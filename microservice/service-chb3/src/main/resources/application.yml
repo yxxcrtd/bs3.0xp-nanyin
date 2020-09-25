@@ -1,0 +1,163 @@
+server:
+  port: 8104
+  address: 0.0.0.0
+#主配置文件，配置了这个会优先读取里面的属性覆盖主配置文件的属性
+spring:
+  profiles:
+    active: dtx
+  thymeleaf:
+    cache: false
+  application:
+    name: chb3Service #服务名称
+  datasource:
+    type: org.apache.commons.dbcp2.BasicDataSource
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    validationQuery: SELECT 1 FROM DUAL
+    maxTotal: 50
+    maxIdle: 50
+    minIdle: 20
+    timeBetweenEvictionRunsMillis: 60000  # 默认是-1
+    numTestsPerEvictionRun: 10
+    removeAbandonedOnBorrow: true
+    removeAbandonedOnMaintenance: true
+    logAbandoned: true
+    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.jdbc.ReadTimeout=50000 
+  activemq:
+    systemId: report
+    active: false
+  http:
+    multipart: # 文件上传设置
+      maxFileSize: 10Mb #设置单个文件的大小
+      maxRequestSize: 100Mb #设置单次请求的文件的总大小
+#base数据源
+base:
+  datasource:
+    maxTotal: 50
+    maxIdle: 50
+    minIdle: 20
+    timeBetweenEvictionRunsMillis: 60000  # 默认是-1
+    numTestsPerEvictionRun: 10
+    removeAbandonedOnBorrow: true
+    removeAbandonedOnMaintenance: true
+    logAbandoned: true
+    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.jdbc.ReadTimeout=50000
+#interf数据源
+interf:
+  datasource:
+    type: org.apache.commons.dbcp2.BasicDataSource
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    validationQuery: SELECT 1 FROM DUAL
+    maxTotal: 50
+    maxIdle: 50
+    minIdle: 20
+    timeBetweenEvictionRunsMillis: 60000  # 默认是-1
+    numTestsPerEvictionRun: 10
+    removeAbandonedOnBorrow: true
+    removeAbandonedOnMaintenance: true
+    logAbandoned: true
+    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.jdbc.ReadTimeout=50000    
+    testWhileIdle: true
+#注册中心配置
+eureka:
+  client:
+    enabled: true #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
+  instance:
+    prefer-ip-address: false
+#分布式事物配置
+tx-lcn:
+  springcloud:
+    loadbalance:
+      enabled: true #开启负载均衡#用户系统
+  logger:
+    enabled: true # 开启日志数据库记录存储
+    onlyError: true
+#用户系统
+#1 jixu用户系统
+#2 joyin用户系统
+#3 joyinBatch用户系统
+jixu:
+  user:
+    type: 2
+#安全配置
+shiro:
+  jwtEnable: true
+  casClientName: report
+#应用配置
+application:
+  menuType: hover
+  sysCode: SVR
+  menuPosition: top #菜单默认位置（设置主题后失效），支持left和top两种
+  pageStep: 100 #数据表格页码步长
+  mainPage: report/myHome
+  logoAbout: /image/report/logo-about.png
+  logo: /image/report/logo.png
+  sessionTimeout: 1800000 #超时自动退出
+  interfMaxCorePoolSize: 20 #上游接口解析读取文件处理最大线程数
+  maxDataCountOneTimeForInvestholdInfo : 50 #上游接口解析读取文件处理中持有信息批量查询单次最大查询主键数（江苏银行50）
+  reportInterfIsNeedOkFile: 1 #上游接口解析读取文件处理中，是否需要.ok传输完成标志文件（1：需要 0：不需要）
+  reportInterfOkFileExtension: ok #上游接口解析读取文件处理中，传输完成标志文件的扩展名（默认为ok）
+  reportInsertCount: 15 #数据批量一次性insert条数
+  reportSelectOrDeleteCount: 50 #数据批量一次查询或者删除条数
+  reportSelectOrDeleteCountForShenFen: 100 #数据批量一次查询或者删除条数(身份信息用)
+  reportInsertLongCount: 10 #数据批量一次性insert条数(单条数据字段较多)
+  reportInterfFileEncoding: UTF-8 #上游接口文件编码格式 
+  reportInterfOneTimeDataCount: 1000 #上游接口解析读取文件处理,单线程处理数据条数
+  reportInterfOneTimeSqlLdrDataCount: 200000 #上游接口解析读取文件处理,单次sqlldr处理最大数据条数
+  reportInterfOneTimeSqlLdrCommitCount: 10000 #上游接口解析读取文件处理,单次sqlldr处理单次提交数
+  reportInterfSplitCharacter: '|' #上游txt文件解析分割符
+  reportCbFeedBackHandleCountOneTime: 10000 #中债反馈文件内容单次处理数据条数
+  isMicroService: microservice
+---
+spring:
+  profiles: dtx
+  #本地启动建议删除redis配置start
+  cache:
+    type: redis
+  redis:
+    database: 1 #redis 集群为0
+    host: 192.168.90.86
+    port: 6379
+    timeout: 20000
+  #本地启动建议删除redis配置end
+# redis 集群部署
+#  redis：
+#    database：0
+#    cluster:
+#      nodes: 192.168.70.104:6379,192.168.70.104:6380,192.168.90.3:6381,192.168.90.3:6382,192.168.90.79:6383,192.168.90.79:6384
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.6:1521/orcl
+    username: yitihua1_212
+    password: yitihua1_212
+    reportSqlldrDatabaseName: 192.168.90.6:1521/orcl #sqlldr用数据库连接，必须保持这种格式
+#应用配置
+application:
+  sqldirurl: jdbc:oracle:thin:@//192.168.90.6:1521/orcl
+  sqldiruserName: yitihua1_212
+  sqldirpassword: yitihua1_212
+#base数据源配置
+base:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.6:1521/orcl
+    username: yitihua1_212
+    password: yitihua1_212
+#interf数据库配置
+interf:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.6:1521/orcl
+    username: yitihua1_212
+    password: yitihua1_212
+#日志路径配置
+log:
+  path: /home/tams/logs/service/chb3Service
+  level: DEBUG
+#注册中心配置
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://127.0.0.1:9100/eureka/
+  instance:
+    ip-address: 127.0.0.1
+#分布式事物配置
+tx-lcn:
+  client:
+    managerAddress: 192.168.90.89:8070 # manager服务地址(rpc端口),可填写多个负载

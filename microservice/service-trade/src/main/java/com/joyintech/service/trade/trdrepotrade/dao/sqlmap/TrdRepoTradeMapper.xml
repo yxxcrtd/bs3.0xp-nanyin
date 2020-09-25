@@ -1,0 +1,756 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.service.trade.trdrepotrade.dao.TrdRepoTradeMapper" >
+    <resultMap id="trdRepoTradeReferenceFullResultMap" type="com.joyintech.service.trade.trdrepotrade.dto.TrdRepoTradeReferenceDto"
+               extends="com.joyintech.tams.common.base.dao.TrdProductDealMapper.BaseResultMap">
+        <result column="TRADE_ID"               property="tradeId"        jdbcType="VARCHAR" />
+        <result column="F_TRADE_ID"             property="fTradeId"       jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE2"          property="finprodType2"   jdbcType="VARCHAR" />
+        <result column="ENTRUST_ID"             property="entrustId"      jdbcType="VARCHAR" />
+        <result column="PORTFOLIO_ID"           property="portfolioId"    jdbcType="VARCHAR" />
+        <result column="BACK_LEND_DIRECTION"    property="ps"             jdbcType="VARCHAR" />
+        <result column="BASIS"                  property="basis"          jdbcType="VARCHAR" />
+        <result column="TRADE_MARKET"           property="tradeMarket"    jdbcType="VARCHAR" />
+        <result column="SETTLE_SPEED"           property="settleSpeedStr" jdbcType="VARCHAR" />
+        <result column="TRADE_DATE"             property="tradeDate"      jdbcType="VARCHAR" />
+        <result column="SEC_MANAGE_ACCT_ID"     property="secAcctId"      jdbcType="VARCHAR" />
+        <result column="VDATE"                  property="vdate"          jdbcType="VARCHAR" />
+        <result column="MDATE"                  property="mdate"          jdbcType="VARCHAR" />
+        <result column="TERM"                   property="term"           jdbcType="VARCHAR" />
+        <result column="TERM_TYPE"              property="termTypeReback" jdbcType="VARCHAR" />
+        <result column="CALENDAR_ID"            property="calendarId"     jdbcType="VARCHAR" />
+        <result column="CCY"                    property="ccy"            jdbcType="VARCHAR" />
+        <result column="PRIN"                   property="prinAmt"        jdbcType="VARCHAR" />
+        <result column="M_INT_AMT"              property="rebackIntAmt"   jdbcType="VARCHAR" />
+        <result column="M_TRADE_AMT"            property="mdateSettleAmt" jdbcType="VARCHAR" />
+        <result column="rebackPrice"            property="rebackPrice"    jdbcType="VARCHAR" />
+        <!-- 查看缺失字段增加 add by renping 20191020 start -->
+        <result column="ACT_CAP_DAYS"           property="actCapDays"     jdbcType="VARCHAR" />
+        <result column="VPAY_DATE"              property="vpayDate"       jdbcType="VARCHAR" />
+        <result column="MPAY_DATE"              property="mpayDate"       jdbcType="VARCHAR" />
+        <!-- 查看缺失字段增加 add by renping 20191020 end -->
+        <result column="REMARK"                 property="remark"         jdbcType="VARCHAR" />
+        <result column="CHL_ID"                 property="chlId"          jdbcType="VARCHAR" />
+        <result column="FEE_AMT"                property="channelFee"     jdbcType="VARCHAR" />
+        <result column="TRADE_AMT"              property="tradeAmtAndFee"     jdbcType="VARCHAR" />
+        <result column="TYPE_6"                 property="repoType"       jdbcType="VARCHAR" />
+        <!-- 增加 add by nixukuan 20191119 start -->
+        <result column="branch"           property="branch"     jdbcType="VARCHAR" />
+        <result column="regist_org"              property="registOrg"       jdbcType="VARCHAR" />
+        <!-- 增加 add by nixukuan 20191119 end -->
+        <association property="trdInvestPersonInfo" javaType="com.joyintech.service.trade.trdrepotrade.dto.TrdInvestPersonInfoDto">
+            <result column="TRADER"             property="trader"         jdbcType="VARCHAR" />
+            <result column="COUNTER_ID"         property="counterId"      jdbcType="VARCHAR" />
+            <result column="COUNTER_TRADER"     property="counterTrader"  jdbcType="VARCHAR" />
+            <result column="COUNTER_CONTACT"    property="contactInfo"    jdbcType="VARCHAR" />
+        </association>
+    </resultMap>
+	<!-- 质押式回购查询 本金金额查询修改 modify by gaopeng 20191205 start -->
+    <!-- 回购资产交易查询画面，查询回购资产交易信息列表 -->
+    <select id="selectForPage" resultType="com.joyintech.service.trade.trdrepotrade.dto.TrdRepoTradeDto">
+        SELECT * FROM (
+    	<trim prefixOverrides="UNION ALL">
+    	    <!-- 流程中 -->
+    		<if test="validStatus == null or validStatus == '' or validStatus == VALID_STATUS_01">
+                SELECT
+                    #{VALID_STATUS_01} validStatus,
+                    wtpd.F_TRADE_ID fTradeId,
+                    wtpd.TRADE_ID tradeId,
+	                wtpda.ENTRUST_ID entrustId,
+	                pp.PORTFOLIO_ID portfolioId,
+	                pp.PORTFOLIO_NAME portfolioName,
+                    wtpdo.REPO_TYPE repoType,
+	                wtpd.FINPROD_ID finprodId,
+                    wtpdo.TERM_TYPE termTypeReback,
+	                wptpd.BACK_LEND_DIRECTION ps,
+                    wtpd.TRADE_DATE tradeDate,
+	                wtpd.PRIN_AMT prinAmt,
+	                wtpd.CCY ccy,
+	                wtpd.REMARK remark,
+	                wtpd.WORKFLOW_ID workflowId,
+	                wtpd.WORKFLOW_STATUS workflowStatus,
+                    dict.item_value  tradeMarket
+                FROM
+                              WFL_TRD_PRODUCT_DEAL wtpd
+                  LEFT JOIN   WFL_TRD_PRODUCT_DEAL_ADD wtpda
+                          ON  wtpda.TRADE_ID = wtpd.TRADE_ID
+                  LEFT JOIN   PTL_PORTFOLIO pp
+                          ON  pp.PORTFOLIO_ID = wtpda.PORTFOLIO_ID
+                  LEFT JOIN   WFL_TRD_PRODUCT_DEAL_OTH wtpdo
+                          ON  wtpdo.TRADE_ID = wtpd.TRADE_ID
+                  LEFT JOIN   WFL_PA_TRD_PRODUCT_DEAL wptpd
+                          ON  wptpd.TRADE_ID = wtpd.TRADE_ID
+                 LEFT JOIN   sys_datadict_list dict ON wtpd.trade_market=dict.item_code and dict.dict_code='TRADE_PLACE'
+                  WHERE pp.INVEST_YESORNO='Y'
+                  AND  wtpd.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03})
+                    <if test="loginUserName != null and loginUserName != ''">
+                        AND (pp.PORTFOLIO_ID IN ( SELECT PORTFOLIO_ID FROM PTL_PORTFOLIO_AUTHORITY WHERE USER_ID = #{loginUserName})
+                        OR pp.PARENT_PORTFOLIO_ID IN (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName}))
+                    </if>
+                    <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+                        AND ((pp.PORTFOLIO_ID IN
+                        <foreach collection="portfolioIdList" item="item" index="index" open="("
+                                 close=")" separator=",">
+                            <if test="(index % 998) == 0">
+                                null) OR pp.PORTFOLIO_ID in (
+                            </if>
+                            #{item}
+                        </foreach>
+                        )
+                        OR (pp.PARENT_PORTFOLIO_ID IN
+                        <foreach collection="portfolioIdList" item="item" index="index" open="("
+                                 close=")" separator=",">
+                            <if test="(index % 998) == 0">
+                                null) OR pp.PARENT_PORTFOLIO_ID in (
+                            </if>
+                            #{item}
+                        </foreach>)
+                        )
+
+                    </if>
+                    <if test="entrustId != null and entrustId != ''">
+                        AND wtpda.ENTRUST_ID like CONCAT(#{entrustId}, '%')
+                    </if>
+                    AND wptpd.PA_BUSS_TYPE IN (#{PINAN_BUSINESS_TYPE_19}, #{PINAN_BUSINESS_TYPE_20})
+		             <if test="repoType != null and repoType != ''">
+		                AND wtpdo.REPO_TYPE = #{repoType} and wtpd.trade_market !=#{TRADE_PLACE_01}
+		            </if>
+		            <if test="ps != null and ps != ''">
+		                and wptpd.BACK_LEND_DIRECTION = #{ps}
+		            </if>
+		            <if test="tradeDateBegin != null and tradeDateBegin != ''">
+		                AND wtpd.TRADE_DATE >= to_date(#{tradeDateBegin}, 'yyyy-MM-dd')
+		            </if>
+		            <if test="tradeDateEnd != null and tradeDateEnd != ''">
+		                AND wtpd.TRADE_DATE &lt;= to_date(#{tradeDateEnd}, 'yyyy-MM-dd')
+		            </if>
+		            and (wtpd.IS_CANCEL is null or wtpd.IS_CANCEL = #{YES_NO_NO})
+		            and wtpd.TRADE_STATUS = #{TRADE_STATUS_01}
+                    <if test="fTradeId!=null and fTradeId!='' ">
+                        and wtpd.f_trade_id=#{fTradeId}
+                    </if>
+            </if>
+            <!-- 有效 -->
+    		<if test="validStatus == null or validStatus == '' or validStatus == VALID_STATUS_02">
+    			UNION ALL
+                SELECT
+                    #{VALID_STATUS_02} validStatus,
+                    tpd.F_TRADE_ID fTradeId,
+                    tpd.TRADE_ID tradeId,
+                    tpda.ENTRUST_ID entrustId,
+                    pp.PORTFOLIO_ID portfolioId,
+                    pp.PORTFOLIO_NAME portfolioName,
+                    fpt.TYPE_6 repoType,
+                    tpd.FINPROD_ID finprodId,
+                    ftp.TERM_TYPE termTypeReback,
+                    ptpd.BACK_LEND_DIRECTION ps,
+                    tpd.TRADE_DATE tradeDate,
+                    tpd.PRIN_AMT prinAmt,
+                    tpd.CCY ccy,
+                    tpd.REMARK remark,
+                    '' workflowId,
+                    '' workflowStatus,
+                dict.item_value tradeMarket
+                FROM TRD_PRODUCT_DEAL tpd
+                  LEFT JOIN TRD_PRODUCT_DEAL_ADD tpda ON tpda.TRADE_ID = tpd.TRADE_ID
+                  LEFT JOIN PTL_TRADE PT ON tpd.TRADE_ID = PT.BUSI_NO
+                  LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
+                  LEFT JOIN FIN_PRODUCT_TYPE fpt ON  fpt.FINPROD_ID = tpd.TRADE_ID AND fpt.BRANCH = #{BRANCH_0}
+                  LEFT JOIN FIN_TRADE_PRODUCT ftp ON  ftp.FINPROD_ID = tpd.TRADE_ID AND fpt.BRANCH = #{BRANCH_0}
+                  LEFT JOIN PA_TRD_PRODUCT_DEAL ptpd ON ptpd.TRADE_ID = tpd.TRADE_ID
+                  LEFT JOIN   sys_datadict_list dict ON tpd.trade_market=dict.item_code and dict.dict_code='TRADE_PLACE'
+                  where pp.INVEST_YESORNO='Y'
+                     and  tpd.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03})
+                    <if test="loginUserName != null and loginUserName != ''">
+                        AND (pp.PORTFOLIO_ID IN ( SELECT PORTFOLIO_ID FROM PTL_PORTFOLIO_AUTHORITY WHERE USER_ID = #{loginUserName})
+                        OR pp.PARENT_PORTFOLIO_ID IN (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName}))
+                    </if>
+                    <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+                        AND ((pp.PORTFOLIO_ID IN
+                        <foreach collection="portfolioIdList" item="item" index="index" open="("
+                                 close=")" separator=",">
+                            <if test="(index % 998) == 0">
+                                null) OR pp.PORTFOLIO_ID in (
+                            </if>
+                            #{item}
+                        </foreach>
+                        )
+                        OR (pp.PARENT_PORTFOLIO_ID IN
+                        <foreach collection="portfolioIdList" item="item" open="("
+                                 close=")" separator=",">
+                            <if test="(index % 998) == 0">
+                                null) OR pp.PARENT_PORTFOLIO_ID in (
+                            </if>
+                            #{item}
+                        </foreach>)
+                        )
+                    </if>
+                    <if test="entrustId != null and entrustId != ''">
+                        AND tpda.ENTRUST_ID like CONCAT(#{entrustId}, '%')
+                    </if>
+                    AND ptpd.PA_BUSS_TYPE IN (#{PINAN_BUSINESS_TYPE_19}, #{PINAN_BUSINESS_TYPE_20})
+                      <if test="repoType != null and repoType != ''">
+                        AND fpt.TYPE_6 = #{repoType} and tpd.trade_market !=#{TRADE_PLACE_01}
+                    </if>
+                    <if test="ps != null and ps != ''">
+                        and ptpd.BACK_LEND_DIRECTION = #{ps}
+                    </if>
+                    <if test="tradeDateBegin != null and tradeDateBegin != ''">
+                        AND tpd.TRADE_DATE >= to_date(#{tradeDateBegin}, 'yyyy-MM-dd')
+                    </if>
+                    <if test="tradeDateEnd != null and tradeDateEnd != ''">
+                        AND tpd.TRADE_DATE &lt;= to_date(#{tradeDateEnd}, 'yyyy-MM-dd')
+                    </if>
+                    AND (tpd.IS_CANCEL is null or tpd.IS_CANCEL = #{YES_NO_NO})
+                    AND tpd.TRADE_STATUS = #{TRADE_STATUS_01}
+                    <if test="fTradeId!=null and fTradeId!='' ">
+                        and tpd.f_trade_id=#{fTradeId}
+                    </if>
+            </if>
+            <!-- 撤销 -->
+    		<if test="validStatus == null or validStatus == '' or validStatus == VALID_STATUS_03">
+    			UNION ALL
+                SELECT
+                    #{VALID_STATUS_03} validStatus,
+                    tpd.F_TRADE_ID fTradeId,
+                    tpd.TRADE_ID tradeId,
+                    tpda.ENTRUST_ID entrustId,
+                    pp.PORTFOLIO_ID portfolioId,
+                    pp.PORTFOLIO_NAME portfolioName,
+                    fpt.TYPE_6 repoType,
+                    tpd.FINPROD_ID finprodId,
+                    ftp.TERM_TYPE termTypeReback,
+                    ptpd.BACK_LEND_DIRECTION ps,
+                    tpd.TRADE_DATE tradeDate,
+                    tpd.PRIN_AMT prinAmt,
+                    tpd.CCY ccy,
+                    tpd.REMARK remark,
+                    '' workflowId,
+                    '' workflowStatus,
+                dict.item_value tradeMarket
+                FROM TRD_PRODUCT_DEAL tpd
+                LEFT JOIN TRD_PRODUCT_DEAL_ADD tpda ON  tpda.TRADE_ID = tpd.TRADE_ID
+                LEFT JOIN PTL_TRADE PT ON tpd.TRADE_ID = PT.BUSI_NO
+                LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
+                LEFT JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = tpd.TRADE_ID AND fpt.BRANCH = #{BRANCH_0}
+<!--                        ON  (-->
+<!--                            (tpd.TRADE_STATUS = #{TRADE_STATUS_01} AND fpt.FINPROD_ID = tpd.TRADE_ID)-->
+<!--                            OR-->
+<!--                            (tpd.TRADE_STATUS = #{TRADE_STATUS_03} AND fpt.FINPROD_ID = SUBSTR(tpd.TRADE_ID, 0, LENGTH(tpd.TRADE_ID)-1))-->
+<!--                            )-->
+<!--                       AND fpt.BRANCH = #{BRANCH_0}-->
+                LEFT JOIN   FIN_TRADE_PRODUCT ftp ON ftp.FINPROD_ID = tpd.TRADE_ID AND fpt.BRANCH = #{BRANCH_0}
+<!--                        ON  (-->
+<!--                            (tpd.TRADE_STATUS = #{TRADE_STATUS_01} AND ftp.FINPROD_ID = tpd.TRADE_ID)-->
+<!--                            OR-->
+<!--                            (tpd.TRADE_STATUS = #{TRADE_STATUS_03} AND ftp.FINPROD_ID = SUBSTR(tpd.TRADE_ID, 0, LENGTH(tpd.TRADE_ID)-1))-->
+<!--                            )-->
+<!--                        AND fpt.BRANCH = #{BRANCH_0}-->
+                LEFT JOIN   PA_TRD_PRODUCT_DEAL ptpd
+                        ON  ptpd.TRADE_ID = tpd.TRADE_ID
+                LEFT JOIN   sys_datadict_list dict ON tpd.trade_market=dict.item_code and dict.dict_code='TRADE_PLACE'
+                where pp.INVEST_YESORNO='Y'
+                    and  tpd.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03})
+                <if test="loginUserName != null and loginUserName != ''">
+                    AND (pp.PORTFOLIO_ID IN ( SELECT PORTFOLIO_ID FROM PTL_PORTFOLIO_AUTHORITY WHERE USER_ID = #{loginUserName})
+                    OR pp.PARENT_PORTFOLIO_ID IN (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName}))
+                </if>
+                <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+                    AND ((pp.PORTFOLIO_ID IN
+                    <foreach collection="portfolioIdList" item="item" index="index" open="("
+                             close=")" separator=",">
+                        <if test="(index % 998) == 0">
+                            null) OR pp.PORTFOLIO_ID in (
+                        </if>
+                        #{item}
+                    </foreach>
+                    )
+                    OR (pp.PARENT_PORTFOLIO_ID IN
+                    <foreach collection="portfolioIdList" item="item" index="index" open="("
+                             close=")" separator=",">
+                        <if test="(index % 998) == 0">
+                            null) OR pp.PARENT_PORTFOLIO_ID in (
+                        </if>
+                        #{item}
+                    </foreach>
+                    )
+                    )
+                </if>
+                    <if test="entrustId != null and entrustId != ''">
+                        AND tpda.ENTRUST_ID like CONCAT(#{entrustId}, '%')
+                    </if>
+                    AND ptpd.PA_BUSS_TYPE IN (#{PINAN_BUSINESS_TYPE_19}, #{PINAN_BUSINESS_TYPE_20})
+                      <if test="repoType != null and repoType != ''">
+                        AND fpt.TYPE_6 = #{repoType} and tpd.trade_market !=#{TRADE_PLACE_01}
+                    </if>
+                    <if test="ps != null and ps != ''">
+                        and ptpd.BACK_LEND_DIRECTION = #{ps}
+                    </if>
+                    <if test="tradeDateBegin != null and tradeDateBegin != ''">
+                        AND tpd.TRADE_DATE >= to_date(#{tradeDateBegin}, 'yyyy-MM-dd')
+                    </if>
+                    <if test="tradeDateEnd != null and tradeDateEnd != ''">
+                        AND tpd.TRADE_DATE &lt;= to_date(#{tradeDateEnd}, 'yyyy-MM-dd')
+                    </if>
+                    AND tpd.IS_CANCEL = #{YES_NO_YES}
+                    AND tpd.TRADE_STATUS = #{TRADE_STATUS_01}
+                    <if test="fTradeId!=null and fTradeId!='' ">
+                        and tpd.f_trade_id=#{fTradeId}
+                    </if>
+            </if>
+    	</trim>
+        )
+    	ORDER BY
+    	  tradeDate DESC,
+    	  tradeId DESC
+    </select>
+	<!-- 质押式回购查询 本金金额查询修改 modify by gaopeng 20191205 end -->
+    <!-- 根据交易编号查询回购资产交易信息 -->
+    <select id="getTrdRepoTradeDto" resultMap="trdRepoTradeReferenceFullResultMap">
+        SELECT
+          tpd.TRADE_ID,
+          tpd.F_TRADE_ID,
+          tpd.FINPROD_TYPE2,
+          tpda.ENTRUST_ID,
+          PP.PORTFOLIO_ID,
+          ptrd.BACK_LEND_DIRECTION,
+          ftp.BASIS,
+          ftp.TRADE_MARKET,
+          tpd.TRADE_DATE,
+          tpd.SEC_MANAGE_ACCT_ID,
+          tpd.SETTLE_SPEED,
+          ftp.VDATE,
+          ftp.MDATE,
+          ftp.TERM,
+          ftp.TERM_TYPE,
+          ftp.CALENDAR_ID,
+          tpd.CCY,
+          ftp.PRIN,
+          ftp.M_INT_AMT,
+          ftp.M_TRADE_AMT,
+          ftp.INT_RATE * 100 rebackPrice,
+          <!-- 查看缺失字段增加 add by renping 20191020 start -->
+          ftp.ACT_CAP_DAYS,
+          ftp.VPAY_DATE,
+          ftp.MPAY_DATE,
+          <!-- 查看缺失字段增加 add by renping 20191020 start -->
+          tpd.REMARK,
+          tpd.TRADER,
+          tpd.COUNTER_ID,
+          tpd.COUNTER_TRADER,
+          tpd.COUNTER_CONTACT,
+          TPD.CHL_ID,
+          TPD.FEE_AMT,
+          TPD.TRADE_AMT,
+          fpt.TYPE_6,
+        <!-- 增加 add by nixukuan 20191119 start -->
+          tpd.branch,
+          tpd.regist_org
+        <!-- 增加 add by nixukuan 20191119 end -->
+        FROM
+                      TRD_PRODUCT_DEAL tpd
+          LEFT JOIN   TRD_PRODUCT_DEAL_ADD tpda
+                  ON  tpda.TRADE_ID = tpd.TRADE_ID
+          LEFT JOIN   PA_TRD_PRODUCT_DEAL ptrd
+                  ON   ptrd.TRADE_ID = tpd.TRADE_ID
+          LEFT JOIN PTL_TRADE PT ON tpd.TRADE_ID = PT.BUSI_NO
+          LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
+          LEFT JOIN   FIN_TRADE_PRODUCT ftp
+                  ON  (
+                          (tpd.TRADE_STATUS = #{TRADE_STATUS_01} AND ftp.FINPROD_ID = tpd.TRADE_ID)
+                          OR
+                          (tpd.TRADE_STATUS = #{TRADE_STATUS_03} AND ftp.FINPROD_ID = SUBSTR(tpd.TRADE_ID, 0, LENGTH(tpd.TRADE_ID)-1))
+                      )
+          LEFT JOIN   FIN_PRODUCT_TYPE fpt
+                  ON  (
+                          (tpd.TRADE_STATUS = #{TRADE_STATUS_01} AND fpt.FINPROD_ID = tpd.TRADE_ID)
+                          OR
+                          (tpd.TRADE_STATUS = #{TRADE_STATUS_03} AND fpt.FINPROD_ID = SUBSTR(tpd.TRADE_ID, 0, LENGTH(tpd.TRADE_ID)-1))
+                      )
+                  AND fpt.BRANCH = #{BRANCH_0}
+        WHERE
+            PP.INVEST_YESORNO = 'Y'
+          AND tpd.TRADE_ID = #{tradeId}
+    </select>
+
+    <select id="selectPtlSecPositionFlow" resultMap="com.joyintech.tams.common.base.dao.PtlSecPositionFlowMapper.BaseResultMap">
+        SELECT
+          <include refid="com.joyintech.tams.common.base.dao.PtlSecPositionFlowMapper.Base_Column_List"></include>
+        FROM
+          PTL_SEC_POSITION_FLOW
+        WHERE
+              TRADE_ID = #{bizCode}
+          AND TRADE_ID != FINPROD_ID
+          AND HODING_TYPE = #{POSITION_TYPE_04}
+    </select>
+
+    <select id="selectTradeIdByWorkflowId" resultType="string">
+        select max(TRADE_ID) from WFL_TRD_PRODUCT_DEAL where WORKFLOW_ID = #{workflowId}
+    </select>
+
+    <select id="selectInFlowDataCount" resultType="int">
+        select count(1) from WFL_TRD_PRODUCT_DEAL 
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+            or P_TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectRevokedDataCount" resultType="int">
+        select count(1) from TRD_PRODUCT_DEAL 
+        where 
+            (TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+            or P_TRADE_ID = #{tradeId,jdbcType=VARCHAR})
+            and 
+            (IS_CANCEL = #{YES_NO_YES,jdbcType=VARCHAR}
+            or TRADE_STATUS = #{TRADE_STATUS_03,jdbcType=VARCHAR}
+            )
+    </select>
+
+    <select id="getSecManageAcctId" resultType="com.joyintech.framework.select.SuggestDto">
+        SELECT
+            A.ACCT_NO hidCode,
+            A.ACCT_NO code,
+            B.SEC_ACCT_NAME name,
+            B.SEC_ACCT_NAME shortName,
+            B.REGIST_ORG  object
+        FROM
+                      PTL_SEC_ACCT A
+          INNER JOIN STL_SEC_ACCT_INFO B
+                  ON  A.ACCT_NO = B.SEC_ACCT_ID
+        <where>
+            <if test="portfolioId !=null and portfolioId !='' ">
+                PORTFOLIO_ID = #{portfolioId, jdbcType=VARCHAR}
+            </if>
+            <if test="search != null and search != ''">
+                AND
+                (
+                    A.ACCT_NO LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                    OR
+                    B.SEC_ACCT_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                )
+            </if>
+            <if test="initValue != null and initValue != ''">
+                AND A.ACCT_NO = #{initValue}
+            </if>
+            <if test="tradeMarket != null and tradeMarket != ''">
+             	AND TRADE_PLACE =#{tradeMarket}
+            </if>
+        </where>
+    </select>
+
+    <select id="getAvaStandardStockPosition" resultType="java.math.BigDecimal">
+          SELECT  sum(NVL(INTOTALPRINAMT.AMOUNT, 0) * 100 * NVL(FSCR.SCALE, 0))-
+               AVG(NVL(STANDARDPLEDGE.AMOUNT, 0)) PLEDGEPRINAMT
+          FROM (SELECT PSP.PORTFOLIO_ID,
+                       PSP.FINPROD_ID,
+                       PSP.SEC_ACCT_ID,
+                       PSP.CCY,
+                       TO_CHAR(PSP.CDATE, 'yyyy-MM-dd') CDATE,
+                       SUM(NVL(PSP.AMOUNT, 0)) AMOUNT
+                  FROM PTL_SEC_POSITION PSP INNER JOIN STL_SEC_ACCT_INFO B ON B.SEC_ACCT_ID = PSP.SEC_ACCT_ID
+                 WHERE PSP.HODING_TYPE IN ('01', '03')
+                   AND PSP.PORTFOLIO_ID = #{portfolioId}
+                   AND B.TRADE_PLACE   in ( '03','04')
+                   AND PSP.CDATE =  TO_DATE(#{tradeDate}, 'yyyy-MM-dd')
+                   AND PSP.SEC_ACCT_ID =  #{secAcctId, jdbcType=VARCHAR}
+                 GROUP BY PSP.PORTFOLIO_ID, PSP.FINPROD_ID, PSP.SEC_ACCT_ID, PSP.CCY, PSP.CDATE) AVA
+          LEFT JOIN (SELECT TPDA.PORTFOLIO_ID,
+                            TPD.SEC_MANAGE_ACCT_ID SEC_ACCT_ID,
+                            TPD.CCY,
+                            SUM(DECODE(TPD.PS, 'T23', NVL(TPD.PRIN_AMT, 0) * -1, NVL(TPD.PRIN_AMT, 0))) AMOUNT
+                       FROM TRD_PRODUCT_DEAL TPD
+                       LEFT JOIN FIN_PRODUCT_TYPE FPT ON FPT.FINPROD_ID = TPD.FINPROD_ID
+                       LEFT JOIN TRD_PRODUCT_DEAL_ADD TPDA ON TPDA.TRADE_ID = TPD.TRADE_ID
+                      WHERE FPT.TYPE_6 = 'H02'
+                        AND TPD.TRADE_STATUS = '01'
+                        AND TPD.IS_CANCEL='N'
+                        AND TPD.PS IN ('T23', 'T01')
+                        AND TPDA.PORTFOLIO_ID = #{portfolioId}
+                        AND TPD.SEC_MANAGE_ACCT_ID =  #{secAcctId, jdbcType=VARCHAR}
+                        AND TPD.FINPROD_TYPE2 = 'F02'
+                        AND TPD.TRADE_DATE &lt;= TO_DATE(#{tradeDate}, 'yyyy-MM-dd')
+                      GROUP BY TPDA.PORTFOLIO_ID, TPD.SEC_MANAGE_ACCT_ID, TPD.CCY) STANDARDPLEDGE
+            ON STANDARDPLEDGE.SEC_ACCT_ID = AVA.SEC_ACCT_ID
+           AND STANDARDPLEDGE.PORTFOLIO_ID = AVA.PORTFOLIO_ID
+           AND STANDARDPLEDGE.CCY = AVA.CCY
+          LEFT JOIN (SELECT TSF.PORTFOLIO_ID,
+                            TSF.SEC_ACCT_ID,
+                            TSFD.FINPROD_ID,
+                            SUM(NVL(PSPF.AMOUNT, 0)) AMOUNT
+                       FROM TRD_STASEC_FLOW TSF
+                       LEFT JOIN TRD_STASEC_FLOW_DETAIL TSFD
+                         ON TSFD.SEQNO = TSF.SEQNO
+                        AND TSFD.BRANCH = #{BRANCH_0, jdbcType=VARCHAR}
+                       LEFT JOIN PTL_SEC_POSITION_FLOW PSPF
+                         ON TSF.SEQNO = PSPF.TRADE_ID
+                        AND PSPF.FINPROD_ID = tsfd.FINPROD_ID
+                        AND TSF.PORTFOLIO_ID = PSPF.PORTFOLIO_ID
+                        AND TSF.SEC_ACCT_ID = PSPF.SEC_ACCT_ID
+                      WHERE TSF.PORTFOLIO_ID = #{portfolioId}
+                        AND TSF.CDATE &lt;= TO_DATE(#{tradeDate}, 'yyyy-MM-dd')
+                        AND TSF.SEC_ACCT_ID =  #{secAcctId, jdbcType=VARCHAR}
+                      GROUP BY TSF.PORTFOLIO_ID, TSF.SEC_ACCT_ID, TSFD.FINPROD_ID) INTOTALPRINAMT
+            ON INTOTALPRINAMT.PORTFOLIO_ID = AVA.PORTFOLIO_ID
+           AND INTOTALPRINAMT.SEC_ACCT_ID = AVA.SEC_ACCT_ID
+           AND INTOTALPRINAMT.FINPROD_ID = AVA.FINPROD_ID
+          LEFT JOIN FIN_STDSEC_CONVERSE_RADIO FSCR
+            ON FSCR.FINPROD_ID = AVA.FINPROD_ID
+           AND FSCR.BRANCH = #{BRANCH_0, jdbcType=VARCHAR}
+           AND FSCR.VDATE &lt;= TO_DATE(#{tradeDate}, 'yyyy-MM-dd')
+           AND NOT EXISTS (SELECT 1
+                  FROM FIN_STDSEC_CONVERSE_RADIO FSCRINNER
+                 WHERE FSCRINNER.FINPROD_ID = FSCR.FINPROD_ID
+                   AND FSCRINNER.BRANCH = #{BRANCH_0, jdbcType=VARCHAR}
+                   AND FSCRINNER.VDATE &lt;= TO_DATE(#{tradeDate}, 'yyyy-MM-dd')
+                   AND FSCRINNER.VDATE > FSCR.VDATE)
+    </select>
+
+    <select id="getVPOrPAuthAmount" resultType="java.math.BigDecimal">
+        SELECT
+            SUM(NVL(AUTHORIZE_LIMIT_AMT, 0))
+        FROM
+                RSK_AUTHORIZE_MNG
+        <where>
+                    ROLE_POS = #{ROLE_POST_01}
+                AND ASSET_TYPE = #{PINAN_ASSET_TYPE_F07}
+              <if test="assetSecType != null and assetSecType != ''">
+                AND (ASSET_SEC_TYPE = #{assetSecType} OR ASSET_SEC_TYPE IS NULL OR ASSET_SEC_TYPE = '')
+              </if>
+              <if test="tradeMarket != null and tradeMarket != ''">
+                AND (TRADE_MARKET = #{tradeMarket} OR TRADE_MARKET IS NULL OR TRADE_MARKET = '')
+              </if>
+              <if test="tradeDirection != null and tradeDirection != ''">
+                AND (TRADE_DIRECTION = #{tradeDirection} OR TRADE_DIRECTION IS NULL OR TRADE_DIRECTION = '')
+              </if>
+              <if test="loginUserName != null and loginUserName != ''">
+                  AND USER_NAME = #{loginUserName}
+              </if>
+        </where>
+    </select>
+
+    <select id="selectFinDealPledge" resultType="java.util.Map">
+        SELECT
+            fdp.FINPROD_ID "tradeId",
+            fp.FINPROD_MARKET_ID "bondCode",
+            fp.FINPROD_ABBR "bondAbbrName",
+            NVL(fdp.PLEDGE_NUMBER, 0) * 100 "prinAmt",
+            fdp.PLEDGE_RATIO "ratio"
+        FROM
+                      FIN_DEAL_PLEDGE fdp
+            LEFT JOIN FIN_PRODUCT fp
+                  ON  fp.FINPROD_ID = fdp.PLEDGE_FINPROD_ID
+        <where>
+            <if test="tradeIds != null and tradeIds.size() > 0">
+                AND fdp.FINPROD_ID IN
+                <foreach collection="tradeIds" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="queryRepoCstpInfoList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select ORITRADEID id, ORITRADEID text
+        from INTERF_OPICS_TRAD_REPO where 1=1
+        and PRODTYPE = #{prodType}
+        <if test="initValue != null and initValue != ''">
+            and ORITRADEID IN (#{initValue})
+        </if>
+        <if test="param != null and param != ''">
+            and ORITRADEID like concat(concat('%',#{param}),'%')
+        </if>
+    </select>
+
+    <select id="queryRepoCstpInfoByNo" resultType="com.joyintech.service.trade.trdrepotrade.dto.InterfOpicsTradRepoDto">
+        select
+        <choose>
+            <when test="isCstpSure!=null and isCstpSure!=''  and isCstpSure!='null' ">
+                TRD_MATCH_INFO.MATCH_NUM repoamtcstp,
+            </when>
+            <otherwise>
+                INTERF_OPICS_TRAD_REPO.Repoamt repoamtcstp,
+            </otherwise>
+        </choose>
+        INTERF_OPICS_TRAD_REPO.*,
+        INTERF_CSTP_TRADE.CASHHOLDINGDAYS
+        from INTERF_OPICS_TRAD_REPO
+        inner join INTERF_CSTP_TRADE on INTERF_CSTP_TRADE.EXECID = INTERF_OPICS_TRAD_REPO.ORITRADEID
+        <if test="isCstpSure!=null and isCstpSure!=''  and isCstpSure!='null' ">
+            inner join TRD_MATCH_INFO on TRD_MATCH_INFO.CSTP_TRADE_ID = INTERF_OPICS_TRAD_REPO.ORITRADEID
+        </if>
+        <where>
+            and INTERF_OPICS_TRAD_REPO.ORITRADEID = #{fedealno}
+            <if test="entrustId!=null and entrustId!='' and entrustId!='null' ">
+                 and TRD_MATCH_INFO.Entrust_Id=#{entrustId}
+            </if>
+            <if test="preTradeId!=null and preTradeId!='' and preTradeId!='null' ">
+                and TRD_MATCH_INFO.PRE_TRADE_ID=#{preTradeId}
+            </if>
+            and INTERF_OPICS_TRAD_REPO.PRODTYPE = #{prodType}
+        </where>
+    </select>
+
+    <select id="queryRepoAssetByNo" resultMap="com.joyintech.tams.common.base.dao.InterfTradRepoasstMapper.BaseResultMap">
+    	select *
+    	from INTERF_TRAD_REPOASST
+    	where TRADEID = #{fedealno}
+    </select>
+    <select id="querySecinfo" resultType="com.joyintech.tams.common.base.entity.FinProduct">
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinProductMapper.Base_Column_List" />
+        from FIN_PRODUCT
+        where
+        FINPROD_MARKET_ID =  #{FINPROD_MARKET_ID}
+    </select>
+    <select id="getTrdProductDealByFTradeId" resultMap="com.joyintech.tams.common.base.dao.TrdProductDealMapper.BaseResultMap">
+        select
+        <include refid="com.joyintech.tams.common.base.dao.TrdProductDealMapper.Base_Column_List" />
+        from TRD_PRODUCT_DEAL where 1=1
+        <if test="fTradeId!=null">
+            and f_trade_id=#{fTradeId}
+        </if>
+        and IS_CANCEL='N' AND TRADE_STATUS =01
+        and FINPROD_TYPE2 = #{finprodType2}
+    </select>
+    <select id="getWftTrdProductDealByFTradeId" resultMap="com.joyintech.tams.common.base.dao.WflTrdProductDealMapper.BaseResultMap">
+        select TRADE_AMT
+        from WFL_TRD_PRODUCT_DEAL
+        where 1=1
+        <if test='fTradeId!=null and fTradeId!=""'>
+            and f_trade_id=#{fTradeId}
+        </if>
+        <if test='workflowId!=null and workflowId!=""'>
+            and workflow_id != #{workflowId}
+        </if>
+        and IS_CANCEL='N' AND TRADE_STATUS =01
+        and FINPROD_TYPE2 = #{finprodType2}
+    </select>
+
+    <select id="getPledgeBondInfoDto" resultType="com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto">
+        SELECT
+        fp.FINPROD_MARKET_ID                               bondCode,
+        fp.FINPROD_ABBR                                    bondAbbrName,
+        fp.MDATE                                           mdate,
+        mbvi.NETPRICE                                      firstNetPrice,
+        fp.REGIST_ORG                                      repRegistOrg,
+        fpt.type_6                                         secType
+        FROM
+        FIN_PRODUCT fp
+        LEFT JOIN
+        MST_BOND_VALUATION_INFO mbvi
+        ON
+        mbvi.SEC_ID = fp.FINPROD_MARKET_ID
+        AND mbvi.VALUE_DATE &lt;= TO_DATE(#{tradeDate}, 'yyyy-MM-dd')
+        AND NOT EXISTS
+        (
+        SELECT
+        1
+        FROM
+        MST_BOND_VALUATION_INFO mbviInner
+        WHERE
+        mbviInner.SEC_ID = fp.FINPROD_MARKET_ID
+        AND mbviInner.VALUE_DATE &lt;= TO_DATE(#{tradeDate}, 'yyyy-MM-dd')
+        AND mbviInner.VALUE_DATE > mbvi.VALUE_DATE )
+        LEFT JOIN
+        FIN_PRODUCT_TYPE FPT
+        ON
+        fp.FINPROD_ID = FPT.FINPROD_ID
+        where
+        fp.FINPROD_TYPE2 = #{FINPROD_TYPE2_ZQ}
+        and fp.FINPROD_ID = #{finprodId}
+    </select>
+
+    <select id="getOutPledgeInfo" resultType="com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto">
+    select t2.finprod_market_id bondCode,
+    t2.finprod_id finprodId,
+    t2.finprod_abbr bondAbbrName,
+    t1.pledge_amt pledgePrin,
+    null as prin,
+    t1.pledge_ratio*100  pledgeRatio
+    from fin_deal_pledge t1
+    left join fin_product t2
+    on t1.pledge_finprod_id = t2.finprod_id
+    where t1.finprod_id = #{finprodId}
+    and t1.branch =#{branch}
+    </select>
+	
+	<select id="getBondNames" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT 
+		  B.FINPROD_ABBR FINPROD_NAME 
+		FROM FIN_DEAL_PLEDGE A 
+		LEFT JOIN FIN_PRODUCT B ON A.PLEDGE_FINPROD_ID = B.FINPROD_ID	
+		WHERE A.FINPROD_ID = #{finId}
+	</select>
+
+
+    <select id="isDqTrdProductInfo" resultType="int">
+    select count(1) from TRD_FIN_PRODUCT_DEAL_TOTAL total
+    left join trd_product_deal deal
+    on total.TOTLE_TRADE_ID=deal.TOTLE_TRADE_ID
+    where total.ps=#{PST56}
+    and deal.TRADE_ID=deal.FINPROD_ID
+    and deal.trade_id= #{tradeId}
+    </select>
+
+    <select id="getFinProduct" resultType="com.joyintech.tams.common.base.entity.FinProduct">
+        select finprod_id finprodId
+        from fin_product
+        where finprod_market_id = #{finprodMarketId}
+    </select>
+
+    <select id="queryLendinQty" resultType="java.math.BigDecimal">
+        SELECT SUM(qty) FROM (
+            SELECT fdt.PLEDGE_FACE_VALUE qty
+            FROM TRD_PRODUCT_DEAL tpd
+            INNER JOIN FIN_DEAL_TARGET fdt on tpd.TRADE_ID = fdt.FINPROD_ID AND fdt.BRANCH = 0
+            INNER JOIN PTL_TRADE PT ON TPD.TRADE_ID = PT.BUSI_NO
+        WHERE
+                fdt.PLEDGE_FINPROD_ID = #{finprodId}
+                AND PT.PORTFOLIO_ID = #{portfolioId}
+                and tpd.finprod_type2 in ('F29')
+                and to_date(#{tradeDate}, 'yyyy-MM-dd') >= tpd.TRADE_DATE
+                and to_date(#{mdate}, 'yyyy-MM-dd') >= tpd.MDATE
+
+            union all
+
+            SELECT fdt.PLEDGE_NUMBER*100 qty
+            FROM TRD_PRODUCT_DEAL tpd
+            INNER JOIN FIN_DEAL_PLEDGE fdt on tpd.TRADE_ID = fdt.FINPROD_ID AND fdt.BRANCH = 0
+            INNER JOIN PTL_TRADE PT ON TPD.TRADE_ID = PT.BUSI_NO
+            WHERE fdt.PLEDGE_FINPROD_ID = #{finprodId} AND PT.PORTFOLIO_ID = #{portfolioId}
+            and tpd.finprod_type2 in ('F05') and to_date(#{tradeDate}, 'yyyy-MM-dd') >= tpd.TRADE_DATE and to_date(#{mdate}, 'yyyy-MM-dd') >= tpd.MDATE
+        )
+    </select>
+    
+    
+    <select id="selectDoEntrustMoney" resultType="java.math.BigDecimal">
+    	SELECT 
+		       sum(NVL(ETR_ENTRUST.ENTRUST_AMT, ETR_ENTRUST.ENTRUST_NUM)- NVL(ETR_FINISH_STATUS_A.FINISH_AMT, 0)) proAvailableCash
+		  FROM ETR_DISTRIBUTE
+		 INNER JOIN ETR_ENTRUST
+		    ON ETR_DISTRIBUTE.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
+		 INNER JOIN PTL_PORTFOLIO
+		    ON PTL_PORTFOLIO.PORTFOLIO_ID = ETR_ENTRUST.PORTFOLIO_ID
+		  LEFT JOIN FIN_PRODUCT
+		    ON FIN_PRODUCT.FINPROD_ID = ETR_ENTRUST.FINPROD_ID
+		  LEFT JOIN (SELECT ETR_FINISH_STATUS.ENTRUST_ID,
+		                    sum(FINISH_AMT) AS FINISH_AMT
+		               FROM ETR_FINISH_STATUS
+		              GROUP BY ENTRUST_ID) ETR_FINISH_STATUS_A
+		    ON ETR_FINISH_STATUS_A.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
+		 INNER JOIN ETR_ENTRUST_ADD
+		    ON ETR_ENTRUST_ADD.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
+		 WHERE ETR_ENTRUST.ENTRUST_ID IN
+		  <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+			  #{item}
+		  </foreach>
+    </select>
+
+    <select id="selectPreTradeId" resultType="com.joyintech.tams.common.base.entity.TrdMatchInfo">
+    select
+    SEQNO, CSTP_TRADE_ID, PRE_TRADE_ID
+    from
+    TRD_MATCH_INFO
+    where
+    CSTP_TRADE_ID = #{CSTP_TRADE_ID} and 
+    PRE_TRADE_ID is not null
+    </select>
+</mapper>

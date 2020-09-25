@@ -1,0 +1,14 @@
+[{
+	"label": "查看",
+	"type": "button",
+	"class": "primary",
+	"category": "view",
+	"value": ""
+},
+{
+	"label": "生成",
+	"type": "button",
+	"class": "success",
+	"category": "generate",
+	"value": ""
+}]

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.disclosure.information.config.poireportmodelmanage.dao.PoiReportModelManage001Mapper">
+
+	<select id="searchReports" parameterType="java.util.Map" resultType="com.joyintech.tams.common.base.entity.DisPoiTab">
+	select
+	TAB_NUM tabNum,/**报表编号*/
+	TAB_NAME tabName,/**报表名称*/
+	TEMP_PATH tempPath,/**模板路径*/
+	TEMP_NAME tempName,/**模板名称*/
+	case  when STATUS='E' then '有效'
+    when  STATUS='D' then '删除'
+    else '待处理'
+    end
+	 status/**有效状态*/
+	from DIS_POI_TAB 
+	WHERE 1=1 
+        <if test="tabNum!=null and tabNum!=''">
+			and TAB_NUM like concat(concat('%',#{tabNum,jdbcType=VARCHAR}),'%')
+		</if>
+        <if test="tabName!=null and tabName!=''">
+			and TAB_NAME like concat(concat('%',#{tabName,jdbcType=VARCHAR}),'%')
+		</if>
+		<if test="tempName!=null and tempName!=''">
+			and TEMP_NAME like concat(concat('%',#{tempName,jdbcType=VARCHAR}),'%')
+		</if>
+		<if test="status!=null and status!=''">
+			and STATUS like concat(concat('%',#{status,jdbcType=VARCHAR}),'%')
+		</if>
+		order by tabNum,NVL(UPDATE_TIME,CREATE_TIME)  desc
+	</select>
+
+
+ <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        update  DIS_POI_TAB  set  status='D'  where TAB_NUM = #{tabNum,jdbcType=VARCHAR}
+    </delete>
+
+</mapper>

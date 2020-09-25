@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ReportRule001.xlsx" name="报表规则设置">
+	<Worksheet javaBean="com.joyintech.tams.disclosure.information.manage.workrule.dto.ReportRule001Dto">
+		<Row>
+			<Cell order="1" name="规则名称">ruleName</Cell>
+			<Cell order="2" name="报表名称">repName</Cell>
+			<Cell order="3" name="报表披露规则说明">detail</Cell>
+			<Cell order="4" name="基准日">basisDateTypeName</Cell>
+			<Cell order="5" name="默认文件名称">defaultFileName</Cell>
+			<Cell order="6" name="默认输出格式">fileOutType</Cell>
+			<Cell order="7" name="默认输出路径">defaultFileType</Cell>					
+		</Row>
+	</Worksheet>
+</Workbook>

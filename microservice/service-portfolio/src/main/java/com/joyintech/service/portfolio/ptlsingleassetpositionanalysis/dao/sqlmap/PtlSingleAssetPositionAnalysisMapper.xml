@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.joyintech.service.portfolio.ptlsingleassetpositionanalysis.dao.PtlSingleAssetPositionAnalysisMapper">
+    <!-- 资产不穿透 -->
+    <sql id="PTL_SEC_VALUTION">
+    with assetHold as (select gavInfo.finprodAbbr,gavInfo.finprodMarketId,gavInfo.portFolioName,
+		                          gavInfo.marketValue,gavInfo.dscCostAmt,gavInfo.shareAmt,
+		                          round(nvl(gavInfo.marketValue,0)/ppvInfo.tdyAssetValue*100,2) as
+		                          marketValueRatio,gavInfo.portfolioId,ppvInfo.tdyAssetValue,
+								  gavInfo.portfolioId1
+		                     from (select psv.CDATE cdate,psv.PORTFOLIO_ID portfolioId,psv.FINPROD_ID finprodId,
+		                                  psv.SHARE_AMT shareAmt,
+					                      case when fpt.TYPE_8 = 'F08' AND fpt.TYPE_6 = 'L01' then -1*psv.DSC_COST_AMT
+					                           when fpt.TYPE_6 = 'L02' then -1*psv.DSC_COST_AMT
+					                           when fpt.TYPE_8 = 'F07' AND fpt.TYPE_7 = '03' then -1*psv.DSC_COST_AMT
+					                           else psv.DSC_COST_AMT end as dscCostAmt,
+					                      case when fpt.TYPE_8 = 'F08' AND fpt.TYPE_6 = 'L01' then -1*(NVL(psv.TDY_FLOAT_INGPL,0)+NVL(psv.DSC_COST_AMT,0))
+					                           when fpt.TYPE_6 = 'L02' then -1*(NVL(psv.TDY_FLOAT_INGPL,0)+NVL(psv.DSC_COST_AMT,0))
+					                           when fpt.TYPE_8 = 'F07' AND fpt.TYPE_7 = '03' then -1*(NVL(psv.TDY_FLOAT_INGPL,0)+NVL(psv.DSC_COST_AMT,0))
+					                           else (NVL(psv.TDY_FLOAT_INGPL,0)+NVL(psv.DSC_COST_AMT,0)) end as marketValue,
+		                                  pp.PORTFOLIO_NAME portFolioName,fp.FINPROD_MARKET_ID finprodMarketId,
+		                                  fp.FINPROD_ABBR finprodAbbr,
+										  pp.PORTFOLIO_ID portfolioId1
+		                             from PTL_SEC_VALUTION psv
+		                       inner join PTL_PORTFOLIO pp on psv.PORTFOLIO_ID=pp.PORTFOLIO_ID
+		                       inner join FIN_PRODUCT fp on fp.FINPROD_ID=psv.FINPROD_ID
+		                       inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID
+		                            where 1=1
+		                            <if test="finprodIdList != null and finprodIdList.size()>0">
+		                               AND fp.FINPROD_MARKET_ID IN
+		                               <foreach collection="finprodIdList" item="item" separator="," open="(" close =")">
+			                            #{item}
+		                               </foreach>
+	                                </if>
+									<if test="searchDate != null and searchDate != ''">
+										and to_char(psv.CDATE,'yyyy-mm-dd') = #{searchDate}
+									</if>
+		                            <!--<if test="searchDateStart != null and searchDateStart != ''">
+			                            AND (psv.CDATE BETWEEN TO_DATE(#{searchDateStart},'YYYY-MM-DD')
+			                                 AND TO_DATE(#{searchDateEnd},'YYYY-MM-DD'))
+		                            </if>-->
+		                          )gavInfo
+		                left join (select ppv.CDATE cdate,ppv.PORTFOLIO_ID portfolioId,nvl(ppv.TDY_ASSET_VALUE,0) tdyAssetValue
+		                             from PTL_PORTFOLIO_VALUATION ppv
+		                            where 1=1
+									<if test="searchDate != null and searchDate != ''">
+										and to_char(ppv.CDATE,'yyyy-mm-dd')= #{searchDate}
+									</if>
+		                            <!--<if test="searchDateStart != null and searchDateStart != ''">
+			                          AND (ppv.CDATE BETWEEN TO_DATE(#{searchDateStart},'YYYY-MM-DD')
+			                               AND TO_DATE(#{searchDateEnd},'YYYY-MM-DD'))
+		                            </if>-->
+		                           )ppvInfo on ppvInfo.portfolioId=gavInfo.portfolioId and ppvInfo.cdate=gavInfo.cdate
+		                    where ppvInfo.tdyAssetValue !=0
+		)
+    </sql>
+    <!-- 资产穿透 -->
+    <sql id="PTL_SEC_VALUTION_PIERCE">
+    with assetHold as (select gavInfo.finprodAbbr,gavInfo.finprodMarketId,gavInfo.portFolioName,
+		                          gavInfo.marketValue,gavInfo.dscCostAmt,gavInfo.shareAmt,
+                                  round(nvl(gavInfo.marketValue,0)/ppvInfo.tdyAssetValue*100,2) as
+		                          marketValueRatio,gavInfo.portfolioId,ppvInfo.tdyAssetValue,gavInfo.portfolioId1
+		                     from (select psv.CDATE cdate,psv.PORTFOLIO_ID portfolioId,psv.FINPROD_ID finprodId,
+		                                  psv.MARKET_VALUE marketValue,psv.SHARE_AMT shareAmt,psv.DSC_COST_AMT dscCostAmt,
+		                                  pp.PORTFOLIO_NAME portFolioName,fp.FINPROD_MARKET_ID finprodMarketId,
+		                                  fp.FINPROD_ABBR finprodAbbr,
+										  pp.PORTFOLIO_ID portfolioId1
+		                             from PTL_SEC_PIERCE_VALUTION psv
+		                       inner join PTL_PORTFOLIO pp on psv.PORTFOLIO_ID=pp.PORTFOLIO_ID
+		                       inner join FIN_PRODUCT fp on fp.FINPROD_ID=psv.FINPROD_ID
+		                            where 1=1
+		                            <if test="finprodIdList != null and finprodIdList.size()>0">
+		                               AND fp.FINPROD_MARKET_ID IN
+		                               <foreach collection="finprodIdList" item="item" separator="," open="(" close =")">
+			                            #{item}
+		                               </foreach>
+	                                </if>
+									<if test="searchDate != null and searchDate != ''">
+										and to_char(psv.CDATE,'yyyy-mm-dd') = #{searchDate}
+									</if>
+		                            <!--<if test="searchDateStart != null and searchDateStart != ''">
+			                            AND (psv.CDATE BETWEEN TO_DATE(#{searchDateStart},'YYYY-MM-DD')
+			                                 AND TO_DATE(#{searchDateEnd},'YYYY-MM-DD'))
+		                            </if>-->
+		                          )gavInfo
+		                left join (select ppv.CDATE cdate,ppv.PORTFOLIO_ID portfolioId,nvl(ppv.TDY_ASSET_VALUE,0) tdyAssetValue
+		                             from PTL_PORTFOLIO_VALUATION ppv
+		                            where 1=1
+									<if test="searchDate != null and searchDate != ''">
+										and to_char(ppv.CDATE,'yyyy-mm-dd')= #{searchDate}
+									</if>
+		                            <!--<if test="searchDateStart != null and searchDateStart != ''">
+			                          AND (ppv.CDATE BETWEEN TO_DATE(#{searchDateStart},'YYYY-MM-DD')
+			                               AND TO_DATE(#{searchDateEnd},'YYYY-MM-DD'))
+		                            </if>-->
+		                           )ppvInfo on ppvInfo.portfolioId=gavInfo.portfolioId and ppvInfo.cdate=gavInfo.cdate
+		                    where ppvInfo.tdyAssetValue !=0
+		)
+    </sql>
+	<select id="select"
+		resultType="com.joyintech.service.portfolio.ptlsingleassetpositionanalysis.dto.PtlSingleAssetPositionAnalysis001Dto">
+		<if test="sex != null and sex == '01'.toString()">
+		<include refid="PTL_SEC_VALUTION"></include>
+		</if>
+		<if test="sex != null and sex == '02'.toString()">
+		<include refid="PTL_SEC_VALUTION_PIERCE"></include>
+		</if>
+		<if test="parentId != null and parentId eq 'root'">
+		select finprodMarketId,finprodAbbr,null portFolioName,sum(marketValue) as marketValue,
+		       sum(dscCostAmt) as dscCostAmt,sum(shareAmt) as shareAmt,
+			round(sum(nvl(assetHold.marketValue,0))/sum(assetHold.tdyAssetValue)*100,2) as marketValueRatio,null portfolioId,'02' as hasChildren
+		       ,'root' parentInfo,finprodMarketId childInfo,portfolioId1
+		from assetHold
+		group by finprodMarketId,finprodAbbr,portfolioId1
+		</if>
+		<if test="parentId != null and parentId neq 'root'">
+		select null finprodMarketId,null finprodAbbr,portFolioName,marketValue,dscCostAmt,shareAmt,
+		       marketValueRatio,portfolioId,'01' as hasChildren
+		       ,finprodMarketId parentInfo,portFolioName childInfo,portfolioId1
+		from assetHold
+		where finprodMarketId = #{parentId}
+		</if>
+		<if test="parentId == null or parentId == ''">
+		select finprodMarketId,finprodAbbr,null portFolioName,sum(marketValue) as marketValue,
+		       sum(dscCostAmt) as dscCostAmt,sum(shareAmt) as shareAmt,
+		       sum(marketValueRatio) as marketValueRatio,null portfolioId,'02' as hasChildren
+		       ,'root' parentInfo,finprodMarketId childInfo,portfolioId1
+		from assetHold
+		group by finprodMarketId,finprodAbbr,portfolioId1
+		</if>
+	</select>
+	<select id="getFinprodMarketId" resultType="com.joyintech.framework.select.SelectOptionDto">
+	SELECT FINPROD_MARKET_ID id, nvl(FINPROD_ABBR,FINPROD_NAME) text
+	  FROM FIN_PRODUCT
+	 WHERE FINPROD_TYPE2 in
+	 <foreach collection="FINTYPE_F01_LIST" item="item" separator="," open="(" close =")">
+		#{item}
+	</foreach>
+	<if test="search != null and search != ''">
+		AND (FINPROD_MARKET_ID LIKE CONCAT('%',CONCAT(#{search},'%'))
+		OR FINPROD_NAME LIKE CONCAT('%',CONCAT(#{search},'%'))
+		OR FINPROD_ABBR LIKE CONCAT('%',CONCAT(#{search},'%')))
+	</if>
+	UNION ALL
+		SELECT FINPROD_MARKET_ID id, nvl(FINPROD_ABBR,FINPROD_NAME) text
+		FROM FIN_PRODUCT
+		<!-- 多级法人改造 add by jingqiongqiong 20200615 -->
+		<if test="institutionCode != null and institutionCode != ''">
+			INNER JOIN DATA_AUTH_NOTIFY_INST dani on dani.BUSINESS_ID = FIN_PRODUCT.FINPROD_ID AND dani.MODEL_TYPE='02'
+			<!--多级法人改造 add by jingqiongqiong 20200617-->
+			<if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+				AND dani.INSTITUTION_CODE IN
+				<foreach collection="resourcesTreeInstCodeList" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
+			<!--多级法人改造 add by jingqiongqiong 20200617-->
+		</if>
+		WHERE FINPROD_TYPE2 in
+		<foreach collection="FINTYPE_F02_LIST" item="item" separator="," open="(" close =")">
+			#{item}
+		</foreach>
+		<!-- 多级法人改造 add by jingqiongqiong 20200615 -->
+		<if test="search != null and search != ''">
+			AND (FINPROD_MARKET_ID LIKE CONCAT('%',CONCAT(#{search},'%'))
+			OR FINPROD_NAME LIKE CONCAT('%',CONCAT(#{search},'%'))
+			OR FINPROD_ABBR LIKE CONCAT('%',CONCAT(#{search},'%')))
+		</if>
+    </select>
+    
+    <!-- 导出数据 -->
+	<select id="selectForExport" resultType="com.joyintech.service.portfolio.ptlsingleassetpositionanalysis.dto.PtlSingleAssetPositionAnalysis001Dto">
+		<if test="sex != null and sex == '01'.toString()">
+		<include refid="PTL_SEC_VALUTION"></include>
+		</if>
+		<if test="sex != null and sex == '02'.toString()">
+		<include refid="PTL_SEC_VALUTION_PIERCE"></include>
+		</if>
+	    select assetHold1.finprodMarketId,assetHold1.finprodAbbr,null portFolioName,sum(assetHold1.marketValue) as marketValue,
+		       sum(assetHold1.dscCostAmt) as dscCostAmt,sum(assetHold1.shareAmt) as shareAmt,
+        round(sum(nvl(assetHold1.marketValue,0))/sum(assetHold1.tdyAssetValue)*100,2) as marketValueRatio,null portfolioId,'02' as hasChildren
+		       ,'root' parentInfo,assetHold1.finprodMarketId childInfo, null belongInstitutionCodeNew
+		from (
+		SELECT
+		assetHold.*,
+		DATAINST.BELONG_INSTITUTION_CODE belongInstitutionCode
+		FROM assetHold
+		LEFT JOIN DATA_AUTH_NOTIFY_INST DATAINST ON assetHold.portfolioId1 = DATAINST.BUSINESS_ID AND DATAINST.DATA_TYPE='PTL01' AND DATAINST.MODEL_TYPE = '02'
+		WHERE 1=1
+		<if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+			AND DATAINST.INSTITUTION_CODE IN
+			<foreach collection="resourcesTreeInstCodeList" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		) assetHold1
+		group by assetHold1.finprodMarketId,assetHold1.finprodAbbr
+	    union all
+	    select null finprodMarketId,null finprodAbbr,assetHold1.portFolioName,assetHold1.marketValue,assetHold1.dscCostAmt,assetHold1.shareAmt,
+		assetHold1.marketValueRatio,assetHold1.portfolioId,'01' as hasChildren
+		       ,assetHold1.finprodMarketId parentInfo,assetHold1.portFolioName childInfo,
+		assetHold1.belongInstitutionCode belongInstitutionCodeNew
+		from (
+		SELECT
+		assetHold.*,
+		DATAINST.BELONG_INSTITUTION_CODE belongInstitutionCode
+		FROM assetHold
+		LEFT JOIN DATA_AUTH_NOTIFY_INST DATAINST ON assetHold.portfolioId1 = DATAINST.BUSINESS_ID AND DATAINST.DATA_TYPE='PTL01' AND DATAINST.MODEL_TYPE = '02'
+		WHERE 1=1
+		<if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+			AND DATAINST.INSTITUTION_CODE IN
+			<foreach collection="resourcesTreeInstCodeList" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		) assetHold1
+	</select>
+	<select id="selectAll"
+			resultType="com.joyintech.service.portfolio.ptlsingleassetpositionanalysis.dto.PtlSingleAssetPositionAnalysis001Dto">
+		<if test="sex != null and sex == '01'.toString()">
+			<include refid="PTL_SEC_VALUTION"></include>
+		</if>
+		<if test="sex != null and sex == '02'.toString()">
+			<include refid="PTL_SEC_VALUTION_PIERCE"></include>
+		</if>
+		<if test="parentId != null and parentId eq 'root'">
+			select assetHold1.finprodMarketId,assetHold1.finprodAbbr,null portFolioName,sum(assetHold1.marketValue) as marketValue,
+			sum(assetHold1.dscCostAmt) as dscCostAmt,sum(assetHold1.shareAmt) as shareAmt,
+			round(sum(nvl(assetHold1.marketValue,0))/sum(assetHold1.tdyAssetValue)*100,2) as marketValueRatio,null portfolioId,'02' as hasChildren
+			,'root' parentInfo,assetHold1.finprodMarketId childInfo
+			from (
+			SELECT
+			assetHold.*
+			FROM assetHold
+			LEFT JOIN DATA_AUTH_NOTIFY_INST DATAINST ON assetHold.portfolioId1 = DATAINST.BUSINESS_ID AND DATAINST.DATA_TYPE='PTL01' AND DATAINST.MODEL_TYPE = '02'
+			WHERE 1=1
+			<if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+				AND DATAINST.INSTITUTION_CODE IN
+				<foreach collection="resourcesTreeInstCodeList" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
+			) assetHold1
+			WHERE NVL(assetHold1.shareAmt,0)!=0
+			group by assetHold1.finprodMarketId,assetHold1.finprodAbbr
+		</if>
+		<if test="parentId != null and parentId neq 'root'">
+			select null finprodMarketId,null finprodAbbr,assetHold1.portFolioName,assetHold1.marketValue,assetHold1.dscCostAmt,NVL(assetHold1.shareAmt,0) shareAmt,
+			assetHold1.marketValueRatio,assetHold1.portfolioId,'01' as hasChildren
+			,assetHold1.finprodMarketId parentInfo,assetHold1.portFolioName childInfo,
+			assetHold1.belongInstitutionCode belongInstitutionCodeNew
+			from (
+			SELECT
+			assetHold.*,
+			DATAINST.BELONG_INSTITUTION_CODE belongInstitutionCode
+			FROM assetHold
+			LEFT JOIN DATA_AUTH_NOTIFY_INST DATAINST ON assetHold.portfolioId1 = DATAINST.BUSINESS_ID AND DATAINST.DATA_TYPE='PTL01' AND DATAINST.MODEL_TYPE = '02'
+			WHERE 1=1
+			<if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+				AND DATAINST.INSTITUTION_CODE IN
+				<foreach collection="resourcesTreeInstCodeList" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
+			) assetHold1
+			where assetHold1.finprodMarketId = #{parentId} AND NVL(assetHold1.shareAmt,0)!=0
+		</if>
+		<if test="parentId == null or parentId == ''">
+			select assetHold1.finprodMarketId,assetHold1.finprodAbbr,null portFolioName,sum(assetHold1.marketValue) as marketValue,
+			sum(assetHold1.dscCostAmt) as dscCostAmt,sum(assetHold1.shareAmt) as shareAmt,
+			sum(assetHold1.marketValueRatio) as marketValueRatio,null portfolioId,'02' as hasChildren
+			,'root' parentInfo,assetHold1.finprodMarketId childInfo
+			from
+			(
+			SELECT
+			assetHold.*
+			FROM assetHold
+			LEFT JOIN DATA_AUTH_NOTIFY_INST DATAINST ON assetHold.portfolioId1 = DATAINST.BUSINESS_ID AND DATAINST.DATA_TYPE='PTL01' AND DATAINST.MODEL_TYPE = '02'
+			WHERE 1=1
+			<if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+				AND DATAINST.INSTITUTION_CODE IN
+				<foreach collection="resourcesTreeInstCodeList" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
+			) assetHold1
+			WHERE NVL(assetHold1.shareAmt,0)!=0
+			group by assetHold1.finprodMarketId,assetHold1.finprodAbbr
+		</if>
+	</select>
+</mapper>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ReportModelManage001.xlsx" name="报表模板配置">
+	<Worksheet javaBean="com.joyintech.tams.disclosure.information.config.reportmodelmanage.ReportModelManage001Dto">
+		<Row>
+			<Cell order="1" name="模板英文名">code</Cell>
+			<Cell order="2" name="模板中文名">name</Cell>
+			<Cell order="3" name="模板路径">temLoad</Cell>
+			<Cell order="4" name="创建时间">cdate</Cell>	
+			<Cell order="5" name="更新时间">udate</Cell>			
+		</Row>
+	</Worksheet>
+</Workbook>

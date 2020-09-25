@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-..mybatis.org..DTD Mapper 3.0..EN" "http:..mybatis.org.dtd.mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.disclosure.information.config.reportcontentenum.dao.ReportContentEnum002Mapper">
+      <select id="selectIndexDetail" resultType="com.joyintech.service.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto">
+     select 
+      pb.ID as id,              /** 主键ID **/
+      pb.PRI_ID as priID,   
+      pb.INDEX_NAME as indexName,   /** 指标名称**/
+      pb.INDEX_VALUE as indexValue,  /**指标值**/
+      pb.INDEX_FILE as indexFile,  /**指标值**/
+      pb.INDEX_TYPE as indexType,   /**审核状态**/
+      pb.INDEX_DATE as indexDate,    /**生效日期**/
+      pb.CREATE_USER as createUser, /** 制作人**/
+      to_char(pb.UPDATE_TIME,'yyyy-mm-dd hh24:mi:ss') as updateTimeFmt,
+      pb.AUDIT_STATUS  as auditStatus, /**审核状态**/
+      pb.INDEX_DETAIL as indexDetail  /*适用范围说明*/
+       from REP_INDEX_SUB pb
+         inner join  REP_INDEX_PRIMARY  py
+           on pb.PRI_ID=py.ID  
+         where 1=1    
+         AND py.id = #{indexId}
+         ORDER BY pb.CREATE_TIME DESC
+   </select>
+   
+       <select id="selectByindexName" resultType="com.joyintech.service.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto">
+     select 
+       ID as id,
+       INDEX_NAME as indexName
+        from REP_INDEX_SUB
+        where INDEX_NAME =#{indexName}
+   </select>
+   
+    <insert id="insert" parameterType="com.joyintech.service.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto">
+      insert  into  REP_INDEX_SUB(ID,PRI_ID,INDEX_NAME,INDEX_VALUE,
+             INDEX_DATE,INDEX_TYPE,INDEX_FILE,
+             CREATE_USER,CREATE_TIME,
+             UPDATE_USER,UPDATE_TIME,CREATE_DEPT,AUDIT_STATUS)
+      values(#{id,jdbcType=VARCHAR},
+            #{priId,jdbcType=VARCHAR},
+            #{indexName,jdbcType=VARCHAR},
+            #{indexValue,jdbcType=VARCHAR},
+            to_date(#{indexDate}, 'yyyy-MM-dd'),
+            #{indexType,jdbcType=VARCHAR},
+          	#{indexFile,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR},         
+            #{updateTime,jdbcType=TIMESTAMP},
+            #{createDept,jdbcType=VARCHAR},
+            '已审核')
+   </insert>
+   
+     <select id="selectById" resultType="com.joyintech.service.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto" parameterType="java.lang.String">
+       select ris.ID as id,ris.PRI_ID as priId,ris.INDEX_NAME as indexName,ris.INDEX_VALUE as indexValue,ris.INDEX_DATE as indexDate,
+              ris.INDEX_TYPE as indexType,to_char(ris.INDEX_DATE,'yyyy-mm-dd') as indexDateStr,ris.INDEX_FILE as indexFile,ris.INDEX_DETAIL as indexDetail,
+              ris.AUDIT_STATUS as auditStatus
+       from REP_INDEX_SUB ris
+       where ris.ID =#{id}
+   </select>
+      <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.service.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto">
+     update REP_INDEX_SUB 
+       <set >
+            <if test="indexName != null" >
+                INDEX_NAME = #{indexName,jdbcType=VARCHAR},
+            </if>
+            <if test="indexDate != null" >
+                INDEX_DATE = to_date(#{indexDate}, 'yyyy-MM-dd'),
+            </if>
+            <if test="indexValue != null" >
+                INDEX_VALUE = #{indexValue,jdbcType=VARCHAR},
+            </if>
+            <if test="indexFile != null" >
+                INDEX_FILE = #{indexFile,jdbcType=VARCHAR},
+            </if>
+             <if test="indexType != null" >
+                INDEX_TYPE = #{indexType,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = sysdate,
+            </if>
+        </set>
+        where ID=#{id,jdbcType=VARCHAR}
+  </update>
+   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from REP_INDEX_SUB
+        where ID in
+          <foreach collection="_parameter.split(',')" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+    <select id="findRulePage" resultType="com.joyintech.service.disclosure.information.config.reportcontentenum.dto.ReportContentEnum003Dto">
+		select rjr.RULE_TYPE1 as ruleType1,
+		       rjr.RULE_TYPE2 as ruleType2,
+		       rjr.RULE_TYPE3 as ruleType3,
+		       rjr.RULE_TYPE4 as ruleType4
+		from REP_JOB_RANGE rjr
+		where rjr.JOB_ID=#{id,jdbcType=VARCHAR}
+    </select>
+    <select id="findIndexIsQuoteById" resultType="com.joyintech.service.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto">
+		select distinct id,indexName 
+		from (
+			select 
+				ID id,
+				index_name indexName
+	      	from REP_INDEX_PRIMARY 
+			where 1=1
+			and ID in
+			<foreach collection="array" open="(" separator="," close=")" item="id">
+            	#{id}
+    		</foreach>
+    		and is_quote = '01' /*被引用*/
+			union all
+			select sub.ID id,
+				sub.index_value indexName
+	      	from REP_INDEX_SUB sub
+			left join REP_INDEX_PRIMARY pri on sub.pri_id = pri.id
+			where 1=1
+			and sub.id in
+			<foreach collection="array" open="(" separator="," close=")" item="id">
+	            #{id}
+	    	</foreach>
+	    	and pri.is_quote = '01' /*被引用*/
+		)
+    </select>
+</mapper>

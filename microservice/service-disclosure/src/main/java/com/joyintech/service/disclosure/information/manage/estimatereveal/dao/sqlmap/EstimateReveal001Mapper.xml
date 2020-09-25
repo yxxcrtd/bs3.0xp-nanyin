@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.disclosure.information.manage.estimatereveal.dao.EstimateReveal001Mapper">
+	
+	<select id="findPage" resultType="com.joyintech.service.disclosure.information.manage.estimatereveal.dto.EstimateReveal001Dto">
+		SELECT
+		    rel.PRODID    prodid,
+		    rel.PROD_NAME prodName,
+		    rel.REP_TYPE  repType,
+		    rfp.NAME      repTypeName,
+		    rel.REP_NAME  repName,
+		    CASE
+		        WHEN rel.START_DATE IS NULL
+		        OR  rel.START_DATE = rel.END_DATE
+		        THEN TO_CHAR(rel.END_DATE,'yyyy-mm-dd')
+		        ELSE TO_CHAR(rel.START_DATE,'yyyy-mm-dd') || '--'||TO_CHAR(rel.END_DATE,'yyyy-mm-dd')
+		    END                 reportDate,
+		    rel.REVEAL_END_DATE revealEndDate,
+		    rj.JOB_NAME         jobName
+		    /* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/29    start*/
+			,fin_product.finprod_id finprodId
+			/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/29    end*/
+		FROM
+		    REP_EXPECTED_LOG rel
+		LEFT JOIN
+		    REP_JOB rj
+		ON
+		    rel.JOB_ID = rj.JOB_ID
+		LEFT JOIN
+		    REP_INFO ri
+		ON
+		    rel.REP_ID = ri.REP_ID
+		LEFT JOIN
+		    REP_FTP_PATH rfp
+		ON
+		    ri.REPORT_CATEGORY = rfp.ID
+		/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/29    start*/
+		LEFT JOIN fin_product
+		ON fin_product.FINPROD_MARKET_ID = rel.PRODID
+		and fin_product.P_FINPROD_ID is null
+		/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/29    end*/
+		WHERE
+		    rel.STATUS = #{status,jdbcType=VARCHAR}
+		<if test="revealEndDateBegin !=null and revealEndDateBegin !='' ">
+            AND to_char(rel.REVEAL_END_DATE,'yyyy-mm-dd') <![CDATA[>=]]> #{revealEndDateBegin,jdbcType=VARCHAR}
+        </if>
+        <if test="revealEndDateEnd !=null and revealEndDateEnd !='' ">
+            AND to_char(rel.REVEAL_END_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{revealEndDateEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="repName !=null and repName !='' ">
+            AND rel.REP_NAME like '%'||#{repName,jdbcType=VARCHAR}||'%'
+        </if>
+        <if test="prodIdArr != null and prodIdArr.length > 0">
+	 		AND (rel.PRODID IN
+			<foreach item="item" collection="prodIdArr" index="index"
+				open="(" separator="," close=")">
+				 <if test="(index % 998) == 0">
+	                    null) OR rel.PRODID IN (
+                 </if>
+				#{item}
+			</foreach>
+		 )
+		</if>
+		<if test="jobIdArr != null and jobIdArr.length > 0">
+			AND rel.JOB_ID in
+			<foreach item="item" collection="jobIdArr" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="repTypeArr != null and repTypeArr.length > 0">
+	 		AND ri.REPORT_CATEGORY IN
+			<foreach item="item" collection="repTypeArr" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+</mapper>

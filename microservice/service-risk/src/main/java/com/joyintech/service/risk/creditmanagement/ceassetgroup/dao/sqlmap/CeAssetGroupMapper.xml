@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.risk.creditmanagement.ceassetgroup.dao.CeAssetGroupMapper">
+	<!-- 
+	/**
+     * 画面查询方法
+     */
+    Page<CreditLinesDto> selectForPage(Map<String, Object> param);
+	 -->
+	 <select id="selectForPage" resultType="com.joyintech.service.risk.creditmanagement.ceassetgroup.dto.CreditLinesAstGrpDto">
+	 SELECT
+	 	A.SEQNO SEQNO,
+	 	A.CREDIT_MST_ID creditMstId, 
+	 	A.CUSTOMER_ID customerId,
+	 	A.TERM TERM, 
+	 	A.PFLSH PFLSH, 
+        A.CREDIT_AMT/100000000 creditAmt, 
+        A.VDATE VDATE,
+        A.MDATE MDATE,
+        A.REMARK,
+        A.HAP_CREDIT_AMT as hapCreditAmt,
+        A.CREDIT_FLAG as creditFlag,
+        C.ASSETPOOL_NAME as customerName
+		 <!--多级法人改造 add by jingqiongqiong 20200617-->
+		 ,A.INSTITUTION_CODE as institutionCode
+		 <!--多级法人改造 add by jingqiongqiong 20200617-->
+	 FROM 
+	 	CREDIT_LINES A
+	 	INNER JOIN CREDIT_MST_INFO B on A.CREDIT_MST_ID=B.SEQNO and B.CREDIT_INFO_TYPE in ('03')
+	 	left join CREDIT_ASSETPOOL C on A.CUSTOMER_ID=C.SEQNO
+		 <where>
+		    <if test="customerId != null and customerId != ''">
+		 	 A.CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+		 	</if>
+	    	<if test="pflsh !=null and pflsh !=''">
+			AND	A.PFLSH LIKE CONCAT(CONCAT('%',#{pflsh}),'%')
+			</if>
+		 	<if test="vdate != null and vdate !=''">
+		 	AND to_char(A.VDATE,'yyyy-MM-dd') &gt; = #{vdate,jdbcType=DATE}
+		 	</if>
+		 	<if test="mdate != null and mdate !=''">
+		 	AND to_char(A.VDATE,'yyyy-MM-dd') &lt; = #{mdate,jdbcType=DATE}
+		 	</if>
+		 </where>
+	 </select>
+	
+	 <select id="queryCeAssetGroupBySeqno" resultType="com.joyintech.service.risk.creditmanagement.ceassetgroup.dto.CreditLinesAstGrpDto"  >
+       SELECT
+	 	A.SEQNO SEQNO,
+	 	A.CREDIT_MST_ID creditMstId, 
+	 	A.CUSTOMER_ID customerId,
+	 	A.TERM TERM, 
+	 	A.PFLSH PFLSH, 
+        A.CREDIT_AMT/100000000 creditAmt, 
+        A.VDATE VDATE,
+        A.MDATE MDATE,
+        A.CREDIT_FLAG as creditFlag,
+        A.REMARK,
+        A.CREDIT_CONDITION
+	 FROM 
+	 	CREDIT_LINES A
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </select>
+    
+		<!-- 市场代码下拉框 -->
+	<select id="getAssetGroupAliasIds" resultType="com.joyintech.framework.select.SelectOptionDto">
+		SELECT 
+			SEQNO id,
+			ASSETPOOL_NAME text,
+			INSTITUTION_CODE institutionCode
+		FROM
+			CREDIT_ASSETPOOL
+		<where>
+			<if test="assetAliasIds !=null and assetAliasIds != ''">	
+				ASSETPOOL_NAME like concat(concat('%',
+				#{assetAliasIds,jdbcType=VARCHAR}),'%')
+				OR
+				SEQNO like concat(concat('%',
+				#{assetAliasIds,jdbcType=VARCHAR}),'%')
+			</if>
+		</where>	
+	</select>
+	
+    <insert id="insertSupervisionIndicator" parameterType="com.joyintech.service.risk.creditmanagement.ceassetgroup.dto.CreditLinesAstGrpDto" >
+	insert into RSK_ISUP_INDICATOR (
+ 		    IND_ID,
+		    IND_NAME,
+		    IND_TYPE,
+		    SUP_TYPE,
+		    EXPR,
+		    TIME_POINT,
+		    SUP_FREQUENCY,
+		    WARN_COND,
+		    FOUL_COND,
+			IS_ENABLED, 
+			ASSET_TYPE,
+			ASSET_SEC_TYPE,
+			MEMO,
+			CREATE_USER,
+			CREATE_DEPT, 
+            CREATE_TIME, 
+            UPDATE_USER, 
+            UPDATE_TIME              
+		) values (
+		    #{indId, jdbcType=VARCHAR},
+			#{indName , jdbcType=VARCHAR},
+			#{indType, jdbcType=VARCHAR },
+			#{supType, jdbcType=VARCHAR },
+			#{expr, jdbcType=VARCHAR },
+			#{timePoint, jdbcType=VARCHAR },
+			#{supFrequency, jdbcType=VARCHAR },
+			#{warnCond, jdbcType=VARCHAR },
+			#{foulCond, jdbcType=VARCHAR },		
+			#{isEnabled, jdbcType=VARCHAR },
+			#{assetType, jdbcType=VARCHAR },
+			#{assetSecType, jdbcType=VARCHAR },
+			#{memo, jdbcType=VARCHAR },
+			#{createUser, jdbcType=VARCHAR}, 
+			#{createDept, jdbcType=VARCHAR}, 
+            #{createTime, jdbcType=TIMESTAMP},
+            #{updateUser, jdbcType=VARCHAR}, 
+            #{updateTime, jdbcType=TIMESTAMP}
+		)
+ 	</insert>
+ 	
+</mapper>

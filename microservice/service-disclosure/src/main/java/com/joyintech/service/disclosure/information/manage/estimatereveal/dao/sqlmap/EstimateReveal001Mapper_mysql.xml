@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.disclosure.information.manage.estimatereveal.dao.EstimateReveal001Mapper_mysql">
+	<select id="findPage" resultType="com.joyintech.service.disclosure.information.manage.estimatereveal.dto.EstimateReveal001Dto">
+		SELECT
+			rel.PRODID prodid,
+			rel.PROD_NAME prodName,
+			rel.REP_TYPE repType,
+			rfp.NAME repTypeName,
+			rel.REP_NAME repName,
+		CASE
+		WHEN rel.START_DATE IS NULL
+		OR rel.START_DATE = rel.END_DATE THEN
+		DATE_FORMAT( rel.END_DATE, '%Y-%m-%d' ) ELSE CONCAT(
+		DATE_FORMAT( rel.START_DATE, '%Y-%m-%d' ),
+		'--',
+		CONCAT(
+		DATE_FORMAT( rel.END_DATE, '%Y-%m-%d' )))
+		END reportDate,
+		rel.REVEAL_END_DATE revealEndDate,
+		rj.JOB_NAME jobName
+		FROM
+		REP_EXPECTED_LOG rel
+		LEFT JOIN REP_JOB rj ON rel.JOB_ID = rj.JOB_ID
+		LEFT JOIN REP_INFO ri ON rel.REP_ID = ri.REP_ID
+		LEFT JOIN REP_FTP_PATH rfp ON ri.REPORT_CATEGORY = rfp.ID
+		WHERE
+		    rel.STATUS = #{status,jdbcType=VARCHAR}
+		<if test="revealEndDateBegin !=null and revealEndDateBegin !='' ">
+            AND DATE_FORMAT(rel.REVEAL_END_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{revealEndDateBegin,jdbcType=VARCHAR}
+        </if>
+        <if test="revealEndDateEnd !=null and revealEndDateEnd !='' ">
+            AND DATE_FORMAT(rel.REVEAL_END_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{revealEndDateEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="repName !=null and repName !='' ">
+            AND rel.REP_NAME like CONCAT('%',CONCAT(#{repName,jdbcType=VARCHAR},'%'))
+        </if>
+        <if test="prodIdArr != null and prodIdArr.length > 0">
+	 		AND (rel.PRODID IN
+			<foreach item="item" collection="prodIdArr" index="index"
+				open="(" separator="," close=")">
+				 <if test="(index % 998) == 0">
+	                    null) OR rel.PRODID IN (
+                 </if>
+				#{item}
+			</foreach>
+		 )
+		</if>
+		<if test="jobIdArr != null and jobIdArr.length > 0">
+			AND rel.JOB_ID in
+			<foreach item="item" collection="jobIdArr" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="repTypeArr != null and repTypeArr.length > 0">
+	 		AND ri.REPORT_CATEGORY IN
+			<foreach item="item" collection="repTypeArr" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+</mapper>

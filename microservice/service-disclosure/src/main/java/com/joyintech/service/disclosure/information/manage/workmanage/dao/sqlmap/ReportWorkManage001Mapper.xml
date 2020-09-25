@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.disclosure.information.manage.workmanage.dao.ReportWorkManage001Mapper">
+    <select id="queryPageList" resultType="com.joyintech.service.disclosure.information.manage.workmanage.dto.ReportWorkManage001Dto">
+		select * from (
+		SELECT
+		  rj.JOB_ID jobId ,
+		  rj.JOB_NAME jobName ,
+		  rj.LOOP_DATE_DETAIL loopDateDetail,
+		  rj.START_DATE startDate,
+		  rj.END_DATE endDate,
+		  rj.LOOP_DATE_VALUE as loopDateValue,
+		  P.START_DATE as execDate
+		FROM
+		  rep_job rj
+		LEFT JOIN (
+		select 
+		T.JOB_ID,
+		T.START_DATE,
+		T.Sequence
+		from
+(
+select  JOB_ID,START_DATE,row_number() over
+ (partition by JOB_ID order by START_DATE DESC) as Sequence
+  from(select * from REP_INSTALL_LOG where  START_DATE  is not null)  
+)T where T.Sequence<![CDATA[<=]]>1
+		) P ON P.JOB_ID=rj.JOB_ID
+		WHERE
+		  1=1
+		<if test="jobName != null and jobName != ''">
+			AND rj.JOB_NAME LIKE '%'||#{jobName,jdbcType=VARCHAR}||'%'
+		</if>
+		<if test="jobIdArr != null and jobIdArr.length > 0">
+	 		AND rj.JOB_ID IN
+			<foreach item="item" collection="jobIdArr" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		ORDER BY rj.UPDATE_TIME desc
+		) where 1=1
+    </select>
+    <select id="selectReportIdList" resultType="com.joyintech.service.disclosure.information.manage.workmanage.dto.ReportWorkManage001Dto">
+		SELECT
+		  info.rep_id repId,
+		  info.report_name reportName
+		FROM
+		  rep_info info
+		WHERE
+		  1=1
+    </select>
+     <update id="updateConfirmStatusById" parameterType="com.joyintech.service.disclosure.information.manage.workmanage.dto.ReportWorkManage001Dto" >
+	      update REP_REVEAL
+	      set 
+	      CONFIRM_STATUS = #{confirmStatus,jdbcType=VARCHAR}
+	      ,UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
+		  ,UPDATE_TIME = sysdate
+	      where 1=1
+	      and id = #{id,jdbcType=VARCHAR}
+    </update>
+    <select id="selectJobInfo" resultType="com.joyintech.framework.select.SelectOptionDto">
+		SELECT
+		  info.JOB_ID id,
+		  info.JOB_ID text
+		FROM rep_job info
+
+    </select>
+    <!-- 查询是否已经执行 -->
+    <select id="isExecByJobIdAndDate" resultType="com.joyintech.tams.common.base.entity.RepInstallLog">
+    	SELECT
+    		log.JOB_ID jobId,
+    		log.JOB_SEQ jobSeq,
+    		log.EXEC_DATE execDate,
+    		log.EXEC_STATUS execStatus
+		FROM REP_INSTALL_LOG log
+		WHERE log.JOB_ID=#{jobId, jdbcType=VARCHAR}
+			AND ( log.EXEC_DATE =#{execDate, jdbcType=DATE}
+    			OR  log.LASTEXEC_DATE=#{execDate, jdbcType=DATE})
+				AND log.STATUS = 'E'
+    </select>
+</mapper>

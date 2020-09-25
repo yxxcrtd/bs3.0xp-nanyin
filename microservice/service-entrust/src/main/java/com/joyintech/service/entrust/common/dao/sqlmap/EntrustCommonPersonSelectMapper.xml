@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.joyintech.service.entrust.common.dao.EntrustCommonPersonSelectMapper">
+	<select id="getCounterId" resultType="com.joyintech.framework.select.SelectOptionDto">
+		SELECT
+		COUNTER_ID id,
+		COUNTER_NAME text,
+		CASE WHEN COUNTER_TYPE=#{COUNTER_TYPE} THEN #{YES_NO_N}
+		ELSE #{YES_NO_Y} END object
+		FROM MST_COUNTER_PARTY
+		where 1=1 
+			<if test="innerTrade != null and !innerTrade">
+				AND not exists (select 1 from PTL_PORTFOLIO p where p.PORTFOLIO_ID = MST_COUNTER_PARTY.COUNTER_ID)
+				and NOT EXISTS (SELECT 1 FROM fin_product p WHERE p.FINPROD_MARKET_ID = MST_COUNTER_PARTY.COUNTER_ID)
+			</if>
+			<if test="innerTrade != null and innerTrade">
+				AND exists (select 1 from PTL_PORTFOLIO p where p.PORTFOLIO_ID = MST_COUNTER_PARTY.COUNTER_ID)
+			</if>
+			<if test="search != null and search != ''">
+			AND	(
+				COUNTER_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				OR
+				COUNTER_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				)
+			</if>
+			<if test="initValue != null and initValue != ''">
+				AND COUNTER_ID = #{initValue}
+			</if>
+			<if test="counterIdList != null and counterIdList.size() > 0">
+                     
+            	<if test="counterType != null and counterType != '' and counterType != 'null'">
+            		AND( COUNTER_TYPE = #{counterType} OR(
+                           COUNTER_ID IN
+                                <foreach collection="counterIdList" item="item" index= "index" open="(" close=")" separator="," >
+					                <if test="(index % 998) == 0">
+					                	null) or COUNTER_ID in (
+					                </if>
+					                #{item}
+					            </foreach>
+                            ))
+           	 	</if> 
+            </if>
+            <if test="counterIdList == null or counterIdList.size() == 0">
+                 <if test="counterType != null and counterType != '' and counterType != 'null'">
+            		AND COUNTER_TYPE = #{counterType}
+            	</if>
+            </if>
+			
+	</select>
+	
+	<select id="getCounterIdDepat" resultType="com.joyintech.framework.select.SelectOptionDto">
+    	<!-- 委托交易对手的查询逻辑保持与交易的一致 modify by renping 20190925 start -->
+    	SELECT
+    		T1.COUNTER_ID id,
+    		T1.COUNTER_NAME text
+    	FROM 
+    		MST_COUNTER_PARTY T1 
+    	INNER JOIN
+    		MST_CUSTOMER_INFO T2
+    	ON
+    		T1.LINK_ID = T2.CUSTOMER_ID
+    		<where>
+            <if test="search != null and search != ''">
+                (
+                    T1.COUNTER_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                    OR
+                    T1.COUNTER_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                )
+            </if>
+            <if test="initValue != null and initValue != ''">
+                T1.COUNTER_ID = #{initValue}
+            </if>
+            <if test="isAssteManager != null and isAssteManager != ''">
+                And T2.IS_ASSTE_MANAGER = #{isAssteManager}
+            </if>
+            </where>
+        <!-- 委托交易对手的查询逻辑保持与交易的一致 modify by renping 20190925 end -->
+    </select>
+    
+	<select id="getTrader" resultType="com.joyintech.framework.select.SelectOptionDto">
+		SELECT
+			distinct
+			T1.USER_NAME id,
+			T1.REAL_NAME text
+		FROM
+			SYS_USER T1
+        INNER JOIN SYS_USER_ROLE T2
+                ON T1.USER_NAME = T2.USER_ID 
+		INNER JOIN SYS_ROLE T3
+		       ON T2.ROLE_ID = T3.ROLE_ID
+			   AND T3.ROLE_POS IN (#{TRADER},#{TRADER_IN},#{TRADER_OUT},#{TRADER_MASTER}) 
+		<if test="institutionList != null and institutionList.size() > 0">
+   		INNER JOIN SYS_DEPARTMENT 
+   		   ON T1.DEPT_CODE = SYS_DEPARTMENT.DEPT_CODE
+   		   AND SYS_DEPARTMENT.INSTITUTION_CODE IN 
+		   <foreach collection="institutionList" item="item" open="(" close=")" separator=",">
+			    #{item}
+		   </foreach> 
+   		</if>
+		<where> 
+		    1=1
+			<if test="search != null and search != ''">
+			AND	(
+				T1.USER_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				OR
+				T1.REAL_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				)
+			</if>
+			 <if test="initValueList != null and initValueList.size()>0">
+				AND (T1.USER_NAME in
+				<foreach collection="initValueList" open="(" close=")"  index="index"  item="item" separator=",">
+				  <if test="(index % 998) == 0">
+					  null) OR T1.USER_NAME in (
+				  </if>
+					#{item}
+				</foreach>)
+			</if>
+		</where>
+	</select>
+	
+	<select id="getTraderList" resultType="java.lang.String">
+		select TRADER from ETR_DISTRIBUTE where ENTRUST_ID = #{entrustId}
+	</select>
+	
+	<select id="getUser" resultType="java.util.Map">
+		SELECT 
+			REAL_NAME realName,
+			DEPT_CODE deptCode
+		FROM SYS_USER
+		<where>
+			USER_NAME = #{userName}
+		</where>
+	</select>
+	
+	<select id="getRealName" resultType="java.lang.String">
+		SELECT 
+			REAL_NAME realName
+		FROM SYS_USER
+		<where>
+			USER_NAME = #{userName}
+		</where>
+	</select>
+</mapper>

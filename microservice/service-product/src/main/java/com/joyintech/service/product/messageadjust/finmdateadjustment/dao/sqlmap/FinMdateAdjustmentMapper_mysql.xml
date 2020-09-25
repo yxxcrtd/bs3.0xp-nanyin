@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.product.messageadjust.finmdateadjustment.dao.FinMdateAdjustmentMapper_mysql">
+	<select id="queryAdjustMdateList" resultType="com.joyintech.service.product.messageadjust.finmdateadjustment.dto.FinMdateAdjustmentDto">
+		SELECT @rownum:=@rownum+1 as num  ,a.*
+		from (SELECT @rownum:=0) r,(
+		select t.* from (
+		<choose>
+			<when test="(adjustAfterMdateStart != null and adjustAfterMdateStart != '') or (adjustAfterMdateEnd != null and adjustAfterMdateEnd != '')">
+				<include refid="queryAdjustMdateInfo"></include>
+			</when>
+			<otherwise>
+				<if test="adjustType == null or adjustType ==''">
+					<include refid="queryUnAdjustMdateInfo"></include>
+					UNION ALL
+				</if>
+				<include refid="queryAdjustMdateInfo"></include>
+			</otherwise>
+		</choose>
+
+		) t order by mdateUnadjust desc,IFNULL(adjustNum,0) desc
+		) a
+
+	</select>
+	<select id="queryAdjustProdIdList" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select A.FINPROD_ID id, CONCAT_WS('',A.FINPROD_MARKET_ID ,':', A.FINPROD_ABBR) text
+		from FIN_PRODUCT A
+		inner join FIN_PRODUCT_ADD B
+		on A.FINPROD_ID = B.FINPROD_ID
+		and B.ISSUE_STATUS = #{ISSUE_STATUS01}
+		left join PTL_PORTFOLIO_AUTHORITY C
+
+		on B.PORTFOLIO_ID = C.PORTFOLIO_ID
+		where A.P_FINPROD_ID IS NULL
+		<if test="platDate != null and platDate != ''">
+			and A.MDATE &gt;= STR_TO_DATE(#{platDate},'%Y-%m-%d')
+		</if>
+		and A.FINPROD_TYPE2 = #{finprodType2}
+		<if test="search != null and search != ''">
+			and (instr(A.FINPROD_MARKET_ID, #{search}) > 0 or instr(A.FINPROD_ABBR, #{search}) > 0)
+		</if>
+		<choose>
+			<when test="initValue != null and initValue != ''">
+				and A.FINPROD_ID = #{initValue}
+			</when>
+			<otherwise>
+				and C.USER_ID = #{userId}
+			</otherwise>
+		</choose>
+	</select>
+	<select id="queryAdjustInfoByFinprodId" resultType="com.joyintech.service.product.messageadjust.finmdateadjustment.dto.FinMdateAdjustmentDto">
+		select
+
+		IFNULL(T.MDATE, FIN_PRODUCT.MDATE) mdate ,
+		IFNULL(T.LDATE, FIN_PRODUCT.LIQUIDATION_DATE) ldateUnadjust ,
+		FIN_PRODUCT.FINPROD_ABBR finprodAbbr,
+		FIN_PRODUCT.FINPROD_MARKET_ID finprodMarketId,
+		IFNULL(T.adjustNum, 0) adjustNum,
+		FIN_PRODUCT.VDATE vdate,
+		FIN_PRODUCT.CALENDAR_ID calendarId,
+		FIN_PRODUCT_ADD.DEAL_MODE dealMode,
+		FIN_PRODUCT.PROFIT_TYPE profitType
+		from FIN_PRODUCT
+
+
+		left join FIN_PRODUCT_ADD
+		ON FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
+		left join (select FINPROD_ID, MDATE,LDATE,ADJUST_NUM adjustNum from PRD_MDATE_ADJUST
+		where FINPROD_ID = #{finprodId} and ADJUST_NUM =  (
+		SELECT
+		MAX(T.ADJUST_NUM)
+		FROM
+		PRD_MDATE_ADJUST T
+		WHERE
+		T.FINPROD_ID = #{finprodId})
+		) T
+		on FIN_PRODUCT.FINPROD_ID = T.FINPROD_ID
+		where FIN_PRODUCT.FINPROD_ID = #{finprodId}
+	</select>
+	<select id="queryPortFolioMdateByFinprodId" resultType="java.lang.String">
+		select DATE_FORMAT(PTL_PORTFOLIO.MDATE, '%Y-%m-%d') mdate
+		from PTL_PORTFOLIO, PTL_MANAGE_OBJ
+		where PTL_PORTFOLIO.PORTFOLIO_ID = PTL_MANAGE_OBJ.PORTFOLIO_ID
+		and PTL_MANAGE_OBJ.MANAGE_OBJ_ID = #{finprodId}
+	</select>
+	<select id="queryDealCountByFinprodId" resultType="java.lang.Integer">
+		select count(1) from TRD_FIN_PRODUCT_DEAL_TOTAL, FIN_PRODUCT
+		where TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+		and TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_TYPE2 = #{finprodType2}
+		and FIN_PRODUCT.FINPROD_TYPE2 = #{finprodType2}
+		and FIN_PRODUCT.FINPROD_ID = #{finprodId}
+		and TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_DATE &gt;= STR_TO_DATE(#{mdate}, '%Y-%m-%d')
+		and TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_STATUS = #{tradeStatus}
+
+	</select>
+	<select id="getMaxAdjustNum" resultType="java.lang.Integer">
+		select IFNULL(max(adjust_num),0) adjustNum
+		from PRD_MDATE_ADJUST
+		where FINPROD_ID=#{finprodId}
+	</select>
+	<sql id="queryUnAdjustMdateInfo">
+		select  FIN_PRODUCT.FINPROD_MARKET_ID finprodMarketId,
+		FIN_PRODUCT.FINPROD_ABBR finprodAbbr,
+		NULL AS adjusttype,
+		FIN_PRODUCT.MDATE mdateUnadjust,
+		FIN_PRODUCT.LIQUIDATION_DATE ldateUnadjust,
+		NULL AS ldate,
+		NULL AS bdate,
+		NULL AS rdate,
+		NULL AS mdate,
+		NULL AS remark,
+		FIN_PRODUCT.FINPROD_ID finprodId,
+		NULL AS adjustNum,
+		NULL AS status,
+		PMSI.SEND_STATUS sendStatus,
+		PMSI.SEND_REMARK sendRemark
+		from FIN_PRODUCT_ADD, PTL_PORTFOLIO_AUTHORITY, FIN_PRODUCT
+		LEFT JOIN
+		INF_PRD_MDATE_ADJUST PMSI ON FIN_PRODUCT.FINPROD_ID = PMSI.FINPROD_ID
+		where FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
+		and FIN_PRODUCT_ADD.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
+		and PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
+		and FIN_PRODUCT.FINPROD_TYPE2 = #{finprodType2}
+		and FIN_PRODUCT.P_FINPROD_ID IS NULL
+		and date_format(FIN_PRODUCT.MDATE, '%Y-%m-%d %H%-%i-%s') &gt;= #{platDate}
+		and FIN_PRODUCT_ADD.ISSUE_STATUS = #{ISSUE_STATUS01}
+
+		<if test="finprodId != null and finprodId.size() > 0">
+			and FIN_PRODUCT.FINPROD_ID IN
+			<foreach collection="finprodId" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="sendStatus !=null and sendStatus !=''">
+			AND IFNULL(PMSI.SEND_STATUS, '03') = #{sendStatus,jdbcType=VARCHAR}
+		</if>
+		and not exists (select 1 from PRD_MDATE_ADJUST where FIN_PRODUCT.FINPROD_ID = PRD_MDATE_ADJUST.FINPROD_ID)
+	</sql>
+	<sql id="queryAdjustMdateInfo">
+		select  FIN_PRODUCT.FINPROD_MARKET_ID finprodMarketId,
+		FIN_PRODUCT.FINPROD_ABBR finprodAbbr,
+		PRD_MDATE_ADJUST.ADJUST_TYPE adjusttype,
+		PRD_MDATE_ADJUST.MDATE_UNADJUST mdateUnadjust,
+		PRD_MDATE_ADJUST.LDATE_UNADJUST ldateUnadjust,
+
+		PRD_MDATE_ADJUST.LDATE ldate,
+		(CASE WHEN PRD_MDATE_ADJUST.ADJUST_TYPE = #{TZLX_TQZZ} THEN PRD_MDATE_ADJUST.MDATE ELSE NULL END) bdate,
+		<!--			    MYSQL_CASEWHEN(PRD_MDATE_ADJUST.ADJUST_TYPE,#{TZLX_TQZZ},PRD_MDATE_ADJUST.MDATE,NULL) bdate,-->
+		(CASE WHEN PRD_MDATE_ADJUST.ADJUST_TYPE = #{TZLX_CPZQ} THEN PRD_MDATE_ADJUST.MDATE ELSE NULL END) rdate,
+		<!--		MYSQL_CASEWHEN(PRD_MDATE_ADJUST.ADJUST_TYPE,#{TZLX_CPZQ},PRD_MDATE_ADJUST.MDATE,NULL) rdate,-->
+		(CASE WHEN PRD_MDATE_ADJUST.ADJUST_TYPE = #{TZLX_DQRTZ} THEN PRD_MDATE_ADJUST.MDATE ELSE NULL END) mdate,
+		<!--		MYSQL_CASEWHEN(PRD_MDATE_ADJUST.ADJUST_TYPE,#{TZLX_DQRTZ},PRD_MDATE_ADJUST.MDATE,NULL) mdate,-->
+		PRD_MDATE_ADJUST.REMARK remark,
+		FIN_PRODUCT.FINPROD_ID finprodId,
+		PRD_MDATE_ADJUST.ADJUST_NUM adjustNum,
+		(CASE WHEN PRD_MDATE_ADJUST.ADJUST_NUM  = (select max(ADJUST_NUM) from PRD_MDATE_ADJUST pma where pma.FINPROD_ID=PRD_MDATE_ADJUST.FINPROD_ID) THEN 'E' ELSE 'D' END) status,
+		<!--				MYSQL_CASEWHEN(PRD_MDATE_ADJUST.ADJUST_NUM ,(select max(ADJUST_NUM) from PRD_MDATE_ADJUST pma where pma.FINPROD_ID=PRD_MDATE_ADJUST.FINPROD_ID),'E','D') status,-->
+		PMSI.SEND_STATUS sendStatus,
+		PMSI.SEND_REMARK sendRemark
+		from PRD_MDATE_ADJUST, FIN_PRODUCT_ADD, PTL_PORTFOLIO_AUTHORITY, FIN_PRODUCT
+		LEFT JOIN
+		INF_PRD_MDATE_ADJUST PMSI ON FIN_PRODUCT.FINPROD_ID = PMSI.FINPROD_ID
+		where FIN_PRODUCT.FINPROD_ID = PRD_MDATE_ADJUST.FINPROD_ID
+		and FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
+
+		and FIN_PRODUCT_ADD.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
+		and PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
+		and FIN_PRODUCT.FINPROD_TYPE2 = #{finprodType2}
+		and FIN_PRODUCT_ADD.ISSUE_STATUS = #{ISSUE_STATUS01}
+		<if test="finprodId != null and finprodId.size() > 0">
+			and FIN_PRODUCT.FINPROD_ID IN
+			<foreach collection="finprodId" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="adjustAfterMdateStart != null and adjustAfterMdateStart != ''">
+			and PRD_MDATE_ADJUST.MDATE &gt;= STR_TO_DATE(#{adjustAfterMdateStart}, '%Y-%m-%d')
+		</if>
+		<if test="adjustAfterMdateEnd != null and adjustAfterMdateEnd != ''">
+			and PRD_MDATE_ADJUST.MDATE &lt;= STR_TO_DATE(#{adjustAfterMdateEnd}, '%Y-%m-%d')
+		</if>
+		<if test="adjustType != null and adjustType != ''">
+			and PRD_MDATE_ADJUST.ADJUST_TYPE = #{adjustType}
+		</if>
+		<if test="sendStatus !=null and sendStatus !=''">
+			AND IFNULL(PMSI.SEND_STATUS, '03') = #{sendStatus,jdbcType=VARCHAR}
+		</if>
+
+	</sql>
+</mapper>

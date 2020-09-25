@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.disclosure.information.manage.workmanage.dao.ReportWorkManage001Mapper_db2">
+     <update id="updateConfirmStatusById" parameterType="com.joyintech.service.disclosure.information.manage.workmanage.dto.ReportWorkManage001Dto" >
+	      update REP_REVEAL
+	      set 
+	      CONFIRM_STATUS = #{confirmStatus,jdbcType=VARCHAR}
+	      ,UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
+		  ,UPDATE_TIME = current date
+	      where 1=1
+	      and id = #{id,jdbcType=VARCHAR}
+    </update>
+    
+</mapper>

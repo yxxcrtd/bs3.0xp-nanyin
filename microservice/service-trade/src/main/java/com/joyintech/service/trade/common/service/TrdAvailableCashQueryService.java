@@ -1,0 +1,224 @@
+/*
+ * 文件名：TrdAvailableCashQueryService.java 版权：Copyright 2017-2018 JoyinTech. Co. Ltd. All Rights Reserved. 描述：理财资管管理系统V2.0 修改人：杨智 修改时间：2018年10月11日
+ * 修改内容：新建 系统名称：理财资管管理系统V2.0
+ */
+package com.joyintech.service.trade.common.service;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.component.base.group.impl.dao.BasePtlSecPositionInfoMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.service.trade.common.dao.TrdAvailableCashQueryMapper;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
+import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
+
+@Service
+public class TrdAvailableCashQueryService {
+
+    /**
+     * 组合可用现金和实际现金查询更新组件
+     */
+    @Autowired(required = false)
+    private BasePtlCashPositionInfoService basePtlCashPositionInfoService;
+
+    /**
+     * 组合可用现金和实际现金查询更新组件
+     */
+    @Autowired(required = false)
+    private BasePtlSecPositionInfoService basePtlSecPositionInfoService;
+
+    /**
+     * 组合可用持仓和实际持仓查询更新组件Mapper
+     */
+    @Autowired
+    private BasePtlSecPositionInfoMapper basePtlSecPositionInfoMapper;
+
+    @Autowired
+    private TrdAvailableCashQueryMapper trdAvailableCashQueryMapper;
+
+    public Map<String, BigDecimal> getAvailableCash(Map<String, Object> param) {
+        Map<String, BigDecimal> ret = new HashMap<>();
+        Date tradeDate = DateUtil.parse((String)param.get("tradeDate"));
+        Date tradeDateNext = DateUtil.parse((String)param.get("tradeDateNext"));
+        if (tradeDateNext == null) {
+            tradeDateNext = DateUtil.addDay(tradeDate, 1);
+        }
+        // 账户类型
+        List<String> acctTypeList = new ArrayList<String>();
+        String acctTypeListStr = (String)param.get("acctTypeList");
+        if (StringUtil.isNotBlank(acctTypeListStr)) {
+            acctTypeList = StringUtil.splitToList(GlobalConstant.COMMA, acctTypeListStr);
+        }
+        // 可用现金
+        if (basePtlCashPositionInfoService != null) {
+            PtlCashPositionFlowDto dto = new PtlCashPositionFlowDto();
+            dto.setPortfolioId((String)param.get("portfolioId"));
+            dto.setHodingType(DictCodeList.持仓类型_可用.getValue());
+            dto.setCdate(tradeDate);
+            dto.setCcy((String)param.get("ccy"));
+            dto.setAcctType(acctTypeList);
+            dto.setAcctId((String)param.get("acctId"));
+            ret.put("T_0", basePtlCashPositionInfoService.queryUsableCashPosition(dto));
+            dto.setCdate(tradeDateNext);
+            ret.put("T_1", basePtlCashPositionInfoService.queryUsableCashPosition(dto));
+
+            // 通道交易 新增 强成西 2019/03/26 start
+            if (StringUtil.isNotEmpty(param.get("chlId"))) {
+                dto.setCdate(tradeDate);
+                dto.setAcctType(null);
+                dto.setChlFinprodId((String) param.get("chlId"));
+                ret.put("T_2", basePtlCashPositionInfoService.queryUsableCashPosition(dto));
+            }
+            // 通道交易 新增 强成西 2019/03/26 end
+        }
+        // 可用持仓
+        if (basePtlSecPositionInfoService != null) {
+            PtlSecPositionFlowDto dto = new PtlSecPositionFlowDto();
+            dto.setPortfolioId((String)param.get("portfolioId"));
+            dto.setCdate(tradeDate);
+            dto.setCcy((String)param.get("ccy"));
+            dto.setAcctType(acctTypeList);
+            dto.setHodingType(DictCodeList.持仓类型_可用.getValue());
+            if (StringUtil.isNotEmpty((String) param.get("chlId"))) {
+                dto.setChannel(true);
+                dto.setSecAcctId((String) param.get("chlId"));
+            } else {
+                dto.setSecAcctId((String) param.get("secAcctId"));
+            }
+            // 一体化对应etliu start
+            dto.setInvAim((String)param.get("invAim"));
+            // 一体化对应etliu end
+            if (param.get("finprodId") == null
+                || StringUtil.isBlank((String)param.get("finprodId"))) {
+                ret.put("position", null);
+            }
+            else {
+                dto.setFinprodId((String)param.get("finprodId"));
+                BigDecimal result = basePtlSecPositionInfoService.queryUsableSecPosition(dto);
+                if (param.get("multiParam") != null) {
+                    result = ArithmeticUtil.multiply(result, new BigDecimal((Integer) param.get("multiParam")));
+                }
+                ret.put("position", result);
+            }
+        }
+        return ret;
+    }
+
+    public BigDecimal getSecManageAvailableCash(Map<String, Object> param) {
+        List<String> secManager = trdAvailableCashQueryMapper.selectSecManager(param);
+        PtlCashPositionFlowDto dto = new PtlCashPositionFlowDto();
+        dto.setPortfolioId((String)param.get("portfolioId"));
+        dto.setHodingType(DictCodeList.持仓类型_可用.getValue());
+        dto.setCdate(DateUtil.parse((String)param.get("tradeDate")));
+        dto.setCcy((String)param.get("ccy"));
+        // 账户类型
+        List<String> acctTypeList = new ArrayList<String>();
+        String acctTypeListStr = (String)param.get("acctType");
+        if (StringUtil.isNotBlank(acctTypeListStr)) {
+            acctTypeList = StringUtil.splitToList(GlobalConstant.COMMA, acctTypeListStr);
+        }
+        //add by wangpeng 20190830 查询证券账户可用现金
+        String acctId = (String)param.get("acctId");
+        if(StringUtil.isNotEmpty(acctId)){
+        	dto.setAcctId(acctId);
+        }
+        //add end wangpeng 20190830
+        dto.setAcctType(acctTypeList);
+        BigDecimal ret = BigDecimal.ZERO;
+        for (String secNo : secManager) {
+            dto.setSeqno(secNo);
+            ret = ArithmeticUtil.doAdd(basePtlCashPositionInfoService.queryUsableCashPosition(dto), ret);
+        }
+        return ret;
+    }
+
+    /**
+     * 本方券可用持仓：实际 - 质押 +可用（流水表）-融出 +预占用 OWN_POSITION
+     * 融入券可用持仓：融入-卖空-卖空可用（流水表） INTEGRATE_POSITION
+     * 融入券卖空可用持仓：卖空 SHOWHANDS_POSITION
+     */
+    public Map<String, Object> getShowHandNum(Map<String, Object> param) {
+        Map<String, Object> ret = new HashMap<>();
+        if (basePtlSecPositionInfoService != null) {
+            Date tradeDate = DateUtil.parse((String)param.get("tradeDate"));
+            PtlSecPositionFlowDto dto = new PtlSecPositionFlowDto();
+            dto.setPortfolioId((String) param.get("portfolioId"));
+            dto.setCdate(tradeDate);
+            dto.setCcy((String) param.get("ccy"));
+            dto.setHodingType(DictCodeListExt1.持仓类型_卖空.getValue());
+            // 一体化对应etliu start
+            dto.setInvAim((String) param.get("invAim"));
+            // 一体化对应etliu end
+            String invAim = dto.getInvAim();
+            dto.setInvAim(DictCodeListExt1.投资目的_卖空.getValue());
+            if (StringUtil.isNotEmpty((String) param.get("chlId"))) {
+                dto.setChannel(true);
+                dto.setSecAcctId((String) param.get("chlId"));
+            } else {
+                dto.setChannel(false);
+                dto.setSecAcctId((String) param.get("secAcctId"));
+            }
+            if (param.get("finprodId") == null
+                    || StringUtil.isBlank((String) param.get("finprodId"))) {
+                ret.put("position", null);
+            } else {
+                dto.setFinprodId((String) param.get("finprodId"));
+                BigDecimal 卖空 = basePtlSecPositionInfoService.queryOtherSecPosition(dto);
+                ret.put("SHOWHANDS_POSITION", ArithmeticUtil.multiply(卖空, new BigDecimal(100)));
+                dto.setInvAim(invAim);
+                // 本方券可用持仓：实际 - 质押 +可用（流水表）-融出 +预占用 OWN_POSITION
+                dto.setHodingType(DictCodeList.持仓类型_实际.getValue());
+                BigDecimal 实际 = basePtlSecPositionInfoService.queryOtherSecPosition(dto);
+                dto.setHodingType(DictCodeList.持仓类型_可用.getValue());
+                BigDecimal 可用持仓 = basePtlSecPositionInfoMapper.selectSecPositionFlow(dto);
+                dto.setHodingType(DictCodeList.持仓类型_质押.getValue());
+                BigDecimal 质押 = basePtlSecPositionInfoService.queryOtherSecPosition(dto);
+                dto.setInvAim("999999");
+                dto.setHodingType(DictCodeList.持仓类型_融出.getValue());
+                BigDecimal 融出 = basePtlSecPositionInfoService.queryOtherSecPosition(dto);
+                dto.setInvAim(invAim);
+                dto.setHodingType(DictCodeListExt1.持仓类型_预占用.getValue());
+                BigDecimal 预占用 = basePtlSecPositionInfoService.queryOtherSecPosition(dto);
+                ret.put("OWN_POSITION", ArithmeticUtil.multiply(ArithmeticUtil.doAdd(实际, (质押 == null ? BigDecimal.ZERO : 质押.negate()),
+                        可用持仓, (融出 == null ? BigDecimal.ZERO : 融出.negate()), 预占用), new BigDecimal(100)));
+
+                // 融入券可用持仓：融入-卖空-卖空可用（流水表） INTEGRATE_POSITION
+                dto.setInvAim("999999");
+                dto.setHodingType(DictCodeList.持仓类型_融入.getValue());
+                BigDecimal 融入 = basePtlSecPositionInfoService.queryOtherSecPosition(dto);
+                dto.setHodingType(DictCodeListExt1.持仓类型_卖空可用.getValue());
+                dto.setInvAim(DictCodeListExt1.投资目的_卖空.getValue());
+                BigDecimal 卖空可用 = basePtlSecPositionInfoMapper.selectSecPositionFlow(dto);
+                ret.put("INTEGRATE_POSITION", ArithmeticUtil.multiply(ArithmeticUtil.doAdd(融入, (卖空 == null ? BigDecimal.ZERO : 卖空.negate()),
+                        (卖空可用 == null ? BigDecimal.ZERO : 卖空可用.negate())), new BigDecimal(100)));
+                dto.setInvAim(invAim);
+            }
+        }
+        return ret;
+    }
+    
+    /**
+     * 获得资产维度的持仓
+     * @param map 资产代码，日期
+     * @return 持仓
+     */
+    public Map<String, Object> getFinAvaPosition(Map<String, Object> map) {
+        map.put("hodingType03", DictCodeList.持仓类型_实际.getValue());
+        return trdAvailableCashQueryMapper.getFinAvaPosition(map);
+    }
+}

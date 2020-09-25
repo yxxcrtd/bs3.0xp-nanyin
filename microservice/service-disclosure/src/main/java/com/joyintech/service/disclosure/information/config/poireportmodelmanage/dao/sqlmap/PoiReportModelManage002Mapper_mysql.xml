@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.disclosure.information.config.poireportmodelmanage.dao.PoiReportModelManage002Mapper_mysql">
+	<insert id="insertDisPraamsSub" parameterType="com.joyintech.tams.common.base.entity.DisPraamsSub" >
+        insert into DIS_PRAAMS_SUB (TAB_NUM, DIS_ID, DIS_ORDER,
+        CREATE_USER, CREATE_DEPT, CREATE_TIME,
+        UPDATE_USER, UPDATE_TIME)values(
+        <foreach collection="list" item="dto" index="index"
+                 separator="," >
+            #{dto.tabNum,jdbcType=VARCHAR}, #{dto.disId,jdbcType=VARCHAR},
+            #{dto.disOrder,jdbcType=VARCHAR},#{dto.createUser,jdbcType=VARCHAR},
+            #{dto.createDept,jdbcType=VARCHAR},#{dto.createTime,jdbcType=TIMESTAMP},
+            #{dto.updateUser,jdbcType=VARCHAR}, #{dto.updateTime,jdbcType=TIMESTAMP}
+        </foreach>
+        )
+    </insert>
+</mapper>

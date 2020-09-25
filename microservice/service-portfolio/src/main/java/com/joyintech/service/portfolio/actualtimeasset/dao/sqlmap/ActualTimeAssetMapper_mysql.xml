@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.portfolio.actualtimeasset.dao.ActualTimeAssetMapper_mysql">
+	<select id="findPage" resultType="com.joyintech.service.portfolio.actualtimeasset.dto.ActualTimeAssetDto">
+    	select distinct tt.* from 
+		     (
+		     	select portfolioId,portfolioName,secAcctId,secAcctName,finprodId,finprodMarketId,finprodAbbr,type8,type7,
+			        (PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06) as actualPositionAmount,
+			        (PTL_FLOW_AMOUNT01 + PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06 - PTL_AMOUNT04 + PTL_AMOUNT08) as tradePositionAmount,
+			        ETR_FLOW_AMOUNTE01 as instructionsAmount,ETR_FLOW_AMOUNT04 as pledgeAmount,
+			        (PTL_AMOUNT04 - PTL_FLOW_AMOUNT01 - PTL_AMOUNT08 ) as preReductionAmount 
+			       from 
+			       (
+			       		select portfolioId,
+			       			portfolioName,
+			       			secAcctId,
+			       			secAcctName,
+			       			finprodId,
+			       			finprodMarketId,
+			       			finprodAbbr,
+			       			type8,
+				       		type7,
+			       			IFNULL(sum(PTL_AMOUNT03),0) as PTL_AMOUNT03,
+				            IFNULL(sum(PTL_AMOUNT04),0) as PTL_AMOUNT04,
+				            IFNULL(sum(PTL_AMOUNT05),0) as PTL_AMOUNT05,
+				            IFNULL(sum(PTL_AMOUNT06),0) as PTL_AMOUNT06,
+				            IFNULL(sum(PTL_AMOUNT08),0) as PTL_AMOUNT08,
+				            IFNULL(sum(PTL_FLOW_AMOUNT01),0) as PTL_FLOW_AMOUNT01,
+				            IFNULL(sum(ETR_FLOW_AMOUNTE01),0) as ETR_FLOW_AMOUNTE01,
+				            IFNULL(sum(ETR_FLOW_AMOUNT04),0) as ETR_FLOW_AMOUNT04 
+				     from  (
+					        select t.portfolio_id as portfolioId,
+					             t.portfolio_name as portfolioName,
+					             (case when t4.sec_acct_id is null and chnl.finprod_id is null then '' 
+					             	when t4.sec_acct_id is null then chnl.finprod_market_id else t4.sec_acct_id end ) as secAcctId,
+					             (case when t4.sec_acct_id is null and chnl.finprod_id is null then '' 
+					             	when t4.sec_acct_id is null then chnl.finprod_abbr else t4.sec_acct_name end ) as secAcctName,
+					             
+					             chnl.finprod_id as chnlFinprodId,
+					             chnl.finprod_market_id as chnlFinprodMarketId,
+					             chnl.finprod_abbr as chnlFinprodAbbr,
+					             (case when t4.sec_acct_id is null and chnl.finprod_id is null then '999999' 
+					             	when t4.sec_acct_id is null then chnl.finprod_id else t4.sec_acct_id end ) as conSecAcctId,
+					             t2.finprod_id as finprodId,
+					             IFNULL(fin.finprod_market_id, t2.finprod_id) as finprodMarketId,
+	                             IFNULL(fin.finprod_abbr, t2.finprod_id) as finprodAbbr,
+					             t5.type_8 as type8,
+					             t5.type_7 as type7 
+				            from PTL_PORTFOLIO t
+								INNER JOIN PTL_TRADE t3 ON t3.portfolio_id = t.portfolio_id
+								INNER JOIN TRD_PRODUCT_DEAL t2 ON t2.trade_id = t3.BUSI_NO
+								INNER JOIN FIN_PRODUCT fin on fin.finprod_id = t2.finprod_id 
+								INNER JOIN fin_product_type t5
+						            on t5.finprod_id = t2.finprod_id 
+				            	left join PTL_SEC_ACCT t1 
+						          	on t1.portfolio_id = t.portfolio_id and t1.acct_no = t2.sec_manage_acct_id 
+				                left join STL_SEC_ACCT_INFO t4 
+						          	on t4.sec_acct_id = t1.acct_no 
+						        left join FIN_PRODUCT chnl 
+						        	on chnl.finprod_id = t2.chl_id 
+						        	
+						        	<if test="finprodType2 != null and finprodType2 !=''">
+						         		and chnl.finprod_type2 = #{finprodType2,jdbcType=VARCHAR}
+						         	</if>
+						     where t.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
+						       	 <if test="type8 != null and type8 !=''">
+						         	and t5.type_8 = #{type8,jdbcType=VARCHAR}
+						         </if>
+						         <if test="finprodId != null and finprodId !=''">
+						         	and t2.finprod_id = #{finprodId,jdbcType=VARCHAR}
+						         </if>
+						         <if test="secManageAcctId != null and secManageAcctId !=''">
+						         	and t2.sec_manage_acct_id = #{secManageAcctId,jdbcType=VARCHAR} 
+						         </if>
+						         <if test="type8List != null and type8List.size > 0">
+						         	<foreach collection="type8List" open="and t5.type_8 not in (" item="type8Item" separator="," close=")">
+										#{type8Item,jdbcType=VARCHAR}
+									</foreach>
+						         </if>
+						         <if test="noShowType8List != null and noShowType8List.size > 0">
+						         	<foreach collection="noShowType8List" open="and t5.type_8 not in (" item="noshowType8" separator="," close=")">
+										#{noshowType8,jdbcType=VARCHAR}
+									</foreach>
+						         </if>
+						       group by t.portfolio_id,
+						                t.portfolio_name,
+						                t4.sec_acct_id,
+						                t4.sec_acct_name,
+						                chnl.finprod_id ,
+                            			chnl.finprod_market_id,
+                            			chnl.finprod_abbr,
+						                t2.finprod_id,
+						                fin.finprod_market_id,
+						                fin.finprod_abbr,
+						                t5.type_8,
+						                t5.type_7 
+				       ) t 
+				       <include refid="Base_Left_join_Sql" /> 
+				       group by 
+				      		portfolioId,
+				       		portfolioName,
+				       		secAcctId,
+				       		secAcctName,
+				       		finprodId,
+				       		finprodMarketId,
+				       		finprodAbbr,
+				       		type8,
+				       		type7 
+				     union all 
+					     select portfolioId,
+				       			portfolioName,
+				       			secAcctId,
+				       			secAcctName,
+				       			'' finprodId,
+				       			'' finprodMarketId,
+				       			'' finprodAbbr,
+				       			type8,
+				       			type7,
+				       			IFNULL(sum(PTL_AMOUNT03),0) as PTL_AMOUNT03,
+				             	IFNULL(sum(PTL_AMOUNT04),0) as PTL_AMOUNT04,
+				             	IFNULL(sum(PTL_AMOUNT05),0) as PTL_AMOUNT05,
+				             	IFNULL(sum(PTL_AMOUNT06),0) as PTL_AMOUNT06,
+				             	IFNULL(sum(PTL_AMOUNT08),0) as PTL_AMOUNT08,
+				             	IFNULL(sum(PTL_FLOW_AMOUNT01),0) as PTL_FLOW_AMOUNT01,
+				             	IFNULL(sum(ETR_FLOW_AMOUNTE01),0) as ETR_FLOW_AMOUNTE01,
+				             	IFNULL(sum(ETR_FLOW_AMOUNT04),0) as ETR_FLOW_AMOUNT04 
+				       from 
+				        (
+				        	select t.portfolio_id as portfolioId,
+					             t.portfolio_name as portfolioName,
+					             (case when t4.sec_acct_id is null and chnl.finprod_id is null then '' 
+					             	when t4.sec_acct_id is null then chnl.finprod_market_id else t4.sec_acct_id end ) as secAcctId,
+					             (case when t4.sec_acct_id is null and chnl.finprod_id is null then '' 
+					             	when t4.sec_acct_id is null then chnl.finprod_abbr else t4.sec_acct_name end ) as secAcctName,
+					             
+					             chnl.finprod_id as chnlFinprodId,
+					             chnl.finprod_market_id as chnlFinprodMarketId,
+					             chnl.finprod_abbr as chnlFinprodAbbr,
+					             (case when t4.sec_acct_id is null and chnl.finprod_id is null then '999999' 
+					             	when t4.sec_acct_id is null then chnl.finprod_id else t4.sec_acct_id end ) as conSecAcctId,
+					             t2.finprod_id as finprodId,
+					             t5.type_8 as type8,
+					             t5.type_7 as type7 
+				            from PTL_PORTFOLIO t
+								INNER JOIN PTL_TRADE t3 ON t3.portfolio_id = t.portfolio_id
+								INNER JOIN TRD_PRODUCT_DEAL t2 ON t2.trade_id = t3.BUSI_NO
+								INNER JOIN FIN_TRADE_PRODUCT fin on fin.finprod_id = t2.TRADE_ID 
+								INNER JOIN fin_product_type t5 
+						            on t5.finprod_id = t2.finprod_id 
+				            	left join PTL_SEC_ACCT t1 
+						          	on t1.portfolio_id = t.portfolio_id and t1.acct_no = t2.sec_manage_acct_id 
+				                left join STL_SEC_ACCT_INFO t4 
+						          	on t4.sec_acct_id = t1.acct_no 
+						        left join FIN_PRODUCT chnl 
+						        	on chnl.finprod_id = t2.chl_id 
+						        	
+						        	<if test="finprodType2 != null and finprodType2 !=''">
+						         		and chnl.finprod_type2 = #{finprodType2,jdbcType=VARCHAR}
+						         	</if>
+					         where t.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
+						       	 <if test="type8 != null and type8 !=''">
+						         	and t5.type_8 = #{type8,jdbcType=VARCHAR}
+						         </if>
+						         <if test="finprodId != null and finprodId !=''">
+						         	and t2.finprod_id = #{finprodId,jdbcType=VARCHAR}
+						         </if>
+						         <if test="secManageAcctId != null and secManageAcctId !=''">
+						         	and t2.sec_manage_acct_id = #{secManageAcctId,jdbcType=VARCHAR} 
+						         </if>
+						         <if test="type8List != null and type8List.size > 0">
+						         	<foreach collection="type8List" open="and t5.type_8 in (" item="type8Item" separator="," close=")">
+										#{type8Item,jdbcType=VARCHAR}
+									</foreach>
+						         </if>
+						         <if test="noShowType8List != null and noShowType8List.size > 0">
+						         	<foreach collection="noShowType8List" open="and t5.type_8 not in (" item="noshowType8" separator="," close=")">
+										#{noshowType8,jdbcType=VARCHAR}
+									</foreach>
+						         </if>
+					       group by t.portfolio_id,
+					                t.portfolio_name,
+					                t4.sec_acct_id,
+					                t4.sec_acct_name,
+					                chnl.finprod_id,
+                            		chnl.finprod_market_id,
+                            		chnl.finprod_abbr,
+                            		t2.finprod_id,
+					                t5.type_8,
+					                t5.type_7    
+				       ) t 
+				       <include refid="Base_Left_join_Sql" /> 
+				      group by 
+				      		portfolioId,
+				       		portfolioName,
+				       		secAcctId,
+				       		secAcctName,
+				       		type8,
+				       		type7 
+					union all 
+					     select portfolioId,
+				       			portfolioName,
+				       			secAcctId,
+				       			secAcctName,
+				       			finprodId,
+				       			finprodMarketId,
+				       			finprodAbbr,
+				       			type8,
+				       			type7,
+				       			IFNULL(sum(PTL_AMOUNT03),0) as PTL_AMOUNT03,
+				             	IFNULL(sum(PTL_AMOUNT04),0) as PTL_AMOUNT04,
+				             	IFNULL(sum(PTL_AMOUNT05),0) as PTL_AMOUNT05,
+				             	IFNULL(sum(PTL_AMOUNT06),0) as PTL_AMOUNT06,
+				             	IFNULL(sum(PTL_AMOUNT08),0) as PTL_AMOUNT08,
+				             	IFNULL(sum(PTL_FLOW_AMOUNT01),0) as PTL_FLOW_AMOUNT01,
+				             	IFNULL(sum(ETR_FLOW_AMOUNTE01),0) as ETR_FLOW_AMOUNTE01,
+				             	IFNULL(sum(ETR_FLOW_AMOUNT04),0) as ETR_FLOW_AMOUNT04 
+				       from 
+				        (
+							select 
+								portfolioId,
+						   		portfolioName,
+						   		secAcctId,
+						   		secAcctName,
+						   		chnlFinprodId,
+						   		chnlFinprodMarketId,
+						   		chnlFinprodAbbr,
+						   		conSecAcctId,
+								finprodId,
+				       			finprodMarketId,
+				       			finprodAbbr,
+								type8,
+								type7 
+				        	from (
+				        		select t.portfolio_id as portfolioId,
+						             t.portfolio_name as portfolioName,
+						             (case when t4.sec_acct_id is null and chnl.finprod_id is null then '' 
+						             	when t4.sec_acct_id is null then chnl.finprod_market_id else t4.sec_acct_id end ) as secAcctId,
+						             (case when t4.sec_acct_id is null and chnl.finprod_id is null then '' 
+						             	when t4.sec_acct_id is null then chnl.finprod_abbr else t4.sec_acct_name end ) as secAcctName,
+						             
+						             chnl.finprod_id as chnlFinprodId,
+						             chnl.finprod_market_id as chnlFinprodMarketId,
+						             chnl.finprod_abbr as chnlFinprodAbbr,
+						             (case when t4.sec_acct_id is null and chnl.finprod_id is null then '999999' 
+						             	when t4.sec_acct_id is null then chnl.finprod_id else t4.sec_acct_id end ) as conSecAcctId,
+						             FDP.PLEDGE_FINPROD_ID AS finprodId,
+						             fin1.finprod_market_id as finprodMarketId,
+					             	 fin1.finprod_abbr as finprodAbbr,
+								     t5.type_8 AS type8,
+								     t5.type_7 AS type7
+								   FROM
+								    	PTL_PORTFOLIO t 
+								   INNER JOIN PTL_TRADE t3 ON t3.portfolio_id = t.portfolio_id 
+								   INNER JOIN TRD_PRODUCT_DEAL t2 ON t2.trade_id = t3.BUSI_NO 
+								   INNER JOIN FIN_TRADE_PRODUCT fin ON fin.finprod_id = t2.finprod_id 
+								   INNER JOIN FIN_DEAL_PLEDGE FDP ON t2.FINPROD_ID = FDP.FINPROD_ID 
+								   INNER JOIN fin_product_type t5 ON FDP.PLEDGE_FINPROD_ID = t5.finprod_id 
+								   INNER JOIN FIN_PRODUCT fin1 on fin1.finprod_id = FDP.PLEDGE_FINPROD_ID 
+								   LEFT JOIN PTL_SEC_ACCT t1 ON t1.portfolio_id = t.portfolio_id AND t1.acct_no = t2.sec_manage_acct_id 
+								   LEFT JOIN STL_SEC_ACCT_INFO t4 ON t4.sec_acct_id = t1.acct_no 
+								   LEFT JOIN FIN_PRODUCT chnl ON chnl.finprod_id = t2.chl_id 
+								   		
+								    	<if test="finprodType2 != null and finprodType2 !=''">
+							         		and chnl.finprod_type2 = #{finprodType2,jdbcType=VARCHAR}
+							         	</if>
+						         where t.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
+							       	 <if test="type8 != null and type8 !=''">
+							         	and t5.type_8 = #{type8,jdbcType=VARCHAR}
+							         </if>
+							         <if test="finprodId != null and finprodId !=''">
+							         	and t2.finprod_id = #{finprodId,jdbcType=VARCHAR}
+							         </if>
+							         <if test="secManageAcctId != null and secManageAcctId !=''">
+							         	and t2.sec_manage_acct_id = #{secManageAcctId,jdbcType=VARCHAR} 
+							         </if>
+					       	union all 
+						       select t.portfolio_id as portfolioId,
+						             t.portfolio_name as portfolioName,
+						             (case when t4.sec_acct_id is null and chnl.finprod_id is null then '' 
+						             	when t4.sec_acct_id is null then chnl.finprod_market_id else t4.sec_acct_id end ) as secAcctId,
+						             (case when t4.sec_acct_id is null and chnl.finprod_id is null then '' 
+						             	when t4.sec_acct_id is null then chnl.finprod_abbr else t4.sec_acct_name end ) as secAcctName,
+						             
+						             chnl.finprod_id as chnlFinprodId,
+						             chnl.finprod_market_id as chnlFinprodMarketId,
+						             chnl.finprod_abbr as chnlFinprodAbbr,
+						             (case when t4.sec_acct_id is null and chnl.finprod_id is null then '999999' 
+						             	when t4.sec_acct_id is null then chnl.finprod_id else t4.sec_acct_id end ) as conSecAcctId,
+						             FDT.PLEDGE_FINPROD_ID AS finprodId,
+						             fin1.finprod_market_id as finprodMarketId,
+					             	 fin1.finprod_abbr as finprodAbbr,
+								     t5.type_8 AS type8,
+								     t5.type_7 AS type7 
+								   FROM
+								    	PTL_PORTFOLIO t 
+								   INNER JOIN PTL_TRADE t3 ON t3.portfolio_id = t.portfolio_id 
+								   INNER JOIN TRD_PRODUCT_DEAL t2 ON t2.trade_id = t3.BUSI_NO
+								   INNER JOIN FIN_TRADE_PRODUCT fin ON fin.finprod_id = t2.finprod_id 
+								   INNER JOIN FIN_DEAL_TARGET FDT ON T2.FINPROD_ID = FDT.FINPROD_ID 
+								   INNER JOIN fin_product_type t5 ON FDT.PLEDGE_FINPROD_ID = t5.finprod_id 
+								   INNER JOIN FIN_PRODUCT fin1 on fin1.finprod_id = FDT.PLEDGE_FINPROD_ID  
+								   LEFT JOIN PTL_SEC_ACCT t1 ON t1.portfolio_id = t.portfolio_id AND t1.acct_no = t2.sec_manage_acct_id 
+								   LEFT JOIN STL_SEC_ACCT_INFO t4 ON t4.sec_acct_id = t1.acct_no 
+								   LEFT JOIN FIN_PRODUCT chnl ON chnl.finprod_id = t2.chl_id 
+								   		
+								    	<if test="finprodType2 != null and finprodType2 !=''">
+							         		and chnl.finprod_type2 = #{finprodType2,jdbcType=VARCHAR}
+							         	</if>
+						         where t.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
+							       	 <if test="type8 != null and type8 !=''">
+							         	and t5.type_8 = #{type8,jdbcType=VARCHAR}
+							         </if>
+							         <if test="finprodId != null and finprodId !=''">
+							         	and t2.finprod_id = #{finprodId,jdbcType=VARCHAR}
+							         </if>
+							         <if test="secManageAcctId != null and secManageAcctId !=''">
+							         	and t2.sec_manage_acct_id = #{secManageAcctId,jdbcType=VARCHAR} 
+							         </if>
+
+						   ) rrq 
+						   	group by 
+						   		portfolioId,
+						   		portfolioName,
+						   		secAcctId,
+						   		secAcctName,
+						   		chnlFinprodId,
+						   		chnlFinprodMarketId,
+						   		chnlFinprodAbbr,
+						   		conSecAcctId,
+								finprodId,
+								finprodMarketId,
+					            finprodAbbr,
+								type8,
+								type7 
+				       ) t 
+				       <include refid="Base_Left_join_Sql" /> 
+				      group by 
+				      		portfolioId,
+				       		portfolioName,
+				       		secAcctId,
+				       		secAcctName,
+				       		finprodId,
+							finprodMarketId,
+					        finprodAbbr,
+				       		type8,
+				       		type7 
+				) mm 
+	       ) tt 
+		   where <![CDATA[  actualPositionAmount <> 0 or tradePositionAmount <> 0 or instructionsAmount <> 0
+		   					or pledgeAmount <> 0 or preReductionAmount <> 0  ]]> 
+		   order by portfolioId desc,type8 desc,secAcctId desc,finprodMarketId desc 
+    </select>
+	<sql id="Base_Left_join_Sql" >
+		left join (
+			select
+				portfolio_id,
+				sec_acct_id,
+				finprod_id,
+				IFNULL(sum(case when hoding_type = '03' then AMOUNT end),0) PTL_AMOUNT03,
+				IFNULL(sum(case when hoding_type = '04' then AMOUNT end),0) PTL_AMOUNT04,
+				IFNULL(sum(case when hoding_type = '05' then AMOUNT end),0) PTL_AMOUNT05,
+				IFNULL(sum(case when hoding_type = '06' then AMOUNT end),0) PTL_AMOUNT06,
+				IFNULL(sum(case when hoding_type = '08' then AMOUNT end),0) PTL_AMOUNT08
+			from PTL_SEC_POSITION
+			where cdate = STR_TO_DATE(#{cdate},'%Y-%m-%d') 
+				
+			<if test="hodingTypeList != null and hodingTypeList.size > 0">
+				<foreach collection="hodingTypeList"
+					open="and hoding_type in (" item="secHodingType" separator=","
+					close=")">
+					#{secHodingType,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			group by
+				portfolio_id,
+				sec_acct_id,
+				finprod_id
+		) t6 on t6.portfolio_id = t.portfolioId
+			
+			and t6.sec_acct_id = t.conSecAcctId
+			and t6.finprod_id = t.finprodId
+		left join (
+			select
+				portfolio_id,
+				sec_acct_id,
+				finprod_id,
+				IFNULL(sum(case when hoding_type = '01' then AMOUNT end),0) PTL_FLOW_AMOUNT01
+			from PTL_SEC_POSITION_FLOW
+			where cdate <![CDATA[  <= ]]> STR_TO_DATE(#{cdate},'%Y-%m-%d') 
+			<if
+				test="secFlowHodingTypeList != null and secFlowHodingTypeList.size > 0">
+				<foreach collection="secFlowHodingTypeList"
+					open="and hoding_type in (" item="secFlowHodingType" separator=","
+					close=")">
+					#{secFlowHodingType,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			group by
+				portfolio_id,
+				sec_acct_id,
+				finprod_id
+		) t7
+		on t7.portfolio_id = t.portfolioId
+			
+			and t7.sec_acct_id = t.conSecAcctId
+			and t7.finprod_id = t.finprodId
+		left join (
+			select
+				A.portfolio_id,
+				A.sec_acct_id,
+				A.finprod_id,
+				IFNULL(sum(case when A.hoding_type = 'E01' then A.AMOUNT end),0) ETR_FLOW_AMOUNTE01,
+				IFNULL(sum(case when A.hoding_type = '04' then A.AMOUNT end),0) ETR_FLOW_AMOUNT04
+			from ETR_SEC_POSITION A INNER JOIN FIN_PRODUCT B ON A.FINPROD_ID=B.FINPROD_ID
+			where A.cdate = STR_TO_DATE(#{cdate},'%Y-%m-%d') 
+			
+			<if test="etrHodingTypeList != null and etrHodingTypeList.size > 0">
+				<foreach collection="etrHodingTypeList"
+					open="and A.hoding_type in (" item="etrFlowHodingType" separator=","
+					close=")">
+					#{etrFlowHodingType,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			group by
+				A.portfolio_id,
+				A.sec_acct_id,
+				A.finprod_id
+		) t8
+		on t8.portfolio_id = t.portfolioId
+			
+			and t8.sec_acct_id = t.conSecAcctId
+			and t8.finprod_id = t.finprodId
+	</sql>
+</mapper>

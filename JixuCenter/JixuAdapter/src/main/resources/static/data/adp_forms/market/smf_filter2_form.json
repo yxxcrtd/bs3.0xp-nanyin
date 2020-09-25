@@ -1,0 +1,12 @@
+[{
+	"label": "证券类型",
+	"category": "select",
+	"type": "select",
+	"value": "",
+	"options": {
+		"type": "fetch",
+		"values": {},
+		"url": "allAssets",
+		"inputs":{"all":false}
+	}
+}]

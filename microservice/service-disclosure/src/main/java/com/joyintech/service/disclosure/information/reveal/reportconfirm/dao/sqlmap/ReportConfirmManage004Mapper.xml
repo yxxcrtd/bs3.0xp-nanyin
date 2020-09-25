@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.disclosure.information.reveal.reportconfirm.dao.ReportConfirmManage004Mapper">
+<select id="querySameCount" resultType="java.lang.Integer" parameterType="java.lang.String" >
+        SELECT 
+			count(*) 
+		FROM 
+			REP_REVEAL
+		WHERE
+			REPORT_NAME = #{reportName,jdbcType=VARCHAR}
+		AND PRODID = #{prodId,jdbcType=VARCHAR}
+		AND nvl2(TO_CHAR(START_DATE,'yyyy-mm-dd'),TO_CHAR(START_DATE,'yyyy-mm-dd'),'0') = #{reportDateBegin}
+		AND nvl2(TO_CHAR(END_DATE,'yyyy-mm-dd'),TO_CHAR(END_DATE,'yyyy-mm-dd'),'0') = #{reportDateEnd}
+		AND STATUS='E'
+    </select>
+    <update id="updateDataStatus" parameterType="java.lang.String">
+    	UPDATE
+   			REP_REVEAL
+		SET STATUS = 'D'
+			,UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
+			,UPDATE_TIME = sysdate
+		WHERE
+			REPORT_NAME = #{reportName,jdbcType=VARCHAR}
+		AND PRODID = #{prodId,jdbcType=VARCHAR}
+		AND nvl2(TO_CHAR(START_DATE,'yyyy-mm-dd'),TO_CHAR(START_DATE,'yyyy-mm-dd'),'0') = #{reportDateBegin}
+		AND nvl2(TO_CHAR(END_DATE,'yyyy-mm-dd'),TO_CHAR(END_DATE,'yyyy-mm-dd'),'0') = #{reportDateEnd}
+		AND STATUS='E'
+    </update>
+</mapper>

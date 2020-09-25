@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.product.common.dao.BenchMarketInfoMapper_mysql">
+	<select id="selectByPrimaryKey" resultType="com.joyintech.service.product.common.dto.BussBenchMarkInfoDto">
+     select 
+     	FIN_BASE_RULE_INFO.BASE_RULE_TYPE baseRuleType,
+		FIN_BASE_RULE_INFO.PUBLISH_TYPE publishType,
+		FIN_BASE_RULE_INFO.RATE_LOWER*100 rateLower,
+		FIN_BASE_RULE_INFO.RATE_LIMIT*100 rateLimit, 
+        FIN_BASE_RULE_INFO.BASE_RULE_ID baseRuleId,
+        FIN_BASE_RULE_INFO.EFF_DATE effDate,
+        FIN_BASE_RULE_INFO.RATE_TYPE rateType,
+        FIN_BASE_RULE_INFO.RATE*100 rate,
+        FIN_BASE_RULE_INFO.COEFFICIENT coefficient,
+        FIN_BASE_RULE_INFO.INDEX_ID indexId,
+        FIN_BASE_RULE_INFO.INDEX_SOURCE indexSource,
+        FIN_BASE_RULE_INFO.SPREAD_RATE*100 spreadRate,
+        FIN_BASE_RULE_INFO.RESET_TYPE resetType,
+        FIN_BASE_RULE_INFO.BASE_RULE_TYPE baseRuleType,
+        FIN_BASE_RULE_INFO.PUBLISH_TYPE publishType,
+        FIN_BASE_RULE_INFO.RATE_LOWER*100 rateLower,
+        FIN_BASE_RULE_INFO.RATE_LIMIT*100 rateLimit
+        from FIN_BASE_RULE_INFO, FIN_PRODUCT, FIN_PRODUCT_ADD
+        where FIN_BASE_RULE_INFO.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+        AND FIN_BASE_RULE_INFO.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
+        
+        AND FIN_BASE_RULE_INFO.BRANCH = 0 
+        
+        
+        
+        AND ((FIN_BASE_RULE_INFO.FINPROD_ID = #{finprodId} and FIN_PRODUCT_ADD.DEAL_MODE != #{dealMode10})
+		           		OR (FIN_BASE_RULE_INFO.FINPROD_ID = #{finprodId} and FIN_PRODUCT_ADD.DEAL_MODE = #{dealMode10}
+		           		))
+        
+	 	<if test="baseRuleType != null and baseRuleType != ''">
+			AND FIN_BASE_RULE_INFO.BASE_RULE_TYPE = #{baseRuleType,jdbcType=VARCHAR}
+		</if>
+	 	<if test="publishType != null and publishType != ''">
+			AND FIN_BASE_RULE_INFO.PUBLISH_TYPE = #{publishType,jdbcType=VARCHAR}
+		</if>
+        <choose>
+        	<when test="effDate != null and effDate != ''">
+        		and FIN_BASE_RULE_INFO.EFF_DATE = STR_TO_DATE(#{effDate},'%Y-%m-%d')
+        	</when>
+        	<otherwise>
+        		and (FIN_BASE_RULE_INFO.EFF_DATE = FIN_PRODUCT.VDATE OR FIN_PRODUCT.FINPROD_TYPE2= #{finprodType2, jdbcType=VARCHAR})
+        	</otherwise>
+        </choose>
+     </select>
+	<select id="selectByPrimaryKey2" resultType="com.joyintech.service.product.common.dto.BussBenchMarkInfoDto">
+     select 
+     	FIN_BASE_RULE_INFO.BASE_RULE_TYPE baseRuleType,
+		FIN_BASE_RULE_INFO.PUBLISH_TYPE publishType,
+		FIN_BASE_RULE_INFO.RATE_LOWER*100 rateLower,
+		FIN_BASE_RULE_INFO.RATE_LIMIT*100 rateLimit, 
+        FIN_BASE_RULE_INFO.BASE_RULE_ID baseRuleId,
+        FIN_BASE_RULE_INFO.EFF_DATE effDate,
+        FIN_BASE_RULE_INFO.RATE_TYPE rateType,
+        FIN_BASE_RULE_INFO.RATE*100 rate,
+        FIN_BASE_RULE_INFO.COEFFICIENT coefficient,
+        FIN_BASE_RULE_INFO.INDEX_ID indexId,
+        FIN_BASE_RULE_INFO.INDEX_SOURCE indexSource,
+        FIN_BASE_RULE_INFO.SPREAD_RATE*100 spreadRate,
+        FIN_BASE_RULE_INFO.RESET_TYPE resetType,
+        FIN_BASE_RULE_INFO.BASE_RULE_TYPE baseRuleType,
+        FIN_BASE_RULE_INFO.PUBLISH_TYPE publishType,
+        FIN_BASE_RULE_INFO.RATE_LOWER*100 rateLower,
+        FIN_BASE_RULE_INFO.RATE_LIMIT*100 rateLimit
+        from FIN_BASE_RULE_INFO, FIN_PRODUCT, FIN_PRODUCT_ADD
+        where FIN_BASE_RULE_INFO.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+        AND FIN_BASE_RULE_INFO.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
+        
+        AND FIN_BASE_RULE_INFO.BRANCH = 0 
+        
+        
+        
+		AND ((FIN_BASE_RULE_INFO.FINPROD_ID = #{finprodId} and FIN_PRODUCT_ADD.DEAL_MODE != #{dealMode10})
+		           		OR (FIN_PRODUCT.P_FINPROD_ID = #{finprodId} and FIN_PRODUCT_ADD.DEAL_MODE = #{dealMode10}
+		           		AND FIN_PRODUCT_ADD.TERM_TYPE != #{termType02}))
+        
+	 	<if test="baseRuleType != null and baseRuleType != ''">
+			AND FIN_BASE_RULE_INFO.BASE_RULE_TYPE = #{baseRuleType,jdbcType=VARCHAR}
+		</if>
+	 	<if test="publishType != null and publishType != ''">
+			AND FIN_BASE_RULE_INFO.PUBLISH_TYPE = #{publishType,jdbcType=VARCHAR}
+		</if>
+        <choose>
+        	<when test="effDate != null and effDate != ''">
+        		and FIN_BASE_RULE_INFO.EFF_DATE = STR_TO_DATE(#{effDate},'%Y-%m-%d')
+        	</when>
+        	<otherwise>
+        		and (FIN_BASE_RULE_INFO.EFF_DATE = FIN_PRODUCT.VDATE OR FIN_PRODUCT.FINPROD_TYPE2= #{finprodType2, jdbcType=VARCHAR})
+        	</otherwise>
+        </choose>
+     </select>
+	<select id="selectByFinprodidList" resultType="com.joyintech.service.product.common.dto.BussBenchMarkInfoDto">
+     select 
+        FIN_BASE_RULE_INFO.BASE_RULE_ID baseRuleId,
+        FIN_BASE_RULE_INFO.EFF_DATE effDate,
+        FIN_BASE_RULE_INFO.RATE_TYPE rateType,
+        FIN_BASE_RULE_INFO.RATE*100 rate,
+        FIN_BASE_RULE_INFO.COEFFICIENT coefficient,
+        FIN_BASE_RULE_INFO.INDEX_ID indexId,
+        FIN_BASE_RULE_INFO.INDEX_SOURCE indexSource,
+        FIN_BASE_RULE_INFO.SPREAD_RATE*100 spreadRate,
+        FIN_BASE_RULE_INFO.RESET_TYPE resetType,
+        prd_layer_param.PROD_STYLE prodStyle,
+        prd_layer_param.TERM_MAX investmentCycle,
+        FIN_BASE_RULE_INFO.BASE_RULE_TYPE baseRuleType,
+        FIN_BASE_RULE_INFO.PUBLISH_TYPE publishType,
+        FIN_BASE_RULE_INFO.RATE_LOWER*100 rateLower,
+        FIN_BASE_RULE_INFO.RATE_LIMIT*100 rateLimit,
+        FIN_PRODUCT.VDATE vdate,
+        FIN_BASE_RULE_INFO.FINPROD_ID finprodId
+        from FIN_BASE_RULE_INFO, FIN_PRODUCT
+        left join prd_layer_param 
+          on FIN_PRODUCT.FINPROD_ID = prd_layer_param.FINPROD_ID   
+        where FIN_BASE_RULE_INFO.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+        and (FIN_BASE_RULE_INFO.FINPROD_ID = #{finprodId,jdbcType=VARCHAR} or prd_layer_param.P_FINPROD_ID = #{finprodId,jdbcType=VARCHAR})
+        and FIN_BASE_RULE_INFO.BRANCH = 0
+	 	<if test="baseRuleType != null and baseRuleType != ''">
+			AND FIN_BASE_RULE_INFO.BASE_RULE_TYPE = #{baseRuleType,jdbcType=VARCHAR}
+		</if>
+	 	<if test="publishType != null and publishType != ''">
+			AND FIN_BASE_RULE_INFO.PUBLISH_TYPE = #{publishType,jdbcType=VARCHAR}
+		</if>
+        <choose>
+        	<when test="effDate != null and effDate != ''">
+        		and FIN_BASE_RULE_INFO.EFF_DATE = STR_TO_DATE(#{effDate},'%Y-%m-%d')
+        	</when>
+        	<otherwise>
+        		and (FIN_BASE_RULE_INFO.EFF_DATE = FIN_PRODUCT.VDATE OR FIN_PRODUCT.FINPROD_TYPE2= #{finprodType2, jdbcType=VARCHAR})
+        	</otherwise>
+        </choose>
+     </select>
+</mapper>

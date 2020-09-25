@@ -1,0 +1,109 @@
+server:
+  port: 8101
+  address: 0.0.0.0
+#主配置文件，配置了这个会优先读取里面的属性覆盖主配置文件的属性
+spring:
+  profiles:
+    active: dtx
+  activemq:
+    active: false
+  jmx:
+    enabled: false
+  application:
+    name: assetService #服务名称
+  datasource:
+    type: org.apache.commons.dbcp2.BasicDataSource
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    validationQuery: SELECT 1 FROM DUAL
+    maxTotal: 50
+    maxIdle: 50
+    minIdle: 20
+    timeBetweenEvictionRunsMillis: 60000  # 默认是-1
+    numTestsPerEvictionRun: 10
+    removeAbandonedOnBorrow: true
+    removeAbandonedOnMaintenance: true
+    logAbandoned: true
+    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.jdbc.ReadTimeout=50000
+#base数据源
+base:
+  datasource:
+    maxTotal: 50
+    maxIdle: 50
+    minIdle: 20
+    timeBetweenEvictionRunsMillis: 60000  # 默认是-1
+    numTestsPerEvictionRun: 10
+    removeAbandonedOnBorrow: true
+    removeAbandonedOnMaintenance: true
+    logAbandoned: true
+    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.jdbc.ReadTimeout=50000
+#注册中心配置
+eureka:
+  client:
+    enabled: true #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
+  instance:
+    prefer-ip-address: false
+#分布式事物配置
+tx-lcn:
+  springcloud:
+    loadbalance:
+      enabled: true #开启负载均衡#用户系统
+  logger:
+    enabled: true # 开启日志数据库记录存储
+    onlyError: true
+#用户系统
+#1 jixu用户系统
+#2 joyin用户系统
+#3 joyinBatch用户系统
+jixu:
+  user:
+    type: 2
+#安全配置
+shiro:
+  jwtEnable: true
+#应用配置
+application:
+  reportInsertLongCount: 10 #数据批量一次性insert条数(单条数据字段较多)（信息披露项目【tams-pingan-report】需要用到）
+
+---
+spring:
+  profiles: dtx
+  #本地启动建议删除redis配置start
+  cache:
+    type: redis
+  redis:
+    database: 1 #redis 集群为0
+    host: 192.168.90.86
+    port: 6379
+    timeout: 20000
+  #本地启动建议删除redis配置end
+  
+# redis 集群部署
+#  redis：
+#    database：0
+#    cluster:
+#      nodes: 192.168.70.104:6379,192.168.70.104:6380,192.168.90.3:6381,192.168.90.3:6382,192.168.90.79:6383,192.168.90.79:6384
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.201:1521/orcl
+    username: tams1_ejfr10
+    password: ENC(WmYokJzbRbFIVY5UIBMKualuKPfqTMKr)
+#base数据源配置  
+base:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.201:1521/orcl
+    username: tams1_ejfr10
+    password: ENC(WmYokJzbRbFIVY5UIBMKualuKPfqTMKr)
+#日志路径配置
+log:
+  path: /home/tams/logs/service/asset
+  level: DEBUG
+#注册中心配置
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://192.168.90.219:9101/eureka/
+  instance:
+    ip-address: 127.0.0.1
+#分布式事物配置
+tx-lcn:
+  client:
+    managerAddress: 192.168.90.89:8070 # manager服务地址(rpc端口),可填写多个负载

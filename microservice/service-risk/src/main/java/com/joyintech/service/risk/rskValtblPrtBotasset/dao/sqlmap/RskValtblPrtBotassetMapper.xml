@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.service.risk.rskValtblPrtBotasset.dao.RskValtblPrtBotassetMapper">
+	 <select id="queryForPage"  resultType="com.joyintech.service.risk.rskValtblPrtBotasset.dto.RskValtblPrtBotassetMapDto" parameterType="Map">
+	SELECT
+	T1.PTL_ID,
+	T1.SUB_CODE,
+	T1.SUB_NAME,
+	T1.SUB_CLASS,
+	T1.ASSET_SOURCE,
+	T1.FINPROD_ID,
+	T2.FINPROD_MARKET_ID,
+	T2.FINPROD_ABBR,
+	T2.TRADE_MARKET,
+	T1.MARKET_ID tblMarketId
+	FROM
+	RSK_VALTBL_PRT_BOTASSET_MAP T1
+	LEFT JOIN FIN_PRODUCT T2 ON T1.FINPROD_ID = T2.FINPROD_ID
+	<!--筛选利息-->
+	where not exists  (select 1 from RSK_VALTBL_PRT_BOTASSET_MAP T2  where T2.SUB_CODE  like '1204%' AND T1.PTL_ID = T2.PTL_ID and T1.SUB_CODE = T2.SUB_CODE)
+	<if test="ptlId !=null and ptlId !=''">
+		and T1.PTL_ID = #{ptlId}
+	</if>
+	<if test="mappingStat == 'MAPPED'">
+		and T1.FINPROD_ID is not null
+	</if>
+	<if test="mappingStat == 'UNMAP'">
+		and T1.FINPROD_ID is null
+	</if>
+	order by T1.SUB_CODE
+	</select>
+	
+	 <select id="selectBotAssetMap" resultType="com.joyintech.service.risk.rskValtblPrtBotasset.dto.RskValtblPrtBotassetMapDto">
+	 SELECT
+		PTL_ID,
+		SUB_CODE,
+		FINPROD_ID
+		FROM
+	 RSK_VALTBL_PRT_BOTASSET_MAP
+	  <where>
+		  <if test="ptlId !=null and ptlId !=''">
+		   AND	PTL_ID = #{ptlId,jdbcType=VARCHAR}
+		  </if>
+	  </where>
+	 </select>
+	 
+	 <select id="selectAssetById" resultType="com.joyintech.service.risk.rskValtblPrtBotasset.dto.RskValtblPrtBotassetMapDto">
+	 	SELECT
+			FINPROD_ID,
+			FINPROD_TYPE2,
+			FINPROD_ABBR,
+			FINPROD_MARKET_ID,
+			TRADE_MARKET 
+		FROM
+			FIN_PRODUCT
+	    where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+	 </select>
+	 
+	 <!-- get wind债券信息 -->
+	 <select id="selectWindBondAssetById" resultType="com.joyintech.service.risk.rskValtblPrtBotasset.dto.RskValtblPrtBotassetMapDto">
+	 	SELECT
+	 		OBJECT_ID,
+			SECNAME FINPROD_ABBR,
+			SECID FINPROD_MARKET_ID,
+			MARKET TRADE_MARKET 
+		FROM
+			INTERF_PAYHSRCSECINFO
+		 where SECID = #{finprodId,jdbcType=VARCHAR}
+	 </select>
+	 
+	 <!-- 获取未映射count -->
+	 <select id="getCountForValUnmapped" parameterType="Map" resultType="Integer">
+	 	SELECT
+			count( 1 ) 
+		FROM
+			RSK_VALTBL_ASSET_SUB
+			where PTL_ID = #{ptlId}
+			and SUB_CODE = #{subCode}
+			and FINPROD_ID is null
+	 </select>
+	 
+	 <!-- 应用未映射 -->
+	 <update id="applyMapForValUnmapped" parameterType="Map">
+	 	update RSK_VALTBL_ASSET_SUB set
+			FINPROD_ID = #{finprodId, jdbcType=VARCHAR}
+		where
+			PTL_ID = #{ptlId}
+			and (SUB_CODE = #{subCode} OR SUB_NAME in (SELECT SUB_NAME FROM RSK_VALTBL_ASSET_SUB WHERE SUB_CODE = #{subCode} AND PTL_ID = #{ptlId}))
+			and FINPROD_ID is null
+	 </update>
+	 <!-- 获取不同映射count -->
+	 <select id="getCountForValDiffmapped" parameterType="Map" resultType="Integer">
+	 	SELECT
+			count( 1 ) 
+		FROM
+			RSK_VALTBL_ASSET_SUB
+			where PTL_ID = #{ptlId}
+			and SUB_CODE = #{subCode}
+			and FINPROD_ID is not  null
+			<if test="finprodId != null and finprodId != ''">
+			and FINPROD_ID != #{finprodId}
+			</if>
+	 </select>
+	 <!-- 应用不同映射 -->
+	 <update id="applyMapForValDiffmapped" parameterType="Map">
+	 	update RSK_VALTBL_ASSET_SUB set
+			FINPROD_ID = #{finprodId, jdbcType=VARCHAR}
+		where
+			PTL_ID = #{ptlId}
+			and (SUB_CODE = #{subCode} OR SUB_NAME in (SELECT SUB_NAME FROM RSK_VALTBL_ASSET_SUB WHERE SUB_CODE = #{subCode} AND PTL_ID = #{ptlId}))
+			and FINPROD_ID is not null
+			<if test="finprodId != null and finprodId != ''">
+			and FINPROD_ID != #{finprodId}
+			</if>
+	 </update>
+
+	<!--取消映射-->
+	<update id="cancleValmapped" parameterType="Map">
+	 	update RSK_VALTBL_ASSET_SUB set
+			FINPROD_ID = null
+		where
+			PTL_ID = #{ptlId}
+			and (SUB_CODE = #{subCode} OR SUB_NAME in (SELECT SUB_NAME FROM RSK_VALTBL_ASSET_SUB WHERE SUB_CODE = #{subCode} AND PTL_ID = #{ptlId}))
+	 </update>
+	 
+	 <delete id="deletePrtBotassetMap" parameterType="Map">
+		delete from RSK_VALTBL_PRT_BOTASSET_MAP 
+		where PTL_ID = #{ptlId,jdbcType=VARCHAR}
+	 </delete>
+</mapper>

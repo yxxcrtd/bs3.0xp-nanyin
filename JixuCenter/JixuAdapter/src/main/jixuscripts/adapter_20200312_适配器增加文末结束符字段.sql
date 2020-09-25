@@ -1,0 +1,5 @@
+alter table ADPT_INTERFACESOURCE ADD (END_CHAR VARCHAR2(50));
+comment on column "ADPT_INTERFACESOURCE"."END_CHAR" is '导出结束符';
+
+
+

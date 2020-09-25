@@ -1,0 +1,1 @@
+alter table JXV_VOUCHER modify MANAGERGROUPCODE NUMBER(10,0);

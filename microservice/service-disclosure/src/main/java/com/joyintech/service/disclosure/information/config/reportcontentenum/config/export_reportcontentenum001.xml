@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ReportContentEnum001.xlsx" name="报表指标管理">
+	<Worksheet javaBean="com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto">
+		<Row>
+			<Cell order="1" name="生效日期">indexDateStr</Cell>
+			<Cell order="2" name="指标值">indexValue</Cell>
+			<Cell order="3" name="使用范围说明">indexDetail</Cell>
+			<Cell order="4" name="制作人">createUser</Cell>
+			<Cell order="5" name="修改时间">updateTimeFmt</Cell>					
+		</Row>
+	</Worksheet>
+</Workbook>

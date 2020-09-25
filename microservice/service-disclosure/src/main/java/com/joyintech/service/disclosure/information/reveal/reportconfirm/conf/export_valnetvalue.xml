@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ReportConfirmManage001.xlsx" name="报表确认管理">
+	<Worksheet javaBean="com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto">
+		<Row>
+			<Cell order="1" name="确认状态">confirmStatusName</Cell>
+			<Cell order="2" name="产品代码">prodid</Cell>
+			<Cell order="3" name="产品名称">prodName</Cell>
+			<Cell order="4" name="报表名称">reportName</Cell>
+			<Cell order="5" name="报告期">reportDate</Cell>
+			<Cell order="6" name="披露截至日">revealEndDateStr</Cell>
+			<Cell order="7" name="报表类别">reportCategoryName</Cell>
+			<Cell order="8" name="系统生成">sysFilename</Cell>
+			<Cell order="9" name="手动上传">filename</Cell>
+			<Cell order="10" name="生成日期">createTimeStr</Cell>
+			<Cell order="11" name="确认时间">confirmDateStr</Cell>
+			<Cell order="12" name="上传说明">detail</Cell>
+			<Cell order="13" name="上传时间">uploadTime</Cell>
+			<Cell order="14" name="确认方式">isConfirmName</Cell>
+			<Cell order="15" name="披露渠道">revealChannelName</Cell>
+			<Cell order="16" name="披露方式">isRevealName</Cell>
+			<Cell order="17" name="附件">annex</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>

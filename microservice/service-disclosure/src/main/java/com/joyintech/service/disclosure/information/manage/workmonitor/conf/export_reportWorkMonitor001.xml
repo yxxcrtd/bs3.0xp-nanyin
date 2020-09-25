@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ReportWorkMonitor001.xlsx" name="报表作业监控">
+	<Worksheet javaBean="com.joyintech.tams.disclosure.information.manage.workmonitor.dto.ReportWorkMonitorNew001Dto">
+		<Row>
+			<Cell order="1" name="作业编号">jobId</Cell>
+			<Cell order="2" name="作业名称">jobName</Cell>
+			<Cell order="3" name="执行状态">execStatusName</Cell>
+			<Cell order="4" name="首次执行日期">execDate</Cell>
+			<Cell order="5" name="最新执行日期">lastexecDate</Cell>
+			<Cell order="6" name="开始执行时间">startExecDate</Cell>
+			<Cell order="7" name="结束执行时间">endExecDate</Cell>
+			<Cell order="8" name="耗时（s）">spendTime</Cell>
+			<Cell order="9" name="执行结果">execResult</Cell>
+			<Cell order="10" name="执行结果说明">execResultExplain</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>

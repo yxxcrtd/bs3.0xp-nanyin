@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.risk.creditmanagement.preoccupancymanagement.dao.CePreOccupancyManagementMapper_mysql">
+	<select id="selectForPage" resultType="com.joyintech.service.risk.creditmanagement.preoccupancymanagement.dto.CePreOccupancyManagementDto">
+	 SELECT
+	 	A.SEQNO SEQNO,
+	 	A.CREDIT_MST_ID creditMstId, 
+	 	A.CUSTOMER_ID customerId,
+        A.CREDIT_AMT/100000000 creditAmt, 
+        A.VDATE VDATE,
+        A.MDATE MDATE,
+        A.REMARK,
+        C.CUSTOMER_NAME as customerName,
+        D.INSITITUTE_CODE as insitituteCode
+	 FROM 
+	 	CREDIT_LINES_PRE A
+	 	INNER JOIN CREDIT_MST_INFO B on A.CREDIT_MST_ID=B.SEQNO and B.CREDIT_INFO_TYPE in ('01')
+	 	left join MST_CUSTOMER_INFO C on A.CUSTOMER_ID=C.CUSTOMER_ID
+	 	left join MST_CUSTOMER_INFO_ADD D on A.CUSTOMER_ID=D.CUSTOMER_ID
+		 <where>
+		    <if test="customerId != null and customerId != ''">
+		 	 A.CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+		 	</if>
+		 	<if test="vdate != null and vdate !=''">
+		 	AND DATE_FORMAT(A.VDATE,'%Y-%m-%d') &gt; = #{vdate,jdbcType=DATE}
+		 	</if>
+		 	<if test="mdate != null and mdate !=''">
+		 	AND DATE_FORMAT(A.VDATE,'%Y-%m-%d') &lt; = #{mdate,jdbcType=DATE}
+		 	</if>
+		 </where>
+	 </select>
+	<select id="searchRepeatByVmDate" 	resultType="Integer" >
+       SELECT
+	 	count(1)
+	 FROM 
+	 	CREDIT_LINES_PRE A
+        where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+         and PARENT_CUSTOMER_ID IS NULL
+      <![CDATA[  
+      and DATE_FORMAT(VDATE,'%Y-%m-%d')<= #{vmdate, jdbcType=VARCHAR}
+       and DATE_FORMAT(MDATE,'%Y-%m-%d')>=#{vmdate, jdbcType=VARCHAR} 
+      ]]>
+      <if test="seqno != null and seqno != ''">
+			 <![CDATA[and  SEQNO <> #{seqno}]]>
+		</if> 
+    </select>
+	<select id="searchRepeatByVmDateArea" 	resultType="Integer" >
+       SELECT
+	 	count(1)
+	 FROM 
+	 	CREDIT_LINES_PRE A
+        where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+         and PARENT_CUSTOMER_ID IS NULL
+      <![CDATA[  
+      and DATE_FORMAT(VDATE,'%Y-%m-%d')>= #{vdate, jdbcType=VARCHAR}
+       and DATE_FORMAT(MDATE,'%Y-%m-%d')<=#{mdate, jdbcType=VARCHAR} 
+      ]]>
+      <if test="seqno != null and seqno != ''">
+			 <![CDATA[and  SEQNO <> #{seqno}]]>
+		</if> 
+    </select>
+	<select id="getTreeCeOrgQuote" resultType="com.joyintech.service.risk.creditmanagement.ceorg.dto.CreditMstInfoDto">
+		select A.creditMstId,A.creditQuoteTypeCode,A.creditQuoteTypeValue,A.upperCreditQuoteTypeCode,(case when count(B.creditQuoteTypeCode) > 0 then '02' else '01' end) as hasChildren
+		,null as creditAmt from (select m.seqno as creditMstId,m.CREDIT_QUOTE_TYPE_VALUE as creditQuoteTypeCode ,y.item_value as creditQuoteTypeValue, if(trim(n.linked_item_code)= ' ', 'root', n.linked_item_code) AS upperCreditQuoteTypeCode
+		from CREDIT_MST_INFO m
+		inner JOIN SYS_DATADICT_LIST_LINK n ON m.CREDIT_QUOTE_TYPE_VALUE = n.item_code and m.CREDIT_QUOTE_TYPE_CODE=n.dict_code
+		left join SYS_DATADICT_LIST y  ON m.CREDIT_QUOTE_TYPE_VALUE = y.item_code and m.CREDIT_QUOTE_TYPE_CODE=y.dict_code
+		where M.CREDIT_INFO_TYPE = '04'
+		<![CDATA[ AND (m.CREDIT_QUOTE_RANK <> #{rank,jdbcType=VARCHAR} or  m.CREDIT_QUOTE_RANK is null) ]]>
+		union ALL
+		select m.seqno as creditMstId,m.CREDIT_QUOTE_TYPE_VALUE as creditQuoteTypeCode ,y.item_value as creditQuoteTypeValue,'root' AS upperCreditQuoteTypeCode
+		from CREDIT_MST_INFO m
+		left join SYS_DATADICT_LIST y  ON m.CREDIT_QUOTE_TYPE_VALUE = y.item_code and m.CREDIT_QUOTE_TYPE_CODE=y.dict_code
+		where M.CREDIT_INFO_TYPE = '04'
+		AND m.CREDIT_QUOTE_RANK =#{rank,jdbcType=VARCHAR}
+		) A
+		left join (select m.seqno as creditMstId,m.CREDIT_QUOTE_TYPE_VALUE as creditQuoteTypeCode ,y.item_value as creditQuoteTypeValue, if(trim(n.linked_item_code)= ' ', 'root', n.linked_item_code) AS upperCreditQuoteTypeCode
+		from CREDIT_MST_INFO m
+		inner JOIN SYS_DATADICT_LIST_LINK n ON m.CREDIT_QUOTE_TYPE_VALUE = n.item_code and m.CREDIT_QUOTE_TYPE_CODE=n.dict_code
+		left join SYS_DATADICT_LIST y  ON m.CREDIT_QUOTE_TYPE_VALUE = y.item_code and m.CREDIT_QUOTE_TYPE_CODE=y.dict_code
+		where M.CREDIT_INFO_TYPE = '04'
+		<![CDATA[ AND (m.CREDIT_QUOTE_RANK <> #{rank,jdbcType=VARCHAR} or  m.CREDIT_QUOTE_RANK is null) ]]>
+		union ALL
+		select m.seqno as creditMstId,m.CREDIT_QUOTE_TYPE_VALUE as creditQuoteTypeCode ,y.item_value as creditQuoteTypeValue,'root' AS upperCreditQuoteTypeCode
+		from CREDIT_MST_INFO m
+		left join SYS_DATADICT_LIST y  ON m.CREDIT_QUOTE_TYPE_VALUE = y.item_code and m.CREDIT_QUOTE_TYPE_CODE=y.dict_code
+		where M.CREDIT_INFO_TYPE = '04'
+		AND m.CREDIT_QUOTE_RANK =#{rank,jdbcType=VARCHAR}
+		) B on A.creditQuoteTypeCode=B.upperCreditQuoteTypeCode
+		GROUP BY A.creditMstId,A.creditQuoteTypeCode,A.creditQuoteTypeValue,A.upperCreditQuoteTypeCode order by creditMstId asc,upperCreditQuoteTypeCode
+	</select>
+</mapper>

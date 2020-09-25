@@ -1,0 +1,11 @@
+[{
+	"label": "投资组合",
+	"category": "port",
+	"type": "select",
+	"value": "",
+	"options": {
+		"type": "value",
+		"values": [],
+		"url": ""
+	}
+}]

@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.service.product.messageadjust.finpayplanadjustment.dao.FinPayPlanAdjustmentMapper">
+	<resultMap type="com.joyintech.service.product.messageadjust.finpayplanadjustment.dto.FinPayPlanAdjustmentDto" id="BaseResultMap">
+		<id column="MDATE" property="mdate" jdbcType="DATE" />
+		<result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="PAY_DATE" property="payDate" jdbcType="DATE" />
+        <result column="PAY_STATUS" property="payStatus" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="BaseResultMap1" type="com.joyintech.tams.common.base.entity.FinCashPlan" >
+        <id column="CASH_ID" property="cashId" jdbcType="VARCHAR" />
+        <id column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="CASH_NUM" property="cashNum" jdbcType="DECIMAL" />
+        <result column="CASH_TYPE" property="cashType" jdbcType="VARCHAR" />
+        <result column="VDATE_UNADJUST" property="vdateUnadjust" jdbcType="DATE" />
+        <result column="MDATE_UNADJUST" property="mdateUnadjust" jdbcType="DATE" />
+        <result column="PAY_DATE_UNADJUST" property="payDateUnadjust" jdbcType="DATE" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="PAY_DATE" property="payDate" jdbcType="DATE" />
+        <result column="TERMDAYS" property="termdays" jdbcType="DECIMAL" />
+        <result column="VDATE_Y" property="vdateY" jdbcType="DATE" />
+        <result column="VDATE_TERM" property="vdateTerm" jdbcType="DATE" />
+        <result column="MDATE_TERM" property="mdateTerm" jdbcType="DATE" />
+        <result column="TERMDAYS_TERM" property="termdaysTerm" jdbcType="DECIMAL" />
+        <result column="PRIN_AMT" property="prinAmt" jdbcType="DECIMAL" />
+        <result column="INT_PRIN_AMT" property="intPrinAmt" jdbcType="DECIMAL" />
+        <result column="INT_AMT" property="intAmt" jdbcType="DECIMAL" />
+        <result column="IS_PAY_INT" property="isPayInt" jdbcType="VARCHAR" />
+        <result column="CASH_AMT" property="cashAmt" jdbcType="DECIMAL" />
+        <result column="CASH_BASEAMT" property="cashBaseamt" jdbcType="DECIMAL" />
+        <result column="CASH_UNIT_TYPE" property="cashUnitType" jdbcType="VARCHAR" />
+        <result column="CALC_FUNCTION" property="calcFunction" jdbcType="VARCHAR" />
+        <result column="FREQUENCY" property="frequency" jdbcType="DECIMAL" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE" property="finprodType" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE2" property="finprodType2" jdbcType="VARCHAR" />
+        <result column="BRANCH" property="branch" jdbcType="DECIMAL" />
+        <result column="PAY_TYPE" property="payType" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+	<!-- 产品代码下拉框 -->
+	<select id="getFinprodId" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select	DISTINCT																									
+				FIN_PRODUCT.FINPROD_MARKET_ID				id,					
+				NVL(p.FINPROD_ABBR,FIN_PRODUCT.FINPROD_ABBR)      text,
+                NVL(p.FINPROD_ID,FIN_PRODUCT.FINPROD_ID)        object,
+                <!-- modify by wm 周期型产品是否分层查询默认为否  2019-10-16-->
+                DECODE(FIN_PRODUCT_ADD.DEAL_MODE,#{dealMode_10,jdbcType=VARCHAR},#{yeOrNO_N,jdbcType=VARCHAR},fin_product_add.IS_LAY)  	col	
+		from	
+				FIN_CASH_PAY_RULE,
+				FIN_CASH_INFO,																									
+				FIN_PRODUCT
+				INNER JOIN 
+					PTL_MANAGE_OBJ
+				ON (PTL_MANAGE_OBJ.MANAGE_OBJ_ID = FIN_PRODUCT.FINPROD_ID
+				or PTL_MANAGE_OBJ.MANAGE_OBJ_ID= FIN_PRODUCT.P_FINPROD_ID)
+				INNER JOIN FIN_PRODUCT_ADD D2
+ 					ON FIN_PRODUCT.FINPROD_ID = D2.FINPROD_ID
+				INNER JOIN 
+					PTL_PORTFOLIO_AUTHORITY
+				ON
+					PTL_MANAGE_OBJ.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
+					<if test="userId != null and userId != ''">
+						AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
+					</if>
+				LEFT JOIN FIN_PRODUCT P
+  				  ON FIN_PRODUCT.P_FINPROD_ID = P.FINPROD_ID  	
+  				LEFT JOIN FIN_PRODUCT_ADD ON FIN_PRODUCT_ADD.FINPROD_ID = P.FINPROD_ID and  P.PROFIT_TYPE = #{PROFIT_TYPE_01}
+		where	
+				FIN_PRODUCT.FINPROD_ID	=	FIN_CASH_PAY_RULE.FINPROD_ID
+		AND		FIN_CASH_PAY_RULE.PAY_CYCLE != #{payCycle,jdbcType=VARCHAR}																									
+		AND		FIN_PRODUCT.FINPROD_TYPE = #{finprodType2,jdbcType=VARCHAR}
+		AND 	FIN_CASH_INFO.CASH_ID = FIN_CASH_PAY_RULE.CASH_ID
+		AND 	FIN_CASH_INFO.CASH_TYPE_1 = #{cashType1}
+				<if test=" search != null and search != ''">
+				AND	(FIN_PRODUCT.FINPROD_MARKET_ID like concat('%',concat(#{search},'%'))
+				OR FIN_PRODUCT.FINPROD_ABBR like concat('%',concat(#{search},'%'))
+				OR FIN_PRODUCT.P_FINPROD_ID like concat('%',concat(#{search},'%')	)
+				)
+				</if>
+				<if test=" initValue != null and initValue != ''">
+				AND FIN_PRODUCT.FINPROD_MARKET_ID = #{initValue} 
+				</if>
+		<!-- add by wm 2019-10-16 过滤同一产品查询多个  -->	
+		<!-- 预期收益型付费计划查询不到问题修复 -->
+		AND ((FIN_PRODUCT.PROFIT_TYPE != #{PROFIT_TYPE_02} and ((P.FINPROD_ID IS NOT NULL and D2.deal_mode != #{dealMode_01,jdbcType=VARCHAR}) or D2.deal_mode = #{dealMode_01,jdbcType=VARCHAR}))	
+			OR FIN_PRODUCT.PROFIT_TYPE = #{PROFIT_TYPE_02})																				
+	</select>
+	
+	
+		<!-- 产品款型下拉框 -->
+	<select id="getProdType" resultType="com.joyintech.framework.select.SelectOptionDto">
+		SELECT DISTINCT PRD_LAYER_PARAM.PROD_STYLE id,
+               		PRD_LAYER_PARAM.PROD_STYLE  text,
+               		PRD_LAYER_PARAM.FINPROD_ID   object
+			   FROM PRD_LAYER_PARAM 
+			  WHERE P_FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+			  	<if test=" search != null and search != ''">
+					AND	PRD_LAYER_PARAM.PROD_STYLE LIKE concat('%',concat(#{search},'%'))
+				</if>
+	</select>
+	
+	<!-- 产品代码联动带出费用名称 -->
+	<select id="getFeeName" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select																								
+				FIN_CASH_INFO.CASH_ID id,																						
+				MST_FEEINFO.FEE_NAME text
+																										
+		from																								
+				FIN_CASH_INFO,
+				MST_FEEINFO,																						
+				FIN_PRODUCT
+		 left join 	PRD_LAYER_PARAM 
+		   on FIN_PRODUCT.FINPROD_ID = PRD_LAYER_PARAM.FINPROD_ID																					
+		where
+				FIN_CASH_INFO.FINPROD_ID	=	FIN_PRODUCT.FINPROD_ID										
+		AND		FIN_CASH_INFO.FINPROD_TYPE	=	#{finprodType,jdbcType=VARCHAR}										
+		AND		FIN_CASH_INFO.CASH_TYPE_1	=	#{cashType1,jdbcType=VARCHAR}											
+		<!-- AND		FIN_CASH_INFO.CASH_TYPE_2	!=	#{cashType2,jdbcType=VARCHAR} -->
+		AND     FIN_CASH_INFO.FEE_ID = MST_FEEINFO.FEE_ID
+		<if test="finprodMarketId != null and finprodMarketId != ''">
+		AND FIN_PRODUCT.FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR}
+		</if>
+		<if test="initValue != null and initValue != ''">
+		AND FIN_CASH_INFO.CASH_ID = #{initValue,jdbcType=VARCHAR}
+		</if>
+		<if test="prodType != null and prodType != '' ">
+			and PRD_LAYER_PARAM.PROD_STYLE = #{prodType}
+		</if>	
+		AND EXISTS (SELECT 1 FROM FIN_CASH_PLAN
+   				WHERE FIN_CASH_INFO.CASH_ID = FIN_CASH_PLAN.CASH_ID)										
+	</select>
+	<!-- 根据产品代码和费用名称，联动带出产品对应费用的付费计划 -->
+	<select id="selectForPage" resultMap="BaseResultMap">
+select a.prodType,a.VDATE,a.MDATE,a.PAY_DATE,a.PAY_STATUS,a.finprodId from(
+		select	
+				plp.prod_style 						prodType,																								
+				FIN_CASH_PLAN.VDATE					VDATE,					
+				FIN_CASH_PLAN.MDATE					MDATE,					
+				FIN_CASH_PLAN.PAY_DATE				PAY_DATE,					
+				CASE WHEN TRD_PRODUCT_DEAL.TRADE_ID IS NOT NULL 
+                THEN '已支付'
+                WHEN BOK_POSITION_PRDFEE.FINPROD_ID IS NOT NULL AND (BOK_POSITION_PRDFEE.TDY_UNPAID_INTINCEXP IS NULL OR BOK_POSITION_PRDFEE.TDY_UNPAID_INTINCEXP= 0)
+                THEN '无需支付'       
+                ELSE '未支付' end PAY_STATUS,
+                <!-- wangyang1 产品二级法人改造 start -->
+                FIN_CASH_PLAN.FINPROD_ID  finprodId
+                <!-- wangyang1 产品二级法人改造 end -->
+		from																									
+				FIN_CASH_PLAN
+		INNER JOIN FIN_CASH_INFO  
+        ON FIN_CASH_INFO.CASH_ID = FIN_CASH_PLAN.CASH_ID
+		left join																							
+				TRD_PRODUCT_DEAL
+		on 
+				FIN_CASH_PLAN.CASH_ID	=	TRD_PRODUCT_DEAL.CASH_ID									
+				AND FIN_CASH_PLAN.MDATE	=	TRD_PRODUCT_DEAL.MDATE									
+				AND TRD_PRODUCT_DEAL.PS	=	#{ps,jdbcType=VARCHAR}
+				AND TRD_PRODUCT_DEAL.IS_CANCEL != 'Y'	
+				AND (TRD_PRODUCT_DEAL.TRADE_STATUS IS NULL OR TRD_PRODUCT_DEAL.TRADE_STATUS ='01')
+		left join prd_layer_param plp
+		on FIN_CASH_PLAN.Finprod_Id = plp.Finprod_Id
+		LEFT JOIN (
+	      SELECT 
+	         FIN_CASH_PLAN.CASH_ID,
+	         FIN_CASH_PLAN.PAY_DATE,
+	         MAX(FIN_FLOAT_ACCRUAL_SCHE.VAL_DATE) VAL_DATE 
+	      FROM FIN_CASH_PLAN
+	      INNER JOIN FIN_FLOAT_ACCRUAL_SCHE 
+	      ON FIN_FLOAT_ACCRUAL_SCHE.CASH_ID = FIN_CASH_PLAN.CASH_ID
+	      AND FIN_FLOAT_ACCRUAL_SCHE.VAL_DATE &lt; FIN_CASH_PLAN.PAY_DATE
+	      GROUP BY FIN_CASH_PLAN.CASH_ID,FIN_CASH_PLAN.PAY_DATE
+	    ) ACCRUAL_SCHE
+	    ON ACCRUAL_SCHE.CASH_ID =  FIN_CASH_PLAN.CASH_ID
+	    AND ACCRUAL_SCHE.PAY_DATE = FIN_CASH_PLAN.PAY_DATE
+	    LEFT JOIN BOK_POSITION_PRDFEE 
+	    ON BOK_POSITION_PRDFEE.FINPROD_ID = FIN_CASH_INFO.FINPROD_ID
+	    AND BOK_POSITION_PRDFEE.FEE_TYPE = FIN_CASH_INFO.CASH_TYPE_2
+	    AND BOK_POSITION_PRDFEE.BRANCH = FIN_CASH_INFO.BRANCH
+	    AND BOK_POSITION_PRDFEE.CDATE = ACCRUAL_SCHE.VAL_DATE																			
+		where										 															
+				FIN_CASH_PLAN.CASH_ID	=	#{cashId,jdbcType=VARCHAR}		
+		<if test="prodType != null and prodType != ''">
+			and plp.prod_style=#{prodType,jdbcType=VARCHAR}
+		</if>							
+		)a
+group by a.prodType,a.VDATE,a.MDATE,a.PAY_DATE,a.PAY_STATUS,a.finprodId
+order by a.VDATE ASC
+														
+	</select>
+	<!-- 获取到期日和起息日-->
+	<select id="getMdate" resultType="com.joyintech.service.product.messageadjust.finpayplanadjustment.dto.FinPayPlanAdjustmentDto">
+		select	
+				FIN_PRODUCT.VDATE,																			
+				FIN_PRODUCT.MDATE																		
+		from																				
+				FIN_PRODUCT																		
+		where																				
+				FIN_PRODUCT.FINPROD_ID   = #{finprodId,jdbcType=VARCHAR}					
+		
+	</select>
+	<!-- 获取现金流计划 -->
+	<select id="selectByCashId" parameterType="String" resultMap="BaseResultMap1">
+		select 
+        	*
+        from 
+        	FIN_CASH_PLAN
+        where 
+        	CASH_ID = #{cashId,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 费用规则调整产品代码联想下拉框 yag 20191126  -->
+	<select id="getSelectFinprodId" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select		
+				FIN_PRODUCT.FINPROD_MARKET_ID	id,						
+				FIN_PRODUCT.FINPROD_ABBR  text,
+				FIN_PRODUCT.FINPROD_ID || ',' ||
+				to_char(FIN_PRODUCT.VDATE,'yyyy-mm-dd') || ',' ||
+				to_char(FIN_PRODUCT.MDATE,'yyyy-mm-dd') || ',' ||
+				FIN_PRODUCT.PROFIT_TYPE || ',' ||
+				FIN_PRODUCT.CALENDAR_ID || ',' || 
+				to_char(FIN_PRODUCT.LIQUIDATION_DATE,'yyyy-mm-dd') object,
+				<!--modify by wm  增加周期型产品后修改  start 2019-10-16-->
+				<!-- DECODE(FIN_PRODUCT.PROFIT_TYPE,#{profitType_02},#{YES_OR_NO_N},FIN_PRODUCT_ADD.IS_LAY)  col-->
+				case when FIN_PRODUCT.PROFIT_TYPE = #{profitType_02}
+    			then #{YES_OR_NO_N}
+    			when FIN_PRODUCT_ADD.DEAL_MODE = #{dealMode_10}
+    			then #{YES_OR_NO_N}
+    			else FIN_PRODUCT_ADD.IS_LAY
+    			end as col
+    			/* 多级法人改造    add by caojin 2020/6/20   start   */
+    			,FIN_PRODUCT.FINPROD_ID   finprodId
+    			/* 多级法人改造    add by caojin 2020/6/20   end   */
+				<!-- modify by wm  增加周期型产品后修改  end 2019-10-16 -->
+		from		
+				FIN_PRODUCT
+				INNER JOIN 
+					PTL_MANAGE_OBJ
+				ON PTL_MANAGE_OBJ.MANAGE_OBJ_ID = FIN_PRODUCT.FINPROD_ID
+				INNER JOIN 
+					PTL_PORTFOLIO_AUTHORITY
+				ON
+					PTL_MANAGE_OBJ.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
+					<if test="userId != null and userId != ''">
+					AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
+					</if>
+				INNER JOIN FIN_PRODUCT_ADD 
+				  ON FIN_PRODUCT.FINPROD_ID	= FIN_PRODUCT_ADD.FINPROD_ID 
+				  AND FIN_PRODUCT_ADD.ISSUE_STATUS = #{ISSUE_STATUS_01}
+		<where>
+			<if test="args0 != null">
+<!-- 				FIN_PRODUCT.FINPROD_TYPE2 IN (#{args0,jdbcType=VARCHAR}, #{args1,jdbcType=VARCHAR}) -->
+				FIN_PRODUCT.FINPROD_TYPE2 = #{args0,jdbcType=VARCHAR} 
+			</if>
+			<if test="search != null and search != ''">
+				AND (FIN_PRODUCT.FINPROD_MARKET_ID like concat('%',concat(#{search,jdbcType=VARCHAR},'%'))
+					OR FIN_PRODUCT.FINPROD_ABBR like concat('%',concat(#{search,jdbcType=VARCHAR},'%')))
+			</if>
+			<if test="initValue != null and initValue != ''">
+				AND FIN_PRODUCT.FINPROD_MARKET_ID = #{initValue}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryFeeInfoByFinprodId" resultType="com.joyintech.service.product.messageadjust.finpayplanadjustment.dto.FinPayRuleAdjustmentDto">
+       select FIN_CASH_INFO.CASH_ID cashId,
+       	      FIN_CASH_INFO.FEE_ID feeId,
+       		  MST_FEEINFO.FEE_TYPE feeType,
+       		  FIN_CASH_CALC_RULE.BASIS basis,
+       		  FIN_CASH_CALC_RULE.BASE_TYPE basicBill,
+       		  FIN_FLOAT_COUNTING_RULE.FIRST_BASE_TYPE firstBaseType,
+       		  FIN_CASH_PAY_RULE.END_TDAY_RULE calcFeeTradeRule,
+       		  FIN_CASH_PAY_RULE.PAY_TDAY_RULE payFeeTradeRule,
+       		  FIN_CASH_PAY_RULE.PAY_CYCLE payFeeRule,
+       		  FIN_CASH_PAY_RULE.EFF_DATE effDate,
+       		  FIN_FLOAT_COUNTING_RULE.F_ACCR_DATE provisionFirstDay,
+       		  FIN_FLOAT_COUNTING_RULE.ACCR_TDAY_RULE accrTdayRule,
+       		  FIN_CASH_CALC_RULE.YIELD * 100 feeRate,
+       		  FIN_CASH_CALC_RULE.BASE_DATE_TYPE netAssetValueDay,
+       		  FIN_FLOAT_COUNTING_RULE.E_ACCR_DATE eAccrDate,
+       		  FIN_CASH_PAY_RULE.FIRST_PAY_DATE firstCalEndDate,
+       		  MST_FEEINFO.CHARGE_TYPE chargeType,
+       		  prd_layer_param.FINPROD_ID prodStyle,
+       		  FIN_PRODUCT.VDATE vdate,
+       		  FIN_PRODUCT.MDATE mdate,
+       		  FIN_PRODUCT.LIQUIDATION_DATE liquidationDate,
+       		  FIN_PRODUCT.CALENDAR_ID dealCalId,
+       		  FIN_PRODUCT.PROFIT_TYPE profitType
+    	 from FIN_CASH_INFO, MST_FEEINFO, FIN_CASH_PAY_RULE, FIN_CASH_CALC_RULE, FIN_FLOAT_COUNTING_RULE, FIN_PRODUCT
+    	 left join prd_layer_param 
+   		   on FIN_PRODUCT.FINPROD_ID = prd_layer_param.FINPROD_ID   
+    	WHERE FIN_CASH_INFO.FEE_ID = MST_FEEINFO.FEE_ID
+    	  and FIN_CASH_INFO.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+    	  and FIN_CASH_INFO.CASH_ID = FIN_CASH_CALC_RULE.CASH_ID
+    	  <!-- and (FIN_CASH_CALC_RULE.EFF_DATE = FIN_PRODUCT.VDATE OR FIN_PRODUCT.FINPROD_TYPE2=#{finprodType2}) -->
+    	  and FIN_CASH_INFO.CASH_ID = FIN_CASH_PAY_RULE.CASH_ID
+    	  <!-- and (FIN_CASH_PAY_RULE.EFF_DATE = FIN_PRODUCT.VDATE OR FIN_PRODUCT.FINPROD_TYPE2=#{finprodType2}) -->
+    	  and FIN_CASH_INFO.CASH_ID = FIN_FLOAT_COUNTING_RULE.CASH_ID
+    	  <!-- and (FIN_FLOAT_COUNTING_RULE.EFF_DATE = FIN_PRODUCT.VDATE OR FIN_PRODUCT.FINPROD_TYPE2=#{finprodType2}) -->
+    	  and (FIN_CASH_INFO.FINPROD_ID = #{finprodId} or prd_layer_param.P_FINPROD_ID = #{finprodId})
+		  and FIN_CASH_INFO.CASH_TYPE_1 = #{cashType1}
+		  and MST_FEEINFO.FEE_TYPE in (#{feeTypeTrust}, #{feeTypeFix}, #{feeTypeSale}, #{feeTypeOthSale}, #{feeTypeThService},#{feeTypeInvest})
+		  and FIN_CASH_INFO.FINPROD_TYPE = #{finprodType}
+		  and FIN_CASH_PAY_RULE.EFF_DATE = FIN_CASH_CALC_RULE.EFF_DATE
+   		  and FIN_CASH_PAY_RULE.EFF_DATE = FIN_FLOAT_COUNTING_RULE.EFF_DATE
+		  and FIN_CASH_PAY_RULE.EFF_DATE =
+		  	(select max(cpr.eff_date) from FIN_CASH_PAY_RULE cpr
+  				where cpr.cash_id = FIN_CASH_INFO.cash_id)
+    </select>
+    
+    <select id="getSelectProdStyle" resultType="com.joyintech.framework.select.SelectOptionDto">
+    	 SELECT distinct
+		       PRD_LAYER_PARAM.PROD_STYLE text,
+			   FIN_PRODUCT.FINPROD_ID id,
+		       FIN_PRODUCT.FINPROD_ID || ',' ||
+				to_char(FIN_PRODUCT.VDATE,'yyyy-mm-dd') || ',' ||
+				to_char(FIN_PRODUCT.MDATE,'yyyy-mm-dd') || ',' ||
+				FIN_PRODUCT.PROFIT_TYPE || ',' ||
+				FIN_PRODUCT.CALENDAR_ID || ',' || 
+				to_char(FIN_PRODUCT.LIQUIDATION_DATE,'yyyy-mm-dd') object
+		 FROM PRD_LAYER_PARAM,FIN_CASH_INFO,FIN_PRODUCT
+		 WHERE PRD_LAYER_PARAM.FINPROD_ID = FIN_CASH_INFO.FINPROD_ID
+		 AND FIN_CASH_INFO.CASH_TYPE_1 =#{cashType1_03}
+		 AND PRD_LAYER_PARAM.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+		 <if test="pfinprodId != null and pfinprodId != ''">
+		 	AND PRD_LAYER_PARAM.P_FINPROD_ID = #{pfinprodId}
+		 </if>
+		 <if test="search != null and search != ''">
+				AND (FIN_PRODUCT.FINPROD_ABBR like concat('%',concat(#{search,jdbcType=VARCHAR},'%'))
+					OR PRD_LAYER_PARAM.PROD_STYLE like concat('%',concat(#{search,jdbcType=VARCHAR},'%')))
+		 </if>
+		 <if test="initValue != null and initValue != ''">
+		 	AND PRD_LAYER_PARAM.FINPROD_ID = #{initValue}
+		 </if>
+	</select>
+	
+	<delete id = "deleteCashPlanByCashId" parameterType="java.lang.String">
+		delete from FIN_CASH_PLAN where CASH_ID = #{cashId}
+	</delete>
+	
+	<select id="selectLayProductByFinproductId" parameterType="java.lang.String" resultType="com.joyintech.tams.common.base.entity.FinProduct">
+		select b.* 
+		from FIN_PRODUCT a 
+		inner join FIN_PRODUCT b 
+		on a.FINPROD_ID = b.P_FINPROD_ID 
+		where a.FINPROD_ID = #{finprodId}
+	</select>
+	
+	<delete id="deleteFinCashPayByEffdate" parameterType="com.joyintech.tams.common.base.entity.FinCashPayRuleKey" >
+        delete from FIN_CASH_PAY_RULE
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE &gt;= #{effDate,jdbcType=DATE}
+    </delete>
+    
+    <delete id="deleteFinCashCalcRuleByEffdate" parameterType="com.joyintech.tams.common.base.entity.FinCashCalcRuleKey" >
+        delete from FIN_CASH_CALC_RULE
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE &gt;= #{effDate,jdbcType=DATE}
+    </delete>
+    
+    <delete id="deleteFinFloatCountingRuleByEffdate" parameterType="com.joyintech.tams.common.base.entity.FinFloatCountingRuleKey" >
+        delete from FIN_FLOAT_COUNTING_RULE
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE &gt;= #{effDate,jdbcType=DATE}
+    </delete>
+    
+    <delete id="deleteFinRateInfoByEffdate" parameterType="com.joyintech.tams.common.base.entity.FinRateInfoKey" >
+        delete from FIN_RATE_INFO
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE &gt;= #{effDate,jdbcType=DATE}
+    </delete>
+    
+</mapper>

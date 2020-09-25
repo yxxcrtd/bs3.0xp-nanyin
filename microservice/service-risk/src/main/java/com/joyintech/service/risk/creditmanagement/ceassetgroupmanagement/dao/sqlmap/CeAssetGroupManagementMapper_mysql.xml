@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.risk.creditmanagement.ceassetgroupmanagement.dao.CeAssetGroupManagementMapper_mysql">
+	<select id="queryAssetInfo" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select
+			fp.FINPROD_ID id,
+			concat_ws('',fp.FINPROD_MARKET_ID , ':', fp.FINPROD_NAME) text
+		  from 
+			FIN_PRODUCT fp inner join FIN_PRODUCT_TYPE ft on 
+			fp.FINPROD_ID = ft.FINPROD_ID
+		<where>
+			ft.TYPE_8 is not null
+			<if test="search != null and search != ''">
+			and (
+				fp.FINPROD_MARKET_ID LIKE concat_ws('','%', #{search}, '%')
+				or 
+				fp.FINPROD_NAME LIKE concat_ws('','%', #{search}, '%')
+			)
+			</if>
+		</where>
+	</select>
+	<select id="checkIsExistAssetPoolNew" resultType="java.lang.String">
+		SELECT ASSETPOOL_NAME
+     FROM CREDIT_ASSETPOOL
+    WHERE SEQNO IN (SELECT SEQNO
+                      FROM CREDIT_ASSETPOOL_DETAIL
+                     WHERE FINPROD_ID = #{finprodId} )
+      AND ASSETPOOL_NAME IS NOT NULL LIMIT 1
+	</select>
+	<insert id="insertAssetPool" parameterType="java.util.List">
+		insert into CREDIT_ASSETPOOL_DETAIL (
+		SEQNO,
+		FINPROD_ID,
+		CREATE_USER,
+		CREATE_DEPT,
+		CREATE_TIME,
+		UPDATE_USER,
+		UPDATE_TIME
+		)values(
+		<foreach collection="list" item="item" separator=",">
+			#{item.seqno, jdbcType=VARCHAR} ,
+			#{item.finprodId, jdbcType=VARCHAR} ,
+			#{item.createUser, jdbcType=VARCHAR} ,
+			#{item.createDept, jdbcType=VARCHAR} ,
+			#{item.createTime, jdbcType=TIMESTAMP} ,
+			#{item.updateUser, jdbcType=VARCHAR} ,
+			#{item.updateTime, jdbcType=TIMESTAMP}
+		</foreach>
+		)
+	</insert>
+</mapper>

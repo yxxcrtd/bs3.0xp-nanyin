@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.service.product.messageadjust.finproductopenplanadjust.dao.FinProductOpenPlanAdjustMapper">
+	<resultMap type="com.joyintech.service.product.messageadjust.finproductopenplanadjust.dto.FinProductOpenPlanAdjustDto" id="BaseResultMap">
+		 <id column="OPEN_DATE_END" property="openDateEnd" jdbcType="DATE" />
+		 <result column="FINPROD_ABBR" property="finprodAbbr" jdbcType="VARCHAR" />
+		<result column="FINPROD_MARKET_ID" property="finprodMarketId" jdbcType="VARCHAR" />
+		<result column="OPEN_DATE_STR" property="openDateStr" jdbcType="DATE" />
+        <result column="OPEN_VDATE" property="openVdate" jdbcType="DATE" />
+        <result column="OPEN_MDATE" property="openMdate" jdbcType="DATE" />
+        <result column="OPEN_TYPE" property="scheduleType" jdbcType="VARCHAR" />
+        <result column="NUM" property="num" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	
+	<!-- 产品代码联想下拉框 -->
+	<select id="getFinprodId" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select distinct																																											
+			A.FINPROD_MARKET_ID					id,																															
+			A.FINPROD_ABBR						text,
+			A.FINPROD_ID						object,	
+		    decode(D.OPEN_TYPE, #{openPlanType03}, #{openPlanType03}, #{openPlanType01})   col																							
+		from																																											
+			FIN_PRODUCT A
+			INNER JOIN 
+					PTL_MANAGE_OBJ
+				ON PTL_MANAGE_OBJ.MANAGE_OBJ_ID = A.FINPROD_ID
+				INNER JOIN 
+					PTL_PORTFOLIO_AUTHORITY
+				ON
+					PTL_MANAGE_OBJ.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
+					AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId},																																										
+			FIN_CASH_INFO C,																																										
+			FIN_OPEN_RULE D																																										
+		where																																											
+			A.OPERATION_TYPE = #{openType,jdbcType=VARCHAR}  AND A.FINPROD_ID = C.FINPROD_ID  AND C.CASH_ID = D.CASH_ID																																										
+			AND D.OPEN_MODE != #{openMode,jdbcType=VARCHAR}
+			<if test="search != null and search != ''">
+			AND (A.FINPROD_MARKET_ID like concat('%',concat(#{search},'%'))
+			OR A.FINPROD_ABBR like concat('%',concat(#{search},'%')))
+			</if>	
+	</select>
+	
+	<!-- 页面查询 -->
+	<select id="selectForPage" resultMap="BaseResultMap">
+		select	distinct	
+				row_number() over(order by FIN_PRODUCT.FINPROD_MARKET_ID) NUM,																																
+				FIN_PRODUCT.FINPROD_MARKET_ID,																										
+				FIN_PRODUCT.FINPROD_ABBR,																									
+				FIN_OPEN_PLAN.OPEN_DATE_STR,																										
+				FIN_OPEN_PLAN.OPEN_DATE_END,																									
+				FIN_OPEN_PLAN.OPEN_VDATE,																											
+				FIN_OPEN_PLAN.OPEN_MDATE,	
+        		FIN_OPEN_PLAN.OPEN_NDATE,
+        		FIN_OPEN_PLAN.OPEN_TYPE,
+        		<!-- 20-06-09 产品端二级法人改造 wangyang1 start -->
+        		FIN_PRODUCT.FINPROD_ID	
+        		<!-- 20-06-09 产品端二级法人改造 wangyang1 end -->																							
+		from																																								
+				FIN_PRODUCT
+				INNER JOIN 
+					PTL_MANAGE_OBJ
+				ON PTL_MANAGE_OBJ.MANAGE_OBJ_ID = FIN_PRODUCT.FINPROD_ID
+				INNER JOIN 
+					PTL_PORTFOLIO_AUTHORITY
+				ON
+					PTL_MANAGE_OBJ.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
+					AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId},																																							
+				FIN_OPEN_PLAN																																						
+		where																																								
+				FIN_PRODUCT.FINPROD_ID	=	FIN_OPEN_PLAN.FINPROD_ID
+				<if test="finprodIdList != null and finprodIdList.size()>0">
+					AND		FIN_OPEN_PLAN.FINPROD_ID IN
+					<foreach collection="finprodIdList" index="index" item="item" open="(" separator="," close=")">  
+			    	#{item,jdbcType=VARCHAR}
+		        	</foreach>
+				</if>	
+<!-- 				<if test="scheduleTypeList != null and scheduleTypeList.size()>0"> -->
+<!-- 					AND		FIN_OPEN_PLAN.OPEN_TYPE IN  -->
+<!-- 					<foreach collection="scheduleTypeList" index="index" item="item" open="(" separator="," close=")">   -->
+<!-- 			    	#{item,jdbcType=VARCHAR} -->
+<!-- 		        	</foreach> -->
+<!-- 				</if> -->
+				<if test="scheduleType != null and scheduleType != ''">
+					<!-- 按需求张璐确认 开放类型为申赎同频 不管界面计划类型输入什么都可以查询出数据 -->
+					AND	FIN_OPEN_PLAN.OPEN_TYPE = decode(FIN_OPEN_PLAN.OPEN_TYPE, #{openPlanType03}, #{openPlanType03}, #{scheduleType})
+				</if>
+				<if test="openDateStrStart != null">							
+				AND		FIN_OPEN_PLAN.OPEN_DATE_STR between #{openDateStrStart,jdbcType=VARCHAR} and #{openDateStrEnd,jdbcType=VARCHAR}							
+				</if>							
+		order by																																								
+				FIN_PRODUCT.FINPROD_MARKET_ID, FIN_OPEN_PLAN.OPEN_DATE_STR ASC																																						
+	</select>
+</mapper>

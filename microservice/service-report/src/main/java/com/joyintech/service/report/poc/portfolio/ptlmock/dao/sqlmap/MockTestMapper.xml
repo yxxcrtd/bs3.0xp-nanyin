@@ -1,0 +1,778 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.service.report.poc.portfolio.ptlmock.dao.MockTestMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.service.report.poc.portfolio.ptlmock.entity.MockTest" >
+        <id column="MOCK_ID" property="mockId" jdbcType="VARCHAR" />
+        <result column="MOCK_DATE" property="mockDate" jdbcType="DATE" />
+        <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="BASE_RULE" property="baseRule" jdbcType="DECIMAL" />
+        <result column="MGR_FEE_RATE" property="mgrFeeRate" jdbcType="DECIMAL" />
+        <result column="RAISE_AMT_PLAN" property="raiseAmtPlan" jdbcType="DECIMAL" />
+        <result column="PRE_DAY_UNIT_VALUE" property="preDayUnitValue" jdbcType="DECIMAL" />
+        <result column="PRE_DAY_P_YIELD" property="preDayPYield" jdbcType="DECIMAL" />
+        <result column="PRE_DAY_CASH_POSITION" property="preDayCashPosition" jdbcType="DECIMAL" />
+        <result column="PRE_DAY_VAL_CHG" property="preDayValChg" jdbcType="DECIMAL" />
+        <result column="PRE_DAY_SEVEN_DAY_RATE" property="preDaySevenDayRate" jdbcType="DECIMAL" />
+        <result column="PRE_DAY_ASSET_VALUE" property="preDayAssetValue" jdbcType="DECIMAL" />
+        <result column="PRE_DAY_ASSET_NETVALUE" property="preDayAssetNetvalue" jdbcType="DECIMAL" />
+        <result column="PRE_DAY_LEVER_RATE" property="preDayLeverRate" jdbcType="DECIMAL" />
+        <result column="PRE_DAY_BPVALUE" property="preDayBpvalue" jdbcType="DECIMAL" />
+        <result column="PRE_DAY_AVGSURPLUSTIME" property="preDayAvgsurplustime" jdbcType="DECIMAL" />
+        <result column="PRE_DAY_AVGSURPLUSTIME_P" property="preDayAvgsurplustimeP" jdbcType="DECIMAL" />
+        <result column="PRE_DAY_PTL_M_DURATION" property="preDayPtlMDuration" jdbcType="DECIMAL" />
+        <result column="REAL_TIME_UNIT_VALUE" property="realTimeUnitValue" jdbcType="DECIMAL" />
+        <result column="REAL_TIME_P_YIELD" property="realTimePYield" jdbcType="DECIMAL" />
+        <result column="REAL_TIME_CASH_POSITION" property="realTimeCashPosition" jdbcType="DECIMAL" />
+        <result column="REAL_TIME_VAL_CHG" property="realTimeValChg" jdbcType="DECIMAL" />
+        <result column="REAL_TIME_SEVEN_DAY_RATE" property="realTimeSevenDayRate" jdbcType="DECIMAL" />
+        <result column="REAL_TIME_ASSET_VALUE" property="realTimeAssetValue" jdbcType="DECIMAL" />
+        <result column="REAL_TIME_ASSET_NETVALUE" property="realTimeAssetNetvalue" jdbcType="DECIMAL" />
+        <result column="REAL_TIME_LEVER_RATE" property="realTimeLeverRate" jdbcType="DECIMAL" />
+        <result column="REAL_TIME_BPVALUE" property="realTimeBpvalue" jdbcType="DECIMAL" />
+        <result column="REAL_TIME_AVGSURPLUSTIME" property="realTimeAvgsurplustime" jdbcType="DECIMAL" />
+        <result column="REAL_TIME_AVGSURPLUSTIME_P" property="realTimeAvgsurplustimeP" jdbcType="DECIMAL" />
+        <result column="REAL_TIME_PTL_M_DURATION" property="realTimePtlMDuration" jdbcType="DECIMAL" />
+        <result column="AGAIN_INVEST_RATE" property="againInvestRate" jdbcType="DECIMAL" />
+        <result column="FINAN_COST" property="finanCost" jdbcType="DECIMAL" />
+        <result column="MOCK_UNIT_VALUE" property="mockUnitValue" jdbcType="DECIMAL" />
+        <result column="MOCK_P_YIELD" property="mockPYield" jdbcType="DECIMAL" />
+        <result column="MOCK_VAL_CHG" property="mockValChg" jdbcType="DECIMAL" />
+        <result column="MOCK_CASH_POSITION" property="mockCashPosition" jdbcType="DECIMAL" />
+        <result column="MOCK_ASSET_VALUE" property="mockAssetValue" jdbcType="DECIMAL" />
+        <result column="MOCK_ASSET_NETVALUE" property="mockAssetNetvalue" jdbcType="DECIMAL" />
+        <result column="MOCK_LEVER_RATE" property="mockLeverRate" jdbcType="DECIMAL" />
+        <result column="MOCK_BPVALUE" property="mockBpvalue" jdbcType="DECIMAL" />
+        <result column="MOCK_AVGSURPLUSTIME" property="mockAvgsurplustime" jdbcType="DECIMAL" />
+        <result column="MOCK_AVGSURPLUSTIME_P" property="mockAvgsurplustimeP" jdbcType="DECIMAL" />
+        <result column="MOCK_PTL_M_DURATION" property="mockPtlMDuration" jdbcType="DECIMAL" />
+        <result column="MOCK_SEVEN_DAY_RATE" property="mockSevenDayRate" jdbcType="DECIMAL" />
+        <result column="MOCK_ONE_MONTH_RATE" property="mockOneMonthRate" jdbcType="DECIMAL" />
+        <result column="MOCK_THREE_MONTH_RATE" property="mockThreeMonthRate" jdbcType="DECIMAL" />
+        <result column="MOCK_QUARTER_DAY_RATE" property="mockQuarterDayRate" jdbcType="DECIMAL" />
+        <result column="MOCK_ONE_YEAR_RATE" property="mockOneYearRate" jdbcType="DECIMAL" />
+        <result column="MOCK_YIELD" property="mockYield" jdbcType="DECIMAL" />
+        <result column="MOCK_RANGE_START_DATE" property="mockRangeStartDate" jdbcType="DATE" />
+        <result column="MOCK_RANGE_END_DATE" property="mockRangeEndDate" jdbcType="DATE" />
+        <result column="MOCK_RANGE_RATE" property="mockRangeRate" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        MOCK_ID MOCK_ID, MOCK_DATE MOCK_DATE, PORTFOLIO_ID PORTFOLIO_ID, VDATE VDATE, MDATE MDATE, 
+        BASE_RULE BASE_RULE, MGR_FEE_RATE MGR_FEE_RATE, RAISE_AMT_PLAN RAISE_AMT_PLAN, PRE_DAY_UNIT_VALUE PRE_DAY_UNIT_VALUE, 
+        PRE_DAY_P_YIELD PRE_DAY_P_YIELD, PRE_DAY_CASH_POSITION PRE_DAY_CASH_POSITION, PRE_DAY_VAL_CHG PRE_DAY_VAL_CHG, 
+        PRE_DAY_SEVEN_DAY_RATE PRE_DAY_SEVEN_DAY_RATE, PRE_DAY_ASSET_VALUE PRE_DAY_ASSET_VALUE, 
+        PRE_DAY_ASSET_NETVALUE PRE_DAY_ASSET_NETVALUE, PRE_DAY_LEVER_RATE PRE_DAY_LEVER_RATE, 
+        PRE_DAY_BPVALUE PRE_DAY_BPVALUE, PRE_DAY_AVGSURPLUSTIME PRE_DAY_AVGSURPLUSTIME, PRE_DAY_AVGSURPLUSTIME_P PRE_DAY_AVGSURPLUSTIME_P, 
+        PRE_DAY_PTL_M_DURATION PRE_DAY_PTL_M_DURATION, REAL_TIME_UNIT_VALUE REAL_TIME_UNIT_VALUE, 
+        REAL_TIME_P_YIELD REAL_TIME_P_YIELD, REAL_TIME_CASH_POSITION REAL_TIME_CASH_POSITION, 
+        REAL_TIME_VAL_CHG REAL_TIME_VAL_CHG, REAL_TIME_SEVEN_DAY_RATE REAL_TIME_SEVEN_DAY_RATE, 
+        REAL_TIME_ASSET_VALUE REAL_TIME_ASSET_VALUE, REAL_TIME_ASSET_NETVALUE REAL_TIME_ASSET_NETVALUE, 
+        REAL_TIME_LEVER_RATE REAL_TIME_LEVER_RATE, REAL_TIME_BPVALUE REAL_TIME_BPVALUE, REAL_TIME_AVGSURPLUSTIME REAL_TIME_AVGSURPLUSTIME, 
+        REAL_TIME_AVGSURPLUSTIME_P REAL_TIME_AVGSURPLUSTIME_P, REAL_TIME_PTL_M_DURATION REAL_TIME_PTL_M_DURATION, 
+        AGAIN_INVEST_RATE AGAIN_INVEST_RATE, FINAN_COST FINAN_COST, MOCK_UNIT_VALUE MOCK_UNIT_VALUE, 
+        MOCK_P_YIELD MOCK_P_YIELD, MOCK_VAL_CHG MOCK_VAL_CHG, MOCK_CASH_POSITION MOCK_CASH_POSITION, 
+        MOCK_ASSET_VALUE MOCK_ASSET_VALUE, MOCK_ASSET_NETVALUE MOCK_ASSET_NETVALUE, MOCK_LEVER_RATE MOCK_LEVER_RATE, 
+        MOCK_BPVALUE MOCK_BPVALUE, MOCK_AVGSURPLUSTIME MOCK_AVGSURPLUSTIME, MOCK_AVGSURPLUSTIME_P MOCK_AVGSURPLUSTIME_P, 
+        MOCK_PTL_M_DURATION MOCK_PTL_M_DURATION, MOCK_SEVEN_DAY_RATE MOCK_SEVEN_DAY_RATE, 
+        MOCK_ONE_MONTH_RATE MOCK_ONE_MONTH_RATE, MOCK_THREE_MONTH_RATE MOCK_THREE_MONTH_RATE, 
+        MOCK_QUARTER_DAY_RATE MOCK_QUARTER_DAY_RATE, MOCK_ONE_YEAR_RATE MOCK_ONE_YEAR_RATE, 
+        MOCK_YIELD MOCK_YIELD, MOCK_RANGE_START_DATE MOCK_RANGE_START_DATE, MOCK_RANGE_END_DATE MOCK_RANGE_END_DATE, 
+        MOCK_RANGE_RATE MOCK_RANGE_RATE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.service.report.poc.portfolio.ptlmock.dao.MockTestMapper.Base_Column_List" />
+        from MOCK_TEST
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.service.report.poc.portfolio.ptlmock.dao.MockTestMapper.Base_Column_List" />
+        from MOCK_TEST
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.service.report.poc.portfolio.ptlmock.dao.MockTestMapper.Base_Column_List" />
+        from MOCK_TEST
+        where MOCK_ID = #{mockId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from MOCK_TEST
+        where MOCK_ID = #{mockId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.service.report.poc.portfolio.ptlmock.entity.MockTest" >
+        insert into MOCK_TEST (MOCK_ID, MOCK_DATE, PORTFOLIO_ID, 
+            VDATE, MDATE, BASE_RULE, 
+            MGR_FEE_RATE, RAISE_AMT_PLAN, PRE_DAY_UNIT_VALUE, 
+            PRE_DAY_P_YIELD, PRE_DAY_CASH_POSITION, PRE_DAY_VAL_CHG, 
+            PRE_DAY_SEVEN_DAY_RATE, PRE_DAY_ASSET_VALUE, 
+            PRE_DAY_ASSET_NETVALUE, PRE_DAY_LEVER_RATE, 
+            PRE_DAY_BPVALUE, PRE_DAY_AVGSURPLUSTIME, 
+            PRE_DAY_AVGSURPLUSTIME_P, PRE_DAY_PTL_M_DURATION, 
+            REAL_TIME_UNIT_VALUE, REAL_TIME_P_YIELD, REAL_TIME_CASH_POSITION, 
+            REAL_TIME_VAL_CHG, REAL_TIME_SEVEN_DAY_RATE, 
+            REAL_TIME_ASSET_VALUE, REAL_TIME_ASSET_NETVALUE, 
+            REAL_TIME_LEVER_RATE, REAL_TIME_BPVALUE, REAL_TIME_AVGSURPLUSTIME, 
+            REAL_TIME_AVGSURPLUSTIME_P, REAL_TIME_PTL_M_DURATION, 
+            AGAIN_INVEST_RATE, FINAN_COST, MOCK_UNIT_VALUE, 
+            MOCK_P_YIELD, MOCK_VAL_CHG, MOCK_CASH_POSITION, 
+            MOCK_ASSET_VALUE, MOCK_ASSET_NETVALUE, MOCK_LEVER_RATE, 
+            MOCK_BPVALUE, MOCK_AVGSURPLUSTIME, MOCK_AVGSURPLUSTIME_P, 
+            MOCK_PTL_M_DURATION, MOCK_SEVEN_DAY_RATE, MOCK_ONE_MONTH_RATE, 
+            MOCK_THREE_MONTH_RATE, MOCK_QUARTER_DAY_RATE, 
+            MOCK_ONE_YEAR_RATE, MOCK_YIELD, MOCK_RANGE_START_DATE, 
+            MOCK_RANGE_END_DATE, MOCK_RANGE_RATE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{mockId,jdbcType=VARCHAR}, #{mockDate,jdbcType=DATE}, #{portfolioId,jdbcType=VARCHAR}, 
+            #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, #{baseRule,jdbcType=DECIMAL}, 
+            #{mgrFeeRate,jdbcType=DECIMAL}, #{raiseAmtPlan,jdbcType=DECIMAL}, #{preDayUnitValue,jdbcType=DECIMAL}, 
+            #{preDayPYield,jdbcType=DECIMAL}, #{preDayCashPosition,jdbcType=DECIMAL}, #{preDayValChg,jdbcType=DECIMAL}, 
+            #{preDaySevenDayRate,jdbcType=DECIMAL}, #{preDayAssetValue,jdbcType=DECIMAL}, 
+            #{preDayAssetNetvalue,jdbcType=DECIMAL}, #{preDayLeverRate,jdbcType=DECIMAL}, 
+            #{preDayBpvalue,jdbcType=DECIMAL}, #{preDayAvgsurplustime,jdbcType=DECIMAL}, 
+            #{preDayAvgsurplustimeP,jdbcType=DECIMAL}, #{preDayPtlMDuration,jdbcType=DECIMAL}, 
+            #{realTimeUnitValue,jdbcType=DECIMAL}, #{realTimePYield,jdbcType=DECIMAL}, #{realTimeCashPosition,jdbcType=DECIMAL}, 
+            #{realTimeValChg,jdbcType=DECIMAL}, #{realTimeSevenDayRate,jdbcType=DECIMAL}, 
+            #{realTimeAssetValue,jdbcType=DECIMAL}, #{realTimeAssetNetvalue,jdbcType=DECIMAL}, 
+            #{realTimeLeverRate,jdbcType=DECIMAL}, #{realTimeBpvalue,jdbcType=DECIMAL}, #{realTimeAvgsurplustime,jdbcType=DECIMAL}, 
+            #{realTimeAvgsurplustimeP,jdbcType=DECIMAL}, #{realTimePtlMDuration,jdbcType=DECIMAL}, 
+            #{againInvestRate,jdbcType=DECIMAL}, #{finanCost,jdbcType=DECIMAL}, #{mockUnitValue,jdbcType=DECIMAL}, 
+            #{mockPYield,jdbcType=DECIMAL}, #{mockValChg,jdbcType=DECIMAL}, #{mockCashPosition,jdbcType=DECIMAL}, 
+            #{mockAssetValue,jdbcType=DECIMAL}, #{mockAssetNetvalue,jdbcType=DECIMAL}, #{mockLeverRate,jdbcType=DECIMAL}, 
+            #{mockBpvalue,jdbcType=DECIMAL}, #{mockAvgsurplustime,jdbcType=DECIMAL}, #{mockAvgsurplustimeP,jdbcType=DECIMAL}, 
+            #{mockPtlMDuration,jdbcType=DECIMAL}, #{mockSevenDayRate,jdbcType=DECIMAL}, #{mockOneMonthRate,jdbcType=DECIMAL}, 
+            #{mockThreeMonthRate,jdbcType=DECIMAL}, #{mockQuarterDayRate,jdbcType=DECIMAL}, 
+            #{mockOneYearRate,jdbcType=DECIMAL}, #{mockYield,jdbcType=DECIMAL}, #{mockRangeStartDate,jdbcType=DATE}, 
+            #{mockRangeEndDate,jdbcType=DATE}, #{mockRangeRate,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.service.report.poc.portfolio.ptlmock.entity.MockTest" >
+        insert into MOCK_TEST
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="mockId != null" >
+                MOCK_ID,
+            </if>
+            <if test="mockDate != null" >
+                MOCK_DATE,
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="baseRule != null" >
+                BASE_RULE,
+            </if>
+            <if test="mgrFeeRate != null" >
+                MGR_FEE_RATE,
+            </if>
+            <if test="raiseAmtPlan != null" >
+                RAISE_AMT_PLAN,
+            </if>
+            <if test="preDayUnitValue != null" >
+                PRE_DAY_UNIT_VALUE,
+            </if>
+            <if test="preDayPYield != null" >
+                PRE_DAY_P_YIELD,
+            </if>
+            <if test="preDayCashPosition != null" >
+                PRE_DAY_CASH_POSITION,
+            </if>
+            <if test="preDayValChg != null" >
+                PRE_DAY_VAL_CHG,
+            </if>
+            <if test="preDaySevenDayRate != null" >
+                PRE_DAY_SEVEN_DAY_RATE,
+            </if>
+            <if test="preDayAssetValue != null" >
+                PRE_DAY_ASSET_VALUE,
+            </if>
+            <if test="preDayAssetNetvalue != null" >
+                PRE_DAY_ASSET_NETVALUE,
+            </if>
+            <if test="preDayLeverRate != null" >
+                PRE_DAY_LEVER_RATE,
+            </if>
+            <if test="preDayBpvalue != null" >
+                PRE_DAY_BPVALUE,
+            </if>
+            <if test="preDayAvgsurplustime != null" >
+                PRE_DAY_AVGSURPLUSTIME,
+            </if>
+            <if test="preDayAvgsurplustimeP != null" >
+                PRE_DAY_AVGSURPLUSTIME_P,
+            </if>
+            <if test="preDayPtlMDuration != null" >
+                PRE_DAY_PTL_M_DURATION,
+            </if>
+            <if test="realTimeUnitValue != null" >
+                REAL_TIME_UNIT_VALUE,
+            </if>
+            <if test="realTimePYield != null" >
+                REAL_TIME_P_YIELD,
+            </if>
+            <if test="realTimeCashPosition != null" >
+                REAL_TIME_CASH_POSITION,
+            </if>
+            <if test="realTimeValChg != null" >
+                REAL_TIME_VAL_CHG,
+            </if>
+            <if test="realTimeSevenDayRate != null" >
+                REAL_TIME_SEVEN_DAY_RATE,
+            </if>
+            <if test="realTimeAssetValue != null" >
+                REAL_TIME_ASSET_VALUE,
+            </if>
+            <if test="realTimeAssetNetvalue != null" >
+                REAL_TIME_ASSET_NETVALUE,
+            </if>
+            <if test="realTimeLeverRate != null" >
+                REAL_TIME_LEVER_RATE,
+            </if>
+            <if test="realTimeBpvalue != null" >
+                REAL_TIME_BPVALUE,
+            </if>
+            <if test="realTimeAvgsurplustime != null" >
+                REAL_TIME_AVGSURPLUSTIME,
+            </if>
+            <if test="realTimeAvgsurplustimeP != null" >
+                REAL_TIME_AVGSURPLUSTIME_P,
+            </if>
+            <if test="realTimePtlMDuration != null" >
+                REAL_TIME_PTL_M_DURATION,
+            </if>
+            <if test="againInvestRate != null" >
+                AGAIN_INVEST_RATE,
+            </if>
+            <if test="finanCost != null" >
+                FINAN_COST,
+            </if>
+            <if test="mockUnitValue != null" >
+                MOCK_UNIT_VALUE,
+            </if>
+            <if test="mockPYield != null" >
+                MOCK_P_YIELD,
+            </if>
+            <if test="mockValChg != null" >
+                MOCK_VAL_CHG,
+            </if>
+            <if test="mockCashPosition != null" >
+                MOCK_CASH_POSITION,
+            </if>
+            <if test="mockAssetValue != null" >
+                MOCK_ASSET_VALUE,
+            </if>
+            <if test="mockAssetNetvalue != null" >
+                MOCK_ASSET_NETVALUE,
+            </if>
+            <if test="mockLeverRate != null" >
+                MOCK_LEVER_RATE,
+            </if>
+            <if test="mockBpvalue != null" >
+                MOCK_BPVALUE,
+            </if>
+            <if test="mockAvgsurplustime != null" >
+                MOCK_AVGSURPLUSTIME,
+            </if>
+            <if test="mockAvgsurplustimeP != null" >
+                MOCK_AVGSURPLUSTIME_P,
+            </if>
+            <if test="mockPtlMDuration != null" >
+                MOCK_PTL_M_DURATION,
+            </if>
+            <if test="mockSevenDayRate != null" >
+                MOCK_SEVEN_DAY_RATE,
+            </if>
+            <if test="mockOneMonthRate != null" >
+                MOCK_ONE_MONTH_RATE,
+            </if>
+            <if test="mockThreeMonthRate != null" >
+                MOCK_THREE_MONTH_RATE,
+            </if>
+            <if test="mockQuarterDayRate != null" >
+                MOCK_QUARTER_DAY_RATE,
+            </if>
+            <if test="mockOneYearRate != null" >
+                MOCK_ONE_YEAR_RATE,
+            </if>
+            <if test="mockYield != null" >
+                MOCK_YIELD,
+            </if>
+            <if test="mockRangeStartDate != null" >
+                MOCK_RANGE_START_DATE,
+            </if>
+            <if test="mockRangeEndDate != null" >
+                MOCK_RANGE_END_DATE,
+            </if>
+            <if test="mockRangeRate != null" >
+                MOCK_RANGE_RATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="mockId != null" >
+                #{mockId,jdbcType=VARCHAR},
+            </if>
+            <if test="mockDate != null" >
+                #{mockDate,jdbcType=DATE},
+            </if>
+            <if test="portfolioId != null" >
+                #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="baseRule != null" >
+                #{baseRule,jdbcType=DECIMAL},
+            </if>
+            <if test="mgrFeeRate != null" >
+                #{mgrFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="raiseAmtPlan != null" >
+                #{raiseAmtPlan,jdbcType=DECIMAL},
+            </if>
+            <if test="preDayUnitValue != null" >
+                #{preDayUnitValue,jdbcType=DECIMAL},
+            </if>
+            <if test="preDayPYield != null" >
+                #{preDayPYield,jdbcType=DECIMAL},
+            </if>
+            <if test="preDayCashPosition != null" >
+                #{preDayCashPosition,jdbcType=DECIMAL},
+            </if>
+            <if test="preDayValChg != null" >
+                #{preDayValChg,jdbcType=DECIMAL},
+            </if>
+            <if test="preDaySevenDayRate != null" >
+                #{preDaySevenDayRate,jdbcType=DECIMAL},
+            </if>
+            <if test="preDayAssetValue != null" >
+                #{preDayAssetValue,jdbcType=DECIMAL},
+            </if>
+            <if test="preDayAssetNetvalue != null" >
+                #{preDayAssetNetvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="preDayLeverRate != null" >
+                #{preDayLeverRate,jdbcType=DECIMAL},
+            </if>
+            <if test="preDayBpvalue != null" >
+                #{preDayBpvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="preDayAvgsurplustime != null" >
+                #{preDayAvgsurplustime,jdbcType=DECIMAL},
+            </if>
+            <if test="preDayAvgsurplustimeP != null" >
+                #{preDayAvgsurplustimeP,jdbcType=DECIMAL},
+            </if>
+            <if test="preDayPtlMDuration != null" >
+                #{preDayPtlMDuration,jdbcType=DECIMAL},
+            </if>
+            <if test="realTimeUnitValue != null" >
+                #{realTimeUnitValue,jdbcType=DECIMAL},
+            </if>
+            <if test="realTimePYield != null" >
+                #{realTimePYield,jdbcType=DECIMAL},
+            </if>
+            <if test="realTimeCashPosition != null" >
+                #{realTimeCashPosition,jdbcType=DECIMAL},
+            </if>
+            <if test="realTimeValChg != null" >
+                #{realTimeValChg,jdbcType=DECIMAL},
+            </if>
+            <if test="realTimeSevenDayRate != null" >
+                #{realTimeSevenDayRate,jdbcType=DECIMAL},
+            </if>
+            <if test="realTimeAssetValue != null" >
+                #{realTimeAssetValue,jdbcType=DECIMAL},
+            </if>
+            <if test="realTimeAssetNetvalue != null" >
+                #{realTimeAssetNetvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="realTimeLeverRate != null" >
+                #{realTimeLeverRate,jdbcType=DECIMAL},
+            </if>
+            <if test="realTimeBpvalue != null" >
+                #{realTimeBpvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="realTimeAvgsurplustime != null" >
+                #{realTimeAvgsurplustime,jdbcType=DECIMAL},
+            </if>
+            <if test="realTimeAvgsurplustimeP != null" >
+                #{realTimeAvgsurplustimeP,jdbcType=DECIMAL},
+            </if>
+            <if test="realTimePtlMDuration != null" >
+                #{realTimePtlMDuration,jdbcType=DECIMAL},
+            </if>
+            <if test="againInvestRate != null" >
+                #{againInvestRate,jdbcType=DECIMAL},
+            </if>
+            <if test="finanCost != null" >
+                #{finanCost,jdbcType=DECIMAL},
+            </if>
+            <if test="mockUnitValue != null" >
+                #{mockUnitValue,jdbcType=DECIMAL},
+            </if>
+            <if test="mockPYield != null" >
+                #{mockPYield,jdbcType=DECIMAL},
+            </if>
+            <if test="mockValChg != null" >
+                #{mockValChg,jdbcType=DECIMAL},
+            </if>
+            <if test="mockCashPosition != null" >
+                #{mockCashPosition,jdbcType=DECIMAL},
+            </if>
+            <if test="mockAssetValue != null" >
+                #{mockAssetValue,jdbcType=DECIMAL},
+            </if>
+            <if test="mockAssetNetvalue != null" >
+                #{mockAssetNetvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="mockLeverRate != null" >
+                #{mockLeverRate,jdbcType=DECIMAL},
+            </if>
+            <if test="mockBpvalue != null" >
+                #{mockBpvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="mockAvgsurplustime != null" >
+                #{mockAvgsurplustime,jdbcType=DECIMAL},
+            </if>
+            <if test="mockAvgsurplustimeP != null" >
+                #{mockAvgsurplustimeP,jdbcType=DECIMAL},
+            </if>
+            <if test="mockPtlMDuration != null" >
+                #{mockPtlMDuration,jdbcType=DECIMAL},
+            </if>
+            <if test="mockSevenDayRate != null" >
+                #{mockSevenDayRate,jdbcType=DECIMAL},
+            </if>
+            <if test="mockOneMonthRate != null" >
+                #{mockOneMonthRate,jdbcType=DECIMAL},
+            </if>
+            <if test="mockThreeMonthRate != null" >
+                #{mockThreeMonthRate,jdbcType=DECIMAL},
+            </if>
+            <if test="mockQuarterDayRate != null" >
+                #{mockQuarterDayRate,jdbcType=DECIMAL},
+            </if>
+            <if test="mockOneYearRate != null" >
+                #{mockOneYearRate,jdbcType=DECIMAL},
+            </if>
+            <if test="mockYield != null" >
+                #{mockYield,jdbcType=DECIMAL},
+            </if>
+            <if test="mockRangeStartDate != null" >
+                #{mockRangeStartDate,jdbcType=DATE},
+            </if>
+            <if test="mockRangeEndDate != null" >
+                #{mockRangeEndDate,jdbcType=DATE},
+            </if>
+            <if test="mockRangeRate != null" >
+                #{mockRangeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.service.report.poc.portfolio.ptlmock.entity.MockTest" >
+        insert into MOCK_TEST(MOCK_ID, MOCK_DATE, PORTFOLIO_ID, VDATE, MDATE, BASE_RULE, 
+        MGR_FEE_RATE, RAISE_AMT_PLAN, PRE_DAY_UNIT_VALUE, PRE_DAY_P_YIELD, PRE_DAY_CASH_POSITION, 
+        PRE_DAY_VAL_CHG, PRE_DAY_SEVEN_DAY_RATE, PRE_DAY_ASSET_VALUE, PRE_DAY_ASSET_NETVALUE, 
+        PRE_DAY_LEVER_RATE, PRE_DAY_BPVALUE, PRE_DAY_AVGSURPLUSTIME, PRE_DAY_AVGSURPLUSTIME_P, 
+        PRE_DAY_PTL_M_DURATION, REAL_TIME_UNIT_VALUE, REAL_TIME_P_YIELD, REAL_TIME_CASH_POSITION, 
+        REAL_TIME_VAL_CHG, REAL_TIME_SEVEN_DAY_RATE, REAL_TIME_ASSET_VALUE, REAL_TIME_ASSET_NETVALUE, 
+        REAL_TIME_LEVER_RATE, REAL_TIME_BPVALUE, REAL_TIME_AVGSURPLUSTIME, REAL_TIME_AVGSURPLUSTIME_P, 
+        REAL_TIME_PTL_M_DURATION, AGAIN_INVEST_RATE, FINAN_COST, MOCK_UNIT_VALUE, MOCK_P_YIELD, 
+        MOCK_VAL_CHG, MOCK_CASH_POSITION, MOCK_ASSET_VALUE, MOCK_ASSET_NETVALUE, MOCK_LEVER_RATE, 
+        MOCK_BPVALUE, MOCK_AVGSURPLUSTIME, MOCK_AVGSURPLUSTIME_P, MOCK_PTL_M_DURATION, MOCK_SEVEN_DAY_RATE, 
+        MOCK_ONE_MONTH_RATE, MOCK_THREE_MONTH_RATE, MOCK_QUARTER_DAY_RATE, MOCK_ONE_YEAR_RATE, 
+        MOCK_YIELD, MOCK_RANGE_START_DATE, MOCK_RANGE_END_DATE, MOCK_RANGE_RATE, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select MOCK_ID, MOCK_DATE, PORTFOLIO_ID, VDATE, MDATE, BASE_RULE, 
+            MGR_FEE_RATE, RAISE_AMT_PLAN, PRE_DAY_UNIT_VALUE, PRE_DAY_P_YIELD, PRE_DAY_CASH_POSITION, 
+            PRE_DAY_VAL_CHG, PRE_DAY_SEVEN_DAY_RATE, PRE_DAY_ASSET_VALUE, PRE_DAY_ASSET_NETVALUE, 
+            PRE_DAY_LEVER_RATE, PRE_DAY_BPVALUE, PRE_DAY_AVGSURPLUSTIME, PRE_DAY_AVGSURPLUSTIME_P, 
+            PRE_DAY_PTL_M_DURATION, REAL_TIME_UNIT_VALUE, REAL_TIME_P_YIELD, REAL_TIME_CASH_POSITION, 
+            REAL_TIME_VAL_CHG, REAL_TIME_SEVEN_DAY_RATE, REAL_TIME_ASSET_VALUE, REAL_TIME_ASSET_NETVALUE, 
+            REAL_TIME_LEVER_RATE, REAL_TIME_BPVALUE, REAL_TIME_AVGSURPLUSTIME, REAL_TIME_AVGSURPLUSTIME_P, 
+            REAL_TIME_PTL_M_DURATION, AGAIN_INVEST_RATE, FINAN_COST, MOCK_UNIT_VALUE, MOCK_P_YIELD, 
+            MOCK_VAL_CHG, MOCK_CASH_POSITION, MOCK_ASSET_VALUE, MOCK_ASSET_NETVALUE, MOCK_LEVER_RATE, 
+            MOCK_BPVALUE, MOCK_AVGSURPLUSTIME, MOCK_AVGSURPLUSTIME_P, MOCK_PTL_M_DURATION, MOCK_SEVEN_DAY_RATE, 
+            MOCK_ONE_MONTH_RATE, MOCK_THREE_MONTH_RATE, MOCK_QUARTER_DAY_RATE, MOCK_ONE_YEAR_RATE, 
+            MOCK_YIELD, MOCK_RANGE_START_DATE, MOCK_RANGE_END_DATE, MOCK_RANGE_RATE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from MOCK_TEST
+             where 1 = 1 and MOCK_ID = #{mockId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.service.report.poc.portfolio.ptlmock.entity.MockTest" >
+        update MOCK_TEST
+        <set >
+            <if test="mockDate != null" >
+                MOCK_DATE = #{mockDate,jdbcType=DATE},
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                MDATE = #{mdate,jdbcType=DATE},
+            </if>
+            <if test="baseRule != null" >
+                BASE_RULE = #{baseRule,jdbcType=DECIMAL},
+            </if>
+            <if test="mgrFeeRate != null" >
+                MGR_FEE_RATE = #{mgrFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="raiseAmtPlan != null" >
+                RAISE_AMT_PLAN = #{raiseAmtPlan,jdbcType=DECIMAL},
+            </if>
+            <if test="preDayUnitValue != null" >
+                PRE_DAY_UNIT_VALUE = #{preDayUnitValue,jdbcType=DECIMAL},
+            </if>
+            <if test="preDayPYield != null" >
+                PRE_DAY_P_YIELD = #{preDayPYield,jdbcType=DECIMAL},
+            </if>
+            <if test="preDayCashPosition != null" >
+                PRE_DAY_CASH_POSITION = #{preDayCashPosition,jdbcType=DECIMAL},
+            </if>
+            <if test="preDayValChg != null" >
+                PRE_DAY_VAL_CHG = #{preDayValChg,jdbcType=DECIMAL},
+            </if>
+            <if test="preDaySevenDayRate != null" >
+                PRE_DAY_SEVEN_DAY_RATE = #{preDaySevenDayRate,jdbcType=DECIMAL},
+            </if>
+            <if test="preDayAssetValue != null" >
+                PRE_DAY_ASSET_VALUE = #{preDayAssetValue,jdbcType=DECIMAL},
+            </if>
+            <if test="preDayAssetNetvalue != null" >
+                PRE_DAY_ASSET_NETVALUE = #{preDayAssetNetvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="preDayLeverRate != null" >
+                PRE_DAY_LEVER_RATE = #{preDayLeverRate,jdbcType=DECIMAL},
+            </if>
+            <if test="preDayBpvalue != null" >
+                PRE_DAY_BPVALUE = #{preDayBpvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="preDayAvgsurplustime != null" >
+                PRE_DAY_AVGSURPLUSTIME = #{preDayAvgsurplustime,jdbcType=DECIMAL},
+            </if>
+            <if test="preDayAvgsurplustimeP != null" >
+                PRE_DAY_AVGSURPLUSTIME_P = #{preDayAvgsurplustimeP,jdbcType=DECIMAL},
+            </if>
+            <if test="preDayPtlMDuration != null" >
+                PRE_DAY_PTL_M_DURATION = #{preDayPtlMDuration,jdbcType=DECIMAL},
+            </if>
+            <if test="realTimeUnitValue != null" >
+                REAL_TIME_UNIT_VALUE = #{realTimeUnitValue,jdbcType=DECIMAL},
+            </if>
+            <if test="realTimePYield != null" >
+                REAL_TIME_P_YIELD = #{realTimePYield,jdbcType=DECIMAL},
+            </if>
+            <if test="realTimeCashPosition != null" >
+                REAL_TIME_CASH_POSITION = #{realTimeCashPosition,jdbcType=DECIMAL},
+            </if>
+            <if test="realTimeValChg != null" >
+                REAL_TIME_VAL_CHG = #{realTimeValChg,jdbcType=DECIMAL},
+            </if>
+            <if test="realTimeSevenDayRate != null" >
+                REAL_TIME_SEVEN_DAY_RATE = #{realTimeSevenDayRate,jdbcType=DECIMAL},
+            </if>
+            <if test="realTimeAssetValue != null" >
+                REAL_TIME_ASSET_VALUE = #{realTimeAssetValue,jdbcType=DECIMAL},
+            </if>
+            <if test="realTimeAssetNetvalue != null" >
+                REAL_TIME_ASSET_NETVALUE = #{realTimeAssetNetvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="realTimeLeverRate != null" >
+                REAL_TIME_LEVER_RATE = #{realTimeLeverRate,jdbcType=DECIMAL},
+            </if>
+            <if test="realTimeBpvalue != null" >
+                REAL_TIME_BPVALUE = #{realTimeBpvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="realTimeAvgsurplustime != null" >
+                REAL_TIME_AVGSURPLUSTIME = #{realTimeAvgsurplustime,jdbcType=DECIMAL},
+            </if>
+            <if test="realTimeAvgsurplustimeP != null" >
+                REAL_TIME_AVGSURPLUSTIME_P = #{realTimeAvgsurplustimeP,jdbcType=DECIMAL},
+            </if>
+            <if test="realTimePtlMDuration != null" >
+                REAL_TIME_PTL_M_DURATION = #{realTimePtlMDuration,jdbcType=DECIMAL},
+            </if>
+            <if test="againInvestRate != null" >
+                AGAIN_INVEST_RATE = #{againInvestRate,jdbcType=DECIMAL},
+            </if>
+            <if test="finanCost != null" >
+                FINAN_COST = #{finanCost,jdbcType=DECIMAL},
+            </if>
+            <if test="mockUnitValue != null" >
+                MOCK_UNIT_VALUE = #{mockUnitValue,jdbcType=DECIMAL},
+            </if>
+            <if test="mockPYield != null" >
+                MOCK_P_YIELD = #{mockPYield,jdbcType=DECIMAL},
+            </if>
+            <if test="mockValChg != null" >
+                MOCK_VAL_CHG = #{mockValChg,jdbcType=DECIMAL},
+            </if>
+            <if test="mockCashPosition != null" >
+                MOCK_CASH_POSITION = #{mockCashPosition,jdbcType=DECIMAL},
+            </if>
+            <if test="mockAssetValue != null" >
+                MOCK_ASSET_VALUE = #{mockAssetValue,jdbcType=DECIMAL},
+            </if>
+            <if test="mockAssetNetvalue != null" >
+                MOCK_ASSET_NETVALUE = #{mockAssetNetvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="mockLeverRate != null" >
+                MOCK_LEVER_RATE = #{mockLeverRate,jdbcType=DECIMAL},
+            </if>
+            <if test="mockBpvalue != null" >
+                MOCK_BPVALUE = #{mockBpvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="mockAvgsurplustime != null" >
+                MOCK_AVGSURPLUSTIME = #{mockAvgsurplustime,jdbcType=DECIMAL},
+            </if>
+            <if test="mockAvgsurplustimeP != null" >
+                MOCK_AVGSURPLUSTIME_P = #{mockAvgsurplustimeP,jdbcType=DECIMAL},
+            </if>
+            <if test="mockPtlMDuration != null" >
+                MOCK_PTL_M_DURATION = #{mockPtlMDuration,jdbcType=DECIMAL},
+            </if>
+            <if test="mockSevenDayRate != null" >
+                MOCK_SEVEN_DAY_RATE = #{mockSevenDayRate,jdbcType=DECIMAL},
+            </if>
+            <if test="mockOneMonthRate != null" >
+                MOCK_ONE_MONTH_RATE = #{mockOneMonthRate,jdbcType=DECIMAL},
+            </if>
+            <if test="mockThreeMonthRate != null" >
+                MOCK_THREE_MONTH_RATE = #{mockThreeMonthRate,jdbcType=DECIMAL},
+            </if>
+            <if test="mockQuarterDayRate != null" >
+                MOCK_QUARTER_DAY_RATE = #{mockQuarterDayRate,jdbcType=DECIMAL},
+            </if>
+            <if test="mockOneYearRate != null" >
+                MOCK_ONE_YEAR_RATE = #{mockOneYearRate,jdbcType=DECIMAL},
+            </if>
+            <if test="mockYield != null" >
+                MOCK_YIELD = #{mockYield,jdbcType=DECIMAL},
+            </if>
+            <if test="mockRangeStartDate != null" >
+                MOCK_RANGE_START_DATE = #{mockRangeStartDate,jdbcType=DATE},
+            </if>
+            <if test="mockRangeEndDate != null" >
+                MOCK_RANGE_END_DATE = #{mockRangeEndDate,jdbcType=DATE},
+            </if>
+            <if test="mockRangeRate != null" >
+                MOCK_RANGE_RATE = #{mockRangeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where MOCK_ID = #{mockId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.service.report.poc.portfolio.ptlmock.entity.MockTest" >
+        update MOCK_TEST
+        set MOCK_DATE = #{mockDate,jdbcType=DATE},
+            PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            VDATE = #{vdate,jdbcType=DATE},
+            MDATE = #{mdate,jdbcType=DATE},
+            BASE_RULE = #{baseRule,jdbcType=DECIMAL},
+            MGR_FEE_RATE = #{mgrFeeRate,jdbcType=DECIMAL},
+            RAISE_AMT_PLAN = #{raiseAmtPlan,jdbcType=DECIMAL},
+            PRE_DAY_UNIT_VALUE = #{preDayUnitValue,jdbcType=DECIMAL},
+            PRE_DAY_P_YIELD = #{preDayPYield,jdbcType=DECIMAL},
+            PRE_DAY_CASH_POSITION = #{preDayCashPosition,jdbcType=DECIMAL},
+            PRE_DAY_VAL_CHG = #{preDayValChg,jdbcType=DECIMAL},
+            PRE_DAY_SEVEN_DAY_RATE = #{preDaySevenDayRate,jdbcType=DECIMAL},
+            PRE_DAY_ASSET_VALUE = #{preDayAssetValue,jdbcType=DECIMAL},
+            PRE_DAY_ASSET_NETVALUE = #{preDayAssetNetvalue,jdbcType=DECIMAL},
+            PRE_DAY_LEVER_RATE = #{preDayLeverRate,jdbcType=DECIMAL},
+            PRE_DAY_BPVALUE = #{preDayBpvalue,jdbcType=DECIMAL},
+            PRE_DAY_AVGSURPLUSTIME = #{preDayAvgsurplustime,jdbcType=DECIMAL},
+            PRE_DAY_AVGSURPLUSTIME_P = #{preDayAvgsurplustimeP,jdbcType=DECIMAL},
+            PRE_DAY_PTL_M_DURATION = #{preDayPtlMDuration,jdbcType=DECIMAL},
+            REAL_TIME_UNIT_VALUE = #{realTimeUnitValue,jdbcType=DECIMAL},
+            REAL_TIME_P_YIELD = #{realTimePYield,jdbcType=DECIMAL},
+            REAL_TIME_CASH_POSITION = #{realTimeCashPosition,jdbcType=DECIMAL},
+            REAL_TIME_VAL_CHG = #{realTimeValChg,jdbcType=DECIMAL},
+            REAL_TIME_SEVEN_DAY_RATE = #{realTimeSevenDayRate,jdbcType=DECIMAL},
+            REAL_TIME_ASSET_VALUE = #{realTimeAssetValue,jdbcType=DECIMAL},
+            REAL_TIME_ASSET_NETVALUE = #{realTimeAssetNetvalue,jdbcType=DECIMAL},
+            REAL_TIME_LEVER_RATE = #{realTimeLeverRate,jdbcType=DECIMAL},
+            REAL_TIME_BPVALUE = #{realTimeBpvalue,jdbcType=DECIMAL},
+            REAL_TIME_AVGSURPLUSTIME = #{realTimeAvgsurplustime,jdbcType=DECIMAL},
+            REAL_TIME_AVGSURPLUSTIME_P = #{realTimeAvgsurplustimeP,jdbcType=DECIMAL},
+            REAL_TIME_PTL_M_DURATION = #{realTimePtlMDuration,jdbcType=DECIMAL},
+            AGAIN_INVEST_RATE = #{againInvestRate,jdbcType=DECIMAL},
+            FINAN_COST = #{finanCost,jdbcType=DECIMAL},
+            MOCK_UNIT_VALUE = #{mockUnitValue,jdbcType=DECIMAL},
+            MOCK_P_YIELD = #{mockPYield,jdbcType=DECIMAL},
+            MOCK_VAL_CHG = #{mockValChg,jdbcType=DECIMAL},
+            MOCK_CASH_POSITION = #{mockCashPosition,jdbcType=DECIMAL},
+            MOCK_ASSET_VALUE = #{mockAssetValue,jdbcType=DECIMAL},
+            MOCK_ASSET_NETVALUE = #{mockAssetNetvalue,jdbcType=DECIMAL},
+            MOCK_LEVER_RATE = #{mockLeverRate,jdbcType=DECIMAL},
+            MOCK_BPVALUE = #{mockBpvalue,jdbcType=DECIMAL},
+            MOCK_AVGSURPLUSTIME = #{mockAvgsurplustime,jdbcType=DECIMAL},
+            MOCK_AVGSURPLUSTIME_P = #{mockAvgsurplustimeP,jdbcType=DECIMAL},
+            MOCK_PTL_M_DURATION = #{mockPtlMDuration,jdbcType=DECIMAL},
+            MOCK_SEVEN_DAY_RATE = #{mockSevenDayRate,jdbcType=DECIMAL},
+            MOCK_ONE_MONTH_RATE = #{mockOneMonthRate,jdbcType=DECIMAL},
+            MOCK_THREE_MONTH_RATE = #{mockThreeMonthRate,jdbcType=DECIMAL},
+            MOCK_QUARTER_DAY_RATE = #{mockQuarterDayRate,jdbcType=DECIMAL},
+            MOCK_ONE_YEAR_RATE = #{mockOneYearRate,jdbcType=DECIMAL},
+            MOCK_YIELD = #{mockYield,jdbcType=DECIMAL},
+            MOCK_RANGE_START_DATE = #{mockRangeStartDate,jdbcType=DATE},
+            MOCK_RANGE_END_DATE = #{mockRangeEndDate,jdbcType=DATE},
+            MOCK_RANGE_RATE = #{mockRangeRate,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where MOCK_ID = #{mockId,jdbcType=VARCHAR}
+    </update>
+</mapper>

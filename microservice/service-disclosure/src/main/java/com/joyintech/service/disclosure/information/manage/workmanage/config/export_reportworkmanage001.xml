@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ReportWorkManage001.xlsx" name="报表作业管理">
+	<Worksheet javaBean="com.joyintech.tams.disclosure.information.manage.workmanage.dto.ReportWorkManage001Dto">
+		<Row>
+			<Cell order="1" name="作业编号">jobId</Cell>
+			<Cell order="2" name="作业名称">jobName</Cell>
+			<Cell order="3" name="作业执行规则">loopDateDetail</Cell>
+			<Cell order="4" name="上次执行时间">execDate</Cell>
+			<Cell order="5" name="预计执行时间">preExecDate</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>

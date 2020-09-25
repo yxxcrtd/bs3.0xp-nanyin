@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.service.risk.valtblimport.dao.RskValTableImportMapper">
+	 <select id="selectCount" resultType="java.lang.Integer" parameterType="Map">
+	 SELECT
+	sum(count) 
+FROM
+	( SELECT count( 1 ) count FROM RSK_VALTBL_ASSET_SUB 
+	 <where>
+		  <if test="ptlId !=null and ptlId !=''">
+		   AND	PTL_ID = #{ptlId,jdbcType=VARCHAR}
+		  </if>
+		  <if test="valDate != null and valDate != ''">
+		   AND  VAL_DATE = TO_DATE(#{valDate},'YYYY-MM-DD')
+		  </if>
+	 </where>
+	UNION ALL SELECT count( 1 ) count FROM RSK_VALTBL_SUM_ASSET_SUB 
+	<where>
+	      <if test="ptlId !=null and ptlId !=''">
+		   AND	PTL_ID = #{ptlId,jdbcType=VARCHAR}
+		  </if>
+		  <if test="valDate != null and valDate != ''">
+		   AND  VAL_DATE = TO_DATE(#{valDate},'YYYY-MM-DD')
+		  </if>
+	</where>
+	)
+	</select>
+	
+	<delete id="deleteValTable" parameterType="com.joyintech.service.risk.valtblimport.dto.RskValtblAssetSubDto">
+		delete from RSK_VALTBL_ASSET_SUB
+		where PTL_ID = #{ptlId,jdbcType=VARCHAR} and VAL_DATE = #{valDate,jdbcType=DATE}
+	</delete>
+	
+	<delete id="deleteSumValTable" parameterType="com.joyintech.service.risk.valtblimport.dto.RskValtblAssetSubDto">
+		delete from RSK_VALTBL_SUM_ASSET_SUB
+		where PTL_ID = #{ptlId,jdbcType=VARCHAR} and VAL_DATE = #{valDate,jdbcType=DATE}
+	</delete>
+	 
+</mapper>

@@ -1,0 +1,628 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.disclosure.information.reveal.reportconfirm.dao.ReportConfirmManage001Mapper">
+    <select id="queryPageList" resultType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto">
+		select * from (SELECT 
+			REVEAL.ID id
+			,REVEAL.REP_ID repId
+			,REVEAL.REPORT_NAME reportName
+			,REVEAL.PROD_NAME prodName
+			,REVEAL.PRODID prodid
+			,case when 
+				  REVEAL.START_DATE is null or REVEAL.START_DATE = REVEAL.END_DATE
+			 then to_char(REVEAL.END_DATE,'yyyy-mm-dd')
+			 else to_char(REVEAL.START_DATE,'yyyy-mm-dd') || '--'||to_char(REVEAL.END_DATE,'yyyy-mm-dd')
+			 end  reportDate
+			,REVEAL.END_DATE endDate
+			,REVEAL.START_DATE startDate
+			,REVEAL.SYS_FILENAME sysFilename
+			,REVEAL.SYS_FILEPATH sysFilepath
+			,REVEAL.REVEAL_DATE revealDate  /**披露日**/
+			,REVEAL.FILEPATH filepath
+			,REVEAL.FILENAME filename
+			,REVEAL.CONFIRM_STATUS confirmStatus
+			<!-- ,decode(REVEAL.CONFIRM_STATUS,'01','已确认','未确认') confirmStatusName -->
+			,REVEAL.REVEAL_STATUS revealStatus
+			<!-- ,decode(REVEAL.REVEAL_STATUS,'01','已披露','未披露') revealStatusName -->
+			,REVEAL.STATUS status
+			,REVEAL.CREATE_USER createUser
+			,REVEAL.CREATE_DEPT createDept
+			,REVEAL.CREATE_TIME createTime
+			,REVEAL.UPDATE_USER updateUser
+			,REVEAL.UPDATE_TIME updateTime
+			,to_char(REVEAL.CREATE_TIME,'yyyy-MM-dd') createTimeStr
+			,to_char(REVEAL.CONFIRM_DATE,'yyyy-MM-dd') confirmDateStr
+			,REVEAL.SYS_FILEPATH seqno
+			<!-- add by guozhongbao 报表披露管理  20181204 start -->
+			,REVEAL.REVEAL_CHANNEL revealChannel
+			,REVEAL.IS_CONFIRM isConfirm
+			,REVEAL.IS_REVEAL isReveal
+			<!-- add by guozhongbao 报表披露管理 20181204 end -->
+			,REVEAL.DETAIL detail
+			,to_char(REVEAL.TIME,'yyyy-MM-dd') uploadTime
+			,REVEAL.CONFIRM_USER confirmUser
+			,REVEAL.REPORT_CATEGORY reportCategory
+			,rfp.NAME reportCategoryName
+			,to_char(REVEAL.REVEAL_END_DATE,'yyyy-mm-dd hh24:mi') revealEndDateStr
+			,REVEAL.ANNEX annex
+			,REVEAL.ANNEX_PATH  annexPath
+			/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    start*/
+			,fp.finprod_id finprodId
+			/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    end*/
+		FROM REP_REVEAL REVEAL
+		left join rep_info info on REVEAL.rep_id = info.rep_id
+		left join rep_ftp_path rfp on REVEAL.REPORT_CATEGORY = rfp.ID
+		/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    start*/
+		LEFT JOIN fin_product fp
+		ON fp.FINPROD_MARKET_ID = REVEAL.PRODID
+		/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    end*/
+		where 1=1
+		and REVEAL.status ='E'/*有效*/
+		AND FP.P_FINPROD_ID IS NULL
+		<if test="revealStatus!=null and revealStatus != ''">
+	      AND decode(REVEAL.REVEAL_STATUS,null,'1',REVEAL.REVEAL_STATUS)
+            	 =  #{revealStatus,jdbcType=VARCHAR}
+		</if>
+        <if test="finprodIdArr != null and finprodIdArr.length > 0">
+	 		AND REVEAL.PRODID IN
+			<foreach item="item" collection="finprodIdArr" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="reportName !=null and reportName !='' ">
+            AND REVEAL.REPORT_NAME like '%'||#{reportName,jdbcType=VARCHAR}||'%'
+        </if>
+		<if test="valDateBegin !=null and valDateBegin !='' ">
+            AND to_char(REVEAL.CREATE_TIME,'yyyy-mm-dd') <![CDATA[>=]]> #{valDateBegin,jdbcType=VARCHAR}
+        </if>
+        <if test="valDateEnd !=null and valDateEnd !='' ">
+            AND to_char(REVEAL.CREATE_TIME,'yyyy-mm-dd') <![CDATA[<=]]> #{valDateEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="confirmStatus !=null and confirmStatus !='' ">
+            AND decode(REVEAL.CONFIRM_STATUS,null,'02',REVEAL.CONFIRM_STATUS)
+            	 =  #{confirmStatus,jdbcType=VARCHAR}
+        </if>
+        <if test="confirmDateBegin !=null and confirmDateBegin !='' ">
+            AND to_char(REVEAL.CONFIRM_DATE,'yyyy-mm-dd') <![CDATA[>=]]> #{confirmDateBegin,jdbcType=VARCHAR}
+        </if>
+        <if test="confirmDateEnd !=null and confirmDateEnd !='' ">
+            AND to_char(REVEAL.CONFIRM_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{confirmDateEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="confirmTypeArr != null and confirmTypeArr.length > 0">
+	 		AND REVEAL.IS_CONFIRM IN
+			<foreach item="item" collection="confirmTypeArr" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="revealChanelArr != null and revealChanelArr.length > 0">
+	 		and(
+			<foreach item="item" collection="revealChanelArr" index="index"
+				separator="OR">
+				 REVEAL.REVEAL_CHANNEL like '%'||#{item}||'%'
+				
+			</foreach>
+			)
+		</if>
+		<if test="revealDateBegin !=null and revealDateBegin !='' ">
+            AND to_char(REVEAL.REVEAL_DATE,'yyyy-mm-dd') <![CDATA[>=]]> #{revealDateBegin,jdbcType=VARCHAR}
+        </if>
+        <if test="revealDateEnd !=null and revealDateEnd !='' ">
+            AND to_char(REVEAL.REVEAL_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{revealDateEnd,jdbcType=VARCHAR}
+        </if>
+        <!-- <if test="confromPage == null or confromPage == ''">
+	        <if test="revealEndDateBegin !=null and revealEndDateBegin !='' ">
+	            AND to_char(REVEAL.REVEAL_END_DATE,'yyyy-mm-dd') <![CDATA[>=]]> #{revealEndDateBegin,jdbcType=VARCHAR}
+	        </if>
+	        <if test="revealEndDateEnd !=null and revealEndDateEnd !='' ">
+	            AND to_char(REVEAL.REVEAL_END_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{revealEndDateEnd,jdbcType=VARCHAR}
+	        </if>
+        </if>
+        <if test="confromPage != null and confromPage != ''">
+        	<if test="revealEndDateEnd !=null and revealEndDateEnd !='' ">
+	            AND to_char(REVEAL.REVEAL_END_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{revealEndDateEnd,jdbcType=VARCHAR}
+	        </if>
+        </if> -->
+        <if test="revealEndDateBegin !=null and revealEndDateBegin !='' ">
+            AND to_char(REVEAL.REVEAL_END_DATE,'yyyy-mm-dd') <![CDATA[>=]]> #{revealEndDateBegin,jdbcType=VARCHAR}
+        </if>
+        <if test="revealEndDateEnd !=null and revealEndDateEnd !='' ">
+            AND to_char(REVEAL.REVEAL_END_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{revealEndDateEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="repTypeArr != null and repTypeArr.length > 0">
+	 		AND REVEAL.REPORT_CATEGORY IN
+			<foreach item="item" collection="repTypeArr" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+        order by 
+		REVEAL.CONFIRM_STATUS ASC,
+		<if test="confrom != null and confrom !='' ">
+			REVEAL.REVEAL_STATUS DESC,
+		</if>
+		REVEAL.CREATE_TIME DESC) where 1=1
+    </select>
+    
+    <update id="updateRepRevealById" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto" >
+	      update REP_REVEAL
+	      set 
+	      FILEPATH = #{filepath,jdbcType=VARCHAR}
+	      ,FILENAME = #{filename,jdbcType=VARCHAR}
+	      ,TIME = #{time,jdbcType=TIMESTAMP}
+	      ,UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
+		  ,UPDATE_TIME = sysdate
+	      where 1=1
+	      and id = #{id,jdbcType=VARCHAR}
+    </update>
+    
+    <update id="updateRepRevealAnnexById" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto" >
+	      update REP_REVEAL
+	      set 
+	      ANNEX_PATH = #{annexPath,jdbcType=VARCHAR}
+	      ,ANNEX = #{annex,jdbcType=VARCHAR}
+	      ,UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
+		  ,UPDATE_TIME = sysdate
+	      where 1=1
+	      and id = #{id,jdbcType=VARCHAR}
+    </update>
+    
+    <update id="updateConfirmStatusById" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto" >
+	      update REP_REVEAL
+	      set 
+	      CONFIRM_STATUS = #{confirmStatus,jdbcType=VARCHAR},
+	      CONFIRM_DATE = #{confirmDate,jdbcType=DATE},
+	      CONFIRM_USER = #{confirmUser,jdbcType=VARCHAR}
+	      ,UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
+		  ,UPDATE_TIME = sysdate
+	      <if test="isReveal != null and isReveal != ''">
+		  	,IS_REVEAL=#{isReveal,jdbcType=VARCHAR}
+	      </if>
+	      <if test="isConfirm != null and isConfirm != ''">
+		  	,IS_CONFIRM=#{isConfirm,jdbcType=VARCHAR}
+	      </if>
+	      where 1=1
+	      and id = #{id,jdbcType=VARCHAR}
+    </update>
+    
+    <update id="updateRevealStatusById" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto" >
+	      update REP_REVEAL
+	      set 
+	      REVEAL_STATUS = #{revealStatus,jdbcType=VARCHAR},
+	      REVEAL_DATE = #{revealDate,jdbcType=DATE},
+	      REVEAL_USER = #{revealUser,jdbcType=VARCHAR}
+	      <if test="isReveal != null and isReveal != ''">
+		  	,IS_REVEAL=#{isReveal,jdbcType=VARCHAR}
+	      </if>
+	      ,UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
+		  ,UPDATE_TIME = sysdate
+	      where 1=1
+	      and id = #{id,jdbcType=VARCHAR}
+    </update>
+    
+    <update id="updateStatusById" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto" >
+	      update REP_REVEAL
+	      set 
+	      STATUS = #{status,jdbcType=VARCHAR}
+	      ,UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
+		  ,UPDATE_TIME = sysdate
+	      where 1=1
+	      and id = #{id,jdbcType=VARCHAR}
+    </update>
+    
+    <select id="getFinprodId" resultType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto">
+    	select prd.finprod_id,nvl(prd.finprod_abbr,prd.finprod_name) finprod_abbr from fin_product prd 
+    		where 1=1
+    	<if test="finprodType != null and finprodType != '' ">
+    		AND prd.FINPROD_TYPE = #{finprodType}
+    	</if>
+    </select>
+    
+    <!-- 估值表余额表状态表 - 确认状态更新  -->
+    <update id="updateConfirmStatus" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto" >
+	      update BOK_VALBAL_TABLE_STATUS a
+	      set confirm_Status=#{confirmStatusCode,jdbcType=VARCHAR}
+	      where 1=1
+		<if test="finprodId != null and finprodId != ''">
+			and a.finprod_Id=#{finprodId,jdbcType=VARCHAR}
+		</if>  
+		<if test="valDate != null and valDate != ''">
+			and a.val_Date=to_date(#{valDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+		</if> 
+		<if test="valBalFlag != null and valBalFlag != ''">
+			and a.val_Bal_Flag=#{valBalFlagCode,jdbcType=VARCHAR}
+		</if>     
+    </update>
+    
+        <!-- 估值表余额表状态表 - 下发状态更新  -->
+    <update id="updateNoticeStatus" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto" >
+	      update BOK_VALBAL_TABLE_STATUS a
+	      set NOTICE_STATUS=#{noticeStatusCode,jdbcType=VARCHAR}
+	      where 1=1
+		<if test="finprodId != null and finprodId != ''">
+			and a.finprod_Id=#{finprodId,jdbcType=VARCHAR}
+		</if>  
+		<if test="valDate != null and valDate != ''">
+			and a.val_Date=to_date(#{valDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+		</if> 
+		<if test="valBalFlag != null and valBalFlag != ''">
+			and a.val_Bal_Flag=#{valBalFlagCode,jdbcType=VARCHAR}
+		</if>     
+    </update>
+    
+    <insert id="insertBokFileTransfer" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.BokFileTransfer003Dto" >
+        insert into BOK_FILE_TRANSFER (SEQ_NO,FINPROD_ID, VAL_DATE, VAL_BAL_FLAG, 
+            FINPROD_NAME, FILE_NAME, FILE_PATH, UPLOAD_DATE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{seqNo,jdbcType=VARCHAR},#{finprodId,jdbcType=VARCHAR}, #{valDate,jdbcType=DATE}, #{valBalFlag,jdbcType=VARCHAR}, 
+            #{finprodName,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, #{uploadDate,jdbcType=TIMESTAMP},
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    
+    <select id="quryBokFileTransfer" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.BokFileTransfer003Dto" 
+    resultType="java.lang.Integer">
+	   select count(0)
+	   from BOK_FILE_TRANSFER bft
+	   where bft.FINPROD_ID = #{finprodId}
+	     and bft.VAL_BAL_FLAG = #{valBalFlag}
+	     and bft.VAL_DATE = #{valDate}
+	     and bft.FILE_NAME = #{fileName}
+    </select>
+    
+    <delete id="deleteBokFileTransfer" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.BokFileTransfer003Dto" >
+        delete from BOK_FILE_TRANSFER bft
+       where bft.FINPROD_ID = #{finprodId}
+	     and bft.VAL_BAL_FLAG = #{valBalFlag}
+	     and bft.VAL_DATE = #{valDate}
+	     and bft.FILE_NAME = #{fileName}
+    </delete>
+    
+    <select id="queryBokFileTransferPageList" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.BokFileTransfer003Dto"
+    resultType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.BokFileTransfer003Dto">
+			    select bft.SEQ_NO seqNo,
+			       bft.FINPROD_ID finprodId,
+			       bft.FINPROD_NAME finprodName,
+			       bft.VAL_DATE valDate,
+			       bft.VAL_BAL_FLAG valBalFlag,
+			       bft.FILE_NAME fileName,
+			       bft.FILE_PATH filePath,
+			       bft.UPLOAD_DATE uploadDate
+			  from BOK_FILE_TRANSFER bft
+			 where bft.FINPROD_ID = #{finprodId}
+		       and bft.VAL_BAL_FLAG = #{valBalFlag}
+		       and bft.VAL_DATE = #{valDate}
+		       order by bft.UPLOAD_DATE desc
+    </select>
+    
+    <select id="qryBokFileTransferBySeqNo" parameterType="String" 
+    resultType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.BokFileTransfer003Dto">
+	    select bft.SEQ_NO seqNo,
+		       bft.FINPROD_ID finprodId,
+		       bft.FINPROD_NAME finprodName,
+		       bft.VAL_DATE valDate,
+		       bft.VAL_BAL_FLAG valBalFlag,
+		       bft.FILE_NAME fileName,
+		       bft.FILE_PATH filePath,
+		       bft.UPLOAD_DATE uploadDate
+	   from BOK_FILE_TRANSFER bft
+	   where bft.SEQ_NO = #{seqNo}
+    </select>
+    
+    <insert id="insertBokFileInfo" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.BokFileInfoDto" >
+        insert into BOK_FILE_INFO (FILE_ID,FILE_TYPE, FILE_NAME, FILE_PATH, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{fileId,jdbcType=VARCHAR},#{fileType,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    
+    <insert id="insertBokNetValueCfmFile" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.BokNetValueCfmFileDto" >
+        insert into BOK_NETVALUE_CFM_FILE (FINPROD_ID, VAL_DATE, VAL_BAL_FLAG, FILE_ID,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{finprodId,jdbcType=VARCHAR}, #{valDate,jdbcType=DATE}, #{valBalFlag,jdbcType=VARCHAR}, #{fileId,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    
+    <select id="quryBokFileInfo" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.BokFileTransfer003Dto"
+    resultType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.BokFileTransfer003Dto">
+	   select bncf.file_id,
+	       bncf.finprod_id,
+	       bncf.val_bal_flag,
+	       bncf.val_date,
+	       bfi.file_name
+	  from BOK_NETVALUE_CFM_FILE bncf
+	  left join BOK_FILE_INFO bfi
+	  on bncf.file_id = bfi.file_id
+	  where bncf.finprod_id = #{finprodId}
+		and bncf.val_bal_flag = #{valBalFlag}
+		and bncf.val_date = #{valDate}
+		and bfi.file_name = #{fileName}
+    </select>
+    
+    <select id="quryBokFileInfoKey" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.BokFileInfoDto"
+    resultType="java.lang.String">
+	   select bfi.FILE_ID from 
+		  BOK_FILE_INFO  bfi 
+		where bfi.file_type = #{fileType}
+	      and bfi.file_name = #{fileName}
+	      and bfi.file_path = #{filePath}
+    </select>
+    
+    <delete id="deleteBokFileInfo" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.BokFileInfoDto" >
+        delete from BOK_FILE_INFO bfi
+       where bfi.FILE_ID = #{fileId}
+    </delete>
+    
+    <delete id="deleteBokNetValueCfmFile" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.BokNetValueCfmFileDto" >
+        delete from BOK_NETVALUE_CFM_FILE bncf
+        where bncf.FILE_ID = #{fileId}
+<!--         <if test="valBalFlag !=null and valBalFlag !='' "> -->
+<!-- 		 	and bncf.VAL_BAL_FLAG = #{valBalFlag} -->
+<!--         </if> -->
+<!--         <if test="valDate !=null and valDate !='' "> -->
+<!-- 		 	and bncf.VAL_DATE = #{valDate} -->
+<!--         </if> -->
+<!-- 	    <if test="finprodId !=null and finprodId !='' "> -->
+<!-- 		 	and  bncf.FINPROD_ID = #{finprodId} -->
+<!--         </if> -->
+    </delete>
+    
+     <select id="queryBokFileInfoPageList" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.BokFileTransfer003Dto"
+    resultType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.BokFileTransfer003Dto">
+			    select bncf.file_id fileId,
+		             bncf.FINPROD_ID finprodId,             
+		             bncf.VAL_DATE valDate,
+		             bncf.VAL_BAL_FLAG valBalFlag,
+		             bfi.FILE_NAME fileName,
+		             bfi.FILE_PATH filePath,
+		             bfi.create_time uploadDate
+		        from BOK_NETVALUE_CFM_FILE bncf
+		        left join BOK_FILE_INFO bfi 
+		        on bncf.file_id = bfi.file_id
+		        where bncf.FINPROD_ID = #{finprodId}
+		           and bncf.VAL_BAL_FLAG = #{valBalFlag}
+		           and bncf.VAL_DATE = #{valDate}
+		           order by  bfi.create_time desc
+    </select>
+    
+    <select id="qryBokFileInfoByFileId" parameterType="String" 
+    resultType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.BokFileTransfer003Dto">
+	          select bncf.file_id fileId,
+		             bncf.FINPROD_ID finprodId,             
+		             bncf.VAL_DATE valDate,
+		             bncf.VAL_BAL_FLAG valBalFlag,
+		             bfi.FILE_NAME fileName,
+		             bfi.FILE_PATH filePath,
+		             bfi.create_time uploadDate
+		        from BOK_NETVALUE_CFM_FILE bncf
+		        left join BOK_FILE_INFO bfi 
+		        on bncf.file_id = bfi.file_id
+	            where bncf.file_id = #{fileId}
+    </select>
+    
+    <delete id="deleteComfirmByPrimaryKey" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto" >
+	update 
+		REP_REVEAL 
+	set
+		status = 'D'
+		,UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
+		,UPDATE_TIME = sysdate
+    where ID in
+       <foreach collection="id.split(',')" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+    <!-- add by chendong in 2018-11-28 start -->
+    <select id="queryReportInfo" resultType="com.joyintech.tams.common.base.entity.RepReveal">
+		SELECT 
+			rr.ID id,
+			rr.REP_ID repId,
+			rr.PROD_NAME prodName,
+			rr.PRODID prodid,
+			rr.END_DATE endDate,
+			rr.START_DATE startDate,
+			rr.SYS_FILENAME sysFilename,
+			rr.SYS_FILEPATH sysFilepath,
+			rr.FILEPATH filepath,
+			rr.FILENAME filename,
+			rr.CONFIRM_STATUS confirmStatus,
+			rr.REVEAL_STATUS revealStatus,
+			rr.REVEAL_DATE revealDate,  
+			rr.CONFIRM_DATE confirmDate,
+			rr.REPORT_NAME reportName,
+			rr.REPORT_CATEGORY reportCategory
+		FROM 
+			REP_REVEAL rr
+		WHERE
+			rr.STATUS = 'E'
+		<if test="idList != null and idList.size() > 0 ">
+				AND rr.ID in
+	       		<foreach collection="idList" item="item" open="(" separator="," close=")">
+	            	#{item}
+	       		</foreach>
+	       </if>
+	 </select>
+	 <!-- 下载报表路径 -->
+	 <select id="queryReportPath" resultType="java.lang.String">
+	 	SELECT
+    		sufi.PATH
+		FROM
+    		SYS_UPLOAD_FILE_INFO sufi
+		WHERE
+    		sufi.SEQ_NO = #{seqNo}
+	 </select>
+	 <update id="confirmCancle" parameterType="java.lang.String" >
+	      UPDATE REP_REVEAL 
+	      <!-- SET (CONFIRM_STATUS,IS_CONFIRM,IS_REVEAL,CONFIRM_DATE,CONFIRM_USER,UPDATE_USER,UPDATE_TIME) 
+	      = (select '02','01','01',null,null,#{updateUser,jdbcType=VARCHAR},sysdate from dual) -->
+	      set
+	      CONFIRM_STATUS= #{confimStatus,jdbcType=VARCHAR},
+          IS_CONFIRM='01',
+          IS_REVEAL='01',
+          CONFIRM_DATE=null,
+          CONFIRM_USER=null,
+          UPDATE_USER=#{updateUser,jdbcType=VARCHAR},
+          UPDATE_TIME=sysdate
+	      WHERE 1=1
+	      AND ID in
+       		<foreach collection="idList" item="item" open="(" separator="," close=")">
+            	#{item}
+        	</foreach>
+     </update>
+	 <!-- add by chendong in 2018-11-28 end -->
+	 
+	 <!-- add by guozhongbao 删除文件 20181217 start -->
+	 <update id="deleteFile">
+		update REP_REVEAL rr
+		<if test="option != null and option != ''">
+			set rr.FILEPATH = null, rr.TIME = null, rr.FILENAME = null
+		</if>
+		<if test="option == null">
+			set rr.ANNEX = null, rr.ANNEX_PATH = null
+		</if>
+		,UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
+		,UPDATE_TIME = sysdate
+		where rr.ID = #{id, jdbcType=VARCHAR}
+	 </update>
+	 <!-- add by guozhongbao 删除文件 20181217 end -->
+	 <select id="findNewData" parameterType="java.lang.String" resultType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto">
+	 	SELECT 
+			REVEAL.ID id
+			,REVEAL.REP_ID repId
+			,REVEAL.REPORT_NAME reportName
+			,REVEAL.PROD_NAME prodName
+			,REVEAL.PRODID prodid
+			,case when 
+				  REVEAL.START_DATE is null or REVEAL.START_DATE = REVEAL.END_DATE
+			 then to_char(REVEAL.END_DATE,'yyyy-mm-dd')
+			 else to_char(REVEAL.START_DATE,'yyyy-mm-dd') || '--'||to_char(REVEAL.END_DATE,'yyyy-mm-dd')
+			 end  reportDate
+			,REVEAL.END_DATE endDate
+			,REVEAL.START_DATE startDate
+			,REVEAL.SYS_FILENAME sysFilename
+			,REVEAL.SYS_FILEPATH sysFilepath
+			,REVEAL.REVEAL_DATE revealDate  /**披露日**/
+			,REVEAL.FILEPATH filepath
+			,REVEAL.FILENAME filename
+			,REVEAL.CONFIRM_STATUS confirmStatus
+			<!-- ,decode(REVEAL.CONFIRM_STATUS,'01','已确认','未确认') confirmStatusName -->
+			,REVEAL.REVEAL_STATUS revealStatus
+			<!-- ,decode(REVEAL.REVEAL_STATUS,'01','已披露','未披露') revealStatusName -->
+			,REVEAL.STATUS status
+			,REVEAL.CREATE_USER createUser
+			,REVEAL.CREATE_DEPT createDept
+			,REVEAL.CREATE_TIME createTime
+			,REVEAL.UPDATE_USER updateUser
+			,REVEAL.UPDATE_TIME updateTime
+			,to_char(REVEAL.CREATE_TIME,'yyyy-MM-dd') createTimeStr
+			,to_char(REVEAL.CONFIRM_DATE,'yyyy-MM-dd') confirmDateStr
+			,REVEAL.SYS_FILEPATH seqno
+			<!-- add by guozhongbao 报表披露管理  20181204 start -->
+			,REVEAL.REVEAL_CHANNEL revealChannel
+			,REVEAL.IS_CONFIRM isConfirm
+			,REVEAL.IS_REVEAL isReveal
+			<!-- add by guozhongbao 报表披露管理 20181204 end -->
+			,REVEAL.DETAIL detail
+			,to_char(REVEAL.TIME,'yyyy-MM-dd') uploadTime
+			,REVEAL.CONFIRM_USER confirmUser
+			,REVEAL.REPORT_CATEGORY reportCategory
+			,rfp.NAME reportCategoryName
+			,to_char(REVEAL.REVEAL_END_DATE,'yyyy-mm-dd hh24:mi') revealEndDateStr
+			,REVEAL.ANNEX annex
+			,REVEAL.ANNEX_PATH  annexPath
+			/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    start*/
+			,fp.finprod_id finprodId
+			/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    end*/
+		FROM REP_REVEAL REVEAL
+		left join rep_info info on REVEAL.rep_id = info.rep_id
+		left join rep_ftp_path rfp on REVEAL.REPORT_CATEGORY = rfp.ID
+		/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    start*/
+		LEFT JOIN fin_product fp
+		ON fp.FINPROD_MARKET_ID = REVEAL.PRODID
+		/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    end*/
+		where 1=1
+		and REVEAL.status ='E'/*有效*/
+		and REVEAL.id = #{id, jdbcType=VARCHAR}
+	 </select>
+	 <select id="getFileName" resultType="java.lang.String">
+		  
+        SELECT 
+       		r.PROD_NAME||'_'||rfp.NAME  as SYS_FILENAME  
+        FROM REP_REVEAL r 
+        left join  rep_ftp_path  rfp
+        ON
+            r.REPORT_CATEGORY = rfp.ID
+        WHERE r.SYS_FILEPATH=#{sysFilepath, jdbcType=VARCHAR}
+        or  r.FILEPATH=#{sysFilepath, jdbcType=VARCHAR}
+        or  r.ANNEX_PATH=#{sysFilepath, jdbcType=VARCHAR}
+	 	
+	 </select>
+	 <select id="getFormate" resultType="java.lang.String">
+		  
+    	SELECT case when r.SYS_FILEPATH=#{sysFilepath, jdbcType=VARCHAR} then SYS_FILENAME
+    	when r.FILEPATH =#{sysFilepath, jdbcType=VARCHAR} then FILENAME
+    	when r.ANNEX_PATH=#{sysFilepath, jdbcType=VARCHAR} then ANNEX else null end as SYS_FILENAME FROM REP_REVEAL r 
+        WHERE 
+        	r.SYS_FILEPATH=#{sysFilepath, jdbcType=VARCHAR} 
+        or  r.FILEPATH=#{sysFilepath, jdbcType=VARCHAR}
+        or  r.ANNEX_PATH=#{sysFilepath, jdbcType=VARCHAR}
+        
+	 	
+	 </select>
+	 <select id="getReportCategoryName" resultType="java.lang.String">
+		SELECT rfp.NAME from rep_ftp_path rfp
+        
+        where rfp.ID=#{reportCategory, jdbcType=VARCHAR}
+	 	
+	 </select>	 	 
+	 <!-- 判断是否可以上传文档 -->
+	 <select id="selectConfirmStatus" parameterType="com.joyintech.tams.common.base.entity.RepReveal" resultType="java.lang.Integer">
+    	SELECT  COUNT(1)
+    	FROM	REP_REVEAL
+    	WHERE
+    			1=1
+    	<if test="prodid !=null and prodid != ''">
+			AND PRODID = #{prodid,jdbcType=VARCHAR}
+		</if>
+		<if test="reportName !=null and reportName != ''">
+			AND REPORT_NAME = #{reportName,jdbcType=VARCHAR}
+		</if>
+		<if test="startDate !=null">
+			and ( START_DATE = #{startDate,jdbcType=DATE}
+		</if>
+		<if test="startDate !=null">
+			OR END_DATE = #{startDate,jdbcType=DATE} )
+		</if>
+		AND STATUS='E'
+		AND CONFIRM_STATUS='01'
+    </select>
+    
+    <!-- 批量上传文件后，更新文件信息 -->
+    <update id="updateRepRevealByInfo" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto" >
+	      update REP_REVEAL
+	      set 
+	      FILEPATH = #{filepath,jdbcType=VARCHAR}
+	      ,FILENAME = #{filename,jdbcType=VARCHAR}
+	      ,TIME = #{time,jdbcType=DATE}
+		  ,UPDATE_TIME = sysdate
+	      where 1=1
+	      and STATUS = 'E'
+	      <if test="reportName !=null and reportName != ''">
+	      and REPORT_NAME = #{reportName,jdbcType=VARCHAR}
+	      </if>
+	      <if test="prodid !=null and prodid != ''">
+	      and PRODID = #{prodid,jdbcType=VARCHAR}
+	      </if>
+	      <if test="startDate !=null">
+	      and ( START_DATE = #{startDate,jdbcType=DATE}
+	      </if>
+	      <if test="startDate != null">
+			or END_DATE= #{startDate,jdbcType=DATE} )
+		</if>
+    </update></mapper>

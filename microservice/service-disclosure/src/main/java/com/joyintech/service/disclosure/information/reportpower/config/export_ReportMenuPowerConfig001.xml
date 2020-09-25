@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ReportMenuPowerConfig001Info.xlsx" name="报表权限管理">
+	<Worksheet javaBean="com.joyintech.tams.disclosure.information.reportpower.dto.ReportMenuPowerConfig001Dto">
+		<Row>
+			<Cell order="1" name="报表名称">reportName</Cell>
+			<Cell order="2" name="角色名称">roleName</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>

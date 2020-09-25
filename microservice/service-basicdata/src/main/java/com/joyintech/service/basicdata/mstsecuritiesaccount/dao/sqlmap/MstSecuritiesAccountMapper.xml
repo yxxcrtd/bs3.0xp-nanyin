@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.service.basicdata.mstsecuritiesaccount.dao.MstSecuritiesAccountMapper" >
+	<select id="select" resultType="com.joyintech.service.basicdata.mstsecuritiesaccount.dto.MstSecuritiesAccountDto" parameterType="com.joyintech.service.basicdata.mstsecuritiesaccount.dto.MstSecuritiesAccountDto">
+ select distinct STL_SEC_ACCT_INFO.SEC_ACCT_ID , STL_SEC_ACCT_INFO.SEC_ACCT_NAME,
+	STL_SEC_ACCT_INFO.REGIST_ORG, STL_SEC_ACCT_INFO.TRD_ACCT_ID,
+	STL_SEC_ACCT_INFO.REC_ACCT_ID,STL_SEC_ACCT_INFO.SEC_ACCT_SOURCE secAcctSource,
+	STL_SEC_ACCT_INFO.TRADE_PLACE tradePlace,
+	c1.acctName acctName, c1.busiAcctNo1 busiAcctNo1,c2.busiAcctNo2 busiAcctNo2
+	from STL_SEC_ACCT_INFO
+	left join (select distinct ACCT_NO acctNo1,BUSI_ACCT_NO busiAcctNo1,CCY ccy,
+	ACCT_NAME acctName from STL_CAPACCT_INFO)c1
+	on STL_SEC_ACCT_INFO.TRD_ACCT_ID=c1.acctNo1 and STL_SEC_ACCT_INFO.TRD_ACCT_CCY=c1.ccy
+	LEFT join(select distinct ACCT_NO acctNo2,BUSI_ACCT_NO busiAcctNo2,CCY ccy from STL_CAPACCT_INFO)c2
+	on STL_SEC_ACCT_INFO.REC_ACCT_ID=c2.acctNo2  and STL_SEC_ACCT_INFO.REC_ACCT_CCY=c2.ccy
+	LEFT join PTL_SEC_ACCT
+	on STL_SEC_ACCT_INFO.SEC_ACCT_ID = PTL_SEC_ACCT.ACCT_NO
+		<where>      
+			<if test="secAcctId!=null and secAcctId!=''">
+				(STL_SEC_ACCT_INFO.SEC_ACCT_ID  LIKE concat('%',concat(#{secAcctId},'%'))
+			 OR STL_SEC_ACCT_INFO.SEC_ACCT_NAME LIKE concat('%',concat(#{secAcctId},'%')))
+			</if>                                  
+			<if test="registOrg!=null and registOrg!=''">
+			  and STL_SEC_ACCT_INFO.REGIST_ORG=${registOrg}
+			</if>
+			<if test="portfolioId != null and portfolioId != ''">
+				AND	PTL_SEC_ACCT.PORTFOLIO_ID like concat('%',concat(#{portfolioId},'%'))
+			</if>
+			AND NVL(STL_SEC_ACCT_INFO.sec_acct_type, 'SEC') = 'SEC'/*只查询证券账户*/
+		</where>
+	</select>
+	<select id="getSecAcctId" resultType="com.joyintech.framework.select.SuggestDto">
+			select  SEC_ACCT_ID code,
+					SEC_ACCT_ID name,
+					SEC_ACCT_NAME shortName,
+					SEC_ACCT_ID hidCode
+		FROM
+			STL_SEC_ACCT_INFO
+			<where>
+			<if test="secAcctId != null and !secAcctId.equals('')">
+				SEC_ACCT_ID like
+				concat('%',concat(#{secAcctId},'%')) or
+				SEC_ACCT_NAME like
+				concat('%',concat(#{secAcctId},'%'))
+			</if>
+			AND NVL(STL_SEC_ACCT_INFO.sec_acct_type, 'SEC') = 'SEC'/*只查询证券账户*/
+		</where>
+	</select>
+	<select id="getBusiAcctNo" resultType="com.joyintech.framework.select.SelectOptionDto">
+			select  ACCT_NO id,
+					concat(ACCT_Name, CCY) text,
+					CCY col
+					/*多级法人改造，增加STL_CAPACCT_INFO.BUSI_ACCT_NO查询字段 add by caojin 2020/6/12 start  */
+				    ,SEQ_NO  seqNo
+				    /*多级法人改造，增加STL_CAPACCT_INFO.BUSI_ACCT_NO查询字段 add by caojin 2020/6/12 end  */
+		FROM
+			STL_CAPACCT_INFO
+			<where>
+			<if test="busiAcctNo != null and !busiAcctNo.equals('') and !busiAcctNo.equals('null') ">
+				ACCT_NO like
+				concat('%',concat(#{busiAcctNo},'%')) or
+				ACCT_NAME like
+				concat('%',concat(#{busiAcctNo},'%'))
+			</if>
+		</where>
+	</select>
+ 	<select id="selectBySecAcctId" resultType="com.joyintech.service.basicdata.mstsecuritiesaccount.dto.MstSecuritiesAccountDto">
+		select SEC_ACCT_ID secAcctId, SEC_ACCT_NAME secAcctName, SEC_ACCT_SOURCE secAcctSource, REGIST_ORG registOrg, 
+        TRD_ACCT_ID trdAcctId, REC_ACCT_ID recAcctId, REMARK remark, CREATE_USER createUser, CREATE_DEPT createDept, CREATE_TIME createTime, UPDATE_USER updateUser, 
+        UPDATE_TIME updateTime,TRADE_PLACE tradePlace,SEC_ACCT_SOURCE secAcctSource 
+        	from STL_SEC_ACCT_INFO
+        WHERE 
+        	SEC_ACCT_ID=#{secAcctId,jdbcType=VARCHAR}
+        	AND NVL(sec_acct_type, 'SEC') = 'SEC'/*只查询证券账户*/
+	</select> 
+	<select id="checkBySecAcctId" parameterType="com.joyintech.service.basicdata.mstsecuritiesaccount.dto.MstSecuritiesAccountDto" resultType="java.lang.Integer">
+		select count(*) 
+        	from STL_SEC_ACCT_INFO
+        WHERE 
+        	SEC_ACCT_ID=#{secAcctId,jdbcType=VARCHAR}
+        	AND NVL(sec_acct_type, 'SEC') = 'SEC'/*只查询证券账户*/
+	</select> 
+	<select id="checkBySecAcctName" parameterType="com.joyintech.service.basicdata.mstsecuritiesaccount.dto.MstSecuritiesAccountDto" resultType="java.lang.Integer">
+		select count(*)
+        	from STL_SEC_ACCT_INFO
+        WHERE 
+        	SEC_ACCT_Name=#{secAcctName,jdbcType=VARCHAR}
+        	AND NVL(sec_acct_type, 'SEC') = 'SEC'/*只查询证券账户*/
+	</select> 
+	<select id="checkByTrdAcctId" parameterType="com.joyintech.service.basicdata.mstsecuritiesaccount.dto.MstSecuritiesAccountDto" resultType="java.lang.Integer">
+		select count(*)
+        	from STL_CAPACCT_INFO
+        WHERE 
+        	BUSI_ACCT_NO=#{trdAcctId,jdbcType=VARCHAR}
+	</select>
+	<!--  文件上传 -->
+ <!--    <update id="insertIntoFile" parameterType="com.joyintech.service.basicdata.mstsecuritiesaccount.dto.FileDto">
+    	update  TAMS_BASE.SYS_UPLOAD_FILE_INFO
+    	set	BUSINESS_ID = #{businessId,jdbcType=VARCHAR}
+    	where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update> -->
+    <!-- 文件查询 -->
+<!--     <select id="selectFileByBusinessId" resultType="com.joyintech.service.basicdata.mstsecuritiesaccount.dto.FileDto">
+    	select
+    		SEQ_NO as fileNo,
+    		FILE_NAME as srcName,
+    		BUSINESS_ID as businessId,
+    		PATH as targetFile,
+    		CREATE_USER as createUser, 
+    		CREATE_TIME as createTime, 
+    		UPDATE_USER as updateUser, 
+    		UPDATE_TIME as updateTime
+   		from TAMS_BASE.SYS_UPLOAD_FILE_INFO where BUSINESS_ID = #{businessId,jdbcType=VARCHAR}
+    </select> -->
+    <!-- 文件删除 -->
+    <!-- <delete id="deleteFileByBusinessId" parameterType="com.joyintech.service.basicdata.mstsecuritiesaccount.dto.FileDto">
+    	delete from TAMS_BASE.SYS_UPLOAD_FILE_INFO where BUSINESS_ID = #{businessId,jdbcType=VARCHAR}
+    </delete> -->
+    <select id="checkCodeIsUse" parameterType="com.joyintech.service.basicdata.mstsecuritiesaccount.dto.MstSecuritiesAccountDto" resultType="java.lang.Integer">
+    	select count(*) count from PTL_SEC_ACCT  T1 ,STL_SEC_ACCT_INFO T2 
+		 	where T1.ACCT_NO=T2.SEC_ACCT_ID 
+		 		and T2.SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR} 
+		 		AND NVL(T2.sec_acct_type, 'SEC') = 'SEC'/*只查询证券账户*/
+    </select>
+    <select id="checkAllCodeIsUse" parameterType="java.util.List" resultType="com.joyintech.service.basicdata.mstsecuritiesaccount.dto.MstSecuritiesAccountDto">
+		 select T2.SEC_ACCT_ID secAcctId, T2.SEC_ACCT_NAME secAcctName, T2.SEC_ACCT_SOURCE secAcctSource, T2.REGIST_ORG registOrg, 
+        T2.TRD_ACCT_ID trdAcctId, T2.REC_ACCT_ID recAcctId, T2.REMARK remark, T2.CREATE_USER createUser, T2.CREATE_DEPT createDept,T2.CREATE_TIME createTime, T2.UPDATE_USER updateUser, 
+        T2.UPDATE_TIME updateTime from PTL_SEC_ACCT  T1 ,STL_SEC_ACCT_INFO T2 
+		 	where T1.ACCT_NO=T2.SEC_ACCT_ID AND
+				( T2.SEC_ACCT_ID in
+		 		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+	            	<if test="(index % 998) == 0">
+				null) OR T2.SEC_ACCT_ID in (
+			</if>
+	            	#{item.secAcctId,jdbcType=VARCHAR}
+	            </foreach>
+	            )
+	            AND NVL(T2.sec_acct_type, 'SEC') = 'SEC'/*只查询证券账户*/
+    </select>
+	
+	<!-- 组合代码联想文本框 -->
+	<select id="getPortfolioId" resultType="com.joyintech.framework.select.SuggestDto">
+		SELECT PTL_SEC_ACCT.PORTFOLIO_ID code,
+			   PTL_SEC_ACCT.ACCT_NO		shortName 
+			FROM PTL_SEC_ACCT 
+			INNER JOIN
+				 STL_SEC_ACCT_INFO
+			ON	PTL_SEC_ACCT.ACCT_NO = STL_SEC_ACCT_INFO.SEC_ACCT_ID
+			<where>
+				<if test="portfolioId != null and portfolioId != ''">
+				AND	(PORTFOLIO_ID like concat('%',concat(#{portfolioId},'%'))
+				OR	ACCT_NO like concat('%',concat(#{portfolioId},'%'))
+				)
+				</if>
+				AND NVL(STL_SEC_ACCT_INFO.sec_acct_type, 'SEC') = 'SEC'/*只查询证券账户*/
+			</where>  
+	</select>
+	
+</mapper>
