@@ -1,0 +1,28 @@
+# Intellij IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Mac
+.DS_Store
+
+# Maven
+target/
+*.jar
+*.war
+*.zip
+*.tar
+*.tar.gz
+
+# Other
+*.log
+*.cache
+*.diff
+*.patch
+*.tmp
+
+#eclipse
+.classpath
+.project
+.settings/
