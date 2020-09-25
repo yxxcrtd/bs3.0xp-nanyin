@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.PbcProdAssetpoolCodeMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.PbcProdAssetpoolCode" >
+        <id column="INSIDE_PROD_ID" property="insideProdId" jdbcType="VARCHAR" />
+        <id column="CODE_TYPE" property="codeType" jdbcType="VARCHAR" />
+        <result column="PBC_CODE" property="pbcCode" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        INSIDE_PROD_ID INSIDE_PROD_ID, CODE_TYPE CODE_TYPE, PBC_CODE PBC_CODE, STATUS STATUS, 
+        ORG_CODE ORG_CODE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PbcProdAssetpoolCodeMapper.Base_Column_List" />
+        from PBC_PROD_ASSETPOOL_CODE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PbcProdAssetpoolCodeMapper.Base_Column_List" />
+        from PBC_PROD_ASSETPOOL_CODE
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.PbcProdAssetpoolCodeKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PbcProdAssetpoolCodeMapper.Base_Column_List" />
+        from PBC_PROD_ASSETPOOL_CODE
+        where INSIDE_PROD_ID = #{insideProdId,jdbcType=VARCHAR}
+          and CODE_TYPE = #{codeType,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PbcProdAssetpoolCodeKey" >
+        delete from PBC_PROD_ASSETPOOL_CODE
+        where INSIDE_PROD_ID = #{insideProdId,jdbcType=VARCHAR}
+          and CODE_TYPE = #{codeType,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PbcProdAssetpoolCode" >
+        insert into PBC_PROD_ASSETPOOL_CODE (INSIDE_PROD_ID, CODE_TYPE, PBC_CODE, 
+            STATUS, ORG_CODE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{insideProdId,jdbcType=VARCHAR}, #{codeType,jdbcType=VARCHAR}, #{pbcCode,jdbcType=VARCHAR}, 
+            #{status,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PbcProdAssetpoolCode" >
+        insert into PBC_PROD_ASSETPOOL_CODE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="insideProdId != null" >
+                INSIDE_PROD_ID,
+            </if>
+            <if test="codeType != null" >
+                CODE_TYPE,
+            </if>
+            <if test="pbcCode != null" >
+                PBC_CODE,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="insideProdId != null" >
+                #{insideProdId,jdbcType=VARCHAR},
+            </if>
+            <if test="codeType != null" >
+                #{codeType,jdbcType=VARCHAR},
+            </if>
+            <if test="pbcCode != null" >
+                #{pbcCode,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PbcProdAssetpoolCode" >
+        insert into PBC_PROD_ASSETPOOL_CODE(INSIDE_PROD_ID, CODE_TYPE, PBC_CODE, STATUS, 
+        ORG_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select INSIDE_PROD_ID, CODE_TYPE, PBC_CODE, #{status,jdbcType=VARCHAR} STATUS, 
+            ORG_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from PBC_PROD_ASSETPOOL_CODE
+             where STATUS = 'E' and INSIDE_PROD_ID = #{insideProdId,jdbcType=VARCHAR} and CODE_TYPE = #{codeType,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.PbcProdAssetpoolCode" >
+        update PBC_PROD_ASSETPOOL_CODE
+        <set >
+            <if test="pbcCode != null" >
+                PBC_CODE = #{pbcCode,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where INSIDE_PROD_ID = #{insideProdId,jdbcType=VARCHAR}
+          and CODE_TYPE = #{codeType,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PbcProdAssetpoolCode" >
+        update PBC_PROD_ASSETPOOL_CODE
+        set PBC_CODE = #{pbcCode,jdbcType=VARCHAR},
+            STATUS = #{status,jdbcType=VARCHAR},
+            ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where INSIDE_PROD_ID = #{insideProdId,jdbcType=VARCHAR}
+          and CODE_TYPE = #{codeType,jdbcType=VARCHAR}
+    </update>
+</mapper>

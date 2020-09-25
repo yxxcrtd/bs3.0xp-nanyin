@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.TrdFinProductDealTotalMapper_mysql">
+	<insert id="insertDebtBaseInfo" parameterType="com.joyintech.tams.common.base.entity.DebtBaseInfo">
+    		Insert Into MST_COUNTER_PARTY
+    		<trim prefix="(" suffix=")" suffixOverrides="," >
+    			<if test="counterId !=null and counterId !=''">
+    				COUNTER_ID,
+    			</if>
+    			<if test="counterType !=null and counterType !=''">
+    				COUNTER_TYPE,
+    			</if>
+    			<if test="counterName !=null and counterName !=''">
+    				COUNTER_NAME,
+    			</if>
+    			<if test="linkId !=null and linkId !=''">
+    				LINK_ID,
+    			</if>
+    			<if test="managerId !=null and managerId !=''">
+    				MANAGER_ID,
+    			</if>
+    			<if test="hendBank !=null and hendBank !=''">
+    				HEAD_BANK,
+    			</if>
+    			<if test="contact !=null and contact !=''">
+    				CONTACT,
+    			</if>
+    			<if test="contactWay !=null and contactWay !=''">
+    				CONTACT_WAY,
+    			</if>
+    			<if test="remark !=null and remark !=''">
+    				REMARK,
+    			</if>
+    			<if test="createUser !=null and createUser !=''">
+    				CREATE_USER,
+    			</if>
+    			<if test="createDept !=null and createDept !=''">
+    				CREATE_DEPT,
+    			</if>
+    				CREATE_TIME,
+    			<if test="updateUser !=null and updateUser !=''">
+    				UPDATE_USER,
+    			</if>
+    				UPDATE_TIME,
+    			<if test="LinkDeptCode !=null and LinkDeptCode !=''">
+    				LINK_DEPT_CODE,
+    			</if>
+    			<if test="p_type_one !=null and p_type_one !=''">
+    				P_TYPE_ONE,
+    			</if>
+    			<if test="p_type_two !=null and p_type_two !=''">
+    				P_TYPE_TWO
+    			</if>
+    		</trim>
+    		<trim prefix="values (" suffix=")" suffixOverrides="," >
+    			<if test="counterId !=null and counterId !=''">
+    				#{counterId,jdbcType=VARCHAR},
+    			</if>
+    			<if test="counterType !=null and counterType !=''">
+    				#{counterType,jdbcType=VARCHAR},
+    			</if>
+    			<if test="counterName !=null and counterName !=''">
+    				#{counterName,jdbcType=VARCHAR},
+    			</if>
+    			<if test="linkId !=null and linkId !=''">
+    				#{linkId,jdbcType=VARCHAR},
+    			</if>
+    			<if test="managerId !=null and managerId !=''">
+    				#{managerId,jdbcType=VARCHAR},
+    			</if>
+    			<if test="hendBank !=null and hendBank !=''">
+    				#{hendBank,jdbcType=VARCHAR},
+    			</if>
+    			<if test="contact !=null and contact !=''">
+    				#{contact,jdbcType=VARCHAR},
+    			</if>
+    			<if test="contactWay !=null and contactWay !=''">
+    				#{contactWay,jdbcType=VARCHAR},
+    			</if>
+    			<if test="remark !=null and remark !=''">
+    				#{remark,jdbcType=VARCHAR},
+    			</if>
+    			<if test="createUser !=null and createUser !=''">
+    				#{createUser,jdbcType=VARCHAR},
+    			</if>
+    			<if test="createDept !=null and createDept !=''">
+    				#{createDept,jdbcType=VARCHAR},
+    			</if>
+    				NOW(),
+    			<if test="updateUser !=null and updateUser !=''">
+    				#{updateUser,jdbcType=VARCHAR},
+    			</if>
+    				NOW(),
+    			<if test="LinkDeptCode !=null and LinkDeptCode !=''">
+    				#{LinkDeptCode,jdbcType=VARCHAR},
+    			</if>
+    			<if test="p_type_one !=null and p_type_one !=''">
+    				#{p_type_one,jdbcType=VARCHAR},
+    			</if>
+    			<if test="p_type_two !=null and p_type_two !=''">
+    				#{p_type_two,jdbcType=VARCHAR},
+    			</if>
+    		</trim>
+    </insert>
+</mapper>

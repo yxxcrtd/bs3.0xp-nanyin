@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepJobMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepJob" >
+        <id column="JOB_ID" property="jobId" jdbcType="VARCHAR" />
+        <result column="JOB_NAME" property="jobName" jdbcType="VARCHAR" />
+        <result column="LOOP_DATE_TYPE" property="loopDateType" jdbcType="VARCHAR" />
+        <result column="LOOP_DATE_VALUE" property="loopDateValue" jdbcType="VARCHAR" />
+        <result column="LOOP_DATE_DETAIL" property="loopDateDetail" jdbcType="VARCHAR" />
+        <result column="START_DATE" property="startDate" jdbcType="VARCHAR" />
+        <result column="END_DATE" property="endDate" jdbcType="VARCHAR" />
+        <result column="RULE_ID" property="ruleId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="ISPRODRELATED" property="isprodrelated" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        JOB_ID JOB_ID, JOB_NAME JOB_NAME, LOOP_DATE_TYPE LOOP_DATE_TYPE, LOOP_DATE_VALUE LOOP_DATE_VALUE, 
+        LOOP_DATE_DETAIL LOOP_DATE_DETAIL, START_DATE START_DATE, END_DATE END_DATE, RULE_ID RULE_ID, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, ISPRODRELATED ISPRODRELATED
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepJobMapper.Base_Column_List" />
+        from REP_JOB
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepJobMapper.Base_Column_List" />
+        from REP_JOB
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepJobMapper.Base_Column_List" />
+        from REP_JOB
+        where JOB_ID = #{jobId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from REP_JOB
+        where JOB_ID = #{jobId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepJob" >
+        insert into REP_JOB (JOB_ID, JOB_NAME, LOOP_DATE_TYPE, 
+            LOOP_DATE_VALUE, LOOP_DATE_DETAIL, START_DATE, 
+            END_DATE, RULE_ID, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, ISPRODRELATED)
+        values (#{jobId,jdbcType=VARCHAR}, #{jobName,jdbcType=VARCHAR}, #{loopDateType,jdbcType=VARCHAR}, 
+            #{loopDateValue,jdbcType=VARCHAR}, #{loopDateDetail,jdbcType=VARCHAR}, #{startDate,jdbcType=VARCHAR}, 
+            #{endDate,jdbcType=VARCHAR}, #{ruleId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{isprodrelated,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepJob" >
+        insert into REP_JOB
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="jobId != null" >
+                JOB_ID,
+            </if>
+            <if test="jobName != null" >
+                JOB_NAME,
+            </if>
+            <if test="loopDateType != null" >
+                LOOP_DATE_TYPE,
+            </if>
+            <if test="loopDateValue != null" >
+                LOOP_DATE_VALUE,
+            </if>
+            <if test="loopDateDetail != null" >
+                LOOP_DATE_DETAIL,
+            </if>
+            <if test="startDate != null" >
+                START_DATE,
+            </if>
+            <if test="endDate != null" >
+                END_DATE,
+            </if>
+            <if test="ruleId != null" >
+                RULE_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="isprodrelated != null" >
+                ISPRODRELATED,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="jobId != null" >
+                #{jobId,jdbcType=VARCHAR},
+            </if>
+            <if test="jobName != null" >
+                #{jobName,jdbcType=VARCHAR},
+            </if>
+            <if test="loopDateType != null" >
+                #{loopDateType,jdbcType=VARCHAR},
+            </if>
+            <if test="loopDateValue != null" >
+                #{loopDateValue,jdbcType=VARCHAR},
+            </if>
+            <if test="loopDateDetail != null" >
+                #{loopDateDetail,jdbcType=VARCHAR},
+            </if>
+            <if test="startDate != null" >
+                #{startDate,jdbcType=VARCHAR},
+            </if>
+            <if test="endDate != null" >
+                #{endDate,jdbcType=VARCHAR},
+            </if>
+            <if test="ruleId != null" >
+                #{ruleId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isprodrelated != null" >
+                #{isprodrelated,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepJob" >
+        insert into REP_JOB(JOB_ID, JOB_NAME, LOOP_DATE_TYPE, LOOP_DATE_VALUE, LOOP_DATE_DETAIL, 
+        START_DATE, END_DATE, RULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME, ISPRODRELATED)
+        select JOB_ID, JOB_NAME, LOOP_DATE_TYPE, LOOP_DATE_VALUE, LOOP_DATE_DETAIL, 
+            START_DATE, END_DATE, RULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, ISPRODRELATED
+             from REP_JOB
+             where 1 = 1 and JOB_ID = #{jobId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepJob" >
+        update REP_JOB
+        <set >
+            <if test="jobName != null" >
+                JOB_NAME = #{jobName,jdbcType=VARCHAR},
+            </if>
+            <if test="loopDateType != null" >
+                LOOP_DATE_TYPE = #{loopDateType,jdbcType=VARCHAR},
+            </if>
+            <if test="loopDateValue != null" >
+                LOOP_DATE_VALUE = #{loopDateValue,jdbcType=VARCHAR},
+            </if>
+            <if test="loopDateDetail != null" >
+                LOOP_DATE_DETAIL = #{loopDateDetail,jdbcType=VARCHAR},
+            </if>
+            <if test="startDate != null" >
+                START_DATE = #{startDate,jdbcType=VARCHAR},
+            </if>
+            <if test="endDate != null" >
+                END_DATE = #{endDate,jdbcType=VARCHAR},
+            </if>
+            <if test="ruleId != null" >
+                RULE_ID = #{ruleId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isprodrelated != null" >
+                ISPRODRELATED = #{isprodrelated,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where JOB_ID = #{jobId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepJob" >
+        update REP_JOB
+        set JOB_NAME = #{jobName,jdbcType=VARCHAR},
+            LOOP_DATE_TYPE = #{loopDateType,jdbcType=VARCHAR},
+            LOOP_DATE_VALUE = #{loopDateValue,jdbcType=VARCHAR},
+            LOOP_DATE_DETAIL = #{loopDateDetail,jdbcType=VARCHAR},
+            START_DATE = #{startDate,jdbcType=VARCHAR},
+            END_DATE = #{endDate,jdbcType=VARCHAR},
+            RULE_ID = #{ruleId,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            ISPRODRELATED = #{isprodrelated,jdbcType=VARCHAR}
+        where JOB_ID = #{jobId,jdbcType=VARCHAR}
+    </update>
+</mapper>

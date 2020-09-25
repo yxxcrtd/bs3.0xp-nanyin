@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepMonthCountMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepMonthCount" >
+        <id column="REP_FINPROD_ID" property="repFinprodId" jdbcType="VARCHAR" />
+        <id column="RE_COUNT_DATE" property="reCountDate" jdbcType="DATE" />
+        <result column="REP_BANK_PROD_CODE" property="repBankProdCode" jdbcType="VARCHAR" />
+        <result column="REP_ISSUE_PARTY_ID" property="repIssuePartyId" jdbcType="VARCHAR" />
+        <result column="REP_PROD_COUNT" property="repProdCount" jdbcType="DECIMAL" />
+        <result column="REP_RAISE_MONEY_SUM" property="repRaiseMoneySum" jdbcType="DECIMAL" />
+        <result column="REP_RAISE_MONEY_NET" property="repRaiseMoneyNet" jdbcType="DECIMAL" />
+        <result column="REP_PROD_ALIVE_COUNT" property="repProdAliveCount" jdbcType="DECIMAL" />
+        <result column="REP_BALANCE" property="repBalance" jdbcType="DECIMAL" />
+        <result column="REP_CUS_ACHI_PROFIT_SUM" property="repCusAchiProfitSum" jdbcType="DECIMAL" />
+        <result column="REP_BANK_ACHI_PROFIT" property="repBankAchiProfit" jdbcType="DECIMAL" />
+        <result column="REP_REG_DATE" property="repRegDate" jdbcType="DATE" />
+        <result column="REP_SEND_STATUS" property="repSendStatus" jdbcType="VARCHAR" />
+        <result column="REP_STATUS_DATE" property="repStatusDate" jdbcType="DATE" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        REP_FINPROD_ID REP_FINPROD_ID, RE_COUNT_DATE RE_COUNT_DATE, REP_BANK_PROD_CODE REP_BANK_PROD_CODE, 
+        REP_ISSUE_PARTY_ID REP_ISSUE_PARTY_ID, REP_PROD_COUNT REP_PROD_COUNT, REP_RAISE_MONEY_SUM REP_RAISE_MONEY_SUM, 
+        REP_RAISE_MONEY_NET REP_RAISE_MONEY_NET, REP_PROD_ALIVE_COUNT REP_PROD_ALIVE_COUNT, 
+        REP_BALANCE REP_BALANCE, REP_CUS_ACHI_PROFIT_SUM REP_CUS_ACHI_PROFIT_SUM, REP_BANK_ACHI_PROFIT REP_BANK_ACHI_PROFIT, 
+        REP_REG_DATE REP_REG_DATE, REP_SEND_STATUS REP_SEND_STATUS, REP_STATUS_DATE REP_STATUS_DATE, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepMonthCountMapper.Base_Column_List" />
+        from REP_MONTH_COUNT
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepMonthCountMapper.Base_Column_List" />
+        from REP_MONTH_COUNT
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.RepMonthCountKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepMonthCountMapper.Base_Column_List" />
+        from REP_MONTH_COUNT
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+          and RE_COUNT_DATE = #{reCountDate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepMonthCountKey" >
+        delete from REP_MONTH_COUNT
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+          and RE_COUNT_DATE = #{reCountDate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepMonthCount" >
+        insert into REP_MONTH_COUNT (REP_FINPROD_ID, RE_COUNT_DATE, REP_BANK_PROD_CODE, 
+            REP_ISSUE_PARTY_ID, REP_PROD_COUNT, REP_RAISE_MONEY_SUM, 
+            REP_RAISE_MONEY_NET, REP_PROD_ALIVE_COUNT, 
+            REP_BALANCE, REP_CUS_ACHI_PROFIT_SUM, REP_BANK_ACHI_PROFIT, 
+            REP_REG_DATE, REP_SEND_STATUS, REP_STATUS_DATE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{repFinprodId,jdbcType=VARCHAR}, #{reCountDate,jdbcType=DATE}, #{repBankProdCode,jdbcType=VARCHAR}, 
+            #{repIssuePartyId,jdbcType=VARCHAR}, #{repProdCount,jdbcType=DECIMAL}, #{repRaiseMoneySum,jdbcType=DECIMAL}, 
+            #{repRaiseMoneyNet,jdbcType=DECIMAL}, #{repProdAliveCount,jdbcType=DECIMAL}, 
+            #{repBalance,jdbcType=DECIMAL}, #{repCusAchiProfitSum,jdbcType=DECIMAL}, #{repBankAchiProfit,jdbcType=DECIMAL}, 
+            #{repRegDate,jdbcType=DATE}, #{repSendStatus,jdbcType=VARCHAR}, #{repStatusDate,jdbcType=DATE}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepMonthCount" >
+        insert into REP_MONTH_COUNT
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="repFinprodId != null" >
+                REP_FINPROD_ID,
+            </if>
+            <if test="reCountDate != null" >
+                RE_COUNT_DATE,
+            </if>
+            <if test="repBankProdCode != null" >
+                REP_BANK_PROD_CODE,
+            </if>
+            <if test="repIssuePartyId != null" >
+                REP_ISSUE_PARTY_ID,
+            </if>
+            <if test="repProdCount != null" >
+                REP_PROD_COUNT,
+            </if>
+            <if test="repRaiseMoneySum != null" >
+                REP_RAISE_MONEY_SUM,
+            </if>
+            <if test="repRaiseMoneyNet != null" >
+                REP_RAISE_MONEY_NET,
+            </if>
+            <if test="repProdAliveCount != null" >
+                REP_PROD_ALIVE_COUNT,
+            </if>
+            <if test="repBalance != null" >
+                REP_BALANCE,
+            </if>
+            <if test="repCusAchiProfitSum != null" >
+                REP_CUS_ACHI_PROFIT_SUM,
+            </if>
+            <if test="repBankAchiProfit != null" >
+                REP_BANK_ACHI_PROFIT,
+            </if>
+            <if test="repRegDate != null" >
+                REP_REG_DATE,
+            </if>
+            <if test="repSendStatus != null" >
+                REP_SEND_STATUS,
+            </if>
+            <if test="repStatusDate != null" >
+                REP_STATUS_DATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="repFinprodId != null" >
+                #{repFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="reCountDate != null" >
+                #{reCountDate,jdbcType=DATE},
+            </if>
+            <if test="repBankProdCode != null" >
+                #{repBankProdCode,jdbcType=VARCHAR},
+            </if>
+            <if test="repIssuePartyId != null" >
+                #{repIssuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="repProdCount != null" >
+                #{repProdCount,jdbcType=DECIMAL},
+            </if>
+            <if test="repRaiseMoneySum != null" >
+                #{repRaiseMoneySum,jdbcType=DECIMAL},
+            </if>
+            <if test="repRaiseMoneyNet != null" >
+                #{repRaiseMoneyNet,jdbcType=DECIMAL},
+            </if>
+            <if test="repProdAliveCount != null" >
+                #{repProdAliveCount,jdbcType=DECIMAL},
+            </if>
+            <if test="repBalance != null" >
+                #{repBalance,jdbcType=DECIMAL},
+            </if>
+            <if test="repCusAchiProfitSum != null" >
+                #{repCusAchiProfitSum,jdbcType=DECIMAL},
+            </if>
+            <if test="repBankAchiProfit != null" >
+                #{repBankAchiProfit,jdbcType=DECIMAL},
+            </if>
+            <if test="repRegDate != null" >
+                #{repRegDate,jdbcType=DATE},
+            </if>
+            <if test="repSendStatus != null" >
+                #{repSendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="repStatusDate != null" >
+                #{repStatusDate,jdbcType=DATE},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepMonthCount" >
+        insert into REP_MONTH_COUNT(REP_FINPROD_ID, RE_COUNT_DATE, REP_BANK_PROD_CODE, REP_ISSUE_PARTY_ID, 
+        REP_PROD_COUNT, REP_RAISE_MONEY_SUM, REP_RAISE_MONEY_NET, REP_PROD_ALIVE_COUNT, REP_BALANCE, 
+        REP_CUS_ACHI_PROFIT_SUM, REP_BANK_ACHI_PROFIT, REP_REG_DATE, REP_SEND_STATUS, REP_STATUS_DATE, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select REP_FINPROD_ID, RE_COUNT_DATE, REP_BANK_PROD_CODE, REP_ISSUE_PARTY_ID, 
+            REP_PROD_COUNT, REP_RAISE_MONEY_SUM, REP_RAISE_MONEY_NET, REP_PROD_ALIVE_COUNT, REP_BALANCE, 
+            REP_CUS_ACHI_PROFIT_SUM, REP_BANK_ACHI_PROFIT, REP_REG_DATE, REP_SEND_STATUS, REP_STATUS_DATE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from REP_MONTH_COUNT
+             where 1 = 1 and REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR} and RE_COUNT_DATE = #{reCountDate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepMonthCount" >
+        update REP_MONTH_COUNT
+        <set >
+            <if test="repBankProdCode != null" >
+                REP_BANK_PROD_CODE = #{repBankProdCode,jdbcType=VARCHAR},
+            </if>
+            <if test="repIssuePartyId != null" >
+                REP_ISSUE_PARTY_ID = #{repIssuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="repProdCount != null" >
+                REP_PROD_COUNT = #{repProdCount,jdbcType=DECIMAL},
+            </if>
+            <if test="repRaiseMoneySum != null" >
+                REP_RAISE_MONEY_SUM = #{repRaiseMoneySum,jdbcType=DECIMAL},
+            </if>
+            <if test="repRaiseMoneyNet != null" >
+                REP_RAISE_MONEY_NET = #{repRaiseMoneyNet,jdbcType=DECIMAL},
+            </if>
+            <if test="repProdAliveCount != null" >
+                REP_PROD_ALIVE_COUNT = #{repProdAliveCount,jdbcType=DECIMAL},
+            </if>
+            <if test="repBalance != null" >
+                REP_BALANCE = #{repBalance,jdbcType=DECIMAL},
+            </if>
+            <if test="repCusAchiProfitSum != null" >
+                REP_CUS_ACHI_PROFIT_SUM = #{repCusAchiProfitSum,jdbcType=DECIMAL},
+            </if>
+            <if test="repBankAchiProfit != null" >
+                REP_BANK_ACHI_PROFIT = #{repBankAchiProfit,jdbcType=DECIMAL},
+            </if>
+            <if test="repRegDate != null" >
+                REP_REG_DATE = #{repRegDate,jdbcType=DATE},
+            </if>
+            <if test="repSendStatus != null" >
+                REP_SEND_STATUS = #{repSendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="repStatusDate != null" >
+                REP_STATUS_DATE = #{repStatusDate,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+          and RE_COUNT_DATE = #{reCountDate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepMonthCount" >
+        update REP_MONTH_COUNT
+        set REP_BANK_PROD_CODE = #{repBankProdCode,jdbcType=VARCHAR},
+            REP_ISSUE_PARTY_ID = #{repIssuePartyId,jdbcType=VARCHAR},
+            REP_PROD_COUNT = #{repProdCount,jdbcType=DECIMAL},
+            REP_RAISE_MONEY_SUM = #{repRaiseMoneySum,jdbcType=DECIMAL},
+            REP_RAISE_MONEY_NET = #{repRaiseMoneyNet,jdbcType=DECIMAL},
+            REP_PROD_ALIVE_COUNT = #{repProdAliveCount,jdbcType=DECIMAL},
+            REP_BALANCE = #{repBalance,jdbcType=DECIMAL},
+            REP_CUS_ACHI_PROFIT_SUM = #{repCusAchiProfitSum,jdbcType=DECIMAL},
+            REP_BANK_ACHI_PROFIT = #{repBankAchiProfit,jdbcType=DECIMAL},
+            REP_REG_DATE = #{repRegDate,jdbcType=DATE},
+            REP_SEND_STATUS = #{repSendStatus,jdbcType=VARCHAR},
+            REP_STATUS_DATE = #{repStatusDate,jdbcType=DATE},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+          and RE_COUNT_DATE = #{reCountDate,jdbcType=DATE}
+    </update>
+</mapper>

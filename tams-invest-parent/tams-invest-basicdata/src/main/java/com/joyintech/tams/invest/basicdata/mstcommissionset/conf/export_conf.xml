@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="MstCommissionSet.xlsx" name="佣金设置">
+    <Worksheet javaBean="com.joyintech.tams.invest.basicdata.mstcommissionset.dto.MstCommissionSetDto">
+        <Row>
+         	<Cell order="1" name="费用类型">feeTypeStr</Cell>
+         	<Cell order="2" name="证券账户">secAcctName</Cell>
+            <Cell order="3" name="交易场所">tradeMarketStr</Cell>
+            <Cell order="4" name="交易品种">tradeTypeStr</Cell>
+            <Cell order="5" name="交易方向">psStr</Cell>
+            <Cell order="6" name="期限品种">termTypeStr</Cell>
+            <Cell order="7" name="计费类型">chargeTypeStr</Cell>
+            <Cell order="8" name="计费基数">chargeBasisStr</Cell>
+            <Cell order="9" name="费用值/费率值‰">feeRate</Cell>
+            <Cell order="10" name="最大金额">feeMaxi</Cell>
+            <Cell order="11" name="最小金额">feeMini</Cell>
+            <Cell order="12" name="生效日">effDate</Cell>
+            <Cell order="13" name="是否随交易支付">isPayWithTradeStr</Cell>
+        </Row>
+    </Worksheet>
+</Workbook>

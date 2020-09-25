@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ThresholdCheck001.xlsx" name="报表指标管理">
+	<Worksheet javaBean="com.joyintech.tams.disclosure.information.config.thresholdCheck.dto.ThresholdCheck001Dto">
+		<Row>
+			<Cell order="1" name="序号">rId</Cell>
+			<Cell order="2" name="报表名称">reportName</Cell>
+			<Cell order="3" name="报表日期">reportDate</Cell>
+			<Cell order="4" name="阈值指标名称">indexId</Cell>
+			<Cell order="5" name="阈值">indexValue</Cell>	
+			<Cell order="6" name="产品代码">prodId</Cell>	
+			<Cell order="7" name="产品名称">prodName</Cell>	
+			<Cell order="8" name="产品指标值">prodValue</Cell>	
+			<Cell order="9" name="异常结果说明">errormsg</Cell>	
+		</Row>
+	</Worksheet>
+</Workbook>

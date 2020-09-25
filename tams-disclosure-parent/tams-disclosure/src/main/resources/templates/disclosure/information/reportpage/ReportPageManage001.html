@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
+
+<head>
+    <title data-th-text="#{ReportPage001}">报表页面配置</title>
+</head>
+<body>
+    <div layout:fragment="content">
+    <div class="form-button-area" export="false">
+    <a id="reportPagel001_btn_design" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-add"></i>新建</a>
+    <a id="reportPagel001_btn_effective" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-startup"></i>启用</a>
+    <a id="reportPagel001_btn_neffective" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-stopit"></i>禁用</a>
+    <a id="reportPagel001_btn_export" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-export"></i>导出</a>
+    
+    </div>
+    <div class="joyin-form-wrap condition-area">
+        <form class="layui-form" id="searchForm">
+            <div class="layui-form-item">
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable">报表名称</label>                   
+                    <div class="layui-input-inline input-inline">
+                       <!-- <input id="reportName" name="reportName" class="layui-input form-input input-lenovoselect" 
+                        data-th-data-parentids="orgCode" data-th-data-code="prdCode" 
+                		data-th-data-url="@{/information/reportpage/ReportPageManage001/getPageName}"
+                		data-idfield="code" data-keyfield="code"
+                		data-effectivefieldsalias='{"code":"报表代码","shortName":"报表名称"}'
+                		> -->
+                		<select id="reportName" name="reportName"
+										class="layui-input form-input input-select"
+										data-th-formatoption="false"
+										data-th-data-result="${REPORT_NAME}" allowClear="true"
+										placeholder="请输入内容" >
+
+					  </select>
+<!--                 		<input id="reportName" name="reportName" class="layui-input form-input" placeholder="请输入内容">                        -->
+                    </div>
+                </div>
+<!--添加报表类别  -->
+                 <div class="layui-inline layui-col-md4">                   
+                    <label class="layui-form-label form-lable">报表类别</label>
+                    <div class="layui-input-inline input-inline">
+                        <select id="reportCategory" name="reportCategory" class="layui-input form-input input-select" data-th-formatoption="false"
+                           placeholder="请选择，可复选" data-th-data-result="${REPORT_STYLE}" allowClear="true"
+                           multiple="multiple" data-th-placeholder="#{SysCommon.placeholder}">
+                        </select>
+                </div>
+                </div>  
+ <!-- <结束>  -->                         
+            </div>
+        </form>
+        </div>
+        <div>           
+            <table class="layui-table" id="reportModel"></table>           
+        </div>
+    </div>
+    <div layout:fragment="script">
+        <script data-th-inline="javascript" type="text/javascript">
+		    var ADMINISTRATIVE_TYPE1 = /*[[${ADMINISTRATIVE_TYPE1}]]*/;
+		</script>
+        <script data-th-src="@{/js/disclosure/jquery.validate.js}" type="text/javascript"></script>
+        <script data-th-src="@{/js/disclosure/joyinvalid.js}" type="text/javascript"></script>
+        <script data-th-src="@{/js/disclosure/information/config/reportpage/ReportPageManage001.js}" type="text/javascript"></script>
+    </div>
+</body>
+</html>

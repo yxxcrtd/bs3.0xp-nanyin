@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfSendMurexMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfSendMurex" >
+        <id column="UUID" property="uuid" jdbcType="VARCHAR" />
+        <result column="BUSINESS_TYPE" property="businessType" jdbcType="VARCHAR" />
+        <result column="BUSI_SEQ_NO" property="busiSeqNo" jdbcType="VARCHAR" />
+        <result column="SEND_NUM" property="sendNum" jdbcType="DECIMAL" />
+        <result column="SEND_DATE" property="sendDate" jdbcType="DATE" />
+        <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+        <result column="ORDER_REC_STATUS" property="orderRecStatus" jdbcType="VARCHAR" />
+        <result column="ORDER_RET_STATUS" property="orderRetStatus" jdbcType="VARCHAR" />
+        <result column="MUREX_AGREE_NO" property="murexAgreeNo" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.joyintech.tams.common.base.entity.InterfSendMurex" extends="BaseResultMap" >
+        <result column="SEND_DATA" property="sendData" jdbcType="CLOB" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        UUID UUID, BUSINESS_TYPE BUSINESS_TYPE, BUSI_SEQ_NO BUSI_SEQ_NO, SEND_NUM SEND_NUM, 
+        SEND_DATE SEND_DATE, SEND_STATUS SEND_STATUS, ORDER_REC_STATUS ORDER_REC_STATUS, 
+        ORDER_RET_STATUS ORDER_RET_STATUS, MUREX_AGREE_NO MUREX_AGREE_NO, REMARK REMARK, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Blob_Column_List" >
+        SEND_DATA
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfSendMurexMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.InterfSendMurexMapper.Blob_Column_List" />
+        from INTERF_SEND_MUREX
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfSendMurexMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.InterfSendMurexMapper.Blob_Column_List" />
+        from INTERF_SEND_MUREX
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfSendMurexMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.InterfSendMurexMapper.Blob_Column_List" />
+        from INTERF_SEND_MUREX
+        where UUID = #{uuid,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from INTERF_SEND_MUREX
+        where UUID = #{uuid,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfSendMurex" >
+        insert into INTERF_SEND_MUREX (UUID, BUSINESS_TYPE, BUSI_SEQ_NO, 
+            SEND_NUM, SEND_DATE, SEND_STATUS, 
+            ORDER_REC_STATUS, ORDER_RET_STATUS, MUREX_AGREE_NO, 
+            REMARK, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            SEND_DATA)
+        values (#{uuid,jdbcType=VARCHAR}, #{businessType,jdbcType=VARCHAR}, #{busiSeqNo,jdbcType=VARCHAR}, 
+            #{sendNum,jdbcType=DECIMAL}, #{sendDate,jdbcType=DATE}, #{sendStatus,jdbcType=VARCHAR}, 
+            #{orderRecStatus,jdbcType=VARCHAR}, #{orderRetStatus,jdbcType=VARCHAR}, #{murexAgreeNo,jdbcType=VARCHAR}, 
+            #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{sendData,jdbcType=CLOB})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfSendMurex" >
+        insert into INTERF_SEND_MUREX
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="uuid != null" >
+                UUID,
+            </if>
+            <if test="businessType != null" >
+                BUSINESS_TYPE,
+            </if>
+            <if test="busiSeqNo != null" >
+                BUSI_SEQ_NO,
+            </if>
+            <if test="sendNum != null" >
+                SEND_NUM,
+            </if>
+            <if test="sendDate != null" >
+                SEND_DATE,
+            </if>
+            <if test="sendStatus != null" >
+                SEND_STATUS,
+            </if>
+            <if test="orderRecStatus != null" >
+                ORDER_REC_STATUS,
+            </if>
+            <if test="orderRetStatus != null" >
+                ORDER_RET_STATUS,
+            </if>
+            <if test="murexAgreeNo != null" >
+                MUREX_AGREE_NO,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="sendData != null" >
+                SEND_DATA,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="uuid != null" >
+                #{uuid,jdbcType=VARCHAR},
+            </if>
+            <if test="businessType != null" >
+                #{businessType,jdbcType=VARCHAR},
+            </if>
+            <if test="busiSeqNo != null" >
+                #{busiSeqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="sendNum != null" >
+                #{sendNum,jdbcType=DECIMAL},
+            </if>
+            <if test="sendDate != null" >
+                #{sendDate,jdbcType=DATE},
+            </if>
+            <if test="sendStatus != null" >
+                #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="orderRecStatus != null" >
+                #{orderRecStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="orderRetStatus != null" >
+                #{orderRetStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="murexAgreeNo != null" >
+                #{murexAgreeNo,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sendData != null" >
+                #{sendData,jdbcType=CLOB},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfSendMurex" >
+        insert into INTERF_SEND_MUREX(UUID, BUSINESS_TYPE, BUSI_SEQ_NO, SEND_NUM, SEND_DATE, 
+        SEND_STATUS, ORDER_REC_STATUS, ORDER_RET_STATUS, MUREX_AGREE_NO, REMARK, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, SEND_DATA)
+        select UUID, BUSINESS_TYPE, BUSI_SEQ_NO, SEND_NUM, SEND_DATE, 
+            SEND_STATUS, ORDER_REC_STATUS, ORDER_RET_STATUS, MUREX_AGREE_NO, REMARK, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, SEND_DATA
+             from INTERF_SEND_MUREX
+             where 1 = 1 and UUID = #{uuid,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InterfSendMurex" >
+        update INTERF_SEND_MUREX
+        <set >
+            <if test="businessType != null" >
+                BUSINESS_TYPE = #{businessType,jdbcType=VARCHAR},
+            </if>
+            <if test="busiSeqNo != null" >
+                BUSI_SEQ_NO = #{busiSeqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="sendNum != null" >
+                SEND_NUM = #{sendNum,jdbcType=DECIMAL},
+            </if>
+            <if test="sendDate != null" >
+                SEND_DATE = #{sendDate,jdbcType=DATE},
+            </if>
+            <if test="sendStatus != null" >
+                SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="orderRecStatus != null" >
+                ORDER_REC_STATUS = #{orderRecStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="orderRetStatus != null" >
+                ORDER_RET_STATUS = #{orderRetStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="murexAgreeNo != null" >
+                MUREX_AGREE_NO = #{murexAgreeNo,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sendData != null" >
+                SEND_DATA = #{sendData,jdbcType=CLOB},
+            </if>
+        </set>
+        where UUID = #{uuid,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.joyintech.tams.common.base.entity.InterfSendMurex" >
+        update INTERF_SEND_MUREX
+        set BUSINESS_TYPE = #{businessType,jdbcType=VARCHAR},
+            BUSI_SEQ_NO = #{busiSeqNo,jdbcType=VARCHAR},
+            SEND_NUM = #{sendNum,jdbcType=DECIMAL},
+            SEND_DATE = #{sendDate,jdbcType=DATE},
+            SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            ORDER_REC_STATUS = #{orderRecStatus,jdbcType=VARCHAR},
+            ORDER_RET_STATUS = #{orderRetStatus,jdbcType=VARCHAR},
+            MUREX_AGREE_NO = #{murexAgreeNo,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            SEND_DATA = #{sendData,jdbcType=CLOB}
+        where UUID = #{uuid,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfSendMurex" >
+        update INTERF_SEND_MUREX
+        set BUSINESS_TYPE = #{businessType,jdbcType=VARCHAR},
+            BUSI_SEQ_NO = #{busiSeqNo,jdbcType=VARCHAR},
+            SEND_NUM = #{sendNum,jdbcType=DECIMAL},
+            SEND_DATE = #{sendDate,jdbcType=DATE},
+            SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            ORDER_REC_STATUS = #{orderRecStatus,jdbcType=VARCHAR},
+            ORDER_RET_STATUS = #{orderRetStatus,jdbcType=VARCHAR},
+            MUREX_AGREE_NO = #{murexAgreeNo,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where UUID = #{uuid,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbLoanDetailContractDtoMapper_mysql">
+	<insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbLoanDetailContractDto" >
+    insert into CHB_LOAN_DETAIL_CONTRACT (PROD_ID, ASSET_CODE, ORIG_CCY, 
+      ORIG_CONTRACT_AMOUNT, ORIG_CONTRACT_AMOUNT_CNY, 
+      CREATE_USER, CREATE_TIME, UPDATE_USER, 
+      UPDATE_TIME, CREATE_DEPT, ORG_CODE, 
+      DEPT_CODE, STATUS, DATA_SOURCE
+      )
+    values (#{prodId,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR}, #{origCcy,jdbcType=CHAR}, 
+      #{origContractAmount,jdbcType=DECIMAL}, #{origContractAmountCny,jdbcType=DECIMAL}, 
+      'system', NOW(), 'system', 
+      NOW(), #{createDept,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
+      #{deptCode,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}
+      )
+  </insert>
+</mapper>

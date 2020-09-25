@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbReportCheckMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbReportCheck" >
+        <id column="CHECK_SEQNO" property="checkSeqno" jdbcType="VARCHAR" />
+        <result column="REP_CODE" property="repCode" jdbcType="VARCHAR" />
+        <result column="REP_NAME" property="repName" jdbcType="VARCHAR" />
+        <result column="VALID_KEY" property="validKey" jdbcType="VARCHAR" />
+        <result column="CHECK_RESULT" property="checkResult" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DATA_TIME" property="dataTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="IS_LOGIC_CHECK" property="isLogicCheck" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.joyintech.tams.common.base.entity.ChbReportCheckWithBLOBs" extends="BaseResultMap" >
+        <result column="ERROR_INFO" property="errorInfo" jdbcType="CLOB" />
+        <result column="WARN_INFO" property="warnInfo" jdbcType="CLOB" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CHECK_SEQNO CHECK_SEQNO, REP_CODE REP_CODE, REP_NAME REP_NAME, VALID_KEY VALID_KEY, 
+        CHECK_RESULT CHECK_RESULT, ORG_CODE ORG_CODE, DATA_TIME DATA_TIME, CREATE_DEPT CREATE_DEPT, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, 
+        IS_LOGIC_CHECK IS_LOGIC_CHECK
+    </sql>
+    <sql id="Blob_Column_List" >
+        ERROR_INFO, WARN_INFO
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbReportCheckMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.ChbReportCheckMapper.Blob_Column_List" />
+        from CHB_REPORT_CHECK
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbReportCheckMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.ChbReportCheckMapper.Blob_Column_List" />
+        from CHB_REPORT_CHECK
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbReportCheckMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.ChbReportCheckMapper.Blob_Column_List" />
+        from CHB_REPORT_CHECK
+        where CHECK_SEQNO = #{checkSeqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_REPORT_CHECK
+        where CHECK_SEQNO = #{checkSeqno,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_REPORT_CHECK
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbReportCheckWithBLOBs" >
+        insert into CHB_REPORT_CHECK (CHECK_SEQNO, REP_CODE, REP_NAME, 
+            VALID_KEY, CHECK_RESULT, ORG_CODE, 
+            DATA_TIME, CREATE_DEPT, UPDATE_USER, 
+            UPDATE_TIME, CREATE_USER, CREATE_TIME, 
+            IS_LOGIC_CHECK, ERROR_INFO, WARN_INFO
+            )
+        values (#{checkSeqno,jdbcType=VARCHAR}, #{repCode,jdbcType=VARCHAR}, #{repName,jdbcType=VARCHAR}, 
+            #{validKey,jdbcType=VARCHAR}, #{checkResult,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
+            #{dataTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{isLogicCheck,jdbcType=VARCHAR}, #{errorInfo,jdbcType=CLOB}, #{warnInfo,jdbcType=CLOB}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbReportCheckWithBLOBs" >
+        insert into CHB_REPORT_CHECK
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="checkSeqno != null" >
+                CHECK_SEQNO,
+            </if>
+            <if test="repCode != null" >
+                REP_CODE,
+            </if>
+            <if test="repName != null" >
+                REP_NAME,
+            </if>
+            <if test="validKey != null" >
+                VALID_KEY,
+            </if>
+            <if test="checkResult != null" >
+                CHECK_RESULT,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+            <if test="dataTime != null" >
+                DATA_TIME,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="isLogicCheck != null" >
+                IS_LOGIC_CHECK,
+            </if>
+            <if test="errorInfo != null" >
+                ERROR_INFO,
+            </if>
+            <if test="warnInfo != null" >
+                WARN_INFO,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="checkSeqno != null" >
+                #{checkSeqno,jdbcType=VARCHAR},
+            </if>
+            <if test="repCode != null" >
+                #{repCode,jdbcType=VARCHAR},
+            </if>
+            <if test="repName != null" >
+                #{repName,jdbcType=VARCHAR},
+            </if>
+            <if test="validKey != null" >
+                #{validKey,jdbcType=VARCHAR},
+            </if>
+            <if test="checkResult != null" >
+                #{checkResult,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="dataTime != null" >
+                #{dataTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isLogicCheck != null" >
+                #{isLogicCheck,jdbcType=VARCHAR},
+            </if>
+            <if test="errorInfo != null" >
+                #{errorInfo,jdbcType=CLOB},
+            </if>
+            <if test="warnInfo != null" >
+                #{warnInfo,jdbcType=CLOB},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbReportCheckWithBLOBs" >
+        insert into CHB_REPORT_CHECK(CHECK_SEQNO, REP_CODE, REP_NAME, VALID_KEY, CHECK_RESULT, 
+        ORG_CODE, DATA_TIME, CREATE_DEPT, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, 
+        IS_LOGIC_CHECK, ERROR_INFO, WARN_INFO)
+        select CHECK_SEQNO, REP_CODE, REP_NAME, VALID_KEY, CHECK_RESULT, 
+            ORG_CODE, DATA_TIME, CREATE_DEPT, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_USER, CREATE_TIME, 
+            IS_LOGIC_CHECK, ERROR_INFO, WARN_INFO
+             from CHB_REPORT_CHECK
+             where STATUS = 'E' and CHECK_SEQNO = #{checkSeqno,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbReportCheckWithBLOBs" >
+        update CHB_REPORT_CHECK
+        <set >
+            <if test="repCode != null" >
+                REP_CODE = #{repCode,jdbcType=VARCHAR},
+            </if>
+            <if test="repName != null" >
+                REP_NAME = #{repName,jdbcType=VARCHAR},
+            </if>
+            <if test="validKey != null" >
+                VALID_KEY = #{validKey,jdbcType=VARCHAR},
+            </if>
+            <if test="checkResult != null" >
+                CHECK_RESULT = #{checkResult,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="dataTime != null" >
+                DATA_TIME = #{dataTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isLogicCheck != null" >
+                IS_LOGIC_CHECK = #{isLogicCheck,jdbcType=VARCHAR},
+            </if>
+            <if test="errorInfo != null" >
+                ERROR_INFO = #{errorInfo,jdbcType=CLOB},
+            </if>
+            <if test="warnInfo != null" >
+                WARN_INFO = #{warnInfo,jdbcType=CLOB},
+            </if>
+        </set>
+        where CHECK_SEQNO = #{checkSeqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbReportCheckWithBLOBs" >
+        update CHB_REPORT_CHECK
+        <set >
+            <if test="checkSeqno != null" >
+                CHECK_SEQNO = #{checkSeqno,jdbcType=VARCHAR},
+            </if>
+            <if test="repCode != null" >
+                REP_CODE = #{repCode,jdbcType=VARCHAR},
+            </if>
+            <if test="repName != null" >
+                REP_NAME = #{repName,jdbcType=VARCHAR},
+            </if>
+            <if test="validKey != null" >
+                VALID_KEY = #{validKey,jdbcType=VARCHAR},
+            </if>
+            <if test="checkResult != null" >
+                CHECK_RESULT = #{checkResult,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="dataTime != null" >
+                DATA_TIME = #{dataTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isLogicCheck != null" >
+                IS_LOGIC_CHECK = #{isLogicCheck,jdbcType=VARCHAR},
+            </if>
+            <if test="errorInfo != null" >
+                ERROR_INFO = #{errorInfo,jdbcType=CLOB},
+            </if>
+            <if test="warnInfo != null" >
+                WARN_INFO = #{warnInfo,jdbcType=CLOB},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbReportCheckWithBLOBs" >
+        update CHB_REPORT_CHECK
+        set 
+        CHECK_SEQNO = #{checkSeqno,jdbcType=VARCHAR},
+        REP_CODE = #{repCode,jdbcType=VARCHAR},
+        REP_NAME = #{repName,jdbcType=VARCHAR},
+        VALID_KEY = #{validKey,jdbcType=VARCHAR},
+        CHECK_RESULT = #{checkResult,jdbcType=VARCHAR},
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+        DATA_TIME = #{dataTime,jdbcType=TIMESTAMP},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        IS_LOGIC_CHECK = #{isLogicCheck,jdbcType=VARCHAR},
+        ERROR_INFO = #{errorInfo,jdbcType=CLOB},
+        WARN_INFO = #{warnInfo,jdbcType=CLOB}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.joyintech.tams.common.base.entity.ChbReportCheckWithBLOBs" >
+        update CHB_REPORT_CHECK
+        set REP_CODE = #{repCode,jdbcType=VARCHAR},
+            REP_NAME = #{repName,jdbcType=VARCHAR},
+            VALID_KEY = #{validKey,jdbcType=VARCHAR},
+            CHECK_RESULT = #{checkResult,jdbcType=VARCHAR},
+            ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            DATA_TIME = #{dataTime,jdbcType=TIMESTAMP},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            IS_LOGIC_CHECK = #{isLogicCheck,jdbcType=VARCHAR},
+            ERROR_INFO = #{errorInfo,jdbcType=CLOB},
+            WARN_INFO = #{warnInfo,jdbcType=CLOB}
+        where CHECK_SEQNO = #{checkSeqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbReportCheck" >
+        update CHB_REPORT_CHECK
+        set REP_CODE = #{repCode,jdbcType=VARCHAR},
+            REP_NAME = #{repName,jdbcType=VARCHAR},
+            VALID_KEY = #{validKey,jdbcType=VARCHAR},
+            CHECK_RESULT = #{checkResult,jdbcType=VARCHAR},
+            ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            DATA_TIME = #{dataTime,jdbcType=TIMESTAMP},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            IS_LOGIC_CHECK = #{isLogicCheck,jdbcType=VARCHAR}
+        where CHECK_SEQNO = #{checkSeqno,jdbcType=VARCHAR}
+    </update>
+</mapper>

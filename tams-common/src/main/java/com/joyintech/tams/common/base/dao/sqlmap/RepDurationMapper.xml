@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepDurationMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepDuration" >
+        <id column="REP_FINPROD_ID" property="repFinprodId" jdbcType="VARCHAR" />
+        <id column="REP_DURATION_REG_DATE" property="repDurationRegDate" jdbcType="DATE" />
+        <result column="REP_ISSUE_PARTY_NAME" property="repIssuePartyName" jdbcType="VARCHAR" />
+        <result column="REP_ISSUE_PARTY_ID" property="repIssuePartyId" jdbcType="VARCHAR" />
+        <result column="REP_FINPROD_REG_ID" property="repFinprodRegId" jdbcType="VARCHAR" />
+        <result column="REP_BANK_PROD_CODE" property="repBankProdCode" jdbcType="VARCHAR" />
+        <result column="REP_BUS_VDATE" property="repBusVdate" jdbcType="DATE" />
+        <result column="REP_BUS_MDATE" property="repBusMdate" jdbcType="DATE" />
+        <result column="REP_CCY" property="repCcy" jdbcType="VARCHAR" />
+        <result column="REP_APPLY_CNY" property="repApplyCny" jdbcType="DECIMAL" />
+        <result column="REP_CASH_CNY" property="repCashCny" jdbcType="DECIMAL" />
+        <result column="REP_CASH_PROFIT_CNY" property="repCashProfitCny" jdbcType="DECIMAL" />
+        <result column="REP_SUM_APPLY_SHARE" property="repSumApplyShare" jdbcType="DECIMAL" />
+        <result column="REP_SUM_CASH_SHARE" property="repSumCashShare" jdbcType="DECIMAL" />
+        <result column="REP_PROD_BALANCE" property="repProdBalance" jdbcType="DECIMAL" />
+        <result column="REP_PROD_SHARE" property="repProdShare" jdbcType="DECIMAL" />
+        <result column="REP_INIT_NETVAL" property="repInitNetval" jdbcType="DECIMAL" />
+        <result column="REP_PROD_NETVAL" property="repProdNetval" jdbcType="DECIMAL" />
+        <result column="REP_SUM_NETVAL" property="repSumNetval" jdbcType="DECIMAL" />
+        <result column="REP_NETVAL_CCY" property="repNetvalCcy" jdbcType="VARCHAR" />
+        <result column="REP_INIT_NETVAL_CNY" property="repInitNetvalCny" jdbcType="DECIMAL" />
+        <result column="REP_NETVAL_CNY" property="repNetvalCny" jdbcType="DECIMAL" />
+        <result column="REP_SUM_NETVAL_CNY" property="repSumNetvalCny" jdbcType="DECIMAL" />
+        <result column="REP_ACHI_YIELD" property="repAchiYield" jdbcType="DECIMAL" />
+        <result column="REP_NEW_EXPECTED_YIELD" property="repNewExpectedYield" jdbcType="DECIMAL" />
+        <result column="REP_ACHI_PROFIT_CNY" property="repAchiProfitCny" jdbcType="DECIMAL" />
+        <result column="REP_REMARK" property="repRemark" jdbcType="VARCHAR" />
+        <result column="REP_SEND_STATUS" property="repSendStatus" jdbcType="VARCHAR" />
+        <result column="REP_STATUS_DATE" property="repStatusDate" jdbcType="DATE" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        REP_FINPROD_ID REP_FINPROD_ID, REP_DURATION_REG_DATE REP_DURATION_REG_DATE, REP_ISSUE_PARTY_NAME REP_ISSUE_PARTY_NAME, 
+        REP_ISSUE_PARTY_ID REP_ISSUE_PARTY_ID, REP_FINPROD_REG_ID REP_FINPROD_REG_ID, REP_BANK_PROD_CODE REP_BANK_PROD_CODE, 
+        REP_BUS_VDATE REP_BUS_VDATE, REP_BUS_MDATE REP_BUS_MDATE, REP_CCY REP_CCY, REP_APPLY_CNY REP_APPLY_CNY, 
+        REP_CASH_CNY REP_CASH_CNY, REP_CASH_PROFIT_CNY REP_CASH_PROFIT_CNY, REP_SUM_APPLY_SHARE REP_SUM_APPLY_SHARE, 
+        REP_SUM_CASH_SHARE REP_SUM_CASH_SHARE, REP_PROD_BALANCE REP_PROD_BALANCE, REP_PROD_SHARE REP_PROD_SHARE, 
+        REP_INIT_NETVAL REP_INIT_NETVAL, REP_PROD_NETVAL REP_PROD_NETVAL, REP_SUM_NETVAL REP_SUM_NETVAL, 
+        REP_NETVAL_CCY REP_NETVAL_CCY, REP_INIT_NETVAL_CNY REP_INIT_NETVAL_CNY, REP_NETVAL_CNY REP_NETVAL_CNY, 
+        REP_SUM_NETVAL_CNY REP_SUM_NETVAL_CNY, REP_ACHI_YIELD REP_ACHI_YIELD, REP_NEW_EXPECTED_YIELD REP_NEW_EXPECTED_YIELD, 
+        REP_ACHI_PROFIT_CNY REP_ACHI_PROFIT_CNY, REP_REMARK REP_REMARK, REP_SEND_STATUS REP_SEND_STATUS, 
+        REP_STATUS_DATE REP_STATUS_DATE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepDurationMapper.Base_Column_List" />
+        from REP_DURATION
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepDurationMapper.Base_Column_List" />
+        from REP_DURATION
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.RepDurationKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepDurationMapper.Base_Column_List" />
+        from REP_DURATION
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+          and REP_DURATION_REG_DATE = #{repDurationRegDate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepDurationKey" >
+        delete from REP_DURATION
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+          and REP_DURATION_REG_DATE = #{repDurationRegDate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepDuration" >
+        insert into REP_DURATION (REP_FINPROD_ID, REP_DURATION_REG_DATE, REP_ISSUE_PARTY_NAME, 
+            REP_ISSUE_PARTY_ID, REP_FINPROD_REG_ID, REP_BANK_PROD_CODE, 
+            REP_BUS_VDATE, REP_BUS_MDATE, REP_CCY, 
+            REP_APPLY_CNY, REP_CASH_CNY, REP_CASH_PROFIT_CNY, 
+            REP_SUM_APPLY_SHARE, REP_SUM_CASH_SHARE, REP_PROD_BALANCE, 
+            REP_PROD_SHARE, REP_INIT_NETVAL, REP_PROD_NETVAL, 
+            REP_SUM_NETVAL, REP_NETVAL_CCY, REP_INIT_NETVAL_CNY, 
+            REP_NETVAL_CNY, REP_SUM_NETVAL_CNY, REP_ACHI_YIELD, 
+            REP_NEW_EXPECTED_YIELD, REP_ACHI_PROFIT_CNY, 
+            REP_REMARK, REP_SEND_STATUS, REP_STATUS_DATE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{repFinprodId,jdbcType=VARCHAR}, #{repDurationRegDate,jdbcType=DATE}, #{repIssuePartyName,jdbcType=VARCHAR}, 
+            #{repIssuePartyId,jdbcType=VARCHAR}, #{repFinprodRegId,jdbcType=VARCHAR}, #{repBankProdCode,jdbcType=VARCHAR}, 
+            #{repBusVdate,jdbcType=DATE}, #{repBusMdate,jdbcType=DATE}, #{repCcy,jdbcType=VARCHAR}, 
+            #{repApplyCny,jdbcType=DECIMAL}, #{repCashCny,jdbcType=DECIMAL}, #{repCashProfitCny,jdbcType=DECIMAL}, 
+            #{repSumApplyShare,jdbcType=DECIMAL}, #{repSumCashShare,jdbcType=DECIMAL}, #{repProdBalance,jdbcType=DECIMAL}, 
+            #{repProdShare,jdbcType=DECIMAL}, #{repInitNetval,jdbcType=DECIMAL}, #{repProdNetval,jdbcType=DECIMAL}, 
+            #{repSumNetval,jdbcType=DECIMAL}, #{repNetvalCcy,jdbcType=VARCHAR}, #{repInitNetvalCny,jdbcType=DECIMAL}, 
+            #{repNetvalCny,jdbcType=DECIMAL}, #{repSumNetvalCny,jdbcType=DECIMAL}, #{repAchiYield,jdbcType=DECIMAL}, 
+            #{repNewExpectedYield,jdbcType=DECIMAL}, #{repAchiProfitCny,jdbcType=DECIMAL}, 
+            #{repRemark,jdbcType=VARCHAR}, #{repSendStatus,jdbcType=VARCHAR}, #{repStatusDate,jdbcType=DATE}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepDuration" >
+        insert into REP_DURATION
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="repFinprodId != null" >
+                REP_FINPROD_ID,
+            </if>
+            <if test="repDurationRegDate != null" >
+                REP_DURATION_REG_DATE,
+            </if>
+            <if test="repIssuePartyName != null" >
+                REP_ISSUE_PARTY_NAME,
+            </if>
+            <if test="repIssuePartyId != null" >
+                REP_ISSUE_PARTY_ID,
+            </if>
+            <if test="repFinprodRegId != null" >
+                REP_FINPROD_REG_ID,
+            </if>
+            <if test="repBankProdCode != null" >
+                REP_BANK_PROD_CODE,
+            </if>
+            <if test="repBusVdate != null" >
+                REP_BUS_VDATE,
+            </if>
+            <if test="repBusMdate != null" >
+                REP_BUS_MDATE,
+            </if>
+            <if test="repCcy != null" >
+                REP_CCY,
+            </if>
+            <if test="repApplyCny != null" >
+                REP_APPLY_CNY,
+            </if>
+            <if test="repCashCny != null" >
+                REP_CASH_CNY,
+            </if>
+            <if test="repCashProfitCny != null" >
+                REP_CASH_PROFIT_CNY,
+            </if>
+            <if test="repSumApplyShare != null" >
+                REP_SUM_APPLY_SHARE,
+            </if>
+            <if test="repSumCashShare != null" >
+                REP_SUM_CASH_SHARE,
+            </if>
+            <if test="repProdBalance != null" >
+                REP_PROD_BALANCE,
+            </if>
+            <if test="repProdShare != null" >
+                REP_PROD_SHARE,
+            </if>
+            <if test="repInitNetval != null" >
+                REP_INIT_NETVAL,
+            </if>
+            <if test="repProdNetval != null" >
+                REP_PROD_NETVAL,
+            </if>
+            <if test="repSumNetval != null" >
+                REP_SUM_NETVAL,
+            </if>
+            <if test="repNetvalCcy != null" >
+                REP_NETVAL_CCY,
+            </if>
+            <if test="repInitNetvalCny != null" >
+                REP_INIT_NETVAL_CNY,
+            </if>
+            <if test="repNetvalCny != null" >
+                REP_NETVAL_CNY,
+            </if>
+            <if test="repSumNetvalCny != null" >
+                REP_SUM_NETVAL_CNY,
+            </if>
+            <if test="repAchiYield != null" >
+                REP_ACHI_YIELD,
+            </if>
+            <if test="repNewExpectedYield != null" >
+                REP_NEW_EXPECTED_YIELD,
+            </if>
+            <if test="repAchiProfitCny != null" >
+                REP_ACHI_PROFIT_CNY,
+            </if>
+            <if test="repRemark != null" >
+                REP_REMARK,
+            </if>
+            <if test="repSendStatus != null" >
+                REP_SEND_STATUS,
+            </if>
+            <if test="repStatusDate != null" >
+                REP_STATUS_DATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="repFinprodId != null" >
+                #{repFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="repDurationRegDate != null" >
+                #{repDurationRegDate,jdbcType=DATE},
+            </if>
+            <if test="repIssuePartyName != null" >
+                #{repIssuePartyName,jdbcType=VARCHAR},
+            </if>
+            <if test="repIssuePartyId != null" >
+                #{repIssuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinprodRegId != null" >
+                #{repFinprodRegId,jdbcType=VARCHAR},
+            </if>
+            <if test="repBankProdCode != null" >
+                #{repBankProdCode,jdbcType=VARCHAR},
+            </if>
+            <if test="repBusVdate != null" >
+                #{repBusVdate,jdbcType=DATE},
+            </if>
+            <if test="repBusMdate != null" >
+                #{repBusMdate,jdbcType=DATE},
+            </if>
+            <if test="repCcy != null" >
+                #{repCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="repApplyCny != null" >
+                #{repApplyCny,jdbcType=DECIMAL},
+            </if>
+            <if test="repCashCny != null" >
+                #{repCashCny,jdbcType=DECIMAL},
+            </if>
+            <if test="repCashProfitCny != null" >
+                #{repCashProfitCny,jdbcType=DECIMAL},
+            </if>
+            <if test="repSumApplyShare != null" >
+                #{repSumApplyShare,jdbcType=DECIMAL},
+            </if>
+            <if test="repSumCashShare != null" >
+                #{repSumCashShare,jdbcType=DECIMAL},
+            </if>
+            <if test="repProdBalance != null" >
+                #{repProdBalance,jdbcType=DECIMAL},
+            </if>
+            <if test="repProdShare != null" >
+                #{repProdShare,jdbcType=DECIMAL},
+            </if>
+            <if test="repInitNetval != null" >
+                #{repInitNetval,jdbcType=DECIMAL},
+            </if>
+            <if test="repProdNetval != null" >
+                #{repProdNetval,jdbcType=DECIMAL},
+            </if>
+            <if test="repSumNetval != null" >
+                #{repSumNetval,jdbcType=DECIMAL},
+            </if>
+            <if test="repNetvalCcy != null" >
+                #{repNetvalCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="repInitNetvalCny != null" >
+                #{repInitNetvalCny,jdbcType=DECIMAL},
+            </if>
+            <if test="repNetvalCny != null" >
+                #{repNetvalCny,jdbcType=DECIMAL},
+            </if>
+            <if test="repSumNetvalCny != null" >
+                #{repSumNetvalCny,jdbcType=DECIMAL},
+            </if>
+            <if test="repAchiYield != null" >
+                #{repAchiYield,jdbcType=DECIMAL},
+            </if>
+            <if test="repNewExpectedYield != null" >
+                #{repNewExpectedYield,jdbcType=DECIMAL},
+            </if>
+            <if test="repAchiProfitCny != null" >
+                #{repAchiProfitCny,jdbcType=DECIMAL},
+            </if>
+            <if test="repRemark != null" >
+                #{repRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="repSendStatus != null" >
+                #{repSendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="repStatusDate != null" >
+                #{repStatusDate,jdbcType=DATE},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepDuration" >
+        insert into REP_DURATION(REP_FINPROD_ID, REP_DURATION_REG_DATE, REP_ISSUE_PARTY_NAME, 
+        REP_ISSUE_PARTY_ID, REP_FINPROD_REG_ID, REP_BANK_PROD_CODE, REP_BUS_VDATE, REP_BUS_MDATE, 
+        REP_CCY, REP_APPLY_CNY, REP_CASH_CNY, REP_CASH_PROFIT_CNY, REP_SUM_APPLY_SHARE, REP_SUM_CASH_SHARE, 
+        REP_PROD_BALANCE, REP_PROD_SHARE, REP_INIT_NETVAL, REP_PROD_NETVAL, REP_SUM_NETVAL, 
+        REP_NETVAL_CCY, REP_INIT_NETVAL_CNY, REP_NETVAL_CNY, REP_SUM_NETVAL_CNY, REP_ACHI_YIELD, 
+        REP_NEW_EXPECTED_YIELD, REP_ACHI_PROFIT_CNY, REP_REMARK, REP_SEND_STATUS, REP_STATUS_DATE, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select REP_FINPROD_ID, REP_DURATION_REG_DATE, REP_ISSUE_PARTY_NAME, 
+            REP_ISSUE_PARTY_ID, REP_FINPROD_REG_ID, REP_BANK_PROD_CODE, REP_BUS_VDATE, REP_BUS_MDATE, 
+            REP_CCY, REP_APPLY_CNY, REP_CASH_CNY, REP_CASH_PROFIT_CNY, REP_SUM_APPLY_SHARE, REP_SUM_CASH_SHARE, 
+            REP_PROD_BALANCE, REP_PROD_SHARE, REP_INIT_NETVAL, REP_PROD_NETVAL, REP_SUM_NETVAL, 
+            REP_NETVAL_CCY, REP_INIT_NETVAL_CNY, REP_NETVAL_CNY, REP_SUM_NETVAL_CNY, REP_ACHI_YIELD, 
+            REP_NEW_EXPECTED_YIELD, REP_ACHI_PROFIT_CNY, REP_REMARK, REP_SEND_STATUS, REP_STATUS_DATE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from REP_DURATION
+             where 1 = 1 and REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR} and REP_DURATION_REG_DATE = #{repDurationRegDate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepDuration" >
+        update REP_DURATION
+        <set >
+            <if test="repIssuePartyName != null" >
+                REP_ISSUE_PARTY_NAME = #{repIssuePartyName,jdbcType=VARCHAR},
+            </if>
+            <if test="repIssuePartyId != null" >
+                REP_ISSUE_PARTY_ID = #{repIssuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinprodRegId != null" >
+                REP_FINPROD_REG_ID = #{repFinprodRegId,jdbcType=VARCHAR},
+            </if>
+            <if test="repBankProdCode != null" >
+                REP_BANK_PROD_CODE = #{repBankProdCode,jdbcType=VARCHAR},
+            </if>
+            <if test="repBusVdate != null" >
+                REP_BUS_VDATE = #{repBusVdate,jdbcType=DATE},
+            </if>
+            <if test="repBusMdate != null" >
+                REP_BUS_MDATE = #{repBusMdate,jdbcType=DATE},
+            </if>
+            <if test="repCcy != null" >
+                REP_CCY = #{repCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="repApplyCny != null" >
+                REP_APPLY_CNY = #{repApplyCny,jdbcType=DECIMAL},
+            </if>
+            <if test="repCashCny != null" >
+                REP_CASH_CNY = #{repCashCny,jdbcType=DECIMAL},
+            </if>
+            <if test="repCashProfitCny != null" >
+                REP_CASH_PROFIT_CNY = #{repCashProfitCny,jdbcType=DECIMAL},
+            </if>
+            <if test="repSumApplyShare != null" >
+                REP_SUM_APPLY_SHARE = #{repSumApplyShare,jdbcType=DECIMAL},
+            </if>
+            <if test="repSumCashShare != null" >
+                REP_SUM_CASH_SHARE = #{repSumCashShare,jdbcType=DECIMAL},
+            </if>
+            <if test="repProdBalance != null" >
+                REP_PROD_BALANCE = #{repProdBalance,jdbcType=DECIMAL},
+            </if>
+            <if test="repProdShare != null" >
+                REP_PROD_SHARE = #{repProdShare,jdbcType=DECIMAL},
+            </if>
+            <if test="repInitNetval != null" >
+                REP_INIT_NETVAL = #{repInitNetval,jdbcType=DECIMAL},
+            </if>
+            <if test="repProdNetval != null" >
+                REP_PROD_NETVAL = #{repProdNetval,jdbcType=DECIMAL},
+            </if>
+            <if test="repSumNetval != null" >
+                REP_SUM_NETVAL = #{repSumNetval,jdbcType=DECIMAL},
+            </if>
+            <if test="repNetvalCcy != null" >
+                REP_NETVAL_CCY = #{repNetvalCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="repInitNetvalCny != null" >
+                REP_INIT_NETVAL_CNY = #{repInitNetvalCny,jdbcType=DECIMAL},
+            </if>
+            <if test="repNetvalCny != null" >
+                REP_NETVAL_CNY = #{repNetvalCny,jdbcType=DECIMAL},
+            </if>
+            <if test="repSumNetvalCny != null" >
+                REP_SUM_NETVAL_CNY = #{repSumNetvalCny,jdbcType=DECIMAL},
+            </if>
+            <if test="repAchiYield != null" >
+                REP_ACHI_YIELD = #{repAchiYield,jdbcType=DECIMAL},
+            </if>
+            <if test="repNewExpectedYield != null" >
+                REP_NEW_EXPECTED_YIELD = #{repNewExpectedYield,jdbcType=DECIMAL},
+            </if>
+            <if test="repAchiProfitCny != null" >
+                REP_ACHI_PROFIT_CNY = #{repAchiProfitCny,jdbcType=DECIMAL},
+            </if>
+            <if test="repRemark != null" >
+                REP_REMARK = #{repRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="repSendStatus != null" >
+                REP_SEND_STATUS = #{repSendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="repStatusDate != null" >
+                REP_STATUS_DATE = #{repStatusDate,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+          and REP_DURATION_REG_DATE = #{repDurationRegDate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepDuration" >
+        update REP_DURATION
+        set REP_ISSUE_PARTY_NAME = #{repIssuePartyName,jdbcType=VARCHAR},
+            REP_ISSUE_PARTY_ID = #{repIssuePartyId,jdbcType=VARCHAR},
+            REP_FINPROD_REG_ID = #{repFinprodRegId,jdbcType=VARCHAR},
+            REP_BANK_PROD_CODE = #{repBankProdCode,jdbcType=VARCHAR},
+            REP_BUS_VDATE = #{repBusVdate,jdbcType=DATE},
+            REP_BUS_MDATE = #{repBusMdate,jdbcType=DATE},
+            REP_CCY = #{repCcy,jdbcType=VARCHAR},
+            REP_APPLY_CNY = #{repApplyCny,jdbcType=DECIMAL},
+            REP_CASH_CNY = #{repCashCny,jdbcType=DECIMAL},
+            REP_CASH_PROFIT_CNY = #{repCashProfitCny,jdbcType=DECIMAL},
+            REP_SUM_APPLY_SHARE = #{repSumApplyShare,jdbcType=DECIMAL},
+            REP_SUM_CASH_SHARE = #{repSumCashShare,jdbcType=DECIMAL},
+            REP_PROD_BALANCE = #{repProdBalance,jdbcType=DECIMAL},
+            REP_PROD_SHARE = #{repProdShare,jdbcType=DECIMAL},
+            REP_INIT_NETVAL = #{repInitNetval,jdbcType=DECIMAL},
+            REP_PROD_NETVAL = #{repProdNetval,jdbcType=DECIMAL},
+            REP_SUM_NETVAL = #{repSumNetval,jdbcType=DECIMAL},
+            REP_NETVAL_CCY = #{repNetvalCcy,jdbcType=VARCHAR},
+            REP_INIT_NETVAL_CNY = #{repInitNetvalCny,jdbcType=DECIMAL},
+            REP_NETVAL_CNY = #{repNetvalCny,jdbcType=DECIMAL},
+            REP_SUM_NETVAL_CNY = #{repSumNetvalCny,jdbcType=DECIMAL},
+            REP_ACHI_YIELD = #{repAchiYield,jdbcType=DECIMAL},
+            REP_NEW_EXPECTED_YIELD = #{repNewExpectedYield,jdbcType=DECIMAL},
+            REP_ACHI_PROFIT_CNY = #{repAchiProfitCny,jdbcType=DECIMAL},
+            REP_REMARK = #{repRemark,jdbcType=VARCHAR},
+            REP_SEND_STATUS = #{repSendStatus,jdbcType=VARCHAR},
+            REP_STATUS_DATE = #{repStatusDate,jdbcType=DATE},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+          and REP_DURATION_REG_DATE = #{repDurationRegDate,jdbcType=DATE}
+    </update>
+</mapper>

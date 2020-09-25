@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RskValtblSubjectMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RskValtblSubject" >
+        <id column="SUB_CODE" property="subCode" jdbcType="VARCHAR" />
+        <id column="SUB_TYPE" property="subType" jdbcType="VARCHAR" />
+        <result column="SUB_NAME" property="subName" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SUB_CODE SUB_CODE, SUB_TYPE SUB_TYPE, SUB_NAME SUB_NAME, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskValtblSubjectMapper.Base_Column_List" />
+        from RSK_VALTBL_SUBJECT
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskValtblSubjectMapper.Base_Column_List" />
+        from RSK_VALTBL_SUBJECT
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.RskValtblSubjectKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskValtblSubjectMapper.Base_Column_List" />
+        from RSK_VALTBL_SUBJECT
+        where SUB_CODE = #{subCode,jdbcType=VARCHAR}
+          and SUB_TYPE = #{subType,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskValtblSubjectKey" >
+        delete from RSK_VALTBL_SUBJECT
+        where SUB_CODE = #{subCode,jdbcType=VARCHAR}
+          and SUB_TYPE = #{subType,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RskValtblSubject" >
+        insert into RSK_VALTBL_SUBJECT (SUB_CODE, SUB_TYPE, SUB_NAME, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{subCode,jdbcType=VARCHAR}, #{subType,jdbcType=VARCHAR}, #{subName,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskValtblSubject" >
+        insert into RSK_VALTBL_SUBJECT
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="subCode != null" >
+                SUB_CODE,
+            </if>
+            <if test="subType != null" >
+                SUB_TYPE,
+            </if>
+            <if test="subName != null" >
+                SUB_NAME,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="subCode != null" >
+                #{subCode,jdbcType=VARCHAR},
+            </if>
+            <if test="subType != null" >
+                #{subType,jdbcType=VARCHAR},
+            </if>
+            <if test="subName != null" >
+                #{subName,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskValtblSubject" >
+        insert into RSK_VALTBL_SUBJECT(SUB_CODE, SUB_TYPE, SUB_NAME, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select SUB_CODE, SUB_TYPE, SUB_NAME, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from RSK_VALTBL_SUBJECT
+             where 1 = 1 and SUB_CODE = #{subCode,jdbcType=VARCHAR} and SUB_TYPE = #{subType,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RskValtblSubject" >
+        update RSK_VALTBL_SUBJECT
+        <set >
+            <if test="subName != null" >
+                SUB_NAME = #{subName,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SUB_CODE = #{subCode,jdbcType=VARCHAR}
+          and SUB_TYPE = #{subType,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskValtblSubject" >
+        update RSK_VALTBL_SUBJECT
+        set SUB_NAME = #{subName,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SUB_CODE = #{subCode,jdbcType=VARCHAR}
+          and SUB_TYPE = #{subType,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.financialstatements.assetliailitystatement.dao.DisAssetLiabilityStatementQuery001Mapper">
+
+    <select id="getLinkSelectOption" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select distinct
+            sdl.ITEM_CODE id, sdl.ITEM_VALUE text
+        from SYS_DATADICT_LIST sdl
+        inner join SYS_DATADICT_LIST_LINK sdll
+            on sdl.ITEM_CODE = sdll.ITEM_CODE
+        <if test="dict_code_parent != null and dict_code_parent != ''">
+            and sdll.LINKED_DICT_CODE = #{dict_code_parent}
+        </if>
+        <if test="dict_code_child != null and dict_code_child != ''">
+           and sdl.DICT_CODE = #{dict_code_child}
+           and sdll.DICT_CODE = #{dict_code_child}
+        </if>
+        <if test="item_code_parent != null and item_code_parent != ''">
+            and TRIM(sdll.LINKED_ITEM_CODE) = TRIM(#{item_code_parent})
+        </if>
+        <where>
+            <if test="search != null and search !=''">
+                sdl.ITEM_VALUE like '%' || #{search} || '%'
+            </if>
+        </where>
+        ORDER BY sdl.ITEM_CODE asc
+    </select>
+    
+    <select id="selectBokBalance" parameterType="com.joyintech.tams.disclosure.busicommon.financialstatements.assetliailitystatement.dto.DisAssetLiabilityStatementQuery001SearchDto" 
+             resultType="com.joyintech.tams.disclosure.busicommon.financialstatements.assetliailitystatement.dto.DisAssetLiabilityStatementQuery001Dto">
+         select 
+ TT.booksetId,
+ TT.subjectNo,
+ TT.balanceDate,
+  TT.balFlag,
+ sum(oAmt) as oAmt,
+ sum(oDAmt) as oDAmt,
+ sum(oCAmt) as oCAmt
+from
+( select 
+		       bb.bookset_id as booksetId, /*账套代码*/
+		       SUBSTR(bb.subject_no,1,4)  as subjectNo, /*科目号*/
+		       bb.balance_date as balanceDate, /*余额日期*/
+		       bb.bal_flag as balFlag, /*余额方向*/
+		       NVL(bb.o_amt, 0) as oAmt, /*原币余额*/
+		       NVL(bb.o_d_amt, 0) as oDAmt, /*原币余额借方*/
+		       NVL(bb.o_c_amt, 0) as oCAmt/*原币余额贷方*/
+		   from  BOK_BALANCE bb
+      INNER JOIN REP_PROD_INFO RP ON BB.BOOKSET_ID=RP.F_PROD_ID
+  where RP.PROD_ID = #{booksetId}
+       and bb.balance_date = #{balanceDate}
+      ) TT
+      GROUP BY TT.booksetId,TT.subjectNo,TT.balanceDate,TT.balFlag
+    </select>
+    
+     <select id="selectBokBalanceAll" parameterType="com.joyintech.tams.disclosure.busicommon.financialstatements.assetliailitystatement.dto.DisAssetLiabilityStatementQuery001SearchDto" 
+             resultType="com.joyintech.tams.disclosure.busicommon.financialstatements.assetliailitystatement.dto.DisAssetLiabilityStatementQuery001Dto">
+        select 
+		       bb.bookset_id as booksetId, /*账套代码*/
+		       bb.subject_no as subjectNo, /*科目号*/
+		       bb.balance_date as balanceDate, /*余额日期*/
+		       bs.subject_name as subjectName, /*科目名称*/
+		       bb.bal_flag as balFlag, /*余额方向*/
+		       NVL(bb.o_amt, 0) as oAmt, /*原币余额*/
+		       NVL(bb.o_d_amt, 0) as oDAmt, /*原币余额借方*/
+		       NVL(bb.o_c_amt, 0) as oCAmt/*原币余额贷方*/
+		  from  BOK_BALANCE bb
+		  INNER JOIN BOK_BOOKSET bbs 
+		    on bb.BOOKSET_ID = bbs.BOOKSET_ID /**账套表**/
+		  inner join  BOK_SUBJECT bs
+		    on bs.subject_no = bb.subject_no and bs.bookset_id = bbs.BOOKSET_ID_TMPL
+		 where bb.bookset_id in
+		   <foreach collection="accountList" item="item" open="(" separator="," close=")">
+		      #{item.code}
+		   </foreach>
+		   and bb.balance_date = #{balanceDate}
+	       and bb.subject_no in 
+		   <foreach collection="subjectNoList" item="item" open="(" separator="," close=")">
+		      #{item}
+		   </foreach>
+    </select>
+       <select id="selectProfitCalculationDtoList" resultType="com.joyintech.tams.disclosure.busicommon.financialstatements.valprofitquery.dto.DisProfitCalculationDto">
+    	SELECT
+    		proj_name projName,
+			proj_code projCode,
+			proj_level projLevel,
+			subject_no subjectNo,
+			crdr_flg crdrFlg,
+			formula,
+			show_flg showFlg,
+			show_order showOrder
+		   FROM REP_BOK_PROFIT_REP_CONFIG
+		   where PROJ_TYPE='01'
+		order by proj_code
+    </select>
+    <select id="selectBalanceXY"  resultType="com.joyintech.tams.disclosure.busicommon.common.dto.BokBalance"
+     parameterType="com.joyintech.tams.disclosure.busicommon.financialstatements.assetliailitystatement.dto.DisAssetLiabilityStatementQuery001Dto">
+      select     bb2.bookset_id as booksetId, /*账套代码*/
+		       bb2.subject_no as subjectNo, /*科目号*/
+		       bb2.balance_date as balanceDate, /*余额日期*/
+		       bb2.bal_flag as balFlag, /*余额方向*/
+		        NVL(bb2.b_amt, 0)  as  bAmt,  /*本币余额*/
+		       NVL(bb2.o_amt, 0) as oAmt, /*原币余额*/
+		     NVL(bb2.o_d_amt, 0) as oDAmt, /*原币余额借方*/
+		       NVL(bb2.o_c_amt, 0) as oCAmt /*原币余额贷方*/
+      from  BOK_BALANCE  bb2
+      INNER JOIN REP_PROD_INFO RP2 ON BB2.BOOKSET_ID=RP2.F_PROD_ID
+      where RP2.PROD_ID =  #{booksetId}
+      and bb2.balance_date =#{balanceDate}
+      and bb2.SUBJECT_LEVEL='1'
+      
+           union  all
+         select     bb2.bookset_id as booksetId, /*账套代码*/
+		       bb2.subject_no as subjectNo, /*科目号*/
+		       bb2.balance_date as balanceDate, /*余额日期*/
+		       bb2.bal_flag as balFlag, /*余额方向*/
+		        NVL(bb2.b_amt, 0)  as  bAmt,  /*本币余额*/
+		       NVL(bb2.o_amt, 0) as oAmt, /*原币余额*/
+		     NVL(bb2.o_d_amt, 0) as oDAmt, /*原币余额借方*/
+		       NVL(bb2.o_c_amt, 0) as oCAmt /*原币余额贷方*/
+      from  BOK_BALANCE  bb2
+      INNER JOIN REP_PROD_INFO RP2 ON BB2.BOOKSET_ID=RP2.F_PROD_ID
+      where RP2.PROD_ID =  #{booksetId}
+      and bb2.balance_date =#{balanceDate}
+      and bb2.SUBJECT_LEVEL='2'
+    </select>
+    <select id="selectBalance"  resultType="com.joyintech.tams.disclosure.busicommon.common.dto.BokBalance"
+     parameterType="com.joyintech.tams.disclosure.busicommon.financialstatements.assetliailitystatement.dto.DisAssetLiabilityStatementQuery001Dto">
+      select     bb2.bookset_id as booksetId, /*账套代码*/
+		       bb2.subject_no as subjectNo, /*科目号*/
+		       bb2.balance_date as balanceDate, /*余额日期*/
+		       bb2.bal_flag as balFlag, /*余额方向*/
+		        NVL(bb2.b_amt, 0)  as  bAmt,  /*本币余额*/
+		       NVL(bb2.o_amt, 0) as oAmt, /*原币余额*/
+		     NVL(bb2.b_d_amt, 0) as bDAmt, /*本币余额借方*/
+		       NVL(bb2.b_c_amt, 0) as bCAmt /*本币余额贷方*/
+      from  BOK_BALANCE  bb2
+      INNER JOIN REP_PROD_INFO RP2 ON BB2.BOOKSET_ID=RP2.F_PROD_ID
+      where RP2.PROD_ID =  #{booksetId}
+      and bb2.balance_date =#{balanceDate}
+      and bb2.SUBJECT_LEVEL='1'
+      
+           union  all
+         select     bb2.bookset_id as booksetId, /*账套代码*/
+		       bb2.subject_no as subjectNo, /*科目号*/
+		       bb2.balance_date as balanceDate, /*余额日期*/
+		       bb2.bal_flag as balFlag, /*余额方向*/
+		        NVL(bb2.b_amt, 0)  as  bAmt,  /*本币余额*/
+		       NVL(bb2.o_amt, 0) as oAmt, /*原币余额*/
+		     NVL(bb2.b_d_amt, 0) as bDAmt, /*本币余额借方*/
+		       NVL(bb2.b_c_amt, 0) as bCAmt /*本币余额贷方*/
+      from  BOK_BALANCE  bb2
+      INNER JOIN REP_PROD_INFO RP2 ON BB2.BOOKSET_ID=RP2.F_PROD_ID
+      where RP2.PROD_ID =  #{booksetId}
+      and bb2.balance_date =#{balanceDate}
+      and bb2.SUBJECT_LEVEL='2'
+    </select>
+    <!-- 一体化查询新增资产负债表表样   add by  dongxiangyang  20200211  start-->
+           <select id="selectProfitCalculationDtoListYth" resultType="com.joyintech.tams.disclosure.busicommon.financialstatements.valprofitquery.dto.DisProfitCalculationDto">
+    	SELECT
+    		proj_name projName,
+			proj_code projCode,
+			proj_level projLevel,
+			subject_no subjectNo,
+			crdr_flg crdrFlg,
+			formula,
+			show_flg showFlg,
+			show_order showOrder
+		   FROM REP_BOK_PROFIT_REP_CONFIG_YTH
+		   where PROJ_TYPE='01'
+		order by proj_code
+    </select>
+        <!-- 一体化查询新增资产负债表表样   add by  dongxiangyang  20200211  end-->
+    
+</mapper>

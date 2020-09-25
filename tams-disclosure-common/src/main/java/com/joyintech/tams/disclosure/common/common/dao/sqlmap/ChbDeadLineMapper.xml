@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.common.common.dao.ChbDeadLineMapper">
+	<select id="findByReportCode" parameterType="java.lang.String"
+		resultType="com.joyintech.tams.disclosure.common.common.dto.ChbDeadLineDto">
+		select
+		 	rtp.SEQNO seqno,
+            rtp.ORG_CODE orgCode,
+            rtp.REPORT_CODE reportCode,
+            rtp.TYPE_DETAIL typeDetail,
+            rtp.SUBMIT_TIMETYPE submitTimetype,
+            rtp.SUBMIT_REQUIRE3 submitRequire3,
+            rtp.SUBMIT_REQUIRE2 submitRequire2,
+            rtp.SUBMIT_REQUIRE submitRequire,
+            rtp.SUBMIT_POINT_BOND submitPointBond,
+            rtp.SUBMIT_POINT_BANK submitPointBank,
+            rtp.UPDATE_SUBMIT_POINT updateSubmitPoint,
+            rtp.DELETE_SUBMING_POINT deleteSubmingPoint,
+            rtp.STATUS status,
+            rtp.WORKFLOW_ID workflowId,
+            rtp.UPDATE_USER updateUser,
+            rtp.UPDATE_TIME updateTime,
+            rtp.CREATE_USER createUser,
+            rtp.CREATE_TIME createTime
+		from CHB_REG_TIME_POINTS rtp
+		where
+		rtp.STATUS = 'E'
+		and rtp.REPORT_CODE = #{reportCode,jdbcType=VARCHAR}
+		 <if test="typeDetail != null and typeDetail != ''" >
+    			and rtp.TYPE_DETAIL #{typeDetail,jdbcType=VARCHAR}
+    	</if>
+	</select>
+	<!-- 获取中债报送截止日 -->
+     <select id="getChbDeadline" resultType="com.joyintech.tams.disclosure.common.common.dto.ChbDeadLine001Dto" >
+     	select deadline1.*
+     	from(select rownum num, deadline.* from(
+	       SELECT
+		  A.BUSI_DATE busiDate,
+		  A.MARKET_CODE marketCode,
+		  A.IS_HOLIDAY isHoliday,
+		  A.STATUS status,
+		  A.DEPT_CODE deptCode
+		 FROM CHB_MKT_HOLIDAY A
+		 <where>
+		 	<if test="type !=null and type == '01'.toString()">
+	           	A.BUSI_DATE &lt; to_date(#{holidayDate},&apos;yyyy-MM-dd&apos;)
+	         	</if>
+	         	<if test="type !=null and type == '02'.toString()">
+	           	A.BUSI_DATE &gt; to_date(#{holidayDate},&apos;yyyy-MM-dd&apos;)
+	         	</if>
+		 	AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
+		 	AND A.STATUS = 'E'
+		 	AND A.IS_HOLIDAY = '1'
+		 </where>
+		 	<if test="type !=null and type == '01'.toString()">
+	           	order by A.BUSI_DATE desc
+	        </if>
+	        <if test="type !=null and type == '02'.toString()">
+	           	order by A.BUSI_DATE asc
+	        </if>
+		 )deadline
+		 )deadline1
+		 where deadline1.num = #{days,jdbcType=INTEGER}
+    </select>
+    <!-- 获取中债报送截止日是日期当天的 -->
+     <select id="getChbDeadlineZero" resultType="com.joyintech.tams.disclosure.common.common.dto.ChbDeadLine001Dto" >
+     	select deadline1.*
+     	from(select rownum num,deadline.* from(
+	       SELECT
+		  A.BUSI_DATE busiDate,
+		  A.MARKET_CODE marketCode,
+		  A.IS_HOLIDAY isHoliday,
+		  A.STATUS status,
+		  A.DEPT_CODE deptCode
+		 FROM CHB_MKT_HOLIDAY A
+		 <where>
+	        <if test="type !=null and type == '01'.toString()">
+	           	A.BUSI_DATE &lt;= to_date(#{holidayDate},&apos;yyyy-MM-dd&apos;)
+	         	</if>
+	         	<if test="type !=null and type == '02'.toString()">
+	           	A.BUSI_DATE &gt;= to_date(#{holidayDate},&apos;yyyy-MM-dd&apos;)
+	         	</if>
+		 	AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
+		 	AND A.STATUS = 'E'
+		 	AND A.IS_HOLIDAY = '1'
+		 </where>
+		 	<if test="type !=null and type == '01'.toString()">
+	           	order by A.BUSI_DATE desc
+	        </if>
+	        <if test="type !=null and type == '02'.toString()">
+	           	order by A.BUSI_DATE asc
+	        </if>
+		 )deadline
+		 )deadline1
+		 where deadline1.num = 1
+    </select>
+    <select id="selectChbMktHolidayByKey" resultType="com.joyintech.tams.common.base.entity.ChbMktHoliday">
+    	select 
+        BUSI_DATE busiDate,
+    	MARKET_CODE marketCode,
+    	IS_HOLIDAY isHoliday,
+    	WORKFLOW_ID workflowId,
+    	STATUS status
+        from CHB_MKT_HOLIDAY
+        where BUSI_DATE = #{busiDate,jdbcType=DATE}
+          and MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
+    </select>
+      
+   <!-- 查询巨额赎回产品巨额赎回日 -->
+   <select id="getJESHLARGESHDATE" resultType="java.util.Date">
+
+	        SELECT DISTINCT LARGE_SH_DATE
+			FROM REP_PROD_INFO_TA
+			WHERE IS_LARGE_SH='1'
+			AND LARGE_SH_DATE= #{sysDate, jdbcType=DATE}
+			AND PROD_ID = #{prodId, jdbcType=VARCHAR}
+
+  </select>
+  
+   <!-- 查询募集金额调整产品调整日 -->
+   <select id="getMJTZLARGESHDATE" resultType="java.util.Date">
+
+	        SELECT DISTINCT T.LARGE_SH_DATE
+			FROM REP_PROD_INFO_TA T
+			WHERE EXISTS
+	    				(
+					        SELECT 1 FROM
+					            REP_PROD_INFO_TA T1
+					        WHERE
+					            T.PROD_ID=T1.PROD_ID
+					        AND T1.AFTER_RAISE_MAX!=T.AFTER_RAISE_MAX
+					        AND T1.CHANGE_DATE = (SELECT MAX(CHANGE_DATE) FROM REP_PROD_INFO_TA WHERE CHANGE_DATE &lt; T.CHANGE_DATE))
+			AND IS_LARGE_SH='0'
+			AND LARGE_SH_DATE = #{sysDate, jdbcType=DATE}
+			AND PROD_ID= #{prodId, jdbcType=VARCHAR}
+
+  </select>
+    <!-- 查询开放的基准日 -->
+    <select id="getOpenRevealDate" parameterType="string" resultType="java.util.Date">
+  		 select 
+  		 <if test="basisDateType !=null and basisDateType == '04'">
+	     	OPEN_DATE_END
+	     </if>
+	     <if test="basisDateType !=null and basisDateType == '08'">
+	        OPEN_DATE_STR
+	     </if>
+	     <if test="basisDateType !=null and basisDateType == '09'">
+	        OPEN_VDATE   
+	     </if>
+	     from REP_PRD_OPEN_SCHE
+	     where PROD_ID = #{prodId, jdbcType=VARCHAR}
+	     AND STATUS = 'E'
+	     <if test="basisDateType !=null and basisDateType == '04'">
+	     	AND OPEN_DATE_END = #{sysDate, jdbcType=DATE}
+	     </if>
+	     <if test="basisDateType !=null and basisDateType == '08'">
+	        AND OPEN_DATE_STR = #{sysDate, jdbcType=DATE}
+	     </if>
+	     <if test="basisDateType !=null and basisDateType == '09'">
+	        AND OPEN_VDATE = #{sysDate, jdbcType=DATE}    
+	     </if>
+  </select>
+  
+  
+  <!-- 查询费率开放日 -->
+    <select id="getAdjustDate" resultType="int">
+
+	        SELECT 
+	        	count(1) 
+	        FROM 
+				rep_fee_yield
+			WHERE 
+				BUSI_ID = #{prodId, jdbcType=VARCHAR}
+			AND STATUS = 'E'
+			AND START_DATE = #{sysDate, jdbcType=DATE}
+			AND BUSI_ID IN (
+				SELECT BUSI_ID 
+				FROM rep_fee_yield
+				where START_DATE &lt; #{sysDate, jdbcType=DATE}
+				GROUP BY BUSI_ID
+				HAVING COUNT(1) > 1
+			)
+
+  </select>
+  <!-- 获取信息披露报送截止日 -->
+  <select id="getInfoDeadline" resultType="com.joyintech.tams.disclosure.common.common.dto.ChbDeadLine001Dto" >
+     	select deadline1.*
+     	from(select rownum num, deadline.* from(
+	       SELECT
+		  A.BUSI_DATE busiDate,
+		  A.MARKET_CODE marketCode,
+		  A.IS_HOLIDAY isHoliday,
+		  A.STATUS status,
+		  A.DEPT_CODE deptCode
+		 FROM CHB_MKT_HOLIDAY A
+		 <where>
+		 	<if test="type !=null and type == '01'.toString()">
+	           	A.BUSI_DATE &gt; to_date(#{holidayDate},&apos;yyyy-MM-dd&apos;)
+	         	</if>
+	         	<if test="type !=null and type == '02'.toString()">
+	           	A.BUSI_DATE &lt; to_date(#{holidayDate},&apos;yyyy-MM-dd&apos;)
+	         	</if>
+		 	AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
+		 	AND A.STATUS = 'E'
+		 	AND A.IS_HOLIDAY = '1'
+		 </where>
+		 	<if test="type !=null and type == '01'.toString()">
+	           	order by A.BUSI_DATE asc
+	        </if>
+	        <if test="type !=null and type == '02'.toString()">
+	           	order by A.BUSI_DATE desc
+	        </if>
+		 )deadline
+		 )deadline1
+		 where deadline1.num = #{days,jdbcType=INTEGER}
+    </select>
+    <!-- 获取信息披露截止日是日期当天的 -->
+     <select id="getInfoDeadlineZero" resultType="com.joyintech.tams.disclosure.common.common.dto.ChbDeadLine001Dto" >
+     	select deadline1.*
+     	from(select rownum num,deadline.* from(
+	       SELECT
+		  A.BUSI_DATE busiDate,
+		  A.MARKET_CODE marketCode,
+		  A.IS_HOLIDAY isHoliday,
+		  A.STATUS status,
+		  A.DEPT_CODE deptCode
+		 FROM CHB_MKT_HOLIDAY A
+		 <where>
+	        <if test="type !=null and type == '02'.toString()">
+	           	A.BUSI_DATE &lt;= to_date(#{holidayDate},&apos;yyyy-MM-dd&apos;)
+	         	</if>
+	         	<if test="type !=null and type == '01'.toString()">
+	           	A.BUSI_DATE &gt;= to_date(#{holidayDate},&apos;yyyy-MM-dd&apos;)
+	         	</if>
+		 	AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
+		 	AND A.STATUS = 'E'
+		 	AND A.IS_HOLIDAY = '1'
+		 </where>
+		 	<if test="type !=null and type == '02'.toString()">
+	           	order by A.BUSI_DATE desc
+	        </if>
+	        <if test="type !=null and type == '01'.toString()">
+	           	order by A.BUSI_DATE asc
+	        </if>
+		 )deadline
+		 )deadline1
+		 where deadline1.num = 1
+    </select>
+</mapper>

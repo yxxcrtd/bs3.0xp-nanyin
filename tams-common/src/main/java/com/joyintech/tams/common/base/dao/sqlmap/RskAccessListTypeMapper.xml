@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RskAccessListTypeMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RskAccessListType" >
+        <result column="LIST_ID" property="listId" jdbcType="VARCHAR" />
+        <result column="RSK_ASSET_TYPE1" property="rskAssetType1" jdbcType="VARCHAR" />
+        <result column="RSK_ASSET_TYPE2" property="rskAssetType2" jdbcType="VARCHAR" />
+        <result column="RSK_ASSET_TYPE3" property="rskAssetType3" jdbcType="VARCHAR" />
+        <result column="RSK_ASSET_TYPE4" property="rskAssetType4" jdbcType="VARCHAR" />
+        <result column="RSK_ASSET_TYPE5" property="rskAssetType5" jdbcType="VARCHAR" />
+        <result column="LIST_DETAIL_ID_TYPE" property="listDetailIdType" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RskAccessListType" >
+        insert into RSK_ACCESS_LIST_TYPE (LIST_ID, RSK_ASSET_TYPE1, RSK_ASSET_TYPE2, 
+            RSK_ASSET_TYPE3, RSK_ASSET_TYPE4, RSK_ASSET_TYPE5, 
+            LIST_DETAIL_ID_TYPE, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{listId,jdbcType=VARCHAR}, #{rskAssetType1,jdbcType=VARCHAR}, #{rskAssetType2,jdbcType=VARCHAR}, 
+            #{rskAssetType3,jdbcType=VARCHAR}, #{rskAssetType4,jdbcType=VARCHAR}, #{rskAssetType5,jdbcType=VARCHAR}, 
+            #{listDetailIdType,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskAccessListType" >
+        insert into RSK_ACCESS_LIST_TYPE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="listId != null" >
+                LIST_ID,
+            </if>
+            <if test="rskAssetType1 != null" >
+                RSK_ASSET_TYPE1,
+            </if>
+            <if test="rskAssetType2 != null" >
+                RSK_ASSET_TYPE2,
+            </if>
+            <if test="rskAssetType3 != null" >
+                RSK_ASSET_TYPE3,
+            </if>
+            <if test="rskAssetType4 != null" >
+                RSK_ASSET_TYPE4,
+            </if>
+            <if test="rskAssetType5 != null" >
+                RSK_ASSET_TYPE5,
+            </if>
+            <if test="listDetailIdType != null" >
+                LIST_DETAIL_ID_TYPE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="listId != null" >
+                #{listId,jdbcType=VARCHAR},
+            </if>
+            <if test="rskAssetType1 != null" >
+                #{rskAssetType1,jdbcType=VARCHAR},
+            </if>
+            <if test="rskAssetType2 != null" >
+                #{rskAssetType2,jdbcType=VARCHAR},
+            </if>
+            <if test="rskAssetType3 != null" >
+                #{rskAssetType3,jdbcType=VARCHAR},
+            </if>
+            <if test="rskAssetType4 != null" >
+                #{rskAssetType4,jdbcType=VARCHAR},
+            </if>
+            <if test="rskAssetType5 != null" >
+                #{rskAssetType5,jdbcType=VARCHAR},
+            </if>
+            <if test="listDetailIdType != null" >
+                #{listDetailIdType,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskAccessListType" >
+        insert into RSK_ACCESS_LIST_TYPE(LIST_ID, RSK_ASSET_TYPE1, RSK_ASSET_TYPE2, RSK_ASSET_TYPE3, 
+        RSK_ASSET_TYPE4, RSK_ASSET_TYPE5, LIST_DETAIL_ID_TYPE, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select LIST_ID, RSK_ASSET_TYPE1, RSK_ASSET_TYPE2, RSK_ASSET_TYPE3, 
+            RSK_ASSET_TYPE4, RSK_ASSET_TYPE5, LIST_DETAIL_ID_TYPE, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from RSK_ACCESS_LIST_TYPE
+             where 1 = 1
+    </insert>
+</mapper>

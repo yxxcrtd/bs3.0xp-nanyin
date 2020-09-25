@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfCmoneymarketfincomeMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfCmoneymarketfincome" >
+        <id column="OBJECT_ID" property="objectId" jdbcType="VARCHAR" />
+        <result column="S_INFO_WINDCODE" property="sInfoWindcode" jdbcType="VARCHAR" />
+        <result column="F_INFO_BGNDATE" property="fInfoBgndate" jdbcType="VARCHAR" />
+        <result column="F_INFO_ENDDATE" property="fInfoEnddate" jdbcType="VARCHAR" />
+        <result column="F_INFO_UNITYIELD" property="fInfoUnityield" jdbcType="DECIMAL" />
+        <result column="F_INFO_YEARLYROE" property="fInfoYearlyroe" jdbcType="DECIMAL" />
+        <result column="ANN_DATE" property="annDate" jdbcType="VARCHAR" />
+        <result column="OPDATE" property="opdate" jdbcType="DATE" />
+        <result column="OPMODE" property="opmode" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        OBJECT_ID OBJECT_ID, S_INFO_WINDCODE S_INFO_WINDCODE, F_INFO_BGNDATE F_INFO_BGNDATE, 
+        F_INFO_ENDDATE F_INFO_ENDDATE, F_INFO_UNITYIELD F_INFO_UNITYIELD, F_INFO_YEARLYROE F_INFO_YEARLYROE, 
+        ANN_DATE ANN_DATE, OPDATE OPDATE, OPMODE OPMODE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCmoneymarketfincomeMapper.Base_Column_List" />
+        from INTERF_CMONEYMARKETFINCOME
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCmoneymarketfincomeMapper.Base_Column_List" />
+        from INTERF_CMONEYMARKETFINCOME
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCmoneymarketfincomeMapper.Base_Column_List" />
+        from INTERF_CMONEYMARKETFINCOME
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from INTERF_CMONEYMARKETFINCOME
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfCmoneymarketfincome" >
+        insert into INTERF_CMONEYMARKETFINCOME (OBJECT_ID, S_INFO_WINDCODE, F_INFO_BGNDATE, 
+            F_INFO_ENDDATE, F_INFO_UNITYIELD, F_INFO_YEARLYROE, 
+            ANN_DATE, OPDATE, OPMODE
+            )
+        values (#{objectId,jdbcType=VARCHAR}, #{sInfoWindcode,jdbcType=VARCHAR}, #{fInfoBgndate,jdbcType=VARCHAR}, 
+            #{fInfoEnddate,jdbcType=VARCHAR}, #{fInfoUnityield,jdbcType=DECIMAL}, #{fInfoYearlyroe,jdbcType=DECIMAL}, 
+            #{annDate,jdbcType=VARCHAR}, #{opdate,jdbcType=DATE}, #{opmode,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfCmoneymarketfincome" >
+        insert into INTERF_CMONEYMARKETFINCOME
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                OBJECT_ID,
+            </if>
+            <if test="sInfoWindcode != null" >
+                S_INFO_WINDCODE,
+            </if>
+            <if test="fInfoBgndate != null" >
+                F_INFO_BGNDATE,
+            </if>
+            <if test="fInfoEnddate != null" >
+                F_INFO_ENDDATE,
+            </if>
+            <if test="fInfoUnityield != null" >
+                F_INFO_UNITYIELD,
+            </if>
+            <if test="fInfoYearlyroe != null" >
+                F_INFO_YEARLYROE,
+            </if>
+            <if test="annDate != null" >
+                ANN_DATE,
+            </if>
+            <if test="opdate != null" >
+                OPDATE,
+            </if>
+            <if test="opmode != null" >
+                OPMODE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                #{objectId,jdbcType=VARCHAR},
+            </if>
+            <if test="sInfoWindcode != null" >
+                #{sInfoWindcode,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoBgndate != null" >
+                #{fInfoBgndate,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoEnddate != null" >
+                #{fInfoEnddate,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoUnityield != null" >
+                #{fInfoUnityield,jdbcType=DECIMAL},
+            </if>
+            <if test="fInfoYearlyroe != null" >
+                #{fInfoYearlyroe,jdbcType=DECIMAL},
+            </if>
+            <if test="annDate != null" >
+                #{annDate,jdbcType=VARCHAR},
+            </if>
+            <if test="opdate != null" >
+                #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                #{opmode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfCmoneymarketfincome" >
+        insert into INTERF_CMONEYMARKETFINCOME(OBJECT_ID, S_INFO_WINDCODE, F_INFO_BGNDATE, 
+        F_INFO_ENDDATE, F_INFO_UNITYIELD, F_INFO_YEARLYROE, ANN_DATE, OPDATE, OPMODE)
+        select OBJECT_ID, S_INFO_WINDCODE, F_INFO_BGNDATE, 
+            F_INFO_ENDDATE, F_INFO_UNITYIELD, F_INFO_YEARLYROE, ANN_DATE, OPDATE, OPMODE
+             from INTERF_CMONEYMARKETFINCOME
+             where 1 = 1 and OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InterfCmoneymarketfincome" >
+        update INTERF_CMONEYMARKETFINCOME
+        <set >
+            <if test="sInfoWindcode != null" >
+                S_INFO_WINDCODE = #{sInfoWindcode,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoBgndate != null" >
+                F_INFO_BGNDATE = #{fInfoBgndate,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoEnddate != null" >
+                F_INFO_ENDDATE = #{fInfoEnddate,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoUnityield != null" >
+                F_INFO_UNITYIELD = #{fInfoUnityield,jdbcType=DECIMAL},
+            </if>
+            <if test="fInfoYearlyroe != null" >
+                F_INFO_YEARLYROE = #{fInfoYearlyroe,jdbcType=DECIMAL},
+            </if>
+            <if test="annDate != null" >
+                ANN_DATE = #{annDate,jdbcType=VARCHAR},
+            </if>
+            <if test="opdate != null" >
+                OPDATE = #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                OPMODE = #{opmode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfCmoneymarketfincome" >
+        update INTERF_CMONEYMARKETFINCOME
+        set S_INFO_WINDCODE = #{sInfoWindcode,jdbcType=VARCHAR},
+            F_INFO_BGNDATE = #{fInfoBgndate,jdbcType=VARCHAR},
+            F_INFO_ENDDATE = #{fInfoEnddate,jdbcType=VARCHAR},
+            F_INFO_UNITYIELD = #{fInfoUnityield,jdbcType=DECIMAL},
+            F_INFO_YEARLYROE = #{fInfoYearlyroe,jdbcType=DECIMAL},
+            ANN_DATE = #{annDate,jdbcType=VARCHAR},
+            OPDATE = #{opdate,jdbcType=DATE},
+            OPMODE = #{opmode,jdbcType=VARCHAR}
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+</mapper>

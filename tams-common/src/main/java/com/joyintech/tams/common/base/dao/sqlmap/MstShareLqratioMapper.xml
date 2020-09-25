@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.MstShareLqratioMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstShareLqratio" >
+        <id column="SHARES_ID" property="sharesId" jdbcType="VARCHAR" />
+        <id column="VAL_DATE" property="valDate" jdbcType="DATE" />
+        <result column="RATIO" property="ratio" jdbcType="DECIMAL" />
+        <result column="M_DATE" property="mDate" jdbcType="DATE" />
+        <result column="ISSUE_DATE" property="issueDate" jdbcType="DATE" />
+        <result column="INDUSTRY" property="industry" jdbcType="VARCHAR" />
+        <result column="INDUSTRY_INDEX" property="industryIndex" jdbcType="DECIMAL" />
+        <result column="LIMITATION_PERIOD" property="limitationPeriod" jdbcType="DECIMAL" />
+        <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SHARES_ID SHARES_ID, VAL_DATE VAL_DATE, RATIO RATIO, M_DATE M_DATE, ISSUE_DATE ISSUE_DATE, 
+        INDUSTRY INDUSTRY, INDUSTRY_INDEX INDUSTRY_INDEX, LIMITATION_PERIOD LIMITATION_PERIOD, 
+        INPUT_TYPE INPUT_TYPE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstShareLqratioMapper.Base_Column_List" />
+        from MST_SHARE_LQRATIO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstShareLqratioMapper.Base_Column_List" />
+        from MST_SHARE_LQRATIO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.MstShareLqratioKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstShareLqratioMapper.Base_Column_List" />
+        from MST_SHARE_LQRATIO
+        where SHARES_ID = #{sharesId,jdbcType=VARCHAR}
+          and VAL_DATE = #{valDate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstShareLqratioKey" >
+        delete from MST_SHARE_LQRATIO
+        where SHARES_ID = #{sharesId,jdbcType=VARCHAR}
+          and VAL_DATE = #{valDate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.MstShareLqratio" >
+        insert into MST_SHARE_LQRATIO (SHARES_ID, VAL_DATE, RATIO, 
+            M_DATE, ISSUE_DATE, INDUSTRY, 
+            INDUSTRY_INDEX, LIMITATION_PERIOD, INPUT_TYPE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{sharesId,jdbcType=VARCHAR}, #{valDate,jdbcType=DATE}, #{ratio,jdbcType=DECIMAL}, 
+            #{mDate,jdbcType=DATE}, #{issueDate,jdbcType=DATE}, #{industry,jdbcType=VARCHAR}, 
+            #{industryIndex,jdbcType=DECIMAL}, #{limitationPeriod,jdbcType=DECIMAL}, #{inputType,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstShareLqratio" >
+        insert into MST_SHARE_LQRATIO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="sharesId != null" >
+                SHARES_ID,
+            </if>
+            <if test="valDate != null" >
+                VAL_DATE,
+            </if>
+            <if test="ratio != null" >
+                RATIO,
+            </if>
+            <if test="mDate != null" >
+                M_DATE,
+            </if>
+            <if test="issueDate != null" >
+                ISSUE_DATE,
+            </if>
+            <if test="industry != null" >
+                INDUSTRY,
+            </if>
+            <if test="industryIndex != null" >
+                INDUSTRY_INDEX,
+            </if>
+            <if test="limitationPeriod != null" >
+                LIMITATION_PERIOD,
+            </if>
+            <if test="inputType != null" >
+                INPUT_TYPE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="sharesId != null" >
+                #{sharesId,jdbcType=VARCHAR},
+            </if>
+            <if test="valDate != null" >
+                #{valDate,jdbcType=DATE},
+            </if>
+            <if test="ratio != null" >
+                #{ratio,jdbcType=DECIMAL},
+            </if>
+            <if test="mDate != null" >
+                #{mDate,jdbcType=DATE},
+            </if>
+            <if test="issueDate != null" >
+                #{issueDate,jdbcType=DATE},
+            </if>
+            <if test="industry != null" >
+                #{industry,jdbcType=VARCHAR},
+            </if>
+            <if test="industryIndex != null" >
+                #{industryIndex,jdbcType=DECIMAL},
+            </if>
+            <if test="limitationPeriod != null" >
+                #{limitationPeriod,jdbcType=DECIMAL},
+            </if>
+            <if test="inputType != null" >
+                #{inputType,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.MstShareLqratio" >
+        insert into MST_SHARE_LQRATIO(SHARES_ID, VAL_DATE, RATIO, M_DATE, ISSUE_DATE, INDUSTRY, 
+        INDUSTRY_INDEX, LIMITATION_PERIOD, INPUT_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select SHARES_ID, VAL_DATE, RATIO, M_DATE, ISSUE_DATE, INDUSTRY, 
+            INDUSTRY_INDEX, LIMITATION_PERIOD, INPUT_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from MST_SHARE_LQRATIO
+             where 1 = 1 and SHARES_ID = #{sharesId,jdbcType=VARCHAR} and VAL_DATE = #{valDate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.MstShareLqratio" >
+        update MST_SHARE_LQRATIO
+        <set >
+            <if test="ratio != null" >
+                RATIO = #{ratio,jdbcType=DECIMAL},
+            </if>
+            <if test="mDate != null" >
+                M_DATE = #{mDate,jdbcType=DATE},
+            </if>
+            <if test="issueDate != null" >
+                ISSUE_DATE = #{issueDate,jdbcType=DATE},
+            </if>
+            <if test="industry != null" >
+                INDUSTRY = #{industry,jdbcType=VARCHAR},
+            </if>
+            <if test="industryIndex != null" >
+                INDUSTRY_INDEX = #{industryIndex,jdbcType=DECIMAL},
+            </if>
+            <if test="limitationPeriod != null" >
+                LIMITATION_PERIOD = #{limitationPeriod,jdbcType=DECIMAL},
+            </if>
+            <if test="inputType != null" >
+                INPUT_TYPE = #{inputType,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SHARES_ID = #{sharesId,jdbcType=VARCHAR}
+          and VAL_DATE = #{valDate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstShareLqratio" >
+        update MST_SHARE_LQRATIO
+        set RATIO = #{ratio,jdbcType=DECIMAL},
+            M_DATE = #{mDate,jdbcType=DATE},
+            ISSUE_DATE = #{issueDate,jdbcType=DATE},
+            INDUSTRY = #{industry,jdbcType=VARCHAR},
+            INDUSTRY_INDEX = #{industryIndex,jdbcType=DECIMAL},
+            LIMITATION_PERIOD = #{limitationPeriod,jdbcType=DECIMAL},
+            INPUT_TYPE = #{inputType,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SHARES_ID = #{sharesId,jdbcType=VARCHAR}
+          and VAL_DATE = #{valDate,jdbcType=DATE}
+    </update>
+</mapper>

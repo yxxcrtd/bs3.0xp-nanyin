@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbSysUserRoleHisMapper_mysql">
+	<insert id="insertHisByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbSysUserRoleHis" >
+        insert into CHB_SYS_USER_ROLE_HIS(USER_ID, HIS_NO, ROLE_ID, STATUS, CREATE_USER, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select USER_ID, (select IFNULL(max(HIS_NO), 0) from CHB_SYS_USER_ROLE_HIS where STATUS IN('E','D')) + 1 as HIS_NO, ROLE_ID, STATUS, CREATE_USER, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME
+             from CHB_SYS_USER_ROLE
+             where STATUS IN('E','D')
+    </insert>
+</mapper>

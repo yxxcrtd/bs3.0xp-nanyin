@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.FinCashPayRuleMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.FinCashPayRule" >
+        <id column="CASH_ID" property="cashId" jdbcType="VARCHAR" />
+        <id column="EFF_DATE" property="effDate" jdbcType="DATE" />
+        <result column="PAY_CYCLE_VAL" property="payCycleVal" jdbcType="DECIMAL" />
+        <result column="PAY_CYCLE" property="payCycle" jdbcType="VARCHAR" />
+        <result column="DAY_TYPE" property="dayType" jdbcType="CHAR" />
+        <result column="DAY_VALUE" property="dayValue" jdbcType="CHAR" />
+        <result column="END_TDAY_RULE" property="endTdayRule" jdbcType="VARCHAR" />
+        <result column="PAY_TDAY_RULE" property="payTdayRule" jdbcType="VARCHAR" />
+        <result column="CALC_RULE" property="calcRule" jdbcType="VARCHAR" />
+        <result column="FIRST_PAY_DATE" property="firstPayDate" jdbcType="DATE" />
+        <result column="CASH_UNIT_TYPE" property="cashUnitType" jdbcType="VARCHAR" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE" property="finprodType" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE2" property="finprodType2" jdbcType="VARCHAR" />
+        <result column="BRANCH" property="branch" jdbcType="DECIMAL" />
+        <result column="PAY_TYPE" property="payType" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="PAY_MONTH" property="payMonth" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CASH_ID CASH_ID, EFF_DATE EFF_DATE, PAY_CYCLE_VAL PAY_CYCLE_VAL, PAY_CYCLE PAY_CYCLE, 
+        DAY_TYPE DAY_TYPE, DAY_VALUE DAY_VALUE, END_TDAY_RULE END_TDAY_RULE, PAY_TDAY_RULE PAY_TDAY_RULE, 
+        CALC_RULE CALC_RULE, FIRST_PAY_DATE FIRST_PAY_DATE, CASH_UNIT_TYPE CASH_UNIT_TYPE, 
+        FINPROD_ID FINPROD_ID, FINPROD_TYPE FINPROD_TYPE, FINPROD_TYPE2 FINPROD_TYPE2, BRANCH BRANCH, 
+        PAY_TYPE PAY_TYPE, REMARK REMARK, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, PAY_MONTH PAY_MONTH
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinCashPayRuleMapper.Base_Column_List" />
+        from FIN_CASH_PAY_RULE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinCashPayRuleMapper.Base_Column_List" />
+        from FIN_CASH_PAY_RULE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.FinCashPayRuleKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinCashPayRuleMapper.Base_Column_List" />
+        from FIN_CASH_PAY_RULE
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinCashPayRuleKey" >
+        delete from FIN_CASH_PAY_RULE
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FinCashPayRule" >
+        insert into FIN_CASH_PAY_RULE (CASH_ID, EFF_DATE, PAY_CYCLE_VAL, 
+            PAY_CYCLE, DAY_TYPE, DAY_VALUE, 
+            END_TDAY_RULE, PAY_TDAY_RULE, CALC_RULE, 
+            FIRST_PAY_DATE, CASH_UNIT_TYPE, FINPROD_ID, 
+            FINPROD_TYPE, FINPROD_TYPE2, BRANCH, 
+            PAY_TYPE, REMARK, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, PAY_MONTH)
+        values (#{cashId,jdbcType=VARCHAR}, #{effDate,jdbcType=DATE}, #{payCycleVal,jdbcType=DECIMAL}, 
+            #{payCycle,jdbcType=VARCHAR}, #{dayType,jdbcType=CHAR}, #{dayValue,jdbcType=CHAR}, 
+            #{endTdayRule,jdbcType=VARCHAR}, #{payTdayRule,jdbcType=VARCHAR}, #{calcRule,jdbcType=VARCHAR}, 
+            #{firstPayDate,jdbcType=DATE}, #{cashUnitType,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, 
+            #{finprodType,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, 
+            #{payType,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{payMonth,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinCashPayRule" >
+        insert into FIN_CASH_PAY_RULE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="cashId != null" >
+                CASH_ID,
+            </if>
+            <if test="effDate != null" >
+                EFF_DATE,
+            </if>
+            <if test="payCycleVal != null" >
+                PAY_CYCLE_VAL,
+            </if>
+            <if test="payCycle != null" >
+                PAY_CYCLE,
+            </if>
+            <if test="dayType != null" >
+                DAY_TYPE,
+            </if>
+            <if test="dayValue != null" >
+                DAY_VALUE,
+            </if>
+            <if test="endTdayRule != null" >
+                END_TDAY_RULE,
+            </if>
+            <if test="payTdayRule != null" >
+                PAY_TDAY_RULE,
+            </if>
+            <if test="calcRule != null" >
+                CALC_RULE,
+            </if>
+            <if test="firstPayDate != null" >
+                FIRST_PAY_DATE,
+            </if>
+            <if test="cashUnitType != null" >
+                CASH_UNIT_TYPE,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="finprodType != null" >
+                FINPROD_TYPE,
+            </if>
+            <if test="finprodType2 != null" >
+                FINPROD_TYPE2,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="payType != null" >
+                PAY_TYPE,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="payMonth != null" >
+                PAY_MONTH,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="cashId != null" >
+                #{cashId,jdbcType=VARCHAR},
+            </if>
+            <if test="effDate != null" >
+                #{effDate,jdbcType=DATE},
+            </if>
+            <if test="payCycleVal != null" >
+                #{payCycleVal,jdbcType=DECIMAL},
+            </if>
+            <if test="payCycle != null" >
+                #{payCycle,jdbcType=VARCHAR},
+            </if>
+            <if test="dayType != null" >
+                #{dayType,jdbcType=CHAR},
+            </if>
+            <if test="dayValue != null" >
+                #{dayValue,jdbcType=CHAR},
+            </if>
+            <if test="endTdayRule != null" >
+                #{endTdayRule,jdbcType=VARCHAR},
+            </if>
+            <if test="payTdayRule != null" >
+                #{payTdayRule,jdbcType=VARCHAR},
+            </if>
+            <if test="calcRule != null" >
+                #{calcRule,jdbcType=VARCHAR},
+            </if>
+            <if test="firstPayDate != null" >
+                #{firstPayDate,jdbcType=DATE},
+            </if>
+            <if test="cashUnitType != null" >
+                #{cashUnitType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType != null" >
+                #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType2 != null" >
+                #{finprodType2,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="payType != null" >
+                #{payType,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="payMonth != null" >
+                #{payMonth,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinCashPayRule" >
+        insert into FIN_CASH_PAY_RULE(CASH_ID, EFF_DATE, PAY_CYCLE_VAL, PAY_CYCLE, DAY_TYPE, 
+        DAY_VALUE, END_TDAY_RULE, PAY_TDAY_RULE, CALC_RULE, FIRST_PAY_DATE, CASH_UNIT_TYPE, 
+        FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2, BRANCH, PAY_TYPE, REMARK, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, PAY_MONTH)
+        select CASH_ID, EFF_DATE, PAY_CYCLE_VAL, PAY_CYCLE, DAY_TYPE, 
+            DAY_VALUE, END_TDAY_RULE, PAY_TDAY_RULE, CALC_RULE, FIRST_PAY_DATE, CASH_UNIT_TYPE, 
+            FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2, BRANCH, PAY_TYPE, REMARK, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from FIN_CASH_PAY_RULE
+             where 1 = 1 and CASH_ID = #{cashId,jdbcType=VARCHAR} and EFF_DATE = #{effDate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.FinCashPayRule" >
+        update FIN_CASH_PAY_RULE
+        <set >
+            <if test="payCycleVal != null" >
+                PAY_CYCLE_VAL = #{payCycleVal,jdbcType=DECIMAL},
+            </if>
+            <if test="payCycle != null" >
+                PAY_CYCLE = #{payCycle,jdbcType=VARCHAR},
+            </if>
+            <if test="dayType != null" >
+                DAY_TYPE = #{dayType,jdbcType=CHAR},
+            </if>
+            <if test="dayValue != null" >
+                DAY_VALUE = #{dayValue,jdbcType=CHAR},
+            </if>
+            <if test="endTdayRule != null" >
+                END_TDAY_RULE = #{endTdayRule,jdbcType=VARCHAR},
+            </if>
+            <if test="payTdayRule != null" >
+                PAY_TDAY_RULE = #{payTdayRule,jdbcType=VARCHAR},
+            </if>
+            <if test="calcRule != null" >
+                CALC_RULE = #{calcRule,jdbcType=VARCHAR},
+            </if>
+            <if test="firstPayDate != null" >
+                FIRST_PAY_DATE = #{firstPayDate,jdbcType=DATE},
+            </if>
+            <if test="cashUnitType != null" >
+                CASH_UNIT_TYPE = #{cashUnitType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType != null" >
+                FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType2 != null" >
+                FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                BRANCH = #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="payType != null" >
+                PAY_TYPE = #{payType,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="payMonth != null" >
+                PAY_MONTH = #{payMonth,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinCashPayRule" >
+        update FIN_CASH_PAY_RULE
+        set PAY_CYCLE_VAL = #{payCycleVal,jdbcType=DECIMAL},
+            PAY_CYCLE = #{payCycle,jdbcType=VARCHAR},
+            DAY_TYPE = #{dayType,jdbcType=CHAR},
+            DAY_VALUE = #{dayValue,jdbcType=CHAR},
+            END_TDAY_RULE = #{endTdayRule,jdbcType=VARCHAR},
+            PAY_TDAY_RULE = #{payTdayRule,jdbcType=VARCHAR},
+            CALC_RULE = #{calcRule,jdbcType=VARCHAR},
+            FIRST_PAY_DATE = #{firstPayDate,jdbcType=DATE},
+            CASH_UNIT_TYPE = #{cashUnitType,jdbcType=VARCHAR},
+            FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
+            BRANCH = #{branch,jdbcType=DECIMAL},
+            PAY_TYPE = #{payType,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            PAY_MONTH = #{payMonth,jdbcType=VARCHAR}
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+    </update>
+</mapper>

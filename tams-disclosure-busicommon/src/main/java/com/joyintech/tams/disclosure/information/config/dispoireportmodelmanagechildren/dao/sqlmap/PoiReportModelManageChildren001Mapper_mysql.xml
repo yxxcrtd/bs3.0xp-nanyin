@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.config.dispoireportmodelmanagechildren.dao.PoiReportModelManageChildren001Mapper_mysql">
+	<select id="queryForPage"
+            resultType="com.joyintech.tams.disclosure.information.config.dispoireportmodelmanagechildren.dto.PoiReportModelManageChildren001Dto">
+        select
+        sub.ID ID, sub.TAB_NUM TAB_NUM, sub.SUB_NAME SUB_NAME, sub.SUB_TYPE SUB_TYPE, sub.SUB_FORM_TYPE SUB_FORM_TYPE,
+        sub.SUB_WIDTH SUB_WIDTH, sub.SUB_TMP_TYPE SUB_TMP_TYPE, sub.SUB_CHART_TYPE SUB_CHART_TYPE, sub.SUB_DEFUALT SUB_DEFUALT,
+        sub.STATUS STATUS, sub.CREATE_USER CREATE_USER, sub.CREATE_DEPT CREATE_DEPT, sub.CREATE_TIME CREATE_TIME,
+        sub.UPDATE_USER UPDATE_USER, sub.UPDATE_TIME UPDATE_TIME, sub.SUB_CHART_CONF SUB_CHART_CONF ,tab.TEMP_NAME
+        from DIS_POI_SUB sub
+        left join DIS_POI_TAB tab on sub.TAB_NUM = tab.TAB_NUM
+        where
+        1=1
+        <if test="tabNumList != null and tabNumList.size() > 0">
+            <foreach collection="tabNumList" item="tabNum" open=" AND sub.TAB_NUM IN (" close=")" separator=",">
+                #{tabNum,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="subTypeList !=null and subTypeList.size()>0">
+            and SUB_TYPE in
+            <foreach collection="subTypeList" item="subType" open="("
+                     close=")" separator=",">
+                #{subType,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="subFormTypeList != null and subFormTypeList.size() > 0">
+            <foreach collection="subFormTypeList" item="subFormType" open=" AND SUB_FORM_TYPE IN (" close=")" separator=",">
+                #{subFormType,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="subTmpTypeList != null and subTmpTypeList.size() > 0">
+            <foreach collection="subTmpTypeList" item="subTmpType" open=" AND SUB_TMP_TYPE IN (" close=")" separator=",">
+                #{subTmpType,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="subChartTypeList != null and subChartTypeList.size() > 0">
+            <foreach collection="subChartTypeList" item="subChartType" open=" AND SUB_CHART_TYPE IN (" close=")" separator=",">
+                #{subChartType,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="status !=null and status !='' and status != 'null'">
+            and STATUS =#{status,jdbcType=VARCHAR}
+        </if>
+        <if test="subName !=null and subName !='' and subName != 'null'">
+            and SUB_NAME like concat('%', #{subName}, '%')
+        </if>
+        <if test="id !=null and id !='' and id != 'null'">
+            and ID like concat('%', #{id}, '%')
+        </if>
+    </select>
+	<select id="queryPoiIdList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select
+        DISTINCT
+        t2.TAB_NUM as id,
+        t2.TAB_NAME as text
+        from
+        DIS_POI_TAB t2
+        where
+        t2.STATUS=#{statusEffective}
+        <if test="search != null and search != ''">
+            and t2.TAB_NAME like concat('%', #{search, jdbcType=VARCHAR}, '%')
+        </if>
+    </select>
+</mapper>

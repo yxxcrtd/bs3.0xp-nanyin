@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.financialstatements.valprofitquery.dao.DisValProfitQuery001Mapper_mysql">
+	<select id="selectAllBalance" resultMap="com.joyintech.tams.disclosure.busicommon.common.dao.BokBalance001Mapper.BaseResultMap">
+		select <include refid='com.joyintech.tams.disclosure.busicommon.common.dao.BokBalance001Mapper.Base_Column_List'/>
+		from BOK_BALANCE bb
+		where bb.BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR})
+		and bb.SUBJECT_NO like '6%'
+		and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&gt;=#{vdate}
+		and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&lt;=#{mdate}
+	</select>
+	<select id="selectAllBalanceXY" resultType="com.joyintech.tams.disclosure.busicommon.common.dto.BokBalance">
+	   select T.subjectNo,
+       T.balFlag,
+       SUM(T.TdyOCAmt) as TdyOCAmt,
+       SUM(T.TdyODAmt) as TdyODAmt,
+       SUM(TT.TdyOCoCAmt) as TdyOCoCAmt,
+       SUM(TT.TdyOCoDAmt) as TdyOCoDAmt
+     from 
+     (select subjectNo,balFlag,SUM(TdyOCAmt) TdyOCAmt,SUM(TdyODAmt) TdyODAmt from (
+  
+          select if(bb.SUBJECT_LEVEL= '3', CASE WHEN bb.FSUBJECT_NO IN ('611110','611130','611102','611103','611104') THEN bb.subject_no ELSE bb.FSUBJECT_NO END , bb.subject_no) as subjectNo,
+               bb.bal_flag as balFlag, 
+               IFNULL(bb.TDY_O_C_AMT, 0) as TdyOCAmt, 
+               IFNULL(bb.TDY_O_D_AMT, 0) as TdyODAmt 
+          from BOK_BALANCE bb
+         where bb.BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR})
+			and bb.SUBJECT_NO like '6%' or bb.SUBJECT_NO like '3%' 
+			and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&gt;=#{vdate}
+			and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&lt;=#{mdate}
+  )GROUP BY subjectNo,balFlag)T
+  
+  LEFT JOIN (
+          SELECT subjectNo,balFlag,SUM(IFNULL(TdyOCoCAmt,0)) TdyOCoCAmt,SUM(IFNULL(TdyOCoDAmt,0)) TdyOCoDAmt FROM (
+          select if(bb.SUBJECT_LEVEL= '3', CASE WHEN bb.FSUBJECT_NO IN ('611110','611130','611102','611103','611104') THEN bb.subject_no ELSE bb.FSUBJECT_NO END , bb.subject_no) as subjectNo,
+             
+               bb.BALANCE_DATE as balanceDate, 
+               bb.bal_flag as balFlag, 
+               IFNULL(TDY_O_CO_C_AMT, 0) as TdyOCoCAmt, 
+               IFNULL(TDY_O_CO_D_AMT, 0) as TdyOCoDAmt 
+          from BOK_BALANCE bb
+        where bb.BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR})
+		and bb.SUBJECT_NO like '6%'  or  bb.SUBJECT_NO like '3%'
+		and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&gt;=#{sdate}
+		and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&lt;=#{mdate})
+		GROUP BY subjectNo,balFlag) TT ON T.subjectNo=TT.subjectNo AND T.balFlag = TT.balFlag
+ group by T.subjectNo,  T.balFlag
+      
+	
+	</select>
+	<select id="selectAllBalancebAmt" resultType="com.joyintech.tams.disclosure.busicommon.common.dto.BokBalance">
+	   select T.subjectNo,
+       T.balFlag,
+       SUM(T.TdyBCAmt) as TdyBCAmt,
+       SUM(T.TdyBDAmt) as TdyBDAmt,
+       SUM(TT.TdyBCoCAmt) as TdyBCoCAmt,
+       SUM(TT.TdyBCoDAmt) as TdyBCoDAmt
+     from 
+     (select subjectNo,balFlag,SUM(TdyBCAmt) TdyBCAmt,SUM(TdyBDAmt) TdyBDAmt from (
+  
+          select if(bb.SUBJECT_LEVEL= '3', CASE WHEN bb.FSUBJECT_NO IN ('611110','611130','611102','611103','611104') THEN bb.subject_no ELSE bb.FSUBJECT_NO END , bb.subject_no) as subjectNo,
+               bb.bal_flag as balFlag, 
+               IFNULL(bb.TDY_B_C_AMT, 0) as TdyBCAmt, 
+               IFNULL(bb.TDY_B_D_AMT, 0) as TdyBDAmt 
+          from BOK_BALANCE bb
+         where bb.BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR})
+			and bb.SUBJECT_NO like '6%' or bb.SUBJECT_NO like '3%' 
+			and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&gt;=#{vdate}
+			and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&lt;=#{mdate}
+  )GROUP BY subjectNo,balFlag)T
+  
+  LEFT JOIN (
+          SELECT subjectNo,balFlag,SUM(IFNULL(TdyBCoCAmt,0)) TdyBCoCAmt,SUM(IFNULL(TdyBCoDAmt,0)) TdyBCoDAmt FROM (
+          select if(bb.SUBJECT_LEVEL= '3', CASE WHEN bb.FSUBJECT_NO IN ('611110','611130','611102','611103','611104') THEN bb.subject_no ELSE bb.FSUBJECT_NO END , bb.subject_no) as subjectNo,
+             
+               bb.BALANCE_DATE as balanceDate, 
+               bb.bal_flag as balFlag, 
+               IFNULL(TDY_B_CO_C_AMT, 0) as TdyBCoCAmt, 
+               IFNULL(TDY_B_CO_D_AMT, 0) as TdyBCoDAmt 
+          from BOK_BALANCE bb
+        where bb.BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR})
+		and bb.SUBJECT_NO like '6%'  or  bb.SUBJECT_NO like '3%'
+		and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&gt;=#{sdate}
+		and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&lt;=#{mdate})
+		GROUP BY subjectNo,balFlag) TT ON T.subjectNo=TT.subjectNo AND T.balFlag = TT.balFlag
+ group by T.subjectNo,  T.balFlag
+      
+	
+	</select>
+	<select id="selectAllBalanceAll" resultMap="com.joyintech.tams.disclosure.busicommon.common.dao.BokBalance001Mapper.BaseResultMap">
+		select <include refid='com.joyintech.tams.disclosure.busicommon.common.dao.BokBalance001Mapper.Base_Column_List'/>
+		from BOK_BALANCE bb
+		where 1 = 1
+		and bb.SUBJECT_NO like '6%'
+		and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&gt;=#{vdate}
+		and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&lt;=#{mdate}
+		and bb.BOOKSET_ID IN
+		<foreach collection="accounts" item="item" separator="," open="(" close=")">
+			#{item.code}
+		</foreach>
+	</select>
+	<select id="getLinkSelectOption" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select distinct
+            sdl.ITEM_CODE id, sdl.ITEM_VALUE text
+        from SYS_DATADICT_LIST sdl
+        inner join SYS_DATADICT_LIST_LINK sdll
+            on sdl.ITEM_CODE = sdll.ITEM_CODE
+        <if test="dict_code_parent != null and dict_code_parent != ''">
+            and sdll.LINKED_DICT_CODE = #{dict_code_parent}
+        </if>
+        <if test="dict_code_child != null and dict_code_child != ''">
+           and sdl.DICT_CODE = #{dict_code_child}
+           and sdll.DICT_CODE = #{dict_code_child}
+        </if>
+        <if test="item_code_parent != null and item_code_parent != ''">
+            and TRIM(sdll.LINKED_ITEM_CODE) = TRIM(#{item_code_parent})
+        </if>
+        <where>
+            <if test="search != null and search !=''">
+                sdl.ITEM_VALUE like concat('%' , #{search} , '%')
+            </if>
+        </where>
+        ORDER BY sdl.ITEM_CODE asc
+    </select>
+	<select id="selectAllBalancebAmtYth"   resultType="com.joyintech.tams.disclosure.busicommon.common.dto.BokBalance">
+    select bb.subject_no as subjectNo, 
+               bb.bal_flag as balFlag, 
+              sum(IFNULL(bb.TDY_B_C_AMT, 0)) as TdyBCAmt, 
+               sum(IFNULL(bb.TDY_B_D_AMT, 0)) as TdyBDAmt, 
+                sum(IFNULL(TDY_B_CO_C_AMT, 0)) as TdyBCoCAmt, 
+               sum(IFNULL(TDY_B_CO_D_AMT, 0)) as TdyBCoDAmt 
+          from BOK_BALANCE bb
+         where bb.BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR})
+			and bb.SUBJECT_NO like '6%' 
+      and  (bb.SUBJECT_LEVEL='1' or    bb.SUBJECT_LEVEL='2') 
+			and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&gt;=#{vdate}
+			and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&lt;=#{mdate}
+			 group by  bb.subject_no,bb.bal_flag
+    </select>
+</mapper>

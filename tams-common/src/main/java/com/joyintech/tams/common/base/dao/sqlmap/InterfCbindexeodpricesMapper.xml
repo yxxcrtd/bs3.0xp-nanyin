@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfCbindexeodpricesMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfCbindexeodprices" >
+        <id column="OBJECT_ID" property="objectId" jdbcType="VARCHAR" />
+        <result column="S_INFO_WINDCODE" property="sInfoWindcode" jdbcType="VARCHAR" />
+        <result column="TRADE_DT" property="tradeDt" jdbcType="VARCHAR" />
+        <result column="CRNCY_CODE" property="crncyCode" jdbcType="VARCHAR" />
+        <result column="S_DQ_PRECLOSE" property="sDqPreclose" jdbcType="DECIMAL" />
+        <result column="S_DQ_OPEN" property="sDqOpen" jdbcType="DECIMAL" />
+        <result column="S_DQ_HIGH" property="sDqHigh" jdbcType="DECIMAL" />
+        <result column="S_DQ_LOW" property="sDqLow" jdbcType="DECIMAL" />
+        <result column="S_DQ_CLOSE" property="sDqClose" jdbcType="DECIMAL" />
+        <result column="S_DQ_CHANGE" property="sDqChange" jdbcType="DECIMAL" />
+        <result column="S_DQ_PCTCHANGE" property="sDqPctchange" jdbcType="DECIMAL" />
+        <result column="S_DQ_VOLUME" property="sDqVolume" jdbcType="DECIMAL" />
+        <result column="S_DQ_AMOUNT" property="sDqAmount" jdbcType="DECIMAL" />
+        <result column="SEC_ID" property="secId" jdbcType="VARCHAR" />
+        <result column="OPDATE" property="opdate" jdbcType="DATE" />
+        <result column="OPMODE" property="opmode" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        OBJECT_ID OBJECT_ID, S_INFO_WINDCODE S_INFO_WINDCODE, TRADE_DT TRADE_DT, CRNCY_CODE CRNCY_CODE, 
+        S_DQ_PRECLOSE S_DQ_PRECLOSE, S_DQ_OPEN S_DQ_OPEN, S_DQ_HIGH S_DQ_HIGH, S_DQ_LOW S_DQ_LOW, 
+        S_DQ_CLOSE S_DQ_CLOSE, S_DQ_CHANGE S_DQ_CHANGE, S_DQ_PCTCHANGE S_DQ_PCTCHANGE, S_DQ_VOLUME S_DQ_VOLUME, 
+        S_DQ_AMOUNT S_DQ_AMOUNT, SEC_ID SEC_ID, OPDATE OPDATE, OPMODE OPMODE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCbindexeodpricesMapper.Base_Column_List" />
+        from INTERF_CBINDEXEODPRICES
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCbindexeodpricesMapper.Base_Column_List" />
+        from INTERF_CBINDEXEODPRICES
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCbindexeodpricesMapper.Base_Column_List" />
+        from INTERF_CBINDEXEODPRICES
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from INTERF_CBINDEXEODPRICES
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfCbindexeodprices" >
+        insert into INTERF_CBINDEXEODPRICES (OBJECT_ID, S_INFO_WINDCODE, TRADE_DT, 
+            CRNCY_CODE, S_DQ_PRECLOSE, S_DQ_OPEN, 
+            S_DQ_HIGH, S_DQ_LOW, S_DQ_CLOSE, 
+            S_DQ_CHANGE, S_DQ_PCTCHANGE, S_DQ_VOLUME, 
+            S_DQ_AMOUNT, SEC_ID, OPDATE, 
+            OPMODE)
+        values (#{objectId,jdbcType=VARCHAR}, #{sInfoWindcode,jdbcType=VARCHAR}, #{tradeDt,jdbcType=VARCHAR}, 
+            #{crncyCode,jdbcType=VARCHAR}, #{sDqPreclose,jdbcType=DECIMAL}, #{sDqOpen,jdbcType=DECIMAL}, 
+            #{sDqHigh,jdbcType=DECIMAL}, #{sDqLow,jdbcType=DECIMAL}, #{sDqClose,jdbcType=DECIMAL}, 
+            #{sDqChange,jdbcType=DECIMAL}, #{sDqPctchange,jdbcType=DECIMAL}, #{sDqVolume,jdbcType=DECIMAL}, 
+            #{sDqAmount,jdbcType=DECIMAL}, #{secId,jdbcType=VARCHAR}, #{opdate,jdbcType=DATE}, 
+            #{opmode,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfCbindexeodprices" >
+        insert into INTERF_CBINDEXEODPRICES
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                OBJECT_ID,
+            </if>
+            <if test="sInfoWindcode != null" >
+                S_INFO_WINDCODE,
+            </if>
+            <if test="tradeDt != null" >
+                TRADE_DT,
+            </if>
+            <if test="crncyCode != null" >
+                CRNCY_CODE,
+            </if>
+            <if test="sDqPreclose != null" >
+                S_DQ_PRECLOSE,
+            </if>
+            <if test="sDqOpen != null" >
+                S_DQ_OPEN,
+            </if>
+            <if test="sDqHigh != null" >
+                S_DQ_HIGH,
+            </if>
+            <if test="sDqLow != null" >
+                S_DQ_LOW,
+            </if>
+            <if test="sDqClose != null" >
+                S_DQ_CLOSE,
+            </if>
+            <if test="sDqChange != null" >
+                S_DQ_CHANGE,
+            </if>
+            <if test="sDqPctchange != null" >
+                S_DQ_PCTCHANGE,
+            </if>
+            <if test="sDqVolume != null" >
+                S_DQ_VOLUME,
+            </if>
+            <if test="sDqAmount != null" >
+                S_DQ_AMOUNT,
+            </if>
+            <if test="secId != null" >
+                SEC_ID,
+            </if>
+            <if test="opdate != null" >
+                OPDATE,
+            </if>
+            <if test="opmode != null" >
+                OPMODE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                #{objectId,jdbcType=VARCHAR},
+            </if>
+            <if test="sInfoWindcode != null" >
+                #{sInfoWindcode,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeDt != null" >
+                #{tradeDt,jdbcType=VARCHAR},
+            </if>
+            <if test="crncyCode != null" >
+                #{crncyCode,jdbcType=VARCHAR},
+            </if>
+            <if test="sDqPreclose != null" >
+                #{sDqPreclose,jdbcType=DECIMAL},
+            </if>
+            <if test="sDqOpen != null" >
+                #{sDqOpen,jdbcType=DECIMAL},
+            </if>
+            <if test="sDqHigh != null" >
+                #{sDqHigh,jdbcType=DECIMAL},
+            </if>
+            <if test="sDqLow != null" >
+                #{sDqLow,jdbcType=DECIMAL},
+            </if>
+            <if test="sDqClose != null" >
+                #{sDqClose,jdbcType=DECIMAL},
+            </if>
+            <if test="sDqChange != null" >
+                #{sDqChange,jdbcType=DECIMAL},
+            </if>
+            <if test="sDqPctchange != null" >
+                #{sDqPctchange,jdbcType=DECIMAL},
+            </if>
+            <if test="sDqVolume != null" >
+                #{sDqVolume,jdbcType=DECIMAL},
+            </if>
+            <if test="sDqAmount != null" >
+                #{sDqAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="secId != null" >
+                #{secId,jdbcType=VARCHAR},
+            </if>
+            <if test="opdate != null" >
+                #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                #{opmode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfCbindexeodprices" >
+        insert into INTERF_CBINDEXEODPRICES(OBJECT_ID, S_INFO_WINDCODE, TRADE_DT, CRNCY_CODE, 
+        S_DQ_PRECLOSE, S_DQ_OPEN, S_DQ_HIGH, S_DQ_LOW, S_DQ_CLOSE, S_DQ_CHANGE, S_DQ_PCTCHANGE, 
+        S_DQ_VOLUME, S_DQ_AMOUNT, SEC_ID, OPDATE, OPMODE)
+        select OBJECT_ID, S_INFO_WINDCODE, TRADE_DT, CRNCY_CODE, 
+            S_DQ_PRECLOSE, S_DQ_OPEN, S_DQ_HIGH, S_DQ_LOW, S_DQ_CLOSE, S_DQ_CHANGE, S_DQ_PCTCHANGE, 
+            S_DQ_VOLUME, S_DQ_AMOUNT, SEC_ID, OPDATE, OPMODE
+             from INTERF_CBINDEXEODPRICES
+             where 1 = 1 and OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InterfCbindexeodprices" >
+        update INTERF_CBINDEXEODPRICES
+        <set >
+            <if test="sInfoWindcode != null" >
+                S_INFO_WINDCODE = #{sInfoWindcode,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeDt != null" >
+                TRADE_DT = #{tradeDt,jdbcType=VARCHAR},
+            </if>
+            <if test="crncyCode != null" >
+                CRNCY_CODE = #{crncyCode,jdbcType=VARCHAR},
+            </if>
+            <if test="sDqPreclose != null" >
+                S_DQ_PRECLOSE = #{sDqPreclose,jdbcType=DECIMAL},
+            </if>
+            <if test="sDqOpen != null" >
+                S_DQ_OPEN = #{sDqOpen,jdbcType=DECIMAL},
+            </if>
+            <if test="sDqHigh != null" >
+                S_DQ_HIGH = #{sDqHigh,jdbcType=DECIMAL},
+            </if>
+            <if test="sDqLow != null" >
+                S_DQ_LOW = #{sDqLow,jdbcType=DECIMAL},
+            </if>
+            <if test="sDqClose != null" >
+                S_DQ_CLOSE = #{sDqClose,jdbcType=DECIMAL},
+            </if>
+            <if test="sDqChange != null" >
+                S_DQ_CHANGE = #{sDqChange,jdbcType=DECIMAL},
+            </if>
+            <if test="sDqPctchange != null" >
+                S_DQ_PCTCHANGE = #{sDqPctchange,jdbcType=DECIMAL},
+            </if>
+            <if test="sDqVolume != null" >
+                S_DQ_VOLUME = #{sDqVolume,jdbcType=DECIMAL},
+            </if>
+            <if test="sDqAmount != null" >
+                S_DQ_AMOUNT = #{sDqAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="secId != null" >
+                SEC_ID = #{secId,jdbcType=VARCHAR},
+            </if>
+            <if test="opdate != null" >
+                OPDATE = #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                OPMODE = #{opmode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfCbindexeodprices" >
+        update INTERF_CBINDEXEODPRICES
+        set S_INFO_WINDCODE = #{sInfoWindcode,jdbcType=VARCHAR},
+            TRADE_DT = #{tradeDt,jdbcType=VARCHAR},
+            CRNCY_CODE = #{crncyCode,jdbcType=VARCHAR},
+            S_DQ_PRECLOSE = #{sDqPreclose,jdbcType=DECIMAL},
+            S_DQ_OPEN = #{sDqOpen,jdbcType=DECIMAL},
+            S_DQ_HIGH = #{sDqHigh,jdbcType=DECIMAL},
+            S_DQ_LOW = #{sDqLow,jdbcType=DECIMAL},
+            S_DQ_CLOSE = #{sDqClose,jdbcType=DECIMAL},
+            S_DQ_CHANGE = #{sDqChange,jdbcType=DECIMAL},
+            S_DQ_PCTCHANGE = #{sDqPctchange,jdbcType=DECIMAL},
+            S_DQ_VOLUME = #{sDqVolume,jdbcType=DECIMAL},
+            S_DQ_AMOUNT = #{sDqAmount,jdbcType=DECIMAL},
+            SEC_ID = #{secId,jdbcType=VARCHAR},
+            OPDATE = #{opdate,jdbcType=DATE},
+            OPMODE = #{opmode,jdbcType=VARCHAR}
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+</mapper>

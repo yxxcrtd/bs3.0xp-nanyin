@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbSysRoleHisMapper_mysql">
+	<insert id="insertHisByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbSysRoleHis" >
+        insert into CHB_SYS_ROLE_HIS(ROLE_ID, STATUS, HIS_NO, ROLE_NAME, ROLE_POS, BUSI_TYPE, 
+        DATA_AUTHORITY_SELF_FLG, DATA_AUTHORITY_DEPT_FLG, DATA_AUTHORITY_ALL_FLG, TRADE_DATA_AUTHORITY_ALL_FLG, 
+        WORKFLOW_ID, REMARK, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ORG_CODE
+        )
+        select ROLE_ID, STATUS, (select IFNULL(max(HIS_NO), 0) from CHB_SYS_ROLE_HIS where STATUS IN('E','D') and ROLE_ID = #{roleId,jdbcType=VARCHAR}) + 1 as HIS_NO, ROLE_NAME, ROLE_POS, BUSI_TYPE, 
+            DATA_AUTHORITY_SELF_FLG, DATA_AUTHORITY_DEPT_FLG, DATA_AUTHORITY_ALL_FLG, TRADE_DATA_AUTHORITY_ALL_FLG, 
+            WORKFLOW_ID, REMARK, CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME, ORG_CODE
+            
+             from CHB_SYS_ROLE
+             where STATUS IN('E','D') and ROLE_ID = #{roleId,jdbcType=VARCHAR}
+    </insert>
+	<insert id="insertHisByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbSysRoleHis" >
+        insert into CHB_SYS_ROLE_HIS(ROLE_ID, STATUS, HIS_NO, ROLE_NAME, ROLE_POS, BUSI_TYPE, 
+        DATA_AUTHORITY_SELF_FLG, DATA_AUTHORITY_DEPT_FLG, DATA_AUTHORITY_ALL_FLG, TRADE_DATA_AUTHORITY_ALL_FLG, 
+        WORKFLOW_ID, REMARK, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ORG_CODE
+        )
+        select ROLE_ID, STATUS, (select IFNULL(max(HIS_NO), 0) from CHB_SYS_ROLE_HIS where STATUS = 'E' and ROLE_ID = CHB_SYS_ROLE.ROLE_ID) + 1 as HIS_NO, ROLE_NAME, ROLE_POS, BUSI_TYPE, 
+            DATA_AUTHORITY_SELF_FLG, DATA_AUTHORITY_DEPT_FLG, DATA_AUTHORITY_ALL_FLG, TRADE_DATA_AUTHORITY_ALL_FLG, 
+            WORKFLOW_ID, REMARK, CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME, ORG_CODE
+            
+             from CHB_SYS_ROLE
+             where STATUS = 'E' and WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+    </insert>
+</mapper>

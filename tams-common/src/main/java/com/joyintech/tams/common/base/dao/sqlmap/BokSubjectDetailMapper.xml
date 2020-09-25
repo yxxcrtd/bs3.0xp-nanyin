@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.BokSubjectDetailMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.BokSubjectDetail" >
+        <id column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <id column="BASE_SUBJECT_NATURE" property="baseSubjectNature" jdbcType="VARCHAR" />
+        <id column="BOK_DETAIL_ID" property="bokDetailId" jdbcType="VARCHAR" />
+        <result column="SUBJECT_NO" property="subjectNo" jdbcType="VARCHAR" />
+        <result column="DETAIL_SUBJECT_NO" property="detailSubjectNo" jdbcType="VARCHAR" />
+        <result column="DETAIL_SUBJECT_NO_TAIL" property="detailSubjectNoTail" jdbcType="VARCHAR" />
+        <result column="ACC_INT_FLAG" property="accIntFlag" jdbcType="VARCHAR" />
+        <result column="OVERDRAWN_FLAG" property="overdrawnFlag" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        BOOKSET_ID BOOKSET_ID, BASE_SUBJECT_NATURE BASE_SUBJECT_NATURE, BOK_DETAIL_ID BOK_DETAIL_ID, 
+        SUBJECT_NO SUBJECT_NO, DETAIL_SUBJECT_NO DETAIL_SUBJECT_NO, DETAIL_SUBJECT_NO_TAIL DETAIL_SUBJECT_NO_TAIL, 
+        ACC_INT_FLAG ACC_INT_FLAG, OVERDRAWN_FLAG OVERDRAWN_FLAG, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.BokSubjectDetailMapper.Base_Column_List" />
+        from BOK_SUBJECT_DETAIL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.BokSubjectDetailMapper.Base_Column_List" />
+        from BOK_SUBJECT_DETAIL
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.BokSubjectDetailKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.BokSubjectDetailMapper.Base_Column_List" />
+        from BOK_SUBJECT_DETAIL
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and BASE_SUBJECT_NATURE = #{baseSubjectNature,jdbcType=VARCHAR}
+          and BOK_DETAIL_ID = #{bokDetailId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokSubjectDetailKey" >
+        delete from BOK_SUBJECT_DETAIL
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and BASE_SUBJECT_NATURE = #{baseSubjectNature,jdbcType=VARCHAR}
+          and BOK_DETAIL_ID = #{bokDetailId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.BokSubjectDetail" >
+        insert into BOK_SUBJECT_DETAIL (BOOKSET_ID, BASE_SUBJECT_NATURE, BOK_DETAIL_ID, 
+            SUBJECT_NO, DETAIL_SUBJECT_NO, DETAIL_SUBJECT_NO_TAIL, 
+            ACC_INT_FLAG, OVERDRAWN_FLAG, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{booksetId,jdbcType=VARCHAR}, #{baseSubjectNature,jdbcType=VARCHAR}, #{bokDetailId,jdbcType=VARCHAR}, 
+            #{subjectNo,jdbcType=VARCHAR}, #{detailSubjectNo,jdbcType=VARCHAR}, #{detailSubjectNoTail,jdbcType=VARCHAR}, 
+            #{accIntFlag,jdbcType=VARCHAR}, #{overdrawnFlag,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.BokSubjectDetail" >
+        insert into BOK_SUBJECT_DETAIL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="booksetId != null" >
+                BOOKSET_ID,
+            </if>
+            <if test="baseSubjectNature != null" >
+                BASE_SUBJECT_NATURE,
+            </if>
+            <if test="bokDetailId != null" >
+                BOK_DETAIL_ID,
+            </if>
+            <if test="subjectNo != null" >
+                SUBJECT_NO,
+            </if>
+            <if test="detailSubjectNo != null" >
+                DETAIL_SUBJECT_NO,
+            </if>
+            <if test="detailSubjectNoTail != null" >
+                DETAIL_SUBJECT_NO_TAIL,
+            </if>
+            <if test="accIntFlag != null" >
+                ACC_INT_FLAG,
+            </if>
+            <if test="overdrawnFlag != null" >
+                OVERDRAWN_FLAG,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="booksetId != null" >
+                #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="baseSubjectNature != null" >
+                #{baseSubjectNature,jdbcType=VARCHAR},
+            </if>
+            <if test="bokDetailId != null" >
+                #{bokDetailId,jdbcType=VARCHAR},
+            </if>
+            <if test="subjectNo != null" >
+                #{subjectNo,jdbcType=VARCHAR},
+            </if>
+            <if test="detailSubjectNo != null" >
+                #{detailSubjectNo,jdbcType=VARCHAR},
+            </if>
+            <if test="detailSubjectNoTail != null" >
+                #{detailSubjectNoTail,jdbcType=VARCHAR},
+            </if>
+            <if test="accIntFlag != null" >
+                #{accIntFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="overdrawnFlag != null" >
+                #{overdrawnFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.BokSubjectDetail" >
+        insert into BOK_SUBJECT_DETAIL(BOOKSET_ID, BASE_SUBJECT_NATURE, BOK_DETAIL_ID, SUBJECT_NO, 
+        DETAIL_SUBJECT_NO, DETAIL_SUBJECT_NO_TAIL, ACC_INT_FLAG, OVERDRAWN_FLAG, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select BOOKSET_ID, BASE_SUBJECT_NATURE, BOK_DETAIL_ID, SUBJECT_NO, 
+            DETAIL_SUBJECT_NO, DETAIL_SUBJECT_NO_TAIL, ACC_INT_FLAG, OVERDRAWN_FLAG, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from BOK_SUBJECT_DETAIL
+             where 1 = 1 and BOOKSET_ID = #{booksetId,jdbcType=VARCHAR} and BASE_SUBJECT_NATURE = #{baseSubjectNature,jdbcType=VARCHAR} and BOK_DETAIL_ID = #{bokDetailId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.BokSubjectDetail" >
+        update BOK_SUBJECT_DETAIL
+        <set >
+            <if test="subjectNo != null" >
+                SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR},
+            </if>
+            <if test="detailSubjectNo != null" >
+                DETAIL_SUBJECT_NO = #{detailSubjectNo,jdbcType=VARCHAR},
+            </if>
+            <if test="detailSubjectNoTail != null" >
+                DETAIL_SUBJECT_NO_TAIL = #{detailSubjectNoTail,jdbcType=VARCHAR},
+            </if>
+            <if test="accIntFlag != null" >
+                ACC_INT_FLAG = #{accIntFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="overdrawnFlag != null" >
+                OVERDRAWN_FLAG = #{overdrawnFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and BASE_SUBJECT_NATURE = #{baseSubjectNature,jdbcType=VARCHAR}
+          and BOK_DETAIL_ID = #{bokDetailId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokSubjectDetail" >
+        update BOK_SUBJECT_DETAIL
+        set SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR},
+            DETAIL_SUBJECT_NO = #{detailSubjectNo,jdbcType=VARCHAR},
+            DETAIL_SUBJECT_NO_TAIL = #{detailSubjectNoTail,jdbcType=VARCHAR},
+            ACC_INT_FLAG = #{accIntFlag,jdbcType=VARCHAR},
+            OVERDRAWN_FLAG = #{overdrawnFlag,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and BASE_SUBJECT_NATURE = #{baseSubjectNature,jdbcType=VARCHAR}
+          and BOK_DETAIL_ID = #{bokDetailId,jdbcType=VARCHAR}
+    </update>
+</mapper>

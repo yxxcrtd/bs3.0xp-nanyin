@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.TrdVouchDealMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.TrdVouchDeal" >
+        <id column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <result column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <result column="RECORD_TYPE" property="recordType" jdbcType="VARCHAR" />
+        <result column="BOOK_DATE" property="bookDate" jdbcType="DATE" />
+        <result column="OFFSET_FLAG" property="offsetFlag" jdbcType="VARCHAR" />
+        <result column="BUSI_ID" property="busiId" jdbcType="VARCHAR" />
+        <result column="BUSI_DETAIL_TYPE" property="busiDetailType" jdbcType="VARCHAR" />
+        <result column="BRANCH" property="branch" jdbcType="DECIMAL" />
+        <result column="BUSI_TYPE" property="busiType" jdbcType="VARCHAR" />
+        <result column="BOOK_ID" property="bookId" jdbcType="VARCHAR" />
+        <result column="BOOK_TYPE" property="bookType" jdbcType="VARCHAR" />
+        <result column="BOOK_REMARK" property="bookRemark" jdbcType="VARCHAR" />
+        <result column="P_TRADE_ID" property="pTradeId" jdbcType="VARCHAR" />
+        <result column="INV_AIM" property="invAim" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TRADE_ID TRADE_ID, BOOKSET_ID BOOKSET_ID, RECORD_TYPE RECORD_TYPE, BOOK_DATE BOOK_DATE, 
+        OFFSET_FLAG OFFSET_FLAG, BUSI_ID BUSI_ID, BUSI_DETAIL_TYPE BUSI_DETAIL_TYPE, BRANCH BRANCH, 
+        BUSI_TYPE BUSI_TYPE, BOOK_ID BOOK_ID, BOOK_TYPE BOOK_TYPE, BOOK_REMARK BOOK_REMARK, 
+        P_TRADE_ID P_TRADE_ID, INV_AIM INV_AIM, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TrdVouchDealMapper.Base_Column_List" />
+        from TRD_VOUCH_DEAL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TrdVouchDealMapper.Base_Column_List" />
+        from TRD_VOUCH_DEAL
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TrdVouchDealMapper.Base_Column_List" />
+        from TRD_VOUCH_DEAL
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from TRD_VOUCH_DEAL
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.TrdVouchDeal" >
+        insert into TRD_VOUCH_DEAL (TRADE_ID, BOOKSET_ID, RECORD_TYPE, 
+            BOOK_DATE, OFFSET_FLAG, BUSI_ID, 
+            BUSI_DETAIL_TYPE, BRANCH, BUSI_TYPE, 
+            BOOK_ID, BOOK_TYPE, BOOK_REMARK, 
+            P_TRADE_ID, INV_AIM, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME,ACCOUNT_ORDER)
+        values (#{tradeId,jdbcType=VARCHAR}, #{booksetId,jdbcType=VARCHAR}, #{recordType,jdbcType=VARCHAR}, 
+            #{bookDate,jdbcType=DATE}, #{offsetFlag,jdbcType=VARCHAR}, #{busiId,jdbcType=VARCHAR}, 
+            #{busiDetailType,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, #{busiType,jdbcType=VARCHAR}, 
+            #{bookId,jdbcType=VARCHAR}, #{bookType,jdbcType=VARCHAR}, #{bookRemark,jdbcType=VARCHAR}, 
+            #{pTradeId,jdbcType=VARCHAR}, #{invAim,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP},#{accountOrder,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdVouchDeal" >
+        insert into TRD_VOUCH_DEAL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="booksetId != null" >
+                BOOKSET_ID,
+            </if>
+            <if test="recordType != null" >
+                RECORD_TYPE,
+            </if>
+            <if test="bookDate != null" >
+                BOOK_DATE,
+            </if>
+            <if test="offsetFlag != null" >
+                OFFSET_FLAG,
+            </if>
+            <if test="busiId != null" >
+                BUSI_ID,
+            </if>
+            <if test="busiDetailType != null" >
+                BUSI_DETAIL_TYPE,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="busiType != null" >
+                BUSI_TYPE,
+            </if>
+            <if test="bookId != null" >
+                BOOK_ID,
+            </if>
+            <if test="bookType != null" >
+                BOOK_TYPE,
+            </if>
+            <if test="bookRemark != null" >
+                BOOK_REMARK,
+            </if>
+            <if test="pTradeId != null" >
+                P_TRADE_ID,
+            </if>
+            <if test="invAim != null" >
+                INV_AIM,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetId != null" >
+                #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="recordType != null" >
+                #{recordType,jdbcType=VARCHAR},
+            </if>
+            <if test="bookDate != null" >
+                #{bookDate,jdbcType=DATE},
+            </if>
+            <if test="offsetFlag != null" >
+                #{offsetFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="busiId != null" >
+                #{busiId,jdbcType=VARCHAR},
+            </if>
+            <if test="busiDetailType != null" >
+                #{busiDetailType,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="busiType != null" >
+                #{busiType,jdbcType=VARCHAR},
+            </if>
+            <if test="bookId != null" >
+                #{bookId,jdbcType=VARCHAR},
+            </if>
+            <if test="bookType != null" >
+                #{bookType,jdbcType=VARCHAR},
+            </if>
+            <if test="bookRemark != null" >
+                #{bookRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="pTradeId != null" >
+                #{pTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="invAim != null" >
+                #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TrdVouchDeal" >
+        insert into TRD_VOUCH_DEAL(TRADE_ID, BOOKSET_ID, RECORD_TYPE, BOOK_DATE, OFFSET_FLAG, 
+        BUSI_ID, BUSI_DETAIL_TYPE, BRANCH, BUSI_TYPE, BOOK_ID, BOOK_TYPE, BOOK_REMARK, P_TRADE_ID, 
+        INV_AIM, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select TRADE_ID, BOOKSET_ID, RECORD_TYPE, BOOK_DATE, OFFSET_FLAG, 
+            BUSI_ID, BUSI_DETAIL_TYPE, BRANCH, BUSI_TYPE, BOOK_ID, BOOK_TYPE, BOOK_REMARK, P_TRADE_ID, 
+            INV_AIM, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from TRD_VOUCH_DEAL
+             where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.TrdVouchDeal" >
+        update TRD_VOUCH_DEAL
+        <set >
+            <if test="booksetId != null" >
+                BOOKSET_ID = #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="recordType != null" >
+                RECORD_TYPE = #{recordType,jdbcType=VARCHAR},
+            </if>
+            <if test="bookDate != null" >
+                BOOK_DATE = #{bookDate,jdbcType=DATE},
+            </if>
+            <if test="offsetFlag != null" >
+                OFFSET_FLAG = #{offsetFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="busiId != null" >
+                BUSI_ID = #{busiId,jdbcType=VARCHAR},
+            </if>
+            <if test="busiDetailType != null" >
+                BUSI_DETAIL_TYPE = #{busiDetailType,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                BRANCH = #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="busiType != null" >
+                BUSI_TYPE = #{busiType,jdbcType=VARCHAR},
+            </if>
+            <if test="bookId != null" >
+                BOOK_ID = #{bookId,jdbcType=VARCHAR},
+            </if>
+            <if test="bookType != null" >
+                BOOK_TYPE = #{bookType,jdbcType=VARCHAR},
+            </if>
+            <if test="bookRemark != null" >
+                BOOK_REMARK = #{bookRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="pTradeId != null" >
+                P_TRADE_ID = #{pTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="invAim != null" >
+                INV_AIM = #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.TrdVouchDeal" >
+        update TRD_VOUCH_DEAL
+        set BOOKSET_ID = #{booksetId,jdbcType=VARCHAR},
+            RECORD_TYPE = #{recordType,jdbcType=VARCHAR},
+            BOOK_DATE = #{bookDate,jdbcType=DATE},
+            OFFSET_FLAG = #{offsetFlag,jdbcType=VARCHAR},
+            BUSI_ID = #{busiId,jdbcType=VARCHAR},
+            BUSI_DETAIL_TYPE = #{busiDetailType,jdbcType=VARCHAR},
+            BRANCH = #{branch,jdbcType=DECIMAL},
+            BUSI_TYPE = #{busiType,jdbcType=VARCHAR},
+            BOOK_ID = #{bookId,jdbcType=VARCHAR},
+            BOOK_TYPE = #{bookType,jdbcType=VARCHAR},
+            BOOK_REMARK = #{bookRemark,jdbcType=VARCHAR},
+            P_TRADE_ID = #{pTradeId,jdbcType=VARCHAR},
+            INV_AIM = #{invAim,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </update>
+</mapper>

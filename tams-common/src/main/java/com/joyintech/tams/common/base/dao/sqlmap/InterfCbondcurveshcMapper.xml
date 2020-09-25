@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfCbondcurveshcMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfCbondcurveshc" >
+        <id column="OBJECT_ID" property="objectId" jdbcType="VARCHAR" />
+        <result column="TRADE_DT" property="tradeDt" jdbcType="VARCHAR" />
+        <result column="B_ANAL_CURVENUMBER" property="bAnalCurvenumber" jdbcType="DECIMAL" />
+        <result column="B_ANAL_CURVENAME" property="bAnalCurvename" jdbcType="VARCHAR" />
+        <result column="B_ANAL_CURVETYPE" property="bAnalCurvetype" jdbcType="VARCHAR" />
+        <result column="B_ANAL_CURVETERM" property="bAnalCurveterm" jdbcType="DECIMAL" />
+        <result column="B_ANAL_YIELD" property="bAnalYield" jdbcType="DECIMAL" />
+        <result column="OPDATE" property="opdate" jdbcType="DATE" />
+        <result column="OPMODE" property="opmode" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        OBJECT_ID OBJECT_ID, TRADE_DT TRADE_DT, B_ANAL_CURVENUMBER B_ANAL_CURVENUMBER, B_ANAL_CURVENAME B_ANAL_CURVENAME, 
+        B_ANAL_CURVETYPE B_ANAL_CURVETYPE, B_ANAL_CURVETERM B_ANAL_CURVETERM, B_ANAL_YIELD B_ANAL_YIELD, 
+        OPDATE OPDATE, OPMODE OPMODE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCbondcurveshcMapper.Base_Column_List" />
+        from INTERF_CBONDCURVESHC
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCbondcurveshcMapper.Base_Column_List" />
+        from INTERF_CBONDCURVESHC
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCbondcurveshcMapper.Base_Column_List" />
+        from INTERF_CBONDCURVESHC
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from INTERF_CBONDCURVESHC
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfCbondcurveshc" >
+        insert into INTERF_CBONDCURVESHC (OBJECT_ID, TRADE_DT, B_ANAL_CURVENUMBER, 
+            B_ANAL_CURVENAME, B_ANAL_CURVETYPE, B_ANAL_CURVETERM, 
+            B_ANAL_YIELD, OPDATE, OPMODE
+            )
+        values (#{objectId,jdbcType=VARCHAR}, #{tradeDt,jdbcType=VARCHAR}, #{bAnalCurvenumber,jdbcType=DECIMAL}, 
+            #{bAnalCurvename,jdbcType=VARCHAR}, #{bAnalCurvetype,jdbcType=VARCHAR}, #{bAnalCurveterm,jdbcType=DECIMAL}, 
+            #{bAnalYield,jdbcType=DECIMAL}, #{opdate,jdbcType=DATE}, #{opmode,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfCbondcurveshc" >
+        insert into INTERF_CBONDCURVESHC
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                OBJECT_ID,
+            </if>
+            <if test="tradeDt != null" >
+                TRADE_DT,
+            </if>
+            <if test="bAnalCurvenumber != null" >
+                B_ANAL_CURVENUMBER,
+            </if>
+            <if test="bAnalCurvename != null" >
+                B_ANAL_CURVENAME,
+            </if>
+            <if test="bAnalCurvetype != null" >
+                B_ANAL_CURVETYPE,
+            </if>
+            <if test="bAnalCurveterm != null" >
+                B_ANAL_CURVETERM,
+            </if>
+            <if test="bAnalYield != null" >
+                B_ANAL_YIELD,
+            </if>
+            <if test="opdate != null" >
+                OPDATE,
+            </if>
+            <if test="opmode != null" >
+                OPMODE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                #{objectId,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeDt != null" >
+                #{tradeDt,jdbcType=VARCHAR},
+            </if>
+            <if test="bAnalCurvenumber != null" >
+                #{bAnalCurvenumber,jdbcType=DECIMAL},
+            </if>
+            <if test="bAnalCurvename != null" >
+                #{bAnalCurvename,jdbcType=VARCHAR},
+            </if>
+            <if test="bAnalCurvetype != null" >
+                #{bAnalCurvetype,jdbcType=VARCHAR},
+            </if>
+            <if test="bAnalCurveterm != null" >
+                #{bAnalCurveterm,jdbcType=DECIMAL},
+            </if>
+            <if test="bAnalYield != null" >
+                #{bAnalYield,jdbcType=DECIMAL},
+            </if>
+            <if test="opdate != null" >
+                #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                #{opmode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfCbondcurveshc" >
+        insert into INTERF_CBONDCURVESHC(OBJECT_ID, TRADE_DT, B_ANAL_CURVENUMBER, B_ANAL_CURVENAME, 
+        B_ANAL_CURVETYPE, B_ANAL_CURVETERM, B_ANAL_YIELD, OPDATE, OPMODE)
+        select OBJECT_ID, TRADE_DT, B_ANAL_CURVENUMBER, B_ANAL_CURVENAME, 
+            B_ANAL_CURVETYPE, B_ANAL_CURVETERM, B_ANAL_YIELD, OPDATE, OPMODE
+             from INTERF_CBONDCURVESHC
+             where 1 = 1 and OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InterfCbondcurveshc" >
+        update INTERF_CBONDCURVESHC
+        <set >
+            <if test="tradeDt != null" >
+                TRADE_DT = #{tradeDt,jdbcType=VARCHAR},
+            </if>
+            <if test="bAnalCurvenumber != null" >
+                B_ANAL_CURVENUMBER = #{bAnalCurvenumber,jdbcType=DECIMAL},
+            </if>
+            <if test="bAnalCurvename != null" >
+                B_ANAL_CURVENAME = #{bAnalCurvename,jdbcType=VARCHAR},
+            </if>
+            <if test="bAnalCurvetype != null" >
+                B_ANAL_CURVETYPE = #{bAnalCurvetype,jdbcType=VARCHAR},
+            </if>
+            <if test="bAnalCurveterm != null" >
+                B_ANAL_CURVETERM = #{bAnalCurveterm,jdbcType=DECIMAL},
+            </if>
+            <if test="bAnalYield != null" >
+                B_ANAL_YIELD = #{bAnalYield,jdbcType=DECIMAL},
+            </if>
+            <if test="opdate != null" >
+                OPDATE = #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                OPMODE = #{opmode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfCbondcurveshc" >
+        update INTERF_CBONDCURVESHC
+        set TRADE_DT = #{tradeDt,jdbcType=VARCHAR},
+            B_ANAL_CURVENUMBER = #{bAnalCurvenumber,jdbcType=DECIMAL},
+            B_ANAL_CURVENAME = #{bAnalCurvename,jdbcType=VARCHAR},
+            B_ANAL_CURVETYPE = #{bAnalCurvetype,jdbcType=VARCHAR},
+            B_ANAL_CURVETERM = #{bAnalCurveterm,jdbcType=DECIMAL},
+            B_ANAL_YIELD = #{bAnalYield,jdbcType=DECIMAL},
+            OPDATE = #{opdate,jdbcType=DATE},
+            OPMODE = #{opmode,jdbcType=VARCHAR}
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+</mapper>

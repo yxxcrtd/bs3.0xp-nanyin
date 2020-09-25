@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbPrdresistCodeMapper_mysql">
+	<insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode" >
+        insert into CHB_PRDRESIST_CODE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="prodid != null" >
+                PRODID,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+            <if test="prodname != null" >
+                PRODNAME,
+            </if>
+            <if test="regCode != null" >
+                REG_CODE,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE,
+            </if>
+            <if test="investor != null" >
+                INVESTOR,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+                UPDATE_TIME,
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+                CREATE_TIME,
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="operateMode != null" >
+                OPERATE_MODE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="prodid != null" >
+                #{prodid,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="prodname != null" >
+                #{prodname,jdbcType=VARCHAR},
+            </if>
+            <if test="regCode != null" >
+                #{regCode,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="deptCode != null" >
+                #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="investor != null" >
+                #{investor,jdbcType=CHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+                NOW(),
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+                NOW(),
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="operateMode != null" >
+                #{operateMode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode" >
+        update CHB_PRDRESIST_CODE
+        <set >
+            <if test="prodname != null" >
+                PRODNAME = #{prodname,jdbcType=VARCHAR},
+            </if>
+            
+            <if test="regCode != null" >
+                REG_CODE = #{regCode,jdbcType=VARCHAR},
+            </if>
+            
+             
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                MDATE = #{mdate,jdbcType=DATE},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="investor != null" >
+                INVESTOR = #{investor,jdbcType=CHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+                UPDATE_TIME = NOW(),
+            <if test="operateMode != null" >
+                OPERATE_MODE = #{operateMode,jdbcType=VARCHAR}
+            </if>
+        </set>
+        where PRODID = #{prodid,jdbcType=VARCHAR}
+       
+          
+    </update>
+</mapper>

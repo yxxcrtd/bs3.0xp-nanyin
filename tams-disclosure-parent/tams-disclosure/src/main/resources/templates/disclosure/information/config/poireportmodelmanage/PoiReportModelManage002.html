@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="~{layout/default}">
+<head>
+<meta charset="UTF-8">
+<title>poi报表新建</title>
+<style type="text/css">
+.report-input {
+	width: 77.2% !important;
+}
+</style>
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<form class="layui-form joyin-form-wrap" style="padding: -15px 0;"
+			id="submitForm">			
+            <div class="layui-tab layui-tab-card">
+            	<div class="layui-tab-item layui-show">
+            	
+            	<!-- 文件名字隐藏 -->
+	            	<div class="layui-input-inline input-inline" style="display:none;">                               
+	                       <input type="text" id="fileName" name="fileName" placeholder="请输入内容"
+	                           class="layui-input form-input">
+					</div>
+					<!-- 文件路径隐藏 -->
+					<div class="layui-input-inline input-inline" style="display:none;">                               
+	                       <input type="text" id="filePath" name="filePath" placeholder="请输入内容"
+	                           class="layui-input form-input">
+					</div>
+					<!-- 报表仓库隐藏 -->
+            	    <div class="layui-input-inline input-inline"  style="display:none;">
+            					<input type="text" id="reportWarehouse" name="reportWarehouse" placeholder="请输入内容"
+									class="layui-input form-input"
+									data-th-Value="${reportWarehouse}" required disabled="disabled">
+            				</div>
+            		<div class="layui-form-item">
+            			<div class="layui-inline layui-col-md4">
+            				<label class="layui-form-label form-lable" style="width: 100px;">
+            				报表编号<i class="iconfont must" style="display: inline;">*</i></label>
+            				<div class="layui-input-inline input-inline">
+								<input  type="text" id="tabNum" name="tabNum" 
+									class="layui-input form-input"
+									data-th-Value="${entity?.tabNum}" required>
+							</div>
+            			</div>
+            			<div class="layui-inline layui-col-md4">
+            				<label class="layui-form-label form-lable" style="width: 63px;">
+            				报表名称<i class="iconfont must" style="display: inline;">*</i></label>
+            				<div class="layui-input-inline input-inline">
+            					<input type="text" id="tabName" name="tabName" placeholder="请输入内容"
+									class="layui-input form-input"
+									data-th-Value="${entity?.tabName}" required >
+            				</div>
+            			</div>
+            			<div class="layui-inline layui-col-md4">
+            				<label class="layui-form-label form-lable" style="width: 100px;">
+            				模板名称<i class="iconfont must" style="display: inline;">*</i></label>
+            				<div class="layui-input-inline input-inline">
+            					<input type="text" id="tempName" name="tempName" placeholder="请输入内容"
+									class="layui-input form-input"
+									data-th-Value="${entity?.tempName}" required>
+            				</div>
+            			</div>
+            		</div>
+            		
+            		   <div class="layui-form-item">
+            				<label class="layui-form-label form-lable"style="width: 103px;">
+	                                                                                   模板上传<i class="iconfont must" style="display: inline;">*</i></label>
+	            			    <div class="layui-inline" >
+	            				<div class="upload" id="uploadReport" style="width:400px;height:50px;"
+	                						data-option="{ allowFileType: 'xls|xlsx|docx',type: 'drag', muiltiple: false,showDelete:false,callback: 'FileCommon.onUploaded'}"
+	                				>
+	            				</div>
+	            				</div>
+	            			 	<!-- <div class="layui-inline"
+									>
+									<a id="PoiReportModelManage002_btn_Upload"
+										class="layui-btn layui-btn-sm btn-download">  文件上传  
+									</a>
+	            		</div>   -->
+            		</div>
+            		
+            	    <div class="layui-form-item">
+	            			<label class="layui-form-label form-lable" style="width: 100px;">查询条件
+	            			<i class="iconfont must" style="display: inline;">*</i></label>
+	            			<div class="layui-input-inline input-inline"
+									style="width: 15% !important;">
+	
+								</div>
+								<div class="layui-input-inline input-inline"
+									style="width: 15% !important;">
+									<select id="disId" name="disId" class="layui-input form-input input-select"
+				                        placeholder="请选择" data-url='getInfoSelect' allowClear="true"
+				                        >
+				                   </select>
+								</div>
+								
+								<label class="layui-form-label form-lable" style="width: 100px;">序号
+	            			<i class="iconfont must" style="display: inline;">*</i></label>
+								
+								<div class="layui-input-inline input-inline"
+									style="width: 15% !important;">
+									<input type="text" id="disOrder" name="disOrder"
+									onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+										class="layui-input form-input input-input" placeholder="请输入整数序号"
+										>
+									</input>
+								</div>
+								<div class="layui-input-inline input-inline"
+									style="width: 5% !important;left:50px">
+									<a id="PoiReportModelManage002_btn_paramAdd"
+										class="layui-btn layui-btn-sm btn-download">添加
+									</a>
+	            		</div>
+            	    
+            	    
+            			
+							
+            	    </div>
+            	    <div class="layui-form-item">
+            	    	<label class="layui-form-label form-lable" style="width: 110px;"></label>
+            	    	<div class="layui-inline report-input"  style="transform:translate(110px,0px)">
+								<table class="layui-table" id="addParam" name="addParam" ></table>
+						</div>
+            	    </div>
+                         <div class="layui-form-item">
+            			<!-- <div class="layui-inline layui-col-md6 layui-col-xs6 layui-col-sm6 layui-col-lg6" id="ReportModelManage002_btn_downtablefield" style="display:none;">
+            				<label class="layui-form-label form-lable" style="width: 100px;">文件下载
+	            			<i class="iconfont must" style="display: inline;"></i></label>
+	                		<div class="layui-inline layui-col-md6" >
+	            				<button type="button" class="layui-btn layui-btn-sm btn-default"
+										id="downloadReport">
+										<i class="iconfont icon-export"></i>下载报表模板
+									</button>
+	            			</div>
+            			</div> -->
+            			
+            		</div>
+            <!-- 	     <div class="layui-form-item">
+								<div class="layui-inline report-input" style="transform:translate(53px,0px)">
+									<a id="ReportModelManage002_btn_upload"
+										class="layui-btn layui-btn-sm btn-download">文件上传
+									</a>
+									<a id="ReportModelManage002_btn_deletAll"
+										class="layui-btn layui-btn-sm btn-download">全部删除
+									</a>
+								</div>
+            	    </div> -->
+            	    <!-- <div class="layui-form-item">
+            	    	<div class="layui-inline report-input"  style="transform:translate(53px,0px)">
+								<table class="layui-table" id="fileTable" name="fileTable" ></table>
+						</div>
+            	    </div> -->
+                </div>
+            </div>
+            <div class="layui-col-md11" style="margin: 50px;">
+				<div class="text-center">
+					<a id="PoiReportModelManage002_btn_save"
+						class="layui-btn layui-btn-sm btn-save"
+						data-th-text="#{SysCommon.save}">保存</a> <a
+						id="PoiReportModelManage002_btn_cancel"
+						class="layui-btn layui-btn-sm btn-cancel"
+						data-th-text="#{SysCommon.cancel}">取消</a>
+				</div>
+			</div>
+        </form>
+	</div>
+</body>
+<div layout:fragment="script">
+         <script
+        data-th-src="@{/js/disclosure/information/config/poireportmodelmanage/PoiReportModelManage002.js}"
+        type="text/javascript"></script>  
+</div>
+
+</html>

@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.TrdFeeConfigMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.TrdFeeConfig" >
+        <id column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="TRADE_MARKET" property="tradeMarket" jdbcType="VARCHAR" />
+        <result column="FEE_TYPE" property="feeType" jdbcType="VARCHAR" />
+        <result column="REGIST_ORG" property="registOrg" jdbcType="VARCHAR" />
+        <result column="TRADE_TYPE" property="tradeType" jdbcType="VARCHAR" />
+        <result column="PS" property="ps" jdbcType="VARCHAR" />
+        <result column="TERM_TYPE" property="termType" jdbcType="VARCHAR" />
+        <result column="SEC_ACCT_ID" property="secAcctId" jdbcType="VARCHAR" />
+        <result column="CHARGE_TYPE" property="chargeType" jdbcType="VARCHAR" />
+        <result column="CHARGE_BASIS" property="chargeBasis" jdbcType="VARCHAR" />
+        <result column="IS_GRADE" property="isGrade" jdbcType="VARCHAR" />
+        <result column="EFF_DATE" property="effDate" jdbcType="DATE" />
+        <result column="BATCH_SEQ" property="batchSeq" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="IS_PAY_WITH_TRADE" property="isPayWithTrade" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQ_NO SEQ_NO, TRADE_MARKET TRADE_MARKET, FEE_TYPE FEE_TYPE, REGIST_ORG REGIST_ORG, 
+        TRADE_TYPE TRADE_TYPE, PS PS, TERM_TYPE TERM_TYPE, SEC_ACCT_ID SEC_ACCT_ID, CHARGE_TYPE CHARGE_TYPE, 
+        CHARGE_BASIS CHARGE_BASIS, IS_GRADE IS_GRADE, EFF_DATE EFF_DATE, BATCH_SEQ BATCH_SEQ, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, IS_PAY_WITH_TRADE IS_PAY_WITH_TRADE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TrdFeeConfigMapper.Base_Column_List" />
+        from TRD_FEE_CONFIG
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TrdFeeConfigMapper.Base_Column_List" />
+        from TRD_FEE_CONFIG
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TrdFeeConfigMapper.Base_Column_List" />
+        from TRD_FEE_CONFIG
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from TRD_FEE_CONFIG
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.TrdFeeConfig" >
+        insert into TRD_FEE_CONFIG (SEQ_NO, TRADE_MARKET, FEE_TYPE, 
+            REGIST_ORG, TRADE_TYPE, PS, 
+            TERM_TYPE, SEC_ACCT_ID, CHARGE_TYPE, 
+            CHARGE_BASIS, IS_GRADE, EFF_DATE, 
+            BATCH_SEQ, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            IS_PAY_WITH_TRADE)
+        values (#{seqNo,jdbcType=VARCHAR}, #{tradeMarket,jdbcType=VARCHAR}, #{feeType,jdbcType=VARCHAR}, 
+            #{registOrg,jdbcType=VARCHAR}, #{tradeType,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR}, 
+            #{termType,jdbcType=VARCHAR}, #{secAcctId,jdbcType=VARCHAR}, #{chargeType,jdbcType=VARCHAR}, 
+            #{chargeBasis,jdbcType=VARCHAR}, #{isGrade,jdbcType=VARCHAR}, #{effDate,jdbcType=DATE}, 
+            #{batchSeq,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{isPayWithTrade,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdFeeConfig" >
+        insert into TRD_FEE_CONFIG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET,
+            </if>
+            <if test="feeType != null" >
+                FEE_TYPE,
+            </if>
+            <if test="registOrg != null" >
+                REGIST_ORG,
+            </if>
+            <if test="tradeType != null" >
+                TRADE_TYPE,
+            </if>
+            <if test="ps != null" >
+                PS,
+            </if>
+            <if test="termType != null" >
+                TERM_TYPE,
+            </if>
+            <if test="secAcctId != null" >
+                SEC_ACCT_ID,
+            </if>
+            <if test="chargeType != null" >
+                CHARGE_TYPE,
+            </if>
+            <if test="chargeBasis != null" >
+                CHARGE_BASIS,
+            </if>
+            <if test="isGrade != null" >
+                IS_GRADE,
+            </if>
+            <if test="effDate != null" >
+                EFF_DATE,
+            </if>
+            <if test="batchSeq != null" >
+                BATCH_SEQ,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="isPayWithTrade != null" >
+                IS_PAY_WITH_TRADE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeMarket != null" >
+                #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="feeType != null" >
+                #{feeType,jdbcType=VARCHAR},
+            </if>
+            <if test="registOrg != null" >
+                #{registOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeType != null" >
+                #{tradeType,jdbcType=VARCHAR},
+            </if>
+            <if test="ps != null" >
+                #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="termType != null" >
+                #{termType,jdbcType=VARCHAR},
+            </if>
+            <if test="secAcctId != null" >
+                #{secAcctId,jdbcType=VARCHAR},
+            </if>
+            <if test="chargeType != null" >
+                #{chargeType,jdbcType=VARCHAR},
+            </if>
+            <if test="chargeBasis != null" >
+                #{chargeBasis,jdbcType=VARCHAR},
+            </if>
+            <if test="isGrade != null" >
+                #{isGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="effDate != null" >
+                #{effDate,jdbcType=DATE},
+            </if>
+            <if test="batchSeq != null" >
+                #{batchSeq,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isPayWithTrade != null" >
+                #{isPayWithTrade,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TrdFeeConfig" >
+        insert into TRD_FEE_CONFIG(SEQ_NO, TRADE_MARKET, FEE_TYPE, REGIST_ORG, TRADE_TYPE, 
+        PS, TERM_TYPE, SEC_ACCT_ID, CHARGE_TYPE, CHARGE_BASIS, IS_GRADE, EFF_DATE, BATCH_SEQ, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_PAY_WITH_TRADE
+        )
+        select SEQ_NO, TRADE_MARKET, FEE_TYPE, REGIST_ORG, TRADE_TYPE, 
+            PS, TERM_TYPE, SEC_ACCT_ID, CHARGE_TYPE, CHARGE_BASIS, IS_GRADE, EFF_DATE, BATCH_SEQ, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, IS_PAY_WITH_TRADE
+            
+             from TRD_FEE_CONFIG
+             where 1 = 1 and SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.TrdFeeConfig" >
+        update TRD_FEE_CONFIG
+        <set >
+            <if test="tradeMarket != null" >
+                TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="feeType != null" >
+                FEE_TYPE = #{feeType,jdbcType=VARCHAR},
+            </if>
+            <if test="registOrg != null" >
+                REGIST_ORG = #{registOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeType != null" >
+                TRADE_TYPE = #{tradeType,jdbcType=VARCHAR},
+            </if>
+            <if test="ps != null" >
+                PS = #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="termType != null" >
+                TERM_TYPE = #{termType,jdbcType=VARCHAR},
+            </if>
+            <if test="secAcctId != null" >
+                SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR},
+            </if>
+            <if test="chargeType != null" >
+                CHARGE_TYPE = #{chargeType,jdbcType=VARCHAR},
+            </if>
+            <if test="chargeBasis != null" >
+                CHARGE_BASIS = #{chargeBasis,jdbcType=VARCHAR},
+            </if>
+            <if test="isGrade != null" >
+                IS_GRADE = #{isGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="effDate != null" >
+                EFF_DATE = #{effDate,jdbcType=DATE},
+            </if>
+            <if test="batchSeq != null" >
+                BATCH_SEQ = #{batchSeq,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isPayWithTrade != null" >
+                IS_PAY_WITH_TRADE = #{isPayWithTrade,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.TrdFeeConfig" >
+        update TRD_FEE_CONFIG
+        set TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+            FEE_TYPE = #{feeType,jdbcType=VARCHAR},
+            REGIST_ORG = #{registOrg,jdbcType=VARCHAR},
+            TRADE_TYPE = #{tradeType,jdbcType=VARCHAR},
+            PS = #{ps,jdbcType=VARCHAR},
+            TERM_TYPE = #{termType,jdbcType=VARCHAR},
+            SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR},
+            CHARGE_TYPE = #{chargeType,jdbcType=VARCHAR},
+            CHARGE_BASIS = #{chargeBasis,jdbcType=VARCHAR},
+            IS_GRADE = #{isGrade,jdbcType=VARCHAR},
+            EFF_DATE = #{effDate,jdbcType=DATE},
+            BATCH_SEQ = #{batchSeq,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            IS_PAY_WITH_TRADE = #{isPayWithTrade,jdbcType=VARCHAR}
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+</mapper>

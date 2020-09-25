@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfFloatingcouponsrateMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfFloatingcouponsrate" >
+        <id column="OBJECT_ID" property="objectId" jdbcType="VARCHAR" />
+        <result column="S_INFO_WINDCODE" property="sInfoWindcode" jdbcType="VARCHAR" />
+        <result column="CHANGE_DT" property="changeDt" jdbcType="VARCHAR" />
+        <result column="RATE" property="rate" jdbcType="DECIMAL" />
+        <result column="OPDATE" property="opdate" jdbcType="DATE" />
+        <result column="OPMODE" property="opmode" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        OBJECT_ID OBJECT_ID, S_INFO_WINDCODE S_INFO_WINDCODE, CHANGE_DT CHANGE_DT, RATE RATE, 
+        OPDATE OPDATE, OPMODE OPMODE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfFloatingcouponsrateMapper.Base_Column_List" />
+        from INTERF_FLOATINGCOUPONSRATE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfFloatingcouponsrateMapper.Base_Column_List" />
+        from INTERF_FLOATINGCOUPONSRATE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfFloatingcouponsrateMapper.Base_Column_List" />
+        from INTERF_FLOATINGCOUPONSRATE
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from INTERF_FLOATINGCOUPONSRATE
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfFloatingcouponsrate" >
+        insert into INTERF_FLOATINGCOUPONSRATE (OBJECT_ID, S_INFO_WINDCODE, CHANGE_DT, 
+            RATE, OPDATE, OPMODE
+            )
+        values (#{objectId,jdbcType=VARCHAR}, #{sInfoWindcode,jdbcType=VARCHAR}, #{changeDt,jdbcType=VARCHAR}, 
+            #{rate,jdbcType=DECIMAL}, #{opdate,jdbcType=DATE}, #{opmode,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfFloatingcouponsrate" >
+        insert into INTERF_FLOATINGCOUPONSRATE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                OBJECT_ID,
+            </if>
+            <if test="sInfoWindcode != null" >
+                S_INFO_WINDCODE,
+            </if>
+            <if test="changeDt != null" >
+                CHANGE_DT,
+            </if>
+            <if test="rate != null" >
+                RATE,
+            </if>
+            <if test="opdate != null" >
+                OPDATE,
+            </if>
+            <if test="opmode != null" >
+                OPMODE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                #{objectId,jdbcType=VARCHAR},
+            </if>
+            <if test="sInfoWindcode != null" >
+                #{sInfoWindcode,jdbcType=VARCHAR},
+            </if>
+            <if test="changeDt != null" >
+                #{changeDt,jdbcType=VARCHAR},
+            </if>
+            <if test="rate != null" >
+                #{rate,jdbcType=DECIMAL},
+            </if>
+            <if test="opdate != null" >
+                #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                #{opmode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfFloatingcouponsrate" >
+        insert into INTERF_FLOATINGCOUPONSRATE(OBJECT_ID, S_INFO_WINDCODE, CHANGE_DT, RATE, 
+        OPDATE, OPMODE)
+        select OBJECT_ID, S_INFO_WINDCODE, CHANGE_DT, RATE, 
+            OPDATE, OPMODE
+             from INTERF_FLOATINGCOUPONSRATE
+             where 1 = 1 and OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InterfFloatingcouponsrate" >
+        update INTERF_FLOATINGCOUPONSRATE
+        <set >
+            <if test="sInfoWindcode != null" >
+                S_INFO_WINDCODE = #{sInfoWindcode,jdbcType=VARCHAR},
+            </if>
+            <if test="changeDt != null" >
+                CHANGE_DT = #{changeDt,jdbcType=VARCHAR},
+            </if>
+            <if test="rate != null" >
+                RATE = #{rate,jdbcType=DECIMAL},
+            </if>
+            <if test="opdate != null" >
+                OPDATE = #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                OPMODE = #{opmode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfFloatingcouponsrate" >
+        update INTERF_FLOATINGCOUPONSRATE
+        set S_INFO_WINDCODE = #{sInfoWindcode,jdbcType=VARCHAR},
+            CHANGE_DT = #{changeDt,jdbcType=VARCHAR},
+            RATE = #{rate,jdbcType=DECIMAL},
+            OPDATE = #{opdate,jdbcType=DATE},
+            OPMODE = #{opmode,jdbcType=VARCHAR}
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+</mapper>

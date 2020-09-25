@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="~{layout/default}">
+
+<head>
+<title data-th-text="#{ReportPage001}">页面配置</title>
+<style type="text/css">
+.report-input {
+	width: 77.2% !important;
+}
+</style>
+</head>
+<body>
+	<div layout:fragment="content">
+		<form class="layui-form joyin-form-wrap" id="submitForm">
+			<input type="hidden" name="repId" id="repId" data-th-value="${repId}" />
+			<input type="hidden" name="templatePath" id="templatePath"
+				data-th-value="${templatePath}" /> <input type="hidden"
+				name="templateId" id="templateId" data-th-value="${templateId}" />
+			<input type="hidden" name="reportType" id="reportType"
+				data-th-value="${reportType}" />
+			<fieldset class="layui-elem-field layui-field-title"
+				style="margin-top: 1px;">
+				<div class="layui-collapse" lay-filter="test">
+					<div>
+						<!-- class="layui-colla-item" -->
+						<h2 class="layui-colla-title">
+							<a href="javascript:;">模板配置</a>
+						</h2>
+						<div>
+							<!-- class="layui-colla-content" -->
+							<div class="layui-form-item">
+								<div
+									class="layui-inline layui-col-md8 layui-col-xs4 layui-col-sm4 layui-col-lg8">
+									<label class="layui-form-label form-lable">模板名称</label>
+									<div class="layui-input-inline input-inline">
+										<input disabled:true id="templateName" name="templateName"
+											placeholder="请选择模板" class="layui-input form-input"
+											data-th-value="${templateName}" required>
+									</div>
+								</div>
+								<div
+									class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
+									<a id="reportModel001_select"
+										class="layui-btn layui-btn-sm btn-download"><i
+										class="iconfont icon-sent"></i>选择模板</a>
+								</div>
+
+							</div>
+							<div class="layui-form-item">
+								<div
+									class="layui-inline layui-col-md8 layui-col-xs4 layui-col-sm4 layui-col-lg8">
+									<label class="layui-form-label form-lable">报表名称</label>
+									<div class="layui-input-inline input-inline">
+										<input id="reportName" name="reportName" placeholder="请给予报表名称"
+											class="layui-input form-input" data-th-value="${reportName}"
+											required>
+									</div>
+								</div>
+
+								<!-- 启用|禁用 -->
+								<!-- <input type="checkbox" lay-skin="switch" data-th-lay-text="#{ReportPageManage.effcitiveCheckbox}" id="effcitiveCheckbox" data-ignore=false> -->
+								<input type="hidden" lay-skin="switch"
+									data-th-lay-text="#{ReportPageManage.effcitiveCheckbox}"
+									id="effcitiveCheckbox" data-ignore=false>
+							</div>
+							<div class="layui-form-item">
+								<div
+									class="layui-inline layui-col-md8 layui-col-xs4 layui-col-sm4 layui-col-lg8">
+									<label class="layui-form-label form-lable">报表类别</label>
+									<div class="layui-input-inline input-inline">
+										<select id="reportStyle" name="reportStyle"
+											class="layui-input form-input input-select" placeholder="请选择"
+											data-th-data-result="${REPORT_STYLE}" allowClear="true"
+											data-th-initValue='${reportStyle}' required>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset class="layui-elem-field layui-field-title"
+				style="margin-top: 0px;">
+				<div class="layui-collapse" lay-filter="test" style="height: 250px;">
+					<h2 class="layui-colla-title">
+
+						<a href="javascript:;">参数配置</a>
+					</h2>
+					<div style="margin-top: -5px;">
+						<table class="layui-table" id="reportModel"></table>
+					</div>
+
+				</div>
+
+			</fieldset>
+			<fieldset class="layui-elem-field layui-field-title"
+				style="margin-top: 0px;">
+				<div class="layui-collapse" lay-filter="test" style="height: 250px;">
+					<h2 class="layui-colla-title">
+						<a href="javascript:;">规则设置</a>
+					</h2>
+					<div class="layui-form-item">
+						<div class="layui-input-inline input-inline"
+							style="width: 15% !important;">
+							<input type="text" id="ruleType1" name="ruleType1"
+								class="layui-input form-input input-select" placeholder="请输字段值"
+								data-th-data-result="${RULE_TYPE1}" allowClear="true"
+								childrenIds="ruleType2,ruleType3">
+							</input>
+						</div>
+						<div class="layui-input-inline input-inline"
+							style="width: 15% !important;">
+							<input id="ruleType2" name="ruleType2"
+								class="layui-input form-input input-select" placeholder="请输比较条件"
+								data-th-formatoption="false" data-th-data-result="${RULE_TYPE2}"
+								allowClear="true">
+							</input>
+						</div>
+						<div class="layui-input-inline input-inline"
+							style="width: 15% !important;">
+							<input id="ruleType3" name="ruleType3"
+								class="layui-input form-input input-select" placeholder="请输值类型"
+								data-th-formatoption="false" data-th-data-result="${RULE_TYPE3}"
+								allowClear="true">
+							</input>
+						</div>
+						<div class="layui-input-inline input-inline"
+							style="width: 15% !important;">
+							<div id="profitTypeSelect">
+								<input id="profitType" name="profitType"
+									class="layui-input form-input input-select"
+									placeholder="请选择收益类型" data-th-formatoption="false"
+									data-th-data-result="${PROFIT_TYPE}" allowClear="true">
+								</input>
+							</div>
+							<div id="chooseDateSelect">
+								<input type="text" id="chooseDate" name="chooseDate"
+									placeholder="请选择日期"
+									class="layui-input form-input input-dateSelect"
+									allowClear="true" data-th-initValue="${sysDate}"> </input>
+							</div>
+							<div id="raiseTypeSelect">
+								<input id="raiseType" name="raiseType"
+									class="layui-input form-input input-select"
+									placeholder="请选择募集方式" data-th-formatoption="false"
+									data-th-data-result="${RAISE_TYPE}" allowClear="true">
+								</input>
+							</div>
+							<div id="issueModeSelect">
+								<input id="issueMode" name="issueMode"
+									class="layui-input form-input input-select"
+									placeholder="请选择发行方式" data-th-formatoption="false"
+									data-th-data-result="${ISSUE_TYPE}" allowClear="true">
+								</input>
+							</div>
+							<div id="issueStautsSelect">
+								<input id="issueStauts" name="issueStauts"
+									class="layui-input form-input input-select"
+									placeholder="请选择发行状态" data-th-formatoption="false"
+									data-th-data-result="${ISSUE_STATUS}" allowClear="true">
+								</input>
+							</div>
+							<div id="prodTermTypeSelect">
+								<input id="prodTermType" name="prodTermType"
+									class="layui-input form-input input-select"
+									placeholder="请选择产品期限类型" data-th-formatoption="false"
+									data-th-data-result="${PROD_TERM_TYPE}" allowClear="true">
+								</input>
+							</div>
+							<div id="openModeSelect">
+								<input id="openMode" name="openMode"
+									class="layui-input form-input input-select"
+									placeholder="请选择开放模式" data-th-formatoption="false"
+									data-th-data-result="${OPENMODE}" allowClear="true"> </input>
+							</div>
+							<div id="isIndepeAccSelect">
+								<input id="isIndepeAcc" name="isIndepeAcc"
+									class="layui-input form-input input-select" placeholder="请选择是否"
+									data-th-formatoption="false" data-th-data-result="${YES_OR_NO}"
+									allowClear="true"> </input>
+							</div>
+							<div id="prodTypeSelect">
+								<input id="prodType" name="prodType"
+									class="layui-input form-input input-select"
+									placeholder="请选择产品类型" data-th-formatoption="false"
+									data-th-data-result="${PROD_TYPE}" allowClear="true"> </input>
+							</div>
+							<div id="finaTypeSelect">
+								<input id="finaType" name="finaType"
+									class="layui-input form-input input-select"
+									placeholder="请选择理财类型" data-th-formatoption="false"
+									data-th-data-result="${FINA_TYPE}" allowClear="true"> </input>
+							</div>
+						</div>
+						<div class="layui-inline" style="margin-left: 10px;">
+							<button type="button" class="layui-btn layui-btn-sm btn-default"
+								id="ReportPageManage002_btn_add">
+								<i class="iconfont icon-add"></i>
+							</button>
+						</div>
+						<div class="layui-inline" style="margin-left: 20px;text-align: right">
+							<a id="ReportPageManage002_btn_previewProdList"
+								class="layui-btn layui-btn-sm btn-download"> <i
+								class="iconfont icon-sent"></i>【预览产品列表】
+							</a>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<div class="layui-inline">
+							<table class="layui-table" id="settedRule" name="settedRule"></table>
+						</div>
+					</div>
+				</div>
+
+			</fieldset>
+		</form>
+		<div class="text-center" filter="false" export="false"
+			style="margin-top: 0px;">
+			<a id="reportPage003_btn_load"
+				class="layui-btn layui-btn-sm btn-load"><i
+				class="iconfont icon-send"></i>预览</a> <a id="reportPage003_btn_save"
+				class="layui-btn layui-btn-sm btn-save"><i
+				class="iconfont icon-save"></i>保存</a> <a id="reportPage003_btn_cancel"
+				class="layui-btn layui-btn-sm btn-cancel"><i
+				class="iconfont icon-cancel"></i>取消</a>
+		</div>
+		<div style="height: 0px;"></div>
+	</div>
+
+	<div layout:fragment="script">
+		<script data-th-inline="javascript" type="text/javascript">
+		    var ADMINISTRATIVE_TYPE1 = /*[[${ADMINISTRATIVE_TYPE1}]]*/;
+		    var modelName = /*[[${modelName}]]*/;
+		    var effective = /*[[${effective}]]*/;
+		</script>
+		<script data-th-inline="javascript" type="text/javascript">
+		    var RepScreenList = /*[[${RepScreenList}]]*/;
+		    var REPORT_SERVER_URL = [[${REPORT_SERVER_URL}]];
+		    var REPORT_USERNAME = [[${REPORT_USERNAME}]];
+		    var REPORT_PASSWORD = [[${REPORT_PASSWORD}]];
+		    var REPORT_SERVER_PATH = [[${REPORT_SERVER_PATH}]];
+		</script>
+		<script data-th-src="@{/js/disclosure/report.js}"
+			type="text/javascript"></script>
+		<script
+			data-th-src="@{/js/disclosure/information/config/reportpage/ReportPageManage002.js}"
+			type="text/javascript"></script>
+	</div>
+</body>
+</html>

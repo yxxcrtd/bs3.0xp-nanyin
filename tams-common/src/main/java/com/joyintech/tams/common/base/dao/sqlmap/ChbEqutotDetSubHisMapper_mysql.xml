@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbEqutotDetSubHisMapper_mysql">
+	<insert id="insertHisByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbEqutotDetSubHis" >
+        insert into CHB_EQUTOT_DET_SUB_HIS(HIS_NO, REG_CODE, REGIST_BANK_CODE, BUSI_TYPE, 
+        ACCOUNT, DETAIL, REMARK, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, 
+        SHARES, CREATE_DEPT)
+        select (select IFNULL(max(HIS_NO), 0) from CHB_EQUTOT_DET_SUB_HIS where STATUS = 'E' and REG_CODE = #{regCode,jdbcType=VARCHAR} and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR} and BUSI_TYPE = #{busiType,jdbcType=CHAR}) + 1 HIS_NO, REG_CODE, REGIST_BANK_CODE, BUSI_TYPE, 
+            ACCOUNT, DETAIL, REMARK, DEPT_CODE, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_USER, CREATE_TIME, 
+            SHARES, CREATE_DEPT
+             from CHB_EQUTOT_DET_SUB
+             where STATUS = 'E' and REG_CODE = #{regCode,jdbcType=VARCHAR} and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR} and BUSI_TYPE = #{busiType,jdbcType=CHAR}
+    </insert>
+</mapper>

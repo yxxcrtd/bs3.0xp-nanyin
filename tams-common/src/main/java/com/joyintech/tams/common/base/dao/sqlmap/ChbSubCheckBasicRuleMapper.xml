@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbSubCheckBasicRuleMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbSubCheckBasicRule" >
+        <id column="C_S_C_B_R_RULE_ID" property="ruleId" jdbcType="VARCHAR" />
+        <result column="C_S_C_B_R_RULE_NAME" property="ruleName" jdbcType="VARCHAR" />
+        <result column="C_S_C_B_R_RULE_MSG" property="ruleMsg" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        RULE_ID as C_S_C_B_R_RULE_ID, RULE_NAME as C_S_C_B_R_RULE_NAME, RULE_MSG as C_S_C_B_R_RULE_MSG
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSubCheckBasicRuleMapper.Base_Column_List" />
+        from CHB_SUB_CHECK_BASIC_RULE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSubCheckBasicRuleMapper.Base_Column_List" />
+        from CHB_SUB_CHECK_BASIC_RULE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSubCheckBasicRuleMapper.Base_Column_List" />
+        from CHB_SUB_CHECK_BASIC_RULE
+        where RULE_ID = #{ruleId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_SUB_CHECK_BASIC_RULE
+        where RULE_ID = #{ruleId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_SUB_CHECK_BASIC_RULE
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbSubCheckBasicRule" >
+        insert into CHB_SUB_CHECK_BASIC_RULE (RULE_ID, RULE_NAME, RULE_MSG
+            )
+        values (#{ruleId,jdbcType=VARCHAR}, #{ruleName,jdbcType=VARCHAR}, #{ruleMsg,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSubCheckBasicRule" >
+        insert into CHB_SUB_CHECK_BASIC_RULE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="ruleId != null" >
+                RULE_ID,
+            </if>
+            <if test="ruleName != null" >
+                RULE_NAME,
+            </if>
+            <if test="ruleMsg != null" >
+                RULE_MSG,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="ruleId != null" >
+                #{ruleId,jdbcType=VARCHAR},
+            </if>
+            <if test="ruleName != null" >
+                #{ruleName,jdbcType=VARCHAR},
+            </if>
+            <if test="ruleMsg != null" >
+                #{ruleMsg,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbSubCheckBasicRule" >
+        insert into CHB_SUB_CHECK_BASIC_RULE(RULE_ID, RULE_NAME, RULE_MSG)
+        select RULE_ID, RULE_NAME, RULE_MSG
+             from CHB_SUB_CHECK_BASIC_RULE
+             where STATUS = 'E' and RULE_ID = #{ruleId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbSubCheckBasicRule" >
+        update CHB_SUB_CHECK_BASIC_RULE
+        <set >
+            <if test="ruleName != null" >
+                RULE_NAME = #{ruleName,jdbcType=VARCHAR},
+            </if>
+            <if test="ruleMsg != null" >
+                RULE_MSG = #{ruleMsg,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where RULE_ID = #{ruleId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSubCheckBasicRule" >
+        update CHB_SUB_CHECK_BASIC_RULE
+        <set >
+            <if test="ruleId != null" >
+                RULE_ID = #{ruleId,jdbcType=VARCHAR},
+            </if>
+            <if test="ruleName != null" >
+                RULE_NAME = #{ruleName,jdbcType=VARCHAR},
+            </if>
+            <if test="ruleMsg != null" >
+                RULE_MSG = #{ruleMsg,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbSubCheckBasicRule" >
+        update CHB_SUB_CHECK_BASIC_RULE
+        set 
+        RULE_ID = #{ruleId,jdbcType=VARCHAR},
+        RULE_NAME = #{ruleName,jdbcType=VARCHAR},
+        RULE_MSG = #{ruleMsg,jdbcType=VARCHAR}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbSubCheckBasicRule" >
+        update CHB_SUB_CHECK_BASIC_RULE
+        set RULE_NAME = #{ruleName,jdbcType=VARCHAR},
+            RULE_MSG = #{ruleMsg,jdbcType=VARCHAR}
+        where RULE_ID = #{ruleId,jdbcType=VARCHAR}
+    </update>
+</mapper>

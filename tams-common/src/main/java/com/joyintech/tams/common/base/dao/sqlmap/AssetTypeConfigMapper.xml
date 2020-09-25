@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.AssetTypeConfigMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.AssetTypeConfig" >
+        <result column="TYPE_6" property="type6" jdbcType="VARCHAR" />
+        <result column="TYPE_7" property="type7" jdbcType="VARCHAR" />
+        <result column="TYPE_8" property="type8" jdbcType="VARCHAR" />
+        <result column="IS_CREATE_PORTFOLIO" property="isCreatePortfolio" jdbcType="VARCHAR" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.AssetTypeConfig" >
+        insert into ASSET_TYPE_CONFIG (TYPE_6, TYPE_7, TYPE_8, 
+            IS_CREATE_PORTFOLIO)
+        values (#{type6,jdbcType=VARCHAR}, #{type7,jdbcType=VARCHAR}, #{type8,jdbcType=VARCHAR}, 
+            #{isCreatePortfolio,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.AssetTypeConfig" >
+        insert into ASSET_TYPE_CONFIG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="type6 != null" >
+                TYPE_6,
+            </if>
+            <if test="type7 != null" >
+                TYPE_7,
+            </if>
+            <if test="type8 != null" >
+                TYPE_8,
+            </if>
+            <if test="isCreatePortfolio != null" >
+                IS_CREATE_PORTFOLIO,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="type6 != null" >
+                #{type6,jdbcType=VARCHAR},
+            </if>
+            <if test="type7 != null" >
+                #{type7,jdbcType=VARCHAR},
+            </if>
+            <if test="type8 != null" >
+                #{type8,jdbcType=VARCHAR},
+            </if>
+            <if test="isCreatePortfolio != null" >
+                #{isCreatePortfolio,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.AssetTypeConfig" >
+        insert into ASSET_TYPE_CONFIG(TYPE_6, TYPE_7, TYPE_8, IS_CREATE_PORTFOLIO)
+        select TYPE_6, TYPE_7, TYPE_8, IS_CREATE_PORTFOLIO
+             from ASSET_TYPE_CONFIG
+             where 1 = 1
+    </insert>
+    <select id="selectAssetTypeConfig" resultType="com.joyintech.tams.common.base.entity.AssetTypeConfig" parameterType="Map">
+    	select TYPE_6, TYPE_7, TYPE_8, IS_CREATE_PORTFOLIO
+             from ASSET_TYPE_CONFIG
+             <where>
+             	<if test="type_6 !=null and type_6 !=''">
+             		 and TYPE_6 = #{type_6}
+             	</if>
+             	<if test="type_7 !=null and type_7 !=''">
+             		 and TYPE_7 = #{type_7}
+             	</if>
+             	<if test="type_8 !=null and type_8 !=''">
+             		 and TYPE_8 = #{type_8}
+             	</if>
+             </where>
+    </select>
+</mapper>

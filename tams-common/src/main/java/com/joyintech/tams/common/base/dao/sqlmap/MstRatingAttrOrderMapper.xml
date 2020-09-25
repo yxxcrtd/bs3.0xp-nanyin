@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.MstRatingAttrOrderMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstRatingAttrOrder" >
+        <id column="O_TYPE" property="oType" jdbcType="VARCHAR" />
+        <id column="ATTR_CODE" property="attrCode" jdbcType="VARCHAR" />
+        <id column="ATTR_VALUE" property="attrValue" jdbcType="VARCHAR" />
+        <id column="ATTR_ORDER" property="attrOrder" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        O_TYPE O_TYPE, ATTR_CODE ATTR_CODE, ATTR_VALUE ATTR_VALUE, ATTR_ORDER ATTR_ORDER, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstRatingAttrOrderMapper.Base_Column_List" />
+        from MST_RATING_ATTR_ORDER
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstRatingAttrOrderMapper.Base_Column_List" />
+        from MST_RATING_ATTR_ORDER
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.MstRatingAttrOrderKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstRatingAttrOrderMapper.Base_Column_List" />
+        from MST_RATING_ATTR_ORDER
+        where O_TYPE = #{oType,jdbcType=VARCHAR}
+          and ATTR_CODE = #{attrCode,jdbcType=VARCHAR}
+          and ATTR_VALUE = #{attrValue,jdbcType=VARCHAR}
+          and ATTR_ORDER = #{attrOrder,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstRatingAttrOrderKey" >
+        delete from MST_RATING_ATTR_ORDER
+        where O_TYPE = #{oType,jdbcType=VARCHAR}
+          and ATTR_CODE = #{attrCode,jdbcType=VARCHAR}
+          and ATTR_VALUE = #{attrValue,jdbcType=VARCHAR}
+          and ATTR_ORDER = #{attrOrder,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.MstRatingAttrOrder" >
+        insert into MST_RATING_ATTR_ORDER (O_TYPE, ATTR_CODE, ATTR_VALUE, 
+            ATTR_ORDER, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{oType,jdbcType=VARCHAR}, #{attrCode,jdbcType=VARCHAR}, #{attrValue,jdbcType=VARCHAR}, 
+            #{attrOrder,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstRatingAttrOrder" >
+        insert into MST_RATING_ATTR_ORDER
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="oType != null" >
+                O_TYPE,
+            </if>
+            <if test="attrCode != null" >
+                ATTR_CODE,
+            </if>
+            <if test="attrValue != null" >
+                ATTR_VALUE,
+            </if>
+            <if test="attrOrder != null" >
+                ATTR_ORDER,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="oType != null" >
+                #{oType,jdbcType=VARCHAR},
+            </if>
+            <if test="attrCode != null" >
+                #{attrCode,jdbcType=VARCHAR},
+            </if>
+            <if test="attrValue != null" >
+                #{attrValue,jdbcType=VARCHAR},
+            </if>
+            <if test="attrOrder != null" >
+                #{attrOrder,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.MstRatingAttrOrder" >
+        insert into MST_RATING_ATTR_ORDER(O_TYPE, ATTR_CODE, ATTR_VALUE, ATTR_ORDER, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select O_TYPE, ATTR_CODE, ATTR_VALUE, ATTR_ORDER, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from MST_RATING_ATTR_ORDER
+             where 1 = 1 and O_TYPE = #{oType,jdbcType=VARCHAR} and ATTR_CODE = #{attrCode,jdbcType=VARCHAR} and ATTR_VALUE = #{attrValue,jdbcType=VARCHAR} and ATTR_ORDER = #{attrOrder,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.MstRatingAttrOrder" >
+        update MST_RATING_ATTR_ORDER
+        <set >
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where O_TYPE = #{oType,jdbcType=VARCHAR}
+          and ATTR_CODE = #{attrCode,jdbcType=VARCHAR}
+          and ATTR_VALUE = #{attrValue,jdbcType=VARCHAR}
+          and ATTR_ORDER = #{attrOrder,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstRatingAttrOrder" >
+        update MST_RATING_ATTR_ORDER
+        set UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where O_TYPE = #{oType,jdbcType=VARCHAR}
+          and ATTR_CODE = #{attrCode,jdbcType=VARCHAR}
+          and ATTR_VALUE = #{attrValue,jdbcType=VARCHAR}
+          and ATTR_ORDER = #{attrOrder,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbRegInfoStatusMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbRegInfoStatus" >
+        <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="BUSI_MARK" property="busiMark" jdbcType="VARCHAR" />
+        <result column="REPORT_TYPE" property="reportType" jdbcType="VARCHAR" />
+        <result column="DATA_DATE" property="dataDate" jdbcType="DATE" />
+        <result column="SUBMIT_STATUS" property="submitStatus" jdbcType="VARCHAR" />
+        <result column="SUBMIT_DATE" property="submitDate" jdbcType="DATE" />
+        <result column="SUBMIT_END_DATE" property="submitEndDate" jdbcType="DATE" />
+        <result column="FEEDBACK_STATUS" property="feedbackStatus" jdbcType="VARCHAR" />
+        <result column="DATA_TYPE" property="dataType" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO SEQNO, ORG_CODE ORG_CODE, BUSI_MARK BUSI_MARK, REPORT_TYPE REPORT_TYPE, DATA_DATE DATA_DATE, 
+        SUBMIT_STATUS SUBMIT_STATUS, SUBMIT_DATE SUBMIT_DATE, SUBMIT_END_DATE SUBMIT_END_DATE, 
+        FEEDBACK_STATUS FEEDBACK_STATUS, DATA_TYPE DATA_TYPE, STATUS STATUS, WORKFLOW_ID WORKFLOW_ID, 
+        DEPT_CODE DEPT_CODE, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CREATE_USER CREATE_USER, 
+        CREATE_TIME CREATE_TIME, CREATE_DEPT CREATE_DEPT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbRegInfoStatusMapper.Base_Column_List" />
+        from CHB_REG_INFO_STATUS
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbRegInfoStatusMapper.Base_Column_List" />
+        from CHB_REG_INFO_STATUS
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbRegInfoStatusMapper.Base_Column_List" />
+        from CHB_REG_INFO_STATUS
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_REG_INFO_STATUS
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_REG_INFO_STATUS
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbRegInfoStatus" >
+        insert into CHB_REG_INFO_STATUS (SEQNO, ORG_CODE, BUSI_MARK, 
+            REPORT_TYPE, DATA_DATE, SUBMIT_STATUS, 
+            SUBMIT_DATE, SUBMIT_END_DATE, FEEDBACK_STATUS, 
+            DATA_TYPE, STATUS, WORKFLOW_ID, 
+            DEPT_CODE, UPDATE_USER, UPDATE_TIME, 
+            CREATE_USER, CREATE_TIME, CREATE_DEPT
+            )
+        values (#{seqno,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{busiMark,jdbcType=VARCHAR}, 
+            #{reportType,jdbcType=VARCHAR}, #{dataDate,jdbcType=DATE}, #{submitStatus,jdbcType=VARCHAR}, 
+            #{submitDate,jdbcType=DATE}, #{submitEndDate,jdbcType=DATE}, #{feedbackStatus,jdbcType=VARCHAR}, 
+            #{dataType,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{workflowId,jdbcType=VARCHAR}, 
+            #{deptCode,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbRegInfoStatus" >
+        insert into CHB_REG_INFO_STATUS
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+            <if test="busiMark != null" >
+                BUSI_MARK,
+            </if>
+            <if test="reportType != null" >
+                REPORT_TYPE,
+            </if>
+            <if test="dataDate != null" >
+                DATA_DATE,
+            </if>
+            <if test="submitStatus != null" >
+                SUBMIT_STATUS,
+            </if>
+            <if test="submitDate != null" >
+                SUBMIT_DATE,
+            </if>
+            <if test="submitEndDate != null" >
+                SUBMIT_END_DATE,
+            </if>
+            <if test="feedbackStatus != null" >
+                FEEDBACK_STATUS,
+            </if>
+            <if test="dataType != null" >
+                DATA_TYPE,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID,
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="busiMark != null" >
+                #{busiMark,jdbcType=VARCHAR},
+            </if>
+            <if test="reportType != null" >
+                #{reportType,jdbcType=VARCHAR},
+            </if>
+            <if test="dataDate != null" >
+                #{dataDate,jdbcType=DATE},
+            </if>
+            <if test="submitStatus != null" >
+                #{submitStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitDate != null" >
+                #{submitDate,jdbcType=DATE},
+            </if>
+            <if test="submitEndDate != null" >
+                #{submitEndDate,jdbcType=DATE},
+            </if>
+            <if test="feedbackStatus != null" >
+                #{feedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="dataType != null" >
+                #{dataType,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowId != null" >
+                #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbRegInfoStatus" >
+        insert into CHB_REG_INFO_STATUS(SEQNO, ORG_CODE, BUSI_MARK, REPORT_TYPE, DATA_DATE, 
+        SUBMIT_STATUS, SUBMIT_DATE, SUBMIT_END_DATE, FEEDBACK_STATUS, DATA_TYPE, STATUS, 
+        WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, CREATE_DEPT
+        )
+        select SEQNO, ORG_CODE, BUSI_MARK, REPORT_TYPE, DATA_DATE, 
+            SUBMIT_STATUS, SUBMIT_DATE, SUBMIT_END_DATE, FEEDBACK_STATUS, DATA_TYPE, #{status,jdbcType=VARCHAR} STATUS, 
+            #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, DEPT_CODE, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_USER, CREATE_TIME, CREATE_DEPT
+            
+             from CHB_REG_INFO_STATUS
+             where STATUS = 'E' and SEQNO = #{seqno,jdbcType=VARCHAR}
+    </insert>
+    <insert id="insertBasicByWorkflowId" parameterType="java.util.Map" >
+        insert into CHB_REG_INFO_STATUS(SEQNO, ORG_CODE, BUSI_MARK, REPORT_TYPE, DATA_DATE, 
+        SUBMIT_STATUS, SUBMIT_DATE, SUBMIT_END_DATE, FEEDBACK_STATUS, DATA_TYPE, STATUS, 
+        WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, CREATE_DEPT
+        )
+        select SEQNO, ORG_CODE, BUSI_MARK, REPORT_TYPE, DATA_DATE, 
+            SUBMIT_STATUS, SUBMIT_DATE, SUBMIT_END_DATE, FEEDBACK_STATUS, DATA_TYPE, #{status,jdbcType=VARCHAR} STATUS, 
+            #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, DEPT_CODE, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_USER, CREATE_TIME, CREATE_DEPT
+            
+             from CHB_REG_INFO_STATUS
+             where STATUS = 'E' and WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbRegInfoStatus" >
+        update CHB_REG_INFO_STATUS
+        <set >
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="busiMark != null" >
+                BUSI_MARK = #{busiMark,jdbcType=VARCHAR},
+            </if>
+            <if test="reportType != null" >
+                REPORT_TYPE = #{reportType,jdbcType=VARCHAR},
+            </if>
+            <if test="dataDate != null" >
+                DATA_DATE = #{dataDate,jdbcType=DATE},
+            </if>
+            <if test="submitStatus != null" >
+                SUBMIT_STATUS = #{submitStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitDate != null" >
+                SUBMIT_DATE = #{submitDate,jdbcType=DATE},
+            </if>
+            <if test="submitEndDate != null" >
+                SUBMIT_END_DATE = #{submitEndDate,jdbcType=DATE},
+            </if>
+            <if test="feedbackStatus != null" >
+                FEEDBACK_STATUS = #{feedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="dataType != null" >
+                DATA_TYPE = #{dataType,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbRegInfoStatus" >
+        update CHB_REG_INFO_STATUS
+        <set >
+            <if test="seqno != null" >
+                SEQNO = #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="busiMark != null" >
+                BUSI_MARK = #{busiMark,jdbcType=VARCHAR},
+            </if>
+            <if test="reportType != null" >
+                REPORT_TYPE = #{reportType,jdbcType=VARCHAR},
+            </if>
+            <if test="dataDate != null" >
+                DATA_DATE = #{dataDate,jdbcType=DATE},
+            </if>
+            <if test="submitStatus != null" >
+                SUBMIT_STATUS = #{submitStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitDate != null" >
+                SUBMIT_DATE = #{submitDate,jdbcType=DATE},
+            </if>
+            <if test="submitEndDate != null" >
+                SUBMIT_END_DATE = #{submitEndDate,jdbcType=DATE},
+            </if>
+            <if test="feedbackStatus != null" >
+                FEEDBACK_STATUS = #{feedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="dataType != null" >
+                DATA_TYPE = #{dataType,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbRegInfoStatus" >
+        update CHB_REG_INFO_STATUS
+        set 
+        SEQNO = #{seqno,jdbcType=VARCHAR},
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+        BUSI_MARK = #{busiMark,jdbcType=VARCHAR},
+        REPORT_TYPE = #{reportType,jdbcType=VARCHAR},
+        DATA_DATE = #{dataDate,jdbcType=DATE},
+        SUBMIT_STATUS = #{submitStatus,jdbcType=VARCHAR},
+        SUBMIT_DATE = #{submitDate,jdbcType=DATE},
+        SUBMIT_END_DATE = #{submitEndDate,jdbcType=DATE},
+        FEEDBACK_STATUS = #{feedbackStatus,jdbcType=VARCHAR},
+        DATA_TYPE = #{dataType,jdbcType=VARCHAR},
+        STATUS = #{status,jdbcType=VARCHAR},
+        DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbRegInfoStatus" >
+        update CHB_REG_INFO_STATUS
+        set ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            BUSI_MARK = #{busiMark,jdbcType=VARCHAR},
+            REPORT_TYPE = #{reportType,jdbcType=VARCHAR},
+            DATA_DATE = #{dataDate,jdbcType=DATE},
+            SUBMIT_STATUS = #{submitStatus,jdbcType=VARCHAR},
+            SUBMIT_DATE = #{submitDate,jdbcType=DATE},
+            SUBMIT_END_DATE = #{submitEndDate,jdbcType=DATE},
+            FEEDBACK_STATUS = #{feedbackStatus,jdbcType=VARCHAR},
+            DATA_TYPE = #{dataType,jdbcType=VARCHAR},
+            STATUS = #{status,jdbcType=VARCHAR},
+            WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+</mapper>

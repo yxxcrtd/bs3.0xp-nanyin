@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfPayhsrcsecratingMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfPayhsrcsecrating" >
+        <id column="SECID" property="secid" jdbcType="VARCHAR" />
+        <id column="RATINGORG" property="ratingorg" jdbcType="VARCHAR" />
+        <id column="RATINGTYPE" property="ratingtype" jdbcType="VARCHAR" />
+        <id column="RATINGSUBTYPE" property="ratingsubtype" jdbcType="VARCHAR" />
+        <id column="PUBDATE" property="pubdate" jdbcType="DATE" />
+        <id column="SOURCE" property="source" jdbcType="VARCHAR" />
+        <result column="RATING" property="rating" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="IS_RECOMMAND" property="isRecommand" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SECID SECID, RATINGORG RATINGORG, RATINGTYPE RATINGTYPE, RATINGSUBTYPE RATINGSUBTYPE, 
+        PUBDATE PUBDATE, SOURCE SOURCE, RATING RATING, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, IS_RECOMMAND IS_RECOMMAND
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfPayhsrcsecratingMapper.Base_Column_List" />
+        from INTERF_PAYHSRCSECRATING
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfPayhsrcsecratingMapper.Base_Column_List" />
+        from INTERF_PAYHSRCSECRATING
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcsecratingKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfPayhsrcsecratingMapper.Base_Column_List" />
+        from INTERF_PAYHSRCSECRATING
+        where SECID = #{secid,jdbcType=VARCHAR}
+          and RATINGORG = #{ratingorg,jdbcType=VARCHAR}
+          and RATINGTYPE = #{ratingtype,jdbcType=VARCHAR}
+          and RATINGSUBTYPE = #{ratingsubtype,jdbcType=VARCHAR}
+          and PUBDATE = #{pubdate,jdbcType=DATE}
+          and SOURCE = #{source,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcsecratingKey" >
+        delete from INTERF_PAYHSRCSECRATING
+        where SECID = #{secid,jdbcType=VARCHAR}
+          and RATINGORG = #{ratingorg,jdbcType=VARCHAR}
+          and RATINGTYPE = #{ratingtype,jdbcType=VARCHAR}
+          and RATINGSUBTYPE = #{ratingsubtype,jdbcType=VARCHAR}
+          and PUBDATE = #{pubdate,jdbcType=DATE}
+          and SOURCE = #{source,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcsecrating" >
+        insert into INTERF_PAYHSRCSECRATING (SECID, RATINGORG, RATINGTYPE, 
+            RATINGSUBTYPE, PUBDATE, SOURCE, 
+            RATING, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            IS_RECOMMAND)
+        values (#{secid,jdbcType=VARCHAR}, #{ratingorg,jdbcType=VARCHAR}, #{ratingtype,jdbcType=VARCHAR}, 
+            #{ratingsubtype,jdbcType=VARCHAR}, #{pubdate,jdbcType=DATE}, #{source,jdbcType=VARCHAR}, 
+            #{rating,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{isRecommand,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcsecrating" >
+        insert into INTERF_PAYHSRCSECRATING
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="secid != null" >
+                SECID,
+            </if>
+            <if test="ratingorg != null" >
+                RATINGORG,
+            </if>
+            <if test="ratingtype != null" >
+                RATINGTYPE,
+            </if>
+            <if test="ratingsubtype != null" >
+                RATINGSUBTYPE,
+            </if>
+            <if test="pubdate != null" >
+                PUBDATE,
+            </if>
+            <if test="source != null" >
+                SOURCE,
+            </if>
+            <if test="rating != null" >
+                RATING,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="isRecommand != null" >
+                IS_RECOMMAND,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="secid != null" >
+                #{secid,jdbcType=VARCHAR},
+            </if>
+            <if test="ratingorg != null" >
+                #{ratingorg,jdbcType=VARCHAR},
+            </if>
+            <if test="ratingtype != null" >
+                #{ratingtype,jdbcType=VARCHAR},
+            </if>
+            <if test="ratingsubtype != null" >
+                #{ratingsubtype,jdbcType=VARCHAR},
+            </if>
+            <if test="pubdate != null" >
+                #{pubdate,jdbcType=DATE},
+            </if>
+            <if test="source != null" >
+                #{source,jdbcType=VARCHAR},
+            </if>
+            <if test="rating != null" >
+                #{rating,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isRecommand != null" >
+                #{isRecommand,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcsecrating" >
+        insert into INTERF_PAYHSRCSECRATING(SECID, RATINGORG, RATINGTYPE, RATINGSUBTYPE, 
+        PUBDATE, SOURCE, RATING, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+        IS_RECOMMAND)
+        select SECID, RATINGORG, RATINGTYPE, RATINGSUBTYPE, 
+            PUBDATE, SOURCE, RATING, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
+            IS_RECOMMAND
+             from INTERF_PAYHSRCSECRATING
+             where 1 = 1 and SECID = #{secid,jdbcType=VARCHAR} and RATINGORG = #{ratingorg,jdbcType=VARCHAR} and RATINGTYPE = #{ratingtype,jdbcType=VARCHAR} and RATINGSUBTYPE = #{ratingsubtype,jdbcType=VARCHAR} and PUBDATE = #{pubdate,jdbcType=DATE} and SOURCE = #{source,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcsecrating" >
+        update INTERF_PAYHSRCSECRATING
+        <set >
+            <if test="rating != null" >
+                RATING = #{rating,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isRecommand != null" >
+                IS_RECOMMAND = #{isRecommand,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where SECID = #{secid,jdbcType=VARCHAR}
+          and RATINGORG = #{ratingorg,jdbcType=VARCHAR}
+          and RATINGTYPE = #{ratingtype,jdbcType=VARCHAR}
+          and RATINGSUBTYPE = #{ratingsubtype,jdbcType=VARCHAR}
+          and PUBDATE = #{pubdate,jdbcType=DATE}
+          and SOURCE = #{source,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcsecrating" >
+        update INTERF_PAYHSRCSECRATING
+        set RATING = #{rating,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            IS_RECOMMAND = #{isRecommand,jdbcType=VARCHAR}
+        where SECID = #{secid,jdbcType=VARCHAR}
+          and RATINGORG = #{ratingorg,jdbcType=VARCHAR}
+          and RATINGTYPE = #{ratingtype,jdbcType=VARCHAR}
+          and RATINGSUBTYPE = #{ratingsubtype,jdbcType=VARCHAR}
+          and PUBDATE = #{pubdate,jdbcType=DATE}
+          and SOURCE = #{source,jdbcType=VARCHAR}
+    </update>
+</mapper>

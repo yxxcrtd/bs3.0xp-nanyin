@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.BokStatDetPosiitonMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.BokStatDetPosiiton" >
+        <id column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <id column="HAPPEN_DATE" property="happenDate" jdbcType="DATE" />
+        <id column="BOOK_DATE" property="bookDate" jdbcType="DATE" />
+        <id column="BOK_DETAIL_ID" property="bokDetailId" jdbcType="VARCHAR" />
+        <id column="BOOK_SUMMARY_ORDER" property="bookSummaryOrder" jdbcType="DECIMAL" />
+        <result column="BOOKSET_DATE" property="booksetDate" jdbcType="DATE" />
+        <result column="POS_AMT" property="posAmt" jdbcType="DECIMAL" />
+        <result column="INT_RATE" property="intRate" jdbcType="DECIMAL" />
+        <result column="DAILYDSC_YIELD" property="dailydscYield" jdbcType="DECIMAL" />
+        <result column="TDY_INTINCEXP_ADD" property="tdyIntincexpAdd" jdbcType="DECIMAL" />
+        <result column="TDY_INTINCEXP" property="tdyIntincexp" jdbcType="DECIMAL" />
+        <result column="FINPROD_TYPE" property="finprodType" jdbcType="VARCHAR" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="CHL_ID" property="chlId" jdbcType="VARCHAR" />
+        <result column="INV_AIM" property="invAim" jdbcType="VARCHAR" />
+        <result column="TDY_POSITION" property="tdyPosition" jdbcType="DECIMAL" />
+        <result column="TDY_COST_AMT" property="tdyCostAmt" jdbcType="DECIMAL" />
+        <result column="TDY_FLOAT_INGPL" property="tdyFloatIngpl" jdbcType="DECIMAL" />
+        <result column="END_DAYS_1" property="endDays1" jdbcType="DECIMAL" />
+        <result column="END_DAYS_2" property="endDays2" jdbcType="DECIMAL" />
+        <result column="END_DAYS_COST_AMT" property="endDaysCostAmt" jdbcType="DECIMAL" />
+        <result column="BUSI_ID" property="busiId" jdbcType="VARCHAR" />
+        <result column="VAL_DATE" property="valDate" jdbcType="DATE" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="TDY_FLOAT_INGPL_EXP" property="tdyFloatIngplExp" jdbcType="DECIMAL" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="B_CCY" property="bCcy" jdbcType="VARCHAR" />
+        <result column="TDY_INTINCEXP_ADD_B" property="tdyIntincexpAddB" jdbcType="DECIMAL" />
+        <result column="TDY_COST_AMT_B" property="tdyCostAmtB" jdbcType="DECIMAL" />
+        <result column="TDY_FLOAT_INGPL_B" property="tdyFloatIngplB" jdbcType="DECIMAL" />
+        <result column="TDY_FLOAT_INGPL_EXP_B" property="tdyFloatIngplExpB" jdbcType="DECIMAL" />
+        <result column="TDY_INTINCEXP_B" property="tdyIntincexpB" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        BOOKSET_ID BOOKSET_ID, HAPPEN_DATE HAPPEN_DATE, BOOK_DATE BOOK_DATE, BOK_DETAIL_ID BOK_DETAIL_ID, 
+        BOOK_SUMMARY_ORDER BOOK_SUMMARY_ORDER, BOOKSET_DATE BOOKSET_DATE, POS_AMT POS_AMT, 
+        INT_RATE INT_RATE, DAILYDSC_YIELD DAILYDSC_YIELD, TDY_INTINCEXP_ADD TDY_INTINCEXP_ADD, 
+        TDY_INTINCEXP TDY_INTINCEXP, FINPROD_TYPE FINPROD_TYPE, VDATE VDATE, MDATE MDATE, 
+        CHL_ID CHL_ID, INV_AIM INV_AIM, TDY_POSITION TDY_POSITION, TDY_COST_AMT TDY_COST_AMT, 
+        TDY_FLOAT_INGPL TDY_FLOAT_INGPL, END_DAYS_1 END_DAYS_1, END_DAYS_2 END_DAYS_2, END_DAYS_COST_AMT END_DAYS_COST_AMT, 
+        BUSI_ID BUSI_ID, VAL_DATE VAL_DATE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, TDY_FLOAT_INGPL_EXP TDY_FLOAT_INGPL_EXP, 
+        CCY CCY, B_CCY B_CCY, TDY_INTINCEXP_ADD_B TDY_INTINCEXP_ADD_B, TDY_COST_AMT_B TDY_COST_AMT_B, 
+        TDY_FLOAT_INGPL_B TDY_FLOAT_INGPL_B, TDY_FLOAT_INGPL_EXP_B TDY_FLOAT_INGPL_EXP_B, 
+        TDY_INTINCEXP_B TDY_INTINCEXP_B
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.BokStatDetPosiitonMapper.Base_Column_List" />
+        from BOK_STAT_DET_POSIITON
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.BokStatDetPosiitonMapper.Base_Column_List" />
+        from BOK_STAT_DET_POSIITON
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.BokStatDetPosiitonKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.BokStatDetPosiitonMapper.Base_Column_List" />
+        from BOK_STAT_DET_POSIITON
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and HAPPEN_DATE = #{happenDate,jdbcType=DATE}
+          and BOOK_DATE = #{bookDate,jdbcType=DATE}
+          and BOK_DETAIL_ID = #{bokDetailId,jdbcType=VARCHAR}
+          and BOOK_SUMMARY_ORDER = #{bookSummaryOrder,jdbcType=DECIMAL}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokStatDetPosiitonKey" >
+        delete from BOK_STAT_DET_POSIITON
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and HAPPEN_DATE = #{happenDate,jdbcType=DATE}
+          and BOOK_DATE = #{bookDate,jdbcType=DATE}
+          and BOK_DETAIL_ID = #{bokDetailId,jdbcType=VARCHAR}
+          and BOOK_SUMMARY_ORDER = #{bookSummaryOrder,jdbcType=DECIMAL}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.BokStatDetPosiiton" >
+        insert into BOK_STAT_DET_POSIITON (BOOKSET_ID, HAPPEN_DATE, BOOK_DATE, 
+            BOK_DETAIL_ID, BOOK_SUMMARY_ORDER, BOOKSET_DATE, 
+            POS_AMT, INT_RATE, DAILYDSC_YIELD, 
+            TDY_INTINCEXP_ADD, TDY_INTINCEXP, FINPROD_TYPE, 
+            VDATE, MDATE, CHL_ID, INV_AIM, 
+            TDY_POSITION, TDY_COST_AMT, TDY_FLOAT_INGPL, 
+            END_DAYS_1, END_DAYS_2, END_DAYS_COST_AMT, 
+            BUSI_ID, VAL_DATE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, TDY_FLOAT_INGPL_EXP, CCY, 
+            B_CCY, TDY_INTINCEXP_ADD_B, TDY_COST_AMT_B, 
+            TDY_FLOAT_INGPL_B, TDY_FLOAT_INGPL_EXP_B, TDY_INTINCEXP_B
+            )
+        values (#{booksetId,jdbcType=VARCHAR}, #{happenDate,jdbcType=DATE}, #{bookDate,jdbcType=DATE}, 
+            #{bokDetailId,jdbcType=VARCHAR}, #{bookSummaryOrder,jdbcType=DECIMAL}, #{booksetDate,jdbcType=DATE}, 
+            #{posAmt,jdbcType=DECIMAL}, #{intRate,jdbcType=DECIMAL}, #{dailydscYield,jdbcType=DECIMAL}, 
+            #{tdyIntincexpAdd,jdbcType=DECIMAL}, #{tdyIntincexp,jdbcType=DECIMAL}, #{finprodType,jdbcType=VARCHAR}, 
+            #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, #{chlId,jdbcType=VARCHAR}, #{invAim,jdbcType=VARCHAR}, 
+            #{tdyPosition,jdbcType=DECIMAL}, #{tdyCostAmt,jdbcType=DECIMAL}, #{tdyFloatIngpl,jdbcType=DECIMAL}, 
+            #{endDays1,jdbcType=DECIMAL}, #{endDays2,jdbcType=DECIMAL}, #{endDaysCostAmt,jdbcType=DECIMAL}, 
+            #{busiId,jdbcType=VARCHAR}, #{valDate,jdbcType=DATE}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{tdyFloatIngplExp,jdbcType=DECIMAL}, #{ccy,jdbcType=VARCHAR}, 
+            #{bCcy,jdbcType=VARCHAR}, #{tdyIntincexpAddB,jdbcType=DECIMAL}, #{tdyCostAmtB,jdbcType=DECIMAL}, 
+            #{tdyFloatIngplB,jdbcType=DECIMAL}, #{tdyFloatIngplExpB,jdbcType=DECIMAL}, #{tdyIntincexpB,jdbcType=DECIMAL}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.BokStatDetPosiiton" >
+        insert into BOK_STAT_DET_POSIITON
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="booksetId != null" >
+                BOOKSET_ID,
+            </if>
+            <if test="happenDate != null" >
+                HAPPEN_DATE,
+            </if>
+            <if test="bookDate != null" >
+                BOOK_DATE,
+            </if>
+            <if test="bokDetailId != null" >
+                BOK_DETAIL_ID,
+            </if>
+            <if test="bookSummaryOrder != null" >
+                BOOK_SUMMARY_ORDER,
+            </if>
+            <if test="booksetDate != null" >
+                BOOKSET_DATE,
+            </if>
+            <if test="posAmt != null" >
+                POS_AMT,
+            </if>
+            <if test="intRate != null" >
+                INT_RATE,
+            </if>
+            <if test="dailydscYield != null" >
+                DAILYDSC_YIELD,
+            </if>
+            <if test="tdyIntincexpAdd != null" >
+                TDY_INTINCEXP_ADD,
+            </if>
+            <if test="tdyIntincexp != null" >
+                TDY_INTINCEXP,
+            </if>
+            <if test="finprodType != null" >
+                FINPROD_TYPE,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="chlId != null" >
+                CHL_ID,
+            </if>
+            <if test="invAim != null" >
+                INV_AIM,
+            </if>
+            <if test="tdyPosition != null" >
+                TDY_POSITION,
+            </if>
+            <if test="tdyCostAmt != null" >
+                TDY_COST_AMT,
+            </if>
+            <if test="tdyFloatIngpl != null" >
+                TDY_FLOAT_INGPL,
+            </if>
+            <if test="endDays1 != null" >
+                END_DAYS_1,
+            </if>
+            <if test="endDays2 != null" >
+                END_DAYS_2,
+            </if>
+            <if test="endDaysCostAmt != null" >
+                END_DAYS_COST_AMT,
+            </if>
+            <if test="busiId != null" >
+                BUSI_ID,
+            </if>
+            <if test="valDate != null" >
+                VAL_DATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="tdyFloatIngplExp != null" >
+                TDY_FLOAT_INGPL_EXP,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="bCcy != null" >
+                B_CCY,
+            </if>
+            <if test="tdyIntincexpAddB != null" >
+                TDY_INTINCEXP_ADD_B,
+            </if>
+            <if test="tdyCostAmtB != null" >
+                TDY_COST_AMT_B,
+            </if>
+            <if test="tdyFloatIngplB != null" >
+                TDY_FLOAT_INGPL_B,
+            </if>
+            <if test="tdyFloatIngplExpB != null" >
+                TDY_FLOAT_INGPL_EXP_B,
+            </if>
+            <if test="tdyIntincexpB != null" >
+                TDY_INTINCEXP_B,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="booksetId != null" >
+                #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="happenDate != null" >
+                #{happenDate,jdbcType=DATE},
+            </if>
+            <if test="bookDate != null" >
+                #{bookDate,jdbcType=DATE},
+            </if>
+            <if test="bokDetailId != null" >
+                #{bokDetailId,jdbcType=VARCHAR},
+            </if>
+            <if test="bookSummaryOrder != null" >
+                #{bookSummaryOrder,jdbcType=DECIMAL},
+            </if>
+            <if test="booksetDate != null" >
+                #{booksetDate,jdbcType=DATE},
+            </if>
+            <if test="posAmt != null" >
+                #{posAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="intRate != null" >
+                #{intRate,jdbcType=DECIMAL},
+            </if>
+            <if test="dailydscYield != null" >
+                #{dailydscYield,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyIntincexpAdd != null" >
+                #{tdyIntincexpAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyIntincexp != null" >
+                #{tdyIntincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="finprodType != null" >
+                #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="chlId != null" >
+                #{chlId,jdbcType=VARCHAR},
+            </if>
+            <if test="invAim != null" >
+                #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="tdyPosition != null" >
+                #{tdyPosition,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyCostAmt != null" >
+                #{tdyCostAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyFloatIngpl != null" >
+                #{tdyFloatIngpl,jdbcType=DECIMAL},
+            </if>
+            <if test="endDays1 != null" >
+                #{endDays1,jdbcType=DECIMAL},
+            </if>
+            <if test="endDays2 != null" >
+                #{endDays2,jdbcType=DECIMAL},
+            </if>
+            <if test="endDaysCostAmt != null" >
+                #{endDaysCostAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="busiId != null" >
+                #{busiId,jdbcType=VARCHAR},
+            </if>
+            <if test="valDate != null" >
+                #{valDate,jdbcType=DATE},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="tdyFloatIngplExp != null" >
+                #{tdyFloatIngplExp,jdbcType=DECIMAL},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="bCcy != null" >
+                #{bCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="tdyIntincexpAddB != null" >
+                #{tdyIntincexpAddB,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyCostAmtB != null" >
+                #{tdyCostAmtB,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyFloatIngplB != null" >
+                #{tdyFloatIngplB,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyFloatIngplExpB != null" >
+                #{tdyFloatIngplExpB,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyIntincexpB != null" >
+                #{tdyIntincexpB,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.BokStatDetPosiiton" >
+        insert into BOK_STAT_DET_POSIITON(BOOKSET_ID, HAPPEN_DATE, BOOK_DATE, BOK_DETAIL_ID, 
+        BOOK_SUMMARY_ORDER, BOOKSET_DATE, POS_AMT, INT_RATE, DAILYDSC_YIELD, TDY_INTINCEXP_ADD, 
+        TDY_INTINCEXP, FINPROD_TYPE, VDATE, MDATE, CHL_ID, INV_AIM, TDY_POSITION, TDY_COST_AMT, 
+        TDY_FLOAT_INGPL, END_DAYS_1, END_DAYS_2, END_DAYS_COST_AMT, BUSI_ID, VAL_DATE, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, TDY_FLOAT_INGPL_EXP, CCY, B_CCY, 
+        TDY_INTINCEXP_ADD_B, TDY_COST_AMT_B, TDY_FLOAT_INGPL_B, TDY_FLOAT_INGPL_EXP_B, TDY_INTINCEXP_B
+        )
+        select BOOKSET_ID, HAPPEN_DATE, BOOK_DATE, BOK_DETAIL_ID, 
+            BOOK_SUMMARY_ORDER, BOOKSET_DATE, POS_AMT, INT_RATE, DAILYDSC_YIELD, TDY_INTINCEXP_ADD, 
+            TDY_INTINCEXP, FINPROD_TYPE, VDATE, MDATE, CHL_ID, INV_AIM, TDY_POSITION, TDY_COST_AMT, 
+            TDY_FLOAT_INGPL, END_DAYS_1, END_DAYS_2, END_DAYS_COST_AMT, BUSI_ID, VAL_DATE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, TDY_FLOAT_INGPL_EXP, CCY, B_CCY, 
+            TDY_INTINCEXP_ADD_B, TDY_COST_AMT_B, TDY_FLOAT_INGPL_B, TDY_FLOAT_INGPL_EXP_B, TDY_INTINCEXP_B
+            
+             from BOK_STAT_DET_POSIITON
+             where 1 = 1 and BOOKSET_ID = #{booksetId,jdbcType=VARCHAR} and HAPPEN_DATE = #{happenDate,jdbcType=DATE} and BOOK_DATE = #{bookDate,jdbcType=DATE} and BOK_DETAIL_ID = #{bokDetailId,jdbcType=VARCHAR} and BOOK_SUMMARY_ORDER = #{bookSummaryOrder,jdbcType=DECIMAL}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.BokStatDetPosiiton" >
+        update BOK_STAT_DET_POSIITON
+        <set >
+            <if test="booksetDate != null" >
+                BOOKSET_DATE = #{booksetDate,jdbcType=DATE},
+            </if>
+            <if test="posAmt != null" >
+                POS_AMT = #{posAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="intRate != null" >
+                INT_RATE = #{intRate,jdbcType=DECIMAL},
+            </if>
+            <if test="dailydscYield != null" >
+                DAILYDSC_YIELD = #{dailydscYield,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyIntincexpAdd != null" >
+                TDY_INTINCEXP_ADD = #{tdyIntincexpAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyIntincexp != null" >
+                TDY_INTINCEXP = #{tdyIntincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="finprodType != null" >
+                FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                MDATE = #{mdate,jdbcType=DATE},
+            </if>
+            <if test="chlId != null" >
+                CHL_ID = #{chlId,jdbcType=VARCHAR},
+            </if>
+            <if test="invAim != null" >
+                INV_AIM = #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="tdyPosition != null" >
+                TDY_POSITION = #{tdyPosition,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyCostAmt != null" >
+                TDY_COST_AMT = #{tdyCostAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyFloatIngpl != null" >
+                TDY_FLOAT_INGPL = #{tdyFloatIngpl,jdbcType=DECIMAL},
+            </if>
+            <if test="endDays1 != null" >
+                END_DAYS_1 = #{endDays1,jdbcType=DECIMAL},
+            </if>
+            <if test="endDays2 != null" >
+                END_DAYS_2 = #{endDays2,jdbcType=DECIMAL},
+            </if>
+            <if test="endDaysCostAmt != null" >
+                END_DAYS_COST_AMT = #{endDaysCostAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="busiId != null" >
+                BUSI_ID = #{busiId,jdbcType=VARCHAR},
+            </if>
+            <if test="valDate != null" >
+                VAL_DATE = #{valDate,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="tdyFloatIngplExp != null" >
+                TDY_FLOAT_INGPL_EXP = #{tdyFloatIngplExp,jdbcType=DECIMAL},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="bCcy != null" >
+                B_CCY = #{bCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="tdyIntincexpAddB != null" >
+                TDY_INTINCEXP_ADD_B = #{tdyIntincexpAddB,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyCostAmtB != null" >
+                TDY_COST_AMT_B = #{tdyCostAmtB,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyFloatIngplB != null" >
+                TDY_FLOAT_INGPL_B = #{tdyFloatIngplB,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyFloatIngplExpB != null" >
+                TDY_FLOAT_INGPL_EXP_B = #{tdyFloatIngplExpB,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyIntincexpB != null" >
+                TDY_INTINCEXP_B = #{tdyIntincexpB,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and HAPPEN_DATE = #{happenDate,jdbcType=DATE}
+          and BOOK_DATE = #{bookDate,jdbcType=DATE}
+          and BOK_DETAIL_ID = #{bokDetailId,jdbcType=VARCHAR}
+          and BOOK_SUMMARY_ORDER = #{bookSummaryOrder,jdbcType=DECIMAL}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokStatDetPosiiton" >
+        update BOK_STAT_DET_POSIITON
+        set BOOKSET_DATE = #{booksetDate,jdbcType=DATE},
+            POS_AMT = #{posAmt,jdbcType=DECIMAL},
+            INT_RATE = #{intRate,jdbcType=DECIMAL},
+            DAILYDSC_YIELD = #{dailydscYield,jdbcType=DECIMAL},
+            TDY_INTINCEXP_ADD = #{tdyIntincexpAdd,jdbcType=DECIMAL},
+            TDY_INTINCEXP = #{tdyIntincexp,jdbcType=DECIMAL},
+            FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            VDATE = #{vdate,jdbcType=DATE},
+            MDATE = #{mdate,jdbcType=DATE},
+            CHL_ID = #{chlId,jdbcType=VARCHAR},
+            INV_AIM = #{invAim,jdbcType=VARCHAR},
+            TDY_POSITION = #{tdyPosition,jdbcType=DECIMAL},
+            TDY_COST_AMT = #{tdyCostAmt,jdbcType=DECIMAL},
+            TDY_FLOAT_INGPL = #{tdyFloatIngpl,jdbcType=DECIMAL},
+            END_DAYS_1 = #{endDays1,jdbcType=DECIMAL},
+            END_DAYS_2 = #{endDays2,jdbcType=DECIMAL},
+            END_DAYS_COST_AMT = #{endDaysCostAmt,jdbcType=DECIMAL},
+            BUSI_ID = #{busiId,jdbcType=VARCHAR},
+            VAL_DATE = #{valDate,jdbcType=DATE},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            TDY_FLOAT_INGPL_EXP = #{tdyFloatIngplExp,jdbcType=DECIMAL},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            B_CCY = #{bCcy,jdbcType=VARCHAR},
+            TDY_INTINCEXP_ADD_B = #{tdyIntincexpAddB,jdbcType=DECIMAL},
+            TDY_COST_AMT_B = #{tdyCostAmtB,jdbcType=DECIMAL},
+            TDY_FLOAT_INGPL_B = #{tdyFloatIngplB,jdbcType=DECIMAL},
+            TDY_FLOAT_INGPL_EXP_B = #{tdyFloatIngplExpB,jdbcType=DECIMAL},
+            TDY_INTINCEXP_B = #{tdyIntincexpB,jdbcType=DECIMAL}
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and HAPPEN_DATE = #{happenDate,jdbcType=DATE}
+          and BOOK_DATE = #{bookDate,jdbcType=DATE}
+          and BOK_DETAIL_ID = #{bokDetailId,jdbcType=VARCHAR}
+          and BOOK_SUMMARY_ORDER = #{bookSummaryOrder,jdbcType=DECIMAL}
+    </update>
+</mapper>

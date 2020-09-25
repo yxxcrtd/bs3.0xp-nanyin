@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbEquHoldImpTmpMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbEquHoldImpTmp" >
+        <result column="INDENTIFY_MARK" property="indentifyMark" jdbcType="VARCHAR" />
+        <result column="ORG_INDENTIFY_MARK" property="orgIndentifyMark" jdbcType="VARCHAR" />
+        <result column="REGIST_BANK_CODE" property="registBankCode" jdbcType="VARCHAR" />
+        <result column="TYPE" property="type" jdbcType="CHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    </resultMap>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_EQU_HOLD_IMP_TMP
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbEquHoldImpTmp" >
+        insert into CHB_EQU_HOLD_IMP_TMP (INDENTIFY_MARK, ORG_INDENTIFY_MARK, 
+            REGIST_BANK_CODE, TYPE, CREATE_DEPT, 
+            CREATE_USER)
+        values (#{indentifyMark,jdbcType=VARCHAR}, #{orgIndentifyMark,jdbcType=VARCHAR}, 
+            #{registBankCode,jdbcType=VARCHAR}, #{type,jdbcType=CHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbEquHoldImpTmp" >
+        insert into CHB_EQU_HOLD_IMP_TMP
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="indentifyMark != null" >
+                INDENTIFY_MARK,
+            </if>
+            <if test="orgIndentifyMark != null" >
+                ORG_INDENTIFY_MARK,
+            </if>
+            <if test="registBankCode != null" >
+                REGIST_BANK_CODE,
+            </if>
+            <if test="type != null" >
+                TYPE,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="indentifyMark != null" >
+                #{indentifyMark,jdbcType=VARCHAR},
+            </if>
+            <if test="orgIndentifyMark != null" >
+                #{orgIndentifyMark,jdbcType=VARCHAR},
+            </if>
+            <if test="registBankCode != null" >
+                #{registBankCode,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null" >
+                #{type,jdbcType=CHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbEquHoldImpTmp" >
+        insert into CHB_EQU_HOLD_IMP_TMP(INDENTIFY_MARK, ORG_INDENTIFY_MARK, REGIST_BANK_CODE, 
+        TYPE, CREATE_DEPT, CREATE_USER)
+        select INDENTIFY_MARK, ORG_INDENTIFY_MARK, REGIST_BANK_CODE, 
+            TYPE, CREATE_DEPT, CREATE_USER
+             from CHB_EQU_HOLD_IMP_TMP
+             where STATUS = 'E'
+    </insert>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbEquHoldImpTmp" >
+        update CHB_EQU_HOLD_IMP_TMP
+        <set >
+            <if test="indentifyMark != null" >
+                INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR},
+            </if>
+            <if test="orgIndentifyMark != null" >
+                ORG_INDENTIFY_MARK = #{orgIndentifyMark,jdbcType=VARCHAR},
+            </if>
+            <if test="registBankCode != null" >
+                REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null" >
+                TYPE = #{type,jdbcType=CHAR},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbEquHoldImpTmp" >
+        update CHB_EQU_HOLD_IMP_TMP
+        set 
+        INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR},
+        ORG_INDENTIFY_MARK = #{orgIndentifyMark,jdbcType=VARCHAR},
+        REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR},
+        TYPE = #{type,jdbcType=CHAR},
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+</mapper>

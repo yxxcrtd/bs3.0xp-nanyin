@@ -1,0 +1,742 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InfChinamutualfunddescriptionMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InfChinamutualfunddescription" >
+        <id column="OBJECT_ID" property="objectId" jdbcType="VARCHAR" />
+        <result column="F_INFO_WINDCODE" property="fInfoWindcode" jdbcType="VARCHAR" />
+        <result column="F_INFO_FRONT_CODE" property="fInfoFrontCode" jdbcType="VARCHAR" />
+        <result column="F_INFO_BACKEND_CODE" property="fInfoBackendCode" jdbcType="VARCHAR" />
+        <result column="F_INFO_FULLNAME" property="fInfoFullname" jdbcType="VARCHAR" />
+        <result column="F_INFO_NAME" property="fInfoName" jdbcType="VARCHAR" />
+        <result column="F_INFO_CORP_FUNDMANAGEMENTCOMP" property="fInfoCorpFundmanagementcomp" jdbcType="VARCHAR" />
+        <result column="F_INFO_CUSTODIANBANK" property="fInfoCustodianbank" jdbcType="VARCHAR" />
+        <result column="F_INFO_FIRSTINVESTTYPE" property="fInfoFirstinvesttype" jdbcType="VARCHAR" />
+        <result column="F_INFO_SETUPDATE" property="fInfoSetupdate" jdbcType="VARCHAR" />
+        <result column="F_INFO_MATURITYDATE" property="fInfoMaturitydate" jdbcType="VARCHAR" />
+        <result column="F_ISSUE_TOTALUNIT" property="fIssueTotalunit" jdbcType="DECIMAL" />
+        <result column="F_INFO_MANAGEMENTFEERATIO" property="fInfoManagementfeeratio" jdbcType="DECIMAL" />
+        <result column="F_INFO_CUSTODIANFEERATIO" property="fInfoCustodianfeeratio" jdbcType="DECIMAL" />
+        <result column="CRNY_CODE" property="crnyCode" jdbcType="VARCHAR" />
+        <result column="F_INFO_PTMYEAR" property="fInfoPtmyear" jdbcType="DECIMAL" />
+        <result column="F_ISSUE_OEF_STARTDATEINST" property="fIssueOefStartdateinst" jdbcType="VARCHAR" />
+        <result column="F_ISSUE_OEF_DNDDATEINST" property="fIssueOefDnddateinst" jdbcType="VARCHAR" />
+        <result column="F_INFO_PARVALUE" property="fInfoParvalue" jdbcType="DECIMAL" />
+        <result column="F_INFO_TRUSTTYPE" property="fInfoTrusttype" jdbcType="VARCHAR" />
+        <result column="F_INFO_TRUSTEE" property="fInfoTrustee" jdbcType="VARCHAR" />
+        <result column="F_PCHREDM_PCHSTARTDATE" property="fPchredmPchstartdate" jdbcType="VARCHAR" />
+        <result column="F_INFO_REDMSTARTDATE" property="fInfoRedmstartdate" jdbcType="VARCHAR" />
+        <result column="F_INFO_MINBUYAMOUNT" property="fInfoMinbuyamount" jdbcType="DECIMAL" />
+        <result column="F_INFO_EXPECTEDRATEOFRETURN" property="fInfoExpectedrateofreturn" jdbcType="DECIMAL" />
+        <result column="F_INFO_ISSUINGPLACE" property="fInfoIssuingplace" jdbcType="VARCHAR" />
+        <result column="F_INFO_BENCHMARK" property="fInfoBenchmark" jdbcType="VARCHAR" />
+        <result column="F_INFO_STATUS" property="fInfoStatus" jdbcType="DECIMAL" />
+        <result column="F_INFO_RESTRICTEDORNOT" property="fInfoRestrictedornot" jdbcType="VARCHAR" />
+        <result column="F_INFO_STRUCTUREDORNOT" property="fInfoStructuredornot" jdbcType="DECIMAL" />
+        <result column="F_INFO_EXCHMARKET" property="fInfoExchmarket" jdbcType="VARCHAR" />
+        <result column="F_INFO_FIRSTINVESTSTYLE" property="fInfoFirstinveststyle" jdbcType="VARCHAR" />
+        <result column="F_INFO_ISSUEDATE" property="fInfoIssuedate" jdbcType="VARCHAR" />
+        <result column="F_INFO_TYPE" property="fInfoType" jdbcType="VARCHAR" />
+        <result column="F_INFO_ISINITIAL" property="fInfoIsinitial" jdbcType="DECIMAL" />
+        <result column="F_INFO_PINYIN" property="fInfoPinyin" jdbcType="VARCHAR" />
+        <result column="F_INFO_INVESTSCOPE" property="fInfoInvestscope" jdbcType="VARCHAR" />
+        <result column="F_INFO_INVESTOBJECT" property="fInfoInvestobject" jdbcType="VARCHAR" />
+        <result column="F_INFO_INVESTCONCEPTION" property="fInfoInvestconception" jdbcType="VARCHAR" />
+        <result column="F_INFO_DECISION_BASIS" property="fInfoDecisionBasis" jdbcType="VARCHAR" />
+        <result column="IS_INDEXFUND" property="isIndexfund" jdbcType="DECIMAL" />
+        <result column="F_INFO_DELISTDATE" property="fInfoDelistdate" jdbcType="VARCHAR" />
+        <result column="F_INFO_CORP_FUNDMANAGEMENTID" property="fInfoCorpFundmanagementid" jdbcType="VARCHAR" />
+        <result column="F_INFO_CUSTODIANBANKID" property="fInfoCustodianbankid" jdbcType="VARCHAR" />
+        <result column="MAX_NUM_HOLDER" property="maxNumHolder" jdbcType="DECIMAL" />
+        <result column="MAX_NUM_COLTARGET" property="maxNumColtarget" jdbcType="DECIMAL" />
+        <result column="OPDATE" property="opdate" jdbcType="DATE" />
+        <result column="OPMODE" property="opmode" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.joyintech.tams.common.base.entity.InfChinamutualfunddescriptionWithBLOBs" extends="BaseResultMap" >
+        <result column="INVESTSTRATEGY" property="investstrategy" jdbcType="CLOB" />
+        <result column="RISK_RETURN" property="riskReturn" jdbcType="CLOB" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        OBJECT_ID OBJECT_ID, F_INFO_WINDCODE F_INFO_WINDCODE, F_INFO_FRONT_CODE F_INFO_FRONT_CODE, 
+        F_INFO_BACKEND_CODE F_INFO_BACKEND_CODE, F_INFO_FULLNAME F_INFO_FULLNAME, F_INFO_NAME F_INFO_NAME, 
+        F_INFO_CORP_FUNDMANAGEMENTCOMP F_INFO_CORP_FUNDMANAGEMENTCOMP, F_INFO_CUSTODIANBANK F_INFO_CUSTODIANBANK, 
+        F_INFO_FIRSTINVESTTYPE F_INFO_FIRSTINVESTTYPE, F_INFO_SETUPDATE F_INFO_SETUPDATE, 
+        F_INFO_MATURITYDATE F_INFO_MATURITYDATE, F_ISSUE_TOTALUNIT F_ISSUE_TOTALUNIT, F_INFO_MANAGEMENTFEERATIO F_INFO_MANAGEMENTFEERATIO, 
+        F_INFO_CUSTODIANFEERATIO F_INFO_CUSTODIANFEERATIO, CRNY_CODE CRNY_CODE, F_INFO_PTMYEAR F_INFO_PTMYEAR, 
+        F_ISSUE_OEF_STARTDATEINST F_ISSUE_OEF_STARTDATEINST, F_ISSUE_OEF_DNDDATEINST F_ISSUE_OEF_DNDDATEINST, 
+        F_INFO_PARVALUE F_INFO_PARVALUE, F_INFO_TRUSTTYPE F_INFO_TRUSTTYPE, F_INFO_TRUSTEE F_INFO_TRUSTEE, 
+        F_PCHREDM_PCHSTARTDATE F_PCHREDM_PCHSTARTDATE, F_INFO_REDMSTARTDATE F_INFO_REDMSTARTDATE, 
+        F_INFO_MINBUYAMOUNT F_INFO_MINBUYAMOUNT, F_INFO_EXPECTEDRATEOFRETURN F_INFO_EXPECTEDRATEOFRETURN, 
+        F_INFO_ISSUINGPLACE F_INFO_ISSUINGPLACE, F_INFO_BENCHMARK F_INFO_BENCHMARK, F_INFO_STATUS F_INFO_STATUS, 
+        F_INFO_RESTRICTEDORNOT F_INFO_RESTRICTEDORNOT, F_INFO_STRUCTUREDORNOT F_INFO_STRUCTUREDORNOT, 
+        F_INFO_EXCHMARKET F_INFO_EXCHMARKET, F_INFO_FIRSTINVESTSTYLE F_INFO_FIRSTINVESTSTYLE, 
+        F_INFO_ISSUEDATE F_INFO_ISSUEDATE, F_INFO_TYPE F_INFO_TYPE, F_INFO_ISINITIAL F_INFO_ISINITIAL, 
+        F_INFO_PINYIN F_INFO_PINYIN, F_INFO_INVESTSCOPE F_INFO_INVESTSCOPE, F_INFO_INVESTOBJECT F_INFO_INVESTOBJECT, 
+        F_INFO_INVESTCONCEPTION F_INFO_INVESTCONCEPTION, F_INFO_DECISION_BASIS F_INFO_DECISION_BASIS, 
+        IS_INDEXFUND IS_INDEXFUND, F_INFO_DELISTDATE F_INFO_DELISTDATE, F_INFO_CORP_FUNDMANAGEMENTID F_INFO_CORP_FUNDMANAGEMENTID, 
+        F_INFO_CUSTODIANBANKID F_INFO_CUSTODIANBANKID, MAX_NUM_HOLDER MAX_NUM_HOLDER, MAX_NUM_COLTARGET MAX_NUM_COLTARGET, 
+        OPDATE OPDATE, OPMODE OPMODE
+    </sql>
+    <sql id="Blob_Column_List" >
+        INVESTSTRATEGY, RISK_RETURN
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InfChinamutualfunddescriptionMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.InfChinamutualfunddescriptionMapper.Blob_Column_List" />
+        from INF_CHINAMUTUALFUNDDESCRIPTION
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InfChinamutualfunddescriptionMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.InfChinamutualfunddescriptionMapper.Blob_Column_List" />
+        from INF_CHINAMUTUALFUNDDESCRIPTION
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InfChinamutualfunddescriptionMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.InfChinamutualfunddescriptionMapper.Blob_Column_List" />
+        from INF_CHINAMUTUALFUNDDESCRIPTION
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from INF_CHINAMUTUALFUNDDESCRIPTION
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InfChinamutualfunddescriptionWithBLOBs" >
+        insert into INF_CHINAMUTUALFUNDDESCRIPTION (OBJECT_ID, F_INFO_WINDCODE, F_INFO_FRONT_CODE, 
+            F_INFO_BACKEND_CODE, F_INFO_FULLNAME, F_INFO_NAME, 
+            F_INFO_CORP_FUNDMANAGEMENTCOMP, F_INFO_CUSTODIANBANK, 
+            F_INFO_FIRSTINVESTTYPE, F_INFO_SETUPDATE, 
+            F_INFO_MATURITYDATE, F_ISSUE_TOTALUNIT, F_INFO_MANAGEMENTFEERATIO, 
+            F_INFO_CUSTODIANFEERATIO, CRNY_CODE, F_INFO_PTMYEAR, 
+            F_ISSUE_OEF_STARTDATEINST, F_ISSUE_OEF_DNDDATEINST, 
+            F_INFO_PARVALUE, F_INFO_TRUSTTYPE, F_INFO_TRUSTEE, 
+            F_PCHREDM_PCHSTARTDATE, F_INFO_REDMSTARTDATE, 
+            F_INFO_MINBUYAMOUNT, F_INFO_EXPECTEDRATEOFRETURN, 
+            F_INFO_ISSUINGPLACE, F_INFO_BENCHMARK, F_INFO_STATUS, 
+            F_INFO_RESTRICTEDORNOT, F_INFO_STRUCTUREDORNOT, 
+            F_INFO_EXCHMARKET, F_INFO_FIRSTINVESTSTYLE, 
+            F_INFO_ISSUEDATE, F_INFO_TYPE, F_INFO_ISINITIAL, 
+            F_INFO_PINYIN, F_INFO_INVESTSCOPE, F_INFO_INVESTOBJECT, 
+            F_INFO_INVESTCONCEPTION, F_INFO_DECISION_BASIS, 
+            IS_INDEXFUND, F_INFO_DELISTDATE, F_INFO_CORP_FUNDMANAGEMENTID, 
+            F_INFO_CUSTODIANBANKID, MAX_NUM_HOLDER, MAX_NUM_COLTARGET, 
+            OPDATE, OPMODE, INVESTSTRATEGY, 
+            RISK_RETURN)
+        values (#{objectId,jdbcType=VARCHAR}, #{fInfoWindcode,jdbcType=VARCHAR}, #{fInfoFrontCode,jdbcType=VARCHAR}, 
+            #{fInfoBackendCode,jdbcType=VARCHAR}, #{fInfoFullname,jdbcType=VARCHAR}, #{fInfoName,jdbcType=VARCHAR}, 
+            #{fInfoCorpFundmanagementcomp,jdbcType=VARCHAR}, #{fInfoCustodianbank,jdbcType=VARCHAR}, 
+            #{fInfoFirstinvesttype,jdbcType=VARCHAR}, #{fInfoSetupdate,jdbcType=VARCHAR}, 
+            #{fInfoMaturitydate,jdbcType=VARCHAR}, #{fIssueTotalunit,jdbcType=DECIMAL}, #{fInfoManagementfeeratio,jdbcType=DECIMAL}, 
+            #{fInfoCustodianfeeratio,jdbcType=DECIMAL}, #{crnyCode,jdbcType=VARCHAR}, #{fInfoPtmyear,jdbcType=DECIMAL}, 
+            #{fIssueOefStartdateinst,jdbcType=VARCHAR}, #{fIssueOefDnddateinst,jdbcType=VARCHAR}, 
+            #{fInfoParvalue,jdbcType=DECIMAL}, #{fInfoTrusttype,jdbcType=VARCHAR}, #{fInfoTrustee,jdbcType=VARCHAR}, 
+            #{fPchredmPchstartdate,jdbcType=VARCHAR}, #{fInfoRedmstartdate,jdbcType=VARCHAR}, 
+            #{fInfoMinbuyamount,jdbcType=DECIMAL}, #{fInfoExpectedrateofreturn,jdbcType=DECIMAL}, 
+            #{fInfoIssuingplace,jdbcType=VARCHAR}, #{fInfoBenchmark,jdbcType=VARCHAR}, #{fInfoStatus,jdbcType=DECIMAL}, 
+            #{fInfoRestrictedornot,jdbcType=VARCHAR}, #{fInfoStructuredornot,jdbcType=DECIMAL}, 
+            #{fInfoExchmarket,jdbcType=VARCHAR}, #{fInfoFirstinveststyle,jdbcType=VARCHAR}, 
+            #{fInfoIssuedate,jdbcType=VARCHAR}, #{fInfoType,jdbcType=VARCHAR}, #{fInfoIsinitial,jdbcType=DECIMAL}, 
+            #{fInfoPinyin,jdbcType=VARCHAR}, #{fInfoInvestscope,jdbcType=VARCHAR}, #{fInfoInvestobject,jdbcType=VARCHAR}, 
+            #{fInfoInvestconception,jdbcType=VARCHAR}, #{fInfoDecisionBasis,jdbcType=VARCHAR}, 
+            #{isIndexfund,jdbcType=DECIMAL}, #{fInfoDelistdate,jdbcType=VARCHAR}, #{fInfoCorpFundmanagementid,jdbcType=VARCHAR}, 
+            #{fInfoCustodianbankid,jdbcType=VARCHAR}, #{maxNumHolder,jdbcType=DECIMAL}, #{maxNumColtarget,jdbcType=DECIMAL}, 
+            #{opdate,jdbcType=DATE}, #{opmode,jdbcType=VARCHAR}, #{investstrategy,jdbcType=CLOB}, 
+            #{riskReturn,jdbcType=CLOB})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InfChinamutualfunddescriptionWithBLOBs" >
+        insert into INF_CHINAMUTUALFUNDDESCRIPTION
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                OBJECT_ID,
+            </if>
+            <if test="fInfoWindcode != null" >
+                F_INFO_WINDCODE,
+            </if>
+            <if test="fInfoFrontCode != null" >
+                F_INFO_FRONT_CODE,
+            </if>
+            <if test="fInfoBackendCode != null" >
+                F_INFO_BACKEND_CODE,
+            </if>
+            <if test="fInfoFullname != null" >
+                F_INFO_FULLNAME,
+            </if>
+            <if test="fInfoName != null" >
+                F_INFO_NAME,
+            </if>
+            <if test="fInfoCorpFundmanagementcomp != null" >
+                F_INFO_CORP_FUNDMANAGEMENTCOMP,
+            </if>
+            <if test="fInfoCustodianbank != null" >
+                F_INFO_CUSTODIANBANK,
+            </if>
+            <if test="fInfoFirstinvesttype != null" >
+                F_INFO_FIRSTINVESTTYPE,
+            </if>
+            <if test="fInfoSetupdate != null" >
+                F_INFO_SETUPDATE,
+            </if>
+            <if test="fInfoMaturitydate != null" >
+                F_INFO_MATURITYDATE,
+            </if>
+            <if test="fIssueTotalunit != null" >
+                F_ISSUE_TOTALUNIT,
+            </if>
+            <if test="fInfoManagementfeeratio != null" >
+                F_INFO_MANAGEMENTFEERATIO,
+            </if>
+            <if test="fInfoCustodianfeeratio != null" >
+                F_INFO_CUSTODIANFEERATIO,
+            </if>
+            <if test="crnyCode != null" >
+                CRNY_CODE,
+            </if>
+            <if test="fInfoPtmyear != null" >
+                F_INFO_PTMYEAR,
+            </if>
+            <if test="fIssueOefStartdateinst != null" >
+                F_ISSUE_OEF_STARTDATEINST,
+            </if>
+            <if test="fIssueOefDnddateinst != null" >
+                F_ISSUE_OEF_DNDDATEINST,
+            </if>
+            <if test="fInfoParvalue != null" >
+                F_INFO_PARVALUE,
+            </if>
+            <if test="fInfoTrusttype != null" >
+                F_INFO_TRUSTTYPE,
+            </if>
+            <if test="fInfoTrustee != null" >
+                F_INFO_TRUSTEE,
+            </if>
+            <if test="fPchredmPchstartdate != null" >
+                F_PCHREDM_PCHSTARTDATE,
+            </if>
+            <if test="fInfoRedmstartdate != null" >
+                F_INFO_REDMSTARTDATE,
+            </if>
+            <if test="fInfoMinbuyamount != null" >
+                F_INFO_MINBUYAMOUNT,
+            </if>
+            <if test="fInfoExpectedrateofreturn != null" >
+                F_INFO_EXPECTEDRATEOFRETURN,
+            </if>
+            <if test="fInfoIssuingplace != null" >
+                F_INFO_ISSUINGPLACE,
+            </if>
+            <if test="fInfoBenchmark != null" >
+                F_INFO_BENCHMARK,
+            </if>
+            <if test="fInfoStatus != null" >
+                F_INFO_STATUS,
+            </if>
+            <if test="fInfoRestrictedornot != null" >
+                F_INFO_RESTRICTEDORNOT,
+            </if>
+            <if test="fInfoStructuredornot != null" >
+                F_INFO_STRUCTUREDORNOT,
+            </if>
+            <if test="fInfoExchmarket != null" >
+                F_INFO_EXCHMARKET,
+            </if>
+            <if test="fInfoFirstinveststyle != null" >
+                F_INFO_FIRSTINVESTSTYLE,
+            </if>
+            <if test="fInfoIssuedate != null" >
+                F_INFO_ISSUEDATE,
+            </if>
+            <if test="fInfoType != null" >
+                F_INFO_TYPE,
+            </if>
+            <if test="fInfoIsinitial != null" >
+                F_INFO_ISINITIAL,
+            </if>
+            <if test="fInfoPinyin != null" >
+                F_INFO_PINYIN,
+            </if>
+            <if test="fInfoInvestscope != null" >
+                F_INFO_INVESTSCOPE,
+            </if>
+            <if test="fInfoInvestobject != null" >
+                F_INFO_INVESTOBJECT,
+            </if>
+            <if test="fInfoInvestconception != null" >
+                F_INFO_INVESTCONCEPTION,
+            </if>
+            <if test="fInfoDecisionBasis != null" >
+                F_INFO_DECISION_BASIS,
+            </if>
+            <if test="isIndexfund != null" >
+                IS_INDEXFUND,
+            </if>
+            <if test="fInfoDelistdate != null" >
+                F_INFO_DELISTDATE,
+            </if>
+            <if test="fInfoCorpFundmanagementid != null" >
+                F_INFO_CORP_FUNDMANAGEMENTID,
+            </if>
+            <if test="fInfoCustodianbankid != null" >
+                F_INFO_CUSTODIANBANKID,
+            </if>
+            <if test="maxNumHolder != null" >
+                MAX_NUM_HOLDER,
+            </if>
+            <if test="maxNumColtarget != null" >
+                MAX_NUM_COLTARGET,
+            </if>
+            <if test="opdate != null" >
+                OPDATE,
+            </if>
+            <if test="opmode != null" >
+                OPMODE,
+            </if>
+            <if test="investstrategy != null" >
+                INVESTSTRATEGY,
+            </if>
+            <if test="riskReturn != null" >
+                RISK_RETURN,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                #{objectId,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoWindcode != null" >
+                #{fInfoWindcode,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoFrontCode != null" >
+                #{fInfoFrontCode,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoBackendCode != null" >
+                #{fInfoBackendCode,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoFullname != null" >
+                #{fInfoFullname,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoName != null" >
+                #{fInfoName,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoCorpFundmanagementcomp != null" >
+                #{fInfoCorpFundmanagementcomp,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoCustodianbank != null" >
+                #{fInfoCustodianbank,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoFirstinvesttype != null" >
+                #{fInfoFirstinvesttype,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoSetupdate != null" >
+                #{fInfoSetupdate,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoMaturitydate != null" >
+                #{fInfoMaturitydate,jdbcType=VARCHAR},
+            </if>
+            <if test="fIssueTotalunit != null" >
+                #{fIssueTotalunit,jdbcType=DECIMAL},
+            </if>
+            <if test="fInfoManagementfeeratio != null" >
+                #{fInfoManagementfeeratio,jdbcType=DECIMAL},
+            </if>
+            <if test="fInfoCustodianfeeratio != null" >
+                #{fInfoCustodianfeeratio,jdbcType=DECIMAL},
+            </if>
+            <if test="crnyCode != null" >
+                #{crnyCode,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoPtmyear != null" >
+                #{fInfoPtmyear,jdbcType=DECIMAL},
+            </if>
+            <if test="fIssueOefStartdateinst != null" >
+                #{fIssueOefStartdateinst,jdbcType=VARCHAR},
+            </if>
+            <if test="fIssueOefDnddateinst != null" >
+                #{fIssueOefDnddateinst,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoParvalue != null" >
+                #{fInfoParvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="fInfoTrusttype != null" >
+                #{fInfoTrusttype,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoTrustee != null" >
+                #{fInfoTrustee,jdbcType=VARCHAR},
+            </if>
+            <if test="fPchredmPchstartdate != null" >
+                #{fPchredmPchstartdate,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoRedmstartdate != null" >
+                #{fInfoRedmstartdate,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoMinbuyamount != null" >
+                #{fInfoMinbuyamount,jdbcType=DECIMAL},
+            </if>
+            <if test="fInfoExpectedrateofreturn != null" >
+                #{fInfoExpectedrateofreturn,jdbcType=DECIMAL},
+            </if>
+            <if test="fInfoIssuingplace != null" >
+                #{fInfoIssuingplace,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoBenchmark != null" >
+                #{fInfoBenchmark,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoStatus != null" >
+                #{fInfoStatus,jdbcType=DECIMAL},
+            </if>
+            <if test="fInfoRestrictedornot != null" >
+                #{fInfoRestrictedornot,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoStructuredornot != null" >
+                #{fInfoStructuredornot,jdbcType=DECIMAL},
+            </if>
+            <if test="fInfoExchmarket != null" >
+                #{fInfoExchmarket,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoFirstinveststyle != null" >
+                #{fInfoFirstinveststyle,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoIssuedate != null" >
+                #{fInfoIssuedate,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoType != null" >
+                #{fInfoType,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoIsinitial != null" >
+                #{fInfoIsinitial,jdbcType=DECIMAL},
+            </if>
+            <if test="fInfoPinyin != null" >
+                #{fInfoPinyin,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoInvestscope != null" >
+                #{fInfoInvestscope,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoInvestobject != null" >
+                #{fInfoInvestobject,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoInvestconception != null" >
+                #{fInfoInvestconception,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoDecisionBasis != null" >
+                #{fInfoDecisionBasis,jdbcType=VARCHAR},
+            </if>
+            <if test="isIndexfund != null" >
+                #{isIndexfund,jdbcType=DECIMAL},
+            </if>
+            <if test="fInfoDelistdate != null" >
+                #{fInfoDelistdate,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoCorpFundmanagementid != null" >
+                #{fInfoCorpFundmanagementid,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoCustodianbankid != null" >
+                #{fInfoCustodianbankid,jdbcType=VARCHAR},
+            </if>
+            <if test="maxNumHolder != null" >
+                #{maxNumHolder,jdbcType=DECIMAL},
+            </if>
+            <if test="maxNumColtarget != null" >
+                #{maxNumColtarget,jdbcType=DECIMAL},
+            </if>
+            <if test="opdate != null" >
+                #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                #{opmode,jdbcType=VARCHAR},
+            </if>
+            <if test="investstrategy != null" >
+                #{investstrategy,jdbcType=CLOB},
+            </if>
+            <if test="riskReturn != null" >
+                #{riskReturn,jdbcType=CLOB},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InfChinamutualfunddescriptionWithBLOBs" >
+        insert into INF_CHINAMUTUALFUNDDESCRIPTION(OBJECT_ID, F_INFO_WINDCODE, F_INFO_FRONT_CODE, 
+        F_INFO_BACKEND_CODE, F_INFO_FULLNAME, F_INFO_NAME, F_INFO_CORP_FUNDMANAGEMENTCOMP, 
+        F_INFO_CUSTODIANBANK, F_INFO_FIRSTINVESTTYPE, F_INFO_SETUPDATE, F_INFO_MATURITYDATE, 
+        F_ISSUE_TOTALUNIT, F_INFO_MANAGEMENTFEERATIO, F_INFO_CUSTODIANFEERATIO, CRNY_CODE, 
+        F_INFO_PTMYEAR, F_ISSUE_OEF_STARTDATEINST, F_ISSUE_OEF_DNDDATEINST, F_INFO_PARVALUE, 
+        F_INFO_TRUSTTYPE, F_INFO_TRUSTEE, F_PCHREDM_PCHSTARTDATE, F_INFO_REDMSTARTDATE, F_INFO_MINBUYAMOUNT, 
+        F_INFO_EXPECTEDRATEOFRETURN, F_INFO_ISSUINGPLACE, F_INFO_BENCHMARK, F_INFO_STATUS, 
+        F_INFO_RESTRICTEDORNOT, F_INFO_STRUCTUREDORNOT, F_INFO_EXCHMARKET, F_INFO_FIRSTINVESTSTYLE, 
+        F_INFO_ISSUEDATE, F_INFO_TYPE, F_INFO_ISINITIAL, F_INFO_PINYIN, F_INFO_INVESTSCOPE, 
+        F_INFO_INVESTOBJECT, F_INFO_INVESTCONCEPTION, F_INFO_DECISION_BASIS, IS_INDEXFUND, 
+        F_INFO_DELISTDATE, F_INFO_CORP_FUNDMANAGEMENTID, F_INFO_CUSTODIANBANKID, MAX_NUM_HOLDER, 
+        MAX_NUM_COLTARGET, OPDATE, OPMODE, INVESTSTRATEGY, RISK_RETURN)
+        select OBJECT_ID, F_INFO_WINDCODE, F_INFO_FRONT_CODE, 
+            F_INFO_BACKEND_CODE, F_INFO_FULLNAME, F_INFO_NAME, F_INFO_CORP_FUNDMANAGEMENTCOMP, 
+            F_INFO_CUSTODIANBANK, F_INFO_FIRSTINVESTTYPE, F_INFO_SETUPDATE, F_INFO_MATURITYDATE, 
+            F_ISSUE_TOTALUNIT, F_INFO_MANAGEMENTFEERATIO, F_INFO_CUSTODIANFEERATIO, CRNY_CODE, 
+            F_INFO_PTMYEAR, F_ISSUE_OEF_STARTDATEINST, F_ISSUE_OEF_DNDDATEINST, F_INFO_PARVALUE, 
+            F_INFO_TRUSTTYPE, F_INFO_TRUSTEE, F_PCHREDM_PCHSTARTDATE, F_INFO_REDMSTARTDATE, F_INFO_MINBUYAMOUNT, 
+            F_INFO_EXPECTEDRATEOFRETURN, F_INFO_ISSUINGPLACE, F_INFO_BENCHMARK, F_INFO_STATUS, 
+            F_INFO_RESTRICTEDORNOT, F_INFO_STRUCTUREDORNOT, F_INFO_EXCHMARKET, F_INFO_FIRSTINVESTSTYLE, 
+            F_INFO_ISSUEDATE, F_INFO_TYPE, F_INFO_ISINITIAL, F_INFO_PINYIN, F_INFO_INVESTSCOPE, 
+            F_INFO_INVESTOBJECT, F_INFO_INVESTCONCEPTION, F_INFO_DECISION_BASIS, IS_INDEXFUND, 
+            F_INFO_DELISTDATE, F_INFO_CORP_FUNDMANAGEMENTID, F_INFO_CUSTODIANBANKID, MAX_NUM_HOLDER, 
+            MAX_NUM_COLTARGET, OPDATE, OPMODE, INVESTSTRATEGY, RISK_RETURN
+             from INF_CHINAMUTUALFUNDDESCRIPTION
+             where 1 = 1 and OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InfChinamutualfunddescriptionWithBLOBs" >
+        update INF_CHINAMUTUALFUNDDESCRIPTION
+        <set >
+            <if test="fInfoWindcode != null" >
+                F_INFO_WINDCODE = #{fInfoWindcode,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoFrontCode != null" >
+                F_INFO_FRONT_CODE = #{fInfoFrontCode,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoBackendCode != null" >
+                F_INFO_BACKEND_CODE = #{fInfoBackendCode,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoFullname != null" >
+                F_INFO_FULLNAME = #{fInfoFullname,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoName != null" >
+                F_INFO_NAME = #{fInfoName,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoCorpFundmanagementcomp != null" >
+                F_INFO_CORP_FUNDMANAGEMENTCOMP = #{fInfoCorpFundmanagementcomp,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoCustodianbank != null" >
+                F_INFO_CUSTODIANBANK = #{fInfoCustodianbank,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoFirstinvesttype != null" >
+                F_INFO_FIRSTINVESTTYPE = #{fInfoFirstinvesttype,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoSetupdate != null" >
+                F_INFO_SETUPDATE = #{fInfoSetupdate,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoMaturitydate != null" >
+                F_INFO_MATURITYDATE = #{fInfoMaturitydate,jdbcType=VARCHAR},
+            </if>
+            <if test="fIssueTotalunit != null" >
+                F_ISSUE_TOTALUNIT = #{fIssueTotalunit,jdbcType=DECIMAL},
+            </if>
+            <if test="fInfoManagementfeeratio != null" >
+                F_INFO_MANAGEMENTFEERATIO = #{fInfoManagementfeeratio,jdbcType=DECIMAL},
+            </if>
+            <if test="fInfoCustodianfeeratio != null" >
+                F_INFO_CUSTODIANFEERATIO = #{fInfoCustodianfeeratio,jdbcType=DECIMAL},
+            </if>
+            <if test="crnyCode != null" >
+                CRNY_CODE = #{crnyCode,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoPtmyear != null" >
+                F_INFO_PTMYEAR = #{fInfoPtmyear,jdbcType=DECIMAL},
+            </if>
+            <if test="fIssueOefStartdateinst != null" >
+                F_ISSUE_OEF_STARTDATEINST = #{fIssueOefStartdateinst,jdbcType=VARCHAR},
+            </if>
+            <if test="fIssueOefDnddateinst != null" >
+                F_ISSUE_OEF_DNDDATEINST = #{fIssueOefDnddateinst,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoParvalue != null" >
+                F_INFO_PARVALUE = #{fInfoParvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="fInfoTrusttype != null" >
+                F_INFO_TRUSTTYPE = #{fInfoTrusttype,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoTrustee != null" >
+                F_INFO_TRUSTEE = #{fInfoTrustee,jdbcType=VARCHAR},
+            </if>
+            <if test="fPchredmPchstartdate != null" >
+                F_PCHREDM_PCHSTARTDATE = #{fPchredmPchstartdate,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoRedmstartdate != null" >
+                F_INFO_REDMSTARTDATE = #{fInfoRedmstartdate,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoMinbuyamount != null" >
+                F_INFO_MINBUYAMOUNT = #{fInfoMinbuyamount,jdbcType=DECIMAL},
+            </if>
+            <if test="fInfoExpectedrateofreturn != null" >
+                F_INFO_EXPECTEDRATEOFRETURN = #{fInfoExpectedrateofreturn,jdbcType=DECIMAL},
+            </if>
+            <if test="fInfoIssuingplace != null" >
+                F_INFO_ISSUINGPLACE = #{fInfoIssuingplace,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoBenchmark != null" >
+                F_INFO_BENCHMARK = #{fInfoBenchmark,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoStatus != null" >
+                F_INFO_STATUS = #{fInfoStatus,jdbcType=DECIMAL},
+            </if>
+            <if test="fInfoRestrictedornot != null" >
+                F_INFO_RESTRICTEDORNOT = #{fInfoRestrictedornot,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoStructuredornot != null" >
+                F_INFO_STRUCTUREDORNOT = #{fInfoStructuredornot,jdbcType=DECIMAL},
+            </if>
+            <if test="fInfoExchmarket != null" >
+                F_INFO_EXCHMARKET = #{fInfoExchmarket,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoFirstinveststyle != null" >
+                F_INFO_FIRSTINVESTSTYLE = #{fInfoFirstinveststyle,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoIssuedate != null" >
+                F_INFO_ISSUEDATE = #{fInfoIssuedate,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoType != null" >
+                F_INFO_TYPE = #{fInfoType,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoIsinitial != null" >
+                F_INFO_ISINITIAL = #{fInfoIsinitial,jdbcType=DECIMAL},
+            </if>
+            <if test="fInfoPinyin != null" >
+                F_INFO_PINYIN = #{fInfoPinyin,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoInvestscope != null" >
+                F_INFO_INVESTSCOPE = #{fInfoInvestscope,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoInvestobject != null" >
+                F_INFO_INVESTOBJECT = #{fInfoInvestobject,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoInvestconception != null" >
+                F_INFO_INVESTCONCEPTION = #{fInfoInvestconception,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoDecisionBasis != null" >
+                F_INFO_DECISION_BASIS = #{fInfoDecisionBasis,jdbcType=VARCHAR},
+            </if>
+            <if test="isIndexfund != null" >
+                IS_INDEXFUND = #{isIndexfund,jdbcType=DECIMAL},
+            </if>
+            <if test="fInfoDelistdate != null" >
+                F_INFO_DELISTDATE = #{fInfoDelistdate,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoCorpFundmanagementid != null" >
+                F_INFO_CORP_FUNDMANAGEMENTID = #{fInfoCorpFundmanagementid,jdbcType=VARCHAR},
+            </if>
+            <if test="fInfoCustodianbankid != null" >
+                F_INFO_CUSTODIANBANKID = #{fInfoCustodianbankid,jdbcType=VARCHAR},
+            </if>
+            <if test="maxNumHolder != null" >
+                MAX_NUM_HOLDER = #{maxNumHolder,jdbcType=DECIMAL},
+            </if>
+            <if test="maxNumColtarget != null" >
+                MAX_NUM_COLTARGET = #{maxNumColtarget,jdbcType=DECIMAL},
+            </if>
+            <if test="opdate != null" >
+                OPDATE = #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                OPMODE = #{opmode,jdbcType=VARCHAR},
+            </if>
+            <if test="investstrategy != null" >
+                INVESTSTRATEGY = #{investstrategy,jdbcType=CLOB},
+            </if>
+            <if test="riskReturn != null" >
+                RISK_RETURN = #{riskReturn,jdbcType=CLOB},
+            </if>
+        </set>
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.joyintech.tams.common.base.entity.InfChinamutualfunddescriptionWithBLOBs" >
+        update INF_CHINAMUTUALFUNDDESCRIPTION
+        set F_INFO_WINDCODE = #{fInfoWindcode,jdbcType=VARCHAR},
+            F_INFO_FRONT_CODE = #{fInfoFrontCode,jdbcType=VARCHAR},
+            F_INFO_BACKEND_CODE = #{fInfoBackendCode,jdbcType=VARCHAR},
+            F_INFO_FULLNAME = #{fInfoFullname,jdbcType=VARCHAR},
+            F_INFO_NAME = #{fInfoName,jdbcType=VARCHAR},
+            F_INFO_CORP_FUNDMANAGEMENTCOMP = #{fInfoCorpFundmanagementcomp,jdbcType=VARCHAR},
+            F_INFO_CUSTODIANBANK = #{fInfoCustodianbank,jdbcType=VARCHAR},
+            F_INFO_FIRSTINVESTTYPE = #{fInfoFirstinvesttype,jdbcType=VARCHAR},
+            F_INFO_SETUPDATE = #{fInfoSetupdate,jdbcType=VARCHAR},
+            F_INFO_MATURITYDATE = #{fInfoMaturitydate,jdbcType=VARCHAR},
+            F_ISSUE_TOTALUNIT = #{fIssueTotalunit,jdbcType=DECIMAL},
+            F_INFO_MANAGEMENTFEERATIO = #{fInfoManagementfeeratio,jdbcType=DECIMAL},
+            F_INFO_CUSTODIANFEERATIO = #{fInfoCustodianfeeratio,jdbcType=DECIMAL},
+            CRNY_CODE = #{crnyCode,jdbcType=VARCHAR},
+            F_INFO_PTMYEAR = #{fInfoPtmyear,jdbcType=DECIMAL},
+            F_ISSUE_OEF_STARTDATEINST = #{fIssueOefStartdateinst,jdbcType=VARCHAR},
+            F_ISSUE_OEF_DNDDATEINST = #{fIssueOefDnddateinst,jdbcType=VARCHAR},
+            F_INFO_PARVALUE = #{fInfoParvalue,jdbcType=DECIMAL},
+            F_INFO_TRUSTTYPE = #{fInfoTrusttype,jdbcType=VARCHAR},
+            F_INFO_TRUSTEE = #{fInfoTrustee,jdbcType=VARCHAR},
+            F_PCHREDM_PCHSTARTDATE = #{fPchredmPchstartdate,jdbcType=VARCHAR},
+            F_INFO_REDMSTARTDATE = #{fInfoRedmstartdate,jdbcType=VARCHAR},
+            F_INFO_MINBUYAMOUNT = #{fInfoMinbuyamount,jdbcType=DECIMAL},
+            F_INFO_EXPECTEDRATEOFRETURN = #{fInfoExpectedrateofreturn,jdbcType=DECIMAL},
+            F_INFO_ISSUINGPLACE = #{fInfoIssuingplace,jdbcType=VARCHAR},
+            F_INFO_BENCHMARK = #{fInfoBenchmark,jdbcType=VARCHAR},
+            F_INFO_STATUS = #{fInfoStatus,jdbcType=DECIMAL},
+            F_INFO_RESTRICTEDORNOT = #{fInfoRestrictedornot,jdbcType=VARCHAR},
+            F_INFO_STRUCTUREDORNOT = #{fInfoStructuredornot,jdbcType=DECIMAL},
+            F_INFO_EXCHMARKET = #{fInfoExchmarket,jdbcType=VARCHAR},
+            F_INFO_FIRSTINVESTSTYLE = #{fInfoFirstinveststyle,jdbcType=VARCHAR},
+            F_INFO_ISSUEDATE = #{fInfoIssuedate,jdbcType=VARCHAR},
+            F_INFO_TYPE = #{fInfoType,jdbcType=VARCHAR},
+            F_INFO_ISINITIAL = #{fInfoIsinitial,jdbcType=DECIMAL},
+            F_INFO_PINYIN = #{fInfoPinyin,jdbcType=VARCHAR},
+            F_INFO_INVESTSCOPE = #{fInfoInvestscope,jdbcType=VARCHAR},
+            F_INFO_INVESTOBJECT = #{fInfoInvestobject,jdbcType=VARCHAR},
+            F_INFO_INVESTCONCEPTION = #{fInfoInvestconception,jdbcType=VARCHAR},
+            F_INFO_DECISION_BASIS = #{fInfoDecisionBasis,jdbcType=VARCHAR},
+            IS_INDEXFUND = #{isIndexfund,jdbcType=DECIMAL},
+            F_INFO_DELISTDATE = #{fInfoDelistdate,jdbcType=VARCHAR},
+            F_INFO_CORP_FUNDMANAGEMENTID = #{fInfoCorpFundmanagementid,jdbcType=VARCHAR},
+            F_INFO_CUSTODIANBANKID = #{fInfoCustodianbankid,jdbcType=VARCHAR},
+            MAX_NUM_HOLDER = #{maxNumHolder,jdbcType=DECIMAL},
+            MAX_NUM_COLTARGET = #{maxNumColtarget,jdbcType=DECIMAL},
+            OPDATE = #{opdate,jdbcType=DATE},
+            OPMODE = #{opmode,jdbcType=VARCHAR},
+            INVESTSTRATEGY = #{investstrategy,jdbcType=CLOB},
+            RISK_RETURN = #{riskReturn,jdbcType=CLOB}
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InfChinamutualfunddescription" >
+        update INF_CHINAMUTUALFUNDDESCRIPTION
+        set F_INFO_WINDCODE = #{fInfoWindcode,jdbcType=VARCHAR},
+            F_INFO_FRONT_CODE = #{fInfoFrontCode,jdbcType=VARCHAR},
+            F_INFO_BACKEND_CODE = #{fInfoBackendCode,jdbcType=VARCHAR},
+            F_INFO_FULLNAME = #{fInfoFullname,jdbcType=VARCHAR},
+            F_INFO_NAME = #{fInfoName,jdbcType=VARCHAR},
+            F_INFO_CORP_FUNDMANAGEMENTCOMP = #{fInfoCorpFundmanagementcomp,jdbcType=VARCHAR},
+            F_INFO_CUSTODIANBANK = #{fInfoCustodianbank,jdbcType=VARCHAR},
+            F_INFO_FIRSTINVESTTYPE = #{fInfoFirstinvesttype,jdbcType=VARCHAR},
+            F_INFO_SETUPDATE = #{fInfoSetupdate,jdbcType=VARCHAR},
+            F_INFO_MATURITYDATE = #{fInfoMaturitydate,jdbcType=VARCHAR},
+            F_ISSUE_TOTALUNIT = #{fIssueTotalunit,jdbcType=DECIMAL},
+            F_INFO_MANAGEMENTFEERATIO = #{fInfoManagementfeeratio,jdbcType=DECIMAL},
+            F_INFO_CUSTODIANFEERATIO = #{fInfoCustodianfeeratio,jdbcType=DECIMAL},
+            CRNY_CODE = #{crnyCode,jdbcType=VARCHAR},
+            F_INFO_PTMYEAR = #{fInfoPtmyear,jdbcType=DECIMAL},
+            F_ISSUE_OEF_STARTDATEINST = #{fIssueOefStartdateinst,jdbcType=VARCHAR},
+            F_ISSUE_OEF_DNDDATEINST = #{fIssueOefDnddateinst,jdbcType=VARCHAR},
+            F_INFO_PARVALUE = #{fInfoParvalue,jdbcType=DECIMAL},
+            F_INFO_TRUSTTYPE = #{fInfoTrusttype,jdbcType=VARCHAR},
+            F_INFO_TRUSTEE = #{fInfoTrustee,jdbcType=VARCHAR},
+            F_PCHREDM_PCHSTARTDATE = #{fPchredmPchstartdate,jdbcType=VARCHAR},
+            F_INFO_REDMSTARTDATE = #{fInfoRedmstartdate,jdbcType=VARCHAR},
+            F_INFO_MINBUYAMOUNT = #{fInfoMinbuyamount,jdbcType=DECIMAL},
+            F_INFO_EXPECTEDRATEOFRETURN = #{fInfoExpectedrateofreturn,jdbcType=DECIMAL},
+            F_INFO_ISSUINGPLACE = #{fInfoIssuingplace,jdbcType=VARCHAR},
+            F_INFO_BENCHMARK = #{fInfoBenchmark,jdbcType=VARCHAR},
+            F_INFO_STATUS = #{fInfoStatus,jdbcType=DECIMAL},
+            F_INFO_RESTRICTEDORNOT = #{fInfoRestrictedornot,jdbcType=VARCHAR},
+            F_INFO_STRUCTUREDORNOT = #{fInfoStructuredornot,jdbcType=DECIMAL},
+            F_INFO_EXCHMARKET = #{fInfoExchmarket,jdbcType=VARCHAR},
+            F_INFO_FIRSTINVESTSTYLE = #{fInfoFirstinveststyle,jdbcType=VARCHAR},
+            F_INFO_ISSUEDATE = #{fInfoIssuedate,jdbcType=VARCHAR},
+            F_INFO_TYPE = #{fInfoType,jdbcType=VARCHAR},
+            F_INFO_ISINITIAL = #{fInfoIsinitial,jdbcType=DECIMAL},
+            F_INFO_PINYIN = #{fInfoPinyin,jdbcType=VARCHAR},
+            F_INFO_INVESTSCOPE = #{fInfoInvestscope,jdbcType=VARCHAR},
+            F_INFO_INVESTOBJECT = #{fInfoInvestobject,jdbcType=VARCHAR},
+            F_INFO_INVESTCONCEPTION = #{fInfoInvestconception,jdbcType=VARCHAR},
+            F_INFO_DECISION_BASIS = #{fInfoDecisionBasis,jdbcType=VARCHAR},
+            IS_INDEXFUND = #{isIndexfund,jdbcType=DECIMAL},
+            F_INFO_DELISTDATE = #{fInfoDelistdate,jdbcType=VARCHAR},
+            F_INFO_CORP_FUNDMANAGEMENTID = #{fInfoCorpFundmanagementid,jdbcType=VARCHAR},
+            F_INFO_CUSTODIANBANKID = #{fInfoCustodianbankid,jdbcType=VARCHAR},
+            MAX_NUM_HOLDER = #{maxNumHolder,jdbcType=DECIMAL},
+            MAX_NUM_COLTARGET = #{maxNumColtarget,jdbcType=DECIMAL},
+            OPDATE = #{opdate,jdbcType=DATE},
+            OPMODE = #{opmode,jdbcType=VARCHAR}
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+</mapper>

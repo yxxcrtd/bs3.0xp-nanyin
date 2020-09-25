@@ -1,0 +1,86 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.joyintech</groupId>
+		<artifactId>tams-parent-disclosure</artifactId>
+		<version>3.0.0</version>
+	</parent>
+	<artifactId>tams-disclosure</artifactId>
+	<packaging>jar</packaging>
+<!-- 	<packaging>war</packaging> -->
+
+	<properties>
+		<start-class>com.joyintech.tams.disclosure.DisclosureApplication</start-class>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>tams-disclosure-busicommon</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+		</dependency>
+    </dependencies>
+
+	<build>
+		<!-- <finalName>system</finalName> -->
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<!--for war-->
+					<!-- <mainClass>org.springframework.boot.loader.WarLauncher</mainClass>-->
+					<!-- <addResources>true</addResources>-->
+					<classifier>exec</classifier>
+					<fork>true</fork><!-- 如果没有该项配置，devtools不会起作用，即应用不会restart -->
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>/**/ServletInitializer.class</exclude>
+						<exclude>/**/banner.txt</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+
+			<!-- 打包源代码插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<configuration>
+					<attach>true</attach>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+<!-- 	<build> -->
+<!-- 		<plugins> -->
+<!-- 			<plugin> -->
+<!-- 				<groupId>org.springframework.boot</groupId> -->
+<!-- 				<artifactId>spring-boot-maven-plugin</artifactId> -->
+<!--                 <configuration> -->
+<!--                     <mainClass>org.springframework.boot.loader.WarLauncher</mainClass> -->
+<!--                     <addResources>true</addResources> -->
+<!-- 					<classifier>exec</classifier> -->
+<!-- 					<fork>true</fork> -->
+<!--                 </configuration> -->
+<!-- 			</plugin> -->
+<!-- 		</plugins> -->
+<!-- 	</build> -->
+</project>

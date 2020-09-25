@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="~{layout/default}">
+<head>
+<meta charset="UTF-8">
+<title>报表作业管理</title>
+<style type="text/css">
+.report-input {
+	width: 77.2% !important;
+}
+</style>
+</head>
+<body>
+	<div layout:fragment="content">
+		<form class="layui-form joyin-form-wrap" style="padding: -15px 0;"
+			id="submitForm">
+			<div class="layui-tab layui-tab-card">
+				<div class="layui-tab-content">
+					<div class="layui-tab-item layui-show">
+						<div class="layui-form-item">
+							<div class="layui-inline layui-col-md6 layui-col-xs6 layui-col-sm6 layui-col-lg6">
+								<label class="layui-form-label form-lable" style="width: 100px;">作业编号</label>
+								<div class="layui-input-inline input-inline">
+									<input type="text" id="jobId" name="jobId" placeholder="请输入内容"
+										class="layui-input form-input"
+										data-th-Value="${entity?.jobId}" required>
+								</div>
+							</div>
+							<div class="layui-inline layui-col-md6 layui-col-xs6 layui-col-sm6 layui-col-lg6">
+								<label class="layui-form-label form-lable" style="width: 63px;">作业名称</label>
+								<div class="layui-input-inline input-inline">
+									<input type="text" id="jobName" name="jobName"
+										placeholder="请输入内容" class="layui-input form-input"
+										data-th-Value="${entity?.jobName}" required>
+								</div>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<div class="layui-inline layui-col-md12">
+								<label class="layui-form-label form-lable" style="width: 100px">规则名称</label>
+								<div class="layui-input-inline input-inline report-input">
+									<select id="ruleId" name="ruleId"
+										class="layui-input form-input input-select"
+										data-th-formatoption="false"
+										data-th-data-result="${REPORTTPLID_LIST}" allowClear="true"
+										data-th-initValue="${entity?.ruleId}"
+										data-th-placeholder="#{SysCommon.placeholder}" required>
+									</select>
+								</div>
+							</div>
+							<!-- <div class="layui-inline layui-col-md4">
+								<label class="layui-form-label form-lable" style="width: 100px;">报表名称</label>
+								<div class="layui-input-inline input-inline">
+									<input type="text" id="repName" name="repName"
+										placeholder="请输入内容" class="layui-input form-input"
+										data-th-Value="${entity?.repName}" disabled>
+								</div>
+							</div> -->
+						</div>
+						<div class="layui-form-item">
+							<div class="layui-inline layui-col-md12">
+								<label class="layui-form-label form-lable" style="width: 100px;">报表名称</label>
+								<div class="layui-input-inline input-inline report-input">
+									<input type="text" id="repName" name="repName"
+										placeholder="请输入内容" class="layui-input form-input"
+										data-th-Value="${entity?.repName}" disabled>
+								</div>
+							</div>
+						</div>
+
+						<div class="layui-form-item">
+							<div
+								class="layui-inline layui-col-md12 layui-col-xs12 layui-col-sm12 layui-col-lg12">
+								<label class="layui-form-label form-lable"
+									style="text-align: left"> <strong>任务执行规则</strong>
+								</label>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<div class="layui-inline layui-col-md6 layui-col-xs6 layui-col-sm6 layui-col-lg6">
+								<label class="layui-form-label form-lable" style="width: 100px;">是否产品有关</label>
+								<div class="layui-input-inline input-inline">
+									<input type="text" id="isprodrelated" name="isprodrelated"
+										placeholder="请选择是否"
+										class="layui-input form-input input-select"
+										allowClear="true" data-th-data-result="${YES_OR_NO}"
+										data-th-initValue="${entity?.isprodrelated}" required>
+								</div>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<div
+								class="layui-inline layui-col-md6 layui-col-xs6 layui-col-sm6 layui-col-lg6">
+								<label class="layui-form-label form-lable" style="width: 100px;">作业开始日</label>
+								<div class="layui-input-inline input-inline">
+									<input type="text" id="startDate" name="startDate"
+										placeholder="请选择日期"
+										class="layui-input form-input input-dateSelect"
+										allowClear="true"
+										data-th-Value="${entity?.startDate}?: ${sysDate}" required>
+								</div>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<div
+								class="layui-inline layui-col-md12 layui-col-xs12 layui-col-sm12 layui-col-lg12">
+								<label class="layui-form-label form-lable" style="width: 100px;">定时配置</label>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<div
+								class="layui-inline layui-col-md12 layui-col-xs12 layui-col-sm12 layui-col-lg12">
+								<div class="layui-input-block input-inline report-input">
+									<div class="layui-tab layui-tab-card">
+										<ul class="layui-tab-title">
+											<li data-th-text="#{SystemBatchQuartzConfig002.year}">年</li>
+											<li data-th-text="#{SystemBatchQuartzConfig002.month}">月</li>
+											<li data-th-text="#{SystemBatchQuartzConfig002.day}">日</li>
+											<li data-th-text="#{SystemBatchQuartzConfig002.week}">周</li>
+											<li data-th-text="#{SystemBatchQuartzConfig002.hour}"
+												class="layui-this">小时</li>
+											<li data-th-text="#{SystemBatchQuartzConfig002.minute}">分钟</li>
+										</ul>
+										<div class="layui-tab-content" style="height: 70px;">
+											<div class="layui-tab-item">
+												<div class="layui-row">
+													<input type="radio" name="yearType" value="*"
+														data-th-title="|#{SystemBatchQuartzConfig002.every}#{SystemBatchQuartzConfig002.year}"
+														th:checked="${entity?.yearType!='.'} ? 'checked' : 'false'">
+												</div>
+												<div class="layui-row">
+													<div class="layui-col-md2">
+														<input type="radio" name="yearType" value="."
+															data-th-title="#{SystemBatchQuartzConfig002.appoint}"
+															th:checked="${entity?.yearType=='.'} ? 'checked' : 'false'">
+													</div>
+													<div class="layui-col-md4">
+														<select type="text" id="yearAppointList"
+															name="yearAppointList"
+															class="layui-input form-input input-select"
+															placeholder="请输入内容"
+															data-th-placeholder="#{SysCommon.placeholder}"
+															data-th-initValue="${entity?.yearAppoint=='*'} ? '': ${entity?.yearAppoint}"
+															allowClear='true' data-th-data-result='${YEAR_APPOINT}'>
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="layui-tab-item">
+												<div class="layui-row">
+													<input type="radio" name="monthType" value="*"
+														data-th-title="|#{SystemBatchQuartzConfig002.every}#{SystemBatchQuartzConfig002.month}"
+														th:checked="${entity?.monthType!='.'} ? 'checked' : 'false'">
+												</div>
+												<div class="layui-row">
+													<div class="layui-col-md2">
+														<input type="radio" name="monthType" value="."
+															data-th-title="#{SystemBatchQuartzConfig002.appoint}"
+															th:checked="${entity?.monthType=='.'} ? 'checked' : 'false'">
+													</div>
+													<div class="layui-col-md4">
+														<select type="text" id="monthAppointList"
+															name="monthAppointList"
+															class="layui-input form-input input-select"
+															placeholder="请输入内容"
+															data-th-placeholder="#{SysCommon.placeholder}"
+															data-th-initValue="${entity?.monthAppoint=='*'} ? '': ${entity?.monthAppoint}"
+															allowClear='true' data-th-data-result='${MONTH_APPOINT}'>
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="layui-tab-item">
+												<div class="layui-row">
+													<input type="radio" name="dayType" value="*"
+														data-th-title="|#{SystemBatchQuartzConfig002.every}#{SystemBatchQuartzConfig002.day}"
+														th:checked="${entity?.dayType!='.'} ? 'checked' : 'false'">
+												</div>
+												<div class="layui-row">
+													<div class="layui-col-md2">
+														<input type="radio" name="dayType" value="."
+															data-th-title="#{SystemBatchQuartzConfig002.appoint}"
+															th:checked="${entity?.dayType=='.'} ? 'checked' : 'false'">
+													</div>
+													<div class="layui-col-md4">
+														<select type="text" id="dayAppointList"
+															name="dayAppointList"
+															class="layui-input form-input input-select"
+															placeholder="请输入内容"
+															data-th-placeholder="#{SysCommon.placeholder}"
+															data-th-initValue="${entity?.dayAppoint=='*'} ? '': ${entity?.dayAppoint}"
+															allowClear='true' data-th-data-result='${DAY_APPOINT}'>
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="layui-tab-item">
+												<div class="layui-row">
+													<input type="radio" name="weekType" value="*"
+														data-th-title="|#{SystemBatchQuartzConfig002.every}#{SystemBatchQuartzConfig002.week}"
+														th:checked="${entity?.weekType!='.'} ? 'checked' : 'false'">
+												</div>
+												<div class="layui-row">
+													<div class="layui-col-md2">
+														<input type="radio" name="weekType" value="."
+															data-th-title="#{SystemBatchQuartzConfig002.appoint}"
+															th:checked="${entity?.weekType=='.'} ? 'checked' : 'false'">
+													</div>
+													<div class="layui-col-md4">
+														<select type="text" id="weekAppointList"
+															name="weekAppointList"
+															class="layui-input form-input input-select"
+															placeholder="请输入内容"
+															data-th-placeholder="#{SysCommon.placeholder}"
+															data-th-initValue="${entity?.weekAppoint=='*'} ? '': ${entity?.weekAppoint}"
+															allowClear='true' data-th-data-result='${WEEK_APPOINT}'>
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="layui-tab-item layui-show">
+												<div class="layui-row">
+													<input type="radio" name="hourType" value="*"
+														data-th-title="|#{SystemBatchQuartzConfig002.every}#{SystemBatchQuartzConfig002.hour}"
+														th:checked="${entity?.hourType!='.'} ? 'checked' : 'false'">
+												</div>
+												<div class="layui-row">
+													<div class="layui-col-md2">
+														<input type="radio" name="hourType" value="."
+															data-th-title="#{SystemBatchQuartzConfig002.appoint}"
+															th:checked="${entity?.hourType=='.'} ? 'checked' : 'false'">
+													</div>
+													<div class="layui-col-md4">
+														<select type="text" id="hourAppointList"
+															name="hourAppointList"
+															class="layui-input form-input input-select"
+															placeholder="请输入内容"
+															data-th-placeholder="#{SysCommon.placeholder}"
+															data-th-initValue="${entity?.hourAppoint=='*'} ? '': ${entity?.hourAppoint}"
+															allowClear='true' data-th-data-result='${HOUR_APPOINT}'>
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="layui-tab-item">
+												<div class="layui-row">
+													<input disabled type="radio" name="minuteType" value="*"
+														data-th-title="|#{SystemBatchQuartzConfig002.every}#{SystemBatchQuartzConfig002.minute}"
+														th:checked="${entity?.minuteType!='.'} ? 'checked' : 'false'">
+												</div>
+												<div class="layui-row">
+													<div class="layui-col-md2">
+														<input disabled type="radio" name="minuteType" value="."
+															data-th-title="#{SystemBatchQuartzConfig002.appoint}"
+															th:checked="${entity?.minuteType=='.'} ? 'checked' : 'true'">
+													</div>
+													<div class="layui-col-md4">
+														<select disabled type="text" id="minuteAppointList"
+															name="minuteAppointList"
+															class="layui-input form-input input-select"
+															placeholder="请输入内容"
+															data-th-placeholder="#{SysCommon.placeholder}"
+															data-th-initValue="${entity?.minuteAppoint=='*'} ? '': (${entity?.minuteAppoint}?:0)"
+															allowClear='true' data-th-data-result='${MINUTE_APPOINT}'>
+														</select>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<div
+								class="layui-inline layui-col-md6 layui-col-xs6 layui-col-sm6 layui-col-lg6">
+								<label class="layui-form-label form-lable" style="width: 100px;">作业结束日</label>
+								<div class="layui-input-inline input-inline">
+									<input type="text" id="endDate" name="endDate"
+										placeholder="请选择日期"
+										class="layui-input form-input input-dateSelect"
+										allowClear="true" data-th-Value="${entity?.endDate}">
+								</div>
+							</div>
+						</div>
+
+						<div class="layui-form-item">
+							<div
+								class="layui-inline layui-col-md12 layui-col-xs12 layui-col-sm12 layui-col-lg12">
+								<label class="layui-form-label form-lable"
+									style="text-align: left"> <strong>作业范围</strong>
+								</label>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label form-lable" style="width: 100px;">规则设置</label>
+							<div class="layui-input-inline input-inline"
+								style="width: 15% !important;">
+								<input type="text" id="ruleType1" name="ruleType1"
+									class="layui-input form-input input-select" placeholder="请输字段值"
+									data-th-data-result="${RULE_TYPE1}" allowClear="true"
+									childrenIds="ruleType2,ruleType3">
+								</input>
+							</div>
+							<div class="layui-input-inline input-inline"
+								style="width: 15% !important;">
+								<input id="ruleType2" name="ruleType2"
+									class="layui-input form-input input-select"
+									placeholder="请输比较条件" data-th-formatoption="false"
+									data-th-data-result="${RULE_TYPE2}" allowClear="true">
+								</input>
+							</div>
+							<div class="layui-input-inline input-inline"
+								style="width: 15% !important;">
+								<input id="ruleType3" name="ruleType3"
+									class="layui-input form-input input-select" placeholder="请输值类型"
+									data-th-formatoption="false"
+									data-th-data-result="${RULE_TYPE3}" allowClear="true">
+								</input>
+							</div>
+							<div class="layui-input-inline input-inline"
+								style="width: 15% !important;">
+								<div id="profitTypeSelect">
+									<input id="profitType" name="profitType"
+										class="layui-input form-input input-select"
+										placeholder="请选择收益类型" data-th-formatoption="false"
+										data-th-data-result="${PROFIT_TYPE}" allowClear="true">
+									</input>
+								</div>
+								<div id="chooseDateSelect">
+									<input type="text" id="chooseDate" name="chooseDate"
+										placeholder="请选择日期"
+										class="layui-input form-input input-dateSelect"
+										allowClear="true" data-th-initValue="${sysDate}"> </input>
+								</div>
+								<div id="raiseTypeSelect">
+									<input id="raiseType" name="raiseType"
+										class="layui-input form-input input-select"
+										placeholder="请选择募集方式" data-th-formatoption="false"
+										data-th-data-result="${RAISE_TYPE}" allowClear="true">
+									</input>
+								</div>
+								<div id="issueModeSelect">
+									<input id="issueMode" name="issueMode"
+										class="layui-input form-input input-select"
+										placeholder="请选择发行方式" data-th-formatoption="false"
+										data-th-data-result="${ISSUE_MODE}" allowClear="true">
+									</input>
+								</div>
+								<div id="issueStautsSelect">
+									<input id="issueStauts" name="issueStauts"
+										class="layui-input form-input input-select"
+										placeholder="请选择发行状态" data-th-formatoption="false"
+										data-th-data-result="${ISSUE_STATUS}" allowClear="true">
+									</input>
+								</div>
+								<div id="prodTermTypeSelect">
+									<input id="prodTermType" name="prodTermType"
+										class="layui-input form-input input-select"
+										placeholder="请选择产品期限类型" data-th-formatoption="false"
+										data-th-data-result="${PROD_TERM_TYPE}" allowClear="true">
+									</input>
+								</div>
+								<div id="openModeSelect">
+									<input id="openMode" name="openMode"
+										class="layui-input form-input input-select"
+										placeholder="请选择开放模式" data-th-formatoption="false"
+										data-th-data-result="${OPENMODE}" allowClear="true">
+									</input>
+								</div>
+								<div id="isIndepeAccSelect">
+									<input id="isIndepeAcc" name="isIndepeAcc"
+										class="layui-input form-input input-select"
+										placeholder="请选择是否" data-th-formatoption="false"
+										data-th-data-result="${YES_OR_NO}" allowClear="true"> </input>
+								</div>
+								<div id="prodTypeSelect">
+									<input id="prodType" name="prodType"
+										class="layui-input form-input input-select"
+										placeholder="请选择产品类型" data-th-formatoption="false"
+										data-th-data-result="${PROD_TYPE}" allowClear="true">
+									</input>
+								</div>
+								<div id="finaTypeSelect">
+									<input id="finaType" name="finaType"
+										class="layui-input form-input input-select"
+										placeholder="请选择理财类型" data-th-formatoption="false"
+										data-th-data-result="${FINA_TYPE}" allowClear="true">
+									</input>
+								</div>
+								<!-- 添加产品收益标识和目标客户类型 zhangyf 20190921 start -->
+								<div id="prodproFitflagSelect">
+									<input id="prodproFitflag" name="prodproFitflag"
+										class="layui-input form-input input-select"
+										placeholder="请选择收益标识" data-th-formatoption="false"
+										data-th-data-result="${PRODPROFITFLAG}" allowClear="true">
+									</input>
+								</div>
+								<div id="saletargetDeclareSelect">
+									<input id="saletargetDeclare" name="saletargetDeclare"
+										class="layui-input form-input input-select"
+										placeholder="请选择客户类型" data-th-formatoption="false"
+										data-th-data-result="${SALETARGET_DECLARE}" allowClear="true">
+									</input>
+								</div>
+								<!-- 添加产品收益标识和目标客户类型 zhangyf 20190921 end -->
+							</div>
+							<div class="layui-inline">
+								<button type="button" class="layui-btn layui-btn-sm btn-default"
+									id="ReportWorkManage002_btn_add">
+									<i class="iconfont icon-add"></i>
+								</button>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label form-lable" style="width: 100px;">已设规则</label>
+							<div class="layui-inline report-input">
+								<table class="layui-table" id="settedRule" name="settedRule"></table>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<div class="layui-inline layui-col-md6">
+								<label class="layui-form-label form-lable"
+									style="text-align: left"> <strong>不适用产品</strong>
+								</label>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label form-lable" style="width: 100px;">&nbsp;</label>
+							<div class="layui-inline report-input">
+								<table class="layui-table" id="chooseProdTable"
+									name="chooseProdTable"></table>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label form-lable" style="width: 100px;">&nbsp;</label>
+							<div class="layui-inline report-input" style="text-align: right">
+								<a id="ReportWorkManage002_btn_previewProdList"
+									class="layui-btn layui-btn-sm btn-download"> <i
+									class="iconfont icon-sent"></i>【预览产品列表】
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="layui-col-md11" style="margin: 50px;">
+				<div class="text-center">
+					<a id="ReportWorkManage002_btn_save"
+						class="layui-btn layui-btn-sm btn-save"
+						data-th-text="#{SysCommon.save}">保存</a> <a
+						id="ReportWorkManage002_btn_cancel"
+						class="layui-btn layui-btn-sm btn-cancel"
+						data-th-text="#{SysCommon.cancel}">取消</a>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div layout:fragment="script">
+		<script data-th-inline="javascript" type="text/javascript">
+			var groupInfoList = /*[[${groupInfoList}]]*/;
+			var sysDate = /*[[${sysDate}]]*/;
+		</script>
+		<script
+			data-th-src="@{/js/disclosure/information/manage/workmanage/ReportWorkManage002.js}"
+			type="text/javascript"></script>
+	</div>
+</body>
+</html>

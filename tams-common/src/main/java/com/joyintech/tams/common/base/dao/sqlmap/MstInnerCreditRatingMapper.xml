@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.MstInnerCreditRatingMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstInnerCreditRating" >
+        <id column="O_CODE" property="oCode" jdbcType="VARCHAR" />
+        <id column="O_TYPE" property="oType" jdbcType="VARCHAR" />
+        <id column="GRADE_ORG_ID" property="gradeOrgId" jdbcType="VARCHAR" />
+        <id column="GRADE_DATE" property="gradeDate" jdbcType="DATE" />
+        <result column="GRADE_RESULT" property="gradeResult" jdbcType="VARCHAR" />
+        <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="GRADE_EXPECTATION" property="gradeExpectation" jdbcType="VARCHAR" />
+        <result column="DIRECTION_CHANGE" property="directionChange" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        O_CODE O_CODE, O_TYPE O_TYPE, GRADE_ORG_ID GRADE_ORG_ID, GRADE_DATE GRADE_DATE, GRADE_RESULT GRADE_RESULT, 
+        INPUT_TYPE INPUT_TYPE, GRADE_EXPECTATION GRADE_EXPECTATION, DIRECTION_CHANGE DIRECTION_CHANGE, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstInnerCreditRatingMapper.Base_Column_List" />
+        from MST_INNER_CREDIT_RATING
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstInnerCreditRatingMapper.Base_Column_List" />
+        from MST_INNER_CREDIT_RATING
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.MstInnerCreditRatingKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstInnerCreditRatingMapper.Base_Column_List" />
+        from MST_INNER_CREDIT_RATING
+        where O_CODE = #{oCode,jdbcType=VARCHAR}
+          and O_TYPE = #{oType,jdbcType=VARCHAR}
+          and GRADE_ORG_ID = #{gradeOrgId,jdbcType=VARCHAR}
+          and GRADE_DATE = #{gradeDate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstInnerCreditRatingKey" >
+        delete from MST_INNER_CREDIT_RATING
+        where O_CODE = #{oCode,jdbcType=VARCHAR}
+          and O_TYPE = #{oType,jdbcType=VARCHAR}
+          and GRADE_ORG_ID = #{gradeOrgId,jdbcType=VARCHAR}
+          and GRADE_DATE = #{gradeDate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.MstInnerCreditRating" >
+        insert into MST_INNER_CREDIT_RATING (O_CODE, O_TYPE, GRADE_ORG_ID, 
+            GRADE_DATE, GRADE_RESULT, INPUT_TYPE, 
+            GRADE_EXPECTATION, DIRECTION_CHANGE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{oCode,jdbcType=VARCHAR}, #{oType,jdbcType=VARCHAR}, #{gradeOrgId,jdbcType=VARCHAR}, 
+            #{gradeDate,jdbcType=DATE}, #{gradeResult,jdbcType=VARCHAR}, #{inputType,jdbcType=VARCHAR}, 
+            #{gradeExpectation,jdbcType=VARCHAR}, #{directionChange,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstInnerCreditRating" >
+        insert into MST_INNER_CREDIT_RATING
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="oCode != null" >
+                O_CODE,
+            </if>
+            <if test="oType != null" >
+                O_TYPE,
+            </if>
+            <if test="gradeOrgId != null" >
+                GRADE_ORG_ID,
+            </if>
+            <if test="gradeDate != null" >
+                GRADE_DATE,
+            </if>
+            <if test="gradeResult != null" >
+                GRADE_RESULT,
+            </if>
+            <if test="inputType != null" >
+                INPUT_TYPE,
+            </if>
+            <if test="gradeExpectation != null" >
+                GRADE_EXPECTATION,
+            </if>
+            <if test="directionChange != null" >
+                DIRECTION_CHANGE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="oCode != null" >
+                #{oCode,jdbcType=VARCHAR},
+            </if>
+            <if test="oType != null" >
+                #{oType,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeOrgId != null" >
+                #{gradeOrgId,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeDate != null" >
+                #{gradeDate,jdbcType=DATE},
+            </if>
+            <if test="gradeResult != null" >
+                #{gradeResult,jdbcType=VARCHAR},
+            </if>
+            <if test="inputType != null" >
+                #{inputType,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeExpectation != null" >
+                #{gradeExpectation,jdbcType=VARCHAR},
+            </if>
+            <if test="directionChange != null" >
+                #{directionChange,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.MstInnerCreditRating" >
+        insert into MST_INNER_CREDIT_RATING(O_CODE, O_TYPE, GRADE_ORG_ID, GRADE_DATE, GRADE_RESULT, 
+        INPUT_TYPE, GRADE_EXPECTATION, DIRECTION_CHANGE, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select O_CODE, O_TYPE, GRADE_ORG_ID, GRADE_DATE, GRADE_RESULT, 
+            INPUT_TYPE, GRADE_EXPECTATION, DIRECTION_CHANGE, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from MST_INNER_CREDIT_RATING
+             where 1 = 1 and O_CODE = #{oCode,jdbcType=VARCHAR} and O_TYPE = #{oType,jdbcType=VARCHAR} and GRADE_ORG_ID = #{gradeOrgId,jdbcType=VARCHAR} and GRADE_DATE = #{gradeDate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.MstInnerCreditRating" >
+        update MST_INNER_CREDIT_RATING
+        <set >
+            <if test="gradeResult != null" >
+                GRADE_RESULT = #{gradeResult,jdbcType=VARCHAR},
+            </if>
+            <if test="inputType != null" >
+                INPUT_TYPE = #{inputType,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeExpectation != null" >
+                GRADE_EXPECTATION = #{gradeExpectation,jdbcType=VARCHAR},
+            </if>
+            <if test="directionChange != null" >
+                DIRECTION_CHANGE = #{directionChange,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where O_CODE = #{oCode,jdbcType=VARCHAR}
+          and O_TYPE = #{oType,jdbcType=VARCHAR}
+          and GRADE_ORG_ID = #{gradeOrgId,jdbcType=VARCHAR}
+          and GRADE_DATE = #{gradeDate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstInnerCreditRating" >
+        update MST_INNER_CREDIT_RATING
+        set GRADE_RESULT = #{gradeResult,jdbcType=VARCHAR},
+            INPUT_TYPE = #{inputType,jdbcType=VARCHAR},
+            GRADE_EXPECTATION = #{gradeExpectation,jdbcType=VARCHAR},
+            DIRECTION_CHANGE = #{directionChange,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where O_CODE = #{oCode,jdbcType=VARCHAR}
+          and O_TYPE = #{oType,jdbcType=VARCHAR}
+          and GRADE_ORG_ID = #{gradeOrgId,jdbcType=VARCHAR}
+          and GRADE_DATE = #{gradeDate,jdbcType=DATE}
+    </update>
+</mapper>

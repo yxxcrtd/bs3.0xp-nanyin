@@ -1,0 +1,137 @@
+package com.joyintech.tams.common.base.entity;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.tams.common.util.BigDecimalSerializer;
+import java.math.BigDecimal;
+
+public class SttSceneLmh extends BaseEntity {
+    /**
+     * 情景因子代码
+     */
+    private String sceneFtrId;
+
+    /**
+     * 情景代码
+     */
+    private String sceneId;
+
+    /**
+     * 因子代码
+     */
+    private String ftrId;
+
+    /**
+     * 轻度
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal lightValue;
+
+    /**
+     * 中度
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal mediumValue;
+
+    /**
+     * 重度
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal heavyValue;
+
+    /**
+     * 取得 情景因子代码
+     * @return 情景因子代码
+     */
+    public String getSceneFtrId() {
+        return sceneFtrId;
+    }
+
+    /**
+     * 设置 情景因子代码
+     * @param sceneFtrId 情景因子代码
+     */
+    public void setSceneFtrId(String sceneFtrId) {
+        this.sceneFtrId = sceneFtrId == null ? null : sceneFtrId.trim();
+    }
+
+    /**
+     * 取得 情景代码
+     * @return 情景代码
+     */
+    public String getSceneId() {
+        return sceneId;
+    }
+
+    /**
+     * 设置 情景代码
+     * @param sceneId 情景代码
+     */
+    public void setSceneId(String sceneId) {
+        this.sceneId = sceneId == null ? null : sceneId.trim();
+    }
+
+    /**
+     * 取得 因子代码
+     * @return 因子代码
+     */
+    public String getFtrId() {
+        return ftrId;
+    }
+
+    /**
+     * 设置 因子代码
+     * @param ftrId 因子代码
+     */
+    public void setFtrId(String ftrId) {
+        this.ftrId = ftrId == null ? null : ftrId.trim();
+    }
+
+    /**
+     * 取得 轻度
+     * @return 轻度
+     */
+    public BigDecimal getLightValue() {
+        return lightValue;
+    }
+
+    /**
+     * 设置 轻度
+     * @param lightValue 轻度
+     */
+    public void setLightValue(BigDecimal lightValue) {
+        this.lightValue = lightValue;
+    }
+
+    /**
+     * 取得 中度
+     * @return 中度
+     */
+    public BigDecimal getMediumValue() {
+        return mediumValue;
+    }
+
+    /**
+     * 设置 中度
+     * @param mediumValue 中度
+     */
+    public void setMediumValue(BigDecimal mediumValue) {
+        this.mediumValue = mediumValue;
+    }
+
+    /**
+     * 取得 重度
+     * @return 重度
+     */
+    public BigDecimal getHeavyValue() {
+        return heavyValue;
+    }
+
+    /**
+     * 设置 重度
+     * @param heavyValue 重度
+     */
+    public void setHeavyValue(BigDecimal heavyValue) {
+        this.heavyValue = heavyValue;
+    }
+}

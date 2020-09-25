@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepAssetOtherMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepAssetOther" >
+        <id column="REP_FINPROD_ID" property="repFinprodId" jdbcType="VARCHAR" />
+        <result column="REP_PRIVATEFUND_FLAG" property="repPrivatefundFlag" jdbcType="VARCHAR" />
+        <result column="REP_PPPFLAG" property="repPppflag" jdbcType="VARCHAR" />
+        <result column="REP_SMALLCREDIT" property="repSmallcredit" jdbcType="VARCHAR" />
+        <result column="REP_BONDTOSTOCK_FLAG" property="repBondtostockFlag" jdbcType="VARCHAR" />
+        <result column="REP_PRIVATEPRD_FLAG" property="repPrivateprdFlag" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="REP_INSTIT_SIZE" property="repInstitSize" jdbcType="VARCHAR" />
+        <result column="REP_ASSIGNEE" property="repAssignee" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        REP_FINPROD_ID REP_FINPROD_ID, REP_PRIVATEFUND_FLAG REP_PRIVATEFUND_FLAG, REP_PPPFLAG REP_PPPFLAG,
+        REP_SMALLCREDIT REP_SMALLCREDIT, REP_BONDTOSTOCK_FLAG REP_BONDTOSTOCK_FLAG, REP_PRIVATEPRD_FLAG REP_PRIVATEPRD_FLAG,
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER,
+        UPDATE_TIME UPDATE_TIME, REP_INSTIT_SIZE REP_INSTIT_SIZE, REP_ASSIGNEE REP_ASSIGNEE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.RepAssetOtherMapper.Base_Column_List" />
+        from REP_ASSET_OTHER
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.RepAssetOtherMapper.Base_Column_List" />
+        from REP_ASSET_OTHER
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.RepAssetOtherMapper.Base_Column_List" />
+        from REP_ASSET_OTHER
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from REP_ASSET_OTHER
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepAssetOther" >
+        insert into REP_ASSET_OTHER (REP_FINPROD_ID, REP_PRIVATEFUND_FLAG,
+            REP_PPPFLAG, REP_SMALLCREDIT, REP_BONDTOSTOCK_FLAG,
+            REP_PRIVATEPRD_FLAG, CREATE_USER, CREATE_DEPT,
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+            REP_INSTIT_SIZE, REP_ASSIGNEE)
+        values (#{repFinprodId,jdbcType=VARCHAR}, #{repPrivatefundFlag,jdbcType=VARCHAR},
+            #{repPppflag,jdbcType=VARCHAR}, #{repSmallcredit,jdbcType=VARCHAR}, #{repBondtostockFlag,jdbcType=VARCHAR},
+            #{repPrivateprdFlag,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+            #{repInstitSize,jdbcType=VARCHAR}, #{repAssignee,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepAssetOther" >
+        insert into REP_ASSET_OTHER
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="repFinprodId != null" >
+                REP_FINPROD_ID,
+            </if>
+            <if test="repPrivatefundFlag != null" >
+                REP_PRIVATEFUND_FLAG,
+            </if>
+            <if test="repPppflag != null" >
+                REP_PPPFLAG,
+            </if>
+            <if test="repSmallcredit != null" >
+                REP_SMALLCREDIT,
+            </if>
+            <if test="repBondtostockFlag != null" >
+                REP_BONDTOSTOCK_FLAG,
+            </if>
+            <if test="repPrivateprdFlag != null" >
+                REP_PRIVATEPRD_FLAG,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="repInstitSize != null" >
+                REP_INSTIT_SIZE,
+            </if>
+            <if test="repAssignee != null" >
+                REP_ASSIGNEE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="repFinprodId != null" >
+                #{repFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="repPrivatefundFlag != null" >
+                #{repPrivatefundFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="repPppflag != null" >
+                #{repPppflag,jdbcType=VARCHAR},
+            </if>
+            <if test="repSmallcredit != null" >
+                #{repSmallcredit,jdbcType=VARCHAR},
+            </if>
+            <if test="repBondtostockFlag != null" >
+                #{repBondtostockFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="repPrivateprdFlag != null" >
+                #{repPrivateprdFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="repInstitSize != null" >
+                #{repInstitSize,jdbcType=VARCHAR},
+            </if>
+            <if test="repAssignee != null" >
+                #{repAssignee,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepAssetOther" >
+        insert into REP_ASSET_OTHER(REP_FINPROD_ID, REP_PRIVATEFUND_FLAG, REP_PPPFLAG, REP_SMALLCREDIT,
+        REP_BONDTOSTOCK_FLAG, REP_PRIVATEPRD_FLAG, CREATE_USER, CREATE_DEPT, CREATE_TIME,
+        UPDATE_USER, UPDATE_TIME, REP_INSTIT_SIZE, REP_ASSIGNEE)
+        select REP_FINPROD_ID, REP_PRIVATEFUND_FLAG, REP_PPPFLAG, REP_SMALLCREDIT,
+            REP_BONDTOSTOCK_FLAG, REP_PRIVATEPRD_FLAG, CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, REP_INSTIT_SIZE, REP_ASSIGNEE
+             from REP_ASSET_OTHER
+             where 1 = 1 and REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepAssetOther" >
+        update REP_ASSET_OTHER
+        <set >
+            <if test="repPrivatefundFlag != null" >
+                REP_PRIVATEFUND_FLAG = #{repPrivatefundFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="repPppflag != null" >
+                REP_PPPFLAG = #{repPppflag,jdbcType=VARCHAR},
+            </if>
+            <if test="repSmallcredit != null" >
+                REP_SMALLCREDIT = #{repSmallcredit,jdbcType=VARCHAR},
+            </if>
+            <if test="repBondtostockFlag != null" >
+                REP_BONDTOSTOCK_FLAG = #{repBondtostockFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="repPrivateprdFlag != null" >
+                REP_PRIVATEPRD_FLAG = #{repPrivateprdFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="repInstitSize != null" >
+                REP_INSTIT_SIZE = #{repInstitSize,jdbcType=VARCHAR},
+            </if>
+            <if test="repAssignee != null" >
+                REP_ASSIGNEE = #{repAssignee,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepAssetOther" >
+        update REP_ASSET_OTHER
+        set REP_PRIVATEFUND_FLAG = #{repPrivatefundFlag,jdbcType=VARCHAR},
+            REP_PPPFLAG = #{repPppflag,jdbcType=VARCHAR},
+            REP_SMALLCREDIT = #{repSmallcredit,jdbcType=VARCHAR},
+            REP_BONDTOSTOCK_FLAG = #{repBondtostockFlag,jdbcType=VARCHAR},
+            REP_PRIVATEPRD_FLAG = #{repPrivateprdFlag,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            REP_INSTIT_SIZE = #{repInstitSize,jdbcType=VARCHAR},
+            REP_ASSIGNEE = #{repAssignee,jdbcType=VARCHAR}
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </update>
+</mapper>

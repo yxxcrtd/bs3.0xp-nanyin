@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RskValtblPrtImpMapMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RskValtblPrtImpMap" >
+        <id column="PTL_ID" property="ptlId" jdbcType="VARCHAR" />
+        <result column="START_ROW" property="startRow" jdbcType="DECIMAL" />
+        <result column="SUBJECT_CODE_COL" property="subjectCodeCol" jdbcType="DECIMAL" />
+        <result column="STRUCT_MAP_ID" property="structMapId" jdbcType="VARCHAR" />
+        <result column="SUMSUB_MAP_ID" property="sumsubMapId" jdbcType="VARCHAR" />
+        <result column="ASSET_SUB_MAP_ID" property="assetSubMapId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="FILTER_ID" property="filterId" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        PTL_ID PTL_ID, START_ROW START_ROW, SUBJECT_CODE_COL SUBJECT_CODE_COL, STRUCT_MAP_ID STRUCT_MAP_ID, 
+        SUMSUB_MAP_ID SUMSUB_MAP_ID, ASSET_SUB_MAP_ID ASSET_SUB_MAP_ID, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME,FILTER_ID FILTER_ID
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskValtblPrtImpMapMapper.Base_Column_List" />
+        from RSK_VALTBL_PRT_IMP_MAP
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskValtblPrtImpMapMapper.Base_Column_List" />
+        from RSK_VALTBL_PRT_IMP_MAP
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskValtblPrtImpMapMapper.Base_Column_List" />
+        from RSK_VALTBL_PRT_IMP_MAP
+        where PTL_ID = #{ptlId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from RSK_VALTBL_PRT_IMP_MAP
+        where PTL_ID = #{ptlId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RskValtblPrtImpMap" >
+        insert into RSK_VALTBL_PRT_IMP_MAP (PTL_ID, START_ROW, SUBJECT_CODE_COL, 
+            STRUCT_MAP_ID, SUMSUB_MAP_ID, ASSET_SUB_MAP_ID, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, FILTER_ID)
+        values (#{ptlId,jdbcType=VARCHAR}, #{startRow,jdbcType=DECIMAL}, #{subjectCodeCol,jdbcType=DECIMAL}, 
+            #{structMapId,jdbcType=VARCHAR}, #{sumsubMapId,jdbcType=VARCHAR}, #{assetSubMapId,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{filterId,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskValtblPrtImpMap" >
+        insert into RSK_VALTBL_PRT_IMP_MAP
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="ptlId != null" >
+                PTL_ID,
+            </if>
+            <if test="startRow != null" >
+                START_ROW,
+            </if>
+            <if test="subjectCodeCol != null" >
+                SUBJECT_CODE_COL,
+            </if>
+            <if test="structMapId != null" >
+                STRUCT_MAP_ID,
+            </if>
+            <if test="sumsubMapId != null" >
+                SUMSUB_MAP_ID,
+            </if>
+            <if test="assetSubMapId != null" >
+                ASSET_SUB_MAP_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+             <if test="filterId != null" >
+                FILTER_ID,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="ptlId != null" >
+                #{ptlId,jdbcType=VARCHAR},
+            </if>
+            <if test="startRow != null" >
+                #{startRow,jdbcType=DECIMAL},
+            </if>
+            <if test="subjectCodeCol != null" >
+                #{subjectCodeCol,jdbcType=DECIMAL},
+            </if>
+            <if test="structMapId != null" >
+                #{structMapId,jdbcType=VARCHAR},
+            </if>
+            <if test="sumsubMapId != null" >
+                #{sumsubMapId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetSubMapId != null" >
+                #{assetSubMapId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+             <if test="filterId != null" >
+                #{filterId,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskValtblPrtImpMap" >
+        insert into RSK_VALTBL_PRT_IMP_MAP(PTL_ID, START_ROW, SUBJECT_CODE_COL, STRUCT_MAP_ID, 
+        SUMSUB_MAP_ID, ASSET_SUB_MAP_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME,FILTER_ID)
+        select PTL_ID, START_ROW, SUBJECT_CODE_COL, STRUCT_MAP_ID, 
+            SUMSUB_MAP_ID, ASSET_SUB_MAP_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, FILTER_ID
+             from RSK_VALTBL_PRT_IMP_MAP
+             where 1 = 1 and PTL_ID = #{ptlId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RskValtblPrtImpMap" >
+        update RSK_VALTBL_PRT_IMP_MAP
+        <set >
+            <if test="startRow != null" >
+                START_ROW = #{startRow,jdbcType=DECIMAL},
+            </if>
+            <if test="subjectCodeCol != null" >
+                SUBJECT_CODE_COL = #{subjectCodeCol,jdbcType=DECIMAL},
+            </if>
+            <if test="structMapId != null" >
+                STRUCT_MAP_ID = #{structMapId,jdbcType=VARCHAR},
+            </if>
+            <if test="sumsubMapId != null" >
+                SUMSUB_MAP_ID = #{sumsubMapId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetSubMapId != null" >
+                ASSET_SUB_MAP_ID = #{assetSubMapId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="filterId != null" >
+                FILTER_ID = #{filterId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where PTL_ID = #{ptlId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskValtblPrtImpMap" >
+        update RSK_VALTBL_PRT_IMP_MAP
+        set START_ROW = #{startRow,jdbcType=DECIMAL},
+            SUBJECT_CODE_COL = #{subjectCodeCol,jdbcType=DECIMAL},
+            STRUCT_MAP_ID = #{structMapId,jdbcType=VARCHAR},
+            SUMSUB_MAP_ID = #{sumsubMapId,jdbcType=VARCHAR},
+            ASSET_SUB_MAP_ID = #{assetSubMapId,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+             FILTER_ID = #{filterId,jdbcType=VARCHAR}
+        where PTL_ID = #{ptlId,jdbcType=VARCHAR}
+    </update>
+</mapper>

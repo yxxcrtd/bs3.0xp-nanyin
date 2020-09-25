@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="EstimateReveal001.xlsx" name="预计披露">
+	<Worksheet javaBean="com.joyintech.tams.disclosure.interf.common.busicommon.disclosure.information.manage.estimatereveal.dto.EstimateReveal001Dto">
+		<Row>
+			<Cell order="1" name="产品代码">prodid</Cell>
+			<Cell order="2" name="产品名称">prodName</Cell>
+			<Cell order="3" name="报表类别">repTypeName</Cell>
+			<Cell order="4" name="报表名称">repName</Cell>
+			<Cell order="5" name="报告期">reportDate</Cell>
+			<Cell order="6" name="披露截止日">revealEndDateStr</Cell>
+			<Cell order="7" name="作业名称">jobName</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>

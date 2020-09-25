@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.WflTrdTradeFeeDetailMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.WflTrdTradeFeeDetail" >
+        <id column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <id column="FEE_TYPE" property="feeType" jdbcType="VARCHAR" />
+        <id column="WORKFLOW_STATUS" property="workflowStatus" jdbcType="VARCHAR" />
+        <result column="IS_PAY_WITH_TRADE" property="isPayWithTrade" jdbcType="VARCHAR" />
+        <result column="FEE_AMT" property="feeAmt" jdbcType="DECIMAL" />
+        <result column="CHL_FINPROD_ID" property="chlFinprodId" jdbcType="VARCHAR" />
+        <result column="FEE_ID" property="feeId" jdbcType="VARCHAR" />
+        <result column="FEE_RATE" property="feeRate" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TRADE_ID TRADE_ID, FEE_TYPE FEE_TYPE, WORKFLOW_STATUS WORKFLOW_STATUS, IS_PAY_WITH_TRADE IS_PAY_WITH_TRADE, 
+        FEE_AMT FEE_AMT, CHL_FINPROD_ID CHL_FINPROD_ID, FEE_ID FEE_ID, FEE_RATE FEE_RATE, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, WORKFLOW_ID WORKFLOW_ID
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflTrdTradeFeeDetailMapper.Base_Column_List" />
+        from WFL_TRD_TRADE_FEE_DETAIL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflTrdTradeFeeDetailMapper.Base_Column_List" />
+        from WFL_TRD_TRADE_FEE_DETAIL
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.WflTrdTradeFeeDetailKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflTrdTradeFeeDetailMapper.Base_Column_List" />
+        from WFL_TRD_TRADE_FEE_DETAIL
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and FEE_TYPE = #{feeType,jdbcType=VARCHAR}
+          and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.WflTrdTradeFeeDetailKey" >
+        delete from WFL_TRD_TRADE_FEE_DETAIL
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and FEE_TYPE = #{feeType,jdbcType=VARCHAR}
+          and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from WFL_TRD_TRADE_FEE_DETAIL
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insertBasicByWorkflowId" parameterType="java.util.Map" >
+        insert into WFL_TRD_TRADE_FEE_DETAIL(TRADE_ID, FEE_TYPE, WORKFLOW_STATUS, IS_PAY_WITH_TRADE, 
+        FEE_AMT, CHL_FINPROD_ID, FEE_ID, FEE_RATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME, WORKFLOW_ID)
+        select TRADE_ID, FEE_TYPE, WORKFLOW_STATUS, IS_PAY_WITH_TRADE, 
+            FEE_AMT, CHL_FINPROD_ID, FEE_ID, FEE_RATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID
+             from WFL_TRD_TRADE_FEE_DETAIL
+             where WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.WflTrdTradeFeeDetail" >
+        update WFL_TRD_TRADE_FEE_DETAIL
+        <set >
+            <if test="tradeId != null" >
+                TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="feeType != null" >
+                FEE_TYPE = #{feeType,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowStatus != null" >
+                WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="isPayWithTrade != null" >
+                IS_PAY_WITH_TRADE = #{isPayWithTrade,jdbcType=VARCHAR},
+            </if>
+            <if test="feeAmt != null" >
+                FEE_AMT = #{feeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="chlFinprodId != null" >
+                CHL_FINPROD_ID = #{chlFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="feeId != null" >
+                FEE_ID = #{feeId,jdbcType=VARCHAR},
+            </if>
+            <if test="feeRate != null" >
+                FEE_RATE = #{feeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.WflTrdTradeFeeDetail" >
+        update WFL_TRD_TRADE_FEE_DETAIL
+        set 
+        TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+        FEE_TYPE = #{feeType,jdbcType=VARCHAR},
+        WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR},
+        IS_PAY_WITH_TRADE = #{isPayWithTrade,jdbcType=VARCHAR},
+        FEE_AMT = #{feeAmt,jdbcType=DECIMAL},
+        CHL_FINPROD_ID = #{chlFinprodId,jdbcType=VARCHAR},
+        FEE_ID = #{feeId,jdbcType=VARCHAR},
+        FEE_RATE = #{feeRate,jdbcType=DECIMAL},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.WflTrdTradeFeeDetail" >
+        insert into WFL_TRD_TRADE_FEE_DETAIL (TRADE_ID, FEE_TYPE, WORKFLOW_STATUS, 
+            IS_PAY_WITH_TRADE, FEE_AMT, CHL_FINPROD_ID, 
+            FEE_ID, FEE_RATE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, WORKFLOW_ID)
+        values (#{tradeId,jdbcType=VARCHAR}, #{feeType,jdbcType=VARCHAR}, #{workflowStatus,jdbcType=VARCHAR}, 
+            #{isPayWithTrade,jdbcType=VARCHAR}, #{feeAmt,jdbcType=DECIMAL}, #{chlFinprodId,jdbcType=VARCHAR}, 
+            #{feeId,jdbcType=VARCHAR}, #{feeRate,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{workflowId,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.WflTrdTradeFeeDetail" >
+        insert into WFL_TRD_TRADE_FEE_DETAIL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="feeType != null" >
+                FEE_TYPE,
+            </if>
+            <if test="workflowStatus != null" >
+                WORKFLOW_STATUS,
+            </if>
+            <if test="isPayWithTrade != null" >
+                IS_PAY_WITH_TRADE,
+            </if>
+            <if test="feeAmt != null" >
+                FEE_AMT,
+            </if>
+            <if test="chlFinprodId != null" >
+                CHL_FINPROD_ID,
+            </if>
+            <if test="feeId != null" >
+                FEE_ID,
+            </if>
+            <if test="feeRate != null" >
+                FEE_RATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="feeType != null" >
+                #{feeType,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowStatus != null" >
+                #{workflowStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="isPayWithTrade != null" >
+                #{isPayWithTrade,jdbcType=VARCHAR},
+            </if>
+            <if test="feeAmt != null" >
+                #{feeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="chlFinprodId != null" >
+                #{chlFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="feeId != null" >
+                #{feeId,jdbcType=VARCHAR},
+            </if>
+            <if test="feeRate != null" >
+                #{feeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="workflowId != null" >
+                #{workflowId,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.WflTrdTradeFeeDetail" >
+        insert into WFL_TRD_TRADE_FEE_DETAIL(TRADE_ID, FEE_TYPE, WORKFLOW_STATUS, IS_PAY_WITH_TRADE, 
+        FEE_AMT, CHL_FINPROD_ID, FEE_ID, FEE_RATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME, WORKFLOW_ID)
+        select TRADE_ID, FEE_TYPE, WORKFLOW_STATUS, IS_PAY_WITH_TRADE, 
+            FEE_AMT, CHL_FINPROD_ID, FEE_ID, FEE_RATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID
+             from WFL_TRD_TRADE_FEE_DETAIL
+             where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR} and FEE_TYPE = #{feeType,jdbcType=VARCHAR} and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.WflTrdTradeFeeDetail" >
+        update WFL_TRD_TRADE_FEE_DETAIL
+        <set >
+            <if test="isPayWithTrade != null" >
+                IS_PAY_WITH_TRADE = #{isPayWithTrade,jdbcType=VARCHAR},
+            </if>
+            <if test="feeAmt != null" >
+                FEE_AMT = #{feeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="chlFinprodId != null" >
+                CHL_FINPROD_ID = #{chlFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="feeId != null" >
+                FEE_ID = #{feeId,jdbcType=VARCHAR},
+            </if>
+            <if test="feeRate != null" >
+                FEE_RATE = #{feeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and FEE_TYPE = #{feeType,jdbcType=VARCHAR}
+          and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.WflTrdTradeFeeDetail" >
+        update WFL_TRD_TRADE_FEE_DETAIL
+        set IS_PAY_WITH_TRADE = #{isPayWithTrade,jdbcType=VARCHAR},
+            FEE_AMT = #{feeAmt,jdbcType=DECIMAL},
+            CHL_FINPROD_ID = #{chlFinprodId,jdbcType=VARCHAR},
+            FEE_ID = #{feeId,jdbcType=VARCHAR},
+            FEE_RATE = #{feeRate,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and FEE_TYPE = #{feeType,jdbcType=VARCHAR}
+          and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
+    </update>
+</mapper>

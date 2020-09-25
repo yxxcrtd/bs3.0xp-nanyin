@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.FinRateInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.FinRateInfo" >
+        <id column="CASH_ID" property="cashId" jdbcType="VARCHAR" />
+        <id column="EFF_DATE" property="effDate" jdbcType="DATE" />
+        <result column="INT_TYPE" property="intType" jdbcType="VARCHAR" />
+        <result column="BASIS" property="basis" jdbcType="VARCHAR" />
+        <result column="RESET_TYPE" property="resetType" jdbcType="VARCHAR" />
+        <result column="RESET_FREQ" property="resetFreq" jdbcType="VARCHAR" />
+        <result column="FIRST_RESET_DATE" property="firstResetDate" jdbcType="DATE" />
+        <result column="RESET_DATE" property="resetDate" jdbcType="VARCHAR" />
+        <result column="OBSERVE_BEF_DAY" property="observeBefDay" jdbcType="DECIMAL" />
+        <result column="OBSERVE_BEF_UNIT" property="observeBefUnit" jdbcType="VARCHAR" />
+        <result column="RATE" property="rate" jdbcType="DECIMAL" />
+        <result column="COEFFICIENT" property="coefficient" jdbcType="DECIMAL" />
+        <result column="SPREAD_RATE" property="spreadRate" jdbcType="DECIMAL" />
+        <result column="HIGHEST_RATE" property="highestRate" jdbcType="DECIMAL" />
+        <result column="LOWEST_RATE" property="lowestRate" jdbcType="DECIMAL" />
+        <result column="BENCHMARK_ID" property="benchmarkId" jdbcType="VARCHAR" />
+        <result column="BENCHMARK_TYPE" property="benchmarkType" jdbcType="VARCHAR" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="BRANCH" property="branch" jdbcType="DECIMAL" />
+        <result column="FINPROD_TYPE" property="finprodType" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE2" property="finprodType2" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="FIRST_CONFIRM_DATE" property="firstConfirmDate" jdbcType="DATE" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CASH_ID CASH_ID, EFF_DATE EFF_DATE, INT_TYPE INT_TYPE, BASIS BASIS, RESET_TYPE RESET_TYPE, 
+        RESET_FREQ RESET_FREQ, FIRST_RESET_DATE FIRST_RESET_DATE, RESET_DATE RESET_DATE, 
+        OBSERVE_BEF_DAY OBSERVE_BEF_DAY, OBSERVE_BEF_UNIT OBSERVE_BEF_UNIT, RATE RATE, COEFFICIENT COEFFICIENT, 
+        SPREAD_RATE SPREAD_RATE, HIGHEST_RATE HIGHEST_RATE, LOWEST_RATE LOWEST_RATE, BENCHMARK_ID BENCHMARK_ID, 
+        BENCHMARK_TYPE BENCHMARK_TYPE, FINPROD_ID FINPROD_ID, BRANCH BRANCH, FINPROD_TYPE FINPROD_TYPE, 
+        FINPROD_TYPE2 FINPROD_TYPE2, REMARK REMARK, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, FIRST_CONFIRM_DATE FIRST_CONFIRM_DATE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinRateInfoMapper.Base_Column_List" />
+        from FIN_RATE_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinRateInfoMapper.Base_Column_List" />
+        from FIN_RATE_INFO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.FinRateInfoKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinRateInfoMapper.Base_Column_List" />
+        from FIN_RATE_INFO
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinRateInfoKey" >
+        delete from FIN_RATE_INFO
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FinRateInfo" >
+        insert into FIN_RATE_INFO (CASH_ID, EFF_DATE, INT_TYPE, 
+            BASIS, RESET_TYPE, RESET_FREQ, 
+            FIRST_RESET_DATE, RESET_DATE, OBSERVE_BEF_DAY, 
+            OBSERVE_BEF_UNIT, RATE, COEFFICIENT, 
+            SPREAD_RATE, HIGHEST_RATE, LOWEST_RATE, 
+            BENCHMARK_ID, BENCHMARK_TYPE, FINPROD_ID, 
+            BRANCH, FINPROD_TYPE, FINPROD_TYPE2, 
+            REMARK, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            FIRST_CONFIRM_DATE)
+        values (#{cashId,jdbcType=VARCHAR}, #{effDate,jdbcType=DATE}, #{intType,jdbcType=VARCHAR}, 
+            #{basis,jdbcType=VARCHAR}, #{resetType,jdbcType=VARCHAR}, #{resetFreq,jdbcType=VARCHAR}, 
+            #{firstResetDate,jdbcType=DATE}, #{resetDate,jdbcType=VARCHAR}, #{observeBefDay,jdbcType=DECIMAL}, 
+            #{observeBefUnit,jdbcType=VARCHAR}, #{rate,jdbcType=DECIMAL}, #{coefficient,jdbcType=DECIMAL}, 
+            #{spreadRate,jdbcType=DECIMAL}, #{highestRate,jdbcType=DECIMAL}, #{lowestRate,jdbcType=DECIMAL}, 
+            #{benchmarkId,jdbcType=VARCHAR}, #{benchmarkType,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, 
+            #{branch,jdbcType=DECIMAL}, #{finprodType,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR}, 
+            #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{firstConfirmDate,jdbcType=DATE})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinRateInfo" >
+        insert into FIN_RATE_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="cashId != null" >
+                CASH_ID,
+            </if>
+            <if test="effDate != null" >
+                EFF_DATE,
+            </if>
+            <if test="intType != null" >
+                INT_TYPE,
+            </if>
+            <if test="basis != null" >
+                BASIS,
+            </if>
+            <if test="resetType != null" >
+                RESET_TYPE,
+            </if>
+            <if test="resetFreq != null" >
+                RESET_FREQ,
+            </if>
+            <if test="firstResetDate != null" >
+                FIRST_RESET_DATE,
+            </if>
+            <if test="resetDate != null" >
+                RESET_DATE,
+            </if>
+            <if test="observeBefDay != null" >
+                OBSERVE_BEF_DAY,
+            </if>
+            <if test="observeBefUnit != null" >
+                OBSERVE_BEF_UNIT,
+            </if>
+            <if test="rate != null" >
+                RATE,
+            </if>
+            <if test="coefficient != null" >
+                COEFFICIENT,
+            </if>
+            <if test="spreadRate != null" >
+                SPREAD_RATE,
+            </if>
+            <if test="highestRate != null" >
+                HIGHEST_RATE,
+            </if>
+            <if test="lowestRate != null" >
+                LOWEST_RATE,
+            </if>
+            <if test="benchmarkId != null" >
+                BENCHMARK_ID,
+            </if>
+            <if test="benchmarkType != null" >
+                BENCHMARK_TYPE,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="finprodType != null" >
+                FINPROD_TYPE,
+            </if>
+            <if test="finprodType2 != null" >
+                FINPROD_TYPE2,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="firstConfirmDate != null" >
+                FIRST_CONFIRM_DATE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="cashId != null" >
+                #{cashId,jdbcType=VARCHAR},
+            </if>
+            <if test="effDate != null" >
+                #{effDate,jdbcType=DATE},
+            </if>
+            <if test="intType != null" >
+                #{intType,jdbcType=VARCHAR},
+            </if>
+            <if test="basis != null" >
+                #{basis,jdbcType=VARCHAR},
+            </if>
+            <if test="resetType != null" >
+                #{resetType,jdbcType=VARCHAR},
+            </if>
+            <if test="resetFreq != null" >
+                #{resetFreq,jdbcType=VARCHAR},
+            </if>
+            <if test="firstResetDate != null" >
+                #{firstResetDate,jdbcType=DATE},
+            </if>
+            <if test="resetDate != null" >
+                #{resetDate,jdbcType=VARCHAR},
+            </if>
+            <if test="observeBefDay != null" >
+                #{observeBefDay,jdbcType=DECIMAL},
+            </if>
+            <if test="observeBefUnit != null" >
+                #{observeBefUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="rate != null" >
+                #{rate,jdbcType=DECIMAL},
+            </if>
+            <if test="coefficient != null" >
+                #{coefficient,jdbcType=DECIMAL},
+            </if>
+            <if test="spreadRate != null" >
+                #{spreadRate,jdbcType=DECIMAL},
+            </if>
+            <if test="highestRate != null" >
+                #{highestRate,jdbcType=DECIMAL},
+            </if>
+            <if test="lowestRate != null" >
+                #{lowestRate,jdbcType=DECIMAL},
+            </if>
+            <if test="benchmarkId != null" >
+                #{benchmarkId,jdbcType=VARCHAR},
+            </if>
+            <if test="benchmarkType != null" >
+                #{benchmarkType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="finprodType != null" >
+                #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType2 != null" >
+                #{finprodType2,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="firstConfirmDate != null" >
+                #{firstConfirmDate,jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinRateInfo" >
+        insert into FIN_RATE_INFO(CASH_ID, EFF_DATE, INT_TYPE, BASIS, RESET_TYPE, RESET_FREQ, 
+        FIRST_RESET_DATE, RESET_DATE, OBSERVE_BEF_DAY, OBSERVE_BEF_UNIT, RATE, COEFFICIENT, 
+        SPREAD_RATE, HIGHEST_RATE, LOWEST_RATE, BENCHMARK_ID, BENCHMARK_TYPE, FINPROD_ID, 
+        BRANCH, FINPROD_TYPE, FINPROD_TYPE2, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME, FIRST_CONFIRM_DATE)
+        select CASH_ID, EFF_DATE, INT_TYPE, BASIS, RESET_TYPE, RESET_FREQ, 
+            FIRST_RESET_DATE, RESET_DATE, OBSERVE_BEF_DAY, OBSERVE_BEF_UNIT, RATE, COEFFICIENT, 
+            SPREAD_RATE, HIGHEST_RATE, LOWEST_RATE, BENCHMARK_ID, BENCHMARK_TYPE, FINPROD_ID, 
+            BRANCH, FINPROD_TYPE, FINPROD_TYPE2, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, FIRST_CONFIRM_DATE
+             from FIN_RATE_INFO
+             where 1 = 1 and CASH_ID = #{cashId,jdbcType=VARCHAR} and EFF_DATE = #{effDate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.FinRateInfo" >
+        update FIN_RATE_INFO
+        <set >
+            <if test="intType != null" >
+                INT_TYPE = #{intType,jdbcType=VARCHAR},
+            </if>
+            <if test="basis != null" >
+                BASIS = #{basis,jdbcType=VARCHAR},
+            </if>
+            <if test="resetType != null" >
+                RESET_TYPE = #{resetType,jdbcType=VARCHAR},
+            </if>
+            <if test="resetFreq != null" >
+                RESET_FREQ = #{resetFreq,jdbcType=VARCHAR},
+            </if>
+            <if test="firstResetDate != null" >
+                FIRST_RESET_DATE = #{firstResetDate,jdbcType=DATE},
+            </if>
+            <if test="resetDate != null" >
+                RESET_DATE = #{resetDate,jdbcType=VARCHAR},
+            </if>
+            <if test="observeBefDay != null" >
+                OBSERVE_BEF_DAY = #{observeBefDay,jdbcType=DECIMAL},
+            </if>
+            <if test="observeBefUnit != null" >
+                OBSERVE_BEF_UNIT = #{observeBefUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="rate != null" >
+                RATE = #{rate,jdbcType=DECIMAL},
+            </if>
+            <if test="coefficient != null" >
+                COEFFICIENT = #{coefficient,jdbcType=DECIMAL},
+            </if>
+            <if test="spreadRate != null" >
+                SPREAD_RATE = #{spreadRate,jdbcType=DECIMAL},
+            </if>
+            <if test="highestRate != null" >
+                HIGHEST_RATE = #{highestRate,jdbcType=DECIMAL},
+            </if>
+            <if test="lowestRate != null" >
+                LOWEST_RATE = #{lowestRate,jdbcType=DECIMAL},
+            </if>
+            <if test="benchmarkId != null" >
+                BENCHMARK_ID = #{benchmarkId,jdbcType=VARCHAR},
+            </if>
+            <if test="benchmarkType != null" >
+                BENCHMARK_TYPE = #{benchmarkType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                BRANCH = #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="finprodType != null" >
+                FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType2 != null" >
+                FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="firstConfirmDate != null" >
+                FIRST_CONFIRM_DATE = #{firstConfirmDate,jdbcType=DATE},
+            </if>
+        </set>
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinRateInfo" >
+        update FIN_RATE_INFO
+        set INT_TYPE = #{intType,jdbcType=VARCHAR},
+            BASIS = #{basis,jdbcType=VARCHAR},
+            RESET_TYPE = #{resetType,jdbcType=VARCHAR},
+            RESET_FREQ = #{resetFreq,jdbcType=VARCHAR},
+            FIRST_RESET_DATE = #{firstResetDate,jdbcType=DATE},
+            RESET_DATE = #{resetDate,jdbcType=VARCHAR},
+            OBSERVE_BEF_DAY = #{observeBefDay,jdbcType=DECIMAL},
+            OBSERVE_BEF_UNIT = #{observeBefUnit,jdbcType=VARCHAR},
+            RATE = #{rate,jdbcType=DECIMAL},
+            COEFFICIENT = #{coefficient,jdbcType=DECIMAL},
+            SPREAD_RATE = #{spreadRate,jdbcType=DECIMAL},
+            HIGHEST_RATE = #{highestRate,jdbcType=DECIMAL},
+            LOWEST_RATE = #{lowestRate,jdbcType=DECIMAL},
+            BENCHMARK_ID = #{benchmarkId,jdbcType=VARCHAR},
+            BENCHMARK_TYPE = #{benchmarkType,jdbcType=VARCHAR},
+            FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            BRANCH = #{branch,jdbcType=DECIMAL},
+            FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            FIRST_CONFIRM_DATE = #{firstConfirmDate,jdbcType=DATE}
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+    </update>
+</mapper>

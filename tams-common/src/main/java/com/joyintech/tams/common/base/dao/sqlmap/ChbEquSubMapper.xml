@@ -1,0 +1,680 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbEquSubMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbEquSub" >
+        <id column="INDENTIFY_MARK" property="indentifyMark" jdbcType="VARCHAR" />
+        <id column="REGIST_BANK_CODE" property="registBankCode" jdbcType="VARCHAR" />
+        <id column="SUBMIT_STATUS" property="submitStatus" jdbcType="CHAR" />
+        <result column="ORG_INDENTIFY_MARK" property="orgIndentifyMark" jdbcType="VARCHAR" />
+        <result column="IS_BELONG_BANK" property="isBelongBank" jdbcType="CHAR" />
+        <result column="THE_BANK_NAME" property="theBankName" jdbcType="VARCHAR" />
+        <result column="THE_BANK_CODE" property="theBankCode" jdbcType="VARCHAR" />
+        <result column="HOLDER_MARK" property="holderMark" jdbcType="CHAR" />
+        <result column="HOLDER_REGION" property="holderRegion" jdbcType="VARCHAR" />
+        <result column="HOLDER_TYPE" property="holderType" jdbcType="CHAR" />
+        <result column="PERSONAL_IDENTIFY_TYPE" property="personalIdentifyType" jdbcType="CHAR" />
+        <result column="INSTITUTION_IDENTIFY_TYPE" property="institutionIdentifyType" jdbcType="VARCHAR" />
+        <result column="OTHER_IDENTIFY_NAME" property="otherIdentifyName" jdbcType="VARCHAR" />
+        <result column="IDENTIFY_NUMBER" property="identifyNumber" jdbcType="VARCHAR" />
+        <result column="SPV_CAP_ACC_BANK" property="spvCapAccBank" jdbcType="VARCHAR" />
+        <result column="OTHER_CAP_ACC_BANK" property="otherCapAccBank" jdbcType="VARCHAR" />
+        <result column="SPV_REGIST_CODE" property="spvRegistCode" jdbcType="VARCHAR" />
+        <result column="HOLDER_DATE" property="holderDate" jdbcType="DATE" />
+        <result column="HOLDER_NAME" property="holderName" jdbcType="VARCHAR" />
+        <result column="HOLDER_SEX" property="holderSex" jdbcType="CHAR" />
+        <result column="HOLDER_RISK_PREFER" property="holderRiskPrefer" jdbcType="VARCHAR" />
+        <result column="HOLDER_CELLPHONE" property="holderCellphone" jdbcType="VARCHAR" />
+        <result column="HOLDER_TELEPHONE" property="holderTelephone" jdbcType="VARCHAR" />
+        <result column="HOLDER_EMAIL" property="holderEmail" jdbcType="VARCHAR" />
+        <result column="TYPE" property="type" jdbcType="CHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+        <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+        <result column="DELETE_RES" property="deleteRes" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        INDENTIFY_MARK INDENTIFY_MARK, REGIST_BANK_CODE REGIST_BANK_CODE, SUBMIT_STATUS SUBMIT_STATUS, 
+        ORG_INDENTIFY_MARK ORG_INDENTIFY_MARK, IS_BELONG_BANK IS_BELONG_BANK, THE_BANK_NAME THE_BANK_NAME, 
+        THE_BANK_CODE THE_BANK_CODE, HOLDER_MARK HOLDER_MARK, HOLDER_REGION HOLDER_REGION, 
+        HOLDER_TYPE HOLDER_TYPE, PERSONAL_IDENTIFY_TYPE PERSONAL_IDENTIFY_TYPE, INSTITUTION_IDENTIFY_TYPE INSTITUTION_IDENTIFY_TYPE, 
+        OTHER_IDENTIFY_NAME OTHER_IDENTIFY_NAME, IDENTIFY_NUMBER IDENTIFY_NUMBER, SPV_CAP_ACC_BANK SPV_CAP_ACC_BANK, 
+        OTHER_CAP_ACC_BANK OTHER_CAP_ACC_BANK, SPV_REGIST_CODE SPV_REGIST_CODE, HOLDER_DATE HOLDER_DATE, 
+        HOLDER_NAME HOLDER_NAME, HOLDER_SEX HOLDER_SEX, HOLDER_RISK_PREFER HOLDER_RISK_PREFER, 
+        HOLDER_CELLPHONE HOLDER_CELLPHONE, HOLDER_TELEPHONE HOLDER_TELEPHONE, HOLDER_EMAIL HOLDER_EMAIL, 
+        TYPE TYPE, REMARK REMARK, SUBMIT_TIME SUBMIT_TIME, CHB_SUBMIT_DEADLINE CHB_SUBMIT_DEADLINE, 
+        SUBMIT_DEADLINE SUBMIT_DEADLINE, STATUS STATUS, DEPT_CODE DEPT_CODE, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, SUMIT_SEQ SUMIT_SEQ, 
+        DELETE_RES DELETE_RES, ORG_CODE ORG_CODE, CREATE_DEPT CREATE_DEPT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbEquSubMapper.Base_Column_List" />
+        from CHB_EQU_SUB
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbEquSubMapper.Base_Column_List" />
+        from CHB_EQU_SUB
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.ChbEquSubKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbEquSubMapper.Base_Column_List" />
+        from CHB_EQU_SUB
+        where INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
+          and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
+          and SUBMIT_STATUS = #{submitStatus,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbEquSubKey" >
+        delete from CHB_EQU_SUB
+        where INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
+          and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
+          and SUBMIT_STATUS = #{submitStatus,jdbcType=CHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_EQU_SUB
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbEquSub" >
+        insert into CHB_EQU_SUB (INDENTIFY_MARK, REGIST_BANK_CODE, SUBMIT_STATUS, 
+            ORG_INDENTIFY_MARK, IS_BELONG_BANK, THE_BANK_NAME, 
+            THE_BANK_CODE, HOLDER_MARK, HOLDER_REGION, 
+            HOLDER_TYPE, PERSONAL_IDENTIFY_TYPE, INSTITUTION_IDENTIFY_TYPE, 
+            OTHER_IDENTIFY_NAME, IDENTIFY_NUMBER, SPV_CAP_ACC_BANK, 
+            OTHER_CAP_ACC_BANK, SPV_REGIST_CODE, HOLDER_DATE, 
+            HOLDER_NAME, HOLDER_SEX, HOLDER_RISK_PREFER, 
+            HOLDER_CELLPHONE, HOLDER_TELEPHONE, HOLDER_EMAIL, 
+            TYPE, REMARK, SUBMIT_TIME, 
+            CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+            STATUS, DEPT_CODE, UPDATE_USER, 
+            UPDATE_TIME, CREATE_USER, CREATE_TIME, 
+            SUMIT_SEQ, DELETE_RES, ORG_CODE, 
+            CREATE_DEPT)
+        values (#{indentifyMark,jdbcType=VARCHAR}, #{registBankCode,jdbcType=VARCHAR}, #{submitStatus,jdbcType=CHAR}, 
+            #{orgIndentifyMark,jdbcType=VARCHAR}, #{isBelongBank,jdbcType=CHAR}, #{theBankName,jdbcType=VARCHAR}, 
+            #{theBankCode,jdbcType=VARCHAR}, #{holderMark,jdbcType=CHAR}, #{holderRegion,jdbcType=VARCHAR}, 
+            #{holderType,jdbcType=CHAR}, #{personalIdentifyType,jdbcType=CHAR}, #{institutionIdentifyType,jdbcType=VARCHAR}, 
+            #{otherIdentifyName,jdbcType=VARCHAR}, #{identifyNumber,jdbcType=VARCHAR}, #{spvCapAccBank,jdbcType=VARCHAR}, 
+            #{otherCapAccBank,jdbcType=VARCHAR}, #{spvRegistCode,jdbcType=VARCHAR}, #{holderDate,jdbcType=DATE}, 
+            #{holderName,jdbcType=VARCHAR}, #{holderSex,jdbcType=CHAR}, #{holderRiskPrefer,jdbcType=VARCHAR}, 
+            #{holderCellphone,jdbcType=VARCHAR}, #{holderTelephone,jdbcType=VARCHAR}, #{holderEmail,jdbcType=VARCHAR}, 
+            #{type,jdbcType=CHAR}, #{remark,jdbcType=VARCHAR}, #{submitTime,jdbcType=TIMESTAMP}, 
+            #{chbSubmitDeadline,jdbcType=TIMESTAMP}, #{submitDeadline,jdbcType=TIMESTAMP}, 
+            #{status,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{sumitSeq,jdbcType=VARCHAR}, #{deleteRes,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbEquSub" >
+        insert into CHB_EQU_SUB
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="indentifyMark != null" >
+                INDENTIFY_MARK,
+            </if>
+            <if test="registBankCode != null" >
+                REGIST_BANK_CODE,
+            </if>
+            <if test="submitStatus != null" >
+                SUBMIT_STATUS,
+            </if>
+            <if test="orgIndentifyMark != null" >
+                ORG_INDENTIFY_MARK,
+            </if>
+            <if test="isBelongBank != null" >
+                IS_BELONG_BANK,
+            </if>
+            <if test="theBankName != null" >
+                THE_BANK_NAME,
+            </if>
+            <if test="theBankCode != null" >
+                THE_BANK_CODE,
+            </if>
+            <if test="holderMark != null" >
+                HOLDER_MARK,
+            </if>
+            <if test="holderRegion != null" >
+                HOLDER_REGION,
+            </if>
+            <if test="holderType != null" >
+                HOLDER_TYPE,
+            </if>
+            <if test="personalIdentifyType != null" >
+                PERSONAL_IDENTIFY_TYPE,
+            </if>
+            <if test="institutionIdentifyType != null" >
+                INSTITUTION_IDENTIFY_TYPE,
+            </if>
+            <if test="otherIdentifyName != null" >
+                OTHER_IDENTIFY_NAME,
+            </if>
+            <if test="identifyNumber != null" >
+                IDENTIFY_NUMBER,
+            </if>
+            <if test="spvCapAccBank != null" >
+                SPV_CAP_ACC_BANK,
+            </if>
+            <if test="otherCapAccBank != null" >
+                OTHER_CAP_ACC_BANK,
+            </if>
+            <if test="spvRegistCode != null" >
+                SPV_REGIST_CODE,
+            </if>
+            <if test="holderDate != null" >
+                HOLDER_DATE,
+            </if>
+            <if test="holderName != null" >
+                HOLDER_NAME,
+            </if>
+            <if test="holderSex != null" >
+                HOLDER_SEX,
+            </if>
+            <if test="holderRiskPrefer != null" >
+                HOLDER_RISK_PREFER,
+            </if>
+            <if test="holderCellphone != null" >
+                HOLDER_CELLPHONE,
+            </if>
+            <if test="holderTelephone != null" >
+                HOLDER_TELEPHONE,
+            </if>
+            <if test="holderEmail != null" >
+                HOLDER_EMAIL,
+            </if>
+            <if test="type != null" >
+                TYPE,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="submitTime != null" >
+                SUBMIT_TIME,
+            </if>
+            <if test="chbSubmitDeadline != null" >
+                CHB_SUBMIT_DEADLINE,
+            </if>
+            <if test="submitDeadline != null" >
+                SUBMIT_DEADLINE,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="sumitSeq != null" >
+                SUMIT_SEQ,
+            </if>
+            <if test="deleteRes != null" >
+                DELETE_RES,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="indentifyMark != null" >
+                #{indentifyMark,jdbcType=VARCHAR},
+            </if>
+            <if test="registBankCode != null" >
+                #{registBankCode,jdbcType=VARCHAR},
+            </if>
+            <if test="submitStatus != null" >
+                #{submitStatus,jdbcType=CHAR},
+            </if>
+            <if test="orgIndentifyMark != null" >
+                #{orgIndentifyMark,jdbcType=VARCHAR},
+            </if>
+            <if test="isBelongBank != null" >
+                #{isBelongBank,jdbcType=CHAR},
+            </if>
+            <if test="theBankName != null" >
+                #{theBankName,jdbcType=VARCHAR},
+            </if>
+            <if test="theBankCode != null" >
+                #{theBankCode,jdbcType=VARCHAR},
+            </if>
+            <if test="holderMark != null" >
+                #{holderMark,jdbcType=CHAR},
+            </if>
+            <if test="holderRegion != null" >
+                #{holderRegion,jdbcType=VARCHAR},
+            </if>
+            <if test="holderType != null" >
+                #{holderType,jdbcType=CHAR},
+            </if>
+            <if test="personalIdentifyType != null" >
+                #{personalIdentifyType,jdbcType=CHAR},
+            </if>
+            <if test="institutionIdentifyType != null" >
+                #{institutionIdentifyType,jdbcType=VARCHAR},
+            </if>
+            <if test="otherIdentifyName != null" >
+                #{otherIdentifyName,jdbcType=VARCHAR},
+            </if>
+            <if test="identifyNumber != null" >
+                #{identifyNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="spvCapAccBank != null" >
+                #{spvCapAccBank,jdbcType=VARCHAR},
+            </if>
+            <if test="otherCapAccBank != null" >
+                #{otherCapAccBank,jdbcType=VARCHAR},
+            </if>
+            <if test="spvRegistCode != null" >
+                #{spvRegistCode,jdbcType=VARCHAR},
+            </if>
+            <if test="holderDate != null" >
+                #{holderDate,jdbcType=DATE},
+            </if>
+            <if test="holderName != null" >
+                #{holderName,jdbcType=VARCHAR},
+            </if>
+            <if test="holderSex != null" >
+                #{holderSex,jdbcType=CHAR},
+            </if>
+            <if test="holderRiskPrefer != null" >
+                #{holderRiskPrefer,jdbcType=VARCHAR},
+            </if>
+            <if test="holderCellphone != null" >
+                #{holderCellphone,jdbcType=VARCHAR},
+            </if>
+            <if test="holderTelephone != null" >
+                #{holderTelephone,jdbcType=VARCHAR},
+            </if>
+            <if test="holderEmail != null" >
+                #{holderEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null" >
+                #{type,jdbcType=CHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="submitTime != null" >
+                #{submitTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="chbSubmitDeadline != null" >
+                #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitDeadline != null" >
+                #{submitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sumitSeq != null" >
+                #{sumitSeq,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteRes != null" >
+                #{deleteRes,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbEquSub" >
+        insert into CHB_EQU_SUB(INDENTIFY_MARK, REGIST_BANK_CODE, SUBMIT_STATUS, ORG_INDENTIFY_MARK, 
+        IS_BELONG_BANK, THE_BANK_NAME, THE_BANK_CODE, HOLDER_MARK, HOLDER_REGION, HOLDER_TYPE, 
+        PERSONAL_IDENTIFY_TYPE, INSTITUTION_IDENTIFY_TYPE, OTHER_IDENTIFY_NAME, IDENTIFY_NUMBER, 
+        SPV_CAP_ACC_BANK, OTHER_CAP_ACC_BANK, SPV_REGIST_CODE, HOLDER_DATE, HOLDER_NAME, 
+        HOLDER_SEX, HOLDER_RISK_PREFER, HOLDER_CELLPHONE, HOLDER_TELEPHONE, HOLDER_EMAIL, 
+        TYPE, REMARK, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, DEPT_CODE, 
+        UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, SUMIT_SEQ, DELETE_RES, ORG_CODE, 
+        CREATE_DEPT)
+        select INDENTIFY_MARK, REGIST_BANK_CODE, SUBMIT_STATUS, ORG_INDENTIFY_MARK, 
+            IS_BELONG_BANK, THE_BANK_NAME, THE_BANK_CODE, HOLDER_MARK, HOLDER_REGION, HOLDER_TYPE, 
+            PERSONAL_IDENTIFY_TYPE, INSTITUTION_IDENTIFY_TYPE, OTHER_IDENTIFY_NAME, IDENTIFY_NUMBER, 
+            SPV_CAP_ACC_BANK, OTHER_CAP_ACC_BANK, SPV_REGIST_CODE, HOLDER_DATE, HOLDER_NAME, 
+            HOLDER_SEX, HOLDER_RISK_PREFER, HOLDER_CELLPHONE, HOLDER_TELEPHONE, HOLDER_EMAIL, 
+            TYPE, REMARK, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, #{status,jdbcType=VARCHAR} STATUS, DEPT_CODE, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_USER, CREATE_TIME, SUMIT_SEQ, DELETE_RES, ORG_CODE, 
+            CREATE_DEPT
+             from CHB_EQU_SUB
+             where STATUS = 'E' and INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR} and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR} and SUBMIT_STATUS = #{submitStatus,jdbcType=CHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbEquSub" >
+        update CHB_EQU_SUB
+        <set >
+            <if test="orgIndentifyMark != null" >
+                ORG_INDENTIFY_MARK = #{orgIndentifyMark,jdbcType=VARCHAR},
+            </if>
+            <if test="isBelongBank != null" >
+                IS_BELONG_BANK = #{isBelongBank,jdbcType=CHAR},
+            </if>
+            <if test="theBankName != null" >
+                THE_BANK_NAME = #{theBankName,jdbcType=VARCHAR},
+            </if>
+            <if test="theBankCode != null" >
+                THE_BANK_CODE = #{theBankCode,jdbcType=VARCHAR},
+            </if>
+            <if test="holderMark != null" >
+                HOLDER_MARK = #{holderMark,jdbcType=CHAR},
+            </if>
+            <if test="holderRegion != null" >
+                HOLDER_REGION = #{holderRegion,jdbcType=VARCHAR},
+            </if>
+            <if test="holderType != null" >
+                HOLDER_TYPE = #{holderType,jdbcType=CHAR},
+            </if>
+            <if test="personalIdentifyType != null" >
+                PERSONAL_IDENTIFY_TYPE = #{personalIdentifyType,jdbcType=CHAR},
+            </if>
+            <if test="institutionIdentifyType != null" >
+                INSTITUTION_IDENTIFY_TYPE = #{institutionIdentifyType,jdbcType=VARCHAR},
+            </if>
+            <if test="otherIdentifyName != null" >
+                OTHER_IDENTIFY_NAME = #{otherIdentifyName,jdbcType=VARCHAR},
+            </if>
+            <if test="identifyNumber != null" >
+                IDENTIFY_NUMBER = #{identifyNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="spvCapAccBank != null" >
+                SPV_CAP_ACC_BANK = #{spvCapAccBank,jdbcType=VARCHAR},
+            </if>
+            <if test="otherCapAccBank != null" >
+                OTHER_CAP_ACC_BANK = #{otherCapAccBank,jdbcType=VARCHAR},
+            </if>
+            <if test="spvRegistCode != null" >
+                SPV_REGIST_CODE = #{spvRegistCode,jdbcType=VARCHAR},
+            </if>
+            <if test="holderDate != null" >
+                HOLDER_DATE = #{holderDate,jdbcType=DATE},
+            </if>
+            <if test="holderName != null" >
+                HOLDER_NAME = #{holderName,jdbcType=VARCHAR},
+            </if>
+            <if test="holderSex != null" >
+                HOLDER_SEX = #{holderSex,jdbcType=CHAR},
+            </if>
+            <if test="holderRiskPrefer != null" >
+                HOLDER_RISK_PREFER = #{holderRiskPrefer,jdbcType=VARCHAR},
+            </if>
+            <if test="holderCellphone != null" >
+                HOLDER_CELLPHONE = #{holderCellphone,jdbcType=VARCHAR},
+            </if>
+            <if test="holderTelephone != null" >
+                HOLDER_TELEPHONE = #{holderTelephone,jdbcType=VARCHAR},
+            </if>
+            <if test="holderEmail != null" >
+                HOLDER_EMAIL = #{holderEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null" >
+                TYPE = #{type,jdbcType=CHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="submitTime != null" >
+                SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="chbSubmitDeadline != null" >
+                CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitDeadline != null" >
+                SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sumitSeq != null" >
+                SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteRes != null" >
+                DELETE_RES = #{deleteRes,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
+          and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
+          and SUBMIT_STATUS = #{submitStatus,jdbcType=CHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbEquSub" >
+        update CHB_EQU_SUB
+        <set >
+            <if test="indentifyMark != null" >
+                INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR},
+            </if>
+            <if test="registBankCode != null" >
+                REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR},
+            </if>
+            <if test="submitStatus != null" >
+                SUBMIT_STATUS = #{submitStatus,jdbcType=CHAR},
+            </if>
+            <if test="orgIndentifyMark != null" >
+                ORG_INDENTIFY_MARK = #{orgIndentifyMark,jdbcType=VARCHAR},
+            </if>
+            <if test="isBelongBank != null" >
+                IS_BELONG_BANK = #{isBelongBank,jdbcType=CHAR},
+            </if>
+            <if test="theBankName != null" >
+                THE_BANK_NAME = #{theBankName,jdbcType=VARCHAR},
+            </if>
+            <if test="theBankCode != null" >
+                THE_BANK_CODE = #{theBankCode,jdbcType=VARCHAR},
+            </if>
+            <if test="holderMark != null" >
+                HOLDER_MARK = #{holderMark,jdbcType=CHAR},
+            </if>
+            <if test="holderRegion != null" >
+                HOLDER_REGION = #{holderRegion,jdbcType=VARCHAR},
+            </if>
+            <if test="holderType != null" >
+                HOLDER_TYPE = #{holderType,jdbcType=CHAR},
+            </if>
+            <if test="personalIdentifyType != null" >
+                PERSONAL_IDENTIFY_TYPE = #{personalIdentifyType,jdbcType=CHAR},
+            </if>
+            <if test="institutionIdentifyType != null" >
+                INSTITUTION_IDENTIFY_TYPE = #{institutionIdentifyType,jdbcType=VARCHAR},
+            </if>
+            <if test="otherIdentifyName != null" >
+                OTHER_IDENTIFY_NAME = #{otherIdentifyName,jdbcType=VARCHAR},
+            </if>
+            <if test="identifyNumber != null" >
+                IDENTIFY_NUMBER = #{identifyNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="spvCapAccBank != null" >
+                SPV_CAP_ACC_BANK = #{spvCapAccBank,jdbcType=VARCHAR},
+            </if>
+            <if test="otherCapAccBank != null" >
+                OTHER_CAP_ACC_BANK = #{otherCapAccBank,jdbcType=VARCHAR},
+            </if>
+            <if test="spvRegistCode != null" >
+                SPV_REGIST_CODE = #{spvRegistCode,jdbcType=VARCHAR},
+            </if>
+            <if test="holderDate != null" >
+                HOLDER_DATE = #{holderDate,jdbcType=DATE},
+            </if>
+            <if test="holderName != null" >
+                HOLDER_NAME = #{holderName,jdbcType=VARCHAR},
+            </if>
+            <if test="holderSex != null" >
+                HOLDER_SEX = #{holderSex,jdbcType=CHAR},
+            </if>
+            <if test="holderRiskPrefer != null" >
+                HOLDER_RISK_PREFER = #{holderRiskPrefer,jdbcType=VARCHAR},
+            </if>
+            <if test="holderCellphone != null" >
+                HOLDER_CELLPHONE = #{holderCellphone,jdbcType=VARCHAR},
+            </if>
+            <if test="holderTelephone != null" >
+                HOLDER_TELEPHONE = #{holderTelephone,jdbcType=VARCHAR},
+            </if>
+            <if test="holderEmail != null" >
+                HOLDER_EMAIL = #{holderEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null" >
+                TYPE = #{type,jdbcType=CHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="submitTime != null" >
+                SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="chbSubmitDeadline != null" >
+                CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitDeadline != null" >
+                SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sumitSeq != null" >
+                SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteRes != null" >
+                DELETE_RES = #{deleteRes,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbEquSub" >
+        update CHB_EQU_SUB
+        set 
+        INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR},
+        REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR},
+        SUBMIT_STATUS = #{submitStatus,jdbcType=CHAR},
+        ORG_INDENTIFY_MARK = #{orgIndentifyMark,jdbcType=VARCHAR},
+        IS_BELONG_BANK = #{isBelongBank,jdbcType=CHAR},
+        THE_BANK_NAME = #{theBankName,jdbcType=VARCHAR},
+        THE_BANK_CODE = #{theBankCode,jdbcType=VARCHAR},
+        HOLDER_MARK = #{holderMark,jdbcType=CHAR},
+        HOLDER_REGION = #{holderRegion,jdbcType=VARCHAR},
+        HOLDER_TYPE = #{holderType,jdbcType=CHAR},
+        PERSONAL_IDENTIFY_TYPE = #{personalIdentifyType,jdbcType=CHAR},
+        INSTITUTION_IDENTIFY_TYPE = #{institutionIdentifyType,jdbcType=VARCHAR},
+        OTHER_IDENTIFY_NAME = #{otherIdentifyName,jdbcType=VARCHAR},
+        IDENTIFY_NUMBER = #{identifyNumber,jdbcType=VARCHAR},
+        SPV_CAP_ACC_BANK = #{spvCapAccBank,jdbcType=VARCHAR},
+        OTHER_CAP_ACC_BANK = #{otherCapAccBank,jdbcType=VARCHAR},
+        SPV_REGIST_CODE = #{spvRegistCode,jdbcType=VARCHAR},
+        HOLDER_DATE = #{holderDate,jdbcType=DATE},
+        HOLDER_NAME = #{holderName,jdbcType=VARCHAR},
+        HOLDER_SEX = #{holderSex,jdbcType=CHAR},
+        HOLDER_RISK_PREFER = #{holderRiskPrefer,jdbcType=VARCHAR},
+        HOLDER_CELLPHONE = #{holderCellphone,jdbcType=VARCHAR},
+        HOLDER_TELEPHONE = #{holderTelephone,jdbcType=VARCHAR},
+        HOLDER_EMAIL = #{holderEmail,jdbcType=VARCHAR},
+        TYPE = #{type,jdbcType=CHAR},
+        REMARK = #{remark,jdbcType=VARCHAR},
+        SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+        CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+        SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+        STATUS = #{status,jdbcType=VARCHAR},
+        DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+        DELETE_RES = #{deleteRes,jdbcType=VARCHAR},
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbEquSub" >
+        update CHB_EQU_SUB
+        set ORG_INDENTIFY_MARK = #{orgIndentifyMark,jdbcType=VARCHAR},
+            IS_BELONG_BANK = #{isBelongBank,jdbcType=CHAR},
+            THE_BANK_NAME = #{theBankName,jdbcType=VARCHAR},
+            THE_BANK_CODE = #{theBankCode,jdbcType=VARCHAR},
+            HOLDER_MARK = #{holderMark,jdbcType=CHAR},
+            HOLDER_REGION = #{holderRegion,jdbcType=VARCHAR},
+            HOLDER_TYPE = #{holderType,jdbcType=CHAR},
+            PERSONAL_IDENTIFY_TYPE = #{personalIdentifyType,jdbcType=CHAR},
+            INSTITUTION_IDENTIFY_TYPE = #{institutionIdentifyType,jdbcType=VARCHAR},
+            OTHER_IDENTIFY_NAME = #{otherIdentifyName,jdbcType=VARCHAR},
+            IDENTIFY_NUMBER = #{identifyNumber,jdbcType=VARCHAR},
+            SPV_CAP_ACC_BANK = #{spvCapAccBank,jdbcType=VARCHAR},
+            OTHER_CAP_ACC_BANK = #{otherCapAccBank,jdbcType=VARCHAR},
+            SPV_REGIST_CODE = #{spvRegistCode,jdbcType=VARCHAR},
+            HOLDER_DATE = #{holderDate,jdbcType=DATE},
+            HOLDER_NAME = #{holderName,jdbcType=VARCHAR},
+            HOLDER_SEX = #{holderSex,jdbcType=CHAR},
+            HOLDER_RISK_PREFER = #{holderRiskPrefer,jdbcType=VARCHAR},
+            HOLDER_CELLPHONE = #{holderCellphone,jdbcType=VARCHAR},
+            HOLDER_TELEPHONE = #{holderTelephone,jdbcType=VARCHAR},
+            HOLDER_EMAIL = #{holderEmail,jdbcType=VARCHAR},
+            TYPE = #{type,jdbcType=CHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+            CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+            SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+            STATUS = #{status,jdbcType=VARCHAR},
+            DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+            DELETE_RES = #{deleteRes,jdbcType=VARCHAR},
+            ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+        where INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
+          and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
+          and SUBMIT_STATUS = #{submitStatus,jdbcType=CHAR}
+    </update>
+</mapper>

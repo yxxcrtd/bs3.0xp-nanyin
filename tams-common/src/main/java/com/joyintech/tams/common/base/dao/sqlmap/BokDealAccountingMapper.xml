@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.BokDealAccountingMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.BokDealAccounting" >
+        <id column="BUSI_NO" property="busiNo" jdbcType="VARCHAR" />
+        <id column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <id column="BUSI_TABLE" property="busiTable" jdbcType="VARCHAR" />
+        <result column="BOOKSET_DATE" property="booksetDate" jdbcType="DATE" />
+        <result column="BOOK_DATE" property="bookDate" jdbcType="DATE" />
+        <result column="HAPPEN_DATE" property="happenDate" jdbcType="DATE" />
+        <result column="IS_ACCOUNTED" property="isAccounted" jdbcType="VARCHAR" />
+        <result column="BOOK_ID" property="bookId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="INV_AIM" property="invAim" jdbcType="VARCHAR" />
+        <result column="INV_AIM_METHOD" property="invAimMethod" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        BUSI_NO BUSI_NO, BOOKSET_ID BOOKSET_ID, BUSI_TABLE BUSI_TABLE, BOOKSET_DATE BOOKSET_DATE, 
+        BOOK_DATE BOOK_DATE, HAPPEN_DATE HAPPEN_DATE, IS_ACCOUNTED IS_ACCOUNTED, BOOK_ID BOOK_ID, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, INV_AIM INV_AIM, INV_AIM_METHOD INV_AIM_METHOD
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.BokDealAccountingMapper.Base_Column_List" />
+        from BOK_DEAL_ACCOUNTING
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.BokDealAccountingMapper.Base_Column_List" />
+        from BOK_DEAL_ACCOUNTING
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.BokDealAccountingKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.BokDealAccountingMapper.Base_Column_List" />
+        from BOK_DEAL_ACCOUNTING
+        where BUSI_NO = #{busiNo,jdbcType=VARCHAR}
+          and BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and BUSI_TABLE = #{busiTable,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokDealAccountingKey" >
+        delete from BOK_DEAL_ACCOUNTING
+        where BUSI_NO = #{busiNo,jdbcType=VARCHAR}
+          and BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and BUSI_TABLE = #{busiTable,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.BokDealAccounting" >
+        insert into BOK_DEAL_ACCOUNTING (BUSI_NO, BOOKSET_ID, BUSI_TABLE, 
+            BOOKSET_DATE, BOOK_DATE, HAPPEN_DATE, 
+            IS_ACCOUNTED, BOOK_ID, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, INV_AIM, INV_AIM_METHOD
+            )
+        values (#{busiNo,jdbcType=VARCHAR}, #{booksetId,jdbcType=VARCHAR}, #{busiTable,jdbcType=VARCHAR}, 
+            #{booksetDate,jdbcType=DATE}, #{bookDate,jdbcType=DATE}, #{happenDate,jdbcType=DATE}, 
+            #{isAccounted,jdbcType=VARCHAR}, #{bookId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{invAim,jdbcType=VARCHAR}, #{invAimMethod,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.BokDealAccounting" >
+        insert into BOK_DEAL_ACCOUNTING
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="busiNo != null" >
+                BUSI_NO,
+            </if>
+            <if test="booksetId != null" >
+                BOOKSET_ID,
+            </if>
+            <if test="busiTable != null" >
+                BUSI_TABLE,
+            </if>
+            <if test="booksetDate != null" >
+                BOOKSET_DATE,
+            </if>
+            <if test="bookDate != null" >
+                BOOK_DATE,
+            </if>
+            <if test="happenDate != null" >
+                HAPPEN_DATE,
+            </if>
+            <if test="isAccounted != null" >
+                IS_ACCOUNTED,
+            </if>
+            <if test="bookId != null" >
+                BOOK_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="invAim != null" >
+                INV_AIM,
+            </if>
+            <if test="invAimMethod != null" >
+                INV_AIM_METHOD,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="busiNo != null" >
+                #{busiNo,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetId != null" >
+                #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="busiTable != null" >
+                #{busiTable,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetDate != null" >
+                #{booksetDate,jdbcType=DATE},
+            </if>
+            <if test="bookDate != null" >
+                #{bookDate,jdbcType=DATE},
+            </if>
+            <if test="happenDate != null" >
+                #{happenDate,jdbcType=DATE},
+            </if>
+            <if test="isAccounted != null" >
+                #{isAccounted,jdbcType=VARCHAR},
+            </if>
+            <if test="bookId != null" >
+                #{bookId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="invAim != null" >
+                #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="invAimMethod != null" >
+                #{invAimMethod,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.BokDealAccounting" >
+        insert into BOK_DEAL_ACCOUNTING(BUSI_NO, BOOKSET_ID, BUSI_TABLE, BOOKSET_DATE, BOOK_DATE, 
+        HAPPEN_DATE, IS_ACCOUNTED, BOOK_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME, INV_AIM, INV_AIM_METHOD)
+        select BUSI_NO, BOOKSET_ID, BUSI_TABLE, BOOKSET_DATE, BOOK_DATE, 
+            HAPPEN_DATE, IS_ACCOUNTED, BOOK_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, INV_AIM, INV_AIM_METHOD
+             from BOK_DEAL_ACCOUNTING
+             where 1 = 1 and BUSI_NO = #{busiNo,jdbcType=VARCHAR} and BOOKSET_ID = #{booksetId,jdbcType=VARCHAR} and BUSI_TABLE = #{busiTable,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.BokDealAccounting" >
+        update BOK_DEAL_ACCOUNTING
+        <set >
+            <if test="booksetDate != null" >
+                BOOKSET_DATE = #{booksetDate,jdbcType=DATE},
+            </if>
+            <if test="bookDate != null" >
+                BOOK_DATE = #{bookDate,jdbcType=DATE},
+            </if>
+            <if test="happenDate != null" >
+                HAPPEN_DATE = #{happenDate,jdbcType=DATE},
+            </if>
+            <if test="isAccounted != null" >
+                IS_ACCOUNTED = #{isAccounted,jdbcType=VARCHAR},
+            </if>
+            <if test="bookId != null" >
+                BOOK_ID = #{bookId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="invAim != null" >
+                INV_AIM = #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="invAimMethod != null" >
+                INV_AIM_METHOD = #{invAimMethod,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where BUSI_NO = #{busiNo,jdbcType=VARCHAR}
+          and BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and BUSI_TABLE = #{busiTable,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokDealAccounting" >
+        update BOK_DEAL_ACCOUNTING
+        set BOOKSET_DATE = #{booksetDate,jdbcType=DATE},
+            BOOK_DATE = #{bookDate,jdbcType=DATE},
+            HAPPEN_DATE = #{happenDate,jdbcType=DATE},
+            IS_ACCOUNTED = #{isAccounted,jdbcType=VARCHAR},
+            BOOK_ID = #{bookId,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            INV_AIM = #{invAim,jdbcType=VARCHAR},
+            INV_AIM_METHOD = #{invAimMethod,jdbcType=VARCHAR}
+        where BUSI_NO = #{busiNo,jdbcType=VARCHAR}
+          and BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and BUSI_TABLE = #{busiTable,jdbcType=VARCHAR}
+    </update>
+</mapper>

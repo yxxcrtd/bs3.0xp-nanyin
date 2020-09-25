@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.invest.batch.riskparamcalc.dao.RskParamReCalcMapper" >
+    <select id="queryOcpInfo" resultMap="com.joyintech.tams.common.base.dao.RskOccupyInfoMapper.BaseResultMap"
+            parameterType="java.util.List" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskOccupyInfoMapper.Base_Column_List" />
+        from RSK_OCCUPY_INFO
+        where EVENT_ID IN (SELECT EVENT_ID from RSK_OCCUPY_INFO 
+            where EVENT_DATE >= #{sysDate} 
+        <if test="prodIdList != null and prodIdList.size() > 0">
+            and PROD_ID IN
+            <foreach collection="prodIdList" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach> 
+        </if>
+        )
+    </select>
+
+    <delete id="deleteRskIndParaDtl" parameterType="java.util.List" >
+        delete from RSK_INDICATOR_PARA_CALCDETAIL
+        <where>
+	        <if test="infoList != null and infoList.size() > 0">
+	            OR (SUP_DATE||TRADE_ID||CREATE_USER) IN
+	            <foreach collection="infoList" item="item" separator="," open="(" close=")">
+	               #{item.supDate} || #{item.tradeId} || #{item.createUser}
+	            </foreach>
+	        </if>
+        </where>
+    </delete>
+    
+    <delete id="deleteRskIndParaDtlTwo" parameterType="java.util.Map" >
+        delete from RSK_INDICATOR_PARA_CALCDETAIL
+        <where>
+            SUP_DATE = to_date(#{supDate},'YYYY-MM-DD') 
+            and CREATE_USER = #{createUser}
+	        <if test="tradeIds != null and tradeIds.size() > 0">
+	            AND TRADE_ID IN
+	            <foreach collection="tradeIds" item="item" separator="," open="(" close=")">
+	                #{item} 
+	            </foreach>
+	        </if>
+        </where>
+    </delete>
+</mapper>

@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ProductBaseInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ProductBaseInfo" >
+        <id column="PRD_DESIGN_ID" property="prdDesignId" jdbcType="VARCHAR" />
+        <result column="REQUIREMENT_ID" property="requirementId" jdbcType="VARCHAR" />
+        <result column="PRD_DESIGN_SERIAL_NAME" property="prdDesignSerialName" jdbcType="VARCHAR" />
+        <result column="PRD_BASE_GOAL" property="prdBaseGoal" jdbcType="VARCHAR" />
+        <result column="PRD_CHARATER" property="prdCharater" jdbcType="VARCHAR" />
+        <result column="RAISE_TYPE" property="raiseType" jdbcType="VARCHAR" />
+        <result column="INVEST_NATURE" property="investNature" jdbcType="VARCHAR" />
+        <result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
+        <result column="TAR_CUSTOMER_TYPE" property="tarCustomerType" jdbcType="VARCHAR" />
+        <result column="TAR_INVESTOR" property="tarInvestor" jdbcType="VARCHAR" />
+        <result column="RSK_LEVEL" property="rskLevel" jdbcType="VARCHAR" />
+        <result column="OPEN_DESCRIBE" property="openDescribe" jdbcType="VARCHAR" />
+        <result column="PRD_TERM" property="prdTerm" jdbcType="VARCHAR" />
+        <result column="PLAN_ISSUE_DATE" property="planIssueDate" jdbcType="VARCHAR" />
+        <result column="PLAN_ISSUE_SCALE" property="planIssueScale" jdbcType="VARCHAR" />
+        <result column="SALE_AREA" property="saleArea" jdbcType="VARCHAR" />
+        <result column="BASE_RULE_INFO" property="baseRuleInfo" jdbcType="VARCHAR" />
+        <result column="FEE_RATE" property="feeRate" jdbcType="VARCHAR" />
+        <result column="TOFF_START" property="toffStart" jdbcType="VARCHAR" />
+        <result column="HUGE_RED_RATIO" property="hugeRedRatio" jdbcType="VARCHAR" />
+        <result column="INV_ASSET_RATE" property="invAssetRate" jdbcType="VARCHAR" />
+        <result column="INTEN_INV_STRATEGY" property="intenInvStrategy" jdbcType="VARCHAR" />
+        <result column="OTHER" property="other" jdbcType="VARCHAR" />
+        <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        PRD_DESIGN_ID PRD_DESIGN_ID, REQUIREMENT_ID REQUIREMENT_ID, PRD_DESIGN_SERIAL_NAME PRD_DESIGN_SERIAL_NAME, 
+        PRD_BASE_GOAL PRD_BASE_GOAL, PRD_CHARATER PRD_CHARATER, RAISE_TYPE RAISE_TYPE, INVEST_NATURE INVEST_NATURE, 
+        OPERATE_MODE OPERATE_MODE, TAR_CUSTOMER_TYPE TAR_CUSTOMER_TYPE, TAR_INVESTOR TAR_INVESTOR, 
+        RSK_LEVEL RSK_LEVEL, OPEN_DESCRIBE OPEN_DESCRIBE, PRD_TERM PRD_TERM, PLAN_ISSUE_DATE PLAN_ISSUE_DATE, 
+        PLAN_ISSUE_SCALE PLAN_ISSUE_SCALE, SALE_AREA SALE_AREA, BASE_RULE_INFO BASE_RULE_INFO, 
+        FEE_RATE FEE_RATE, TOFF_START TOFF_START, HUGE_RED_RATIO HUGE_RED_RATIO, INV_ASSET_RATE INV_ASSET_RATE, 
+        INTEN_INV_STRATEGY INTEN_INV_STRATEGY, OTHER OTHER, DATA_STATUS DATA_STATUS, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ProductBaseInfoMapper.Base_Column_List" />
+        from PRODUCT_BASE_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ProductBaseInfoMapper.Base_Column_List" />
+        from PRODUCT_BASE_INFO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ProductBaseInfoMapper.Base_Column_List" />
+        from PRODUCT_BASE_INFO
+        where PRD_DESIGN_ID = #{prdDesignId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from PRODUCT_BASE_INFO
+        where PRD_DESIGN_ID = #{prdDesignId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ProductBaseInfo" >
+        insert into PRODUCT_BASE_INFO (PRD_DESIGN_ID, REQUIREMENT_ID, PRD_DESIGN_SERIAL_NAME, 
+            PRD_BASE_GOAL, PRD_CHARATER, RAISE_TYPE, 
+            INVEST_NATURE, OPERATE_MODE, TAR_CUSTOMER_TYPE, 
+            TAR_INVESTOR, RSK_LEVEL, OPEN_DESCRIBE, 
+            PRD_TERM, PLAN_ISSUE_DATE, PLAN_ISSUE_SCALE, 
+            SALE_AREA, BASE_RULE_INFO, FEE_RATE, 
+            TOFF_START, HUGE_RED_RATIO, INV_ASSET_RATE, 
+            INTEN_INV_STRATEGY, OTHER, DATA_STATUS, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{prdDesignId,jdbcType=VARCHAR}, #{requirementId,jdbcType=VARCHAR}, #{prdDesignSerialName,jdbcType=VARCHAR}, 
+            #{prdBaseGoal,jdbcType=VARCHAR}, #{prdCharater,jdbcType=VARCHAR}, #{raiseType,jdbcType=VARCHAR}, 
+            #{investNature,jdbcType=VARCHAR}, #{operateMode,jdbcType=VARCHAR}, #{tarCustomerType,jdbcType=VARCHAR}, 
+            #{tarInvestor,jdbcType=VARCHAR}, #{rskLevel,jdbcType=VARCHAR}, #{openDescribe,jdbcType=VARCHAR}, 
+            #{prdTerm,jdbcType=VARCHAR}, #{planIssueDate,jdbcType=VARCHAR}, #{planIssueScale,jdbcType=VARCHAR}, 
+            #{saleArea,jdbcType=VARCHAR}, #{baseRuleInfo,jdbcType=VARCHAR}, #{feeRate,jdbcType=VARCHAR}, 
+            #{toffStart,jdbcType=VARCHAR}, #{hugeRedRatio,jdbcType=VARCHAR}, #{invAssetRate,jdbcType=VARCHAR}, 
+            #{intenInvStrategy,jdbcType=VARCHAR}, #{other,jdbcType=VARCHAR}, #{dataStatus,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ProductBaseInfo" >
+        insert into PRODUCT_BASE_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="prdDesignId != null" >
+                PRD_DESIGN_ID,
+            </if>
+            <if test="requirementId != null" >
+                REQUIREMENT_ID,
+            </if>
+            <if test="prdDesignSerialName != null" >
+                PRD_DESIGN_SERIAL_NAME,
+            </if>
+            <if test="prdBaseGoal != null" >
+                PRD_BASE_GOAL,
+            </if>
+            <if test="prdCharater != null" >
+                PRD_CHARATER,
+            </if>
+            <if test="raiseType != null" >
+                RAISE_TYPE,
+            </if>
+            <if test="investNature != null" >
+                INVEST_NATURE,
+            </if>
+            <if test="operateMode != null" >
+                OPERATE_MODE,
+            </if>
+            <if test="tarCustomerType != null" >
+                TAR_CUSTOMER_TYPE,
+            </if>
+            <if test="tarInvestor != null" >
+                TAR_INVESTOR,
+            </if>
+            <if test="rskLevel != null" >
+                RSK_LEVEL,
+            </if>
+            <if test="openDescribe != null" >
+                OPEN_DESCRIBE,
+            </if>
+            <if test="prdTerm != null" >
+                PRD_TERM,
+            </if>
+            <if test="planIssueDate != null" >
+                PLAN_ISSUE_DATE,
+            </if>
+            <if test="planIssueScale != null" >
+                PLAN_ISSUE_SCALE,
+            </if>
+            <if test="saleArea != null" >
+                SALE_AREA,
+            </if>
+            <if test="baseRuleInfo != null" >
+                BASE_RULE_INFO,
+            </if>
+            <if test="feeRate != null" >
+                FEE_RATE,
+            </if>
+            <if test="toffStart != null" >
+                TOFF_START,
+            </if>
+            <if test="hugeRedRatio != null" >
+                HUGE_RED_RATIO,
+            </if>
+            <if test="invAssetRate != null" >
+                INV_ASSET_RATE,
+            </if>
+            <if test="intenInvStrategy != null" >
+                INTEN_INV_STRATEGY,
+            </if>
+            <if test="other != null" >
+                OTHER,
+            </if>
+            <if test="dataStatus != null" >
+                DATA_STATUS,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="prdDesignId != null" >
+                #{prdDesignId,jdbcType=VARCHAR},
+            </if>
+            <if test="requirementId != null" >
+                #{requirementId,jdbcType=VARCHAR},
+            </if>
+            <if test="prdDesignSerialName != null" >
+                #{prdDesignSerialName,jdbcType=VARCHAR},
+            </if>
+            <if test="prdBaseGoal != null" >
+                #{prdBaseGoal,jdbcType=VARCHAR},
+            </if>
+            <if test="prdCharater != null" >
+                #{prdCharater,jdbcType=VARCHAR},
+            </if>
+            <if test="raiseType != null" >
+                #{raiseType,jdbcType=VARCHAR},
+            </if>
+            <if test="investNature != null" >
+                #{investNature,jdbcType=VARCHAR},
+            </if>
+            <if test="operateMode != null" >
+                #{operateMode,jdbcType=VARCHAR},
+            </if>
+            <if test="tarCustomerType != null" >
+                #{tarCustomerType,jdbcType=VARCHAR},
+            </if>
+            <if test="tarInvestor != null" >
+                #{tarInvestor,jdbcType=VARCHAR},
+            </if>
+            <if test="rskLevel != null" >
+                #{rskLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="openDescribe != null" >
+                #{openDescribe,jdbcType=VARCHAR},
+            </if>
+            <if test="prdTerm != null" >
+                #{prdTerm,jdbcType=VARCHAR},
+            </if>
+            <if test="planIssueDate != null" >
+                #{planIssueDate,jdbcType=VARCHAR},
+            </if>
+            <if test="planIssueScale != null" >
+                #{planIssueScale,jdbcType=VARCHAR},
+            </if>
+            <if test="saleArea != null" >
+                #{saleArea,jdbcType=VARCHAR},
+            </if>
+            <if test="baseRuleInfo != null" >
+                #{baseRuleInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="feeRate != null" >
+                #{feeRate,jdbcType=VARCHAR},
+            </if>
+            <if test="toffStart != null" >
+                #{toffStart,jdbcType=VARCHAR},
+            </if>
+            <if test="hugeRedRatio != null" >
+                #{hugeRedRatio,jdbcType=VARCHAR},
+            </if>
+            <if test="invAssetRate != null" >
+                #{invAssetRate,jdbcType=VARCHAR},
+            </if>
+            <if test="intenInvStrategy != null" >
+                #{intenInvStrategy,jdbcType=VARCHAR},
+            </if>
+            <if test="other != null" >
+                #{other,jdbcType=VARCHAR},
+            </if>
+            <if test="dataStatus != null" >
+                #{dataStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ProductBaseInfo" >
+        insert into PRODUCT_BASE_INFO(PRD_DESIGN_ID, REQUIREMENT_ID, PRD_DESIGN_SERIAL_NAME, 
+        PRD_BASE_GOAL, PRD_CHARATER, RAISE_TYPE, INVEST_NATURE, OPERATE_MODE, TAR_CUSTOMER_TYPE, 
+        TAR_INVESTOR, RSK_LEVEL, OPEN_DESCRIBE, PRD_TERM, PLAN_ISSUE_DATE, PLAN_ISSUE_SCALE, 
+        SALE_AREA, BASE_RULE_INFO, FEE_RATE, TOFF_START, HUGE_RED_RATIO, INV_ASSET_RATE, 
+        INTEN_INV_STRATEGY, OTHER, DATA_STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME)
+        select PRD_DESIGN_ID, REQUIREMENT_ID, PRD_DESIGN_SERIAL_NAME, 
+            PRD_BASE_GOAL, PRD_CHARATER, RAISE_TYPE, INVEST_NATURE, OPERATE_MODE, TAR_CUSTOMER_TYPE, 
+            TAR_INVESTOR, RSK_LEVEL, OPEN_DESCRIBE, PRD_TERM, PLAN_ISSUE_DATE, PLAN_ISSUE_SCALE, 
+            SALE_AREA, BASE_RULE_INFO, FEE_RATE, TOFF_START, HUGE_RED_RATIO, INV_ASSET_RATE, 
+            INTEN_INV_STRATEGY, OTHER, DATA_STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from PRODUCT_BASE_INFO
+             where 1 = 1 and PRD_DESIGN_ID = #{prdDesignId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ProductBaseInfo" >
+        update PRODUCT_BASE_INFO
+        <set >
+            <if test="requirementId != null" >
+                REQUIREMENT_ID = #{requirementId,jdbcType=VARCHAR},
+            </if>
+            <if test="prdDesignSerialName != null" >
+                PRD_DESIGN_SERIAL_NAME = #{prdDesignSerialName,jdbcType=VARCHAR},
+            </if>
+            <if test="prdBaseGoal != null" >
+                PRD_BASE_GOAL = #{prdBaseGoal,jdbcType=VARCHAR},
+            </if>
+            <if test="prdCharater != null" >
+                PRD_CHARATER = #{prdCharater,jdbcType=VARCHAR},
+            </if>
+            <if test="raiseType != null" >
+                RAISE_TYPE = #{raiseType,jdbcType=VARCHAR},
+            </if>
+            <if test="investNature != null" >
+                INVEST_NATURE = #{investNature,jdbcType=VARCHAR},
+            </if>
+            <if test="operateMode != null" >
+                OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
+            </if>
+            <if test="tarCustomerType != null" >
+                TAR_CUSTOMER_TYPE = #{tarCustomerType,jdbcType=VARCHAR},
+            </if>
+            <if test="tarInvestor != null" >
+                TAR_INVESTOR = #{tarInvestor,jdbcType=VARCHAR},
+            </if>
+            <if test="rskLevel != null" >
+                RSK_LEVEL = #{rskLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="openDescribe != null" >
+                OPEN_DESCRIBE = #{openDescribe,jdbcType=VARCHAR},
+            </if>
+            <if test="prdTerm != null" >
+                PRD_TERM = #{prdTerm,jdbcType=VARCHAR},
+            </if>
+            <if test="planIssueDate != null" >
+                PLAN_ISSUE_DATE = #{planIssueDate,jdbcType=VARCHAR},
+            </if>
+            <if test="planIssueScale != null" >
+                PLAN_ISSUE_SCALE = #{planIssueScale,jdbcType=VARCHAR},
+            </if>
+            <if test="saleArea != null" >
+                SALE_AREA = #{saleArea,jdbcType=VARCHAR},
+            </if>
+            <if test="baseRuleInfo != null" >
+                BASE_RULE_INFO = #{baseRuleInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="feeRate != null" >
+                FEE_RATE = #{feeRate,jdbcType=VARCHAR},
+            </if>
+            <if test="toffStart != null" >
+                TOFF_START = #{toffStart,jdbcType=VARCHAR},
+            </if>
+            <if test="hugeRedRatio != null" >
+                HUGE_RED_RATIO = #{hugeRedRatio,jdbcType=VARCHAR},
+            </if>
+            <if test="invAssetRate != null" >
+                INV_ASSET_RATE = #{invAssetRate,jdbcType=VARCHAR},
+            </if>
+            <if test="intenInvStrategy != null" >
+                INTEN_INV_STRATEGY = #{intenInvStrategy,jdbcType=VARCHAR},
+            </if>
+            <if test="other != null" >
+                OTHER = #{other,jdbcType=VARCHAR},
+            </if>
+            <if test="dataStatus != null" >
+                DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where PRD_DESIGN_ID = #{prdDesignId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ProductBaseInfo" >
+        update PRODUCT_BASE_INFO
+        set REQUIREMENT_ID = #{requirementId,jdbcType=VARCHAR},
+            PRD_DESIGN_SERIAL_NAME = #{prdDesignSerialName,jdbcType=VARCHAR},
+            PRD_BASE_GOAL = #{prdBaseGoal,jdbcType=VARCHAR},
+            PRD_CHARATER = #{prdCharater,jdbcType=VARCHAR},
+            RAISE_TYPE = #{raiseType,jdbcType=VARCHAR},
+            INVEST_NATURE = #{investNature,jdbcType=VARCHAR},
+            OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
+            TAR_CUSTOMER_TYPE = #{tarCustomerType,jdbcType=VARCHAR},
+            TAR_INVESTOR = #{tarInvestor,jdbcType=VARCHAR},
+            RSK_LEVEL = #{rskLevel,jdbcType=VARCHAR},
+            OPEN_DESCRIBE = #{openDescribe,jdbcType=VARCHAR},
+            PRD_TERM = #{prdTerm,jdbcType=VARCHAR},
+            PLAN_ISSUE_DATE = #{planIssueDate,jdbcType=VARCHAR},
+            PLAN_ISSUE_SCALE = #{planIssueScale,jdbcType=VARCHAR},
+            SALE_AREA = #{saleArea,jdbcType=VARCHAR},
+            BASE_RULE_INFO = #{baseRuleInfo,jdbcType=VARCHAR},
+            FEE_RATE = #{feeRate,jdbcType=VARCHAR},
+            TOFF_START = #{toffStart,jdbcType=VARCHAR},
+            HUGE_RED_RATIO = #{hugeRedRatio,jdbcType=VARCHAR},
+            INV_ASSET_RATE = #{invAssetRate,jdbcType=VARCHAR},
+            INTEN_INV_STRATEGY = #{intenInvStrategy,jdbcType=VARCHAR},
+            OTHER = #{other,jdbcType=VARCHAR},
+            DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where PRD_DESIGN_ID = #{prdDesignId,jdbcType=VARCHAR}
+    </update>
+</mapper>

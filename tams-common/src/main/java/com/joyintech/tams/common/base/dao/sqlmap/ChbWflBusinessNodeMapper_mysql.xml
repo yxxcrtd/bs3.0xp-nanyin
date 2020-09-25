@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbWflBusinessNodeMapper_mysql">
+	<insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbWflBusinessNode" >
+        insert into CHB_WFL_BUSINESS_NODE(SEQNO, HIS_NO, WORKFLOW_ID, BUSINESS_ID, HI_USER, 
+        NODE_ID, NODE_NAME, DISMOUNT, CHARACTER, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME)
+        select SEQNO, (select IFNULL(max(HIS_NO), 0) from CHB_WFL_BUSINESS_NODE where STATUS = 'E' and SEQNO = #{seqno,jdbcType=VARCHAR}) + 1 as HIS_NO, #{workflowId,jdbcType=VARCHAR} as WORKFLOW_ID, BUSINESS_ID, HI_USER, 
+            NODE_ID, NODE_NAME, DISMOUNT, CHARACTER, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME
+             from CHB_WFL_BUSINESS_NODE
+             where STATUS = 'E' and SEQNO = #{seqno,jdbcType=VARCHAR}
+    </insert>
+	<insert id="insertBasicByWorkflowId" parameterType="java.util.Map" >
+        insert into CHB_WFL_BUSINESS_NODE(SEQNO, HIS_NO, WORKFLOW_ID, BUSINESS_ID, HI_USER, 
+        NODE_ID, NODE_NAME, DISMOUNT, CHARACTER, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME)
+        select SEQNO, (select IFNULL(max(HIS_NO), 0) from CHB_WFL_BUSINESS_NODE where STATUS = 'E' and SEQNO = CHB_WFL_BUSINESS_NODE.SEQNO) + 1 as HIS_NO, #{newWorkflowId,jdbcType=VARCHAR} as WORKFLOW_ID, BUSINESS_ID, HI_USER, 
+            NODE_ID, NODE_NAME, DISMOUNT, CHARACTER, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME
+             from CHB_WFL_BUSINESS_NODE
+             where STATUS = 'E' and WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
+    </insert>
+</mapper>

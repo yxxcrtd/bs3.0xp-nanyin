@@ -1,0 +1,111 @@
+/*.fc-sat div,.fc-sun div{
+    color: #ED6D23 !important;
+}*/
+.fc-ltr .fc-basic-view .fc-day-top{
+    height:100%;
+}
+.fc-ltr .fc-basic-view .fc-day-top .fc-day-number{
+    width: 100%;
+    text-align: center;
+    display: block;
+    font-size: 20px;
+    font-family: Arial;
+    color: #555;
+}
+
+.fc-day-cnTerm{
+    text-align: center;
+    padding: 0px 12px 0 12px;
+    color: #ff0000!important;
+}
+
+.fc-day-cnDate{
+    text-align: center;
+    color: #999;
+}
+
+.fc-content-skeleton,.fc-content-skeleton table,.fc-content-skeleton table thead,.fc-content-skeleton table thead tr
+,.fc-content-skeleton table thead tr td{
+    height:100%;
+}
+.fc-content-skeleton .fc-thead-tbody td{
+   vertical-align: middle;
+    text-align:center;
+}
+.fc-content-skeleton .fc-thead-tbody .fc-day-number{
+    text-align:center;
+}
+.test-test{
+    position: absolute;
+    top:0;
+}
+#calendar1 .fc-widget-header{
+    position:relative;
+}
+#calendar1 div.fc-widget-header:after{
+    position:absolute;
+    content: url(../../image/disclosure/time-bg.png);
+    top:-30px;
+    left:-36px;
+}
+
+.fc th, .fc td{
+    border-left:transparent;
+    border-right:transparent;
+}
+
+#calendar1 .fc-widget-header,#calendar .fc-widget-header{
+    background-color:lightgray;
+}
+.fc-toolbar{
+    background: #e0f2fe;
+}
+.fc-button{
+    background: #4da6ff;
+    color: #fff;
+    border-radius: 20px!important;
+    border: none;
+    outline: none;
+}
+.fc-center h2{
+    color: #333333;
+    font-size: 16px;
+    line-height: 42px;
+}
+.fc-toolbar{
+    margin-bottom: 0;
+    height: 42px;
+}
+.fc-left{
+    margin: 6px 0 0 10px;
+}
+.fc-right{
+    margin: 6px 10px 0 0;
+}
+#calendar1 .fc-widget-header, #calendar .fc-widget-header{
+    background-color: #f0f0f0;
+}
+.fc-day-header{
+    color: #666666;
+    font-weight: normal;
+    font-size: 13px;
+    padding: 3px 0!important;
+}
+.fc-sat,.fc-sun{
+    color: #ff0000;
+}
+.fc-unthemed .fc-today{
+    background: #4da6ff;
+    color: #fff;
+}
+.fc-state-highlight{
+    color: #fff!important;
+}
+.fc-state-highlight .fc-day-cnTerm{
+    color: #fff!important;
+}
+.fc-event{
+    background-color: #90c31f;
+    border-radius: 0;
+    border: 1px solid #90c31f;
+}

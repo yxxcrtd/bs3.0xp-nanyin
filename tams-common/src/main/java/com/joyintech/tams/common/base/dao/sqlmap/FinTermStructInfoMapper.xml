@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.FinTermStructInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.FinTermStructInfo" >
+        <id column="TERM_STRUCT_ID" property="termStructId" jdbcType="VARCHAR" />
+        <result column="TERM_STRUCT_NAME" property="termStructName" jdbcType="VARCHAR" />
+        <result column="MIN_DAYS" property="minDays" jdbcType="DECIMAL" />
+        <result column="MAX_DAYS" property="maxDays" jdbcType="DECIMAL" />
+        <result column="TERM_STRUCT_TYPE" property="termStructType" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TERM_STRUCT_ID TERM_STRUCT_ID, TERM_STRUCT_NAME TERM_STRUCT_NAME, MIN_DAYS MIN_DAYS, 
+        MAX_DAYS MAX_DAYS, TERM_STRUCT_TYPE TERM_STRUCT_TYPE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinTermStructInfoMapper.Base_Column_List" />
+        from FIN_TERM_STRUCT_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinTermStructInfoMapper.Base_Column_List" />
+        from FIN_TERM_STRUCT_INFO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinTermStructInfoMapper.Base_Column_List" />
+        from FIN_TERM_STRUCT_INFO
+        where TERM_STRUCT_ID = #{termStructId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from FIN_TERM_STRUCT_INFO
+        where TERM_STRUCT_ID = #{termStructId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FinTermStructInfo" >
+        insert into FIN_TERM_STRUCT_INFO (TERM_STRUCT_ID, TERM_STRUCT_NAME, MIN_DAYS, 
+            MAX_DAYS, TERM_STRUCT_TYPE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{termStructId,jdbcType=VARCHAR}, #{termStructName,jdbcType=VARCHAR}, #{minDays,jdbcType=DECIMAL}, 
+            #{maxDays,jdbcType=DECIMAL}, #{termStructType,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinTermStructInfo" >
+        insert into FIN_TERM_STRUCT_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="termStructId != null" >
+                TERM_STRUCT_ID,
+            </if>
+            <if test="termStructName != null" >
+                TERM_STRUCT_NAME,
+            </if>
+            <if test="minDays != null" >
+                MIN_DAYS,
+            </if>
+            <if test="maxDays != null" >
+                MAX_DAYS,
+            </if>
+            <if test="termStructType != null" >
+                TERM_STRUCT_TYPE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="termStructId != null" >
+                #{termStructId,jdbcType=VARCHAR},
+            </if>
+            <if test="termStructName != null" >
+                #{termStructName,jdbcType=VARCHAR},
+            </if>
+            <if test="minDays != null" >
+                #{minDays,jdbcType=DECIMAL},
+            </if>
+            <if test="maxDays != null" >
+                #{maxDays,jdbcType=DECIMAL},
+            </if>
+            <if test="termStructType != null" >
+                #{termStructType,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinTermStructInfo" >
+        insert into FIN_TERM_STRUCT_INFO(TERM_STRUCT_ID, TERM_STRUCT_NAME, MIN_DAYS, MAX_DAYS, 
+        TERM_STRUCT_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        select TERM_STRUCT_ID, TERM_STRUCT_NAME, MIN_DAYS, MAX_DAYS, 
+            TERM_STRUCT_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            
+             from FIN_TERM_STRUCT_INFO
+             where 1 = 1 and TERM_STRUCT_ID = #{termStructId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.FinTermStructInfo" >
+        update FIN_TERM_STRUCT_INFO
+        <set >
+            <if test="termStructName != null" >
+                TERM_STRUCT_NAME = #{termStructName,jdbcType=VARCHAR},
+            </if>
+            <if test="minDays != null" >
+                MIN_DAYS = #{minDays,jdbcType=DECIMAL},
+            </if>
+            <if test="maxDays != null" >
+                MAX_DAYS = #{maxDays,jdbcType=DECIMAL},
+            </if>
+            <if test="termStructType != null" >
+                TERM_STRUCT_TYPE = #{termStructType,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where TERM_STRUCT_ID = #{termStructId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinTermStructInfo" >
+        update FIN_TERM_STRUCT_INFO
+        set TERM_STRUCT_NAME = #{termStructName,jdbcType=VARCHAR},
+            MIN_DAYS = #{minDays,jdbcType=DECIMAL},
+            MAX_DAYS = #{maxDays,jdbcType=DECIMAL},
+            TERM_STRUCT_TYPE = #{termStructType,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where TERM_STRUCT_ID = #{termStructId,jdbcType=VARCHAR}
+    </update>
+</mapper>

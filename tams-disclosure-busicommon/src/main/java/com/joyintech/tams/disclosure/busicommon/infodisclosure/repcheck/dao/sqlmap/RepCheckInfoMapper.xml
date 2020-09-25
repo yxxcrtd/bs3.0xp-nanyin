@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.joyintech.tams.disclosure.busicommon.infodisclosure.repcheck.dao.RepCheckInfoMapper">
+	<select id="getCheckInfo"
+		resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.repcheck.entity.RepCheckInfoDto">
+		select rcr.CHECK_ID as checkId,rcr.REP_ID as repId,rcr.CHECK_FOR as checkFor,rcr.ID as id,
+		       rc.QUERY_SCOPE as queryScope,rc.QUERY_TYPE as queryType,rc.BASE_DATA_TYPE as baseDataType,
+		       rc.QUERY_CONTEN_DESCR as queryContenDescr,rc.QUERY_CONTEN as queryConten,
+		       rc.QUERY_PARAM as queryParam,rc.DATA_TYPE as dataType,rc.PARAM_TYPE as paramType,
+		       rc.PARAM_VALUE1 as paramValue1,rc.PARAM_VALUE2 as paramValue2
+		from REP_CHECK_RELATION rcr
+		inner join REP_CHECK rc on rcr.CHECK_ID=rc.CHECK_ID and rc.STATUS='E'
+		where rcr.STATUS='E'
+		and rcr.REP_ID=#{repId,jdbcType=VARCHAR}
+		and rcr.CHECK_FOR=#{checkFor,jdbcType=VARCHAR}
+	</select>
+	<select id="selectProdInfo"
+		resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.repcheck.entity.RepProdCheckInfo">
+		select rpi.PROD_ID as prodId,
+               rpi.PROD_RE prodRe,
+               rpi.PROD_NAME prodName,
+               rpi.PROD_ABBR prodAbbr,
+               rpi.RAISE_MIN raiseMin,
+               rpi.RAISE_MAX raiseMax,
+               to_char(rpi.RAISE_STRDATE,'yyyy-mm-dd') raiseStrdate,
+               to_char(rpi.RAISE_ENDDATE,'yyyy-mm-dd') raiseEnddate,
+               rpi.RAISE_CCY raiseCcy,
+               to_char(rpi.SET_DATE,'yyyy-mm-dd') setDate,
+               to_char(rpi.VDATE,'yyyy-mm-dd') vdate,
+               rpi.FIRST_OPEN_DAY firstOpenDay,
+               to_char(rpi.MDATE,'yyyy-mm-dd') as mdate,
+               to_char(rpi.ACT_MDATE,'yyyy-mm-dd') as actMdate,
+               rpi.TERM as term,
+               rpi.WINDUP_DATE as windupDate,
+               rpi.ISSUE_MODE as issueMode,
+               rpi.PROFIT_TYPE as profitType,
+               rpi.PROD_TYPE as prodType,
+               rpi.ISSUE_STATUS as issueStatus,
+               rpi.RAISE_TYPE as raiseType,
+               rpi.RISK_LEVEL as riskLevel
+		from REP_PROD_INFO rpi
+		where rpi.STATUS='E'
+		and rpi.PROD_ID = #{prodId,jdbcType=VARCHAR}
+		and rpi.p_prod_id is null /*不取子产品*/
+	</select>
+
+</mapper>

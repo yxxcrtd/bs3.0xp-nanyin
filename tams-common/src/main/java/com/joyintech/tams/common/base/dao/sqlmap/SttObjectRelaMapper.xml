@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.SttObjectRelaMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.SttObjectRela" >
+        <id column="S_O_R_OBJECT_GRP_ID" property="objectGrpId" jdbcType="VARCHAR" />
+        <id column="S_O_R_OBJECT_ID" property="objectId" jdbcType="VARCHAR" />
+        <result column="S_O_R_CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="S_O_R_CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="S_O_R_CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="S_O_R_UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="S_O_R_UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        OBJECT_GRP_ID as S_O_R_OBJECT_GRP_ID, OBJECT_ID as S_O_R_OBJECT_ID, CREATE_USER as S_O_R_CREATE_USER, 
+        CREATE_DEPT as S_O_R_CREATE_DEPT, CREATE_TIME as S_O_R_CREATE_TIME, UPDATE_USER as S_O_R_UPDATE_USER, 
+        UPDATE_TIME as S_O_R_UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttObjectRelaMapper.Base_Column_List" />
+        from STT_OBJECT_RELA
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttObjectRelaMapper.Base_Column_List" />
+        from STT_OBJECT_RELA
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.SttObjectRelaKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttObjectRelaMapper.Base_Column_List" />
+        from STT_OBJECT_RELA
+        where OBJECT_GRP_ID = #{objectGrpId,jdbcType=VARCHAR}
+          and OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SttObjectRelaKey" >
+        delete from STT_OBJECT_RELA
+        where OBJECT_GRP_ID = #{objectGrpId,jdbcType=VARCHAR}
+          and OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from STT_OBJECT_RELA
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SttObjectRela" >
+        insert into STT_OBJECT_RELA (OBJECT_GRP_ID, OBJECT_ID, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{objectGrpId,jdbcType=VARCHAR}, #{objectId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.SttObjectRela" >
+        insert into STT_OBJECT_RELA
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="objectGrpId != null" >
+                OBJECT_GRP_ID,
+            </if>
+            <if test="objectId != null" >
+                OBJECT_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="objectGrpId != null" >
+                #{objectGrpId,jdbcType=VARCHAR},
+            </if>
+            <if test="objectId != null" >
+                #{objectId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SttObjectRela" >
+        insert into STT_OBJECT_RELA(OBJECT_GRP_ID, OBJECT_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select OBJECT_GRP_ID, OBJECT_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME
+             from STT_OBJECT_RELA
+             where STATUS = 'E' and OBJECT_GRP_ID = #{objectGrpId,jdbcType=VARCHAR} and OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.SttObjectRela" >
+        update STT_OBJECT_RELA
+        <set >
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where OBJECT_GRP_ID = #{objectGrpId,jdbcType=VARCHAR}
+          and OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.SttObjectRela" >
+        update STT_OBJECT_RELA
+        <set >
+            <if test="objectGrpId != null" >
+                OBJECT_GRP_ID = #{objectGrpId,jdbcType=VARCHAR},
+            </if>
+            <if test="objectId != null" >
+                OBJECT_ID = #{objectId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.SttObjectRela" >
+        update STT_OBJECT_RELA
+        set 
+        OBJECT_GRP_ID = #{objectGrpId,jdbcType=VARCHAR},
+        OBJECT_ID = #{objectId,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SttObjectRela" >
+        update STT_OBJECT_RELA
+        set UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where OBJECT_GRP_ID = #{objectGrpId,jdbcType=VARCHAR}
+          and OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+</mapper>

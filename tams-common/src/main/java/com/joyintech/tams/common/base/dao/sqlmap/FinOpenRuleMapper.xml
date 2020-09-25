@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.FinOpenRuleMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.FinOpenRule" >
+        <id column="CASH_ID" property="cashId" jdbcType="VARCHAR" />
+        <id column="OPEN_TYPE" property="openType" jdbcType="VARCHAR" />
+        <result column="OPEN_MODE" property="openMode" jdbcType="VARCHAR" />
+        <result column="OPEN_DAYS" property="openDays" jdbcType="DECIMAL" />
+        <result column="OPEN_CYCLE" property="openCycle" jdbcType="DECIMAL" />
+        <result column="OPEN_CYCLE_UNIT" property="openCycleUnit" jdbcType="VARCHAR" />
+        <result column="DAY_TYPE" property="dayType" jdbcType="VARCHAR" />
+        <result column="DAY_VALUE" property="dayValue" jdbcType="VARCHAR" />
+        <result column="CALC_METHOD" property="calcMethod" jdbcType="VARCHAR" />
+        <result column="FIRST_OPEN_DATE" property="firstOpenDate" jdbcType="DATE" />
+        <result column="TRADEDAY_RULE" property="tradedayRule" jdbcType="VARCHAR" />
+        <result column="HDAY_OPEN_FLAG" property="hdayOpenFlag" jdbcType="VARCHAR" />
+        <result column="CALC_RULE" property="calcRule" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CPRICE_RULE" property="cpriceRule" jdbcType="VARCHAR" />
+        <result column="OPEN_DAYS_TYPE" property="openDaysType" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CASH_ID CASH_ID, OPEN_TYPE OPEN_TYPE, OPEN_MODE OPEN_MODE, OPEN_DAYS OPEN_DAYS, OPEN_CYCLE OPEN_CYCLE, 
+        OPEN_CYCLE_UNIT OPEN_CYCLE_UNIT, DAY_TYPE DAY_TYPE, DAY_VALUE DAY_VALUE, CALC_METHOD CALC_METHOD, 
+        FIRST_OPEN_DATE FIRST_OPEN_DATE, TRADEDAY_RULE TRADEDAY_RULE, HDAY_OPEN_FLAG HDAY_OPEN_FLAG, 
+        CALC_RULE CALC_RULE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CPRICE_RULE CPRICE_RULE, OPEN_DAYS_TYPE OPEN_DAYS_TYPE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinOpenRuleMapper.Base_Column_List" />
+        from FIN_OPEN_RULE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinOpenRuleMapper.Base_Column_List" />
+        from FIN_OPEN_RULE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.FinOpenRuleKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinOpenRuleMapper.Base_Column_List" />
+        from FIN_OPEN_RULE
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and OPEN_TYPE = #{openType,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinOpenRuleKey" >
+        delete from FIN_OPEN_RULE
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and OPEN_TYPE = #{openType,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FinOpenRule" >
+        insert into FIN_OPEN_RULE (CASH_ID, OPEN_TYPE, OPEN_MODE, 
+            OPEN_DAYS, OPEN_CYCLE, OPEN_CYCLE_UNIT, 
+            DAY_TYPE, DAY_VALUE, CALC_METHOD, 
+            FIRST_OPEN_DATE, TRADEDAY_RULE, HDAY_OPEN_FLAG, 
+            CALC_RULE, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            CPRICE_RULE, OPEN_DAYS_TYPE)
+        values (#{cashId,jdbcType=VARCHAR}, #{openType,jdbcType=VARCHAR}, #{openMode,jdbcType=VARCHAR}, 
+            #{openDays,jdbcType=DECIMAL}, #{openCycle,jdbcType=DECIMAL}, #{openCycleUnit,jdbcType=VARCHAR}, 
+            #{dayType,jdbcType=VARCHAR}, #{dayValue,jdbcType=VARCHAR}, #{calcMethod,jdbcType=VARCHAR}, 
+            #{firstOpenDate,jdbcType=DATE}, #{tradedayRule,jdbcType=VARCHAR}, #{hdayOpenFlag,jdbcType=VARCHAR}, 
+            #{calcRule,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{cpriceRule,jdbcType=VARCHAR}, #{openDaysType,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinOpenRule" >
+        insert into FIN_OPEN_RULE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="cashId != null" >
+                CASH_ID,
+            </if>
+            <if test="openType != null" >
+                OPEN_TYPE,
+            </if>
+            <if test="openMode != null" >
+                OPEN_MODE,
+            </if>
+            <if test="openDays != null" >
+                OPEN_DAYS,
+            </if>
+            <if test="openCycle != null" >
+                OPEN_CYCLE,
+            </if>
+            <if test="openCycleUnit != null" >
+                OPEN_CYCLE_UNIT,
+            </if>
+            <if test="dayType != null" >
+                DAY_TYPE,
+            </if>
+            <if test="dayValue != null" >
+                DAY_VALUE,
+            </if>
+            <if test="calcMethod != null" >
+                CALC_METHOD,
+            </if>
+            <if test="firstOpenDate != null" >
+                FIRST_OPEN_DATE,
+            </if>
+            <if test="tradedayRule != null" >
+                TRADEDAY_RULE,
+            </if>
+            <if test="hdayOpenFlag != null" >
+                HDAY_OPEN_FLAG,
+            </if>
+            <if test="calcRule != null" >
+                CALC_RULE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="cpriceRule != null" >
+                CPRICE_RULE,
+            </if>
+            <if test="openDaysType != null" >
+                OPEN_DAYS_TYPE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="cashId != null" >
+                #{cashId,jdbcType=VARCHAR},
+            </if>
+            <if test="openType != null" >
+                #{openType,jdbcType=VARCHAR},
+            </if>
+            <if test="openMode != null" >
+                #{openMode,jdbcType=VARCHAR},
+            </if>
+            <if test="openDays != null" >
+                #{openDays,jdbcType=DECIMAL},
+            </if>
+            <if test="openCycle != null" >
+                #{openCycle,jdbcType=DECIMAL},
+            </if>
+            <if test="openCycleUnit != null" >
+                #{openCycleUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="dayType != null" >
+                #{dayType,jdbcType=VARCHAR},
+            </if>
+            <if test="dayValue != null" >
+                #{dayValue,jdbcType=VARCHAR},
+            </if>
+            <if test="calcMethod != null" >
+                #{calcMethod,jdbcType=VARCHAR},
+            </if>
+            <if test="firstOpenDate != null" >
+                #{firstOpenDate,jdbcType=DATE},
+            </if>
+            <if test="tradedayRule != null" >
+                #{tradedayRule,jdbcType=VARCHAR},
+            </if>
+            <if test="hdayOpenFlag != null" >
+                #{hdayOpenFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="calcRule != null" >
+                #{calcRule,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="cpriceRule != null" >
+                #{cpriceRule,jdbcType=VARCHAR},
+            </if>
+            <if test="openDaysType != null" >
+                #{openDaysType,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinOpenRule" >
+        insert into FIN_OPEN_RULE(CASH_ID, OPEN_TYPE, OPEN_MODE, OPEN_DAYS, OPEN_CYCLE, OPEN_CYCLE_UNIT, 
+        DAY_TYPE, DAY_VALUE, CALC_METHOD, FIRST_OPEN_DATE, TRADEDAY_RULE, HDAY_OPEN_FLAG, 
+        CALC_RULE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, CPRICE_RULE, 
+        OPEN_DAYS_TYPE)
+        select CASH_ID, OPEN_TYPE, OPEN_MODE, OPEN_DAYS, OPEN_CYCLE, OPEN_CYCLE_UNIT, 
+            DAY_TYPE, DAY_VALUE, CALC_METHOD, FIRST_OPEN_DATE, TRADEDAY_RULE, HDAY_OPEN_FLAG, 
+            CALC_RULE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CPRICE_RULE, 
+            OPEN_DAYS_TYPE
+             from FIN_OPEN_RULE
+             where 1 = 1 and CASH_ID = #{cashId,jdbcType=VARCHAR} and OPEN_TYPE = #{openType,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.FinOpenRule" >
+        update FIN_OPEN_RULE
+        <set >
+            <if test="openMode != null" >
+                OPEN_MODE = #{openMode,jdbcType=VARCHAR},
+            </if>
+            <if test="openDays != null" >
+                OPEN_DAYS = #{openDays,jdbcType=DECIMAL},
+            </if>
+            <if test="openCycle != null" >
+                OPEN_CYCLE = #{openCycle,jdbcType=DECIMAL},
+            </if>
+            <if test="openCycleUnit != null" >
+                OPEN_CYCLE_UNIT = #{openCycleUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="dayType != null" >
+                DAY_TYPE = #{dayType,jdbcType=VARCHAR},
+            </if>
+            <if test="dayValue != null" >
+                DAY_VALUE = #{dayValue,jdbcType=VARCHAR},
+            </if>
+            <if test="calcMethod != null" >
+                CALC_METHOD = #{calcMethod,jdbcType=VARCHAR},
+            </if>
+            <if test="firstOpenDate != null" >
+                FIRST_OPEN_DATE = #{firstOpenDate,jdbcType=DATE},
+            </if>
+            <if test="tradedayRule != null" >
+                TRADEDAY_RULE = #{tradedayRule,jdbcType=VARCHAR},
+            </if>
+            <if test="hdayOpenFlag != null" >
+                HDAY_OPEN_FLAG = #{hdayOpenFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="calcRule != null" >
+                CALC_RULE = #{calcRule,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="cpriceRule != null" >
+                CPRICE_RULE = #{cpriceRule,jdbcType=VARCHAR},
+            </if>
+            <if test="openDaysType != null" >
+                OPEN_DAYS_TYPE = #{openDaysType,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and OPEN_TYPE = #{openType,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinOpenRule" >
+        update FIN_OPEN_RULE
+        set OPEN_MODE = #{openMode,jdbcType=VARCHAR},
+            OPEN_DAYS = #{openDays,jdbcType=DECIMAL},
+            OPEN_CYCLE = #{openCycle,jdbcType=DECIMAL},
+            OPEN_CYCLE_UNIT = #{openCycleUnit,jdbcType=VARCHAR},
+            DAY_TYPE = #{dayType,jdbcType=VARCHAR},
+            DAY_VALUE = #{dayValue,jdbcType=VARCHAR},
+            CALC_METHOD = #{calcMethod,jdbcType=VARCHAR},
+            FIRST_OPEN_DATE = #{firstOpenDate,jdbcType=DATE},
+            TRADEDAY_RULE = #{tradedayRule,jdbcType=VARCHAR},
+            HDAY_OPEN_FLAG = #{hdayOpenFlag,jdbcType=VARCHAR},
+            CALC_RULE = #{calcRule,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            CPRICE_RULE = #{cpriceRule,jdbcType=VARCHAR},
+            OPEN_DAYS_TYPE = #{openDaysType,jdbcType=VARCHAR}
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and OPEN_TYPE = #{openType,jdbcType=VARCHAR}
+    </update>
+</mapper>

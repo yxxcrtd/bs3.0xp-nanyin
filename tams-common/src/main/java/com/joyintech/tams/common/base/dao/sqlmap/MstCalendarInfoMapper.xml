@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.MstCalendarInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstCalendarInfo" >
+        <id column="CALENDAR_ID" property="calendarId" jdbcType="VARCHAR" />
+        <result column="CALENDAR_NAME" property="calendarName" jdbcType="VARCHAR" />
+        <result column="OTHER_ID" property="otherId" jdbcType="VARCHAR" />
+        <result column="IS_TRADE_CALENDAR" property="isTradeCalendar" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CALENDAR_ID CALENDAR_ID, CALENDAR_NAME CALENDAR_NAME, OTHER_ID OTHER_ID, IS_TRADE_CALENDAR IS_TRADE_CALENDAR, 
+        REMARK REMARK, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstCalendarInfoMapper.Base_Column_List" />
+        from MST_CALENDAR_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstCalendarInfoMapper.Base_Column_List" />
+        from MST_CALENDAR_INFO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstCalendarInfoMapper.Base_Column_List" />
+        from MST_CALENDAR_INFO
+        where CALENDAR_ID = #{calendarId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from MST_CALENDAR_INFO
+        where CALENDAR_ID = #{calendarId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.MstCalendarInfo" >
+        insert into MST_CALENDAR_INFO (CALENDAR_ID, CALENDAR_NAME, OTHER_ID, 
+            IS_TRADE_CALENDAR, REMARK, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{calendarId,jdbcType=VARCHAR}, #{calendarName,jdbcType=VARCHAR}, #{otherId,jdbcType=VARCHAR}, 
+            #{isTradeCalendar,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstCalendarInfo" >
+        insert into MST_CALENDAR_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="calendarId != null" >
+                CALENDAR_ID,
+            </if>
+            <if test="calendarName != null" >
+                CALENDAR_NAME,
+            </if>
+            <if test="otherId != null" >
+                OTHER_ID,
+            </if>
+            <if test="isTradeCalendar != null" >
+                IS_TRADE_CALENDAR,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="calendarId != null" >
+                #{calendarId,jdbcType=VARCHAR},
+            </if>
+            <if test="calendarName != null" >
+                #{calendarName,jdbcType=VARCHAR},
+            </if>
+            <if test="otherId != null" >
+                #{otherId,jdbcType=VARCHAR},
+            </if>
+            <if test="isTradeCalendar != null" >
+                #{isTradeCalendar,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.MstCalendarInfo" >
+        insert into MST_CALENDAR_INFO(CALENDAR_ID, CALENDAR_NAME, OTHER_ID, IS_TRADE_CALENDAR, 
+        REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select CALENDAR_ID, CALENDAR_NAME, OTHER_ID, IS_TRADE_CALENDAR, 
+            REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from MST_CALENDAR_INFO
+             where 1 = 1 and CALENDAR_ID = #{calendarId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.MstCalendarInfo" >
+        update MST_CALENDAR_INFO
+        <set >
+            <if test="calendarName != null" >
+                CALENDAR_NAME = #{calendarName,jdbcType=VARCHAR},
+            </if>
+            <if test="otherId != null" >
+                OTHER_ID = #{otherId,jdbcType=VARCHAR},
+            </if>
+            <if test="isTradeCalendar != null" >
+                IS_TRADE_CALENDAR = #{isTradeCalendar,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where CALENDAR_ID = #{calendarId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstCalendarInfo" >
+        update MST_CALENDAR_INFO
+        set CALENDAR_NAME = #{calendarName,jdbcType=VARCHAR},
+            OTHER_ID = #{otherId,jdbcType=VARCHAR},
+            IS_TRADE_CALENDAR = #{isTradeCalendar,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where CALENDAR_ID = #{calendarId,jdbcType=VARCHAR}
+    </update>
+</mapper>

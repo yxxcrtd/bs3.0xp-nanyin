@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.SttExtConfigMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.SttExtConfig" >
+        <id column="S_E_C_CONFIG_ID" property="configId" jdbcType="VARCHAR" />
+        <result column="S_E_C_TABLE_NAME" property="tableName" jdbcType="VARCHAR" />
+        <result column="S_E_C_SELECT_COLUMN" property="selectColumn" jdbcType="VARCHAR" />
+        <result column="S_E_C_SELECT_CRITERIA" property="selectCriteria" jdbcType="VARCHAR" />
+        <result column="S_E_C_INPUT_COLUMN" property="inputColumn" jdbcType="VARCHAR" />
+        <result column="S_E_C_DATE_PERIOD" property="datePeriod" jdbcType="VARCHAR" />
+        <result column="S_E_C_ASC_COLUMN" property="ascColumn" jdbcType="VARCHAR" />
+        <result column="S_E_C_DESC_COLUMN" property="descColumn" jdbcType="VARCHAR" />
+        <result column="S_E_C_CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="S_E_C_CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="S_E_C_CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="S_E_C_UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="S_E_C_UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CONFIG_ID as S_E_C_CONFIG_ID, TABLE_NAME as S_E_C_TABLE_NAME, SELECT_COLUMN as S_E_C_SELECT_COLUMN, 
+        SELECT_CRITERIA as S_E_C_SELECT_CRITERIA, INPUT_COLUMN as S_E_C_INPUT_COLUMN, DATE_PERIOD as S_E_C_DATE_PERIOD, 
+        ASC_COLUMN as S_E_C_ASC_COLUMN, DESC_COLUMN as S_E_C_DESC_COLUMN, CREATE_USER as S_E_C_CREATE_USER, 
+        CREATE_DEPT as S_E_C_CREATE_DEPT, CREATE_TIME as S_E_C_CREATE_TIME, UPDATE_USER as S_E_C_UPDATE_USER, 
+        UPDATE_TIME as S_E_C_UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttExtConfigMapper.Base_Column_List" />
+        from STT_EXT_CONFIG
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttExtConfigMapper.Base_Column_List" />
+        from STT_EXT_CONFIG
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttExtConfigMapper.Base_Column_List" />
+        from STT_EXT_CONFIG
+        where CONFIG_ID = #{configId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from STT_EXT_CONFIG
+        where CONFIG_ID = #{configId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from STT_EXT_CONFIG
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SttExtConfig" >
+        insert into STT_EXT_CONFIG (CONFIG_ID, TABLE_NAME, SELECT_COLUMN, 
+            SELECT_CRITERIA, INPUT_COLUMN, DATE_PERIOD, 
+            ASC_COLUMN, DESC_COLUMN, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{configId,jdbcType=VARCHAR}, #{tableName,jdbcType=VARCHAR}, #{selectColumn,jdbcType=VARCHAR}, 
+            #{selectCriteria,jdbcType=VARCHAR}, #{inputColumn,jdbcType=VARCHAR}, #{datePeriod,jdbcType=VARCHAR}, 
+            #{ascColumn,jdbcType=VARCHAR}, #{descColumn,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.SttExtConfig" >
+        insert into STT_EXT_CONFIG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="configId != null" >
+                CONFIG_ID,
+            </if>
+            <if test="tableName != null" >
+                TABLE_NAME,
+            </if>
+            <if test="selectColumn != null" >
+                SELECT_COLUMN,
+            </if>
+            <if test="selectCriteria != null" >
+                SELECT_CRITERIA,
+            </if>
+            <if test="inputColumn != null" >
+                INPUT_COLUMN,
+            </if>
+            <if test="datePeriod != null" >
+                DATE_PERIOD,
+            </if>
+            <if test="ascColumn != null" >
+                ASC_COLUMN,
+            </if>
+            <if test="descColumn != null" >
+                DESC_COLUMN,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="configId != null" >
+                #{configId,jdbcType=VARCHAR},
+            </if>
+            <if test="tableName != null" >
+                #{tableName,jdbcType=VARCHAR},
+            </if>
+            <if test="selectColumn != null" >
+                #{selectColumn,jdbcType=VARCHAR},
+            </if>
+            <if test="selectCriteria != null" >
+                #{selectCriteria,jdbcType=VARCHAR},
+            </if>
+            <if test="inputColumn != null" >
+                #{inputColumn,jdbcType=VARCHAR},
+            </if>
+            <if test="datePeriod != null" >
+                #{datePeriod,jdbcType=VARCHAR},
+            </if>
+            <if test="ascColumn != null" >
+                #{ascColumn,jdbcType=VARCHAR},
+            </if>
+            <if test="descColumn != null" >
+                #{descColumn,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SttExtConfig" >
+        insert into STT_EXT_CONFIG(CONFIG_ID, TABLE_NAME, SELECT_COLUMN, SELECT_CRITERIA, 
+        INPUT_COLUMN, DATE_PERIOD, ASC_COLUMN, DESC_COLUMN, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select CONFIG_ID, TABLE_NAME, SELECT_COLUMN, SELECT_CRITERIA, 
+            INPUT_COLUMN, DATE_PERIOD, ASC_COLUMN, DESC_COLUMN, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME
+             from STT_EXT_CONFIG
+             where STATUS = 'E' and CONFIG_ID = #{configId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.SttExtConfig" >
+        update STT_EXT_CONFIG
+        <set >
+            <if test="tableName != null" >
+                TABLE_NAME = #{tableName,jdbcType=VARCHAR},
+            </if>
+            <if test="selectColumn != null" >
+                SELECT_COLUMN = #{selectColumn,jdbcType=VARCHAR},
+            </if>
+            <if test="selectCriteria != null" >
+                SELECT_CRITERIA = #{selectCriteria,jdbcType=VARCHAR},
+            </if>
+            <if test="inputColumn != null" >
+                INPUT_COLUMN = #{inputColumn,jdbcType=VARCHAR},
+            </if>
+            <if test="datePeriod != null" >
+                DATE_PERIOD = #{datePeriod,jdbcType=VARCHAR},
+            </if>
+            <if test="ascColumn != null" >
+                ASC_COLUMN = #{ascColumn,jdbcType=VARCHAR},
+            </if>
+            <if test="descColumn != null" >
+                DESC_COLUMN = #{descColumn,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where CONFIG_ID = #{configId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.SttExtConfig" >
+        update STT_EXT_CONFIG
+        <set >
+            <if test="configId != null" >
+                CONFIG_ID = #{configId,jdbcType=VARCHAR},
+            </if>
+            <if test="tableName != null" >
+                TABLE_NAME = #{tableName,jdbcType=VARCHAR},
+            </if>
+            <if test="selectColumn != null" >
+                SELECT_COLUMN = #{selectColumn,jdbcType=VARCHAR},
+            </if>
+            <if test="selectCriteria != null" >
+                SELECT_CRITERIA = #{selectCriteria,jdbcType=VARCHAR},
+            </if>
+            <if test="inputColumn != null" >
+                INPUT_COLUMN = #{inputColumn,jdbcType=VARCHAR},
+            </if>
+            <if test="datePeriod != null" >
+                DATE_PERIOD = #{datePeriod,jdbcType=VARCHAR},
+            </if>
+            <if test="ascColumn != null" >
+                ASC_COLUMN = #{ascColumn,jdbcType=VARCHAR},
+            </if>
+            <if test="descColumn != null" >
+                DESC_COLUMN = #{descColumn,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.SttExtConfig" >
+        update STT_EXT_CONFIG
+        set 
+        CONFIG_ID = #{configId,jdbcType=VARCHAR},
+        TABLE_NAME = #{tableName,jdbcType=VARCHAR},
+        SELECT_COLUMN = #{selectColumn,jdbcType=VARCHAR},
+        SELECT_CRITERIA = #{selectCriteria,jdbcType=VARCHAR},
+        INPUT_COLUMN = #{inputColumn,jdbcType=VARCHAR},
+        DATE_PERIOD = #{datePeriod,jdbcType=VARCHAR},
+        ASC_COLUMN = #{ascColumn,jdbcType=VARCHAR},
+        DESC_COLUMN = #{descColumn,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SttExtConfig" >
+        update STT_EXT_CONFIG
+        set TABLE_NAME = #{tableName,jdbcType=VARCHAR},
+            SELECT_COLUMN = #{selectColumn,jdbcType=VARCHAR},
+            SELECT_CRITERIA = #{selectCriteria,jdbcType=VARCHAR},
+            INPUT_COLUMN = #{inputColumn,jdbcType=VARCHAR},
+            DATE_PERIOD = #{datePeriod,jdbcType=VARCHAR},
+            ASC_COLUMN = #{ascColumn,jdbcType=VARCHAR},
+            DESC_COLUMN = #{descColumn,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where CONFIG_ID = #{configId,jdbcType=VARCHAR}
+    </update>
+</mapper>

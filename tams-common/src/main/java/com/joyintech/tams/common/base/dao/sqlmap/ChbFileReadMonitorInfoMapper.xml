@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbFileReadMonitorInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbFileReadMonitorInfo" >
+        <id column="HANDLE_SEQNO" property="handleSeqno" jdbcType="VARCHAR" />
+        <result column="HANDLE_FILE_NAME" property="handleFileName" jdbcType="VARCHAR" />
+        <result column="HANDLE_FILE_PATH" property="handleFilePath" jdbcType="VARCHAR" />
+        <result column="HANDLE_FILE_TYPE" property="handleFileType" jdbcType="VARCHAR" />
+        <result column="FILE_READ_START_TIME" property="fileReadStartTime" jdbcType="TIMESTAMP" />
+        <result column="FILE_READ_END_TIME" property="fileReadEndTime" jdbcType="TIMESTAMP" />
+        <result column="FILE_DATA_COUNT" property="fileDataCount" jdbcType="DECIMAL" />
+        <result column="FILE_HANDLE_STATUS" property="fileHandleStatus" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.joyintech.tams.common.base.entity.ChbFileReadMonitorInfo" extends="BaseResultMap" >
+        <result column="FILE_HANDLE_RESULT_MSG" property="fileHandleResultMsg" jdbcType="CLOB" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        HANDLE_SEQNO HANDLE_SEQNO, HANDLE_FILE_NAME HANDLE_FILE_NAME, HANDLE_FILE_PATH HANDLE_FILE_PATH, 
+        HANDLE_FILE_TYPE HANDLE_FILE_TYPE, FILE_READ_START_TIME FILE_READ_START_TIME, FILE_READ_END_TIME FILE_READ_END_TIME, 
+        FILE_DATA_COUNT FILE_DATA_COUNT, FILE_HANDLE_STATUS FILE_HANDLE_STATUS, CREATE_DEPT CREATE_DEPT, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME
+    </sql>
+    <sql id="Blob_Column_List" >
+        FILE_HANDLE_RESULT_MSG
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbFileReadMonitorInfoMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.ChbFileReadMonitorInfoMapper.Blob_Column_List" />
+        from CHB_FILE_READ_MONITOR_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbFileReadMonitorInfoMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.ChbFileReadMonitorInfoMapper.Blob_Column_List" />
+        from CHB_FILE_READ_MONITOR_INFO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbFileReadMonitorInfoMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.ChbFileReadMonitorInfoMapper.Blob_Column_List" />
+        from CHB_FILE_READ_MONITOR_INFO
+        where HANDLE_SEQNO = #{handleSeqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_FILE_READ_MONITOR_INFO
+        where HANDLE_SEQNO = #{handleSeqno,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_FILE_READ_MONITOR_INFO
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbFileReadMonitorInfo" >
+        insert into CHB_FILE_READ_MONITOR_INFO (HANDLE_SEQNO, HANDLE_FILE_NAME, HANDLE_FILE_PATH, 
+            HANDLE_FILE_TYPE, FILE_READ_START_TIME, 
+            FILE_READ_END_TIME, FILE_DATA_COUNT, FILE_HANDLE_STATUS, 
+            CREATE_DEPT, UPDATE_USER, UPDATE_TIME, 
+            CREATE_USER, CREATE_TIME, FILE_HANDLE_RESULT_MSG
+            )
+        values (#{handleSeqno,jdbcType=VARCHAR}, #{handleFileName,jdbcType=VARCHAR}, #{handleFilePath,jdbcType=VARCHAR}, 
+            #{handleFileType,jdbcType=VARCHAR}, #{fileReadStartTime,jdbcType=TIMESTAMP}, 
+            #{fileReadEndTime,jdbcType=TIMESTAMP}, #{fileDataCount,jdbcType=DECIMAL}, #{fileHandleStatus,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{fileHandleResultMsg,jdbcType=CLOB}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbFileReadMonitorInfo" >
+        insert into CHB_FILE_READ_MONITOR_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="handleSeqno != null" >
+                HANDLE_SEQNO,
+            </if>
+            <if test="handleFileName != null" >
+                HANDLE_FILE_NAME,
+            </if>
+            <if test="handleFilePath != null" >
+                HANDLE_FILE_PATH,
+            </if>
+            <if test="handleFileType != null" >
+                HANDLE_FILE_TYPE,
+            </if>
+            <if test="fileReadStartTime != null" >
+                FILE_READ_START_TIME,
+            </if>
+            <if test="fileReadEndTime != null" >
+                FILE_READ_END_TIME,
+            </if>
+            <if test="fileDataCount != null" >
+                FILE_DATA_COUNT,
+            </if>
+            <if test="fileHandleStatus != null" >
+                FILE_HANDLE_STATUS,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="fileHandleResultMsg != null" >
+                FILE_HANDLE_RESULT_MSG,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="handleSeqno != null" >
+                #{handleSeqno,jdbcType=VARCHAR},
+            </if>
+            <if test="handleFileName != null" >
+                #{handleFileName,jdbcType=VARCHAR},
+            </if>
+            <if test="handleFilePath != null" >
+                #{handleFilePath,jdbcType=VARCHAR},
+            </if>
+            <if test="handleFileType != null" >
+                #{handleFileType,jdbcType=VARCHAR},
+            </if>
+            <if test="fileReadStartTime != null" >
+                #{fileReadStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fileReadEndTime != null" >
+                #{fileReadEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fileDataCount != null" >
+                #{fileDataCount,jdbcType=DECIMAL},
+            </if>
+            <if test="fileHandleStatus != null" >
+                #{fileHandleStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fileHandleResultMsg != null" >
+                #{fileHandleResultMsg,jdbcType=CLOB},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbFileReadMonitorInfo" >
+        insert into CHB_FILE_READ_MONITOR_INFO(HANDLE_SEQNO, HANDLE_FILE_NAME, HANDLE_FILE_PATH, 
+        HANDLE_FILE_TYPE, FILE_READ_START_TIME, FILE_READ_END_TIME, FILE_DATA_COUNT, FILE_HANDLE_STATUS, 
+        CREATE_DEPT, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, FILE_HANDLE_RESULT_MSG
+        )
+        select HANDLE_SEQNO, HANDLE_FILE_NAME, HANDLE_FILE_PATH, 
+            HANDLE_FILE_TYPE, FILE_READ_START_TIME, FILE_READ_END_TIME, FILE_DATA_COUNT, FILE_HANDLE_STATUS, 
+            CREATE_DEPT, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_USER, CREATE_TIME, FILE_HANDLE_RESULT_MSG
+            
+             from CHB_FILE_READ_MONITOR_INFO
+             where STATUS = 'E' and HANDLE_SEQNO = #{handleSeqno,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbFileReadMonitorInfo" >
+        update CHB_FILE_READ_MONITOR_INFO
+        <set >
+            <if test="handleFileName != null" >
+                HANDLE_FILE_NAME = #{handleFileName,jdbcType=VARCHAR},
+            </if>
+            <if test="handleFilePath != null" >
+                HANDLE_FILE_PATH = #{handleFilePath,jdbcType=VARCHAR},
+            </if>
+            <if test="handleFileType != null" >
+                HANDLE_FILE_TYPE = #{handleFileType,jdbcType=VARCHAR},
+            </if>
+            <if test="fileReadStartTime != null" >
+                FILE_READ_START_TIME = #{fileReadStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fileReadEndTime != null" >
+                FILE_READ_END_TIME = #{fileReadEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fileDataCount != null" >
+                FILE_DATA_COUNT = #{fileDataCount,jdbcType=DECIMAL},
+            </if>
+            <if test="fileHandleStatus != null" >
+                FILE_HANDLE_STATUS = #{fileHandleStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fileHandleResultMsg != null" >
+                FILE_HANDLE_RESULT_MSG = #{fileHandleResultMsg,jdbcType=CLOB},
+            </if>
+        </set>
+        where HANDLE_SEQNO = #{handleSeqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbFileReadMonitorInfo" >
+        update CHB_FILE_READ_MONITOR_INFO
+        <set >
+            <if test="handleSeqno != null" >
+                HANDLE_SEQNO = #{handleSeqno,jdbcType=VARCHAR},
+            </if>
+            <if test="handleFileName != null" >
+                HANDLE_FILE_NAME = #{handleFileName,jdbcType=VARCHAR},
+            </if>
+            <if test="handleFilePath != null" >
+                HANDLE_FILE_PATH = #{handleFilePath,jdbcType=VARCHAR},
+            </if>
+            <if test="handleFileType != null" >
+                HANDLE_FILE_TYPE = #{handleFileType,jdbcType=VARCHAR},
+            </if>
+            <if test="fileReadStartTime != null" >
+                FILE_READ_START_TIME = #{fileReadStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fileReadEndTime != null" >
+                FILE_READ_END_TIME = #{fileReadEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fileDataCount != null" >
+                FILE_DATA_COUNT = #{fileDataCount,jdbcType=DECIMAL},
+            </if>
+            <if test="fileHandleStatus != null" >
+                FILE_HANDLE_STATUS = #{fileHandleStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fileHandleResultMsg != null" >
+                FILE_HANDLE_RESULT_MSG = #{fileHandleResultMsg,jdbcType=CLOB},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbFileReadMonitorInfo" >
+        update CHB_FILE_READ_MONITOR_INFO
+        set 
+        HANDLE_SEQNO = #{handleSeqno,jdbcType=VARCHAR},
+        HANDLE_FILE_NAME = #{handleFileName,jdbcType=VARCHAR},
+        HANDLE_FILE_PATH = #{handleFilePath,jdbcType=VARCHAR},
+        HANDLE_FILE_TYPE = #{handleFileType,jdbcType=VARCHAR},
+        FILE_READ_START_TIME = #{fileReadStartTime,jdbcType=TIMESTAMP},
+        FILE_READ_END_TIME = #{fileReadEndTime,jdbcType=TIMESTAMP},
+        FILE_DATA_COUNT = #{fileDataCount,jdbcType=DECIMAL},
+        FILE_HANDLE_STATUS = #{fileHandleStatus,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        FILE_HANDLE_RESULT_MSG = #{fileHandleResultMsg,jdbcType=CLOB}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.joyintech.tams.common.base.entity.ChbFileReadMonitorInfo" >
+        update CHB_FILE_READ_MONITOR_INFO
+        set HANDLE_FILE_NAME = #{handleFileName,jdbcType=VARCHAR},
+            HANDLE_FILE_PATH = #{handleFilePath,jdbcType=VARCHAR},
+            HANDLE_FILE_TYPE = #{handleFileType,jdbcType=VARCHAR},
+            FILE_READ_START_TIME = #{fileReadStartTime,jdbcType=TIMESTAMP},
+            FILE_READ_END_TIME = #{fileReadEndTime,jdbcType=TIMESTAMP},
+            FILE_DATA_COUNT = #{fileDataCount,jdbcType=DECIMAL},
+            FILE_HANDLE_STATUS = #{fileHandleStatus,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            FILE_HANDLE_RESULT_MSG = #{fileHandleResultMsg,jdbcType=CLOB},
+            ERROR_FILE_SEQNO = #{errorFileSeqNo,jdbcType=VARCHAR}
+        where HANDLE_SEQNO = #{handleSeqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbFileReadMonitorInfo" >
+        update CHB_FILE_READ_MONITOR_INFO
+        set HANDLE_FILE_NAME = #{handleFileName,jdbcType=VARCHAR},
+            HANDLE_FILE_PATH = #{handleFilePath,jdbcType=VARCHAR},
+            HANDLE_FILE_TYPE = #{handleFileType,jdbcType=VARCHAR},
+            FILE_READ_START_TIME = #{fileReadStartTime,jdbcType=TIMESTAMP},
+            FILE_READ_END_TIME = #{fileReadEndTime,jdbcType=TIMESTAMP},
+            FILE_DATA_COUNT = #{fileDataCount,jdbcType=DECIMAL},
+            FILE_HANDLE_STATUS = #{fileHandleStatus,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where HANDLE_SEQNO = #{handleSeqno,jdbcType=VARCHAR}
+    </update>
+</mapper>

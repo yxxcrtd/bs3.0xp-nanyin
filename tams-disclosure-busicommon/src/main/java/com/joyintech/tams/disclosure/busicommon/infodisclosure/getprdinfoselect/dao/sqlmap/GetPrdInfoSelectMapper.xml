@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.dao.GetPrdInfoSelectMapper">
+	<select id="getPrdInfoSelect" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select distinct
+			PROD_ID id,
+			PROD_ABBR text
+			/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    start*/
+			,fin_product.finprod_id finprodId
+			/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    end*/
+		from
+			REP_PROD_INFO
+		/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    start*/
+		LEFT JOIN fin_product
+		ON fin_product.FINPROD_MARKET_ID = REP_PROD_INFO.PROD_ID
+		and fin_product.P_FINPROD_ID is null
+		/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    end*/
+	    where STATUS='E'
+	    and p_prod_id is null /*不取子产品*/
+	    <if test="search != null and search != ''">
+	    	and (PROD_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
+            or PROD_ABBR like '%' || #{search, jdbcType=VARCHAR} || '%')
+	    </if>
+	    <if test="condition != null and condition != ''">
+			<![CDATA[ ${condition}  ]]>
+		</if>
+	</select>
+	<select id="getCusInfoSelect" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select distinct
+			INDENTIFY_MARK id,
+			HOLDER_NAME text
+		from
+			CHB_EQU_HOLD
+	    where STATUS='E'
+	    <if test="search != null and search != ''">
+	    	and (INDENTIFY_MARK like '%' || #{search, jdbcType=VARCHAR} || '%'
+            or HOLDER_NAME like '%' || #{search, jdbcType=VARCHAR} || '%')
+	    </if>
+	    <if test="condition != null and condition != ''">
+			<![CDATA[ ${condition}  ]]>
+		</if>
+	</select>
+	
+	<select id="getInfoSelect" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select 
+			DIS_ID id,
+			DIS_NAME text
+		from
+			DIS_PRAMS
+	</select>
+</mapper>

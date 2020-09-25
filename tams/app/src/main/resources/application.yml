@@ -1,0 +1,251 @@
+prod:
+  bussRep: 1
+server:
+  port: 8080
+  address: 0.0.0.0
+  maxHttpHeaderSize: 102400
+  context-path: /tams
+listener:
+  port: 8888
+  length: 8
+  encode: UTF-8
+spring:
+  jmx:
+    enabled: false
+  thymeleaf:
+    cache: false
+  profiles:
+    active: dtx
+  application:
+    name: tams-server
+    dfstype: 2
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    validationQuery: SELECT 1 FROM DUAL
+    maxTotal: 10
+    maxIdle: 10
+    minIdle: 5
+    timeBetweenEvictionRunsMillis: 60000
+    numTestsPerEvictionRun: 10
+    removeAbandonedOnBorrow: true
+    removeAbandonedOnMaintenance: true
+    logAbandoned: true
+    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
+  activemq:
+    systemId: tams
+    active: false
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+  http:
+    multipart:
+      maxFileSize: 10Mb
+      maxRequestSize: 100Mb
+base:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    maxTotal: 10
+    maxIdle: 10
+    minIdle: 5
+    timeBetweenEvictionRunsMillis: 60000
+    numTestsPerEvictionRun: 10
+    removeAbandonedOnBorrow: true
+    removeAbandonedOnMaintenance: true
+    logAbandoned: true
+    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
+interf:
+  datasource:
+    type: org.apache.commons.dbcp2.BasicDataSource
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    validationQuery: SELECT 1 FROM DUAL
+    maxTotal: 10
+    maxIdle: 10
+    minIdle: 5
+    timeBetweenEvictionRunsMillis: 60000
+    numTestsPerEvictionRun: 10
+    removeAbandonedOnBorrow: true
+    removeAbandonedOnMaintenance: true
+    logAbandoned: true
+    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
+    testWhileIdle: true
+stresstest:
+  datasource:
+    type: org.apache.commons.dbcp2.BasicDataSource
+    validationQuery: select 1 from dual
+    maxTotal: 10
+    maxIdle: 10
+    minIdle: 5
+    timeBetweenEvictionRunsMillis: 60000
+    numTestsPerEvictionRun: 10
+    removeAbandonedOnBorrow: true
+    removeAbandonedOnMaintenance: true
+    logAbandoned: true
+    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
+    testWhileIdle: true
+tx-lcn:
+  springcloud:
+    loadbalance:
+      enabled: true
+  logger:
+    enabled: true
+    onlyError: true
+jixu:
+  user:
+    type: 2
+shiro:
+  sessionId: JSESSIONID
+  casClientName: tams
+  allowUrl: /service/**, /api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
+
+specialsyspara:
+  parakey: AUTHORIZE_LIMIT||PRICE_CAL_TYPE||portfolio_handle_userid||settle_acct_name||settle_acct_no||prod_tru_acct_no||prod_tru_acct_name||lending_acct_no||lending_acct_name
+#页面特殊参数取值
+specialsyspage:
+  pagekey: SysInstitution001||SysDepartment001||SysUser001||SysActorRole001||SysActorAssign001||SysBatchProcess001||SysBatchStart001||ValBatchStart001||SystemBatchQuartzConfig001||Workflow001||SysDate001||SysDataDict001||SysParaSet001
+application:
+  cache:
+    file: classpath:ehcache_app.xml
+  remindPage: invest/remindMain  
+  menuType: hover
+  sysCode: TAMS
+  menuPosition: top
+  pageStep: 100
+  logoAbout: /image/logos/logo-about.png
+  logo: /image/logos/logo.png
+  sessionTimeout: 1800000
+  interfMaxCorePoolSize: 20
+  maxDataCountOneTimeForInvestholdInfo: 50
+  reportInterfIsNeedOkFile: 1
+  reportInterfOkFileExtension: ok
+  reportInsertCount: 15
+  reportSelectOrDeleteCount: 50
+  reportSelectOrDeleteCountForShenFen: 100
+  reportInsertLongCount: 10
+  reportInterfFileEncoding: UTF-8
+  reportInterfOneTimeDataCount: 1000
+  reportInterfOneTimeSqlLdrDataCount: 200000
+  reportInterfOneTimeSqlLdrCommitCount: 10000
+  reportInterfSplitCharacter: '|'
+  reportCbFeedBackHandleCountOneTime: 10000
+  riskTestMaxCorePoolSize: 20
+  riskTestmaxSubmitProductSize: 50
+
+---
+spring:
+  profiles: yitihua-jicheng
+  thymeleaf:
+    cache: false
+  redis:
+    database: 1
+    password: joyin!234
+    host: 192.168.90.198
+    port: 6379
+    timeout: 20000
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.201:1521/orcl
+    username: tams1_ejfr10
+    password: tams1_ejfr10
+    reportSqlldrDatabaseName: 192.168.90.201:1521/orcl
+application:
+  sqldirurl: jdbc:oracle:thin:@//192.168.90.201:1521/orcl
+  sqldiruserName: tams1_ejfr10
+  sqldirpassword: tams1_ejfr10
+shiro:
+  ssoEnable: true
+  allowUrl: /service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
+base:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.201:1521/orcl
+    username: tams1_ejfr10
+    password: tams1_ejfr10
+interf:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.201:1521/orcl
+    username: tams1_ejfr10
+    password: tams1_ejfr10
+stresstest:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.201:1521/orcl
+    username: tams1_ejfr10
+    password: tams1_ejfr10
+log:
+  path: /home/tams/logs/tams
+  level: INFO
+eureka:
+  client:
+    enabled: false
+jixu:
+  user:
+    type: 2
+xinping:
+  properties:
+    urlIP: 127.0.0.1
+    urlPort: 9191
+tx-lcn:
+  client:
+    managerAddress: 192.168.90.198:8070
+---
+spring:
+  profiles: dtx
+  redis:
+    database: 1
+    password: joyin!234
+    host: 192.168.90.198
+    port: 6379
+    timeout: 20000
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams0702ls
+    password: zgtams0702ls
+    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
+application:
+  url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+  username: zgtams0702ls
+  password: zgtams0702ls
+base:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams0702ls
+    password: zgtams0702ls
+stresstest:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams0702ls
+    password: zgtams0702ls
+interf:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams0702ls
+    password: zgtams0702ls
+log:
+  path: ${user.home}/tams/logs/tams
+  level: DEBUG
+eureka:
+  client:
+    enabled: true
+    serviceUrl:
+      defaultZone: http://192.168.90.219:9101/eureka/
+  instance:
+    ip-address: 127.0.0.1
+    prefer-ip-address: false
+xinping:
+  properties:
+    urlIP: 127.0.0.1
+    urlPort: 9191
+#场内交易使用配置
+exchangesystem:
+  properties:
+    urlIP: joyin.gaoyusoft.com
+    urlPort: 8989
+    urlAppend: /exchange/hello
+    
+tx-lcn:
+  client:
+    managerAddress: 192.168.90.219:8070
+
+
+# 温州 APP 消息推送接口配置，默认 false
+workflow:
+  isSentMessage: false
+  serviceName: messageService
+

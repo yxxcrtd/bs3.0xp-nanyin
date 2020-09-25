@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfCompintroductionMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfCompintroduction" >
+        <id column="OBJECT_ID" property="objectId" jdbcType="VARCHAR" />
+        <result column="COMP_ID" property="compId" jdbcType="VARCHAR" />
+        <result column="COMP_NAME" property="compName" jdbcType="VARCHAR" />
+        <result column="COMP_SNAME" property="compSname" jdbcType="VARCHAR" />
+        <result column="COMP_NAME_ENG" property="compNameEng" jdbcType="VARCHAR" />
+        <result column="COMP_SNAMEENG" property="compSnameeng" jdbcType="VARCHAR" />
+        <result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+        <result column="CITY" property="city" jdbcType="VARCHAR" />
+        <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+        <result column="OFFICE" property="office" jdbcType="VARCHAR" />
+        <result column="ZIPCODE" property="zipcode" jdbcType="VARCHAR" />
+        <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+        <result column="FAX" property="fax" jdbcType="VARCHAR" />
+        <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+        <result column="WEBSITE" property="website" jdbcType="VARCHAR" />
+        <result column="REGISTERNUMBER" property="registernumber" jdbcType="VARCHAR" />
+        <result column="CHAIRMAN" property="chairman" jdbcType="VARCHAR" />
+        <result column="PRESIDENT" property="president" jdbcType="VARCHAR" />
+        <result column="DISCLOSER" property="discloser" jdbcType="VARCHAR" />
+        <result column="REGCAPITAL" property="regcapital" jdbcType="DECIMAL" />
+        <result column="CURRENCYCODE" property="currencycode" jdbcType="VARCHAR" />
+        <result column="FOUNDDATE" property="founddate" jdbcType="VARCHAR" />
+        <result column="ENDDATE" property="enddate" jdbcType="VARCHAR" />
+        <result column="BRIEFING" property="briefing" jdbcType="VARCHAR" />
+        <result column="COMP_TYPE" property="compType" jdbcType="VARCHAR" />
+        <result column="COMP_PROPERTY" property="compProperty" jdbcType="VARCHAR" />
+        <result column="OPDATE" property="opdate" jdbcType="DATE" />
+        <result column="OPMODE" property="opmode" jdbcType="VARCHAR" />
+        <result column="COUNTRY" property="country" jdbcType="VARCHAR" />
+        <result column="BUSINESSSCOPE" property="businessscope" jdbcType="VARCHAR" />
+        <result column="COMPANY_TYPE" property="companyType" jdbcType="VARCHAR" />
+        <result column="S_INFO_TOTALEMPLOYEES" property="sInfoTotalemployees" jdbcType="DECIMAL" />
+        <result column="MAIN_BUSINESS" property="mainBusiness" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        OBJECT_ID OBJECT_ID, COMP_ID COMP_ID, COMP_NAME COMP_NAME, COMP_SNAME COMP_SNAME, 
+        COMP_NAME_ENG COMP_NAME_ENG, COMP_SNAMEENG COMP_SNAMEENG, PROVINCE PROVINCE, CITY CITY, 
+        ADDRESS ADDRESS, OFFICE OFFICE, ZIPCODE ZIPCODE, PHONE PHONE, FAX FAX, EMAIL EMAIL, 
+        WEBSITE WEBSITE, REGISTERNUMBER REGISTERNUMBER, CHAIRMAN CHAIRMAN, PRESIDENT PRESIDENT, 
+        DISCLOSER DISCLOSER, REGCAPITAL REGCAPITAL, CURRENCYCODE CURRENCYCODE, FOUNDDATE FOUNDDATE, 
+        ENDDATE ENDDATE, BRIEFING BRIEFING, COMP_TYPE COMP_TYPE, COMP_PROPERTY COMP_PROPERTY, 
+        OPDATE OPDATE, OPMODE OPMODE, COUNTRY COUNTRY, BUSINESSSCOPE BUSINESSSCOPE, COMPANY_TYPE COMPANY_TYPE, 
+        S_INFO_TOTALEMPLOYEES S_INFO_TOTALEMPLOYEES, MAIN_BUSINESS MAIN_BUSINESS
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCompintroductionMapper.Base_Column_List" />
+        from INTERF_COMPINTRODUCTION
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCompintroductionMapper.Base_Column_List" />
+        from INTERF_COMPINTRODUCTION
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCompintroductionMapper.Base_Column_List" />
+        from INTERF_COMPINTRODUCTION
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from INTERF_COMPINTRODUCTION
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfCompintroduction" >
+        insert into INTERF_COMPINTRODUCTION (OBJECT_ID, COMP_ID, COMP_NAME, 
+            COMP_SNAME, COMP_NAME_ENG, COMP_SNAMEENG, 
+            PROVINCE, CITY, ADDRESS, 
+            OFFICE, ZIPCODE, PHONE, 
+            FAX, EMAIL, WEBSITE, 
+            REGISTERNUMBER, CHAIRMAN, PRESIDENT, 
+            DISCLOSER, REGCAPITAL, CURRENCYCODE, 
+            FOUNDDATE, ENDDATE, BRIEFING, 
+            COMP_TYPE, COMP_PROPERTY, OPDATE, 
+            OPMODE, COUNTRY, BUSINESSSCOPE, 
+            COMPANY_TYPE, S_INFO_TOTALEMPLOYEES, MAIN_BUSINESS
+            )
+        values (#{objectId,jdbcType=VARCHAR}, #{compId,jdbcType=VARCHAR}, #{compName,jdbcType=VARCHAR}, 
+            #{compSname,jdbcType=VARCHAR}, #{compNameEng,jdbcType=VARCHAR}, #{compSnameeng,jdbcType=VARCHAR}, 
+            #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+            #{office,jdbcType=VARCHAR}, #{zipcode,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+            #{fax,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{website,jdbcType=VARCHAR}, 
+            #{registernumber,jdbcType=VARCHAR}, #{chairman,jdbcType=VARCHAR}, #{president,jdbcType=VARCHAR}, 
+            #{discloser,jdbcType=VARCHAR}, #{regcapital,jdbcType=DECIMAL}, #{currencycode,jdbcType=VARCHAR}, 
+            #{founddate,jdbcType=VARCHAR}, #{enddate,jdbcType=VARCHAR}, #{briefing,jdbcType=VARCHAR}, 
+            #{compType,jdbcType=VARCHAR}, #{compProperty,jdbcType=VARCHAR}, #{opdate,jdbcType=DATE}, 
+            #{opmode,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{businessscope,jdbcType=VARCHAR}, 
+            #{companyType,jdbcType=VARCHAR}, #{sInfoTotalemployees,jdbcType=DECIMAL}, #{mainBusiness,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfCompintroduction" >
+        insert into INTERF_COMPINTRODUCTION
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                OBJECT_ID,
+            </if>
+            <if test="compId != null" >
+                COMP_ID,
+            </if>
+            <if test="compName != null" >
+                COMP_NAME,
+            </if>
+            <if test="compSname != null" >
+                COMP_SNAME,
+            </if>
+            <if test="compNameEng != null" >
+                COMP_NAME_ENG,
+            </if>
+            <if test="compSnameeng != null" >
+                COMP_SNAMEENG,
+            </if>
+            <if test="province != null" >
+                PROVINCE,
+            </if>
+            <if test="city != null" >
+                CITY,
+            </if>
+            <if test="address != null" >
+                ADDRESS,
+            </if>
+            <if test="office != null" >
+                OFFICE,
+            </if>
+            <if test="zipcode != null" >
+                ZIPCODE,
+            </if>
+            <if test="phone != null" >
+                PHONE,
+            </if>
+            <if test="fax != null" >
+                FAX,
+            </if>
+            <if test="email != null" >
+                EMAIL,
+            </if>
+            <if test="website != null" >
+                WEBSITE,
+            </if>
+            <if test="registernumber != null" >
+                REGISTERNUMBER,
+            </if>
+            <if test="chairman != null" >
+                CHAIRMAN,
+            </if>
+            <if test="president != null" >
+                PRESIDENT,
+            </if>
+            <if test="discloser != null" >
+                DISCLOSER,
+            </if>
+            <if test="regcapital != null" >
+                REGCAPITAL,
+            </if>
+            <if test="currencycode != null" >
+                CURRENCYCODE,
+            </if>
+            <if test="founddate != null" >
+                FOUNDDATE,
+            </if>
+            <if test="enddate != null" >
+                ENDDATE,
+            </if>
+            <if test="briefing != null" >
+                BRIEFING,
+            </if>
+            <if test="compType != null" >
+                COMP_TYPE,
+            </if>
+            <if test="compProperty != null" >
+                COMP_PROPERTY,
+            </if>
+            <if test="opdate != null" >
+                OPDATE,
+            </if>
+            <if test="opmode != null" >
+                OPMODE,
+            </if>
+            <if test="country != null" >
+                COUNTRY,
+            </if>
+            <if test="businessscope != null" >
+                BUSINESSSCOPE,
+            </if>
+            <if test="companyType != null" >
+                COMPANY_TYPE,
+            </if>
+            <if test="sInfoTotalemployees != null" >
+                S_INFO_TOTALEMPLOYEES,
+            </if>
+            <if test="mainBusiness != null" >
+                MAIN_BUSINESS,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                #{objectId,jdbcType=VARCHAR},
+            </if>
+            <if test="compId != null" >
+                #{compId,jdbcType=VARCHAR},
+            </if>
+            <if test="compName != null" >
+                #{compName,jdbcType=VARCHAR},
+            </if>
+            <if test="compSname != null" >
+                #{compSname,jdbcType=VARCHAR},
+            </if>
+            <if test="compNameEng != null" >
+                #{compNameEng,jdbcType=VARCHAR},
+            </if>
+            <if test="compSnameeng != null" >
+                #{compSnameeng,jdbcType=VARCHAR},
+            </if>
+            <if test="province != null" >
+                #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null" >
+                #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null" >
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="office != null" >
+                #{office,jdbcType=VARCHAR},
+            </if>
+            <if test="zipcode != null" >
+                #{zipcode,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null" >
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="fax != null" >
+                #{fax,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null" >
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="website != null" >
+                #{website,jdbcType=VARCHAR},
+            </if>
+            <if test="registernumber != null" >
+                #{registernumber,jdbcType=VARCHAR},
+            </if>
+            <if test="chairman != null" >
+                #{chairman,jdbcType=VARCHAR},
+            </if>
+            <if test="president != null" >
+                #{president,jdbcType=VARCHAR},
+            </if>
+            <if test="discloser != null" >
+                #{discloser,jdbcType=VARCHAR},
+            </if>
+            <if test="regcapital != null" >
+                #{regcapital,jdbcType=DECIMAL},
+            </if>
+            <if test="currencycode != null" >
+                #{currencycode,jdbcType=VARCHAR},
+            </if>
+            <if test="founddate != null" >
+                #{founddate,jdbcType=VARCHAR},
+            </if>
+            <if test="enddate != null" >
+                #{enddate,jdbcType=VARCHAR},
+            </if>
+            <if test="briefing != null" >
+                #{briefing,jdbcType=VARCHAR},
+            </if>
+            <if test="compType != null" >
+                #{compType,jdbcType=VARCHAR},
+            </if>
+            <if test="compProperty != null" >
+                #{compProperty,jdbcType=VARCHAR},
+            </if>
+            <if test="opdate != null" >
+                #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                #{opmode,jdbcType=VARCHAR},
+            </if>
+            <if test="country != null" >
+                #{country,jdbcType=VARCHAR},
+            </if>
+            <if test="businessscope != null" >
+                #{businessscope,jdbcType=VARCHAR},
+            </if>
+            <if test="companyType != null" >
+                #{companyType,jdbcType=VARCHAR},
+            </if>
+            <if test="sInfoTotalemployees != null" >
+                #{sInfoTotalemployees,jdbcType=DECIMAL},
+            </if>
+            <if test="mainBusiness != null" >
+                #{mainBusiness,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfCompintroduction" >
+        insert into INTERF_COMPINTRODUCTION(OBJECT_ID, COMP_ID, COMP_NAME, COMP_SNAME, COMP_NAME_ENG, 
+        COMP_SNAMEENG, PROVINCE, CITY, ADDRESS, OFFICE, ZIPCODE, PHONE, FAX, EMAIL, WEBSITE, 
+        REGISTERNUMBER, CHAIRMAN, PRESIDENT, DISCLOSER, REGCAPITAL, CURRENCYCODE, FOUNDDATE, 
+        ENDDATE, BRIEFING, COMP_TYPE, COMP_PROPERTY, OPDATE, OPMODE, COUNTRY, BUSINESSSCOPE, 
+        COMPANY_TYPE, S_INFO_TOTALEMPLOYEES, MAIN_BUSINESS)
+        select OBJECT_ID, COMP_ID, COMP_NAME, COMP_SNAME, COMP_NAME_ENG, 
+            COMP_SNAMEENG, PROVINCE, CITY, ADDRESS, OFFICE, ZIPCODE, PHONE, FAX, EMAIL, WEBSITE, 
+            REGISTERNUMBER, CHAIRMAN, PRESIDENT, DISCLOSER, REGCAPITAL, CURRENCYCODE, FOUNDDATE, 
+            ENDDATE, BRIEFING, COMP_TYPE, COMP_PROPERTY, OPDATE, OPMODE, COUNTRY, BUSINESSSCOPE, 
+            COMPANY_TYPE, S_INFO_TOTALEMPLOYEES, MAIN_BUSINESS
+             from INTERF_COMPINTRODUCTION
+             where 1 = 1 and OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InterfCompintroduction" >
+        update INTERF_COMPINTRODUCTION
+        <set >
+            <if test="compId != null" >
+                COMP_ID = #{compId,jdbcType=VARCHAR},
+            </if>
+            <if test="compName != null" >
+                COMP_NAME = #{compName,jdbcType=VARCHAR},
+            </if>
+            <if test="compSname != null" >
+                COMP_SNAME = #{compSname,jdbcType=VARCHAR},
+            </if>
+            <if test="compNameEng != null" >
+                COMP_NAME_ENG = #{compNameEng,jdbcType=VARCHAR},
+            </if>
+            <if test="compSnameeng != null" >
+                COMP_SNAMEENG = #{compSnameeng,jdbcType=VARCHAR},
+            </if>
+            <if test="province != null" >
+                PROVINCE = #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null" >
+                CITY = #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null" >
+                ADDRESS = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="office != null" >
+                OFFICE = #{office,jdbcType=VARCHAR},
+            </if>
+            <if test="zipcode != null" >
+                ZIPCODE = #{zipcode,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null" >
+                PHONE = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="fax != null" >
+                FAX = #{fax,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null" >
+                EMAIL = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="website != null" >
+                WEBSITE = #{website,jdbcType=VARCHAR},
+            </if>
+            <if test="registernumber != null" >
+                REGISTERNUMBER = #{registernumber,jdbcType=VARCHAR},
+            </if>
+            <if test="chairman != null" >
+                CHAIRMAN = #{chairman,jdbcType=VARCHAR},
+            </if>
+            <if test="president != null" >
+                PRESIDENT = #{president,jdbcType=VARCHAR},
+            </if>
+            <if test="discloser != null" >
+                DISCLOSER = #{discloser,jdbcType=VARCHAR},
+            </if>
+            <if test="regcapital != null" >
+                REGCAPITAL = #{regcapital,jdbcType=DECIMAL},
+            </if>
+            <if test="currencycode != null" >
+                CURRENCYCODE = #{currencycode,jdbcType=VARCHAR},
+            </if>
+            <if test="founddate != null" >
+                FOUNDDATE = #{founddate,jdbcType=VARCHAR},
+            </if>
+            <if test="enddate != null" >
+                ENDDATE = #{enddate,jdbcType=VARCHAR},
+            </if>
+            <if test="briefing != null" >
+                BRIEFING = #{briefing,jdbcType=VARCHAR},
+            </if>
+            <if test="compType != null" >
+                COMP_TYPE = #{compType,jdbcType=VARCHAR},
+            </if>
+            <if test="compProperty != null" >
+                COMP_PROPERTY = #{compProperty,jdbcType=VARCHAR},
+            </if>
+            <if test="opdate != null" >
+                OPDATE = #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                OPMODE = #{opmode,jdbcType=VARCHAR},
+            </if>
+            <if test="country != null" >
+                COUNTRY = #{country,jdbcType=VARCHAR},
+            </if>
+            <if test="businessscope != null" >
+                BUSINESSSCOPE = #{businessscope,jdbcType=VARCHAR},
+            </if>
+            <if test="companyType != null" >
+                COMPANY_TYPE = #{companyType,jdbcType=VARCHAR},
+            </if>
+            <if test="sInfoTotalemployees != null" >
+                S_INFO_TOTALEMPLOYEES = #{sInfoTotalemployees,jdbcType=DECIMAL},
+            </if>
+            <if test="mainBusiness != null" >
+                MAIN_BUSINESS = #{mainBusiness,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfCompintroduction" >
+        update INTERF_COMPINTRODUCTION
+        set COMP_ID = #{compId,jdbcType=VARCHAR},
+            COMP_NAME = #{compName,jdbcType=VARCHAR},
+            COMP_SNAME = #{compSname,jdbcType=VARCHAR},
+            COMP_NAME_ENG = #{compNameEng,jdbcType=VARCHAR},
+            COMP_SNAMEENG = #{compSnameeng,jdbcType=VARCHAR},
+            PROVINCE = #{province,jdbcType=VARCHAR},
+            CITY = #{city,jdbcType=VARCHAR},
+            ADDRESS = #{address,jdbcType=VARCHAR},
+            OFFICE = #{office,jdbcType=VARCHAR},
+            ZIPCODE = #{zipcode,jdbcType=VARCHAR},
+            PHONE = #{phone,jdbcType=VARCHAR},
+            FAX = #{fax,jdbcType=VARCHAR},
+            EMAIL = #{email,jdbcType=VARCHAR},
+            WEBSITE = #{website,jdbcType=VARCHAR},
+            REGISTERNUMBER = #{registernumber,jdbcType=VARCHAR},
+            CHAIRMAN = #{chairman,jdbcType=VARCHAR},
+            PRESIDENT = #{president,jdbcType=VARCHAR},
+            DISCLOSER = #{discloser,jdbcType=VARCHAR},
+            REGCAPITAL = #{regcapital,jdbcType=DECIMAL},
+            CURRENCYCODE = #{currencycode,jdbcType=VARCHAR},
+            FOUNDDATE = #{founddate,jdbcType=VARCHAR},
+            ENDDATE = #{enddate,jdbcType=VARCHAR},
+            BRIEFING = #{briefing,jdbcType=VARCHAR},
+            COMP_TYPE = #{compType,jdbcType=VARCHAR},
+            COMP_PROPERTY = #{compProperty,jdbcType=VARCHAR},
+            OPDATE = #{opdate,jdbcType=DATE},
+            OPMODE = #{opmode,jdbcType=VARCHAR},
+            COUNTRY = #{country,jdbcType=VARCHAR},
+            BUSINESSSCOPE = #{businessscope,jdbcType=VARCHAR},
+            COMPANY_TYPE = #{companyType,jdbcType=VARCHAR},
+            S_INFO_TOTALEMPLOYEES = #{sInfoTotalemployees,jdbcType=DECIMAL},
+            MAIN_BUSINESS = #{mainBusiness,jdbcType=VARCHAR}
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+</mapper>

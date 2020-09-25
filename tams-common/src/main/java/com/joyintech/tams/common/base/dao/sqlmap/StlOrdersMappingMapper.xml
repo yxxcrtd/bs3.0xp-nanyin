@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.StlOrdersMappingMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.StlOrdersMapping" >
+        <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE" property="finprodType" jdbcType="VARCHAR" />
+        <result column="BUSI_TYPE" property="busiType" jdbcType="VARCHAR" />
+        <result column="BUSI_TYPE_NAME" property="busiTypeName" jdbcType="VARCHAR" />
+        <result column="TRADE_PS" property="tradePs" jdbcType="VARCHAR" />
+        <result column="INV_AIM" property="invAim" jdbcType="VARCHAR" />
+        <result column="ORDER_TYPE" property="orderType" jdbcType="VARCHAR" />
+        <result column="ORDER_TYPE_NAME" property="orderTypeName" jdbcType="VARCHAR" />
+        <result column="DATE_TYPE" property="dateType" jdbcType="VARCHAR" />
+        <result column="PS" property="ps" jdbcType="VARCHAR" />
+        <result column="MY_ACCT_TYPE" property="myAcctType" jdbcType="VARCHAR" />
+        <result column="COUNTER_ACCT_TYPE" property="counterAcctType" jdbcType="VARCHAR" />
+        <result column="IS_BOOK" property="isBook" jdbcType="VARCHAR" />
+        <result column="PARA_CODE" property="paraCode" jdbcType="VARCHAR" />
+        <result column="PARAM_VALUE" property="paramValue" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CHANNEL_ASSET" property="channelAsset" jdbcType="VARCHAR" />
+        <result column="PARAMS" property="params" jdbcType="VARCHAR" />
+        <result column="SETTLAMT_FIELDCODE" property="settlamtFieldcode" jdbcType="VARCHAR" />
+        <result column="MAPPING_TYPE" property="mappingType" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO SEQNO, FINPROD_TYPE FINPROD_TYPE, BUSI_TYPE BUSI_TYPE, BUSI_TYPE_NAME BUSI_TYPE_NAME, 
+        TRADE_PS TRADE_PS, INV_AIM INV_AIM, ORDER_TYPE ORDER_TYPE, ORDER_TYPE_NAME ORDER_TYPE_NAME, 
+        DATE_TYPE DATE_TYPE, PS PS, MY_ACCT_TYPE MY_ACCT_TYPE, COUNTER_ACCT_TYPE COUNTER_ACCT_TYPE, 
+        IS_BOOK IS_BOOK, PARA_CODE PARA_CODE, PARAM_VALUE PARAM_VALUE, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
+        CHANNEL_ASSET CHANNEL_ASSET, PARAMS PARAMS, SETTLAMT_FIELDCODE SETTLAMT_FIELDCODE, 
+        MAPPING_TYPE MAPPING_TYPE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.StlOrdersMappingMapper.Base_Column_List" />
+        from STL_ORDERS_MAPPING
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.StlOrdersMappingMapper.Base_Column_List" />
+        from STL_ORDERS_MAPPING
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.StlOrdersMappingMapper.Base_Column_List" />
+        from STL_ORDERS_MAPPING
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from STL_ORDERS_MAPPING
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.StlOrdersMapping" >
+        insert into STL_ORDERS_MAPPING (SEQNO, FINPROD_TYPE, BUSI_TYPE, 
+            BUSI_TYPE_NAME, TRADE_PS, INV_AIM, 
+            ORDER_TYPE, ORDER_TYPE_NAME, DATE_TYPE, 
+            PS, MY_ACCT_TYPE, COUNTER_ACCT_TYPE, 
+            IS_BOOK, PARA_CODE, PARAM_VALUE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, CHANNEL_ASSET, 
+            PARAMS, SETTLAMT_FIELDCODE, MAPPING_TYPE
+            )
+        values (#{seqno,jdbcType=VARCHAR}, #{finprodType,jdbcType=VARCHAR}, #{busiType,jdbcType=VARCHAR}, 
+            #{busiTypeName,jdbcType=VARCHAR}, #{tradePs,jdbcType=VARCHAR}, #{invAim,jdbcType=VARCHAR}, 
+            #{orderType,jdbcType=VARCHAR}, #{orderTypeName,jdbcType=VARCHAR}, #{dateType,jdbcType=VARCHAR}, 
+            #{ps,jdbcType=VARCHAR}, #{myAcctType,jdbcType=VARCHAR}, #{counterAcctType,jdbcType=VARCHAR}, 
+            #{isBook,jdbcType=VARCHAR}, #{paraCode,jdbcType=VARCHAR}, #{paramValue,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{channelAsset,jdbcType=VARCHAR}, 
+            #{params,jdbcType=VARCHAR}, #{settlamtFieldcode,jdbcType=VARCHAR}, #{mappingType,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.StlOrdersMapping" >
+        insert into STL_ORDERS_MAPPING
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="finprodType != null" >
+                FINPROD_TYPE,
+            </if>
+            <if test="busiType != null" >
+                BUSI_TYPE,
+            </if>
+            <if test="busiTypeName != null" >
+                BUSI_TYPE_NAME,
+            </if>
+            <if test="tradePs != null" >
+                TRADE_PS,
+            </if>
+            <if test="invAim != null" >
+                INV_AIM,
+            </if>
+            <if test="orderType != null" >
+                ORDER_TYPE,
+            </if>
+            <if test="orderTypeName != null" >
+                ORDER_TYPE_NAME,
+            </if>
+            <if test="dateType != null" >
+                DATE_TYPE,
+            </if>
+            <if test="ps != null" >
+                PS,
+            </if>
+            <if test="myAcctType != null" >
+                MY_ACCT_TYPE,
+            </if>
+            <if test="counterAcctType != null" >
+                COUNTER_ACCT_TYPE,
+            </if>
+            <if test="isBook != null" >
+                IS_BOOK,
+            </if>
+            <if test="paraCode != null" >
+                PARA_CODE,
+            </if>
+            <if test="paramValue != null" >
+                PARAM_VALUE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="channelAsset != null" >
+                CHANNEL_ASSET,
+            </if>
+            <if test="params != null" >
+                PARAMS,
+            </if>
+            <if test="settlamtFieldcode != null" >
+                SETTLAMT_FIELDCODE,
+            </if>
+            <if test="mappingType != null" >
+                MAPPING_TYPE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType != null" >
+                #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="busiType != null" >
+                #{busiType,jdbcType=VARCHAR},
+            </if>
+            <if test="busiTypeName != null" >
+                #{busiTypeName,jdbcType=VARCHAR},
+            </if>
+            <if test="tradePs != null" >
+                #{tradePs,jdbcType=VARCHAR},
+            </if>
+            <if test="invAim != null" >
+                #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="orderType != null" >
+                #{orderType,jdbcType=VARCHAR},
+            </if>
+            <if test="orderTypeName != null" >
+                #{orderTypeName,jdbcType=VARCHAR},
+            </if>
+            <if test="dateType != null" >
+                #{dateType,jdbcType=VARCHAR},
+            </if>
+            <if test="ps != null" >
+                #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="myAcctType != null" >
+                #{myAcctType,jdbcType=VARCHAR},
+            </if>
+            <if test="counterAcctType != null" >
+                #{counterAcctType,jdbcType=VARCHAR},
+            </if>
+            <if test="isBook != null" >
+                #{isBook,jdbcType=VARCHAR},
+            </if>
+            <if test="paraCode != null" >
+                #{paraCode,jdbcType=VARCHAR},
+            </if>
+            <if test="paramValue != null" >
+                #{paramValue,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="channelAsset != null" >
+                #{channelAsset,jdbcType=VARCHAR},
+            </if>
+            <if test="params != null" >
+                #{params,jdbcType=VARCHAR},
+            </if>
+            <if test="settlamtFieldcode != null" >
+                #{settlamtFieldcode,jdbcType=VARCHAR},
+            </if>
+            <if test="mappingType != null" >
+                #{mappingType,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.StlOrdersMapping" >
+        insert into STL_ORDERS_MAPPING(SEQNO, FINPROD_TYPE, BUSI_TYPE, BUSI_TYPE_NAME, TRADE_PS, 
+        INV_AIM, ORDER_TYPE, ORDER_TYPE_NAME, DATE_TYPE, PS, MY_ACCT_TYPE, COUNTER_ACCT_TYPE, 
+        IS_BOOK, PARA_CODE, PARAM_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME, CHANNEL_ASSET, PARAMS, SETTLAMT_FIELDCODE, MAPPING_TYPE)
+        select SEQNO, FINPROD_TYPE, BUSI_TYPE, BUSI_TYPE_NAME, TRADE_PS, 
+            INV_AIM, ORDER_TYPE, ORDER_TYPE_NAME, DATE_TYPE, PS, MY_ACCT_TYPE, COUNTER_ACCT_TYPE, 
+            IS_BOOK, PARA_CODE, PARAM_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CHANNEL_ASSET, PARAMS, SETTLAMT_FIELDCODE, MAPPING_TYPE
+             from STL_ORDERS_MAPPING
+             where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.StlOrdersMapping" >
+        update STL_ORDERS_MAPPING
+        <set >
+            <if test="finprodType != null" >
+                FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="busiType != null" >
+                BUSI_TYPE = #{busiType,jdbcType=VARCHAR},
+            </if>
+            <if test="busiTypeName != null" >
+                BUSI_TYPE_NAME = #{busiTypeName,jdbcType=VARCHAR},
+            </if>
+            <if test="tradePs != null" >
+                TRADE_PS = #{tradePs,jdbcType=VARCHAR},
+            </if>
+            <if test="invAim != null" >
+                INV_AIM = #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="orderType != null" >
+                ORDER_TYPE = #{orderType,jdbcType=VARCHAR},
+            </if>
+            <if test="orderTypeName != null" >
+                ORDER_TYPE_NAME = #{orderTypeName,jdbcType=VARCHAR},
+            </if>
+            <if test="dateType != null" >
+                DATE_TYPE = #{dateType,jdbcType=VARCHAR},
+            </if>
+            <if test="ps != null" >
+                PS = #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="myAcctType != null" >
+                MY_ACCT_TYPE = #{myAcctType,jdbcType=VARCHAR},
+            </if>
+            <if test="counterAcctType != null" >
+                COUNTER_ACCT_TYPE = #{counterAcctType,jdbcType=VARCHAR},
+            </if>
+            <if test="isBook != null" >
+                IS_BOOK = #{isBook,jdbcType=VARCHAR},
+            </if>
+            <if test="paraCode != null" >
+                PARA_CODE = #{paraCode,jdbcType=VARCHAR},
+            </if>
+            <if test="paramValue != null" >
+                PARAM_VALUE = #{paramValue,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="channelAsset != null" >
+                CHANNEL_ASSET = #{channelAsset,jdbcType=VARCHAR},
+            </if>
+            <if test="params != null" >
+                PARAMS = #{params,jdbcType=VARCHAR},
+            </if>
+            <if test="settlamtFieldcode != null" >
+                SETTLAMT_FIELDCODE = #{settlamtFieldcode,jdbcType=VARCHAR},
+            </if>
+            <if test="mappingType != null" >
+                MAPPING_TYPE = #{mappingType,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.StlOrdersMapping" >
+        update STL_ORDERS_MAPPING
+        set FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            BUSI_TYPE = #{busiType,jdbcType=VARCHAR},
+            BUSI_TYPE_NAME = #{busiTypeName,jdbcType=VARCHAR},
+            TRADE_PS = #{tradePs,jdbcType=VARCHAR},
+            INV_AIM = #{invAim,jdbcType=VARCHAR},
+            ORDER_TYPE = #{orderType,jdbcType=VARCHAR},
+            ORDER_TYPE_NAME = #{orderTypeName,jdbcType=VARCHAR},
+            DATE_TYPE = #{dateType,jdbcType=VARCHAR},
+            PS = #{ps,jdbcType=VARCHAR},
+            MY_ACCT_TYPE = #{myAcctType,jdbcType=VARCHAR},
+            COUNTER_ACCT_TYPE = #{counterAcctType,jdbcType=VARCHAR},
+            IS_BOOK = #{isBook,jdbcType=VARCHAR},
+            PARA_CODE = #{paraCode,jdbcType=VARCHAR},
+            PARAM_VALUE = #{paramValue,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            CHANNEL_ASSET = #{channelAsset,jdbcType=VARCHAR},
+            PARAMS = #{params,jdbcType=VARCHAR},
+            SETTLAMT_FIELDCODE = #{settlamtFieldcode,jdbcType=VARCHAR},
+            MAPPING_TYPE = #{mappingType,jdbcType=VARCHAR}
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+</mapper>

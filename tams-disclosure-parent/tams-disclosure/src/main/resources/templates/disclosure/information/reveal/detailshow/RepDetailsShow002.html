@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
+<head>
+<meta charset="UTF-8">
+<title data-th-text="#{RepDetailsShow002}">报表查询预览</title>
+<script th:inline="javascript">
+</script>
+</head>
+<script th:inline="javascript">
+	var resultDate = [[${resultDate}]];
+</script>
+<body>
+<div layout:fragment="content">
+
+	<div class="layui-row layui-col-space15">
+	   		<div class="joyin-form-wrap condition-area" id="showSearch" style="height: 30px;">
+		    </div>
+			  
+                <div class="layui-inline layui-col-md-offset9" style="margin-top: 10px">              
+                    <p hidden><button class="layui-btn layui-btn-sm " id="showDetailBtn"><i class="iconfont icon-search"></i>查询</button></p>
+	                <p hidden><a class="layui-btn layui-btn-sm btn-select" id="doSubimt">生成<i class="iconfont icon-down"></i></a>
+		                <ul class="btn-select-wrap" style="display: none;" id="toSubmit">
+		                    <li><a href="javascript:;" id="excelSubimt">excel</a></li>
+		                    <li><a href="javascript:;" id="wordSubimt">word</a></li>
+		                </ul></p>
+	                <p hidden><a class="layui-btn layui-btn-sm btn-select" id="doExport">导出<i class="iconfont icon-down"></i></a>
+		                <ul class="btn-select-wrap" style="display: none;" id="toExport">
+		                    <li><a href="javascript:;" id="excelExport">excel</a></li>
+		                    <li><a href="javascript:;" id="wordExport">word</a></li>
+		                </ul></p>
+	           	</div>
+               
+			<div class="layui-tab layui-tab-card">
+	        	<div id="showtable" style="overflow:auto"></div>
+	    	</div>
+    </div>
+</div>
+</body>
+<div layout:fragment="script">
+  	<script data-th-src="@{/js/disclosure/information/reveal/detailshow/RepDetailsShow002.js}" type="text/javascript"></script>
+	<script data-th-src="@{/js/disclosure/report.js}" type="text/javascript"></script>
+	<script data-th-inline="javascript" type="text/javascript">
+			var REPORT_SERVER_URL = [[${REPORT_SERVER_URL}]];
+		    var REPORT_USERNAME = [[${REPORT_USERNAME}]];
+		    var REPORT_PASSWORD = [[${REPORT_PASSWORD}]];
+		    var REPORT_SERVER_PATH = [[${REPORT_SERVER_PATH}]];
+		</script>
+</div>
+
+</html>

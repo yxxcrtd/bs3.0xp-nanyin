@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.joyintech.tams.common.base.dao.ColumnTypeMapper">
+	<resultMap id="BaseResultMap"
+		type="com.joyintech.tams.common.base.entity.ColumnTypeDto">
+		<result column="COLUMN_NAME" property="columnNname"
+			jdbcType="VARCHAR" />
+		<result column="COMMENTS" property="comment"
+			jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="queryColmnInfo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+		SELECT COLUMN_NAME,COMMENTS FROM 
+		(SELECT DISTINCT B.COLUMN_NAME COLUMN_NAME, 
+			A.COMMENTS COMMENTS ,B.COLUMN_ID COLUMN_ID
+			FROM USER_COL_COMMENTS A
+			,ALL_TAB_COLUMNS B
+			WHERE A.TABLE_NAME = B.TABLE_NAME AND
+ 			A.COLUMN_NAME = B.COLUMN_NAME 
+ 			<if test="tableId != null" >
+			AND A.TABLE_NAME = #{tableId,jdbcType=CHAR}
+			</if>
+			)
+			ORDER BY COLUMN_ID
+	</select>
+	
+	<select id="queryAllColumnByTableId" resultType="java.lang.String" parameterType="java.lang.String" >
+		SELECT DISTINCT B.COLUMN_NAME COLUMN_NAME
+			FROM USER_COL_COMMENTS A
+			,ALL_TAB_COLUMNS B
+			WHERE A.TABLE_NAME = B.TABLE_NAME AND
+ 			A.COLUMN_NAME = B.COLUMN_NAME 
+ 			<if test="tableId != null" >
+			AND A.TABLE_NAME = #{tableId,jdbcType=CHAR}
+			</if>
+	</select>
+
+</mapper>

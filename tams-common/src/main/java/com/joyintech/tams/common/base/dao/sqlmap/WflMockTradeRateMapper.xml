@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.WflMockTradeRateMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.WflMockTradeRate" >
+        <id column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <id column="RATE_TYPE" property="rateType" jdbcType="VARCHAR" />
+        <id column="RATE_MNCLASS" property="rateMnclass" jdbcType="VARCHAR" />
+        <result column="INDEX_ID" property="indexId" jdbcType="VARCHAR" />
+        <result column="INDEX_SOURCE" property="indexSource" jdbcType="VARCHAR" />
+        <result column="COEFFICIENT" property="coefficient" jdbcType="VARCHAR" />
+        <result column="SPREAD_RATE" property="spreadRate" jdbcType="VARCHAR" />
+        <result column="WORKFLOW_STATUS" property="workflowStatus" jdbcType="VARCHAR" />
+        <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TRADE_ID TRADE_ID, RATE_TYPE RATE_TYPE, RATE_MNCLASS RATE_MNCLASS, INDEX_ID INDEX_ID, 
+        INDEX_SOURCE INDEX_SOURCE, COEFFICIENT COEFFICIENT, SPREAD_RATE SPREAD_RATE, WORKFLOW_STATUS WORKFLOW_STATUS, 
+        WORKFLOW_ID WORKFLOW_ID, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflMockTradeRateMapper.Base_Column_List" />
+        from WFL_MOCK_TRADE_RATE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflMockTradeRateMapper.Base_Column_List" />
+        from WFL_MOCK_TRADE_RATE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.WflMockTradeRateKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflMockTradeRateMapper.Base_Column_List" />
+        from WFL_MOCK_TRADE_RATE
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and RATE_TYPE = #{rateType,jdbcType=VARCHAR}
+          and RATE_MNCLASS = #{rateMnclass,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.WflMockTradeRateKey" >
+        delete from WFL_MOCK_TRADE_RATE
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and RATE_TYPE = #{rateType,jdbcType=VARCHAR}
+          and RATE_MNCLASS = #{rateMnclass,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from WFL_MOCK_TRADE_RATE
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insertBasicByWorkflowId" parameterType="java.util.Map" >
+        insert into WFL_MOCK_TRADE_RATE(TRADE_ID, RATE_TYPE, RATE_MNCLASS, INDEX_ID, INDEX_SOURCE, 
+        COEFFICIENT, SPREAD_RATE, WORKFLOW_STATUS, WORKFLOW_ID, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select TRADE_ID, RATE_TYPE, RATE_MNCLASS, INDEX_ID, INDEX_SOURCE, 
+            COEFFICIENT, SPREAD_RATE, WORKFLOW_STATUS, #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from WFL_MOCK_TRADE_RATE
+             where WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.WflMockTradeRate" >
+        update WFL_MOCK_TRADE_RATE
+        <set >
+            <if test="tradeId != null" >
+                TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="rateType != null" >
+                RATE_TYPE = #{rateType,jdbcType=VARCHAR},
+            </if>
+            <if test="rateMnclass != null" >
+                RATE_MNCLASS = #{rateMnclass,jdbcType=VARCHAR},
+            </if>
+            <if test="indexId != null" >
+                INDEX_ID = #{indexId,jdbcType=VARCHAR},
+            </if>
+            <if test="indexSource != null" >
+                INDEX_SOURCE = #{indexSource,jdbcType=VARCHAR},
+            </if>
+            <if test="coefficient != null" >
+                COEFFICIENT = #{coefficient,jdbcType=VARCHAR},
+            </if>
+            <if test="spreadRate != null" >
+                SPREAD_RATE = #{spreadRate,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowStatus != null" >
+                WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.WflMockTradeRate" >
+        update WFL_MOCK_TRADE_RATE
+        set 
+        TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+        RATE_TYPE = #{rateType,jdbcType=VARCHAR},
+        RATE_MNCLASS = #{rateMnclass,jdbcType=VARCHAR},
+        INDEX_ID = #{indexId,jdbcType=VARCHAR},
+        INDEX_SOURCE = #{indexSource,jdbcType=VARCHAR},
+        COEFFICIENT = #{coefficient,jdbcType=VARCHAR},
+        SPREAD_RATE = #{spreadRate,jdbcType=VARCHAR},
+        WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.WflMockTradeRate" >
+        insert into WFL_MOCK_TRADE_RATE (TRADE_ID, RATE_TYPE, RATE_MNCLASS, 
+            INDEX_ID, INDEX_SOURCE, COEFFICIENT, 
+            SPREAD_RATE, WORKFLOW_STATUS, WORKFLOW_ID, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{tradeId,jdbcType=VARCHAR}, #{rateType,jdbcType=VARCHAR}, #{rateMnclass,jdbcType=VARCHAR}, 
+            #{indexId,jdbcType=VARCHAR}, #{indexSource,jdbcType=VARCHAR}, #{coefficient,jdbcType=VARCHAR}, 
+            #{spreadRate,jdbcType=VARCHAR}, #{workflowStatus,jdbcType=VARCHAR}, #{workflowId,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.WflMockTradeRate" >
+        insert into WFL_MOCK_TRADE_RATE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="rateType != null" >
+                RATE_TYPE,
+            </if>
+            <if test="rateMnclass != null" >
+                RATE_MNCLASS,
+            </if>
+            <if test="indexId != null" >
+                INDEX_ID,
+            </if>
+            <if test="indexSource != null" >
+                INDEX_SOURCE,
+            </if>
+            <if test="coefficient != null" >
+                COEFFICIENT,
+            </if>
+            <if test="spreadRate != null" >
+                SPREAD_RATE,
+            </if>
+            <if test="workflowStatus != null" >
+                WORKFLOW_STATUS,
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="rateType != null" >
+                #{rateType,jdbcType=VARCHAR},
+            </if>
+            <if test="rateMnclass != null" >
+                #{rateMnclass,jdbcType=VARCHAR},
+            </if>
+            <if test="indexId != null" >
+                #{indexId,jdbcType=VARCHAR},
+            </if>
+            <if test="indexSource != null" >
+                #{indexSource,jdbcType=VARCHAR},
+            </if>
+            <if test="coefficient != null" >
+                #{coefficient,jdbcType=VARCHAR},
+            </if>
+            <if test="spreadRate != null" >
+                #{spreadRate,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowStatus != null" >
+                #{workflowStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowId != null" >
+                #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.WflMockTradeRate" >
+        insert into WFL_MOCK_TRADE_RATE(TRADE_ID, RATE_TYPE, RATE_MNCLASS, INDEX_ID, INDEX_SOURCE, 
+        COEFFICIENT, SPREAD_RATE, WORKFLOW_STATUS, WORKFLOW_ID, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select TRADE_ID, RATE_TYPE, RATE_MNCLASS, INDEX_ID, INDEX_SOURCE, 
+            COEFFICIENT, SPREAD_RATE, WORKFLOW_STATUS, #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from WFL_MOCK_TRADE_RATE
+             where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR} and RATE_TYPE = #{rateType,jdbcType=VARCHAR} and RATE_MNCLASS = #{rateMnclass,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.WflMockTradeRate" >
+        update WFL_MOCK_TRADE_RATE
+        <set >
+            <if test="indexId != null" >
+                INDEX_ID = #{indexId,jdbcType=VARCHAR},
+            </if>
+            <if test="indexSource != null" >
+                INDEX_SOURCE = #{indexSource,jdbcType=VARCHAR},
+            </if>
+            <if test="coefficient != null" >
+                COEFFICIENT = #{coefficient,jdbcType=VARCHAR},
+            </if>
+            <if test="spreadRate != null" >
+                SPREAD_RATE = #{spreadRate,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowStatus != null" >
+                WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and RATE_TYPE = #{rateType,jdbcType=VARCHAR}
+          and RATE_MNCLASS = #{rateMnclass,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.WflMockTradeRate" >
+        update WFL_MOCK_TRADE_RATE
+        set INDEX_ID = #{indexId,jdbcType=VARCHAR},
+            INDEX_SOURCE = #{indexSource,jdbcType=VARCHAR},
+            COEFFICIENT = #{coefficient,jdbcType=VARCHAR},
+            SPREAD_RATE = #{spreadRate,jdbcType=VARCHAR},
+            WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR},
+            WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and RATE_TYPE = #{rateType,jdbcType=VARCHAR}
+          and RATE_MNCLASS = #{rateMnclass,jdbcType=VARCHAR}
+    </update>
+</mapper>

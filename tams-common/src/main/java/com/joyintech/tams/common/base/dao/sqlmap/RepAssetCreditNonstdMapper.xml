@@ -1,0 +1,944 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepAssetCreditNonstdMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepAssetCreditNonstd" >
+        <id column="REP_FINPROD_ID" property="repFinprodId" jdbcType="VARCHAR" />
+        <result column="REP_AMT" property="repAmt" jdbcType="DECIMAL" />
+        <result column="REP_PROFIT_TYPE" property="repProfitType" jdbcType="VARCHAR" />
+        <result column="REP_IS_RESALE" property="repIsResale" jdbcType="VARCHAR" />
+        <result column="REP_VDATE" property="repVdate" jdbcType="DATE" />
+        <result column="REP_MDATE" property="repMdate" jdbcType="DATE" />
+        <result column="REP_TERM" property="repTerm" jdbcType="DECIMAL" />
+        <result column="REP_RATE_FLAG" property="repRateFlag" jdbcType="VARCHAR" />
+        <result column="REP_PROJ_YIELD" property="repProjYield" jdbcType="DECIMAL" />
+        <result column="REP_INTPAY_CYCLE" property="repIntpayCycle" jdbcType="DECIMAL" />
+        <result column="REP_REPAY_CMT" property="repRepayCmt" jdbcType="VARCHAR" />
+        <result column="REP_BASIS" property="repBasis" jdbcType="VARCHAR" />
+        <result column="REP_BASIS_TYPE" property="repBasisType" jdbcType="VARCHAR" />
+        <result column="REP_FLOAT_FACTOR" property="repFloatFactor" jdbcType="DECIMAL" />
+        <result column="REP_SPREAD_RATE" property="repSpreadRate" jdbcType="DECIMAL" />
+        <result column="REP_FINANCIER" property="repFinancier" jdbcType="VARCHAR" />
+        <result column="REP_FCR_GRADE_IN" property="repFcrGradeIn" jdbcType="VARCHAR" />
+        <result column="REP_FCR_GRADE_OUT" property="repFcrGradeOut" jdbcType="VARCHAR" />
+        <result column="REP_FINANCIER_TYPE1" property="repFinancierType1" jdbcType="VARCHAR" />
+        <result column="REP_FINANCIER_TYPE2" property="repFinancierType2" jdbcType="VARCHAR" />
+        <result column="REP_FINANCIER_TYPE3" property="repFinancierType3" jdbcType="VARCHAR" />
+        <result column="REP_FINANCE_PROJ" property="repFinanceProj" jdbcType="VARCHAR" />
+        <result column="REP_INDUSTRY1" property="repIndustry1" jdbcType="VARCHAR" />
+        <result column="REP_INDUSTRY_LEVEL2" property="repIndustryLevel2" jdbcType="VARCHAR" />
+        <result column="REP_PRO_INDUSTRY" property="repProIndustry" jdbcType="VARCHAR" />
+        <result column="REP_PRO_INDUSTRY_LEVEL2" property="repProIndustryLevel2" jdbcType="VARCHAR" />
+        <result column="REP_INDUSTRY_FLAG" property="repIndustryFlag" jdbcType="VARCHAR" />
+        <result column="REP_MONIT_TYPE" property="repMonitType" jdbcType="VARCHAR" />
+        <result column="REP_MON_TYPE_COMM" property="repMonTypeComm" jdbcType="VARCHAR" />
+        <result column="REP_GUA_TYPE" property="repGuaType" jdbcType="VARCHAR" />
+        <result column="REP_GUA_TYPE_REMARK" property="repGuaTypeRemark" jdbcType="VARCHAR" />
+        <result column="REP_FINANCIER_GRADE" property="repFinancierGrade" jdbcType="VARCHAR" />
+        <result column="REP_IN_GRADE" property="repInGrade" jdbcType="VARCHAR" />
+        <result column="REP_OUT_GRADE" property="repOutGrade" jdbcType="VARCHAR" />
+        <result column="REP_CHOSE" property="repChose" jdbcType="VARCHAR" />
+        <result column="REP_CONDITION_CMM" property="repConditionCmm" jdbcType="VARCHAR" />
+        <result column="REP_FIN_AREA" property="repFinArea" jdbcType="VARCHAR" />
+        <result column="REP_TOTAL_FEE_RATE" property="repTotalFeeRate" jdbcType="DECIMAL" />
+        <result column="REP_FIN_ORG_CODE" property="repFinOrgCode" jdbcType="VARCHAR" />
+        <result column="REP_REMARK" property="repRemark" jdbcType="VARCHAR" />
+        
+        <result column="REP_FMDATE" property="repFmdate" jdbcType="DATE" />
+        <result column="REP_PRIN_BASEAMT" property="repPrinBaseamt" jdbcType="DECIMAL" />
+        <result column="REP_COUPON_SPECIES" property="repCouponSpecies" jdbcType="VARCHAR" />
+        <result column="REP_INTPAY_RULE" property="repIntpayRule" jdbcType="VARCHAR" />
+        <result column="REP_STRUCT_GRADE" property="repStructGrade" jdbcType="VARCHAR" />
+        <result column="REP_REPAYMENT_TYPE" property="repRepaymentType" jdbcType="VARCHAR" />
+        <result column="REP_PERIOD_REPAYMENT_FLAG" property="repPeriodRepaymentFlag" jdbcType="VARCHAR" />
+        <result column="REP_EXCESS_PROFIT_RATE" property="repExcessProfitRate" jdbcType="DECIMAL" />
+        <result column="REP_CONTAIN_TYPE" property="repContainType" jdbcType="VARCHAR" />
+        <result column="REP_EXERCISE_TYPE" property="repExerciseType" jdbcType="VARCHAR" />
+        <result column="REP_EXERCISE_DATE" property="repExerciseDate" jdbcType="DATE" />
+        <result column="REP_FIRST_EXERCISE_DATE" property="repFirstExerciseDate" jdbcType="DATE" />
+        <result column="REP_EXERCISE_PERIOD" property="repExercisePeriod" jdbcType="DECIMAL" />
+        <result column="REP_EXERCISE_PRICE" property="repExercisePrice" jdbcType="DECIMAL" />
+        <result column="REP_PERPETUAL_CLAUSE_TYPE" property="repPerpetualClauseType" jdbcType="VARCHAR" />
+        <result column="REP_DEFERRED_INTEREST_TYPE" property="repDeferredInterestType" jdbcType="VARCHAR" />
+        <result column="REP_DEFERRED_INTEREST_INT" property="repDeferredInterestInt" jdbcType="VARCHAR" />
+        <result column="REP_FIRST_REPRCE_DATE" property="repFirstReprceDate" jdbcType="DATE" />
+        <result column="REP_REPRCE_CYCLE" property="repReprceCycle" jdbcType="DECIMAL" />
+        <result column="REP_PART_REDEM_FLAG" property="repPartRedemFlag" jdbcType="VARCHAR" />
+        <result column="REP_PART_REDEM_RATE" property="repPartRedemRate" jdbcType="DECIMAL" />
+        <result column="REP_PLEDGE_TYPE" property="repPledgeType" jdbcType="VARCHAR" />
+        <result column="REP_PLEDGE_VALUE" property="repPledgeValue" jdbcType="DECIMAL" />
+        <result column="REP_NATURE_GUARANTEE" property="repNatureGuarantee" jdbcType="VARCHAR" />
+        <result column="REP_RELATION_FINAN" property="repRelationFinan" jdbcType="VARCHAR" />
+        <result column="REP_BASIC_ASSET_TYPE" property="repBasicAssetType" jdbcType="VARCHAR" />
+        
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        REP_FINPROD_ID REP_FINPROD_ID, REP_AMT REP_AMT, REP_PROFIT_TYPE REP_PROFIT_TYPE, 
+        REP_IS_RESALE REP_IS_RESALE, REP_VDATE REP_VDATE, REP_MDATE REP_MDATE, REP_TERM REP_TERM, 
+        REP_RATE_FLAG REP_RATE_FLAG, REP_PROJ_YIELD REP_PROJ_YIELD, REP_INTPAY_CYCLE REP_INTPAY_CYCLE, 
+        REP_REPAY_CMT REP_REPAY_CMT, REP_BASIS REP_BASIS, REP_BASIS_TYPE REP_BASIS_TYPE, 
+        REP_FLOAT_FACTOR REP_FLOAT_FACTOR, REP_SPREAD_RATE REP_SPREAD_RATE, REP_FINANCIER REP_FINANCIER, 
+        REP_FCR_GRADE_IN REP_FCR_GRADE_IN, REP_FCR_GRADE_OUT REP_FCR_GRADE_OUT, REP_FINANCIER_TYPE1 REP_FINANCIER_TYPE1, 
+        REP_FINANCIER_TYPE2 REP_FINANCIER_TYPE2, REP_FINANCIER_TYPE3 REP_FINANCIER_TYPE3, 
+        REP_FINANCE_PROJ REP_FINANCE_PROJ, REP_INDUSTRY1 REP_INDUSTRY1, REP_INDUSTRY_LEVEL2 REP_INDUSTRY_LEVEL2, 
+        REP_PRO_INDUSTRY REP_PRO_INDUSTRY, REP_PRO_INDUSTRY_LEVEL2 REP_PRO_INDUSTRY_LEVEL2, 
+        REP_INDUSTRY_FLAG REP_INDUSTRY_FLAG, REP_MONIT_TYPE REP_MONIT_TYPE, REP_MON_TYPE_COMM REP_MON_TYPE_COMM, 
+        REP_GUA_TYPE REP_GUA_TYPE, REP_GUA_TYPE_REMARK REP_GUA_TYPE_REMARK, REP_FINANCIER_GRADE REP_FINANCIER_GRADE, 
+        REP_IN_GRADE REP_IN_GRADE, REP_OUT_GRADE REP_OUT_GRADE, REP_CHOSE REP_CHOSE, REP_CONDITION_CMM REP_CONDITION_CMM, 
+        REP_FIN_AREA REP_FIN_AREA, REP_TOTAL_FEE_RATE REP_TOTAL_FEE_RATE, REP_FIN_ORG_CODE REP_FIN_ORG_CODE, 
+        REP_REMARK REP_REMARK, 
+        
+        REP_FMDATE REP_FMDATE, REP_PRIN_BASEAMT REP_PRIN_BASEAMT,
+        REP_COUPON_SPECIES REP_COUPON_SPECIES, REP_INTPAY_RULE REP_INTPAY_RULE, REP_STRUCT_GRADE REP_STRUCT_GRADE,
+        REP_REPAYMENT_TYPE REP_REPAYMENT_TYPE, REP_PERIOD_REPAYMENT_FLAG REP_PERIOD_REPAYMENT_FLAG, REP_EXCESS_PROFIT_RATE REP_EXCESS_PROFIT_RATE,
+        REP_CONTAIN_TYPE REP_CONTAIN_TYPE, REP_EXERCISE_TYPE REP_EXERCISE_TYPE, REP_EXERCISE_DATE REP_EXERCISE_DATE,
+        REP_FIRST_EXERCISE_DATE REP_FIRST_EXERCISE_DATE, REP_EXERCISE_PERIOD REP_EXERCISE_PERIOD, REP_EXERCISE_PRICE REP_EXERCISE_PRICE,
+        REP_PERPETUAL_CLAUSE_TYPE REP_PERPETUAL_CLAUSE_TYPE, REP_DEFERRED_INTEREST_TYPE REP_DEFERRED_INTEREST_TYPE, REP_DEFERRED_INTEREST_INT REP_DEFERRED_INTEREST_INT,
+        REP_FIRST_REPRCE_DATE REP_FIRST_REPRCE_DATE, REP_REPRCE_CYCLE REP_REPRCE_CYCLE, REP_PART_REDEM_FLAG REP_PART_REDEM_FLAG,
+        REP_PART_REDEM_RATE REP_PART_REDEM_RATE, REP_PLEDGE_TYPE REP_PLEDGE_TYPE, REP_PLEDGE_VALUE REP_PLEDGE_VALUE,
+        REP_NATURE_GUARANTEE REP_NATURE_GUARANTEE,REP_RELATION_FINAN REP_RELATION_FINAN, REP_BASIC_ASSET_TYPE,
+            
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepAssetCreditNonstdMapper.Base_Column_List" />
+        from REP_ASSET_CREDIT_NONSTD
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepAssetCreditNonstdMapper.Base_Column_List" />
+        from REP_ASSET_CREDIT_NONSTD
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepAssetCreditNonstdMapper.Base_Column_List" />
+        from REP_ASSET_CREDIT_NONSTD
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from REP_ASSET_CREDIT_NONSTD
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepAssetCreditNonstd" >
+        insert into REP_ASSET_CREDIT_NONSTD (REP_FINPROD_ID, REP_AMT, REP_PROFIT_TYPE, 
+            REP_IS_RESALE, REP_VDATE, REP_MDATE, 
+            REP_TERM, REP_RATE_FLAG, REP_PROJ_YIELD, 
+            REP_INTPAY_CYCLE, REP_REPAY_CMT, REP_BASIS, 
+            REP_BASIS_TYPE, REP_FLOAT_FACTOR, REP_SPREAD_RATE, 
+            REP_FINANCIER, REP_FCR_GRADE_IN, REP_FCR_GRADE_OUT, 
+            REP_FINANCIER_TYPE1, REP_FINANCIER_TYPE2, 
+            REP_FINANCIER_TYPE3, REP_FINANCE_PROJ, REP_INDUSTRY1, 
+            REP_INDUSTRY_LEVEL2, REP_PRO_INDUSTRY, REP_PRO_INDUSTRY_LEVEL2, 
+            REP_INDUSTRY_FLAG, REP_MONIT_TYPE, REP_MON_TYPE_COMM, 
+            REP_GUA_TYPE, REP_GUA_TYPE_REMARK, REP_FINANCIER_GRADE, 
+            REP_IN_GRADE, REP_OUT_GRADE, REP_CHOSE, REP_CONDITION_CMM, 
+            REP_FIN_AREA, REP_TOTAL_FEE_RATE, REP_FIN_ORG_CODE, REP_REMARK,
+            
+            REP_FMDATE, REP_PRIN_BASEAMT,
+            REP_COUPON_SPECIES, REP_INTPAY_RULE, REP_STRUCT_GRADE,
+            REP_REPAYMENT_TYPE, REP_PERIOD_REPAYMENT_FLAG, REP_EXCESS_PROFIT_RATE,
+            REP_CONTAIN_TYPE, REP_EXERCISE_TYPE, REP_EXERCISE_DATE,
+            REP_FIRST_EXERCISE_DATE, REP_EXERCISE_PERIOD, REP_EXERCISE_PRICE,
+            REP_PERPETUAL_CLAUSE_TYPE, REP_DEFERRED_INTEREST_TYPE, REP_DEFERRED_INTEREST_INT,
+            REP_FIRST_REPRCE_DATE, REP_REPRCE_CYCLE, REP_PART_REDEM_FLAG,
+            REP_PART_REDEM_RATE, REP_PLEDGE_TYPE, REP_PLEDGE_VALUE,
+            REP_NATURE_GUARANTEE,REP_RELATION_FINAN, REP_BASIC_ASSET_TYPE,
+            
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        values (#{repFinprodId,jdbcType=VARCHAR}, #{repAmt,jdbcType=DECIMAL}, #{repProfitType,jdbcType=VARCHAR}, 
+            #{repIsResale,jdbcType=VARCHAR}, #{repVdate,jdbcType=DATE}, #{repMdate,jdbcType=DATE}, 
+            #{repTerm,jdbcType=DECIMAL}, #{repRateFlag,jdbcType=VARCHAR}, #{repProjYield,jdbcType=DECIMAL}, 
+            #{repIntpayCycle,jdbcType=DECIMAL}, #{repRepayCmt,jdbcType=VARCHAR}, #{repBasis,jdbcType=VARCHAR}, 
+            #{repBasisType,jdbcType=VARCHAR}, #{repFloatFactor,jdbcType=DECIMAL}, #{repSpreadRate,jdbcType=DECIMAL}, 
+            #{repFinancier,jdbcType=VARCHAR}, #{repFcrGradeIn,jdbcType=VARCHAR}, #{repFcrGradeOut,jdbcType=VARCHAR}, 
+            #{repFinancierType1,jdbcType=VARCHAR}, #{repFinancierType2,jdbcType=VARCHAR}, 
+            #{repFinancierType3,jdbcType=VARCHAR}, #{repFinanceProj,jdbcType=VARCHAR}, #{repIndustry1,jdbcType=VARCHAR}, 
+            #{repIndustryLevel2,jdbcType=VARCHAR}, #{repProIndustry,jdbcType=VARCHAR}, #{repProIndustryLevel2,jdbcType=VARCHAR}, 
+            #{repIndustryFlag,jdbcType=VARCHAR}, #{repMonitType,jdbcType=VARCHAR}, #{repMonTypeComm,jdbcType=VARCHAR}, 
+            #{repGuaType,jdbcType=VARCHAR}, #{repGuaTypeRemark,jdbcType=VARCHAR}, #{repFinancierGrade,jdbcType=VARCHAR}, 
+            #{repInGrade,jdbcType=VARCHAR}, #{repOutGrade,jdbcType=VARCHAR}, #{repChose,jdbcType=VARCHAR}, 
+            #{repConditionCmm,jdbcType=VARCHAR}, #{repFinArea,jdbcType=VARCHAR}, #{repTotalFeeRate,jdbcType=DECIMAL}, 
+            #{repFinOrgCode,jdbcType=VARCHAR}, #{repRemark,jdbcType=VARCHAR}, 
+            
+            #{repFmdate,jdbcType=DATE}, #{repPrinBaseamt,jdbcType=DECIMAL}, #{repCouponSpecies,jdbcType=VARCHAR}, 
+            #{repIntpayRule,jdbcType=VARCHAR}, #{repStructGrade,jdbcType=VARCHAR}, #{repRepaymentType,jdbcType=VARCHAR},
+            #{repPeriodRepaymentFlag,jdbcType=VARCHAR}, #{repExcessProfitRate,jdbcType=DECIMAL}, #{repContainType,jdbcType=VARCHAR},
+            #{repExerciseType,jdbcType=VARCHAR}, #{repExerciseDate,jdbcType=DATE}, #{repFirstExerciseDate,jdbcType=DATE},
+            #{repExercisePeriod,jdbcType=DECIMAL}, #{repExercisePrice,jdbcType=DECIMAL}, #{repPerpetualClauseType,jdbcType=VARCHAR},
+            #{repDeferredInterestType,jdbcType=VARCHAR}, #{repDeferredInterestInt,jdbcType=VARCHAR}, #{repFirstReprceDate,jdbcType=DATE},
+            #{repReprceCycle,jdbcType=DECIMAL}, #{repPartRedemFlag,jdbcType=VARCHAR}, #{repPartRedemRate,jdbcType=DECIMAL},
+            #{repPledgeType,jdbcType=VARCHAR}, #{repPledgeValue,jdbcType=DECIMAL}, #{repNatureGuarantee,jdbcType=VARCHAR},
+            #{repRelationFinan,jdbcType=VARCHAR},#{repBasicAssetType,jdbcType=VARCHAR},
+            
+            #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepAssetCreditNonstd" >
+        insert into REP_ASSET_CREDIT_NONSTD
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="repFinprodId != null" >
+                REP_FINPROD_ID,
+            </if>
+            <if test="repAmt != null" >
+                REP_AMT,
+            </if>
+            <if test="repProfitType != null" >
+                REP_PROFIT_TYPE,
+            </if>
+            <if test="repIsResale != null" >
+                REP_IS_RESALE,
+            </if>
+            <if test="repVdate != null" >
+                REP_VDATE,
+            </if>
+            <if test="repMdate != null" >
+                REP_MDATE,
+            </if>
+            <if test="repTerm != null" >
+                REP_TERM,
+            </if>
+            <if test="repRateFlag != null" >
+                REP_RATE_FLAG,
+            </if>
+            <if test="repProjYield != null" >
+                REP_PROJ_YIELD,
+            </if>
+            <if test="repIntpayCycle != null" >
+                REP_INTPAY_CYCLE,
+            </if>
+            <if test="repRepayCmt != null" >
+                REP_REPAY_CMT,
+            </if>
+            <if test="repBasis != null" >
+                REP_BASIS,
+            </if>
+            <if test="repBasisType != null" >
+                REP_BASIS_TYPE,
+            </if>
+            <if test="repFloatFactor != null" >
+                REP_FLOAT_FACTOR,
+            </if>
+            <if test="repSpreadRate != null" >
+                REP_SPREAD_RATE,
+            </if>
+            <if test="repFinancier != null" >
+                REP_FINANCIER,
+            </if>
+            <if test="repFcrGradeIn != null" >
+                REP_FCR_GRADE_IN,
+            </if>
+            <if test="repFcrGradeOut != null" >
+                REP_FCR_GRADE_OUT,
+            </if>
+            <if test="repFinancierType1 != null" >
+                REP_FINANCIER_TYPE1,
+            </if>
+            <if test="repFinancierType2 != null" >
+                REP_FINANCIER_TYPE2,
+            </if>
+            <if test="repFinancierType3 != null" >
+                REP_FINANCIER_TYPE3,
+            </if>
+            <if test="repFinanceProj != null" >
+                REP_FINANCE_PROJ,
+            </if>
+            <if test="repIndustry1 != null" >
+                REP_INDUSTRY1,
+            </if>
+            <if test="repIndustryLevel2 != null" >
+                REP_INDUSTRY_LEVEL2,
+            </if>
+            <if test="repProIndustry != null" >
+                REP_PRO_INDUSTRY,
+            </if>
+            <if test="repProIndustryLevel2 != null" >
+                REP_PRO_INDUSTRY_LEVEL2,
+            </if>
+            <if test="repIndustryFlag != null" >
+                REP_INDUSTRY_FLAG,
+            </if>
+            <if test="repMonitType != null" >
+                REP_MONIT_TYPE,
+            </if>
+            <if test="repMonTypeComm != null" >
+                REP_MON_TYPE_COMM,
+            </if>
+            <if test="repGuaType != null" >
+                REP_GUA_TYPE,
+            </if>
+            <if test="repGuaTypeRemark != null" >
+                REP_GUA_TYPE_REMARK,
+            </if>
+            <if test="repFinancierGrade != null" >
+                REP_FINANCIER_GRADE,
+            </if>
+            <if test="repInGrade != null" >
+                REP_IN_GRADE,
+            </if>
+            <if test="repOutGrade != null" >
+                REP_OUT_GRADE,
+            </if>
+            <if test="repChose != null" >
+                REP_CHOSE,
+            </if>
+            <if test="repConditionCmm != null" >
+                REP_CONDITION_CMM,
+            </if>
+            <if test="repFinArea != null" >
+                REP_FIN_AREA,
+            </if>
+            <if test="repTotalFeeRate != null" >
+                REP_TOTAL_FEE_RATE,
+            </if>
+            <if test="repFinOrgCode != null" >
+                REP_FIN_ORG_CODE,
+            </if>
+            <if test="repRemark != null" >
+                REP_REMARK,
+            </if>
+            
+            <if test="repFmdate != null" >
+                REP_FMDATE,
+            </if>
+            <if test="repPrinBaseamt != null" >
+                REP_PRIN_BASEAMT,
+            </if>
+            <if test="repCouponSpecies != null" >
+                REP_COUPON_SPECIES,
+            </if>
+            <if test="repIntpayRule != null" >
+                REP_INTPAY_RULE,
+            </if>
+            <if test="repStructGrade != null" >
+                REP_STRUCT_GRADE,
+            </if>
+            <if test="repRepaymentType != null" >
+                REP_REPAYMENT_TYPE,
+            </if>
+            <if test="repPeriodRepaymentFlag != null" >
+                REP_PERIOD_REPAYMENT_FLAG,
+            </if>
+            <if test="repExcessProfitRate != null" >
+                REP_EXCESS_PROFIT_RATE,
+            </if>
+            <if test="repContainType != null" >
+                REP_CONTAIN_TYPE,
+            </if>
+            <if test="repExerciseType != null" >
+                REP_EXERCISE_TYPE,
+            </if>
+            <if test="repExerciseDate != null" >
+                REP_EXERCISE_DATE,
+            </if>
+            <if test="repFirstExerciseDate != null" >
+                REP_FIRST_EXERCISE_DATE,
+            </if>
+            <if test="repExercisePeriod != null" >
+                REP_EXERCISE_PERIOD,
+            </if>
+            <if test="repExercisePrice != null" >
+                REP_EXERCISE_PRICE,
+            </if>
+            <if test="repPerpetualClauseType != null" >
+                REP_PERPETUAL_CLAUSE_TYPE,
+            </if>
+            <if test="repDeferredInterestType != null" >
+                REP_DEFERRED_INTEREST_TYPE,
+            </if>
+            <if test="repDeferredInterestInt != null" >
+                REP_DEFERRED_INTEREST_INT,
+            </if>
+            <if test="repFirstReprceDate != null" >
+                REP_FIRST_REPRCE_DATE,
+            </if>
+            <if test="repReprceCycle != null" >
+                REP_REPRCE_CYCLE,
+            </if>
+            <if test="repPartRedemFlag != null" >
+                REP_PART_REDEM_FLAG,
+            </if>
+            <if test="repPartRedemRate != null" >
+                REP_PART_REDEM_RATE,
+            </if>
+            <if test="repPledgeType != null" >
+                REP_PLEDGE_TYPE,
+            </if>
+            <if test="repPledgeValue != null" >
+                REP_PLEDGE_VALUE,
+            </if>
+            <if test="repNatureGuarantee != null" >
+                REP_NATURE_GUARANTEE,
+            </if>
+            <if test="repRelationFinan != null" >
+                REP_RELATION_FINAN,
+            </if>
+            <if test="repBasicAssetType != null" >
+                REP_BASIC_ASSET_TYPE,
+            </if>
+            
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="repFinprodId != null" >
+                #{repFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="repAmt != null" >
+                #{repAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="repProfitType != null" >
+                #{repProfitType,jdbcType=VARCHAR},
+            </if>
+            <if test="repIsResale != null" >
+                #{repIsResale,jdbcType=VARCHAR},
+            </if>
+            <if test="repVdate != null" >
+                #{repVdate,jdbcType=DATE},
+            </if>
+            <if test="repMdate != null" >
+                #{repMdate,jdbcType=DATE},
+            </if>
+            <if test="repTerm != null" >
+                #{repTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="repRateFlag != null" >
+                #{repRateFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="repProjYield != null" >
+                #{repProjYield,jdbcType=DECIMAL},
+            </if>
+            <if test="repIntpayCycle != null" >
+                #{repIntpayCycle,jdbcType=DECIMAL},
+            </if>
+            <if test="repRepayCmt != null" >
+                #{repRepayCmt,jdbcType=VARCHAR},
+            </if>
+            <if test="repBasis != null" >
+                #{repBasis,jdbcType=VARCHAR},
+            </if>
+            <if test="repBasisType != null" >
+                #{repBasisType,jdbcType=VARCHAR},
+            </if>
+            <if test="repFloatFactor != null" >
+                #{repFloatFactor,jdbcType=DECIMAL},
+            </if>
+            <if test="repSpreadRate != null" >
+                #{repSpreadRate,jdbcType=DECIMAL},
+            </if>
+            <if test="repFinancier != null" >
+                #{repFinancier,jdbcType=VARCHAR},
+            </if>
+            <if test="repFcrGradeIn != null" >
+                #{repFcrGradeIn,jdbcType=VARCHAR},
+            </if>
+            <if test="repFcrGradeOut != null" >
+                #{repFcrGradeOut,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinancierType1 != null" >
+                #{repFinancierType1,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinancierType2 != null" >
+                #{repFinancierType2,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinancierType3 != null" >
+                #{repFinancierType3,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinanceProj != null" >
+                #{repFinanceProj,jdbcType=VARCHAR},
+            </if>
+            <if test="repIndustry1 != null" >
+                #{repIndustry1,jdbcType=VARCHAR},
+            </if>
+            <if test="repIndustryLevel2 != null" >
+                #{repIndustryLevel2,jdbcType=VARCHAR},
+            </if>
+            <if test="repProIndustry != null" >
+                #{repProIndustry,jdbcType=VARCHAR},
+            </if>
+            <if test="repProIndustryLevel2 != null" >
+                #{repProIndustryLevel2,jdbcType=VARCHAR},
+            </if>
+            <if test="repIndustryFlag != null" >
+                #{repIndustryFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="repMonitType != null" >
+                #{repMonitType,jdbcType=VARCHAR},
+            </if>
+            <if test="repMonTypeComm != null" >
+                #{repMonTypeComm,jdbcType=VARCHAR},
+            </if>
+            <if test="repGuaType != null" >
+                #{repGuaType,jdbcType=VARCHAR},
+            </if>
+            <if test="repGuaTypeRemark != null" >
+                #{repGuaTypeRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinancierGrade != null" >
+                #{repFinancierGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="repInGrade != null" >
+                #{repInGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="repOutGrade != null" >
+                #{repOutGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="repChose != null" >
+                #{repChose,jdbcType=VARCHAR},
+            </if>
+            <if test="repConditionCmm != null" >
+                #{repConditionCmm,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinArea != null" >
+                #{repFinArea,jdbcType=VARCHAR},
+            </if>
+            <if test="repTotalFeeRate != null" >
+                #{repTotalFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="repFinOrgCode != null" >
+                #{repFinOrgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="repRemark != null" >
+                #{repRemark,jdbcType=VARCHAR},
+            </if>
+            
+            <if test="repFmdate != null" >
+                #{repFmdate,jdbcType=DATE},
+            </if>
+            <if test="repPrinBaseamt != null" >
+                #{repPrinBaseamt,jdbcType=DECIMAL},
+            </if>
+            <if test="repCouponSpecies != null" >
+                #{repCouponSpecies,jdbcType=VARCHAR},
+            </if>
+            <if test="repIntpayRule != null" >
+                #{repIntpayRule,jdbcType=VARCHAR},
+            </if>
+            <if test="repStructGrade != null" >
+                #{repStructGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="repRepaymentType != null" >
+                #{repRepaymentType,jdbcType=VARCHAR},
+            </if>
+            <if test="repPeriodRepaymentFlag != null" >
+                #{repPeriodRepaymentFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="repExcessProfitRate != null" >
+                #{repExcessProfitRate,jdbcType=DECIMAL},
+            </if>
+            <if test="repContainType != null" >
+                #{repContainType,jdbcType=VARCHAR},
+            </if>
+            <if test="repExerciseType != null" >
+                #{repExerciseType,jdbcType=VARCHAR},
+            </if>
+            <if test="repExerciseDate != null" >
+                #{repExerciseDate,jdbcType=DATE},
+            </if>
+            <if test="repFirstExerciseDate != null" >
+                #{repFirstExerciseDate,jdbcType=DATE},
+            </if>
+            <if test="repExercisePeriod != null" >
+                #{repExercisePeriod,jdbcType=DECIMAL},
+            </if>
+            <if test="repExercisePrice != null" >
+                #{repExercisePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="repPerpetualClauseType != null" >
+                #{repPerpetualClauseType,jdbcType=VARCHAR},
+            </if>
+            <if test="repDeferredInterestType != null" >
+                #{repDeferredInterestType,jdbcType=VARCHAR},
+            </if>
+            <if test="repDeferredInterestInt != null" >
+                #{repDeferredInterestInt,jdbcType=VARCHAR},
+            </if>
+            <if test="repFirstReprceDate != null" >
+                #{repFirstReprceDate,jdbcType=DATE},
+            </if>
+            <if test="repReprceCycle != null" >
+                #{repReprceCycle,jdbcType=DECIMAL},
+            </if>
+            <if test="repPartRedemFlag != null" >
+                #{repPartRedemFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="repPartRedemRate != null" >
+                #{repPartRedemRate,jdbcType=DECIMAL},
+            </if>
+            <if test="repPledgeType != null" >
+                #{repPledgeType,jdbcType=VARCHAR},
+            </if>
+            <if test="repPledgeValue != null" >
+                #{repPledgeValue,jdbcType=DECIMAL},
+            </if>
+            <if test="repNatureGuarantee != null" >
+                #{repNatureGuarantee,jdbcType=VARCHAR},
+            </if>
+            <if test="repRelationFinan != null" >
+                #{repRelationFinan,jdbcType=VARCHAR},
+            </if>
+            <if test="repBasicAssetType != null" >
+                #{repBasicAssetType,jdbcType=VARCHAR},
+            </if>
+            
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepAssetCreditNonstd" >
+        insert into REP_ASSET_CREDIT_NONSTD(REP_FINPROD_ID, REP_AMT, REP_PROFIT_TYPE, REP_IS_RESALE, 
+        REP_VDATE, REP_MDATE, REP_TERM, REP_RATE_FLAG, REP_PROJ_YIELD, REP_INTPAY_CYCLE, 
+        REP_REPAY_CMT, REP_BASIS, REP_BASIS_TYPE, REP_FLOAT_FACTOR, REP_SPREAD_RATE, REP_FINANCIER, 
+        REP_FCR_GRADE_IN, REP_FCR_GRADE_OUT, REP_FINANCIER_TYPE1, REP_FINANCIER_TYPE2, REP_FINANCIER_TYPE3, 
+        REP_FINANCE_PROJ, REP_INDUSTRY1, REP_INDUSTRY_LEVEL2, REP_PRO_INDUSTRY, REP_PRO_INDUSTRY_LEVEL2, 
+        REP_INDUSTRY_FLAG, REP_MONIT_TYPE, REP_MON_TYPE_COMM, REP_GUA_TYPE, REP_GUA_TYPE_REMARK, 
+        REP_FINANCIER_GRADE, REP_IN_GRADE, REP_OUT_GRADE, REP_CHOSE, REP_CONDITION_CMM, REP_FIN_AREA, 
+        REP_TOTAL_FEE_RATE, REP_FIN_ORG_CODE, REP_REMARK, 
+		REP_FMDATE, REP_PRIN_BASEAMT,
+        REP_COUPON_SPECIES, REP_INTPAY_RULE, REP_STRUCT_GRADE,
+        REP_REPAYMENT_TYPE, REP_PERIOD_REPAYMENT_FLAG, REP_EXCESS_PROFIT_RATE,
+        REP_CONTAIN_TYPE, REP_EXERCISE_TYPE, REP_EXERCISE_DATE,
+        REP_FIRST_EXERCISE_DATE, REP_EXERCISE_PERIOD, REP_EXERCISE_PRICE,
+        REP_PERPETUAL_CLAUSE_TYPE, REP_DEFERRED_INTEREST_TYPE, REP_DEFERRED_INTEREST_INT,
+        REP_FIRST_REPRCE_DATE, REP_REPRCE_CYCLE, REP_PART_REDEM_FLAG,
+        REP_PART_REDEM_RATE, REP_PLEDGE_TYPE, REP_PLEDGE_VALUE,
+        REP_NATURE_GUARANTEE,REP_RELATION_FINAN, REP_BASIC_ASSET_TYPE,        
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select REP_FINPROD_ID, REP_AMT, REP_PROFIT_TYPE, REP_IS_RESALE, 
+            REP_VDATE, REP_MDATE, REP_TERM, REP_RATE_FLAG, REP_PROJ_YIELD, REP_INTPAY_CYCLE, 
+            REP_REPAY_CMT, REP_BASIS, REP_BASIS_TYPE, REP_FLOAT_FACTOR, REP_SPREAD_RATE, REP_FINANCIER, 
+            REP_FCR_GRADE_IN, REP_FCR_GRADE_OUT, REP_FINANCIER_TYPE1, REP_FINANCIER_TYPE2, REP_FINANCIER_TYPE3, 
+            REP_FINANCE_PROJ, REP_INDUSTRY1, REP_INDUSTRY_LEVEL2, REP_PRO_INDUSTRY, REP_PRO_INDUSTRY_LEVEL2, 
+            REP_INDUSTRY_FLAG, REP_MONIT_TYPE, REP_MON_TYPE_COMM, REP_GUA_TYPE, REP_GUA_TYPE_REMARK, 
+            REP_FINANCIER_GRADE, REP_IN_GRADE, REP_OUT_GRADE, REP_CHOSE, REP_CONDITION_CMM, REP_FIN_AREA, 
+            REP_TOTAL_FEE_RATE, REP_FIN_ORG_CODE, REP_REMARK, 
+            REP_FMDATE, REP_PRIN_BASEAMT,
+            REP_COUPON_SPECIES, REP_INTPAY_RULE, REP_STRUCT_GRADE,
+            REP_REPAYMENT_TYPE, REP_PERIOD_REPAYMENT_FLAG, REP_EXCESS_PROFIT_RATE,
+            REP_CONTAIN_TYPE, REP_EXERCISE_TYPE, REP_EXERCISE_DATE,
+            REP_FIRST_EXERCISE_DATE, REP_EXERCISE_PERIOD, REP_EXERCISE_PRICE,
+            REP_PERPETUAL_CLAUSE_TYPE, REP_DEFERRED_INTEREST_TYPE, REP_DEFERRED_INTEREST_INT,
+            REP_FIRST_REPRCE_DATE, REP_REPRCE_CYCLE, REP_PART_REDEM_FLAG,
+            REP_PART_REDEM_RATE, REP_PLEDGE_TYPE, REP_PLEDGE_VALUE,
+            REP_NATURE_GUARANTEE,REP_RELATION_FINAN, REP_BASIC_ASSET_TYPE,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from REP_ASSET_CREDIT_NONSTD
+             where 1 = 1 and REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepAssetCreditNonstd" >
+        update REP_ASSET_CREDIT_NONSTD
+        <set >
+            <if test="repAmt != null" >
+                REP_AMT = #{repAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="repProfitType != null" >
+                REP_PROFIT_TYPE = #{repProfitType,jdbcType=VARCHAR},
+            </if>
+            <if test="repIsResale != null" >
+                REP_IS_RESALE = #{repIsResale,jdbcType=VARCHAR},
+            </if>
+            <if test="repVdate != null" >
+                REP_VDATE = #{repVdate,jdbcType=DATE},
+            </if>
+            <if test="repMdate != null" >
+                REP_MDATE = #{repMdate,jdbcType=DATE},
+            </if>
+            <if test="repTerm != null" >
+                REP_TERM = #{repTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="repRateFlag != null" >
+                REP_RATE_FLAG = #{repRateFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="repProjYield != null" >
+                REP_PROJ_YIELD = #{repProjYield,jdbcType=DECIMAL},
+            </if>
+            <if test="repIntpayCycle != null" >
+                REP_INTPAY_CYCLE = #{repIntpayCycle,jdbcType=DECIMAL},
+            </if>
+            <if test="repRepayCmt != null" >
+                REP_REPAY_CMT = #{repRepayCmt,jdbcType=VARCHAR},
+            </if>
+            <if test="repBasis != null" >
+                REP_BASIS = #{repBasis,jdbcType=VARCHAR},
+            </if>
+            <if test="repBasisType != null" >
+                REP_BASIS_TYPE = #{repBasisType,jdbcType=VARCHAR},
+            </if>
+            <if test="repFloatFactor != null" >
+                REP_FLOAT_FACTOR = #{repFloatFactor,jdbcType=DECIMAL},
+            </if>
+            <if test="repSpreadRate != null" >
+                REP_SPREAD_RATE = #{repSpreadRate,jdbcType=DECIMAL},
+            </if>
+            <if test="repFinancier != null" >
+                REP_FINANCIER = #{repFinancier,jdbcType=VARCHAR},
+            </if>
+            <if test="repFcrGradeIn != null" >
+                REP_FCR_GRADE_IN = #{repFcrGradeIn,jdbcType=VARCHAR},
+            </if>
+            <if test="repFcrGradeOut != null" >
+                REP_FCR_GRADE_OUT = #{repFcrGradeOut,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinancierType1 != null" >
+                REP_FINANCIER_TYPE1 = #{repFinancierType1,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinancierType2 != null" >
+                REP_FINANCIER_TYPE2 = #{repFinancierType2,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinancierType3 != null" >
+                REP_FINANCIER_TYPE3 = #{repFinancierType3,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinanceProj != null" >
+                REP_FINANCE_PROJ = #{repFinanceProj,jdbcType=VARCHAR},
+            </if>
+            <if test="repIndustry1 != null" >
+                REP_INDUSTRY1 = #{repIndustry1,jdbcType=VARCHAR},
+            </if>
+            <if test="repIndustryLevel2 != null" >
+                REP_INDUSTRY_LEVEL2 = #{repIndustryLevel2,jdbcType=VARCHAR},
+            </if>
+            <if test="repProIndustry != null" >
+                REP_PRO_INDUSTRY = #{repProIndustry,jdbcType=VARCHAR},
+            </if>
+            <if test="repProIndustryLevel2 != null" >
+                REP_PRO_INDUSTRY_LEVEL2 = #{repProIndustryLevel2,jdbcType=VARCHAR},
+            </if>
+            <if test="repIndustryFlag != null" >
+                REP_INDUSTRY_FLAG = #{repIndustryFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="repMonitType != null" >
+                REP_MONIT_TYPE = #{repMonitType,jdbcType=VARCHAR},
+            </if>
+            <if test="repMonTypeComm != null" >
+                REP_MON_TYPE_COMM = #{repMonTypeComm,jdbcType=VARCHAR},
+            </if>
+            <if test="repGuaType != null" >
+                REP_GUA_TYPE = #{repGuaType,jdbcType=VARCHAR},
+            </if>
+            <if test="repGuaTypeRemark != null" >
+                REP_GUA_TYPE_REMARK = #{repGuaTypeRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinancierGrade != null" >
+                REP_FINANCIER_GRADE = #{repFinancierGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="repInGrade != null" >
+                REP_IN_GRADE = #{repInGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="repOutGrade != null" >
+                REP_OUT_GRADE = #{repOutGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="repChose != null" >
+                REP_CHOSE = #{repChose,jdbcType=VARCHAR},
+            </if>
+            <if test="repConditionCmm != null" >
+                REP_CONDITION_CMM = #{repConditionCmm,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinArea != null" >
+                REP_FIN_AREA = #{repFinArea,jdbcType=VARCHAR},
+            </if>
+            <if test="repTotalFeeRate != null" >
+                REP_TOTAL_FEE_RATE = #{repTotalFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="repFinOrgCode != null" >
+                REP_FIN_ORG_CODE = #{repFinOrgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="repRemark != null" >
+                REP_REMARK = #{repRemark,jdbcType=VARCHAR},
+            </if>
+            
+            <if test="repFmdate != null" >
+                REP_FMDATE = #{repFmdate,jdbcType=DATE},
+            </if>
+            <if test="repPrinBaseamt != null" >
+                REP_PRIN_BASEAMT = #{repPrinBaseamt,jdbcType=DECIMAL},
+            </if>
+            <if test="repCouponSpecies != null" >
+                REP_COUPON_SPECIES = #{repCouponSpecies,jdbcType=VARCHAR},
+            </if>
+            <if test="repIntpayRule != null" >
+                REP_INTPAY_RULE = #{repIntpayRule,jdbcType=VARCHAR},
+            </if>
+            <if test="repStructGrade != null" >
+                REP_STRUCT_GRADE = #{repStructGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="repRepaymentType != null" >
+                REP_REPAYMENT_TYPE = #{repRepaymentType,jdbcType=VARCHAR},
+            </if>
+            <if test="repPeriodRepaymentFlag != null" >
+                REP_PERIOD_REPAYMENT_FLAG = #{repPeriodRepaymentFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="repExcessProfitRate != null" >
+                REP_EXCESS_PROFIT_RATE = #{repExcessProfitRate,jdbcType=DECIMAL},
+            </if>
+            <if test="repContainType != null" >
+                REP_CONTAIN_TYPE = #{repContainType,jdbcType=VARCHAR},
+            </if>
+            <if test="repExerciseType != null" >
+                REP_EXERCISE_TYPE = #{repExerciseType,jdbcType=VARCHAR},
+            </if>
+            <if test="repExerciseDate != null" >
+                REP_EXERCISE_DATE = #{repExerciseDate,jdbcType=DATE},
+            </if>
+            <if test="repFirstExerciseDate != null" >
+                REP_FIRST_EXERCISE_DATE = #{repFirstExerciseDate,jdbcType=DATE},
+            </if>
+            <if test="repExercisePeriod != null" >
+                REP_EXERCISE_PERIOD = #{repExercisePeriod,jdbcType=DECIMAL},
+            </if>
+            <if test="repExercisePrice != null" >
+                REP_EXERCISE_PRICE = #{repExercisePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="repPerpetualClauseType != null" >
+                REP_PERPETUAL_CLAUSE_TYPE = #{repPerpetualClauseType,jdbcType=VARCHAR},
+            </if>
+            <if test="repDeferredInterestType != null" >
+                REP_DEFERRED_INTEREST_TYPE = #{repDeferredInterestType,jdbcType=VARCHAR},
+            </if>
+            <if test="repDeferredInterestInt != null" >
+                REP_DEFERRED_INTEREST_INT = #{repDeferredInterestInt,jdbcType=VARCHAR},
+            </if>
+            <if test="repFirstReprceDate != null" >
+                REP_FIRST_REPRCE_DATE = #{repFirstReprceDate,jdbcType=DATE},
+            </if>
+            <if test="repReprceCycle != null" >
+                REP_REPRCE_CYCLE = #{repReprceCycle,jdbcType=DECIMAL},
+            </if>
+            <if test="repPartRedemFlag != null" >
+                REP_PART_REDEM_FLAG = #{repPartRedemFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="repPartRedemRate != null" >
+                REP_PART_REDEM_RATE = #{repPartRedemRate,jdbcType=DECIMAL},
+            </if>
+            <if test="repPledgeType != null" >
+                REP_PLEDGE_TYPE = #{repPledgeType,jdbcType=VARCHAR},
+            </if>
+            <if test="repPledgeValue != null" >
+                REP_PLEDGE_VALUE = #{repPledgeValue,jdbcType=DECIMAL},
+            </if>
+            <if test="repNatureGuarantee != null" >
+                REP_NATURE_GUARANTEE = #{repNatureGuarantee,jdbcType=VARCHAR},
+            </if>
+            <if test="repRelationFinan != null" >
+                REP_RELATION_FINAN = #{repRelationFinan,jdbcType=VARCHAR},
+            </if>
+            <if test="repBasicAssetType != null" >
+                REP_BASIC_ASSET_TYPE = #{repBasicAssetType,jdbcType=VARCHAR},
+            </if>
+            
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepAssetCreditNonstd" >
+        update REP_ASSET_CREDIT_NONSTD
+        set REP_AMT = #{repAmt,jdbcType=DECIMAL},
+            REP_PROFIT_TYPE = #{repProfitType,jdbcType=VARCHAR},
+            REP_IS_RESALE = #{repIsResale,jdbcType=VARCHAR},
+            REP_VDATE = #{repVdate,jdbcType=DATE},
+            REP_MDATE = #{repMdate,jdbcType=DATE},
+            REP_TERM = #{repTerm,jdbcType=DECIMAL},
+            REP_RATE_FLAG = #{repRateFlag,jdbcType=VARCHAR},
+            REP_PROJ_YIELD = #{repProjYield,jdbcType=DECIMAL},
+            REP_INTPAY_CYCLE = #{repIntpayCycle,jdbcType=DECIMAL},
+            REP_REPAY_CMT = #{repRepayCmt,jdbcType=VARCHAR},
+            REP_BASIS = #{repBasis,jdbcType=VARCHAR},
+            REP_BASIS_TYPE = #{repBasisType,jdbcType=VARCHAR},
+            REP_FLOAT_FACTOR = #{repFloatFactor,jdbcType=DECIMAL},
+            REP_SPREAD_RATE = #{repSpreadRate,jdbcType=DECIMAL},
+            REP_FINANCIER = #{repFinancier,jdbcType=VARCHAR},
+            REP_FCR_GRADE_IN = #{repFcrGradeIn,jdbcType=VARCHAR},
+            REP_FCR_GRADE_OUT = #{repFcrGradeOut,jdbcType=VARCHAR},
+            REP_FINANCIER_TYPE1 = #{repFinancierType1,jdbcType=VARCHAR},
+            REP_FINANCIER_TYPE2 = #{repFinancierType2,jdbcType=VARCHAR},
+            REP_FINANCIER_TYPE3 = #{repFinancierType3,jdbcType=VARCHAR},
+            REP_FINANCE_PROJ = #{repFinanceProj,jdbcType=VARCHAR},
+            REP_INDUSTRY1 = #{repIndustry1,jdbcType=VARCHAR},
+            REP_INDUSTRY_LEVEL2 = #{repIndustryLevel2,jdbcType=VARCHAR},
+            REP_PRO_INDUSTRY = #{repProIndustry,jdbcType=VARCHAR},
+            REP_PRO_INDUSTRY_LEVEL2 = #{repProIndustryLevel2,jdbcType=VARCHAR},
+            REP_INDUSTRY_FLAG = #{repIndustryFlag,jdbcType=VARCHAR},
+            REP_MONIT_TYPE = #{repMonitType,jdbcType=VARCHAR},
+            REP_MON_TYPE_COMM = #{repMonTypeComm,jdbcType=VARCHAR},
+            REP_GUA_TYPE = #{repGuaType,jdbcType=VARCHAR},
+            REP_GUA_TYPE_REMARK = #{repGuaTypeRemark,jdbcType=VARCHAR},
+            REP_FINANCIER_GRADE = #{repFinancierGrade,jdbcType=VARCHAR},
+            REP_IN_GRADE = #{repInGrade,jdbcType=VARCHAR},
+            REP_OUT_GRADE = #{repOutGrade,jdbcType=VARCHAR},
+            REP_CHOSE = #{repChose,jdbcType=VARCHAR},
+            REP_CONDITION_CMM = #{repConditionCmm,jdbcType=VARCHAR},
+            REP_FIN_AREA = #{repFinArea,jdbcType=VARCHAR},
+            REP_TOTAL_FEE_RATE = #{repTotalFeeRate,jdbcType=DECIMAL},
+            REP_FIN_ORG_CODE = #{repFinOrgCode,jdbcType=VARCHAR},
+            REP_REMARK = #{repRemark,jdbcType=VARCHAR},
+            
+            REP_FMDATE = #{repFmdate,jdbcType=DATE},
+            REP_PRIN_BASEAMT = #{repPrinBaseamt,jdbcType=DECIMAL},
+            REP_COUPON_SPECIES = #{repCouponSpecies,jdbcType=VARCHAR},
+            REP_INTPAY_RULE = #{repIntpayRule,jdbcType=VARCHAR},
+            REP_STRUCT_GRADE = #{repStructGrade,jdbcType=VARCHAR},
+            REP_REPAYMENT_TYPE = #{repRepaymentType,jdbcType=VARCHAR},
+            REP_PERIOD_REPAYMENT_FLAG = #{repPeriodRepaymentFlag,jdbcType=VARCHAR},
+            REP_EXCESS_PROFIT_RATE = #{repExcessProfitRate,jdbcType=DECIMAL},
+            REP_CONTAIN_TYPE = #{repContainType,jdbcType=VARCHAR},
+            REP_EXERCISE_TYPE = #{repExerciseType,jdbcType=VARCHAR},
+            REP_EXERCISE_DATE = #{repExerciseDate,jdbcType=DATE},
+            REP_FIRST_EXERCISE_DATE = #{repFirstExerciseDate,jdbcType=DATE},
+            REP_EXERCISE_PERIOD = #{repExercisePeriod,jdbcType=DECIMAL},
+            REP_EXERCISE_PRICE = #{repExercisePrice,jdbcType=DECIMAL},
+            REP_PERPETUAL_CLAUSE_TYPE = #{repPerpetualClauseType,jdbcType=VARCHAR},
+            REP_DEFERRED_INTEREST_TYPE = #{repDeferredInterestType,jdbcType=VARCHAR},
+            REP_DEFERRED_INTEREST_INT = #{repDeferredInterestInt,jdbcType=VARCHAR},
+            REP_FIRST_REPRCE_DATE = #{repFirstReprceDate,jdbcType=DATE},
+            REP_REPRCE_CYCLE = #{repReprceCycle,jdbcType=DECIMAL},
+            REP_PART_REDEM_FLAG = #{repPartRedemFlag,jdbcType=VARCHAR},
+            REP_PART_REDEM_RATE = #{repPartRedemRate,jdbcType=DECIMAL},
+            REP_PLEDGE_TYPE = #{repPledgeType,jdbcType=VARCHAR},
+            REP_PLEDGE_VALUE = #{repPledgeValue,jdbcType=DECIMAL},
+            REP_NATURE_GUARANTEE = #{repNatureGuarantee,jdbcType=VARCHAR},
+            REP_RELATION_FINAN = #{repRelationFinan,jdbcType=VARCHAR},
+            REP_BASIC_ASSET_TYPE = #{repBasicAssetType,jdbcType=VARCHAR},
+            
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </update>
+</mapper>

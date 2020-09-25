@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.PbcLoanDetailInfoSubMapper_mysql">
+	<delete id="deleteByModel" parameterType="java.util.Map">
+    	DELETE FROM PBC_LOAN_DETAIL_INFO_SUB WHERE REPORTUUID IN (
+    	 SELECT REPORTUUID from PBC_REPORT
+	   where 1=1
+	   <if test="startdate!=null">
+	   	and DATE_FORMAT(startdate,'%Y-%m-%d') >= DATE_FORMAT(#{startdate,jdbcType=DATE},'%Y-%m-%d')
+	   </if>
+	   <if test="enddate!=null">
+	   	and DATE_FORMAT(enddate,'%Y-%m-%d') >= DATE_FORMAT(#{enddate,jdbcType=DATE},'%Y-%m-%d')
+	   </if>
+	   <if test="reporttype!=null">
+	   	and REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
+	   </if>
+	   <if test="reportfrequ!=null">
+	   	and REPORTFREQU = #{reportfrequ,jdbcType=VARCHAR}
+       </if>
+	   <if test="pbcAccountId!=null">
+	   	and PBC_ACCOUNT_ID = #{pbcAccountId,jdbcType=VARCHAR}
+       </if>
+       <if test="pbcAccountId == null" >
+         and PBC_ACCOUNT_ID is null
+       </if> 
+        and send_status = '01'
+    	
+    	)
+    	
+    	
+    </delete>
+</mapper>

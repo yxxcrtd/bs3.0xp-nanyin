@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RskIsupLogMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RskIsupLog" >
+        <id column="LOG_ID" property="logId" jdbcType="VARCHAR" />
+        <id column="FUNCTION_ID" property="functionId" jdbcType="VARCHAR" />
+        <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <result column="IND_ID" property="indId" jdbcType="VARCHAR" />
+        <result column="LOG_LVL" property="logLvl" jdbcType="VARCHAR" />
+        <result column="LOG_TIME" property="logTime" jdbcType="DATE" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.joyintech.tams.common.base.entity.RskIsupLog" extends="BaseResultMap" >
+        <result column="MESSAGE" property="message" jdbcType="CLOB" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        LOG_ID LOG_ID, FUNCTION_ID FUNCTION_ID, PORTFOLIO_ID PORTFOLIO_ID, IND_ID IND_ID, 
+        LOG_LVL LOG_LVL, LOG_TIME LOG_TIME, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Blob_Column_List" >
+        MESSAGE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIsupLogMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.RskIsupLogMapper.Blob_Column_List" />
+        from RSK_ISUP_LOG
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIsupLogMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.RskIsupLogMapper.Blob_Column_List" />
+        from RSK_ISUP_LOG
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.joyintech.tams.common.base.entity.RskIsupLogKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIsupLogMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.RskIsupLogMapper.Blob_Column_List" />
+        from RSK_ISUP_LOG
+        where LOG_ID = #{logId,jdbcType=VARCHAR}
+          and FUNCTION_ID = #{functionId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskIsupLogKey" >
+        delete from RSK_ISUP_LOG
+        where LOG_ID = #{logId,jdbcType=VARCHAR}
+          and FUNCTION_ID = #{functionId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RskIsupLog" >
+        insert into RSK_ISUP_LOG (LOG_ID, FUNCTION_ID, PORTFOLIO_ID, 
+            IND_ID, LOG_LVL, LOG_TIME, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, MESSAGE
+            )
+        values (#{logId,jdbcType=VARCHAR}, #{functionId,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, 
+            #{indId,jdbcType=VARCHAR}, #{logLvl,jdbcType=VARCHAR}, #{logTime,jdbcType=DATE}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{message,jdbcType=CLOB}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskIsupLog" >
+        insert into RSK_ISUP_LOG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="logId != null" >
+                LOG_ID,
+            </if>
+            <if test="functionId != null" >
+                FUNCTION_ID,
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID,
+            </if>
+            <if test="indId != null" >
+                IND_ID,
+            </if>
+            <if test="logLvl != null" >
+                LOG_LVL,
+            </if>
+            <if test="logTime != null" >
+                LOG_TIME,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="message != null" >
+                MESSAGE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="logId != null" >
+                #{logId,jdbcType=VARCHAR},
+            </if>
+            <if test="functionId != null" >
+                #{functionId,jdbcType=VARCHAR},
+            </if>
+            <if test="portfolioId != null" >
+                #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="indId != null" >
+                #{indId,jdbcType=VARCHAR},
+            </if>
+            <if test="logLvl != null" >
+                #{logLvl,jdbcType=VARCHAR},
+            </if>
+            <if test="logTime != null" >
+                #{logTime,jdbcType=DATE},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="message != null" >
+                #{message,jdbcType=CLOB},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskIsupLog" >
+        insert into RSK_ISUP_LOG(LOG_ID, FUNCTION_ID, PORTFOLIO_ID, IND_ID, LOG_LVL, LOG_TIME, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, MESSAGE)
+        select LOG_ID, FUNCTION_ID, PORTFOLIO_ID, IND_ID, LOG_LVL, LOG_TIME, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, MESSAGE
+             from RSK_ISUP_LOG
+             where 1 = 1 and LOG_ID = #{logId,jdbcType=VARCHAR} and FUNCTION_ID = #{functionId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RskIsupLog" >
+        update RSK_ISUP_LOG
+        <set >
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="indId != null" >
+                IND_ID = #{indId,jdbcType=VARCHAR},
+            </if>
+            <if test="logLvl != null" >
+                LOG_LVL = #{logLvl,jdbcType=VARCHAR},
+            </if>
+            <if test="logTime != null" >
+                LOG_TIME = #{logTime,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="message != null" >
+                MESSAGE = #{message,jdbcType=CLOB},
+            </if>
+        </set>
+        where LOG_ID = #{logId,jdbcType=VARCHAR}
+          and FUNCTION_ID = #{functionId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.joyintech.tams.common.base.entity.RskIsupLog" >
+        update RSK_ISUP_LOG
+        set PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            IND_ID = #{indId,jdbcType=VARCHAR},
+            LOG_LVL = #{logLvl,jdbcType=VARCHAR},
+            LOG_TIME = #{logTime,jdbcType=DATE},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            MESSAGE = #{message,jdbcType=CLOB}
+        where LOG_ID = #{logId,jdbcType=VARCHAR}
+          and FUNCTION_ID = #{functionId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskIsupLog" >
+        update RSK_ISUP_LOG
+        set PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            IND_ID = #{indId,jdbcType=VARCHAR},
+            LOG_LVL = #{logLvl,jdbcType=VARCHAR},
+            LOG_TIME = #{logTime,jdbcType=DATE},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where LOG_ID = #{logId,jdbcType=VARCHAR}
+          and FUNCTION_ID = #{functionId,jdbcType=VARCHAR}
+    </update>
+</mapper>

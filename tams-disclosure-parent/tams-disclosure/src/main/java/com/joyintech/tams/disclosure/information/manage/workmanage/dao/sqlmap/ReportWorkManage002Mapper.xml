@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.manage.workmanage.dao.ReportWorkManage002Mapper">
+    <select id="findProdPage" resultType="com.joyintech.tams.disclosure.information.manage.workmanage.dto.ReportWorkManage003Dto">
+		select Row_Number() OVER (ORDER BY rjep.PROD_ID desc) as id,rjep.PROD_ID as prodId,rjep.PROD_NAME as prodName
+		from REP_JOB_EXCLUDE_PRO rjep
+		where rjep.JOB_ID=#{jobId,jdbcType=VARCHAR}
+    </select>
+    <select id="findRulePage" resultType="com.joyintech.tams.disclosure.information.manage.workmanage.dto.ReportWorkManage004Dto">
+		select rjr.RULE_TYPE1 as ruleType1,
+		       rjr.RULE_TYPE2 as ruleType2,
+		       rjr.RULE_TYPE3 as ruleType3,
+		       rjr.RULE_TYPE4 as ruleType4
+		from REP_JOB_RANGE rjr
+		where rjr.JOB_ID=#{jobId,jdbcType=VARCHAR}
+    </select>
+    <select id="getRepRule" resultType="com.joyintech.framework.select.SelectOptionDto">
+		SELECT rr.ID as id,rr.RULE_NAME as text,rr.REP_NAME as col
+		FROM REP_RULE rr
+		left join REP_INFO ri on ri.REP_ID=rr.REP_ID
+    </select>
+    <delete id="deleteRangeInfo" parameterType="java.lang.String" >
+        delete from REP_JOB_RANGE
+        where JOB_ID = #{jobId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteExcludeProInfo" parameterType="java.lang.String" >
+        delete from REP_JOB_EXCLUDE_PRO
+        where JOB_ID = #{jobId,jdbcType=VARCHAR}
+    </delete>
+    <select id="selectJobByIdAndName" parameterType="com.joyintech.tams.disclosure.information.manage.workmanage.dto.ReportWorkManage002Dto" 
+    resultType="java.lang.Integer">
+        select  COUNT(JOB_ID)
+        from REP_JOB
+        where JOB_ID = #{jobId,jdbcType=VARCHAR}
+        or JOB_NAME = #{jobName,jdbcType=VARCHAR}
+    </select>
+    <select id="getReportWorkManage002Dto" resultType="com.joyintech.tams.disclosure.information.manage.workmanage.dto.ReportWorkManage002Dto">
+		select rj.JOB_ID jobId, rj.JOB_NAME jobName, rj.LOOP_DATE_TYPE loopDateType, rj.LOOP_DATE_VALUE loopDateValue, rj.ISPRODRELATED isProdRelated,
+               rj.LOOP_DATE_DETAIL loopDateDetail, rj.START_DATE startDate, rj.END_DATE endDate, rj.RULE_ID ruleId, 
+               rj.CREATE_USER createUser, rj.CREATE_DEPT createDept, rj.CREATE_TIME createTime, rj.UPDATE_USER updateUser, 
+               rj.UPDATE_TIME updateTime,ri.REPORT_NAME repName
+		from REP_JOB rj
+		left join REP_RULE rr on rj.RULE_ID=rr.ID
+		left join REP_INFO ri on rr.REP_ID = ri.REP_ID
+		where rj.JOB_ID=#{jobId,jdbcType=VARCHAR}
+    </select>
+</mapper>

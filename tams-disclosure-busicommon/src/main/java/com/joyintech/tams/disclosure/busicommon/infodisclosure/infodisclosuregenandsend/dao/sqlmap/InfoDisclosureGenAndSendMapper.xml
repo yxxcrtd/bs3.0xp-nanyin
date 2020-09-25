@@ -1,0 +1,1156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.dao.InfoDisclosureGenAndSendMapper">
+	<select id="getAllRepInstallFileList"
+		resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.InfoDisclosureGenAndSendEntity">
+		SELECT
+			files.ID id,
+    		files.JOB_ID jobId,
+    		files.JOB_SEQ jobSeq,
+    		files.PRODID prodid,
+    		files.PROD_NAME prodName,
+    		files.END_DATE endDate,
+    		files.START_DATE startDate,
+    		files.REVEAL_CHANNEL revealChannel,
+    		files.REVEAL_END_DATE revealEndDate,
+    		files.REP_TYPE rep_Type,
+    		files.REP_ID repId,
+    		files.REP_NAME repName,
+    		files.FILE_TYPE fileType,
+    		files.IS_CONFIRM isConfirm,
+    		files.IS_REVEAL isReveal,
+    		files.STATUS statu,
+			info.TEMPLATE_ID templateId,
+			info.TEMPLATE_PATH templatePath,
+			info.TEMPLATE_NAME templateName,
+			info.REPORT_NAME reportName,
+			info.REPORT_TYPE reportType,
+			info.REP_ORDER repOrder,
+			info.REPORT_CATEGORY reportCategory,
+			prod.OPEN_MODE openMode,
+			prod.PROD_TYPE prodType,
+			prod.ISSUE_MODE issueMode,
+			prod.ACT_MDATE actMdate,
+			prod.SET_DATE setDate,
+			prod.VDATE vdate,
+			prod.MDATE mdate,
+			prod.TERM term,
+			prod.WINDUP_DATE windupDate,
+			prod.PROFIT_TYPE profitType,
+			prod.RAISE_TYPE raiseType,
+			nvl(prod.RAISE_MIN,0) raiseMin,
+    		nvl(prod.RAISE_MAX,0) raiseMax,
+    		nvl(prod.RAISE_AMT,0) raiseAmt
+		FROM
+			REP_INSTALL_FILE files
+			LEFT JOIN REP_INFO info
+			on files.REP_ID = info.REP_ID
+			left join REP_PROD_INFO prod
+			on files.PRODID = prod.PROD_ID
+			and prod.STATUS = 'E'
+			order by JOB_SEQ desc
+		<!-- WHERE
+		files.EXEC_STATUS IN ('01','02') -->
+	</select>
+	<select id="getRepScreenList" resultType="com.joyintech.tams.common.base.entity.RepScreen">
+        SELECT
+        	SCREEN_KEY screenKey,
+        	SCREEN_NAME screenName,
+            SCREEN_TYPE screenType,
+            SCREEN_VALUE screenValue,
+            SCREEN_STATUS screenStatus
+        FROM REP_SCREEN 
+       	where REP_ID = #{repId}
+       	AND SCREEN_STATUS = 'Y'
+       	ORDER BY SCREEN_INDEX
+    </select>
+    <update id="updateRepInstallStatus" parameterType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.InfoDisclosureGenAndSendEntity">
+        update  REP_INSTALL_FILE set EXEC_STATUS = #{execStatus, jdbcType=VARCHAR}
+        WHERE  ID = #{id, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByJobSeqSelective" parameterType="com.joyintech.tams.common.base.entity.RepInstallLog" >
+        update REP_INSTALL_LOG
+        <set >
+            <if test="jobId != null" >
+                JOB_ID = #{jobId,jdbcType=VARCHAR},
+            </if>
+            <if test="jobName != null" >
+                JOB_NAME = #{jobName,jdbcType=VARCHAR},
+            </if>
+            <if test="endDate != null" >
+                END_DATE = #{endDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="startDate != null" >
+                START_DATE = #{startDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="execDate != null" >
+                EXEC_DATE = #{execDate,jdbcType=DATE},
+            </if>
+            <if test="flag != null" >
+                FLAG = #{flag,jdbcType=VARCHAR},
+            </if>
+            <if test="execDetail != null" >
+                EXEC_DETAIL = #{execDetail,jdbcType=VARCHAR},
+            </if>
+            <if test="execStatus != null" >
+                EXEC_STATUS = #{execStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+             <if test="execResult != null" >
+                EXEC_RESULT = #{execResult,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where JOB_SEQ = #{jobSeq,jdbcType=VARCHAR}
+    </update>
+    <!-- 获取各种状态数据count -->
+    <select id="getExecStatusList" resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.InfoDisclosureGenAndSendEntity">
+        select EXEC_STATUS execStatus,
+        	count(*) execTotal 
+        from REP_INSTALL_LOG_DETAIL detail 
+        where detail.JOB_SEQ =  #{jobSeq}
+		GROUP by detail.EXEC_STATUS 
+    </select>
+    <!-- 获取所有 -->
+    <select id="getAllRepScreenList" resultType="com.joyintech.tams.common.base.entity.RepScreen">
+        SELECT
+        	REP_ID    repId,
+        	SCREEN_KEY screenKey,
+        	SCREEN_NAME screenName,
+            SCREEN_TYPE screenType,
+            SCREEN_VALUE screenValue,
+            SCREEN_STATUS screenStatus
+        FROM REP_SCREEN 
+       	where SCREEN_STATUS = 'Y'
+       	ORDER BY SCREEN_INDEX
+    </select>
+    <!-- 获取指标表参数 -->
+    <select id="getRepPordIndexInfo" resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.RepProdIndexEntity">
+    	SELECT
+    		prod.VALUE_DATE,
+    		prod.YIELD_7,
+    		prod.W_YIELD,
+    		prod.UNIT_VALUE,
+    		prod.UNIT_VALUE_T
+		FROM
+    		REP_PROD_INDEX prod
+		WHERE
+    		PROD_ID = #{prodId, jdbcType=VARCHAR}
+		AND prod.STATUS='E'
+		AND prod.VALUE_DATE =
+    		(
+        		SELECT
+            		MAX(pd1.VALUE_DATE)
+        		FROM
+            		REP_PROD_INDEX pd1
+        		WHERE
+            		prod.PROD_ID = pd1.PROD_ID
+        		AND pd1.VALUE_DATE &lt;=#{endDate, jdbcType=DATE} 
+        	)
+    </select>
+       <!-- 获取指标表参数 -->
+    <select id="getRepPordValueIndexInfo" resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.RepProdIndexEntity">
+    	SELECT
+    		prod.VALUE_DATE,
+    		prod.YIELD_7,
+    		prod.W_YIELD,
+    		prod.UNIT_VALUE,
+    		prod.UNIT_VALUE_T
+		FROM
+    		REP_PROD_INDEX prod
+		WHERE
+    		PROD_ID = #{prodId, jdbcType=VARCHAR}
+		AND prod.STATUS='E'
+		AND prod.VALUE_DATE = #{endDate, jdbcType=DATE} 
+    </select>
+    <!-- 获取未执行的有多少数据 -->
+    <select id="getTotalByJobSeq" resultType="int">
+    	select count(1) from REP_INSTALL_FILE 
+    	where REP_INSTALL_FILE.JOB_SEQ = #{jobSeq, jdbcType=VARCHAR}
+    </select>
+    <!-- 获取指标表参数  货币型产品-->
+    <select id="getRepPordValueCurrencyMdateInfo" resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.RepProdIndexEntity">
+    	SELECT
+    		prod.VALUE_DATE,
+    		prod.YIELD_7,
+    		prod.W_YIELD,
+    		prod.UNIT_VALUE,
+    		prod.UNIT_VALUE_T
+		FROM
+    		REP_PROD_INDEX prod
+		WHERE
+    		PROD_ID = #{prodId, jdbcType=VARCHAR}
+		AND prod.STATUS='E'
+		AND prod.VALUE_DATE = #{endDate, jdbcType=DATE} 
+		AND prod.VALUE_DATE &lt; #{actMdate, jdbcType=DATE} 
+    </select>
+    <!-- 获取指标表参数  净值型产品-->
+    <select id="getRepPordValueNetMdateInfo" resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.RepProdIndexEntity">
+    	SELECT
+    		prod.VALUE_DATE,
+    		prod.YIELD_7,
+    		prod.W_YIELD,
+    		prod.UNIT_VALUE,
+    		prod.UNIT_VALUE_T
+		FROM
+    		REP_PROD_INDEX prod
+		WHERE
+    		PROD_ID = #{prodId, jdbcType=VARCHAR}
+		AND prod.STATUS='E'
+		AND prod.VALUE_DATE = #{endDate, jdbcType=DATE} 
+		AND prod.VALUE_DATE &lt;= #{actMdate, jdbcType=DATE} 
+    </select>
+    <!-- 净值型产品单位与累计净值 -->
+    <select id="getRepPordValueNetByEnddate" resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.RepProdIndexEntity">
+		SELECT
+    		rpTemp.VALUE_DATE,
+   			nvl(rpTemp.UNIT_VALUE,0) unitValue,
+    		nvl(rpTemp.UNIT_VALUE_T,0) unitValueT
+		FROM
+    	(
+        SELECT
+            R.VALUE_DATE,
+            R.UNIT_VALUE,
+            R.UNIT_VALUE_T
+        FROM
+            REP_PROD_INDEX R
+        LEFT JOIN
+            (
+                SELECT
+                    R1.PROD_ID PROD_ID,
+                    R1.VALUE_DATE,
+                    CAST(R1.UNIT_VALUE AS DECIMAL(20,4))                             UNIT_VALUE,
+                    CAST(R1.UNIT_VALUE_T AS DECIMAL(20,4))                           UNIT_VALUE_T,
+                    ABS(days(R1.VALUE_DATE)-days(TO_CHAR(#{endDate, jdbcType=DATE},'yyyy-mm-dd'))) minDate
+                FROM
+                    REP_PROD_INDEX R1
+                WHERE
+                    R1.STATUS='E'
+                AND R1.PROD_ID=#{prodId, jdbcType=VARCHAR}
+                ORDER BY
+                    minDate
+                FETCH
+                    FIRST 1 ROWS ONLY )RTEMP
+        ON
+            RTEMP.PROD_ID=R.PROD_ID
+        LEFT JOIN
+            REP_PROD_INFO rpi
+        ON
+            rpi.PROD_ID = R.PROD_ID
+        WHERE
+            ABS(days(R.VALUE_DATE)-days(TO_CHAR(#{endDate, jdbcType=DATE},'yyyy-mm-dd')))=RTEMP.minDate
+        AND rpi.OPEN_MODE='02'
+        UNION ALL
+        SELECT
+            R.VALUE_DATE,
+            R.UNIT_VALUE,
+            R.UNIT_VALUE_T
+        FROM
+            REP_PROD_INDEX R
+        LEFT JOIN
+            REP_PROD_INFO rpi
+        ON
+            rpi.PROD_ID = #{prodId, jdbcType=VARCHAR}
+        AND rpi.STATUS='E'
+        WHERE
+            R.VALUE_DATE=#{endDate, jdbcType=DATE}
+        AND R.PROD_ID=rpi.PROD_ID
+        AND R.STATUS='E'
+        AND rpi.OPEN_MODE='01') rpTemp
+	</select>
+	 <!-- 货币型产品万份收益 -->
+    <select id="getRepPordValueCurrencyByEnddate"
+		resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.RepProdIndexEntity">
+		SELECT
+    		R.VALUE_DATE,
+    		nvl(RTEMP.YIELD_7,0) yield7,
+   		 	nvl(RTEMP.W_YIELD,0) wYield 
+		FROM
+    		REP_PROD_INDEX R
+		LEFT JOIN
+    	(
+        	SELECT
+            	R1.PROD_ID PROD_ID,
+            	R1.VALUE_DATE,
+            	CAST(R1.YIELD_7*100 AS DECIMAL(20,4))                            YIELD_7,
+            	CAST(R1.W_YIELD AS DECIMAL(20,4))                                W_YIELD,
+            	ABS(days(R1.VALUE_DATE)-days(TO_CHAR(#{endDate, jdbcType=DATE},'yyyy-mm-dd'))) minDate
+        	FROM
+            	REP_PROD_INDEX R1
+        	WHERE
+            	R1.STATUS='E'
+        		AND R1.PROD_ID=#{prodId, jdbcType=VARCHAR}
+        	ORDER BY
+            	minDate FETCH
+            	FIRST 1 ROWS ONLY )RTEMP
+			ON
+    		RTEMP.PROD_ID=R.PROD_ID
+		WHERE
+    		R.PROD_ID = #{prodId, jdbcType=VARCHAR}
+		AND R.STATUS='E'
+		AND ABS(days(R.VALUE_DATE)-days(TO_CHAR(#{endDate, jdbcType=DATE},'yyyy-mm-dd')))=RTEMP.minDate
+	</select>
+	<!-- 净值型产品投资各资产占比情况 -->
+    <select id="selectNetProdAssetPercent"
+		resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.RepProdIndexEntity">
+		SELECT
+		rt.DICT_VALUE,
+		tt.amt amt,
+		nvl(cast(round(cast(tt.amt*100 as float)/tota.B_MARKET_VALUE,2) as decimal(10,2)),0) as precent --占比
+		FROM
+		(
+		SELECT DISTINCT
+		DICT_CODE,DICT_VALUE
+		FROM
+		rep_book_relation) rt
+		LEFT JOIN
+		(
+		SELECT
+		rela.DICT_CODE,
+		SUM(DECODE(rela.FLAG,'01',1,-1)*dt.B_MARKET_VALUE) amt,
+		dt.PROD_ID,
+		dt.VAL_DATE
+		FROM
+		rep_book_relation rela
+		LEFT JOIN
+		REP_VAL_TABLE_DATA dt
+		ON
+		(
+		dt.SUBJECT_NO LIKE CONCAT(rela.SUBJECT_NO,'%')
+		)
+		LEFT JOIN
+		REP_BOK_SUBJECT sbt
+		ON
+		dt.SUBJECT_NO = sbt.SUBJECT_NO
+		WHERE
+		dt.DETAIL_DIST ='01'
+		AND rela.SUBJECT_LEVEL = sbt.SUBJECT_LEVEL
+		AND dt.PROD_ID =#{prodId, jdbcType=VARCHAR}
+		AND dt.VAL_DATE = #{endDate, jdbcType=DATE}
+		AND dt.STATUS = 'E'
+		AND sbt.BAL_FLAG = 'D'
+		GROUP BY
+		rela.DICT_CODE,
+		dt.PROD_ID,
+		dt.VAL_DATE
+		UNION ALL
+		SELECT
+		'10' DICT_CODE,
+		dt.B_MARKET_VALUE,
+		dt.PROD_ID,
+		dt.VAL_DATE
+		FROM
+		REP_VAL_TABLE_DATA dt
+		WHERE
+		dt.DETAIL_DIST ='05'
+		AND dt.PROD_ID =#{prodId, jdbcType=VARCHAR}
+		AND dt.VAL_DATE = #{endDate, jdbcType=DATE}
+		AND dt.STATUS = 'E'
+		UNION ALL
+		SELECT
+		'09' DICT_CODE ,
+		NVL(tot1.amt1,0)-NVL(tot2.amt2,0) amt,
+		tot1.PROD_ID,
+		tot1.VAL_DATE
+		FROM
+		(
+		SELECT
+		dt.B_MARKET_VALUE amt1 ,
+		dt.PROD_ID,
+		dt.VAL_DATE
+		FROM
+		REP_VAL_TABLE_DATA dt
+		WHERE
+		dt.DETAIL_DIST ='05'
+		AND dt.PROD_ID =#{prodId, jdbcType=VARCHAR}
+		AND dt.VAL_DATE = #{endDate, jdbcType=DATE}
+		AND dt.STATUS = 'E'
+		)tot1,
+		(
+		SELECT
+		SUM(DECODE(rela.FLAG,'01',1,-1)*dt.B_MARKET_VALUE) amt2,
+		dt.PROD_ID,
+		dt.VAL_DATE
+		FROM
+		rep_book_relation rela
+		LEFT JOIN
+		REP_VAL_TABLE_DATA dt
+		ON
+		(
+		dt.SUBJECT_NO LIKE CONCAT(rela.SUBJECT_NO,'%')
+		)
+		LEFT JOIN
+		REP_BOK_SUBJECT sbt
+		ON
+		dt.SUBJECT_NO = sbt.SUBJECT_NO
+		WHERE
+		dt.DETAIL_DIST ='01'
+		AND rela.SUBJECT_LEVEL = sbt.SUBJECT_LEVEL
+		AND dt.PROD_ID =#{prodId, jdbcType=VARCHAR}
+		AND dt.VAL_DATE = #{endDate, jdbcType=DATE}
+		AND dt.STATUS = 'E'
+		AND sbt.BAL_FLAG = 'D'
+		GROUP BY
+		dt.PROD_ID,
+		dt.VAL_DATE )tot2
+		WHERE
+		tot1.PROD_ID = tot2.PROD_ID
+		AND tot1.VAL_DATE = tot2.VAL_DATE
+		)tt
+		ON rt.DICT_CODE = tt.DICT_CODE
+		left join (
+		SELECT
+		CASE WHEN dt.B_MARKET_VALUE=0 THEN NULL ELSE dt.B_MARKET_VALUE END AS
+		B_MARKET_VALUE,
+		dt.PROD_ID,
+		dt.VAL_DATE
+		FROM
+		REP_VAL_TABLE_DATA dt
+		WHERE
+		dt.DETAIL_DIST ='05'
+		AND dt.PROD_ID =#{prodId, jdbcType=VARCHAR}
+		AND dt.VAL_DATE = #{endDate, jdbcType=DATE}
+		AND dt.STATUS = 'E'
+		)tota
+		on tota.PROD_ID = tt.PROD_ID
+		AND tota.VAL_DATE = tt.VAL_DATE
+		order by rt.DICT_CODE asc
+	</select>
+	<!-- 货币型产品投资各资产占比情况 -->
+    <select id="selectCurrencyProdAssetPercent"
+		resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.RepProdIndexEntity">
+		SELECT
+		rt.DICT_VALUE,
+		tt.amt amt,
+		nvl(CAST(ROUND(CAST(tt.amt*100 AS FLOAT)/tota.B_COST,2) AS DECIMAL(10,2)),0) AS precent
+		FROM (
+		SELECT DISTINCT
+		DICT_CODE,
+		DICT_VALUE
+		FROM rep_book_relation) rt
+		LEFT JOIN
+		(
+		SELECT
+		rela.DICT_CODE,
+		SUM(DECODE(rela.FLAG,'01',1,-1)*dt.B_COST) amt,
+		dt.PROD_ID,
+		dt.VAL_DATE
+		FROM
+		rep_book_relation rela
+		LEFT JOIN
+		REP_VAL_TABLE_DATA dt
+		ON
+		(
+		dt.SUBJECT_NO LIKE CONCAT(rela.SUBJECT_NO,'%') )
+		LEFT JOIN
+		REP_BOK_SUBJECT sbt
+		ON
+		dt.SUBJECT_NO = sbt.SUBJECT_NO
+		WHERE
+		dt.DETAIL_DIST ='01'
+		AND rela.SUBJECT_LEVEL = sbt.SUBJECT_LEVEL
+		AND dt.PROD_ID =#{prodId, jdbcType=VARCHAR}
+		AND dt.VAL_DATE = #{endDate, jdbcType=DATE}
+		AND dt.STATUS = 'E'
+		AND sbt.BAL_FLAG = 'D'
+		GROUP BY
+		rela.DICT_CODE,
+		dt.PROD_ID,
+		dt.VAL_DATE
+		UNION ALL
+		SELECT
+		'10' DICT_CODE,
+		dt.B_COST,
+		dt.PROD_ID,
+		dt.VAL_DATE
+		FROM
+		REP_VAL_TABLE_DATA dt
+		WHERE
+		dt.DETAIL_DIST ='05'
+		AND dt.PROD_ID =#{prodId, jdbcType=VARCHAR}
+		AND dt.VAL_DATE = #{endDate, jdbcType=DATE}
+		AND dt.STATUS = 'E'
+		UNION ALL
+		SELECT
+		'09' DICT_CODE ,
+		NVL(tot1.amt1,0)-NVL(tot2.amt2,0) amt,
+		tot1.PROD_ID,
+		tot1.VAL_DATE
+		FROM
+		(
+		SELECT
+		dt.B_COST amt1 ,
+		dt.PROD_ID,
+		dt.VAL_DATE
+		FROM
+		REP_VAL_TABLE_DATA dt
+		WHERE
+		dt.DETAIL_DIST ='05'
+		AND dt.PROD_ID =#{prodId, jdbcType=VARCHAR}
+		AND dt.VAL_DATE = #{endDate, jdbcType=DATE}
+		AND dt.STATUS = 'E' )tot1,
+		(
+		SELECT
+		SUM(DECODE(rela.FLAG,'01',1,-1)*dt.B_COST) amt2,
+		dt.PROD_ID,
+		dt.VAL_DATE
+		FROM
+		rep_book_relation rela
+		LEFT JOIN
+		REP_VAL_TABLE_DATA dt
+		ON
+		(
+		dt.SUBJECT_NO LIKE CONCAT(rela.SUBJECT_NO,'%') )
+		LEFT JOIN
+		REP_BOK_SUBJECT sbt
+		ON
+		dt.SUBJECT_NO = sbt.SUBJECT_NO
+		WHERE
+		dt.DETAIL_DIST ='01'
+		AND rela.SUBJECT_LEVEL = sbt.SUBJECT_LEVEL
+		AND dt.PROD_ID =#{prodId, jdbcType=VARCHAR}
+		AND dt.VAL_DATE = #{endDate, jdbcType=DATE}
+		AND dt.STATUS = 'E'
+		AND sbt.BAL_FLAG = 'D'
+		GROUP BY
+		dt.PROD_ID,
+		dt.VAL_DATE )tot2
+		WHERE
+		tot1.PROD_ID = tot2.PROD_ID
+		AND tot1.VAL_DATE = tot2.VAL_DATE )tt
+		ON
+		rt.DICT_CODE = tt.DICT_CODE
+		LEFT JOIN
+		(
+		SELECT
+		CASE
+		WHEN dt.B_COST=0
+		THEN NULL
+		ELSE dt.B_COST
+		END AS B_COST,
+		dt.PROD_ID,
+		dt.VAL_DATE
+		FROM
+		REP_VAL_TABLE_DATA dt
+		WHERE
+		dt.DETAIL_DIST ='05'
+		AND dt.PROD_ID =#{prodId, jdbcType=VARCHAR}
+		AND dt.VAL_DATE = #{endDate, jdbcType=DATE}
+		AND dt.STATUS = 'E')tota
+		ON
+		tota.PROD_ID = tt.PROD_ID
+		AND tota.VAL_DATE = tt.VAL_DATE
+		ORDER BY
+		rt.DICT_CODE ASC
+	</select>
+	<select id="selectNetProdAssetPercentTen"
+		resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.RepProdIndexEntity">
+		select
+		case when ass.bCost is NULL then 0.00
+		else cast(round(cast(ass.bCost*100 as float)/tota.B_COST,2) as
+		decimal(20,2)) end as precent 
+		from(
+		select rvtd.SUBJECT_NAME subjectName,
+		rvtd.B_COST bCost,
+		rvtd.PROD_ID,
+		rvtd.SUBJECT_NO,
+		row_number() OVER(ORDER BY rvtd.B_COST desc) as ROWNUM
+		FROM REP_VAL_TABLE_DATA rvtd
+		LEFT JOIN REP_BOOK_RELATION rela
+		ON rvtd.SUBJECT_NO LIKE CONCAT(rela.SUBJECT_NO,'%')
+		WHERE
+		rvtd.PROD_ID =#{prodId, jdbcType=VARCHAR}
+		and rvtd.DETAIL_DIST ='01'
+		AND rvtd.VAL_DATE =#{endDate, jdbcType=DATE}
+		and rvtd.SUBJECT_NO like '1%'
+		and num_amt is not null
+		and rela.DICT_CODE!='01'
+		and rela.DICT_CODE!='02'
+		and rvtd.B_COST>0
+		AND (rvtd.SUBJECT_NO NOT IN(SELECT SUBJECT_NO FROM rep_bok_subject)
+		OR rvtd.SUBJECT_NO IN(SELECT SUBJECT_NO FROM rep_bok_subject WHERE
+		rep_bok_subject.GEN_DETSUB_FLAG='02')
+		AND rvtd.SUBJECT_NO NOT IN(SELECT FSUBJECT_ID FROM rep_bok_subject WHERE
+		FSUBJECT_ID IS NOT NULL))
+		)ass
+		left join (
+		SELECT
+		CASE WHEN dt.B_COST=0 THEN NULL ELSE dt.B_COST END AS B_COST,
+		dt.PROD_ID,
+		dt.VAL_DATE
+		FROM
+		REP_VAL_TABLE_DATA dt
+		WHERE
+
+		dt.PROD_ID =#{prodId, jdbcType=VARCHAR}
+		and dt.DETAIL_DIST ='05'
+		AND dt.VAL_DATE =#{endDate, jdbcType=DATE}
+		AND dt.STATUS = 'E'
+		)tota
+		on tota.PROD_ID = ass.PROD_ID
+		where ass.ROWNUM &lt;=10
+		and tota.B_COST is not null
+		ORDER BY precent DESC
+	</select>
+	<!-- 货币型产品投资各资产占比情况 -->
+	<select id="selectCurrencyProdAssetPercentTen"
+		resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.RepProdIndexEntity">
+		select
+		ass.ROWNUM,
+		ass.subjectName,
+		cast(round(ass.bCost,2) as decimal(20,2)) bCost,
+		tota.B_COST bcostTotal,
+		case when ass.bCost is NULL then 0.00
+		else cast(round(cast(ass.bCost*100 as float)/tota.B_COST,2) as
+		decimal(20,2)) end as precent --占比(总数不能超过100%)
+		from(
+		select rvtd.SUBJECT_NAME subjectName,
+		rvtd.B_COST bCost,
+		rvtd.PROD_ID,
+		rvtd.SUBJECT_NO,
+		row_number() OVER(ORDER BY rvtd.B_COST desc) as ROWNUM
+		FROM REP_VAL_TABLE_DATA rvtd
+		LEFT JOIN REP_BOOK_RELATION rela
+		ON rvtd.SUBJECT_NO LIKE CONCAT(rela.SUBJECT_NO,'%')
+		WHERE
+		rvtd.PROD_ID =#{prodId, jdbcType=VARCHAR}
+		and rvtd.DETAIL_DIST ='01'
+		AND rvtd.VAL_DATE =#{endDate, jdbcType=DATE}
+		and rvtd.SUBJECT_NO like '1%'
+		and num_amt is not null
+		and rela.DICT_CODE!='01'
+		and rela.DICT_CODE!='02'
+		and rvtd.B_COST>0
+		AND (rvtd.SUBJECT_NO NOT IN(SELECT SUBJECT_NO FROM rep_bok_subject)
+		OR rvtd.SUBJECT_NO IN(SELECT SUBJECT_NO FROM rep_bok_subject WHERE
+		rep_bok_subject.GEN_DETSUB_FLAG='02')
+		AND rvtd.SUBJECT_NO NOT IN(SELECT FSUBJECT_ID FROM rep_bok_subject WHERE
+		FSUBJECT_ID IS NOT NULL))
+		)ass
+		left join (
+		SELECT
+		CASE WHEN dt.B_COST=0 THEN NULL ELSE dt.B_COST END AS B_COST,
+		dt.PROD_ID,
+		dt.VAL_DATE
+		FROM
+		REP_VAL_TABLE_DATA dt
+		WHERE
+
+		dt.PROD_ID =#{prodId, jdbcType=VARCHAR}
+		and dt.DETAIL_DIST ='05'
+		AND dt.VAL_DATE =#{endDate, jdbcType=DATE}
+		AND dt.STATUS = 'E'
+		)tota
+		on tota.PROD_ID = ass.PROD_ID
+		where ass.ROWNUM &lt;=10
+		and tota.B_COST is not null
+		ORDER BY precent DESC
+	</select>
+	<!-- 预期收益性年化收益 -->
+	<select id="selectProfitYield"
+		resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.RepProdIndexEntity">
+		SELECT
+		rpinfo.PROD_ID,
+		rpinfo.PROD_NAME,
+		rpinfo.RAISE_CCY,
+		rpinfo.SET_DATE,
+		rpinfo.MDATE,
+		CAST(round(t2.YIELD_E*100,2)as NUMERIC(20,2)) YIELD_E
+		FROM
+		REP_PROD_INFO rpinfo
+		LEFT JOIN(
+		SELECT * FROM(SELECT
+		REP_PROD_INDEX.PROD_ID,
+		REP_PROD_INDEX.YIELD_E YIELD_E,
+		abs(days(REP_PROD_INDEX.VALUE_DATE)-days(to_char(rpi.MDATE,'yyyy-mm-dd')))
+		minDate
+		FROM REP_PROD_INDEX
+		LEFT JOIN REP_PROD_INFO rpi
+		ON rpi.PROD_ID=REP_PROD_INDEX.PROD_ID
+		WHERE REP_PROD_INDEX.STATUS='E'
+		AND REP_PROD_INDEX.PROD_ID=#{prodId, jdbcType=VARCHAR}
+		GROUP BY
+		REP_PROD_INDEX.PROD_ID,REP_PROD_INDEX.VALUE_DATE,REP_PROD_INDEX.YIELD_E,rpi.MDATE
+		ORDER BY minDate)
+		FETCH FIRST 1 ROWS ONLY)t2
+		ON rpinfo.PROD_ID=t2.PROD_ID
+		WHERE
+		rpinfo.PROD_ID=#{prodId, jdbcType=VARCHAR}
+		AND rpinfo.STATUS='E'
+		and rpinfo.p_prod_id is null /*不取子产品*/
+	</select>
+	<!-- 净值型产品单位净值 -->
+	<select id="selectNetYield"
+		resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.RepProdIndexEntity">
+		SELECT
+		rpinfo.PROD_ID,
+		rpinfo.PROD_NAME,
+		rpinfo.RAISE_CCY,
+		rpinfo.SET_DATE,
+		rpinfo.MDATE,
+		CAST(round(t2.UNIT_VALUE,4)as NUMERIC(20,4)) UNIT_VALUE
+		FROM
+		REP_PROD_INFO rpinfo
+		LEFT JOIN(
+		SELECT * FROM(SELECT
+		REP_PROD_INDEX.PROD_ID,
+		REP_PROD_INDEX.UNIT_VALUE UNIT_VALUE,
+		abs(days(REP_PROD_INDEX.VALUE_DATE)-days(to_char(rpi.MDATE,'yyyy-mm-dd')))
+		minDate
+		FROM REP_PROD_INDEX
+		LEFT JOIN REP_PROD_INFO rpi
+		ON rpi.PROD_ID=REP_PROD_INDEX.PROD_ID
+		WHERE REP_PROD_INDEX.STATUS='E'
+		AND REP_PROD_INDEX.PROD_ID=#{prodId, jdbcType=VARCHAR}
+		AND REP_PROD_INDEX.VALUE_DATE &lt;=rpi.MDATE
+		GROUP BY
+		REP_PROD_INDEX.PROD_ID,REP_PROD_INDEX.VALUE_DATE,REP_PROD_INDEX.UNIT_VALUE,rpi.MDATE
+		ORDER BY minDate)
+		FETCH FIRST 1 ROWS ONLY)t2
+		ON rpinfo.PROD_ID=t2.PROD_ID
+		WHERE
+		rpinfo.PROD_ID=#{prodId, jdbcType=VARCHAR}
+		AND rpinfo.STATUS='E'
+		and rpinfo.p_prod_id is null /*不取子产品*/
+	</select>
+	<!-- 货币型产品七日年化 -->
+	<select id="selectCurrencyYield"
+		resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.RepProdIndexEntity">
+		SELECT
+		rpinfo.PROD_ID,
+		rpinfo.PROD_NAME,
+		rpinfo.RAISE_CCY,
+		rpinfo.SET_DATE,
+		rpinfo.MDATE,
+		CAST(round(t2.YIELD_7*100,4)as NUMERIC(20,4)) YIELD_7
+		FROM
+		REP_PROD_INFO rpinfo
+		LEFT JOIN(
+		SELECT * FROM(SELECT
+		REP_PROD_INDEX.PROD_ID,
+		REP_PROD_INDEX.YIELD_7 YIELD_7,
+		abs(days(REP_PROD_INDEX.VALUE_DATE)-days(to_char(rpi.MDATE,'yyyy-mm-dd')))
+		minDate
+		FROM REP_PROD_INDEX
+		LEFT JOIN REP_PROD_INFO rpi
+		ON rpi.PROD_ID=REP_PROD_INDEX.PROD_ID
+		WHERE REP_PROD_INDEX.STATUS='E'
+		AND REP_PROD_INDEX.PROD_ID=#{prodId, jdbcType=VARCHAR}
+		AND REP_PROD_INDEX.VALUE_DATE &lt;rpi.MDATE
+		GROUP BY
+		REP_PROD_INDEX.PROD_ID,REP_PROD_INDEX.VALUE_DATE,REP_PROD_INDEX.YIELD_7,rpi.MDATE
+		ORDER BY minDate)
+		FETCH FIRST 1 ROWS ONLY)t2
+		ON rpinfo.PROD_ID=t2.PROD_ID
+		WHERE
+		rpinfo.PROD_ID=#{prodId, jdbcType=VARCHAR}
+		AND rpinfo.STATUS='E'
+		and rpinfo.p_prod_id is null /*不取子产品*/
+	</select>
+		<!-- 获取预期收益性产品费用情况 -->
+	<select id="selectProfitFee"
+		resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.RepProdIndexEntity">
+		SELECT
+		rpi.PROD_ID,
+		rpi.PROD_NAME,
+		rpi.INVEST_PROF_DATE,
+		rpi.DEAL_CAL,
+		rpindex1.PROFIT_TOTAL,
+		cast(rpindex1.YIELD_E*100 as decimal(10,2)) yieldE,
+		feeTemp.sFee,
+		feeTemp.tFee,
+		feeTemp.mFee,
+		feeTemp.fFee,
+		feeTemp.otherFee,
+		SUM(ttotal1.sFeeRate) as sFeeRate,
+		SUM(ttotal1.tFeeRate) as tFeeRate,
+		SUM(ttotal1.mFeeRate) as mFeeRate,
+		SUM(ttotal1.otherFeeRate)as otherFeeRate
+		FROM
+		REP_PROD_INFO rpi
+		LEFT JOIN(
+		select rpindex.PROFIT_TOTAL,
+		rpindex.YIELD_E,
+		rpindex.PROD_ID
+		from (
+		select
+		rpindex.PROD_ID,
+		min(abs(days(rpindex.VALUE_DATE)-days(to_char(rpi.MDATE,'yyyy-mm-dd'))))
+		minDate,
+		rpi.MDATE
+		from REP_PROD_INDEX rpindex
+		left join REP_PROD_INFO rpi
+		on rpi.PROD_ID=rpindex.PROD_ID
+		where rpindex.PROD_ID = #{prodId, jdbcType=VARCHAR}
+		group by
+		rpindex.PROD_ID,
+		rpi.MDATE
+		) rpindexTemp
+		left join REP_PROD_INDEX rpindex
+		on rpindexTemp.PROD_ID=rpindex.PROD_ID
+		and
+		abs(days(rpindex.VALUE_DATE)-days(to_char(rpindexTemp.MDATE,'yyyy-mm-dd')))=rpindexTemp.minDate
+		AND rpindex.STATUS='E'
+		group by
+		PROFIT_TOTAL,
+		YIELD_E,
+		rpindex.PROD_ID
+		) rpindex1
+		ON rpindex1.PROD_ID=rpi.PROD_ID
+		LEFT JOIN (SELECT
+		rp.PROD_ID,
+		sum(case when BOK_TYPE='02' then PAID_FEE else null end) as sFee,
+		sum(case when BOK_TYPE='01' then PAID_FEE else null end) as tFee,
+		sum(case when BOK_TYPE='03' then PAID_FEE else null end) as mFee,
+		sum(case when BOK_TYPE in('04','07','08') then PAID_FEE else null end) as
+		fFee,
+		sum(case when BOK_TYPE in('06','09','10','11','99') then PAID_FEE else null
+		end) as otherFee
+		FROM
+		REP_FEE_TRD rp
+		WHERE
+		rp.PROD_ID = #{prodId, jdbcType=VARCHAR}
+		AND rp.STATUS='E'
+		GROUP BY
+		rp.PROD_ID) feeTemp
+		ON feeTemp.PROD_ID = rpi.PROD_ID
+		LEFT JOIN(
+		select
+		ttotal.BUSI_ID,
+		cast(SUM(ttotal.sFeeRate*100) as decimal(10,2)) as sFeeRate,
+		cast(SUM(ttotal.tFeeRate*100)as decimal(10,2)) as tFeeRate,
+		cast(SUM(ttotal.mFeeRate*100)as decimal(10,2)) as mFeeRate,
+		cast(SUM(ttotal.otherFeeRate*100)as decimal(10,2)) otherFeeRate from(
+		select
+		rateTemp.BUSI_ID,
+		rateTemp.sFeeRate as sFeeRate,
+		rateTemp.tFeeRate as tFeeRate,
+		rateTemp.mFeeRate as mFeeRate,
+		rateTemp.otherFeeRate as otherFeeRate
+		from (
+		SELECT
+		rfy.BUSI_ID,
+		case when rfy.BOK_TYPE='02' then rfy.FEE_RATE else null end as sFeeRate,
+		case when rfy.BOK_TYPE='01' then rfy.FEE_RATE else null end as
+		tFeeRate,
+		case when rfy.BOK_TYPE='03' then rfy.FEE_RATE else null end as mFeeRate,
+		case when rfy.BOK_TYPE in('06','09','10','11','99') then rfy.FEE_RATE
+		else null end as otherFeeRate
+		FROM(
+		SELECT
+		rfy1.BUSI_ID BUSI_ID,
+		rfy1.BOK_TYPE,
+		min(abs(days(rfy1.START_DATE)-days(to_char(rpi1.MDATE,'yyyy-mm-dd'))))
+		minDate1,
+		rpi1.MDATE
+		FROM REP_FEE_YIELD rfy1
+		left join REP_PROD_INFO rpi1
+		on rpi1.PROD_ID=rfy1.BUSI_ID
+		WHERE rfy1.BUSI_ID=#{prodId, jdbcType=VARCHAR}
+		GROUP BY
+		rfy1.BUSI_ID,
+		rfy1.BOK_TYPE,
+		rpi1.MDATE
+		)t1
+		LEFT JOIN REP_FEE_YIELD rfy
+		ON rfy.BUSI_ID=t1.BUSI_ID
+		AND
+		abs(days(rfy.START_DATE)-days(to_char(t1.MDATE,'yyyy-mm-dd')))=t1.minDate1)rateTemp
+		GROUP BY
+		rateTemp.BUSI_ID,
+		sFeeRate,
+		tFeeRate,
+		mFeeRate,
+		otherFeeRate) ttotal
+		GROUP BY ttotal.BUSI_ID) ttotal1
+		ON ttotal1.BUSI_ID=rpi.PROD_ID
+		WHERE
+		rpi.PROD_ID=#{prodId, jdbcType=VARCHAR}
+		AND rpi.STATUS='E'
+		and rpi.p_prod_id is null /*不取子产品*/
+		GROUP BY
+		rpi.PROD_ID,
+		rpi.PROD_NAME,
+		rpi.INVEST_PROF_DATE,
+		rpi.DEAL_CAL,
+		rpindex1.PROFIT_TOTAL,
+		rpindex1.YIELD_E,
+		feeTemp.sFee,
+		feeTemp.tFee,
+		feeTemp.mFee,
+		feeTemp.fFee,
+		feeTemp.otherFee
+	</select>
+	<!-- 获取净值型产品费用情况 -->
+	<select id="selectNetFee"
+		resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.RepProdIndexEntity">
+		SELECT
+		rpi.PROD_ID,
+		rpi.PROD_NAME,
+		rpi.INVEST_PROF_DATE,
+		rpi.DEAL_CAL,
+		rpindex1.PROFIT_TOTAL,
+		feeTemp.sFee,
+		feeTemp.tFee,
+		feeTemp.mFee,
+		feeTemp.fFee,
+		feeTemp.otherFee,
+		SUM(ttotal1.sFeeRate) as sFeeRate,
+		SUM(ttotal1.tFeeRate) as tFeeRate,
+		SUM(ttotal1.mFeeRate) as mFeeRate,
+		SUM(ttotal1.otherFeeRate)as otherFeeRate
+		FROM
+		REP_PROD_INFO rpi
+		LEFT JOIN(
+		select rpindex.PROFIT_TOTAL,
+		rpindex.PROD_ID
+		from (
+		select
+		rpindex.PROD_ID,
+		min(abs(days(rpindex.VALUE_DATE)-days(to_char(rpi.MDATE,'yyyy-mm-dd'))))
+		minDate,
+		rpi.MDATE
+		from REP_PROD_INDEX rpindex
+		left join REP_PROD_INFO rpi
+		on rpi.PROD_ID=rpindex.PROD_ID
+		where rpindex.PROD_ID = #{prodId, jdbcType=VARCHAR}
+		group by
+		rpindex.PROD_ID,
+		rpi.MDATE) rpindexTemp
+		left join REP_PROD_INDEX rpindex
+		on rpindexTemp.PROD_ID=rpindex.PROD_ID
+		and
+		abs(days(rpindex.VALUE_DATE)-days(to_char(rpindexTemp.MDATE,'yyyy-mm-dd')))=rpindexTemp.minDate
+		AND rpindex.STATUS='E'
+		group by
+		PROFIT_TOTAL,
+		rpindex.PROD_ID
+		) rpindex1
+		ON rpindex1.PROD_ID=rpi.PROD_ID
+		LEFT JOIN (SELECT
+		rp.PROD_ID,
+		sum(case when BOK_TYPE='02' then PAID_FEE else null end) as sFee,
+		sum(case when BOK_TYPE='01' then PAID_FEE else null end) as tFee,
+		sum(case when BOK_TYPE='03' then PAID_FEE else null end) as mFee,
+		sum(case when BOK_TYPE in('04','07','08') then PAID_FEE else null end) as
+		fFee,
+		sum(case when BOK_TYPE in('06','09','10','11','99') then PAID_FEE else null
+		end) as otherFee
+		FROM
+		REP_FEE_TRD rp
+		WHERE
+		rp.PROD_ID = #{prodId, jdbcType=VARCHAR}
+		AND rp.STATUS='E'
+		GROUP BY
+		rp.PROD_ID) feeTemp
+		ON feeTemp.PROD_ID = rpi.PROD_ID
+		LEFT JOIN(
+		select
+		ttotal.BUSI_ID,
+		cast(SUM(ttotal.sFeeRate*100) as decimal(10,2)) as sFeeRate,
+		cast(SUM(ttotal.tFeeRate*100)as decimal(10,2)) as tFeeRate,
+		cast(SUM(ttotal.mFeeRate*100)as decimal(10,2)) as mFeeRate,
+		cast(SUM(ttotal.otherFeeRate*100)as decimal(10,2)) otherFeeRate from(
+		select
+		rateTemp.BUSI_ID,
+		rateTemp.sFeeRate as sFeeRate,
+		rateTemp.tFeeRate as tFeeRate,
+		rateTemp.mFeeRate as mFeeRate,
+		rateTemp.otherFeeRate as otherFeeRate
+		from (
+		SELECT
+		rfy.BUSI_ID,
+		case when rfy.BOK_TYPE='02' then rfy.FEE_RATE else null end as sFeeRate,
+		case when rfy.BOK_TYPE='01' then rfy.FEE_RATE else null end as
+		tFeeRate,
+		case when rfy.BOK_TYPE='03' then rfy.FEE_RATE else null end as mFeeRate,
+		case when rfy.BOK_TYPE in('06','09','10','11','99') then rfy.FEE_RATE
+		else null end as otherFeeRate
+		FROM(
+		SELECT
+		rfy1.BUSI_ID BUSI_ID,
+		rfy1.BOK_TYPE,
+		min(abs(days(rfy1.START_DATE)-days(to_char(rpi1.MDATE,'yyyy-mm-dd'))))
+		minDate1,
+		rpi1.MDATE
+		FROM REP_FEE_YIELD rfy1
+		left join REP_PROD_INFO rpi1
+		on rpi1.PROD_ID=rfy1.BUSI_ID
+		WHERE rfy1.BUSI_ID=#{prodId, jdbcType=VARCHAR}
+		GROUP BY
+		rfy1.BUSI_ID,
+		rfy1.BOK_TYPE,
+		rpi1.MDATE
+		)t1
+		LEFT JOIN REP_FEE_YIELD rfy
+		ON rfy.BUSI_ID=t1.BUSI_ID
+		AND
+		abs(days(rfy.START_DATE)-days(to_char(t1.MDATE,'yyyy-mm-dd')))=t1.minDate1)rateTemp
+		GROUP BY
+		rateTemp.BUSI_ID,
+		sFeeRate,
+		tFeeRate,
+		mFeeRate,
+		otherFeeRate) ttotal
+		GROUP BY ttotal.BUSI_ID) ttotal1
+		ON ttotal1.BUSI_ID=rpi.PROD_ID
+		WHERE
+		rpi.PROD_ID=#{prodId, jdbcType=VARCHAR}
+		AND rpi.STATUS='E'
+		and rpi.p_prod_id is null /*不取子产品*/
+		GROUP BY
+		rpi.PROD_ID,
+		rpi.PROD_NAME,
+		rpi.INVEST_PROF_DATE,
+		rpi.DEAL_CAL,
+		rpindex1.PROFIT_TOTAL,
+		feeTemp.sFee,
+		feeTemp.tFee,
+		feeTemp.mFee,
+		feeTemp.fFee,
+		feeTemp.otherFee
+	</select>
+	<!-- 获取货币型产品费用情况 -->
+	<select id="selectCurrencyFee"
+		resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.RepProdIndexEntity">
+		SELECT
+		rpi.PROD_ID,
+		rpi.PROD_NAME,
+		rpi.INVEST_PROF_DATE,
+		rpi.DEAL_CAL,
+		rpindex1.PROFIT_TOTAL,
+		rpindex1.PROFIT_TDY,
+		feeTemp.sFee,
+		feeTemp.tFee,
+		feeTemp.mFee,
+		feeTemp.fFee,
+		feeTemp.otherFee,
+		SUM(ttotal1.sFeeRate) as sFeeRate,
+		SUM(ttotal1.tFeeRate) as tFeeRate,
+		SUM(ttotal1.mFeeRate) as mFeeRate,
+		SUM(ttotal1.otherFeeRate)as otherFeeRate
+		FROM
+		REP_PROD_INFO rpi
+		LEFT JOIN(
+		select rpindex.PROFIT_TOTAL,
+		rpindexTemp.PROFIT_TDY,
+		rpindex.PROD_ID
+		from (
+		select
+		rpindex.PROD_ID,
+		sum(PROFIT_TDY) PROFIT_TDY,
+		min(abs(days(rpindex.VALUE_DATE)-days(to_char(rpi.MDATE,'yyyy-mm-dd'))))
+		minDate,
+		rpi.MDATE
+		from REP_PROD_INDEX rpindex
+		left join REP_PROD_INFO rpi
+		on rpi.PROD_ID=rpindex.PROD_ID
+		where rpindex.PROD_ID = #{prodId, jdbcType=VARCHAR}
+		group by
+		rpindex.PROD_ID,
+		rpi.MDATE) rpindexTemp
+		left join REP_PROD_INDEX rpindex
+		on rpindexTemp.PROD_ID=rpindex.PROD_ID
+		and
+		abs(days(rpindex.VALUE_DATE)-days(to_char(rpindexTemp.MDATE,'yyyy-mm-dd')))=rpindexTemp.minDate
+		AND rpindex.STATUS='E'
+		group by
+		PROFIT_TOTAL,
+		rpindexTemp.PROFIT_TDY,
+		rpindex.PROD_ID
+		) rpindex1
+		ON rpindex1.PROD_ID=rpi.PROD_ID
+		LEFT JOIN (SELECT
+		rp.PROD_ID,
+		sum(case when BOK_TYPE='02' then PAID_FEE else null end) as sFee,
+		sum(case when BOK_TYPE='01' then PAID_FEE else null end) as tFee,
+		sum(case when BOK_TYPE='03' then PAID_FEE else null end) as mFee,
+		sum(case when BOK_TYPE in('04','07','08') then PAID_FEE else null end) as
+		fFee,
+		sum(case when BOK_TYPE in('06','09','10','11','99') then PAID_FEE else null
+		end) as otherFee
+		FROM
+		REP_FEE_TRD rp
+		WHERE
+		rp.PROD_ID = #{prodId, jdbcType=VARCHAR}
+		AND rp.STATUS='E'
+		GROUP BY
+		rp.PROD_ID) feeTemp
+		ON feeTemp.PROD_ID = rpi.PROD_ID
+		LEFT JOIN(
+		select
+		ttotal.BUSI_ID,
+		cast(SUM(ttotal.sFeeRate*100) as decimal(10,2)) as sFeeRate,
+		cast(SUM(ttotal.tFeeRate*100)as decimal(10,2)) as tFeeRate,
+		cast(SUM(ttotal.mFeeRate*100)as decimal(10,2)) as mFeeRate,
+		cast(SUM(ttotal.otherFeeRate*100)as decimal(10,2)) otherFeeRate from(
+		select
+		rateTemp.BUSI_ID,
+		rateTemp.sFeeRate as sFeeRate,
+		rateTemp.tFeeRate as tFeeRate,
+		rateTemp.mFeeRate as mFeeRate,
+		rateTemp.otherFeeRate as otherFeeRate
+		from (
+		SELECT
+		rfy.BUSI_ID,
+		case when rfy.BOK_TYPE='02' then rfy.FEE_RATE else null end as sFeeRate,
+		case when rfy.BOK_TYPE='01' then rfy.FEE_RATE else null end as
+		tFeeRate,
+		case when rfy.BOK_TYPE='03' then rfy.FEE_RATE else null end as mFeeRate,
+		case when rfy.BOK_TYPE in('06','09','10','11','99') then rfy.FEE_RATE
+		else null end as otherFeeRate
+		FROM(
+		SELECT
+		rfy1.BUSI_ID BUSI_ID,
+		rfy1.BOK_TYPE,
+		min(abs(days(rfy1.START_DATE)-days(to_char(rpi1.MDATE,'yyyy-mm-dd'))))
+		minDate1,
+		rpi1.MDATE
+		FROM REP_FEE_YIELD rfy1
+		left join REP_PROD_INFO rpi1
+		on rpi1.PROD_ID=rfy1.BUSI_ID
+		WHERE rfy1.BUSI_ID=#{prodId, jdbcType=VARCHAR}
+		GROUP BY
+		rfy1.BUSI_ID,
+		rfy1.BOK_TYPE,
+		rpi1.MDATE
+		)t1
+		LEFT JOIN REP_FEE_YIELD rfy
+		ON rfy.BUSI_ID=t1.BUSI_ID
+		AND
+		abs(days(rfy.START_DATE)-days(to_char(t1.MDATE,'yyyy-mm-dd')))=t1.minDate1
+		)rateTemp
+		GROUP BY
+		rateTemp.BUSI_ID,
+		sFeeRate,
+		tFeeRate,
+		mFeeRate,
+		otherFeeRate) ttotal
+		GROUP BY ttotal.BUSI_ID) ttotal1
+		ON ttotal1.BUSI_ID=rpi.PROD_ID
+		WHERE
+		rpi.PROD_ID=#{prodId, jdbcType=VARCHAR}
+		AND rpi.STATUS='E'
+		and rpi.p_prod_id is null /*不取子产品*/
+		GROUP BY
+		rpi.PROD_ID,
+		rpi.PROD_NAME,
+		rpi.INVEST_PROF_DATE,
+		rpi.DEAL_CAL,
+		rpindex1.PROFIT_TOTAL,
+		rpindex1.PROFIT_TDY,
+		feeTemp.sFee,
+		feeTemp.tFee,
+		feeTemp.mFee,
+		feeTemp.fFee,
+		feeTemp.otherFee
+	</select>
+</mapper>

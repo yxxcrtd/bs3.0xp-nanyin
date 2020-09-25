@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.BaseMapper">
+    <select id="getSequenceIndexData" parameterType="java.util.Map"
+        resultType="java.lang.Long" useCache="false" flushCache="true">
+        <if test="databaseType == 'DB2'"> 
+          select nextval for ${sequenceName} from SYSIBM.SYSDUMMY1
+        </if>
+        <if test="databaseType == 'Oracle'"> 
+          select ${sequenceName}.nextVal from dual
+        </if>
+    </select>
+    <!-- 查询所有有权限的机构代码 -->
+<!--     <select id="selectOrgCode" parameterType="java.lang.String" resultType="java.lang.String">
+        select ORG_CODE from CHB_SYS_ORGANIZATION where STATUS = 'E' start with ORG_CODE=#{orgCode} connect by prior ORG_CODE = SUP_ORG_CODE
+    </select> -->
+     <!-- 查询所有有权限的部门代码 -->
+<!--     <select id="selectDeptCode" parameterType="java.lang.String" resultType="java.lang.String">
+        select DEPT_CODE from CHB_SYS_DEPARTMENT where STATUS = 'E' start with DEPT_CODE = #{deptCode} connect by prior DEPT_CODE = DIRECT_DEPT_CODE
+    </select> -->
+        <!-- 根据机构代码和用户id查询用户的登记银行编码 -->
+    <select id="selectBankCode" parameterType="java.lang.String" resultType="java.lang.String">
+    	select 
+    	corb.REGIST_BANK_CODE 
+    	from CHB_ORG_REGIST_BANK_CODE corb
+    	where 
+    	corb.ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+    </select>
+    
+    <!-- <select id="getChildCodeList" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select 
+			so.ORG_NAME as text,
+			so.ORG_CODE as id
+		 from CHB_SYS_ORGANIZATION so 
+		 where so.SUP_ORG_CODE = #{myOrgCode,jdbcType=VARCHAR} AND STATUS = 'E'
+	</select>
+	<select id="getSelfItem" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select so.ORG_NAME as text,
+		   so.ORG_CODE as id 
+	    from CHB_SYS_ORGANIZATION so 
+	    where
+	    	STATUS = 'E'
+	    	<if test="myOrgCode != null and myOrgCode != ''">
+	    	AND so.ORG_CODE = #{myOrgCode}  
+	    	</if>
+	</select> -->
+    <select id="getTableColumnList" resultType="string">
+        select COLUMN_NAME
+        from user_tab_columns
+        where Table_Name = #{tableName,jdbcType=VARCHAR}
+    </select>
+</mapper>

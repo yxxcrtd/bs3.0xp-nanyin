@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RskValtblSumAssetSubMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RskValtblSumAssetSub" >
+        <id column="VAL_DATE" property="valDate" jdbcType="DATE" />
+        <id column="PTL_ID" property="ptlId" jdbcType="VARCHAR" />
+        <id column="SUB_CODE" property="subCode" jdbcType="VARCHAR" />
+        <result column="SECURITY_QUANTITY" property="securityQuantity" jdbcType="DECIMAL" />
+        <result column="UNIT_COST" property="unitCost" jdbcType="DECIMAL" />
+        <result column="SECURITY_COST" property="securityCost" jdbcType="DECIMAL" />
+        <result column="CTNWR" property="ctnwr" jdbcType="DECIMAL" />
+        <result column="MCP" property="mcp" jdbcType="DECIMAL" />
+        <result column="SMV" property="smv" jdbcType="DECIMAL" />
+        <result column="MCR" property="mcr" jdbcType="DECIMAL" />
+        <result column="VALUE_ADDED" property="valueAdded" jdbcType="DECIMAL" />
+        <result column="SUSPENSION_INFO" property="suspensionInfo" jdbcType="VARCHAR" />
+        <result column="EQUITY_INFO" property="equityInfo" jdbcType="VARCHAR" />
+        <result column="IMP_MODE" property="impMode" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        VAL_DATE VAL_DATE, PTL_ID PTL_ID, SUB_CODE SUB_CODE, SECURITY_QUANTITY SECURITY_QUANTITY, 
+        UNIT_COST UNIT_COST, SECURITY_COST SECURITY_COST, CTNWR CTNWR, MCP MCP, SMV SMV, 
+        MCR MCR, VALUE_ADDED VALUE_ADDED, SUSPENSION_INFO SUSPENSION_INFO, EQUITY_INFO EQUITY_INFO, 
+        IMP_MODE IMP_MODE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskValtblSumAssetSubMapper.Base_Column_List" />
+        from RSK_VALTBL_SUM_ASSET_SUB
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskValtblSumAssetSubMapper.Base_Column_List" />
+        from RSK_VALTBL_SUM_ASSET_SUB
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.RskValtblSumAssetSubKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskValtblSumAssetSubMapper.Base_Column_List" />
+        from RSK_VALTBL_SUM_ASSET_SUB
+        where VAL_DATE = #{valDate,jdbcType=DATE}
+          and PTL_ID = #{ptlId,jdbcType=VARCHAR}
+          and SUB_CODE = #{subCode,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskValtblSumAssetSubKey" >
+        delete from RSK_VALTBL_SUM_ASSET_SUB
+        where VAL_DATE = #{valDate,jdbcType=DATE}
+          and PTL_ID = #{ptlId,jdbcType=VARCHAR}
+          and SUB_CODE = #{subCode,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RskValtblSumAssetSub" >
+        insert into RSK_VALTBL_SUM_ASSET_SUB (VAL_DATE, PTL_ID, SUB_CODE, 
+            SECURITY_QUANTITY, UNIT_COST, SECURITY_COST, 
+            CTNWR, MCP, SMV, 
+            MCR, VALUE_ADDED, SUSPENSION_INFO, 
+            EQUITY_INFO, IMP_MODE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{valDate,jdbcType=DATE}, #{ptlId,jdbcType=VARCHAR}, #{subCode,jdbcType=VARCHAR}, 
+            #{securityQuantity,jdbcType=DECIMAL}, #{unitCost,jdbcType=DECIMAL}, #{securityCost,jdbcType=DECIMAL}, 
+            #{ctnwr,jdbcType=DECIMAL}, #{mcp,jdbcType=DECIMAL}, #{smv,jdbcType=DECIMAL}, 
+            #{mcr,jdbcType=DECIMAL}, #{valueAdded,jdbcType=DECIMAL}, #{suspensionInfo,jdbcType=VARCHAR}, 
+            #{equityInfo,jdbcType=VARCHAR}, #{impMode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskValtblSumAssetSub" >
+        insert into RSK_VALTBL_SUM_ASSET_SUB
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="valDate != null" >
+                VAL_DATE,
+            </if>
+            <if test="ptlId != null" >
+                PTL_ID,
+            </if>
+            <if test="subCode != null" >
+                SUB_CODE,
+            </if>
+            <if test="securityQuantity != null" >
+                SECURITY_QUANTITY,
+            </if>
+            <if test="unitCost != null" >
+                UNIT_COST,
+            </if>
+            <if test="securityCost != null" >
+                SECURITY_COST,
+            </if>
+            <if test="ctnwr != null" >
+                CTNWR,
+            </if>
+            <if test="mcp != null" >
+                MCP,
+            </if>
+            <if test="smv != null" >
+                SMV,
+            </if>
+            <if test="mcr != null" >
+                MCR,
+            </if>
+            <if test="valueAdded != null" >
+                VALUE_ADDED,
+            </if>
+            <if test="suspensionInfo != null" >
+                SUSPENSION_INFO,
+            </if>
+            <if test="equityInfo != null" >
+                EQUITY_INFO,
+            </if>
+            <if test="impMode != null" >
+                IMP_MODE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="valDate != null" >
+                #{valDate,jdbcType=DATE},
+            </if>
+            <if test="ptlId != null" >
+                #{ptlId,jdbcType=VARCHAR},
+            </if>
+            <if test="subCode != null" >
+                #{subCode,jdbcType=VARCHAR},
+            </if>
+            <if test="securityQuantity != null" >
+                #{securityQuantity,jdbcType=DECIMAL},
+            </if>
+            <if test="unitCost != null" >
+                #{unitCost,jdbcType=DECIMAL},
+            </if>
+            <if test="securityCost != null" >
+                #{securityCost,jdbcType=DECIMAL},
+            </if>
+            <if test="ctnwr != null" >
+                #{ctnwr,jdbcType=DECIMAL},
+            </if>
+            <if test="mcp != null" >
+                #{mcp,jdbcType=DECIMAL},
+            </if>
+            <if test="smv != null" >
+                #{smv,jdbcType=DECIMAL},
+            </if>
+            <if test="mcr != null" >
+                #{mcr,jdbcType=DECIMAL},
+            </if>
+            <if test="valueAdded != null" >
+                #{valueAdded,jdbcType=DECIMAL},
+            </if>
+            <if test="suspensionInfo != null" >
+                #{suspensionInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="equityInfo != null" >
+                #{equityInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="impMode != null" >
+                #{impMode,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskValtblSumAssetSub" >
+        insert into RSK_VALTBL_SUM_ASSET_SUB(VAL_DATE, PTL_ID, SUB_CODE, SECURITY_QUANTITY, 
+        UNIT_COST, SECURITY_COST, CTNWR, MCP, SMV, MCR, VALUE_ADDED, SUSPENSION_INFO, EQUITY_INFO, 
+        IMP_MODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select VAL_DATE, PTL_ID, SUB_CODE, SECURITY_QUANTITY, 
+            UNIT_COST, SECURITY_COST, CTNWR, MCP, SMV, MCR, VALUE_ADDED, SUSPENSION_INFO, EQUITY_INFO, 
+            IMP_MODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from RSK_VALTBL_SUM_ASSET_SUB
+             where 1 = 1 and VAL_DATE = #{valDate,jdbcType=DATE} and PTL_ID = #{ptlId,jdbcType=VARCHAR} and SUB_CODE = #{subCode,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RskValtblSumAssetSub" >
+        update RSK_VALTBL_SUM_ASSET_SUB
+        <set >
+            <if test="securityQuantity != null" >
+                SECURITY_QUANTITY = #{securityQuantity,jdbcType=DECIMAL},
+            </if>
+            <if test="unitCost != null" >
+                UNIT_COST = #{unitCost,jdbcType=DECIMAL},
+            </if>
+            <if test="securityCost != null" >
+                SECURITY_COST = #{securityCost,jdbcType=DECIMAL},
+            </if>
+            <if test="ctnwr != null" >
+                CTNWR = #{ctnwr,jdbcType=DECIMAL},
+            </if>
+            <if test="mcp != null" >
+                MCP = #{mcp,jdbcType=DECIMAL},
+            </if>
+            <if test="smv != null" >
+                SMV = #{smv,jdbcType=DECIMAL},
+            </if>
+            <if test="mcr != null" >
+                MCR = #{mcr,jdbcType=DECIMAL},
+            </if>
+            <if test="valueAdded != null" >
+                VALUE_ADDED = #{valueAdded,jdbcType=DECIMAL},
+            </if>
+            <if test="suspensionInfo != null" >
+                SUSPENSION_INFO = #{suspensionInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="equityInfo != null" >
+                EQUITY_INFO = #{equityInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="impMode != null" >
+                IMP_MODE = #{impMode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where VAL_DATE = #{valDate,jdbcType=DATE}
+          and PTL_ID = #{ptlId,jdbcType=VARCHAR}
+          and SUB_CODE = #{subCode,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskValtblSumAssetSub" >
+        update RSK_VALTBL_SUM_ASSET_SUB
+        set SECURITY_QUANTITY = #{securityQuantity,jdbcType=DECIMAL},
+            UNIT_COST = #{unitCost,jdbcType=DECIMAL},
+            SECURITY_COST = #{securityCost,jdbcType=DECIMAL},
+            CTNWR = #{ctnwr,jdbcType=DECIMAL},
+            MCP = #{mcp,jdbcType=DECIMAL},
+            SMV = #{smv,jdbcType=DECIMAL},
+            MCR = #{mcr,jdbcType=DECIMAL},
+            VALUE_ADDED = #{valueAdded,jdbcType=DECIMAL},
+            SUSPENSION_INFO = #{suspensionInfo,jdbcType=VARCHAR},
+            EQUITY_INFO = #{equityInfo,jdbcType=VARCHAR},
+            IMP_MODE = #{impMode,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where VAL_DATE = #{valDate,jdbcType=DATE}
+          and PTL_ID = #{ptlId,jdbcType=VARCHAR}
+          and SUB_CODE = #{subCode,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfCmfundnavMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfCmfundnav" >
+        <id column="F_INFO_CODE" property="fInfoCode" jdbcType="VARCHAR" />
+        <id column="PRICE_DATE" property="priceDate" jdbcType="VARCHAR" />
+        <id column="SOURCE" property="source" jdbcType="VARCHAR" />
+        <result column="ANN_DATE" property="annDate" jdbcType="VARCHAR" />
+        <result column="F_NAV_UNIT" property="fNavUnit" jdbcType="DECIMAL" />
+        <result column="F_INFO_YEARLYROE" property="fInfoYearlyroe" jdbcType="DECIMAL" />
+        <result column="YEARLYROE" property="yearlyroe" jdbcType="DECIMAL" />
+        <result column="F_NAV_ACCUMULATED" property="fNavAccumulated" jdbcType="DECIMAL" />
+        <result column="F_NAV_DIVACCUMULATED" property="fNavDivaccumulated" jdbcType="DECIMAL" />
+        <result column="F_NAV_ADJFACTOR" property="fNavAdjfactor" jdbcType="DECIMAL" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="F_PRT_NETASSET" property="fPrtNetasset" jdbcType="DECIMAL" />
+        <result column="F_NAV_ADJUSTED" property="fNavAdjusted" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        F_INFO_CODE F_INFO_CODE, PRICE_DATE PRICE_DATE, SOURCE SOURCE, ANN_DATE ANN_DATE, 
+        F_NAV_UNIT F_NAV_UNIT, F_INFO_YEARLYROE F_INFO_YEARLYROE, YEARLYROE YEARLYROE, F_NAV_ACCUMULATED F_NAV_ACCUMULATED, 
+        F_NAV_DIVACCUMULATED F_NAV_DIVACCUMULATED, F_NAV_ADJFACTOR F_NAV_ADJFACTOR, CCY CCY, 
+        F_PRT_NETASSET F_PRT_NETASSET, F_NAV_ADJUSTED F_NAV_ADJUSTED, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCmfundnavMapper.Base_Column_List" />
+        from INTERF_CMFUNDNAV
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCmfundnavMapper.Base_Column_List" />
+        from INTERF_CMFUNDNAV
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.InterfCmfundnavKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCmfundnavMapper.Base_Column_List" />
+        from INTERF_CMFUNDNAV
+        where F_INFO_CODE = #{fInfoCode,jdbcType=VARCHAR}
+          and PRICE_DATE = #{priceDate,jdbcType=VARCHAR}
+          and SOURCE = #{source,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfCmfundnavKey" >
+        delete from INTERF_CMFUNDNAV
+        where F_INFO_CODE = #{fInfoCode,jdbcType=VARCHAR}
+          and PRICE_DATE = #{priceDate,jdbcType=VARCHAR}
+          and SOURCE = #{source,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfCmfundnav" >
+        insert into INTERF_CMFUNDNAV (F_INFO_CODE, PRICE_DATE, SOURCE, 
+            ANN_DATE, F_NAV_UNIT, F_INFO_YEARLYROE, 
+            YEARLYROE, F_NAV_ACCUMULATED, F_NAV_DIVACCUMULATED, 
+            F_NAV_ADJFACTOR, CCY, F_PRT_NETASSET, 
+            F_NAV_ADJUSTED, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{fInfoCode,jdbcType=VARCHAR}, #{priceDate,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, 
+            #{annDate,jdbcType=VARCHAR}, #{fNavUnit,jdbcType=DECIMAL}, #{fInfoYearlyroe,jdbcType=DECIMAL}, 
+            #{yearlyroe,jdbcType=DECIMAL}, #{fNavAccumulated,jdbcType=DECIMAL}, #{fNavDivaccumulated,jdbcType=DECIMAL}, 
+            #{fNavAdjfactor,jdbcType=DECIMAL}, #{ccy,jdbcType=VARCHAR}, #{fPrtNetasset,jdbcType=DECIMAL}, 
+            #{fNavAdjusted,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfCmfundnav" >
+        insert into INTERF_CMFUNDNAV
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="fInfoCode != null" >
+                F_INFO_CODE,
+            </if>
+            <if test="priceDate != null" >
+                PRICE_DATE,
+            </if>
+            <if test="source != null" >
+                SOURCE,
+            </if>
+            <if test="annDate != null" >
+                ANN_DATE,
+            </if>
+            <if test="fNavUnit != null" >
+                F_NAV_UNIT,
+            </if>
+            <if test="fInfoYearlyroe != null" >
+                F_INFO_YEARLYROE,
+            </if>
+            <if test="yearlyroe != null" >
+                YEARLYROE,
+            </if>
+            <if test="fNavAccumulated != null" >
+                F_NAV_ACCUMULATED,
+            </if>
+            <if test="fNavDivaccumulated != null" >
+                F_NAV_DIVACCUMULATED,
+            </if>
+            <if test="fNavAdjfactor != null" >
+                F_NAV_ADJFACTOR,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="fPrtNetasset != null" >
+                F_PRT_NETASSET,
+            </if>
+            <if test="fNavAdjusted != null" >
+                F_NAV_ADJUSTED,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="fInfoCode != null" >
+                #{fInfoCode,jdbcType=VARCHAR},
+            </if>
+            <if test="priceDate != null" >
+                #{priceDate,jdbcType=VARCHAR},
+            </if>
+            <if test="source != null" >
+                #{source,jdbcType=VARCHAR},
+            </if>
+            <if test="annDate != null" >
+                #{annDate,jdbcType=VARCHAR},
+            </if>
+            <if test="fNavUnit != null" >
+                #{fNavUnit,jdbcType=DECIMAL},
+            </if>
+            <if test="fInfoYearlyroe != null" >
+                #{fInfoYearlyroe,jdbcType=DECIMAL},
+            </if>
+            <if test="yearlyroe != null" >
+                #{yearlyroe,jdbcType=DECIMAL},
+            </if>
+            <if test="fNavAccumulated != null" >
+                #{fNavAccumulated,jdbcType=DECIMAL},
+            </if>
+            <if test="fNavDivaccumulated != null" >
+                #{fNavDivaccumulated,jdbcType=DECIMAL},
+            </if>
+            <if test="fNavAdjfactor != null" >
+                #{fNavAdjfactor,jdbcType=DECIMAL},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="fPrtNetasset != null" >
+                #{fPrtNetasset,jdbcType=DECIMAL},
+            </if>
+            <if test="fNavAdjusted != null" >
+                #{fNavAdjusted,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfCmfundnav" >
+        insert into INTERF_CMFUNDNAV(F_INFO_CODE, PRICE_DATE, SOURCE, ANN_DATE, F_NAV_UNIT, 
+        F_INFO_YEARLYROE, YEARLYROE, F_NAV_ACCUMULATED, F_NAV_DIVACCUMULATED, F_NAV_ADJFACTOR, 
+        CCY, F_PRT_NETASSET, F_NAV_ADJUSTED, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME)
+        select F_INFO_CODE, PRICE_DATE, SOURCE, ANN_DATE, F_NAV_UNIT, 
+            F_INFO_YEARLYROE, YEARLYROE, F_NAV_ACCUMULATED, F_NAV_DIVACCUMULATED, F_NAV_ADJFACTOR, 
+            CCY, F_PRT_NETASSET, F_NAV_ADJUSTED, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from INTERF_CMFUNDNAV
+             where 1 = 1 and F_INFO_CODE = #{fInfoCode,jdbcType=VARCHAR} and PRICE_DATE = #{priceDate,jdbcType=VARCHAR} and SOURCE = #{source,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InterfCmfundnav" >
+        update INTERF_CMFUNDNAV
+        <set >
+            <if test="annDate != null" >
+                ANN_DATE = #{annDate,jdbcType=VARCHAR},
+            </if>
+            <if test="fNavUnit != null" >
+                F_NAV_UNIT = #{fNavUnit,jdbcType=DECIMAL},
+            </if>
+            <if test="fInfoYearlyroe != null" >
+                F_INFO_YEARLYROE = #{fInfoYearlyroe,jdbcType=DECIMAL},
+            </if>
+            <if test="yearlyroe != null" >
+                YEARLYROE = #{yearlyroe,jdbcType=DECIMAL},
+            </if>
+            <if test="fNavAccumulated != null" >
+                F_NAV_ACCUMULATED = #{fNavAccumulated,jdbcType=DECIMAL},
+            </if>
+            <if test="fNavDivaccumulated != null" >
+                F_NAV_DIVACCUMULATED = #{fNavDivaccumulated,jdbcType=DECIMAL},
+            </if>
+            <if test="fNavAdjfactor != null" >
+                F_NAV_ADJFACTOR = #{fNavAdjfactor,jdbcType=DECIMAL},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="fPrtNetasset != null" >
+                F_PRT_NETASSET = #{fPrtNetasset,jdbcType=DECIMAL},
+            </if>
+            <if test="fNavAdjusted != null" >
+                F_NAV_ADJUSTED = #{fNavAdjusted,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where F_INFO_CODE = #{fInfoCode,jdbcType=VARCHAR}
+          and PRICE_DATE = #{priceDate,jdbcType=VARCHAR}
+          and SOURCE = #{source,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfCmfundnav" >
+        update INTERF_CMFUNDNAV
+        set ANN_DATE = #{annDate,jdbcType=VARCHAR},
+            F_NAV_UNIT = #{fNavUnit,jdbcType=DECIMAL},
+            F_INFO_YEARLYROE = #{fInfoYearlyroe,jdbcType=DECIMAL},
+            YEARLYROE = #{yearlyroe,jdbcType=DECIMAL},
+            F_NAV_ACCUMULATED = #{fNavAccumulated,jdbcType=DECIMAL},
+            F_NAV_DIVACCUMULATED = #{fNavDivaccumulated,jdbcType=DECIMAL},
+            F_NAV_ADJFACTOR = #{fNavAdjfactor,jdbcType=DECIMAL},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            F_PRT_NETASSET = #{fPrtNetasset,jdbcType=DECIMAL},
+            F_NAV_ADJUSTED = #{fNavAdjusted,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where F_INFO_CODE = #{fInfoCode,jdbcType=VARCHAR}
+          and PRICE_DATE = #{priceDate,jdbcType=VARCHAR}
+          and SOURCE = #{source,jdbcType=VARCHAR}
+    </update>
+</mapper>

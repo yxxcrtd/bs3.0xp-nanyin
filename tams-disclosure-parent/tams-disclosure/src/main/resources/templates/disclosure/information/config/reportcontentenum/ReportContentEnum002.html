@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="~{layout/default}">
+<head>
+<title>新建指标</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<form class="layui-form joyin-form-wrap" id="submitForm"
+			style="background: #ffffff; padding: 10px 0;">
+			<div class="layui-form-item" style="display: none;">
+				<input id="operateType" name="operateType"
+					class="layui-input form-input" placeholder="请输入"
+					data-th-value="${entity?.operateType}">
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-inline layui-col-md8">
+					<label class="layui-form-label form-lable" style="width: 100px;">
+						<i class="iconfont must" style="display: inline;">*</i> 指标代码
+					</label>
+					<div class="layui-input-inline input-inline">
+						<input type="text" id="id" name="id" placeholder="请输入内容"
+							class="layui-input form-input" data-th-Value="${entity?.id}">
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-inline layui-col-md8">
+					<label class="layui-form-label form-lable" style="width: 100px;">
+						<i class="iconfont must" style="display: inline;">*</i> 指标名称
+					</label>
+					<div class="layui-input-inline input-inline">
+						<input type="text" id="indexName" name="indexName"
+							placeholder="请输入内容" class="layui-input form-input"
+							data-th-Value="${entity?.indexName}">
+					</div>
+				</div>
+			</div>
+			<!-- <div class="layui-form-item">
+				<div class="layui-inline layui-col-md8">
+					<label class="layui-form-label form-lable" style="width: 100px;">规则设置</label>
+					<div class="layui-input-inline input-inline"
+						style="width: 15% !important;">
+						<input type="text" id="ruleType1" name="ruleType1"
+							class="layui-input form-input input-select" placeholder="请输字段值"
+							data-th-data-result="${RULE_TYPE1}" allowClear="true"
+							childrenIds="ruleType2,ruleType3"
+							data-th-placeholder="#{ReportWorkManage002.ruleType1}"> </input>
+					</div>
+					<div class="layui-input-inline input-inline"
+						style="width: 15% !important;">
+						<input id="ruleType2" name="ruleType2"
+							class="layui-input form-input input-select" placeholder="请输比较条件"
+							data-th-formatoption="false" data-th-data-result="${RULE_TYPE2}"
+							allowClear="true"
+							data-th-placeholder="#{ReportWorkManage002.ruleType2}"> </input>
+					</div>
+					<div class="layui-input-inline input-inline"
+						style="width: 15% !important;">
+						<input id="ruleType3" name="ruleType3"
+							class="layui-input form-input input-select" placeholder="请输值类型"
+							data-th-formatoption="false" data-th-data-result="${RULE_TYPE3}"
+							allowClear="true"
+							data-th-placeholder="#{ReportWorkManage002.ruleType3}"> </input>
+					</div>
+					<div class="layui-input-inline input-inline"
+						style="width: 15% !important;">
+						<div id="profitTypeSelect">
+							<input id="profitType" name="profitType"
+								class="layui-input form-input input-select"
+								placeholder="请选择收益类型" data-th-formatoption="false"
+								data-th-data-result="${PROFIT_TYPE}" allowClear="true">
+							</input>
+						</div>
+						<input type="text" id="chooseDate" name="chooseDate"
+							placeholder="请选择日期"
+							class="layui-input form-input input-dateSelect" allowClear="true"
+							data-th-initValue="${sysDate}"> </input>
+						<div id="raiseTypeSelect">
+							<input id="raiseType" name="raiseType"
+								class="layui-input form-input input-select"
+								placeholder="请选择募集方式" data-th-formatoption="false"
+								data-th-data-result="${RAISE_TYPE}" allowClear="true"> </input>
+						</div>
+					</div>
+					<div class="layui-inline">
+						<button type="button" class="layui-btn layui-btn-sm btn-default"
+							id="ReportContentEnum002_btn_add">
+							<i class="iconfont icon-add"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+					<label class="layui-form-label form-lable" style="width: 100px;">已设规则</label>
+					<div class="layui-inline" style="width: 60%;">
+						<table class="layui-table" id="settedRule" name="settedRule"></table>
+					</div>
+			</div> -->
+			<div class="layui-form-item">
+				<div class="layui-inline layui-col-md8">
+					<label class="layui-form-label form-lable" style="width: 100px;">指标描述</label>
+					<div class="layui-input-inline input-inline">
+						<textarea name="indexDescribe"
+							data-th-text="${entity?.indexDescribe}" class="layui-textarea"
+							placeholder="请输入内容"
+							data-th-placeholder="#{SysCommon.placeholder}"></textarea>
+					</div>
+				</div>
+			</div>
+		</form>
+
+		<div class="layui-col-md11" style="margin: 50px;">
+			<div class="text-center">
+				<a id="ReportContentEnum002_btn_save"
+					class="layui-btn layui-btn-sm btn-save"
+					data-th-text="#{SysCommon.save}">保存</a> <a
+					id="ReportContentEnum002_btn_submit"
+					class="layui-btn layui-btn-sm btn-submit"
+					data-th-text="#{SysCommon.submit}">提交</a> <a
+					id="ReportContentEnum002_btn_cancel"
+					class="layui-btn layui-btn-sm btn-cancel"
+					data-th-text="#{SysCommon.cancel}">取消</a>
+			</div>
+		</div>
+	</div>
+	<div layout:fragment="script">
+		<script
+			data-th-src="@{/js/disclosure/information/config/reportcontentenum/ReportContentEnum002.js}"
+			type="text/javascript"></script>
+	</div>
+</body>
+</html>

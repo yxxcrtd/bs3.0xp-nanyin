@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorator="~{layout/default}">
+<head>
+<title data-th-text="#{SystemActorAssign002}">角色分配</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <form class="layui-form joyin-form-wrap" id="searchForm">
+            <input type="hidden" id="repId" name="repId"  class="layui-input form-input">
+	       <input type="hidden" id="flag" name="flag"  class="layui-input form-input">
+	       <input type="hidden" id="datas" name="datas"  class="layui-input form-input">
+            <div class="layui-form-item">
+				<div class="layui-inline layui-col-md12">
+		        	<div class="layui-inline layui-col-md5">
+		        		<table class="layui-table" id="roleTable"></table>
+		        	</div>
+		        	<div class="layui-inline layui-col-md1">&nbsp;</div>
+		            <div class="layui-inline layui-col-md5">
+		        		<table class="layui-table" id="userRoleTable" name="selectedItem" data-th-title="#{SystemActorAssign001.roleName}"></table>
+		        	</div>
+		         </div>		        
+	        </div>
+            <input type="hidden" id="createDept" name="createDept" data-th-value="${entity?.createDept}">
+        </form>
+        <div class="layui-col-md11" style="margin:50px;">
+            <div class="text-center">
+		        <a id="SysActorAssign002_btn_save" class="layui-btn layui-btn-sm btn-save" data-th-text="#{SysCommon.save}">保存</a>
+		        <a id="SysActorAssign002_btn_cancel" class="layui-btn layui-btn-sm btn-cancel" data-th-text="#{SysCommon.cancel}">取消</a>
+            </div>
+        </div>
+    </div>
+    <div layout:fragment="script">
+        <script data-th-src="@{/js/disclosure/information/reportpower/ReportMenuPowerConfig002.js}" type="text/javascript"></script>
+        <script data-th-inline="javascript" type="text/javascript">
+        var reportName =/*[[${reportName}]]*/;
+        var repId = /*[[${repId}]]*/;
+        $("#repId").val(repId);
+        var flag =/*[[${flag}]]*/;
+        var datas = /*[[${datas}]]*/;
+        $("#flag").val(flag);
+        $("#datas").val(datas);
+        </script>
+    </div>
+</body>
+
+</html>

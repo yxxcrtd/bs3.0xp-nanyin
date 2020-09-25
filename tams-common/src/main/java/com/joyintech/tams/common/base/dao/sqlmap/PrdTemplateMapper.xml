@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.PrdTemplateMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.PrdTemplate" >
+        <id column="TEMPLATE_ID" property="templateId" jdbcType="VARCHAR" />
+        <id column="TEMPLATE_NAME" property="templateName" jdbcType="VARCHAR" />
+        <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="DEAL_MODE" property="dealMode" jdbcType="VARCHAR" />
+        <result column="OPERATION_TYPE" property="operationType" jdbcType="VARCHAR" />
+        <result column="PROFIT_FLAG" property="profitFlag" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.joyintech.tams.common.base.entity.PrdTemplate" extends="BaseResultMap" >
+        <result column="TEMPLATE_CONTENT" property="templateContent" jdbcType="CLOB" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TEMPLATE_ID TEMPLATE_ID, TEMPLATE_NAME TEMPLATE_NAME, PROFIT_TYPE PROFIT_TYPE, REMARK REMARK, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, DEAL_MODE DEAL_MODE, OPERATION_TYPE OPERATION_TYPE, PROFIT_FLAG PROFIT_FLAG
+    </sql>
+    <sql id="Blob_Column_List" >
+        TEMPLATE_CONTENT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PrdTemplateMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.PrdTemplateMapper.Blob_Column_List" />
+        from PRD_TEMPLATE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PrdTemplateMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.PrdTemplateMapper.Blob_Column_List" />
+        from PRD_TEMPLATE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.joyintech.tams.common.base.entity.PrdTemplateKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PrdTemplateMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.PrdTemplateMapper.Blob_Column_List" />
+        from PRD_TEMPLATE
+        where TEMPLATE_ID = #{templateId,jdbcType=VARCHAR}
+          and TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PrdTemplateKey" >
+        delete from PRD_TEMPLATE
+        where TEMPLATE_ID = #{templateId,jdbcType=VARCHAR}
+          and TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PrdTemplate" >
+        insert into PRD_TEMPLATE (TEMPLATE_ID, TEMPLATE_NAME, PROFIT_TYPE, 
+            REMARK, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            DEAL_MODE, OPERATION_TYPE, PROFIT_FLAG, 
+            TEMPLATE_CONTENT)
+        values (#{templateId,jdbcType=VARCHAR}, #{templateName,jdbcType=VARCHAR}, #{profitType,jdbcType=VARCHAR}, 
+            #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{dealMode,jdbcType=VARCHAR}, #{operationType,jdbcType=VARCHAR}, #{profitFlag,jdbcType=VARCHAR}, 
+            #{templateContent,jdbcType=CLOB})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PrdTemplate" >
+        insert into PRD_TEMPLATE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="templateId != null" >
+                TEMPLATE_ID,
+            </if>
+            <if test="templateName != null" >
+                TEMPLATE_NAME,
+            </if>
+            <if test="profitType != null" >
+                PROFIT_TYPE,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="dealMode != null" >
+                DEAL_MODE,
+            </if>
+            <if test="operationType != null" >
+                OPERATION_TYPE,
+            </if>
+            <if test="profitFlag != null" >
+                PROFIT_FLAG,
+            </if>
+            <if test="templateContent != null" >
+                TEMPLATE_CONTENT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="templateId != null" >
+                #{templateId,jdbcType=VARCHAR},
+            </if>
+            <if test="templateName != null" >
+                #{templateName,jdbcType=VARCHAR},
+            </if>
+            <if test="profitType != null" >
+                #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dealMode != null" >
+                #{dealMode,jdbcType=VARCHAR},
+            </if>
+            <if test="operationType != null" >
+                #{operationType,jdbcType=VARCHAR},
+            </if>
+            <if test="profitFlag != null" >
+                #{profitFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="templateContent != null" >
+                #{templateContent,jdbcType=CLOB},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PrdTemplate" >
+        insert into PRD_TEMPLATE(TEMPLATE_ID, TEMPLATE_NAME, PROFIT_TYPE, REMARK, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, DEAL_MODE, OPERATION_TYPE, PROFIT_FLAG, 
+        TEMPLATE_CONTENT)
+        select TEMPLATE_ID, TEMPLATE_NAME, PROFIT_TYPE, REMARK, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, DEAL_MODE, OPERATION_TYPE, PROFIT_FLAG, 
+            TEMPLATE_CONTENT
+             from PRD_TEMPLATE
+             where 1 = 1 and TEMPLATE_ID = #{templateId,jdbcType=VARCHAR} and TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.PrdTemplate" >
+        update PRD_TEMPLATE
+        <set >
+            <if test="profitType != null" >
+                PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dealMode != null" >
+                DEAL_MODE = #{dealMode,jdbcType=VARCHAR},
+            </if>
+            <if test="operationType != null" >
+                OPERATION_TYPE = #{operationType,jdbcType=VARCHAR},
+            </if>
+            <if test="profitFlag != null" >
+                PROFIT_FLAG = #{profitFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="templateContent != null" >
+                TEMPLATE_CONTENT = #{templateContent,jdbcType=CLOB},
+            </if>
+        </set>
+        where TEMPLATE_ID = #{templateId,jdbcType=VARCHAR}
+          and TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.joyintech.tams.common.base.entity.PrdTemplate" >
+        update PRD_TEMPLATE
+        set PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            DEAL_MODE = #{dealMode,jdbcType=VARCHAR},
+            OPERATION_TYPE = #{operationType,jdbcType=VARCHAR},
+            PROFIT_FLAG = #{profitFlag,jdbcType=VARCHAR},
+            TEMPLATE_CONTENT = #{templateContent,jdbcType=CLOB}
+        where TEMPLATE_ID = #{templateId,jdbcType=VARCHAR}
+          and TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PrdTemplate" >
+        update PRD_TEMPLATE
+        set PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            DEAL_MODE = #{dealMode,jdbcType=VARCHAR},
+            OPERATION_TYPE = #{operationType,jdbcType=VARCHAR},
+            PROFIT_FLAG = #{profitFlag,jdbcType=VARCHAR}
+        where TEMPLATE_ID = #{templateId,jdbcType=VARCHAR}
+          and TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR}
+    </update>
+</mapper>

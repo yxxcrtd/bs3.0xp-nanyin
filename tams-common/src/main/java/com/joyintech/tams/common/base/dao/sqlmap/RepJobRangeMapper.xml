@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepJobRangeMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepJobRange" >
+        <id column="ID" property="id" jdbcType="VARCHAR" />
+        <result column="JOB_ID" property="jobId" jdbcType="VARCHAR" />
+        <result column="FLAG" property="flag" jdbcType="VARCHAR" />
+        <result column="RULE_TYPE1" property="ruleType1" jdbcType="VARCHAR" />
+        <result column="RULE_TYPE2" property="ruleType2" jdbcType="VARCHAR" />
+        <result column="RULE_TYPE3" property="ruleType3" jdbcType="VARCHAR" />
+        <result column="RULE_TYPE4" property="ruleType4" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ID ID, JOB_ID JOB_ID, FLAG FLAG, RULE_TYPE1 RULE_TYPE1, RULE_TYPE2 RULE_TYPE2, RULE_TYPE3 RULE_TYPE3, 
+        RULE_TYPE4 RULE_TYPE4, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepJobRangeMapper.Base_Column_List" />
+        from REP_JOB_RANGE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepJobRangeMapper.Base_Column_List" />
+        from REP_JOB_RANGE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepJobRangeMapper.Base_Column_List" />
+        from REP_JOB_RANGE
+        where ID = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from REP_JOB_RANGE
+        where ID = #{id,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepJobRange" >
+        insert into REP_JOB_RANGE (ID, JOB_ID, FLAG, 
+            RULE_TYPE1, RULE_TYPE2, RULE_TYPE3, 
+            RULE_TYPE4, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{id,jdbcType=VARCHAR}, #{jobId,jdbcType=VARCHAR}, #{flag,jdbcType=VARCHAR}, 
+            #{ruleType1,jdbcType=VARCHAR}, #{ruleType2,jdbcType=VARCHAR}, #{ruleType3,jdbcType=VARCHAR}, 
+            #{ruleType4,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepJobRange" >
+        insert into REP_JOB_RANGE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                ID,
+            </if>
+            <if test="jobId != null" >
+                JOB_ID,
+            </if>
+            <if test="flag != null" >
+                FLAG,
+            </if>
+            <if test="ruleType1 != null" >
+                RULE_TYPE1,
+            </if>
+            <if test="ruleType2 != null" >
+                RULE_TYPE2,
+            </if>
+            <if test="ruleType3 != null" >
+                RULE_TYPE3,
+            </if>
+            <if test="ruleType4 != null" >
+                RULE_TYPE4,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="jobId != null" >
+                #{jobId,jdbcType=VARCHAR},
+            </if>
+            <if test="flag != null" >
+                #{flag,jdbcType=VARCHAR},
+            </if>
+            <if test="ruleType1 != null" >
+                #{ruleType1,jdbcType=VARCHAR},
+            </if>
+            <if test="ruleType2 != null" >
+                #{ruleType2,jdbcType=VARCHAR},
+            </if>
+            <if test="ruleType3 != null" >
+                #{ruleType3,jdbcType=VARCHAR},
+            </if>
+            <if test="ruleType4 != null" >
+                #{ruleType4,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepJobRange" >
+        insert into REP_JOB_RANGE(ID, JOB_ID, FLAG, RULE_TYPE1, RULE_TYPE2, RULE_TYPE3, RULE_TYPE4, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select ID, JOB_ID, FLAG, RULE_TYPE1, RULE_TYPE2, RULE_TYPE3, RULE_TYPE4, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from REP_JOB_RANGE
+             where 1 = 1 and ID = #{id,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepJobRange" >
+        update REP_JOB_RANGE
+        <set >
+            <if test="jobId != null" >
+                JOB_ID = #{jobId,jdbcType=VARCHAR},
+            </if>
+            <if test="flag != null" >
+                FLAG = #{flag,jdbcType=VARCHAR},
+            </if>
+            <if test="ruleType1 != null" >
+                RULE_TYPE1 = #{ruleType1,jdbcType=VARCHAR},
+            </if>
+            <if test="ruleType2 != null" >
+                RULE_TYPE2 = #{ruleType2,jdbcType=VARCHAR},
+            </if>
+            <if test="ruleType3 != null" >
+                RULE_TYPE3 = #{ruleType3,jdbcType=VARCHAR},
+            </if>
+            <if test="ruleType4 != null" >
+                RULE_TYPE4 = #{ruleType4,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepJobRange" >
+        update REP_JOB_RANGE
+        set JOB_ID = #{jobId,jdbcType=VARCHAR},
+            FLAG = #{flag,jdbcType=VARCHAR},
+            RULE_TYPE1 = #{ruleType1,jdbcType=VARCHAR},
+            RULE_TYPE2 = #{ruleType2,jdbcType=VARCHAR},
+            RULE_TYPE3 = #{ruleType3,jdbcType=VARCHAR},
+            RULE_TYPE4 = #{ruleType4,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+</mapper>

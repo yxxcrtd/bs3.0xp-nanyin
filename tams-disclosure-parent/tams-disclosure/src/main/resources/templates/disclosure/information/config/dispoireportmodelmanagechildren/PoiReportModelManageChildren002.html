@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layout/default}">
+<head>
+    <title data-th-text="#{PoiReportModelManageChildren002}">poi查询sql管理新建</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <form class="layui-form joyin-form-wrap pro-module-form" id="submitForm">
+        <div class="pro-module-wrap">
+            <div class="pro-module">
+                <div class="pro-module-item">
+                    <div class="layui-form-item">
+                        <div class="form-inline-wrap">
+                            <label class="layui-form-label form-label-wrap"
+                                   data-th-text="#{PoiReportModelManageChildren002.id}">子表编号</label>
+                            <div class="layui-input-inline input-inline">
+                                <input type="text" name="id" id="id"
+                                       class="layui-input form-input"
+                                       required
+                                       data-th-placeholder="#{SysCommon.placeholder}"
+                                       data-th-value='${entity?.id}' ></span>
+                            </div>
+                        </div>
+                        <div class="form-inline-wrap">
+                            <label class="layui-form-label form-label-wrap"
+                                   data-th-text="#{PoiReportModelManageChildren002.subName}">子表名称</label>
+                            <div class="layui-input-inline input-inline">
+                                <input type="text" name="subName" id="subName"
+                                       class="layui-input form-input"
+                                       required
+                                       data-th-placeholder="#{SysCommon.placeholder}"
+                                       data-th-value='${entity?.subName}' ></span>
+                            </div>
+                        </div>
+                        <div class="form-inline-wrap">
+                            <label class="layui-form-label form-label-wrap"
+                                   data-th-text="#{PoiReportModelManageChildren002.tabNum}">模板编号</label>
+                            <div class="layui-input-inline input-inline">
+                                <select name="tabNum" id="tabNum"
+                                        class="layui-input form-input input-select"
+                                        data-th-placeholder="#{SysCommon.placeholder}"
+                                        data-th-initValue='${entity?.tabNum}'
+                                        data-url='queryTabNumList' required>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="form-inline-wrap">
+                            <label class="layui-form-label form-label-wrap"
+                                   data-th-text="#{PoiReportModelManageChildren002.subType}">模板类型</label>
+                            <div class="layui-input-inline input-inline">
+                                <select name="subType" id="subType"
+                                        class="layui-input form-input input-select"
+                                        data-th-placeholder="#{SysCommon.placeholder}"
+                                        data-th-initValue='${entity?.subType}'
+                                        data-th-data-result="${DIS_TEMP_TYPE}" required>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-inline-wrap">
+                            <label class="layui-form-label form-label-wrap"
+                                   data-th-text="#{PoiReportModelManageChildren002.subFormType}">表格类型</label>
+                            <div class="layui-input-inline input-inline">
+                                <select name="subFormType" id="subFormType"
+                                        class="layui-input form-input input-select"
+                                        data-th-placeholder="#{SysCommon.placeholder}"
+                                        data-th-initValue='${entity?.subFormType}'
+                                        data-th-data-result="${DIS_TABLE_TYPE}" required>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-inline-wrap">
+                            <label class="layui-form-label form-label-wrap"
+                                   data-th-text="#{PoiReportModelManageChildren002.subWidth}">表格宽度</label>
+                            <div class="layui-input-inline input-inline">
+                                <select name="subWidth" id="subWidth"
+                                        class="layui-input form-input input-select"
+                                        data-th-placeholder="#{SysCommon.placeholder}"
+                                        data-th-initValue='${entity?.subWidth}'
+                                        data-th-data-result="${DIS_TABLE_WIDTH}" required>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="form-inline-wrap">
+                            <label class="layui-form-label form-label-wrap"
+                                   data-th-text="#{PoiReportModelManageChildren002.subTmpType}">表格样式</label>
+                            <div class="layui-input-inline input-inline">
+                                <select name="subTmpType" id="subTmpType"
+                                        class="layui-input form-input input-select"
+                                        data-th-placeholder="#{SysCommon.placeholder}"
+                                        data-th-initValue='${entity?.subTmpType}'
+                                        data-th-data-result="${DIS_TABLE_STYLE}" required>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-inline-wrap">
+                            <label class="layui-form-label form-label-wrap"
+                                   data-th-text="#{PoiReportModelManageChildren002.subChartType}">图表类型</label>
+                            <div class="layui-input-inline input-inline">
+                                <select name="subChartType" id="subChartType"
+                                        class="layui-input form-input input-select"
+                                        data-th-placeholder="#{SysCommon.placeholder}"
+                                        data-th-initValue='${entity?.subChartType}'
+                                        data-th-data-result="${DIS_CHART_STYLE}" required>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-inline-wrap">
+                            <label class="layui-form-label form-label-wrap"
+                                   data-th-text="#{PoiReportModelManageChildren002.subDefualt}">默认反馈</label>
+                            <div class="layui-input-inline input-inline">
+                                <input type="text" name="subDefualt" id="subDefualt"
+                                       class="layui-input form-input"
+                                       data-th-placeholder="#{SysCommon.placeholder}"
+                                       data-th-value='${entity?.subDefualt}' ></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="form-inline-wrap">
+                            <label class="layui-form-label form-label-wrap"
+                                   data-th-text="#{PoiReportModelManageChildren002.subChartConf}">图表配置</label>
+                            <div class="layui-input-inline input-inline">
+                                <textarea id="subChartConf" name="subChartConf"
+                                          class="layui-textarea"
+                                          data-th-placeholder="#{SysCommon.placeholder}"
+                                          data-th-text="${entity?.subChartConf}"
+                                ></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row text-center stepbar">
+            <a id="PoiReportModelManageChildren002_btn_submit"
+               class="layui-btn layui-btn-sm btn-submit"
+               data-th-text="#{SysCommon.save}">提交</a>
+            <a id="PoiReportModelManageChildren002_btn_cancel"
+               class="layui-btn layui-btn-sm btn-cancel"
+               data-th-text="#{SysCommon.cancel}">取消</a>
+        </div>
+    </form>
+</div>
+<div layout:fragment="script">
+    <script data-th-inline="javascript" type="text/javascript">
+        var BILL_BASE_FEE_KIND = /*[[${BILL_BASE_FEE_KIND}]]*/'[]'; // 计费基数_费用品种
+        var BASIS_SELECT = /*[[${BASIS}]]*/'[]'; // 计息基础
+        var PINAN_ASSET_TYPE = /*[[${PINAN_ASSET_TYPE}]]*/'[]'; // 计息基础
+
+        var PROFIT_TYPE_01 = /*[[${PROFIT_TYPE_01}]]*/'01'; // 数据字典.收益类型_净值
+        var PROFIT_TYPE_02 = /*[[${PROFIT_TYPE_02}]]*/'02'; // 数据字典.收益类型_预期收益
+        var PROFIT_TYPE_03 = /*[[${PROFIT_TYPE_03}]]*/'03'; // 数据字典.收益类型_货币
+        var DISPOSE_PATTERN_01 = /*[[${DISPOSE_PATTERN_01}]]*/'01'; // 数据字典.处理模式_普通
+        var DISPOSE_PATTERN_10 = /*[[${DISPOSE_PATTERN_10}]]*/'10'; // 数据字典.处理模式_周期型
+        var DISPOSE_PATTERN_11 = /*[[${DISPOSE_PATTERN_11}]]*/'11'; // 数据字典.处理模式_分档
+        var ISSUE_MODE_01 = /*[[${ISSUE_MODE_01}]]*/'01'; // 数据字典.开放类型_封闭式
+        var ISSUE_MODE_02 = /*[[${ISSUE_MODE_02}]]*/'02'; // 数据字典.开放类型_开放式
+        var SVR_OPERATEMODE_DECLARE_01 = /*[[${SVR_OPERATEMODE_DECLARE_01}]]*/'01'; // 数据字典.产品运作模式_封闭式净值型
+        var SVR_OPERATEMODE_DECLARE_02 = /*[[${SVR_OPERATEMODE_DECLARE_02}]]*/'02'; // 数据字典.产品运作模式_封闭式非净值型
+        var SVR_OPERATEMODE_DECLARE_03 = /*[[${SVR_OPERATEMODE_DECLARE_03}]]*/'03'; // 数据字典.产品运作模式_开放式净值型
+        var SVR_OPERATEMODE_DECLARE_04 = /*[[${SVR_OPERATEMODE_DECLARE_04}]]*/'04'; // 数据字典.产品运作模式_开放式非净值型
+        var YES = /*[[${YES}]]*/'Y'; // 数据字典.是否_是
+        var NO = /*[[${NO}]]*/'N'; // 数据字典.是否_否
+        var TERM_TYPE_01 = /*[[${TERM_TYPE_01}]]*/'01'; // 数据字典.期限类型_单一固定期限
+        var TERM_TYPE_02 = /*[[${TERM_TYPE_02}]]*/'02'; // 数据字典.期限类型_多固定期限
+        var TERM_TYPE_03 = /*[[${TERM_TYPE_03}]]*/'03'; // 数据字典.期限类型_无固定期限
+
+        var pageId = /*[[${pageId}]]*/''; // 画面Id
+        var prodId = /*[[${prodId}]]*/''; // prodId
+        var FEEINFO_LIST = /*[[${FEEINFO_LIST}]]*/'';
+    </script>
+    <script data-th-src="@{/js/disclosure/information/config/dispoireportmodelmanagechildren/PoiReportModelManageChildren002.js}" type="text/javascript"></script>
+</div>
+</body>
+</html>

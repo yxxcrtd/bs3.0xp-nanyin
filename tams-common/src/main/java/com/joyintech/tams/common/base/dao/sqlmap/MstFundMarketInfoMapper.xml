@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.MstFundMarketInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstFundMarketInfo" >
+        <id column="FUND_CODE" property="fundCode" jdbcType="VARCHAR" />
+        <id column="VALUE_DATE" property="valueDate" jdbcType="DATE" />
+        <result column="CLOSE_PRICE" property="closePrice" jdbcType="DECIMAL" />
+        <result column="AVERAGE_PRICE" property="averagePrice" jdbcType="DECIMAL" />
+        <result column="MAX_PRICE" property="maxPrice" jdbcType="DECIMAL" />
+        <result column="MIN_PRICE" property="minPrice" jdbcType="DECIMAL" />
+        <result column="BUY_ONE_PRICE" property="buyOnePrice" jdbcType="DECIMAL" />
+        <result column="SELL_ONE_PRICE" property="sellOnePrice" jdbcType="DECIMAL" />
+        <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        FUND_CODE FUND_CODE, VALUE_DATE VALUE_DATE, CLOSE_PRICE CLOSE_PRICE, AVERAGE_PRICE AVERAGE_PRICE, 
+        MAX_PRICE MAX_PRICE, MIN_PRICE MIN_PRICE, BUY_ONE_PRICE BUY_ONE_PRICE, SELL_ONE_PRICE SELL_ONE_PRICE, 
+        INPUT_TYPE INPUT_TYPE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstFundMarketInfoMapper.Base_Column_List" />
+        from MST_FUND_MARKET_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstFundMarketInfoMapper.Base_Column_List" />
+        from MST_FUND_MARKET_INFO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.MstFundMarketInfoKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstFundMarketInfoMapper.Base_Column_List" />
+        from MST_FUND_MARKET_INFO
+        where FUND_CODE = #{fundCode,jdbcType=VARCHAR}
+          and VALUE_DATE = #{valueDate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstFundMarketInfoKey" >
+        delete from MST_FUND_MARKET_INFO
+        where FUND_CODE = #{fundCode,jdbcType=VARCHAR}
+          and VALUE_DATE = #{valueDate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.MstFundMarketInfo" >
+        insert into MST_FUND_MARKET_INFO (FUND_CODE, VALUE_DATE, CLOSE_PRICE, 
+            AVERAGE_PRICE, MAX_PRICE, MIN_PRICE, 
+            BUY_ONE_PRICE, SELL_ONE_PRICE, INPUT_TYPE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{fundCode,jdbcType=VARCHAR}, #{valueDate,jdbcType=DATE}, #{closePrice,jdbcType=DECIMAL}, 
+            #{averagePrice,jdbcType=DECIMAL}, #{maxPrice,jdbcType=DECIMAL}, #{minPrice,jdbcType=DECIMAL}, 
+            #{buyOnePrice,jdbcType=DECIMAL}, #{sellOnePrice,jdbcType=DECIMAL}, #{inputType,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstFundMarketInfo" >
+        insert into MST_FUND_MARKET_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="fundCode != null" >
+                FUND_CODE,
+            </if>
+            <if test="valueDate != null" >
+                VALUE_DATE,
+            </if>
+            <if test="closePrice != null" >
+                CLOSE_PRICE,
+            </if>
+            <if test="averagePrice != null" >
+                AVERAGE_PRICE,
+            </if>
+            <if test="maxPrice != null" >
+                MAX_PRICE,
+            </if>
+            <if test="minPrice != null" >
+                MIN_PRICE,
+            </if>
+            <if test="buyOnePrice != null" >
+                BUY_ONE_PRICE,
+            </if>
+            <if test="sellOnePrice != null" >
+                SELL_ONE_PRICE,
+            </if>
+            <if test="inputType != null" >
+                INPUT_TYPE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="fundCode != null" >
+                #{fundCode,jdbcType=VARCHAR},
+            </if>
+            <if test="valueDate != null" >
+                #{valueDate,jdbcType=DATE},
+            </if>
+            <if test="closePrice != null" >
+                #{closePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="averagePrice != null" >
+                #{averagePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="maxPrice != null" >
+                #{maxPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="minPrice != null" >
+                #{minPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="buyOnePrice != null" >
+                #{buyOnePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="sellOnePrice != null" >
+                #{sellOnePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="inputType != null" >
+                #{inputType,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.MstFundMarketInfo" >
+        insert into MST_FUND_MARKET_INFO(FUND_CODE, VALUE_DATE, CLOSE_PRICE, AVERAGE_PRICE, 
+        MAX_PRICE, MIN_PRICE, BUY_ONE_PRICE, SELL_ONE_PRICE, INPUT_TYPE, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select FUND_CODE, VALUE_DATE, CLOSE_PRICE, AVERAGE_PRICE, 
+            MAX_PRICE, MIN_PRICE, BUY_ONE_PRICE, SELL_ONE_PRICE, INPUT_TYPE, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from MST_FUND_MARKET_INFO
+             where 1 = 1 and FUND_CODE = #{fundCode,jdbcType=VARCHAR} and VALUE_DATE = #{valueDate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.MstFundMarketInfo" >
+        update MST_FUND_MARKET_INFO
+        <set >
+            <if test="closePrice != null" >
+                CLOSE_PRICE = #{closePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="averagePrice != null" >
+                AVERAGE_PRICE = #{averagePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="maxPrice != null" >
+                MAX_PRICE = #{maxPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="minPrice != null" >
+                MIN_PRICE = #{minPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="buyOnePrice != null" >
+                BUY_ONE_PRICE = #{buyOnePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="sellOnePrice != null" >
+                SELL_ONE_PRICE = #{sellOnePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="inputType != null" >
+                INPUT_TYPE = #{inputType,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where FUND_CODE = #{fundCode,jdbcType=VARCHAR}
+          and VALUE_DATE = #{valueDate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstFundMarketInfo" >
+        update MST_FUND_MARKET_INFO
+        set CLOSE_PRICE = #{closePrice,jdbcType=DECIMAL},
+            AVERAGE_PRICE = #{averagePrice,jdbcType=DECIMAL},
+            MAX_PRICE = #{maxPrice,jdbcType=DECIMAL},
+            MIN_PRICE = #{minPrice,jdbcType=DECIMAL},
+            BUY_ONE_PRICE = #{buyOnePrice,jdbcType=DECIMAL},
+            SELL_ONE_PRICE = #{sellOnePrice,jdbcType=DECIMAL},
+            INPUT_TYPE = #{inputType,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where FUND_CODE = #{fundCode,jdbcType=VARCHAR}
+          and VALUE_DATE = #{valueDate,jdbcType=DATE}
+    </update>
+</mapper>

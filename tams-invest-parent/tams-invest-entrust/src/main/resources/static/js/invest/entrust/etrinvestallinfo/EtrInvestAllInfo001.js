@@ -1,0 +1,430 @@
+/**
+ * 所有投资查询
+ */
+(function(){
+    /**
+     * 获取查询参数
+     */
+    var searchform =function(){ 
+        var data = $.serializeToObject('#searchForm');
+        if($('#finprodType2').val()){
+           data.finprodType2 = $('#finprodType2').val().join(',');
+        }
+        if($('#portfolioId').val()){
+            data.portfolioId = $('#portfolioId').val().join(',');
+         }
+        //利率互换交易方向  后台转换
+        if($('#ps').val() && $('#ps').select2('data')[0].col ==IRS_TYPE ){
+        	data.ps= IRS_TYPE+data.ps
+        }
+        return data;
+    };
+
+    /**
+     * 定义数据表格
+     */
+    var table=$("#dataTable").joyintable({
+        ajax: {
+            url: 'findPage',
+            type: 'POST',
+            data: function() {
+                return searchform();
+            }
+        },
+        dblclick:function(table, data) {
+            data.operateType = "dblclick";
+            data.pageModel=PAGE_MODEL_REFERENCE;
+            if(data.assetType == F01 && data.ps != PS_T04 && data.ps != PS_T49){
+                Joyin.dialog(JoyinUtil.getLabel("EtrInvestAllInfo001.etrBond"),
+                         basePath
+                        + "invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/init",
+                        "95%", "80%", data,
+                        function(){table.reload();});
+            }else if(data.assetType == F07){
+                Joyin.dialog(JoyinUtil.getLabel("EtrInvestAllInfo001.etrBack"),
+                        basePath
+                       + "invest/entrust/etrrepo/EtrRepo002/init",
+                       "95%", "90%", data,
+                       function(){table.reload();});
+                // add by zhangpuyu 2910/10/18 修复委托查询买断式回购双击跳转失败start
+            }else if(data.assetType == F10) {
+                Joyin.dialog(JoyinUtil.getLabel("EtrInvestAllInfo001.etrBack"),
+                    basePath
+                    + "invest/entrust/etrboutrepo/EtrBoutRepo002/init",
+                    "95%", "80%", data,
+                    function (){table.reload();});
+            }else if(data.assetType == F02){
+                // add by zhangpuyu 2910/10/18 修复委托查询买断式回购双击跳转失败 end
+                Joyin.dialog(JoyinUtil.getLabel("EtrInvestAllInfo001.etrFund"),
+                        basePath
+                       + "invest/entrust/etrfund/EtrFund002/init",
+                       "95%", "80%", data,
+                       function(){table.reload();});
+            }else if(data.assetType == F05){
+                Joyin.dialog(JoyinUtil.getLabel("EtrInvestAllInfo001.etrBrow"),
+                        basePath
+                       + "invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/init",
+                       "95%", "80%", data,
+                       function(){table.reload();});
+            }else if(data.assetType == F08){
+                Joyin.dialog(JoyinUtil.getLabel("EtrInvestAllInfo001.etrLend"),
+                        basePath
+                       + "invest/entrust/etrlendspecinfo/EtrLendSpecInfo002/init",
+                       "95%", "80%", data,
+                       function(){table.reload();});
+            }else if(data.assetType == F04){
+                Joyin.dialog(JoyinUtil.getLabel("EtrInvestAllInfo001.etrPlanN"),
+                        basePath
+                       + "invest/entrust/etrplanassetn/EtrPlanAssetN002/init",
+                       "95%", "80%", data,
+                       function(){table.reload();});
+            }else if(data.assetType == F03){
+                Joyin.dialog(JoyinUtil.getLabel("EtrInvestAllInfo001.etrPlanR"),
+                        basePath
+                       + "invest/entrust/etrplanassetr/EtrPlanAssetR002/init",
+                       "95%", "80%", data,
+                       function(){table.reload();});
+            }else if(data.assetType == F06){
+                Joyin.dialog(JoyinUtil.getLabel("EtrInvestAllInfo001.etrProject"),
+                        basePath
+                       + "invest/entrust/etrproject/EtrProject002/init",
+                       "95%", "80%", data,
+                       function(){table.reload();});
+            }else if(data.assetType == F09){
+                Joyin.dialog(JoyinUtil.getLabel("EtrInvestAllInfo001.etrPlanC"),
+                        basePath
+                       + "invest/entrust/etrplanassetc/EtrPlanAssetC002/init",
+                       "95%", "80%", data,
+                       function(){table.reload();});
+            }else if(data.assetType == F11){
+                Joyin.dialog(JoyinUtil.getLabel("EtrStock002.refence"),
+                    basePath
+                    + "invest/entrust/etrstock/EtrStock002/init",
+                    "95%", "80%", data,
+                    function(){table.reload();});
+            }else if(data.assetType == F12){
+                Joyin.dialog(JoyinUtil.getLabel("EtrSecLend.refrence"),
+                        basePath
+                       + "invest/entrust/etrseclend/EtrSecLend002/init",
+                       "95%", "80%", {
+                           pageModel:PAGE_MODEL_REFERENCE,
+                           entrustId:data.entrustId,
+                           targetFinprodId:data.finprodId,
+                           portfolioId:data.portfolioId
+                       },
+                       function(){table.reload();});
+            }else if(data.assetType == F13){
+                Joyin.dialog(JoyinUtil.getLabel("EtrWtSpotex.dblclick"),
+                        basePath
+                       + "invest/entrust/etrwtspotex/EtrWtSpotex002/init",
+                       "95%", "80%", {
+                           pageModel:PAGE_MODEL_REFERENCE,
+                           entrustId:data.entrustId,
+                           targetFinprodId:data.finprodId,
+                           portfolioId:data.portfolioId
+                       },
+                       function(){table.reload();});
+            }else if(data.assetType == F14){
+                Joyin.dialog(JoyinUtil.getLabel("EtrForwex002.refrence"),
+                        basePath
+                       + "invest/entrust/etrforwex/EtrForwex002/init",
+                       "95%", "80%", {
+                           pageModel:PAGE_MODEL_REFERENCE,
+                           entrustId:data.entrustId,
+                           targetFinprodId:data.finprodId,
+                           portfolioId:data.portfolioId
+                       },
+                       function(){table.reload();});
+            }else if(data.assetType == F15){
+                Joyin.dialog(JoyinUtil.getLabel("EtrWtFxswap002.refrence"),
+                        basePath
+                       + "invest/entrust/etrwtfxswap/EtrWtFxswap002/init",
+                       "95%", "80%", {
+                           pageModel:PAGE_MODEL_REFERENCE,
+                           entrustId:data.entrustId,
+                           targetFinprodId:data.finprodId,
+                           portfolioId:data.portfolioId
+                       },
+                       function(){table.reload();});
+            }else if(data.assetType == F16){
+                Joyin.dialog(JoyinUtil.getLabel("EtrIRS.dblclick"),
+                        basePath
+                       + "invest/entrust/etrirs/EtrIRS002/init",
+                       "95%", "80%", {
+                           pageModel:PAGE_MODEL_REFERENCE,
+                           entrustId:data.entrustId,
+                           targetFinprodId:data.finprodId,
+                           portfolioId:data.portfolioId
+                       },
+                       function(){table.reload();});
+            }else if(data.assetType == F17){
+                Joyin.dialog(JoyinUtil.getLabel("EtrBondFirstLBidding002.refrence"),
+                    basePath
+                    + "invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/init",
+                    "95%", "80%", {
+                        pageModel:PAGE_MODEL_REFERENCE,
+                        entrustId:data.entrustId,
+                        targetFinprodId:data.finprodId,
+                        portfolioId:data.portfolioId
+                    },
+                    function(){table.reload();});
+                //ADD  BY GAOPENG 20191123 增加可转债转股委托 start 
+            }else if(data.assetType == F01 && data.ps == PS_T49){
+                    Joyin.dialog(JoyinUtil.getLabel("EtrBondToStock002.dblclick"),
+                        basePath
+                        + "invest/entrust/etrbondtostock/EtrBondToStock002/init",
+                        "95%", "80%", {
+                            pageModel:PAGE_MODEL_REFERENCE,
+                            entrustId:data.entrustId,
+                            targetFinprodId:data.finprodId,
+                            portfolioId:data.portfolioId
+                        },
+                        function(){table.reload();});
+                  //ADD  BY GAOPENG 20191123 增加可转债转股委托 end
+            }else if(data.assetType == F01 && data.ps == PS_T04){
+                Joyin.dialog(JoyinUtil.getLabel("EtrConBond002.dblclick"),
+                    basePath
+                    + "invest/entrust/etrconbond/EtrConBond002/init",
+                    "95%", "80%", {
+                        pageModel:PAGE_MODEL_REFERENCE,
+                        entrustId:data.entrustId,
+                        targetFinprodId:data.finprodId,
+                        portfolioId:data.portfolioId
+                    },
+                    function(){table.reload();});
+            }else if(data.assetType == F36 ){
+                Joyin.dialog(JoyinUtil.getLabel("EtrInstruction002.dblclick"),
+                    basePath
+                    + "invest/entrust/etrinstruction/EtrInstruction002/init",
+                    "95%", "80%", {
+                        pageModel:PAGE_MODEL_REFERENCE,
+                        entrustId:data.entrustId
+                    },
+                    function(){table.reload();});
+            }
+        },
+        cols:[ 
+             {field:'entrustId',visible:false}
+            ,{field:'entrustStatus', visible:false}
+            ,{field:'entrustStatusStr', title: 'EtrInvestAllInfo001.entrustStatus', width:'200',sortField:"entrustStatus"}
+            ,{field:'portfolioId', title: 'EtrInvestAllInfo001.portfolioId', width:'200',
+                render : function(data, type, row, meta) {
+                    if(row.portfolioId){
+                        return "<a  class='pro-link portfolioIdLink' style='cursor: pointer;'>"+row.portfolioId+"</ a>";
+                    }else{
+                        return '';
+                    }
+                } ,sortField:"portfolioId"
+            }
+            ,{field:'portfolioName', title: 'EtrInvestAllInfo001.portfolioName', width:'200',sortField:"portfolioName"}
+            ,{field:'assetType',visible:false}
+            ,{field:'assetTypeStr', title: 'EtrInvestAllInfo001.finprodType2', width:'200',sortField:"assetType"}
+            ,{field:'finprodId',visible:false}
+            ,{field:'finprodMarketId', title: 'EtrInvestAllInfo001.finprodId', width:'200',
+                render : function(data, type, row, meta) {
+                    return "<a  class='pro-link finprodIdLink' style='cursor: pointer;'>"+data+"</ a>";
+                },sortField:"finprodMarketId"
+            }
+            ,{field:'finprodName', title: 'EtrInvestAllInfo001.finprodName', width:'200',sortField:"finprodName"}
+            ,{field:'ps', visible:false}
+            ,{field:'psStr', title: 'EtrInvestAllInfo001.ps', width:'10%'}
+            ,{field:'tradeMarket', visible:false}
+            ,{field:'tradeMarketStr', title: 'EtrInvestAllInfo001.tradeMarket', width:'200',sortField:"tradeMarket"}
+            ,{field:'tradePlat', visible:false}
+            ,{field:'tradePlatStr', title: 'EtrInvestAllInfo001.tradePlat', width:'200',sortField:"settleSpreed"}
+            ,{field:'entrustAmt',type:'number', title: 'EtrInvestAllInfo001.entrustAmt', width:'200', type:'money',sortField:"entrustAmt"}
+            ,{field:'ccy',visible:false}
+            ,{field:'ccyStr', title: 'EtrInvestAllInfo001.ccy', width:'200',sortField:"ccy"}
+            ,{field:'vdate', title: 'EtrInvestAllInfo001.vdate', width:'200' ,type:'date',sortField:"vdate"}
+            ,{field:'mdate', title: 'EtrInvestAllInfo001.mdate', width:'200' ,type:'date',sortField:"mdate"}
+            ,{field:'invManagerId', title: 'EtrInvestAllInfo001.invManagerId', width:'200',sortField:"invManagerId"}
+            ,{field:'remark', title: 'EtrInvestAllInfo001.remark', width:'200',sortable:false}
+            ,{field:'pbExportstatus', visible:false}
+            ,{field:'pbExportstatusStr', title: 'EtrInvestAllInfo001.pbExportstatus', width:'150',sortField:"pbExportstatus"}
+        ],
+    });
+    
+    /**
+     * 组合代码链接
+     */
+    table.bind('click','.portfolioIdLink', function(row) {
+        Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
+                basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
+                "98%", "90%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
+                portfolioId:row.portfolioId});//主键组合代码
+    });
+    /**
+     * 资产代码链接
+     */
+    table.bind('click','.finprodIdLink', function(row) {
+        //在新建界面进行显示单行的详细信息
+        if(row.assetType == F01){
+            Joyin.dialog(JoyinUtil.getLabel("EtrInvestAllInfo001.astBond"),
+                     basePath
+                    + "invest/asset/bond/FinBondTargetAsset002/init",
+                    "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
+                                    finprodId:row.finprodId,  //金融产品代码
+                                    });
+        }else if(row.assetType == F02){
+            Joyin.dialog(JoyinUtil.getLabel("EtrInvestAllInfo001.astFund"),
+                    basePath
+                   + "invest/asset/fund/FinFundTarget002/init",
+                   "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
+                                   finprodId:row.finprodId,  //金融产品代码
+                                   });
+        }else if(row.assetType == F05){
+            Joyin.dialog(JoyinUtil.getLabel("EtrInvestAllInfo001.astBrow"),
+                    basePath
+                   + "invest/asset/depo/FinDepositTarget002/init",
+                   "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
+                                   finprodId:row.finprodId,  //金融产品代码
+                                   });
+        }else if(row.assetType == F04){
+            Joyin.dialog(JoyinUtil.getLabel("EtrInvestAllInfo001.astPlanN"),
+                    basePath
+                   + "invest/asset/plan/planNet/FinPlanNetAsset002/init",
+                   "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
+                                   finprodId:row.finprodId,  //金融产品代码
+                                   });
+        }else if(row.assetType == F03){
+            Joyin.dialog(JoyinUtil.getLabel("EtrInvestAllInfo001.astPlanR"),
+                    basePath
+                   + "invest/asset/plan/planProfit/FinPlanProfitAsset002/init",
+                   "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
+                                   finprodId:row.finprodId,  //金融产品代码
+                                   });
+        }else if(row.assetType == F06){
+            Joyin.dialog(JoyinUtil.getLabel("EtrInvestAllInfo001.astProject"),
+                    basePath
+                   + "invest/asset/project/FinProjectTargetAsset002/init",
+                   "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
+                                   finprodId:row.finprodId,  //金融产品代码
+                                   });
+        }else if(row.assetType == F09){
+            Joyin.dialog(JoyinUtil.getLabel("EtrInvestAllInfo001.astPlanC"),
+                    basePath
+                   + "invest/asset/plan/plancur/FinPlanAssetC002/init",
+                   "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
+                                   finprodId:row.finprodId,  //金融产品代码
+                                   });
+        }else if(row.assetType == F12){
+            Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
+                    basePath
+                   + "invest/asset/bond/FinBondTargetAsset002/init",
+                   "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
+                                   finprodId:row.finprodId,  //债券借贷委托查看
+            });
+        }else if(row.assetType == F17){
+            Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
+                basePath
+                + "invest/asset/tenderbond/FinTenderBondTargetAsset002/init",
+                "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
+                    finprodId:row.finprodId,  //债券一级债券委托查看
+                });
+        }
+    });
+    /**
+     * 导出
+     */
+    var exportExcel = function(){       
+        //勾选导出
+        var paramObj = searchform(); 
+        var selectedItem = [];
+        $.each(table.getAllCheckedRows() ,function (i, item) {
+            selectedItem.push(item.entrustId);
+        });
+        paramObj.selectedItem = selectedItem.join(',');
+        Joyin.exportExcel(basePath+"invest/entrust/etrinvestallinfo/EtrInvestAllInfo001/export", paramObj);
+    };
+    /**
+     * PB导出
+     */
+    var exportPBExcel = function(){       
+    	//勾选导出
+    	var paramObj = searchform(); 
+    	var selectedItem = [];
+        var isTrue = true;
+        var checkMsg="";
+    	$.each(table.getAllCheckedRows() ,function (i, item) {
+    		selectedItem.push(item.entrustId);
+    		if(!(item.entrustStatus=='02'||item.entrustStatus=='03')){
+    			checkMsg+="选中的第"+(i+1)+"行，只允许导出指令有效状态为“待接收”、“已接收”的指令！</br>";
+    			isTrue = false;
+            }else if(!(item.assetType==F01||item.assetType==F07)){
+    			checkMsg+="选中的第"+(i+1)+"行，只允许导出交易类型为债券买卖、债券质押式竞价回购的指令！</br>";
+    			isTrue = false;
+    		}else {
+    			if(item.assetType==F07){
+    				Joyin.ajaxSync('/invest/entrust/etrinvestallinfo/EtrInvestAllInfo001/checkPBRepoType',{entrustId:item.entrustId},
+    				    	  function(result) {
+    				    		if(!(result&&result.assetType1=='H02')){
+    				    			checkMsg+="选中的第"+(i+1)+"行，只允许导出交易类型为债券买卖、债券质押式竞价回购的指令！</br>";
+    				    			isTrue = false;
+    				            }
+    				           });	
+    			}
+    			if(!(item.tradeMarket=='03'||item.tradeMarket=='04')){
+        			checkMsg+="选中的第"+(i+1)+"行，只允许导出交易场所为“上海证券交易所”、“深圳证券交易所”的指令！</br>";
+        			isTrue = false;
+        		}
+    			if(item.assetType==F01){
+    				if(!(item.ps=='T01'||item.ps=='T02')){
+		    			checkMsg+="选中的第"+(i+1)+"行，只允许导出交易类型为债券买卖、债券质押式竞价回购的指令！</br>";
+	        			isTrue = false;
+	        		}
+	        		if(!(item.tradePlat=='02'||item.tradePlat=='03'||item.tradePlat=='04')){
+	        			checkMsg+="选中的第"+(i+1)+"行，只允许导出交易平台为“固收收益平台”、“大宗交易平台”、“竞价撮合平台”的指令！</br>";
+	        			isTrue = false;
+	        		}
+    			}
+    			
+    		}
+    	});
+    	paramObj.selectedItem = selectedItem.join(',');
+    	if(paramObj.selectedItem.length==0){
+            Joyin.error(JoyinUtil
+                .getMessage("请至少选择一条委托数据！"));
+            return;
+        }
+    	if(!isTrue){
+            Joyin.warn(JoyinUtil
+                .getMessage(checkMsg));
+            return;
+        }
+		Joyin.ajaxSync('/invest/entrust/etrinvestallinfo/EtrInvestAllInfo001/checkPBExportType',paramObj,
+		  function(result) {
+			if(result){
+	            Joyin.confirm("委托编号："+result+"已导出，是否确认重复导出？",function() {
+	            	Joyin.exportExcel(basePath+"invest/entrust/etrinvestallinfo/EtrInvestAllInfo001/exportPB", paramObj);
+	            });	
+		    }else{
+	            Joyin.exportExcel(basePath+"invest/entrust/etrinvestallinfo/EtrInvestAllInfo001/exportPB", paramObj);
+	    	}
+	    	table.reload();
+		 });
+    };
+
+    /**
+     * 编辑按钮事件
+     */
+    $(function () {
+        /**
+         * 查询按钮
+         */
+        $('#EtrInvestAllInfo001_btn_search').click(function() {
+            table.load();
+        });
+        /**
+         * 导出按钮
+         */
+        $('#EtrInvestAllInfo001_btn_export').click(function() {
+            exportExcel();
+        });
+        /**
+         * 导出按钮
+         */
+        $('#EtrInvestAllInfo001_btn_pb_export').click(function() {
+        	exportPBExcel();
+        });
+    });
+}());

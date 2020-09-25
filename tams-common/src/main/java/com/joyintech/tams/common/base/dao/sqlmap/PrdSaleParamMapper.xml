@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.PrdSaleParamMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.PrdSaleParam" >
+        <id column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="PRD_BAND" property="prdBand" jdbcType="VARCHAR" />
+        <result column="CYY_TYPE" property="cyyType" jdbcType="VARCHAR" />
+        <result column="SALE_CHANNEL" property="saleChannel" jdbcType="VARCHAR" />
+        <result column="SALE_AREA" property="saleArea" jdbcType="VARCHAR" />
+        <result column="SALE_MAX" property="saleMax" jdbcType="DECIMAL" />
+        <result column="SALE_MIN" property="saleMin" jdbcType="DECIMAL" />
+        <result column="TOFF_START" property="toffStart" jdbcType="DECIMAL" />
+        <result column="LOWEST_AMT" property="lowestAmt" jdbcType="DECIMAL" />
+        <result column="HUGE_RED_RATIO" property="hugeRedRatio" jdbcType="DECIMAL" />
+        <result column="MIN_PAPER_QTY" property="minPaperQty" jdbcType="DECIMAL" />
+        <result column="MIN_REDM_QTY" property="minRedmQty" jdbcType="DECIMAL" />
+        <result column="CAN_PLGE" property="canPlge" jdbcType="VARCHAR" />
+        <result column="MAX_PLGE_RATE" property="maxPlgeRate" jdbcType="DECIMAL" />
+        <result column="FIRST_SALE_VDATE" property="firstSaleVdate" jdbcType="DATE" />
+        <result column="FIRST_SALE_MDATE" property="firstSaleMdate" jdbcType="DATE" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CONSIGNMENT_FLAG" property="consignmentFlag" jdbcType="VARCHAR" />
+        <result column="BEFOREEND_FLAG" property="beforeendFlag" jdbcType="VARCHAR" />
+        <result column="RED_FLAG" property="redFlag" jdbcType="VARCHAR" />
+        <result column="DEFAULTRED_FLAG" property="defaultredFlag" jdbcType="VARCHAR" />
+        <result column="BEFOREESTABLISH_FLAG" property="beforeestablishFlag" jdbcType="VARCHAR" />
+        <result column="CONTINUE_FLAG" property="continueFlag" jdbcType="VARCHAR" />
+        <result column="RAISE_AMT_PLAN" property="raiseAmtPlan" jdbcType="DECIMAL" />
+        <result column="INVESTOR_TYPE" property="investorType" jdbcType="VARCHAR" />
+        <result column="SAME_ORG" property="sameOrg" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        FINPROD_ID FINPROD_ID, PRD_BAND PRD_BAND, CYY_TYPE CYY_TYPE, SALE_CHANNEL SALE_CHANNEL, 
+        SALE_AREA SALE_AREA, SALE_MAX SALE_MAX, SALE_MIN SALE_MIN, TOFF_START TOFF_START, 
+        LOWEST_AMT LOWEST_AMT, HUGE_RED_RATIO HUGE_RED_RATIO, MIN_PAPER_QTY MIN_PAPER_QTY, 
+        MIN_REDM_QTY MIN_REDM_QTY, CAN_PLGE CAN_PLGE, MAX_PLGE_RATE MAX_PLGE_RATE, FIRST_SALE_VDATE FIRST_SALE_VDATE, 
+        FIRST_SALE_MDATE FIRST_SALE_MDATE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CONSIGNMENT_FLAG CONSIGNMENT_FLAG, 
+        BEFOREEND_FLAG BEFOREEND_FLAG, RED_FLAG RED_FLAG, DEFAULTRED_FLAG DEFAULTRED_FLAG, 
+        BEFOREESTABLISH_FLAG BEFOREESTABLISH_FLAG, CONTINUE_FLAG CONTINUE_FLAG, RAISE_AMT_PLAN RAISE_AMT_PLAN, 
+        INVESTOR_TYPE INVESTOR_TYPE, SAME_ORG SAME_ORG
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PrdSaleParamMapper.Base_Column_List" />
+        from PRD_SALE_PARAM
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PrdSaleParamMapper.Base_Column_List" />
+        from PRD_SALE_PARAM
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PrdSaleParamMapper.Base_Column_List" />
+        from PRD_SALE_PARAM
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from PRD_SALE_PARAM
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PrdSaleParam" >
+        insert into PRD_SALE_PARAM (FINPROD_ID, PRD_BAND, CYY_TYPE, 
+            SALE_CHANNEL, SALE_AREA, SALE_MAX, 
+            SALE_MIN, TOFF_START, LOWEST_AMT, 
+            HUGE_RED_RATIO, MIN_PAPER_QTY, MIN_REDM_QTY, 
+            CAN_PLGE, MAX_PLGE_RATE, FIRST_SALE_VDATE, 
+            FIRST_SALE_MDATE, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            CONSIGNMENT_FLAG, BEFOREEND_FLAG, RED_FLAG, 
+            DEFAULTRED_FLAG, BEFOREESTABLISH_FLAG, 
+            CONTINUE_FLAG, RAISE_AMT_PLAN, INVESTOR_TYPE, 
+            SAME_ORG)
+        values (#{finprodId,jdbcType=VARCHAR}, #{prdBand,jdbcType=VARCHAR}, #{cyyType,jdbcType=VARCHAR}, 
+            #{saleChannel,jdbcType=VARCHAR}, #{saleArea,jdbcType=VARCHAR}, #{saleMax,jdbcType=DECIMAL}, 
+            #{saleMin,jdbcType=DECIMAL}, #{toffStart,jdbcType=DECIMAL}, #{lowestAmt,jdbcType=DECIMAL}, 
+            #{hugeRedRatio,jdbcType=DECIMAL}, #{minPaperQty,jdbcType=DECIMAL}, #{minRedmQty,jdbcType=DECIMAL}, 
+            #{canPlge,jdbcType=VARCHAR}, #{maxPlgeRate,jdbcType=DECIMAL}, #{firstSaleVdate,jdbcType=DATE}, 
+            #{firstSaleMdate,jdbcType=DATE}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{consignmentFlag,jdbcType=VARCHAR}, #{beforeendFlag,jdbcType=VARCHAR}, #{redFlag,jdbcType=VARCHAR}, 
+            #{defaultredFlag,jdbcType=VARCHAR}, #{beforeestablishFlag,jdbcType=VARCHAR}, 
+            #{continueFlag,jdbcType=VARCHAR}, #{raiseAmtPlan,jdbcType=DECIMAL}, #{investorType,jdbcType=VARCHAR}, 
+            #{sameOrg,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PrdSaleParam" >
+        insert into PRD_SALE_PARAM
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="prdBand != null" >
+                PRD_BAND,
+            </if>
+            <if test="cyyType != null" >
+                CYY_TYPE,
+            </if>
+            <if test="saleChannel != null" >
+                SALE_CHANNEL,
+            </if>
+            <if test="saleArea != null" >
+                SALE_AREA,
+            </if>
+            <if test="saleMax != null" >
+                SALE_MAX,
+            </if>
+            <if test="saleMin != null" >
+                SALE_MIN,
+            </if>
+            <if test="toffStart != null" >
+                TOFF_START,
+            </if>
+            <if test="lowestAmt != null" >
+                LOWEST_AMT,
+            </if>
+            <if test="hugeRedRatio != null" >
+                HUGE_RED_RATIO,
+            </if>
+            <if test="minPaperQty != null" >
+                MIN_PAPER_QTY,
+            </if>
+            <if test="minRedmQty != null" >
+                MIN_REDM_QTY,
+            </if>
+            <if test="canPlge != null" >
+                CAN_PLGE,
+            </if>
+            <if test="maxPlgeRate != null" >
+                MAX_PLGE_RATE,
+            </if>
+            <if test="firstSaleVdate != null" >
+                FIRST_SALE_VDATE,
+            </if>
+            <if test="firstSaleMdate != null" >
+                FIRST_SALE_MDATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="consignmentFlag != null" >
+                CONSIGNMENT_FLAG,
+            </if>
+            <if test="beforeendFlag != null" >
+                BEFOREEND_FLAG,
+            </if>
+            <if test="redFlag != null" >
+                RED_FLAG,
+            </if>
+            <if test="defaultredFlag != null" >
+                DEFAULTRED_FLAG,
+            </if>
+            <if test="beforeestablishFlag != null" >
+                BEFOREESTABLISH_FLAG,
+            </if>
+            <if test="continueFlag != null" >
+                CONTINUE_FLAG,
+            </if>
+            <if test="raiseAmtPlan != null" >
+                RAISE_AMT_PLAN,
+            </if>
+            <if test="investorType != null" >
+                INVESTOR_TYPE,
+            </if>
+            <if test="sameOrg != null" >
+                SAME_ORG,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="prdBand != null" >
+                #{prdBand,jdbcType=VARCHAR},
+            </if>
+            <if test="cyyType != null" >
+                #{cyyType,jdbcType=VARCHAR},
+            </if>
+            <if test="saleChannel != null" >
+                #{saleChannel,jdbcType=VARCHAR},
+            </if>
+            <if test="saleArea != null" >
+                #{saleArea,jdbcType=VARCHAR},
+            </if>
+            <if test="saleMax != null" >
+                #{saleMax,jdbcType=DECIMAL},
+            </if>
+            <if test="saleMin != null" >
+                #{saleMin,jdbcType=DECIMAL},
+            </if>
+            <if test="toffStart != null" >
+                #{toffStart,jdbcType=DECIMAL},
+            </if>
+            <if test="lowestAmt != null" >
+                #{lowestAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="hugeRedRatio != null" >
+                #{hugeRedRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="minPaperQty != null" >
+                #{minPaperQty,jdbcType=DECIMAL},
+            </if>
+            <if test="minRedmQty != null" >
+                #{minRedmQty,jdbcType=DECIMAL},
+            </if>
+            <if test="canPlge != null" >
+                #{canPlge,jdbcType=VARCHAR},
+            </if>
+            <if test="maxPlgeRate != null" >
+                #{maxPlgeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="firstSaleVdate != null" >
+                #{firstSaleVdate,jdbcType=DATE},
+            </if>
+            <if test="firstSaleMdate != null" >
+                #{firstSaleMdate,jdbcType=DATE},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="consignmentFlag != null" >
+                #{consignmentFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="beforeendFlag != null" >
+                #{beforeendFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="redFlag != null" >
+                #{redFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="defaultredFlag != null" >
+                #{defaultredFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="beforeestablishFlag != null" >
+                #{beforeestablishFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="continueFlag != null" >
+                #{continueFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="raiseAmtPlan != null" >
+                #{raiseAmtPlan,jdbcType=DECIMAL},
+            </if>
+            <if test="investorType != null" >
+                #{investorType,jdbcType=VARCHAR},
+            </if>
+            <if test="sameOrg != null" >
+                #{sameOrg,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PrdSaleParam" >
+        insert into PRD_SALE_PARAM(FINPROD_ID, PRD_BAND, CYY_TYPE, SALE_CHANNEL, SALE_AREA, 
+        SALE_MAX, SALE_MIN, TOFF_START, LOWEST_AMT, HUGE_RED_RATIO, MIN_PAPER_QTY, MIN_REDM_QTY, 
+        CAN_PLGE, MAX_PLGE_RATE, FIRST_SALE_VDATE, FIRST_SALE_MDATE, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, CONSIGNMENT_FLAG, BEFOREEND_FLAG, RED_FLAG, 
+        DEFAULTRED_FLAG, BEFOREESTABLISH_FLAG, CONTINUE_FLAG, RAISE_AMT_PLAN, INVESTOR_TYPE, 
+        SAME_ORG)
+        select FINPROD_ID, PRD_BAND, CYY_TYPE, SALE_CHANNEL, SALE_AREA, 
+            SALE_MAX, SALE_MIN, TOFF_START, LOWEST_AMT, HUGE_RED_RATIO, MIN_PAPER_QTY, MIN_REDM_QTY, 
+            CAN_PLGE, MAX_PLGE_RATE, FIRST_SALE_VDATE, FIRST_SALE_MDATE, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CONSIGNMENT_FLAG, BEFOREEND_FLAG, RED_FLAG, 
+            DEFAULTRED_FLAG, BEFOREESTABLISH_FLAG, CONTINUE_FLAG, RAISE_AMT_PLAN, INVESTOR_TYPE, 
+            SAME_ORG
+             from PRD_SALE_PARAM
+             where 1 = 1 and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.PrdSaleParam" >
+        update PRD_SALE_PARAM
+        <set >
+            <if test="prdBand != null" >
+                PRD_BAND = #{prdBand,jdbcType=VARCHAR},
+            </if>
+            <if test="cyyType != null" >
+                CYY_TYPE = #{cyyType,jdbcType=VARCHAR},
+            </if>
+            <if test="saleChannel != null" >
+                SALE_CHANNEL = #{saleChannel,jdbcType=VARCHAR},
+            </if>
+            <if test="saleArea != null" >
+                SALE_AREA = #{saleArea,jdbcType=VARCHAR},
+            </if>
+            <if test="saleMax != null" >
+                SALE_MAX = #{saleMax,jdbcType=DECIMAL},
+            </if>
+            <if test="saleMin != null" >
+                SALE_MIN = #{saleMin,jdbcType=DECIMAL},
+            </if>
+            <if test="toffStart != null" >
+                TOFF_START = #{toffStart,jdbcType=DECIMAL},
+            </if>
+            <if test="lowestAmt != null" >
+                LOWEST_AMT = #{lowestAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="hugeRedRatio != null" >
+                HUGE_RED_RATIO = #{hugeRedRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="minPaperQty != null" >
+                MIN_PAPER_QTY = #{minPaperQty,jdbcType=DECIMAL},
+            </if>
+            <if test="minRedmQty != null" >
+                MIN_REDM_QTY = #{minRedmQty,jdbcType=DECIMAL},
+            </if>
+            <if test="canPlge != null" >
+                CAN_PLGE = #{canPlge,jdbcType=VARCHAR},
+            </if>
+            <if test="maxPlgeRate != null" >
+                MAX_PLGE_RATE = #{maxPlgeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="firstSaleVdate != null" >
+                FIRST_SALE_VDATE = #{firstSaleVdate,jdbcType=DATE},
+            </if>
+            <if test="firstSaleMdate != null" >
+                FIRST_SALE_MDATE = #{firstSaleMdate,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="consignmentFlag != null" >
+                CONSIGNMENT_FLAG = #{consignmentFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="beforeendFlag != null" >
+                BEFOREEND_FLAG = #{beforeendFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="redFlag != null" >
+                RED_FLAG = #{redFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="defaultredFlag != null" >
+                DEFAULTRED_FLAG = #{defaultredFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="beforeestablishFlag != null" >
+                BEFOREESTABLISH_FLAG = #{beforeestablishFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="continueFlag != null" >
+                CONTINUE_FLAG = #{continueFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="raiseAmtPlan != null" >
+                RAISE_AMT_PLAN = #{raiseAmtPlan,jdbcType=DECIMAL},
+            </if>
+            <if test="investorType != null" >
+                INVESTOR_TYPE = #{investorType,jdbcType=VARCHAR},
+            </if>
+            <if test="sameOrg != null" >
+                SAME_ORG = #{sameOrg,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PrdSaleParam" >
+        update PRD_SALE_PARAM
+        set PRD_BAND = #{prdBand,jdbcType=VARCHAR},
+            CYY_TYPE = #{cyyType,jdbcType=VARCHAR},
+            SALE_CHANNEL = #{saleChannel,jdbcType=VARCHAR},
+            SALE_AREA = #{saleArea,jdbcType=VARCHAR},
+            SALE_MAX = #{saleMax,jdbcType=DECIMAL},
+            SALE_MIN = #{saleMin,jdbcType=DECIMAL},
+            TOFF_START = #{toffStart,jdbcType=DECIMAL},
+            LOWEST_AMT = #{lowestAmt,jdbcType=DECIMAL},
+            HUGE_RED_RATIO = #{hugeRedRatio,jdbcType=DECIMAL},
+            MIN_PAPER_QTY = #{minPaperQty,jdbcType=DECIMAL},
+            MIN_REDM_QTY = #{minRedmQty,jdbcType=DECIMAL},
+            CAN_PLGE = #{canPlge,jdbcType=VARCHAR},
+            MAX_PLGE_RATE = #{maxPlgeRate,jdbcType=DECIMAL},
+            FIRST_SALE_VDATE = #{firstSaleVdate,jdbcType=DATE},
+            FIRST_SALE_MDATE = #{firstSaleMdate,jdbcType=DATE},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            CONSIGNMENT_FLAG = #{consignmentFlag,jdbcType=VARCHAR},
+            BEFOREEND_FLAG = #{beforeendFlag,jdbcType=VARCHAR},
+            RED_FLAG = #{redFlag,jdbcType=VARCHAR},
+            DEFAULTRED_FLAG = #{defaultredFlag,jdbcType=VARCHAR},
+            BEFOREESTABLISH_FLAG = #{beforeestablishFlag,jdbcType=VARCHAR},
+            CONTINUE_FLAG = #{continueFlag,jdbcType=VARCHAR},
+            RAISE_AMT_PLAN = #{raiseAmtPlan,jdbcType=DECIMAL},
+            INVESTOR_TYPE = #{investorType,jdbcType=VARCHAR},
+            SAME_ORG = #{sameOrg,jdbcType=VARCHAR}
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </update>
+</mapper>

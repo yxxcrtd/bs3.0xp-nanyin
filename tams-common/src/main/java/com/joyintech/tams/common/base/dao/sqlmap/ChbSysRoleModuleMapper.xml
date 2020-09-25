@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbSysRoleModuleMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbSysRoleModule" >
+        <id column="C_S_R_M_ROLE_ID" property="roleId" jdbcType="VARCHAR" />
+        <id column="C_S_R_M_STATUS" property="status" jdbcType="CHAR" />
+        <id column="C_S_R_M_PAGE_ID" property="pageId" jdbcType="VARCHAR" />
+        <id column="C_S_R_M_ELEMENT_ID" property="elementId" jdbcType="VARCHAR" />
+        <result column="C_S_R_M_WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+        <result column="C_S_R_M_CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="C_S_R_M_CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="C_S_R_M_UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="C_S_R_M_UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ROLE_ID as C_S_R_M_ROLE_ID, STATUS as C_S_R_M_STATUS, PAGE_ID as C_S_R_M_PAGE_ID, 
+        ELEMENT_ID as C_S_R_M_ELEMENT_ID, WORKFLOW_ID as C_S_R_M_WORKFLOW_ID, CREATE_USER as C_S_R_M_CREATE_USER, 
+        CREATE_TIME as C_S_R_M_CREATE_TIME, UPDATE_USER as C_S_R_M_UPDATE_USER, UPDATE_TIME as C_S_R_M_UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysRoleModuleMapper.Base_Column_List" />
+        from CHB_SYS_ROLE_MODULE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysRoleModuleMapper.Base_Column_List" />
+        from CHB_SYS_ROLE_MODULE
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.ChbSysRoleModuleKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysRoleModuleMapper.Base_Column_List" />
+        from CHB_SYS_ROLE_MODULE
+        where ROLE_ID = #{roleId,jdbcType=VARCHAR}
+          and STATUS = #{status,jdbcType=CHAR}
+          and PAGE_ID = #{pageId,jdbcType=VARCHAR}
+          and ELEMENT_ID = #{elementId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbSysRoleModuleKey" >
+        delete from CHB_SYS_ROLE_MODULE
+        where ROLE_ID = #{roleId,jdbcType=VARCHAR}
+          and STATUS = #{status,jdbcType=CHAR}
+          and PAGE_ID = #{pageId,jdbcType=VARCHAR}
+          and ELEMENT_ID = #{elementId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_SYS_ROLE_MODULE
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbSysRoleModule" >
+        insert into CHB_SYS_ROLE_MODULE (ROLE_ID, STATUS, PAGE_ID, 
+            ELEMENT_ID, WORKFLOW_ID, CREATE_USER, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{roleId,jdbcType=VARCHAR}, #{status,jdbcType=CHAR}, #{pageId,jdbcType=VARCHAR}, 
+            #{elementId,jdbcType=VARCHAR}, #{workflowId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysRoleModule" >
+        insert into CHB_SYS_ROLE_MODULE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="roleId != null" >
+                ROLE_ID,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="pageId != null" >
+                PAGE_ID,
+            </if>
+            <if test="elementId != null" >
+                ELEMENT_ID,
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="roleId != null" >
+                #{roleId,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=CHAR},
+            </if>
+            <if test="pageId != null" >
+                #{pageId,jdbcType=VARCHAR},
+            </if>
+            <if test="elementId != null" >
+                #{elementId,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowId != null" >
+                #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbSysRoleModule" >
+        insert into CHB_SYS_ROLE_MODULE(ROLE_ID, STATUS, PAGE_ID, ELEMENT_ID, WORKFLOW_ID, 
+        CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select ROLE_ID, #{status,jdbcType=VARCHAR} as STATUS, PAGE_ID, ELEMENT_ID, #{workflowId,jdbcType=VARCHAR} as WORKFLOW_ID, 
+            CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME
+             from CHB_SYS_ROLE_MODULE
+             where STATUS = 'E' and ROLE_ID = #{roleId,jdbcType=VARCHAR} and PAGE_ID = #{pageId,jdbcType=VARCHAR} and ELEMENT_ID = #{elementId,jdbcType=VARCHAR}
+    </insert>
+    <insert id="insertBasicByWorkflowId" parameterType="java.util.Map" >
+        insert into CHB_SYS_ROLE_MODULE(ROLE_ID, STATUS, PAGE_ID, ELEMENT_ID, WORKFLOW_ID, 
+        CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select ROLE_ID, #{status,jdbcType=VARCHAR} as STATUS, PAGE_ID, ELEMENT_ID, #{newWorkflowId,jdbcType=VARCHAR} as WORKFLOW_ID, 
+            CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME
+             from CHB_SYS_ROLE_MODULE
+             where STATUS = 'E' and WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysRoleModule" >
+        update CHB_SYS_ROLE_MODULE
+        <set >
+            <if test="workflowId != null" >
+                WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ROLE_ID = #{roleId,jdbcType=VARCHAR}
+          and STATUS = #{status,jdbcType=CHAR}
+          and PAGE_ID = #{pageId,jdbcType=VARCHAR}
+          and ELEMENT_ID = #{elementId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysRoleModule" >
+        update CHB_SYS_ROLE_MODULE
+        <set >
+            <if test="roleId != null" >
+                ROLE_ID = #{roleId,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=CHAR},
+            </if>
+            <if test="pageId != null" >
+                PAGE_ID = #{pageId,jdbcType=VARCHAR},
+            </if>
+            <if test="elementId != null" >
+                ELEMENT_ID = #{elementId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbSysRoleModule" >
+        update CHB_SYS_ROLE_MODULE
+        set 
+        ROLE_ID = #{roleId,jdbcType=VARCHAR},
+        STATUS = #{status,jdbcType=CHAR},
+        PAGE_ID = #{pageId,jdbcType=VARCHAR},
+        ELEMENT_ID = #{elementId,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbSysRoleModule" >
+        update CHB_SYS_ROLE_MODULE
+        set WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where ROLE_ID = #{roleId,jdbcType=VARCHAR}
+          and STATUS = #{status,jdbcType=CHAR}
+          and PAGE_ID = #{pageId,jdbcType=VARCHAR}
+          and ELEMENT_ID = #{elementId,jdbcType=VARCHAR}
+    </update>
+</mapper>

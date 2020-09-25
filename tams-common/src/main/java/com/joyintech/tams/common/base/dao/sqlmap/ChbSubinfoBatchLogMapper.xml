@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbSubinfoBatchLogMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbSubinfoBatchLog" >
+        <id column="BATCH_EXE_ID" property="batchExeId" jdbcType="VARCHAR" />
+        <result column="TASK_ID" property="taskId" jdbcType="VARCHAR" />
+        <result column="BUSI_CONFIRM_DATE" property="busiConfirmDate" jdbcType="VARCHAR" />
+        <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+        <result column="FILE_TYPE" property="fileType" jdbcType="VARCHAR" />
+        <result column="COMPRES_FILE_ID" property="compresFileId" jdbcType="VARCHAR" />
+        <result column="COMPRES_FILE_NAME" property="compresFileName" jdbcType="VARCHAR" />
+        <result column="COMPRES_FILE_PATH" property="compresFilePath" jdbcType="VARCHAR" />
+        <result column="FILE_COUNT" property="fileCount" jdbcType="DECIMAL" />
+        <result column="RECORD_COUNT" property="recordCount" jdbcType="DECIMAL" />
+        <result column="DEAL_STATUS" property="dealStatus" jdbcType="VARCHAR" />
+        <result column="DEAL_MESSAGE" property="dealMessage" jdbcType="VARCHAR" />
+        <result column="CONSUME_TIME" property="consumeTime" jdbcType="DECIMAL" />
+        <result column="START_TIME" property="startTime" jdbcType="TIMESTAMP" />
+        <result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+        <result column="GEN_CONDITION" property="genCondition" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        BATCH_EXE_ID BATCH_EXE_ID, TASK_ID TASK_ID, BUSI_CONFIRM_DATE BUSI_CONFIRM_DATE, 
+        OPERATOR OPERATOR, FILE_TYPE FILE_TYPE, COMPRES_FILE_ID COMPRES_FILE_ID, COMPRES_FILE_NAME COMPRES_FILE_NAME, 
+        COMPRES_FILE_PATH COMPRES_FILE_PATH, FILE_COUNT FILE_COUNT, RECORD_COUNT RECORD_COUNT, 
+        DEAL_STATUS DEAL_STATUS, DEAL_MESSAGE DEAL_MESSAGE, CONSUME_TIME CONSUME_TIME, START_TIME START_TIME, 
+        END_TIME END_TIME, GEN_CONDITION GEN_CONDITION, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CREATE_DEPT CREATE_DEPT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSubinfoBatchLogMapper.Base_Column_List" />
+        from CHB_SUBINFO_BATCH_LOG
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSubinfoBatchLogMapper.Base_Column_List" />
+        from CHB_SUBINFO_BATCH_LOG
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSubinfoBatchLogMapper.Base_Column_List" />
+        from CHB_SUBINFO_BATCH_LOG
+        where BATCH_EXE_ID = #{batchExeId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_SUBINFO_BATCH_LOG
+        where BATCH_EXE_ID = #{batchExeId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbSubinfoBatchLog" >
+        insert into CHB_SUBINFO_BATCH_LOG (BATCH_EXE_ID, TASK_ID, BUSI_CONFIRM_DATE, 
+            OPERATOR, FILE_TYPE, COMPRES_FILE_ID, 
+            COMPRES_FILE_NAME, COMPRES_FILE_PATH, FILE_COUNT, 
+            RECORD_COUNT, DEAL_STATUS, DEAL_MESSAGE, 
+            CONSUME_TIME, START_TIME, END_TIME, 
+            GEN_CONDITION, CREATE_USER, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, CREATE_DEPT
+            )
+        values (#{batchExeId,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, #{busiConfirmDate,jdbcType=VARCHAR}, 
+            #{operator,jdbcType=VARCHAR}, #{fileType,jdbcType=VARCHAR}, #{compresFileId,jdbcType=VARCHAR}, 
+            #{compresFileName,jdbcType=VARCHAR}, #{compresFilePath,jdbcType=VARCHAR}, #{fileCount,jdbcType=DECIMAL}, 
+            #{recordCount,jdbcType=DECIMAL}, #{dealStatus,jdbcType=VARCHAR}, #{dealMessage,jdbcType=VARCHAR}, 
+            #{consumeTime,jdbcType=DECIMAL}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+            #{genCondition,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSubinfoBatchLog" >
+        insert into CHB_SUBINFO_BATCH_LOG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="batchExeId != null" >
+                BATCH_EXE_ID,
+            </if>
+            <if test="taskId != null" >
+                TASK_ID,
+            </if>
+            <if test="busiConfirmDate != null" >
+                BUSI_CONFIRM_DATE,
+            </if>
+            <if test="operator != null" >
+                OPERATOR,
+            </if>
+            <if test="fileType != null" >
+                FILE_TYPE,
+            </if>
+            <if test="compresFileId != null" >
+                COMPRES_FILE_ID,
+            </if>
+            <if test="compresFileName != null" >
+                COMPRES_FILE_NAME,
+            </if>
+            <if test="compresFilePath != null" >
+                COMPRES_FILE_PATH,
+            </if>
+            <if test="fileCount != null" >
+                FILE_COUNT,
+            </if>
+            <if test="recordCount != null" >
+                RECORD_COUNT,
+            </if>
+            <if test="dealStatus != null" >
+                DEAL_STATUS,
+            </if>
+            <if test="dealMessage != null" >
+                DEAL_MESSAGE,
+            </if>
+            <if test="consumeTime != null" >
+                CONSUME_TIME,
+            </if>
+            <if test="startTime != null" >
+                START_TIME,
+            </if>
+            <if test="endTime != null" >
+                END_TIME,
+            </if>
+            <if test="genCondition != null" >
+                GEN_CONDITION,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="batchExeId != null" >
+                #{batchExeId,jdbcType=VARCHAR},
+            </if>
+            <if test="taskId != null" >
+                #{taskId,jdbcType=VARCHAR},
+            </if>
+            <if test="busiConfirmDate != null" >
+                #{busiConfirmDate,jdbcType=VARCHAR},
+            </if>
+            <if test="operator != null" >
+                #{operator,jdbcType=VARCHAR},
+            </if>
+            <if test="fileType != null" >
+                #{fileType,jdbcType=VARCHAR},
+            </if>
+            <if test="compresFileId != null" >
+                #{compresFileId,jdbcType=VARCHAR},
+            </if>
+            <if test="compresFileName != null" >
+                #{compresFileName,jdbcType=VARCHAR},
+            </if>
+            <if test="compresFilePath != null" >
+                #{compresFilePath,jdbcType=VARCHAR},
+            </if>
+            <if test="fileCount != null" >
+                #{fileCount,jdbcType=DECIMAL},
+            </if>
+            <if test="recordCount != null" >
+                #{recordCount,jdbcType=DECIMAL},
+            </if>
+            <if test="dealStatus != null" >
+                #{dealStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="dealMessage != null" >
+                #{dealMessage,jdbcType=VARCHAR},
+            </if>
+            <if test="consumeTime != null" >
+                #{consumeTime,jdbcType=DECIMAL},
+            </if>
+            <if test="startTime != null" >
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null" >
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="genCondition != null" >
+                #{genCondition,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbSubinfoBatchLog" >
+        insert into CHB_SUBINFO_BATCH_LOG(BATCH_EXE_ID, TASK_ID, BUSI_CONFIRM_DATE, OPERATOR, 
+        FILE_TYPE, COMPRES_FILE_ID, COMPRES_FILE_NAME, COMPRES_FILE_PATH, FILE_COUNT, RECORD_COUNT, 
+        DEAL_STATUS, DEAL_MESSAGE, CONSUME_TIME, START_TIME, END_TIME, GEN_CONDITION, CREATE_USER, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, CREATE_DEPT)
+        select BATCH_EXE_ID, TASK_ID, BUSI_CONFIRM_DATE, OPERATOR, 
+            FILE_TYPE, COMPRES_FILE_ID, COMPRES_FILE_NAME, COMPRES_FILE_PATH, FILE_COUNT, RECORD_COUNT, 
+            DEAL_STATUS, DEAL_MESSAGE, CONSUME_TIME, START_TIME, END_TIME, GEN_CONDITION, CREATE_USER, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_DEPT
+             from CHB_SUBINFO_BATCH_LOG
+             where 1 = 1 and BATCH_EXE_ID = #{batchExeId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbSubinfoBatchLog" >
+        update CHB_SUBINFO_BATCH_LOG
+        <set >
+            <if test="taskId != null" >
+                TASK_ID = #{taskId,jdbcType=VARCHAR},
+            </if>
+            <if test="busiConfirmDate != null" >
+                BUSI_CONFIRM_DATE = #{busiConfirmDate,jdbcType=VARCHAR},
+            </if>
+            <if test="operator != null" >
+                OPERATOR = #{operator,jdbcType=VARCHAR},
+            </if>
+            <if test="fileType != null" >
+                FILE_TYPE = #{fileType,jdbcType=VARCHAR},
+            </if>
+            <if test="compresFileId != null" >
+                COMPRES_FILE_ID = #{compresFileId,jdbcType=VARCHAR},
+            </if>
+            <if test="compresFileName != null" >
+                COMPRES_FILE_NAME = #{compresFileName,jdbcType=VARCHAR},
+            </if>
+            <if test="compresFilePath != null" >
+                COMPRES_FILE_PATH = #{compresFilePath,jdbcType=VARCHAR},
+            </if>
+            <if test="fileCount != null" >
+                FILE_COUNT = #{fileCount,jdbcType=DECIMAL},
+            </if>
+            <if test="recordCount != null" >
+                RECORD_COUNT = #{recordCount,jdbcType=DECIMAL},
+            </if>
+            <if test="dealStatus != null" >
+                DEAL_STATUS = #{dealStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="dealMessage != null" >
+                DEAL_MESSAGE = #{dealMessage,jdbcType=VARCHAR},
+            </if>
+            <if test="consumeTime != null" >
+                CONSUME_TIME = #{consumeTime,jdbcType=DECIMAL},
+            </if>
+            <if test="startTime != null" >
+                START_TIME = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null" >
+                END_TIME = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="genCondition != null" >
+                GEN_CONDITION = #{genCondition,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where BATCH_EXE_ID = #{batchExeId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbSubinfoBatchLog" >
+        update CHB_SUBINFO_BATCH_LOG
+        set TASK_ID = #{taskId,jdbcType=VARCHAR},
+            BUSI_CONFIRM_DATE = #{busiConfirmDate,jdbcType=VARCHAR},
+            OPERATOR = #{operator,jdbcType=VARCHAR},
+            FILE_TYPE = #{fileType,jdbcType=VARCHAR},
+            COMPRES_FILE_ID = #{compresFileId,jdbcType=VARCHAR},
+            COMPRES_FILE_NAME = #{compresFileName,jdbcType=VARCHAR},
+            COMPRES_FILE_PATH = #{compresFilePath,jdbcType=VARCHAR},
+            FILE_COUNT = #{fileCount,jdbcType=DECIMAL},
+            RECORD_COUNT = #{recordCount,jdbcType=DECIMAL},
+            DEAL_STATUS = #{dealStatus,jdbcType=VARCHAR},
+            DEAL_MESSAGE = #{dealMessage,jdbcType=VARCHAR},
+            CONSUME_TIME = #{consumeTime,jdbcType=DECIMAL},
+            START_TIME = #{startTime,jdbcType=TIMESTAMP},
+            END_TIME = #{endTime,jdbcType=TIMESTAMP},
+            GEN_CONDITION = #{genCondition,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        where BATCH_EXE_ID = #{batchExeId,jdbcType=VARCHAR}
+    </update>
+</mapper>

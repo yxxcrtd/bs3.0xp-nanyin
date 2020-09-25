@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="~{layout/default}">
+<head>
+<title>新建指标值管理</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<form class="layui-form joyin-form-wrap" id="submitForm"
+			style="background: #ffffff; padding: 10px 0;">
+
+			<div class="layui-form-item" style="display: none;">
+				<input id="operateType" name="operateType"
+					class="layui-input form-input" placeholder="请输入"
+					data-th-value="${entity?.operateType}"> <input id="id"
+					name="id" class="layui-input form-input" placeholder="主键id"
+					data-th-value="${entity?.id}"> <input id="indexFile"
+					name="indexFile" class="layui-input form-input" placeholder="文件内容"
+					data-th-value="${entity?.indexFile}"> <input id="priId"
+					name="priId" class="layui-input form-input"
+					data-th-value="${priId}" placeholder="主键id">
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-inline layui-col-md8">
+					<label class="layui-form-label form-lable" style="width: 180px;">指标名称</label>
+					<div class="layui-input-inline input-inline">
+						<input type="text" id="indexName" name="indexName" disabled="true"
+							placeholder="" class="layui-input form-input"
+							data-th-Value="${indexName}">
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-inline layui-col-md8">
+					<label class="layui-form-label form-lable" style="width: 180px;">
+						<i class="iconfont must" style="display: inline;">*</i> 生效日期
+					</label>
+					<div class="layui-input-inline input-inline">
+						<input type="text" id="indexDate" name="indexDate"
+							placeholder="请选择日期"
+							class="layui-input form-input input-dateSelect"
+							data-th-Value="${entity?.indexDateStr}" allowClear="true">
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-inline layui-col-md8">
+					<label class="layui-form-label form-lable" style="width: 180px;">规则设置</label>
+					<div class="layui-input-inline input-inline"
+						style="width: 15% !important;">
+						<input type="text" id="ruleType1" name="ruleType1"
+							class="layui-input form-input input-select" placeholder="请输字段值"
+							data-th-data-result="${RULE_TYPE1}" allowClear="true"
+							childrenIds="ruleType2,ruleType3"> </input>
+					</div>
+					<div class="layui-input-inline input-inline"
+						style="width: 15% !important;">
+						<input id="ruleType2" name="ruleType2"
+							class="layui-input form-input input-select" placeholder="请输比较条件"
+							data-th-formatoption="false" data-th-data-result="${RULE_TYPE2}"
+							allowClear="true"> </input>
+					</div>
+					<div class="layui-input-inline input-inline"
+						style="width: 15% !important;">
+						<input id="ruleType3" name="ruleType3"
+							class="layui-input form-input input-select" placeholder="请输值类型"
+							data-th-formatoption="false" data-th-data-result="${RULE_TYPE3}"
+							allowClear="true"> </input>
+					</div>
+					<div class="layui-input-inline input-inline"
+						style="width: 15% !important;">
+						<div id="profitTypeSelect">
+							<input id="profitType" name="profitType"
+								class="layui-input form-input input-select"
+								placeholder="请选择收益类型" data-th-formatoption="false"
+								data-th-data-result="${PROFIT_TYPE}" allowClear="true">
+							</input>
+						</div>
+						<div id="chooseDateSelect">
+							<input type="text" id="chooseDate" name="chooseDate"
+								placeholder="请选择日期"
+								class="layui-input form-input input-dateSelect"
+								allowClear="true" data-th-initValue="${sysDate}"> </input>
+						</div>
+						<div id="raiseTypeSelect">
+							<input id="raiseType" name="raiseType"
+								class="layui-input form-input input-select"
+								placeholder="请选择募集方式" data-th-formatoption="false"
+								data-th-data-result="${RAISE_TYPE}" allowClear="true"> </input>
+						</div>
+						<div id="issueModeSelect">
+							<input id="issueMode" name="issueMode"
+								class="layui-input form-input input-select"
+								placeholder="请选择发行方式" data-th-formatoption="false"
+								data-th-data-result="${ISSUE_TYPE}" allowClear="true"> </input>
+						</div>
+						<div id="issueStautsSelect">
+							<input id="issueStauts" name="issueStauts"
+								class="layui-input form-input input-select"
+								placeholder="请选择发行状态" data-th-formatoption="false"
+								data-th-data-result="${ISSUE_STATUS}" allowClear="true">
+							</input>
+						</div>
+						<div id="openModeSelect">
+							<input id="openMode" name="openMode"
+								class="layui-input form-input input-select"
+								placeholder="请选择开放模式" data-th-formatoption="false"
+								data-th-data-result="${OPENMODE}" allowClear="true"> </input>
+						</div>
+						<div id="isIndepeAccSelect">
+							<input id="isIndepeAcc" name="isIndepeAcc"
+								class="layui-input form-input input-select" placeholder="请选择是否"
+								data-th-formatoption="false" data-th-data-result="${YES_OR_NO}"
+								allowClear="true"> </input>
+						</div>
+						<div id="prodTypeSelect">
+							<input id="prodType" name="prodType"
+								class="layui-input form-input input-select"
+								placeholder="请选择产品类型" data-th-formatoption="false"
+								data-th-data-result="${PROD_TYPE}" allowClear="true"> </input>
+						</div>
+						<div id="finaTypeSelect">
+							<input id="finaType" name="finaType"
+								class="layui-input form-input input-select"
+								placeholder="请选择理财类型" data-th-formatoption="false"
+								data-th-data-result="${FINA_TYPE}" allowClear="true"> </input>
+						</div>
+						<div id="prodTermTypeSelect">
+							<input id="prodTermType" name="prodTermType"
+								class="layui-input form-input input-select"
+								placeholder="请选择产品期限类型" data-th-formatoption="false"
+								data-th-data-result="${PROD_TERM_TYPE}" allowClear="true">
+							</input>
+						</div>
+						<div id="riskTypeSelect">
+							<input id="riskType" name="riskType"
+								class="layui-input form-input input-select"
+								placeholder="请选择投资者风险偏好" data-th-formatoption="false"
+								data-th-data-result="${RISKTYPE}" allowClear="true">
+							</input>
+						</div>
+						<div id="riskLevelSelect">
+							<input id="riskLevel" name="riskLevel"
+								class="layui-input form-input input-select"
+								placeholder="请选择产品风险评级" data-th-formatoption="false"
+								data-th-data-result="${RISK_LEVEL}" allowClear="true">
+							</input>
+						</div>
+					</div>
+					<div class="layui-inline">
+						<button type="button" class="layui-btn layui-btn-sm btn-default"
+							id="ReportContentEnum003_btn_add">
+							<i class="iconfont icon-add"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label form-lable" style="width: 180px;">已设规则</label>
+				<div class="layui-inline" style="width: 60%;">
+					<table class="layui-table" id="settedRule" name="settedRule"></table>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-inline layui-col-md8">
+					<label class="layui-form-label form-lable" style="width:180px;" >
+					<!-- <i class="iconfont must" style="display: inline;">*</i>  --> 适用产品范围说明
+					</label>
+					<div class="layui-input-inline input-inline">
+						<textarea id="indexDetail" name="indexDetail"
+							data-th-text="${entity?.indexDetail}" class="layui-textarea"
+							placeholder="请输入内容"
+							data-th-placeholder="#{SysCommon.placeholder}"></textarea>
+					</div>
+				</div>
+			</div>
+			<!-- <div class="layui-form-item">
+				<div class="layui-inline layui-col-md8">
+					<label class="layui-form-label form-lable" style="width: 180px;">
+						<i class="iconfont must" style="display: inline;">*</i> 指标类型
+					</label>
+					<div class="layui-input-inline input-inline">
+						<input type="text" id="indexType" name="indexType"
+							placeholder="请输入内容" class="layui-input form-input input-checkbox"
+							data-result="[{&quot;id&quot;:&quot;01&quot;,&quot;text&quot;:&quot;录入型&quot;,&quot;col&quot;:&quot;&quot;},
+                                                     {&quot;id&quot;:&quot;02&quot;,&quot;text&quot;:&quot;附件型&quot;,&quot;col&quot;:&quot;&quot;}]"
+							data-th-initValue='${type}'>
+					</div>
+				</div>
+			</div> -->
+			<!-- <div class="layui-form-item">
+				<div class="layui-inline layui-col-md8">
+					<label class="layui-form-label form-lable "> </label>
+					<div class="layui-input-inline input-inline">
+						<a id="uploadFile" href="#" style="margin-left: 350px;"></a>
+					</div>
+				</div>
+			</div> -->
+
+			<div class="layui-form-item">
+				<div class="layui-inline layui-col-md8">
+					<label class="layui-form-label form-lable" style="width: 180px;">
+						<i class="iconfont must" style="display: inline;">*</i> 指标值
+					</label>
+					<div class="layui-input-inline input-inline">
+						<textarea id="indexValue" name="indexValue"
+							data-th-text="${entity?.indexValue}" class="layui-textarea"
+							placeholder="请输入内容"
+							data-th-placeholder="#{SysCommon.placeholder}"></textarea>
+					</div>
+					<!-- <div class="upload"
+						th:disabled="${pageModel} eq ${pageModelReference}" id="test1"
+						style="display: none;"
+						data-option="{allowFileType: 'xls|xlsx', type: 'drag', callback: 'FileCommon.onUploaded'}">
+					</div> -->
+				</div>
+			</div>
+			<div class="layui-col-md11" style="margin: 50px;">
+				<div class="text-center">
+					<a id="ReportContentEnum003_btn_save"
+						class="layui-btn layui-btn-sm btn-save"
+						data-th-text="#{SysCommon.save}">保存</a> <a
+						id="ReportContentEnum003_btn_submit"
+						class="layui-btn layui-btn-sm btn-submit"
+						data-th-text="#{SysCommon.submit}">提交</a> <a
+						id="ReportContentEnum003_btn_cancel"
+						class="layui-btn layui-btn-sm btn-cancel"
+						data-th-text="#{SysCommon.cancel}">取消</a>
+				</div>
+			</div>
+		</form>
+
+	</div>
+	<div layout:fragment="script">
+		<script th:inline="javascript" type="text/javascript">
+		    var indexName = /*[[${indexName}]]*/'';
+			var priId = /*[[${priId}]]*/'';
+			//$("#priId").val(priId);
+		</script>
+		<script
+			data-th-src="@{/js/disclosure/information/config/reportcontentenum/ReportContentEnum003.js}"
+			type="text/javascript"></script>
+	</div>
+</body>
+</html>

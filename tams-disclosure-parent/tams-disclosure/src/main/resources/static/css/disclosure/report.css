@@ -1,0 +1,41 @@
+/* CSS Document */
+
+/*标题*/
+.menu-title-wrap { margin: 25px 0 10px 0;border-left: 5px solid #1d8ce7;}
+.menu-title {color: #666666;font-size: 16px;padding-left: 10px;}
+/*延时报送检查*/
+.delay-des-wrap {border: 1px solid #bcbcbc; background: #fff; padding:5px 0 5px 5px; z-index: 64; right:50px;top: -27px; position: absolute; line-height:normal;}
+.delay-des-wrap ul li { float: left; margin-right:5px;}
+.delay-des-wrap ul li i { background-color:#ffffff; width:12px; height:10px; display:inline-block; font-size:0; margin-right:5px; vertical-align:middle;}
+.delay-des-wrap ul li i.youxiu { background-color:#a8de64;}
+.delay-des-wrap ul li i.hege { background-color:#fbf786;}
+.delay-des-wrap ul li i.yujing { background-color:#ff9999;}
+
+/*日历样式*/
+#calendar { width: calc(50% - 15px); padding: 5px 10px 5px 5px;display:inline-block; float:left;}
+#calendar1 { width: calc(50% - 15px); padding: 5px 5px 5px 10px;display: inline-block; float:right;}
+#calendar .fc-scroller, #calendar1 .fc-scroller {overflow-x: hidden !important;overflow-y: auto !important;}
+.holiday-des {position: absolute;top: 0;}
+.sourcepreview {overflow: hidden;overflow-y: auto!important;}
+
+.fc-day-number{font-size: 18px;}
+.fc-day-cnDate{font-size: 16px;}
+.fc-today .fc-day-cnDate{color: #fff;}
+.fc-other-month.fc-today{background: #fff!important;color: #999!important;}
+.fc-other-month.fc-today .fc-day-cnDate{color: #999;}
+
+.whole-tab-wrap .tab-pane {display:none;}
+/*.whole-tab-wrap .active {display:block!important;}*/
+
+/*风险偏好*/
+.text-Conervative,.text-balance,.text-grow,.text-steady,.text-progress {font-style:normal;padding: 2px 5px;border-radius: 2px;color: #fff;}
+.text-Conervative {background: #90c31f;}.text-balance {background: #dc73ff;}
+.text-grow {background: #ff9326;}.text-steady {background: #3bb4f2;}.text-progress {background: #dd514c;}
+
+/*层级-等级*/
+.btn-common .iconfont {font-size: 12px;}
+.debt-level-01 { color: #a3d900;}.debt-level-02 { color: #00d936;}
+.debt-level-03 { color: #00d9d9;}.debt-level-04 {color: #00a3d9;}
+.debt-level-05 { color: #3b9dff;}.debt-level-06 {color: #b973ff;}
+.debt-level-07 {color: #ff4dff;}.debt-level-08 {color: #ffc926;}
+.debt-level-09 {color: #ff9673;}.debt-level-10 {color: #eb3838;}

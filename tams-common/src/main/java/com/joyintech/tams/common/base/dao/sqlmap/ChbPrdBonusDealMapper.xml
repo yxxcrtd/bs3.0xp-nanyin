@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbPrdBonusDealMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbPrdBonusDeal" >
+        <result column="SEQNO" property="seqno" jdbcType="CHAR" />
+        <result column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <result column="FPROD_ID" property="fprodId" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="TRADE_TYPE" property="tradeType" jdbcType="VARCHAR" />
+        <result column="REG_DATE" property="regDate" jdbcType="DATE" />
+        <result column="SETTDATE_DATE" property="settdateDate" jdbcType="DATE" />
+        <result column="PAY_DATE" property="payDate" jdbcType="DATE" />
+        <result column="REG_TRADE_QTY" property="regTradeQty" jdbcType="DECIMAL" />
+        <result column="TRADE_QTY" property="tradeQty" jdbcType="DECIMAL" />
+        <result column="TRADE_AMT" property="tradeAmt" jdbcType="DECIMAL" />
+        <result column="INT_AMT" property="intAmt" jdbcType="DECIMAL" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="REV_DATE" property="revDate" jdbcType="DATE" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbPrdBonusDeal" >
+        insert into CHB_PRD_BONUS_DEAL (SEQNO, TRADE_ID, FPROD_ID, 
+            PROD_ID, TRADE_TYPE, REG_DATE, 
+            SETTDATE_DATE, PAY_DATE, REG_TRADE_QTY, 
+            TRADE_QTY, TRADE_AMT, INT_AMT, 
+            STATUS, REV_DATE, REMARK, 
+            UPDATE_USER, UPDATE_TIME, CREATE_USER, 
+            CREATE_TIME, ORG_CODE, CREATE_DEPT
+            )
+        values (#{seqno,jdbcType=CHAR}, #{tradeId,jdbcType=VARCHAR}, #{fprodId,jdbcType=VARCHAR}, 
+            #{prodId,jdbcType=VARCHAR}, #{tradeType,jdbcType=VARCHAR}, #{regDate,jdbcType=DATE}, 
+            #{settdateDate,jdbcType=DATE}, #{payDate,jdbcType=DATE}, #{regTradeQty,jdbcType=DECIMAL}, 
+            #{tradeQty,jdbcType=DECIMAL}, #{tradeAmt,jdbcType=DECIMAL}, #{intAmt,jdbcType=DECIMAL}, 
+            #{status,jdbcType=VARCHAR}, #{revDate,jdbcType=DATE}, #{remark,jdbcType=VARCHAR}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{orgCode,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbPrdBonusDeal" >
+        insert into CHB_PRD_BONUS_DEAL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="fprodId != null" >
+                FPROD_ID,
+            </if>
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="tradeType != null" >
+                TRADE_TYPE,
+            </if>
+            <if test="regDate != null" >
+                REG_DATE,
+            </if>
+            <if test="settdateDate != null" >
+                SETTDATE_DATE,
+            </if>
+            <if test="payDate != null" >
+                PAY_DATE,
+            </if>
+            <if test="regTradeQty != null" >
+                REG_TRADE_QTY,
+            </if>
+            <if test="tradeQty != null" >
+                TRADE_QTY,
+            </if>
+            <if test="tradeAmt != null" >
+                TRADE_AMT,
+            </if>
+            <if test="intAmt != null" >
+                INT_AMT,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="revDate != null" >
+                REV_DATE,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=CHAR},
+            </if>
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="fprodId != null" >
+                #{fprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeType != null" >
+                #{tradeType,jdbcType=VARCHAR},
+            </if>
+            <if test="regDate != null" >
+                #{regDate,jdbcType=DATE},
+            </if>
+            <if test="settdateDate != null" >
+                #{settdateDate,jdbcType=DATE},
+            </if>
+            <if test="payDate != null" >
+                #{payDate,jdbcType=DATE},
+            </if>
+            <if test="regTradeQty != null" >
+                #{regTradeQty,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeQty != null" >
+                #{tradeQty,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeAmt != null" >
+                #{tradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="intAmt != null" >
+                #{intAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="revDate != null" >
+                #{revDate,jdbcType=DATE},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbPrdBonusDeal" >
+        insert into CHB_PRD_BONUS_DEAL(SEQNO, TRADE_ID, FPROD_ID, PROD_ID, TRADE_TYPE, REG_DATE, 
+        SETTDATE_DATE, PAY_DATE, REG_TRADE_QTY, TRADE_QTY, TRADE_AMT, INT_AMT, STATUS, REV_DATE, 
+        REMARK, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE, CREATE_DEPT
+        )
+        select SEQNO, TRADE_ID, FPROD_ID, PROD_ID, TRADE_TYPE, REG_DATE, 
+            SETTDATE_DATE, PAY_DATE, REG_TRADE_QTY, TRADE_QTY, TRADE_AMT, INT_AMT, #{status,jdbcType=VARCHAR} STATUS, REV_DATE, 
+            REMARK, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE, CREATE_DEPT
+            
+             from CHB_PRD_BONUS_DEAL
+             where STATUS = 'E'
+    </insert>
+</mapper>

@@ -1,0 +1,54 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
+<head>
+<meta charset="utf-8">
+<title data-th-text="#{DisclosureHolidaymarket001}">节假日市场维护</title>
+<link rel="stylesheet" type="text/css" data-th-href="@{/css/disclosure/fullcalendar.css}">
+<link rel="stylesheet" type="text/css" data-th-href="@{/css/disclosure/fullcalendar.print.css}" media="print">
+<link rel="stylesheet" type="text/css" data-th-href="@{/css/disclosure/mytest.css}">
+<link rel="stylesheet" type="text/css" data-th-href="@{/css/disclosure/report.css}">
+</head>
+
+<body>
+<div layout:fragment="content">
+<div class="form-button-area" filter="false" export="false">
+    <a id="DisclosureHolidaymarket001_btn_setHolid" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-holiday"></i><span>设为节假日</span></a>
+    <a id="DisclosureHolidaymarket001_btn_setWork" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-weekday"></i><span>设为工作日</span></a>
+  </div>
+<div class="joyin-form-wrap condition-area">
+  <form class="layui-form" id="searchForm">
+    <div class="layui-form-item">
+      <div class="layui-inline layui-col-md3">
+        <label class="layui-form-label form-lable">市场日历类型</label>
+        <div class="layui-input-inline input-inline">
+          <input id="marketCalendarType" class="input-select" allowClear="true" data-th-data-result='${SHARES_TRADE_MARKET}' initvalue="01" placeholder="请选择" />
+        </div>
+      </div>
+      <div class="layui-inline layui-col-md3">
+        <label class="layui-form-label form-lable">年份</label>
+        <div class="layui-input-inline input-inline">
+          <input class="layui-input form-input input-dateSelect" data-option="{type:'year'}" id="selectYear" type="text" data-th-data-result='${SELECT_YEAR}' data-th-formatoption="true" data-th-data-initvalue='${nowYear}' placeholder="请选择" data-th-placeholder="#{SysCommon.placeholder}">
+        </div>
+      </div>
+    </div>
+  </form>
+  </div>
+  <div class="my-test-test layui-clear" style="margin-top:10px;">
+    <div id="calendar"></div>
+    <div id="calendar1"></div>
+  </div>
+</div>
+<div layout:fragment="script">
+  <script data-th-src="@{/js/disclosure/jquery.validate.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/disclosure/joyinvalid.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/disclosure/report-common.js}" type="text/javascript"></script>
+  <!-- 先引用 -->
+  <script data-th-src="@{/js/disclosure/moment-with-locales.min.js}" type="text/javascript"></script>
+  <!-- 再引用日期组件 -->
+  <script data-th-src="@{/js/disclosure/lunar.js}" type="text/javascript"></script> 
+  <script data-th-src="@{/js/disclosure/fullcalendar.js}" type="text/javascript"></script> 
+  <script data-th-src="@{/js/disclosure/zh-cn.js}" type="text/javascript"></script> 
+  <script data-th-src="@{/js/disclosure/submitmaintenance/holidaymarket/DisclosureHolidaymarket001.js}" type="text/javascript"></script> 
+</div>
+</body>
+</html>

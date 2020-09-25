@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
+<head>
+    <meta charset="UTF-8">
+    <title data-th-text="#{DisPoiQuery001}">poi查询sql管理</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="form-button-area" export="false">
+        <!-- 新建-->
+        <button type="button" class="layui-btn layui-btn-sm btn-default" id="DisPoiQuery001_btn_add"><i class="iconfont icon-add"></i>新建 </button>
+        <!-- 删除 -->
+        <button type="button" class="layui-btn layui-btn-sm btn-default" id="DisPoiQuery001_btn_delete"><i class="iconfont icon-delete"></i>删除 </button>
+    </div>
+    <div class="joyin-form-wrap joyin-filter-form condition-area">
+        <form class="layui-form" id="searchForm">
+            <div class="layui-form-item" >
+                <div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
+                    <label class="layui-form-label form-lable">关联类型</label>
+                    <div class="layui-input-inline input-inline">
+                        <select id="poiType" name="poiType" class="layui-input form-input input-select"
+                                placeholder="请选择" data-th-data-result="${POI_TYPE}"
+                                data-th-placeholder="#{SysCommon.placeholder}" allowClear="true" >
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable">关联编号</label>
+                    <div class="layui-input-inline input-inline">
+                        <select id="poiId" name="poiId" class="layui-input form-input input-select"
+                                placeholder="请选择" data-url='queryPoiIdList'
+                                parentIds="poiType"
+                                formatoption = true
+                                allowClear="true"
+                                data-th-placeholder="#{SysCommon.placeholder}" multiple="multiple">
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" style="height: 24px">
+            </div>
+        </form>
+    </div>
+    <table class="layui-table"
+           id="DisPoiQuery001_disPoiQuery001"></table>
+</div>
+<div layout:fragment="script">
+    <script data-th-src="@{/js/disclosure/information/config/dispoiquery/DisPoiQuery001.js}" type="text/javascript"></script>
+    <script data-th-src="@{/js/disclosure/report.js}" type="text/javascript"></script>
+    <script data-th-inline="javascript" type="text/javascript">
+        var prod = [[${prodInfoList}]];
+        var prodArray =  $.parseJSON(prod);
+        var REPORT_SERVER_URL = [[${REPORT_SERVER_URL}]];
+        var REPORT_USERNAME = [[${REPORT_USERNAME}]];
+        var REPORT_PASSWORD = [[${REPORT_PASSWORD}]];
+        var REPORT_SERVER_PATH = [[${REPORT_SERVER_PATH}]];
+        var cureDate = [[${cureDate}]];
+    </script>
+</div>
+</body>
+</html>

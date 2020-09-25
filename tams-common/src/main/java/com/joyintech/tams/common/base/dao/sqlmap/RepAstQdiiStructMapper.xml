@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepAstQdiiStructMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepAstQdiiStruct" >
+        <id column="REP_FINPROD_ID" property="repFinprodId" jdbcType="VARCHAR" />
+        <result column="REP_COUNTRY_AREA" property="repCountryArea" jdbcType="VARCHAR" />
+        <result column="REP_VDATE" property="repVdate" jdbcType="DATE" />
+        <result column="REP_MDATE" property="repMdate" jdbcType="DATE" />
+        <result column="REP_PAPER_RATE" property="repPaperRate" jdbcType="DECIMAL" />
+        <result column="REP_INTPAY_CYCLE" property="repIntpayCycle" jdbcType="DECIMAL" />
+        <result column="REP_INCOME_RATIO" property="repIncomeRatio" jdbcType="DECIMAL" />
+        <result column="REP_DER_INSTR_RATIO" property="repDerInstrRatio" jdbcType="DECIMAL" />
+        <result column="REP_DER_INSTR_INV_TYPE" property="repDerInstrInvType" jdbcType="VARCHAR" />
+        <result column="REP_DER_INSTR_TARGET" property="repDerInstrTarget" jdbcType="VARCHAR" />
+        <result column="REP_ACCT_MODE" property="repAcctMode" jdbcType="VARCHAR" />
+        <result column="REP_SPECIAL_CMT" property="repSpecialCmt" jdbcType="VARCHAR" />
+        <result column="REP_MAX_YIELD" property="repMaxYield" jdbcType="DECIMAL" />
+        <result column="REP_MIN_YIELD" property="repMinYield" jdbcType="DECIMAL" />
+        <result column="REP_BASIC_PRICE" property="repBasicPrice" jdbcType="DECIMAL" />
+        <result column="REP_REG_DATE_PRICE" property="repRegDatePrice" jdbcType="DECIMAL" />
+        <result column="REP_TRADE_FEE" property="repTradeFee" jdbcType="VARCHAR" />
+        <result column="REP_REMARK" property="repRemark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        REP_FINPROD_ID REP_FINPROD_ID, REP_COUNTRY_AREA REP_COUNTRY_AREA, REP_VDATE REP_VDATE, 
+        REP_MDATE REP_MDATE, REP_PAPER_RATE REP_PAPER_RATE, REP_INTPAY_CYCLE REP_INTPAY_CYCLE, 
+        REP_INCOME_RATIO REP_INCOME_RATIO, REP_DER_INSTR_RATIO REP_DER_INSTR_RATIO, REP_DER_INSTR_INV_TYPE REP_DER_INSTR_INV_TYPE, 
+        REP_DER_INSTR_TARGET REP_DER_INSTR_TARGET, REP_ACCT_MODE REP_ACCT_MODE, REP_SPECIAL_CMT REP_SPECIAL_CMT, 
+        REP_MAX_YIELD REP_MAX_YIELD, REP_MIN_YIELD REP_MIN_YIELD, REP_BASIC_PRICE REP_BASIC_PRICE, 
+        REP_REG_DATE_PRICE REP_REG_DATE_PRICE, REP_TRADE_FEE REP_TRADE_FEE, REP_REMARK REP_REMARK, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepAstQdiiStructMapper.Base_Column_List" />
+        from REP_AST_QDII_STRUCT
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepAstQdiiStructMapper.Base_Column_List" />
+        from REP_AST_QDII_STRUCT
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepAstQdiiStructMapper.Base_Column_List" />
+        from REP_AST_QDII_STRUCT
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from REP_AST_QDII_STRUCT
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepAstQdiiStruct" >
+        insert into REP_AST_QDII_STRUCT (REP_FINPROD_ID, REP_COUNTRY_AREA, REP_VDATE, 
+            REP_MDATE, REP_PAPER_RATE, REP_INTPAY_CYCLE, 
+            REP_INCOME_RATIO, REP_DER_INSTR_RATIO, REP_DER_INSTR_INV_TYPE, 
+            REP_DER_INSTR_TARGET, REP_ACCT_MODE, REP_SPECIAL_CMT, 
+            REP_MAX_YIELD, REP_MIN_YIELD, REP_BASIC_PRICE, 
+            REP_REG_DATE_PRICE, REP_TRADE_FEE, REP_REMARK, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{repFinprodId,jdbcType=VARCHAR}, #{repCountryArea,jdbcType=VARCHAR}, #{repVdate,jdbcType=DATE}, 
+            #{repMdate,jdbcType=DATE}, #{repPaperRate,jdbcType=DECIMAL}, #{repIntpayCycle,jdbcType=DECIMAL}, 
+            #{repIncomeRatio,jdbcType=DECIMAL}, #{repDerInstrRatio,jdbcType=DECIMAL}, #{repDerInstrInvType,jdbcType=VARCHAR}, 
+            #{repDerInstrTarget,jdbcType=VARCHAR}, #{repAcctMode,jdbcType=VARCHAR}, #{repSpecialCmt,jdbcType=VARCHAR}, 
+            #{repMaxYield,jdbcType=DECIMAL}, #{repMinYield,jdbcType=DECIMAL}, #{repBasicPrice,jdbcType=DECIMAL}, 
+            #{repRegDatePrice,jdbcType=DECIMAL}, #{repTradeFee,jdbcType=VARCHAR}, #{repRemark,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepAstQdiiStruct" >
+        insert into REP_AST_QDII_STRUCT
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="repFinprodId != null" >
+                REP_FINPROD_ID,
+            </if>
+            <if test="repCountryArea != null" >
+                REP_COUNTRY_AREA,
+            </if>
+            <if test="repVdate != null" >
+                REP_VDATE,
+            </if>
+            <if test="repMdate != null" >
+                REP_MDATE,
+            </if>
+            <if test="repPaperRate != null" >
+                REP_PAPER_RATE,
+            </if>
+            <if test="repIntpayCycle != null" >
+                REP_INTPAY_CYCLE,
+            </if>
+            <if test="repIncomeRatio != null" >
+                REP_INCOME_RATIO,
+            </if>
+            <if test="repDerInstrRatio != null" >
+                REP_DER_INSTR_RATIO,
+            </if>
+            <if test="repDerInstrInvType != null" >
+                REP_DER_INSTR_INV_TYPE,
+            </if>
+            <if test="repDerInstrTarget != null" >
+                REP_DER_INSTR_TARGET,
+            </if>
+            <if test="repAcctMode != null" >
+                REP_ACCT_MODE,
+            </if>
+            <if test="repSpecialCmt != null" >
+                REP_SPECIAL_CMT,
+            </if>
+            <if test="repMaxYield != null" >
+                REP_MAX_YIELD,
+            </if>
+            <if test="repMinYield != null" >
+                REP_MIN_YIELD,
+            </if>
+            <if test="repBasicPrice != null" >
+                REP_BASIC_PRICE,
+            </if>
+            <if test="repRegDatePrice != null" >
+                REP_REG_DATE_PRICE,
+            </if>
+            <if test="repTradeFee != null" >
+                REP_TRADE_FEE,
+            </if>
+            <if test="repRemark != null" >
+                REP_REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="repFinprodId != null" >
+                #{repFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="repCountryArea != null" >
+                #{repCountryArea,jdbcType=VARCHAR},
+            </if>
+            <if test="repVdate != null" >
+                #{repVdate,jdbcType=DATE},
+            </if>
+            <if test="repMdate != null" >
+                #{repMdate,jdbcType=DATE},
+            </if>
+            <if test="repPaperRate != null" >
+                #{repPaperRate,jdbcType=DECIMAL},
+            </if>
+            <if test="repIntpayCycle != null" >
+                #{repIntpayCycle,jdbcType=DECIMAL},
+            </if>
+            <if test="repIncomeRatio != null" >
+                #{repIncomeRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="repDerInstrRatio != null" >
+                #{repDerInstrRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="repDerInstrInvType != null" >
+                #{repDerInstrInvType,jdbcType=VARCHAR},
+            </if>
+            <if test="repDerInstrTarget != null" >
+                #{repDerInstrTarget,jdbcType=VARCHAR},
+            </if>
+            <if test="repAcctMode != null" >
+                #{repAcctMode,jdbcType=VARCHAR},
+            </if>
+            <if test="repSpecialCmt != null" >
+                #{repSpecialCmt,jdbcType=VARCHAR},
+            </if>
+            <if test="repMaxYield != null" >
+                #{repMaxYield,jdbcType=DECIMAL},
+            </if>
+            <if test="repMinYield != null" >
+                #{repMinYield,jdbcType=DECIMAL},
+            </if>
+            <if test="repBasicPrice != null" >
+                #{repBasicPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="repRegDatePrice != null" >
+                #{repRegDatePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="repTradeFee != null" >
+                #{repTradeFee,jdbcType=VARCHAR},
+            </if>
+            <if test="repRemark != null" >
+                #{repRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepAstQdiiStruct" >
+        insert into REP_AST_QDII_STRUCT(REP_FINPROD_ID, REP_COUNTRY_AREA, REP_VDATE, REP_MDATE, 
+        REP_PAPER_RATE, REP_INTPAY_CYCLE, REP_INCOME_RATIO, REP_DER_INSTR_RATIO, REP_DER_INSTR_INV_TYPE, 
+        REP_DER_INSTR_TARGET, REP_ACCT_MODE, REP_SPECIAL_CMT, REP_MAX_YIELD, REP_MIN_YIELD, 
+        REP_BASIC_PRICE, REP_REG_DATE_PRICE, REP_TRADE_FEE, REP_REMARK, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select REP_FINPROD_ID, REP_COUNTRY_AREA, REP_VDATE, REP_MDATE, 
+            REP_PAPER_RATE, REP_INTPAY_CYCLE, REP_INCOME_RATIO, REP_DER_INSTR_RATIO, REP_DER_INSTR_INV_TYPE, 
+            REP_DER_INSTR_TARGET, REP_ACCT_MODE, REP_SPECIAL_CMT, REP_MAX_YIELD, REP_MIN_YIELD, 
+            REP_BASIC_PRICE, REP_REG_DATE_PRICE, REP_TRADE_FEE, REP_REMARK, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from REP_AST_QDII_STRUCT
+             where 1 = 1 and REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepAstQdiiStruct" >
+        update REP_AST_QDII_STRUCT
+        <set >
+            <if test="repCountryArea != null" >
+                REP_COUNTRY_AREA = #{repCountryArea,jdbcType=VARCHAR},
+            </if>
+            <if test="repVdate != null" >
+                REP_VDATE = #{repVdate,jdbcType=DATE},
+            </if>
+            <if test="repMdate != null" >
+                REP_MDATE = #{repMdate,jdbcType=DATE},
+            </if>
+            <if test="repPaperRate != null" >
+                REP_PAPER_RATE = #{repPaperRate,jdbcType=DECIMAL},
+            </if>
+            <if test="repIntpayCycle != null" >
+                REP_INTPAY_CYCLE = #{repIntpayCycle,jdbcType=DECIMAL},
+            </if>
+            <if test="repIncomeRatio != null" >
+                REP_INCOME_RATIO = #{repIncomeRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="repDerInstrRatio != null" >
+                REP_DER_INSTR_RATIO = #{repDerInstrRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="repDerInstrInvType != null" >
+                REP_DER_INSTR_INV_TYPE = #{repDerInstrInvType,jdbcType=VARCHAR},
+            </if>
+            <if test="repDerInstrTarget != null" >
+                REP_DER_INSTR_TARGET = #{repDerInstrTarget,jdbcType=VARCHAR},
+            </if>
+            <if test="repAcctMode != null" >
+                REP_ACCT_MODE = #{repAcctMode,jdbcType=VARCHAR},
+            </if>
+            <if test="repSpecialCmt != null" >
+                REP_SPECIAL_CMT = #{repSpecialCmt,jdbcType=VARCHAR},
+            </if>
+            <if test="repMaxYield != null" >
+                REP_MAX_YIELD = #{repMaxYield,jdbcType=DECIMAL},
+            </if>
+            <if test="repMinYield != null" >
+                REP_MIN_YIELD = #{repMinYield,jdbcType=DECIMAL},
+            </if>
+            <if test="repBasicPrice != null" >
+                REP_BASIC_PRICE = #{repBasicPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="repRegDatePrice != null" >
+                REP_REG_DATE_PRICE = #{repRegDatePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="repTradeFee != null" >
+                REP_TRADE_FEE = #{repTradeFee,jdbcType=VARCHAR},
+            </if>
+            <if test="repRemark != null" >
+                REP_REMARK = #{repRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepAstQdiiStruct" >
+        update REP_AST_QDII_STRUCT
+        set REP_COUNTRY_AREA = #{repCountryArea,jdbcType=VARCHAR},
+            REP_VDATE = #{repVdate,jdbcType=DATE},
+            REP_MDATE = #{repMdate,jdbcType=DATE},
+            REP_PAPER_RATE = #{repPaperRate,jdbcType=DECIMAL},
+            REP_INTPAY_CYCLE = #{repIntpayCycle,jdbcType=DECIMAL},
+            REP_INCOME_RATIO = #{repIncomeRatio,jdbcType=DECIMAL},
+            REP_DER_INSTR_RATIO = #{repDerInstrRatio,jdbcType=DECIMAL},
+            REP_DER_INSTR_INV_TYPE = #{repDerInstrInvType,jdbcType=VARCHAR},
+            REP_DER_INSTR_TARGET = #{repDerInstrTarget,jdbcType=VARCHAR},
+            REP_ACCT_MODE = #{repAcctMode,jdbcType=VARCHAR},
+            REP_SPECIAL_CMT = #{repSpecialCmt,jdbcType=VARCHAR},
+            REP_MAX_YIELD = #{repMaxYield,jdbcType=DECIMAL},
+            REP_MIN_YIELD = #{repMinYield,jdbcType=DECIMAL},
+            REP_BASIC_PRICE = #{repBasicPrice,jdbcType=DECIMAL},
+            REP_REG_DATE_PRICE = #{repRegDatePrice,jdbcType=DECIMAL},
+            REP_TRADE_FEE = #{repTradeFee,jdbcType=VARCHAR},
+            REP_REMARK = #{repRemark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </update>
+</mapper>

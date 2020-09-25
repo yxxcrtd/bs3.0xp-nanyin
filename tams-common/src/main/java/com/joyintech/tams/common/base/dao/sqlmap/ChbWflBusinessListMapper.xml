@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbWflBusinessListMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbWflBusinessList" >
+        <id column="C_W_B_L_SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="C_W_B_L_WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+        <result column="C_W_B_L_PAGE_ID" property="pageId" jdbcType="VARCHAR" />
+        <result column="C_W_B_L_ELEMENT_ID" property="elementId" jdbcType="VARCHAR" />
+        <result column="C_W_B_L_CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+        <result column="C_W_B_L_CRT_DATE" property="crtDate" jdbcType="DATE" />
+        <result column="C_W_B_L_CUR_USER" property="curUser" jdbcType="VARCHAR" />
+        <result column="C_W_B_L_CUR_NODE_ID" property="curNodeId" jdbcType="VARCHAR" />
+        <result column="C_W_B_L_NEXT_USER" property="nextUser" jdbcType="VARCHAR" />
+        <result column="C_W_B_L_BUSINESS_TYPE" property="businessType" jdbcType="VARCHAR" />
+        <result column="C_W_B_L_TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <result column="C_W_B_L_TITLE" property="title" jdbcType="VARCHAR" />
+        <result column="C_W_B_L_ACTION_TYPE" property="actionType" jdbcType="VARCHAR" />
+        <result column="C_W_B_L_PROCESS_STATE" property="processState" jdbcType="VARCHAR" />
+        <result column="C_W_B_L_CANCEL_FLG" property="cancelFlg" jdbcType="VARCHAR" />
+        <result column="C_W_B_L_SIGN_FLG" property="signFlg" jdbcType="VARCHAR" />
+        <result column="C_W_B_L_COMPLETE_FLG" property="completeFlg" jdbcType="VARCHAR" />
+        <result column="C_W_B_L_CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="C_W_B_L_CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="C_W_B_L_CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="C_W_B_L_UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="C_W_B_L_UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO as C_W_B_L_SEQNO, WORKFLOW_ID as C_W_B_L_WORKFLOW_ID, PAGE_ID as C_W_B_L_PAGE_ID, 
+        ELEMENT_ID as C_W_B_L_ELEMENT_ID, CRT_USER as C_W_B_L_CRT_USER, CRT_DATE as C_W_B_L_CRT_DATE, 
+        CUR_USER as C_W_B_L_CUR_USER, CUR_NODE_ID as C_W_B_L_CUR_NODE_ID, NEXT_USER as C_W_B_L_NEXT_USER, 
+        BUSINESS_TYPE as C_W_B_L_BUSINESS_TYPE, TRADE_ID as C_W_B_L_TRADE_ID, TITLE as C_W_B_L_TITLE, 
+        ACTION_TYPE as C_W_B_L_ACTION_TYPE, PROCESS_STATE as C_W_B_L_PROCESS_STATE, CANCEL_FLG as C_W_B_L_CANCEL_FLG, 
+        SIGN_FLG as C_W_B_L_SIGN_FLG, COMPLETE_FLG as C_W_B_L_COMPLETE_FLG, CREATE_USER as C_W_B_L_CREATE_USER, 
+        CREATE_DEPT as C_W_B_L_CREATE_DEPT, CREATE_TIME as C_W_B_L_CREATE_TIME, UPDATE_USER as C_W_B_L_UPDATE_USER, 
+        UPDATE_TIME as C_W_B_L_UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbWflBusinessListMapper.Base_Column_List" />
+        from CHB_WFL_BUSINESS_LIST
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbWflBusinessListMapper.Base_Column_List" />
+        from CHB_WFL_BUSINESS_LIST
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbWflBusinessListMapper.Base_Column_List" />
+        from CHB_WFL_BUSINESS_LIST
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_WFL_BUSINESS_LIST
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_WFL_BUSINESS_LIST
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbWflBusinessList" >
+        insert into CHB_WFL_BUSINESS_LIST (SEQNO, WORKFLOW_ID, PAGE_ID, 
+            ELEMENT_ID, CRT_USER, CRT_DATE, 
+            CUR_USER, CUR_NODE_ID, NEXT_USER, 
+            BUSINESS_TYPE, TRADE_ID, TITLE, 
+            ACTION_TYPE, PROCESS_STATE, CANCEL_FLG, 
+            SIGN_FLG, COMPLETE_FLG, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{seqno,jdbcType=VARCHAR}, #{workflowId,jdbcType=VARCHAR}, #{pageId,jdbcType=VARCHAR}, 
+            #{elementId,jdbcType=VARCHAR}, #{crtUser,jdbcType=VARCHAR}, #{crtDate,jdbcType=DATE}, 
+            #{curUser,jdbcType=VARCHAR}, #{curNodeId,jdbcType=VARCHAR}, #{nextUser,jdbcType=VARCHAR}, 
+            #{businessType,jdbcType=VARCHAR}, #{tradeId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+            #{actionType,jdbcType=VARCHAR}, #{processState,jdbcType=VARCHAR}, #{cancelFlg,jdbcType=VARCHAR}, 
+            #{signFlg,jdbcType=VARCHAR}, #{completeFlg,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbWflBusinessList" >
+        insert into CHB_WFL_BUSINESS_LIST
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID,
+            </if>
+            <if test="pageId != null" >
+                PAGE_ID,
+            </if>
+            <if test="elementId != null" >
+                ELEMENT_ID,
+            </if>
+            <if test="crtUser != null" >
+                CRT_USER,
+            </if>
+            <if test="crtDate != null" >
+                CRT_DATE,
+            </if>
+            <if test="curUser != null" >
+                CUR_USER,
+            </if>
+            <if test="curNodeId != null" >
+                CUR_NODE_ID,
+            </if>
+            <if test="nextUser != null" >
+                NEXT_USER,
+            </if>
+            <if test="businessType != null" >
+                BUSINESS_TYPE,
+            </if>
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="title != null" >
+                TITLE,
+            </if>
+            <if test="actionType != null" >
+                ACTION_TYPE,
+            </if>
+            <if test="processState != null" >
+                PROCESS_STATE,
+            </if>
+            <if test="cancelFlg != null" >
+                CANCEL_FLG,
+            </if>
+            <if test="signFlg != null" >
+                SIGN_FLG,
+            </if>
+            <if test="completeFlg != null" >
+                COMPLETE_FLG,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowId != null" >
+                #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="pageId != null" >
+                #{pageId,jdbcType=VARCHAR},
+            </if>
+            <if test="elementId != null" >
+                #{elementId,jdbcType=VARCHAR},
+            </if>
+            <if test="crtUser != null" >
+                #{crtUser,jdbcType=VARCHAR},
+            </if>
+            <if test="crtDate != null" >
+                #{crtDate,jdbcType=DATE},
+            </if>
+            <if test="curUser != null" >
+                #{curUser,jdbcType=VARCHAR},
+            </if>
+            <if test="curNodeId != null" >
+                #{curNodeId,jdbcType=VARCHAR},
+            </if>
+            <if test="nextUser != null" >
+                #{nextUser,jdbcType=VARCHAR},
+            </if>
+            <if test="businessType != null" >
+                #{businessType,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="title != null" >
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="actionType != null" >
+                #{actionType,jdbcType=VARCHAR},
+            </if>
+            <if test="processState != null" >
+                #{processState,jdbcType=VARCHAR},
+            </if>
+            <if test="cancelFlg != null" >
+                #{cancelFlg,jdbcType=VARCHAR},
+            </if>
+            <if test="signFlg != null" >
+                #{signFlg,jdbcType=VARCHAR},
+            </if>
+            <if test="completeFlg != null" >
+                #{completeFlg,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbWflBusinessList" >
+        insert into CHB_WFL_BUSINESS_LIST(SEQNO, WORKFLOW_ID, PAGE_ID, ELEMENT_ID, CRT_USER, 
+        CRT_DATE, CUR_USER, CUR_NODE_ID, NEXT_USER, BUSINESS_TYPE, TRADE_ID, TITLE, ACTION_TYPE, 
+        PROCESS_STATE, CANCEL_FLG, SIGN_FLG, COMPLETE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select SEQNO, #{workflowId,jdbcType=VARCHAR} as WORKFLOW_ID, PAGE_ID, ELEMENT_ID, CRT_USER, 
+            CRT_DATE, CUR_USER, CUR_NODE_ID, NEXT_USER, BUSINESS_TYPE, TRADE_ID, TITLE, ACTION_TYPE, 
+            PROCESS_STATE, CANCEL_FLG, SIGN_FLG, COMPLETE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME
+             from CHB_WFL_BUSINESS_LIST
+             where STATUS = 'E' and SEQNO = #{seqno,jdbcType=VARCHAR}
+    </insert>
+    <insert id="insertBasicByWorkflowId" parameterType="java.util.Map" >
+        insert into CHB_WFL_BUSINESS_LIST(SEQNO, WORKFLOW_ID, PAGE_ID, ELEMENT_ID, CRT_USER, 
+        CRT_DATE, CUR_USER, CUR_NODE_ID, NEXT_USER, BUSINESS_TYPE, TRADE_ID, TITLE, ACTION_TYPE, 
+        PROCESS_STATE, CANCEL_FLG, SIGN_FLG, COMPLETE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select SEQNO, #{newWorkflowId,jdbcType=VARCHAR} as WORKFLOW_ID, PAGE_ID, ELEMENT_ID, CRT_USER, 
+            CRT_DATE, CUR_USER, CUR_NODE_ID, NEXT_USER, BUSINESS_TYPE, TRADE_ID, TITLE, ACTION_TYPE, 
+            PROCESS_STATE, CANCEL_FLG, SIGN_FLG, COMPLETE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME
+             from CHB_WFL_BUSINESS_LIST
+             where STATUS = 'E' and WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbWflBusinessList" >
+        update CHB_WFL_BUSINESS_LIST
+        <set >
+            <if test="workflowId != null" >
+                WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="pageId != null" >
+                PAGE_ID = #{pageId,jdbcType=VARCHAR},
+            </if>
+            <if test="elementId != null" >
+                ELEMENT_ID = #{elementId,jdbcType=VARCHAR},
+            </if>
+            <if test="crtUser != null" >
+                CRT_USER = #{crtUser,jdbcType=VARCHAR},
+            </if>
+            <if test="crtDate != null" >
+                CRT_DATE = #{crtDate,jdbcType=DATE},
+            </if>
+            <if test="curUser != null" >
+                CUR_USER = #{curUser,jdbcType=VARCHAR},
+            </if>
+            <if test="curNodeId != null" >
+                CUR_NODE_ID = #{curNodeId,jdbcType=VARCHAR},
+            </if>
+            <if test="nextUser != null" >
+                NEXT_USER = #{nextUser,jdbcType=VARCHAR},
+            </if>
+            <if test="businessType != null" >
+                BUSINESS_TYPE = #{businessType,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeId != null" >
+                TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="title != null" >
+                TITLE = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="actionType != null" >
+                ACTION_TYPE = #{actionType,jdbcType=VARCHAR},
+            </if>
+            <if test="processState != null" >
+                PROCESS_STATE = #{processState,jdbcType=VARCHAR},
+            </if>
+            <if test="cancelFlg != null" >
+                CANCEL_FLG = #{cancelFlg,jdbcType=VARCHAR},
+            </if>
+            <if test="signFlg != null" >
+                SIGN_FLG = #{signFlg,jdbcType=VARCHAR},
+            </if>
+            <if test="completeFlg != null" >
+                COMPLETE_FLG = #{completeFlg,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbWflBusinessList" >
+        update CHB_WFL_BUSINESS_LIST
+        <set >
+            <if test="seqno != null" >
+                SEQNO = #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="pageId != null" >
+                PAGE_ID = #{pageId,jdbcType=VARCHAR},
+            </if>
+            <if test="elementId != null" >
+                ELEMENT_ID = #{elementId,jdbcType=VARCHAR},
+            </if>
+            <if test="crtUser != null" >
+                CRT_USER = #{crtUser,jdbcType=VARCHAR},
+            </if>
+            <if test="crtDate != null" >
+                CRT_DATE = #{crtDate,jdbcType=DATE},
+            </if>
+            <if test="curUser != null" >
+                CUR_USER = #{curUser,jdbcType=VARCHAR},
+            </if>
+            <if test="curNodeId != null" >
+                CUR_NODE_ID = #{curNodeId,jdbcType=VARCHAR},
+            </if>
+            <if test="nextUser != null" >
+                NEXT_USER = #{nextUser,jdbcType=VARCHAR},
+            </if>
+            <if test="businessType != null" >
+                BUSINESS_TYPE = #{businessType,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeId != null" >
+                TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="title != null" >
+                TITLE = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="actionType != null" >
+                ACTION_TYPE = #{actionType,jdbcType=VARCHAR},
+            </if>
+            <if test="processState != null" >
+                PROCESS_STATE = #{processState,jdbcType=VARCHAR},
+            </if>
+            <if test="cancelFlg != null" >
+                CANCEL_FLG = #{cancelFlg,jdbcType=VARCHAR},
+            </if>
+            <if test="signFlg != null" >
+                SIGN_FLG = #{signFlg,jdbcType=VARCHAR},
+            </if>
+            <if test="completeFlg != null" >
+                COMPLETE_FLG = #{completeFlg,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbWflBusinessList" >
+        update CHB_WFL_BUSINESS_LIST
+        set 
+        SEQNO = #{seqno,jdbcType=VARCHAR},
+        PAGE_ID = #{pageId,jdbcType=VARCHAR},
+        ELEMENT_ID = #{elementId,jdbcType=VARCHAR},
+        CRT_USER = #{crtUser,jdbcType=VARCHAR},
+        CRT_DATE = #{crtDate,jdbcType=DATE},
+        CUR_USER = #{curUser,jdbcType=VARCHAR},
+        CUR_NODE_ID = #{curNodeId,jdbcType=VARCHAR},
+        NEXT_USER = #{nextUser,jdbcType=VARCHAR},
+        BUSINESS_TYPE = #{businessType,jdbcType=VARCHAR},
+        TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+        TITLE = #{title,jdbcType=VARCHAR},
+        ACTION_TYPE = #{actionType,jdbcType=VARCHAR},
+        PROCESS_STATE = #{processState,jdbcType=VARCHAR},
+        CANCEL_FLG = #{cancelFlg,jdbcType=VARCHAR},
+        SIGN_FLG = #{signFlg,jdbcType=VARCHAR},
+        COMPLETE_FLG = #{completeFlg,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbWflBusinessList" >
+        update CHB_WFL_BUSINESS_LIST
+        set WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            PAGE_ID = #{pageId,jdbcType=VARCHAR},
+            ELEMENT_ID = #{elementId,jdbcType=VARCHAR},
+            CRT_USER = #{crtUser,jdbcType=VARCHAR},
+            CRT_DATE = #{crtDate,jdbcType=DATE},
+            CUR_USER = #{curUser,jdbcType=VARCHAR},
+            CUR_NODE_ID = #{curNodeId,jdbcType=VARCHAR},
+            NEXT_USER = #{nextUser,jdbcType=VARCHAR},
+            BUSINESS_TYPE = #{businessType,jdbcType=VARCHAR},
+            TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            TITLE = #{title,jdbcType=VARCHAR},
+            ACTION_TYPE = #{actionType,jdbcType=VARCHAR},
+            PROCESS_STATE = #{processState,jdbcType=VARCHAR},
+            CANCEL_FLG = #{cancelFlg,jdbcType=VARCHAR},
+            SIGN_FLG = #{signFlg,jdbcType=VARCHAR},
+            COMPLETE_FLG = #{completeFlg,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ReportPageManage001.xlsx" name="报表页面管理">
+	<Worksheet javaBean="com.joyintech.tams.disclosure.interf.common.busicommon.disclosure.common.base.entity.RepInfo">
+		<Row>
+			<Cell order="1" name="报表名称">reportName</Cell>
+			<Cell order="2" name="模板英文名">templateId</Cell>
+			<Cell order="3" name="模板中文名">templateName</Cell>
+			<Cell order="4" name="报表类别">reportCategoryName</Cell>
+			<Cell order="5" name="制作人">updateUser</Cell>
+			<Cell order="6" name="状态">reportTypeName</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>

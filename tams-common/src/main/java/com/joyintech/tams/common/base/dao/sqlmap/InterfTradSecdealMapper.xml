@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfTradSecdealMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfTradSecdeal" >
+        <id column="DEALNO" property="dealno" jdbcType="VARCHAR" />
+        <result column="SECID" property="secid" jdbcType="VARCHAR" />
+        <result column="PROFOLIO_ID" property="profolioId" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="INVTYPE" property="invtype" jdbcType="VARCHAR" />
+        <result column="PS" property="ps" jdbcType="VARCHAR" />
+        <result column="PRICE_8" property="price8" jdbcType="DECIMAL" />
+        <result column="YIELD_8" property="yield8" jdbcType="DECIMAL" />
+        <result column="CNO" property="cno" jdbcType="VARCHAR" />
+        <result column="FACEAMT" property="faceamt" jdbcType="DECIMAL" />
+        <result column="PRINAMT" property="prinamt" jdbcType="DECIMAL" />
+        <result column="SETTAMT" property="settamt" jdbcType="DECIMAL" />
+        <result column="PRODUCT" property="product" jdbcType="VARCHAR" />
+        <result column="PRODTYPE" property="prodtype" jdbcType="VARCHAR" />
+        <result column="TRAD" property="trad" jdbcType="VARCHAR" />
+        <result column="CONVINTAMT" property="convintamt" jdbcType="DECIMAL" />
+        <result column="EFFECTFLAG" property="effectflag" jdbcType="VARCHAR" />
+        <result column="BROK" property="brok" jdbcType="VARCHAR" />
+        <result column="INPUTDATE" property="inputdate" jdbcType="DATE" />
+        <result column="DEALDATE" property="dealdate" jdbcType="DATE" />
+        <result column="SETTDATE" property="settdate" jdbcType="DATE" />
+        <result column="REVDATE" property="revdate" jdbcType="DATE" />
+        <result column="UPDATECOUNTER" property="updatecounter" jdbcType="DECIMAL" />
+        <result column="FEDEALNO" property="fedealno" jdbcType="VARCHAR" />
+        <result column="DEALTEXT" property="dealtext" jdbcType="VARCHAR" />
+        <result column="LSTMNTDATE" property="lstmntdate" jdbcType="DATE" />
+        <result column="CLIENTTRADER" property="clienttrader" jdbcType="VARCHAR" />
+        <result column="COUNTERTELEPHONE" property="countertelephone" jdbcType="VARCHAR" />
+        <result column="OURDEPOSITACCOUNTNUMBER" property="ourdepositaccountnumber" jdbcType="VARCHAR" />
+        <result column="STRIKEYIELD" property="strikeyield" jdbcType="DECIMAL" />
+        <result column="DIRTYPRICE" property="dirtyprice" jdbcType="DECIMAL" />
+        <result column="ACCRUEDINTERESTAMT" property="accruedinterestamt" jdbcType="DECIMAL" />
+        <result column="SETTLE_SPEED" property="settleSpeed" jdbcType="VARCHAR" />
+        <result column="UNIT_INT" property="unitInt" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        DEALNO DEALNO, SECID SECID, PROFOLIO_ID PROFOLIO_ID, CCY CCY, INVTYPE INVTYPE, PS PS, 
+        PRICE_8 PRICE_8, YIELD_8 YIELD_8, CNO CNO, FACEAMT FACEAMT, PRINAMT PRINAMT, SETTAMT SETTAMT, 
+        PRODUCT PRODUCT, PRODTYPE PRODTYPE, TRAD TRAD, CONVINTAMT CONVINTAMT, EFFECTFLAG EFFECTFLAG, 
+        BROK BROK, INPUTDATE INPUTDATE, DEALDATE DEALDATE, SETTDATE SETTDATE, REVDATE REVDATE, 
+        UPDATECOUNTER UPDATECOUNTER, FEDEALNO FEDEALNO, DEALTEXT DEALTEXT, LSTMNTDATE LSTMNTDATE, 
+        CLIENTTRADER CLIENTTRADER, COUNTERTELEPHONE COUNTERTELEPHONE, OURDEPOSITACCOUNTNUMBER OURDEPOSITACCOUNTNUMBER, 
+        STRIKEYIELD STRIKEYIELD, DIRTYPRICE DIRTYPRICE, ACCRUEDINTERESTAMT ACCRUEDINTERESTAMT, 
+        SETTLE_SPEED SETTLE_SPEED, UNIT_INT UNIT_INT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfTradSecdealMapper.Base_Column_List" />
+        from INTERF_TRAD_SECDEAL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfTradSecdealMapper.Base_Column_List" />
+        from INTERF_TRAD_SECDEAL
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfTradSecdealMapper.Base_Column_List" />
+        from INTERF_TRAD_SECDEAL
+        where DEALNO = #{dealno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from INTERF_TRAD_SECDEAL
+        where DEALNO = #{dealno,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfTradSecdeal" >
+        insert into INTERF_TRAD_SECDEAL (DEALNO, SECID, PROFOLIO_ID, 
+            CCY, INVTYPE, PS, 
+            PRICE_8, YIELD_8, CNO, 
+            FACEAMT, PRINAMT, SETTAMT, 
+            PRODUCT, PRODTYPE, TRAD, 
+            CONVINTAMT, EFFECTFLAG, BROK, 
+            INPUTDATE, DEALDATE, SETTDATE, 
+            REVDATE, UPDATECOUNTER, FEDEALNO, 
+            DEALTEXT, LSTMNTDATE, CLIENTTRADER, 
+            COUNTERTELEPHONE, OURDEPOSITACCOUNTNUMBER, 
+            STRIKEYIELD, DIRTYPRICE, ACCRUEDINTERESTAMT, 
+            SETTLE_SPEED, UNIT_INT)
+        values (#{dealno,jdbcType=VARCHAR}, #{secid,jdbcType=VARCHAR}, #{profolioId,jdbcType=VARCHAR}, 
+            #{ccy,jdbcType=VARCHAR}, #{invtype,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR}, 
+            #{price8,jdbcType=DECIMAL}, #{yield8,jdbcType=DECIMAL}, #{cno,jdbcType=VARCHAR}, 
+            #{faceamt,jdbcType=DECIMAL}, #{prinamt,jdbcType=DECIMAL}, #{settamt,jdbcType=DECIMAL}, 
+            #{product,jdbcType=VARCHAR}, #{prodtype,jdbcType=VARCHAR}, #{trad,jdbcType=VARCHAR}, 
+            #{convintamt,jdbcType=DECIMAL}, #{effectflag,jdbcType=VARCHAR}, #{brok,jdbcType=VARCHAR}, 
+            #{inputdate,jdbcType=DATE}, #{dealdate,jdbcType=DATE}, #{settdate,jdbcType=DATE}, 
+            #{revdate,jdbcType=DATE}, #{updatecounter,jdbcType=DECIMAL}, #{fedealno,jdbcType=VARCHAR}, 
+            #{dealtext,jdbcType=VARCHAR}, #{lstmntdate,jdbcType=DATE}, #{clienttrader,jdbcType=VARCHAR}, 
+            #{countertelephone,jdbcType=VARCHAR}, #{ourdepositaccountnumber,jdbcType=VARCHAR}, 
+            #{strikeyield,jdbcType=DECIMAL}, #{dirtyprice,jdbcType=DECIMAL}, #{accruedinterestamt,jdbcType=DECIMAL}, 
+            #{settleSpeed,jdbcType=VARCHAR}, #{unitInt,jdbcType=DECIMAL})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfTradSecdeal" >
+        insert into INTERF_TRAD_SECDEAL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="dealno != null" >
+                DEALNO,
+            </if>
+            <if test="secid != null" >
+                SECID,
+            </if>
+            <if test="profolioId != null" >
+                PROFOLIO_ID,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="invtype != null" >
+                INVTYPE,
+            </if>
+            <if test="ps != null" >
+                PS,
+            </if>
+            <if test="price8 != null" >
+                PRICE_8,
+            </if>
+            <if test="yield8 != null" >
+                YIELD_8,
+            </if>
+            <if test="cno != null" >
+                CNO,
+            </if>
+            <if test="faceamt != null" >
+                FACEAMT,
+            </if>
+            <if test="prinamt != null" >
+                PRINAMT,
+            </if>
+            <if test="settamt != null" >
+                SETTAMT,
+            </if>
+            <if test="product != null" >
+                PRODUCT,
+            </if>
+            <if test="prodtype != null" >
+                PRODTYPE,
+            </if>
+            <if test="trad != null" >
+                TRAD,
+            </if>
+            <if test="convintamt != null" >
+                CONVINTAMT,
+            </if>
+            <if test="effectflag != null" >
+                EFFECTFLAG,
+            </if>
+            <if test="brok != null" >
+                BROK,
+            </if>
+            <if test="inputdate != null" >
+                INPUTDATE,
+            </if>
+            <if test="dealdate != null" >
+                DEALDATE,
+            </if>
+            <if test="settdate != null" >
+                SETTDATE,
+            </if>
+            <if test="revdate != null" >
+                REVDATE,
+            </if>
+            <if test="updatecounter != null" >
+                UPDATECOUNTER,
+            </if>
+            <if test="fedealno != null" >
+                FEDEALNO,
+            </if>
+            <if test="dealtext != null" >
+                DEALTEXT,
+            </if>
+            <if test="lstmntdate != null" >
+                LSTMNTDATE,
+            </if>
+            <if test="clienttrader != null" >
+                CLIENTTRADER,
+            </if>
+            <if test="countertelephone != null" >
+                COUNTERTELEPHONE,
+            </if>
+            <if test="ourdepositaccountnumber != null" >
+                OURDEPOSITACCOUNTNUMBER,
+            </if>
+            <if test="strikeyield != null" >
+                STRIKEYIELD,
+            </if>
+            <if test="dirtyprice != null" >
+                DIRTYPRICE,
+            </if>
+            <if test="accruedinterestamt != null" >
+                ACCRUEDINTERESTAMT,
+            </if>
+            <if test="settleSpeed != null" >
+                SETTLE_SPEED,
+            </if>
+            <if test="unitInt != null" >
+                UNIT_INT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="dealno != null" >
+                #{dealno,jdbcType=VARCHAR},
+            </if>
+            <if test="secid != null" >
+                #{secid,jdbcType=VARCHAR},
+            </if>
+            <if test="profolioId != null" >
+                #{profolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="invtype != null" >
+                #{invtype,jdbcType=VARCHAR},
+            </if>
+            <if test="ps != null" >
+                #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="price8 != null" >
+                #{price8,jdbcType=DECIMAL},
+            </if>
+            <if test="yield8 != null" >
+                #{yield8,jdbcType=DECIMAL},
+            </if>
+            <if test="cno != null" >
+                #{cno,jdbcType=VARCHAR},
+            </if>
+            <if test="faceamt != null" >
+                #{faceamt,jdbcType=DECIMAL},
+            </if>
+            <if test="prinamt != null" >
+                #{prinamt,jdbcType=DECIMAL},
+            </if>
+            <if test="settamt != null" >
+                #{settamt,jdbcType=DECIMAL},
+            </if>
+            <if test="product != null" >
+                #{product,jdbcType=VARCHAR},
+            </if>
+            <if test="prodtype != null" >
+                #{prodtype,jdbcType=VARCHAR},
+            </if>
+            <if test="trad != null" >
+                #{trad,jdbcType=VARCHAR},
+            </if>
+            <if test="convintamt != null" >
+                #{convintamt,jdbcType=DECIMAL},
+            </if>
+            <if test="effectflag != null" >
+                #{effectflag,jdbcType=VARCHAR},
+            </if>
+            <if test="brok != null" >
+                #{brok,jdbcType=VARCHAR},
+            </if>
+            <if test="inputdate != null" >
+                #{inputdate,jdbcType=DATE},
+            </if>
+            <if test="dealdate != null" >
+                #{dealdate,jdbcType=DATE},
+            </if>
+            <if test="settdate != null" >
+                #{settdate,jdbcType=DATE},
+            </if>
+            <if test="revdate != null" >
+                #{revdate,jdbcType=DATE},
+            </if>
+            <if test="updatecounter != null" >
+                #{updatecounter,jdbcType=DECIMAL},
+            </if>
+            <if test="fedealno != null" >
+                #{fedealno,jdbcType=VARCHAR},
+            </if>
+            <if test="dealtext != null" >
+                #{dealtext,jdbcType=VARCHAR},
+            </if>
+            <if test="lstmntdate != null" >
+                #{lstmntdate,jdbcType=DATE},
+            </if>
+            <if test="clienttrader != null" >
+                #{clienttrader,jdbcType=VARCHAR},
+            </if>
+            <if test="countertelephone != null" >
+                #{countertelephone,jdbcType=VARCHAR},
+            </if>
+            <if test="ourdepositaccountnumber != null" >
+                #{ourdepositaccountnumber,jdbcType=VARCHAR},
+            </if>
+            <if test="strikeyield != null" >
+                #{strikeyield,jdbcType=DECIMAL},
+            </if>
+            <if test="dirtyprice != null" >
+                #{dirtyprice,jdbcType=DECIMAL},
+            </if>
+            <if test="accruedinterestamt != null" >
+                #{accruedinterestamt,jdbcType=DECIMAL},
+            </if>
+            <if test="settleSpeed != null" >
+                #{settleSpeed,jdbcType=VARCHAR},
+            </if>
+            <if test="unitInt != null" >
+                #{unitInt,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfTradSecdeal" >
+        insert into INTERF_TRAD_SECDEAL(DEALNO, SECID, PROFOLIO_ID, CCY, INVTYPE, PS, PRICE_8, 
+        YIELD_8, CNO, FACEAMT, PRINAMT, SETTAMT, PRODUCT, PRODTYPE, TRAD, CONVINTAMT, EFFECTFLAG, 
+        BROK, INPUTDATE, DEALDATE, SETTDATE, REVDATE, UPDATECOUNTER, FEDEALNO, DEALTEXT, 
+        LSTMNTDATE, CLIENTTRADER, COUNTERTELEPHONE, OURDEPOSITACCOUNTNUMBER, STRIKEYIELD, 
+        DIRTYPRICE, ACCRUEDINTERESTAMT, SETTLE_SPEED, UNIT_INT)
+        select DEALNO, SECID, PROFOLIO_ID, CCY, INVTYPE, PS, PRICE_8, 
+            YIELD_8, CNO, FACEAMT, PRINAMT, SETTAMT, PRODUCT, PRODTYPE, TRAD, CONVINTAMT, EFFECTFLAG, 
+            BROK, INPUTDATE, DEALDATE, SETTDATE, REVDATE, UPDATECOUNTER, FEDEALNO, DEALTEXT, 
+            LSTMNTDATE, CLIENTTRADER, COUNTERTELEPHONE, OURDEPOSITACCOUNTNUMBER, STRIKEYIELD, 
+            DIRTYPRICE, ACCRUEDINTERESTAMT, SETTLE_SPEED, UNIT_INT
+             from INTERF_TRAD_SECDEAL
+             where 1 = 1 and DEALNO = #{dealno,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InterfTradSecdeal" >
+        update INTERF_TRAD_SECDEAL
+        <set >
+            <if test="secid != null" >
+                SECID = #{secid,jdbcType=VARCHAR},
+            </if>
+            <if test="profolioId != null" >
+                PROFOLIO_ID = #{profolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="invtype != null" >
+                INVTYPE = #{invtype,jdbcType=VARCHAR},
+            </if>
+            <if test="ps != null" >
+                PS = #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="price8 != null" >
+                PRICE_8 = #{price8,jdbcType=DECIMAL},
+            </if>
+            <if test="yield8 != null" >
+                YIELD_8 = #{yield8,jdbcType=DECIMAL},
+            </if>
+            <if test="cno != null" >
+                CNO = #{cno,jdbcType=VARCHAR},
+            </if>
+            <if test="faceamt != null" >
+                FACEAMT = #{faceamt,jdbcType=DECIMAL},
+            </if>
+            <if test="prinamt != null" >
+                PRINAMT = #{prinamt,jdbcType=DECIMAL},
+            </if>
+            <if test="settamt != null" >
+                SETTAMT = #{settamt,jdbcType=DECIMAL},
+            </if>
+            <if test="product != null" >
+                PRODUCT = #{product,jdbcType=VARCHAR},
+            </if>
+            <if test="prodtype != null" >
+                PRODTYPE = #{prodtype,jdbcType=VARCHAR},
+            </if>
+            <if test="trad != null" >
+                TRAD = #{trad,jdbcType=VARCHAR},
+            </if>
+            <if test="convintamt != null" >
+                CONVINTAMT = #{convintamt,jdbcType=DECIMAL},
+            </if>
+            <if test="effectflag != null" >
+                EFFECTFLAG = #{effectflag,jdbcType=VARCHAR},
+            </if>
+            <if test="brok != null" >
+                BROK = #{brok,jdbcType=VARCHAR},
+            </if>
+            <if test="inputdate != null" >
+                INPUTDATE = #{inputdate,jdbcType=DATE},
+            </if>
+            <if test="dealdate != null" >
+                DEALDATE = #{dealdate,jdbcType=DATE},
+            </if>
+            <if test="settdate != null" >
+                SETTDATE = #{settdate,jdbcType=DATE},
+            </if>
+            <if test="revdate != null" >
+                REVDATE = #{revdate,jdbcType=DATE},
+            </if>
+            <if test="updatecounter != null" >
+                UPDATECOUNTER = #{updatecounter,jdbcType=DECIMAL},
+            </if>
+            <if test="fedealno != null" >
+                FEDEALNO = #{fedealno,jdbcType=VARCHAR},
+            </if>
+            <if test="dealtext != null" >
+                DEALTEXT = #{dealtext,jdbcType=VARCHAR},
+            </if>
+            <if test="lstmntdate != null" >
+                LSTMNTDATE = #{lstmntdate,jdbcType=DATE},
+            </if>
+            <if test="clienttrader != null" >
+                CLIENTTRADER = #{clienttrader,jdbcType=VARCHAR},
+            </if>
+            <if test="countertelephone != null" >
+                COUNTERTELEPHONE = #{countertelephone,jdbcType=VARCHAR},
+            </if>
+            <if test="ourdepositaccountnumber != null" >
+                OURDEPOSITACCOUNTNUMBER = #{ourdepositaccountnumber,jdbcType=VARCHAR},
+            </if>
+            <if test="strikeyield != null" >
+                STRIKEYIELD = #{strikeyield,jdbcType=DECIMAL},
+            </if>
+            <if test="dirtyprice != null" >
+                DIRTYPRICE = #{dirtyprice,jdbcType=DECIMAL},
+            </if>
+            <if test="accruedinterestamt != null" >
+                ACCRUEDINTERESTAMT = #{accruedinterestamt,jdbcType=DECIMAL},
+            </if>
+            <if test="settleSpeed != null" >
+                SETTLE_SPEED = #{settleSpeed,jdbcType=VARCHAR},
+            </if>
+            <if test="unitInt != null" >
+                UNIT_INT = #{unitInt,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where DEALNO = #{dealno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfTradSecdeal" >
+        update INTERF_TRAD_SECDEAL
+        set SECID = #{secid,jdbcType=VARCHAR},
+            PROFOLIO_ID = #{profolioId,jdbcType=VARCHAR},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            INVTYPE = #{invtype,jdbcType=VARCHAR},
+            PS = #{ps,jdbcType=VARCHAR},
+            PRICE_8 = #{price8,jdbcType=DECIMAL},
+            YIELD_8 = #{yield8,jdbcType=DECIMAL},
+            CNO = #{cno,jdbcType=VARCHAR},
+            FACEAMT = #{faceamt,jdbcType=DECIMAL},
+            PRINAMT = #{prinamt,jdbcType=DECIMAL},
+            SETTAMT = #{settamt,jdbcType=DECIMAL},
+            PRODUCT = #{product,jdbcType=VARCHAR},
+            PRODTYPE = #{prodtype,jdbcType=VARCHAR},
+            TRAD = #{trad,jdbcType=VARCHAR},
+            CONVINTAMT = #{convintamt,jdbcType=DECIMAL},
+            EFFECTFLAG = #{effectflag,jdbcType=VARCHAR},
+            BROK = #{brok,jdbcType=VARCHAR},
+            INPUTDATE = #{inputdate,jdbcType=DATE},
+            DEALDATE = #{dealdate,jdbcType=DATE},
+            SETTDATE = #{settdate,jdbcType=DATE},
+            REVDATE = #{revdate,jdbcType=DATE},
+            UPDATECOUNTER = #{updatecounter,jdbcType=DECIMAL},
+            FEDEALNO = #{fedealno,jdbcType=VARCHAR},
+            DEALTEXT = #{dealtext,jdbcType=VARCHAR},
+            LSTMNTDATE = #{lstmntdate,jdbcType=DATE},
+            CLIENTTRADER = #{clienttrader,jdbcType=VARCHAR},
+            COUNTERTELEPHONE = #{countertelephone,jdbcType=VARCHAR},
+            OURDEPOSITACCOUNTNUMBER = #{ourdepositaccountnumber,jdbcType=VARCHAR},
+            STRIKEYIELD = #{strikeyield,jdbcType=DECIMAL},
+            DIRTYPRICE = #{dirtyprice,jdbcType=DECIMAL},
+            ACCRUEDINTERESTAMT = #{accruedinterestamt,jdbcType=DECIMAL},
+            SETTLE_SPEED = #{settleSpeed,jdbcType=VARCHAR},
+            UNIT_INT = #{unitInt,jdbcType=DECIMAL}
+        where DEALNO = #{dealno,jdbcType=VARCHAR}
+    </update>
+</mapper>

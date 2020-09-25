@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbPrdPeriodYieldMapper" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield" >
+    <id column="SEQNO" property="seqno" jdbcType="CHAR" />
+    <result column="FPROD_ID" property="fprodId" jdbcType="VARCHAR" />
+    <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+    <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="CHANG_TYPE" property="changType" jdbcType="VARCHAR" />
+    <result column="PROD_VALUE" property="prodValue" jdbcType="DECIMAL" />
+    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+    <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="REV_DATE" property="revDate" jdbcType="TIMESTAMP" />
+    <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    SEQNO, FPROD_ID, PROD_ID, CHANGE_DATE, CHANG_TYPE, PROD_VALUE, ORG_CODE, DEPT_CODE, 
+    STATUS, REV_DATE, DATA_SOURCE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, 
+    REMARK
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from CHB_PRD_PERIODYIELD
+    where SEQNO = #{seqno,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from CHB_PRD_PERIODYIELD
+    where SEQNO = #{seqno,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield" >
+    insert into CHB_PRD_PERIODYIELD (SEQNO, FPROD_ID, PROD_ID, 
+      CHANGE_DATE, CHANG_TYPE, PROD_VALUE, 
+      ORG_CODE, DEPT_CODE, STATUS, 
+      REV_DATE, DATA_SOURCE, UPDATE_USER, 
+      UPDATE_TIME, CREATE_USER, CREATE_TIME, 
+      REMARK)
+    values (#{seqno,jdbcType=CHAR}, #{fprodId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, 
+      #{changeDate,jdbcType=TIMESTAMP}, #{changType,jdbcType=VARCHAR}, #{prodValue,jdbcType=DECIMAL}, 
+      #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{revDate,jdbcType=TIMESTAMP}, #{dataSource,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield" >
+    insert into CHB_PRD_PERIODYIELD
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="seqno != null" >
+        SEQNO,
+      </if>
+      <if test="fprodId != null" >
+        FPROD_ID,
+      </if>
+      <if test="prodId != null" >
+        PROD_ID,
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE,
+      </if>
+      <if test="changType != null" >
+        CHANG_TYPE,
+      </if>
+      <if test="prodValue != null" >
+        PROD_VALUE,
+      </if>
+      <if test="orgCode != null" >
+        ORG_CODE,
+      </if>
+      <if test="deptCode != null" >
+        DEPT_CODE,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="revDate != null" >
+        REV_DATE,
+      </if>
+      <if test="dataSource != null" >
+        DATA_SOURCE,
+      </if>
+      <if test="updateUser != null" >
+        UPDATE_USER,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="seqno != null" >
+        #{seqno,jdbcType=CHAR},
+      </if>
+      <if test="fprodId != null" >
+        #{fprodId,jdbcType=VARCHAR},
+      </if>
+      <if test="prodId != null" >
+        #{prodId,jdbcType=VARCHAR},
+      </if>
+      <if test="changeDate != null" >
+        #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changType != null" >
+        #{changType,jdbcType=VARCHAR},
+      </if>
+      <if test="prodValue != null" >
+        #{prodValue,jdbcType=DECIMAL},
+      </if>
+      <if test="orgCode != null" >
+        #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="deptCode != null" >
+        #{deptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="revDate != null" >
+        #{revDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dataSource != null" >
+        #{dataSource,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield" >
+    update CHB_PRD_PERIODYIELD
+    <set >
+      <if test="fprodId != null" >
+        FPROD_ID = #{fprodId,jdbcType=VARCHAR},
+      </if>
+      <if test="prodId != null" >
+        PROD_ID = #{prodId,jdbcType=VARCHAR},
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changType != null" >
+        CHANG_TYPE = #{changType,jdbcType=VARCHAR},
+      </if>
+      <if test="prodValue != null" >
+        PROD_VALUE = #{prodValue,jdbcType=DECIMAL},
+      </if>
+      <if test="orgCode != null" >
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="deptCode != null" >
+        DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="revDate != null" >
+        REV_DATE = #{revDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dataSource != null" >
+        DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null" >
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where SEQNO = #{seqno,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield" >
+    update CHB_PRD_PERIODYIELD
+    set FPROD_ID = #{fprodId,jdbcType=VARCHAR},
+      PROD_ID = #{prodId,jdbcType=VARCHAR},
+      CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      CHANG_TYPE = #{changType,jdbcType=VARCHAR},
+      PROD_VALUE = #{prodValue,jdbcType=DECIMAL},
+      ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
+      REV_DATE = #{revDate,jdbcType=TIMESTAMP},
+      DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      REMARK = #{remark,jdbcType=VARCHAR}
+    where SEQNO = #{seqno,jdbcType=CHAR}
+  </update>
+</mapper>

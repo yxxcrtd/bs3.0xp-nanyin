@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.invest.common.component.base.group.impl.dao.BasePtlSecPositionInfoMapper" >
+
+     <select id="selectSecPositionFlow" resultType="java.math.BigDecimal" >
+        select
+          SUM(AMOUNT)
+        from PTL_SEC_POSITION_FLOW
+        where CDATE &lt;= #{cdate,jdbcType=DATE}
+            <include refid="whereSql"/>
+         <if test="acctType != null and !acctType.isEmpty() and needAcctType">
+             and SEC_ACCT_ID in (
+             SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID = #{portfolioId}
+             <foreach collection="acctType" open=" and ACCT_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
+             )
+         </if>
+    </select>
+
+     <select id="selectSecPosition" resultType="java.math.BigDecimal" >
+        select
+          SUM(AMOUNT)
+        from PTL_SEC_POSITION
+        where CDATE = #{cdate,jdbcType=DATE}
+            <include refid="whereSql"/>
+         <if test="acctType != null and !acctType.isEmpty() and needAcctType">
+             and SEC_ACCT_ID in (
+             SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID = #{portfolioId}
+             <foreach collection="acctType" open=" and ACCT_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
+             )
+         </if>
+    </select>
+    
+     <select id="selectSecPositionMaxCdate" resultType="java.util.Date" >
+        select
+          max(CDATE)
+        from PTL_SEC_POSITION
+        where CDATE &lt;= #{cdate,jdbcType=DATE}
+            <include refid="whereSql"/>
+         <if test="acctType != null and !acctType.isEmpty() and needAcctType">
+             and SEC_ACCT_ID in (
+             SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID = #{portfolioId}
+             <foreach collection="acctType" open=" and ACCT_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
+             )
+         </if>
+    </select>
+
+     <select id="selectMaxCdate" resultType="string" >
+        select
+          to_char(MAX(CDATE), 'yyyy-MM-dd')
+        from PTL_SEC_POSITION
+        <where>
+            <include refid="whereSql"/>
+        </where>
+    </select>
+
+    <update id="updatePosition" parameterType="map">
+        UPDATE PTL_SEC_POSITION SET AMOUNT = AMOUNT + #{amount}
+        where CDATE between TO_DATE(#{minDate}, 'yyyy-MM-dd') AND TO_DATE(#{maxDate}, 'yyyy-MM-dd')
+        <include refid="whereSql"/>
+    </update>
+
+    <delete id="deletePtlSecPositionFlow">
+        DELETE FROM PTL_SEC_POSITION_FLOW
+        <where>
+            <if test="cdate != null">
+              CDATE = #{cdate, jdbcType=DATE}
+            </if>
+            <if test="tradeId != null and tradeId != ''">
+              AND TRADE_ID = #{tradeId}
+            </if>
+            <include refid="whereSql"/>
+        </where>
+    </delete>
+
+    <sql id="whereSql">
+        <if test="portfolioId != null and portfolioId != ''">
+            and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+        </if>
+        <if test="hodingType != null and hodingType != ''">
+            and HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+        </if>
+        <if test="channel != null and channel">
+            and SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
+        </if>
+        <if test="!channel and secAcctId != null and secAcctId != ''">
+            and SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
+        </if>
+        <if test="!channel and (secAcctId == null or secAcctId == '') and (entrust == null || !entrust)">
+            and SEC_ACCT_ID = '999999'
+        </if>
+        <if test="invAim != null and invAim != ''">
+            and INV_AIM = #{invAim,jdbcType=VARCHAR}
+        </if>
+        <if test="finprodId != null and finprodId != ''">
+            and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        </if>
+        <if test="branch != null">
+            and BRANCH = #{branch, jdbcType=DECIMAL}
+        </if>
+    </sql>
+</mapper>

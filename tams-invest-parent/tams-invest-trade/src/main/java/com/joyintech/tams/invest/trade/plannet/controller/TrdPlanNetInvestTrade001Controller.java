@@ -1,0 +1,333 @@
+/*
+ * 文件名：TrdPlanNetInvestTrade001Controller.java
+ * 版权：Copyright 2017-2018 JoyinTech. Co. Ltd. All Rights Reserved.
+ * 描述：理财资管管理系统V2.0
+ * 修改人：xiexinting
+ * 修改时间：2018年12月2日
+ * 修改内容：新建
+ * 系统名称：理财资管管理系统V2.0
+ */
+ 
+package com.joyintech.tams.invest.trade.plannet.controller;
+
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
+import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
+import com.joyintech.tams.component.business.settle.BussSettleOrderCommService;
+import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
+import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
+import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
+import com.joyintech.tams.invest.trade.plannet.dto.TrdPlanNetInvestTradeConfirmDto;
+import com.joyintech.tams.invest.trade.plannet.dto.TrdPlanNetInvestTradeDto;
+import com.joyintech.tams.invest.trade.plannet.service.TrdPlanNetInvestTrade001Service;
+import com.joyintech.tams.invest.trade.plannet.service.TrdPlanNetInvestTrade002Service;
+import com.joyintech.tams.invest.trade.plannet.service.TrdPlanNetInvestTrade003Service;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 计划类（净值型）投资交易查询
+ * 〈功能详细描述〉
+ * @author xiexinting
+ * @version 1.0 2018年12月2日
+ * @see TrdPlanNetInvestTrade001Controller
+ * @since 1.0
+ */
+@PageId("TrdPlanNetInvestTrade001")
+@Controller
+@RequestMapping("/invest/trade/plannet/TrdPlanNetInvestTrade001")
+public class TrdPlanNetInvestTrade001Controller extends BaseController {
+    /**
+     * 清算指令共通Service
+     */
+    @Autowired(required = false)
+    private BussSettleOrderCommService bussSettleOrderCommService;
+
+    /**
+     * 划款指令业务组件service
+     */
+    @Autowired(required = false)
+    private BussTrdTransferOrderService bussTrdTransferOrderService;
+    @Autowired
+    private TrdPlanNetInvestTrade001Service trdPlanNetInvestTrade001Service;
+    @Autowired
+    private TrdPlanNetInvestTrade002Service TrdPlanNetInvestTrade002Service;
+    @Autowired
+    private TrdPlanNetInvestTrade003Service TrdPlanNetInvestTrade003Service;
+
+    /**
+     * 流程组件
+     */
+    @Autowired
+    private MstWorkflowCommonService mstWorkflowCommonService;
+
+    /**
+     * 交易基础组件调用Service
+     */
+    @Autowired
+    private TrdCommonBaseService trdCommonBaseService;
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String init(Model model) {
+        this.setSelectOptionToModel(model, DictCode.交易方向);
+        this.setSelectOptionToModel(model, DictCode.交易流程状态);
+        this.setSelectOptionToModel(model, DictCode.计划类资产一级分类);
+        /*添加资产二级-四级分类的数据字典值 zhangpuyu 2019/7/31 start*/
+        this.setSelectOptionToModel(model, DictCode.行内资产二级分类,DictCode.行内资产三级分类,DictCode.行内资产四级分类);
+        /*添加资产二级-四级分类的数据字典值 zhangpuyu 2019/7/31 end*/
+        model.addAttribute("ps_T04", DictCodeList.交易方向_申购.getValue());
+        model.addAttribute("ps_T06", DictCodeList.交易方向_赎回.getValue());
+        model.addAttribute("ps_T05", DictCodeList.交易方向_申购确认.getValue());
+        model.addAttribute("ps_T19", DictCodeList.交易方向_赎回确认.getValue());
+        model.addAttribute("ps_T24", DictCodeList.交易方向_赎回到账.getValue());
+        model.addAttribute("ps_mr",DictCodeList.交易方向_买入.getValue());
+        model.addAttribute("ps_mc",DictCodeList.交易方向_卖出.getValue());
+        model.addAttribute("BUS_TYPE", DictCodeList.共通业务类型_计划类资产_净值型_交易.getValue());
+        
+        model.addAttribute("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE")==null?"01":CacheUtil.getSysParam("IS_SHOW_TYPE"));
+        
+        return super.init(model);
+    }
+    
+    /**
+     * 分页查询
+     * 
+     * @return Page<TrdBondInvestTradeDto>泛型的page实体类
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("findPage")
+    @ResponseBody
+    public Page<TrdPlanNetInvestTradeDto> findPage()
+        throws Exception {
+        return trdPlanNetInvestTrade001Service.findPage(RequestUtil.getPageParam());
+    }
+    
+    /**
+     * 按钮点击时的check
+     *
+     * @param dto dto
+     * @param result BindingResult
+     * @return check结果
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("check")
+    public AjaxResult check(@RequestBody @Validated({
+        ValidateGroupDelete.class}) TrdPlanNetInvestTradeDto dto, BindingResult result) {
+        //撤销时校验
+        if (StringUtil.equals(dto.getOperateType(), "revoke")){
+            //校验是否存在待确认的流程 yjm start 20190904
+            WflValidInputParameter parameter = new WflValidInputParameter();
+            parameter.setPageId("TrdPlanNetInvestTrade003");      
+            parameter.setBusinessDataPk3(dto.getSelectedItem().get(0).getTradeId());
+            if (mstWorkflowCommonService.isInWflProcess(parameter)){
+                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+                errorList.add(new ValidMessage("存在后续交易，请先撤销流程中待确认的数据。"));
+                AjaxResult ar = new AjaxResult();
+                ar.setErrorList(errorList);
+                return ar;
+            }
+            //校验是否存在待确认的流程 yjm end 20190904
+            // 确认提醒 TISHKBS-1113【组合资金账户头寸查询】内转交易撤销提醒 add by hpp 2020-09-17 start
+            if (result.getErrorCount() == 0) {
+                AjaxResult ajaxResult = new AjaxResult();
+                String confirmMsg = "";
+                String changeLineMark = "<br/>";
+
+                //根据交易编号查询另一笔未撤销的转仓交易信息
+                String tradeId = dto.getSelectedItem().get(0).getTradeId();
+                TrdProductDeal res = trdCommonBaseService.selectZCDeal(tradeId);
+                if(StringUtil.isNotEmpty(res)){
+                    confirmMsg = "此交易为转仓交易，撤销后需要将业务编号为["+
+                            res.getTradeId()+"]的反向转仓交易也撤销掉，请确认是否继续？";
+                }else{
+                    confirmMsg = "请确认是否撤销？";
+                }
+                if (StringUtil.isNotBlank(confirmMsg)) {
+                    ajaxResult.setData(confirmMsg);
+                }
+                if (ajaxResult != null) {
+                    return ajaxResult;
+                }
+            }
+            // 确认提醒 TISHKBS-1113【组合资金账户头寸查询】内转交易撤销提醒 add by hpp 2020-09-17 end
+        }
+        
+        return commonCheck(result, dto.getOperateType());
+    }
+    /**
+     * 按钮点击时的check
+     *
+     * @param dto dto
+     * @param result BindingResult
+     * @return check结果
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("check2")
+    public AjaxResult check2(@RequestBody @Validated({
+        ValidateGroupDelete.class}) TrdPlanNetInvestTradeConfirmDto dto, BindingResult result) {
+        return commonCheck(result, dto.getOperateType());
+    }
+    /**
+     * 
+     * 撤销
+     * <功能详细描述>
+     * @param entity
+     * @param br
+     * @return
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("revoke")
+    public AjaxResult revoke(@RequestBody @Validated({
+        ValidateGroupDelete.class}) TrdPlanNetInvestTradeDto entity, BindingResult br) throws Exception {
+        if (br.hasErrors()) {
+            return new AjaxResult(br);
+        }
+        TrdPlanNetInvestTradeDto dto = entity.getSelectedItem().get(0);
+        String cancelRemark = entity.getCancelRemark();
+
+        ProcessParameter<TrdPlanNetInvestTradeDto> processParameter = new ProcessParameter<TrdPlanNetInvestTradeDto>();
+        WorkFlowParameter<TrdPlanNetInvestTradeDto> params = new WorkFlowParameter<TrdPlanNetInvestTradeDto>();
+        processParameter.setWorkFlowParameter(params);
+        if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())
+           || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())
+           || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
+           || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())){
+            dto = TrdPlanNetInvestTrade002Service.getTrdFundDto(dto.getTradeId());
+            if (dto.getSettleSpeed()!=null){
+                if(dto.getSettleSpeed()==0){
+                    dto.setSettleSpreed(DictCodeList.清算速度_T_0.getValue());
+                }else if(dto.getSettleSpeed()==1){
+                    dto.setSettleSpreed(DictCodeList.清算速度_T_1.getValue());
+                }
+            }
+            processParameter.setPageId("TrdPlanNetInvestTrade002");
+            params.setPageId("TrdPlanNetInvestTrade002");
+        }else if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购确认.getValue()) || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回确认.getValue())
+                || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回到账.getValue())){
+            TrdPlanNetInvestTradeConfirmDto confirmDto = TrdPlanNetInvestTrade003Service.getTrdFundDto(dto.getTradeId());
+            BeanUtil.copyPropertiesIgnoreNull(dto, confirmDto);
+            if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回确认.getValue())) {
+                Map<String, Object> accountTradId = new HashMap<>();
+                Map<String, Object> map = new HashMap<>();
+                map.put("tradeId", dto.getTradeId());
+                map.put("N", DictCodeList.是否_否.getValue());
+                accountTradId = trdPlanNetInvestTrade001Service.getAccountId(map);
+                if (accountTradId == null) {
+                    accountTradId = trdPlanNetInvestTrade001Service.selectAccountTrdIdinwfl(
+                        dto.getTradeId());
+                }
+                List<BussTrdTransferOrderBase> bttob = new ArrayList<>();
+                if (accountTradId != null) {
+                    if (StringUtil.equals((String)accountTradId.get("WORKFLOWID"), "0")) {
+                        bttob = TrdPlanNetInvestTrade003Service.selectOrdersByBizCode(
+                            (String)accountTradId.get("TRADID"));
+                    }
+                    else {
+                        bttob = bussSettleOrderCommService.selectOrdersByBizCode(
+                            (String)accountTradId.get("TRADID"));
+                    }
+                    if (bttob != null && bttob.size() > 0) {
+                        List<BussTrdTransferOrderDto> bttodList = new ArrayList<>();
+                        BussTrdTransferOrderDto bttod = new BussTrdTransferOrderDto();
+                        BeanUtil.copyPropertiesIgnoreNull(bttod, bttob.get(0));
+                        bttodList.add(bttod);
+                        dto.setBussTrdTransferOrder(bussTrdTransferOrderService.save(bttodList));
+                    }
+                }
+            }
+            Map<String, Object> map = TrdPlanNetInvestTrade003Service.getTradeRefrence(
+                dto.getTradeId());
+            if (map.get("feeAmtPay") != null) {
+                dto.setRedemptionFee(new BigDecimal((String)map.get("feeAmtPay")));
+            }
+            if (map.get("channalFee") != null) {
+                dto.setChannelFee(new BigDecimal((String)map.get("channalFee")));
+            }
+            if (map.get("hostingFee") != null) {
+                dto.setHostingFee(new BigDecimal((String)map.get("hostingFee")));
+            }
+            processParameter.setPageId("TrdPlanNetInvestTrade003");
+            params.setPageId("TrdPlanNetInvestTrade003");
+        }
+
+        if(StringUtil.isNotEmpty(cancelRemark)){
+            dto.setCancelRemark(cancelRemark);
+        }
+
+        params.setElementId(this.getParam("elementId"));
+        params.setBusinessCode(item -> item.getTradeId());
+        params.setBusinessType(DictCodeList.共通业务类型_计划类资产_净值型_交易.getValue());
+        // 设置流程业务说明, entity即传入的dto
+        // “交易编号：” + 上述取得的交易编号+“资产名称：”+画面.资产名称+“交易日：”+画面.交易日
+        params.setComment((item) -> WorkFlowUtil.concatComment(
+            getMessage("TrdPlanNetInvestTrade002.tradeId"), item.getTradeId(),
+            getMessage("TrdPlanNetInvestTrade002.finprodName"),
+            item.getFinprodName(),
+            getMessage("TrdPlanNetInvestTrade002.tradeDate"),
+            DateUtil.format(item.getTradeDate())));
+        processParameter.setWorkFlowParameter(params);
+        dto.setOperateType(entity.getOperateType());
+        dto.setbTradeId(dto.getTradeId());
+        String msg = trdPlanNetInvestTrade001Service.start(processParameter,dto);
+        return new AjaxResult(msg);
+    }
+    
+    /**
+     * 文件导出 <功能详细描述>
+     * 
+     * @return 导出返回参数
+     * @throws Exception 抛出异常
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("export")
+    public ResponseEntity<byte[]> export()
+        throws Exception {
+    	Map<String, Object> param = RequestUtil.getParameters(getRequest());
+    	param.put("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE"));
+        return trdPlanNetInvestTrade001Service.export(this.getPageId(),
+        		param);
+    }
+}

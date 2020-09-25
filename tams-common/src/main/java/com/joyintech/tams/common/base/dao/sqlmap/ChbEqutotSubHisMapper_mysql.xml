@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbEqutotSubHisMapper_mysql">
+	<insert id="insertHisByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbEqutotSubHis" >
+        insert into CHB_EQUTOT_SUB_HIS(HIS_NO, REG_CODE, REGIST_BANK_CODE, ACCOUNT, BUSI_TYPE, 
+        DETAIL, REMARK, SUBMIT_STATUS, SUBMIT_TIME, SUBMIT_DEADLINE, SUBMIT_FEEDBACK_STATUS, 
+        STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, 
+        SHARES, ORG_CODE, CHB_SUBMIT_DEADLINE, CREATE_DEPT)
+        select (select IFNULL(max(HIS_NO), 0) from CHB_EQUTOT_SUB_HIS where STATUS = 'E' and REG_CODE = #{regCode,jdbcType=VARCHAR} and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}) + 1 HIS_NO, REG_CODE, REGIST_BANK_CODE, ACCOUNT, BUSI_TYPE, 
+            DETAIL, REMARK, SUBMIT_STATUS, SUBMIT_TIME, SUBMIT_DEADLINE, SUBMIT_FEEDBACK_STATUS, 
+            STATUS, WORKFLOW_ID, DEPT_CODE, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_USER, CREATE_TIME, 
+            SHARES, ORG_CODE, CHB_SUBMIT_DEADLINE, CREATE_DEPT
+             from CHB_EQUTOT_SUB
+             where STATUS = 'E' and REG_CODE = #{regCode,jdbcType=VARCHAR} and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
+    </insert>
+	<insert id="insertHisByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbEqutotSubHis" >
+        insert into CHB_EQUTOT_SUB_HIS(HIS_NO, REG_CODE, REGIST_BANK_CODE, ACCOUNT, BUSI_TYPE, 
+        DETAIL, REMARK, SUBMIT_STATUS, SUBMIT_TIME, SUBMIT_DEADLINE, SUBMIT_FEEDBACK_STATUS, 
+        STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, 
+        SHARES, ORG_CODE, CHB_SUBMIT_DEADLINE, CREATE_DEPT)
+        select (select IFNULL(max(HIS_NO), 0) from CHB_EQUTOT_SUB_HIS where STATUS = 'E' and REG_CODE = CHB_EQUTOT_SUB.REG_CODE and REGIST_BANK_CODE = CHB_EQUTOT_SUB.REGIST_BANK_CODE) + 1 HIS_NO, REG_CODE, REGIST_BANK_CODE, ACCOUNT, BUSI_TYPE, 
+            DETAIL, REMARK, SUBMIT_STATUS, SUBMIT_TIME, SUBMIT_DEADLINE, SUBMIT_FEEDBACK_STATUS, 
+            STATUS, WORKFLOW_ID, DEPT_CODE, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_USER, CREATE_TIME, 
+            SHARES, ORG_CODE, CHB_SUBMIT_DEADLINE, CREATE_DEPT
+             from CHB_EQUTOT_SUB
+             where STATUS = 'E' and WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+    </insert>
+</mapper>

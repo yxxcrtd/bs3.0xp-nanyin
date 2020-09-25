@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbBotAstPositionSubMapper_mysql">
+	<update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbBotAstPositionSub" >
+    update CHB_BOT_AST_POS_SUB
+    <set >
+      <if test="registBankCode != null" >
+        REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="issuePartyId != null" >
+        ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+      </if>
+      <if test="posDate != null" >
+        POS_DATE = #{posDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="planAssetId != null" >
+        PLAN_ASSET_ID = #{planAssetId,jdbcType=VARCHAR},
+      </if>
+      <if test="assetCode != null" >
+        ASSET_CODE = #{assetCode,jdbcType=OTHER},
+      </if>
+      <if test="totalNum != null" >
+        TOTAL_NUM = #{totalNum,jdbcType=DECIMAL},
+      </if>
+      <if test="issueAmt != null" >
+        ISSUE_AMT = #{issueAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="uninvestCash != null" >
+        UNINVEST_CASH = #{uninvestCash,jdbcType=DECIMAL},
+      </if>
+      <if test="posNum != null" >
+        POS_NUM = #{posNum,jdbcType=DECIMAL},
+      </if>
+      <if test="posAmt != null" >
+        POS_AMT = #{posAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="sendStatus != null" >
+        SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="chbSubmitDeadline != null" >
+        CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitDeadline != null" >
+        SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitTime != null" >
+        SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sumitSeq != null" >
+        SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+      </if>
+      <if test="submitFeedbackStatus != null" >
+        SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+        STATUS_DATE = NOW(),
+      <if test="orgCode != null" >
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="deptCode != null" >
+        DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDept != null" >
+        CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      </if>
+        UPDATE_TIME = NOW(),
+    </set>
+    where trim(REGIST_SEQNO) = #{registSeqno,jdbcType=CHAR}
+  </update>
+</mapper>

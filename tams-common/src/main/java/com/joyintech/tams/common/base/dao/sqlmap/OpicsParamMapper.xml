@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.OpicsParamMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.OpicsParam" >
+        <id column="ITEM_ID" property="itemId" jdbcType="VARCHAR" />
+        <id column="PARA_TYPE" property="paraType" jdbcType="VARCHAR" />
+        <result column="ITEM_NAME" property="itemName" jdbcType="VARCHAR" />
+        <result column="ITEM_VALUE_CN" property="itemValueCn" jdbcType="VARCHAR" />
+        <result column="ITEM_VALUE_EN" property="itemValueEn" jdbcType="VARCHAR" />
+        <result column="ORDERS" property="orders" jdbcType="DECIMAL" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ITEM_ID ITEM_ID, PARA_TYPE PARA_TYPE, ITEM_NAME ITEM_NAME, ITEM_VALUE_CN ITEM_VALUE_CN, 
+        ITEM_VALUE_EN ITEM_VALUE_EN, ORDERS ORDERS, REMARK REMARK, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.OpicsParamMapper.Base_Column_List" />
+        from OPICS_PARAM
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.OpicsParamMapper.Base_Column_List" />
+        from OPICS_PARAM
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.OpicsParamKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.OpicsParamMapper.Base_Column_List" />
+        from OPICS_PARAM
+        where ITEM_ID = #{itemId,jdbcType=VARCHAR}
+          and PARA_TYPE = #{paraType,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.OpicsParamKey" >
+        delete from OPICS_PARAM
+        where ITEM_ID = #{itemId,jdbcType=VARCHAR}
+          and PARA_TYPE = #{paraType,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.OpicsParam" >
+        insert into OPICS_PARAM (ITEM_ID, PARA_TYPE, ITEM_NAME, 
+            ITEM_VALUE_CN, ITEM_VALUE_EN, ORDERS, 
+            REMARK, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{itemId,jdbcType=VARCHAR}, #{paraType,jdbcType=VARCHAR}, #{itemName,jdbcType=VARCHAR}, 
+            #{itemValueCn,jdbcType=VARCHAR}, #{itemValueEn,jdbcType=VARCHAR}, #{orders,jdbcType=DECIMAL}, 
+            #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.OpicsParam" >
+        insert into OPICS_PARAM
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="itemId != null" >
+                ITEM_ID,
+            </if>
+            <if test="paraType != null" >
+                PARA_TYPE,
+            </if>
+            <if test="itemName != null" >
+                ITEM_NAME,
+            </if>
+            <if test="itemValueCn != null" >
+                ITEM_VALUE_CN,
+            </if>
+            <if test="itemValueEn != null" >
+                ITEM_VALUE_EN,
+            </if>
+            <if test="orders != null" >
+                ORDERS,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="itemId != null" >
+                #{itemId,jdbcType=VARCHAR},
+            </if>
+            <if test="paraType != null" >
+                #{paraType,jdbcType=VARCHAR},
+            </if>
+            <if test="itemName != null" >
+                #{itemName,jdbcType=VARCHAR},
+            </if>
+            <if test="itemValueCn != null" >
+                #{itemValueCn,jdbcType=VARCHAR},
+            </if>
+            <if test="itemValueEn != null" >
+                #{itemValueEn,jdbcType=VARCHAR},
+            </if>
+            <if test="orders != null" >
+                #{orders,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.OpicsParam" >
+        insert into OPICS_PARAM(ITEM_ID, PARA_TYPE, ITEM_NAME, ITEM_VALUE_CN, ITEM_VALUE_EN, 
+        ORDERS, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select ITEM_ID, PARA_TYPE, ITEM_NAME, ITEM_VALUE_CN, ITEM_VALUE_EN, 
+            ORDERS, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from OPICS_PARAM
+             where 1 = 1 and ITEM_ID = #{itemId,jdbcType=VARCHAR} and PARA_TYPE = #{paraType,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.OpicsParam" >
+        update OPICS_PARAM
+        <set >
+            <if test="itemName != null" >
+                ITEM_NAME = #{itemName,jdbcType=VARCHAR},
+            </if>
+            <if test="itemValueCn != null" >
+                ITEM_VALUE_CN = #{itemValueCn,jdbcType=VARCHAR},
+            </if>
+            <if test="itemValueEn != null" >
+                ITEM_VALUE_EN = #{itemValueEn,jdbcType=VARCHAR},
+            </if>
+            <if test="orders != null" >
+                ORDERS = #{orders,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ITEM_ID = #{itemId,jdbcType=VARCHAR}
+          and PARA_TYPE = #{paraType,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.OpicsParam" >
+        update OPICS_PARAM
+        set ITEM_NAME = #{itemName,jdbcType=VARCHAR},
+            ITEM_VALUE_CN = #{itemValueCn,jdbcType=VARCHAR},
+            ITEM_VALUE_EN = #{itemValueEn,jdbcType=VARCHAR},
+            ORDERS = #{orders,jdbcType=DECIMAL},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where ITEM_ID = #{itemId,jdbcType=VARCHAR}
+          and PARA_TYPE = #{paraType,jdbcType=VARCHAR}
+    </update>
+</mapper>

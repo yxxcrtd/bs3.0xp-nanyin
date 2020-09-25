@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.batch.disclosure.informationdisclourse.infodiscautoconfirm.dao.InfoDiscAutoConfirmMapper_mysql">
+    <!-- 将自动确认的未确认的披露数据更新为已披露 -->
+    <update id="updateAutoConfirm">
+		update rep_reveal set CONFIRM_STATUS= #{isConfirm, jdbcType=VARCHAR},CONFIRM_DATE = now()
+		where IS_CONFIRM = #{unConfirm, jdbcType=VARCHAR}
+		and rep_reveal.CONFIRM_STATUS = #{isAutoConfirm, jdbcType=VARCHAR}
+	</update>
+
+</mapper>

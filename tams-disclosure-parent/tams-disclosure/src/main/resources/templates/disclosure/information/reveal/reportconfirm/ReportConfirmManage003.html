@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
+<head>
+<meta charset="UTF-8">
+<title>文件上传</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <div class="layui-inline" style="margin: 35px 140px;">
+            <div class="upload"
+                data-option="{allowFileType: 'xls|xlsx|pdf|docx', muiltiple: false, autoUpload: false,
+                 type: 'drag', callback: 'ReportConfirmManage003.onUploaded'}">
+            </div>
+        </div>
+    </div>
+</body>
+
+<div layout:fragment="script">
+  <script data-th-src="@{/js/disclosure/information/reveal/reportconfirm/ReportConfirmManage003.js}" type="text/javascript"></script>
+                         
+</div>
+
+</html>

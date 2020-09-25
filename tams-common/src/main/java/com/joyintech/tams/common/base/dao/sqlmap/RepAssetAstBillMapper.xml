@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepAssetAstBillMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepAssetAstBill" >
+        <id column="REP_FINPROD_ID" property="repFinprodId" jdbcType="VARCHAR" />
+        <result column="REP_IS_RIGHT" property="repIsRight" jdbcType="VARCHAR" />
+        <result column="REP_IS_RESALE" property="repIsResale" jdbcType="VARCHAR" />
+        <result column="REP_AST_BILL_TYPE" property="repAstBillType" jdbcType="VARCHAR" />
+        <result column="REP_NUM" property="repNum" jdbcType="DECIMAL" />
+        <result column="REP_AMT_SUM" property="repAmtSum" jdbcType="DECIMAL" />
+        <result column="REP_REMAIN_TERM" property="repRemainTerm" jdbcType="DECIMAL" />
+        <result column="REP_MAX_REMAIN_TERM" property="repMaxRemainTerm" jdbcType="DECIMAL" />
+        <result column="REP_MIN_REMAIN_TERM" property="repMinRemainTerm" jdbcType="DECIMAL" />
+        <result column="REP_VDATE" property="repVdate" jdbcType="DATE" />
+        <result column="REP_MDATE" property="repMdate" jdbcType="DATE" />
+        <result column="REP_INDUSTRY" property="repIndustry" jdbcType="VARCHAR" />
+        <result column="REP_INDUSTRY_LEVEL2" property="repIndustryLevel2" jdbcType="VARCHAR" />
+        <result column="REP_DISC_RATE" property="repDiscRate" jdbcType="DECIMAL" />
+        <result column="REP_REMARK" property="repRemark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        REP_FINPROD_ID REP_FINPROD_ID, REP_IS_RIGHT REP_IS_RIGHT, REP_IS_RESALE REP_IS_RESALE, 
+        REP_AST_BILL_TYPE REP_AST_BILL_TYPE, REP_NUM REP_NUM, REP_AMT_SUM REP_AMT_SUM, REP_REMAIN_TERM REP_REMAIN_TERM, 
+        REP_MAX_REMAIN_TERM REP_MAX_REMAIN_TERM, REP_MIN_REMAIN_TERM REP_MIN_REMAIN_TERM, 
+        REP_VDATE REP_VDATE, REP_MDATE REP_MDATE, REP_INDUSTRY REP_INDUSTRY, REP_INDUSTRY_LEVEL2 REP_INDUSTRY_LEVEL2, 
+        REP_DISC_RATE REP_DISC_RATE, REP_REMARK REP_REMARK, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepAssetAstBillMapper.Base_Column_List" />
+        from REP_ASSET_AST_BILL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepAssetAstBillMapper.Base_Column_List" />
+        from REP_ASSET_AST_BILL
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepAssetAstBillMapper.Base_Column_List" />
+        from REP_ASSET_AST_BILL
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from REP_ASSET_AST_BILL
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepAssetAstBill" >
+        insert into REP_ASSET_AST_BILL (REP_FINPROD_ID, REP_IS_RIGHT, REP_IS_RESALE, 
+            REP_AST_BILL_TYPE, REP_NUM, REP_AMT_SUM, 
+            REP_REMAIN_TERM, REP_MAX_REMAIN_TERM, REP_MIN_REMAIN_TERM, 
+            REP_VDATE, REP_MDATE, REP_INDUSTRY, 
+            REP_INDUSTRY_LEVEL2, REP_DISC_RATE, REP_REMARK, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{repFinprodId,jdbcType=VARCHAR}, #{repIsRight,jdbcType=VARCHAR}, #{repIsResale,jdbcType=VARCHAR}, 
+            #{repAstBillType,jdbcType=VARCHAR}, #{repNum,jdbcType=DECIMAL}, #{repAmtSum,jdbcType=DECIMAL}, 
+            #{repRemainTerm,jdbcType=DECIMAL}, #{repMaxRemainTerm,jdbcType=DECIMAL}, #{repMinRemainTerm,jdbcType=DECIMAL}, 
+            #{repVdate,jdbcType=DATE}, #{repMdate,jdbcType=DATE}, #{repIndustry,jdbcType=VARCHAR}, 
+            #{repIndustryLevel2,jdbcType=VARCHAR}, #{repDiscRate,jdbcType=DECIMAL}, #{repRemark,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepAssetAstBill" >
+        insert into REP_ASSET_AST_BILL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="repFinprodId != null" >
+                REP_FINPROD_ID,
+            </if>
+            <if test="repIsRight != null" >
+                REP_IS_RIGHT,
+            </if>
+            <if test="repIsResale != null" >
+                REP_IS_RESALE,
+            </if>
+            <if test="repAstBillType != null" >
+                REP_AST_BILL_TYPE,
+            </if>
+            <if test="repNum != null" >
+                REP_NUM,
+            </if>
+            <if test="repAmtSum != null" >
+                REP_AMT_SUM,
+            </if>
+            <if test="repRemainTerm != null" >
+                REP_REMAIN_TERM,
+            </if>
+            <if test="repMaxRemainTerm != null" >
+                REP_MAX_REMAIN_TERM,
+            </if>
+            <if test="repMinRemainTerm != null" >
+                REP_MIN_REMAIN_TERM,
+            </if>
+            <if test="repVdate != null" >
+                REP_VDATE,
+            </if>
+            <if test="repMdate != null" >
+                REP_MDATE,
+            </if>
+            <if test="repIndustry != null" >
+                REP_INDUSTRY,
+            </if>
+            <if test="repIndustryLevel2 != null" >
+                REP_INDUSTRY_LEVEL2,
+            </if>
+            <if test="repDiscRate != null" >
+                REP_DISC_RATE,
+            </if>
+            <if test="repRemark != null" >
+                REP_REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="repFinprodId != null" >
+                #{repFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="repIsRight != null" >
+                #{repIsRight,jdbcType=VARCHAR},
+            </if>
+            <if test="repIsResale != null" >
+                #{repIsResale,jdbcType=VARCHAR},
+            </if>
+            <if test="repAstBillType != null" >
+                #{repAstBillType,jdbcType=VARCHAR},
+            </if>
+            <if test="repNum != null" >
+                #{repNum,jdbcType=DECIMAL},
+            </if>
+            <if test="repAmtSum != null" >
+                #{repAmtSum,jdbcType=DECIMAL},
+            </if>
+            <if test="repRemainTerm != null" >
+                #{repRemainTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="repMaxRemainTerm != null" >
+                #{repMaxRemainTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="repMinRemainTerm != null" >
+                #{repMinRemainTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="repVdate != null" >
+                #{repVdate,jdbcType=DATE},
+            </if>
+            <if test="repMdate != null" >
+                #{repMdate,jdbcType=DATE},
+            </if>
+            <if test="repIndustry != null" >
+                #{repIndustry,jdbcType=VARCHAR},
+            </if>
+            <if test="repIndustryLevel2 != null" >
+                #{repIndustryLevel2,jdbcType=VARCHAR},
+            </if>
+            <if test="repDiscRate != null" >
+                #{repDiscRate,jdbcType=DECIMAL},
+            </if>
+            <if test="repRemark != null" >
+                #{repRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepAssetAstBill" >
+        insert into REP_ASSET_AST_BILL(REP_FINPROD_ID, REP_IS_RIGHT, REP_IS_RESALE, REP_AST_BILL_TYPE, 
+        REP_NUM, REP_AMT_SUM, REP_REMAIN_TERM, REP_MAX_REMAIN_TERM, REP_MIN_REMAIN_TERM, 
+        REP_VDATE, REP_MDATE, REP_INDUSTRY, REP_INDUSTRY_LEVEL2, REP_DISC_RATE, REP_REMARK, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select REP_FINPROD_ID, REP_IS_RIGHT, REP_IS_RESALE, REP_AST_BILL_TYPE, 
+            REP_NUM, REP_AMT_SUM, REP_REMAIN_TERM, REP_MAX_REMAIN_TERM, REP_MIN_REMAIN_TERM, 
+            REP_VDATE, REP_MDATE, REP_INDUSTRY, REP_INDUSTRY_LEVEL2, REP_DISC_RATE, REP_REMARK, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from REP_ASSET_AST_BILL
+             where 1 = 1 and REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepAssetAstBill" >
+        update REP_ASSET_AST_BILL
+        <set >
+            <if test="repIsRight != null" >
+                REP_IS_RIGHT = #{repIsRight,jdbcType=VARCHAR},
+            </if>
+            <if test="repIsResale != null" >
+                REP_IS_RESALE = #{repIsResale,jdbcType=VARCHAR},
+            </if>
+            <if test="repAstBillType != null" >
+                REP_AST_BILL_TYPE = #{repAstBillType,jdbcType=VARCHAR},
+            </if>
+            <if test="repNum != null" >
+                REP_NUM = #{repNum,jdbcType=DECIMAL},
+            </if>
+            <if test="repAmtSum != null" >
+                REP_AMT_SUM = #{repAmtSum,jdbcType=DECIMAL},
+            </if>
+            <if test="repRemainTerm != null" >
+                REP_REMAIN_TERM = #{repRemainTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="repMaxRemainTerm != null" >
+                REP_MAX_REMAIN_TERM = #{repMaxRemainTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="repMinRemainTerm != null" >
+                REP_MIN_REMAIN_TERM = #{repMinRemainTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="repVdate != null" >
+                REP_VDATE = #{repVdate,jdbcType=DATE},
+            </if>
+            <if test="repMdate != null" >
+                REP_MDATE = #{repMdate,jdbcType=DATE},
+            </if>
+            <if test="repIndustry != null" >
+                REP_INDUSTRY = #{repIndustry,jdbcType=VARCHAR},
+            </if>
+            <if test="repIndustryLevel2 != null" >
+                REP_INDUSTRY_LEVEL2 = #{repIndustryLevel2,jdbcType=VARCHAR},
+            </if>
+            <if test="repDiscRate != null" >
+                REP_DISC_RATE = #{repDiscRate,jdbcType=DECIMAL},
+            </if>
+            <if test="repRemark != null" >
+                REP_REMARK = #{repRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepAssetAstBill" >
+        update REP_ASSET_AST_BILL
+        set REP_IS_RIGHT = #{repIsRight,jdbcType=VARCHAR},
+            REP_IS_RESALE = #{repIsResale,jdbcType=VARCHAR},
+            REP_AST_BILL_TYPE = #{repAstBillType,jdbcType=VARCHAR},
+            REP_NUM = #{repNum,jdbcType=DECIMAL},
+            REP_AMT_SUM = #{repAmtSum,jdbcType=DECIMAL},
+            REP_REMAIN_TERM = #{repRemainTerm,jdbcType=DECIMAL},
+            REP_MAX_REMAIN_TERM = #{repMaxRemainTerm,jdbcType=DECIMAL},
+            REP_MIN_REMAIN_TERM = #{repMinRemainTerm,jdbcType=DECIMAL},
+            REP_VDATE = #{repVdate,jdbcType=DATE},
+            REP_MDATE = #{repMdate,jdbcType=DATE},
+            REP_INDUSTRY = #{repIndustry,jdbcType=VARCHAR},
+            REP_INDUSTRY_LEVEL2 = #{repIndustryLevel2,jdbcType=VARCHAR},
+            REP_DISC_RATE = #{repDiscRate,jdbcType=DECIMAL},
+            REP_REMARK = #{repRemark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </update>
+</mapper>

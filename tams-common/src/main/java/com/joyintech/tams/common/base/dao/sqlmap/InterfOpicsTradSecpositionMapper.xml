@@ -1,0 +1,575 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfOpicsTradSecpositionMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfOpicsTradSecposition" >
+        <id column="BR" property="br" jdbcType="VARCHAR" />
+        <result column="CDATE" property="cdate" jdbcType="DATE" />
+        <result column="SECID" property="secid" jdbcType="VARCHAR" />
+        <result column="INVTYPE" property="invtype" jdbcType="VARCHAR" />
+        <result column="COST" property="cost" jdbcType="VARCHAR" />
+        <result column="PORT" property="port" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="PRODUCT" property="product" jdbcType="VARCHAR" />
+        <result column="PRODTYPE" property="prodtype" jdbcType="VARCHAR" />
+        <result column="PURCHAVGCOST" property="purchavgcost" jdbcType="DECIMAL" />
+        <result column="PRINAMT" property="prinamt" jdbcType="DECIMAL" />
+        <result column="PRINAMTYST" property="prinamtyst" jdbcType="DECIMAL" />
+        <result column="TDPRINAMT" property="tdprinamt" jdbcType="DECIMAL" />
+        <result column="TDPRINAMTYST" property="tdprinamtyst" jdbcType="DECIMAL" />
+        <result column="SETTAVGCOST" property="settavgcost" jdbcType="DECIMAL" />
+        <result column="SETTAVGCOSTYST" property="settavgcostyst" jdbcType="DECIMAL" />
+        <result column="TDYINTINCEXP" property="tdyintincexp" jdbcType="DECIMAL" />
+        <result column="YSTINTINCEXP" property="ystintincexp" jdbcType="DECIMAL" />
+        <result column="PMEINTINCEXP" property="pmeintincexp" jdbcType="DECIMAL" />
+        <result column="PYEINTINCEXP" property="pyeintincexp" jdbcType="DECIMAL" />
+        <result column="TDYDSCINCEXP" property="tdydscincexp" jdbcType="DECIMAL" />
+        <result column="YSTDSCINCEXP" property="ystdscincexp" jdbcType="DECIMAL" />
+        <result column="PMEDSCINCEXP" property="pmedscincexp" jdbcType="DECIMAL" />
+        <result column="PYEDSCINCEXP" property="pyedscincexp" jdbcType="DECIMAL" />
+        <result column="TDYSALEGAIN" property="tdysalegain" jdbcType="DECIMAL" />
+        <result column="YSTSALEGAIN" property="ystsalegain" jdbcType="DECIMAL" />
+        <result column="PMESALEGAIN" property="pmesalegain" jdbcType="DECIMAL" />
+        <result column="PYESALEGAIN" property="pyesalegain" jdbcType="DECIMAL" />
+        <result column="TDYUGLAMT" property="tdyuglamt" jdbcType="DECIMAL" />
+        <result column="YSTUGLAMT" property="ystuglamt" jdbcType="DECIMAL" />
+        <result column="PMEUGLAMT" property="pmeuglamt" jdbcType="DECIMAL" />
+        <result column="PYEUGLAMT" property="pyeuglamt" jdbcType="DECIMAL" />
+        <result column="TDYMTM" property="tdymtm" jdbcType="DECIMAL" />
+        <result column="YSTMTM" property="ystmtm" jdbcType="DECIMAL" />
+        <result column="PMEMTM" property="pmemtm" jdbcType="DECIMAL" />
+        <result column="PYEMTM" property="pyemtm" jdbcType="DECIMAL" />
+        <result column="CLSGPRICE_8" property="clsgprice8" jdbcType="DECIMAL" />
+        <result column="TDBOOKVALUE" property="tdbookvalue" jdbcType="DECIMAL" />
+        <result column="TDBOOKVALUEYST" property="tdbookvalueyst" jdbcType="DECIMAL" />
+        <result column="TDMARKETVALUE" property="tdmarketvalue" jdbcType="DECIMAL" />
+        <result column="TDMARKETVALUEYST" property="tdmarketvalueyst" jdbcType="DECIMAL" />
+        <result column="ACCROUTST" property="accroutst" jdbcType="DECIMAL" />
+        <result column="ACCROUTSTYST" property="accroutstyst" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        BR BR, CDATE CDATE, SECID SECID, INVTYPE INVTYPE, COST COST, PORT PORT, CCY CCY, 
+        PRODUCT PRODUCT, PRODTYPE PRODTYPE, PURCHAVGCOST PURCHAVGCOST, PRINAMT PRINAMT, PRINAMTYST PRINAMTYST, 
+        TDPRINAMT TDPRINAMT, TDPRINAMTYST TDPRINAMTYST, SETTAVGCOST SETTAVGCOST, SETTAVGCOSTYST SETTAVGCOSTYST, 
+        TDYINTINCEXP TDYINTINCEXP, YSTINTINCEXP YSTINTINCEXP, PMEINTINCEXP PMEINTINCEXP, 
+        PYEINTINCEXP PYEINTINCEXP, TDYDSCINCEXP TDYDSCINCEXP, YSTDSCINCEXP YSTDSCINCEXP, 
+        PMEDSCINCEXP PMEDSCINCEXP, PYEDSCINCEXP PYEDSCINCEXP, TDYSALEGAIN TDYSALEGAIN, YSTSALEGAIN YSTSALEGAIN, 
+        PMESALEGAIN PMESALEGAIN, PYESALEGAIN PYESALEGAIN, TDYUGLAMT TDYUGLAMT, YSTUGLAMT YSTUGLAMT, 
+        PMEUGLAMT PMEUGLAMT, PYEUGLAMT PYEUGLAMT, TDYMTM TDYMTM, YSTMTM YSTMTM, PMEMTM PMEMTM, 
+        PYEMTM PYEMTM, CLSGPRICE_8 CLSGPRICE_8, TDBOOKVALUE TDBOOKVALUE, TDBOOKVALUEYST TDBOOKVALUEYST, 
+        TDMARKETVALUE TDMARKETVALUE, TDMARKETVALUEYST TDMARKETVALUEYST, ACCROUTST ACCROUTST, 
+        ACCROUTSTYST ACCROUTSTYST
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfOpicsTradSecpositionMapper.Base_Column_List" />
+        from INTERF_OPICS_TRAD_SECPOSITION
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfOpicsTradSecpositionMapper.Base_Column_List" />
+        from INTERF_OPICS_TRAD_SECPOSITION
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfOpicsTradSecpositionMapper.Base_Column_List" />
+        from INTERF_OPICS_TRAD_SECPOSITION
+        where BR = #{br,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from INTERF_OPICS_TRAD_SECPOSITION
+        where BR = #{br,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfOpicsTradSecposition" >
+        insert into INTERF_OPICS_TRAD_SECPOSITION (BR, CDATE, SECID, 
+            INVTYPE, COST, PORT, 
+            CCY, PRODUCT, PRODTYPE, 
+            PURCHAVGCOST, PRINAMT, PRINAMTYST, 
+            TDPRINAMT, TDPRINAMTYST, SETTAVGCOST, 
+            SETTAVGCOSTYST, TDYINTINCEXP, YSTINTINCEXP, 
+            PMEINTINCEXP, PYEINTINCEXP, TDYDSCINCEXP, 
+            YSTDSCINCEXP, PMEDSCINCEXP, PYEDSCINCEXP, 
+            TDYSALEGAIN, YSTSALEGAIN, PMESALEGAIN, 
+            PYESALEGAIN, TDYUGLAMT, YSTUGLAMT, 
+            PMEUGLAMT, PYEUGLAMT, TDYMTM, 
+            YSTMTM, PMEMTM, PYEMTM, 
+            CLSGPRICE_8, TDBOOKVALUE, TDBOOKVALUEYST, 
+            TDMARKETVALUE, TDMARKETVALUEYST, ACCROUTST, 
+            ACCROUTSTYST)
+        values (#{br,jdbcType=VARCHAR}, #{cdate,jdbcType=DATE}, #{secid,jdbcType=VARCHAR}, 
+            #{invtype,jdbcType=VARCHAR}, #{cost,jdbcType=VARCHAR}, #{port,jdbcType=VARCHAR}, 
+            #{ccy,jdbcType=VARCHAR}, #{product,jdbcType=VARCHAR}, #{prodtype,jdbcType=VARCHAR}, 
+            #{purchavgcost,jdbcType=DECIMAL}, #{prinamt,jdbcType=DECIMAL}, #{prinamtyst,jdbcType=DECIMAL}, 
+            #{tdprinamt,jdbcType=DECIMAL}, #{tdprinamtyst,jdbcType=DECIMAL}, #{settavgcost,jdbcType=DECIMAL}, 
+            #{settavgcostyst,jdbcType=DECIMAL}, #{tdyintincexp,jdbcType=DECIMAL}, #{ystintincexp,jdbcType=DECIMAL}, 
+            #{pmeintincexp,jdbcType=DECIMAL}, #{pyeintincexp,jdbcType=DECIMAL}, #{tdydscincexp,jdbcType=DECIMAL}, 
+            #{ystdscincexp,jdbcType=DECIMAL}, #{pmedscincexp,jdbcType=DECIMAL}, #{pyedscincexp,jdbcType=DECIMAL}, 
+            #{tdysalegain,jdbcType=DECIMAL}, #{ystsalegain,jdbcType=DECIMAL}, #{pmesalegain,jdbcType=DECIMAL}, 
+            #{pyesalegain,jdbcType=DECIMAL}, #{tdyuglamt,jdbcType=DECIMAL}, #{ystuglamt,jdbcType=DECIMAL}, 
+            #{pmeuglamt,jdbcType=DECIMAL}, #{pyeuglamt,jdbcType=DECIMAL}, #{tdymtm,jdbcType=DECIMAL}, 
+            #{ystmtm,jdbcType=DECIMAL}, #{pmemtm,jdbcType=DECIMAL}, #{pyemtm,jdbcType=DECIMAL}, 
+            #{clsgprice8,jdbcType=DECIMAL}, #{tdbookvalue,jdbcType=DECIMAL}, #{tdbookvalueyst,jdbcType=DECIMAL}, 
+            #{tdmarketvalue,jdbcType=DECIMAL}, #{tdmarketvalueyst,jdbcType=DECIMAL}, #{accroutst,jdbcType=DECIMAL}, 
+            #{accroutstyst,jdbcType=DECIMAL})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfOpicsTradSecposition" >
+        insert into INTERF_OPICS_TRAD_SECPOSITION
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="br != null" >
+                BR,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="secid != null" >
+                SECID,
+            </if>
+            <if test="invtype != null" >
+                INVTYPE,
+            </if>
+            <if test="cost != null" >
+                COST,
+            </if>
+            <if test="port != null" >
+                PORT,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="product != null" >
+                PRODUCT,
+            </if>
+            <if test="prodtype != null" >
+                PRODTYPE,
+            </if>
+            <if test="purchavgcost != null" >
+                PURCHAVGCOST,
+            </if>
+            <if test="prinamt != null" >
+                PRINAMT,
+            </if>
+            <if test="prinamtyst != null" >
+                PRINAMTYST,
+            </if>
+            <if test="tdprinamt != null" >
+                TDPRINAMT,
+            </if>
+            <if test="tdprinamtyst != null" >
+                TDPRINAMTYST,
+            </if>
+            <if test="settavgcost != null" >
+                SETTAVGCOST,
+            </if>
+            <if test="settavgcostyst != null" >
+                SETTAVGCOSTYST,
+            </if>
+            <if test="tdyintincexp != null" >
+                TDYINTINCEXP,
+            </if>
+            <if test="ystintincexp != null" >
+                YSTINTINCEXP,
+            </if>
+            <if test="pmeintincexp != null" >
+                PMEINTINCEXP,
+            </if>
+            <if test="pyeintincexp != null" >
+                PYEINTINCEXP,
+            </if>
+            <if test="tdydscincexp != null" >
+                TDYDSCINCEXP,
+            </if>
+            <if test="ystdscincexp != null" >
+                YSTDSCINCEXP,
+            </if>
+            <if test="pmedscincexp != null" >
+                PMEDSCINCEXP,
+            </if>
+            <if test="pyedscincexp != null" >
+                PYEDSCINCEXP,
+            </if>
+            <if test="tdysalegain != null" >
+                TDYSALEGAIN,
+            </if>
+            <if test="ystsalegain != null" >
+                YSTSALEGAIN,
+            </if>
+            <if test="pmesalegain != null" >
+                PMESALEGAIN,
+            </if>
+            <if test="pyesalegain != null" >
+                PYESALEGAIN,
+            </if>
+            <if test="tdyuglamt != null" >
+                TDYUGLAMT,
+            </if>
+            <if test="ystuglamt != null" >
+                YSTUGLAMT,
+            </if>
+            <if test="pmeuglamt != null" >
+                PMEUGLAMT,
+            </if>
+            <if test="pyeuglamt != null" >
+                PYEUGLAMT,
+            </if>
+            <if test="tdymtm != null" >
+                TDYMTM,
+            </if>
+            <if test="ystmtm != null" >
+                YSTMTM,
+            </if>
+            <if test="pmemtm != null" >
+                PMEMTM,
+            </if>
+            <if test="pyemtm != null" >
+                PYEMTM,
+            </if>
+            <if test="clsgprice8 != null" >
+                CLSGPRICE_8,
+            </if>
+            <if test="tdbookvalue != null" >
+                TDBOOKVALUE,
+            </if>
+            <if test="tdbookvalueyst != null" >
+                TDBOOKVALUEYST,
+            </if>
+            <if test="tdmarketvalue != null" >
+                TDMARKETVALUE,
+            </if>
+            <if test="tdmarketvalueyst != null" >
+                TDMARKETVALUEYST,
+            </if>
+            <if test="accroutst != null" >
+                ACCROUTST,
+            </if>
+            <if test="accroutstyst != null" >
+                ACCROUTSTYST,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="br != null" >
+                #{br,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=DATE},
+            </if>
+            <if test="secid != null" >
+                #{secid,jdbcType=VARCHAR},
+            </if>
+            <if test="invtype != null" >
+                #{invtype,jdbcType=VARCHAR},
+            </if>
+            <if test="cost != null" >
+                #{cost,jdbcType=VARCHAR},
+            </if>
+            <if test="port != null" >
+                #{port,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="product != null" >
+                #{product,jdbcType=VARCHAR},
+            </if>
+            <if test="prodtype != null" >
+                #{prodtype,jdbcType=VARCHAR},
+            </if>
+            <if test="purchavgcost != null" >
+                #{purchavgcost,jdbcType=DECIMAL},
+            </if>
+            <if test="prinamt != null" >
+                #{prinamt,jdbcType=DECIMAL},
+            </if>
+            <if test="prinamtyst != null" >
+                #{prinamtyst,jdbcType=DECIMAL},
+            </if>
+            <if test="tdprinamt != null" >
+                #{tdprinamt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdprinamtyst != null" >
+                #{tdprinamtyst,jdbcType=DECIMAL},
+            </if>
+            <if test="settavgcost != null" >
+                #{settavgcost,jdbcType=DECIMAL},
+            </if>
+            <if test="settavgcostyst != null" >
+                #{settavgcostyst,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyintincexp != null" >
+                #{tdyintincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="ystintincexp != null" >
+                #{ystintincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="pmeintincexp != null" >
+                #{pmeintincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="pyeintincexp != null" >
+                #{pyeintincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="tdydscincexp != null" >
+                #{tdydscincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="ystdscincexp != null" >
+                #{ystdscincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="pmedscincexp != null" >
+                #{pmedscincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="pyedscincexp != null" >
+                #{pyedscincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="tdysalegain != null" >
+                #{tdysalegain,jdbcType=DECIMAL},
+            </if>
+            <if test="ystsalegain != null" >
+                #{ystsalegain,jdbcType=DECIMAL},
+            </if>
+            <if test="pmesalegain != null" >
+                #{pmesalegain,jdbcType=DECIMAL},
+            </if>
+            <if test="pyesalegain != null" >
+                #{pyesalegain,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyuglamt != null" >
+                #{tdyuglamt,jdbcType=DECIMAL},
+            </if>
+            <if test="ystuglamt != null" >
+                #{ystuglamt,jdbcType=DECIMAL},
+            </if>
+            <if test="pmeuglamt != null" >
+                #{pmeuglamt,jdbcType=DECIMAL},
+            </if>
+            <if test="pyeuglamt != null" >
+                #{pyeuglamt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdymtm != null" >
+                #{tdymtm,jdbcType=DECIMAL},
+            </if>
+            <if test="ystmtm != null" >
+                #{ystmtm,jdbcType=DECIMAL},
+            </if>
+            <if test="pmemtm != null" >
+                #{pmemtm,jdbcType=DECIMAL},
+            </if>
+            <if test="pyemtm != null" >
+                #{pyemtm,jdbcType=DECIMAL},
+            </if>
+            <if test="clsgprice8 != null" >
+                #{clsgprice8,jdbcType=DECIMAL},
+            </if>
+            <if test="tdbookvalue != null" >
+                #{tdbookvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="tdbookvalueyst != null" >
+                #{tdbookvalueyst,jdbcType=DECIMAL},
+            </if>
+            <if test="tdmarketvalue != null" >
+                #{tdmarketvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="tdmarketvalueyst != null" >
+                #{tdmarketvalueyst,jdbcType=DECIMAL},
+            </if>
+            <if test="accroutst != null" >
+                #{accroutst,jdbcType=DECIMAL},
+            </if>
+            <if test="accroutstyst != null" >
+                #{accroutstyst,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfOpicsTradSecposition" >
+        insert into INTERF_OPICS_TRAD_SECPOSITION(BR, CDATE, SECID, INVTYPE, COST, PORT, 
+        CCY, PRODUCT, PRODTYPE, PURCHAVGCOST, PRINAMT, PRINAMTYST, TDPRINAMT, TDPRINAMTYST, 
+        SETTAVGCOST, SETTAVGCOSTYST, TDYINTINCEXP, YSTINTINCEXP, PMEINTINCEXP, PYEINTINCEXP, 
+        TDYDSCINCEXP, YSTDSCINCEXP, PMEDSCINCEXP, PYEDSCINCEXP, TDYSALEGAIN, YSTSALEGAIN, 
+        PMESALEGAIN, PYESALEGAIN, TDYUGLAMT, YSTUGLAMT, PMEUGLAMT, PYEUGLAMT, TDYMTM, YSTMTM, 
+        PMEMTM, PYEMTM, CLSGPRICE_8, TDBOOKVALUE, TDBOOKVALUEYST, TDMARKETVALUE, TDMARKETVALUEYST, 
+        ACCROUTST, ACCROUTSTYST)
+        select BR, CDATE, SECID, INVTYPE, COST, PORT, 
+            CCY, PRODUCT, PRODTYPE, PURCHAVGCOST, PRINAMT, PRINAMTYST, TDPRINAMT, TDPRINAMTYST, 
+            SETTAVGCOST, SETTAVGCOSTYST, TDYINTINCEXP, YSTINTINCEXP, PMEINTINCEXP, PYEINTINCEXP, 
+            TDYDSCINCEXP, YSTDSCINCEXP, PMEDSCINCEXP, PYEDSCINCEXP, TDYSALEGAIN, YSTSALEGAIN, 
+            PMESALEGAIN, PYESALEGAIN, TDYUGLAMT, YSTUGLAMT, PMEUGLAMT, PYEUGLAMT, TDYMTM, YSTMTM, 
+            PMEMTM, PYEMTM, CLSGPRICE_8, TDBOOKVALUE, TDBOOKVALUEYST, TDMARKETVALUE, TDMARKETVALUEYST, 
+            ACCROUTST, ACCROUTSTYST
+             from INTERF_OPICS_TRAD_SECPOSITION
+             where 1 = 1 and BR = #{br,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InterfOpicsTradSecposition" >
+        update INTERF_OPICS_TRAD_SECPOSITION
+        <set >
+            <if test="cdate != null" >
+                CDATE = #{cdate,jdbcType=DATE},
+            </if>
+            <if test="secid != null" >
+                SECID = #{secid,jdbcType=VARCHAR},
+            </if>
+            <if test="invtype != null" >
+                INVTYPE = #{invtype,jdbcType=VARCHAR},
+            </if>
+            <if test="cost != null" >
+                COST = #{cost,jdbcType=VARCHAR},
+            </if>
+            <if test="port != null" >
+                PORT = #{port,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="product != null" >
+                PRODUCT = #{product,jdbcType=VARCHAR},
+            </if>
+            <if test="prodtype != null" >
+                PRODTYPE = #{prodtype,jdbcType=VARCHAR},
+            </if>
+            <if test="purchavgcost != null" >
+                PURCHAVGCOST = #{purchavgcost,jdbcType=DECIMAL},
+            </if>
+            <if test="prinamt != null" >
+                PRINAMT = #{prinamt,jdbcType=DECIMAL},
+            </if>
+            <if test="prinamtyst != null" >
+                PRINAMTYST = #{prinamtyst,jdbcType=DECIMAL},
+            </if>
+            <if test="tdprinamt != null" >
+                TDPRINAMT = #{tdprinamt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdprinamtyst != null" >
+                TDPRINAMTYST = #{tdprinamtyst,jdbcType=DECIMAL},
+            </if>
+            <if test="settavgcost != null" >
+                SETTAVGCOST = #{settavgcost,jdbcType=DECIMAL},
+            </if>
+            <if test="settavgcostyst != null" >
+                SETTAVGCOSTYST = #{settavgcostyst,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyintincexp != null" >
+                TDYINTINCEXP = #{tdyintincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="ystintincexp != null" >
+                YSTINTINCEXP = #{ystintincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="pmeintincexp != null" >
+                PMEINTINCEXP = #{pmeintincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="pyeintincexp != null" >
+                PYEINTINCEXP = #{pyeintincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="tdydscincexp != null" >
+                TDYDSCINCEXP = #{tdydscincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="ystdscincexp != null" >
+                YSTDSCINCEXP = #{ystdscincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="pmedscincexp != null" >
+                PMEDSCINCEXP = #{pmedscincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="pyedscincexp != null" >
+                PYEDSCINCEXP = #{pyedscincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="tdysalegain != null" >
+                TDYSALEGAIN = #{tdysalegain,jdbcType=DECIMAL},
+            </if>
+            <if test="ystsalegain != null" >
+                YSTSALEGAIN = #{ystsalegain,jdbcType=DECIMAL},
+            </if>
+            <if test="pmesalegain != null" >
+                PMESALEGAIN = #{pmesalegain,jdbcType=DECIMAL},
+            </if>
+            <if test="pyesalegain != null" >
+                PYESALEGAIN = #{pyesalegain,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyuglamt != null" >
+                TDYUGLAMT = #{tdyuglamt,jdbcType=DECIMAL},
+            </if>
+            <if test="ystuglamt != null" >
+                YSTUGLAMT = #{ystuglamt,jdbcType=DECIMAL},
+            </if>
+            <if test="pmeuglamt != null" >
+                PMEUGLAMT = #{pmeuglamt,jdbcType=DECIMAL},
+            </if>
+            <if test="pyeuglamt != null" >
+                PYEUGLAMT = #{pyeuglamt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdymtm != null" >
+                TDYMTM = #{tdymtm,jdbcType=DECIMAL},
+            </if>
+            <if test="ystmtm != null" >
+                YSTMTM = #{ystmtm,jdbcType=DECIMAL},
+            </if>
+            <if test="pmemtm != null" >
+                PMEMTM = #{pmemtm,jdbcType=DECIMAL},
+            </if>
+            <if test="pyemtm != null" >
+                PYEMTM = #{pyemtm,jdbcType=DECIMAL},
+            </if>
+            <if test="clsgprice8 != null" >
+                CLSGPRICE_8 = #{clsgprice8,jdbcType=DECIMAL},
+            </if>
+            <if test="tdbookvalue != null" >
+                TDBOOKVALUE = #{tdbookvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="tdbookvalueyst != null" >
+                TDBOOKVALUEYST = #{tdbookvalueyst,jdbcType=DECIMAL},
+            </if>
+            <if test="tdmarketvalue != null" >
+                TDMARKETVALUE = #{tdmarketvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="tdmarketvalueyst != null" >
+                TDMARKETVALUEYST = #{tdmarketvalueyst,jdbcType=DECIMAL},
+            </if>
+            <if test="accroutst != null" >
+                ACCROUTST = #{accroutst,jdbcType=DECIMAL},
+            </if>
+            <if test="accroutstyst != null" >
+                ACCROUTSTYST = #{accroutstyst,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where BR = #{br,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfOpicsTradSecposition" >
+        update INTERF_OPICS_TRAD_SECPOSITION
+        set CDATE = #{cdate,jdbcType=DATE},
+            SECID = #{secid,jdbcType=VARCHAR},
+            INVTYPE = #{invtype,jdbcType=VARCHAR},
+            COST = #{cost,jdbcType=VARCHAR},
+            PORT = #{port,jdbcType=VARCHAR},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            PRODUCT = #{product,jdbcType=VARCHAR},
+            PRODTYPE = #{prodtype,jdbcType=VARCHAR},
+            PURCHAVGCOST = #{purchavgcost,jdbcType=DECIMAL},
+            PRINAMT = #{prinamt,jdbcType=DECIMAL},
+            PRINAMTYST = #{prinamtyst,jdbcType=DECIMAL},
+            TDPRINAMT = #{tdprinamt,jdbcType=DECIMAL},
+            TDPRINAMTYST = #{tdprinamtyst,jdbcType=DECIMAL},
+            SETTAVGCOST = #{settavgcost,jdbcType=DECIMAL},
+            SETTAVGCOSTYST = #{settavgcostyst,jdbcType=DECIMAL},
+            TDYINTINCEXP = #{tdyintincexp,jdbcType=DECIMAL},
+            YSTINTINCEXP = #{ystintincexp,jdbcType=DECIMAL},
+            PMEINTINCEXP = #{pmeintincexp,jdbcType=DECIMAL},
+            PYEINTINCEXP = #{pyeintincexp,jdbcType=DECIMAL},
+            TDYDSCINCEXP = #{tdydscincexp,jdbcType=DECIMAL},
+            YSTDSCINCEXP = #{ystdscincexp,jdbcType=DECIMAL},
+            PMEDSCINCEXP = #{pmedscincexp,jdbcType=DECIMAL},
+            PYEDSCINCEXP = #{pyedscincexp,jdbcType=DECIMAL},
+            TDYSALEGAIN = #{tdysalegain,jdbcType=DECIMAL},
+            YSTSALEGAIN = #{ystsalegain,jdbcType=DECIMAL},
+            PMESALEGAIN = #{pmesalegain,jdbcType=DECIMAL},
+            PYESALEGAIN = #{pyesalegain,jdbcType=DECIMAL},
+            TDYUGLAMT = #{tdyuglamt,jdbcType=DECIMAL},
+            YSTUGLAMT = #{ystuglamt,jdbcType=DECIMAL},
+            PMEUGLAMT = #{pmeuglamt,jdbcType=DECIMAL},
+            PYEUGLAMT = #{pyeuglamt,jdbcType=DECIMAL},
+            TDYMTM = #{tdymtm,jdbcType=DECIMAL},
+            YSTMTM = #{ystmtm,jdbcType=DECIMAL},
+            PMEMTM = #{pmemtm,jdbcType=DECIMAL},
+            PYEMTM = #{pyemtm,jdbcType=DECIMAL},
+            CLSGPRICE_8 = #{clsgprice8,jdbcType=DECIMAL},
+            TDBOOKVALUE = #{tdbookvalue,jdbcType=DECIMAL},
+            TDBOOKVALUEYST = #{tdbookvalueyst,jdbcType=DECIMAL},
+            TDMARKETVALUE = #{tdmarketvalue,jdbcType=DECIMAL},
+            TDMARKETVALUEYST = #{tdmarketvalueyst,jdbcType=DECIMAL},
+            ACCROUTST = #{accroutst,jdbcType=DECIMAL},
+            ACCROUTSTYST = #{accroutstyst,jdbcType=DECIMAL}
+        where BR = #{br,jdbcType=VARCHAR}
+    </update>
+</mapper>

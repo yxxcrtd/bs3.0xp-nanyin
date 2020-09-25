@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepInfo" >
+        <id column="REP_ID" property="repId" jdbcType="VARCHAR" />
+        <result column="TEMPLATE_ID" property="templateId" jdbcType="VARCHAR" />
+        <result column="TEMPLATE_PATH" property="templatePath" jdbcType="VARCHAR" />
+        <result column="TEMPLATE_NAME" property="templateName" jdbcType="VARCHAR" />
+        <result column="REPORT_NAME" property="reportName" jdbcType="VARCHAR" />
+        <result column="REPORT_TYPE" property="reportType" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="REP_ORDER" property="repOrder" jdbcType="DECIMAL" />
+        <result column="REPORT_CATEGORY" property="reportCategory" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        REP_ID REP_ID, TEMPLATE_ID TEMPLATE_ID, TEMPLATE_PATH TEMPLATE_PATH, TEMPLATE_NAME TEMPLATE_NAME, 
+        REPORT_NAME REPORT_NAME, REPORT_TYPE REPORT_TYPE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, REP_ORDER REP_ORDER, 
+        REPORT_CATEGORY REPORT_CATEGORY
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepInfoMapper.Base_Column_List" />
+        from REP_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepInfoMapper.Base_Column_List" />
+        from REP_INFO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepInfoMapper.Base_Column_List" />
+        from REP_INFO
+        where REP_ID = #{repId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from REP_INFO
+        where REP_ID = #{repId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepInfo" >
+        insert into REP_INFO (REP_ID, TEMPLATE_ID, TEMPLATE_PATH, 
+            TEMPLATE_NAME, REPORT_NAME, REPORT_TYPE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, REP_ORDER, 
+            REPORT_CATEGORY)
+        values (#{repId,jdbcType=VARCHAR}, #{templateId,jdbcType=VARCHAR}, #{templatePath,jdbcType=VARCHAR}, 
+            #{templateName,jdbcType=VARCHAR}, #{reportName,jdbcType=VARCHAR}, #{reportType,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{repOrder,jdbcType=DECIMAL}, 
+            #{reportCategory,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepInfo" >
+        insert into REP_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="repId != null" >
+                REP_ID,
+            </if>
+            <if test="templateId != null" >
+                TEMPLATE_ID,
+            </if>
+            <if test="templatePath != null" >
+                TEMPLATE_PATH,
+            </if>
+            <if test="templateName != null" >
+                TEMPLATE_NAME,
+            </if>
+            <if test="reportName != null" >
+                REPORT_NAME,
+            </if>
+            <if test="reportType != null" >
+                REPORT_TYPE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="repOrder != null" >
+                REP_ORDER,
+            </if>
+            <if test="reportCategory != null" >
+                REPORT_CATEGORY,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="repId != null" >
+                #{repId,jdbcType=VARCHAR},
+            </if>
+            <if test="templateId != null" >
+                #{templateId,jdbcType=VARCHAR},
+            </if>
+            <if test="templatePath != null" >
+                #{templatePath,jdbcType=VARCHAR},
+            </if>
+            <if test="templateName != null" >
+                #{templateName,jdbcType=VARCHAR},
+            </if>
+            <if test="reportName != null" >
+                #{reportName,jdbcType=VARCHAR},
+            </if>
+            <if test="reportType != null" >
+                #{reportType,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="repOrder != null" >
+                #{repOrder,jdbcType=DECIMAL},
+            </if>
+            <if test="reportCategory != null" >
+                #{reportCategory,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepInfo" >
+        insert into REP_INFO(REP_ID, TEMPLATE_ID, TEMPLATE_PATH, TEMPLATE_NAME, REPORT_NAME, 
+        REPORT_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REP_ORDER, 
+        REPORT_CATEGORY)
+        select REP_ID, TEMPLATE_ID, TEMPLATE_PATH, TEMPLATE_NAME, REPORT_NAME, 
+            REPORT_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, REP_ORDER, 
+            REPORT_CATEGORY
+             from REP_INFO
+             where 1 = 1 and REP_ID = #{repId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepInfo" >
+        update REP_INFO
+        <set >
+            <if test="templateId != null" >
+                TEMPLATE_ID = #{templateId,jdbcType=VARCHAR},
+            </if>
+            <if test="templatePath != null" >
+                TEMPLATE_PATH = #{templatePath,jdbcType=VARCHAR},
+            </if>
+            <if test="templateName != null" >
+                TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR},
+            </if>
+            <if test="reportName != null" >
+                REPORT_NAME = #{reportName,jdbcType=VARCHAR},
+            </if>
+            <if test="reportType != null" >
+                REPORT_TYPE = #{reportType,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="repOrder != null" >
+                REP_ORDER = #{repOrder,jdbcType=DECIMAL},
+            </if>
+            <if test="reportCategory != null" >
+                REPORT_CATEGORY = #{reportCategory,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where REP_ID = #{repId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepInfo" >
+        update REP_INFO
+        set TEMPLATE_ID = #{templateId,jdbcType=VARCHAR},
+            TEMPLATE_PATH = #{templatePath,jdbcType=VARCHAR},
+            TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR},
+            REPORT_NAME = #{reportName,jdbcType=VARCHAR},
+            REPORT_TYPE = #{reportType,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            REP_ORDER = #{repOrder,jdbcType=DECIMAL},
+            REPORT_CATEGORY = #{reportCategory,jdbcType=VARCHAR}
+        where REP_ID = #{repId,jdbcType=VARCHAR}
+    </update>
+</mapper>

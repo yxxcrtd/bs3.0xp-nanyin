@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.manage.workmanage.dao.ReportWorkManage003Mapper">
+    <select id="findProdPage" resultType="com.joyintech.tams.disclosure.information.manage.workmanage.dto.ReportWorkManage003Dto">
+		SELECT Row_Number() OVER (ORDER BY PROD_ID desc) as id,PROD_ID as prodId,nvl(PROD_ABBR,PROD_NAME) as prodName
+        FROM REP_PROD_INFO
+        where 1=1
+        and p_prod_id is null /*不取子产品*/
+        <if test="condition != null and condition != ''">
+			<![CDATA[ ${condition}  ]]>
+		</if>
+		<if test="chooseProdId != null and chooseProdId.length > 0">
+	 		AND PROD_ID NOT IN
+			<foreach item="item" collection="chooseProdId" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="prodIds != null and prodIds.length > 0">
+	 		AND PROD_ID NOT IN
+			<foreach item="item" collection="prodIds" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="prodId != null and prodId != ''">
+			and PROD_ID like '%'||#{prodId,jdbcType=VARCHAR}||'%'
+		</if>
+		<if test="prodName != null and prodName != ''">
+			and nvl(PROD_ABBR,PROD_NAME) like '%'||#{prodName,jdbcType=VARCHAR}||'%'
+		</if>
+    </select>
+    
+</mapper>

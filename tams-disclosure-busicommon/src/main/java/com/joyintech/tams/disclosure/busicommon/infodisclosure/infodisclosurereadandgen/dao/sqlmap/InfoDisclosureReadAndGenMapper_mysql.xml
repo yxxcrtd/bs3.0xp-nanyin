@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.dao.InfoDisclosureReadAndGenMapper_mysql">
+	<insert id="insertRepInstallFileBatch" parameterType="java.util.List" >
+        insert into REP_INSTALL_FILE (ID, JOB_ID, JOB_SEQ,
+        PRODID, PROD_NAME, END_DATE,
+        START_DATE, REVEAL_CHANNEL, REVEAL_END_DATE,
+        REP_TYPE, REP_ID, REP_NAME,
+        FILE_TYPE, IS_CONFIRM, IS_REVEAL,
+        STATUS, CREATE_USER, CREATE_DEPT,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        ) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+                #{item.id,jdbcType=VARCHAR} ID,
+                #{item.jobId,jdbcType=VARCHAR} JOB_ID,
+                #{item.jobSeq,jdbcType=VARCHAR} JOB_SEQ,
+                #{item.prodid,jdbcType=VARCHAR} PRODID,
+                #{item.prodName,jdbcType=VARCHAR} PROD_NAME,
+                #{item.endDate,jdbcType=DATE} END_DATE,
+                #{item.startDate,jdbcType=DATE} START_DATE,
+                #{item.revealChannel,jdbcType=VARCHAR} REVEAL_CHANNEL,
+                #{item.revealEndDate,jdbcType=TIMESTAMP} REVEAL_END_DATE,
+                #{item.repType,jdbcType=VARCHAR} REP_TYPE,
+                #{item.repId,jdbcType=VARCHAR} REP_ID,
+                #{item.repName,jdbcType=VARCHAR} REP_NAME,
+                #{item.fileType,jdbcType=VARCHAR} FILE_TYPE,
+                #{item.isConfirm,jdbcType=VARCHAR} IS_CONFIRM,
+                #{item.isReveal,jdbcType=VARCHAR} IS_REVEAL,
+                #{item.status,jdbcType=VARCHAR} STATUS,
+                #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+                #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+                #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+                #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+                #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            )
+        </foreach>
+    </insert>
+	<insert id="insertRepExceptedLogBatch" parameterType="java.util.List" >
+        insert into REP_EXPECTED_LOG (ID, JOB_ID, PRODID,
+        PROD_NAME, END_DATE, START_DATE,
+        REVEAL_END_DATE, REP_TYPE, REP_ID,
+        REP_NAME, FILE_TYPE, EXEC_STATUS,
+        STATUS, CREATE_USER, CREATE_DEPT,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        ) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+                #{item.id,jdbcType=VARCHAR} ID,
+                #{item.jobId,jdbcType=VARCHAR} JOB_ID,
+                #{item.prodid,jdbcType=VARCHAR} PRODID,
+                #{item.prodName,jdbcType=VARCHAR} PROD_NAME,
+                #{item.endDate,jdbcType=DATE} END_DATE,
+                #{item.startDate,jdbcType=DATE} START_DATE,
+                #{item.revealEndDate,jdbcType=TIMESTAMP} REVEAL_END_DATE,
+                #{item.repType,jdbcType=VARCHAR} REP_TYPE,
+                #{item.repId,jdbcType=VARCHAR} REP_ID,
+                #{item.repName,jdbcType=VARCHAR} REP_NAME,
+                #{item.fileType,jdbcType=VARCHAR} FILE_TYPE,
+                #{item.execStatus,jdbcType=VARCHAR} EXEC_STATUS,
+                #{item.status,jdbcType=VARCHAR} STATUS,
+                #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+                #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+                #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+                #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+                #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            )
+        </foreach>
+    </insert>
+</mapper>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.infodisclosure.prodtrd.dao.InfoDisProdtrdMapper_mysql">
+	<select id="selectChbPrdDealInfoByUpdateTime"
+    	resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.prodtrd.entity.InfoDisProdtrdEntity" >
+    	SELECT
+		  A.prod_id prodId,
+		  A.SETTDATE_DATE confirmDate,
+		  A.FPROD_ID fprodId,
+		  SUM(A.SUB_AMT) subAmt,
+		  SUM(A.RED_AMT) redAmt,
+		  SUM(A.BONUS_AMT) bonusAmt,
+		  SUM(A.SUB_TRADE_PRINCE) subTradePrince,
+		  SUM(A.RED_TRADE_PRINCE) redTradePrince,
+		  SUM(A.RED_INT_AMT) redIntAmt
+		FROM
+		  (
+		  	
+		    SELECT
+		      if(cpd.prod_id=NULL,cpd.fprod_id,cpd.prod_id) prod_id,
+		      cpd.SETTDATE_DATE,
+		      cpd.FPROD_ID,
+		      CASE
+		        WHEN cpd.trade_type IN ('01','02') THEN cpd.TRADE_QTY ELSE 0
+		      END SUB_AMT,
+		      CASE
+		        WHEN cpd.trade_type IN ('03','17') THEN cpd.TRADE_QTY ELSE 0
+		      END RED_AMT,
+		      CASE
+		        WHEN cpd.trade_type IN ('05') THEN cpd.TRADE_QTY ELSE 0
+		      END BONUS_AMT,
+		      CASE
+		        WHEN cpd.trade_type IN ('01','02') THEN if(cpd.status='D',-1,1)*cpd.TRADE_PRINCE ELSE 0
+		      END SUB_TRADE_PRINCE,
+		      CASE
+		        WHEN cpd.trade_type IN ('03','17') THEN if(cpd.status='D',-1,1)*cpd.TRADE_PRINCE ELSE 0
+		      END RED_TRADE_PRINCE,
+		      CASE
+		        WHEN cpd.trade_type IN ('03','17') THEN if(cpd.status='D',-1,1)*cpd.INT_AMT ELSE 0
+		      END RED_INT_AMT
+		    FROM
+		      CHB_PRD_DEAL cpd
+		    WHERE
+		      1=1
+		    AND cpd.trade_type IN ('01','02','03','05','17')
+		    AND DATE_FORMAT(cpd.update_time,'%Y-%m-%d') = #{executeDateStr,jdbcType=VARCHAR}
+		    AND DATE_FORMAT(cpd.SETTDATE_DATE,'%Y-%m-%d') = #{executeDateStr,jdbcType=VARCHAR}
+		    AND cpd.status = 'E'
+		    
+		    
+		    UNION ALL
+		    SELECT
+		      if(prod_id=NULL,fprod_id,prod_id) prod_id,
+		      L.SETTDATE_DATE,
+		      L.FPROD_ID,
+		      CASE
+		        WHEN L.trade_type IN ('01','02') THEN if(L.status='D',-1,1)*L.TRADE_QTY ELSE 0
+		      END SUB_AMT,
+		      CASE
+		        WHEN L.trade_type IN ('03','17') THEN if(L.status='D',-1,1)*L.TRADE_QTY ELSE 0
+		      END RED_AMT,
+		      CASE
+		        WHEN L.trade_type IN ('05') THEN if(L.status='D',-1,1)*L.TRADE_QTY ELSE 0
+		      END BONUS_AMT,
+		      CASE
+		        WHEN L.trade_type IN ('01','02') THEN if(L.status='D',-1,1)*L.TRADE_PRINCE ELSE 0
+		      END SUB_TRADE_PRINCE,
+		      CASE
+		        WHEN L.trade_type IN ('03','17') THEN if(L.status='D',-1,1)*L.TRADE_PRINCE ELSE 0
+		      END RED_TRADE_PRINCE,
+		      CASE
+		        WHEN L.trade_type IN ('03','17') THEN if(L.status='D',-1,1)*L.INT_AMT ELSE 0
+		      END RED_INT_AMT
+		    FROM
+		      CHB_PRD_DEAL L
+		    WHERE
+		      1=1
+		    AND L.trade_type IN ('01','02','03','05','17')
+		    
+		    AND EXISTS
+		      (
+		        SELECT
+		          1
+		        FROM
+		          CHB_PRD_DEAL S
+		        WHERE
+		          DATE_FORMAT(S.update_time,'%Y-%m-%d') = #{executeDateStr,jdbcType=VARCHAR}
+		        AND DATE_FORMAT(S.SETTDATE_DATE,'%Y-%m-%d') != #{executeDateStr,jdbcType=VARCHAR}
+		        AND DATE_FORMAT(S.CREATE_TIME,'%Y-%m-%d') != #{executeDateStr,jdbcType=VARCHAR}
+		        
+		        AND S.PROD_ID=L.PROD_ID
+		        AND DATE_FORMAT(S.SETTDATE_DATE,'%Y-%m-%d') = DATE_FORMAT(L.SETTDATE_DATE,'%Y-%m-%d')
+		      )
+		      
+		  )A
+		GROUP BY
+		  A.prod_id,
+		  A.SETTDATE_DATE,
+		  A.FPROD_ID
+		  
+    </select>
+</mapper>

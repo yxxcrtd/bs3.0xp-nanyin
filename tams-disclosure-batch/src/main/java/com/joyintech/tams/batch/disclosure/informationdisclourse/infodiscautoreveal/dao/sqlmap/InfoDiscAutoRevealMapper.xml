@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.joyintech.tams.batch.disclosure.informationdisclourse.infodiscautoreveal.dao.InfoDiscAutoRevealMapper">
+	<select id="getRepRevealList" resultType="com.joyintech.tams.batch.disclosure.informationdisclourse.infodiscautoreveal.dto.InfoDiscAutoRevealReadResult">
+SELECT
+		reveal.ID id,
+		reveal.REP_ID repId,
+		reveal.REPORT_NAME reportName,
+		reveal.REPORT_CATEGORY reportCategory,
+		reveal.PROD_NAME prodName,
+		reveal.PRODID prodid,
+		reveal.END_DATE endDate,
+		reveal.START_DATE startDate,
+		reveal.SYS_FILENAME sysFilename,
+		reveal.SYS_FILEPATH sysFilepath,
+		reveal.SYS_FILENAME_DATE sysFilenameDate,
+		reveal.FILEPATH filepath,
+		reveal.TIME time,
+		reveal.FILENAME filename,
+		reveal.CONFIRM_STATUS confirmStatus,
+		reveal.CONFIRM_USER confirmUser,
+		reveal.CONFIRM_DATE confirmDate,
+		reveal.REVEAL_STATUS revealStatus,
+		reveal.REVEAL_DATE revealDate,
+		reveal.REVEAL_USER revealUser,
+		reveal.IS_REVEAL isReveal,
+		reveal.IS_CONFIRM isConfirm,
+		reveal.DETAIL detail,
+		reveal.REVEAL_CHANNEL revealChannel,
+		reveal.STATUS status,
+		reveal.REVEAL_END_DATE revealEndDate
+		FROM
+		REP_REVEAL reveal
+		LEFT JOIN REP_PROD_INFO info
+		on info.PROD_ID = reveal.PRODID
+		and info.STATUS = 'E'
+		WHERE
+		reveal.REVEAL_STATUS = '02'
+		AND reveal.CONFIRM_STATUS = #{confirmStatus,jdbcType=VARCHAR}
+		AND reveal.STATUS = 'E'
+		AND reveal.IS_REVEAL = '02'
+	</select>
+	<!-- 更新披露状态 -->
+	<update id="updateRevealStatusById" parameterType="com.joyintech.tams.batch.disclosure.informationdisclourse.infodiscautoreveal.dto.InfoDiscAutoRevealResult" >
+	      update REP_REVEAL
+	      set 
+	      REVEAL_STATUS = #{revealStatus,jdbcType=VARCHAR},
+	      REVEAL_DATE = #{revealDate,jdbcType=TIMESTAMP},
+	      REVEAL_USER = #{revealUser,jdbcType=VARCHAR},
+	      UPDATE_TIME = sysdate,
+	      UPDATE_USER = #{revealUser,jdbcType=VARCHAR}
+	      where id = #{id,jdbcType=VARCHAR}
+    </update>
+</mapper>

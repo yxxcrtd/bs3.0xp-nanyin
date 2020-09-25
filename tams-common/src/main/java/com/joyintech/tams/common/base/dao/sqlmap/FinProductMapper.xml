@@ -1,0 +1,793 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.FinProductMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.FinProduct" >
+        <id column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE" property="finprodType" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE2" property="finprodType2" jdbcType="VARCHAR" />
+        <result column="FINPROD_ABBR" property="finprodAbbr" jdbcType="VARCHAR" />
+        <result column="FINPROD_NAME" property="finprodName" jdbcType="VARCHAR" />
+        <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+        <result column="COUPON_SPECIES" property="couponSpecies" jdbcType="VARCHAR" />
+        <result column="CHL_FINPROD_ID" property="chlFinprodId" jdbcType="VARCHAR" />
+        <result column="FINPROD_MARKET_ID" property="finprodMarketId" jdbcType="VARCHAR" />
+        <result column="ISSUE_ID" property="issueId" jdbcType="VARCHAR" />
+        <result column="ISSUE_PRICE" property="issuePrice" jdbcType="DECIMAL" />
+        <result column="ISSUE_AMT" property="issueAmt" jdbcType="DECIMAL" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="BLN_AREA" property="blnArea" jdbcType="VARCHAR" />
+        <result column="TRADE_MARKET" property="tradeMarket" jdbcType="VARCHAR" />
+        <result column="CALENDAR_ID" property="calendarId" jdbcType="VARCHAR" />
+        <result column="ISSUE_TYPE" property="issueType" jdbcType="VARCHAR" />
+        <result column="OPERATION_TYPE" property="operationType" jdbcType="VARCHAR" />
+        <result column="ENTRUST_TYPE" property="entrustType" jdbcType="VARCHAR" />
+        <result column="ENTRUSTER" property="entruster" jdbcType="VARCHAR" />
+        <result column="TRUSTEE_ID" property="trusteeId" jdbcType="VARCHAR" />
+        <result column="ISSUER" property="issuer" jdbcType="VARCHAR" />
+        <result column="MANAGER" property="manager" jdbcType="VARCHAR" />
+        <result column="FINANCIER" property="financier" jdbcType="VARCHAR" />
+        <result column="IDATE" property="idate" jdbcType="DATE" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="TERM_DAYS" property="termDays" jdbcType="DECIMAL" />
+        <result column="ACTMDATE" property="actmdate" jdbcType="DATE" />
+        <result column="LIQUIDATION_DATE" property="liquidationDate" jdbcType="DATE" />
+        <result column="IS_CHL" property="isChl" jdbcType="VARCHAR" />
+        <result column="IS_SUS" property="isSus" jdbcType="VARCHAR" />
+        <result column="SUSTAINABLE_REMARK" property="sustainableRemark" jdbcType="VARCHAR" />
+        <result column="IS_RIGHT" property="isRight" jdbcType="VARCHAR" />
+        <result column="CAPI_INCOME_FEATURE" property="capiIncomeFeature" jdbcType="VARCHAR" />
+        <result column="P_FINPROD_ID" property="pFinprodId" jdbcType="VARCHAR" />
+        <result column="O_FINPROD_ID" property="oFinprodId" jdbcType="VARCHAR" />
+        <result column="REGIST_ORG" property="registOrg" jdbcType="VARCHAR" />
+        <result column="EXE_DATE" property="exeDate" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CONTRACT_NO" property="contractNo" jdbcType="VARCHAR" />
+        <result column="IS_FIN_ORG" property="isFinOrg" jdbcType="VARCHAR" />
+        <result column="SPONSOR" property="sponsor" jdbcType="VARCHAR" />
+        <result column="INVEST_ADVISER" property="investAdviser" jdbcType="VARCHAR" />
+        <result column="LIQUIDATION_YESNO" property="liquidationYesno" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        FINPROD_ID FINPROD_ID, FINPROD_TYPE FINPROD_TYPE, FINPROD_TYPE2 FINPROD_TYPE2, FINPROD_ABBR FINPROD_ABBR, 
+        FINPROD_NAME FINPROD_NAME, PROFIT_TYPE PROFIT_TYPE, COUPON_SPECIES COUPON_SPECIES, 
+        CHL_FINPROD_ID CHL_FINPROD_ID, FINPROD_MARKET_ID FINPROD_MARKET_ID, ISSUE_ID ISSUE_ID, 
+        ISSUE_PRICE ISSUE_PRICE, ISSUE_AMT ISSUE_AMT, CCY CCY, BLN_AREA BLN_AREA, TRADE_MARKET TRADE_MARKET, 
+        CALENDAR_ID CALENDAR_ID, ISSUE_TYPE ISSUE_TYPE, OPERATION_TYPE OPERATION_TYPE, ENTRUST_TYPE ENTRUST_TYPE, 
+        ENTRUSTER ENTRUSTER, TRUSTEE_ID TRUSTEE_ID, ISSUER ISSUER, MANAGER MANAGER, FINANCIER FINANCIER, 
+        IDATE IDATE, VDATE VDATE, MDATE MDATE, TERM_DAYS TERM_DAYS, ACTMDATE ACTMDATE, LIQUIDATION_DATE LIQUIDATION_DATE, 
+        IS_CHL IS_CHL, IS_SUS IS_SUS, SUSTAINABLE_REMARK SUSTAINABLE_REMARK, IS_RIGHT IS_RIGHT, 
+        CAPI_INCOME_FEATURE CAPI_INCOME_FEATURE, P_FINPROD_ID P_FINPROD_ID, O_FINPROD_ID O_FINPROD_ID, 
+        REGIST_ORG REGIST_ORG, EXE_DATE EXE_DATE, REMARK REMARK, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
+        CONTRACT_NO CONTRACT_NO, IS_FIN_ORG IS_FIN_ORG, SPONSOR SPONSOR, INVEST_ADVISER INVEST_ADVISER, 
+        LIQUIDATION_YESNO LIQUIDATION_YESNO
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinProductMapper.Base_Column_List" />
+        from FIN_PRODUCT
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinProductMapper.Base_Column_List" />
+        from FIN_PRODUCT
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinProductMapper.Base_Column_List" />
+        from FIN_PRODUCT
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from FIN_PRODUCT
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FinProduct" >
+        insert into FIN_PRODUCT (FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2, 
+            FINPROD_ABBR, FINPROD_NAME, PROFIT_TYPE, 
+            COUPON_SPECIES, CHL_FINPROD_ID, FINPROD_MARKET_ID, 
+            ISSUE_ID, ISSUE_PRICE, ISSUE_AMT, 
+            CCY, BLN_AREA, TRADE_MARKET, 
+            CALENDAR_ID, ISSUE_TYPE, OPERATION_TYPE, 
+            ENTRUST_TYPE, ENTRUSTER, TRUSTEE_ID, 
+            ISSUER, MANAGER, FINANCIER, 
+            IDATE, VDATE, MDATE, TERM_DAYS, 
+            ACTMDATE, LIQUIDATION_DATE, IS_CHL, 
+            IS_SUS, SUSTAINABLE_REMARK, IS_RIGHT, 
+            CAPI_INCOME_FEATURE, P_FINPROD_ID, O_FINPROD_ID, 
+            REGIST_ORG, EXE_DATE, REMARK, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, CONTRACT_NO, 
+            IS_FIN_ORG, SPONSOR, INVEST_ADVISER, 
+            LIQUIDATION_YESNO)
+        values (#{finprodId,jdbcType=VARCHAR}, #{finprodType,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR}, 
+            #{finprodAbbr,jdbcType=VARCHAR}, #{finprodName,jdbcType=VARCHAR}, #{profitType,jdbcType=VARCHAR}, 
+            #{couponSpecies,jdbcType=VARCHAR}, #{chlFinprodId,jdbcType=VARCHAR}, #{finprodMarketId,jdbcType=VARCHAR}, 
+            #{issueId,jdbcType=VARCHAR}, #{issuePrice,jdbcType=DECIMAL}, #{issueAmt,jdbcType=DECIMAL}, 
+            #{ccy,jdbcType=VARCHAR}, #{blnArea,jdbcType=VARCHAR}, #{tradeMarket,jdbcType=VARCHAR}, 
+            #{calendarId,jdbcType=VARCHAR}, #{issueType,jdbcType=VARCHAR}, #{operationType,jdbcType=VARCHAR}, 
+            #{entrustType,jdbcType=VARCHAR}, #{entruster,jdbcType=VARCHAR}, #{trusteeId,jdbcType=VARCHAR}, 
+            #{issuer,jdbcType=VARCHAR}, #{manager,jdbcType=VARCHAR}, #{financier,jdbcType=VARCHAR}, 
+            #{idate,jdbcType=DATE}, #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, #{termDays,jdbcType=DECIMAL}, 
+            #{actmdate,jdbcType=DATE}, #{liquidationDate,jdbcType=DATE}, #{isChl,jdbcType=VARCHAR}, 
+            #{isSus,jdbcType=VARCHAR}, #{sustainableRemark,jdbcType=VARCHAR}, #{isRight,jdbcType=VARCHAR}, 
+            #{capiIncomeFeature,jdbcType=VARCHAR}, #{pFinprodId,jdbcType=VARCHAR}, #{oFinprodId,jdbcType=VARCHAR}, 
+            #{registOrg,jdbcType=VARCHAR}, #{exeDate,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{contractNo,jdbcType=VARCHAR}, 
+            #{isFinOrg,jdbcType=VARCHAR}, #{sponsor,jdbcType=VARCHAR}, #{investAdviser,jdbcType=VARCHAR}, 
+            #{liquidationYesno,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinProduct" >
+        insert into FIN_PRODUCT
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="finprodType != null" >
+                FINPROD_TYPE,
+            </if>
+            <if test="finprodType2 != null" >
+                FINPROD_TYPE2,
+            </if>
+            <if test="finprodAbbr != null" >
+                FINPROD_ABBR,
+            </if>
+            <if test="finprodName != null" >
+                FINPROD_NAME,
+            </if>
+            <if test="profitType != null" >
+                PROFIT_TYPE,
+            </if>
+            <if test="couponSpecies != null" >
+                COUPON_SPECIES,
+            </if>
+            <if test="chlFinprodId != null" >
+                CHL_FINPROD_ID,
+            </if>
+            <if test="finprodMarketId != null" >
+                FINPROD_MARKET_ID,
+            </if>
+            <if test="issueId != null" >
+                ISSUE_ID,
+            </if>
+            <if test="issuePrice != null" >
+                ISSUE_PRICE,
+            </if>
+            <if test="issueAmt != null" >
+                ISSUE_AMT,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="blnArea != null" >
+                BLN_AREA,
+            </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET,
+            </if>
+            <if test="calendarId != null" >
+                CALENDAR_ID,
+            </if>
+            <if test="issueType != null" >
+                ISSUE_TYPE,
+            </if>
+            <if test="operationType != null" >
+                OPERATION_TYPE,
+            </if>
+            <if test="entrustType != null" >
+                ENTRUST_TYPE,
+            </if>
+            <if test="entruster != null" >
+                ENTRUSTER,
+            </if>
+            <if test="trusteeId != null" >
+                TRUSTEE_ID,
+            </if>
+            <if test="issuer != null" >
+                ISSUER,
+            </if>
+            <if test="manager != null" >
+                MANAGER,
+            </if>
+            <if test="financier != null" >
+                FINANCIER,
+            </if>
+            <if test="idate != null" >
+                IDATE,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="termDays != null" >
+                TERM_DAYS,
+            </if>
+            <if test="actmdate != null" >
+                ACTMDATE,
+            </if>
+            <if test="liquidationDate != null" >
+                LIQUIDATION_DATE,
+            </if>
+            <if test="isChl != null" >
+                IS_CHL,
+            </if>
+            <if test="isSus != null" >
+                IS_SUS,
+            </if>
+            <if test="sustainableRemark != null" >
+                SUSTAINABLE_REMARK,
+            </if>
+            <if test="isRight != null" >
+                IS_RIGHT,
+            </if>
+            <if test="capiIncomeFeature != null" >
+                CAPI_INCOME_FEATURE,
+            </if>
+            <if test="pFinprodId != null" >
+                P_FINPROD_ID,
+            </if>
+            <if test="oFinprodId != null" >
+                O_FINPROD_ID,
+            </if>
+            <if test="registOrg != null" >
+                REGIST_ORG,
+            </if>
+            <if test="exeDate != null" >
+                EXE_DATE,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="contractNo != null" >
+                CONTRACT_NO,
+            </if>
+            <if test="isFinOrg != null" >
+                IS_FIN_ORG,
+            </if>
+            <if test="sponsor != null" >
+                SPONSOR,
+            </if>
+            <if test="investAdviser != null" >
+                INVEST_ADVISER,
+            </if>
+            <if test="liquidationYesno != null" >
+                LIQUIDATION_YESNO,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType != null" >
+                #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType2 != null" >
+                #{finprodType2,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodAbbr != null" >
+                #{finprodAbbr,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodName != null" >
+                #{finprodName,jdbcType=VARCHAR},
+            </if>
+            <if test="profitType != null" >
+                #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="couponSpecies != null" >
+                #{couponSpecies,jdbcType=VARCHAR},
+            </if>
+            <if test="chlFinprodId != null" >
+                #{chlFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodMarketId != null" >
+                #{finprodMarketId,jdbcType=VARCHAR},
+            </if>
+            <if test="issueId != null" >
+                #{issueId,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePrice != null" >
+                #{issuePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="issueAmt != null" >
+                #{issueAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="blnArea != null" >
+                #{blnArea,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeMarket != null" >
+                #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="calendarId != null" >
+                #{calendarId,jdbcType=VARCHAR},
+            </if>
+            <if test="issueType != null" >
+                #{issueType,jdbcType=VARCHAR},
+            </if>
+            <if test="operationType != null" >
+                #{operationType,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustType != null" >
+                #{entrustType,jdbcType=VARCHAR},
+            </if>
+            <if test="entruster != null" >
+                #{entruster,jdbcType=VARCHAR},
+            </if>
+            <if test="trusteeId != null" >
+                #{trusteeId,jdbcType=VARCHAR},
+            </if>
+            <if test="issuer != null" >
+                #{issuer,jdbcType=VARCHAR},
+            </if>
+            <if test="manager != null" >
+                #{manager,jdbcType=VARCHAR},
+            </if>
+            <if test="financier != null" >
+                #{financier,jdbcType=VARCHAR},
+            </if>
+            <if test="idate != null" >
+                #{idate,jdbcType=DATE},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="termDays != null" >
+                #{termDays,jdbcType=DECIMAL},
+            </if>
+            <if test="actmdate != null" >
+                #{actmdate,jdbcType=DATE},
+            </if>
+            <if test="liquidationDate != null" >
+                #{liquidationDate,jdbcType=DATE},
+            </if>
+            <if test="isChl != null" >
+                #{isChl,jdbcType=VARCHAR},
+            </if>
+            <if test="isSus != null" >
+                #{isSus,jdbcType=VARCHAR},
+            </if>
+            <if test="sustainableRemark != null" >
+                #{sustainableRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="isRight != null" >
+                #{isRight,jdbcType=VARCHAR},
+            </if>
+            <if test="capiIncomeFeature != null" >
+                #{capiIncomeFeature,jdbcType=VARCHAR},
+            </if>
+            <if test="pFinprodId != null" >
+                #{pFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="oFinprodId != null" >
+                #{oFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="registOrg != null" >
+                #{registOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="exeDate != null" >
+                #{exeDate,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="contractNo != null" >
+                #{contractNo,jdbcType=VARCHAR},
+            </if>
+            <if test="isFinOrg != null" >
+                #{isFinOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="sponsor != null" >
+                #{sponsor,jdbcType=VARCHAR},
+            </if>
+            <if test="investAdviser != null" >
+                #{investAdviser,jdbcType=VARCHAR},
+            </if>
+            <if test="liquidationYesno != null" >
+                #{liquidationYesno,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinProduct" >
+        insert into FIN_PRODUCT(FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2, FINPROD_ABBR, FINPROD_NAME, 
+        PROFIT_TYPE, COUPON_SPECIES, CHL_FINPROD_ID, FINPROD_MARKET_ID, ISSUE_ID, ISSUE_PRICE, 
+        ISSUE_AMT, CCY, BLN_AREA, TRADE_MARKET, CALENDAR_ID, ISSUE_TYPE, OPERATION_TYPE, 
+        ENTRUST_TYPE, ENTRUSTER, TRUSTEE_ID, ISSUER, MANAGER, FINANCIER, IDATE, VDATE, MDATE, 
+        TERM_DAYS, ACTMDATE, LIQUIDATION_DATE, IS_CHL, IS_SUS, SUSTAINABLE_REMARK, IS_RIGHT, 
+        CAPI_INCOME_FEATURE, P_FINPROD_ID, O_FINPROD_ID, REGIST_ORG, EXE_DATE, REMARK, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, CONTRACT_NO, IS_FIN_ORG, SPONSOR, 
+        INVEST_ADVISER, LIQUIDATION_YESNO)
+        select FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2, FINPROD_ABBR, FINPROD_NAME, 
+            PROFIT_TYPE, COUPON_SPECIES, CHL_FINPROD_ID, FINPROD_MARKET_ID, ISSUE_ID, ISSUE_PRICE, 
+            ISSUE_AMT, CCY, BLN_AREA, TRADE_MARKET, CALENDAR_ID, ISSUE_TYPE, OPERATION_TYPE, 
+            ENTRUST_TYPE, ENTRUSTER, TRUSTEE_ID, ISSUER, MANAGER, FINANCIER, IDATE, VDATE, MDATE, 
+            TERM_DAYS, ACTMDATE, LIQUIDATION_DATE, IS_CHL, IS_SUS, SUSTAINABLE_REMARK, IS_RIGHT, 
+            CAPI_INCOME_FEATURE, P_FINPROD_ID, O_FINPROD_ID, REGIST_ORG, EXE_DATE, REMARK, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CONTRACT_NO, IS_FIN_ORG, SPONSOR, 
+            INVEST_ADVISER, LIQUIDATION_YESNO
+             from FIN_PRODUCT
+             where 1 = 1 and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.FinProduct" >
+        update FIN_PRODUCT
+        <set >
+            <if test="finprodType != null" >
+                FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType2 != null" >
+                FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodAbbr != null" >
+                FINPROD_ABBR = #{finprodAbbr,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodName != null" >
+                FINPROD_NAME = #{finprodName,jdbcType=VARCHAR},
+            </if>
+            <if test="profitType != null" >
+                PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="couponSpecies != null" >
+                COUPON_SPECIES = #{couponSpecies,jdbcType=VARCHAR},
+            </if>
+            <if test="chlFinprodId != null" >
+                CHL_FINPROD_ID = #{chlFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodMarketId != null" >
+                FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR},
+            </if>
+            <if test="issueId != null" >
+                ISSUE_ID = #{issueId,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePrice != null" >
+                ISSUE_PRICE = #{issuePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="issueAmt != null" >
+                ISSUE_AMT = #{issueAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="blnArea != null" >
+                BLN_AREA = #{blnArea,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="calendarId != null" >
+                CALENDAR_ID = #{calendarId,jdbcType=VARCHAR},
+            </if>
+            <if test="issueType != null" >
+                ISSUE_TYPE = #{issueType,jdbcType=VARCHAR},
+            </if>
+            <if test="operationType != null" >
+                OPERATION_TYPE = #{operationType,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustType != null" >
+                ENTRUST_TYPE = #{entrustType,jdbcType=VARCHAR},
+            </if>
+            <if test="entruster != null" >
+                ENTRUSTER = #{entruster,jdbcType=VARCHAR},
+            </if>
+            <if test="trusteeId != null" >
+                TRUSTEE_ID = #{trusteeId,jdbcType=VARCHAR},
+            </if>
+            <if test="issuer != null" >
+                ISSUER = #{issuer,jdbcType=VARCHAR},
+            </if>
+            <if test="manager != null" >
+                MANAGER = #{manager,jdbcType=VARCHAR},
+            </if>
+            <if test="financier != null" >
+                FINANCIER = #{financier,jdbcType=VARCHAR},
+            </if>
+            <if test="idate != null" >
+                IDATE = #{idate,jdbcType=DATE},
+            </if>
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                MDATE = #{mdate,jdbcType=DATE},
+            </if>
+            <if test="termDays != null" >
+                TERM_DAYS = #{termDays,jdbcType=DECIMAL},
+            </if>
+            <if test="actmdate != null" >
+                ACTMDATE = #{actmdate,jdbcType=DATE},
+            </if>
+            <if test="liquidationDate != null" >
+                LIQUIDATION_DATE = #{liquidationDate,jdbcType=DATE},
+            </if>
+            <if test="isChl != null" >
+                IS_CHL = #{isChl,jdbcType=VARCHAR},
+            </if>
+            <if test="isSus != null" >
+                IS_SUS = #{isSus,jdbcType=VARCHAR},
+            </if>
+            <if test="sustainableRemark != null" >
+                SUSTAINABLE_REMARK = #{sustainableRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="isRight != null" >
+                IS_RIGHT = #{isRight,jdbcType=VARCHAR},
+            </if>
+            <if test="capiIncomeFeature != null" >
+                CAPI_INCOME_FEATURE = #{capiIncomeFeature,jdbcType=VARCHAR},
+            </if>
+            <if test="pFinprodId != null" >
+                P_FINPROD_ID = #{pFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="oFinprodId != null" >
+                O_FINPROD_ID = #{oFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="registOrg != null" >
+                REGIST_ORG = #{registOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="exeDate != null" >
+                EXE_DATE = #{exeDate,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="contractNo != null" >
+                CONTRACT_NO = #{contractNo,jdbcType=VARCHAR},
+            </if>
+            <if test="isFinOrg != null" >
+                IS_FIN_ORG = #{isFinOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="sponsor != null" >
+                SPONSOR = #{sponsor,jdbcType=VARCHAR},
+            </if>
+            <if test="investAdviser != null" >
+                INVEST_ADVISER = #{investAdviser,jdbcType=VARCHAR},
+            </if>
+            <if test="liquidationYesno != null" >
+                LIQUIDATION_YESNO = #{liquidationYesno,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinProduct" >
+        update FIN_PRODUCT
+        set FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
+            FINPROD_ABBR = #{finprodAbbr,jdbcType=VARCHAR},
+            FINPROD_NAME = #{finprodName,jdbcType=VARCHAR},
+            PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            COUPON_SPECIES = #{couponSpecies,jdbcType=VARCHAR},
+            CHL_FINPROD_ID = #{chlFinprodId,jdbcType=VARCHAR},
+            FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR},
+            ISSUE_ID = #{issueId,jdbcType=VARCHAR},
+            ISSUE_PRICE = #{issuePrice,jdbcType=DECIMAL},
+            ISSUE_AMT = #{issueAmt,jdbcType=DECIMAL},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            BLN_AREA = #{blnArea,jdbcType=VARCHAR},
+            TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+            CALENDAR_ID = #{calendarId,jdbcType=VARCHAR},
+            ISSUE_TYPE = #{issueType,jdbcType=VARCHAR},
+            OPERATION_TYPE = #{operationType,jdbcType=VARCHAR},
+            ENTRUST_TYPE = #{entrustType,jdbcType=VARCHAR},
+            ENTRUSTER = #{entruster,jdbcType=VARCHAR},
+            TRUSTEE_ID = #{trusteeId,jdbcType=VARCHAR},
+            ISSUER = #{issuer,jdbcType=VARCHAR},
+            MANAGER = #{manager,jdbcType=VARCHAR},
+            FINANCIER = #{financier,jdbcType=VARCHAR},
+            IDATE = #{idate,jdbcType=DATE},
+            VDATE = #{vdate,jdbcType=DATE},
+            MDATE = #{mdate,jdbcType=DATE},
+            TERM_DAYS = #{termDays,jdbcType=DECIMAL},
+            ACTMDATE = #{actmdate,jdbcType=DATE},
+            LIQUIDATION_DATE = #{liquidationDate,jdbcType=DATE},
+            IS_CHL = #{isChl,jdbcType=VARCHAR},
+            IS_SUS = #{isSus,jdbcType=VARCHAR},
+            SUSTAINABLE_REMARK = #{sustainableRemark,jdbcType=VARCHAR},
+            IS_RIGHT = #{isRight,jdbcType=VARCHAR},
+            CAPI_INCOME_FEATURE = #{capiIncomeFeature,jdbcType=VARCHAR},
+            P_FINPROD_ID = #{pFinprodId,jdbcType=VARCHAR},
+            O_FINPROD_ID = #{oFinprodId,jdbcType=VARCHAR},
+            REGIST_ORG = #{registOrg,jdbcType=VARCHAR},
+            EXE_DATE = #{exeDate,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            CONTRACT_NO = #{contractNo,jdbcType=VARCHAR},
+            IS_FIN_ORG = #{isFinOrg,jdbcType=VARCHAR},
+            SPONSOR = #{sponsor,jdbcType=VARCHAR},
+            INVEST_ADVISER = #{investAdviser,jdbcType=VARCHAR},
+            LIQUIDATION_YESNO = #{liquidationYesno,jdbcType=VARCHAR}
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </update>
+    <select id="getSubProd" parameterType="map" resultType="java.lang.String">
+        SELECT FINPROD_ID from FIN_PRODUCT
+        where P_FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </select>
+    <update id="updateSonProdByPProd" parameterType="com.joyintech.tams.common.base.entity.FinProduct" >
+        update FIN_PRODUCT
+        <set >
+            <if test="finprodType != null" >
+                FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType2 != null" >
+                FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodAbbr != null" >
+                FINPROD_ABBR = #{finprodAbbr,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodName != null" >
+                FINPROD_NAME = #{finprodName,jdbcType=VARCHAR},
+            </if>
+            <if test="profitType != null" >
+                PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="couponSpecies != null" >
+                COUPON_SPECIES = #{couponSpecies,jdbcType=VARCHAR},
+            </if>
+            <if test="chlFinprodId != null" >
+                CHL_FINPROD_ID = #{chlFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodMarketId != null" >
+                FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR},
+            </if>
+            <if test="issueId != null" >
+                ISSUE_ID = #{issueId,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePrice != null" >
+                ISSUE_PRICE = #{issuePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="issueAmt != null" >
+                ISSUE_AMT = #{issueAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="blnArea != null" >
+                BLN_AREA = #{blnArea,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="calendarId != null" >
+                CALENDAR_ID = #{calendarId,jdbcType=VARCHAR},
+            </if>
+            <if test="issueType != null" >
+                ISSUE_TYPE = #{issueType,jdbcType=VARCHAR},
+            </if>
+            <if test="operationType != null" >
+                OPERATION_TYPE = #{operationType,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustType != null" >
+                ENTRUST_TYPE = #{entrustType,jdbcType=VARCHAR},
+            </if>
+            <if test="entruster != null" >
+                ENTRUSTER = #{entruster,jdbcType=VARCHAR},
+            </if>
+            <if test="trusteeId != null" >
+                TRUSTEE_ID = #{trusteeId,jdbcType=VARCHAR},
+            </if>
+            <if test="issuer != null" >
+                ISSUER = #{issuer,jdbcType=VARCHAR},
+            </if>
+            <if test="manager != null" >
+                MANAGER = #{manager,jdbcType=VARCHAR},
+            </if>
+            <if test="financier != null" >
+                FINANCIER = #{financier,jdbcType=VARCHAR},
+            </if>
+            <if test="idate != null" >
+                IDATE = #{idate,jdbcType=DATE},
+            </if>
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                MDATE = #{mdate,jdbcType=DATE},
+            </if>
+            <if test="termDays != null" >
+                TERM_DAYS = #{termDays,jdbcType=DECIMAL},
+            </if>
+            <if test="actmdate != null" >
+                ACTMDATE = #{actmdate,jdbcType=DATE},
+            </if>
+            <if test="liquidationDate != null" >
+                LIQUIDATION_DATE = #{liquidationDate,jdbcType=DATE},
+            </if>
+            <if test="isChl != null" >
+                IS_CHL = #{isChl,jdbcType=VARCHAR},
+            </if>
+            <if test="isSus != null" >
+                IS_SUS = #{isSus,jdbcType=VARCHAR},
+            </if>
+            <if test="sustainableRemark != null" >
+                SUSTAINABLE_REMARK = #{sustainableRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="isRight != null" >
+                IS_RIGHT = #{isRight,jdbcType=VARCHAR},
+            </if>
+            <if test="capiIncomeFeature != null" >
+                CAPI_INCOME_FEATURE = #{capiIncomeFeature,jdbcType=VARCHAR},
+            </if>
+            <if test="oFinprodId != null" >
+                O_FINPROD_ID = #{oFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="registOrg != null" >
+                REGIST_ORG = #{registOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="exeDate != null" >
+                EXE_DATE = #{exeDate,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="contractNo != null" >
+                CONTRACT_NO = #{contractNo,jdbcType=VARCHAR},
+            </if>
+            <if test="isFinOrg != null" >
+                IS_FIN_ORG = #{isFinOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="sponsor != null" >
+                SPONSOR = #{sponsor,jdbcType=VARCHAR},
+            </if>
+            <if test="investAdviser != null" >
+                INVEST_ADVISER = #{investAdviser,jdbcType=VARCHAR},
+            </if>
+            <if test="liquidationYesno != null" >
+                LIQUIDATION_YESNO = #{liquidationYesno,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where P_FINPROD_ID = #{pFinprodId,jdbcType=VARCHAR}
+    </update>
+</mapper>

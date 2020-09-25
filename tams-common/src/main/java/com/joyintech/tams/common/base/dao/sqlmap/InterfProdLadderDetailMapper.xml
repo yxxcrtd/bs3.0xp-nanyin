@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfProdLadderDetailMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfProdLadderDetail" >
+        <result column="PRODID" property="prodid" jdbcType="VARCHAR" />
+        <result column="CDATE" property="cdate" jdbcType="VARCHAR" />
+        <result column="STARTDATE" property="startdate" jdbcType="VARCHAR" />
+        <result column="ENDDATE" property="enddate" jdbcType="VARCHAR" />
+        <result column="REFADDRATE" property="refaddrate" jdbcType="DECIMAL" />
+        <result column="STARTAMOUNT" property="startamount" jdbcType="DECIMAL" />
+        <result column="ENDAMOUNT" property="endamount" jdbcType="DECIMAL" />
+        <result column="STARTCUSTOMERLEVEL" property="startcustomerlevel" jdbcType="VARCHAR" />
+        <result column="ENDCUSTOMERLEVEL" property="endcustomerlevel" jdbcType="VARCHAR" />
+        <result column="STARTDAYNUM" property="startdaynum" jdbcType="DECIMAL" />
+        <result column="ENDDAYNUM" property="enddaynum" jdbcType="DECIMAL" />
+        <result column="STICKDAYNUM" property="stickdaynum" jdbcType="DECIMAL" />
+        <result column="TRANDAYNUM" property="trandaynum" jdbcType="DECIMAL" />
+        <result column="TOTALCOUNT" property="totalcount" jdbcType="DECIMAL" />
+        <result column="ACCOUNTAMOUNTBYRATE" property="accountamountbyrate" jdbcType="DECIMAL" />
+        <result column="SOURCEAMOUNTBYRATE" property="sourceamountbyrate" jdbcType="DECIMAL" />
+        <result column="TOTALPROFITAMOUNT" property="totalprofitamount" jdbcType="DECIMAL" />
+        <result column="BUYAMOUNT" property="buyamount" jdbcType="DECIMAL" />
+        <result column="DRAWAMOUNT" property="drawamount" jdbcType="DECIMAL" />
+        <result column="INTERF_ID" property="interfId" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfProdLadderDetail" >
+        insert into INTERF_PROD_LADDER_DETAIL (PRODID, CDATE, STARTDATE, 
+            ENDDATE, REFADDRATE, STARTAMOUNT, 
+            ENDAMOUNT, STARTCUSTOMERLEVEL, ENDCUSTOMERLEVEL, 
+            STARTDAYNUM, ENDDAYNUM, STICKDAYNUM, 
+            TRANDAYNUM, TOTALCOUNT, ACCOUNTAMOUNTBYRATE, 
+            SOURCEAMOUNTBYRATE, TOTALPROFITAMOUNT, 
+            BUYAMOUNT, DRAWAMOUNT, INTERF_ID, 
+            CREATE_TIME)
+        values (#{prodid,jdbcType=VARCHAR}, #{cdate,jdbcType=VARCHAR}, #{startdate,jdbcType=VARCHAR}, 
+            #{enddate,jdbcType=VARCHAR}, #{refaddrate,jdbcType=DECIMAL}, #{startamount,jdbcType=DECIMAL}, 
+            #{endamount,jdbcType=DECIMAL}, #{startcustomerlevel,jdbcType=VARCHAR}, #{endcustomerlevel,jdbcType=VARCHAR}, 
+            #{startdaynum,jdbcType=DECIMAL}, #{enddaynum,jdbcType=DECIMAL}, #{stickdaynum,jdbcType=DECIMAL}, 
+            #{trandaynum,jdbcType=DECIMAL}, #{totalcount,jdbcType=DECIMAL}, #{accountamountbyrate,jdbcType=DECIMAL}, 
+            #{sourceamountbyrate,jdbcType=DECIMAL}, #{totalprofitamount,jdbcType=DECIMAL}, 
+            #{buyamount,jdbcType=DECIMAL}, #{drawamount,jdbcType=DECIMAL}, #{interfId,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfProdLadderDetail" >
+        insert into INTERF_PROD_LADDER_DETAIL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="prodid != null" >
+                PRODID,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="startdate != null" >
+                STARTDATE,
+            </if>
+            <if test="enddate != null" >
+                ENDDATE,
+            </if>
+            <if test="refaddrate != null" >
+                REFADDRATE,
+            </if>
+            <if test="startamount != null" >
+                STARTAMOUNT,
+            </if>
+            <if test="endamount != null" >
+                ENDAMOUNT,
+            </if>
+            <if test="startcustomerlevel != null" >
+                STARTCUSTOMERLEVEL,
+            </if>
+            <if test="endcustomerlevel != null" >
+                ENDCUSTOMERLEVEL,
+            </if>
+            <if test="startdaynum != null" >
+                STARTDAYNUM,
+            </if>
+            <if test="enddaynum != null" >
+                ENDDAYNUM,
+            </if>
+            <if test="stickdaynum != null" >
+                STICKDAYNUM,
+            </if>
+            <if test="trandaynum != null" >
+                TRANDAYNUM,
+            </if>
+            <if test="totalcount != null" >
+                TOTALCOUNT,
+            </if>
+            <if test="accountamountbyrate != null" >
+                ACCOUNTAMOUNTBYRATE,
+            </if>
+            <if test="sourceamountbyrate != null" >
+                SOURCEAMOUNTBYRATE,
+            </if>
+            <if test="totalprofitamount != null" >
+                TOTALPROFITAMOUNT,
+            </if>
+            <if test="buyamount != null" >
+                BUYAMOUNT,
+            </if>
+            <if test="drawamount != null" >
+                DRAWAMOUNT,
+            </if>
+            <if test="interfId != null" >
+                INTERF_ID,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="prodid != null" >
+                #{prodid,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=VARCHAR},
+            </if>
+            <if test="startdate != null" >
+                #{startdate,jdbcType=VARCHAR},
+            </if>
+            <if test="enddate != null" >
+                #{enddate,jdbcType=VARCHAR},
+            </if>
+            <if test="refaddrate != null" >
+                #{refaddrate,jdbcType=DECIMAL},
+            </if>
+            <if test="startamount != null" >
+                #{startamount,jdbcType=DECIMAL},
+            </if>
+            <if test="endamount != null" >
+                #{endamount,jdbcType=DECIMAL},
+            </if>
+            <if test="startcustomerlevel != null" >
+                #{startcustomerlevel,jdbcType=VARCHAR},
+            </if>
+            <if test="endcustomerlevel != null" >
+                #{endcustomerlevel,jdbcType=VARCHAR},
+            </if>
+            <if test="startdaynum != null" >
+                #{startdaynum,jdbcType=DECIMAL},
+            </if>
+            <if test="enddaynum != null" >
+                #{enddaynum,jdbcType=DECIMAL},
+            </if>
+            <if test="stickdaynum != null" >
+                #{stickdaynum,jdbcType=DECIMAL},
+            </if>
+            <if test="trandaynum != null" >
+                #{trandaynum,jdbcType=DECIMAL},
+            </if>
+            <if test="totalcount != null" >
+                #{totalcount,jdbcType=DECIMAL},
+            </if>
+            <if test="accountamountbyrate != null" >
+                #{accountamountbyrate,jdbcType=DECIMAL},
+            </if>
+            <if test="sourceamountbyrate != null" >
+                #{sourceamountbyrate,jdbcType=DECIMAL},
+            </if>
+            <if test="totalprofitamount != null" >
+                #{totalprofitamount,jdbcType=DECIMAL},
+            </if>
+            <if test="buyamount != null" >
+                #{buyamount,jdbcType=DECIMAL},
+            </if>
+            <if test="drawamount != null" >
+                #{drawamount,jdbcType=DECIMAL},
+            </if>
+            <if test="interfId != null" >
+                #{interfId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfProdLadderDetail" >
+        insert into INTERF_PROD_LADDER_DETAIL(PRODID, CDATE, STARTDATE, ENDDATE, REFADDRATE, 
+        STARTAMOUNT, ENDAMOUNT, STARTCUSTOMERLEVEL, ENDCUSTOMERLEVEL, STARTDAYNUM, ENDDAYNUM, 
+        STICKDAYNUM, TRANDAYNUM, TOTALCOUNT, ACCOUNTAMOUNTBYRATE, SOURCEAMOUNTBYRATE, TOTALPROFITAMOUNT, 
+        BUYAMOUNT, DRAWAMOUNT, INTERF_ID, CREATE_TIME)
+        select PRODID, CDATE, STARTDATE, ENDDATE, REFADDRATE, 
+            STARTAMOUNT, ENDAMOUNT, STARTCUSTOMERLEVEL, ENDCUSTOMERLEVEL, STARTDAYNUM, ENDDAYNUM, 
+            STICKDAYNUM, TRANDAYNUM, TOTALCOUNT, ACCOUNTAMOUNTBYRATE, SOURCEAMOUNTBYRATE, TOTALPROFITAMOUNT, 
+            BUYAMOUNT, DRAWAMOUNT, INTERF_ID, CREATE_TIME
+             from INTERF_PROD_LADDER_DETAIL
+             where 1 = 1
+    </insert>
+</mapper>

@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.SttStressTestMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.SttStressTest" >
+        <id column="S_S_T_TEST_ID" property="testId" jdbcType="VARCHAR" />
+        <id column="S_S_T_TEST_NAME" property="testName" jdbcType="VARCHAR" />
+        <result column="S_S_T_TMPL_ID" property="tmplId" jdbcType="VARCHAR" />
+        <result column="S_S_T_ANALYSIS_VDATE" property="analysisVdate" jdbcType="TIMESTAMP" />
+        <result column="S_S_T_ANALYSIS_MDATE" property="analysisMdate" jdbcType="TIMESTAMP" />
+        <result column="S_S_T_BASE_DATE" property="baseDate" jdbcType="TIMESTAMP" />
+        <result column="S_S_T_TEST_DATE" property="testDate" jdbcType="TIMESTAMP" />
+        <result column="S_S_T_CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="S_S_T_CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="S_S_T_EXE_STATUS" property="exeStatus" jdbcType="VARCHAR" />
+        <result column="S_S_T_CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="S_S_T_UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="S_S_T_UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="INSTITUTION_CODE" property="institutionCode" jdbcType="VARCHAR" /> 
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TEST_ID as S_S_T_TEST_ID, TMPL_ID as S_S_T_TMPL_ID, ANALYSIS_VDATE as S_S_T_ANALYSIS_VDATE, 
+        ANALYSIS_MDATE as S_S_T_ANALYSIS_MDATE, BASE_DATE as S_S_T_BASE_DATE, TEST_DATE as S_S_T_TEST_DATE, 
+        CREATE_USER as S_S_T_CREATE_USER, CREATE_DEPT as S_S_T_CREATE_DEPT, CREATE_TIME as S_S_T_CREATE_TIME, 
+        UPDATE_USER as S_S_T_UPDATE_USER, UPDATE_TIME as S_S_T_UPDATE_TIME,INSTITUTION_CODE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttStressTestMapper.Base_Column_List" />
+        from STT_STRESS_TEST
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttStressTestMapper.Base_Column_List" />
+        from STT_STRESS_TEST
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttStressTestMapper.Base_Column_List" />
+        from STT_STRESS_TEST
+        where TEST_ID = #{testId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from STT_STRESS_TEST
+        where TEST_ID = #{testId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from STT_STRESS_TEST
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SttStressTest" >
+        insert into STT_STRESS_TEST (TEST_ID, TMPL_ID, ANALYSIS_VDATE, 
+            ANALYSIS_MDATE, BASE_DATE, TEST_DATE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME,INSTITUTION_CODE)
+        values (#{testId,jdbcType=VARCHAR}, #{tmplId,jdbcType=VARCHAR}, #{analysisVdate,jdbcType=TIMESTAMP}, 
+            #{analysisMdate,jdbcType=TIMESTAMP}, #{baseDate,jdbcType=TIMESTAMP}, #{testDate,jdbcType=TIMESTAMP}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{institutionCode,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.SttStressTest" >
+        insert into STT_STRESS_TEST
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="testId != null" >
+                TEST_ID,
+            </if>
+            <if test="testName != null" >
+                TEST_NAME,
+            </if>
+            <if test="tmplId != null" >
+                TMPL_ID,
+            </if>
+            <if test="analysisVdate != null" >
+                ANALYSIS_VDATE,
+            </if>
+            <if test="analysisMdate != null" >
+                ANALYSIS_MDATE,
+            </if>
+            <if test="baseDate != null" >
+                BASE_DATE,
+            </if>
+            <if test="testDate != null" >
+                TEST_DATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="exeStatus != null" >
+                EXE_STATUS,
+            </if>
+            <if test="remark != null" >
+                remark,
+            </if>
+            <if test="riskFacHandling != null and riskFacHandling !=''">
+            	DATAERROR_FLAG,
+            </if>
+            <if test="institutionCode !=''">
+            	INSTITUTION_CODE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="testId != null" >
+                #{testId,jdbcType=VARCHAR},
+            </if>
+            <if test="testName != null" >
+                #{testName,jdbcType=VARCHAR},
+            </if>
+            <if test="tmplId != null" >
+                #{tmplId,jdbcType=VARCHAR},
+            </if>
+            <if test="analysisVdate != null" >
+                #{analysisVdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="analysisMdate != null" >
+                #{analysisMdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="baseDate != null" >
+                #{baseDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="testDate != null" >
+                #{testDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="exeStatus != null" >
+                #{exeStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+               #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="riskFacHandling != null  and riskFacHandling !=''" >
+               #{riskFacHandling,jdbcType=VARCHAR},
+            </if>
+            <if test="institutionCode !=''">
+            	#{institutionCode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SttStressTest" >
+        insert into STT_STRESS_TEST(TEST_ID, TMPL_ID, ANALYSIS_VDATE, ANALYSIS_MDATE, BASE_DATE, 
+        TEST_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME,INSTITUTION_CODE)
+        select TEST_ID, TMPL_ID, ANALYSIS_VDATE, ANALYSIS_MDATE, BASE_DATE, 
+            TEST_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME
+            ,INSTITUTION_CODE from STT_STRESS_TEST
+             where STATUS = 'E' and TEST_ID = #{testId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.SttStressTest" >
+        update STT_STRESS_TEST
+        <set >
+            <if test="tmplId != null" >
+                TMPL_ID = #{tmplId,jdbcType=VARCHAR},
+            </if>
+            <if test="analysisVdate != null" >
+                ANALYSIS_VDATE = #{analysisVdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="analysisMdate != null" >
+                ANALYSIS_MDATE = #{analysisMdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="baseDate != null" >
+                BASE_DATE = #{baseDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="testDate != null" >
+                TEST_DATE = #{testDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="institutionCode !=''">
+            	INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where TEST_ID = #{testId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.SttStressTest" >
+        update STT_STRESS_TEST
+        <set >
+            <if test="testId != null" >
+                TEST_ID = #{testId,jdbcType=VARCHAR},
+            </if>
+            <if test="tmplId != null" >
+                TMPL_ID = #{tmplId,jdbcType=VARCHAR},
+            </if>
+            <if test="analysisVdate != null" >
+                ANALYSIS_VDATE = #{analysisVdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="analysisMdate != null" >
+                ANALYSIS_MDATE = #{analysisMdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="baseDate != null" >
+                BASE_DATE = #{baseDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="testDate != null" >
+                TEST_DATE = #{testDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="institutionCode !=''">
+            	INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.SttStressTest" >
+        update STT_STRESS_TEST
+        set 
+        TEST_ID = #{testId,jdbcType=VARCHAR},
+        TMPL_ID = #{tmplId,jdbcType=VARCHAR},
+        ANALYSIS_VDATE = #{analysisVdate,jdbcType=TIMESTAMP},
+        ANALYSIS_MDATE = #{analysisMdate,jdbcType=TIMESTAMP},
+        BASE_DATE = #{baseDate,jdbcType=TIMESTAMP},
+        TEST_DATE = #{testDate,jdbcType=TIMESTAMP},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SttStressTest" >
+        update STT_STRESS_TEST
+        set TMPL_ID = #{tmplId,jdbcType=VARCHAR},
+            ANALYSIS_VDATE = #{analysisVdate,jdbcType=TIMESTAMP},
+            ANALYSIS_MDATE = #{analysisMdate,jdbcType=TIMESTAMP},
+            BASE_DATE = #{baseDate,jdbcType=TIMESTAMP},
+            TEST_DATE = #{testDate,jdbcType=TIMESTAMP},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR}
+        where TEST_ID = #{testId,jdbcType=VARCHAR}
+    </update>
+</mapper>

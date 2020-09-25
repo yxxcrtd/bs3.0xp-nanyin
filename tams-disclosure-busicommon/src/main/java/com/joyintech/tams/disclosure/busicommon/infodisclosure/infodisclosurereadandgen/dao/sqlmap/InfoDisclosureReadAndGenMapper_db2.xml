@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.dao.InfoDisclosureReadAndGenMapper_db2">
+	<select id="getJobList" resultType="com.joyintech.tams.common.base.entity.RepJob">
+		SELECT
+		JOB_ID jobId,
+		JOB_NAME jobName,
+		LOOP_DATE_TYPE loopDateType,
+		LOOP_DATE_VALUE loopDateValue,
+		LOOP_DATE_DETAIL loopDateDetail,
+		START_DATE startDate,
+		END_DATE endDate,
+		RULE_ID ruleId
+		FROM
+		REP_JOB job
+		where job.START_DATE &lt;= #{executeDateStr, jdbcType=VARCHAR}
+		and (job.END_DATE is null or job.END_DATE >=#{executeDateStr, jdbcType=VARCHAR})
+	</select>
+	<select id="getRepJobRangeList" resultType="com.joyintech.tams.common.base.entity.RepJobRange">
+		SELECT
+		ID id,
+		JOB_ID
+		jobId,
+		FLAG flag,
+		RULE_TYPE1 ruleType1,
+		RULE_TYPE2 ruleType2,
+		RULE_TYPE3 ruleType3,
+		RULE_TYPE4 ruleType4
+		FROM
+		REP_JOB_RANGE rang
+		WHERE
+		rang.JOB_ID =#{jobId, jdbcType=VARCHAR}
+	</select>
+	<select id="getRepRuleInfo" resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.RepRuleEntity">
+		SELECT
+		rule.ID id,
+		rule.REP_ID repId,
+		info.REPORT_NAME repName,
+		rule.RCF_TYPE rcfType,
+		rule.RCF_VALUE rcfValue,
+		rule.BASIS_DATE_TYPE basisDateType,
+		rule.MAKE_TYPE makeType,
+		rule.MAKE_VALUE makeValue,
+		rule.MAKE_DATE_TYPE makeDateType,
+		rule.MAKE_TIME makeTime,
+		rule.REVEAL_TYPE revealType,
+		rule.REVEAL_VALUE revealValue,
+		rule.REVEAL_DATE_TYPE revealDateType,
+		rule.REVEAL_TIME revealTime,
+		rule.DATA_TYPE dataType,
+		rule.DATA_RANGE dataRange,
+		rule.DATA_BEGIN dataBegin,
+		rule.DATA_END dataEnd,
+		rule.DATA_VALUE dataValue,
+		rule.FILE_OUT_TYPE fileOutType,
+		rule.REVEAL_CHANNEL revealChannel,
+		rule.FTP_ID ftpId,
+		rule.IS_CONFIRM isConfirm,
+		rule.IS_REVEAL isReveal,
+		rule.DETAIL detail,
+		info.REPORT_CATEGORY reportCategory
+		FROM REP_RULE rule
+		LEFT JOIN REP_INFO info
+		on rule.REP_ID = info.REP_ID
+		where rule.id =#{ruleId, jdbcType=VARCHAR}
+	</select>
+	<select id="getProdList" resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.ProdInfoListEntity">
+		SELECT
+    	PROD_ID prodId,
+    	PROD_RE prodRe,
+    	PROD_NAME prodName,
+    	PROD_ABBR prodAbbr,
+    	RAISE_MIN raiseMin,
+    	RAISE_MAX raiseMax,
+    	RAISE_STRDATE raiseStrdate,
+    	RAISE_ENDDATE raiseEnddate,
+    	RAISE_CCY raiseCcy,
+    	SET_DATE setDate,
+    	VDATE vdate,
+    	FIRST_OPEN_DAY firstOpenDay,
+    	MDATE mdate,
+    	ACT_MDATE actMdate,
+    	TERM term,
+    	WINDUP_DATE windupDate,
+    	ISSUE_MODE issueMode,
+    	PROFIT_TYPE profitType,
+    	PROD_TYPE prodType,
+    	ISSUE_STATUS issueStatus,
+    	RAISE_TYPE raiseType,
+    	RISK_LEVEL riskLevel,
+    	REVEAL_CHANNEL revealChannel
+		FROM REP_PROD_INFO 
+    	where 1=1 ${sqlVal}
+    		and p_prod_id is null /*不取子产品*/
+    		AND STATUS = 'E'
+    		AND NOT EXISTS(select  1 FROM REP_JOB_EXCLUDE_PRO pro 
+    		WHERE pro.PROD_ID=REP_PROD_INFO.PROD_ID and pro.JOB_ID=#{jobId, jdbcType=VARCHAR})
+	</select>
+	<!-- 批量插入组装表 -->
+	<insert id="insertRepInstallFileBatch" parameterType="java.util.List" >
+        insert into REP_INSTALL_FILE (ID, JOB_ID, JOB_SEQ, 
+            PRODID, PROD_NAME, END_DATE, 
+            START_DATE, REVEAL_CHANNEL, REVEAL_END_DATE, 
+            REP_TYPE, REP_ID, REP_NAME, 
+            FILE_TYPE, IS_CONFIRM, IS_REVEAL, 
+            STATUS, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+         select A.* from (
+            <foreach collection="list" item="item" index="index" separator="union all">
+            	select 
+            		#{item.id,jdbcType=VARCHAR} ID,
+            		#{item.jobId,jdbcType=VARCHAR} JOB_ID,
+            		#{item.jobSeq,jdbcType=VARCHAR} JOB_SEQ, 
+            		#{item.prodid,jdbcType=VARCHAR} PRODID,
+            		#{item.prodName,jdbcType=VARCHAR} PROD_NAME,
+            		#{item.endDate,jdbcType=DATE} END_DATE, 
+           		    #{item.startDate,jdbcType=DATE} START_DATE, 
+           		    #{item.revealChannel,jdbcType=VARCHAR} REVEAL_CHANNEL,
+           		    #{item.revealEndDate,jdbcType=TIMESTAMP} REVEAL_END_DATE, 
+            		#{item.repType,jdbcType=VARCHAR} REP_TYPE,
+            		#{item.repId,jdbcType=VARCHAR} REP_ID, 
+            		#{item.repName,jdbcType=VARCHAR} REP_NAME, 
+            		#{item.fileType,jdbcType=VARCHAR} FILE_TYPE, 
+            		#{item.isConfirm,jdbcType=VARCHAR} IS_CONFIRM, 
+            		#{item.isReveal,jdbcType=VARCHAR} IS_REVEAL,
+            		#{item.status,jdbcType=VARCHAR} STATUS, 
+            		#{item.createUser,jdbcType=VARCHAR} CREATE_USER, 
+            		#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT, 
+            		#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+            		#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            		#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            	from sysibm.sysdummy1
+            </foreach>
+            )A
+    </insert>
+    <!-- 批量插入预期表 -->
+	<insert id="insertRepExceptedLogBatch" parameterType="java.util.List" >
+        insert into REP_EXPECTED_LOG (ID, JOB_ID, PRODID, 
+            PROD_NAME, END_DATE, START_DATE, 
+            REVEAL_END_DATE, REP_TYPE, REP_ID, 
+            REP_NAME, FILE_TYPE, EXEC_STATUS, 
+            STATUS, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+         select A.* from (
+            <foreach collection="list" item="item" index="index" separator="union all">
+            	select 
+            	    #{item.id,jdbcType=VARCHAR} ID, 
+            	    #{item.jobId,jdbcType=VARCHAR} JOB_ID,
+            	    #{item.prodid,jdbcType=VARCHAR} PRODID, 
+            		#{item.prodName,jdbcType=VARCHAR} PROD_NAME,
+            		#{item.endDate,jdbcType=DATE} END_DATE,
+            		#{item.startDate,jdbcType=DATE} START_DATE, 
+            		#{item.revealEndDate,jdbcType=TIMESTAMP} REVEAL_END_DATE, 
+            		#{item.repType,jdbcType=VARCHAR} REP_TYPE, 
+            		#{item.repId,jdbcType=VARCHAR} REP_ID, 
+            		#{item.repName,jdbcType=VARCHAR} REP_NAME, 
+            		#{item.fileType,jdbcType=VARCHAR} FILE_TYPE, 
+            		#{item.execStatus,jdbcType=VARCHAR} EXEC_STATUS, 
+            		#{item.status,jdbcType=VARCHAR} STATUS, 
+            		#{item.createUser,jdbcType=VARCHAR} CREATE_USER, 
+            		#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT, 
+            		#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME, 
+            		#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            		#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            	from sysibm.sysdummy1
+            </foreach>
+            )A
+    </insert>
+    <update id="updateInstallLogD">
+    	update REP_INSTALL_LOG set status = 'D'
+    		where JOB_ID = #{jobId,jdbcType=VARCHAR}
+    		and EXEC_DATE = #{execDate, jdbcType = DATE}
+    </update>
+    <!-- 获取所有error的产品列表 -->
+    <select id="getErrorProdList" resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.ProdInfoListEntity">
+		SELECT
+    	PROD_ID prodId,
+    	PROD_RE prodRe,
+    	PROD_NAME prodName,
+    	PROD_ABBR prodAbbr,
+    	RAISE_MIN raiseMin,
+    	RAISE_MAX raiseMax,
+    	RAISE_STRDATE raiseStrdate,
+    	RAISE_ENDDATE raiseEnddate,
+    	RAISE_CCY raiseCcy,
+    	SET_DATE setDate,
+    	VDATE vdate,
+    	FIRST_OPEN_DAY firstOpenDay,
+    	MDATE mdate,
+    	ACT_MDATE actMdate,
+    	TERM term,
+    	WINDUP_DATE windupDate,
+    	ISSUE_MODE issueMode,
+    	PROFIT_TYPE profitType,
+    	PROD_TYPE prodType,
+    	ISSUE_STATUS issueStatus,
+    	RAISE_TYPE raiseType,
+    	RISK_LEVEL riskLevel,
+    	REVEAL_CHANNEL revealChannel
+		FROM REP_PROD_INFO 
+    	where PROD_ID in(
+    		SELECT
+            dt.PRODID
+        	FROM
+            	REP_INSTALL_LOG_DETAIL dt
+        	WHERE
+            	dt.JOB_SEQ=#{jobSeq,jdbcType=VARCHAR}
+        	AND dt.EXEC_STATUS=#{execStatus,jdbcType=VARCHAR}
+    	)
+    	and p_prod_id is null /*不取子产品*/
+	</select>
+	<update id="updateInstallLogDetailD">
+    	update REP_INSTALL_LOG_DETAIL set status = 'D'
+    		where JOB_SEQ = #{jobSeq,jdbcType=VARCHAR}
+    		<if test="execStatus != null and execStatus == '02'">
+    			and EXEC_STATUS = #{execStatus, jdbcType=VARCHAR}
+    		</if>
+    </update>
+    <!-- 查询输入日期当天是否有超限 -->
+    <select id="queryCXCount" resultType="int">
+		SELECT count(1) FROM REP_INVESTDETAIL
+		WHERE STATUS = 'E'
+			  AND IS_SCALE_OUT = '01'
+			  AND VAL_DATE =#{executeDateStr,jdbcType=DATE}
+	</select>
+	<!-- 查询输入日期当天是否有信贷类资产交易-->
+    <select id="queryXDCount" resultType="int">
+		SELECT COUNT(1) FROM REP_PROD_ASSET a
+			LEFT JOIN REP_ASSET_INFO i
+			ON a.ASSET_ID=i.ASSET_ID
+			AND i.STATUS='E'
+		WHERE
+    	a.VAL_DATE=#{executeDateStr,jdbcType=DATE}
+		AND a.STATUS='E'
+		AND i.ASSET_TYPE_ONE='04'
+		AND i.ASSET_BUSI_TYPE='41'
+	</select>
+	<!-- 查询输入日期当天是否有关联交易-->
+    <select id="queryGLCount" resultType="int">
+		SELECT count(1) FROM REP_TRADE_INFO p
+		where p.STATUS='E'
+			and p.TRADE_DATE=#{executeDateStr,jdbcType=DATE}
+    		and p.IS_RELATION_TRADE='01'
+    		and p.IS_OUT_TRADE='01'
+	</select>
+	<!-- 查询输入日期当天是否有非标交易-->
+    <select id="queryFBCount" resultType="int">
+		select count(1) from  REP_PROD_ASSET rti  
+ 			left join REP_ASSET_INFO rai 
+ 			on rai.asset_id=rti.asset_id
+ 			and rai.STATUS='E'
+ 		where rti.VAL_DATE=#{executeDateStr,jdbcType=DATE}
+ 			  and rti.STATUS='E'
+ 			  and rai.ASSET_TYPE_ONE='04'
+ 			  and rai.IS_STAND_ASSET='N'
+	</select>
+	
+	<!-- 查询当前规则对应报表是否为巨额赎回产品-->
+    <select id="queryJESHCPCount" resultType="int">
+		SELECT count(1)
+		FROM REP_PROD_INFO_TA
+		WHERE IS_LARGE_SH='1'
+		AND LARGE_SH_DATE=#{executeDateStr,jdbcType=DATE}
+		
+	</select>
+	<!-- 查询当前规则对应报表是否为募集金额上限调整产品-->
+    <select id="queryMJJETZCount" resultType="int">
+		SELECT count(1)
+		FROM REP_PROD_INFO_TA T
+			WHERE EXISTS
+	    				(
+					        SELECT 1 FROM
+					            REP_PROD_INFO_TA T1
+					        WHERE
+					            T.PROD_ID=T1.PROD_ID
+					        AND T1.AFTER_RAISE_MAX!=T.AFTER_RAISE_MAX
+					        AND T1.CHANGE_DATE = (SELECT MAX(CHANGE_DATE) FROM REP_PROD_INFO_TA WHERE CHANGE_DATE &lt; T.CHANGE_DATE))
+					AND T.LARGE_SH_DATE = #{executeDateStr,jdbcType=DATE}
+	</select>
+	
+	</mapper>

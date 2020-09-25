@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.BaseInformationMapper_mysql">
+	<select id="queryBaseInfoByParams" resultType="Map" statementType="STATEMENT">
+		SELECT * FROM ${tableId} WHERE 
+		<if test="list==null or list.size()==0">
+			1=1
+		</if>
+		<foreach item="item" index="index" collection="list" open=" " separator="and" close=" ">
+			<choose>
+				<when test="item.baseColumnType == 'T'">
+					${item.baseColumnId} LIKE '%${item.columnText}%'
+				</when>
+				<when test="item.baseColumnType == 'D'">
+				DATE_FORMAT(${item.baseColumnId},'%Y-%m-%d') <![CDATA[ >= ]]> '${item.startDate}'
+				AND DATE_FORMAT(${item.baseColumnId},'%Y-%m-%d') <![CDATA[ <= ]]> '${item.endDate}'
+				</when>
+				<when test="item.baseColumnType == 'S'">
+					1=1 and ${item.baseColumnId} in
+					<foreach collection="item.columnSeq" item="items" open="(" separator="," close=")">
+    					'${items}'
+    				</foreach>
+				</when>
+			</choose>
+		</foreach>
+		<if test="flag">
+			AND STATUS != 'D'
+		</if>
+	</select>
+	<update id="deleteData" parameterType="java.util.Map" statementType="STATEMENT">
+	<if test="map != null and map.size() > 0">
+		UPDATE ${tableId} SET STATUS = 'D', UPDATE_TIME = NOW()
+		<where>
+			<foreach collection="map" index="key" item="value" separator="AND">
+				(${key} = ${value})
+			</foreach>
+		</where>
+	</if>
+	</update>
+</mapper>

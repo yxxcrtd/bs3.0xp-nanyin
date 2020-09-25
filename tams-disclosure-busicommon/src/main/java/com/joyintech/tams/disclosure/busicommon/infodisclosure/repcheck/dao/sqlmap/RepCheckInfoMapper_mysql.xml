@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.infodisclosure.repcheck.dao.RepCheckInfoMapper_mysql">
+	<select id="selectProdInfo"
+		resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.repcheck.entity.RepProdCheckInfo">
+		select rpi.PROD_ID as prodId,
+               rpi.PROD_RE prodRe,
+               rpi.PROD_NAME prodName,
+               rpi.PROD_ABBR prodAbbr,
+               rpi.RAISE_MIN raiseMin,
+               rpi.RAISE_MAX raiseMax,
+               DATE_FORMAT(rpi.RAISE_STRDATE,'%Y-%m-%d') raiseStrdate,
+               DATE_FORMAT(rpi.RAISE_ENDDATE,'%Y-%m-%d') raiseEnddate,
+               rpi.RAISE_CCY raiseCcy,
+               DATE_FORMAT(rpi.SET_DATE,'%Y-%m-%d') setDate,
+               DATE_FORMAT(rpi.VDATE,'%Y-%m-%d') vdate,
+               rpi.FIRST_OPEN_DAY firstOpenDay,
+               DATE_FORMAT(rpi.MDATE,'%Y-%m-%d') as mdate,
+               DATE_FORMAT(rpi.ACT_MDATE,'%Y-%m-%d') as actMdate,
+               rpi.TERM as term,
+               rpi.WINDUP_DATE as windupDate,
+               rpi.ISSUE_MODE as issueMode,
+               rpi.PROFIT_TYPE as profitType,
+               rpi.PROD_TYPE as prodType,
+               rpi.ISSUE_STATUS as issueStatus,
+               rpi.RAISE_TYPE as raiseType,
+               rpi.RISK_LEVEL as riskLevel
+		from REP_PROD_INFO rpi
+		where rpi.STATUS='E'
+		and rpi.PROD_ID = #{prodId,jdbcType=VARCHAR}
+		and rpi.p_prod_id is null 
+	</select>
+</mapper>

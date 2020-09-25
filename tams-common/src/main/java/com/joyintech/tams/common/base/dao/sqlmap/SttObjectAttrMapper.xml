@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.SttObjectAttrMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.SttObjectAttr" >
+        <id column="S_O_A_OBJECT_ID" property="objectId" jdbcType="VARCHAR" />
+        <id column="S_O_A_PARAM_CODE" property="paramCode" jdbcType="VARCHAR" />
+        <result column="S_O_A_PARAM_TYPE" property="paramType" jdbcType="VARCHAR" />
+        <result column="S_O_A_PARAM_VALUE" property="paramValue" jdbcType="VARCHAR" />
+        <result column="S_O_A_DICT_CODE" property="dictCode" jdbcType="VARCHAR" />
+        <result column="S_O_A_REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="S_O_A_CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="S_O_A_CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="S_O_A_CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="S_O_A_UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="S_O_A_UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        OBJECT_ID as S_O_A_OBJECT_ID, PARAM_CODE as S_O_A_PARAM_CODE, PARAM_TYPE as S_O_A_PARAM_TYPE, 
+        PARAM_VALUE as S_O_A_PARAM_VALUE, DICT_CODE as S_O_A_DICT_CODE, REMARK as S_O_A_REMARK, 
+        CREATE_USER as S_O_A_CREATE_USER, CREATE_DEPT as S_O_A_CREATE_DEPT, CREATE_TIME as S_O_A_CREATE_TIME, 
+        UPDATE_USER as S_O_A_UPDATE_USER, UPDATE_TIME as S_O_A_UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttObjectAttrMapper.Base_Column_List" />
+        from STT_OBJECT_ATTR
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttObjectAttrMapper.Base_Column_List" />
+        from STT_OBJECT_ATTR
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.SttObjectAttrKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttObjectAttrMapper.Base_Column_List" />
+        from STT_OBJECT_ATTR
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+          and PARAM_CODE = #{paramCode,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SttObjectAttrKey" >
+        delete from STT_OBJECT_ATTR
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+          and PARAM_CODE = #{paramCode,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from STT_OBJECT_ATTR
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SttObjectAttr" >
+        insert into STT_OBJECT_ATTR (OBJECT_ID, PARAM_CODE, PARAM_TYPE, 
+            PARAM_VALUE, DICT_CODE, REMARK, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{objectId,jdbcType=VARCHAR}, #{paramCode,jdbcType=VARCHAR}, #{paramType,jdbcType=VARCHAR}, 
+            #{paramValue,jdbcType=VARCHAR}, #{dictCode,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.SttObjectAttr" >
+        insert into STT_OBJECT_ATTR
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                OBJECT_ID,
+            </if>
+            <if test="paramCode != null" >
+                PARAM_CODE,
+            </if>
+            <if test="paramType != null" >
+                PARAM_TYPE,
+            </if>
+            <if test="paramValue != null" >
+                PARAM_VALUE,
+            </if>
+            <if test="dictCode != null" >
+                DICT_CODE,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                #{objectId,jdbcType=VARCHAR},
+            </if>
+            <if test="paramCode != null" >
+                #{paramCode,jdbcType=VARCHAR},
+            </if>
+            <if test="paramType != null" >
+                #{paramType,jdbcType=VARCHAR},
+            </if>
+            <if test="paramValue != null" >
+                #{paramValue,jdbcType=VARCHAR},
+            </if>
+            <if test="dictCode != null" >
+                #{dictCode,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SttObjectAttr" >
+        insert into STT_OBJECT_ATTR(OBJECT_ID, PARAM_CODE, PARAM_TYPE, PARAM_VALUE, DICT_CODE, 
+        REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select OBJECT_ID, PARAM_CODE, PARAM_TYPE, PARAM_VALUE, DICT_CODE, 
+            REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME
+             from STT_OBJECT_ATTR
+             where STATUS = 'E' and OBJECT_ID = #{objectId,jdbcType=VARCHAR} and PARAM_CODE = #{paramCode,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.SttObjectAttr" >
+        update STT_OBJECT_ATTR
+        <set >
+            <if test="paramType != null" >
+                PARAM_TYPE = #{paramType,jdbcType=VARCHAR},
+            </if>
+            <if test="paramValue != null" >
+                PARAM_VALUE = #{paramValue,jdbcType=VARCHAR},
+            </if>
+            <if test="dictCode != null" >
+                DICT_CODE = #{dictCode,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+          and PARAM_CODE = #{paramCode,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.SttObjectAttr" >
+        update STT_OBJECT_ATTR
+        <set >
+            <if test="objectId != null" >
+                OBJECT_ID = #{objectId,jdbcType=VARCHAR},
+            </if>
+            <if test="paramCode != null" >
+                PARAM_CODE = #{paramCode,jdbcType=VARCHAR},
+            </if>
+            <if test="paramType != null" >
+                PARAM_TYPE = #{paramType,jdbcType=VARCHAR},
+            </if>
+            <if test="paramValue != null" >
+                PARAM_VALUE = #{paramValue,jdbcType=VARCHAR},
+            </if>
+            <if test="dictCode != null" >
+                DICT_CODE = #{dictCode,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.SttObjectAttr" >
+        update STT_OBJECT_ATTR
+        set 
+        OBJECT_ID = #{objectId,jdbcType=VARCHAR},
+        PARAM_CODE = #{paramCode,jdbcType=VARCHAR},
+        PARAM_TYPE = #{paramType,jdbcType=VARCHAR},
+        PARAM_VALUE = #{paramValue,jdbcType=VARCHAR},
+        DICT_CODE = #{dictCode,jdbcType=VARCHAR},
+        REMARK = #{remark,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SttObjectAttr" >
+        update STT_OBJECT_ATTR
+        set PARAM_TYPE = #{paramType,jdbcType=VARCHAR},
+            PARAM_VALUE = #{paramValue,jdbcType=VARCHAR},
+            DICT_CODE = #{dictCode,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+          and PARAM_CODE = #{paramCode,jdbcType=VARCHAR}
+    </update>
+</mapper>

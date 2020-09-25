@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.batch.disclosure.informationdisclourse.disreportprodindex.dao.DisReportProdIndexMapper_mysql">
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.batch.disclosure.informationdisclourse.disreportprodindex.dto.DisReportProdIndexResult" >
+        <result column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="VALUE_DATE" property="valueDate" jdbcType="DATE" />
+        <result column="CAPITAL" property="capital" jdbcType="DECIMAL" />
+        <result column="ASSET_VALUE_COST" property="assetValueCost" jdbcType="DECIMAL" />
+        <result column="ASSET_VALUE_MARKET" property="assetValueMarket" jdbcType="DECIMAL" />
+        <result column="UNIT_VALUE" property="unitValue" jdbcType="DECIMAL" />
+        <result column="UNIT_VALUE_T" property="unitValueT" jdbcType="DECIMAL" />
+        <result column="DEVIATION_AMT" property="deviationAmt" jdbcType="DECIMAL" />
+        <result column="DEVIATION" property="deviation" jdbcType="DECIMAL" />
+        <result column="PROFIT_TDY" property="profitTdy" jdbcType="DECIMAL" />
+        <result column="PROFIT_TOTAL" property="profitTotal" jdbcType="DECIMAL" />
+        <result column="W_YIELD" property="wYield" jdbcType="DECIMAL" />
+        <result column="YIELD_TDY" property="yieldTdy" jdbcType="DECIMAL" />
+        <result column="YIELD_7" property="yield7" jdbcType="DECIMAL" />
+        <result column="YIELD_TOTAL" property="yieldTotal" jdbcType="DECIMAL" />
+        <result column="YIELD_E" property="yieldE" jdbcType="DECIMAL" />
+        <result column="YIELD_E_MAX" property="yieldEMax" jdbcType="DECIMAL" />
+        <result column="SURPLUS_TERM" property="surplusTerm" jdbcType="DECIMAL" />
+        <result column="AVERAGE_MDATE" property="averageMdate" jdbcType="DECIMAL" />
+        <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="INPUT_USER" property="inputUser" jdbcType="VARCHAR" />
+        <result column="ADAPTER_ID" property="adapterId" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="PROFIT_CURRENT_YES" property="profitCurrentYes" jdbcType="DECIMAL" />
+        <result column="PROFIT_CURRENT_NO" property="profitCurrentNo" jdbcType="DECIMAL" />
+        <result column="PROFIT_CURRENT" property="profitCurrent" jdbcType="DECIMAL" />
+        <result column="PROFIT_TDY_ABLE" property="profitTdyAble" jdbcType="DECIMAL" />
+        <result column="PROD_PROFIT_TDY_ABLE" property="prodProfitTdyAble" jdbcType="DECIMAL" />
+        <result column="NETVALUE_TDY_YIELD" property="netvalueTdyYield" jdbcType="DECIMAL" />
+        <result column="NETVALUE_TOTAL_YIELD" property="netvalueTotalYield" jdbcType="DECIMAL" />
+        <result column="NETVALUE_TDY_INCRE" property="netvalueTdyIncre" jdbcType="DECIMAL" />
+        <result column="NETVALUE_TOTAL_INCRE" property="netvalueTotalIncre" jdbcType="DECIMAL" />
+        <result column="FLOAT_BASE_RATE" property="floatBaseRate" jdbcType="DECIMAL" />
+        <result column="BOUNUS_VALUE" property="bounusValue" jdbcType="DECIMAL" />
+        <result column="RATE_BENCHMARK" property="rateBenchmark" jdbcType="DECIMAL" />
+        <result column="CASH_FORM_GRANT_TOTAL" property="cashFormGrantTotal" jdbcType="DECIMAL" />
+        <result column="REINVEST_FORM_GRANT_TOTAL" property="reinvestFormGrantTotal" jdbcType="DECIMAL" />
+        <result column="REDEMPTION_TURNOUT_AMT" property="redemptionTurnoutAmt" jdbcType="DECIMAL" />
+        <result column="PROFIT_THISYEAR_CHANGE" property="profitThisyearChange" jdbcType="DECIMAL" />
+        <result column="BENCHMARK_INFO" property="benchmarkInfo" jdbcType="VARCHAR" />
+        <result column="CASH_FORM_GRANT_TDY" property="cashFormGrantTdy" jdbcType="DECIMAL" />
+        <result column="REINVEST_FORM_GRANT_TDY" property="reinvestFormGrantTdy" jdbcType="DECIMAL" />
+        <result column="REDEM_INTAMT_TDY" property="redemIntamtTdy" jdbcType="DECIMAL" />
+        <result column="PROFIT_CHANGE_TDY" property="profitChangeTdy" jdbcType="DECIMAL" />
+        <result column="FLOAT_TOTAL_RATE" property="floatTotalRate" jdbcType="DECIMAL" />
+    </resultMap>
+
+
+    <select id="getAverageMdate" resultType="int" parameterType="java.util.Map">
+		SELECT SUM((case when AL_FLAG = '01' then 1 else -1 end) *POS_AMT*END_DAYS_1)
+		/ SUM((case  when AL_FLAG = '01' then 1 else -1 end) *POS_AMT)
+          FROM REP_ASSET_INDEX
+	  	WHERE PROD_ID = #{prodid,jdbcType=VARCHAR}
+	  	AND VALUE_DATE = #{valuedate,jdbcType=DATE}
+	</select>
+
+    <select id="getYeildE" resultType="java.math.BigDecimal" parameterType="java.util.Map">
+		SELECT       a.RATE
+		from (
+		SELECT        RATE,
+		             @rn := @rn + 1  AS RN
+		  FROM REP_CASH_YIELD, (select @rn := 0) b
+		WHERE       busi_id = #{prodid,jdbcType=VARCHAR}
+		AND START_DATE &lt;= #{valuedate,jdbcType=DATE}
+		AND CASH_TYPE = #{cashType,jdbcType=VARCHAR}
+		ORDER BY START_DATE DESC
+		) a
+		limit 1
+	</select>
+</mapper>

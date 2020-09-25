@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfHttpLogMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfHttpLog" >
+        <id column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="UUID" property="uuid" jdbcType="VARCHAR" />
+        <result column="URL" property="url" jdbcType="VARCHAR" />
+        <result column="ENCODE" property="encode" jdbcType="VARCHAR" />
+        <result column="TASK_STATUS" property="taskStatus" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="ERR_MESSAGE" property="errMessage" jdbcType="VARCHAR" />
+        <result column="REMARK1" property="remark1" jdbcType="VARCHAR" />
+        <result column="REMARK2" property="remark2" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.joyintech.tams.common.base.entity.InterfHttpLogWithBLOBs" extends="BaseResultMap" >
+        <result column="SEND_STRING" property="sendString" jdbcType="CLOB" />
+        <result column="ACCEPT_STRING" property="acceptString" jdbcType="CLOB" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQ_NO SEQ_NO, UUID UUID, URL URL, ENCODE ENCODE, TASK_STATUS TASK_STATUS, CREATE_TIME CREATE_TIME, 
+        ERR_MESSAGE ERR_MESSAGE, REMARK1 REMARK1, REMARK2 REMARK2
+    </sql>
+    <sql id="Blob_Column_List" >
+        SEND_STRING, ACCEPT_STRING
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfHttpLogMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.InterfHttpLogMapper.Blob_Column_List" />
+        from INTERF_HTTP_LOG
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfHttpLogMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.InterfHttpLogMapper.Blob_Column_List" />
+        from INTERF_HTTP_LOG
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfHttpLogMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.InterfHttpLogMapper.Blob_Column_List" />
+        from INTERF_HTTP_LOG
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from INTERF_HTTP_LOG
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfHttpLogWithBLOBs" >
+        insert into INTERF_HTTP_LOG (SEQ_NO, UUID, URL, 
+            ENCODE, TASK_STATUS, CREATE_TIME, 
+            ERR_MESSAGE, REMARK1, REMARK2, 
+            SEND_STRING, ACCEPT_STRING)
+        values (#{seqNo,jdbcType=VARCHAR}, #{uuid,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+            #{encode,jdbcType=VARCHAR}, #{taskStatus,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{errMessage,jdbcType=VARCHAR}, #{remark1,jdbcType=VARCHAR}, #{remark2,jdbcType=VARCHAR}, 
+            #{sendString,jdbcType=CLOB}, #{acceptString,jdbcType=CLOB})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfHttpLogWithBLOBs" >
+        insert into INTERF_HTTP_LOG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="uuid != null" >
+                UUID,
+            </if>
+            <if test="url != null" >
+                URL,
+            </if>
+            <if test="encode != null" >
+                ENCODE,
+            </if>
+            <if test="taskStatus != null" >
+                TASK_STATUS,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="errMessage != null" >
+                ERR_MESSAGE,
+            </if>
+            <if test="remark1 != null" >
+                REMARK1,
+            </if>
+            <if test="remark2 != null" >
+                REMARK2,
+            </if>
+            <if test="sendString != null" >
+                SEND_STRING,
+            </if>
+            <if test="acceptString != null" >
+                ACCEPT_STRING,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="uuid != null" >
+                #{uuid,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null" >
+                #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="encode != null" >
+                #{encode,jdbcType=VARCHAR},
+            </if>
+            <if test="taskStatus != null" >
+                #{taskStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="errMessage != null" >
+                #{errMessage,jdbcType=VARCHAR},
+            </if>
+            <if test="remark1 != null" >
+                #{remark1,jdbcType=VARCHAR},
+            </if>
+            <if test="remark2 != null" >
+                #{remark2,jdbcType=VARCHAR},
+            </if>
+            <if test="sendString != null" >
+                #{sendString,jdbcType=CLOB},
+            </if>
+            <if test="acceptString != null" >
+                #{acceptString,jdbcType=CLOB},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfHttpLogWithBLOBs" >
+        insert into INTERF_HTTP_LOG(SEQ_NO, UUID, URL, ENCODE, TASK_STATUS, CREATE_TIME, 
+        ERR_MESSAGE, REMARK1, REMARK2, SEND_STRING, ACCEPT_STRING)
+        select SEQ_NO, UUID, URL, ENCODE, TASK_STATUS, CREATE_TIME, 
+            ERR_MESSAGE, REMARK1, REMARK2, SEND_STRING, ACCEPT_STRING
+             from INTERF_HTTP_LOG
+             where 1 = 1 and SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InterfHttpLogWithBLOBs" >
+        update INTERF_HTTP_LOG
+        <set >
+            <if test="uuid != null" >
+                UUID = #{uuid,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null" >
+                URL = #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="encode != null" >
+                ENCODE = #{encode,jdbcType=VARCHAR},
+            </if>
+            <if test="taskStatus != null" >
+                TASK_STATUS = #{taskStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="errMessage != null" >
+                ERR_MESSAGE = #{errMessage,jdbcType=VARCHAR},
+            </if>
+            <if test="remark1 != null" >
+                REMARK1 = #{remark1,jdbcType=VARCHAR},
+            </if>
+            <if test="remark2 != null" >
+                REMARK2 = #{remark2,jdbcType=VARCHAR},
+            </if>
+            <if test="sendString != null" >
+                SEND_STRING = #{sendString,jdbcType=CLOB},
+            </if>
+            <if test="acceptString != null" >
+                ACCEPT_STRING = #{acceptString,jdbcType=CLOB},
+            </if>
+        </set>
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.joyintech.tams.common.base.entity.InterfHttpLogWithBLOBs" >
+        update INTERF_HTTP_LOG
+        set UUID = #{uuid,jdbcType=VARCHAR},
+            URL = #{url,jdbcType=VARCHAR},
+            ENCODE = #{encode,jdbcType=VARCHAR},
+            TASK_STATUS = #{taskStatus,jdbcType=VARCHAR},
+            ERR_MESSAGE = #{errMessage,jdbcType=VARCHAR},
+            REMARK1 = #{remark1,jdbcType=VARCHAR},
+            REMARK2 = #{remark2,jdbcType=VARCHAR},
+            SEND_STRING = #{sendString,jdbcType=CLOB},
+            ACCEPT_STRING = #{acceptString,jdbcType=CLOB}
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfHttpLog" >
+        update INTERF_HTTP_LOG
+        set UUID = #{uuid,jdbcType=VARCHAR},
+            URL = #{url,jdbcType=VARCHAR},
+            ENCODE = #{encode,jdbcType=VARCHAR},
+            TASK_STATUS = #{taskStatus,jdbcType=VARCHAR},
+            ERR_MESSAGE = #{errMessage,jdbcType=VARCHAR},
+            REMARK1 = #{remark1,jdbcType=VARCHAR},
+            REMARK2 = #{remark2,jdbcType=VARCHAR}
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+</mapper>

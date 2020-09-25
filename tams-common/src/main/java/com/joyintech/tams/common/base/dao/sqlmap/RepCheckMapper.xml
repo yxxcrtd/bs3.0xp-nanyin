@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepCheckMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepCheck" >
+        <id column="CHECK_ID" property="checkId" jdbcType="VARCHAR" />
+        <id column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="QUERY_SCOPE" property="queryScope" jdbcType="VARCHAR" />
+        <result column="QUERY_TYPE" property="queryType" jdbcType="VARCHAR" />
+        <result column="BASE_DATA_TYPE" property="baseDataType" jdbcType="VARCHAR" />
+        <result column="QUERY_CONTEN_DESCR" property="queryContenDescr" jdbcType="VARCHAR" />
+        <result column="QUERY_CONTEN" property="queryConten" jdbcType="VARCHAR" />
+        <result column="QUERY_PARAM" property="queryParam" jdbcType="VARCHAR" />
+        <result column="DATA_TYPE" property="dataType" jdbcType="VARCHAR" />
+        <result column="PARAM_TYPE" property="paramType" jdbcType="VARCHAR" />
+        <result column="PARAM_VALUE1" property="paramValue1" jdbcType="VARCHAR" />
+        <result column="PARAM_VALUE2" property="paramValue2" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CHECK_ID CHECK_ID, STATUS STATUS, QUERY_SCOPE QUERY_SCOPE, QUERY_TYPE QUERY_TYPE, 
+        BASE_DATA_TYPE BASE_DATA_TYPE, QUERY_CONTEN_DESCR QUERY_CONTEN_DESCR, QUERY_CONTEN QUERY_CONTEN, 
+        QUERY_PARAM QUERY_PARAM, DATA_TYPE DATA_TYPE, PARAM_TYPE PARAM_TYPE, PARAM_VALUE1 PARAM_VALUE1, 
+        PARAM_VALUE2 PARAM_VALUE2, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepCheckMapper.Base_Column_List" />
+        from REP_CHECK
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepCheckMapper.Base_Column_List" />
+        from REP_CHECK
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.RepCheckKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepCheckMapper.Base_Column_List" />
+        from REP_CHECK
+        where CHECK_ID = #{checkId,jdbcType=VARCHAR}
+          and STATUS = #{status,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepCheckKey" >
+        delete from REP_CHECK
+        where CHECK_ID = #{checkId,jdbcType=VARCHAR}
+          and STATUS = #{status,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepCheck" >
+        insert into REP_CHECK (CHECK_ID, STATUS, QUERY_SCOPE, 
+            QUERY_TYPE, BASE_DATA_TYPE, QUERY_CONTEN_DESCR, 
+            QUERY_CONTEN, QUERY_PARAM, DATA_TYPE, 
+            PARAM_TYPE, PARAM_VALUE1, PARAM_VALUE2, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{checkId,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{queryScope,jdbcType=VARCHAR}, 
+            #{queryType,jdbcType=VARCHAR}, #{baseDataType,jdbcType=VARCHAR}, #{queryContenDescr,jdbcType=VARCHAR}, 
+            #{queryConten,jdbcType=VARCHAR}, #{queryParam,jdbcType=VARCHAR}, #{dataType,jdbcType=VARCHAR}, 
+            #{paramType,jdbcType=VARCHAR}, #{paramValue1,jdbcType=VARCHAR}, #{paramValue2,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepCheck" >
+        insert into REP_CHECK
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="checkId != null" >
+                CHECK_ID,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="queryScope != null" >
+                QUERY_SCOPE,
+            </if>
+            <if test="queryType != null" >
+                QUERY_TYPE,
+            </if>
+            <if test="baseDataType != null" >
+                BASE_DATA_TYPE,
+            </if>
+            <if test="queryContenDescr != null" >
+                QUERY_CONTEN_DESCR,
+            </if>
+            <if test="queryConten != null" >
+                QUERY_CONTEN,
+            </if>
+            <if test="queryParam != null" >
+                QUERY_PARAM,
+            </if>
+            <if test="dataType != null" >
+                DATA_TYPE,
+            </if>
+            <if test="paramType != null" >
+                PARAM_TYPE,
+            </if>
+            <if test="paramValue1 != null" >
+                PARAM_VALUE1,
+            </if>
+            <if test="paramValue2 != null" >
+                PARAM_VALUE2,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="checkId != null" >
+                #{checkId,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="queryScope != null" >
+                #{queryScope,jdbcType=VARCHAR},
+            </if>
+            <if test="queryType != null" >
+                #{queryType,jdbcType=VARCHAR},
+            </if>
+            <if test="baseDataType != null" >
+                #{baseDataType,jdbcType=VARCHAR},
+            </if>
+            <if test="queryContenDescr != null" >
+                #{queryContenDescr,jdbcType=VARCHAR},
+            </if>
+            <if test="queryConten != null" >
+                #{queryConten,jdbcType=VARCHAR},
+            </if>
+            <if test="queryParam != null" >
+                #{queryParam,jdbcType=VARCHAR},
+            </if>
+            <if test="dataType != null" >
+                #{dataType,jdbcType=VARCHAR},
+            </if>
+            <if test="paramType != null" >
+                #{paramType,jdbcType=VARCHAR},
+            </if>
+            <if test="paramValue1 != null" >
+                #{paramValue1,jdbcType=VARCHAR},
+            </if>
+            <if test="paramValue2 != null" >
+                #{paramValue2,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepCheck" >
+        insert into REP_CHECK(CHECK_ID, STATUS, QUERY_SCOPE, QUERY_TYPE, BASE_DATA_TYPE, 
+        QUERY_CONTEN_DESCR, QUERY_CONTEN, QUERY_PARAM, DATA_TYPE, PARAM_TYPE, PARAM_VALUE1, 
+        PARAM_VALUE2, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select CHECK_ID, #{status,jdbcType=VARCHAR} STATUS, QUERY_SCOPE, QUERY_TYPE, BASE_DATA_TYPE, 
+            QUERY_CONTEN_DESCR, QUERY_CONTEN, QUERY_PARAM, DATA_TYPE, PARAM_TYPE, PARAM_VALUE1, 
+            PARAM_VALUE2, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from REP_CHECK
+             where STATUS = 'E' and CHECK_ID = #{checkId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepCheck" >
+        update REP_CHECK
+        <set >
+            <if test="queryScope != null" >
+                QUERY_SCOPE = #{queryScope,jdbcType=VARCHAR},
+            </if>
+            <if test="queryType != null" >
+                QUERY_TYPE = #{queryType,jdbcType=VARCHAR},
+            </if>
+            <if test="baseDataType != null" >
+                BASE_DATA_TYPE = #{baseDataType,jdbcType=VARCHAR},
+            </if>
+            <if test="queryContenDescr != null" >
+                QUERY_CONTEN_DESCR = #{queryContenDescr,jdbcType=VARCHAR},
+            </if>
+            <if test="queryConten != null" >
+                QUERY_CONTEN = #{queryConten,jdbcType=VARCHAR},
+            </if>
+            <if test="queryParam != null" >
+                QUERY_PARAM = #{queryParam,jdbcType=VARCHAR},
+            </if>
+            <if test="dataType != null" >
+                DATA_TYPE = #{dataType,jdbcType=VARCHAR},
+            </if>
+            <if test="paramType != null" >
+                PARAM_TYPE = #{paramType,jdbcType=VARCHAR},
+            </if>
+            <if test="paramValue1 != null" >
+                PARAM_VALUE1 = #{paramValue1,jdbcType=VARCHAR},
+            </if>
+            <if test="paramValue2 != null" >
+                PARAM_VALUE2 = #{paramValue2,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where CHECK_ID = #{checkId,jdbcType=VARCHAR}
+          and STATUS = #{status,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepCheck" >
+        update REP_CHECK
+        set QUERY_SCOPE = #{queryScope,jdbcType=VARCHAR},
+            QUERY_TYPE = #{queryType,jdbcType=VARCHAR},
+            BASE_DATA_TYPE = #{baseDataType,jdbcType=VARCHAR},
+            QUERY_CONTEN_DESCR = #{queryContenDescr,jdbcType=VARCHAR},
+            QUERY_CONTEN = #{queryConten,jdbcType=VARCHAR},
+            QUERY_PARAM = #{queryParam,jdbcType=VARCHAR},
+            DATA_TYPE = #{dataType,jdbcType=VARCHAR},
+            PARAM_TYPE = #{paramType,jdbcType=VARCHAR},
+            PARAM_VALUE1 = #{paramValue1,jdbcType=VARCHAR},
+            PARAM_VALUE2 = #{paramValue2,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where CHECK_ID = #{checkId,jdbcType=VARCHAR}
+          and STATUS = #{status,jdbcType=VARCHAR}
+    </update>
+</mapper>

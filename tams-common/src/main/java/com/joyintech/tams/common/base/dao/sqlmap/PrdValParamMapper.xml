@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.PrdValParamMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.PrdValParam" >
+        <id column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="UNITVALUE_DEC" property="unitvalueDec" jdbcType="DECIMAL" />
+        <result column="UNITVALUE_MODE" property="unitvalueMode" jdbcType="VARCHAR" />
+        <result column="RATE_DEC" property="rateDec" jdbcType="DECIMAL" />
+        <result column="RATEVALUE_MODE" property="ratevalueMode" jdbcType="VARCHAR" />
+        <result column="MILION_PROFIT_DEC" property="milionProfitDec" jdbcType="DECIMAL" />
+        <result column="MILION_PROFIT_DEC_MODE" property="milionProfitDecMode" jdbcType="VARCHAR" />
+        <result column="YEAR_YIELD_DEC" property="yearYieldDec" jdbcType="DECIMAL" />
+        <result column="YEAR_YIELD_DEC_MODE" property="yearYieldDecMode" jdbcType="VARCHAR" />
+        <result column="IS_COUNTING_CUR_INT" property="isCountingCurInt" jdbcType="VARCHAR" />
+        <result column="DEAL_LOSS_MODE" property="dealLossMode" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        FINPROD_ID FINPROD_ID, UNITVALUE_DEC UNITVALUE_DEC, UNITVALUE_MODE UNITVALUE_MODE, 
+        RATE_DEC RATE_DEC, RATEVALUE_MODE RATEVALUE_MODE, MILION_PROFIT_DEC MILION_PROFIT_DEC, 
+        MILION_PROFIT_DEC_MODE MILION_PROFIT_DEC_MODE, YEAR_YIELD_DEC YEAR_YIELD_DEC, YEAR_YIELD_DEC_MODE YEAR_YIELD_DEC_MODE, 
+        IS_COUNTING_CUR_INT IS_COUNTING_CUR_INT, DEAL_LOSS_MODE DEAL_LOSS_MODE, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PrdValParamMapper.Base_Column_List" />
+        from PRD_VAL_PARAM
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PrdValParamMapper.Base_Column_List" />
+        from PRD_VAL_PARAM
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PrdValParamMapper.Base_Column_List" />
+        from PRD_VAL_PARAM
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from PRD_VAL_PARAM
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PrdValParam" >
+        insert into PRD_VAL_PARAM (FINPROD_ID, UNITVALUE_DEC, UNITVALUE_MODE, 
+            RATE_DEC, RATEVALUE_MODE, MILION_PROFIT_DEC, 
+            MILION_PROFIT_DEC_MODE, YEAR_YIELD_DEC, YEAR_YIELD_DEC_MODE, 
+            IS_COUNTING_CUR_INT, DEAL_LOSS_MODE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{finprodId,jdbcType=VARCHAR}, #{unitvalueDec,jdbcType=DECIMAL}, #{unitvalueMode,jdbcType=VARCHAR}, 
+            #{rateDec,jdbcType=DECIMAL}, #{ratevalueMode,jdbcType=VARCHAR}, #{milionProfitDec,jdbcType=DECIMAL}, 
+            #{milionProfitDecMode,jdbcType=VARCHAR}, #{yearYieldDec,jdbcType=DECIMAL}, #{yearYieldDecMode,jdbcType=VARCHAR}, 
+            #{isCountingCurInt,jdbcType=VARCHAR}, #{dealLossMode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PrdValParam" >
+        insert into PRD_VAL_PARAM
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="unitvalueDec != null" >
+                UNITVALUE_DEC,
+            </if>
+            <if test="unitvalueMode != null" >
+                UNITVALUE_MODE,
+            </if>
+            <if test="rateDec != null" >
+                RATE_DEC,
+            </if>
+            <if test="ratevalueMode != null" >
+                RATEVALUE_MODE,
+            </if>
+            <if test="milionProfitDec != null" >
+                MILION_PROFIT_DEC,
+            </if>
+            <if test="milionProfitDecMode != null" >
+                MILION_PROFIT_DEC_MODE,
+            </if>
+            <if test="yearYieldDec != null" >
+                YEAR_YIELD_DEC,
+            </if>
+            <if test="yearYieldDecMode != null" >
+                YEAR_YIELD_DEC_MODE,
+            </if>
+            <if test="isCountingCurInt != null" >
+                IS_COUNTING_CUR_INT,
+            </if>
+            <if test="dealLossMode != null" >
+                DEAL_LOSS_MODE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="unitvalueDec != null" >
+                #{unitvalueDec,jdbcType=DECIMAL},
+            </if>
+            <if test="unitvalueMode != null" >
+                #{unitvalueMode,jdbcType=VARCHAR},
+            </if>
+            <if test="rateDec != null" >
+                #{rateDec,jdbcType=DECIMAL},
+            </if>
+            <if test="ratevalueMode != null" >
+                #{ratevalueMode,jdbcType=VARCHAR},
+            </if>
+            <if test="milionProfitDec != null" >
+                #{milionProfitDec,jdbcType=DECIMAL},
+            </if>
+            <if test="milionProfitDecMode != null" >
+                #{milionProfitDecMode,jdbcType=VARCHAR},
+            </if>
+            <if test="yearYieldDec != null" >
+                #{yearYieldDec,jdbcType=DECIMAL},
+            </if>
+            <if test="yearYieldDecMode != null" >
+                #{yearYieldDecMode,jdbcType=VARCHAR},
+            </if>
+            <if test="isCountingCurInt != null" >
+                #{isCountingCurInt,jdbcType=VARCHAR},
+            </if>
+            <if test="dealLossMode != null" >
+                #{dealLossMode,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PrdValParam" >
+        insert into PRD_VAL_PARAM(FINPROD_ID, UNITVALUE_DEC, UNITVALUE_MODE, RATE_DEC, RATEVALUE_MODE, 
+        MILION_PROFIT_DEC, MILION_PROFIT_DEC_MODE, YEAR_YIELD_DEC, YEAR_YIELD_DEC_MODE, IS_COUNTING_CUR_INT, 
+        DEAL_LOSS_MODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select FINPROD_ID, UNITVALUE_DEC, UNITVALUE_MODE, RATE_DEC, RATEVALUE_MODE, 
+            MILION_PROFIT_DEC, MILION_PROFIT_DEC_MODE, YEAR_YIELD_DEC, YEAR_YIELD_DEC_MODE, IS_COUNTING_CUR_INT, 
+            DEAL_LOSS_MODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from PRD_VAL_PARAM
+             where 1 = 1 and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.PrdValParam" >
+        update PRD_VAL_PARAM
+        <set >
+            <if test="unitvalueDec != null" >
+                UNITVALUE_DEC = #{unitvalueDec,jdbcType=DECIMAL},
+            </if>
+            <if test="unitvalueMode != null" >
+                UNITVALUE_MODE = #{unitvalueMode,jdbcType=VARCHAR},
+            </if>
+            <if test="rateDec != null" >
+                RATE_DEC = #{rateDec,jdbcType=DECIMAL},
+            </if>
+            <if test="ratevalueMode != null" >
+                RATEVALUE_MODE = #{ratevalueMode,jdbcType=VARCHAR},
+            </if>
+            <if test="milionProfitDec != null" >
+                MILION_PROFIT_DEC = #{milionProfitDec,jdbcType=DECIMAL},
+            </if>
+            <if test="milionProfitDecMode != null" >
+                MILION_PROFIT_DEC_MODE = #{milionProfitDecMode,jdbcType=VARCHAR},
+            </if>
+            <if test="yearYieldDec != null" >
+                YEAR_YIELD_DEC = #{yearYieldDec,jdbcType=DECIMAL},
+            </if>
+            <if test="yearYieldDecMode != null" >
+                YEAR_YIELD_DEC_MODE = #{yearYieldDecMode,jdbcType=VARCHAR},
+            </if>
+            <if test="isCountingCurInt != null" >
+                IS_COUNTING_CUR_INT = #{isCountingCurInt,jdbcType=VARCHAR},
+            </if>
+            <if test="dealLossMode != null" >
+                DEAL_LOSS_MODE = #{dealLossMode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PrdValParam" >
+        update PRD_VAL_PARAM
+        set UNITVALUE_DEC = #{unitvalueDec,jdbcType=DECIMAL},
+            UNITVALUE_MODE = #{unitvalueMode,jdbcType=VARCHAR},
+            RATE_DEC = #{rateDec,jdbcType=DECIMAL},
+            RATEVALUE_MODE = #{ratevalueMode,jdbcType=VARCHAR},
+            MILION_PROFIT_DEC = #{milionProfitDec,jdbcType=DECIMAL},
+            MILION_PROFIT_DEC_MODE = #{milionProfitDecMode,jdbcType=VARCHAR},
+            YEAR_YIELD_DEC = #{yearYieldDec,jdbcType=DECIMAL},
+            YEAR_YIELD_DEC_MODE = #{yearYieldDecMode,jdbcType=VARCHAR},
+            IS_COUNTING_CUR_INT = #{isCountingCurInt,jdbcType=VARCHAR},
+            DEAL_LOSS_MODE = #{dealLossMode,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </update>
+</mapper>

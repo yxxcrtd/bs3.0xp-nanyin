@@ -1,0 +1,456 @@
+server:
+  port: 8080
+  address: 0.0.0.0
+  maxHttpHeaderSize: 102400
+#监听端口配置
+listener:
+  port: 8888 #端口
+  length: 8 #报文前长度信息占位长度，配置为空或者0表示不存在占位
+  encode: UTF-8 #编码
+#主配置文件，配置了这个会优先读取里面的属性覆盖主配置文件的属性
+spring:
+  jmx:
+    enabled: false
+  thymeleaf:
+    cache: false
+  profiles:
+    active: yitihua9004
+  application:
+    name: report-server #服务名称
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    validationQuery: SELECT 1 FROM DUAL
+  activemq:
+    systemId: report
+    active: false
+  http:
+    multipart: # 文件上传设置
+      maxFileSize: 10Mb #设置单个文件的大小
+      maxRequestSize: 100Mb #设置单次请求的文件的总大小
+shiro:
+  casClientName: report
+  
+application:
+  menuType: hover
+  sysCode: REP
+  menuPosition: top #菜单默认位置（设置主题后失效），支持left和top两种
+  pageStep: 100 #数据表格页码步长
+  #mainPage: disclosure/myHome
+  logoAbout: /image/disclosure/logo-about.png
+  logo: /image/disclosure/logo.png
+  sessionTimeout: 1800000 #超时自动退出
+  interfMaxCorePoolSize: 20 #上游接口解析读取文件处理最大线程数
+  maxDataCountOneTimeForInvestholdInfo : 50 #上游接口解析读取文件处理中持有信息批量查询单次最大查询主键数（江苏银行50）
+  reportInterfIsNeedOkFile: 1 #上游接口解析读取文件处理中，是否需要.ok传输完成标志文件（1：需要 0：不需要）
+  reportInterfOkFileExtension: ok #上游接口解析读取文件处理中，传输完成标志文件的扩展名（默认为ok）
+  reportInsertCount: 15 #数据批量一次性insert条数
+  reportSelectOrDeleteCount: 50 #数据批量一次查询或者删除条数
+  reportSelectOrDeleteCountForShenFen: 100 #数据批量一次查询或者删除条数(身份信息用)
+  reportInsertLongCount: 10 #数据批量一次性insert条数(单条数据字段较多)
+  reportInterfFileEncoding: UTF-8 #上游接口文件编码格式 
+  reportInterfOneTimeDataCount: 1000 #上游接口解析读取文件处理,单线程处理数据条数
+  reportInterfOneTimeSqlLdrDataCount: 200000 #上游接口解析读取文件处理,单次sqlldr处理最大数据条数
+  reportInterfOneTimeSqlLdrCommitCount: 10000 #上游接口解析读取文件处理,单次sqlldr处理单次提交数
+  reportInterfSplitCharacter: '|' #上游txt文件解析分割符
+  reportCbFeedBackHandleCountOneTime: 10000 #中债反馈文件内容单次处理数据条数
+
+eureka:
+  instance:
+    hostname: report-server
+  client:
+    enabled: false
+    serviceUrl:
+      defaultZone: http://192.168.70.146:1111/eureka/
+
+---
+spring:
+  profiles: dev
+  thymeleaf:
+    cache: false
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: report_new
+    password: ENC(yuxpHIIDTwuM1dxcNltb8QSfffCeK55H)
+    reportSqlldrDatabaseName: 192.168.70.112:1521/ORCL #sqlldr用数据库连接，必须保持这种格式
+#base数据库配置
+base:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@//192.168.70.180:1521/TAMS2
+    username: tams_base
+    password: ENC(V4BaOp/IIOSK9SnSZE2oHCg9PB5612pH)
+    validationQuery: SELECT 1 FROM DUAL
+shiro:
+  casEnable: false
+log:
+  path: D:/logs/report
+  level: info
+
+---
+spring:
+  profiles: test
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: report_user
+    password: ENC(Eii6sLkZg03iJqERLLA9WrfJjeoVyVIk)
+    reportSqlldrDatabaseName: 192.168.70.112:1521/ORCL #sqlldr用数据库连接，必须保持这种格式
+#base数据库配置
+base:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: report_base
+    password: ENC(iFio8U8WA5WZ6DwyMCc9xVVLFl96wkPU)
+    validationQuery: SELECT 1 FROM DUAL
+shiro:
+  casEnable: false
+log:
+  path: /home/tams/logs/report
+  level: info
+logging:
+  path: /home/tams/logs/report
+  
+---
+spring:
+  profiles: prod
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: report_user_ys
+    password: ENC(rhLsKtGABtWht2J2vTffESp6tvI1S5Jz)
+    reportSqlldrDatabaseName: 192.168.70.112:1521/ORCL #sqlldr用数据库连接，必须保持这种格式
+#base数据库配置
+base:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: report_base_ys
+    password: ENC(LBL1mV3ZLLz1L90BXPO/MoTkduMGq/Vs)
+    validationQuery: SELECT 1 FROM DUAL
+shiro:
+  casEnable: false
+log:
+  path: /home/tams/logs/report
+  level: info
+logging:
+  path: /home/tams/logs/report
+  
+  
+---
+spring:
+  profiles: etliu
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: etliu_user
+    password: ENC(Eii6sLkZg03iJqERLLA9WrfJjeoVyVIk)
+    reportSqlldrDatabaseName: 192.168.70.112:1521/ORCL #sqlldr用数据库连接，必须保持这种格式
+#base数据库配置
+base:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: etliu_base
+    password: ENC(iFio8U8WA5WZ6DwyMCc9xVVLFl96wkPU)
+    validationQuery: SELECT 1 FROM DUAL
+shiro:
+  casEnable: false
+log:
+  path: /home/etliu/logs/report
+  level: info
+logging:
+  path: /home/etliu/logs/report
+  
+  
+---
+spring:
+  profiles: bigdatatest
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: bigdata_user
+    password: ENC(Eii6sLkZg03iJqERLLA9WrfJjeoVyVIk)
+    reportSqlldrDatabaseName: 192.168.70.112:1521/ORCL #sqlldr用数据库连接，必须保持这种格式
+#base数据库配置
+base:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: bigdata_base
+    password: ENC(iFio8U8WA5WZ6DwyMCc9xVVLFl96wkPU)
+    validationQuery: SELECT 1 FROM DUAL
+shiro:
+  casEnable: false
+log:
+  path: /home/tisuser/etliu/logs/report
+  level: info
+logging:
+  path: /home/tisuser/etliu/logs/report
+
+
+---
+spring:
+  profiles: db2Test
+  thymeleaf:
+    cache: false
+  datasource:
+    url: jdbc:db2://192.168.70.62:50000/tamsdb:currentSchema=REPORT_USER_TEST;
+    username: tamsinst
+    password: ENC(5Di07iThvIYt2S0jwquyzdaWtJ+P9qIn)
+    driverClassName: com.ibm.db2.jcc.DB2Driver
+    validationQuery: SELECT 1 FROM SYSIBM.SYSDUMMY1
+  #base数据库配置
+base:
+  datasource:
+    driverClassName: com.ibm.db2.jcc.DB2Driver
+    url: jdbc:db2://192.168.70.62:50000/tamsdb:currentSchema=REPORT_BASE_TEST;
+    username: tamsinst
+    password: ENC(5Di07iThvIYt2S0jwquyzdaWtJ+P9qIn)
+    validationQuery: SELECT 1 FROM SYSIBM.SYSDUMMY1
+shiro:
+  casEnable: false
+log:
+  path: /home/etliu/db2/logs
+  level: info
+
+---
+spring:
+  profiles: xppocoracle
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: xppoc_user
+    password: report_user
+    reportSqlldrDatabaseName: 192.168.70.112:1521/ORCL #sqlldr用数据库连接，必须保持这种格式
+#base数据库配置
+base:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: xppoc_base
+    password: report_base
+    validationQuery: SELECT 1 FROM DUAL
+shiro:
+  casEnable: false
+log:
+  path: /home/tamsuser/logs/report
+  level: info
+logging:
+  path: /home/tamsuser/logs/report
+  
+---
+spring:
+  profiles: xppocoracleT
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.36:1521/ORCL
+    username: rev_mast
+    password: rev_mast
+    reportSqlldrDatabaseName: 192.168.90.36:1521/ORCL #sqlldr用数据库连接，必须保持这种格式
+#base数据库配置
+base:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@//192.168.90.36:1521/ORCL
+    username: rev_base
+    password: rev_base
+    validationQuery: SELECT 1 FROM DUAL
+shiro:
+  casEnable: false
+log:
+  path: /home/tamsuser/logs/report
+  level: info
+logging:
+  path: /home/tamsuser/logs/report
+  
+---
+spring:
+  profiles: xppocdb2
+  thymeleaf:
+    cache: false
+  datasource:
+    url: jdbc:db2://192.168.70.62:50000/tamsdb:currentSchema=REVEAL_MAST_TEST;
+    username: tamsinst
+    password: tamsinst
+    driverClassName: com.ibm.db2.jcc.DB2Driver
+    validationQuery: SELECT 1 FROM SYSIBM.SYSDUMMY1
+  #base数据库配置
+base:
+  datasource:
+    driverClassName: com.ibm.db2.jcc.DB2Driver
+    url: jdbc:db2://192.168.70.62:50000/tamsdb:currentSchema=REVEAL_BASE_TEST;
+    username: tamsinst
+    password: tamsinst
+    validationQuery: SELECT 1 FROM SYSIBM.SYSDUMMY1
+shiro:
+  casEnable: false
+  ssoEnable: false #是否开启SSO认证
+  #loginUrl: http://localhost:9080/valuation/login #登录地址，在开启cas后该地址配置不生效
+log:
+  path: /home/tamsuser/logs/report
+  level: info
+  
+  
+---
+spring:
+  profiles: xpdb2Test
+  thymeleaf:
+    cache: false
+  datasource:
+    url: jdbc:db2://192.168.70.62:50000/tamsdb:currentSchema=TAMS_MAST_02;
+    username: tamsinst
+    password: tamsinst
+    driverClassName: com.ibm.db2.jcc.DB2Driver
+    validationQuery: SELECT 1 FROM SYSIBM.SYSDUMMY1
+  #base数据库配置
+base:
+  datasource:
+    driverClassName: com.ibm.db2.jcc.DB2Driver
+    url: jdbc:db2://192.168.70.62:50000/tamsdb:currentSchema=TAMS_BASE_02;
+    username: tamsinst
+    password: tamsinst
+    validationQuery: SELECT 1 FROM SYSIBM.SYSDUMMY1
+shiro:
+  casEnable: false
+log:
+  path: /home/tamsuser/logs/report
+  level: info
+  
+---
+spring:
+  profiles: yitihua
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.45:1521/ORCL
+    username: yitihua_mast
+    password: yitihua_mast
+    reportSqlldrDatabaseName: 192.168.70.45:1521/ORCL #sqlldr用数据库连接，必须保持这种格式
+#base数据库配置
+base:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@//192.168.70.45:1521/ORCL
+    username: yitihua_base
+    password: yitihua_base
+    validationQuery: SELECT 1 FROM DUAL
+shiro:
+  casEnable: false
+log:
+  path: /home/tams/logs/disclosure
+  level: info
+logging:
+  path: /home/tams/logs/disclosure
+eureka:
+  client:
+    enabled: true #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
+    serviceUrl:
+      defaultZone: http://192.168.70.45:9100/eureka/
+  instance:
+    hostname: localhost
+
+---
+spring:
+  profiles: yitihua9004
+  datasource:
+    url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.90.111)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.90.112)(PORT=1521))(LOAD_BALANCE=no)(FAILOVER=on))(CONNECT_DATA=(SERVICE_NAME=tamsdbpdb)))
+    username: tams212
+    password: tams212
+    maxTotal: 50
+    maxIdle: 50
+    minIdle: 20
+    timeBetweenEvictionRunsMillis: 60000  # 默认是-1
+    numTestsPerEvictionRun: 10
+    removeAbandonedOnBorrow: true
+    removeAbandonedOnMaintenance: true
+    logAbandoned: true
+    reportSqlldrDatabaseName: 192.168.90.3:1521/ORCL #sqlldr用数据库连接，必须保持这种格式
+    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000 # 批处理不加该配置
+
+#base数据库配置
+base:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.90.111)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.90.112)(PORT=1521))(LOAD_BALANCE=no)(FAILOVER=on))(CONNECT_DATA=(SERVICE_NAME=tamsdbpdb)))
+    username: tams212
+    password: tams212
+    maxTotal: 50
+    maxIdle: 50
+    minIdle: 20
+    timeBetweenEvictionRunsMillis: 60000  # 默认是-1
+    numTestsPerEvictionRun: 10
+    removeAbandonedOnBorrow: true
+    removeAbandonedOnMaintenance: true
+    logAbandoned: true     
+    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000 # 批处理不加该配置
+    validationQuery: SELECT 1 FROM DUAL
+shiro:
+  casEnable: false
+log:
+  path: /home/tams/logs/disclosure
+  level: info
+logging:
+  path: /home/tams/logs/disclosure
+eureka:
+  client:
+    enabled: true #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
+    serviceUrl:
+      defaultZone: http://192.168.90.3:9004/eureka/
+  instance:
+    hostname: localhost
+
+
+---
+spring:
+  profiles: yitihua9005
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.3:1521/ORCL
+    username: yitihua_mast9005
+    password: yitihua_mast9005
+    reportSqlldrDatabaseName: 192.168.90.3:1521/ORCL #sqlldr用数据库连接，必须保持这种格式
+#base数据库配置
+base:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@//192.168.90.3:1521/ORCL
+    username: yitihua_base9005
+    password: yitihua_base9005
+    validationQuery: SELECT 1 FROM DUAL
+shiro:
+  casEnable: false
+log:
+  path: /home/tams/logs/disclosure
+  level: info
+logging:
+  path: /home/tams/logs/disclosure
+eureka:
+  client:
+    enabled: true #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
+    serviceUrl:
+      defaultZone: http://192.168.90.3:9005/eureka/
+  instance:
+    hostname: localhost
+
+---
+spring:
+  profiles: yitihua9006
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.3:1521/ORCL
+    username: yitihua_mast9006
+    password: yitihua_mast9006
+    reportSqlldrDatabaseName: 192.168.90.3:1521/ORCL #sqlldr用数据库连接，必须保持这种格式
+#base数据库配置
+base:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@//192.168.90.3:1521/ORCL
+    username: yitihua_base9006
+    password: yitihua_base9006
+    validationQuery: SELECT 1 FROM DUAL
+shiro:
+  casEnable: false
+log:
+  path: /home/tams/logs/disclosure
+  level: info
+logging:
+  path: /home/tams/logs/disclosure
+eureka:
+  client:
+    enabled: true #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
+    serviceUrl:
+      defaultZone: http://192.168.90.3:9006/eureka/
+  instance:
+    hostname: localhost

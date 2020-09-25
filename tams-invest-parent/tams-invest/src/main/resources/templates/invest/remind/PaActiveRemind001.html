@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layout/default}">
+<head>
+    <meta charset="UTF-8">
+    <title data-th-text="#{PaActiveRemind001}">主动提醒</title>
+    <style>
+        .remind-title{
+            padding-left: 5px;
+            border-left: 3px solid #4893e6;
+        }
+        .remind-wrap{
+            height: 45px;
+            padding-left: 20px;
+        }
+        .remind-pro-des{
+            color: #fff;
+            line-height: 45px;
+            text-align: center;
+            border-radius: 45px;
+            width: 45px;
+            float: left;
+            height: 45px;
+            font-size: 22px;
+        }
+        .remind-raise{
+            background: #77bbff;
+        }
+        .remind-interest{
+            background: #8dca57;
+        }
+        .remind-red{
+            background: #ff7373;
+        }
+        .remind-son{
+            background: #ff3eff;
+        }
+        .remind-stage{
+            background: #ffa64d;
+        }
+        .remind-fee{
+            background: #cb97ff;
+        }
+        .remind-pro-detail{
+            padding-left: 10px;
+            float: left;
+        }
+        .remind-pro-detail a:hover{
+            color:#007fff;
+        }
+        .remind-amount{
+            display: block;
+            padding-top: 9px;
+            font-size: 22px;
+            color:#007fff;
+        }
+        .remind-detail{
+            color: #444444;
+        }
+        .remind-item{
+            margin-top:10px;
+        }
+        .remind-item-wrap{
+            border-right: 1px solid #b2d3f4;
+        }
+        .layui-fluid{
+            background: #f5f5f5;
+        }
+        .remind-ul li{
+            margin-top: 20px;
+            padding: 10px 0;
+            background: #ffffff;
+        }
+        .remind-asset{
+            background: #e3f1ff;
+        }
+        .remind-project{
+            background: #eff6e8;
+        }
+        .remind-plan{
+            background: #fae8ff;
+        }
+        .remind-check-wrap{
+            padding: 15px;
+        }
+        .remind-check-title{
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            color: #444444;
+            text-align: center;
+            font-size: 16px;
+            border-bottom: 1px solid #b7c3ce;
+        }
+
+        #timeleft div {
+            padding-bottom: 20px;
+            color: #444;
+        }
+
+        #timecenter div {
+            height: 65px;
+            color: #333333;
+        }
+
+        #timeright div {
+            padding-bottom: 19px;
+            padding-left: 75px;
+        }
+
+        #timeright div a {
+            font-size: 16px;
+            margin: 0 0 0px;
+            color: #007fff;
+        }
+
+        .cicle1 {
+            position: absolute;
+            top: -20px;
+            left: -6px;
+            border-radius: 50%;
+            list-style: none;
+            width: 10px;
+            height: 10px;
+            background: #bbb!important;
+        }
+
+        .cicle2 {
+            position: absolute;
+            top: 19px;
+            left: -6px;
+            border-radius: 50%;
+            list-style: none;
+            width: 10px;
+            height: 10px;
+            background: #bbb!important;
+        }
+
+        .cicle3 {
+            position: absolute;
+            top: 58px;
+            left: -6px;
+            border-radius: 10px;
+            list-style: none;
+            width: 10px;
+            height: 10px;
+            background: #bbb!important;
+        }
+
+        .cicle4 {
+            position: absolute;
+            top: 210px;
+            left: -10px;
+            border-radius: 10px;
+            list-style: none;
+            width: 20px;
+            height: 20px;
+            border: 1px solid #cccccc;
+            background: #ffffff;
+        }
+        .cicle-ul li{
+            padding: 0!important;
+        }
+        .remind-sure-wrap{
+            border-right: 1px dashed #dddddd;
+        }
+        .link-num{
+            font-size: 22px;
+            color: #007fff;
+        }
+        .remind-sure{
+            text-align: center;
+        }
+        .remind-sure-des{
+            color: #444444;
+            font-size: 14px;
+        }
+        .remind-sure-icon{
+            line-height: 45px;
+            margin: 5px auto;
+            border: 1px solid #ddd;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+        }
+        .asset-r3s1{
+            color: #ff3eff;
+            font-size: 18px;
+        }
+        .asset-r3s2{
+            color: #8dca57;
+            font-size: 18px;
+        }
+        .asset-r3s3{
+            color: #ff7373;
+            font-size: 18px;
+        }
+        .asset-r3s4{
+            color: #ffa64d;
+            font-size: 26px;
+        }
+        .asset-r3s5{
+            color: #b973ff;
+            font-size: 26px;
+        }
+        .asset-r3s6{
+            color: #00dddd;
+            font-size: 18px;
+        }
+        .asset-r3s7{
+            color: #cc00cc;
+            font-size: 26px;
+        }
+        .asset-r3s8{
+            color: #00aa88;
+            font-size: 26px;
+        }
+        .asset-r3s9{
+            color: #009fcc;
+            font-size: 18px;
+        }
+        .asset-r3s10{
+            color: #9900ff;
+            font-size: 26px;
+        }
+        .asset-r3s11{
+            color: #aa7700;
+            font-size: 26px;
+        }
+        .asset-r3s12{
+            color: #007fff;
+            font-size: 18px;
+        }
+        .remind-sure-list{
+            width: 19.9%;
+            float: left;
+        }
+        .remind-sure-listex{
+            width: 24.9%;
+            float: left;
+        }
+        .remind-item-list{
+            width: 14%;
+            float: left;
+        }
+        .layui-col-space20{
+            margin: 4px 11px -6px 11px;
+        }
+        .remind-risk-wrap{
+            border: 1px solid #dddddd;
+            overflow: hidden;
+        }
+        .remind-risk-left{
+            float: left;
+            padding: 10px 0 10px 15px;
+        }
+        .risk-left-des{
+            color: #444;
+            font-size: 14px;
+        }
+        .remind-risk-right{
+            float: right;
+            text-align: center;
+            width: 65px;
+            height: 65px;
+            line-height: 65px;
+        }
+        .remind-risk-icon{
+            background: #cc99ff;
+        }
+        .risk-right-icon{
+            background: #9999ff;
+        }
+        .remind-risk-right i{
+            color: #ffffff;
+            font-size: 46px;
+        }
+        .bond-title{
+            font-size: 14px;
+            color: #444444;
+            padding: 7px 0 0 10px;
+        }
+        .bond-des{
+            text-align: center;
+        }
+        .cover-wrap{
+            height: 90px;
+            background: url("../../image/cover-pic.png") no-repeat;
+        }
+        .right-wrap{
+            height: 90px;
+            background: url("../../image/right-pic.png") no-repeat;
+        }
+        .remind-linking{
+            padding: 1px 5px 1px 10px;
+            border: 1px solid #ddd;
+            height: 31px;
+            overflow: auto;
+        }
+        .remind-linking a{
+            color: #007fff;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <form class="layui-form joyin-form-wrap" id="searchForm" style="padding: 0;background: #ffffff;">
+        <div class="layui-form-item" style="padding: 8px 0;">
+            <div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
+                <label class="layui-form-label form-lable" style="width: 80px;"
+                       data-th-text="#{PaActiveRemind001.quaryDate}">查询日期</label>
+                <div class="layui-input-inline input-inline">
+                    <input id='quaryDate' name='quaryDate' class="layui-input form-input input-dateSelect"
+                           placeholder="请选择时间区间" data-th-placeholder="#{SysCommon.placeholder}"
+                           data-th-value='${#dates.format(sysDate,"yyyy-MM-dd")}'>
+                </div>
+            </div>
+            <a id="PaActiveRemind001_btn_search" class="layui-btn layui-btn-sm btn-search"
+               data-th-text="#{PaActiveRemind001.search}">查询</a>
+        </div>
+    </form>
+    <div class="remind-container">
+        <ul class="remind-ul">
+            <li style="margin-top: 0;">
+                <h3 class="remind-title" data-th-text="#{PaActiveRemind001.R1}">产品端</h3>
+                <div class="layui-row remind-item">
+                    <div class="remind-item-list remind-item-wrap">
+                        <div class="remind-wrap">
+                            <div class="remind-pro-des remind-raise">募</div>
+                            <div class="remind-pro-detail">
+                                <div class="remind-detail" data-th-text="#{PaActiveRemind001.R1S1}">产品正在募集</div>
+                                <a href="javascript:;" class="remind-amount click"
+                                   data-th-one="${R1}" id="R1S1" data-th-two="${R1S1}" data-th-text="${result?.R1S1}"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="remind-item-list remind-item-wrap">
+                        <div class="remind-wrap">
+                            <div class="remind-pro-des remind-interest">息</div>
+                            <div class="remind-pro-detail">
+                                <div class="remind-detail" data-th-text="#{PaActiveRemind001.R1S2}">产品起息</div>
+                                <a href="javascript:;" class="remind-amount click"
+                                   data-th-one="${R1}" id="R1S2" data-th-two="${R1S2}" data-th-text="${result?.R1S2}"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="remind-item-list remind-item-wrap">
+                        <div class="remind-wrap">
+                            <div class="remind-pro-des remind-red">中</div>
+                            <div class="remind-pro-detail">
+                                <div class="remind-detail" data-th-text="#{PaActiveRemind001.R1S3}">产品中间付息</div>
+                                <a href="javascript:;" class="remind-amount click"
+                                   data-th-one="${R1}" id="R1S3" data-th-two="${R1S3}" data-th-text="${result?.R1S3}"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="remind-item-list remind-item-wrap">
+                        <div class="remind-wrap">
+                            <div class="remind-pro-des remind-son">子</div>
+                            <div class="remind-pro-detail">
+                                <div class="remind-detail" data-th-text="#{PaActiveRemind001.R1S4}">子周期强制赎回</div>
+                                <a href="javascript:;" class="remind-amount click"
+                                   data-th-one="${R1}" id="R1S4" data-th-two="${R1S4}" data-th-text="${result?.R1S4}"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="remind-item-list remind-item-wrap">
+                        <div class="remind-wrap">
+                            <div class="remind-pro-des remind-stage">期</div>
+                            <div class="remind-pro-detail">
+                                <div class="remind-detail" data-th-text="#{PaActiveRemind001.R1S5}">产品到期</div>
+                                <a href="javascript:;" class="remind-amount click"
+                                   data-th-one="${R1}" id="R1S5" data-th-two="${R1S5}" data-th-text="${result?.R1S5}"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="remind-item-list remind-item-wrap">
+                        <div class="remind-wrap">
+                            <div class="remind-pro-des remind-fee">费</div>
+                            <div class="remind-pro-detail">
+                                <div class="remind-detail" data-th-text="#{PaActiveRemind001.R1S6}">产品费用支付</div>
+                                <a href="javascript:;" class="remind-amount click"
+                                   data-th-one="${R1}" id="R1S6" data-th-two="${R1S6}" data-th-text="${result?.R1S6}"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="remind-item-list remind-item-wrap">
+                        <div class="remind-wrap">
+                            <div class="remind-pro-detail">
+                                <div class="remind-detail">产品最新净值<1有：</div>
+                                <div class="remind-detail">
+                                    <a href="javascript:;" class="remind-amount click"
+                                       data-th-one="${R1}" id="R1S7" data-th-two="${R1S7}" data-th-text="${result?.R1S7}">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <h3 class="remind-title" data-th-text="#{PaActiveRemind001.R2}">315检查</h3>
+                <div class="layui-row layui-col-space20">
+                    <div class="layui-col-md4">
+                        <div class="remind-check-wrap remind-asset">
+                            <div class="remind-check-title" data-th-text="#{PaActiveRemind001.R2S1}">项目类</div>
+                            <div style="overflow: hidden;width: 45%;margin: 0 auto;">
+                                <div id="timeleft" style="float: left;">
+                                    <div>提前5天</div>
+                                    <div>提前1个月</div>
+                                    <div style="padding-bottom: 0;">提前3个月</div>
+                                </div>
+                                <div id="timecenter" style="float: left;">
+                                    <div style="height: 88px; border-left: 1px solid #bbb; position: absolute; left: 50%;">
+                                        <ul class="cicle-ul">
+                                            <li class="cicle1"></li>
+                                            <li class="cicle2"></li>
+                                            <li class="cicle3"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div id="timeright" style="float: left;">
+                                    <div>
+                                        <a href="javascript:;" class="click" id="R2S1" data-th-one="${R2}" data-th-two="${R2S1}" data-th-text="${result?.R2S1}"></a>
+                                    </div>
+                                    <div>
+                                        <a href="javascript:;" class="click" id="R2S2" data-th-one="${R2}" data-th-two="${R2S2}" data-th-text="${result?.R2S2}"></a>
+                                    </div>
+                                    <div style="padding-bottom: 0;">
+                                        <a href="javascript:;" class="click" id="R2S3" data-th-one="${R2}" data-th-two="${R2S3}" data-th-text="${result?.R2S3}"></a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md4">
+                        <div class="remind-check-wrap remind-project">
+                            <div class="remind-check-title" data-th-text="#{PaActiveRemind001.R2S2}">计划类利率型</div>
+                            <div style="overflow: hidden;width: 45%;margin: 0 auto;">
+                                <div id="timeleft" style="float: left;">
+                                    <div>提前5天</div>
+                                    <div>提前1个月</div>
+                                    <div style="padding-bottom: 0;">提前3个月</div>
+                                </div>
+                                <div id="timecenter" style="float: left;">
+                                    <div style="height: 88px; border-left: 1px solid #bbb; position: absolute; left: 50%;">
+                                        <ul class="cicle-ul">
+                                            <li class="cicle1"></li>
+                                            <li class="cicle2"></li>
+                                            <li class="cicle3"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div id="timeright" style="float: left;">
+                                    <div>
+                                        <a href="javascript:;" class="click" id="R2S4" data-th-one="${R2}" data-th-two="${R2S4}" data-th-text="${result?.R2S4}"></a>
+                                    </div>
+                                    <div>
+                                        <a href="javascript:;" class="click" id="R2S5" data-th-one="${R2}" data-th-two="${R2S5}" data-th-text="${result?.R2S5}"></a>
+                                    </div>
+                                    <div style="padding-bottom: 0;">
+                                        <a href="javascript:;" class="click" id="R2S6" data-th-one="${R2}" data-th-two="${R2S6}" data-th-text="${result?.R2S6}"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <h3 class="remind-title" data-th-text="#{PaActiveRemind001.R3}">回款及存续期确认</h3>
+                <div class="layui-row remind-item">
+                    <div class="remind-sure-listex remind-sure-wrap">
+                        <div class="remind-sure">
+                            <div class="remind-sure-link">
+                                <a href="javascript:;" class="link-num click" id="R3S1"  data-th-one="${R3}" data-th-two="${R3S1}" data-th-text="${result?.R3S1}">10000</a>
+                            </div>
+                            <div class="remind-sure-icon">
+                                <span class="asset-r3s1">基|净</span>
+                            </div>
+                            <div class="remind-sure-des" data-th-text="#{PaActiveRemind001.R3S1}">基金类净值型回款确认</div>
+                        </div>
+                    </div>
+                    <div class="remind-sure-listex remind-sure-wrap">
+                        <div class="remind-sure">
+                            <div class="remind-sure-link">
+                                <a href="javascript:;" class="link-num click" id="R3S2" data-th-one="${R3}" data-th-two="${R3S2}" data-th-text="${result?.R3S2}">100</a>
+                            </div>
+                            <div class="remind-sure-icon">
+                                <span class="asset-r3s2">基|货</span>
+                            </div>
+                            <div class="remind-sure-des" data-th-text="#{PaActiveRemind001.R3S2}">基金类货币型回款确认</div>
+                        </div>
+                    </div>
+                    <div class="remind-sure-listex remind-sure-wrap">
+                        <div class="remind-sure">
+                            <div class="remind-sure-link">
+                                <a href="javascript:;" class="link-num click" id="R3S3" data-th-one="${R3}" data-th-two="${R3S3}" data-th-text="${result?.R3S3}">1000</a>
+                            </div>
+                            <div class="remind-sure-icon">
+                                <span class="asset-r3s3">计|净</span>
+                            </div>
+                            <div class="remind-sure-des" data-th-text="#{PaActiveRemind001.R3S3}">计划类净值型回款确认</div>
+                        </div>
+                    </div>
+                    <div class="remind-sure-listex">
+                        <div class="remind-sure">
+                            <div class="remind-sure-link">
+                                <a href="javascript:;" class="link-num click" id="R3S12" data-th-one="${R3}" data-th-two="${R3S12}" data-th-text="${result?.R3S12}">1000</a>
+                            </div>
+                            <div class="remind-sure-icon">
+                                <span class="asset-r3s12">计|货</span>
+                            </div>
+                            <div class="remind-sure-des" data-th-text="#{PaActiveRemind001.R3S12}">计划类净值型回款确认</div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="layui-row remind-item">
+                    <div class="remind-sure-listex remind-sure-wrap">
+                        <div class="remind-sure">
+                            <div class="remind-sure-link">
+                                <a href="javascript:;" class="link-num click" id="R3S4" data-th-one="${R3}" data-th-two="${R3S4}" data-th-text="${result?.R3S4}">10000</a>
+                            </div>
+                            <div class="remind-sure-icon">
+                                <span class="asset-r3s4">货</span>
+                            </div>
+                            <div class="remind-sure-des" data-th-text="#{PaActiveRemind001.R3S4}">货币基金分红提醒</div>
+                        </div>
+                    </div>
+                    <div class="remind-sure-listex remind-sure-wrap">
+                        <div class="remind-sure">
+                            <div class="remind-sure-link">
+                                <a href="javascript:;" class="link-num click" id="R3S5" data-th-one="${R3}" data-th-two="${R3S5}" data-th-text="${result?.R3S5}"></a>
+                            </div>
+                            <div class="remind-sure-icon">
+                                <span class="asset-r3s5">债</span>
+                            </div>
+                            <div class="remind-sure-des" data-th-text="#{PaActiveRemind001.R3S5}">债券存续期</div>
+                        </div>
+                    </div>
+                    <!--
+                    <div class="remind-sure-listex remind-sure-wrap">
+                        <div class="remind-sure">
+                            <div class="remind-sure-link">
+                                <a href="javascript:;" class="link-num click" id="R3S6" data-th-one="${R3}" data-th-two="${R3S6}" data-th-text="${result?.R3S6}"></a>
+                            </div>
+                            <div class="remind-sure-icon">
+                                <span class="asset-r3s6">债|确</span>
+                            </div>
+                            <div class="remind-sure-des" data-th-text="#{PaActiveRemind001.R3S6}">债券存续期回款确认</div>
+                        </div>
+                    </div>
+                       -->
+
+                    <div class="remind-sure-listex remind-sure-wrap">
+                        <div class="remind-sure">
+                            <div class="remind-sure-link">
+                                <a href="javascript:;" class="link-num click" id="R3S14" data-th-one="${R3}" data-th-two="${R3S14}" data-th-text="${result?.R3S14}" ></a>
+                            </div>
+                            <div class="remind-sure-icon">
+                                <span class="asset-r3s7">质</span>
+                            </div>
+                            <div class="remind-sure-des" data-th-text="#{PaActiveRemind001.R3S14}">回购到期</div>
+                        </div>
+                    </div>
+
+                    <div class="remind-sure-listex remind-sure-wrap">
+                        <div class="remind-sure">
+                            <div class="remind-sure-link">
+                                <a href="javascript:;" class="link-num click" id="R3S8" data-th-one="${R3}" data-th-two="${R3S8}" data-th-text="${result?.R3S8}" ></a>
+                            </div>
+                            <div class="remind-sure-icon">
+                                <span class="asset-r3s8">项</span>
+                            </div>
+                            <div class="remind-sure-des" data-th-text="#{PaActiveRemind001.R3S8}">项目类资产存续期</div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="layui-row remind-item">
+                    <div class="remind-sure-listex remind-sure-wrap">
+                        <div class="remind-sure">
+                            <div class="remind-sure-link">
+                                <a href="javascript:;" class="link-num click" id="R3S13" data-th-one="${R3}" data-th-two="${R3S13}"  data-th-text="${result?.R3S13}">50</a>
+                            </div>
+                            <div class="remind-sure-icon">
+                                <span class="asset-r3s9">存|确</span>
+                            </div>
+                            <div class="remind-sure-des" data-th-text="#{PaActiveRemind001.R3S13}">存款类资产存续期</div>
+                        </div>
+                    </div>
+
+                    <div class="remind-sure-listex remind-sure-wrap">
+                        <div class="remind-sure">
+                            <div class="remind-sure-link">
+                                <a href="javascript:;" class="link-num click" id="R3S10" data-th-one="${R3}" data-th-two="${R3S10}" data-th-text="${result?.R3S10}">50</a>
+                            </div>
+                            <div class="remind-sure-icon">
+                                <span class="asset-r3s10">计</span>
+                            </div>
+                            <div class="remind-sure-des" data-th-text="#{PaActiveRemind001.R3S10}">计划类利率型存续期</div>
+                        </div>
+                    </div>
+
+                    <div class="remind-sure-listex remind-sure-wrap">
+                        <div class="remind-sure">
+                            <div class="remind-sure-link">
+                                <a href="javascript:;" class="link-num click" id="R3S15" data-th-one="${R3}" data-th-two="${R3S15}"  data-th-text="${result?.R3S15}">50</a>
+                            </div>
+                            <div class="remind-sure-icon">
+                                <span class="asset-r3s11">买</span>
+                            </div>
+                            <div class="remind-sure-des" data-th-text="#{PaActiveRemind001.R3S15}">买断式存续期</div>
+                        </div>
+                    </div>
+
+                    <div class="remind-sure-listex remind-sure-wrap">
+                        <div class="remind-sure">
+                            <div class="remind-sure-link">
+                                <a href="javascript:;" class="link-num click" id="R3S16" data-th-one="${R3}" data-th-two="${R3S16}"  data-th-text="${result?.R3S16}">50</a>
+                            </div>
+                            <div class="remind-sure-icon">
+                                <span class="asset-r3s11">债</span>
+                            </div>
+                            <div class="remind-sure-des" data-th-text="#{PaActiveRemind001.R3S16}">债券借贷融出的券还本收息</div>
+                        </div>
+                    </div>
+
+                </div>
+            </li>
+            <li>
+                <h3 class="remind-title" data-th-text="#{PaActiveRemind001.R6}">净值披露</h3>
+                <div class="layui-row layui-col-space20">
+                    <div class="layui-col-md4">
+                        <div class="remind-risk-wrap cover-wrap" style="background-position: bottom center;">
+                            <h3 class="bond-title" data-th-text="#{PaActiveRemind001.R6S1}">净值披露</h3>
+                            <div class="bond-des">
+                                <a href="javascript:;" class="link-num click" id="R6S1" data-th-one="${R6}" data-th-two="${R6S1}" data-th-text="${result?.R6S1}">10000</a>
+                            </div>
+                            <!--<section class="doc doc&#45;&#45;bg2" style="height: 40px;position: relative;overflow: hidden;">
+                                <canvas id="canvas" style="position:absolute;top:0px;left:0px;z-index:1;"></canvas>
+                            </section>-->
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <h3 class="remind-title" data-th-text="#{PaActiveRemind001.R7}">变更提醒</h3>
+                <div class="layui-row layui-col-space20">
+                    <div class="layui-col-md4">
+                        <div class="remind-risk-wrap cover-wrap" style="background-position: bottom center;">
+                            <h3 class="bond-title" data-th-text="#{PaActiveRemind001.R7S1}">债项和主体评级变动</h3>
+                            <div class="bond-des">
+                                <a href="javascript:;" class="link-num click" id="R7S1" data-th-one="${R7}" data-th-two="${R7S1}" data-th-text="${result?.R7S1}">10000</a>
+                            </div>
+                            <!--<section class="doc doc&#45;&#45;bg2" style="height: 40px;position: relative;overflow: hidden;">
+                                <canvas id="canvas" style="position:absolute;top:0px;left:0px;z-index:1;"></canvas>
+                            </section>-->
+                        </div>
+                    </div>
+                    <div class="layui-col-md4">
+                        <div class="remind-risk-wrap cover-wrap" style="background-position: bottom center;">
+                            <h3 class="bond-title" data-th-text="#{PaActiveRemind001.R7S2}">项目类资产标的信息被修改</h3>
+                            <div class="bond-des">
+                                <a href="javascript:;" class="link-num click" id="R7S2" data-th-one="${R7}" data-th-two="${R7S2}" data-th-text="${result?.R7S2}">10000</a>
+                            </div>
+                            <!--<section class="doc doc&#45;&#45;bg2" style="height: 40px;position: relative;overflow: hidden;">
+                                <canvas id="canvas" style="position:absolute;top:0px;left:0px;z-index:1;"></canvas>
+                            </section>-->
+                        </div>
+                     </div>
+                    <div class="layui-col-md4">
+                    	<div class="remind-risk-wrap cover-wrap" style="background-position: bottom center;">
+                    		<h3 class="bond-title" data-th-text="#{PaActiveRemind001.R7S3}">舆情提醒</h3>
+                    		<div class="bond-des">
+                    			<a href="javascript:;" class="link-num click" id="R7S3" data-th-one="${R7}" data-th-two="${R7S3}" data-th-text="${result?.R7S3}">10000</a>
+                    		</div>
+                    	</div>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <h3 class="remind-title" data-th-text="#{PaActiveRemind001.R4}">债券行权及覆盖</h3>
+                <div class="layui-row layui-col-space20">
+                    <div class="layui-col-md4">
+                        <div class="remind-risk-wrap cover-wrap" style="background-position: bottom center;">
+                            <h3 class="bond-title" data-th-text="#{PaActiveRemind001.R4S1}">债券行权</h3>
+                            <div class="bond-des">
+                                <a href="javascript:;" class="link-num click" id="R4S1" data-th-one="${R4}" data-th-two="${R4S1}" data-th-text="${result?.R4S1}">10000</a>
+                            </div>
+                            <!--<section class="doc doc&#45;&#45;bg2" style="height: 40px;position: relative;overflow: hidden;">
+                                <canvas id="canvas" style="position:absolute;top:0px;left:0px;z-index:1;"></canvas>
+                            </section>-->
+                        </div>
+                    </div>
+                    <div class="layui-col-md4">
+                        <div class="remind-risk-wrap right-wrap" style="background-position: bottom center;">
+                            <h3 class="bond-title"  data-th-text="#{PaActiveRemind001.R4S2}">债券覆盖</h3>
+                            <div class="bond-des">
+                                <a href="javascript:;" class="link-num click" id="R4S2" data-th-one="${R4}" data-th-two="${R4S2}" data-th-text="${result?.R4S2}">1000</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <h3 class="remind-title" data-th-text="#{PaActiveRemind001.R5}">风险提醒</h3>
+                <div class="layui-row layui-col-space20">
+                    <div class="layui-col-md4">
+                        <div class="remind-risk-wrap">
+                            <div class="remind-risk-left">
+                                <a href="javascript:;" class="link-num click" id="R5S1" data-th-one="${R5}" data-th-two="${R5S1}" data-th-text="${result?.R5S1}" ></a>
+                                <div class="risk-left-des" data-th-text="#{PaActiveRemind001.R5S1}">指标预警提醒</div>
+                            </div>
+                            <div class="remind-risk-right remind-risk-icon">
+                                <i class="iconfont icon-risk-caution"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md4">
+                        <div class="remind-risk-wrap">
+                            <div class="remind-risk-left">
+                                <a href="javascript:;" class="link-num click" id="R5S2" data-th-one="${R5}" data-th-two="${R5S2}" data-th-text="${result?.R5S1}" ></a>
+                                <div class="risk-left-des" data-th-text="#{PaActiveRemind001.R5S2}">指标违规提醒</div>
+                            </div>
+                            <div class="remind-risk-right risk-right-icon">
+                                <i class="iconfont icon-warning_fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li th:if="${isEjfr}">
+                <h3 class="remind-title" data-th-text="#{PaActiveRemind001.R9}">公共数据变更</h3>
+                <div class="layui-row layui-col-space20">
+                    <div class="layui-col-md4">
+                        <div class="remind-risk-wrap cover-wrap" style="background-position: bottom center;">
+                            <h3 class="bond-title" data-th-text="#{PaActiveRemind001.R9S1}">数据修改</h3>
+                            <div class="bond-des">
+                                <a href="javascript:;" class="link-num click" id="R9S1" data-th-one="${R9}" data-th-two="${R9S1}" data-th-text="${result?.R9S1}">10000</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+<div layout:fragment="script">
+    <script data-th-src="@{/invest/js/remind/PaActiveRemind001.js}" type="text/javascript"></script>
+</div>
+</body>
+</html>

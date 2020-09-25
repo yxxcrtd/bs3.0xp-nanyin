@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.manage.prodfilemanage.dao.ReportProdFileManage001Mapper_mysql">
+	<select id="getPrdInfoSelectPF" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select PROD_ID id,
+		    PROD_NAME text
+		from REP_PROD_FILE_PRODINFO
+		where DATA_STATUS='E'
+		<if test="search != null and search != ''">
+		    and (PROD_ID like concat('%', #{search, jdbcType=VARCHAR}, '%')
+		    or PROD_NAME like concat('%', #{search, jdbcType=VARCHAR}, '%'))
+		</if>
+	</select>
+	<select id="getProdSeriesSelectPF" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select PROD_SERIES id,
+		    PROD_SERIES text
+		from REP_PROD_FILE_PRODINFO
+		where DATA_STATUS='E'
+		<if test="search != null and search != ''">
+		    and PROD_SERIES like concat('%', #{search, jdbcType=VARCHAR}, '%')
+		</if>
+	</select>
+	<select id="searchPage" resultType="com.joyintech.tams.disclosure.information.manage.prodfilemanage.dto.ReportProdFileManage001Dto">
+		SELECT
+	    <if test="reportType !=null and reportType == '01'.toString()">
+		    rpfp.PRODUUID produuid,
+		    rpfp.PROD_ID prodId,
+		    rpfp.PROFIT_TYPE profitType,
+		    rpfp.PROD_SERIES prodSeries,
+		    rpfp.ISSUE_TYPE issueType,
+		    rpfp.DATA_STATUS dataStatus,
+		    rpfp.RAISE_TYPE raiseType,
+		    rpfp.RAISE_VDATE raiseVdate,
+		    rpfp.RAISE_ENDDATE raiseEnddate,
+		    rpfp.VDATE vdate,
+		    rpfp.CCY ccy,
+		    rpfp.PROFIT_FLAG profitFlag
+	    </if>
+		FROM REP_PROD_FILE_PRODINFO rpfp
+		<where>
+		    <if test="prodIdList != null and prodIdList.size() > 0">
+			    <foreach collection="prodIdList" item="prodId" open=" AND rpfp.PROD_ID IN (" close=")" separator=",">
+			        #{prodId,jdbcType=VARCHAR}
+			    </foreach>
+		    </if>
+		    <if test="profitTypeList != null and profitTypeList.size() > 0">
+			    <foreach collection="profitTypeList" item="profitType" open=" AND rpfp.PROFIT_TYPE IN (" close=")" separator=",">
+			        #{profitType,jdbcType=VARCHAR}
+			    </foreach>
+		    </if>
+		    <if test="prodSeriesList != null and prodSeriesList.size() > 0">
+			    <foreach collection="prodSeriesList" item="prodSeries" open=" AND rpfp.PROD_SERIES IN (" close=")" separator=",">
+			        #{prodSeries,jdbcType=VARCHAR}
+			    </foreach>
+		    </if>
+		    <if test="issueTypeList != null and issueTypeList.size() > 0">
+			    <foreach collection="issueTypeList" item="issueType" open=" AND rpfp.ISSUE_TYPE IN (" close=")" separator=",">
+			        #{issueType,jdbcType=VARCHAR}
+			    </foreach>
+		    </if>
+		    <if test="dataStatusList != null and dataStatusList.size() > 0">
+			    <foreach collection="dataStatusList" item="dataStatus" open=" AND rpfp.DATA_STATUS IN (" close=")" separator=",">
+			        #{dataStatus,jdbcType=VARCHAR}
+			    </foreach>
+		    </if>
+		    <if test="raiseTypeList != null and raiseTypeList.size() > 0">
+			    <foreach collection="raiseTypeList" item="raiseType" open=" AND rpfp.RAISE_TYPE IN (" close=")" separator=",">
+			        #{raiseType,jdbcType=VARCHAR}
+			    </foreach>
+		    </if>
+		    <if test="ccyList != null and ccyList.size() > 0">
+			    <foreach collection="ccyList" item="ccy" open=" AND rpfp.CCY IN (" close=")" separator=",">
+			        #{ccy,jdbcType=VARCHAR}
+			    </foreach>
+		    </if>
+		    <if test="profitFlagList != null and profitFlagList.size() > 0">
+			    <foreach collection="profitFlagList" item="profitFlag" open=" AND rpfp.PROFIT_FLAG IN (" close=")" separator=",">
+			        #{profitFlag,jdbcType=VARCHAR}
+			    </foreach>
+		    </if>
+		    <if test="raiseVdateStr !=null and raiseVdateStr !='' ">
+		        AND DATE_FORMAT(rpfp.RAISE_VDATE,'%Y-%m-%d') <![CDATA[>=]]> #{raiseVdateStr,jdbcType=VARCHAR}
+		    </if>
+		    <if test="raiseVdateEnd !=null and raiseVdateEnd !='' ">
+		        AND DATE_FORMAT(rpfp.RAISE_VDATE,'%Y-%m-%d') <![CDATA[<=]]> #{raiseVdateEnd,jdbcType=VARCHAR}
+		    </if>
+		    <if test="raiseEnddateStr !=null and raiseEnddateStr !='' ">
+		        AND DATE_FORMAT(rpfp.RAISE_ENDDATE,'%Y-%m-%d') <![CDATA[>=]]> #{raiseEnddateStr,jdbcType=VARCHAR}
+		    </if>
+		    <if test="raiseEnddateEnd !=null and raiseEnddateEnd !='' ">
+		        AND DATE_FORMAT(rpfp.RAISE_ENDDATE,'%Y-%m-%d') <![CDATA[<=]]> #{raiseEnddateEnd,jdbcType=VARCHAR}
+		    </if>
+		    <if test="vdateStr !=null and vdateStr !='' ">
+		        AND DATE_FORMAT(rpfp.VDATE,'%Y-%m-%d') <![CDATA[>=]]> #{vdateStr,jdbcType=VARCHAR}
+		    </if>
+		    <if test="vdateEnd !=null and vdateEnd !='' ">
+		        AND DATE_FORMAT(rpfp.VDATE,'%Y-%m-%d') <![CDATA[<=]]> #{vdateEnd,jdbcType=VARCHAR}
+		    </if>
+		 </where>
+	</select>
+	<insert id="insertFeeInfoBatchPF">
+        insert into REP_PROD_FILE_FEEINFO (PROD_ID, FEE_ID, FEERATE, BASICBILL, BASIS) values
+        <foreach collection="dataList" item="item" separator=",">
+            (
+                #{item.prodId}, #{item.feeId}, #{item.feerate}, #{item.basicbill}, #{item.basis}
+            )
+        </foreach>
+    </insert>
+	<insert id="insertInvestKindBatchPF">
+        insert into REP_INVASSETKIND (PROD_ID, CODE, T_LIMIT,
+        D_LIMIT, STATUS, CREATE_USER,
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME) values
+        <foreach collection="dataList" item="item" separator=",">
+            (
+                #{item.prodId,jdbcType=VARCHAR}, #{item.code,jdbcType=VARCHAR}, #{item.tLimit,jdbcType=VARCHAR},
+                #{item.dLimit,jdbcType=VARCHAR}, #{item.status,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR},
+                #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR},
+                #{item.updateTime,jdbcType=TIMESTAMP}
+            )
+        </foreach>
+    </insert>
+</mapper>

@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
+<head>
+<meta charset="UTF-8">
+<title data-th-text="#{ReportTreeMenuConfiguration001}">报表树形菜单配置</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+
+	<div class="layui-row layui-col-space15">
+	<div class="layui-col-md9" style="width: 65%">
+	   
+        <div class="form-button-area" export="false" filter="false">
+
+        </div>
+        <div class="joyin-form-wrap joyin-filter-form condition-area">
+            <form class="layui-form" id="searchForm">         
+                <div class="layui-form-item">
+                    <div class="layui-inline layui-col-md8">
+                        <label class="layui-form-label form-lable2">报表名称</label>
+                        <div class="layui-input-inline input-inline">
+                            <input type="text" id="reportName" name="reportName" placeholder="请输入内容" class="layui-input form-input">
+                        </div>
+                    </div>   
+                </div>
+            </form>
+        </div>
+        <div>
+            <table class="layui-table" id="dataTable"></table>
+        </div>
+	    </div>    
+		<div class="layui-col-md3" style="width: 34%">
+		    <div class="joyin-form-wrap">
+		      <form class="layui-form" id="proidSearchForm"> 
+                   <div class="layui-form-item" >
+                         <input type="text" id="TmpCName" name="TmpCName"
+			                        class="layui-input form-input input-fuzzy-text"
+			                        placeholder="输入报表名称或名称关键字"
+			                        data-eventfunc="serachKey">
+                   </div>              
+                   <div class="layui-input" style="border: 1px solid #dbdbdb; scroll-y: auto; scroll-x: hidden; overflow-y: scroll;" data-checkall="false"
+					    id='typeDatatree'  data-canedit='1' data-checkable='false' data-roottitle='报表树'
+					    data-th-url='|@{/disclosure/information/config/reporttree/ReportTreeMenuConfiguration001/getInterGroup}'></div>
+		       </form>
+		    </div> 		    
+	    </div>   	
+    </div>
+</div>
+</body>
+<div layout:fragment="script">
+  <script data-th-src="@{/js/disclosure/information/config/reporttree/ReportTreeMenuConfiguration001.js}" type="text/javascript"></script>
+</div>
+
+</html>

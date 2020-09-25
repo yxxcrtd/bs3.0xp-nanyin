@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.PtlInvStrategyMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.PtlInvStrategy" >
+        <id column="STRATEGY_ID" property="strategyId" jdbcType="VARCHAR" />
+        <result column="STRATEGY_TYPE" property="strategyType" jdbcType="VARCHAR" />
+        <result column="STRATEGY_NAME" property="strategyName" jdbcType="VARCHAR" />
+        <result column="STRATEGY_DESC" property="strategyDesc" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="USE_STATUS" property="useStatus" jdbcType="VARCHAR" />
+        <result column="STRATEGY_CLASS" property="strategyClass" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        STRATEGY_ID STRATEGY_ID, STRATEGY_TYPE STRATEGY_TYPE, STRATEGY_NAME STRATEGY_NAME, 
+        STRATEGY_DESC STRATEGY_DESC, REMARK REMARK, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, USE_STATUS USE_STATUS, 
+        STRATEGY_CLASS STRATEGY_CLASS
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PtlInvStrategyMapper.Base_Column_List" />
+        from PTL_INV_STRATEGY
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PtlInvStrategyMapper.Base_Column_List" />
+        from PTL_INV_STRATEGY
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PtlInvStrategyMapper.Base_Column_List" />
+        from PTL_INV_STRATEGY
+        where STRATEGY_ID = #{strategyId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from PTL_INV_STRATEGY
+        where STRATEGY_ID = #{strategyId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PtlInvStrategy" >
+        insert into PTL_INV_STRATEGY (STRATEGY_ID, STRATEGY_TYPE, STRATEGY_NAME, 
+            STRATEGY_DESC, REMARK, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, USE_STATUS, STRATEGY_CLASS
+            )
+        values (#{strategyId,jdbcType=VARCHAR}, #{strategyType,jdbcType=VARCHAR}, #{strategyName,jdbcType=VARCHAR}, 
+            #{strategyDesc,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{useStatus,jdbcType=VARCHAR}, #{strategyClass,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PtlInvStrategy" >
+        insert into PTL_INV_STRATEGY
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="strategyId != null" >
+                STRATEGY_ID,
+            </if>
+            <if test="strategyType != null" >
+                STRATEGY_TYPE,
+            </if>
+            <if test="strategyName != null" >
+                STRATEGY_NAME,
+            </if>
+            <if test="strategyDesc != null" >
+                STRATEGY_DESC,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="useStatus != null" >
+                USE_STATUS,
+            </if>
+            <if test="strategyClass != null" >
+                STRATEGY_CLASS,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="strategyId != null" >
+                #{strategyId,jdbcType=VARCHAR},
+            </if>
+            <if test="strategyType != null" >
+                #{strategyType,jdbcType=VARCHAR},
+            </if>
+            <if test="strategyName != null" >
+                #{strategyName,jdbcType=VARCHAR},
+            </if>
+            <if test="strategyDesc != null" >
+                #{strategyDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="useStatus != null" >
+                #{useStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="strategyClass != null" >
+                #{strategyClass,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PtlInvStrategy" >
+        insert into PTL_INV_STRATEGY(STRATEGY_ID, STRATEGY_TYPE, STRATEGY_NAME, STRATEGY_DESC, 
+        REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, USE_STATUS, 
+        STRATEGY_CLASS)
+        select STRATEGY_ID, STRATEGY_TYPE, STRATEGY_NAME, STRATEGY_DESC, 
+            REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, USE_STATUS, 
+            STRATEGY_CLASS
+             from PTL_INV_STRATEGY
+             where 1 = 1 and STRATEGY_ID = #{strategyId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.PtlInvStrategy" >
+        update PTL_INV_STRATEGY
+        <set >
+            <if test="strategyType != null" >
+                STRATEGY_TYPE = #{strategyType,jdbcType=VARCHAR},
+            </if>
+            <if test="strategyName != null" >
+                STRATEGY_NAME = #{strategyName,jdbcType=VARCHAR},
+            </if>
+            <if test="strategyDesc != null" >
+                STRATEGY_DESC = #{strategyDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="useStatus != null" >
+                USE_STATUS = #{useStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="strategyClass != null" >
+                STRATEGY_CLASS = #{strategyClass,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where STRATEGY_ID = #{strategyId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PtlInvStrategy" >
+        update PTL_INV_STRATEGY
+        set STRATEGY_TYPE = #{strategyType,jdbcType=VARCHAR},
+            STRATEGY_NAME = #{strategyName,jdbcType=VARCHAR},
+            STRATEGY_DESC = #{strategyDesc,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            USE_STATUS = #{useStatus,jdbcType=VARCHAR},
+            STRATEGY_CLASS = #{strategyClass,jdbcType=VARCHAR}
+        where STRATEGY_ID = #{strategyId,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepFtpPathMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepFtpPath" >
+        <id column="ID" property="id" jdbcType="VARCHAR" />
+        <result column="NAME" property="name" jdbcType="VARCHAR" />
+        <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+        <result column="USERNAME" property="username" jdbcType="VARCHAR" />
+        <result column="PATH" property="path" jdbcType="VARCHAR" />
+        <result column="PROT" property="prot" jdbcType="VARCHAR" />
+        <result column="IP" property="ip" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="BEAN_NAME" property="beanName" jdbcType="VARCHAR" />
+        <result column="BEAN_VAL" property="beanVal" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ID ID, NAME NAME, PASSWORD PASSWORD, USERNAME USERNAME, PATH PATH, PROT PROT, IP IP, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, BEAN_NAME BEAN_NAME, BEAN_VAL BEAN_VAL
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepFtpPathMapper.Base_Column_List" />
+        from REP_FTP_PATH
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepFtpPathMapper.Base_Column_List" />
+        from REP_FTP_PATH
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepFtpPathMapper.Base_Column_List" />
+        from REP_FTP_PATH
+        where ID = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from REP_FTP_PATH
+        where ID = #{id,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepFtpPath" >
+        insert into REP_FTP_PATH (ID, NAME, PASSWORD, 
+            USERNAME, PATH, PROT, 
+            IP, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            BEAN_NAME, BEAN_VAL)
+        values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+            #{username,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, #{prot,jdbcType=VARCHAR}, 
+            #{ip,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{beanName,jdbcType=VARCHAR}, #{beanVal,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepFtpPath" >
+        insert into REP_FTP_PATH
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                ID,
+            </if>
+            <if test="name != null" >
+                NAME,
+            </if>
+            <if test="password != null" >
+                PASSWORD,
+            </if>
+            <if test="username != null" >
+                USERNAME,
+            </if>
+            <if test="path != null" >
+                PATH,
+            </if>
+            <if test="prot != null" >
+                PROT,
+            </if>
+            <if test="ip != null" >
+                IP,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="beanName != null" >
+                BEAN_NAME,
+            </if>
+            <if test="beanVal != null" >
+                BEAN_VAL,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null" >
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null" >
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null" >
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="path != null" >
+                #{path,jdbcType=VARCHAR},
+            </if>
+            <if test="prot != null" >
+                #{prot,jdbcType=VARCHAR},
+            </if>
+            <if test="ip != null" >
+                #{ip,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="beanName != null" >
+                #{beanName,jdbcType=VARCHAR},
+            </if>
+            <if test="beanVal != null" >
+                #{beanVal,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepFtpPath" >
+        insert into REP_FTP_PATH(ID, NAME, PASSWORD, USERNAME, PATH, PROT, IP, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME,BEAN_NAME, BEAN_VAL)
+        select ID, NAME, PASSWORD, USERNAME, PATH, PROT, IP, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, BEAN_NAME, BEAN_VAL
+             from REP_FTP_PATH
+             where 1 = 1 and ID = #{id,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepFtpPath" >
+        update REP_FTP_PATH
+        <set >
+            <if test="name != null" >
+                NAME = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null" >
+                PASSWORD = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null" >
+                USERNAME = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="path != null" >
+                PATH = #{path,jdbcType=VARCHAR},
+            </if>
+            <if test="prot != null" >
+                PROT = #{prot,jdbcType=VARCHAR},
+            </if>
+            <if test="ip != null" >
+                IP = #{ip,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="beanName != null" >
+                BEAN_NAME = #{beanName,jdbcType=VARCHAR},
+            </if>
+            <if test="beanVal != null" >
+                BEAN_VAL = #{beanVal,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepFtpPath" >
+        update REP_FTP_PATH
+        set NAME = #{name,jdbcType=VARCHAR},
+            PASSWORD = #{password,jdbcType=VARCHAR},
+            USERNAME = #{username,jdbcType=VARCHAR},
+            PATH = #{path,jdbcType=VARCHAR},
+            PROT = #{prot,jdbcType=VARCHAR},
+            IP = #{ip,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            BEAN_NAME = #{beanName,jdbcType=VARCHAR},
+            BEAN_VAL = #{beanVal,jdbcType=VARCHAR}
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+</mapper>

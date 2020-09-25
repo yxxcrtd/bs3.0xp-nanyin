@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.config.dispoiquery.dao.DisPoiQuery001Mapper_mysql">
+	<select id="queryForPage"
+            resultType="com.joyintech.tams.disclosure.information.config.dispoiquery.dto.DisPoiQuery001Dto">
+        select
+        ID ID, POI_ID POI_ID, POI_TYPE POI_TYPE, POI_ORDER POI_ORDER, POI_SQL POI_SQL, CREATE_USER CREATE_USER,
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+        from DIS_POI_QUERY
+        where
+        1=1
+        <if test="poiIdList !=null and poiIdList.size()>0">
+            and POI_ID in
+            <foreach collection="poiIdList" item="poiId" open="("
+                     close=")" separator=",">
+                #{poiId,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="poiTypeList != null and poiTypeList.size() > 0">
+            <foreach collection="poiTypeList" item="poiType" open=" AND POI_TYPE IN (" close=")" separator=",">
+                #{poiType,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="poiOrder !=null and poiOrder !='' and poiOrder != 'null'">
+            and POI_ORDER like concat('%' , #{poiOrder} , '%')
+        </if>
+    </select>
+	<select id = "queryPoiIdList" resultType="com.joyintech.framework.select.SelectOptionDto">
+      <if test="poiType != null and poiType == '01'">
+          select
+          DISTINCT
+          t1.TAB_NUM as id,
+          t1.SUB_NAME as text
+          from
+          DIS_POI_SUB t1
+          where
+          t1.STATUS=#{statusEffective}
+          <if test="search != null and search != ''">
+              and (t1.SUB_NAME like concat('%' , #{search, jdbcType=VARCHAR} , '%') or t1.TAB_NUM like concat('%' , #{search, jdbcType=VARCHAR} , '%'))
+          </if>
+        </if>
+        <if test="poiType != null and poiType == '02'">
+            select
+            DISTINCT
+            t2.TAB_NUM as id,
+            t2.TAB_NAME as text
+            from
+            DIS_POI_TAB t2
+            where
+            t2.STATUS=#{statusEffective}
+             <if test="search != null and search != ''">
+                and (t2.TAB_NAME like concat('%' , #{search, jdbcType=VARCHAR} , '%') or t2.TAB_NUM like concat('%' , #{search, jdbcType=VARCHAR} , '%'))
+            </if>
+        </if>
+  </select>
+</mapper>

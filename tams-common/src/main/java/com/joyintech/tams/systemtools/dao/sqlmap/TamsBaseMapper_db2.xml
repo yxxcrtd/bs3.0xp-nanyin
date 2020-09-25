@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.systemtools.dao.TamsBaseMapper_db2">
+    <select id="getSequenceIndexData" parameterType="java.util.Map"
+        resultType="java.lang.Long" useCache="false" flushCache="true">
+        <if test="databaseType == 'DB2'"> 
+          select nextval for ${sequenceName} from SYSIBM.SYSDUMMY1
+        </if>
+        <if test="databaseType == 'Oracle'"> 
+          select ${sequenceName}.nextVal from dual
+        </if>
+    </select>
+    <!-- 查询所有有权限的机构代码 -->
+<!--     <select id="selectOrgCode" parameterType="java.lang.String" resultType="java.lang.String">
+        select ORG_CODE from CHB_SYS_ORGANIZATION where STATUS = 'E' start with ORG_CODE=#{orgCode} connect by prior ORG_CODE = SUP_ORG_CODE
+    </select> -->
+     <!-- 查询所有有权限的部门代码 -->
+<!--     <select id="selectDeptCode" parameterType="java.lang.String" resultType="java.lang.String">
+        select DEPT_CODE from CHB_SYS_DEPARTMENT where STATUS = 'E' start with DEPT_CODE = #{deptCode} connect by prior DEPT_CODE = DIRECT_DEPT_CODE
+    </select> -->
+        <!-- 根据机构代码和用户id查询用户的登记银行编码 -->
+    <select id="selectBankCode" parameterType="java.lang.String" resultType="java.lang.String">
+    	select 
+    	corb.REGIST_BANK_CODE 
+    	from CHB_ORG_REGIST_BANK_CODE corb
+    	where 
+    	corb.ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+    </select>
+	<!-- 查询机构下的所有部门代码 -->
+    <select id="selectDeptCode" resultType="java.lang.String" parameterType="java.lang.String">
+    	SELECT DEPT_CODE FROM SYS_DEPARTMENT WHERE INSTITUTION_CODE = #{institutionCode} <!-- AND STATUS = 'E' -->
+    </select>
+
+    <select id="selectDataModuleByUserName" resultType="com.joyintech.tams.systemtools.dto.SystemActorRoleDto">
+		SELECT
+			INSTITUTION_CODE as institutionCode,
+			DEPT_CODE as deptCode,
+			SUM(ROLE_DATA_TYPE) as roleDataType
+		FROM SYS_DATA_ROLE_MODULE
+		WHERE ROLE_ID IN (SELECT ROLE_ID FROM SYS_USER_ROLE WHERE USER_ID = #{userName}) AND ROLE_DATA_TYPE IN ('02', '04')
+		GROUP BY INSTITUTION_CODE, DEPT_CODE
+	</select>
+
+	<select id="selectSysDatadictValue" resultType="string">
+		SELECT ITEM_VALUE FROM SYS_DATADICT_LIST WHERE DICT_CODE = #{dictCode} and ITEM_CODE = #{itemCode}
+	</select>
+
+	<select id="selectSysDatadictValueList" resultType="com.joyintech.tams.systemtools.dto.SysDataDict">
+		SELECT DICT_CODE,
+				ITEM_CODE,
+				ITEM_VALUE,
+				ORDER_NO,
+				DEFAULT_VALUE
+		FROM SYS_DATADICT_LIST WHERE DICT_CODE = #{dictCode}
+	</select>
+	
+	<select id="selectSysDatadictItemCode" resultType="string">
+		SELECT ITEM_CODE FROM SYS_DATADICT_LIST WHERE DICT_CODE = #{dictCode} and ITEM_VALUE = #{itemValue}
+	</select>
+	
+	<select id="selectSysParamValue" resultType="string">
+		select PARAM_VALUE from SYS_PARA where  PARA_CODE =#{paramCode} 
+		<if test="systemCode != null"> 
+		and SYSTEM_CODE = #{systemCode} 
+		</if>
+	</select>
+
+	<select id="queryFirstIndustryBySecondIndustry" resultType="com.joyintech.tams.systemtools.dto.SysDataDict">
+		SELECT ltrim(rtrim(ITEM_CODE)) AS itemCode,
+		ltrim(rtrim(LINKED_ITEM_CODE)) AS linkedItemCode
+		FROM SYS_DATADICT_LIST_LINK
+		WHERE DICT_CODE = 'INSTITUTION_INDUSTRY_SECOND_LEVEL'
+		AND LINKED_DICT_CODE = 'INSTITUTION_INDUSTRY_FIRST_LEVEL'
+	</select>
+	<!-- 查询机构类型 -->
+	<select id="getInstitutionType" resultType="java.lang.String" parameterType="java.lang.String">
+    	SELECT INSTITUTION_TYPE FROM SYS_INSTITUTION WHERE INSTITUTION_CODE = #{institutionCode}
+    </select>
+    
+     <!-- 根据机构代码获取机构类型 -->
+    <select id="selectInsitutionType" resultType="java.lang.String">
+	    SELECT INSTITUTION_TYPE FROM SYS_INSTITUTION
+	    where institution = #{institutionCode}
+    </select>
+    
+    <select id="getInsitutionType_ms" resultType="java.lang.String">
+	    SELECT INSTITUTION_TYPE
+      FROM SYS_INSTITUTION SI
+     WHERE EXISTS (SELECT 1
+              FROM SYS_DEPARTMENT SD
+             WHERE SD.INSTITUTION_CODE = SI.INSTITUTION_CODE
+               AND EXISTS (SELECT 1
+                      FROM SYS_USER SU
+                     WHERE SD.DEPT_CODE = SU.DEPT_CODE
+                       AND SU.USER_NAME = #{userName} ))
+    </select>
+    
+    <select id="getInsitutionCode_ms" resultType="java.lang.String">
+	     SELECT INSTITUTION_CODE
+      FROM SYS_INSTITUTION SI
+     WHERE EXISTS (SELECT 1
+              FROM SYS_DEPARTMENT SD
+             WHERE SD.INSTITUTION_CODE = SI.INSTITUTION_CODE
+               AND EXISTS (SELECT 1
+                      FROM SYS_USER SU
+                     WHERE SD.DEPT_CODE = SU.DEPT_CODE
+                       AND SU.USER_NAME = #{userName} ))
+    </select>
+    
+    <select id="getParentInstitution" parameterType="java.lang.String" resultType="java.lang.String">
+        WITH TEMP_INSTITUTION(INSTITUTION_CODE, UPPER_INSTITUTION_CODE) AS (
+            SELECT
+                si.INSTITUTION_CODE, si.UPPER_INSTITUTION_CODE
+            FROM
+                SYS_INSTITUTION si
+            WHERE
+                si.INSTITUTION_CODE = #{institutionCode}
+            UNION ALL
+            SELECT
+                si2.INSTITUTION_CODE, si2.UPPER_INSTITUTION_CODE
+            FROM
+                SYS_INSTITUTION si2, TEMP_INSTITUTION b WHERE b.UPPER_INSTITUTION_CODE = si2.INSTITUTION_CODE)
+        SELECT INSTITUTION_CODE FROM TEMP_INSTITUTION WHERE INSTITUTION_CODE != #{institutionCode}
+    </select>
+    
+</mapper>

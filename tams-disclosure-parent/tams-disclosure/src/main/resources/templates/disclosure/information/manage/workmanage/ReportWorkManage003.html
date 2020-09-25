@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="~{layout/default}">
+<head>
+<meta charset="UTF-8">
+<title>报表作业管理</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="joyin-form-wrap">
+			<form class="layui-form" id="searchForm">
+				<input type="hidden" name="settedRule" id="settedRule"
+						data-th-value="${settedRule}" /> 
+					<input type="hidden" name="hasProdTable" id="hasProdTable" data-th-value="${hasProdTable}" />
+					<input type="hidden" name="onlyView" id="onlyView" data-th-value="${onlyView}" />
+				<div class="layui-form-item" style="padding: 10px 0;">
+					<div class="layui-inline layui-col-xs4 layui-col-md4">
+						<label class="layui-form-label form-lable">产品代码</label>
+						<div class="layui-input-inline input-inline">
+							<input type="text" id="prodId" name="prodId"
+								class="layui-input form-input" placeholder="请选择"
+								allowClear="true" data-th-placeholder="#{SysCommon.placeholder}">
+						</div>
+					</div>
+					<div class="layui-inline layui-col-xs4 layui-col-md4">
+						<label class="layui-form-label form-lable">产品名称</label>
+						<div class="layui-input-inline input-inline">
+							<input type="text" id="prodName" name="prodName"
+								class="layui-input form-input" placeholder="请选择"
+								allowClear="true" data-th-placeholder="#{SysCommon.placeholder}">
+						</div>
+					</div>
+					<a class="layui-btn layui-btn-sm btn-search" id="ReportWorkManage003_btn_search" style="margin-left: 20px;"><i class="iconfont icon-search"></i><span>&nbsp;&nbsp;查询</span></a>
+				</div>
+				<div id="chooseProdTableDiv">
+					<table class="layui-table" id="chooseProdTable"></table>
+				</div>
+			</form>
+		</div>
+		<div>
+			<table class="layui-table" id="previewProdTable"></table>
+		</div>
+		<!-- <div id="chooseProdTableDiv">
+			<table class="layui-table" id="chooseProdTable"></table>
+		</div> -->
+		<div class="layui-col-md11" style="margin: 50px;">
+			<div class="text-center">
+				<a id="ReportWorkManage003_btn_save"
+					class="layui-btn layui-btn-sm btn-save"
+					data-th-text="#{SysCommon.save}">确定</a> <a
+					id="ReportWorkManage003_btn_cancel"
+					class="layui-btn layui-btn-sm btn-cancel"
+					data-th-text="#{SysCommon.cancel}">取消</a>
+			</div>
+		</div>
+	</div>
+	<div layout:fragment="script">
+		<script data-th-inline="javascript" type="text/javascript">
+		</script>
+		<script
+			data-th-src="@{/js/disclosure/information/manage/workmanage/ReportWorkManage003.js}"
+			type="text/javascript"></script>
+	</div>
+</body>
+</html>

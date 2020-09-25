@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ValInterflogMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ValInterflog" >
+        <id column="TMP_NAME" property="tmpName" jdbcType="VARCHAR" />
+        <id column="FILE_NAME" property="fileName" jdbcType="VARCHAR" />
+        <id column="EX_DATE" property="exDate" jdbcType="TIMESTAMP" />
+        <id column="NUM" property="num" jdbcType="DECIMAL" />
+        <result column="IS_CHECK" property="isCheck" jdbcType="VARCHAR" />
+        <result column="DETAIL" property="detail" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="PARENT_SEQNO" property="parentSeqno" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TMP_NAME TMP_NAME, FILE_NAME FILE_NAME, EX_DATE EX_DATE, NUM NUM, IS_CHECK IS_CHECK, 
+        DETAIL DETAIL, REMARK REMARK, PARENT_SEQNO PARENT_SEQNO, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValInterflogMapper.Base_Column_List" />
+        from VAL_INTERFLOG
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValInterflogMapper.Base_Column_List" />
+        from VAL_INTERFLOG
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.ValInterflogKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValInterflogMapper.Base_Column_List" />
+        from VAL_INTERFLOG
+        where TMP_NAME = #{tmpName,jdbcType=VARCHAR}
+          and FILE_NAME = #{fileName,jdbcType=VARCHAR}
+          and EX_DATE = #{exDate,jdbcType=TIMESTAMP}
+          and NUM = #{num,jdbcType=DECIMAL}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ValInterflogKey" >
+        delete from VAL_INTERFLOG
+        where TMP_NAME = #{tmpName,jdbcType=VARCHAR}
+          and FILE_NAME = #{fileName,jdbcType=VARCHAR}
+          and EX_DATE = #{exDate,jdbcType=TIMESTAMP}
+          and NUM = #{num,jdbcType=DECIMAL}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ValInterflog" >
+        insert into VAL_INTERFLOG (TMP_NAME, FILE_NAME, EX_DATE, 
+            NUM, IS_CHECK, DETAIL, 
+            REMARK, PARENT_SEQNO, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{tmpName,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{exDate,jdbcType=TIMESTAMP}, 
+            #{num,jdbcType=DECIMAL}, #{isCheck,jdbcType=VARCHAR}, #{detail,jdbcType=VARCHAR}, 
+            #{remark,jdbcType=VARCHAR}, #{parentSeqno,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ValInterflog" >
+        insert into VAL_INTERFLOG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="tmpName != null" >
+                TMP_NAME,
+            </if>
+            <if test="fileName != null" >
+                FILE_NAME,
+            </if>
+            <if test="exDate != null" >
+                EX_DATE,
+            </if>
+            <if test="num != null" >
+                NUM,
+            </if>
+            <if test="isCheck != null" >
+                IS_CHECK,
+            </if>
+            <if test="detail != null" >
+                DETAIL,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="parentSeqno != null" >
+                PARENT_SEQNO,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="tmpName != null" >
+                #{tmpName,jdbcType=VARCHAR},
+            </if>
+            <if test="fileName != null" >
+                #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="exDate != null" >
+                #{exDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="num != null" >
+                #{num,jdbcType=DECIMAL},
+            </if>
+            <if test="isCheck != null" >
+                #{isCheck,jdbcType=VARCHAR},
+            </if>
+            <if test="detail != null" >
+                #{detail,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="parentSeqno != null" >
+                #{parentSeqno,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ValInterflog" >
+        insert into VAL_INTERFLOG(TMP_NAME, FILE_NAME, EX_DATE, NUM, IS_CHECK, DETAIL, REMARK, 
+        PARENT_SEQNO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select TMP_NAME, FILE_NAME, EX_DATE, NUM, IS_CHECK, DETAIL, REMARK, 
+            PARENT_SEQNO, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from VAL_INTERFLOG
+             where 1 = 1 and TMP_NAME = #{tmpName,jdbcType=VARCHAR} and FILE_NAME = #{fileName,jdbcType=VARCHAR} and EX_DATE = #{exDate,jdbcType=TIMESTAMP} and NUM = #{num,jdbcType=DECIMAL}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ValInterflog" >
+        update VAL_INTERFLOG
+        <set >
+            <if test="isCheck != null" >
+                IS_CHECK = #{isCheck,jdbcType=VARCHAR},
+            </if>
+            <if test="detail != null" >
+                DETAIL = #{detail,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="parentSeqno != null" >
+                PARENT_SEQNO = #{parentSeqno,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where TMP_NAME = #{tmpName,jdbcType=VARCHAR}
+          and FILE_NAME = #{fileName,jdbcType=VARCHAR}
+          and EX_DATE = #{exDate,jdbcType=TIMESTAMP}
+          and NUM = #{num,jdbcType=DECIMAL}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ValInterflog" >
+        update VAL_INTERFLOG
+        set IS_CHECK = #{isCheck,jdbcType=VARCHAR},
+            DETAIL = #{detail,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            PARENT_SEQNO = #{parentSeqno,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where TMP_NAME = #{tmpName,jdbcType=VARCHAR}
+          and FILE_NAME = #{fileName,jdbcType=VARCHAR}
+          and EX_DATE = #{exDate,jdbcType=TIMESTAMP}
+          and NUM = #{num,jdbcType=DECIMAL}
+    </update>
+</mapper>

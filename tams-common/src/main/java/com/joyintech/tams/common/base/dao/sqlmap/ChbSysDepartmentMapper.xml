@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbSysDepartmentMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbSysDepartment" >
+        <id column="C_S_D_DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <id column="C_S_D_STATUS" property="status" jdbcType="CHAR" />
+        <result column="C_S_D_DEPT_NAME" property="deptName" jdbcType="VARCHAR" />
+        <result column="C_S_D_INV_OFFICES" property="invOffices" jdbcType="VARCHAR" />
+        <result column="C_S_D_DEPT_FUN" property="deptFun" jdbcType="VARCHAR" />
+        <result column="C_S_D_INSTITUTION_CODE" property="institutionCode" jdbcType="VARCHAR" />
+        <result column="C_S_D_DIRECT_DEPT_CODE" property="directDeptCode" jdbcType="VARCHAR" />
+        <result column="C_S_D_WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+        <result column="C_S_D_REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="C_S_D_CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="C_S_D_CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="C_S_D_UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="C_S_D_UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="C_S_D_ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        DEPT_CODE as C_S_D_DEPT_CODE, STATUS as C_S_D_STATUS, DEPT_NAME as C_S_D_DEPT_NAME, 
+        INV_OFFICES as C_S_D_INV_OFFICES, DEPT_FUN as C_S_D_DEPT_FUN, INSTITUTION_CODE as C_S_D_INSTITUTION_CODE, 
+        DIRECT_DEPT_CODE as C_S_D_DIRECT_DEPT_CODE, WORKFLOW_ID as C_S_D_WORKFLOW_ID, REMARK as C_S_D_REMARK, 
+        CREATE_USER as C_S_D_CREATE_USER, CREATE_TIME as C_S_D_CREATE_TIME, UPDATE_USER as C_S_D_UPDATE_USER, 
+        UPDATE_TIME as C_S_D_UPDATE_TIME, ORG_CODE as C_S_D_ORG_CODE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysDepartmentMapper.Base_Column_List" />
+        from CHB_SYS_DEPARTMENT
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysDepartmentMapper.Base_Column_List" />
+        from CHB_SYS_DEPARTMENT
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.ChbSysDepartmentKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysDepartmentMapper.Base_Column_List" />
+        from CHB_SYS_DEPARTMENT
+        where DEPT_CODE = #{deptCode,jdbcType=VARCHAR}
+          and STATUS = #{status,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbSysDepartmentKey" >
+        delete from CHB_SYS_DEPARTMENT
+        where DEPT_CODE = #{deptCode,jdbcType=VARCHAR}
+          and STATUS = #{status,jdbcType=CHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_SYS_DEPARTMENT
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbSysDepartment" >
+        insert into CHB_SYS_DEPARTMENT (DEPT_CODE, STATUS, DEPT_NAME, 
+            INV_OFFICES, DEPT_FUN, INSTITUTION_CODE, 
+            DIRECT_DEPT_CODE, WORKFLOW_ID, REMARK, 
+            CREATE_USER, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, ORG_CODE)
+        values (#{deptCode,jdbcType=VARCHAR}, #{status,jdbcType=CHAR}, #{deptName,jdbcType=VARCHAR}, 
+            #{invOffices,jdbcType=VARCHAR}, #{deptFun,jdbcType=VARCHAR}, #{institutionCode,jdbcType=VARCHAR}, 
+            #{directDeptCode,jdbcType=VARCHAR}, #{workflowId,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{orgCode,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysDepartment" >
+        insert into CHB_SYS_DEPARTMENT
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="deptCode != null" >
+                DEPT_CODE,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="deptName != null" >
+                DEPT_NAME,
+            </if>
+            <if test="invOffices != null" >
+                INV_OFFICES,
+            </if>
+            <if test="deptFun != null" >
+                DEPT_FUN,
+            </if>
+            <if test="institutionCode != null" >
+                INSTITUTION_CODE,
+            </if>
+            <if test="directDeptCode != null" >
+                DIRECT_DEPT_CODE,
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="deptCode != null" >
+                #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=CHAR},
+            </if>
+            <if test="deptName != null" >
+                #{deptName,jdbcType=VARCHAR},
+            </if>
+            <if test="invOffices != null" >
+                #{invOffices,jdbcType=VARCHAR},
+            </if>
+            <if test="deptFun != null" >
+                #{deptFun,jdbcType=VARCHAR},
+            </if>
+            <if test="institutionCode != null" >
+                #{institutionCode,jdbcType=VARCHAR},
+            </if>
+            <if test="directDeptCode != null" >
+                #{directDeptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowId != null" >
+                #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbSysDepartment" >
+        insert into CHB_SYS_DEPARTMENT(DEPT_CODE, STATUS, DEPT_NAME, INV_OFFICES, DEPT_FUN, 
+        INSTITUTION_CODE, DIRECT_DEPT_CODE, WORKFLOW_ID, REMARK, CREATE_USER, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME, ORG_CODE)
+        select DEPT_CODE, #{status,jdbcType=VARCHAR} as STATUS, DEPT_NAME, INV_OFFICES, DEPT_FUN, 
+            INSTITUTION_CODE, DIRECT_DEPT_CODE, #{workflowId,jdbcType=VARCHAR} as WORKFLOW_ID, REMARK, CREATE_USER, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME, ORG_CODE
+             from CHB_SYS_DEPARTMENT
+             where STATUS = 'E' and DEPT_CODE = #{deptCode,jdbcType=VARCHAR}
+    </insert>
+    <insert id="insertBasicByWorkflowId" parameterType="java.util.Map" >
+        insert into CHB_SYS_DEPARTMENT(DEPT_CODE, STATUS, DEPT_NAME, INV_OFFICES, DEPT_FUN, 
+        INSTITUTION_CODE, DIRECT_DEPT_CODE, WORKFLOW_ID, REMARK, CREATE_USER, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME, ORG_CODE)
+        select DEPT_CODE, #{status,jdbcType=VARCHAR} as STATUS, DEPT_NAME, INV_OFFICES, DEPT_FUN, 
+            INSTITUTION_CODE, DIRECT_DEPT_CODE, #{newWorkflowId,jdbcType=VARCHAR} as WORKFLOW_ID, REMARK, CREATE_USER, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME, ORG_CODE
+             from CHB_SYS_DEPARTMENT
+             where STATUS = 'E' and WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysDepartment" >
+        update CHB_SYS_DEPARTMENT
+        <set >
+            <if test="deptName != null" >
+                DEPT_NAME = #{deptName,jdbcType=VARCHAR},
+            </if>
+            <if test="invOffices != null" >
+                INV_OFFICES = #{invOffices,jdbcType=VARCHAR},
+            </if>
+            <if test="deptFun != null" >
+                DEPT_FUN = #{deptFun,jdbcType=VARCHAR},
+            </if>
+            <if test="institutionCode != null" >
+                INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR},
+            </if>
+            <if test="directDeptCode != null" >
+                DIRECT_DEPT_CODE = #{directDeptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where DEPT_CODE = #{deptCode,jdbcType=VARCHAR}
+          and STATUS = #{status,jdbcType=CHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysDepartment" >
+        update CHB_SYS_DEPARTMENT
+        <set >
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=CHAR},
+            </if>
+            <if test="deptName != null" >
+                DEPT_NAME = #{deptName,jdbcType=VARCHAR},
+            </if>
+            <if test="invOffices != null" >
+                INV_OFFICES = #{invOffices,jdbcType=VARCHAR},
+            </if>
+            <if test="deptFun != null" >
+                DEPT_FUN = #{deptFun,jdbcType=VARCHAR},
+            </if>
+            <if test="institutionCode != null" >
+                INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR},
+            </if>
+            <if test="directDeptCode != null" >
+                DIRECT_DEPT_CODE = #{directDeptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbSysDepartment" >
+        update CHB_SYS_DEPARTMENT
+        set 
+        DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+        STATUS = #{status,jdbcType=CHAR},
+        DEPT_NAME = #{deptName,jdbcType=VARCHAR},
+        INV_OFFICES = #{invOffices,jdbcType=VARCHAR},
+        DEPT_FUN = #{deptFun,jdbcType=VARCHAR},
+        INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR},
+        DIRECT_DEPT_CODE = #{directDeptCode,jdbcType=VARCHAR},
+        REMARK = #{remark,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbSysDepartment" >
+        update CHB_SYS_DEPARTMENT
+        set DEPT_NAME = #{deptName,jdbcType=VARCHAR},
+            INV_OFFICES = #{invOffices,jdbcType=VARCHAR},
+            DEPT_FUN = #{deptFun,jdbcType=VARCHAR},
+            INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR},
+            DIRECT_DEPT_CODE = #{directDeptCode,jdbcType=VARCHAR},
+            WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+        where DEPT_CODE = #{deptCode,jdbcType=VARCHAR}
+          and STATUS = #{status,jdbcType=CHAR}
+    </update>
+</mapper>

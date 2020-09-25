@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.BokBatchMarketwarningInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.BokBatchMarketwarningInfo" >
+        <result column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="BATCH_EXE_SEQ_NO" property="batchExeSeqNo" jdbcType="VARCHAR" />
+        <result column="TASK_ID" property="taskId" jdbcType="VARCHAR" />
+        <result column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <result column="HAPPEN_DATE" property="happenDate" jdbcType="DATE" />
+        <result column="BOOKSET_DATE" property="booksetDate" jdbcType="DATE" />
+        <result column="BOOK_DATE" property="bookDate" jdbcType="DATE" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE" property="finprodType" jdbcType="VARCHAR" />
+        <result column="MARKET_CODE" property="marketCode" jdbcType="VARCHAR" />
+        <result column="INV_AIM" property="invAim" jdbcType="VARCHAR" />
+        <result column="VALUE_SOURCE" property="valueSource" jdbcType="VARCHAR" />
+        <result column="THE_VALUE_DATE" property="theValueDate" jdbcType="DATE" />
+        <result column="ACT_VALUE_DATE" property="actValueDate" jdbcType="DATE" />
+        <result column="ACT_MARKET_PRICE" property="actMarketPrice" jdbcType="DECIMAL" />
+        <result column="YES_OR_NO" property="yesOrNo" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.BokBatchMarketwarningInfo" >
+        insert into BOK_BATCH_MARKETWARNING_INFO (SEQ_NO, BATCH_EXE_SEQ_NO, TASK_ID, 
+            BOOKSET_ID, HAPPEN_DATE, BOOKSET_DATE, 
+            BOOK_DATE, FINPROD_ID, FINPROD_TYPE, 
+            MARKET_CODE, INV_AIM, VALUE_SOURCE, 
+            THE_VALUE_DATE, ACT_VALUE_DATE, ACT_MARKET_PRICE, 
+            YES_OR_NO, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{seqNo,jdbcType=VARCHAR}, #{batchExeSeqNo,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, 
+            #{booksetId,jdbcType=VARCHAR}, #{happenDate,jdbcType=DATE}, #{booksetDate,jdbcType=DATE}, 
+            #{bookDate,jdbcType=DATE}, #{finprodId,jdbcType=VARCHAR}, #{finprodType,jdbcType=VARCHAR}, 
+            #{marketCode,jdbcType=VARCHAR}, #{invAim,jdbcType=VARCHAR}, #{valueSource,jdbcType=VARCHAR}, 
+            #{theValueDate,jdbcType=DATE}, #{actValueDate,jdbcType=DATE}, #{actMarketPrice,jdbcType=DECIMAL}, 
+            #{yesOrNo,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.BokBatchMarketwarningInfo" >
+        insert into BOK_BATCH_MARKETWARNING_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="batchExeSeqNo != null" >
+                BATCH_EXE_SEQ_NO,
+            </if>
+            <if test="taskId != null" >
+                TASK_ID,
+            </if>
+            <if test="booksetId != null" >
+                BOOKSET_ID,
+            </if>
+            <if test="happenDate != null" >
+                HAPPEN_DATE,
+            </if>
+            <if test="booksetDate != null" >
+                BOOKSET_DATE,
+            </if>
+            <if test="bookDate != null" >
+                BOOK_DATE,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="finprodType != null" >
+                FINPROD_TYPE,
+            </if>
+            <if test="marketCode != null" >
+                MARKET_CODE,
+            </if>
+            <if test="invAim != null" >
+                INV_AIM,
+            </if>
+            <if test="valueSource != null" >
+                VALUE_SOURCE,
+            </if>
+            <if test="theValueDate != null" >
+                THE_VALUE_DATE,
+            </if>
+            <if test="actValueDate != null" >
+                ACT_VALUE_DATE,
+            </if>
+            <if test="actMarketPrice != null" >
+                ACT_MARKET_PRICE,
+            </if>
+            <if test="yesOrNo != null" >
+                YES_OR_NO,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="batchExeSeqNo != null" >
+                #{batchExeSeqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="taskId != null" >
+                #{taskId,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetId != null" >
+                #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="happenDate != null" >
+                #{happenDate,jdbcType=DATE},
+            </if>
+            <if test="booksetDate != null" >
+                #{booksetDate,jdbcType=DATE},
+            </if>
+            <if test="bookDate != null" >
+                #{bookDate,jdbcType=DATE},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType != null" >
+                #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="marketCode != null" >
+                #{marketCode,jdbcType=VARCHAR},
+            </if>
+            <if test="invAim != null" >
+                #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="valueSource != null" >
+                #{valueSource,jdbcType=VARCHAR},
+            </if>
+            <if test="theValueDate != null" >
+                #{theValueDate,jdbcType=DATE},
+            </if>
+            <if test="actValueDate != null" >
+                #{actValueDate,jdbcType=DATE},
+            </if>
+            <if test="actMarketPrice != null" >
+                #{actMarketPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="yesOrNo != null" >
+                #{yesOrNo,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.BokBatchMarketwarningInfo" >
+        insert into BOK_BATCH_MARKETWARNING_INFO(SEQ_NO, BATCH_EXE_SEQ_NO, TASK_ID, BOOKSET_ID, 
+        HAPPEN_DATE, BOOKSET_DATE, BOOK_DATE, FINPROD_ID, FINPROD_TYPE, MARKET_CODE, INV_AIM, 
+        VALUE_SOURCE, THE_VALUE_DATE, ACT_VALUE_DATE, ACT_MARKET_PRICE, YES_OR_NO, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select SEQ_NO, BATCH_EXE_SEQ_NO, TASK_ID, BOOKSET_ID, 
+            HAPPEN_DATE, BOOKSET_DATE, BOOK_DATE, FINPROD_ID, FINPROD_TYPE, MARKET_CODE, INV_AIM, 
+            VALUE_SOURCE, THE_VALUE_DATE, ACT_VALUE_DATE, ACT_MARKET_PRICE, YES_OR_NO, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from BOK_BATCH_MARKETWARNING_INFO
+             where 1 = 1
+    </insert>
+</mapper>

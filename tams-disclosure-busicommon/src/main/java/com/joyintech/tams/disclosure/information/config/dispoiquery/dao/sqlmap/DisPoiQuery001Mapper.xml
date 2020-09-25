@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.disclosure.information.config.dispoiquery.dao.DisPoiQuery001Mapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.disclosure.information.config.dispoiquery.dto.DisPoiQuery001Dto" >
+        <id column="ID" property="id" jdbcType="VARCHAR" />
+        <result column="POI_ID" property="poiId" jdbcType="VARCHAR" />
+        <result column="POI_TYPE" property="poiType" jdbcType="VARCHAR" />
+        <result column="POI_ORDER" property="poiOrder" jdbcType="VARCHAR" />
+        <result column="POI_SQL" property="poiSql" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ID ID, POI_ID POI_ID, POI_TYPE POI_TYPE, POI_ORDER POI_ORDER, POI_SQL POI_SQL, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.disclosure.information.config.dispoiquery.dao.DisPoiQuery001Mapper.Base_Column_List" />
+        from DIS_POI_QUERY
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.disclosure.information.config.dispoiquery.dao.DisPoiQuery001Mapper.Base_Column_List" />
+        from DIS_POI_QUERY
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.disclosure.information.config.dispoiquery.dao.DisPoiQuery001Mapper.Base_Column_List" />
+        from DIS_POI_QUERY
+        where ID = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from DIS_POI_QUERY
+        where ID = #{id,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.disclosure.information.config.dispoiquery.dto.DisPoiQuery001Dto" >
+        insert into DIS_POI_QUERY (ID, POI_ID, POI_TYPE, 
+            POI_ORDER, POI_SQL, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{id,jdbcType=VARCHAR}, #{poiId,jdbcType=VARCHAR}, #{poiType,jdbcType=VARCHAR}, 
+            #{poiOrder,jdbcType=VARCHAR}, #{poiSql,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.disclosure.information.config.dispoiquery.dto.DisPoiQuery001Dto" >
+        insert into DIS_POI_QUERY
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                ID,
+            </if>
+            <if test="poiId != null" >
+                POI_ID,
+            </if>
+            <if test="poiType != null" >
+                POI_TYPE,
+            </if>
+            <if test="poiOrder != null" >
+                POI_ORDER,
+            </if>
+            <if test="poiSql != null" >
+                POI_SQL,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="poiId != null" >
+                #{poiId,jdbcType=VARCHAR},
+            </if>
+            <if test="poiType != null" >
+                #{poiType,jdbcType=VARCHAR},
+            </if>
+            <if test="poiOrder != null" >
+                #{poiOrder,jdbcType=VARCHAR},
+            </if>
+            <if test="poiSql != null" >
+                #{poiSql,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.disclosure.information.config.dispoiquery.dto.DisPoiQuery001Dto" >
+        insert into DIS_POI_QUERY(ID, POI_ID, POI_TYPE, POI_ORDER, POI_SQL, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select ID, POI_ID, POI_TYPE, POI_ORDER, POI_SQL, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from DIS_POI_QUERY
+             where 1 = 1 and ID = #{id,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.disclosure.information.config.dispoiquery.dto.DisPoiQuery001Dto" >
+        update DIS_POI_QUERY
+        <set >
+            <if test="poiId != null" >
+                POI_ID = #{poiId,jdbcType=VARCHAR},
+            </if>
+            <if test="poiType != null" >
+                POI_TYPE = #{poiType,jdbcType=VARCHAR},
+            </if>
+            <if test="poiOrder != null" >
+                POI_ORDER = #{poiOrder,jdbcType=VARCHAR},
+            </if>
+            <if test="poiSql != null" >
+                POI_SQL = #{poiSql,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.disclosure.information.config.dispoiquery.dto.DisPoiQuery001Dto" >
+        update DIS_POI_QUERY
+        set POI_ID = #{poiId,jdbcType=VARCHAR},
+            POI_TYPE = #{poiType,jdbcType=VARCHAR},
+            POI_ORDER = #{poiOrder,jdbcType=VARCHAR},
+            POI_SQL = #{poiSql,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+    <select id="queryForPage"
+            resultType="com.joyintech.tams.disclosure.information.config.dispoiquery.dto.DisPoiQuery001Dto">
+        select
+        ID ID, POI_ID POI_ID, POI_TYPE POI_TYPE, POI_ORDER POI_ORDER, POI_SQL POI_SQL, CREATE_USER CREATE_USER,
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+        from DIS_POI_QUERY
+        where
+        1=1
+        <if test="poiIdList !=null and poiIdList.size()>0">
+            and POI_ID in
+            <foreach collection="poiIdList" item="poiId" open="("
+                     close=")" separator=",">
+                #{poiId,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="poiTypeList != null and poiTypeList.size() > 0">
+            <foreach collection="poiTypeList" item="poiType" open=" AND POI_TYPE IN (" close=")" separator=",">
+                #{poiType,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="poiOrder !=null and poiOrder !='' and poiOrder != 'null'">
+            and POI_ORDER like '%' || #{poiOrder} || '%'
+        </if>
+    </select>
+    <select id = "queryPoiIdList" resultType="com.joyintech.framework.select.SelectOptionDto">
+      <if test="poiType != null and poiType == '01'">
+          select
+          DISTINCT
+          t1.TAB_NUM as id,
+          t1.SUB_NAME as text
+          from
+          DIS_POI_SUB t1
+          where
+          t1.STATUS=#{statusEffective}
+          <if test="search != null and search != ''">
+              and (t1.SUB_NAME like '%' || #{search, jdbcType=VARCHAR} || '%' or t1.TAB_NUM like '%' || #{search, jdbcType=VARCHAR} || '%')
+          </if>
+        </if>
+        <if test="poiType != null and poiType == '02'">
+            select
+            DISTINCT
+            t2.TAB_NUM as id,
+            t2.TAB_NAME as text
+            from
+            DIS_POI_TAB t2
+            where
+            t2.STATUS=#{statusEffective}
+             <if test="search != null and search != ''">
+                and (t2.TAB_NAME like '%' || #{search, jdbcType=VARCHAR} || '%' or t2.TAB_NUM like '%' || #{search, jdbcType=VARCHAR} || '%')
+            </if>
+        </if>
+  </select>
+    <select id ="selectById"
+            resultType="com.joyintech.tams.disclosure.information.config.dispoiquery.dto.DisPoiQuery001Dto">
+    select
+        a.ID ID, a.POI_ID POI_ID, a.POI_TYPE POI_TYPE, a.POI_ORDER POI_ORDER, a.POI_SQL POI_SQL, a.CREATE_USER CREATE_USER,
+        a.CREATE_DEPT CREATE_DEPT, a.CREATE_TIME CREATE_TIME, a.UPDATE_USER UPDATE_USER, a.UPDATE_TIME UPDATE_TIME
+    from DIS_POI_QUERY a
+    where a.ID = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByKeyList" parameterType="com.joyintech.tams.disclosure.information.config.dispoiquery.dto.DisPoiQuery001Dto">
+        delete from DIS_POI_QUERY
+        <where>
+            <foreach collection="keyList" item="item" open="and (ID) in(" separator="," close=")">
+                (#{item.id})
+            </foreach>
+        </where>
+    </delete>
+</mapper>

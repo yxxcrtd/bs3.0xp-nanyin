@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.WflMockTradeDealMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.WflMockTradeDeal" >
+        <id column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <result column="TRADE_DATE" property="tradeDate" jdbcType="DATE" />
+        <result column="PRD_DESIGN_ID" property="prdDesignId" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE" property="assetType" jdbcType="VARCHAR" />
+        <result column="ASSET_RISK_LEVEL" property="assetRiskLevel" jdbcType="VARCHAR" />
+        <result column="MOCK_AMT" property="mockAmt" jdbcType="DECIMAL" />
+        <result column="MOCK_SHARE_AMT" property="mockShareAmt" jdbcType="DECIMAL" />
+        <result column="BATCH_ID" property="batchId" jdbcType="VARCHAR" />
+        <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+        <result column="工作流ID" property="工作流id" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TRADE_ID TRADE_ID, TRADE_DATE TRADE_DATE, PRD_DESIGN_ID PRD_DESIGN_ID, ASSET_TYPE ASSET_TYPE, 
+        ASSET_RISK_LEVEL ASSET_RISK_LEVEL, MOCK_AMT MOCK_AMT, MOCK_SHARE_AMT MOCK_SHARE_AMT, 
+        BATCH_ID BATCH_ID, WORKFLOW_ID WORKFLOW_ID, 工作流ID 工作流ID, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflMockTradeDealMapper.Base_Column_List" />
+        from WFL_MOCK_TRADE_DEAL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflMockTradeDealMapper.Base_Column_List" />
+        from WFL_MOCK_TRADE_DEAL
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflMockTradeDealMapper.Base_Column_List" />
+        from WFL_MOCK_TRADE_DEAL
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from WFL_MOCK_TRADE_DEAL
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from WFL_MOCK_TRADE_DEAL
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insertBasicByWorkflowId" parameterType="java.util.Map" >
+        insert into WFL_MOCK_TRADE_DEAL(TRADE_ID, TRADE_DATE, PRD_DESIGN_ID, ASSET_TYPE, 
+        ASSET_RISK_LEVEL, MOCK_AMT, MOCK_SHARE_AMT, BATCH_ID, WORKFLOW_ID, 工作流ID, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select TRADE_ID, TRADE_DATE, PRD_DESIGN_ID, ASSET_TYPE, 
+            ASSET_RISK_LEVEL, MOCK_AMT, MOCK_SHARE_AMT, BATCH_ID, #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, 工作流ID, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from WFL_MOCK_TRADE_DEAL
+             where WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.WflMockTradeDeal" >
+        update WFL_MOCK_TRADE_DEAL
+        <set >
+            <if test="tradeId != null" >
+                TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeDate != null" >
+                TRADE_DATE = #{tradeDate,jdbcType=DATE},
+            </if>
+            <if test="prdDesignId != null" >
+                PRD_DESIGN_ID = #{prdDesignId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType != null" >
+                ASSET_TYPE = #{assetType,jdbcType=VARCHAR},
+            </if>
+            <if test="assetRiskLevel != null" >
+                ASSET_RISK_LEVEL = #{assetRiskLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="mockAmt != null" >
+                MOCK_AMT = #{mockAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="mockShareAmt != null" >
+                MOCK_SHARE_AMT = #{mockShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="batchId != null" >
+                BATCH_ID = #{batchId,jdbcType=VARCHAR},
+            </if>
+            <if test="工作流id != null" >
+                工作流ID = #{工作流id,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.WflMockTradeDeal" >
+        update WFL_MOCK_TRADE_DEAL
+        set 
+        TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+        TRADE_DATE = #{tradeDate,jdbcType=DATE},
+        PRD_DESIGN_ID = #{prdDesignId,jdbcType=VARCHAR},
+        ASSET_TYPE = #{assetType,jdbcType=VARCHAR},
+        ASSET_RISK_LEVEL = #{assetRiskLevel,jdbcType=VARCHAR},
+        MOCK_AMT = #{mockAmt,jdbcType=DECIMAL},
+        MOCK_SHARE_AMT = #{mockShareAmt,jdbcType=DECIMAL},
+        BATCH_ID = #{batchId,jdbcType=VARCHAR},
+        工作流ID = #{工作流id,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.WflMockTradeDeal" >
+        insert into WFL_MOCK_TRADE_DEAL (TRADE_ID, TRADE_DATE, PRD_DESIGN_ID, 
+            ASSET_TYPE, ASSET_RISK_LEVEL, MOCK_AMT, 
+            MOCK_SHARE_AMT, BATCH_ID, WORKFLOW_ID, 
+            工作流ID, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{tradeId,jdbcType=VARCHAR}, #{tradeDate,jdbcType=DATE}, #{prdDesignId,jdbcType=VARCHAR}, 
+            #{assetType,jdbcType=VARCHAR}, #{assetRiskLevel,jdbcType=VARCHAR}, #{mockAmt,jdbcType=DECIMAL}, 
+            #{mockShareAmt,jdbcType=DECIMAL}, #{batchId,jdbcType=VARCHAR}, #{workflowId,jdbcType=VARCHAR}, 
+            #{工作流id,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.WflMockTradeDeal" >
+        insert into WFL_MOCK_TRADE_DEAL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="tradeDate != null" >
+                TRADE_DATE,
+            </if>
+            <if test="prdDesignId != null" >
+                PRD_DESIGN_ID,
+            </if>
+            <if test="assetType != null" >
+                ASSET_TYPE,
+            </if>
+            <if test="assetRiskLevel != null" >
+                ASSET_RISK_LEVEL,
+            </if>
+            <if test="mockAmt != null" >
+                MOCK_AMT,
+            </if>
+            <if test="mockShareAmt != null" >
+                MOCK_SHARE_AMT,
+            </if>
+            <if test="batchId != null" >
+                BATCH_ID,
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID,
+            </if>
+            <if test="工作流id != null" >
+                工作流ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeDate != null" >
+                #{tradeDate,jdbcType=DATE},
+            </if>
+            <if test="prdDesignId != null" >
+                #{prdDesignId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType != null" >
+                #{assetType,jdbcType=VARCHAR},
+            </if>
+            <if test="assetRiskLevel != null" >
+                #{assetRiskLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="mockAmt != null" >
+                #{mockAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="mockShareAmt != null" >
+                #{mockShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="batchId != null" >
+                #{batchId,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowId != null" >
+                #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="工作流id != null" >
+                #{工作流id,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.WflMockTradeDeal" >
+        insert into WFL_MOCK_TRADE_DEAL(TRADE_ID, TRADE_DATE, PRD_DESIGN_ID, ASSET_TYPE, 
+        ASSET_RISK_LEVEL, MOCK_AMT, MOCK_SHARE_AMT, BATCH_ID, WORKFLOW_ID, 工作流ID, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select TRADE_ID, TRADE_DATE, PRD_DESIGN_ID, ASSET_TYPE, 
+            ASSET_RISK_LEVEL, MOCK_AMT, MOCK_SHARE_AMT, BATCH_ID, #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, 工作流ID, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from WFL_MOCK_TRADE_DEAL
+             where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.WflMockTradeDeal" >
+        update WFL_MOCK_TRADE_DEAL
+        <set >
+            <if test="tradeDate != null" >
+                TRADE_DATE = #{tradeDate,jdbcType=DATE},
+            </if>
+            <if test="prdDesignId != null" >
+                PRD_DESIGN_ID = #{prdDesignId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType != null" >
+                ASSET_TYPE = #{assetType,jdbcType=VARCHAR},
+            </if>
+            <if test="assetRiskLevel != null" >
+                ASSET_RISK_LEVEL = #{assetRiskLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="mockAmt != null" >
+                MOCK_AMT = #{mockAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="mockShareAmt != null" >
+                MOCK_SHARE_AMT = #{mockShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="batchId != null" >
+                BATCH_ID = #{batchId,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="工作流id != null" >
+                工作流ID = #{工作流id,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.WflMockTradeDeal" >
+        update WFL_MOCK_TRADE_DEAL
+        set TRADE_DATE = #{tradeDate,jdbcType=DATE},
+            PRD_DESIGN_ID = #{prdDesignId,jdbcType=VARCHAR},
+            ASSET_TYPE = #{assetType,jdbcType=VARCHAR},
+            ASSET_RISK_LEVEL = #{assetRiskLevel,jdbcType=VARCHAR},
+            MOCK_AMT = #{mockAmt,jdbcType=DECIMAL},
+            MOCK_SHARE_AMT = #{mockShareAmt,jdbcType=DECIMAL},
+            BATCH_ID = #{batchId,jdbcType=VARCHAR},
+            WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            工作流ID = #{工作流id,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </update>
+</mapper>

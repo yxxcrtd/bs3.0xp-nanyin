@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.FinPostInvestInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.FinPostInvestInfo" >
+        <id column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="HOST_CUSTOMER_MANAGER" property="hostCustomerManager" jdbcType="VARCHAR" />
+        <result column="ASSIST_CUSTOMER_MANAGER" property="assistCustomerManager" jdbcType="VARCHAR" />
+        <result column="IS_LAY" property="isLay" jdbcType="VARCHAR" />
+        <result column="LAY_PORTFOLIO" property="layPortfolio" jdbcType="VARCHAR" />
+        <result column="MY_BANK_GRADE" property="myBankGrade" jdbcType="VARCHAR" />
+        <result column="BOTTOM_CONTRACT_FORM" property="bottomContractForm" jdbcType="VARCHAR" />
+        <result column="NATURE_ASSIGN_ASSETS" property="natureAssignAssets" jdbcType="VARCHAR" />
+        <result column="IS_FLOAT" property="isFloat" jdbcType="VARCHAR" />
+        <result column="FLOAT_ISSUE_CMT" property="floatIssueCmt" jdbcType="VARCHAR" />
+        <result column="PRD_TYPES" property="prdTypes" jdbcType="VARCHAR" />
+        <result column="SALE_DEADLINE" property="saleDeadline" jdbcType="DATE" />
+        <result column="PROP_PRIO_PER" property="propPrioPer" jdbcType="VARCHAR" />
+        <result column="AMOUNT_INVES_BAD" property="amountInvesBad" jdbcType="DECIMAL" />
+        <result column="WARN_LINE" property="warnLine" jdbcType="VARCHAR" />
+        <result column="WARN_RULE" property="warnRule" jdbcType="VARCHAR" />
+        <result column="FLAT_LINE" property="flatLine" jdbcType="VARCHAR" />
+        <result column="FLAT_RULE" property="flatRule" jdbcType="VARCHAR" />
+        <result column="DIFFRENT_PARTY_NAME" property="diffrentPartyName" jdbcType="VARCHAR" />
+        <result column="SINGLE_VOTE_RATIO" property="singleVoteRatio" jdbcType="DECIMAL" />
+        <result column="COMPOUND_BATCH" property="compoundBatch" jdbcType="VARCHAR" />
+        <result column="COMPEN_SPEC_CMT" property="compenSpecCmt" jdbcType="VARCHAR" />
+        <result column="PAWN_SHARE" property="pawnShare" jdbcType="VARCHAR" />
+        <result column="PAWN_SHARE_PER" property="pawnSharePer" jdbcType="DECIMAL" />
+        <result column="PAWN_SHARE_MONEY" property="pawnShareMoney" jdbcType="DECIMAL" />
+        <result column="PAWN_SHARE_QUANLITY" property="pawnShareQuanlity" jdbcType="DECIMAL" />
+        <result column="IS_RESTRICT_SHARE" property="isRestrictShare" jdbcType="VARCHAR" />
+        <result column="PROP_TOTAL_CAPITAL_SHARE" property="propTotalCapitalShare" jdbcType="DECIMAL" />
+        <result column="PLEDGE_SHARE" property="pledgeShare" jdbcType="VARCHAR" />
+        <result column="SHARE_HOLDER" property="shareHolder" jdbcType="VARCHAR" />
+        <result column="TRADE_MARKET" property="tradeMarket" jdbcType="VARCHAR" />
+        <result column="REPURCHASE_PARTY_NAME" property="repurchasePartyName" jdbcType="VARCHAR" />
+        <result column="PENALTY_RATE" property="penaltyRate" jdbcType="DECIMAL" />
+        <result column="SHARE_CODE" property="shareCode" jdbcType="VARCHAR" />
+        <result column="SHARE_NAME" property="shareName" jdbcType="VARCHAR" />
+        <result column="IS_BUY_BACK" property="isBuyBack" jdbcType="VARCHAR" />
+        <result column="BUY_BACK_RATE" property="buyBackRate" jdbcType="DECIMAL" />
+        <result column="BUY_BACK_POLICY" property="buyBackPolicy" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="INIT_INFERIOR_RATE" property="initInferiorRate" jdbcType="DECIMAL" />
+        <result column="IS_REP_CLAUSE" property="isRepClause" jdbcType="VARCHAR" />
+        <result column="ASSET_INSIDE_TYPE" property="assetInsideType" jdbcType="VARCHAR" />
+        <result column="ASSET_BOT_TYPE" property="assetBotType" jdbcType="VARCHAR" />
+        <result column="POST_ORG" property="postOrg" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        FINPROD_ID FINPROD_ID, HOST_CUSTOMER_MANAGER HOST_CUSTOMER_MANAGER, ASSIST_CUSTOMER_MANAGER ASSIST_CUSTOMER_MANAGER, 
+        IS_LAY IS_LAY, LAY_PORTFOLIO LAY_PORTFOLIO, MY_BANK_GRADE MY_BANK_GRADE, BOTTOM_CONTRACT_FORM BOTTOM_CONTRACT_FORM, 
+        NATURE_ASSIGN_ASSETS NATURE_ASSIGN_ASSETS, IS_FLOAT IS_FLOAT, FLOAT_ISSUE_CMT FLOAT_ISSUE_CMT, 
+        PRD_TYPES PRD_TYPES, SALE_DEADLINE SALE_DEADLINE, PROP_PRIO_PER PROP_PRIO_PER, AMOUNT_INVES_BAD AMOUNT_INVES_BAD, 
+        WARN_LINE WARN_LINE, WARN_RULE WARN_RULE, FLAT_LINE FLAT_LINE, FLAT_RULE FLAT_RULE, 
+        DIFFRENT_PARTY_NAME DIFFRENT_PARTY_NAME, SINGLE_VOTE_RATIO SINGLE_VOTE_RATIO, COMPOUND_BATCH COMPOUND_BATCH, 
+        COMPEN_SPEC_CMT COMPEN_SPEC_CMT, PAWN_SHARE PAWN_SHARE, PAWN_SHARE_PER PAWN_SHARE_PER, 
+        PAWN_SHARE_MONEY PAWN_SHARE_MONEY, PAWN_SHARE_QUANLITY PAWN_SHARE_QUANLITY, IS_RESTRICT_SHARE IS_RESTRICT_SHARE, 
+        PROP_TOTAL_CAPITAL_SHARE PROP_TOTAL_CAPITAL_SHARE, PLEDGE_SHARE PLEDGE_SHARE, SHARE_HOLDER SHARE_HOLDER, 
+        TRADE_MARKET TRADE_MARKET, REPURCHASE_PARTY_NAME REPURCHASE_PARTY_NAME, PENALTY_RATE PENALTY_RATE, 
+        SHARE_CODE SHARE_CODE, SHARE_NAME SHARE_NAME, IS_BUY_BACK IS_BUY_BACK, BUY_BACK_RATE BUY_BACK_RATE, 
+        BUY_BACK_POLICY BUY_BACK_POLICY, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, INIT_INFERIOR_RATE INIT_INFERIOR_RATE, 
+        IS_REP_CLAUSE IS_REP_CLAUSE, ASSET_INSIDE_TYPE ASSET_INSIDE_TYPE, ASSET_BOT_TYPE ASSET_BOT_TYPE, 
+        POST_ORG POST_ORG
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinPostInvestInfoMapper.Base_Column_List" />
+        from FIN_POST_INVEST_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinPostInvestInfoMapper.Base_Column_List" />
+        from FIN_POST_INVEST_INFO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinPostInvestInfoMapper.Base_Column_List" />
+        from FIN_POST_INVEST_INFO
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from FIN_POST_INVEST_INFO
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FinPostInvestInfo" >
+        insert into FIN_POST_INVEST_INFO (FINPROD_ID, HOST_CUSTOMER_MANAGER, ASSIST_CUSTOMER_MANAGER, 
+            IS_LAY, LAY_PORTFOLIO, MY_BANK_GRADE, 
+            BOTTOM_CONTRACT_FORM, NATURE_ASSIGN_ASSETS, 
+            IS_FLOAT, FLOAT_ISSUE_CMT, PRD_TYPES, 
+            SALE_DEADLINE, PROP_PRIO_PER, AMOUNT_INVES_BAD, 
+            WARN_LINE, WARN_RULE, FLAT_LINE, 
+            FLAT_RULE, DIFFRENT_PARTY_NAME, SINGLE_VOTE_RATIO, 
+            COMPOUND_BATCH, COMPEN_SPEC_CMT, PAWN_SHARE, 
+            PAWN_SHARE_PER, PAWN_SHARE_MONEY, PAWN_SHARE_QUANLITY, 
+            IS_RESTRICT_SHARE, PROP_TOTAL_CAPITAL_SHARE, 
+            PLEDGE_SHARE, SHARE_HOLDER, TRADE_MARKET, 
+            REPURCHASE_PARTY_NAME, PENALTY_RATE, SHARE_CODE, 
+            SHARE_NAME, IS_BUY_BACK, BUY_BACK_RATE, 
+            BUY_BACK_POLICY, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            INIT_INFERIOR_RATE, IS_REP_CLAUSE, ASSET_INSIDE_TYPE, 
+            ASSET_BOT_TYPE, POST_ORG)
+        values (#{finprodId,jdbcType=VARCHAR}, #{hostCustomerManager,jdbcType=VARCHAR}, #{assistCustomerManager,jdbcType=VARCHAR}, 
+            #{isLay,jdbcType=VARCHAR}, #{layPortfolio,jdbcType=VARCHAR}, #{myBankGrade,jdbcType=VARCHAR}, 
+            #{bottomContractForm,jdbcType=VARCHAR}, #{natureAssignAssets,jdbcType=VARCHAR}, 
+            #{isFloat,jdbcType=VARCHAR}, #{floatIssueCmt,jdbcType=VARCHAR}, #{prdTypes,jdbcType=VARCHAR}, 
+            #{saleDeadline,jdbcType=DATE}, #{propPrioPer,jdbcType=VARCHAR}, #{amountInvesBad,jdbcType=DECIMAL}, 
+            #{warnLine,jdbcType=VARCHAR}, #{warnRule,jdbcType=VARCHAR}, #{flatLine,jdbcType=VARCHAR}, 
+            #{flatRule,jdbcType=VARCHAR}, #{diffrentPartyName,jdbcType=VARCHAR}, #{singleVoteRatio,jdbcType=DECIMAL}, 
+            #{compoundBatch,jdbcType=VARCHAR}, #{compenSpecCmt,jdbcType=VARCHAR}, #{pawnShare,jdbcType=VARCHAR}, 
+            #{pawnSharePer,jdbcType=DECIMAL}, #{pawnShareMoney,jdbcType=DECIMAL}, #{pawnShareQuanlity,jdbcType=DECIMAL}, 
+            #{isRestrictShare,jdbcType=VARCHAR}, #{propTotalCapitalShare,jdbcType=DECIMAL}, 
+            #{pledgeShare,jdbcType=VARCHAR}, #{shareHolder,jdbcType=VARCHAR}, #{tradeMarket,jdbcType=VARCHAR}, 
+            #{repurchasePartyName,jdbcType=VARCHAR}, #{penaltyRate,jdbcType=DECIMAL}, #{shareCode,jdbcType=VARCHAR}, 
+            #{shareName,jdbcType=VARCHAR}, #{isBuyBack,jdbcType=VARCHAR}, #{buyBackRate,jdbcType=DECIMAL}, 
+            #{buyBackPolicy,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{initInferiorRate,jdbcType=DECIMAL}, #{isRepClause,jdbcType=VARCHAR}, #{assetInsideType,jdbcType=VARCHAR}, 
+            #{assetBotType,jdbcType=VARCHAR}, #{postOrg,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinPostInvestInfo" >
+        insert into FIN_POST_INVEST_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="hostCustomerManager != null" >
+                HOST_CUSTOMER_MANAGER,
+            </if>
+            <if test="assistCustomerManager != null" >
+                ASSIST_CUSTOMER_MANAGER,
+            </if>
+            <if test="isLay != null" >
+                IS_LAY,
+            </if>
+            <if test="layPortfolio != null" >
+                LAY_PORTFOLIO,
+            </if>
+            <if test="myBankGrade != null" >
+                MY_BANK_GRADE,
+            </if>
+            <if test="bottomContractForm != null" >
+                BOTTOM_CONTRACT_FORM,
+            </if>
+            <if test="natureAssignAssets != null" >
+                NATURE_ASSIGN_ASSETS,
+            </if>
+            <if test="isFloat != null" >
+                IS_FLOAT,
+            </if>
+            <if test="floatIssueCmt != null" >
+                FLOAT_ISSUE_CMT,
+            </if>
+            <if test="prdTypes != null" >
+                PRD_TYPES,
+            </if>
+            <if test="saleDeadline != null" >
+                SALE_DEADLINE,
+            </if>
+            <if test="propPrioPer != null" >
+                PROP_PRIO_PER,
+            </if>
+            <if test="amountInvesBad != null" >
+                AMOUNT_INVES_BAD,
+            </if>
+            <if test="warnLine != null" >
+                WARN_LINE,
+            </if>
+            <if test="warnRule != null" >
+                WARN_RULE,
+            </if>
+            <if test="flatLine != null" >
+                FLAT_LINE,
+            </if>
+            <if test="flatRule != null" >
+                FLAT_RULE,
+            </if>
+            <if test="diffrentPartyName != null" >
+                DIFFRENT_PARTY_NAME,
+            </if>
+            <if test="singleVoteRatio != null" >
+                SINGLE_VOTE_RATIO,
+            </if>
+            <if test="compoundBatch != null" >
+                COMPOUND_BATCH,
+            </if>
+            <if test="compenSpecCmt != null" >
+                COMPEN_SPEC_CMT,
+            </if>
+            <if test="pawnShare != null" >
+                PAWN_SHARE,
+            </if>
+            <if test="pawnSharePer != null" >
+                PAWN_SHARE_PER,
+            </if>
+            <if test="pawnShareMoney != null" >
+                PAWN_SHARE_MONEY,
+            </if>
+            <if test="pawnShareQuanlity != null" >
+                PAWN_SHARE_QUANLITY,
+            </if>
+            <if test="isRestrictShare != null" >
+                IS_RESTRICT_SHARE,
+            </if>
+            <if test="propTotalCapitalShare != null" >
+                PROP_TOTAL_CAPITAL_SHARE,
+            </if>
+            <if test="pledgeShare != null" >
+                PLEDGE_SHARE,
+            </if>
+            <if test="shareHolder != null" >
+                SHARE_HOLDER,
+            </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET,
+            </if>
+            <if test="repurchasePartyName != null" >
+                REPURCHASE_PARTY_NAME,
+            </if>
+            <if test="penaltyRate != null" >
+                PENALTY_RATE,
+            </if>
+            <if test="shareCode != null" >
+                SHARE_CODE,
+            </if>
+            <if test="shareName != null" >
+                SHARE_NAME,
+            </if>
+            <if test="isBuyBack != null" >
+                IS_BUY_BACK,
+            </if>
+            <if test="buyBackRate != null" >
+                BUY_BACK_RATE,
+            </if>
+            <if test="buyBackPolicy != null" >
+                BUY_BACK_POLICY,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="initInferiorRate != null" >
+                INIT_INFERIOR_RATE,
+            </if>
+            <if test="isRepClause != null" >
+                IS_REP_CLAUSE,
+            </if>
+            <if test="assetInsideType != null" >
+                ASSET_INSIDE_TYPE,
+            </if>
+            <if test="assetBotType != null" >
+                ASSET_BOT_TYPE,
+            </if>
+            <if test="postOrg != null" >
+                POST_ORG,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="hostCustomerManager != null" >
+                #{hostCustomerManager,jdbcType=VARCHAR},
+            </if>
+            <if test="assistCustomerManager != null" >
+                #{assistCustomerManager,jdbcType=VARCHAR},
+            </if>
+            <if test="isLay != null" >
+                #{isLay,jdbcType=VARCHAR},
+            </if>
+            <if test="layPortfolio != null" >
+                #{layPortfolio,jdbcType=VARCHAR},
+            </if>
+            <if test="myBankGrade != null" >
+                #{myBankGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="bottomContractForm != null" >
+                #{bottomContractForm,jdbcType=VARCHAR},
+            </if>
+            <if test="natureAssignAssets != null" >
+                #{natureAssignAssets,jdbcType=VARCHAR},
+            </if>
+            <if test="isFloat != null" >
+                #{isFloat,jdbcType=VARCHAR},
+            </if>
+            <if test="floatIssueCmt != null" >
+                #{floatIssueCmt,jdbcType=VARCHAR},
+            </if>
+            <if test="prdTypes != null" >
+                #{prdTypes,jdbcType=VARCHAR},
+            </if>
+            <if test="saleDeadline != null" >
+                #{saleDeadline,jdbcType=DATE},
+            </if>
+            <if test="propPrioPer != null" >
+                #{propPrioPer,jdbcType=VARCHAR},
+            </if>
+            <if test="amountInvesBad != null" >
+                #{amountInvesBad,jdbcType=DECIMAL},
+            </if>
+            <if test="warnLine != null" >
+                #{warnLine,jdbcType=VARCHAR},
+            </if>
+            <if test="warnRule != null" >
+                #{warnRule,jdbcType=VARCHAR},
+            </if>
+            <if test="flatLine != null" >
+                #{flatLine,jdbcType=VARCHAR},
+            </if>
+            <if test="flatRule != null" >
+                #{flatRule,jdbcType=VARCHAR},
+            </if>
+            <if test="diffrentPartyName != null" >
+                #{diffrentPartyName,jdbcType=VARCHAR},
+            </if>
+            <if test="singleVoteRatio != null" >
+                #{singleVoteRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="compoundBatch != null" >
+                #{compoundBatch,jdbcType=VARCHAR},
+            </if>
+            <if test="compenSpecCmt != null" >
+                #{compenSpecCmt,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnShare != null" >
+                #{pawnShare,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnSharePer != null" >
+                #{pawnSharePer,jdbcType=DECIMAL},
+            </if>
+            <if test="pawnShareMoney != null" >
+                #{pawnShareMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="pawnShareQuanlity != null" >
+                #{pawnShareQuanlity,jdbcType=DECIMAL},
+            </if>
+            <if test="isRestrictShare != null" >
+                #{isRestrictShare,jdbcType=VARCHAR},
+            </if>
+            <if test="propTotalCapitalShare != null" >
+                #{propTotalCapitalShare,jdbcType=DECIMAL},
+            </if>
+            <if test="pledgeShare != null" >
+                #{pledgeShare,jdbcType=VARCHAR},
+            </if>
+            <if test="shareHolder != null" >
+                #{shareHolder,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeMarket != null" >
+                #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="repurchasePartyName != null" >
+                #{repurchasePartyName,jdbcType=VARCHAR},
+            </if>
+            <if test="penaltyRate != null" >
+                #{penaltyRate,jdbcType=DECIMAL},
+            </if>
+            <if test="shareCode != null" >
+                #{shareCode,jdbcType=VARCHAR},
+            </if>
+            <if test="shareName != null" >
+                #{shareName,jdbcType=VARCHAR},
+            </if>
+            <if test="isBuyBack != null" >
+                #{isBuyBack,jdbcType=VARCHAR},
+            </if>
+            <if test="buyBackRate != null" >
+                #{buyBackRate,jdbcType=DECIMAL},
+            </if>
+            <if test="buyBackPolicy != null" >
+                #{buyBackPolicy,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="initInferiorRate != null" >
+                #{initInferiorRate,jdbcType=DECIMAL},
+            </if>
+            <if test="isRepClause != null" >
+                #{isRepClause,jdbcType=VARCHAR},
+            </if>
+            <if test="assetInsideType != null" >
+                #{assetInsideType,jdbcType=VARCHAR},
+            </if>
+            <if test="assetBotType != null" >
+                #{assetBotType,jdbcType=VARCHAR},
+            </if>
+            <if test="postOrg != null" >
+                #{postOrg,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinPostInvestInfo" >
+        insert into FIN_POST_INVEST_INFO(FINPROD_ID, HOST_CUSTOMER_MANAGER, ASSIST_CUSTOMER_MANAGER, 
+        IS_LAY, LAY_PORTFOLIO, MY_BANK_GRADE, BOTTOM_CONTRACT_FORM, NATURE_ASSIGN_ASSETS, 
+        IS_FLOAT, FLOAT_ISSUE_CMT, PRD_TYPES, SALE_DEADLINE, PROP_PRIO_PER, AMOUNT_INVES_BAD, 
+        WARN_LINE, WARN_RULE, FLAT_LINE, FLAT_RULE, DIFFRENT_PARTY_NAME, SINGLE_VOTE_RATIO, 
+        COMPOUND_BATCH, COMPEN_SPEC_CMT, PAWN_SHARE, PAWN_SHARE_PER, PAWN_SHARE_MONEY, PAWN_SHARE_QUANLITY, 
+        IS_RESTRICT_SHARE, PROP_TOTAL_CAPITAL_SHARE, PLEDGE_SHARE, SHARE_HOLDER, TRADE_MARKET, 
+        REPURCHASE_PARTY_NAME, PENALTY_RATE, SHARE_CODE, SHARE_NAME, IS_BUY_BACK, BUY_BACK_RATE, 
+        BUY_BACK_POLICY, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+        INIT_INFERIOR_RATE, IS_REP_CLAUSE, ASSET_INSIDE_TYPE, ASSET_BOT_TYPE, POST_ORG)
+        select FINPROD_ID, HOST_CUSTOMER_MANAGER, ASSIST_CUSTOMER_MANAGER, 
+            IS_LAY, LAY_PORTFOLIO, MY_BANK_GRADE, BOTTOM_CONTRACT_FORM, NATURE_ASSIGN_ASSETS, 
+            IS_FLOAT, FLOAT_ISSUE_CMT, PRD_TYPES, SALE_DEADLINE, PROP_PRIO_PER, AMOUNT_INVES_BAD, 
+            WARN_LINE, WARN_RULE, FLAT_LINE, FLAT_RULE, DIFFRENT_PARTY_NAME, SINGLE_VOTE_RATIO, 
+            COMPOUND_BATCH, COMPEN_SPEC_CMT, PAWN_SHARE, PAWN_SHARE_PER, PAWN_SHARE_MONEY, PAWN_SHARE_QUANLITY, 
+            IS_RESTRICT_SHARE, PROP_TOTAL_CAPITAL_SHARE, PLEDGE_SHARE, SHARE_HOLDER, TRADE_MARKET, 
+            REPURCHASE_PARTY_NAME, PENALTY_RATE, SHARE_CODE, SHARE_NAME, IS_BUY_BACK, BUY_BACK_RATE, 
+            BUY_BACK_POLICY, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
+            INIT_INFERIOR_RATE, IS_REP_CLAUSE, ASSET_INSIDE_TYPE, ASSET_BOT_TYPE, POST_ORG
+             from FIN_POST_INVEST_INFO
+             where 1 = 1 and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.FinPostInvestInfo" >
+        update FIN_POST_INVEST_INFO
+        <set >
+            <if test="hostCustomerManager != null" >
+                HOST_CUSTOMER_MANAGER = #{hostCustomerManager,jdbcType=VARCHAR},
+            </if>
+            <if test="assistCustomerManager != null" >
+                ASSIST_CUSTOMER_MANAGER = #{assistCustomerManager,jdbcType=VARCHAR},
+            </if>
+            <if test="isLay != null" >
+                IS_LAY = #{isLay,jdbcType=VARCHAR},
+            </if>
+            <if test="layPortfolio != null" >
+                LAY_PORTFOLIO = #{layPortfolio,jdbcType=VARCHAR},
+            </if>
+            <if test="myBankGrade != null" >
+                MY_BANK_GRADE = #{myBankGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="bottomContractForm != null" >
+                BOTTOM_CONTRACT_FORM = #{bottomContractForm,jdbcType=VARCHAR},
+            </if>
+            <if test="natureAssignAssets != null" >
+                NATURE_ASSIGN_ASSETS = #{natureAssignAssets,jdbcType=VARCHAR},
+            </if>
+            <if test="isFloat != null" >
+                IS_FLOAT = #{isFloat,jdbcType=VARCHAR},
+            </if>
+            <if test="floatIssueCmt != null" >
+                FLOAT_ISSUE_CMT = #{floatIssueCmt,jdbcType=VARCHAR},
+            </if>
+            <if test="prdTypes != null" >
+                PRD_TYPES = #{prdTypes,jdbcType=VARCHAR},
+            </if>
+            <if test="saleDeadline != null" >
+                SALE_DEADLINE = #{saleDeadline,jdbcType=DATE},
+            </if>
+            <if test="propPrioPer != null" >
+                PROP_PRIO_PER = #{propPrioPer,jdbcType=VARCHAR},
+            </if>
+            <if test="amountInvesBad != null" >
+                AMOUNT_INVES_BAD = #{amountInvesBad,jdbcType=DECIMAL},
+            </if>
+            <if test="warnLine != null" >
+                WARN_LINE = #{warnLine,jdbcType=VARCHAR},
+            </if>
+            <if test="warnRule != null" >
+                WARN_RULE = #{warnRule,jdbcType=VARCHAR},
+            </if>
+            <if test="flatLine != null" >
+                FLAT_LINE = #{flatLine,jdbcType=VARCHAR},
+            </if>
+            <if test="flatRule != null" >
+                FLAT_RULE = #{flatRule,jdbcType=VARCHAR},
+            </if>
+            <if test="diffrentPartyName != null" >
+                DIFFRENT_PARTY_NAME = #{diffrentPartyName,jdbcType=VARCHAR},
+            </if>
+            <if test="singleVoteRatio != null" >
+                SINGLE_VOTE_RATIO = #{singleVoteRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="compoundBatch != null" >
+                COMPOUND_BATCH = #{compoundBatch,jdbcType=VARCHAR},
+            </if>
+            <if test="compenSpecCmt != null" >
+                COMPEN_SPEC_CMT = #{compenSpecCmt,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnShare != null" >
+                PAWN_SHARE = #{pawnShare,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnSharePer != null" >
+                PAWN_SHARE_PER = #{pawnSharePer,jdbcType=DECIMAL},
+            </if>
+            <if test="pawnShareMoney != null" >
+                PAWN_SHARE_MONEY = #{pawnShareMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="pawnShareQuanlity != null" >
+                PAWN_SHARE_QUANLITY = #{pawnShareQuanlity,jdbcType=DECIMAL},
+            </if>
+            <if test="isRestrictShare != null" >
+                IS_RESTRICT_SHARE = #{isRestrictShare,jdbcType=VARCHAR},
+            </if>
+            <if test="propTotalCapitalShare != null" >
+                PROP_TOTAL_CAPITAL_SHARE = #{propTotalCapitalShare,jdbcType=DECIMAL},
+            </if>
+            <if test="pledgeShare != null" >
+                PLEDGE_SHARE = #{pledgeShare,jdbcType=VARCHAR},
+            </if>
+            <if test="shareHolder != null" >
+                SHARE_HOLDER = #{shareHolder,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="repurchasePartyName != null" >
+                REPURCHASE_PARTY_NAME = #{repurchasePartyName,jdbcType=VARCHAR},
+            </if>
+            <if test="penaltyRate != null" >
+                PENALTY_RATE = #{penaltyRate,jdbcType=DECIMAL},
+            </if>
+            <if test="shareCode != null" >
+                SHARE_CODE = #{shareCode,jdbcType=VARCHAR},
+            </if>
+            <if test="shareName != null" >
+                SHARE_NAME = #{shareName,jdbcType=VARCHAR},
+            </if>
+            <if test="isBuyBack != null" >
+                IS_BUY_BACK = #{isBuyBack,jdbcType=VARCHAR},
+            </if>
+            <if test="buyBackRate != null" >
+                BUY_BACK_RATE = #{buyBackRate,jdbcType=DECIMAL},
+            </if>
+            <if test="buyBackPolicy != null" >
+                BUY_BACK_POLICY = #{buyBackPolicy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="initInferiorRate != null" >
+                INIT_INFERIOR_RATE = #{initInferiorRate,jdbcType=DECIMAL},
+            </if>
+            <if test="isRepClause != null" >
+                IS_REP_CLAUSE = #{isRepClause,jdbcType=VARCHAR},
+            </if>
+            <if test="assetInsideType != null" >
+                ASSET_INSIDE_TYPE = #{assetInsideType,jdbcType=VARCHAR},
+            </if>
+            <if test="assetBotType != null" >
+                ASSET_BOT_TYPE = #{assetBotType,jdbcType=VARCHAR},
+            </if>
+            <if test="postOrg != null" >
+                POST_ORG = #{postOrg,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinPostInvestInfo" >
+        update FIN_POST_INVEST_INFO
+        set HOST_CUSTOMER_MANAGER = #{hostCustomerManager,jdbcType=VARCHAR},
+            ASSIST_CUSTOMER_MANAGER = #{assistCustomerManager,jdbcType=VARCHAR},
+            IS_LAY = #{isLay,jdbcType=VARCHAR},
+            LAY_PORTFOLIO = #{layPortfolio,jdbcType=VARCHAR},
+            MY_BANK_GRADE = #{myBankGrade,jdbcType=VARCHAR},
+            BOTTOM_CONTRACT_FORM = #{bottomContractForm,jdbcType=VARCHAR},
+            NATURE_ASSIGN_ASSETS = #{natureAssignAssets,jdbcType=VARCHAR},
+            IS_FLOAT = #{isFloat,jdbcType=VARCHAR},
+            FLOAT_ISSUE_CMT = #{floatIssueCmt,jdbcType=VARCHAR},
+            PRD_TYPES = #{prdTypes,jdbcType=VARCHAR},
+            SALE_DEADLINE = #{saleDeadline,jdbcType=DATE},
+            PROP_PRIO_PER = #{propPrioPer,jdbcType=VARCHAR},
+            AMOUNT_INVES_BAD = #{amountInvesBad,jdbcType=DECIMAL},
+            WARN_LINE = #{warnLine,jdbcType=VARCHAR},
+            WARN_RULE = #{warnRule,jdbcType=VARCHAR},
+            FLAT_LINE = #{flatLine,jdbcType=VARCHAR},
+            FLAT_RULE = #{flatRule,jdbcType=VARCHAR},
+            DIFFRENT_PARTY_NAME = #{diffrentPartyName,jdbcType=VARCHAR},
+            SINGLE_VOTE_RATIO = #{singleVoteRatio,jdbcType=DECIMAL},
+            COMPOUND_BATCH = #{compoundBatch,jdbcType=VARCHAR},
+            COMPEN_SPEC_CMT = #{compenSpecCmt,jdbcType=VARCHAR},
+            PAWN_SHARE = #{pawnShare,jdbcType=VARCHAR},
+            PAWN_SHARE_PER = #{pawnSharePer,jdbcType=DECIMAL},
+            PAWN_SHARE_MONEY = #{pawnShareMoney,jdbcType=DECIMAL},
+            PAWN_SHARE_QUANLITY = #{pawnShareQuanlity,jdbcType=DECIMAL},
+            IS_RESTRICT_SHARE = #{isRestrictShare,jdbcType=VARCHAR},
+            PROP_TOTAL_CAPITAL_SHARE = #{propTotalCapitalShare,jdbcType=DECIMAL},
+            PLEDGE_SHARE = #{pledgeShare,jdbcType=VARCHAR},
+            SHARE_HOLDER = #{shareHolder,jdbcType=VARCHAR},
+            TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+            REPURCHASE_PARTY_NAME = #{repurchasePartyName,jdbcType=VARCHAR},
+            PENALTY_RATE = #{penaltyRate,jdbcType=DECIMAL},
+            SHARE_CODE = #{shareCode,jdbcType=VARCHAR},
+            SHARE_NAME = #{shareName,jdbcType=VARCHAR},
+            IS_BUY_BACK = #{isBuyBack,jdbcType=VARCHAR},
+            BUY_BACK_RATE = #{buyBackRate,jdbcType=DECIMAL},
+            BUY_BACK_POLICY = #{buyBackPolicy,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            INIT_INFERIOR_RATE = #{initInferiorRate,jdbcType=DECIMAL},
+            IS_REP_CLAUSE = #{isRepClause,jdbcType=VARCHAR},
+            ASSET_INSIDE_TYPE = #{assetInsideType,jdbcType=VARCHAR},
+            ASSET_BOT_TYPE = #{assetBotType,jdbcType=VARCHAR},
+            POST_ORG = #{postOrg,jdbcType=VARCHAR}
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </update>
+</mapper>

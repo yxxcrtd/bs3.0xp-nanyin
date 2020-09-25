@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.FinFloatCountingRuleMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.FinFloatCountingRule" >
+        <id column="CASH_ID" property="cashId" jdbcType="VARCHAR" />
+        <id column="EFF_DATE" property="effDate" jdbcType="DATE" />
+        <result column="ACCR_TYPE" property="accrType" jdbcType="VARCHAR" />
+        <result column="ACCR_CYCLE" property="accrCycle" jdbcType="DECIMAL" />
+        <result column="ACCR_CYCLE_UNIT" property="accrCycleUnit" jdbcType="VARCHAR" />
+        <result column="ACCR_DAY_TYPE" property="accrDayType" jdbcType="VARCHAR" />
+        <result column="ACCR_DAY_VALUE" property="accrDayValue" jdbcType="VARCHAR" />
+        <result column="ACCR_TDAY_RULE" property="accrTdayRule" jdbcType="VARCHAR" />
+        <result column="F_ACCR_DATE" property="fAccrDate" jdbcType="DATE" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="E_ACCR_DATE" property="eAccrDate" jdbcType="DATE" />
+        <result column="INTERVAL_RULE" property="intervalRule" jdbcType="VARCHAR" />
+        <result column="F_ACCR_END_DATE" property="fAccrEndDate" jdbcType="DATE" />
+        <result column="FIRST_BASE_TYPE" property="firstBaseType" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CASH_ID CASH_ID, EFF_DATE EFF_DATE, ACCR_TYPE ACCR_TYPE, ACCR_CYCLE ACCR_CYCLE, ACCR_CYCLE_UNIT ACCR_CYCLE_UNIT, 
+        ACCR_DAY_TYPE ACCR_DAY_TYPE, ACCR_DAY_VALUE ACCR_DAY_VALUE, ACCR_TDAY_RULE ACCR_TDAY_RULE, 
+        F_ACCR_DATE F_ACCR_DATE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, E_ACCR_DATE E_ACCR_DATE, INTERVAL_RULE INTERVAL_RULE, 
+        F_ACCR_END_DATE F_ACCR_END_DATE, FIRST_BASE_TYPE FIRST_BASE_TYPE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinFloatCountingRuleMapper.Base_Column_List" />
+        from FIN_FLOAT_COUNTING_RULE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinFloatCountingRuleMapper.Base_Column_List" />
+        from FIN_FLOAT_COUNTING_RULE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.FinFloatCountingRuleKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinFloatCountingRuleMapper.Base_Column_List" />
+        from FIN_FLOAT_COUNTING_RULE
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinFloatCountingRuleKey" >
+        delete from FIN_FLOAT_COUNTING_RULE
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FinFloatCountingRule" >
+        insert into FIN_FLOAT_COUNTING_RULE (CASH_ID, EFF_DATE, ACCR_TYPE, 
+            ACCR_CYCLE, ACCR_CYCLE_UNIT, ACCR_DAY_TYPE, 
+            ACCR_DAY_VALUE, ACCR_TDAY_RULE, F_ACCR_DATE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, E_ACCR_DATE, 
+            INTERVAL_RULE, F_ACCR_END_DATE, FIRST_BASE_TYPE
+            )
+        values (#{cashId,jdbcType=VARCHAR}, #{effDate,jdbcType=DATE}, #{accrType,jdbcType=VARCHAR}, 
+            #{accrCycle,jdbcType=DECIMAL}, #{accrCycleUnit,jdbcType=VARCHAR}, #{accrDayType,jdbcType=VARCHAR}, 
+            #{accrDayValue,jdbcType=VARCHAR}, #{accrTdayRule,jdbcType=VARCHAR}, #{fAccrDate,jdbcType=DATE}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{eAccrDate,jdbcType=DATE}, 
+            #{intervalRule,jdbcType=VARCHAR}, #{fAccrEndDate,jdbcType=DATE}, #{firstBaseType,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinFloatCountingRule" >
+        insert into FIN_FLOAT_COUNTING_RULE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="cashId != null" >
+                CASH_ID,
+            </if>
+            <if test="effDate != null" >
+                EFF_DATE,
+            </if>
+            <if test="accrType != null" >
+                ACCR_TYPE,
+            </if>
+            <if test="accrCycle != null" >
+                ACCR_CYCLE,
+            </if>
+            <if test="accrCycleUnit != null" >
+                ACCR_CYCLE_UNIT,
+            </if>
+            <if test="accrDayType != null" >
+                ACCR_DAY_TYPE,
+            </if>
+            <if test="accrDayValue != null" >
+                ACCR_DAY_VALUE,
+            </if>
+            <if test="accrTdayRule != null" >
+                ACCR_TDAY_RULE,
+            </if>
+            <if test="fAccrDate != null" >
+                F_ACCR_DATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="eAccrDate != null" >
+                E_ACCR_DATE,
+            </if>
+            <if test="intervalRule != null" >
+                INTERVAL_RULE,
+            </if>
+            <if test="fAccrEndDate != null" >
+                F_ACCR_END_DATE,
+            </if>
+            <if test="firstBaseType != null" >
+                FIRST_BASE_TYPE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="cashId != null" >
+                #{cashId,jdbcType=VARCHAR},
+            </if>
+            <if test="effDate != null" >
+                #{effDate,jdbcType=DATE},
+            </if>
+            <if test="accrType != null" >
+                #{accrType,jdbcType=VARCHAR},
+            </if>
+            <if test="accrCycle != null" >
+                #{accrCycle,jdbcType=DECIMAL},
+            </if>
+            <if test="accrCycleUnit != null" >
+                #{accrCycleUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="accrDayType != null" >
+                #{accrDayType,jdbcType=VARCHAR},
+            </if>
+            <if test="accrDayValue != null" >
+                #{accrDayValue,jdbcType=VARCHAR},
+            </if>
+            <if test="accrTdayRule != null" >
+                #{accrTdayRule,jdbcType=VARCHAR},
+            </if>
+            <if test="fAccrDate != null" >
+                #{fAccrDate,jdbcType=DATE},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="eAccrDate != null" >
+                #{eAccrDate,jdbcType=DATE},
+            </if>
+            <if test="intervalRule != null" >
+                #{intervalRule,jdbcType=VARCHAR},
+            </if>
+            <if test="fAccrEndDate != null" >
+                #{fAccrEndDate,jdbcType=DATE},
+            </if>
+            <if test="firstBaseType != null" >
+                #{firstBaseType,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinFloatCountingRule" >
+        insert into FIN_FLOAT_COUNTING_RULE(CASH_ID, EFF_DATE, ACCR_TYPE, ACCR_CYCLE, ACCR_CYCLE_UNIT, 
+        ACCR_DAY_TYPE, ACCR_DAY_VALUE, ACCR_TDAY_RULE, F_ACCR_DATE, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, E_ACCR_DATE, INTERVAL_RULE, F_ACCR_END_DATE, 
+        FIRST_BASE_TYPE)
+        select CASH_ID, EFF_DATE, ACCR_TYPE, ACCR_CYCLE, ACCR_CYCLE_UNIT, 
+            ACCR_DAY_TYPE, ACCR_DAY_VALUE, ACCR_TDAY_RULE, F_ACCR_DATE, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, E_ACCR_DATE, INTERVAL_RULE, F_ACCR_END_DATE, 
+            FIRST_BASE_TYPE
+             from FIN_FLOAT_COUNTING_RULE
+             where 1 = 1 and CASH_ID = #{cashId,jdbcType=VARCHAR} and EFF_DATE = #{effDate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.FinFloatCountingRule" >
+        update FIN_FLOAT_COUNTING_RULE
+        <set >
+            <if test="accrType != null" >
+                ACCR_TYPE = #{accrType,jdbcType=VARCHAR},
+            </if>
+            <if test="accrCycle != null" >
+                ACCR_CYCLE = #{accrCycle,jdbcType=DECIMAL},
+            </if>
+            <if test="accrCycleUnit != null" >
+                ACCR_CYCLE_UNIT = #{accrCycleUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="accrDayType != null" >
+                ACCR_DAY_TYPE = #{accrDayType,jdbcType=VARCHAR},
+            </if>
+            <if test="accrDayValue != null" >
+                ACCR_DAY_VALUE = #{accrDayValue,jdbcType=VARCHAR},
+            </if>
+            <if test="accrTdayRule != null" >
+                ACCR_TDAY_RULE = #{accrTdayRule,jdbcType=VARCHAR},
+            </if>
+            <if test="fAccrDate != null" >
+                F_ACCR_DATE = #{fAccrDate,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="eAccrDate != null" >
+                E_ACCR_DATE = #{eAccrDate,jdbcType=DATE},
+            </if>
+            <if test="intervalRule != null" >
+                INTERVAL_RULE = #{intervalRule,jdbcType=VARCHAR},
+            </if>
+            <if test="fAccrEndDate != null" >
+                F_ACCR_END_DATE = #{fAccrEndDate,jdbcType=DATE},
+            </if>
+            <if test="firstBaseType != null" >
+                FIRST_BASE_TYPE = #{firstBaseType,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinFloatCountingRule" >
+        update FIN_FLOAT_COUNTING_RULE
+        set ACCR_TYPE = #{accrType,jdbcType=VARCHAR},
+            ACCR_CYCLE = #{accrCycle,jdbcType=DECIMAL},
+            ACCR_CYCLE_UNIT = #{accrCycleUnit,jdbcType=VARCHAR},
+            ACCR_DAY_TYPE = #{accrDayType,jdbcType=VARCHAR},
+            ACCR_DAY_VALUE = #{accrDayValue,jdbcType=VARCHAR},
+            ACCR_TDAY_RULE = #{accrTdayRule,jdbcType=VARCHAR},
+            F_ACCR_DATE = #{fAccrDate,jdbcType=DATE},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            E_ACCR_DATE = #{eAccrDate,jdbcType=DATE},
+            INTERVAL_RULE = #{intervalRule,jdbcType=VARCHAR},
+            F_ACCR_END_DATE = #{fAccrEndDate,jdbcType=DATE},
+            FIRST_BASE_TYPE = #{firstBaseType,jdbcType=VARCHAR}
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+    </update>
+</mapper>

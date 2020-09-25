@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.manage.workmanage.dao.ReportWorkManage001Mapper_mysql">
+	<select id="queryPageList" resultType="com.joyintech.tams.disclosure.information.manage.workmanage.dto.ReportWorkManage001Dto">
+		select * from (
+		SELECT
+		  rj.JOB_ID jobId ,
+		  rj.JOB_NAME jobName ,
+		  rj.LOOP_DATE_DETAIL loopDateDetail,
+		  rj.START_DATE startDate,
+		  rj.END_DATE endDate,
+		  rj.LOOP_DATE_VALUE as loopDateValue,
+		  P.START_DATE as execDate
+		FROM
+		  rep_job rj
+		LEFT JOIN (
+		select 
+		T.JOB_ID,
+		T.START_DATE,
+		T.Sequence
+		from
+(
+		SELECT
+		a.JOB_ID,
+		a.START_DATE,
+		IF
+		( @JOB_ID = a.JOB_ID, @rank := @rank + 1, @rank := 1 ) AS Sequence ,
+		@JOB_ID := a.JOB_ID
+
+		FROM
+		( SELECT * FROM REP_INSTALL_LOG WHERE START_DATE IS NOT NULL ) a,
+		( SELECT @rownum := 0, @JOB_ID := NULL, @rank := 0 ) b
+)T where T.Sequence<![CDATA[<=]]>1
+		) P ON P.JOB_ID=rj.JOB_ID
+		WHERE
+		  1=1
+		<if test="jobName != null and jobName != ''">
+			AND rj.JOB_NAME LIKE concat(concat('%',#{jobName,jdbcType=VARCHAR}),'%')
+
+		</if>
+		<if test="jobIdArr != null and jobIdArr.length > 0">
+	 		AND rj.JOB_ID IN
+			<foreach item="item" collection="jobIdArr" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		ORDER BY rj.UPDATE_TIME desc
+		) where 1=1
+    </select>
+	<update id="updateConfirmStatusById" parameterType="com.joyintech.tams.disclosure.information.manage.workmanage.dto.ReportWorkManage001Dto" >
+	      update REP_REVEAL
+	      set 
+	      CONFIRM_STATUS = #{confirmStatus,jdbcType=VARCHAR}
+	      ,UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
+		  ,UPDATE_TIME = NOW()
+	      where 1=1
+	      and id = #{id,jdbcType=VARCHAR}
+    </update>
+</mapper>

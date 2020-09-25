@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodiscinvestgroupdetail.dao.InfoDiscInvestGroupDetailMapper">
+	<select id="selectProdInvestList"
+		resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodiscinvestgroupdetail.entity.InfoDiscInvestGroupDetailEntity">
+		SELECT
+		  rai.prod_id prodId,
+		  SUM(NVL(rai.TDY_COST_AMT,0)) assetsValueNet
+		FROM
+		  REP_ASSET_INDEX rai
+		WHERE
+		  1=1
+		  AND rai.VALUE_DATE=to_date(#{executeDateStr},'yyyy-mm-dd')
+		GROUP BY
+		  rai.prod_id
+	</select>
+	
+	<select id="selectAssetInvestListByAssetclassOne"
+		resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodiscinvestgroupdetail.entity.InfoDiscInvestGroupDetailEntity">
+		SELECT
+		  rai.prod_id prodId,
+		  sum(rai.TDY_COST_AMT) assetsValueNet,
+		  info.ASSET_TYPE_DIS assetTypeCode,
+		  rai.VALUE_DATE valDate
+		FROM
+		  rep_asset_index rai
+		LEFT JOIN rep_asset_info info ON rai.busi_id = info.asset_id AND info.status ='E' 
+		WHERE rai.VALUE_DATE = to_date(#{executeDateStr},'yyyy-mm-dd')
+		GROUP BY
+			rai.prod_id,
+			info.ASSET_TYPE_DIS,
+			rai.VALUE_DATE
+	</select>
+	
+	<delete id="deleteInfoDiscInvestGroupDetail" parameterType="java.util.HashMap" >
+        delete from REP_INVESTDETAIL ril
+       where ril.VAL_DATE = to_date(#{executeDateStr},'yyyy-mm-dd')
+    </delete>
+	<insert id="insertInfoDiscInvestGroupDetail" parameterType="java.util.List" >
+        insert into 
+        	REP_INVESTDETAIL 
+        	(
+	        	SEQNO, 
+	        	PROD_ID, 
+	        	VAL_DATE, 
+	            ASSET_TYPE_CODE, 
+	            ASSETS_VALUE_NET, 
+	            ASSETS_VALUE_NET_SCALE, 
+	            IS_SCALE_OUT, 
+	            STATUS, 
+	            CREATE_USER, 
+	            CREATE_DEPT, 
+	            CREATE_TIME, 
+	            UPDATE_USER, 
+	            UPDATE_TIME
+            )
+         	select A.* from (
+            <foreach collection="list" item="item" index="index" separator="union all">
+            	select 
+            		#{item.seqno,jdbcType=VARCHAR},
+            		#{item.prodId,jdbcType=VARCHAR}, 
+            		#{item.valDate,jdbcType=DATE}, 
+		            #{item.assetTypeCode,jdbcType=VARCHAR}, 
+		            #{item.assetsValueNet,jdbcType=DECIMAL}, 
+		            #{item.assetsValueNetScale,jdbcType=DECIMAL}, 
+		            #{item.isScaleOut,jdbcType=CHAR}, 
+		            #{item.status,jdbcType=CHAR}, 
+		            #{item.createUser,jdbcType=VARCHAR}, 
+		            #{item.createDept,jdbcType=VARCHAR}, 
+		            #{item.createTime,jdbcType=TIMESTAMP}, 
+		            #{item.updateUser,jdbcType=VARCHAR}, 
+		            #{item.updateTime,jdbcType=TIMESTAMP}
+            	from dual
+            </foreach>
+            )A
+    </insert>
+    
+	<select id="selectProdInvestAdjRateList"
+		resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodiscinvestgroupdetail.entity.InfoDiscInvestGroupDetailEntity">
+		SELECT
+		  rownum,
+		  t.*
+		FROM
+		  (
+		    SELECT
+				PROD_ID prodId,
+				RATE rate
+		    FROM
+		      	REP_PROD_INVEST_ADJRATE
+		    WHERE 1=1
+			    AND PROD_ID =#{prodId,jdbcType=VARCHAR}
+			    AND INVEST_TYPE =#{assetTypeCode,jdbcType=VARCHAR}
+			    AND to_date(#{executeDateStr},'yyyy-mm-dd') >= INVEST_ADJUST_DATE
+		    ORDER BY
+		      INVEST_ADJUST_DATE DESC
+		  )t
+		WHERE rownum = 1
+	</select>
+</mapper>

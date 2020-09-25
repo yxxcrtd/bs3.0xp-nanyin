@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RskIsupPointValMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RskIsupPointVal" >
+        <id column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <id column="IND_ID" property="indId" jdbcType="VARCHAR" />
+        <id column="SUP_DATE" property="supDate" jdbcType="DATE" />
+        <id column="SUP_FREQUENCY" property="supFrequency" jdbcType="VARCHAR" />
+        <result column="SUP_VAL" property="supVal" jdbcType="VARCHAR" />
+        <result column="SUP_STAT" property="supStat" jdbcType="VARCHAR" />
+        <result column="SUP_UNITE_STAT" property="supUniteStat" jdbcType="VARCHAR" />
+        <result column="WARN_COND" property="warnCond" jdbcType="VARCHAR" />
+        <result column="APPROVE_COND" property="approveCond" jdbcType="VARCHAR" />
+        <result column="FOUL_COND" property="foulCond" jdbcType="VARCHAR" />
+        <result column="FOUL_DAYS" property="foulDays" jdbcType="DECIMAL" />
+        <result column="MATH_PROCESS" property="mathProcess" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        PORTFOLIO_ID PORTFOLIO_ID, IND_ID IND_ID, SUP_DATE SUP_DATE, SUP_FREQUENCY SUP_FREQUENCY, 
+        SUP_VAL SUP_VAL, SUP_STAT SUP_STAT, SUP_UNITE_STAT SUP_UNITE_STAT, WARN_COND WARN_COND, 
+        APPROVE_COND APPROVE_COND, FOUL_COND FOUL_COND, FOUL_DAYS FOUL_DAYS, MATH_PROCESS MATH_PROCESS, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIsupPointValMapper.Base_Column_List" />
+        from RSK_ISUP_POINT_VAL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIsupPointValMapper.Base_Column_List" />
+        from RSK_ISUP_POINT_VAL
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.RskIsupPointValKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIsupPointValMapper.Base_Column_List" />
+        from RSK_ISUP_POINT_VAL
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and IND_ID = #{indId,jdbcType=VARCHAR}
+          and SUP_DATE = #{supDate,jdbcType=DATE}
+          and SUP_FREQUENCY = #{supFrequency,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskIsupPointValKey" >
+        delete from RSK_ISUP_POINT_VAL
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and IND_ID = #{indId,jdbcType=VARCHAR}
+          and SUP_DATE = #{supDate,jdbcType=DATE}
+          and SUP_FREQUENCY = #{supFrequency,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RskIsupPointVal" >
+        insert into RSK_ISUP_POINT_VAL (PORTFOLIO_ID, IND_ID, SUP_DATE, 
+            SUP_FREQUENCY, SUP_VAL, SUP_STAT, 
+            SUP_UNITE_STAT, WARN_COND, APPROVE_COND, 
+            FOUL_COND, FOUL_DAYS, MATH_PROCESS, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{portfolioId,jdbcType=VARCHAR}, #{indId,jdbcType=VARCHAR}, #{supDate,jdbcType=DATE}, 
+            #{supFrequency,jdbcType=VARCHAR}, #{supVal,jdbcType=VARCHAR}, #{supStat,jdbcType=VARCHAR}, 
+            #{supUniteStat,jdbcType=VARCHAR}, #{warnCond,jdbcType=VARCHAR}, #{approveCond,jdbcType=VARCHAR}, 
+            #{foulCond,jdbcType=VARCHAR}, #{foulDays,jdbcType=DECIMAL}, #{mathProcess,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskIsupPointVal" >
+        insert into RSK_ISUP_POINT_VAL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID,
+            </if>
+            <if test="indId != null" >
+                IND_ID,
+            </if>
+            <if test="supDate != null" >
+                SUP_DATE,
+            </if>
+            <if test="supFrequency != null" >
+                SUP_FREQUENCY,
+            </if>
+            <if test="supVal != null" >
+                SUP_VAL,
+            </if>
+            <if test="supStat != null" >
+                SUP_STAT,
+            </if>
+            <if test="supUniteStat != null" >
+                SUP_UNITE_STAT,
+            </if>
+            <if test="warnCond != null" >
+                WARN_COND,
+            </if>
+            <if test="approveCond != null" >
+                APPROVE_COND,
+            </if>
+            <if test="foulCond != null" >
+                FOUL_COND,
+            </if>
+            <if test="foulDays != null" >
+                FOUL_DAYS,
+            </if>
+            <if test="mathProcess != null" >
+                MATH_PROCESS,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="portfolioId != null" >
+                #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="indId != null" >
+                #{indId,jdbcType=VARCHAR},
+            </if>
+            <if test="supDate != null" >
+                #{supDate,jdbcType=DATE},
+            </if>
+            <if test="supFrequency != null" >
+                #{supFrequency,jdbcType=VARCHAR},
+            </if>
+            <if test="supVal != null" >
+                #{supVal,jdbcType=VARCHAR},
+            </if>
+            <if test="supStat != null" >
+                #{supStat,jdbcType=VARCHAR},
+            </if>
+            <if test="supUniteStat != null" >
+                #{supUniteStat,jdbcType=VARCHAR},
+            </if>
+            <if test="warnCond != null" >
+                #{warnCond,jdbcType=VARCHAR},
+            </if>
+            <if test="approveCond != null" >
+                #{approveCond,jdbcType=VARCHAR},
+            </if>
+            <if test="foulCond != null" >
+                #{foulCond,jdbcType=VARCHAR},
+            </if>
+            <if test="foulDays != null" >
+                #{foulDays,jdbcType=DECIMAL},
+            </if>
+            <if test="mathProcess != null" >
+                #{mathProcess,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskIsupPointVal" >
+        insert into RSK_ISUP_POINT_VAL(PORTFOLIO_ID, IND_ID, SUP_DATE, SUP_FREQUENCY, SUP_VAL, 
+        SUP_STAT, SUP_UNITE_STAT, WARN_COND, APPROVE_COND, FOUL_COND, FOUL_DAYS, MATH_PROCESS, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select PORTFOLIO_ID, IND_ID, SUP_DATE, SUP_FREQUENCY, SUP_VAL, 
+            SUP_STAT, SUP_UNITE_STAT, WARN_COND, APPROVE_COND, FOUL_COND, FOUL_DAYS, MATH_PROCESS, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from RSK_ISUP_POINT_VAL
+             where 1 = 1 and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR} and IND_ID = #{indId,jdbcType=VARCHAR} and SUP_DATE = #{supDate,jdbcType=DATE} and SUP_FREQUENCY = #{supFrequency,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RskIsupPointVal" >
+        update RSK_ISUP_POINT_VAL
+        <set >
+            <if test="supVal != null" >
+                SUP_VAL = #{supVal,jdbcType=VARCHAR},
+            </if>
+            <if test="supStat != null" >
+                SUP_STAT = #{supStat,jdbcType=VARCHAR},
+            </if>
+            <if test="supUniteStat != null" >
+                SUP_UNITE_STAT = #{supUniteStat,jdbcType=VARCHAR},
+            </if>
+            <if test="warnCond != null" >
+                WARN_COND = #{warnCond,jdbcType=VARCHAR},
+            </if>
+            <if test="approveCond != null" >
+                APPROVE_COND = #{approveCond,jdbcType=VARCHAR},
+            </if>
+            <if test="foulCond != null" >
+                FOUL_COND = #{foulCond,jdbcType=VARCHAR},
+            </if>
+            <if test="foulDays != null" >
+                FOUL_DAYS = #{foulDays,jdbcType=DECIMAL},
+            </if>
+            <if test="mathProcess != null" >
+                MATH_PROCESS = #{mathProcess,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and IND_ID = #{indId,jdbcType=VARCHAR}
+          and SUP_DATE = #{supDate,jdbcType=DATE}
+          and SUP_FREQUENCY = #{supFrequency,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskIsupPointVal" >
+        update RSK_ISUP_POINT_VAL
+        set SUP_VAL = #{supVal,jdbcType=VARCHAR},
+            SUP_STAT = #{supStat,jdbcType=VARCHAR},
+            SUP_UNITE_STAT = #{supUniteStat,jdbcType=VARCHAR},
+            WARN_COND = #{warnCond,jdbcType=VARCHAR},
+            APPROVE_COND = #{approveCond,jdbcType=VARCHAR},
+            FOUL_COND = #{foulCond,jdbcType=VARCHAR},
+            FOUL_DAYS = #{foulDays,jdbcType=DECIMAL},
+            MATH_PROCESS = #{mathProcess,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and IND_ID = #{indId,jdbcType=VARCHAR}
+          and SUP_DATE = #{supDate,jdbcType=DATE}
+          and SUP_FREQUENCY = #{supFrequency,jdbcType=VARCHAR}
+    </update>
+</mapper>

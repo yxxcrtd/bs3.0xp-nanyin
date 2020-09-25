@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbSysDigManaMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbSysDigMana" >
+        <id column="TYPE" property="type" jdbcType="VARCHAR" />
+        <id column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <id column="STATUS" property="status" jdbcType="CHAR" />
+        <result column="INPUT_DIG" property="inputDig" jdbcType="DECIMAL" />
+        <result column="OUTPUT_DIG" property="outputDig" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TYPE TYPE, CCY CCY, STATUS STATUS, INPUT_DIG INPUT_DIG, OUTPUT_DIG OUTPUT_DIG, CREATE_USER CREATE_USER, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CREATE_DEPT CREATE_DEPT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysDigManaMapper.Base_Column_List" />
+        from CHB_SYS_DIG_MANA
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysDigManaMapper.Base_Column_List" />
+        from CHB_SYS_DIG_MANA
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.ChbSysDigManaKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysDigManaMapper.Base_Column_List" />
+        from CHB_SYS_DIG_MANA
+        where TYPE = #{type,jdbcType=VARCHAR}
+          and CCY = #{ccy,jdbcType=VARCHAR}
+          and STATUS = #{status,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbSysDigManaKey" >
+        delete from CHB_SYS_DIG_MANA
+        where TYPE = #{type,jdbcType=VARCHAR}
+          and CCY = #{ccy,jdbcType=VARCHAR}
+          and STATUS = #{status,jdbcType=CHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_SYS_DIG_MANA
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbSysDigMana" >
+        insert into CHB_SYS_DIG_MANA (TYPE, CCY, STATUS, 
+            INPUT_DIG, OUTPUT_DIG, CREATE_USER, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            CREATE_DEPT)
+        values (#{type,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, #{status,jdbcType=CHAR}, 
+            #{inputDig,jdbcType=DECIMAL}, #{outputDig,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{createDept,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysDigMana" >
+        insert into CHB_SYS_DIG_MANA
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="type != null" >
+                TYPE,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="inputDig != null" >
+                INPUT_DIG,
+            </if>
+            <if test="outputDig != null" >
+                OUTPUT_DIG,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="type != null" >
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=CHAR},
+            </if>
+            <if test="inputDig != null" >
+                #{inputDig,jdbcType=DECIMAL},
+            </if>
+            <if test="outputDig != null" >
+                #{outputDig,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbSysDigMana" >
+        insert into CHB_SYS_DIG_MANA(TYPE, CCY, STATUS, INPUT_DIG, OUTPUT_DIG, CREATE_USER, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, CREATE_DEPT)
+        select TYPE, CCY, #{status,jdbcType=VARCHAR} STATUS, INPUT_DIG, OUTPUT_DIG, CREATE_USER, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_DEPT
+             from CHB_SYS_DIG_MANA
+             where STATUS = 'E' and TYPE = #{type,jdbcType=VARCHAR} and CCY = #{ccy,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysDigMana" >
+        update CHB_SYS_DIG_MANA
+        <set >
+            <if test="inputDig != null" >
+                INPUT_DIG = #{inputDig,jdbcType=DECIMAL},
+            </if>
+            <if test="outputDig != null" >
+                OUTPUT_DIG = #{outputDig,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where TYPE = #{type,jdbcType=VARCHAR}
+          and CCY = #{ccy,jdbcType=VARCHAR}
+          and STATUS = #{status,jdbcType=CHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysDigMana" >
+        update CHB_SYS_DIG_MANA
+        <set >
+            <if test="type != null" >
+                TYPE = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=CHAR},
+            </if>
+            <if test="inputDig != null" >
+                INPUT_DIG = #{inputDig,jdbcType=DECIMAL},
+            </if>
+            <if test="outputDig != null" >
+                OUTPUT_DIG = #{outputDig,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbSysDigMana" >
+        update CHB_SYS_DIG_MANA
+        set 
+        TYPE = #{type,jdbcType=VARCHAR},
+        CCY = #{ccy,jdbcType=VARCHAR},
+        STATUS = #{status,jdbcType=CHAR},
+        INPUT_DIG = #{inputDig,jdbcType=DECIMAL},
+        OUTPUT_DIG = #{outputDig,jdbcType=DECIMAL},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbSysDigMana" >
+        update CHB_SYS_DIG_MANA
+        set INPUT_DIG = #{inputDig,jdbcType=DECIMAL},
+            OUTPUT_DIG = #{outputDig,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        where TYPE = #{type,jdbcType=VARCHAR}
+          and CCY = #{ccy,jdbcType=VARCHAR}
+          and STATUS = #{status,jdbcType=CHAR}
+    </update>
+</mapper>

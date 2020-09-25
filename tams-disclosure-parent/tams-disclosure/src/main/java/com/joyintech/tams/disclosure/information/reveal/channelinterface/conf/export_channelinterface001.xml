@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ChannelInterface001.xlsx" name="渠道接口信息查询">
+	<Worksheet javaBean="com.joyintech.tams.disclosure.information.reveal.channelinterface.dto.ChannelInterfaceNew001Dto">
+		<Row>	
+			<Cell order="1" name="产品编号">prodId</Cell>	
+			<Cell order="2" name="发送状态">sendStatusStr</Cell>
+			<Cell order="3" name="发送日期">sendDateStr</Cell>
+			<Cell order="4" name="反馈日期">receiveDateStr</Cell>
+			<Cell order="5" name="反馈状态">receiveStatusStr</Cell>
+			<Cell order="6" name="文件名称">fileName</Cell>
+			<Cell order="7" name="报表类别">reportCategory</Cell>
+			<Cell order="8" name="报表名称">reportId</Cell>
+			<Cell order="9" name="披露渠道">channelCodeStr</Cell>
+			<Cell order="10" name="开始日期">statrDateStr</Cell>
+			<Cell order="11" name="结束日期">endDateStr</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>

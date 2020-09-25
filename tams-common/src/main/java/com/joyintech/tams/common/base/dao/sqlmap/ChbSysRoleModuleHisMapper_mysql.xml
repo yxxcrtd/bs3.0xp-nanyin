@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbSysRoleModuleHisMapper_mysql">
+	<insert id="insertHisByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbSysRoleModuleHis" >
+        insert into CHB_SYS_ROLE_MODULE_HIS(ROLE_ID, HIS_NO, STATUS, PAGE_ID, ELEMENT_ID, 
+        WORKFLOW_ID, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select ROLE_ID, (select IFNULL(max(HIS_NO), 0) from CHB_SYS_ROLE_MODULE_HIS where STATUS IN('E','D')) + 1 as HIS_NO, STATUS, PAGE_ID, ELEMENT_ID, 
+            WORKFLOW_ID, CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME
+             from CHB_SYS_ROLE_MODULE
+             where STATUS IN('E','D')
+    </insert>
+	<insert id="insertHisByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbSysRoleModuleHis" >
+        insert into CHB_SYS_ROLE_MODULE_HIS(ROLE_ID, HIS_NO, STATUS, PAGE_ID, ELEMENT_ID, 
+        WORKFLOW_ID, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select ROLE_ID, (select IFNULL(max(HIS_NO), 0) from CHB_SYS_ROLE_MODULE_HIS where STATUS = 'E') + 1 as HIS_NO, STATUS, PAGE_ID, ELEMENT_ID, 
+            WORKFLOW_ID, CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME
+             from CHB_SYS_ROLE_MODULE
+             where STATUS = 'E' and WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+    </insert>
+</mapper>

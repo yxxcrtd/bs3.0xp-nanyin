@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbSubCheckItemRuleMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbSubCheckItemRule" >
+        <id column="C_S_C_I_R_CLASS_ID" property="classId" jdbcType="VARCHAR" />
+        <id column="C_S_C_I_R_ITEM_RULE_NO" property="itemRuleNo" jdbcType="DECIMAL" />
+        <result column="C_S_C_I_R_ITEM_CODE" property="itemCode" jdbcType="VARCHAR" />
+        <result column="C_S_C_I_R_ITEM_NAME" property="itemName" jdbcType="VARCHAR" />
+        <result column="C_S_C_I_R_CHECK_RULE_ID" property="checkRuleId" jdbcType="VARCHAR" />
+        <result column="C_S_C_I_R_CHECK_RULE_PARA" property="checkRulePara" jdbcType="VARCHAR" />
+        <result column="C_S_C_I_R_REMARK" property="remark" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CLASS_ID as C_S_C_I_R_CLASS_ID, ITEM_RULE_NO as C_S_C_I_R_ITEM_RULE_NO, ITEM_CODE as C_S_C_I_R_ITEM_CODE, 
+        ITEM_NAME as C_S_C_I_R_ITEM_NAME, CHECK_RULE_ID as C_S_C_I_R_CHECK_RULE_ID, CHECK_RULE_PARA as C_S_C_I_R_CHECK_RULE_PARA, 
+        REMARK as C_S_C_I_R_REMARK
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSubCheckItemRuleMapper.Base_Column_List" />
+        from CHB_SUB_CHECK_ITEM_RULE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSubCheckItemRuleMapper.Base_Column_List" />
+        from CHB_SUB_CHECK_ITEM_RULE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.ChbSubCheckItemRuleKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSubCheckItemRuleMapper.Base_Column_List" />
+        from CHB_SUB_CHECK_ITEM_RULE
+        where CLASS_ID = #{classId,jdbcType=VARCHAR}
+          and ITEM_RULE_NO = #{itemRuleNo,jdbcType=DECIMAL}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbSubCheckItemRuleKey" >
+        delete from CHB_SUB_CHECK_ITEM_RULE
+        where CLASS_ID = #{classId,jdbcType=VARCHAR}
+          and ITEM_RULE_NO = #{itemRuleNo,jdbcType=DECIMAL}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_SUB_CHECK_ITEM_RULE
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbSubCheckItemRule" >
+        insert into CHB_SUB_CHECK_ITEM_RULE (CLASS_ID, ITEM_RULE_NO, ITEM_CODE, 
+            ITEM_NAME, CHECK_RULE_ID, CHECK_RULE_PARA, 
+            REMARK)
+        values (#{classId,jdbcType=VARCHAR}, #{itemRuleNo,jdbcType=DECIMAL}, #{itemCode,jdbcType=VARCHAR}, 
+            #{itemName,jdbcType=VARCHAR}, #{checkRuleId,jdbcType=VARCHAR}, #{checkRulePara,jdbcType=VARCHAR}, 
+            #{remark,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSubCheckItemRule" >
+        insert into CHB_SUB_CHECK_ITEM_RULE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="classId != null" >
+                CLASS_ID,
+            </if>
+            <if test="itemRuleNo != null" >
+                ITEM_RULE_NO,
+            </if>
+            <if test="itemCode != null" >
+                ITEM_CODE,
+            </if>
+            <if test="itemName != null" >
+                ITEM_NAME,
+            </if>
+            <if test="checkRuleId != null" >
+                CHECK_RULE_ID,
+            </if>
+            <if test="checkRulePara != null" >
+                CHECK_RULE_PARA,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="classId != null" >
+                #{classId,jdbcType=VARCHAR},
+            </if>
+            <if test="itemRuleNo != null" >
+                #{itemRuleNo,jdbcType=DECIMAL},
+            </if>
+            <if test="itemCode != null" >
+                #{itemCode,jdbcType=VARCHAR},
+            </if>
+            <if test="itemName != null" >
+                #{itemName,jdbcType=VARCHAR},
+            </if>
+            <if test="checkRuleId != null" >
+                #{checkRuleId,jdbcType=VARCHAR},
+            </if>
+            <if test="checkRulePara != null" >
+                #{checkRulePara,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbSubCheckItemRule" >
+        insert into CHB_SUB_CHECK_ITEM_RULE(CLASS_ID, ITEM_RULE_NO, ITEM_CODE, ITEM_NAME, 
+        CHECK_RULE_ID, CHECK_RULE_PARA, REMARK)
+        select CLASS_ID, ITEM_RULE_NO, ITEM_CODE, ITEM_NAME, 
+            CHECK_RULE_ID, CHECK_RULE_PARA, REMARK
+             from CHB_SUB_CHECK_ITEM_RULE
+             where STATUS = 'E' and CLASS_ID = #{classId,jdbcType=VARCHAR} and ITEM_RULE_NO = #{itemRuleNo,jdbcType=DECIMAL}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbSubCheckItemRule" >
+        update CHB_SUB_CHECK_ITEM_RULE
+        <set >
+            <if test="itemCode != null" >
+                ITEM_CODE = #{itemCode,jdbcType=VARCHAR},
+            </if>
+            <if test="itemName != null" >
+                ITEM_NAME = #{itemName,jdbcType=VARCHAR},
+            </if>
+            <if test="checkRuleId != null" >
+                CHECK_RULE_ID = #{checkRuleId,jdbcType=VARCHAR},
+            </if>
+            <if test="checkRulePara != null" >
+                CHECK_RULE_PARA = #{checkRulePara,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where CLASS_ID = #{classId,jdbcType=VARCHAR}
+          and ITEM_RULE_NO = #{itemRuleNo,jdbcType=DECIMAL}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSubCheckItemRule" >
+        update CHB_SUB_CHECK_ITEM_RULE
+        <set >
+            <if test="classId != null" >
+                CLASS_ID = #{classId,jdbcType=VARCHAR},
+            </if>
+            <if test="itemRuleNo != null" >
+                ITEM_RULE_NO = #{itemRuleNo,jdbcType=DECIMAL},
+            </if>
+            <if test="itemCode != null" >
+                ITEM_CODE = #{itemCode,jdbcType=VARCHAR},
+            </if>
+            <if test="itemName != null" >
+                ITEM_NAME = #{itemName,jdbcType=VARCHAR},
+            </if>
+            <if test="checkRuleId != null" >
+                CHECK_RULE_ID = #{checkRuleId,jdbcType=VARCHAR},
+            </if>
+            <if test="checkRulePara != null" >
+                CHECK_RULE_PARA = #{checkRulePara,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbSubCheckItemRule" >
+        update CHB_SUB_CHECK_ITEM_RULE
+        set 
+        CLASS_ID = #{classId,jdbcType=VARCHAR},
+        ITEM_RULE_NO = #{itemRuleNo,jdbcType=DECIMAL},
+        ITEM_CODE = #{itemCode,jdbcType=VARCHAR},
+        ITEM_NAME = #{itemName,jdbcType=VARCHAR},
+        CHECK_RULE_ID = #{checkRuleId,jdbcType=VARCHAR},
+        CHECK_RULE_PARA = #{checkRulePara,jdbcType=VARCHAR},
+        REMARK = #{remark,jdbcType=VARCHAR}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbSubCheckItemRule" >
+        update CHB_SUB_CHECK_ITEM_RULE
+        set ITEM_CODE = #{itemCode,jdbcType=VARCHAR},
+            ITEM_NAME = #{itemName,jdbcType=VARCHAR},
+            CHECK_RULE_ID = #{checkRuleId,jdbcType=VARCHAR},
+            CHECK_RULE_PARA = #{checkRulePara,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR}
+        where CLASS_ID = #{classId,jdbcType=VARCHAR}
+          and ITEM_RULE_NO = #{itemRuleNo,jdbcType=DECIMAL}
+    </update>
+</mapper>

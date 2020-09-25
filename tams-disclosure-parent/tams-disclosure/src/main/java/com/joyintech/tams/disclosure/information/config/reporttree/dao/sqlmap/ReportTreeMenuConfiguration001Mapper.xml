@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.joyintech.tams.disclosure.information.config.reporttree.dao.ReportTreeMenuConfiguration001Mapper">
+	<select id="findAllData" parameterType="java.lang.String" resultType="com.joyintech.tams.disclosure.information.config.reporttree.dto.ReportTreeMenuConfiguration001Dto">
+		select
+		TREE_ID treeId,
+		P_ID pId,
+		TREE_NAME treeName,
+		FLAG
+		from
+		rep_tree T
+    	LEFT JOIN REP_INFO B ON T.TREE_ID=B.REP_ID
+		where 1=1
+		AND (T.FLAG IS NULL OR T.FLAG='C' OR B.REPORT_TYPE='Y')
+		<if test="tmpCName != null and tmpCName != ''">
+			and TREE_NAME like '%'||#{tmpCName}||'%'			
+		</if>		
+		ORDER BY B.REP_ORDER
+	</select>
+	<select id="findAllPNode" parameterType="java.lang.String" resultType="com.joyintech.tams.disclosure.information.config.reporttree.dto.ReportTreeMenuConfiguration001Dto">
+		select
+		TREE_ID treeId,
+		P_ID pId,
+		TREE_NAME treeName,
+		FLAG
+		from
+		rep_tree T
+    	LEFT JOIN REP_INFO B ON T.TREE_ID=B.REP_ID
+		where 1=1
+		AND (T.FLAG IS NULL OR T.FLAG='C' OR B.REPORT_TYPE='Y')
+		AND T.P_ID is null
+		<if test=" Id!= null and Id!= ''">
+			AND TREE_ID != #{Id,jdbcType=VARCHAR}
+		</if>
+	</select>
+	
+	<select id="findParentOrSAubTreeList" resultType="com.joyintech.tams.disclosure.information.config.reporttree.dto.ReportTreeMenuConfiguration001Dto">
+		SELECT DISTINCT
+			T.TREE_ID treeId,
+			T.P_ID pId,
+			T.TREE_NAME treeName,
+			T.FLAG,
+			b.rep_order repOrder
+		FROM
+			rep_tree T
+    	LEFT JOIN REP_INFO B ON T.TREE_ID=B.REP_ID
+    	 LEFT JOIN rep_power p ON p.report_id= t.tree_id
+		WHERE 1=1
+		AND (T.FLAG IS NULL OR T.FLAG='C' OR B.REPORT_TYPE='Y')
+		<if test="spflag == 'PAR'">   
+			and T.TREE_ID = #{pId,jdbcType=VARCHAR}
+		</if>
+		<if test="spflag == 'SUB'">   
+			and T.P_ID = #{treeId,jdbcType=VARCHAR}
+		</if>
+		<if test="paraTreeName != null and paraTreeName != ''">
+			and T.TREE_NAME like '%'||#{paraTreeName}||'%'
+		</if>
+		<if test="roleIdList != null and roleIdList.size > 0">
+			AND (
+				(T.FLAG != 'Y' OR T.FLAG='C' or  T.FLAG is null)/*Y以外（为节点）则全部查出*/
+				OR(B.REPORT_TYPE='Y' and p.ID IN
+					<foreach item="item" collection="roleIdList" index="index"
+						open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				)/*Y为报表需要根据权限来过滤，REPORT_TYPE='Y'表示需要展示*/
+			)
+		</if>
+		ORDER BY B.REP_ORDER
+		
+	</select>
+	<select id="getRoleIdList" resultType="java.lang.String">
+		SELECT
+		  ROLE_ID
+		FROM
+		  SYS_USER_ROLE
+		WHERE
+		  USER_ID = #{updateUser,jdbcType=VARCHAR}
+	</select>
+	<insert id="AddParentNode">
+		insert into REP_TREE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="treeId != null">
+				TREE_ID,
+			</if>
+			<if test="PId != null">
+				P_ID,
+			</if>
+			<if test="treeName != null">
+				TREE_NAME,
+			</if>
+			<if test="flag != null">
+				FLAG,
+			</if>
+
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="treeId != null">
+				#{treeId,jdbcType=VARCHAR},
+			</if>
+			<if test="PId != null">
+				#{PId,jdbcType=VARCHAR},
+			</if>
+			<if test="treeName != null">
+				#{treeName,jdbcType=VARCHAR},
+			</if>
+			<if test="flag != null">
+				#{flag,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="getEdit">
+		update REP_TREE
+		<set>
+			<if test="treeName != null">
+				TREE_NAME = #{treeName,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where TREE_ID = #{treeId,jdbcType=VARCHAR}
+	</update>
+	<select id="queryPageList" resultType="com.joyintech.tams.common.base.entity.RepInfo">
+		select
+		REP_ID repId,
+		TEMPLATE_ID templateId,
+		TEMPLATE_PATH templatePath,
+		REPORT_NAME reportName,
+		REPORT_TYPE, CREATE_USER, CREATE_TIME, UPDATE_USER,
+		UPDATE_TIME, CREATE_DEPT
+		from REP_INFO
+		where 1=1
+		AND REP_INFO.REPORT_TYPE='Y'
+		<if test="reportName !=null and reportName !='' ">
+			AND REPORT_NAME LIKE '%' || #{reportName,jdbcType=VARCHAR}
+			|| '%'
+		</if>
+		ORDER BY REP_ORDER
+	</select>
+	<insert id="getAddAll">
+		insert into REP_TREE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="treeId != null">
+				TREE_ID,
+			</if>
+			<if test="pId != null">
+				P_ID,
+			</if>
+			<if test="treeName != null">
+				TREE_NAME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="treeId != null">
+				#{treeId,jdbcType=VARCHAR},
+			</if>
+			<if test="pId != null">
+				#{pId,jdbcType=VARCHAR},
+			</if>
+			<if test="treeName != null">
+				#{treeName,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="checkData" resultType="com.joyintech.tams.disclosure.information.config.reporttree.dto.ReportTreeMenuConfiguration001Dto">
+		select
+		TREE_ID treeId,
+		P_ID pId,
+		TREE_NAME treeName ,
+		FLAG
+		from
+		rep_tree
+		<where>
+			<if test="treeId!= null and treeId!= ''">
+				TREE_ID=#{treeId,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<select id="checkDataPid" resultType="com.joyintech.tams.disclosure.information.config.reporttree.dto.ReportTreeMenuConfiguration001Dto">
+		select
+		TREE_ID treeId,
+		P_ID pId,
+		TREE_NAME treeName,
+		FLAG
+		from
+		rep_tree
+		<where>
+			<if test=" Id!= null and Id!= ''">
+				P_ID=#{Id,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<delete id="delete" parameterType="java.lang.String">
+		delete from REP_TREE
+		where P_ID = #{Id,jdbcType=VARCHAR}
+	</delete>
+
+	<select id="selectByKey" resultType="com.joyintech.tams.disclosure.information.config.reporttree.dto.ReportTreeMenuConfiguration001Dto">
+		select
+		TREE_ID treeId,
+		P_ID pId,
+		TREE_NAME treeName,
+		FLAG
+		from
+		rep_tree
+		WHERE 1=1
+		<if test="PId  != null and PId  != ''">
+			AND P_ID=#{PId,jdbcType=VARCHAR}
+		</if>
+		<if test="treeId  != null and treeId  != ''">
+			AND TREE_ID=#{treeId,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<update id="edit">
+		update REP_TREE
+		<set>
+			<if test="Id != null">
+				FLAG = 'C',
+			</if>
+		</set>
+		where TREE_ID = #{Id,jdbcType=VARCHAR}
+	</update>
+	<select id="selectByPrimaryKey" resultType="com.joyintech.tams.disclosure.information.config.reporttree.dto.ReportTreeMenuConfiguration001Dto">
+        select 
+        rt.TREE_ID treeId,
+		rt.P_ID pId,
+		rt.TREE_NAME treeName,
+		rt.FLAG flag,
+		countChl.childNum
+        from REP_TREE rt
+        left join (select count(TREE_ID) childNum,P_ID as pId
+            from REP_TREE
+            where P_ID is not null
+            group by P_ID
+        )countChl on countChl.pId=rt.TREE_ID
+        where rt.TREE_ID = #{treeId,jdbcType=VARCHAR}
+    </select> 
+</mapper>

@@ -1,0 +1,312 @@
+server:
+  port: 8084
+spring:
+  application:
+    name: REPORT-BATCH-SERVER #服务名称
+  profiles:
+    active: yitihua
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+  activemq:
+    active: false
+batch:
+  sysCode: REP
+  properties:
+    chunkNumber: 100
+    concurrency: 10
+    queueCapacity: 50
+    maxExeUser: 5
+    maxThreadPerUser: 1 #定时任务并发数
+    serverDownTime: 600000
+    sleeptime: 20000
+    notifyIntervalTime: 30000
+    enableServerDoubleAlive: false
+    serverName: SERVER1
+    needProcessLog: false #process是否记录正常日志
+application:
+    reportInsertCount: 15
+    reportSelectOrDeleteCount: 50
+    reportInsertLongCount: 10
+    reportSelectOrDeleteCountForShenFen: 100 #数据批量一次查询或者删除条数(身份信息用)
+    reportCbFeedBackHandleCountOneTime: 10000 #中债反馈文件内容单次处理数据条数
+eureka:
+  instance:
+    hostname: ${spring.cloud.client.ipAddress}
+    instanceId: ${spring.cloud.client.ipAddress}:${server.port}
+    preferIpAddress: true
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://192.168.70.146:1111/eureka/
+
+---
+spring:
+  profiles: dev
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: report_new
+    password: ENC(yuxpHIIDTwuM1dxcNltb8QSfffCeK55H)
+    validationQuery: SELECT 1 FROM DUAL
+#base数据库配置
+base:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@//192.168.70.180:1521/TAMS2
+    username: tams_base
+    password: ENC(V4BaOp/IIOSK9SnSZE2oHCg9PB5612pH)
+    validationQuery: SELECT 1 FROM DUAL
+log:
+  path: D:/batch/logs
+  level: info
+
+
+---
+spring:
+  profiles: test
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: report_user
+    password: ENC(Eii6sLkZg03iJqERLLA9WrfJjeoVyVIk)
+    validationQuery: SELECT 1 FROM DUAL
+#base数据库配置
+base:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: report_base
+    password: ENC(iFio8U8WA5WZ6DwyMCc9xVVLFl96wkPU)
+    validationQuery: SELECT 1 FROM DUAL
+log:
+  path: /home/tams/logs/disclosure/batch
+  level: info
+
+
+---
+spring:
+  profiles: prod
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: report_user_ys
+    password: ENC(rhLsKtGABtWht2J2vTffESp6tvI1S5Jz)
+    validationQuery: SELECT 1 FROM DUAL
+#base数据库配置
+base:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: report_base_ys
+    password: ENC(LBL1mV3ZLLz1L90BXPO/MoTkduMGq/Vs)
+    validationQuery: SELECT 1 FROM DUAL
+log:
+  path: /home/tams/logs/disclosure/batch
+  level: info
+
+
+---
+spring:
+  profiles: etliu
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: etliu_user
+    password: ENC(Eii6sLkZg03iJqERLLA9WrfJjeoVyVIk)
+    validationQuery: SELECT 1 FROM DUAL
+#base数据库配置
+base:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: etliu_base
+    password: ENC(iFio8U8WA5WZ6DwyMCc9xVVLFl96wkPU)
+    validationQuery: SELECT 1 FROM DUAL
+log:
+  path: /home/tomcat/logs/batch
+  level: info
+
+
+---
+spring:
+  profiles: bigdatatest
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: bigdata_user
+    password: ENC(Eii6sLkZg03iJqERLLA9WrfJjeoVyVIk)
+    validationQuery: SELECT 1 FROM DUAL
+#base数据库配置
+base:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: bigdata_base
+    password: ENC(iFio8U8WA5WZ6DwyMCc9xVVLFl96wkPU)
+    validationQuery: SELECT 1 FROM DUAL
+log:
+  path: /home/etliu/logs/disclosure/batch
+  level: info
+
+
+
+---
+spring:
+  profiles: db2Test
+  datasource:
+    url: jdbc:db2://192.168.70.62:50000/tamsdb:currentSchema=REPORT_USER_TEST;
+    username: tamsinst
+    password: ENC(5Di07iThvIYt2S0jwquyzdaWtJ+P9qIn)
+    driverClassName: com.ibm.db2.jcc.DB2Driver
+    validationQuery: SELECT 1 FROM SYSIBM.SYSDUMMY1
+#base数据库配置
+base:
+  datasource:
+    driverClassName: com.ibm.db2.jcc.DB2Driver
+    url: jdbc:db2://192.168.70.62:50000/tamsdb:currentSchema=REPORT_BASE_TEST;
+    username: tamsinst
+    password: ENC(5Di07iThvIYt2S0jwquyzdaWtJ+P9qIn)
+    validationQuery: SELECT 1 FROM SYSIBM.SYSDUMMY1
+log:
+  path: /home/etliu/db2/logs/batch
+  level: info
+---
+spring:
+  profiles: xppoc
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: xppoc_user
+    password: report_user
+    reportSqlldrDatabaseName: 192.168.70.112:1521/ORCL #sqlldr用数据库连接，必须保持这种格式
+#base数据库配置
+base:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: xppoc_base
+    password: report_base
+    validationQuery: SELECT 1 FROM DUAL
+shiro:
+  casEnable: false
+log:
+  path: /home/tamsuser/logs/report
+  level: info
+logging:
+  path: /home/tamsuser/logs/report
+
+  
+---
+spring:
+  profiles: xppocoracle
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: xppoc_user
+    password: report_user
+    reportSqlldrDatabaseName: 192.168.70.112:1521/ORCL #sqlldr用数据库连接，必须保持这种格式
+#base数据库配置
+base:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: xppoc_base
+    password: report_base
+    validationQuery: SELECT 1 FROM DUAL
+shiro:
+  casEnable: false
+log:
+  path: /home/tamsuser/logs/report-batch
+  level: info
+logging:
+  path: /home/tamsuser/logs/report-batch
+  
+  
+---
+spring:
+  profiles: xppocdb2
+  thymeleaf:
+    cache: false
+  datasource:
+    url: jdbc:db2://192.168.70.62:50000/tamsdb:currentSchema=REVEAL_MAST_TEST;
+    username: tamsinst
+    password: tamsinst
+    driverClassName: com.ibm.db2.jcc.DB2Driver
+    validationQuery: SELECT 1 FROM SYSIBM.SYSDUMMY1
+  #base数据库配置
+base:
+  datasource:
+    driverClassName: com.ibm.db2.jcc.DB2Driver
+    url: jdbc:db2://192.168.70.62:50000/tamsdb:currentSchema=REVEAL_BASE_TEST;
+    username: tamsinst
+    password: tamsinst
+    validationQuery: SELECT 1 FROM SYSIBM.SYSDUMMY1
+shiro:
+  casEnable: false
+log:
+  path: /home/tamsuser/logs/report-batch
+  level: info
+  
+---
+spring:
+  profiles: xppocoracleT
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: rev_mast_test
+    password: rev_mast_test
+    reportSqlldrDatabaseName: 192.168.70.112:1521/ORCL #sqlldr用数据库连接，必须保持这种格式
+#base数据库配置
+base:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@//192.168.70.112:1521/ORCL
+    username: rev_base_test
+    password: rev_base_test
+    validationQuery: SELECT 1 FROM DUAL
+shiro:
+  casEnable: false
+log:
+  path: /home/tamsuser/logs/report-batch
+  level: info
+logging:
+  path: /home/tamsuser/logs/report-batch
+  
+---
+spring:
+  profiles: yitihua
+  datasource:
+    url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.90.111)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.90.112)(PORT=1521))(LOAD_BALANCE=no)(FAILOVER=on))(CONNECT_DATA=(SERVICE_NAME=tamsdbpdb)))
+    username: tams212
+    password: tams212
+    maxTotal: 50
+    maxIdle: 50
+    minIdle: 20
+    timeBetweenEvictionRunsMillis: 60000  # 默认是-1
+    numTestsPerEvictionRun: 10
+    removeAbandonedOnBorrow: true
+    removeAbandonedOnMaintenance: true
+    logAbandoned: true
+    reportSqlldrDatabaseName: 192.168.70.45:1521/orcl #sqlldr用数据库连接，必须保持这种格式
+#base数据库配置
+base:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.90.111)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.90.112)(PORT=1521))(LOAD_BALANCE=no)(FAILOVER=on))(CONNECT_DATA=(SERVICE_NAME=tamsdbpdb)))
+    username: tams212
+    password: tams212
+    maxTotal: 50
+    maxIdle: 50
+    minIdle: 20
+    timeBetweenEvictionRunsMillis: 60000  # 默认是-1
+    numTestsPerEvictionRun: 10
+    removeAbandonedOnBorrow: true
+    removeAbandonedOnMaintenance: true
+    logAbandoned: true
+    validationQuery: SELECT 1 FROM DUAL
+shiro:
+  casEnable: false
+log:
+  path: /home/tamsuser/logs/report-batch
+  level: info
+logging:
+  path: /home/tamsuser/logs/report-batch
+  

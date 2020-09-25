@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.TacticConfigOptDetailMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.TacticConfigOptDetail" >
+        <id column="TACTIC_CONFIG_CODE" property="tacticConfigCode" jdbcType="VARCHAR" />
+        <id column="ASSET_TYPE" property="assetType" jdbcType="VARCHAR" />
+        <result column="THEO_CONFIG_RATE" property="theoConfigRate" jdbcType="DECIMAL" />
+        <result column="SAMLE_AVER_RATE" property="samleAverRate" jdbcType="DECIMAL" />
+        <result column="VIX" property="vix" jdbcType="DECIMAL" />
+        <result column="COR_RATE" property="corRate" jdbcType="DECIMAL" />
+        <result column="COR_SCENE" property="corScene" jdbcType="VARCHAR" />
+        <result column="COR_RATIO" property="corRatio" jdbcType="DECIMAL" />
+        <result column="COR_VIEW" property="corView" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TACTIC_CONFIG_CODE TACTIC_CONFIG_CODE, ASSET_TYPE ASSET_TYPE, THEO_CONFIG_RATE THEO_CONFIG_RATE, 
+        SAMLE_AVER_RATE SAMLE_AVER_RATE, VIX VIX, COR_RATE COR_RATE, COR_SCENE COR_SCENE, 
+        COR_RATIO COR_RATIO, COR_VIEW COR_VIEW, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TacticConfigOptDetailMapper.Base_Column_List" />
+        from TACTIC_CONFIG_OPT_DETAIL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TacticConfigOptDetailMapper.Base_Column_List" />
+        from TACTIC_CONFIG_OPT_DETAIL
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.TacticConfigOptDetailKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TacticConfigOptDetailMapper.Base_Column_List" />
+        from TACTIC_CONFIG_OPT_DETAIL
+        where TACTIC_CONFIG_CODE = #{tacticConfigCode,jdbcType=VARCHAR}
+          and ASSET_TYPE = #{assetType,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.TacticConfigOptDetailKey" >
+        delete from TACTIC_CONFIG_OPT_DETAIL
+        where TACTIC_CONFIG_CODE = #{tacticConfigCode,jdbcType=VARCHAR}
+          and ASSET_TYPE = #{assetType,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.TacticConfigOptDetail" >
+        insert into TACTIC_CONFIG_OPT_DETAIL (TACTIC_CONFIG_CODE, ASSET_TYPE, THEO_CONFIG_RATE, 
+            SAMLE_AVER_RATE, VIX, COR_RATE, 
+            COR_SCENE, COR_RATIO, COR_VIEW, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{tacticConfigCode,jdbcType=VARCHAR}, #{assetType,jdbcType=VARCHAR}, #{theoConfigRate,jdbcType=DECIMAL}, 
+            #{samleAverRate,jdbcType=DECIMAL}, #{vix,jdbcType=DECIMAL}, #{corRate,jdbcType=DECIMAL}, 
+            #{corScene,jdbcType=VARCHAR}, #{corRatio,jdbcType=DECIMAL}, #{corView,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TacticConfigOptDetail" >
+        insert into TACTIC_CONFIG_OPT_DETAIL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="tacticConfigCode != null" >
+                TACTIC_CONFIG_CODE,
+            </if>
+            <if test="assetType != null" >
+                ASSET_TYPE,
+            </if>
+            <if test="theoConfigRate != null" >
+                THEO_CONFIG_RATE,
+            </if>
+            <if test="samleAverRate != null" >
+                SAMLE_AVER_RATE,
+            </if>
+            <if test="vix != null" >
+                VIX,
+            </if>
+            <if test="corRate != null" >
+                COR_RATE,
+            </if>
+            <if test="corScene != null" >
+                COR_SCENE,
+            </if>
+            <if test="corRatio != null" >
+                COR_RATIO,
+            </if>
+            <if test="corView != null" >
+                COR_VIEW,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="tacticConfigCode != null" >
+                #{tacticConfigCode,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType != null" >
+                #{assetType,jdbcType=VARCHAR},
+            </if>
+            <if test="theoConfigRate != null" >
+                #{theoConfigRate,jdbcType=DECIMAL},
+            </if>
+            <if test="samleAverRate != null" >
+                #{samleAverRate,jdbcType=DECIMAL},
+            </if>
+            <if test="vix != null" >
+                #{vix,jdbcType=DECIMAL},
+            </if>
+            <if test="corRate != null" >
+                #{corRate,jdbcType=DECIMAL},
+            </if>
+            <if test="corScene != null" >
+                #{corScene,jdbcType=VARCHAR},
+            </if>
+            <if test="corRatio != null" >
+                #{corRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="corView != null" >
+                #{corView,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TacticConfigOptDetail" >
+        insert into TACTIC_CONFIG_OPT_DETAIL(TACTIC_CONFIG_CODE, ASSET_TYPE, THEO_CONFIG_RATE, 
+        SAMLE_AVER_RATE, VIX, COR_RATE, COR_SCENE, COR_RATIO, COR_VIEW, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select TACTIC_CONFIG_CODE, ASSET_TYPE, THEO_CONFIG_RATE, 
+            SAMLE_AVER_RATE, VIX, COR_RATE, COR_SCENE, COR_RATIO, COR_VIEW, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from TACTIC_CONFIG_OPT_DETAIL
+             where 1 = 1 and TACTIC_CONFIG_CODE = #{tacticConfigCode,jdbcType=VARCHAR} and ASSET_TYPE = #{assetType,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.TacticConfigOptDetail" >
+        update TACTIC_CONFIG_OPT_DETAIL
+        <set >
+            <if test="theoConfigRate != null" >
+                THEO_CONFIG_RATE = #{theoConfigRate,jdbcType=DECIMAL},
+            </if>
+            <if test="samleAverRate != null" >
+                SAMLE_AVER_RATE = #{samleAverRate,jdbcType=DECIMAL},
+            </if>
+            <if test="vix != null" >
+                VIX = #{vix,jdbcType=DECIMAL},
+            </if>
+            <if test="corRate != null" >
+                COR_RATE = #{corRate,jdbcType=DECIMAL},
+            </if>
+            <if test="corScene != null" >
+                COR_SCENE = #{corScene,jdbcType=VARCHAR},
+            </if>
+            <if test="corRatio != null" >
+                COR_RATIO = #{corRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="corView != null" >
+                COR_VIEW = #{corView,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where TACTIC_CONFIG_CODE = #{tacticConfigCode,jdbcType=VARCHAR}
+          and ASSET_TYPE = #{assetType,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.TacticConfigOptDetail" >
+        update TACTIC_CONFIG_OPT_DETAIL
+        set THEO_CONFIG_RATE = #{theoConfigRate,jdbcType=DECIMAL},
+            SAMLE_AVER_RATE = #{samleAverRate,jdbcType=DECIMAL},
+            VIX = #{vix,jdbcType=DECIMAL},
+            COR_RATE = #{corRate,jdbcType=DECIMAL},
+            COR_SCENE = #{corScene,jdbcType=VARCHAR},
+            COR_RATIO = #{corRatio,jdbcType=DECIMAL},
+            COR_VIEW = #{corView,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where TACTIC_CONFIG_CODE = #{tacticConfigCode,jdbcType=VARCHAR}
+          and ASSET_TYPE = #{assetType,jdbcType=VARCHAR}
+    </update>
+</mapper>

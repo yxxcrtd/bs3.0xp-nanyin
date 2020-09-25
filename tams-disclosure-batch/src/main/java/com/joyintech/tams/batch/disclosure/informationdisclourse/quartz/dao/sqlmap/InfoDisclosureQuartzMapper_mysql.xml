@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.batch.disclosure.informationdisclourse.quartz.dao.InfoDisclosureQuartzMapper_mysql">
+    <sql id="Base_Column_List" >
+        JOB_ID JOB_ID, JOB_NAME JOB_NAME, LOOP_DATE_TYPE LOOP_DATE_TYPE, LOOP_DATE_VALUE LOOP_DATE_VALUE,
+        LOOP_DATE_DETAIL LOOP_DATE_DETAIL, START_DATE START_DATE, END_DATE END_DATE, RULE_ID RULE_ID,
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER,
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+
+    <select id="selectJobByDate" resultType="com.joyintech.tams.batch.disclosure.informationdisclourse.quartz.dto.RepJobDetail" >
+        select
+        <include refid="com.joyintech.tams.batch.disclosure.informationdisclourse.quartz.dao.InfoDisclosureQuartzMapper.Base_Column_List" />
+        from REP_JOB
+        where START_DATE &lt;= date_format(#{Date,jdbcType=DATE},'%Y-%m-%d')
+        AND (END_DATE is null OR END_DATE = '' or END_DATE &gt;=  date_format(#{Date,jdbcType=DATE},'%Y-%m-%d'))
+    </select>
+
+</mapper>

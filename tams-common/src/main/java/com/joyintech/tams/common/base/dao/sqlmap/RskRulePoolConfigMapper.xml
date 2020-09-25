@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RskRulePoolConfigMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RskRulePoolConfig" >
+        <id column="RULE_ID" property="ruleId" jdbcType="VARCHAR" />
+        <id column="CLASSIFY_DIMENSION" property="classifyDimension" jdbcType="VARCHAR" />
+        <result column="CLASSIFY_DIMENSION_VAL" property="classifyDimensionVal" jdbcType="VARCHAR" />
+        <result column="LINK_SIGN" property="linkSign" jdbcType="VARCHAR" />
+        <result column="PARAM_NUM" property="paramNum" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        RULE_ID RULE_ID, CLASSIFY_DIMENSION CLASSIFY_DIMENSION, CLASSIFY_DIMENSION_VAL CLASSIFY_DIMENSION_VAL, 
+        LINK_SIGN LINK_SIGN, PARAM_NUM PARAM_NUM, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskRulePoolConfigMapper.Base_Column_List" />
+        from RSK_RULE_POOL_CONFIG
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskRulePoolConfigMapper.Base_Column_List" />
+        from RSK_RULE_POOL_CONFIG
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.RskRulePoolConfigKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskRulePoolConfigMapper.Base_Column_List" />
+        from RSK_RULE_POOL_CONFIG
+        where RULE_ID = #{ruleId,jdbcType=VARCHAR}
+          and CLASSIFY_DIMENSION = #{classifyDimension,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskRulePoolConfigKey" >
+        delete from RSK_RULE_POOL_CONFIG
+        where RULE_ID = #{ruleId,jdbcType=VARCHAR}
+          and CLASSIFY_DIMENSION = #{classifyDimension,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RskRulePoolConfig" >
+        insert into RSK_RULE_POOL_CONFIG (RULE_ID, CLASSIFY_DIMENSION, CLASSIFY_DIMENSION_VAL, 
+            LINK_SIGN, PARAM_NUM, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{ruleId,jdbcType=VARCHAR}, #{classifyDimension,jdbcType=VARCHAR}, #{classifyDimensionVal,jdbcType=VARCHAR}, 
+            #{linkSign,jdbcType=VARCHAR}, #{paramNum,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskRulePoolConfig" >
+        insert into RSK_RULE_POOL_CONFIG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="ruleId != null" >
+                RULE_ID,
+            </if>
+            <if test="classifyDimension != null" >
+                CLASSIFY_DIMENSION,
+            </if>
+            <if test="classifyDimensionVal != null" >
+                CLASSIFY_DIMENSION_VAL,
+            </if>
+            <if test="linkSign != null" >
+                LINK_SIGN,
+            </if>
+            <if test="paramNum != null" >
+                PARAM_NUM,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="ruleId != null" >
+                #{ruleId,jdbcType=VARCHAR},
+            </if>
+            <if test="classifyDimension != null" >
+                #{classifyDimension,jdbcType=VARCHAR},
+            </if>
+            <if test="classifyDimensionVal != null" >
+                #{classifyDimensionVal,jdbcType=VARCHAR},
+            </if>
+            <if test="linkSign != null" >
+                #{linkSign,jdbcType=VARCHAR},
+            </if>
+            <if test="paramNum != null" >
+                #{paramNum,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskRulePoolConfig" >
+        insert into RSK_RULE_POOL_CONFIG(RULE_ID, CLASSIFY_DIMENSION, CLASSIFY_DIMENSION_VAL, 
+        LINK_SIGN, PARAM_NUM, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        select RULE_ID, CLASSIFY_DIMENSION, CLASSIFY_DIMENSION_VAL, 
+            LINK_SIGN, PARAM_NUM, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            
+             from RSK_RULE_POOL_CONFIG
+             where 1 = 1 and RULE_ID = #{ruleId,jdbcType=VARCHAR} and CLASSIFY_DIMENSION = #{classifyDimension,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RskRulePoolConfig" >
+        update RSK_RULE_POOL_CONFIG
+        <set >
+            <if test="classifyDimensionVal != null" >
+                CLASSIFY_DIMENSION_VAL = #{classifyDimensionVal,jdbcType=VARCHAR},
+            </if>
+            <if test="linkSign != null" >
+                LINK_SIGN = #{linkSign,jdbcType=VARCHAR},
+            </if>
+            <if test="paramNum != null" >
+                PARAM_NUM = #{paramNum,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where RULE_ID = #{ruleId,jdbcType=VARCHAR}
+          and CLASSIFY_DIMENSION = #{classifyDimension,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskRulePoolConfig" >
+        update RSK_RULE_POOL_CONFIG
+        set CLASSIFY_DIMENSION_VAL = #{classifyDimensionVal,jdbcType=VARCHAR},
+            LINK_SIGN = #{linkSign,jdbcType=VARCHAR},
+            PARAM_NUM = #{paramNum,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where RULE_ID = #{ruleId,jdbcType=VARCHAR}
+          and CLASSIFY_DIMENSION = #{classifyDimension,jdbcType=VARCHAR}
+    </update>
+</mapper>

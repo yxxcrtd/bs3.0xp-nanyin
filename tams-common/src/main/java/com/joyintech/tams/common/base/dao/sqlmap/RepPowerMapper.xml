@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepPowerMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepPower" >
+        <id column="ID" property="id" jdbcType="VARCHAR" />
+        <result column="TYPE" property="type" jdbcType="VARCHAR" />
+        <result column="REPORT_ID" property="reportId" jdbcType="VARCHAR" />
+        <result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ID ID, TYPE TYPE, REPORT_ID REPORT_ID, ROLE_NAME ROLE_NAME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepPowerMapper.Base_Column_List" />
+        from REP_POWER
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepPowerMapper.Base_Column_List" />
+        from REP_POWER
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepPowerMapper.Base_Column_List" />
+        from REP_POWER
+        where ID = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from REP_POWER
+        where ID = #{id,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepPower" >
+        insert into REP_POWER (ID, TYPE, REPORT_ID, 
+            ROLE_NAME)
+        values (#{id,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{reportId,jdbcType=VARCHAR}, 
+            #{roleName,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepPower" >
+        insert into REP_POWER
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                ID,
+            </if>
+            <if test="type != null" >
+                TYPE,
+            </if>
+            <if test="reportId != null" >
+                REPORT_ID,
+            </if>
+            <if test="roleName != null" >
+                ROLE_NAME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null" >
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="reportId != null" >
+                #{reportId,jdbcType=VARCHAR},
+            </if>
+            <if test="roleName != null" >
+                #{roleName,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepPower" >
+        insert into REP_POWER(ID, TYPE, REPORT_ID, ROLE_NAME)
+        select ID, TYPE, REPORT_ID, ROLE_NAME
+             from REP_POWER
+             where 1 = 1 and ID = #{id,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepPower" >
+        update REP_POWER
+        <set >
+            <if test="type != null" >
+                TYPE = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="reportId != null" >
+                REPORT_ID = #{reportId,jdbcType=VARCHAR},
+            </if>
+            <if test="roleName != null" >
+                ROLE_NAME = #{roleName,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepPower" >
+        update REP_POWER
+        set TYPE = #{type,jdbcType=VARCHAR},
+            REPORT_ID = #{reportId,jdbcType=VARCHAR},
+            ROLE_NAME = #{roleName,jdbcType=VARCHAR}
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+</mapper>

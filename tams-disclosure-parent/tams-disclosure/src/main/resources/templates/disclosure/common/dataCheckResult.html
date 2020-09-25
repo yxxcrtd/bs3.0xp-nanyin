@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
+<head>
+<style>
+    .layui-table-cell {
+        height: auto !important;
+    }
+</style>
+</head>
+<body>
+<div layout:fragment="content" class="check-wrap">
+   <table class="layui-table" id="checkTable" style="width:100%;margin-bottom:0px;">
+   </table>
+</div>
+ <div layout:fragment="script">
+        <script data-th-src="@{/js/disclosure/common/dataCheckResult.js}" type="text/javascript"></script>
+    </div>
+</body>
+</html>
+ 

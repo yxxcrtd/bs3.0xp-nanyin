@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.manage.workmonitor.dao.ReportWorkMonitor002Mapper_db2">
+	<select id="findPage" resultType="com.joyintech.tams.disclosure.information.manage.workmonitor.dto.ReportWorkMonitor002Dto">
+		select * from (select DISTINCT * from (SELECT 
+		    rild.PRODID      prodid,
+		    rild.PROD_NAME   prodName,
+		    rild.REP_TYPE    repType,
+		    rfp.NAME         repTypeName,
+		    rild.REP_NAME    repName,
+		    case when 
+				  rild.START_DATE is null or rild.START_DATE = rild.END_DATE
+			then to_char(rild.END_DATE,'yyyy-mm-dd')
+			else to_char(rild.START_DATE,'yyyy-mm-dd') || '--'||to_char(rild.END_DATE,'yyyy-mm-dd')
+			end reportDate,
+			rild.REVEAL_END_DATE revealEndDate,
+		    rild.EXEC_STATUS execStatus,
+		    to_char(rild.STR_EXEC_DATE,'yyyy-mm-dd hh24:mi:ss')  startExecDate,
+		    to_char(rild.END_EXEC_DATE,'yyyy-mm-dd hh24:mi:ss')  endExecDate,
+		    decode(rild.EXEC_STATUS,'01','01','02') execResult,
+		    rild.EXEC_RESULT        execResultExplain,
+		    ril.JOB_NAME     jobName
+		FROM
+		    REP_INSTALL_LOG_DETAIL rild
+		INNER JOIN
+		    REP_INSTALL_LOG ril
+		ON
+		    rild.JOB_ID = ril.JOB_ID
+		AND ril.STATUS = #{status,jdbcType=VARCHAR}
+		LEFT JOIN
+		    REP_INFO ri
+		ON
+		    rild.REP_ID = ri.REP_ID
+		LEFT JOIN
+		    REP_FTP_PATH rfp
+		ON
+		    ri.REPORT_CATEGORY = rfp.ID
+<!-- 		LEFT JOIN REP_CHECK_ERRMSG check on check.MSGID = rild.id -->
+		LEFT JOIN (
+			SELECT
+				rep_id,
+				LISTAGG(ERRORMSG, '；') as errormsg
+			FROM REP_CHECK_ERRMSG 
+			GROUP BY rep_id
+		) check on check.rep_id = rild.id
+		WHERE
+		    rild.STATUS = #{status,jdbcType=VARCHAR}
+		<if test="jobIdArr != null and jobIdArr.length > 0">
+			AND rild.JOB_ID in
+			<foreach item="item" collection="jobIdArr" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="prodIdArr != null and prodIdArr.length > 0">
+	 		AND rild.PRODID IN
+			<foreach item="item" collection="prodIdArr" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="repName != null and repName != ''">
+	 		AND rild.REP_NAME like '%' || #{repName,jdbcType=VARCHAR} || '%'
+		</if>
+		<if test="execStatusArr != null and execStatusArr.length > 0">
+	 		AND rild.EXEC_STATUS IN
+			<foreach item="item" collection="execStatusArr" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="execResultArr != null and execResultArr.length > 0">
+	 		AND rild.EXEC_STATUS IN
+			<foreach item="item" collection="execResultArr" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="valDateBegin !=null and valDateBegin !='' ">
+            AND to_char(rild.STR_EXEC_DATE,'yyyy-mm-dd') <![CDATA[>=]]> #{valDateBegin,jdbcType=VARCHAR}
+        </if>
+        <if test="valDateEnd !=null and valDateEnd !='' ">
+            AND to_char(rild.END_EXEC_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{valDateEnd,jdbcType=VARCHAR}
+        </if>
+		<if test="repTypeArr != null and repTypeArr.length > 0">
+	 		AND ri.REPORT_CATEGORY IN
+			<foreach item="item" collection="repTypeArr" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+        <!-- <if test="confromPage == null or confromPage == ''">
+	        <if test="revealEndDateBegin !=null and revealEndDateBegin !='' ">
+	            AND to_char(rild.REVEAL_END_DATE,'yyyy-mm-dd') <![CDATA[>=]]> #{revealEndDateBegin,jdbcType=VARCHAR}
+	        </if>
+	        <if test="revealEndDateEnd !=null and revealEndDateEnd !='' ">
+	            AND to_char(rild.REVEAL_END_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{revealEndDateEnd,jdbcType=VARCHAR}
+	        </if>
+        </if>
+        <if test="confromPage != null and confromPage != ''">
+        	<if test="revealEndDateEnd !=null and revealEndDateEnd !='' ">
+	            AND to_char(rild.REVEAL_END_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{revealEndDateEnd,jdbcType=VARCHAR}
+	        </if>
+        </if> -->
+        <if test="revealEndDateBegin !=null and revealEndDateBegin !='' ">
+            AND to_char(rild.REVEAL_END_DATE,'yyyy-mm-dd') <![CDATA[>=]]> #{revealEndDateBegin,jdbcType=VARCHAR}
+        </if>
+        <if test="revealEndDateEnd !=null and revealEndDateEnd !='' ">
+            AND to_char(rild.REVEAL_END_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{revealEndDateEnd,jdbcType=VARCHAR}
+        </if>
+        order by rild.UPDATE_TIME desc))where 1=1
+	</select>
+</mapper>

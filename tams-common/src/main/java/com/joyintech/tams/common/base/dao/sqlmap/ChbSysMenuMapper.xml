@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbSysMenuMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbSysMenu" >
+        <id column="C_S_M_MENU_ID" property="menuId" jdbcType="VARCHAR" />
+        <result column="C_S_M_PARENT_MENU_ID" property="parentMenuId" jdbcType="VARCHAR" />
+        <result column="C_S_M_PAGE_ID" property="pageId" jdbcType="VARCHAR" />
+        <result column="C_S_M_ORDER_NO" property="orderNo" jdbcType="DECIMAL" />
+        <result column="C_S_M_STATUS" property="status" jdbcType="CHAR" />
+        <result column="C_S_M_REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="C_S_M_CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="C_S_M_CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="C_S_M_UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="C_S_M_UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        MENU_ID as C_S_M_MENU_ID, PARENT_MENU_ID as C_S_M_PARENT_MENU_ID, PAGE_ID as C_S_M_PAGE_ID, 
+        ORDER_NO as C_S_M_ORDER_NO, STATUS as C_S_M_STATUS, REMARK as C_S_M_REMARK, CREATE_USER as C_S_M_CREATE_USER, 
+        CREATE_TIME as C_S_M_CREATE_TIME, UPDATE_USER as C_S_M_UPDATE_USER, UPDATE_TIME as C_S_M_UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysMenuMapper.Base_Column_List" />
+        from CHB_SYS_MENU
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysMenuMapper.Base_Column_List" />
+        from CHB_SYS_MENU
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysMenuMapper.Base_Column_List" />
+        from CHB_SYS_MENU
+        where MENU_ID = #{menuId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_SYS_MENU
+        where MENU_ID = #{menuId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_SYS_MENU
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbSysMenu" >
+        insert into CHB_SYS_MENU (MENU_ID, PARENT_MENU_ID, PAGE_ID, 
+            ORDER_NO, STATUS, REMARK, 
+            CREATE_USER, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{menuId,jdbcType=VARCHAR}, #{parentMenuId,jdbcType=VARCHAR}, #{pageId,jdbcType=VARCHAR}, 
+            #{orderNo,jdbcType=DECIMAL}, #{status,jdbcType=CHAR}, #{remark,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysMenu" >
+        insert into CHB_SYS_MENU
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="menuId != null" >
+                MENU_ID,
+            </if>
+            <if test="parentMenuId != null" >
+                PARENT_MENU_ID,
+            </if>
+            <if test="pageId != null" >
+                PAGE_ID,
+            </if>
+            <if test="orderNo != null" >
+                ORDER_NO,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="menuId != null" >
+                #{menuId,jdbcType=VARCHAR},
+            </if>
+            <if test="parentMenuId != null" >
+                #{parentMenuId,jdbcType=VARCHAR},
+            </if>
+            <if test="pageId != null" >
+                #{pageId,jdbcType=VARCHAR},
+            </if>
+            <if test="orderNo != null" >
+                #{orderNo,jdbcType=DECIMAL},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=CHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbSysMenu" >
+        insert into CHB_SYS_MENU(MENU_ID, PARENT_MENU_ID, PAGE_ID, ORDER_NO, STATUS, REMARK, 
+        CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select MENU_ID, PARENT_MENU_ID, PAGE_ID, ORDER_NO, #{status,jdbcType=VARCHAR} as STATUS, REMARK, 
+            CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME
+             from CHB_SYS_MENU
+             where STATUS = 'E' and MENU_ID = #{menuId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysMenu" >
+        update CHB_SYS_MENU
+        <set >
+            <if test="parentMenuId != null" >
+                PARENT_MENU_ID = #{parentMenuId,jdbcType=VARCHAR},
+            </if>
+            <if test="pageId != null" >
+                PAGE_ID = #{pageId,jdbcType=VARCHAR},
+            </if>
+            <if test="orderNo != null" >
+                ORDER_NO = #{orderNo,jdbcType=DECIMAL},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=CHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where MENU_ID = #{menuId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysMenu" >
+        update CHB_SYS_MENU
+        <set >
+            <if test="menuId != null" >
+                MENU_ID = #{menuId,jdbcType=VARCHAR},
+            </if>
+            <if test="parentMenuId != null" >
+                PARENT_MENU_ID = #{parentMenuId,jdbcType=VARCHAR},
+            </if>
+            <if test="pageId != null" >
+                PAGE_ID = #{pageId,jdbcType=VARCHAR},
+            </if>
+            <if test="orderNo != null" >
+                ORDER_NO = #{orderNo,jdbcType=DECIMAL},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=CHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbSysMenu" >
+        update CHB_SYS_MENU
+        set 
+        MENU_ID = #{menuId,jdbcType=VARCHAR},
+        PARENT_MENU_ID = #{parentMenuId,jdbcType=VARCHAR},
+        PAGE_ID = #{pageId,jdbcType=VARCHAR},
+        ORDER_NO = #{orderNo,jdbcType=DECIMAL},
+        STATUS = #{status,jdbcType=CHAR},
+        REMARK = #{remark,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbSysMenu" >
+        update CHB_SYS_MENU
+        set PARENT_MENU_ID = #{parentMenuId,jdbcType=VARCHAR},
+            PAGE_ID = #{pageId,jdbcType=VARCHAR},
+            ORDER_NO = #{orderNo,jdbcType=DECIMAL},
+            STATUS = #{status,jdbcType=CHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where MENU_ID = #{menuId,jdbcType=VARCHAR}
+    </update>
+</mapper>

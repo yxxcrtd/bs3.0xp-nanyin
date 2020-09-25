@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbInfoReportMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbInfoReport" >
+        <id column="REPORT_NO" property="reportNo" jdbcType="VARCHAR" />
+        <result column="REP_MES_NO" property="repMesNo" jdbcType="VARCHAR" />
+        <result column="UPLOAD_RESULT" property="uploadResult" jdbcType="VARCHAR" />
+        <result column="UPLOAD_RESULT_MSG" property="uploadResultMsg" jdbcType="VARCHAR" />
+        <result column="UPLOAD_FILE_ID" property="uploadFileId" jdbcType="VARCHAR" />
+        <result column="CHECK_FILE_ID" property="checkFileId" jdbcType="VARCHAR" />
+        <result column="CHECK_RESULT" property="checkResult" jdbcType="VARCHAR" />
+        <result column="CHECK_RESULT_MSG" property="checkResultMsg" jdbcType="VARCHAR" />
+        <result column="CHECK_FILE_NAME" property="checkFileName" jdbcType="VARCHAR" />
+        <result column="CHECK_TOTAL_COUNT" property="checkTotalCount" jdbcType="DECIMAL" />
+        <result column="CHECK_SUCCESS_COUNT" property="checkSuccessCount" jdbcType="DECIMAL" />
+        <result column="CHECK_FAILED_COUNT" property="checkFailedCount" jdbcType="DECIMAL" />
+        <result column="INSIDE_FILE_ID" property="insideFileId" jdbcType="VARCHAR" />
+        <result column="SEND_TIME" property="sendTime" jdbcType="DATE" />
+        <result column="REPLY_TIME" property="replyTime" jdbcType="TIMESTAMP" />
+        <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_COUNT" property="submitCount" jdbcType="DECIMAL" />
+        <result column="SUBMIT_TYPE" property="submitType" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        REPORT_NO REPORT_NO, REP_MES_NO REP_MES_NO, UPLOAD_RESULT UPLOAD_RESULT, UPLOAD_RESULT_MSG UPLOAD_RESULT_MSG, 
+        UPLOAD_FILE_ID UPLOAD_FILE_ID, CHECK_FILE_ID CHECK_FILE_ID, CHECK_RESULT CHECK_RESULT, 
+        CHECK_RESULT_MSG CHECK_RESULT_MSG, CHECK_FILE_NAME CHECK_FILE_NAME, CHECK_TOTAL_COUNT CHECK_TOTAL_COUNT, 
+        CHECK_SUCCESS_COUNT CHECK_SUCCESS_COUNT, CHECK_FAILED_COUNT CHECK_FAILED_COUNT, INSIDE_FILE_ID INSIDE_FILE_ID, 
+        SEND_TIME SEND_TIME, REPLY_TIME REPLY_TIME, WORKFLOW_ID WORKFLOW_ID, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
+        SUBMIT_COUNT SUBMIT_COUNT, SUBMIT_TYPE SUBMIT_TYPE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbInfoReportMapper.Base_Column_List" />
+        from CHB_INFO_REPORT
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbInfoReportMapper.Base_Column_List" />
+        from CHB_INFO_REPORT
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbInfoReportMapper.Base_Column_List" />
+        from CHB_INFO_REPORT
+        where REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_INFO_REPORT
+        where REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_INFO_REPORT
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbInfoReport" >
+        insert into CHB_INFO_REPORT (REPORT_NO, REP_MES_NO, UPLOAD_RESULT, 
+            UPLOAD_RESULT_MSG, UPLOAD_FILE_ID, CHECK_FILE_ID, 
+            CHECK_RESULT, CHECK_RESULT_MSG, CHECK_FILE_NAME, 
+            CHECK_TOTAL_COUNT, CHECK_SUCCESS_COUNT, CHECK_FAILED_COUNT, 
+            INSIDE_FILE_ID, SEND_TIME, REPLY_TIME, 
+            WORKFLOW_ID, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            SUBMIT_COUNT, SUBMIT_TYPE)
+        values (#{reportNo,jdbcType=VARCHAR}, #{repMesNo,jdbcType=VARCHAR}, #{uploadResult,jdbcType=VARCHAR}, 
+            #{uploadResultMsg,jdbcType=VARCHAR}, #{uploadFileId,jdbcType=VARCHAR}, #{checkFileId,jdbcType=VARCHAR}, 
+            #{checkResult,jdbcType=VARCHAR}, #{checkResultMsg,jdbcType=VARCHAR}, #{checkFileName,jdbcType=VARCHAR}, 
+            #{checkTotalCount,jdbcType=DECIMAL}, #{checkSuccessCount,jdbcType=DECIMAL}, #{checkFailedCount,jdbcType=DECIMAL}, 
+            #{insideFileId,jdbcType=VARCHAR}, #{sendTime,jdbcType=DATE}, #{replyTime,jdbcType=TIMESTAMP}, 
+            #{workflowId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{submitCount,jdbcType=DECIMAL}, #{submitType,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbInfoReport" >
+        insert into CHB_INFO_REPORT
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="reportNo != null" >
+                REPORT_NO,
+            </if>
+            <if test="repMesNo != null" >
+                REP_MES_NO,
+            </if>
+            <if test="uploadResult != null" >
+                UPLOAD_RESULT,
+            </if>
+            <if test="uploadResultMsg != null" >
+                UPLOAD_RESULT_MSG,
+            </if>
+            <if test="uploadFileId != null" >
+                UPLOAD_FILE_ID,
+            </if>
+            <if test="checkFileId != null" >
+                CHECK_FILE_ID,
+            </if>
+            <if test="checkResult != null" >
+                CHECK_RESULT,
+            </if>
+            <if test="checkResultMsg != null" >
+                CHECK_RESULT_MSG,
+            </if>
+            <if test="checkFileName != null" >
+                CHECK_FILE_NAME,
+            </if>
+            <if test="checkTotalCount != null" >
+                CHECK_TOTAL_COUNT,
+            </if>
+            <if test="checkSuccessCount != null" >
+                CHECK_SUCCESS_COUNT,
+            </if>
+            <if test="checkFailedCount != null" >
+                CHECK_FAILED_COUNT,
+            </if>
+            <if test="insideFileId != null" >
+                INSIDE_FILE_ID,
+            </if>
+            <if test="sendTime != null" >
+                SEND_TIME,
+            </if>
+            <if test="replyTime != null" >
+                REPLY_TIME,
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="submitCount != null" >
+                SUBMIT_COUNT,
+            </if>
+            <if test="submitType != null" >
+                SUBMIT_TYPE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="reportNo != null" >
+                #{reportNo,jdbcType=VARCHAR},
+            </if>
+            <if test="repMesNo != null" >
+                #{repMesNo,jdbcType=VARCHAR},
+            </if>
+            <if test="uploadResult != null" >
+                #{uploadResult,jdbcType=VARCHAR},
+            </if>
+            <if test="uploadResultMsg != null" >
+                #{uploadResultMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="uploadFileId != null" >
+                #{uploadFileId,jdbcType=VARCHAR},
+            </if>
+            <if test="checkFileId != null" >
+                #{checkFileId,jdbcType=VARCHAR},
+            </if>
+            <if test="checkResult != null" >
+                #{checkResult,jdbcType=VARCHAR},
+            </if>
+            <if test="checkResultMsg != null" >
+                #{checkResultMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="checkFileName != null" >
+                #{checkFileName,jdbcType=VARCHAR},
+            </if>
+            <if test="checkTotalCount != null" >
+                #{checkTotalCount,jdbcType=DECIMAL},
+            </if>
+            <if test="checkSuccessCount != null" >
+                #{checkSuccessCount,jdbcType=DECIMAL},
+            </if>
+            <if test="checkFailedCount != null" >
+                #{checkFailedCount,jdbcType=DECIMAL},
+            </if>
+            <if test="insideFileId != null" >
+                #{insideFileId,jdbcType=VARCHAR},
+            </if>
+            <if test="sendTime != null" >
+                #{sendTime,jdbcType=DATE},
+            </if>
+            <if test="replyTime != null" >
+                #{replyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="workflowId != null" >
+                #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitCount != null" >
+                #{submitCount,jdbcType=DECIMAL},
+            </if>
+            <if test="submitType != null" >
+                #{submitType,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbInfoReport" >
+        insert into CHB_INFO_REPORT(REPORT_NO, REP_MES_NO, UPLOAD_RESULT, UPLOAD_RESULT_MSG, 
+        UPLOAD_FILE_ID, CHECK_FILE_ID, CHECK_RESULT, CHECK_RESULT_MSG, CHECK_FILE_NAME, CHECK_TOTAL_COUNT, 
+        CHECK_SUCCESS_COUNT, CHECK_FAILED_COUNT, INSIDE_FILE_ID, SEND_TIME, REPLY_TIME, WORKFLOW_ID, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUBMIT_COUNT, SUBMIT_TYPE
+        )
+        select REPORT_NO, REP_MES_NO, UPLOAD_RESULT, UPLOAD_RESULT_MSG, 
+            UPLOAD_FILE_ID, CHECK_FILE_ID, CHECK_RESULT, CHECK_RESULT_MSG, CHECK_FILE_NAME, CHECK_TOTAL_COUNT, 
+            CHECK_SUCCESS_COUNT, CHECK_FAILED_COUNT, INSIDE_FILE_ID, SEND_TIME, REPLY_TIME, #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, SUBMIT_COUNT, SUBMIT_TYPE
+            
+             from CHB_INFO_REPORT
+             where STATUS = 'E' and REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+    </insert>
+    <insert id="insertBasicByWorkflowId" parameterType="java.util.Map" >
+        insert into CHB_INFO_REPORT(REPORT_NO, REP_MES_NO, UPLOAD_RESULT, UPLOAD_RESULT_MSG, 
+        UPLOAD_FILE_ID, CHECK_FILE_ID, CHECK_RESULT, CHECK_RESULT_MSG, CHECK_FILE_NAME, CHECK_TOTAL_COUNT, 
+        CHECK_SUCCESS_COUNT, CHECK_FAILED_COUNT, INSIDE_FILE_ID, SEND_TIME, REPLY_TIME, WORKFLOW_ID, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUBMIT_COUNT, SUBMIT_TYPE
+        )
+        select REPORT_NO, REP_MES_NO, UPLOAD_RESULT, UPLOAD_RESULT_MSG, 
+            UPLOAD_FILE_ID, CHECK_FILE_ID, CHECK_RESULT, CHECK_RESULT_MSG, CHECK_FILE_NAME, CHECK_TOTAL_COUNT, 
+            CHECK_SUCCESS_COUNT, CHECK_FAILED_COUNT, INSIDE_FILE_ID, SEND_TIME, REPLY_TIME, #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, SUBMIT_COUNT, SUBMIT_TYPE
+            
+             from CHB_INFO_REPORT
+             where STATUS = 'E' and WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbInfoReport" >
+        update CHB_INFO_REPORT
+        <set >
+            <if test="repMesNo != null" >
+                REP_MES_NO = #{repMesNo,jdbcType=VARCHAR},
+            </if>
+            <if test="uploadResult != null" >
+                UPLOAD_RESULT = #{uploadResult,jdbcType=VARCHAR},
+            </if>
+            <if test="uploadResultMsg != null" >
+                UPLOAD_RESULT_MSG = #{uploadResultMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="uploadFileId != null" >
+                UPLOAD_FILE_ID = #{uploadFileId,jdbcType=VARCHAR},
+            </if>
+            <if test="checkFileId != null" >
+                CHECK_FILE_ID = #{checkFileId,jdbcType=VARCHAR},
+            </if>
+            <if test="checkResult != null" >
+                CHECK_RESULT = #{checkResult,jdbcType=VARCHAR},
+            </if>
+            <if test="checkResultMsg != null" >
+                CHECK_RESULT_MSG = #{checkResultMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="checkFileName != null" >
+                CHECK_FILE_NAME = #{checkFileName,jdbcType=VARCHAR},
+            </if>
+            <if test="checkTotalCount != null" >
+                CHECK_TOTAL_COUNT = #{checkTotalCount,jdbcType=DECIMAL},
+            </if>
+            <if test="checkSuccessCount != null" >
+                CHECK_SUCCESS_COUNT = #{checkSuccessCount,jdbcType=DECIMAL},
+            </if>
+            <if test="checkFailedCount != null" >
+                CHECK_FAILED_COUNT = #{checkFailedCount,jdbcType=DECIMAL},
+            </if>
+            <if test="insideFileId != null" >
+                INSIDE_FILE_ID = #{insideFileId,jdbcType=VARCHAR},
+            </if>
+            <if test="sendTime != null" >
+                SEND_TIME = #{sendTime,jdbcType=DATE},
+            </if>
+            <if test="replyTime != null" >
+                REPLY_TIME = #{replyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitCount != null" >
+                SUBMIT_COUNT = #{submitCount,jdbcType=DECIMAL},
+            </if>
+            <if test="submitType != null" >
+                SUBMIT_TYPE = #{submitType,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbInfoReport" >
+        update CHB_INFO_REPORT
+        <set >
+            <if test="reportNo != null" >
+                REPORT_NO = #{reportNo,jdbcType=VARCHAR},
+            </if>
+            <if test="repMesNo != null" >
+                REP_MES_NO = #{repMesNo,jdbcType=VARCHAR},
+            </if>
+            <if test="uploadResult != null" >
+                UPLOAD_RESULT = #{uploadResult,jdbcType=VARCHAR},
+            </if>
+            <if test="uploadResultMsg != null" >
+                UPLOAD_RESULT_MSG = #{uploadResultMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="uploadFileId != null" >
+                UPLOAD_FILE_ID = #{uploadFileId,jdbcType=VARCHAR},
+            </if>
+            <if test="checkFileId != null" >
+                CHECK_FILE_ID = #{checkFileId,jdbcType=VARCHAR},
+            </if>
+            <if test="checkResult != null" >
+                CHECK_RESULT = #{checkResult,jdbcType=VARCHAR},
+            </if>
+            <if test="checkResultMsg != null" >
+                CHECK_RESULT_MSG = #{checkResultMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="checkFileName != null" >
+                CHECK_FILE_NAME = #{checkFileName,jdbcType=VARCHAR},
+            </if>
+            <if test="checkTotalCount != null" >
+                CHECK_TOTAL_COUNT = #{checkTotalCount,jdbcType=DECIMAL},
+            </if>
+            <if test="checkSuccessCount != null" >
+                CHECK_SUCCESS_COUNT = #{checkSuccessCount,jdbcType=DECIMAL},
+            </if>
+            <if test="checkFailedCount != null" >
+                CHECK_FAILED_COUNT = #{checkFailedCount,jdbcType=DECIMAL},
+            </if>
+            <if test="insideFileId != null" >
+                INSIDE_FILE_ID = #{insideFileId,jdbcType=VARCHAR},
+            </if>
+            <if test="sendTime != null" >
+                SEND_TIME = #{sendTime,jdbcType=DATE},
+            </if>
+            <if test="replyTime != null" >
+                REPLY_TIME = #{replyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitCount != null" >
+                SUBMIT_COUNT = #{submitCount,jdbcType=DECIMAL},
+            </if>
+            <if test="submitType != null" >
+                SUBMIT_TYPE = #{submitType,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbInfoReport" >
+        update CHB_INFO_REPORT
+        set 
+        REPORT_NO = #{reportNo,jdbcType=VARCHAR},
+        REP_MES_NO = #{repMesNo,jdbcType=VARCHAR},
+        UPLOAD_RESULT = #{uploadResult,jdbcType=VARCHAR},
+        UPLOAD_RESULT_MSG = #{uploadResultMsg,jdbcType=VARCHAR},
+        UPLOAD_FILE_ID = #{uploadFileId,jdbcType=VARCHAR},
+        CHECK_FILE_ID = #{checkFileId,jdbcType=VARCHAR},
+        CHECK_RESULT = #{checkResult,jdbcType=VARCHAR},
+        CHECK_RESULT_MSG = #{checkResultMsg,jdbcType=VARCHAR},
+        CHECK_FILE_NAME = #{checkFileName,jdbcType=VARCHAR},
+        CHECK_TOTAL_COUNT = #{checkTotalCount,jdbcType=DECIMAL},
+        CHECK_SUCCESS_COUNT = #{checkSuccessCount,jdbcType=DECIMAL},
+        CHECK_FAILED_COUNT = #{checkFailedCount,jdbcType=DECIMAL},
+        INSIDE_FILE_ID = #{insideFileId,jdbcType=VARCHAR},
+        SEND_TIME = #{sendTime,jdbcType=DATE},
+        REPLY_TIME = #{replyTime,jdbcType=TIMESTAMP},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        SUBMIT_COUNT = #{submitCount,jdbcType=DECIMAL},
+        SUBMIT_TYPE = #{submitType,jdbcType=VARCHAR}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbInfoReport" >
+        update CHB_INFO_REPORT
+        set REP_MES_NO = #{repMesNo,jdbcType=VARCHAR},
+            UPLOAD_RESULT = #{uploadResult,jdbcType=VARCHAR},
+            UPLOAD_RESULT_MSG = #{uploadResultMsg,jdbcType=VARCHAR},
+            UPLOAD_FILE_ID = #{uploadFileId,jdbcType=VARCHAR},
+            CHECK_FILE_ID = #{checkFileId,jdbcType=VARCHAR},
+            CHECK_RESULT = #{checkResult,jdbcType=VARCHAR},
+            CHECK_RESULT_MSG = #{checkResultMsg,jdbcType=VARCHAR},
+            CHECK_FILE_NAME = #{checkFileName,jdbcType=VARCHAR},
+            CHECK_TOTAL_COUNT = #{checkTotalCount,jdbcType=DECIMAL},
+            CHECK_SUCCESS_COUNT = #{checkSuccessCount,jdbcType=DECIMAL},
+            CHECK_FAILED_COUNT = #{checkFailedCount,jdbcType=DECIMAL},
+            INSIDE_FILE_ID = #{insideFileId,jdbcType=VARCHAR},
+            SEND_TIME = #{sendTime,jdbcType=DATE},
+            REPLY_TIME = #{replyTime,jdbcType=TIMESTAMP},
+            WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            SUBMIT_COUNT = #{submitCount,jdbcType=DECIMAL},
+            SUBMIT_TYPE = #{submitType,jdbcType=VARCHAR}
+        where REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+    </update>
+</mapper>

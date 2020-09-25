@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ValSubjectTableidMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ValSubjectTableid" >
+        <id column="SUBJECT_HEAD" property="subjectHead" jdbcType="VARCHAR" />
+        <result column="TABLEID" property="tableid" jdbcType="VARCHAR" />
+        <result column="ASSETS_NAME" property="assetsName" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SUBJECT_HEAD SUBJECT_HEAD, TABLEID TABLEID, ASSETS_NAME ASSETS_NAME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValSubjectTableidMapper.Base_Column_List" />
+        from VAL_SUBJECT_TABLEID
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValSubjectTableidMapper.Base_Column_List" />
+        from VAL_SUBJECT_TABLEID
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValSubjectTableidMapper.Base_Column_List" />
+        from VAL_SUBJECT_TABLEID
+        where SUBJECT_HEAD = #{subjectHead,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from VAL_SUBJECT_TABLEID
+        where SUBJECT_HEAD = #{subjectHead,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ValSubjectTableid" >
+        insert into VAL_SUBJECT_TABLEID (SUBJECT_HEAD, TABLEID, ASSETS_NAME
+            )
+        values (#{subjectHead,jdbcType=VARCHAR}, #{tableid,jdbcType=VARCHAR}, #{assetsName,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ValSubjectTableid" >
+        insert into VAL_SUBJECT_TABLEID
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="subjectHead != null" >
+                SUBJECT_HEAD,
+            </if>
+            <if test="tableid != null" >
+                TABLEID,
+            </if>
+            <if test="assetsName != null" >
+                ASSETS_NAME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="subjectHead != null" >
+                #{subjectHead,jdbcType=VARCHAR},
+            </if>
+            <if test="tableid != null" >
+                #{tableid,jdbcType=VARCHAR},
+            </if>
+            <if test="assetsName != null" >
+                #{assetsName,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ValSubjectTableid" >
+        insert into VAL_SUBJECT_TABLEID(SUBJECT_HEAD, TABLEID, ASSETS_NAME)
+        select SUBJECT_HEAD, TABLEID, ASSETS_NAME
+             from VAL_SUBJECT_TABLEID
+             where 1 = 1 and SUBJECT_HEAD = #{subjectHead,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ValSubjectTableid" >
+        update VAL_SUBJECT_TABLEID
+        <set >
+            <if test="tableid != null" >
+                TABLEID = #{tableid,jdbcType=VARCHAR},
+            </if>
+            <if test="assetsName != null" >
+                ASSETS_NAME = #{assetsName,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where SUBJECT_HEAD = #{subjectHead,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ValSubjectTableid" >
+        update VAL_SUBJECT_TABLEID
+        set TABLEID = #{tableid,jdbcType=VARCHAR},
+            ASSETS_NAME = #{assetsName,jdbcType=VARCHAR}
+        where SUBJECT_HEAD = #{subjectHead,jdbcType=VARCHAR}
+    </update>
+</mapper>

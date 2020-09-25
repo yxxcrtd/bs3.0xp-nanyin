@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfPayhsrcholidayMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfPayhsrcholiday" >
+        <id column="OBJECT_ID" property="objectId" jdbcType="VARCHAR" />
+        <result column="HOLIDATE" property="holidate" jdbcType="VARCHAR" />
+        <result column="MARKET_CODE" property="marketCode" jdbcType="VARCHAR" />
+        <result column="EFFECTFLAG" property="effectflag" jdbcType="VARCHAR" />
+        <result column="LSTMNTDATE" property="lstmntdate" jdbcType="DATE" />
+        <result column="LSTMNTUSER" property="lstmntuser" jdbcType="VARCHAR" />
+        <result column="OPDATE" property="opdate" jdbcType="DATE" />
+        <result column="OPMODE" property="opmode" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        OBJECT_ID OBJECT_ID, HOLIDATE HOLIDATE, MARKET_CODE MARKET_CODE, EFFECTFLAG EFFECTFLAG, 
+        LSTMNTDATE LSTMNTDATE, LSTMNTUSER LSTMNTUSER, OPDATE OPDATE, OPMODE OPMODE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfPayhsrcholidayMapper.Base_Column_List" />
+        from INTERF_PAYHSRCHOLIDAY
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfPayhsrcholidayMapper.Base_Column_List" />
+        from INTERF_PAYHSRCHOLIDAY
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfPayhsrcholidayMapper.Base_Column_List" />
+        from INTERF_PAYHSRCHOLIDAY
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from INTERF_PAYHSRCHOLIDAY
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcholiday" >
+        insert into INTERF_PAYHSRCHOLIDAY (OBJECT_ID, HOLIDATE, MARKET_CODE, 
+            EFFECTFLAG, LSTMNTDATE, LSTMNTUSER, 
+            OPDATE, OPMODE)
+        values (#{objectId,jdbcType=VARCHAR}, #{holidate,jdbcType=VARCHAR}, #{marketCode,jdbcType=VARCHAR}, 
+            #{effectflag,jdbcType=VARCHAR}, #{lstmntdate,jdbcType=DATE}, #{lstmntuser,jdbcType=VARCHAR}, 
+            #{opdate,jdbcType=DATE}, #{opmode,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcholiday" >
+        insert into INTERF_PAYHSRCHOLIDAY
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                OBJECT_ID,
+            </if>
+            <if test="holidate != null" >
+                HOLIDATE,
+            </if>
+            <if test="marketCode != null" >
+                MARKET_CODE,
+            </if>
+            <if test="effectflag != null" >
+                EFFECTFLAG,
+            </if>
+            <if test="lstmntdate != null" >
+                LSTMNTDATE,
+            </if>
+            <if test="lstmntuser != null" >
+                LSTMNTUSER,
+            </if>
+            <if test="opdate != null" >
+                OPDATE,
+            </if>
+            <if test="opmode != null" >
+                OPMODE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                #{objectId,jdbcType=VARCHAR},
+            </if>
+            <if test="holidate != null" >
+                #{holidate,jdbcType=VARCHAR},
+            </if>
+            <if test="marketCode != null" >
+                #{marketCode,jdbcType=VARCHAR},
+            </if>
+            <if test="effectflag != null" >
+                #{effectflag,jdbcType=VARCHAR},
+            </if>
+            <if test="lstmntdate != null" >
+                #{lstmntdate,jdbcType=DATE},
+            </if>
+            <if test="lstmntuser != null" >
+                #{lstmntuser,jdbcType=VARCHAR},
+            </if>
+            <if test="opdate != null" >
+                #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                #{opmode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcholiday" >
+        insert into INTERF_PAYHSRCHOLIDAY(OBJECT_ID, HOLIDATE, MARKET_CODE, EFFECTFLAG, LSTMNTDATE, 
+        LSTMNTUSER, OPDATE, OPMODE)
+        select OBJECT_ID, HOLIDATE, MARKET_CODE, EFFECTFLAG, LSTMNTDATE, 
+            LSTMNTUSER, OPDATE, OPMODE
+             from INTERF_PAYHSRCHOLIDAY
+             where 1 = 1 and OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcholiday" >
+        update INTERF_PAYHSRCHOLIDAY
+        <set >
+            <if test="holidate != null" >
+                HOLIDATE = #{holidate,jdbcType=VARCHAR},
+            </if>
+            <if test="marketCode != null" >
+                MARKET_CODE = #{marketCode,jdbcType=VARCHAR},
+            </if>
+            <if test="effectflag != null" >
+                EFFECTFLAG = #{effectflag,jdbcType=VARCHAR},
+            </if>
+            <if test="lstmntdate != null" >
+                LSTMNTDATE = #{lstmntdate,jdbcType=DATE},
+            </if>
+            <if test="lstmntuser != null" >
+                LSTMNTUSER = #{lstmntuser,jdbcType=VARCHAR},
+            </if>
+            <if test="opdate != null" >
+                OPDATE = #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                OPMODE = #{opmode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcholiday" >
+        update INTERF_PAYHSRCHOLIDAY
+        set HOLIDATE = #{holidate,jdbcType=VARCHAR},
+            MARKET_CODE = #{marketCode,jdbcType=VARCHAR},
+            EFFECTFLAG = #{effectflag,jdbcType=VARCHAR},
+            LSTMNTDATE = #{lstmntdate,jdbcType=DATE},
+            LSTMNTUSER = #{lstmntuser,jdbcType=VARCHAR},
+            OPDATE = #{opdate,jdbcType=DATE},
+            OPMODE = #{opmode,jdbcType=VARCHAR}
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+</mapper>

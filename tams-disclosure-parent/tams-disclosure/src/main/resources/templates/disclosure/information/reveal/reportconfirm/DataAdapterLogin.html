@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
+<head>
+<meta charset="UTF-8">
+<title>适配器服务器登录</title>
+</head>
+<body>
+<div layout:fragment="content">
+        <div class="layui-col-md12" >
+            <div class="joyin-form-wrap joyin-form-container">
+                <form class="layui-form" id="schemeForm">
+                        <input type="text" id="serverUrl" name="serverUrl" style="display:none" class="layui-input form-input" data-th-value="${DATAADAPTER_SERVER_URL}" > 
+						<input type="text" id="serverPath" name="serverPath" style="display:none" class="layui-input form-input" data-th-value="${DATAADAPTER_SERVER_PATH}"> 
+						<input type="text" id="userName" name="userName" style="display:none" class="layui-input form-input" data-th-value="${DATAADAPTER_USERNAME}" > 
+						<input type="text" id="passWord" name="passWord" style="display:none" class="layui-input form-input" data-th-value="${DATAADAPTER_PASSWORD}" >        
+                </form>
+            </div>
+
+        </div>
+    </div>
+	<div layout:fragment="script">
+			<script data-th-src="@{/js/disclosure/information/reveal/reportconfirm/DataAdapterLogin.js}"
+									type="text/javascript"></script>
+	</div>
+</body>
+</html>

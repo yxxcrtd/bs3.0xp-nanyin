@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.PrdBonusPlanNMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.PrdBonusPlanN" >
+        <id column="BONUS_PLAN_ID" property="bonusPlanId" jdbcType="VARCHAR" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="BONU_SCALC_FLAG" property="bonuScalcFlag" jdbcType="VARCHAR" />
+        <result column="BASE_DATE" property="baseDate" jdbcType="DATE" />
+        <result column="REG_DATE" property="regDate" jdbcType="DATE" />
+        <result column="DEL_DATE" property="delDate" jdbcType="DATE" />
+        <result column="BONUS_DATE" property="bonusDate" jdbcType="DATE" />
+        <result column="VLU_REF_DATE" property="vluRefDate" jdbcType="DATE" />
+        <result column="UNIT_BONUS_VLU" property="unitBonusVlu" jdbcType="DECIMAL" />
+        <result column="TOTAL_AMT" property="totalAmt" jdbcType="DECIMAL" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="IS_NET_MORMALIZE" property="isNetMormalize" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        BONUS_PLAN_ID BONUS_PLAN_ID, FINPROD_ID FINPROD_ID, BONU_SCALC_FLAG BONU_SCALC_FLAG, 
+        BASE_DATE BASE_DATE, REG_DATE REG_DATE, DEL_DATE DEL_DATE, BONUS_DATE BONUS_DATE, 
+        VLU_REF_DATE VLU_REF_DATE, UNIT_BONUS_VLU UNIT_BONUS_VLU, TOTAL_AMT TOTAL_AMT, REMARK REMARK, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, IS_NET_MORMALIZE IS_NET_MORMALIZE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PrdBonusPlanNMapper.Base_Column_List" />
+        from PRD_BONUS_PLAN_N
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PrdBonusPlanNMapper.Base_Column_List" />
+        from PRD_BONUS_PLAN_N
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PrdBonusPlanNMapper.Base_Column_List" />
+        from PRD_BONUS_PLAN_N
+        where BONUS_PLAN_ID = #{bonusPlanId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from PRD_BONUS_PLAN_N
+        where BONUS_PLAN_ID = #{bonusPlanId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PrdBonusPlanN" >
+        insert into PRD_BONUS_PLAN_N (BONUS_PLAN_ID, FINPROD_ID, BONU_SCALC_FLAG, 
+            BASE_DATE, REG_DATE, DEL_DATE, 
+            BONUS_DATE, VLU_REF_DATE, UNIT_BONUS_VLU, 
+            TOTAL_AMT, REMARK, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, IS_NET_MORMALIZE)
+        values (#{bonusPlanId,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, #{bonuScalcFlag,jdbcType=VARCHAR}, 
+            #{baseDate,jdbcType=DATE}, #{regDate,jdbcType=DATE}, #{delDate,jdbcType=DATE}, 
+            #{bonusDate,jdbcType=DATE}, #{vluRefDate,jdbcType=DATE}, #{unitBonusVlu,jdbcType=DECIMAL}, 
+            #{totalAmt,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{isNetMormalize,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PrdBonusPlanN" >
+        insert into PRD_BONUS_PLAN_N
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="bonusPlanId != null" >
+                BONUS_PLAN_ID,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="bonuScalcFlag != null" >
+                BONU_SCALC_FLAG,
+            </if>
+            <if test="baseDate != null" >
+                BASE_DATE,
+            </if>
+            <if test="regDate != null" >
+                REG_DATE,
+            </if>
+            <if test="delDate != null" >
+                DEL_DATE,
+            </if>
+            <if test="bonusDate != null" >
+                BONUS_DATE,
+            </if>
+            <if test="vluRefDate != null" >
+                VLU_REF_DATE,
+            </if>
+            <if test="unitBonusVlu != null" >
+                UNIT_BONUS_VLU,
+            </if>
+            <if test="totalAmt != null" >
+                TOTAL_AMT,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="isNetMormalize != null" >
+                IS_NET_MORMALIZE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="bonusPlanId != null" >
+                #{bonusPlanId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="bonuScalcFlag != null" >
+                #{bonuScalcFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="baseDate != null" >
+                #{baseDate,jdbcType=DATE},
+            </if>
+            <if test="regDate != null" >
+                #{regDate,jdbcType=DATE},
+            </if>
+            <if test="delDate != null" >
+                #{delDate,jdbcType=DATE},
+            </if>
+            <if test="bonusDate != null" >
+                #{bonusDate,jdbcType=DATE},
+            </if>
+            <if test="vluRefDate != null" >
+                #{vluRefDate,jdbcType=DATE},
+            </if>
+            <if test="unitBonusVlu != null" >
+                #{unitBonusVlu,jdbcType=DECIMAL},
+            </if>
+            <if test="totalAmt != null" >
+                #{totalAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isNetMormalize != null" >
+                #{isNetMormalize,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PrdBonusPlanN" >
+        insert into PRD_BONUS_PLAN_N(BONUS_PLAN_ID, FINPROD_ID, BONU_SCALC_FLAG, BASE_DATE, 
+        REG_DATE, DEL_DATE, BONUS_DATE, VLU_REF_DATE, UNIT_BONUS_VLU, TOTAL_AMT, REMARK, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_NET_MORMALIZE
+        )
+        select BONUS_PLAN_ID, FINPROD_ID, BONU_SCALC_FLAG, BASE_DATE, 
+            REG_DATE, DEL_DATE, BONUS_DATE, VLU_REF_DATE, UNIT_BONUS_VLU, TOTAL_AMT, REMARK, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, IS_NET_MORMALIZE
+            
+             from PRD_BONUS_PLAN_N
+             where 1 = 1 and BONUS_PLAN_ID = #{bonusPlanId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.PrdBonusPlanN" >
+        update PRD_BONUS_PLAN_N
+        <set >
+            <if test="finprodId != null" >
+                FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="bonuScalcFlag != null" >
+                BONU_SCALC_FLAG = #{bonuScalcFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="baseDate != null" >
+                BASE_DATE = #{baseDate,jdbcType=DATE},
+            </if>
+            <if test="regDate != null" >
+                REG_DATE = #{regDate,jdbcType=DATE},
+            </if>
+            <if test="delDate != null" >
+                DEL_DATE = #{delDate,jdbcType=DATE},
+            </if>
+            <if test="bonusDate != null" >
+                BONUS_DATE = #{bonusDate,jdbcType=DATE},
+            </if>
+            <if test="vluRefDate != null" >
+                VLU_REF_DATE = #{vluRefDate,jdbcType=DATE},
+            </if>
+            <if test="unitBonusVlu != null" >
+                UNIT_BONUS_VLU = #{unitBonusVlu,jdbcType=DECIMAL},
+            </if>
+            <if test="totalAmt != null" >
+                TOTAL_AMT = #{totalAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isNetMormalize != null" >
+                IS_NET_MORMALIZE = #{isNetMormalize,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where BONUS_PLAN_ID = #{bonusPlanId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PrdBonusPlanN" >
+        update PRD_BONUS_PLAN_N
+        set FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            BONU_SCALC_FLAG = #{bonuScalcFlag,jdbcType=VARCHAR},
+            BASE_DATE = #{baseDate,jdbcType=DATE},
+            REG_DATE = #{regDate,jdbcType=DATE},
+            DEL_DATE = #{delDate,jdbcType=DATE},
+            BONUS_DATE = #{bonusDate,jdbcType=DATE},
+            VLU_REF_DATE = #{vluRefDate,jdbcType=DATE},
+            UNIT_BONUS_VLU = #{unitBonusVlu,jdbcType=DECIMAL},
+            TOTAL_AMT = #{totalAmt,jdbcType=DECIMAL},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            IS_NET_MORMALIZE = #{isNetMormalize,jdbcType=VARCHAR}
+        where BONUS_PLAN_ID = #{bonusPlanId,jdbcType=VARCHAR}
+    </update>
+</mapper>

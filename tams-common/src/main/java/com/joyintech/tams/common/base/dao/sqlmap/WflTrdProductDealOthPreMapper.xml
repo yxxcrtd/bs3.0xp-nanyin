@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.WflTrdProductDealOthPreMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.WflTrdProductDealOthPre" >
+        <id column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <id column="WORKFLOW_STATUS" property="workflowStatus" jdbcType="VARCHAR" />
+        <result column="BASIS" property="basis" jdbcType="VARCHAR" />
+        <result column="RATE" property="rate" jdbcType="DECIMAL" />
+        <result column="TERM" property="term" jdbcType="DECIMAL" />
+        <result column="M_TRADE_AMT" property="mTradeAmt" jdbcType="DECIMAL" />
+        <result column="REPO_TYPE" property="repoType" jdbcType="VARCHAR" />
+        <result column="DL_TYPE" property="dlType" jdbcType="VARCHAR" />
+        <result column="TERM_TYPE" property="termType" jdbcType="VARCHAR" />
+        <result column="PLEDGE_FINPROD_ID" property="pledgeFinprodId" jdbcType="VARCHAR" />
+        <result column="PLEDGE_FINPROD_TYPE" property="pledgeFinprodType" jdbcType="VARCHAR" />
+        <result column="PLEDGE_FACE_VALUE" property="pledgeFaceValue" jdbcType="DECIMAL" />
+        <result column="EXC_PS" property="excPs" jdbcType="VARCHAR" />
+        <result column="EXC_FXS_TERM_TYPE" property="excFxsTermType" jdbcType="VARCHAR" />
+        <result column="F_MDATE" property="fMdate" jdbcType="DATE" />
+        <result column="FWD_POINT" property="fwdPoint" jdbcType="DECIMAL" />
+        <result column="FWD_FPRICE" property="fwdFprice" jdbcType="DECIMAL" />
+        <result column="F_DEAL_AMT" property="fDealAmt" jdbcType="DECIMAL" />
+        <result column="F_COR_AMT" property="fCorAmt" jdbcType="DECIMAL" />
+        <result column="F_USD_AMT" property="fUsdAmt" jdbcType="DECIMAL" />
+        <result column="DEAL_CUR" property="dealCur" jdbcType="VARCHAR" />
+        <result column="INT_RATE_ID" property="intRateId" jdbcType="VARCHAR" />
+        <result column="IRS_TYPE" property="irsType" jdbcType="VARCHAR" />
+        <result column="PAY_CYCLE_R" property="payCycleR" jdbcType="VARCHAR" />
+        <result column="FIRST_PAY_DATE_R" property="firstPayDateR" jdbcType="DATE" />
+        <result column="SPREAD_RATE_F" property="spreadRateF" jdbcType="DECIMAL" />
+        <result column="PAY_CYCLE_F" property="payCycleF" jdbcType="VARCHAR" />
+        <result column="FIRST_PAY_DATE_F" property="firstPayDateF" jdbcType="DATE" />
+        <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TRADE_ID TRADE_ID, WORKFLOW_STATUS WORKFLOW_STATUS, BASIS BASIS, RATE RATE, TERM TERM, 
+        M_TRADE_AMT M_TRADE_AMT, REPO_TYPE REPO_TYPE, DL_TYPE DL_TYPE, TERM_TYPE TERM_TYPE, 
+        PLEDGE_FINPROD_ID PLEDGE_FINPROD_ID, PLEDGE_FINPROD_TYPE PLEDGE_FINPROD_TYPE, PLEDGE_FACE_VALUE PLEDGE_FACE_VALUE, 
+        EXC_PS EXC_PS, EXC_FXS_TERM_TYPE EXC_FXS_TERM_TYPE, F_MDATE F_MDATE, FWD_POINT FWD_POINT, 
+        FWD_FPRICE FWD_FPRICE, F_DEAL_AMT F_DEAL_AMT, F_COR_AMT F_COR_AMT, F_USD_AMT F_USD_AMT, 
+        DEAL_CUR DEAL_CUR, INT_RATE_ID INT_RATE_ID, IRS_TYPE IRS_TYPE, PAY_CYCLE_R PAY_CYCLE_R, 
+        FIRST_PAY_DATE_R FIRST_PAY_DATE_R, SPREAD_RATE_F SPREAD_RATE_F, PAY_CYCLE_F PAY_CYCLE_F, 
+        FIRST_PAY_DATE_F FIRST_PAY_DATE_F, WORKFLOW_ID WORKFLOW_ID, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflTrdProductDealOthPreMapper.Base_Column_List" />
+        from WFL_TRD_PRODUCT_DEAL_OTH_PRE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflTrdProductDealOthPreMapper.Base_Column_List" />
+        from WFL_TRD_PRODUCT_DEAL_OTH_PRE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.WflTrdProductDealOthPreKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflTrdProductDealOthPreMapper.Base_Column_List" />
+        from WFL_TRD_PRODUCT_DEAL_OTH_PRE
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.WflTrdProductDealOthPreKey" >
+        delete from WFL_TRD_PRODUCT_DEAL_OTH_PRE
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from WFL_TRD_PRODUCT_DEAL_OTH_PRE
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insertBasicByWorkflowId" parameterType="java.util.Map" >
+        insert into WFL_TRD_PRODUCT_DEAL_OTH_PRE(TRADE_ID, WORKFLOW_STATUS, BASIS, RATE, 
+        TERM, M_TRADE_AMT, REPO_TYPE, DL_TYPE, TERM_TYPE, PLEDGE_FINPROD_ID, PLEDGE_FINPROD_TYPE, 
+        PLEDGE_FACE_VALUE, EXC_PS, EXC_FXS_TERM_TYPE, F_MDATE, FWD_POINT, FWD_FPRICE, F_DEAL_AMT, 
+        F_COR_AMT, F_USD_AMT, DEAL_CUR, INT_RATE_ID, IRS_TYPE, PAY_CYCLE_R, FIRST_PAY_DATE_R, 
+        SPREAD_RATE_F, PAY_CYCLE_F, FIRST_PAY_DATE_F, WORKFLOW_ID, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select TRADE_ID, WORKFLOW_STATUS, BASIS, RATE, 
+            TERM, M_TRADE_AMT, REPO_TYPE, DL_TYPE, TERM_TYPE, PLEDGE_FINPROD_ID, PLEDGE_FINPROD_TYPE, 
+            PLEDGE_FACE_VALUE, EXC_PS, EXC_FXS_TERM_TYPE, F_MDATE, FWD_POINT, FWD_FPRICE, F_DEAL_AMT, 
+            F_COR_AMT, F_USD_AMT, DEAL_CUR, INT_RATE_ID, IRS_TYPE, PAY_CYCLE_R, FIRST_PAY_DATE_R, 
+            SPREAD_RATE_F, PAY_CYCLE_F, FIRST_PAY_DATE_F, #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from WFL_TRD_PRODUCT_DEAL_OTH_PRE
+             where WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.WflTrdProductDealOthPre" >
+        update WFL_TRD_PRODUCT_DEAL_OTH_PRE
+        <set >
+            <if test="tradeId != null" >
+                TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowStatus != null" >
+                WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="basis != null" >
+                BASIS = #{basis,jdbcType=VARCHAR},
+            </if>
+            <if test="rate != null" >
+                RATE = #{rate,jdbcType=DECIMAL},
+            </if>
+            <if test="term != null" >
+                TERM = #{term,jdbcType=DECIMAL},
+            </if>
+            <if test="mTradeAmt != null" >
+                M_TRADE_AMT = #{mTradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="repoType != null" >
+                REPO_TYPE = #{repoType,jdbcType=VARCHAR},
+            </if>
+            <if test="dlType != null" >
+                DL_TYPE = #{dlType,jdbcType=VARCHAR},
+            </if>
+            <if test="termType != null" >
+                TERM_TYPE = #{termType,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeFinprodId != null" >
+                PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeFinprodType != null" >
+                PLEDGE_FINPROD_TYPE = #{pledgeFinprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeFaceValue != null" >
+                PLEDGE_FACE_VALUE = #{pledgeFaceValue,jdbcType=DECIMAL},
+            </if>
+            <if test="excPs != null" >
+                EXC_PS = #{excPs,jdbcType=VARCHAR},
+            </if>
+            <if test="excFxsTermType != null" >
+                EXC_FXS_TERM_TYPE = #{excFxsTermType,jdbcType=VARCHAR},
+            </if>
+            <if test="fMdate != null" >
+                F_MDATE = #{fMdate,jdbcType=DATE},
+            </if>
+            <if test="fwdPoint != null" >
+                FWD_POINT = #{fwdPoint,jdbcType=DECIMAL},
+            </if>
+            <if test="fwdFprice != null" >
+                FWD_FPRICE = #{fwdFprice,jdbcType=DECIMAL},
+            </if>
+            <if test="fDealAmt != null" >
+                F_DEAL_AMT = #{fDealAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="fCorAmt != null" >
+                F_COR_AMT = #{fCorAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="fUsdAmt != null" >
+                F_USD_AMT = #{fUsdAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="dealCur != null" >
+                DEAL_CUR = #{dealCur,jdbcType=VARCHAR},
+            </if>
+            <if test="intRateId != null" >
+                INT_RATE_ID = #{intRateId,jdbcType=VARCHAR},
+            </if>
+            <if test="irsType != null" >
+                IRS_TYPE = #{irsType,jdbcType=VARCHAR},
+            </if>
+            <if test="payCycleR != null" >
+                PAY_CYCLE_R = #{payCycleR,jdbcType=VARCHAR},
+            </if>
+            <if test="firstPayDateR != null" >
+                FIRST_PAY_DATE_R = #{firstPayDateR,jdbcType=DATE},
+            </if>
+            <if test="spreadRateF != null" >
+                SPREAD_RATE_F = #{spreadRateF,jdbcType=DECIMAL},
+            </if>
+            <if test="payCycleF != null" >
+                PAY_CYCLE_F = #{payCycleF,jdbcType=VARCHAR},
+            </if>
+            <if test="firstPayDateF != null" >
+                FIRST_PAY_DATE_F = #{firstPayDateF,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.WflTrdProductDealOthPre" >
+        update WFL_TRD_PRODUCT_DEAL_OTH_PRE
+        set 
+        TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+        WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR},
+        BASIS = #{basis,jdbcType=VARCHAR},
+        RATE = #{rate,jdbcType=DECIMAL},
+        TERM = #{term,jdbcType=DECIMAL},
+        M_TRADE_AMT = #{mTradeAmt,jdbcType=DECIMAL},
+        REPO_TYPE = #{repoType,jdbcType=VARCHAR},
+        DL_TYPE = #{dlType,jdbcType=VARCHAR},
+        TERM_TYPE = #{termType,jdbcType=VARCHAR},
+        PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR},
+        PLEDGE_FINPROD_TYPE = #{pledgeFinprodType,jdbcType=VARCHAR},
+        PLEDGE_FACE_VALUE = #{pledgeFaceValue,jdbcType=DECIMAL},
+        EXC_PS = #{excPs,jdbcType=VARCHAR},
+        EXC_FXS_TERM_TYPE = #{excFxsTermType,jdbcType=VARCHAR},
+        F_MDATE = #{fMdate,jdbcType=DATE},
+        FWD_POINT = #{fwdPoint,jdbcType=DECIMAL},
+        FWD_FPRICE = #{fwdFprice,jdbcType=DECIMAL},
+        F_DEAL_AMT = #{fDealAmt,jdbcType=DECIMAL},
+        F_COR_AMT = #{fCorAmt,jdbcType=DECIMAL},
+        F_USD_AMT = #{fUsdAmt,jdbcType=DECIMAL},
+        DEAL_CUR = #{dealCur,jdbcType=VARCHAR},
+        INT_RATE_ID = #{intRateId,jdbcType=VARCHAR},
+        IRS_TYPE = #{irsType,jdbcType=VARCHAR},
+        PAY_CYCLE_R = #{payCycleR,jdbcType=VARCHAR},
+        FIRST_PAY_DATE_R = #{firstPayDateR,jdbcType=DATE},
+        SPREAD_RATE_F = #{spreadRateF,jdbcType=DECIMAL},
+        PAY_CYCLE_F = #{payCycleF,jdbcType=VARCHAR},
+        FIRST_PAY_DATE_F = #{firstPayDateF,jdbcType=DATE},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.WflTrdProductDealOthPre" >
+        insert into WFL_TRD_PRODUCT_DEAL_OTH_PRE (TRADE_ID, WORKFLOW_STATUS, BASIS, 
+            RATE, TERM, M_TRADE_AMT, 
+            REPO_TYPE, DL_TYPE, TERM_TYPE, 
+            PLEDGE_FINPROD_ID, PLEDGE_FINPROD_TYPE, PLEDGE_FACE_VALUE, 
+            EXC_PS, EXC_FXS_TERM_TYPE, F_MDATE, 
+            FWD_POINT, FWD_FPRICE, F_DEAL_AMT, 
+            F_COR_AMT, F_USD_AMT, DEAL_CUR, 
+            INT_RATE_ID, IRS_TYPE, PAY_CYCLE_R, 
+            FIRST_PAY_DATE_R, SPREAD_RATE_F, PAY_CYCLE_F, 
+            FIRST_PAY_DATE_F, WORKFLOW_ID, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{tradeId,jdbcType=VARCHAR}, #{workflowStatus,jdbcType=VARCHAR}, #{basis,jdbcType=VARCHAR}, 
+            #{rate,jdbcType=DECIMAL}, #{term,jdbcType=DECIMAL}, #{mTradeAmt,jdbcType=DECIMAL}, 
+            #{repoType,jdbcType=VARCHAR}, #{dlType,jdbcType=VARCHAR}, #{termType,jdbcType=VARCHAR}, 
+            #{pledgeFinprodId,jdbcType=VARCHAR}, #{pledgeFinprodType,jdbcType=VARCHAR}, #{pledgeFaceValue,jdbcType=DECIMAL}, 
+            #{excPs,jdbcType=VARCHAR}, #{excFxsTermType,jdbcType=VARCHAR}, #{fMdate,jdbcType=DATE}, 
+            #{fwdPoint,jdbcType=DECIMAL}, #{fwdFprice,jdbcType=DECIMAL}, #{fDealAmt,jdbcType=DECIMAL}, 
+            #{fCorAmt,jdbcType=DECIMAL}, #{fUsdAmt,jdbcType=DECIMAL}, #{dealCur,jdbcType=VARCHAR}, 
+            #{intRateId,jdbcType=VARCHAR}, #{irsType,jdbcType=VARCHAR}, #{payCycleR,jdbcType=VARCHAR}, 
+            #{firstPayDateR,jdbcType=DATE}, #{spreadRateF,jdbcType=DECIMAL}, #{payCycleF,jdbcType=VARCHAR}, 
+            #{firstPayDateF,jdbcType=DATE}, #{workflowId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.WflTrdProductDealOthPre" >
+        insert into WFL_TRD_PRODUCT_DEAL_OTH_PRE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="workflowStatus != null" >
+                WORKFLOW_STATUS,
+            </if>
+            <if test="basis != null" >
+                BASIS,
+            </if>
+            <if test="rate != null" >
+                RATE,
+            </if>
+            <if test="term != null" >
+                TERM,
+            </if>
+            <if test="mTradeAmt != null" >
+                M_TRADE_AMT,
+            </if>
+            <if test="repoType != null" >
+                REPO_TYPE,
+            </if>
+            <if test="dlType != null" >
+                DL_TYPE,
+            </if>
+            <if test="termType != null" >
+                TERM_TYPE,
+            </if>
+            <if test="pledgeFinprodId != null" >
+                PLEDGE_FINPROD_ID,
+            </if>
+            <if test="pledgeFinprodType != null" >
+                PLEDGE_FINPROD_TYPE,
+            </if>
+            <if test="pledgeFaceValue != null" >
+                PLEDGE_FACE_VALUE,
+            </if>
+            <if test="excPs != null" >
+                EXC_PS,
+            </if>
+            <if test="excFxsTermType != null" >
+                EXC_FXS_TERM_TYPE,
+            </if>
+            <if test="fMdate != null" >
+                F_MDATE,
+            </if>
+            <if test="fwdPoint != null" >
+                FWD_POINT,
+            </if>
+            <if test="fwdFprice != null" >
+                FWD_FPRICE,
+            </if>
+            <if test="fDealAmt != null" >
+                F_DEAL_AMT,
+            </if>
+            <if test="fCorAmt != null" >
+                F_COR_AMT,
+            </if>
+            <if test="fUsdAmt != null" >
+                F_USD_AMT,
+            </if>
+            <if test="dealCur != null" >
+                DEAL_CUR,
+            </if>
+            <if test="intRateId != null" >
+                INT_RATE_ID,
+            </if>
+            <if test="irsType != null" >
+                IRS_TYPE,
+            </if>
+            <if test="payCycleR != null" >
+                PAY_CYCLE_R,
+            </if>
+            <if test="firstPayDateR != null" >
+                FIRST_PAY_DATE_R,
+            </if>
+            <if test="spreadRateF != null" >
+                SPREAD_RATE_F,
+            </if>
+            <if test="payCycleF != null" >
+                PAY_CYCLE_F,
+            </if>
+            <if test="firstPayDateF != null" >
+                FIRST_PAY_DATE_F,
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowStatus != null" >
+                #{workflowStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="basis != null" >
+                #{basis,jdbcType=VARCHAR},
+            </if>
+            <if test="rate != null" >
+                #{rate,jdbcType=DECIMAL},
+            </if>
+            <if test="term != null" >
+                #{term,jdbcType=DECIMAL},
+            </if>
+            <if test="mTradeAmt != null" >
+                #{mTradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="repoType != null" >
+                #{repoType,jdbcType=VARCHAR},
+            </if>
+            <if test="dlType != null" >
+                #{dlType,jdbcType=VARCHAR},
+            </if>
+            <if test="termType != null" >
+                #{termType,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeFinprodId != null" >
+                #{pledgeFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeFinprodType != null" >
+                #{pledgeFinprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeFaceValue != null" >
+                #{pledgeFaceValue,jdbcType=DECIMAL},
+            </if>
+            <if test="excPs != null" >
+                #{excPs,jdbcType=VARCHAR},
+            </if>
+            <if test="excFxsTermType != null" >
+                #{excFxsTermType,jdbcType=VARCHAR},
+            </if>
+            <if test="fMdate != null" >
+                #{fMdate,jdbcType=DATE},
+            </if>
+            <if test="fwdPoint != null" >
+                #{fwdPoint,jdbcType=DECIMAL},
+            </if>
+            <if test="fwdFprice != null" >
+                #{fwdFprice,jdbcType=DECIMAL},
+            </if>
+            <if test="fDealAmt != null" >
+                #{fDealAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="fCorAmt != null" >
+                #{fCorAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="fUsdAmt != null" >
+                #{fUsdAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="dealCur != null" >
+                #{dealCur,jdbcType=VARCHAR},
+            </if>
+            <if test="intRateId != null" >
+                #{intRateId,jdbcType=VARCHAR},
+            </if>
+            <if test="irsType != null" >
+                #{irsType,jdbcType=VARCHAR},
+            </if>
+            <if test="payCycleR != null" >
+                #{payCycleR,jdbcType=VARCHAR},
+            </if>
+            <if test="firstPayDateR != null" >
+                #{firstPayDateR,jdbcType=DATE},
+            </if>
+            <if test="spreadRateF != null" >
+                #{spreadRateF,jdbcType=DECIMAL},
+            </if>
+            <if test="payCycleF != null" >
+                #{payCycleF,jdbcType=VARCHAR},
+            </if>
+            <if test="firstPayDateF != null" >
+                #{firstPayDateF,jdbcType=DATE},
+            </if>
+            <if test="workflowId != null" >
+                #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.WflTrdProductDealOthPre" >
+        insert into WFL_TRD_PRODUCT_DEAL_OTH_PRE(TRADE_ID, WORKFLOW_STATUS, BASIS, RATE, 
+        TERM, M_TRADE_AMT, REPO_TYPE, DL_TYPE, TERM_TYPE, PLEDGE_FINPROD_ID, PLEDGE_FINPROD_TYPE, 
+        PLEDGE_FACE_VALUE, EXC_PS, EXC_FXS_TERM_TYPE, F_MDATE, FWD_POINT, FWD_FPRICE, F_DEAL_AMT, 
+        F_COR_AMT, F_USD_AMT, DEAL_CUR, INT_RATE_ID, IRS_TYPE, PAY_CYCLE_R, FIRST_PAY_DATE_R, 
+        SPREAD_RATE_F, PAY_CYCLE_F, FIRST_PAY_DATE_F, WORKFLOW_ID, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select TRADE_ID, WORKFLOW_STATUS, BASIS, RATE, 
+            TERM, M_TRADE_AMT, REPO_TYPE, DL_TYPE, TERM_TYPE, PLEDGE_FINPROD_ID, PLEDGE_FINPROD_TYPE, 
+            PLEDGE_FACE_VALUE, EXC_PS, EXC_FXS_TERM_TYPE, F_MDATE, FWD_POINT, FWD_FPRICE, F_DEAL_AMT, 
+            F_COR_AMT, F_USD_AMT, DEAL_CUR, INT_RATE_ID, IRS_TYPE, PAY_CYCLE_R, FIRST_PAY_DATE_R, 
+            SPREAD_RATE_F, PAY_CYCLE_F, FIRST_PAY_DATE_F, #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from WFL_TRD_PRODUCT_DEAL_OTH_PRE
+             where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR} and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.WflTrdProductDealOthPre" >
+        update WFL_TRD_PRODUCT_DEAL_OTH_PRE
+        <set >
+            <if test="basis != null" >
+                BASIS = #{basis,jdbcType=VARCHAR},
+            </if>
+            <if test="rate != null" >
+                RATE = #{rate,jdbcType=DECIMAL},
+            </if>
+            <if test="term != null" >
+                TERM = #{term,jdbcType=DECIMAL},
+            </if>
+            <if test="mTradeAmt != null" >
+                M_TRADE_AMT = #{mTradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="repoType != null" >
+                REPO_TYPE = #{repoType,jdbcType=VARCHAR},
+            </if>
+            <if test="dlType != null" >
+                DL_TYPE = #{dlType,jdbcType=VARCHAR},
+            </if>
+            <if test="termType != null" >
+                TERM_TYPE = #{termType,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeFinprodId != null" >
+                PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeFinprodType != null" >
+                PLEDGE_FINPROD_TYPE = #{pledgeFinprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeFaceValue != null" >
+                PLEDGE_FACE_VALUE = #{pledgeFaceValue,jdbcType=DECIMAL},
+            </if>
+            <if test="excPs != null" >
+                EXC_PS = #{excPs,jdbcType=VARCHAR},
+            </if>
+            <if test="excFxsTermType != null" >
+                EXC_FXS_TERM_TYPE = #{excFxsTermType,jdbcType=VARCHAR},
+            </if>
+            <if test="fMdate != null" >
+                F_MDATE = #{fMdate,jdbcType=DATE},
+            </if>
+            <if test="fwdPoint != null" >
+                FWD_POINT = #{fwdPoint,jdbcType=DECIMAL},
+            </if>
+            <if test="fwdFprice != null" >
+                FWD_FPRICE = #{fwdFprice,jdbcType=DECIMAL},
+            </if>
+            <if test="fDealAmt != null" >
+                F_DEAL_AMT = #{fDealAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="fCorAmt != null" >
+                F_COR_AMT = #{fCorAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="fUsdAmt != null" >
+                F_USD_AMT = #{fUsdAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="dealCur != null" >
+                DEAL_CUR = #{dealCur,jdbcType=VARCHAR},
+            </if>
+            <if test="intRateId != null" >
+                INT_RATE_ID = #{intRateId,jdbcType=VARCHAR},
+            </if>
+            <if test="irsType != null" >
+                IRS_TYPE = #{irsType,jdbcType=VARCHAR},
+            </if>
+            <if test="payCycleR != null" >
+                PAY_CYCLE_R = #{payCycleR,jdbcType=VARCHAR},
+            </if>
+            <if test="firstPayDateR != null" >
+                FIRST_PAY_DATE_R = #{firstPayDateR,jdbcType=DATE},
+            </if>
+            <if test="spreadRateF != null" >
+                SPREAD_RATE_F = #{spreadRateF,jdbcType=DECIMAL},
+            </if>
+            <if test="payCycleF != null" >
+                PAY_CYCLE_F = #{payCycleF,jdbcType=VARCHAR},
+            </if>
+            <if test="firstPayDateF != null" >
+                FIRST_PAY_DATE_F = #{firstPayDateF,jdbcType=DATE},
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.WflTrdProductDealOthPre" >
+        update WFL_TRD_PRODUCT_DEAL_OTH_PRE
+        set BASIS = #{basis,jdbcType=VARCHAR},
+            RATE = #{rate,jdbcType=DECIMAL},
+            TERM = #{term,jdbcType=DECIMAL},
+            M_TRADE_AMT = #{mTradeAmt,jdbcType=DECIMAL},
+            REPO_TYPE = #{repoType,jdbcType=VARCHAR},
+            DL_TYPE = #{dlType,jdbcType=VARCHAR},
+            TERM_TYPE = #{termType,jdbcType=VARCHAR},
+            PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR},
+            PLEDGE_FINPROD_TYPE = #{pledgeFinprodType,jdbcType=VARCHAR},
+            PLEDGE_FACE_VALUE = #{pledgeFaceValue,jdbcType=DECIMAL},
+            EXC_PS = #{excPs,jdbcType=VARCHAR},
+            EXC_FXS_TERM_TYPE = #{excFxsTermType,jdbcType=VARCHAR},
+            F_MDATE = #{fMdate,jdbcType=DATE},
+            FWD_POINT = #{fwdPoint,jdbcType=DECIMAL},
+            FWD_FPRICE = #{fwdFprice,jdbcType=DECIMAL},
+            F_DEAL_AMT = #{fDealAmt,jdbcType=DECIMAL},
+            F_COR_AMT = #{fCorAmt,jdbcType=DECIMAL},
+            F_USD_AMT = #{fUsdAmt,jdbcType=DECIMAL},
+            DEAL_CUR = #{dealCur,jdbcType=VARCHAR},
+            INT_RATE_ID = #{intRateId,jdbcType=VARCHAR},
+            IRS_TYPE = #{irsType,jdbcType=VARCHAR},
+            PAY_CYCLE_R = #{payCycleR,jdbcType=VARCHAR},
+            FIRST_PAY_DATE_R = #{firstPayDateR,jdbcType=DATE},
+            SPREAD_RATE_F = #{spreadRateF,jdbcType=DECIMAL},
+            PAY_CYCLE_F = #{payCycleF,jdbcType=VARCHAR},
+            FIRST_PAY_DATE_F = #{firstPayDateF,jdbcType=DATE},
+            WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
+    </update>
+</mapper>

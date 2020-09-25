@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.batch.disclosure.informationdisclourse.doReady.dao.DisDoReadyMapper_mysql">
+
+    <insert id="insertReadyByInterf" parameterType="String" >
+
+        insert into ADPT_FILEBACKUPRECORD values(_NEXTINDEX('adpt_fileb_id_seq'),'1',now(),date_format(str_to_date(#{date,jdbcType=VARCHAR},'%Y%m%d'),'%Y-%m-%d'),null)
+    </insert>
+
+    <update id="updateReadybyAdapter" parameterType="String" >
+    	UPDATE DIS_DATA_READY SET
+    		DATA_DATE	=	str_to_date(#{date,jdbcType=VARCHAR},'%Y-%m-%d')
+    </update>
+
+    <select id="getValueId" resultType="java.lang.String">
+		select _NEXTINDEX('adpt_fileb_id_seq') from dual
+	</select>
+</mapper>

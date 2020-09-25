@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbEqudetHisMapper_mysql">
+	<insert id="insertHisByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbEqudetHis" >
+        insert into CHB_EQUDET_HIS(HIS_NO, BUSI_SEQNO, REGIST_BANK_CODE, INDENTIFY_MARK, 
+        ACCOUNT, EQUITY_CONF_DATE, BUY_PLACE, BUSI_TYPE, CCY, AMOUNT, SHARES, CHANNEL, FUND_ACC, 
+        FUND_ACC_BANK, IS_SUBMIT, IS_CONSIGN, REMARK, STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, 
+        UPDATE_TIME, CREATE_USER, CREATE_TIME, DATA_SOURCE, ORG_CODE, ACCOUNT_NAME, AGENT, 
+        CREATE_DEPT, SHARE_CONF_DATETIME)
+        select (select IFNULL(max(HIS_NO), 0) from CHB_EQUDET_HIS where STATUS = 'E' and BUSI_SEQNO = #{busiSeqno,jdbcType=VARCHAR} and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR} and INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}) + 1 HIS_NO, BUSI_SEQNO, REGIST_BANK_CODE, INDENTIFY_MARK, 
+            ACCOUNT, EQUITY_CONF_DATE, BUY_PLACE, BUSI_TYPE, CCY, AMOUNT, SHARES, CHANNEL, FUND_ACC, 
+            FUND_ACC_BANK, IS_SUBMIT, IS_CONSIGN, REMARK, STATUS, WORKFLOW_ID, DEPT_CODE, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_USER, CREATE_TIME, DATA_SOURCE, ORG_CODE, ACCOUNT_NAME, AGENT, 
+            CREATE_DEPT, SHARE_CONF_DATETIME
+             from CHB_EQUDET
+             where STATUS = 'E' and BUSI_SEQNO = #{busiSeqno,jdbcType=VARCHAR} and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR} and INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
+    </insert>
+	<insert id="insertHisByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbEqudetHis" >
+        insert into CHB_EQUDET_HIS(HIS_NO, BUSI_SEQNO, REGIST_BANK_CODE, INDENTIFY_MARK, 
+        ACCOUNT, EQUITY_CONF_DATE, BUY_PLACE, BUSI_TYPE, CCY, AMOUNT, SHARES, CHANNEL, FUND_ACC, 
+        FUND_ACC_BANK, IS_SUBMIT, IS_CONSIGN, REMARK, STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, 
+        UPDATE_TIME, CREATE_USER, CREATE_TIME, DATA_SOURCE, ORG_CODE, ACCOUNT_NAME, AGENT, 
+        CREATE_DEPT, SHARE_CONF_DATETIME)
+        select (select IFNULL(max(HIS_NO), 0) from CHB_EQUDET_HIS where STATUS = 'E' and BUSI_SEQNO = CHB_EQUDET.BUSI_SEQNO and REGIST_BANK_CODE = CHB_EQUDET.REGIST_BANK_CODE and INDENTIFY_MARK = CHB_EQUDET.INDENTIFY_MARK) + 1 HIS_NO, BUSI_SEQNO, REGIST_BANK_CODE, INDENTIFY_MARK, 
+            ACCOUNT, EQUITY_CONF_DATE, BUY_PLACE, BUSI_TYPE, CCY, AMOUNT, SHARES, CHANNEL, FUND_ACC, 
+            FUND_ACC_BANK, IS_SUBMIT, IS_CONSIGN, REMARK, STATUS, WORKFLOW_ID, DEPT_CODE, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_USER, CREATE_TIME, DATA_SOURCE, ORG_CODE, ACCOUNT_NAME, AGENT, 
+            CREATE_DEPT, SHARE_CONF_DATETIME
+             from CHB_EQUDET
+             where STATUS = 'E' and WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+    </insert>
+</mapper>

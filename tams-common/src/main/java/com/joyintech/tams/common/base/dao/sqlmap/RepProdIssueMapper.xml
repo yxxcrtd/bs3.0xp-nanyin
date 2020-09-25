@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepProdIssueMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepProdIssue" >
+        <id column="REP_FINPROD_ID" property="repFinprodId" jdbcType="VARCHAR" />
+        <result column="REP_BANK_PROD_CODE" property="repBankProdCode" jdbcType="VARCHAR" />
+        <result column="REP_FINPROD_REG_ID" property="repFinprodRegId" jdbcType="VARCHAR" />
+        <result column="REP_RAISE_VDATE" property="repRaiseVdate" jdbcType="DATE" />
+        <result column="REP_RAISE_ENDDATE" property="repRaiseEnddate" jdbcType="DATE" />
+        <result column="REP_PRD_VDATE" property="repPrdVdate" jdbcType="DATE" />
+        <result column="REP_PRD_MDATE" property="repPrdMdate" jdbcType="DATE" />
+        <result column="REP_IS_CONSTRACTE" property="repIsConstracte" jdbcType="VARCHAR" />
+        <result column="REP_GRADE_TYPE" property="repGradeType" jdbcType="VARCHAR" />
+        <result column="REP_EXP_MIN_YIELD" property="repExpMinYield" jdbcType="DECIMAL" />
+        <result column="REP_EXP_MAX_YIELD" property="repExpMaxYield" jdbcType="DECIMAL" />
+        <result column="REP_EXP_AVG_YIELD" property="repExpAvgYield" jdbcType="DECIMAL" />
+        <result column="REP_YIELD_COMMENT" property="repYieldComment" jdbcType="VARCHAR" />
+        <result column="REP_OPEN_MODE" property="repOpenMode" jdbcType="VARCHAR" />
+        <result column="REP_OPEN_CIRCLE" property="repOpenCircle" jdbcType="VARCHAR" />
+        <result column="REP_OPEN_CIRCLE_DAYS" property="repOpenCircleDays" jdbcType="DECIMAL" />
+        <result column="REP_RULE_COMMENT" property="repRuleComment" jdbcType="VARCHAR" />
+        <result column="REP_FIRST_OPEN_DAY" property="repFirstOpenDay" jdbcType="DATE" />
+        <result column="REP_HOLIDAY_ON_FLAG" property="repHolidayOnFlag" jdbcType="VARCHAR" />
+        <result column="REP_AVG_OPEN_COUNT" property="repAvgOpenCount" jdbcType="DECIMAL" />
+        <result column="REP_OPEN_BUSS" property="repOpenBuss" jdbcType="VARCHAR" />
+        <result column="REP_OPEN_BUSS_REMARK" property="repOpenBussRemark" jdbcType="VARCHAR" />
+        <result column="REP_REMARK" property="repRemark" jdbcType="VARCHAR" />
+        <result column="REP_ISSUE_DATE" property="repIssueDate" jdbcType="DATE" />
+        <result column="REP_SEND_STATUS" property="repSendStatus" jdbcType="VARCHAR" />
+        <result column="REP_STATUS_DATE" property="repStatusDate" jdbcType="DATE" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        REP_FINPROD_ID REP_FINPROD_ID, REP_BANK_PROD_CODE REP_BANK_PROD_CODE, REP_FINPROD_REG_ID REP_FINPROD_REG_ID, 
+        REP_RAISE_VDATE REP_RAISE_VDATE, REP_RAISE_ENDDATE REP_RAISE_ENDDATE, REP_PRD_VDATE REP_PRD_VDATE, 
+        REP_PRD_MDATE REP_PRD_MDATE, REP_IS_CONSTRACTE REP_IS_CONSTRACTE, REP_GRADE_TYPE REP_GRADE_TYPE, 
+        REP_EXP_MIN_YIELD REP_EXP_MIN_YIELD, REP_EXP_MAX_YIELD REP_EXP_MAX_YIELD, REP_EXP_AVG_YIELD REP_EXP_AVG_YIELD, 
+        REP_YIELD_COMMENT REP_YIELD_COMMENT, REP_OPEN_MODE REP_OPEN_MODE, REP_OPEN_CIRCLE REP_OPEN_CIRCLE, 
+        REP_OPEN_CIRCLE_DAYS REP_OPEN_CIRCLE_DAYS, REP_RULE_COMMENT REP_RULE_COMMENT, REP_FIRST_OPEN_DAY REP_FIRST_OPEN_DAY, 
+        REP_HOLIDAY_ON_FLAG REP_HOLIDAY_ON_FLAG, REP_AVG_OPEN_COUNT REP_AVG_OPEN_COUNT, REP_OPEN_BUSS REP_OPEN_BUSS, 
+        REP_OPEN_BUSS_REMARK REP_OPEN_BUSS_REMARK, REP_REMARK REP_REMARK, REP_ISSUE_DATE REP_ISSUE_DATE, 
+        REP_SEND_STATUS REP_SEND_STATUS, REP_STATUS_DATE REP_STATUS_DATE, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepProdIssueMapper.Base_Column_List" />
+        from REP_PROD_ISSUE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepProdIssueMapper.Base_Column_List" />
+        from REP_PROD_ISSUE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepProdIssueMapper.Base_Column_List" />
+        from REP_PROD_ISSUE
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from REP_PROD_ISSUE
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepProdIssue" >
+        insert into REP_PROD_ISSUE (REP_FINPROD_ID, REP_BANK_PROD_CODE, REP_FINPROD_REG_ID, 
+            REP_RAISE_VDATE, REP_RAISE_ENDDATE, REP_PRD_VDATE, 
+            REP_PRD_MDATE, REP_IS_CONSTRACTE, REP_GRADE_TYPE, 
+            REP_EXP_MIN_YIELD, REP_EXP_MAX_YIELD, REP_EXP_AVG_YIELD, 
+            REP_YIELD_COMMENT, REP_OPEN_MODE, REP_OPEN_CIRCLE, 
+            REP_OPEN_CIRCLE_DAYS, REP_RULE_COMMENT, REP_FIRST_OPEN_DAY, 
+            REP_HOLIDAY_ON_FLAG, REP_AVG_OPEN_COUNT, REP_OPEN_BUSS, 
+            REP_OPEN_BUSS_REMARK, REP_REMARK, REP_ISSUE_DATE, 
+            REP_SEND_STATUS, REP_STATUS_DATE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{repFinprodId,jdbcType=VARCHAR}, #{repBankProdCode,jdbcType=VARCHAR}, #{repFinprodRegId,jdbcType=VARCHAR}, 
+            #{repRaiseVdate,jdbcType=DATE}, #{repRaiseEnddate,jdbcType=DATE}, #{repPrdVdate,jdbcType=DATE}, 
+            #{repPrdMdate,jdbcType=DATE}, #{repIsConstracte,jdbcType=VARCHAR}, #{repGradeType,jdbcType=VARCHAR}, 
+            #{repExpMinYield,jdbcType=DECIMAL}, #{repExpMaxYield,jdbcType=DECIMAL}, #{repExpAvgYield,jdbcType=DECIMAL}, 
+            #{repYieldComment,jdbcType=VARCHAR}, #{repOpenMode,jdbcType=VARCHAR}, #{repOpenCircle,jdbcType=VARCHAR}, 
+            #{repOpenCircleDays,jdbcType=DECIMAL}, #{repRuleComment,jdbcType=VARCHAR}, #{repFirstOpenDay,jdbcType=DATE}, 
+            #{repHolidayOnFlag,jdbcType=VARCHAR}, #{repAvgOpenCount,jdbcType=DECIMAL}, #{repOpenBuss,jdbcType=VARCHAR}, 
+            #{repOpenBussRemark,jdbcType=VARCHAR}, #{repRemark,jdbcType=VARCHAR}, #{repIssueDate,jdbcType=DATE}, 
+            #{repSendStatus,jdbcType=VARCHAR}, #{repStatusDate,jdbcType=DATE}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepProdIssue" >
+        insert into REP_PROD_ISSUE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="repFinprodId != null" >
+                REP_FINPROD_ID,
+            </if>
+            <if test="repBankProdCode != null" >
+                REP_BANK_PROD_CODE,
+            </if>
+            <if test="repFinprodRegId != null" >
+                REP_FINPROD_REG_ID,
+            </if>
+            <if test="repRaiseVdate != null" >
+                REP_RAISE_VDATE,
+            </if>
+            <if test="repRaiseEnddate != null" >
+                REP_RAISE_ENDDATE,
+            </if>
+            <if test="repPrdVdate != null" >
+                REP_PRD_VDATE,
+            </if>
+            <if test="repPrdMdate != null" >
+                REP_PRD_MDATE,
+            </if>
+            <if test="repIsConstracte != null" >
+                REP_IS_CONSTRACTE,
+            </if>
+            <if test="repGradeType != null" >
+                REP_GRADE_TYPE,
+            </if>
+            <if test="repExpMinYield != null" >
+                REP_EXP_MIN_YIELD,
+            </if>
+            <if test="repExpMaxYield != null" >
+                REP_EXP_MAX_YIELD,
+            </if>
+            <if test="repExpAvgYield != null" >
+                REP_EXP_AVG_YIELD,
+            </if>
+            <if test="repYieldComment != null" >
+                REP_YIELD_COMMENT,
+            </if>
+            <if test="repOpenMode != null" >
+                REP_OPEN_MODE,
+            </if>
+            <if test="repOpenCircle != null" >
+                REP_OPEN_CIRCLE,
+            </if>
+            <if test="repOpenCircleDays != null" >
+                REP_OPEN_CIRCLE_DAYS,
+            </if>
+            <if test="repRuleComment != null" >
+                REP_RULE_COMMENT,
+            </if>
+            <if test="repFirstOpenDay != null" >
+                REP_FIRST_OPEN_DAY,
+            </if>
+            <if test="repHolidayOnFlag != null" >
+                REP_HOLIDAY_ON_FLAG,
+            </if>
+            <if test="repAvgOpenCount != null" >
+                REP_AVG_OPEN_COUNT,
+            </if>
+            <if test="repOpenBuss != null" >
+                REP_OPEN_BUSS,
+            </if>
+            <if test="repOpenBussRemark != null" >
+                REP_OPEN_BUSS_REMARK,
+            </if>
+            <if test="repRemark != null" >
+                REP_REMARK,
+            </if>
+            <if test="repIssueDate != null" >
+                REP_ISSUE_DATE,
+            </if>
+            <if test="repSendStatus != null" >
+                REP_SEND_STATUS,
+            </if>
+            <if test="repStatusDate != null" >
+                REP_STATUS_DATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="repFinprodId != null" >
+                #{repFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="repBankProdCode != null" >
+                #{repBankProdCode,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinprodRegId != null" >
+                #{repFinprodRegId,jdbcType=VARCHAR},
+            </if>
+            <if test="repRaiseVdate != null" >
+                #{repRaiseVdate,jdbcType=DATE},
+            </if>
+            <if test="repRaiseEnddate != null" >
+                #{repRaiseEnddate,jdbcType=DATE},
+            </if>
+            <if test="repPrdVdate != null" >
+                #{repPrdVdate,jdbcType=DATE},
+            </if>
+            <if test="repPrdMdate != null" >
+                #{repPrdMdate,jdbcType=DATE},
+            </if>
+            <if test="repIsConstracte != null" >
+                #{repIsConstracte,jdbcType=VARCHAR},
+            </if>
+            <if test="repGradeType != null" >
+                #{repGradeType,jdbcType=VARCHAR},
+            </if>
+            <if test="repExpMinYield != null" >
+                #{repExpMinYield,jdbcType=DECIMAL},
+            </if>
+            <if test="repExpMaxYield != null" >
+                #{repExpMaxYield,jdbcType=DECIMAL},
+            </if>
+            <if test="repExpAvgYield != null" >
+                #{repExpAvgYield,jdbcType=DECIMAL},
+            </if>
+            <if test="repYieldComment != null" >
+                #{repYieldComment,jdbcType=VARCHAR},
+            </if>
+            <if test="repOpenMode != null" >
+                #{repOpenMode,jdbcType=VARCHAR},
+            </if>
+            <if test="repOpenCircle != null" >
+                #{repOpenCircle,jdbcType=VARCHAR},
+            </if>
+            <if test="repOpenCircleDays != null" >
+                #{repOpenCircleDays,jdbcType=DECIMAL},
+            </if>
+            <if test="repRuleComment != null" >
+                #{repRuleComment,jdbcType=VARCHAR},
+            </if>
+            <if test="repFirstOpenDay != null" >
+                #{repFirstOpenDay,jdbcType=DATE},
+            </if>
+            <if test="repHolidayOnFlag != null" >
+                #{repHolidayOnFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="repAvgOpenCount != null" >
+                #{repAvgOpenCount,jdbcType=DECIMAL},
+            </if>
+            <if test="repOpenBuss != null" >
+                #{repOpenBuss,jdbcType=VARCHAR},
+            </if>
+            <if test="repOpenBussRemark != null" >
+                #{repOpenBussRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="repRemark != null" >
+                #{repRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="repIssueDate != null" >
+                #{repIssueDate,jdbcType=DATE},
+            </if>
+            <if test="repSendStatus != null" >
+                #{repSendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="repStatusDate != null" >
+                #{repStatusDate,jdbcType=DATE},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepProdIssue" >
+        insert into REP_PROD_ISSUE(REP_FINPROD_ID, REP_BANK_PROD_CODE, REP_FINPROD_REG_ID, 
+        REP_RAISE_VDATE, REP_RAISE_ENDDATE, REP_PRD_VDATE, REP_PRD_MDATE, REP_IS_CONSTRACTE, 
+        REP_GRADE_TYPE, REP_EXP_MIN_YIELD, REP_EXP_MAX_YIELD, REP_EXP_AVG_YIELD, REP_YIELD_COMMENT, 
+        REP_OPEN_MODE, REP_OPEN_CIRCLE, REP_OPEN_CIRCLE_DAYS, REP_RULE_COMMENT, REP_FIRST_OPEN_DAY, 
+        REP_HOLIDAY_ON_FLAG, REP_AVG_OPEN_COUNT, REP_OPEN_BUSS, REP_OPEN_BUSS_REMARK, REP_REMARK, 
+        REP_ISSUE_DATE, REP_SEND_STATUS, REP_STATUS_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select REP_FINPROD_ID, REP_BANK_PROD_CODE, REP_FINPROD_REG_ID, 
+            REP_RAISE_VDATE, REP_RAISE_ENDDATE, REP_PRD_VDATE, REP_PRD_MDATE, REP_IS_CONSTRACTE, 
+            REP_GRADE_TYPE, REP_EXP_MIN_YIELD, REP_EXP_MAX_YIELD, REP_EXP_AVG_YIELD, REP_YIELD_COMMENT, 
+            REP_OPEN_MODE, REP_OPEN_CIRCLE, REP_OPEN_CIRCLE_DAYS, REP_RULE_COMMENT, REP_FIRST_OPEN_DAY, 
+            REP_HOLIDAY_ON_FLAG, REP_AVG_OPEN_COUNT, REP_OPEN_BUSS, REP_OPEN_BUSS_REMARK, REP_REMARK, 
+            REP_ISSUE_DATE, REP_SEND_STATUS, REP_STATUS_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from REP_PROD_ISSUE
+             where 1 = 1 and REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepProdIssue" >
+        update REP_PROD_ISSUE
+        <set >
+            <if test="repBankProdCode != null" >
+                REP_BANK_PROD_CODE = #{repBankProdCode,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinprodRegId != null" >
+                REP_FINPROD_REG_ID = #{repFinprodRegId,jdbcType=VARCHAR},
+            </if>
+            <if test="repRaiseVdate != null" >
+                REP_RAISE_VDATE = #{repRaiseVdate,jdbcType=DATE},
+            </if>
+            <if test="repRaiseEnddate != null" >
+                REP_RAISE_ENDDATE = #{repRaiseEnddate,jdbcType=DATE},
+            </if>
+            <if test="repPrdVdate != null" >
+                REP_PRD_VDATE = #{repPrdVdate,jdbcType=DATE},
+            </if>
+            <if test="repPrdMdate != null" >
+                REP_PRD_MDATE = #{repPrdMdate,jdbcType=DATE},
+            </if>
+            <if test="repIsConstracte != null" >
+                REP_IS_CONSTRACTE = #{repIsConstracte,jdbcType=VARCHAR},
+            </if>
+            <if test="repGradeType != null" >
+                REP_GRADE_TYPE = #{repGradeType,jdbcType=VARCHAR},
+            </if>
+            <if test="repExpMinYield != null" >
+                REP_EXP_MIN_YIELD = #{repExpMinYield,jdbcType=DECIMAL},
+            </if>
+            <if test="repExpMaxYield != null" >
+                REP_EXP_MAX_YIELD = #{repExpMaxYield,jdbcType=DECIMAL},
+            </if>
+            <if test="repExpAvgYield != null" >
+                REP_EXP_AVG_YIELD = #{repExpAvgYield,jdbcType=DECIMAL},
+            </if>
+            <if test="repYieldComment != null" >
+                REP_YIELD_COMMENT = #{repYieldComment,jdbcType=VARCHAR},
+            </if>
+            <if test="repOpenMode != null" >
+                REP_OPEN_MODE = #{repOpenMode,jdbcType=VARCHAR},
+            </if>
+            <if test="repOpenCircle != null" >
+                REP_OPEN_CIRCLE = #{repOpenCircle,jdbcType=VARCHAR},
+            </if>
+            <if test="repOpenCircleDays != null" >
+                REP_OPEN_CIRCLE_DAYS = #{repOpenCircleDays,jdbcType=DECIMAL},
+            </if>
+            <if test="repRuleComment != null" >
+                REP_RULE_COMMENT = #{repRuleComment,jdbcType=VARCHAR},
+            </if>
+            <if test="repFirstOpenDay != null" >
+                REP_FIRST_OPEN_DAY = #{repFirstOpenDay,jdbcType=DATE},
+            </if>
+            <if test="repHolidayOnFlag != null" >
+                REP_HOLIDAY_ON_FLAG = #{repHolidayOnFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="repAvgOpenCount != null" >
+                REP_AVG_OPEN_COUNT = #{repAvgOpenCount,jdbcType=DECIMAL},
+            </if>
+            <if test="repOpenBuss != null" >
+                REP_OPEN_BUSS = #{repOpenBuss,jdbcType=VARCHAR},
+            </if>
+            <if test="repOpenBussRemark != null" >
+                REP_OPEN_BUSS_REMARK = #{repOpenBussRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="repRemark != null" >
+                REP_REMARK = #{repRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="repIssueDate != null" >
+                REP_ISSUE_DATE = #{repIssueDate,jdbcType=DATE},
+            </if>
+            <if test="repSendStatus != null" >
+                REP_SEND_STATUS = #{repSendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="repStatusDate != null" >
+                REP_STATUS_DATE = #{repStatusDate,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepProdIssue" >
+        update REP_PROD_ISSUE
+        set REP_BANK_PROD_CODE = #{repBankProdCode,jdbcType=VARCHAR},
+            REP_FINPROD_REG_ID = #{repFinprodRegId,jdbcType=VARCHAR},
+            REP_RAISE_VDATE = #{repRaiseVdate,jdbcType=DATE},
+            REP_RAISE_ENDDATE = #{repRaiseEnddate,jdbcType=DATE},
+            REP_PRD_VDATE = #{repPrdVdate,jdbcType=DATE},
+            REP_PRD_MDATE = #{repPrdMdate,jdbcType=DATE},
+            REP_IS_CONSTRACTE = #{repIsConstracte,jdbcType=VARCHAR},
+            REP_GRADE_TYPE = #{repGradeType,jdbcType=VARCHAR},
+            REP_EXP_MIN_YIELD = #{repExpMinYield,jdbcType=DECIMAL},
+            REP_EXP_MAX_YIELD = #{repExpMaxYield,jdbcType=DECIMAL},
+            REP_EXP_AVG_YIELD = #{repExpAvgYield,jdbcType=DECIMAL},
+            REP_YIELD_COMMENT = #{repYieldComment,jdbcType=VARCHAR},
+            REP_OPEN_MODE = #{repOpenMode,jdbcType=VARCHAR},
+            REP_OPEN_CIRCLE = #{repOpenCircle,jdbcType=VARCHAR},
+            REP_OPEN_CIRCLE_DAYS = #{repOpenCircleDays,jdbcType=DECIMAL},
+            REP_RULE_COMMENT = #{repRuleComment,jdbcType=VARCHAR},
+            REP_FIRST_OPEN_DAY = #{repFirstOpenDay,jdbcType=DATE},
+            REP_HOLIDAY_ON_FLAG = #{repHolidayOnFlag,jdbcType=VARCHAR},
+            REP_AVG_OPEN_COUNT = #{repAvgOpenCount,jdbcType=DECIMAL},
+            REP_OPEN_BUSS = #{repOpenBuss,jdbcType=VARCHAR},
+            REP_OPEN_BUSS_REMARK = #{repOpenBussRemark,jdbcType=VARCHAR},
+            REP_REMARK = #{repRemark,jdbcType=VARCHAR},
+            REP_ISSUE_DATE = #{repIssueDate,jdbcType=DATE},
+            REP_SEND_STATUS = #{repSendStatus,jdbcType=VARCHAR},
+            REP_STATUS_DATE = #{repStatusDate,jdbcType=DATE},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </update>
+</mapper>

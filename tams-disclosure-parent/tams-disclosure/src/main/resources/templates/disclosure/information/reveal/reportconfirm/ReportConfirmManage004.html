@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
+<head>
+<meta charset="UTF-8">
+<title>报表人工上传</title>
+</head>
+<body>
+	<div layout:fragment="content">
+        <form class="layui-form joyin-form-wrap" id="submitForm" style="background: #ffffff; padding: 10px 0;">
+              <!-- <div class="layui-form-item" style="display:none;">
+                <input id="operateType" name="operateType"
+                            class="layui-input form-input" placeholder="请输入"
+                            data-th-value="${entity?.operateType}" >                                   
+            	</div> -->
+            	<!-- 文件名字隐藏 -->
+            	<div class="layui-input-inline input-inline" style="display:none;">                               
+                       <input type="text" id="fileName" name="fileName" placeholder="请输入内容"
+                           class="layui-input form-input">
+				</div>
+				<!-- 文件路径隐藏 -->
+				<div class="layui-input-inline input-inline" style="display:none;">                               
+                       <input type="text" id="filePath" name="filePath" placeholder="请输入内容"
+                           class="layui-input form-input">
+				</div>
+            <div class="layui-form-item">
+                <div class="layui-inline layui-col-md7">
+                   <label class="layui-form-label form-lable">
+                   		<i class="iconfont must" style="display: inline;">*</i>
+                    		产品名称
+                    </label>
+                    <div class="layui-input-inline input-inline">                               
+                       <select id="prodId" name="prodId" class="layui-input form-input input-select"
+	                        placeholder="请选择"  allowClear="true"
+	                        data-url='getPrdInfoSelect'>
+	                   </select>
+					</div>
+                </div>
+                <div class="layui-inline layui-col-md5">
+                	<label class="layui-form-label form-lable">
+                    <i class="iconfont must" style="display: inline;">*</i>
+                                                                    报表名称
+                    </label>
+                    <div class="layui-input-inline input-inline">                               
+                       <input type="text" id="reportName" name="reportName" placeholder="请输入内容"
+                           class="layui-input form-input">
+					</div>
+                </div>
+            </div> 
+            <div class="layui-form-item">
+            	<div class="layui-inline layui-col-md7">
+                   <label class="layui-form-label form-lable">
+                   <i class="iconfont must" style="display: inline;">*</i>
+                    		报表类别
+                    </label>
+                    <div class="layui-input-inline input-inline">                               
+                       <select id="reportType" name="reportType" class="layui-input form-input input-select"
+	                        placeholder="请选择" data-th-data-result="${REPORT_STYLE}" allowClear="true"
+	                        >
+	                   </select>
+					</div>
+                </div> 
+            	<div class="layui-inline layui-col-md5">
+                   <label class="layui-form-label form-lable">
+                   <i class="iconfont must" style="display: inline;">*</i>
+                                                          确认方式
+                   </label>
+                    <div class="layui-input-inline input-inline">                               
+                            <input type="text" id="conFirmType" name="conFirmType" conFirmType="" placeholder="请输入内容"
+                                class="layui-input form-input input-checkbox" data-th-data-result="${CONFIRM_TYPE}"
+                                data-th-initValue='${confirmType}' disabled="disabled">
+                    </div>
+                </div>
+                </div>
+                <div class="layui-form-item">
+                	<div class="layui-inline layui-col-md7">
+	                    <label class="layui-form-label form-lable">
+	                   <i class="iconfont must" style="display: inline;">*</i>
+	                                                         披露渠道
+	                   </label>
+	                    <div class="layui-input-inline input-inline">                               
+	                            <input type="text" id="revealChannel" name="revealChannel" conFirmType="" placeholder="请输入内容" multiple="multiple"
+	                                class="layui-input form-input input-checkbox"
+	                                data-th-data-result="${channelList}"
+	                                data-th-initValue='${revealChannel}'>
+	                    </div>
+                 	</div>
+                 
+                 	<div class="layui-inline layui-col-md5">
+	                    <label class="layui-form-label form-lable">
+	                    	<i class="iconfont must" style="display: inline;">*</i>
+	                                                                        披露方式
+	                    </label>
+	                    <div class="layui-input-inline input-inline">                               
+	                            <input type="text" id="revealType" name="revealType" conFirmType="" placeholder="请输入内容"
+	                                class="layui-input form-input input-checkbox" data-th-data-result="${REVEAL_TYPE}"
+	                                data-th-initValue='${revealType}' disabled="disabled">
+	                    </div>
+                 </div>
+            	</div>
+                <div class="layui-form-item">
+                	<div class="layui-inline layui-col-md1">&nbsp;</div>
+                	<div class="layui-inline layui-col-md4">
+                		<label class="layui-form-label form-lable">
+                		<i class="iconfont must" style="display: inline;">*</i>
+                                                                                    报表上传</label>
+                        <div class="layui-inline" >
+            				<div class="upload" id="uploadReport"
+                				data-option="{allowFileType: 'xls|xlsx|pdf|docx', type: 'drag', muiltiple: false, callback: 'FileCommon.onUploaded'}">
+            				</div>
+            			</div>
+            		</div>
+            	</div>
+            	<div class="layui-form-item">
+            		<div class="layui-inline layui-col-md7">
+	                  <label class="layui-form-label form-lable">
+	                  	<i class="iconfont must" style="display: inline;">*</i>	
+	                  		&nbsp;&nbsp;报&nbsp;告&nbsp;期</label>
+	                  <div class="layui-input-inline input-inline">
+	                    <input type="text" id="reportDate" name="reportDate" placeholder="请选择时间区间" class="layui-input form-input input-dateRangeSelect" value="">
+	                  </div>
+                    </div>
+            	</div>
+            	<div class="layui-form-item">
+            		<div class="layui-inline layui-col-md7">
+	                  <label class="layui-form-label form-lable">
+	                  	<i class="iconfont must" style="display: inline;">*</i>	
+	                  		披露截止日</label>
+	                  <div class="layui-input-inline input-inline">
+	                    <input id="revealEndDate" name="revealEndDate" placeholder="请选择时间" type="datetime" class="layui-input form-input input-dateSelect" value="">
+	                  </div>
+                	</div> 
+            	</div>
+            	<div class="layui-form-item">
+            		<div class="layui-inline layui-col-md7">
+	                    <label class="layui-form-label form-lable">手动上传说明</label>
+	                    <div class="layui-input-inline input-inline">
+	                        <textarea id="uploadDescribe" name="uploadDescribe" class="layui-textarea" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" ></textarea>
+	                    </div>
+	                </div>
+            	</div>
+            <div class="layui-col-md11" style="margin: 50px;">
+            <div class="text-center">
+                <!-- <a id="ReportConfirmManage004_btn_save" class="layui-btn layui-btn-sm btn-save"
+                    data-th-text="#{SysCommon.save}">保存</a> -->
+                <a id="ReportConfirmManage004_btn_submit" class="layui-btn layui-btn-sm btn-submit"
+                    data-th-text="#{SysCommon.submit}">提交</a>
+                <a id="ReportConfirmManage004_btn_cancel" class="layui-btn layui-btn-sm btn-cancel"
+                    data-th-text="#{SysCommon.cancel}">取消</a>
+            </div>
+        </div>                  
+        </form>
+        <input type="text" id="filesize" name="filesize" class="layui-input form-input" disabled="disabled" style = "display:none;">
+    </div>
+    <div layout:fragment="script">
+        <script data-th-src="@{/js/disclosure/information/reveal/reportconfirm/ReportConfirmManage004.js}"
+            type="text/javascript"></script>
+    </div>
+</body>
+</html>

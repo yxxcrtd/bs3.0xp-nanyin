@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.infodisclosure.batchUtil.dao.SysBatchStartMapper">
+    <select id="findAllTask" resultType="com.joyintech.framework.base.entity.SysBatchTask">
+        SELECT
+        TASK_ID taskId,
+        FTASK_ID ftaskId,
+        BEAN_NAME beanName,
+        TASK_NAME taskName,
+        TASK_PRI taskPri,
+        CREATE_USER createUser,
+        CREATE_TIME createTime,
+        UPDATE_USER updateUser,
+        UPDATE_TIME updateTime
+        FROM SYS_BATCH_TASK
+        <where>
+            <if test="batchName != null and batchName != ''">
+                (UPPER(BEAN_NAME) LIKE concat(concat('%', UPPER(#{batchName})),'%') OR UPPER(TASK_NAME) LIKE concat(concat('%', UPPER(#{batchName})),'%') )
+            </if>
+        </where>
+    </select>
+
+    <insert id="batchInsertBatchGroup">
+        insert into SYS_BATCH_JOB (BATCH_SEQ_NO, TASK_ID,
+        CREATE_USER, CREATE_DEPT, CREATE_TIME,
+        UPDATE_USER, UPDATE_TIME)
+        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+                 close="from dual)">
+            #{item.batchSeqNo,jdbcType=VARCHAR}, #{item.taskId,jdbcType=VARCHAR},
+            #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}
+        </foreach>
+    </insert>
+
+    <insert id="batchInsertProdGroup">
+        insert into SYS_BATCH_GRP_PRDLINK (GROUP_SEQ, PRODUCT_ID, PRODUCT_NAME,
+        CREATE_USER, CREATE_DEPT,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+                 close="from dual)">
+            #{item.groupSeq,jdbcType=VARCHAR}, #{item.productId,jdbcType=VARCHAR}, #{item.productName,jdbcType=VARCHAR},
+            #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR},
+            #{item.updateTime,jdbcType=TIMESTAMP}
+        </foreach>
+    </insert>
+
+    <update id="updateExeDetailToUnr">
+        UPDATE SYS_BATCHGRP_EXEC_INFO SET STATUS = 'UNR', UPDATE_USER = #{userName}, UPDATE_TIME=sysdate where SEQ_NO = #{detailSeqNo}
+    </update>
+
+    <delete id="deleteAllBatchInfo">
+        DELETE FROM SYS_BATCHGRP_EXEC_INFO where SEQ_NO = #{detailSeqNo}
+    </delete>
+</mapper>

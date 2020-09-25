@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.batch.disclosure.informationdisclourse.infodiscautoreveal.dao.InfoDiscAutoRevealMapper_mysql">
+    <!-- 更新披露状态 -->
+    <update id="updateRevealStatusById" parameterType="com.joyintech.tams.batch.disclosure.informationdisclourse.infodiscautoreveal.dto.InfoDiscAutoRevealResult" >
+	      update REP_REVEAL
+	      set
+	      REVEAL_STATUS = #{revealStatus,jdbcType=VARCHAR},
+	      REVEAL_DATE = #{revealDate,jdbcType=TIMESTAMP},
+	      REVEAL_USER = #{revealUser,jdbcType=VARCHAR},
+	      UPDATE_TIME = now(),
+	      UPDATE_USER = #{revealUser,jdbcType=VARCHAR}
+	      where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+</mapper>

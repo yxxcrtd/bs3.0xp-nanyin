@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbEqutotDetSubHisMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbEqutotDetSubHis" >
+        <id column="HIS_NO" property="hisNo" jdbcType="DECIMAL" />
+        <id column="REG_CODE" property="regCode" jdbcType="VARCHAR" />
+        <id column="REGIST_BANK_CODE" property="registBankCode" jdbcType="VARCHAR" />
+        <id column="BUSI_TYPE" property="busiType" jdbcType="CHAR" />
+        <result column="ACCOUNT" property="account" jdbcType="VARCHAR" />
+        <result column="DETAIL" property="detail" jdbcType="DECIMAL" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="SHARES" property="shares" jdbcType="DECIMAL" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        HIS_NO HIS_NO, REG_CODE REG_CODE, REGIST_BANK_CODE REGIST_BANK_CODE, BUSI_TYPE BUSI_TYPE, 
+        ACCOUNT ACCOUNT, DETAIL DETAIL, REMARK REMARK, DEPT_CODE DEPT_CODE, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, SHARES SHARES, 
+        CREATE_DEPT CREATE_DEPT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbEqutotDetSubHisMapper.Base_Column_List" />
+        from CHB_EQUTOT_DET_SUB_HIS
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbEqutotDetSubHisMapper.Base_Column_List" />
+        from CHB_EQUTOT_DET_SUB_HIS
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.ChbEqutotDetSubHisKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbEqutotDetSubHisMapper.Base_Column_List" />
+        from CHB_EQUTOT_DET_SUB_HIS
+        where HIS_NO = #{hisNo,jdbcType=DECIMAL}
+          and REG_CODE = #{regCode,jdbcType=VARCHAR}
+          and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
+          and BUSI_TYPE = #{busiType,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbEqutotDetSubHisKey" >
+        delete from CHB_EQUTOT_DET_SUB_HIS
+        where HIS_NO = #{hisNo,jdbcType=DECIMAL}
+          and REG_CODE = #{regCode,jdbcType=VARCHAR}
+          and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
+          and BUSI_TYPE = #{busiType,jdbcType=CHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbEqutotDetSubHis" >
+        insert into CHB_EQUTOT_DET_SUB_HIS (HIS_NO, REG_CODE, REGIST_BANK_CODE, 
+            BUSI_TYPE, ACCOUNT, DETAIL, 
+            REMARK, DEPT_CODE, UPDATE_USER, 
+            UPDATE_TIME, CREATE_USER, CREATE_TIME, 
+            SHARES, CREATE_DEPT)
+        values (#{hisNo,jdbcType=DECIMAL}, #{regCode,jdbcType=VARCHAR}, #{registBankCode,jdbcType=VARCHAR}, 
+            #{busiType,jdbcType=CHAR}, #{account,jdbcType=VARCHAR}, #{detail,jdbcType=DECIMAL}, 
+            #{remark,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{shares,jdbcType=DECIMAL}, #{createDept,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbEqutotDetSubHis" >
+        insert into CHB_EQUTOT_DET_SUB_HIS
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="hisNo != null" >
+                HIS_NO,
+            </if>
+            <if test="regCode != null" >
+                REG_CODE,
+            </if>
+            <if test="registBankCode != null" >
+                REGIST_BANK_CODE,
+            </if>
+            <if test="busiType != null" >
+                BUSI_TYPE,
+            </if>
+            <if test="account != null" >
+                ACCOUNT,
+            </if>
+            <if test="detail != null" >
+                DETAIL,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="shares != null" >
+                SHARES,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="hisNo != null" >
+                #{hisNo,jdbcType=DECIMAL},
+            </if>
+            <if test="regCode != null" >
+                #{regCode,jdbcType=VARCHAR},
+            </if>
+            <if test="registBankCode != null" >
+                #{registBankCode,jdbcType=VARCHAR},
+            </if>
+            <if test="busiType != null" >
+                #{busiType,jdbcType=CHAR},
+            </if>
+            <if test="account != null" >
+                #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="detail != null" >
+                #{detail,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="shares != null" >
+                #{shares,jdbcType=DECIMAL},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertHisByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbEqutotDetSubHis" >
+        insert into CHB_EQUTOT_DET_SUB_HIS(HIS_NO, REG_CODE, REGIST_BANK_CODE, BUSI_TYPE, 
+        ACCOUNT, DETAIL, REMARK, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, 
+        SHARES, CREATE_DEPT)
+        select (select nvl(max(HIS_NO), 0) from CHB_EQUTOT_DET_SUB_HIS where STATUS = 'E' and REG_CODE = #{regCode,jdbcType=VARCHAR} and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR} and BUSI_TYPE = #{busiType,jdbcType=CHAR}) + 1 HIS_NO, REG_CODE, REGIST_BANK_CODE, BUSI_TYPE, 
+            ACCOUNT, DETAIL, REMARK, DEPT_CODE, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_USER, CREATE_TIME, 
+            SHARES, CREATE_DEPT
+             from CHB_EQUTOT_DET_SUB
+             where STATUS = 'E' and REG_CODE = #{regCode,jdbcType=VARCHAR} and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR} and BUSI_TYPE = #{busiType,jdbcType=CHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbEqutotDetSubHis" >
+        update CHB_EQUTOT_DET_SUB_HIS
+        <set >
+            <if test="account != null" >
+                ACCOUNT = #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="detail != null" >
+                DETAIL = #{detail,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="shares != null" >
+                SHARES = #{shares,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where HIS_NO = #{hisNo,jdbcType=DECIMAL}
+          and REG_CODE = #{regCode,jdbcType=VARCHAR}
+          and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
+          and BUSI_TYPE = #{busiType,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbEqutotDetSubHis" >
+        update CHB_EQUTOT_DET_SUB_HIS
+        set ACCOUNT = #{account,jdbcType=VARCHAR},
+            DETAIL = #{detail,jdbcType=DECIMAL},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            SHARES = #{shares,jdbcType=DECIMAL},
+        where HIS_NO = #{hisNo,jdbcType=DECIMAL}
+          and REG_CODE = #{regCode,jdbcType=VARCHAR}
+          and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
+          and BUSI_TYPE = #{busiType,jdbcType=CHAR}
+    </update>
+</mapper>

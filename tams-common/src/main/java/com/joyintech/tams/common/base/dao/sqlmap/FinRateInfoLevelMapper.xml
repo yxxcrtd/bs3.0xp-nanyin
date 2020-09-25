@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.FinRateInfoLevelMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.FinRateInfoLevel" >
+        <id column="CASH_ID" property="cashId" jdbcType="VARCHAR" />
+        <id column="EFF_DATE" property="effDate" jdbcType="DATE" />
+        <id column="LEVEL" property="level" jdbcType="VARCHAR" />
+        <result column="CUSTOM_LEVEL" property="customLevel" jdbcType="VARCHAR" />
+        <result column="AMT_MIN" property="amtMin" jdbcType="DECIMAL" />
+        <result column="AMT_MAX" property="amtMax" jdbcType="DECIMAL" />
+        <result column="TERM_MAX" property="termMax" jdbcType="DECIMAL" />
+        <result column="TERM_MIN" property="termMin" jdbcType="DECIMAL" />
+        <result column="YIELD" property="yield" jdbcType="DECIMAL" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CASH_ID CASH_ID, EFF_DATE EFF_DATE, LEVEL LEVEL, CUSTOM_LEVEL CUSTOM_LEVEL, AMT_MIN AMT_MIN, 
+        AMT_MAX AMT_MAX, TERM_MAX TERM_MAX, TERM_MIN TERM_MIN, YIELD YIELD, REMARK REMARK, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinRateInfoLevelMapper.Base_Column_List" />
+        from FIN_RATE_INFO_LEVEL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinRateInfoLevelMapper.Base_Column_List" />
+        from FIN_RATE_INFO_LEVEL
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.FinRateInfoLevelKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinRateInfoLevelMapper.Base_Column_List" />
+        from FIN_RATE_INFO_LEVEL
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+          and LEVEL = #{level,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinRateInfoLevelKey" >
+        delete from FIN_RATE_INFO_LEVEL
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+          and LEVEL = #{level,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FinRateInfoLevel" >
+        insert into FIN_RATE_INFO_LEVEL (CASH_ID, EFF_DATE, LEVEL, 
+            CUSTOM_LEVEL, AMT_MIN, AMT_MAX, 
+            TERM_MAX, TERM_MIN, YIELD, 
+            REMARK, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{cashId,jdbcType=VARCHAR}, #{effDate,jdbcType=DATE}, #{level,jdbcType=VARCHAR}, 
+            #{customLevel,jdbcType=VARCHAR}, #{amtMin,jdbcType=DECIMAL}, #{amtMax,jdbcType=DECIMAL}, 
+            #{termMax,jdbcType=DECIMAL}, #{termMin,jdbcType=DECIMAL}, #{yield,jdbcType=DECIMAL}, 
+            #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinRateInfoLevel" >
+        insert into FIN_RATE_INFO_LEVEL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="cashId != null" >
+                CASH_ID,
+            </if>
+            <if test="effDate != null" >
+                EFF_DATE,
+            </if>
+            <if test="level != null" >
+                LEVEL,
+            </if>
+            <if test="customLevel != null" >
+                CUSTOM_LEVEL,
+            </if>
+            <if test="amtMin != null" >
+                AMT_MIN,
+            </if>
+            <if test="amtMax != null" >
+                AMT_MAX,
+            </if>
+            <if test="termMax != null" >
+                TERM_MAX,
+            </if>
+            <if test="termMin != null" >
+                TERM_MIN,
+            </if>
+            <if test="yield != null" >
+                YIELD,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="cashId != null" >
+                #{cashId,jdbcType=VARCHAR},
+            </if>
+            <if test="effDate != null" >
+                #{effDate,jdbcType=DATE},
+            </if>
+            <if test="level != null" >
+                #{level,jdbcType=VARCHAR},
+            </if>
+            <if test="customLevel != null" >
+                #{customLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="amtMin != null" >
+                #{amtMin,jdbcType=DECIMAL},
+            </if>
+            <if test="amtMax != null" >
+                #{amtMax,jdbcType=DECIMAL},
+            </if>
+            <if test="termMax != null" >
+                #{termMax,jdbcType=DECIMAL},
+            </if>
+            <if test="termMin != null" >
+                #{termMin,jdbcType=DECIMAL},
+            </if>
+            <if test="yield != null" >
+                #{yield,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinRateInfoLevel" >
+        insert into FIN_RATE_INFO_LEVEL(CASH_ID, EFF_DATE, LEVEL, CUSTOM_LEVEL, AMT_MIN, 
+        AMT_MAX, TERM_MAX, TERM_MIN, YIELD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select CASH_ID, EFF_DATE, LEVEL, CUSTOM_LEVEL, AMT_MIN, 
+            AMT_MAX, TERM_MAX, TERM_MIN, YIELD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from FIN_RATE_INFO_LEVEL
+             where 1 = 1 and CASH_ID = #{cashId,jdbcType=VARCHAR} and EFF_DATE = #{effDate,jdbcType=DATE} and LEVEL = #{level,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.FinRateInfoLevel" >
+        update FIN_RATE_INFO_LEVEL
+        <set >
+            <if test="customLevel != null" >
+                CUSTOM_LEVEL = #{customLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="amtMin != null" >
+                AMT_MIN = #{amtMin,jdbcType=DECIMAL},
+            </if>
+            <if test="amtMax != null" >
+                AMT_MAX = #{amtMax,jdbcType=DECIMAL},
+            </if>
+            <if test="termMax != null" >
+                TERM_MAX = #{termMax,jdbcType=DECIMAL},
+            </if>
+            <if test="termMin != null" >
+                TERM_MIN = #{termMin,jdbcType=DECIMAL},
+            </if>
+            <if test="yield != null" >
+                YIELD = #{yield,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+          and LEVEL = #{level,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinRateInfoLevel" >
+        update FIN_RATE_INFO_LEVEL
+        set CUSTOM_LEVEL = #{customLevel,jdbcType=VARCHAR},
+            AMT_MIN = #{amtMin,jdbcType=DECIMAL},
+            AMT_MAX = #{amtMax,jdbcType=DECIMAL},
+            TERM_MAX = #{termMax,jdbcType=DECIMAL},
+            TERM_MIN = #{termMin,jdbcType=DECIMAL},
+            YIELD = #{yield,jdbcType=DECIMAL},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+          and LEVEL = #{level,jdbcType=VARCHAR}
+    </update>
+</mapper>

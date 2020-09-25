@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.invest.trade.bondtostock.dao.TrdBondToStockMapper_mysql">
+    <sql id="whereSql">
+        WHERE
+        <!--投管业务类型-->
+        total.TG_BUSI_TYPE = #{TG_BUSI_TYPE_ZZG}
+        and total.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_ZQ}
+        <!--过滤母组合-->
+        and PP.INVEST_YESORNO = #{YES_NO_YES}
+        and IFNULL(total.IS_CANCEL,#{YES_NO_NO}) = #{YES_NO_NO}
+        <if test="finprodIdList != null and finprodIdList.size()>0">
+            <foreach collection="finprodIdList" open="and total.FINPROD_ID in(" close=")" separator="," item="item">
+                #{item}
+            </foreach>
+        </if>
+        <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
+            <foreach collection="finprodMarketIdList" open="and fpzg.FINPROD_MARKET_ID in(" close=")" separator="," item="item">
+                #{item}
+            </foreach>
+        </if>
+        <if test="loginUserName != null and loginUserName != ''">
+            and (pp.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName})
+            OR pp.PARENT_PORTFOLIO_ID IN (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName}))
+        </if>
+        <if test="portfolioIdList != null and portfolioIdList.size()>0">
+            <foreach collection="portfolioIdList" open="and total.PORTFOLIO_ID in(" close=")" separator="," item="item">
+                #{item}
+            </foreach>
+        </if>
+        <if test="tradeDateStart != null and tradeDateStart != ''">
+            and total.TRADE_DATE &gt;= STR_TO_DATE(#{tradeDateStart},'%Y-%M-%d ')
+        </if>
+        <if test="tradeDateEnd != null and tradeDateEnd != ''">
+            and total.TRADE_DATE &lt;= STR_TO_DATE(#{tradeDateEnd},'%Y-%M-%d ')
+        </if>
+        <if test="tradeMarket != null and tradeMarket != ''">
+            and total.TRADE_MARKET =#{tradeMarket}
+        </if>
+        <if test="entrustId != null and entrustId != ''">
+            and totalAdd.ENTRUST_ID =#{entrustId}
+        </if>
+    </sql>
+
+    <select id="getPositionInfo" resultType="java.math.BigDecimal">
+        SELECT
+        sum(IFNULL(psp.amount,0))*100 amount
+        FROM
+        PTL_SEC_POSITION psp
+        where HODING_TYPE = #{hodingType}
+        and psp.PORTFOLIO_ID = #{portfolioId}
+        and psp.FINPROD_ID = #{finprodId}
+        and psp.CDATE &lt;= STR_TO_DATE(#{cdate},'%Y-%M-%d ')
+        <if test="branch != null and branch != ''">
+            and psp.BRANCH = #{branch}
+        </if>
+        <if test="invAim != null and invAim != ''">
+            and psp.INV_AIM = #{invAim}
+        </if>
+        <if test="ccy != null and ccy != ''">
+            and psp.ccy = #{ccy}
+        </if>
+        <if test="secAcctId != null and secAcctId != ''">
+            and psp.SEC_ACCT_ID = #{secAcctId}
+        </if>
+        <if test="chlId != null and chlId != ''">
+            and psp.SEC_ACCT_ID = #{chlId}
+        </if>
+        and not exists (
+        select
+        1
+        from
+        PTL_SEC_POSITION tpsp
+        where
+        tpsp.CDATE &lt;= STR_TO_DATE(#{cdate},'%Y-%M-%d ')
+        and tpsp.HODING_TYPE = psp.HODING_TYPE
+        and tpsp.PORTFOLIO_ID = psp.PORTFOLIO_ID
+        and tpsp.FINPROD_ID = psp.FINPROD_ID
+        and tpsp.BRANCH = psp.BRANCH
+        and tpsp.INV_AIM = psp.INV_AIM
+        and tpsp.CCY = psp.CCY
+        and tpsp.SEC_ACCT_ID = psp.SEC_ACCT_ID
+        and tpsp.CDATE > psp.CDATE
+        )
+    </select>
+</mapper>

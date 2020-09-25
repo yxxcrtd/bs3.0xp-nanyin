@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ValInterfActionlogMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ValInterfActionlog" >
+        <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="BUSI_DATE" property="busiDate" jdbcType="DATE" />
+        <result column="ORDERNO" property="orderno" jdbcType="DECIMAL" />
+        <result column="TASK_ENAME" property="taskEname" jdbcType="VARCHAR" />
+        <result column="START_TIME" property="startTime" jdbcType="TIMESTAMP" />
+        <result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="EXEC_RESULT" property="execResult" jdbcType="VARCHAR" />
+        <result column="LAST_TIME" property="lastTime" jdbcType="DECIMAL" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="EXECTASK_SEQNO" property="exectaskSeqno" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.joyintech.tams.common.base.entity.ValInterfActionlog" extends="BaseResultMap" >
+        <result column="DETAIL_ACTION" property="detailAction" jdbcType="CLOB" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO SEQNO, BUSI_DATE BUSI_DATE, ORDERNO ORDERNO, TASK_ENAME TASK_ENAME, START_TIME START_TIME, 
+        END_TIME END_TIME, STATUS STATUS, EXEC_RESULT EXEC_RESULT, LAST_TIME LAST_TIME, CREATE_TIME CREATE_TIME, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, UPDATE_TIME UPDATE_TIME, UPDATE_USER UPDATE_USER, 
+        EXECTASK_SEQNO EXECTASK_SEQNO
+    </sql>
+    <sql id="Blob_Column_List" >
+        DETAIL_ACTION
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValInterfActionlogMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.ValInterfActionlogMapper.Blob_Column_List" />
+        from VAL_INTERF_ACTIONLOG
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValInterfActionlogMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.ValInterfActionlogMapper.Blob_Column_List" />
+        from VAL_INTERF_ACTIONLOG
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValInterfActionlogMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.ValInterfActionlogMapper.Blob_Column_List" />
+        from VAL_INTERF_ACTIONLOG
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from VAL_INTERF_ACTIONLOG
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ValInterfActionlog" >
+        insert into VAL_INTERF_ACTIONLOG (SEQNO, BUSI_DATE, ORDERNO, 
+            TASK_ENAME, START_TIME, END_TIME, 
+            STATUS, EXEC_RESULT, LAST_TIME, 
+            CREATE_TIME, CREATE_USER, CREATE_DEPT, 
+            UPDATE_TIME, UPDATE_USER, EXECTASK_SEQNO, 
+            DETAIL_ACTION)
+        values (#{seqno,jdbcType=VARCHAR}, #{busiDate,jdbcType=DATE}, #{orderno,jdbcType=DECIMAL}, 
+            #{taskEname,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+            #{status,jdbcType=VARCHAR}, #{execResult,jdbcType=VARCHAR}, #{lastTime,jdbcType=DECIMAL}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{exectaskSeqno,jdbcType=VARCHAR}, 
+            #{detailAction,jdbcType=CLOB})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ValInterfActionlog" >
+        insert into VAL_INTERF_ACTIONLOG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="busiDate != null" >
+                BUSI_DATE,
+            </if>
+            <if test="orderno != null" >
+                ORDERNO,
+            </if>
+            <if test="taskEname != null" >
+                TASK_ENAME,
+            </if>
+            <if test="startTime != null" >
+                START_TIME,
+            </if>
+            <if test="endTime != null" >
+                END_TIME,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="execResult != null" >
+                EXEC_RESULT,
+            </if>
+            <if test="lastTime != null" >
+                LAST_TIME,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="exectaskSeqno != null" >
+                EXECTASK_SEQNO,
+            </if>
+            <if test="detailAction != null" >
+                DETAIL_ACTION,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="busiDate != null" >
+                #{busiDate,jdbcType=DATE},
+            </if>
+            <if test="orderno != null" >
+                #{orderno,jdbcType=DECIMAL},
+            </if>
+            <if test="taskEname != null" >
+                #{taskEname,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null" >
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null" >
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="execResult != null" >
+                #{execResult,jdbcType=VARCHAR},
+            </if>
+            <if test="lastTime != null" >
+                #{lastTime,jdbcType=DECIMAL},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="exectaskSeqno != null" >
+                #{exectaskSeqno,jdbcType=VARCHAR},
+            </if>
+            <if test="detailAction != null" >
+                #{detailAction,jdbcType=CLOB},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ValInterfActionlog" >
+        insert into VAL_INTERF_ACTIONLOG(SEQNO, BUSI_DATE, ORDERNO, TASK_ENAME, START_TIME, 
+        END_TIME, STATUS, EXEC_RESULT, LAST_TIME, CREATE_TIME, CREATE_USER, CREATE_DEPT, 
+        UPDATE_TIME, UPDATE_USER, EXECTASK_SEQNO, DETAIL_ACTION)
+        select SEQNO, BUSI_DATE, ORDERNO, TASK_ENAME, START_TIME, 
+            END_TIME, #{status,jdbcType=VARCHAR} STATUS, EXEC_RESULT, LAST_TIME, CREATE_TIME, CREATE_USER, CREATE_DEPT, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, EXECTASK_SEQNO, DETAIL_ACTION
+             from VAL_INTERF_ACTIONLOG
+             where STATUS = 'E' and SEQNO = #{seqno,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ValInterfActionlog" >
+        update VAL_INTERF_ACTIONLOG
+        <set >
+            <if test="busiDate != null" >
+                BUSI_DATE = #{busiDate,jdbcType=DATE},
+            </if>
+            <if test="orderno != null" >
+                ORDERNO = #{orderno,jdbcType=DECIMAL},
+            </if>
+            <if test="taskEname != null" >
+                TASK_ENAME = #{taskEname,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null" >
+                START_TIME = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null" >
+                END_TIME = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="execResult != null" >
+                EXEC_RESULT = #{execResult,jdbcType=VARCHAR},
+            </if>
+            <if test="lastTime != null" >
+                LAST_TIME = #{lastTime,jdbcType=DECIMAL},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="exectaskSeqno != null" >
+                EXECTASK_SEQNO = #{exectaskSeqno,jdbcType=VARCHAR},
+            </if>
+            <if test="detailAction != null" >
+                DETAIL_ACTION = #{detailAction,jdbcType=CLOB},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.joyintech.tams.common.base.entity.ValInterfActionlog" >
+        update VAL_INTERF_ACTIONLOG
+        set BUSI_DATE = #{busiDate,jdbcType=DATE},
+            ORDERNO = #{orderno,jdbcType=DECIMAL},
+            TASK_ENAME = #{taskEname,jdbcType=VARCHAR},
+            START_TIME = #{startTime,jdbcType=TIMESTAMP},
+            END_TIME = #{endTime,jdbcType=TIMESTAMP},
+            STATUS = #{status,jdbcType=VARCHAR},
+            EXEC_RESULT = #{execResult,jdbcType=VARCHAR},
+            LAST_TIME = #{lastTime,jdbcType=DECIMAL},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            EXECTASK_SEQNO = #{exectaskSeqno,jdbcType=VARCHAR},
+            DETAIL_ACTION = #{detailAction,jdbcType=CLOB}
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ValInterfActionlog" >
+        update VAL_INTERF_ACTIONLOG
+        set BUSI_DATE = #{busiDate,jdbcType=DATE},
+            ORDERNO = #{orderno,jdbcType=DECIMAL},
+            TASK_ENAME = #{taskEname,jdbcType=VARCHAR},
+            START_TIME = #{startTime,jdbcType=TIMESTAMP},
+            END_TIME = #{endTime,jdbcType=TIMESTAMP},
+            STATUS = #{status,jdbcType=VARCHAR},
+            EXEC_RESULT = #{execResult,jdbcType=VARCHAR},
+            LAST_TIME = #{lastTime,jdbcType=DECIMAL},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            EXECTASK_SEQNO = #{exectaskSeqno,jdbcType=VARCHAR}
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+</mapper>

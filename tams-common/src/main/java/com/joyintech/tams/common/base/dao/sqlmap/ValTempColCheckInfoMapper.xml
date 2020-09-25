@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ValTempColCheckInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ValTempColCheckInfo" >
+        <id column="TMP_E_NAME" property="tmpEName" jdbcType="VARCHAR" />
+        <id column="COL_E_NAME" property="colEName" jdbcType="VARCHAR" />
+        <result column="TMP_C_NAME" property="tmpCName" jdbcType="VARCHAR" />
+        <result column="COL_C_NAME" property="colCName" jdbcType="VARCHAR" />
+        <result column="COL_TYPE" property="colType" jdbcType="VARCHAR" />
+        <result column="IS_NULL" property="isNull" jdbcType="VARCHAR" />
+        <result column="MAX_LENGTH" property="maxLength" jdbcType="DECIMAL" />
+        <result column="IS_EXIST" property="isExist" jdbcType="VARCHAR" />
+        <result column="DICT_CODE" property="dictCode" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TMP_E_NAME TMP_E_NAME, COL_E_NAME COL_E_NAME, TMP_C_NAME TMP_C_NAME, COL_C_NAME COL_C_NAME, 
+        COL_TYPE COL_TYPE, IS_NULL IS_NULL, MAX_LENGTH MAX_LENGTH, IS_EXIST IS_EXIST, DICT_CODE DICT_CODE, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValTempColCheckInfoMapper.Base_Column_List" />
+        from VAL_TEMP_COL_CHECK_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValTempColCheckInfoMapper.Base_Column_List" />
+        from VAL_TEMP_COL_CHECK_INFO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.ValTempColCheckInfoKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValTempColCheckInfoMapper.Base_Column_List" />
+        from VAL_TEMP_COL_CHECK_INFO
+        where TMP_E_NAME = #{tmpEName,jdbcType=VARCHAR}
+          and COL_E_NAME = #{colEName,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ValTempColCheckInfoKey" >
+        delete from VAL_TEMP_COL_CHECK_INFO
+        where TMP_E_NAME = #{tmpEName,jdbcType=VARCHAR}
+          and COL_E_NAME = #{colEName,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ValTempColCheckInfo" >
+        insert into VAL_TEMP_COL_CHECK_INFO (TMP_E_NAME, COL_E_NAME, TMP_C_NAME, 
+            COL_C_NAME, COL_TYPE, IS_NULL, 
+            MAX_LENGTH, IS_EXIST, DICT_CODE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{tmpEName,jdbcType=VARCHAR}, #{colEName,jdbcType=VARCHAR}, #{tmpCName,jdbcType=VARCHAR}, 
+            #{colCName,jdbcType=VARCHAR}, #{colType,jdbcType=VARCHAR}, #{isNull,jdbcType=VARCHAR}, 
+            #{maxLength,jdbcType=DECIMAL}, #{isExist,jdbcType=VARCHAR}, #{dictCode,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ValTempColCheckInfo" >
+        insert into VAL_TEMP_COL_CHECK_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="tmpEName != null" >
+                TMP_E_NAME,
+            </if>
+            <if test="colEName != null" >
+                COL_E_NAME,
+            </if>
+            <if test="tmpCName != null" >
+                TMP_C_NAME,
+            </if>
+            <if test="colCName != null" >
+                COL_C_NAME,
+            </if>
+            <if test="colType != null" >
+                COL_TYPE,
+            </if>
+            <if test="isNull != null" >
+                IS_NULL,
+            </if>
+            <if test="maxLength != null" >
+                MAX_LENGTH,
+            </if>
+            <if test="isExist != null" >
+                IS_EXIST,
+            </if>
+            <if test="dictCode != null" >
+                DICT_CODE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="tmpEName != null" >
+                #{tmpEName,jdbcType=VARCHAR},
+            </if>
+            <if test="colEName != null" >
+                #{colEName,jdbcType=VARCHAR},
+            </if>
+            <if test="tmpCName != null" >
+                #{tmpCName,jdbcType=VARCHAR},
+            </if>
+            <if test="colCName != null" >
+                #{colCName,jdbcType=VARCHAR},
+            </if>
+            <if test="colType != null" >
+                #{colType,jdbcType=VARCHAR},
+            </if>
+            <if test="isNull != null" >
+                #{isNull,jdbcType=VARCHAR},
+            </if>
+            <if test="maxLength != null" >
+                #{maxLength,jdbcType=DECIMAL},
+            </if>
+            <if test="isExist != null" >
+                #{isExist,jdbcType=VARCHAR},
+            </if>
+            <if test="dictCode != null" >
+                #{dictCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ValTempColCheckInfo" >
+        insert into VAL_TEMP_COL_CHECK_INFO(TMP_E_NAME, COL_E_NAME, TMP_C_NAME, COL_C_NAME, 
+        COL_TYPE, IS_NULL, MAX_LENGTH, IS_EXIST, DICT_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select TMP_E_NAME, COL_E_NAME, TMP_C_NAME, COL_C_NAME, 
+            COL_TYPE, IS_NULL, MAX_LENGTH, IS_EXIST, DICT_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from VAL_TEMP_COL_CHECK_INFO
+             where 1 = 1 and TMP_E_NAME = #{tmpEName,jdbcType=VARCHAR} and COL_E_NAME = #{colEName,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ValTempColCheckInfo" >
+        update VAL_TEMP_COL_CHECK_INFO
+        <set >
+            <if test="tmpCName != null" >
+                TMP_C_NAME = #{tmpCName,jdbcType=VARCHAR},
+            </if>
+            <if test="colCName != null" >
+                COL_C_NAME = #{colCName,jdbcType=VARCHAR},
+            </if>
+            <if test="colType != null" >
+                COL_TYPE = #{colType,jdbcType=VARCHAR},
+            </if>
+            <if test="isNull != null" >
+                IS_NULL = #{isNull,jdbcType=VARCHAR},
+            </if>
+            <if test="maxLength != null" >
+                MAX_LENGTH = #{maxLength,jdbcType=DECIMAL},
+            </if>
+            <if test="isExist != null" >
+                IS_EXIST = #{isExist,jdbcType=VARCHAR},
+            </if>
+            <if test="dictCode != null" >
+                DICT_CODE = #{dictCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where TMP_E_NAME = #{tmpEName,jdbcType=VARCHAR}
+          and COL_E_NAME = #{colEName,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ValTempColCheckInfo" >
+        update VAL_TEMP_COL_CHECK_INFO
+        set TMP_C_NAME = #{tmpCName,jdbcType=VARCHAR},
+            COL_C_NAME = #{colCName,jdbcType=VARCHAR},
+            COL_TYPE = #{colType,jdbcType=VARCHAR},
+            IS_NULL = #{isNull,jdbcType=VARCHAR},
+            MAX_LENGTH = #{maxLength,jdbcType=DECIMAL},
+            IS_EXIST = #{isExist,jdbcType=VARCHAR},
+            DICT_CODE = #{dictCode,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where TMP_E_NAME = #{tmpEName,jdbcType=VARCHAR}
+          and COL_E_NAME = #{colEName,jdbcType=VARCHAR}
+    </update>
+</mapper>

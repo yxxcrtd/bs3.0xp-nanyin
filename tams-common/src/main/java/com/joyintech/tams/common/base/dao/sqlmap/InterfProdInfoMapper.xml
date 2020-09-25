@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfProdInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfProdInfo" >
+        <result column="PRODID" property="prodid" jdbcType="VARCHAR" />
+        <result column="CDATE" property="cdate" jdbcType="VARCHAR" />
+        <result column="PRODNAME" property="prodname" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="STARTDATE" property="startdate" jdbcType="VARCHAR" />
+        <result column="ENDDATE" property="enddate" jdbcType="VARCHAR" />
+        <result column="ACTENDDATE" property="actenddate" jdbcType="VARCHAR" />
+        <result column="NETVALUE" property="netvalue" jdbcType="DECIMAL" />
+        <result column="PREINAMOUNT" property="preinamount" jdbcType="DECIMAL" />
+        <result column="TOTALCURRENTAMOUNT" property="totalcurrentamount" jdbcType="DECIMAL" />
+        <result column="TOTALBUYAMOUNT" property="totalbuyamount" jdbcType="DECIMAL" />
+        <result column="TOTALDRAWAMOUNT" property="totaldrawamount" jdbcType="DECIMAL" />
+        <result column="TOTALDRAWCUSTAMOUNT" property="totaldrawcustamount" jdbcType="DECIMAL" />
+        <result column="TOTALFEESAMOUNT" property="totalfeesamount" jdbcType="DECIMAL" />
+        <result column="TOTALCARRIEDINTEREST" property="totalcarriedinterest" jdbcType="DECIMAL" />
+        <result column="TOTALNOTCARRIEDINTEREST" property="totalnotcarriedinterest" jdbcType="DECIMAL" />
+        <result column="RESERVEBUYAMT" property="reservebuyamt" jdbcType="DECIMAL" />
+        <result column="RESERVEDRAWVOL" property="reservedrawvol" jdbcType="DECIMAL" />
+        <result column="TOTALCARRIEDVOL" property="totalcarriedvol" jdbcType="DECIMAL" />
+        <result column="TOTALPAYABLEINTEREST" property="totalpayableinterest" jdbcType="DECIMAL" />
+        <result column="TOTALNEWINTEREST" property="totalnewinterest" jdbcType="DECIMAL" />
+        <result column="TOTALCLOSEINTEREST" property="totalcloseinterest" jdbcType="DECIMAL" />
+        <result column="TOTALCARRYINTEREST" property="totalcarryinterest" jdbcType="DECIMAL" />
+        <result column="TOTALCURRENTQUANTITY" property="totalcurrentquantity" jdbcType="DECIMAL" />
+        <result column="TOTALBUYQUANTITY" property="totalbuyquantity" jdbcType="DECIMAL" />
+        <result column="TOTALDRAWQUANTITY" property="totaldrawquantity" jdbcType="DECIMAL" />
+        <result column="TOTALCOUNT" property="totalcount" jdbcType="DECIMAL" />
+        <result column="TOTALPROFITAMOUNT" property="totalprofitamount" jdbcType="DECIMAL" />
+        <result column="PRODTYPE" property="prodtype" jdbcType="VARCHAR" />
+        <result column="PINAN_BUSINESS_TYPE" property="pinanBusinessType" jdbcType="VARCHAR" />
+        <result column="INTERF_ID" property="interfId" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfProdInfo" >
+        insert into INTERF_PROD_INFO (PRODID, CDATE, PRODNAME, 
+            CCY, STARTDATE, ENDDATE, 
+            ACTENDDATE, NETVALUE, PREINAMOUNT, 
+            TOTALCURRENTAMOUNT, TOTALBUYAMOUNT, TOTALDRAWAMOUNT, 
+            TOTALDRAWCUSTAMOUNT, TOTALFEESAMOUNT, 
+            TOTALCARRIEDINTEREST, TOTALNOTCARRIEDINTEREST, 
+            RESERVEBUYAMT, RESERVEDRAWVOL, TOTALCARRIEDVOL, 
+            TOTALPAYABLEINTEREST, TOTALNEWINTEREST, 
+            TOTALCLOSEINTEREST, TOTALCARRYINTEREST, 
+            TOTALCURRENTQUANTITY, TOTALBUYQUANTITY, 
+            TOTALDRAWQUANTITY, TOTALCOUNT, TOTALPROFITAMOUNT, 
+            PRODTYPE, PINAN_BUSINESS_TYPE, INTERF_ID, 
+            CREATE_TIME)
+        values (#{prodid,jdbcType=VARCHAR}, #{cdate,jdbcType=VARCHAR}, #{prodname,jdbcType=VARCHAR}, 
+            #{ccy,jdbcType=VARCHAR}, #{startdate,jdbcType=VARCHAR}, #{enddate,jdbcType=VARCHAR}, 
+            #{actenddate,jdbcType=VARCHAR}, #{netvalue,jdbcType=DECIMAL}, #{preinamount,jdbcType=DECIMAL}, 
+            #{totalcurrentamount,jdbcType=DECIMAL}, #{totalbuyamount,jdbcType=DECIMAL}, #{totaldrawamount,jdbcType=DECIMAL}, 
+            #{totaldrawcustamount,jdbcType=DECIMAL}, #{totalfeesamount,jdbcType=DECIMAL}, 
+            #{totalcarriedinterest,jdbcType=DECIMAL}, #{totalnotcarriedinterest,jdbcType=DECIMAL}, 
+            #{reservebuyamt,jdbcType=DECIMAL}, #{reservedrawvol,jdbcType=DECIMAL}, #{totalcarriedvol,jdbcType=DECIMAL}, 
+            #{totalpayableinterest,jdbcType=DECIMAL}, #{totalnewinterest,jdbcType=DECIMAL}, 
+            #{totalcloseinterest,jdbcType=DECIMAL}, #{totalcarryinterest,jdbcType=DECIMAL}, 
+            #{totalcurrentquantity,jdbcType=DECIMAL}, #{totalbuyquantity,jdbcType=DECIMAL}, 
+            #{totaldrawquantity,jdbcType=DECIMAL}, #{totalcount,jdbcType=DECIMAL}, #{totalprofitamount,jdbcType=DECIMAL}, 
+            #{prodtype,jdbcType=VARCHAR}, #{pinanBusinessType,jdbcType=VARCHAR}, #{interfId,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfProdInfo" >
+        insert into INTERF_PROD_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="prodid != null" >
+                PRODID,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="prodname != null" >
+                PRODNAME,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="startdate != null" >
+                STARTDATE,
+            </if>
+            <if test="enddate != null" >
+                ENDDATE,
+            </if>
+            <if test="actenddate != null" >
+                ACTENDDATE,
+            </if>
+            <if test="netvalue != null" >
+                NETVALUE,
+            </if>
+            <if test="preinamount != null" >
+                PREINAMOUNT,
+            </if>
+            <if test="totalcurrentamount != null" >
+                TOTALCURRENTAMOUNT,
+            </if>
+            <if test="totalbuyamount != null" >
+                TOTALBUYAMOUNT,
+            </if>
+            <if test="totaldrawamount != null" >
+                TOTALDRAWAMOUNT,
+            </if>
+            <if test="totaldrawcustamount != null" >
+                TOTALDRAWCUSTAMOUNT,
+            </if>
+            <if test="totalfeesamount != null" >
+                TOTALFEESAMOUNT,
+            </if>
+            <if test="totalcarriedinterest != null" >
+                TOTALCARRIEDINTEREST,
+            </if>
+            <if test="totalnotcarriedinterest != null" >
+                TOTALNOTCARRIEDINTEREST,
+            </if>
+            <if test="reservebuyamt != null" >
+                RESERVEBUYAMT,
+            </if>
+            <if test="reservedrawvol != null" >
+                RESERVEDRAWVOL,
+            </if>
+            <if test="totalcarriedvol != null" >
+                TOTALCARRIEDVOL,
+            </if>
+            <if test="totalpayableinterest != null" >
+                TOTALPAYABLEINTEREST,
+            </if>
+            <if test="totalnewinterest != null" >
+                TOTALNEWINTEREST,
+            </if>
+            <if test="totalcloseinterest != null" >
+                TOTALCLOSEINTEREST,
+            </if>
+            <if test="totalcarryinterest != null" >
+                TOTALCARRYINTEREST,
+            </if>
+            <if test="totalcurrentquantity != null" >
+                TOTALCURRENTQUANTITY,
+            </if>
+            <if test="totalbuyquantity != null" >
+                TOTALBUYQUANTITY,
+            </if>
+            <if test="totaldrawquantity != null" >
+                TOTALDRAWQUANTITY,
+            </if>
+            <if test="totalcount != null" >
+                TOTALCOUNT,
+            </if>
+            <if test="totalprofitamount != null" >
+                TOTALPROFITAMOUNT,
+            </if>
+            <if test="prodtype != null" >
+                PRODTYPE,
+            </if>
+            <if test="pinanBusinessType != null" >
+                PINAN_BUSINESS_TYPE,
+            </if>
+            <if test="interfId != null" >
+                INTERF_ID,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="prodid != null" >
+                #{prodid,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=VARCHAR},
+            </if>
+            <if test="prodname != null" >
+                #{prodname,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="startdate != null" >
+                #{startdate,jdbcType=VARCHAR},
+            </if>
+            <if test="enddate != null" >
+                #{enddate,jdbcType=VARCHAR},
+            </if>
+            <if test="actenddate != null" >
+                #{actenddate,jdbcType=VARCHAR},
+            </if>
+            <if test="netvalue != null" >
+                #{netvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="preinamount != null" >
+                #{preinamount,jdbcType=DECIMAL},
+            </if>
+            <if test="totalcurrentamount != null" >
+                #{totalcurrentamount,jdbcType=DECIMAL},
+            </if>
+            <if test="totalbuyamount != null" >
+                #{totalbuyamount,jdbcType=DECIMAL},
+            </if>
+            <if test="totaldrawamount != null" >
+                #{totaldrawamount,jdbcType=DECIMAL},
+            </if>
+            <if test="totaldrawcustamount != null" >
+                #{totaldrawcustamount,jdbcType=DECIMAL},
+            </if>
+            <if test="totalfeesamount != null" >
+                #{totalfeesamount,jdbcType=DECIMAL},
+            </if>
+            <if test="totalcarriedinterest != null" >
+                #{totalcarriedinterest,jdbcType=DECIMAL},
+            </if>
+            <if test="totalnotcarriedinterest != null" >
+                #{totalnotcarriedinterest,jdbcType=DECIMAL},
+            </if>
+            <if test="reservebuyamt != null" >
+                #{reservebuyamt,jdbcType=DECIMAL},
+            </if>
+            <if test="reservedrawvol != null" >
+                #{reservedrawvol,jdbcType=DECIMAL},
+            </if>
+            <if test="totalcarriedvol != null" >
+                #{totalcarriedvol,jdbcType=DECIMAL},
+            </if>
+            <if test="totalpayableinterest != null" >
+                #{totalpayableinterest,jdbcType=DECIMAL},
+            </if>
+            <if test="totalnewinterest != null" >
+                #{totalnewinterest,jdbcType=DECIMAL},
+            </if>
+            <if test="totalcloseinterest != null" >
+                #{totalcloseinterest,jdbcType=DECIMAL},
+            </if>
+            <if test="totalcarryinterest != null" >
+                #{totalcarryinterest,jdbcType=DECIMAL},
+            </if>
+            <if test="totalcurrentquantity != null" >
+                #{totalcurrentquantity,jdbcType=DECIMAL},
+            </if>
+            <if test="totalbuyquantity != null" >
+                #{totalbuyquantity,jdbcType=DECIMAL},
+            </if>
+            <if test="totaldrawquantity != null" >
+                #{totaldrawquantity,jdbcType=DECIMAL},
+            </if>
+            <if test="totalcount != null" >
+                #{totalcount,jdbcType=DECIMAL},
+            </if>
+            <if test="totalprofitamount != null" >
+                #{totalprofitamount,jdbcType=DECIMAL},
+            </if>
+            <if test="prodtype != null" >
+                #{prodtype,jdbcType=VARCHAR},
+            </if>
+            <if test="pinanBusinessType != null" >
+                #{pinanBusinessType,jdbcType=VARCHAR},
+            </if>
+            <if test="interfId != null" >
+                #{interfId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfProdInfo" >
+        insert into INTERF_PROD_INFO(PRODID, CDATE, PRODNAME, CCY, STARTDATE, ENDDATE, ACTENDDATE, 
+        NETVALUE, PREINAMOUNT, TOTALCURRENTAMOUNT, TOTALBUYAMOUNT, TOTALDRAWAMOUNT, TOTALDRAWCUSTAMOUNT, 
+        TOTALFEESAMOUNT, TOTALCARRIEDINTEREST, TOTALNOTCARRIEDINTEREST, RESERVEBUYAMT, RESERVEDRAWVOL, 
+        TOTALCARRIEDVOL, TOTALPAYABLEINTEREST, TOTALNEWINTEREST, TOTALCLOSEINTEREST, TOTALCARRYINTEREST, 
+        TOTALCURRENTQUANTITY, TOTALBUYQUANTITY, TOTALDRAWQUANTITY, TOTALCOUNT, TOTALPROFITAMOUNT, 
+        PRODTYPE, PINAN_BUSINESS_TYPE, INTERF_ID, CREATE_TIME)
+        select PRODID, CDATE, PRODNAME, CCY, STARTDATE, ENDDATE, ACTENDDATE, 
+            NETVALUE, PREINAMOUNT, TOTALCURRENTAMOUNT, TOTALBUYAMOUNT, TOTALDRAWAMOUNT, TOTALDRAWCUSTAMOUNT, 
+            TOTALFEESAMOUNT, TOTALCARRIEDINTEREST, TOTALNOTCARRIEDINTEREST, RESERVEBUYAMT, RESERVEDRAWVOL, 
+            TOTALCARRIEDVOL, TOTALPAYABLEINTEREST, TOTALNEWINTEREST, TOTALCLOSEINTEREST, TOTALCARRYINTEREST, 
+            TOTALCURRENTQUANTITY, TOTALBUYQUANTITY, TOTALDRAWQUANTITY, TOTALCOUNT, TOTALPROFITAMOUNT, 
+            PRODTYPE, PINAN_BUSINESS_TYPE, INTERF_ID, CREATE_TIME
+             from INTERF_PROD_INFO
+             where 1 = 1
+    </insert>
+</mapper>

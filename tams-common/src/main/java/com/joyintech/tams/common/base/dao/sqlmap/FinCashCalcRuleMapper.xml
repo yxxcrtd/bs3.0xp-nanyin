@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.FinCashCalcRuleMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.FinCashCalcRule" >
+        <id column="CASH_ID" property="cashId" jdbcType="VARCHAR" />
+        <id column="EFF_DATE" property="effDate" jdbcType="DATE" />
+        <result column="CALC_TYPE" property="calcType" jdbcType="VARCHAR" />
+        <result column="BASE_TYPE" property="baseType" jdbcType="VARCHAR" />
+        <result column="BASE_DATE_TYPE" property="baseDateType" jdbcType="VARCHAR" />
+        <result column="BASIS" property="basis" jdbcType="VARCHAR" />
+        <result column="YIELD" property="yield" jdbcType="DECIMAL" />
+        <result column="IS_INITIAL" property="isInitial" jdbcType="VARCHAR" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE" property="finprodType" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE2" property="finprodType2" jdbcType="VARCHAR" />
+        <result column="BRANCH" property="branch" jdbcType="DECIMAL" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CASH_ID CASH_ID, EFF_DATE EFF_DATE, CALC_TYPE CALC_TYPE, BASE_TYPE BASE_TYPE, BASE_DATE_TYPE BASE_DATE_TYPE, 
+        BASIS BASIS, YIELD YIELD, IS_INITIAL IS_INITIAL, FINPROD_ID FINPROD_ID, FINPROD_TYPE FINPROD_TYPE, 
+        FINPROD_TYPE2 FINPROD_TYPE2, BRANCH BRANCH, REMARK REMARK, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinCashCalcRuleMapper.Base_Column_List" />
+        from FIN_CASH_CALC_RULE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinCashCalcRuleMapper.Base_Column_List" />
+        from FIN_CASH_CALC_RULE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.FinCashCalcRuleKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinCashCalcRuleMapper.Base_Column_List" />
+        from FIN_CASH_CALC_RULE
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinCashCalcRuleKey" >
+        delete from FIN_CASH_CALC_RULE
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FinCashCalcRule" >
+        insert into FIN_CASH_CALC_RULE (CASH_ID, EFF_DATE, CALC_TYPE, 
+            BASE_TYPE, BASE_DATE_TYPE, BASIS, 
+            YIELD, IS_INITIAL, FINPROD_ID, 
+            FINPROD_TYPE, FINPROD_TYPE2, BRANCH, 
+            REMARK, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{cashId,jdbcType=VARCHAR}, #{effDate,jdbcType=DATE}, #{calcType,jdbcType=VARCHAR}, 
+            #{baseType,jdbcType=VARCHAR}, #{baseDateType,jdbcType=VARCHAR}, #{basis,jdbcType=VARCHAR}, 
+            #{yield,jdbcType=DECIMAL}, #{isInitial,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, 
+            #{finprodType,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, 
+            #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinCashCalcRule" >
+        insert into FIN_CASH_CALC_RULE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="cashId != null" >
+                CASH_ID,
+            </if>
+            <if test="effDate != null" >
+                EFF_DATE,
+            </if>
+            <if test="calcType != null" >
+                CALC_TYPE,
+            </if>
+            <if test="baseType != null" >
+                BASE_TYPE,
+            </if>
+            <if test="baseDateType != null" >
+                BASE_DATE_TYPE,
+            </if>
+            <if test="basis != null" >
+                BASIS,
+            </if>
+            <if test="yield != null" >
+                YIELD,
+            </if>
+            <if test="isInitial != null" >
+                IS_INITIAL,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="finprodType != null" >
+                FINPROD_TYPE,
+            </if>
+            <if test="finprodType2 != null" >
+                FINPROD_TYPE2,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="cashId != null" >
+                #{cashId,jdbcType=VARCHAR},
+            </if>
+            <if test="effDate != null" >
+                #{effDate,jdbcType=DATE},
+            </if>
+            <if test="calcType != null" >
+                #{calcType,jdbcType=VARCHAR},
+            </if>
+            <if test="baseType != null" >
+                #{baseType,jdbcType=VARCHAR},
+            </if>
+            <if test="baseDateType != null" >
+                #{baseDateType,jdbcType=VARCHAR},
+            </if>
+            <if test="basis != null" >
+                #{basis,jdbcType=VARCHAR},
+            </if>
+            <if test="yield != null" >
+                #{yield,jdbcType=DECIMAL},
+            </if>
+            <if test="isInitial != null" >
+                #{isInitial,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType != null" >
+                #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType2 != null" >
+                #{finprodType2,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinCashCalcRule" >
+        insert into FIN_CASH_CALC_RULE(CASH_ID, EFF_DATE, CALC_TYPE, BASE_TYPE, BASE_DATE_TYPE, 
+        BASIS, YIELD, IS_INITIAL, FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2, BRANCH, REMARK, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select CASH_ID, EFF_DATE, CALC_TYPE, BASE_TYPE, BASE_DATE_TYPE, 
+            BASIS, YIELD, IS_INITIAL, FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2, BRANCH, REMARK, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from FIN_CASH_CALC_RULE
+             where 1 = 1 and CASH_ID = #{cashId,jdbcType=VARCHAR} and EFF_DATE = #{effDate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.FinCashCalcRule" >
+        update FIN_CASH_CALC_RULE
+        <set >
+            <if test="calcType != null" >
+                CALC_TYPE = #{calcType,jdbcType=VARCHAR},
+            </if>
+            <if test="baseType != null" >
+                BASE_TYPE = #{baseType,jdbcType=VARCHAR},
+            </if>
+            <if test="baseDateType != null" >
+                BASE_DATE_TYPE = #{baseDateType,jdbcType=VARCHAR},
+            </if>
+            <if test="basis != null" >
+                BASIS = #{basis,jdbcType=VARCHAR},
+            </if>
+            <if test="yield != null" >
+                YIELD = #{yield,jdbcType=DECIMAL},
+            </if>
+            <if test="isInitial != null" >
+                IS_INITIAL = #{isInitial,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType != null" >
+                FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType2 != null" >
+                FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                BRANCH = #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinCashCalcRule" >
+        update FIN_CASH_CALC_RULE
+        set CALC_TYPE = #{calcType,jdbcType=VARCHAR},
+            BASE_TYPE = #{baseType,jdbcType=VARCHAR},
+            BASE_DATE_TYPE = #{baseDateType,jdbcType=VARCHAR},
+            BASIS = #{basis,jdbcType=VARCHAR},
+            YIELD = #{yield,jdbcType=DECIMAL},
+            IS_INITIAL = #{isInitial,jdbcType=VARCHAR},
+            FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
+            BRANCH = #{branch,jdbcType=DECIMAL},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+    </update>
+</mapper>

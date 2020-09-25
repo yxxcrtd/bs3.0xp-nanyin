@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.disclosure.information.config.dispoireportmodelmanagechildren.dao.PoiReportModelManageChildren001Mapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.disclosure.information.config.dispoireportmodelmanagechildren.dto.PoiReportModelManageChildren001Dto" >
+        <id column="ID" property="id" jdbcType="VARCHAR" />
+        <result column="TAB_NUM" property="tabNum" jdbcType="VARCHAR" />
+        <result column="SUB_NAME" property="subName" jdbcType="VARCHAR" />
+        <result column="SUB_TYPE" property="subType" jdbcType="VARCHAR" />
+        <result column="SUB_FORM_TYPE" property="subFormType" jdbcType="VARCHAR" />
+        <result column="SUB_WIDTH" property="subWidth" jdbcType="VARCHAR" />
+        <result column="SUB_TMP_TYPE" property="subTmpType" jdbcType="VARCHAR" />
+        <result column="SUB_CHART_TYPE" property="subChartType" jdbcType="VARCHAR" />
+        <result column="SUB_DEFUALT" property="subDefualt" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="SUB_CHART_CONF" property="subChartConf" jdbcType="VARCHAR" />
+        <result column="TEMP_NAME" property="tempName" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ID ID, TAB_NUM TAB_NUM, SUB_NAME SUB_NAME, SUB_TYPE SUB_TYPE, SUB_FORM_TYPE SUB_FORM_TYPE,
+        SUB_WIDTH SUB_WIDTH, SUB_TMP_TYPE SUB_TMP_TYPE, SUB_CHART_TYPE SUB_CHART_TYPE, SUB_DEFUALT SUB_DEFUALT,
+        STATUS STATUS, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME,
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME,SUB_CHART_CONF SUB_CHART_CONF
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.disclosure.information.config.dispoireportmodelmanagechildren.dao.PoiReportModelManageChildren001Mapper.Base_Column_List" />
+        from DIS_POI_SUB
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.disclosure.information.config.dispoireportmodelmanagechildren.dao.PoiReportModelManageChildren001Mapper.Base_Column_List" />
+        from DIS_POI_SUB
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.disclosure.information.config.dispoireportmodelmanagechildren.dao.PoiReportModelManageChildren001Mapper.Base_Column_List" />
+        from DIS_POI_SUB
+        where ID = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from DIS_POI_SUB
+        where ID = #{id,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.disclosure.information.config.dispoireportmodelmanagechildren.dto.PoiReportModelManageChildren001Dto" >
+        insert into DIS_POI_SUB (ID, TAB_NUM, SUB_NAME,
+            SUB_TYPE, SUB_FORM_TYPE, SUB_WIDTH,
+            SUB_TMP_TYPE, SUB_CHART_TYPE, SUB_DEFUALT,
+            STATUS, CREATE_USER, CREATE_DEPT,
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME,SUB_CHART_CONF
+            )
+        values (#{id,jdbcType=VARCHAR}, #{tabNum,jdbcType=VARCHAR}, #{subName,jdbcType=VARCHAR},
+            #{subType,jdbcType=VARCHAR}, #{subFormType,jdbcType=VARCHAR}, #{subWidth,jdbcType=VARCHAR},
+            #{subTmpType,jdbcType=VARCHAR}, #{subChartType,jdbcType=VARCHAR}, #{subDefualt,jdbcType=VARCHAR},
+            #{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+            #{subChartConf,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.disclosure.information.config.dispoireportmodelmanagechildren.dto.PoiReportModelManageChildren001Dto" >
+        insert into DIS_POI_SUB
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                ID,
+            </if>
+            <if test="tabNum != null" >
+                TAB_NUM,
+            </if>
+            <if test="subName != null" >
+                SUB_NAME,
+            </if>
+            <if test="subType != null" >
+                SUB_TYPE,
+            </if>
+            <if test="subFormType != null" >
+                SUB_FORM_TYPE,
+            </if>
+            <if test="subWidth != null" >
+                SUB_WIDTH,
+            </if>
+            <if test="subTmpType != null" >
+                SUB_TMP_TYPE,
+            </if>
+            <if test="subChartType != null" >
+                SUB_CHART_TYPE,
+            </if>
+            <if test="subDefualt != null" >
+                SUB_DEFUALT,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="subChartConf != null" >
+                SUB_CHART_CONF,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="tabNum != null" >
+                #{tabNum,jdbcType=VARCHAR},
+            </if>
+            <if test="subName != null" >
+                #{subName,jdbcType=VARCHAR},
+            </if>
+            <if test="subType != null" >
+                #{subType,jdbcType=VARCHAR},
+            </if>
+            <if test="subFormType != null" >
+                #{subFormType,jdbcType=VARCHAR},
+            </if>
+            <if test="subWidth != null" >
+                #{subWidth,jdbcType=VARCHAR},
+            </if>
+            <if test="subTmpType != null" >
+                #{subTmpType,jdbcType=VARCHAR},
+            </if>
+            <if test="subChartType != null" >
+                #{subChartType,jdbcType=VARCHAR},
+            </if>
+            <if test="subDefualt != null" >
+                #{subDefualt,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="subChartConf != null" >
+                #{subChartConf,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.disclosure.information.config.dispoireportmodelmanagechildren.dto.PoiReportModelManageChildren001Dto" >
+        insert into DIS_POI_SUB(ID, TAB_NUM, SUB_NAME, SUB_TYPE, SUB_FORM_TYPE, SUB_WIDTH,
+        SUB_TMP_TYPE, SUB_CHART_TYPE, SUB_DEFUALT, STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME,
+        UPDATE_USER, UPDATE_TIME,SUB_CHART_CONF)
+        select ID, TAB_NUM, SUB_NAME, SUB_TYPE, SUB_FORM_TYPE, SUB_WIDTH,
+            SUB_TMP_TYPE, SUB_CHART_TYPE, SUB_DEFUALT,SUB_CHART_CONF, #{status,jdbcType=VARCHAR} STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from DIS_POI_SUB
+             where STATUS = 'E' and ID = #{id,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.disclosure.information.config.dispoireportmodelmanagechildren.dto.PoiReportModelManageChildren001Dto" >
+        update DIS_POI_SUB
+        <set >
+            <if test="tabNum != null" >
+                TAB_NUM = #{tabNum,jdbcType=VARCHAR},
+            </if>
+            <if test="subName != null" >
+                SUB_NAME = #{subName,jdbcType=VARCHAR},
+            </if>
+            <if test="subType != null" >
+                SUB_TYPE = #{subType,jdbcType=VARCHAR},
+            </if>
+            <if test="subFormType != null" >
+                SUB_FORM_TYPE = #{subFormType,jdbcType=VARCHAR},
+            </if>
+            <if test="subWidth != null" >
+                SUB_WIDTH = #{subWidth,jdbcType=VARCHAR},
+            </if>
+            <if test="subTmpType != null" >
+                SUB_TMP_TYPE = #{subTmpType,jdbcType=VARCHAR},
+            </if>
+            <if test="subChartType != null" >
+                SUB_CHART_TYPE = #{subChartType,jdbcType=VARCHAR},
+            </if>
+            <if test="subDefualt != null" >
+                SUB_DEFUALT = #{subDefualt,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="subChartConf != null" >
+                SUB_CHART_CONF = #{subChartConf,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.disclosure.information.config.dispoireportmodelmanagechildren.dto.PoiReportModelManageChildren001Dto" >
+        update DIS_POI_SUB
+        set TAB_NUM = #{tabNum,jdbcType=VARCHAR},
+            SUB_NAME = #{subName,jdbcType=VARCHAR},
+            SUB_TYPE = #{subType,jdbcType=VARCHAR},
+            SUB_FORM_TYPE = #{subFormType,jdbcType=VARCHAR},
+            SUB_WIDTH = #{subWidth,jdbcType=VARCHAR},
+            SUB_TMP_TYPE = #{subTmpType,jdbcType=VARCHAR},
+            SUB_CHART_TYPE = #{subChartType,jdbcType=VARCHAR},
+            SUB_DEFUALT = #{subDefualt,jdbcType=VARCHAR},
+            STATUS = #{status,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            SUB_CHART_CONF = #{subChartConf,jdbcType=VARCHAR}
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+    <select id="queryForPage"
+            resultType="com.joyintech.tams.disclosure.information.config.dispoireportmodelmanagechildren.dto.PoiReportModelManageChildren001Dto">
+        select
+        sub.ID ID, sub.TAB_NUM TAB_NUM, sub.SUB_NAME SUB_NAME, sub.SUB_TYPE SUB_TYPE, sub.SUB_FORM_TYPE SUB_FORM_TYPE,
+        sub.SUB_WIDTH SUB_WIDTH, sub.SUB_TMP_TYPE SUB_TMP_TYPE, sub.SUB_CHART_TYPE SUB_CHART_TYPE, sub.SUB_DEFUALT SUB_DEFUALT,
+        sub.STATUS STATUS, sub.CREATE_USER CREATE_USER, sub.CREATE_DEPT CREATE_DEPT, sub.CREATE_TIME CREATE_TIME,
+        sub.UPDATE_USER UPDATE_USER, sub.UPDATE_TIME UPDATE_TIME, sub.SUB_CHART_CONF SUB_CHART_CONF ,tab.TEMP_NAME
+        from DIS_POI_SUB sub
+        left join DIS_POI_TAB tab on sub.TAB_NUM = tab.TAB_NUM
+        where
+        1=1
+        <if test="tabNumList != null and tabNumList.size() > 0">
+            <foreach collection="tabNumList" item="tabNum" open=" AND sub.TAB_NUM IN (" close=")" separator=",">
+                #{tabNum,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="subTypeList !=null and subTypeList.size()>0">
+            and SUB_TYPE in
+            <foreach collection="subTypeList" item="subType" open="("
+                     close=")" separator=",">
+                #{subType,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="subFormTypeList != null and subFormTypeList.size() > 0">
+            <foreach collection="subFormTypeList" item="subFormType" open=" AND SUB_FORM_TYPE IN (" close=")" separator=",">
+                #{subFormType,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="subTmpTypeList != null and subTmpTypeList.size() > 0">
+            <foreach collection="subTmpTypeList" item="subTmpType" open=" AND SUB_TMP_TYPE IN (" close=")" separator=",">
+                #{subTmpType,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="subChartTypeList != null and subChartTypeList.size() > 0">
+            <foreach collection="subChartTypeList" item="subChartType" open=" AND SUB_CHART_TYPE IN (" close=")" separator=",">
+                #{subChartType,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="status !=null and status !='' and status != 'null'">
+            and STATUS =#{status,jdbcType=VARCHAR}
+        </if>
+        <if test="subName !=null and subName !='' and subName != 'null'">
+            and SUB_NAME like '%' || #{subName} || '%'
+        </if>
+        <if test="id !=null and id !='' and id != 'null'">
+            and ID like '%' || #{id} || '%'
+        </if>
+    </select>
+    <select id="queryPoiIdList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select
+        DISTINCT
+        t2.TAB_NUM as id,
+        t2.TAB_NAME as text
+        from
+        DIS_POI_TAB t2
+        where
+        t2.STATUS=#{statusEffective}
+        <if test="search != null and search != ''">
+            and t2.TAB_NAME like '%' || #{search, jdbcType=VARCHAR} || '%'
+        </if>
+    </select>
+    <select id="countById" resultType="java.lang.Integer">
+     select
+     count(*)
+     from DIS_POI_SUB
+     where
+     id =#{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByKeyList" parameterType="com.joyintech.tams.disclosure.information.config.dispoireportmodelmanagechildren.dto.PoiReportModelManageChildren001Dto">
+        delete from DIS_POI_SUB
+        <where>
+            <foreach collection="keyList" item="item" open="and (ID) in(" separator="," close=")">
+                (#{item.id})
+            </foreach>
+        </where>
+    </delete>
+    <select id="selectById"
+            resultType="com.joyintech.tams.disclosure.information.config.dispoireportmodelmanagechildren.dto.PoiReportModelManageChildren001Dto">
+      select
+        ID ID, TAB_NUM TAB_NUM, SUB_NAME SUB_NAME, SUB_TYPE SUB_TYPE, SUB_FORM_TYPE SUB_FORM_TYPE,
+        SUB_WIDTH SUB_WIDTH, SUB_TMP_TYPE SUB_TMP_TYPE, SUB_CHART_TYPE SUB_CHART_TYPE, SUB_DEFUALT SUB_DEFUALT,
+        STATUS STATUS, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME,
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME,SUB_CHART_CONF SUB_CHART_CONF
+        from DIS_POI_SUB
+        where ID =#{id,jdbcType=VARCHAR}
+    </select>
+</mapper>

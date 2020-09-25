@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.BokPositionPrdfeeMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.BokPositionPrdfee" >
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="BRANCH" property="branch" jdbcType="DECIMAL" />
+        <result column="CDATE" property="cdate" jdbcType="DATE" />
+        <result column="CHL_ID" property="chlId" jdbcType="VARCHAR" />
+        <result column="FEE_TYPE" property="feeType" jdbcType="VARCHAR" />
+        <result column="TDY_POSITION" property="tdyPosition" jdbcType="DECIMAL" />
+        <result column="TDY_FEE_RATE" property="tdyFeeRate" jdbcType="DECIMAL" />
+        <result column="TDY_INTINCEXP_ADD" property="tdyIntincexpAdd" jdbcType="DECIMAL" />
+        <result column="TDY_INTERVAL_UNPAID_INC" property="tdyIntervalUnpaidInc" jdbcType="DECIMAL" />
+        <result column="TDY_UNPAID_INTINCEXP" property="tdyUnpaidIntincexp" jdbcType="DECIMAL" />
+        <result column="P_FINPROD_ID" property="pFinprodId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.BokPositionPrdfee" >
+        insert into BOK_POSITION_PRDFEE (FINPROD_ID, BRANCH, CDATE, 
+            CHL_ID, FEE_TYPE, TDY_POSITION, 
+            TDY_FEE_RATE, TDY_INTINCEXP_ADD, TDY_INTERVAL_UNPAID_INC, 
+            TDY_UNPAID_INTINCEXP, P_FINPROD_ID, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{finprodId,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, #{cdate,jdbcType=DATE}, 
+            #{chlId,jdbcType=VARCHAR}, #{feeType,jdbcType=VARCHAR}, #{tdyPosition,jdbcType=DECIMAL}, 
+            #{tdyFeeRate,jdbcType=DECIMAL}, #{tdyIntincexpAdd,jdbcType=DECIMAL}, #{tdyIntervalUnpaidInc,jdbcType=DECIMAL}, 
+            #{tdyUnpaidIntincexp,jdbcType=DECIMAL}, #{pFinprodId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.BokPositionPrdfee" >
+        insert into BOK_POSITION_PRDFEE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="chlId != null" >
+                CHL_ID,
+            </if>
+            <if test="feeType != null" >
+                FEE_TYPE,
+            </if>
+            <if test="tdyPosition != null" >
+                TDY_POSITION,
+            </if>
+            <if test="tdyFeeRate != null" >
+                TDY_FEE_RATE,
+            </if>
+            <if test="tdyIntincexpAdd != null" >
+                TDY_INTINCEXP_ADD,
+            </if>
+            <if test="tdyIntervalUnpaidInc != null" >
+                TDY_INTERVAL_UNPAID_INC,
+            </if>
+            <if test="tdyUnpaidIntincexp != null" >
+                TDY_UNPAID_INTINCEXP,
+            </if>
+            <if test="pFinprodId != null" >
+                P_FINPROD_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=DATE},
+            </if>
+            <if test="chlId != null" >
+                #{chlId,jdbcType=VARCHAR},
+            </if>
+            <if test="feeType != null" >
+                #{feeType,jdbcType=VARCHAR},
+            </if>
+            <if test="tdyPosition != null" >
+                #{tdyPosition,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyFeeRate != null" >
+                #{tdyFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyIntincexpAdd != null" >
+                #{tdyIntincexpAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyIntervalUnpaidInc != null" >
+                #{tdyIntervalUnpaidInc,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyUnpaidIntincexp != null" >
+                #{tdyUnpaidIntincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="pFinprodId != null" >
+                #{pFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.BokPositionPrdfee" >
+        insert into BOK_POSITION_PRDFEE(FINPROD_ID, BRANCH, CDATE, CHL_ID, FEE_TYPE, TDY_POSITION, 
+        TDY_FEE_RATE, TDY_INTINCEXP_ADD, TDY_INTERVAL_UNPAID_INC, TDY_UNPAID_INTINCEXP, P_FINPROD_ID, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select FINPROD_ID, BRANCH, CDATE, CHL_ID, FEE_TYPE, TDY_POSITION, 
+            TDY_FEE_RATE, TDY_INTINCEXP_ADD, TDY_INTERVAL_UNPAID_INC, TDY_UNPAID_INTINCEXP, P_FINPROD_ID, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from BOK_POSITION_PRDFEE
+             where 1 = 1
+    </insert>
+</mapper>

@@ -1,0 +1,25 @@
+package com.joyintech.tams.common.base.dao;
+
+import com.joyintech.tams.common.base.entity.StlPayOrders;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface StlPayOrdersMapper {
+    int deleteByPrimaryKey(String orderId);
+
+    int insert(StlPayOrders record);
+
+    int insertSelective(StlPayOrders record);
+
+    int insertBasicByBasicInfo(StlPayOrders record);
+
+    StlPayOrders selectByPrimaryKey(String orderId);
+
+    int updateByPrimaryKeySelective(StlPayOrders record);
+
+    int updateByPrimaryKey(StlPayOrders record);
+
+    List<StlPayOrders> selectByTradeId(String orderId);
+}

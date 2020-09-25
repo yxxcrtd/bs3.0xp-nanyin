@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbEquperiodHisMapper_mysql">
+	<insert id="insertHisByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbEquperiodHis" >
+        insert into CHB_EQUPERIOD_HIS(HIS_NO, REGIST_BANK_CODE, INDENTIFY_MARK, PRODID, CCY, 
+        AVAILABLE_QUANTITY, FROZEN_QUANTITY, PLEDGED_QUANTITY, INIT_VAL_DATE, INIT_VAL_REGIST_DATE, 
+        STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, 
+        DATA_SOURCE, ORG_CODE, CONVER_CNY_AMOUNT, CREATE_DEPT, AMOUNT)
+        select (select IFNULL(max(HIS_NO), 0) from CHB_EQUPERIOD_HIS where STATUS = 'E' and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR} and INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR} and PRODID = #{prodid,jdbcType=VARCHAR} and CCY = #{ccy,jdbcType=CHAR}) + 1 HIS_NO, REGIST_BANK_CODE, INDENTIFY_MARK, PRODID, CCY, 
+            AVAILABLE_QUANTITY, FROZEN_QUANTITY, PLEDGED_QUANTITY, INIT_VAL_DATE, INIT_VAL_REGIST_DATE, 
+            STATUS, WORKFLOW_ID, DEPT_CODE, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_USER, CREATE_TIME, 
+            DATA_SOURCE, ORG_CODE, CONVER_CNY_AMOUNT, CREATE_DEPT, AMOUNT
+             from CHB_EQUPERIOD
+             where STATUS = 'E' and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR} and INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR} and PRODID = #{prodid,jdbcType=VARCHAR} and CCY = #{ccy,jdbcType=CHAR}
+    </insert>
+	<insert id="insertHisByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbEquperiodHis" >
+        insert into CHB_EQUPERIOD_HIS(HIS_NO, REGIST_BANK_CODE, INDENTIFY_MARK, PRODID, CCY, 
+        AVAILABLE_QUANTITY, FROZEN_QUANTITY, PLEDGED_QUANTITY, INIT_VAL_DATE, INIT_VAL_REGIST_DATE, 
+        STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, 
+        DATA_SOURCE, ORG_CODE, CONVER_CNY_AMOUNT, CREATE_DEPT, AMOUNT)
+        select (select IFNULL(max(HIS_NO), 0) from CHB_EQUPERIOD_HIS where STATUS = 'E' and REGIST_BANK_CODE = CHB_EQUPERIOD.REGIST_BANK_CODE and INDENTIFY_MARK = CHB_EQUPERIOD.INDENTIFY_MARK and PRODID = CHB_EQUPERIOD.PRODID and CCY = CHB_EQUPERIOD.CCY) + 1 HIS_NO, REGIST_BANK_CODE, INDENTIFY_MARK, PRODID, CCY, 
+            AVAILABLE_QUANTITY, FROZEN_QUANTITY, PLEDGED_QUANTITY, INIT_VAL_DATE, INIT_VAL_REGIST_DATE, 
+            STATUS, WORKFLOW_ID, DEPT_CODE, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_USER, CREATE_TIME, 
+            DATA_SOURCE, ORG_CODE, CONVER_CNY_AMOUNT, CREATE_DEPT, AMOUNT
+             from CHB_EQUPERIOD
+             where STATUS = 'E' and WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+    </insert>
+</mapper>

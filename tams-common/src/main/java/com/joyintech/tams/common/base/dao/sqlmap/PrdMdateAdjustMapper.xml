@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.PrdMdateAdjustMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.PrdMdateAdjust" >
+        <id column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <id column="ADJUST_NUM" property="adjustNum" jdbcType="DECIMAL" />
+        <result column="MDATE_UNADJUST" property="mdateUnadjust" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="LDATE" property="ldate" jdbcType="DATE" />
+        <result column="ADJUST_TYPE" property="adjustType" jdbcType="VARCHAR" />
+        <result column="LDATE_UNADJUST" property="ldateUnadjust" jdbcType="DATE" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        FINPROD_ID FINPROD_ID, ADJUST_NUM ADJUST_NUM, MDATE_UNADJUST MDATE_UNADJUST, MDATE MDATE, 
+        REMARK REMARK, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, LDATE LDATE, ADJUST_TYPE ADJUST_TYPE, 
+        LDATE_UNADJUST LDATE_UNADJUST
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PrdMdateAdjustMapper.Base_Column_List" />
+        from PRD_MDATE_ADJUST
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PrdMdateAdjustMapper.Base_Column_List" />
+        from PRD_MDATE_ADJUST
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.PrdMdateAdjustKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PrdMdateAdjustMapper.Base_Column_List" />
+        from PRD_MDATE_ADJUST
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and ADJUST_NUM = #{adjustNum,jdbcType=DECIMAL}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PrdMdateAdjustKey" >
+        delete from PRD_MDATE_ADJUST
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and ADJUST_NUM = #{adjustNum,jdbcType=DECIMAL}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PrdMdateAdjust" >
+        insert into PRD_MDATE_ADJUST (FINPROD_ID, ADJUST_NUM, MDATE_UNADJUST, 
+            MDATE, REMARK, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, LDATE, ADJUST_TYPE, 
+            LDATE_UNADJUST)
+        values (#{finprodId,jdbcType=VARCHAR}, #{adjustNum,jdbcType=DECIMAL}, #{mdateUnadjust,jdbcType=DATE}, 
+            #{mdate,jdbcType=DATE}, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{ldate,jdbcType=DATE}, #{adjustType,jdbcType=VARCHAR}, 
+            #{ldateUnadjust,jdbcType=DATE})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PrdMdateAdjust" >
+        insert into PRD_MDATE_ADJUST
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="adjustNum != null" >
+                ADJUST_NUM,
+            </if>
+            <if test="mdateUnadjust != null" >
+                MDATE_UNADJUST,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="ldate != null" >
+                LDATE,
+            </if>
+            <if test="adjustType != null" >
+                ADJUST_TYPE,
+            </if>
+            <if test="ldateUnadjust != null" >
+                LDATE_UNADJUST,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="adjustNum != null" >
+                #{adjustNum,jdbcType=DECIMAL},
+            </if>
+            <if test="mdateUnadjust != null" >
+                #{mdateUnadjust,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="ldate != null" >
+                #{ldate,jdbcType=DATE},
+            </if>
+            <if test="adjustType != null" >
+                #{adjustType,jdbcType=VARCHAR},
+            </if>
+            <if test="ldateUnadjust != null" >
+                #{ldateUnadjust,jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PrdMdateAdjust" >
+        insert into PRD_MDATE_ADJUST(FINPROD_ID, ADJUST_NUM, MDATE_UNADJUST, MDATE, REMARK, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, LDATE, ADJUST_TYPE, 
+        LDATE_UNADJUST)
+        select FINPROD_ID, ADJUST_NUM, MDATE_UNADJUST, MDATE, REMARK, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, LDATE, ADJUST_TYPE, 
+            LDATE_UNADJUST
+             from PRD_MDATE_ADJUST
+             where 1 = 1 and FINPROD_ID = #{finprodId,jdbcType=VARCHAR} and ADJUST_NUM = #{adjustNum,jdbcType=DECIMAL}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.PrdMdateAdjust" >
+        update PRD_MDATE_ADJUST
+        <set >
+            <if test="mdateUnadjust != null" >
+                MDATE_UNADJUST = #{mdateUnadjust,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                MDATE = #{mdate,jdbcType=DATE},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="ldate != null" >
+                LDATE = #{ldate,jdbcType=DATE},
+            </if>
+            <if test="adjustType != null" >
+                ADJUST_TYPE = #{adjustType,jdbcType=VARCHAR},
+            </if>
+            <if test="ldateUnadjust != null" >
+                LDATE_UNADJUST = #{ldateUnadjust,jdbcType=DATE},
+            </if>
+        </set>
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and ADJUST_NUM = #{adjustNum,jdbcType=DECIMAL}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PrdMdateAdjust" >
+        update PRD_MDATE_ADJUST
+        set MDATE_UNADJUST = #{mdateUnadjust,jdbcType=DATE},
+            MDATE = #{mdate,jdbcType=DATE},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            LDATE = #{ldate,jdbcType=DATE},
+            ADJUST_TYPE = #{adjustType,jdbcType=VARCHAR},
+            LDATE_UNADJUST = #{ldateUnadjust,jdbcType=DATE}
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and ADJUST_NUM = #{adjustNum,jdbcType=DECIMAL}
+    </update>
+</mapper>

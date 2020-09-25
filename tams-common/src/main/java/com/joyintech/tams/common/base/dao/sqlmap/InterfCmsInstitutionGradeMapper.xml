@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfCmsInstitutionGradeMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfCmsInstitutionGrade" >
+        <result column="GRADE_ORG_ID" property="gradeOrgId" jdbcType="VARCHAR" />
+        <result column="GRADE_TYPE" property="gradeType" jdbcType="VARCHAR" />
+        <result column="GRADE_RESULT" property="gradeResult" jdbcType="VARCHAR" />
+        <result column="GRADE_RPT_YEAR" property="gradeRptYear" jdbcType="VARCHAR" />
+        <result column="GRADE_MODEL_TYPE" property="gradeModelType" jdbcType="VARCHAR" />
+        <result column="GRADE_EFF_DATE" property="gradeEffDate" jdbcType="DATE" />
+        <result column="GRADE_END_DATE" property="gradeEndDate" jdbcType="DATE" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfCmsInstitutionGrade" >
+        insert into INTERF_CMS_INSTITUTION_GRADE (GRADE_ORG_ID, GRADE_TYPE, GRADE_RESULT, 
+            GRADE_RPT_YEAR, GRADE_MODEL_TYPE, GRADE_EFF_DATE, 
+            GRADE_END_DATE)
+        values (#{gradeOrgId,jdbcType=VARCHAR}, #{gradeType,jdbcType=VARCHAR}, #{gradeResult,jdbcType=VARCHAR}, 
+            #{gradeRptYear,jdbcType=VARCHAR}, #{gradeModelType,jdbcType=VARCHAR}, #{gradeEffDate,jdbcType=DATE}, 
+            #{gradeEndDate,jdbcType=DATE})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfCmsInstitutionGrade" >
+        insert into INTERF_CMS_INSTITUTION_GRADE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="gradeOrgId != null" >
+                GRADE_ORG_ID,
+            </if>
+            <if test="gradeType != null" >
+                GRADE_TYPE,
+            </if>
+            <if test="gradeResult != null" >
+                GRADE_RESULT,
+            </if>
+            <if test="gradeRptYear != null" >
+                GRADE_RPT_YEAR,
+            </if>
+            <if test="gradeModelType != null" >
+                GRADE_MODEL_TYPE,
+            </if>
+            <if test="gradeEffDate != null" >
+                GRADE_EFF_DATE,
+            </if>
+            <if test="gradeEndDate != null" >
+                GRADE_END_DATE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="gradeOrgId != null" >
+                #{gradeOrgId,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeType != null" >
+                #{gradeType,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeResult != null" >
+                #{gradeResult,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeRptYear != null" >
+                #{gradeRptYear,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeModelType != null" >
+                #{gradeModelType,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeEffDate != null" >
+                #{gradeEffDate,jdbcType=DATE},
+            </if>
+            <if test="gradeEndDate != null" >
+                #{gradeEndDate,jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfCmsInstitutionGrade" >
+        insert into INTERF_CMS_INSTITUTION_GRADE(GRADE_ORG_ID, GRADE_TYPE, GRADE_RESULT, 
+        GRADE_RPT_YEAR, GRADE_MODEL_TYPE, GRADE_EFF_DATE, GRADE_END_DATE)
+        select GRADE_ORG_ID, GRADE_TYPE, GRADE_RESULT, 
+            GRADE_RPT_YEAR, GRADE_MODEL_TYPE, GRADE_EFF_DATE, GRADE_END_DATE
+             from INTERF_CMS_INSTITUTION_GRADE
+             where 1 = 1
+    </insert>
+</mapper>

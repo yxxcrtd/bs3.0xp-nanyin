@@ -1,0 +1,193 @@
+package com.joyintech.tams.invest.trade.bondtostock.controller;
+
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto;
+import com.joyintech.tams.constant.*;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
+import com.joyintech.tams.invest.trade.bondtostock.dto.TrdBondToStock001Dto;
+import com.joyintech.tams.invest.trade.bondtostock.service.TrdBondToStock002Service;
+import com.joyintech.tams.invest.trade.common.controller.TrdCommonController;
+import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 可转债转股
+ *
+ * @author 丁志鹏
+ * @version 1.0 2019年11月14日
+ * @see TrdBondToStock002Controller 可转债转股管理画面001
+ * @since 1.0
+ */
+@Controller
+@PageId("TrdBondToStock002")
+@RequestMapping("/invest/trade/bondtostock/TrdBondToStock002")
+public class TrdBondToStock002Controller extends BaseController {
+    /**
+     *  业务service
+     */
+    @Autowired
+    private TrdBondToStock002Service trdBondToStock002Service;
+    
+    @Autowired
+    private TrdCommonController trdCommonController;
+    
+    @Override
+    public String init(Model model) {
+        String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
+        String entrustId = getParam("entrustId");
+        String busiCode = getParam("busiCode");
+        TrdBondToStock001Dto entity;
+//        流程中数据
+        if(StringUtil.isNotEmpty(workflowId)){
+            entity = trdBondToStock002Service.getBussinessEntityByWorkflowId(workflowId);
+            model.addAttribute("riskTrialRetDto", JsonUtils.object2Json(entity.getRiskTrialRetDto()));
+        }
+        //        有效交易数据
+        else if(StringUtil.isNotEmpty(busiCode)){
+            entity = trdBondToStock002Service.findEffectData(busiCode);
+        }
+//        委托来源数据
+        else if(StringUtil.isNotEmpty(entrustId)){
+//            获取委托信息
+            entity = trdBondToStock002Service.getEntrustInfo(entrustId);
+            entity.setTradeDate(DateUtil.platDateFromCache());
+            if(StringUtil.isNotBlank(entity.getRemark())&&StringUtil.contains(entity.getRemark(),"退回原因")){
+                entity.setRemark("");
+            }
+        }
+        else{
+            entity = new TrdBondToStock001Dto();
+            entity.setTradeDate(DateUtil.platDateFromCache());
+        }
+        //---add by zxjjpei 风险试算结果需要工作流编号 20200325 start---
+        if(StringUtil.isNotEmpty(workflowId)){
+            model.addAttribute("workflowId",workflowId);
+        }
+        else{
+            model.addAttribute("workflowId",entity.getWorkflowId());
+        }
+        //---add by zxjjpei 风险试算结果需要工作流编号 20200325 end---
+//        画面数据字典
+        setSelectOptionToModel(model, DictCode.交易场所,DictCode.币种,DictCode.投资目的);
+        model.addAttribute(GlobalConstant.ENTITY,entity);
+        model.addAttribute("FINPROD_TYPE_TG_ZQ", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        model.addAttribute("PS_ZZG",DictCodeListExt3.交易方向_债转股.getValue());
+        model.addAttribute("PA_TYPE_ZZG",DictCodeListExt3.平安业务类型_债转股.getValue());
+        model.addAttribute("YES_OR_NO_N", DictCodeList.是否_否.getValue());
+        model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_交易监控.getValue());
+        model.addAttribute("ACCT_TYPE_A01", DictCodeListExt1.资金账户类型_产品托管户.getValue());
+        model.addAttribute("ACCT_TYPE_A07", DictCodeListExt1.资金账户类型_券商资金账户.getValue());
+        model.addAttribute("PS_MC",DictCodeList.交易方向_卖出.getValue());
+        model.addAttribute("PA_TYPE_ZQMC",DictCodeListExt1.平安业务类型_债券类资产卖出.getValue());
+        TrdInvestPersonInfo002Dto trdInvestPersonInfo = new TrdInvestPersonInfo002Dto();
+        BeanUtil.copyPropertiesIgnoreNull(trdInvestPersonInfo,entity.getTrdInvestPersonInfo()==null?entity:entity.getTrdInvestPersonInfo());
+        if(StringUtil.isEmpty(trdInvestPersonInfo.getTrader())){
+            trdInvestPersonInfo.setTrader(LoginUserUtil.getUserName());
+        }
+        model.addAttribute("entity_trdInvestPersonInfo",JsonUtils.object2Json(trdInvestPersonInfo));
+        model.addAttribute("businessId",entity.getBusiCode());
+        // 划款信息
+        if (entity != null && !StringUtil.isEmptyList(entity.getBussTrdTransferOrder())) {
+            model.addAttribute("entity_bussRepFinProductInfoDto",
+                    JsonUtils.object2Json(entity.getBussTrdTransferOrder().get(0)));
+        }
+        //add by lizhi 是否限制划款指令开关 2020年2月26日  start
+        model.addAttribute("GEN_PAY_ORDERS_AUTO",CacheUtil.getSysParam(BussinessConstant.GEN_PAY_ORDERS_AUTO));
+        //add by lizhi 是否限制划款指令开关 2020年2月26日  end
+        return super.init(model);
+    }
+    /**
+     * 保存提交前的数据检查
+     *
+     * @param dto 画面输入参数
+     * @return 检查结果
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("check")
+    @ResponseBody
+    public AjaxResult check(@Validated({ValidateGroupEdit.class}) @RequestBody TrdBondToStock001Dto dto, BindingResult result) {
+        if (result != null && result.hasErrors()) {
+            return new AjaxResult(result);
+        }
+        return commonCheck(result, dto.getOperateType());
+    }
+    @RequestMapping("getPositionInfo")
+    @ResponseBody
+    public AjaxResult getPositionInfo(){
+        AjaxResult ajaxResult = new AjaxResult();
+        Map<String,Object> retMap = trdBondToStock002Service.getPositionInfo(RequestUtil.getPageParam());
+        ajaxResult.setData(retMap);
+        return ajaxResult;
+    }
+    /**
+     * 保存提交
+     *
+     * @param dto
+     * @return 画面输入参数
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("save")
+    AjaxResult save(@RequestBody TrdBondToStock001Dto dto)
+            throws Exception {
+        
+        
+        
+        List<TrdBondToStock001Dto> dtoList = new ArrayList<>();
+        TrdBondToStock001Dto tempDto = new TrdBondToStock001Dto();
+        BeanUtil.copyProperties(tempDto, dto);
+//        获取业务编号
+        tempDto.setBusiCode(trdBondToStock002Service.gen业务编号());
+        ProcessParameter<TrdBondToStock001Dto> processParameter = new ProcessParameter<>();
+        WorkFlowParameter<TrdBondToStock001Dto> workFlowParameter = new WorkFlowParameter<>();
+        processParameter.setWorkFlowParameter(workFlowParameter);
+        processParameter.setPageId(this.getPageId());
+        if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
+            processParameter.setOperationType(OperationType.NEW);
+        }
+        else {
+            processParameter.setOperationType(OperationType.MODIFY);
+        }
+        workFlowParameter.setPageId(this.getPageId());
+        workFlowParameter.setElementId(this.getParam("elementId"));
+        workFlowParameter.setBusinessCode((entity) -> entity.getBusiCode());
+        workFlowParameter.setBusinessType(DictCodeListExt3.共通业务类型_可转债转股交易.getValue());
+        workFlowParameter.setComment((entity) -> WorkFlowUtil.concatComment(
+                getMessage("TrdBondInvestTrade002.tradeId") + GlobalConstant.COLON + entity.getBusiCode(),
+                getMessage("TrdBondInvestTrade002.finprodName") + GlobalConstant.COLON + entity.getFinprodName(),
+                getMessage("TrdBondInvestTrade002.tradeDate") + GlobalConstant.COLON + DateUtil.format(entity.getTradeDate())));
+        tempDto.setActPortfolioId(tempDto.getPortfolioId());
+        tempDto.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(tempDto.getPortfolioId()));
+        trdBondToStock002Service.prepareEntity(tempDto);
+        tempDto.setPortfolioId(tempDto.getActPortfolioId());
+        String msg = trdBondToStock002Service.start(processParameter, tempDto);
+        
+        //授信占用额度
+//        trdCommonController.delLinesDeal(dto.getRiskCreditListCommonDto(),tempDto.getBusiCode());
+        return new AjaxResult(msg);
+    }
+}

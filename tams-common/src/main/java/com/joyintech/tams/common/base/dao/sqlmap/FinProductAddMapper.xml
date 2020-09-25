@@ -1,0 +1,823 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.FinProductAddMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.FinProductAdd" >
+        <id column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="SALE_DEPARTMENT" property="saleDepartment" jdbcType="VARCHAR" />
+        <result column="SALE_LAYER" property="saleLayer" jdbcType="VARCHAR" />
+        <result column="SALE_PERIOD" property="salePeriod" jdbcType="DECIMAL" />
+        <result column="PUR_SPEED" property="purSpeed" jdbcType="DECIMAL" />
+        <result column="RED_SPEED" property="redSpeed" jdbcType="DECIMAL" />
+        <result column="IS_SEC_BOND" property="isSecBond" jdbcType="VARCHAR" />
+        <result column="WIND_ID" property="windId" jdbcType="VARCHAR" />
+        <result column="IS_AUTO_UPDATE" property="isAutoUpdate" jdbcType="VARCHAR" />
+        <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <result column="PROD_REGIST_CODE" property="prodRegistCode" jdbcType="VARCHAR" />
+        <result column="IS_CYCLE" property="isCycle" jdbcType="VARCHAR" />
+        <result column="IS_LAY" property="isLay" jdbcType="VARCHAR" />
+        <result column="LAY_TYPE" property="layType" jdbcType="VARCHAR" />
+        <result column="INVEST_NATURE" property="investNature" jdbcType="VARCHAR" />
+        <result column="PROFIT_FLAG" property="profitFlag" jdbcType="VARCHAR" />
+        <result column="SALE_MODE" property="saleMode" jdbcType="VARCHAR" />
+        <result column="CHB_ID" property="chbId" jdbcType="VARCHAR" />
+        <result column="TMPL_ID" property="tmplId" jdbcType="VARCHAR" />
+        <result column="CLOSE_DAYS" property="closeDays" jdbcType="DECIMAL" />
+        <result column="ISSUE_STATUS" property="issueStatus" jdbcType="VARCHAR" />
+        <result column="ISSUE_STATUS_REMARK" property="issueStatusRemark" jdbcType="VARCHAR" />
+        <result column="IS_COMPOUND_INT" property="isCompoundInt" jdbcType="VARCHAR" />
+        <result column="TERM_TYPE" property="termType" jdbcType="VARCHAR" />
+        <result column="FACE_VALUE" property="faceValue" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="PAY_TYPE" property="payType" jdbcType="VARCHAR" />
+        <result column="IS_RECONCILIATION" property="isReconciliation" jdbcType="VARCHAR" />
+        <result column="IS_CASH_MANAGE" property="isCashManage" jdbcType="VARCHAR" />
+        <result column="RISK_LEVEL" property="riskLevel" jdbcType="VARCHAR" />
+        <result column="DEAL_MODE" property="dealMode" jdbcType="VARCHAR" />
+        <result column="IS_EXCLUSIVE" property="isExclusive" jdbcType="VARCHAR" />
+        <result column="BID_DATE" property="bidDate" jdbcType="DATE" />
+        <result column="BOARD" property="board" jdbcType="VARCHAR" />
+        <result column="SH_OR_ZH" property="shOrZh" jdbcType="VARCHAR" />
+        <result column="IS_MARGIN_FINPROD" property="isMarginFinprod" jdbcType="VARCHAR" />
+        <result column="CITY_BOND_LEV" property="cityBondLev" jdbcType="VARCHAR" />
+        <result column="IS_CITY_BOND" property="isCityBond" jdbcType="VARCHAR" />
+        <result column="INVESTMENT_CYCLE" property="investmentCycle" jdbcType="VARCHAR" />
+        <result column="PROD_MANAGER" property="prodManager" jdbcType="VARCHAR" />
+        <result column="COLLECT_TYPE" property="collectType" jdbcType="VARCHAR" />
+        <result column="REGULATORY_RATING" property="regulatoryRating" jdbcType="VARCHAR" />
+        <result column="PRD_DESIGN_ID" property="prdDesignId" jdbcType="VARCHAR" />
+        <result column="ADDITION" property="addition" jdbcType="VARCHAR" />
+        <result column="IS_PLEDGE_REP" property="isPledgeRep" jdbcType="VARCHAR" />
+        <result column="TOFF_STRDATE" property="toffStrdate" jdbcType="DATE" />
+        <result column="TOFF_ENDDATE" property="toffEnddate" jdbcType="DATE" />
+        <result column="TRM_FUND_ABBR" property="trmFundAbbr" jdbcType="VARCHAR" />
+        <result column="TRM_FUND_TYPE" property="trmFundType" jdbcType="VARCHAR" />
+        <result column="GRA_FUND_TYPE" property="graFundType" jdbcType="VARCHAR" />
+        <result column="PUR_RED_ID" property="purRedId" jdbcType="VARCHAR" />
+        <result column="PUR_RED_ABBR" property="purRedAbbr" jdbcType="VARCHAR" />
+        <result column="PUR_START_LOW" property="purStartLow" jdbcType="DECIMAL" />
+        <result column="RED_START_LOW" property="redStartLow" jdbcType="DECIMAL" />
+        <result column="ETF_TYPE" property="etfType" jdbcType="VARCHAR" />
+        <result column="ETF_MIN_PRUNIT" property="etfMinPrunit" jdbcType="DECIMAL" />
+        <result column="IS_RECEIPT" property="isReceipt" jdbcType="VARCHAR" />
+        <result column="IS_NETPRICE" property="isNetprice" jdbcType="VARCHAR" />
+        <result column="CREATE_ORG" property="createOrg" jdbcType="VARCHAR" />
+        <result column="VAL_ORG" property="valOrg" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        FINPROD_ID FINPROD_ID, SALE_DEPARTMENT SALE_DEPARTMENT, SALE_LAYER SALE_LAYER, SALE_PERIOD SALE_PERIOD, 
+        PUR_SPEED PUR_SPEED, RED_SPEED RED_SPEED, IS_SEC_BOND IS_SEC_BOND, WIND_ID WIND_ID, 
+        IS_AUTO_UPDATE IS_AUTO_UPDATE, PORTFOLIO_ID PORTFOLIO_ID, PROD_REGIST_CODE PROD_REGIST_CODE, 
+        IS_CYCLE IS_CYCLE, IS_LAY IS_LAY, LAY_TYPE LAY_TYPE, INVEST_NATURE INVEST_NATURE, 
+        PROFIT_FLAG PROFIT_FLAG, SALE_MODE SALE_MODE, CHB_ID CHB_ID, TMPL_ID TMPL_ID, CLOSE_DAYS CLOSE_DAYS, 
+        ISSUE_STATUS ISSUE_STATUS, ISSUE_STATUS_REMARK ISSUE_STATUS_REMARK, IS_COMPOUND_INT IS_COMPOUND_INT, 
+        TERM_TYPE TERM_TYPE, FACE_VALUE FACE_VALUE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, PAY_TYPE PAY_TYPE, 
+        IS_RECONCILIATION IS_RECONCILIATION, IS_CASH_MANAGE IS_CASH_MANAGE, RISK_LEVEL RISK_LEVEL, 
+        DEAL_MODE DEAL_MODE, IS_EXCLUSIVE IS_EXCLUSIVE, BID_DATE BID_DATE, BOARD BOARD, SH_OR_ZH SH_OR_ZH, 
+        IS_MARGIN_FINPROD IS_MARGIN_FINPROD, CITY_BOND_LEV CITY_BOND_LEV, IS_CITY_BOND IS_CITY_BOND, 
+        INVESTMENT_CYCLE INVESTMENT_CYCLE, PROD_MANAGER PROD_MANAGER, COLLECT_TYPE COLLECT_TYPE, 
+        REGULATORY_RATING REGULATORY_RATING, PRD_DESIGN_ID PRD_DESIGN_ID, ADDITION ADDITION, 
+        IS_PLEDGE_REP IS_PLEDGE_REP, TOFF_STRDATE TOFF_STRDATE, TOFF_ENDDATE TOFF_ENDDATE, 
+        TRM_FUND_ABBR TRM_FUND_ABBR, TRM_FUND_TYPE TRM_FUND_TYPE, GRA_FUND_TYPE GRA_FUND_TYPE, 
+        PUR_RED_ID PUR_RED_ID, PUR_RED_ABBR PUR_RED_ABBR, PUR_START_LOW PUR_START_LOW, RED_START_LOW RED_START_LOW, 
+        ETF_TYPE ETF_TYPE, ETF_MIN_PRUNIT ETF_MIN_PRUNIT, IS_RECEIPT IS_RECEIPT, IS_NETPRICE IS_NETPRICE, 
+        CREATE_ORG CREATE_ORG, VAL_ORG VAL_ORG
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinProductAddMapper.Base_Column_List" />
+        from FIN_PRODUCT_ADD
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinProductAddMapper.Base_Column_List" />
+        from FIN_PRODUCT_ADD
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinProductAddMapper.Base_Column_List" />
+        from FIN_PRODUCT_ADD
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from FIN_PRODUCT_ADD
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FinProductAdd" >
+        insert into FIN_PRODUCT_ADD (FINPROD_ID, SALE_DEPARTMENT, SALE_LAYER, 
+            SALE_PERIOD, PUR_SPEED, RED_SPEED, 
+            IS_SEC_BOND, WIND_ID, IS_AUTO_UPDATE, 
+            PORTFOLIO_ID, PROD_REGIST_CODE, IS_CYCLE, 
+            IS_LAY, LAY_TYPE, INVEST_NATURE, 
+            PROFIT_FLAG, SALE_MODE, CHB_ID, 
+            TMPL_ID, CLOSE_DAYS, ISSUE_STATUS, 
+            ISSUE_STATUS_REMARK, IS_COMPOUND_INT, TERM_TYPE, 
+            FACE_VALUE, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            PAY_TYPE, IS_RECONCILIATION, IS_CASH_MANAGE, 
+            RISK_LEVEL, DEAL_MODE, IS_EXCLUSIVE, 
+            BID_DATE, BOARD, SH_OR_ZH, 
+            IS_MARGIN_FINPROD, CITY_BOND_LEV, IS_CITY_BOND, 
+            INVESTMENT_CYCLE, PROD_MANAGER, COLLECT_TYPE, 
+            REGULATORY_RATING, PRD_DESIGN_ID, ADDITION, 
+            IS_PLEDGE_REP, TOFF_STRDATE, TOFF_ENDDATE, 
+            TRM_FUND_ABBR, TRM_FUND_TYPE, GRA_FUND_TYPE, 
+            PUR_RED_ID, PUR_RED_ABBR, PUR_START_LOW, 
+            RED_START_LOW, ETF_TYPE, ETF_MIN_PRUNIT, 
+            IS_RECEIPT, IS_NETPRICE, CREATE_ORG, 
+            VAL_ORG
+            <if test="calRateType != null" >
+                ,cal_Rate_Type
+            </if>)
+        values (#{finprodId,jdbcType=VARCHAR}, #{saleDepartment,jdbcType=VARCHAR}, #{saleLayer,jdbcType=VARCHAR}, 
+            #{salePeriod,jdbcType=DECIMAL}, #{purSpeed,jdbcType=DECIMAL}, #{redSpeed,jdbcType=DECIMAL}, 
+            #{isSecBond,jdbcType=VARCHAR}, #{windId,jdbcType=VARCHAR}, #{isAutoUpdate,jdbcType=VARCHAR}, 
+            #{portfolioId,jdbcType=VARCHAR}, #{prodRegistCode,jdbcType=VARCHAR}, #{isCycle,jdbcType=VARCHAR}, 
+            #{isLay,jdbcType=VARCHAR}, #{layType,jdbcType=VARCHAR}, #{investNature,jdbcType=VARCHAR}, 
+            #{profitFlag,jdbcType=VARCHAR}, #{saleMode,jdbcType=VARCHAR}, #{chbId,jdbcType=VARCHAR}, 
+            #{tmplId,jdbcType=VARCHAR}, #{closeDays,jdbcType=DECIMAL}, #{issueStatus,jdbcType=VARCHAR}, 
+            #{issueStatusRemark,jdbcType=VARCHAR}, #{isCompoundInt,jdbcType=VARCHAR}, #{termType,jdbcType=VARCHAR}, 
+            #{faceValue,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{payType,jdbcType=VARCHAR}, #{isReconciliation,jdbcType=VARCHAR}, #{isCashManage,jdbcType=VARCHAR}, 
+            #{riskLevel,jdbcType=VARCHAR}, #{dealMode,jdbcType=VARCHAR}, #{isExclusive,jdbcType=VARCHAR}, 
+            #{bidDate,jdbcType=DATE}, #{board,jdbcType=VARCHAR}, #{shOrZh,jdbcType=VARCHAR}, 
+            #{isMarginFinprod,jdbcType=VARCHAR}, #{cityBondLev,jdbcType=VARCHAR}, #{isCityBond,jdbcType=VARCHAR}, 
+            #{investmentCycle,jdbcType=VARCHAR}, #{prodManager,jdbcType=VARCHAR}, #{collectType,jdbcType=VARCHAR}, 
+            #{regulatoryRating,jdbcType=VARCHAR}, #{prdDesignId,jdbcType=VARCHAR}, #{addition,jdbcType=VARCHAR}, 
+            #{isPledgeRep,jdbcType=VARCHAR}, #{toffStrdate,jdbcType=DATE}, #{toffEnddate,jdbcType=DATE}, 
+            #{trmFundAbbr,jdbcType=VARCHAR}, #{trmFundType,jdbcType=VARCHAR}, #{graFundType,jdbcType=VARCHAR}, 
+            #{purRedId,jdbcType=VARCHAR}, #{purRedAbbr,jdbcType=VARCHAR}, #{purStartLow,jdbcType=DECIMAL}, 
+            #{redStartLow,jdbcType=DECIMAL}, #{etfType,jdbcType=VARCHAR}, #{etfMinPrunit,jdbcType=DECIMAL}, 
+            #{isReceipt,jdbcType=VARCHAR}, #{isNetprice,jdbcType=VARCHAR}, #{createOrg,jdbcType=VARCHAR}, 
+            #{valOrg,jdbcType=VARCHAR}
+            <if test="calRateType != null" >
+                ,#{calRateType,jdbcType=VARCHAR}
+            </if>)
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinProductAdd" >
+        insert into FIN_PRODUCT_ADD
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="saleDepartment != null" >
+                SALE_DEPARTMENT,
+            </if>
+            <if test="saleLayer != null" >
+                SALE_LAYER,
+            </if>
+            <if test="salePeriod != null" >
+                SALE_PERIOD,
+            </if>
+            <if test="purSpeed != null" >
+                PUR_SPEED,
+            </if>
+            <if test="redSpeed != null" >
+                RED_SPEED,
+            </if>
+            <if test="isSecBond != null" >
+                IS_SEC_BOND,
+            </if>
+            <if test="windId != null" >
+                WIND_ID,
+            </if>
+            <if test="isAutoUpdate != null" >
+                IS_AUTO_UPDATE,
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID,
+            </if>
+            <if test="prodRegistCode != null" >
+                PROD_REGIST_CODE,
+            </if>
+            <if test="isCycle != null" >
+                IS_CYCLE,
+            </if>
+            <if test="isLay != null" >
+                IS_LAY,
+            </if>
+            <if test="layType != null" >
+                LAY_TYPE,
+            </if>
+            <if test="investNature != null" >
+                INVEST_NATURE,
+            </if>
+            <if test="profitFlag != null" >
+                PROFIT_FLAG,
+            </if>
+            <if test="saleMode != null" >
+                SALE_MODE,
+            </if>
+            <if test="chbId != null" >
+                CHB_ID,
+            </if>
+            <if test="tmplId != null" >
+                TMPL_ID,
+            </if>
+            <if test="closeDays != null" >
+                CLOSE_DAYS,
+            </if>
+            <if test="issueStatus != null" >
+                ISSUE_STATUS,
+            </if>
+            <if test="issueStatusRemark != null" >
+                ISSUE_STATUS_REMARK,
+            </if>
+            <if test="isCompoundInt != null" >
+                IS_COMPOUND_INT,
+            </if>
+            <if test="termType != null" >
+                TERM_TYPE,
+            </if>
+            <if test="faceValue != null" >
+                FACE_VALUE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="payType != null" >
+                PAY_TYPE,
+            </if>
+            <if test="isReconciliation != null" >
+                IS_RECONCILIATION,
+            </if>
+            <if test="isCashManage != null" >
+                IS_CASH_MANAGE,
+            </if>
+            <if test="riskLevel != null" >
+                RISK_LEVEL,
+            </if>
+            <if test="dealMode != null" >
+                DEAL_MODE,
+            </if>
+            <if test="isExclusive != null" >
+                IS_EXCLUSIVE,
+            </if>
+            <if test="bidDate != null" >
+                BID_DATE,
+            </if>
+            <if test="board != null" >
+                BOARD,
+            </if>
+            <if test="shOrZh != null" >
+                SH_OR_ZH,
+            </if>
+            <if test="isMarginFinprod != null" >
+                IS_MARGIN_FINPROD,
+            </if>
+            <if test="cityBondLev != null" >
+                CITY_BOND_LEV,
+            </if>
+            <if test="isCityBond != null" >
+                IS_CITY_BOND,
+            </if>
+            <if test="investmentCycle != null" >
+                INVESTMENT_CYCLE,
+            </if>
+            <if test="prodManager != null" >
+                PROD_MANAGER,
+            </if>
+            <if test="collectType != null" >
+                COLLECT_TYPE,
+            </if>
+            <if test="regulatoryRating != null" >
+                REGULATORY_RATING,
+            </if>
+            <if test="prdDesignId != null" >
+                PRD_DESIGN_ID,
+            </if>
+            <if test="addition != null" >
+                ADDITION,
+            </if>
+            <if test="isPledgeRep != null" >
+                IS_PLEDGE_REP,
+            </if>
+            <if test="toffStrdate != null" >
+                TOFF_STRDATE,
+            </if>
+            <if test="toffEnddate != null" >
+                TOFF_ENDDATE,
+            </if>
+            <if test="trmFundAbbr != null" >
+                TRM_FUND_ABBR,
+            </if>
+            <if test="trmFundType != null" >
+                TRM_FUND_TYPE,
+            </if>
+            <if test="graFundType != null" >
+                GRA_FUND_TYPE,
+            </if>
+            <if test="purRedId != null" >
+                PUR_RED_ID,
+            </if>
+            <if test="purRedAbbr != null" >
+                PUR_RED_ABBR,
+            </if>
+            <if test="purStartLow != null" >
+                PUR_START_LOW,
+            </if>
+            <if test="redStartLow != null" >
+                RED_START_LOW,
+            </if>
+            <if test="etfType != null" >
+                ETF_TYPE,
+            </if>
+            <if test="etfMinPrunit != null" >
+                ETF_MIN_PRUNIT,
+            </if>
+            <if test="isReceipt != null" >
+                IS_RECEIPT,
+            </if>
+            <if test="isNetprice != null" >
+                IS_NETPRICE,
+            </if>
+            <if test="createOrg != null" >
+                CREATE_ORG,
+            </if>
+            <if test="valOrg != null" >
+                VAL_ORG,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="saleDepartment != null" >
+                #{saleDepartment,jdbcType=VARCHAR},
+            </if>
+            <if test="saleLayer != null" >
+                #{saleLayer,jdbcType=VARCHAR},
+            </if>
+            <if test="salePeriod != null" >
+                #{salePeriod,jdbcType=DECIMAL},
+            </if>
+            <if test="purSpeed != null" >
+                #{purSpeed,jdbcType=DECIMAL},
+            </if>
+            <if test="redSpeed != null" >
+                #{redSpeed,jdbcType=DECIMAL},
+            </if>
+            <if test="isSecBond != null" >
+                #{isSecBond,jdbcType=VARCHAR},
+            </if>
+            <if test="windId != null" >
+                #{windId,jdbcType=VARCHAR},
+            </if>
+            <if test="isAutoUpdate != null" >
+                #{isAutoUpdate,jdbcType=VARCHAR},
+            </if>
+            <if test="portfolioId != null" >
+                #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodRegistCode != null" >
+                #{prodRegistCode,jdbcType=VARCHAR},
+            </if>
+            <if test="isCycle != null" >
+                #{isCycle,jdbcType=VARCHAR},
+            </if>
+            <if test="isLay != null" >
+                #{isLay,jdbcType=VARCHAR},
+            </if>
+            <if test="layType != null" >
+                #{layType,jdbcType=VARCHAR},
+            </if>
+            <if test="investNature != null" >
+                #{investNature,jdbcType=VARCHAR},
+            </if>
+            <if test="profitFlag != null" >
+                #{profitFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="saleMode != null" >
+                #{saleMode,jdbcType=VARCHAR},
+            </if>
+            <if test="chbId != null" >
+                #{chbId,jdbcType=VARCHAR},
+            </if>
+            <if test="tmplId != null" >
+                #{tmplId,jdbcType=VARCHAR},
+            </if>
+            <if test="closeDays != null" >
+                #{closeDays,jdbcType=DECIMAL},
+            </if>
+            <if test="issueStatus != null" >
+                #{issueStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="issueStatusRemark != null" >
+                #{issueStatusRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="isCompoundInt != null" >
+                #{isCompoundInt,jdbcType=VARCHAR},
+            </if>
+            <if test="termType != null" >
+                #{termType,jdbcType=VARCHAR},
+            </if>
+            <if test="faceValue != null" >
+                #{faceValue,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="payType != null" >
+                #{payType,jdbcType=VARCHAR},
+            </if>
+            <if test="isReconciliation != null" >
+                #{isReconciliation,jdbcType=VARCHAR},
+            </if>
+            <if test="isCashManage != null" >
+                #{isCashManage,jdbcType=VARCHAR},
+            </if>
+            <if test="riskLevel != null" >
+                #{riskLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="dealMode != null" >
+                #{dealMode,jdbcType=VARCHAR},
+            </if>
+            <if test="isExclusive != null" >
+                #{isExclusive,jdbcType=VARCHAR},
+            </if>
+            <if test="bidDate != null" >
+                #{bidDate,jdbcType=DATE},
+            </if>
+            <if test="board != null" >
+                #{board,jdbcType=VARCHAR},
+            </if>
+            <if test="shOrZh != null" >
+                #{shOrZh,jdbcType=VARCHAR},
+            </if>
+            <if test="isMarginFinprod != null" >
+                #{isMarginFinprod,jdbcType=VARCHAR},
+            </if>
+            <if test="cityBondLev != null" >
+                #{cityBondLev,jdbcType=VARCHAR},
+            </if>
+            <if test="isCityBond != null" >
+                #{isCityBond,jdbcType=VARCHAR},
+            </if>
+            <if test="investmentCycle != null" >
+                #{investmentCycle,jdbcType=VARCHAR},
+            </if>
+            <if test="prodManager != null" >
+                #{prodManager,jdbcType=VARCHAR},
+            </if>
+            <if test="collectType != null" >
+                #{collectType,jdbcType=VARCHAR},
+            </if>
+            <if test="regulatoryRating != null" >
+                #{regulatoryRating,jdbcType=VARCHAR},
+            </if>
+            <if test="prdDesignId != null" >
+                #{prdDesignId,jdbcType=VARCHAR},
+            </if>
+            <if test="addition != null" >
+                #{addition,jdbcType=VARCHAR},
+            </if>
+            <if test="isPledgeRep != null" >
+                #{isPledgeRep,jdbcType=VARCHAR},
+            </if>
+            <if test="toffStrdate != null" >
+                #{toffStrdate,jdbcType=DATE},
+            </if>
+            <if test="toffEnddate != null" >
+                #{toffEnddate,jdbcType=DATE},
+            </if>
+            <if test="trmFundAbbr != null" >
+                #{trmFundAbbr,jdbcType=VARCHAR},
+            </if>
+            <if test="trmFundType != null" >
+                #{trmFundType,jdbcType=VARCHAR},
+            </if>
+            <if test="graFundType != null" >
+                #{graFundType,jdbcType=VARCHAR},
+            </if>
+            <if test="purRedId != null" >
+                #{purRedId,jdbcType=VARCHAR},
+            </if>
+            <if test="purRedAbbr != null" >
+                #{purRedAbbr,jdbcType=VARCHAR},
+            </if>
+            <if test="purStartLow != null" >
+                #{purStartLow,jdbcType=DECIMAL},
+            </if>
+            <if test="redStartLow != null" >
+                #{redStartLow,jdbcType=DECIMAL},
+            </if>
+            <if test="etfType != null" >
+                #{etfType,jdbcType=VARCHAR},
+            </if>
+            <if test="etfMinPrunit != null" >
+                #{etfMinPrunit,jdbcType=DECIMAL},
+            </if>
+            <if test="isReceipt != null" >
+                #{isReceipt,jdbcType=VARCHAR},
+            </if>
+            <if test="isNetprice != null" >
+                #{isNetprice,jdbcType=VARCHAR},
+            </if>
+            <if test="createOrg != null" >
+                #{createOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="valOrg != null" >
+                #{valOrg,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinProductAdd" >
+        insert into FIN_PRODUCT_ADD(FINPROD_ID, SALE_DEPARTMENT, SALE_LAYER, SALE_PERIOD, 
+        PUR_SPEED, RED_SPEED, IS_SEC_BOND, WIND_ID, IS_AUTO_UPDATE, PORTFOLIO_ID, PROD_REGIST_CODE, 
+        IS_CYCLE, IS_LAY, LAY_TYPE, INVEST_NATURE, PROFIT_FLAG, SALE_MODE, CHB_ID, TMPL_ID, 
+        CLOSE_DAYS, ISSUE_STATUS, ISSUE_STATUS_REMARK, IS_COMPOUND_INT, TERM_TYPE, FACE_VALUE, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, PAY_TYPE, IS_RECONCILIATION, 
+        IS_CASH_MANAGE, RISK_LEVEL, DEAL_MODE, IS_EXCLUSIVE, BID_DATE, BOARD, SH_OR_ZH, IS_MARGIN_FINPROD, 
+        CITY_BOND_LEV, IS_CITY_BOND, INVESTMENT_CYCLE, PROD_MANAGER, COLLECT_TYPE, REGULATORY_RATING, 
+        PRD_DESIGN_ID, ADDITION, IS_PLEDGE_REP, TOFF_STRDATE, TOFF_ENDDATE, TRM_FUND_ABBR, 
+        TRM_FUND_TYPE, GRA_FUND_TYPE, PUR_RED_ID, PUR_RED_ABBR, PUR_START_LOW, RED_START_LOW, 
+        ETF_TYPE, ETF_MIN_PRUNIT, IS_RECEIPT, IS_NETPRICE, CREATE_ORG, VAL_ORG)
+        select FINPROD_ID, SALE_DEPARTMENT, SALE_LAYER, SALE_PERIOD, 
+            PUR_SPEED, RED_SPEED, IS_SEC_BOND, WIND_ID, IS_AUTO_UPDATE, PORTFOLIO_ID, PROD_REGIST_CODE, 
+            IS_CYCLE, IS_LAY, LAY_TYPE, INVEST_NATURE, PROFIT_FLAG, SALE_MODE, CHB_ID, TMPL_ID, 
+            CLOSE_DAYS, ISSUE_STATUS, ISSUE_STATUS_REMARK, IS_COMPOUND_INT, TERM_TYPE, FACE_VALUE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, PAY_TYPE, IS_RECONCILIATION, 
+            IS_CASH_MANAGE, RISK_LEVEL, DEAL_MODE, IS_EXCLUSIVE, BID_DATE, BOARD, SH_OR_ZH, IS_MARGIN_FINPROD, 
+            CITY_BOND_LEV, IS_CITY_BOND, INVESTMENT_CYCLE, PROD_MANAGER, COLLECT_TYPE, REGULATORY_RATING, 
+            PRD_DESIGN_ID, ADDITION, IS_PLEDGE_REP, TOFF_STRDATE, TOFF_ENDDATE, TRM_FUND_ABBR, 
+            TRM_FUND_TYPE, GRA_FUND_TYPE, PUR_RED_ID, PUR_RED_ABBR, PUR_START_LOW, RED_START_LOW, 
+            ETF_TYPE, ETF_MIN_PRUNIT, IS_RECEIPT, IS_NETPRICE, CREATE_ORG, VAL_ORG
+             from FIN_PRODUCT_ADD
+             where 1 = 1 and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.FinProductAdd" >
+        update FIN_PRODUCT_ADD
+        <set >
+            <if test="saleDepartment != null" >
+                SALE_DEPARTMENT = #{saleDepartment,jdbcType=VARCHAR},
+            </if>
+            <if test="saleLayer != null" >
+                SALE_LAYER = #{saleLayer,jdbcType=VARCHAR},
+            </if>
+            <if test="salePeriod != null" >
+                SALE_PERIOD = #{salePeriod,jdbcType=DECIMAL},
+            </if>
+            <if test="purSpeed != null" >
+                PUR_SPEED = #{purSpeed,jdbcType=DECIMAL},
+            </if>
+            <if test="redSpeed != null" >
+                RED_SPEED = #{redSpeed,jdbcType=DECIMAL},
+            </if>
+            <if test="isSecBond != null" >
+                IS_SEC_BOND = #{isSecBond,jdbcType=VARCHAR},
+            </if>
+            <if test="windId != null" >
+                WIND_ID = #{windId,jdbcType=VARCHAR},
+            </if>
+            <if test="isAutoUpdate != null" >
+                IS_AUTO_UPDATE = #{isAutoUpdate,jdbcType=VARCHAR},
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodRegistCode != null" >
+                PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR},
+            </if>
+            <if test="isCycle != null" >
+                IS_CYCLE = #{isCycle,jdbcType=VARCHAR},
+            </if>
+            <if test="isLay != null" >
+                IS_LAY = #{isLay,jdbcType=VARCHAR},
+            </if>
+            <if test="layType != null" >
+                LAY_TYPE = #{layType,jdbcType=VARCHAR},
+            </if>
+            <if test="investNature != null" >
+                INVEST_NATURE = #{investNature,jdbcType=VARCHAR},
+            </if>
+            <if test="profitFlag != null" >
+                PROFIT_FLAG = #{profitFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="saleMode != null" >
+                SALE_MODE = #{saleMode,jdbcType=VARCHAR},
+            </if>
+            <if test="chbId != null" >
+                CHB_ID = #{chbId,jdbcType=VARCHAR},
+            </if>
+            <if test="tmplId != null" >
+                TMPL_ID = #{tmplId,jdbcType=VARCHAR},
+            </if>
+            <if test="closeDays != null" >
+                CLOSE_DAYS = #{closeDays,jdbcType=DECIMAL},
+            </if>
+            <if test="issueStatus != null" >
+                ISSUE_STATUS = #{issueStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="issueStatusRemark != null" >
+                ISSUE_STATUS_REMARK = #{issueStatusRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="isCompoundInt != null" >
+                IS_COMPOUND_INT = #{isCompoundInt,jdbcType=VARCHAR},
+            </if>
+            <if test="termType != null" >
+                TERM_TYPE = #{termType,jdbcType=VARCHAR},
+            </if>
+            <if test="faceValue != null" >
+                FACE_VALUE = #{faceValue,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="payType != null" >
+                PAY_TYPE = #{payType,jdbcType=VARCHAR},
+            </if>
+            <if test="isReconciliation != null" >
+                IS_RECONCILIATION = #{isReconciliation,jdbcType=VARCHAR},
+            </if>
+            <if test="isCashManage != null" >
+                IS_CASH_MANAGE = #{isCashManage,jdbcType=VARCHAR},
+            </if>
+            <if test="riskLevel != null" >
+                RISK_LEVEL = #{riskLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="dealMode != null" >
+                DEAL_MODE = #{dealMode,jdbcType=VARCHAR},
+            </if>
+            <if test="isExclusive != null" >
+                IS_EXCLUSIVE = #{isExclusive,jdbcType=VARCHAR},
+            </if>
+            <if test="bidDate != null" >
+                BID_DATE = #{bidDate,jdbcType=DATE},
+            </if>
+            <if test="board != null" >
+                BOARD = #{board,jdbcType=VARCHAR},
+            </if>
+            <if test="shOrZh != null" >
+                SH_OR_ZH = #{shOrZh,jdbcType=VARCHAR},
+            </if>
+            <if test="isMarginFinprod != null" >
+                IS_MARGIN_FINPROD = #{isMarginFinprod,jdbcType=VARCHAR},
+            </if>
+            <if test="cityBondLev != null" >
+                CITY_BOND_LEV = #{cityBondLev,jdbcType=VARCHAR},
+            </if>
+            <if test="isCityBond != null" >
+                IS_CITY_BOND = #{isCityBond,jdbcType=VARCHAR},
+            </if>
+            <if test="investmentCycle != null" >
+                INVESTMENT_CYCLE = #{investmentCycle,jdbcType=VARCHAR},
+            </if>
+            <if test="prodManager != null" >
+                PROD_MANAGER = #{prodManager,jdbcType=VARCHAR},
+            </if>
+            <if test="collectType != null" >
+                COLLECT_TYPE = #{collectType,jdbcType=VARCHAR},
+            </if>
+            <if test="regulatoryRating != null" >
+                REGULATORY_RATING = #{regulatoryRating,jdbcType=VARCHAR},
+            </if>
+            <if test="prdDesignId != null" >
+                PRD_DESIGN_ID = #{prdDesignId,jdbcType=VARCHAR},
+            </if>
+            <if test="addition != null" >
+                ADDITION = #{addition,jdbcType=VARCHAR},
+            </if>
+            <if test="isPledgeRep != null" >
+                IS_PLEDGE_REP = #{isPledgeRep,jdbcType=VARCHAR},
+            </if>
+            <if test="toffStrdate != null" >
+                TOFF_STRDATE = #{toffStrdate,jdbcType=DATE},
+            </if>
+            <if test="toffEnddate != null" >
+                TOFF_ENDDATE = #{toffEnddate,jdbcType=DATE},
+            </if>
+            <if test="trmFundAbbr != null" >
+                TRM_FUND_ABBR = #{trmFundAbbr,jdbcType=VARCHAR},
+            </if>
+            <if test="trmFundType != null" >
+                TRM_FUND_TYPE = #{trmFundType,jdbcType=VARCHAR},
+            </if>
+            <if test="graFundType != null" >
+                GRA_FUND_TYPE = #{graFundType,jdbcType=VARCHAR},
+            </if>
+            <if test="purRedId != null" >
+                PUR_RED_ID = #{purRedId,jdbcType=VARCHAR},
+            </if>
+            <if test="purRedAbbr != null" >
+                PUR_RED_ABBR = #{purRedAbbr,jdbcType=VARCHAR},
+            </if>
+            <if test="purStartLow != null" >
+                PUR_START_LOW = #{purStartLow,jdbcType=DECIMAL},
+            </if>
+            <if test="redStartLow != null" >
+                RED_START_LOW = #{redStartLow,jdbcType=DECIMAL},
+            </if>
+            <if test="etfType != null" >
+                ETF_TYPE = #{etfType,jdbcType=VARCHAR},
+            </if>
+            <if test="etfMinPrunit != null" >
+                ETF_MIN_PRUNIT = #{etfMinPrunit,jdbcType=DECIMAL},
+            </if>
+            <if test="isReceipt != null" >
+                IS_RECEIPT = #{isReceipt,jdbcType=VARCHAR},
+            </if>
+            <if test="isNetprice != null" >
+                IS_NETPRICE = #{isNetprice,jdbcType=VARCHAR},
+            </if>
+            <if test="valOrg != null" >
+                VAL_ORG = #{valOrg,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinProductAdd" >
+        update FIN_PRODUCT_ADD
+        set SALE_DEPARTMENT = #{saleDepartment,jdbcType=VARCHAR},
+            SALE_LAYER = #{saleLayer,jdbcType=VARCHAR},
+            SALE_PERIOD = #{salePeriod,jdbcType=DECIMAL},
+            PUR_SPEED = #{purSpeed,jdbcType=DECIMAL},
+            RED_SPEED = #{redSpeed,jdbcType=DECIMAL},
+            IS_SEC_BOND = #{isSecBond,jdbcType=VARCHAR},
+            WIND_ID = #{windId,jdbcType=VARCHAR},
+            IS_AUTO_UPDATE = #{isAutoUpdate,jdbcType=VARCHAR},
+            PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR},
+            IS_CYCLE = #{isCycle,jdbcType=VARCHAR},
+            IS_LAY = #{isLay,jdbcType=VARCHAR},
+            LAY_TYPE = #{layType,jdbcType=VARCHAR},
+            INVEST_NATURE = #{investNature,jdbcType=VARCHAR},
+            PROFIT_FLAG = #{profitFlag,jdbcType=VARCHAR},
+            SALE_MODE = #{saleMode,jdbcType=VARCHAR},
+            CHB_ID = #{chbId,jdbcType=VARCHAR},
+            TMPL_ID = #{tmplId,jdbcType=VARCHAR},
+            CLOSE_DAYS = #{closeDays,jdbcType=DECIMAL},
+            ISSUE_STATUS = #{issueStatus,jdbcType=VARCHAR},
+            ISSUE_STATUS_REMARK = #{issueStatusRemark,jdbcType=VARCHAR},
+            IS_COMPOUND_INT = #{isCompoundInt,jdbcType=VARCHAR},
+            TERM_TYPE = #{termType,jdbcType=VARCHAR},
+            FACE_VALUE = #{faceValue,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            PAY_TYPE = #{payType,jdbcType=VARCHAR},
+            IS_RECONCILIATION = #{isReconciliation,jdbcType=VARCHAR},
+            IS_CASH_MANAGE = #{isCashManage,jdbcType=VARCHAR},
+            RISK_LEVEL = #{riskLevel,jdbcType=VARCHAR},
+            DEAL_MODE = #{dealMode,jdbcType=VARCHAR},
+            IS_EXCLUSIVE = #{isExclusive,jdbcType=VARCHAR},
+            BID_DATE = #{bidDate,jdbcType=DATE},
+            BOARD = #{board,jdbcType=VARCHAR},
+            SH_OR_ZH = #{shOrZh,jdbcType=VARCHAR},
+            IS_MARGIN_FINPROD = #{isMarginFinprod,jdbcType=VARCHAR},
+            CITY_BOND_LEV = #{cityBondLev,jdbcType=VARCHAR},
+            IS_CITY_BOND = #{isCityBond,jdbcType=VARCHAR},
+            INVESTMENT_CYCLE = #{investmentCycle,jdbcType=VARCHAR},
+            PROD_MANAGER = #{prodManager,jdbcType=VARCHAR},
+            COLLECT_TYPE = #{collectType,jdbcType=VARCHAR},
+            REGULATORY_RATING = #{regulatoryRating,jdbcType=VARCHAR},
+            PRD_DESIGN_ID = #{prdDesignId,jdbcType=VARCHAR},
+            ADDITION = #{addition,jdbcType=VARCHAR},
+            IS_PLEDGE_REP = #{isPledgeRep,jdbcType=VARCHAR},
+            TOFF_STRDATE = #{toffStrdate,jdbcType=DATE},
+            TOFF_ENDDATE = #{toffEnddate,jdbcType=DATE},
+            TRM_FUND_ABBR = #{trmFundAbbr,jdbcType=VARCHAR},
+            TRM_FUND_TYPE = #{trmFundType,jdbcType=VARCHAR},
+            GRA_FUND_TYPE = #{graFundType,jdbcType=VARCHAR},
+            PUR_RED_ID = #{purRedId,jdbcType=VARCHAR},
+            PUR_RED_ABBR = #{purRedAbbr,jdbcType=VARCHAR},
+            PUR_START_LOW = #{purStartLow,jdbcType=DECIMAL},
+            RED_START_LOW = #{redStartLow,jdbcType=DECIMAL},
+            ETF_TYPE = #{etfType,jdbcType=VARCHAR},
+            ETF_MIN_PRUNIT = #{etfMinPrunit,jdbcType=DECIMAL},
+            IS_RECEIPT = #{isReceipt,jdbcType=VARCHAR},
+            IS_NETPRICE = #{isNetprice,jdbcType=VARCHAR},
+            VAL_ORG = #{valOrg,jdbcType=VARCHAR}
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbSysDepartmentHisMapper_mysql">
+	<insert id="insertHisByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbSysDepartmentHis" >
+        insert into CHB_SYS_DEPARTMENT_HIS(DEPT_CODE, HIS_NO, DEPT_NAME, INV_OFFICES, DEPT_FUN, 
+        INSTITUTION_CODE, DIRECT_DEPT_CODE, WORKFLOW_ID, REMARK, STATUS, CREATE_USER, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select DEPT_CODE, (select IFNULL(max(HIS_NO), 0) from CHB_SYS_DEPARTMENT_HIS where STATUS IN('E','D')) + 1 as HIS_NO, DEPT_NAME, INV_OFFICES, DEPT_FUN, 
+            INSTITUTION_CODE, DIRECT_DEPT_CODE, WORKFLOW_ID, REMARK, STATUS, CREATE_USER, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME
+             from CHB_SYS_DEPARTMENT
+             where STATUS IN('E','D')
+    </insert>
+	<insert id="insertHisByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbSysDepartmentHis" >
+        insert into CHB_SYS_DEPARTMENT_HIS(DEPT_CODE, HIS_NO, DEPT_NAME, INV_OFFICES, DEPT_FUN, 
+        INSTITUTION_CODE, DIRECT_DEPT_CODE, WORKFLOW_ID, REMARK, STATUS, CREATE_USER, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select DEPT_CODE, (select IFNULL(max(HIS_NO), 0) from CHB_SYS_DEPARTMENT_HIS where STATUS = 'E') + 1 as HIS_NO, DEPT_NAME, INV_OFFICES, DEPT_FUN, 
+            INSTITUTION_CODE, DIRECT_DEPT_CODE, WORKFLOW_ID, REMARK, STATUS, CREATE_USER, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME
+             from CHB_SYS_DEPARTMENT
+             where STATUS = 'E' and WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+    </insert>
+</mapper>

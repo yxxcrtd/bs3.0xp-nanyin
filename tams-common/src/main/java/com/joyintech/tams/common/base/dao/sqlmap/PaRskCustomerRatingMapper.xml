@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.PaRskCustomerRatingMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.PaRskCustomerRating" >
+        <id column="CUSTOMER_ID" property="customerId" jdbcType="VARCHAR" />
+        <id column="RATINGTYPE" property="ratingtype" jdbcType="VARCHAR" />
+        <id column="START_DATE" property="startDate" jdbcType="DATE" />
+        <id column="END_DATE" property="endDate" jdbcType="DATE" />
+        <result column="RATING" property="rating" jdbcType="VARCHAR" />
+        <result column="RATING_YEAR" property="ratingYear" jdbcType="DECIMAL" />
+        <result column="RATING_MODE" property="ratingMode" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CUSTOMER_ID CUSTOMER_ID, RATINGTYPE RATINGTYPE, START_DATE START_DATE, END_DATE END_DATE, 
+        RATING RATING, RATING_YEAR RATING_YEAR, RATING_MODE RATING_MODE, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="Base_Column_List" />
+        from PA_RSK_CUSTOMER_RATING
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="Base_Column_List" />
+        from PA_RSK_CUSTOMER_RATING
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.PaRskCustomerRatingKey" >
+        select 
+        <include refid="Base_Column_List" />
+        from PA_RSK_CUSTOMER_RATING
+        where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+          and RATINGTYPE = #{ratingtype,jdbcType=VARCHAR}
+          and START_DATE = #{startDate,jdbcType=DATE}
+          and END_DATE = #{endDate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PaRskCustomerRatingKey" >
+        delete from PA_RSK_CUSTOMER_RATING
+        where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+          and RATINGTYPE = #{ratingtype,jdbcType=VARCHAR}
+          and START_DATE = #{startDate,jdbcType=DATE}
+          and END_DATE = #{endDate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PaRskCustomerRating" >
+        insert into PA_RSK_CUSTOMER_RATING (CUSTOMER_ID, RATINGTYPE, START_DATE, 
+            END_DATE, RATING, RATING_YEAR, 
+            RATING_MODE, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{customerId,jdbcType=VARCHAR}, #{ratingtype,jdbcType=VARCHAR}, #{startDate,jdbcType=DATE}, 
+            #{endDate,jdbcType=DATE}, #{rating,jdbcType=VARCHAR}, #{ratingYear,jdbcType=DECIMAL}, 
+            #{ratingMode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PaRskCustomerRating" >
+        insert into PA_RSK_CUSTOMER_RATING
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="customerId != null" >
+                CUSTOMER_ID,
+            </if>
+            <if test="ratingtype != null" >
+                RATINGTYPE,
+            </if>
+            <if test="startDate != null" >
+                START_DATE,
+            </if>
+            <if test="endDate != null" >
+                END_DATE,
+            </if>
+            <if test="rating != null" >
+                RATING,
+            </if>
+            <if test="ratingYear != null" >
+                RATING_YEAR,
+            </if>
+            <if test="ratingMode != null" >
+                RATING_MODE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="customerId != null" >
+                #{customerId,jdbcType=VARCHAR},
+            </if>
+            <if test="ratingtype != null" >
+                #{ratingtype,jdbcType=VARCHAR},
+            </if>
+            <if test="startDate != null" >
+                #{startDate,jdbcType=DATE},
+            </if>
+            <if test="endDate != null" >
+                #{endDate,jdbcType=DATE},
+            </if>
+            <if test="rating != null" >
+                #{rating,jdbcType=VARCHAR},
+            </if>
+            <if test="ratingYear != null" >
+                #{ratingYear,jdbcType=DECIMAL},
+            </if>
+            <if test="ratingMode != null" >
+                #{ratingMode,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PaRskCustomerRating" >
+        insert into PA_RSK_CUSTOMER_RATING(CUSTOMER_ID, RATINGTYPE, START_DATE, END_DATE, 
+        RATING, RATING_YEAR, RATING_MODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME)
+        select CUSTOMER_ID, RATINGTYPE, START_DATE, END_DATE, 
+            RATING, RATING_YEAR, RATING_MODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from PA_RSK_CUSTOMER_RATING
+             where 1 = 1 and CUSTOMER_ID = #{customerId,jdbcType=VARCHAR} and RATINGTYPE = #{ratingtype,jdbcType=VARCHAR} and START_DATE = #{startDate,jdbcType=DATE} and END_DATE = #{endDate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.PaRskCustomerRating" >
+        update PA_RSK_CUSTOMER_RATING
+        <set >
+            <if test="rating != null" >
+                RATING = #{rating,jdbcType=VARCHAR},
+            </if>
+            <if test="ratingYear != null" >
+                RATING_YEAR = #{ratingYear,jdbcType=DECIMAL},
+            </if>
+            <if test="ratingMode != null" >
+                RATING_MODE = #{ratingMode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+          and RATINGTYPE = #{ratingtype,jdbcType=VARCHAR}
+          and START_DATE = #{startDate,jdbcType=DATE}
+          and END_DATE = #{endDate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PaRskCustomerRating" >
+        update PA_RSK_CUSTOMER_RATING
+        set RATING = #{rating,jdbcType=VARCHAR},
+            RATING_YEAR = #{ratingYear,jdbcType=DECIMAL},
+            RATING_MODE = #{ratingMode,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+          and RATINGTYPE = #{ratingtype,jdbcType=VARCHAR}
+          and START_DATE = #{startDate,jdbcType=DATE}
+          and END_DATE = #{endDate,jdbcType=DATE}
+    </update>
+</mapper>

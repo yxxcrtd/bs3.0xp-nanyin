@@ -1,0 +1,873 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfPayhsrcsecinfoMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfPayhsrcsecinfo" >
+        <id column="SECID" property="secid" jdbcType="VARCHAR" />
+        <id column="SOURCE" property="source" jdbcType="VARCHAR" />
+        <result column="SECNAME" property="secname" jdbcType="VARCHAR" />
+        <result column="SECCODE" property="seccode" jdbcType="VARCHAR" />
+        <result column="MARKET" property="market" jdbcType="CHAR" />
+        <result column="SECFULLNAME" property="secfullname" jdbcType="VARCHAR" />
+        <result column="RATEBASIC" property="ratebasic" jdbcType="VARCHAR" />
+        <result column="COUPONSPECIES" property="couponspecies" jdbcType="CHAR" />
+        <result column="INTERESTRATE" property="interestrate" jdbcType="CHAR" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="PAYCYCLE" property="paycycle" jdbcType="VARCHAR" />
+        <result column="FACEVALUE" property="facevalue" jdbcType="DECIMAL" />
+        <result column="ISSUEPRICE" property="issueprice" jdbcType="DECIMAL" />
+        <result column="PAPERIR" property="paperir" jdbcType="DECIMAL" />
+        <result column="SCHECALRULE" property="schecalrule" jdbcType="CHAR" />
+        <result column="FIRSTRATEDAY" property="firstrateday" jdbcType="DATE" />
+        <result column="WORKDAYRULE" property="workdayrule" jdbcType="CHAR" />
+        <result column="ISSUERSHORT" property="issuershort" jdbcType="VARCHAR" />
+        <result column="RESETTYPE" property="resettype" jdbcType="VARCHAR" />
+        <result column="OBSERVEBEFDAY" property="observebefday" jdbcType="DECIMAL" />
+        <result column="OBSERVEBEFUNIT" property="observebefunit" jdbcType="VARCHAR" />
+        <result column="TOPRATE" property="toprate" jdbcType="DECIMAL" />
+        <result column="BOTTOMRATE" property="bottomrate" jdbcType="DECIMAL" />
+        <result column="ISSUEAMT" property="issueamt" jdbcType="DECIMAL" />
+        <result column="RATECODE" property="ratecode" jdbcType="VARCHAR" />
+        <result column="SPREADRATE_8" property="spreadrate8" jdbcType="DECIMAL" />
+        <result column="COEFFICIENT" property="coefficient" jdbcType="DECIMAL" />
+        <result column="SECTYPE" property="sectype" jdbcType="VARCHAR" />
+        <result column="SECTYPE2" property="sectype2" jdbcType="VARCHAR" />
+        <result column="CHBSECTYPE" property="chbsectype" jdbcType="VARCHAR" />
+        <result column="CHBSECTYPE2" property="chbsectype2" jdbcType="VARCHAR" />
+        <result column="PBOCSECTYPE" property="pbocsectype" jdbcType="VARCHAR" />
+        <result column="PBOCSECTYPE2" property="pbocsectype2" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="ISSECBOND" property="issecbond" jdbcType="VARCHAR" />
+        <result column="ISSUS" property="issus" jdbcType="VARCHAR" />
+        <result column="CALLOPTION" property="calloption" jdbcType="VARCHAR" />
+        <result column="PUTOPTION" property="putoption" jdbcType="VARCHAR" />
+        <result column="INSTITUTION" property="institution" jdbcType="VARCHAR" />
+        <result column="INSTITUTIONTEXT" property="institutiontext" jdbcType="VARCHAR" />
+        <result column="MARKETTEXT" property="markettext" jdbcType="VARCHAR" />
+        <result column="MARKET2" property="market2" jdbcType="CHAR" />
+        <result column="CCY" property="ccy" jdbcType="CHAR" />
+        <result column="ISSUETYPE" property="issuetype" jdbcType="VARCHAR" />
+        <result column="BLNAREA" property="blnarea" jdbcType="VARCHAR" />
+        <result column="GUARANTOR" property="guarantor" jdbcType="VARCHAR" />
+        <result column="GUARTYPE" property="guartype" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="PUBENDDATE" property="pubenddate" jdbcType="DATE" />
+        <result column="CITY_INVEST_SEC_CHB" property="cityInvestSecChb" jdbcType="VARCHAR" />
+        <result column="CITY_INVEST_SEC_PROVINCES" property="cityInvestSecProvinces" jdbcType="VARCHAR" />
+        <result column="CITY_INVEST_SEC_CITIES" property="cityInvestSecCities" jdbcType="VARCHAR" />
+        <result column="CITY_INVEST_SEC_COUNTY" property="cityInvestSecCounty" jdbcType="VARCHAR" />
+        <result column="CITY_INVEST_SEC_WIND" property="cityInvestSecWind" jdbcType="VARCHAR" />
+        <result column="CITY_INVEST_SEC_CBRC" property="cityInvestSecCbrc" jdbcType="VARCHAR" />
+        <result column="ASSET_CLASS" property="assetClass" jdbcType="VARCHAR" />
+        <result column="CONCRETE_CLASS" property="concreteClass" jdbcType="VARCHAR" />
+        <result column="CONCRETE_CLASS_SM" property="concreteClassSm" jdbcType="VARCHAR" />
+        <result column="ISSUER_SCALE_TYPE" property="issuerScaleType" jdbcType="VARCHAR" />
+        <result column="ISSUER_TECHNOLOGY_TYPE" property="issuerTechnologyType" jdbcType="VARCHAR" />
+        <result column="ISSUER_ECONOMIC_TYPE" property="issuerEconomicType" jdbcType="VARCHAR" />
+        <result column="ISSUER_DESC" property="issuerDesc" jdbcType="VARCHAR" />
+        <result column="ISSUER_INSTITUTIONS" property="issuerInstitutions" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SECID SECID, SOURCE SOURCE, SECNAME SECNAME, SECCODE SECCODE, MARKET MARKET, SECFULLNAME SECFULLNAME, 
+        RATEBASIC RATEBASIC, COUPONSPECIES COUPONSPECIES, INTERESTRATE INTERESTRATE, VDATE VDATE, 
+        MDATE MDATE, PAYCYCLE PAYCYCLE, FACEVALUE FACEVALUE, ISSUEPRICE ISSUEPRICE, PAPERIR PAPERIR, 
+        SCHECALRULE SCHECALRULE, FIRSTRATEDAY FIRSTRATEDAY, WORKDAYRULE WORKDAYRULE, ISSUERSHORT ISSUERSHORT, 
+        RESETTYPE RESETTYPE, OBSERVEBEFDAY OBSERVEBEFDAY, OBSERVEBEFUNIT OBSERVEBEFUNIT, 
+        TOPRATE TOPRATE, BOTTOMRATE BOTTOMRATE, ISSUEAMT ISSUEAMT, RATECODE RATECODE, SPREADRATE_8 SPREADRATE_8, 
+        COEFFICIENT COEFFICIENT, SECTYPE SECTYPE, SECTYPE2 SECTYPE2, CHBSECTYPE CHBSECTYPE, 
+        CHBSECTYPE2 CHBSECTYPE2, PBOCSECTYPE PBOCSECTYPE, PBOCSECTYPE2 PBOCSECTYPE2, REMARK REMARK, 
+        ISSECBOND ISSECBOND, ISSUS ISSUS, CALLOPTION CALLOPTION, PUTOPTION PUTOPTION, INSTITUTION INSTITUTION, 
+        INSTITUTIONTEXT INSTITUTIONTEXT, MARKETTEXT MARKETTEXT, MARKET2 MARKET2, CCY CCY, 
+        ISSUETYPE ISSUETYPE, BLNAREA BLNAREA, GUARANTOR GUARANTOR, GUARTYPE GUARTYPE, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
+        PUBENDDATE PUBENDDATE, CITY_INVEST_SEC_CHB CITY_INVEST_SEC_CHB, CITY_INVEST_SEC_PROVINCES CITY_INVEST_SEC_PROVINCES, 
+        CITY_INVEST_SEC_CITIES CITY_INVEST_SEC_CITIES, CITY_INVEST_SEC_COUNTY CITY_INVEST_SEC_COUNTY, 
+        CITY_INVEST_SEC_WIND CITY_INVEST_SEC_WIND, CITY_INVEST_SEC_CBRC CITY_INVEST_SEC_CBRC, 
+        ASSET_CLASS ASSET_CLASS, CONCRETE_CLASS CONCRETE_CLASS, CONCRETE_CLASS_SM CONCRETE_CLASS_SM, 
+        ISSUER_SCALE_TYPE ISSUER_SCALE_TYPE, ISSUER_TECHNOLOGY_TYPE ISSUER_TECHNOLOGY_TYPE, 
+        ISSUER_ECONOMIC_TYPE ISSUER_ECONOMIC_TYPE, ISSUER_DESC ISSUER_DESC, ISSUER_INSTITUTIONS ISSUER_INSTITUTIONS
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfPayhsrcsecinfoMapper.Base_Column_List" />
+        from INTERF_PAYHSRCSECINFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfPayhsrcsecinfoMapper.Base_Column_List" />
+        from INTERF_PAYHSRCSECINFO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcsecinfoKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfPayhsrcsecinfoMapper.Base_Column_List" />
+        from INTERF_PAYHSRCSECINFO
+        where SECID = #{secid,jdbcType=VARCHAR}
+          and SOURCE = #{source,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcsecinfoKey" >
+        delete from INTERF_PAYHSRCSECINFO
+        where SECID = #{secid,jdbcType=VARCHAR}
+          and SOURCE = #{source,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcsecinfo" >
+        insert into INTERF_PAYHSRCSECINFO (SECID, SOURCE, SECNAME, 
+            SECCODE, MARKET, SECFULLNAME, 
+            RATEBASIC, COUPONSPECIES, INTERESTRATE, 
+            VDATE, MDATE, PAYCYCLE, 
+            FACEVALUE, ISSUEPRICE, PAPERIR, 
+            SCHECALRULE, FIRSTRATEDAY, WORKDAYRULE, 
+            ISSUERSHORT, RESETTYPE, OBSERVEBEFDAY, 
+            OBSERVEBEFUNIT, TOPRATE, BOTTOMRATE, 
+            ISSUEAMT, RATECODE, SPREADRATE_8, 
+            COEFFICIENT, SECTYPE, SECTYPE2, 
+            CHBSECTYPE, CHBSECTYPE2, PBOCSECTYPE, 
+            PBOCSECTYPE2, REMARK, ISSECBOND, 
+            ISSUS, CALLOPTION, PUTOPTION, 
+            INSTITUTION, INSTITUTIONTEXT, MARKETTEXT, 
+            MARKET2, CCY, ISSUETYPE, 
+            BLNAREA, GUARANTOR, GUARTYPE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, PUBENDDATE, 
+            CITY_INVEST_SEC_CHB, CITY_INVEST_SEC_PROVINCES, 
+            CITY_INVEST_SEC_CITIES, CITY_INVEST_SEC_COUNTY, 
+            CITY_INVEST_SEC_WIND, CITY_INVEST_SEC_CBRC, 
+            ASSET_CLASS, CONCRETE_CLASS, CONCRETE_CLASS_SM, 
+            ISSUER_SCALE_TYPE, ISSUER_TECHNOLOGY_TYPE, 
+            ISSUER_ECONOMIC_TYPE, ISSUER_DESC, ISSUER_INSTITUTIONS
+            )
+        values (#{secid,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, #{secname,jdbcType=VARCHAR}, 
+            #{seccode,jdbcType=VARCHAR}, #{market,jdbcType=CHAR}, #{secfullname,jdbcType=VARCHAR}, 
+            #{ratebasic,jdbcType=VARCHAR}, #{couponspecies,jdbcType=CHAR}, #{interestrate,jdbcType=CHAR}, 
+            #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, #{paycycle,jdbcType=VARCHAR}, 
+            #{facevalue,jdbcType=DECIMAL}, #{issueprice,jdbcType=DECIMAL}, #{paperir,jdbcType=DECIMAL}, 
+            #{schecalrule,jdbcType=CHAR}, #{firstrateday,jdbcType=DATE}, #{workdayrule,jdbcType=CHAR}, 
+            #{issuershort,jdbcType=VARCHAR}, #{resettype,jdbcType=VARCHAR}, #{observebefday,jdbcType=DECIMAL}, 
+            #{observebefunit,jdbcType=VARCHAR}, #{toprate,jdbcType=DECIMAL}, #{bottomrate,jdbcType=DECIMAL}, 
+            #{issueamt,jdbcType=DECIMAL}, #{ratecode,jdbcType=VARCHAR}, #{spreadrate8,jdbcType=DECIMAL}, 
+            #{coefficient,jdbcType=DECIMAL}, #{sectype,jdbcType=VARCHAR}, #{sectype2,jdbcType=VARCHAR}, 
+            #{chbsectype,jdbcType=VARCHAR}, #{chbsectype2,jdbcType=VARCHAR}, #{pbocsectype,jdbcType=VARCHAR}, 
+            #{pbocsectype2,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{issecbond,jdbcType=VARCHAR}, 
+            #{issus,jdbcType=VARCHAR}, #{calloption,jdbcType=VARCHAR}, #{putoption,jdbcType=VARCHAR}, 
+            #{institution,jdbcType=VARCHAR}, #{institutiontext,jdbcType=VARCHAR}, #{markettext,jdbcType=VARCHAR}, 
+            #{market2,jdbcType=CHAR}, #{ccy,jdbcType=CHAR}, #{issuetype,jdbcType=VARCHAR}, 
+            #{blnarea,jdbcType=VARCHAR}, #{guarantor,jdbcType=VARCHAR}, #{guartype,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{pubenddate,jdbcType=DATE}, 
+            #{cityInvestSecChb,jdbcType=VARCHAR}, #{cityInvestSecProvinces,jdbcType=VARCHAR}, 
+            #{cityInvestSecCities,jdbcType=VARCHAR}, #{cityInvestSecCounty,jdbcType=VARCHAR}, 
+            #{cityInvestSecWind,jdbcType=VARCHAR}, #{cityInvestSecCbrc,jdbcType=VARCHAR}, 
+            #{assetClass,jdbcType=VARCHAR}, #{concreteClass,jdbcType=VARCHAR}, #{concreteClassSm,jdbcType=VARCHAR}, 
+            #{issuerScaleType,jdbcType=VARCHAR}, #{issuerTechnologyType,jdbcType=VARCHAR}, 
+            #{issuerEconomicType,jdbcType=VARCHAR}, #{issuerDesc,jdbcType=VARCHAR}, #{issuerInstitutions,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcsecinfo" >
+        insert into INTERF_PAYHSRCSECINFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="secid != null" >
+                SECID,
+            </if>
+            <if test="source != null" >
+                SOURCE,
+            </if>
+            <if test="secname != null" >
+                SECNAME,
+            </if>
+            <if test="seccode != null" >
+                SECCODE,
+            </if>
+            <if test="market != null" >
+                MARKET,
+            </if>
+            <if test="secfullname != null" >
+                SECFULLNAME,
+            </if>
+            <if test="ratebasic != null" >
+                RATEBASIC,
+            </if>
+            <if test="couponspecies != null" >
+                COUPONSPECIES,
+            </if>
+            <if test="interestrate != null" >
+                INTERESTRATE,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="paycycle != null" >
+                PAYCYCLE,
+            </if>
+            <if test="facevalue != null" >
+                FACEVALUE,
+            </if>
+            <if test="issueprice != null" >
+                ISSUEPRICE,
+            </if>
+            <if test="paperir != null" >
+                PAPERIR,
+            </if>
+            <if test="schecalrule != null" >
+                SCHECALRULE,
+            </if>
+            <if test="firstrateday != null" >
+                FIRSTRATEDAY,
+            </if>
+            <if test="workdayrule != null" >
+                WORKDAYRULE,
+            </if>
+            <if test="issuershort != null" >
+                ISSUERSHORT,
+            </if>
+            <if test="resettype != null" >
+                RESETTYPE,
+            </if>
+            <if test="observebefday != null" >
+                OBSERVEBEFDAY,
+            </if>
+            <if test="observebefunit != null" >
+                OBSERVEBEFUNIT,
+            </if>
+            <if test="toprate != null" >
+                TOPRATE,
+            </if>
+            <if test="bottomrate != null" >
+                BOTTOMRATE,
+            </if>
+            <if test="issueamt != null" >
+                ISSUEAMT,
+            </if>
+            <if test="ratecode != null" >
+                RATECODE,
+            </if>
+            <if test="spreadrate8 != null" >
+                SPREADRATE_8,
+            </if>
+            <if test="coefficient != null" >
+                COEFFICIENT,
+            </if>
+            <if test="sectype != null" >
+                SECTYPE,
+            </if>
+            <if test="sectype2 != null" >
+                SECTYPE2,
+            </if>
+            <if test="chbsectype != null" >
+                CHBSECTYPE,
+            </if>
+            <if test="chbsectype2 != null" >
+                CHBSECTYPE2,
+            </if>
+            <if test="pbocsectype != null" >
+                PBOCSECTYPE,
+            </if>
+            <if test="pbocsectype2 != null" >
+                PBOCSECTYPE2,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="issecbond != null" >
+                ISSECBOND,
+            </if>
+            <if test="issus != null" >
+                ISSUS,
+            </if>
+            <if test="calloption != null" >
+                CALLOPTION,
+            </if>
+            <if test="putoption != null" >
+                PUTOPTION,
+            </if>
+            <if test="institution != null" >
+                INSTITUTION,
+            </if>
+            <if test="institutiontext != null" >
+                INSTITUTIONTEXT,
+            </if>
+            <if test="markettext != null" >
+                MARKETTEXT,
+            </if>
+            <if test="market2 != null" >
+                MARKET2,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="issuetype != null" >
+                ISSUETYPE,
+            </if>
+            <if test="blnarea != null" >
+                BLNAREA,
+            </if>
+            <if test="guarantor != null" >
+                GUARANTOR,
+            </if>
+            <if test="guartype != null" >
+                GUARTYPE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="pubenddate != null" >
+                PUBENDDATE,
+            </if>
+            <if test="cityInvestSecChb != null" >
+                CITY_INVEST_SEC_CHB,
+            </if>
+            <if test="cityInvestSecProvinces != null" >
+                CITY_INVEST_SEC_PROVINCES,
+            </if>
+            <if test="cityInvestSecCities != null" >
+                CITY_INVEST_SEC_CITIES,
+            </if>
+            <if test="cityInvestSecCounty != null" >
+                CITY_INVEST_SEC_COUNTY,
+            </if>
+            <if test="cityInvestSecWind != null" >
+                CITY_INVEST_SEC_WIND,
+            </if>
+            <if test="cityInvestSecCbrc != null" >
+                CITY_INVEST_SEC_CBRC,
+            </if>
+            <if test="assetClass != null" >
+                ASSET_CLASS,
+            </if>
+            <if test="concreteClass != null" >
+                CONCRETE_CLASS,
+            </if>
+            <if test="concreteClassSm != null" >
+                CONCRETE_CLASS_SM,
+            </if>
+            <if test="issuerScaleType != null" >
+                ISSUER_SCALE_TYPE,
+            </if>
+            <if test="issuerTechnologyType != null" >
+                ISSUER_TECHNOLOGY_TYPE,
+            </if>
+            <if test="issuerEconomicType != null" >
+                ISSUER_ECONOMIC_TYPE,
+            </if>
+            <if test="issuerDesc != null" >
+                ISSUER_DESC,
+            </if>
+            <if test="issuerInstitutions != null" >
+                ISSUER_INSTITUTIONS,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="secid != null" >
+                #{secid,jdbcType=VARCHAR},
+            </if>
+            <if test="source != null" >
+                #{source,jdbcType=VARCHAR},
+            </if>
+            <if test="secname != null" >
+                #{secname,jdbcType=VARCHAR},
+            </if>
+            <if test="seccode != null" >
+                #{seccode,jdbcType=VARCHAR},
+            </if>
+            <if test="market != null" >
+                #{market,jdbcType=CHAR},
+            </if>
+            <if test="secfullname != null" >
+                #{secfullname,jdbcType=VARCHAR},
+            </if>
+            <if test="ratebasic != null" >
+                #{ratebasic,jdbcType=VARCHAR},
+            </if>
+            <if test="couponspecies != null" >
+                #{couponspecies,jdbcType=CHAR},
+            </if>
+            <if test="interestrate != null" >
+                #{interestrate,jdbcType=CHAR},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="paycycle != null" >
+                #{paycycle,jdbcType=VARCHAR},
+            </if>
+            <if test="facevalue != null" >
+                #{facevalue,jdbcType=DECIMAL},
+            </if>
+            <if test="issueprice != null" >
+                #{issueprice,jdbcType=DECIMAL},
+            </if>
+            <if test="paperir != null" >
+                #{paperir,jdbcType=DECIMAL},
+            </if>
+            <if test="schecalrule != null" >
+                #{schecalrule,jdbcType=CHAR},
+            </if>
+            <if test="firstrateday != null" >
+                #{firstrateday,jdbcType=DATE},
+            </if>
+            <if test="workdayrule != null" >
+                #{workdayrule,jdbcType=CHAR},
+            </if>
+            <if test="issuershort != null" >
+                #{issuershort,jdbcType=VARCHAR},
+            </if>
+            <if test="resettype != null" >
+                #{resettype,jdbcType=VARCHAR},
+            </if>
+            <if test="observebefday != null" >
+                #{observebefday,jdbcType=DECIMAL},
+            </if>
+            <if test="observebefunit != null" >
+                #{observebefunit,jdbcType=VARCHAR},
+            </if>
+            <if test="toprate != null" >
+                #{toprate,jdbcType=DECIMAL},
+            </if>
+            <if test="bottomrate != null" >
+                #{bottomrate,jdbcType=DECIMAL},
+            </if>
+            <if test="issueamt != null" >
+                #{issueamt,jdbcType=DECIMAL},
+            </if>
+            <if test="ratecode != null" >
+                #{ratecode,jdbcType=VARCHAR},
+            </if>
+            <if test="spreadrate8 != null" >
+                #{spreadrate8,jdbcType=DECIMAL},
+            </if>
+            <if test="coefficient != null" >
+                #{coefficient,jdbcType=DECIMAL},
+            </if>
+            <if test="sectype != null" >
+                #{sectype,jdbcType=VARCHAR},
+            </if>
+            <if test="sectype2 != null" >
+                #{sectype2,jdbcType=VARCHAR},
+            </if>
+            <if test="chbsectype != null" >
+                #{chbsectype,jdbcType=VARCHAR},
+            </if>
+            <if test="chbsectype2 != null" >
+                #{chbsectype2,jdbcType=VARCHAR},
+            </if>
+            <if test="pbocsectype != null" >
+                #{pbocsectype,jdbcType=VARCHAR},
+            </if>
+            <if test="pbocsectype2 != null" >
+                #{pbocsectype2,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="issecbond != null" >
+                #{issecbond,jdbcType=VARCHAR},
+            </if>
+            <if test="issus != null" >
+                #{issus,jdbcType=VARCHAR},
+            </if>
+            <if test="calloption != null" >
+                #{calloption,jdbcType=VARCHAR},
+            </if>
+            <if test="putoption != null" >
+                #{putoption,jdbcType=VARCHAR},
+            </if>
+            <if test="institution != null" >
+                #{institution,jdbcType=VARCHAR},
+            </if>
+            <if test="institutiontext != null" >
+                #{institutiontext,jdbcType=VARCHAR},
+            </if>
+            <if test="markettext != null" >
+                #{markettext,jdbcType=VARCHAR},
+            </if>
+            <if test="market2 != null" >
+                #{market2,jdbcType=CHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=CHAR},
+            </if>
+            <if test="issuetype != null" >
+                #{issuetype,jdbcType=VARCHAR},
+            </if>
+            <if test="blnarea != null" >
+                #{blnarea,jdbcType=VARCHAR},
+            </if>
+            <if test="guarantor != null" >
+                #{guarantor,jdbcType=VARCHAR},
+            </if>
+            <if test="guartype != null" >
+                #{guartype,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="pubenddate != null" >
+                #{pubenddate,jdbcType=DATE},
+            </if>
+            <if test="cityInvestSecChb != null" >
+                #{cityInvestSecChb,jdbcType=VARCHAR},
+            </if>
+            <if test="cityInvestSecProvinces != null" >
+                #{cityInvestSecProvinces,jdbcType=VARCHAR},
+            </if>
+            <if test="cityInvestSecCities != null" >
+                #{cityInvestSecCities,jdbcType=VARCHAR},
+            </if>
+            <if test="cityInvestSecCounty != null" >
+                #{cityInvestSecCounty,jdbcType=VARCHAR},
+            </if>
+            <if test="cityInvestSecWind != null" >
+                #{cityInvestSecWind,jdbcType=VARCHAR},
+            </if>
+            <if test="cityInvestSecCbrc != null" >
+                #{cityInvestSecCbrc,jdbcType=VARCHAR},
+            </if>
+            <if test="assetClass != null" >
+                #{assetClass,jdbcType=VARCHAR},
+            </if>
+            <if test="concreteClass != null" >
+                #{concreteClass,jdbcType=VARCHAR},
+            </if>
+            <if test="concreteClassSm != null" >
+                #{concreteClassSm,jdbcType=VARCHAR},
+            </if>
+            <if test="issuerScaleType != null" >
+                #{issuerScaleType,jdbcType=VARCHAR},
+            </if>
+            <if test="issuerTechnologyType != null" >
+                #{issuerTechnologyType,jdbcType=VARCHAR},
+            </if>
+            <if test="issuerEconomicType != null" >
+                #{issuerEconomicType,jdbcType=VARCHAR},
+            </if>
+            <if test="issuerDesc != null" >
+                #{issuerDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="issuerInstitutions != null" >
+                #{issuerInstitutions,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcsecinfo" >
+        insert into INTERF_PAYHSRCSECINFO(SECID, SOURCE, SECNAME, SECCODE, MARKET, SECFULLNAME, 
+        RATEBASIC, COUPONSPECIES, INTERESTRATE, VDATE, MDATE, PAYCYCLE, FACEVALUE, ISSUEPRICE, 
+        PAPERIR, SCHECALRULE, FIRSTRATEDAY, WORKDAYRULE, ISSUERSHORT, RESETTYPE, OBSERVEBEFDAY, 
+        OBSERVEBEFUNIT, TOPRATE, BOTTOMRATE, ISSUEAMT, RATECODE, SPREADRATE_8, COEFFICIENT, 
+        SECTYPE, SECTYPE2, CHBSECTYPE, CHBSECTYPE2, PBOCSECTYPE, PBOCSECTYPE2, REMARK, ISSECBOND, 
+        ISSUS, CALLOPTION, PUTOPTION, INSTITUTION, INSTITUTIONTEXT, MARKETTEXT, MARKET2, 
+        CCY, ISSUETYPE, BLNAREA, GUARANTOR, GUARTYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME, PUBENDDATE, CITY_INVEST_SEC_CHB, CITY_INVEST_SEC_PROVINCES, 
+        CITY_INVEST_SEC_CITIES, CITY_INVEST_SEC_COUNTY, CITY_INVEST_SEC_WIND, CITY_INVEST_SEC_CBRC, 
+        ASSET_CLASS, CONCRETE_CLASS, CONCRETE_CLASS_SM, ISSUER_SCALE_TYPE, ISSUER_TECHNOLOGY_TYPE, 
+        ISSUER_ECONOMIC_TYPE, ISSUER_DESC, ISSUER_INSTITUTIONS)
+        select SECID, SOURCE, SECNAME, SECCODE, MARKET, SECFULLNAME, 
+            RATEBASIC, COUPONSPECIES, INTERESTRATE, VDATE, MDATE, PAYCYCLE, FACEVALUE, ISSUEPRICE, 
+            PAPERIR, SCHECALRULE, FIRSTRATEDAY, WORKDAYRULE, ISSUERSHORT, RESETTYPE, OBSERVEBEFDAY, 
+            OBSERVEBEFUNIT, TOPRATE, BOTTOMRATE, ISSUEAMT, RATECODE, SPREADRATE_8, COEFFICIENT, 
+            SECTYPE, SECTYPE2, CHBSECTYPE, CHBSECTYPE2, PBOCSECTYPE, PBOCSECTYPE2, REMARK, ISSECBOND, 
+            ISSUS, CALLOPTION, PUTOPTION, INSTITUTION, INSTITUTIONTEXT, MARKETTEXT, MARKET2, 
+            CCY, ISSUETYPE, BLNAREA, GUARANTOR, GUARTYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, PUBENDDATE, CITY_INVEST_SEC_CHB, CITY_INVEST_SEC_PROVINCES, 
+            CITY_INVEST_SEC_CITIES, CITY_INVEST_SEC_COUNTY, CITY_INVEST_SEC_WIND, CITY_INVEST_SEC_CBRC, 
+            ASSET_CLASS, CONCRETE_CLASS, CONCRETE_CLASS_SM, ISSUER_SCALE_TYPE, ISSUER_TECHNOLOGY_TYPE, 
+            ISSUER_ECONOMIC_TYPE, ISSUER_DESC, ISSUER_INSTITUTIONS
+             from INTERF_PAYHSRCSECINFO
+             where 1 = 1 and SECID = #{secid,jdbcType=VARCHAR} and SOURCE = #{source,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcsecinfo" >
+        update INTERF_PAYHSRCSECINFO
+        <set >
+            <if test="secname != null" >
+                SECNAME = #{secname,jdbcType=VARCHAR},
+            </if>
+            <if test="seccode != null" >
+                SECCODE = #{seccode,jdbcType=VARCHAR},
+            </if>
+            <if test="market != null" >
+                MARKET = #{market,jdbcType=CHAR},
+            </if>
+            <if test="secfullname != null" >
+                SECFULLNAME = #{secfullname,jdbcType=VARCHAR},
+            </if>
+            <if test="ratebasic != null" >
+                RATEBASIC = #{ratebasic,jdbcType=VARCHAR},
+            </if>
+            <if test="couponspecies != null" >
+                COUPONSPECIES = #{couponspecies,jdbcType=CHAR},
+            </if>
+            <if test="interestrate != null" >
+                INTERESTRATE = #{interestrate,jdbcType=CHAR},
+            </if>
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                MDATE = #{mdate,jdbcType=DATE},
+            </if>
+            <if test="paycycle != null" >
+                PAYCYCLE = #{paycycle,jdbcType=VARCHAR},
+            </if>
+            <if test="facevalue != null" >
+                FACEVALUE = #{facevalue,jdbcType=DECIMAL},
+            </if>
+            <if test="issueprice != null" >
+                ISSUEPRICE = #{issueprice,jdbcType=DECIMAL},
+            </if>
+            <if test="paperir != null" >
+                PAPERIR = #{paperir,jdbcType=DECIMAL},
+            </if>
+            <if test="schecalrule != null" >
+                SCHECALRULE = #{schecalrule,jdbcType=CHAR},
+            </if>
+            <if test="firstrateday != null" >
+                FIRSTRATEDAY = #{firstrateday,jdbcType=DATE},
+            </if>
+            <if test="workdayrule != null" >
+                WORKDAYRULE = #{workdayrule,jdbcType=CHAR},
+            </if>
+            <if test="issuershort != null" >
+                ISSUERSHORT = #{issuershort,jdbcType=VARCHAR},
+            </if>
+            <if test="resettype != null" >
+                RESETTYPE = #{resettype,jdbcType=VARCHAR},
+            </if>
+            <if test="observebefday != null" >
+                OBSERVEBEFDAY = #{observebefday,jdbcType=DECIMAL},
+            </if>
+            <if test="observebefunit != null" >
+                OBSERVEBEFUNIT = #{observebefunit,jdbcType=VARCHAR},
+            </if>
+            <if test="toprate != null" >
+                TOPRATE = #{toprate,jdbcType=DECIMAL},
+            </if>
+            <if test="bottomrate != null" >
+                BOTTOMRATE = #{bottomrate,jdbcType=DECIMAL},
+            </if>
+            <if test="issueamt != null" >
+                ISSUEAMT = #{issueamt,jdbcType=DECIMAL},
+            </if>
+            <if test="ratecode != null" >
+                RATECODE = #{ratecode,jdbcType=VARCHAR},
+            </if>
+            <if test="spreadrate8 != null" >
+                SPREADRATE_8 = #{spreadrate8,jdbcType=DECIMAL},
+            </if>
+            <if test="coefficient != null" >
+                COEFFICIENT = #{coefficient,jdbcType=DECIMAL},
+            </if>
+            <if test="sectype != null" >
+                SECTYPE = #{sectype,jdbcType=VARCHAR},
+            </if>
+            <if test="sectype2 != null" >
+                SECTYPE2 = #{sectype2,jdbcType=VARCHAR},
+            </if>
+            <if test="chbsectype != null" >
+                CHBSECTYPE = #{chbsectype,jdbcType=VARCHAR},
+            </if>
+            <if test="chbsectype2 != null" >
+                CHBSECTYPE2 = #{chbsectype2,jdbcType=VARCHAR},
+            </if>
+            <if test="pbocsectype != null" >
+                PBOCSECTYPE = #{pbocsectype,jdbcType=VARCHAR},
+            </if>
+            <if test="pbocsectype2 != null" >
+                PBOCSECTYPE2 = #{pbocsectype2,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="issecbond != null" >
+                ISSECBOND = #{issecbond,jdbcType=VARCHAR},
+            </if>
+            <if test="issus != null" >
+                ISSUS = #{issus,jdbcType=VARCHAR},
+            </if>
+            <if test="calloption != null" >
+                CALLOPTION = #{calloption,jdbcType=VARCHAR},
+            </if>
+            <if test="putoption != null" >
+                PUTOPTION = #{putoption,jdbcType=VARCHAR},
+            </if>
+            <if test="institution != null" >
+                INSTITUTION = #{institution,jdbcType=VARCHAR},
+            </if>
+            <if test="institutiontext != null" >
+                INSTITUTIONTEXT = #{institutiontext,jdbcType=VARCHAR},
+            </if>
+            <if test="markettext != null" >
+                MARKETTEXT = #{markettext,jdbcType=VARCHAR},
+            </if>
+            <if test="market2 != null" >
+                MARKET2 = #{market2,jdbcType=CHAR},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=CHAR},
+            </if>
+            <if test="issuetype != null" >
+                ISSUETYPE = #{issuetype,jdbcType=VARCHAR},
+            </if>
+            <if test="blnarea != null" >
+                BLNAREA = #{blnarea,jdbcType=VARCHAR},
+            </if>
+            <if test="guarantor != null" >
+                GUARANTOR = #{guarantor,jdbcType=VARCHAR},
+            </if>
+            <if test="guartype != null" >
+                GUARTYPE = #{guartype,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="pubenddate != null" >
+                PUBENDDATE = #{pubenddate,jdbcType=DATE},
+            </if>
+            <if test="cityInvestSecChb != null" >
+                CITY_INVEST_SEC_CHB = #{cityInvestSecChb,jdbcType=VARCHAR},
+            </if>
+            <if test="cityInvestSecProvinces != null" >
+                CITY_INVEST_SEC_PROVINCES = #{cityInvestSecProvinces,jdbcType=VARCHAR},
+            </if>
+            <if test="cityInvestSecCities != null" >
+                CITY_INVEST_SEC_CITIES = #{cityInvestSecCities,jdbcType=VARCHAR},
+            </if>
+            <if test="cityInvestSecCounty != null" >
+                CITY_INVEST_SEC_COUNTY = #{cityInvestSecCounty,jdbcType=VARCHAR},
+            </if>
+            <if test="cityInvestSecWind != null" >
+                CITY_INVEST_SEC_WIND = #{cityInvestSecWind,jdbcType=VARCHAR},
+            </if>
+            <if test="cityInvestSecCbrc != null" >
+                CITY_INVEST_SEC_CBRC = #{cityInvestSecCbrc,jdbcType=VARCHAR},
+            </if>
+            <if test="assetClass != null" >
+                ASSET_CLASS = #{assetClass,jdbcType=VARCHAR},
+            </if>
+            <if test="concreteClass != null" >
+                CONCRETE_CLASS = #{concreteClass,jdbcType=VARCHAR},
+            </if>
+            <if test="concreteClassSm != null" >
+                CONCRETE_CLASS_SM = #{concreteClassSm,jdbcType=VARCHAR},
+            </if>
+            <if test="issuerScaleType != null" >
+                ISSUER_SCALE_TYPE = #{issuerScaleType,jdbcType=VARCHAR},
+            </if>
+            <if test="issuerTechnologyType != null" >
+                ISSUER_TECHNOLOGY_TYPE = #{issuerTechnologyType,jdbcType=VARCHAR},
+            </if>
+            <if test="issuerEconomicType != null" >
+                ISSUER_ECONOMIC_TYPE = #{issuerEconomicType,jdbcType=VARCHAR},
+            </if>
+            <if test="issuerDesc != null" >
+                ISSUER_DESC = #{issuerDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="issuerInstitutions != null" >
+                ISSUER_INSTITUTIONS = #{issuerInstitutions,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where SECID = #{secid,jdbcType=VARCHAR}
+          and SOURCE = #{source,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcsecinfo" >
+        update INTERF_PAYHSRCSECINFO
+        set SECNAME = #{secname,jdbcType=VARCHAR},
+            SECCODE = #{seccode,jdbcType=VARCHAR},
+            MARKET = #{market,jdbcType=CHAR},
+            SECFULLNAME = #{secfullname,jdbcType=VARCHAR},
+            RATEBASIC = #{ratebasic,jdbcType=VARCHAR},
+            COUPONSPECIES = #{couponspecies,jdbcType=CHAR},
+            INTERESTRATE = #{interestrate,jdbcType=CHAR},
+            VDATE = #{vdate,jdbcType=DATE},
+            MDATE = #{mdate,jdbcType=DATE},
+            PAYCYCLE = #{paycycle,jdbcType=VARCHAR},
+            FACEVALUE = #{facevalue,jdbcType=DECIMAL},
+            ISSUEPRICE = #{issueprice,jdbcType=DECIMAL},
+            PAPERIR = #{paperir,jdbcType=DECIMAL},
+            SCHECALRULE = #{schecalrule,jdbcType=CHAR},
+            FIRSTRATEDAY = #{firstrateday,jdbcType=DATE},
+            WORKDAYRULE = #{workdayrule,jdbcType=CHAR},
+            ISSUERSHORT = #{issuershort,jdbcType=VARCHAR},
+            RESETTYPE = #{resettype,jdbcType=VARCHAR},
+            OBSERVEBEFDAY = #{observebefday,jdbcType=DECIMAL},
+            OBSERVEBEFUNIT = #{observebefunit,jdbcType=VARCHAR},
+            TOPRATE = #{toprate,jdbcType=DECIMAL},
+            BOTTOMRATE = #{bottomrate,jdbcType=DECIMAL},
+            ISSUEAMT = #{issueamt,jdbcType=DECIMAL},
+            RATECODE = #{ratecode,jdbcType=VARCHAR},
+            SPREADRATE_8 = #{spreadrate8,jdbcType=DECIMAL},
+            COEFFICIENT = #{coefficient,jdbcType=DECIMAL},
+            SECTYPE = #{sectype,jdbcType=VARCHAR},
+            SECTYPE2 = #{sectype2,jdbcType=VARCHAR},
+            CHBSECTYPE = #{chbsectype,jdbcType=VARCHAR},
+            CHBSECTYPE2 = #{chbsectype2,jdbcType=VARCHAR},
+            PBOCSECTYPE = #{pbocsectype,jdbcType=VARCHAR},
+            PBOCSECTYPE2 = #{pbocsectype2,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            ISSECBOND = #{issecbond,jdbcType=VARCHAR},
+            ISSUS = #{issus,jdbcType=VARCHAR},
+            CALLOPTION = #{calloption,jdbcType=VARCHAR},
+            PUTOPTION = #{putoption,jdbcType=VARCHAR},
+            INSTITUTION = #{institution,jdbcType=VARCHAR},
+            INSTITUTIONTEXT = #{institutiontext,jdbcType=VARCHAR},
+            MARKETTEXT = #{markettext,jdbcType=VARCHAR},
+            MARKET2 = #{market2,jdbcType=CHAR},
+            CCY = #{ccy,jdbcType=CHAR},
+            ISSUETYPE = #{issuetype,jdbcType=VARCHAR},
+            BLNAREA = #{blnarea,jdbcType=VARCHAR},
+            GUARANTOR = #{guarantor,jdbcType=VARCHAR},
+            GUARTYPE = #{guartype,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            PUBENDDATE = #{pubenddate,jdbcType=DATE},
+            CITY_INVEST_SEC_CHB = #{cityInvestSecChb,jdbcType=VARCHAR},
+            CITY_INVEST_SEC_PROVINCES = #{cityInvestSecProvinces,jdbcType=VARCHAR},
+            CITY_INVEST_SEC_CITIES = #{cityInvestSecCities,jdbcType=VARCHAR},
+            CITY_INVEST_SEC_COUNTY = #{cityInvestSecCounty,jdbcType=VARCHAR},
+            CITY_INVEST_SEC_WIND = #{cityInvestSecWind,jdbcType=VARCHAR},
+            CITY_INVEST_SEC_CBRC = #{cityInvestSecCbrc,jdbcType=VARCHAR},
+            ASSET_CLASS = #{assetClass,jdbcType=VARCHAR},
+            CONCRETE_CLASS = #{concreteClass,jdbcType=VARCHAR},
+            CONCRETE_CLASS_SM = #{concreteClassSm,jdbcType=VARCHAR},
+            ISSUER_SCALE_TYPE = #{issuerScaleType,jdbcType=VARCHAR},
+            ISSUER_TECHNOLOGY_TYPE = #{issuerTechnologyType,jdbcType=VARCHAR},
+            ISSUER_ECONOMIC_TYPE = #{issuerEconomicType,jdbcType=VARCHAR},
+            ISSUER_DESC = #{issuerDesc,jdbcType=VARCHAR},
+            ISSUER_INSTITUTIONS = #{issuerInstitutions,jdbcType=VARCHAR}
+        where SECID = #{secid,jdbcType=VARCHAR}
+          and SOURCE = #{source,jdbcType=VARCHAR}
+    </update>
+</mapper>

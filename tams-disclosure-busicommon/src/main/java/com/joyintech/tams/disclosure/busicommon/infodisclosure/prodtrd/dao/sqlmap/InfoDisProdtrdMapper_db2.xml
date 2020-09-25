@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.infodisclosure.prodtrd.dao.InfoDisProdtrdMapper_db2" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.disclosure.busicommon.infodisclosure.prodtrd.entity.InfoDisProdtrdEntity" >
+        <result column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="CONFIRM_DATE" property="confirmDate" jdbcType="DATE" />
+        <result column="SUB_AMT" property="subAmt" jdbcType="DECIMAL" />
+        <result column="RED_AMT" property="redAmt" jdbcType="DECIMAL" />
+        <result column="BONUS_AMT" property="bonusAmt" jdbcType="DECIMAL" />
+        <result column="CAPITAL" property="capital" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="INPUT_USER" property="inputUser" jdbcType="VARCHAR" />
+        <result column="ADAPTER_ID" property="adapterId" jdbcType="VARCHAR" />
+        <result column="FPROD_ID" property="fprodId" jdbcType="VARCHAR" />
+        <result column="SUB_TRADE_PRINCE" property="subTradePrince" jdbcType="DECIMAL" />
+        <result column="RED_TRADE_PRINCE" property="redTradePrince" jdbcType="DECIMAL" />
+        <result column="RED_INT_AMT" property="redIntAmt" jdbcType="DECIMAL" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.disclosure.busicommon.infodisclosure.prodtrd.entity.InfoDisProdtrdEntity" >
+        insert into REP_PRODTRD (SEQ_NO, PROD_ID, CONFIRM_DATE, 
+            SUB_AMT, RED_AMT, BONUS_AMT, 
+            CAPITAL, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            INPUT_TYPE, INPUT_USER, ADAPTER_ID, FPROD_ID, SUB_TRADE_PRINCE, RED_TRADE_PRINCE, RED_INT_AMT
+            )
+        values (#{seqNo,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{confirmDate,jdbcType=DATE}, 
+            #{subAmt,jdbcType=DECIMAL}, #{redAmt,jdbcType=DECIMAL}, #{bonusAmt,jdbcType=DECIMAL}, 
+            #{capital,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{inputType,jdbcType=VARCHAR}, #{inputUser,jdbcType=VARCHAR}, #{adapterId,jdbcType=VARCHAR}, 
+            #{fprodId,jdbcType=VARCHAR}, #{subTradePrince,jdbcType=DECIMAL}, #{redTradePrince,jdbcType=DECIMAL}, #{redIntAmt,jdbcType=DECIMAL}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.disclosure.busicommon.infodisclosure.prodtrd.entity.InfoDisProdtrdEntity" >
+        insert into REP_PRODTRD
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="confirmDate != null" >
+                CONFIRM_DATE,
+            </if>
+            <if test="subAmt != null" >
+                SUB_AMT,
+            </if>
+            <if test="redAmt != null" >
+                RED_AMT,
+            </if>
+            <if test="bonusAmt != null" >
+                BONUS_AMT,
+            </if>
+            <if test="capital != null" >
+                CAPITAL,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="inputType != null" >
+                INPUT_TYPE,
+            </if>
+            <if test="inputUser != null" >
+                INPUT_USER,
+            </if>
+            <if test="adapterId != null" >
+                ADAPTER_ID,
+            </if>
+            <if test="fprodId != null" >
+                FPROD_ID,
+            </if>
+            <if test="subTradePrince != null" >
+                SUB_TRADE_PRINCE,
+            </if>
+            <if test="redTradePrince != null" >
+                RED_TRADE_PRINCE,
+            </if>
+            <if test="redIntAmt != null" >
+                RED_INT_AMT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="confirmDate != null" >
+                #{confirmDate,jdbcType=DATE},
+            </if>
+            <if test="subAmt != null" >
+                #{subAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="redAmt != null" >
+                #{redAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="bonusAmt != null" >
+                #{bonusAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="capital != null" >
+                #{capital,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="inputType != null" >
+                #{inputType,jdbcType=VARCHAR},
+            </if>
+            <if test="inputUser != null" >
+                #{inputUser,jdbcType=VARCHAR},
+            </if>
+            <if test="adapterId != null" >
+                #{adapterId,jdbcType=VARCHAR},
+            </if>
+            <if test="fprodId != null" >
+                #{fprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="subTradePrince != null" >
+                #{subTradePrince,jdbcType=DECIMAL},
+            </if>
+            <if test="redTradePrince != null" >
+                #{redTradePrince,jdbcType=DECIMAL},
+            </if>
+            <if test="redIntAmt != null" >
+                #{redIntAmt,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.disclosure.busicommon.infodisclosure.prodtrd.entity.InfoDisProdtrdEntity" >
+        insert into REP_PRODTRD(SEQ_NO, PROD_ID, CONFIRM_DATE, SUB_AMT, RED_AMT, BONUS_AMT, 
+        CAPITAL, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INPUT_TYPE, 
+        INPUT_USER, ADAPTER_ID, FPROD_ID, SUB_TRADE_PRINCE, RED_TRADE_PRINCE, RED_INT_AMT)
+        select SEQ_NO, PROD_ID, CONFIRM_DATE, SUB_AMT, RED_AMT, BONUS_AMT, 
+            CAPITAL, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, INPUT_TYPE, 
+            INPUT_USER, ADAPTER_ID, FPROD_ID, SUB_TRADE_PRINCE, RED_TRADE_PRINCE, RED_INT_AMT 
+             from REP_PRODTRD
+             where 1 = 1
+    </insert>
+    
+    <select id="selectChbPrdDealInfoByUpdateTime"
+    	resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.prodtrd.entity.InfoDisProdtrdEntity" >
+    	SELECT
+		  A.prod_id prodId,
+		  A.SETTDATE_DATE confirmDate,
+		  A.FPROD_ID fprodId,
+		  SUM(A.SUB_AMT) subAmt,
+		  SUM(A.RED_AMT) redAmt,
+		  SUM(A.BONUS_AMT) bonusAmt,
+		  SUM(A.SUB_TRADE_PRINCE) subTradePrince,
+		  SUM(A.RED_TRADE_PRINCE) redTradePrince,
+		  SUM(A.RED_INT_AMT) redIntAmt
+		FROM
+		  (
+		  	/*update_time和settdate_date都等于跑批日期的数据统计 start*/
+		    SELECT
+		      DECODE(cpd.prod_id,NULL,cpd.fprod_id,cpd.prod_id) prod_id,
+		      cpd.SETTDATE_DATE,
+		      cpd.FPROD_ID,
+		      CASE
+		        WHEN cpd.trade_type IN ('01','02') THEN cpd.TRADE_QTY ELSE 0
+		      END SUB_AMT,
+		      CASE
+		        WHEN cpd.trade_type IN ('03','17') THEN cpd.TRADE_QTY ELSE 0
+		      END RED_AMT,
+		      CASE
+		        WHEN cpd.trade_type IN ('05') THEN cpd.TRADE_QTY ELSE 0
+		      END BONUS_AMT,
+		      CASE
+		        WHEN cpd.trade_type IN ('01','02') THEN DECODE(cpd.status,'D',-1,1)*cpd.TRADE_PRINCE ELSE 0
+		      END SUB_TRADE_PRINCE,
+		      CASE
+		        WHEN cpd.trade_type IN ('03','17') THEN DECODE(cpd.status,'D',-1,1)*cpd.TRADE_PRINCE ELSE 0
+		      END RED_TRADE_PRINCE,
+		      CASE
+		        WHEN cpd.trade_type IN ('03','17') THEN DECODE(cpd.status,'D',-1,1)*cpd.INT_AMT ELSE 0
+		      END RED_INT_AMT
+		    FROM
+		      CHB_PRD_DEAL cpd
+		    WHERE
+		      1=1
+		    AND cpd.trade_type IN ('01','02','03','05','17')
+		    AND TO_CHAR(cpd.update_time,'yyyy-mm-dd') = #{executeDateStr,jdbcType=VARCHAR}
+		    AND TO_CHAR(cpd.SETTDATE_DATE,'yyyy-mm-dd') = #{executeDateStr,jdbcType=VARCHAR}
+		    AND cpd.status = 'E'
+		    /*update_time和settdate_date都等于跑批日期的数据统计 end*/
+		    /*update_time等于跑批日期、但settdate_date不等于跑批日期都的数据统计 start*/
+		    UNION ALL
+		    SELECT
+		      DECODE(prod_id,NULL,fprod_id,prod_id) prod_id,
+		      L.SETTDATE_DATE,
+		      L.FPROD_ID,
+		      CASE
+		        WHEN L.trade_type IN ('01','02') THEN DECODE(L.status,'D',-1,1)*L.TRADE_QTY ELSE 0
+		      END SUB_AMT,
+		      CASE
+		        WHEN L.trade_type IN ('03','17') THEN DECODE(L.status,'D',-1,1)*L.TRADE_QTY ELSE 0
+		      END RED_AMT,
+		      CASE
+		        WHEN L.trade_type IN ('05') THEN DECODE(L.status,'D',-1,1)*L.TRADE_QTY ELSE 0
+		      END BONUS_AMT,
+		      CASE
+		        WHEN L.trade_type IN ('01','02') THEN DECODE(L.status,'D',-1,1)*L.TRADE_PRINCE ELSE 0
+		      END SUB_TRADE_PRINCE,
+		      CASE
+		        WHEN L.trade_type IN ('03','17') THEN DECODE(L.status,'D',-1,1)*L.TRADE_PRINCE ELSE 0
+		      END RED_TRADE_PRINCE,
+		      CASE
+		        WHEN L.trade_type IN ('03','17') THEN DECODE(L.status,'D',-1,1)*L.INT_AMT ELSE 0
+		      END RED_INT_AMT
+		    FROM
+		      CHB_PRD_DEAL L
+		    WHERE
+		      1=1
+		    AND L.trade_type IN ('01','02','03','05','17')
+		    /*AND L.status = 'E'*/
+		    AND EXISTS
+		      (
+		        SELECT
+		          1
+		        FROM
+		          CHB_PRD_DEAL S
+		        WHERE
+		          TO_CHAR(S.update_time,'yyyy-mm-dd') = #{executeDateStr,jdbcType=VARCHAR}
+		        AND TO_CHAR(S.SETTDATE_DATE,'yyyy-mm-dd') != #{executeDateStr,jdbcType=VARCHAR}
+		        AND to_char(S.CREATE_TIME,'yyyy-mm-dd') != #{executeDateStr,jdbcType=VARCHAR}
+		        /*AND DECODE(S.prod_id,NULL,S.fprod_id,S.prod_id) = DECODE(L.prod_id,NULL,L.fprod_id,L.prod_id)*/
+		        AND S.PROD_ID=L.PROD_ID
+		        AND TO_CHAR(S.SETTDATE_DATE,'yyyy-mm-dd') = TO_CHAR(L.SETTDATE_DATE,'yyyy-mm-dd')
+		      )
+		      /*update_time等于跑批日期、但settdate_date不等于跑批日期都的数据统计 end*/
+		  )A
+		GROUP BY
+		  A.prod_id,
+		  A.SETTDATE_DATE,
+		  A.FPROD_ID
+		  
+    </select>
+    
+    <select id="selectRepProdTrdByConfirmDateAndProdId"
+    	resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.prodtrd.entity.InfoDisProdtrdEntity" >
+    	SELECT
+    		SEQ_NO seqNo,
+			SUB_AMT subAmt,
+			RED_AMT redAmt,
+			BONUS_AMT bonusAmt,
+			CAPITAL capital
+		FROM rep_prodtrd
+		WHERE prod_id = #{prodId,jdbcType=VARCHAR}
+		AND CONFIRM_DATE = #{confirmDate,jdbcType=DATE}
+    </select>
+    
+    <select id="selectProdIndexByProdIdAndValueDate"
+    	resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.prodtrd.entity.InfoDisProdtrdEntity">
+    	SELECT 
+    		CAPITAL  capital<!-- 实收资本 -->
+    	FROM rep_prod_index
+		WHERE prod_id = #{prodId,jdbcType=VARCHAR}
+		AND value_date = #{confirmDate,jdbcType=DATE}
+		AND status = 'E'
+    </select>
+    
+    <update id="mergeProdtrdList">
+    	MERGE INTO REP_PRODTRD RP
+		USING (
+			<foreach collection="list" item="item" open="select * from("
+				close=")" separator="union all">
+				SELECT 
+					'${item.seqNo}' SEQ_NO,<!--流水号-->
+					'${item.prodId}' PROD_ID,<!--产品代码-->
+					<choose><when test="item.confirmDate != null">#{item.confirmDate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> CONFIRM_DATE,<!--确认日-->
+					<choose><when test="item.subAmt != null">${item.subAmt}</when><otherwise>null</otherwise></choose> SUB_AMT,<!--申购份额-->
+					<choose><when test="item.redAmt != null">${item.redAmt}</when><otherwise>null</otherwise></choose> RED_AMT,<!--赎回份额-->
+					<choose><when test="item.bonusAmt != null">${item.bonusAmt}</when><otherwise>null</otherwise></choose> BONUS_AMT,<!--红利再投结转份额-->
+					<choose><when test="item.capital != null">${item.capital}</when><otherwise>null</otherwise></choose> CAPITAL,<!--产品份额-->
+					'${item.createUser}' CREATE_USER,<!--创建人-->
+					'${item.createDept}' CREATE_DEPT,<!--创建部门-->
+					<choose><when test="item.createTime != null">#{item.createTime,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose> CREATE_TIME,<!--创建时间-->
+					'${item.updateUser}' UPDATE_USER,<!--更新人-->
+					<choose><when test="item.updateTime != null">#{item.updateTime,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose> UPDATE_TIME,<!--更新时间-->
+					'${item.inputType}' INPUT_TYPE,<!--导入方法-->
+					'${item.inputUser}' INPUT_USER,<!--导入用户-->
+					'${item.adapterId}' ADAPTER_ID,<!--适配器ID-->
+					'${item.fprodId}' FPROD_ID,<!--父产品代码-->
+					<choose><when test="item.subTradePrince != null">${item.subTradePrince}</when><otherwise>null</otherwise></choose> SUB_TRADE_PRINCE,<!--申购金额-->
+					<choose><when test="item.redTradePrince != null">${item.redTradePrince}</when><otherwise>null</otherwise></choose> RED_TRADE_PRINCE,<!--赎回金额-->
+					<choose><when test="item.redIntAmt != null">${item.redIntAmt}</when><otherwise>null</otherwise></choose> RED_INT_AMT<!--赎回利息-->
+				FROM
+					sysibm.SYSDUMMY1
+			</foreach>
+		) TEMP
+		<!-- 业务主键匹配 -->
+		ON(
+			RP.PROD_ID = TEMP.PROD_ID AND RP.CONFIRM_DATE = TEMP.CONFIRM_DATE
+		)
+		<!-- 匹配到则更新  start-->
+		WHEN MATCHED THEN 
+			UPDATE SET 
+				<!--RP.SEQ_NO= TEMP.SEQ_NO,流水号-->
+				<!--RP.PROD_ID= TEMP.PROD_ID,产品代码-->
+				<!--RP.CONFIRM_DATE= TEMP.CONFIRM_DATE,确认日-->
+				RP.SUB_AMT= TEMP.SUB_AMT+RP.SUB_AMT,<!--申购份额-->
+				RP.RED_AMT= TEMP.RED_AMT+RP.RED_AMT,<!--赎回份额-->
+				RP.BONUS_AMT= TEMP.BONUS_AMT+RP.BONUS_AMT,<!--红利再投结转份额-->
+				RP.CAPITAL= TEMP.CAPITAL+RP.CAPITAL,<!--产品份额-->
+				RP.CREATE_USER= TEMP.CREATE_USER,<!--创建人-->
+				RP.CREATE_DEPT= TEMP.CREATE_DEPT,<!--创建部门-->
+				RP.CREATE_TIME= TEMP.CREATE_TIME,<!--创建时间-->
+				RP.UPDATE_USER= TEMP.UPDATE_USER,<!--更新人-->
+				RP.UPDATE_TIME= TEMP.UPDATE_TIME,<!--更新时间-->
+				RP.INPUT_TYPE= TEMP.INPUT_TYPE,<!--导入方法-->
+				RP.INPUT_USER= TEMP.INPUT_USER,<!--导入用户-->
+				RP.ADAPTER_ID= TEMP.ADAPTER_ID,<!--适配器ID-->
+				RP.SUB_TRADE_PRINCE= TEMP.SUB_TRADE_PRINCE+RP.SUB_TRADE_PRINCE,<!--申购金额-->
+				RP.RED_TRADE_PRINCE= TEMP.RED_TRADE_PRINCE+RP.RED_TRADE_PRINCE,<!--赎回金额-->
+				RP.RED_INT_AMT= TEMP.RED_INT_AMT+RP.RED_INT_AMT<!--赎回利息-->
+		<!-- 匹配到则更新  end-->
+		<!-- 不匹配到则插入  start-->
+		WHEN NOT MATCHED THEN
+            INSERT
+            (
+				SEQ_NO,<!--流水号-->
+				PROD_ID,<!--产品代码-->
+				CONFIRM_DATE,<!--确认日-->
+				SUB_AMT,<!--申购份额-->
+				RED_AMT,<!--赎回份额-->
+				BONUS_AMT,<!--红利再投结转份额-->
+				CAPITAL,<!--产品份额-->
+				CREATE_USER,<!--创建人-->
+				CREATE_DEPT,<!--创建部门-->
+				CREATE_TIME,<!--创建时间-->
+				UPDATE_USER,<!--更新人-->
+				UPDATE_TIME,<!--更新时间-->
+				INPUT_TYPE,<!--导入方法-->
+				INPUT_USER,<!--导入用户-->
+				ADAPTER_ID,<!--适配器ID-->
+				FPROD_ID,<!--父产品代码-->
+				SUB_TRADE_PRINCE,<!--申购金额-->
+				RED_TRADE_PRINCE,<!--赎回金额-->
+				RED_INT_AMT<!--赎回利息-->
+			)
+            VALUES
+           (
+				TEMP.SEQ_NO,<!--流水号-->
+				TEMP.PROD_ID,<!--产品代码-->
+				TEMP.CONFIRM_DATE,<!--确认日-->
+				TEMP.SUB_AMT,<!--申购份额-->
+				TEMP.RED_AMT,<!--赎回份额-->
+				TEMP.BONUS_AMT,<!--红利再投结转份额-->
+				TEMP.CAPITAL,<!--产品份额-->
+				TEMP.CREATE_USER,<!--创建人-->
+				TEMP.CREATE_DEPT,<!--创建部门-->
+				TEMP.CREATE_TIME,<!--创建时间-->
+				TEMP.UPDATE_USER,<!--更新人-->
+				TEMP.UPDATE_TIME,<!--更新时间-->
+				TEMP.INPUT_TYPE,<!--导入方法-->
+				TEMP.INPUT_USER,<!--导入用户-->
+				TEMP.ADAPTER_ID,<!--适配器ID-->
+				TEMP.FPROD_ID,<!--父产品代码-->
+				TEMP.SUB_TRADE_PRINCE,<!--申购金额-->
+				TEMP.RED_TRADE_PRINCE,<!--赎回金额-->
+				TEMP.RED_INT_AMT<!--赎回利息-->
+			) 
+		<!-- 不匹配到则插入  end-->
+    </update>
+</mapper>

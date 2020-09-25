@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbAssetsBasisDataMapper_mysql">
+	<insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbAssetsBasisData" >
+    insert into CHB_ASSETS_BASIS_DATA (VAL_ID, PROD_ID, ASSET_ID,CCY, 
+      VALUE_DATE, MDATE, POS_AMT, 
+      TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, 
+      DELAY_PAY_AMT, REMARK, CREATE_TIME, 
+      UPDATE_TIME, CREATE_DEPT, ORG_CODE, 
+      DEPT_CODE, CREATE_USER, UPDATE_USER, 
+      STATUS, DATA_SOURCE, MD5PRIMARYKEY
+      )
+    values (#{valId,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{assetId,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR},
+      #{valueDate,jdbcType=TIMESTAMP}, #{mdate,jdbcType=TIMESTAMP}, #{posAmt,jdbcType=DECIMAL}, 
+      #{tdyCostAmt,jdbcType=DECIMAL}, #{tdyFloatIngpl,jdbcType=DECIMAL}, #{tdyIntincexp,jdbcType=DECIMAL}, 
+      #{delayPayAmt,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, NOW(), 
+      NOW(), #{createDept,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
+      #{deptCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, #{md5primarykey,jdbcType=CHAR}
+      )
+  </insert>
+	<insert id="insertNoBtm" parameterType="com.joyintech.tams.common.base.entity.ChbAssetsBasisData" >
+    insert into CHB_ASSETS_BASIS_DATA_NOBTM (VAL_ID, PROD_ID, ASSET_ID,CCY, 
+      VALUE_DATE, MDATE, POS_AMT, 
+      TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, 
+      DELAY_PAY_AMT, REMARK, CREATE_TIME, 
+      UPDATE_TIME, CREATE_DEPT, ORG_CODE, 
+      DEPT_CODE, CREATE_USER, UPDATE_USER, 
+      STATUS, DATA_SOURCE, MD5PRIMARYKEY
+      )
+    values (#{valId,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{assetId,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR},
+      #{valueDate,jdbcType=TIMESTAMP}, #{mdate,jdbcType=TIMESTAMP}, #{posAmt,jdbcType=DECIMAL}, 
+      #{tdyCostAmt,jdbcType=DECIMAL}, #{tdyFloatIngpl,jdbcType=DECIMAL}, #{tdyIntincexp,jdbcType=DECIMAL}, 
+      #{delayPayAmt,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, NOW(), 
+      NOW(), #{createDept,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
+      #{deptCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, #{md5primarykey,jdbcType=CHAR}
+      )
+  </insert>
+</mapper>

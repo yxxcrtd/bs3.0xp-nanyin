@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepProdIndexMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepProdIndex" >
+        <result column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="VALUE_DATE" property="valueDate" jdbcType="DATE" />
+        <result column="CAPITAL" property="capital" jdbcType="DECIMAL" />
+        <result column="PROFIT_NO" property="profitNo" jdbcType="DECIMAL" />
+        <result column="PROFIT_YES" property="profitYes" jdbcType="DECIMAL" />
+        <result column="ASSET_TOTAL_COST" property="assetTotalCost" jdbcType="DECIMAL" />
+        <result column="ASSET_TOTAL_MARKET" property="assetTotalMarket" jdbcType="DECIMAL" />
+        <result column="DEBT_TOTAL" property="debtTotal" jdbcType="DECIMAL" />
+        <result column="ASSET_VALUE_COST" property="assetValueCost" jdbcType="DECIMAL" />
+        <result column="ASSET_VALUE_MARKET" property="assetValueMarket" jdbcType="DECIMAL" />
+        <result column="UNIT_VALUE" property="unitValue" jdbcType="DECIMAL" />
+        <result column="UNIT_VALUE_T" property="unitValueT" jdbcType="DECIMAL" />
+        <result column="UNIT_VALUE_Y" property="unitValueY" jdbcType="DECIMAL" />
+        <result column="ASSETS_VALUE" property="assetsValue" jdbcType="DECIMAL" />
+        <result column="DEVIATION_AMT" property="deviationAmt" jdbcType="DECIMAL" />
+        <result column="DEVIATION" property="deviation" jdbcType="DECIMAL" />
+        <result column="PROFIT_TDY" property="profitTdy" jdbcType="DECIMAL" />
+        <result column="PROFIT_TOTAL" property="profitTotal" jdbcType="DECIMAL" />
+        <result column="W_YIELD" property="wYield" jdbcType="DECIMAL" />
+        <result column="W_YIELD_YEAR" property="wYieldYear" jdbcType="DECIMAL" />
+        <result column="W_YIELD_TOTAL" property="wYieldTotal" jdbcType="DECIMAL" />
+        <result column="YIELD_TDY" property="yieldTdy" jdbcType="DECIMAL" />
+        <result column="YIELD_7" property="yield7" jdbcType="DECIMAL" />
+        <result column="YIELD_TOTAL" property="yieldTotal" jdbcType="DECIMAL" />
+        <result column="YIELD_E" property="yieldE" jdbcType="DECIMAL" />
+        <result column="YIELD_E_MAX" property="yieldEMax" jdbcType="DECIMAL" />
+        <result column="SURPLUS_TERM" property="surplusTerm" jdbcType="DECIMAL" />
+        <result column="AVERAGE_MDATE" property="averageMdate" jdbcType="DECIMAL" />
+        <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="INPUT_USER" property="inputUser" jdbcType="VARCHAR" />
+        <result column="ADAPTER_ID" property="adapterId" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="PRD_UNIT_VALUE" property="prdUnitValue" jdbcType="DECIMAL" />
+        <result column="MANAGE_YIELD" property="manageYield" jdbcType="DECIMAL" />
+        <result column="PROD_SHARE" property="prodShare" jdbcType="DECIMAL" />
+        <result column="YIELD_MONTH" property="yieldMonth" jdbcType="DECIMAL" />
+        <result column="NET_VALUE" property="netValue" jdbcType="DECIMAL" />
+        <result column="ISSUE_TYPE_Z" property="issueTypeZ" jdbcType="VARCHAR" />
+        <result column="ADDSURPLUS_TERM" property="addsurplusTerm" jdbcType="DECIMAL" />
+        <result column="PROFIT_CURRENT_YES" property="profitCurrentYes" jdbcType="DECIMAL" />
+        <result column="PROFIT_CURRENT_NO" property="profitCurrentNo" jdbcType="DECIMAL" />
+        <result column="PROFIT_CURRENT" property="profitCurrent" jdbcType="DECIMAL" />
+        <result column="PROFIT_TDY_ABLE" property="profitTdyAble" jdbcType="DECIMAL" />
+        <result column="PROD_PROFIT_TDY_ABLE" property="prodProfitTdyAble" jdbcType="DECIMAL" />
+        <result column="NETVALUE_TDY_YIELD" property="netvalueTdyYield" jdbcType="DECIMAL" />
+        <result column="NETVALUE_TOTAL_YIELD" property="netvalueTotalYield" jdbcType="DECIMAL" />
+        <result column="NETVALUE_TDY_INCRE" property="netvalueTdyIncre" jdbcType="DECIMAL" />
+        <result column="NETVALUE_TOTAL_INCRE" property="netvalueTotalIncre" jdbcType="DECIMAL" />
+        <result column="AVG_SURPLUS_TIME" property="avgSurplusTime" jdbcType="DECIMAL" />
+        <result column="FLOAT_BASE_RATE" property="floatBaseRate" jdbcType="DECIMAL" />
+        <result column="BOUNUS_VALUE" property="bounusValue" jdbcType="DECIMAL" />
+        <result column="ISSUE_TYPE" property="issueType" jdbcType="VARCHAR" />
+        <result column="RATE_TYPE" property="rateType" jdbcType="VARCHAR" />
+        <result column="RATE_BENCHMARK" property="rateBenchmark" jdbcType="DECIMAL" />
+        <result column="RATE_ADJ" property="rateAdj" jdbcType="DECIMAL" />
+        <result column="CASH_FORM_GRANT_TOTAL" property="cashFormGrantTotal" jdbcType="DECIMAL" />
+        <result column="REINVEST_FORM_GRANT_TOTAL" property="reinvestFormGrantTotal" jdbcType="DECIMAL" />
+        <result column="REDEMPTION_TURNOUT_AMT" property="redemptionTurnoutAmt" jdbcType="DECIMAL" />
+        <result column="PROFIT_THISYEAR_CHANGE" property="profitThisyearChange" jdbcType="DECIMAL" />
+        <result column="HUGE_REDEEM_THRESHOLD" property="hugeRedeemThreshold" jdbcType="DECIMAL" />
+        <result column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <result column="REINVEST_FORM_GRANT_TDY" property="reinvestFormGrantTdy" jdbcType="DECIMAL" />
+        <result column="CASH_FORM_GRANT_TDY" property="cashFormGrantTdy" jdbcType="DECIMAL" />
+        <result column="REDEM_INTAMT_TDY" property="redemIntamtTdy" jdbcType="DECIMAL" />
+        <result column="BENCHMARK_INFO" property="benchmarkInfo" jdbcType="VARCHAR" />
+        <result column="FLOAT_TOTAL_RATE" property="floatTotalRate" jdbcType="DECIMAL" />
+        <result column="PROFIT_CHANGE_TDY" property="profitChangeTdy" jdbcType="DECIMAL" />
+        <result column="ASSET_VALUE_COST_FQ" property="assetValueCostFq" jdbcType="DECIMAL" />
+        <result column="ASSET_VALUE_MARKET_FQ" property="assetValueMarketFq" jdbcType="DECIMAL" />
+        <result column="UNIT_VALUE_FQ" property="unitValueFq" jdbcType="DECIMAL" />
+        <result column="PROFIT_TDY_FQ" property="profitTdyFq" jdbcType="DECIMAL" />
+        <result column="W_YIELD_FQ" property="wYieldFq" jdbcType="DECIMAL" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepProdIndex" >
+        insert into REP_PROD_INDEX (SEQ_NO, PROD_ID, VALUE_DATE, 
+            CAPITAL, PROFIT_NO, PROFIT_YES, 
+            ASSET_TOTAL_COST, ASSET_TOTAL_MARKET, DEBT_TOTAL, 
+            ASSET_VALUE_COST, ASSET_VALUE_MARKET, UNIT_VALUE, 
+            UNIT_VALUE_T, UNIT_VALUE_Y, ASSETS_VALUE, 
+            DEVIATION_AMT, DEVIATION, PROFIT_TDY, 
+            PROFIT_TOTAL, W_YIELD, W_YIELD_YEAR, 
+            W_YIELD_TOTAL, YIELD_TDY, YIELD_7, 
+            YIELD_TOTAL, YIELD_E, YIELD_E_MAX, 
+            SURPLUS_TERM, AVERAGE_MDATE, INPUT_TYPE, 
+            INPUT_USER, ADAPTER_ID, STATUS, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, PRD_UNIT_VALUE, 
+            MANAGE_YIELD, PROD_SHARE, YIELD_MONTH, 
+            NET_VALUE, ISSUE_TYPE_Z, ADDSURPLUS_TERM, 
+            PROFIT_CURRENT_YES, PROFIT_CURRENT_NO, PROFIT_CURRENT, 
+            PROFIT_TDY_ABLE, PROD_PROFIT_TDY_ABLE, NETVALUE_TDY_YIELD, 
+            NETVALUE_TOTAL_YIELD, NETVALUE_TDY_INCRE, 
+            NETVALUE_TOTAL_INCRE, AVG_SURPLUS_TIME, FLOAT_BASE_RATE, 
+            BOUNUS_VALUE, ISSUE_TYPE, RATE_TYPE, 
+            RATE_BENCHMARK, RATE_ADJ, CASH_FORM_GRANT_TOTAL, 
+            REINVEST_FORM_GRANT_TOTAL, REDEMPTION_TURNOUT_AMT, 
+            PROFIT_THISYEAR_CHANGE, HUGE_REDEEM_THRESHOLD, 
+            BOOKSET_ID, REINVEST_FORM_GRANT_TDY, CASH_FORM_GRANT_TDY, 
+            REDEM_INTAMT_TDY, BENCHMARK_INFO, FLOAT_TOTAL_RATE, 
+            PROFIT_CHANGE_TDY, ASSET_VALUE_COST_FQ, ASSET_VALUE_MARKET_FQ, 
+            UNIT_VALUE_FQ, PROFIT_TDY_FQ, W_YIELD_FQ
+            )
+        values (#{seqNo,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{valueDate,jdbcType=DATE}, 
+            #{capital,jdbcType=DECIMAL}, #{profitNo,jdbcType=DECIMAL}, #{profitYes,jdbcType=DECIMAL}, 
+            #{assetTotalCost,jdbcType=DECIMAL}, #{assetTotalMarket,jdbcType=DECIMAL}, #{debtTotal,jdbcType=DECIMAL}, 
+            #{assetValueCost,jdbcType=DECIMAL}, #{assetValueMarket,jdbcType=DECIMAL}, #{unitValue,jdbcType=DECIMAL}, 
+            #{unitValueT,jdbcType=DECIMAL}, #{unitValueY,jdbcType=DECIMAL}, #{assetsValue,jdbcType=DECIMAL}, 
+            #{deviationAmt,jdbcType=DECIMAL}, #{deviation,jdbcType=DECIMAL}, #{profitTdy,jdbcType=DECIMAL}, 
+            #{profitTotal,jdbcType=DECIMAL}, #{wYield,jdbcType=DECIMAL}, #{wYieldYear,jdbcType=DECIMAL}, 
+            #{wYieldTotal,jdbcType=DECIMAL}, #{yieldTdy,jdbcType=DECIMAL}, #{yield7,jdbcType=DECIMAL}, 
+            #{yieldTotal,jdbcType=DECIMAL}, #{yieldE,jdbcType=DECIMAL}, #{yieldEMax,jdbcType=DECIMAL}, 
+            #{surplusTerm,jdbcType=DECIMAL}, #{averageMdate,jdbcType=DECIMAL}, #{inputType,jdbcType=VARCHAR}, 
+            #{inputUser,jdbcType=VARCHAR}, #{adapterId,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{prdUnitValue,jdbcType=DECIMAL}, 
+            #{manageYield,jdbcType=DECIMAL}, #{prodShare,jdbcType=DECIMAL}, #{yieldMonth,jdbcType=DECIMAL}, 
+            #{netValue,jdbcType=DECIMAL}, #{issueTypeZ,jdbcType=VARCHAR}, #{addsurplusTerm,jdbcType=DECIMAL}, 
+            #{profitCurrentYes,jdbcType=DECIMAL}, #{profitCurrentNo,jdbcType=DECIMAL}, #{profitCurrent,jdbcType=DECIMAL}, 
+            #{profitTdyAble,jdbcType=DECIMAL}, #{prodProfitTdyAble,jdbcType=DECIMAL}, #{netvalueTdyYield,jdbcType=DECIMAL}, 
+            #{netvalueTotalYield,jdbcType=DECIMAL}, #{netvalueTdyIncre,jdbcType=DECIMAL}, 
+            #{netvalueTotalIncre,jdbcType=DECIMAL}, #{avgSurplusTime,jdbcType=DECIMAL}, #{floatBaseRate,jdbcType=DECIMAL}, 
+            #{bounusValue,jdbcType=DECIMAL}, #{issueType,jdbcType=VARCHAR}, #{rateType,jdbcType=VARCHAR}, 
+            #{rateBenchmark,jdbcType=DECIMAL}, #{rateAdj,jdbcType=DECIMAL}, #{cashFormGrantTotal,jdbcType=DECIMAL}, 
+            #{reinvestFormGrantTotal,jdbcType=DECIMAL}, #{redemptionTurnoutAmt,jdbcType=DECIMAL}, 
+            #{profitThisyearChange,jdbcType=DECIMAL}, #{hugeRedeemThreshold,jdbcType=DECIMAL}, 
+            #{booksetId,jdbcType=VARCHAR}, #{reinvestFormGrantTdy,jdbcType=DECIMAL}, #{cashFormGrantTdy,jdbcType=DECIMAL}, 
+            #{redemIntamtTdy,jdbcType=DECIMAL}, #{benchmarkInfo,jdbcType=VARCHAR}, #{floatTotalRate,jdbcType=DECIMAL}, 
+            #{profitChangeTdy,jdbcType=DECIMAL}, #{assetValueCostFq,jdbcType=DECIMAL}, #{assetValueMarketFq,jdbcType=DECIMAL}, 
+            #{unitValueFq,jdbcType=DECIMAL}, #{profitTdyFq,jdbcType=DECIMAL}, #{wYieldFq,jdbcType=DECIMAL}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepProdIndex" >
+        insert into REP_PROD_INDEX
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="valueDate != null" >
+                VALUE_DATE,
+            </if>
+            <if test="capital != null" >
+                CAPITAL,
+            </if>
+            <if test="profitNo != null" >
+                PROFIT_NO,
+            </if>
+            <if test="profitYes != null" >
+                PROFIT_YES,
+            </if>
+            <if test="assetTotalCost != null" >
+                ASSET_TOTAL_COST,
+            </if>
+            <if test="assetTotalMarket != null" >
+                ASSET_TOTAL_MARKET,
+            </if>
+            <if test="debtTotal != null" >
+                DEBT_TOTAL,
+            </if>
+            <if test="assetValueCost != null" >
+                ASSET_VALUE_COST,
+            </if>
+            <if test="assetValueMarket != null" >
+                ASSET_VALUE_MARKET,
+            </if>
+            <if test="unitValue != null" >
+                UNIT_VALUE,
+            </if>
+            <if test="unitValueT != null" >
+                UNIT_VALUE_T,
+            </if>
+            <if test="unitValueY != null" >
+                UNIT_VALUE_Y,
+            </if>
+            <if test="assetsValue != null" >
+                ASSETS_VALUE,
+            </if>
+            <if test="deviationAmt != null" >
+                DEVIATION_AMT,
+            </if>
+            <if test="deviation != null" >
+                DEVIATION,
+            </if>
+            <if test="profitTdy != null" >
+                PROFIT_TDY,
+            </if>
+            <if test="profitTotal != null" >
+                PROFIT_TOTAL,
+            </if>
+            <if test="wYield != null" >
+                W_YIELD,
+            </if>
+            <if test="wYieldYear != null" >
+                W_YIELD_YEAR,
+            </if>
+            <if test="wYieldTotal != null" >
+                W_YIELD_TOTAL,
+            </if>
+            <if test="yieldTdy != null" >
+                YIELD_TDY,
+            </if>
+            <if test="yield7 != null" >
+                YIELD_7,
+            </if>
+            <if test="yieldTotal != null" >
+                YIELD_TOTAL,
+            </if>
+            <if test="yieldE != null" >
+                YIELD_E,
+            </if>
+            <if test="yieldEMax != null" >
+                YIELD_E_MAX,
+            </if>
+            <if test="surplusTerm != null" >
+                SURPLUS_TERM,
+            </if>
+            <if test="averageMdate != null" >
+                AVERAGE_MDATE,
+            </if>
+            <if test="inputType != null" >
+                INPUT_TYPE,
+            </if>
+            <if test="inputUser != null" >
+                INPUT_USER,
+            </if>
+            <if test="adapterId != null" >
+                ADAPTER_ID,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="prdUnitValue != null" >
+                PRD_UNIT_VALUE,
+            </if>
+            <if test="manageYield != null" >
+                MANAGE_YIELD,
+            </if>
+            <if test="prodShare != null" >
+                PROD_SHARE,
+            </if>
+            <if test="yieldMonth != null" >
+                YIELD_MONTH,
+            </if>
+            <if test="netValue != null" >
+                NET_VALUE,
+            </if>
+            <if test="issueTypeZ != null" >
+                ISSUE_TYPE_Z,
+            </if>
+            <if test="addsurplusTerm != null" >
+                ADDSURPLUS_TERM,
+            </if>
+            <if test="profitCurrentYes != null" >
+                PROFIT_CURRENT_YES,
+            </if>
+            <if test="profitCurrentNo != null" >
+                PROFIT_CURRENT_NO,
+            </if>
+            <if test="profitCurrent != null" >
+                PROFIT_CURRENT,
+            </if>
+            <if test="profitTdyAble != null" >
+                PROFIT_TDY_ABLE,
+            </if>
+            <if test="prodProfitTdyAble != null" >
+                PROD_PROFIT_TDY_ABLE,
+            </if>
+            <if test="netvalueTdyYield != null" >
+                NETVALUE_TDY_YIELD,
+            </if>
+            <if test="netvalueTotalYield != null" >
+                NETVALUE_TOTAL_YIELD,
+            </if>
+            <if test="netvalueTdyIncre != null" >
+                NETVALUE_TDY_INCRE,
+            </if>
+            <if test="netvalueTotalIncre != null" >
+                NETVALUE_TOTAL_INCRE,
+            </if>
+            <if test="avgSurplusTime != null" >
+                AVG_SURPLUS_TIME,
+            </if>
+            <if test="floatBaseRate != null" >
+                FLOAT_BASE_RATE,
+            </if>
+            <if test="bounusValue != null" >
+                BOUNUS_VALUE,
+            </if>
+            <if test="issueType != null" >
+                ISSUE_TYPE,
+            </if>
+            <if test="rateType != null" >
+                RATE_TYPE,
+            </if>
+            <if test="rateBenchmark != null" >
+                RATE_BENCHMARK,
+            </if>
+            <if test="rateAdj != null" >
+                RATE_ADJ,
+            </if>
+            <if test="cashFormGrantTotal != null" >
+                CASH_FORM_GRANT_TOTAL,
+            </if>
+            <if test="reinvestFormGrantTotal != null" >
+                REINVEST_FORM_GRANT_TOTAL,
+            </if>
+            <if test="redemptionTurnoutAmt != null" >
+                REDEMPTION_TURNOUT_AMT,
+            </if>
+            <if test="profitThisyearChange != null" >
+                PROFIT_THISYEAR_CHANGE,
+            </if>
+            <if test="hugeRedeemThreshold != null" >
+                HUGE_REDEEM_THRESHOLD,
+            </if>
+            <if test="booksetId != null" >
+                BOOKSET_ID,
+            </if>
+            <if test="reinvestFormGrantTdy != null" >
+                REINVEST_FORM_GRANT_TDY,
+            </if>
+            <if test="cashFormGrantTdy != null" >
+                CASH_FORM_GRANT_TDY,
+            </if>
+            <if test="redemIntamtTdy != null" >
+                REDEM_INTAMT_TDY,
+            </if>
+            <if test="benchmarkInfo != null" >
+                BENCHMARK_INFO,
+            </if>
+            <if test="floatTotalRate != null" >
+                FLOAT_TOTAL_RATE,
+            </if>
+            <if test="profitChangeTdy != null" >
+                PROFIT_CHANGE_TDY,
+            </if>
+            <if test="assetValueCostFq != null" >
+                ASSET_VALUE_COST_FQ,
+            </if>
+            <if test="assetValueMarketFq != null" >
+                ASSET_VALUE_MARKET_FQ,
+            </if>
+            <if test="unitValueFq != null" >
+                UNIT_VALUE_FQ,
+            </if>
+            <if test="profitTdyFq != null" >
+                PROFIT_TDY_FQ,
+            </if>
+            <if test="wYieldFq != null" >
+                W_YIELD_FQ,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="valueDate != null" >
+                #{valueDate,jdbcType=DATE},
+            </if>
+            <if test="capital != null" >
+                #{capital,jdbcType=DECIMAL},
+            </if>
+            <if test="profitNo != null" >
+                #{profitNo,jdbcType=DECIMAL},
+            </if>
+            <if test="profitYes != null" >
+                #{profitYes,jdbcType=DECIMAL},
+            </if>
+            <if test="assetTotalCost != null" >
+                #{assetTotalCost,jdbcType=DECIMAL},
+            </if>
+            <if test="assetTotalMarket != null" >
+                #{assetTotalMarket,jdbcType=DECIMAL},
+            </if>
+            <if test="debtTotal != null" >
+                #{debtTotal,jdbcType=DECIMAL},
+            </if>
+            <if test="assetValueCost != null" >
+                #{assetValueCost,jdbcType=DECIMAL},
+            </if>
+            <if test="assetValueMarket != null" >
+                #{assetValueMarket,jdbcType=DECIMAL},
+            </if>
+            <if test="unitValue != null" >
+                #{unitValue,jdbcType=DECIMAL},
+            </if>
+            <if test="unitValueT != null" >
+                #{unitValueT,jdbcType=DECIMAL},
+            </if>
+            <if test="unitValueY != null" >
+                #{unitValueY,jdbcType=DECIMAL},
+            </if>
+            <if test="assetsValue != null" >
+                #{assetsValue,jdbcType=DECIMAL},
+            </if>
+            <if test="deviationAmt != null" >
+                #{deviationAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="deviation != null" >
+                #{deviation,jdbcType=DECIMAL},
+            </if>
+            <if test="profitTdy != null" >
+                #{profitTdy,jdbcType=DECIMAL},
+            </if>
+            <if test="profitTotal != null" >
+                #{profitTotal,jdbcType=DECIMAL},
+            </if>
+            <if test="wYield != null" >
+                #{wYield,jdbcType=DECIMAL},
+            </if>
+            <if test="wYieldYear != null" >
+                #{wYieldYear,jdbcType=DECIMAL},
+            </if>
+            <if test="wYieldTotal != null" >
+                #{wYieldTotal,jdbcType=DECIMAL},
+            </if>
+            <if test="yieldTdy != null" >
+                #{yieldTdy,jdbcType=DECIMAL},
+            </if>
+            <if test="yield7 != null" >
+                #{yield7,jdbcType=DECIMAL},
+            </if>
+            <if test="yieldTotal != null" >
+                #{yieldTotal,jdbcType=DECIMAL},
+            </if>
+            <if test="yieldE != null" >
+                #{yieldE,jdbcType=DECIMAL},
+            </if>
+            <if test="yieldEMax != null" >
+                #{yieldEMax,jdbcType=DECIMAL},
+            </if>
+            <if test="surplusTerm != null" >
+                #{surplusTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="averageMdate != null" >
+                #{averageMdate,jdbcType=DECIMAL},
+            </if>
+            <if test="inputType != null" >
+                #{inputType,jdbcType=VARCHAR},
+            </if>
+            <if test="inputUser != null" >
+                #{inputUser,jdbcType=VARCHAR},
+            </if>
+            <if test="adapterId != null" >
+                #{adapterId,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="prdUnitValue != null" >
+                #{prdUnitValue,jdbcType=DECIMAL},
+            </if>
+            <if test="manageYield != null" >
+                #{manageYield,jdbcType=DECIMAL},
+            </if>
+            <if test="prodShare != null" >
+                #{prodShare,jdbcType=DECIMAL},
+            </if>
+            <if test="yieldMonth != null" >
+                #{yieldMonth,jdbcType=DECIMAL},
+            </if>
+            <if test="netValue != null" >
+                #{netValue,jdbcType=DECIMAL},
+            </if>
+            <if test="issueTypeZ != null" >
+                #{issueTypeZ,jdbcType=VARCHAR},
+            </if>
+            <if test="addsurplusTerm != null" >
+                #{addsurplusTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="profitCurrentYes != null" >
+                #{profitCurrentYes,jdbcType=DECIMAL},
+            </if>
+            <if test="profitCurrentNo != null" >
+                #{profitCurrentNo,jdbcType=DECIMAL},
+            </if>
+            <if test="profitCurrent != null" >
+                #{profitCurrent,jdbcType=DECIMAL},
+            </if>
+            <if test="profitTdyAble != null" >
+                #{profitTdyAble,jdbcType=DECIMAL},
+            </if>
+            <if test="prodProfitTdyAble != null" >
+                #{prodProfitTdyAble,jdbcType=DECIMAL},
+            </if>
+            <if test="netvalueTdyYield != null" >
+                #{netvalueTdyYield,jdbcType=DECIMAL},
+            </if>
+            <if test="netvalueTotalYield != null" >
+                #{netvalueTotalYield,jdbcType=DECIMAL},
+            </if>
+            <if test="netvalueTdyIncre != null" >
+                #{netvalueTdyIncre,jdbcType=DECIMAL},
+            </if>
+            <if test="netvalueTotalIncre != null" >
+                #{netvalueTotalIncre,jdbcType=DECIMAL},
+            </if>
+            <if test="avgSurplusTime != null" >
+                #{avgSurplusTime,jdbcType=DECIMAL},
+            </if>
+            <if test="floatBaseRate != null" >
+                #{floatBaseRate,jdbcType=DECIMAL},
+            </if>
+            <if test="bounusValue != null" >
+                #{bounusValue,jdbcType=DECIMAL},
+            </if>
+            <if test="issueType != null" >
+                #{issueType,jdbcType=VARCHAR},
+            </if>
+            <if test="rateType != null" >
+                #{rateType,jdbcType=VARCHAR},
+            </if>
+            <if test="rateBenchmark != null" >
+                #{rateBenchmark,jdbcType=DECIMAL},
+            </if>
+            <if test="rateAdj != null" >
+                #{rateAdj,jdbcType=DECIMAL},
+            </if>
+            <if test="cashFormGrantTotal != null" >
+                #{cashFormGrantTotal,jdbcType=DECIMAL},
+            </if>
+            <if test="reinvestFormGrantTotal != null" >
+                #{reinvestFormGrantTotal,jdbcType=DECIMAL},
+            </if>
+            <if test="redemptionTurnoutAmt != null" >
+                #{redemptionTurnoutAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="profitThisyearChange != null" >
+                #{profitThisyearChange,jdbcType=DECIMAL},
+            </if>
+            <if test="hugeRedeemThreshold != null" >
+                #{hugeRedeemThreshold,jdbcType=DECIMAL},
+            </if>
+            <if test="booksetId != null" >
+                #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="reinvestFormGrantTdy != null" >
+                #{reinvestFormGrantTdy,jdbcType=DECIMAL},
+            </if>
+            <if test="cashFormGrantTdy != null" >
+                #{cashFormGrantTdy,jdbcType=DECIMAL},
+            </if>
+            <if test="redemIntamtTdy != null" >
+                #{redemIntamtTdy,jdbcType=DECIMAL},
+            </if>
+            <if test="benchmarkInfo != null" >
+                #{benchmarkInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="floatTotalRate != null" >
+                #{floatTotalRate,jdbcType=DECIMAL},
+            </if>
+            <if test="profitChangeTdy != null" >
+                #{profitChangeTdy,jdbcType=DECIMAL},
+            </if>
+            <if test="assetValueCostFq != null" >
+                #{assetValueCostFq,jdbcType=DECIMAL},
+            </if>
+            <if test="assetValueMarketFq != null" >
+                #{assetValueMarketFq,jdbcType=DECIMAL},
+            </if>
+            <if test="unitValueFq != null" >
+                #{unitValueFq,jdbcType=DECIMAL},
+            </if>
+            <if test="profitTdyFq != null" >
+                #{profitTdyFq,jdbcType=DECIMAL},
+            </if>
+            <if test="wYieldFq != null" >
+                #{wYieldFq,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepProdIndex" >
+        insert into REP_PROD_INDEX(SEQ_NO, PROD_ID, VALUE_DATE, CAPITAL, PROFIT_NO, PROFIT_YES, 
+        ASSET_TOTAL_COST, ASSET_TOTAL_MARKET, DEBT_TOTAL, ASSET_VALUE_COST, ASSET_VALUE_MARKET, 
+        UNIT_VALUE, UNIT_VALUE_T, UNIT_VALUE_Y, ASSETS_VALUE, DEVIATION_AMT, DEVIATION, PROFIT_TDY, 
+        PROFIT_TOTAL, W_YIELD, W_YIELD_YEAR, W_YIELD_TOTAL, YIELD_TDY, YIELD_7, YIELD_TOTAL, 
+        YIELD_E, YIELD_E_MAX, SURPLUS_TERM, AVERAGE_MDATE, INPUT_TYPE, INPUT_USER, ADAPTER_ID, 
+        STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, PRD_UNIT_VALUE, 
+        MANAGE_YIELD, PROD_SHARE, YIELD_MONTH, NET_VALUE, ISSUE_TYPE_Z, ADDSURPLUS_TERM, 
+        PROFIT_CURRENT_YES, PROFIT_CURRENT_NO, PROFIT_CURRENT, PROFIT_TDY_ABLE, PROD_PROFIT_TDY_ABLE, 
+        NETVALUE_TDY_YIELD, NETVALUE_TOTAL_YIELD, NETVALUE_TDY_INCRE, NETVALUE_TOTAL_INCRE, 
+        AVG_SURPLUS_TIME, FLOAT_BASE_RATE, BOUNUS_VALUE, ISSUE_TYPE, RATE_TYPE, RATE_BENCHMARK, 
+        RATE_ADJ, CASH_FORM_GRANT_TOTAL, REINVEST_FORM_GRANT_TOTAL, REDEMPTION_TURNOUT_AMT, 
+        PROFIT_THISYEAR_CHANGE, HUGE_REDEEM_THRESHOLD, BOOKSET_ID, REINVEST_FORM_GRANT_TDY, 
+        CASH_FORM_GRANT_TDY, REDEM_INTAMT_TDY, BENCHMARK_INFO, FLOAT_TOTAL_RATE, PROFIT_CHANGE_TDY, 
+        ASSET_VALUE_COST_FQ, ASSET_VALUE_MARKET_FQ, UNIT_VALUE_FQ, PROFIT_TDY_FQ, W_YIELD_FQ
+        )
+        select SEQ_NO, PROD_ID, VALUE_DATE, CAPITAL, PROFIT_NO, PROFIT_YES, 
+            ASSET_TOTAL_COST, ASSET_TOTAL_MARKET, DEBT_TOTAL, ASSET_VALUE_COST, ASSET_VALUE_MARKET, 
+            UNIT_VALUE, UNIT_VALUE_T, UNIT_VALUE_Y, ASSETS_VALUE, DEVIATION_AMT, DEVIATION, PROFIT_TDY, 
+            PROFIT_TOTAL, W_YIELD, W_YIELD_YEAR, W_YIELD_TOTAL, YIELD_TDY, YIELD_7, YIELD_TOTAL, 
+            YIELD_E, YIELD_E_MAX, SURPLUS_TERM, AVERAGE_MDATE, INPUT_TYPE, INPUT_USER, ADAPTER_ID, 
+            #{status,jdbcType=VARCHAR} STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, PRD_UNIT_VALUE, 
+            MANAGE_YIELD, PROD_SHARE, YIELD_MONTH, NET_VALUE, ISSUE_TYPE_Z, ADDSURPLUS_TERM, 
+            PROFIT_CURRENT_YES, PROFIT_CURRENT_NO, PROFIT_CURRENT, PROFIT_TDY_ABLE, PROD_PROFIT_TDY_ABLE, 
+            NETVALUE_TDY_YIELD, NETVALUE_TOTAL_YIELD, NETVALUE_TDY_INCRE, NETVALUE_TOTAL_INCRE, 
+            AVG_SURPLUS_TIME, FLOAT_BASE_RATE, BOUNUS_VALUE, ISSUE_TYPE, RATE_TYPE, RATE_BENCHMARK, 
+            RATE_ADJ, CASH_FORM_GRANT_TOTAL, REINVEST_FORM_GRANT_TOTAL, REDEMPTION_TURNOUT_AMT, 
+            PROFIT_THISYEAR_CHANGE, HUGE_REDEEM_THRESHOLD, BOOKSET_ID, REINVEST_FORM_GRANT_TDY, 
+            CASH_FORM_GRANT_TDY, REDEM_INTAMT_TDY, BENCHMARK_INFO, FLOAT_TOTAL_RATE, PROFIT_CHANGE_TDY, 
+            ASSET_VALUE_COST_FQ, ASSET_VALUE_MARKET_FQ, UNIT_VALUE_FQ, PROFIT_TDY_FQ, W_YIELD_FQ
+            
+             from REP_PROD_INDEX
+             where STATUS = 'E'
+    </insert>
+</mapper>

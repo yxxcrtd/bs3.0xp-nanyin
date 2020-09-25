@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ProductRequirementMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ProductRequirement" >
+        <id column="REQUIREMENT_ID" property="requirementId" jdbcType="VARCHAR" />
+        <result column="REQUIREMENT_BASIS" property="requirementBasis" jdbcType="VARCHAR" />
+        <result column="REQUIREMENT_DATE" property="requirementDate" jdbcType="DATE" />
+        <result column="TAR_CUSTOMER" property="tarCustomer" jdbcType="VARCHAR" />
+        <result column="PRD_SCALE" property="prdScale" jdbcType="VARCHAR" />
+        <result column="PRD_PERIOD" property="prdPeriod" jdbcType="VARCHAR" />
+        <result column="PRD_RATE" property="prdRate" jdbcType="VARCHAR" />
+        <result column="PRD_REQUIREMENT_DETIAL" property="prdRequirementDetial" jdbcType="VARCHAR" />
+        <result column="REQUIREMENT_SOURCE" property="requirementSource" jdbcType="VARCHAR" />
+        <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="REVIEW_YESNO" property="reviewYesno" jdbcType="VARCHAR" />
+        <result column="REQUIREMENT_USER" property="requirementUser" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        REQUIREMENT_ID REQUIREMENT_ID, REQUIREMENT_BASIS REQUIREMENT_BASIS, REQUIREMENT_DATE REQUIREMENT_DATE, 
+        TAR_CUSTOMER TAR_CUSTOMER, PRD_SCALE PRD_SCALE, PRD_PERIOD PRD_PERIOD, PRD_RATE PRD_RATE, 
+        PRD_REQUIREMENT_DETIAL PRD_REQUIREMENT_DETIAL, REQUIREMENT_SOURCE REQUIREMENT_SOURCE, 
+        DATA_STATUS DATA_STATUS, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, REVIEW_YESNO REVIEW_YESNO, REQUIREMENT_USER REQUIREMENT_USER
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ProductRequirementMapper.Base_Column_List" />
+        from PRODUCT_REQUIREMENT
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ProductRequirementMapper.Base_Column_List" />
+        from PRODUCT_REQUIREMENT
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ProductRequirementMapper.Base_Column_List" />
+        from PRODUCT_REQUIREMENT
+        where REQUIREMENT_ID = #{requirementId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from PRODUCT_REQUIREMENT
+        where REQUIREMENT_ID = #{requirementId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ProductRequirement" >
+        insert into PRODUCT_REQUIREMENT (REQUIREMENT_ID, REQUIREMENT_BASIS, 
+            REQUIREMENT_DATE, TAR_CUSTOMER, PRD_SCALE, 
+            PRD_PERIOD, PRD_RATE, PRD_REQUIREMENT_DETIAL, 
+            REQUIREMENT_SOURCE, DATA_STATUS, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, REVIEW_YESNO, REQUIREMENT_USER
+            )
+        values (#{requirementId,jdbcType=VARCHAR}, #{requirementBasis,jdbcType=VARCHAR}, 
+            #{requirementDate,jdbcType=DATE}, #{tarCustomer,jdbcType=VARCHAR}, #{prdScale,jdbcType=VARCHAR}, 
+            #{prdPeriod,jdbcType=VARCHAR}, #{prdRate,jdbcType=VARCHAR}, #{prdRequirementDetial,jdbcType=VARCHAR}, 
+            #{requirementSource,jdbcType=VARCHAR}, #{dataStatus,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{reviewYesno,jdbcType=VARCHAR}, #{requirementUser,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ProductRequirement" >
+        insert into PRODUCT_REQUIREMENT
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="requirementId != null" >
+                REQUIREMENT_ID,
+            </if>
+            <if test="requirementBasis != null" >
+                REQUIREMENT_BASIS,
+            </if>
+            <if test="requirementDate != null" >
+                REQUIREMENT_DATE,
+            </if>
+            <if test="tarCustomer != null" >
+                TAR_CUSTOMER,
+            </if>
+            <if test="prdScale != null" >
+                PRD_SCALE,
+            </if>
+            <if test="prdPeriod != null" >
+                PRD_PERIOD,
+            </if>
+            <if test="prdRate != null" >
+                PRD_RATE,
+            </if>
+            <if test="prdRequirementDetial != null" >
+                PRD_REQUIREMENT_DETIAL,
+            </if>
+            <if test="requirementSource != null" >
+                REQUIREMENT_SOURCE,
+            </if>
+            <if test="dataStatus != null" >
+                DATA_STATUS,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="reviewYesno != null" >
+                REVIEW_YESNO,
+            </if>
+            <if test="requirementUser != null" >
+                REQUIREMENT_USER,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="requirementId != null" >
+                #{requirementId,jdbcType=VARCHAR},
+            </if>
+            <if test="requirementBasis != null" >
+                #{requirementBasis,jdbcType=VARCHAR},
+            </if>
+            <if test="requirementDate != null" >
+                #{requirementDate,jdbcType=DATE},
+            </if>
+            <if test="tarCustomer != null" >
+                #{tarCustomer,jdbcType=VARCHAR},
+            </if>
+            <if test="prdScale != null" >
+                #{prdScale,jdbcType=VARCHAR},
+            </if>
+            <if test="prdPeriod != null" >
+                #{prdPeriod,jdbcType=VARCHAR},
+            </if>
+            <if test="prdRate != null" >
+                #{prdRate,jdbcType=VARCHAR},
+            </if>
+            <if test="prdRequirementDetial != null" >
+                #{prdRequirementDetial,jdbcType=VARCHAR},
+            </if>
+            <if test="requirementSource != null" >
+                #{requirementSource,jdbcType=VARCHAR},
+            </if>
+            <if test="dataStatus != null" >
+                #{dataStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="reviewYesno != null" >
+                #{reviewYesno,jdbcType=VARCHAR},
+            </if>
+            <if test="requirementUser != null" >
+                #{requirementUser,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ProductRequirement" >
+        insert into PRODUCT_REQUIREMENT(REQUIREMENT_ID, REQUIREMENT_BASIS, REQUIREMENT_DATE, 
+        TAR_CUSTOMER, PRD_SCALE, PRD_PERIOD, PRD_RATE, PRD_REQUIREMENT_DETIAL, REQUIREMENT_SOURCE, 
+        DATA_STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REVIEW_YESNO, 
+        REQUIREMENT_USER)
+        select REQUIREMENT_ID, REQUIREMENT_BASIS, REQUIREMENT_DATE, 
+            TAR_CUSTOMER, PRD_SCALE, PRD_PERIOD, PRD_RATE, PRD_REQUIREMENT_DETIAL, REQUIREMENT_SOURCE, 
+            DATA_STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, REVIEW_YESNO, 
+            REQUIREMENT_USER
+             from PRODUCT_REQUIREMENT
+             where 1 = 1 and REQUIREMENT_ID = #{requirementId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ProductRequirement" >
+        update PRODUCT_REQUIREMENT
+        <set >
+            <if test="requirementBasis != null" >
+                REQUIREMENT_BASIS = #{requirementBasis,jdbcType=VARCHAR},
+            </if>
+            <if test="requirementDate != null" >
+                REQUIREMENT_DATE = #{requirementDate,jdbcType=DATE},
+            </if>
+            <if test="tarCustomer != null" >
+                TAR_CUSTOMER = #{tarCustomer,jdbcType=VARCHAR},
+            </if>
+            <if test="prdScale != null" >
+                PRD_SCALE = #{prdScale,jdbcType=VARCHAR},
+            </if>
+            <if test="prdPeriod != null" >
+                PRD_PERIOD = #{prdPeriod,jdbcType=VARCHAR},
+            </if>
+            <if test="prdRate != null" >
+                PRD_RATE = #{prdRate,jdbcType=VARCHAR},
+            </if>
+            <if test="prdRequirementDetial != null" >
+                PRD_REQUIREMENT_DETIAL = #{prdRequirementDetial,jdbcType=VARCHAR},
+            </if>
+            <if test="requirementSource != null" >
+                REQUIREMENT_SOURCE = #{requirementSource,jdbcType=VARCHAR},
+            </if>
+            <if test="dataStatus != null" >
+                DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="reviewYesno != null" >
+                REVIEW_YESNO = #{reviewYesno,jdbcType=VARCHAR},
+            </if>
+            <if test="requirementUser != null" >
+                REQUIREMENT_USER = #{requirementUser,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where REQUIREMENT_ID = #{requirementId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ProductRequirement" >
+        update PRODUCT_REQUIREMENT
+        set REQUIREMENT_BASIS = #{requirementBasis,jdbcType=VARCHAR},
+            REQUIREMENT_DATE = #{requirementDate,jdbcType=DATE},
+            TAR_CUSTOMER = #{tarCustomer,jdbcType=VARCHAR},
+            PRD_SCALE = #{prdScale,jdbcType=VARCHAR},
+            PRD_PERIOD = #{prdPeriod,jdbcType=VARCHAR},
+            PRD_RATE = #{prdRate,jdbcType=VARCHAR},
+            PRD_REQUIREMENT_DETIAL = #{prdRequirementDetial,jdbcType=VARCHAR},
+            REQUIREMENT_SOURCE = #{requirementSource,jdbcType=VARCHAR},
+            DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            REVIEW_YESNO = #{reviewYesno,jdbcType=VARCHAR},
+            REQUIREMENT_USER = #{requirementUser,jdbcType=VARCHAR}
+        where REQUIREMENT_ID = #{requirementId,jdbcType=VARCHAR}
+    </update>
+</mapper>

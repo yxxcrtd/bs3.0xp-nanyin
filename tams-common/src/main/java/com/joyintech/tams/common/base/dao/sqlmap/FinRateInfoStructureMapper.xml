@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.FinRateInfoStructureMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.FinRateInfoStructure" >
+        <id column="CASH_ID" property="cashId" jdbcType="VARCHAR" />
+        <id column="EFF_DATE" property="effDate" jdbcType="DATE" />
+        <result column="STRUCTURE_TYPE" property="structureType" jdbcType="VARCHAR" />
+        <result column="HIGH_HIND_PRICE" property="highHindPrice" jdbcType="DECIMAL" />
+        <result column="LOW_HIND_PRICE" property="lowHindPrice" jdbcType="DECIMAL" />
+        <result column="HIGH_EXERC_PRICE" property="highExercPrice" jdbcType="DECIMAL" />
+        <result column="LOW_EXERC_PRICE" property="lowExercPrice" jdbcType="DECIMAL" />
+        <result column="EXE_PRICE" property="exePrice" jdbcType="DECIMAL" />
+        <result column="KNOCK_PRICE" property="knockPrice" jdbcType="DECIMAL" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="EXEC_BASE_DATE" property="execBaseDate" jdbcType="DATE" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CASH_ID CASH_ID, EFF_DATE EFF_DATE, STRUCTURE_TYPE STRUCTURE_TYPE, HIGH_HIND_PRICE HIGH_HIND_PRICE, 
+        LOW_HIND_PRICE LOW_HIND_PRICE, HIGH_EXERC_PRICE HIGH_EXERC_PRICE, LOW_EXERC_PRICE LOW_EXERC_PRICE, 
+        EXE_PRICE EXE_PRICE, KNOCK_PRICE KNOCK_PRICE, REMARK REMARK, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
+        EXEC_BASE_DATE EXEC_BASE_DATE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinRateInfoStructureMapper.Base_Column_List" />
+        from FIN_RATE_INFO_STRUCTURE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinRateInfoStructureMapper.Base_Column_List" />
+        from FIN_RATE_INFO_STRUCTURE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.FinRateInfoStructureKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinRateInfoStructureMapper.Base_Column_List" />
+        from FIN_RATE_INFO_STRUCTURE
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinRateInfoStructureKey" >
+        delete from FIN_RATE_INFO_STRUCTURE
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FinRateInfoStructure" >
+        insert into FIN_RATE_INFO_STRUCTURE (CASH_ID, EFF_DATE, STRUCTURE_TYPE, 
+            HIGH_HIND_PRICE, LOW_HIND_PRICE, HIGH_EXERC_PRICE, 
+            LOW_EXERC_PRICE, EXE_PRICE, KNOCK_PRICE, 
+            REMARK, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            EXEC_BASE_DATE)
+        values (#{cashId,jdbcType=VARCHAR}, #{effDate,jdbcType=DATE}, #{structureType,jdbcType=VARCHAR}, 
+            #{highHindPrice,jdbcType=DECIMAL}, #{lowHindPrice,jdbcType=DECIMAL}, #{highExercPrice,jdbcType=DECIMAL}, 
+            #{lowExercPrice,jdbcType=DECIMAL}, #{exePrice,jdbcType=DECIMAL}, #{knockPrice,jdbcType=DECIMAL}, 
+            #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{execBaseDate,jdbcType=DATE})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinRateInfoStructure" >
+        insert into FIN_RATE_INFO_STRUCTURE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="cashId != null" >
+                CASH_ID,
+            </if>
+            <if test="effDate != null" >
+                EFF_DATE,
+            </if>
+            <if test="structureType != null" >
+                STRUCTURE_TYPE,
+            </if>
+            <if test="highHindPrice != null" >
+                HIGH_HIND_PRICE,
+            </if>
+            <if test="lowHindPrice != null" >
+                LOW_HIND_PRICE,
+            </if>
+            <if test="highExercPrice != null" >
+                HIGH_EXERC_PRICE,
+            </if>
+            <if test="lowExercPrice != null" >
+                LOW_EXERC_PRICE,
+            </if>
+            <if test="exePrice != null" >
+                EXE_PRICE,
+            </if>
+            <if test="knockPrice != null" >
+                KNOCK_PRICE,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="execBaseDate != null" >
+                EXEC_BASE_DATE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="cashId != null" >
+                #{cashId,jdbcType=VARCHAR},
+            </if>
+            <if test="effDate != null" >
+                #{effDate,jdbcType=DATE},
+            </if>
+            <if test="structureType != null" >
+                #{structureType,jdbcType=VARCHAR},
+            </if>
+            <if test="highHindPrice != null" >
+                #{highHindPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="lowHindPrice != null" >
+                #{lowHindPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="highExercPrice != null" >
+                #{highExercPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="lowExercPrice != null" >
+                #{lowExercPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="exePrice != null" >
+                #{exePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="knockPrice != null" >
+                #{knockPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="execBaseDate != null" >
+                #{execBaseDate,jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinRateInfoStructure" >
+        insert into FIN_RATE_INFO_STRUCTURE(CASH_ID, EFF_DATE, STRUCTURE_TYPE, HIGH_HIND_PRICE, 
+        LOW_HIND_PRICE, HIGH_EXERC_PRICE, LOW_EXERC_PRICE, EXE_PRICE, KNOCK_PRICE, REMARK, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, EXEC_BASE_DATE)
+        select CASH_ID, EFF_DATE, STRUCTURE_TYPE, HIGH_HIND_PRICE, 
+            LOW_HIND_PRICE, HIGH_EXERC_PRICE, LOW_EXERC_PRICE, EXE_PRICE, KNOCK_PRICE, REMARK, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, EXEC_BASE_DATE
+             from FIN_RATE_INFO_STRUCTURE
+             where 1 = 1 and CASH_ID = #{cashId,jdbcType=VARCHAR} and EFF_DATE = #{effDate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.FinRateInfoStructure" >
+        update FIN_RATE_INFO_STRUCTURE
+        <set >
+            <if test="structureType != null" >
+                STRUCTURE_TYPE = #{structureType,jdbcType=VARCHAR},
+            </if>
+            <if test="highHindPrice != null" >
+                HIGH_HIND_PRICE = #{highHindPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="lowHindPrice != null" >
+                LOW_HIND_PRICE = #{lowHindPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="highExercPrice != null" >
+                HIGH_EXERC_PRICE = #{highExercPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="lowExercPrice != null" >
+                LOW_EXERC_PRICE = #{lowExercPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="exePrice != null" >
+                EXE_PRICE = #{exePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="knockPrice != null" >
+                KNOCK_PRICE = #{knockPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="execBaseDate != null" >
+                EXEC_BASE_DATE = #{execBaseDate,jdbcType=DATE},
+            </if>
+        </set>
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinRateInfoStructure" >
+        update FIN_RATE_INFO_STRUCTURE
+        set STRUCTURE_TYPE = #{structureType,jdbcType=VARCHAR},
+            HIGH_HIND_PRICE = #{highHindPrice,jdbcType=DECIMAL},
+            LOW_HIND_PRICE = #{lowHindPrice,jdbcType=DECIMAL},
+            HIGH_EXERC_PRICE = #{highExercPrice,jdbcType=DECIMAL},
+            LOW_EXERC_PRICE = #{lowExercPrice,jdbcType=DECIMAL},
+            EXE_PRICE = #{exePrice,jdbcType=DECIMAL},
+            KNOCK_PRICE = #{knockPrice,jdbcType=DECIMAL},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            EXEC_BASE_DATE = #{execBaseDate,jdbcType=DATE}
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+    </update>
+</mapper>

@@ -1,0 +1,115 @@
+package com.joyintech.tams.common.base.entity;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.json.CustomDateDeserialize;
+import java.util.Date;
+
+public class PrdIssueplanInfo extends BaseEntity {
+    /**
+     * 产品发行规划编号
+     */
+    private String prdIssueplanCode;
+
+    /**
+     * 产品发行规划名称
+     */
+    private String prdIssueplanName;
+
+    /**
+     * 开始日
+     */
+    private Date vdate;
+
+    /**
+     * 结束日
+     */
+    private Date edate;
+
+    /**
+     * 备注
+     */
+    private String remark;
+
+    /**
+     * 取得 产品发行规划编号
+     * @return 产品发行规划编号
+     */
+    public String getPrdIssueplanCode() {
+        return prdIssueplanCode;
+    }
+
+    /**
+     * 设置 产品发行规划编号
+     * @param prdIssueplanCode 产品发行规划编号
+     */
+    public void setPrdIssueplanCode(String prdIssueplanCode) {
+        this.prdIssueplanCode = prdIssueplanCode == null ? null : prdIssueplanCode.trim();
+    }
+
+    /**
+     * 取得 产品发行规划名称
+     * @return 产品发行规划名称
+     */
+    public String getPrdIssueplanName() {
+        return prdIssueplanName;
+    }
+
+    /**
+     * 设置 产品发行规划名称
+     * @param prdIssueplanName 产品发行规划名称
+     */
+    public void setPrdIssueplanName(String prdIssueplanName) {
+        this.prdIssueplanName = prdIssueplanName == null ? null : prdIssueplanName.trim();
+    }
+
+    /**
+     * 取得 开始日
+     * @return 开始日
+     */
+    public Date getVdate() {
+        return vdate;
+    }
+
+    /**
+     * 设置 开始日
+     * @param vdate 开始日
+     */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setVdate(Date vdate) {
+        this.vdate = vdate;
+    }
+
+    /**
+     * 取得 结束日
+     * @return 结束日
+     */
+    public Date getEdate() {
+        return edate;
+    }
+
+    /**
+     * 设置 结束日
+     * @param edate 结束日
+     */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setEdate(Date edate) {
+        this.edate = edate;
+    }
+
+    /**
+     * 取得 备注
+     * @return 备注
+     */
+    public String getRemark() {
+        return remark;
+    }
+
+    /**
+     * 设置 备注
+     * @param remark 备注
+     */
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
+    }
+}

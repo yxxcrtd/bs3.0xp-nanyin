@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.financialstatements.valprofitquery.dao.DisValProfitQuery001Mapper">
+	<select id="selectAllBalance" resultMap="com.joyintech.tams.disclosure.busicommon.common.dao.BokBalance001Mapper.BaseResultMap">
+		select <include refid='com.joyintech.tams.disclosure.busicommon.common.dao.BokBalance001Mapper.Base_Column_List'/>
+		from BOK_BALANCE bb
+		where bb.BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR})
+		and bb.SUBJECT_NO like '6%'
+		and to_char(bb.BALANCE_DATE,'yyyy-MM-dd')&gt;=#{vdate}
+		and to_char(bb.BALANCE_DATE,'yyyy-MM-dd')&lt;=#{mdate}
+	</select>
+	<select id="selectAllBalanceXY" resultType="com.joyintech.tams.disclosure.busicommon.common.dto.BokBalance">
+	   select T.subjectNo,
+       T.balFlag,
+       SUM(T.TdyOCAmt) as TdyOCAmt,
+       SUM(T.TdyODAmt) as TdyODAmt,
+       SUM(TT.TdyOCoCAmt) as TdyOCoCAmt,
+       SUM(TT.TdyOCoDAmt) as TdyOCoDAmt
+     from 
+     (select subjectNo,balFlag,SUM(TdyOCAmt) TdyOCAmt,SUM(TdyODAmt) TdyODAmt from (
+  
+          select decode(bb.SUBJECT_LEVEL, '3', CASE WHEN bb.FSUBJECT_NO IN ('611110','611130','611102','611103','611104') THEN bb.subject_no ELSE bb.FSUBJECT_NO END , bb.subject_no) as subjectNo, /*科目号*/
+               bb.bal_flag as balFlag, /*余额方向*/
+               NVL(bb.TDY_O_C_AMT, 0) as TdyOCAmt, /*原币余额*/
+               NVL(bb.TDY_O_D_AMT, 0) as TdyODAmt /*原币余额借方*/
+          from BOK_BALANCE bb
+         where bb.BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR})
+			and bb.SUBJECT_NO like '6%' or bb.SUBJECT_NO like '3%' 
+			and to_char(bb.BALANCE_DATE,'yyyy-MM-dd')&gt;=#{vdate}
+			and to_char(bb.BALANCE_DATE,'yyyy-MM-dd')&lt;=#{mdate}
+  )GROUP BY subjectNo,balFlag)T
+  
+  LEFT JOIN (
+          SELECT subjectNo,balFlag,SUM(NVL(TdyOCoCAmt,0)) TdyOCoCAmt,SUM(NVL(TdyOCoDAmt,0)) TdyOCoDAmt FROM (
+          select decode(bb.SUBJECT_LEVEL, '3', CASE WHEN bb.FSUBJECT_NO IN ('611110','611130','611102','611103','611104') THEN bb.subject_no ELSE bb.FSUBJECT_NO END , bb.subject_no) as subjectNo, /*科目号*/
+             
+               bb.BALANCE_DATE as balanceDate, /*余额日期*/
+               bb.bal_flag as balFlag, /*余额方向*/
+               NVL(TDY_O_CO_C_AMT, 0) as TdyOCoCAmt, /*原币余额贷方*/
+               NVL(TDY_O_CO_D_AMT, 0) as TdyOCoDAmt /*原币余额贷方*/
+          from BOK_BALANCE bb
+        where bb.BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR})
+		and bb.SUBJECT_NO like '6%'  or  bb.SUBJECT_NO like '3%'
+		and to_char(bb.BALANCE_DATE,'yyyy-MM-dd')&gt;=#{sdate}
+		and to_char(bb.BALANCE_DATE,'yyyy-MM-dd')&lt;=#{mdate})
+		GROUP BY subjectNo,balFlag) TT ON T.subjectNo=TT.subjectNo AND T.balFlag = TT.balFlag
+ group by T.subjectNo,  T.balFlag
+      <!-- (
+      select 
+        decode(bb.SUBJECT_LEVEL,'1',bb.subject_no,bb.FSUBJECT_NO) as subjectNo,/*科目号*/
+        bb.BALANCE_DATE  as balanceDate, /*余额日期*/
+          bb.bal_flag as balFlag, /*余额方向*/
+		       NVL(bb.TDY_O_AMT, 0) as TdyOCAmt, /*原币余额*/
+		       NVL(bb.TDY_O_C_AMT, 0) as TdyODAmt, /*原币余额借方*/
+		       NVL(TDY_O_CO_C_AMT, 0) as TdyOCoCAmt,/*原币余额贷方*/
+            NVL(TDY_O_CO_D_AMT, 0) as TdyOCoDAmt/*原币余额贷方*/
+		from BOK_BALANCE bb
+	where bb.BOOKSET_ID=#{booksetId}
+		and bb.SUBJECT_NO like '6%'
+		and to_char(bb.BALANCE_DATE,'yyyy-MM-dd')&gt;=#{vdate}
+		and to_char(bb.BALANCE_DATE,'yyyy-MM-dd')&lt;=#{mdate}
+    )TT group by TT.subjectNo,TT.balanceDate,TT.balFlag -->
+	
+	</select>
+	
+	<select id="selectAllBalancebAmt" resultType="com.joyintech.tams.disclosure.busicommon.common.dto.BokBalance">
+	   select T.subjectNo,
+       T.balFlag,
+       SUM(T.TdyBCAmt) as TdyBCAmt,
+       SUM(T.TdyBDAmt) as TdyBDAmt,
+       SUM(TT.TdyBCoCAmt) as TdyBCoCAmt,
+       SUM(TT.TdyBCoDAmt) as TdyBCoDAmt
+     from 
+     (select subjectNo,balFlag,SUM(TdyBCAmt) TdyBCAmt,SUM(TdyBDAmt) TdyBDAmt from (
+  
+          select decode(bb.SUBJECT_LEVEL, '3', CASE WHEN bb.FSUBJECT_NO IN ('611110','611130','611102','611103','611104') THEN bb.subject_no ELSE bb.FSUBJECT_NO END , bb.subject_no) as subjectNo, /*科目号*/
+               bb.bal_flag as balFlag, /*余额方向*/
+               NVL(bb.TDY_B_C_AMT, 0) as TdyBCAmt, /*本币余额*/
+               NVL(bb.TDY_B_D_AMT, 0) as TdyBDAmt /*本币余额借方*/
+          from BOK_BALANCE bb
+         where bb.BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR})
+			and bb.SUBJECT_NO like '6%' or bb.SUBJECT_NO like '3%' 
+			and to_char(bb.BALANCE_DATE,'yyyy-MM-dd')&gt;=#{vdate}
+			and to_char(bb.BALANCE_DATE,'yyyy-MM-dd')&lt;=#{mdate}
+  )GROUP BY subjectNo,balFlag)T
+  
+  LEFT JOIN (
+          SELECT subjectNo,balFlag,SUM(NVL(TdyBCoCAmt,0)) TdyBCoCAmt,SUM(NVL(TdyBCoDAmt,0)) TdyBCoDAmt FROM (
+          select decode(bb.SUBJECT_LEVEL, '3', CASE WHEN bb.FSUBJECT_NO IN ('611110','611130','611102','611103','611104') THEN bb.subject_no ELSE bb.FSUBJECT_NO END , bb.subject_no) as subjectNo, /*科目号*/
+             
+               bb.BALANCE_DATE as balanceDate, /*余额日期*/
+               bb.bal_flag as balFlag, /*余额方向*/
+               NVL(TDY_B_CO_C_AMT, 0) as TdyBCoCAmt, /*原币余额贷方*/
+               NVL(TDY_B_CO_D_AMT, 0) as TdyBCoDAmt /*原币余额贷方*/
+          from BOK_BALANCE bb
+        where bb.BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR})
+		and bb.SUBJECT_NO like '6%'  or  bb.SUBJECT_NO like '3%'
+		and to_char(bb.BALANCE_DATE,'yyyy-MM-dd')&gt;=#{sdate}
+		and to_char(bb.BALANCE_DATE,'yyyy-MM-dd')&lt;=#{mdate})
+		GROUP BY subjectNo,balFlag) TT ON T.subjectNo=TT.subjectNo AND T.balFlag = TT.balFlag
+ group by T.subjectNo,  T.balFlag
+      <!-- (
+      select 
+        decode(bb.SUBJECT_LEVEL,'1',bb.subject_no,bb.FSUBJECT_NO) as subjectNo,/*科目号*/
+        bb.BALANCE_DATE  as balanceDate, /*余额日期*/
+          bb.bal_flag as balFlag, /*余额方向*/
+		       NVL(bb.TDY_O_AMT, 0) as TdyOCAmt, /*原币余额*/
+		       NVL(bb.TDY_O_C_AMT, 0) as TdyODAmt, /*原币余额借方*/
+		       NVL(TDY_O_CO_C_AMT, 0) as TdyOCoCAmt,/*原币余额贷方*/
+            NVL(TDY_O_CO_D_AMT, 0) as TdyOCoDAmt/*原币余额贷方*/
+		from BOK_BALANCE bb
+	where bb.BOOKSET_ID=#{booksetId}
+		and bb.SUBJECT_NO like '6%'
+		and to_char(bb.BALANCE_DATE,'yyyy-MM-dd')&gt;=#{vdate}
+		and to_char(bb.BALANCE_DATE,'yyyy-MM-dd')&lt;=#{mdate}
+    )TT group by TT.subjectNo,TT.balanceDate,TT.balFlag -->
+	
+	</select>
+	
+	<select id="selectAllBalanceAll" resultMap="com.joyintech.tams.disclosure.busicommon.common.dao.BokBalance001Mapper.BaseResultMap">
+		select <include refid='com.joyintech.tams.disclosure.busicommon.common.dao.BokBalance001Mapper.Base_Column_List'/>
+		from BOK_BALANCE bb
+		where 1 = 1
+		and bb.SUBJECT_NO like '6%'
+		and to_char(bb.BALANCE_DATE,'yyyy-MM-dd')&gt;=#{vdate}
+		and to_char(bb.BALANCE_DATE,'yyyy-MM-dd')&lt;=#{mdate}
+		and bb.BOOKSET_ID IN
+		<foreach collection="accounts" item="item" separator="," open="(" close=")">
+			#{item.code}
+		</foreach>
+	</select>
+	
+	<select id="getLinkSelectOption" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select distinct
+            sdl.ITEM_CODE id, sdl.ITEM_VALUE text
+        from SYS_DATADICT_LIST sdl
+        inner join SYS_DATADICT_LIST_LINK sdll
+            on sdl.ITEM_CODE = sdll.ITEM_CODE
+        <if test="dict_code_parent != null and dict_code_parent != ''">
+            and sdll.LINKED_DICT_CODE = #{dict_code_parent}
+        </if>
+        <if test="dict_code_child != null and dict_code_child != ''">
+           and sdl.DICT_CODE = #{dict_code_child}
+           and sdll.DICT_CODE = #{dict_code_child}
+        </if>
+        <if test="item_code_parent != null and item_code_parent != ''">
+            and TRIM(sdll.LINKED_ITEM_CODE) = TRIM(#{item_code_parent})
+        </if>
+        <where>
+            <if test="search != null and search !=''">
+                sdl.ITEM_VALUE like '%' || #{search} || '%'
+            </if>
+        </where>
+        ORDER BY sdl.ITEM_CODE asc
+    </select>
+    
+    <select id="selectProfitCalculationDtoList" resultType="com.joyintech.tams.disclosure.busicommon.financialstatements.valprofitquery.dto.DisProfitCalculationDto">
+    	SELECT
+    		proj_name projName,
+			proj_code projCode,
+			proj_level projLevel,
+			subject_no subjectNo,
+			crdr_flg crdrFlg,
+			formula,
+			show_flg showFlg,
+			show_order showOrder
+		FROM REP_BOK_PROFIT_REP_CONFIG
+		   where PROJ_TYPE='03'
+		order by proj_code
+    </select>
+    
+    <!-- 一體化 查询利润表表样 add by dongxiangyang 20200211 start -->
+    <select id="selectProfitCalculationDtoListYth" resultType="com.joyintech.tams.disclosure.busicommon.financialstatements.valprofitquery.dto.DisProfitCalculationDto">
+    	SELECT
+    		proj_name projName,
+			proj_code projCode,
+			proj_level projLevel,
+			subject_no subjectNo,
+			crdr_flg crdrFlg,
+			formula,
+			show_flg showFlg,
+			show_order showOrder
+		FROM REP_BOK_PROFIT_REP_CONFIG_YTH
+		   where PROJ_TYPE='03'
+		order by proj_code
+    </select>
+        <!-- 一體化 查询利润表表样 add by dongxiangyang 20200211 end -->
+    <select id="selectAllBalancebAmtYth"   resultType="com.joyintech.tams.disclosure.busicommon.common.dto.BokBalance">
+    select bb.subject_no as subjectNo, /*科目号*/
+               bb.bal_flag as balFlag, /*余额方向*/
+              sum(NVL(bb.TDY_B_C_AMT, 0)) as TdyBCAmt, /*本币余额*/
+               sum(NVL(bb.TDY_B_D_AMT, 0)) as TdyBDAmt, /*本币余额借方*/
+                sum(NVL(TDY_B_CO_C_AMT, 0)) as TdyBCoCAmt, /*原币余额贷方*/
+               sum(NVL(TDY_B_CO_D_AMT, 0)) as TdyBCoDAmt /*原币余额贷方*/
+          from BOK_BALANCE bb
+         where bb.BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR})
+			and bb.SUBJECT_NO like '6%' 
+      and  (bb.SUBJECT_LEVEL='1' or    bb.SUBJECT_LEVEL='2') 
+			and to_char(bb.BALANCE_DATE,'yyyy-MM-dd')&gt;=#{vdate}
+			and to_char(bb.BALANCE_DATE,'yyyy-MM-dd')&lt;=#{mdate}
+			 group by  bb.subject_no,bb.bal_flag
+    </select>
+</mapper>

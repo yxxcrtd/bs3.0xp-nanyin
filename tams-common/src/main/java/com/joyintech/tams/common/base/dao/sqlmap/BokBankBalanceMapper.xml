@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.BokBankBalanceMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.BokBankBalance" >
+        <id column="SQE_NO" property="sqeNo" jdbcType="VARCHAR" />
+        <result column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <result column="VOUCH_NUM" property="vouchNum" jdbcType="DATE" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="BRANCH" property="branch" jdbcType="DECIMAL" />
+        <result column="TABLE_ID" property="tableId" jdbcType="VARCHAR" />
+        <result column="SUBJECT_NO" property="subjectNo" jdbcType="VARCHAR" />
+        <result column="B_AMT_BOOK_DATE" property="bAmtBookDate" jdbcType="DECIMAL" />
+        <result column="BAL_FLAG_BOOK_DATE" property="balFlagBookDate" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="BUSI_ID" property="busiId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SQE_NO SQE_NO, BOOKSET_ID BOOKSET_ID, VOUCH_NUM VOUCH_NUM, FINPROD_ID FINPROD_ID, 
+        BRANCH BRANCH, TABLE_ID TABLE_ID, SUBJECT_NO SUBJECT_NO, B_AMT_BOOK_DATE B_AMT_BOOK_DATE, 
+        BAL_FLAG_BOOK_DATE BAL_FLAG_BOOK_DATE, CCY CCY, BUSI_ID BUSI_ID, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.BokBankBalanceMapper.Base_Column_List" />
+        from BOK_BANK_BALANCE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.BokBankBalanceMapper.Base_Column_List" />
+        from BOK_BANK_BALANCE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.BokBankBalanceMapper.Base_Column_List" />
+        from BOK_BANK_BALANCE
+        where SQE_NO = #{sqeNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from BOK_BANK_BALANCE
+        where SQE_NO = #{sqeNo,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.BokBankBalance" >
+        insert into BOK_BANK_BALANCE (SQE_NO, BOOKSET_ID, VOUCH_NUM, 
+            FINPROD_ID, BRANCH, TABLE_ID, 
+            SUBJECT_NO, B_AMT_BOOK_DATE, BAL_FLAG_BOOK_DATE, 
+            CCY, BUSI_ID, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{sqeNo,jdbcType=VARCHAR}, #{booksetId,jdbcType=VARCHAR}, #{vouchNum,jdbcType=DATE}, 
+            #{finprodId,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, #{tableId,jdbcType=VARCHAR}, 
+            #{subjectNo,jdbcType=VARCHAR}, #{bAmtBookDate,jdbcType=DECIMAL}, #{balFlagBookDate,jdbcType=VARCHAR}, 
+            #{ccy,jdbcType=VARCHAR}, #{busiId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.BokBankBalance" >
+        insert into BOK_BANK_BALANCE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="sqeNo != null" >
+                SQE_NO,
+            </if>
+            <if test="booksetId != null" >
+                BOOKSET_ID,
+            </if>
+            <if test="vouchNum != null" >
+                VOUCH_NUM,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="tableId != null" >
+                TABLE_ID,
+            </if>
+            <if test="subjectNo != null" >
+                SUBJECT_NO,
+            </if>
+            <if test="bAmtBookDate != null" >
+                B_AMT_BOOK_DATE,
+            </if>
+            <if test="balFlagBookDate != null" >
+                BAL_FLAG_BOOK_DATE,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="busiId != null" >
+                BUSI_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="sqeNo != null" >
+                #{sqeNo,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetId != null" >
+                #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="vouchNum != null" >
+                #{vouchNum,jdbcType=DATE},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="tableId != null" >
+                #{tableId,jdbcType=VARCHAR},
+            </if>
+            <if test="subjectNo != null" >
+                #{subjectNo,jdbcType=VARCHAR},
+            </if>
+            <if test="bAmtBookDate != null" >
+                #{bAmtBookDate,jdbcType=DECIMAL},
+            </if>
+            <if test="balFlagBookDate != null" >
+                #{balFlagBookDate,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="busiId != null" >
+                #{busiId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.BokBankBalance" >
+        insert into BOK_BANK_BALANCE(SQE_NO, BOOKSET_ID, VOUCH_NUM, FINPROD_ID, BRANCH, TABLE_ID, 
+        SUBJECT_NO, B_AMT_BOOK_DATE, BAL_FLAG_BOOK_DATE, CCY, BUSI_ID, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select SQE_NO, BOOKSET_ID, VOUCH_NUM, FINPROD_ID, BRANCH, TABLE_ID, 
+            SUBJECT_NO, B_AMT_BOOK_DATE, BAL_FLAG_BOOK_DATE, CCY, BUSI_ID, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from BOK_BANK_BALANCE
+             where 1 = 1 and SQE_NO = #{sqeNo,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.BokBankBalance" >
+        update BOK_BANK_BALANCE
+        <set >
+            <if test="booksetId != null" >
+                BOOKSET_ID = #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="vouchNum != null" >
+                VOUCH_NUM = #{vouchNum,jdbcType=DATE},
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                BRANCH = #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="tableId != null" >
+                TABLE_ID = #{tableId,jdbcType=VARCHAR},
+            </if>
+            <if test="subjectNo != null" >
+                SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR},
+            </if>
+            <if test="bAmtBookDate != null" >
+                B_AMT_BOOK_DATE = #{bAmtBookDate,jdbcType=DECIMAL},
+            </if>
+            <if test="balFlagBookDate != null" >
+                BAL_FLAG_BOOK_DATE = #{balFlagBookDate,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="busiId != null" >
+                BUSI_ID = #{busiId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SQE_NO = #{sqeNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokBankBalance" >
+        update BOK_BANK_BALANCE
+        set BOOKSET_ID = #{booksetId,jdbcType=VARCHAR},
+            VOUCH_NUM = #{vouchNum,jdbcType=DATE},
+            FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            BRANCH = #{branch,jdbcType=DECIMAL},
+            TABLE_ID = #{tableId,jdbcType=VARCHAR},
+            SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR},
+            B_AMT_BOOK_DATE = #{bAmtBookDate,jdbcType=DECIMAL},
+            BAL_FLAG_BOOK_DATE = #{balFlagBookDate,jdbcType=VARCHAR},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            BUSI_ID = #{busiId,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SQE_NO = #{sqeNo,jdbcType=VARCHAR}
+    </update>
+</mapper>

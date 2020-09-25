@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.BokBankSceConfigMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.BokBankSceConfig" >
+        <id column="SQE_NO" property="sqeNo" jdbcType="VARCHAR" />
+        <result column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <result column="TABLE_ID" property="tableId" jdbcType="VARCHAR" />
+        <result column="ACCURE_TYPE" property="accureType" jdbcType="VARCHAR" />
+        <result column="DAYEND_TYPE" property="dayendType" jdbcType="VARCHAR" />
+        <result column="PS" property="ps" jdbcType="VARCHAR" />
+        <result column="BASE_NATURE" property="baseNature" jdbcType="VARCHAR" />
+        <result column="FEE_TYPE" property="feeType" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SQE_NO SQE_NO, BOOKSET_ID BOOKSET_ID, TABLE_ID TABLE_ID, ACCURE_TYPE ACCURE_TYPE, 
+        DAYEND_TYPE DAYEND_TYPE, PS PS, BASE_NATURE BASE_NATURE, FEE_TYPE FEE_TYPE, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.BokBankSceConfigMapper.Base_Column_List" />
+        from BOK_BANK_SCE_CONFIG
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.BokBankSceConfigMapper.Base_Column_List" />
+        from BOK_BANK_SCE_CONFIG
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.BokBankSceConfigMapper.Base_Column_List" />
+        from BOK_BANK_SCE_CONFIG
+        where SQE_NO = #{sqeNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from BOK_BANK_SCE_CONFIG
+        where SQE_NO = #{sqeNo,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.BokBankSceConfig" >
+        insert into BOK_BANK_SCE_CONFIG (SQE_NO, BOOKSET_ID, TABLE_ID, 
+            ACCURE_TYPE, DAYEND_TYPE, PS, 
+            BASE_NATURE, FEE_TYPE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{sqeNo,jdbcType=VARCHAR}, #{booksetId,jdbcType=VARCHAR}, #{tableId,jdbcType=VARCHAR}, 
+            #{accureType,jdbcType=VARCHAR}, #{dayendType,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR}, 
+            #{baseNature,jdbcType=VARCHAR}, #{feeType,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.BokBankSceConfig" >
+        insert into BOK_BANK_SCE_CONFIG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="sqeNo != null" >
+                SQE_NO,
+            </if>
+            <if test="booksetId != null" >
+                BOOKSET_ID,
+            </if>
+            <if test="tableId != null" >
+                TABLE_ID,
+            </if>
+            <if test="accureType != null" >
+                ACCURE_TYPE,
+            </if>
+            <if test="dayendType != null" >
+                DAYEND_TYPE,
+            </if>
+            <if test="ps != null" >
+                PS,
+            </if>
+            <if test="baseNature != null" >
+                BASE_NATURE,
+            </if>
+            <if test="feeType != null" >
+                FEE_TYPE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="sqeNo != null" >
+                #{sqeNo,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetId != null" >
+                #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="tableId != null" >
+                #{tableId,jdbcType=VARCHAR},
+            </if>
+            <if test="accureType != null" >
+                #{accureType,jdbcType=VARCHAR},
+            </if>
+            <if test="dayendType != null" >
+                #{dayendType,jdbcType=VARCHAR},
+            </if>
+            <if test="ps != null" >
+                #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="baseNature != null" >
+                #{baseNature,jdbcType=VARCHAR},
+            </if>
+            <if test="feeType != null" >
+                #{feeType,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.BokBankSceConfig" >
+        insert into BOK_BANK_SCE_CONFIG(SQE_NO, BOOKSET_ID, TABLE_ID, ACCURE_TYPE, DAYEND_TYPE, 
+        PS, BASE_NATURE, FEE_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        select SQE_NO, BOOKSET_ID, TABLE_ID, ACCURE_TYPE, DAYEND_TYPE, 
+            PS, BASE_NATURE, FEE_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            
+             from BOK_BANK_SCE_CONFIG
+             where 1 = 1 and SQE_NO = #{sqeNo,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.BokBankSceConfig" >
+        update BOK_BANK_SCE_CONFIG
+        <set >
+            <if test="booksetId != null" >
+                BOOKSET_ID = #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="tableId != null" >
+                TABLE_ID = #{tableId,jdbcType=VARCHAR},
+            </if>
+            <if test="accureType != null" >
+                ACCURE_TYPE = #{accureType,jdbcType=VARCHAR},
+            </if>
+            <if test="dayendType != null" >
+                DAYEND_TYPE = #{dayendType,jdbcType=VARCHAR},
+            </if>
+            <if test="ps != null" >
+                PS = #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="baseNature != null" >
+                BASE_NATURE = #{baseNature,jdbcType=VARCHAR},
+            </if>
+            <if test="feeType != null" >
+                FEE_TYPE = #{feeType,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SQE_NO = #{sqeNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokBankSceConfig" >
+        update BOK_BANK_SCE_CONFIG
+        set BOOKSET_ID = #{booksetId,jdbcType=VARCHAR},
+            TABLE_ID = #{tableId,jdbcType=VARCHAR},
+            ACCURE_TYPE = #{accureType,jdbcType=VARCHAR},
+            DAYEND_TYPE = #{dayendType,jdbcType=VARCHAR},
+            PS = #{ps,jdbcType=VARCHAR},
+            BASE_NATURE = #{baseNature,jdbcType=VARCHAR},
+            FEE_TYPE = #{feeType,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SQE_NO = #{sqeNo,jdbcType=VARCHAR}
+    </update>
+</mapper>

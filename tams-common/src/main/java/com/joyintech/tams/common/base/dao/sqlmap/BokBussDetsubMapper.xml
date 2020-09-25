@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.BokBussDetsubMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.BokBussDetsub" >
+        <id column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <id column="DETAIL_SUBJECT_NO" property="detailSubjectNo" jdbcType="VARCHAR" />
+        <result column="DETAIL_SUBJECT_NAME" property="detailSubjectName" jdbcType="VARCHAR" />
+        <result column="FSUBJECT_ID" property="fsubjectId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="DETAIL_SUBJECT_NO_TAIL" property="detailSubjectNoTail" jdbcType="VARCHAR" />
+        <result column="DETAIL_SUBNAME_TAIL" property="detailSubnameTail" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        BOOKSET_ID BOOKSET_ID, DETAIL_SUBJECT_NO DETAIL_SUBJECT_NO, DETAIL_SUBJECT_NAME DETAIL_SUBJECT_NAME, 
+        FSUBJECT_ID FSUBJECT_ID, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, DETAIL_SUBJECT_NO_TAIL DETAIL_SUBJECT_NO_TAIL, 
+        DETAIL_SUBNAME_TAIL DETAIL_SUBNAME_TAIL
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.BokBussDetsubMapper.Base_Column_List" />
+        from BOK_BUSS_DETSUB
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.BokBussDetsubMapper.Base_Column_List" />
+        from BOK_BUSS_DETSUB
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.BokBussDetsubKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.BokBussDetsubMapper.Base_Column_List" />
+        from BOK_BUSS_DETSUB
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and DETAIL_SUBJECT_NO = #{detailSubjectNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokBussDetsubKey" >
+        delete from BOK_BUSS_DETSUB
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and DETAIL_SUBJECT_NO = #{detailSubjectNo,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.BokBussDetsub" >
+        insert into BOK_BUSS_DETSUB (BOOKSET_ID, DETAIL_SUBJECT_NO, DETAIL_SUBJECT_NAME, 
+            FSUBJECT_ID, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            DETAIL_SUBJECT_NO_TAIL, DETAIL_SUBNAME_TAIL
+            )
+        values (#{booksetId,jdbcType=VARCHAR}, #{detailSubjectNo,jdbcType=VARCHAR}, #{detailSubjectName,jdbcType=VARCHAR}, 
+            #{fsubjectId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{detailSubjectNoTail,jdbcType=VARCHAR}, #{detailSubnameTail,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.BokBussDetsub" >
+        insert into BOK_BUSS_DETSUB
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="booksetId != null" >
+                BOOKSET_ID,
+            </if>
+            <if test="detailSubjectNo != null" >
+                DETAIL_SUBJECT_NO,
+            </if>
+            <if test="detailSubjectName != null" >
+                DETAIL_SUBJECT_NAME,
+            </if>
+            <if test="fsubjectId != null" >
+                FSUBJECT_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="detailSubjectNoTail != null" >
+                DETAIL_SUBJECT_NO_TAIL,
+            </if>
+            <if test="detailSubnameTail != null" >
+                DETAIL_SUBNAME_TAIL,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="booksetId != null" >
+                #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="detailSubjectNo != null" >
+                #{detailSubjectNo,jdbcType=VARCHAR},
+            </if>
+            <if test="detailSubjectName != null" >
+                #{detailSubjectName,jdbcType=VARCHAR},
+            </if>
+            <if test="fsubjectId != null" >
+                #{fsubjectId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="detailSubjectNoTail != null" >
+                #{detailSubjectNoTail,jdbcType=VARCHAR},
+            </if>
+            <if test="detailSubnameTail != null" >
+                #{detailSubnameTail,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.BokBussDetsub" >
+        insert into BOK_BUSS_DETSUB(BOOKSET_ID, DETAIL_SUBJECT_NO, DETAIL_SUBJECT_NAME, FSUBJECT_ID, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, DETAIL_SUBJECT_NO_TAIL, 
+        DETAIL_SUBNAME_TAIL)
+        select BOOKSET_ID, DETAIL_SUBJECT_NO, DETAIL_SUBJECT_NAME, FSUBJECT_ID, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, DETAIL_SUBJECT_NO_TAIL, 
+            DETAIL_SUBNAME_TAIL
+             from BOK_BUSS_DETSUB
+             where 1 = 1 and BOOKSET_ID = #{booksetId,jdbcType=VARCHAR} and DETAIL_SUBJECT_NO = #{detailSubjectNo,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.BokBussDetsub" >
+        update BOK_BUSS_DETSUB
+        <set >
+            <if test="detailSubjectName != null" >
+                DETAIL_SUBJECT_NAME = #{detailSubjectName,jdbcType=VARCHAR},
+            </if>
+            <if test="fsubjectId != null" >
+                FSUBJECT_ID = #{fsubjectId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="detailSubjectNoTail != null" >
+                DETAIL_SUBJECT_NO_TAIL = #{detailSubjectNoTail,jdbcType=VARCHAR},
+            </if>
+            <if test="detailSubnameTail != null" >
+                DETAIL_SUBNAME_TAIL = #{detailSubnameTail,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and DETAIL_SUBJECT_NO = #{detailSubjectNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokBussDetsub" >
+        update BOK_BUSS_DETSUB
+        set DETAIL_SUBJECT_NAME = #{detailSubjectName,jdbcType=VARCHAR},
+            FSUBJECT_ID = #{fsubjectId,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            DETAIL_SUBJECT_NO_TAIL = #{detailSubjectNoTail,jdbcType=VARCHAR},
+            DETAIL_SUBNAME_TAIL = #{detailSubnameTail,jdbcType=VARCHAR}
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and DETAIL_SUBJECT_NO = #{detailSubjectNo,jdbcType=VARCHAR}
+    </update>
+</mapper>

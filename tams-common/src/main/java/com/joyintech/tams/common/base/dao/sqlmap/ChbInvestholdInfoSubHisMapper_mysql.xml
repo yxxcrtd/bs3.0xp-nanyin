@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbInvestholdInfoSubHisMapper_mysql">
+	<insert id="insertHisByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSubHis" >
+        insert into CHB_INVESTHOLD_INFO_SUB_HIS(HIS_NO, REGIST_SEQNO, REGIST_BANK_CODE, CHB_SUBMIT_DEADLINE, 
+        PRD_REGIST_CODE, INDENTIFY_MARK, CCY, HOLD_DATE, AMOUNT, QTY, CNY_AMT, REMARK, SUBMIT_DEADLINE, 
+        WORKFLOW_ID, SEND_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME, ORG_CODE, DEPT_CODE, SUBMIT_TIME, SUMIT_SEQ, CREATE_DEPT, CHECK_SEQNO, 
+        PRODID)
+        select (select IFNULL(max(HIS_NO), 0) from CHB_INVESTHOLD_INFO_SUB_HIS where STATUS = 'E') + 1 HIS_NO, REGIST_SEQNO, REGIST_BANK_CODE, CHB_SUBMIT_DEADLINE, 
+            PRD_REGIST_CODE, INDENTIFY_MARK, CCY, HOLD_DATE, AMOUNT, QTY, CNY_AMT, REMARK, SUBMIT_DEADLINE, 
+            WORKFLOW_ID, SEND_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, ORG_CODE, DEPT_CODE, SUBMIT_TIME, SUMIT_SEQ, CREATE_DEPT, CHECK_SEQNO, 
+            PRODID
+             from CHB_INVESTHOLD_INFO_SUB
+             where STATUS = 'E'
+    </insert>
+	<insert id="insertHisByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSubHis" >
+        insert into CHB_INVESTHOLD_INFO_SUB_HIS(HIS_NO, REGIST_SEQNO, REGIST_BANK_CODE, CHB_SUBMIT_DEADLINE, 
+        PRD_REGIST_CODE, INDENTIFY_MARK, CCY, HOLD_DATE, AMOUNT, QTY, CNY_AMT, REMARK, SUBMIT_DEADLINE, 
+        WORKFLOW_ID, SEND_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME, ORG_CODE, DEPT_CODE, SUBMIT_TIME, SUMIT_SEQ, CREATE_DEPT, CHECK_SEQNO, 
+        PRODID)
+        select (select IFNULL(max(HIS_NO), 0) from CHB_INVESTHOLD_INFO_SUB_HIS where STATUS = 'E') + 1 HIS_NO, REGIST_SEQNO, REGIST_BANK_CODE, CHB_SUBMIT_DEADLINE, 
+            PRD_REGIST_CODE, INDENTIFY_MARK, CCY, HOLD_DATE, AMOUNT, QTY, CNY_AMT, REMARK, SUBMIT_DEADLINE, 
+            WORKFLOW_ID, SEND_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, ORG_CODE, DEPT_CODE, SUBMIT_TIME, SUMIT_SEQ, CREATE_DEPT, CHECK_SEQNO, 
+            PRODID
+             from CHB_INVESTHOLD_INFO_SUB
+             where STATUS = 'E' and WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+    </insert>
+</mapper>

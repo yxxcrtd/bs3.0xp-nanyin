@@ -1,0 +1,143 @@
+/*
+ * 文件名：ResetBaseRuleInfoReaderService.java
+ * 版权：Copyright 2017-2018 JoyinTech. Co. Ltd. All Rights Reserved.
+ * 描述：理财资管管理系统V2.0
+ * 修改人：zhangnian
+ * 修改时间：2019年2月16日
+ * 修改内容：新建
+ * 系统名称：理财资管管理系统V2.0
+ */
+
+package com.joyintech.tams.invest.batch.susprdfutureopenplangen.service;
+
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.FinOpenPlan;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto;
+import com.joyintech.tams.invest.batch.susprdfutureopenplangen.relyingonresources.dto.BussFinProductOpenPlanDto;
+import com.joyintech.tams.invest.common.CommonUtil;
+
+/**
+ * reader相关业务处理
+ * 
+ * @version 1.0 2019年9月24日
+ * @since 1.0
+ */
+@SuppressWarnings("rawtypes")
+@Service
+@Scope("prototype")
+public class SusPrdFutureOpenPlanGenProcesserService extends BaseService {
+
+	/**
+	 * 
+	 * @param susprdfutureopenplangendto
+	 * @param years 推迟年数
+	 */
+	public BussFinProductOpenPlanDto executeDto(SusPrdFutureOpenPlanGenDto susprdfutureopenplangendto,int years)
+			throws Exception {
+
+		BussFinProductOpenPlanDto bussFinProductOpenPlanDto = new BussFinProductOpenPlanDto();
+		BeanUtil.copyPropertiesIgnoreNull(bussFinProductOpenPlanDto, susprdfutureopenplangendto);
+		bussFinProductOpenPlanDto.setVdate(susprdfutureopenplangendto.getOpenVdate());
+		bussFinProductOpenPlanDto.setMdate(DateUtil.addYear(susprdfutureopenplangendto.getOpenMdate(), years));
+		bussFinProductOpenPlanDto.setOperationType(susprdfutureopenplangendto.getOpenMode());
+		bussFinProductOpenPlanDto.setTradCalender(susprdfutureopenplangendto.getCalendarId());
+		bussFinProductOpenPlanDto.setCalcMethod(susprdfutureopenplangendto.getCalcMethod());
+		if(StringUtil.isNotEmpty(susprdfutureopenplangendto.getOpenCycle())) {
+			bussFinProductOpenPlanDto.setOpenCycle(Long.parseLong(susprdfutureopenplangendto.getOpenCycle()));
+		}
+		bussFinProductOpenPlanDto.setOpenCycleUnit(susprdfutureopenplangendto.getOpenCycleUnit());
+		if (DictCodeListExt1.日期类型_周几.getValue().equals(susprdfutureopenplangendto.getDayType())) {
+			bussFinProductOpenPlanDto.setDayOfWeek(susprdfutureopenplangendto.getDayValue());
+		}
+		if (DictCodeListExt1.日期类型_第几自然日.getValue().equals(susprdfutureopenplangendto.getDayType())) {
+			bussFinProductOpenPlanDto.setDayOfMonth(susprdfutureopenplangendto.getDayValue());
+		}
+		if (DictCodeListExt1.日期类型_第几工作日.getValue().equals(susprdfutureopenplangendto.getDayType())) {
+			bussFinProductOpenPlanDto.setWorkdayOfMonth(susprdfutureopenplangendto.getDayValue());
+		}
+		if (DictCodeListExt1.日期类型_第几周周几.getValue().equals(susprdfutureopenplangendto.getDayType())) {
+			bussFinProductOpenPlanDto.setWeekOfMonth(susprdfutureopenplangendto.getDayValue().split(":")[0]);
+		}
+		if (DictCodeListExt1.日期类型_第几周周几.getValue().equals(susprdfutureopenplangendto.getDayType())) {
+			bussFinProductOpenPlanDto.setWorkdayOfWeek(susprdfutureopenplangendto.getDayValue().split(":")[1]);
+		}
+		bussFinProductOpenPlanDto.setTradedayRule(susprdfutureopenplangendto.getTradedayRule());
+		bussFinProductOpenPlanDto.setFirstOpenDate(susprdfutureopenplangendto.getFirstOpenDate());
+		bussFinProductOpenPlanDto.setOpenDaysType(susprdfutureopenplangendto.getOpenDaysType());
+		if(StringUtil.isNotEmpty(susprdfutureopenplangendto.getOpenDays())) {
+			bussFinProductOpenPlanDto.setOpenDays(Long.parseLong(susprdfutureopenplangendto.getOpenDays()));
+		}
+		bussFinProductOpenPlanDto.setCpriceRule(susprdfutureopenplangendto.getCpriceRule());
+		bussFinProductOpenPlanDto.setIsCycle(susprdfutureopenplangendto.getIsCycle());
+		if(StringUtil.isNotEmpty(susprdfutureopenplangendto.getCloseDays())) {
+			bussFinProductOpenPlanDto.setCloseTerm(Integer.parseInt(susprdfutureopenplangendto.getCloseDays()));
+		}
+		bussFinProductOpenPlanDto.setDealMode(susprdfutureopenplangendto.getDealMode());
+
+		return bussFinProductOpenPlanDto;
+	}
+
+	public List<FinOpenPlan> executeList(List<FinOpenPlan> finOpenPlanList,
+			SusPrdFutureOpenPlanGenDto susprdfutureopenplangendto) throws Exception {
+		// 经过处理的List<开放计划>
+		List<FinOpenPlan> newFinOpenPlanList = new ArrayList<FinOpenPlan>();
+
+		for (FinOpenPlan finOpenPlan : finOpenPlanList) {
+            finOpenPlan.setOpenVdateUn(finOpenPlan.getOpenVdate());
+			if (finOpenPlan.getOpenVdateUn().compareTo(susprdfutureopenplangendto.getOpenVdate()) < 1) { // 前者小于等于后者
+				continue;
+			} else {
+                finOpenPlan.setOpenDateStrUn(finOpenPlan.getOpenDateStr());
+                finOpenPlan.setOpenDateEndUn(finOpenPlan.getOpenDateEnd());
+                finOpenPlan.setOpenMdateUn(finOpenPlan.getOpenMdate());
+				finOpenPlan.setCashId(susprdfutureopenplangendto.getCashId()); // 现金流代码
+				finOpenPlan.setOpenType(susprdfutureopenplangendto.getOpenType());
+				finOpenPlan.setFinprodId(susprdfutureopenplangendto.getFinprodId());
+				finOpenPlan.setBranch(0L);
+				finOpenPlan.setOpenStatus(DictCodeList.开放状态_开放.getValue());
+				newFinOpenPlanList.add(finOpenPlan);
+			}
+
+		}
+		return newFinOpenPlanList;
+	}
+	
+	/**
+	 * 两年后的今天的日期
+	 */
+	public static Date datePlusYears(Date nowDate,int years) {
+		Date twoYearLaterDate = new Date();
+		try {
+			twoYearLaterDate = new SimpleDateFormat("yyyy-MM-dd").parse(LocalDate.parse(new SimpleDateFormat("yyyy-MM-dd").format(nowDate)).plus(years, ChronoUnit.YEARS).toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return twoYearLaterDate;
+	}
+	
+	/**
+	 * 判断字符串不为空
+	 */
+	public static boolean isNotNull(String str) {
+		if(null!=str && !"".equals(str)) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+}

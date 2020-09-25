@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.dao.GetPrdInfoSelectMapper_mysql">
+	<select id="getPrdInfoSelect" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select distinct
+			PROD_ID id,
+			PROD_ABBR text
+		from
+			REP_PROD_INFO
+	    where STATUS='E'
+	    and p_prod_id is null 
+	    <if test="search != null and search != ''">
+	    	and (PROD_ID like concat('%', #{search, jdbcType=VARCHAR}, '%')
+            or PROD_ABBR like concat('%', #{search, jdbcType=VARCHAR}, '%'))
+	    </if>
+	    <if test="condition != null and condition != ''">
+			<![CDATA[ ${condition}  ]]>
+		</if>
+	</select>
+	<select id="getCusInfoSelect" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select distinct
+			INDENTIFY_MARK id,
+			HOLDER_NAME text
+		from
+			CHB_EQU_HOLD
+	    where STATUS='E'
+	    <if test="search != null and search != ''">
+	    	and (INDENTIFY_MARK like concat('%', #{search, jdbcType=VARCHAR}, '%')
+            or HOLDER_NAME like concat('%', #{search, jdbcType=VARCHAR}, '%'))
+	    </if>
+	    <if test="condition != null and condition != ''">
+			<![CDATA[ ${condition}  ]]>
+		</if>
+	</select>
+</mapper>

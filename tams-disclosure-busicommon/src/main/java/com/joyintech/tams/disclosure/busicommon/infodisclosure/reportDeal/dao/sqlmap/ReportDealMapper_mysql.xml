@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.dao.ReportDealMapper_mysql">
+	<select id="selectData" resultType="com.joyintech.tams.common.base.entity.RepReveal">
+	 	SELECT 
+			rr.PRODID prodid,
+			rr.SYS_FILENAME sysFilename,
+			rr.FILENAME filename,
+			rr.REVEAL_STATUS revealStatus,
+			DATE_FORMAT(rr.REVEAL_END_DATE revealEndDate,'%Y-%m-%d')
+		FROM 
+			REP_REVEAL rr
+		WHERE
+			rr.STATUS = 'E'
+        AND DATE_FORMAT(rr.REVEAL_DATE,'%Y-%m-%d') = #{data,jdbcType=VARCHAR}
+	 </select>
+	<select id="selectDataByRevEndDate" resultType="com.joyintech.tams.common.base.entity.RepReveal">
+	 	select DISTINCT prodid,reportCategory from (SELECT DISTINCT
+			rr.PRODID prodid,
+			rr.REPORT_CATEGORY reportCategory
+		FROM 
+			REP_REVEAL rr
+		WHERE
+			rr.STATUS = 'E'
+        AND DATE_FORMAT(rr.REVEAL_END_DATE,'%Y-%m-%d') = #{data,jdbcType=VARCHAR}
+        AND rr.REVEAL_STATUS = #{revealStatus,jdbcType=VARCHAR}
+        UNION ALL
+        SELECT DISTINCT
+		    rild.PRODID        prodid,
+		    ri.REPORT_CATEGORY reportCategory
+		FROM
+		    REP_INSTALL_LOG_DETAIL rild
+		LEFT JOIN
+		    REP_INFO ri
+		ON
+		    rild.REP_ID = ri.REP_ID
+		WHERE
+		    rild.STATUS='E'
+		AND rild.EXEC_STATUS='02'
+		AND DATE_FORMAT(rild.REVEAL_END_DATE,'%Y-%m-%d') = #{data,jdbcType=VARCHAR})
+	 </select>
+</mapper>

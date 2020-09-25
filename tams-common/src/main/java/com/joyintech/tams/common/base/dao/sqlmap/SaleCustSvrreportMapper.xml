@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.SaleCustSvrreportMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.SaleCustSvrreport" >
+        <result column="SENDDATE" property="senddate" jdbcType="DATE" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="ISSUEMEMBER" property="issuemember" jdbcType="VARCHAR" />
+        <result column="INORABOARD" property="inoraboard" jdbcType="VARCHAR" />
+        <result column="CUS_CODE" property="cusCode" jdbcType="VARCHAR" />
+        <result column="AREA_CODE" property="areaCode" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="PRINAMT" property="prinamt" jdbcType="DECIMAL" />
+        <result column="PRINAMT_RMB" property="prinamtRmb" jdbcType="DECIMAL" />
+        <result column="PRINAMT_CONFIRM" property="prinamtConfirm" jdbcType="DECIMAL" />
+        <result column="SG_AMT" property="sgAmt" jdbcType="DECIMAL" />
+        <result column="SG_AMT_RMB" property="sgAmtRmb" jdbcType="DECIMAL" />
+        <result column="SG_CONFIRM_AMT" property="sgConfirmAmt" jdbcType="DECIMAL" />
+        <result column="SH_AMT" property="shAmt" jdbcType="DECIMAL" />
+        <result column="SH_AMT_RMB" property="shAmtRmb" jdbcType="DECIMAL" />
+        <result column="SH_PRINCIPAL" property="shPrincipal" jdbcType="DECIMAL" />
+        <result column="SH_PRINCIPAL_RMB" property="shPrincipalRmb" jdbcType="DECIMAL" />
+        <result column="SH_QTY" property="shQty" jdbcType="DECIMAL" />
+        <result column="EXPIRE_AMT" property="expireAmt" jdbcType="DECIMAL" />
+        <result column="EXPIRE_AMT_RMB" property="expireAmtRmb" jdbcType="DECIMAL" />
+        <result column="EXPIRE_AMT_PRINCIPAL" property="expireAmtPrincipal" jdbcType="DECIMAL" />
+        <result column="EXPIRE_AMT_PRINCIPAL_RMB" property="expireAmtPrincipalRmb" jdbcType="DECIMAL" />
+        <result column="EXPIRE_AMT_QTY" property="expireAmtQty" jdbcType="DECIMAL" />
+        <result column="REBONUS_AMT" property="rebonusAmt" jdbcType="DECIMAL" />
+        <result column="REBONUS_AMT_RMB" property="rebonusAmtRmb" jdbcType="DECIMAL" />
+        <result column="REBONUS_AMT_QTY" property="rebonusAmtQty" jdbcType="DECIMAL" />
+        <result column="BONUS_AMT" property="bonusAmt" jdbcType="DECIMAL" />
+        <result column="BONUS_AMT_RMB" property="bonusAmtRmb" jdbcType="DECIMAL" />
+        <result column="QTY_ADD_AMT" property="qtyAddAmt" jdbcType="DECIMAL" />
+        <result column="QTY_ADD_AMT_RMB" property="qtyAddAmtRmb" jdbcType="DECIMAL" />
+        <result column="QTY_ADD" property="qtyAdd" jdbcType="DECIMAL" />
+        <result column="QTY_MINUS_PRINCIPAL" property="qtyMinusPrincipal" jdbcType="DECIMAL" />
+        <result column="QTY_MINUS_PRINCIPAL_RMB" property="qtyMinusPrincipalRmb" jdbcType="DECIMAL" />
+        <result column="QTY_MINUS" property="qtyMinus" jdbcType="DECIMAL" />
+        <result column="SAVE_AMT" property="saveAmt" jdbcType="DECIMAL" />
+        <result column="SAVE_CUS_NUM" property="saveCusNum" jdbcType="DECIMAL" />
+        <result column="SAVE_AMT_RMB" property="saveAmtRmb" jdbcType="DECIMAL" />
+        <result column="SAVE_QTY" property="saveQty" jdbcType="DECIMAL" />
+        <result column="EXCHANGE_RATE" property="exchangeRate" jdbcType="DECIMAL" />
+        <result column="CUS_TYPE" property="cusType" jdbcType="VARCHAR" />
+        <result column="UPDATETIME" property="updatetime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SaleCustSvrreport" >
+        insert into SALE_CUST_SVRREPORT (SENDDATE, FINPROD_ID, ISSUEMEMBER, 
+            INORABOARD, CUS_CODE, AREA_CODE, 
+            CCY, PRINAMT, PRINAMT_RMB, 
+            PRINAMT_CONFIRM, SG_AMT, SG_AMT_RMB, 
+            SG_CONFIRM_AMT, SH_AMT, SH_AMT_RMB, 
+            SH_PRINCIPAL, SH_PRINCIPAL_RMB, SH_QTY, 
+            EXPIRE_AMT, EXPIRE_AMT_RMB, EXPIRE_AMT_PRINCIPAL, 
+            EXPIRE_AMT_PRINCIPAL_RMB, EXPIRE_AMT_QTY, 
+            REBONUS_AMT, REBONUS_AMT_RMB, REBONUS_AMT_QTY, 
+            BONUS_AMT, BONUS_AMT_RMB, QTY_ADD_AMT, 
+            QTY_ADD_AMT_RMB, QTY_ADD, QTY_MINUS_PRINCIPAL, 
+            QTY_MINUS_PRINCIPAL_RMB, QTY_MINUS, SAVE_AMT, 
+            SAVE_CUS_NUM, SAVE_AMT_RMB, SAVE_QTY, 
+            EXCHANGE_RATE, CUS_TYPE, UPDATETIME
+            )
+        values (#{senddate,jdbcType=DATE}, #{finprodId,jdbcType=VARCHAR}, #{issuemember,jdbcType=VARCHAR}, 
+            #{inoraboard,jdbcType=VARCHAR}, #{cusCode,jdbcType=VARCHAR}, #{areaCode,jdbcType=VARCHAR}, 
+            #{ccy,jdbcType=VARCHAR}, #{prinamt,jdbcType=DECIMAL}, #{prinamtRmb,jdbcType=DECIMAL}, 
+            #{prinamtConfirm,jdbcType=DECIMAL}, #{sgAmt,jdbcType=DECIMAL}, #{sgAmtRmb,jdbcType=DECIMAL}, 
+            #{sgConfirmAmt,jdbcType=DECIMAL}, #{shAmt,jdbcType=DECIMAL}, #{shAmtRmb,jdbcType=DECIMAL}, 
+            #{shPrincipal,jdbcType=DECIMAL}, #{shPrincipalRmb,jdbcType=DECIMAL}, #{shQty,jdbcType=DECIMAL}, 
+            #{expireAmt,jdbcType=DECIMAL}, #{expireAmtRmb,jdbcType=DECIMAL}, #{expireAmtPrincipal,jdbcType=DECIMAL}, 
+            #{expireAmtPrincipalRmb,jdbcType=DECIMAL}, #{expireAmtQty,jdbcType=DECIMAL}, 
+            #{rebonusAmt,jdbcType=DECIMAL}, #{rebonusAmtRmb,jdbcType=DECIMAL}, #{rebonusAmtQty,jdbcType=DECIMAL}, 
+            #{bonusAmt,jdbcType=DECIMAL}, #{bonusAmtRmb,jdbcType=DECIMAL}, #{qtyAddAmt,jdbcType=DECIMAL}, 
+            #{qtyAddAmtRmb,jdbcType=DECIMAL}, #{qtyAdd,jdbcType=DECIMAL}, #{qtyMinusPrincipal,jdbcType=DECIMAL}, 
+            #{qtyMinusPrincipalRmb,jdbcType=DECIMAL}, #{qtyMinus,jdbcType=DECIMAL}, #{saveAmt,jdbcType=DECIMAL}, 
+            #{saveCusNum,jdbcType=DECIMAL}, #{saveAmtRmb,jdbcType=DECIMAL}, #{saveQty,jdbcType=DECIMAL}, 
+            #{exchangeRate,jdbcType=DECIMAL}, #{cusType,jdbcType=VARCHAR}, #{updatetime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.SaleCustSvrreport" >
+        insert into SALE_CUST_SVRREPORT
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="senddate != null" >
+                SENDDATE,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="issuemember != null" >
+                ISSUEMEMBER,
+            </if>
+            <if test="inoraboard != null" >
+                INORABOARD,
+            </if>
+            <if test="cusCode != null" >
+                CUS_CODE,
+            </if>
+            <if test="areaCode != null" >
+                AREA_CODE,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="prinamt != null" >
+                PRINAMT,
+            </if>
+            <if test="prinamtRmb != null" >
+                PRINAMT_RMB,
+            </if>
+            <if test="prinamtConfirm != null" >
+                PRINAMT_CONFIRM,
+            </if>
+            <if test="sgAmt != null" >
+                SG_AMT,
+            </if>
+            <if test="sgAmtRmb != null" >
+                SG_AMT_RMB,
+            </if>
+            <if test="sgConfirmAmt != null" >
+                SG_CONFIRM_AMT,
+            </if>
+            <if test="shAmt != null" >
+                SH_AMT,
+            </if>
+            <if test="shAmtRmb != null" >
+                SH_AMT_RMB,
+            </if>
+            <if test="shPrincipal != null" >
+                SH_PRINCIPAL,
+            </if>
+            <if test="shPrincipalRmb != null" >
+                SH_PRINCIPAL_RMB,
+            </if>
+            <if test="shQty != null" >
+                SH_QTY,
+            </if>
+            <if test="expireAmt != null" >
+                EXPIRE_AMT,
+            </if>
+            <if test="expireAmtRmb != null" >
+                EXPIRE_AMT_RMB,
+            </if>
+            <if test="expireAmtPrincipal != null" >
+                EXPIRE_AMT_PRINCIPAL,
+            </if>
+            <if test="expireAmtPrincipalRmb != null" >
+                EXPIRE_AMT_PRINCIPAL_RMB,
+            </if>
+            <if test="expireAmtQty != null" >
+                EXPIRE_AMT_QTY,
+            </if>
+            <if test="rebonusAmt != null" >
+                REBONUS_AMT,
+            </if>
+            <if test="rebonusAmtRmb != null" >
+                REBONUS_AMT_RMB,
+            </if>
+            <if test="rebonusAmtQty != null" >
+                REBONUS_AMT_QTY,
+            </if>
+            <if test="bonusAmt != null" >
+                BONUS_AMT,
+            </if>
+            <if test="bonusAmtRmb != null" >
+                BONUS_AMT_RMB,
+            </if>
+            <if test="qtyAddAmt != null" >
+                QTY_ADD_AMT,
+            </if>
+            <if test="qtyAddAmtRmb != null" >
+                QTY_ADD_AMT_RMB,
+            </if>
+            <if test="qtyAdd != null" >
+                QTY_ADD,
+            </if>
+            <if test="qtyMinusPrincipal != null" >
+                QTY_MINUS_PRINCIPAL,
+            </if>
+            <if test="qtyMinusPrincipalRmb != null" >
+                QTY_MINUS_PRINCIPAL_RMB,
+            </if>
+            <if test="qtyMinus != null" >
+                QTY_MINUS,
+            </if>
+            <if test="saveAmt != null" >
+                SAVE_AMT,
+            </if>
+            <if test="saveCusNum != null" >
+                SAVE_CUS_NUM,
+            </if>
+            <if test="saveAmtRmb != null" >
+                SAVE_AMT_RMB,
+            </if>
+            <if test="saveQty != null" >
+                SAVE_QTY,
+            </if>
+            <if test="exchangeRate != null" >
+                EXCHANGE_RATE,
+            </if>
+            <if test="cusType != null" >
+                CUS_TYPE,
+            </if>
+            <if test="updatetime != null" >
+                UPDATETIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="senddate != null" >
+                #{senddate,jdbcType=DATE},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="issuemember != null" >
+                #{issuemember,jdbcType=VARCHAR},
+            </if>
+            <if test="inoraboard != null" >
+                #{inoraboard,jdbcType=VARCHAR},
+            </if>
+            <if test="cusCode != null" >
+                #{cusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="areaCode != null" >
+                #{areaCode,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="prinamt != null" >
+                #{prinamt,jdbcType=DECIMAL},
+            </if>
+            <if test="prinamtRmb != null" >
+                #{prinamtRmb,jdbcType=DECIMAL},
+            </if>
+            <if test="prinamtConfirm != null" >
+                #{prinamtConfirm,jdbcType=DECIMAL},
+            </if>
+            <if test="sgAmt != null" >
+                #{sgAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="sgAmtRmb != null" >
+                #{sgAmtRmb,jdbcType=DECIMAL},
+            </if>
+            <if test="sgConfirmAmt != null" >
+                #{sgConfirmAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="shAmt != null" >
+                #{shAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="shAmtRmb != null" >
+                #{shAmtRmb,jdbcType=DECIMAL},
+            </if>
+            <if test="shPrincipal != null" >
+                #{shPrincipal,jdbcType=DECIMAL},
+            </if>
+            <if test="shPrincipalRmb != null" >
+                #{shPrincipalRmb,jdbcType=DECIMAL},
+            </if>
+            <if test="shQty != null" >
+                #{shQty,jdbcType=DECIMAL},
+            </if>
+            <if test="expireAmt != null" >
+                #{expireAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="expireAmtRmb != null" >
+                #{expireAmtRmb,jdbcType=DECIMAL},
+            </if>
+            <if test="expireAmtPrincipal != null" >
+                #{expireAmtPrincipal,jdbcType=DECIMAL},
+            </if>
+            <if test="expireAmtPrincipalRmb != null" >
+                #{expireAmtPrincipalRmb,jdbcType=DECIMAL},
+            </if>
+            <if test="expireAmtQty != null" >
+                #{expireAmtQty,jdbcType=DECIMAL},
+            </if>
+            <if test="rebonusAmt != null" >
+                #{rebonusAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="rebonusAmtRmb != null" >
+                #{rebonusAmtRmb,jdbcType=DECIMAL},
+            </if>
+            <if test="rebonusAmtQty != null" >
+                #{rebonusAmtQty,jdbcType=DECIMAL},
+            </if>
+            <if test="bonusAmt != null" >
+                #{bonusAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="bonusAmtRmb != null" >
+                #{bonusAmtRmb,jdbcType=DECIMAL},
+            </if>
+            <if test="qtyAddAmt != null" >
+                #{qtyAddAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="qtyAddAmtRmb != null" >
+                #{qtyAddAmtRmb,jdbcType=DECIMAL},
+            </if>
+            <if test="qtyAdd != null" >
+                #{qtyAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="qtyMinusPrincipal != null" >
+                #{qtyMinusPrincipal,jdbcType=DECIMAL},
+            </if>
+            <if test="qtyMinusPrincipalRmb != null" >
+                #{qtyMinusPrincipalRmb,jdbcType=DECIMAL},
+            </if>
+            <if test="qtyMinus != null" >
+                #{qtyMinus,jdbcType=DECIMAL},
+            </if>
+            <if test="saveAmt != null" >
+                #{saveAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="saveCusNum != null" >
+                #{saveCusNum,jdbcType=DECIMAL},
+            </if>
+            <if test="saveAmtRmb != null" >
+                #{saveAmtRmb,jdbcType=DECIMAL},
+            </if>
+            <if test="saveQty != null" >
+                #{saveQty,jdbcType=DECIMAL},
+            </if>
+            <if test="exchangeRate != null" >
+                #{exchangeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="cusType != null" >
+                #{cusType,jdbcType=VARCHAR},
+            </if>
+            <if test="updatetime != null" >
+                #{updatetime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SaleCustSvrreport" >
+        insert into SALE_CUST_SVRREPORT(SENDDATE, FINPROD_ID, ISSUEMEMBER, INORABOARD, CUS_CODE, 
+        AREA_CODE, CCY, PRINAMT, PRINAMT_RMB, PRINAMT_CONFIRM, SG_AMT, SG_AMT_RMB, SG_CONFIRM_AMT, 
+        SH_AMT, SH_AMT_RMB, SH_PRINCIPAL, SH_PRINCIPAL_RMB, SH_QTY, EXPIRE_AMT, EXPIRE_AMT_RMB, 
+        EXPIRE_AMT_PRINCIPAL, EXPIRE_AMT_PRINCIPAL_RMB, EXPIRE_AMT_QTY, REBONUS_AMT, REBONUS_AMT_RMB, 
+        REBONUS_AMT_QTY, BONUS_AMT, BONUS_AMT_RMB, QTY_ADD_AMT, QTY_ADD_AMT_RMB, QTY_ADD, 
+        QTY_MINUS_PRINCIPAL, QTY_MINUS_PRINCIPAL_RMB, QTY_MINUS, SAVE_AMT, SAVE_CUS_NUM, 
+        SAVE_AMT_RMB, SAVE_QTY, EXCHANGE_RATE, CUS_TYPE, UPDATETIME)
+        select SENDDATE, FINPROD_ID, ISSUEMEMBER, INORABOARD, CUS_CODE, 
+            AREA_CODE, CCY, PRINAMT, PRINAMT_RMB, PRINAMT_CONFIRM, SG_AMT, SG_AMT_RMB, SG_CONFIRM_AMT, 
+            SH_AMT, SH_AMT_RMB, SH_PRINCIPAL, SH_PRINCIPAL_RMB, SH_QTY, EXPIRE_AMT, EXPIRE_AMT_RMB, 
+            EXPIRE_AMT_PRINCIPAL, EXPIRE_AMT_PRINCIPAL_RMB, EXPIRE_AMT_QTY, REBONUS_AMT, REBONUS_AMT_RMB, 
+            REBONUS_AMT_QTY, BONUS_AMT, BONUS_AMT_RMB, QTY_ADD_AMT, QTY_ADD_AMT_RMB, QTY_ADD, 
+            QTY_MINUS_PRINCIPAL, QTY_MINUS_PRINCIPAL_RMB, QTY_MINUS, SAVE_AMT, SAVE_CUS_NUM, 
+            SAVE_AMT_RMB, SAVE_QTY, EXCHANGE_RATE, CUS_TYPE, UPDATETIME
+             from SALE_CUST_SVRREPORT
+             where 1 = 1
+    </insert>
+    
+    <select id="getSaleCustSvrreportOfFx" parameterType="map"
+		resultMap="BaseResultMap">
+		select SENDDATE,
+		       FINPROD_ID,
+		       ISSUEMEMBER,
+		       INORABOARD,
+		       CUS_CODE,
+		       AREA_CODE,
+		       CCY,
+		       PRINAMT,
+		       PRINAMT_RMB,
+		       PRINAMT_CONFIRM,
+		       SG_AMT,
+		       SG_AMT_RMB,
+		       SG_CONFIRM_AMT,
+		       SH_AMT,
+		       SH_AMT_RMB,
+		       SH_PRINCIPAL,
+		       SH_PRINCIPAL_RMB,
+		       SH_QTY,
+		       EXPIRE_AMT,
+		       EXPIRE_AMT_RMB,
+		       EXPIRE_AMT_PRINCIPAL,
+		       EXPIRE_AMT_PRINCIPAL_RMB,
+		       EXPIRE_AMT_QTY,
+		       REBONUS_AMT,
+		       REBONUS_AMT_RMB,
+		       REBONUS_AMT_QTY,
+		       BONUS_AMT,
+		       BONUS_AMT_RMB,
+		       QTY_ADD_AMT,
+		       QTY_ADD_AMT_RMB,
+		       QTY_ADD,
+		       QTY_MINUS_PRINCIPAL,
+		       QTY_MINUS_PRINCIPAL_RMB,
+		       QTY_MINUS,
+		       SAVE_AMT,
+		       SAVE_CUS_NUM,
+		       SAVE_AMT_RMB,
+		       SAVE_QTY,
+		       EXCHANGE_RATE,
+		       CUS_TYPE,
+		       UPDATETIME
+		  from SALE_CUST_SVRREPORT
+		where to_char(SENDDATE,'yyyy-MM-dd') = to_char(#{batchTime,jdbcType=DATE},'yyyy-MM-dd')
+				or to_char(UPDATETIME,'yyyy-MM-dd') = to_char(#{batchTime,jdbcType=DATE},'yyyy-MM-dd')
+	</select>
+</mapper>
