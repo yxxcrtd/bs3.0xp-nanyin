@@ -1,0 +1,3 @@
+/*银行账套*/
+delete from bok_bookset where bookset_id = 'BANK0001';
+Insert into bok_bookset (BOOKSET_ID,BOOKSET_NAME,BOOKSET_FULLNAME,BOOKSET_TYPE,ACCT_MODE,BOK_SPEC_MODE,ACCT_SUBJECT_ID,ACCT_SUBJECT_TYPE,STANDARD_CCY,BOOKSET_ID_TMPL,ACCT_STANDARD,START_DATE,END_DATE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('BANK0001','银行账套','银行账套','01',null,null,'BANK0001','BANK','CNY','BANK0001','YH',to_date('01-1月 -10','DD-MON-RR'),to_date('31-12月-99','DD-MON-RR'),'system',null,sysdate,'system',sysdate);

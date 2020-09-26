@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.joyintech.tams.valuation.report.common.infodisclosure.infodisclosuregenandsend.dao.InfoDisclosureGenAndSendMapper">
+	<select id="getAllRepInstallFileList"
+		resultType="com.joyintech.tams.valuation.report.common.infodisclosure.infodisclosuregenandsend.entity.InfoDisclosureGenAndSendEntity">
+		SELECT
+		files.ID id,
+    	files.JOB_ID jobId,
+    	files.JOB_SEQ jobSeq,
+    	files.PRODID prodid,
+    	files.PROD_NAME prodName,
+    	files.END_DATE endDate,
+    	files.START_DATE startDate,
+    	files.REVEAL_CHANNEL revealChannel,
+    	files.REVEAL_END_DATE revealEndDate,
+    	files.REP_TYPE rep_Type,
+    	files.REP_ID repId,
+    	files.REP_NAME repName,
+    	files.FILE_TYPE fileType,
+    	files.IS_CONFIRM isConfirm,
+    	files.IS_REVEAL isReveal,
+    	files.STATUS statu,
+		info.TEMPLATE_ID templateId,
+		info.TEMPLATE_PATH templatePath,
+		info.TEMPLATE_NAME templateName,
+		info.REPORT_NAME reportName,
+		info.REPORT_TYPE reportType,
+		info.REP_ORDER repOrder,
+		info.REPORT_CATEGORY reportCategory
+		FROM
+		REP_INSTALL_FILE files
+		LEFT JOIN REP_INFO info
+		on files.REP_ID = info.REP_ID
+		order by JOB_SEQ desc
+		<!-- WHERE
+		files.EXEC_STATUS IN ('01','02') -->
+	</select>
+	<select id="getRepScreenList" resultType="com.joyintech.tams.common.base.entity.RepScreen">
+        SELECT
+        	SCREEN_KEY,
+        	SCREEN_NAME,
+            SCREEN_TYPE,
+            SCREEN_VALUE,
+            SCREEN_STATUS
+        FROM REP_SCREEN 
+       	where REP_ID = #{repId}
+       	AND SCREEN_STATUS = 'Y'
+       	ORDER BY SCREEN_INDEX
+    </select>
+    <update id="updateRepInstallStatus" parameterType="com.joyintech.tams.valuation.report.common.infodisclosure.infodisclosuregenandsend.entity.InfoDisclosureGenAndSendEntity">
+        update  REP_INSTALL_FILE set EXEC_STATUS = #{execStatus, jdbcType=VARCHAR}
+        WHERE  ID = #{id, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByJobSeqSelective" parameterType="com.joyintech.tams.common.base.entity.RepInstallLog" >
+        update REP_INSTALL_LOG
+        <set >
+            <if test="jobId != null" >
+                JOB_ID = #{jobId,jdbcType=VARCHAR},
+            </if>
+            <if test="jobName != null" >
+                JOB_NAME = #{jobName,jdbcType=VARCHAR},
+            </if>
+            <if test="endDate != null" >
+                END_DATE = #{endDate,jdbcType=DATE},
+            </if>
+            <if test="startDate != null" >
+                START_DATE = #{startDate,jdbcType=DATE},
+            </if>
+            <if test="execDate != null" >
+                EXEC_DATE = #{execDate,jdbcType=DATE},
+            </if>
+            <if test="flag != null" >
+                FLAG = #{flag,jdbcType=VARCHAR},
+            </if>
+            <if test="execDetail != null" >
+                EXEC_DETAIL = #{execDetail,jdbcType=VARCHAR},
+            </if>
+            <if test="execStatus != null" >
+                EXEC_STATUS = #{execStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where JOB_SEQ = #{jobSeq,jdbcType=VARCHAR}
+    </update>
+</mapper>

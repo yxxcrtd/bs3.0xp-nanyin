@@ -1,0 +1,1 @@
+update RSK_ISUP_INDICATOR set EXPR='${FV202001010003}-${ZQDYWDDSYLQX}' where ind_name = '收益率曲线';

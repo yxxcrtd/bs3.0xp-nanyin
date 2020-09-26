@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.valuation.report.common.infodisclosure.reportDeal.dao.ReportDealMapper_mysql">
+
+    <select id="selectData" resultType="com.joyintech.tams.common.base.entity.RepReveal">
+	 	SELECT
+			rr.PRODID prodid,
+			rr.SYS_FILENAME sysFilename,
+			rr.FILENAME filename,
+			rr.REVEAL_STATUS revealStatus,
+			date_format(rr.REVEAL_END_DATE revealEndDate,'%y-%m-%d')
+		FROM
+			REP_REVEAL rr
+		WHERE
+			rr.STATUS = 'E'
+        AND date_format(rr.REVEAL_DATE,'%y-%m-%d') = #{data,jdbcType=VARCHAR}
+	 </select>
+</mapper>

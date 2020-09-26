@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.valuation.report.common.base.dao.ChbDeadLineMapper_mysql">
+
+    <!-- 获取中债报送截止日 -->
+    <select id="getChbDeadline" resultType="com.joyintech.tams.valuation.report.common.base.entity.ChbDeadLine001Dto" >
+        select deadline1.*
+        from(select @rn := @rn +1 num, deadline.* from(
+        SELECT
+        A.BUSI_DATE busiDate,
+        A.MARKET_CODE marketCode,
+        A.IS_HOLIDAY isHoliday,
+        A.STATUS status,
+        A.DEPT_CODE deptCode
+        FROM CHB_MKT_HOLIDAY A
+        <where>
+            <if test="type !=null and type == '01'.toString()">
+                A.BUSI_DATE &lt; str_to_date(#{holidayDate},'%y-%M-%d';)
+            </if>
+            <if test="type !=null and type == '02'.toString()">
+                A.BUSI_DATE &gt; str_to_date(#{holidayDate},'%y-%M-%d';)
+            </if>
+            AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
+            AND A.STATUS = 'E'
+            AND A.IS_HOLIDAY = '1'
+        </where>
+        <if test="type !=null and type == '01'.toString()">
+            order by A.BUSI_DATE desc
+        </if>
+        <if test="type !=null and type == '02'.toString()">
+            order by A.BUSI_DATE asc
+        </if>
+        )deadline,  (SELECT @rn := 0) b
+        )deadline1
+        where deadline1.num = #{days,jdbcType=INTEGER}
+    </select>
+    <!-- 获取中债报送截止日是日期当天的 -->
+    <select id="getChbDeadlineZero" resultType="com.joyintech.tams.valuation.report.common.base.entity.ChbDeadLine001Dto" >
+        select deadline1.*
+        from(select @rn := @rn +1 num, deadline.* from(
+        SELECT
+        A.BUSI_DATE busiDate,
+        A.MARKET_CODE marketCode,
+        A.IS_HOLIDAY isHoliday,
+        A.STATUS status,
+        A.DEPT_CODE deptCode
+        FROM CHB_MKT_HOLIDAY A
+        <where>
+            <if test="type !=null and type == '01'.toString()">
+                A.BUSI_DATE &lt;= str_to_date(#{holidayDate},'%y-%M-%d';)
+            </if>
+            <if test="type !=null and type == '02'.toString()">
+                A.BUSI_DATE &gt;= str_to_date(#{holidayDate},'%y-%M-%d';)
+            </if>
+            AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
+            AND A.STATUS = 'E'
+            AND A.IS_HOLIDAY = '1'
+        </where>
+        <if test="type !=null and type == '01'.toString()">
+            order by A.BUSI_DATE desc
+        </if>
+        <if test="type !=null and type == '02'.toString()">
+            order by A.BUSI_DATE asc
+        </if>
+        )deadline ,  (SELECT @rn := 0) b
+        )deadline1
+        where deadline1.num = 1
+    </select>
+</mapper>

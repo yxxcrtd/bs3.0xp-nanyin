@@ -1,0 +1,58 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.joyintech</groupId>
+		<artifactId>tams-parent</artifactId>
+		<version>0.0.1</version>
+	</parent>
+	<artifactId>valuation-package</artifactId>
+	<version>1.0.0</version>
+	<packaging>pom</packaging>
+	<name>valuation-package</name>
+	<modules>
+		<module>../tams-valuation-parent/tams-valuation</module>
+		<module>../microservice/service-valuation</module>
+		<module>../tams-common</module>
+		<module>../tams-valuation-common</module>
+		<module>../tams-valuation-batch</module>
+		<module>../tams-valuation-interf</module>
+		<module>../JixuCenter</module>
+	</modules>
+<!--	<parent>-->
+<!--		<groupId>com.joyintech</groupId>-->
+<!--		<artifactId>tams-parent</artifactId>-->
+<!--		<version>2.1.8.1</version>-->
+<!--	</parent>-->
+<!--	<artifactId>valuation-package</artifactId>-->
+<!--	<version>1.0.0</version>-->
+<!--	<packaging>pom</packaging>-->
+<!--	<name>valuation-package</name>-->
+<!--	<modules>-->
+<!--		&lt;!&ndash; 前台应用 &ndash;&gt;-->
+<!--		<module>../component-base</module>-->
+<!--		<module>../component-business</module>-->
+<!--		<module>../tams-common</module>-->
+<!--		<module>../tams-invest-common</module>-->
+<!--		<module>../tams-invest-interf</module>-->
+<!--		<module>../tams-invest-parent/tams-invest-basicdata</module>-->
+<!--		<module>../tams-valuation-api</module>-->
+<!--		<module>../tams-valuation-common</module>-->
+<!--		<module>../tams-valuation-parent/tams-valuation</module>-->
+<!--		<module>../tams-valuation-parent/singleValuation</module>-->
+
+<!--		&lt;!&ndash; 批处理  &ndash;&gt;-->
+<!--		<module>../tams-valuation-batch</module>-->
+<!--		&lt;!&ndash; 接口 &ndash;&gt;-->
+<!--		<module>../tams-valuation-interf</module>-->
+<!--		&lt;!&ndash;         微服务 &ndash;&gt;-->
+<!--		<module>../microservice/service-basicdata</module>-->
+
+<!--		&lt;!&ndash;         几许中心包 &ndash;&gt;-->
+<!--		<module>../JixuCenter</module>-->
+
+
+
+<!--	</modules>-->
+
+</project>

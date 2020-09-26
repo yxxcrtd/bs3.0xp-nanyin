@@ -1,0 +1,104 @@
+-- 暂存功能草稿箱
+drop table SYS_TRASH_INFO;
+CREATE TABLE
+    SYS_TRASH_INFO
+    (
+        TRASH_ID VARCHAR2(32) NOT NULL,
+        TRASH_NAME VARCHAR2(200) NOT NULL,
+        USER_NAME VARCHAR2(32) NOT NULL,
+        PAGE_ID VARCHAR2(50) NOT NULL,
+        SEQ_NO VARCHAR2(32) NOT NULL,
+        CREATE_USER VARCHAR2(20) NOT NULL,
+        CREATE_DEPT VARCHAR2(32),
+        CREATE_TIME TIMESTAMP(6) NOT NULL,
+        UPDATE_USER VARCHAR2(20) NOT NULL,
+        UPDATE_TIME TIMESTAMP(6) NOT NULL,
+        PRIMARY KEY (TRASH_ID)
+    );
+COMMENT ON TABLE SYS_TRASH_INFO
+IS
+    '草稿箱';
+COMMENT ON COLUMN SYS_TRASH_INFO.TRASH_ID
+IS
+    '草稿ID';
+COMMENT ON COLUMN SYS_TRASH_INFO.TRASH_NAME
+IS
+    '草稿箱名称';
+COMMENT ON COLUMN SYS_TRASH_INFO.USER_NAME
+IS
+    '用户名';
+COMMENT ON COLUMN SYS_TRASH_INFO.PAGE_ID
+IS
+    '画面代码';
+COMMENT ON COLUMN SYS_TRASH_INFO.SEQ_NO
+IS
+    '数据留痕表业务编号';
+COMMENT ON COLUMN SYS_TRASH_INFO.CREATE_USER
+IS
+    '创建人';
+COMMENT ON COLUMN SYS_TRASH_INFO.CREATE_DEPT
+IS
+    '创建部门';
+COMMENT ON COLUMN SYS_TRASH_INFO.CREATE_TIME
+IS
+    '创建时间';
+COMMENT ON COLUMN SYS_TRASH_INFO.UPDATE_USER
+IS
+    '更新人';
+COMMENT ON COLUMN SYS_TRASH_INFO.UPDATE_TIME
+IS
+    '更新时间';
+
+
+--草稿箱模式需要设置pageModel为修改模式的画面列表
+drop table SYS_TRASH_SET_EDIT_MODEL_PAGE;
+CREATE TABLE
+    SYS_TRASH_SET_EDIT_MODEL_PAGE
+    (
+        SEQ_NO VARCHAR2(32) NOT NULL,
+        PAGE_ID VARCHAR2(50) NOT NULL,
+        PRIMARY KEY (SEQ_NO)
+    );
+COMMENT ON TABLE SYS_TRASH_SET_EDIT_MODEL_PAGE
+IS
+    '草稿箱设置画面模式画面列表';
+COMMENT ON COLUMN SYS_TRASH_SET_EDIT_MODEL_PAGE.SEQ_NO
+IS
+    '流水号';
+COMMENT ON COLUMN SYS_TRASH_SET_EDIT_MODEL_PAGE.PAGE_ID
+IS
+    '画面代码';
+
+
+--草稿箱模式非对象画面表
+drop table SYS_TRASH_NOT_TARGET_PAGE;
+CREATE TABLE
+    SYS_TRASH_NOT_TARGET_PAGE
+    (
+        SEQ_NO VARCHAR2(32) NOT NULL,
+        PAGE_ID VARCHAR2(50) NOT NULL,
+        PRIMARY KEY (SEQ_NO)
+    );
+COMMENT ON TABLE SYS_TRASH_NOT_TARGET_PAGE
+IS
+    '草稿箱模式非对象画面表';
+COMMENT ON COLUMN SYS_TRASH_NOT_TARGET_PAGE.SEQ_NO
+IS
+    '流水号';
+COMMENT ON COLUMN SYS_TRASH_NOT_TARGET_PAGE.PAGE_ID
+IS
+    '画面代码';
+
+
+--附件共通路径设置参数
+DELETE FROM SYS_PARA where PARA_CODE = 'CommonFilePath';
+insert into SYS_PARA values ('SYS','CommonFilePath','component/core/FileCommon/init','','','附件上传共通业务组件路径','system','',to_date('2019/5/7', 'yyyy/mm/dd'), 'system',to_date('2019/5/7', 'yyyy/mm/dd'));
+
+--设置草稿箱对象外画面
+truncate table SYS_TRASH_NOT_TARGET_PAGE;
+insert into SYS_TRASH_NOT_TARGET_PAGE select replace(f_guid(),'-',''),page_id from sys_page p where P.PAGE_ID not in(
+'ProductReportRegister002','FinProductBuild002','FinNetValueProductBuild002',
+'FinBondTargetAsset002','FinDepositTarget002','FinFundTarget002',
+'FinPlanProfitAsset002','FinProjectTargetAsset002'
+);
+--Add By QuJianZhong 草稿箱对象外画面配置 end

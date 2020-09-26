@@ -1,0 +1,1 @@
+update BOK_SUBJECT set SUBJECT_NAME = REPLACE(SUBJECT_NAME, '？', '') where (SUBJECT_NAME like '%' || '？' || '%');

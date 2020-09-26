@@ -1,0 +1,1 @@
+delete from sys_datadict_list where  dict_code='EXEC_MODE' and item_value in ('欧式','美式');

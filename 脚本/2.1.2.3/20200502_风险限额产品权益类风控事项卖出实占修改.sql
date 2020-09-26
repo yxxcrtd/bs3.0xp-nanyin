@@ -1,0 +1,4 @@
+delete from RSK_EVENT_ITEM_RULE where EVENT_CODE='EVENT_ID_QYLZCGM_08' and ITEM_CODE in ('eventType','investType','ps');
+INSERT INTO "RSK_EVENT_ITEM_RULE" VALUES ('EVENT_ID_QYLZCGM_08', 'eventType', '42f0e31c2e95485bb6e5079e560cb0a7', NULL, '0,1,2', 'IN', NULL, NULL, NULL, 'jjpei', '2222222', sysdate, 'jjpei', sysdate);
+INSERT INTO "RSK_EVENT_ITEM_RULE" VALUES ('EVENT_ID_QYLZCGM_08', 'investType', '42f0e31c2e95485bb6e5079e560cb0a7', NULL, '02', '=', NULL, NULL, NULL, 'jjpei', '2222222', sysdate, 'jjpei', sysdate);
+INSERT INTO "RSK_EVENT_ITEM_RULE" VALUES ('EVENT_ID_QYLZCGM_08', 'ps', '42f0e31c2e95485bb6e5079e560cb0a7', NULL, 'T02,T03,T06,T19,T21', 'IN', NULL, NULL, NULL, 'jjpei', '2222222', sysdate, 'jjpei', sysdate);

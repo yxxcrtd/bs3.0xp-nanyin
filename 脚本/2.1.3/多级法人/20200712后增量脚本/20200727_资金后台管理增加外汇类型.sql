@@ -1,0 +1,4 @@
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('FundBackgroundManagement001', '999999', 'PINAN_BUSINESS_TYPE', '103', null, null, 'system', null, '24-5月 -19 12.00.00.000000 上午', 'system', '24-5月 -19 12.00.00.000000 上午', null);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('FundBackgroundManagement001', '999999', 'PINAN_BUSINESS_TYPE', '104', null, null, 'system', null, '24-5月 -19 12.00.00.000000 上午', 'system', '24-5月 -19 12.00.00.000000 上午', null);

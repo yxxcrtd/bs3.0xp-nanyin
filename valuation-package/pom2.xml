@@ -1,0 +1,31 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.joyintech</groupId>
+		<artifactId>tams-parent</artifactId>
+		<version>2.1.9.2</version>
+	</parent>
+	<artifactId>valuation-package</artifactId>
+	<version>1.0.0</version>
+	<packaging>pom</packaging>
+	<name>valuation-package</name>
+	<modules>
+		<module>../tams-valuation-parent/tams-valuation</module>
+		<module>../tams-valuation-parent/singleValuation</module>
+		<module>../microservice/service-valuation</module>
+		<module>../microservice/service-basicdata</module>
+		<module>../tams-common</module>
+		<module>../tams-valuation-common</module>
+		<module>../tams-valuation-batch</module>
+		<module>../tams-valuation-interf</module>
+		<module>../tams-invest-parent/tams-invest-basicdata</module>
+		<module>../tams-invest-common</module>
+		<module>../JixuCenter</module>
+		<module>../tams-valuation-api</module>
+		<module>../component-base</module>
+		<module>../component-business</module>
+		<module>../tams-invest-interf</module>
+	</modules>
+
+</project>

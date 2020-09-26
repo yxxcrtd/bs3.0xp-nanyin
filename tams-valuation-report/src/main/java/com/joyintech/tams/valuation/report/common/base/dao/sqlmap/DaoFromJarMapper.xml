@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.valuation.report.common.base.dao.DaoFromJarMapper" >
+
+    <resultMap id="SysUploadFileInfoResultMap" type="com.joyintech.tams.common.base.entity.SysUploadFileInfo" >
+        <id column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="FILE_NAME" property="fileName" jdbcType="VARCHAR" />
+        <result column="PATH" property="path" jdbcType="VARCHAR" />
+        <result column="BUSINESS_ID" property="businessId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+ 	<select id="selectByPrimaryKey" resultMap="SysUploadFileInfoResultMap" parameterType="java.lang.String" >
+        select 
+	        SEQ_NO SEQ_NO, FILE_NAME FILE_NAME, PATH PATH, BUSINESS_ID BUSINESS_ID, CREATE_USER CREATE_USER, 
+	        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+        from SYS_UPLOAD_FILE_INFO
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </select>
+    
+     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SysUploadFileInfo" >
+        insert into SYS_UPLOAD_FILE_INFO (SEQ_NO, FILE_NAME, PATH, 
+            BUSINESS_ID, CREATE_USER, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{seqNo,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, 
+            #{businessId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+
+</mapper>

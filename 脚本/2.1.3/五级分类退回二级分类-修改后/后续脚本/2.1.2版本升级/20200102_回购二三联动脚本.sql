@@ -1,0 +1,13 @@
+delete from SYS_DATADICT_LIST_LINK where LINKED_DICT_CODE='CUSTOM_ASSET_TYPE_TWO' and LINKED_ITEM_CODE='H01'and DICT_CODE='CUSTOM_ASSET_TYPE_THREE'and ITEM_CODE='H03';
+delete from SYS_DATADICT_LIST_LINK where LINKED_DICT_CODE='CUSTOM_ASSET_TYPE_TWO' and LINKED_ITEM_CODE='H01'and DICT_CODE='CUSTOM_ASSET_TYPE_THREE'and ITEM_CODE='H04';
+delete from SYS_DATADICT_LIST_LINK where LINKED_DICT_CODE='CUSTOM_ASSET_TYPE_TWO' and LINKED_ITEM_CODE='H02'and DICT_CODE='CUSTOM_ASSET_TYPE_THREE'and ITEM_CODE='H03';
+delete from SYS_DATADICT_LIST_LINK where LINKED_DICT_CODE='CUSTOM_ASSET_TYPE_TWO' and LINKED_ITEM_CODE='H02'and DICT_CODE='CUSTOM_ASSET_TYPE_THREE'and ITEM_CODE='H04';
+delete from SYS_DATADICT_LIST_LINK where LINKED_DICT_CODE='CUSTOM_ASSET_TYPE_TWO' and LINKED_ITEM_CODE='H03'and DICT_CODE='CUSTOM_ASSET_TYPE_THREE'and ITEM_CODE='H03';
+delete from SYS_DATADICT_LIST_LINK where LINKED_DICT_CODE='CUSTOM_ASSET_TYPE_TWO' and LINKED_ITEM_CODE='H03'and DICT_CODE='CUSTOM_ASSET_TYPE_THREE'and ITEM_CODE='H04';
+
+insert into SYS_DATADICT_LIST_LINK values ('CUSTOM_ASSET_TYPE_THREE','H03','CUSTOM_ASSET_TYPE_TWO','H01','system','',to_date('2019/9/20', 'yyyy/mm/dd'), 'system',to_date('2019/9/20', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST_LINK values ('CUSTOM_ASSET_TYPE_THREE','H04','CUSTOM_ASSET_TYPE_TWO','H01','system','',to_date('2019/9/20', 'yyyy/mm/dd'), 'system',to_date('2019/9/20', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST_LINK values ('CUSTOM_ASSET_TYPE_THREE','H03','CUSTOM_ASSET_TYPE_TWO','H02','system','',to_date('2019/9/20', 'yyyy/mm/dd'), 'system',to_date('2019/9/20', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST_LINK values ('CUSTOM_ASSET_TYPE_THREE','H04','CUSTOM_ASSET_TYPE_TWO','H02','system','',to_date('2019/9/20', 'yyyy/mm/dd'), 'system',to_date('2019/9/20', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST_LINK values ('CUSTOM_ASSET_TYPE_THREE','H03','CUSTOM_ASSET_TYPE_TWO','H03','system','',to_date('2019/9/20', 'yyyy/mm/dd'), 'system',to_date('2019/9/20', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST_LINK values ('CUSTOM_ASSET_TYPE_THREE','H04','CUSTOM_ASSET_TYPE_TWO','H03','system','',to_date('2019/9/20', 'yyyy/mm/dd'), 'system',to_date('2019/9/20', 'yyyy/mm/dd'));

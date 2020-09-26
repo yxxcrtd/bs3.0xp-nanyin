@@ -1,0 +1,1 @@
+update sys_para set remark='收益率单位净值接口数据确认（01:已下发,02:已确认,03:未下发、未确认)' where para_code='SVR_VALSTATUS_FLAG';

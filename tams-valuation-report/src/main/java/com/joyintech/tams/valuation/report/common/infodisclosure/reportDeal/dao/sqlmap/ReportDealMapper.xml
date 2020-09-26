@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.valuation.report.common.infodisclosure.reportDeal.dao.ReportDealMapper">
+	<update id="updateDataStatus" parameterType="com.joyintech.tams.common.base.entity.RepReveal">
+    	UPDATE
+   			REP_REVEAL
+		SET STATUS = 'D'
+		WHERE
+			1=1
+		<if test="repId !=null and repId != ''">
+			AND REP_ID = #{repId,jdbcType=VARCHAR}
+		</if>
+		<if test="reportName !=null and reportName != ''">
+			AND REPORT_NAME = #{reportName,jdbcType=VARCHAR}
+		</if>
+		<if test="prodid !=null and prodid != ''">
+			AND PRODID = #{prodid,jdbcType=VARCHAR}
+		</if>
+		<if test="startDate !=null">
+			AND START_DATE = #{startDate,jdbcType=DATE}
+		</if>
+		<if test="endDate !=null">
+			AND END_DATE = #{endDate,jdbcType=DATE}
+		</if>
+		AND STATUS='E'
+    </update>
+    <select id="selectConfirmStatus" parameterType="com.joyintech.tams.common.base.entity.RepReveal" resultType="java.lang.Integer">
+    	SELECT  COUNT(1)
+    	FROM	REP_REVEAL
+    	WHERE
+    			1=1
+		<if test="repId !=null and repId != ''">
+			AND REP_ID = #{repId,jdbcType=VARCHAR}
+		</if>
+		<if test="reportName !=null and reportName != ''">
+			AND REPORT_NAME = #{reportName,jdbcType=VARCHAR}
+		</if>
+		<if test="prodid !=null and prodid != ''">
+			AND PRODID = #{prodid,jdbcType=VARCHAR}
+		</if>
+		<if test="startDate !=null">
+			AND START_DATE = #{startDate,jdbcType=DATE}
+		</if>
+		<if test="endDate !=null">
+			AND END_DATE = #{endDate,jdbcType=DATE}
+		</if>
+		AND STATUS='E'
+		AND CONFIRM_STATUS='01'
+    </select>
+    <select id="selectData" resultType="com.joyintech.tams.common.base.entity.RepReveal">
+	 	SELECT 
+			rr.PRODID prodid,
+			rr.SYS_FILENAME sysFilename,
+			rr.FILENAME filename,
+			rr.REVEAL_STATUS revealStatus,
+			to_char(rr.REVEAL_END_DATE revealEndDate,'yyyy-mm-dd')
+		FROM 
+			REP_REVEAL rr
+		WHERE
+			rr.STATUS = 'E'
+        AND to_char(rr.REVEAL_DATE,'yyyy-mm-dd') = #{data,jdbcType=VARCHAR}
+	 </select>
+</mapper>

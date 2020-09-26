@@ -1,0 +1,1 @@
+update sys_para set remark = '是否生成内部交易的反向交易' where para_code = 'is_auto_generate_negate_deal';

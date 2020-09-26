@@ -1,0 +1,1 @@
+UPDATE sys_page SET IS_NEED_WORKFLOW ='01' WHERE PAGE_ID ='EtrBrowDepoInfo003';

@@ -1,0 +1,1 @@
+update PAGE_ELEMENT_CONFIG set IS_SHOW = 'Y' where PAGE_ELEMENT_CONFIG.PAGE_ID = 'FinNetValueProductBuild002' and PAGE_ELEMENT_CONFIG.ELEMENT_ID = 'FinProductBuild002.isAnaplerotic';

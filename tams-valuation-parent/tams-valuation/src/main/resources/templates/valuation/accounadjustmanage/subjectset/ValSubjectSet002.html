@@ -1,0 +1,186 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorator="~{layout/default}">
+<head>
+<meta charset="utf-8">
+<title data-th-text="#{ValSubjectSet002}">新建科目</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <form class="layui-form joyin-form-wrap" id="submitForm">
+            <div class="layui-form-item">
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable" data-th-text="#{ValSubjectSet001.booksetId}">账套代码</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" id="booksetId" name="booksetId"
+                            class="layui-input form-input input-lenovoselect" placeholder="请输入内容"
+                            data-th-placeholder="#{SysCommon.placeholder}"
+                            data-th-data-url="@{/valuation/accounadjustmanage/assetbook/ValAssetBook001/getBooksetId}"
+                            data-th-value="${entity?.booksetId}" data-idfield="code" data-keyfield="code"
+                            data-th-data-effectivefieldsalias='|{"code":"#{ValSubjectSet001.booksetId}","shortName":"#{ValSubjectSet001.booksetName}"}|'
+                            required>
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable" data-th-text="#{ValSubjectSet001.fsubjectId}">上级科目号</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" id="fsubjectId" name="fsubjectId"
+                            class="layui-input form-input input-lenovoselect" placeholder="请输入内容"
+                            data-th-placeholder="#{SysCommon.placeholder}"
+                            data-th-data-url="@{/valuation/accounadjustmanage/subjectset/ValSubjectSet001/getSubjectId}"
+                            data-linkedids="subjectName" data-idfield="code" data-keyfield="code" data-th-value="${entity?.fsubjectId}"
+                            data-th-data-effectivefieldsalias='|{"code":"#{ValSubjectSet001.fsubjectId}","shortName":"#{ValSubjectSet001.subjectName}"}|'>
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable" data-th-text="#{ValSubjectSet001.subjectNo}">科目号</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" id="subjectNo" name="subjectNo" class="layui-input form-input"
+                            placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                            data-th-value="${entity?.subjectNo}" required>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable" data-th-text="#{ValSubjectSet001.subjectName}">科目名称</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" id="subjectName" name="subjectName" class="layui-input form-input"
+                            placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                            data-th-value="${entity?.subjectName}" required>
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable" data-th-text="#{ValSubjectSet001.balFlag}">余额方向</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" id="balFlag" name="balFlag" class="layui-input form-input input-checkbox"
+                            data-th-initValue="${entity?.balFlag}" data-th-data-result='${BAL_FLAG}'>
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable" data-th-text="#{ValSubjectSet001.subjectType}">科目类型</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" id="subjectType" name="subjectType"
+                            class="layui-input form-input input-select" data-th-data-result='${SUBJECT_TYPE}'
+                            data-th-initValue="${entity?.subjectType}" required>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable" data-th-text="#{ValSubjectSet001.subjectLevel}">科目级别</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" id="subjectLevel" name="subjectLevel" class="layui-input form-input"
+                            placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                            data-th-value="${entity?.subjectLevel}" required>
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable" data-th-text="#{ValSubjectSet001.accQuaFlag}">是否核算数量</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" id="accQuaFlag" name="accQuaFlag"
+                            class="layui-input form-input input-checkbox" data-th-initValue="${entity?.accQuaFlag}"
+                            data-th-data-result='${YES_OR_NO}'>
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable" data-th-text="#{ValSubjectSet001.accIntFlag}">是否计息</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" id="accIntFlag" name="accIntFlag"
+                            class="layui-input form-input input-checkbox" data-th-initValue="${entity?.accIntFlag}"
+                            data-th-data-result='${YES_OR_NO}'>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable" data-th-text="#{ValSubjectSet001.overdrawnFlag}">是否允许透支</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" id="overdrawnFlag" name="overdrawnFlag"
+                            class="layui-input form-input input-checkbox" data-th-initValue="${entity?.overdrawnFlag}"
+                            data-th-data-result='${YES_OR_NO}'>
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable" data-th-text="#{ValSubjectSet001.baseSubjectNature}">基础科目性质</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" id="baseSubjectNature" name="baseSubjectNature"
+                            class="layui-input form-input" placeholder="请输入内容"
+                            data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.baseSubjectNature}">
+                    </div>
+                </div>
+<!--                 <div class="layui-inline layui-col-md4"> -->
+<!--                     <label class="layui-form-label form-lable" data-th-text="#{ValSubjectSet001.subjectNature1}">扩展科目性质1</label> -->
+<!--                     <div class="layui-input-inline input-inline"> -->
+<!--                         <input type="text" id="subjectNature1" name="subjectNature1" class="layui-input form-input" -->
+<!--                             placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" -->
+<!--                             data-th-value="${entity?.subjectNature1}"> -->
+<!--                     </div> -->
+<!--                 </div> -->
+            </div>
+<!--             <div class="layui-form-item"> -->
+<!--                 <div class="layui-inline layui-col-md4"> -->
+<!--                     <label class="layui-form-label form-lable" data-th-text="#{ValSubjectSet001.subjectNature2}">扩展科目性质2</label> -->
+<!--                     <div class="layui-input-inline input-inline"> -->
+<!--                         <input type="text" id="subjectNature2" name="subjectNature2" class="layui-input form-input" -->
+<!--                             placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" -->
+<!--                             data-th-value="${entity?.subjectNature2}"> -->
+<!--                     </div> -->
+<!--                 </div> -->
+<!--                 <div class="layui-inline layui-col-md4"> -->
+<!--                     <label class="layui-form-label form-lable" data-th-text="#{ValSubjectSet001.subjectNature3}">扩展科目性质3</label> -->
+<!--                     <div class="layui-input-inline input-inline"> -->
+<!--                         <input type="text" id="subjectNature3" name="subjectNature3" class="layui-input form-input" -->
+<!--                             placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" -->
+<!--                             data-th-value="${entity?.subjectNature3}"> -->
+<!--                     </div> -->
+<!--                 </div> -->
+<!--                 <div class="layui-inline layui-col-md4"> -->
+<!--                     <label class="layui-form-label form-lable" data-th-text="#{ValSubjectSet001.subjectNature4}">扩展科目性质4</label> -->
+<!--                     <div class="layui-input-inline input-inline"> -->
+<!--                         <input type="text" id="subjectNature4" name="subjectNature4" class="layui-input form-input" -->
+<!--                             placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" -->
+<!--                             data-th-value="${entity?.subjectNature4}"> -->
+<!--                     </div> -->
+<!--                 </div> -->
+<!--             </div> -->
+<!--             <div class="layui-form-item"> -->
+<!--                 <div class="layui-inline layui-col-md4"> -->
+<!--                     <label class="layui-form-label form-lable" data-th-text="#{ValSubjectSet001.subjectNature5}">扩展科目性质5</label> -->
+<!--                     <div class="layui-input-inline input-inline"> -->
+<!--                         <input type="text" id="subjectNature5" name="subjectNature5" class="layui-input form-input" -->
+<!--                             placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" -->
+<!--                             data-th-value="${entity?.subjectNature5}"> -->
+<!--                     </div> -->
+<!--                 </div> -->
+<!--                 <div class="layui-inline layui-col-md4"> -->
+<!--                     <label class="layui-form-label form-lable" data-th-text="#{ValSubjectSet001.subjectNature6}">扩展科目性质6</label> -->
+<!--                     <div class="layui-input-inline input-inline"> -->
+<!--                         <input type="text" id="subjectNature6" name="subjectNature6" class="layui-input form-input" -->
+<!--                             placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" -->
+<!--                             data-th-value="${entity?.subjectNature6}"> -->
+<!--                     </div> -->
+<!--                 </div> -->
+<!--                 <div class="layui-inline layui-col-md4"> -->
+<!--                     <label class="layui-form-label form-lable" data-th-text="#{ValSubjectSet001.subjectNature6}">收支方向</label> -->
+<!--                     <div class="layui-input-inline input-inline"> -->
+<!--                         <input type="text" id="subjectNature6" name="subjectNature6" class="layui-input form-input" -->
+<!--                             placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" -->
+<!--                             data-th-value="${entity?.subjectNature6}"> -->
+<!--                     </div> -->
+<!--                 </div> -->
+<!--             </div> -->
+        </form>
+        <div class="layui-col-md11" style="margin: 10px;">
+            <div class="text-center">
+<!--                 <a id="ValSubjectSet002_btn_save" class="layui-btn layui-btn-sm btn-save">保存</a> -->
+                <a id="ValSubjectSet002_btn_submit" class="layui-btn layui-btn-sm btn-submit">提交</a>
+                <a id="ValSubjectSet002_btn_cancel" class="layui-btn layui-btn-sm btn-cancel">取消</a>
+            </div>
+        </div>
+    </div>
+    <div layout:fragment="script">
+        <script data-th-src="@{/js/valuation/accounadjustmanage/subjectset/ValSubjectSet002.js}" type="text/javascript"></script>
+    </div>
+</body>
+</html>

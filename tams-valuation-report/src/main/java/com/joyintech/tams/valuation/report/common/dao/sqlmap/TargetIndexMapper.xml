@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.valuation.report.common.dao.TargetIndexMapper">
+    
+    <select id="slectTargetIndex" resultType="com.joyintech.tams.valuation.report.common.dto.RepProdIndex" parameterType="java.util.Map">
+    select * from REP_PROD_INDEX
+    where VALUE_DATE    <![CDATA[ >= ]]> #{beforeDate,jdbcType=TIMESTAMP}
+    and VALUE_DATE    <![CDATA[ <= ]]>  #{endDate,jdbcType=TIMESTAMP} 
+    and PROD_ID=#{prodId,jdbcType=VARCHAR}
+    </select>
+  
+   <select id="selectFinProduct" resultType="com.joyintech.tams.valuation.report.common.dto.FinProduct">
+	select * from FIN_PRODUCT 
+	WHERE FINPROD_ID=#{prodId}
+	AND FINPROD_TYPE='F16'
+   
+   </select>
+   
+ <select id="selectMstHoliday" resultType="com.joyintech.tams.valuation.report.common.dto.MstHoliday" parameterType="java.util.Map">
+ select * from MST_HOLIDAY
+	where CDATE <![CDATA[ >= ]]>  #{startDate} 
+	and CDATE  <![CDATA[ <= ]]>  #{endDate} 
+	and CALENDAR_ID=#{calendarId}
+ </select>
+ <select id="seletcRepProdIndexByDate" resultType="com.joyintech.tams.valuation.report.common.dto.RepProdIndex">
+  select * from  REP_PROD_INDEX  where VALUE_DATE=#{cDate}
+ AND  CAPITAL is not NULL
+ </select>
+ 
+ <select id="getNetvalue"  resultType="com.joyintech.tams.valuation.report.common.dto.NetvaluerResultDto"  parameterType="java.util.Map">
+   select  
+     to_char(VALUE_DATE,'yyyy-MM') yDate,
+     sum(W_YIELD) swYield
+     from  REP_PROD_INDEX
+     where  
+     VALUE_DATE    <![CDATA[ >= ]]> #{beforeDate,jdbcType=TIMESTAMP}
+     and VALUE_DATE    <![CDATA[ <= ]]>  #{endDate,jdbcType=TIMESTAMP} 
+     and PROD_ID=#{prodId,jdbcType=VARCHAR}
+     group by to_char(VALUE_DATE,'yyyy-MM')
+ </select>
+</mapper>

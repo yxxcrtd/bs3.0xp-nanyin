@@ -1,0 +1,8 @@
+--舆情提醒 字典表的处理
+delete SYS_ACTIVEREMINDER_SET where REM_TYPE like 'R7S3';
+Insert into SYS_ACTIVEREMINDER_SET (REM_TYPE,DAYS,URL,LABLE,DEALF,CLOSF,REMARK,MENU_ID) values ('R7S3',0,'/risk/customerrelationtree/agencynegativeinf/AgencyNegativeInf001/init','AgencyNegativeInf001','Y','Y',null,'RISK_MANAGEMENT_001_011_001');
+delete from SYS_DATADICT_LIST where ITEM_CODE like 'R7S3';
+Insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REMINDER_TYPE_SMALL','R7S3','舆情提醒',3,'0','system',null,to_timestamp('24-2月 -20 04.55.12.000000000 下午','DD-MON-RR HH.MI.SSXFF AM'),'system',to_timestamp('24-2月 -20 04.55.12.000000000 下午','DD-MON-RR HH.MI.SSXFF AM'));
+delete from SYS_DATADICT_LIST_LINK where ITEM_CODE like 'R7S3';
+Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REMINDER_TYPE_SMALL','R7S3','REMINDER_TYPE_BIG','R7                                                ','system',null,to_timestamp('24-2月 -20 04.55.12.000000000 下午','DD-MON-RR HH.MI.SSXFF AM'),'system',to_timestamp('24-2月 -20 04.55.12.000000000 下午','DD-MON-RR HH.MI.SSXFF AM'));
+commit;

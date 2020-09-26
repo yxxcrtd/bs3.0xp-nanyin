@@ -1,0 +1,200 @@
+/***费率收益率变更取值时间修改***/
+UPDATE ADPT_INTERFACESOURCE
+SET DBSQL='SELECT
+    FIN_PRODUCT.FINPROD_ID       BUSI_ID,--业务代码
+    FIN_CASH_CALC_RULE.CASH_ID   CASH_ID,--现金流代码
+    sys_datadict_list.ITEM_VALUE CASH_NAME,--现金流名称
+    FIN_CASH_INFO.CASH_TYPE_1    CASH_TYPE,--现金流类型
+    FIN_CASH_INFO.CASH_TYPE_2    CASH_TYPE2,--现金流二级类型
+    FIN_CASH_CALC_RULE.YIELD     FEE_RATE,--初始利率
+    FIN_CASH_CALC_RULE.EFF_DATE  START_DATE,--生效日
+    FIN_CASH_CALC_RULE.CREATE_USER,
+    FIN_CASH_CALC_RULE.CREATE_DEPT,
+    FIN_CASH_CALC_RULE.UPDATE_USER,
+    FIN_PRODUCT.P_FINPROD_ID  --父产品代码
+FROM
+    FIN_PRODUCT,
+    FIN_CASH_INFO,
+    MST_FEEINFO,
+    FIN_CASH_CALC_RULE,
+    sys_datadict_list
+WHERE
+    FIN_PRODUCT.FINPROD_ID = FIN_CASH_INFO.FINPROD_ID
+AND FIN_PRODUCT.FINPROD_TYPE2 IN ( ''F16'' ,''F24'' )
+AND FIN_CASH_INFO.CASH_TYPE_1 = ''03''
+AND FIN_CASH_INFO.FEE_ID = MST_FEEINFO.FEE_ID
+AND FIN_CASH_INFO.CASH_ID = FIN_CASH_CALC_RULE.CASH_ID
+AND sys_datadict_list.dict_code =''CASH_TYPE_2''
+AND sys_datadict_list.item_code = FIN_CASH_INFO.CASH_TYPE_2
+AND sys_datadict_list.item_code = FIN_CASH_INFO.CASH_TYPE_2
+AND FIN_CASH_CALC_RULE.update_time > :UPDATE'
+WHERE SOURCEID = '5040';
+
+UPDATE ADPT_INTERFACECOLCONFIG
+SET FUNCPARAMS = 'FIN_CASH_CALC_RULE,UPDATE_TIME,D'
+where COLNAME = 'UPDATE' AND FUNCCLASS = 'ParamsFetchLastMaxData';
+
+
+DECLARE
+ SQLDBSQL CLOB := 'SELECT DISTINCT DECODE(t.p_finprod_id,
+                       NULL,
+                       t.finprod_market_id,
+                       t.finprod_id) AS PROD_ID,
+                cc.reg_code AS PROD_RE,
+                T.FINPROD_NAME AS PROD_NAME,
+                T.FINPROD_ABBR AS PROD_ABBR,
+                NULL AS RAISE_MIN,
+                NULL AS RAISE_MAX,
+                I.REP_RAISE_VDATE AS RAISE_STRDATE,
+                I.REP_RAISE_ENDDATE AS RAISE_ENDDATE,
+                T.ccy AS RAISE_CCY,
+                T.VDATE AS SET_DATE,
+                T.VDATE,
+                I.REP_FIRST_OPEN_DAY AS FIRST_OPEN_DAY,
+                T.MDATE,
+                CASE
+                  WHEN TPD.PS IN (''C5'', ''C20'') THEN
+                   TPD.TRADE_DATE
+                  when pma.FINPROD_ID is not null then
+                   pma.mdate
+                  else
+                   T.MDATE
+                end AS ACT_MDATE,
+                D.REP_TERM AS TERM,
+                NULL AS WINDUP_DATE,
+                T.OPERATION_TYPE AS ISSUE_MODE,
+                TA.PROFIT_FLAG AS PROFIT_TYPE,
+                T.PROFIT_TYPE AS PROD_TYPE,
+                NULL AS FINA_TYPE,
+                TA.ISSUE_STATUS AS ISSUE_STATUS,
+                T.ISSUE_TYPE AS RAISE_TYPE,
+                D.REP_RISK_LEVEL AS RISK_LEVEL,
+                NULL AS RISK_BEARING,
+                NULL AS RISKLEVEL_CLR,
+                NULL AS RISKLEVEL_INVESTOR,
+                NULL AS TOFF_START,
+                NULL AS MIN_UNIT_AMT,
+                NULL AS LOWEST_AMT,
+                NULL AS INV_DAYS,
+                NVL(Rateinfo.BASIS, ''A/365'') AS BASIS,
+                NULL AS MIN_REDM_QTY,
+                MCI.CUSTOMER_NAME AS ACCT_CHNNAME,
+                NULL AS PRD_BAND,
+                D.REP_MNAME AS PROD_MANAGE,
+                D.REP_INVESTOR_TYPE AS INVESTOR_TYPE,
+                RSP.HUGE_RED_RATIO AS HUGE_RED_RATIO,
+                NULL AS MIN_PAPER_QTY,
+                NULL AS HUGE_RED_RATIO,
+                NULL AS REDM_HANDLE_NAME,
+                T.TRUSTEE_ID AS FMGR_ID_NAME,
+                NULL AS IMGR_ID_NAME,
+                NULL AS CUS_REDEEM_FLAG_NAME,
+                T.ENTRUST_TYPE AS MANAGE_TYPE,
+                NULL AS CREDIT_FLAG_NAME,
+                NULL AS CREDIT_MODE_NAME,
+                NULL AS CREDIT_TYPE_NAME,
+                NULL AS SALE_DEPT,
+                NULL AS SALE_TARGET,
+                NULL AS INVEST_TYPE,
+                NULL AS CMMODE,
+                D.REP_CONT_MODE AS CONT_MODE,
+                NULL AS INVEST_ARAE_NAME,
+                NULL AS INVEST_COUNTRY_NAME,
+                NULL AS ORG_ID,
+                NULL AS MGR_NAME,
+                NULL AS PROD_BUSS_TYPE,
+                I.REP_IS_CONSTRACTE AS IS_LAYER,
+                NULL AS FIT_FLAG,
+                D.REP_RAISE_AMT_PLAN AS RAISE_AMT,
+                NULL AS INVEST_INFO,
+                D.REP_INVEST_PRIN_DATE AS INVEST_PRIN_DATE,
+                D.REP_INVEST_PROF_DATE AS INVEST_PROF_DATE,
+                NULL AS INVEST_TARGET,
+                NULL AS INVEST_POLICY,
+                NULL AS BENCHMARK,
+                D.REP_MANAGER_NAME AS MANAGER_NAME,
+                D.REP_IN_DEP_NAME AS REGIST_NAME,
+                NULL AS FLOAT_NAME,
+                NULL AS BANK_PROPORTION,
+                I.REP_OPEN_MODE AS OPEN_MODE,
+                TA.INVEST_NATURE AS PROD_INVEST_NATURE,
+                NULL AS REVEAL_CHANNEL,
+                NULL AS IS_INDEPE_ACC,
+                NULL AS DEAL_CAL_NAME,
+                ''E'' AS STATUS,
+                T.CREATE_USER,
+                NULL AS CREATE_DEPT,
+                T.CREATE_TIME,
+                T.UPDATE_USER,
+                T.UPDATE_TIME,
+                D.REP_SALE_AMT_STR AS SALE_AMT_STR,
+                D.REP_OPERATE_MODE AS OPERATE_MODE,
+                DECODE(t.p_finprod_id, NULL, DECODE(bbset.bookset_id,NULL,t.finprod_id,bbset.bookset_id), t.finprod_id) AS F_PROD_ID,
+                greatest(NVL(T.UPDATE_TIME, T.CREATE_TIME),
+                         NVL(NVL(I.UPDATE_TIME, I.CREATE_TIME),
+                             to_date(''1900-01-01'', ''yyyy-MM-dd'')),
+                         NVL(NVL(D.UPDATE_TIME, D.CREATE_TIME),
+                             to_date(''1900-01-01'', ''yyyy-MM-dd'')),
+                         NVL(NVL(TA.UPDATE_TIME, TA.CREATE_TIME),
+                             to_date(''1900-01-01'', ''yyyy-MM-dd'')),
+                         NVL(NVL(R.UPDATE_TIME, R.CREATE_TIME),
+                             to_date(''1900-01-01'', ''yyyy-MM-dd''))) AS updateTime,
+                DECODE(t.p_finprod_id, NULL, NULL, t.finprod_market_id) AS P_PROD_ID,
+                PA.PROD_SERIES AS PROD_SERIES,
+                AD.PROFIT_FLAG AS PRODPROFITFLAG,
+                D.REP_INVESTOR_TYPE AS SALETARGET_DECLARE
+  FROM FIN_PRODUCT T
+  LEFT JOIN REP_PROD_ISSUE I
+    ON I.REP_FINPROD_ID = T.Finprod_Id
+  LEFT JOIN REP_PROD_DECLARE D
+    ON D.REP_FINPROD_ID = T.Finprod_Id
+  LEFT JOIN CHB_PRDRESIST_CODE CC
+    ON t.finprod_market_id = cc.prodid
+  LEFT JOIN fin_product_add TA
+    ON t.finprod_id = TA.finprod_id
+  LEFT JOIN PRD_SALE_PARAM RSP
+    ON t.finprod_id = RSP.FINPROD_ID
+  LEFT JOIN FIN_CASH_INFO CASH
+    ON (CASH.FINPROD_ID = T.FINPROD_ID AND cash.cash_type_2 = ''C01'' AND
+       cash.finprod_type = ''01'')
+  LEFT JOIN FIN_OPEN_RULE R
+    ON R.CASH_ID = CASH.CASH_ID
+   AND r.open_type IN (''01'', ''03'')
+  LEFT JOIN FIN_CASH_INFO CASH1
+    ON (CASH1.FINPROD_ID = NVL(T.p_finprod_id, T.FINPROD_ID) AND
+       CASH1.cash_type_1 = ''02'' AND CASH1.cash_type_2 = ''C02'' AND
+       CASH1.BRANCH = ''0'')
+  LEFT JOIN fin_rate_info Rateinfo
+    ON Rateinfo.CASH_ID = CASH1.CASH_ID
+  LEFT JOIN BOK_BOOKSET acct
+    ON T.FINPROD_ID = acct.ACCT_SUBJECT_ID
+   AND t.finprod_type = acct.ACCT_SUBJECT_TYPE
+  LEFT JOIN MST_CUSTOMER_INFO MCI
+    ON T.TRUSTEE_ID = MCI.CUSTOMER_ID
+  LEFT JOIN FIN_PRODUCT_ADD AD
+    ON AD.FINPROD_ID = T.FINPROD_ID
+  LEFT JOIN BOK_BOOKSET BBSET
+    ON BBSET.acct_subject_id = T.finprod_id
+  LEFT JOIN PA_FIN_PRODUCT PA
+    ON T.FINPROD_ID = PA.FINPROD_ID
+  LEFT JOIN (select *
+               from TRD_FIN_PRODUCT_DEAL_TOTAL
+              where ps in (''C5'', ''C20'')
+                and trade_status != ''03'') TPD
+    ON TPD.FINPROD_ID = t.finprod_id
+  left join (select FINPROD_ID, MDATE
+               from (select FINPROD_ID,
+                            MDATE,
+                            row_number() over(partition by FINPROD_ID order by MDATE desc) as rn
+                       from PRD_MDATE_ADJUST
+                      where ADJUST_TYPE = ''02'')
+              where rn = 1) pma
+    on pma.FINPROD_ID = t.finprod_id
+ WHERE T.FINPROD_TYPE2 IN (''F16'', ''F24'')';
+
+
+BEGIN
+
+	UPDATE ADPT_INTERFACESOURCE SET DBSQL = SQLDBSQL  WHERE SOURCEID = '1002';
+
+end ;

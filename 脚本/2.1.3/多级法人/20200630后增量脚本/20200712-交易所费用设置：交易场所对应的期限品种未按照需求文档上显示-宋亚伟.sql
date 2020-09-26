@@ -1,0 +1,21 @@
+delete from sys_datadict_list_link l where l.dict_code =  'TERM_TYPE_REBACK' and l.linked_item_code = '03';
+insert into sys_datadict_list_link (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TERM_TYPE_REBACK', 'GC001', 'TRADE_PLACE', '03', 'system', '', '05-3月 -19 12.00.00.000000 上午', 'system', '05-3月 -19 12.00.00.000000 上午');
+insert into sys_datadict_list_link (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TERM_TYPE_REBACK', 'GC002', 'TRADE_PLACE', '03', 'system', '', '05-3月 -19 12.00.00.000000 上午', 'system', '05-3月 -19 12.00.00.000000 上午');
+insert into sys_datadict_list_link (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TERM_TYPE_REBACK', 'GC003', 'TRADE_PLACE', '03', 'system', '', '05-3月 -19 12.00.00.000000 上午', 'system', '05-3月 -19 12.00.00.000000 上午');
+insert into sys_datadict_list_link (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TERM_TYPE_REBACK', 'GC004', 'TRADE_PLACE', '03', 'system', '', '05-3月 -19 12.00.00.000000 上午', 'system', '05-3月 -19 12.00.00.000000 上午');
+insert into sys_datadict_list_link (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TERM_TYPE_REBACK', 'GC007', 'TRADE_PLACE', '03', 'system', '', '05-3月 -19 12.00.00.000000 上午', 'system', '05-3月 -19 12.00.00.000000 上午');
+insert into sys_datadict_list_link (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TERM_TYPE_REBACK', 'GC014', 'TRADE_PLACE', '03', 'system', '', '05-3月 -19 12.00.00.000000 上午', 'system', '05-3月 -19 12.00.00.000000 上午');
+insert into sys_datadict_list_link (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TERM_TYPE_REBACK', 'GC028', 'TRADE_PLACE', '03', 'system', '', '05-3月 -19 12.00.00.000000 上午', 'system', '05-3月 -19 12.00.00.000000 上午');
+insert into sys_datadict_list_link (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TERM_TYPE_REBACK', 'GC091', 'TRADE_PLACE', '03', 'system', '', '05-3月 -19 12.00.00.000000 上午', 'system', '05-3月 -19 12.00.00.000000 上午');
+insert into sys_datadict_list_link (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TERM_TYPE_REBACK', 'GC182', 'TRADE_PLACE', '03', 'system', '', '05-3月 -19 12.00.00.000000 上午', 'system', '05-3月 -19 12.00.00.000000 上午');
+
+commit;

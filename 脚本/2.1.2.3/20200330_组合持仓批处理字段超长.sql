@@ -1,0 +1,1 @@
+alter table ASSET_TARGET_DB modify FINPROD_NAME VARCHAR2(200);

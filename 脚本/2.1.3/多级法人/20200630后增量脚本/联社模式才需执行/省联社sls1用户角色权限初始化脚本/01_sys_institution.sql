@@ -1,0 +1,3 @@
+delete from sys_institution where INSTITUTION_CODE = 'INSINSIN1';
+insert into sys_institution (INSTITUTION_CODE, SYSTEM_CODE, INSTITUTION_NAME, INSTITUTION_TYPE, UPPER_INSTITUTION_CODE, INSITITUTE_CODE, ASS_PEOPLE, ASS_PHONE, GRD_INFO, PROVINCE, CITY, COUNTIES, OTHER, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('INSINSIN1', 'TAMS', '省联社', '01', null, null, null, null, null, null, null, null, null, null, 'admin', null, '06-6月 -20 05.48.23.828000 下午', 'admin', '06-6月 -20 05.48.23.828000 下午');

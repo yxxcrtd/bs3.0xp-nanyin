@@ -1,0 +1,3 @@
+delete from sys_user where user_id = 'sls1';
+insert into sys_user (USER_ID, SYSTEM_CODE, USER_NAME, REAL_NAME, MAIL_ADDR, PHONE_NUM, PASSWORD, SALT, DEPT_CODE, SSO_USER_ID, MOB_NUM, WECHAT_NUM, ADMIN_FLAG, LAST_PASS_DATE, IS_FROZEN, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('88aef12bd060493686819df2e4363bc9', 'TAMS', 'sls1', 'sls1', null, null, 'eaccb3cde3cb42a68b59abb3dc445f74', '6a26c4b74de79de03be9cdee14e539ee', 'slsbm', null, null, null, '02', to_date('30-05-2019', 'dd-mm-yyyy'), null, null, 'system', null, '11-6月 -20 02.47.06.869000 下午', 'sls1', '11-6月 -20 03.27.41.290000 下午');

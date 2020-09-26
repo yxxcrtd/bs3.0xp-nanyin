@@ -1,0 +1,1 @@
+update sys_datadict_list set item_value='劵费对付' where dict_code='SETTLEMENT_WAY_LENDING' and item_code='01';

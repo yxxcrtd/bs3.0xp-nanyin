@@ -1,0 +1,1 @@
+alter table CHB_ASSET_INFO add  (IS_CHL VARCHAR2(50 BYTE));

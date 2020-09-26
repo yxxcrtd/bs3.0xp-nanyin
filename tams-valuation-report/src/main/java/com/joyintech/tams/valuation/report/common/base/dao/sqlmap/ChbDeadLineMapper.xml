@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.valuation.report.common.base.dao.ChbDeadLineMapper">
+	<select id="findByReportCode" parameterType="java.lang.String"
+		resultType="com.joyintech.tams.valuation.report.common.base.entity.ChbDeadLineDto">
+		select
+		 	rtp.SEQNO seqno,
+            rtp.ORG_CODE orgCode,
+            rtp.REPORT_CODE reportCode,
+            rtp.TYPE_DETAIL typeDetail,
+            rtp.SUBMIT_TIMETYPE submitTimetype,
+            rtp.SUBMIT_REQUIRE3 submitRequire3,
+            rtp.SUBMIT_REQUIRE2 submitRequire2,
+            rtp.SUBMIT_REQUIRE submitRequire,
+            rtp.SUBMIT_POINT_BOND submitPointBond,
+            rtp.SUBMIT_POINT_BANK submitPointBank,
+            rtp.UPDATE_SUBMIT_POINT updateSubmitPoint,
+            rtp.DELETE_SUBMING_POINT deleteSubmingPoint,
+            rtp.STATUS status,
+            rtp.WORKFLOW_ID workflowId,
+            rtp.UPDATE_USER updateUser,
+            rtp.UPDATE_TIME updateTime,
+            rtp.CREATE_USER createUser,
+            rtp.CREATE_TIME createTime
+		from CHB_REG_TIME_POINTS rtp
+		where
+		rtp.STATUS = 'E'
+		and rtp.REPORT_CODE = #{reportCode,jdbcType=VARCHAR}
+		 <if test="typeDetail != null and typeDetail != ''" >
+    			and rtp.TYPE_DETAIL #{typeDetail,jdbcType=VARCHAR}
+    	</if>
+	</select>
+	<!-- 获取中债报送截止日 -->
+     <select id="getChbDeadline" resultType="com.joyintech.tams.valuation.report.common.base.entity.ChbDeadLine001Dto" >
+     	select deadline1.*
+     	from(select rownum num, deadline.* from(
+	       SELECT
+		  A.BUSI_DATE busiDate,
+		  A.MARKET_CODE marketCode,
+		  A.IS_HOLIDAY isHoliday,
+		  A.STATUS status,
+		  A.DEPT_CODE deptCode
+		 FROM CHB_MKT_HOLIDAY A
+		 <where>
+		 	<if test="type !=null and type == '01'.toString()">
+	           	A.BUSI_DATE &lt; to_date(#{holidayDate},&apos;yyyy-MM-dd&apos;)
+	         	</if>
+	         	<if test="type !=null and type == '02'.toString()">
+	           	A.BUSI_DATE &gt; to_date(#{holidayDate},&apos;yyyy-MM-dd&apos;)
+	         	</if>
+		 	AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
+		 	AND A.STATUS = 'E'
+		 	AND A.IS_HOLIDAY = '1'
+		 </where>
+		 	<if test="type !=null and type == '01'.toString()">
+	           	order by A.BUSI_DATE desc
+	        </if>
+	        <if test="type !=null and type == '02'.toString()">
+	           	order by A.BUSI_DATE asc
+	        </if>
+		 )deadline
+		 )deadline1
+		 where deadline1.num = #{days,jdbcType=INTEGER}
+    </select>
+    <!-- 获取中债报送截止日是日期当天的 -->
+     <select id="getChbDeadlineZero" resultType="com.joyintech.tams.valuation.report.common.base.entity.ChbDeadLine001Dto" >
+     	select deadline1.*
+     	from(select rownum num,deadline.* from(
+	       SELECT
+		  A.BUSI_DATE busiDate,
+		  A.MARKET_CODE marketCode,
+		  A.IS_HOLIDAY isHoliday,
+		  A.STATUS status,
+		  A.DEPT_CODE deptCode
+		 FROM CHB_MKT_HOLIDAY A
+		 <where>
+	        <if test="type !=null and type == '01'.toString()">
+	           	A.BUSI_DATE &lt;= to_date(#{holidayDate},&apos;yyyy-MM-dd&apos;)
+	         	</if>
+	         	<if test="type !=null and type == '02'.toString()">
+	           	A.BUSI_DATE &gt;= to_date(#{holidayDate},&apos;yyyy-MM-dd&apos;)
+	         	</if>
+		 	AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
+		 	AND A.STATUS = 'E'
+		 	AND A.IS_HOLIDAY = '1'
+		 </where>
+		 	<if test="type !=null and type == '01'.toString()">
+	           	order by A.BUSI_DATE desc
+	        </if>
+	        <if test="type !=null and type == '02'.toString()">
+	           	order by A.BUSI_DATE asc
+	        </if>
+		 )deadline
+		 )deadline1
+		 where deadline1.num = 1
+    </select>
+    <select id="selectChbMktHolidayByKey" resultType="com.joyintech.tams.common.base.entity.ChbMktHoliday">
+    	select 
+        BUSI_DATE busiDate,
+    	MARKET_CODE marketCode,
+    	IS_HOLIDAY isHoliday,
+    	WORKFLOW_ID workflowId,
+    	STATUS status
+        from CHB_MKT_HOLIDAY
+        where BUSI_DATE = #{busiDate,jdbcType=DATE}
+          and MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
+    </select>
+</mapper>

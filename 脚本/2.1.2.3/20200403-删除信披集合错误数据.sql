@@ -1,0 +1,2 @@
+      --删除错误数据
+      DELETE FROM REP_TREE WHERE P_ID IS NULL AND TREE_ID = 'CP_001_001'

@@ -1,0 +1,15 @@
+--账套参数：新增参数【同业借款四级科目类型】
+DELETE FROM BOK_BOOKSET_EXT WHERE PARAM_CODE='TYJK_FORSUBJECT';
+insert into BOK_BOOKSET_EXT values ('00000000000000000002','TYJK_FORSUBJECT','01','同业借款四级科目类型','01：资产代码  02：期限品种','system','',to_date('2019/11/30', 'yyyy/mm/dd'), 'system',to_date('2019/11/30', 'yyyy/mm/dd'));
+insert into BOK_BOOKSET_EXT values ('00000000000000000003','TYJK_FORSUBJECT','01','同业借款四级科目类型','01：资产代码  02：期限品种','system','',to_date('2019/11/30', 'yyyy/mm/dd'), 'system',to_date('2019/11/30', 'yyyy/mm/dd'));
+insert into BOK_BOOKSET_EXT values ('00000000000000000004','TYJK_FORSUBJECT','01','同业借款四级科目类型','01：资产代码  02：期限品种','system','',to_date('2019/11/30', 'yyyy/mm/dd'), 'system',to_date('2019/11/30', 'yyyy/mm/dd'));
+
+
+--历史数据更新
+INSERT INTO BOK_BOOKSET_EXT
+SELECT A.BOOKSET_ID,B.PARAM_CODE,B.PARAM_VALUE,B.PARAM_NAME,B.REMARK,
+B.CREATE_USER,B.CREATE_DEPT,B.CREATE_TIME,B.UPDATE_USER,B.UPDATE_TIME
+FROM BOK_BOOKSET A,BOK_BOOKSET_EXT B
+WHERE A.BOOKSET_ID_TMPL = B.BOOKSET_ID
+AND A.BOOKSET_ID_TMPL IN ('00000000000000000002','00000000000000000003','00000000000000000004')
+AND B.PARAM_CODE ='TYJK_FORSUBJECT';

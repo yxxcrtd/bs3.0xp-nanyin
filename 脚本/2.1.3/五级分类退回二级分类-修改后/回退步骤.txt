@@ -1,0 +1,5 @@
+1.执行脚本【1.base20190924_SYS_PAGE_DICTLIST二级分类等.sql】
+2.执行脚本【2.master20190924_FIN_PRODUCT_TYPE_CONFIG二级.sql】
+3.执行脚本【3.系统参数是否展示资产四五级分类.sql】
+5.执行【5.20190929_master_FIN_PRODUCT_TYPE更新.sql】脚本
+7.【后续脚本】为回退遗漏脚本，也要执行，后续测试如果发现还有问题，会在这里面提供
