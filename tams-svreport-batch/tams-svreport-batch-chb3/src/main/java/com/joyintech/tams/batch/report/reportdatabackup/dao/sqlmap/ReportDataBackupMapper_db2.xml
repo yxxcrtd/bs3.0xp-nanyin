@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.batch.report.reportdatabackup.dao.ReportDataBackupMapper_db2">
+	<!-- 查询传入的表名是否存在-->
+	<select id="queryTableIsExist" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT NAME as TABLE_NAME FROM SYSIBM.SYSTABLES 
+		WHERE TID <![CDATA[<>]]> 0 AND Name = #{tableName}
+	</select>
+<!-- 报送总表备份 -->
+	<update id="createChbInfoReport">
+        create table ${newTableName} as 
+        (select * from CHB_INFO_REPORT rep where 1=0
+		) definition only
+    </update>
+    <!-- 创建表备份ChbSubmitStatus -->
+	<update id="createChbSubmitStatus">
+        create table ${newTableName} as 
+    		(select * from CHB_SUBMIT_STATUS where 1=0
+    		) definition only
+    </update>
+    <!-- 创建表备份ChbInvestHoldInfo -->
+	<update id="createChbInvestHoldInfo">
+        create table ${newTableName} as 
+        (select * from CHB_INVESTHOLD_INFO info where 1=0
+    	  ) definition only
+    </update>
+    <!-- 创建表备份ChbInvestHoldInfoSub -->
+	<update id="createChbInvestHoldInfoSub">
+        create table ${newTableName} as 
+        (select * from  CHB_INVESTHOLD_INFO_SUB sub where 1=0
+    	) definition only
+    </update>
+     <update id="truncateTable">
+        ALTER TABLE ${tableName} ACTIVATE NOT LOGGED INITIALLY WITH EMPTY TABLE        
+    </update>
+</mapper>

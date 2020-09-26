@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chb.prodraisetotalregist.dao.RaiseTotalRegist001Mapper_db2">
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
+    <id column="REGIST_SEQNO" jdbcType="VARCHAR" property="registSeqno" />
+    <result column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
+    <result column="FPROD_ID" jdbcType="VARCHAR" property="fprodId" />
+    <result column="ISSUE_PARTY_ID" jdbcType="VARCHAR" property="issuePartyId" />
+    <result column="SINGLE_TOTAL" jdbcType="DECIMAL" property="singleTotal" />
+    <result column="LEGAL_TOTAL" jdbcType="DECIMAL" property="legalTotal" />
+    <result column="UNLEGAL_TOTAL" jdbcType="DECIMAL" property="unlegalTotal" />
+    <result column="SUBSCRIBE_CCY_AMT" jdbcType="VARCHAR" property="subscribeCcyAmt" />
+    <result column="SALE_AREA_AMT" jdbcType="VARCHAR" property="saleAreaAmt" />
+    <result column="TOTAL_AMT" jdbcType="DECIMAL" property="totalAmt" />
+    <result column="RAISE_QTY" jdbcType="DECIMAL" property="raiseQty" />
+    <result column="IS_CONSIGN" jdbcType="VARCHAR" property="isConsign" />
+    <result column="CONSIGN_AMT" jdbcType="DECIMAL" property="consignAmt" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="SEND_STATUS" jdbcType="VARCHAR" property="sendStatus" />
+    <result column="SUBMIT_FEEDBACK_STATUS" jdbcType="VARCHAR" property="submitFeedbackStatus" />
+    <result column="STATUS_DATE" jdbcType="TIMESTAMP" property="statusDate" />
+    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="SUBMIT_TIME" jdbcType="TIMESTAMP" property="submitTime" />
+    <result column="CHB_SUBMIT_DEADLINE" jdbcType="TIMESTAMP" property="chbSubmitDeadline" />
+    <result column="SUBMIT_DEADLINE" jdbcType="TIMESTAMP" property="submitDeadline" />
+    <result column="ORG_CODE" jdbcType="VARCHAR" property="orgCode" />
+    <result column="DEPT_CODE" jdbcType="VARCHAR" property="deptCode" />
+    <result column="PROD_NAME" jdbcType="VARCHAR" property="prodName" />
+    <result column="REG_CODE" jdbcType="VARCHAR" property="regCode" />
+    <result column="SALETARGET" jdbcType="VARCHAR" property="saletarget" />
+    <result column="RAISE_ENDDATE" jdbcType="TIMESTAMP" property="raiseEnddate" />
+    <result column="ISSUING_STATUS" jdbcType="VARCHAR" property="issuingStatus" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL, 
+    SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT, RAISE_QTY, IS_CONSIGN, CONSIGN_AMT, 
+    REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, 
+    CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+    ORG_CODE, DEPT_CODE
+  </sql>
+  
+  <insert id="insertBatch" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
+    insert into CHB_PRD_RAISETOT_SUB (REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, 
+      SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL, 
+      SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT, 
+      RAISE_QTY, IS_CONSIGN, CONSIGN_AMT, 
+      REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, 
+      STATUS_DATE, STATUS, CREATE_USER, 
+      CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+      UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, 
+      SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE
+      )
+      <foreach collection="insertList" item="item" index="index" separator="union all" >
+      select
+      #{item.registSeqno,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.issuePartyId,jdbcType=VARCHAR}, 
+      #{item.singleTotal,jdbcType=DECIMAL}, #{item.legalTotal,jdbcType=DECIMAL}, #{item.unlegalTotal,jdbcType=DECIMAL}, 
+      #{item.subscribeCcyAmt,jdbcType=VARCHAR}, #{item.saleAreaAmt,jdbcType=VARCHAR}, #{item.totalAmt,jdbcType=DECIMAL}, 
+      #{item.raiseQty,jdbcType=DECIMAL}, #{item.isConsign,jdbcType=VARCHAR}, #{item.consignAmt,jdbcType=DECIMAL}, 
+      #{item.remark,jdbcType=VARCHAR}, #{item.sendStatus,jdbcType=VARCHAR}, #{item.submitFeedbackStatus,jdbcType=VARCHAR}, 
+      #{item.statusDate,jdbcType=TIMESTAMP}, #{item.status,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR}, 
+      #{item.createDept,jdbcType=VARCHAR}, sysdate, #{item.updateUser,jdbcType=VARCHAR}, 
+      sysdate, #{item.submitTime,jdbcType=TIMESTAMP}, #{item.chbSubmitDeadline,jdbcType=TIMESTAMP}, 
+      #{item.submitDeadline,jdbcType=TIMESTAMP}, #{item.orgCode,jdbcType=VARCHAR}, #{item.deptCode,jdbcType=VARCHAR}
+      from SYSIBM.SYSDUMMY1
+      </foreach>
+  </insert>
+  
+</mapper>

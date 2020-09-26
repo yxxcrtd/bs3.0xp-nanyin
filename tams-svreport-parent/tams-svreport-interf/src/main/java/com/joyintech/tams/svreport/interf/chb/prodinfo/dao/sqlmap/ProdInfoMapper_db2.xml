@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.prodinfo.dao.ProdInfoMapper_db2" >
+<resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
+    <id column="PRODUUID" jdbcType="CHAR" property="produuid" />
+    <result column="FPROD_ID" jdbcType="VARCHAR" property="fprodId" />
+    <result column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
+    <result column="ORG_CODE" jdbcType="VARCHAR" property="orgCode" />
+    <result column="PROD_NAME" jdbcType="VARCHAR" property="prodName" />
+    <result column="REG_CODE" jdbcType="VARCHAR" property="regCode" />
+    <result column="LACKS" jdbcType="VARCHAR" property="lacks" />
+    <result column="PROD_INS_ID" jdbcType="VARCHAR" property="prodInsId" />
+    <result column="PROFIT_TYPE" jdbcType="VARCHAR" property="profitType" />
+    <result column="INVESTOR_TYPE" jdbcType="VARCHAR" property="investorType" />
+    <result column="IS_INTACT" jdbcType="VARCHAR" property="isIntact" />
+    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+    <result column="BASIC" jdbcType="VARCHAR" property="basic" />
+    <result column="PRODTYPE" jdbcType="VARCHAR" property="prodtype" />
+    <result column="ISAGENCY" jdbcType="VARCHAR" property="isagency" />
+    <result column="SALETARGET" jdbcType="VARCHAR" property="saletarget" />
+    <result column="DURATIONFLAG" jdbcType="VARCHAR" property="durationflag" />
+    <result column="MDATE" jdbcType="TIMESTAMP" property="mdate" />
+    <result column="VDATE" jdbcType="TIMESTAMP" property="vdate" />
+    <result column="TERMINATEDATE" jdbcType="TIMESTAMP" property="terminatedate" />
+    <result column="IVSTORIENTATION" jdbcType="VARCHAR" property="ivstorientation" />
+    <result column="OPEN_BUSS_REMARK" jdbcType="VARCHAR" property="openBussRemark" />
+    <result column="RAISE_PSTRDATE" jdbcType="TIMESTAMP" property="raisePstrdate" />
+    <result column="RAISE_PENDDATE" jdbcType="TIMESTAMP" property="raisePenddate" />
+    <result column="DECLARE_STATUS" jdbcType="VARCHAR" property="declareStatus" />
+    <result column="ISSUING_STATUS" jdbcType="VARCHAR" property="issuingStatus" />
+    <result column="RISK_LEVEL" jdbcType="VARCHAR" property="riskLevel" />
+    <result column="TERMTYPE" jdbcType="VARCHAR" property="termtype" />
+    <result column="RAISE_CCY" jdbcType="VARCHAR" property="raiseCcy" />
+    <result column="RAISE_VDATE" jdbcType="TIMESTAMP" property="raiseVdate" />
+    <result column="RAISE_ENDDATE" jdbcType="TIMESTAMP" property="raiseEnddate" />
+    <result column="TEMPLATE_NAME" jdbcType="VARCHAR" property="templateName" />
+    <result column="PROD_BRAND" jdbcType="VARCHAR" property="prodBrand" />
+    <result column="PROD_STAGE" jdbcType="DECIMAL" property="prodStage" />
+    <result column="DESIGNER_NAME" jdbcType="VARCHAR" property="designerName" />
+    <result column="DESIGNER_ID" jdbcType="VARCHAR" property="designerId" />
+    <result column="APPROVER_NAME" jdbcType="VARCHAR" property="approverName" />
+    <result column="APPROVER_ID" jdbcType="VARCHAR" property="approverId" />
+    <result column="MANAGER_NAME" jdbcType="VARCHAR" property="managerName" />
+    <result column="MANAGER_ID" jdbcType="VARCHAR" property="managerId" />
+    <result column="BOOK_MODE" jdbcType="VARCHAR" property="bookMode" />
+    <result column="LIAISON_NAME" jdbcType="VARCHAR" property="liaisonName" />
+    <result column="LIAISON_TEL" jdbcType="VARCHAR" property="liaisonTel" />
+    <result column="LIAISON_MOBILE" jdbcType="VARCHAR" property="liaisonMobile" />
+    <result column="LIAISON_EMAIL" jdbcType="VARCHAR" property="liaisonEmail" />
+    <result column="INVEST_ARAE" jdbcType="VARCHAR" property="investArae" />
+    <result column="INVEST_COUNTRY" jdbcType="VARCHAR" property="investCountry" />
+    <result column="FINAN_SER_MODEL" jdbcType="VARCHAR" property="finanSerModel" />
+    <result column="OPERATE_MODE" jdbcType="VARCHAR" property="operateMode" />
+    <result column="CMMODE" jdbcType="VARCHAR" property="cmmode" />
+    <result column="PMMODE" jdbcType="VARCHAR" property="pmmode" />
+    <result column="MNAME" jdbcType="VARCHAR" property="mname" />
+    <result column="INV_ASSET_TYPE" jdbcType="VARCHAR" property="invAssetType" />
+    <result column="CONT_MODE" jdbcType="VARCHAR" property="contMode" />
+    <result column="COOPERATION_NAME" jdbcType="VARCHAR" property="cooperationName" />
+    <result column="CON_PRD_TRAGET" jdbcType="VARCHAR" property="conPrdTraget" />
+    <result column="IS_YIELD" jdbcType="VARCHAR" property="isYield" />
+    <result column="IS_YIELD_MEAS_BASIS" jdbcType="VARCHAR" property="isYieldMeasBasis" />
+    <result column="INV_TYPE_RAT" jdbcType="VARCHAR" property="invTypeRat" />
+    <result column="RISK_TYPE" jdbcType="VARCHAR" property="riskType" />
+    <result column="HIGH_YIELD" jdbcType="DECIMAL" property="highYield" />
+    <result column="LOW_YIELD" jdbcType="DECIMAL" property="lowYield" />
+    <result column="SALE_AREA" jdbcType="VARCHAR" property="saleArea" />
+    <result column="SALE_AMT_STR" jdbcType="DECIMAL" property="saleAmtStr" />
+    <result column="CASH_PRIN_CCY" jdbcType="VARCHAR" property="cashPrinCcy" />
+    <result column="CASH_PROF_CCY" jdbcType="VARCHAR" property="cashProfCcy" />
+    <result column="RAISE_AMT_PLAN" jdbcType="DECIMAL" property="raiseAmtPlan" />
+    <result column="SALE_FEE_RATE" jdbcType="DECIMAL" property="saleFeeRate" />
+    <result column="INVEST_PRIN_DATE" jdbcType="VARCHAR" property="investPrinDate" />
+    <result column="INVEST_PROF_DATE" jdbcType="VARCHAR" property="investProfDate" />
+    <result column="TRU_FEE_RATE" jdbcType="DECIMAL" property="truFeeRate" />
+    <result column="IN_DEP_CODE" jdbcType="VARCHAR" property="inDepCode" />
+    <result column="IN_DEP_NAME" jdbcType="VARCHAR" property="inDepName" />
+    <result column="OUT_DEP_CTRY" jdbcType="VARCHAR" property="outDepCtry" />
+    <result column="OUT_DEP_NAME" jdbcType="VARCHAR" property="outDepName" />
+    <result column="TERM_RIGHT_FLAG" jdbcType="VARCHAR" property="termRightFlag" />
+    <result column="CUS_REDEEM_FLAG" jdbcType="VARCHAR" property="cusRedeemFlag" />
+    <result column="CREDIT_FLAG" jdbcType="VARCHAR" property="creditFlag" />
+    <result column="CREDIT_TYPE" jdbcType="VARCHAR" property="creditType" />
+    <result column="PRICED_MODE" jdbcType="VARCHAR" property="pricedMode" />
+    <result column="PRD_VDATE" jdbcType="TIMESTAMP" property="prdVdate" />
+    <result column="PRD_MDATE" jdbcType="TIMESTAMP" property="prdMdate" />
+    <result column="EXP_AVG_YIELD" jdbcType="DECIMAL" property="expAvgYield" />
+    <result column="IS_CONSTRACTE" jdbcType="VARCHAR" property="isConstracte" />
+    <result column="GRADE_TYPE" jdbcType="VARCHAR" property="gradeType" />
+    <result column="YIELD_COMMENT" jdbcType="VARCHAR" property="yieldComment" />
+    <result column="OPEN_MODE" jdbcType="VARCHAR" property="openMode" />
+    <result column="OPEN_CIRCLE" jdbcType="VARCHAR" property="openCircle" />
+    <result column="OPEN_CIRCLE_DAYS" jdbcType="DECIMAL" property="openCircleDays" />
+    <result column="RULE_COMMENT" jdbcType="VARCHAR" property="ruleComment" />
+    <result column="FIRST_OPEN_DAY" jdbcType="TIMESTAMP" property="firstOpenDay" />
+    <result column="HOLIDAY_ON_FLAG" jdbcType="VARCHAR" property="holidayOnFlag" />
+    <result column="AVG_OPEN_COUNT" jdbcType="DECIMAL" property="avgOpenCount" />
+    <result column="OPEN_BUSS" jdbcType="VARCHAR" property="openBuss" />
+    <result column="HIGH_YIELD_ISSUE" jdbcType="DECIMAL" property="highYieldIssue" />
+    <result column="LOW_YIELD_ISSUE" jdbcType="DECIMAL" property="lowYieldIssue" />
+    <result column="CREDIT_MODE" jdbcType="VARCHAR" property="creditMode" />
+    <result column="ISSUE_PARTY_ID" jdbcType="VARCHAR" property="issuePartyId" />
+    <result column="OPENTYPEP" jdbcType="VARCHAR" property="opentypep" />
+    <result column="OPENDAYP" jdbcType="VARCHAR" property="opendayp" />
+    <result column="OPENCYCLEP" jdbcType="VARCHAR" property="opencyclep" />
+    <result column="OPENCYCLEUNITP" jdbcType="VARCHAR" property="opencycleunitp" />
+    <result column="WEEKP" jdbcType="VARCHAR" property="weekp" />
+    <result column="DAYP" jdbcType="VARCHAR" property="dayp" />
+    <result column="WORKDAYP" jdbcType="VARCHAR" property="workdayp" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="DEPT_CODE" jdbcType="VARCHAR" property="deptCode" />
+    <result column="WORKFLOW_ID" jdbcType="VARCHAR" property="workflowId" />
+    <result column="DATA_SOURCE" jdbcType="VARCHAR" property="dataSource" />
+    <result column="RAISE_TYPE" jdbcType="VARCHAR" property="raiseType" />
+    <result column="MANAGE_TYPE" jdbcType="VARCHAR" property="manageType" />
+    <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="AGENT" jdbcType="VARCHAR" property="agent" />
+    <result column="EXC_FIN_SECTOR" jdbcType="VARCHAR" property="excFinSector" />
+    <result column="IS_SHORT_TERM" jdbcType="VARCHAR" property="isShortTerm" />
+    <result column="SHORT_TERM" jdbcType="DECIMAL" property="shortTerm" />
+    <result column="IS_FREE_REDEM" jdbcType="VARCHAR" property="isFreeRedem" />
+    <result column="CUSTOMER_TYPE" jdbcType="VARCHAR" property="customerType" />
+    <result column="CASH_MANA_CATE" jdbcType="VARCHAR" property="cashManaCate" />
+    <result column="YIELD" jdbcType="DECIMAL" property="yield" />
+    <result column="INVEST_FEE_RATE" jdbcType="DECIMAL" property="investFeeRate" />
+  </resultMap>
+  <resultMap id="MdateAdjustResultMap" type="com.joyintech.tams.common.base.entity.PrdMdateAdjust" >
+        <id column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <id column="ADJUST_NUM" property="adjustNum" jdbcType="DECIMAL" />
+        <result column="MDATE_UNADJUST" property="mdateUnadjust" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="LDATE" property="ldate" jdbcType="DATE" />
+        <result column="ADJUST_TYPE" property="adjustType" jdbcType="VARCHAR" />
+        <result column="LDATE_UNADJUST" property="ldateUnadjust" jdbcType="DATE" />
+    </resultMap>
+  <sql id="Base_Column_List">
+    PRODUUID, FPROD_ID, PROD_ID, ORG_CODE, PROD_NAME, REG_CODE, LACKS, PROD_INS_ID, PROFIT_TYPE, 
+    INVESTOR_TYPE, IS_INTACT, STATUS, BASIC, PRODTYPE, ISAGENCY, SALETARGET, DURATIONFLAG, 
+    MDATE, VDATE, TERMINATEDATE, IVSTORIENTATION, OPEN_BUSS_REMARK, RAISE_PSTRDATE, RAISE_PENDDATE, 
+    DECLARE_STATUS, ISSUING_STATUS, RISK_LEVEL, TERMTYPE, RAISE_CCY, RAISE_VDATE, RAISE_ENDDATE, 
+    TEMPLATE_NAME, PROD_BRAND, PROD_STAGE, DESIGNER_NAME, DESIGNER_ID, APPROVER_NAME, 
+    APPROVER_ID, MANAGER_NAME, MANAGER_ID, BOOK_MODE, LIAISON_NAME, LIAISON_TEL, LIAISON_MOBILE, 
+    LIAISON_EMAIL, INVEST_ARAE, INVEST_COUNTRY, FINAN_SER_MODEL, OPERATE_MODE, CMMODE, 
+    PMMODE, MNAME, INV_ASSET_TYPE, CONT_MODE, COOPERATION_NAME, CON_PRD_TRAGET, IS_YIELD, 
+    IS_YIELD_MEAS_BASIS, INV_TYPE_RAT, RISK_TYPE, HIGH_YIELD, LOW_YIELD, SALE_AREA, SALE_AMT_STR, 
+    CASH_PRIN_CCY, CASH_PROF_CCY, RAISE_AMT_PLAN, SALE_FEE_RATE, INVEST_PRIN_DATE, INVEST_PROF_DATE, 
+    TRU_FEE_RATE, IN_DEP_CODE, IN_DEP_NAME, OUT_DEP_CTRY, OUT_DEP_NAME, TERM_RIGHT_FLAG, 
+    CUS_REDEEM_FLAG, CREDIT_FLAG, CREDIT_TYPE, PRICED_MODE, PRD_VDATE, PRD_MDATE, EXP_AVG_YIELD, 
+    IS_CONSTRACTE, GRADE_TYPE, YIELD_COMMENT, OPEN_MODE, OPEN_CIRCLE, OPEN_CIRCLE_DAYS, 
+    RULE_COMMENT, FIRST_OPEN_DAY, HOLIDAY_ON_FLAG, AVG_OPEN_COUNT, OPEN_BUSS, HIGH_YIELD_ISSUE, 
+    LOW_YIELD_ISSUE, CREDIT_MODE, ISSUE_PARTY_ID, OPENTYPEP, OPENDAYP, OPENCYCLEP, OPENCYCLEUNITP, 
+    WEEKP, DAYP, WORKDAYP, REMARK, DEPT_CODE, WORKFLOW_ID, DATA_SOURCE, RAISE_TYPE, MANAGE_TYPE, 
+    UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, AGENT
+  </sql>
+    <select id="selectProdInfo" parameterType="java.util.Map"
+    resultType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo"
+    resultSetType="FORWARD_ONLY" fetchSize="1000">
+    WITH TEMP_INFO AS (
+    SELECT P_FINPROD_ID, listagg(TAR_CUSTOMER_TYPE,',') TYPE
+                 FROM PRD_LAYER_PARAM 
+                  GROUP BY P_FINPROD_ID
+    )
+      SELECT  '01' fiduciaryDuty,<!-- 受托职责：01 主动管理 -->
+      '99' transferType,<!-- 转让类型 ：99 其他-->
+      '02' isMarketFund,<!-- 货币市场基金标识 ：02 否-->
+      t.finprod_id  finprodid,
+      T.FINPROD_TYPE2 FINPRODTYPE2,
+         --f_guid  PRODUUID  ,  --<!--  主键，自动生成   -->
+         CASE WHEN T.p_finprod_id IS NOT NULL THEN 
+            FINPROD_MARKET_ID
+          ELSE NULL
+          END FPROD_ID,
+       --<!--  父产品代码   -->
+       case when T.p_finprod_id IS NOT NULL THEN 
+         t.finprod_id
+         else  T.FINPROD_MARKET_ID 
+      end PROD_ID, --<!--  产品代码   -->
+      --ORG_CODE  ,  --<!--  机构代码   -->
+      T.FINPROD_NAME PROD_NAME  ,  --<!--  产品名称   -->
+      TA.PROD_REGIST_CODE REG_CODE  ,  --<!--  产品登记编码   -->
+      --LACKS  ,  --<!--  信息缺失项 无缺失、缺失中债申报、缺失中债发行   -->
+      D.REP_FINPROD_INS_ID PROD_INS_ID  ,  --<!--  行内标识码   -->
+      TA.PROFIT_FLAG PROFIT_TYPE  ,  --<!--  产品收益类型  01 保证收益/02 保本浮动收益/03 非保本浮动收益     -->
+      D.REP_INVESTOR_TYPE INVESTOR_TYPE  ,  --<!--  投资者类型   -->
+      --IS_INTACT  ,  --<!--  发行要素维护完整   -->
+      'E' STATUS  ,  --<!--  数据状态  A 新建/ E 有效/D删除   -->
+      NVL(Rateinfo.BASIS,'A/365') BASIC  ,  --<!--  计息基础 A/360, A/365     -->
+     
+      DECODE(T.PROFIT_TYPE,'01','N','02','R','03','M','C')   PRODTYPE  ,  --<!--  标识哪种产品，净值N，货币M，利率R，客户周期C 净值、预期收益、货币、结构   -->
+     
+      TA.SALE_MODE  ISAGENCY  ,  --<!--  是否代销，01/02   -->
+      TINFO.TYPE SALETARGET,
+      --D.REP_INVESTOR_TYPE SALETARGET  ,  --<!--  目标客户类型,01 私人银行客户专属/02 机构客户专属/03 一般个人客户/04 金融同业专属/05 高资产净值客户   -->
+      '03' DURATIONFLAG  ,  --<!--  存续状态  存续01，终止02，未起息03     -->
+      T.MDATE  ,  --<!--  到期日   -->
+      T.VDATE  ,  --<!--  起息日   -->
+      T.ACTMDATE TERMINATEDATE  ,  --<!--  提前终止日   -->
+      TA.INVEST_NATURE IVSTORIENTATION  ,  --<!--  投资性质 01固定收益类/02权益类/03混合类/04商品及金融衍生品类   -->
+      I.REP_OPEN_BUSS_REMARK OPEN_BUSS_REMARK  ,  --<!--  开放期业务说明   -->
+      D.REP_RAISE_PSTRDATE RAISE_PSTRDATE  ,  --<!--  募集起始日期（从）   -->
+      D.REP_RAISE_PENDDATE RAISE_PENDDATE  ,  --<!--  募集起始日期（到）   -->
+      --DECLARE_STATUS  ,  --<!--  报备状态   -->
+      TA.ISSUE_STATUS ISSUING_STATUS  ,  --<!--  发行状态  确认发行/发行成功/发行失败/不发行     -->
+      D.REP_RISK_LEVEL RISK_LEVEL  ,  --<!--  产品风险等级  01 一级（低）/02 二级（中低）/03 三级（中）/04 四级（中高）/05 五级（高）     -->
+      D.REP_TERM TERMTYPE  ,  --<!--  产品期限01 T+0产品/02 7天（含）以内/03 7天-1个月（含）/04 1-3个月（含）/05 3-6 25个月(含)/06 6-12个月（含）/07 1-3年（含）/08 3年以上   -->
+      D.REP_RAISE_CCY RAISE_CCY  ,  --<!--  募集币种   -->
+      I.REP_RAISE_VDATE RAISE_VDATE  ,  --<!--  募集起始日期   -->
+      I.REP_RAISE_ENDDATE RAISE_ENDDATE  ,  --<!--  募集结束日期   -->
+      --TEMPLATE_NAME  ,  --<!--  模板名称   -->
+      D.REP_FINPROD_BRAND PROD_BRAND  ,  --<!--  产品品牌   -->
+      D.REP_FINPROD_STAGE PROD_STAGE  ,  --<!--  产品期次   -->
+      D.REP_DESIGNER_NAME DESIGNER_NAME  ,  --<!--  产品设计人姓名   -->
+      D.REP_DESIGNER_ID DESIGNER_ID  ,  --<!--  产品设计人身份证号   -->
+      D.REP_APPROVER_NAME APPROVER_NAME  ,  --<!--  产品审批人姓名   -->
+      D.REP_APPROVER_ID APPROVER_ID  ,  --<!--  产品审批人身份证号   -->
+      D.REP_MANAGER_NAME MANAGER_NAME  ,  --<!--  投资经理姓名   -->
+      D.REP_MANAGER_ID MANAGER_ID  ,  --<!--  投资经理身份证号   -->
+      D.REP_BOOK_MODE BOOK_MODE  ,  --<!--  会计核算方式  01 表内/02 表外     -->
+      D.REP_LIAISON_NAME LIAISON_NAME  ,  --<!--  业务联络人姓名   -->
+      D.REP_LIAISON_TEL LIAISON_TEL  ,  --<!--  业务联络人座机   -->
+      D.REP_LIAISON_MOBILE LIAISON_MOBILE  ,  --<!--  业务联络人手机   -->
+      D.REP_LIAISON_EMAIL LIAISON_EMAIL  ,  --<!--  业务联络人邮箱   -->
+      D.REP_INVEST_AREA INVEST_ARAE  ,  --<!--  资金投向地区  01 境内/02 境外/03 境内和境外     -->
+      D.REP_INVEST_COUNTRY INVEST_COUNTRY  ,  --<!--  产品投资国家或地区参考《世界各国和地区名称代码》   -->
+      D.REP_FINAN_SER_MODEL FINAN_SER_MODEL  ,  --<!--  理财业务服务模式01 综合理财服务/02 理财顾问服务/99 其他   -->
+      D.REP_OPERATE_MODE OPERATE_MODE  ,  --<!--  产品运作模式  01 封闭式净值型/02 封闭式非净值型/03 开放式净值型/04 开放式非净值型     -->
+      D.REP_CMMODE CMMODE  ,  --<!--  产品资产配置方式01 单一资产配置（一对一）/02 资产组合配置（一对多）/03 其他配置（多对多）   -->
+      D.REP_PMMODE PMMODE  ,  --<!--  产品管理模式01银行为实际管理人/02 其他机构为实际管理人/03 资产管理公司/04 特殊目的载体（SPV）   -->
+      D.REP_MNAME MNAME  ,  --<!--  实际管理人名称   -->
+      D.REP_INV_ASSET_TYPE INV_ASSET_TYPE  ,  --<!--  投资资产类型  01 结构性投资类/02 货币市场工具类/03 债券类/04 非标准化债权类/05 股票类/06 股权类/07 另类投资类/08 混合类/09代客境外投资类/10 银行存款类/11 理财直接融资工具类/12 新增可投资资产类/13 公募基金类/ 14 私募基金类/ 15 产业基金类 /16 衍生产品类 /17 商品类     -->
+      D.REP_CONT_MODE CONT_MODE  ,  --<!--  合作模式  01 独立运作/02 银信/03 银保/04 银基/05 银证/07 混合类/99 其他     -->
+      D.REP_COOP_NAME COOPERATION_NAME  ,  --<!--  合作机构   -->
+      D.REP_CON_PRD_TRAGET CON_PRD_TRAGET  ,  --<!--  结构性产品挂钩标的01 利率/02 汇率/03 股票/04 农产品/05 大宗商品/06 贵金属/07 债券/08 指数 /09 基金/10 另类资产/11 期货/12 期权/13 远期/14 互换/15 复合金融衍生品/99 其他   -->
+      D.REP_IS_YIELD IS_YIELD  ,  --<!--  是否有预期收益率01 是/02 否   -->
+      D.REP_IS_YIELD_BASIS IS_YIELD_MEAS_BASIS  ,  --<!--  是否有收益率测算依据  01 是/02 否     -->
+      D.REP_INV_TYPE_RAT INV_TYPE_RAT  ,  --<!--  投资资产种类及比例   -->
+      D.REP_RISK_TYPE RISK_TYPE  ,  --<!--  投资者风险偏好01 保守型/02 稳健型/03 平衡型/04 成长型/05 进取型   -->
+      D.REP_HIGH_YIELD HIGH_YIELD  ,  --<!--  预计客户最高年收益率%   -->
+      D.REP_LOW_YIELD LOW_YIELD  ,  --<!--  预计客户最低年收益率%   -->
+      D.REP_SALE_AREA SALE_AREA  ,  --<!--  产品销售地区   -->
+      D.REP_SALE_AMT_STR SALE_AMT_STR  ,  --<!--  起点销售金额   -->
+      D.REP_CASH_PRIN_CCY CASH_PRIN_CCY  ,  --<!--  兑付本金币种   -->
+      D.REP_CASH_PROF_CCY CASH_PROF_CCY  ,  --<!--  兑付收益币种   -->
+      D.REP_RAISE_AMT_PLAN RAISE_AMT_PLAN  ,  --<!--  计划募集金额（元）   -->
+      D.REP_SALE_FEE_RATE SALE_FEE_RATE  ,  --<!--  销售手续费率%   -->
+      D.REP_INVEST_PRIN_DATE INVEST_PRIN_DATE  ,  --<!--  投资本金到账日   -->
+      D.REP_INVEST_PROF_DATE INVEST_PROF_DATE  ,  --<!--  投资收益到账日   -->
+      D.REP_TRU_FEE_RATE TRU_FEE_RATE  ,  --<!--  托管费率   -->
+      D.REP_IN_DEP_CODE IN_DEP_CODE  ,  --<!--  境内托管机构代码   -->
+      D.REP_IN_DEP_NAME IN_DEP_NAME  ,  --<!--  境内托管机构名称   -->
+      D.REP_OUT_DEP_CTRY OUT_DEP_CTRY  ,  --<!--  境外托管机构国别   -->
+      D.REP_OUT_DEP_NAME OUT_DEP_NAME  ,  --<!--  境外托管机构名称   -->
+      D.REP_TERM_RIGHT_FLAG TERM_RIGHT_FLAG  ,  --<!--  发行机构提前终止权标识   -->
+      D.REP_CUS_REDEEM_FLAG CUS_REDEEM_FLAG  ,  --<!--  客户赎回权标识   -->
+      D.REP_CREDIT_FLAG CREDIT_FLAG  ,  --<!--  产品增信标识   -->
+      D.REP_CREDIT_TYPE CREDIT_TYPE  ,  --<!--  产品增信机构类型   -->
+      D.REP_PRICED_MODE PRICED_MODE  ,  --<!--  产品定价方式   -->
+      D.EXC_FIN_SECTOR EXC_FIN_SECTOR  ,  --<!--  是否金融同业专属   -->
+      D.IS_SHORT_TERM IS_SHORT_TERM  ,  --<!--  是否设置最短持有期限   -->
+      D.SHORT_TERM SHORT_TERM  ,  --<!--  最短持有期限(天)   -->
+      D.IS_FREE_REDEM IS_FREE_REDEM  ,  --<!--  最短持有期后是否自由赎回   -->
+      D.CUSTOMER_TYPE CUSTOMER_TYPE  ,  --<!--  客户类型   -->
+      I.REP_PRD_VDATE PRD_VDATE  ,  --<!--  产品起始日期   -->
+      I.REP_PRD_MDATE PRD_MDATE  ,  --<!--  产品终止日期   -->
+      I.REP_EXP_AVG_YIELD EXP_AVG_YIELD  ,  --<!--  平均预计客户年收益率(上流%)   -->
+      I.REP_IS_CONSTRACTE IS_CONSTRACTE  ,  --<!--  是否结构化分层产品   -->
+      I.REP_GRADE_TYPE GRADE_TYPE  ,  --<!--  层级类别  11 优先层级一/12 优先层级二/13 优先层级三/14 优先层级四/15 优先层级五/21 进取层级一/22 进取层级二/23 进取层级三/24 进取层级四/25 进取层级五     -->
+      I.REP_YIELD_COMMENT YIELD_COMMENT  ,  --<!--  收益率分档情况说明   -->
+      I.REP_OPEN_MODE OPEN_MODE  ,  --<!--    开放模式01 有规律开放/02 无规律开放   -->
+      I.REP_OPEN_CIRCLE OPEN_CIRCLE  ,  --<!--  规律开放周期   -->
+      I.REP_OPEN_CIRCLE_DAYS OPEN_CIRCLE_DAYS  ,  --<!--  其他规律开放周期（天）   -->
+      I.REP_RULE_COMMENT RULE_COMMENT  ,  --<!--  无规律开放说明   -->
+      I.REP_FIRST_OPEN_DAY FIRST_OPEN_DAY  ,  --<!--  首次开放周期起始日   -->
+      I.REP_HOLIDAY_ON_FLAG HOLIDAY_ON_FLAG  ,  --<!--  节假日是否开放   -->
+      I.REP_AVG_OPEN_COUNT AVG_OPEN_COUNT  ,  --<!--  平均开放次数（年化）   -->
+      I.REP_OPEN_BUSS OPEN_BUSS  ,  --<!--  开放期业务01申赎皆可/02 仅可申购无限制/ 03仅可赎回无限制 /04仅可申购有限制/05仅可赎回有限制 /99其他   -->
+      I.REP_EXP_MAX_YIELD HIGH_YIELD_ISSUE  ,  --<!--  预计最高收益率(上流%)-发行   -->
+      I.REP_EXP_MIN_YIELD LOW_YIELD_ISSUE  ,  --<!--  预计最低收益率(上流%)-发行   -->
+      D.REP_CREDIT_MODE CREDIT_MODE  ,  --<!--  产品增信形式   -->
+      D.REP_ISSUE_PARTY_ID ISSUE_PARTY_ID  ,  --<!--  发行机构代码   -->
+      OPEN_MODE OPENTYPEP  ,  --<!--  开放模式申  01	定期开放02	高频开放03	周期开放  -->
+      OPEN_DAYS OPENDAYP  ,  --<!--  开放天数申   -->
+      DECODE(R.open_mode,'02',1,OPEN_CYCLE) OPENCYCLEP  ,  --<!--  开放周期申   -->
+      DECODE(R.open_mode,'02','D',OPEN_CYCLE_UNIT)OPENCYCLEUNITP,--<!--  开放周期单位02	年05	月06	周07	日   -->
+     --<!--  DECODE(OPEN_CYCLE_UNIT,'02','Y','05','M','06','W','07','D')) OPENCYCLEUNITP  ,   -->
+      DAY_VALUE WEEKP  ,  --<!--  周申   -->
+      DAY_VALUE DAYP  ,  --<!--  几号申   -->
+      DAY_VALUE WORKDAYP  ,  --<!--  第几工作日申   -->
+      D.REP_REMARK REMARK,    --<!--  备注   -->
+      --DEPT_CODE  ,  --<!--  部门代码   -->
+      --WORKFLOW_ID  ,  --<!--  工作流代码   -->
+      --DATA_SOURCE  ,  --<!--  数据来源   -->
+      T.ISSUE_TYPE RAISE_TYPE  ,  --<!--  募集方式   -->
+      T.ENTRUST_TYPE MANAGE_TYPE ,   --<!--  管理方式   -->
+      --UPDATE_USER  ,  --<!--  更新人   -->
+      --UPDATE_TIME  ,  --<!--  更新时间   -->
+      --CREATE_USER  ,  --<!--  创建人   -->
+      --CREATE_TIME  ,  --<!--  创建时间   -->
+      --AGENT    --<!--  经办人   -->
+      --T.CREATE_TIME AS createTime,
+	  --nvl(T.UPDATE_TIME,T.CREATE_TIME) AS updateTime
+	  ta.IS_CASH_MANAGE as CASH_MANA_CATE,---增加是否现金管理类字段接入
+	   greatest(nvl(T.UPDATE_TIME,T.CREATE_TIME),
+	   nvl(nvl(I.UPDATE_TIME,I.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+	   nvl(nvl(D.UPDATE_TIME,D.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+	   nvl(nvl(TA.UPDATE_TIME,TA.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+	   nvl(nvl(R.UPDATE_TIME,R.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd'))
+	   ) AS updateTime
+      FROM FIN_PRODUCT T --<!-- 要素表 -->
+      LEFT JOIN REP_PROD_ISSUE I --发行
+      ON I.REP_FINPROD_ID = T.Finprod_Id
+      LEFT JOIN REP_PROD_DECLARE D  --<!-- 申报表 -->
+      ON D.REP_FINPROD_ID = T.Finprod_Id
+      LEFT JOIN  fin_product_add TA --<!-- 要素附属表 -->
+      ON  t.finprod_id =TA.finprod_id
+      
+      
+     LEFT JOIN FIN_CASH_INFO CASH  --<!-- 现金流信息表 -->
+      ON CASH.FINPROD_ID = T.FINPROD_ID
+      and cash.cash_type_2 ='C01'
+      and cash.finprod_type='01'
+      
+      LEFT JOIN FIN_OPEN_RULE R  --<!-- 开放规则表 -->
+      ON R.CASH_ID = CASH.CASH_ID
+      and r.open_type in ('01','03')
+      
+      LEFT JOIN FIN_CASH_INFO CASH1  --<!-- 现金流信息表 -->
+      ON CASH1.FINPROD_ID = nvl(T.p_finprod_id,T.FINPROD_ID)
+      and CASH1.cash_type_1 = '02'
+      and CASH1.cash_type_2 = 'C02'
+      and CASH1.BRANCH = '0'
+      
+      LEFT JOIN fin_rate_info Rateinfo  --<!-- 现金流利率信息表 -->
+      ON Rateinfo.CASH_ID = CASH1.CASH_ID
+      
+      LEFT JOIN TEMP_INFO TINFO
+      ON TINFO.P_FINPROD_ID = T.FINPROD_ID
+      
+      WHERE  T.FINPROD_TYPE2 in('F16','F24')
+      /*根据创建时间、更新时间和接口接入时间接入数据*/
+      AND (NVL(T.UPDATE_TIME,T.CREATE_TIME) > #{batchTime,jdbcType=TIMESTAMP}
+      or NVL(I.UPDATE_TIME,I.CREATE_TIME) > #{batchTime,jdbcType=TIMESTAMP}
+      or NVL(D.UPDATE_TIME,D.CREATE_TIME) > #{batchTime,jdbcType=TIMESTAMP}
+      or NVL(TA.UPDATE_TIME,TA.CREATE_TIME) > #{batchTime,jdbcType=TIMESTAMP}
+      or NVL(R.UPDATE_TIME,R.CREATE_TIME) > #{batchTime,jdbcType=TIMESTAMP})
+	   <!-- <![CDATA[AND TO_CHAR(NVL(T.UPDATE_TIME,T.CREATE_TIME),'yyyy-MM-dd') > #{batchTime,jdbcType=VARCHAR}]]> -->
+	   
+    </select>
+</mapper>

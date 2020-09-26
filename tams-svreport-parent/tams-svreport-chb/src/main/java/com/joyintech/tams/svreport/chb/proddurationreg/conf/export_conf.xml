@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ProdDurationReg001.xls" name="产品存续期登记">
+	<Worksheet javaBean="com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto">
+		<Row>
+			<Cell order="1" name="产品登记编码">prodRegistCode</Cell><!--产品登记编码-->
+			<Cell order="2" name="发行机构代码">issuePartyId</Cell><!--发行机构代码-->
+			<Cell order="3" name="初始净值">originalValue</Cell><!--初始净值-->
+			<Cell order="4" name="产品净值">prdValue</Cell><!--产品净值-->
+			<Cell order="5" name="累计净值">totalValue</Cell><!--累计净值-->
+			<Cell order="6" name="净值币种">valueCcy</Cell><!--净值币种-->
+			<Cell order="7" name="折算人民币初始净值">cnyOrlValue</Cell><!--折算人民币初始净值-->
+			<Cell order="8" name="折算人民币净值">cnyPrdValue</Cell><!--折算人民币净值-->
+			<Cell order="9" name="折算人民币累计净值">cnyTalValue</Cell><!--折算人民币累计净值-->
+			<Cell order="10" name="实现收益率(%)">reaYield</Cell><!--实现收益率-->
+			<Cell order="11" name="最新预期收益率(%)">newExpYield</Cell><!--最新预期收益率-->
+			<Cell order="12" name="银行实现收益（元）">bankImpInt</Cell><!--银行实现收益（元）-->
+			<Cell order="13" name="业务起始日">vdateStr</Cell><!--业务起始日-->
+			<Cell order="14" name="业务结束日">mdateStr</Cell><!--业务结束日-->
+			<Cell order="15" name="累计申购份额">purchaseQtyStr</Cell><!--累计申购份额-->
+			<Cell order="16" name="累计赎回份额">redeemQtyStr</Cell><!--累计赎回份额-->
+			<Cell order="17" name="每万份份额分红">shareAmtWanStr</Cell><!--累计赎回份额-->
+			<Cell order="18" name="每万份现金分红">cashAmtWanStr</Cell><!--累计赎回份额-->
+			<Cell order="19" name="产品余额（元）">balanceAmt</Cell><!--产品余额（元）-->
+			<Cell order="20" name="产品份额">prdQtyStr</Cell><!--产品份额-->
+			<Cell order="21" name="币种和申购兑付信息">ccyPurchase</Cell><!--币种和申购兑付信息-->
+			<Cell order="22" name="备注">remark</Cell><!--备注-->
+		</Row>
+	</Worksheet>
+</Workbook>

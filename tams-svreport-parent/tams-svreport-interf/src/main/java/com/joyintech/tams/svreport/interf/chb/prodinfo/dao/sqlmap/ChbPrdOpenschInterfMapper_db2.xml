@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.prodinfo.dao.ChbPrdOpenschInterfMapper_db2" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbPrdOpensch" >
+    <id column="SEQNO" property="seqno" jdbcType="CHAR" />
+    <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+    <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+    <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+    <result column="PLAN_TYPE" property="planType" jdbcType="VARCHAR" />
+    <result column="OPEN_START" property="openStart" jdbcType="TIMESTAMP" />
+    <result column="OPEN_END" property="openEnd" jdbcType="TIMESTAMP" />
+    <result column="OPEN_VDATE" property="openVdate" jdbcType="TIMESTAMP" />
+    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+    <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+    <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="REV_DATE" property="revDate" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    SEQNO, PROD_ID, PROD_NAME, ISSUE_PARTY_ID, PLAN_TYPE, OPEN_START, OPEN_END, OPEN_VDATE, 
+    ORG_CODE, DEPT_CODE, DATA_SOURCE, STATUS, REV_DATE, UPDATE_USER, UPDATE_TIME, CREATE_USER, 
+    CREATE_TIME, REMARK
+  </sql>
+    
+  <delete id="deletePrdOpensch" parameterType="java.lang.String">
+	 begin
+     <foreach collection="prodidlist" item="prodid" index="index" separator=";">
+	     delete from CHB_PRD_OPENSCH
+	     where PROD_ID = #{prodid,jdbcType=VARCHAR} 
+     </foreach>
+    ;end
+  </delete>
+ 
+</mapper>

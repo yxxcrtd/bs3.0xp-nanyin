@@ -1,0 +1,729 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoAddImpMapper_mysql">
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstCustomerInfoAdd">
+    <id column="CUSTOMER_ID" jdbcType="VARCHAR" property="customerId" />
+    <result column="PARTY_TYPE3" jdbcType="VARCHAR" property="partyType3" />
+    <result column="PARTY_TYPE2" jdbcType="VARCHAR" property="partyType2" />
+    <result column="PARTY_TYPE1" jdbcType="VARCHAR" property="partyType1" />
+    <result column="INDUSTRY" jdbcType="VARCHAR" property="industry" />
+    <result column="INDUSTRY2" jdbcType="VARCHAR" property="industry2" />
+    <result column="INSITITUTE_CODE" jdbcType="VARCHAR" property="insitituteCode" />
+    <result column="IS_GOV" jdbcType="VARCHAR" property="isGov" />
+    <result column="MAIN_CAPITAL" jdbcType="DECIMAL" property="mainCapital" />
+    <result column="REGISTER_CAPITAL" jdbcType="DECIMAL" property="registerCapital" />
+    <result column="PROVINCE" jdbcType="VARCHAR" property="province" />
+    <result column="CITY" jdbcType="VARCHAR" property="city" />
+    <result column="COUNTY" jdbcType="VARCHAR" property="county" />
+    <result column="HOLDING_TYPE" jdbcType="VARCHAR" property="holdingType" />
+    <result column="CUSTOMER_OBJ_TYPE" jdbcType="VARCHAR" property="customerObjType" />
+    <result column="IS_LISTED_COMPANY" jdbcType="VARCHAR" property="isListedCompany" />
+    <result column="IS_GROUP_CUSTOMER" jdbcType="VARCHAR" property="isGroupCustomer" />
+    <result column="PARENT_CUSTOMER_ID" jdbcType="VARCHAR" property="parentCustomerId" />
+    <result column="PARENT_CUSTOMER_NAME" jdbcType="VARCHAR" property="parentCustomerName" />
+    <result column="IS_PRIVATE" jdbcType="VARCHAR" property="isPrivate" />
+    <result column="IS_ESCAPE_DEPT" jdbcType="VARCHAR" property="isEscapeDept" />
+    <result column="CREDIT_TYPE" jdbcType="VARCHAR" property="creditType" />
+    <result column="IS_CREDIT_RELATED_TRD" jdbcType="VARCHAR" property="isCreditRelatedTrd" />
+    <result column="STRUCT_ADJUST_TYPE" jdbcType="VARCHAR" property="structAdjustType" />
+    <result column="INDUS_UPGRATE_TYPE" jdbcType="VARCHAR" property="indusUpgrateType" />
+    <result column="BUSI_SCOPE" jdbcType="VARCHAR" property="busiScope" />
+    <result column="MAIN_BUSI" jdbcType="VARCHAR" property="mainBusi" />
+    <result column="SEX" jdbcType="VARCHAR" property="sex" />
+    <result column="PERSON_ID" jdbcType="VARCHAR" property="personId" />
+    <result column="M_PHONE" jdbcType="VARCHAR" property="mPhone" />
+    <result column="PHONE" jdbcType="VARCHAR" property="phone" />
+    <result column="POSITION" jdbcType="VARCHAR" property="position" />
+    <result column="COMPANY_NAME" jdbcType="VARCHAR" property="companyName" />
+    <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+    <result column="MAIL" jdbcType="VARCHAR" property="mail" />
+    <result column="PROPERTY" jdbcType="VARCHAR" property="property" />
+    <result column="COMPANY_NATURE" jdbcType="VARCHAR" property="companyNature" />
+    <result column="LINK_ID1" jdbcType="VARCHAR" property="linkId1" />
+    <result column="LINK_ID2" jdbcType="VARCHAR" property="linkId2" />
+    <result column="LINK_ID3" jdbcType="VARCHAR" property="linkId3" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    CUSTOMER_ID, PARTY_TYPE3, PARTY_TYPE2, PARTY_TYPE1, INDUSTRY, INDUSTRY2, INSITITUTE_CODE, 
+    IS_GOV, MAIN_CAPITAL, REGISTER_CAPITAL, PROVINCE, CITY, COUNTY, HOLDING_TYPE, CUSTOMER_OBJ_TYPE, 
+    IS_LISTED_COMPANY, IS_GROUP_CUSTOMER, PARENT_CUSTOMER_ID, PARENT_CUSTOMER_NAME, IS_PRIVATE, 
+    IS_ESCAPE_DEPT, CREDIT_TYPE, IS_CREDIT_RELATED_TRD, STRUCT_ADJUST_TYPE, INDUS_UPGRATE_TYPE, 
+    BUSI_SCOPE, MAIN_BUSI, SEX, PERSON_ID, M_PHONE, PHONE, POSITION, COMPANY_NAME, ADDRESS, 
+    MAIL, PROPERTY, COMPANY_NATURE, LINK_ID1, LINK_ID2, LINK_ID3, REMARK, CREATE_USER, 
+    CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from MST_CUSTOMER_INFO_ADD
+    where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from MST_CUSTOMER_INFO_ADD
+    where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfoAdd">
+    insert into MST_CUSTOMER_INFO_ADD (CUSTOMER_ID, PARTY_TYPE3, PARTY_TYPE2, 
+      PARTY_TYPE1, INDUSTRY, INDUSTRY2, 
+      INSITITUTE_CODE, IS_GOV, MAIN_CAPITAL, 
+      REGISTER_CAPITAL, PROVINCE, CITY, 
+      COUNTY, HOLDING_TYPE, CUSTOMER_OBJ_TYPE, 
+      IS_LISTED_COMPANY, IS_GROUP_CUSTOMER, PARENT_CUSTOMER_ID, 
+      PARENT_CUSTOMER_NAME, IS_PRIVATE, IS_ESCAPE_DEPT, 
+      CREDIT_TYPE, IS_CREDIT_RELATED_TRD, STRUCT_ADJUST_TYPE, 
+      INDUS_UPGRATE_TYPE, BUSI_SCOPE, MAIN_BUSI, 
+      SEX, PERSON_ID, M_PHONE, 
+      PHONE, POSITION, COMPANY_NAME, 
+      ADDRESS, MAIL, PROPERTY, 
+      COMPANY_NATURE, LINK_ID1, LINK_ID2, 
+      LINK_ID3, REMARK, CREATE_USER, 
+      CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+      UPDATE_TIME)
+    values (#{customerId,jdbcType=VARCHAR}, #{partyType3,jdbcType=VARCHAR}, #{partyType2,jdbcType=VARCHAR}, 
+      #{partyType1,jdbcType=VARCHAR}, #{industry,jdbcType=VARCHAR}, #{industry2,jdbcType=VARCHAR}, 
+      #{insitituteCode,jdbcType=VARCHAR}, #{isGov,jdbcType=VARCHAR}, #{mainCapital,jdbcType=DECIMAL}, 
+      #{registerCapital,jdbcType=DECIMAL}, #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
+      #{county,jdbcType=VARCHAR}, #{holdingType,jdbcType=VARCHAR}, #{customerObjType,jdbcType=VARCHAR}, 
+      #{isListedCompany,jdbcType=VARCHAR}, #{isGroupCustomer,jdbcType=VARCHAR}, #{parentCustomerId,jdbcType=VARCHAR}, 
+      #{parentCustomerName,jdbcType=VARCHAR}, #{isPrivate,jdbcType=VARCHAR}, #{isEscapeDept,jdbcType=VARCHAR}, 
+      #{creditType,jdbcType=VARCHAR}, #{isCreditRelatedTrd,jdbcType=VARCHAR}, #{structAdjustType,jdbcType=VARCHAR}, 
+      #{indusUpgrateType,jdbcType=VARCHAR}, #{busiScope,jdbcType=VARCHAR}, #{mainBusi,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=VARCHAR}, #{personId,jdbcType=VARCHAR}, #{mPhone,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{position,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{mail,jdbcType=VARCHAR}, #{property,jdbcType=VARCHAR}, 
+      #{companyNature,jdbcType=VARCHAR}, #{linkId1,jdbcType=VARCHAR}, #{linkId2,jdbcType=VARCHAR}, 
+      #{linkId3,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+      #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfoAdd">
+    insert into MST_CUSTOMER_INFO_ADD
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="customerId != null">
+        CUSTOMER_ID,
+      </if>
+      <if test="partyType3 != null">
+        PARTY_TYPE3,
+      </if>
+      <if test="partyType2 != null">
+        PARTY_TYPE2,
+      </if>
+      <if test="partyType1 != null">
+        PARTY_TYPE1,
+      </if>
+      <if test="industry != null">
+        INDUSTRY,
+      </if>
+      <if test="industry2 != null">
+        INDUSTRY2,
+      </if>
+      <if test="insitituteCode != null">
+        INSITITUTE_CODE,
+      </if>
+      <if test="isGov != null">
+        IS_GOV,
+      </if>
+      <if test="mainCapital != null">
+        MAIN_CAPITAL,
+      </if>
+      <if test="registerCapital != null">
+        REGISTER_CAPITAL,
+      </if>
+      <if test="province != null">
+        PROVINCE,
+      </if>
+      <if test="city != null">
+        CITY,
+      </if>
+      <if test="county != null">
+        COUNTY,
+      </if>
+      <if test="holdingType != null">
+        HOLDING_TYPE,
+      </if>
+      <if test="customerObjType != null">
+        CUSTOMER_OBJ_TYPE,
+      </if>
+      <if test="isListedCompany != null">
+        IS_LISTED_COMPANY,
+      </if>
+      <if test="isGroupCustomer != null">
+        IS_GROUP_CUSTOMER,
+      </if>
+      <if test="parentCustomerId != null">
+        PARENT_CUSTOMER_ID,
+      </if>
+      <if test="parentCustomerName != null">
+        PARENT_CUSTOMER_NAME,
+      </if>
+      <if test="isPrivate != null">
+        IS_PRIVATE,
+      </if>
+      <if test="isEscapeDept != null">
+        IS_ESCAPE_DEPT,
+      </if>
+      <if test="creditType != null">
+        CREDIT_TYPE,
+      </if>
+      <if test="isCreditRelatedTrd != null">
+        IS_CREDIT_RELATED_TRD,
+      </if>
+      <if test="structAdjustType != null">
+        STRUCT_ADJUST_TYPE,
+      </if>
+      <if test="indusUpgrateType != null">
+        INDUS_UPGRATE_TYPE,
+      </if>
+      <if test="busiScope != null">
+        BUSI_SCOPE,
+      </if>
+      <if test="mainBusi != null">
+        MAIN_BUSI,
+      </if>
+      <if test="sex != null">
+        SEX,
+      </if>
+      <if test="personId != null">
+        PERSON_ID,
+      </if>
+      <if test="mPhone != null">
+        M_PHONE,
+      </if>
+      <if test="phone != null">
+        PHONE,
+      </if>
+      <if test="position != null">
+        POSITION,
+      </if>
+      <if test="companyName != null">
+        COMPANY_NAME,
+      </if>
+      <if test="address != null">
+        ADDRESS,
+      </if>
+      <if test="mail != null">
+        MAIL,
+      </if>
+      <if test="property != null">
+        PROPERTY,
+      </if>
+      <if test="companyNature != null">
+        COMPANY_NATURE,
+      </if>
+      <if test="linkId1 != null">
+        LINK_ID1,
+      </if>
+      <if test="linkId2 != null">
+        LINK_ID2,
+      </if>
+      <if test="linkId3 != null">
+        LINK_ID3,
+      </if>
+      <if test="remark != null">
+        REMARK,
+      </if>
+      <if test="createUser != null">
+        CREATE_USER,
+      </if>
+      <if test="createDept != null">
+        CREATE_DEPT,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="updateUser != null">
+        UPDATE_USER,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="customerId != null">
+        #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="partyType3 != null">
+        #{partyType3,jdbcType=VARCHAR},
+      </if>
+      <if test="partyType2 != null">
+        #{partyType2,jdbcType=VARCHAR},
+      </if>
+      <if test="partyType1 != null">
+        #{partyType1,jdbcType=VARCHAR},
+      </if>
+      <if test="industry != null">
+        #{industry,jdbcType=VARCHAR},
+      </if>
+      <if test="industry2 != null">
+        #{industry2,jdbcType=VARCHAR},
+      </if>
+      <if test="insitituteCode != null">
+        #{insitituteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isGov != null">
+        #{isGov,jdbcType=VARCHAR},
+      </if>
+      <if test="mainCapital != null">
+        #{mainCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="registerCapital != null">
+        #{registerCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="province != null">
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="county != null">
+        #{county,jdbcType=VARCHAR},
+      </if>
+      <if test="holdingType != null">
+        #{holdingType,jdbcType=VARCHAR},
+      </if>
+      <if test="customerObjType != null">
+        #{customerObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="isListedCompany != null">
+        #{isListedCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="isGroupCustomer != null">
+        #{isGroupCustomer,jdbcType=VARCHAR},
+      </if>
+      <if test="parentCustomerId != null">
+        #{parentCustomerId,jdbcType=VARCHAR},
+      </if>
+      <if test="parentCustomerName != null">
+        #{parentCustomerName,jdbcType=VARCHAR},
+      </if>
+      <if test="isPrivate != null">
+        #{isPrivate,jdbcType=VARCHAR},
+      </if>
+      <if test="isEscapeDept != null">
+        #{isEscapeDept,jdbcType=VARCHAR},
+      </if>
+      <if test="creditType != null">
+        #{creditType,jdbcType=VARCHAR},
+      </if>
+      <if test="isCreditRelatedTrd != null">
+        #{isCreditRelatedTrd,jdbcType=VARCHAR},
+      </if>
+      <if test="structAdjustType != null">
+        #{structAdjustType,jdbcType=VARCHAR},
+      </if>
+      <if test="indusUpgrateType != null">
+        #{indusUpgrateType,jdbcType=VARCHAR},
+      </if>
+      <if test="busiScope != null">
+        #{busiScope,jdbcType=VARCHAR},
+      </if>
+      <if test="mainBusi != null">
+        #{mainBusi,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="personId != null">
+        #{personId,jdbcType=VARCHAR},
+      </if>
+      <if test="mPhone != null">
+        #{mPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null">
+        #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null">
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="mail != null">
+        #{mail,jdbcType=VARCHAR},
+      </if>
+      <if test="property != null">
+        #{property,jdbcType=VARCHAR},
+      </if>
+      <if test="companyNature != null">
+        #{companyNature,jdbcType=VARCHAR},
+      </if>
+      <if test="linkId1 != null">
+        #{linkId1,jdbcType=VARCHAR},
+      </if>
+      <if test="linkId2 != null">
+        #{linkId2,jdbcType=VARCHAR},
+      </if>
+      <if test="linkId3 != null">
+        #{linkId3,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDept != null">
+        #{createDept,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfoAdd">
+    update MST_CUSTOMER_INFO_ADD
+    <set>
+      <if test="partyType3 != null">
+        PARTY_TYPE3 = #{partyType3,jdbcType=VARCHAR},
+      </if>
+      <if test="partyType2 != null">
+        PARTY_TYPE2 = #{partyType2,jdbcType=VARCHAR},
+      </if>
+      <if test="partyType1 != null">
+        PARTY_TYPE1 = #{partyType1,jdbcType=VARCHAR},
+      </if>
+      <if test="industry != null">
+        INDUSTRY = #{industry,jdbcType=VARCHAR},
+      </if>
+      <if test="industry2 != null">
+        INDUSTRY2 = #{industry2,jdbcType=VARCHAR},
+      </if>
+      <if test="insitituteCode != null">
+        INSITITUTE_CODE = #{insitituteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isGov != null">
+        IS_GOV = #{isGov,jdbcType=VARCHAR},
+      </if>
+      <if test="mainCapital != null">
+        MAIN_CAPITAL = #{mainCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="registerCapital != null">
+        REGISTER_CAPITAL = #{registerCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="province != null">
+        PROVINCE = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        CITY = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="county != null">
+        COUNTY = #{county,jdbcType=VARCHAR},
+      </if>
+      <if test="holdingType != null">
+        HOLDING_TYPE = #{holdingType,jdbcType=VARCHAR},
+      </if>
+      <if test="customerObjType != null">
+        CUSTOMER_OBJ_TYPE = #{customerObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="isListedCompany != null">
+        IS_LISTED_COMPANY = #{isListedCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="isGroupCustomer != null">
+        IS_GROUP_CUSTOMER = #{isGroupCustomer,jdbcType=VARCHAR},
+      </if>
+      <if test="parentCustomerId != null">
+        PARENT_CUSTOMER_ID = #{parentCustomerId,jdbcType=VARCHAR},
+      </if>
+      <if test="parentCustomerName != null">
+        PARENT_CUSTOMER_NAME = #{parentCustomerName,jdbcType=VARCHAR},
+      </if>
+      <if test="isPrivate != null">
+        IS_PRIVATE = #{isPrivate,jdbcType=VARCHAR},
+      </if>
+      <if test="isEscapeDept != null">
+        IS_ESCAPE_DEPT = #{isEscapeDept,jdbcType=VARCHAR},
+      </if>
+      <if test="creditType != null">
+        CREDIT_TYPE = #{creditType,jdbcType=VARCHAR},
+      </if>
+      <if test="isCreditRelatedTrd != null">
+        IS_CREDIT_RELATED_TRD = #{isCreditRelatedTrd,jdbcType=VARCHAR},
+      </if>
+      <if test="structAdjustType != null">
+        STRUCT_ADJUST_TYPE = #{structAdjustType,jdbcType=VARCHAR},
+      </if>
+      <if test="indusUpgrateType != null">
+        INDUS_UPGRATE_TYPE = #{indusUpgrateType,jdbcType=VARCHAR},
+      </if>
+      <if test="busiScope != null">
+        BUSI_SCOPE = #{busiScope,jdbcType=VARCHAR},
+      </if>
+      <if test="mainBusi != null">
+        MAIN_BUSI = #{mainBusi,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        SEX = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="personId != null">
+        PERSON_ID = #{personId,jdbcType=VARCHAR},
+      </if>
+      <if test="mPhone != null">
+        M_PHONE = #{mPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        PHONE = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null">
+        POSITION = #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null">
+        COMPANY_NAME = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="mail != null">
+        MAIL = #{mail,jdbcType=VARCHAR},
+      </if>
+      <if test="property != null">
+        PROPERTY = #{property,jdbcType=VARCHAR},
+      </if>
+      <if test="companyNature != null">
+        COMPANY_NATURE = #{companyNature,jdbcType=VARCHAR},
+      </if>
+      <if test="linkId1 != null">
+        LINK_ID1 = #{linkId1,jdbcType=VARCHAR},
+      </if>
+      <if test="linkId2 != null">
+        LINK_ID2 = #{linkId2,jdbcType=VARCHAR},
+      </if>
+      <if test="linkId3 != null">
+        LINK_ID3 = #{linkId3,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDept != null">
+        CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfoAdd">
+    update MST_CUSTOMER_INFO_ADD
+    set PARTY_TYPE3 = #{partyType3,jdbcType=VARCHAR},
+      PARTY_TYPE2 = #{partyType2,jdbcType=VARCHAR},
+      PARTY_TYPE1 = #{partyType1,jdbcType=VARCHAR},
+      INDUSTRY = #{industry,jdbcType=VARCHAR},
+      INDUSTRY2 = #{industry2,jdbcType=VARCHAR},
+      INSITITUTE_CODE = #{insitituteCode,jdbcType=VARCHAR},
+      IS_GOV = #{isGov,jdbcType=VARCHAR},
+      MAIN_CAPITAL = #{mainCapital,jdbcType=DECIMAL},
+      REGISTER_CAPITAL = #{registerCapital,jdbcType=DECIMAL},
+      PROVINCE = #{province,jdbcType=VARCHAR},
+      CITY = #{city,jdbcType=VARCHAR},
+      COUNTY = #{county,jdbcType=VARCHAR},
+      HOLDING_TYPE = #{holdingType,jdbcType=VARCHAR},
+      CUSTOMER_OBJ_TYPE = #{customerObjType,jdbcType=VARCHAR},
+      IS_LISTED_COMPANY = #{isListedCompany,jdbcType=VARCHAR},
+      IS_GROUP_CUSTOMER = #{isGroupCustomer,jdbcType=VARCHAR},
+      PARENT_CUSTOMER_ID = #{parentCustomerId,jdbcType=VARCHAR},
+      PARENT_CUSTOMER_NAME = #{parentCustomerName,jdbcType=VARCHAR},
+      IS_PRIVATE = #{isPrivate,jdbcType=VARCHAR},
+      IS_ESCAPE_DEPT = #{isEscapeDept,jdbcType=VARCHAR},
+      CREDIT_TYPE = #{creditType,jdbcType=VARCHAR},
+      IS_CREDIT_RELATED_TRD = #{isCreditRelatedTrd,jdbcType=VARCHAR},
+      STRUCT_ADJUST_TYPE = #{structAdjustType,jdbcType=VARCHAR},
+      INDUS_UPGRATE_TYPE = #{indusUpgrateType,jdbcType=VARCHAR},
+      BUSI_SCOPE = #{busiScope,jdbcType=VARCHAR},
+      MAIN_BUSI = #{mainBusi,jdbcType=VARCHAR},
+      SEX = #{sex,jdbcType=VARCHAR},
+      PERSON_ID = #{personId,jdbcType=VARCHAR},
+      M_PHONE = #{mPhone,jdbcType=VARCHAR},
+      PHONE = #{phone,jdbcType=VARCHAR},
+      POSITION = #{position,jdbcType=VARCHAR},
+      COMPANY_NAME = #{companyName,jdbcType=VARCHAR},
+      ADDRESS = #{address,jdbcType=VARCHAR},
+      MAIL = #{mail,jdbcType=VARCHAR},
+      PROPERTY = #{property,jdbcType=VARCHAR},
+      COMPANY_NATURE = #{companyNature,jdbcType=VARCHAR},
+      LINK_ID1 = #{linkId1,jdbcType=VARCHAR},
+      LINK_ID2 = #{linkId2,jdbcType=VARCHAR},
+      LINK_ID3 = #{linkId3,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+  </update>
+  
+  <delete id="deleteAllData">
+  truncate table MST_CUSTOMER_INFO_ADD
+  </delete>
+  
+  <delete id="deleteTodayData">
+  delete from MST_CUSTOMER_INFO_ADD where DATE_FORMAT(ifnull(UPDATE_TIME,CREATE_TIME),'%Y%m%d')=DATE_FORMAT(NOW(),'%Y%m%d')
+  </delete>
+  
+  <insert id="mergeMstCustomerInfoData"
+	parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfo">
+	MERGE INTO MST_CUSTOMER_INFO_ADD CII
+	USING (
+	<foreach collection="list" item="item" open="select * from("
+		close=")" separator="union all">
+		SELECT
+		#{item.partyType3,jdbcType=VARCHAR} PARTY_TYPE3,
+		#{item.partyType2,jdbcType=VARCHAR} PARTY_TYPE2,
+		#{item.partyType1,jdbcType=VARCHAR} PARTY_TYPE1,
+		#{item.industry,jdbcType=VARCHAR} INDUSTRY,
+		#{item.industry2,jdbcType=VARCHAR} INDUSTRY2,
+		#{item.insitituteCode,jdbcType=VARCHAR} INSITITUTE_CODE,
+		#{item.isGov,jdbcType=VARCHAR} IS_GOV,
+		#{item.mainCapital,jdbcType=DECIMAL} MAIN_CAPITAL,
+		#{item.registerCapital,jdbcType=DECIMAL} REGISTER_CAPITAL,
+		#{item.province,jdbcType=VARCHAR} PROVINCE,
+		#{item.city,jdbcType=VARCHAR} CITY,
+		#{item.county,jdbcType=VARCHAR} COUNTY,
+		#{item.holdingType,jdbcType=VARCHAR} HOLDING_TYPE,
+		#{item.customerObjType,jdbcType=VARCHAR} CUSTOMER_OBJ_TYPE,
+		#{item.isListedCompany,jdbcType=VARCHAR} IS_LISTED_COMPANY,
+		#{item.isGroupCustomer,jdbcType=VARCHAR} IS_GROUP_CUSTOMER,
+		#{item.parentCustomerId,jdbcType=VARCHAR} PARENT_CUSTOMER_ID,
+		#{item.parentCustomerName,jdbcType=VARCHAR} PARENT_CUSTOMER_NAME,
+		#{item.isPrivate,jdbcType=VARCHAR} IS_PRIVATE,
+		#{item.isEscapeDept,jdbcType=VARCHAR} IS_ESCAPE_DEPT,
+		#{item.creditType,jdbcType=VARCHAR} CREDIT_TYPE,
+		#{item.isCreditRelatedTrd,jdbcType=VARCHAR} IS_CREDIT_RELATED_TRD,
+		#{item.structAdjustType,jdbcType=VARCHAR} STRUCT_ADJUST_TYPE,
+		#{item.indusUpgrateType,jdbcType=VARCHAR} INDUS_UPGRATE_TYPE,
+		#{item.busiScope,jdbcType=VARCHAR} BUSI_SCOPE,
+		#{item.mainBusi,jdbcType=VARCHAR} MAIN_BUSI,
+		#{item.sex,jdbcType=VARCHAR} SEX,
+		#{item.personId,jdbcType=VARCHAR} PERSON_ID,
+		#{item.mPhone,jdbcType=VARCHAR} M_PHONE,
+		#{item.phone,jdbcType=VARCHAR} PHONE,
+		#{item.position,jdbcType=VARCHAR} POSITION,
+		#{item.companyName,jdbcType=VARCHAR} COMPANY_NAME,
+		#{item.address,jdbcType=VARCHAR} ADDRESS,
+		#{item.mail,jdbcType=VARCHAR} MAIL,
+		#{item.property,jdbcType=VARCHAR} PROPERTY,
+		#{item.companyNature,jdbcType=VARCHAR} COMPANY_NATURE,
+		#{item.linkId1,jdbcType=VARCHAR} LINK_ID1,
+		#{item.linkId2,jdbcType=VARCHAR} LINK_ID2,
+		#{item.linkId3,jdbcType=VARCHAR} LINK_ID3,
+		#{item.remark,jdbcType=VARCHAR} REMARK,
+		#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+		#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+		NOW() CREATE_TIME,
+		#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+		NOW() UPDATE_TIME,
+		#{item.customerId,jdbcType=VARCHAR} CUSTOMER_ID
+		FROM
+		DUAL
+	</foreach>
+	) TEMP
+	<!-- 业务主键匹配 -->
+	ON(CII.CUSTOMER_ID = TEMP.CUSTOMER_ID
+	)
+	<!-- 匹配到则更新 -->
+	WHEN MATCHED THEN UPDATE SET
+	PARTY_TYPE3 = TEMP.PARTY_TYPE3,
+	PARTY_TYPE2 = TEMP.PARTY_TYPE2,
+	PARTY_TYPE1 = TEMP.PARTY_TYPE1,
+	INDUSTRY = TEMP.INDUSTRY,
+	INDUSTRY2 = TEMP.INDUSTRY2,
+	INSITITUTE_CODE = TEMP.INSITITUTE_CODE,
+	IS_GOV = TEMP.IS_GOV,
+	MAIN_CAPITAL = TEMP.MAIN_CAPITAL,
+	REGISTER_CAPITAL = TEMP.REGISTER_CAPITAL,
+	PROVINCE = TEMP.PROVINCE,
+	CITY = TEMP.CITY,
+	COUNTY = TEMP.COUNTY,
+	HOLDING_TYPE = TEMP.HOLDING_TYPE,
+	CUSTOMER_OBJ_TYPE = TEMP.CUSTOMER_OBJ_TYPE,
+	IS_LISTED_COMPANY = TEMP.IS_LISTED_COMPANY,
+	IS_GROUP_CUSTOMER = TEMP.IS_GROUP_CUSTOMER,
+	PARENT_CUSTOMER_ID = TEMP.PARENT_CUSTOMER_ID,
+	PARENT_CUSTOMER_NAME = TEMP.PARENT_CUSTOMER_NAME,
+	IS_PRIVATE = TEMP.IS_PRIVATE,
+	IS_ESCAPE_DEPT = TEMP.IS_ESCAPE_DEPT,
+	CREDIT_TYPE = TEMP.CREDIT_TYPE,
+	IS_CREDIT_RELATED_TRD = TEMP.IS_CREDIT_RELATED_TRD,
+	STRUCT_ADJUST_TYPE = TEMP.STRUCT_ADJUST_TYPE,
+	INDUS_UPGRATE_TYPE = TEMP.INDUS_UPGRATE_TYPE,
+	BUSI_SCOPE = TEMP.BUSI_SCOPE,
+	MAIN_BUSI = TEMP.MAIN_BUSI,
+	SEX = TEMP.SEX,
+	PERSON_ID = TEMP.PERSON_ID,
+	M_PHONE = TEMP.M_PHONE,
+	PHONE = TEMP.PHONE,
+	POSITION = TEMP.POSITION,
+	COMPANY_NAME = TEMP.COMPANY_NAME,
+	ADDRESS = TEMP.ADDRESS,
+	MAIL = TEMP.MAIL,
+	PROPERTY = TEMP.PROPERTY,
+	COMPANY_NATURE = TEMP.COMPANY_NATURE,
+	LINK_ID1 = TEMP.LINK_ID1,
+	LINK_ID2 = TEMP.LINK_ID2,
+	LINK_ID3 = TEMP.LINK_ID2,
+	REMARK = TEMP.REMARK,
+	CREATE_USER = TEMP.CREATE_USER,
+	CREATE_DEPT = TEMP.CREATE_DEPT,
+	CREATE_TIME = TEMP.CREATE_TIME,
+	UPDATE_USER = TEMP.UPDATE_USER,
+	UPDATE_TIME = TEMP.UPDATE_TIME
+	<!-- 未匹配到这插入 -->
+	WHEN NOT MATCHED THEN INSERT
+	(CUSTOMER_ID, PARTY_TYPE3, PARTY_TYPE2,
+	PARTY_TYPE1, INDUSTRY, INDUSTRY2,
+	INSITITUTE_CODE, IS_GOV, MAIN_CAPITAL,
+	REGISTER_CAPITAL, PROVINCE, CITY,
+	COUNTY, HOLDING_TYPE, CUSTOMER_OBJ_TYPE,
+	IS_LISTED_COMPANY, IS_GROUP_CUSTOMER, PARENT_CUSTOMER_ID,
+	PARENT_CUSTOMER_NAME, IS_PRIVATE, IS_ESCAPE_DEPT,
+	CREDIT_TYPE, IS_CREDIT_RELATED_TRD, STRUCT_ADJUST_TYPE,
+	INDUS_UPGRATE_TYPE, BUSI_SCOPE, MAIN_BUSI,
+	SEX, PERSON_ID, M_PHONE,
+	PHONE, POSITION, COMPANY_NAME,
+	ADDRESS, MAIL, PROPERTY,
+	COMPANY_NATURE, LINK_ID1, LINK_ID2,
+	LINK_ID3, REMARK, CREATE_USER,
+	CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+	UPDATE_TIME)
+	values (TEMP.CUSTOMER_ID, TEMP.PARTY_TYPE3, TEMP.PARTY_TYPE2,
+	TEMP.PARTY_TYPE1, TEMP.INDUSTRY, TEMP.INDUSTRY2,
+	TEMP.INSITITUTE_CODE, TEMP.IS_GOV, TEMP.MAIN_CAPITAL,
+	TEMP.REGISTER_CAPITAL, TEMP.PROVINCE, TEMP.CITY,
+	TEMP.COUNTY, TEMP.HOLDING_TYPE, TEMP.CUSTOMER_OBJ_TYPE,
+	TEMP.IS_LISTED_COMPANY, TEMP.IS_GROUP_CUSTOMER, TEMP.PARENT_CUSTOMER_ID,
+	TEMP.PARENT_CUSTOMER_NAME, TEMP.IS_PRIVATE, TEMP.IS_ESCAPE_DEPT,
+	TEMP.CREDIT_TYPE, TEMP.IS_CREDIT_RELATED_TRD, TEMP.STRUCT_ADJUST_TYPE,
+	TEMP.INDUS_UPGRATE_TYPE, TEMP.BUSI_SCOPE, TEMP.MAIN_BUSI,
+	TEMP.SEX, TEMP.PERSON_ID, TEMP.M_PHONE,
+	TEMP.PHONE, TEMP.POSITION, TEMP.COMPANY_NAME,
+	TEMP.ADDRESS, TEMP.MAIL, TEMP.PROPERTY,
+	TEMP.COMPANY_NATURE, TEMP.LINK_ID1, TEMP.LINK_ID2,
+	TEMP.LINK_ID3, TEMP.REMARK, TEMP.CREATE_USER,
+	TEMP.CREATE_DEPT, TEMP.CREATE_TIME, TEMP.UPDATE_USER,
+	TEMP.UPDATE_TIME)
+</insert>
+</mapper>

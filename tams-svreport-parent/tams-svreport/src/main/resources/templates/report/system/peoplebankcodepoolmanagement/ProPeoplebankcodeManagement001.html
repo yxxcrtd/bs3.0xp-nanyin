@@ -1,0 +1,97 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="~{layout/default}">
+<head>
+<meta charset="utf-8">
+<title data-th-text="#{ProPeoplebankcodeManagement001}">人行产品资产池代码管理</title>
+<link rel="stylesheet" type="text/css"
+	data-th-href="@{/css/report/report.css}">
+<style>
+.input-checkbox .layui-form-checkbox {
+	margin-top: 0;
+	height: 28px;
+}
+</style>
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<div class="form-button-area" filter="false">
+			<a id="ProPeoplebankcodeManagement001_btn_import"
+				class="layui-btn layui-btn-sm btn-import btn-default">导入</a>
+		</div>
+
+
+		<div class="joyin-form-wrap condition-area">
+			<form class="layui-form" id="searchForm">
+				<div class="layui-form-item">
+					<div class="layui-inline layui-col-md3">
+						<label class="layui-form-label form-lable">内部产品代码</label>
+						<div class="layui-input-inline input-inline">
+							<select id="ProPeoplebankcodeManagement001_insideProdId"
+								name="insideProdId"
+								data-th-data-url='@{/svreport/system/peoplebankcodepoolmanagement/ProPeoplebankcodeManagement001/getInsideProdId}'
+								data-th-data-formatoption=true
+								data-th-data-parentids="insideProdId" class="input-select"
+								placeholder="请选择"
+								data-th-placeholder="#{SysCommon.selectplaceholder}"
+								allowClear="true" multiple="multiple">
+							</select>
+						</div>
+					</div>
+
+					<div class="layui-inline layui-col-md4">
+						<label class="layui-form-label form-lable">人行产品代码(系统)</label>
+						<div class="layui-input-inline input-inline">
+							<input id="ProPeoplebankcodeManagement001_pbcProjectCode"
+								type="text" name="timeControl" class="layui-input form-input"
+								placeholder="请输入内容" />
+						</div>
+					</div>
+
+					<div class="layui-inline layui-col-md4">
+						<label class="layui-form-label form-lable">人行资产池代码(系统)</label>
+						<div class="layui-input-inline input-inline">
+							<input id="ProPeoplebankcodeManagement001_pbcAssetPoolCode"
+								type="text" name="timeControl" class="layui-input form-input"
+								placeholder="请输入内容" />
+						</div>
+					</div>
+					<div class="layui-inline layui-col-md4" style="visibility: hidden;">
+						<label class="layui-form-label form-lable"></label> <select
+							class="layui-input form-input input-select"></select>
+						<div class="layui-input-inline input-inline"></div>
+					</div>
+					<div class="layui-inline layui-col-md4" style="visibility: hidden;">
+						<label class="layui-form-label form-lable"></label> <select
+							class="layui-input form-input input-select"></select>
+						<div class="layui-input-inline input-inline"></div>
+					</div>
+				</div>
+				<div id="selectedColumns" class="layui-form-item"></div>
+			</form>
+		</div>
+		<table class="layui-table"
+			id="ProPeoplebankcodeManagement001_proPeoplebankcodeManagement001"></table>
+	</div>
+	<div layout:fragment="script">
+		<script data-th-inline="javascript" type="text/javascript">
+      var isFromMain=/*[[${isFromMain}]]*/'01';
+      var YES = /*[[${YES}]]*/'Y'; // 数据字典.是否_是
+      var isSendStatusTableShow = [[${isEleShow['send_status_table']}]];
+      var isSendStatusTableLinkShow = [[${isEleShow['send_status_table_link']}]];
+      var isSendRemarkTableShow = [[${isEleShow['send_remark_table']}]];
+  </script>
+		<script data-th-src="@{/js/report/jquery.validate.js}"
+			type="text/javascript"></script>
+		<script data-th-src="@{/js/report/joyinvalid.js}"
+			type="text/javascript"></script>
+		<script data-th-src="@{/js/report/report-common.js}"
+			type="text/javascript"></script>
+		<script
+			data-th-src="@{/js/report/system/peoplebankcodepoolmanagement/ProPeoplebankcodeManagement001.js}"
+			type="text/javascript"></script>
+	</div>
+</body>
+</html>

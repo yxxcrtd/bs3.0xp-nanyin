@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.infomanagement.dao.OperationalInfo004Mapper_mysql">
+
+    <select id="getBaseInfoIdByTable" resultType="string">
+
+        SELECT
+            baseinformationid
+        FROM
+            chb_infomgr_config
+        WHERE
+            trim(basetableid) = #{tableName}
+            limit 1
+
+    </select>
+
+    <select id="getFilterIdByBaseInfoId" resultType="string">
+         SELECT
+        filterid
+        FROM
+         chb_infomgr_filter_detail
+         where
+         baseinformationid = #{baseInfoId}
+    </select>
+
+    <select id="getFilterIdByTable" resultType="string">
+      SELECT
+    filterid
+    FROM
+    chb_infomgr_filter_detail
+    WHERE
+    baseinformationid = (
+        SELECT
+            baseinformationid
+        FROM
+            chb_infomgr_config
+        WHERE
+            basetableid = #{tableName}
+            limit 1
+    )
+    </select>
+
+    <select id="getBaseInfoIds" resultType="string">
+        SELECT
+        baseinformationid
+        FROM
+        chb_infomgr_config
+        WHERE
+        basetableid = #{tableName}
+    </select>
+
+</mapper>

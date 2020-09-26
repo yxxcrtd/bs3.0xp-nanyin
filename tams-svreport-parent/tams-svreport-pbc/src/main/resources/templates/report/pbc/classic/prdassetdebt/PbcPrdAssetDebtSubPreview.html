@@ -1,0 +1,38 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="~{layout/default}">
+<head>
+<meta charset="utf-8">
+<title data-th-text="#{PbcPrdAssetDebtSubPreview}">资产负债信息明细预览</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="form-button-area" export="false">
+			<a id="PbcPrdAssetDebtSubPreview_btn_export" class="layui-btn layui-btn-sm btn-export btn-default">导出</a> 
+		</div>
+		<div>
+			<div id="tableDiv0" display="block">
+				<table class="layui-table" id="dataTableDK"></table>
+			</div>
+			<div id="tableDiv1" display="none">
+				<table class="layui-table" id="dataTableXT"></table>
+			</div>
+		</div>
+	</div>
+	<div layout:fragment="script">
+		<script data-th-inline="javascript" type="text/javascript">
+			var previewType = /*[[${previewType}]]*/'';
+			var reportuuid = /*[[${reportuuid}]]*/'';
+		</script>
+		<script data-th-src="@{/js/report/report-common.js}"
+			type="text/javascript"></script>
+		<script data-th-src="@{/js/report/jquery.validate.js}"
+			type="text/javascript"></script>
+		<script data-th-src="@{/js/report/joyinvalid.js}"
+			type="text/javascript"></script>
+		<script data-th-src="@{/js/report/pbc/classic/prdassetdebt/PbcPrdAssetDebtSubPreview.js}"
+			type="text/javascript"></script>
+	</div>
+</body>
+</html>

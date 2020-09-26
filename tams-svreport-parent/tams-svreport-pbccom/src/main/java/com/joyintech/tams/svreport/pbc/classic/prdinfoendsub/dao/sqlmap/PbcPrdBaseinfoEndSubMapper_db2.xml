@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.pbc.classic.prdinfoendsub.dao.PbcPrdBaseinfoEndSubMapper_db2" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.pbc.classic.prdinfoendsub.dto.PbcPrdBaseinfoEndSub" >
+    <id column="REGIST_SEQNO" property="registSeqno" jdbcType="CHAR" />
+    <result column="PBC_PROD_ID" property="pbcProdId" jdbcType="VARCHAR" />
+    <result column="MDATE" property="mdate" jdbcType="TIMESTAMP" />
+    <result column="CCY" property="ccy" jdbcType="CHAR" />
+    <result column="PROFIT" property="profit" jdbcType="DECIMAL" />
+    <result column="PROFIT_CNY" property="profitCny" jdbcType="DECIMAL" />
+    <result column="CUSTOM_PROFIT" property="customProfit" jdbcType="DECIMAL" />
+    <result column="CUSTOM_PROFIT_CNY" property="customProfitCny" jdbcType="DECIMAL" />
+    <result column="CUS_YEAR_YIELD" property="cusYearYield" jdbcType="DECIMAL" />
+    <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+    <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+    <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
+    <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+    <result column="STATUS_DATE" property="statusDate" jdbcType="TIMESTAMP" />
+    <result column="PBC_SUBMIT_DEADLINE" property="pbcSubmitDeadline" jdbcType="TIMESTAMP" />
+    <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+    <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+    <result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
+    <result column="IVSTORIENTATION" property="ivstorientation" jdbcType="VARCHAR" />
+    <result column="VDATE" property="vdate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    REGIST_SEQNO, PBC_PROD_ID, MDATE, CCY, PROFIT, PROFIT_CNY, CUSTOM_PROFIT, CUSTOM_PROFIT_CNY, 
+    CUS_YEAR_YIELD, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, 
+    PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, 
+    CREATE_TIME, UPDATE_USER, UPDATE_TIME
+  </sql>
+   <sql id="Base_Column_List2" >
+    HIS_NO, PBC_PROD_ID, MDATE, CCY, PROFIT, PROFIT_CNY, CUSTOM_PROFIT, CUSTOM_PROFIT_CNY, 
+    CUS_YEAR_YIELD, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, 
+    PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, 
+    CREATE_TIME, UPDATE_USER, UPDATE_TIME
+  </sql>
+  <sql id="Extend_Column_List" >
+  	PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE
+  </sql>
+  <sql id="PBC_PRD_BASEINFO_SUB">
+  (select a.* from (SELECT PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,status,RAISE_ENDDATE,ORG_CODE,
+	row_number() OVER (partition BY PBC_PROD_ID ORDER BY NVL(UPDATE_TIME,CREATE_TIME)
+	DESC) AS myrank
+	FROM pbc_prd_baseinfo_sub) a
+	WHERE a.myrank=1)
+  </sql>
+<!-- 查询产品交易头寸 -->
+<select id="getPrdDealPositionList"
+	parameterType="com.joyintech.tams.svreport.pbc.classic.prdinfoendsub.dto.PbcPrdBaseinfoEndSub"
+	resultType="com.joyintech.tams.svreport.position.dto.ChbPrdPosition">
+	select CDATE,PROD_ID,CCY,sum(nvl(TOTAL_INTAMT,0)) TOTAL_INTAMT,sum(nvl(CUSTAMT,0)) CUSTAMT,sum(nvl(CUSTQTY,0)) CUSTQTY,sum(nvl(RAISEAMT,0)) RAISEAMT
+	from CHB_PRD_POSITION
+	where
+	<foreach collection="list" item="item" open="(PROD_ID,to_char(CDATE,'yyyy-mm-dd')) in ("
+		separator="union all" close=")">
+		select
+		#{item.prodId,jdbcType=VARCHAR},
+		to_char(#{item.mdate},'yyyy-mm-dd')
+		from sysibm.SYSDUMMY1
+	</foreach>
+	group by CDATE,PROD_ID,CCY
+</select>
+
+</mapper>

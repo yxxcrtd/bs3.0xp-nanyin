@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
+
+<head>
+    <meta charset="utf-8">
+    <title data-th-text="#{SvrOperationalInfo003}">业务信息维护待维护表新建修改</title>
+    <link rel="stylesheet" type="text/css" data-th-href="@{/css/report/report.css}">
+</head>
+<body>
+<div layout:fragment="content">
+    <form id="SvrOperationalInfo003_newForm" class="layui-form joyin-form-wrap">
+        <div class="layui-form-item" >
+            <div class="layui-inline layui-col-md12">
+                <label class="layui-form-label form-lable">待维护表名称</label>
+                <div class="layui-input-inline input-inline">
+                  <input type="text" id="SvrOperationalInfo003_mgrTableName" name="mgrTableName" data-th-value="${entity?.mgrTableName}" class="layui-input form-input" placeholder="请输入表名" required>
+                </div>
+            </div>
+        </div>
+         <div class="layui-form-item" >
+            <div class="layui-inline layui-col-md12">
+                <label class="layui-form-label form-lable">待维护表中文名称</label>
+                <div class="layui-input-inline input-inline">
+                  <input type="text" id="SvrOperationalInfo003_mgrTableChiName" name="mgrTableChiName" data-th-value="${entity?.mgrTableChiName}" class="layui-input form-input" placeholder="请输入中文表名" required>
+                </div>
+            </div>
+        </div>
+         <div class="layui-form-item" >
+            <div class="layui-inline layui-col-md12">
+                <label class="layui-form-label form-lable">待维护表对应接口</label>
+                <div class="layui-input-inline input-inline">
+                  <input type="text" id="SvrOperationalInfo003_dataObject" name="dataObject" data-th-value="${entity?.dataObject}" class="layui-input form-input" placeholder="请输入对应接口">
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="layui-col-md11" style="margin:15px;">
+        <div class="text-center">
+        <a id="SvrOperationalInfo003_BTN_submit" class="layui-btn layui-btn-sm btn-submit">提交</a> 
+        <a id="SvrOperationalInfo003_BTN_cancel" class="layui-btn layui-btn-sm btn-cancel">取消</a> 
+        </div>
+    </div>
+</div>
+</body>
+<div layout:fragment="script">
+    <script data-th-src="@{/js/report/jquery.validate.js}" type="text/javascript"></script>
+    <script data-th-src="@{/js/report/joyinvalid.js}" type="text/javascript"></script>
+    <script data-th-src="@{/js/report/report-common.js}" type="text/javascript"></script>
+    <script data-th-src="@{/js/report/common/infomanagement/SvrOperationalInfo003.js}" type="text/javascript"></script>
+</div>
+</html>

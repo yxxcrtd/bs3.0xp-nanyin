@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.datacheck.totalcheck.dao.ChbTotalCheckMapper" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.datacheck.totalcheck.dto.ChbTotalCheckDto" >
+    <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+    <result column="CDATE" property="cdate" jdbcType="TIMESTAMP" />
+    <result column="CHECK_TYPE" property="checkType" jdbcType="VARCHAR" />
+    <result column="YIELD" property="yield" jdbcType="DECIMAL" />
+    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    SEQNO, CDATE, CHECK_TYPE, YIELD, ORG_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+    UPDATE_USER, UPDATE_TIME
+  </sql>
+  <sql id="Base_Column_List_Total" >
+    total.SEQNO, total.CDATE, total.CHECK_TYPE, total.YIELD, total.ORG_CODE, total.CREATE_USER, total.CREATE_DEPT, total.CREATE_TIME, 
+    total.UPDATE_USER, total.UPDATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from CHB_TOTALCHECK
+    where SEQNO = #{seqno,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from CHB_TOTALCHECK
+    where SEQNO = #{seqno,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.datacheck.totalcheck.dto.ChbTotalCheckDto" >
+    insert into CHB_TOTALCHECK (SEQNO, CDATE, CHECK_TYPE, 
+      YIELD, ORG_CODE, CREATE_USER, 
+      CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+      UPDATE_TIME)
+    values (#{seqno,jdbcType=VARCHAR}, #{cdate,jdbcType=TIMESTAMP}, #{checkType,jdbcType=VARCHAR}, 
+      #{yield,jdbcType=DECIMAL}, #{orgCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+      #{createDept,jdbcType=VARCHAR}, sysdate, #{updateUser,jdbcType=VARCHAR}, 
+      sysdate)
+  </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.datacheck.totalcheck.dto.ChbTotalCheckDto" >
+    insert into CHB_TOTALCHECK
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="seqno != null" >
+        SEQNO,
+      </if>
+      <if test="cdate != null" >
+        CDATE,
+      </if>
+      <if test="checkType != null" >
+        CHECK_TYPE,
+      </if>
+      <if test="yield != null" >
+        YIELD,
+      </if>
+      <if test="orgCode != null" >
+        ORG_CODE,
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER,
+      </if>
+      <if test="createDept != null" >
+        CREATE_DEPT,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateUser != null" >
+        UPDATE_USER,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="seqno != null" >
+        #{seqno,jdbcType=VARCHAR},
+      </if>
+      <if test="cdate != null" >
+        #{cdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkType != null" >
+        #{checkType,jdbcType=VARCHAR},
+      </if>
+      <if test="yield != null" >
+        #{yield,jdbcType=DECIMAL},
+      </if>
+      <if test="orgCode != null" >
+        #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDept != null" >
+        #{createDept,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.chb.datacheck.totalcheck.dto.ChbTotalCheckDto" >
+    update CHB_TOTALCHECK
+    <set >
+      <if test="cdate != null" >
+        CDATE = #{cdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkType != null" >
+        CHECK_TYPE = #{checkType,jdbcType=VARCHAR},
+      </if>
+      <if test="yield != null" >
+        YIELD = #{yield,jdbcType=DECIMAL},
+      </if>
+      <if test="orgCode != null" >
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDept != null" >
+        CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where SEQNO = #{seqno,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.chb.datacheck.totalcheck.dto.ChbTotalCheckDto" >
+    update CHB_TOTALCHECK
+    set CDATE = #{cdate,jdbcType=TIMESTAMP},
+      CHECK_TYPE = #{checkType,jdbcType=VARCHAR},
+      YIELD = #{yield,jdbcType=DECIMAL},
+      ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where SEQNO = #{seqno,jdbcType=VARCHAR}
+  </update>
+  
+  <delete id="deletTotalCheckByCdate" parameterType="java.util.Map">
+  delete from CHB_TOTALCHECK
+  where 1 =1
+  and to_char(cdate,'yyyy-MM-dd') >= to_char(#{cdate,jdbcType=DATE},'yyyy-MM-dd')
+  </delete>
+  
+  <select id="selectData" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from(
+        select 
+        <include refid="Base_Column_List_Total" />
+        ,rank() over (partition by total.CHECK_TYPE order by total.CDATE desc) rowindex
+        from CHB_TOTALCHECK total
+        left join CHB_TOTALCHECK_DETAIL detail
+        on detail.TOTALSEQNO = total.seqno
+        where 1 =1 
+        <if test="searchDate != null and !searchDate.isEmpty()">
+            and to_char(total.CDATE,'yyyy-MM-dd') &lt;= #{searchDate,jdbcType=VARCHAR}
+        </if>
+        <if test="orgCodeList != null and orgCodeList.size() > 0">
+            <foreach collection="orgCodeList" item="orgCode" 
+                open=" AND detail.ISSUE_PARTY_ID IN (" close=")" separator=",">
+                #{orgCode,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    )
+    where rowindex = 1
+  </select>
+</mapper>

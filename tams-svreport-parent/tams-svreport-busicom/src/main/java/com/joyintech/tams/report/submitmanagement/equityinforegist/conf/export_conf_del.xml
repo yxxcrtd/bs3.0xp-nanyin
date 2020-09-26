@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="EquityInfoRegistDel.xlsx" name="投资者身份信息登记">
+	<Worksheet javaBean="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto">
+		<Row>
+			<Cell order="1" name="登记银行代码">bankCode</Cell><!-- 登记银行代码 -->
+			<Cell order="2" name="识别标识">indentifyMark</Cell><!-- 识别标识 -->
+		</Row>
+	</Worksheet>
+</Workbook>

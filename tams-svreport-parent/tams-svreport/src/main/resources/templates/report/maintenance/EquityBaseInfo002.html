@@ -1,0 +1,25 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
+<head>
+<meta charset="utf-8">
+<title data-th-text="#{EquityBaseInfo002}">基期信息</title>
+<link rel="stylesheet" type="text/css" data-th-href="@{/css/report/report.css}">
+</head>
+
+<body>
+<div layout:fragment="content">
+  <div class="layui-form" style=" margin-top:10px;">
+    <div class="form-group input-file" data-th-data-maxfilecount="1" data-th-data-path="botast" data-th-data-isimport="true" data-th-data-allowfiletype="xls,xlsx" data-th-data-callback="EquityBaseInfo002.onUploaded" data-th-data-url="@{/chinabond/assetelementregist/ReportChinaBondAssetElementRegist003/uploadFile}" ></div>
+  </div>
+</div>
+<div layout:fragment="script">
+  <script data-th-inline="javascript" type="text/javascript">
+    var isFromMain="${isFromMain}";
+  </script> 
+  <script data-th-src="@{/js/report/jquery.validate.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/joyinvalid.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/report-common.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/maintenance/EquityBaseInfo002.js}" type="text/javascript"></script>
+</div>
+</body>
+</html>

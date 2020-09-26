@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.submitmaintenance.transformrule.dao.TransformRule001Mapper_mysql">
+	<!-- 检查数据是否重复 -->
+	<select id="check" resultType="java.lang.Integer">
+		select count(*) from CHB_TRANSFORM_RULE where ORG_FIELD=#{orgField}  and TRANS_TYPE='02' and STATUS!='D'
+	</select>
+
+	<!-- 插入数据 -->
+	<insert id="insertTransField" parameterType="com.joyintech.tams.report.submitmaintenance.transformrule.dto.TransformRule001Dto">
+		insert into  CHB_TRANSFORM_RULE(SEQNO,TRANS_TYPE,ORG_FIELD,PINGYING,FIELD_UNICODE,
+			TARGET_FIELD,STATUS,IS_MODIFY,REMARK,UPDATE_USER,UPDATE_TIME,
+			CREATE_USER,CREATE_TIME,CREATE_DEPT) 
+		values (f_guid,
+        	#{transType,jdbcType=CHAR} ,
+        	#{orgField,jdbcType=VARCHAR} ,
+        	#{pinyin,jdbcType=VARCHAR} ,
+        	#{fieldUnicode,jdbcType=VARCHAR} ,
+       	 	#{targetField,jdbcType=VARCHAR} ,
+        	#{dataStatus,jdbcType=VARCHAR} ,
+        	#{isModify,jdbcType=CHAR} ,
+        	#{remark,jdbcType=VARCHAR} ,
+        	#{updateUser,jdbcType=VARCHAR},
+        	NOW(),
+       		#{createUser,jdbcType=VARCHAR},
+        	NOW(),
+       		#{createDept,jdbcType=VARCHAR})
+	</insert>
+
+	<!-- 删除数据 -->
+    <update id="deleteByList" parameterType="java.util.List" >
+        update  CHB_TRANSFORM_RULE
+        <set>
+        STATUS='D'
+        </set>
+        <where>
+            <foreach collection="deleteList" index="index" item="item" open="(" separator=") or (" close=")">     
+                SEQNO = #{item.seqno, jdbcType=VARCHAR}
+            </foreach>
+        </where>
+    </update>
+
+  <!--修改保存 -->
+  <update id="doEditSave" parameterType="com.joyintech.tams.report.submitmaintenance.transformrule.dto.TransformRule001Dto">
+	update CHB_TRANSFORM_RULE
+        <set>
+        PINGYING=#{pinyin,jdbcType=VARCHAR} ,
+        TARGET_FIELD= #{targetField,jdbcType=VARCHAR} ,
+        REMARK=#{remark,jdbcType=VARCHAR},
+        STATUS='E',
+        FIELD_UNICODE= #{fieldUnicode,jdbcType=VARCHAR} ,
+        UPDATE_USER= #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME=NOW()
+        </set>
+        where SEQNO=#{seqno}
+	</update>
+
+</mapper>

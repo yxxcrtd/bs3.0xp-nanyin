@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.transmonthreport.dao.ChbTransMonthReportDetailMapper" >
+
+  <select id="selectPrdList" resultType="com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthPrdPosition" parameterType="com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthPrdPosition" >
+  
+  select fp.profit_type as prodtype,chbprd.raisemode as raisemode,chbprd.ivstorientation as ivstorientation,chbprd.operate_mode as operateMode,
+  chbprd.cash_mana_cate as cashmanacate,chbprd.openduration as openduration,chbprd.termtype as termtype,
+  nvl(chbprd.endamtsum_Oth,0) as endamtsumOth,
+  nvl(case when fp.profit_type='02' then llcalc.yield
+      when fp.profit_type ='01'
+       then case when jzcalc.strvalue = null or jzcalc.strvalue=0 then 0
+            else  (jzcalc.endvalue-jzcalc.strvalue)/(jzcalc.strvalue*(#{enddate,jdbcType=DATE}-#{startdate,jdbcType=DATE}+1))*decode(finrate.basis,'A/365',365,360)
+            end
+      when fp.profit_type ='03'
+       then case when   hbcalc.strvalue = null or hbcalc.strvalue=0 then 0  
+               else  (hbcalc.endvalue-hbcalc.strvalue)/(hbcalc.strvalue*(#{enddate,jdbcType=DATE}-#{startdate,jdbcType=DATE}+1))*decode(finrate.basis,'A/365',365,360)
+            end
+        end,0) as prodprice,fp.finprod_id as finprodId
+   from chb_month_prd_position chbprd
+   left join fin_product fp
+   on 'F16_'||chbprd.prodid=fp.finprod_id
+   left join fin_cash_info cash
+   on fp.finprod_Id=cash.finprod_id 
+   and cash.cash_type_1='02'
+   left join (
+	select calc1.cash_id,calc1.finprod_id,
+    calc1.yield,row_number() over(partition by
+   	calc1.cash_id,calc1.finprod_id  order by  calc1.eff_date desc) as idx
+    from FIN_CASH_CALC_RULE calc1
+    left join  fin_product fp
+    on calc1.finprod_id=fp.finprod_id
+    where calc1.eff_date <![CDATA[<=]]> #{enddate,jdbcType=DATE}  and fp.operation_Type='02'
+    union all
+    select calc1.cash_id,calc1.finprod_id,
+    calc1.yield,row_number() over(partition by
+    calc1.cash_id,calc1.finprod_id  order by  calc1.eff_date desc) as idx
+    from FIN_CASH_CALC_RULE calc1
+    left join  fin_product fp
+    on calc1.finprod_id=fp.finprod_id
+    where calc1.eff_date = fp.vdate and fp.operation_Type='01'
+    ) llcalc
+    on cash.cash_id=llcalc.cash_id and cash.finprod_id=llcalc.finprod_id
+    and  llcalc.idx=1
+    left join (select endval.finprod_id,
+           nvl(endval.TOTAL_NET_VALUE,0) endvalue,
+           nvl(strval.TOTAL_NET_VALUE,1) strvalue
+           from BOK_VALBAL_TABLE_STATUS endval
+			left join BOK_VALBAL_TABLE_STATUS strval
+			on endval.finprod_id=strval.finprod_id
+			and strval.val_date= #{startdate,jdbcType=DATE}-1
+			where endval.val_date=#{enddate,jdbcType=DATE})jzcalc
+			on  fp.finprod_id=jzcalc.finprod_id
+   left join (
+   select endval.bookset_id as finprod_id,
+           nvl(endval.subject_name,0) endvalue,
+           nvl(strval.subject_name,vdateval.subject_name) strvalue
+           from bok_val_table_data endval
+      left join bok_val_table_data strval
+      on endval.bookset_id=strval.bookset_id
+      and strval.val_date= #{startdate,jdbcType=DATE}-1
+       and trim(endval.subject_no)='从成立以来累计万份收益:'  and trim(strval.subject_no)='从成立以来累计万份收益:'
+      left join fin_product fp
+      on endval.bookset_id=fp.finprod_id and trim(endval.subject_no)='从成立以来累计万份收益:'  
+       left join bok_val_table_data vdateval
+      on fp.finprod_id=vdateval.bookset_id
+      and fp.vdate=vdateval.val_date and trim(vdateval.subject_no)='从成立以来累计万份收益:'
+      where endval.val_date=#{enddate,jdbcType=DATE}
+      and trim(endval.subject_no)='从成立以来累计万份收益:'
+   )hbcalc
+   on  fp.finprod_id=hbcalc.finprod_id
+    left join fin_rate_info finrate
+    on finrate.cash_id=cash.cash_id and  cash.finprod_id=finrate.finprod_id
+      <!-- 多级法人改造 add by hxy 20200629 -->
+     <if test="institutionlist != null and !institutionlist.isEmpty()  ">
+                   inner join data_auth_notify_inst dani 
+                   on dani.BUSINESS_ID = fp.finprod_id
+                   and dani.data_type='FINPROD04'
+                   and dani.model_type='02'
+                   and dani.institution_code
+                   <foreach collection="institutionlist" item="item" separator=","
+                      open="in ("  close=")">
+                   #{item}
+                   </foreach>
+     </if>
+       <!-- 多级法人改造 add by hxy 20200629 --> 
+    
+	where chbprd.startdate = #{startdate,jdbcType=DATE}
+	and chbprd.enddate = #{enddate,jdbcType=DATE}
+	 and chbprd.profit_type='03' 
+  </select>
+  <select id="selectAssetList" resultType="com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthAssetPosition" parameterType="com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthAssetPosition" >
+   select  fp.profit_type as prodtype, chbasset.rating as rating,
+    chbasset.assettype2 as assettype2,
+    decode(chbasset.assettype2,'2617',chbinfo.is_govern_fund,chbasset.is_govern_fund1)  isgovernfund1,
+    chbinfo.bank_sec_capital bankseccapital, 
+    chbinfo.bank_sec_perpetual banksecperpetual,chbinfo.bank_sec_prefer banksecprefer,
+    repbond.rep_sec_nature as repsecnature,
+    case when  chbasset.assettype2 in ('1201','1202','1203','1204','1205','1206','1207','1208','1209','1210','1299')  
+               then nvl(chbasset.assetvalue_a,0)
+        else coalesce(chbasset.assetvalue_b,chbasset.assetvalue_a,0) 
+    end as assetvalueB,
+    case when chbasset.assettype2 in ('1001','1106','2401','1303','2403','2402','2499','1401','1402','1403','1404','1405','1406','1499') then 1
+      else nvl((nvl(exeplan.mdate,nvl(asset.mdate,deal.mdate)) -  #{enddate,jdbcType=DATE}),0) end as remainterm,fp.finprod_id as finprodId
+    from chb_month_asset_position chbasset
+    left join fin_product fp
+    on 'F16_'||chbasset.prod_id=fp.finprod_id
+    left join fin_product_add d
+    on fp.finprod_id=d.finprod_id
+  	left join chb_asset_info chbinfo
+ 	on chbasset.asset_code=chbinfo.asset_code
+ 	left join rep_asset_bond repbond
+ 	on chbinfo.asset_code=repbond.sec_id
+	 left join fin_product asset
+ 	on (chbasset.asset_code=asset.finprod_market_id or chbasset.asset_code=asset.finprod_id)
+ 	left join trd_product_deal deal
+	 on chbasset.asset_code=deal.trade_id
+   left join (select distinct p.finprod_id as prodid,min(p.exercise_date) as mdate  
+   from   fin_exercise_plan p  where p.finprod_type='F01'    and p.exercise_date>#{enddate,jdbcType=DATE}
+   group by p.finprod_id ) exeplan
+   on asset.finprod_id=exeplan.prodid and asset.is_sus='Y'  
+	 	 <!-- 多级法人改造 add by hxy 20200616 -->
+     <if test="institutionlist != null and !institutionlist.isEmpty()  ">
+                   inner join data_auth_notify_inst dani 
+                   on dani.BUSINESS_ID = fp.finprod_id
+                   and dani.data_type='FINPROD04'
+                     and dani.model_type='02'
+                   and dani.institution_code
+                   <foreach collection="institutionlist" item="item" separator=","
+                      open="in ("  close=")">
+                   #{item}
+                   </foreach>
+     </if>
+       <!-- 多级法人改造 add by hxy 20200616 --> 
+ 	where chbasset.startdate = #{startdate,jdbcType=DATE} 
+	and chbasset.enddate = #{enddate,jdbcType=DATE}
+    and d.profit_flag='03' and chbasset.assettype2 not in ('1701','1702','1703','1704','1705','1706')  
+  </select>
+    <select id="selectAssetListBottom" resultType="com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthAssetPosition" >
+    select tt.prodtype,tt.assettype2,
+           sum(case when tt.totalnum = null or tt.totalnum=0 then 0
+                    else tt.accuqty/tt.totalnum*tt.posnum
+               end) as assetvalueB,tt.remainterm
+	from (
+	select   distinct fp.profit_type as prodtype,t2.asset_type2 as assettype2,
+	nvl(T1.TOTAL_NUM,0) as totalnum,nvl(T4.ACCUQTY,0) as accuqty,nvl(T1.POS_AMT,0) as posnum,t1.pos_id,
+	nvl((nvl(exeplan.mdate,nvl(asset.mdate,deal.mdate)) - #{enddate,jdbcType=DATE}),0) as remainterm
+	from chb_bot_ast_pos t1
+	inner join chb_asset_info t2 on t1.plan_asset_id=t2.asset_code
+	inner join chb_asset_info t3 on t1.asset_code=t3.asset_code
+	inner join chb_asset_position t4 on t1.plan_asset_id=t4.asset_code
+	left join fin_product fp
+	on 'F16_'||t4.prod_id=fp.finprod_id
+	left join fin_product_add d
+	on fp.finprod_id=d.finprod_id
+	left join rep_asset_bond repbond
+ 	on t1.asset_code=repbond.sec_id
+	left join fin_product asset
+ 	on (t1.asset_code=asset.finprod_market_id or t1.asset_code=asset.finprod_id)
+ 	left join trd_product_deal deal
+	 on t1.asset_code=deal.trade_id
+   left join (select distinct p.finprod_id as prodid,min(p.exercise_date) as mdate  
+   from   fin_exercise_plan p  where p.finprod_type='F01'  and p.exercise_date>#{enddate,jdbcType=DATE}
+    group by p.finprod_id ) exeplan
+   on asset.finprod_id=exeplan.prodid and asset.is_sus='Y'  
+	 <!-- 多级法人改造 add by hxy 20200616 -->
+     <if test="institutionlist != null and !institutionlist.isEmpty()  ">
+                   inner join data_auth_notify_inst dani 
+                   on dani.BUSINESS_ID = fp.finprod_id
+                   and dani.data_type='FINPROD04'
+                     and dani.model_type='02'
+                   and dani.institution_code
+                   <foreach collection="institutionlist" item="item" separator=","
+                      open="in ("  close=")">
+                   #{item}
+                   </foreach>
+     </if>
+       <!-- 多级法人改造 add by hxy 20200616 --> 
+	where t2.asset_type2 in ('1701','1702','1703','1704','1705','1706')  
+	and t3.asset_type2 in ('1201','1202','1203','1204','1205','1206','1207','1208','1209','1210','1299')  
+	and d.profit_flag='03'
+	and t4.cdate =  #{enddate,jdbcType=DATE}
+	and t1.pos_date = #{enddate,jdbcType=DATE}
+	)tt
+	group by tt.prodtype,tt.assettype2,tt.remainterm
+    </select>
+    <!-- 下拉查询所属下属机构（模糊查询） -->
+	<select id="getChbTransOrg" resultType="com.joyintech.framework.select.SelectOptionDto" >
+		SELECT s.institution_code id,s.institution_name  text
+        from sys_institution s
+		<where>
+     <if test="institutionlist != null and !institutionlist.isEmpty()  ">
+                  and s.institution_code
+                   <foreach collection="institutionlist" item="item" separator=","
+                      open="in ("  close=")">
+                   #{item}
+                   </foreach>
+     </if>
+			<if test="search !=null and search != ''">
+				AND	(s.institution_code like concat('%',concat(#{search},'%'))
+				OR s.institution_name like concat('%',concat(#{search},'%')))
+			</if>
+		</where>
+		order by s.institution_code,s.institution_name
+	</select>
+</mapper>   

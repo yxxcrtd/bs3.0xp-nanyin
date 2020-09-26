@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="PbcProdRaiseSub.xlsx" name="产品资金募集信息">
+	<Worksheet javaBean="com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub">
+		<Row>
+			<Cell order="1" name="数据状态">statusStr</Cell>
+			<Cell order="2" name="数据日期">statusDate</Cell>
+			<Cell order="3" name="报送状态">sendStatusStr</Cell>
+			<Cell order="4" name="报送日期">submitTime</Cell>
+			<Cell order="5" name="报送截止日">pbcSubmitDeadline</Cell>
+			<Cell order="6" name="反馈状态">submitFeedbackStatusStr</Cell>
+			<Cell order="7" name="募集日期">raisingDateStr</Cell>
+			<Cell order="8" name="产品代码">pbcProdIdShow</Cell>
+			<Cell order="9" name="反馈产品代码">pbcCode</Cell>
+			<Cell order="10" name="地区">buyPlace</Cell>
+			<Cell order="11" name="客户类型">customerType1</Cell>
+			<Cell order="12" name="币种">ccy</Cell>
+			<Cell order="13" name="当期申购金额">raisingAmtsum</Cell>
+			<Cell order="14" name="当期申购金额折人民币">raisingAmtsumCny</Cell>
+			<Cell order="15" name="当期申购份额">raisingQty</Cell>
+			<Cell order="16" name="当期兑付/赎回金额">redamt</Cell>
+			<Cell order="17" name="当期兑付/赎回份额">redqty</Cell>
+			<Cell order="18" name="期末产品金额">endamtsum</Cell>
+			<Cell order="19" name="期末产品金额折人民币">endamtsumCny</Cell>
+			<Cell order="20" name="期末产品份额">endqty</Cell>
+			<Cell order="21" name="开放式净值型产品期末净值">prodValue</Cell>
+			<Cell order="22" name="开放式净值型产品期末净值折人民币">prodValueCny</Cell>
+			<Cell order="23" name="开放式净值型产品期末累计净值">unitValueTotal</Cell>
+			<Cell order="24" name="开放式净值型产品期末累计净值折人民币">unitValueTotalCny</Cell>
+			<Cell order="25" name="开放式非净值型产品预期最高收益率">prodHighYield</Cell>
+			<Cell order="26" name="开放式非净值型产品预期最低收益率">prodLowYield</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.joyintech.tams.report.common.dao.ChbMgrTableInfoMapper_db2">
+	<resultMap id="BaseResultMap"
+		type="com.joyintech.tams.common.base.entity.ChbMgrTableInfo">
+		<id column="MGRTABLE_ID" property="mgrTableId" jdbcType="VARCHAR" />
+		<result column="MGRTABLE_NAME" property="mgrTableName"
+			jdbcType="VARCHAR" />
+		<result column="MGRTABLE_CHI_NAME" property="mgrTableChiName"
+			jdbcType="VARCHAR" />
+		<result column="DATAOBJECT" property="dataObject"
+			jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<select id="checkTableExist" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM syscat.tables WHERE TabName =
+		#{mgrTableName,jdbcType=VARCHAR}
+	</select>
+
+</mapper>

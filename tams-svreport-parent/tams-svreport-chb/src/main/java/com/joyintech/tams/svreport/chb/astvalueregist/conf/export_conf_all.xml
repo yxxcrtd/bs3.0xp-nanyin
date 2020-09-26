@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ChbAstValInfoAll.xls" name="资产估值信息登记">
+	<Worksheet javaBean="com.joyintech.tams.svreport.chb.astvalueregist.dto.ChbAstValueRegist001Dto">
+		<Row>
+			<Cell order="1"  name="数据状态"> statusStr</Cell><!-- 数据状态 -->
+			<Cell order="2"  name="数据日期"> updateTime</Cell><!-- 数据日期 -->
+			<Cell order="3"  name="报送状态"> sendStatusStr</Cell><!-- 报送状态 -->
+			<Cell order="4"  name="报送日期"> submitTime</Cell><!-- 报送日期 -->
+			<Cell order="5"  name="报送截止日"> chbSubmitDeadline</Cell><!-- 报送截止日 -->
+			<Cell order="6"  name="反馈状态"> submitFeedbackStatusStr</Cell><!-- 反馈状态 -->
+			<Cell order="7" name="行内资产/负债编码">assetCode</Cell><!-- 行内资产/负债编码 -->
+			<Cell order="8" name="发行机构代码">issuePartyId</Cell><!--发行机构代码 -->
+			<Cell order="9" name="估值日期">valDateExport</Cell><!-- 估值日期 -->
+			<Cell order="10" name="单位估值（净价）">unitValNet</Cell><!-- 单位估值（净价） -->
+			<Cell order="11" name="单位估值（全价）">unitValTotal</Cell><!-- 单位估值（全价） -->
+			<Cell order="12" name="备注">remark</Cell><!-- 备注-->
+		</Row>
+	</Worksheet>
+</Workbook>

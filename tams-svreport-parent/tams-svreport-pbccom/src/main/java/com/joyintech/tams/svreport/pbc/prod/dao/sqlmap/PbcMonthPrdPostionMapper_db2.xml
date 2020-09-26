@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.pbc.prod.dao.PbcMonthPrdPostionMapper_db2" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.pbc.prod.dto.PbcMonthPrdPostionDto" >
+    <result column="POSUUID" property="posuuid" jdbcType="CHAR" />
+    <result column="PRODID" property="prodid" jdbcType="VARCHAR" />
+    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+    <result column="STARTDATE" property="startdate" jdbcType="TIMESTAMP" />
+    <result column="ENDDATE" property="enddate" jdbcType="TIMESTAMP" />
+    <result column="BOOKDATE" property="bookdate" jdbcType="TIMESTAMP" />
+    <result column="IS_CONSTRACTE" property="isConstracte" jdbcType="VARCHAR" />
+    <result column="TRANSFER_TYPE" property="transferType" jdbcType="VARCHAR" />
+    <result column="BUY_PLACE" property="buyPlace" jdbcType="VARCHAR" />
+    <result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
+    <result column="RAISEMODE" property="raisemode" jdbcType="VARCHAR" />
+    <result column="IVSTORIENTATION" property="ivstorientation" jdbcType="VARCHAR" />
+    <result column="MANAGE_TYPE" property="manageType" jdbcType="VARCHAR" />
+    <result column="FIDUCIARY_DUTY" property="fiduciaryDuty" jdbcType="VARCHAR" />
+    <result column="DURATIONFLAG" property="durationflag" jdbcType="VARCHAR" />
+    <result column="IS_MARKET_FUND" property="isMarketFund" jdbcType="VARCHAR" />
+    <result column="VDATE" property="vdate" jdbcType="TIMESTAMP" />
+    <result column="PAYSTATUS" property="paystatus" jdbcType="VARCHAR" />
+    <result column="TERM" property="term" jdbcType="DECIMAL" />
+    <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_TYPE2" property="customerType2" jdbcType="VARCHAR" />
+    <result column="ENDAMTSUM_OTH" property="endamtsumOth" jdbcType="DECIMAL" />
+    <result column="DIRTYAMTSUM" property="dirtyamtsum" jdbcType="DECIMAL" />
+    <result column="REDAMT" property="redamt" jdbcType="DECIMAL" />
+    <result column="ENDQTYSUM" property="endqtysum" jdbcType="DECIMAL" />
+    <result column="END_DAYS" property="endDays" jdbcType="DECIMAL" />
+    <result column="ASSET_POOL_CODE" property="assetPoolCode" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="selectProdDealList"  parameterType="map" 
+          resultSetType="FORWARD_ONLY" fetchSize="1000"
+          resultType="com.joyintech.tams.svreport.pbc.prod.dto.PbcMonthPrdPostionDto">
+       SELECT
+	    F_GUID() posuuid /*主键*/,
+	    INFO.PROD_ID prodid,/*产品代码*/
+	    INFO.ORG_CODE orgCode,/*产品所属机构代码*/
+	    #{reportStartDate,jdbcType=DATE} startdate,/*报表开始日期*/
+	    #{reportEndDate,jdbcType=DATE} enddate,/*报表结束日期*/
+	    #{batchDate,jdbcType=DATE} bookdate,/*统计日期*/
+	    DECODE(INFO.IS_CONSTRACTE,'Y','01','02') isConstracte,/*是否分级产品*/
+	    INFO.PRODTYPE prodType,/*产品标识*/
+	    INFO.IS_MARKET_FUND isMarketFund,/*货币市场基金*/
+	    INFO.TRANSFER_TYPE transferType,/*转让类型*/
+	    INFO.OPERATE_MODE operateMode,/*运行方式*/
+	    INFO.RAISE_TYPE raisemode,/*募集方式*/
+	    INFO.IVSTORIENTATION ivstorientation,/*投资性质*/
+	    INFO.MANAGE_TYPE manageType,/*管理方式*/
+	    INFO.FIDUCIARY_DUTY fiduciaryDuty,/*受托职责*/
+	    INFO.VDATE,/*起息日*/
+	    DECODE(OPERATE_MODE,'03','0','04','0',INFO.MDATE - INFO.VDATE) TERM,/*合同期限*/
+	    CASE 
+	        WHEN  NVL((SELECT count(1) FROM CHB_PRD_DEAL D WHERE NVL(D.FPROD_ID,D.PROD_ID) = INFO.PROD_ID AND D.SETTDATE_DATE <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
+	                   AND NOT EXISTS (SELECT 1 FROM CHB_PRD_DEAL TMP 
+	                                   WHERE NVL(TMP.FPROD_ID,TMP.PROD_ID) = NVL(D.FPROD_ID,D.PROD_ID) 
+	                                   AND TMP.SETTDATE_DATE <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
+	                                   AND TMP.TRADE_TYPE = '16')),0)  > 0
+	              THEN '01'
+	        WHEN  NVL((SELECT count(1) FROM CHB_PRD_DEAL D WHERE NVL(D.FPROD_ID,D.PROD_ID) = INFO.PROD_ID AND D.SETTDATE_DATE <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
+	                   AND D.TRADE_TYPE = '16'),0)  > 0
+	              THEN '02'
+	        WHEN  NVL((SELECT count(1) FROM CHB_PRD_DEAL D WHERE NVL(D.FPROD_ID,D.PROD_ID) = INFO.PROD_ID AND D.SETTDATE_DATE <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}),0)  = 0
+	              THEN '03'
+	       ELSE NULL
+	    END DURATIONFLAG,/*存续状态*/
+	    DEAL.BUY_PLACE buyPlace,/*销售区域*/
+	    CASE 
+	        WHEN  NVL(INFO.TERMINATEDATE,INFO.MDATE) = (SELECT SETTDATE_DATE 
+	        											FROM CHB_PRD_DEAL D 
+	        											WHERE NVL(D.FPROD_ID,D.PROD_ID) = INFO.PROD_ID 
+	        											AND D.SETTDATE_DATE <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
+	        											AND D.TRADE_TYPE = '16' FETCH FIRST 1 ROWS ONLY)  
+	              THEN '01'
+	        WHEN  NVL(INFO.TERMINATEDATE,INFO.MDATE) > (SELECT SETTDATE_DATE 
+	        											FROM CHB_PRD_DEAL D 
+	        											WHERE NVL(D.FPROD_ID,D.PROD_ID) = INFO.PROD_ID 
+	        											AND D.SETTDATE_DATE <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
+	        											AND D.TRADE_TYPE = '16' FETCH FIRST 1 ROWS ONLY)   
+	              THEN '02'
+	        WHEN  NVL(INFO.TERMINATEDATE,INFO.MDATE) <![CDATA[<]]> (SELECT SETTDATE_DATE FROM CHB_PRD_DEAL D 
+	        														WHERE NVL(D.FPROD_ID,D.PROD_ID) = INFO.PROD_ID 
+	        											            AND D.SETTDATE_DATE <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
+	        														AND D.TRADE_TYPE = '16' FETCH FIRST 1 ROWS ONLY) 
+	              THEN '03'
+	        WHEN  NVL(INFO.TERMINATEDATE,INFO.MDATE) BETWEEN #{reportStartDate,jdbcType=DATE} and #{reportEndDate,jdbcType=DATE} 
+	              AND NOT EXISTS (SELECT SETTDATE_DATE FROM CHB_PRD_DEAL D WHERE NVL(D.FPROD_ID,D.PROD_ID) = INFO.PROD_ID AND D.TRADE_TYPE = '16' FETCH FIRST 1 ROWS ONLY)
+	              THEN '04'
+	       ELSE NULL
+	    END PAYSTATUS,/*兑付状态*/
+	    DEAL.CCY,/*币种*/
+	    DEAL.CUSTOMER_TYPE2 customerType2,/*客户二级类型*/
+	    CASE 
+	      WHEN INFO.PRODTYPE = 'N' THEN 
+	        DEAL.QM_PRINCE  * nvl((SELECT 
+	                            PROD_VALUE 
+	                          FROM (SELECT RANK() OVER(PARTITION BY PROD_ID ORDER BY CHANGE_DATE DESC) MY_RANK,FPROD_ID,PROD_ID,PROD_VALUE 
+	                                FROM CHB_PRD_PERIODYIELD
+	                                WHERE CHANGE_DATE <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE} 
+	                                AND CHANG_TYPE='01'
+	                                ) 
+	                          WHERE MY_RANK=1
+	                          AND NVL(FPROD_ID,PROD_ID) = INFO.PROD_ID
+	                          )
+	                      ,1)
+	      ELSE DEAL.QM_PRINCE 
+	    END ENDAMTSUM_OTH,/*期末余额*/
+	    DEAL.MJ_PRINCE DIRTYAMTSUM,/*募集金额*/
+	    DEAL.DF_PRINCE REDAMT,/*兑付金额*/
+	    DEAL.QM_PRINCE ENDQTYSUM,/*剩余份额*/
+	    CASE 
+	      WHEN INFO.OPERATE_MODE IN ('01','02') THEN GREATEST(INFO.MDATE - #{reportEndDate,jdbcType=DATE},0) 
+	      ELSE  
+	        (
+	          CASE WHEN (SELECT count(1) FROM CHB_PRD_OPENSCH CSCH 
+			               WHERE CSCH.PROD_ID = INFO.PROD_ID)=0 THEN 1
+	          ELSE
+	             GREATEST(
+		              NVL((SELECT MIN(SCH.OPEN_START) FROM CHB_PRD_OPENSCH SCH 
+			               WHERE SCH.PROD_ID = INFO.PROD_ID 
+			               AND SCH.OPEN_START > #{reportEndDate,jdbcType=DATE}
+		                   )
+		             ,INFO.MDATE) - #{reportEndDate,jdbcType=DATE} 
+	             ,0)
+	          END 
+	        )
+	    END END_DAYS/*剩余期限*/ 
+	 FROM CHB_PRD_BASEINFO INFO
+	 
+	 LEFT JOIN 
+	 (
+	   SELECT 
+	    PROD_ID,
+	    CCY,
+	    CUSTOMER_TYPE2,
+	    BUY_PLACE,
+	    SUM(MJ_PRINCE) MJ_PRINCE,
+	    SUM(DF_PRINCE) DF_PRINCE,
+	    SUM(QM_PRINCE) QM_PRINCE
+	   FROM (
+	       SELECT 
+	          NVL(DL.FPROD_ID,DL.PROD_ID) PROD_ID,
+	          CCY,
+	          CUSTOMER_TYPE2,
+	          BUY_PLACE,
+	          DL.SETTDATE_DATE,
+	          CASE WHEN DL.SETTDATE_DATE BETWEEN #{reportStartDate,jdbcType=DATE} AND #{reportEndDate,jdbcType=DATE} THEN
+	               SUM(CASE WHEN DL.trade_type IN('01','02','05') THEN DL.TRADE_PRINCE 
+	                  ELSE 0 
+	                  END ) 
+	          ELSE 0
+	          END  MJ_PRINCE,
+	          CASE WHEN DL.SETTDATE_DATE BETWEEN #{reportStartDate,jdbcType=DATE} AND #{reportEndDate,jdbcType=DATE} THEN
+	                SUM(CASE WHEN DL.trade_type IN('03','16','17') THEN DL.TRADE_PRINCE 
+	                    ELSE 0 
+	                    END )
+	          ELSE 0
+	          END DF_PRINCE,
+	          SUM(DECODE(DL.TRADE_TYPE,'01',DL.TRADE_QTY,'02',DL.TRADE_QTY,'05',DL.TRADE_QTY,'14',DL.TRADE_QTY,-1 * DL.TRADE_QTY)) QM_PRINCE
+	       FROM CHB_PRD_DEAL DL
+	       WHERE DL.SETTDATE_DATE <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
+           AND DL.TRADE_TYPE != '04'
+		   <if test="prodList !=null and prodList.size()>0">
+		        AND NVL(DL.FPROD_ID,DL.PROD_ID) IN
+		        <foreach collection="prodList" item="prodid" open="(" separator=","  close=")">
+		            #{prodid,jdbcType=VARCHAR}
+		        </foreach>
+		   </if>
+	       /*历史到期产品不统计*/
+	       AND NOT EXISTS(SELECT 1 FROM CHB_PRD_DEAL D 
+	                            WHERE D.TRADE_TYPE = '16'
+                      			AND NVL(D.FPROD_ID,D.PROD_ID) = NVL(DL.FPROD_ID,DL.PROD_ID)
+	                            AND D.SETTDATE_DATE <![CDATA[<]]> #{reportStartDate,jdbcType=DATE})
+	       GROUP BY NVL(DL.FPROD_ID,DL.PROD_ID),CCY,CUSTOMER_TYPE2,BUY_PLACE,DL.SETTDATE_DATE
+	   )
+	   GROUP BY PROD_ID,CCY,CUSTOMER_TYPE2,BUY_PLACE
+	 )DEAL
+	 ON DEAL.PROD_ID = INFO.PROD_ID
+	    
+	 WHERE INFO.FPROD_ID IS NULL
+	  /*非保本*/
+	 AND INFO.PROFIT_TYPE = '03'
+	 <if test="prodList !=null and prodList.size()>0">
+        AND INFO.PROD_ID IN
+        <foreach collection="prodList" item="prodid" open="(" separator=","  close=")">
+            #{prodid,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+	 AND INFO.VDATE <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
+	 /*历史到期产品不统计*/
+	 AND NOT EXISTS(SELECT 1 FROM CHB_PRD_DEAL D 
+	                      WHERE D.TRADE_TYPE = '16'
+	                      AND NVL(D.FPROD_ID,D.PROD_ID) = INFO.PROD_ID
+	                      AND D.SETTDATE_DATE <![CDATA[<]]> #{reportStartDate,jdbcType=DATE})    
+  
+  </select>
+ 
+</mapper>

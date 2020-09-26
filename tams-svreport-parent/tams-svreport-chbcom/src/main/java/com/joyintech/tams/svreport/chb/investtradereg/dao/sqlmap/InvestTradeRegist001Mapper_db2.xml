@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.investtradereg.dao.InvestTradeRegist001Mapper_db2" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto" >
+    <id column="REGIST_SEQNO" property="registSeqno" jdbcType="CHAR" />
+    <result column="TRADE_CODE" property="tradeCode" jdbcType="VARCHAR" />
+    <result column="INVEST_VARIETY" property="investVariety" jdbcType="VARCHAR" />
+    <result column="INVEST_TYPE" property="investType" jdbcType="VARCHAR" />
+    <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+    <result column="REGIST_BANK_CODE" property="registBankCode" jdbcType="VARCHAR" />
+    <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+    <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+    <result column="CNY_AMT" property="cnyAmt" jdbcType="DECIMAL" />
+    <result column="AMT" property="amt" jdbcType="DECIMAL" />
+    <result column="NUM" property="num" jdbcType="DECIMAL" />
+    <result column="CUR_ASSET_TYPE" property="curAssetType" jdbcType="VARCHAR" />
+    <result column="CUR_ASSETDET_TYPE" property="curAssetdetType" jdbcType="VARCHAR" />
+    <result column="DEALDATE" property="dealdate" jdbcType="DATE" />
+    <result column="TRADE_COUNTER" property="tradeCounter" jdbcType="VARCHAR" />
+    <result column="UNIT_PRICE_FULL" property="unitPriceFull" jdbcType="DECIMAL" />
+    <result column="UNIT_PRICE_NET" property="unitPriceNet" jdbcType="DECIMAL" />
+    <result column="END_RATE" property="endRate" jdbcType="DECIMAL" />
+    <result column="CONTRACT_CODE" property="contractCode" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="CHL_CPCT_ID" property="chlCpctId" jdbcType="VARCHAR" />
+    <result column="TRADE_TYPE" property="tradeType" jdbcType="VARCHAR" />
+    <result column="CHL_AGRT_NAME" property="chlAgrtName" jdbcType="VARCHAR" />
+    <result column="FEE_ID" property="feeId" jdbcType="VARCHAR" />
+    <result column="FEE_NAME" property="feeName" jdbcType="VARCHAR" />
+    <result column="FEE_TYPE" property="feeType" jdbcType="VARCHAR" />
+    <result column="FEE_SECTYPE" property="feeSectype" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="CHAR" />
+    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+    <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" jdbcType="TIMESTAMP" />
+    <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
+    <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+    <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
+    <result column="STATUS_DATE" property="statusDate" jdbcType="TIMESTAMP" />
+    <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+    <result column="DELETE_RES" property="deleteRes" jdbcType="VARCHAR" />
+    <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+    <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    <result column="DEAL_REGIST_DATE" property="dealRegistDate" jdbcType="DATE" />
+    <result column="IS_ASSET_SUB" property="isAssetSub" jdbcType="VARCHAR" />
+    <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+    <result column="PROD_REG_CODE" property="prodRegCode" jdbcType="VARCHAR" />
+    <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+    <result column="REF_TRADESEQNO" property="refTradeseqno" jdbcType="VARCHAR" />
+    <result column="PRODTYPE" property="prodType" jdbcType="VARCHAR" />
+    <result column="DEALTYPE" jdbcType="VARCHAR" property="dealtype" />
+  </resultMap>
+  <resultMap id="BaseResultMapHis" type="com.joyintech.tams.svreport.chb.investtradereg.dto.ChbInvestTradeSubHisDto" >
+    <id column="HIS_NO" property="hisNo" jdbcType="CHAR" />
+    <result column="TRADE_CODE" property="tradeCode" jdbcType="VARCHAR" />
+    <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+    <result column="REGIST_BANK_CODE" property="registBankCode" jdbcType="VARCHAR" />
+    <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+    <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+    <result column="CUR_ASSET_TYPE" property="curAssetType" jdbcType="VARCHAR" />
+    <result column="CUR_ASSETDET_TYPE" property="curAssetdetType" jdbcType="VARCHAR" />
+    <result column="DEALDATE" property="dealdate" jdbcType="TIMESTAMP" />
+    <result column="TRADE_COUNTER" property="tradeCounter" jdbcType="VARCHAR" />
+    <result column="UNIT_PRICE_FULL" property="unitPriceFull" jdbcType="DECIMAL" />
+    <result column="UNIT_PRICE_NET" property="unitPriceNet" jdbcType="DECIMAL" />
+    <result column="END_RATE" property="endRate" jdbcType="DECIMAL" />
+    <result column="CONTRACT_CODE" property="contractCode" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="CHL_CPCT_ID" property="chlCpctId" jdbcType="VARCHAR" />
+    <result column="TRADE_TYPE" property="tradeType" jdbcType="VARCHAR" />
+    <result column="CHL_AGRT_NAME" property="chlAgrtName" jdbcType="VARCHAR" />
+    <result column="FEE_ID" property="feeId" jdbcType="VARCHAR" />
+    <result column="FEE_NAME" property="feeName" jdbcType="VARCHAR" />
+    <result column="FEE_TYPE" property="feeType" jdbcType="VARCHAR" />
+    <result column="FEE_SECTYPE" property="feeSectype" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+    <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" jdbcType="TIMESTAMP" />
+    <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
+    <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+    <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
+    <result column="STATUS_DATE" property="statusDate" jdbcType="TIMESTAMP" />
+    <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+    <result column="DELETE_RES" property="deleteRes" jdbcType="VARCHAR" />
+    <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+    <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    <result column="DEAL_REGIST_DATE" property="dealRegistDate" jdbcType="TIMESTAMP" />
+    <result column="IS_ASSET_SUB" property="isAssetSub" jdbcType="VARCHAR" />
+    <result column="REF_TRADESEQNO" property="refTradeseqno" jdbcType="CHAR" />
+    <result column="CNY_AMT" property="cnyAmt" jdbcType="DECIMAL" />
+    <result column="AMT" property="amt" jdbcType="DECIMAL" />
+    <result column="NUM" property="num" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    REGIST_SEQNO, TRADE_CODE, PROD_ID, REGIST_BANK_CODE, 
+    ASSET_CODE, CCY, CNY_AMT, AMT, NUM, CUR_ASSET_TYPE, CUR_ASSETDET_TYPE, DEALDATE, 
+    TRADE_COUNTER, UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE, CONTRACT_CODE, REMARK, 
+    CHL_CPCT_ID, TRADE_TYPE, CHL_AGRT_NAME, FEE_ID, FEE_NAME, FEE_TYPE, FEE_SECTYPE, STATUS, 
+    ORG_CODE, DEPT_CODE, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, CHB_SUBMIT_DEADLINE, 
+    SUBMIT_DEADLINE, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, SUBMIT_TIME, DELETE_RES, 
+    DATA_SOURCE, CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO
+  </sql>
+  <sql id="Base_Column_List_His" >
+    REGIST_SEQNO HIS_NO, TRADE_CODE, PROD_ID, REGIST_BANK_CODE, ASSET_CODE, CCY, CUR_ASSET_TYPE, CUR_ASSETDET_TYPE, 
+    DEALDATE, TRADE_COUNTER, UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE, CONTRACT_CODE, 
+    REMARK, CHL_CPCT_ID, TRADE_TYPE, CHL_AGRT_NAME, FEE_ID, FEE_NAME, FEE_TYPE, FEE_SECTYPE, 
+    STATUS, ORG_CODE, DEPT_CODE, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+    CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, 
+    SUBMIT_TIME, DELETE_RES, DATA_SOURCE, CREATE_DEPT, DEAL_REGIST_DATE, IS_ASSET_SUB, 
+    REF_TRADESEQNO, CNY_AMT, AMT, NUM
+  </sql>
+	
+	<insert id="insertBatch" parameterType="com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto">
+	insert into CHB_INVEST_TRADE_SUB (REGIST_SEQNO, TRADE_CODE,  PROD_ID, REGIST_BANK_CODE, 
+      ASSET_CODE, CCY, CNY_AMT, 
+      AMT, NUM, CUR_ASSET_TYPE, 
+      CUR_ASSETDET_TYPE, DEALDATE, TRADE_COUNTER, 
+      UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE, 
+      CONTRACT_CODE, REMARK, CHL_CPCT_ID, 
+      TRADE_TYPE, CHL_AGRT_NAME, FEE_ID, 
+      FEE_NAME, FEE_TYPE, FEE_SECTYPE, 
+      STATUS, ORG_CODE, DEPT_CODE, 
+      CREATE_USER, CREATE_TIME, UPDATE_USER, 
+      UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+      SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, 
+      SUBMIT_TIME, DELETE_RES, DATA_SOURCE, 
+      CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO)
+		<foreach collection="insertList" item="item" index="index" separator="union all" >
+		select
+		  #{item.registSeqno,jdbcType=CHAR}, #{item.tradeCode,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.registBankCode,jdbcType=VARCHAR}, 
+	      #{item.assetCode,jdbcType=VARCHAR}, #{item.ccy,jdbcType=VARCHAR}, #{item.cnyAmt,jdbcType=DECIMAL}, 
+	      #{item.amt,jdbcType=DECIMAL}, #{item.num,jdbcType=DECIMAL}, #{item.curAssetType,jdbcType=VARCHAR}, 
+	      #{item.curAssetdetType,jdbcType=VARCHAR}, #{item.dealdate,jdbcType=TIMESTAMP}, #{item.tradeCounter,jdbcType=VARCHAR}, 
+	      #{item.unitPriceFull,jdbcType=DECIMAL}, #{item.unitPriceNet,jdbcType=DECIMAL}, #{item.endRate,jdbcType=DECIMAL}, 
+	      #{item.contractCode,jdbcType=VARCHAR}, #{item.remark,jdbcType=VARCHAR}, #{item.chlCpctId,jdbcType=VARCHAR}, 
+	      #{item.tradeType,jdbcType=VARCHAR}, #{item.chlAgrtName,jdbcType=VARCHAR}, #{item.feeId,jdbcType=VARCHAR}, 
+	      #{item.feeName,jdbcType=VARCHAR}, #{item.feeType,jdbcType=VARCHAR}, #{item.feeSectype,jdbcType=VARCHAR}, 
+	      #{item.status,jdbcType=CHAR}, #{item.orgCode,jdbcType=VARCHAR}, #{item.deptCode,jdbcType=VARCHAR}, 
+	      #{item.createUser,jdbcType=VARCHAR}, sysdate, #{item.updateUser,jdbcType=VARCHAR}, 
+	      #{item.updateTime,jdbcType=TIMESTAMP}, #{item.chbSubmitDeadline,jdbcType=TIMESTAMP}, #{item.submitDeadline,jdbcType=TIMESTAMP}, 
+	      #{item.sendStatus,jdbcType=VARCHAR}, #{item.submitFeedbackStatus,jdbcType=VARCHAR}, #{item.statusDate,jdbcType=TIMESTAMP}, 
+	      #{item.submitTime,jdbcType=TIMESTAMP}, #{item.deleteRes,jdbcType=VARCHAR}, #{item.dataSource,jdbcType=VARCHAR}, 
+	      #{item.createDept,jdbcType=VARCHAR},#{item.dealRegistDate,jdbcType=TIMESTAMP},#{item.isAssetSub,jdbcType=VARCHAR},#{item.refTradeseqno,jdbcType=VARCHAR}
+	      from sysibm.SYSDUMMY1
+		</foreach>
+	</insert>
+    
+    <select id="getTradeNo" resultType="java.lang.String">
+        select SEQ_INVEST_TRADE_SUB.nextval from sysibm.SYSDUMMY1
+    </select>
+
+
+	<delete id="deleteLastSubmitHis" parameterType="java.util.Map">
+       delete  from CHB_INVEST_TRADE_SUB_HIS
+      where 1 =1 
+      and HIS_NO in (
+      select a.HIS_NO from (
+  select HIS_NO,row_number() over(partition by ASSET_CODE order by nvl(UPDATE_TIME,CREATE_TIME) desc) myrank
+  from CHB_INVEST_TRADE_SUB_HIS
+  where 1=1
+   <if test="registList !=null and registList.size()>0">
+         <foreach collection="registList" item="regist" open=" AND (TRADE_CODE) IN (" separator="union all"  close=")">
+           select #{regist.tradeCode,jdbcType=VARCHAR}from sysibm.SYSDUMMY1
+         </foreach>
+      </if>
+  )a
+  where a.myrank=1
+  )
+  </delete>
+</mapper>

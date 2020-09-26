@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dao.PbcPrdBaseinfoSubMapper_db2">
+	<resultMap id="BaseResultMap"
+		type="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dto.PbcPrdBaseinfoSub">
+		<id column="REGIST_SEQNO" property="registSeqno" jdbcType="CHAR" />
+		<result column="PBC_PROD_ID" property="pbcProdId" jdbcType="VARCHAR" />
+		<result column="ISSUE_PARTY_ID" property="issuePartyId"
+			jdbcType="VARCHAR" />
+		<result column="PBC_PROD_TYPE" property="pbcProdType" jdbcType="CHAR" />
+		<result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+		<result column="PROD_BRAND" property="prodBrand" jdbcType="VARCHAR" />
+		<result column="PROD_STAGE" property="prodStage" jdbcType="DECIMAL" />
+		<result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+		<result column="RAISE_CCY" property="raiseCcy" jdbcType="VARCHAR" />
+		<result column="CASH_PRIN_CCY" property="cashPrinCcy" jdbcType="VARCHAR" />
+		<result column="CASH_PROF_CCY" property="cashProfCcy" jdbcType="VARCHAR" />
+		<result column="CUSTOMER_TYPE" property="customerType"
+			jdbcType="VARCHAR" />
+		<result column="RAISE_TYPE" property="raiseType" jdbcType="CHAR" />
+		<result column="MANAGE_TYPE" property="manageType" jdbcType="CHAR" />
+		<result column="FIDUCIARY_DUTY" property="fiduciaryDuty"
+			jdbcType="VARCHAR" />
+		<result column="CONT_MODE" property="contMode" jdbcType="VARCHAR" />
+		<result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
+		<result column="IVSTORIENTATION" property="ivstorientation"
+			jdbcType="VARCHAR" />
+		<result column="BUSI_MODEL" property="busiModel" jdbcType="CHAR" />
+		<result column="PROFIT_TYPE" property="profitType" jdbcType="CHAR" />
+		<result column="INCOME_GUARAN_IDENT" property="incomeGuaranIdent"
+			jdbcType="CHAR" />
+		<result column="PRIN_GUARAN_IDENT" property="prinGuaranIdent"
+			jdbcType="CHAR" />
+		<result column="HIGH_YIELD_ISSUE" property="highYieldIssue"
+			jdbcType="DECIMAL" />
+		<result column="LOW_YIELD_ISSUE" property="lowYieldIssue"
+			jdbcType="DECIMAL" />
+		<result column="RAISE_VDATE" property="raiseVdate" jdbcType="TIMESTAMP" />
+		<result column="RAISE_ENDDATE" property="raiseEnddate"
+			jdbcType="TIMESTAMP" />
+		<result column="TERM_RIGHT_FLAG" property="termRightFlag"
+			jdbcType="CHAR" />
+		<result column="CUS_REDEEM_FLAG" property="cusRedeemFlag"
+			jdbcType="CHAR" />
+		<result column="CREDIT_FLAG" property="creditFlag" jdbcType="CHAR" />
+		<result column="CREDIT_TYPE" property="creditType" jdbcType="VARCHAR" />
+		<result column="CREDIT_MODE" property="creditMode" jdbcType="VARCHAR" />
+		<result column="IN_DEP_NAME" property="inDepName" jdbcType="VARCHAR" />
+		<result column="IN_DEP_CODE" property="inDepCode" jdbcType="VARCHAR" />
+		<result column="OUT_DEP_CTRY" property="outDepCtry" jdbcType="VARCHAR" />
+		<result column="OUT_DEP_NAME" property="outDepName" jdbcType="VARCHAR" />
+		<result column="VDATE" property="vdate" jdbcType="TIMESTAMP" />
+		<result column="MDATE" property="mdate" jdbcType="TIMESTAMP" />
+		<result column="ACCOUNT_ID" property="accountId" jdbcType="VARCHAR" />
+		<result column="IS_CONSTRACTE" property="isConstracte"
+			jdbcType="CHAR" />
+		<result column="TRANSFER_TYPE" property="transferType"
+			jdbcType="CHAR" />
+		<result column="IDENTI_FLAG" property="identiFlag" jdbcType="CHAR" />
+		<result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+		<result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+		<result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus"
+			jdbcType="VARCHAR" />
+		<result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+		<result column="STATUS_DATE" property="statusDate" jdbcType="TIMESTAMP" />
+		<result column="PBC_SUBMIT_DEADLINE" property="pbcSubmitDeadline"
+			jdbcType="TIMESTAMP" />
+		<result column="SUBMIT_DEADLINE" property="submitDeadline"
+			jdbcType="TIMESTAMP" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+		<result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+		<result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		REGIST_SEQNO, PBC_PROD_ID, ISSUE_PARTY_ID, PBC_PROD_TYPE, PROD_NAME, PROD_BRAND,
+		PROD_STAGE, PROD_ID, RAISE_CCY, CASH_PRIN_CCY, CASH_PROF_CCY,
+		CUSTOMER_TYPE, RAISE_TYPE,
+		MANAGE_TYPE, FIDUCIARY_DUTY, CONT_MODE, OPERATE_MODE, IVSTORIENTATION, BUSI_MODEL,
+		INCOME_GUARAN_IDENT, PRIN_GUARAN_IDENT, HIGH_YIELD_ISSUE,
+		LOW_YIELD_ISSUE, RAISE_VDATE,
+		RAISE_ENDDATE, TERM_RIGHT_FLAG, CUS_REDEEM_FLAG, CREDIT_FLAG, CREDIT_TYPE,
+		CREDIT_MODE,
+		IN_DEP_NAME, IN_DEP_CODE, OUT_DEP_CTRY, OUT_DEP_NAME, VDATE, MDATE, ACCOUNT_ID,
+		IS_CONSTRACTE,
+		TRANSFER_TYPE, IDENTI_FLAG, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS,
+		SUMIT_SEQ,
+		STATUS_DATE, PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE,
+		CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+	</sql>
+	<sql id="Base_Column_List2">
+		HIS_NO, PBC_PROD_ID, ISSUE_PARTY_ID, PBC_PROD_TYPE, PROD_NAME, PROD_BRAND,
+		PROD_STAGE, PROD_ID, RAISE_CCY, CASH_PRIN_CCY, CASH_PROF_CCY,
+		CUSTOMER_TYPE, RAISE_TYPE,
+		MANAGE_TYPE, FIDUCIARY_DUTY, CONT_MODE, OPERATE_MODE, IVSTORIENTATION, BUSI_MODEL,
+		INCOME_GUARAN_IDENT, PRIN_GUARAN_IDENT, HIGH_YIELD_ISSUE,
+		LOW_YIELD_ISSUE, RAISE_VDATE,
+		RAISE_ENDDATE, TERM_RIGHT_FLAG, CUS_REDEEM_FLAG, CREDIT_FLAG, CREDIT_TYPE,
+		CREDIT_MODE,
+		IN_DEP_NAME, IN_DEP_CODE, OUT_DEP_CTRY, OUT_DEP_NAME, VDATE, MDATE, ACCOUNT_ID,
+		IS_CONSTRACTE,
+		TRANSFER_TYPE, IDENTI_FLAG, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS,
+		SUMIT_SEQ,
+		STATUS_DATE, PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE,
+		CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+	</sql>
+	
+	<select id="selectNeedRegisteData" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dto.PbcPrdBaseinfoSub">
+		select info.ISSUE_PARTY_ID,
+		'1' PBC_PROD_TYPE,
+		case
+		when lengthb(PROD_NAME)>180
+		then substrb(PROD_NAME,1,180)
+		else PROD_NAME
+		end PROD_NAME,
+		PROD_BRAND,
+		case
+		when length(PROD_STAGE)>4
+		then to_number(substr(PROD_STAGE,1,4))
+		else PROD_STAGE
+		end PROD_STAGE,
+		PROD_ID,
+		RAISE_CCY,
+		CASH_PRIN_CCY,
+		CASH_PROF_CCY,
+		CUSTOMER_TYPE,
+		decode(RAISE_TYPE,'01','1','2') RAISE_TYPE,
+		decode(MANAGE_TYPE,'01','1','2') MANAGE_TYPE,
+		decode(FIDUCIARY_DUTY,'01','1','2') FIDUCIARY_DUTY,
+		decode(CONT_MODE,'01','11','02','12','03','13','04','14','05','15','07','16','99','17')
+		CONT_MODE,
+		decode(OPERATE_MODE,'01','4','02','5','03','2','04','3') OPERATE_MODE,
+		decode(PROFIT_TYPE,'03',decode(IVSTORIENTATION,'01','007','02','008','03','009','04','010'),'011')
+		IVSTORIENTATION,
+		PROFIT_TYPE,
+		decode(PROFIT_TYPE,'03','3','1') BUSI_MODEL,
+		decode(PROFIT_TYPE,'01','1','2') INCOME_GUARAN_IDENT,
+		decode(PROFIT_TYPE,'01','1','2') PRIN_GUARAN_IDENT,
+		HIGH_YIELD_ISSUE,
+		LOW_YIELD_ISSUE,
+		RAISE_VDATE,
+		RAISE_ENDDATE,
+		decode(TERM_RIGHT_FLAG,'01','1','2') TERM_RIGHT_FLAG,
+		decode(CUS_REDEEM_FLAG,'01','1','2') CUS_REDEEM_FLAG,
+		decode(CREDIT_FLAG,'01','1','2') CREDIT_FLAG,
+		REPLACE(CREDIT_TYPE, '0','') CREDIT_TYPE,
+		decode(CREDIT_MODE,'01','1','02','2','03','1,2')CREDIT_MODE,
+		IN_DEP_NAME,
+		IN_DEP_CODE,
+		OUT_DEP_CTRY,
+		case
+		when lengthb(OUT_DEP_NAME)>120
+		then substrb(OUT_DEP_NAME,1,120)
+		else OUT_DEP_NAME
+		end OUT_DEP_NAME,
+		VDATE,
+		MDATE,
+		null ACCOUNT_ID,
+		decode(IS_CONSTRACTE,'01','1','2')IS_CONSTRACTE,
+		decode(TRANSFER_TYPE,'01','1','99','2')TRANSFER_TYPE,
+		decode(cbc.IS_FIN_SUB_COMPANY,'01','2','1') IDENTI_FLAG,
+		sysdate STATUS_DATE,
+		info.STATUS,
+		info.CREATE_USER,
+		info.UPDATE_USER,
+		info.ORG_CODE,
+		info.DEPT_CODE CREATE_DEPT
+		from chb_prd_baseinfo info
+
+		left join CHB_ORG_REGIST_BANK_CODE cbc on
+		cbc.REGIST_BANK_CODE=info.ISSUE_PARTY_ID
+		and CBC.STATUS='E'
+		where to_char(info.UPDATE_TIME,'yyyy-MM-dd') = to_char(#{statusDate,jdbcType=DATE},'yyyy-MM-dd')
+		and info.fprod_id is null
+		and info.ISSUING_STATUS='01'
+		<if test="prodList !=null  and prodList.size()!=0">
+			and prod_id in
+			<foreach collection="prodList" item="prodid" open="(" separator=","
+				close=")">
+				#{prodid}
+			</foreach>
+		</if>
+
+	</select>
+</mapper>

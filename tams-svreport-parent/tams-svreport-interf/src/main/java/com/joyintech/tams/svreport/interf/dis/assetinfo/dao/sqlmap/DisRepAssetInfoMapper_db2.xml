@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.dis.assetinfo.dao.DisRepAssetInfoMapper_db2" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.interf.dis.assetinfo.dto.DisRepAssetInfo" >
+        <result column="ASSET_ID" property="assetId" jdbcType="VARCHAR" />
+        <result column="MARKET_ID" property="marketId" jdbcType="VARCHAR" />
+        <result column="ASSET_NAME" property="assetName" jdbcType="VARCHAR" />
+        <result column="ISSUER" property="issuer" jdbcType="VARCHAR" />
+        <result column="IDATE" property="idate" jdbcType="DATE" />
+        <result column="ISSUE_PRICE" property="issuePrice" jdbcType="DECIMAL" />
+        <result column="ISSUE_AMT" property="issueAmt" jdbcType="DECIMAL" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="ACTMDATE" property="actmdate" jdbcType="DATE" />
+        <result column="TRADE_MARKET" property="tradeMarket" jdbcType="VARCHAR" />
+        <result column="REGIST_ORG" property="registOrg" jdbcType="VARCHAR" />
+        <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="INPUT_USER" property="inputUser" jdbcType="VARCHAR" />
+        <result column="ADAPTER_ID" property="adapterId" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="ASSET_TYPE" property="assetType" jdbcType="VARCHAR" />
+        <result column="FIX_ANCIER" property="fixAncier" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE_ONE" property="assetTypeOne" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE_TWO" property="assetTypeTwo" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE_THREE" property="assetTypeThree" jdbcType="VARCHAR" />
+        <result column="ASSET_BUSI_TYPE" property="assetBusiType" jdbcType="VARCHAR" />
+        <result column="IS_STAND_ASSET" property="isStandAsset" jdbcType="VARCHAR" />
+        <result column="RATE_TYPE" property="rateType" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE_DIS" property="assetTypeDis" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <update id="mergeRepAssetInfo">
+        MERGE INTO REP_ASSET_INFO RAI
+		USING (
+			<foreach collection="list" item="item" open="select * from("
+				close=")" separator="union all">
+				SELECT 
+					'${item.assetId}' ASSET_ID,<!--资产代码-->
+					'${item.marketId}' MARKET_ID,<!--市场代码-->
+					'${item.assetName}' ASSET_NAME,<!--资产名称-->
+					'${item.issuer}' ISSUER,<!--发行人-->
+			      	<choose><when test="item.idate != null">#{item.idate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> IDATE,<!--发行日-->
+					<choose><when test="item.issuePrice != null">${item.issuePrice}</when><otherwise>null</otherwise></choose>  ISSUE_PRICE,<!--发行价-->
+					<choose><when test="item.issueAmt != null">${item.issueAmt}</when><otherwise>null</otherwise></choose>  ISSUE_AMT,<!--发行规模-->
+					'${item.ccy}' CCY,<!--币种-->
+			      	<choose><when test="item.vdate != null">#{item.vdate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> VDATE,<!--起息日-->
+			      	<choose><when test="item.mdate != null">#{item.mdate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> MDATE,<!--到期日-->
+			      	<choose><when test="item.actmdate != null">#{item.actmdate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> ACTMDATE,<!--实际到期日-->
+					'${item.tradeMarket}' TRADE_MARKET,<!--交易场所-->
+					'${item.registOrg}' REGIST_ORG,<!--登记托管机构-->
+					'${item.inputType}' INPUT_TYPE,<!--导入方法-->
+					'${item.inputUser}' INPUT_USER,<!--导入用户-->
+					'${item.adapterId}' ADAPTER_ID,<!--适配器ID-->
+					'${item.status}' STATUS,<!--状态-->
+					'${item.createUser}' CREATE_USER,<!--创建人-->
+					'${item.createDept}' CREATE_DEPT,<!--创建部门-->
+      				<choose><when test="item.createTime != null">#{item.createTime,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose> CREATE_TIME,<!--创建时间-->
+					'${item.updateUser}' UPDATE_USER,<!--更新人-->
+      				<choose><when test="item.updateTime != null">#{item.updateTime,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose> UPDATE_TIME,<!--更新时间-->
+					'${item.fixAncier}' FIX_ANCIER,<!--融资人-->
+					'${item.assetTypeOne}' ASSET_TYPE_ONE,<!--资产一级分类-->
+					'${item.assetTypeTwo}' ASSET_TYPE_TWO,<!--资产二级分类-->
+					'${item.assetTypeThree}' ASSET_TYPE_THREE,<!--资产三级分类-->
+					'${item.assetTypeDis}' ASSET_TYPE_DIS<!--信披报表一级类型-->
+					,'${item.disAssetTypeone}' DIS_ASSET_TYPEONE<!--信披资产一级类型-->
+					,'${item.disAssetTypeytwo}' DIS_ASSET_TYPETWO<!--信披资产二级类型-->
+					,'${item.disAssetTypethree}' DIS_ASSET_TYPETHREE<!--信披资产三级类型-->
+				FROM
+					sysibm.SYSDUMMY1
+			</foreach>
+		) TEMP
+		<!-- 业务主键匹配 -->
+		ON(
+			RAI.ASSET_ID = TEMP.ASSET_ID 
+		)
+		<!-- 匹配到则更新  start-->
+		WHEN MATCHED THEN 
+			UPDATE SET 
+				<!--RAI.ASSET_ID = TEMP.ASSET_ID,资产代码-->
+				RAI.MARKET_ID = TEMP.MARKET_ID,<!--市场代码-->
+				RAI.ASSET_NAME = TEMP.ASSET_NAME,<!--资产名称-->
+				RAI.ISSUER = TEMP.ISSUER,<!--发行人-->
+				RAI.IDATE = TEMP.IDATE,<!--发行日-->
+				RAI.ISSUE_PRICE = TEMP.ISSUE_PRICE,<!--发行价-->
+				RAI.ISSUE_AMT = TEMP.ISSUE_AMT,<!--发行规模-->
+				RAI.CCY = TEMP.CCY,<!--币种-->
+				RAI.VDATE = TEMP.VDATE,<!--起息日-->
+				RAI.MDATE = TEMP.MDATE,<!--到期日-->
+				RAI.ACTMDATE = TEMP.ACTMDATE,<!--实际到期日-->
+				RAI.TRADE_MARKET = TEMP.TRADE_MARKET,<!--交易场所-->
+				RAI.REGIST_ORG = TEMP.REGIST_ORG,<!--登记托管机构-->
+				RAI.INPUT_TYPE = TEMP.INPUT_TYPE,<!--导入方法-->
+				RAI.INPUT_USER = TEMP.INPUT_USER,<!--导入用户-->
+				RAI.ADAPTER_ID = TEMP.ADAPTER_ID,<!--适配器ID-->
+				RAI.STATUS = TEMP.STATUS,<!--状态-->
+				RAI.CREATE_USER = TEMP.CREATE_USER,<!--创建人-->
+				RAI.CREATE_DEPT = TEMP.CREATE_DEPT,<!--创建部门-->
+				RAI.CREATE_TIME = TEMP.CREATE_TIME,<!--创建时间-->
+				RAI.UPDATE_USER = TEMP.UPDATE_USER,<!--更新人-->
+				RAI.UPDATE_TIME = TEMP.UPDATE_TIME,<!--更新时间-->
+				RAI.FIX_ANCIER = TEMP.FIX_ANCIER,<!--融资人-->
+				RAI.ASSET_TYPE_ONE = TEMP.ASSET_TYPE_ONE,<!--资产一级分类-->
+				RAI.ASSET_TYPE_TWO = TEMP.ASSET_TYPE_TWO,<!--资产二级分类-->
+				RAI.ASSET_TYPE_THREE = TEMP.ASSET_TYPE_THREE,<!--资产三级分类-->
+				RAI.ASSET_TYPE_DIS = TEMP.ASSET_TYPE_DIS<!--信披报表一级类型-->
+				,RAI.DIS_ASSET_TYPEONE = TEMP.DIS_ASSET_TYPEONE<!--信披资产一级类型-->
+				,RAI.DIS_ASSET_TYPETWO = TEMP.DIS_ASSET_TYPETWO<!--信披资产二级类型-->
+				,RAI.DIS_ASSET_TYPETHREE = TEMP.DIS_ASSET_TYPETHREE<!--信披资产三级类型-->
+		<!-- 匹配到则更新  end-->
+		<!-- 不匹配到则插入  start-->
+		WHEN NOT MATCHED THEN
+            INSERT
+            (
+				ASSET_ID,<!--资产代码-->
+				MARKET_ID,<!--市场代码-->
+				ASSET_NAME,<!--资产名称-->
+				ISSUER,<!--发行人-->
+				IDATE,<!--发行日-->
+				ISSUE_PRICE,<!--发行价-->
+				ISSUE_AMT,<!--发行规模-->
+				CCY,<!--币种-->
+				VDATE,<!--起息日-->
+				MDATE,<!--到期日-->
+				ACTMDATE,<!--实际到期日-->
+				TRADE_MARKET,<!--交易场所-->
+				REGIST_ORG,<!--登记托管机构-->
+				INPUT_TYPE,<!--导入方法-->
+				INPUT_USER,<!--导入用户-->
+				ADAPTER_ID,<!--适配器ID-->
+				STATUS,<!--状态-->
+				CREATE_USER,<!--创建人-->
+				CREATE_DEPT,<!--创建部门-->
+				CREATE_TIME,<!--创建时间-->
+				UPDATE_USER,<!--更新人-->
+				UPDATE_TIME,<!--更新时间-->
+				FIX_ANCIER,<!--融资人-->
+				ASSET_TYPE_ONE,<!--资产一级分类-->
+				ASSET_TYPE_TWO,<!--资产二级分类-->
+				ASSET_TYPE_THREE,<!--资产三级分类-->
+				ASSET_TYPE_DIS<!--信披报表一级类型-->
+				,DIS_ASSET_TYPEONE<!--信披资产一级类型-->
+				,DIS_ASSET_TYPETWO<!--信披资产二级类型-->
+				,DIS_ASSET_TYPETHREE<!--信披资产三级类型-->
+			)
+            VALUES
+           (
+				TEMP.ASSET_ID,<!--资产代码-->
+				TEMP.MARKET_ID,<!--市场代码-->
+				TEMP.ASSET_NAME,<!--资产名称-->
+				TEMP.ISSUER,<!--发行人-->
+				TEMP.IDATE,<!--发行日-->
+				TEMP.ISSUE_PRICE,<!--发行价-->
+				TEMP.ISSUE_AMT,<!--发行规模-->
+				TEMP.CCY,<!--币种-->
+				TEMP.VDATE,<!--起息日-->
+				TEMP.MDATE,<!--到期日-->
+				TEMP.ACTMDATE,<!--实际到期日-->
+				TEMP.TRADE_MARKET,<!--交易场所-->
+				TEMP.REGIST_ORG,<!--登记托管机构-->
+				TEMP.INPUT_TYPE,<!--导入方法-->
+				TEMP.INPUT_USER,<!--导入用户-->
+				TEMP.ADAPTER_ID,<!--适配器ID-->
+				TEMP.STATUS,<!--状态-->
+				TEMP.CREATE_USER,<!--创建人-->
+				TEMP.CREATE_DEPT,<!--创建部门-->
+				TEMP.CREATE_TIME,<!--创建时间-->
+				TEMP.UPDATE_USER,<!--更新人-->
+				TEMP.UPDATE_TIME,<!--更新时间-->
+				TEMP.FIX_ANCIER,<!--融资人-->
+				TEMP.ASSET_TYPE_ONE,<!--资产一级分类-->
+				TEMP.ASSET_TYPE_TWO,<!--资产二级分类-->
+				TEMP.ASSET_TYPE_THREE,<!--资产三级分类-->
+				TEMP.ASSET_TYPE_DIS<!--信披报表一级类型-->
+				,TEMP.DIS_ASSET_TYPEONE<!--信披资产一级类型-->
+				,TEMP.DIS_ASSET_TYPETWO<!--信披资产二级类型-->
+				,TEMP.DIS_ASSET_TYPETHREE<!--信披资产三级类型-->
+
+			) 
+		<!-- 不匹配到则插入  end-->
+    </update>
+</mapper>

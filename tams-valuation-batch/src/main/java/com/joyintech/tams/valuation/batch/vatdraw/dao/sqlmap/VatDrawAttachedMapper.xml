@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.valuation.batch.vatdraw.dao.VatDrawAttachedMapper">
+    
+    <!-- 取附加税计税方式信息 -->
+    <select id="getAddTaxCalType" resultType="com.joyintech.tams.valuation.batch.vatdraw.dto.AddTaxRuleDto">
+        SELECT
+            ADD_TAX_TYPE,
+            MAX(EFF_DATE) AS EFF_DATE,
+            MAX(TAX_RATE) AS TAX_RATE
+        FROM TAX_ADT_SCHEDULE
+        WHERE
+            EFF_DATE <![CDATA[<=]]> #{happenDate}
+            AND SCH_ID IN (
+                SELECT 
+                    SCHEME_ID
+                FROM BOK_BOOKSET_PLAN
+                WHERE
+                    BOOKSET_ID = #{booksetId}
+                    AND SCHEME_TYPE = #{schemeType}
+            )
+            AND EFF_DATE = (
+            	SELECT MAX(EFF_DATE)
+            	FROM TAX_ADT_SCHEDULE TEMP
+            	WHERE TAX_ADT_SCHEDULE.ADD_TAX_TYPE = TEMP.ADD_TAX_TYPE
+            	AND TEMP.SCH_ID IN (
+	                SELECT 
+	                    SCHEME_ID
+	                FROM BOK_BOOKSET_PLAN
+	                WHERE
+	                    BOOKSET_ID = #{booksetId}
+	                    AND SCHEME_TYPE = #{schemeType}
+            	)
+            	AND TEMP.EFF_DATE <![CDATA[<=]]> #{happenDate}
+            )
+        GROUP BY 
+            ADD_TAX_TYPE       
+    </select>
+    
+    <!-- 查询账务明细最大的处理序列 -->
+    <select id="querySumMaxBookOrders" resultType="java.math.BigDecimal" >
+        SELECT 
+            NVL(MAX(BOOK_ORDER),1) maxBookOrder
+        FROM TAX_BOK_BALANCE_SUM
+        WHERE 
+            HAPPEN_DATE = #{happenDate}
+            AND BOOK_DATE <![CDATA[<=]]> #{bookDate}
+            AND BOOKSET_ID = #{booksetId}
+            <if test="vatType != null and vatType != ''">
+                AND VAT_TYPE = #{vatType}
+            </if>
+    </select>
+    
+    <select id="queryTdyTaxBalanceSum" resultType="com.joyintech.tams.common.base.entity.TaxBokBalanceSum">
+        SELECT
+            SEQ_NO,
+            BOOKSET_ID,
+            BOOKSET_DATE,
+            HAPPEN_DATE,
+            O_CCY,
+            VAT_TYPE,
+            TAX_P_TYPE,
+            INCOME_AMT_ALL,
+            TAX_AMT_SUM,
+            TAX_AMT,
+            BOOK_ORDER,
+            HAPPEN_AMT,
+            BOOK_DATE
+        FROM TAX_BOK_BALANCE_SUM 
+        WHERE
+            HAPPEN_DATE = #{happenDate}
+            AND BOOK_ORDER = #{bookOrder}
+            AND BOOK_DATE = #{bookDate}
+            AND BOOKSET_ID  = #{booksetId}
+    </select>
+    
+    
+</mapper>

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chb.astvalueregist.dao.ChbAstValueRegist001Mapper_mysql">
+<sql id="baseInfo">
+		SELECT
+		    CAVS.ISSUE_PARTY_ID  as issuePartyId,
+		    CAVS.ASSET_CODE as assetCode,
+		    CAVS.VAL_DATE as valDate,
+		    CAVS.UNIT_VAL_NET as unitValNet,
+		    CAVS.UNIT_VAL_TOTAL as unitValTotal,
+		    CAVS.ORG_CODE as orgCode,
+		    CAVS.DEPT_CODE as deptCode,
+		    CAVS.CREATE_USER as createUser,
+		    CAVS.CREATE_TIME as createTime,
+		    CAVS.UPDATE_USER as updateUser,
+		    CAVS.UPDATE_TIME as updateTime,
+		    CAVS.CHB_SUBMIT_DEADLINE as chbSubmitDeadline,
+		    CAVS.SUBMIT_DEADLINE as submitDeadline,
+		    CAVS.SEND_STATUS as sendStatus,
+		    CAVS.SUBMIT_TIME as submitTime,
+		    CAVS.REGIST_SEQNO registSeqno,
+		    CAVS.REMARK as remark,
+		    CAVS.STATUS_DATE as statusDate,
+		    CAVS.STATUS as status,
+		    CAVS.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus
+		FROM
+		    CHB_AST_VAL_SUB CAVS
+</sql>								
+<select id="searchPage"  parameterType="map"
+	resultType="com.joyintech.tams.svreport.chb.astvalueregist.dto.ChbAstValueRegist001Dto">
+		select * from
+		(<include refid="baseInfo"/>
+		<where>
+			<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
+				DATE_FORMAT(CAVS.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{submitDeadLineStart,jdbcType=VARCHAR}
+			</if>
+			<if test="submitDeadLineEnd != null and submitDeadLineEnd != ''">
+				and DATE_FORMAT(CAVS.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{submitDeadLineEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="sendStatusList != null and sendStatusList.size()>0">
+				<foreach collection="sendStatusList" item="item" open="and CAVS.SEND_STATUS in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="statusList != null and statusList.size()>0">
+				<foreach collection="statusList" item="item" open="and CAVS.STATUS in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="statusDateStart != null and statusDateStart != ''">
+				and DATE_FORMAT(CAVS.STATUS_DATE,'%Y-%m-%d') &gt;= #{statusDateStart,jdbcType=VARCHAR}
+			</if>
+			<if test="statusDateEnd != null and statusDateEnd != ''">
+				and DATE_FORMAT(CAVS.STATUS_DATE,'%Y-%m-%d') &lt;= #{statusDateEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="submitDateStart != null and submitDateStart != ''">
+				and DATE_FORMAT(CAVS.SUBMIT_TIME,'%Y-%m-%d') &gt;= #{submitDateStart,jdbcType=VARCHAR}
+			</if>
+			<if test="submitDateEnd != null and submitDateEnd != ''">
+				and DATE_FORMAT(CAVS.SUBMIT_TIME,'%Y-%m-%d') &lt;= #{submitDateEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="valDateStart != null and valDateStart != ''">
+				and DATE_FORMAT(CAVS.VAL_DATE,'%Y-%m-%d') &gt;= #{valDateStart,jdbcType=VARCHAR}
+			</if>
+			<if test="valDateEnd != null and valDateEnd != ''">
+				and DATE_FORMAT(CAVS.VAL_DATE,'%Y-%m-%d') &lt;= #{valDateEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
+		 		<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND CAVS.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
+             		#{submitFeedbackStatus,jdbcType=VARCHAR}
+            	</foreach>	
+		 	</if>
+		 	<if test="sendStatus != null  and sendStatus != ''">
+				and CAVS.SEND_STATUS = #{sendStatus,jdbcType=VARCHAR}
+			</if>
+			<if test="status != null  and status != ''">
+				and CAVS.STATUS = #{status,jdbcType=VARCHAR}
+			</if>
+			<if test="assetCodeLike != null and assetcodelike != ''">
+				and upper(CAVS.ASSET_CODE) like concat_ws('','%',upper(#{assetCodeLike,jdbcType=VARCHAR}),'%')
+			</if>
+		</where>
+		) order by valDate,assetCode
+	</select>
+
+
+    <select id="queryExportListByKeys" resultType="com.joyintech.tams.svreport.chb.astvalueregist.dto.ChbAstValueRegist001Dto">
+		select * from
+		(<include refid="baseInfo"/>
+		<where>
+		   	<if test="registList!=null and registList.size()!=0">
+			 	<foreach collection="registList" item="regist" open=" (" close=")" separator=") or (">
+			 		       1=1
+			 		   <if test="regist.registSeqno!=null and regist.registSeqno!=''">
+			 	 			and trim(CAVS.REGIST_SEQNO) = #{regist.registSeqno} 
+			 	 		</if> 
+			 		    <if test="regist.status!=null and regist.status!=''">
+			 	 			and CAVS.STATUS = #{regist.status} 
+			 	 		</if>
+			 	 		<if test="regist.sendStatus!=null and regist.sendStatus!=''">
+			 	 			and CAVS.SEND_STATUS = #{regist.sendStatus} 
+			 	 		</if>
+			 	 		<if test="regist.registBankCode!=null and regist.registBankCode!=''">
+			 	 			and CAVS.REGIST_BANK_CODE = #{regist.registBankCode} 
+			 	 		</if>
+			 	</foreach>
+		   	</if>
+		</where>
+		)
+	</select>
+	
+	    <!-- 接口报送更新并且更新 报送流水号-->
+    <update id="updateInterfSubmitAndSeqBatch" parameterType="java.util.Map">
+         update CHB_AST_VAL_SUB sub
+        <set> 
+            sub.SEND_STATUS = '03',
+            sub.SUBMIT_FEEDBACK_STATUS = '03',
+            sub.submit_time = NOW(),
+            sub.UPDATE_TIME = NOW(),
+            sub.STATUS_DATE = NOW()
+        </set>
+        <where>
+            <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
+                trim(sub.REGIST_SEQNO) = #{regist.registSeqno} 
+            </foreach>
+        </where>
+    </update>
+	
+	 
+    <!-- 取消手工报送登记表更新 -->
+	<update id="cancelMannultRegist" parameterType="java.util.Map">
+		update CHB_AST_VAL_SUB
+		<set> 
+		 	SEND_STATUS = '01',
+			UPDATE_TIME = NOW(),
+			SUBMIT_TIME = null,
+			SUBMIT_FEEDBACK_STATUS = null
+		</set>
+		<where>
+		 	<foreach collection="list" item="dto" open="(" close=")" separator=") or (">
+		 	 	 trim(REGIST_SEQNO) = #{dto.registSeqno}  
+		 	</foreach>
+		</where>
+	</update>
+	
+	<delete id="deleteRegistSeqnoList">
+	delete from CHB_AST_VAL_SUB
+	where
+	<foreach collection="regList" item="item" open="REGIST_SEQNO in ("
+		separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+	</foreach>
+	</delete>
+   
+   <insert id="insertSeletForSub" parameterType="java.lang.String">
+	insert into CHB_AST_VAL_SUB (
+	REGIST_SEQNO, REGIST_BANK_CODE,
+	ISSUE_PARTY_ID, ASSET_CODE, VAL_DATE, UNIT_VAL_NET,
+	UNIT_VAL_TOTAL, REMARK, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SEND_STATUS,
+	SUBMIT_TIME,
+	SUMIT_SEQ, SUBMIT_FEEDBACK_STATUS, STATUS, STATUS_DATE, ORG_CODE, DEPT_CODE,
+	CREATE_USER,
+	CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+	)
+	select
+	REGIST_SEQNO, REGIST_BANK_CODE, ISSUE_PARTY_ID, ASSET_CODE, VAL_DATE, UNIT_VAL_NET,
+	UNIT_VAL_TOTAL, REMARK, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+	SEND_STATUS, SUBMIT_TIME,
+	SUMIT_SEQ, SUBMIT_FEEDBACK_STATUS, STATUS, STATUS_DATE, ORG_CODE, DEPT_CODE,
+	CREATE_USER,
+	CREATE_DEPT, NOW(), UPDATE_USER, NOW()
+	from CHB_AST_VAL_SUB_HIS
+	where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+	<if test="regList !=null and regList.size()>0">
+		<foreach collection="regList" item="item" open="and REGIST_SEQNO IN ("
+			separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+</insert>
+   
+   <select id="selectRegistSeqnoList" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.chb.astvalueregist.dto.ChbAstValueRegist001Dto">
+   	select REGIST_SEQNO
+      from CHB_AST_VAL_SUB
+      where 
+      <if test="flag=='02'">
+      SEND_STATUS in ('02','03')
+      </if>
+      <if test="flag=='01'">
+      SEND_STATUS = '01'
+      </if>
+      <foreach collection="list" item="item" open="and ( (" separator=") or (" close=") )">
+      ASSET_CODE = #{item.assetCode}
+	and VAL_DATE = #{item.valDate}
+      </foreach>
+   </select>
+</mapper>

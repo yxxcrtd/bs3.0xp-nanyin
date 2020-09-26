@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ChbAstValueSubDel.xls" name="资产估值信息登记删除">
+	<Worksheet javaBean="com.joyintech.submitmanagement.chbastvaluesub.dto.ChbAstValueSub001Dto" dataStart="3">
+		<Row>
+			<Cell order="1" name="产品存续期信息批量删除产品登记编码"></Cell><!-- 产品登记编码 -->
+			<Cell order="2" name="产品存续期信息批量删除业务结束日期"></Cell><!-- 业务结束日期 -->
+			<Cell order="3" name="资产要素明细信息登记模块批量删除行内资产/负债编码"></Cell><!-- 行内资产/负债编码 -->
+			<Cell order="4" name="交易信息批量删除产品登记编码"></Cell><!-- 产品登记编码-->
+			<Cell order="5" name="交易信息批量删除行内交易编码"></Cell><!-- 行内交易编码-->
+			<Cell order="6" name="交易信息批量删除资金流动类型"></Cell><!-- 资金流动类型-->
+			<Cell order="7" name="交易信息批量删除行内资产/负债编码"></Cell><!-- 行内资产/负债编码-->
+			<Cell order="8" name="资产要素明细信息登记模块批量删除行内资产/负债编码">assetCode</Cell><!--行内资产/负债编码-->
+			<Cell order="9" name="资产要素明细信息登记模块批量删除估值日期">valDate</Cell><!--估值日期-->
+			<Cell order="10" name="底层资产信息模块批量删除 对应资管及委外资产行内资产/负载编码"></Cell><!--对应资管及委外资产行内资产/负载编码-->
+			<Cell order="11" name="底层资产信息模块批量删除 底层资产行内资产/负债编码"></Cell><!--底层资产行内资产/负债编码-->
+			<Cell order="12" name="底层资产信息模块批量删除 持仓日期"></Cell><!--持仓日期-->
+			<Cell order="13" name="公共要素删除原因">reason</Cell><!-- 删除原因 -->
+		</Row>
+	</Worksheet>
+</Workbook>

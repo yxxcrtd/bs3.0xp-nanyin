@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001Mapper_mysql">
+	<!--查询产品代码和名称 -->
+	<select id="queryPrdNameList" parameterType="java.lang.String"
+		resultType="com.joyintech.framework.select.SuggestDto">
+		SELECT DISTINCT
+		A.PROD_INS_ID as code,
+		A.PROD_NAME as name,
+		A.PROD_NAME as
+		shortName
+		FROM chb_prd_declare_info A
+		<where>
+			A.PROD_INS_ID like concat_ws('','%',#{prodId, jdbcType=VARCHAR},'%')
+		</where>
+		order by A.PROD_INS_ID
+	</select>
+	<!-- 查询所有产品代码 -->
+	<select id="queryPrdNames" resultType="com.joyintech.framework.select.SelectOptionDto">
+		SELECT DISTINCT
+        A.PRODID as id, 
+        ifnull(A.PRODNAME,A.PRODID) as text
+        FROM CHB_PRDRESIST_CODE A
+        where 1=1
+        <if test="search !=null and search !=''">
+			AND A.PRODID LIKE concat_ws('','%',#{search},'%')
+		</if>
+        order by A.PRODID
+	</select>
+	<select id="queryPrdNameListOld" parameterType="java.lang.String" resultType="com.joyintech.framework.select.SuggestDto">
+		SELECT DISTINCT
+        A.PRODID as code, 
+        A.PRODNAME as name,
+        A.PRODNAME as shortName
+        FROM CHB_PRDRESIST_CODE A
+        <where>
+			A.PRODID like concat_ws('','%',#{prodId, jdbcType=VARCHAR},'%')
+        </where>
+        order by A.PRODID
+	</select>
+
+	<!-- 查询检查结果 -->
+	<select id="searchTable" parameterType="map"
+		resultType="com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto">
+		select CHECK_SEQNO checkSeqno,
+		REP_CODE repCode,
+		REP_NAME repName,
+		VALID_KEY validKey,
+		CHECK_RESULT checkResult,
+		ERROR_INFO errorInfo,
+		WARN_INFO warnInfo,
+		DATE_FORMAT(DATA_TIME,'%Y-%m-%d') checkTime
+		from CHB_REPORT_CHECK
+		<where>
+				CHECK_RESULT !='01'
+			<if test="updateTimeStart!=null and updateTimeStart!=''">
+				and DATE_FORMAT(DATA_TIME,'%Y-%m-%d') &gt;=
+				#{updateTimeStart,jdbcType=VARCHAR}
+			</if>
+			<if test="updateTimeEnd!=null and updateTimeEnd!=''">
+				and DATE_FORMAT(DATA_TIME,'%Y-%m-%d') &lt;=
+				#{updateTimeEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="checkResult!=null and checkResult!=''">
+				and CHECK_RESULT = #{checkResult,jdbcType=VARCHAR}
+			</if>
+			<if test="repCodeList!=null and repCodeList.size()!=0">
+				<foreach collection="repCodeList" item="repCode" open="and REP_CODE in("
+					separator="," close=")">
+					#{repCode,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="orgCodeList!=null and orgCodeList.size()!=0">
+				<foreach collection="orgCodeList" item="orgCode" open="and ORG_CODE in("
+					separator="," close=")">
+					#{orgCode,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+
+
+
+	<!-- 批量插入 -->
+	<insert id="batchInsert"
+		parameterType="com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto">
+		insert into CHB_REPORT_CHECK(CHECK_SEQNO,
+		REP_CODE,
+		REP_NAME,
+		VALID_KEY,
+		CHECK_RESULT,
+		ORG_CODE,
+		DATA_TIME,
+		CREATE_DEPT,
+		UPDATE_USER,
+		UPDATE_TIME,
+		CREATE_USER,
+		CREATE_TIME,
+		ERROR_INFO,
+		WARN_INFO,
+		IS_LOGIC_CHECK,
+		REF_SEQNO)
+		<foreach collection="list" item="dto" open=" select * from (select "
+			close="from dual)" separator="from dual union all select ">
+			#{dto.checkSeqno,jdbcType=VARCHAR},
+			#{dto.repCode,jdbcType=VARCHAR},
+			#{dto.repName,jdbcType=VARCHAR},
+			#{dto.validKey,jdbcType=VARCHAR},
+			#{dto.checkResult,jdbcType=VARCHAR},
+			#{dto.orgCode,jdbcType=VARCHAR},
+			#{dto.dataTime,jdbcType=TIMESTAMP},
+			#{dto.createDept,jdbcType=VARCHAR},
+			#{dto.updateUser,jdbcType=VARCHAR},
+			#{dto.updateTime,jdbcType=TIMESTAMP},
+			#{dto.createUser,jdbcType=VARCHAR},
+			#{dto.createTime,jdbcType=TIMESTAMP},
+			#{dto.errorInfo,jdbcType=VARCHAR},
+			#{dto.warnInfo,jdbcType=VARCHAR},
+			#{dto.isLogicCheck,jdbcType=VARCHAR},
+			#{dto.refseqno,jdbcType=VARCHAR}
+		</foreach>
+	</insert>
+
+	<!-- 根据批量检查序列号查询检查结果 -->
+	<select id="selectByCheckSeqno" parameterType="string"
+		resultType="com.joyintech.tams.report.common.dto.ExcelValidDto">
+		select CHECK_SEQNO checkSeqno,
+		VALID_KEY validKey,
+		CHECK_RESULT
+		checkResult,
+		ERROR_INFO errorInfo,
+		WARN_INFO warnInfo
+		from
+		CHB_REPORT_CHECK
+		<where>
+			<foreach collection="list" item="item" open="CHECK_SEQNO in("
+				separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</where>
+	</select>
+
+
+
+
+
+	<!-- 根据检查序列号删除报送前检查的信息 -->
+	<delete id="delReportCheckDatas" parameterType="string">
+		delete from CHB_REPORT_CHECK
+		<where>
+			<foreach collection="list" item="checkSeqno" open="CHECK_SEQNO in("
+				separator="," close=")">
+				#{checkSeqno,jdbcType=VARCHAR}
+			</foreach>
+		</where>
+	</delete>
+
+	<!-- 同一条数据，如果报送检查通过，则将之前检查不通过的删除 -->
+	<delete id="delReportUnCheckDatas" parameterType="string">
+		delete from CHB_REPORT_CHECK
+		<where>
+			<foreach collection="list" item="indentifyMark" open="VALID_KEY in("
+				separator="," close=")">
+				#{indentifyMark,jdbcType=VARCHAR}
+			</foreach>
+			and CHECK_RESULT = '02'
+		</where>
+	</delete>
+	<!-- 根据报表名称删除报送前检查表中数据 -->
+	<delete id="delReportAllCheckDatas" parameterType="string">
+		delete from
+		CHB_REPORT_CHECK
+		where rep_code = #{repCode,jdbcType=VARCHAR}
+	</delete>
+	<delete id="delReportDatasByCodeAndDate" parameterType="map">
+		delete from
+		CHB_REPORT_CHECK
+		where rep_code = #{reportCode,jdbcType=VARCHAR}
+		and DATE_FORMAT(DATA_TIME,'%Y-%m-%d')=DATE_FORMAT(#{reportDate,jdbcType=DATE},'%Y-%m-%d')
+	</delete>
+	
+	<!-- 根据关联序列号查询检查结果 -->
+	<select id="selectByRefSeqno" parameterType="string"
+		resultType="com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto">
+		select CHECK_SEQNO checkSeqno,
+		VALID_KEY validKey,
+		CHECK_RESULT
+		checkResult,
+		ERROR_INFO errorInfo,
+		WARN_INFO warnInfo,
+		REF_SEQNO refSeqno
+		from
+		CHB_REPORT_CHECK
+		<where>
+			<foreach collection="list" item="item" open="REF_SEQNO in("
+				separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</where>
+	</select>
+	
+	<delete id="batchDelete" parameterType="com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto">
+	delete from CHB_REPORT_CHECK
+	where 
+	<if test="list !=null and list.size()>0">
+	<foreach collection="list" item="item" open="(REP_CODE,VALID_KEY,DATE_FORMAT(DATA_TIME,'%Y-%m-%d')) in (" close=")" separator="union all">
+	select #{item.repCode,jdbcType=VARCHAR},#{item.validKey,jdbcType=VARCHAR},DATE_FORMAT(#{item.dataTime,jdbcType=TIMESTAMP},'%Y-%m-%d')
+	from dual
+	</foreach>
+	</if>
+	</delete>
+</mapper>

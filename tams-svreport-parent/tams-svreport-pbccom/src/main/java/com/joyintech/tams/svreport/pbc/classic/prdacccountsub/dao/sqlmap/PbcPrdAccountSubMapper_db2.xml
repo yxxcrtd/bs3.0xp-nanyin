@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dao.PbcPrdAccountSubMapper_db2" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub" >
+    <id column="REGIST_SEQNO" property="registSeqno" jdbcType="CHAR" />
+    <result column="PBC_ACCOUNT_ID" property="pbcAccountId" jdbcType="VARCHAR" />
+    <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+    <result column="ACCOUNT_NAME" property="accountName" jdbcType="VARCHAR" />
+     <result column="ACCOUNT_ID" property="accountId" jdbcType="VARCHAR" />
+    <result column="VDATE" property="vdate" jdbcType="TIMESTAMP" />
+    <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+    <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+    <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
+    <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+    <result column="STATUS_DATE" property="statusDate" jdbcType="TIMESTAMP" />
+    <result column="PBC_SUBMIT_DEADLINE" property="pbcSubmitDeadline" jdbcType="TIMESTAMP" />
+    <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+    <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    REGIST_SEQNO, PBC_ACCOUNT_ID, ISSUE_PARTY_ID,ACCOUNT_ID, ACCOUNT_NAME, VDATE, SEND_STATUS, SUBMIT_TIME, 
+    SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+    STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+  </sql>
+   <sql id="Base_Column_List2" >
+    HIS_NO, PBC_ACCOUNT_ID, ISSUE_PARTY_ID,ACCOUNT_ID, ACCOUNT_NAME, VDATE, SEND_STATUS, SUBMIT_TIME, 
+    SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+    STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+  </sql>
+
+  <select id="selectNeedRegisteData" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub">
+		select info.ISSUE_PARTY_ID,
+		case
+		when length(PROD_NAME)>180
+		then substr(PROD_NAME,1,180)
+		else PROD_NAME
+		end ACCOUNT_NAME,
+		VDATE,
+		PROD_ID ACCOUNT_ID,
+		sysdate STATUS_DATE,
+		info.STATUS,
+		info.CREATE_USER,
+		info.UPDATE_USER,
+		info.ORG_CODE,
+		info.DEPT_CODE CREATE_DEPT
+		from chb_prd_baseinfo info
+		where to_char(info.UPDATE_TIME,'yyyy-MM-dd') = to_char(#{statusDate,jdbcType=DATE},'yyyy-MM-dd')
+			and info.PROFIT_TYPE='03'
+			and info.fprod_id is null
+			and info.ISSUING_STATUS='01'
+		<if test="prodList !=null  and prodList.size()!=0">
+			and info.prod_id in
+			<foreach collection="prodList" item="prodid" open="(" separator=","
+				close=")">
+				#{prodid}
+			</foreach>
+		</if>
+
+	</select>
+</mapper>

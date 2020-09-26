@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.joyintech.tams.svreport.chb.datacheck.totalcheck.dao.ChbTotalCheckCBMapper_db2">
+    <resultMap id="TotalCheckDetailBaseResultMap" type="com.joyintech.tams.svreport.chb.datacheck.totalcheck.dto.ChbTotalCheckDetailDto" >
+    <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+    <result column="TOTALSEQNO" property="totalseqno" jdbcType="VARCHAR" />
+    <result column="ASSET_TYPE2" property="assetType2" jdbcType="VARCHAR" />
+    <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+    <result column="PRD_ID" property="prdId" jdbcType="VARCHAR" />
+    <result column="PRD_NAME" property="prdName" jdbcType="VARCHAR" />
+    <result column="PRD_NUM" property="prdNum" jdbcType="DECIMAL" />
+    <result column="PRD_AMT" property="prdAmt" jdbcType="DECIMAL" />
+    <result column="MONTH_PRD_NUM" property="monthPrdNum" jdbcType="DECIMAL" />
+    <result column="MONTH_PRD_AMT" property="monthPrdAmt" jdbcType="DECIMAL" />
+    <result column="DEVIATION" property="deviation" jdbcType="DECIMAL" />
+    <result column="PRD_NUM_CNY" property="prdNumCny" jdbcType="DECIMAL" />
+    <result column="PRD_AMT_CNY" property="prdAmtCny" jdbcType="DECIMAL" />
+    <result column="MONTH_PRD_NUM_CNY" property="monthPrdNumCny" jdbcType="DECIMAL" />
+    <result column="MONTH_PRD_AMT_CNY" property="monthPrdAmtCny" jdbcType="DECIMAL" />
+    <result column="DEVIATION_CNY" property="deviationCny" jdbcType="DECIMAL" />
+    <result column="DETAIL_YIELD" property="detailYield" jdbcType="DECIMAL" />
+    <result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
+    <result column="HOLD_AMT" property="holdAmt" jdbcType="DECIMAL" />
+    <result column="PRD_ASTHOLD_AMT" property="prdAstholdAmt" jdbcType="DECIMAL" />
+    <result column="PRD_BALHOLD_AMT" property="prdBalholdAmt" jdbcType="DECIMAL" />
+    <result column="PRD_CASHHOLD_AMT" property="prdCashholdAmt" jdbcType="DECIMAL" />
+    <result column="PRD_HOLDDATE" property="prdHolddate" jdbcType="TIMESTAMP" />
+    <result column="PRD_INS_ID" property="prdInsId" jdbcType="VARCHAR" />
+    <result column="PRD_VDATE" property="prdVdate" jdbcType="TIMESTAMP" />
+    <result column="RAISE_STARTDATE" property="raiseStartdate" jdbcType="TIMESTAMP" />
+    <result column="RAISE_ENDDATE" property="raiseEnddate" jdbcType="TIMESTAMP" />
+    <result column="RAISE_REGDATE" property="raiseRegdate" jdbcType="TIMESTAMP" />
+    <result column="RAISE_IS_DELAY" property="raiseIsDelay" jdbcType="VARCHAR" />
+    <result column="BOT_ISSUE_NUM" property="botIssueNum" jdbcType="DECIMAL" />
+    <result column="BOT_ISSUE_AMT" property="botIssueAmt" jdbcType="DECIMAL" />
+    <result column="BOT_UNINVEST_CASH" property="botUninvestCash" jdbcType="DECIMAL" />
+    <result column="BOT_ASSET_AMT" property="botAssetAmt" jdbcType="DECIMAL" />
+    <result column="BOT_DEBT_AMT" property="botDebtAmt" jdbcType="DECIMAL" />
+    <result column="AST_HOLD_NUM" property="astHoldNum" jdbcType="DECIMAL" />
+    <result column="AST_HOLD_IS_COUNT" property="astHoldIsCount" jdbcType="VARCHAR" />
+    <result column="AST_MIN_UPRICE" property="astMinUprice" jdbcType="DECIMAL" />
+    <result column="AST_MAX_UPRICE" property="astMaxUprice" jdbcType="DECIMAL" />
+    <result column="IS_REG" property="isReg" jdbcType="VARCHAR" />
+    <result column="IS_DEVIATION" property="isDeviation" jdbcType="VARCHAR" />
+    <result column="CHECK_DATE" property="checkDate" jdbcType="TIMESTAMP" />
+    <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+    <result column="ISSUE_PARTY_NAME" property="issuePartyName" jdbcType="VARCHAR" />
+    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="IS_ISSUE_REG" property="isIssueReg" jdbcType="VARCHAR" />
+    <result column="SUBSCRIBE_CCY_AMT" property="subscribeCcyAmt" jdbcType="VARCHAR" />
+    <result column="PRD_ASSET_AMT" property="prdAssetAmt" jdbcType="VARCHAR" />
+    <result column="PRD_ASSET_CCY" property="prdAssetCcy" jdbcType="VARCHAR" />
+    <result column="ASSET_HOLD_CCY" property="assetHoldCcy" jdbcType="VARCHAR" />
+    <result column="PRD_INIT_AMT" property="prdInitAmt" jdbcType="VARCHAR" />
+    <result column="CCY_PURCHASE" property="ccyPurchase" jdbcType="VARCHAR" />
+    <result column="INIT_CCY" property="initCcy" jdbcType="VARCHAR" />
+    </resultMap>
+    
+    <select id="selectTradePrice" parameterType="java.util.Map" resultMap="TotalCheckDetailBaseResultMap">
+        select
+		  prdinfo.prod_id prd_id,
+		  assetdeal.asset_code asset_code,
+		  sum(decode(assetdeal.rowindexlast,1,assetdeal.unit_price,0)) AST_MAX_UPRICE,
+		  sum(decode(assetdeal.rowindexfirst,1,assetdeal.unit_price,0)) AST_MIN_UPRICE,
+          decode(nvl(prdissuesub.REGIST_SEQNO,'NOSEQNO'),'NOSEQNO','02','01') IS_ISSUE_REG
+		from chb_prd_baseinfo prdinfo
+		left join CHB_PRD_ISSUE_SUB prdissuesub
+		on prdinfo.prod_id = prdissuesub.prod_id
+        and prdissuesub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
+        <!-- and prdissuesub.STATUS != '03' /*数据状态！=删除*/ -->
+        and to_char(prdissuesub.PRD_VDATE,'yyyy-MM-dd') &lt;= to_char(#{queryDate,jdbcType=DATE},'yyyy-MM-dd')
+		and not exists(
+	        select 1
+	        from chb_prd_end_sub prdendsub
+	        where 1 =1
+	        and prdendsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
+	        and prdissuesub.prod_id = prdendsub.prod_id
+	        <!-- and prdendsub.status != '03' /*数据状态！=删除*/ -->
+	        and to_char(prdendsub.mdate,'yyyy-MM-dd') &lt;= to_char(#{queryDate,jdbcType=DATE},'yyyy-MM-dd')
+        )
+		left join (
+		  select *
+		  from(
+		    select investdealsub.prod_id prod_id,
+		    assetinfosub.asset_code asset_code,
+		    investdealsub.CNY_AMT/cast (investdealsub.num as decimal(30,2)) unit_price,
+		    rank() over (partition by investdealsub.prod_id,assetinfosub.asset_code order by investdealsub.CNY_AMT/cast (investdealsub.num as decimal(30,2)) desc) rowindexlast,
+		    rank() over (partition by investdealsub.prod_id,assetinfosub.asset_code order by investdealsub.CNY_AMT/cast (investdealsub.num as decimal(30,2)) asc) rowindexfirst
+		    from chb_invest_trade_sub investdealsub
+		    left join chb_asset_info_sub assetinfosub
+		    on assetinfosub.asset_code = investdealsub.asset_code
+		    where 1 = 1
+		    and investdealsub.CUR_ASSET_TYPE in ('01','02','03','04','05','06','07','08')
+		    <!-- and investdealsub.status != '03' /*数据状态！=删除*/ -->
+		    and investdealsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
+		    and to_char(investdealsub.dealdate,'yyyy-MM-dd') &lt;= to_char(#{queryDate,jdbcType=DATE},'yyyy-MM-dd')
+		    and to_char(investdealsub.submit_time,'yyyy-MM-dd') &lt;= to_char(#{queryDate,jdbcType=DATE},'yyyy-MM-dd')
+		  ) where rowindexlast = 1 or rowindexfirst = 1
+		) assetdeal
+		on assetdeal.prod_id = prdinfo.prod_id
+		where 1 =1
+        and prdinfo.status in ('E','M')/*有效状态：有效、修改*/
+        and nvl(prdinfo.fprod_id,'NULLFP') = 'NULLFP'/*过滤母产品*/
+		<!-- and prdinfo.status != '03' /*数据状态！=删除*/ -->
+		and prdinfo.ISSUING_STATUS = '01'/*发行状态=发行成功*/
+        <if test="prodIgnoreList != null and prodIgnoreList.size() > 0">
+            <foreach collection="prodIgnoreList" item="prodid" open="and prdinfo.prod_id not in (" close=")" separator=",">
+                #{prodid,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+		group by prdinfo.prod_id,assetdeal.asset_code,decode(nvl(prdissuesub.REGIST_SEQNO,'NOSEQNO'),'NOSEQNO','02','01')
+    </select>
+</mapper>

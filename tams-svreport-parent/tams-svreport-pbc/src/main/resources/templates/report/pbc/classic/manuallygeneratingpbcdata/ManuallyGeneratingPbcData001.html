@@ -1,0 +1,62 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="~{layout/default}">
+<head>
+<meta charset="utf-8">
+<title data-th-text="#{ManuallyGeneratingPbcData001}">手工生成人行数据文件</title>
+<link rel="stylesheet" type="text/css"
+	data-th-href="@{/css/report/report.css}">
+<style>
+.input-checkbox .layui-form-checkbox {
+	margin-top: 0;
+	height: 28px;
+}
+</style>
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<div class="joyin-form-wrap condition-area">
+			<form class="layui-form">
+				<div class="layui-form-item">
+					<div class="layui-inline layui-col-md3">
+						<label class="layui-form-label form-lable">产品代码</label>
+						<div class="layui-input-inline input-inline">
+							<select id="pbcProdId" class="input-select"
+								data-th-data-url="@{/svreport/system/proregistcodemanage/ProRegistCodeManage001/getProdID}"
+								placeholder="请选择" allowClear="true" multiple="multiple"></select>
+						</div>
+					</div>
+					<div class="layui-inline layui-col-md3">
+						<label class="layui-form-label form-lable">查询日期</label>
+						<div class="layui-input-inline input-inline">
+							<input id="queryDate" type="text"
+								name="timeControl"
+								class="layui-input form-input input-dateRangeSelect"
+								value required="required"
+								placeholder="请选择一个月以内日期区间" />
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div style="height:900px">
+        </div>
+	</div>
+	<div layout:fragment="script">
+		<script data-th-inline="javascript" type="text/javascript">
+			var isFromMain = /*[[${isFromMain}]]*/'01';
+		</script>
+		<script data-th-src="@{/js/report/jquery.validate.js}"
+			type="text/javascript"></script>
+		<script data-th-src="@{/js/report/joyinvalid.js}"
+			type="text/javascript"></script>
+		<script data-th-src="@{/js/report/report-common.js}"
+			type="text/javascript"></script>
+		<script
+			data-th-src="@{/js/report/pbc/classic/manuallygeneratingpbcdata/ManuallyGeneratingPbcData001.js}"
+			type="text/javascript"></script>
+	</div>
+</body>
+</html>

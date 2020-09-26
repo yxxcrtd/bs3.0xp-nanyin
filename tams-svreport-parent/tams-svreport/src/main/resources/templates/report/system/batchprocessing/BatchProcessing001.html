@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
+
+<head>
+    <title data-th-text="#{BatchProcessing001}">报送批处理</title>
+    <style>
+        .layui-table-body{
+            height:330px!important;
+        }
+    </style>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="layui-col-md12" style="margin:10px;">
+            <a id="SysInstitution001_btn_filter" class="layui-btn layui-btn-sm btn-filter" data-th-text="#{SysCommon.filter}">筛选</a>
+        </div>
+        <form class="layui-form joyin-form-wrap joyin-filter-form" id="BatchProcessing001_form">
+            <div class="layui-form-item">
+                <div class="layui-inline layui-col-md3">
+                    <label class="layui-form-label form-lable">批处理任务</label>
+                    <div class="layui-input-inline input-inliner">
+                        <select id="BatchDealProcess" name="BatchDealProcess" class="input-select" data-th-data-result='${taskDataInit}' placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" multiple="multiple">
+                        </select>
+                    </div>
+                </div>
+                <!--<div class="layui-inline layui-col-md3">
+                    <label class="layui-form-label form-lable">跑批起止日期</label>
+                    <div class="layui-input-inline input-inline">
+                        <input id="BatchDealDate" type="text"  name="timeControl" data-th-data-start="${start}" data-th-data-end="${end}" class="layui-input form-input input-dateRangeSelect" placeholder="请选择日期区间" />
+                    </div>
+                </div>-->
+                <div class="layui-inline layui-col-md3">
+                    <a id="BatchProcessing001_btn_running" class="layui-btn layui-btn-sm btn-batch" >批处理执行</a>
+                    <a id="SysInstitution001_btn_reset" class="layui-btn layui-btn-sm btn-reset" data-th-text="#{SysCommon.reset}">重置</a>
+                    <a id="BatchProcessing001_btn_recover" class="layui-btn layui-btn-sm btn-reset"><i class="glyphicon glyphicon-repeat"></i>恢复批前状态</a>
+                </div>
+            </div>
+        </form>
+        <!--<h5 class="debt-batch-toolbar">批处理执行日志</h5>-->
+        <div class="clearfix">
+            <div class="debt-norecordleft">
+                <table class="layui-table" id="batchProcessing001"></table>
+            </div>
+            <!--<div class="debt-recordright" id="recordWrap" style="display:none">
+                <p id="logArea"  class="text-area"></p>
+            </div>
+            <div class="debt-record-emprty">
+                <span class="debt-batch-center"><i class="iconfont icon-no-record debt-icon-norecord"></i>暂无记录</span>
+            </div>-->
+        </div>
+    </div>
+    <div layout:fragment="script">
+        <script data-th-inline="javascript" type="text/javascript">
+            var dealBatchProcessUrl = '/system/batchprocessing/BatchProcessing001/dealBatchProcess';
+            var yes='${yes}';
+            var checkUrl = '/system/batchprocessing/BatchProcessing001/check';
+            var start = '${start}';
+            var end ='${end}';
+        </script>
+        <script data-th-src="@{/js/report/jquery.validate.js}" type="text/javascript"></script>
+        <script data-th-src="@{/js/report/joyinvalid.js}" type="text/javascript"></script>
+        <script data-th-src="@{/js/report/report-common.js}" type="text/javascript"></script>
+        <script data-th-src="@{/js/report/system/batchprocessing/BatchProcessing001.js}" type="text/javascript"></script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.dis.prodinvestadjust.dao.DisRepProdInvestAdjustMapper_db2" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.interf.dis.prodinvestadjust.dto.DisRepProdInvestAdjust" >
+        <result column="ID" property="id" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="INVEST_RANGE" property="investRange" jdbcType="VARCHAR" />
+        <result column="INVEST_TYPE" property="investType" jdbcType="VARCHAR" />
+        <result column="ADJUST_DATE" property="adjustDate" jdbcType="DATE" />
+        <result column="RAISE_MAX" property="raiseMax" jdbcType="DECIMAL" />
+        <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="INPUT_USER" property="inputUser" jdbcType="VARCHAR" />
+        <result column="ADAPTER_ID" property="adapterId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    </resultMap>
+    
+    <insert id="insertRepProdInvestAdjustList" parameterType="java.util.List">
+	    insert into REP_PROD_INVEST_ADJUST
+	    (   
+	        ID, PROD_ID, INVEST_RANGE, 
+            INVEST_TYPE, ADJUST_DATE, RAISE_MAX, 
+            INPUT_TYPE, INPUT_USER, ADAPTER_ID, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, STATUS
+	    )
+	    <foreach collection="list" item="item" open=" select * from (select " close="from sysibm.SYSDUMMY1)" separator="from sysibm.SYSDUMMY1 union all select ">
+	    	#{item.id,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.investRange,jdbcType=VARCHAR}, 
+            #{item.investType,jdbcType=VARCHAR}, #{item.adjustDate,jdbcType=DATE}, #{item.raiseMax,jdbcType=DECIMAL}, 
+            #{item.inputType,jdbcType=VARCHAR}, #{item.inputUser,jdbcType=VARCHAR}, #{item.adapterId,jdbcType=VARCHAR}, 
+            #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
+            #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.status,jdbcType=VARCHAR}
+	    </foreach>
+	</insert>
+</mapper>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.batch.report.reportdatabackup.dao.ReportDataBackupMapper">
+	<!-- 查询传入的表名是否存在-->
+	<select id="queryTableIsExist" parameterType="java.lang.String" resultType="java.lang.String">
+		select TABLE_NAME tableName from user_tables 
+		where table_name = #{tableName}
+	</select>
+	<!-- 报送总表备份 -->
+	<update id="createChbInfoReport">
+        create table ${newTableName} as select * from CHB_INFO_REPORT  where 1=0
+    </update>
+    <!-- 插入 ChbInfoReport数据-->
+    <insert id="insertChbInfoReportData">
+    	insert into ${newTableName} 
+		select * from CHB_INFO_REPORT rep where rep.REPORT_NO in (
+    		select distinct REPORT_NO from CHB_SUBMIT_STATUS 
+    		left join CHB_INVESTHOLD_INFO_SUB
+    		on CHB_SUBMIT_STATUS.SEQNO = CHB_INVESTHOLD_INFO_SUB.SUMIT_SEQ
+    		where CHB_INVESTHOLD_INFO_SUB.HOLD_DATE = to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+    		and REPORT_NO is not null
+			)
+    </insert>
+    <!-- 插入 ChbInfoReport数据-->
+    <delete id="deleteChbInfoReportData">
+    	delete from CHB_INFO_REPORT rep where rep.REPORT_NO in (
+    		select distinct REPORT_NO from CHB_SUBMIT_STATUS 
+    		left join CHB_INVESTHOLD_INFO_SUB
+    		on CHB_SUBMIT_STATUS.SEQNO = CHB_INVESTHOLD_INFO_SUB.SUMIT_SEQ
+    		where CHB_INVESTHOLD_INFO_SUB.HOLD_DATE = to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+    		and REPORT_NO is not null
+			)
+    </delete>
+    <!-- 创建表备份ChbSubmitStatus -->
+	<update id="createChbSubmitStatus">
+        create table ${newTableName} as select CHB_SUBMIT_STATUS.* from CHB_SUBMIT_STATUS  where 1=0
+    </update>
+    <!-- 插入 ChbSubmitStatus数据-->
+    <insert id="insertChbSubmitStatusData">
+    	insert into ${newTableName} 
+		select CHB_SUBMIT_STATUS.* from CHB_SUBMIT_STATUS 
+    		left join CHB_INVESTHOLD_INFO_SUB
+    		on CHB_SUBMIT_STATUS.SEQNO = CHB_INVESTHOLD_INFO_SUB.SUMIT_SEQ
+    		where CHB_INVESTHOLD_INFO_SUB.HOLD_DATE = to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+    </insert>
+    <!-- 插入 ChbSubmitStatus数据-->
+    <delete id="deleteChbSubmitStatusData">
+    	delete from CHB_SUBMIT_STATUS where CHB_SUBMIT_STATUS.SEQNO in(
+    		select SUMIT_SEQ from CHB_INVESTHOLD_INFO_SUB
+    		where HOLD_DATE = to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+    		)
+    </delete>
+    <!-- 创建表备份ChbInvestHoldInfo -->
+	<update id="createChbInvestHoldInfo">
+        create table ${newTableName} as select * from CHB_INVESTHOLD_INFO   where 1=0
+    </update>
+    <!-- 插入 ChbInvestHoldInfo数据-->
+    <insert id="insertChbInvestHoldInfoData">
+    	insert into ${newTableName} 
+		select info.* from CHB_INVESTHOLD_INFO info
+    		where info.HOLD_DATE = to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+    </insert>
+    <!-- 插入 ChbInvestHoldInfo数据-->
+    <delete id="deleteChbInvestHoldInfoData">
+		delete from CHB_INVESTHOLD_INFO info 
+		where info.HOLD_DATE = to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+    </delete>
+    <!-- 创建表备份ChbInvestHoldInfoSub -->
+	<update id="createChbInvestHoldInfoSub">
+        create table ${newTableName} as select * from  CHB_INVESTHOLD_INFO_SUB sub where 1=0
+    </update>
+    <!-- 插入 ChbInvestHoldInfoSub数据-->
+    <insert id="insertChbInvestHoldInfoSubData">
+    	insert into ${newTableName} 
+		select sub.* from  CHB_INVESTHOLD_INFO_SUB sub
+    		where sub.HOLD_DATE = to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+    </insert>
+    <!-- 插入 ChbInvestHoldInfoSub数据-->
+    <delete id="deleteChbInvestHoldInfoSubData">
+		delete from  CHB_INVESTHOLD_INFO_SUB sub where 
+    		sub.HOLD_DATE = to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+    </delete>
+    <select id="isExistBackupData" resultType="java.lang.Integer">
+    	select count(1) from CHB_INVESTHOLD_INFO_SUB 
+    	where SEND_STATUS = '01' and HOLD_DATE <![CDATA[<]]> to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+    </select>
+    <!-- 获取所有需要归档的日期 -->
+    <select id="getDateByBackupData" resultType="java.util.Date">
+    	select distinct hold_date from CHB_INVESTHOLD_INFO_SUB 
+    	where SEND_STATUS in ('02','03') and HOLD_DATE <![CDATA[<]]> to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+    	order by HOLD_DATE desc
+    </select>
+    <!-- 将未归档的数据移至临时表中 -->
+	<update id="insertChbSubmitStatusTemp">
+        insert into  ${newTableName} 
+         select CHB_SUBMIT_STATUS.* from CHB_SUBMIT_STATUS 
+    		left join CHB_INVESTHOLD_INFO_SUB
+    		on CHB_SUBMIT_STATUS.SEQNO = CHB_INVESTHOLD_INFO_SUB.SUMIT_SEQ
+    		where CHB_INVESTHOLD_INFO_SUB.HOLD_DATE >= to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+    </update>
+    <update id="truncateTable">
+        truncate table ${tableName}
+    </update>
+    <insert id="insertDataToOriTable">
+    	insert into ${newTableName} 
+		select * from  ${tempTableName} 
+    </insert>
+    <update id="dropTempTable">
+    	drop table ${newTableName};
+    </update>
+        <!-- 创建表备份createChbInvestHoldInfoTemp -->
+	<update id="insertChbInvestHoldInfoTemp">
+        insert into ${newTableName} 
+        select info.* from CHB_INVESTHOLD_INFO info
+    		where info.HOLD_DATE >= to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+    </update>
+     <!-- 创建表备份ChbInvestHoldInfoSub -->
+	<update id="insertChbInvestHoldInfoSubTemp">
+        insert into ${newTableName} 
+        select sub.* from  CHB_INVESTHOLD_INFO_SUB sub
+    		where sub.HOLD_DATE >= to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+    </update>
+</mapper>

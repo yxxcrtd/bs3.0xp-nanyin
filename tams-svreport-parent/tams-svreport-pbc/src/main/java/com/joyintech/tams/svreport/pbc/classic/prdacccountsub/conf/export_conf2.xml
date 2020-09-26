@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="PbcPrdAccountSub002.xls" name="资产池基本信息">
+	<Worksheet javaBean="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub">
+		<Row>
+			<Cell order="1" name="资产池名称">accountName</Cell>
+			<Cell order="2" name="资产池起始日期">vdate02</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>

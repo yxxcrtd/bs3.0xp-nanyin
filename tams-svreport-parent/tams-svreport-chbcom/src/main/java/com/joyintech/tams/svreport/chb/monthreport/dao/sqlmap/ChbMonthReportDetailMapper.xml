@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthReportDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportDetail" >
+    <id column="DETAILUUID" property="detailuuid" jdbcType="CHAR" />
+    <result column="TERMID" property="termid" jdbcType="VARCHAR" />
+    <result column="REPORTTYPE" property="reporttype" jdbcType="VARCHAR" />
+    <result column="PROPERTYCODE" property="propertycode" jdbcType="VARCHAR" />
+    <result column="PRODCOUNTS" property="prodcounts" jdbcType="DECIMAL" />
+    <result column="PRODAMOUNT" property="prodamount" jdbcType="DECIMAL" />
+    <result column="PRODNETAMOUNT" property="prodnetamount" jdbcType="DECIMAL" />
+    <result column="DURATIONPRODCOUNTS" property="durationprodcounts" jdbcType="DECIMAL" />
+    <result column="BALANCE" property="balance" jdbcType="DECIMAL" />
+    <result column="BOTTOMBALANCE" property="bottombalance" jdbcType="DECIMAL" />
+    <result column="CUSTOMERPROFIT" property="customerprofit" jdbcType="DECIMAL" />
+    <result column="BANKPROFIT" property="bankprofit" jdbcType="DECIMAL" />
+    <result column="PRODYIELD" property="prodyield" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    DETAILUUID, TERMID, REPORTTYPE, PROPERTYCODE, PRODCOUNTS, PRODAMOUNT, PRODNETAMOUNT, 
+    DURATIONPRODCOUNTS, BALANCE, BOTTOMBALANCE, CUSTOMERPROFIT, BANKPROFIT, PRODYIELD
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from CHB_MONTH_REPORT_DETAIL
+    where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from CHB_MONTH_REPORT_DETAIL
+    where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportDetail" >
+    insert into CHB_MONTH_REPORT_DETAIL (DETAILUUID, TERMID, REPORTTYPE, 
+      PROPERTYCODE, PRODCOUNTS, PRODAMOUNT, 
+      PRODNETAMOUNT, DURATIONPRODCOUNTS, BALANCE, 
+      BOTTOMBALANCE, CUSTOMERPROFIT, BANKPROFIT, 
+      PRODYIELD,REPORTUUID)
+    values (#{detailuuid,jdbcType=CHAR}, #{termid,jdbcType=VARCHAR}, #{reporttype,jdbcType=VARCHAR}, 
+      #{propertycode,jdbcType=VARCHAR}, #{prodcounts,jdbcType=DECIMAL}, #{prodamount,jdbcType=DECIMAL}, 
+      #{prodnetamount,jdbcType=DECIMAL}, #{durationprodcounts,jdbcType=DECIMAL}, #{balance,jdbcType=DECIMAL}, 
+      #{bottombalance,jdbcType=DECIMAL}, #{customerprofit,jdbcType=DECIMAL}, #{bankprofit,jdbcType=DECIMAL}, 
+      #{prodyield,jdbcType=DECIMAL},#{reportuuid,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportDetail" >
+    insert into CHB_MONTH_REPORT_DETAIL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="detailuuid != null" >
+        DETAILUUID,
+      </if>
+      <if test="reportuuid != null" >
+        REPORTUUID,
+      </if>
+      <if test="termid != null" >
+        TERMID,
+      </if>
+      <if test="reporttype != null" >
+        REPORTTYPE,
+      </if>
+      <if test="propertycode != null" >
+        PROPERTYCODE,
+      </if>
+      <if test="prodcounts != null" >
+        PRODCOUNTS,
+      </if>
+      <if test="prodamount != null" >
+        PRODAMOUNT,
+      </if>
+      <if test="prodnetamount != null" >
+        PRODNETAMOUNT,
+      </if>
+      <if test="durationprodcounts != null" >
+        DURATIONPRODCOUNTS,
+      </if>
+      <if test="balance != null" >
+        BALANCE,
+      </if>
+      <if test="bottombalance != null" >
+        BOTTOMBALANCE,
+      </if>
+      <if test="customerprofit != null" >
+        CUSTOMERPROFIT,
+      </if>
+      <if test="bankprofit != null" >
+        BANKPROFIT,
+      </if>
+      <if test="prodyield != null" >
+        PRODYIELD,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="detailuuid != null" >
+        #{detailuuid,jdbcType=CHAR},
+      </if>
+      <if test="reportuuid != null" >
+        #{reportuuid,jdbcType=CHAR},
+      </if>
+      <if test="termid != null" >
+        #{termid,jdbcType=VARCHAR},
+      </if>
+      <if test="reporttype != null" >
+        #{reporttype,jdbcType=VARCHAR},
+      </if>
+      <if test="propertycode != null" >
+        #{propertycode,jdbcType=VARCHAR},
+      </if>
+      <if test="prodcounts != null" >
+        #{prodcounts,jdbcType=DECIMAL},
+      </if>
+      <if test="prodamount != null" >
+        #{prodamount,jdbcType=DECIMAL},
+      </if>
+      <if test="prodnetamount != null" >
+        #{prodnetamount,jdbcType=DECIMAL},
+      </if>
+      <if test="durationprodcounts != null" >
+        #{durationprodcounts,jdbcType=DECIMAL},
+      </if>
+      <if test="balance != null" >
+        #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="bottombalance != null" >
+        #{bottombalance,jdbcType=DECIMAL},
+      </if>
+      <if test="customerprofit != null" >
+        #{customerprofit,jdbcType=DECIMAL},
+      </if>
+      <if test="bankprofit != null" >
+        #{bankprofit,jdbcType=DECIMAL},
+      </if>
+      <if test="prodyield != null" >
+        #{prodyield,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportDetail" >
+    update CHB_MONTH_REPORT_DETAIL
+    <set >
+      <if test="termid != null" >
+        TERMID = #{termid,jdbcType=VARCHAR},
+      </if>
+      <if test="reporttype != null" >
+        REPORTTYPE = #{reporttype,jdbcType=VARCHAR},
+      </if>
+      <if test="propertycode != null" >
+        PROPERTYCODE = #{propertycode,jdbcType=VARCHAR},
+      </if>
+      <if test="prodcounts != null" >
+        PRODCOUNTS = #{prodcounts,jdbcType=DECIMAL},
+      </if>
+      <if test="prodamount != null" >
+        PRODAMOUNT = #{prodamount,jdbcType=DECIMAL},
+      </if>
+      <if test="prodnetamount != null" >
+        PRODNETAMOUNT = #{prodnetamount,jdbcType=DECIMAL},
+      </if>
+      <if test="durationprodcounts != null" >
+        DURATIONPRODCOUNTS = #{durationprodcounts,jdbcType=DECIMAL},
+      </if>
+      <if test="balance != null" >
+        BALANCE = #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="bottombalance != null" >
+        BOTTOMBALANCE = #{bottombalance,jdbcType=DECIMAL},
+      </if>
+      <if test="customerprofit != null" >
+        CUSTOMERPROFIT = #{customerprofit,jdbcType=DECIMAL},
+      </if>
+      <if test="bankprofit != null" >
+        BANKPROFIT = #{bankprofit,jdbcType=DECIMAL},
+      </if>
+      <if test="prodyield != null" >
+        PRODYIELD = #{prodyield,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportDetail" >
+    update CHB_MONTH_REPORT_DETAIL
+    set TERMID = #{termid,jdbcType=VARCHAR},
+      REPORTTYPE = #{reporttype,jdbcType=VARCHAR},
+      PROPERTYCODE = #{propertycode,jdbcType=VARCHAR},
+      PRODCOUNTS = #{prodcounts,jdbcType=DECIMAL},
+      PRODAMOUNT = #{prodamount,jdbcType=DECIMAL},
+      PRODNETAMOUNT = #{prodnetamount,jdbcType=DECIMAL},
+      DURATIONPRODCOUNTS = #{durationprodcounts,jdbcType=DECIMAL},
+      BALANCE = #{balance,jdbcType=DECIMAL},
+      BOTTOMBALANCE = #{bottombalance,jdbcType=DECIMAL},
+      CUSTOMERPROFIT = #{customerprofit,jdbcType=DECIMAL},
+      BANKPROFIT = #{bankprofit,jdbcType=DECIMAL},
+      PRODYIELD = #{prodyield,jdbcType=DECIMAL}
+    where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+  </update>
+  
+  
+  <select id="selectByModel" parameterType="map" resultMap="BaseResultMap">
+   	 	select 
+	        DETAILUUID, TERMID, REPORTTYPE, PROPERTYCODE, PRODCOUNTS, PRODAMOUNT, PRODNETAMOUNT, 
+   			 DURATIONPRODCOUNTS, BALANCE, BOTTOMBALANCE, CUSTOMERPROFIT, BANKPROFIT, PRODYIELD,
+   			 ''  as createUser,'' as createDept
+	    from CHB_MONTH_REPORT_DETAIL
+   		<where>
+			<if test="termid != null and termid != ''">
+				and termid =  #{termid,jdbcType=VARCHAR}
+			</if>
+			<if test="reportuuid != null and reportuuid != ''">
+				and reportuuid =  #{reportuuid,jdbcType=VARCHAR}
+			</if>
+		</where>
+  </select>
+  <select id="selectAllPropertyCode" resultType="String">
+  	select PROPERTYCODE from CHB_MONTH_REPORT_TEMPLATE where REPORTTYPE='BALANCE'
+  </select>
+  <insert id="insertBatch" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportDetail" >
+    insert into CHB_MONTH_REPORT_DETAIL (DETAILUUID, TERMID, REPORTTYPE, 
+      PROPERTYCODE, PRODCOUNTS, PRODAMOUNT, 
+      PRODNETAMOUNT, DURATIONPRODCOUNTS, BALANCE, 
+      BOTTOMBALANCE, CUSTOMERPROFIT, BANKPROFIT, 
+      PRODYIELD,REPORTUUID)
+    <foreach collection="insertList" item="item" index="index" separator="union all">
+    	select 
+    	#{item.detailuuid,jdbcType=CHAR}, 
+    	#{item.termid,jdbcType=VARCHAR},
+    	#{item.reporttype,jdbcType=VARCHAR}, 
+      	#{item.propertycode,jdbcType=VARCHAR}, 
+      	#{item.prodcounts,jdbcType=DECIMAL}, 
+      	#{item.prodamount,jdbcType=DECIMAL}, 
+      	#{item.prodnetamount,jdbcType=DECIMAL}, 
+      	#{item.durationprodcounts,jdbcType=DECIMAL}, 
+      	#{item.balance,jdbcType=DECIMAL}, 
+		#{item.bottombalance,jdbcType=DECIMAL}, 
+		#{item.customerprofit,jdbcType=DECIMAL}, 
+		#{item.bankprofit,jdbcType=DECIMAL}, 
+		#{item.prodyield,jdbcType=DECIMAL},
+		#{item.reportuuid,jdbcType=CHAR}
+		from dual
+    </foreach>
+  </insert>
+  <delete id="deleteByTermId" parameterType="java.lang.String" >
+    delete from CHB_MONTH_REPORT_DETAIL
+    where 1 =1
+    <if test="termid != null and termid != ''">
+    and termid = #{termid,jdbcType=VARCHAR}
+    </if>
+    <if test="reportType != null and reportType != ''">
+    and REPORTTYPE = #{reportType,jdbcType=VARCHAR}
+    </if>
+    <if test="reportuuid != null and reportuuid != ''">
+    and REPORTUUID = #{reportuuid,jdbcType=VARCHAR}
+    </if>
+  </delete>
+  
+  <delete id="delete" parameterType="java.lang.String" >
+    delete from CHB_MONTH_REPORT_DETAIL
+    where TERMID = #{termid,jdbcType=VARCHAR}
+   	and REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
+   	<if test="reportuuid != null and reportuuid != ''">
+    and REPORTUUID = #{reportuuid,jdbcType=VARCHAR}
+    </if>
+  </delete>
+   <select id="getInvestorHoldings" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.PrdSaletargetDealDetail" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.PrdSaletargetDealDetail">
+  	with pi as (
+	    select 
+      val.prod_id prodid,
+	    nvl(val.prod_value,1) prod_value,
+      nvl(val.CCY,'CNY') prod_value_ccy
+	    from 
+	    (
+	        select prod_id,ccy,prod_value from (
+	        select rank() over(partition by prod_id order by change_date desc) 
+	        my_rank,prod_id,ccy,prod_value from CHB_PRD_PERIODYIELD
+	        where CHANGE_DATE<![CDATA[<=]]>to_date(#{dealdate,jdbcType=VARCHAR},'yyyyMMdd') and CHANG_TYPE='01'
+	        ) where my_rank=1
+	    )val
+	  
+	)
+  	 ,rate as(
+	     SELECT
+				BASIS_CYY ccyOriginal,
+				QUOT_CYY ccyConvert,
+				TRADE_DATE publishDate,
+	      case when #{rateflag,jdbcType=VARCHAR} = '02'
+	      then
+				CLOSE_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+	      when #{rateflag,jdbcType=VARCHAR} = '01'
+	      then
+				OPEN_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+	      when #{rateflag,jdbcType=VARCHAR} = '03'
+	      then
+				HIGH_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end) 
+	       when #{rateflag,jdbcType=VARCHAR} = '04'
+	       then
+				LOW_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end) 
+	       when #{rateflag,jdbcType=VARCHAR} = '05'
+				then MID_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end) 
+	      end yeid
+			 FROM MST_EXCHARGE_QUOTE info
+	    where
+				info.QUOT_CYY = 'CNY'
+				and info.DATASOURCE_TYPE='SAFE'
+				and info.TRADE_DATE = (select max(t.TRADE_DATE)
+				from MST_EXCHARGE_QUOTE t
+				where t.BASIS_CYY = info.BASIS_CYY
+				and t.QUOT_CYY = info.QUOT_CYY
+				and t.DATASOURCE_TYPE='SAFE'
+				and t.TRADE_DATE <![CDATA[<=]]>to_date(#{dealdate,jdbcType=VARCHAR},'yyyyMMdd')) 
+      ) 
+ 	, ds as(     
+	select sum(nvl(OIC_PORT,0)+nvl(HNWC_PORT,0)+nvl(PBC_PORT,0)) pr,
+	sum(nvl(NFCC_PORT,0)+nvl(AMPRO_PORT,0)+nvl(OTHER_PORT,0)) fjr,
+	sum(nvl(BAN_INS_PORT,0)) ba,
+	sum(nvl(OFIC_PORT,0)) ot,
+	dd.prod_id
+	from P_INTERF_SALE_GDATA_DETAIL dd
+	left join chb_prd_baseinfo cb on DD.prod_id=CB.PROD_ID and CB.STATUS !='D'
+	
+	where cb.PROFIT_TYPE='03' and GDATE=to_date(#{dealdate,jdbcType=VARCHAR},'yyyyMMdd')
+	group by dd.prod_id)
+
+	select sum(ds.pr*nvl(pi.prod_value,1)*nvl(rate.yeid,1)) naturalpersonqty,
+	sum(ds.fjr*nvl(pi.prod_value,1)*nvl(rate.yeid,1)) nonfinancialinstitution,
+	sum(ds.ba*nvl(pi.prod_value,1)*nvl(rate.yeid,1)) bisrinqty,
+	sum(ds.ot*nvl(pi.prod_value,1)*nvl(rate.yeid,1)) oficrinqty
+	from ds
+	left join pi on DS.prod_id=PI.PRODID
+	left join rate on pi.prod_value_ccy=rate.ccyOriginal
+  </select>
+</mapper>

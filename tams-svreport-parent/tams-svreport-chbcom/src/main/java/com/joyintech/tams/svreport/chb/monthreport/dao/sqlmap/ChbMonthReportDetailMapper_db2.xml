@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthReportDetailMapper_db2" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportDetail" >
+    <id column="DETAILUUID" property="detailuuid" jdbcType="CHAR" />
+    <result column="TERMID" property="termid" jdbcType="VARCHAR" />
+    <result column="REPORTTYPE" property="reporttype" jdbcType="VARCHAR" />
+    <result column="PROPERTYCODE" property="propertycode" jdbcType="VARCHAR" />
+    <result column="PRODCOUNTS" property="prodcounts" jdbcType="DECIMAL" />
+    <result column="PRODAMOUNT" property="prodamount" jdbcType="DECIMAL" />
+    <result column="PRODNETAMOUNT" property="prodnetamount" jdbcType="DECIMAL" />
+    <result column="DURATIONPRODCOUNTS" property="durationprodcounts" jdbcType="DECIMAL" />
+    <result column="BALANCE" property="balance" jdbcType="DECIMAL" />
+    <result column="BOTTOMBALANCE" property="bottombalance" jdbcType="DECIMAL" />
+    <result column="CUSTOMERPROFIT" property="customerprofit" jdbcType="DECIMAL" />
+    <result column="BANKPROFIT" property="bankprofit" jdbcType="DECIMAL" />
+    <result column="PRODYIELD" property="prodyield" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    DETAILUUID, TERMID, REPORTTYPE, PROPERTYCODE, PRODCOUNTS, PRODAMOUNT, PRODNETAMOUNT, 
+    DURATIONPRODCOUNTS, BALANCE, BOTTOMBALANCE, CUSTOMERPROFIT, BANKPROFIT, PRODYIELD
+  </sql>
+
+  <insert id="insertBatch" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportDetail" >
+    insert into CHB_MONTH_REPORT_DETAIL (DETAILUUID, TERMID, REPORTTYPE, 
+      PROPERTYCODE, PRODCOUNTS, PRODAMOUNT, 
+      PRODNETAMOUNT, DURATIONPRODCOUNTS, BALANCE, 
+      BOTTOMBALANCE, CUSTOMERPROFIT, BANKPROFIT, 
+      PRODYIELD,REPORTUUID)
+    <foreach collection="insertList" item="item" index="index" separator="union all">
+    	select 
+    	#{item.detailuuid,jdbcType=CHAR}, 
+    	#{item.termid,jdbcType=VARCHAR},
+    	#{item.reporttype,jdbcType=VARCHAR}, 
+      	#{item.propertycode,jdbcType=VARCHAR}, 
+      	#{item.prodcounts,jdbcType=DECIMAL}, 
+      	#{item.prodamount,jdbcType=DECIMAL}, 
+      	#{item.prodnetamount,jdbcType=DECIMAL}, 
+      	#{item.durationprodcounts,jdbcType=DECIMAL}, 
+      	#{item.balance,jdbcType=DECIMAL}, 
+		#{item.bottombalance,jdbcType=DECIMAL}, 
+		#{item.customerprofit,jdbcType=DECIMAL}, 
+		#{item.bankprofit,jdbcType=DECIMAL}, 
+		#{item.prodyield,jdbcType=DECIMAL},
+		#{item.reportuuid,jdbcType=CHAR}
+		from sysibm.SYSDUMMY1
+    </foreach>
+  </insert>
+</mapper>

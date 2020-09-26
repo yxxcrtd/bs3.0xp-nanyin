@@ -1,0 +1,853 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.submitmaintenance.equityinfo.dao.EquityInfo001Mapper_db2">
+	<!-- 权益人信息列表数据查询 -->
+	<select id="queryForEquityInfoPage" resultType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto">
+		select 
+			INDENTIFY_MARK as indentifyMark,
+         	REGIST_BANK_CODE as bankCode,
+         	ORG_INDENTIFY_MARK as orgIndentifyMark,
+        	TRIM(IS_BELONG_BANK) as isBelongBank,
+        	THE_BANK_NAME as theBankName,
+        	THE_BANK_CODE as theBankCode,
+        	TRIM(HOLDER_MARK) as holderMark,
+        	HOLDER_REGION as holderRegion,
+        	TRIM(HOLDER_TYPE) as holderType,
+        	TRIM(PERSONAL_IDENTIFY_TYPE) as personalIdentifyType,
+        	INSTITUTION_IDENTIFY_TYPE as institutionIdentifyType,
+        	nvl(PERSONAL_IDENTIFY_TYPE,INSTITUTION_IDENTIFY_TYPE) as inentifyType,
+        	IDENTIFY_NUMBER as identifyNumber,
+        	OTHER_IDENTIFY_NAME as otherIdentifyName,
+        	SPV_CAP_ACC_BANK as spvCapAccBank,
+        	OTHER_CAP_ACC_BANK as otherCapAccBank,
+        	SPV_REGIST_CODE as spvRegistCode,
+        	HOLDER_NAME as holderName,
+        	HOLDER_SEX as holderSex,
+        	HOLDER_RISK_PREFER as holderRiskPrefer,
+        	HOLDER_CELLPHONE as holderCellphone,
+        	HOLDER_TELEPHONE as holderTelephone,
+        	HOLDER_EMAIL as holderEmail,
+        	REMARK as remark,
+        	A.ORG_CODE orgCode,
+        	STATUS as status,
+        	<!-- 查询接口导入校验信息 -->
+        	INTERF_CHECK_RESULT as interfCheckResult,
+        	AGENT as agent
+   		from CHB_EQU_HOLD A
+		 <where>
+		 	<if test="bankCode != null and bankCode != ''">
+		 	A.REGIST_BANK_CODE LIKE concat(concat('%',#{bankCode}),'%')
+		 	</if>
+		 	<if test="orgCodeList != null and orgCodeList.size() > 0">
+		 	<foreach collection="orgCodeList" item="orgCode" open=" AND A.ORG_CODE IN (" close=")" separator=",">
+		 	 #{orgCode,jdbcType=VARCHAR}
+		 	</foreach>
+			</if>
+		 	<if test="statusList != null and statusList.size() > 0">
+            	<foreach collection="statusList" item="status" open=" AND A.STATUS IN (" close=")" separator=",">
+             		#{status,jdbcType=VARCHAR}
+            	</foreach>
+		 	</if>
+		 	<if test="indentifyMark != null and indentifyMark != ''">
+		 		AND A.INDENTIFY_MARK LIKE concat(concat('%',#{indentifyMark}),'%')
+		 	</if>
+		 	<if test="holderTypeList != null and holderTypeList.size() > 0">
+            	<foreach collection="holderTypeList" item="holderType" open=" AND A.HOLDER_TYPE IN (" close=")" separator=",">
+             		#{holderType,jdbcType=VARCHAR}
+           		</foreach>
+		 	</if>
+		 	<if test="holderName != null and holderName != ''">
+		 		AND A.HOLDER_NAME LIKE concat(concat('%',#{holderName}),'%')
+		 	</if>
+		 	<if test="identifyNumber != null and identifyNumber != ''">
+		 		AND A.IDENTIFY_NUMBER LIKE concat(concat('%',#{identifyNumber}),'%')
+		 	</if>
+		 </where>
+		 ORDER BY UPDATE_TIME DESC, INDENTIFY_MARK ASC
+	</select>
+	<!-- 查询已报送的数据  -->
+	<select id="queryAlSumbitEquityList" resultType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfoDto">
+		select sub.indentify_mark as indentifyMark,sub.regist_bank_code as registBankCode
+  			from chb_equ_sub sub
+  			left join CHB_SUBMIT_STATUS status
+    			on sub.SUMIT_SEQ = status.seqno
+    		<where>
+    			<if test="equityList != null and equityList.size() > 0">
+    				<foreach collection="equityList" item="indentifyMark" open=" AND sub.indentify_mark IN (" close=")" separator=",">
+		 	 			#{indentifyMark.indentifyMark}
+		 			</foreach>
+		 			<foreach collection="equityList" item="registBankCode" open=" AND sub.regist_bank_code IN (" close=")" separator=",">
+		 	 			#{registBankCode.registBankCode}
+		 			</foreach>
+    			</if>
+    			and status.submit_feedback_status != '02'
+    		</where>
+	</select>
+	<!-- 根据输入的识别标识与登记银行代码查询登记表中的额数据  -->
+	<select id="querySumbitEquityByCode" parameterType="com.joyintech.tams.common.base.entity.ChbEquHold"
+		resultType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfoDto">
+		select sub.indentify_mark as indentifyMark,sub.regist_bank_code as registBankCode,sub.type,
+			sub.SUBMIT_STATUS as submitStatus,status.submit_feedback_status as submitFeedbackStatus
+  			from chb_equ_sub sub
+  			left join CHB_SUBMIT_STATUS status
+    			on sub.SUMIT_SEQ = status.seqno
+    		<where>
+    			and sub.indentify_mark = #{indentifyMark}
+		 		and sub.regist_bank_code = #{registBankCode}
+    		</where>
+	</select>
+	<!-- 批量插入excel导入内容 -->
+	<insert id="insertBtachEquityInfo" parameterType="java.util.List">
+		  insert into CHB_EQU_HOLD (INDENTIFY_MARK, REGIST_BANK_CODE, ORG_INDENTIFY_MARK, 
+            IS_BELONG_BANK, THE_BANK_NAME, THE_BANK_CODE, 
+            HOLDER_MARK, HOLDER_REGION, HOLDER_TYPE, 
+            PERSONAL_IDENTIFY_TYPE, INSTITUTION_IDENTIFY_TYPE, 
+            OTHER_IDENTIFY_NAME, IDENTIFY_NUMBER, SPV_CAP_ACC_BANK, 
+            OTHER_CAP_ACC_BANK, SPV_REGIST_CODE, HOLDER_DATE, 
+            HOLDER_NAME, HOLDER_SEX, HOLDER_RISK_PREFER, 
+            HOLDER_CELLPHONE, HOLDER_TELEPHONE, IS_SUBMIT, 
+            HOLDER_EMAIL, REMARK, STATUS, 
+            WORKFLOW_ID, DEPT_CODE, UPDATE_USER, 
+            UPDATE_TIME, CREATE_USER, CREATE_TIME, 
+            DATA_SOURCE,ORG_CODE ,AGENT, CREATE_DEPT)
+            select A.* from (
+            <foreach collection="list" item="item" index="index" separator="union all">
+            	select 
+            		#{item.indentifyMark,jdbcType=VARCHAR} INDENTIFY_MARK,
+            		#{item.bankCode,jdbcType=VARCHAR} REGIST_BANK_CODE,
+            		#{item.orgIndentifyMark,jdbcType=VARCHAR} ORG_INDENTIFY_MARK, 
+            		#{item.isBelongBank,jdbcType=CHAR} IS_BELONG_BANK,
+            		#{item.theBankName,jdbcType=VARCHAR} THE_BANK_NAME,
+            		#{item.theBankCode,jdbcType=VARCHAR} THE_BANK_CODE, 
+           		    #{item.holderMark,jdbcType=CHAR} HOLDER_MARK, 
+           		    #{item.holderRegion,jdbcType=VARCHAR} HOLDER_REGION,
+           		    #{item.holderType,jdbcType=CHAR} HOLDER_TYPE, 
+            		#{item.personalIdentifyType,jdbcType=CHAR} PERSONAL_IDENTIFY_TYPE,
+            		#{item.institutionIdentifyType,jdbcType=VARCHAR} INSTITUTION_IDENTIFY_TYPE, 
+            		#{item.otherIdentifyName,jdbcType=VARCHAR} OTHER_IDENTIFY_NAME, 
+            		#{item.identifyNumber,jdbcType=VARCHAR} IDENTIFY_NUMBER, 
+            		#{item.spvCapAccBank,jdbcType=VARCHAR} SPV_CAP_ACC_BANK, 
+            		#{item.otherCapAccBank,jdbcType=VARCHAR} OTHER_CAP_ACC_BANK,
+            		#{item.spvRegistCode,jdbcType=VARCHAR} SPV_REGIST_CODE, 
+            		null HOLDER_DATE, 
+            		#{item.holderName,jdbcType=VARCHAR} HOLDER_NAME, 
+            		#{item.holderSex,jdbcType=CHAR} HOLDER_SEX,
+            		#{item.holderRiskPrefer,jdbcType=VARCHAR} HOLDER_RISK_PREFER, 
+            		#{item.holderCellphone,jdbcType=VARCHAR} HOLDER_CELLPHONE, 
+            		#{item.holderTelephone,jdbcType=VARCHAR} HOLDER_TELEPHONE,
+            		#{item.isSubmit,jdbcType=CHAR} IS_SUBMIT, 
+            		#{item.holderEmail,jdbcType=VARCHAR} HOLDER_EMAIL, 
+            		#{item.remark,jdbcType=VARCHAR} REMARK, 
+            		'E' STATUS, 
+            		'' WORKFLOW_ID, 
+            		#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+            		#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            		current timestamp UPDATE_TIME, 
+            		#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            		current timestamp CREATE_TIME, 
+            		#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+            		#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+            		#{item.agent,jdbcType=VARCHAR} AGENT,
+                    #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT
+            	from sysibm.sysdummy1
+            </foreach>
+            )A
+	</insert>
+	<!-- 批量更新 -->
+	<update id="updateBatchEquityInfo" parameterType="java.util.List">
+		  
+        <foreach collection="list" item="item" index="index" separator=";" > 
+            update chb_equ_hold 
+			<set>
+				<if test="item.indentifyMark != null and item.indentifyMark != '' " >
+                	INDENTIFY_MARK = #{item.indentifyMark,jdbcType=VARCHAR},
+            	</if> 
+            	<if test="item.orgIndentifyMark != null and item.orgIndentifyMark != '' " >
+                	ORG_INDENTIFY_MARK = #{item.orgIndentifyMark,jdbcType=VARCHAR},
+            	</if>
+            	<if test="item.isBelongBank != null and item.isBelongBank != '' " >
+                	IS_BELONG_BANK = #{item.isBelongBank,jdbcType=CHAR},
+            	</if>
+            	<if test="item.theBankName != null and item.theBankName != '' " >
+                	THE_BANK_NAME = #{item.theBankName,jdbcType=VARCHAR},
+            	</if>
+            	<if test="item.theBankCode != null and item.theBankCode != '' " >
+                	THE_BANK_CODE = #{item.theBankCode,jdbcType=VARCHAR},
+            	</if>
+            	<if test="item.holderMark != null and item.holderMark != '' " >
+                	HOLDER_MARK = #{item.holderMark,jdbcType=CHAR},
+            	</if>
+            	<if test="item.holderRegion != null and item.holderRegion != '' " >
+                	HOLDER_REGION = #{item.holderRegion,jdbcType=VARCHAR},
+            	</if>
+            	<if test="item.holderType != null and item.holderType != '' " >
+                	HOLDER_TYPE = #{item.holderType,jdbcType=CHAR},
+            	</if>
+            	<if test="item.personalIdentifyType != null and item.isBelongBank != '' " >
+                	PERSONAL_IDENTIFY_TYPE = #{item.personalIdentifyType,jdbcType=CHAR},
+            	</if>
+            	<if test="item.institutionIdentifyType != null and item.institutionIdentifyType != '' " >
+                	INSTITUTION_IDENTIFY_TYPE = #{item.institutionIdentifyType,jdbcType=VARCHAR},
+            	</if>
+            	<if test="item.otherIdentifyName != null and item.otherIdentifyName != '' " >
+                	OTHER_IDENTIFY_NAME = #{item.otherIdentifyName,jdbcType=VARCHAR},
+            	</if>
+            	<if test="item.identifyNumber != null and item.identifyNumber != '' " >
+                	IDENTIFY_NUMBER = #{item.identifyNumber,jdbcType=VARCHAR},
+            	</if>
+            	<if test="item.spvCapAccBank != null and item.spvCapAccBank != '' " >
+                	SPV_CAP_ACC_BANK = #{item.spvCapAccBank,jdbcType=VARCHAR},
+            	</if>
+            	<if test="item.otherCapAccBank != null and item.otherCapAccBank != '' " >
+                	OTHER_CAP_ACC_BANK = #{item.otherCapAccBank,jdbcType=VARCHAR},
+            	</if>
+            	<if test="item.spvRegistCode != null and item.spvRegistCode != '' " >
+                	SPV_REGIST_CODE = #{item.spvRegistCode,jdbcType=VARCHAR},
+            	</if>
+            	<if test="item.holderDate != null " >
+                	HOLDER_DATE = #{item.holderDate,jdbcType=DATE},
+            	</if>
+            	<if test="item.holderName != null and item.holderName != '' " >
+                	HOLDER_NAME = #{item.holderName,jdbcType=VARCHAR},
+            	</if>
+            	<if test="item.holderSex != null and item.holderSex != '' " >
+                	HOLDER_SEX = #{item.holderSex,jdbcType=CHAR},
+            	</if>
+            	<if test="item.holderRiskPrefer != null and item.holderRiskPrefer != '' " >
+                	HOLDER_RISK_PREFER = #{item.holderRiskPrefer,jdbcType=VARCHAR},
+            	</if>
+            	<if test="item.holderCellphone != null and item.holderCellphone != '' " >
+                	HOLDER_CELLPHONE = #{item.holderCellphone,jdbcType=VARCHAR},
+            	</if>
+            	<if test="item.holderTelephone != null and item.holderTelephone != '' " >
+                	HOLDER_TELEPHONE = #{item.holderTelephone,jdbcType=VARCHAR},
+            	</if>
+            	<if test="item.isSubmit != null and item.isSubmit != '' " >
+                	IS_SUBMIT = #{item.isSubmit,jdbcType=CHAR},
+            	</if>
+            	<if test="item.holderEmail != null and item.holderEmail != '' " >
+                	HOLDER_EMAIL = #{item.holderEmail,jdbcType=VARCHAR},
+            	</if>
+            	<if test="item.remark != null and item.remark != '' " >
+                	REMARK = #{item.remark,jdbcType=VARCHAR},
+            	</if>
+            	<if test="item.status != null and item.status != '' " >
+                	STATUS = #{item.status,jdbcType=VARCHAR},
+            	</if>
+            	<if test="item.workflowId != null and item.workflowId != '' " >
+                	WORKFLOW_ID = #{item.workflowId,jdbcType=VARCHAR},
+            	</if>
+            	<if test="item.orgCode != null and item.orgCode != '' " >
+                	ORG_CODE = #{item.orgCode,jdbcType=VARCHAR},
+            	</if>
+            	<if test="item.dataSource != null and item.dataSource != '' " >
+                	DATA_SOURCE = #{item.dataSource,jdbcType=VARCHAR},
+            	</if>
+            	<if test="item.agent != null and item.agent != '' " >
+                	AGENT = #{item.agent,jdbcType=VARCHAR},
+            	</if>
+            	<if test="item.deptCode != null and item.deptCode != '' " >
+                	DEPT_CODE = #{item.deptCode,jdbcType=VARCHAR},
+            	</if>
+            	<if test="item.createDept != null and item.createDept != '' " >
+                    CREATE_DEPT = #{item.createDept,jdbcType=VARCHAR},
+                </if>
+			</set> 
+            <where>
+        		<if test="item.type !=null and item.type == '02'.toString()">
+            		INDENTIFY_MARK in ( #{item.orgIndentifyMark,jdbcType=VARCHAR}, #{item.indentifyMark,jdbcType=VARCHAR}) and
+            	</if>
+        		<if test="item.type !=null and item.type != '02'">
+            		INDENTIFY_MARK = #{item.indentifyMark,jdbcType=VARCHAR} and
+            	</if>
+            	 REGIST_BANK_CODE = #{item.bankCode,jdbcType=VARCHAR}
+            </where>
+        </foreach>
+        
+	</update>
+	<!-- 批量删除 -->
+	<delete id="deleteBatchEquityInfo" parameterType="java.util.List">
+		delete from chb_equ_hold
+		<where>
+  			<foreach collection="list" index="index" item="item" open="(" separator="or" close=")">     
+  				INDENTIFY_MARK = #{item.indentifyMark,jdbcType=VARCHAR} 
+  				and REGIST_BANK_CODE = #{item.bankCode,jdbcType=VARCHAR}
+    		</foreach>
+  		</where>
+	</delete>
+	<!-- 根据识别标识与登记银行代码从信息维护表中查询数据插入登记表 -->
+	<insert id="insertEquityHis" parameterType="java.util.List">
+		insert into CHB_EQU_HOLD_HIS (HIS_NO, INDENTIFY_MARK, REGIST_BANK_CODE, 
+            ORG_INDENTIFY_MARK, IS_BELONG_BANK, THE_BANK_NAME, 
+            THE_BANK_CODE, HOLDER_MARK, HOLDER_REGION, 
+            HOLDER_TYPE, PERSONAL_IDENTIFY_TYPE, INSTITUTION_IDENTIFY_TYPE, 
+            OTHER_IDENTIFY_NAME, IDENTIFY_NUMBER, SPV_CAP_ACC_BANK, 
+            OTHER_CAP_ACC_BANK, SPV_REGIST_CODE, HOLDER_DATE, 
+            HOLDER_NAME, HOLDER_SEX, HOLDER_RISK_PREFER, 
+            HOLDER_CELLPHONE, HOLDER_TELEPHONE, IS_SUBMIT, 
+            HOLDER_EMAIL, REMARK, STATUS, 
+            WORKFLOW_ID, DEPT_CODE, UPDATE_USER, 
+            UPDATE_TIME, CREATE_USER, CREATE_TIME, 
+            DATA_SOURCE,ORG_CODE,AGENT, CREATE_DEPT)
+        select  seq_equity_info.NEXTVAL,
+        A.Indentify_Mark,A.Regist_Bank_Code,A.Org_Indentify_Mark,
+        A.Is_Belong_Bank,A.The_Bank_Name,A.The_Bank_Code,A.Holder_Mark,
+        A.Holder_Region,A.Holder_Type,A.Personal_Identify_Type,A.Institution_Identify_Type,
+        A.Other_Identify_Name,A.Identify_Number,A.Spv_Cap_Acc_Bank,
+        A.Other_Cap_Acc_Bank,A.Spv_Regist_Code,A.Holder_Date,
+        A.Holder_Name,A.Holder_Sex,A.Holder_Risk_Prefer,
+        A.Holder_Cellphone,A.Holder_Telephone,A.Is_Submit,
+        A.Holder_Email,A.Remark,A.Status,
+        A.Workflow_Id,A.Dept_Code,A.Update_User,
+        A.Update_Time,A.Create_User,A.Create_Time,A.Data_Source,A.ORG_CODE,
+        A.AGENT, A.CREATE_DEPT
+        from chb_equ_hold A
+        <where>
+  			<foreach collection="list" index="index" item="item" open="(" separator=") or (" close=")">     
+       			<if test="item.type !=null and item.type == '02'.toString()">
+            		INDENTIFY_MARK in (#{item.orgIndentifyMark,jdbcType=VARCHAR},#{item.indentifyMark,jdbcType=VARCHAR} ) and
+            	</if>
+        		<if test="item.type !=null and item.type != '02'">
+            		INDENTIFY_MARK = #{item.indentifyMark,jdbcType=VARCHAR} and
+            	</if>  				
+            	 A.REGIST_BANK_CODE = #{item.bankCode,jdbcType=VARCHAR}
+    		</foreach>
+  		</where>    
+	</insert>
+	<!-- 权益人信息按选择导出 -->
+	<select id="queryExpSelectEquityInfo" resultType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto">
+		select 
+			INDENTIFY_MARK as indentifyMark,
+         	REGIST_BANK_CODE as bankCode,
+         	ORG_INDENTIFY_MARK as orgIndentifyMark,
+        	TRIM(IS_BELONG_BANK) as isBelongBank,
+        	THE_BANK_NAME as theBankName,
+        	THE_BANK_CODE as theBankCode,
+        	TRIM(HOLDER_MARK) as holderMark,
+        	HOLDER_REGION as holderRegion,
+        	TRIM(HOLDER_TYPE) as holderType,
+        	TRIM(PERSONAL_IDENTIFY_TYPE) as personalIdentifyType,
+        	INSTITUTION_IDENTIFY_TYPE as institutionIdentifyType,
+        	nvl(PERSONAL_IDENTIFY_TYPE,INSTITUTION_IDENTIFY_TYPE) as inentify_Type,
+        	IDENTIFY_NUMBER as identifyNumber,
+        	OTHER_IDENTIFY_NAME as otherIdentifyName,
+        	SPV_CAP_ACC_BANK as spvCapAccBank,
+        	OTHER_CAP_ACC_BANK as otherCapAccBank,
+        	SPV_REGIST_CODE as spvRegistCode,
+        	HOLDER_NAME as holderName,
+        	HOLDER_SEX as holderSex,
+        	HOLDER_RISK_PREFER as holderRiskPrefer,
+        	HOLDER_CELLPHONE as holderCellphone,
+        	HOLDER_TELEPHONE as holderTelephone,
+        	HOLDER_EMAIL as holderEmail,
+        	REMARK as remark,
+        	STATUS as status,
+        	AGENT  as agent,
+        	INTERF_CHECK_RESULT as interfCheckResult
+   		from CHB_EQU_HOLD A
+		 <where>
+		 	<foreach collection="eList" item="item" open=" (" close=")" separator=") or (">
+		 	 		REGIST_BANK_CODE = #{item.bankCode,jdbcType=VARCHAR} 
+		 	 		and INDENTIFY_MARK = #{item.indentifyMark,jdbcType=VARCHAR} 
+		 	</foreach>
+		 </where>
+	</select>
+		<!-- 批量插入接口内容 -->
+	<insert id="insertBtachInterfEquityInfo" parameterType="java.util.List">
+		  insert into CHB_EQU_HOLD (INDENTIFY_MARK, REGIST_BANK_CODE, ORG_INDENTIFY_MARK, 
+            IS_BELONG_BANK, THE_BANK_NAME, THE_BANK_CODE, 
+            HOLDER_MARK, HOLDER_REGION, HOLDER_TYPE, 
+            PERSONAL_IDENTIFY_TYPE, INSTITUTION_IDENTIFY_TYPE, 
+            OTHER_IDENTIFY_NAME, IDENTIFY_NUMBER, SPV_CAP_ACC_BANK, 
+            OTHER_CAP_ACC_BANK, SPV_REGIST_CODE, HOLDER_DATE, 
+            HOLDER_NAME, HOLDER_SEX, HOLDER_RISK_PREFER, 
+            HOLDER_CELLPHONE, HOLDER_TELEPHONE, IS_SUBMIT, 
+            HOLDER_EMAIL, REMARK, STATUS, 
+            WORKFLOW_ID, DEPT_CODE, UPDATE_USER, 
+            UPDATE_TIME, CREATE_USER, CREATE_TIME, 
+            DATA_SOURCE, ORG_CODE ,AGENT, CREATE_DEPT,INTERF_CHECK_RESULT)
+            select A.* from (
+            <foreach collection="list" item="item" index="index" separator="union all">
+            	select 
+            		#{item.indentifyMark,jdbcType=VARCHAR} INDENTIFY_MARK,
+            		#{item.bankCode,jdbcType=VARCHAR} REGIST_BANK_CODE,
+            		#{item.orgIndentifyMark,jdbcType=VARCHAR} ORG_INDENTIFY_MARK, 
+            		#{item.isBelongBank,jdbcType=CHAR} IS_BELONG_BANK,
+            		#{item.theBankName,jdbcType=VARCHAR} THE_BANK_NAME,
+            		#{item.theBankCode,jdbcType=VARCHAR} THE_BANK_CODE, 
+           		    #{item.holderMark,jdbcType=CHAR} HOLDER_MARK, 
+           		    #{item.holderRegion,jdbcType=VARCHAR} HOLDER_REGION,
+           		    #{item.holderType,jdbcType=CHAR} HOLDER_TYPE, 
+            		#{item.personalIdentifyType,jdbcType=CHAR} PERSONAL_IDENTIFY_TYPE,
+            		#{item.institutionIdentifyType,jdbcType=VARCHAR} INSTITUTION_IDENTIFY_TYPE, 
+            		#{item.otherIdentifyName,jdbcType=VARCHAR} OTHER_IDENTIFY_NAME, 
+            		#{item.identifyNumber,jdbcType=VARCHAR} IDENTIFY_NUMBER, 
+            		#{item.spvCapAccBank,jdbcType=VARCHAR} SPV_CAP_ACC_BANK, 
+            		#{item.otherCapAccBank,jdbcType=VARCHAR} OTHER_CAP_ACC_BANK,
+            		#{item.spvRegistCode,jdbcType=VARCHAR} SPV_REGIST_CODE, 
+            		#{item.holderDate,jdbcType=VARCHAR} HOLDER_DATE, 
+            		#{item.holderName,jdbcType=VARCHAR} HOLDER_NAME, 
+            		#{item.holderSex,jdbcType=CHAR} HOLDER_SEX,
+            		#{item.holderRiskPrefer,jdbcType=VARCHAR} HOLDER_RISK_PREFER, 
+            		#{item.holderCellphone,jdbcType=VARCHAR} HOLDER_CELLPHONE, 
+            		#{item.holderTelephone,jdbcType=VARCHAR} HOLDER_TELEPHONE,
+            		#{item.isSubmit,jdbcType=CHAR} IS_SUBMIT, 
+            		#{item.holderEmail,jdbcType=VARCHAR} HOLDER_EMAIL, 
+            		#{item.remark,jdbcType=VARCHAR} REMARK, 
+            		#{item.status,jdbcType=VARCHAR} STATUS, 
+            		'' WORKFLOW_ID, 
+            		#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+            		#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            		current timestamp UPDATE_TIME, 
+            		#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            		current timestamp CREATE_TIME, 
+            		#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+            		#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+            		#{item.agent,jdbcType=VARCHAR} AGENT,
+            		#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+            		#{item.interfCheckResult,jdbcType=VARCHAR} INTERF_CHECK_RESULT
+            	from sysibm.sysdummy1
+            </foreach>
+            )A
+	</insert>
+	<select id="getEquityInfo001DtoByKey" resultType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto">
+		select 
+			INDENTIFY_MARK as indentifyMark,
+         	REGIST_BANK_CODE as bankCode,
+         	ORG_INDENTIFY_MARK as orgIndentifyMark,
+        	IS_BELONG_BANK as isBelongBank,
+        	THE_BANK_NAME as theBankName,
+        	THE_BANK_CODE as theBankCode,
+        	HOLDER_MARK as holderMark,
+        	HOLDER_REGION as holderRegion,
+        	HOLDER_TYPE as holderType,
+        	PERSONAL_IDENTIFY_TYPE as personalIdentifyType,
+        	INSTITUTION_IDENTIFY_TYPE as institutionInentifyType,
+        	nvl(PERSONAL_IDENTIFY_TYPE,INSTITUTION_IDENTIFY_TYPE) as inentify_Type,
+        	IDENTIFY_NUMBER as identifyNumber,
+        	OTHER_IDENTIFY_NAME as otherIdentifyName,
+        	SPV_CAP_ACC_BANK as spvCapAccBank,
+        	OTHER_CAP_ACC_BANK as otherCapAccBank,
+        	SPV_REGIST_CODE as spvRegistCode,
+        	HOLDER_NAME as holderName,
+        	HOLDER_SEX as holderSex,
+        	HOLDER_RISK_PREFER as holderRiskPrefer,
+        	HOLDER_CELLPHONE as holderCellphone,
+        	HOLDER_TELEPHONE as holderTelephone,
+        	HOLDER_EMAIL as holderEmail,
+        	REMARK as remark,
+        	A.ORG_CODE orgCode,
+        	STATUS as status,
+        	DATA_SOURCE dataSource
+   		from CHB_EQU_HOLD A
+		  <where>
+        	<if test="type !=null and type == '02'.toString()">
+            		INDENTIFY_MARK in (#{orgIndentifyMark,jdbcType=VARCHAR},#{indentifyMark,jdbcType=VARCHAR} ) and
+            	</if>
+        		<if test="type !=null and type != '02'">
+            		INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR} and
+            	</if>
+            	 REGIST_BANK_CODE = #{bankCode,jdbcType=VARCHAR}
+           </where>
+	</select>
+	
+	<!-- 插入数据到临时表 -->
+	<insert id="insertIntoImportTable" parameterType="java.util.List">
+		insert into CHB_EQU_HOLD_IMP_TMP(INDENTIFY_MARK,ORG_INDENTIFY_MARK,REGIST_BANK_CODE,TYPE)
+		<foreach collection="list" item="item" separator="from sysibm.sysdummy1 union all select" open="select * from (select " close="from sysibm.sysdummy1)">
+	        #{item.INDENTIFY_MARK,jdbcType=VARCHAR} INDENTIFY_MARK,
+	        #{item.ORG_INDENTIFY_MARK,jdbcType=VARCHAR} ORG_INDENTIFY_MARK,
+	        #{item.REGIST_BANK_CODE,jdbcType=VARCHAR} REGIST_BANK_CODE,
+	        '01' "TYPE"
+	    </foreach>
+	</insert>
+	    
+   	<!-- 删除临时表 -->
+	<delete id="deleteTmpTable">
+		truncate table CHB_EQU_HOLD_IMP_TMP IMMEDIATE
+	</delete>
+	
+	<select id="selectTmpCount" resultType="java.lang.Long">
+		select count(0) from CHB_EQU_HOLD_IMP_TMP
+	</select>
+	
+	<select id="selectEquityInfoForImpCheck" resultType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto">
+		select 
+        	A.STATUS as status,
+        	A.DATA_SOURCE dataSource,
+        	B.INDENTIFY_MARK as indentifyMark,
+        	B.ORG_INDENTIFY_MARK as orgIndentifyMark,
+        	A.REGIST_BANK_CODE as bankCode
+   		from
+   		 CHB_EQU_HOLD A,
+   	     CHB_EQU_HOLD_IMP_TMP B
+   	    WHERE 
+   	    	A.REGIST_BANK_CODE = B.REGIST_BANK_CODE
+   	    	AND (
+   	    	(B.TYPE IS NOT NULL AND B.TYPE = '02' AND (A.INDENTIFY_MARK = B.INDENTIFY_MARK OR A.INDENTIFY_MARK = B.ORG_INDENTIFY_MARK))
+   	    	OR
+   	    	(B.TYPE IS NOT NULL AND B.TYPE != '02' AND A.INDENTIFY_MARK = B.INDENTIFY_MARK)
+   	   	)
+	</select>
+	<!-- 权益人信息按选择导出 -->
+	<select id="queryEquityInfoList" resultType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto">
+		select 
+			INDENTIFY_MARK as indentifyMark,
+         	REGIST_BANK_CODE as bankCode,
+         	ORG_INDENTIFY_MARK as orgIndentifyMark,
+        	IS_BELONG_BANK as isBelongBank,
+        	THE_BANK_NAME as theBankName,
+        	THE_BANK_CODE as theBankCode,
+        	HOLDER_MARK as holderMark,
+        	HOLDER_REGION as holderRegion,
+        	HOLDER_TYPE as holderType,
+        	PERSONAL_IDENTIFY_TYPE as personalIdentifyType,
+        	INSTITUTION_IDENTIFY_TYPE as institutionIdentifyType,
+        	nvl(PERSONAL_IDENTIFY_TYPE,INSTITUTION_IDENTIFY_TYPE) as inentify_Type,
+        	IDENTIFY_NUMBER as identifyNumber,
+        	OTHER_IDENTIFY_NAME as otherIdentifyName,
+        	SPV_CAP_ACC_BANK as spvCapAccBank,
+        	OTHER_CAP_ACC_BANK as otherCapAccBank,
+        	SPV_REGIST_CODE as spvRegistCode,
+        	HOLDER_NAME as holderName,
+        	HOLDER_SEX as holderSex,
+        	HOLDER_RISK_PREFER as holderRiskPrefer,
+        	HOLDER_CELLPHONE as holderCellphone,
+        	HOLDER_TELEPHONE as holderTelephone,
+        	HOLDER_EMAIL as holderEmail,
+        	REMARK as remark,
+        	STATUS as status,
+        	AGENT  as agent
+   		from CHB_EQU_HOLD A
+		 <where>
+		 	<foreach collection="equityList" item="item" open="(A.REGIST_BANK_CODE,A.INDENTIFY_MARK) in ( values" close=")" separator=",">
+		 	 		(#{item.bankCode,jdbcType=VARCHAR},#{item.indentifyMark,jdbcType=VARCHAR}) 
+		 	</foreach>
+		 	and A.status !='D'
+		 </where>
+	</select>
+	<!-- 批量更新  Excel-->
+	<update id="updateBatchEquityInfoExcel" parameterType="java.util.List">
+		  
+        <foreach collection="list" item="item" index="index" separator=";" > 
+            update chb_equ_hold 
+			<set>
+                	INDENTIFY_MARK = #{item.indentifyMark,jdbcType=VARCHAR},
+                	ORG_INDENTIFY_MARK = #{item.orgIndentifyMark,jdbcType=VARCHAR},
+                	IS_BELONG_BANK = #{item.isBelongBank,jdbcType=CHAR},
+                	THE_BANK_NAME = #{item.theBankName,jdbcType=VARCHAR},
+                	THE_BANK_CODE = #{item.theBankCode,jdbcType=VARCHAR},
+                	HOLDER_MARK = #{item.holderMark,jdbcType=CHAR},
+                	HOLDER_REGION = #{item.holderRegion,jdbcType=VARCHAR},
+                	HOLDER_TYPE = #{item.holderType,jdbcType=CHAR},
+                	PERSONAL_IDENTIFY_TYPE = #{item.personalIdentifyType,jdbcType=CHAR},
+                	INSTITUTION_IDENTIFY_TYPE = #{item.institutionIdentifyType,jdbcType=VARCHAR},
+                	OTHER_IDENTIFY_NAME = #{item.otherIdentifyName,jdbcType=VARCHAR},
+                	IDENTIFY_NUMBER = #{item.identifyNumber,jdbcType=VARCHAR},
+                	SPV_CAP_ACC_BANK = #{item.spvCapAccBank,jdbcType=VARCHAR},
+                	OTHER_CAP_ACC_BANK = #{item.otherCapAccBank,jdbcType=VARCHAR},
+                	SPV_REGIST_CODE = #{item.spvRegistCode,jdbcType=VARCHAR},
+                	HOLDER_DATE = #{item.holderDate,jdbcType=DATE},
+                	HOLDER_NAME = #{item.holderName,jdbcType=VARCHAR},
+                	HOLDER_SEX = #{item.holderSex,jdbcType=CHAR},
+                	HOLDER_RISK_PREFER = #{item.holderRiskPrefer,jdbcType=VARCHAR},
+                	HOLDER_CELLPHONE = #{item.holderCellphone,jdbcType=VARCHAR},
+                	HOLDER_TELEPHONE = #{item.holderTelephone,jdbcType=VARCHAR},
+                	IS_SUBMIT = #{item.isSubmit,jdbcType=CHAR},
+                	HOLDER_EMAIL = #{item.holderEmail,jdbcType=VARCHAR},
+                	REMARK = #{item.remark,jdbcType=VARCHAR},
+                	STATUS = #{item.status,jdbcType=VARCHAR},
+                	WORKFLOW_ID = #{item.workflowId,jdbcType=VARCHAR},
+                	ORG_CODE = #{item.orgCode,jdbcType=VARCHAR},
+                	DATA_SOURCE = #{item.dataSource,jdbcType=VARCHAR},
+                	AGENT = #{item.agent,jdbcType=VARCHAR},
+                	DEPT_CODE = #{item.deptCode,jdbcType=VARCHAR},
+                    CREATE_DEPT = #{item.createDept,jdbcType=VARCHAR}
+			</set> 
+            <where>
+        		<if test="item.type !=null and item.type == '02'.toString()">
+            		INDENTIFY_MARK in ( #{item.orgIndentifyMark,jdbcType=VARCHAR}, #{item.indentifyMark,jdbcType=VARCHAR}) and
+            	</if>
+        		<if test="item.type !=null and item.type != '02'">
+            		INDENTIFY_MARK = #{item.indentifyMark,jdbcType=VARCHAR} and
+            	</if>
+            	 REGIST_BANK_CODE = #{item.bankCode,jdbcType=VARCHAR}
+            </where>
+        </foreach>
+        
+	</update>
+	<!-- 识别标识变更时，将有效数据移植履历表 -->
+	<insert id="insertEquityIdHis" parameterType="java.util.List">
+		insert into CHB_EQU_HOLD_HIS (HIS_NO, INDENTIFY_MARK, REGIST_BANK_CODE, 
+            ORG_INDENTIFY_MARK, IS_BELONG_BANK, THE_BANK_NAME, 
+            THE_BANK_CODE, HOLDER_MARK, HOLDER_REGION, 
+            HOLDER_TYPE, PERSONAL_IDENTIFY_TYPE, INSTITUTION_IDENTIFY_TYPE, 
+            OTHER_IDENTIFY_NAME, IDENTIFY_NUMBER, SPV_CAP_ACC_BANK, 
+            OTHER_CAP_ACC_BANK, SPV_REGIST_CODE, HOLDER_DATE, 
+            HOLDER_NAME, HOLDER_SEX, HOLDER_RISK_PREFER, 
+            HOLDER_CELLPHONE, HOLDER_TELEPHONE, IS_SUBMIT, 
+            HOLDER_EMAIL, REMARK, STATUS, 
+            WORKFLOW_ID, DEPT_CODE, UPDATE_USER, 
+            UPDATE_TIME, CREATE_USER, CREATE_TIME, 
+            DATA_SOURCE,ORG_CODE,AGENT, CREATE_DEPT)
+        select  seq_equity_info.NEXTVAL,
+        A.Indentify_Mark,A.Regist_Bank_Code,A.Org_Indentify_Mark,
+        A.Is_Belong_Bank,A.The_Bank_Name,A.The_Bank_Code,A.Holder_Mark,
+        A.Holder_Region,A.Holder_Type,A.Personal_Identify_Type,A.Institution_Identify_Type,
+        A.Other_Identify_Name,A.Identify_Number,A.Spv_Cap_Acc_Bank,
+        A.Other_Cap_Acc_Bank,A.Spv_Regist_Code,A.Holder_Date,
+        A.Holder_Name,A.Holder_Sex,A.Holder_Risk_Prefer,
+        A.Holder_Cellphone,A.Holder_Telephone,A.Is_Submit,
+        A.Holder_Email,A.Remark,A.Status,
+        A.Workflow_Id,A.Dept_Code,A.Update_User,
+        A.Update_Time,A.Create_User,A.Create_Time,A.Data_Source,A.ORG_CODE,
+        A.AGENT, A.CREATE_DEPT
+        from chb_equ_hold A
+        <where>
+  			<foreach collection="list" index="index" item="item" open="(" separator=") or (" close=")">     
+            		INDENTIFY_MARK = #{item.orgIndentifyMark,jdbcType=VARCHAR} and
+            	    A.REGIST_BANK_CODE = #{item.bankCode,jdbcType=VARCHAR}
+            	    and A.status = 'E'
+    		</foreach>
+  		</where>    
+	</insert>
+	<select id="checkDetailData" resultType="java.util.Map">
+		select INDENTIFY_MARK FROM CHB_EQUDET WHERE STATUS='E' and EQUITY_CONF_DATE = #{dealDate,jdbcType=DATE}
+		<foreach collection="dataList" item="item" open="and (INDENTIFY_MARK,REGIST_BANK_CODE) in ( values" separator="," close=")">     
+	            (#{item.indentifyMark,jdbcType=VARCHAR},#{item.bankCode,jdbcType=VARCHAR})
+		</foreach>
+	</select>
+	<select id="checkHoldData" resultType="java.util.Map">
+		select INDENTIFY_MARK FROM CHB_INVESTHOLD_INFO_SUB WHERE SEND_STATUS=#{unSubmit} and HOLD_DATE = #{dealDate,jdbcType=DATE}
+		<foreach collection="dataList" item="item" open="and (INDENTIFY_MARK,REGIST_BANK_CODE) in ( values" separator="," close=")">     
+	            (#{item.indentifyMark,jdbcType=VARCHAR},#{item.bankCode,jdbcType=VARCHAR})
+		</foreach>
+	</select>
+	<select id="checkHoldDataSubmit" resultType="java.util.Map">
+	select INDENTIFY_MARK from (
+	SELECT ciis.INDENTIFY_MARK,SUM(ciis.QTY) qty FROM CHB_INVESTHOLD_INFO_SUB ciis
+	inner join
+	(SELECT
+	    REGIST_BANK_CODE,INDENTIFY_MARK,MAX(HOLD_DATE) maxDate
+	    FROM CHB_INVESTHOLD_INFO_SUB
+    where 
+	    SEND_STATUS != #{unSubmit}
+	    and STATUS != #{statusD}
+	    <foreach collection="dataList" item="item" open="and (INDENTIFY_MARK,REGIST_BANK_CODE)in( values" separator="," close=")">     
+	            (#{item.indentifyMark,jdbcType=VARCHAR},#{item.bankCode,jdbcType=VARCHAR})
+		</foreach>
+	GROUP BY
+	    INDENTIFY_MARK,
+	    REGIST_BANK_CODE) ciis2
+	    on ciis.REGIST_BANK_CODE = ciis2.REGIST_BANK_CODE and ciis.INDENTIFY_MARK = ciis2.INDENTIFY_MARK and ciis.HOLD_DATE = ciis2.maxDate
+	where 
+	ciis.SEND_STATUS != #{unSubmit} and ciis.STATUS != #{statusD}
+	GROUP BY 
+	ciis.INDENTIFY_MARK
+	)
+	where qty>0
+	</select>
+	
+	<!-- 批量更新 -->
+	<update id="updateBatchEquityInfoTemp" parameterType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto">
+		   update chb_equ_hold 
+			<set>
+				<if test="indentifyMark != null and indentifyMark != '' " >
+                	INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR},
+            	</if> 
+            	<if test="orgIndentifyMark != null and orgIndentifyMark != '' " >
+                	ORG_INDENTIFY_MARK = #{orgIndentifyMark,jdbcType=VARCHAR},
+            	</if>
+            	<if test="isBelongBank != null and isBelongBank != '' " >
+                	IS_BELONG_BANK = #{isBelongBank,jdbcType=CHAR},
+            	</if>
+            	<if test="theBankName != null and theBankName != '' " >
+                	THE_BANK_NAME = #{theBankName,jdbcType=VARCHAR},
+            	</if>
+            	<if test="theBankCode != null and theBankCode != '' " >
+                	THE_BANK_CODE = #{theBankCode,jdbcType=VARCHAR},
+            	</if>
+            	<if test="holderMark != null and holderMark != '' " >
+                	HOLDER_MARK = #{holderMark,jdbcType=CHAR},
+            	</if>
+            	<if test="holderRegion != null and holderRegion != '' " >
+                	HOLDER_REGION = #{holderRegion,jdbcType=VARCHAR},
+            	</if>
+            	<if test="holderType != null and holderType != '' " >
+                	HOLDER_TYPE = #{holderType,jdbcType=CHAR},
+            	</if>
+            	<if test="personalIdentifyType != null and isBelongBank != '' " >
+                	PERSONAL_IDENTIFY_TYPE = #{personalIdentifyType,jdbcType=CHAR},
+            	</if>
+            	<if test="institutionIdentifyType != null and institutionIdentifyType != '' " >
+                	INSTITUTION_IDENTIFY_TYPE = #{institutionIdentifyType,jdbcType=VARCHAR},
+            	</if>
+            	<if test="otherIdentifyName != null and otherIdentifyName != '' " >
+                	OTHER_IDENTIFY_NAME = #{otherIdentifyName,jdbcType=VARCHAR},
+            	</if>
+            	<if test="identifyNumber != null and identifyNumber != '' " >
+                	IDENTIFY_NUMBER = #{identifyNumber,jdbcType=VARCHAR},
+            	</if>
+            	<if test="spvCapAccBank != null and spvCapAccBank != '' " >
+                	SPV_CAP_ACC_BANK = #{spvCapAccBank,jdbcType=VARCHAR},
+            	</if>
+            	<if test="otherCapAccBank != null and otherCapAccBank != '' " >
+                	OTHER_CAP_ACC_BANK = #{otherCapAccBank,jdbcType=VARCHAR},
+            	</if>
+            	<if test="spvRegistCode != null and spvRegistCode != '' " >
+                	SPV_REGIST_CODE = #{spvRegistCode,jdbcType=VARCHAR},
+            	</if>
+            	<if test="holderDate != null " >
+                	HOLDER_DATE = #{holderDate,jdbcType=DATE},
+            	</if>
+            	<if test="holderName != null and holderName != '' " >
+                	HOLDER_NAME = #{holderName,jdbcType=VARCHAR},
+            	</if>
+            	<if test="holderSex != null and holderSex != '' " >
+                	HOLDER_SEX = #{holderSex,jdbcType=CHAR},
+            	</if>
+            	<if test="holderRiskPrefer != null and holderRiskPrefer != '' " >
+                	HOLDER_RISK_PREFER = #{holderRiskPrefer,jdbcType=VARCHAR},
+            	</if>
+            	<if test="holderCellphone != null and holderCellphone != '' " >
+                	HOLDER_CELLPHONE = #{holderCellphone,jdbcType=VARCHAR},
+            	</if>
+            	<if test="holderTelephone != null and holderTelephone != '' " >
+                	HOLDER_TELEPHONE = #{holderTelephone,jdbcType=VARCHAR},
+            	</if>
+            	<if test="isSubmit != null and isSubmit != '' " >
+                	IS_SUBMIT = #{isSubmit,jdbcType=CHAR},
+            	</if>
+            	<if test="holderEmail != null and holderEmail != '' " >
+                	HOLDER_EMAIL = #{holderEmail,jdbcType=VARCHAR},
+            	</if>
+            	<if test="remark != null and remark != '' " >
+                	REMARK = #{remark,jdbcType=VARCHAR},
+            	</if>
+            	<if test="status != null and status != '' " >
+                	STATUS = #{status,jdbcType=VARCHAR},
+            	</if>
+            	<if test="workflowId != null and workflowId != '' " >
+                	WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            	</if>
+            	<if test="orgCode != null and orgCode != '' " >
+                	ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            	</if>
+            	<if test="dataSource != null and dataSource != '' " >
+                	DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            	</if>
+            	<if test="agent != null and agent != '' " >
+                	AGENT = #{agent,jdbcType=VARCHAR},
+            	</if>
+            	<if test="deptCode != null and deptCode != '' " >
+                	DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            	</if>
+            	<if test="createDept != null and createDept != '' " >
+                    CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+                </if>
+                <if test="interfCheckResult!=null and interfCheckResult!='' ">
+                INTERF_CHECK_RESULT=#{interfCheckResult,jdbcType=VARCHAR},
+                </if>
+			</set> 
+            <where>
+        		<if test="type !=null and type == '02'.toString()">
+            		INDENTIFY_MARK in ( #{orgIndentifyMark,jdbcType=VARCHAR}, #{indentifyMark,jdbcType=VARCHAR}) and
+            	</if>
+        		<if test="type !=null and type != '02'">
+            		INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR} and
+            	</if>
+            	 REGIST_BANK_CODE = #{bankCode,jdbcType=VARCHAR}
+            </where>
+	</update>
+	<!-- 查询符合条件即中债反馈状态为中债退回的投资者身份信息 -->
+	<select id="selectFeedBackData" resultType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto">
+		SELECT 
+			T.INDENTIFY_MARK as indentifyMark,
+         	T.REGIST_BANK_CODE as bankCode,
+         	T.ORG_INDENTIFY_MARK as orgIndentifyMark,
+        	T.IS_BELONG_BANK as isBelongBank,
+        	T.THE_BANK_NAME as theBankName,
+        	T.THE_BANK_CODE as theBankCode,
+        	T.HOLDER_MARK as holderMark,
+        	T.HOLDER_REGION as holderRegion,
+        	T.HOLDER_TYPE as holderType,
+        	T.PERSONAL_IDENTIFY_TYPE as personalIdentifyType,
+        	T.INSTITUTION_IDENTIFY_TYPE as institutionIdentifyType,
+        	nvl(T.PERSONAL_IDENTIFY_TYPE,T.INSTITUTION_IDENTIFY_TYPE) as inentifyType,
+        	T.IDENTIFY_NUMBER as identifyNumber,
+        	T.OTHER_IDENTIFY_NAME as otherIdentifyName,
+        	T.SPV_CAP_ACC_BANK as spvCapAccBank,
+        	T.OTHER_CAP_ACC_BANK as otherCapAccBank,
+        	T.SPV_REGIST_CODE as spvRegistCode,
+        	T.HOLDER_NAME as holderName,
+        	T.HOLDER_SEX as holderSex,
+        	T.HOLDER_RISK_PREFER as holderRiskPrefer,
+        	T.HOLDER_CELLPHONE as holderCellphone,
+        	T.HOLDER_TELEPHONE as holderTelephone,
+        	T.HOLDER_EMAIL as holderEmail,
+        	T.REMARK as remark,
+        	T.ORG_CODE orgCode,
+        	T.STATUS as status,
+        	'' as interfCheckResult,
+        	'' as agent,
+        	status.SUBMIT_FEEDBACK_MSG as repFailedInfo
+		 FROM CHB_EQU_SUB T left join CHB_SUBMIT_STATUS status
+		 on T.sumit_seq = status.seqno
+		<where>
+			<if test="FEEDBACKSTATUS!=null and FEEDBACKSTATUS !=''" >
+				status.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
+			</if>
+			<if test="SEQNO !=null and SEQNO.size()>0 ">
+				<foreach collection="SEQNO" item="SUMIT_SEQ" open=" AND T.SUMIT_SEQ IN (" close=")" separator=",">
+					#{SUMIT_SEQ,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="SEQNO !=null and SEQNO.size() ==0">
+				AND 1=2
+			</if>
+		</where>
+	</select>
+	<select id="selectAllFeedBackData" resultType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto">
+		SELECT 
+			T.INDENTIFY_MARK as indentifyMark,
+         	T.REGIST_BANK_CODE as bankCode,
+         	T.ORG_INDENTIFY_MARK as orgIndentifyMark,
+        	T.IS_BELONG_BANK as isBelongBank,
+        	T.THE_BANK_NAME as theBankName,
+        	T.THE_BANK_CODE as theBankCode,
+        	T.HOLDER_MARK as holderMark,
+        	T.HOLDER_REGION as holderRegion,
+        	T.HOLDER_TYPE as holderType,
+        	T.PERSONAL_IDENTIFY_TYPE as personalIdentifyType,
+        	T.INSTITUTION_IDENTIFY_TYPE as institutionIdentifyType,
+        	nvl(T.PERSONAL_IDENTIFY_TYPE,T.INSTITUTION_IDENTIFY_TYPE) as inentifyType,
+        	T.IDENTIFY_NUMBER as identifyNumber,
+        	T.OTHER_IDENTIFY_NAME as otherIdentifyName,
+        	T.SPV_CAP_ACC_BANK as spvCapAccBank,
+        	T.OTHER_CAP_ACC_BANK as otherCapAccBank,
+        	T.SPV_REGIST_CODE as spvRegistCode,
+        	T.HOLDER_NAME as holderName,
+        	T.HOLDER_SEX as holderSex,
+        	T.HOLDER_RISK_PREFER as holderRiskPrefer,
+        	T.HOLDER_CELLPHONE as holderCellphone,
+        	T.HOLDER_TELEPHONE as holderTelephone,
+        	T.HOLDER_EMAIL as holderEmail,
+        	T.REMARK as remark,
+        	T.ORG_CODE orgCode,
+        	T.STATUS as status,
+        	'' as interfCheckResult,
+        	'' as agent,
+        	status.SUBMIT_FEEDBACK_MSG as repFailedInfo
+		 FROM CHB_EQU_SUB T left join CHB_SUBMIT_STATUS status
+		 on T.sumit_seq = status.seqno
+		<where>
+			<if test="FEEDBACKSTATUS!=null and FEEDBACKSTATUS !=''" >
+				status.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
+			</if>
+			<if test="reportNo !=null and reportNo !=''">
+				 AND status.REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+			</if>
+			
+		</where>
+	</select>
+</mapper>

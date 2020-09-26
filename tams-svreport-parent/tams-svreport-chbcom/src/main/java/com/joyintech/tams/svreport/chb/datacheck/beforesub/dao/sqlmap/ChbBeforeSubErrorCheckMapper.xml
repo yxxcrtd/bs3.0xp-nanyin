@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.datacheck.beforesub.dao.ChbBeforeSubErrorCheckMapper" >
+  
+  <select id="selectProdDealSub" resultType="java.util.HashMap"  parameterType="java.util.Date" >
+  	select * from CHB_PRD_DEAL_SUB
+  	where 
+  	 (SUBMIT_FEEDBACK_STATUS !='03' or SUBMIT_FEEDBACK_STATUS is null)
+  	and STATUS_DATE<![CDATA[<=]]>#{checkdate,jdbcType=DATE}
+	<if test="listProd!=null and listProd.size()!=0">
+	 	and PROD_ID in 
+	    <foreach item="prodid" collection="listProd" open="(" separator="," close=")"> 
+	      #{prodid}
+	   	</foreach>
+	</if>
+  </select>
+    
+   <update id="updateProdDealSub" parameterType="java.lang.String" >
+	   update CHB_PRD_DEAL_SUB set status='04'
+	   where REGIST_SEQNO= #{seqno,jdbcType=CHAR}
+   </update>
+    
+   <select id="selectProdIssueSub" resultType="java.util.HashMap"  parameterType="java.util.Date" >
+  	select * from CHB_PRD_ISSUE_SUB
+  	where 
+  	 (SUBMIT_FEEDBACK_STATUS !='03' or SUBMIT_FEEDBACK_STATUS is null)
+  	and STATUS_DATE<![CDATA[<=]]>#{checkdate,jdbcType=DATE}
+	<if test="listProd!=null and listProd.size()!=0">
+	 	and PROD_ID in 
+	    <foreach item="prodid" collection="listProd" open="(" separator="," close=")"> 
+	      #{prodid}
+	   	</foreach>
+	</if>  	
+  </select>
+    
+   <update id="updateProdIssueSub" parameterType="java.lang.String" >
+	   update CHB_PRD_ISSUE_SUB set status='04'
+	   where REGIST_SEQNO= #{seqno,jdbcType=CHAR}
+   </update>
+  
+  <select id="selectProdEndSub" resultType="java.util.HashMap"  parameterType="java.util.Date" >
+  	select * from CHB_PRD_END_SUB
+  	where 
+  	 (SUBMIT_FEEDBACK_STATUS !='03' or SUBMIT_FEEDBACK_STATUS is null)
+  	and STATUS_DATE<![CDATA[<=]]>#{checkdate,jdbcType=DATE}
+	<if test="listProd!=null and listProd.size()!=0">
+	 	and PROD_ID in 
+	    <foreach item="prodid" collection="listProd" open="(" separator="," close=")"> 
+	      #{prodid}
+	   	</foreach>
+	</if>  	
+  </select>
+    
+   <update id="updateProdEndSub" parameterType="java.lang.String" >
+	   update CHB_PRD_END_SUB set status='04'
+	   where REGIST_SEQNO= #{seqno,jdbcType=CHAR}
+   </update>
+
+  <select id="selectInvestTradeSub" resultType="java.util.HashMap"  parameterType="java.util.Date" >
+  	select * from CHB_INVEST_TRADE_SUB
+  	where 
+  	 (SUBMIT_FEEDBACK_STATUS !='03' or SUBMIT_FEEDBACK_STATUS is null)
+  	and STATUS_DATE<![CDATA[<=]]>#{checkdate,jdbcType=DATE}
+	<if test="listProd!=null and listProd.size()!=0">
+	 	and PROD_ID in 
+	    <foreach item="prodid" collection="listProd" open="(" separator="," close=")"> 
+	      #{prodid}
+	   	</foreach>
+	</if>
+  </select>
+    
+   <update id="updateInvestTradeSub" parameterType="java.lang.String" >
+	   update CHB_INVEST_TRADE_SUB set status='04'
+	   where REGIST_SEQNO= #{seqno,jdbcType=CHAR}
+   </update>
+       
+</mapper>

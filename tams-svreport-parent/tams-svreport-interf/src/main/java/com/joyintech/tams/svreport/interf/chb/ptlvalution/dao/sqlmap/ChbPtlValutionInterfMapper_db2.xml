@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.ptlvalution.dao.ChbPtlValutionInterfMapper_db2">
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbPtlValution">
+    <id column="CDATE" jdbcType="TIMESTAMP" property="cdate" />
+    <id column="PORTFOLIO_ID" jdbcType="VARCHAR" property="portfolioId" />
+    <id column="FINPROD_ID" jdbcType="VARCHAR" property="finprodId" />
+    <id column="INV_AIM" jdbcType="VARCHAR" property="invAim" />
+    <result column="CCY" jdbcType="VARCHAR" property="ccy" />
+    <result column="SHARE_AMT" jdbcType="DECIMAL" property="shareAmt" />
+    <result column="DSC_COST_AMT" jdbcType="DECIMAL" property="dscCostAmt" />
+    <result column="DSC_CLEAN_PRICE" jdbcType="DECIMAL" property="dscCleanPrice" />
+    <result column="BUY_COST_AMT" jdbcType="DECIMAL" property="buyCostAmt" />
+    <result column="BUY_CLEAN_PRICE" jdbcType="DECIMAL" property="buyCleanPrice" />
+    <result column="MARKET_VALUE" jdbcType="DECIMAL" property="marketValue" />
+    <result column="MARKET_CLEAN_PRICE" jdbcType="DECIMAL" property="marketCleanPrice" />
+    <result column="TDY_INTINCEXP" jdbcType="DECIMAL" property="tdyIntincexp" />
+    <result column="TDY_DSCINCEXP_ADD" jdbcType="DECIMAL" property="tdyDscincexpAdd" />
+    <result column="TDY_INTINCEXP_ADD" jdbcType="DECIMAL" property="tdyIntincexpAdd" />
+    <result column="TDY_DSCLOSS_ADD" jdbcType="DECIMAL" property="tdyDsclossAdd" />
+    <result column="TDY_FLOAT_INGPL_ADD" jdbcType="DECIMAL" property="tdyFloatIngplAdd" />
+    <result column="TDY_FEE_ADD" jdbcType="DECIMAL" property="tdyFeeAdd" />
+    <result column="ACCU_NET_VALUE" jdbcType="DECIMAL" property="accuNetValue" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    CDATE, PORTFOLIO_ID, FINPROD_ID, INV_AIM, CCY, SHARE_AMT, DSC_COST_AMT, DSC_CLEAN_PRICE, 
+    BUY_COST_AMT, BUY_CLEAN_PRICE, MARKET_VALUE, MARKET_CLEAN_PRICE, TDY_INTINCEXP, TDY_DSCINCEXP_ADD, 
+    TDY_INTINCEXP_ADD, TDY_DSCLOSS_ADD, TDY_FLOAT_INGPL_ADD, TDY_FEE_ADD, ACCU_NET_VALUE, 
+    CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+  </sql>
+
+  <insert id="insertBatchList" parameterType="com.joyintech.tams.common.base.entity.ChbPtlValution">
+    insert into CHB_PTL_VALUTION (CDATE, PORTFOLIO_ID, FINPROD_ID, 
+      INV_AIM, CCY, SHARE_AMT, 
+      DSC_COST_AMT, DSC_CLEAN_PRICE, BUY_COST_AMT, 
+      BUY_CLEAN_PRICE, MARKET_VALUE, MARKET_CLEAN_PRICE, 
+      TDY_INTINCEXP, TDY_DSCINCEXP_ADD, TDY_INTINCEXP_ADD, 
+      TDY_DSCLOSS_ADD, TDY_FLOAT_INGPL_ADD, TDY_FEE_ADD, 
+      ACCU_NET_VALUE, CREATE_USER, CREATE_DEPT, 
+      CREATE_TIME, UPDATE_USER, UPDATE_TIME
+      )
+      <foreach collection="listChbPtlValution" item="dto" open=" select * from (select " close="from sysibm.SYSDUMMY1)" separator="from sysibm.SYSDUMMY1 union all select ">
+      #{dto.cdate,jdbcType=TIMESTAMP}, #{dto.portfolioId,jdbcType=VARCHAR}, #{dto.finprodId,jdbcType=VARCHAR}, 
+      #{dto.invAim,jdbcType=VARCHAR}, #{dto.ccy,jdbcType=VARCHAR}, #{dto.shareAmt,jdbcType=DECIMAL}, 
+      #{dto.dscCostAmt,jdbcType=DECIMAL}, #{dto.dscCleanPrice,jdbcType=DECIMAL}, #{dto.buyCostAmt,jdbcType=DECIMAL}, 
+      #{dto.buyCleanPrice,jdbcType=DECIMAL}, #{dto.marketValue,jdbcType=DECIMAL}, #{dto.marketCleanPrice,jdbcType=DECIMAL}, 
+      #{dto.tdyIntincexp,jdbcType=DECIMAL}, #{dto.tdyDscincexpAdd,jdbcType=DECIMAL}, #{dto.tdyIntincexpAdd,jdbcType=DECIMAL}, 
+      #{dto.tdyDsclossAdd,jdbcType=DECIMAL}, #{dto.tdyFloatIngplAdd,jdbcType=DECIMAL}, #{dto.tdyFeeAdd,jdbcType=DECIMAL}, 
+      #{dto.accuNetValue,jdbcType=DECIMAL}, #{dto.createUser,jdbcType=VARCHAR}, #{dto.createDept,jdbcType=VARCHAR}, 
+      #{dto.createTime,jdbcType=TIMESTAMP}, #{dto.updateUser,jdbcType=VARCHAR}, #{dto.updateTime,jdbcType=TIMESTAMP}
+      </foreach>
+  </insert>
+</mapper>

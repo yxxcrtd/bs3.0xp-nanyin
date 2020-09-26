@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.botastpositionregist.dao.ChbBotAstPosSubHisMapper_mysql">
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.botastpositionregist.dto.ChbBotAstPosSubHis" >
+    <id column="REGIST_SEQNO" property="registSeqno" jdbcType="CHAR" />
+    <result column="REGIST_BANK_CODE" property="registBankCode" jdbcType="VARCHAR" />
+    <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+    <result column="POS_DATE" property="posDate" jdbcType="TIMESTAMP" />
+    <result column="PLAN_ASSET_ID" property="planAssetId" jdbcType="VARCHAR" />
+    <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+    <result column="TOTAL_NUM" property="totalNum" jdbcType="DECIMAL" />
+    <result column="ISSUE_AMT" property="issueAmt" jdbcType="DECIMAL" />
+    <result column="UNINVEST_CASH" property="uninvestCash" jdbcType="DECIMAL" />
+    <result column="POS_NUM" property="posNum" jdbcType="DECIMAL" />
+    <result column="POS_AMT" property="posAmt" jdbcType="DECIMAL" />
+    <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+    <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" jdbcType="TIMESTAMP" />
+    <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
+    <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+    <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+    <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="STATUS_DATE" property="statusDate" jdbcType="TIMESTAMP" />
+    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+    <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    REGIST_SEQNO, REGIST_BANK_CODE, ISSUE_PARTY_ID, POS_DATE, PLAN_ASSET_ID, ASSET_CODE, 
+    TOTAL_NUM, ISSUE_AMT, UNINVEST_CASH, POS_NUM, POS_AMT, SEND_STATUS, CHB_SUBMIT_DEADLINE, 
+    SUBMIT_DEADLINE, SUBMIT_TIME, SUMIT_SEQ, SUBMIT_FEEDBACK_STATUS, STATUS, STATUS_DATE, 
+    ORG_CODE, DEPT_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from CHB_BOT_AST_POS_SUB_HIS
+    where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from CHB_BOT_AST_POS_SUB_HIS
+    where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.botastpositionregist.dto.ChbBotAstPosSubHis" >
+    insert into CHB_BOT_AST_POS_SUB_HIS (REGIST_SEQNO, REGIST_BANK_CODE, ISSUE_PARTY_ID, 
+      POS_DATE, PLAN_ASSET_ID, ASSET_CODE, 
+      TOTAL_NUM, ISSUE_AMT, UNINVEST_CASH, 
+      POS_NUM, POS_AMT, SEND_STATUS, 
+      CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+      SUBMIT_TIME, SUMIT_SEQ, SUBMIT_FEEDBACK_STATUS, 
+      STATUS, STATUS_DATE, ORG_CODE, 
+      DEPT_CODE, CREATE_USER, CREATE_DEPT, 
+      CREATE_TIME, UPDATE_USER, UPDATE_TIME
+      )
+    values (#{registSeqno,jdbcType=CHAR}, #{registBankCode,jdbcType=VARCHAR}, #{issuePartyId,jdbcType=VARCHAR}, 
+      #{posDate,jdbcType=TIMESTAMP}, #{planAssetId,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR}, 
+      #{totalNum,jdbcType=DECIMAL}, #{issueAmt,jdbcType=DECIMAL}, #{uninvestCash,jdbcType=DECIMAL}, 
+      #{posNum,jdbcType=DECIMAL}, #{posAmt,jdbcType=DECIMAL}, #{sendStatus,jdbcType=VARCHAR}, 
+      #{chbSubmitDeadline,jdbcType=TIMESTAMP}, #{submitDeadline,jdbcType=TIMESTAMP}, 
+      #{submitTime,jdbcType=TIMESTAMP}, #{sumitSeq,jdbcType=VARCHAR}, #{submitFeedbackStatus,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{statusDate,jdbcType=TIMESTAMP}, #{orgCode,jdbcType=VARCHAR}, 
+      #{deptCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+      NOW(), #{updateUser,jdbcType=VARCHAR}, NOW()
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.botastpositionregist.dto.ChbBotAstPosSubHis" >
+    insert into CHB_BOT_AST_POS_SUB_HIS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="registSeqno != null" >
+        REGIST_SEQNO,
+      </if>
+      <if test="registBankCode != null" >
+        REGIST_BANK_CODE,
+      </if>
+      <if test="issuePartyId != null" >
+        ISSUE_PARTY_ID,
+      </if>
+      <if test="posDate != null" >
+        POS_DATE,
+      </if>
+      <if test="planAssetId != null" >
+        PLAN_ASSET_ID,
+      </if>
+      <if test="assetCode != null" >
+        ASSET_CODE,
+      </if>
+      <if test="totalNum != null" >
+        TOTAL_NUM,
+      </if>
+      <if test="issueAmt != null" >
+        ISSUE_AMT,
+      </if>
+      <if test="uninvestCash != null" >
+        UNINVEST_CASH,
+      </if>
+      <if test="posNum != null" >
+        POS_NUM,
+      </if>
+      <if test="posAmt != null" >
+        POS_AMT,
+      </if>
+      <if test="sendStatus != null" >
+        SEND_STATUS,
+      </if>
+      <if test="chbSubmitDeadline != null" >
+        CHB_SUBMIT_DEADLINE,
+      </if>
+      <if test="submitDeadline != null" >
+        SUBMIT_DEADLINE,
+      </if>
+      <if test="submitTime != null" >
+        SUBMIT_TIME,
+      </if>
+      <if test="sumitSeq != null" >
+        SUMIT_SEQ,
+      </if>
+      <if test="submitFeedbackStatus != null" >
+        SUBMIT_FEEDBACK_STATUS,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="statusDate != null" >
+        STATUS_DATE,
+      </if>
+      <if test="orgCode != null" >
+        ORG_CODE,
+      </if>
+      <if test="deptCode != null" >
+        DEPT_CODE,
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER,
+      </if>
+      <if test="createDept != null" >
+        CREATE_DEPT,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateUser != null" >
+        UPDATE_USER,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="registSeqno != null" >
+        #{registSeqno,jdbcType=CHAR},
+      </if>
+      <if test="registBankCode != null" >
+        #{registBankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="issuePartyId != null" >
+        #{issuePartyId,jdbcType=VARCHAR},
+      </if>
+      <if test="posDate != null" >
+        #{posDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="planAssetId != null" >
+        #{planAssetId,jdbcType=VARCHAR},
+      </if>
+      <if test="assetCode != null" >
+        #{assetCode,jdbcType=VARCHAR},
+      </if>
+      <if test="totalNum != null" >
+        #{totalNum,jdbcType=DECIMAL},
+      </if>
+      <if test="issueAmt != null" >
+        #{issueAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="uninvestCash != null" >
+        #{uninvestCash,jdbcType=DECIMAL},
+      </if>
+      <if test="posNum != null" >
+        #{posNum,jdbcType=DECIMAL},
+      </if>
+      <if test="posAmt != null" >
+        #{posAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="sendStatus != null" >
+        #{sendStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="chbSubmitDeadline != null" >
+        #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitDeadline != null" >
+        #{submitDeadline,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitTime != null" >
+        #{submitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sumitSeq != null" >
+        #{sumitSeq,jdbcType=VARCHAR},
+      </if>
+      <if test="submitFeedbackStatus != null" >
+        #{submitFeedbackStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="statusDate != null" >
+        #{statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orgCode != null" >
+        #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="deptCode != null" >
+        #{deptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDept != null" >
+        #{createDept,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.chb.botastpositionregist.dto.ChbBotAstPosSubHis" >
+    update CHB_BOT_AST_POS_SUB_HIS
+    <set >
+      <if test="registBankCode != null" >
+        REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="issuePartyId != null" >
+        ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+      </if>
+      <if test="posDate != null" >
+        POS_DATE = #{posDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="planAssetId != null" >
+        PLAN_ASSET_ID = #{planAssetId,jdbcType=VARCHAR},
+      </if>
+      <if test="assetCode != null" >
+        ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
+      </if>
+      <if test="totalNum != null" >
+        TOTAL_NUM = #{totalNum,jdbcType=DECIMAL},
+      </if>
+      <if test="issueAmt != null" >
+        ISSUE_AMT = #{issueAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="uninvestCash != null" >
+        UNINVEST_CASH = #{uninvestCash,jdbcType=DECIMAL},
+      </if>
+      <if test="posNum != null" >
+        POS_NUM = #{posNum,jdbcType=DECIMAL},
+      </if>
+      <if test="posAmt != null" >
+        POS_AMT = #{posAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="sendStatus != null" >
+        SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="chbSubmitDeadline != null" >
+        CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitDeadline != null" >
+        SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitTime != null" >
+        SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sumitSeq != null" >
+        SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+      </if>
+      <if test="submitFeedbackStatus != null" >
+        SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="statusDate != null" >
+        STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orgCode != null" >
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="deptCode != null" >
+        DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDept != null" >
+        CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.chb.botastpositionregist.dto.ChbBotAstPosSubHis" >
+    update CHB_BOT_AST_POS_SUB_HIS
+    set REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR},
+      ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+      POS_DATE = #{posDate,jdbcType=TIMESTAMP},
+      PLAN_ASSET_ID = #{planAssetId,jdbcType=VARCHAR},
+      ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
+      TOTAL_NUM = #{totalNum,jdbcType=DECIMAL},
+      ISSUE_AMT = #{issueAmt,jdbcType=DECIMAL},
+      UNINVEST_CASH = #{uninvestCash,jdbcType=DECIMAL},
+      POS_NUM = #{posNum,jdbcType=DECIMAL},
+      POS_AMT = #{posAmt,jdbcType=DECIMAL},
+      SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+      CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+      SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+      SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+      SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+      SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
+      STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+      ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+  </update>
+  
+  <insert id="insertSubHisBatch" parameterType="java.lang.String">
+  insert into CHB_BOT_AST_POS_SUB_HIS (REGIST_SEQNO, REGIST_BANK_CODE, ISSUE_PARTY_ID, 
+      POS_DATE, PLAN_ASSET_ID, ASSET_CODE, 
+      TOTAL_NUM, ISSUE_AMT, UNINVEST_CASH, 
+      POS_NUM, POS_AMT, SEND_STATUS, 
+      CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+      SUBMIT_TIME, SUMIT_SEQ, SUBMIT_FEEDBACK_STATUS, 
+      STATUS, STATUS_DATE, ORG_CODE, 
+      DEPT_CODE, CREATE_USER, CREATE_DEPT, 
+      CREATE_TIME, UPDATE_USER, UPDATE_TIME
+      )
+      select
+      REGIST_SEQNO, REGIST_BANK_CODE, ISSUE_PARTY_ID, 
+      POS_DATE, PLAN_ASSET_ID, ASSET_CODE, 
+      TOTAL_NUM, ISSUE_AMT, UNINVEST_CASH, 
+      POS_NUM, POS_AMT, SEND_STATUS, 
+      CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+      SUBMIT_TIME, SUMIT_SEQ, SUBMIT_FEEDBACK_STATUS, 
+      STATUS, STATUS_DATE, ORG_CODE, 
+      DEPT_CODE, CREATE_USER, CREATE_DEPT, 
+      CREATE_TIME, UPDATE_USER, UPDATE_TIME
+    from CHB_BOT_AST_POS_SUB
+    where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+  	<if test="regList !=null and regList.size()>0">
+          <foreach collection="regList" item="item" open="and REGIST_SEQNO IN (" separator=","  close=")">
+            #{item,jdbcType=VARCHAR}
+          </foreach>
+    </if>
+  </insert>
+ 
+  <select id="selectByprodId" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.chb.botastpositionregist.dto.ChbBotAstPositionRegist001Dto">
+  select a.REGIST_SEQNO from (
+    SELECT
+    @rownum := @rownum + 1 rownum,
+    REGIST_SEQNO,
+    IF
+    (
+      (
+      @POS_DATE = A.POS_DATE
+      AND @PLAN_ASSET_ID = A.PLAN_ASSET_ID
+      AND @ASSET_CODE = A.ASSET_CODE
+      ),
+      @rank := @rank + 1,
+      @rank := 1
+    ) AS myrank,
+    @POS_DATE := A.POS_DATE,
+    @PLAN_ASSET_ID := A.PLAN_ASSET_ID,
+    @ASSET_CODE := A.ASSET_CODE
+    FROM
+    ( SELECT * FROM CHB_BOT_AST_POS_SUB_HIS ORDER BY POS_DATE,PLAN_ASSET_ID, ASSET_CODE, ifnull( UPDATE_TIME, CREATE_TIME ) DESC ) A,
+    (
+    SELECT
+    @rownum := 0,
+    @POS_DATE := NULL,
+    @PLAN_ASSET_ID := NULL,
+    @ASSET_CODE := NULL,
+    @rank := 0
+    ) B
+  where 
+  <foreach collection="regList" item="item" open="(" separator=") or (" close=")">
+   POS_DATE = #{item.posDate}
+	and PLAN_ASSET_ID = #{item.planAssetId}
+	and ASSET_CODE = #{item.assetCode}
+  </foreach>
+  )a
+  where 1 = 1 limit 1
+  </select>
+  
+   <delete id="deleteBySeqno" parameterType="java.lang.String">
+	delete from CHB_BOT_AST_POS_SUB_HIS
+	where
+	<foreach collection="seqnolist" item="item" open="REGIST_SEQNO in ("
+		separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+	</foreach>
+</delete>
+</mapper>

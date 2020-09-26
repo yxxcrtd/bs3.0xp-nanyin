@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="PbcCapAssetInfo001.xlsx" name="人行资金信托代码管理">
+	<Worksheet javaBean="com.joyintech.tams.report.system.systempbccapassetinfo.dto.PbcCapAssetInfo001Dto">
+		<Row>
+			<Cell order="1" name="资产代码*">assetid</Cell>
+		    <Cell order="2" name="资产名称">assetName</Cell>
+		    <Cell order="3" name="资金信托代码*">pobcassetid</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>

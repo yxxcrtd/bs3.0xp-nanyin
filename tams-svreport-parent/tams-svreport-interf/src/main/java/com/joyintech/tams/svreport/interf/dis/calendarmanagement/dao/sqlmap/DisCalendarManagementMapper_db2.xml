@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.interf.dis.calendarmanagement.dao.DisCalendarManagementMapper_db2">
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.interf.dis.calendarmanagement.dto.DisCalendarManagement">
+    <result column="CALENDAR_ID" jdbcType="VARCHAR" property="calendarId" />
+    <result column="CALENDAR_NAME" jdbcType="VARCHAR" property="calendarName" />
+    <result column="OTHER_ID" jdbcType="VARCHAR" property="otherId" />
+    <result column="IS_TRADE_CALENDAR" jdbcType="VARCHAR" property="isTradeCalendar" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />  
+    <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateteUser" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />  
+  </resultMap>
+
+  <sql id="Base_Column_List">
+       CALENDAR_ID,CALENDAR_NAME,OTHER_ID,IS_TRADE_CALENDAR,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME
+  </sql>	
+  
+ <update id="mergeByModel">
+        MERGE INTO MST_CALENDAR_INFO RPI
+		USING (
+			<foreach collection="list" item="item" open="select * from("
+				close=")" separator="union all">
+				SELECT 					
+					'${item.calendarId}' CALENDAR_ID,<!--日历编码-->
+					'${item.calendarName}' CALENDAR_NAME,<!--日历名称-->
+					'${item.otherId}' OTHER_ID,<!--第三方日历编号-->
+					'${item.isTradeCalendar}' IS_TRADE_CALENDAR,<!--是否交易日历，交易日历为多市场日历复合而成-->
+					'${item.remark}' REMARK,<!--备注-->
+					'${item.createUser}' CREATE_USER,<!--创建人-->
+					'${item.createDept}' CREATE_DEPT,<!--创建部门-->
+					<choose><when test="item.createTime != null">#{item.createTime,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose> CREATE_TIME,<!--创建时间-->
+					'${item.updateUser}' UPDATE_USER,<!--更新人-->
+					<choose><when test="item.updateTime != null">#{item.updateTime,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose> UPDATE_TIME<!--更新时间-->				
+				FROM
+					sysibm.SYSDUMMY1
+			</foreach>
+		) TEMP
+		<!-- 业务主键匹配 -->
+		ON(
+			RPI.CALENDAR_ID = TEMP.CALENDAR_ID
+		)
+		<!-- 匹配到则更新  start-->
+		WHEN MATCHED THEN 
+			UPDATE SET 
+				RPI.CALENDAR_NAME = TEMP.CALENDAR_NAME,<!--日历名称-->
+				RPI.OTHER_ID = TEMP.OTHER_ID,<!--第三方日历编号-->
+				RPI.IS_TRADE_CALENDAR = TEMP.IS_TRADE_CALENDAR,<!--是否交易日历，交易日历为多市场日历复合而成-->
+				RPI.REMARK = TEMP.REMARK,<!--备注-->
+				RPI.CREATE_USER = TEMP.CREATE_USER,<!--创建人-->
+				RPI.CREATE_DEPT = TEMP.CREATE_DEPT,<!--创建部门-->
+				RPI.CREATE_TIME = TEMP.CREATE_TIME,<!--创建时间-->
+				RPI.UPDATE_USER = TEMP.UPDATE_USER,<!--更新人-->
+				RPI.UPDATE_TIME = TEMP.UPDATE_TIME<!--更新时间-->			
+		<!-- 匹配到则更新  end-->
+		<!-- 不匹配到则插入  start-->
+		WHEN NOT MATCHED THEN
+            INSERT
+            (
+				CALENDAR_ID,<!--日历编码-->
+				CALENDAR_NAME,<!--日历名称-->
+				OTHER_ID,<!--第三方日历编号-->
+				IS_TRADE_CALENDAR,<!--是否交易日历，交易日历为多市场日历复合而成-->
+				REMARK,<!--备注-->
+				CREATE_USER,<!--创建人-->
+				CREATE_DEPT,<!--创建部门-->
+				CREATE_TIME,<!--创建时间-->
+				UPDATE_USER,<!--更新人-->
+				UPDATE_TIME<!--更新时间-->	
+			)
+            VALUES
+           (
+				TEMP.CALENDAR_ID,<!--日历编码-->
+				TEMP.CALENDAR_NAME,<!--日历名称-->
+				TEMP.OTHER_ID,<!--第三方日历编号-->
+				TEMP.IS_TRADE_CALENDAR,<!--是否交易日历，交易日历为多市场日历复合而成-->
+				TEMP.REMARK,<!--备注-->				
+				TEMP.CREATE_USER,<!--创建人-->
+				TEMP.CREATE_DEPT,<!--创建部门-->
+				TEMP.CREATE_TIME,<!--创建时间-->
+				TEMP.UPDATE_USER,<!--更新人-->
+				TEMP.UPDATE_TIME<!--更新时间-->	
+			) 
+		<!-- 不匹配到则插入  end-->
+    </update>
+ 
+</mapper>

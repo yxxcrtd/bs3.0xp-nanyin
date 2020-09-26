@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="PbcPrdAssetDebtSubPreviewXT.xlsx" name="资金信托信息">
+	<Worksheet javaBean="com.joyintech.tams.svreport.pbc.report.dto.PbcLoanDetailInfoSub">
+		<Row>
+			<Cell order="1" name="资产池代码">pbcAccountId</Cell>
+			<Cell order="2" name="内部产品代码">prodId</Cell>
+			<Cell order="3" name="资产代码">assetCode</Cell>
+			<Cell order="4" name="资产名称">assetName</Cell>
+			<Cell order="5" name="股权种类">stockType</Cell>
+			<Cell order="6" name="产品发起机构编码">capitalTrustOrgCode</Cell>
+			<Cell order="7" name="人行资金信托代码">pobcassetid</Cell>
+			<Cell order="8" name="币种代码">ccy</Cell>
+			<Cell order="9" name="资金信托产品余额">capitalTrustAmount</Cell>
+			<Cell order="10" name="资金信托产品余额折人民币">capitalTrustAmountCny</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>

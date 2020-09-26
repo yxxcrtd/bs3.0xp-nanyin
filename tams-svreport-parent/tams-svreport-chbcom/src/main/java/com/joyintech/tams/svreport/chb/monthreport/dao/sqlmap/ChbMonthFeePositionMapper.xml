@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthFeePositionMapper" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthFeePosition" >
+    <id column="POSUUID" property="posuuid" jdbcType="CHAR" />
+    <result column="PRODID" property="prodid" jdbcType="VARCHAR" />
+    <result column="STARTDATE" property="startdate" jdbcType="TIMESTAMP" />
+    <result column="ENDDATE" property="enddate" jdbcType="TIMESTAMP" />
+    <result column="BOOKDATE" property="bookdate" jdbcType="TIMESTAMP" />
+    <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+    <result column="RAISEMODE" property="raisemode" jdbcType="VARCHAR" />
+    <result column="IVSTORIENTATION" property="ivstorientation" jdbcType="VARCHAR" />
+    <result column="BANKAMT" property="bankamt" jdbcType="DECIMAL" />
+    <result column="TRUSTFEEAMT" property="trustfeeamt" jdbcType="DECIMAL" />
+    <result column="SALEFEEAMT" property="salefeeamt" jdbcType="DECIMAL" />
+    <result column="OTHERFEEAMT" property="otherfeeamt" jdbcType="DECIMAL" />
+    <result column="MANAFEEAMT" property="manafeeamt" jdbcType="DECIMAL" />
+    <result column="FLOATFEEAMT" property="floatfeeamt" jdbcType="DECIMAL" />
+    <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+    <result column="CON_PRD_TRAGET" property="conPrdTraget" jdbcType="VARCHAR" />
+    <result column="INSTITUTION_CODE" property="institutionCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    POSUUID, PRODID, STARTDATE, ENDDATE, BOOKDATE, CCY, RAISEMODE, IVSTORIENTATION, BANKAMT, 
+    TRUSTFEEAMT, SALEFEEAMT, OTHERFEEAMT, MANAFEEAMT, FLOATFEEAMT, PROFIT_TYPE, CON_PRD_TRAGET
+  </sql>
+  
+  <sql id="Base_Column_List_inst" >
+    POSUUID, PRODID, STARTDATE, ENDDATE, BOOKDATE, CCY, RAISEMODE, IVSTORIENTATION, BANKAMT, 
+    TRUSTFEEAMT, SALEFEEAMT, OTHERFEEAMT, MANAFEEAMT, FLOATFEEAMT, PROFIT_TYPE, CON_PRD_TRAGET, INSTITUTION_CODE
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List_inst" />
+    from CHB_MONTH_FEE_POSITION
+    <if test="modelType != null">
+     	left join (      select f.finprod_market_id,di.institution_code 
+      from fin_product f
+      left join DATA_AUTH_NOTIFY_INST di on f.finprod_id=di.business_id and di.model_type = '02' AND DI.DATA_TYPE= 'FINPROD04'
+      WHERE f.p_finprod_id is null) di on di.finprod_market_id = CHB_MONTH_FEE_POSITION.PRODID
+     </if>
+    where POSUUID = #{posuuid,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from CHB_MONTH_FEE_POSITION
+    where POSUUID = #{posuuid,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthFeePosition" >
+    insert into CHB_MONTH_FEE_POSITION (POSUUID, PRODID, STARTDATE, 
+      ENDDATE, BOOKDATE, CCY, 
+      RAISEMODE, IVSTORIENTATION, BANKAMT, 
+      TRUSTFEEAMT, SALEFEEAMT, OTHERFEEAMT, 
+      MANAFEEAMT, FLOATFEEAMT, PROFIT_TYPE, 
+      CON_PRD_TRAGET)
+    values (#{posuuid,jdbcType=CHAR}, #{prodid,jdbcType=VARCHAR}, #{startdate,jdbcType=TIMESTAMP}, 
+      #{enddate,jdbcType=TIMESTAMP}, #{bookdate,jdbcType=TIMESTAMP}, #{ccy,jdbcType=VARCHAR}, 
+      #{raisemode,jdbcType=VARCHAR}, #{ivstorientation,jdbcType=VARCHAR}, #{bankamt,jdbcType=DECIMAL}, 
+      #{trustfeeamt,jdbcType=DECIMAL}, #{salefeeamt,jdbcType=DECIMAL}, #{otherfeeamt,jdbcType=DECIMAL}, 
+      #{manafeeamt,jdbcType=DECIMAL}, #{floatfeeamt,jdbcType=DECIMAL}, #{profitType,jdbcType=VARCHAR}, 
+      #{conPrdTraget,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthFeePosition" >
+    insert into CHB_MONTH_FEE_POSITION
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="posuuid != null" >
+        POSUUID,
+      </if>
+      <if test="prodid != null" >
+        PRODID,
+      </if>
+      <if test="startdate != null" >
+        STARTDATE,
+      </if>
+      <if test="enddate != null" >
+        ENDDATE,
+      </if>
+      <if test="bookdate != null" >
+        BOOKDATE,
+      </if>
+      <if test="ccy != null" >
+        CCY,
+      </if>
+      <if test="raisemode != null" >
+        RAISEMODE,
+      </if>
+      <if test="ivstorientation != null" >
+        IVSTORIENTATION,
+      </if>
+      <if test="bankamt != null" >
+        BANKAMT,
+      </if>
+      <if test="trustfeeamt != null" >
+        TRUSTFEEAMT,
+      </if>
+      <if test="salefeeamt != null" >
+        SALEFEEAMT,
+      </if>
+      <if test="otherfeeamt != null" >
+        OTHERFEEAMT,
+      </if>
+      <if test="manafeeamt != null" >
+        MANAFEEAMT,
+      </if>
+      <if test="floatfeeamt != null" >
+        FLOATFEEAMT,
+      </if>
+      <if test="profitType != null" >
+        PROFIT_TYPE,
+      </if>
+      <if test="conPrdTraget != null" >
+        CON_PRD_TRAGET,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="posuuid != null" >
+        #{posuuid,jdbcType=CHAR},
+      </if>
+      <if test="prodid != null" >
+        #{prodid,jdbcType=VARCHAR},
+      </if>
+      <if test="startdate != null" >
+        #{startdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enddate != null" >
+        #{enddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bookdate != null" >
+        #{bookdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ccy != null" >
+        #{ccy,jdbcType=VARCHAR},
+      </if>
+      <if test="raisemode != null" >
+        #{raisemode,jdbcType=VARCHAR},
+      </if>
+      <if test="ivstorientation != null" >
+        #{ivstorientation,jdbcType=VARCHAR},
+      </if>
+      <if test="bankamt != null" >
+        #{bankamt,jdbcType=DECIMAL},
+      </if>
+      <if test="trustfeeamt != null" >
+        #{trustfeeamt,jdbcType=DECIMAL},
+      </if>
+      <if test="salefeeamt != null" >
+        #{salefeeamt,jdbcType=DECIMAL},
+      </if>
+      <if test="otherfeeamt != null" >
+        #{otherfeeamt,jdbcType=DECIMAL},
+      </if>
+      <if test="manafeeamt != null" >
+        #{manafeeamt,jdbcType=DECIMAL},
+      </if>
+      <if test="floatfeeamt != null" >
+        #{floatfeeamt,jdbcType=DECIMAL},
+      </if>
+      <if test="profitType != null" >
+        #{profitType,jdbcType=VARCHAR},
+      </if>
+      <if test="conPrdTraget != null" >
+        #{conPrdTraget,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthFeePosition" >
+    update CHB_MONTH_FEE_POSITION
+    <set >
+      <if test="prodid != null" >
+        PRODID = #{prodid,jdbcType=VARCHAR},
+      </if>
+      <if test="startdate != null" >
+        STARTDATE = #{startdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enddate != null" >
+        ENDDATE = #{enddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bookdate != null" >
+        BOOKDATE = #{bookdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ccy != null" >
+        CCY = #{ccy,jdbcType=VARCHAR},
+      </if>
+      <if test="raisemode != null" >
+        RAISEMODE = #{raisemode,jdbcType=VARCHAR},
+      </if>
+      <if test="ivstorientation != null" >
+        IVSTORIENTATION = #{ivstorientation,jdbcType=VARCHAR},
+      </if>
+      <if test="bankamt != null" >
+        BANKAMT = #{bankamt,jdbcType=DECIMAL},
+      </if>
+      <if test="trustfeeamt != null" >
+        TRUSTFEEAMT = #{trustfeeamt,jdbcType=DECIMAL},
+      </if>
+      <if test="salefeeamt != null" >
+        SALEFEEAMT = #{salefeeamt,jdbcType=DECIMAL},
+      </if>
+      <if test="otherfeeamt != null" >
+        OTHERFEEAMT = #{otherfeeamt,jdbcType=DECIMAL},
+      </if>
+      <if test="manafeeamt != null" >
+        MANAFEEAMT = #{manafeeamt,jdbcType=DECIMAL},
+      </if>
+      <if test="floatfeeamt != null" >
+        FLOATFEEAMT = #{floatfeeamt,jdbcType=DECIMAL},
+      </if>
+      <if test="profitType != null" >
+        PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+      </if>
+      <if test="conPrdTraget != null" >
+        CON_PRD_TRAGET = #{conPrdTraget,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where POSUUID = #{posuuid,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthFeePosition" >
+    update CHB_MONTH_FEE_POSITION
+    set PRODID = #{prodid,jdbcType=VARCHAR},
+      STARTDATE = #{startdate,jdbcType=TIMESTAMP},
+      ENDDATE = #{enddate,jdbcType=TIMESTAMP},
+      BOOKDATE = #{bookdate,jdbcType=TIMESTAMP},
+      CCY = #{ccy,jdbcType=VARCHAR},
+      RAISEMODE = #{raisemode,jdbcType=VARCHAR},
+      IVSTORIENTATION = #{ivstorientation,jdbcType=VARCHAR},
+      BANKAMT = #{bankamt,jdbcType=DECIMAL},
+      TRUSTFEEAMT = #{trustfeeamt,jdbcType=DECIMAL},
+      SALEFEEAMT = #{salefeeamt,jdbcType=DECIMAL},
+      OTHERFEEAMT = #{otherfeeamt,jdbcType=DECIMAL},
+      MANAFEEAMT = #{manafeeamt,jdbcType=DECIMAL},
+      FLOATFEEAMT = #{floatfeeamt,jdbcType=DECIMAL},
+      PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+      CON_PRD_TRAGET = #{conPrdTraget,jdbcType=VARCHAR}
+    where POSUUID = #{posuuid,jdbcType=CHAR}
+  </update>
+  
+  <select id="select" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthFeePosition" >
+    select 
+    <include refid="Base_Column_List_inst" />
+    from CHB_MONTH_FEE_POSITION
+     	left join (      select f.finprod_market_id,di.institution_code 
+      from fin_product f
+      left join DATA_AUTH_NOTIFY_INST di on f.finprod_id=di.business_id and di.model_type = '02' AND DI.DATA_TYPE= 'FINPROD04'
+      WHERE f.p_finprod_id is null) di on di.finprod_market_id = CHB_MONTH_FEE_POSITION.PRODID
+    where startdate = #{startdate,jdbcType=DATE}
+    and enddate = #{enddate,jdbcType=DATE}
+  </select>
+    
+  <insert id="genPosition" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReport" >
+	insert into chb_month_fee_position(
+		POSUUID
+		,PRODID
+		,STARTDATE
+		,ENDDATE
+		,BOOKDATE
+		,CCY
+		,RAISEMODE
+		,IVSTORIENTATION
+		,BANKAMT
+		,TRUSTFEEAMT
+		,SALEFEEAMT
+		,OTHERFEEAMT
+		,MANAFEEAMT
+		,FLOATFEEAMT
+		,PROFIT_TYPE
+		,CON_PRD_TRAGET
+	)
+	
+	/*费用明细表--按主产品纬度*/
+	with fd as(
+        select nvl(d.fprod_id,d.prod_id) prodid
+        ,d.FEE_TYPE
+        ,d.FEE_SECTYPE
+        ,d.CCY
+        ,d.amt
+        ,i.raise_type
+        ,i.IVSTORIENTATION
+        from chb_prd_fee_deal d
+        left join chb_prd_baseinfo i
+        on nvl(d.fprod_id,d.prod_id)=i.prod_id and i.fprod_id is null
+        where d.status!='D' and d.amt>0
+        and d.pay_DATE between #{startdate,jdbcType=DATE} and #{enddate,jdbcType=DATE}        
+    )
+    /*费用统计表--按产品ID，投资性质，募集方式，币种进行汇总*/
+    ,fs as (
+        select dd.prodid,dd.ccy,dd.raise_type,dd.ivstorientation
+        ,sum(
+            case when dd.FEE_SECTYPE in('01') then amt /*二级类型=本机构托管费*/
+            else 0 
+            end ) TRUSTFEEAMT /*本机构托管费*/    
+        ,sum(
+            case when dd.FEE_SECTYPE in('02') then amt /*二级类型=本机构固定管理费*/
+            else 0 
+            end ) MANAFEEAMT /*本机构固定管理费*/  
+        ,sum(
+            case when dd.FEE_SECTYPE in('03') then amt /*二级类型=本机构销售服务费*/
+            else 0 
+            end ) SALEFEEAMT /*本机构销售服务费*/      
+        ,sum(
+            case when dd.FEE_SECTYPE in('04') then amt /*二级类型=本机构其它费*/
+            else 0 
+            end ) OTHERFEEAMT /*本机构其它务费*/ 
+        ,sum(
+            case when dd.FEE_SECTYPE in('10','11') then amt /*二级类型=本机构浮动中收费*/
+            else 0 
+            end ) FLOATFEEAMT /*本机构本期浮动费/中收*/
+        ,sum(
+            case when dd.FEE_TYPE ='01' then amt /*本机构费用*/
+            else 0 
+            end ) BANKAMT /*本机构费用和*/                
+        from fd dd
+        group by dd.prodid,dd.ccy,dd.raise_type,dd.ivstorientation
+	)
+	
+	select 
+	f_guid()
+	,deal.prodid
+    ,#{startdate,jdbcType=DATE} startdate
+    ,#{enddate,jdbcType=DATE} enddate
+    ,#{statusDate,jdbcType=DATE} bookdate
+	,deal.ccy
+	,deal.RAISE_TYPE
+	,deal.Ivstorientation
+	,deal.bankamt
+	,deal.TRUSTFEEAMT
+	,deal.SALEFEEAMT
+	,deal.OTHERFEEAMT
+	,deal.MANAFEEAMT
+	,deal.FLOATFEEAMT
+	,prod.PROFIT_TYPE
+	,null CON_PRD_TRAGET
+	from fs deal, CHB_PRD_BASEINFO prod
+	where deal.prodid=prod.prod_id
+    <if test="prodid!=null">
+    	and deal.prodid=#{prodid,jdbcType=VARCHAR} 
+    </if>
+    <if test="prodids !=null">
+		and deal.prodid in
+		<foreach collection="prodids" item="prodid" open="(" separator=","
+			close=")">
+			#{prodid}
+		</foreach>
+	</if>
+  </insert> 
+  
+  <delete id="deleteByModel" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReport" >
+    delete from CHB_MONTH_FEE_POSITION
+    where 1=1
+    <if test="startdate!=null">
+    	and startdate=#{startdate,jdbcType=DATE} 
+    </if>
+    <if test="enddate!=null">
+    	and enddate=#{enddate,jdbcType=DATE} 
+    </if>
+    <if test="prodid!=null">
+    	and prodid=#{prodid,jdbcType=VARCHAR} 
+    </if>
+    <if test="prodids !=null">
+		and prodid in
+		<foreach collection="prodids" item="prodid" open="(" separator=","
+			close=")">
+			#{prodid}
+		</foreach>
+	</if> 
+   </delete>
+   
+</mapper>

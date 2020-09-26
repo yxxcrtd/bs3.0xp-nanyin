@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoImpMapper_db2">
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstCustomerInfo">
+    <id column="CUSTOMER_ID" jdbcType="VARCHAR" property="customerId" />
+    <result column="CUSTOMER_NAME" jdbcType="VARCHAR" property="customerName" />
+    <result column="CUSTOMER_ABBR" jdbcType="VARCHAR" property="customerAbbr" />
+    <result column="CUSTOMER_TYPE" jdbcType="VARCHAR" property="customerType" />
+    <result column="IS_ISSUER" jdbcType="VARCHAR" property="isIssuer" />
+    <result column="IS_ASSTE_MANAGER" jdbcType="VARCHAR" property="isAssteManager" />
+    <result column="IS_TRUSTER" jdbcType="VARCHAR" property="isTruster" />
+    <result column="IS_SALER" jdbcType="VARCHAR" property="isSaler" />
+    <result column="IS_FINANCIER" jdbcType="VARCHAR" property="isFinancier" />
+    <result column="IS_GUARANTEE" jdbcType="VARCHAR" property="isGuarantee" />
+    <result column="IS_RATING_AGENCIES" jdbcType="VARCHAR" property="isRatingAgencies" />
+    <result column="IS_PLEDGOR" jdbcType="VARCHAR" property="isPledgor" />
+    <result column="IS_DEPOSIT_BANK" jdbcType="VARCHAR" property="isDepositBank" />
+    <result column="IS_INVEST_ADVISER" jdbcType="VARCHAR" property="isInvestAdviser" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_ABBR, CUSTOMER_TYPE, IS_ISSUER, IS_ASSTE_MANAGER, 
+    IS_TRUSTER, IS_SALER, IS_FINANCIER, IS_GUARANTEE, IS_RATING_AGENCIES, IS_PLEDGOR, 
+    IS_DEPOSIT_BANK, IS_INVEST_ADVISER, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+    UPDATE_TIME
+  </sql>
+
+  
+	<insert id="mergeMstCustomerInfoData"
+		parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfo">
+		MERGE INTO MST_CUSTOMER_INFO CII
+		USING (
+		<foreach collection="list" item="item" open="select * from("
+			close=")" separator="union all">
+			SELECT
+			'${item.customerName}' CUSTOMER_NAME,
+			'${item.customerAbbr}' CUSTOMER_ABBR,
+			'${item.customerType}' CUSTOMER_TYPE,
+			'${item.isIssuer}' IS_ISSUER,
+			'${item.isAssteManager}' IS_ASSTE_MANAGER,
+			'${item.isTruster}' IS_TRUSTER,
+			'${item.isSaler}' IS_SALER,
+			'${item.isFinancier}' IS_FINANCIER,
+			'${item.isGuarantee}' IS_GUARANTEE,
+			'${item.isRatingAgencies}' IS_RATING_AGENCIES,
+			'${item.isPledgor}' IS_PLEDGOR,
+			'${item.isDepositBank}' IS_DEPOSIT_BANK,
+			'${item.isInvestAdviser}' IS_INVEST_ADVISER,
+			'${item.createUser}' CREATE_USER,
+			'${item.createDept}' CREATE_DEPT,
+			current date CREATE_TIME,
+			'${item.updateUser}' UPDATE_USER,
+			current date UPDATE_TIME,
+			'${item.customerId}' CUSTOMER_ID
+			FROM
+			sysibm.SYSDUMMY1
+		</foreach>
+		) TEMP
+		<!-- 业务主键匹配 -->
+		ON(CII.CUSTOMER_ID = TEMP.CUSTOMER_ID
+		)
+		<!-- 匹配到则更新 -->
+		WHEN MATCHED THEN UPDATE SET
+		CUSTOMER_NAME = TEMP.CUSTOMER_NAME,
+		CUSTOMER_ABBR = TEMP.CUSTOMER_ABBR,
+		CUSTOMER_TYPE = TEMP.CUSTOMER_TYPE,
+		IS_ISSUER = TEMP.IS_ISSUER,
+		IS_ASSTE_MANAGER = TEMP.IS_ASSTE_MANAGER,
+		IS_TRUSTER = TEMP.IS_TRUSTER,
+		IS_SALER = TEMP.IS_SALER,
+		IS_FINANCIER = TEMP.IS_FINANCIER,
+		IS_GUARANTEE = TEMP.IS_GUARANTEE,
+		IS_RATING_AGENCIES = TEMP.IS_RATING_AGENCIES,
+		IS_PLEDGOR = TEMP.IS_PLEDGOR,
+		IS_DEPOSIT_BANK = TEMP.IS_DEPOSIT_BANK,
+		IS_INVEST_ADVISER = TEMP.IS_INVEST_ADVISER,
+		CREATE_USER = TEMP.CREATE_USER,
+		CREATE_DEPT = TEMP.CREATE_DEPT,
+		CREATE_TIME = TEMP.CREATE_TIME,
+		UPDATE_USER = TEMP.UPDATE_USER,
+		UPDATE_TIME = TEMP.UPDATE_TIME
+		<!-- 未匹配到这插入 -->
+		WHEN NOT MATCHED THEN INSERT
+		(CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_ABBR,
+		CUSTOMER_TYPE, IS_ISSUER, IS_ASSTE_MANAGER,
+		IS_TRUSTER, IS_SALER, IS_FINANCIER,
+		IS_GUARANTEE, IS_RATING_AGENCIES, CREATE_USER,
+		CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+		UPDATE_TIME, IS_PLEDGOR, IS_DEPOSIT_BANK,
+		IS_INVEST_ADVISER)
+		values (TEMP.CUSTOMER_ID, TEMP.CUSTOMER_NAME, TEMP.CUSTOMER_ABBR,
+		TEMP.CUSTOMER_TYPE, TEMP.IS_ISSUER, TEMP.IS_ASSTE_MANAGER,
+		TEMP.IS_TRUSTER, TEMP.IS_SALER, TEMP.IS_FINANCIER,
+		TEMP.IS_GUARANTEE, TEMP.IS_RATING_AGENCIES, TEMP.CREATE_USER,
+		TEMP.CREATE_DEPT, TEMP.CREATE_TIME, TEMP.UPDATE_USER,
+		TEMP.UPDATE_TIME, TEMP.IS_PLEDGOR, TEMP.IS_DEPOSIT_BANK,
+		TEMP.IS_INVEST_ADVISER)
+	</insert>
+</mapper>

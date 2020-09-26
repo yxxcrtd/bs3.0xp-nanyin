@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chb.astvalueregist.dao.ChbAstValCBMapper_db2">
+
+
+
+
+	<!-- 批量 插入登记表-->
+	<insert id="insertRegistBatchList" parameterType="com.joyintech.tams.common.base.entity.ChbAstValueSub">
+		insert into CHB_AST_VAL_SUB (REGIST_SEQNO, REGIST_BANK_CODE, ISSUE_PARTY_ID, 
+		      ASSET_CODE, VAL_DATE, UNIT_VAL_NET, 
+		      UNIT_VAL_TOTAL, REMARK, CHB_SUBMIT_DEADLINE, 
+		      SUBMIT_DEADLINE, SEND_STATUS, SUBMIT_TIME, 
+		      SUMIT_SEQ, SUBMIT_FEEDBACK_STATUS, STATUS, 
+		      STATUS_DATE, ORG_CODE, DEPT_CODE, 
+		      CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+		      UPDATE_USER, UPDATE_TIME
+            )
+		<foreach collection="chbAstValSubList" item="dto" open=" select * from (select " close="from sysibm.SYSDUMMY1)" separator="from sysibm.SYSDUMMY1 union all select ">
+	  #{dto.registSeqno,jdbcType=CHAR}, #{dto.registBankCode,jdbcType=VARCHAR}, #{dto.issuePartyId,jdbcType=VARCHAR}, 
+      #{dto.assetCode,jdbcType=OTHER}, #{dto.valDate,jdbcType=TIMESTAMP}, #{dto.unitValNet,jdbcType=DECIMAL}, 
+      #{dto.unitValTotal,jdbcType=DECIMAL}, #{dto.remark,jdbcType=VARCHAR}, #{dto.chbSubmitDeadline,jdbcType=TIMESTAMP}, 
+      #{dto.submitDeadline,jdbcType=TIMESTAMP}, #{dto.sendStatus,jdbcType=VARCHAR}, #{dto.submitTime,jdbcType=TIMESTAMP}, 
+      #{dto.sumitSeq,jdbcType=VARCHAR}, #{dto.submitFeedbackStatus,jdbcType=VARCHAR}, #{dto.status,jdbcType=VARCHAR}, 
+      #{dto.statusDate,jdbcType=TIMESTAMP} STATUS_DATE, #{dto.orgCode,jdbcType=VARCHAR}, #{dto.deptCode,jdbcType=VARCHAR}, 
+      #{dto.createUser,jdbcType=VARCHAR}, #{dto.createDept,jdbcType=VARCHAR}, sysdate CREATE_TIME, 
+      #{dto.updateUser,jdbcType=VARCHAR}, sysdate UPDATE_TIME
+        </foreach>
+	</insert>
+	
+	<!-- 批量 插入信息表-->
+	<insert id="insertInfoBatchList" parameterType="com.joyintech.tams.common.base.entity.ChbAstValue">
+		insert into CHB_AST_VAL ( VAL_ID, ISSUE_PARTY_ID, ASSET_CODE, VAL_DATE, UNIT_VAL_NET, UNIT_VAL_TOTAL, REMARK, 
+			    DATASOURCE, STATUS, WORKFLOW_ID, ORG_CODE, DEPT_CODE, CREATE_USER, CREATE_TIME, UPDATE_USER, 
+			    UPDATE_TIME
+            )
+		<foreach collection="chbAstValList" item="dto" open=" select * from (select " close="from sysibm.SYSDUMMY1)" separator="from sysibm.SYSDUMMY1 union all select ">
+		  #{dto.valId,jdbcType=CHAR}, #{dto.issuePartyId,jdbcType=VARCHAR}, #{dto.assetCode,jdbcType=VARCHAR}, 
+	      #{dto.valDate,jdbcType=TIMESTAMP}, #{dto.unitValNet,jdbcType=DECIMAL}, #{dto.unitValTotal,jdbcType=DECIMAL}, 
+	      #{dto.remark,jdbcType=VARCHAR}, #{dto.datasource,jdbcType=VARCHAR}, #{dto.status,jdbcType=VARCHAR}, 
+	      #{dto.workflowId,jdbcType=VARCHAR}, #{dto.orgCode,jdbcType=VARCHAR}, #{dto.deptCode,jdbcType=VARCHAR}, 
+	      #{dto.createUser,jdbcType=VARCHAR}, #{dto.createTime,jdbcType=TIMESTAMP}, #{dto.updateUser,jdbcType=VARCHAR}, 
+	      #{dto.updateTime,jdbcType=TIMESTAMP}
+        </foreach>
+	</insert>
+</mapper>

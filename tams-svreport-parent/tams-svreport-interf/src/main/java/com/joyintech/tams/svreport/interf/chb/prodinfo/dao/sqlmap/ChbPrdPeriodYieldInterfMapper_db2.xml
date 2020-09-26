@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.prodinfo.dao.ChbPrdPeriodYieldInterfMapper_db2" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield" >
+    <id column="SEQNO" property="seqno" jdbcType="CHAR" />
+    <result column="FPROD_ID" property="fprodId" jdbcType="VARCHAR" />
+    <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+    <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="CHANG_TYPE" property="changType" jdbcType="VARCHAR" />
+    <result column="PROD_VALUE" property="prodValue" jdbcType="DECIMAL" />
+    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+    <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="REV_DATE" property="revDate" jdbcType="TIMESTAMP" />
+    <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    SEQNO, FPROD_ID, PROD_ID, CHANGE_DATE, CHANG_TYPE, PROD_VALUE, ORG_CODE, DEPT_CODE, 
+    STATUS, REV_DATE, DATA_SOURCE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, 
+    REMARK,CCY,UNIT_VALUE_TOTAL
+  </sql>
+  
+  <insert id="insertBatchList"
+	parameterType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield">
+	insert into CHB_PRD_PERIODYIELD (SEQNO, FPROD_ID, PROD_ID,
+	CHANGE_DATE, CHANG_TYPE, PROD_VALUE,
+	ORG_CODE, DEPT_CODE, STATUS,
+	REV_DATE, DATA_SOURCE, UPDATE_USER,
+	UPDATE_TIME, CREATE_USER, CREATE_TIME,
+	REMARK,UNIT_VALUE_TOTAL,CCY)
+	<foreach collection="list" item="dto" separator="union all">
+		select #{dto.seqno,jdbcType=CHAR}, #{dto.fprodId,jdbcType=VARCHAR},
+		#{dto.prodId,jdbcType=VARCHAR},
+		#{dto.changeDate,jdbcType=TIMESTAMP}, #{dto.changType,jdbcType=VARCHAR}, #{dto.prodValue,jdbcType=DECIMAL},
+		#{dto.orgCode,jdbcType=VARCHAR}, #{dto.deptCode,jdbcType=VARCHAR},
+		#{dto.status,jdbcType=VARCHAR},
+		#{dto.revDate,jdbcType=TIMESTAMP}, #{dto.dataSource,jdbcType=VARCHAR},
+		#{dto.updateUser,jdbcType=VARCHAR},
+		sysdate, #{dto.createUser,jdbcType=VARCHAR}, sysdate,
+		#{dto.remark,jdbcType=VARCHAR},#{dto.unitValueTotal,jdbcType=DECIMAL},
+		#{dto.ccy,jdbcType=VARCHAR} from SYSIBM.SYSDUMMY1
+	</foreach>
+</insert>
+  
+<delete id="deleteBatch2"
+	parameterType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield">
+	delete from CHB_PRD_PERIODYIELD
+	<where>
+		<foreach collection="list" item="dto" separator="union all"
+			open="(PROD_ID,CHANGE_DATE) in ("
+			close=")">
+			select #{dto.prodId,jdbcType=VARCHAR},
+			#{dto.changeDate,jdbcType=TIMESTAMP}
+			from SYSIBM.SYSDUMMY1
+		</foreach>
+	</where>
+</delete>
+
+<insert id="mergeChbPrdPeriodYieldData"
+	parameterType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield">
+	MERGE INTO CHB_PRD_PERIODYIELD CII
+	USING (
+	<foreach collection="list" item="item" open="select * from("
+		close=")" separator="union all">
+		SELECT
+		'${item.seqno}' SEQNO,
+		<choose><when test="item.fprodId!= null">'${item.fprodId}'</when><otherwise>null</otherwise></choose> FPROD_ID,
+		'${item.prodId}' PROD_ID,
+		<choose><when test="item.changeDate!= null">#{item.changeDate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> CHANGE_DATE,
+		'${item.changType}' CHANG_TYPE,
+		<choose><when test="item.prodValue!= null">${item.prodValue}</when><otherwise>null</otherwise></choose> PROD_VALUE,
+		'${item.orgCode}' ORG_CODE,
+		'${item.deptCode}' DEPT_CODE,
+		'${item.status}' STATUS,
+		<choose><when test="item.revDate!= null">#{item.revDate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> REV_DATE,
+		'${item.dataSource}' DATA_SOURCE,
+		'${item.updateUser}' UPDATE_USER,
+		current timestamp  UPDATE_TIME, 
+		'${item.createUser}' CREATE_USER,
+		current timestamp  CREATE_TIME,
+		'${item.remark}' REMARK,
+		<choose><when test="item.unitValueTotal!= null">${item.unitValueTotal}</when><otherwise>null</otherwise></choose> UNIT_VALUE_TOTAL,
+		'${item.ccy}' ccy
+		FROM
+		SYSIBM.SYSDUMMY1
+	</foreach>
+	) TEMP
+	<!-- 业务主键匹配 -->
+	ON(CII.PROD_ID = TEMP.PROD_ID
+	AND CII.CHANGE_DATE = TEMP.CHANGE_DATE
+	AND CII.CHANG_TYPE = TEMP.CHANG_TYPE
+	)
+	<!-- 匹配到则更新 -->
+	WHEN MATCHED THEN UPDATE SET
+	CII.PROD_VALUE = TEMP.PROD_VALUE,
+	CII.UNIT_VALUE_TOTAL = TEMP.UNIT_VALUE_TOTAL,
+	CII.ORG_CODE = TEMP.ORG_CODE,
+	CII.DEPT_CODE = TEMP.DEPT_CODE,
+	CII.REV_DATE = TEMP.REV_DATE,
+	CII.STATUS = decode(TEMP.STATUS,'E','M','D'),
+	CII.REMARK = TEMP.REMARK,
+	CII.UPDATE_USER = TEMP.UPDATE_USER,
+	CII.UPDATE_TIME = TEMP.UPDATE_TIME,
+	CII.CCY = TEMP.CCY
+	<!-- 未匹配到这插入 -->
+	WHEN NOT MATCHED THEN INSERT (SEQNO, FPROD_ID, PROD_ID,
+	CHANGE_DATE,
+	CHANG_TYPE, PROD_VALUE,
+	ORG_CODE, DEPT_CODE, STATUS,
+	REV_DATE,
+	DATA_SOURCE, UPDATE_USER,
+	UPDATE_TIME, CREATE_USER, CREATE_TIME,
+	REMARK,UNIT_VALUE_TOTAL,CCY)
+	VALUES(TEMP.SEQNO, TEMP.FPROD_ID, TEMP.PROD_ID,
+	TEMP.CHANGE_DATE, TEMP.CHANG_TYPE,
+	TEMP.PROD_VALUE,
+	TEMP.ORG_CODE, TEMP.DEPT_CODE, TEMP.STATUS,
+	TEMP.REV_DATE, TEMP.DATA_SOURCE, TEMP.UPDATE_USER,
+	TEMP.UPDATE_TIME, TEMP.CREATE_USER,
+	TEMP.CREATE_TIME,
+	TEMP.REMARK,TEMP.UNIT_VALUE_TOTAL,TEMP.CCY)
+</insert>
+</mapper>

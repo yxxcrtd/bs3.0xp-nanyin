@@ -1,0 +1,50 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
+<head>
+<meta charset="utf-8">
+<title data-th-text="#{ReportUpInterfMonitor001}">上游接口文件读取处理监控</title>
+<link rel="stylesheet" type="text/css" data-th-href="@{/css/report/report.css}">
+</head>
+
+<body>
+<div layout:fragment="content">
+<div class="joyin-form-wrap condition-area">
+  <form class="layui-form" id="searchForm">
+    <div class="layui-form-item">
+      <div class="layui-inline layui-col-md4">
+        <label class="layui-form-label form-lable">查询日</label>
+        <div class="layui-input-inline input-inline">
+          <input type="text" id="searchDate" name="timeControl" class="layui-input form-input input-dateRangeSelect" data-th-start="${nowSysDate}" data-th-end ="${nowSysDate}" placeholder="请选择日期区间" />
+        </div>
+      </div>
+      
+       <div class="layui-inline layui-col-md4">
+              <label class="layui-form-label form-lable">数据文件类别</label>
+              <div class="layui-input-inline input-inline">
+                <select id="handleFileType" name="handleFileType" class="input-select" allowClear="true" multiple="multiple" data-th-data-result='${UPINTERF_FILE_TYPE}' data-th-initvalue="${fileType}" data-th-formatoption="false" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}"></select>
+              </div>
+       </div>
+       <div class="layui-inline layui-col-md4">
+              <label class="layui-form-label form-lable">文件处理状态</label>
+              <div class="layui-input-inline input-inline">
+                <select id="fileHandleStatus" name="fileHandleStatus" class="input-select" allowClear="true" multiple="multiple" data-th-data-result='${UPINTERF_FILE_READ_STATUS}' data-th-initvalue="${fileHandleStatus}" data-th-formatoption="false" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}"></select>
+              </div>
+       </div>
+    </div>
+  </form>
+  </div>
+  <div class="layui-table" id="dataTable"></div>
+</div>
+<div layout:fragment="script">
+  <script data-th-inline="javascript" type="text/javascript">
+    var isFromMain = /*[[${isFromMain}]]*/;
+    var searchDataStart=/*[[${searchDataStart}]]*/'';
+	var searchDataEnd=/*[[${searchDataEnd}]]*/'';
+  </script> 
+  <script data-th-src="@{/js/report/jquery.validate.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/joyinvalid.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/report-common.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/system/upinterfmonitor/ReportUpInterfMonitor001.js}" type="text/javascript"></script> 
+</div>
+</body>
+</html>

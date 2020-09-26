@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.proddurationreg.dao.ChbPrdDurationRegMapper_db2" >
+	<select id="getReaYield" resultType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield">
+ 		select prodValue,ccy from(
+		select rownumber() over() as rownum,
+		  yield.prod_value prodValue,yield.ccy 
+		from chb_prd_periodyield yield
+		where yield.change_date = (select max(change_date)
+									from chb_prd_periodyield yield1
+									where yield1.prod_id = yield.prod_id
+									<!-- and yield1.org_code = yield.org_code -->
+									and yield1.status != 'D'
+									<if test="type !=null and type == '01'.toString()">
+										and yield1.change_date <![CDATA[<]]> #{date,jdbcType = DATE}
+									</if>
+									<if test="type !=null and type == '02'.toString()">
+										and yield1.change_date <![CDATA[<=]]>#{date,jdbcType = DATE}
+									</if>)
+		AND yield.prod_id = #{prodId, jdbcType = VARCHAR}
+		<!-- AND yield.org_code = #{orgCode, jdbcType = VARCHAR} -->
+	    )where ROWNUM = 1
+	</select>
+
+<select id="getTotalUnitBonusAmount" resultType="java.math.BigDecimal">
+    select Unit_Value_Total from(
+    select rownumber() over() as rownum,
+	  yield.Unit_Value_Total
+	from chb_prd_periodyield yield
+	where yield.change_date = (select max(change_date)
+								from chb_prd_periodyield yield1
+								where yield1.prod_id = yield.prod_id
+								<!-- and yield1.org_code = yield.org_code -->
+								and yield1.status != 'D'
+								and yield1.change_date <![CDATA[<=]]>#{date,jdbcType = DATE})
+	AND yield.prod_id = #{prodId, jdbcType = VARCHAR}
+	<!-- AND yield.org_code = #{orgCode, jdbcType = VARCHAR} -->
+   ) where rownum=1
+  </select>
+</mapper>

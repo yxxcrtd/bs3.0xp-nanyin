@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.svreport.salecustsvrreportfordeal.dao.SaleCustSvrreportVoMapper_mysql">
+
+	<resultMap id="BaseResultMap" type="com.joyintech.tams.common.svreport.salecustsvrreportfordeal.dto.SaleCustSvrreportVo" >
+		<result column="SENDDATE" property="senddate" jdbcType="DATE" />
+		<result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+		<result column="ISSUEMEMBER" property="issuemember" jdbcType="VARCHAR" />
+		<result column="INORABOARD" property="inoraboard" jdbcType="VARCHAR" />
+		<result column="CUS_CODE" property="cusCode" jdbcType="VARCHAR" />
+		<result column="AREA_CODE" property="areaCode" jdbcType="VARCHAR" />
+		<result column="CCY" property="ccy" jdbcType="VARCHAR" />
+		<result column="PRINAMT" property="prinamt" jdbcType="DECIMAL" />
+		<result column="PRINAMT_RMB" property="prinamtRmb" jdbcType="DECIMAL" />
+		<result column="PRINAMT_CONFIRM" property="prinamtConfirm" jdbcType="DECIMAL" />
+		<result column="SG_AMT" property="sgAmt" jdbcType="DECIMAL" />
+		<result column="SG_AMT_RMB" property="sgAmtRmb" jdbcType="DECIMAL" />
+		<result column="SG_CONFIRM_AMT" property="sgConfirmAmt" jdbcType="DECIMAL" />
+		<result column="SH_AMT" property="shAmt" jdbcType="DECIMAL" />
+		<result column="SH_AMT_RMB" property="shAmtRmb" jdbcType="DECIMAL" />
+		<result column="SH_PRINCIPAL" property="shPrincipal" jdbcType="DECIMAL" />
+		<result column="SH_PRINCIPAL_RMB" property="shPrincipalRmb" jdbcType="DECIMAL" />
+		<result column="SH_QTY" property="shQty" jdbcType="DECIMAL" />
+		<result column="EXPIRE_AMT" property="expireAmt" jdbcType="DECIMAL" />
+		<result column="EXPIRE_AMT_RMB" property="expireAmtRmb" jdbcType="DECIMAL" />
+		<result column="EXPIRE_AMT_PRINCIPAL" property="expireAmtPrincipal" jdbcType="DECIMAL" />
+		<result column="EXPIRE_AMT_PRINCIPAL_RMB" property="expireAmtPrincipalRmb" jdbcType="DECIMAL" />
+		<result column="EXPIRE_AMT_QTY" property="expireAmtQty" jdbcType="DECIMAL" />
+		<result column="REBONUS_AMT" property="rebonusAmt" jdbcType="DECIMAL" />
+		<result column="REBONUS_AMT_RMB" property="rebonusAmtRmb" jdbcType="DECIMAL" />
+		<result column="REBONUS_AMT_QTY" property="rebonusAmtQty" jdbcType="DECIMAL" />
+		<result column="BONUS_AMT" property="bonusAmt" jdbcType="DECIMAL" />
+		<result column="BONUS_AMT_RMB" property="bonusAmtRmb" jdbcType="DECIMAL" />
+		<result column="QTY_ADD_AMT" property="qtyAddAmt" jdbcType="DECIMAL" />
+		<result column="QTY_ADD_AMT_RMB" property="qtyAddAmtRmb" jdbcType="DECIMAL" />
+		<result column="QTY_ADD" property="qtyAdd" jdbcType="DECIMAL" />
+		<result column="QTY_MINUS_PRINCIPAL" property="qtyMinusPrincipal" jdbcType="DECIMAL" />
+		<result column="QTY_MINUS_PRINCIPAL_RMB" property="qtyMinusPrincipalRmb" jdbcType="DECIMAL" />
+		<result column="QTY_MINUS" property="qtyMinus" jdbcType="DECIMAL" />
+		<result column="SAVE_AMT" property="saveAmt" jdbcType="DECIMAL" />
+		<result column="SAVE_CUS_NUM" property="saveCusNum" jdbcType="DECIMAL" />
+		<result column="SAVE_AMT_RMB" property="saveAmtRmb" jdbcType="DECIMAL" />
+		<result column="SAVE_QTY" property="saveQty" jdbcType="DECIMAL" />
+		<result column="EXCHANGE_RATE" property="exchangeRate" jdbcType="DECIMAL" />
+		<result column="CUS_TYPE" property="cusType" jdbcType="VARCHAR" />
+		<result column="UPDATETIME" property="updatetime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<select id="getSaleCustSvrreportOfFx" parameterType="map"
+		resultMap="BaseResultMap">
+		select SENDDATE,
+		       FINPROD_ID,
+		       ISSUEMEMBER,
+		       INORABOARD,
+		       CUS_CODE,
+		       AREA_CODE,
+		       CCY,
+		       PRINAMT,
+		       PRINAMT_RMB,
+		       PRINAMT_CONFIRM,
+		       SG_AMT,
+		       SG_AMT_RMB,
+		       SG_CONFIRM_AMT,
+		       SH_AMT,
+		       SH_AMT_RMB,
+		       SH_PRINCIPAL,
+		       SH_PRINCIPAL_RMB,
+		       SH_QTY,
+		       EXPIRE_AMT,
+		       EXPIRE_AMT_RMB,
+		       EXPIRE_AMT_PRINCIPAL,
+		       EXPIRE_AMT_PRINCIPAL_RMB,
+		       EXPIRE_AMT_QTY,
+		       REBONUS_AMT,
+		       REBONUS_AMT_RMB,
+		       REBONUS_AMT_QTY,
+		       BONUS_AMT,
+		       BONUS_AMT_RMB,
+		       QTY_ADD_AMT,
+		       QTY_ADD_AMT_RMB,
+		       QTY_ADD,
+		       QTY_MINUS_PRINCIPAL,
+		       QTY_MINUS_PRINCIPAL_RMB,
+		       QTY_MINUS,
+		       SAVE_AMT,
+		       SAVE_CUS_NUM,
+		       SAVE_AMT_RMB,
+		       SAVE_QTY,
+		       EXCHANGE_RATE,
+		       CUS_TYPE,
+		       UPDATETIME
+		  from SALE_CUST_SVRREPORT
+		where DATE_FORMAT(SENDDATE,'%Y-%m-%d') = DATE_FORMAT(#{batchTime,jdbcType=DATE},'%Y-%m-%d')
+				or DATE_FORMAT(UPDATETIME,'%Y-%m-%d') = DATE_FORMAT(#{batchTime,jdbcType=DATE},'%Y-%m-%d')
+	</select>
+</mapper>

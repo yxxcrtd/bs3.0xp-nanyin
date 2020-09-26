@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.maintenance.dao.EquityBaseInfo001Mapper_db2">
+
+	<select id="getEquityBaseList" parameterType="java.util.List"
+	 resultType="com.joyintech.tams.report.maintenance.dto.EquiteBaseInfo001Dto">
+		select A.regist_bank_code bankCode,
+       		A.prodid           prodId,
+       		A.indentify_mark   indentifyMark,
+       		A.ccy
+  			from CHB_EQUPERIOD A
+  		<where>
+		 	<foreach collection="list" item="map" open="AND (A.regist_bank_code,A.prodid,A.indentify_mark,A.ccy) in ( values" close=")" separator=",">
+		 	 		(#{map.bankCode,jdbcType=VARCHAR},#{map.prodId,jdbcType=VARCHAR},#{map.indentifyMark,jdbcType=VARCHAR},#{map.ccy,jdbcType=VARCHAR}) 
+		 	</foreach>
+		 </where>
+	</select>
+</mapper>

@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.proddeclare.dao.ChbPrdDeclareInfoMapper_db2" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto" >
+    <id column="DECLARE_UUID" property="declareUuid" jdbcType="CHAR" />
+    <result column="PROD_INS_ID" property="prodInsId" jdbcType="VARCHAR" />
+    <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+    <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+    <result column="PROD_BRAND" property="prodBrand" jdbcType="VARCHAR" />
+    <result column="PROD_STAGE" property="prodStage" jdbcType="DECIMAL" />
+    <result column="APPROVER_ID" property="approverId" jdbcType="VARCHAR" />
+    <result column="APPROVER_NAME" property="approverName" jdbcType="VARCHAR" />
+    <result column="DESIGNER_ID" property="designerId" jdbcType="VARCHAR" />
+    <result column="DESIGNER_NAME" property="designerName" jdbcType="VARCHAR" />
+    <result column="MANAGER_ID" property="managerId" jdbcType="VARCHAR" />
+    <result column="MANAGER_NAME" property="managerName" jdbcType="VARCHAR" />
+    <result column="LIAISON_NAME" property="liaisonName" jdbcType="VARCHAR" />
+    <result column="LIAISON_TEL" property="liaisonTel" jdbcType="VARCHAR" />
+    <result column="LIAISON_MOBILE" property="liaisonMobile" jdbcType="VARCHAR" />
+    <result column="LIAISON_EMAIL" property="liaisonEmail" jdbcType="VARCHAR" />
+    <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+    <result column="TERMTYPE" property="termtype" jdbcType="VARCHAR" />
+    <result column="EXC_FIN_SECTOR" property="excFinSector" jdbcType="VARCHAR" />
+    <result column="INVEST_ARAE" property="investArae" jdbcType="VARCHAR" />
+    <result column="INVEST_COUNTRY" property="investCountry" jdbcType="VARCHAR" />
+    <result column="FINAN_SER_MODEL" property="finanSerModel" jdbcType="VARCHAR" />
+    <result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
+    <result column="RAISE_TYPE" property="raiseType" jdbcType="VARCHAR" />
+    <result column="CMMODE" property="cmmode" jdbcType="VARCHAR" />
+    <result column="PMMODE" property="pmmode" jdbcType="VARCHAR" />
+    <result column="MNAME" property="mname" jdbcType="VARCHAR" />
+    <result column="PRICED_MODE" property="pricedMode" jdbcType="VARCHAR" />
+    <result column="IVSTORIENTATION" property="ivstorientation" jdbcType="VARCHAR" />
+    <result column="YIELD" property="yield" jdbcType="DECIMAL" />
+    <result column="IS_SHORT_TERM" property="isShortTerm" jdbcType="VARCHAR" />
+    <result column="SHORT_TERM" property="shortTerm" jdbcType="DECIMAL" />
+    <result column="IS_FREE_REDEM" property="isFreeRedem" jdbcType="VARCHAR" />
+    <result column="CASH_MANA_CATE" property="cashManaCate" jdbcType="VARCHAR" />
+    <result column="SALE_AREA" property="saleArea" jdbcType="VARCHAR" />
+    <result column="SALE_AMT_STR" property="saleAmtStr" jdbcType="DECIMAL" />
+    <result column="RAISE_CCY" property="raiseCcy" jdbcType="VARCHAR" />
+    <result column="CASH_PRIN_CCY" property="cashPrinCcy" jdbcType="VARCHAR" />
+    <result column="CASH_PROF_CCY" property="cashProfCcy" jdbcType="VARCHAR" />
+    <result column="SALE_FEE_RATE" property="saleFeeRate" jdbcType="DECIMAL" />
+    <result column="TRU_FEE_RATE" property="truFeeRate" jdbcType="DECIMAL" />
+    <result column="RAISE_PSTRDATE" property="raisePstrdate" jdbcType="TIMESTAMP" />
+    <result column="RAISE_PENDDATE" property="raisePenddate" jdbcType="TIMESTAMP" />
+    <result column="RAISE_AMT_PLAN" property="raiseAmtPlan" jdbcType="DECIMAL" />
+    <result column="IN_DEP_NAME" property="inDepName" jdbcType="VARCHAR" />
+    <result column="IN_DEP_CODE" property="inDepCode" jdbcType="VARCHAR" />
+    <result column="OUT_DEP_CTRY" property="outDepCtry" jdbcType="VARCHAR" />
+    <result column="OUT_DEP_NAME" property="outDepName" jdbcType="VARCHAR" />
+    <result column="RISK_TYPE" property="riskType" jdbcType="VARCHAR" />
+    <result column="RISK_LEVEL" property="riskLevel" jdbcType="VARCHAR" />
+    <result column="TERM_RIGHT_FLAG" property="termRightFlag" jdbcType="VARCHAR" />
+    <result column="CUS_REDEEM_FLAG" property="cusRedeemFlag" jdbcType="VARCHAR" />
+    <result column="INVEST_FEE_RATE" property="investFeeRate" jdbcType="DECIMAL" />
+    <result column="CONT_MODE" property="contMode" jdbcType="VARCHAR" />
+    <result column="COOPERATION_NAME" property="cooperationName" jdbcType="VARCHAR" />
+    <result column="INVEST_PRIN_DATE" property="investPrinDate" jdbcType="VARCHAR" />
+    <result column="INVEST_PROF_DATE" property="investProfDate" jdbcType="VARCHAR" />
+    <result column="CREDIT_FLAG" property="creditFlag" jdbcType="VARCHAR" />
+    <result column="CREDIT_TYPE" property="creditType" jdbcType="VARCHAR" />
+    <result column="CREDIT_MODE" property="creditMode" jdbcType="VARCHAR" />
+    <result column="INV_TYPE_RAT" property="invTypeRat" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+    <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+    <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+    <result column="DATASOURCE" property="datasource" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    DECLARE_UUID, PROD_INS_ID, PROD_NAME, ISSUE_PARTY_ID, PROD_BRAND, PROD_STAGE, APPROVER_ID, 
+    APPROVER_NAME, DESIGNER_ID, DESIGNER_NAME, MANAGER_ID, MANAGER_NAME, LIAISON_NAME, 
+    LIAISON_TEL, LIAISON_MOBILE, LIAISON_EMAIL, PROFIT_TYPE, TERMTYPE, EXC_FIN_SECTOR, 
+    INVEST_ARAE, INVEST_COUNTRY, FINAN_SER_MODEL, OPERATE_MODE, RAISE_TYPE, CMMODE, PMMODE, 
+    MNAME, PRICED_MODE, IVSTORIENTATION, YIELD, IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, 
+    CASH_MANA_CATE, SALE_AREA, SALE_AMT_STR, RAISE_CCY, CASH_PRIN_CCY, CASH_PROF_CCY, 
+    SALE_FEE_RATE, TRU_FEE_RATE, RAISE_PSTRDATE, RAISE_PENDDATE, RAISE_AMT_PLAN, IN_DEP_NAME, 
+    IN_DEP_CODE, OUT_DEP_CTRY, OUT_DEP_NAME, RISK_TYPE, RISK_LEVEL, TERM_RIGHT_FLAG, 
+    CUS_REDEEM_FLAG, INVEST_FEE_RATE, CONT_MODE, COOPERATION_NAME, INVEST_PRIN_DATE, 
+    INVEST_PROF_DATE, CREDIT_FLAG, CREDIT_TYPE, CREDIT_MODE, INV_TYPE_RAT, REMARK, STATUS, 
+    CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ORG_CODE, DEPT_CODE, WORKFLOW_ID, 
+    DATASOURCE
+  </sql>
+
+
+   <insert id="mergeInfoList"
+		parameterType="com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto">
+		MERGE INTO CHB_PRD_DECLARE_INFO CII
+		USING (
+		<foreach collection="newDataList" item="dto" open="select * from("
+			close=")" separator="union all">
+		select
+		'${dto.declareUuid}' DECLARE_UUID,
+		'${dto.prodInsId}' PROD_INS_ID,
+		'${dto.prodName}'  PROD_NAME,
+		'${dto.issuePartyId}' ISSUE_PARTY_ID,
+		'${dto.prodBrand}' PROD_BRAND,
+		<choose><when test="dto.prodStage != null">${dto.prodStage}</when><otherwise>null</otherwise></choose> PROD_STAGE,
+		'${dto.approverId}'	APPROVER_ID,
+		'${dto.approverName}' APPROVER_NAME,
+		'${dto.designerId}' DESIGNER_ID,
+		'${dto.designerName}' DESIGNER_NAME,
+		'${dto.managerId}' MANAGER_ID,
+		'${dto.managerName}' MANAGER_NAME,
+		'${dto.liaisonName}' LIAISON_NAME,
+		'${dto.liaisonTel}' LIAISON_TEL,
+		'${dto.liaisonMobile}' LIAISON_MOBILE,
+		'${dto.liaisonEmail}' LIAISON_EMAIL,
+		'${dto.profitType}' PROFIT_TYPE,
+		'${dto.termtype}' TERMTYPE,
+		'${dto.excFinSector}' EXC_FIN_SECTOR,
+		'${dto.investArae}' INVEST_ARAE,
+		'${dto.investCountry}' INVEST_COUNTRY,
+		'${dto.finanSerModel}' FINAN_SER_MODEL,
+		'${dto.operateMode}' OPERATE_MODE,
+		'${dto.raiseType}' RAISE_TYPE,
+		'${dto.cmmode}' CMMODE,
+		'${dto.pmmode}' PMMODE,
+		'${dto.mname}' MNAME,
+		'${dto.pricedMode}' PRICED_MODE,
+		'${dto.ivstorientation}' IVSTORIENTATION,
+		<choose><when test="dto.yield != null">${dto.yield}</when><otherwise>null</otherwise></choose> YIELD,
+		'${dto.isShortTerm}' IS_SHORT_TERM,
+		<choose><when test="dto.shortTerm != null">${dto.shortTerm}</when><otherwise>null</otherwise></choose> SHORT_TERM,
+		'${dto.isFreeRedem}' IS_FREE_REDEM,
+		'${dto.cashManaCate}' CASH_MANA_CATE,
+		'${dto.saleArea}' SALE_AREA,
+		<choose><when test="dto.saleAmtStr != null">${dto.saleAmtStr}</when><otherwise>null</otherwise></choose> SALE_AMT_STR,
+		'${dto.raiseCcy}' RAISE_CCY,
+		'${dto.cashPrinCcy}' CASH_PRIN_CCY,
+		'${dto.cashProfCcy}' CASH_PROF_CCY,
+		<choose><when test="dto.saleFeeRate != null">${dto.saleFeeRate}</when><otherwise>null</otherwise></choose> SALE_FEE_RATE,
+		<choose><when test="dto.truFeeRate != null">${dto.truFeeRate}</when><otherwise>null</otherwise></choose> TRU_FEE_RATE,
+		<choose><when test="dto.raisePstrdate != null">#{dto.raisePstrdate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> RAISE_PSTRDATE,
+		<choose><when test="dto.raisePenddate != null">#{dto.raisePenddate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> RAISE_PENDDATE,
+		<choose><when test="dto.raiseAmtPlan != null">${dto.raiseAmtPlan}</when><otherwise>null</otherwise></choose> RAISE_AMT_PLAN,
+		'${dto.inDepName}' IN_DEP_NAME,
+		'${dto.inDepCode}' IN_DEP_CODE,
+		'${dto.outDepCtry}' OUT_DEP_CTRY,
+		'${dto.outDepName}' OUT_DEP_NAME,
+		'${dto.riskType}' RISK_TYPE,
+		'${dto.riskLevel}' RISK_LEVEL,
+		'${dto.termRightFlag}' TERM_RIGHT_FLAG,
+		'${dto.cusRedeemFlag}' CUS_REDEEM_FLAG,
+		<choose><when test="dto.investFeeRate != null">${dto.investFeeRate}</when><otherwise>null</otherwise></choose> INVEST_FEE_RATE,
+		'${dto.contMode}' CONT_MODE,
+		'${dto.cooperationName}' COOPERATION_NAME,
+		'${dto.investPrinDate}' INVEST_PRIN_DATE,
+		'${dto.investProfDate}' INVEST_PROF_DATE,
+		'${dto.creditFlag}' CREDIT_FLAG,
+		'${dto.creditType}' CREDIT_TYPE,
+		'${dto.creditMode}' CREDIT_MODE,
+		'${dto.invTypeRat}' INV_TYPE_RAT,
+		'${dto.remark}' REMARK,
+		'${dto.status}' STATUS,
+		'${dto.createUser}' CREATE_USER,
+		current timestamp CREATE_TIME,
+		'${dto.updateUser}' UPDATE_USER,
+		current timestamp UPDATE_TIME,
+		'${dto.orgCode}' ORG_CODE,
+		'${dto.deptCode}' DEPT_CODE,
+		'${dto.workflowId}' WORKFLOW_ID,
+		'${dto.datasource}' DATASOURCE
+		from sysibm.SYSDUMMY1
+		</foreach>
+		) TEMP
+		<!-- 业务主键匹配 -->
+		ON (CII.PROD_INS_ID = TEMP.PROD_INS_ID)
+		<!-- 匹配到则更新 -->
+		WHEN MATCHED THEN
+		UPDATE
+		SET 
+	  CII.DECLARE_UUID = TEMP.DECLARE_UUID,
+      CII.PROD_NAME = TEMP.PROD_NAME,
+      CII.ISSUE_PARTY_ID = TEMP.ISSUE_PARTY_ID,
+      CII.PROD_BRAND = TEMP.PROD_BRAND,
+      CII.PROD_STAGE = TEMP.PROD_STAGE,
+      CII.APPROVER_ID = TEMP.APPROVER_ID,
+      CII.APPROVER_NAME = TEMP.APPROVER_NAME,
+      CII.DESIGNER_ID = TEMP.DESIGNER_ID,
+      CII.DESIGNER_NAME = TEMP.DESIGNER_NAME,
+      CII.MANAGER_ID = TEMP.MANAGER_ID,
+      CII.MANAGER_NAME = TEMP.MANAGER_NAME,
+      CII.LIAISON_NAME = TEMP.LIAISON_NAME,
+      CII.LIAISON_TEL = TEMP.LIAISON_TEL,
+      CII.LIAISON_MOBILE = TEMP.LIAISON_MOBILE,
+      CII.LIAISON_EMAIL = TEMP.LIAISON_EMAIL,
+      CII.PROFIT_TYPE = TEMP.PROFIT_TYPE,
+      CII.TERMTYPE = TEMP.TERMTYPE,
+      CII.EXC_FIN_SECTOR = TEMP.EXC_FIN_SECTOR,
+      CII.INVEST_ARAE = TEMP.INVEST_ARAE,
+      CII.INVEST_COUNTRY = TEMP.INVEST_COUNTRY,
+      CII.FINAN_SER_MODEL = TEMP.FINAN_SER_MODEL,
+      CII.OPERATE_MODE = TEMP.OPERATE_MODE,
+      CII.RAISE_TYPE = TEMP.RAISE_TYPE,
+      CII.CMMODE = TEMP.CMMODE,
+      CII.PMMODE = TEMP.PMMODE,
+      CII.MNAME = TEMP.MNAME,
+      CII.PRICED_MODE = TEMP.PRICED_MODE,
+      CII.IVSTORIENTATION = TEMP.IVSTORIENTATION,
+      CII.YIELD = TEMP.YIELD,
+      CII.IS_SHORT_TERM = TEMP.IS_SHORT_TERM,
+      CII.SHORT_TERM = TEMP.SHORT_TERM,
+      CII.IS_FREE_REDEM = TEMP.IS_FREE_REDEM,
+      CII.CASH_MANA_CATE = TEMP.CASH_MANA_CATE,
+      CII.SALE_AREA = TEMP.SALE_AREA,
+      CII.SALE_AMT_STR = TEMP.SALE_AMT_STR,
+      CII.RAISE_CCY = TEMP.RAISE_CCY,
+      CII.CASH_PRIN_CCY = TEMP.CASH_PRIN_CCY,
+      CII.CASH_PROF_CCY = TEMP.CASH_PROF_CCY,
+      CII.SALE_FEE_RATE = TEMP.SALE_FEE_RATE,
+      CII.TRU_FEE_RATE = TEMP.TRU_FEE_RATE,
+      CII.RAISE_PSTRDATE = TEMP.RAISE_PSTRDATE,
+      CII.RAISE_PENDDATE = TEMP.RAISE_PENDDATE,
+      CII.RAISE_AMT_PLAN = TEMP.RAISE_AMT_PLAN,
+      CII.IN_DEP_NAME = TEMP.IN_DEP_NAME,
+      CII.IN_DEP_CODE = TEMP.IN_DEP_CODE,
+      CII.OUT_DEP_CTRY = TEMP.OUT_DEP_CTRY,
+      CII.OUT_DEP_NAME = TEMP.OUT_DEP_NAME,
+      CII.RISK_TYPE = TEMP.RISK_TYPE,
+      CII.RISK_LEVEL = TEMP.RISK_LEVEL,
+      CII.TERM_RIGHT_FLAG = TEMP.TERM_RIGHT_FLAG,
+      CII.CUS_REDEEM_FLAG = TEMP.CUS_REDEEM_FLAG,
+      CII.INVEST_FEE_RATE = TEMP.INVEST_FEE_RATE,
+      CII.CONT_MODE = TEMP.CONT_MODE,
+      CII.COOPERATION_NAME = TEMP.COOPERATION_NAME,
+      CII.INVEST_PRIN_DATE = TEMP.INVEST_PRIN_DATE,
+      CII.INVEST_PROF_DATE = TEMP.INVEST_PROF_DATE,
+      CII.CREDIT_FLAG = TEMP.CREDIT_FLAG,
+      CII.CREDIT_TYPE = TEMP.CREDIT_TYPE,
+      CII.CREDIT_MODE = TEMP.CREDIT_MODE,
+      CII.INV_TYPE_RAT = TEMP.INV_TYPE_RAT,
+      CII.REMARK = TEMP.REMARK,
+      CII.STATUS = 'M',
+      CII.UPDATE_TIME = current timestamp,
+      CII.ORG_CODE = TEMP.ORG_CODE,
+      CII.DEPT_CODE = TEMP.DEPT_CODE,
+      CII.WORKFLOW_ID = TEMP.WORKFLOW_ID,
+      CII.DATASOURCE = TEMP.DATASOURCE
+	 WHEN NOT MATCHED THEN
+	 INSERT (DECLARE_UUID, PROD_INS_ID, PROD_NAME, 
+      ISSUE_PARTY_ID, PROD_BRAND, PROD_STAGE, 
+      APPROVER_ID, APPROVER_NAME, DESIGNER_ID, 
+      DESIGNER_NAME, MANAGER_ID, MANAGER_NAME, 
+      LIAISON_NAME, LIAISON_TEL, LIAISON_MOBILE, 
+      LIAISON_EMAIL, PROFIT_TYPE, TERMTYPE, 
+      EXC_FIN_SECTOR, INVEST_ARAE, INVEST_COUNTRY, 
+      FINAN_SER_MODEL, OPERATE_MODE, RAISE_TYPE, 
+      CMMODE, PMMODE, MNAME, 
+      PRICED_MODE, IVSTORIENTATION, YIELD, 
+      IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, 
+      CASH_MANA_CATE, SALE_AREA, SALE_AMT_STR, 
+      RAISE_CCY, CASH_PRIN_CCY, CASH_PROF_CCY, 
+      SALE_FEE_RATE, TRU_FEE_RATE, RAISE_PSTRDATE, 
+      RAISE_PENDDATE, RAISE_AMT_PLAN, IN_DEP_NAME, 
+      IN_DEP_CODE, OUT_DEP_CTRY, OUT_DEP_NAME, 
+      RISK_TYPE, RISK_LEVEL, TERM_RIGHT_FLAG, 
+      CUS_REDEEM_FLAG, INVEST_FEE_RATE, CONT_MODE, 
+      COOPERATION_NAME, INVEST_PRIN_DATE, INVEST_PROF_DATE, 
+      CREDIT_FLAG, CREDIT_TYPE, CREDIT_MODE, 
+      INV_TYPE_RAT, REMARK, STATUS, 
+      CREATE_USER, CREATE_TIME, UPDATE_USER, 
+      UPDATE_TIME, ORG_CODE, DEPT_CODE, 
+      WORKFLOW_ID, DATASOURCE
+		)
+	 values(
+	  TEMP.DECLARE_UUID, 
+	  TEMP.PROD_INS_ID, 
+	  TEMP.PROD_NAME, 
+      TEMP.ISSUE_PARTY_ID, 
+      TEMP.PROD_BRAND, 
+      TEMP.PROD_STAGE, 
+      TEMP.APPROVER_ID, 
+      TEMP.APPROVER_NAME, 
+      TEMP.DESIGNER_ID, 
+      TEMP.DESIGNER_NAME, 
+      TEMP.MANAGER_ID, 
+      TEMP.MANAGER_NAME, 
+      TEMP.LIAISON_NAME, 
+      TEMP.LIAISON_TEL, 
+      TEMP.LIAISON_MOBILE, 
+      TEMP.LIAISON_EMAIL, 
+      TEMP.PROFIT_TYPE, 
+      TEMP.TERMTYPE, 
+      TEMP.EXC_FIN_SECTOR, 
+      TEMP.INVEST_ARAE, 
+      TEMP.INVEST_COUNTRY, 
+      TEMP.FINAN_SER_MODEL, 
+      TEMP.OPERATE_MODE, 
+      TEMP.RAISE_TYPE, 
+      TEMP.CMMODE, 
+      TEMP.PMMODE, 
+      TEMP.MNAME, 
+      TEMP.PRICED_MODE, 
+      TEMP.IVSTORIENTATION, 
+      TEMP.YIELD, 
+      TEMP.IS_SHORT_TERM, 
+      TEMP.SHORT_TERM, 
+      TEMP.IS_FREE_REDEM, 
+      TEMP.CASH_MANA_CATE, 
+      TEMP.SALE_AREA, 
+      TEMP.SALE_AMT_STR, 
+      TEMP.RAISE_CCY, 
+      TEMP.CASH_PRIN_CCY, 
+      TEMP.CASH_PROF_CCY, 
+      TEMP.SALE_FEE_RATE, 
+      TEMP.TRU_FEE_RATE, 
+      TEMP.RAISE_PSTRDATE, 
+      TEMP.RAISE_PENDDATE, 
+      TEMP.RAISE_AMT_PLAN, 
+      TEMP.IN_DEP_NAME, 
+      TEMP.IN_DEP_CODE, 
+      TEMP.OUT_DEP_CTRY, 
+      TEMP.OUT_DEP_NAME, 
+      TEMP.RISK_TYPE, 
+      TEMP.RISK_LEVEL, 
+      TEMP.TERM_RIGHT_FLAG, 
+      TEMP.CUS_REDEEM_FLAG, 
+      TEMP.INVEST_FEE_RATE, 
+      TEMP.CONT_MODE, 
+      TEMP.COOPERATION_NAME, 
+      TEMP.INVEST_PRIN_DATE, 
+      TEMP.INVEST_PROF_DATE, 
+      TEMP.CREDIT_FLAG, 
+      TEMP.CREDIT_TYPE, 
+      TEMP.CREDIT_MODE, 
+      TEMP.INV_TYPE_RAT, 
+      TEMP.REMARK, 
+      'E', 
+      'system', 
+      current timestamp, 
+      'system', 
+      current timestamp, 
+      TEMP.ORG_CODE, 
+      TEMP.DEPT_CODE, 
+      TEMP.WORKFLOW_ID, 
+      TEMP.DATASOURCE
+		)
+	</insert>
+</mapper>

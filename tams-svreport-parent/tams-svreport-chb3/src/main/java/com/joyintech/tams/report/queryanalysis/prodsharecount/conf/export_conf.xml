@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ProdShareCount001.xlsx" name="产品份额统计">
+	<Worksheet javaBean="com.joyintech.tams.report.queryanalysis.prodsharecount.dto.ProdShareCount001Dto">
+		<Row>
+			<Cell order="1" name="产品代码">prodId</Cell><!-- 产品代码 -->
+			<Cell order="2" name="产品登记编码">prdRegistCode</Cell><!-- 产品登记编码 -->
+			<Cell order="3" name="产品名称">prodName</Cell><!-- 产品名称 -->
+			<Cell order="4" name="币种">ccy</Cell><!-- 币种-->
+			<Cell order="5" name="持有日期">holdDateStr</Cell><!-- 持有日期 -->
+			<Cell order="6" name="产品份额">qty</Cell><!-- 产品份额-->
+			<Cell order="7" name="产品总金额">sumQty</Cell><!-- 产品总金额 -->
+			<Cell order="8" name="客户总数">sumCus</Cell><!-- 客户总数 -->
+			<Cell order="9" name="上一次产品份额">lastQty</Cell><!-- 币种 -->
+			<Cell order="10" name="产品份额变动">changeQty</Cell><!-- 产品份额变动 -->
+		</Row>
+	</Worksheet>
+</Workbook>

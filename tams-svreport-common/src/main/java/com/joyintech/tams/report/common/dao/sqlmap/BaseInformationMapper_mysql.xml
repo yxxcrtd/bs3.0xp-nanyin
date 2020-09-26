@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.common.dao.BaseInformationMapper_mysql">
+	<resultMap id="BaseResultMap"
+			   type="com.joyintech.tams.common.base.entity.BaseInformationDto">
+		<id column="BASEINFORMATIONID" property="baseInformationId"
+			jdbcType="VARCHAR" />
+		<result column="BASETABLEID" property="baseTableId"
+				jdbcType="VARCHAR" />
+		<result column="BASETABLENAME" property="baseTableName"
+				jdbcType="VARCHAR" />
+		<result column="BASECOLUMNID" property="baseColumnId"
+				jdbcType="VARCHAR" />
+		<result column="BASECOLUMNNAME" property="baseColumnName"
+				jdbcType="VARCHAR" />
+		<result column="BASECOLUMNTYPE" property="baseColumnType"
+				jdbcType="CHAR" />
+		<result column="DATAOBJECT" property="dataObject"
+				jdbcType="VARCHAR" />
+		<result column="BUSINESSPKFLAG" property="businesspkFlag"
+				jdbcType="CHAR" />
+		<result column="DICTCODE" property="dictCode"
+				jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="queryBaseInfoByParams" resultType="Map" statementType="STATEMENT">
+		SELECT * FROM ${tableId} WHERE 
+		<if test="list==null or list.size()==0">
+			1=1
+		</if>
+		<foreach item="item" index="index" collection="list" open=" " separator="and" close=" ">
+			<choose>
+				<when test="item.baseColumnType == 'T'.toString()">
+					${item.baseColumnId} LIKE '%${item.columnText}%'
+				</when>
+				<when test="item.baseColumnType == 'D'.toString()">
+				DATE_FORMAT(${item.baseColumnId},'%Y-%m-%d') <![CDATA[ >= ]]> '${item.startDate}'
+				AND DATE_FORMAT(${item.baseColumnId},'%Y-%m-%d') <![CDATA[ <= ]]> '${item.endDate}'
+				</when>
+				<when test="item.baseColumnType == 'S'.toString()">
+					1=1 and ${item.baseColumnId} in
+					<foreach collection="item.columnSeq" item="items" open="(" separator="," close=")">
+    					'${items}'
+    				</foreach>
+				</when>
+			</choose>
+		</foreach>
+		<if test="flag">
+			AND STATUS != 'D'
+		</if>
+		<if test="assetType != null">
+		 	and ASSET_TYPE='${assetType}'
+		</if>
+		</select>
+	<select id="queryBaseInfoPageByParams" resultType="Map" statementType="STATEMENT">
+select * from (SELECT t.*,LIMIT ROW_ID FROM ${tableId} t WHERE 
+		<if test="list==null or list.size()==0">
+			1=1
+		</if>
+		<foreach item="item" index="index" collection="list" open=" " separator="and" close=" ">
+			<choose>
+				<when test="item.baseColumnType == 'T'.toString()">
+					${item.baseColumnId} LIKE '%${item.columnText}%'
+				</when>
+				<when test="item.baseColumnType == 'D'.toString()">
+				DATE_FORMAT(${item.baseColumnId},'%Y-%m-%d') <![CDATA[ >= ]]> '${item.startDate}'
+				AND DATE_FORMAT(${item.baseColumnId},'%Y-%m-%d') <![CDATA[ <= ]]> '${item.endDate}'
+				</when>
+				<when test="item.baseColumnType == 'S'.toString()">
+					1=1 and ${item.baseColumnId} in
+					<foreach collection="item.columnSeq" item="items" open="(" separator="," close=")">
+    					'${items}'
+    				</foreach>
+				</when>
+			</choose>
+		</foreach>
+		) 
+		where
+		ROW_ID &lt; ${endIndex} and ROW_ID &gt; ${beginIndex}
+	</select>
+	<select id="queryBaseInfoCountByParams" resultType="java.lang.Integer" statementType="STATEMENT">
+			SELECT count(1) FROM ${tableId} WHERE 
+		<if test="list==null or list.size()==0">
+			1=1
+		</if>
+		<foreach item="item" index="index" collection="list" open=" " separator="and" close=" ">
+			<choose>
+				<when test="item.baseColumnType == 'T'.toString()">
+					${item.baseColumnId} LIKE '%${item.columnText}%'
+				</when>
+				<when test="item.baseColumnType == 'D'.toString()">
+				DATE_FORMAT(${item.baseColumnId},'%Y-%m-%d') <![CDATA[ >= ]]> '${item.startDate}'
+				AND DATE_FORMAT(${item.baseColumnId},'%Y-%m-%d') <![CDATA[ <= ]]> '${item.endDate}'
+				</when>
+				<when test="item.baseColumnType == 'S'.toString()">
+					1=1 and ${item.baseColumnId} in
+					<foreach collection="item.columnSeq" item="items" open="(" separator="," close=")">
+    					'${items}'
+    				</foreach>
+				</when>
+			</choose>
+		</foreach>
+	</select>
+
+	<update id="deleteData" parameterType="java.util.Map" statementType="STATEMENT">
+	<if test="map != null and map.size() > 0">
+		UPDATE ${tableId} SET STATUS = 'D', UPDATE_TIME = NOW()
+		<where>
+			<foreach collection="map" index="key" item="value" separator="AND">
+				(${key} = ${value})
+			</foreach>
+		</where>
+	</if>
+	</update>
+</mapper>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.bottomassetposition.dao.ChbBotAstPosInterfMapper_db2">
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbBotAstPosition" >
+    <id column="POS_ID" property="posId" jdbcType="CHAR" />
+    <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+    <result column="POS_DATE" property="posDate" jdbcType="TIMESTAMP" />
+    <result column="PLAN_ASSET_ID" property="planAssetId" jdbcType="VARCHAR" />
+    <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+    <result column="TOTAL_NUM" property="totalNum" jdbcType="DECIMAL" />
+    <result column="ISSUE_AMT" property="issueAmt" jdbcType="DECIMAL" />
+    <result column="UNINVEST_CASH" property="uninvestCash" jdbcType="DECIMAL" />
+    <result column="POS_NUM" property="posNum" jdbcType="DECIMAL" />
+    <result column="POS_AMT" property="posAmt" jdbcType="DECIMAL" />
+    <result column="ISFINAPLAN" property="isfinaplan" jdbcType="CHAR" />
+    <result column="ISCHL" property="ischl" jdbcType="CHAR" />
+    <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+    <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="DATASOURCE" property="datasource" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    POS_ID, ISSUE_PARTY_ID, POS_DATE, PLAN_ASSET_ID, ASSET_CODE, TOTAL_NUM, ISSUE_AMT, 
+    UNINVEST_CASH, POS_NUM, POS_AMT, ISFINAPLAN, ISCHL, WORKFLOW_ID, STATUS, ORG_CODE, 
+    DEPT_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, DATASOURCE
+  </sql>
+
+  <insert id="insertBatchList" parameterType="com.joyintech.tams.common.base.entity.ChbBotAstPosition">
+    insert into CHB_BOT_AST_POS (POS_ID, ISSUE_PARTY_ID, POS_DATE, 
+      PLAN_ASSET_ID, ASSET_CODE, TOTAL_NUM, 
+      ISSUE_AMT, UNINVEST_CASH, POS_NUM, 
+      POS_AMT, ISFINAPLAN, ISCHL, 
+      WORKFLOW_ID, STATUS, ORG_CODE, 
+      DEPT_CODE, CREATE_USER, CREATE_DEPT, 
+      CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+      DATASOURCE
+      )
+      <foreach collection="listChbBotAstPosition" item="dto" open=" select * from (select " close="from sysibm.SYSDUMMY1)" separator="from sysibm.SYSDUMMY1 union all select ">
+      #{dto.posId,jdbcType=CHAR}, #{dto.issuePartyId,jdbcType=VARCHAR}, #{dto.posDate,jdbcType=TIMESTAMP}, 
+      #{dto.planAssetId,jdbcType=VARCHAR}, #{dto.assetCode,jdbcType=VARCHAR}, #{dto.totalNum,jdbcType=DECIMAL}, 
+      #{dto.issueAmt,jdbcType=DECIMAL}, #{dto.uninvestCash,jdbcType=DECIMAL}, #{dto.posNum,jdbcType=DECIMAL}, 
+      #{dto.posAmt,jdbcType=DECIMAL}, #{dto.isfinaplan,jdbcType=CHAR}, #{dto.ischl,jdbcType=CHAR}, 
+      #{dto.workflowId,jdbcType=VARCHAR}, #{dto.status,jdbcType=VARCHAR}, #{dto.orgCode,jdbcType=VARCHAR}, 
+      #{dto.deptCode,jdbcType=VARCHAR}, #{dto.createUser,jdbcType=VARCHAR}, #{dto.createDept,jdbcType=VARCHAR}, 
+      #{dto.createTime,jdbcType=TIMESTAMP}, #{dto.updateUser,jdbcType=VARCHAR}, #{dto.updateTime,jdbcType=TIMESTAMP}, 
+      #{dto.datasource,jdbcType=VARCHAR}
+      </foreach>
+  </insert>
+  
+  <insert id="mergeData"
+		parameterType="com.joyintech.tams.common.base.entity.ChbBotAstPosition">
+		MERGE INTO CHB_BOT_AST_POS CII
+		USING (
+		<foreach collection="newDataList" item="item" open="select * from("
+			close=")" separator="union all">
+	SELECT
+	  '${item.posId}' POS_ID, 
+	  '${item.issuePartyId}' ISSUE_PARTY_ID, 
+      <choose><when test="item.posDate != null">#{item.posDate,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose> POS_DATE,
+      '${item.planAssetId}' PLAN_ASSET_ID,
+      '${item.assetCode}' ASSET_CODE, 
+      <choose><when test="item.totalNum != null">${item.totalNum}</when><otherwise>null</otherwise></choose> TOTAL_NUM,
+      <choose><when test="item.issueAmt != null">${item.issueAmt}</when><otherwise>null</otherwise></choose> ISSUE_AMT,
+      <choose><when test="item.uninvestCash != null">${item.uninvestCash}</when><otherwise>null</otherwise></choose> UNINVEST_CASH,
+      <choose><when test="item.posNum != null">${item.posNum}</when><otherwise>null</otherwise></choose> POS_NUM,
+      <choose><when test="item.posAmt != null">${item.posAmt}</when><otherwise>null</otherwise></choose> POS_AMT,
+      '${item.isfinaplan}' ISFINAPLAN, 
+      '${item.ischl}' ISCHL, 
+      '${item.workflowId}' WORKFLOW_ID,
+      '${item.status}' STATUS, 
+      '${item.orgCode}' ORG_CODE, 
+      '${item.deptCode}' DEPT_CODE, 
+      '${item.createUser}' CREATE_USER,
+      '${item.createDept}' CREATE_DEPT ,
+      current date CREATE_TIME, 
+      '${item.updateUser}' UPDATE_USER, 
+      current date UPDATE_TIME, 
+      '${item.datasource}' DATASOURCE
+	FROM sysibm.SYSDUMMY1
+		</foreach>
+		) TEMP
+		<!-- 业务主键匹配 -->
+		ON(CII.PLAN_ASSET_ID = TEMP.PLAN_ASSET_ID 
+		and CII.ASSET_CODE = TEMP.ASSET_CODE
+		and CII.POS_DATE = TEMP.POS_DATE)
+		<!-- 匹配到则更新 -->
+		WHEN MATCHED THEN UPDATE
+		SET  
+		 CII.POS_ID = TEMP.POS_ID,
+		 CII.ISSUE_PARTY_ID = TEMP.ISSUE_PARTY_ID,
+		 CII.TOTAL_NUM = TEMP.TOTAL_NUM,
+		 CII.ISSUE_AMT = TEMP.ISSUE_AMT,
+		 CII.UNINVEST_CASH = TEMP.UNINVEST_CASH,
+		 CII.POS_NUM = TEMP.POS_NUM,
+		 CII.POS_AMT = TEMP.POS_AMT,
+		 CII.ISFINAPLAN = TEMP.ISFINAPLAN,
+		 CII.ISCHL = TEMP.ISCHL,
+		 CII.WORKFLOW_ID = TEMP.WORKFLOW_ID,
+		 CII.STATUS = TEMP.STATUS,
+		 CII.ORG_CODE = TEMP.ORG_CODE,
+		 CII.DEPT_CODE = TEMP.DEPT_CODE,
+		 CII.CREATE_USER = TEMP.CREATE_USER,
+		 CII.CREATE_DEPT = TEMP.CREATE_DEPT,
+		 CII.CREATE_TIME = TEMP.CREATE_TIME,
+		 CII.UPDATE_USER = TEMP.UPDATE_USER,
+		 CII.UPDATE_TIME = TEMP.UPDATE_TIME,
+		 CII.DATASOURCE = TEMP.DATASOURCE
+		<!-- 未匹配到这插入 -->
+		WHEN NOT MATCHED THEN INSERT (POS_ID, ISSUE_PARTY_ID, POS_DATE, 
+      PLAN_ASSET_ID, ASSET_CODE, TOTAL_NUM, 
+      ISSUE_AMT, UNINVEST_CASH, POS_NUM, 
+      POS_AMT, ISFINAPLAN, ISCHL, 
+      WORKFLOW_ID, STATUS, ORG_CODE, 
+      DEPT_CODE, CREATE_USER, CREATE_DEPT, 
+      CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+      DATASOURCE)
+		VALUES( TEMP.POS_ID,
+		 TEMP.ISSUE_PARTY_ID,
+		 TEMP.POS_DATE,
+		 TEMP.PLAN_ASSET_ID,
+		 TEMP.ASSET_CODE,
+		 TEMP.TOTAL_NUM,
+		 TEMP.ISSUE_AMT,
+		 TEMP.UNINVEST_CASH,
+		 TEMP.POS_NUM,
+		 TEMP.POS_AMT,
+		 TEMP.ISFINAPLAN,
+		 TEMP.ISCHL,
+		 TEMP.WORKFLOW_ID,
+		 TEMP.STATUS,
+		 TEMP.ORG_CODE,
+		 TEMP.DEPT_CODE,
+		 TEMP.CREATE_USER,
+		 TEMP.CREATE_DEPT,
+		 TEMP.CREATE_TIME,
+		 TEMP.UPDATE_USER,
+		 TEMP.UPDATE_TIME,
+		 TEMP.DATASOURCE
+			)
+	</insert>
+</mapper>

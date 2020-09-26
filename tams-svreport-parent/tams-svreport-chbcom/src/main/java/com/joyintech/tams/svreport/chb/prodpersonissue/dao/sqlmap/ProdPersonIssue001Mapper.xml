@@ -1,0 +1,986 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.prodpersonissue.dao.ProdPersonIssue001Mapper" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.prodpersonissue.dto.ProdPersonIssue001Dto" >
+    <id column="REGIST_SEQNO" property="registSeqno" jdbcType="VARCHAR" />
+    <result column="PROD_REGIST_CODE" property="prodRegistCode" jdbcType="VARCHAR" />
+    <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+    <result column="RAISE_VDATE" property="raiseVdate" jdbcType="TIMESTAMP" />
+    <result column="RAISE_ENDDATE" property="raiseEnddate" jdbcType="TIMESTAMP" />
+    <result column="PRD_VDATE" property="prdVdate" jdbcType="TIMESTAMP" />
+    <result column="PRD_MDATE" property="prdMdate" jdbcType="TIMESTAMP" />
+    <result column="IS_CONSTRACTE" property="isConstracte" jdbcType="VARCHAR" />
+    <result column="GRADE_TYPE" property="gradeType" jdbcType="VARCHAR" />
+    <result column="EXP_MIN_YIELD" property="expMinYield" jdbcType="DECIMAL" />
+    <result column="EXP_MAX_YIELD" property="expMaxYield" jdbcType="DECIMAL" />
+    <result column="EXP_AVG_YIELD" property="expAvgYield" jdbcType="DECIMAL" />
+    <result column="YIELD_COMMENT" property="yieldComment" jdbcType="VARCHAR" />
+    <result column="OPEN_MODE" property="openMode" jdbcType="VARCHAR" />
+    <result column="OPEN_CIRCLE" property="openCircle" jdbcType="VARCHAR" />
+    <result column="OPEN_CIRCLE_DAYS" property="openCircleDays" jdbcType="DECIMAL" />
+    <result column="RULE_COMMENT" property="ruleComment" jdbcType="VARCHAR" />
+    <result column="FIRST_OPEN_DAY" property="firstOpenDay" jdbcType="TIMESTAMP" />
+    <result column="HOLIDAY_ON_FLAG" property="holidayOnFlag" jdbcType="VARCHAR" />
+    <result column="AVG_OPEN_COUNT" property="avgOpenCount" jdbcType="DECIMAL" />
+    <result column="OPEN_BUSS" property="openBuss" jdbcType="VARCHAR" />
+    <result column="OPEN_BUSS_REMARK" property="openBussRemark" jdbcType="VARCHAR" />
+    <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+    <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
+    <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+    <result column="STATUS_DATE" property="statusDate" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+    <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" jdbcType="TIMESTAMP" />
+    <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
+    <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+     <result column="MANAGE_TYPE" property="manageType" jdbcType="VARCHAR" />
+     <result column="YIELD_LOW" property="yieldLow" jdbcType="DECIMAL" />
+     <result column="YIELD_HIGH" property="yieldHigh" jdbcType="DECIMAL" />
+     <result column="YIELD_REMARK" property="yieldRemark" jdbcType="VARCHAR" />
+      <result column="BUSI_ACCT_NO" property="busiAcctNo" jdbcType="VARCHAR" />
+      <result column="ACCT_NAME" property="acctName" jdbcType="VARCHAR" />
+ 
+   </resultMap>
+  <sql id="Base_Column_List" >
+    REGIST_SEQNO, PROD_REGIST_CODE, PROD_ID, RAISE_VDATE, RAISE_ENDDATE, PRD_VDATE, PRD_MDATE, 
+    IS_CONSTRACTE, GRADE_TYPE, EXP_MIN_YIELD, EXP_MAX_YIELD, EXP_AVG_YIELD, YIELD_COMMENT, 
+    OPEN_MODE, OPEN_CIRCLE, OPEN_CIRCLE_DAYS, RULE_COMMENT, FIRST_OPEN_DAY, HOLIDAY_ON_FLAG, 
+    AVG_OPEN_COUNT, OPEN_BUSS, OPEN_BUSS_REMARK, WORKFLOW_ID, SUBMIT_FEEDBACK_STATUS, 
+    SEND_STATUS, STATUS_DATE, STATUS, ORG_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+    UPDATE_USER, UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, ISSUE_PARTY_ID
+  </sql>
+  <sql id="baseInfo">
+		select
+			sub.REGIST_SEQNO REGISTSEQNO ,
+			reginfo.REG_CODE PRODREGISTCODE ,
+			sub.PROD_ID PRODID ,
+			sub.RAISE_VDATE RAISEVDATE ,
+			sub.RAISE_ENDDATE RAISEENDDATE ,
+			sub.PRD_VDATE PRDVDATE ,
+			sub.PRD_MDATE PRDMDATE ,
+			sub.IS_CONSTRACTE ISCONSTRACTE ,
+			sub.GRADE_TYPE GRADETYPE ,
+			sub.EXP_MIN_YIELD EXPMINYIELD ,
+			sub.EXP_MAX_YIELD EXPMAXYIELD ,
+			sub.EXP_AVG_YIELD EXPAVGYIELD ,
+			sub.YIELD_COMMENT YIELDCOMMENT ,
+			sub.OPEN_MODE OPENMODE ,
+			sub.OPEN_CIRCLE OPENCIRCLE ,
+			sub.OPEN_CIRCLE_DAYS OPENCIRCLEDAYS ,
+			sub.RULE_COMMENT RULECOMMENT ,
+			sub.FIRST_OPEN_DAY FIRSTOPENDAY ,
+			sub.HOLIDAY_ON_FLAG HOLIDAYONFLAG ,
+			sub.AVG_OPEN_COUNT AVGOPENCOUNT ,
+			sub.OPEN_BUSS OPENBUSS ,
+			sub.OPEN_BUSS_REMARK OPENBUSSREMARK ,
+			sub.WORKFLOW_ID WORKFLOWID ,
+			sub.SUBMIT_FEEDBACK_STATUS SUBMITFEEDBACKSTATUS ,
+			sub.SEND_STATUS SENDSTATUS ,
+			sub.STATUS_DATE STATUSDATE ,
+			sub.STATUS STATUS ,
+			sub.ORG_CODE ORGCODE ,
+			sub.CREATE_TIME CREATETIME ,
+			sub.UPDATE_USER UPDATEUSER ,
+			sub.UPDATE_TIME UPDATETIME ,
+			sub.SUBMIT_TIME SUBMITTIME ,
+			sub.CHB_SUBMIT_DEADLINE CHBSUBMITDEADLINE ,
+			sub.SUBMIT_DEADLINE SUBMITDEADLINE ,
+			sub.ISSUE_PARTY_ID ISSUEPARTYID,
+			sub.MANAGE_TYPE MANAGETYPE,
+			sub.YIELD_LOW YIELDLOW,
+			sub.YIELD_HIGH YIELDHIGH,
+			sub.YIELD_REMARK YIELDREMARK,
+			sub.BUSI_ACCT_NO BUSIACCTNO,
+			sub.ACCT_NAME ACCTNAME
+			from CHB_PRD_ISSUE_SUB sub
+		    left join chb_prdresist_code reginfo
+		    on sub.prod_id = reginfo.prodid
+   </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from CHB_PRD_ISSUE_SUB
+    where REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from CHB_PRD_ISSUE_SUB
+    where REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.prodpersonissue.dto.ProdPersonIssue001Dto" >
+    insert into CHB_PRD_ISSUE_SUB (REGIST_SEQNO, PROD_REGIST_CODE, PROD_ID, 
+      RAISE_VDATE, RAISE_ENDDATE, PRD_VDATE, 
+      PRD_MDATE, IS_CONSTRACTE, GRADE_TYPE, 
+      EXP_MIN_YIELD, EXP_MAX_YIELD, EXP_AVG_YIELD, 
+      YIELD_COMMENT, OPEN_MODE, OPEN_CIRCLE, 
+      OPEN_CIRCLE_DAYS, RULE_COMMENT, FIRST_OPEN_DAY, 
+      HOLIDAY_ON_FLAG, AVG_OPEN_COUNT, OPEN_BUSS, 
+      OPEN_BUSS_REMARK, WORKFLOW_ID, SUBMIT_FEEDBACK_STATUS, 
+      SEND_STATUS, STATUS_DATE, STATUS, 
+      ORG_CODE, CREATE_USER, CREATE_DEPT, 
+      CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+      SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+      ISSUE_PARTY_ID)
+    values (#{registSeqno,jdbcType=VARCHAR}, #{prodRegistCode,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, 
+      #{raiseVdate,jdbcType=TIMESTAMP}, #{raiseEnddate,jdbcType=TIMESTAMP}, #{prdVdate,jdbcType=TIMESTAMP}, 
+      #{prdMdate,jdbcType=TIMESTAMP}, #{isConstracte,jdbcType=VARCHAR}, #{gradeType,jdbcType=VARCHAR}, 
+      #{expMinYield,jdbcType=DECIMAL}, #{expMaxYield,jdbcType=DECIMAL}, #{expAvgYield,jdbcType=DECIMAL}, 
+      #{yieldComment,jdbcType=VARCHAR}, #{openMode,jdbcType=VARCHAR}, #{openCircle,jdbcType=VARCHAR}, 
+      #{openCircleDays,jdbcType=DECIMAL}, #{ruleComment,jdbcType=VARCHAR}, #{firstOpenDay,jdbcType=TIMESTAMP}, 
+      #{holidayOnFlag,jdbcType=VARCHAR}, #{avgOpenCount,jdbcType=DECIMAL}, #{openBuss,jdbcType=VARCHAR}, 
+      #{openBussRemark,jdbcType=VARCHAR}, #{workflowId,jdbcType=VARCHAR}, #{submitFeedbackStatus,jdbcType=VARCHAR}, 
+      #{sendStatus,jdbcType=VARCHAR}, #{statusDate,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, 
+      #{orgCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{submitTime,jdbcType=TIMESTAMP}, #{chbSubmitDeadline,jdbcType=TIMESTAMP}, #{submitDeadline,jdbcType=TIMESTAMP}, 
+      #{issuePartyId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.prodpersonissue.dto.ProdPersonIssue001Dto" >
+    insert into CHB_PRD_ISSUE_SUB
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="registSeqno != null" >
+        REGIST_SEQNO,
+      </if>
+      <if test="prodRegistCode != null" >
+        PROD_REGIST_CODE,
+      </if>
+      <if test="prodId != null" >
+        PROD_ID,
+      </if>
+      <if test="raiseVdate != null" >
+        RAISE_VDATE,
+      </if>
+      <if test="raiseEnddate != null" >
+        RAISE_ENDDATE,
+      </if>
+      <if test="prdVdate != null" >
+        PRD_VDATE,
+      </if>
+      <if test="prdMdate != null" >
+        PRD_MDATE,
+      </if>
+      <if test="isConstracte != null" >
+        IS_CONSTRACTE,
+      </if>
+      <if test="gradeType != null" >
+        GRADE_TYPE,
+      </if>
+      <if test="expMinYield != null" >
+        EXP_MIN_YIELD,
+      </if>
+      <if test="expMaxYield != null" >
+        EXP_MAX_YIELD,
+      </if>
+      <if test="expAvgYield != null" >
+        EXP_AVG_YIELD,
+      </if>
+      <if test="yieldComment != null" >
+        YIELD_COMMENT,
+      </if>
+      <if test="openMode != null" >
+        OPEN_MODE,
+      </if>
+      <if test="openCircle != null" >
+        OPEN_CIRCLE,
+      </if>
+      <if test="openCircleDays != null" >
+        OPEN_CIRCLE_DAYS,
+      </if>
+      <if test="ruleComment != null" >
+        RULE_COMMENT,
+      </if>
+      <if test="firstOpenDay != null" >
+        FIRST_OPEN_DAY,
+      </if>
+      <if test="holidayOnFlag != null" >
+        HOLIDAY_ON_FLAG,
+      </if>
+      <if test="avgOpenCount != null" >
+        AVG_OPEN_COUNT,
+      </if>
+      <if test="openBuss != null" >
+        OPEN_BUSS,
+      </if>
+      <if test="openBussRemark != null" >
+        OPEN_BUSS_REMARK,
+      </if>
+      <if test="workflowId != null" >
+        WORKFLOW_ID,
+      </if>
+      <if test="submitFeedbackStatus != null" >
+        SUBMIT_FEEDBACK_STATUS,
+      </if>
+      <if test="sendStatus != null" >
+        SEND_STATUS,
+      </if>
+      <if test="statusDate != null" >
+        STATUS_DATE,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="orgCode != null" >
+        ORG_CODE,
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER,
+      </if>
+      <if test="createDept != null" >
+        CREATE_DEPT,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateUser != null" >
+        UPDATE_USER,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="submitTime != null" >
+        SUBMIT_TIME,
+      </if>
+      <if test="chbSubmitDeadline != null" >
+        CHB_SUBMIT_DEADLINE,
+      </if>
+      <if test="submitDeadline != null" >
+        SUBMIT_DEADLINE,
+      </if>
+      <if test="issuePartyId != null" >
+        ISSUE_PARTY_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="registSeqno != null" >
+        #{registSeqno,jdbcType=VARCHAR},
+      </if>
+      <if test="prodRegistCode != null" >
+        #{prodRegistCode,jdbcType=VARCHAR},
+      </if>
+      <if test="prodId != null" >
+        #{prodId,jdbcType=VARCHAR},
+      </if>
+      <if test="raiseVdate != null" >
+        #{raiseVdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="raiseEnddate != null" >
+        #{raiseEnddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="prdVdate != null" >
+        #{prdVdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="prdMdate != null" >
+        #{prdMdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isConstracte != null" >
+        #{isConstracte,jdbcType=VARCHAR},
+      </if>
+      <if test="gradeType != null" >
+        #{gradeType,jdbcType=VARCHAR},
+      </if>
+      <if test="expMinYield != null" >
+        #{expMinYield,jdbcType=DECIMAL},
+      </if>
+      <if test="expMaxYield != null" >
+        #{expMaxYield,jdbcType=DECIMAL},
+      </if>
+      <if test="expAvgYield != null" >
+        #{expAvgYield,jdbcType=DECIMAL},
+      </if>
+      <if test="yieldComment != null" >
+        #{yieldComment,jdbcType=VARCHAR},
+      </if>
+      <if test="openMode != null" >
+        #{openMode,jdbcType=VARCHAR},
+      </if>
+      <if test="openCircle != null" >
+        #{openCircle,jdbcType=VARCHAR},
+      </if>
+      <if test="openCircleDays != null" >
+        #{openCircleDays,jdbcType=DECIMAL},
+      </if>
+      <if test="ruleComment != null" >
+        #{ruleComment,jdbcType=VARCHAR},
+      </if>
+      <if test="firstOpenDay != null" >
+        #{firstOpenDay,jdbcType=TIMESTAMP},
+      </if>
+      <if test="holidayOnFlag != null" >
+        #{holidayOnFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="avgOpenCount != null" >
+        #{avgOpenCount,jdbcType=DECIMAL},
+      </if>
+      <if test="openBuss != null" >
+        #{openBuss,jdbcType=VARCHAR},
+      </if>
+      <if test="openBussRemark != null" >
+        #{openBussRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="workflowId != null" >
+        #{workflowId,jdbcType=VARCHAR},
+      </if>
+      <if test="submitFeedbackStatus != null" >
+        #{submitFeedbackStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="sendStatus != null" >
+        #{sendStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="statusDate != null" >
+        #{statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="orgCode != null" >
+        #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDept != null" >
+        #{createDept,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitTime != null" >
+        #{submitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="chbSubmitDeadline != null" >
+        #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitDeadline != null" >
+        #{submitDeadline,jdbcType=TIMESTAMP},
+      </if>
+      <if test="issuePartyId != null" >
+        #{issuePartyId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.chb.prodpersonissue.dto.ProdPersonIssue001Dto" >
+    update CHB_PRD_ISSUE_SUB
+    <set >
+      <if test="prodRegistCode != null" >
+        PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR},
+      </if>
+      <if test="prodId != null" >
+        PROD_ID = #{prodId,jdbcType=VARCHAR},
+      </if>
+      <if test="raiseVdate != null" >
+        RAISE_VDATE = #{raiseVdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="raiseEnddate != null" >
+        RAISE_ENDDATE = #{raiseEnddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="prdVdate != null" >
+        PRD_VDATE = #{prdVdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="prdMdate != null" >
+        PRD_MDATE = #{prdMdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isConstracte != null" >
+        IS_CONSTRACTE = #{isConstracte,jdbcType=VARCHAR},
+      </if>
+      <if test="gradeType != null" >
+        GRADE_TYPE = #{gradeType,jdbcType=VARCHAR},
+      </if>
+      <if test="expMinYield != null" >
+        EXP_MIN_YIELD = #{expMinYield,jdbcType=DECIMAL},
+      </if>
+      <if test="expMaxYield != null" >
+        EXP_MAX_YIELD = #{expMaxYield,jdbcType=DECIMAL},
+      </if>
+      <if test="expAvgYield != null" >
+        EXP_AVG_YIELD = #{expAvgYield,jdbcType=DECIMAL},
+      </if>
+      <if test="yieldComment != null" >
+        YIELD_COMMENT = #{yieldComment,jdbcType=VARCHAR},
+      </if>
+      <if test="openMode != null" >
+        OPEN_MODE = #{openMode,jdbcType=VARCHAR},
+      </if>
+      <if test="openCircle != null" >
+        OPEN_CIRCLE = #{openCircle,jdbcType=VARCHAR},
+      </if>
+      <if test="openCircleDays != null" >
+        OPEN_CIRCLE_DAYS = #{openCircleDays,jdbcType=DECIMAL},
+      </if>
+      <if test="ruleComment != null" >
+        RULE_COMMENT = #{ruleComment,jdbcType=VARCHAR},
+      </if>
+      <if test="firstOpenDay != null" >
+        FIRST_OPEN_DAY = #{firstOpenDay,jdbcType=TIMESTAMP},
+      </if>
+      <if test="holidayOnFlag != null" >
+        HOLIDAY_ON_FLAG = #{holidayOnFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="avgOpenCount != null" >
+        AVG_OPEN_COUNT = #{avgOpenCount,jdbcType=DECIMAL},
+      </if>
+      <if test="openBuss != null" >
+        OPEN_BUSS = #{openBuss,jdbcType=VARCHAR},
+      </if>
+      <if test="openBussRemark != null" >
+        OPEN_BUSS_REMARK = #{openBussRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="workflowId != null" >
+        WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+      </if>
+      <if test="submitFeedbackStatus != null" >
+        SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="sendStatus != null" >
+        SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="statusDate != null" >
+        STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="orgCode != null" >
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDept != null" >
+        CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitTime != null" >
+        SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="chbSubmitDeadline != null" >
+        CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitDeadline != null" >
+        SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+      </if>
+      <if test="issuePartyId != null" >
+        ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.chb.prodpersonissue.dto.ProdPersonIssue001Dto" >
+    update CHB_PRD_ISSUE_SUB
+    set PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR},
+      PROD_ID = #{prodId,jdbcType=VARCHAR},
+      RAISE_VDATE = #{raiseVdate,jdbcType=TIMESTAMP},
+      RAISE_ENDDATE = #{raiseEnddate,jdbcType=TIMESTAMP},
+      PRD_VDATE = #{prdVdate,jdbcType=TIMESTAMP},
+      PRD_MDATE = #{prdMdate,jdbcType=TIMESTAMP},
+      IS_CONSTRACTE = #{isConstracte,jdbcType=VARCHAR},
+      GRADE_TYPE = #{gradeType,jdbcType=VARCHAR},
+      EXP_MIN_YIELD = #{expMinYield,jdbcType=DECIMAL},
+      EXP_MAX_YIELD = #{expMaxYield,jdbcType=DECIMAL},
+      EXP_AVG_YIELD = #{expAvgYield,jdbcType=DECIMAL},
+      YIELD_COMMENT = #{yieldComment,jdbcType=VARCHAR},
+      OPEN_MODE = #{openMode,jdbcType=VARCHAR},
+      OPEN_CIRCLE = #{openCircle,jdbcType=VARCHAR},
+      OPEN_CIRCLE_DAYS = #{openCircleDays,jdbcType=DECIMAL},
+      RULE_COMMENT = #{ruleComment,jdbcType=VARCHAR},
+      FIRST_OPEN_DAY = #{firstOpenDay,jdbcType=TIMESTAMP},
+      HOLIDAY_ON_FLAG = #{holidayOnFlag,jdbcType=VARCHAR},
+      AVG_OPEN_COUNT = #{avgOpenCount,jdbcType=DECIMAL},
+      OPEN_BUSS = #{openBuss,jdbcType=VARCHAR},
+      OPEN_BUSS_REMARK = #{openBussRemark,jdbcType=VARCHAR},
+      WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+      SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+      SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+      STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+      STATUS = #{status,jdbcType=VARCHAR},
+      ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+      CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+      SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+      ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR}
+    where REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
+  </update>
+
+	<!-- 个人发行登记查询 -->
+	<select id="queryForProdPersonIssuePage" parameterType="map"
+	resultType="com.joyintech.tams.svreport.chb.prodpersonissue.dto.ProdPersonIssue001Dto">
+		select a.* from
+		(
+
+		select
+			sub.REGIST_SEQNO REGISTSEQNO ,
+			reginfo.REG_CODE PRODREGISTCODE ,
+			sub.PROD_ID PRODID ,
+			sub.RAISE_VDATE RAISEVDATE ,
+			sub.RAISE_ENDDATE RAISEENDDATE ,
+			sub.PRD_VDATE PRDVDATE ,
+			sub.PRD_MDATE PRDMDATE ,
+			sub.IS_CONSTRACTE ISCONSTRACTE ,
+			sub.GRADE_TYPE GRADETYPE ,
+			sub.EXP_MIN_YIELD EXPMINYIELD ,
+			sub.EXP_MAX_YIELD EXPMAXYIELD ,
+			sub.EXP_AVG_YIELD EXPAVGYIELD ,
+			sub.YIELD_COMMENT YIELDCOMMENT ,
+			sub.OPEN_MODE OPENMODE ,
+			sub.OPEN_CIRCLE OPENCIRCLE ,
+			sub.OPEN_CIRCLE_DAYS OPENCIRCLEDAYS ,
+			sub.RULE_COMMENT RULECOMMENT ,
+			sub.FIRST_OPEN_DAY FIRSTOPENDAY ,
+			sub.HOLIDAY_ON_FLAG HOLIDAYONFLAG ,
+			sub.AVG_OPEN_COUNT AVGOPENCOUNT ,
+			sub.OPEN_BUSS OPENBUSS ,
+			sub.OPEN_BUSS_REMARK OPENBUSSREMARK ,
+			sub.WORKFLOW_ID WORKFLOWID ,
+			sub.SUBMIT_FEEDBACK_STATUS SUBMITFEEDBACKSTATUS ,
+			sub.SEND_STATUS SENDSTATUS ,
+			sub.STATUS_DATE STATUSDATE ,
+			sub.STATUS STATUS ,
+			sub.ORG_CODE ORGCODE ,
+			sub.CREATE_TIME CREATETIME ,
+			sub.UPDATE_USER UPDATEUSER ,
+			sub.UPDATE_TIME UPDATETIME ,
+			sub.SUBMIT_TIME SUBMITTIME ,
+			sub.CHB_SUBMIT_DEADLINE CHBSUBMITDEADLINE ,
+			sub.SUBMIT_DEADLINE SUBMITDEADLINE ,
+			
+			<if test="model_type != null">
+				b.reg_code ISSUEPARTYID, /*发行机构代码*/
+			  </if>
+			  <if test="model_type == null">
+		    	sub.ISSUE_PARTY_ID ISSUEPARTYID,
+			  </if>
+			
+			sub.MANAGE_TYPE MANAGETYPE,
+			sub.YIELD_LOW YIELDLOW,
+			sub.YIELD_HIGH YIELDHIGH,
+			sub.YIELD_REMARK YIELDREMARK,
+			sub.BUSI_ACCT_NO BUSIACCTNO,
+			sub.ACCT_NAME ACCTNAME
+			from CHB_PRD_ISSUE_SUB sub
+		    left join chb_prdresist_code reginfo on sub.prod_id = reginfo.prodid
+		    left join CHB_PRD_BASEINFO B ON b.prod_id=sub.prod_id
+		<where>
+		 <if test="statusList != null and statusList.size() > 0">
+            	<foreach collection="statusList" item="status" open=" AND sub.STATUS IN (" close=")" separator=",">
+             		#{status}
+            	</foreach>
+		  </if>
+	       <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
+		 		<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND sub.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
+             		#{submitFeedbackStatus}
+            	</foreach>	
+		 	</if>
+		 	<if test="submitStatusList != null and submitStatusList.size() > 0">
+		 		<foreach collection="submitStatusList" item="submitStatus" open=" AND sub.SEND_STATUS IN (" close=")" separator=",">
+             		#{submitStatus}
+            	</foreach>			 	
+		 	</if>
+		 	<!-- 不勾选数据导出时需要指定报送状态 add by gaojian 2019-06-10 begin-->
+		 	<if test="sendStatus != null and sendStatus != ''">
+				AND sub.SEND_STATUS = #{sendStatus}
+			</if>
+			<!-- 不勾选数据导出时需要指定报送状态 add by gaojian 2019-06-10 end-->
+		 	<if test="submitDate != null and submitDate != ''">
+				AND to_char(sub.SUBMIT_TIME,'yyyy-MM-dd') >= #{submitDate}
+			</if>
+			<if test="submitDateEnd != null and submitDateEnd != ''">
+				AND to_char(sub.SUBMIT_TIME,'yyyy-MM-dd') <![CDATA[<=]]>#{submitDateEnd}
+			</if>
+		 	<if test="updateTime != null and updateTime != ''">
+		 	AND to_char(sub.STATUS_DATE,'yyyy-MM-dd') >= #{updateTime}
+		 	</if>
+		 	<if test="updateTimeEnd != null and updateTimeEnd != ''">
+		 	AND to_char(sub.STATUS_DATE,'yyyy-MM-dd') <![CDATA[<=]]> #{updateTimeEnd}
+		 	</if>
+		 	<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
+		 	AND to_char(sub.CHB_SUBMIT_DEADLINE,'yyyy-MM-dd') &gt;= #{submitDeadLineStart}
+		 	</if>
+		 	<if test="submitDeadLineEnd != null and submitDeadLineEnd != ''">
+		 	AND to_char(sub.CHB_SUBMIT_DEADLINE,'yyyy-MM-dd') &lt;= #{submitDeadLineEnd}
+		 	</if>
+		 	
+		 	<if test="raiseVdateStart != null and raiseVdateStart != ''">
+		 	AND to_char(sub.RAISE_VDATE,'yyyy-MM-dd') &gt;=#{raiseVdateStart}
+		 	</if>
+		 	<if test="raiseVdateEnd != null and raiseVdateEnd != ''">
+		 	AND to_char(sub.RAISE_VDATE,'yyyy-MM-dd') &lt;= #{raiseVdateEnd}
+		 	</if>
+		 	<if test="prdVdateStart != null and prdVdateStart != ''">
+		 	AND to_char(sub.PRD_VDATE,'yyyy-MM-dd') &gt;= #{prdVdateStart}
+		 	</if>
+		 	<if test="prdVdateEnd != null and prdVdateEnd != ''">
+		 	AND to_char(sub.PRD_VDATE,'yyyy-MM-dd') &lt;= #{prdVdateEnd}
+		 	</if>
+		 	<if test="prodIdList != null and prodIdList.size() > 0">
+            	<foreach collection="prodIdList" item="status" open=" AND sub.PROD_ID IN (" close=")" separator=",">
+             		#{status}
+            	</foreach>
+		  	</if>
+		   <if test="prodRegistCodeList != null and prodRegistCodeList.size() > 0">
+            	<foreach collection="prodRegistCodeList" item="status" open=" AND reginfo.reg_code IN (" close=")" separator=",">
+             		#{status}
+            	</foreach>
+		   </if>
+		   and sub.STATUS !='04'
+		   </where>
+		   ) a
+	</select>
+	<!-- 个人发行登记查询-->
+	
+	<select id="queryExportListByKeys" resultMap="BaseResultMap"
+		parameterType="java.util.List">
+		<!-- select
+		<include refid="Base_Column_List" />
+		from CHB_PRD_ISSUE_SUB sub -->
+		select
+			sub.REGIST_SEQNO REGIST_SEQNO ,
+			reginfo.REG_CODE PROD_REGIST_CODE ,
+			sub.PROD_ID PROD_ID ,
+			sub.RAISE_VDATE RAISE_VDATE ,
+			sub.RAISE_ENDDATE RAISE_ENDDATE ,
+			sub.PRD_VDATE PRD_VDATE ,
+			sub.PRD_MDATE PRD_MDATE ,
+			sub.IS_CONSTRACTE IS_CONSTRACTE ,
+			sub.GRADE_TYPE GRADE_TYPE ,
+			sub.EXP_MIN_YIELD EXP_MIN_YIELD ,
+			sub.EXP_MAX_YIELD EXP_MAX_YIELD ,
+			sub.EXP_AVG_YIELD EXP_AVG_YIELD ,
+			sub.YIELD_COMMENT YIELD_COMMENT ,
+			sub.OPEN_MODE OPEN_MODE ,
+			sub.OPEN_CIRCLE OPEN_CIRCLE ,
+			sub.OPEN_CIRCLE_DAYS OPEN_CIRCLE_DAYS ,
+			sub.RULE_COMMENT RULE_COMMENT ,
+			sub.FIRST_OPEN_DAY FIRST_OPEN_DAY ,
+			sub.HOLIDAY_ON_FLAG HOLIDAY_ON_FLAG ,
+			sub.AVG_OPEN_COUNT AVG_OPEN_COUNT ,
+			sub.OPEN_BUSS OPEN_BUSS ,
+			sub.OPEN_BUSS_REMARK OPEN_BUSS_REMARK ,
+			sub.WORKFLOW_ID WORKFLOW_ID ,
+			sub.SUBMIT_FEEDBACK_STATUS SUBMIT_FEEDBACK_STATUS ,
+			sub.SEND_STATUS SEND_STATUS ,
+			sub.STATUS_DATE STATUS_DATE ,
+			sub.STATUS STATUS ,
+			sub.ORG_CODE ORG_CODE ,
+			sub.CREATE_TIME CREATE_TIME ,
+			sub.UPDATE_USER UPDATE_USER ,
+			sub.UPDATE_TIME UPDATE_TIME ,
+			sub.SUBMIT_TIME SUBMIT_TIME ,
+			sub.CHB_SUBMIT_DEADLINE CHB_SUBMIT_DEADLINE ,
+			sub.SUBMIT_DEADLINE SUBMIT_DEADLINE ,
+			sub.ISSUE_PARTY_ID ISSUE_PARTY_ID
+			from CHB_PRD_ISSUE_SUB sub
+		    left join chb_prdresist_code reginfo
+		    on sub.prod_id = reginfo.prodid
+		<where>
+		   	<if test="registList!=null and registList.size()!=0">
+			   	<foreach collection="registList" item="items" 
+	            		open=" AND TRIM(sub.REGIST_SEQNO) IN (" close=")" separator=",">
+	             		#{items,jdbcType=CHAR}
+	             </foreach> 
+		   	</if>
+		</where>
+		
+	</select>
+	
+	 <!-- 接口报送更新并且更新 报送流水号-->
+    <update id="updateInterfSubmitAndSeqBatch" parameterType="java.util.Map">
+         update CHB_PRD_ISSUE_SUB sub
+        <set> 
+            <if test="sendStatus != null and sendStatus != ''">
+                sub.SEND_STATUS = #{sendStatus},
+            </if>
+            <if test="submitFeeBackStatus != null and submitFeeBackStatus != ''">
+                sub.SUBMIT_FEEDBACK_STATUS = #{submitFeeBackStatus},
+            </if> 
+            sub.submit_time = sysdate,
+            sub.UPDATE_TIME = sysdate
+        </set>
+        <where>
+            <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
+                trim(sub.REGIST_SEQNO) = #{regist.registSeqno} 
+            </foreach>
+        </where>
+    </update>
+	
+	 
+    <!-- 取消手工报送登记表更新 -->
+	<update id="cancelMannultRegist" parameterType="java.util.Map">
+		update CHB_PRD_ISSUE_SUB
+		<set> 
+		 	SEND_STATUS = '01',
+			UPDATE_TIME = sysdate,
+			SUBMIT_TIME = null,
+            SUBMIT_FEEDBACK_STATUS=null
+		</set>
+		<where>
+		 	<foreach collection="list" item="dto" open="(" close=")" separator=") or (">
+		 	 	 trim(REGIST_SEQNO)= #{dto.registSeqno}  
+		 	</foreach>
+		</where>
+	</update>
+  
+  <select id="queryGenerateList" resultType="com.joyintech.tams.svreport.chb.prodpersonissue.dto.ProdPersonIssue001Dto">
+       SELECT
+   		    reginfo.REG_CODE PRODREGISTCODE, /*产品登记编码*/
+            info.PROD_ID, /*理财产品代码*/
+            info.RAISE_VDATE, /*募集起始日期*/
+            info.RAISE_ENDDATE, /*募集结束日期  */
+            info.vdate PRD_VDATE, /*产品起始日期  */
+            info.mdate PRD_MDATE, /*产品终止日期  */
+            info.IS_CONSTRACTE, /*是否为结构化（分级）产品 */
+            info.GRADE_TYPE, /*层级类别 */
+            info.LOW_YIELD_ISSUE EXP_MIN_YIELD, /*预计客户最低年收益率 %  */
+            info.HIGH_YIELD_ISSUE EXP_MAX_YIELD, /*预计客户最高年收益率 % */
+			info.EXP_AVG_YIELD, /*平均预计客户年收益率%  */
+			info.YIELD_COMMENT, /*收益率分档情况说明 */
+			info.OPEN_MODE, /*开放模式 */
+			info.OPEN_CIRCLE, /*规律开放周期 */
+			info.OPEN_CIRCLE_DAYS, /*其他规律开放周期 (天) */
+			info.RULE_COMMENT , /*无规律开放说明*/
+			info.FIRST_OPEN_DAY, /*首次开放周期起始日 */
+			info.HOLIDAY_ON_FLAG, /*节假日是否开放  */
+			info.AVG_OPEN_COUNT, /*平均开放次数（年化）*/
+			info.OPEN_BUSS, /*开放期业务*/
+			info.OPEN_BUSS_REMARK, /*开放期业务说明 */
+			info.STATUS STATUS,
+			info.MANAGE_TYPE,
+            info.YIELD_LOW,
+            info.YIELD_HIGH,
+            info.YIELD_REMARK,
+            info.BUSI_ACCT_NO,
+            info.ACCT_NAME
+            <if test="model_type != null">
+		      	,info.REG_CODE ISSUE_PARTY_ID /*发行机构代码*/
+		     </if>
+			FROM chb_prd_baseinfo info
+	    left join chb_prdresist_code reginfo
+	    on info.prod_id = reginfo.prodid
+		where 1 =1
+		and info.fprod_id is null <!-- 去除子产品 -->
+		and info.RAISE_VDATE is not null
+		and reginfo.REG_CODE is not null
+		<if test="prodInfos!=null and prodInfos.size()!=0">
+		    AND trim(info.prod_id) in 
+			<foreach item="prodid" collection="prodInfos" open="(" separator="," close=")"> 
+			  #{prodid,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<!-- 根据产品的更新时间和创建时间生成报表 -->
+		<if test="generateDate != null">
+		and (to_char(nvl(info.update_time,info.create_time),'yyyy-MM-dd' )=#{generateDate,jdbcType=VARCHAR}
+		or to_char(nvl(reginfo.update_time,reginfo.create_time),'yyyy-MM-dd' )=#{generateDate,jdbcType=VARCHAR})
+		</if>
+	</select>
+	
+	<delete id="deleteByProdid" parameterType="com.joyintech.tams.svreport.chb.prodpersonissue.dto.ProdPersonIssue001Dto">
+    delete from CHB_PRD_ISSUE_SUB
+      where SEND_STATUS = '01'
+        <foreach collection="deleteList" item="item" index="index" open="and PROD_ID in (" close=")" separator=",">
+        #{item.prodId,jdbcType=VARCHAR} 
+        </foreach>
+    </delete>
+    
+    <!-- 批量 插入登记表-->
+    <insert id="insertSub" parameterType="com.joyintech.tams.svreport.chb.prodpersonissue.dto.ProdPersonIssue001Dto">
+        insert into CHB_PRD_ISSUE_SUB (REGIST_SEQNO, PROD_REGIST_CODE, PROD_ID, 
+	        RAISE_VDATE, RAISE_ENDDATE, PRD_VDATE, 
+	        PRD_MDATE, IS_CONSTRACTE, GRADE_TYPE, 
+	        EXP_MIN_YIELD, EXP_MAX_YIELD, EXP_AVG_YIELD, 
+	        YIELD_COMMENT, OPEN_MODE, OPEN_CIRCLE, 
+	        OPEN_CIRCLE_DAYS, RULE_COMMENT, FIRST_OPEN_DAY, 
+	        HOLIDAY_ON_FLAG, AVG_OPEN_COUNT, OPEN_BUSS, 
+	        OPEN_BUSS_REMARK, WORKFLOW_ID, SUBMIT_FEEDBACK_STATUS, 
+	        SEND_STATUS, STATUS_DATE, STATUS, 
+	        ORG_CODE, CREATE_USER, CREATE_DEPT, 
+	        CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+	        SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+	        ISSUE_PARTY_ID
+	        ,MANAGE_TYPE,YIELD_LOW,YIELD_HIGH,YIELD_REMARK,BUSI_ACCT_NO,ACCT_NAME
+        )
+		values(
+		   #{registSeqno,jdbcType=VARCHAR}, #{prodRegistCode,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, 
+		   #{raiseVdate,jdbcType=TIMESTAMP}, #{raiseEnddate,jdbcType=TIMESTAMP}, #{prdVdate,jdbcType=TIMESTAMP}, 
+		   #{prdMdate,jdbcType=TIMESTAMP}, #{isConstracte,jdbcType=VARCHAR}, #{gradeType,jdbcType=VARCHAR}, 
+		   #{expMinYield,jdbcType=DECIMAL}, #{expMaxYield,jdbcType=DECIMAL}, #{expAvgYield,jdbcType=DECIMAL}, 
+		   #{yieldComment,jdbcType=VARCHAR}, #{openMode,jdbcType=VARCHAR}, #{openCircle,jdbcType=VARCHAR}, 
+		   #{openCircleDays,jdbcType=DECIMAL}, #{ruleComment,jdbcType=VARCHAR}, #{firstOpenDay,jdbcType=TIMESTAMP}, 
+		   #{holidayOnFlag,jdbcType=VARCHAR}, #{avgOpenCount,jdbcType=DECIMAL}, #{openBuss,jdbcType=VARCHAR}, 
+		   #{openBussRemark,jdbcType=VARCHAR}, #{workflowId,jdbcType=VARCHAR}, #{submitFeedbackStatus,jdbcType=VARCHAR}, 
+		   #{sendStatus,jdbcType=VARCHAR}, #{statusDate,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, 
+		   #{orgCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+		   sysdate, #{updateUser,jdbcType=VARCHAR}, sysdate, 
+		   #{submitTime,jdbcType=TIMESTAMP}, #{chbSubmitDeadline,jdbcType=TIMESTAMP}, #{submitDeadline,jdbcType=TIMESTAMP}, 
+		   #{issuePartyId,jdbcType=VARCHAR}
+		   ,#{manageType,jdbcType=VARCHAR},#{yieldLow,jdbcType=DECIMAL},#{yieldHigh,jdbcType=DECIMAL}
+		   ,#{yieldRemark,jdbcType=VARCHAR},#{busiAcctNo,jdbcType=VARCHAR},#{acctName,jdbcType=VARCHAR}
+		)
+    </insert>
+    
+    <select id="queryRegIssueList" resultType="com.joyintech.tams.svreport.chb.prodpersonissue.dto.ProdPersonIssue001Dto"
+    parameterType="com.joyintech.tams.svreport.chb.prodpersonissue.dto.ProdPersonIssue001Dto">
+        SELECT 
+          regsub.REG_CODE PRODREGISTCODE,/*产品登记编码*/
+		  sub.PROD_ID,/*理财产品代码*/
+		  sub.ORG_CODE,/*发行机构代码*/
+		  sub.RAISE_VDATE,/*募集起始日期*/
+		  sub.RAISE_ENDDATE,/*募集结束日期  */
+		  sub.PRD_VDATE,/*产品起始日期  */
+		  sub.PRD_MDATE,/*产品终止日期  */
+		  sub.IS_CONSTRACTE,/*是否为结构化（分级）产品 */
+		  sub.GRADE_TYPE,/*层级类别 */
+		  sub.EXP_MIN_YIELD,/*预计客户最低年收益率 %  */
+		  sub.EXP_MAX_YIELD,/*预计客户最高年收益率 % */
+		  sub.EXP_AVG_YIELD,/*平均预计客户年收益率%  */
+		  sub.YIELD_COMMENT,/*收益率分档情况说明 */
+		  sub.OPEN_MODE,/*开放模式 */
+		  sub.OPEN_CIRCLE,/*规律开放周期 */
+		  sub.OPEN_CIRCLE_DAYS,/*其他规律开放周期 (天) */
+		  sub.RULE_COMMENT ,/*无规律开放说明*/
+		  sub.FIRST_OPEN_DAY,/*首次开放周期起始日 */
+		  sub.HOLIDAY_ON_FLAG,/*节假日是否开放  */
+		  sub.AVG_OPEN_COUNT,/*平均开放次数（年化）*/
+		  sub.OPEN_BUSS,/*开放期业务*/
+		  sub.OPEN_BUSS_REMARK,/*开放期业务说明 */
+		  sub.status
+		FROM CHB_PRD_ISSUE_SUB sub
+		LEFT JOIN chb_prdresist_code regsub
+		ON sub.prod_id = regsub.prodid
+		where SEND_STATUS in ('02','03')
+		<if test="reglist!=null and reglist.size()!=0">
+			<foreach collection="reglist" item="item" open="and((" close="))" separator=") or (">
+		 	 	 trim(sub.prod_id)= #{item.prodId,jdbcType=VARCHAR}
+		 	</foreach>
+		</if>
+	</select>
+	
+	
+	<delete id="deleteRegistSeqnoList">
+   delete from CHB_PRD_ISSUE_SUB 
+   where 
+	<foreach collection="regList" item="item" open="REGIST_SEQNO in (" separator="," close=")">
+	#{item,jdbcType=VARCHAR}
+	</foreach>
+   </delete>
+   
+   <insert id="insertSeletForSub" parameterType="java.lang.String">
+   insert into CHB_PRD_ISSUE_SUB (
+      REGIST_SEQNO, PROD_REGIST_CODE, PROD_ID, 
+      RAISE_VDATE, RAISE_ENDDATE, PRD_VDATE, 
+      PRD_MDATE, IS_CONSTRACTE, GRADE_TYPE, 
+      EXP_MIN_YIELD, EXP_MAX_YIELD, EXP_AVG_YIELD, 
+      YIELD_COMMENT, OPEN_MODE, OPEN_CIRCLE, 
+      OPEN_CIRCLE_DAYS, RULE_COMMENT, FIRST_OPEN_DAY, 
+      HOLIDAY_ON_FLAG, AVG_OPEN_COUNT, OPEN_BUSS, 
+      OPEN_BUSS_REMARK, WORKFLOW_ID, SUBMIT_FEEDBACK_STATUS, 
+      SEND_STATUS, STATUS_DATE, STATUS, 
+      ORG_CODE, CREATE_USER, CREATE_DEPT, 
+      CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+      SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+      ISSUE_PARTY_ID, SUMIT_SEQ
+      )
+      select
+      REGIST_SEQNO, PROD_REGIST_CODE, PROD_ID, 
+      RAISE_VDATE, RAISE_ENDDATE, PRD_VDATE, 
+      PRD_MDATE, IS_CONSTRACTE, GRADE_TYPE, 
+      EXP_MIN_YIELD, EXP_MAX_YIELD, EXP_AVG_YIELD, 
+      YIELD_COMMENT, OPEN_MODE, OPEN_CIRCLE, 
+      OPEN_CIRCLE_DAYS, RULE_COMMENT, FIRST_OPEN_DAY, 
+      HOLIDAY_ON_FLAG, AVG_OPEN_COUNT, OPEN_BUSS, 
+      OPEN_BUSS_REMARK, WORKFLOW_ID, SUBMIT_FEEDBACK_STATUS, 
+      SEND_STATUS, STATUS_DATE, STATUS, 
+      ORG_CODE, CREATE_USER, CREATE_DEPT, 
+      sysdate, UPDATE_USER, sysdate, 
+      SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+      ISSUE_PARTY_ID, SUMIT_SEQ
+    from CHB_PRD_ISSUE_SUB_HIS
+    where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+  	<if test="regList !=null and regList.size()>0">
+          <foreach collection="regList" item="item" open="and REGIST_SEQNO IN (" separator=","  close=")">
+            #{item,jdbcType=VARCHAR}
+          </foreach>
+       </if>
+   </insert>
+   
+   <select id="selectRegistSeqnoList" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto">
+   	select REGIST_SEQNO
+      from CHB_PRD_ISSUE_SUB
+      where 
+      <if test="flag == '02'">
+      SEND_STATUS in ('02','03')
+      </if>
+      <if test="flag == '01'">
+      SEND_STATUS = '01'
+      </if>
+      <foreach collection="list" item="item" open="and ( (" separator=") or (" close=") )">
+      PROD_ID = #{item.prodId,jdbcType=VARCHAR}
+      </foreach>
+   </select>
+       <select id="selectAllDataByList" resultMap="BaseResultMap">
+	select  
+CPS.PROD_REGIST_CODE,
+CPS.PROD_ID,
+<if test="model_type != null">
+   	info.REG_CODE ISSUE_PARTY_ID, /*发行机构代码*/
+  </if>
+  <if test="model_type == null">
+	CPS.ISSUE_PARTY_ID,
+  </if>
+CPS.RAISE_VDATE,
+CPS.RAISE_ENDDATE,
+CPS.PRD_VDATE,
+CPS.PRD_MDATE,
+CPS.MANAGE_TYPE,/**管理方式*/
+CPS.IS_CONSTRACTE,
+CPS.YIELD_LOW,
+CPS.YIELD_HIGH,
+CPS.YIELD_REMARK,
+CPS.OPEN_MODE,
+CPS.OPEN_CIRCLE,
+CPS.OPEN_CIRCLE_DAYS,
+CPS.RULE_COMMENT,
+CPS.FIRST_OPEN_DAY,
+CPS.HOLIDAY_ON_FLAG,
+CPS.AVG_OPEN_COUNT,
+CPS.OPEN_BUSS,
+CPS.OPEN_BUSS_REMARK,
+CPS.BUSI_ACCT_NO,
+CPS.ACCT_NAME
+
+
+from  CHB_PRD_ISSUE_SUB  CPS
+<if test="model_type != null">
+left join CHB_PRD_BASEINFO info on info.PROD_ID=CPS.prod_id
+</if>
+
+    where 1=1
+    <if test="keyList != null and keyList.size()>0">
+    <foreach collection="keyList" item="items" open="and CPS.REGIST_SEQNO in (" separator="," close=")">
+    #{items.registSeqno,jdbcType=VARCHAR}
+    </foreach>
+    </if>
+    order by CPS.SUBMIT_DEADLINE
+ </select>
+</mapper>

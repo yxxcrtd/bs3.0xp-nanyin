@@ -1,0 +1,115 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorator="~{layout/default}">
+<head>
+<meta charset="utf-8">
+<title data-th-text="#{DelayVerification001}">延时报送检查</title>
+<link rel="stylesheet" type="text/css"
+    data-th-href="@{/css/report/report.css}">
+<!--[if lt IE 9]>
+<script data-th-src="@{/js/report/excanvas.js}" type="text/javascript"></script>
+<![endif]-->
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <div class="joyin-form-wrap condition-area">
+            <form class="layui-form" id="searchForm">
+                <div class="layui-form-item">
+                    <div class="layui-inline layui-col-md3">
+                        <label class="layui-form-label form-lable">查询日期</label>
+                        <div class="layui-input-inline input-inline">
+                            <input type="text" id="searchDate" name="timeControl"
+                                data-th-value="${DATE_START}+' - '+${DATE_END}"
+                                class="layui-input form-input input-dateRangeSelect"
+                                placeholder="请选择日期区间" />
+                        </div>
+                    </div>
+                    <div class="layui-inline layui-col-md5">
+                        <label class="layui-form-label form-lable">不统计手工处理的数据</label>
+                        <div class="layui-input-inline input-inline">
+                            <input type="checkbox" id="isNotCount" checked>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="layui-fluid">
+            <div class="layui-tab layui-tab-brief " id="tabList"
+                lay-filter="tabList" style="margin-bottom: 0px;" overflow>
+                <ul class="layui-tab-title" id="form">
+                    <li class="layui-this" lay-id="01" id="rate01" lay-tab-id="01">中债报送及时合格率</li>
+                    <li lay-id="02" id="rate02" lay-tab-id="02">人行报送及时合格率</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="tab-pane active" id="tabpan01" style="width: 100%;">
+                        <p class="menu-title-wrap">
+                            <span class="menu-title">中债报送及时合格率</span>
+                        </p>
+                        <form class="layui-clear" role="form">
+                            <div class="whole-form-wrap joy-pie"
+                                style="position: relative; width: 100%; height: 200px;">
+                                <div class="delay-des-wrap">
+                                    <ul class="layui-clear" id="colorTitle">
+                                        <li id="top"><i class="youxiu"></i>&ge;75%</li>
+                                        <li id="mid"><i class="hege"></i>&ge;50%<75%</li>
+                                        <li id="end"><i class="yujing"></i>&lt;50%</li>
+                                    </ul>
+                                </div>
+                                <div class="joy-pie-div" pie-type='CHB'
+                                    style="width: 100%; height: 94%"></div>
+                                <div class="joy-pie-div" pie-type='CHB'
+                                    style="width: 100%; height: 5%"></div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane" id="tabpan02" style="width: 100%">
+                        <p class="menu-title-wrap">
+                            <span class="menu-title">人行报送及时合格率</span>
+                        </p>
+                        <form class="layui-clear" role="form" style="width: 100%">
+                            <div class="whole-form-wrap joy-pie"
+                                style="position: relative; width: 100%; height: 200px;">
+                                <div class="delay-des-wrap">
+                                    <ul class="layui-clear" id="colorTitlePbc">
+                                        <li id="topPbc"><i class="youxiu"></i>&ge;95%</li>
+                                        <li id="midPbc"><i class="hege"></i>&ge;90%<95%</li>
+                                        <li id="endPbc"><i class="yujing"></i>&lt;90%</li>
+                                    </ul>
+                                </div>
+                                <div class="joy-pie-div" pie-type='PBC' id="PBC-PIE-1"
+                                    style="width: 100%; height: 94%"></div>
+                                <div class="joy-pie-div" pie-type='PBC' id="PBC-PIE-2"
+                                    style="width: 100%; height: 5%"></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-clear whole-tab-wrap">
+                <div class="layui-table" id="table0"></div>
+            </div>
+            <span class="layui-hide" id="text" data-th-text="${tabflag}"></span>
+        </div>
+    </div>
+    <div layout:fragment="script">
+        <script data-th-inline="javascript" type="text/javascript">
+                var isFromMain = "${isFromMain}";
+            </script>
+        <script data-th-src="@{/js/report/jquery.validate.js}"
+            type="text/javascript"></script>
+        <script data-th-src="@{/js/report/joyinvalid.js}"
+            type="text/javascript"></script>
+        <script data-th-src="@{/js/report/report-common.js}"
+            type="text/javascript"></script>
+        <script data-th-src="@{/js/report/moment-with-locales.min.js}"
+            type="text/javascript"></script>
+        <script data-th-src="@{/js/report/echarts.min.js}"
+            type="text/javascript"></script>
+        <script
+            data-th-src="@{/js/report/submitexamination/delayverification/DelayVerification001.js}"
+            type="text/javascript"></script>
+    </div>
+</body>
+</html>

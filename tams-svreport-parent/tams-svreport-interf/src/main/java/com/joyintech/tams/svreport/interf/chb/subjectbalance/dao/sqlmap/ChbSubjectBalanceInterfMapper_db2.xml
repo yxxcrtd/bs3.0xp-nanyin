@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.subjectbalance.dao.ChbSubjectBalanceInterfMapper_db2" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.interf.chb.subjectbalance.dto.BokBalance" >
+        <id column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <id column="BALANCE_DATE" property="balanceDate" jdbcType="DATE" />
+        <id column="SUBJECT_NO" property="subjectNo" jdbcType="VARCHAR" />
+        <result column="FSUBJECT_NO" property="fsubjectNo" jdbcType="VARCHAR" />
+        <result column="SUBJECT_LEVEL" property="subjectLevel" jdbcType="DECIMAL" />
+        <result column="BAL_FLAG" property="balFlag" jdbcType="VARCHAR" />
+        <result column="BAL_CO_FLAG" property="balCoFlag" jdbcType="VARCHAR" />
+        <result column="O_CCY" property="oCcy" jdbcType="VARCHAR" />
+        <result column="O_AMT" property="oAmt" jdbcType="DECIMAL" />
+        <result column="O_C_AMT" property="oCAmt" jdbcType="DECIMAL" />
+        <result column="O_D_AMT" property="oDAmt" jdbcType="DECIMAL" />
+        <result column="O_CO_AMT" property="oCoAmt" jdbcType="DECIMAL" />
+        <result column="O_CO_C_AMT" property="oCoCAmt" jdbcType="DECIMAL" />
+        <result column="O_CO_D_AMT" property="oCoDAmt" jdbcType="DECIMAL" />
+        <result column="B_CCY" property="bCcy" jdbcType="VARCHAR" />
+        <result column="B_AMT" property="bAmt" jdbcType="DECIMAL" />
+        <result column="B_C_AMT" property="bCAmt" jdbcType="DECIMAL" />
+        <result column="B_CO_AMT" property="bCoAmt" jdbcType="DECIMAL" />
+        <result column="B_CO_C_AMT" property="bCoCAmt" jdbcType="DECIMAL" />
+        <result column="B_CO_D_AMT" property="bCoDAmt" jdbcType="DECIMAL" />
+        <result column="B_D_AMT" property="bDAmt" jdbcType="DECIMAL" />
+        <result column="TDY_O_AMT" property="tdyOAmt" jdbcType="DECIMAL" />
+        <result column="TDY_O_C_AMT" property="tdyOCAmt" jdbcType="DECIMAL" />
+        <result column="TDY_O_D_AMT" property="tdyODAmt" jdbcType="DECIMAL" />
+        <result column="TDY_O_CO_AMT" property="tdyOCoAmt" jdbcType="DECIMAL" />
+        <result column="TDY_O_CO_C_AMT" property="tdyOCoCAmt" jdbcType="DECIMAL" />
+        <result column="TDY_O_CO_D_AMT" property="tdyOCoDAmt" jdbcType="DECIMAL" />
+        <result column="TDY_B_AMT" property="tdyBAmt" jdbcType="DECIMAL" />
+        <result column="TDY_B_C_AMT" property="tdyBCAmt" jdbcType="DECIMAL" />
+        <result column="TDY_B_D_AMT" property="tdyBDAmt" jdbcType="DECIMAL" />
+        <result column="TDY_B_CO_AMT" property="tdyBCoAmt" jdbcType="DECIMAL" />
+        <result column="TDY_B_CO_C_AMT" property="tdyBCoCAmt" jdbcType="DECIMAL" />
+        <result column="TDY_B_CO_D_AMT" property="tdyBCoDAmt" jdbcType="DECIMAL" />
+        <result column="IS_LEAF" property="isLeaf" jdbcType="VARCHAR" />
+        <result column="NUM_AMT" property="numAmt" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="TDY_AMT_FLAG" property="tdyAmtFlag" jdbcType="VARCHAR" />
+        <result column="TDY_CO_FLAG" property="tdyCoFlag" jdbcType="VARCHAR" />
+        <result column="TDY_PUR_O_D_ULAMT" property="tdyPurODUlamt" jdbcType="DECIMAL" />
+        <result column="TDY_RED_O_D_ULAMT" property="tdyRedODUlamt" jdbcType="DECIMAL" />
+        <result column="TDY_PUR_O_C_ULAMT" property="tdyPurOCUlamt" jdbcType="DECIMAL" />
+        <result column="TDY_RED_O_C_ULAMT" property="tdyRedOCUlamt" jdbcType="DECIMAL" />
+        <result column="TDY_PUR_B_D_ULAMT" property="tdyPurBDUlamt" jdbcType="DECIMAL" />
+        <result column="TDY_RED_B_D_ULAMT" property="tdyRedBDUlamt" jdbcType="DECIMAL" />
+        <result column="TDY_PUR_B_C_ULAMT" property="tdyPurBCUlamt" jdbcType="DECIMAL" />
+        <result column="TDY_RED_B_C_ULAMT" property="tdyRedBCUlamt" jdbcType="DECIMAL" />
+  
+  </resultMap>
+  <sql id="Base_Column_List" >
+        BOOKSET_ID BOOKSET_ID, BALANCE_DATE BALANCE_DATE, SUBJECT_NO SUBJECT_NO, FSUBJECT_NO FSUBJECT_NO, 
+        SUBJECT_LEVEL SUBJECT_LEVEL, BAL_FLAG BAL_FLAG, BAL_CO_FLAG BAL_CO_FLAG, O_CCY O_CCY, 
+        O_AMT O_AMT, O_C_AMT O_C_AMT, O_D_AMT O_D_AMT, O_CO_AMT O_CO_AMT, O_CO_C_AMT O_CO_C_AMT, 
+        O_CO_D_AMT O_CO_D_AMT, B_CCY B_CCY, B_AMT B_AMT, B_C_AMT B_C_AMT, B_CO_AMT B_CO_AMT, 
+        B_CO_C_AMT B_CO_C_AMT, B_CO_D_AMT B_CO_D_AMT, B_D_AMT B_D_AMT, TDY_O_AMT TDY_O_AMT, 
+        TDY_O_C_AMT TDY_O_C_AMT, TDY_O_D_AMT TDY_O_D_AMT, TDY_O_CO_AMT TDY_O_CO_AMT, TDY_O_CO_C_AMT TDY_O_CO_C_AMT, 
+        TDY_O_CO_D_AMT TDY_O_CO_D_AMT, TDY_B_AMT TDY_B_AMT, TDY_B_C_AMT TDY_B_C_AMT, TDY_B_D_AMT TDY_B_D_AMT, 
+        TDY_B_CO_AMT TDY_B_CO_AMT, TDY_B_CO_C_AMT TDY_B_CO_C_AMT, TDY_B_CO_D_AMT TDY_B_CO_D_AMT, 
+        IS_LEAF IS_LEAF, NUM_AMT NUM_AMT, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, TDY_AMT_FLAG TDY_AMT_FLAG, 
+        TDY_CO_FLAG TDY_CO_FLAG, TDY_PUR_O_D_ULAMT TDY_PUR_O_D_ULAMT, TDY_RED_O_D_ULAMT TDY_RED_O_D_ULAMT, 
+        TDY_PUR_O_C_ULAMT TDY_PUR_O_C_ULAMT, TDY_RED_O_C_ULAMT TDY_RED_O_C_ULAMT, TDY_PUR_B_D_ULAMT TDY_PUR_B_D_ULAMT, 
+        TDY_RED_B_D_ULAMT TDY_RED_B_D_ULAMT, TDY_PUR_B_C_ULAMT TDY_PUR_B_C_ULAMT, TDY_RED_B_C_ULAMT TDY_RED_B_C_ULAMT
+  </sql>
+  <insert id="mergeData" parameterType="com.joyintech.tams.svreport.interf.chb.subjectbalance.dto.BokBalance" >
+		MERGE INTO BOK_BALANCE CII
+		USING (
+		<foreach collection="newDataList" item="item" open="select * from("
+			close=")" separator="union all">
+		SELECT 
+			'${item.booksetId}' BOOKSET_ID,
+      		<choose><when test="item.balanceDate != null">#{item.balanceDate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> BALANCE_DATE,
+			'${item.subjectNo}' SUBJECT_NO,
+			'${item.fsubjectNo}' FSUBJECT_NO,
+			<choose><when test="item.subjectLevel != null">${item.subjectLevel}</when><otherwise>null</otherwise></choose> SUBJECT_LEVEL,
+			'${item.balFlag}' BAL_FLAG,
+			'${item.balCoFlag}' BAL_CO_FLAG,
+			'${item.oCcy}' O_CCY,
+			<choose><when test="item.oAmt != null">${item.oAmt}</when><otherwise>null</otherwise></choose> O_AMT,
+			<choose><when test="item.oCAmt != null">${item.oCAmt}</when><otherwise>null</otherwise></choose> O_C_AMT,
+			<choose><when test="item.oDAmt != null">${item.oDAmt}</when><otherwise>null</otherwise></choose> O_D_AMT,
+			<choose><when test="item.oCoAmt != null">${item.oCoAmt}</when><otherwise>null</otherwise></choose> O_CO_AMT,
+			<choose><when test="item.oCoCAmt != null">${item.oCoCAmt}</when><otherwise>null</otherwise></choose> O_CO_C_AMT,
+			<choose><when test="item.oCoDAmt != null">${item.oCoDAmt}</when><otherwise>null</otherwise></choose> O_CO_D_AMT,
+			'${item.bCcy}' B_CCY,
+			<choose><when test="item.bAmt != null">${item.bAmt}</when><otherwise>null</otherwise></choose> B_AMT,
+			<choose><when test="item.bCAmt != null">${item.bCAmt}</when><otherwise>null</otherwise></choose> B_C_AMT,
+			<choose><when test="item.bCoAmt != null">${item.bCoAmt}</when><otherwise>null</otherwise></choose> B_CO_AMT,
+			<choose><when test="item.bCoCAmt != null">${item.bCoCAmt}</when><otherwise>null</otherwise></choose> B_CO_C_AMT,
+			<choose><when test="item.bCoDAmt != null">${item.bCoDAmt}</when><otherwise>null</otherwise></choose> B_CO_D_AMT,
+			<choose><when test="item.bDAmt != null">${item.bDAmt}</when><otherwise>null</otherwise></choose> B_D_AMT,
+			<choose><when test="item.tdyOAmt != null">${item.tdyOAmt}</when><otherwise>null</otherwise></choose> TDY_O_AMT,
+			<choose><when test="item.tdyOCAmt != null">${item.tdyOCAmt}</when><otherwise>null</otherwise></choose> TDY_O_C_AMT,
+			<choose><when test="item.tdyODAmt != null">${item.tdyODAmt}</when><otherwise>null</otherwise></choose> TDY_O_D_AMT,
+			<choose><when test="item.tdyOCoAmt != null">${item.tdyOCoAmt}</when><otherwise>null</otherwise></choose> TDY_O_CO_AMT,
+			<choose><when test="item.tdyOCoCAmt != null">${item.tdyOCoCAmt}</when><otherwise>null</otherwise></choose> TDY_O_CO_C_AMT,
+			<choose><when test="item.tdyOCoDAmt != null">${item.tdyOCoDAmt}</when><otherwise>null</otherwise></choose> TDY_O_CO_D_AMT,
+			<choose><when test="item.tdyBAmt != null">${item.tdyBAmt}</when><otherwise>null</otherwise></choose> TDY_B_AMT,
+			<choose><when test="item.tdyBCAmt != null">${item.tdyBCAmt}</when><otherwise>null</otherwise></choose> TDY_B_C_AMT,
+			<choose><when test="item.tdyBDAmt != null">${item.tdyBDAmt}</when><otherwise>null</otherwise></choose> TDY_B_D_AMT,
+			<choose><when test="item.tdyBCoAmt != null">${item.tdyBCoAmt}</when><otherwise>null</otherwise></choose> TDY_B_CO_AMT,
+			<choose><when test="item.tdyBCoCAmt != null">${item.tdyBCoCAmt}</when><otherwise>null</otherwise></choose> TDY_B_CO_C_AMT,
+			<choose><when test="item.tdyBCoDAmt != null">${item.tdyBCoDAmt}</when><otherwise>null</otherwise></choose> TDY_B_CO_D_AMT,
+			'${item.isLeaf}' IS_LEAF,
+			<choose><when test="item.numAmt != null">${item.numAmt}</when><otherwise>null</otherwise></choose> NUM_AMT,
+			'${item.createUser}' CREATE_USER,
+			'${item.createDept}' CREATE_DEPT,
+			sysdate CREATE_TIME,
+			'${item.updateUser}' UPDATE_USER,
+			sysdate UPDATE_TIME,
+			'${item.tdyAmtFlag}' TDY_AMT_FLAG,
+			'${item.tdyCoFlag}' TDY_CO_FLAG,
+			<choose><when test="item.tdyPurODUlamt != null">${item.tdyPurODUlamt}</when><otherwise>null</otherwise></choose> TDY_PUR_O_D_ULAMT,
+			<choose><when test="item.tdyRedODUlamt != null">${item.tdyRedODUlamt}</when><otherwise>null</otherwise></choose> TDY_RED_O_D_ULAMT,
+			<choose><when test="item.tdyPurOCUlamt != null">${item.tdyPurOCUlamt}</when><otherwise>null</otherwise></choose> TDY_PUR_O_C_ULAMT,
+			<choose><when test="item.tdyRedOCUlamt != null">${item.tdyRedOCUlamt}</when><otherwise>null</otherwise></choose> TDY_RED_O_C_ULAMT,
+			<choose><when test="item.tdyPurBDUlamt != null">${item.tdyPurBDUlamt}</when><otherwise>null</otherwise></choose> TDY_PUR_B_D_ULAMT,
+			<choose><when test="item.tdyRedBDUlamt != null">${item.tdyRedBDUlamt}</when><otherwise>null</otherwise></choose> TDY_RED_B_D_ULAMT,
+			<choose><when test="item.tdyPurBCUlamt != null">${item.tdyPurBCUlamt}</when><otherwise>null</otherwise></choose> TDY_PUR_B_C_ULAMT,
+			<choose><when test="item.tdyRedBCUlamt != null">${item.tdyRedBCUlamt}</when><otherwise>null</otherwise></choose> TDY_RED_B_C_ULAMT
+		  FROM sysibm.SYSDUMMY1
+		</foreach>
+		) TEMP
+		<!-- 业务主键匹配 -->
+		ON(CII.BOOKSET_ID = TEMP.BOOKSET_ID
+		AND CII.SUBJECT_NO = TEMP.SUBJECT_NO
+		AND CII.BALANCE_DATE = TEMP.BALANCE_DATE 
+		)
+		<!-- 匹配到则更新 -->
+		WHEN MATCHED THEN UPDATE 
+			SET  CII.FSUBJECT_NO = TEMP.FSUBJECT_NO,
+				 CII.SUBJECT_LEVEL = TEMP.SUBJECT_LEVEL,
+				 CII.BAL_FLAG = TEMP.BAL_FLAG,
+				 CII.BAL_CO_FLAG = TEMP.BAL_CO_FLAG,
+				 CII.O_CCY = TEMP.O_CCY,
+				 CII.O_AMT = TEMP.O_AMT,
+				 CII.O_C_AMT = TEMP.O_C_AMT,
+				 CII.O_D_AMT = TEMP.O_D_AMT,
+				 CII.O_CO_AMT = TEMP.O_CO_AMT,
+				 CII.O_CO_C_AMT = TEMP.O_CO_C_AMT,
+				 CII.O_CO_D_AMT = TEMP.O_CO_D_AMT,
+				 CII.B_CCY = TEMP.B_CCY,
+				 CII.B_AMT = TEMP.B_AMT,
+				 CII.B_C_AMT = TEMP.B_C_AMT,
+				 CII.B_CO_AMT = TEMP.B_CO_AMT,
+				 CII.B_CO_C_AMT = TEMP.B_CO_C_AMT,
+				 CII.B_CO_D_AMT = TEMP.B_CO_D_AMT,
+				 CII.B_D_AMT = TEMP.B_D_AMT,
+				 CII.TDY_O_AMT=TEMP.TDY_O_AMT,
+				 CII.TDY_O_C_AMT= TEMP.TDY_O_C_AMT,
+				 CII.TDY_O_D_AMT =TEMP.TDY_O_D_AMT,
+				 CII.TDY_O_CO_AMT = TEMP.TDY_O_CO_AMT,
+				 CII.TDY_O_CO_C_AMT = TEMP.TDY_O_CO_C_AMT,
+				 CII.TDY_O_CO_D_AMT = TEMP.TDY_O_CO_D_AMT,
+				 CII.TDY_B_AMT = TEMP.TDY_B_AMT,
+				 CII.TDY_B_C_AMT = TEMP.TDY_B_C_AMT,
+				 CII.TDY_B_D_AMT = TEMP.TDY_B_D_AMT,
+				 CII.TDY_B_CO_AMT = TEMP.TDY_B_CO_AMT,
+				 CII.TDY_B_CO_C_AMT = TEMP.TDY_B_CO_C_AMT,
+				 CII.TDY_B_CO_D_AMT = TEMP.TDY_B_CO_D_AMT,
+				 CII.IS_LEAF = TEMP.IS_LEAF,
+				 CII.NUM_AMT = TEMP.NUM_AMT,
+				 CII.CREATE_USER = TEMP.CREATE_USER,
+				 CII.CREATE_DEPT = TEMP.CREATE_DEPT,
+				 CII.CREATE_TIME = TEMP.CREATE_TIME,
+				 CII.UPDATE_USER = TEMP.UPDATE_USER,
+				 CII.UPDATE_TIME = TEMP.UPDATE_TIME,
+				 CII.TDY_AMT_FLAG = TEMP.TDY_AMT_FLAG,
+				 CII.TDY_CO_FLAG = TEMP.TDY_CO_FLAG,
+				 CII.TDY_PUR_O_D_ULAMT = TEMP.TDY_PUR_O_D_ULAMT,
+				 CII.TDY_RED_O_D_ULAMT = TEMP.TDY_RED_O_D_ULAMT,
+				 CII.TDY_PUR_O_C_ULAMT = TEMP.TDY_PUR_O_C_ULAMT,
+				 CII.TDY_RED_O_C_ULAMT = TEMP.TDY_RED_O_C_ULAMT,
+				 CII.TDY_PUR_B_D_ULAMT = TEMP.TDY_PUR_B_D_ULAMT,
+				 CII.TDY_RED_B_D_ULAMT = TEMP.TDY_RED_B_D_ULAMT,
+				 CII.TDY_PUR_B_C_ULAMT = TEMP.TDY_PUR_B_C_ULAMT,
+				 CII.TDY_RED_B_C_ULAMT = TEMP.TDY_RED_B_C_ULAMT
+		<!-- 未匹配到这插入 -->
+		WHEN NOT MATCHED THEN INSERT (
+		    BOOKSET_ID, BALANCE_DATE, SUBJECT_NO, 
+            FSUBJECT_NO, SUBJECT_LEVEL, BAL_FLAG, 
+            BAL_CO_FLAG, O_CCY, O_AMT, 
+            O_C_AMT, O_D_AMT, O_CO_AMT, 
+            O_CO_C_AMT, O_CO_D_AMT, B_CCY, 
+            B_AMT, B_C_AMT, B_CO_AMT, 
+            B_CO_C_AMT, B_CO_D_AMT, B_D_AMT, 
+            TDY_O_AMT, TDY_O_C_AMT, TDY_O_D_AMT, 
+            TDY_O_CO_AMT, TDY_O_CO_C_AMT, TDY_O_CO_D_AMT, 
+            TDY_B_AMT, TDY_B_C_AMT, TDY_B_D_AMT, 
+            TDY_B_CO_AMT, TDY_B_CO_C_AMT, TDY_B_CO_D_AMT, 
+            IS_LEAF, NUM_AMT, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, TDY_AMT_FLAG, TDY_CO_FLAG, 
+            TDY_PUR_O_D_ULAMT, TDY_RED_O_D_ULAMT, TDY_PUR_O_C_ULAMT, 
+            TDY_RED_O_C_ULAMT, TDY_PUR_B_D_ULAMT, TDY_RED_B_D_ULAMT, 
+            TDY_PUR_B_C_ULAMT, TDY_RED_B_C_ULAMT)
+		VALUES(  TEMP.BOOKSET_ID,
+				 TEMP.BALANCE_DATE, 
+				 TEMP.SUBJECT_NO,
+				 TEMP.FSUBJECT_NO,
+				 TEMP.SUBJECT_LEVEL,
+				 TEMP.BAL_FLAG,
+				 TEMP.BAL_CO_FLAG,
+				 TEMP.O_CCY,
+				 TEMP.O_AMT,
+				 TEMP.O_C_AMT,
+				 TEMP.O_D_AMT,
+				 TEMP.O_CO_AMT,
+				 TEMP.O_CO_C_AMT,
+				 TEMP.O_CO_D_AMT,
+				 TEMP.B_CCY,
+				 TEMP.B_AMT,
+				 TEMP.B_C_AMT,
+				 TEMP.B_CO_AMT,
+				 TEMP.B_CO_C_AMT,
+				 TEMP.B_CO_D_AMT,
+				 TEMP.B_D_AMT,
+				 TEMP.TDY_O_AMT,
+				 TEMP.TDY_O_C_AMT,
+				 TEMP.TDY_O_D_AMT,
+				 TEMP.TDY_O_CO_AMT,
+				 TEMP.TDY_O_CO_C_AMT,
+				 TEMP.TDY_O_CO_D_AMT,
+				 TEMP.TDY_B_AMT,
+				 TEMP.TDY_B_C_AMT,
+				 TEMP.TDY_B_D_AMT,
+				 TEMP.TDY_B_CO_AMT,
+				 TEMP.TDY_B_CO_C_AMT,
+				 TEMP.TDY_B_CO_D_AMT,
+				 TEMP.IS_LEAF,
+				 TEMP.NUM_AMT,
+				 TEMP.CREATE_USER,
+				 TEMP.CREATE_DEPT,
+				 TEMP.CREATE_TIME,
+				 TEMP.UPDATE_USER,
+				 TEMP.UPDATE_TIME,
+				 TEMP.TDY_AMT_FLAG,
+				 TEMP.TDY_CO_FLAG,
+				 TEMP.TDY_PUR_O_D_ULAMT,
+				 TEMP.TDY_RED_O_D_ULAMT,
+				 TEMP.TDY_PUR_O_C_ULAMT,
+				 TEMP.TDY_RED_O_C_ULAMT,
+				 TEMP.TDY_PUR_B_D_ULAMT,
+				 TEMP.TDY_RED_B_D_ULAMT,
+				 TEMP.TDY_PUR_B_C_ULAMT,
+				 TEMP.TDY_RED_B_C_ULAMT
+				)
+	</insert>
+	
+</mapper>

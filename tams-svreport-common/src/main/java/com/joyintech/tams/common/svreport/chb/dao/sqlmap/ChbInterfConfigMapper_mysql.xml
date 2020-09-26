@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.svreport.chb.dao.ChbInterfConfigMapper_mysql">
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbInterfConfigDto">
+        <id column="INTERF_ID" jdbcType="VARCHAR" property="interfId" />
+        <result column="LAST_UPDATETIME" jdbcType="TIMESTAMP" property="lastUpdatetime" />
+        <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+        <result column="INTERF_NAME" jdbcType="VARCHAR" property="interfName" />
+        <result column="CONTENT_TYPE" jdbcType="CHAR" property="contentType" />
+        <result column="CONTENT_SRC" jdbcType="VARCHAR" property="contentSrc" />
+        <result column="REF_REPORT" jdbcType="VARCHAR" property="refReport" />
+        <result column="SYS_SCOPE" jdbcType="VARCHAR" property="sysScope" />
+        <result column="STATUS" jdbcType="VARCHAR" property="status" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    INTERF_ID, LAST_UPDATETIME, REMARK, INTERF_NAME, CONTENT_TYPE, CONTENT_SRC, REF_REPORT,
+    SYS_SCOPE, STATUS
+  </sql>
+    <update id="updateBySysdate" parameterType="map">
+        update
+            CHB_INTERF_CONFIG
+        set 
+            LAST_UPDATETIME =  NOW()
+        where
+            INTERF_ID =  #{interfId,jdbcType=VARCHAR}
+    </update>
+</mapper>

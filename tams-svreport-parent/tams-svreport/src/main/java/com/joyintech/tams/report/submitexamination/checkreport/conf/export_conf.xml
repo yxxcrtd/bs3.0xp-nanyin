@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="CheckReport.xlsx" name="报送前检查">
+	<Worksheet javaBean="com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto">
+		<Row>
+			<Cell order="1" name="报表名称">repName</Cell>
+			<Cell order="2" name="检查日期">checkTime</Cell>
+			<Cell order="3" name="唯一标识">validKey</Cell>
+			<Cell order="4" name="检查结果">checkResult</Cell>
+			<Cell order="5" name="错误信息项">errorInfo</Cell>
+			<Cell order="6" name="警告信息项">warnInfo</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>

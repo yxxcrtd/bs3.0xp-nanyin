@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.batch.report.generateinvestorsholdregist.dao.GenerateInvestorsHoldInfoRegistAutoSendCBMapper_mysql">
+
+    <select id="selectBusiData" resultType="com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto">
+        SELECT targetObjTable.ORG_CODE orgCode,
+        targetObjTable.REGIST_BANK_CODE registBankCode,
+        p.REG_CODE prdRegistCode,
+        targetObjTable.INDENTIFY_MARK indentifyMark,
+        targetObjTable.CCY ccy,
+        h.DEPT_CODE deptCode,
+        IFNULL(s.QTY, IFNULL(e.AVAILABLE_QUANTITY,0)+ IFNULL(e.PLEDGED_QUANTITY,0)+ IFNULL(e.FROZEN_QUANTITY，0))
+        + IFNULL(TEMP.SHARES,0) qty,
+        IFNULL(s.AMOUNT, IFNULL(e.AMOUNT,0))+ IFNULL(TEMP.AMOUNT,0) amount
+        FROM (
+        SELECT DISTINCT ORG_CODE,REGIST_BANK_CODE,PRODID,INDENTIFY_MARK,CCY FROM(
+        SELECT DISTINCT ORG_CODE,REGIST_BANK_CODE,ACCOUNT PRODID,INDENTIFY_MARK,CCY
+        FROM CHB_EQUDET WHERE STATUS='E'
+        AND SHARE_CONF_DATETIME &lt;= #{executeDate,jdbcType=TIMESTAMP}
+        UNION ALL
+        SELECT DISTINCT ORG_CODE,REGIST_BANK_CODE,PRODID,INDENTIFY_MARK,CCY
+        FROM CHB_EQUPERIOD WHERE STATUS='E'))targetObjTable
+        LEFT JOIN
+        (SELECT e.ORG_CODE,e.REGIST_BANK_CODE,e.ACCOUNT,e.INDENTIFY_MARK,e.CCY,
+        SUM(case when e.BUSI_TYPE in('01','02','05','07','09','10','12','14')and e.STATUS='E' then IFNULL(e.SHARES,0)
+        when e.BUSI_TYPE in('01','02','05','07','09','10','12','14')and e.STATUS='D' then IFNULL(-1*e.SHARES,0)
+        when e.BUSI_TYPE not in('01','02','05','07','09','10','12','14')and e.STATUS='E' then IFNULL(-1*e.SHARES,0)
+        when e.BUSI_TYPE not in('01','02','05','07','09','10','12','14')and e.STATUS='D' then IFNULL(e.SHARES,0)
+        else -1*IFNULL(e.SHARES,0) end) SHARES,
+        SUM(case when e.BUSI_TYPE in('01','02','05','07','09','10','12','14')and e.STATUS='E' then IFNULL(e.AMOUNT,0)
+        when e.BUSI_TYPE in('01','02','05','07','09','10','12','14')and e.STATUS='D' then IFNULL(-1*e.AMOUNT,0)
+        when e.BUSI_TYPE not in('01','02','05','07','09','10','12','14')and e.STATUS='E' then IFNULL(-1*e.AMOUNT,0)
+        when e.BUSI_TYPE not in('01','02','05','07','09','10','12','14')and e.STATUS='D' then IFNULL(e.AMOUNT,0)
+        else -1*IFNULL(e.AMOUNT,0) end) AMOUNT
+        FROM CHB_EQUDET e
+        LEFT JOIN CHB_PRDRESIST_CODE prodInfo
+        ON prodInfo.PRODID = e.ACCOUNT
+        <where>
+            <if test="isJoinDelayDataToday =='01'">
+                e.SHARE_CONF_DATETIME &gt; #{executeDate,jdbcType=TIMESTAMP}-1
+                AND e.SHARE_CONF_DATETIME &lt;= #{executeDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="isJoinDelayDataToday =='02'">
+                (e.SHARE_CONF_DATETIME &gt; #{executeDate,jdbcType=TIMESTAMP}-1
+                AND e.SHARE_CONF_DATETIME &lt;= #{executeDate,jdbcType=TIMESTAMP})
+                OR
+                (e.SHARE_CONF_DATETIME &lt;= #{executeDate,jdbcType=TIMESTAMP}-1
+                AND e.UPDATE_TIME &gt; (select max(temp.UPDATE_TIME) from CHB_INVESTHOLD_INFO_SUB temp
+                where temp.REGIST_BANK_CODE = e.REGIST_BANK_CODE
+                and temp.PRD_REGIST_CODE = prodInfo.REG_CODE
+                and temp.INDENTIFY_MARK = e.INDENTIFY_MARK
+                and temp.CCY = e.CCY))
+            </if>
+            and e.STATUS in('E','D')
+            and e.BUSI_TYPE !='04'
+        </where>
+        GROUP BY e.ORG_CODE,e.REGIST_BANK_CODE,e.ACCOUNT,e.INDENTIFY_MARK,e.CCY) TEMP
+        ON targetObjTable.ORG_CODE = TEMP.ORG_CODE
+        AND targetObjTable.REGIST_BANK_CODE = TEMP.REGIST_BANK_CODE
+        AND targetObjTable.PRODID = TEMP.ACCOUNT
+        AND targetObjTable.INDENTIFY_MARK = TEMP.INDENTIFY_MARK
+        AND targetObjTable.CCY = TEMP.CCY
+        INNER JOIN CHB_EQU_HOLD h
+        ON targetObjTable.ORG_CODE = h.ORG_CODE
+        AND targetObjTable.INDENTIFY_MARK = h.INDENTIFY_MARK
+        AND h.STATUS='E'
+        INNER JOIN CHB_PRDRESIST_CODE p
+        ON targetObjTable.ORG_CODE = p.ORG_CODE
+        AND targetObjTable.PRODID = p.PRODID
+        LEFT JOIN CHB_EQUPERIOD e
+        ON targetObjTable.ORG_CODE = e.ORG_CODE
+        AND targetObjTable.REGIST_BANK_CODE = e.REGIST_BANK_CODE
+        AND targetObjTable.PRODID = e.PRODID
+        AND targetObjTable.INDENTIFY_MARK = e.INDENTIFY_MARK
+        AND targetObjTable.CCY = e.CCY
+        AND e.STATUS = 'E'
+        LEFT JOIN
+        (SELECT * FROM CHB_INVESTHOLD_INFO_SUB s1 WHERE s1.STATUS!='D'
+        AND s1.REGIST_SEQNO = (select max(REGIST_SEQNO) from CHB_INVESTHOLD_INFO_SUB s2 where
+        s1.REGIST_BANK_CODE = s2.REGIST_BANK_CODE
+        AND s1.PRD_REGIST_CODE = s2.PRD_REGIST_CODE
+        AND s1.INDENTIFY_MARK = s2.INDENTIFY_MARK
+        AND s1.CCY = s2.CCY
+        AND s1.HOLD_DATE = s2.HOLD_DATE
+        AND s1.STATUS = s2.STATUS)) s
+        ON targetObjTable.REGIST_BANK_CODE = s.REGIST_BANK_CODE
+        AND p.REG_CODE = s.PRD_REGIST_CODE
+        AND targetObjTable.INDENTIFY_MARK = s.INDENTIFY_MARK
+        AND targetObjTable.CCY = s.CCY
+        AND s.HOLD_DATE = #{holdDate,jdbcType=DATE}-1
+        AND s.STATUS!='03'
+    </select>
+
+    <!-- 批量插入 -->
+    <insert id="insert" parameterType="com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto">
+        insert into CHB_INVESTHOLD_INFO_SUB(REGIST_SEQNO, REGIST_BANK_CODE, CHB_SUBMIT_DEADLINE,
+        PRD_REGIST_CODE, INDENTIFY_MARK, CCY,
+        HOLD_DATE, AMOUNT, QTY,
+        CNY_AMT, REMARK, SUBMIT_DEADLINE,
+        WORKFLOW_ID, SEND_STATUS, STATUS_DATE,
+        STATUS, CREATE_USER, CREATE_TIME,
+        UPDATE_USER, UPDATE_TIME, ORG_CODE,
+        DEPT_CODE, SUBMIT_TIME, SUMIT_SEQ,
+        CREATE_DEPT)
+
+        values
+        <foreach collection="insertDataList" item="dto" separator=",">
+
+            #{dto.registSeqno,jdbcType=VARCHAR}, #{dto.registBankCode,jdbcType=VARCHAR}, #{dto.chbSubmitDeadline,jdbcType=TIMESTAMP},
+            #{dto.prdRegistCode,jdbcType=VARCHAR}, #{dto.indentifyMark,jdbcType=VARCHAR}, #{dto.ccy,jdbcType=VARCHAR},
+            #{dto.holdDate,jdbcType=DATE}, #{dto.amount,jdbcType=DECIMAL}, #{dto.qty,jdbcType=DECIMAL},
+            #{dto.cnyAmt,jdbcType=DECIMAL}, #{dto.remark,jdbcType=VARCHAR}, #{dto.submitDeadline,jdbcType=TIMESTAMP},
+            #{dto.workflowId,jdbcType=VARCHAR}, #{dto.sendStatus,jdbcType=VARCHAR}, #{dto.statusDate,jdbcType=DATE},
+            #{dto.status,jdbcType=VARCHAR}, #{dto.createUser,jdbcType=VARCHAR}, #{dto.createTime,jdbcType=TIMESTAMP},
+            #{dto.updateUser,jdbcType=VARCHAR}, #{dto.updateTime,jdbcType=TIMESTAMP}, #{dto.orgCode,jdbcType=VARCHAR},
+            #{dto.deptCode,jdbcType=VARCHAR}, #{dto.submitTime,jdbcType=TIMESTAMP}, #{dto.sumitSeq,jdbcType=VARCHAR},
+            #{dto.createDept,jdbcType=VARCHAR}
+        </foreach>
+    </insert>
+</mapper>

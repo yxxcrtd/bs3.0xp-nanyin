@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.pbc.classic.data.dao.PbcDatfileDetailRelationMapper_db2" >
+    
+ 
+    <insert id="insertList" parameterType="java.util.List" >
+		insert into PBC_DATFILE_DETAIL_RELATION (
+			DETAILID, FILECODE, GENDATE, 
+			BUSI_ID, CREATE_USER, CREATE_DEPT, 
+			CREATE_TIME, UPDATE_USER, UPDATE_TIME
+		)
+		select DISTINCT A.* from (
+           <foreach collection="list" item="relation" index="index" separator="union all">
+	           	select
+					#{relation.detailid,jdbcType=CHAR}, 
+					#{relation.filecode,jdbcType=VARCHAR}, 
+					#{relation.gendate,jdbcType=DATE}, 
+					#{relation.busiId,jdbcType=VARCHAR}, 
+					#{relation.createUser,jdbcType=VARCHAR}, 
+					#{relation.createDept,jdbcType=VARCHAR}, 
+					#{relation.createTime,jdbcType=TIMESTAMP}, 
+					#{relation.updateUser,jdbcType=VARCHAR}, 
+					#{relation.updateTime,jdbcType=TIMESTAMP} 
+				from sysibm.SYSDUMMY1
+           </foreach>
+		)A
+	</insert>
+	<select id="selectUnSendDatafileAfterYesterday" resultType="com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDatfileDetailRelation">
+        SELECT
+		    t1.fileid,
+		    t1.filepath,
+		    t2.detailid,
+		    t2.detailcode,
+		    t3.filecode,
+		    t3.gendate,
+		    t3.busi_id as busiId
+		FROM
+		    pbc_datfile t1
+		    LEFT JOIN pbc_datfile_detail t2 ON t2.fileid=t1.fileid
+		    LEFT JOIN pbc_datfile_detail_relation t3 ON t3.detailid=t2.detailid
+		    LEFT JOIN pbc_prd_baseinfo_sub t4 ON t4.regist_seqno=t3.busi_id /*产品基本信息*/
+		    LEFT JOIN PBC_PRD_ACCOUNT_SUB t5 ON t5.regist_seqno=t3.busi_id /*资产池基本信息*/
+		    LEFT JOIN PBC_INIT_PROD_RAISING_SUB t6 ON t6.regist_seqno=t3.busi_id/*产品起始募集信息*/
+		    LEFT JOIN PBC_PRD_BASEINFO_END_SUB t7 ON t7.regist_seqno=t3.busi_id/*产品终止信息*/
+		    LEFT JOIN PBC_PRD_ACCOUNT_END_SUB t8 ON t8.regist_seqno=t3.busi_id/*资产池终止登记*/
+		    LEFT JOIN PBC_PROD_RAISING_SUB t9 ON t9.regist_seqno=t3.busi_id/*产品资金募集信息*/
+		    LEFT JOIN PBC_REPORT t10 ON t10.REPORTUUID=t3.busi_id/*资产负债信息*/
+		WHERE
+		    1=1
+		    AND t1.cdate >= #{batchDate,jdbcType=DATE} - 1 day
+		    AND t1.status = #{status,jdbcType=VARCHAR}
+		    AND t3.detailid IS NOT NULL
+		    AND(
+		        t4.send_status = #{sendStatus,jdbcType=VARCHAR}
+		        or t5.send_status = #{sendStatus,jdbcType=VARCHAR}
+		        or t6.send_status = #{sendStatus,jdbcType=VARCHAR}
+		        or t7.send_status = #{sendStatus,jdbcType=VARCHAR}
+		        or t8.send_status = #{sendStatus,jdbcType=VARCHAR}
+		        or t9.send_status = #{sendStatus,jdbcType=VARCHAR}
+		        or t10.send_status = #{sendStatus,jdbcType=VARCHAR}
+		    )
+    </select>
+
+	<select id="selectAllDatafileAfterYesterday" resultType="com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDatfileDetailRelation">    
+    	SELECT
+		    t1.fileid,
+		   LISTAGG(t2.detailid,',') detailid
+		FROM
+		    pbc_datfile t1
+		    LEFT JOIN pbc_datfile_detail t2 ON t2.fileid=t1.fileid
+		WHERE
+		    1=1
+		    AND t1.cdate>=#{batchDate,jdbcType=DATE}-1 day
+		    AND t1.status=#{status,jdbcType=VARCHAR}
+		group BY
+		    t1.fileid
+    </select>
+ 
+    
+</mapper>

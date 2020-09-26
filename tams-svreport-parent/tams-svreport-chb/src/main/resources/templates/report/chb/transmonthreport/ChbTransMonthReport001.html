@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
+
+<head>
+    <title data-th-text="#{ChbTransMonthReport001}">理财产品转型情况月度统计表</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <div class="form-button-area" export="false">
+            <a id="ChbTransMonthReport001_btn_chbexport" class="layui-btn layui-btn-sm btn-export btn-default">导出中债excel</a>
+        </div>
+            <div class="joyin-form-wrap joyin-filter-form">    
+            	<div class="layui-form-item"> 
+                <div class="layui-inline layui-col-md4"> 
+                        <label class="layui-form-label form-lable">统计年月</label>
+                        <div class="layui-input-inline input-inline">
+                            <input id="enddate" type="text"  name="timeControl"  class="layui-input form-input input-dateSelect" 
+                            placeholder="请选择年月" />
+                        </div>
+                 </div>
+                <div class="layui-inline layui-col-md4" th:if="${AUTHORITY_TYPE}=='02'">
+		   			    <label class="layui-form-label form-lable">所属机构</label>
+		   			     <div class="layui-input-inline input-inline">
+                          <select id="chbTransOrg" name="chbTransOrg"
+                              class="layui-input form-input input-select" allowClear="true"
+                              placeholder="请选择" required="required"
+                              data-th-data-url='@{/chb/transmonthreport/ChbTransMonthReport001/getChbTransOrg}' 
+                          </select>
+                          </div>
+		        </div>
+                </div>
+          
+        </div>
+    </div>
+    <div layout:fragment="script">
+        <script data-th-inline="javascript" type="text/javascript">
+    	var AUTHORITY_TYPE = /*[[${AUTHORITY_TYPE}]]*/'';
+        </script>
+        <script data-th-src="@{/js/report/chb/transmonthreport/ChbTransMonthReport001.js}" type="text/javascript"></script>
+        <script data-th-src="@{/js/report/report-common.js}" type="text/javascript"></script>
+    </div>
+</body>
+
+</html>

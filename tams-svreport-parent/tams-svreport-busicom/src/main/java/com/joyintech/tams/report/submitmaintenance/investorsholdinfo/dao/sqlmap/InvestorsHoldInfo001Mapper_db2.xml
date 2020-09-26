@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dao.InvestorsHoldInfo001Mapper_db2">
+	<insert id="insertChbHoldInfoData" >
+		MERGE INTO CHB_INVESTHOLD_INFO CII
+		USING (
+		<foreach collection="newDataList" item="item" open="select * from("
+			close=")" separator="union all">
+			SELECT 
+			'${item.registBankCode}' REGIST_BANK_CODE,
+			'${item.indentifyMark}' INDENTIFY_MARK,
+            '${item.prodid}' PRODID,
+			'${item.prdRegistCode}' PRD_REGIST_CODE,
+            <choose><when test="item.holdDate != null">#{item.holdDate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> HOLD_DATE,
+			'${item.ccy}' CCY,
+            <choose><when test="item.amount != null">${item.amount}</when><otherwise>null</otherwise></choose> AMOUNT,
+            <choose><when test="item.qty != null">${item.qty}</when><otherwise>null</otherwise></choose> QTY,
+            <choose><when test="item.cnyAmt != null">${item.cnyAmt}</when><otherwise>null</otherwise></choose> CNY_AMT,
+			'${item.remark}' REMARK,
+			'${item.dataSource}' DATA_SOURCE,
+			'${item.status}' STATUS,
+			'${item.orgCode}' ORG_CODE,
+			'${item.deptCode}' DEPT_CODE,
+			'${item.updateUser}' UPDATE_USER,
+            <choose><when test="item.updateTime != null">#{item.updateTime,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose> UPDATE_TIME,
+			'${item.createUser}' CREATE_USER,
+            <choose><when test="item.createTime != null">#{item.createTime,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose> CREATE_TIME,
+			'${item.agent}' AGENT,
+			'${item.createDept}' CREATE_DEPT,
+			'${item.interfCheckResult}' INTERF_CHECK_RESULT
+			FROM
+			sysibm.sysdummy1
+		</foreach>
+		) TEMP
+		<!-- 业务主键匹配 -->
+		ON(CII.REGIST_BANK_CODE = TEMP.REGIST_BANK_CODE
+		AND CII.INDENTIFY_MARK = TEMP.INDENTIFY_MARK
+		<!-- AND CII.PRD_REGIST_CODE = TEMP.PRD_REGIST_CODE -->
+		AND CII.PRODID = TEMP.PRODID
+		AND CII.HOLD_DATE = TEMP.HOLD_DATE
+		AND CII.CCY = TEMP.CCY
+		)
+		<!-- 匹配到则更新 -->
+		WHEN MATCHED THEN UPDATE SET CII.AMOUNT = TEMP.AMOUNT,CII.QTY = TEMP.QTY,CII.CNY_AMT = TEMP.CNY_AMT,CII.STATUS = TEMP.STATUS,CII.REMARK = TEMP.REMARK,
+		CII.UPDATE_USER = TEMP.UPDATE_USER,CII.UPDATE_TIME = TEMP.UPDATE_TIME, CII.AGENT=TEMP.AGENT, CII.PRD_REGIST_CODE = TEMP.PRD_REGIST_CODE
+		<!-- 未匹配到这插入 -->
+		WHEN NOT MATCHED THEN INSERT (REGIST_BANK_CODE, INDENTIFY_MARK, PRODID, PRD_REGIST_CODE, HOLD_DATE, CCY, AMOUNT, QTY, CNY_AMT, REMARK, DATA_SOURCE, STATUS, ORG_CODE, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME,AGENT,CREATE_DEPT,INTERF_CHECK_RESULT)
+		VALUES(TEMP.REGIST_BANK_CODE, TEMP.INDENTIFY_MARK, TEMP.PRODID, TEMP.PRD_REGIST_CODE, TEMP.HOLD_DATE, TEMP.CCY, TEMP.AMOUNT, TEMP.QTY, TEMP.CNY_AMT, TEMP.REMARK, TEMP.DATA_SOURCE, TEMP.STATUS, TEMP.ORG_CODE, TEMP.DEPT_CODE, TEMP.UPDATE_USER, TEMP.UPDATE_TIME, TEMP.CREATE_USER, TEMP.CREATE_TIME,TEMP.AGENT,TEMP.CREATE_DEPT,TEMP.INTERF_CHECK_RESULT)
+	</insert>
+		<insert id="insertChbSubHoldInfoData" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub">
+		MERGE INTO CHB_INVESTHOLD_INFO_SUB CII
+		USING (
+		<foreach collection="subList" item="item" open="select * from("
+			close=")" separator="union all">
+			SELECT 
+			'${item.registSeqno}' REGIST_SEQNO,
+			'${item.registBankCode}' REGIST_BANK_CODE,
+			'${item.indentifyMark}' INDENTIFY_MARK,
+			'${item.prdRegistCode}' PRD_REGIST_CODE,
+            <choose><when test="item.holdDate != null">#{item.holdDate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> HOLD_DATE,
+			'${item.ccy}' CCY,
+            <choose><when test="item.amount != null">${item.amount}</when><otherwise>null</otherwise></choose> AMOUNT,
+            <choose><when test="item.qty != null">${item.qty}</when><otherwise>null</otherwise></choose> QTY,
+            <choose><when test="item.cnyAmt != null">${item.cnyAmt}</when><otherwise>null</otherwise></choose> CNY_AMT,
+			'${item.remark}' REMARK,
+            <choose><when test="item.chbSubmitDeadline != null">#{item.chbSubmitDeadline,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose> CHB_SUBMIT_DEADLINE,
+            <choose><when test="item.submitDeadline != null">#{item.submitDeadline,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose> SUBMIT_DEADLINE,
+			'${item.sendStatus}' SEND_STATUS,
+            <choose><when test="item.statusDate != null">#{item.statusDate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> STATUS_DATE,
+			'${item.status}' STATUS,
+			'${item.orgCode}' ORG_CODE,
+			'${item.deptCode}' DEPT_CODE,
+			'${item.updateUser}' UPDATE_USER,
+            <choose><when test="item.updateTime != null">#{item.updateTime,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose> UPDATE_TIME,
+			'${item.createUser}' CREATE_USER,
+            <choose><when test="item.createTime != null">#{item.createTime,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose> CREATE_TIME,
+			'${item.createDept}' CREATE_DEPT,
+			'${item.checkSeqno}' CHECK_SEQNO,
+			'${item.prodid}' PRODID,
+            '${item.registSeqno} SUMIT_SEQ
+			FROM
+			sysibm.sysdummy1
+		</foreach>
+		) TEMP
+		<!-- 业务主键匹配 -->
+		ON(CII.REGIST_BANK_CODE = TEMP.REGIST_BANK_CODE
+		AND CII.INDENTIFY_MARK = TEMP.INDENTIFY_MARK
+		AND CII.PRD_REGIST_CODE = TEMP.PRD_REGIST_CODE
+		AND CII.HOLD_DATE = TEMP.HOLD_DATE
+		AND CII.CCY = TEMP.CCY
+		AND CII.INDENTIFY_MARK = TEMP.INDENTIFY_MARK
+		AND CII.PRODID = TEMP.PRODID
+		<!-- 未报送 -->
+		AND CII.SEND_STATUS = TEMP.SEND_STATUS
+		)
+		<!-- 匹配到则更新 -->
+		WHEN MATCHED THEN UPDATE SET CII.AMOUNT = TEMP.AMOUNT,CII.QTY = TEMP.QTY,CII.CNY_AMT = TEMP.CNY_AMT,CII.STATUS = TEMP.STATUS,CII.REMARK = TEMP.REMARK,
+		CII.UPDATE_USER = TEMP.UPDATE_USER,CII.UPDATE_TIME = TEMP.UPDATE_TIME,CII.CHB_SUBMIT_DEADLINE=TEMP.CHB_SUBMIT_DEADLINE,
+		CII.SUBMIT_DEADLINE=TEMP.SUBMIT_DEADLINE,CII.STATUS_DATE=TEMP.STATUS_DATE,CII.CHECK_SEQNO=TEMP.CHECK_SEQNO, CII.SUMIT_SEQ=TEMP.SUMIT_SEQ
+		<!-- 未匹配到这插入 -->
+		WHEN NOT MATCHED THEN INSERT (REGIST_SEQNO,REGIST_BANK_CODE, INDENTIFY_MARK, PRD_REGIST_CODE, HOLD_DATE, CCY, AMOUNT, QTY, CNY_AMT, REMARK,STATUS, ORG_CODE, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,SEND_STATUS,STATUS_DATE,CREATE_DEPT,CHECK_SEQNO,PRODID, SUMIT_SEQ)
+		VALUES(TEMP.REGIST_SEQNO,TEMP.REGIST_BANK_CODE, TEMP.INDENTIFY_MARK, TEMP.PRD_REGIST_CODE, TEMP.HOLD_DATE, TEMP.CCY, TEMP.AMOUNT, TEMP.QTY, TEMP.CNY_AMT, TEMP.REMARK, TEMP.STATUS, TEMP.ORG_CODE, TEMP.DEPT_CODE, TEMP.UPDATE_USER, TEMP.UPDATE_TIME, TEMP.CREATE_USER, TEMP.CREATE_TIME,TEMP.CHB_SUBMIT_DEADLINE,TEMP.SUBMIT_DEADLINE,TEMP.SEND_STATUS,TEMP.STATUS_DATE,TEMP.CREATE_DEPT,TEMP.CHECK_SEQNO,TEMP.PRODID, TEMP.SUMIT_SEQ)
+	</insert>
+	<insert id="insertProdRegInfo" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode">
+		insert into CHB_PRDRESIST_CODE(PRODID,ORG_CODE,REG_CODE,DEPT_CODE,UPDATE_USER,UPDATE_TIME,CREATE_USER,CREATE_TIME,CREATE_DEPT)
+		<foreach collection="prodRegInfoList" item="dto" open=" select * from (select " close="from SYSIBM.SYSDUMMY1)" separator="from SYSIBM.SYSDUMMY1 union all select ">
+		#{dto.prodid,jdbcType=VARCHAR}, 
+		#{dto.orgCode,jdbcType=VARCHAR}, 
+		#{dto.regCode,jdbcType=VARCHAR}, 
+        #{dto.deptCode,jdbcType=VARCHAR}, 
+        #{dto.updateUser,jdbcType=TIMESTAMP}, 
+        #{dto.updateTime,jdbcType=VARCHAR},
+        #{dto.createUser,jdbcType=TIMESTAMP},
+        #{dto.createTime,jdbcType=TIMESTAMP}, 
+        #{dto.createDept,jdbcType=VARCHAR}
+         
+        </foreach>
+	</insert>
+	<!-- update by hujng -->
+	<select id="selectAllHoldInfoData" resultType = "com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
+	select
+		 cii.REGIST_BANK_CODE registBankCode,
+		 cii.INDENTIFY_MARK indentifyMark,
+         cii.PRODID prodid,
+		 cii.PRD_REGIST_CODE prdRegistCode,
+		 cii.HOLD_DATE holdDate,
+		 cii.CCY ccy,
+		 cii.AMOUNT amount,
+		 cii.QTY qty,
+		 cii.CNY_AMT cnyAmt,
+		 cii.STATUS status
+	from 
+	CHB_INVESTHOLD_INFO cii
+    <!-- 修复持有信息导入代销数据，导入模板内数据检查全不通过时，前台报错问题 add by weiyuqiang 2019-04-17 start -->
+    <where>
+<!-- 	<foreach collection="newKeyList" item="item" open="(cii.REGIST_BANK_CODE,cii.INDENTIFY_MARK,cii.PRODID,cii.HOLD_DATE,cii.CCY) in(" separator="," close=")">
+		(#{item.registBankCode},#{item.indentifyMark},#{item.prodid},#{item.holdDate},#{item.ccy})
+	</foreach>	 -->
+	<foreach collection="newKeyList" item="item" open="(" separator="or" close=")">
+		(cii.REGIST_BANK_CODE =#{item.registBankCode} 
+			and cii.INDENTIFY_MARK=#{item.indentifyMark}
+			and cii.PRD_REGIST_CODE=#{item.prdRegistCode}
+			and cii.HOLD_DATE =#{item.holdDate} 
+			and cii.CCY =#{item.ccy})
+	</foreach>
+    </where>
+    <!-- 修复持有信息导入代销数据，导入模板内数据检查全不通过时，前台报错问题 add by weiyuqiang 2019-04-17 end -->
+	</select>
+	<select id="selectAllSubHoldInfoData" resultType = "com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub">
+	select
+		 ciis.REGIST_SEQNO registSeqno,
+		 ciis.REGIST_BANK_CODE registBankCode,
+		 ciis.INDENTIFY_MARK indentifyMark,
+		 ciis.PRD_REGIST_CODE prdRegistCode,
+		 ciis.HOLD_DATE holdDate,
+		 ciis.CCY ccy,
+		 ciis.AMOUNT amount,
+		 ciis.QTY qty,
+		 ciis.CNY_AMT cnyAmt,
+		 ciis.STATUS status,
+		 ciis.SEND_STATUS,
+		 ciis.CHECK_SEQNO checkSeqno
+	from 
+	CHB_INVESTHOLD_INFO_SUB ciis
+	where
+	<foreach collection="newKeyList" item="item" open="(ciis.REGIST_BANK_CODE,ciis.INDENTIFY_MARK,ciis.PRD_REGIST_CODE,ciis.HOLD_DATE,ciis.CCY) in( values" separator="," close=")">
+		(#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},#{item.holdDate},#{item.ccy})
+	</foreach>
+	</select>
+	<update id="updateByKeyList">
+		update CHB_INVESTHOLD_INFO cii
+		set STATUS = #{stautsD}
+		where
+		<foreach collection="keyList" item="item" open="(REGIST_BANK_CODE,INDENTIFY_MARK,PRODID,HOLD_DATE,CCY,STATUS) in(values " separator="," close=")">
+			(#{item.registBankCode},#{item.indentifyMark},#{item.prodid},#{item.holdDate},#{item.ccy},#{item.statusCode})
+		</foreach>
+	</update>
+	
+	<delete id="deleteByKeyList">
+		delete 
+		CHB_INVESTHOLD_INFO cii
+		where
+		<foreach collection="keyList" item="item" open="(REGIST_BANK_CODE,INDENTIFY_MARK,PRODID,HOLD_DATE,CCY,STATUS) in(values " separator="," close=")">
+			(#{item.registBankCode},#{item.indentifyMark},#{item.prodid},#{item.holdDate},#{item.ccy},#{item.statusCode})
+		</foreach>
+	</delete>
+	
+	<delete id="deleteUnSubByKeyList">
+		delete CHB_INVESTHOLD_INFO_SUB
+		where SEND_STATUS =#{unSubmit}
+		<foreach collection="keyList" item="item" open="and (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,HOLD_DATE,CCY) in(values " separator="," close=")">
+				(#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},#{item.holdDate},#{item.ccy})
+		</foreach>
+	</delete>
+	
+	<update id="updateChbInvestholdInfoData">
+        update CHB_INVESTHOLD_INFO 
+            set
+                PRD_REGIST_CODE = #{prdRegistCode,jdbcType=VARCHAR},
+                STATUS = #{statusToUpdate,jdbcType=VARCHAR}
+            where
+                STATUS = 'A'
+                and (REGIST_BANK_CODE, INDENTIFY_MARK, PRODID, HOLD_DATE, CCY) in ( values
+	            <foreach collection="dataList" item="item" index="index" separator=", " > 
+	               (
+	               #{item.registBankCode,jdbcType=VARCHAR},
+		           #{item.indentifyMark,jdbcType=VARCHAR},
+		           #{item.prodid,jdbcType=VARCHAR},
+		           #{item.holdDate,jdbcType=DATE},
+		           #{item.ccy,jdbcType=VARCHAR}
+		           )
+	            </foreach>
+                )
+	</update>
+	
+		<update id="updateChbInvestholdInfoData2">
+        update CHB_INVESTHOLD_INFO 
+            set
+                PRD_REGIST_CODE = #{prdRegistCode,jdbcType=VARCHAR}
+            where
+                STATUS = 'E'
+                and (REGIST_BANK_CODE, INDENTIFY_MARK, PRODID, HOLD_DATE, CCY) in ( values
+	            <foreach collection="dataList" item="item" index="index" separator=", " > 
+	               (
+	               #{item.registBankCode,jdbcType=VARCHAR},
+		           #{item.indentifyMark,jdbcType=VARCHAR},
+		           #{item.prodid,jdbcType=VARCHAR},
+		           #{item.holdDate,jdbcType=DATE},
+		           #{item.ccy,jdbcType=VARCHAR}
+		           )
+	            </foreach>
+                )
+	</update>
+	<update id="updateChbInvestholdInfoSubData">
+        update CHB_INVESTHOLD_INFO_SUB 
+            set
+                PRD_REGIST_CODE = #{prdRegistCode,jdbcType=VARCHAR}
+            where
+                STATUS in ('01','02')
+                and (REGIST_BANK_CODE, INDENTIFY_MARK, PRODID, HOLD_DATE, CCY) in ( values
+	            <foreach collection="dataList" item="item" index="index" separator=", " > 
+	               (
+	               #{item.registBankCode,jdbcType=VARCHAR},
+		           #{item.indentifyMark,jdbcType=VARCHAR},
+		           #{item.prodid,jdbcType=VARCHAR},
+		           #{item.holdDate,jdbcType=DATE},
+		           #{item.ccy,jdbcType=VARCHAR}
+		           )
+	            </foreach>
+                )
+	</update>
+	<!-- 查询持有信息登记中中债反馈状态为中债退回的数据 -->
+	<select id="selectInvestHoldInfoFeedBackData" resultType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
+		select T.REGIST_BANK_CODE registBankCode,
+		 T.INDENTIFY_MARK indentifyMark,
+         T.PRODID prodid,
+		 T.PRD_REGIST_CODE prdRegistCode,
+		 T.HOLD_DATE holdDate,
+		 T.CCY ccy,
+		 T.AMOUNT amount,
+		 T.QTY qty,
+		 T.CNY_AMT cnyAmt,
+		 T.REMARK remark,
+		 '' as  dataSource,
+		 T.STATUS statusCode,
+		 T.STATUS status,
+		 T.CCY ccyCode,
+		 '' as  agent,
+		 status.SUBMIT_FEEDBACK_MSG as repFailedInfo
+		 from CHB_INVESTHOLD_INFO_SUB T
+		 left join CHB_SUBMIT_STATUS status
+		 on T.sumit_seq = status.seqno
+		<where>
+			<if test="FEEDBACKSTATUS!=null and FEEDBACKSTATUS !=''" >
+				status.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
+			</if>
+			<if test="SEQNO !=null and SEQNO.size()>0 ">
+				<foreach collection="SEQNO" item="SUMIT_SEQ" open=" AND T.SUMIT_SEQ IN (" close=")" separator=",">
+					#{SUMIT_SEQ,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="SEQNO !=null and SEQNO.size() ==0">
+				AND 1=2
+			</if>
+		</where>
+	</select>
+	
+	<!-- 查询持有信息登记中中债反馈状态为中债退回的数据 -->
+	<select id="selectAllInvestHoldInfoFeedBackData" resultType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
+		select T.REGIST_BANK_CODE registBankCode,
+		 T.INDENTIFY_MARK indentifyMark,
+         T.PRODID prodid,
+		 T.PRD_REGIST_CODE prdRegistCode,
+		 T.HOLD_DATE holdDate,
+		 T.CCY ccy,
+		 T.AMOUNT amount,
+		 T.QTY qty,
+		 T.CNY_AMT cnyAmt,
+		 T.REMARK remark,
+		 '' as  dataSource,
+		 T.STATUS statusCode,
+		 T.STATUS status,
+		 T.CCY ccyCode,
+		 '' as  agent,
+		 status.SUBMIT_FEEDBACK_MSG as repFailedInfo
+		 from CHB_INVESTHOLD_INFO_SUB T
+		 left join CHB_SUBMIT_STATUS status
+		 on T.sumit_seq = status.seqno
+		<where>
+			<if test="FEEDBACKSTATUS!=null and FEEDBACKSTATUS !=''" >
+				status.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
+			</if>
+			<if test="reportNo !=null and reportNo !=''">
+				AND status.REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<!-- 删除登记表中未报送数据 -->
+	<delete id="deleteByPrimaryBatch" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub" >
+        delete from CHB_INVESTHOLD_INFO_SUB
+        <where>
+        	SEND_STATUS = '01'
+        	<foreach collection="subList" item="item" open="and (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,HOLD_DATE,CCY) in( values" separator="," close=")">
+				(#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},#{item.holdDate},#{item.ccy})
+			</foreach>
+        </where>
+	</delete>
+	<!-- 批量更新登记表中未报送数据 -->
+	<update id="updateByPrimaryKeySelectedBatch" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub" >
+        update CHB_INVESTHOLD_INFO_SUB
+        <set >
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR}
+            </if>
+        </set>
+        <where>
+        	SEND_STATUS = '01'
+        	<foreach collection="subList" item="item" open="and (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,HOLD_DATE,CCY) in( values" separator="," close=")">
+				(#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},#{item.holdDate},#{item.ccy})
+			</foreach>
+        </where>
+     </update>
+     	<!-- 批量  -->
+	<select id="querySumbitInvestHoldByCodeBatch" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfo" resultType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub">
+		select INDENTIFY_MARK as indentifyMark,
+		REGIST_BANK_CODE as registBankCode,
+		SEND_STATUS as sendStatus,
+		QTY as qty,
+		AMOUNT as amount,
+		CNY_AMT as cnyamt,
+		CCY as ccy,
+		HOLD_DATE as holdDate,
+		PRD_REGIST_CODE as prdRegistCode
+  		from CHB_INVESTHOLD_INFO_SUB
+    	where 
+    	<foreach collection="keyList" item="item" open="(REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,HOLD_DATE,CCY) in( values" separator="," close=")">
+			(#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},#{item.holdDate},#{item.ccy})
+		</foreach>
+	</select>
+      
+    <!-- 删除持有信息登记表中数据状态为删除的数据-->
+    <delete id="handleSubDeleteData" parameterType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto" >
+        delete from CHB_INVESTHOLD_INFO_SUB
+        <where>
+            STATUS = '03'
+            <foreach collection="dataList" item="item" open="and (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,HOLD_DATE,CCY) in( values" separator="," close=")">
+                (#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},#{item.holdDate},#{item.ccy})
+            </foreach>
+        </where>
+    </delete>
+</mapper>

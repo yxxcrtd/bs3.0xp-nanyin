@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.submitmaintenance.equityinfo.dao.EquityInfoDistinctMapper_db2">
+<resultMap id="BaseResultMap" type="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto" >
+    <result column="INDENTIFY_MARK" property="indentifyMark" jdbcType="VARCHAR" />
+    <result column="ORG_INDENTIFY_MARK" property="orgIndentifyMark" jdbcType="VARCHAR" />
+    <result column="REGIST_BANK_CODE" property="bankCode" jdbcType="VARCHAR" />
+    <result column="IS_BELONG_BANK" property="isBelongBank" jdbcType="CHAR" />
+    <result column="THE_BANK_NAME" property="theBankName" jdbcType="VARCHAR" />
+    <result column="THE_BANK_CODE" property="theBankCode" jdbcType="VARCHAR" />
+    <result column="HOLDER_MARK" property="holderMark" jdbcType="CHAR" />
+    <result column="HOLDER_REGION" property="holderRegion" jdbcType="VARCHAR" />
+    <result column="HOLDER_TYPE" property="holderType" jdbcType="CHAR" />
+    <result column="PERSONAL_IDENTIFY_TYPE" property="personalIdentifyType" jdbcType="CHAR" />
+    <result column="INSTITUTION_IDENTIFY_TYPE" property="institutionIdentifyType" jdbcType="VARCHAR" />
+    <result column="OTHER_IDENTIFY_NAME" property="otherIdentifyName" jdbcType="VARCHAR" />
+    <result column="IDENTIFY_NUMBER" property="identifyNumber" jdbcType="VARCHAR" />
+    <result column="SPV_CAP_ACC_BANK" property="spvCapAccBank" jdbcType="VARCHAR" />
+    <result column="OTHER_CAP_ACC_BANK" property="otherCapAccBank" jdbcType="VARCHAR" />
+    <result column="SPV_REGIST_CODE" property="spvRegistCode" jdbcType="VARCHAR" />
+    <result column="HOLDER_DATE" property="holderDate" jdbcType="TIMESTAMP" />
+    <result column="HOLDER_NAME" property="holderName" jdbcType="VARCHAR" />
+    <result column="HOLDER_SEX" property="holderSex" jdbcType="CHAR" />
+    <result column="HOLDER_RISK_PREFER" property="holderRiskPrefer" jdbcType="VARCHAR" />
+    <result column="HOLDER_CELLPHONE" property="holderCellphone" jdbcType="VARCHAR" />
+    <result column="HOLDER_TELEPHONE" property="holderTelephone" jdbcType="VARCHAR" />
+    <result column="IS_SUBMIT" property="isSubmit" jdbcType="CHAR" />
+    <result column="HOLDER_EMAIL" property="holderEmail" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+    <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="DATA_DATE" property="dataDate" jdbcType="TIMESTAMP" />
+    <result column="DATA_SOURCE" property="dataSource" jdbcType="CHAR" />
+    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+    <result column="AGENT" property="agent" jdbcType="VARCHAR" />
+    <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    <result column="INTERF_CHECK_RESULT" property="interfCheckResult" jdbcType="VARCHAR" />
+    <result column="MERGER_INDENTIFY_MARK" property="mergerindentifymark" jdbcType="VARCHAR" />
+  </resultMap>
+ 
+	<select id="queryAllEquityInfoConStrastYbsSingle"  
+	        parameterType="java.lang.String"
+	        resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto">
+    	SELECT * FROM (
+    	  SELECT 		    
+    	    NVL((SELECT T.INDENTIFY_MARK FROM    
+		         CHB_EQU_SUB T
+		         WHERE T.ORG_INDENTIFY_MARK = T1.INDENTIFY_MARK 
+		         AND STATUS !='03' 
+		         FETCH FIRST 1 ROWS ONLY),T1.INDENTIFY_MARK
+		    ) AS indentifyMark,
+			T1.ORG_INDENTIFY_MARK AS orgIndentifyMark,
+			T1.REGIST_BANK_CODE AS bankCode,
+			T1.IS_BELONG_BANK AS isBelongBank,
+			T1.THE_BANK_NAME AS theBankName,
+			T1.THE_BANK_CODE AS theBankCode,
+			T1.HOLDER_MARK AS holderMark,
+			T1.HOLDER_REGION AS holderRegion,
+			T1.HOLDER_TYPE AS holderType,
+			T1.PERSONAL_IDENTIFY_TYPE AS personalIdentifyType,
+			T1.INSTITUTION_IDENTIFY_TYPE AS institutionIdentifyType,
+			T1.OTHER_IDENTIFY_NAME AS otherIdentifyName,
+			T1.IDENTIFY_NUMBER AS identifyNumber,
+			T1.SPV_CAP_ACC_BANK AS spvCapAccBank,
+			T1.OTHER_CAP_ACC_BANK AS otherCapAccBank,
+			T1.SPV_REGIST_CODE AS spvRegistCode,
+			T1.HOLDER_DATE AS holderDate,
+			T1.HOLDER_NAME AS holderName,
+			T1.HOLDER_SEX AS holderSex,
+			T1.HOLDER_RISK_PREFER AS holderRiskPrefer,
+			T1.HOLDER_CELLPHONE AS holderCellphone,
+			T1.HOLDER_TELEPHONE AS holderTelephone,
+			T1.HOLDER_EMAIL AS holderEmail,
+			T1.REMARK AS remark,
+			T1.STATUS AS status,
+			T1.DEPT_CODE AS deptCode,
+			T1.UPDATE_USER AS updateUser,
+			T1.UPDATE_TIME AS updateTime,
+			T1.CREATE_USER AS createUser,
+			T1.ORG_CODE AS orgCode,
+       		row_number() OVER(partition by t1.REGIST_BANK_CODE
+										   ||'_'||t1.IDENTIFY_NUMBER
+										   ||'_'||t1.HOLDER_NAME
+										   ||'_'||t1.PERSONAL_IDENTIFY_TYPE
+										   ||'_'||t1.INSTITUTION_IDENTIFY_TYPE
+										   ||'_'||t1.OTHER_IDENTIFY_NAME order by t1.update_time desc) rank
+       	from chb_view_equ_sub T1
+    	inner join CHB_SUBMIT_STATUS t2
+    	on  t1.SUMIT_SEQ = t2.SEQNO
+    	<where>
+    		 t2.SUBMIT_FEEDBACK_STATUS = '03'
+		        AND t1.REGIST_BANK_CODE
+		            ||'_'||t1.IDENTIFY_NUMBER
+		            ||'_'||t1.HOLDER_NAME
+		            ||'_'||t1.PERSONAL_IDENTIFY_TYPE
+		            ||'_'||t1.INSTITUTION_IDENTIFY_TYPE
+		            ||'_'||t1.OTHER_IDENTIFY_NAME = #{key,jdbcType=VARCHAR}
+		           
+		</where>
+		) 
+		where rank = 1
+	</select>
+	
+</mapper>

@@ -1,0 +1,92 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
+<head>
+<meta charset="utf-8">
+<title data-th-text="#{InvestorsHoldInfo002}">新建投资者持有信息</title>
+<link rel="stylesheet" type="text/css" data-th-href="@{/css/report/report.css}">
+</head>
+
+<body>
+<div layout:fragment="content">
+  <form class="layui-form joyin-form-wrap" id="submitForm">
+    <input hidden type="text" id="registBankCode" data-th-value="${entity?.registBankCode}" style="display:none;">
+    <input hidden type="text" id="InvestorsHoldInfo002_orgCode" data-th-value="${entity?.orgCode}" style="display:none;">
+    <input hidden type="text" id="InvestorsHoldInfo002_deptCode" data-th-value="${entity?.deptCode}" style="display:none;">
+    <input hidden type="text" id="InvestorsHoldInfo002_createDept" data-th-value="${entity?.createDept}" style="display:none;">
+    <input hidden type="text" id="InvestorsHoldInfo002_prodid" data-th-value="${entity?.prodid}" style="display:none;">
+    <div class="layui-form-item">
+      <div class="layui-inline layui-col-md6">
+        <label class="layui-form-label form-lable" data-th-text="#{InvestorsHoldInfo001.indentifyMark}">识别标识</label>
+        <div class="layui-input-inline input-inline">
+          <input type="text" id="indentifyMark" name="indentifyMark" class="layui-input form-input" data-th-value="${entity?.indentifyMark}" required>
+        </div>
+      </div>
+        <!-- 
+      <div class="layui-inline layui-col-md6">
+        <label class="layui-form-label form-lable" data-th-text="#{InvestorsHoldInfo001.prdRegistCode}">产品登记编码</label>
+        <div class="layui-input-inline input-inline">
+          <input type="text" id="prdRegistCode" name="prdRegistCode" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.prdRegistCode}" required>
+        </div>
+      </div>
+      -->
+       
+      <div class="layui-inline layui-col-md6">
+        <label class="layui-form-label form-lable">产品登记编码</label>
+        <div class="layui-input-inline input-inline">
+          <input type="text" id="prdRegistCode" name="prdRegistCode" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-initValue="${entity?.prdRegistCode}" data-th-data-result='${REGIST_CODE}' required>
+        </div>
+      </div> 
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-inline layui-col-md6">
+        <label class="layui-form-label form-lable" data-th-text="#{InvestorsHoldInfo001.ccy}">币种</label>
+        <div class="layui-input-inline input-inline">
+          <input type="text" id="ccy" name="ccy" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-initValue="${entity?.ccy}"  data-th-data-result='${CURRENCY_CHB}' required>
+        </div>
+      </div>
+      <div class="layui-inline layui-col-md6">
+        <label class="layui-form-label form-lable" data-th-text="#{InvestorsHoldInfo001.holdDate}">持有日期</label>
+        <div class="layui-input-inline input-inline">
+          <input type="text" id="holdDate" class="layui-input form-input input-dateSelect" required data-th-value="${#dates.format(entity?.holdDate, 'yyyy-MM-dd')}"/>
+        </div>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-inline layui-col-md6">
+        <label class="layui-form-label form-lable " data-th-text="#{InvestorsHoldInfo001.qty}">持有份额</label>
+        <div class="layui-input-inline input-inline">
+          <input type="text" id="qty" name="qty" class="text-money layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.qty}" data-pattern='##.##' data-textrange=5 data-fixtype=2 required >
+        </div>
+      </div>
+      <div class="layui-inline layui-col-md6">
+        <label class="layui-form-label form-lable" data-th-text="#{InvestorsHoldInfo001.amount}">持有金额</label>
+        <div class="layui-input-inline input-inline">
+          <input type="text" id="amount" name="amount" class="layui-input form-input text-money" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.amount}" data-pattern='##.##' data-textrange=2 data-fixtype=2 required>
+        </div>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-inline layui-col-md6">
+        <label class="layui-form-label form-lable" data-th-text="#{InvestorsHoldInfo001.cnyAmt}">折算人民币金额（元）</label>
+        <div class="layui-input-inline input-inline">
+          <input type="text" id="cnyAmt" name="cnyAmt" class="layui-input form-input text-money" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.cnyAmt}" data-pattern='##.##' data-textrange=2 data-fixtype=2 required>
+        </div>
+      </div>
+    </div>
+    <div class="layui-col-md11" style="margin:50px;">
+      <div class="text-center"> <a id="InvestorsHoldInfo002_btn_save" class="layui-btn layui-btn-sm btn-save" data-th-text="#{SysCommon.submit}">提交</a> <a id="InvestorsHoldInfo002_btn_cancel" class="layui-btn layui-btn-sm btn-cancel" data-th-text="#{SysCommon.cancel}">取消</a> </div>
+    </div>
+  </form>
+</div>
+<div layout:fragment="script">
+  <script data-th-inline="javascript" type="text/javascript">
+    /* var CNY="${CNY}"; */
+    /* var entity = '${entity}'; */
+  </script>
+  <script data-th-src="@{/js/report/jquery.validate.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/joyinvalid.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/report-common.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/submitmaintenance/investorsholdinfo/InvestorsHoldInfo002.js}" type="text/javascript"></script> 
+</div>
+</body>
+</html>

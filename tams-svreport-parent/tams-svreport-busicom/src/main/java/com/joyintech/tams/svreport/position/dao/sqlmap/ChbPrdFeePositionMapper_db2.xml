@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.position.dao.ChbPrdFeePositionMapper_db2" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.position.dto.ChbPrdFeePosition" >
+    <result column="CDATE" property="cdate" jdbcType="DATE" />
+    <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+    <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+    <result column="FEE_TYPE" property="feeType" jdbcType="VARCHAR" />
+    <result column="FEE_SECTYPE" property="feeSectype" jdbcType="VARCHAR" />
+    <result column="AMT" property="amt" jdbcType="DECIMAL" />
+    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+    <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <insert id="insertBatch" parameterType="java.util.List" >
+       insert into CHB_PRD_FEE_POSITION 
+	       (CDATE, PROD_ID, CCY,
+	        FEE_TYPE, FEE_SECTYPE,
+	        AMT,
+	        ORG_CODE,DEPT_CODE,
+	        CREATE_USER,CREATE_TIME)
+        <foreach collection="insertDataList" item="dto" index="index"  separator="union all"  open="("  close=")">
+	       select    
+		        #{dto.cdate,jdbcType=DATE}, 
+		        #{dto.prodId,jdbcType=VARCHAR}, 
+		        #{dto.ccy,jdbcType=VARCHAR}, 
+	            #{dto.feeType,jdbcType=VARCHAR}, 
+	            #{dto.feeSectype,jdbcType=VARCHAR},
+	            #{dto.amt,jdbcType=DECIMAL}, 	            
+	            #{dto.orgCode,jdbcType=VARCHAR}, 
+	            #{dto.deptCode,jdbcType=VARCHAR},
+	            #{dto.createUser,jdbcType=VARCHAR},
+	            sysdate 
+            from SYSIBM.SYSDUMMY1
+       </foreach>
+  </insert>
+</mapper>

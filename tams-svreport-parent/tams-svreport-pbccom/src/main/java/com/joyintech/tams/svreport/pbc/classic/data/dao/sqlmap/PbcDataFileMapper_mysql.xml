@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.pbc.classic.data.dao.PbcDataFileMapper_mysql">
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDataFile">
+    <id column="FILEID" jdbcType="CHAR" property="fileid" />
+    <result column="FILECODE" jdbcType="VARCHAR" property="filecode" />
+    <result column="CDATE" jdbcType="TIMESTAMP" property="cdate" />
+    <result column="HEAD_ORGCODE" jdbcType="VARCHAR" property="headOrgcode" />
+    <result column="FILESEQNO" jdbcType="VARCHAR" property="fileseqno" />
+    <result column="FILEPATH" jdbcType="VARCHAR" property="filepath" />
+    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+    <result column="ORG_CODE" jdbcType="VARCHAR" property="orgCode" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="SUBMIT_TIME" jdbcType="TIMESTAMP" property="submitTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    FILEID, FILECODE, CDATE, HEAD_ORGCODE, FILESEQNO, FILEPATH, STATUS, ORG_CODE, CREATE_USER, 
+    CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUBMIT_TIME
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from PBC_DATFILE
+    where FILEID = #{fileid,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from PBC_DATFILE
+    where FILEID = #{fileid,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDataFile">
+    insert into PBC_DATFILE (FILEID, FILECODE, CDATE, 
+      HEAD_ORGCODE, FILESEQNO, FILEPATH, 
+      STATUS, ORG_CODE, CREATE_USER, 
+      CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+      UPDATE_TIME, SUBMIT_TIME)
+    values (#{fileid,jdbcType=CHAR}, #{filecode,jdbcType=VARCHAR}, #{cdate,jdbcType=TIMESTAMP}, 
+      #{headOrgcode,jdbcType=VARCHAR}, #{fileseqno,jdbcType=VARCHAR}, #{filepath,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+      #{createDept,jdbcType=VARCHAR}, NOW(), #{updateUser,jdbcType=VARCHAR},
+      NOW(), #{submitTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDataFile">
+    insert into PBC_DATFILE
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="fileid != null">
+        FILEID,
+      </if>
+      <if test="filecode != null">
+        FILECODE,
+      </if>
+      <if test="cdate != null">
+        CDATE,
+      </if>
+      <if test="headOrgcode != null">
+        HEAD_ORGCODE,
+      </if>
+      <if test="fileseqno != null">
+        FILESEQNO,
+      </if>
+      <if test="filepath != null">
+        FILEPATH,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+      <if test="orgCode != null">
+        ORG_CODE,
+      </if>
+      <if test="createUser != null">
+        CREATE_USER,
+      </if>
+      <if test="createDept != null">
+        CREATE_DEPT,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="updateUser != null">
+        UPDATE_USER,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="submitTime != null">
+        SUBMIT_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="fileid != null">
+        #{fileid,jdbcType=CHAR},
+      </if>
+      <if test="filecode != null">
+        #{filecode,jdbcType=VARCHAR},
+      </if>
+      <if test="cdate != null">
+        #{cdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="headOrgcode != null">
+        #{headOrgcode,jdbcType=VARCHAR},
+      </if>
+      <if test="fileseqno != null">
+        #{fileseqno,jdbcType=VARCHAR},
+      </if>
+      <if test="filepath != null">
+        #{filepath,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="orgCode != null">
+        #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDept != null">
+        #{createDept,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitTime != null">
+        #{submitTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDataFile">
+    update PBC_DATFILE
+    <set>
+      <if test="filecode != null">
+        FILECODE = #{filecode,jdbcType=VARCHAR},
+      </if>
+      <if test="cdate != null">
+        CDATE = #{cdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="headOrgcode != null">
+        HEAD_ORGCODE = #{headOrgcode,jdbcType=VARCHAR},
+      </if>
+      <if test="fileseqno != null">
+        FILESEQNO = #{fileseqno,jdbcType=VARCHAR},
+      </if>
+      <if test="filepath != null">
+        FILEPATH = #{filepath,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="orgCode != null">
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDept != null">
+        CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitTime != null">
+        SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where FILEID = #{fileid,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDataFile">
+    update PBC_DATFILE
+    set FILECODE = #{filecode,jdbcType=VARCHAR},
+      CDATE = #{cdate,jdbcType=TIMESTAMP},
+      HEAD_ORGCODE = #{headOrgcode,jdbcType=VARCHAR},
+      FILESEQNO = #{fileseqno,jdbcType=VARCHAR},
+      FILEPATH = #{filepath,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
+      ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP}
+    where FILEID = #{fileid,jdbcType=CHAR}
+  </update>
+  
+  <select id="queryPage" parameterType="map" resultMap="BaseResultMap">
+  	select * from (
+        select 
+        <include refid="Base_Column_List" />
+        from PBC_DATFILE
+        <where>
+        	STATUS != 'D'
+            <if test="fileCodeList != null and fileCodeList.size() > 0">
+                <foreach close=")" collection="fileCodeList" item="item" open="AND FILECODE IN(" separator=",">
+                #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="startDate != null and startDate != ''">
+                AND DATE_FORMAT(CDATE,'%Y-%m-%d') &gt;= #{startDate,jdbcType=VARCHAR}
+            </if>
+           <if test="endDate != null and endDate != ''">
+                AND DATE_FORMAT(CDATE,'%Y-%m-%d') &lt;= #{endDate,jdbcType=VARCHAR}
+            </if>
+        </where>
+    ) ORDER BY FILECODE, HEAD_ORGCODE, CDATE, FILESEQNO
+  </select>
+</mapper>

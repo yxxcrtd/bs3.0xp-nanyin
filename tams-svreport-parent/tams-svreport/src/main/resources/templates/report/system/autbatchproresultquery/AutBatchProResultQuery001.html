@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
+
+<head>
+    <title data-th-text="#{AutBatchProResultQuery001}">自动报送批处理结果查询</title>
+</head>
+<body>
+    <div class="container" layout:fragment="content">
+    <div class="joyin-form-wrap condition-area">
+        <form class="layui-form" role="form" id="AutBatchProResultQuery001_searchForm" access="enter">
+            <div class="layui-form-item">
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable">任务代码</label>
+                    <div class="layui-input-inline input-inline">
+                        <select id="taskId" class="layui-input form-input input-select" data-th-data-result='${taskInfoList }' placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true">
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable">执行日</label>
+                    <div class="layui-input-inline input-inline">
+                        <input id="date" type="text"  name="date"  class="layui-input form-input input-dateSelect" placeholder="请选择日期区间" />
+                    </div>
+                </div>
+            </div>
+        </form>
+        </div>
+        <div>
+            <table class="layui-table" id="autBatchProResultQuery001"></table>
+        </div>
+    </div>
+    <div layout:fragment="script">
+        <script data-th-src="@{/js/report/jquery.validate.js}" type="text/javascript"></script>
+        <script data-th-src="@{/js/report/joyinvalid.js}" type="text/javascript"></script>
+        <script data-th-src="@{/js/report/report-common.js}" type="text/javascript"></script>
+        <script data-th-src="@{/js/report/system/autbatchproresultquery/autBatchProResultQuery001.js}" type="text/javascript"></script>
+    </div>
+</body>
+</html>

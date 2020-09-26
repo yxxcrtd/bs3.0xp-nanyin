@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.joyintech.tams.report.submitmaintenance.mstmarketcalendarinfo.dao.SvrMstMarketCalendarInfoMapper_db2">
+
+	<!-- 将Excel表格数据加入数据库 -->
+	<insert id="insertBtachEquityInfo" parameterType="java.util.List">
+		insert into
+		MST_HOLIDAY(MST_HOLIDAY.CALENDAR_ID,MST_HOLIDAY.CDATE,MST_HOLIDAY.IS_HOLIDAY,MST_HOLIDAY.CREATE_USER,MST_HOLIDAY.CREATE_DEPT,MST_HOLIDAY.CREATE_TIME,MST_HOLIDAY.UPDATE_USER,MST_HOLIDAY.UPDATE_TIME)
+		select A.* from (
+		<foreach collection="listN" item="item" index="index"
+			separator="union all">
+			select
+			#{item.calendarId,jdbcType=VARCHAR} CALENDAR_ID,
+			#{item.cdate,jdbcType=DATE} CDATE,
+			#{item.isHoliday,jdbcType=VARCHAR} IS_HOLIDAY,
+			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+			#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+			from sysibm.SYSDUMMY1
+		</foreach>
+		)A
+	</insert>
+</mapper>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="TransformRule001.xlsx" name="变形转换规则">
+	<Worksheet javaBean="com.joyintech.tams.report.submitmaintenance.transformrule.dto.TransformRule001Dto">
+		<Row>
+			<Cell order="1" name="数据状态">statusName</Cell><!-- 数据状态 -->
+			<Cell order="2" name="类型">transTypeStr</Cell><!-- 类型 -->
+			<Cell order="3" name="原始值">orgField</Cell><!-- 原始值-->
+			<Cell order="4" name="拼音">pinyin</Cell><!-- 拼音 -->
+			<Cell order="5" name="unicode码">fieldUnicode</Cell><!-- unicode码 -->
+			<Cell order="6" name="转化后值">targetField</Cell><!-- 转化后值 -->
+			<Cell order="7" name="是否可维护">isModifyStr</Cell><!-- 是否可维护 -->
+			<Cell order="8" name="备注">remark</Cell><!-- 备注 -->
+		</Row>
+	</Worksheet>
+</Workbook>

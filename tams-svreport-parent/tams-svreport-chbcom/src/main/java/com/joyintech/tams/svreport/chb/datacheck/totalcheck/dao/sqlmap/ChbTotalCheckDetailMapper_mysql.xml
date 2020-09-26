@@ -1,0 +1,670 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.datacheck.totalcheck.dao.ChbTotalCheckDetailMapper_mysql">
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.datacheck.totalcheck.dto.ChbTotalCheckDetailDto" >
+    <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+    <result column="TOTALSEQNO" property="totalseqno" jdbcType="VARCHAR" />
+    <result column="ASSET_TYPE2" property="assetType2" jdbcType="VARCHAR" />
+    <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+    <result column="PRD_ID" property="prdId" jdbcType="VARCHAR" />
+    <result column="PRD_NAME" property="prdName" jdbcType="VARCHAR" />
+    <result column="PRD_NUM" property="prdNum" jdbcType="DECIMAL" />
+    <result column="PRD_AMT" property="prdAmt" jdbcType="DECIMAL" />
+    <result column="MONTH_PRD_NUM" property="monthPrdNum" jdbcType="DECIMAL" />
+    <result column="MONTH_PRD_AMT" property="monthPrdAmt" jdbcType="DECIMAL" />
+    <result column="DEVIATION" property="deviation" jdbcType="DECIMAL" />
+    <result column="PRD_NUM_CNY" property="prdNumCny" jdbcType="DECIMAL" />
+    <result column="PRD_AMT_CNY" property="prdAmtCny" jdbcType="DECIMAL" />
+    <result column="MONTH_PRD_NUM_CNY" property="monthPrdNumCny" jdbcType="DECIMAL" />
+    <result column="MONTH_PRD_AMT_CNY" property="monthPrdAmtCny" jdbcType="DECIMAL" />
+    <result column="DEVIATION_CNY" property="deviationCny" jdbcType="DECIMAL" />
+    <result column="DETAIL_YIELD" property="detailYield" jdbcType="DECIMAL" />
+    <result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
+    <result column="HOLD_AMT" property="holdAmt" jdbcType="DECIMAL" />
+    <result column="PRD_ASTHOLD_AMT" property="prdAstholdAmt" jdbcType="DECIMAL" />
+    <result column="PRD_BALHOLD_AMT" property="prdBalholdAmt" jdbcType="DECIMAL" />
+    <result column="PRD_CASHHOLD_AMT" property="prdCashholdAmt" jdbcType="DECIMAL" />
+    <result column="PRD_HOLDDATE" property="prdHolddate" jdbcType="TIMESTAMP" />
+    <result column="PRD_INS_ID" property="prdInsId" jdbcType="VARCHAR" />
+    <result column="PRD_VDATE" property="prdVdate" jdbcType="TIMESTAMP" />
+    <result column="RAISE_STARTDATE" property="raiseStartdate" jdbcType="TIMESTAMP" />
+    <result column="RAISE_ENDDATE" property="raiseEnddate" jdbcType="TIMESTAMP" />
+    <result column="RAISE_REGDATE" property="raiseRegdate" jdbcType="TIMESTAMP" />
+    <result column="RAISE_IS_DELAY" property="raiseIsDelay" jdbcType="VARCHAR" />
+    <result column="BOT_ISSUE_NUM" property="botIssueNum" jdbcType="DECIMAL" />
+    <result column="BOT_ISSUE_AMT" property="botIssueAmt" jdbcType="DECIMAL" />
+    <result column="BOT_UNINVEST_CASH" property="botUninvestCash" jdbcType="DECIMAL" />
+    <result column="BOT_ASSET_AMT" property="botAssetAmt" jdbcType="DECIMAL" />
+    <result column="BOT_DEBT_AMT" property="botDebtAmt" jdbcType="DECIMAL" />
+    <result column="AST_HOLD_NUM" property="astHoldNum" jdbcType="DECIMAL" />
+    <result column="AST_HOLD_IS_COUNT" property="astHoldIsCount" jdbcType="VARCHAR" />
+    <result column="AST_MIN_UPRICE" property="astMinUprice" jdbcType="DECIMAL" />
+    <result column="AST_MAX_UPRICE" property="astMaxUprice" jdbcType="DECIMAL" />
+    <result column="IS_REG" property="isReg" jdbcType="VARCHAR" />
+    <result column="IS_DEVIATION" property="isDeviation" jdbcType="VARCHAR" />
+    <result column="CHECK_DATE" property="checkDate" jdbcType="TIMESTAMP" />
+    <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+    <result column="ISSUE_PARTY_NAME" property="issuePartyName" jdbcType="VARCHAR" />
+    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List_With_Pro" >
+    SEQNO seqno, TOTALSEQNO totalseqno, ASSET_TYPE2 assetType2, ASSET_CODE assetCode, PRD_ID prdId, PRD_NAME prdName, PRD_NUM prdNum, PRD_AMT prdAmt, MONTH_PRD_NUM monthPrdNum, 
+    MONTH_PRD_AMT monthPrdAmt, DEVIATION deviation, PRD_NUM_CNY prdNumCny, PRD_AMT_CNY prdAmtCny, MONTH_PRD_NUM_CNY monthPrdNumCny, MONTH_PRD_AMT_CNY monthPrdAmtCny, 
+    DEVIATION_CNY deviationCny, DETAIL_YIELD detailYield, OPERATE_MODE operateMode, HOLD_AMT holdAmt, PRD_ASTHOLD_AMT prdAstholdAmt, PRD_BALHOLD_AMT prdBalholdAmt, 
+    PRD_CASHHOLD_AMT prdCashholdAmt, PRD_HOLDDATE prdHolddate, PRD_INS_ID prdInsId, PRD_VDATE prdVdate, RAISE_STARTDATE raiseStartdate, RAISE_ENDDATE raiseEnddate, 
+    RAISE_REGDATE raiseRegdate, RAISE_IS_DELAY raiseIsDelay, BOT_ISSUE_NUM botIssueNum, BOT_ISSUE_AMT botIssueAmt, 
+    BOT_UNINVEST_CASH botUninvestCash, BOT_ASSET_AMT botAssetAmt, BOT_DEBT_AMT botDebtAmt, AST_HOLD_NUM astHoldNum, AST_HOLD_IS_COUNT astHoldIsCount, 
+    AST_MIN_UPRICE astMinUprice, AST_MAX_UPRICE astMaxUprice, IS_REG isReg, IS_DEVIATION isDeviation, CHECK_DATE checkDate, ISSUE_PARTY_ID issuePartyId, ISSUE_PARTY_NAME issuePartyName, 
+    ORG_CODE orgCode, CREATE_USER createUser, CREATE_DEPT createDept, CREATE_TIME createTime, UPDATE_USER updateUser, UPDATE_TIME updateTime
+  </sql>
+  <sql id="Base_Column_List" >
+    SEQNO, TOTALSEQNO, ASSET_TYPE2, ASSET_CODE, PRD_ID, PRD_NAME, PRD_NUM, PRD_AMT, MONTH_PRD_NUM, 
+    MONTH_PRD_AMT, DEVIATION, PRD_NUM_CNY, PRD_AMT_CNY, MONTH_PRD_NUM_CNY, MONTH_PRD_AMT_CNY, 
+    DEVIATION_CNY, DETAIL_YIELD, OPERATE_MODE, HOLD_AMT, PRD_ASTHOLD_AMT, PRD_BALHOLD_AMT, 
+    PRD_CASHHOLD_AMT, PRD_HOLDDATE, PRD_INS_ID, PRD_VDATE, RAISE_STARTDATE, RAISE_ENDDATE, 
+    RAISE_REGDATE, RAISE_IS_DELAY, BOT_ISSUE_NUM, BOT_ISSUE_AMT, 
+    BOT_UNINVEST_CASH, BOT_ASSET_AMT, BOT_DEBT_AMT, AST_HOLD_NUM, AST_HOLD_IS_COUNT, 
+    AST_MIN_UPRICE, AST_MAX_UPRICE, IS_REG, IS_DEVIATION, CHECK_DATE, ISSUE_PARTY_ID, ISSUE_PARTY_NAME, 
+    ORG_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+  </sql>
+  <sql id="Base_Column_List_Detail" >
+    detail.SEQNO, detail.TOTALSEQNO, detail.ASSET_TYPE2, detail.ASSET_CODE, detail.PRD_ID, detail.PRD_NAME, detail.PRD_NUM, detail.PRD_AMT, detail.MONTH_PRD_NUM, 
+    detail.MONTH_PRD_AMT, detail.DEVIATION, detail.PRD_NUM_CNY, detail.PRD_AMT_CNY, detail.MONTH_PRD_NUM_CNY, detail.MONTH_PRD_AMT_CNY, 
+    detail.DEVIATION_CNY, detail.DETAIL_YIELD, detail.OPERATE_MODE, detail.HOLD_AMT, detail.PRD_ASTHOLD_AMT, detail.PRD_BALHOLD_AMT, 
+    detail.PRD_CASHHOLD_AMT, detail.PRD_HOLDDATE, detail.PRD_INS_ID, detail.PRD_VDATE, detail.RAISE_STARTDATE, detail.RAISE_ENDDATE, 
+    detail.RAISE_REGDATE, detail.RAISE_IS_DELAY, detail.BOT_ISSUE_NUM, detail.BOT_ISSUE_AMT, detail.
+    BOT_UNINVEST_CASH, detail.BOT_ASSET_AMT, detail.BOT_DEBT_AMT, detail.AST_HOLD_NUM, detail.AST_HOLD_IS_COUNT, 
+    detail.AST_MIN_UPRICE, detail.AST_MAX_UPRICE, detail.IS_REG, detail.IS_DEVIATION, detail.CHECK_DATE, detail.ISSUE_PARTY_ID, detail.ISSUE_PARTY_NAME, 
+    detail.ORG_CODE, detail.CREATE_USER, detail.CREATE_DEPT, detail.CREATE_TIME, detail.UPDATE_USER, detail.UPDATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from CHB_TOTALCHECK_DETAIL
+    where SEQNO = #{seqno,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from CHB_TOTALCHECK_DETAIL
+    where SEQNO = #{seqno,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.datacheck.totalcheck.dto.ChbTotalCheckDetailDto" >
+    insert into CHB_TOTALCHECK_DETAIL (SEQNO, TOTALSEQNO, ASSET_TYPE2, 
+      ASSET_CODE, PRD_ID, PRD_NAME, 
+      PRD_NUM, PRD_AMT, MONTH_PRD_NUM, 
+      MONTH_PRD_AMT, DEVIATION, PRD_NUM_CNY, 
+      PRD_AMT_CNY, MONTH_PRD_NUM_CNY, MONTH_PRD_AMT_CNY, 
+      DEVIATION_CNY, DETAIL_YIELD, OPERATE_MODE, 
+      HOLD_AMT, PRD_ASTHOLD_AMT, PRD_BALHOLD_AMT, 
+      PRD_CASHHOLD_AMT, PRD_HOLDDATE, PRD_INS_ID, 
+      PRD_VDATE, RAISE_STARTDATE, RAISE_ENDDATE, 
+      RAISE_REGDATE, RAISE_IS_DELAY, BOT_ISSUE_NUM, BOT_ISSUE_AMT, 
+      BOT_UNINVEST_CASH, BOT_ASSET_AMT, BOT_DEBT_AMT, 
+      AST_HOLD_NUM, AST_HOLD_IS_COUNT, AST_MIN_UPRICE, 
+      AST_MAX_UPRICE,IS_REG, IS_DEVIATION, CHECK_DATE, 
+      ISSUE_PARTY_ID, ISSUE_PARTY_NAME, ORG_CODE, 
+      CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+      UPDATE_USER, UPDATE_TIME)
+    values (#{seqno,jdbcType=VARCHAR}, #{totalseqno,jdbcType=VARCHAR}, #{assetType2,jdbcType=VARCHAR}, 
+      #{assetCode,jdbcType=VARCHAR}, #{prdId,jdbcType=VARCHAR}, #{prdName,jdbcType=VARCHAR}, 
+      #{prdNum,jdbcType=DECIMAL}, #{prdAmt,jdbcType=DECIMAL}, #{monthPrdNum,jdbcType=DECIMAL}, 
+      #{monthPrdAmt,jdbcType=DECIMAL}, #{deviation,jdbcType=DECIMAL}, #{prdNumCny,jdbcType=DECIMAL}, 
+      #{prdAmtCny,jdbcType=DECIMAL}, #{monthPrdNumCny,jdbcType=DECIMAL}, #{monthPrdAmtCny,jdbcType=DECIMAL}, 
+      #{deviationCny,jdbcType=DECIMAL}, #{detailYield,jdbcType=DECIMAL}, #{operateMode,jdbcType=VARCHAR}, 
+      #{holdAmt,jdbcType=DECIMAL}, #{prdAstholdAmt,jdbcType=DECIMAL}, #{prdBalholdAmt,jdbcType=DECIMAL}, 
+      #{prdCashholdAmt,jdbcType=DECIMAL}, #{prdHolddate,jdbcType=TIMESTAMP}, #{prdInsId,jdbcType=VARCHAR}, 
+      #{prdVdate,jdbcType=TIMESTAMP}, #{raiseStartdate,jdbcType=TIMESTAMP}, #{raiseEnddate,jdbcType=TIMESTAMP}, 
+      #{raiseRegdate,jdbcType=TIMESTAMP}, #{raiseIsDelay,jdbcType=VARCHAR}, #{botIssueNum,jdbcType=DECIMAL}, #{botIssueAmt,jdbcType=DECIMAL}, 
+      #{botUninvestCash,jdbcType=DECIMAL}, #{botAssetAmt,jdbcType=DECIMAL}, #{botDebtAmt,jdbcType=DECIMAL}, 
+      #{astHoldNum,jdbcType=DECIMAL}, #{astHoldIsCount,jdbcType=VARCHAR}, #{astMinUprice,jdbcType=DECIMAL}, 
+      #{astMaxUprice,jdbcType=DECIMAL}, #{isReg,jdbcType=VARCHAR}, #{isDeviation,jdbcType=VARCHAR}, #{checkDate,jdbcType=TIMESTAMP}, 
+      #{issuePartyId,jdbcType=VARCHAR}, #{issuePartyName,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
+      #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.datacheck.totalcheck.dto.ChbTotalCheckDetailDto" >
+    insert into CHB_TOTALCHECK_DETAIL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="seqno != null" >
+        SEQNO,
+      </if>
+      <if test="totalseqno != null" >
+        TOTALSEQNO,
+      </if>
+      <if test="assetType2 != null" >
+        ASSET_TYPE2,
+      </if>
+      <if test="assetCode != null" >
+        ASSET_CODE,
+      </if>
+      <if test="prdId != null" >
+        PRD_ID,
+      </if>
+      <if test="prdName != null" >
+        PRD_NAME,
+      </if>
+      <if test="prdNum != null" >
+        PRD_NUM,
+      </if>
+      <if test="prdAmt != null" >
+        PRD_AMT,
+      </if>
+      <if test="monthPrdNum != null" >
+        MONTH_PRD_NUM,
+      </if>
+      <if test="monthPrdAmt != null" >
+        MONTH_PRD_AMT,
+      </if>
+      <if test="deviation != null" >
+        DEVIATION,
+      </if>
+      <if test="prdNumCny != null" >
+        PRD_NUM_CNY,
+      </if>
+      <if test="prdAmtCny != null" >
+        PRD_AMT_CNY,
+      </if>
+      <if test="monthPrdNumCny != null" >
+        MONTH_PRD_NUM_CNY,
+      </if>
+      <if test="monthPrdAmtCny != null" >
+        MONTH_PRD_AMT_CNY,
+      </if>
+      <if test="deviationCny != null" >
+        DEVIATION_CNY,
+      </if>
+      <if test="detailYield != null" >
+        DETAIL_YIELD,
+      </if>
+      <if test="operateMode != null" >
+        OPERATE_MODE,
+      </if>
+      <if test="holdAmt != null" >
+        HOLD_AMT,
+      </if>
+      <if test="prdAstholdAmt != null" >
+        PRD_ASTHOLD_AMT,
+      </if>
+      <if test="prdBalholdAmt != null" >
+        PRD_BALHOLD_AMT,
+      </if>
+      <if test="prdCashholdAmt != null" >
+        PRD_CASHHOLD_AMT,
+      </if>
+      <if test="prdHolddate != null" >
+        PRD_HOLDDATE,
+      </if>
+      <if test="prdInsId != null" >
+        PRD_INS_ID,
+      </if>
+      <if test="prdVdate != null" >
+        PRD_VDATE,
+      </if>
+      <if test="raiseStartdate != null" >
+        RAISE_STARTDATE,
+      </if>
+      <if test="raiseEnddate != null" >
+        RAISE_ENDDATE,
+      </if>
+      <if test="raiseRegdate != null" >
+        RAISE_REGDATE,
+      </if>
+      <if test="raiseIsDelay != null" >
+        RAISE_IS_DELAY,
+      </if>
+      <if test="botIssueNum != null" >
+        BOT_ISSUE_NUM,
+      </if>
+      <if test="botIssueAmt != null" >
+        BOT_ISSUE_AMT,
+      </if>
+      <if test="botUninvestCash != null" >
+        BOT_UNINVEST_CASH,
+      </if>
+      <if test="botAssetAmt != null" >
+        BOT_ASSET_AMT,
+      </if>
+      <if test="botDebtAmt != null" >
+        BOT_DEBT_AMT,
+      </if>
+      <if test="astHoldNum != null" >
+        AST_HOLD_NUM,
+      </if>
+      <if test="astHoldIsCount != null" >
+        AST_HOLD_IS_COUNT,
+      </if>
+      <if test="astMinUprice != null" >
+        AST_MIN_UPRICE,
+      </if>
+      <if test="astMaxUprice != null" >
+        AST_MAX_UPRICE,
+      </if>
+      <if test="isReg != null" >
+        IS_REG,
+      </if>
+      <if test="isDeviation != null" >
+        IS_DEVIATION,
+      </if>
+      <if test="checkDate != null" >
+        CHECK_DATE,
+      </if>
+      <if test="issuePartyId != null" >
+        ISSUE_PARTY_ID,
+      </if>
+      <if test="issuePartyName != null" >
+        ISSUE_PARTY_NAME,
+      </if>
+      <if test="orgCode != null" >
+        ORG_CODE,
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER,
+      </if>
+      <if test="createDept != null" >
+        CREATE_DEPT,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateUser != null" >
+        UPDATE_USER,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="seqno != null" >
+        #{seqno,jdbcType=VARCHAR},
+      </if>
+      <if test="totalseqno != null" >
+        #{totalseqno,jdbcType=VARCHAR},
+      </if>
+      <if test="assetType2 != null" >
+        #{assetType2,jdbcType=VARCHAR},
+      </if>
+      <if test="assetCode != null" >
+        #{assetCode,jdbcType=VARCHAR},
+      </if>
+      <if test="prdId != null" >
+        #{prdId,jdbcType=VARCHAR},
+      </if>
+      <if test="prdName != null" >
+        #{prdName,jdbcType=VARCHAR},
+      </if>
+      <if test="prdNum != null" >
+        #{prdNum,jdbcType=DECIMAL},
+      </if>
+      <if test="prdAmt != null" >
+        #{prdAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="monthPrdNum != null" >
+        #{monthPrdNum,jdbcType=DECIMAL},
+      </if>
+      <if test="monthPrdAmt != null" >
+        #{monthPrdAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="deviation != null" >
+        #{deviation,jdbcType=DECIMAL},
+      </if>
+      <if test="prdNumCny != null" >
+        #{prdNumCny,jdbcType=DECIMAL},
+      </if>
+      <if test="prdAmtCny != null" >
+        #{prdAmtCny,jdbcType=DECIMAL},
+      </if>
+      <if test="monthPrdNumCny != null" >
+        #{monthPrdNumCny,jdbcType=DECIMAL},
+      </if>
+      <if test="monthPrdAmtCny != null" >
+        #{monthPrdAmtCny,jdbcType=DECIMAL},
+      </if>
+      <if test="deviationCny != null" >
+        #{deviationCny,jdbcType=DECIMAL},
+      </if>
+      <if test="detailYield != null" >
+        #{detailYield,jdbcType=DECIMAL},
+      </if>
+      <if test="operateMode != null" >
+        #{operateMode,jdbcType=VARCHAR},
+      </if>
+      <if test="holdAmt != null" >
+        #{holdAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="prdAstholdAmt != null" >
+        #{prdAstholdAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="prdBalholdAmt != null" >
+        #{prdBalholdAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="prdCashholdAmt != null" >
+        #{prdCashholdAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="prdHolddate != null" >
+        #{prdHolddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="prdInsId != null" >
+        #{prdInsId,jdbcType=VARCHAR},
+      </if>
+      <if test="prdVdate != null" >
+        #{prdVdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="raiseStartdate != null" >
+        #{raiseStartdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="raiseEnddate != null" >
+        #{raiseEnddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="raiseRegdate != null" >
+        #{raiseRegdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="raiseIsDelay != null" >
+        #{raiseIsDelay,jdbcType=VARCHAR},
+      </if>
+      <if test="botIssueNum != null" >
+        #{botIssueNum,jdbcType=DECIMAL},
+      </if>
+      <if test="botIssueAmt != null" >
+        #{botIssueAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="botUninvestCash != null" >
+        #{botUninvestCash,jdbcType=DECIMAL},
+      </if>
+      <if test="botAssetAmt != null" >
+        #{botAssetAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="botDebtAmt != null" >
+        #{botDebtAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="astHoldNum != null" >
+        #{astHoldNum,jdbcType=DECIMAL},
+      </if>
+      <if test="astHoldIsCount != null" >
+        #{astHoldIsCount,jdbcType=VARCHAR},
+      </if>
+      <if test="astMinUprice != null" >
+        #{astMinUprice,jdbcType=DECIMAL},
+      </if>
+      <if test="astMaxUprice != null" >
+        #{astMaxUprice,jdbcType=DECIMAL},
+      </if>
+      <if test="isReg != null" >
+        #{isReg,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeviation != null" >
+        #{isDeviation,jdbcType=VARCHAR},
+      </if>
+      <if test="checkDate != null" >
+        #{checkDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="issuePartyId != null" >
+        #{issuePartyId,jdbcType=VARCHAR},
+      </if>
+      <if test="issuePartyName != null" >
+        #{issuePartyName,jdbcType=VARCHAR},
+      </if>
+      <if test="orgCode != null" >
+        #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDept != null" >
+        #{createDept,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.chb.datacheck.totalcheck.dto.ChbTotalCheckDetailDto" >
+    update CHB_TOTALCHECK_DETAIL
+    <set >
+      <if test="totalseqno != null" >
+        TOTALSEQNO = #{totalseqno,jdbcType=VARCHAR},
+      </if>
+      <if test="assetType2 != null" >
+        ASSET_TYPE2 = #{assetType2,jdbcType=VARCHAR},
+      </if>
+      <if test="assetCode != null" >
+        ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
+      </if>
+      <if test="prdId != null" >
+        PRD_ID = #{prdId,jdbcType=VARCHAR},
+      </if>
+      <if test="prdName != null" >
+        PRD_NAME = #{prdName,jdbcType=VARCHAR},
+      </if>
+      <if test="prdNum != null" >
+        PRD_NUM = #{prdNum,jdbcType=DECIMAL},
+      </if>
+      <if test="prdAmt != null" >
+        PRD_AMT = #{prdAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="monthPrdNum != null" >
+        MONTH_PRD_NUM = #{monthPrdNum,jdbcType=DECIMAL},
+      </if>
+      <if test="monthPrdAmt != null" >
+        MONTH_PRD_AMT = #{monthPrdAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="deviation != null" >
+        DEVIATION = #{deviation,jdbcType=DECIMAL},
+      </if>
+      <if test="prdNumCny != null" >
+        PRD_NUM_CNY = #{prdNumCny,jdbcType=DECIMAL},
+      </if>
+      <if test="prdAmtCny != null" >
+        PRD_AMT_CNY = #{prdAmtCny,jdbcType=DECIMAL},
+      </if>
+      <if test="monthPrdNumCny != null" >
+        MONTH_PRD_NUM_CNY = #{monthPrdNumCny,jdbcType=DECIMAL},
+      </if>
+      <if test="monthPrdAmtCny != null" >
+        MONTH_PRD_AMT_CNY = #{monthPrdAmtCny,jdbcType=DECIMAL},
+      </if>
+      <if test="deviationCny != null" >
+        DEVIATION_CNY = #{deviationCny,jdbcType=DECIMAL},
+      </if>
+      <if test="detailYield != null" >
+        DETAIL_YIELD = #{detailYield,jdbcType=DECIMAL},
+      </if>
+      <if test="operateMode != null" >
+        OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
+      </if>
+      <if test="holdAmt != null" >
+        HOLD_AMT = #{holdAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="prdAstholdAmt != null" >
+        PRD_ASTHOLD_AMT = #{prdAstholdAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="prdBalholdAmt != null" >
+        PRD_BALHOLD_AMT = #{prdBalholdAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="prdCashholdAmt != null" >
+        PRD_CASHHOLD_AMT = #{prdCashholdAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="prdHolddate != null" >
+        PRD_HOLDDATE = #{prdHolddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="prdInsId != null" >
+        PRD_INS_ID = #{prdInsId,jdbcType=VARCHAR},
+      </if>
+      <if test="prdVdate != null" >
+        PRD_VDATE = #{prdVdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="raiseStartdate != null" >
+        RAISE_STARTDATE = #{raiseStartdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="raiseEnddate != null" >
+        RAISE_ENDDATE = #{raiseEnddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="raiseRegdate != null" >
+        RAISE_REGDATE = #{raiseRegdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="raiseIsDelay != null" >
+        RAISE_IS_DELAY = #{raiseIsDelay,jdbcType=VARCHAR},
+      </if>
+      <if test="botIssueNum != null" >
+        BOT_ISSUE_NUM = #{botIssueNum,jdbcType=DECIMAL},
+      </if>
+      <if test="botIssueAmt != null" >
+        BOT_ISSUE_AMT = #{botIssueAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="botUninvestCash != null" >
+        BOT_UNINVEST_CASH = #{botUninvestCash,jdbcType=DECIMAL},
+      </if>
+      <if test="botAssetAmt != null" >
+        BOT_ASSET_AMT = #{botAssetAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="botDebtAmt != null" >
+        BOT_DEBT_AMT = #{botDebtAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="astHoldNum != null" >
+        AST_HOLD_NUM = #{astHoldNum,jdbcType=DECIMAL},
+      </if>
+      <if test="astHoldIsCount != null" >
+        AST_HOLD_IS_COUNT = #{astHoldIsCount,jdbcType=VARCHAR},
+      </if>
+      <if test="astMinUprice != null" >
+        AST_MIN_UPRICE = #{astMinUprice,jdbcType=DECIMAL},
+      </if>
+      <if test="astMaxUprice != null" >
+        AST_MAX_UPRICE = #{astMaxUprice,jdbcType=DECIMAL},
+      </if>
+      <if test="isReg != null" >
+        IS_REG = #{isReg,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeviation != null" >
+        IS_DEVIATION = #{isDeviation,jdbcType=VARCHAR},
+      </if>
+      <if test="checkDate != null" >
+        CHECK_DATE = #{checkDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="issuePartyId != null" >
+        ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+      </if>
+      <if test="issuePartyName != null" >
+        ISSUE_PARTY_NAME = #{issuePartyName,jdbcType=VARCHAR},
+      </if>
+      <if test="orgCode != null" >
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDept != null" >
+        CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where SEQNO = #{seqno,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.chb.datacheck.totalcheck.dto.ChbTotalCheckDetailDto" >
+    update CHB_TOTALCHECK_DETAIL
+    set TOTALSEQNO = #{totalseqno,jdbcType=VARCHAR},
+      ASSET_TYPE2 = #{assetType2,jdbcType=VARCHAR},
+      ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
+      PRD_ID = #{prdId,jdbcType=VARCHAR},
+      PRD_NAME = #{prdName,jdbcType=VARCHAR},
+      PRD_NUM = #{prdNum,jdbcType=DECIMAL},
+      PRD_AMT = #{prdAmt,jdbcType=DECIMAL},
+      MONTH_PRD_NUM = #{monthPrdNum,jdbcType=DECIMAL},
+      MONTH_PRD_AMT = #{monthPrdAmt,jdbcType=DECIMAL},
+      DEVIATION = #{deviation,jdbcType=DECIMAL},
+      PRD_NUM_CNY = #{prdNumCny,jdbcType=DECIMAL},
+      PRD_AMT_CNY = #{prdAmtCny,jdbcType=DECIMAL},
+      MONTH_PRD_NUM_CNY = #{monthPrdNumCny,jdbcType=DECIMAL},
+      MONTH_PRD_AMT_CNY = #{monthPrdAmtCny,jdbcType=DECIMAL},
+      DEVIATION_CNY = #{deviationCny,jdbcType=DECIMAL},
+      DETAIL_YIELD = #{detailYield,jdbcType=DECIMAL},
+      OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
+      HOLD_AMT = #{holdAmt,jdbcType=DECIMAL},
+      PRD_ASTHOLD_AMT = #{prdAstholdAmt,jdbcType=DECIMAL},
+      PRD_BALHOLD_AMT = #{prdBalholdAmt,jdbcType=DECIMAL},
+      PRD_CASHHOLD_AMT = #{prdCashholdAmt,jdbcType=DECIMAL},
+      PRD_HOLDDATE = #{prdHolddate,jdbcType=TIMESTAMP},
+      PRD_INS_ID = #{prdInsId,jdbcType=VARCHAR},
+      PRD_VDATE = #{prdVdate,jdbcType=TIMESTAMP},
+      RAISE_STARTDATE = #{raiseStartdate,jdbcType=TIMESTAMP},
+      RAISE_ENDDATE = #{raiseEnddate,jdbcType=TIMESTAMP},
+      RAISE_REGDATE = #{raiseRegdate,jdbcType=TIMESTAMP},
+      RAISE_IS_DELAY = #{raiseIsDelay,jdbcType=VARCHAR},
+      BOT_ISSUE_NUM = #{botIssueNum,jdbcType=DECIMAL},
+      BOT_ISSUE_AMT = #{botIssueAmt,jdbcType=DECIMAL},
+      BOT_UNINVEST_CASH = #{botUninvestCash,jdbcType=DECIMAL},
+      BOT_ASSET_AMT = #{botAssetAmt,jdbcType=DECIMAL},
+      BOT_DEBT_AMT = #{botDebtAmt,jdbcType=DECIMAL},
+      AST_HOLD_NUM = #{astHoldNum,jdbcType=DECIMAL},
+      AST_HOLD_IS_COUNT = #{astHoldIsCount,jdbcType=VARCHAR},
+      AST_MIN_UPRICE = #{astMinUprice,jdbcType=DECIMAL},
+      AST_MAX_UPRICE = #{astMaxUprice,jdbcType=DECIMAL},
+      IS_REG = #{raiseIsReg,jdbcType=VARCHAR},
+      IS_DEVIATION = #{isDeviation,jdbcType=VARCHAR},
+      CHECK_DATE = #{checkDate,jdbcType=TIMESTAMP},
+      ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+      ISSUE_PARTY_NAME = #{issuePartyName,jdbcType=VARCHAR},
+      ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where SEQNO = #{seqno,jdbcType=VARCHAR}
+  </update>
+  
+  <delete id="deletTotalCheckDeatailByCdate" parameterType="java.util.Map">
+	  delete from CHB_TOTALCHECK_DETAIL
+	  where TOTALSEQNO in (
+	    select seqno 
+	    from CHB_TOTALCHECK
+	    where DATE_FORMAT(cdate,'%Y-%m-%d') >= DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
+	  )
+  </delete>
+  
+  <select id="selectTotalCheckDetailByPage" parameterType="java.util.Map" 
+    resultType="com.joyintech.tams.svreport.chb.datacheck.totalcheck.dto.ChbTotalCheckDetailDto" >
+    select 
+    <include refid="Base_Column_List_With_Pro" />
+    from(
+	    select 
+	    <include refid="Base_Column_List_Detail" />
+	    ,rank() over (partition by total.CHECK_TYPE order by total.CDATE desc) rowindex
+	    from CHB_TOTALCHECK total
+	    left join CHB_TOTALCHECK_DETAIL detail
+	    on detail.TOTALSEQNO = total.seqno
+	    where 1 =1 
+	    and detail.seqno is not null
+	    <if test="searchDate != null and !searchDate.isEmpty()">
+	        and DATE_FORMAT(total.CDATE,'%Y-%m-%d') &lt;= #{searchDate,jdbcType=VARCHAR}
+	    </if>
+        <if test="index != null and !index.isEmpty()">
+            and total.CHECK_TYPE = #{index,jdbcType=VARCHAR}
+        </if>
+	    <if test="orgCodeList != null and orgCodeList.size() > 0">
+		    <foreach collection="orgCodeList" item="orgCode" 
+		        open=" AND detail.ISSUE_PARTY_ID IN (" close=")" separator=",">
+		        #{orgCode,jdbcType=VARCHAR}
+		    </foreach>
+	    </if>
+    )
+    where 1 = 1 limit 1
+  </select>
+</mapper>

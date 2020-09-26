@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.assetbasis.dao.ChbAstValInterfMapper">
+
+	<insert id="insertInfo" parameterType="com.joyintech.tams.common.base.entity.ChbAstValue">
+		insert into CHB_AST_VAL ( VAL_ID, ISSUE_PARTY_ID, ASSET_CODE, VAL_DATE, UNIT_VAL_NET, UNIT_VAL_TOTAL, REMARK, 
+			    DATASOURCE, STATUS, WORKFLOW_ID, ORG_CODE, DEPT_CODE, CREATE_USER, CREATE_TIME, UPDATE_USER, 
+			    UPDATE_TIME
+            ) values (
+	           #{valId,jdbcType=CHAR}, #{issuePartyId,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR}, 
+		      #{valDate,jdbcType=TIMESTAMP}, #{unitValNet,jdbcType=DECIMAL}, #{unitValTotal,jdbcType=DECIMAL}, 
+		      #{remark,jdbcType=VARCHAR}, #{datasource,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+		      #{workflowId,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, 
+		      #{createUser,jdbcType=VARCHAR}, sysdate, #{updateUser,jdbcType=VARCHAR}, 
+		      sysdate
+            )
+	</insert>
+	
+	<delete id="deleteInfo"  parameterType="map">
+		delete from CHB_AST_VAL
+		<where>
+			<if test="valDate != null and valDate != ''">
+				to_char(VAL_DATE,'yyyy-MM-dd') = #{valDate,jdbcType=VARCHAR}
+			</if>
+			<if test="status != null and status!= ''">
+				and STATUS  = #{status,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</delete>
+	
+	<select id="queryAssetValueInfoList" resultType="com.joyintech.tams.common.base.entity.ChbAstValue">
+		with price as (
+	  		SELECT BASIS_CYY CCY,
+	  		<choose>
+	  		<when test="exchangeSource == '01'">OPEN_PRICE PRICE</when>
+	  		<when test="exchangeSource == '02'">CLOSE_PRICE PRICE</when>
+	  		<when test="exchangeSource == '03'">HIGH_PRICE PRICE</when>
+	  		<when test="exchangeSource == '04'">LOW_PRICE PRICE</when>
+	  		<otherwise>MID_PRICE PRICE</otherwise>
+	  		</choose>
+	   			FROM ( select t.*,row_number() over(partition by BASIS_CYY order by TRADE_DATE DESC) row_number  
+			    		from MST_EXCHARGE_QUOTE t 
+			    		where to_char(t.TRADE_DATE,'yyyy-MM-dd') &lt;= #{generateDate,jdbcType=VARCHAR} 
+			    		and QUOT_CYY='CNY' and DATASOURCE_TYPE='SAFE'
+	    		) 
+	    	WHERE  row_number=1
+		)
+	select 
+		assetCode,
+		valDate,
+		ROUND(unitValNet,4) unitValNet,
+		ROUND(unitValTotal,4) unitValTotal
+			from (select 
+			  assetbasis.assetCode,
+			  assetbasis.valueDate valDate,
+			  nvl(price.PRICE,1)
+          *
+             decode(typex.SRCFIELD1,
+             'NOMONEYFOUND',(costAmt+floatingpl)/posAmt,
+             'MONEYFOUND',decode(info.TRM_FUND_TYPE,'01',100,'05',0.01,1),
+             <!-- 增加股票和衍生品估值信息处理 add by gaojian 2019-07-24  begin-->
+             'STOCK', (costAmt+floatingpl)/posAmt,
+             'DERIVATIVE', (costAmt+floatingpl),
+             <!-- 增加股票和衍生品估值信息处理 add by gaojian 2019-07-24  end-->
+             <!-- 增加期权估值信息处理 add by zhengxiaolian 2020-01-15  begin-->
+             'OPTION', (costAmt+floatingpl),
+             <!-- 增加期权估值信息处理 add by zhengxiaolian 2020-01-15  end-->
+             decode(assetbasis.valueDate,assetbasis.mdate,100,100*costAmt/posAmt)) unitValNet,
+        nvl(price.PRICE,1)
+          *
+             decode(typex.SRCFIELD1,
+              'MONEYFOUND',(costAmt+floatingpl+intincexp)/posAmt,
+              'NOMONEYFOUND',(costAmt+floatingpl)/posAmt,
+              <!-- 增加股票和衍生品估值信息处理 add by gaojian 2019-07-24  begin-->
+              'STOCK', (costAmt+floatingpl+intincexp)/posAmt,
+              'DERIVATIVE', (costAmt+floatingpl+intincexp),
+              <!-- 增加股票和衍生品估值信息处理 add by gaojian 2019-07-24  end-->
+              <!-- 增加期权估值信息处理 add by zhengxiaolian 2020-01-15  begin-->
+              'OPTION', (costAmt+floatingpl+intincexp),
+              <!-- 增加期权估值信息处理 add by zhengxiaolian 2020-01-15  end-->
+              decode(assetbasis.valueDate,assetbasis.mdate,100,100*(costAmt+floatingpl+intincexp)/posAmt)) unitValTotal
+           from (select 
+				ASSET_ID assetCode,
+				VALUE_DATE valueDate,
+				CCY ccy,
+        		MDATE mdate,
+				sum(nvl(TDY_COST_AMT,0)) costAmt,
+				sum(nvl(TDY_INTINCEXP,0)) intincexp,
+				sum(nvl(POS_AMT,0)) posAmt,
+        sum(nvl(TDY_FLOAT_INGPL,0)) floatingpl
+        		<if test="isBtm ==null or isBtm=='01' ">
+				FROM CHB_ASSETS_BASIS_DATA basis
+				</if>
+				<if test="isBtm !=null and isBtm=='02' ">
+				FROM CHB_ASSETS_BASIS_DATA_NOBTM  basis
+				</if>
+				where to_char(VALUE_DATE,'yyyy-MM-dd') = #{generateDate,jdbcType=VARCHAR}
+				and basis.status !='D'
+				and pos_amt != 0
+                and pos_amt is not null
+				group by ASSET_ID,VALUE_DATE,MDATE,CCY) assetbasis
+				left join CHB_ASSET_INFO info
+				  on info.ASSET_CODE = assetbasis.assetCode 
+				left join price on price.CCY = assetbasis.CCY
+        left join CHB_TYPE_MAPPING_EX typex on typex.OBJFIELD1 =  info.ORG_ASSET_TYPE1 
+                                      	   and ((typex.OBJFIELD2 =  info.ORG_ASSET_TYPE2) or typex.OBJFIELD2 is null)
+                                      	   and ((typex.OBJFIELD3 =  info.TRM_FUND_TYPE) or typex.OBJFIELD3 is null)
+                                    	   and typex.MAPPINGCODE='ASSETBASISTYPE'
+				where 1=1 
+				  and (assetbasis.posAmt &lt;&gt; 0 or assetbasis.valueDate=assetbasis.mdate)
+				  and  assetbasis.assetCode is not null
+				  and typex.MAPPINGCODE is not null
+			) where unitValNet is not null
+	</select>
+	
+	
+</mapper>

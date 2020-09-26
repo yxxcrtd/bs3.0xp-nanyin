@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ProdPersonIssue.xls" name="个人产品发行登记">
+	<Worksheet javaBean="com.joyintech.tams.svreport.chb.prodpersonissue.dto.ProdPersonIssue001Dto">
+		<Row>
+			<Cell order="1" name="产品登记编码">prodRegistCode</Cell>
+			<Cell order="2" name="理财产品代码">prodId</Cell>
+			<Cell order="3" name="发行机构代码">issuePartyId</Cell>
+			<Cell order="4" name="募集起始日期">raiseVdateStr</Cell>
+			<Cell order="5" name="募集结束日期">raiseEnddateStr</Cell>
+			<Cell order="6" name="产品起始日期">prdVdateStr</Cell>
+			<Cell order="7" name="产品终止日期">prdMdateStr</Cell>
+			<Cell order="8" name="管理方式">manageTypeStr</Cell>
+			<Cell order="9" name="是否为结构化（分级）产品">isConstracteStr</Cell>
+			<Cell order="10" name="业绩比较基准上限%">yieldHigh</Cell>
+			<Cell order="11" name="业绩比较基准下限%">yieldLow</Cell>
+			<Cell order="12" name="业绩比较基准说明">yieldRemark</Cell>
+			<Cell order="13" name="开放模式">openModeStr</Cell>
+			<Cell order="14" name="规律开放周期">openCircleStr</Cell>
+			<Cell order="15" name="其他规律开放周期 (天)">openCircleDays</Cell>
+			<Cell order="16" name="无规律开放说明">ruleComment</Cell>
+			<Cell order="17" name="首次开放周期起始日">firstOpenDayStr</Cell>
+			<Cell order="18" name="节假日是否开放">holidayOnFlagStr</Cell>
+			<Cell order="19" name="平均开放次数（年化）">avgOpenCount</Cell>
+			<Cell order="20" name="开放期业务">openBussStr</Cell>
+			<Cell order="21" name="开放期业务说明">openBussRemark</Cell>
+			<Cell order="22" name="资金托管账号">busiAcctNo</Cell>
+			<Cell order="23" name="资金托管账户">acctName</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>

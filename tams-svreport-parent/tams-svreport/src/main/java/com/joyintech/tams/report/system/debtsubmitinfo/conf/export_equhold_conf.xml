@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="EquityInfo.xlsx" name="投资者身份信息维护">
+	<Worksheet javaBean="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto">
+		<Row>
+			<Cell order="1" name="登记银行代码">bankCode</Cell><!-- 登记银行代码 -->
+			<Cell order="2" name="识别标识">indentifyMark</Cell><!-- 识别标识 -->
+			<Cell order="3" name="原识别标识">orgIndentifyMark</Cell><!-- 原识别标识 -->
+			<Cell order="4" name="该投资者是否属于本行">isBelongBank</Cell><!-- 该投资者是否属于本行 -->
+			<Cell order="5" name="投资者所属银行名称">theBankName</Cell><!-- 投资者所属银行名称-->
+			<Cell order="6" name="投资者所属银行代码">theBankCode</Cell><!-- 投资者所属银行代码 -->
+			<Cell order="7" name="投资者境内外标识">holderMark</Cell><!-- 投资者境内外标识 -->
+			<Cell order="8" name="投资者所属国家或地区">holderRegion</Cell><!-- 投资者所属国家或地区 -->
+			<Cell order="9" name="投资者类别">holderType</Cell><!-- 投资者类别-->
+			<Cell order="10" name="个人证件类别">personalIdentifyType</Cell><!-- 个人证件类别 -->
+			<Cell order="11" name="机构证件类别">institutionIdentifyType</Cell><!-- 机构证件类别 -->
+			<Cell order="12" name="其他证件名称">otherIdentifyName</Cell><!-- 其他证件名称 -->
+			<Cell order="13" name="证件号码">identifyNumber</Cell><!-- 证件号码 -->
+			<Cell order="14" name="SPV资金托管账户开户行">spvCapAccBank</Cell><!-- SPV资金托管账户开户行-->
+			<Cell order="15" name="其他资金托管账户开户行">otherCapAccBank</Cell><!-- 其他资金托管账户开户行 -->
+			<!-- 删除该字段 -->
+			<!-- <Cell order="16" name="SPV登记编码">spvRegistCode</Cell>SPV登记编码 -->
+			<Cell order="17" name="投资者名称">holderName</Cell><!-- 投资者名称 -->
+			<Cell order="18" name="性别">holderSex</Cell><!-- 性别 -->
+			<Cell order="19" name="风险偏好">holderRiskPrefer</Cell><!-- 风险偏好-->
+			<Cell order="20" name="手机号码">holderCellphone</Cell><!-- 手机号码-->
+			<Cell order="21" name="固定电话">holderTelephone</Cell><!-- 固定电话 -->
+			<Cell order="22" name="电子邮箱">holderEmail</Cell><!-- 电子邮箱-->
+			<Cell order="23" name="备注">remark</Cell><!-- 备注 -->
+			<Cell order="24" name="经办人">agent</Cell><!-- 经办人-->
+			<Cell order="25" name="接入检查结果">interfCheckResult</Cell>
+			<Cell order="26" name="中债反馈信息">repFailedInfo</Cell><!-- 中债反馈信息 -->
+	<!--		<Cell order="24" name="状态">importStatus</Cell> 备注 -->
+		</Row>
+	</Worksheet>
+</Workbook>

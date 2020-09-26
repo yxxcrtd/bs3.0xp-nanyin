@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ProShareCheck001.xlsx" name="产品份额检查">
+	<Worksheet javaBean="com.joyintech.tams.report.queryanalysis.prosharecheck.dto.ProShareCheck001Dto">
+		<Row>
+			<Cell order="1" name="查询日期">holdDateStr</Cell><!-- 查询日期 -->
+			<Cell order="2" name="检查结果">checkRes</Cell><!-- 检查结果 -->
+			<Cell order="3" name="产品代码">prodId</Cell><!-- 产品代码 -->
+			<Cell order="4" name="产品名称">prodName</Cell><!-- 产品名称-->
+			<Cell order="5" name="产品登记编码">prdRegistCode</Cell><!-- 产品登记编码 -->
+			<Cell order="6" name="币种">ccy</Cell><!-- 币种 -->
+			<Cell order="7" name="当日持有份额">qty</Cell><!-- 当日持有份额 -->
+			<Cell order="8" name="前一日持有份额">lastQty</Cell><!-- 前一日持有份额 -->
+			<Cell order="9" name="当日明细变动份额">changeQty</Cell><!-- 当日明细变动份额 -->
+		</Row>
+	</Worksheet>
+</Workbook>

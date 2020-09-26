@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.submitexamination.delayverification.dao.DelayVerification001Mapper_db2">
+<select id="searchDate" resultType="com.joyintech.tams.report.submitexamination.delayverification.dto.DelayVerification001Dto">
+	<!-- 参数searchDateStart 查询开始日
+		 	searchDateEnd 查询结束日
+		 	nosubmit 未提交的状态值
+		 	-->
+	select 
+		unSubmitNum,
+		total,
+		(case 
+		<!-- 总数为0时，合格率为0 -->
+		    when total=0 THEN 0 
+			
+			else ROUND((1-((CAST (unSubmitNum AS DOUBLE))/total))*100,2) end)as rate,
+		pageType
+		from(
+			 <!-- 投资者持有信息--> 
+			select
+				count(temp.SEND_STATUS) as total,
+				nvl(sum(temp.lateNums),0) as unSubmitNum,
+				'11' as pageType
+				from(
+					select
+						case when ces.SEND_STATUS != #{nosubmit}  
+							  and ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1  <!-- 已报送数据，且延时报送数量 -->
+							 when ces.SEND_STATUS = #{nosubmit} 
+							  and ces.CHB_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
+							   else 0 end lateNums,  <!-- 统计延时数据 -->
+						ces.SEND_STATUS,
+						ces.ORG_CODE,
+						ces.CREATE_DEPT
+					 from CHB_INVESTHOLD_INFO_SUB ces
+						 where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
+						   and ces.CHB_SUBMIT_DEADLINE &lt;= #{searchDateEnd}
+					union all
+					<!-- 履历表数据 -->
+					select
+						case when ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+							   else 0 end lateNums,  <!-- 统计延时数据 -->
+						ces.SEND_STATUS,
+						ces.ORG_CODE,
+						ces.CREATE_DEPT
+						from CHB_INVESTHOLD_INFO_SUB_HIS ces
+						 where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
+							and ces.CHB_SUBMIT_DEADLINE &lt;= #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
+				)temp
+				<where>
+					<if test="isNotCount !=null and isNotCount=='01'">
+					<!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
+						temp.SEND_STATUS != #{manualSub}
+					</if>
+					<if test="createDeptList != null and createDeptList.size>0">
+						<foreach collection="createDeptList" item = "item" open="and temp.CREATE_DEPT in(" separator="," close=")">
+						#{item,jdbcType=VARCHAR}
+						</foreach>
+					</if>
+				</where>
+			union all
+			
+			<!--  权益人 -->
+			select
+				count(temp.SUBMIT_STATUS) as total,
+				nvl(sum(temp.lateNums),0) as unSubmitNum,
+				'12' as pageType
+				from(
+					select
+						case when ces.Submit_Status != #{nosubmit}  
+							  and ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+							 when ces.Submit_Status = #{nosubmit} 
+							  and ces.CHB_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
+							   else 0 end lateNums,  <!-- 统计延时数据 -->
+						ces.SUBMIT_STATUS,
+						ces.CREATE_DEPT
+					 from CHB_EQU_SUB ces
+						 where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
+						   and ces.CHB_SUBMIT_DEADLINE &lt;= #{searchDateEnd}
+					union all
+					<!-- 履历表数据 -->
+					select
+						case when ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+							   else 0 end lateNums, <!-- 统计延时数据 -->
+						ces.SUBMIT_STATUS,
+						ces.CREATE_DEPT
+						from CHB_EQU_SUB_HIS ces
+						 where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
+							and ces.CHB_SUBMIT_DEADLINE &lt;= #{searchDateEnd} <!-- 中债报送截止日落在查询日期范围 -->
+				)temp
+				<where>
+					<if test="isNotCount !=null and isNotCount=='01'">
+					<!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
+					 temp.SUBMIT_STATUS != #{manualSub}
+					</if>
+					<if test="createDeptList != null and createDeptList.size>0">
+						<foreach collection="createDeptList" item = "item" open="and temp.CREATE_DEPT in(" separator="," close=")">
+						#{item,jdbcType=VARCHAR}
+						</foreach>
+					</if>
+				</where>
+		)
+</select>
+</mapper>

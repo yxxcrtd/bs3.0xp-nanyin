@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.report.system.systempbccapassetinfo.dao.PbcCapAssetInfo001DtoMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.report.system.systempbccapassetinfo.dto.PbcCapAssetInfo001Dto" >
+        <id column="ASSET_UUID" property="assetUuid" jdbcType="CHAR" />
+        <result column="ASSETID" property="assetid" jdbcType="VARCHAR" />
+        <result column="ASSETNAME" property="assetname" jdbcType="VARCHAR" />
+        <result column="POBCASSETID" property="pobcassetid" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ASSET_UUID ASSET_UUID, ASSETID ASSETID, ASSETNAME ASSETNAME, POBCASSETID POBCASSETID,
+        STATUS STATUS, ORG_CODE ORG_CODE, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME,
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CREATE_DEPT CREATE_DEPT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.report.system.systempbccapassetinfo.dao.PbcCapAssetInfo001DtoMapper.Base_Column_List" />
+        from PBC_CAP_ASSET_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.report.system.systempbccapassetinfo.dao.PbcCapAssetInfo001DtoMapper.Base_Column_List" />
+        from PBC_CAP_ASSET_INFO
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByAssetId" resultMap="BaseResultMap" parameterType="com.joyintech.tams.report.system.systempbccapassetinfo.dto.PbcCapAssetInfo001Dto">
+        select
+        <include refid="com.joyintech.tams.report.system.systempbccapassetinfo.dao.PbcCapAssetInfo001DtoMapper.Base_Column_List" />
+        from PBC_CAP_ASSET_INFO
+        where ASSETID = #{assetid}
+        and status =#{status}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from PBC_CAP_ASSET_INFO
+        where ASSET_UUID = #{assetUuid,jdbcType=CHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.report.system.systempbccapassetinfo.dto.PbcCapAssetInfo001Dto" >
+        insert into PBC_CAP_ASSET_INFO (ASSET_UUID, ASSETID, ASSETNAME,
+            POBCASSETID, STATUS, ORG_CODE,
+            CREATE_USER, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME, CREATE_DEPT)
+        values (#{assetUuid,jdbcType=CHAR}, #{assetid,jdbcType=VARCHAR}, #{assetname,jdbcType=VARCHAR},
+            #{pobcassetid,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.report.system.systempbccapassetinfo.dto.PbcCapAssetInfo001Dto" >
+        insert into PBC_CAP_ASSET_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="assetUuid != null" >
+                ASSET_UUID,
+            </if>
+            <if test="assetid != null" >
+                ASSETID,
+            </if>
+            <if test="assetname != null" >
+                ASSETNAME,
+            </if>
+            <if test="pobcassetid != null" >
+                POBCASSETID,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="assetUuid != null" >
+                #{assetUuid,jdbcType=CHAR},
+            </if>
+            <if test="assetid != null" >
+                #{assetid,jdbcType=VARCHAR},
+            </if>
+            <if test="assetname != null" >
+                #{assetname,jdbcType=VARCHAR},
+            </if>
+            <if test="pobcassetid != null" >
+                #{pobcassetid,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.report.system.systempbccapassetinfo.dto.PbcCapAssetInfo001Dto" >
+        insert into PBC_CAP_ASSET_INFO(ASSET_UUID, ASSETID, ASSETNAME, POBCASSETID, STATUS,
+        ORG_CODE, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, CREATE_DEPT)
+        select ASSET_UUID, ASSETID, ASSETNAME, POBCASSETID, #{status,jdbcType=VARCHAR} STATUS,
+            ORG_CODE, CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_DEPT
+             from PBC_CAP_ASSET_INFO
+             where STATUS = 'E' and ASSET_UUID = #{assetUuid,jdbcType=CHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.report.system.systempbccapassetinfo.dto.PbcCapAssetInfo001Dto" >
+        update PBC_CAP_ASSET_INFO
+        <set >
+            <if test="assetid != null" >
+                ASSETID = #{assetid,jdbcType=VARCHAR},
+            </if>
+            <if test="assetname != null" >
+                ASSETNAME = #{assetname,jdbcType=VARCHAR},
+            </if>
+            <if test="pobcassetid != null" >
+                POBCASSETID = #{pobcassetid,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ASSET_UUID = #{assetUuid,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.report.system.systempbccapassetinfo.dto.PbcCapAssetInfo001Dto" >
+        update PBC_CAP_ASSET_INFO
+        set ASSETID = #{assetid,jdbcType=VARCHAR},
+            ASSETNAME = #{assetname,jdbcType=VARCHAR},
+            POBCASSETID = #{pobcassetid,jdbcType=VARCHAR},
+            STATUS = #{status,jdbcType=VARCHAR},
+            ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        where ASSET_UUID = #{assetUuid,jdbcType=CHAR}
+    </update>
+    <select id="queryForPage" resultType="com.joyintech.tams.report.system.systempbccapassetinfo.dto.PbcCapAssetInfo001Dto">
+      select distinct
+              b.ASSET_UUID as assetUuid /*主键*/,
+              t.ASSET_CODE as assetCode/*资产代码*/,
+		      t.ASSET_NAME as assetName /*资产名称*/,
+		      b.POBCASSETID as pobcassetid/*人行资金信托代码*/,
+              to_char(t.PLAN_SDATE,'yyyy-MM-dd hh:mm:ss') as planSdate /*资产起息日*/,
+              to_char(t.PLAN_EDATE,'yyyy-MM-dd hh:mm:ss') as planEdate /*资产到期日*/,
+              b.UPDATE_TIME as updateTime
+            from chb_asset_info t
+            left join PBC_CAP_ASSET_INFO b on t.ASSET_CODE = b.ASSETID and b.STATUS!='D'
+            where t.PBC_ASSET_TYPE1='P07'
+            and t.PBC_ASSET_TYPE2='T02'
+            and t.PBC_ASSET_TYPE3='M02'
+            and t.STATUS!='D'
+            <if test="planSdateStart != null and planSdateStart != ''" >
+                AND to_char(t.PLAN_SDATE,'yyyy-MM-dd') <![CDATA[>=]]> #{planSdateStart}
+            </if>
+            <if test="planSdateEnd != null and planSdateEnd != ''" >
+                AND to_char(t.PLAN_SDATE,'yyyy-MM-dd') <![CDATA[<=]]> #{planSdateEnd}
+            </if>
+            <if test="planEdateStart != null and planEdateStart != ''" >
+                AND to_char(t.PLAN_EDATE,'yyyy-MM-dd') <![CDATA[>=]]> #{planEdateStart}
+            </if>
+            <if test="planEdateEnd != null and planEdateEnd != ''" >
+                AND to_char(t.PLAN_EDATE,'yyyy-MM-dd') <![CDATA[<=]]> #{planEdateEnd}
+            </if>
+            <if test="pobcassetidList !=null and pobcassetidList.size()>0">
+                and b.POBCASSETID in
+                <foreach collection="pobcassetidList" item="pobcassetid" open="("
+                         close=")" separator=",">
+                    #{pobcassetid}
+                </foreach>
+            </if>
+            <if test="assetCodeList !=null and assetCodeList.size()>0">
+                and t.ASSET_CODE in
+                <foreach collection="assetCodeList" item="assetCode" open="("
+                         close=")" separator=",">
+                    #{assetCode}
+                </foreach>
+            </if>
+            order by b.UPDATE_TIME desc
+    </select>
+    <select id="getAssetCodeList" resultType="com.joyintech.framework.select.SelectOptionDto">
+      select t.ASSET_CODE as id,
+            nvl(t.ASSET_NAME,t.ASSET_CODE) as text
+      from chb_asset_info t
+      where t.PBC_ASSET_TYPE1='P07'
+      and t.PBC_ASSET_TYPE2='T02'
+      and t.PBC_ASSET_TYPE3='M02'
+      and t.STATUS!='D'
+        <if test="search != null and search != ''">
+            and (
+            t.ASSET_CODE LIKE CONCAT('%', CONCAT(#{search}, '%'))
+            OR
+            t.ASSET_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+            )
+        </if>
+      order by t.UPDATE_TIME desc
+    </select>
+    <select id="setPobCasSeTidList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select t.POBCASSETID as id,
+        t.POBCASSETID as text
+        from PBC_CAP_ASSET_INFO t
+        where
+        t.STATUS!='D'
+        <if test="search != null and search != ''">
+            and (
+            t.POBCASSETID LIKE CONCAT('%', CONCAT(#{search}, '%'))
+            OR
+            t.POBCASSETID LIKE CONCAT('%', CONCAT(#{search}, '%'))
+            )
+        </if>
+        order by t.UPDATE_TIME desc
+    </select>
+    <select id="querySearchPageList"
+            resultType="com.joyintech.tams.report.system.systempbccapassetinfo.dto.PbcCapAssetInfo001Dto">
+        select
+        t.ASSET_CODE as assetid/*资产代码*/,
+        t.ASSET_NAME as assetName /*资产名称*/,
+        b.POBCASSETID as pobcassetid/*人行资金信托代码*/
+        from chb_asset_info t
+        left join PBC_CAP_ASSET_INFO b on t.ASSET_CODE = b.ASSETID  and b.STATUS!='D'
+        where t.PBC_ASSET_TYPE1='P07'
+        and t.PBC_ASSET_TYPE2='T02'
+        and t.PBC_ASSET_TYPE3='M02'
+        and t.STATUS!='D'
+        <if test="planSdateStart != null and planSdateStart != ''" >
+            AND to_char(t.PLAN_SDATE,'yyyy-MM-dd') <![CDATA[>=]]> #{planSdateStart}
+        </if>
+        <if test="planSdateEnd != null and planSdateEnd != ''" >
+            AND to_char(t.PLAN_SDATE,'yyyy-MM-dd') <![CDATA[<=]]> #{planSdateEnd}
+        </if>
+        <if test="planEdateStart != null and planEdateStart != ''" >
+            AND to_char(t.PLAN_EDATE,'yyyy-MM-dd') <![CDATA[>=]]> #{planEdateStart}
+        </if>
+        <if test="planEdateEnd != null and planEdateEnd != ''" >
+            AND to_char(t.PLAN_EDATE,'yyyy-MM-dd') <![CDATA[<=]]> #{planEdateEnd}
+        </if>
+        <if test="pobcassetidList !=null and pobcassetidList.size()>0">
+            and b.POBCASSETID in
+            <foreach collection="pobcassetidList" item="pobcassetid" open="("
+                     close=")" separator=",">
+                #{pobcassetid}
+            </foreach>
+        </if>
+        <if test="assetCodeList !=null and assetCodeList.size()>0">
+            and t.ASSET_CODE in
+            <foreach collection="assetCodeList" item="assetCode" open="("
+                     close=")" separator=",">
+                #{assetCode}
+            </foreach>
+        </if>
+        <if test="keyList != null and keyList.size > 0">
+            and b.ASSET_UUID in
+            <foreach collection="keyList" open="(" close=")" separator="," item="item">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        order by b.UPDATE_TIME desc
+    </select>
+    <select id="getPobCassetId" resultType="java.lang.String">
+        select
+        ASSETID as ASSETID
+        from PBC_CAP_ASSET_INFO
+        where
+        1=1
+        and STATUS != #{statusEffective}
+        and ASSETID IN
+        <foreach collection="list" item="pobCassetId" open="(" close=")" separator=",">
+          #{pobCassetId.assetid}
+        </foreach>
+    </select>
+    <select id="statisticalAssetId" resultType="java.lang.Integer">
+        select
+        count(*)
+        from chb_asset_info
+        where ASSET_CODE = #{assetId}
+        and STATUS!= 'D'
+    </select>
+    <select id="statisticalCorrectAssetId" resultType="java.lang.Integer">
+        select
+        count(*)
+        from chb_asset_info
+        where ASSET_CODE = #{assetId}
+        and STATUS!= 'D'
+        and PBC_ASSET_TYPE1='P07'
+        and PBC_ASSET_TYPE2='T02'
+        and PBC_ASSET_TYPE3='M02'
+    </select>
+    <select id="selectPobcassetIdAndAssetId"
+            resultType="com.joyintech.tams.report.system.systempbccapassetinfo.dto.PbcCapAssetInfo001Dto">
+        select
+        ASSETID as assetid,
+        POBCASSETID as pobcassetid
+        from PBC_CAP_ASSET_INFO
+        where
+        1=1
+        and STATUS!= #{statusEffective}
+        and POBCASSETID IN
+        <foreach collection="list" item="pobCassetId" open="(" close=")" separator=",">
+            #{pobCassetId.pobcassetid}
+        </foreach>
+    </select>
+</mapper>

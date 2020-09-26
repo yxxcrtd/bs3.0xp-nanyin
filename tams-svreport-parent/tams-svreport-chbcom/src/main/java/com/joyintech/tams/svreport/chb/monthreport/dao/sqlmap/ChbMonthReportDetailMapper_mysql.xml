@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthReportDetailMapper_mysql">
+
+   <select id="getInvestorHoldings" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.PrdSaletargetDealDetail" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.PrdSaletargetDealDetail">
+	select sum(ds.pr*ifnull(pi.prod_value,1)*ifnull(rate.yeid,1)) naturalpersonqty,
+        sum(ds.fjr*ifnull(pi.prod_value,1)*ifnull(rate.yeid,1)) nonfinancialinstitution,
+        sum(ds.ba*ifnull(pi.prod_value,1)*ifnull(rate.yeid,1)) bisrinqty,
+        sum(ds.ot*ifnull(pi.prod_value,1)*ifnull(rate.yeid,1)) oficrinqty
+	from (
+        select sum(ifnull(OIC_PORT,0)+ifnull(HNWC_PORT,0)+ifnull(PBC_PORT,0)) pr,
+        sum(ifnull(NFCC_PORT,0)+ifnull(AMPRO_PORT,0)+ifnull(OTHER_PORT,0)) fjr,
+        sum(ifnull(BAN_INS_PORT,0)) ba,
+        sum(ifnull(OFIC_PORT,0)) ot,
+        dd.prod_id
+        from P_INTERF_SALE_GDATA_DETAIL dd
+        left join chb_prd_baseinfo cb on DD.prod_id=CB.PROD_ID and CB.STATUS !='D'
+
+        where cb.PROFIT_TYPE='03' and GDATE=STR_TO_DATE(#{dealdate,jdbcType=VARCHAR},'%Y%m%d')
+        group by dd.prod_id
+        ) ds
+	left join (
+	    select
+      val.prod_id prodid,
+	    ifnull(val.prod_value,1) prod_value,
+      ifnull(val.CCY,'CNY') prod_value_ccy
+	    from
+	    (
+	        select prod_id,ccy,prod_value from (
+	        select rank() over(partition by prod_id order by change_date desc)
+	        my_rank,prod_id,ccy,prod_value from CHB_PRD_PERIODYIELD
+	        where CHANGE_DATE<![CDATA[<=]]>STR_TO_DATE(#{dealdate,jdbcType=VARCHAR},'%Y%m%d') and CHANG_TYPE='01'
+	        ) where 1=1 limit 1
+	    )val
+
+	) pi on DS.prod_id=PI.PRODID
+	left join (
+	     SELECT
+				BASIS_CYY ccyOriginal,
+				QUOT_CYY ccyConvert,
+				TRADE_DATE publishDate,
+	      case when #{rateflag,jdbcType=VARCHAR} = '02'
+	      then
+				CLOSE_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+	      when #{rateflag,jdbcType=VARCHAR} = '01'
+	      then
+				OPEN_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+	      when #{rateflag,jdbcType=VARCHAR} = '03'
+	      then
+				HIGH_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+	       when #{rateflag,jdbcType=VARCHAR} = '04'
+	       then
+				LOW_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+	       when #{rateflag,jdbcType=VARCHAR} = '05'
+				then MID_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+	      end yeid
+			 FROM MST_EXCHARGE_QUOTE info
+	    where
+				info.QUOT_CYY = 'CNY'
+				and info.DATASOURCE_TYPE='SAFE'
+				and info.TRADE_DATE = (select max(t.TRADE_DATE)
+				from MST_EXCHARGE_QUOTE t
+				where t.BASIS_CYY = info.BASIS_CYY
+				and t.QUOT_CYY = info.QUOT_CYY
+				and t.DATASOURCE_TYPE='SAFE'
+				and t.TRADE_DATE <![CDATA[<=]]>STR_TO_DATE(#{dealdate,jdbcType=VARCHAR},'%Y%m%d'))
+      ) rate on pi.prod_value_ccy=rate.ccyOriginal
+  </select>
+</mapper>

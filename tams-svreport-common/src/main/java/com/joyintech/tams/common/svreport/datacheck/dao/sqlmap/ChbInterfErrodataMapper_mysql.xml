@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.svreport.datacheck.dao.ChbInterfErrodataMapper_mysql">
+	<insert id="insertChbInterfErrodata" parameterType="com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodata">
+		MERGE INTO CHB_INTERF_ERRODATA CII
+		USING (
+		<foreach collection="newDataList" item="item" open="select * from("
+			close=")" separator="union all">
+			SELECT
+			#{item.datauuid,jdbcType=VARCHAR} DATAUUID,
+			#{item.dataid,jdbcType=VARCHAR} DATAID,
+			#{item.interfType,jdbcType=VARCHAR} INTERF_TYPE,
+			#{item.fireName,jdbcType=VARCHAR} FIRE_NAME,
+			#{item.orgData,jdbcType=CLOB} ORG_DATA,
+            #{item.errMsg,jdbcType=CLOB} ERR_MSG,
+			#{item.status,jdbcType=VARCHAR} STATUS,
+			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+			#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+			#{item.workflowId,jdbcType=VARCHAR} WORKFLOW_ID,
+			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE
+			FROM
+			DUAL
+		</foreach>
+		) TEMP
+		
+		ON(CII.DATAID = TEMP.DATAID)
+		
+		WHEN MATCHED THEN UPDATE
+		SET CII.INTERF_TYPE = TEMP.INTERF_TYPE,CII.FIRE_NAME = TEMP.FIRE_NAME,
+		CII.ORG_DATA =TEMP.ORG_DATA,CII.ERR_MSG = TEMP.ERR_MSG,
+		CII.STATUS =TEMP.STATUS,CII.UPDATE_USER = TEMP.UPDATE_USER,
+		CII.CREATE_USER =TEMP.CREATE_USER,CII.ORG_CODE = TEMP.ORG_CODE,
+		CII.DEPT_CODE =TEMP.DEPT_CODE,CII.CREATE_DEPT = TEMP.CREATE_DEPT,
+		CII.WORKFLOW_ID = TEMP.WORKFLOW_ID,CII.UPDATE_TIME = NOW()
+		
+		WHEN NOT MATCHED THEN INSERT (DATAUUID,DATAID, INTERF_TYPE, FIRE_NAME,
+		ORG_DATA,ERR_MSG,
+		 STATUS, UPDATE_USER, CREATE_USER, UPDATE_TIME, CREATE_TIME, 
+    	WORKFLOW_ID, ORG_CODE, DEPT_CODE, CREATE_DEPT)
+		VALUES(TEMP.DATAUUID,TEMP.DATAID, TEMP.INTERF_TYPE, TEMP.FIRE_NAME,
+		TEMP.ORG_DATA,TEMP.ERR_MSG,
+		 TEMP.STATUS, TEMP.UPDATE_USER, TEMP.CREATE_USER, TEMP.UPDATE_TIME, TEMP.CREATE_TIME, 
+    	TEMP.WORKFLOW_ID, TEMP.ORG_CODE, TEMP.DEPT_CODE, TEMP.CREATE_DEPT)
+	</insert>
+</mapper>

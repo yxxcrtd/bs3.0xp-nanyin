@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.submitmaintenance.exchangerate.dao.Exchangerate001Mapper">
+	<!-- 汇率行情列表数据查询 -->
+	<select id="queryForPage" resultType="com.joyintech.tams.report.submitmaintenance.exchangerate.dto.Exchangerate001Dto">
+		SELECT
+		  A.STATUS status,
+		  A.STATUS statusName,
+		  A.CCY_ORIGINAL ccyOriginal,
+		  A.CCY_ORIGINAL ccyOriginalName,
+		  A.CCY_CONVERT ccyConvert,
+		  A.CCY_CONVERT ccyConvertName,
+		  A.PUBLISH_DATE publishDate,
+		  A.EXCHANGE_PRICE exchangePrice,
+		  A.EXCHANGE_PRICE exchangeRate
+		 FROM CHB_MST_EXCHANGE_INFO A
+		 <where>
+		 <!-- dingzhipeng edit 2017-10-11 start -->
+		 <!-- 查询条件变更 -->
+		 <!-- 币种 -->
+			 <if test="ccyOriginalList != null and ccyOriginalList.size() > 0">
+		 		<foreach collection="ccyOriginalList" item="ccyOriginal" open=" A.CCY_ORIGINAL IN (" close=")" separator=",">
+		 	 		#{ccyOriginal}
+		 		</foreach>
+			 </if>
+			 <!-- 折算币种 -->
+			 <if test="ccyConvertList != null and ccyConvertList.size() > 0">
+		 		<foreach collection="ccyConvertList" item="ccyConvert" open="AND A.CCY_CONVERT IN (" close=")" separator=",">
+		 	 		#{ccyConvert}
+		 		</foreach>
+			 </if>
+		 	<if test="publishDateStart != null and publishDateStart != ''">
+	           AND A.PUBLISH_DATE &gt;= to_date(#{publishDateStart,jdbcType=DATE},'yyyy-MM-dd')
+	           <!-- /*AND A.PUBLISH_DATE = to_date(#{publishDate},'yyyy-MM-dd')*/ -->
+		 	</if>
+		 	<if test="publishDateEnd != null and publishDateEnd != ''">
+	           AND A.PUBLISH_DATE &lt;= to_date(#{publishDateEnd,jdbcType=DATE},'yyyy-MM-dd')
+	           <!-- /*AND A.PUBLISH_DATE = to_date(#{publishDate},'yyyy-MM-dd')*/ -->
+		 	</if>
+		 	<!-- dingzhipeng edit 2017-10-11 end -->
+             <!-- 选中导出使用的参数 -->
+             <if test="keys != null and keys.size() > 0">
+                 <foreach collection="keys" item="key" open=" AND A.CCY_ORIGINAL || '|' || A.CCY_CONVERT || '|' || to_char(A.PUBLISH_DATE,'yyyy-MM-dd') || '|' || A.STATUS IN (" close=")" separator=",">
+                     #{key,jdbcType=VARCHAR}
+                 </foreach>
+             </if>
+		 </where>
+		 ORDER BY A.PUBLISH_DATE DESC
+	</select>			
+	<insert id="insertSelective" parameterType="com.joyintech.tams.report.submitmaintenance.exchangerate.dto.Exchangerate001Dto" >
+        insert into CHB_MST_EXCHANGE_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="ccyOriginal != null" >
+                CCY_ORIGINAL,
+            </if>
+            <if test="ccyConvert != null" >
+                CCY_CONVERT,
+            </if>
+            <if test="publishDate != null" >
+                PUBLISH_DATE,
+            </if>
+            <if test="exchangePrice != null" >
+                EXCHANGE_PRICE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="ccyOriginal != null" >
+                #{ccyOriginal,jdbcType=VARCHAR},
+            </if>
+            <if test="ccyConvert != null" >
+                #{ccyConvert,jdbcType=VARCHAR},
+            </if>
+            <if test="publishDate != null" >
+                #{publishDate,jdbcType=DATE},
+            </if>
+            <if test="exchangePrice != null" >
+                #{exchangePrice,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.report.submitmaintenance.exchangerate.dto.Exchangerate001Dto" >
+        update CHB_MST_EXCHANGE_INFO
+        <set >
+        	<if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+        	<if test="exchangePrice != null" >
+                IS_CONSIGN = #{isConsign,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where CCY_ORIGINAL = #{ccyOriginal,jdbcType=VARCHAR}
+        	and CCY_CONVERT = #{ccyConvert,jdbcType=VARCHAR}
+        	and STATUS ='E'
+        	<!-- and PUBLISH_DATE= #{publishDate,jdbcType=DATE} -->
+        	and to_char(PUBLISH_DATE, 'yyyy-mm-dd') = to_char(#{publishDate,jdbcType=DATE}, 'yyyy-mm-dd')
+    </update>
+    <select id="getInfoDataByPrimaryKey" resultType="com.joyintech.tams.report.submitmaintenance.exchangerate.dto.Exchangerate002Dto">
+        SELECT
+        A.STATUS status,
+        A.CCY_ORIGINAL ccyOriginal,
+        A.CCY_CONVERT ccyConvert,
+        to_char(A.PUBLISH_DATE,'yyyy-mm-dd') publishDate,
+        A.EXCHANGE_PRICE exchangePrice,
+        A.EXCHANGE_PRICE exchangeRate
+        FROM CHB_MST_EXCHANGE_INFO A
+        <where>
+            <if test="ccyOriginal != null and ccyOriginal != ''">
+                A.CCY_ORIGINAL = #{ccyOriginal,jdbcType=VARCHAR}
+            </if>
+            <if test="ccyConvert != null and ccyConvert != ''">
+                AND A.CCY_CONVERT = #{ccyConvert,jdbcType=VARCHAR}
+            </if>
+               <!-- AND A.PUBLISH_DATE=#{publishDate,jdbcType=DATE} -->
+               AND to_char(A.PUBLISH_DATE, 'yyyy-mm-dd') = to_char(#{publishDate,jdbcType=DATE}, 'yyyy-mm-dd')
+               AND A.STATUS=#{status,jdbcType=VARCHAR}
+        </where>
+    </select>
+    <select id="isExist" resultType="java.lang.Integer" parameterType="com.joyintech.tams.report.submitmaintenance.exchangerate.dto.Exchangerate002Dto">
+    SELECT
+    	count(1)
+    from CHB_MST_EXCHANGE_INFO mei
+    where mei.CCY_ORIGINAL=#{ccyOriginal}
+    and mei.CCY_CONVERT= #{ccyConvert}
+    <!-- and mei.PUBLISH_DATE=to_date(#{publishDate},'yyyy-MM-dd') -->
+    and to_char(mei.PUBLISH_DATE, 'yyyy-mm-dd') = #{publishDate}
+    and mei.STATUS='E'
+    </select>
+   	<delete id="deleteData" parameterType="com.joyintech.tams.report.submitmaintenance.exchangerate.dto.Exchangerate001Dto">
+        delete CHB_MST_EXCHANGE_INFO
+        where CCY_ORIGINAL = #{ccyOriginal,jdbcType=VARCHAR}
+        	and CCY_CONVERT = #{ccyConvert,jdbcType=VARCHAR}
+        	and STATUS ='E'
+        	<!-- and PUBLISH_DATE= #{publishDate,jdbcType=DATE} -->
+        	and to_char(PUBLISH_DATE, 'yyyy-mm-dd') = to_char(#{publishDate,jdbcType=DATE}, 'yyyy-mm-dd')
+    </delete>
+    
+    <select id="selectDataCount" resultType="java.lang.Integer" parameterType="java.util.List">
+        select
+            count(1)
+        from
+            CHB_MST_EXCHANGE_INFO mei
+        where
+            mei.STATUS = 'E'
+            <foreach collection="keylist" index="index" item="item" open="and (" separator="or" close=")">
+             (
+                mei.CCY_ORIGINAL = #{item.ccyOriginal,jdbcType=VARCHAR}
+                and mei.CCY_CONVERT = #{item.ccyConvert,jdbcType=VARCHAR}
+                and to_char(mei.PUBLISH_DATE, 'yyyy-MM-dd') = to_char(#{item.publishDate,jdbcType=DATE}, 'yyyy-MM-dd')
+             )
+            </foreach>
+    </select>
+    <select id="selectNewRate" resultType="java.math.BigDecimal">
+    select
+		<choose>
+		<when test="pricetype == '01'">
+			cmei.OPEN_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+		</when>
+		<when test="pricetype == '02'">
+			cmei.CLOSE_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+		</when>
+		<when test="pricetype == '03'">
+			cmei.HIGH_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+		</when>
+		<when test="pricetype == '04'">
+			cmei.LOW_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+		</when>
+		<otherwise >
+			cmei.MID_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+		</otherwise>
+		</choose>
+		 from MST_EXCHARGE_QUOTE cmei
+		 		 where  cmei.BASIS_CYY= #{CCY_ORIGINAL,jdbcType=VARCHAR}
+			 	 and cmei.QUOT_CYY = #{CCY_CONVERT,jdbcType=VARCHAR}
+		 		 and cmei.DATASOURCE_TYPE = 'SAFE'
+		 		 AND cmei.TRADE_DATE=
+		 	     ( select max(TRADE_DATE) from MST_EXCHARGE_QUOTE  where DATASOURCE_TYPE = 'SAFE' and BASIS_CYY = #{CCY_ORIGINAL,jdbcType=VARCHAR} and QUOT_CYY = #{CCY_CONVERT,jdbcType=VARCHAR} and TRADE_DATE &lt;= #{HOLDDATE,jdbcType=DATE})
+		 </select>
+</mapper>

@@ -1,0 +1,62 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
+<head>
+<meta charset="utf-8">
+<title data-th-text="#{EquityBaseInfo001}">基期信息</title>
+<link rel="stylesheet" type="text/css" data-th-href="@{/css/report/report.css}">
+</head>
+
+<body>
+<div layout:fragment="content">
+  <div class="form-button-area" filter="false">
+    <a id="EquityBaseInfo001_btn_delete" class="layui-btn layui-btn-sm btn-delete btn-default" data-th-text="#{SysCommon.delete}">删除</a>
+    <a id="EquityBaseInfo001_btn_import" class="layui-btn layui-btn-sm btn-default btn-import">导入</a>
+  </div>
+  <div class="joyin-form-wrap condition-area">
+      <form class="layui-form" id="searchForm">
+        <div class="layui-form-item">
+          <div class="layui-inline layui-col-md3">
+            <label class="layui-form-label form-lable">机构代码</label>
+            <div class="layui-input-inline input-inline">
+              <select id="orgCode" class="input-select" allowClear="true" multiple="multiple" data-th-data-url="@{/svreport/system/proregistcodemanage/ProRegistCodeManage001/getInstitutionCode}" placeholder="请选择"></select>
+            </div>
+          </div>
+          <div class="layui-inline layui-col-md3">
+            <label class="layui-form-label form-lable">产品名称</label>
+            <div class="layui-input-inline input-inline">
+              <input id="prdName" name="prdName" class="layui-input form-input input-lenovoselect" 
+              data-th-data-url='@{/maintenance/EquityBaseInfo001/getPrdName}' 
+              data-idfield="code" data-keyfield="code"
+              data-effectivefieldsalias='{"code":"产品代码","shortName":"产品名称"}'
+              placeholder="请选择或输入关键词">
+              <!-- <select id="prdName" name="prdName" class="input-select" allowClear="true" multiple="multiple" data-th-data-url='@{/system/proregistcodemanage/ProRegistCodeManage001/getRegCode}' data-formatoption=“true” data-parentids="orgCode" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}"></select> -->
+            </div>
+          </div>
+          <div class="layui-inline layui-col-md3">
+                <label class="layui-form-label form-lable">数据状态</label>
+                <div class="layui-input-inline input-inline">
+                  <select id="status" class="input-select" allowClear="true" multiple="multiple" data-th-data-result='${MAINTAIN_STATUS}' initvalue="" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}"></select>
+                </div>
+           </div>
+           <div class="layui-inline layui-col-md3">
+                <label class="layui-form-label form-lable">识别标识</label>
+                <div class="layui-input-inline input-inline">
+                  <input id="indentifyMark" name="indentifyMark" type="text" class="layui-input form-input" maxlength="30" placeholder="请输入关键词">
+                </div>
+          </div>
+        </div>
+      </form>
+  </div>
+  <table class="layui-table" id="equityBaseInfo"></table>
+</div>
+<div layout:fragment="script">
+  <script data-th-inline="javascript" type="text/javascript">
+    var isFromMain="${isFromMain}";
+  </script>
+  <script data-th-src="@{/js/report/jquery.validate.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/joyinvalid.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/report-common.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/maintenance/EquityBaseInfo001.js}" type="text/javascript"></script> 
+</div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstHolidayImpMapper_db2">
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstHoliday">
+    <id column="CALENDAR_ID" jdbcType="VARCHAR" property="calendarId" />
+    <id column="CDATE" jdbcType="TIMESTAMP" property="cdate" />
+    <result column="IS_HOLIDAY" jdbcType="DECIMAL" property="isHoliday" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    CALENDAR_ID, CDATE, IS_HOLIDAY, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+    UPDATE_TIME
+  </sql>
+
+  <delete id="deleteHolidayBatch2"
+	parameterType="com.joyintech.tams.common.base.entity.MstHoliday">
+	delete from MST_HOLIDAY
+	<where>
+		<foreach collection="holidayList" item="dto" separator="union all"
+			open="(CALENDAR_ID,CDATE) in ("
+			close=")">
+			select #{dto.calendarId,jdbcType=DATE},
+			#{dto.cdate,jdbcType=VARCHAR}
+			from sysibm.SYSDUMMY1
+		</foreach>
+	</where>
+</delete>
+
+<insert id="mergeHolidayData"
+	parameterType="com.joyintech.tams.common.base.entity.MstHoliday">
+	MERGE INTO MST_HOLIDAY CII
+	USING (
+	<foreach collection="list" item="item" open="select * from("
+		close=")" separator="union all">
+		SELECT
+		'${item.calendarId}' CALENDAR_ID, 
+        <choose><when test="item.cdate != null">#{item.cdate,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose> CDATE,
+        <choose><when test="item.isHoliday != null">${item.isHoliday}</when><otherwise>null</otherwise></choose> IS_HOLIDAY,
+      '${item.createUser}' CREATE_USER, 
+      '${item.createDept}' CREATE_DEPT, 
+      current date CREATE_TIME, 
+      '${item.createUser}' UPDATE_USER, 
+      current date UPDATE_TIME
+		FROM
+		sysibm.SYSDUMMY1
+	</foreach>
+	) TEMP
+	<!-- 业务主键匹配 -->
+	ON(CII.CALENDAR_ID = TEMP.CALENDAR_ID
+	AND to_char(CII.CDATE,'yyyy-mm-dd') = to_char(TEMP.CDATE,'yyyy-mm-dd')
+	)
+	<!-- 匹配到则更新 -->
+	WHEN MATCHED THEN UPDATE SET
+	CII.IS_HOLIDAY = TEMP.IS_HOLIDAY,
+	CII.UPDATE_USER = TEMP.UPDATE_USER,
+	CII.UPDATE_TIME = TEMP.UPDATE_TIME
+	<!-- 未匹配到这插入 -->
+	WHEN NOT MATCHED THEN INSERT 
+	(CALENDAR_ID, CDATE, IS_HOLIDAY, 
+      CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+      UPDATE_USER, UPDATE_TIME)
+	VALUES(TEMP.CALENDAR_ID, TEMP.CDATE, TEMP.IS_HOLIDAY, 
+      TEMP.CREATE_USER, TEMP.CREATE_DEPT, TEMP.CREATE_TIME, 
+      TEMP.UPDATE_USER, TEMP.UPDATE_TIME)
+</insert>
+</mapper>

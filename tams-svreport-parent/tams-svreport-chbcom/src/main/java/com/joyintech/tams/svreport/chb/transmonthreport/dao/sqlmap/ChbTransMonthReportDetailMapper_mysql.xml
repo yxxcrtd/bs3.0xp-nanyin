@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.transmonthreport.dao.ChbTransMonthReportDetailMapper_mysql" >
+
+  <select id="selectPrdList" resultType="com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthPrdPosition" parameterType="com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthPrdPosition" >
+  
+  select fp.profit_type as prodtype,chbprd.raisemode as raisemode,chbprd.ivstorientation as ivstorientation,chbprd.operate_mode as operateMode,
+  chbprd.cash_mana_cate as cashmanacate,chbprd.openduration as openduration,chbprd.termtype as termtype,
+  ifnull(chbprd.endamtsum_Oth,0) as endamtsumOth,
+  ifnull(case
+        when fp.profit_type='02' then llcalc.yield
+        when fp.profit_type ='01' then
+            case when jzcalc.strvalue=null or jzcalc.strvalue=0 then 0
+            else  (jzcalc.endvalue-jzcalc.strvalue)/(jzcalc.strvalue*(#{enddate,jdbcType=DATE}-#{startdate,jdbcType=DATE}+1))*(CASE finrate.basis WHEN 'A/365' THEN 365 ELSE 360 END)
+            end
+        when fp.profit_type ='03' then
+            case when hbcalc.strvalue=null or hbcalc.strvalue=0 then 0
+            else  (hbcalc.endvalue-hbcalc.strvalue)/(hbcalc.strvalue*(#{enddate,jdbcType=DATE}-#{startdate,jdbcType=DATE}+1))*(CASE finrate.basis WHEN 'A/365' THEN 365 ELSE 360 END)
+            end
+        end,0) as prodprice
+   from chb_month_prd_position chbprd
+   left join fin_product fp
+   on concat_ws('','F16_', chbprd.prodid)=fp.finprod_id
+   left join fin_cash_info cash
+   on fp.finprod_Id=cash.finprod_id 
+   and cash.cash_type_1='02'
+   left join (
+            SELECT
+            @rownum:=@rownum+1 rownum,
+            calc1.cash_id,
+            calc1.finprod_id,
+            calc1.yield,
+            IF
+            (
+                (
+                    @cash_id = calc1.cash_id
+                    AND @finprod_id =calc1.finprod_id
+                ),
+                @rank := @rank + 1,
+                @rank := 1
+            ) AS idx,
+            @cash_id := calc1.cash_id as gro_cash_id,
+            @finprod_id := calc1.finprod_id as gro_finprod_id
+        FROM
+            (
+                SELECT * FROM FIN_CASH_CALC_RULE
+                left join  fin_product fp on calc1.finprod_id=fp.finprod_id
+                ORDER BY cash_id,finprod_id, eff_date DESC
+            ) calc1,
+            (
+            SELECT
+                @rownum := 0,
+                @cash_id := NULL,
+                @finprod_id := NULL,
+                @rank := 0
+            ) B
+        where calc1.eff_date <![CDATA[<=]]> #{enddate,jdbcType=DATE} and fp.operation_Type='02'
+
+        union all
+
+        SELECT @rownum1 := @rownum1 + 1 rownum, /* 虚拟列行标 */
+               tmp.cash_id,
+               tmp.finprod_id,
+               tmp.yield,
+               IF(
+                        (@cash_id1 = tmp.cash_id and @finprod_id1:= tmp.finprod_id),
+                        @rank1 := @rank + 1,
+                        @rank1 := 1
+                ) AS idx,
+                @cash_id1 := tmp.cash_id as gro_cash_id,
+                @finprod_id1 := tmp.finprod_id as gro_finprod_id
+         FROM (
+             select calc1.cash_id,calc1.finprod_id,calc1.yield
+             from FIN_CASH_CALC_RULE calc1
+             left join fin_product fp on calc1.finprod_id=fp.finprod_id
+             where calc1.eff_date = fp.vdate and fp.operation_Type='01'
+             order by  calc1.eff_date desc
+            ) tmp,
+             /* 定义临时变量池 */
+              (SELECT @rownum1 := 0,
+                      @cash_id1 := null,
+                      @finprod_id1 := null,
+                      @rank1 := 0) a
+
+	 ) llcalc
+    on cash.cash_id=llcalc.cash_id and cash.finprod_id=llcalc.finprod_id
+    and  llcalc.idx=1
+    left join (select endval.finprod_id,
+           ifnull(endval.TOTAL_NET_VALUE,0) endvalue,
+           ifnull(strval.TOTAL_NET_VALUE,1) strvalue
+           from BOK_VALBAL_TABLE_STATUS endval
+			left join BOK_VALBAL_TABLE_STATUS strval
+			on endval.finprod_id=strval.finprod_id
+			and strval.val_date= #{startdate,jdbcType=DATE}-1
+			where endval.val_date=#{enddate,jdbcType=DATE})jzhbcalc
+			on  fp.finprod_id=jzhbcalc.finprod_id
+    left join fin_rate_info finrate
+    on finrate.cash_id=cash.cash_id and  cash.finprod_id=finrate.finprod_id
+	where chbprd.startdate = #{startdate,jdbcType=DATE}
+	and chbprd.enddate = #{enddate,jdbcType=DATE}
+	and d.is_lay = 'N'  and chbprd.profit_type='03' 
+  </select>
+  <select id="selectAssetList" resultType="com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthAssetPosition" parameterType="com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthAssetPosition" >
+   select  fp.profit_type as prodtype, chbasset.rating as rating,
+    chbasset.assettype2 as assettype2,chbasset.is_govern_fund1 isgovernfund1,
+    chbinfo.bank_sec_capital bankseccapital, 
+    chbinfo.bank_sec_perpetual banksecperpetual,chbinfo.bank_sec_prefer banksecprefer,
+    coalesce(chbasset.assetvalue_b,chbasset.assetvalue_a,0) as assetvalueB,
+    ifnull((ifnull(asset.mdate,deal.mdate)-  #{enddate,jdbcType=DATE}),0) as remainterm
+    from chb_month_asset_position chbasset
+    left join fin_product fp
+    on (chbasset.prod_id=fp.finprod_market_id or chbasset.prod_id=fp.finprod_id)
+    left join fin_product_add d
+    on fp.finprod_id=d.finprod_id
+    and d.is_lay = 'N'  
+  	left join chb_asset_info chbinfo
+ 	on chbasset.asset_code=chbinfo.asset_code
+	 left join fin_product asset
+ 	on (chbasset.asset_code=asset.finprod_market_id or chbasset.asset_code=asset.finprod_id)
+ 	left join trd_product_deal deal on chbasset.asset_code=deal.trade_id
+
+ 	left join (select distinct p.finprod_id as prodid,max(p.exercise_date) as mdate
+   from   fin_exercise_plan p  where p.finprod_type='F01' group by p.finprod_id ) exeplan
+   on concat_ws('','F01',repbond.sec_id=exeplan.prodid) and repbond.rep_bank_sec_perpetual='01'
+
+ 	where chbasset.startdate = #{startdate,jdbcType=DATE}
+	and chbasset.enddate = #{enddate,jdbcType=DATE}
+    and d.profit_flag='03'
+  </select>
+</mapper>   

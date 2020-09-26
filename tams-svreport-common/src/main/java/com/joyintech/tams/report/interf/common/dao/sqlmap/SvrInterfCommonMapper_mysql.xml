@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.interf.common.dao.SvrInterfCommonMapper_mysql">
+    <insert id="insertInterfLogList">
+        insert into CHB_INTERF_LOG (LOG_ID,INTERF_ID,
+        INTERF_TYPE,
+        file_NAME,TASK_STATUS,
+        CREATE_TIME,BIZ_DATE,
+        err_message,ISNEEDWARNING,
+        remark1,remark2)
+
+        values
+        <foreach collection="list" item="item" separator=",">
+            #{item.logId,jdbcType=VARCHAR}, #{item.interfId,jdbcType=VARCHAR},
+            #{item.interfType,jdbcType=VARCHAR},
+            #{item.fileName,jdbcType=VARCHAR}, #{item.taskStatus,jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP}, #{item.bizDate,jdbcType=VARCHAR},
+            #{item.errMessage,jdbcType=VARCHAR}, #{item.isneedwarning,jdbcType=VARCHAR},
+            #{item.remark1,jdbcType=VARCHAR}, #{item.remark2,jdbcType=VARCHAR}
+        </foreach>
+    </insert>
+</mapper>

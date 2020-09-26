@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.valuation.batch.bookaccountgenerate.dao.BookAccountGenerateMapper">
+	<delete id="deleteOldDataDetail">
+		DELETE FROM BOK_VOUCH_DETAIL C
+		WHERE 
+            EXISTS(
+            SELECT 1  
+            FROM BOK_VOUCH_MAIN A, BOK_BATCH_TASK_TODO B
+            WHERE  
+              A.VOUCH_NUM = C.VOUCH_NUM
+              AND B.BOOKSET_ID =  A.BOOKSET_ID
+              AND A.BOOK_DATE >= B.BOOK_DATE
+              AND B.SEQ_NO = #{seqNo}
+              AND B.BOOKSET_DATE = #{BOOKSET_DATE}
+              AND B.TASK_ID = #{taskId}
+              AND A.BOOK_TYPE != '03'
+              AND B.IS_SUB_BOOKSET = #{IS_SUB_BOOKSET}
+            )
+	</delete>
+	<delete id="deleteOldDataRel">
+		DELETE FROM BOK_VOUCH_REL C
+		WHERE 
+			EXISTS(
+            SELECT 1  
+            FROM BOK_VOUCH_MAIN A, BOK_BATCH_TASK_TODO B
+            WHERE  
+              A.VOUCH_NUM = C.VOUCH_NUM
+              AND B.BOOKSET_ID =  A.BOOKSET_ID
+              AND A.BOOK_DATE >= B.BOOK_DATE
+              AND B.SEQ_NO = #{seqNo}
+              AND B.BOOKSET_DATE = #{BOOKSET_DATE}
+              AND B.TASK_ID = #{taskId}
+              AND B.IS_SUB_BOOKSET = #{IS_SUB_BOOKSET}
+            )
+	</delete>
+	<delete id="deleteOldData">
+		DELETE FROM BOK_VOUCH_MAIN A
+		WHERE 
+            EXISTS(
+            SELECT 1  
+            FROM BOK_BATCH_TASK_TODO B
+            WHERE  
+              B.BOOKSET_ID =  A.BOOKSET_ID
+              AND B.SEQ_NO = #{seqNo}
+              AND B.BOOKSET_DATE = #{BOOKSET_DATE}
+              AND B.TASK_ID = #{taskId}
+              AND B.IS_SUB_BOOKSET = #{IS_SUB_BOOKSET}
+            )
+            AND A.BOOK_DATE >= #{BOOKSET_DATE}
+            AND A.BOOK_TYPE != '03'
+	</delete>
+	<select id="selectData" resultType="com.joyintech.tams.valuation.batch.bookaccountgenerate.dto.BookAccountDetail">
+		select
+			A.BOOKSET_ID,
+			A.TABLE_ID,
+			A.TRADE_ID,
+			A.BUSI_ID,
+			A.HAPPEN_DATE,
+			A.BOOK_DATE,
+			A.SUBJECT_NO,
+			A.DETAIL_SUBJECT_NO,
+			A.CD_FLAG,
+			A.O_CCY,
+			A.O_HAPPEN_AMT,
+			A.OFFSET_FLAG,
+			A.SEQNO,
+			A.HAPPEN_NUMBER,
+			A.BOK_DETAIL_ID,
+			B.F_TRADE_ID,
+			C.TABLE_NAME,
+            A.BOOK_ID,
+            A.BOOK_TYPE,
+            A.B_CCY,
+            A.B_HAPPEN_AMT,
+            A.BOOK_REMARK,
+            A.ISEXE_ZERO_AMT
+            <!-- ,D.DETAIL_SUBJECT_NO_TAIL -->
+        from BOK_BOOKDETAIL_ALL A
+		left join TRD_PRODUCT_DEAL B
+			on A.TRADE_ID = B.TRADE_ID
+		left join BOK_TABLELIST C ON A.TABLE_ID = C.TABLE_ID
+        AND A.BOOKSET_ID = C.BOOKSET_ID
+<!-- 
+		left join BOK_SUBJECT_DETAIL D
+			ON A.BOOKSET_ID = C.BOOKSET_ID
+			AND A.BOK_DETAIL_ID = D.BOK_DETAIL_ID
+			AND A.BASE_SUBJECT_NATURE = D.BASE_SUBJECT_NATURE
+-->
+		where
+			A.BOOK_DATE = #{BOOK_DATE}
+			AND A.BOOK_TYPE != '03'
+            AND A.BOOKSET_ID IN (
+                SELECT 
+                    BOOKSET_ID 
+                FROM BOK_BATCH_TASK_TODO B
+                WHERE 
+                    B.SEQ_NO = #{seqNo}
+              		AND B.BOOKSET_DATE = #{BOOKSET_DATE}
+              		AND B.BOOK_DATE = #{BOOK_DATE}
+                    AND B.TASK_ID = #{taskId}
+                    AND B.IS_SUB_BOOKSET = #{IS_SUB_BOOKSET}
+            )
+		order by
+			A.BOOKSET_ID,A.HAPPEN_DATE,A.BUSI_ID,A.TRADE_ID
+	</select>
+	<update id="updateHistory">
+		update BOK_VOUCH_MAIN
+		set BUS_VOUCHNUM = substr(BUS_VOUCHNUM,0,length(BUS_VOUCHNUM)-6) || '00' || substr(BUS_VOUCHNUM,-6)
+		where VOUCH_YEAR = #{vouchYear} AND VOUCH_MONTH = #{vouchMonth}
+	</update>
+</mapper>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.db.struct.dao.SvrTableStructMapper_db2">
+    <select id="selectTableStruct" parameterType="java.util.Map"
+        resultType="com.joyintech.tams.report.db.struct.dto.TableColumn" useCache="false" flushCache="true">
+          SELECT distinct
+			TABNAME as tableName,
+			COLNAME as columnName,
+			TYPENAME as dataType,
+			LENGTH as dataLength,
+			NULLS as nullable,
+		    COLNO as columnId
+		FROM
+			SYSCAT.columns
+		WHERE
+			TABNAME = '${table}'
+		ORDER BY
+			COLNO
+    </select>
+</mapper>

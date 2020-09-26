@@ -1,0 +1,3333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.home.dao.ReportHomeMapper_mysql">
+
+<select id="selectChbEquSub" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+	select
+	  	delayData.delaynum as delaynum,/*已延期*/
+	   DATE_FORMAT(delayingData.mindate,'%Y-%m-%d') as mindate,
+	   DATE_FORMAT(delayingData.maxdate,'%Y-%m-%d') as maxdate,
+	   delayingData.delayingnum as delayingnum,/*即将延期*/
+	   sendData.sendnum as sendnum,/*将报送*/
+	   manualData.manualnum as manualnum,/*手工处理*/
+	   interfPass.interfPassnum as interfPassnum,/*接口通过*/
+	   interfBack.interfBacknum as interfBacknum,/*接口退回*/
+	   deleteTemp.deletenum as deletenum,/*删除模版*/
+	   deleteTemp.countType as countType,
+	  	'14' as reporttype /*投资者身份信息*/
+	  	FROM
+	  	(select count(ces1.SUBMIT_STATUS) as delaynum from CHB_EQU_SUB  ces1 WHERE DATE_FORMAT(ces1.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ces1.SUBMIT_STATUS=#{NO_SUBMIT}
+	  	 <if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ces1.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+	<if test="orgCodeList != null and orgCodeList.size>0">
+	             <foreach collection="orgCodeList" item = "item" open=" and ces1.ORG_CODE in(" separator="," close=")">
+	             #{item,jdbcType=VARCHAR}
+	             </foreach>
+	         </if>
+	         <if test="deptCodeList != null and deptCodeList.size>0">
+	             <foreach collection="deptCodeList" item = "item" open=" and ces1.DEPT_CODE in(" separator="," close=")">
+	             #{item,jdbcType=VARCHAR}
+	             </foreach>
+	         </if>
+	  	 ) delayData ,
+	(select count(ces2.SUBMIT_STATUS) as delayingnum , min(ces2.SUBMIT_DEADLINE) as mindate, max(ces2.CHB_SUBMIT_DEADLINE) as maxdate from CHB_EQU_SUB  ces2 WHERE DATE_FORMAT(ces2.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and DATE_FORMAT(ces2.SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ces2.SUBMIT_STATUS=#{NO_SUBMIT} 
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ces2.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+	         <if test="orgCodeList != null and orgCodeList.size>0">
+	             <foreach collection="orgCodeList" item = "item" open=" and ces2.ORG_CODE in(" separator="," close=")">
+	             #{item,jdbcType=VARCHAR}
+	             </foreach>
+	         </if>
+	         <if test="deptCodeList != null and deptCodeList.size>0">
+	             <foreach collection="deptCodeList" item = "item" open=" and ces2.DEPT_CODE in(" separator="," close=")">
+	             #{item,jdbcType=VARCHAR}
+	             </foreach>
+	         </if>
+	) delayingData,
+	(select count(ces3.SUBMIT_STATUS) as sendnum from CHB_EQU_SUB  ces3 WHERE DATE_FORMAT(ces3.SUBMIT_DEADLINE,'%Y-%m-%d') &gt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ces3.SUBMIT_STATUS=#{NO_SUBMIT}  
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+	         <if test="orgCodeList != null and orgCodeList.size>0">
+	             <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+	             #{item,jdbcType=VARCHAR}
+	             </foreach>
+	         </if>
+	         <if test="deptCodeList != null and deptCodeList.size>0">
+	             <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+	             #{item,jdbcType=VARCHAR}
+	             </foreach>
+	         </if>
+	) sendData,
+	(select count(ces3.SUBMIT_STATUS) as manualnum /*手工处理*/
+	from CHB_EQU_SUB  ces3
+	WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
+	and ces3.SUBMIT_STATUS='03' /*手工处理*/
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+	         <if test="orgCodeList != null and orgCodeList.size>0">
+	             <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+	             #{item,jdbcType=VARCHAR}
+	             </foreach>
+	         </if>
+	         <if test="deptCodeList != null and deptCodeList.size>0">
+	             <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+	             #{item,jdbcType=VARCHAR}
+	             </foreach>
+	         </if>
+	) manualData,
+	(select count(ces3.SUBMIT_STATUS) as interfPassnum /*接口通过*/
+	from CHB_EQU_SUB  ces3
+	left join CHB_SUBMIT_STATUS substatus
+	 		on ces3.sumit_seq = substatus.seqno
+	WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+	and ces3.SUBMIT_STATUS='02' /*接口报送*/
+	and substatus.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+	         <if test="orgCodeList != null and orgCodeList.size>0">
+	             <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+	             #{item,jdbcType=VARCHAR}
+	             </foreach>
+	         </if>
+	         <if test="deptCodeList != null and deptCodeList.size>0">
+	             <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+	             #{item,jdbcType=VARCHAR}
+	             </foreach>
+	         </if>
+	) interfPass,
+	(select count(ces3.SUBMIT_STATUS) as interfBacknum /*接口退回*/
+	from CHB_EQU_SUB  ces3
+	left join CHB_SUBMIT_STATUS substatus
+	 		on ces3.sumit_seq = substatus.seqno
+	WHERE <![CDATA[DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') <= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') ]]>
+	and ces3.SUBMIT_STATUS='02' /*接口报送*/
+	and substatus.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+	         <if test="orgCodeList != null and orgCodeList.size>0">
+	             <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+	             #{item,jdbcType=VARCHAR}
+	             </foreach>
+	         </if>
+	         <if test="deptCodeList != null and deptCodeList.size>0">
+	             <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+	             #{item,jdbcType=VARCHAR}
+	             </foreach>
+	         </if>
+	) interfBack,
+	(SELECT
+		count(1) as deletenum,
+		'chbEquReg' as countType
+	FROM 
+		CHB_EQU_SUB ces
+	WHERE ces.STATUS='03' and ces.SUBMIT_STATUS='01'
+	and DATE_FORMAT(ces.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
+	<if test="createDeptList != null and createDeptList.size>0">
+	<foreach collection="createDeptList" item = "item" open="and ces.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+	</foreach>
+	</if>
+	         <if test="orgCodeList != null and orgCodeList.size>0">
+	         <foreach collection="orgCodeList" item = "item" open=" and ces.ORG_CODE in(" separator="," close=")">
+	             #{item,jdbcType=VARCHAR}
+	         </foreach>
+	         </if>
+	         <if test="deptCodeList != null and deptCodeList.size>0">
+	         <foreach collection="deptCodeList" item = "item" open=" and ces.DEPT_CODE in(" separator="," close=")">
+	             #{item,jdbcType=VARCHAR}
+	         </foreach>
+	         </if>
+	         )deleteTemp
+</select>
+
+<select id="selectChbInvestholdInfoSub" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+	select
+  		delayData.delaynum as delaynum,/*已延期*/
+	    DATE_FORMAT(delayingData.mindate,'%Y-%m-%d') as mindate,
+	    DATE_FORMAT(delayingData.maxdate,'%Y-%m-%d') as maxdate,
+	    delayingData.delayingnum as delayingnum,/*即将延期*/
+	    sendData.sendnum as sendnum,/*将报送*/
+	    manualData.manualnum as manualnum,/*手工处理*/
+	    interfPass.interfPassnum as interfPassnum,/*接口通过*/
+	    interfBack.interfBacknum as interfBacknum,/*接口退回*/
+	    deleteTemp.deletenum as deletenum,/*删除模版*/
+	    deleteTemp.countType as countType,
+	   	'16' as reporttype /*投资者持有信息*/
+	   	FROM
+	   	(select count(ciis1.SEND_STATUS) as delaynum from CHB_INVESTHOLD_INFO_SUB  ciis1 WHERE DATE_FORMAT(ciis1.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ciis1.SEND_STATUS=#{NO_SUBMIT} 
+	   	<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis1.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis1.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis1.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+	   	) delayData ,
+		(select count(ciis2.SEND_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.CHB_SUBMIT_DEADLINE) as maxdate from CHB_INVESTHOLD_INFO_SUB  ciis2 WHERE DATE_FORMAT(ciis2.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and DATE_FORMAT(ciis2.SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis2.SEND_STATUS=#{NO_SUBMIT}
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis2.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis2.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis2.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		 ) delayingData,
+		(select count(ciis3.SEND_STATUS) as sendnum from CHB_INVESTHOLD_INFO_SUB  ciis3 WHERE DATE_FORMAT(ciis3.SUBMIT_DEADLINE,'%Y-%m-%d') &gt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis3.SEND_STATUS=#{NO_SUBMIT} 
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) sendData,
+		(select count(ces3.SEND_STATUS) as manualnum /*手工处理*/
+		from CHB_INVESTHOLD_INFO_SUB  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SEND_STATUS='03' /*手工处理*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) manualData,
+		(select count(ces3.SEND_STATUS) as interfPassnum /*接口通过*/
+		from CHB_INVESTHOLD_INFO_SUB  ces3
+		left join CHB_SUBMIT_STATUS substatus
+   		on ces3.sumit_seq = substatus.seqno
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and substatus.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfPass,
+		(select count(ces3.SEND_STATUS) as interfBacknum /*接口退回*/
+		from CHB_INVESTHOLD_INFO_SUB  ces3
+		left join CHB_SUBMIT_STATUS substatus
+   		on ces3.sumit_seq = substatus.seqno
+		WHERE <![CDATA[DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') <= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') ]]>
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and substatus.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfBack,
+		(
+		SELECT
+			count(1) as deletenum,
+			'chbHoldReg' as countType
+		FROM 
+			CHB_INVESTHOLD_INFO_SUB ciis
+		WHERE ciis.STATUS='03' and ciis.SEND_STATUS='01'
+		and DATE_FORMAT(ciis.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
+		<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ciis.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+           <foreach collection="orgCodeList" item = "item" open=" and ciis.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+           </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+           <foreach collection="deptCodeList" item = "item" open=" and ciis.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+           </foreach>
+           </if>
+		)deleteTemp
+</select>
+<select id="selectChbEqudetSub" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+   		select
+  		delayData.delaynum as delaynum,/*已延期*/
+	    DATE_FORMAT(delayingData.mindate,'%Y-%m-%d') as mindate,
+	    DATE_FORMAT(delayingData.maxdate,'%Y-%m-%d') as maxdate,
+	    delayingData.delayingnum as delayingnum,/*即将延期*/
+	    sendData.sendnum as sendnum,/*将报送*/
+	    manualData.manualnum as manualnum,/*手工处理*/
+	    interfPass.interfPassnum as interfPassnum,/*接口通过*/
+	    interfBack.interfBacknum as interfBacknum,/*接口退回*/
+	    deleteTemp.deletenum as deletenum,/*删除模版*/
+	    deleteTemp.countType as countType,
+	   	'28' as reporttype /*投资者持有信息*/
+	   	FROM
+	   	(select count(ciis1.SUBMIT_STATUS) as delaynum from CHB_EQUDET_SUB  ciis1 WHERE DATE_FORMAT(ciis1.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ciis1.SUBMIT_STATUS=#{NO_SUBMIT} 
+	   	<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis1.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis1.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis1.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+	   	) delayData ,
+		(select count(ciis2.SUBMIT_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.CHB_SUBMIT_DEADLINE) as maxdate from CHB_EQUDET_SUB  ciis2 WHERE DATE_FORMAT(ciis2.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and DATE_FORMAT(ciis2.SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis2.SUBMIT_STATUS=#{NO_SUBMIT}
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis2.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis2.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis2.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		 ) delayingData,
+		(select count(ciis3.SUBMIT_STATUS) as sendnum from CHB_EQUDET_SUB  ciis3 WHERE DATE_FORMAT(ciis3.SUBMIT_DEADLINE,'%Y-%m-%d') &gt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis3.SUBMIT_STATUS=#{NO_SUBMIT} 
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) sendData,
+		(select count(ces3.SUBMIT_STATUS) as manualnum /*手工处理*/
+		from CHB_EQUDET_SUB  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SUBMIT_STATUS='03' /*手工处理*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) manualData,
+		(select count(ces3.SUBMIT_STATUS) as interfPassnum /*接口通过*/
+		from CHB_EQUDET_SUB  ces3
+		left join CHB_SUBMIT_STATUS substatus
+   		on ces3.sumit_seq = substatus.seqno
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SUBMIT_STATUS='02' /*接口报送*/
+		and substatus.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfPass,
+		(select count(ces3.SUBMIT_STATUS) as interfBacknum /*接口退回*/
+		from CHB_EQUDET_SUB  ces3
+		left join CHB_SUBMIT_STATUS substatus
+   		on ces3.sumit_seq = substatus.seqno
+		WHERE <![CDATA[DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') <= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') ]]>
+		and ces3.SUBMIT_STATUS='02' /*接口报送*/
+		and substatus.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfBack,
+		(
+		SELECT
+			count(1) as deletenum,
+			'chbHoldReg' as countType
+		FROM 
+			CHB_EQUDET_SUB ciis
+		WHERE ciis.STATUS='03' and ciis.SUBMIT_STATUS='01'
+		and DATE_FORMAT(ciis.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
+		<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ciis.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+           <foreach collection="orgCodeList" item = "item" open=" and ciis.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+           </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+           <foreach collection="deptCodeList" item = "item" open=" and ciis.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+           </foreach>
+           </if>
+		)deleteTemp
+</select>
+<select id="selectChbPrdDeclareSub" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+	select
+   	delayData.delaynum as delaynum,/*已延期*/
+    DATE_FORMAT(delayingData.mindate,'%Y-%m-%d') as mindate,
+    DATE_FORMAT(delayingData.maxdate,'%Y-%m-%d') as maxdate,
+    delayingData.delayingnum as delayingnum,/*即将延期*/
+    sendData.sendnum as sendnum,/*将报送*/
+    manualData.manualnum as manualnum,/*手工处理*/
+    interfPass.interfPassnum as interfPassnum,/*接口通过*/
+    interfBack.interfBacknum as interfBacknum,/*接口退回*/
+    null as deletenum,/*删除模版*/
+    null as countType,
+   	'01' as reporttype /*产品申报登记*/
+   	FROM
+   	(select count(ciis1.SEND_STATUS) as delaynum from CHB_PRD_DECLARE_SUB  ciis1 WHERE DATE_FORMAT(ciis1.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ciis1.SEND_STATUS=#{NO_SUBMIT} 
+   	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ciis1.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+	<if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ciis1.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ciis1.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+   	) delayData ,
+	(select count(ciis2.SEND_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.CHB_SUBMIT_DEADLINE) as maxdate from CHB_PRD_DECLARE_SUB  ciis2 WHERE DATE_FORMAT(ciis2.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and DATE_FORMAT(ciis2.SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis2.SEND_STATUS=#{NO_SUBMIT}
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ciis2.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ciis2.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ciis2.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	 ) delayingData,
+	(select count(ciis3.SEND_STATUS) as sendnum from CHB_PRD_DECLARE_SUB  ciis3 WHERE DATE_FORMAT(ciis3.SUBMIT_DEADLINE,'%Y-%m-%d') &gt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis3.SEND_STATUS=#{NO_SUBMIT} 
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ciis3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ciis3.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ciis3.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	) sendData,
+	(select count(ces3.SEND_STATUS) as manualnum /*手工处理*/
+	from CHB_PRD_DECLARE_SUB  ces3
+	WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+	and ces3.SEND_STATUS='03' /*手工处理*/
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	) manualData,
+	(select count(ces3.SEND_STATUS) as interfPassnum /*接口通过*/
+	from CHB_PRD_DECLARE_SUB  ces3
+	WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+	and ces3.SEND_STATUS='02' /*接口报送*/
+	and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	) interfPass,
+	(select count(ces3.SEND_STATUS) as interfBacknum /*接口退回*/
+	from CHB_PRD_DECLARE_SUB  ces3
+	WHERE <![CDATA[DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') <= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') ]]>
+	and ces3.SEND_STATUS='02' /*接口报送*/
+	and ces3.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	) interfBack
+</select>
+
+<select id="selectChbPrdIssueSub" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+	select
+	   	delayData.delaynum as delaynum,/*已延期*/
+	    DATE_FORMAT(delayingData.mindate,'%Y-%m-%d') as mindate,
+	    DATE_FORMAT(delayingData.maxdate,'%Y-%m-%d') as maxdate,
+	    delayingData.delayingnum as delayingnum,/*即将延期*/
+	    sendData.sendnum as sendnum,/*将报送*/
+	    manualData.manualnum as manualnum,/*手工处理*/
+	    interfPass.interfPassnum as interfPassnum,/*接口通过*/
+	    interfBack.interfBacknum as interfBacknum,/*接口退回*/
+	    null as deletenum,/*删除模版*/
+	    null as countType,
+	   	'02' as reporttype/*发行登记*/
+	   	FROM
+	   	(select count(ciis1.SEND_STATUS) as delaynum from CHB_PRD_ISSUE_SUB  ciis1 WHERE DATE_FORMAT(ciis1.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ciis1.SEND_STATUS=#{NO_SUBMIT} 
+	   	<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis1.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis1.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis1.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+	   	) delayData ,
+		(select count(ciis2.SEND_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.CHB_SUBMIT_DEADLINE) as maxdate from CHB_PRD_ISSUE_SUB  ciis2 WHERE DATE_FORMAT(ciis2.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and DATE_FORMAT(ciis2.SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis2.SEND_STATUS=#{NO_SUBMIT}
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis2.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis2.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis2.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		 ) delayingData,
+		(select count(ciis3.SEND_STATUS) as sendnum from CHB_PRD_ISSUE_SUB  ciis3 WHERE DATE_FORMAT(ciis3.SUBMIT_DEADLINE,'%Y-%m-%d') &gt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis3.SEND_STATUS=#{NO_SUBMIT} 
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) sendData,
+		(select count(ces3.SEND_STATUS) as manualnum /*手工处理*/
+		from CHB_PRD_ISSUE_SUB  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SEND_STATUS='03' /*手工处理*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) manualData,
+		(select count(ces3.SEND_STATUS) as interfPassnum /*接口通过*/
+		from CHB_PRD_ISSUE_SUB  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfPass,
+		(select count(ces3.SEND_STATUS) as interfBacknum /*接口退回*/
+		from CHB_PRD_ISSUE_SUB  ces3
+		WHERE <![CDATA[DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') <= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') ]]>
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfBack
+</select>
+
+<select id="selectChbPrdRaisetotSub" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+	select
+   	delayData.delaynum as delaynum,/*已延期*/
+    DATE_FORMAT(delayingData.mindate,'%Y-%m-%d') as mindate,
+    DATE_FORMAT(delayingData.maxdate,'%Y-%m-%d') as maxdate,
+    delayingData.delayingnum as delayingnum,/*即将延期*/
+    sendData.sendnum as sendnum,/*将报送*/
+    manualData.manualnum as manualnum,/*手工处理*/
+    interfPass.interfPassnum as interfPassnum,/*接口通过*/
+    interfBack.interfBacknum as interfBacknum,/*接口退回*/
+    null as deletenum,/*删除模版*/
+    null as countType,
+   	'04' as reporttype /*募集总量登记*/
+   	FROM
+   	(select count(ciis1.SEND_STATUS) as delaynum from CHB_PRD_RAISETOT_SUB  ciis1 WHERE DATE_FORMAT(ciis1.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ciis1.SEND_STATUS=#{NO_SUBMIT} 
+   	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ciis1.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+	<if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ciis1.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ciis1.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+   	) delayData ,
+	(select count(ciis2.SEND_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.CHB_SUBMIT_DEADLINE) as maxdate from CHB_PRD_RAISETOT_SUB  ciis2 WHERE DATE_FORMAT(ciis2.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and DATE_FORMAT(ciis2.SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis2.SEND_STATUS=#{NO_SUBMIT}
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ciis2.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ciis2.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ciis2.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	 ) delayingData,
+	(select count(ciis3.SEND_STATUS) as sendnum from CHB_PRD_RAISETOT_SUB  ciis3 WHERE DATE_FORMAT(ciis3.SUBMIT_DEADLINE,'%Y-%m-%d') &gt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis3.SEND_STATUS=#{NO_SUBMIT} 
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ciis3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ciis3.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ciis3.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	) sendData,
+	(select count(ces3.SEND_STATUS) as manualnum /*手工处理*/
+	from CHB_PRD_RAISETOT_SUB  ces3
+	WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+	and ces3.SEND_STATUS='03' /*手工处理*/
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	) manualData,
+	(select count(ces3.SEND_STATUS) as interfPassnum /*接口通过*/
+	from CHB_PRD_RAISETOT_SUB  ces3
+	WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+	and ces3.SEND_STATUS='02' /*接口报送*/
+	and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	) interfPass,
+	(select count(ces3.SEND_STATUS) as interfBacknum /*接口退回*/
+	from CHB_PRD_RAISETOT_SUB  ces3
+	WHERE <![CDATA[DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') <= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') ]]>
+	and ces3.SEND_STATUS='02' /*接口报送*/
+	and ces3.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	) interfBack
+</select>
+
+<select id="selectChbPrdDealSub" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+	select
+   	delayData.delaynum as delaynum,/*已延期*/
+    DATE_FORMAT(delayingData.mindate,'%Y-%m-%d') as mindate,
+    DATE_FORMAT(delayingData.maxdate,'%Y-%m-%d') as maxdate,
+    delayingData.delayingnum as delayingnum,/*即将延期*/
+    sendData.sendnum as sendnum,/*将报送*/
+    manualData.manualnum as manualnum,/*手工处理*/
+    interfPass.interfPassnum as interfPassnum,/*接口通过*/
+    interfBack.interfBacknum as interfBacknum,/*接口退回*/
+    deleteTemp.deletenum as deletenum,/*删除模版*/
+    deleteTemp.countType as countType,
+   	'06' as reporttype /*存续期登记*/
+   	FROM
+   	(select count(ciis1.SEND_STATUS) as delaynum from CHB_PRD_DEAL_SUB  ciis1 WHERE DATE_FORMAT(ciis1.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ciis1.SEND_STATUS=#{NO_SUBMIT} 
+   	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ciis1.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+	<if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ciis1.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ciis1.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+   	) delayData ,
+	(select count(ciis2.SEND_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.CHB_SUBMIT_DEADLINE) as maxdate from CHB_PRD_DEAL_SUB  ciis2 WHERE DATE_FORMAT(ciis2.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and DATE_FORMAT(ciis2.SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis2.SEND_STATUS=#{NO_SUBMIT}
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ciis2.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ciis2.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ciis2.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	 ) delayingData,
+	(select count(ciis3.SEND_STATUS) as sendnum from CHB_PRD_DEAL_SUB  ciis3 WHERE DATE_FORMAT(ciis3.SUBMIT_DEADLINE,'%Y-%m-%d') &gt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis3.SEND_STATUS=#{NO_SUBMIT} 
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ciis3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ciis3.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ciis3.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	) sendData,
+	(select count(ces3.SEND_STATUS) as manualnum /*手工处理*/
+	from CHB_PRD_DEAL_SUB  ces3
+	WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+	and ces3.SEND_STATUS='03' /*手工处理*/
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	) manualData,
+	(select count(ces3.SEND_STATUS) as interfPassnum /*接口通过*/
+	from CHB_PRD_DEAL_SUB  ces3
+	WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+	and ces3.SEND_STATUS='02' /*接口报送*/
+	and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	) interfPass,
+	(select count(ces3.SEND_STATUS) as interfBacknum /*接口退回*/
+	from CHB_PRD_DEAL_SUB  ces3
+	WHERE <![CDATA[DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') <= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') ]]>
+	and ces3.SEND_STATUS='02' /*接口报送*/
+	and ces3.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	) interfBack,
+	(
+	SELECT
+		count(1) as deletenum,
+		'prodDurReg' as countType
+	FROM 
+		CHB_PRD_DEAL_SUB ciis
+	WHERE ciis.STATUS='03' and ciis.SEND_STATUS='01'
+	and DATE_FORMAT(ciis.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
+	<if test="createDeptList != null and createDeptList.size>0">
+	<foreach collection="createDeptList" item = "item" open="and ciis.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+	</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+          <foreach collection="orgCodeList" item = "item" open=" and ciis.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+          </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+          <foreach collection="deptCodeList" item = "item" open=" and ciis.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+          </foreach>
+          </if>
+	)deleteTemp
+</select>
+
+<select id="selectChbPrdEndSub" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+	select
+   	delayData.delaynum as delaynum,/*已延期*/
+    DATE_FORMAT(delayingData.mindate,'%Y-%m-%d') as mindate,
+    DATE_FORMAT(delayingData.maxdate,'%Y-%m-%d') as maxdate,
+    delayingData.delayingnum as delayingnum,/*即将延期*/
+    sendData.sendnum as sendnum,/*将报送*/
+    manualData.manualnum as manualnum,/*手工处理*/
+    interfPass.interfPassnum as interfPassnum,/*接口通过*/
+    interfBack.interfBacknum as interfBacknum,/*接口退回*/
+    null as deletenum,/*删除模版*/
+    null as countType,
+   	'07' as reporttype /*终止登记*/
+   	FROM
+   	(select count(ciis1.SEND_STATUS) as delaynum from CHB_PRD_END_SUB  ciis1 WHERE DATE_FORMAT(ciis1.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ciis1.SEND_STATUS=#{NO_SUBMIT} 
+   	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ciis1.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+	<if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ciis1.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ciis1.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+   	) delayData ,
+	(select count(ciis2.SEND_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.CHB_SUBMIT_DEADLINE) as maxdate from CHB_PRD_END_SUB  ciis2 WHERE DATE_FORMAT(ciis2.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and DATE_FORMAT(ciis2.SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis2.SEND_STATUS=#{NO_SUBMIT}
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ciis2.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ciis2.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ciis2.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	 ) delayingData,
+	(select count(ciis3.SEND_STATUS) as sendnum from CHB_PRD_END_SUB  ciis3 WHERE DATE_FORMAT(ciis3.SUBMIT_DEADLINE,'%Y-%m-%d') &gt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis3.SEND_STATUS=#{NO_SUBMIT} 
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ciis3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ciis3.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ciis3.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	) sendData,
+	(select count(ces3.SEND_STATUS) as manualnum /*手工处理*/
+	from CHB_PRD_END_SUB  ces3
+	WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+	and ces3.SEND_STATUS='03' /*手工处理*/
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	) manualData,
+	(select count(ces3.SEND_STATUS) as interfPassnum /*接口通过*/
+	from CHB_PRD_END_SUB  ces3
+	WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+	and ces3.SEND_STATUS='02' /*接口报送*/
+	and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	) interfPass,
+	(select count(ces3.SEND_STATUS) as interfBacknum /*接口退回*/
+	from CHB_PRD_END_SUB  ces3
+	WHERE <![CDATA[DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') <= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') ]]>
+	and ces3.SEND_STATUS='02' /*接口报送*/
+	and ces3.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	) interfBack
+</select>
+
+<select id="selectChbBotAstPosSub" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+	select
+	   	delayData.delaynum as delaynum,/*已延期*/
+	    DATE_FORMAT(delayingData.mindate,'%Y-%m-%d') as mindate,
+	    DATE_FORMAT(delayingData.maxdate,'%Y-%m-%d') as maxdate,
+	    delayingData.delayingnum as delayingnum,/*即将延期*/
+	    sendData.sendnum as sendnum,/*将报送*/
+	    manualData.manualnum as manualnum,/*手工处理*/
+	    interfPass.interfPassnum as interfPassnum,/*接口通过*/
+	    interfBack.interfBacknum as interfBacknum,/*接口退回*/
+	    deleteTemp.deletenum as deletenum,/*删除模版*/
+	    deleteTemp.countType as countType,
+	   	'12' as reporttype /*底层持仓登记*/
+	   	FROM
+	   	(select count(ciis1.SEND_STATUS) as delaynum from CHB_BOT_AST_POS_SUB  ciis1 WHERE DATE_FORMAT(ciis1.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ciis1.SEND_STATUS=#{NO_SUBMIT} 
+	   	<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis1.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis1.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis1.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+	   	) delayData ,
+		(select count(ciis2.SEND_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.CHB_SUBMIT_DEADLINE) as maxdate from CHB_BOT_AST_POS_SUB  ciis2 WHERE DATE_FORMAT(ciis2.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and DATE_FORMAT(ciis2.SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis2.SEND_STATUS=#{NO_SUBMIT}
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis2.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis2.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis2.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		 ) delayingData,
+		(select count(ciis3.SEND_STATUS) as sendnum from CHB_BOT_AST_POS_SUB  ciis3 WHERE DATE_FORMAT(ciis3.SUBMIT_DEADLINE,'%Y-%m-%d') &gt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis3.SEND_STATUS=#{NO_SUBMIT} 
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) sendData,
+		(select count(ces3.SEND_STATUS) as manualnum /*手工处理*/
+		from CHB_BOT_AST_POS_SUB  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SEND_STATUS='03' /*手工处理*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) manualData,
+		(select count(ces3.SEND_STATUS) as interfPassnum /*接口通过*/
+		from CHB_BOT_AST_POS_SUB  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfPass,
+		(select count(ces3.SEND_STATUS) as interfBacknum /*接口退回*/
+		from CHB_BOT_AST_POS_SUB  ces3
+		WHERE <![CDATA[DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') <= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') ]]>
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfBack,
+		(
+		SELECT
+			count(1) as deletenum,
+			'astposReg' as countType
+		FROM 
+			CHB_BOT_AST_POS_SUB ciis
+		WHERE ciis.STATUS='03' and ciis.SEND_STATUS='01'
+		and DATE_FORMAT(ciis.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
+		<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ciis.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+           <foreach collection="orgCodeList" item = "item" open=" and ciis.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+           </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+           <foreach collection="deptCodeList" item = "item" open=" and ciis.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+           </foreach>
+           </if>
+		)deleteTemp
+</select>
+
+<select id="selectChbAssetInfoSub" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+	select
+   	delayData.delaynum as delaynum,/*已延期*/
+    DATE_FORMAT(delayingData.mindate,'%Y-%m-%d') as mindate,
+    DATE_FORMAT(delayingData.maxdate,'%Y-%m-%d') as maxdate,
+    delayingData.delayingnum as delayingnum,/*即将延期*/
+    sendData.sendnum as sendnum,/*将报送*/
+    manualData.manualnum as manualnum,/*手工处理*/
+    interfPass.interfPassnum as interfPassnum,/*接口通过*/
+    interfBack.interfBacknum as interfBacknum,/*接口退回*/
+    deleteTemp.deletenum as deletenum,/*删除模版*/
+    deleteTemp.countType as countType,
+   	'10' as reporttype /*资产要素登记*/
+   	FROM
+   	(select count(ciis1.SEND_STATUS) as delaynum from CHB_ASSET_INFO_SUB  ciis1 WHERE DATE_FORMAT(ciis1.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ciis1.SEND_STATUS=#{NO_SUBMIT} 
+   	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ciis1.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+	<if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ciis1.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ciis1.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+   	) delayData ,
+	(select count(ciis2.SEND_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.CHB_SUBMIT_DEADLINE) as maxdate from CHB_ASSET_INFO_SUB  ciis2 WHERE DATE_FORMAT(ciis2.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and DATE_FORMAT(ciis2.SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis2.SEND_STATUS=#{NO_SUBMIT}
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ciis2.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ciis2.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ciis2.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	 ) delayingData,
+	(select count(ciis3.SEND_STATUS) as sendnum from CHB_ASSET_INFO_SUB  ciis3 WHERE DATE_FORMAT(ciis3.SUBMIT_DEADLINE,'%Y-%m-%d') &gt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis3.SEND_STATUS=#{NO_SUBMIT} 
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ciis3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ciis3.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ciis3.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	) sendData,
+	(select count(ces3.SEND_STATUS) as manualnum /*手工处理*/
+	from CHB_ASSET_INFO_SUB  ces3
+	WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+	and ces3.SEND_STATUS='03' /*手工处理*/
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	) manualData,
+	(select count(ces3.SEND_STATUS) as interfPassnum /*接口通过*/
+	from CHB_ASSET_INFO_SUB  ces3
+	WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+	and ces3.SEND_STATUS='02' /*接口报送*/
+	and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	) interfPass,
+	(select count(ces3.SEND_STATUS) as interfBacknum /*接口退回*/
+	from CHB_ASSET_INFO_SUB  ces3
+	WHERE <![CDATA[DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') <= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') ]]>
+			and ces3.SEND_STATUS='02' /*接口报送*/
+			and ces3.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+			<if test="createDeptList != null and createDeptList.size>0">
+				<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+            <if test="orgCodeList != null and orgCodeList.size>0">
+                <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="deptCodeList != null and deptCodeList.size>0">
+                <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+			) interfBack,
+			(
+			SELECT
+				count(1) as deletenum,
+				'assetInfoReg' as countType
+			FROM 
+				CHB_ASSET_INFO_SUB ciis
+			WHERE ciis.STATUS='03' and ciis.SEND_STATUS='01'
+			and DATE_FORMAT(ciis.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
+			<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis.CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+			</if>
+            <if test="orgCodeList != null and orgCodeList.size>0">
+            <foreach collection="orgCodeList" item = "item" open=" and ciis.ORG_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            </if>
+            <if test="deptCodeList != null and deptCodeList.size>0">
+            <foreach collection="deptCodeList" item = "item" open=" and ciis.DEPT_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            </if>
+			)deleteTemp
+</select>
+
+<select id="selectChbInvestTradeSub" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+	select
+	   	delayData.delaynum as delaynum,/*已延期*/
+	    DATE_FORMAT(delayingData.mindate,'%Y-%m-%d') as mindate,
+	    DATE_FORMAT(delayingData.maxdate,'%Y-%m-%d') as maxdate,
+	    delayingData.delayingnum as delayingnum,/*即将延期*/
+	    sendData.sendnum as sendnum,/*将报送*/
+	    manualData.manualnum as manualnum,/*手工处理*/
+	    interfPass.interfPassnum as interfPassnum,/*接口通过*/
+	    interfBack.interfBacknum as interfBacknum,/*接口退回*/
+	    deleteTemp.deletenum as deletenum,/*删除模版*/
+	    deleteTemp.countType as countType,
+	   	'11' as reporttype /*资产交易登记*/
+	   	FROM
+	   	(select count(ciis1.SEND_STATUS) as delaynum from CHB_INVEST_TRADE_SUB  ciis1 WHERE DATE_FORMAT(ciis1.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ciis1.SEND_STATUS=#{NO_SUBMIT} 
+	   	<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis1.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis1.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis1.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+	   	) delayData ,
+		(select count(ciis2.SEND_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.CHB_SUBMIT_DEADLINE) as maxdate from CHB_INVEST_TRADE_SUB  ciis2 WHERE DATE_FORMAT(ciis2.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and DATE_FORMAT(ciis2.SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis2.SEND_STATUS=#{NO_SUBMIT}
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis2.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis2.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis2.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		 ) delayingData,
+		(select count(ciis3.SEND_STATUS) as sendnum from CHB_INVEST_TRADE_SUB  ciis3 WHERE DATE_FORMAT(ciis3.SUBMIT_DEADLINE,'%Y-%m-%d') &gt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis3.SEND_STATUS=#{NO_SUBMIT} 
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) sendData,
+		(select count(ces3.SEND_STATUS) as manualnum /*手工处理*/
+		from CHB_INVEST_TRADE_SUB  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SEND_STATUS='03' /*手工处理*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) manualData,
+		(select count(ces3.SEND_STATUS) as interfPassnum /*接口通过*/
+		from CHB_INVEST_TRADE_SUB  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfPass,
+		(select count(ces3.SEND_STATUS) as interfBacknum /*接口退回*/
+		from CHB_INVEST_TRADE_SUB  ces3
+		WHERE <![CDATA[DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') <= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') ]]>
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfBack,
+		(
+		SELECT
+			count(1) as deletenum,
+			'investTradeReg' as countType
+		FROM 
+			CHB_INVEST_TRADE_SUB ciis
+		WHERE ciis.STATUS='03' and ciis.SEND_STATUS='01'
+		and DATE_FORMAT(ciis.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
+		<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ciis.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+           <foreach collection="orgCodeList" item = "item" open=" and ciis.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+           </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+           <foreach collection="deptCodeList" item = "item" open=" and ciis.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+           </foreach>
+           </if>
+		)deleteTemp
+</select>
+
+<select id="selectChbAstValSub" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+	select
+	   	delayData.delaynum as delaynum,/*已延期*/
+	    DATE_FORMAT(delayingData.mindate,'%Y-%m-%d') as mindate,
+	    DATE_FORMAT(delayingData.maxdate,'%Y-%m-%d') as maxdate,
+	    delayingData.delayingnum as delayingnum,/*即将延期*/
+	    sendData.sendnum as sendnum,/*将报送*/
+	    manualData.manualnum as manualnum,/*手工处理*/
+	    interfPass.interfPassnum as interfPassnum,/*接口通过*/
+	    interfBack.interfBacknum as interfBacknum,/*接口退回*/
+	    deleteTemp.deletenum as deletenum,/*删除模版*/
+	    deleteTemp.countType as countType,
+	   	'05' as reporttype /*资产估值登记*/
+	   	FROM
+	   	(select count(ciis1.SEND_STATUS) as delaynum from CHB_AST_VAL_SUB  ciis1 WHERE DATE_FORMAT(ciis1.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ciis1.SEND_STATUS=#{NO_SUBMIT} 
+	   	<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis1.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis1.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis1.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+	   	) delayData ,
+		(select count(ciis2.SEND_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.CHB_SUBMIT_DEADLINE) as maxdate from CHB_AST_VAL_SUB  ciis2 WHERE DATE_FORMAT(ciis2.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and DATE_FORMAT(ciis2.SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis2.SEND_STATUS=#{NO_SUBMIT}
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis2.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis2.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis2.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		 ) delayingData,
+		(select count(ciis3.SEND_STATUS) as sendnum from CHB_AST_VAL_SUB  ciis3 WHERE DATE_FORMAT(ciis3.SUBMIT_DEADLINE,'%Y-%m-%d') &gt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis3.SEND_STATUS=#{NO_SUBMIT} 
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) sendData,
+		(select count(ces3.SEND_STATUS) as manualnum /*手工处理*/
+		from CHB_AST_VAL_SUB  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SEND_STATUS='03' /*手工处理*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) manualData,
+		(select count(ces3.SEND_STATUS) as interfPassnum /*接口通过*/
+		from CHB_AST_VAL_SUB  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfPass,
+		(select count(ces3.SEND_STATUS) as interfBacknum /*接口退回*/
+		from CHB_AST_VAL_SUB  ces3
+		WHERE <![CDATA[DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') <= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') ]]>
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfBack,
+		(
+		SELECT
+			count(1) as deletenum,
+			'investTradeReg' as countType
+		FROM 
+			CHB_AST_VAL_SUB ciis
+		WHERE ciis.STATUS='03' and ciis.SEND_STATUS='01'
+		and DATE_FORMAT(ciis.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
+		<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ciis.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+           <foreach collection="orgCodeList" item = "item" open=" and ciis.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+           </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+           <foreach collection="deptCodeList" item = "item" open=" and ciis.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+           </foreach>
+           </if>
+		)deleteTemp
+</select>
+
+<select id="selectChbMonthReport" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+	select
+   	delayData.delaynum as delaynum,/*已延期*/
+    DATE_FORMAT(delayingData.mindate,'%Y-%m-%d') as mindate,
+    DATE_FORMAT(delayingData.maxdate,'%Y-%m-%d') as maxdate,
+    delayingData.delayingnum as delayingnum,/*即将延期*/
+    sendData.sendnum as sendnum,/*将报送*/
+    manualData.manualnum as manualnum,/*手工处理*/
+    interfPass.interfPassnum as interfPassnum,/*接口通过*/
+    interfBack.interfBacknum as interfBacknum,/*接口退回*/
+    null as deletenum,/*删除模版*/
+    null as countType,
+   	'08' as reporttype /*月度统计报表*/
+   	FROM
+   	(select count(ciis1.SEND_STATUS) as delaynum from CHB_MONTH_REPORT  ciis1 WHERE DATE_FORMAT(ciis1.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ciis1.SEND_STATUS=#{NO_SUBMIT} 
+   	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ciis1.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+	<if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ciis1.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ciis1.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+   	) delayData ,
+	(select count(ciis2.SEND_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.CHB_SUBMIT_DEADLINE) as maxdate from CHB_MONTH_REPORT  ciis2 WHERE DATE_FORMAT(ciis2.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and DATE_FORMAT(ciis2.SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis2.SEND_STATUS=#{NO_SUBMIT}
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ciis2.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ciis2.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ciis2.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	 ) delayingData,
+	(select count(ciis3.SEND_STATUS) as sendnum from CHB_MONTH_REPORT  ciis3 WHERE DATE_FORMAT(ciis3.SUBMIT_DEADLINE,'%Y-%m-%d') &gt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis3.SEND_STATUS=#{NO_SUBMIT} 
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ciis3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ciis3.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ciis3.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	) sendData,
+	(select count(ces3.SEND_STATUS) as manualnum /*手工处理*/
+	from CHB_MONTH_REPORT  ces3
+	WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+	and ces3.SEND_STATUS='03' /*手工处理*/
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	) manualData,
+	(select count(ces3.SEND_STATUS) as interfPassnum /*接口通过*/
+	from CHB_MONTH_REPORT  ces3
+	WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+	and ces3.SEND_STATUS='02' /*接口报送*/
+	and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	) interfPass,
+	(select count(ces3.SEND_STATUS) as interfBacknum /*接口退回*/
+	from CHB_MONTH_REPORT  ces3
+	WHERE <![CDATA[DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') <= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') ]]>
+	and ces3.SEND_STATUS='02' /*接口报送*/
+	and ces3.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+	<if test="createDeptList != null and createDeptList.size>0">
+		<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+          <if test="orgCodeList != null and orgCodeList.size>0">
+              <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+          <if test="deptCodeList != null and deptCodeList.size>0">
+              <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+	) interfBack
+</select>
+
+<select id="selectPbcReport" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+	select
+	   	delayData.delaynum as delaynum,/*已延期*/
+	    DATE_FORMAT(delayingData.mindate,'%Y-%m-%d') as mindate,
+	    DATE_FORMAT(delayingData.maxdate,'%Y-%m-%d') as maxdate,
+	    delayingData.delayingnum as delayingnum,/*即将延期*/
+	    sendData.sendnum as sendnum,/*将报送*/
+	    manualData.manualnum as manualnum,/*手工处理*/
+	    interfPass.interfPassnum as interfPassnum,/*接口通过*/
+	    interfBack.interfBacknum as interfBacknum,/*接口退回*/
+	    null as deletenum,/*删除模版*/
+	    null as countType,
+	   	'17' as reporttype /*人行月度报表*/
+	   	FROM
+	   	(select count(ciis1.SEND_STATUS) as delaynum from PBC_REPORT  ciis1 WHERE DATE_FORMAT(ciis1.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ciis1.SEND_STATUS=#{NO_SUBMIT} and ciis1.reporttype != 'ONEPRD_ASSET_DEBT'
+	   	<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis1.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis1.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis1.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+	   	) delayData ,
+		(select count(ciis2.SEND_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.CHB_SUBMIT_DEADLINE) as maxdate from PBC_REPORT  ciis2 WHERE DATE_FORMAT(ciis2.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and DATE_FORMAT(ciis2.SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis2.SEND_STATUS=#{NO_SUBMIT} and ciis2.reporttype != 'ONEPRD_ASSET_DEBT'
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis2.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis2.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis2.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		 ) delayingData,
+		(select count(ciis3.SEND_STATUS) as sendnum from PBC_REPORT  ciis3 WHERE DATE_FORMAT(ciis3.SUBMIT_DEADLINE,'%Y-%m-%d') &gt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis3.SEND_STATUS=#{NO_SUBMIT} and ciis3.reporttype != 'ONEPRD_ASSET_DEBT'
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) sendData,
+		(select count(ces3.SEND_STATUS) as manualnum /*手工处理*/
+		from PBC_REPORT  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ces3.reporttype != 'ONEPRD_ASSET_DEBT'
+		and ces3.SEND_STATUS='03' /*手工处理*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) manualData,
+		(select count(ces3.SEND_STATUS) as interfPassnum /*接口通过*/
+		from PBC_REPORT  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ces3.reporttype != 'ONEPRD_ASSET_DEBT'
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfPass,
+		(select count(ces3.SEND_STATUS) as interfBacknum /*接口退回*/
+		from PBC_REPORT  ces3
+		WHERE <![CDATA[DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') <= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') ]]> and ces3.reporttype != 'ONEPRD_ASSET_DEBT'
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfBack
+</select>
+
+<select id="selectPbcPrdAccountSub" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+	select
+	   	delayData.delaynum as delaynum,/*已延期*/
+	    DATE_FORMAT(delayingData.mindate,'%Y-%m-%d') as mindate,
+	    DATE_FORMAT(delayingData.maxdate,'%Y-%m-%d') as maxdate,
+	    delayingData.delayingnum as delayingnum,/*即将延期*/
+	    sendData.sendnum as sendnum,/*将报送*/
+	    manualData.manualnum as manualnum,/*手工处理*/
+	    interfPass.interfPassnum as interfPassnum,/*接口通过*/
+	    interfBack.interfBacknum as interfBacknum,/*接口退回*/
+	    null as deletenum,/*删除模版*/
+	    null as countType,
+	   	'18' as reporttype /*资产池基本信息*/
+	   	FROM
+	   	(select count(ciis1.SEND_STATUS) as delaynum from PBC_PRD_ACCOUNT_SUB  ciis1 WHERE DATE_FORMAT(ciis1.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &lt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ciis1.SEND_STATUS=#{NO_SUBMIT} 
+	   	<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis1.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis1.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis1.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+	   	) delayData ,
+		(select count(ciis2.SEND_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.PBC_SUBMIT_DEADLINE) as maxdate from PBC_PRD_ACCOUNT_SUB  ciis2 WHERE DATE_FORMAT(ciis2.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and DATE_FORMAT(ciis2.SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis2.SEND_STATUS=#{NO_SUBMIT}
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis2.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis2.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis2.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		 ) delayingData,
+		(select count(ciis3.SEND_STATUS) as sendnum from PBC_PRD_ACCOUNT_SUB  ciis3 WHERE DATE_FORMAT(ciis3.SUBMIT_DEADLINE,'%Y-%m-%d') &gt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis3.SEND_STATUS=#{NO_SUBMIT} 
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) sendData,
+		(select count(ces3.SEND_STATUS) as manualnum /*手工处理*/
+		from PBC_PRD_ACCOUNT_SUB  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SEND_STATUS='03' /*手工处理*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) manualData,
+		(select count(ces3.SEND_STATUS) as interfPassnum /*接口通过*/
+		from PBC_PRD_ACCOUNT_SUB  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfPass,
+		(select count(ces3.SEND_STATUS) as interfBacknum /*接口退回*/
+		from PBC_PRD_ACCOUNT_SUB  ces3
+		WHERE <![CDATA[DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') <= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') ]]>
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfBack
+</select>
+
+<select id="selectPbcPrdBaseinfoSub" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+	select
+	   	delayData.delaynum as delaynum,/*已延期*/
+	    DATE_FORMAT(delayingData.mindate,'%Y-%m-%d') as mindate,
+	    DATE_FORMAT(delayingData.maxdate,'%Y-%m-%d') as maxdate,
+	    delayingData.delayingnum as delayingnum,/*即将延期*/
+	    sendData.sendnum as sendnum,/*将报送*/
+	    manualData.manualnum as manualnum,/*手工处理*/
+	    interfPass.interfPassnum as interfPassnum,/*接口通过*/
+	    interfBack.interfBacknum as interfBacknum,/*接口退回*/
+	    null as deletenum,/*删除模版*/
+	    null as countType,
+	   	'19' as reporttype /*人行产品基本信息*/
+	   	FROM
+	   	(select count(ciis1.SEND_STATUS) as delaynum from PBC_PRD_BASEINFO_SUB  ciis1 WHERE DATE_FORMAT(ciis1.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &lt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ciis1.SEND_STATUS=#{NO_SUBMIT} 
+	   	<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis1.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis1.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis1.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+	   	) delayData ,
+		(select count(ciis2.SEND_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.PBC_SUBMIT_DEADLINE) as maxdate from PBC_PRD_BASEINFO_SUB  ciis2 WHERE DATE_FORMAT(ciis2.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and DATE_FORMAT(ciis2.SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis2.SEND_STATUS=#{NO_SUBMIT}
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis2.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis2.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis2.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		 ) delayingData,
+		(select count(ciis3.SEND_STATUS) as sendnum from PBC_PRD_BASEINFO_SUB  ciis3 WHERE DATE_FORMAT(ciis3.SUBMIT_DEADLINE,'%Y-%m-%d') &gt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis3.SEND_STATUS=#{NO_SUBMIT} 
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) sendData,
+		(select count(ces3.SEND_STATUS) as manualnum /*手工处理*/
+		from PBC_PRD_BASEINFO_SUB  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SEND_STATUS='03' /*手工处理*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) manualData,
+		(select count(ces3.SEND_STATUS) as interfPassnum /*接口通过*/
+		from PBC_PRD_BASEINFO_SUB  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfPass,
+		(select count(ces3.SEND_STATUS) as interfBacknum /*接口退回*/
+		from PBC_PRD_BASEINFO_SUB  ces3
+		WHERE <![CDATA[DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') <= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') ]]>
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfBack
+</select>
+
+<select id="selectPbcInitProdRaisingSub" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+	select
+	   	delayData.delaynum as delaynum,/*已延期*/
+	    DATE_FORMAT(delayingData.mindate,'%Y-%m-%d') as mindate,
+	    DATE_FORMAT(delayingData.maxdate,'%Y-%m-%d') as maxdate,
+	    delayingData.delayingnum as delayingnum,/*即将延期*/
+	    sendData.sendnum as sendnum,/*将报送*/
+	    manualData.manualnum as manualnum,/*手工处理*/
+	    interfPass.interfPassnum as interfPassnum,/*接口通过*/
+	    interfBack.interfBacknum as interfBacknum,/*接口退回*/
+	    null as deletenum,/*删除模版*/
+	    null as countType,
+	   	'20' as reporttype /*产品起始募集信息*/
+	   	FROM
+	   	(select count(ciis1.SEND_STATUS) as delaynum from PBC_INIT_PROD_RAISING_SUB  ciis1 WHERE DATE_FORMAT(ciis1.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &lt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ciis1.SEND_STATUS=#{NO_SUBMIT} 
+	   	<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis1.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis1.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis1.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+	   	) delayData ,
+		(select count(ciis2.SEND_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.PBC_SUBMIT_DEADLINE) as maxdate from PBC_INIT_PROD_RAISING_SUB  ciis2 WHERE DATE_FORMAT(ciis2.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and DATE_FORMAT(ciis2.SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis2.SEND_STATUS=#{NO_SUBMIT}
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis2.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis2.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis2.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		 ) delayingData,
+		(select count(ciis3.SEND_STATUS) as sendnum from PBC_INIT_PROD_RAISING_SUB  ciis3 WHERE DATE_FORMAT(ciis3.SUBMIT_DEADLINE,'%Y-%m-%d') &gt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis3.SEND_STATUS=#{NO_SUBMIT} 
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) sendData,
+		(select count(ces3.SEND_STATUS) as manualnum /*手工处理*/
+		from PBC_INIT_PROD_RAISING_SUB  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SEND_STATUS='03' /*手工处理*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) manualData,
+		(select count(ces3.SEND_STATUS) as interfPassnum /*接口通过*/
+		from PBC_INIT_PROD_RAISING_SUB  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfPass,
+		(select count(ces3.SEND_STATUS) as interfBacknum /*接口退回*/
+		from PBC_INIT_PROD_RAISING_SUB  ces3
+		WHERE <![CDATA[DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') <= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') ]]>
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfBack
+</select>
+
+<select id="selectPbcProdRaisingSub" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+	select
+	   	delayData.delaynum as delaynum,/*已延期*/
+	    DATE_FORMAT(delayingData.mindate,'%Y-%m-%d') as mindate,
+	    DATE_FORMAT(delayingData.maxdate,'%Y-%m-%d') as maxdate,
+	    delayingData.delayingnum as delayingnum,/*即将延期*/
+	    sendData.sendnum as sendnum,/*将报送*/
+	    manualData.manualnum as manualnum,/*手工处理*/
+	    interfPass.interfPassnum as interfPassnum,/*接口通过*/
+	    interfBack.interfBacknum as interfBacknum,/*接口退回*/
+	    null as deletenum,/*删除模版*/
+	    null as countType,
+	   	'21' as reporttype /*产品资产募集信息*/
+	   	FROM
+	   	(select count(ciis1.SEND_STATUS) as delaynum from PBC_PROD_RAISING_SUB  ciis1 WHERE DATE_FORMAT(ciis1.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &lt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ciis1.SEND_STATUS=#{NO_SUBMIT} 
+	   	<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis1.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis1.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis1.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+	   	) delayData ,
+		(select count(ciis2.SEND_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.PBC_SUBMIT_DEADLINE) as maxdate from PBC_PROD_RAISING_SUB  ciis2 WHERE DATE_FORMAT(ciis2.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and DATE_FORMAT(ciis2.SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis2.SEND_STATUS=#{NO_SUBMIT}
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis2.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis2.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis2.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		 ) delayingData,
+		(select count(ciis3.SEND_STATUS) as sendnum from PBC_PROD_RAISING_SUB  ciis3 WHERE DATE_FORMAT(ciis3.SUBMIT_DEADLINE,'%Y-%m-%d') &gt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis3.SEND_STATUS=#{NO_SUBMIT} 
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) sendData,
+		(select count(ces3.SEND_STATUS) as manualnum /*手工处理*/
+		from PBC_PROD_RAISING_SUB  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SEND_STATUS='03' /*手工处理*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) manualData,
+		(select count(ces3.SEND_STATUS) as interfPassnum /*接口通过*/
+		from PBC_PROD_RAISING_SUB  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfPass,
+		(select count(ces3.SEND_STATUS) as interfBacknum /*接口退回*/
+		from PBC_PROD_RAISING_SUB  ces3
+		WHERE <![CDATA[DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') <= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') ]]>
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfBack
+</select>
+
+<select id="selectPbcPrdAccountEndSub" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+	select
+	   	delayData.delaynum as delaynum,/*已延期*/
+	    DATE_FORMAT(delayingData.mindate,'%Y-%m-%d') as mindate,
+	    DATE_FORMAT(delayingData.maxdate,'%Y-%m-%d') as maxdate,
+	    delayingData.delayingnum as delayingnum,/*即将延期*/
+	    sendData.sendnum as sendnum,/*将报送*/
+	    manualData.manualnum as manualnum,/*手工处理*/
+	    interfPass.interfPassnum as interfPassnum,/*接口通过*/
+	    interfBack.interfBacknum as interfBacknum,/*接口退回*/
+	    null as deletenum,/*删除模版*/
+	    null as countType,
+	   	'22' as reporttype /*资产池终止信息*/
+	   	FROM
+	   	(select count(ciis1.SEND_STATUS) as delaynum from PBC_PRD_ACCOUNT_END_SUB  ciis1 WHERE DATE_FORMAT(ciis1.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &lt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ciis1.SEND_STATUS=#{NO_SUBMIT} 
+	   	<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis1.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis1.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis1.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+	   	) delayData ,
+		(select count(ciis2.SEND_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.PBC_SUBMIT_DEADLINE) as maxdate from PBC_PRD_ACCOUNT_END_SUB  ciis2 WHERE DATE_FORMAT(ciis2.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and DATE_FORMAT(ciis2.SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis2.SEND_STATUS=#{NO_SUBMIT}
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis2.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis2.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis2.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		 ) delayingData,
+		(select count(ciis3.SEND_STATUS) as sendnum from PBC_PRD_ACCOUNT_END_SUB  ciis3 WHERE DATE_FORMAT(ciis3.SUBMIT_DEADLINE,'%Y-%m-%d') &gt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis3.SEND_STATUS=#{NO_SUBMIT} 
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) sendData,
+		(select count(ces3.SEND_STATUS) as manualnum /*手工处理*/
+		from PBC_PRD_ACCOUNT_END_SUB  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SEND_STATUS='03' /*手工处理*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) manualData,
+		(select count(ces3.SEND_STATUS) as interfPassnum /*接口通过*/
+		from PBC_PRD_ACCOUNT_END_SUB  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfPass,
+		(select count(ces3.SEND_STATUS) as interfBacknum /*接口退回*/
+		from PBC_PRD_ACCOUNT_END_SUB  ces3
+		WHERE <![CDATA[DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') <= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') ]]>
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfBack
+</select>
+
+<select id="selectPbcPrdBaseinfoEndSub" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+	select
+	   	delayData.delaynum as delaynum,/*已延期*/
+	    DATE_FORMAT(delayingData.mindate,'%Y-%m-%d') as mindate,
+	    DATE_FORMAT(delayingData.maxdate,'%Y-%m-%d') as maxdate,
+	    delayingData.delayingnum as delayingnum,/*即将延期*/
+	    sendData.sendnum as sendnum,/*将报送*/
+	    manualData.manualnum as manualnum,/*手工处理*/
+	    interfPass.interfPassnum as interfPassnum,/*接口通过*/
+	    interfBack.interfBacknum as interfBacknum,/*接口退回*/
+	    null as deletenum,/*删除模版*/
+	    null as countType,
+	   	'23' as reporttype /*产品终止信息*/
+	   	FROM
+	   	(select count(ciis1.SEND_STATUS) as delaynum from PBC_PRD_BASEINFO_END_SUB  ciis1 WHERE DATE_FORMAT(ciis1.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &lt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ciis1.SEND_STATUS=#{NO_SUBMIT} 
+	   	<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis1.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis1.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis1.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+	   	) delayData ,
+		(select count(ciis2.SEND_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.PBC_SUBMIT_DEADLINE) as maxdate from PBC_PRD_BASEINFO_END_SUB  ciis2 WHERE DATE_FORMAT(ciis2.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and DATE_FORMAT(ciis2.SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis2.SEND_STATUS=#{NO_SUBMIT}
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis2.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis2.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis2.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		 ) delayingData,
+		(select count(ciis3.SEND_STATUS) as sendnum from PBC_PRD_BASEINFO_END_SUB  ciis3 WHERE DATE_FORMAT(ciis3.SUBMIT_DEADLINE,'%Y-%m-%d') &gt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis3.SEND_STATUS=#{NO_SUBMIT} 
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) sendData,
+		(select count(ces3.SEND_STATUS) as manualnum /*手工处理*/
+		from PBC_PRD_BASEINFO_END_SUB  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SEND_STATUS='03' /*手工处理*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) manualData,
+		(select count(ces3.SEND_STATUS) as interfPassnum /*接口通过*/
+		from PBC_PRD_BASEINFO_END_SUB  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfPass,
+		(select count(ces3.SEND_STATUS) as interfBacknum /*接口退回*/
+		from PBC_PRD_BASEINFO_END_SUB  ces3
+		WHERE <![CDATA[DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') <= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') ]]>
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfBack
+</select>
+
+<select id="selectPbcReportAsset" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+	select
+	   	delayData.delaynum as delaynum,/*已延期*/
+	    DATE_FORMAT(delayingData.mindate,'%Y-%m-%d') as mindate,
+	    DATE_FORMAT(delayingData.maxdate,'%Y-%m-%d') as maxdate,
+	    delayingData.delayingnum as delayingnum,/*即将延期*/
+	    sendData.sendnum as sendnum,/*将报送*/
+	    manualData.manualnum as manualnum,/*手工处理*/
+	    interfPass.interfPassnum as interfPassnum,/*接口通过*/
+	    interfBack.interfBacknum as interfBacknum,/*接口退回*/
+	    null as deletenum,/*删除模版*/
+	    null as countType,
+	   	'24' as reporttype /*资产负债信息*/
+	   	FROM
+	   	(select count(ciis1.SEND_STATUS) as delaynum from PBC_REPORT  ciis1 WHERE DATE_FORMAT(ciis1.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ciis1.SEND_STATUS=#{NO_SUBMIT} and ciis1.reporttype = 'ONEPRD_ASSET_DEBT'
+	   	<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis1.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis1.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis1.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+	   	) delayData ,
+		(select count(ciis2.SEND_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.CHB_SUBMIT_DEADLINE) as maxdate from PBC_REPORT  ciis2 WHERE DATE_FORMAT(ciis2.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and DATE_FORMAT(ciis2.SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis2.SEND_STATUS=#{NO_SUBMIT} and ciis2.reporttype = 'ONEPRD_ASSET_DEBT'
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis2.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis2.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis2.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		 ) delayingData,
+		(select count(ciis3.SEND_STATUS) as sendnum from PBC_REPORT  ciis3 WHERE DATE_FORMAT(ciis3.SUBMIT_DEADLINE,'%Y-%m-%d') &gt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis3.SEND_STATUS=#{NO_SUBMIT} and ciis3.reporttype = 'ONEPRD_ASSET_DEBT'
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) sendData,
+		(select count(ces3.SEND_STATUS) as manualnum /*手工处理*/
+		from PBC_REPORT  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ces3.reporttype = 'ONEPRD_ASSET_DEBT'
+		and ces3.SEND_STATUS='03' /*手工处理*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) manualData,
+		(select count(ces3.SEND_STATUS) as interfPassnum /*接口通过*/
+		from PBC_REPORT  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ces3.reporttype = 'ONEPRD_ASSET_DEBT'
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfPass,
+		(select count(ces3.SEND_STATUS) as interfBacknum /*接口退回*/
+		from PBC_REPORT  ces3
+		WHERE <![CDATA[DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') <= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') ]]> and ces3.reporttype = 'ONEPRD_ASSET_DEBT'
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfBack
+</select>
+
+<select id="selectChbG06" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+	select
+	   	delayData.delaynum as delaynum,/*已延期*/
+	    DATE_FORMAT(delayingData.mindate,'%Y-%m-%d') as mindate,
+	    DATE_FORMAT(delayingData.maxdate,'%Y-%m-%d') as maxdate,
+	    delayingData.delayingnum as delayingnum,/*即将延期*/
+	    sendData.sendnum as sendnum,/*将报送*/
+	    manualData.manualnum as manualnum,/*手工处理*/
+	    interfPass.interfPassnum as interfPassnum,/*接口通过*/
+	    interfBack.interfBacknum as interfBacknum,/*接口退回*/
+	    null as deletenum,/*删除模版*/
+	    null as countType,
+	   	'25' as reporttype /*G06报表*/
+	   	FROM
+	   	(select count(ciis1.SEND_STATUS) as delaynum from CHB_MONTH_REPORT  ciis1 WHERE DATE_FORMAT(ciis1.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ciis1.SEND_STATUS=#{NO_SUBMIT} 
+	   	<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis1.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis1.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis1.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+	   	) delayData ,
+		(select count(ciis2.SEND_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.CHB_SUBMIT_DEADLINE) as maxdate from CHB_MONTH_REPORT  ciis2 WHERE DATE_FORMAT(ciis2.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and DATE_FORMAT(ciis2.SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis2.SEND_STATUS=#{NO_SUBMIT}
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis2.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis2.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis2.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		 ) delayingData,
+		(select count(ciis3.SEND_STATUS) as sendnum from CHB_MONTH_REPORT  ciis3 WHERE DATE_FORMAT(ciis3.SUBMIT_DEADLINE,'%Y-%m-%d') &gt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis3.SEND_STATUS=#{NO_SUBMIT} 
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ciis3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ciis3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) sendData,
+		(select count(ces3.SEND_STATUS) as manualnum /*手工处理*/
+		from CHB_MONTH_REPORT  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SEND_STATUS='03' /*手工处理*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) manualData,
+		(select count(ces3.SEND_STATUS) as interfPassnum /*接口通过*/
+		from CHB_MONTH_REPORT  ces3
+		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') 
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfPass,
+		(select count(ces3.SEND_STATUS) as interfBacknum /*接口退回*/
+		from CHB_MONTH_REPORT  ces3
+		WHERE <![CDATA[DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') <= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') ]]>
+		and ces3.SEND_STATUS='02' /*接口报送*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+           <if test="orgCodeList != null and orgCodeList.size>0">
+               <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+           <if test="deptCodeList != null and deptCodeList.size>0">
+               <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+               #{item,jdbcType=VARCHAR}
+               </foreach>
+           </if>
+		) interfBack
+</select>
+<select id="searchInfoArea" resultType="com.joyintech.tams.report.home.dto.InfoAreaDto">
+	select 
+		countNum,
+		countType
+		FROM(
+			SELECT
+				count(1) as countNum,
+				'chbEquHold' as countType
+			FROM 
+				CHB_EQU_HOLD ceh
+			WHERE ceh.STATUS='A'
+			<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ceh.CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+			</if>
+			<if test="orgCodeList != null and orgCodeList.size>0">
+            <foreach collection="orgCodeList" item = "item" open=" and ceh.ORG_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            </if>
+            <if test="deptCodeList != null and deptCodeList.size>0">
+            <foreach collection="deptCodeList" item = "item" open=" and ceh.DEPT_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            </if>
+			union all
+			SELECT
+				count(1) as countNum,
+				'chbEqudet' as countType
+			FROM 
+				CHB_EQUDET ce
+			WHERE ce.STATUS='A'
+			<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ce.CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+			</if>
+            <if test="orgCodeList != null and orgCodeList.size>0">
+            <foreach collection="orgCodeList" item = "item" open=" and ce.ORG_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            </if>
+            <if test="deptCodeList != null and deptCodeList.size>0">
+            <foreach collection="deptCodeList" item = "item" open=" and ce.DEPT_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            </if>
+			union all
+			SELECT
+				count(1) as countNum,
+				'chbPrdresistCode' as countType
+			FROM 
+				CHB_PRDRESIST_CODE cpc
+			<!-- modify by wm 合DB2版本代码  2018-07-23 begin--> 
+			<!-- WHERE cpc.REG_CODE is NULL -->
+			WHERE (cpc.REG_CODE is NULL or cpc.REG_CODE = '')
+			<!-- modify by wm 合DB2版本代码  2018-07-23 end--> 
+			<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and cpc.CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+			</if>
+            <if test="orgCodeList != null and orgCodeList.size>0">
+            <foreach collection="orgCodeList" item = "item" open=" and cpc.ORG_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            </if>
+            <if test="deptCodeList != null and deptCodeList.size>0">
+            <foreach collection="deptCodeList" item = "item" open=" and cpc.DEPT_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            </if>
+			union all
+			SELECT
+				count(1) as countNum,
+				'chbHoldInfo' as countType
+			FROM 
+				CHB_INVESTHOLD_INFO cii
+			WHERE cii.STATUS='A'
+			<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and cii.CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+			</if>
+            <if test="orgCodeList != null and orgCodeList.size>0">
+            <foreach collection="orgCodeList" item = "item" open=" and cii.ORG_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            </if>
+            <if test="deptCodeList != null and deptCodeList.size>0">
+            <foreach collection="deptCodeList" item = "item" open=" and cii.DEPT_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            </if>
+            union all
+			SELECT
+				count(1) as countNum,
+				'investormerger' as countType
+			FROM 
+				CHB_EQU_HOLD_CHECK check1
+			WHERE check1.OPERATE_STATUS='01'
+			and DATE_FORMAT(check1.DATA_DATE,'%Y-%m-%d') <![CDATA[<=]]>#{dataTimeEnd,jdbcType=VARCHAR}
+			<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and check1.CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+			</if>
+            <if test="orgCodeList != null and orgCodeList.size>0">
+            <foreach collection="orgCodeList" item = "item" open=" and check1.ORG_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            </if>
+            <if test="deptCodeList != null and deptCodeList.size>0">
+            <foreach collection="deptCodeList" item = "item" open=" and check1.DEPT_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            </if>
+		)
+</select>
+<select id="searcheBatchxportTemplates" resultType="com.joyintech.tams.report.home.dto.InfoAreaDto">
+	select 
+		countNum,
+		countType
+		FROM(
+			SELECT
+				count(1) as countNum,
+				'chbEquReg' as countType
+			FROM 
+				CHB_EQU_SUB ces
+			WHERE ces.STATUS='03' and ces.SUBMIT_STATUS='01'
+			<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces.CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+			</if>
+            <if test="orgCodeList != null and orgCodeList.size>0">
+            <foreach collection="orgCodeList" item = "item" open=" and ces.ORG_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            </if>
+            <if test="deptCodeList != null and deptCodeList.size>0">
+            <foreach collection="deptCodeList" item = "item" open=" and ces.DEPT_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            </if>
+		
+			union all
+			SELECT
+				count(1) as countNum,
+				'chbHoldReg' as countType
+			FROM 
+				CHB_INVESTHOLD_INFO_SUB ciis
+			WHERE ciis.STATUS='03' and ciis.SEND_STATUS='01'
+			<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis.CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+			</if>
+            <if test="orgCodeList != null and orgCodeList.size>0">
+            <foreach collection="orgCodeList" item = "item" open=" and ciis.ORG_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            </if>
+            <if test="deptCodeList != null and deptCodeList.size>0">
+            <foreach collection="deptCodeList" item = "item" open=" and ciis.DEPT_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            </if>
+            
+            union all
+			SELECT
+				count(1) as countNum,
+				'prodDurReg' as countType
+			FROM 
+				CHB_PRD_DEAL_SUB ciis
+			WHERE ciis.STATUS='03' and ciis.SEND_STATUS='01'
+			<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis.CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+			</if>
+            <if test="orgCodeList != null and orgCodeList.size>0">
+            <foreach collection="orgCodeList" item = "item" open=" and ciis.ORG_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            </if>
+            <if test="deptCodeList != null and deptCodeList.size>0">
+            <foreach collection="deptCodeList" item = "item" open=" and ciis.DEPT_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            </if>
+            
+            union all
+			SELECT
+				count(1) as countNum,
+				'assetInfoReg' as countType
+			FROM 
+				CHB_ASSET_INFO_SUB ciis
+			WHERE ciis.STATUS='03' and ciis.SEND_STATUS='01'
+			<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis.CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+			</if>
+            <if test="orgCodeList != null and orgCodeList.size>0">
+            <foreach collection="orgCodeList" item = "item" open=" and ciis.ORG_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            </if>
+            <if test="deptCodeList != null and deptCodeList.size>0">
+            <foreach collection="deptCodeList" item = "item" open=" and ciis.DEPT_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            </if>
+            
+            union all
+			SELECT
+				count(1) as countNum,
+				'investTradeReg' as countType
+			FROM 
+				CHB_INVEST_TRADE_SUB ciis
+			WHERE ciis.STATUS='03' and ciis.SEND_STATUS='01'
+			<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis.CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+			</if>
+            <if test="orgCodeList != null and orgCodeList.size>0">
+            <foreach collection="orgCodeList" item = "item" open=" and ciis.ORG_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            </if>
+            <if test="deptCodeList != null and deptCodeList.size>0">
+            <foreach collection="deptCodeList" item = "item" open=" and ciis.DEPT_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            </if>
+            
+            union all
+			SELECT
+				count(1) as countNum,
+				'astvalueReg' as countType
+			FROM 
+				CHB_AST_VAL_SUB ciis
+			WHERE ciis.STATUS='03' and ciis.SEND_STATUS='01'
+			<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis.CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+			</if>
+            <if test="orgCodeList != null and orgCodeList.size>0">
+            <foreach collection="orgCodeList" item = "item" open=" and ciis.ORG_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            </if>
+            <if test="deptCodeList != null and deptCodeList.size>0">
+            <foreach collection="deptCodeList" item = "item" open=" and ciis.DEPT_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            </if>
+		)
+</select>
+<select id="searchReportCheckNum" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+  select ifnull(checkwarn.warnnum,0) warningnum /*预警*/
+  ,ifnull(checkfail1.failnum,0)+ifnull(checkfail2.failnum,0) failnum /*不通过*/
+  ,ifnull(checkwarn.warnnum,0)+ifnull(checkfail1.failnum,0)+ifnull(checkfail2.failnum,0) as submitChecknum /*报送检查*/
+  ,ifnull(checkwarn.rep_code,checkfail1.rep_code) reporttype /*报表类型*/
+  from (select count(check_result) warnnum,rep_code
+	from chb_report_check where
+	check_result='03'
+	and DATE_FORMAT(DATA_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
+	group by rep_code
+	) checkwarn
+  left join (select count(check_result) failnum,rep_code
+	from chb_report_check where
+	check_result='02'
+	and DATE_FORMAT(DATA_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
+	group by rep_code) checkfail1 on checkwarn.rep_code = checkfail1.rep_code
+  right join (select count(check_result) failnum,rep_code
+	from chb_report_check where
+	check_result='02'
+	and DATE_FORMAT(DATA_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
+	group by rep_code) checkfail2 on checkwarn.rep_code = checkfail2.rep_code
+</select>
+
+<select id="selectMenulist" resultType="java.lang.String">
+	select page_id from sys_menu
+	where PARENT_MENU_ID in (select MENU_ID from sys_menu where PARENT_MENU_ID = 'SVR_003')
+</select>
+</mapper>

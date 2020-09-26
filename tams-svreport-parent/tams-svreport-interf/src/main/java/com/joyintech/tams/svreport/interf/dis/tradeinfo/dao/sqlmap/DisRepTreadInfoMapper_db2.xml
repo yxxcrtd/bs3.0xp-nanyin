@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.dis.tradeinfo.dao.DisRepTreadInfoMapper_db2" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.interf.dis.tradeinfo.dto.DisRepTreadInfo" >
+        <id column="ID" property="id" jdbcType="VARCHAR" />
+        <result column="ASSET_ID" property="assetId" jdbcType="VARCHAR" />
+        <result column="ASSET_NAME" property="assetName" jdbcType="VARCHAR" />
+        <result column="TRADE_COUNTY" property="tradeCounty" jdbcType="VARCHAR" />
+        <result column="TRADE_DATE" property="tradeDate" jdbcType="DATE" />
+        <result column="TRADE_AMT" property="tradeAmt" jdbcType="DECIMAL" />
+        <result column="TRADE_TYPE" property="tradeType" jdbcType="VARCHAR" />
+        <result column="BUY_PART" property="buyPart" jdbcType="VARCHAR" />
+        <result column="PS" property="ps" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="IS_RELATION_TRADE" property="isRelationTrade" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="SALE_PART" property="salePart" jdbcType="VARCHAR" />
+        <result column="EXPIRE_RATE" property="expireRate" jdbcType="DECIMAL" />
+        <result column="CONTRACT_NO" property="contractNo" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="PRIN_AMT" property="prinAmt" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ID ID, ASSET_ID ASSET_ID, ASSET_NAME ASSET_NAME, TRADE_COUNTY TRADE_COUNTY, TRADE_DATE TRADE_DATE, 
+        TRADE_AMT TRADE_AMT, TRADE_TYPE TRADE_TYPE, BUY_PART BUY_PART, PS PS, STATUS STATUS, 
+        IS_RELATION_TRADE IS_RELATION_TRADE, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
+        SALE_PART SALE_PART, EXPIRE_RATE EXPIRE_RATE, 
+        CONTRACT_NO CONTRACT_NO, PROD_ID PROD_ID, PRIN_AMT PRIN_AMT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.svreport.interf.dis.tradeinfo.dao.DisRepTreadInfoMapper.Base_Column_List" />
+        from REP_TREAD_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.svreport.interf.dis.tradeinfo.dao.DisRepTreadInfoMapper.Base_Column_List" />
+        from REP_TREAD_INFO
+        where STATUS = 'E'
+    </sql>
+
+    <update id="mergeRepTradeInfo">
+        MERGE INTO REP_TRADE_INFO RPI
+		USING (
+			<foreach collection="list" item="item" open="select * from("
+				close=")" separator="union all">
+				SELECT 
+					'${item.id}' ID,<!--id-->
+					'${item.assetId}' ASSET_ID,<!--资产代码-->
+					'${item.assetName}' ASSET_NAME,<!--资产名称-->
+					'${item.tradeCounty}' TRADE_COUNTY,<!--交易对手-->
+					<choose><when test="item.tradeDate != null">#{item.tradeDate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> TRADE_DATE,<!--交易日期-->
+					<choose><when test="item.tradeAmt != null">${item.tradeAmt}</when><otherwise>null</otherwise></choose> TRADE_AMT,<!--交易金额-->
+					'${item.tradeType}' TRADE_TYPE,<!--交易类型-->
+					'${item.buyPart}' BUY_PART,<!--买入方-->
+					'${item.salePart}' SALE_PART,<!--卖出方-->
+					'${item.ps}' PS,<!--交易方向-->
+					'${item.status}' STATUS,<!--状态-->
+					'${item.isRelationTrade}' IS_RELATION_TRADE,<!--是否关联交易-->
+					'${item.createUser}' CREATE_USER,<!--创建人-->
+					'${item.createDept}' CREATE_DEPT,<!--创建部门-->
+					<choose><when test="item.createTime != null">#{item.createTime,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose> CREATE_TIME,<!--创建时间-->
+					'${item.updateUser}' UPDATE_USER,<!--更新人-->
+					<choose><when test="item.updateTime != null">#{item.updateTime,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose> UPDATE_TIME,<!--更新时间-->
+					<choose><when test="item.expireRate != null">${item.expireRate}</when><otherwise>null</otherwise></choose> EXPIRE_RATE,<!--到期收益率-->
+					'${item.contractNo}' CONTRACT_NO,<!--合同号-->
+					'${item.prodId}' PROD_ID,<!--产品代码-->
+					<choose><when test="item.prinAmt != null">${item.prinAmt}</when><otherwise>null</otherwise></choose> PRIN_AMT<!--交易本金-->
+				FROM
+					sysibm.SYSDUMMY1
+			</foreach>
+		) TEMP
+		<!-- 业务主键匹配 -->
+		ON(
+			RPI.ID = TEMP.ID 
+		)
+		<!-- 匹配到则更新  start-->
+		WHEN MATCHED THEN 
+			UPDATE SET 
+				<!--RPI.ID = TEMP.ID,id-->
+				RPI.ASSET_ID = TEMP.ASSET_ID,<!--资产代码-->
+				RPI.ASSET_NAME = TEMP.ASSET_NAME,<!--资产名称-->
+				RPI.TRADE_COUNTY = TEMP.TRADE_COUNTY,<!--交易对手-->
+				RPI.TRADE_DATE = TEMP.TRADE_DATE,<!--交易日期-->
+				RPI.TRADE_AMT = TEMP.TRADE_AMT,<!--交易金额-->
+				RPI.TRADE_TYPE = TEMP.TRADE_TYPE,<!--交易类型-->
+				RPI.BUY_PART = TEMP.BUY_PART,<!--买入方-->
+				RPI.SALE_PART = TEMP.SALE_PART,<!--卖出方-->
+				RPI.PS = TEMP.PS,<!--交易方向-->
+				RPI.STATUS = TEMP.STATUS,<!--状态-->
+				RPI.IS_RELATION_TRADE = TEMP.IS_RELATION_TRADE,<!--是否关联交易-->
+				RPI.CREATE_USER = TEMP.CREATE_USER,<!--创建人-->
+				RPI.CREATE_DEPT = TEMP.CREATE_DEPT,<!--创建部门-->
+				RPI.CREATE_TIME = TEMP.CREATE_TIME,<!--创建时间-->
+				RPI.UPDATE_USER = TEMP.UPDATE_USER,<!--更新人-->
+				RPI.UPDATE_TIME = TEMP.UPDATE_TIME,<!--更新时间-->
+				RPI.EXPIRE_RATE = TEMP.EXPIRE_RATE,<!--到期收益率-->
+				RPI.CONTRACT_NO = TEMP.CONTRACT_NO,<!--合同号-->
+				RPI.PROD_ID = TEMP.PROD_ID,<!--产品代码-->
+				RPI.PRIN_AMT = TEMP.PRIN_AMT<!--交易本金-->
+		<!-- 匹配到则更新  end-->
+		<!-- 不匹配到则插入  start-->
+		WHEN NOT MATCHED THEN
+            INSERT
+            (
+				ID,<!--id-->
+				ASSET_ID,<!--资产代码-->
+				ASSET_NAME,<!--资产名称-->
+				TRADE_COUNTY,<!--交易对手-->
+				TRADE_DATE,<!--交易日期-->
+				TRADE_AMT,<!--交易金额-->
+				TRADE_TYPE,<!--交易类型-->
+				BUY_PART,<!--买入方-->
+				SALE_PART,<!--卖出方-->
+				PS,<!--交易方向-->
+				STATUS,<!--状态-->
+				IS_RELATION_TRADE,<!--是否关联交易-->
+				CREATE_USER,<!--创建人-->
+				CREATE_DEPT,<!--创建部门-->
+				CREATE_TIME,<!--创建时间-->
+				UPDATE_USER,<!--更新人-->
+				UPDATE_TIME,<!--更新时间-->
+				EXPIRE_RATE,<!--到期收益率-->
+				CONTRACT_NO,<!--合同号-->
+				PROD_ID,<!--产品代码-->
+				PRIN_AMT<!--交易本金-->
+			)
+            VALUES
+           (
+				TEMP.ID,<!--id-->
+				TEMP.ASSET_ID,<!--资产代码-->
+				TEMP.ASSET_NAME,<!--资产名称-->
+				TEMP.TRADE_COUNTY,<!--交易对手-->
+				TEMP.TRADE_DATE,<!--交易日期-->
+				TEMP.TRADE_AMT,<!--交易金额-->
+				TEMP.TRADE_TYPE,<!--交易类型-->
+				TEMP.BUY_PART,<!--买入方-->
+				TEMP.SALE_PART,<!--卖出方-->
+				TEMP.PS,<!--交易方向-->
+				TEMP.STATUS,<!--状态-->
+				TEMP.IS_RELATION_TRADE,<!--是否关联交易-->
+				TEMP.CREATE_USER,<!--创建人-->
+				TEMP.CREATE_DEPT,<!--创建部门-->
+				TEMP.CREATE_TIME,<!--创建时间-->
+				TEMP.UPDATE_USER,<!--更新人-->
+				TEMP.UPDATE_TIME,<!--更新时间-->
+				TEMP.EXPIRE_RATE,<!--到期收益率-->
+				TEMP.CONTRACT_NO,<!--合同号-->
+				TEMP.PROD_ID,<!--产品代码-->
+				TEMP.PRIN_AMT<!--交易本金-->
+			) 
+		<!-- 不匹配到则插入  end-->
+    </update>
+</mapper>

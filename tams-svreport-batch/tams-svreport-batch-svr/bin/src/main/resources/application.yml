@@ -1,0 +1,103 @@
+server:
+  port: 8084
+spring:
+  application:
+    name: SVREPORT-BATCH-SERVER #服务名称
+  profiles:
+    active: dev
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+#     driverClassName: com.ibm.db2.jcc.DB2Driver
+#     validationQuery: SELECT 1 FROM SYSIBM.SYSDUMMY1
+  activemq:
+    active: false
+batch:
+  sysCode: REP
+  properties:
+    chunkNumber: 100
+    concurrency: 10
+    queueCapacity: 50
+    maxExeUser: 5
+    maxThreadPerUser: 4 #定时任务并发数
+application:
+    reportSelectOrDeleteCountForShenFen: 100 #数据批量一次查询或者删除条数(身份信息用)
+    reportCbFeedBackHandleCountOneTime: 10000 #中债反馈文件内容单次处理数据条数
+    interfMaxCorePoolSize: 20 #上游接口解析读取文件处理最大线程数
+    maxDataCountOneTimeForInvestholdInfo : 50 #上游接口解析读取文件处理中持有信息批量查询单次最大查询主键数（江苏银行50）
+    reportInterfIsNeedOkFile: '01' #上游接口解析读取文件处理中，是否需要.ok传输完成标志文件（01：需要 02：不需要）
+    reportInterfOkFileExtension: ok #上游接口解析读取文件处理中，传输完成标志文件的扩展名（默认为ok）
+    reportInsertCount: 15 #数据批量一次性insert条数
+    reportSelectOrDeleteCount: 50 #数据批量一次查询或者删除条数
+    reportInsertLongCount: 10 #数据批量一次性insert条数(单条数据字段较多)
+    reportInterfFileEncoding: UTF-8 #上游接口文件编码格式 
+    reportInterfOneTimeDataCount: 1000 #上游接口解析读取文件处理,单线程处理数据条数
+    reportInterfOneTimeSqlLdrDataCount: 200000 #上游接口解析读取文件处理,单次sqlldr处理最大数据条数
+    reportInterfOneTimeSqlLdrCommitCount: 10000 #上游接口解析读取文件处理,单次sqlldr处理单次提交数
+    reportInterfSplitCharacter: '|' #上游txt文件解析分割符
+eureka:
+  instance:
+    hostname: ${spring.cloud.client.ipAddress}
+    instanceId: ${spring.cloud.client.ipAddress}:${server.port}
+    preferIpAddress: true
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://192.168.70.146:1111/eureka/
+
+---
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:oracle:thin:@192.168.70.78:1521:orcl
+    username: report_chb
+    password: report_chb
+    reportSqlldrDatabaseName: 192.168.70.78:1521:orcl #sqlldr用数据库连接，必须保持这种格式
+#base数据库配置
+base:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@192.168.70.78:1521:orcl
+    username: report_base
+    password: report_base
+    validationQuery: SELECT 1 FROM DUAL
+#interf数据库配置
+interf:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@192.168.70.69:1521:orcl
+    username: tams_mast
+    password: tams_mast
+    validationQuery: SELECT 1 FROM DUAL
+log:
+  path: /home/svreport/logs/svreport-batch
+  level: info
+logging:
+  path: /home/svreport/logs/svreport-batch
+---
+spring:
+  profiles: db2Test
+  datasource:
+    url: jdbc:db2://192.168.70.137:50000/DBSREPRT:currentSchema=DB2INST1;
+    username: db2inst1
+    password: 123456
+    driverClassName: com.ibm.db2.jcc.DB2Driver
+    validationQuery: SELECT 1 FROM SYSIBM.SYSDUMMY1
+#base数据库配置
+base:
+  datasource:
+    driverClassName: com.ibm.db2.jcc.DB2Driver
+    url: jdbc:db2://192.168.70.137:50000/DBSBASE:currentSchema=DBSBASE;
+    username: db2inst1
+    password: 123456
+    validationQuery: SELECT 1 FROM SYSIBM.SYSDUMMY1
+log:
+  path: /home/tams/logs/tams9096
+  level: DEBUG
+eureka:
+  client:
+    enabled: true #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
+    serviceUrl:
+       defaultZone:  http://192.168.70.204:1111/eureka/
+  instance:
+     hostname: localhost

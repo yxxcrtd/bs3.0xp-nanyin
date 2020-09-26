@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ChbBotAstPosInfoAll.xls" name="底层资产持仓信息登记">
+	<Worksheet javaBean="com.joyintech.tams.svreport.chb.botastpositionregist.dto.ChbBotAstPositionRegist001Dto">
+		<Row>
+			<Cell order="1"  name="数据状态"> statusStr</Cell><!-- 数据状态 -->
+			<Cell order="2"  name="数据日期"> updateTime</Cell><!-- 数据日期 -->
+			<Cell order="3"  name="报送状态"> sendStatusStr</Cell><!-- 报送状态 -->
+			<Cell order="4"  name="报送日期"> submitTime</Cell><!-- 报送日期 -->
+			<Cell order="5"  name="报送截止日"> chbSubmitDeadline</Cell><!-- 报送截止日 -->
+			<Cell order="6"  name="反馈状态"> submitFeedbackStatusStr</Cell><!-- 反馈状态 -->
+		<Cell order="7" name="发行机构代码">issuePartyId</Cell>
+		<Cell order="8" name="对应资管及委外资产行内资产/负债编码">planAssetId</Cell>
+		<Cell order="9" name="资管及委外资产当前总数量">totalNum</Cell>
+		<Cell order="10" name="资管及委外资产当前总折算人民币金额(元)">issueAmt</Cell>
+		<Cell order="11" name="资管及委外资产未投资头寸(元)">uninvestCash</Cell>
+		<Cell order="12" name="底层资产行内资产/负债编码">assetCode</Cell>
+		<Cell order="13" name="底层资产持仓数量">posNum</Cell>
+		<Cell order="14" name="底层资产折算人民币市值(元)">posAmt</Cell>
+		<Cell order="15" name="持仓日期">posDateExport</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>

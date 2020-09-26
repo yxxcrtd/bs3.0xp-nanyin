@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ChbBotAstPosInfo.xls" name="底层资产持仓信息登记中债">
+	<Worksheet javaBean="com.joyintech.tams.svreport.chb.botastpositionregist.dto.ChbBotAstPositionRegist001Dto">
+		<Row>
+		<Cell order="1" name="发行机构代码">issuePartyId</Cell>
+		<Cell order="2" name="对应资管及委外资产行内资产/负债编码">planAssetId</Cell>
+		<Cell order="3" name="资管及委外资产当前总数量">totalNum</Cell>
+		<Cell order="4" name="资管及委外资产当前总折算人民币金额(元)">issueAmt</Cell>
+		<Cell order="5" name="资管及委外资产未投资头寸(元)">uninvestCash</Cell>
+		<Cell order="6" name="底层资产行内资产/负债编码">assetCode</Cell>
+		<Cell order="7" name="底层资产持仓数量">posNum</Cell>
+		<Cell order="8" name="底层资产折算人民币市值(元)">posAmt</Cell>
+		<Cell order="9" name="持仓日期">posDateExport</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>

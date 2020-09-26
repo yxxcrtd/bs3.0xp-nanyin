@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ProdRaiseTotalRegist001.xls" name="产品募集总量登记">
+	<Worksheet javaBean="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
+		<Row>
+			<Cell order="1" name="产品登记编码">regCode</Cell><!-- 产品登记编码 -->
+			<Cell order="2" name="发行机构代码">issuePartyId</Cell><!-- 发行机构代码 -->
+			<Cell order="3" name="个人投资者总数">singleTotal</Cell><!-- 个人投资者总数-->
+			<Cell order="4" name="法人投资者总数">legalTotal</Cell><!-- 法人投资者总数 -->
+			<Cell order="5" name="非法人投资者总数">unlegalTotal</Cell><!-- 非法人投资者总数 -->
+			<Cell order="6" name="实际募集金额（元）">totalAmt</Cell><!-- 实际募集金额（元） -->
+			<Cell order="7" name="募集总份额">raiseQty</Cell><!-- 募集总份额 -->
+			<Cell order="8" name="是否有其他机构代销">isConsignStr</Cell><!-- 是否有其他机构代销 -->
+			<Cell order="9" name="代销总金额">consignAmt</Cell><!-- 代销总金额 -->
+			<Cell order="10" name="产品销售区域及募集金额">saleAreaAmt</Cell><!-- 产品销售区域及募集金额 -->
+			<Cell order="11" name="认购币种">subscribeCcyAmt</Cell><!-- 认购币种 -->
+			<Cell order="12" name="备注">remark</Cell><!-- 备注 -->
+		</Row>
+	</Worksheet>
+</Workbook>

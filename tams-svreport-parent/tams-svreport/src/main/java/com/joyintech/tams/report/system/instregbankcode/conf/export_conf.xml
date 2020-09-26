@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="SysInstRegBankCode001Out.xlsx" name="机构登记银行代码管理">
+	<Worksheet javaBean="com.joyintech.tams.report.system.instregbankcode.dto.SysInstRegBankCode001Dto">
+		<Row>
+			<Cell order="1" name="机构代码">orgCode</Cell>
+			<Cell order="2" name="机构名称">orgName</Cell>
+			<Cell order="3" name="登记银行代码">registBankCode</Cell>
+			<Cell order="4" name="总行机构代码">pbcBankCode</Cell>
+			<Cell order="5" name="是否理财子公司">isFinSubCompany</Cell>
+			<Cell order="6" name="社会信用代码">insitituteCode</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>

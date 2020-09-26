@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.report.submitmaintenance.businessdetailed.dao.IBDMapper_mysql" >
+
+    <!-- 根据识别标识与登记银行代码从信息维护表中查询数据插入登记表 -->
+    <insert id="insertEquityBusiHis" parameterType="java.util.List">
+        insert into CHB_EQUDET_HIS (HIS_NO, BUSI_SEQNO, ACCOUNT,
+        REGIST_BANK_CODE, INDENTIFY_MARK, EQUITY_CONF_DATE,
+        BUY_PLACE, BUSI_TYPE, CCY,
+        AMOUNT, SHARES, CHANNEL,
+        FUND_ACC, FUND_ACC_BANK, IS_SUBMIT,
+        REMARK, STATUS,
+        WORKFLOW_ID, DEPT_CODE, UPDATE_USER,
+        UPDATE_TIME, CREATE_USER, CREATE_TIME,
+        DATA_SOURCE,ACCOUNT_NAME ,ORG_CODE,IS_CONSIGN,AGENT,SHARE_CONF_DATETIME, CREATE_DEPT)
+        select  _NEXTINDEX('seq_equity_busi'),
+        A.BUSI_SEQNO,A.ACCOUNT,A.REGIST_BANK_CODE,
+        A.INDENTIFY_MARK,A.EQUITY_CONF_DATE,A.BUY_PLACE,A.BUSI_TYPE,
+        A.CCY,A.AMOUNT,A.SHARES,A.CHANNEL,
+        A.FUND_ACC,A.FUND_ACC_BANK,A.IS_SUBMIT,
+        A.REMARK,A.STATUS,A.WORKFLOW_ID,
+        A.DEPT_CODE,A.UPDATE_USER,A.UPDATE_TIME,
+        A.CREATE_USER,A.CREATE_TIME,A.DATA_SOURCE,
+        A.ACCOUNT_NAME , A.ORG_CODE ,A.IS_CONSIGN,
+        A.AGENT,A.SHARE_CONF_DATETIME,
+        A.CREATE_DEPT
+        from CHB_EQUDET A
+        <where>
+            <foreach collection="list" index="index" item="item" open="(" separator="or" close=")">
+                A.INDENTIFY_MARK = #{item.indentifyMark,jdbcType=VARCHAR}
+                and A.REGIST_BANK_CODE = #{item.registBankCode,jdbcType=VARCHAR}
+                and A.BUSI_SEQNO = #{item.busiSeqno,jdbcType=VARCHAR}
+            </foreach>
+        </where>
+    </insert>
+</mapper>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+	<context id="context1" targetRuntime="MyBatis3">
+		<!-- 指定生成的java文件的编码,没有直接生成到项目时中文可能会乱码 -->
+		<property name="javaFileEncoding" value="UTF-8" />
+		<!-- mysql配置 -->
+		 <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver" 
+        connectionURL="jdbc:oracle:thin:@192.168.70.78:1521:orcl"  userId="report_chb"  password="report_chb"> 
+        <property name="remarksReporting" value="true"></property>
+   	 </jdbcConnection> 
+		
+		
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<!-- dto class -->
+		<javaModelGenerator targetPackage="com.joyintech.tams.report.chb.monthreport.dto"
+			targetProject="..\src\main\java">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+
+		<!-- mybatis xml file -->
+		<sqlMapGenerator targetPackage="com.joyintech.tams.report.chb.monthreport.dao.sqlmap"
+			targetProject="..\src\main\java">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+		<!-- mapper class -->
+		<javaClientGenerator type="XMLMAPPER"
+			targetPackage="com.joyintech.tams.report.chb.monthreport.dao" targetProject="..\src\main\java">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+
+		
+		<!--不生成帮助类（Exmaples） -->
+    	<!-- 
+    	enableCountByExample="false"
+    	enableUpdateByExample="false" 
+    	enableDeleteByExample="false"
+    	enableSelectByExample="false" 
+    	selectByExampleQueryId="false"
+    	 -->
+    	<!--已生成的表
+    	 <table schema="demo" tableName="USER" domainObjectName="User"></table>
+    	 --> 		
+		<table schema="" tableName="CHB_MONTH_ASSET_POSITION" domainObjectName="ChbMonthAssetPosition"
+    	enableCountByExample="false"
+    	enableUpdateByExample="false" 
+    	enableDeleteByExample="false"
+    	enableSelectByExample="false" 
+    	selectByExampleQueryId="false">			
+		</table>
+	</context>
+</generatorConfiguration>
+

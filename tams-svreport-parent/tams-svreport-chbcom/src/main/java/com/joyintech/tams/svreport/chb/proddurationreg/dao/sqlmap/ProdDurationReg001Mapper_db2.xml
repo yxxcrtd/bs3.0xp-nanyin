@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chb.proddurationreg.dao.ProdDurationReg001Mapper_db2">
+	<sql id="baseInfo">
+		SELECT 
+			CPDS.REGIST_SEQNO registSeqno,
+		    CPDS.PROD_ID prodId,
+		    CPB.PROD_NAME prodName,
+		    CPDS.ISSUE_PARTY_ID issuePartyId,
+		    CPDS.PROD_REGIST_CODE prodRegistCode,
+		    CPDS.ORIGINAL_VALUE originalValue,
+		    CPDS.PRD_VALUE prdValue,
+		    CPDS.TOTAL_VALUE totalValue,
+		    CPDS.VALUE_CCY valueCcy,
+		    CPDS.CNY_ORL_VALUE cnyOrlValue,
+		    CPDS.CNY_PRD_VALUE cnyPrdValue,
+		    CPDS.CNY_TAL_VALUE cnyTalValue,
+		    CPDS.REA_YIELD*100 reaYield,
+		    CPDS.NEW_EXP_YIELD*100 newExpYield,
+		    CPDS.BANK_IMP_INT bankImpInt,
+		    TO_CHAR(CPDS.VDATE,'yyyyMMdd') vdate,
+		    TO_CHAR(CPDS.MDATE,'yyyyMMdd') mdate,
+		    CPDS.PURCHASE_QTY purchaseQty,
+		    CPDS.REDEEM_QTY redeemQty,
+		    CPDS.BALANCE_AMT balanceAmt,
+		    CPDS.PRD_QTY prdQty,
+		    CPDS.CCY_PURCHASE ccyPurchase,
+		    CPDS.SEND_STATUS sendStatus,
+		    CPDS.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+			CPDS.STATUS_DATE statusDate,
+		    CPDS.STATUS,
+		    CPDS.ORG_CODE orgCode,
+		    CPDS.UPDATE_TIME updateTime,
+		    CPDS.SUBMIT_TIME submitTime,
+		    CPDS.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
+		    CPDS.REMARK
+		FROM CHB_PRD_DEAL_SUB CPDS
+		
+		LEFT JOIN CHB_PRD_BASEINFO CPB 
+		ON CPB.PROD_ID = CPDS.PROD_ID
+		AND CPB.ORG_CODE = CPDS.ORG_CODE
+		AND CPB.STATUS = 'E'
+	</sql>
+
+	<delete id="deleteLastSubmitHis" parameterType="java.util.Map">
+      delete from CHB_PRD_DEAL_SUB_HIS
+      where 1 =1 
+      and HIS_NO in (
+      select a.HIS_NO from (
+  select HIS_NO,row_number() over(partition by prod_id,vdate order by nvl(UPDATE_TIME,CREATE_TIME) desc) myrank
+  from CHB_PRD_DEAL_SUB_HIS
+  where 1=1
+   <if test="registList !=null and registList.size()>0">
+         <foreach collection="registList" item="regist" open=" AND (PROD_ID,vdate) IN (" separator="union all"  close=")">
+           select #{regist.prodId,jdbcType=VARCHAR}, to_date(#{regist.vdate,jdbcType=VARCHAR},'yyyyMMdd') from sysibm.SYSDUMMY1
+         </foreach>
+      </if>
+  )a
+  where a.myrank=1
+  )
+  </delete>
+</mapper>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.common.dao.TransformRuleMapper_mysql">
+	<insert id="insertTransField" parameterType="com.joyintech.tams.report.common.dto.TransformRule001Dto">
+		insert into  CHB_TRANSFORM_RULE(SEQNO,TRANS_TYPE,ORG_FIELD,PINGYING,FIELD_UNICODE,
+			TARGET_FIELD,STATUS,IS_MODIFY,REMARK,UPDATE_USER,UPDATE_TIME,
+			CREATE_USER,CREATE_TIME,CREATE_DEPT) 
+		values (f_guid,
+        	#{transType,jdbcType=CHAR} ,
+        	#{orgField,jdbcType=VARCHAR} ,
+        	#{pinyin,jdbcType=VARCHAR} ,
+        	#{fieldUnicode,jdbcType=VARCHAR} ,
+       	 	#{targetField,jdbcType=VARCHAR} ,
+        	#{dataStatus,jdbcType=VARCHAR} ,
+        	#{isModify,jdbcType=CHAR} ,
+        	#{remark,jdbcType=VARCHAR} ,
+        	#{updateUser,jdbcType=VARCHAR},
+        	NOW(),
+       		#{createUser,jdbcType=VARCHAR},
+        	NOW(),
+       		#{createDept,jdbcType=VARCHAR})
+	</insert>
+	<update id="doEditSave" parameterType="com.joyintech.tams.report.common.dto.TransformRule001Dto">
+	update CHB_TRANSFORM_RULE
+        <set>
+        PINGYING=#{pinyin,jdbcType=VARCHAR} ,
+        TARGET_FIELD= #{targetField,jdbcType=VARCHAR} ,
+        REMARK=#{remark,jdbcType=VARCHAR},
+        UPDATE_USER= #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME=NOW()
+        </set>
+        where SEQNO=#{seqno}
+	</update>
+</mapper>

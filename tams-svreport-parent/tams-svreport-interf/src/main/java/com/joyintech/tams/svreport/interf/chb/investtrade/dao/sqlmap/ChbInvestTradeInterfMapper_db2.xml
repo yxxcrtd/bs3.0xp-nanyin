@@ -1,0 +1,1876 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+    namespace="com.joyintech.tams.svreport.interf.chb.investtrade.dao.ChbInvestTradeInterfMapper_db2">
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbInvestTrade">
+    <id column="TRADE_SEQNO" jdbcType="CHAR" property="tradeSeqno" />
+    <result column="TRADE_CODE" jdbcType="VARCHAR" property="tradeCode" />
+    <result column="INVEST_VARIETY" jdbcType="VARCHAR" property="investVariety" />
+    <result column="INVEST_TYPE" jdbcType="VARCHAR" property="investType" />
+    <result column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
+    <result column="REGIST_BANK_CODE" jdbcType="VARCHAR" property="registBankCode" />
+    <result column="ASSET_CODE" jdbcType="VARCHAR" property="assetCode" />
+    <result column="CCY" jdbcType="VARCHAR" property="ccy" />
+    <result column="AMT" jdbcType="DECIMAL" property="amt" />
+    <result column="CNY_AMT" jdbcType="DECIMAL" property="cnyAmt" />
+    <result column="NUM" jdbcType="DECIMAL" property="num" />
+    <result column="CUR_ASSET_TYPE" jdbcType="VARCHAR" property="curAssetType" />
+    <result column="CUR_ASSETDET_TYPE" jdbcType="VARCHAR" property="curAssetdetType" />
+    <result column="DEALDATE" jdbcType="DATE" property="dealdate" />
+    <result column="TRADE_COUNTER" jdbcType="VARCHAR" property="tradeCounter" />
+    <result column="UNIT_PRICE_FULL" jdbcType="DECIMAL" property="unitPriceFull" />
+    <result column="UNIT_PRICE_NET" jdbcType="DECIMAL" property="unitPriceNet" />
+    <result column="END_RATE" jdbcType="DECIMAL" property="endRate" />
+    <result column="CONTRACT_CODE" jdbcType="VARCHAR" property="contractCode" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="CHL_CPCT_ID" jdbcType="VARCHAR" property="chlCpctId" />
+    <result column="TRADE_TYPE" jdbcType="VARCHAR" property="tradeType" />
+    <result column="CHL_AGRT_NAME" jdbcType="VARCHAR" property="chlAgrtName" />
+    <result column="IS_UNDER_TRADE" jdbcType="VARCHAR" property="isUnderTrade" />
+    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+    <result column="ORG_CODE" jdbcType="VARCHAR" property="orgCode" />
+    <result column="DEPT_CODE" jdbcType="VARCHAR" property="deptCode" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="STATUS_DATE" jdbcType="DATE" property="statusDate" />
+    <result column="REV_DATE" jdbcType="DATE" property="revDate" />
+    <result column="DATA_SOURCE" jdbcType="VARCHAR" property="dataSource" />
+    <result column="RATE" jdbcType="DECIMAL" property="rate" />
+    <result column="BASIS" jdbcType="VARCHAR" property="basis" />
+    <result column="DEALTYPE" jdbcType="VARCHAR" property="dealtype" />
+    <result column="FACEVALUE" jdbcType="DECIMAL" property="facevalue" />
+    <result column="INTPAYAMT" jdbcType="DECIMAL" property="intPayAmt" />
+    <result column="F_TRADE_CODE" jdbcType="VARCHAR" property="fTradeCode" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    TRADE_SEQNO, TRADE_CODE, INVEST_VARIETY, INVEST_TYPE, PROD_ID, REGIST_BANK_CODE, 
+    ASSET_CODE, CCY, AMT, CNY_AMT, NUM, CUR_ASSET_TYPE, CUR_ASSETDET_TYPE, DEALDATE, 
+    TRADE_COUNTER, UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE, CONTRACT_CODE, REMARK, 
+    CHL_CPCT_ID, TRADE_TYPE, CHL_AGRT_NAME, IS_UNDER_TRADE, STATUS, ORG_CODE, DEPT_CODE, 
+    CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, STATUS_DATE, REV_DATE, DATA_SOURCE, 
+    RATE, BASIS, DEALTYPE, FACEVALUE
+  </sql>
+
+  <insert id="insertBatch" parameterType="com.joyintech.tams.common.base.entity.ChbInvestTrade">
+    insert into CHB_INVEST_TRADE (TRADE_SEQNO, TRADE_CODE, INVEST_VARIETY, 
+      INVEST_TYPE, PROD_ID, REGIST_BANK_CODE, 
+      ASSET_CODE, CCY, AMT, 
+      CNY_AMT, NUM, CUR_ASSET_TYPE, 
+      CUR_ASSETDET_TYPE, DEALDATE, TRADE_COUNTER, 
+      UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE, 
+      CONTRACT_CODE, REMARK, CHL_CPCT_ID, 
+      TRADE_TYPE, CHL_AGRT_NAME, IS_UNDER_TRADE, 
+      STATUS, ORG_CODE, DEPT_CODE, 
+      CREATE_USER, CREATE_TIME, UPDATE_USER, 
+      UPDATE_TIME, STATUS_DATE, REV_DATE, 
+      DATA_SOURCE, RATE, BASIS, 
+      DEALTYPE, FACEVALUE)
+    <foreach collection="insertList" item="item" index="index"
+        separator="union all ">
+      select
+      #{item.tradeSeqno,jdbcType=CHAR}, #{item.tradeCode,jdbcType=VARCHAR}, #{item.investVariety,jdbcType=VARCHAR}, 
+      #{item.investType,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.registBankCode,jdbcType=VARCHAR}, 
+      #{item.assetCode,jdbcType=VARCHAR}, #{item.ccy,jdbcType=VARCHAR}, #{item.amt,jdbcType=DECIMAL}, 
+      #{item.cnyAmt,jdbcType=DECIMAL}, #{item.num,jdbcType=DECIMAL}, #{item.curAssetType,jdbcType=VARCHAR}, 
+      #{item.curAssetdetType,jdbcType=VARCHAR}, #{item.dealdate,jdbcType=TIMESTAMP}, #{item.tradeCounter,jdbcType=VARCHAR}, 
+      #{item.unitPriceFull,jdbcType=DECIMAL}, #{item.unitPriceNet,jdbcType=DECIMAL}, #{item.endRate,jdbcType=DECIMAL}, 
+      #{item.contractCode,jdbcType=VARCHAR}, #{item.remark,jdbcType=VARCHAR}, #{item.chlCpctId,jdbcType=VARCHAR}, 
+      #{item.tradeType,jdbcType=VARCHAR}, #{item.chlAgrtName,jdbcType=VARCHAR}, #{item.isUnderTrade,jdbcType=VARCHAR}, 
+      #{item.status,jdbcType=VARCHAR}, #{item.orgCode,jdbcType=VARCHAR}, #{item.deptCode,jdbcType=VARCHAR}, 
+      #{item.createUser,jdbcType=VARCHAR}, sysdate, #{item.updateUser,jdbcType=VARCHAR}, 
+      sysdate, #{item.statusDate,jdbcType=TIMESTAMP}, #{item.revDate,jdbcType=TIMESTAMP}, 
+      #{item.dataSource,jdbcType=VARCHAR}, #{item.rate,jdbcType=DECIMAL}, #{item.basis,jdbcType=VARCHAR}, 
+      #{item.dealtype,jdbcType=VARCHAR},#{item.facevalue,jdbcType=DECIMAL}
+      from SYSIBM.SYSDUMMY1
+      </foreach>
+      </insert>
+  
+  <select id="selectInvestTradeByInterfdateBatch" parameterType="java.util.Map" 
+        resultType="com.joyintech.tams.common.base.entity.ChbInvestTrade"
+         resultSetType="FORWARD_ONLY" fetchSize="1000" flushCache="true" useCache="false">
+  WITH rate as(
+		SELECT
+		info.*
+		FROM MST_EXCHARGE_QUOTE info
+		where
+		info.QUOT_CYY = 'CNY'
+		and info.DATASOURCE_TYPE='SAFE'
+		and info.TRADE_DATE = (select max(t.TRADE_DATE)
+		from MST_EXCHARGE_QUOTE t
+		where t.EXCHARGE_CODE = info.EXCHARGE_CODE
+		and t.DATASOURCE_TYPE='SAFE'
+    	)
+	),
+    ASSET_COUNTER AS(
+    /*拆借*/
+    SELECT asset.REP_FINPROD_ID ASSET_ID,
+    depodetail.COUNTER_ID COUNTER_ID,
+    asset.REP_RATE_YEAR/100 asset_yeild,
+    greatest(nvl(NVL(asset.UPDATE_TIME,asset.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(depodetail.UPDATE_TIME,depodetail.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd'))
+       )  UPDATE_TIME
+    FROM REP_ASSET_INTER_LEND asset
+    left join fin_trade_product depodetail
+    on depodetail.FINPROD_ID = asset.REP_FINPROD_ID
+    where depodetail.branch = 0
+    AND depodetail.finprod_type2 IS NOT NULL
+    /*回购*/
+    union all
+    SELECT asset.REP_FINPROD_ID ASSET_ID,
+    depodetail.COUNTER_ID COUNTER_ID,
+    asset.REP_ANNUAL_INTEREST_RATE/100 asset_yeild,
+    greatest(nvl(NVL(asset.UPDATE_TIME,asset.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(depodetail.UPDATE_TIME,depodetail.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd'))
+       )  UPDATE_TIME
+    FROM REP_LIABILITIES asset
+    left join fin_trade_product depodetail
+    on depodetail.FINPROD_ID = asset.REP_FINPROD_ID
+    where depodetail.branch = 0
+    /*存放*/
+    UNION ALL
+    SELECT asset.REP_FINPROD_ID ASSET_ID,
+    assettail.ISSUER COUNTER_ID,
+    asset.REP_RATE_YEAR/100 asset_yeild,
+    greatest(nvl(NVL(asset.UPDATE_TIME,asset.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(assettail.UPDATE_TIME,assettail.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd'))
+       )  UPDATE_TIME
+    FROM REP_ASSET_BANK_DEPOSIT asset
+    left join fin_product assettail
+    on assettail.FINPROD_ID = asset.REP_FINPROD_ID
+    ),
+   /* 增加股票和衍生品交易 add by gaojian 2019-07-19 begin */
+	/*债券借贷交易拆分临时表*/
+	TEMP_BOND_DEAL AS (
+	SELECT * FROM (
+		/*债券借贷交易买入*/
+		SELECT DEAL.*, '00' SPLIT_TYPE FROM TRD_PRODUCT_DEAL DEAL
+		WHERE DEAL.FINPROD_TYPE2 IN ('F29', 'F30')
+		AND DEAL.PS = 'T01'
+		/*债券借贷到期本金交易*/
+		UNION ALL
+		SELECT DEAL.*, '01' SPLIT_TYPE FROM TRD_PRODUCT_DEAL DEAL
+		WHERE DEAL.FINPROD_TYPE2 IN ('F29', 'F30')
+		AND DEAL.PS = 'T07'
+		/*债券借贷到期费用交易*/
+		UNION ALL
+		SELECT DEAL.*, '02' SPLIT_TYPE FROM TRD_PRODUCT_DEAL DEAL
+		WHERE DEAL.FINPROD_TYPE2 IN ('F29', 'F30')
+		AND DEAL.PS = 'T07'
+		) TEMP
+		WHERE 1 = 1
+		AND EXISTS (
+			SELECT 1 
+			FROM PTL_TRADE PTLTRADE
+			WHERE 1 =1 
+			AND PTLTRADE.BUSI_NO = TEMP.TRADE_ID
+		)
+	),
+	/*外汇即期交易拆分临时表*/
+	TEMP_FES_DEAL AS (
+	SELECT * FROM (
+		/*拆分的买入交易*/
+		SELECT DEAL.*, '01' SPLIT_TYPE FROM TRD_PRODUCT_DEAL DEAL
+		WHERE DEAL.FINPROD_TYPE2 = 'F11'
+		AND DEAL.PS = 'T01'
+		/*拆分的卖出交易*/
+		UNION ALL
+		SELECT DEAL.*, '02' SPLIT_TYPE FROM TRD_PRODUCT_DEAL DEAL
+		WHERE DEAL.FINPROD_TYPE2 = 'F11'
+		AND DEAL.PS = 'T01'
+		/*其余交易(理论上没有数据)*/
+		UNION ALL
+		SELECT DEAL.*, '00' SPLIT_TYPE FROM TRD_PRODUCT_DEAL DEAL
+		WHERE DEAL.FINPROD_TYPE2 = 'F11'
+		AND DEAL.PS != 'T01'
+		) TEMP
+		WHERE 1 = 1
+		AND EXISTS (
+			SELECT 1 
+			FROM PTL_TRADE PTLTRADE
+			WHERE 1 =1 
+			AND PTLTRADE.BUSI_NO = TEMP.TRADE_ID
+		)
+	),
+	/*外汇远期交易拆分临时表*/
+	TEMP_FEF_DEAL AS (
+	SELECT * FROM (
+		/*外汇远期交易买入*/
+		SELECT DEAL.*, '00' SPLIT_TYPE FROM TRD_PRODUCT_DEAL DEAL
+		WHERE DEAL.FINPROD_TYPE2 = 'F12'
+		AND DEAL.PS != 'T07'
+		/*外汇远期到期本金交易*/
+		UNION ALL
+		SELECT DEAL.*, '01' SPLIT_TYPE FROM TRD_PRODUCT_DEAL DEAL
+		WHERE DEAL.FINPROD_TYPE2 = 'F12'
+		AND DEAL.PS = 'T07'
+		/*外汇远期到期费用交易*/
+		UNION ALL
+		SELECT DEAL.*, '02' SPLIT_TYPE FROM TRD_PRODUCT_DEAL DEAL
+		WHERE DEAL.FINPROD_TYPE2 = 'F12'
+		AND DEAL.PS = 'T07'
+		) TEMP
+		WHERE 1 = 1
+		AND EXISTS (
+			SELECT 1 
+			FROM PTL_TRADE PTLTRADE
+			WHERE 1 =1 
+			AND PTLTRADE.BUSI_NO = TEMP.TRADE_ID
+		)
+	),
+	/*外汇掉期交易拆分临时表*/
+	TEMP_FESW_DEAL AS (
+	SELECT * FROM (
+	    /*外汇掉期买入卖出交易*/
+		SELECT DEAL.*, '01' SPLIT_TYPE FROM TRD_PRODUCT_DEAL DEAL
+		WHERE DEAL.FINPROD_TYPE2 = 'F13'
+		/*外汇掉期收益交易*/
+		UNION ALL
+		SELECT DEAL.*, '02' SPLIT_TYPE FROM TRD_PRODUCT_DEAL DEAL
+		WHERE DEAL.FINPROD_TYPE2 = 'F13'
+		) TEMP
+		WHERE 1 = 1
+		AND EXISTS (
+			SELECT 1 
+			FROM PTL_TRADE PTLTRADE
+			WHERE 1 =1 
+			AND PTLTRADE.BUSI_NO = TEMP.TRADE_ID
+		)
+	),
+	/* 增加股票和衍生品交易 add by gaojian 2019-07-19 end */
+    INVESTDEAL AS(
+    /*债券+abs+行权*/
+    SELECT NULL TRADE_SEQNO,
+    deal.TRADE_ID TRADE_ID,
+    '01' INVEST_VARIETY,/*投资品种*/
+    decode(DEAL.INV_AIM,'FVTPL','TRA','AC','HTM','FVOCI','AFS') INVEST_TYPE,/*投资目的 枚举值对应待处理TODO*/
+    null PROD_ID,/*取自从属表*/
+    deal.regist_org REGIST_BANK_CODE,/*登记银行编码*/
+    DEAL.FINPROD_ID ASSET_CODE,
+    DEAL.CCY CCY,
+    deal.trade_amt AMT,
+    NULL CNY_AMT,/*折算后人民币在街口中单独处理*/
+    DEAL.SHARE_AMT*100 NUM,
+    DECODE(DEAL.PS,'T01','01','T02','02','T03','02','T39','02','T22',DECODE(TOTALDEAL.PS,'T08','11','T09','09','T07','09'),'T23',DECODE(TOTALDEAL.PS,'T08','11','T07','02')) CUR_ASSET_TYPE,/*中间还本的利息需统计成11其他收入*/
+    DECODE(DEAL.PS,'T22',decode(TOTALDEAL.ps,'T08','部分到期-收息','T09','收息','T07','收息'),'T23',decode(TOTALDEAL.ps,'T08','部分到期','T07','到期')) CUR_ASSETDET_TYPE,/*针对不同的收息：中间收息：债券收息交易，部分还本收息：债券中间还本交易，到期收息：债券到期利息收入*/
+    DEAL.SETTLE_DATE DEALDATE,
+    DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG) TRADE_COUNTER,
+    DECODE(DEAL.PS,'T01',DEAL.UNIT_FPRICE,'T02',DEAL.UNIT_FPRICE,'T03',DEAL.UNIT_FPRICE,'T39',DEAL.UNIT_FPRICE,'T23',DECODE(TOTALDEAL.PS,'T08',DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/cast(DEAL.SHARE_AMT as DECIMAL(30,2))*-1),'T07',DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/cast(DEAL.SHARE_AMT as DECIMAL(30,2))))) UNIT_PRICE_FULL,
+    DECODE(DEAL.PS,'T01',DEAL.UNIT_CPRICE,'T02',DEAL.UNIT_CPRICE,'T03',DEAL.UNIT_CPRICE,'T39',DEAL.UNIT_CPRICE,'T23',DECODE(TOTALDEAL.PS,'T08',decode(deal.SHARE_AMT,0,0,DEAL.trade_amt/cast(DEAL.SHARE_AMT as DECIMAL(30,2))*-1),'T07',decode(deal.SHARE_AMT,0,0,DEAL.trade_amt/cast(DEAL.SHARE_AMT as DECIMAL(30,2))))) UNIT_PRICE_NET,
+    DECODE(DEAL.PS,'T01',DEAL.YIELD,'T02',DEAL.YIELD,'T03',DEAL.YIELD,'T39',DEAL.YIELD,'T23',decode(TOTALDEAL.ps,'T07',DEAL.YIELD)) END_RATE,
+    DEAL.TRADE_ID CONTRACT_CODE,
+    DEAL.REMARK REMARK,
+    DEAL.CHL_ID CHL_CPCT_ID,
+    '01' TRADE_TYPE,/*后续判断是否为资管计划交易,即资产一级分类为资管计划*/
+    NULL CHL_AGRT_NAME,
+    decode(nvl(deal.CHL_ID,'NCHL'),'NCHL','02') IS_UNDER_TRADE,/*资产交易才为底层（通道投资）,资管计划交易不为底层*/
+    DECODE(NVL(REVDL.TRADE_ID,'NCANCEL'),'NCANCEL','E','D') STATUS,/*撤销的数据改变有效状态*/
+    NULL ORG_CODE,
+    NULL DEPT_CODE,
+    deal.CREATE_USER CREATE_USER,
+    deal.CREATE_TIME CREATE_TIME,
+    deal.UPDATE_USER UPDATE_USER,
+    greatest(nvl(NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(secASSET.UPDATE_TIME,secASSET.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(TOTALDEAL.UPDATE_TIME,TOTALDEAL.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd'))
+       )  UPDATE_TIME,
+    NULL STATUS_DATE,
+    REVDL.create_time REV_DATE,/*撤销日*/
+    NULL DATA_SOURCE,
+    NULL RATE,/*取中债系统中的资产收益率*/
+    NULL BASIS, /*取中债系统中的资产计息基础*/
+    decode(deal.ps,'T23',decode(totaldeal.ps,'T07',decode(deal.SHARE_AMT,0,0,DEAL.TRADE_AMT/cast(DEAL.SHARE_AMT as DECIMAL(30,2))),deal.par_value),DEAL.PAR_VALUE) FACEVALUE,/*面值*/
+    DECODE(DEAL.PS,'T01','08','T02','09','T03','09','T39','09','T22',decode(TOTALDEAL.ps,'T08','25','T09','23','T07','02'),'T23',decode(TOTALDEAL.ps,'T08','24','T07','01')) DEALTYPE/*收息具体类型在后续判断*/,
+    deal.TOTLE_TRADE_ID TOTLE_TRADE_ID,
+    null INTPAYAMT,
+    deal.F_TRADE_ID F_TRADE_ID
+    FROM TRD_PRODUCT_DEAL DEAL
+    LEFT JOIN TRD_PRODUCT_DEAL REVDL
+    ON deal.TRADE_ID = REVDL.P_TRADE_ID
+    LEFT JOIN FIN_PRODUCT secASSET
+    on deal.FINPROD_ID = secASSET.FINPROD_ID
+    LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TOTALDEAL
+    on deal.TOTLE_TRADE_ID = TOTALDEAL.TOTLE_TRADE_ID
+    WHERE 1=1
+    AND DEAL.BUSI_TYPE = '02'
+    and (ABS(nvl(deal.share_amt,0)) + ABS(nvl(deal.trade_amt,0)) != 0)/* 去除面额和金额同时为空的情况 */
+    /*只接入原始交易数据*/
+    /*AND DEAL.TRADE_STATUS = '01'*/
+    and nvL(deal.p_trade_id,'NOREV') = 'NOREV'
+    /*根据交割日和接口接入时间接入数据*/
+    <![CDATA[AND( NVL(deal.UPDATE_TIME,deal.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(secASSET.UPDATE_TIME,secASSET.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(TOTALDEAL.UPDATE_TIME,TOTALDEAL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
+    /*计划类资产*/
+    union all
+    SELECT NULL TRADE_SEQNO,
+    deal.TRADE_ID TRADE_ID,
+    DECODE(nvl(PLANASSET.PROFIT_TYPE,PLANASSETDETAIL.PROFIT_TYPE),'01','04','02','03','03','05') INVEST_VARIETY,/*投资品种根据收益类型分类*/
+    decode(DEAL.INV_AIM,'FVTPL','TRA','AC','HTM','FVOCI','AFS') INVEST_TYPE,/*投资目的 枚举值对应待处理TODO*/
+    null PROD_ID,/*取自从属表*/
+    deal.regist_org REGIST_BANK_CODE,/*登记银行编码*/
+    nvl(PLANASSET.FINPROD_ID,PLANASSETDETAIL.FINPROD_ID) ASSET_CODE,
+    DEAL.CCY CCY,
+    /*decode(nvl(PLANASSET.PROFIT_TYPE,PLANASSETDETAIL.PROFIT_TYPE),'01',decode(deal.ps,'T12',deal.int_amt,DEAL.TRADE_AMT),DEAL.TRADE_AMT) AMT,*/ /*利率型单独一类、货币性和净值型一类*/
+    decode(deal.ps,'T01',deal.prin_amt,'T11',deal.int_amt,'T12',deal.int_amt,DEAL.TRADE_AMT) AMT,/*对于计划类资产，红利再投及分红 发生金额直接取int_amt*/
+    NULL CNY_AMT,/*折算后人民币在街口中单独处理*/
+	decode(deal.ps,'T22',decode(totaldeal.ps,'T09',TOTALDEALPA.REMAIN_PRIN_AMT,TOTALDEAL.SHARE_AMT),'T23',TOTALDEAL.SHARE_AMT,DEAL.SHARE_AMT) NUM,
+    <!--deal.SHARE_AMT NUM,/*计划类资产红利再投另加一笔投资收益：分红日产品对应持仓份额走中债子系统的资产头寸中取*/-->
+    DECODE(DEAL.PS,'T01','01','T02','02','T22','09','T23','02','T05','01','T19','02','T11','09','T12','01','C3','01','C06','02') CUR_ASSET_TYPE,/*计划类资产红利再投另加一笔投资收益*/
+    DECODE(DEAL.PS,'T22',decode(TOTALDEAL.ps,'T08','部分到期-收息','T09','收息','T07','收息'),'T23',decode(TOTALDEAL.ps,'T08','部分到期','T07','到期'),'T11','资产分红') CUR_ASSETDET_TYPE,/*针对不同的收息：中间收息：债券收息交易，部分还本收息：债券中间还本交易，到期收息：债券到期利息收入*/
+    DEAL.SETTLE_DATE DEALDATE,
+    decode(deal.ps,'T22',custinfo.CUSTOMER_NAME,'T23',custinfo.CUSTOMER_NAME,'T11',custinfo.CUSTOMER_NAME,'T12',custinfo.CUSTOMER_NAME,DEAL.COUNTER_ID) TRADE_COUNTER,/*对手方*/
+<!--     DECODE(DEAL.PS,'T01',DECODE(nvl(PLANASSET.PROFIT_TYPE,PLANASSETDETAIL.PROFIT_TYPE),'03',1,DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/DEAL.SHARE_AMT)*100),'T02',DECODE(nvl(PLANASSET.PROFIT_TYPE,PLANASSETDETAIL.PROFIT_TYPE),'03',1,DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/DEAL.SHARE_AMT)*100),'T23',100,'T05',DECODE(nvl(PLANASSET.PROFIT_TYPE,PLANASSETDETAIL.PROFIT_TYPE),'03',1,DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/DEAL.SHARE_AMT)),'T19',DECODE(nvl(PLANASSET.PROFIT_TYPE,PLANASSETDETAIL.PROFIT_TYPE),'03',1,DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/DEAL.SHARE_AMT)),'T12', DECODE(nvl(PLANASSET.PROFIT_TYPE,PLANASSETDETAIL.PROFIT_TYPE),'01',DEAL.INT_AMT/nvl(decode(DEAL.SHARE_AMT,0,deal.INT_AMT,DEAL.SHARE_AMT),deal.INT_AMT),'03',1,DEAL.TRADE_AMT/nvl(decode(DEAL.SHARE_AMT,0,deal.TRADE_AMT,DEAL.SHARE_AMT),deal.TRADE_AMT))) UNIT_PRICE_FULL, -->
+    DECODE( DEAL.PS,
+		'T01',DECODE(
+				nvl(PLANASSET.PROFIT_TYPE,PLANASSETDETAIL.PROFIT_TYPE)
+				,'03',1
+				,'01',DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/cast(DEAL.SHARE_AMT as DECIMAL(30,2)))
+				,'02',DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/cast(DEAL.SHARE_AMT as DECIMAL(30,2)))*100),
+		'T02',DECODE(
+				nvl(PLANASSET.PROFIT_TYPE,PLANASSETDETAIL.PROFIT_TYPE),
+				'03',1
+				,'01',DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/cast(DEAL.SHARE_AMT as DECIMAL(30,2)))
+				,'02',DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/cast(DEAL.SHARE_AMT as DECIMAL(30,2)))*100),
+		'T23',100,
+		'T05',DECODE(nvl(PLANASSET.PROFIT_TYPE,PLANASSETDETAIL.PROFIT_TYPE),'03',1,DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/cast(DEAL.SHARE_AMT as DECIMAL(30,2)))),
+		'T19',DECODE(nvl(PLANASSET.PROFIT_TYPE,PLANASSETDETAIL.PROFIT_TYPE),'03',1,DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/cast(DEAL.SHARE_AMT as DECIMAL(30,2)))),
+		'T12',DECODE(nvl(PLANASSET.PROFIT_TYPE,PLANASSETDETAIL.PROFIT_TYPE),'01',DEAL.INT_AMT/nvl(decode(DEAL.SHARE_AMT,0,deal.INT_AMT,cast(DEAL.SHARE_AMT as DECIMAL(30,2))),deal.INT_AMT),'03',1,DEAL.TRADE_AMT/nvl(decode(DEAL.SHARE_AMT,0,deal.TRADE_AMT,cast(DEAL.SHARE_AMT as DECIMAL(30,2))),deal.TRADE_AMT))
+	)  UNIT_PRICE_FULL,
+<!--     DECODE(DEAL.PS,'T01',decode(nvl(PLANASSET.PROFIT_TYPE,PLANASSETDETAIL.PROFIT_TYPE),'03',1,100),'T02',decode(nvl(PLANASSET.PROFIT_TYPE,PLANASSETDETAIL.PROFIT_TYPE),'03',1,100),'T23',100,'T05',DECODE(nvl(PLANASSET.PROFIT_TYPE,PLANASSETDETAIL.PROFIT_TYPE),'03',1,DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/DEAL.SHARE_AMT)),'T19',DECODE(nvl(PLANASSET.PROFIT_TYPE,PLANASSETDETAIL.PROFIT_TYPE),'03',1,DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/DEAL.SHARE_AMT)),'T12',decode(nvl(PLANASSET.PROFIT_TYPE,PLANASSETDETAIL.PROFIT_TYPE),'01',deal.int_amt/nvl(decode(DEAL.SHARE_AMT,0,deal.int_amt,DEAL.SHARE_AMT),deal.int_amt),'03',1,DEAL.TRADE_AMT/nvl(decode(DEAL.SHARE_AMT,0,deal.TRADE_AMT,DEAL.SHARE_AMT),deal.TRADE_AMT))) UNIT_PRICE_NET, -->
+    DECODE(
+		DEAL.PS,
+		'T01',decode(
+				nvl(PLANASSET.PROFIT_TYPE,PLANASSETDETAIL.PROFIT_TYPE)
+				,'03',1
+				,'01',DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/cast(DEAL.SHARE_AMT as DECIMAL(30,2)))
+				,'02',100
+				),
+		'T02',decode(
+				nvl(PLANASSET.PROFIT_TYPE,PLANASSETDETAIL.PROFIT_TYPE)
+				,'03',1
+				,'01',DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/cast(DEAL.SHARE_AMT as DECIMAL(30,2)))
+				,'02',100),
+				
+		'T23',100,
+		'T05',DECODE(nvl(PLANASSET.PROFIT_TYPE,PLANASSETDETAIL.PROFIT_TYPE),'03',1,DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/cast(DEAL.SHARE_AMT as DECIMAL(30,2)))),
+		'T19',DECODE(nvl(PLANASSET.PROFIT_TYPE,PLANASSETDETAIL.PROFIT_TYPE),'03',1,DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/cast(DEAL.SHARE_AMT as DECIMAL(30,2)))),
+		'T12',decode(nvl(PLANASSET.PROFIT_TYPE,PLANASSETDETAIL.PROFIT_TYPE),'01',deal.int_amt/nvl(decode(DEAL.SHARE_AMT,0,deal.int_amt,cast(DEAL.SHARE_AMT as DECIMAL(30,2))),deal.int_amt),'03',1,DEAL.TRADE_AMT/nvl(decode(DEAL.SHARE_AMT,0,deal.TRADE_AMT,cast(DEAL.SHARE_AMT as DECIMAL(30,2))),deal.TRADE_AMT))
+	) UNIT_PRICE_NET,
+    DECODE(DEAL.PS,'T23',DECODE(TOTALDEAL.PS,'T07',DEAL.YIELD)) END_RATE,
+    nvl(nvl(PLANASSET.CONTRACT_NO,PLANASSETDETAIL.CONTRACT_NO),DEAL.TRADE_ID) CONTRACT_CODE,
+    DEAL.REMARK REMARK,
+    DEAL.CHL_ID CHL_CPCT_ID,
+    '01' TRADE_TYPE,/*后续判断是否为资管计划交易,即资产一级分类为资管计划*/
+    NULL CHL_AGRT_NAME,
+    decode(nvl(deal.CHL_ID,'NCHL'),'NCHL','02') IS_UNDER_TRADE,/*资产交易才为底层（通道投资）,资管计划交易不为底层*/
+    DECODE(NVL(REVDL.TRADE_ID,'NCANCEL'),'NCANCEL','E','D') STATUS,/*撤销的数据改变有效状态*/
+    NULL ORG_CODE,
+    NULL DEPT_CODE,
+    deal.CREATE_USER CREATE_USER,
+    deal.CREATE_TIME CREATE_TIME,
+    deal.UPDATE_USER UPDATE_USER,
+    greatest(nvl(NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(PLANASSETDETAIL.UPDATE_TIME,PLANASSETDETAIL.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(PLANASSET.UPDATE_TIME,PLANASSET.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(custinfo.UPDATE_TIME,custinfo.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(TOTALDEAL.UPDATE_TIME,TOTALDEAL.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(DEALADD.UPDATE_TIME,DEALADD.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd'))
+       )  UPDATE_TIME,
+    NULL STATUS_DATE,
+    REVDL.create_time REV_DATE,/*撤销日*/
+    NULL DATA_SOURCE,
+    NULL RATE,/*取中债系统中的资产收益率*/
+    NULL BASIS, /*取中债系统中的资产计息基础*/
+    null faceValue,/*面值*/
+    DECODE(DEAL.PS,'T01','08','T02','09','T22',decode(TOTALDEAL.ps,'T08','25','T09','23','T07','02'),'T23',decode(TOTALDEAL.ps,'T08','24','T07','01'),'T05','12','T19','15','T11','20','T12','05','C3','04','C06','03') DEALTYPE/*收息具体类型在后续判断*/,
+    deal.TOTLE_TRADE_ID TOTLE_TRADE_ID,
+    DEALADD.REG_DATE_AMT INTPAYAMT,
+    deal.F_TRADE_ID F_TRADE_ID
+    /* ASSETPOSITION.AMOUNT INTPAYAMT */
+    FROM TRD_PRODUCT_DEAL DEAL
+    LEFT JOIN TRD_PRODUCT_DEAL REVDL
+    ON deal.TRADE_ID = REVDL.P_TRADE_ID
+    LEFT JOIN FIN_PRODUCT PLANASSETDETAIL
+    on deal.FINPROD_ID = PLANASSETDETAIL.FINPROD_ID
+    LEFT JOIN FIN_PRODUCT PLANASSET
+    on PLANASSETDETAIL.P_FINPROD_ID = PLANASSET.FINPROD_ID
+    LEFT JOIN MST_CUSTOMER_INFO custinfo
+    on nvl(PLANASSET.MANAGER,PLANASSETDETAIL.MANAGER) = custinfo.CUSTOMER_ID
+    LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TOTALDEAL
+    on deal.TOTLE_TRADE_ID = TOTALDEAL.TOTLE_TRADE_ID
+    LEFT JOIN TRD_PRODUCT_DEAL_ADD DEALADD
+    ON DEALADD.TRADE_ID = DEAL.TRADE_ID
+	left join PA_TRD_FIN_PRODUCT_DEAL_TOTAL TOTALDEALPA
+    ON deal.TOTLE_TRADE_ID = TOTALDEALPA.TOTLE_TRADE_ID
+    WHERE 1=1
+    /*过滤项目类资产、计划类资产、基金重复项*/
+    AND DEAL.BUSI_TYPE     IN( '07','09','06')
+    AND DEAL.FINPROD_TYPE2 = 'F17'
+    /*只接入原始交易数据*/
+    /*AND DEAL.TRADE_STATUS = '01'*/
+    and nvL(deal.p_trade_id,'NOREV') = 'NOREV'
+    /*根据交割日和接口接入时间接入数据*/
+    <![CDATA[AND( NVL(deal.UPDATE_TIME,deal.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(PLANASSETDETAIL.UPDATE_TIME,PLANASSETDETAIL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(PLANASSET.UPDATE_TIME,PLANASSET.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(custinfo.UPDATE_TIME,custinfo.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(DEALADD.UPDATE_TIME,DEALADD.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(TOTALDEAL.UPDATE_TIME,TOTALDEAL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
+    /*存款类资产、拆借类资产*/
+    union all
+    SELECT NULL TRADE_SEQNO,
+    DEAL.TRADE_ID TRADE_ID,
+    DECODE(DEAL.FINPROD_TYPE2,'F08','07','F09','08','F21','08','F25','07','06') INVEST_VARIETY,/*投资品种*/
+    decode(DEAL.INV_AIM,'FVTPL','TRA','AC','HTM','FVOCI','AFS') INVEST_TYPE,/*投资目的 枚举值对应待处理TODO*/
+    null PROD_ID,/*取自从属表*/
+    deal.regist_org REGIST_BANK_CODE,/*登记银行编码*/
+    DEAL.FINPROD_ID ASSET_CODE,
+    DEAL.CCY CCY,
+    deal.trade_amt AMT,
+    NULL CNY_AMT,/*折算后人民币在街口中单独处理*/
+    DEAL.SHARE_AMT NUM,
+    DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T01','03','T02','04','T22','09','T23',DECODE(TOTALDEAL.PS,'T08','04','T07','04'),'T38','04'),'01',DECODE(DEAL.FINPROD_TYPE2,'F08',DECODE(DEAL.PS,'T01','06','T02','08','T22','10','T23','08'),DECODE(DEAL.PS,'T01','05','T02','07','T22','09','T23','07'))) CUR_ASSET_TYPE,
+    DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',DECODE(TOTALDEAL.PS,'T08','收息','T09','收息','T07','收息'),'T23',DECODE(TOTALDEAL.PS,'T08','部分到期','T07','到期')),'01',DECODE(DEAL.PS,'T22',DECODE(DEAL.FINPROD_TYPE2,'F08','付息','收息'),'T23','到期')) CUR_ASSETDET_TYPE,
+    DEAL.SETTLE_DATE DEALDATE,
+	DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',mst.customer_name,'T23',mst.customer_name,'T38',mst.customer_name,decode(TOTALDEAL.PS,'T09',mst.customer_name,deal.counter_id)),'01',NVL(deal.counter_id,assetcounter.COUNTER_ID)) TRADE_COUNTER,
+    <!--DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',mst.customer_name,'T23',mst.customer_name,'T38',mst.customer_name,decode(TOTALDEAL.PS,'T09',mst.customer_name,deal.counter_id)),'01',NVL(deal.counter_id,assetcounter.COUNTER_ID)) TRADE_COUNTER,-->
+    /*  DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',assetcounter.COUNTER_ID,'T23',assetcounter.COUNTER_ID,'T38',assetcounter.COUNTER_ID,decode(TOTALDEAL.PS,'T09',assetcounter.COUNTER_ID,deal.counter_id)),'01',decode(deal.finprod_id,'F07',DECODE(DEAL.PS,'T22',assetcounter.COUNTER_ID,'T23',assetcounter.COUNTER_ID,'T38',assetcounter.COUNTER_ID,decode(TOTALDEAL.PS,'T09',assetcounter.COUNTER_ID,deal.counter_id),DECODE(DEAL.PS,'T22',assetcounter.COUNTER_ID,'T23',assetcounter.COUNTER_ID,deal.counter_id)))) TRADE_COUNTER, */
+    /*到期收息的对手方要为空*/
+    NULL UNIT_PRICE_FULL,
+    NULL UNIT_PRICE_NET,
+    DECODE(DEAL.BUSI_TYPE,'01',assetcounter.asset_yeild,'03',assetcounter.asset_yeild) END_RATE,
+    nvl(DEPOASSET.CONTRACT_NO,DEAL.TRADE_ID) CONTRACT_CODE,
+    DEAL.REMARK REMARK,
+    DEAL.CHL_ID CHL_CPCT_ID,
+    '01' TRADE_TYPE,/*后续判断是否为资管计划交易,即资产一级分类为资管计划*/
+    NULL CHL_AGRT_NAME,
+    decode(nvl(deal.CHL_ID,'NCHL'),'NCHL','02') IS_UNDER_TRADE,/*资产交易才为底层（通道投资）,资管计划交易不为底层*/
+    DECODE(NVL(REVDL.TRADE_ID,'NCANCEL'),'NCANCEL','E','D') STATUS,/*撤销的数据改变有效状态*/
+    NULL ORG_CODE,
+    NULL DEPT_CODE,
+    deal.CREATE_USER CREATE_USER,
+    deal.CREATE_TIME CREATE_TIME,
+    deal.UPDATE_USER UPDATE_USER,
+    greatest(nvl(NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(DEPOASSET.UPDATE_TIME,DEPOASSET.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(ASSETCOUNTER.UPDATE_TIME,to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(TOTALDEAL.UPDATE_TIME,TOTALDEAL.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd'))
+       )  UPDATE_TIME,
+    NULL STATUS_DATE,
+    REVDL.create_time REV_DATE,/*撤销日*/
+    NULL DATA_SOURCE,
+    NULL RATE,/*取中债系统中的资产收益率*/
+    NULL BASIS, /*取中债系统中的资产计息基础*/
+    null faceValue,/*面值*/
+    DECODE(DEAL.PS,'T01','08','T02','09','T38','09','T22',DECODE(TOTALDEAL.PS,'T08','25','T09','23','T07','02'),'T23',DECODE(TOTALDEAL.PS,'T08','24','T07','01')) DEALTYPE,
+    deal.TOTLE_TRADE_ID TOTLE_TRADE_ID,
+    null INTPAYAMT,
+    deal.F_TRADE_ID F_TRADE_ID
+    FROM TRD_PRODUCT_DEAL DEAL
+    LEFT JOIN TRD_PRODUCT_DEAL REVDL
+    ON deal.TRADE_ID = REVDL.P_TRADE_ID
+    LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TOTALDEAL
+    on deal.TOTLE_TRADE_ID = TOTALDEAL.TOTLE_TRADE_ID
+    LEFT JOIN ASSET_COUNTER ASSETCOUNTER/*资产交易对手*/
+    on assetcounter.asset_id = DEAL.FINPROD_ID
+    LEFT JOIN FIN_PRODUCT DEPOASSET
+    ON DEPOASSET.FINPROD_ID = DEAL.FINPROD_ID
+    left join MST_CUSTOMER_INFO mst
+    on DEPOASSET.ISSUER = mst.customer_id
+    WHERE 1=1
+    and deal.BUSI_TYPE in( '03','01')
+    /*只接入原始交易数据*/
+    /*AND DEAL.TRADE_STATUS = '01'*/
+    and nvL(deal.p_trade_id,'NOREV') = 'NOREV'
+    /*根据交割日和接口接入时间接入数据*/
+    <![CDATA[AND( NVL(deal.UPDATE_TIME,deal.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(DEPOASSET.UPDATE_TIME,DEPOASSET.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or ASSETCOUNTER.UPDATE_TIME > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(TOTALDEAL.UPDATE_TIME,TOTALDEAL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
+    /*回购交易*/
+    union all
+    SELECT NULL TRADE_SEQNO,
+    DEAL.TRADE_ID TRADE_ID,
+    DECODE(DEAL.FINPROD_TYPE2,'F02','09','F03','10','F04','11','F05','12') INVEST_VARIETY,/*投资品种*/
+    decode(DEAL.INV_AIM,'FVTPL','TRA','AC','HTM','FVOCI','AFS') INVEST_TYPE,/*投资目的 枚举值对应待处理TODO*/
+    null PROD_ID,/*取自从属表*/
+    deal.regist_org REGIST_BANK_CODE,/*登记银行编码*/
+    DEAL.FINPROD_ID ASSET_CODE,
+    DEAL.CCY CCY,
+    deal.TRADE_AMT AMT,
+    NULL CNY_AMT,/*折算后人民币在街口中单独处理*/
+    DEAL.SHARE_AMT NUM,
+    DECODE(DEAL.FINPROD_TYPE2,'F02',DECODE(DEAL.PS,'T01','06','T02','08','T22','10','T23','08'),
+    'F03',DECODE(DEAL.PS,'T01','05','T02','07','T22','09','T23','07'),
+    'F04',DECODE(DEAL.PS,'T01','06','T02','08','T22','10','T23','08'),
+    'F05',DECODE(DEAL.PS,'T01','05','T02','07','T22','09','T23','07')) CUR_ASSET_TYPE,
+    DECODE(DEAL.FINPROD_TYPE2,'F02',DECODE(DEAL.PS,'T22','付息','T23','到期'),
+    'F03',DECODE(DEAL.PS,'T22','收息','T23','到期'),
+    'F04',DECODE(DEAL.PS,'T22',DECODE(TOTALDEAL.PS,'T08','部分到期-付息','T07','付息'),'T23',DECODE(TOTALDEAL.PS,'T08','部分到期','T07','到期')),
+    'F05',DECODE(DEAL.PS,'T22',DECODE(TOTALDEAL.PS,'T08','部分到期-收息','T07','收息'),'T23',DECODE(TOTALDEAL.PS,'T08','部分到期','T07','到期'))) CUR_ASSETDET_TYPE,
+    DEAL.SETTLE_DATE DEALDATE,
+    DECODE(DEAL.PS,'T22',DEPOASSET.counter_id,'T23',DEPOASSET.counter_id,deal.counter_id) TRADE_COUNTER,/*资产交易对手*/
+    null UNIT_PRICE_FULL,
+    NULL UNIT_PRICE_NET,
+    DEPOASSET.INT_RATE END_RATE,
+    DEAL.TRADE_ID CONTRACT_CODE,
+    DEAL.REMARK REMARK,
+    DEAL.CHL_ID CHL_CPCT_ID,
+    '01' TRADE_TYPE,/*后续判断是否为资管计划交易,即资产一级分类为资管计划*/
+    NULL CHL_AGRT_NAME,
+    decode(nvl(deal.CHL_ID,'NCHL'),'NCHL','02') IS_UNDER_TRADE,/*资产交易才为底层（通道投资）,资管计划交易不为底层*/
+    DECODE(NVL(REVDL.TRADE_ID,'NCANCEL'),'NCANCEL','E','D') STATUS,/*撤销的数据改变有效状态*/
+    NULL ORG_CODE,
+    NULL DEPT_CODE,
+    deal.CREATE_USER CREATE_USER,
+    deal.CREATE_TIME CREATE_TIME,
+    deal.UPDATE_USER UPDATE_USER,
+    greatest(nvl(NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(DEPOASSET.UPDATE_TIME,DEPOASSET.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(ASSETCOUNTER.UPDATE_TIME,to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(TOTALDEAL.UPDATE_TIME,TOTALDEAL.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd'))
+       )  UPDATE_TIME,
+    NULL STATUS_DATE,
+    REVDL.create_time REV_DATE,/*撤销日*/
+    NULL DATA_SOURCE,
+    NULL RATE,/*取中债系统中的资产收益率*/
+    NULL BASIS, /*取中债系统中的资产计息基础*/
+    null faceValue,/*面值*/
+    DECODE(DEAL.PS,'T01','08','T02','09','T22',decode(TOTALDEAL.ps,'T08','25','T09','23','T07','02'),'T23',decode(TOTALDEAL.ps,'T08','24','T07','01')) DEALTYPE/*收息具体类型在后续判断*/,
+    deal.TOTLE_TRADE_ID TOTLE_TRADE_ID,
+    null INTPAYAMT,
+    deal.F_TRADE_ID F_TRADE_ID
+    FROM TRD_PRODUCT_DEAL DEAL
+    LEFT JOIN TRD_PRODUCT_DEAL REVDL
+    ON deal.TRADE_ID = REVDL.P_TRADE_ID
+    LEFT JOIN FIN_TRADE_PRODUCT DEPOASSET
+    ON DEAL.FINPROD_ID = DEPOASSET.FINPROD_ID
+    and DEPOASSET.branch = 0
+    LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TOTALDEAL
+    on deal.TOTLE_TRADE_ID = TOTALDEAL.TOTLE_TRADE_ID
+    LEFT JOIN ASSET_COUNTER ASSETCOUNTER/*资产交易对手*/
+    on assetcounter.asset_id = DEAL.FINPROD_ID
+    WHERE 1=1
+    and deal.BUSI_TYPE in( '04','05')
+    /*只接入原始交易数据*/
+    /*AND DEAL.TRADE_STATUS = '01'*/
+    and nvL(deal.p_trade_id,'NOREV') = 'NOREV'
+    /*根据交割日和接口接入时间接入数据*/
+    <![CDATA[AND( NVL(deal.UPDATE_TIME,deal.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(DEPOASSET.UPDATE_TIME,DEPOASSET.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or ASSETCOUNTER.UPDATE_TIME > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(TOTALDEAL.UPDATE_TIME,TOTALDEAL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
+    /*基金资产*/
+    union all
+    SELECT NULL TRADE_SEQNO,
+    DEAL.TRADE_ID TRADE_ID,
+    DECODE(FUNDASSET.PROFIT_TYPE,'01','14','03','13') INVEST_VARIETY,
+    /*投资品种根据收益类型分类*/
+    DECODE(DEAL.INV_AIM,'FVTPL','TRA','AC','HTM','FVOCI','AFS') INVEST_TYPE,
+    /*投资目的 枚举值对应待处理TODO*/
+    NULL PROD_ID,
+    /*取自从属表*/
+    DEAL.REGIST_ORG REGIST_BANK_CODE,
+    /*登记银行编码*/
+    DEAL.FINPROD_ID ASSET_CODE,
+    DEAL.CCY CCY,
+    decode(deal.ps,'T01',deal.prin_amt,'T11',deal.int_amt,'T12',deal.int_amt,DEAL.TRADE_AMT) AMT,
+    NULL CNY_AMT,
+    /*折算后人民币在街口中单独处理*/
+    DEAL.SHARE_AMT NUM,
+    DECODE(FUNDASSET.PROFIT_TYPE,'01',DECODE(DEAL.PS,'T01','01','T02','02','T05','01','T19','02','T12','01','T11','09'),'03',DECODE(DEAL.PS,'T01','01','T02','02','T05','01','T19','02','T12','01','T11','09')) CUR_ASSET_TYPE,
+    NULL CUR_ASSETDET_TYPE,
+    DEAL.SETTLE_DATE DEALDATE,
+    decode(deal.ps,'T22',custinfo.CUSTOMER_NAME,'T23',custinfo.CUSTOMER_NAME,'T11',custinfo.CUSTOMER_NAME,'T12',custinfo.CUSTOMER_NAME,DEAL.COUNTER_ID) TRADE_COUNTER,
+    /*到期收息的对手方要为空*/
+    DECODE(FUNDASSET.PROFIT_TYPE,'03',DECODE(DEAL.PS,'T01',1,'T02',1,'T05',1,'T19',1,'T12',1),'01',DECODE(DEAL.PS,'T01',DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/cast(DEAL.SHARE_AMT as DECIMAL(30,2))),'T02',DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/cast(DEAL.SHARE_AMT as DECIMAL(30,2))),'T05',DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/cast(DEAL.SHARE_AMT as DECIMAL(30,2))),'T19',DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/cast(DEAL.SHARE_AMT as DECIMAL(30,2))),'T11',DEAL.INT_AMT/nvl(decode(DEAL.SHARE_AMT,0,deal.INT_AMT,cast(DEAL.SHARE_AMT as DECIMAL(30,2))),deal.INT_AMT),'T12',DEAL.INT_AMT/nvl(decode(DEAL.SHARE_AMT,0,deal.INT_AMT,cast(DEAL.SHARE_AMT as DECIMAL(30,2))),deal.INT_AMT))) UNIT_PRICE_FULL,
+    DECODE(FUNDASSET.PROFIT_TYPE,'03',DECODE(DEAL.PS,'T01',1,'T02',1,'T05',1,'T19',1,'T12',1),'01',DECODE(DEAL.PS,'T01',DECODE(DEAL.SHARE_AMT,0,0,DEAL.prin_amt/cast(DEAL.SHARE_AMT as DECIMAL(30,2))),'T02',DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/cast(DEAL.SHARE_AMT as DECIMAL(30,2))),'T05',DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/cast(DEAL.SHARE_AMT as DECIMAL(30,2))),'T19',DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/cast(DEAL.SHARE_AMT as DECIMAL(30,2))),'T11',DEAL.int_amt/nvl(decode(DEAL.SHARE_AMT,0,deal.INT_AMT,cast(DEAL.SHARE_AMT as DECIMAL(30,2))),deal.INT_AMT),'T12',DEAL.int_amt/nvl(decode(DEAL.SHARE_AMT,0,deal.INT_AMT,cast(DEAL.SHARE_AMT as DECIMAL(30,2))),deal.INT_AMT))) UNIT_PRICE_NET,
+    NULL END_RATE,
+    nvl(sqdeal.F_TRADE_ID, DEAL.TRADE_ID) CONTRACT_CODE,
+    DEAL.REMARK REMARK,
+    DEAL.CHL_ID CHL_CPCT_ID,
+    '01' TRADE_TYPE,
+    /*后续判断是否为资管计划交易,即资产一级分类为资管计划*/
+    NULL CHL_AGRT_NAME,
+    DECODE(NVL(DEAL.CHL_ID,'NCHL'),'NCHL','02') IS_UNDER_TRADE,
+    /*资产交易才为底层（通道投资）,资管计划交易不为底层*/
+    DECODE(NVL(REVDL.TRADE_ID,'NCANCEL'),'NCANCEL','E','D') STATUS,/*撤销的数据改变有效状态*/
+    /*有效状态默认有效*/
+    NULL ORG_CODE,
+    NULL DEPT_CODE,
+    deal.CREATE_USER CREATE_USER,
+    deal.CREATE_TIME CREATE_TIME,
+    deal.UPDATE_USER UPDATE_USER,
+    greatest(nvl(NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(FUNDASSET.UPDATE_TIME,FUNDASSET.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(custinfo.UPDATE_TIME,custinfo.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(DEALADD.UPDATE_TIME,DEALADD.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd'))
+       )  UPDATE_TIME,
+    NULL STATUS_DATE,
+    REVDL.create_time REV_DATE,/*撤销日*/
+    NULL DATA_SOURCE,
+    NULL RATE,
+    /*取中债系统中的资产收益率*/
+    NULL BASIS,
+    /*取中债系统中的资产计息基础*/
+    NULL FACEVALUE,
+    /*面值*/
+    DECODE(DEAL.PS,'T01','08','T02','09','T05','12','T19','15','T12','05','T11','20') DEALTYPE
+    /*收息具体类型在后续判断*/ ,
+    deal.TOTLE_TRADE_ID TOTLE_TRADE_ID,
+    DEALADD.REG_DATE_AMT INTPAYAMT,
+    deal.F_TRADE_ID F_TRADE_ID
+    /* ASSETPOSITION.AMOUNT INTPAYAMT */
+    FROM TRD_PRODUCT_DEAL DEAL
+    LEFT JOIN TRD_PRODUCT_DEAL REVDL
+    ON deal.TRADE_ID = REVDL.P_TRADE_ID
+    LEFT JOIN FIN_PRODUCT FUNDASSET
+    ON DEAL.FINPROD_ID  = FUNDASSET.FINPROD_ID
+    LEFT JOIN MST_CUSTOMER_INFO custinfo
+    on FUNDASSET.MANAGER = custinfo.CUSTOMER_ID
+    LEFT JOIN TRD_PRODUCT_DEAL_ADD DEALADD
+    ON DEALADD.TRADE_ID = DEAL.TRADE_ID
+    left join TRD_PRODUCT_DEAL sqdeal
+    on sqdeal.TRADE_ID=DEAL.B_TRADE_ID
+    WHERE 1             =1
+    AND DEAL.BUSI_TYPE IN( '06','07')
+    /*过滤货基中的计划类资产净值型*/
+    and deal.FINPROD_TYPE2 = 'F06'
+    /*只取确认数据*/
+    AND DEAL.PS IN ('T01','T02','T05','T19','T11','T12')
+    /*AND DEAL.TRADE_STATUS = '01'*/
+    and nvL(deal.p_trade_id,'NOREV') = 'NOREV'
+    /*根据交割日和接口接入时间接入数据*/
+    <![CDATA[AND( NVL(deal.UPDATE_TIME,deal.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(FUNDASSET.UPDATE_TIME,FUNDASSET.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(custinfo.UPDATE_TIME,custinfo.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(DEALADD.UPDATE_TIME,DEALADD.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
+    /*债权类、权益类(项目)资产交易*/
+    union all
+    SELECT NULL TRADE_SEQNO,
+    deal.TRADE_ID TRADE_ID,
+    '15' INVEST_VARIETY,/*投资品种*/
+    decode(DEAL.INV_AIM,'FVTPL','TRA','AC','HTM','FVOCI','AFS') INVEST_TYPE,/*投资目的 枚举值对应待处理TODO*/
+    null PROD_ID,/*取自从属表*/
+    deal.regist_org REGIST_BANK_CODE,/*登记银行编码*/
+    DEAL.FINPROD_ID ASSET_CODE,
+    DEAL.CCY CCY,
+    deal.trade_amt AMT,
+    NULL CNY_AMT,/*折算后人民币在街口中单独处理*/
+	decode(deal.ps,'T22',decode(totaldeal.ps,'T09',TOTALDEALPA.REMAIN_PRIN_AMT,TOTALDEAL.SHARE_AMT),'T23',TOTALDEAL.SHARE_AMT,DEAL.SHARE_AMT) NUM,
+    <!--decode(deal.ps,'T22',decode(totaldeal.ps,'T09',deal.share_amt,TOTALDEAL.SHARE_AMT),'T23',TOTALDEAL.SHARE_AMT,DEAL.SHARE_AMT) NUM,-->
+    DECODE(DEAL.PS,'T01','01','T02','02','T22',DECODE(TOTALDEAL.PS,'T08','09','T09','09','T07','09'),'T23',DECODE(TOTALDEAL.PS,'T08','02','T07','02')) CUR_ASSET_TYPE,/*中间还本的利息需统计成11其他收入*/
+    DECODE(DEAL.PS,'T22',decode(TOTALDEAL.ps,'T08','部分到期-收息','T09','收息','T07','收息'),'T23',decode(TOTALDEAL.ps,'T08','部分到期','T07','到期')) CUR_ASSETDET_TYPE,/*针对不同的收息：中间收息：债券收息交易，部分还本收息：债券中间还本交易，到期收息：债券到期利息收入*/
+    DEAL.SETTLE_DATE DEALDATE,
+    decode(deal.ps,'T22',custinfo.CUSTOMER_NAME,'T23',custinfo.CUSTOMER_NAME,'T11',custinfo.CUSTOMER_NAME,'T12',custinfo.CUSTOMER_NAME,DEAL.COUNTER_ID) TRADE_COUNTER,/*到期收息的对手方要为空*/
+    DECODE(DEAL.PS,'T01',DEAL.UNIT_FPRICE,'T02',DEAL.UNIT_FPRICE,'T23',100) UNIT_PRICE_FULL,
+    DECODE(DEAL.PS,'T01',DEAL.UNIT_CPRICE,'T02',DEAL.UNIT_CPRICE,'T23',decode(TOTALDEAL.SHARE_AMT,0,0,null,0,DEAL.trade_amt / cast(TOTALDEAL.SHARE_AMT as DECIMAL(30,2)) * 100)) UNIT_PRICE_NET,
+    DECODE(DEAL.PS,'T01',DEAL.YIELD,'T02',DEAL.YIELD) END_RATE,
+    nvl(PROJECTASSET.CONTRACT_NO,DEAL.TRADE_ID) CONTRACT_CODE,
+    DEAL.REMARK REMARK,
+    DEAL.CHL_ID CHL_CPCT_ID,
+    '01' TRADE_TYPE,/*后续判断是否为资管计划交易,即资产一级分类为资管计划*/
+    NULL CHL_AGRT_NAME,
+    decode(nvl(deal.CHL_ID,'NCHL'),'NCHL','02') IS_UNDER_TRADE,/*资产交易才为底层（通道投资）,资管计划交易不为底层*/
+    DECODE(NVL(REVDL.TRADE_ID,'NCANCEL'),'NCANCEL','E','D') STATUS,/*撤销的数据改变有效状态*/
+    NULL ORG_CODE,
+    NULL DEPT_CODE,
+    deal.CREATE_USER CREATE_USER,
+    deal.CREATE_TIME CREATE_TIME,
+    deal.UPDATE_USER UPDATE_USER,
+    greatest(nvl(NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(PROJECTASSET.UPDATE_TIME,PROJECTASSET.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(custinfo.UPDATE_TIME,custinfo.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(TOTALDEAL.UPDATE_TIME,TOTALDEAL.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(DEALADD.UPDATE_TIME,DEALADD.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd'))
+       )  UPDATE_TIME,
+    NULL STATUS_DATE,
+    REVDL.create_time REV_DATE,/*撤销日*/ 
+    NULL DATA_SOURCE,
+    NULL RATE,/*取中债系统中的资产收益率*/
+    NULL BASIS, /*取中债系统中的资产计息基础*/
+    NULL FACEVALUE,/*面值*/
+    DECODE(DEAL.PS,'T01','08','T02','09','T22',decode(TOTALDEAL.ps,'T08','25','T09','23','T07','02'),'T23',decode(TOTALDEAL.ps,'T08','24','T07','01')) DEALTYPE/*收息具体类型在后续判断*/,
+    deal.TOTLE_TRADE_ID TOTLE_TRADE_ID,
+    null INTPAYAMT,
+    deal.F_TRADE_ID F_TRADE_ID
+    FROM TRD_PRODUCT_DEAL DEAL
+    LEFT JOIN TRD_PRODUCT_DEAL REVDL
+    ON deal.TRADE_ID = REVDL.P_TRADE_ID
+    LEFT JOIN FIN_PRODUCT PROJECTASSET
+    ON DEAL.FINPROD_ID  = PROJECTASSET.FINPROD_ID
+    LEFT JOIN MST_CUSTOMER_INFO custinfo
+    on PROJECTASSET.FINANCIER = custinfo.CUSTOMER_ID
+    LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TOTALDEAL
+    on deal.TOTLE_TRADE_ID = TOTALDEAL.TOTLE_TRADE_ID
+    LEFT JOIN TRD_PRODUCT_DEAL_ADD DEALADD
+    ON DEALADD.TRADE_ID = DEAL.TRADE_ID
+	left join PA_TRD_FIN_PRODUCT_DEAL_TOTAL TOTALDEALPA
+    ON deal.TOTLE_TRADE_ID = TOTALDEALPA.TOTLE_TRADE_ID
+    WHERE 1=1
+    /*过滤项目类资产*/
+    AND DEAL.BUSI_TYPE     = '09'
+    AND DEAL.FINPROD_TYPE2 = 'F18'
+    /*只接入原始交易数据*/
+    /*AND DEAL.TRADE_STATUS = '01'*/
+    and nvL(deal.p_trade_id,'NOREV') = 'NOREV'
+    /*根据交割日和接口接入时间接入数据*/
+    <![CDATA[AND( NVL(deal.UPDATE_TIME,deal.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(PROJECTASSET.UPDATE_TIME,PROJECTASSET.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(custinfo.UPDATE_TIME,custinfo.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(DEALADD.UPDATE_TIME,DEALADD.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(TOTALDEAL.UPDATE_TIME,TOTALDEAL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
+    /*增值税缴纳*/
+    union all
+    select 
+    NULL TRADE_SEQNO,
+    deal.TRADE_ID TRADE_ID,
+    '22' INVEST_VARIETY,/*投资品种,营改增*/
+    deal.INV_AIM INVEST_TYPE,/*投资目的 枚举值对应待处理*/
+    null PROD_ID,/*产品代码*/
+    deal.regist_org REGIST_BANK_CODE,/*登记银行编码*/
+    deal.FINPROD_ID ASSET_CODE,/*行内资产负债编码*/
+    deal.CCY CCY,/*币种*/
+    deal.trade_AMT AMT,/*发生金额*/
+    null CNY_AMT,/*折算人民币*/
+    0 NUM,/*数量*/
+    '12' CUR_ASSET_TYPE,/*资金流动类型*/
+    '增值税缴纳' CUR_ASSETDET_TYPE,/*资金流动类型说明*/
+    deal.SETTLE_DATE DEALDATE,/*交易日期*/
+    null TRADE_COUNTER,/*交易对手*/
+    null UNIT_PRICE_FULL,
+    null UNIT_PRICE_NET,
+    null END_RATE,
+    deal.TRADE_ID CONTRACT_CODE,
+    deal.REMARK REMARK,
+    null CHL_CPCT_ID,
+    ' 04' TRADE_TYPE,/*其他交易*/
+    NULL CHL_AGRT_NAME,
+    decode(nvl(deal.CHL_ID,'NCHL'),'NCHL','02') IS_UNDER_TRADE,/*资产交易才为底层（通道投资）,资管计划交易不为底层*/
+    DECODE(NVL(REVDL.TRADE_ID,'NCANCEL'),'NCANCEL','E','D') STATUS,/*撤销的数据改变有效状态*/
+    NULL ORG_CODE,
+    NULL DEPT_CODE,
+    deal.CREATE_USER CREATE_USER,
+    deal.CREATE_TIME CREATE_TIME,
+    deal.UPDATE_USER UPDATE_USER,
+    greatest(nvl(NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(DEALADD.UPDATE_TIME,DEALADD.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd'))
+       )  UPDATE_TIME,
+    NULL STATUS_DATE,
+    REVDL.create_time REV_DATE,/*撤销日*/
+    NULL DATA_SOURCE,
+    NULL RATE,
+    NULL BASIS,
+    NULL FACEVALUE,/*面值*/
+    '22' DEALTYPE/*交易类型：营改增缴纳*/,
+    deal.TOTLE_TRADE_ID TOTLE_TRADE_ID,
+    null INTPAYAMT,
+    deal.F_TRADE_ID F_TRADE_ID
+    from TRD_PRODUCT_DEAL deal
+    LEFT JOIN TRD_PRODUCT_DEAL REVDL
+    ON deal.TRADE_ID = REVDL.P_TRADE_ID
+    LEFT JOIN TRD_PRODUCT_DEAL_ADD dealadd 
+    on dealadd.TRADE_ID = deal.TRADE_ID
+    where 1= 1
+    and deal.BUSI_TYPE = '16'
+    /*AND DEAL.TRADE_STATUS = '01'*/
+    and nvL(deal.p_trade_id,'NOREV') = 'NOREV'
+    <![CDATA[AND( NVL(deal.UPDATE_TIME,deal.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(DEALADD.UPDATE_TIME,DEALADD.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
+    /*通道费用交易*/
+    union all
+    select 
+    NULL TRADE_SEQNO,
+    deal.TRADE_ID TRADE_ID,
+    '16' INVEST_VARIETY,/*投资品种,通道费用支付*/
+    deal.INV_AIM INVEST_TYPE,/*投资目的 枚举值对应待处理*/
+    null PROD_ID,
+    deal.regist_org REGIST_BANK_CODE,/*登记银行编码*/
+    null ASSET_CODE,/*行内资产负债编码*/
+    deal.CCY CCY,/*币种*/
+    deal.trade_AMT AMT,/*发生金额*/
+    null CNY_AMT,/*折算人民币*/
+    0 NUM,/*数量*/
+    '12' CUR_ASSET_TYPE,/*资金流动类型*/
+    '投资费用支出' CUR_ASSETDET_TYPE,/*资金流动类型说明*/
+    deal.TRADE_DATE DEALDATE,/*交易日期*/
+    custinfo.CUSTOMER_NAME TRADE_COUNTER,/*交易对手*/
+    null UNIT_PRICE_FULL,
+    null UNIT_PRICE_NET,
+    null END_RATE,
+    deal.TRADE_ID CONTRACT_CODE,
+    deal.REMARK REMARK,
+    null CHL_CPCT_ID,
+    '06' TRADE_TYPE,/*通道费用交易*/
+    NULL CHL_AGRT_NAME,
+    '02' IS_UNDER_TRADE,/*资产交易才为底层（通道投资）,资管计划交易不为底层*/
+    DECODE(NVL(REVDL.TRADE_ID,'NCANCEL'),'NCANCEL','E','D') STATUS,/*撤销的数据改变有效状态*/
+    NULL ORG_CODE,
+    NULL DEPT_CODE,
+    deal.CREATE_USER CREATE_USER,
+    deal.CREATE_TIME CREATE_TIME,
+    deal.UPDATE_USER UPDATE_USER,
+    GREATEST(NVL(NVL(custinfo.UPDATE_TIME,custinfo.CREATE_TIME),TO_DATE('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(deal.UPDATE_TIME,deal.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(info.UPDATE_TIME,info.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd'))
+       )  UPDATE_TIME,
+    NULL STATUS_DATE,
+    REVDL.create_time REV_DATE,/*撤销日*/
+    NULL DATA_SOURCE,
+    NULL RATE,
+    NULL BASIS,
+    NULL FACEVALUE,/*面值*/
+    '16' DEALTYPE/*交易类型：通道费用支付*/,
+    deal.TOTLE_TRADE_ID TOTLE_TRADE_ID,
+    null INTPAYAMT,
+    deal.F_TRADE_ID F_TRADE_ID
+    from TRD_PRODUCT_DEAL deal 
+    LEFT JOIN TRD_PRODUCT_DEAL REVDL
+    ON deal.TRADE_ID = REVDL.P_TRADE_ID 
+    left join fin_product info
+    on info.FINPROD_ID = deal.CHL_ID
+    left join MST_CUSTOMER_INFO custinfo
+    on info.manager = custinfo.CUSTOMER_ID
+    WHERE 1 =1
+    and deal.finprod_type2 = 'B09'/*金融产品分类（投管分类）*/
+    /*AND DEAL.TRADE_STATUS = '01'*/
+    and nvL(deal.p_trade_id,'NOREV') = 'NOREV'
+    <![CDATA[AND(NVL(deal.UPDATE_TIME,deal.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[OR NVL(info.UPDATE_TIME,info.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(custinfo.UPDATE_TIME,custinfo.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
+    /*自定义现金流*/
+    union all
+    select 
+    NULL TRADE_SEQNO,
+    deal.TRADE_ID TRADE_ID,
+    '21' INVEST_VARIETY,/*投资品种,自定义现金流*/
+    deal.INV_AIM INVEST_TYPE,/*投资目的 枚举值对应待处理*/
+    null PROD_ID,/*产品代码*/
+    deal.regist_org REGIST_BANK_CODE,/*登记银行编码*/
+    deal.FINPROD_ID ASSET_CODE,/*行内资产负债编码*/
+    deal.CCY CCY,/*币种*/
+    deal.trade_amt AMT,/*发生金额*/
+    null CNY_AMT,/*折算人民币*/
+    nvl(deal.SHARE_AMT,0) NUM,/*数量*/
+    DECODE(deal.PS,'T99','12','T98','11' ) CUR_ASSET_TYPE,/*资金流动类型*/
+    '无' CUR_ASSETDET_TYPE,/*资金流动类型说明*/
+    deal.SETTLE_DATE DEALDATE,/*交易日期*/
+    deal.COUNTER_ID TRADE_COUNTER,/*交易对手*/
+    null UNIT_PRICE_FULL,
+    null UNIT_PRICE_NET,
+    null END_RATE,
+    deal.TRADE_ID CONTRACT_CODE,
+    deal.REMARK REMARK,
+    null CHL_CPCT_ID,
+    '04' TRADE_TYPE,/*其他交易*/
+    NULL CHL_AGRT_NAME,
+    decode(nvl(deal.CHL_ID,'NCHL'),'NCHL','02') IS_UNDER_TRADE,/*资产交易才为底层（通道投资）,资管计划交易不为底层*/
+    DECODE(NVL(REVDL.TRADE_ID,'NCANCEL'),'NCANCEL','E','D') STATUS,/*撤销的数据改变有效状态*/
+    NULL ORG_CODE,
+    NULL DEPT_CODE,
+    deal.CREATE_USER CREATE_USER,
+    deal.CREATE_TIME CREATE_TIME,
+    deal.UPDATE_USER UPDATE_USER,
+    nvL(deal.UPDATE_TIME,deal.CREATE_TIME) UPDATE_TIME,
+    NULL STATUS_DATE,
+    REVDL.create_time REV_DATE,/*撤销日*/ 
+    NULL DATA_SOURCE,
+    NULL RATE,
+    NULL BASIS,
+    NULL FACEVALUE,/*面值*/
+    DECODE(deal.PS,'T99','13','T98','14' ) DEALTYPE/*交易类型：13自定义现金流收入;14自定义现金流支出*/,
+    deal.TOTLE_TRADE_ID TOTLE_TRADE_ID,
+    null INTPAYAMT,
+    deal.F_TRADE_ID F_TRADE_ID
+    from TRD_PRODUCT_DEAL deal
+    LEFT JOIN TRD_PRODUCT_DEAL REVDL
+    ON deal.TRADE_ID = REVDL.P_TRADE_ID
+    where deal.finprod_type2 = 'F23'
+    /*AND DEAL.TRADE_STATUS = '01'*/
+    and nvL(deal.p_trade_id,'NOREV') = 'NOREV'
+    <![CDATA[AND (NVL(deal.UPDATE_TIME,deal.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
+    /*理财托管户收息确认*/
+    union all
+    select 
+    NULL TRADE_SEQNO,
+    deal.TRADE_ID TRADE_ID,
+    '19' INVEST_VARIETY,/*19理财托管户收息;20其他账户收息*/
+    deal.INV_AIM INVEST_TYPE,/*投资目的 枚举值对应待处理*/
+    null PROD_ID,/*产品代码*/
+    deal.regist_org REGIST_BANK_CODE,/*登记银行编码*/
+    deal.FINPROD_ID ASSET_CODE,/*行内资产负债编码*/
+    deal.CCY CCY,/*币种*/
+    deal.trade_amt AMT,/*发生金额*/
+    null CNY_AMT,/*折算人民币*/
+    0 NUM,/*数量*/
+    '11' CUR_ASSET_TYPE,/*资金流动类型*/
+    '理财账户收息' CUR_ASSETDET_TYPE,/*资金流动类型说明*/
+    deal.SETTLE_DATE DEALDATE,/*交易日期*/
+    null TRADE_COUNTER,/*交易对手*/
+    null UNIT_PRICE_FULL,
+    null UNIT_PRICE_NET,
+    null END_RATE,
+    deal.TRADE_ID CONTRACT_CODE,
+    deal.REMARK REMARK,
+    null CHL_CPCT_ID,
+    '04' TRADE_TYPE,/*其他交易*/
+    NULL CHL_AGRT_NAME,
+    decode(nvl(deal.CHL_ID,'NCHL'),'NCHL','02') IS_UNDER_TRADE,/*资产交易才为底层（通道投资）,资管计划交易不为底层*/
+    DECODE(NVL(REVDL.TRADE_ID,'NCANCEL'),'NCANCEL','E','D') STATUS,/*撤销的数据改变有效状态*/
+    NULL ORG_CODE,
+    NULL DEPT_CODE,
+    deal.CREATE_USER CREATE_USER,
+    deal.CREATE_TIME CREATE_TIME,
+    deal.UPDATE_USER UPDATE_USER,
+    nvL(deal.UPDATE_TIME,deal.CREATE_TIME) UPDATE_TIME,
+    NULL STATUS_DATE,
+    REVDL.create_time REV_DATE,/*撤销日*/
+    NULL DATA_SOURCE,
+    NULL RATE,
+    NULL BASIS,
+    NULL FACEVALUE,/*面值*/
+    '07' DEALTYPE/*交易类型：07理财托管户收息确认;11理财账户收息确认*/,
+    deal.TOTLE_TRADE_ID TOTLE_TRADE_ID,
+    null INTPAYAMT,
+    deal.F_TRADE_ID F_TRADE_ID
+    from TRD_PRODUCT_DEAL deal
+    LEFT JOIN TRD_PRODUCT_DEAL REVDL
+    ON deal.TRADE_ID = REVDL.P_TRADE_ID
+    where deal.BUSI_TYPE = '15'
+    /*AND DEAL.TRADE_STATUS = '01'*/
+    and nvL(deal.p_trade_id,'NOREV') = 'NOREV'
+    <![CDATA[AND (NVL(deal.UPDATE_TIME,deal.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
+    /* 增加股票和衍生品交易 add by gaojian 2019-07-19 begin */
+    /*股票交易*/
+	UNION ALL
+	SELECT
+	NULL TRADE_SEQNO, /*交易UUID*/
+	DEAL.TRADE_ID TRADE_ID, /*行内交易编码*/
+	'25' INVEST_VARIETY, /*投资品种*/
+	NULL INVEST_TYPE, /*投资类型*/
+	DEALADD.PORTFOLIO_ID PROD_ID, /*产品代码*/
+	DEAL.REGIST_ORG REGIST_BANK_CODE, /*发行机构代码*/
+	DEAL.FINPROD_ID ASSET_CODE, /*行内资产/负债编码*/
+	DEAL.CCY CCY, /*币种*/
+	DECODE(DEAL.PS, 'T12', 0, NVL(DEAL.TRADE_AMT, 0)) AMT, /*发生金额*/
+	NULL CNY_AMT, /*折算人民币金额*/
+	DECODE(DEAL.PS, 'T11', NVL(DEALADD.REG_DATE_AMT, 0), NVL(DEAL.SHARE_AMT, 0)) NUM, /*数量*/
+	CASE 
+		WHEN DEAL.PS IN ('T01', 'T46', 'T47', 'T48', 'T12') THEN '01'
+		WHEN DEAL.PS = 'T02' THEN '02'
+		WHEN DEAL.PS = 'T11' THEN '09'
+		ELSE NULL
+	END AS CUR_ASSET_TYPE, /*资金流动类型*/
+	CASE 
+		WHEN DEAL.PS IN ('T01', 'T02', 'T46', 'T47', 'T48', 'T12') THEN '无'
+		WHEN DEAL.PS = 'T11' THEN '股票分红'
+		ELSE NULL
+	END AS CUR_ASSETDET_TYPE, /*资金流动类型说明*/	
+	DEAL.SETTLE_DATE DEALDATE, /*交易日*/
+	CASE 
+		WHEN DEAL.PS IN ('T11', 'T12') THEN CUSTINFO.CUSTOMER_NAME
+		ELSE DEAL.COUNTER_ID
+	END AS TRADE_COUNTER, /*交易对手*/
+	CASE 
+		WHEN DEAL.PS IN ('T01', 'T02', 'T46', 'T47', 'T48') THEN ROUND(NVL(DEAL.TRADE_AMT, 0)/NVL(cast(DEAL.SHARE_AMT as DECIMAL(30,2)), 1), 4) 
+		WHEN DEAL.PS = 'T12' THEN 0
+		ELSE NULL
+	END AS UNIT_PRICE_FULL, /*单位成交价格（全价）*/
+	CASE 
+		WHEN DEAL.PS IN ('T01', 'T02', 'T46', 'T47', 'T48') THEN ROUND(NVL(DEAL.TRADE_AMT, 0)/NVL(cast(DEAL.SHARE_AMT as DECIMAL(30,2)), 1), 4) 
+		WHEN DEAL.PS = 'T12' THEN 0
+		ELSE NULL
+	END AS UNIT_PRICE_NET, /*单位成交价格（净价）*/
+	DEAL.YIELD END_RATE, /*到期收益率*/
+	DEAL.TRADE_ID CONTRACT_CODE, /*成交编号/合同号*/
+	NULL REMARK, /*备注*/
+	NULL CHL_CPCT_ID, /*通道代码*/
+	'01' TRADE_TYPE, /*交易类型*/
+	NULL CHL_AGRT_NAME, /*通道名称*/
+	'02' IS_UNDER_TRADE, /*是否底层交易流水 01 是/ 02 否*/
+	DECODE(NVL(REVDL.TRADE_ID,'NCANCEL'),'NCANCEL','E','D') STATUS,/*撤销的数据改变有效状态*/
+	NULL ORG_CODE, /*机构代码*/
+    NULL DEPT_CODE, /*部门代码*/
+	DEAL.CREATE_USER CREATE_USER, /*创建人*/
+    DEAL.CREATE_TIME CREATE_TIME, /*创建时间*/
+    DEAL.UPDATE_USER UPDATE_USER, /*更新人*/
+	GREATEST(NVL(NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD')),
+			 NVL(NVL(DEALADD.UPDATE_TIME,DEALADD.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD')),
+			 NVL(NVL(CUSTINFO.UPDATE_TIME,CUSTINFO.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD')),
+			 NVL(NVL(PROJECTASSET.UPDATE_TIME,PROJECTASSET.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD')) 			 
+       )  UPDATE_TIME, /*更新时间*/
+	NULL STATUS_DATE, /*数据日期*/
+    REVDL.create_time REV_DATE,/*撤销日*/
+    NULL DATA_SOURCE, /*数据来源*/
+	NULL RATE, /*利率*/
+    NULL BASIS, /*计息基础*/
+	NULL FACEVALUE, /*面值*/
+	DECODE(DEAL.PS, 'T02', '09', 'T11', '20', 'T12', '05', '08') DEALTYPE, /*交易类型*/
+	DEAL.TOTLE_TRADE_ID TOTLE_TRADE_ID, /*汇总交易编号*/
+    DEALADD.REG_DATE_AMT INTPAYAMT, /*当日分红累计份额*/
+    DEAL.F_TRADE_ID F_TRADE_ID /*关联系统交易编号*/
+	FROM TRD_PRODUCT_DEAL DEAL
+	LEFT JOIN TRD_PRODUCT_DEAL REVDL
+    ON deal.TRADE_ID = REVDL.P_TRADE_ID
+	LEFT JOIN TRD_PRODUCT_DEAL_ADD DEALADD
+    ON DEALADD.TRADE_ID = DEAL.TRADE_ID
+	LEFT JOIN FIN_PRODUCT PROJECTASSET
+    ON DEAL.FINPROD_ID  = PROJECTASSET.FINPROD_ID
+    LEFT JOIN MST_CUSTOMER_INFO CUSTINFO
+    ON PROJECTASSET.ISSUER = CUSTINFO.CUSTOMER_ID
+    WHERE DEAL.FINPROD_TYPE2 = 'F10'
+	 <![CDATA[AND (NVL(deal.UPDATE_TIME,deal.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+	 	<![CDATA[or NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
+	and nvL(deal.p_trade_id,'NOREV') = 'NOREV'
+	/*买入利率互换交易*/
+	UNION ALL
+	SELECT
+	NULL TRADE_SEQNO, /*交易UUID*/
+	DEAL.TRADE_ID TRADE_ID, /*行内交易编码*/
+	'26' INVEST_VARIETY, /*投资品种*/
+	NULL INVEST_TYPE, /*投资类型*/
+	DEALADD.PORTFOLIO_ID PROD_ID, /*产品代码*/
+	DEAL.REGIST_ORG REGIST_BANK_CODE, /*发行机构代码*/
+	FTP.FINPROD_ID ASSET_CODE, /*行内资产/负债编码*/
+	DEAL.CCY CCY, /*币种*/
+	DECODE(DEAL.PS, 'T01', 0, NVL(DEAL.TRADE_AMT, 0)) AMT, /*发生金额*/
+	NULL CNY_AMT, /*折算人民币金额*/
+	NVL(DEAL.SHARE_AMT, 0) NUM, /*数量*/
+	DECODE (DEAL.PS, 'T01', '01', 'T07', '02', 'T98', '09', 'T99', '10') CUR_ASSET_TYPE, /*资金流动类型*/
+	CASE
+		WHEN DEAL.PS = 'T98' THEN '利率互换利息收入'
+		WHEN DEAL.PS = 'T99' THEN '利率互换利息支出'
+		ELSE '无'
+	END AS CUR_ASSETDET_TYPE, /*资金流动类型说明*/	
+	DEAL.SETTLE_DATE DEALDATE, /*交易日*/
+	DECODE (DEAL.PS, 'T01', DEAL.COUNTER_ID, CUSTINFO.COUNTER_NAME) TRADE_COUNTER, /*交易对手*/
+	CASE 
+		WHEN DEAL.PS IN ('T01', 'T02') THEN 0
+		ELSE NULL
+	END AS UNIT_PRICE_FULL, /*单位成交价格（全价）*/
+	CASE 
+		WHEN DEAL.PS IN ('T01', 'T02') THEN 0
+		ELSE NULL
+	END AS UNIT_PRICE_NET, /*单位成交价格（净价）*/
+	DEAL.YIELD END_RATE, /*到期收益率*/
+	DEAL.TRADE_ID CONTRACT_CODE, /*成交编号/合同号*/
+	NULL REMARK, /*备注*/
+	NULL CHL_CPCT_ID, /*通道代码*/
+	'01' TRADE_TYPE, /*交易类型*/
+	NULL CHL_AGRT_NAME, /*通道名称*/
+	'02' IS_UNDER_TRADE, /*是否底层交易流水 01 是/ 02 否*/
+	DECODE(NVL(REVDL.TRADE_ID,'NCANCEL'),'NCANCEL','E','D') STATUS,/*撤销的数据改变有效状态*/
+	NULL ORG_CODE, /*机构代码*/
+    NULL DEPT_CODE, /*部门代码*/
+	DEAL.CREATE_USER CREATE_USER, /*创建人*/
+    DEAL.CREATE_TIME CREATE_TIME, /*创建时间*/
+    DEAL.UPDATE_USER UPDATE_USER, /*更新人*/
+	GREATEST(NVL(NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD')),
+			 NVL(NVL(DEALADD.UPDATE_TIME,DEALADD.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD')),
+			 NVL(NVL(CUSTINFO.UPDATE_TIME,CUSTINFO.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD')),
+			 NVL(NVL(PROJECTASSET.UPDATE_TIME,PROJECTASSET.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD')), 	
+			 NVL(NVL(FTP.UPDATE_TIME,FTP.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD')) 		 
+       )  UPDATE_TIME, /*更新时间*/
+	NULL STATUS_DATE, /*数据日期*/
+    REVDL.create_time REV_DATE,/*撤销日*/
+    NULL DATA_SOURCE, /*数据来源*/
+	NULL RATE, /*利率*/
+    NULL BASIS, /*计息基础*/
+	NULL FACEVALUE, /*面值*/
+	DECODE(DEAL.PS, 'T01', '08', 'T02', '09', '23') DEALTYPE, /*交易类型*/
+	DEAL.TOTLE_TRADE_ID TOTLE_TRADE_ID, /*汇总交易编号*/
+    DEALADD.REG_DATE_AMT INTPAYAMT, /*当日分红累计份额*/
+    DEAL.F_TRADE_ID F_TRADE_ID /*关联系统交易编号*/
+	FROM TRD_PRODUCT_DEAL DEAL
+	LEFT JOIN TRD_PRODUCT_DEAL REVDL
+    ON deal.TRADE_ID = REVDL.P_TRADE_ID
+	LEFT JOIN TRD_PRODUCT_DEAL_ADD DEALADD
+    ON DEALADD.TRADE_ID = DEAL.TRADE_ID
+	LEFT JOIN FIN_PRODUCT PROJECTASSET
+    ON DEAL.FINPROD_ID  = PROJECTASSET.FINPROD_ID
+    LEFT JOIN FIN_TRADE_PRODUCT FTP
+	ON DEAL.FINPROD_ID = FTP.FINPROD_ID
+	LEFT JOIN MST_COUNTER_PARTY CUSTINFO
+	ON FTP.COUNTER_ID = CUSTINFO.COUNTER_ID
+    WHERE DEAL.FINPROD_TYPE2 = 'F14'
+    <![CDATA[AND (NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    	<![CDATA[or NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
+    and nvL(deal.p_trade_id,'NOREV') = 'NOREV'
+	/*债券借贷交易*/
+	UNION ALL
+	SELECT 
+	NULL TRADE_SEQNO, /*交易UUID*/
+	CASE
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '01' THEN DEAL.TRADE_ID || '01'
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '02' THEN DEAL.TRADE_ID || '02'
+		ELSE DEAL.TRADE_ID
+	END AS TRADE_ID, /*行内交易编码*/
+	'27' INVEST_VARIETY, /*投资品种*/
+	NULL INVEST_TYPE, /*投资类型*/
+	DEALADD.PORTFOLIO_ID PROD_ID, /*产品代码*/
+	DEAL.REGIST_ORG REGIST_BANK_CODE, /*发行机构代码*/
+	FTP.FINPROD_ID ASSET_CODE, /*行内资产/负债编码*/
+	DEAL.CCY CCY, /*币种*/
+	CASE
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '01' THEN 0
+		ELSE NVL(DEAL.TRADE_AMT, 0)
+	END AS AMT, /*发生金额*/
+	NULL CNY_AMT, /*折算人民币金额*/
+	DEAL.SHARE_AMT NUM, /*数量*/
+	CASE 
+		WHEN DEAL.PS = 'T01' THEN '01'
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '01' THEN '02'
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '02' AND DEAL.FINPROD_TYPE2 = 'F29' THEN '10'
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '02' AND DEAL.FINPROD_TYPE2 = 'F30' THEN '09'
+		ELSE NULL
+	END AS CUR_ASSET_TYPE, /*资金流动类型*/
+	CASE 
+		WHEN DEAL.PS = 'T01' THEN '无'
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '01' THEN '无'
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '02' AND DEAL.FINPROD_TYPE2 = 'F29' THEN '债券借贷费用支出'
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '02' AND DEAL.FINPROD_TYPE2 = 'F30' THEN '债券借贷费用收入'
+		ELSE NULL
+	END AS CUR_ASSETDET_TYPE, /*资金流动类型说明*/	
+	DEAL.SETTLE_DATE DEALDATE, /*交易日*/
+	DECODE (DEAL.PS, 'T01', DEAL.COUNTER_ID, CUSTINFO.COUNTER_NAME) TRADE_COUNTER, /*交易对手*/
+	CASE 
+		WHEN DEAL.PS = 'T01'  THEN 0
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '01' THEN 0
+		ELSE NULL
+	END AS UNIT_PRICE_FULL, /*单位成交价格（全价）*/
+	CASE 
+		WHEN DEAL.PS = 'T01'  THEN 0
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '01' THEN 0
+		ELSE NULL
+	END AS UNIT_PRICE_NET, /*单位成交价格（净价）*/
+	DEAL.YIELD END_RATE, /*到期收益率*/
+	CASE
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '01' THEN DEAL.TRADE_ID || '01'
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '02' THEN DEAL.TRADE_ID || '02'
+		WHEN DEAL.PS = 'T01' THEN nvl(DEAL.F_TRADE_ID,DEAL.TRADE_ID)
+		ELSE DEAL.TRADE_ID
+	END AS CONTRACT_CODE, /*成交编号/合同号*/
+	NULL REMARK, /*备注*/
+	NULL CHL_CPCT_ID, /*通道代码*/
+	CASE 
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '02' THEN '04'
+		ELSE '01'
+	END AS TRADE_TYPE, /*交易类型*/
+	NULL CHL_AGRT_NAME, /*通道名称*/
+	'02' IS_UNDER_TRADE, /*是否底层交易流水 01 是/ 02 否*/
+	DECODE(NVL(REVDL.TRADE_ID,'NCANCEL'),'NCANCEL','E','D') STATUS,/*撤销的数据改变有效状态*/
+	NULL ORG_CODE, /*机构代码*/
+    NULL DEPT_CODE, /*部门代码*/
+	DEAL.CREATE_USER CREATE_USER, /*创建人*/
+    DEAL.CREATE_TIME CREATE_TIME, /*创建时间*/
+    DEAL.UPDATE_USER UPDATE_USER, /*更新人*/
+	GREATEST(NVL(NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD')),
+			 NVL(NVL(DEALADD.UPDATE_TIME,DEALADD.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD')),
+			 NVL(NVL(CUSTINFO.UPDATE_TIME,CUSTINFO.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD')),
+			 NVL(NVL(PROJECTASSET.UPDATE_TIME,PROJECTASSET.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD')), 	
+			 NVL(NVL(FTP.UPDATE_TIME,FTP.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD'))		 
+       )  UPDATE_TIME, /*更新时间*/
+	NULL STATUS_DATE, /*数据日期*/
+   	REVDL.create_time REV_DATE, /*撤销日*/
+    NULL DATA_SOURCE, /*数据来源*/
+	NULL RATE, /*利率*/
+    NULL BASIS, /*计息基础*/
+	NULL FACEVALUE, /*面值*/
+	CASE
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '01' THEN '09'
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '02' THEN '10'
+		ELSE '08'
+	END AS DEALTYPE, /*交易类型*/
+	DEAL.TOTLE_TRADE_ID TOTLE_TRADE_ID, /*汇总交易编号*/
+    DEALADD.REG_DATE_AMT INTPAYAMT, /*当日分红累计份额*/
+    DEAL.F_TRADE_ID F_TRADE_ID /*关联系统交易编号*/
+	FROM TEMP_BOND_DEAL DEAL
+	LEFT JOIN TRD_PRODUCT_DEAL REVDL
+    ON deal.TRADE_ID = REVDL.P_TRADE_ID
+	LEFT JOIN TRD_PRODUCT_DEAL_ADD DEALADD
+    ON DEALADD.TRADE_ID = DEAL.TRADE_ID
+	LEFT JOIN FIN_PRODUCT PROJECTASSET
+    ON DEAL.FINPROD_ID  = PROJECTASSET.FINPROD_ID
+    LEFT JOIN FIN_TRADE_PRODUCT FTP
+	ON DEAL.FINPROD_ID = FTP.FINPROD_ID
+	LEFT JOIN MST_COUNTER_PARTY CUSTINFO
+	ON FTP.COUNTER_ID = CUSTINFO.COUNTER_ID
+	WHERE nvL(deal.p_trade_id,'NOREV') = 'NOREV'
+	<![CDATA[AND (NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    	<![CDATA[or NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
+    /*外汇即期交易*/
+	UNION ALL
+	SELECT 
+	NULL TRADE_SEQNO, /*交易UUID*/
+	CASE
+		WHEN DEAL.PS = 'T01' AND DEAL.SPLIT_TYPE = '01' THEN DEAL.TRADE_ID || '01'
+		WHEN DEAL.PS = 'T01' AND DEAL.SPLIT_TYPE = '02' THEN DEAL.TRADE_ID || '02'
+	END AS TRADE_ID, /*行内交易编码*/
+	'28' INVEST_VARIETY, /*投资品种*/
+	NULL INVEST_TYPE, /*投资类型*/
+	DEALADD.PORTFOLIO_ID PROD_ID, /*产品代码*/
+	DEAL.REGIST_ORG REGIST_BANK_CODE, /*发行机构代码*/
+	FTP.FINPROD_ID ASSET_CODE, /*行内资产/负债编码*/
+	FTP.CCY CCY, /*币种*/
+	0 AMT, /*发生金额*/
+	NULL CNY_AMT, /*折算人民币金额*/
+	1 NUM, /*数量*/
+	CASE
+		WHEN DEAL.PS = 'T01' AND DEAL.SPLIT_TYPE = '01' THEN '01'
+		WHEN DEAL.PS = 'T01' AND DEAL.SPLIT_TYPE = '02' THEN '02'
+	END AS CUR_ASSET_TYPE, /*资金流动类型*/
+	'无' CUR_ASSETDET_TYPE, /*资金流动类型说明*/	
+	CASE
+		WHEN DEAL.PS = 'T01' AND DEAL.SPLIT_TYPE = '01' THEN DEAL.TRADE_DATE
+		WHEN DEAL.PS = 'T01' AND DEAL.SPLIT_TYPE = '02' THEN DEAL.SETTLE_DATE
+	END AS DEALDATE, /*交易日*/
+	DEAL.COUNTER_ID TRADE_COUNTER, /*交易对手*/
+	0 UNIT_PRICE_FULL, /*单位成交价格（全价）*/
+	0 UNIT_PRICE_NET, /*单位成交价格（净价）*/
+	NULL END_RATE, /*到期收益率*/
+	CASE
+		WHEN DEAL.PS = 'T01' AND DEAL.SPLIT_TYPE = '01' THEN DEAL.TRADE_ID || '01'
+		WHEN DEAL.PS = 'T01' AND DEAL.SPLIT_TYPE = '02' THEN DEAL.TRADE_ID || '02'
+	END AS CONTRACT_CODE, /*成交编号/合同号*/
+	NULL REMARK, /*备注*/
+	NULL CHL_CPCT_ID, /*通道代码*/
+	'01' TRADE_TYPE, /*交易类型*/
+	NULL CHL_AGRT_NAME, /*通道名称*/
+	'02' IS_UNDER_TRADE, /*是否底层交易流水 01 是/ 02 否*/
+	DECODE(NVL(REVDL.TRADE_ID,'NCANCEL'),'NCANCEL','E','D') STATUS,/*撤销的数据改变有效状态*/
+	NULL ORG_CODE, /*机构代码*/
+    NULL DEPT_CODE, /*部门代码*/
+	DEAL.CREATE_USER CREATE_USER, /*创建人*/
+    DEAL.CREATE_TIME CREATE_TIME, /*创建时间*/
+    DEAL.UPDATE_USER UPDATE_USER, /*更新人*/
+	GREATEST(NVL(NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD')),
+			 NVL(NVL(DEALADD.UPDATE_TIME,DEALADD.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD')),	
+			 NVL(NVL(FTP.UPDATE_TIME,FTP.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD'))			 
+       )  UPDATE_TIME, /*更新时间*/
+	NULL STATUS_DATE, /*数据日期*/
+    REVDL.create_time REV_DATE, /*撤销日*/
+    NULL DATA_SOURCE, /*数据来源*/
+	NULL RATE, /*利率*/
+    NULL BASIS, /*计息基础*/
+	NULL FACEVALUE, /*面值*/
+	DECODE(DEAL.SPLIT_TYPE, '01', '08', '02', '09') DEALTYPE, /*交易类型*/
+	DEAL.TOTLE_TRADE_ID TOTLE_TRADE_ID, /*汇总交易编号*/
+    DEALADD.REG_DATE_AMT INTPAYAMT, /*当日分红累计份额*/
+    DEAL.F_TRADE_ID F_TRADE_ID /*关联系统交易编号*/
+	FROM TEMP_FES_DEAL DEAL
+	LEFT JOIN TRD_PRODUCT_DEAL REVDL
+    ON deal.TRADE_ID = REVDL.P_TRADE_ID
+	LEFT JOIN TRD_PRODUCT_DEAL_ADD DEALADD
+    ON DEALADD.TRADE_ID = DEAL.TRADE_ID
+    LEFT JOIN FIN_TRADE_PRODUCT FTP
+	ON DEAL.FINPROD_ID = FTP.FINPROD_ID
+	WHERE nvL(deal.p_trade_id,'NOREV') = 'NOREV'
+	<![CDATA[AND (NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    	<![CDATA[or NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
+	/*外汇远期交易*/
+	UNION ALL
+	select * from(
+	SELECT 
+	NULL TRADE_SEQNO, /*交易UUID*/
+	CASE
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '01' THEN DEAL.TRADE_ID || '01'
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '02' THEN DEAL.TRADE_ID || '02'
+		ELSE DEAL.TRADE_ID
+	END AS TRADE_ID, /*行内交易编码*/
+	'29' INVEST_VARIETY, /*投资品种*/
+	'F12' INVEST_TYPE, /*投资类型,此处实际应该为空，赋值主要是为了在代码层面作为计算发生金额的判断条件*/
+	DEALADD.PORTFOLIO_ID PROD_ID, /*产品代码*/
+	DEAL.REGIST_ORG REGIST_BANK_CODE, /*发行机构代码*/
+	FTP.FINPROD_ID ASSET_CODE, /*行内资产/负债编码*/
+	CASE
+		WHEN DEAL.PS = 'T01' THEN FTP.CCY 
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '01' THEN FTP.CCY 
+		ELSE SUBSTR(FTP.CUR_PAIR,INSTR(FTP.CUR_PAIR,'/',-1)+1)
+	END AS CCY, /*币种*/
+	0 AMT, /*发生金额*/
+	NULL CNY_AMT, /*折算人民币金额*/
+	CASE
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '02' THEN NVL(DEAL.PRIN_AMT, 0)
+		ELSE 1
+	END AS NUM, /*数量*/
+	CASE 
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '01' THEN '02'
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '02' THEN '09'
+		ELSE '01'
+	END AS CUR_ASSET_TYPE, /*资金流动类型*/
+	FTP.CUR_PAIR || ':' || FTP.CCY || ':' || DEAL.CCY || ':' || FTP.EXC_PS || ':' || DEAL.PS || ':' || NVL(DEAL.FPRICE_AMT, 0) || ':' || NVL(DEAL.PRIN_AMT, 0) || ':' || NVL(DEAL.UNIT_FPRICE, 1) || ':' || DEAL.DELIVERY_TYPE CUR_ASSETDET_TYPE, /*资金流动类型说明*/	
+	DEAL.SETTLE_DATE DEALDATE, /*交易日*/
+	CASE
+    	WHEN DEAL.PS = 'T01' THEN DEAL.COUNTER_ID 
+    	ELSE MCP.COUNTER_NAME
+  	END AS TRADE_COUNTER, /*交易对手*/
+	CASE 
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '02' THEN NULL
+		ELSE 0
+	END AS UNIT_PRICE_FULL, /*单位成交价格（全价）*/
+	CASE 
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '02' THEN NULL
+		ELSE 0
+	END AS UNIT_PRICE_NET, /*单位成交价格（净价）*/
+	NULL END_RATE, /*到期收益率*/
+	CASE
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '01' THEN DEAL.TRADE_ID || '01'
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '02' THEN DEAL.TRADE_ID || '02'
+		ELSE DEAL.TRADE_ID
+	END AS CONTRACT_CODE, /*成交编号/合同号*/
+	NULL REMARK, /*备注*/
+	NULL CHL_CPCT_ID, /*通道代码*/
+	CASE 
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '02' THEN '04'
+		ELSE '01' 
+	END AS TRADE_TYPE, /*交易类型*/
+	NULL CHL_AGRT_NAME, /*通道名称*/
+	'02' IS_UNDER_TRADE, /*是否底层交易流水 01 是/ 02 否*/
+	DECODE(NVL(REVDL.TRADE_ID,'NCANCEL'),'NCANCEL','E','D') STATUS,/*撤销的数据改变有效状态*/
+	NULL ORG_CODE, /*机构代码*/
+    NULL DEPT_CODE, /*部门代码*/
+	DEAL.CREATE_USER CREATE_USER, /*创建人*/
+    DEAL.CREATE_TIME CREATE_TIME, /*创建时间*/
+    DEAL.UPDATE_USER UPDATE_USER, /*更新人*/
+	GREATEST(NVL(NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD')),
+			 NVL(NVL(DEALADD.UPDATE_TIME,DEALADD.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD')),		
+			 NVL(NVL(MEQ.UPDATE_TIME,MEQ.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD')),	
+			 NVL(NVL(FTP.UPDATE_TIME,FTP.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD'))		 
+       )  UPDATE_TIME, /*更新时间*/
+	NULL STATUS_DATE, /*数据日期*/
+    REVDL.create_time REV_DATE, /*撤销日*/
+    NULL DATA_SOURCE, /*数据来源*/
+	NULL RATE, /*利率*/
+    NULL BASIS, /*计息基础*/
+	NULL FACEVALUE, /*面值*/
+	CASE 
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '01' THEN '09'
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '02' THEN '10'
+		ELSE '08'
+	END AS DEALTYPE, /*交易类型*/
+	DEAL.TOTLE_TRADE_ID TOTLE_TRADE_ID, /*汇总交易编号*/
+    DEALADD.REG_DATE_AMT INTPAYAMT, /*当日分红累计份额*/
+    DEAL.F_TRADE_ID F_TRADE_ID /*关联系统交易编号*/
+	FROM TEMP_FEF_DEAL DEAL
+	LEFT JOIN TRD_PRODUCT_DEAL REVDL
+    ON deal.TRADE_ID = REVDL.P_TRADE_ID
+	LEFT JOIN TRD_PRODUCT_DEAL_ADD DEALADD
+    ON DEALADD.TRADE_ID = DEAL.TRADE_ID
+    LEFT JOIN FIN_TRADE_PRODUCT FTP
+    ON DEAL.FINPROD_ID = FTP.FINPROD_ID
+    LEFT JOIN MST_COUNTER_PARTY MCP
+    ON FTP.COUNTER_ID = MCP.COUNTER_ID
+    LEFT JOIN rate MEQ
+    ON FTP.CUR_PAIR = MEQ.EXCHARGE_CODE
+    WHERE nvL(deal.p_trade_id,'NOREV') = 'NOREV'
+    <![CDATA[AND (NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    	<![CDATA[or NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
+    )where to_char(dealdate,'yyyy-MM-dd')&gt;=to_char(update_time,'yyyy-MM-dd')
+    /*外汇掉期交易*/
+	UNION ALL
+	select * from(
+	SELECT 
+	NULL TRADE_SEQNO, /*交易UUID*/
+	CASE 
+		WHEN DEAL.SPLIT_TYPE = '01' THEN DEAL.TRADE_ID || '01'
+		WHEN DEAL.SPLIT_TYPE = '02' THEN DEAL.TRADE_ID || '02'
+	END AS TRADE_ID, /*行内交易编码*/
+	'30' INVEST_VARIETY, /*投资品种*/
+	'F13' INVEST_TYPE, /*投资类型,此处实际应该为空，赋值主要是为了在代码层面作为计算发生金额的判断条件*/
+	DEALADD.PORTFOLIO_ID PROD_ID, /*产品代码*/
+	DEAL.REGIST_ORG REGIST_BANK_CODE, /*发行机构代码*/
+	FTP.FINPROD_ID ASSET_CODE, /*行内资产/负债编码*/
+	CASE
+		WHEN DEAL.PS = 'T01' AND DEAL.SPLIT_TYPE = '01' THEN FTP.CCY 
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '01' THEN FTP.CCY 
+		ELSE SUBSTR(FTP.CUR_PAIR,INSTR(FTP.CUR_PAIR,'/',-1)+1)
+	END AS CCY, /*币种*/
+	0 AMT, /*发生金额*/
+	NULL CNY_AMT, /*折算人民币金额*/
+	CASE 
+		WHEN DEAL.SPLIT_TYPE = '01' THEN 1
+		WHEN DEAL.SPLIT_TYPE = '02' THEN DEAL.PRIN_AMT
+	END AS NUM, /*数量*/
+	CASE 
+		WHEN DEAL.PS = 'T01' AND DEAL.SPLIT_TYPE = '01' THEN '01'
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '01' THEN '02'
+		ELSE '09'
+	END AS CUR_ASSET_TYPE, /*资金流动类型*/
+	FTP.CUR_PAIR || ':' || FTP.CCY || ':' || DEAL.CCY || ':' || FTP.EXC_PS || ':' || DEAL.PS || ':' || NVL(DEAL.FPRICE_AMT, 0) || ':' || NVL(DEAL.PRIN_AMT, 0) CUR_ASSETDET_TYPE, /*资金流动类型说明*/	
+	CASE 
+		WHEN DEAL.PS = 'T01' AND DEAL.SPLIT_TYPE = '01' THEN DEAL.TRADE_DATE
+		ELSE DEAL.SETTLE_DATE
+	END AS DEALDATE, /*交易日*/
+	CASE 
+		WHEN DEAL.PS = 'T01' AND DEAL.SPLIT_TYPE = '01' THEN DEAL.COUNTER_ID
+		ELSE MCP.COUNTER_NAME
+	END AS TRADE_COUNTER, /*交易对手*/
+	CASE 
+		WHEN DEAL.SPLIT_TYPE = '01' THEN 0
+		ELSE NULL
+	END AS UNIT_PRICE_FULL, /*单位成交价格（全价）*/
+	CASE 
+		WHEN DEAL.SPLIT_TYPE = '01' THEN 0
+		ELSE NULL
+	END AS UNIT_PRICE_NET, /*单位成交价格（净价）*/
+	NULL END_RATE, /*到期收益率*/
+	CASE 
+		WHEN DEAL.SPLIT_TYPE = '01' THEN DEAL.TRADE_ID || '01'
+		WHEN DEAL.SPLIT_TYPE = '02' THEN DEAL.TRADE_ID || '02'
+	END AS CONTRACT_CODE, /*成交编号/合同号*/
+	NULL REMARK, /*备注*/
+	NULL CHL_CPCT_ID, /*通道代码*/
+	CASE 
+		WHEN DEAL.SPLIT_TYPE = '01' THEN '01'
+		WHEN DEAL.SPLIT_TYPE = '02' THEN '04'
+	END AS TRADE_TYPE, /*交易类型*/
+	NULL CHL_AGRT_NAME, /*通道名称*/
+	'02' IS_UNDER_TRADE, /*是否底层交易流水 01 是/ 02 否*/
+	DECODE(NVL(REVDL.TRADE_ID,'NCANCEL'),'NCANCEL','E','D') STATUS,/*撤销的数据改变有效状态*/
+	NULL ORG_CODE, /*机构代码*/
+    NULL DEPT_CODE, /*部门代码*/
+	DEAL.CREATE_USER CREATE_USER, /*创建人*/
+    DEAL.CREATE_TIME CREATE_TIME, /*创建时间*/
+    DEAL.UPDATE_USER UPDATE_USER, /*更新人*/
+	GREATEST(NVL(NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD')),
+			 NVL(NVL(DEALADD.UPDATE_TIME,DEALADD.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD')),
+			 NVL(NVL(FTP.UPDATE_TIME,FTP.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD')),
+			 NVL(NVL(MEQ.UPDATE_TIME,MEQ.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD')),	
+			 NVL(NVL(MCP.UPDATE_TIME,MCP.CREATE_TIME),TO_DATE('1900-01-01','YYYY-MM-DD')) 			 
+       )  UPDATE_TIME, /*更新时间*/
+	NULL STATUS_DATE, /*数据日期*/
+    REVDL.create_time REV_DATE, /*撤销日*/
+    NULL DATA_SOURCE, /*数据来源*/
+	NULL RATE, /*利率*/
+    NULL BASIS, /*计息基础*/
+	NULL FACEVALUE, /*面值*/
+	CASE 
+		WHEN DEAL.PS = 'T01' AND DEAL.SPLIT_TYPE = '01' THEN '08'
+		WHEN DEAL.PS = 'T07' AND DEAL.SPLIT_TYPE = '01' THEN '09'
+		ELSE '10'
+	END AS DEALTYPE, /*交易类型*/
+	DEAL.TOTLE_TRADE_ID TOTLE_TRADE_ID, /*汇总交易编号*/
+    DEALADD.REG_DATE_AMT INTPAYAMT, /*当日分红累计份额*/
+    DEAL.F_TRADE_ID F_TRADE_ID /*关联系统交易编号*/
+	FROM TEMP_FESW_DEAL DEAL
+	LEFT JOIN TRD_PRODUCT_DEAL REVDL
+    ON deal.TRADE_ID = REVDL.P_TRADE_ID
+	LEFT JOIN TRD_PRODUCT_DEAL_ADD DEALADD
+    ON DEALADD.TRADE_ID = DEAL.TRADE_ID
+	LEFT JOIN FIN_TRADE_PRODUCT FTP
+	ON DEAL.FINPROD_ID = FTP.FINPROD_ID
+	LEFT JOIN MST_COUNTER_PARTY MCP
+	ON FTP.COUNTER_ID = MCP.COUNTER_ID
+	LEFT JOIN rate MEQ
+    ON FTP.CUR_PAIR = MEQ.EXCHARGE_CODE
+	WHERE nvL(deal.p_trade_id,'NOREV') = 'NOREV'
+	 <![CDATA[AND (NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    	<![CDATA[or NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
+	 )where to_char(dealdate,'yyyy-MM-dd')>=to_char(update_time,'yyyy-MM-dd')
+    /**增加股票和衍生品交易 add by gaojian 2019-07-19 end**/
+    )
+    SELECT  DISTINCT * FROM (
+    SELECT
+    investdeal.TRADE_SEQNO TRADE_SEQNO,
+    investdeal.TRADE_Id TRADE_CODE,
+    investdeal.INVEST_VARIETY INVEST_VARIETY,
+    INVESTDEAL.INVEST_TYPE INVEST_TYPE,
+    nvl(DEALADD.PORTFOLIO_ID,dealtotal.PORTFOLIO_ID) PROD_ID,
+    investdeal.REGIST_BANK_CODE REGIST_BANK_CODE,
+    CASE 
+    	WHEN investdeal.INVEST_VARIETY IN ('26', '27', '28', '29', '30') THEN investdeal.ASSET_CODE
+    	ELSE nvl(fp.FINPROD_MARKET_ID, fp2.FINPROD_ID)
+    END AS ASSET_CODE,
+    investdeal.CCY CCY,
+    investdeal.amt amt,
+    investdeal.CNY_AMT CNY_AMT,
+    nvl(investdeal.NUM,DEALTOtAL.share_amt) NUM,/*付息时取total*/
+    investdeal.CUR_ASSET_TYPE CUR_ASSET_TYPE,
+    investdeal.CUR_ASSETDET_TYPE CUR_ASSETDET_TYPE,
+    investdeal.DEALDATE DEALDATE,
+    investdeal.TRADE_COUNTER TRADE_COUNTER,
+    investdeal.UNIT_PRICE_FULL UNIT_PRICE_FULL,
+    investdeal.UNIT_PRICE_NET UNIT_PRICE_NET,
+    investdeal.END_RATE END_RATE,
+    investdeal.CONTRACT_CODE CONTRACT_CODE,
+    investdeal.REMARK REMARK,
+    CHLINFO.FINPROD_MARKET_ID CHL_CPCT_ID,
+    investdeal.TRADE_TYPE TRADE_TYPE,
+    investdeal.CHL_AGRT_NAME CHL_AGRT_NAME,
+    INVESTDEAL.IS_UNDER_TRADE IS_UNDER_TRADE,
+   	investdeal.STATUS,
+    investdeal.ORG_CODE ORG_CODE,
+    investdeal.DEPT_CODE DEPT_CODE,
+    investdeal.CREATE_USER CREATE_USER,
+    investdeal.CREATE_TIME CREATE_TIME,
+    investdeal.UPDATE_USER UPDATE_USER,
+    greatest(nvl(NVL(investdeal.UPDATE_TIME,investdeal.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(DEALADD.UPDATE_TIME,DEALADD.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(investdeal.REV_DATE,investdeal.REV_DATE),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(DEALTOtAL.UPDATE_TIME,DEALTOtAL.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+       nvl(NVL(CHLINFO.UPDATE_TIME,CHLINFO.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd'))
+       )  UPDATE_TIME,
+    INVESTDEAL.STATUS_DATE STATUS_DATE,
+    investdeal.REV_DATE REV_DATE,/*撤销日*/
+    investdeal.data_source data_source,
+    investdeal.rate rate,
+    investdeal.BASIS BASIS,
+    investdeal.DEALTYPE DEALTYPE,
+    INVESTDEAL.FACEVALUE FACEVALUE,
+    investdeal.INTPAYAMT INTPAYAMT,
+    investdeal.F_TRADE_ID F_TRADE_CODE
+    ,FRA.PAY_TYPE
+    FROM INVESTDEAL investdeal
+    LEFT JOIN TRD_PRODUCT_DEAL_ADD DEALADD/*交易从属表*/
+    /*ON DEALADD.TRADE_ID = INVESTDEAL.TRADE_ID*/
+    ON (DEALADD.TRADE_ID = INVESTDEAL.TRADE_ID
+	OR DEALADD.TRADE_ID || '01' = INVESTDEAL.TRADE_ID
+	OR DEALADD.TRADE_ID || '02' = INVESTDEAL.TRADE_ID
+	)
+   /*关联FIN_PRODUCT及FIN_TRADE_PRODUCT重新获取资产代码*/
+    left join FIN_PRODUCT fp
+    on fp.FINPROD_ID = investdeal.ASSET_CODE
+    left join FIN_TRADE_PRODUCT fp2
+    on fp2.FINPROD_ID = investdeal.ASSET_CODE
+    and fp2.branch = 0
+    LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL DEALTOtAL/*产品代码取不到取total表如：买断式回购*/
+    on INVESTDEAL.TOTLE_TRADE_ID = DEALTOtAL.TOTLE_TRADE_ID
+    LEFT JOIN FIN_PRODUCT CHLINFO/*通道信息*/
+    on CHLINFO.FINPROD_ID = investdeal.CHL_CPCT_ID
+    LEFT JOIN FIN_PRODUCT_ADD FRA ON investdeal.CHL_CPCT_ID = FRA.FINPROD_ID
+    LEFT JOIN (select DISTINCT FINPROD_MARKET_ID from FIN_PRODUCT where FINPROD_TYPE2='F16') fpd
+    on fpd.FINPROD_MARKET_ID=nvl(DEALADD.PORTFOLIO_ID,dealtotal.PORTFOLIO_ID)
+    where 1= 1 
+    <![CDATA[AND( NVL(investdeal.UPDATE_TIME,investdeal.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(DEALADD.UPDATE_TIME,DEALADD.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(investdeal.REV_DATE,to_date('1900-01-01','yyyy-MM-dd')) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(CHLINFO.UPDATE_TIME,CHLINFO.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
+    /*过滤估值生成交易*/
+    AND (EXISTS (
+      SELECT 1 
+      FROM PTL_TRADE PTLTRADE
+      WHERE 1 =1 
+      AND PTLTRADE.BUSI_NO = investdeal.TRADE_ID
+    )OR investdeal.INVEST_VARIETY IN ('27', '28', '29', '30'))
+   /* 去除估值核算自动生成交易 */
+    AND NVL(investdeal.CUR_ASSET_TYPE,'NOTYPE') != 'NOTYPE'
+    and fpd.FINPROD_MARKET_ID is not null
+<!--     and FRA.PAY_TYPE = '01' -->
+    <if test="prodList !=null and prodList.size()>0">
+        /* 产品代码不为空时 */
+        <foreach collection="prodList" item="prodCode" open="and nvl(DEALADD.PORTFOLIO_ID,dealtotal.PORTFOLIO_ID) in (" close=")" separator=",">
+            #{prodCode,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+)
+  </select>
+    
+    <insert id="mergeInfoList" parameterType="com.joyintech.tams.common.base.entity.ChbInvestTrade">
+        MERGE INTO CHB_INVEST_TRADE CII
+        USING (
+            <foreach collection="newDataList" item="item" open="select * from("
+                close=")" separator="union all">
+                select
+                 '${item.tradeSeqno}' TRADE_SEQNO,
+                 '${item.tradeCode}'  TRADE_CODE,
+                '${item.investVariety}'  INVEST_VARIETY,
+                '${item.investType}'  INVEST_TYPE,
+                '${item.prodId}'  PROD_ID,
+                '${item.registBankCode}'  REGIST_BANK_CODE,
+                '${item.assetCode}'  ASSET_CODE,
+                '${item.ccy}'  CCY,
+                <choose><when test="item.amt != null">${item.amt}</when><otherwise>null</otherwise></choose>  AMT,
+                <choose><when test="item.cnyAmt != null">${item.cnyAmt}</when><otherwise>null</otherwise></choose>  CNY_AMT,
+                <choose><when test="item.num != null">${item.num}</when><otherwise>null</otherwise></choose>  NUM,
+                '${item.curAssetType}'  CUR_ASSET_TYPE,
+                '${item.curAssetdetType}'  CUR_ASSETDET_TYPE,
+                <choose><when test="item.dealdate != null">#{item.dealdate,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose>  DEALDATE,
+                '${item.tradeCounter}'  TRADE_COUNTER,
+                <choose><when test="item.unitPriceFull != null">${item.unitPriceFull}</when><otherwise>null</otherwise></choose>  UNIT_PRICE_FULL,
+                <choose><when test="item.unitPriceNet != null">${item.unitPriceNet}</when><otherwise>null</otherwise></choose>  UNIT_PRICE_NET,
+                <choose><when test="item.endRate != null">${item.endRate}</when><otherwise>null</otherwise></choose>  END_RATE,
+                '${item.contractCode}'  CONTRACT_CODE,
+                '${item.remark}'  REMARK,
+                '${item.chlCpctId}'  CHL_CPCT_ID,
+                '${item.tradeType}'  TRADE_TYPE,
+                '${item.chlAgrtName}'  CHL_AGRT_NAME,
+                '${item.isUnderTrade}'  IS_UNDER_TRADE,
+                '${item.status}'  STATUS,
+                '${item.orgCode}'  ORG_CODE,
+                '${item.deptCode}'  DEPT_CODE,
+                '${item.createUser}'  CREATE_USER,
+                sysdate CREATE_TIME,
+                 '${item.updateUser}'  UPDATE_USER,
+                sysdate UPDATE_TIME,
+                <choose><when test="item.statusDate != null">#{item.statusDate,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose>  STATUS_DATE,
+                <choose><when test="item.revDate != null">#{item.revDate,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose>  REV_DATE,
+                '${item.dataSource}'  DATA_SOURCE,
+                <choose><when test="item.rate != null">${item.rate}</when><otherwise>null</otherwise></choose>  RATE,
+                '${item.basis}' BASIS,
+                '${item.dealtype}'  DEALTYPE,
+                <choose><when test="item.facevalue != null">${item.facevalue}</when><otherwise>null</otherwise></choose>  FACEVALUE
+                from SYSIBM.SYSDUMMY1
+            </foreach>
+        ) TEMP
+        <!-- 业务主键匹配 -->
+        ON (CII.TRADE_CODE = TEMP.TRADE_CODE)
+        <!-- 匹配到则更新 -->
+        WHEN MATCHED THEN 
+        UPDATE 
+        SET <!-- CII.TRADE_SEQNO = TEMP.TRADE_SEQNO,
+            CII.TRADE_CODE = TEMP.TRADE_CODE, -->
+            CII.INVEST_VARIETY = TEMP.INVEST_VARIETY,
+            CII.INVEST_TYPE = TEMP.INVEST_TYPE,
+            CII.PROD_ID = TEMP.PROD_ID,
+            CII.REGIST_BANK_CODE = TEMP.REGIST_BANK_CODE,
+            CII.ASSET_CODE = TEMP.ASSET_CODE,
+            CII.CCY = TEMP.CCY,
+            CII.AMT = TEMP.AMT,
+            CII.CNY_AMT = TEMP.CNY_AMT,
+            CII.NUM = TEMP.NUM,
+            CII.CUR_ASSET_TYPE = TEMP.CUR_ASSET_TYPE,
+            CII.CUR_ASSETDET_TYPE = TEMP.CUR_ASSETDET_TYPE,
+            CII.DEALDATE = TEMP.DEALDATE,
+            CII.TRADE_COUNTER = TEMP.TRADE_COUNTER,
+            CII.UNIT_PRICE_FULL = TEMP.UNIT_PRICE_FULL,
+            CII.UNIT_PRICE_NET = TEMP.UNIT_PRICE_NET,
+            CII.END_RATE = TEMP.END_RATE,
+            CII.CONTRACT_CODE = TEMP.CONTRACT_CODE,
+            CII.REMARK = TEMP.REMARK,
+            CII.CHL_CPCT_ID = TEMP.CHL_CPCT_ID,
+            CII.TRADE_TYPE = TEMP.TRADE_TYPE,
+            CII.CHL_AGRT_NAME = TEMP.CHL_AGRT_NAME,
+            CII.IS_UNDER_TRADE = TEMP.IS_UNDER_TRADE,
+            CII.STATUS = decode(TEMP.STATUS,'E','M','D'),
+            CII.ORG_CODE = TEMP.ORG_CODE,
+            CII.DEPT_CODE = TEMP.DEPT_CODE,
+            CII.CREATE_USER = TEMP.CREATE_USER,
+            /*CII.CREATE_TIME = TEMP.CREATE_TIME,*/
+            CII.UPDATE_USER = TEMP.UPDATE_USER,
+            CII.UPDATE_TIME = TEMP.UPDATE_TIME,
+            CII.STATUS_DATE = TEMP.STATUS_DATE,
+            CII.REV_DATE = decode(TEMP.STATUS,'E',null,sysdate),
+            CII.DATA_SOURCE = TEMP.DATA_SOURCE,
+            CII.RATE = TEMP.RATE,
+            CII.BASIS = TEMP.BASIS,
+            CII.DEALTYPE = TEMP.DEALTYPE,
+            CII.FACEVALUE = TEMP.FACEVALUE
+
+        <!-- 未匹配到这插入 -->
+        WHEN NOT MATCHED THEN 
+        INSERT (TRADE_SEQNO, TRADE_CODE, INVEST_VARIETY, 
+          INVEST_TYPE, PROD_ID, REGIST_BANK_CODE, 
+          ASSET_CODE, CCY, AMT, 
+          CNY_AMT, NUM, CUR_ASSET_TYPE, 
+          CUR_ASSETDET_TYPE, DEALDATE, TRADE_COUNTER, 
+          UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE, 
+          CONTRACT_CODE, REMARK, CHL_CPCT_ID, 
+          TRADE_TYPE, CHL_AGRT_NAME, IS_UNDER_TRADE, 
+          STATUS, ORG_CODE, DEPT_CODE, 
+          CREATE_USER, CREATE_TIME, UPDATE_USER, 
+          UPDATE_TIME, STATUS_DATE, REV_DATE, 
+          DATA_SOURCE, RATE, BASIS, 
+          DEALTYPE, FACEVALUE)
+        values(
+            TEMP.TRADE_SEQNO,
+            TEMP.TRADE_CODE,
+            TEMP.INVEST_VARIETY,
+            TEMP.INVEST_TYPE,
+            TEMP.PROD_ID,
+            TEMP.REGIST_BANK_CODE,
+            TEMP.ASSET_CODE,
+            TEMP.CCY,
+            TEMP.AMT,
+            TEMP.CNY_AMT,
+            TEMP.NUM,
+            TEMP.CUR_ASSET_TYPE,
+            TEMP.CUR_ASSETDET_TYPE,
+            TEMP.DEALDATE,
+            TEMP.TRADE_COUNTER,
+            TEMP.UNIT_PRICE_FULL,
+            TEMP.UNIT_PRICE_NET,
+            TEMP.END_RATE,
+            TEMP.CONTRACT_CODE,
+            TEMP.REMARK,
+            TEMP.CHL_CPCT_ID,
+            TEMP.TRADE_TYPE,
+            TEMP.CHL_AGRT_NAME,
+            TEMP.IS_UNDER_TRADE,
+            TEMP.STATUS,
+            TEMP.ORG_CODE,
+            TEMP.DEPT_CODE,
+            TEMP.CREATE_USER,
+            TEMP.CREATE_TIME,
+            TEMP.UPDATE_USER,
+            TEMP.UPDATE_TIME,
+            TEMP.STATUS_DATE,
+            TEMP.REV_DATE,
+            TEMP.DATA_SOURCE,
+            TEMP.RATE,
+            TEMP.BASIS,
+            TEMP.DEALTYPE,
+            TEMP.FACEVALUE
+        )
+    </insert>
+    
+     <insert id="mergeInfoListEx" parameterType="com.joyintech.tams.common.base.entity.ChbInvestTrade">
+        MERGE INTO CHB_INVEST_TRADE CII
+        USING (
+            <foreach collection="newDataList" item="item" open="select * from("
+                close=")" separator="union all">
+                select
+                '${item.tradeSeqno}' TRADE_SEQNO,
+                '${item.tradeCode}'  TRADE_CODE,
+                '${item.investVariety}'  INVEST_VARIETY,
+                '${item.investType}'  INVEST_TYPE,
+                '${item.prodId}'  PROD_ID,
+                '${item.registBankCode}' REGIST_BANK_CODE,
+                '${item.assetCode}'  ASSET_CODE,
+                '${item.ccy}'  CCY,
+                <choose><when test="item.amt != null">${item.amt}</when><otherwise>null</otherwise></choose>  AMT,
+                <choose><when test="item.cnyAmt != null">${item.cnyAmt}</when><otherwise>null</otherwise></choose>  CNY_AMT,
+                <choose><when test="item.num != null">${item.num}</when><otherwise>null</otherwise></choose>  NUM,
+                '${item.curAssetType}'  CUR_ASSET_TYPE,
+                '${item.curAssetdetType}'  CUR_ASSETDET_TYPE,
+                 <choose><when test="item.dealdate != null">#{item.dealdate,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose>  DEALDATE,
+                '${item.tradeCounter}'  TRADE_COUNTER,
+                
+                <choose><when test="item.unitPriceFull != null">${item.unitPriceFull}</when><otherwise>null</otherwise></choose>  UNIT_PRICE_FULL,
+                <choose><when test="item.unitPriceNet != null">${item.unitPriceNet}</when><otherwise>null</otherwise></choose>  UNIT_PRICE_NET,
+                <choose><when test="item.endRate != null">${item.endRate}</when><otherwise>null</otherwise></choose>  END_RATE,
+                '${item.contractCode}'  CONTRACT_CODE,
+                '${item.remark}'  REMARK,
+                '${item.chlCpctId}'  CHL_CPCT_ID,
+                '${item.tradeType}'  TRADE_TYPE,
+                '${item.chlAgrtName}' CHL_AGRT_NAME,
+                '${item.isUnderTrade}' IS_UNDER_TRADE,
+                '${item.status}'  STATUS,
+                '${item.orgCode}'  ORG_CODE,
+                '${item.deptCode}'  DEPT_CODE,
+                '${item.createUser}'  CREATE_USER,
+                sysdate CREATE_TIME,
+                '${item.updateUser}'  UPDATE_USER,
+                sysdate UPDATE_TIME,
+                <choose><when test="item.statusDate != null">#{item.statusDate,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose>  STATUS_DATE,
+                <choose><when test="item.revDate != null">#{item.revDate,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose>  REV_DATE,
+                '${item.dataSource}'  DATA_SOURCE,
+                <choose><when test="item.rate != null">${item.rate}</when><otherwise>null</otherwise></choose>  RATE,
+                '${item.basis}' BASIS,
+                '${item.dealtype}'  DEALTYPE,
+                <choose><when test="item.facevalue != null">${item.facevalue}</when><otherwise>null</otherwise></choose>  FACEVALUE
+                from SYSIBM.SYSDUMMY1
+            </foreach>
+        ) TEMP
+        <!-- 业务主键匹配 -->
+        ON (CII.TRADE_CODE = TEMP.TRADE_CODE)
+        <!-- 匹配到则更新 -->
+        WHEN MATCHED THEN 
+        UPDATE 
+        SET <!-- CII.TRADE_SEQNO = TEMP.TRADE_SEQNO,
+            CII.TRADE_CODE = TEMP.TRADE_CODE, -->
+            CII.INVEST_VARIETY = TEMP.INVEST_VARIETY,
+            CII.INVEST_TYPE = TEMP.INVEST_TYPE,
+            CII.PROD_ID = TEMP.PROD_ID,
+            CII.REGIST_BANK_CODE = TEMP.REGIST_BANK_CODE,
+            CII.ASSET_CODE = TEMP.ASSET_CODE,
+            CII.CCY = TEMP.CCY,
+            CII.AMT = TEMP.AMT,
+            CII.CNY_AMT = TEMP.CNY_AMT,
+            CII.NUM = TEMP.NUM,
+            CII.CUR_ASSET_TYPE = TEMP.CUR_ASSET_TYPE,
+            CII.CUR_ASSETDET_TYPE = TEMP.CUR_ASSETDET_TYPE,
+            CII.DEALDATE = TEMP.DEALDATE,
+            CII.TRADE_COUNTER = TEMP.TRADE_COUNTER,
+            CII.UNIT_PRICE_FULL = TEMP.UNIT_PRICE_FULL,
+            CII.UNIT_PRICE_NET = TEMP.UNIT_PRICE_NET,
+            CII.END_RATE = TEMP.END_RATE,
+            CII.CONTRACT_CODE = TEMP.CONTRACT_CODE,
+            CII.REMARK = TEMP.REMARK,
+            CII.CHL_CPCT_ID = TEMP.CHL_CPCT_ID,
+            CII.TRADE_TYPE = TEMP.TRADE_TYPE,
+            CII.CHL_AGRT_NAME = TEMP.CHL_AGRT_NAME,
+            CII.IS_UNDER_TRADE = TEMP.IS_UNDER_TRADE,
+            CII.STATUS = TEMP.STATUS,
+            CII.ORG_CODE = TEMP.ORG_CODE,
+            CII.DEPT_CODE = TEMP.DEPT_CODE,
+            CII.CREATE_USER = TEMP.CREATE_USER,
+            /*CII.CREATE_TIME = TEMP.CREATE_TIME,*/
+            CII.UPDATE_USER = TEMP.UPDATE_USER,
+            CII.UPDATE_TIME = TEMP.UPDATE_TIME,
+            CII.STATUS_DATE = TEMP.STATUS_DATE,
+            CII.REV_DATE = TEMP.REV_DATE,
+            CII.DATA_SOURCE = TEMP.DATA_SOURCE,
+            CII.RATE = TEMP.RATE,
+            CII.BASIS = TEMP.BASIS,
+            CII.DEALTYPE = TEMP.DEALTYPE,
+            CII.FACEVALUE = TEMP.FACEVALUE
+
+        <!-- 未匹配到这插入 -->
+        WHEN NOT MATCHED THEN 
+        INSERT (TRADE_SEQNO, TRADE_CODE, INVEST_VARIETY, 
+          INVEST_TYPE, PROD_ID, REGIST_BANK_CODE, 
+          ASSET_CODE, CCY, AMT, 
+          CNY_AMT, NUM, CUR_ASSET_TYPE, 
+          CUR_ASSETDET_TYPE, DEALDATE, TRADE_COUNTER, 
+          UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE, 
+          CONTRACT_CODE, REMARK, CHL_CPCT_ID, 
+          TRADE_TYPE, CHL_AGRT_NAME, IS_UNDER_TRADE, 
+          STATUS, ORG_CODE, DEPT_CODE, 
+          CREATE_USER, CREATE_TIME, UPDATE_USER, 
+          UPDATE_TIME, STATUS_DATE, REV_DATE, 
+          DATA_SOURCE, RATE, BASIS, 
+          DEALTYPE, FACEVALUE)
+        values(
+            TEMP.TRADE_SEQNO,
+            TEMP.TRADE_CODE,
+            TEMP.INVEST_VARIETY,
+            TEMP.INVEST_TYPE,
+            TEMP.PROD_ID,
+            TEMP.REGIST_BANK_CODE,
+            TEMP.ASSET_CODE,
+            TEMP.CCY,
+            TEMP.AMT,
+            TEMP.CNY_AMT,
+            TEMP.NUM,
+            TEMP.CUR_ASSET_TYPE,
+            TEMP.CUR_ASSETDET_TYPE,
+            TEMP.DEALDATE,
+            TEMP.TRADE_COUNTER,
+            TEMP.UNIT_PRICE_FULL,
+            TEMP.UNIT_PRICE_NET,
+            TEMP.END_RATE,
+            TEMP.CONTRACT_CODE,
+            TEMP.REMARK,
+            TEMP.CHL_CPCT_ID,
+            TEMP.TRADE_TYPE,
+            TEMP.CHL_AGRT_NAME,
+            TEMP.IS_UNDER_TRADE,
+            TEMP.STATUS,
+            TEMP.ORG_CODE,
+            TEMP.DEPT_CODE,
+            TEMP.CREATE_USER,
+            TEMP.CREATE_TIME,
+            TEMP.UPDATE_USER,
+            TEMP.UPDATE_TIME,
+            TEMP.STATUS_DATE,
+            decode(TEMP.STATUS,'E',null,sysdate),
+            TEMP.DATA_SOURCE,
+            TEMP.RATE,
+            TEMP.BASIS,
+            TEMP.DEALTYPE,
+            TEMP.FACEVALUE
+        )
+    </insert>
+</mapper>

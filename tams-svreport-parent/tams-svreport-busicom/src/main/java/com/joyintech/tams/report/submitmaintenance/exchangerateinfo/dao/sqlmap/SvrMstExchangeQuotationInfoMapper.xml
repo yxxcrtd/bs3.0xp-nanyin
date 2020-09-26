@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.submitmaintenance.exchangerateinfo.dao.SvrMstExchangeQuotationInfoMapper">
+	<sql id = "BASE_COLUMNS">
+		EXCHARGE_CODE as exchargeCode,
+		DATASOURCE_TYPE as datasourceType,
+		TRADE_DATE as tradeDate,
+		OPEN_PRICE as openPrice,
+		CLOSE_PRICE as closePrice,
+		MID_PRICE as midPrice,
+		HIGH_PRICE as highPrice,
+		LOW_PRICE as lowPrice,
+		BASIS_CYY as basisCyy,
+		QUOT_UNIT as quotUnit,
+		INPUT_TYPE as  inputType,
+		CREATE_USER as createUser,
+		CREATE_DEPT as createDept,
+		CREATE_TIME as createTime,
+		UPDATE_USER as updateUser,
+		UPDATE_TIME as updateTime
+	</sql>
+	<!-- 汇率行情查询 -->
+	<select id="select" resultType="com.joyintech.tams.report.submitmaintenance.exchangerateinfo.dto.SvrMstExchangeQuotationInfoDto">
+		select 
+			<include refid="BASE_COLUMNS"></include>
+		from MST_EXCHARGE_QUOTE
+		<where>
+			<if test="exchargeCode != null and exchargeCode != ''">
+				EXCHARGE_CODE like concat(concat('%', #{exchargeCode,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="tradeDateBegin != null and tradeDateBegin != ''" >
+			 <![CDATA[ and to_char(TRADE_DATE,'yyyy-MM-dd') >= #{tradeDateBegin} ]]> 
+		    </if> 
+		    <if test="tradeDateEnd != null and tradeDateEnd != ''" >
+			 <![CDATA[ and to_char(TRADE_DATE,'yyyy-MM-dd') <= #{tradeDateEnd} ]]> 			 
+		    </if> 
+		    <if test="tradeDate != null and tradeDate != ''" >
+			 and to_char(TRADE_DATE,'yyyy-MM-dd') = #{tradeDate}  			 
+		    </if> 
+		</where>
+		order by  exchargeCode,tradeDate
+	</select>
+	
+	<select id="selectForExport"
+	resultType="com.joyintech.tams.report.submitmaintenance.exchangerateinfo.dto.SvrMstExchangeQuotationInfoDto">
+	select
+	<include refid="BASE_COLUMNS"></include>
+	from MST_EXCHARGE_QUOTE
+	<where>
+		<if test="keylist != null and keylist.size()>0">
+			<foreach collection="keylist" item="item" open="(" close=")"
+				separator=") or (">
+				EXCHARGE_CODE = #{item.exchargeCode}
+				and TRADE_DATE = #{item.tradeDate}
+			</foreach>
+		</if>
+	</where>
+	order by exchargeCode,tradeDate
+</select>
+    <select id="selectNewRate" resultType="java.math.BigDecimal">
+    select
+		<choose>
+		<when test="pricetype == '01'">
+			cmei.OPEN_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+		</when>
+		<when test="pricetype == '02'">
+			cmei.CLOSE_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+		</when>
+		<when test="pricetype == '03'">
+			cmei.HIGH_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+		</when>
+		<when test="pricetype == '04'">
+			cmei.LOW_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+		</when>
+		<otherwise >
+			cmei.MID_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+		</otherwise>
+		</choose>
+		 from MST_EXCHARGE_QUOTE cmei
+		 where  cmei.BASIS_CYY= #{ccy}
+		 and cmei.DATASOURCE_TYPE = 'SAFE'
+		 AND cmei.PUBLISH_DATE=
+		 ( select max(TRADE_DATE) from MST_EXCHARGE_QUOTE  where DATASOURCE_TYPE = 'SAFE' and BASIS_CYY = #{ccy} and TRADE_DATE &lt;= #{equityConfDate,jdbcType=DATE}) 
+    </select>
+</mapper>

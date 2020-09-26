@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="PbcPrdBaseinfoSub.xlsx" name="产品基本信息">
+	<Worksheet javaBean="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dto.PbcPrdBaseinfoSub">
+		<Row>
+			<Cell order="1" name="数据状态">statusStr</Cell>
+			<Cell order="2" name="数据日期">statusDate</Cell>
+			<Cell order="3" name="报送状态">sendStatusStr</Cell>
+			<Cell order="4" name="报送日期">submitTime</Cell>
+			<Cell order="5" name="报送截止日">pbcSubmitDeadline</Cell>
+			<Cell order="6" name="反馈状态">submitFeedbackStatusStr</Cell>
+			<Cell order="7" name="产品代码">pbcProdIdShow</Cell>
+			<Cell order="8" name="反馈产品代码">pbcCode</Cell>
+			<Cell order="9" name="发起机构代码">issuePartyId</Cell>
+			<Cell order="10" name="发起机构名称">issuePartyName</Cell>
+			<Cell order="11" name="产品种类">pbcProdType</Cell>
+			<Cell order="12" name="产品名称">prodName</Cell>
+			<Cell order="13" name="产品品牌">prodBrand</Cell>
+			<Cell order="14" name="产品期次">prodStage</Cell>
+			<Cell order="15" name="发起机构内部产品代码">prodId</Cell>
+			<Cell order="16" name="募集币种">raiseCcy</Cell>
+			<Cell order="17" name="兑付本金币种">cashPrinCcy</Cell>
+			<Cell order="18" name="兑付收益币种">cashProfCcy</Cell>
+			<Cell order="19" name="客户类型">customerType</Cell>
+			<Cell order="20" name="募集方式">raiseType</Cell>
+			<Cell order="21" name="管理方式">manageType</Cell>
+			<Cell order="22" name="受托职责">fiduciaryDuty</Cell>
+			<Cell order="23" name="合作模式">contMode</Cell>
+			<Cell order="24" name="运行方式">operateMode</Cell>
+			<Cell order="25" name="产品类型">ivstorientation</Cell>
+			<Cell order="26" name="业务模式">busiModel</Cell>
+			<Cell order="27" name="收益保障标识">incomeGuaranIdent</Cell>
+			<Cell order="28" name="本金保障标识">prinGuaranIdent</Cell>
+			<Cell order="29" name="预计客户最高年收益率">highYieldIssue</Cell>
+			<Cell order="30" name="预计客户最低年收益率">lowYieldIssue</Cell>
+			<Cell order="31" name="募集起始日期">raiseVdate01</Cell>
+			<Cell order="32" name="募集结束日期">raiseEnddate01</Cell>
+			<Cell order="33" name="发行机构提前终止权标识">termRightFlag</Cell>
+			<Cell order="34" name="客户赎回权标识">cusRedeemFlag</Cell>
+			<Cell order="35" name="产品增信标识">creditFlag</Cell>
+			<Cell order="36" name="产品增信机构类型">creditType</Cell>
+			<Cell order="37" name="增信形式">creditMode</Cell>
+			<Cell order="38" name="境内托管机构名称">inDepName</Cell>
+			<Cell order="39" name="境内托管机构代码">inDepCode</Cell>
+			<Cell order="40" name="境外托管机构国别">outDepCtry</Cell>
+			<Cell order="41" name="境外托管机构名称">outDepName</Cell>
+			<Cell order="42" name="产品起始日期">vdate01</Cell>
+			<Cell order="43" name="产品预计终止日期">mdate01</Cell>
+			<Cell order="44" name="产品对应资产池代码">accountId</Cell>
+			<Cell order="45" name="分级产品标识">isConstracte</Cell>
+			<Cell order="46" name="收益权转让产品标识">transferType</Cell>
+			<Cell order="47" name="理财产品发起机构标识">identiFlag</Cell>
+			
+			
+		</Row>
+	</Worksheet>
+</Workbook>

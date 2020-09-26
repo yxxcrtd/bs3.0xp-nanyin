@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorator="~{layout/default}">
+  <head>
+    <meta charset="utf-8" />
+    <title data-th-text="#{SvrTransformRule002}">变形转换规则新建</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      data-th-href="@{/css/report/report.css}"/>
+  </head>
+  <body>
+    <div layout:fragment="content">
+      <form class="layui-form joyin-form-wrap" id="submitForm">
+        <div class="layui-form-item">
+          <div class="layui-inline layui-col-md6">
+            <label class="layui-form-label form-lable">类型</label>
+            <div class="layui-input-inline input-inline">
+              <input
+              	required
+              	searchable="false"
+                type="text"
+                id="transType"
+                name="transType"
+                class="layui-input form-input input-select"
+                data-th-placeholder="#{SysCommon.placeholder}"
+                data-th-value="${TRANS_TYPE_UNC}"
+                data-th-data-result="${TRANS_TYPE}"
+                disabled="disabled"
+              />
+            </div>
+          </div>
+          <!--οnkeyup="value=this.value.replace(/[^\u4e00-\u9ff5]/g,'')" -->
+          <div  class="layui-inline layui-col-md6">
+            <label class="layui-form-label form-lable">原始值</label>
+            <div class="layui-input-inline input-inline">
+              <input
+                required
+                type="text"
+                οnkeyup="value=this.value.replace(/[^\u4e00-\u9ff5]/g,'')"
+                maxlength="1"
+                id="orgField"
+                name="orgField"
+                class="layui-input form-input"
+                placeholder="请输入内容"
+                data-th-placeholder="#{SysCommon.placeholder}"
+                data-th-value="${entity?.orgField}"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <div class="layui-inline layui-col-md6">
+            <label class="layui-form-label form-lable">拼音</label>
+            <div class="layui-input-inline input-inline">
+              <input
+              	required
+                type="text"
+                onkeyup="value=value.replace(/[^a-zA-Z]/g,'')"
+                id="pinyin"
+                name="pinyin"
+                class="layui-input form-input"
+                placeholder="请输入内容"
+                data-th-placeholder="#{SysCommon.placeholder}"
+                data-th-value="${entity?.pinyin}"
+              />
+            </div>
+          </div>
+          <div class="layui-inline layui-col-md6">
+            <label class="layui-form-label form-lable">unicode码</label>
+            <div class="layui-input-inline input-inline">
+              <input
+              	required
+              	disabled="disabled"
+                type="text"
+                id="fieldUnicode"
+                name="fieldUnicode"
+                class="layui-input form-input"
+                data-th-value="${entity?.fieldUnicode}"
+                placeholder="自动生成"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <div class="layui-inline layui-col-md6">
+            <label class="layui-form-label form-lable">转化后值</label>
+            <div class="layui-input-inline input-inline">
+              <input
+                type="text"
+                id="targetField"
+                name="targetField"
+                class="layui-input form-input"
+                disabled="disabled"
+                data-th-value="${entity?.targetField}"
+                required
+                placeholder="自动生成"
+              />
+            </div>
+          </div>
+          <div class="layui-inline layui-col-md6">
+            <label class="layui-form-label form-lable">备注</label>
+            <div class="layui-input-inline input-inline">
+              <input
+                type="text"
+                id="remark"
+                name="remark"
+                class="layui-input form-input"
+                placeholder="请输入内容"
+                data-th-placeholder="#{SysCommon.placeholder}"
+                data-th-value="${entity?.remark}"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="layui-col-md11" style="margin:50px;">
+          <div class="text-center">
+            <a
+              id="TransformRule002_btn_save"
+              class="layui-btn layui-btn-sm btn-save"
+              data-th-text="#{SysCommon.submit}"
+              >提交</a
+            >
+            <a
+              id="TransformRule002_btn_cancel"
+              class="layui-btn layui-btn-sm btn-cancel"
+              data-th-text="#{SysCommon.cancel}"
+              >取消</a
+            >
+          </div>
+        </div>
+      </form>
+    </div>
+    <div layout:fragment="script">
+    	<script data-th-inline="javascript" type="text/javascript">
+			var seqno = /*[[${seqno}]]*/'';
+		</script>
+      <script
+        data-th-src="@{/js/report/submitmaintenance/transformrule/TransformRule002.js}"
+        type="text/javascript"
+      ></script>
+    </div>
+  </body>
+</html>

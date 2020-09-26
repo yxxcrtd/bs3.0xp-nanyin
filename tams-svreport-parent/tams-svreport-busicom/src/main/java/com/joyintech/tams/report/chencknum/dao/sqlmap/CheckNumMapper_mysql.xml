@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.chencknum.dao.CheckNumMapper_mysql">
+<select id="getSendCount" resultType="java.lang.Long">
+		select count(1)
+  		from CHB_EQU_SUB sub
+  		left join CHB_SUBMIT_STATUS status
+    		on sub.sumit_seq = status.seqno
+		<where>
+			1=1
+			<if test="reportDate != null and reportDate != ''">
+				and DATE_FORMAT(status.update_time,'%Y%m%d') = #{reportDate,jdbcType=VARCHAR}
+		 	</if>
+		 	and status.submit_feedback_status='03'
+		</where>
+	</select>
+	<select id="getSendHoldCount"
+		resultType="java.lang.Long">
+		select count(1)
+		from CHB_INVESTHOLD_INFO_SUB ciis
+		left join CHB_SUBMIT_STATUS status
+    	on ciis.sumit_seq = status.seqno
+    	<where>
+    		1=1
+			<if test="reportDate!=null and reportDate != ''">
+				and DATE_FORMAT(ciis.HOLD_DATE,'%Y%m%d') = #{reportDate,jdbcType=VARCHAR}
+			</if>
+			and status.submit_feedback_status='03'
+		</where>
+	</select>
+
+	<update id="updateTotalAmountInfo"
+		parameterType="com.joyintech.tams.report.chencknum.dto.TotalAmountInfoDto">
+		update CHB_TOTALAMOUNT_INFO
+		<set>
+			<if test="fileAmount != null and fileAmount != '' ">
+				file_amount = #{fileAmount,jdbcType=VARCHAR},
+			</if>
+			<if test="fileCount != null and fileCount != '' ">
+				file_count = #{fileCount,jdbcType=VARCHAR},
+			</if>
+			<if test="isEqual != null and isEqual != '' ">
+				is_equal = #{isEqual,jdbcType=VARCHAR},
+			</if>
+			<if test="haldFlag != null and haldFlag != '' ">
+				hald_flag = #{haldFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="amount != null and amount != '' ">
+				amount = #{amount,jdbcType=VARCHAR},
+			</if>
+			<if test="amountReport != null and amountReport != '' ">
+				amount_report = #{amountReport,jdbcType=VARCHAR},
+			</if>
+			update_time=NOW()
+		</set>
+		<where>
+			1=1
+			<if test="reportDate!=null and reportDate != ''">
+				and report_Date = #{reportDate,jdbcType=VARCHAR}
+			</if>
+			<if test="interfaceType!=null and interfaceType != ''">
+				and interface_type = #{interfaceType,jdbcType=VARCHAR}
+			</if>
+			<if test="fileName!=null and fileName != ''">
+				and file_name = #{fileName,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</update>
+	<!-- 根据识别标识与登记银行代码从信息维护表中查询数据插入登记表 -->
+	<insert id="insertTotalAmountInfo"
+		parameterType="com.joyintech.tams.report.chencknum.dto.TotalAmountInfoDto">
+		insert into
+		CHB_TOTALAMOUNT_INFO (
+			id,
+			report_date,
+			interface_type,
+			file_name,
+			file_amount,
+			file_count,
+			file_in_data,
+			is_equal,
+			hald_flag,
+			amount,
+			amount_report,
+			create_time,
+			update_time
+		)values(
+			#{id,jdbcType=VARCHAR},
+			#{reportDate,jdbcType=VARCHAR},
+			#{interfaceType,jdbcType=VARCHAR},
+			#{fileName,jdbcType=VARCHAR},
+			#{fileAmount,jdbcType=VARCHAR},
+			#{fileCount,jdbcType=VARCHAR},
+			#{fileInData,jdbcType=VARCHAR},
+			#{isEqual,jdbcType=VARCHAR},
+			#{haldFlag,jdbcType=VARCHAR},
+			#{amount,jdbcType=VARCHAR},
+			#{amountReport,jdbcType=VARCHAR},
+			NOW(),
+			NOW()
+		)
+	</insert>
+
+</mapper>

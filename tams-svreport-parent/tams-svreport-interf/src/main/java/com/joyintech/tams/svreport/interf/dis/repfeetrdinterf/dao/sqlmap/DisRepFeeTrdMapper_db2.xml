@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.dis.repfeetrdinterf.dao.DisRepFeeTrdMapper_db2" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.interf.dis.repfeetrdinterf.dto.DisRepFeeTrd" >
+        <result column="BUSI_ID" property="busiId" jdbcType="VARCHAR" />
+        <result column="FEE_ID" property="feeId" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="PAID_FEE" property="paidFee" jdbcType="DECIMAL" />
+        <result column="PAY_DATE" property="payDate" jdbcType="DATE" />
+        <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="INPUT_USER" property="inputUser" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="ADAPTER_ID" property="adapterId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CASH_TYPE2" property="cashType2" jdbcType="VARCHAR" />
+    </resultMap>
+    <insert id="insert"  parameterType="java.util.List" >
+        insert into REP_FEE_TRD (BUSI_ID, FEE_ID, PROD_ID, 
+            PAID_FEE, PAY_DATE, 
+            INPUT_TYPE, INPUT_USER, STATUS, 
+            ADAPTER_ID, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            CASH_TYPE2)
+            <foreach collection="list" item="item" open=" select * from (select " close="from sysibm.SYSDUMMY1)" separator="from sysibm.SYSDUMMY1 union all select ">
+	        	#{item.busiId,jdbcType=VARCHAR}, #{item.feeId,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, 
+	            #{item.paidFee,jdbcType=DECIMAL}, #{item.payDate,jdbcType=DATE}, 
+	            #{item.inputType,jdbcType=VARCHAR}, #{item.inputUser,jdbcType=VARCHAR}, #{item.status,jdbcType=VARCHAR}, 
+	            #{item.adapterId,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, 
+	            #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+	            #{item.cashType2,jdbcType=VARCHAR}
+            </foreach>
+    </insert>
+
+    <update id="mergeRepFeeTrdInfo">
+     MERGE INTO REP_FEE_TRD T  
+        USING (
+       <foreach collection="list" item="item" open="select * from("
+				close=")" separator="union all">
+				SELECT 
+       '${busiId}' as BUSI_ID,
+       '${feeId}' as  FEE_ID,
+       '${prodId}' as  PROD_ID,
+	   <choose><when test="paidFee != null">${paidFee}</when><otherwise>null</otherwise></choose> PAID_FEE,
+	   <choose><when test="payDate != null">#{payDate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> PAY_DATE,
+       '${inputType}' as INPUT_TYPE,
+       '${inputUser}' as INPUT_USER,
+       '${status}' as STATUS,
+       '${adapterId}' as ADAPTER_ID,
+       '${createUser}' as CREATE_USER,
+       '${createDept}' as CREATE_DEPT ,
+       <choose><when test="item.createTime != null">#{item.createTime,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose> CREATE_TIME,
+       '${updateUser}' as UPDATE_USER,
+       <choose><when test="item.updateTime != null">#{item.updateTime,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose> UPDATE_TIME,
+       '${cashType2}' as CASH_TYPE2
+       from sysibm.SYSDUMMY1
+       </foreach>
+	) T1
+	ON (T.BUSI_ID=T1.BUSI_ID)
+	WHEN MATCHED THEN
+	UPDATE SET
+	T.BUSI_ID=T1.BUSI_ID,
+	T.FEE_ID=T1.FEE_ID,
+	T.PROD_ID=T1.PROD_ID,
+	T.PAID_FEE=T1.PAID_FEE,
+	T.PAY_DATE=T1.PAY_DATE,
+	T.INPUT_TYPE=T1.INPUT_TYPE,
+	T.INPUT_USER=T1.INPUT_USER,
+	T.STATUS=T1.STATUS,
+	T.ADAPTER_ID=T1.ADAPTER_ID,
+	T.CREATE_USER=T1.CREATE_USER,
+	T.CREATE_DEPT=T1.CREATE_DEPT,
+	T.CREATE_TIME=T1.CREATE_TIME,
+	T.UPDATE_USER=T1.UPDATE_USER,
+	T.UPDATE_TIME=T1.UPDATE_TIME,
+	T.CASH_TYPE2=T1.CASH_TYPE2
+	
+	WHEN NOT MATCHED THEN
+	INSERT(
+	T.BUSI_ID,
+	T.FEE_ID,
+	T.PROD_ID,
+	T.PAID_FEE,
+	T.PAY_DATE,
+	T.INPUT_TYPE,
+	T.INPUT_USER,
+	T.STATUS,
+	T.ADAPTER_ID,
+	T.CREATE_USER,
+	T.CREATE_DEPT,
+	T.CREATE_TIME,
+	T.UPDATE_USER,
+	T.UPDATE_TIME,
+	T.CASH_TYPE2
+	) VALUES (
+	T1.BUSI_ID,
+	T1.FEE_ID,
+	T1.PROD_ID,
+	T1.PAID_FEE,
+	T1.PAY_DATE,
+	T1.INPUT_TYPE,
+	T1.INPUT_USER,
+	T1.STATUS,
+	T1.ADAPTER_ID,
+	T1.CREATE_USER,
+	T1.CREATE_DEPT,
+	T1.CREATE_TIME,
+	T1.UPDATE_USER,
+	T1.UPDATE_TIME,
+	T1.CASH_TYPE2
+	)	
+    </update>
+    <select id="selectCashIdByProdidAndCashType2" parameterType="com.joyintech.tams.svreport.interf.dis.repfeetrdinterf.dto.DisRepFeeTrd"
+    	resultType="com.joyintech.tams.svreport.interf.dis.repfeetrdinterf.dto.DisRepFeeTrd">
+    	SELECT CASH_ID cashId
+    	FROM(
+		  SELECT row_number() over() as ROWNUM,CASH_ID 
+		  FROM REP_CASH_YIELD 
+		  WHERE BUSI_ID = #{prodId,jdbcType=VARCHAR}
+		  AND CASH_TYPE2=#{cashType2,jdbcType=VARCHAR}
+		  AND ROWNUM = 1
+		)
+    </select>
+</mapper>

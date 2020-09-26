@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="EquityInfoRegistAll.xlsx" name="投资者身份信息登记">
+	<Worksheet javaBean="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto">
+		<Row>
+			<Cell order="1"  name="数据状态"> status</Cell><!-- 数据状态 -->
+			<Cell order="2"  name="数据日期"> updateTime</Cell><!-- 数据日期 -->
+			<Cell order="3"  name="报送状态"> submitStatus</Cell><!-- 报送状态 -->
+			<Cell order="4"  name="报送日期"> submitTime</Cell><!-- 报送日期 -->
+			<Cell order="5"  name="报送截止日"> chbSubmitDeadline</Cell><!-- 报送截止日 -->
+			<Cell order="6"  name="反馈状态"> submitFeedbackStatus</Cell><!-- 反馈状态 -->
+			<Cell order="7"  name="数据类型"> type</Cell><!-- 数据类型 -->
+			<Cell order="8"  name="登记银行代码"> bankCode</Cell><!-- 登记银行代码 -->
+			<Cell order="9"  name="机构代码"> orgCode</Cell><!-- 机构代码 -->
+			<Cell order="10"  name="识别标识"> indentifyMark</Cell><!-- 识别标识 -->
+			<Cell order="11"  name="原识别标识"> orgIndentifyMark</Cell><!-- 原识别标识 -->
+			<Cell order="12"  name="该投资者是否属于本行"> isBelongBank</Cell><!-- 该投资者是否属于本行 -->
+			<Cell order="13"  name="投资者所属银行名称"> theBankName</Cell><!-- 投资者所属银行名称 -->
+			<Cell order="14"  name="投资者所属银行代码"> theBankCode</Cell><!-- 投资者所属银行代码 -->
+			<Cell order="15"  name="投资者境内外标识"> holderMark</Cell><!-- 投资者境内外标识 -->
+			<Cell order="16"  name="投资者所属国家或地区"> holderRegion</Cell><!-- 投资者所属国家或地区 -->
+			<Cell order="17"  name="投资者类别"> holderType</Cell><!-- 投资者类别 -->
+			<Cell order="18"  name="证件类别"> identifyType</Cell><!-- 证件类别 -->
+			<Cell order="19"  name="其他证件名称"> otherIdentifyName</Cell><!-- 其他证件名称 -->
+			<Cell order="20"  name="证件号码"> identifyNumber</Cell><!-- 证件号码 -->
+			<Cell order="21"  name="SPV资金托管账户及开户行"> spvCapAccBank</Cell><!-- SPV资金托管账户及开户行 -->
+			<Cell order="22"  name="其他资金托管账户及开户行"> otherCapAccBank</Cell><!-- 其他资金托管账户及开户行 -->
+			<Cell order="23"  name="SPV登记编码"> spvRegistCode</Cell><!-- SPV登记编码 -->
+			<Cell order="24"  name="投资者名称"> holderName</Cell><!-- 投资者名称 -->
+			<Cell order="25"  name="性别"> holderSex</Cell><!-- 性别 -->
+			<Cell order="26"  name="风险偏好"> holderRiskPrefer</Cell><!-- 风险偏好 -->
+			<Cell order="27"  name="手机号码"> holderCellphone</Cell><!-- 手机号码 -->
+			<Cell order="28"  name="固定电话"> holderTelephone</Cell><!-- 固定电话 -->
+			<Cell order="29"  name="电子邮箱"> holderEmail</Cell><!-- 电子邮箱  -->
+			<Cell order="30"  name="备注"> remark</Cell><!-- 备注 -->
+		</Row>
+	</Worksheet>
+</Workbook>

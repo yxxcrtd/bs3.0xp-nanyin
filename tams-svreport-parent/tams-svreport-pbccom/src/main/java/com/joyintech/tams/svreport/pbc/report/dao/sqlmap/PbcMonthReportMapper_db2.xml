@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.pbc.report.dao.PbcMonthReportMapper_db2">
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport" >
+    <id column="REPORTUUID" property="reportuuid" jdbcType="CHAR" />
+    <result column="TERMID" property="termid" jdbcType="VARCHAR" />
+    <result column="REPORTTYPE" property="reporttype" jdbcType="VARCHAR" />
+    <result column="STARTDATE" property="startdate" jdbcType="TIMESTAMP" />
+    <result column="ENDDATE" property="enddate" jdbcType="TIMESTAMP" />
+    <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+    <result column="ISSUE_PARTY_NAME" property="issuePartyName" jdbcType="VARCHAR" />
+    <result column="REPORTFREQU" property="reportfrequ" jdbcType="VARCHAR" />
+    <result column="REPORT_ORG_NAME" property="reportOrgName" jdbcType="VARCHAR" />
+    <result column="SOCIAL_CREDIT_CODE" property="socialCreditCode" jdbcType="VARCHAR" />
+    <result column="FIN_INSTITUTION_CODE" property="finInstitutionCode" jdbcType="VARCHAR" />
+    <result column="PROD_VARIETY" property="prodVariety" jdbcType="VARCHAR" />
+    <result column="PERSON_LIABLE" property="personLiable" jdbcType="VARCHAR" />
+    <result column="CONTACT" property="contact" jdbcType="VARCHAR" />
+    <result column="REPORT_DATE" property="reportDate" jdbcType="TIMESTAMP" />
+    <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+    <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" jdbcType="TIMESTAMP" />
+    <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
+    <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+    <result column="STATUS_DATE" property="statusDate" jdbcType="TIMESTAMP" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+    <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+    <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    <result column="PBC_ACCOUNT_ID" property="pbcAccountId" jdbcType="VARCHAR" />
+    <result column="PROD_ID" property="prodid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    REPORTUUID, TERMID, REPORTTYPE, STARTDATE, ENDDATE, ISSUE_PARTY_ID, ISSUE_PARTY_NAME, 
+    REPORTFREQU, REPORT_ORG_NAME, SOCIAL_CREDIT_CODE, FIN_INSTITUTION_CODE, PROD_VARIETY, 
+    PERSON_LIABLE, CONTACT, REPORT_DATE, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+    SUBMIT_FEEDBACK_STATUS, STATUS, SEND_STATUS, STATUS_DATE, CREATE_USER, CREATE_TIME, 
+    UPDATE_USER, UPDATE_TIME, ORG_CODE, DEPT_CODE, CREATE_DEPT,PBC_ACCOUNT_ID
+  </sql>
+    
+  <insert id="insertReportHis" parameterType="java.util.Map">
+      insert into PBC_REPORT_HIS (
+      HIS_NO, TERMID, REPORTTYPE, 
+      STARTDATE, ENDDATE, ISSUE_PARTY_ID, 
+      ISSUE_PARTY_NAME, REPORTFREQU, REPORT_ORG_NAME, 
+      SOCIAL_CREDIT_CODE, FIN_INSTITUTION_CODE, PROD_VARIETY, 
+      PERSON_LIABLE, CONTACT, REPORT_DATE, 
+      SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+      SUBMIT_FEEDBACK_STATUS, STATUS, SEND_STATUS, 
+      STATUS_DATE, CREATE_USER, CREATE_TIME, 
+      UPDATE_USER, UPDATE_TIME, ORG_CODE, 
+      DEPT_CODE, CREATE_DEPT,PBC_ACCOUNT_ID
+      )
+      select  
+	      REPORTUUID, TERMID, REPORTTYPE, 
+	      STARTDATE, ENDDATE, ISSUE_PARTY_ID, 
+	      ISSUE_PARTY_NAME, REPORTFREQU, REPORT_ORG_NAME, 
+	      SOCIAL_CREDIT_CODE, FIN_INSTITUTION_CODE, PROD_VARIETY, 
+	      PERSON_LIABLE, CONTACT, REPORT_DATE, 
+	      SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+	      SUBMIT_FEEDBACK_STATUS, STATUS, SEND_STATUS, 
+	      STATUS_DATE, CREATE_USER, CREATE_TIME, 
+	      UPDATE_USER, UPDATE_TIME, ORG_CODE, 
+	      DEPT_CODE, CREATE_DEPT,PBC_ACCOUNT_ID
+      from PBC_REPORT
+      where 1 =1
+       <if test="registList !=null and registList.size()>0">
+          <foreach collection="registList" item="regist" open="and (TERMID,REPORTTYPE,nvl(PBC_ACCOUNT_ID,'')) IN (" separator="UNION all"  close=")">
+            select #{regist.termid,jdbcType=VARCHAR},
+            #{regist.reporttype,jdbcType=VARCHAR},nvl(#{regist.pbcAccountId,jdbcType=VARCHAR},'')
+            from sysibm.SYSDUMMY1
+          </foreach>
+       </if>
+       and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+  </insert>
+  <delete id="deleteLastSubmitRegist" parameterType="java.util.Map">
+      delete from PBC_REPORT
+      where 1 =1
+       <if test="registList !=null and registList.size()>0">
+          <foreach collection="registList" item="regist" open="and (TERMID,REPORTTYPE,nvl(PBC_ACCOUNT_ID,'')) IN (" separator="UNION all"  close=")">
+            select #{regist.termid,jdbcType=VARCHAR},
+            #{regist.reporttype,jdbcType=VARCHAR},nvl(#{regist.pbcAccountId,jdbcType=VARCHAR},'')
+            from sysibm.SYSDUMMY1
+          </foreach>
+       </if>
+       and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+  </delete>
+  <insert id="insertReportDataFromHis" parameterType="java.util.Map">
+      insert into PBC_REPORT (
+        REPORTUUID, TERMID, REPORTTYPE, 
+        STARTDATE, ENDDATE, ISSUE_PARTY_ID, 
+        ISSUE_PARTY_NAME, REPORTFREQU, REPORT_ORG_NAME, 
+        SOCIAL_CREDIT_CODE, FIN_INSTITUTION_CODE, PROD_VARIETY, 
+        PERSON_LIABLE, CONTACT, REPORT_DATE, 
+        SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+        SUBMIT_FEEDBACK_STATUS, STATUS, SEND_STATUS, 
+        STATUS_DATE, CREATE_USER, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME, ORG_CODE, 
+        DEPT_CODE, CREATE_DEPT,PBC_ACCOUNT_ID
+      )
+      select   
+        HIS_NO, TERMID, REPORTTYPE, 
+        STARTDATE, ENDDATE, ISSUE_PARTY_ID, 
+        ISSUE_PARTY_NAME, REPORTFREQU, REPORT_ORG_NAME, 
+        SOCIAL_CREDIT_CODE, FIN_INSTITUTION_CODE, PROD_VARIETY, 
+        PERSON_LIABLE, CONTACT, REPORT_DATE, 
+        SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+        SUBMIT_FEEDBACK_STATUS, STATUS, SEND_STATUS, 
+        STATUS_DATE, CREATE_USER, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME, ORG_CODE, 
+        DEPT_CODE, CREATE_DEPT,PBC_ACCOUNT_ID
+      from (
+          select  
+            HIS_NO, TERMID, REPORTTYPE, 
+            STARTDATE, ENDDATE, ISSUE_PARTY_ID, 
+            ISSUE_PARTY_NAME, REPORTFREQU, REPORT_ORG_NAME, 
+            SOCIAL_CREDIT_CODE, FIN_INSTITUTION_CODE, PROD_VARIETY, 
+            PERSON_LIABLE, CONTACT, REPORT_DATE, 
+            SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+            SUBMIT_FEEDBACK_STATUS, STATUS, SEND_STATUS, 
+            STATUS_DATE, CREATE_USER, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, ORG_CODE, 
+            DEPT_CODE, CREATE_DEPT,PBC_ACCOUNT_ID,
+            rank() over (partition by TERMID, REPORTTYPE order by nvl(update_time,create_time) desc) ranknum
+         from PBC_REPORT_HIS  his
+         <where>
+           <if test="registList !=null and registList.size()>0">
+             <foreach collection="registList" item="regist" open="(TERMID,REPORTTYPE,nvl(PBC_ACCOUNT_ID,'')) IN (" separator="UNION all"  close=")">
+                select #{regist.termid,jdbcType=VARCHAR},
+                #{regist.reporttype,jdbcType=VARCHAR},nvl(#{regist.pbcAccountId,jdbcType=VARCHAR},'')
+                from sysibm.SYSDUMMY1
+             </foreach>
+           </if>
+         </where>
+      )
+      where ranknum = 1
+  </insert>
+  <delete id="deleteLastSubmitHis" parameterType="java.util.Map">
+      delete from PBC_REPORT_HIS
+      where 1 =1 
+      <if test="registList !=null and registList.size()>0">
+         <foreach collection="registList" item="regist" open="and (TERMID,REPORTTYPE,nvl(PBC_ACCOUNT_ID,'')) IN (" separator="UNION all"  close=")">
+           select #{regist.termid,jdbcType=VARCHAR},
+           #{regist.reporttype,jdbcType=VARCHAR},nvl(#{regist.pbcAccountId,jdbcType=VARCHAR},'')
+           from sysibm.SYSDUMMY1
+         </foreach>
+      </if>
+      and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+      and nvl(update_time,create_time) = (
+	      select ct 
+	      from(
+		      select nvl(update_time,create_time) ct,
+		      rank() over (partition by TERMID, REPORTTYPE order by nvl(update_time,create_time) desc) ranknum
+		      from PBC_REPORT_HIS
+		      where 1 =1 
+		      <if test="registList !=null and registList.size()>0">
+		         <foreach collection="registList" item="regist" open="and (TERMID,REPORTTYPE,nvl(PBC_ACCOUNT_ID,'')) IN (" separator="UNION all"  close=")">
+		           select #{regist.termid,jdbcType=VARCHAR},
+		           #{regist.reporttype,jdbcType=VARCHAR},nvl(#{regist.pbcAccountId,jdbcType=VARCHAR},'')
+		           from sysibm.SYSDUMMY1
+		         </foreach>
+		      </if>
+		      and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+	      )
+	      where ranknum = 1
+      )
+  </delete>
+</mapper>

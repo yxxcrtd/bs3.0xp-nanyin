@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.submitmaintenance.businessdetailed.dao.EquityBusiDetails001Mapper_db2">
+	<!-- 权益业务明细列表数据查询 -->
+	<select id="queryForPage" resultType="com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquiteBusiDetails001Dto">
+		SELECT
+		  A.STATUS status,
+		  A.IS_CONSIGN isConsign,
+		  A.ACCOUNT account,
+		  P.PRODNAME accountName,
+		  A.REGIST_BANK_CODE registBankCode,
+		  A.BUSI_SEQNO busiSeqno,
+		  A.EQUITY_CONF_DATE eQuityConfDate,
+		  to_char(A.EQUITY_CONF_DATE,'yyyy-MM-dd') eQuityConfDateStr,
+		  A.INDENTIFY_MARK indentifyMark,
+		  A.BUY_PLACE buyPlace,
+		  A.BUSI_TYPE busiType,
+		  A.CCY ccy,
+		  A.AMOUNT amount,
+          A.COVER_CNY_AMOUNT converCnyAmount,
+		  A.SHARES shares,
+		  A.CHANNEL channel,
+		  A.FUND_ACC fundAcc,
+		  A.FUND_ACC_BANK fundAccBank,
+		  A.REMARK remark,
+          P.REG_CODE regCode,
+          A.ORG_CODE orgCode,
+          A.AGENT agent,
+          A.SHARE_CONF_DATETIME shareConfDatetime
+		 FROM CHB_EQUDET A
+        LEFT JOIN CHB_PRDRESIST_CODE P
+        ON A.ACCOUNT = P.PRODID AND A.ORG_CODE = P.ORG_CODE
+            <if test="orgCodeList != null and orgCodeList.size() > 0">
+            <foreach collection="orgCodeList" item="orgCode" open=" AND P.ORG_CODE IN (" close=")" separator=",">
+             #{orgCode,jdbcType=VARCHAR}
+            </foreach>
+            </if>
+        <where>
+		 	<if test="bankCode != null and bankCode != ''">
+		 	A.REGIST_BANK_CODE LIKE concat(concat('%',#{bankCode}),'%')
+		 	</if>
+		 	<if test="orgCodeList != null and orgCodeList.size() > 0">
+		 	<foreach collection="orgCodeList" item="orgCode" open=" AND A.ORG_CODE IN (" close=")" separator=",">
+		 	 #{orgCode,jdbcType=VARCHAR}
+		 	</foreach>
+			</if>
+		 	<if test="prdCodeList != null and prdCodeList.size() > 0">
+		 	<foreach collection="prdCodeList" item="prdCode" open=" AND A.ACCOUNT IN (" close=")" separator=",">
+		 	 #{prdCode,jdbcType=VARCHAR}
+		 	</foreach>
+		 	</if>
+		 	<if test="indentifyMark != null and indentifyMark != ''">
+		 	AND A.INDENTIFY_MARK LIKE concat(concat('%',#{indentifyMark}),'%')
+		 	</if>
+		 	<!-- 业务种类 -->
+		 	<if test="busiTypeList != null and busiTypeList.size() > 0">
+		 	<foreach collection="busiTypeList" item="busiType" open=" AND A.BUSI_TYPE IN (" close=")" separator=",">
+		 	 #{busiType,jdbcType=VARCHAR}
+		 	</foreach>
+		 	</if>
+		 	<if test="eQuityConfDateStart != null and eQuityConfDateStart != ''" >
+	    	AND A.EQUITY_CONF_DATE <![CDATA[>=]]> date( TIMESTAMP_FORMAT(#{eQuityConfDateStart},&apos;yyyy-MM-dd&apos;))
+
+	    	</if>
+	    	<if test="eQuityConfDateEnd != null and eQuityConfDateEnd != ''" >
+	    	AND A.EQUITY_CONF_DATE <![CDATA[<=]]> date( TIMESTAMP_FORMAT(#{eQuityConfDateStart},&apos;yyyy-MM-dd&apos;))
+            </if>
+            <!-- 数据状态 -->
+		 	<if test="statusList != null and statusList.size() > 0">
+		 	<foreach collection="statusList" item="status" open=" AND A.STATUS IN (" close=")" separator=",">
+		 	 #{status,jdbcType=VARCHAR}
+		 	</foreach>
+		 	</if>
+		 	<!-- 渠道 -->
+		 	<if test="channelList != null and channelList.size() > 0">
+		 	<foreach collection="channelList" item="channel" open=" AND A.CHANNEL IN (" close=")" separator=",">
+		 	 #{channel,jdbcType=VARCHAR}
+		 	</foreach>
+		 	</if>
+		 	<if test="isConsign != null and isConsign != ''">
+		 	AND A.IS_CONSIGN = #{isConsign}
+		 	</if>
+		 	<!-- 业务流水号 -->
+		 	<if test="busiSeqno != null and busiSeqno != ''">
+		 	AND A.BUSI_SEQNO = #{busiSeqno}
+		 	</if>
+            <!-- 选中导出使用的参数 -->
+            <if test="listMap != null and listMap.size() > 0">
+                <foreach collection="listMap" item="paramMap" open=" AND ( " close=")" separator="or">
+                		(A.BUSI_SEQNO=#{paramMap.busiSeqnoKey}
+                		and A.REGIST_BANK_CODE=#{paramMap.registBankCodeKey}
+                		and A.INDENTIFY_MARK=#{paramMap.indentifyMarkKey})
+                </foreach>
+            </if>
+		 </where>
+		 ORDER BY A.UPDATE_TIME DESC,A.BUSI_SEQNO ASC
+	</select>
+
+	
+	<insert id="insertSelective" parameterType="com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquiteBusiDetails001Dto" >
+<!--         MERGE INTO CHB_EQUDET T
+        USING (
+        SELECT
+        '${busiSeqno}' AS BUSI_SEQNO
+        FROM sysibm.sysdummy1
+        ) T1
+        ON (T1.BUSI_SEQNO= T.BUSI_SEQNO)
+        WHEN MATCHED THEN
+            UPDATE SET T.STATUS = 'E'
+        WHEN NOT MATCHED THEN -->
+        INSERT into CHB_EQUDET
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="isConsign != null" >
+                IS_CONSIGN,
+            </if>
+            <if test="registBankCode != null" >
+                REGIST_BANK_CODE,
+            </if>
+            <if test="busiSeqno != null" >
+                BUSI_SEQNO,
+            </if>
+            <if test="indentifyMark != null" >
+                INDENTIFY_MARK,
+            </if>
+            <if test="account != null" >
+                ACCOUNT,
+            </if>
+            <if test="accountName != null" >
+                ACCOUNT_NAME,
+            </if>
+            <if test="eQuityConfDate != null" >
+                EQUITY_CONF_DATE,
+            </if>
+            <if test="buyPlace != null" >
+                BUY_PLACE,
+            </if>
+            <if test="busiType != null" >
+                BUSI_TYPE,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="amount != null" >
+                AMOUNT,
+            </if>
+            <if test="converCnyAmount != null" >
+                COVER_CNY_AMOUNT,
+            </if>
+            <if test="shares != null" >
+                SHARES,
+            </if>
+            <if test="channel != null" >
+                CHANNEL,
+            </if>
+            <if test="fundAcc != null" >
+                FUND_ACC,
+            </if>
+            <if test="fundAccBank != null" >
+                FUND_ACC_BANK,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="isConsign != null" >
+                #{isConsign,jdbcType=VARCHAR},
+            </if>
+            <if test="registBankCode != null" >
+                #{registBankCode,jdbcType=VARCHAR},
+            </if>
+            <if test="busiSeqno != null" >
+                #{busiSeqno,jdbcType=VARCHAR},
+            </if>
+            <if test="indentifyMark != null" >
+                #{indentifyMark,jdbcType=VARCHAR},
+            </if>
+            <if test="account != null" >
+                #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="accountName != null" >
+                #{accountName,jdbcType=VARCHAR},
+            </if>
+            <if test="eQuityConfDate != null" >
+                #{eQuityConfDate,jdbcType=DATE},
+            </if>
+            <if test="buyPlace != null" >
+                #{buyPlace,jdbcType=VARCHAR},
+            </if>
+            <if test="busiType != null" >
+                #{busiType,jdbcType=CHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=CHAR},
+            </if>
+            <if test="amount != null" >
+                #{amount,jdbcType=DOUBLE},
+            </if>
+            <if test="converCnyAmount != null" >
+                #{converCnyAmount,jdbcType=DOUBLE},
+            </if>
+            <if test="shares != null" >
+                #{shares,jdbcType=DOUBLE},
+            </if>
+            <if test="channel != null" >
+                #{channel,jdbcType=CHAR},
+            </if>
+            <if test="fundAcc != null" >
+                #{fundAcc,jdbcType=VARCHAR},
+            </if>
+            <if test="fundAccBank != null" >
+                #{fundAccBank,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+	
+	<!-- 插入数据到临时表 -->
+	<insert id="insertIntoImportTable" parameterType="java.util.List">
+		insert into CHB_EQUDET_IMP_TMP(BUSI_SEQNO,INDENTIFY_MARK,REGIST_BANK_CODE,ACCOUNT,ORG_CODE)
+		<foreach collection="list" item="item" separator="from sysibm.sysdummy1 union all select" open="select * from (select " close="from sysibm.sysdummy1)">
+	        #{item.BUSI_SEQNO, jdbcType=VARCHAR} BUSI_SEQNO,
+	        #{item.INDENTIFY_MARK, jdbcType=VARCHAR} INDENTIFY_MARK,
+	        #{item.REGIST_BANK_CODE, jdbcType=VARCHAR} REGIST_BANK_CODE,
+	        #{item.ACCOUNT,jdbcType=VARCHAR} "ACCOUNT",
+	        #{item.ORG_CODE, jdbcType=VARCHAR} ORG_CODE
+	    </foreach>
+	</insert>
+	
+
+
+	
+    
+    <insert id="insertChbEqudetData">
+        insert into CHB_EQUDET (BUSI_SEQNO, REGIST_BANK_CODE, INDENTIFY_MARK, 
+            ACCOUNT, ACCOUNT_NAME, EQUITY_CONF_DATE, 
+            BUY_PLACE, BUSI_TYPE, CCY, 
+            AMOUNT, CHANNEL, FUND_ACC, 
+            FUND_ACC_BANK, IS_SUBMIT, IS_CONSIGN, 
+            REMARK, STATUS, WORKFLOW_ID, 
+            DEPT_CODE, UPDATE_USER, UPDATE_TIME, 
+            CREATE_USER, CREATE_TIME, DATA_SOURCE, 
+            COVER_CNY_AMOUNT, SHARES, ORG_CODE,AGENT,SHARE_CONF_DATETIME, CREATE_DEPT
+            )
+        <foreach collection="dataList" item="item" separator="from sysibm.sysdummy1 union all select" open="select * from (select " close="from sysibm.sysdummy1)">
+            #{item.busiSeqno,jdbcType=VARCHAR}, #{item.registBankCode,jdbcType=VARCHAR}, #{item.indentifyMark,jdbcType=VARCHAR}, 
+            #{item.account,jdbcType=VARCHAR}, #{item.accountName,jdbcType=VARCHAR}, #{item.equityConfDate,jdbcType=DATE}, 
+            #{item.buyPlace,jdbcType=VARCHAR}, #{item.busiType,jdbcType=CHAR}, #{item.ccy,jdbcType=CHAR}, 
+            #{item.amount,jdbcType=DECIMAL}, #{item.channel,jdbcType=CHAR}, #{item.fundAcc,jdbcType=VARCHAR}, 
+            #{item.fundAccBank,jdbcType=VARCHAR}, #{item.isSubmit,jdbcType=CHAR}, #{item.isConsign,jdbcType=VARCHAR}, 
+            #{item.remark,jdbcType=VARCHAR}, #{item.status,jdbcType=VARCHAR}, #{item.workflowId,jdbcType=VARCHAR}, 
+            #{item.deptCode,jdbcType=VARCHAR}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+            #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.dataSource,jdbcType=CHAR}, 
+            #{item.coverCnyAmount,jdbcType=DECIMAL}, #{item.shares,jdbcType=DECIMAL}, #{item.orgCode,jdbcType=VARCHAR},
+            #{item.agent,jdbcType=VARCHAR},#{item.shareConfDatetime,jdbcType=TIMESTAMP}, #{item.createDept,jdbcType=VARCHAR}
+        </foreach>
+    </insert>
+    
+    <insert id="insertChbEqudetSubData">
+        insert into CHB_EQUDET_SUB (BUSI_SEQNO, REGIST_BANK_CODE, INDENTIFY_MARK, 
+            SUBMIT_STATUS, ACCOUNT_NAME, ACCOUNT, 
+            EQUITY_CONF_DATE, BUY_PLACE, BUSI_TYPE, 
+            CCY, AMOUNT, CHANNEL, FUND_ACC, 
+            FUND_ACC_BANK, IS_CONSIGN, TYPE, 
+            REMARK, SUBMIT_TIME, SUBMIT_DEADLINE, 
+            CHB_SUBMIT_DEADLINE, STATUS, SUMIT_SEQ, 
+            DEPT_CODE, UPDATE_USER, UPDATE_TIME, 
+            CREATE_USER, CREATE_TIME, CONVER_CNY_AMOUNT, 
+            SHARES, ORG_CODE, REG_CODE
+            )
+        <foreach collection="dataList" item="item" separator="from sysibm.sysdummy1 union all select" open="select * from (select " close="from sysibm.sysdummy1)">
+            #{item.busiSeqno,jdbcType=VARCHAR}, #{item.registBankCode,jdbcType=VARCHAR}, #{item.indentifyMark,jdbcType=VARCHAR}, 
+            #{item.submitStatus,jdbcType=CHAR}, #{item.accountName,jdbcType=VARCHAR}, #{item.account,jdbcType=VARCHAR}, 
+            #{item.equityConfDate,jdbcType=DATE}, #{item.buyPlace,jdbcType=VARCHAR}, #{item.busiType,jdbcType=CHAR}, 
+            #{item.ccy,jdbcType=CHAR}, #{item.amount,jdbcType=DECIMAL}, #{item.channel,jdbcType=CHAR}, #{item.fundAcc,jdbcType=VARCHAR}, 
+            #{item.fundAccBank,jdbcType=VARCHAR}, #{item.isConsign,jdbcType=VARCHAR}, #{item.type,jdbcType=CHAR}, 
+            #{item.remark,jdbcType=VARCHAR}, #{item.submitTime,jdbcType=TIMESTAMP}, #{item.submitDeadline,jdbcType=TIMESTAMP}, 
+            #{item.chbSubmitDeadline,jdbcType=TIMESTAMP}, #{item.status,jdbcType=VARCHAR}, #{item.sumitSeq,jdbcType=VARCHAR}, 
+            #{item.deptCode,jdbcType=VARCHAR}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+            #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.converCnyAmount,jdbcType=DECIMAL}, 
+            #{item.shares,jdbcType=DECIMAL}, #{item.orgCode,jdbcType=VARCHAR}, #{item.regCode,jdbcType=VARCHAR}
+        </foreach>
+    </insert>
+    
+</mapper>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.report.investormerger.dao.ChbEquHoldCheckDtoMapper_db2" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto" >
+    <result column="INDENTIFY_MARK" property="indentifyMark" jdbcType="VARCHAR" />
+    <result column="ORG_INDENTIFY_MARK" property="orgIndentifyMark" jdbcType="VARCHAR" />
+    <result column="MERGER_INDENTIFY_MARK" property="mergerindentifymark" jdbcType="VARCHAR" />
+    <result column="REGIST_BANK_CODE" property="registBankCode" jdbcType="VARCHAR" />
+    <result column="IS_BELONG_BANK" property="isBelongBank" jdbcType="CHAR" />
+    <result column="THE_BANK_NAME" property="theBankName" jdbcType="VARCHAR" />
+    <result column="THE_BANK_CODE" property="theBankCode" jdbcType="VARCHAR" />
+    <result column="HOLDER_MARK" property="holderMark" jdbcType="CHAR" />
+    <result column="HOLDER_REGION" property="holderRegion" jdbcType="VARCHAR" />
+    <result column="HOLDER_TYPE" property="holderType" jdbcType="CHAR" />
+    <result column="PERSONAL_IDENTIFY_TYPE" property="personalIdentifyType" jdbcType="CHAR" />
+    <result column="INSTITUTION_IDENTIFY_TYPE" property="institutionIdentifyType" jdbcType="VARCHAR" />
+    <result column="OTHER_IDENTIFY_NAME" property="otherIdentifyName" jdbcType="VARCHAR" />
+    <result column="IDENTIFY_NUMBER" property="identifyNumber" jdbcType="VARCHAR" />
+    <result column="SPV_CAP_ACC_BANK" property="spvCapAccBank" jdbcType="VARCHAR" />
+    <result column="OTHER_CAP_ACC_BANK" property="otherCapAccBank" jdbcType="VARCHAR" />
+    <result column="SPV_REGIST_CODE" property="spvRegistCode" jdbcType="VARCHAR" />
+    <result column="HOLDER_DATE" property="holderDate" jdbcType="TIMESTAMP" />
+    <result column="HOLDER_NAME" property="holderName" jdbcType="VARCHAR" />
+    <result column="HOLDER_SEX" property="holderSex" jdbcType="CHAR" />
+    <result column="HOLDER_RISK_PREFER" property="holderRiskPrefer" jdbcType="VARCHAR" />
+    <result column="HOLDER_CELLPHONE" property="holderCellphone" jdbcType="VARCHAR" />
+    <result column="HOLDER_TELEPHONE" property="holderTelephone" jdbcType="VARCHAR" />
+    <result column="IS_SUBMIT" property="isSubmit" jdbcType="CHAR" />
+    <result column="HOLDER_EMAIL" property="holderEmail" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="OPERATE_STATUS" property="operatestatus" jdbcType="VARCHAR" />
+    <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+    <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="DATA_DATE" property="dataDate" jdbcType="TIMESTAMP" />
+    <result column="DATA_SOURCE" property="dataSource" jdbcType="CHAR" />
+    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+    <result column="AGENT" property="agent" jdbcType="VARCHAR" />
+    <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    <result column="INTERF_CHECK_RESULT" property="interfCheckResult" jdbcType="VARCHAR" />
+    <result column="MERGER_INDENTIFY_MARK" property="mergerindentifymark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List">
+	INDENTIFY_MARK, ORG_INDENTIFY_MARK,
+	REGIST_BANK_CODE, IS_BELONG_BANK, THE_BANK_NAME,
+	THE_BANK_CODE, HOLDER_MARK, HOLDER_REGION,
+	HOLDER_TYPE, PERSONAL_IDENTIFY_TYPE, INSTITUTION_IDENTIFY_TYPE,
+	OTHER_IDENTIFY_NAME, IDENTIFY_NUMBER, SPV_CAP_ACC_BANK,
+	OTHER_CAP_ACC_BANK, SPV_REGIST_CODE, HOLDER_DATE,
+	HOLDER_NAME, HOLDER_SEX, HOLDER_RISK_PREFER,
+	HOLDER_CELLPHONE, HOLDER_TELEPHONE, IS_SUBMIT,
+	HOLDER_EMAIL, REMARK, STATUS,
+	WORKFLOW_ID, DEPT_CODE, UPDATE_USER,
+	UPDATE_TIME, CREATE_USER, CREATE_TIME,DATA_DATE,
+	DATA_SOURCE, ORG_CODE, AGENT,
+	CREATE_DEPT, INTERF_CHECK_RESULT,OPERATE_STATUS,MERGER_INDENTIFY_MARK
+  </sql>
+     <update id="refreshChangeIndentifyMark" parameterType="java.util.List">
+    <choose>
+       <when  test="list !=null and list.size()>0">
+         begin
+	       <foreach collection="list" item="item" index="index" separator=";">
+	           <!-- UPDATE CHB_PRD_DEAL DEAL
+		        SET DEAL.INDENTIFY_MARK = #{item.indentifyMark,jdbcType=VARCHAR},
+		        DEAL.UPDATE_TIME = sysdate
+			   WHERE DEAL.INDENTIFY_MARK = #{item.orgIndentifyMark,jdbcType=VARCHAR}; -->
+			   
+			   UPDATE CHB_EQU_HOLD_CHECK HOLDCHECK
+			    SET HOLDCHECK.ORG_INDENTIFY_MARK  =  #{item.orgIndentifyMark,jdbcType=VARCHAR},
+			    HOLDCHECK.INDENTIFY_MARK = #{item.indentifyMark,jdbcType=VARCHAR},
+		        HOLDCHECK.UPDATE_TIME = sysdate
+			   WHERE HOLDCHECK.INDENTIFY_MARK = HOLDCHECK.MERGER_INDENTIFY_MARK
+			   AND HOLDCHECK.MERGER_INDENTIFY_MARK = #{item.orgIndentifyMark,jdbcType=VARCHAR};
+			   
+			   UPDATE CHB_EQU_HOLD_CHECK HOLDCHECK
+			    SET HOLDCHECK.MERGER_INDENTIFY_MARK  = #{item.indentifyMark,jdbcType=VARCHAR},
+		        HOLDCHECK.UPDATE_TIME = sysdate
+			   WHERE HOLDCHECK.MERGER_INDENTIFY_MARK = #{item.orgIndentifyMark,jdbcType=VARCHAR}
+			   <!-- ;
+			   UPDATE CHB_PRD_POSITION POS
+				SET POS.INDENTIFY_MARK = #{item.indentifyMark,jdbcType=VARCHAR}
+			   WHERE POS.INDENTIFY_MARK = #{item.orgIndentifyMark,jdbcType=VARCHAR} -->
+	        </foreach>
+        ;end;
+      </when>
+      <otherwise>
+         SELECT 1 FROM SYSIBM.SYSDUMMY1
+      </otherwise>
+    </choose>
+    
+   </update>
+   
+  <update id="refreshMergerIndentifyMark"  parameterType="java.util.List">
+   <choose>
+    <when test="list !=null and list.size()>0">
+      BEGIN
+		<foreach collection="list" item="item" index="index" separator=";">
+			  UPDATE CHB_PRD_DEAL DEAL
+		        SET DEAL.INDENTIFY_MARK = (SELECT T.MERGER_INDENTIFY_MARK
+		                                   FROM CHB_EQU_HOLD_CHECK T
+		                                   WHERE T.INDENTIFY_MARK = DEAL.INDENTIFY_MARK
+		                                  ),
+		        DEAL.UPDATE_TIME = sysdate
+			  WHERE EXISTS (SELECT 1
+			                FROM CHB_EQU_HOLD_CHECK T
+			                WHERE T.INDENTIFY_MARK = DEAL.INDENTIFY_MARK
+			                AND T.MERGER_INDENTIFY_MARK IS NOT NULL
+			                AND T.REGIST_BANK_CODE
+					            ||'_'||T.IDENTIFY_NUMBER
+					            ||'_'||T.HOLDER_NAME
+					            ||'_'||T.PERSONAL_IDENTIFY_TYPE
+					            ||'_'||T.INSTITUTION_IDENTIFY_TYPE
+					            ||'_'||T.OTHER_IDENTIFY_NAME = nvl(#{item.bankCode,jdbcType=VARCHAR},'')
+												             ||'_'||nvl(#{item.identifyNumber,jdbcType=VARCHAR},'')
+												             ||'_'||nvl(#{item.holderName,jdbcType=VARCHAR},'')
+												             ||'_'||nvl(#{item.personalIdentifyType,jdbcType=VARCHAR},'')
+												             ||'_'||nvl(#{item.institutionIdentifyType,jdbcType=VARCHAR},'')
+												             ||'_'||nvl(#{item.otherIdentifyName,jdbcType=VARCHAR},'')
+			                ); 
+				  
+			 UPDATE CHB_PRD_POSITION POS
+				   SET POS.INDENTIFY_MARK =(SELECT T.MERGER_INDENTIFY_MARK
+		                                FROM CHB_EQU_HOLD_CHECK T
+		                                WHERE T.INDENTIFY_MARK = POS.INDENTIFY_MARK
+		                               )
+		     WHERE EXISTS (SELECT 1
+		                   FROM CHB_EQU_HOLD_CHECK T
+		                   WHERE T.INDENTIFY_MARK = POS.INDENTIFY_MARK
+		                   AND T.MERGER_INDENTIFY_MARK IS NOT NULL
+		                   AND T.REGIST_BANK_CODE
+					            ||'_'||T.IDENTIFY_NUMBER
+					            ||'_'||T.HOLDER_NAME
+					            ||'_'||T.PERSONAL_IDENTIFY_TYPE
+					            ||'_'||T.INSTITUTION_IDENTIFY_TYPE
+					            ||'_'||T.OTHER_IDENTIFY_NAME = nvl(#{item.bankCode,jdbcType=VARCHAR},'')
+												             ||'_'||nvl(#{item.identifyNumber,jdbcType=VARCHAR},'')
+												             ||'_'||nvl(#{item.holderName,jdbcType=VARCHAR},'')
+												             ||'_'||nvl(#{item.personalIdentifyType,jdbcType=VARCHAR},'')
+												             ||'_'||nvl(#{item.institutionIdentifyType,jdbcType=VARCHAR},'')
+												             ||'_'||nvl(#{item.otherIdentifyName,jdbcType=VARCHAR},'')
+		                  )
+	    </foreach>
+		;END;
+	</when>
+	<otherwise>
+	   SELECT 1 FROM SYSIBM.SYSDUMMY1
+	</otherwise>
+	</choose>
+ </update>
+
+</mapper>

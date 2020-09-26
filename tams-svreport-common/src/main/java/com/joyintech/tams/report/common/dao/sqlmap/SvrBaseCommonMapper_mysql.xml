@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.common.dao.SvrBaseCommonMapper_mysql">
+
+	<select id="selectAllProdInfoWithNoSameId" resultType="java.lang.String" >
+    	SELECT CONCAT(IFNULL(PROD_ID,''),',',IFNULL(PROD_INS_ID,'')) from CHB_PRD_BASEINFO where FPROD_ID is null
+    	and PROD_ID !=PROD_INS_ID
+    </select>
+</mapper>

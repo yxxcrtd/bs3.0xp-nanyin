@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.submitmaintenance.holidaymarket.dao.Holidaymarket001Mapper_db2">
+	<!-- 节假日信息数据查询 -->
+	<select id="initHolid" resultType="com.joyintech.tams.report.submitmaintenance.holidaymarket.dto.Holidaymarket001Dto">
+		SELECT
+		  A.BUSI_DATE busiDate,
+		  A.MARKET_CODE marketCode,
+		  A.IS_HOLIDAY isHoliday,
+		  A.STATUS status,
+		  A.DEPT_CODE deptCode
+		 FROM CHB_MKT_HOLIDAY A
+		 <where>
+		 	<if test="start != null and start != ''">
+		 	A.BUSI_DATE &gt;= date( TIMESTAMP_FORMAT(#{start},&apos;yyyy-MM-dd&apos;))
+		 	</if>
+		 	<if test="end != null and end != ''">
+		 	AND A.BUSI_DATE &lt;= date( TIMESTAMP_FORMAT(#{end},&apos;yyyy-MM-dd&apos;))
+		 	</if>
+		 	<if test="marketCalendarType != null and marketCalendarType != ''">
+		 	AND A.MARKET_CODE = #{marketCalendarType}
+		 	</if>
+		 </where>
+		 ORDER BY A.BUSI_DATE
+	</select>	
+	
+	<insert id="insertSelective" parameterType="com.joyintech.tams.report.submitmaintenance.holidaymarket.dto.Holidaymarket001Dto" >
+        insert into CHB_MKT_HOLIDAY
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="busiDate != null" >
+                BUSI_DATE,
+            </if>
+            <if test="marketCode != null" >
+                MARKET_CODE,
+            </if>
+            <if test="isHoliday != null" >
+                IS_HOLIDAY,
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="busiDate != null" >
+                #{busiDate,jdbcType=DATE},
+            </if>
+            <if test="marketCode != null" >
+                #{marketCode,jdbcType=VARCHAR},
+            </if>
+            <if test="isHoliday != null" >
+                #{isHoliday,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="setDateByType">
+    	MERGE INTO CHB_MKT_HOLIDAY T
+    	USING (
+    		<foreach collection="checkDateList" item="item" index="index" separator="union" >
+            SELECT 
+            <choose><when test="item != null">#{item,jdbcType=DATE}</when><otherwise>null</otherwise></choose> BUSI_DATE,
+            '${marketCalendarType}' AS MARKET_CODE
+            FROM sysibm.sysdummy1
+        </foreach>) T1
+        ON (T1.BUSI_DATE = T.BUSI_DATE AND T1.MARKET_CODE = T.MARKET_CODE)
+        <!-- /*数据存在*/ -->
+        WHEN MATCHED THEN       
+              UPDATE SET T.IS_HOLIDAY = #{isHoliday}
+        <!-- /*数据不存在*/ -->
+        WHEN NOT MATCHED THEN
+            INSERT
+            <!--(BUSI_DATE,MARKET_CODE,IS_HOLIDAY,STATUS,DEPT_CODE,CREATE_USER,CREATE_TIME)
+            VALUES
+           (T1.BUSI_DATE,#{marketCalendarType},#{isHoliday},'E',#{deptCode},#{userId},sysdate)-->
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+                BUSI_DATE,
+            <if test="marketCalendarType != null and marketCalendarType != ''" >
+                MARKET_CODE,
+            </if>
+            <if test="isHoliday != null" >
+                IS_HOLIDAY,
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE,
+            </if>
+            <if test="status != null" >
+                STATUS,CREATE_TIME,
+            </if>
+            <if test="userId != null" >
+                CREATE_USER
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+                T1.BUSI_DATE,
+            <if test="marketCalendarType != null and marketCalendarType != ''" >
+                #{marketCalendarType,jdbcType=VARCHAR},
+            </if>
+            <if test="isHoliday != null" >
+                #{isHoliday,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},current timestamp,
+            </if>
+            <if test="userId != null" >
+                #{userId,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <!-- 查询当前日期是否为节假日 -->
+    <select id="isNotHoliday" resultType="com.joyintech.tams.report.submitmaintenance.holidaymarket.dto.Holidaymarket001Dto" >
+        SELECT
+		  A.BUSI_DATE busiDate,
+		  A.MARKET_CODE marketCode,
+		  A.IS_HOLIDAY isHoliday,
+		  A.STATUS status,
+		  A.DEPT_CODE deptCode
+		 FROM CHB_MKT_HOLIDAY A
+		 <where>
+		 	A.BUSI_DATE = to_date(#{holidayDate})
+		 	AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
+		 	AND A.STATUS = 'E'
+		 </where>
+    </select>
+    <!-- 获取中债报送截止日 -->
+     <select id="getChbDeadline" resultType="com.joyintech.tams.report.submitmaintenance.holidaymarket.dto.Holidaymarket001Dto" >
+     	select deadline.* from(
+	       SELECT
+	       row_number()  over() num,
+		  A.BUSI_DATE busiDate,
+		  A.MARKET_CODE marketCode,
+		  A.IS_HOLIDAY isHoliday,
+		  A.STATUS status,
+		  A.DEPT_CODE deptCode
+		 FROM CHB_MKT_HOLIDAY A
+		 <where>
+		 	<if test="type !=null and type == '01'.toString()">
+	           	A.BUSI_DATE &lt; to_date(#{holidayDate})
+	         	</if>
+	         	<if test="type !=null and type == '02'.toString()">
+	           	A.BUSI_DATE &gt; to_date(#{holidayDate})
+	         	</if>
+		 	AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
+		 	AND A.STATUS = 'E'
+		 	AND A.IS_HOLIDAY = '1'
+		 </where>
+		 	<if test="type !=null and type == '01'.toString()">
+	           	order by A.BUSI_DATE desc
+	        </if>
+	        <if test="type !=null and type == '02'.toString()">
+	           	order by A.BUSI_DATE asc
+	        </if>
+		 )deadline
+		 where num = #{days,jdbcType=INTEGER}
+    </select>
+     <!-- 获取中债报送截止日是日期当天的 -->
+     <select id="getChbDeadlineZero" resultType="com.joyintech.tams.report.submitmaintenance.holidaymarket.dto.Holidaymarket001Dto" >
+     	select deadline.* from(
+	       SELECT
+	       row_number() over() num,
+		  A.BUSI_DATE busiDate,
+		  A.MARKET_CODE marketCode,
+		  A.IS_HOLIDAY isHoliday,
+		  A.STATUS status,
+		  A.DEPT_CODE deptCode
+		 FROM CHB_MKT_HOLIDAY A
+		 <where>
+	        <if test="type !=null and type == '01'.toString()">
+	           	A.BUSI_DATE &lt;= to_date(#{holidayDate})
+	         	</if>
+	         	<if test="type !=null and type == '02'.toString()">
+	           	A.BUSI_DATE &gt;= to_date(#{holidayDate})
+	         	</if>
+		 	AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
+		 	AND A.STATUS = 'E'
+		 	AND A.IS_HOLIDAY = '1'
+		 </where>
+		 	<if test="type !=null and type == '01'.toString()">
+	           	order by A.BUSI_DATE desc
+	        </if>
+	        <if test="type !=null and type == '02'.toString()">
+	           	order by A.BUSI_DATE asc
+	        </if>
+		 )deadline
+		 where num = 1
+    </select>
+</mapper>

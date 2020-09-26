@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="EquityBaseInfo.xlsx" name="基期信息登记">
+	<Worksheet javaBean="com.joyintech.tams.report.maintenance.dto.EquiteBaseInfo001Dto">
+		<Row>
+			<Cell order="1" name="登记银行代码">bankCode</Cell><!-- 登记银行代码 -->
+			<Cell order="2" name="产品代码">prodId</Cell><!-- 产品代码-->
+			<Cell order="3" name="识别标志">indentifyMark</Cell><!-- 识别标志 -->
+			<Cell order="4" name="币种">ccy</Cell><!-- 币种 -->
+			<Cell order="5" name="金额">converCnyAmount</Cell><!-- 金额 -->
+			<Cell order="6" name="总折算人民币金额（元）">converCnyAmount</Cell><!-- 总折算人民币金额（元）-->
+			<Cell order="7" name="可用数量">availableQuantity</Cell><!-- 可用数量 -->
+			<Cell order="8" name="冻结数量">frozenQuantity</Cell><!-- 冻结数量 -->
+			<Cell order="9" name="质押数量">pledgedQuantity</Cell><!-- 质押数量 -->
+			<Cell order="10" name="初值日期">initValDate</Cell><!-- 初值日期 -->
+			<Cell order="11" name="初值登记日期">initValRegistDate</Cell><!-- 初值登记日期 -->
+		</Row>
+	</Worksheet>
+</Workbook>

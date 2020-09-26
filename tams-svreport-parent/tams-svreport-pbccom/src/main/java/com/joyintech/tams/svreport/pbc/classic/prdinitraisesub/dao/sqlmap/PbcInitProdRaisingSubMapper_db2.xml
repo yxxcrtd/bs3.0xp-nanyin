@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dao.PbcInitProdRaisingSubMapper_db2" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSub" >
+    <id column="REGIST_SEQNO" property="registSeqno" jdbcType="CHAR" />
+    <result column="PBC_PROD_ID" property="pbcProdId" jdbcType="VARCHAR" />
+    <result column="BUY_PLACE" property="buyPlace" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_TYPE1" property="customerType1" jdbcType="VARCHAR" />
+    <result column="CCY" property="ccy" jdbcType="CHAR" />
+    <result column="INIT_RAISING_AMTSUM" property="initRaisingAmtsum" jdbcType="DECIMAL" />
+    <result column="INIT_RAISING_AMTSUMCNY" property="initRaisingAmtsumcny" jdbcType="DECIMAL" />
+    <result column="INIT_RAISING_QTY" property="initRaisingQty" jdbcType="DECIMAL" />
+    <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+    <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+    <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
+    <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+    <result column="STATUS_DATE" property="statusDate" jdbcType="TIMESTAMP" />
+    <result column="PBC_SUBMIT_DEADLINE" property="pbcSubmitDeadline" jdbcType="TIMESTAMP" />
+    <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+    <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+    <result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
+    <result column="IVSTORIENTATION" property="ivstorientation" jdbcType="VARCHAR" />
+    <result column="VDATE" property="vdate" jdbcType="TIMESTAMP" />
+    
+  </resultMap>
+  <sql id="Base_Column_List" >
+    REGIST_SEQNO, PBC_PROD_ID, BUY_PLACE, CUSTOMER_TYPE1, CCY, INIT_RAISING_AMTSUM, INIT_RAISING_AMTSUMCNY, 
+    INIT_RAISING_QTY, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, 
+    PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, 
+    CREATE_TIME, UPDATE_USER, UPDATE_TIME
+  </sql>
+  <sql id="Base_Column_List2" >
+    HIS_NO, PBC_PROD_ID, BUY_PLACE, CUSTOMER_TYPE1, CCY, INIT_RAISING_AMTSUM, INIT_RAISING_AMTSUMCNY, 
+    INIT_RAISING_QTY, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, 
+    PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, 
+    CREATE_TIME, UPDATE_USER, UPDATE_TIME
+  </sql>
+  <sql id="Extend_Column_List" >
+  	PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE
+  </sql>
+  <sql id="PBC_PRD_BASEINFO_SUB">
+  select a.* from (SELECT PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,status,RAISE_ENDDATE,ORG_CODE,
+	row_number() OVER (partition BY PBC_PROD_ID ORDER BY NVL(UPDATE_TIME,CREATE_TIME)
+	DESC) AS myrank
+	FROM pbc_prd_baseinfo_sub) a
+	WHERE a.myrank=1
+  </sql>
+  
+  <select id="selectPrdposition"
+	resultType="com.joyintech.tams.svreport.position.dto.ChbPrdPosition"
+	parameterType="com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSub">
+	SELECT pos.CDATE,
+	  pos.PROD_ID,
+	  pos.CCY,
+	  sum(nvl(pos.BALANCE_QTY,0)) BALANCE_QTY,
+	  sum(nvl(pos.BALANCE_AMT,0)) BALANCE_AMT,
+	  pos.BUY_PLACE,
+	  pos.CUSTOMER_TYPE2
+	FROM CHB_PRD_POSITION pos
+	left join chb_prd_baseinfo info
+	on info.prod_id = pos.prod_id
+	and info.status != 'D'
+	and info.fprod_id is null
+	left join chb_prd_baseinfo finfo
+	on finfo.prod_id = pos.prod_id
+	and finfo.status != 'D'
+	and info.fprod_id is not null
+	where 1=1
+	<foreach collection="sublist" item="sub" open="and (nvl(finfo.fprod_id,info.prod_id),to_char(pos.cdate,'yyyy-mm-dd')) in (" separator="union all" close=")">
+	select #{sub.prodId,jdbcType=VARCHAR},to_char(#{sub.vdate,jdbcType=DATE},'yyyy-mm-dd') from sysibm.SYSDUMMY1
+	</foreach>
+	group by pos.CDATE,pos.PROD_ID,pos.CCY,pos.BUY_PLACE,pos.CUSTOMER_TYPE2
+</select>
+
+<select id="selectPsbcPrdposition"
+	resultType="com.joyintech.tams.svreport.position.dto.ChbPrdPosition"
+	parameterType="com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSub">
+	SELECT to_date(pos.DEALDATE ,'yyyyMMdd') CDATE,
+	  pos.FINPROD_ID PROD_ID,
+	  pos.CCY,
+	  sum(nvl(pos.PRINQTY,0)) BALANCE_QTY,
+	  sum(nvl(pos.DEALAMT,0)) BALANCE_AMT,
+	  pos.BUY_PLACE,
+	  pos.CUSTOMER_TYPE2
+	FROM P_INTERF_PRO_CUSTOM_DEAL pos	
+	where 1=1
+  and pos.DEALTYPE='1'
+  and (pos.BUY_PLACE not in('210200','330200','350200','370200','440300') or pos.BUY_PLACE is null)
+	<foreach collection="sublist" item="sub" open="and (pos.FINPROD_ID,pos.DEALDATE) in (" separator="union all" close=")">
+	select #{sub.prodId,jdbcType=VARCHAR},to_char(#{sub.vdate,jdbcType=DATE},'yyyyMMdd') from sysibm.SYSDUMMY1
+	</foreach>
+  group by pos.DEALDATE, pos.FINPROD_ID, pos.CCY, pos.BUY_PLACE, pos.CUSTOMER_TYPE2
+</select>
+</mapper>

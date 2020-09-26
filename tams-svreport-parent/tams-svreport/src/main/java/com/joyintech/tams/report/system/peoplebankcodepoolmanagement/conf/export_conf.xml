@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ProPeoplebankcodeManagement001.xlsx" name="人行产品资产池代码管理">
+	<Worksheet javaBean="com.joyintech.tams.report.system.peoplebankcodepoolmanagement.dto.ProPeoplebankcodeManagement001Dto">
+		<Row>
+			<Cell order="1" name="内部产品代码">insideProdId</Cell>
+		    <Cell order="2" name="代码类型">codeTypeName</Cell>
+		    <Cell order="3" name="人行代码">pbcCode</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>

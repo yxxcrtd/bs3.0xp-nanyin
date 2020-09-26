@@ -1,0 +1,523 @@
+package com.joyintech.tams.report.interf.common.util;
+
+import java.io.File;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Vector;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.jcraft.jsch.ChannelSftp.LsEntry;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.tams.report.common.util.ReportGlobalConstant;
+import com.joyintech.tams.report.framework.util.FtpUtil;
+
+public class InterfUtil {
+
+    /**
+     * 日志
+     */
+    private static Logger logger = LoggerFactory.getLogger(InterfUtil.class);
+    /**
+     * 判断字符串是否为空
+     *
+     * @param str
+     * @return
+     */
+    public static boolean isEmpty(String str) {
+        return str == null || str.length() == 0;
+    }
+
+    /**
+     * 判断list是否为空
+     *
+     * @param list
+     * @return
+     */
+    public static boolean isEmptyList(List<?> list) {
+        return list == null || list.isEmpty();
+    }
+
+    /**
+     * 解析XML格式的报文，取出相应的节点所对应的值
+     *
+     * @param xml:XMl格式报文
+     * @param nodename:节点名称
+     * @return String:节点名称对应的值
+     */
+    public static String getnode(String xml, String nodename) {
+        String val = "";
+        if (xml.contains("<" + nodename + ">")) {
+            val = xml.substring(
+                xml.indexOf("<" + nodename + ">") + ("<" + nodename + ">").length(),
+                xml.indexOf("</" + nodename + ">"));
+        }
+        if (val.equals("")) {
+            val = null;
+        }
+        return val;
+    }
+
+    /**
+     * String → BigDecimal
+     *
+     * @param xml
+     * @return
+     */
+    public static BigDecimal str2BigDecimal(String str) {
+        if (isEmpty(str)) {
+            return BigDecimal.ZERO;
+        }
+        return new BigDecimal(str);
+    }
+
+    /**
+     * 根据格式化字符串格式化日期
+     *
+     * @param date 格式化前日期
+     * @param pattern 格式化字符串,如：yyyy-MM-dd
+     * @return 格式化后日期字符串
+     */
+    public static String format(Date date, String pattern) {
+        String s = "";
+        if (date != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+            s = sdf.format(date);
+        }
+        return s;
+    }
+
+    /**
+     * 根据格式化字符串格式化日期
+     *
+     * @param date 格式化前日期
+     * @return 格式化后日期字符串（yyyy-MM-dd）
+     */
+    public static String formatDateWithQuotation(Date date) {
+        String str = format(date, DateUtil.DEFAULT_DATE_FORMAT_EN);
+        if (!str.isEmpty()) {
+            str = "\"" + str + "\"";
+        }
+        return str;
+    }
+
+    /**
+     * 根据格式化字符串格式化日期
+     *
+     * @param date 格式化前日期
+     * @return 格式化后日期字符串（yyyy-MM-dd HH:mm:ss）
+     */
+    public static String formatDateTimeWithQuotation(Date date) {
+        String str = format(date, DateUtil.DEFAULT_DATETIME_FORMAT);
+        if (!str.isEmpty()) {
+            str = "\"" + str + "\"";
+        }
+        return str;
+    }
+
+    /**
+     * 输出对象的字符串表示
+     *
+     * @param value
+     * @return
+     */
+    public static String getTxtDataString(Object value) {
+        return GlobalConstant.VERTICAL_LINE + CommonUtil.getNotNullString(value);
+    }
+
+    /**
+     * 输出对象的字符串表示
+     *
+     * @param value
+     * @return
+     */
+    public static String getTxtDataString(Object value, String defaultValue) {
+        return GlobalConstant.VERTICAL_LINE + StringUtil.getOrElse(value, defaultValue);
+    }
+
+    /**
+     * Description: 从FTP服务器下载文件
+     *
+     * @param ftpType ftp类型（01：FTP，02：SFTP，03：本地文件）
+     * @param url FTP服务器hostname
+     * @param port FTP服务器端口
+     * @param username FTP登录账号
+     * @param password FTP登录密码
+     * @param remotePath FTP服务器上的相对路径
+     * @param localPath 本地路径
+     * @param containsFile 下载文件名包含指定字符串的文件
+     * @return 下载后的本地文件列表
+     */
+    public static List<File> downInterfFile(String ftpType, String url, int port, String username,
+                                            String password, String remotePath, String localPath,
+                                            List<String> containsFile) {
+        final List<File> localFiles = new ArrayList<>();
+        try {
+            // 本地文件系统方式
+            if (StringUtil.equals(ftpType, "03")) {
+                File remoteDir = new File(remotePath);
+                if (remoteDir.exists() && remoteDir.isDirectory()) {
+//                    Collection<File> files = FileUtils.listFiles(remoteDir,
+//                        new String[] {"xml", "txt"}, false);
+                    Collection<File> files = FileUtils.listFiles(remoteDir,
+                            null, false);
+                    for (File ff : files) {
+                        String fileName = ff.getName();
+                        if(fileName.contains("ok")){
+                        	continue;
+                        }
+                        if (containsFile == null || CollectionUtils.exists(containsFile, name -> {
+                            return fileName.contains((String)name);
+                        })) {
+                            File lf = new File(localPath + File.separatorChar + fileName);
+                            if (!lf.exists()) {
+                                lf.createNewFile();
+                                FileUtils.copyFile(ff, lf);
+                            }
+                            localFiles.add(lf);
+                        }
+                    }
+                }
+            }
+            // SFTP方式
+            else if (StringUtil.equals(ftpType, "02")) {
+                SftpUtil.sFTPconnect(username, url, port, password);
+                Vector<?> vector = SftpUtil.getSFtpFile(remotePath);
+                if (null != vector) {
+                    for (Object item : vector) {
+                        LsEntry entry = (LsEntry)item;
+                        String fileName = entry.getFilename();
+                        if (containsFile == null || CollectionUtils.exists(containsFile, name -> {
+                            return fileName.contains((String)name);
+                        })) {
+                            File lf = new File(localPath + File.separatorChar + fileName);
+                            if (!lf.exists()) {
+                                SftpUtil.downloadSftp(remotePath, entry.getFilename(), localPath);
+                            }
+                            localFiles.add(lf);
+                        }
+                    }
+                }
+            }
+            // FTP方式
+            else if (StringUtil.equals(ftpType, "01")) {
+                localFiles.addAll(FtpUtil.downXMLFile(url, port, username, password, remotePath,
+                    localPath, containsFile));
+            }
+        }
+        catch (Exception e) {
+//            e.printStackTrace();
+            logger.error(e.getMessage(),e);
+        }
+        finally {
+            SftpUtil.sFTPDisConnect();
+        }
+        return localFiles;
+    }
+
+    /**
+     * Description: 从FTP服务器下载文件
+     *
+     * @param ftpType ftp类型（01：FTP，02：SFTP，03：本地文件）
+     * @param url FTP服务器hostname
+     * @param port FTP服务器端口
+     * @param username FTP登录账号
+     * @param password FTP登录密码
+     * @param remotePath FTP服务器上的相对路径
+     * @param localPath 本地目录
+     * @return ok文件名列表
+     */
+    public static List<String> downInterfOKFile(String ftpType, String url, int port, String username,
+                                            String password, String remotePath, String localPath, String reportInterfOkFileExtension) {
+        final List<String> okFileNameList = new ArrayList<>();
+        String okFileExtension = "." + reportInterfOkFileExtension;
+        try {
+            // 本地文件系统方式
+            if (StringUtil.equals(ftpType, "03")) {
+                File remoteDir = new File(remotePath);
+                if (remoteDir.exists() && remoteDir.isDirectory()) {
+                    Collection<File> files = FileUtils.listFiles(remoteDir,
+                        new String[] {reportInterfOkFileExtension}, false);
+                    for (File ff : files) {
+                        okFileNameList.add(
+                            StringUtil.splitToList(GlobalConstant.POINT, ff.getName()).get(0));
+                    }
+                }
+            }
+            // SFTP方式
+            else if (StringUtil.equals(ftpType, "02")) {
+                SftpUtil.sFTPconnect(username, url, port, password);
+                Vector<?> vector = SftpUtil.getSFtpFile(remotePath);
+                if (null != vector) {
+                    for (Object item : vector) {
+                        LsEntry entry = (LsEntry)item;
+                        String fileName = entry.getFilename();
+                        if (StringUtil.endsWith(fileName, okFileExtension)) {
+                            okFileNameList.add(
+                                StringUtil.splitToList(GlobalConstant.POINT, fileName).get(0));
+                        }
+                    }
+                }
+            }
+            // FTP方式
+            else if (StringUtil.equals(ftpType, "01")) {
+                List<String> containsFile = new ArrayList<String>();
+                containsFile.add(okFileExtension);
+                List<File> okFileList = FtpUtil.downXMLFile(url, port, username, password, remotePath,
+                    localPath, containsFile);
+
+                for (File file : okFileList) {
+                    okFileNameList.add(
+                        StringUtil.splitToList(GlobalConstant.POINT, file.getName()).get(0));
+                }
+            }
+        }
+        catch (Exception e) {
+//            e.printStackTrace();
+            logger.error(e.getMessage(),e);
+        }
+        finally {
+            SftpUtil.sFTPDisConnect();
+        }
+
+        return okFileNameList;
+    }
+
+    /**
+     * 移动文件
+     *
+     * @param ftpType ftp类型（01：FTP，02：SFTP，03：本地文件）
+     * @param url FTP服务器hostname
+     * @param port FTP服务器端口
+     * @param username FTP登录账号
+     * @param password FTP登录密码
+     * @param remotePath FTP服务器上的相对路径
+     * @param fileName 需要被移动的文件路径
+     * @param newRemotePath 新路径
+     * @return 移动结果
+     */
+    public static boolean moveFiles(String ftpType, String url, int port, String username,
+                                    String password, String remotePath, String fileName,
+                                    String newRemotePath) {
+        try {
+            // 本地文件系统方式
+            if (StringUtil.equals(ftpType, "03")) {
+                File remoteDir = new File(remotePath);
+                if (remoteDir.exists() && remoteDir.isDirectory()) {
+                    Collection<File> files = FileUtils.listFiles(remoteDir,
+                        null, false);
+                    for (File ff : files) {
+                        String name = ff.getName();
+                        if (StringUtil.equals(name, fileName)) {
+                            FileUtils.moveFileToDirectory(ff,
+                                new File(remotePath + File.separatorChar + newRemotePath), true);
+                        }
+                    }
+                }
+            }
+            // SFTP方式
+            else if (StringUtil.equals(ftpType, "02")) {
+                SftpUtil.sFTPconnect(username, url, port, password);
+                Vector<?> vector = SftpUtil.getSFtpFile(remotePath);
+                for (Object item : vector) {
+                    LsEntry entry = (LsEntry)item;
+                    String name = entry.getFilename();
+                    if (StringUtil.equals(name, fileName)) {
+                        SftpUtil.rename(remotePath + File.separatorChar + name,
+                            remotePath + File.separatorChar + newRemotePath, name);
+                    }
+                }
+            }
+            // FTP方式
+            else if (StringUtil.equals(ftpType, "01")) {
+                FtpUtil.moveFiles(url, port, username, password, remotePath, fileName,
+                    newRemotePath);
+            }
+            return true;
+        }
+        catch (Exception e) {
+//            e.printStackTrace();
+            logger.error(e.getMessage(),e);
+        }
+        finally {
+            SftpUtil.sFTPDisConnect();
+        }
+        return false;
+    }
+
+    /**
+     * 删除本地临时文件
+     *
+     * @param localPath 本地目录
+     * @see
+     * @since 1.0
+     */
+    public static void deleteLocalTmpFile(String localPath) {
+        try {
+            File localDir = new File(localPath);
+            if (localDir.exists() && localDir.isDirectory()) {
+                Collection<File> files = FileUtils.listFiles(localDir,
+                    new String[] {"xml", "txt", "tmp"}, false);
+
+                for (File file : files) {
+                    try {
+                        if (file.exists() && file.isFile()) {
+                            file.delete();
+                        }
+                    }
+                    catch (Exception e) {
+                    	logger.error(e.getMessage(),e);
+                    }
+                }
+            }
+        }
+        catch (Exception e) {
+        	logger.error(e.getMessage(),e);
+        }
+    }
+    /**
+     * 删除本地临时文件
+     *
+     * @param localPath 本地目录
+     * @param containFile 传文件名规范
+     * @see
+     * @since 1.0
+     */
+    public static void deleteLocalTmpFile(String localPath,List<String> containsFile) {
+        try {
+            File localDir = new File(localPath);
+            if (localDir.exists() && localDir.isDirectory()) {
+                Collection<File> files = FileUtils.listFiles(localDir,
+                    new String[] {"xml", "txt", "tmp"}, false);
+
+                for (File file : files) {
+                    try {
+                        if (file.exists() && file.isFile()) {
+                            if (containsFile == null || CollectionUtils.exists(containsFile, name -> {
+                                return file.getName().contains((String)name);
+                            })) {
+                                file.delete();
+                            }
+                        }
+                    }
+                    catch (Exception e) {
+                        logger.error(e.getMessage(),e);
+                    }
+                }
+            }
+        }
+        catch (Exception e) {
+            logger.error(e.getMessage(),e);
+        }
+    }
+    /**
+     * 移动文件
+     *
+     * @param ftpType ftp类型（01：FTP，02：SFTP，03：本地文件）
+     * @param url FTP服务器hostname
+     * @param port FTP服务器端口
+     * @param username FTP登录账号
+     * @param password FTP登录密码
+     * @param remotePath FTP服务器上的相对路径
+     * @param fileName 需要被移动的文件路径
+     * @param newRemotePath 新路径
+     * @return 移动结果
+     */
+    public static boolean moveFilesMulThread(String ftpType, String url, int port, String username,
+                                    String password, String remotePath, String fileName,
+                                    String newRemotePath) {
+        try {
+            // 本地文件系统方式
+            if (StringUtil.equals(ftpType, "03")) {
+                File remoteDir = new File(remotePath);
+                if (remoteDir.exists() && remoteDir.isDirectory()) {
+                    Collection<File> files = FileUtils.listFiles(remoteDir,
+                        null, false);
+                    for (File ff : files) {
+                        String name = ff.getName();
+                        if (StringUtil.equals(name, fileName)) {
+                            FileUtils.moveFileToDirectory(ff,
+                                new File(remotePath + File.separatorChar + newRemotePath), true);
+                        }
+                    }
+                }
+            }
+            // SFTP方式
+            else if (StringUtil.equals(ftpType, "02")) {
+                Vector<?> vector = SftpUtil.getSFtpFile(username, url, port, password,remotePath);
+                for (Object item : vector) {
+                    LsEntry entry = (LsEntry)item;
+                    String name = entry.getFilename();
+                    if (StringUtil.equals(name, fileName)) {
+                        SftpUtil.rename(username,url, port,  password,
+                                remotePath + File.separatorChar + name,
+                            remotePath + File.separatorChar + newRemotePath, name);
+                    }
+                }
+            }
+            // FTP方式
+            else if (StringUtil.equals(ftpType, "01")) {
+                FtpUtil.moveFiles(url, port, username, password, remotePath, fileName,
+                    newRemotePath);
+            }
+            return true;
+        }
+        catch (Exception e) {
+//            e.printStackTrace();
+            logger.error(e.getMessage(),e);
+        }
+        return false;
+    }
+	/**
+	 * 获取文件夹所有为处理过的文件名
+	 * @param path 路径
+	 * @return
+	 */
+	public static List<String> getFileNamesNotHandle(String path) {
+		String[] fileNames = new File(path).list();
+		if (fileNames == null) {
+			return null;
+		}
+		List<String> listname_tmp = Arrays.asList(fileNames);
+		List<String> listName = new ArrayList<String>();
+		for (int i = 0; i < listname_tmp.size(); i++) {
+			if (listname_tmp.get(i).toUpperCase().contains(ReportGlobalConstant.SUCCESS_FILE_SUFFIX)) {
+				continue;
+			}
+			listName.add(listname_tmp.get(i));
+		}
+		return listName;
+	}
+
+	// 修改文件名
+	public static void replaceFileName(String allPath, String fileName) {
+		File file = new File(allPath + fileName);
+		if(!file.exists()) {
+			file = new File(allPath + File.separator + fileName);
+		}
+		StringBuffer buffer = new StringBuffer(allPath + File.separatorChar
+				+ fileName);
+		buffer.append(ReportGlobalConstant.SUCCESS_FILE_SUFFIX);
+		/*
+		 * java中rename()函数，两种情况会导致重命名失败 :1.文件不存在2.重名在当前目录中已经存在
+		 * 程序中会出现，重命名之后。原有的文件与重命名的文件共存的情况。 （没有解决）
+		 * 所以当发现上述情况时，会删除已有的文件，避免第二种情况，去再次使用重命名.可能的原因：文件读写冲突
+		 */
+		if (file.renameTo(new File(buffer.toString()))) {
+		} else {
+			(new File(buffer.toString())).delete();
+			file.renameTo(new File(buffer.toString()));
+		}
+	}
+}

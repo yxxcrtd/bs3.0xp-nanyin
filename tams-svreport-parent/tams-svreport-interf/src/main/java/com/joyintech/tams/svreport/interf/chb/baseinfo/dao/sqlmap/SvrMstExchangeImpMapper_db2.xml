@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstExchangeImpMapper_db2">
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstExchargeQuote">
+    <id column="EXCHARGE_CODE" jdbcType="VARCHAR" property="exchargeCode" />
+    <id column="TRADE_DATE" jdbcType="TIMESTAMP" property="tradeDate" />
+    <result column="DATASOURCE_TYPE" jdbcType="VARCHAR" property="datasourceType" />
+    <result column="OPEN_PRICE" jdbcType="DECIMAL" property="openPrice" />
+    <result column="CLOSE_PRICE" jdbcType="DECIMAL" property="closePrice" />
+    <result column="HIGH_PRICE" jdbcType="DECIMAL" property="highPrice" />
+    <result column="LOW_PRICE" jdbcType="DECIMAL" property="lowPrice" />
+    <result column="MID_PRICE" jdbcType="DECIMAL" property="midPrice" />
+    <result column="BASIS_CYY" jdbcType="VARCHAR" property="basisCyy" />
+    <result column="QUOT_CYY" jdbcType="VARCHAR" property="quotCyy" />
+    <result column="QUOT_UNIT" jdbcType="DECIMAL" property="quotUnit" />
+    <result column="INPUT_TYPE" jdbcType="VARCHAR" property="inputType" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    EXCHARGE_CODE, TRADE_DATE, DATASOURCE_TYPE, OPEN_PRICE, CLOSE_PRICE, HIGH_PRICE, 
+    LOW_PRICE, MID_PRICE, BASIS_CYY, QUOT_CYY, QUOT_UNIT, INPUT_TYPE, CREATE_USER, CREATE_DEPT, 
+    CREATE_TIME, UPDATE_USER, UPDATE_TIME
+  </sql>
+
+  
+  <delete id="deleteExchangeBatch" parameterType="com.joyintech.tams.common.base.entity.MstExchargeQuote">
+    delete from MST_EXCHARGE_QUOTE
+    <where>
+		<foreach collection="exchangeInfoList" item="dto" separator="union all"
+			open="(EXCHARGE_CODE,TRADE_DATE) in ("
+			close=")">
+			select #{dto.exchargeCode,jdbcType=VARCHAR},
+			#{dto.tradeDate,jdbcType=TIMESTAMP}
+			from sysibm.SYSDUMMY1
+		</foreach>
+	</where>
+  </delete>
+  
+  <insert id="mergeExchangeData"
+	parameterType="com.joyintech.tams.common.base.entity.MstExchargeQuote">
+	MERGE INTO MST_EXCHARGE_QUOTE CII
+	USING (
+	<foreach collection="list" item="item" open="select * from("
+		close=")" separator="union all">
+		SELECT
+		'${item.exchargeCode}' EXCHARGE_CODE,
+        <choose><when test="item.tradeDate != null">#{item.tradeDate,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose> TRADE_DATE,
+		'${item.datasourceType}' DATASOURCE_TYPE,
+        <choose><when test="item.openPrice != null">${item.openPrice}</when><otherwise>null</otherwise></choose> OPEN_PRICE,
+        <choose><when test="item.closePrice != null">${item.closePrice}</when><otherwise>null</otherwise></choose> CLOSE_PRICE,
+        <choose><when test="item.highPrice != null">${item.highPrice}</when><otherwise>null</otherwise></choose> HIGH_PRICE,
+        <choose><when test="item.lowPrice != null">${item.lowPrice}</when><otherwise>null</otherwise></choose> LOW_PRICE,
+        <choose><when test="item.midPrice != null">${item.midPrice}</when><otherwise>null</otherwise></choose> MID_PRICE,
+       '${item.basisCyy}' BASIS_CYY,
+       '${item.quotCyy}' QUOT_CYY,
+        <choose><when test="item.quotUnit != null">${item.quotUnit}</when><otherwise>null</otherwise></choose> QUOT_UNIT,
+       '${item.inputType}' INPUT_TYPE,
+       '${item.createUser}' CREATE_USER,
+       '${item.createDept}' CREATE_DEPT,
+       current date CREATE_TIME,
+       '${item.updateUser}' UPDATE_USER,
+       current date UPDATE_TIME
+		FROM
+		sysibm.SYSDUMMY1
+	</foreach>
+	) TEMP
+	<!-- 业务主键匹配 -->
+	ON(CII.EXCHARGE_CODE = TEMP.EXCHARGE_CODE
+	AND CII.TRADE_DATE = TEMP.TRADE_DATE
+	)
+	<!-- 匹配到则更新 -->
+	WHEN MATCHED THEN UPDATE SET
+	DATASOURCE_TYPE = TEMP.DATASOURCE_TYPE,
+      OPEN_PRICE = TEMP.OPEN_PRICE,
+      CLOSE_PRICE = TEMP.CLOSE_PRICE,
+      HIGH_PRICE = TEMP.HIGH_PRICE,
+      LOW_PRICE = TEMP.LOW_PRICE,
+      MID_PRICE = TEMP.MID_PRICE,
+      BASIS_CYY = TEMP.BASIS_CYY,
+      QUOT_CYY = TEMP.QUOT_CYY,
+      QUOT_UNIT = TEMP.QUOT_UNIT,
+      INPUT_TYPE = TEMP.INPUT_TYPE,
+      CREATE_USER = TEMP.CREATE_USER,
+      CREATE_DEPT = TEMP.CREATE_DEPT,
+      CREATE_TIME = TEMP.CREATE_TIME,
+      UPDATE_USER = TEMP.UPDATE_USER,
+      UPDATE_TIME = TEMP.UPDATE_TIME
+	<!-- 未匹配到这插入 -->
+	WHEN NOT MATCHED THEN INSERT 
+	(EXCHARGE_CODE, TRADE_DATE, DATASOURCE_TYPE, 
+      OPEN_PRICE, CLOSE_PRICE, HIGH_PRICE, 
+      LOW_PRICE, MID_PRICE, BASIS_CYY, 
+      QUOT_CYY, QUOT_UNIT, INPUT_TYPE, 
+      CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+      UPDATE_USER, UPDATE_TIME)
+    values (TEMP.EXCHARGE_CODE, TEMP.TRADE_DATE, TEMP.DATASOURCE_TYPE, 
+      TEMP.OPEN_PRICE, TEMP.CLOSE_PRICE, TEMP.HIGH_PRICE, 
+      TEMP.LOW_PRICE, TEMP.MID_PRICE, TEMP.BASIS_CYY, 
+      TEMP.QUOT_CYY, TEMP.QUOT_UNIT, TEMP.INPUT_TYPE, 
+      TEMP.CREATE_USER, TEMP.CREATE_DEPT, TEMP.CREATE_TIME, 
+      TEMP.UPDATE_USER, TEMP.UPDATE_TIME)
+</insert>
+</mapper>

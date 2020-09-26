@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.errormessage.dao.ErrorMessage001Mapper">
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.report.errormessage.dto.ErrorMessage001">
+    <id column="DATAID" jdbcType="VARCHAR" property="dataid" />
+    <result column="INTERF_TYPE" jdbcType="VARCHAR" property="interfType" />
+    <result column="FIRE_NAME" jdbcType="VARCHAR" property="fireName" />
+    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+    <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="WORKFLOW_ID" jdbcType="VARCHAR" property="workflowId" />
+    <result column="ORG_CODE" jdbcType="VARCHAR" property="orgCode" />
+    <result column="DEPT_CODE" jdbcType="VARCHAR" property="deptCode" />
+    <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
+    <result column="ORG_DATA" jdbcType="CLOB" property="orgData" />
+    <result column="ERR_MSG" jdbcType="CLOB" property="errMsg" />
+  </resultMap>
+  <sql id="base_view">
+     select DATAID dataid, INTERF_TYPE interfType, FIRE_NAME fireName, STATUS status, UPDATE_USER updateUser,
+      CREATE_USER createUser, UPDATE_TIME updateTime,  CREATE_TIME createTime, WORKFLOW_ID workflowId, 
+      ORG_CODE orgCode, DEPT_CODE deptCode, CREATE_DEPT createDept, ORG_DATA orgData, ERR_MSG errMsg
+    from CHB_INTERF_ERRODATA
+  </sql>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from CHB_INTERF_ERRODATA
+    where DATAID = #{dataid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.joyintech.tams.report.errormessage.dto.ErrorMessage001">
+    insert into CHB_INTERF_ERRODATA (DATAID, INTERF_TYPE, FIRE_NAME, 
+      STATUS, UPDATE_USER, CREATE_USER, 
+      UPDATE_TIME, CREATE_TIME, WORKFLOW_ID, 
+      ORG_CODE, DEPT_CODE, CREATE_DEPT, 
+      ORG_DATA, ERR_MSG)
+    values (#{dataid,jdbcType=VARCHAR}, #{interfType,jdbcType=VARCHAR}, #{fireName,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{workflowId,jdbcType=VARCHAR}, 
+      #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+      #{orgData,jdbcType=CLOB}, #{errMsg,jdbcType=CLOB})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.report.errormessage.dto.ErrorMessage001">
+    update CHB_INTERF_ERRODATA
+    set INTERF_TYPE = #{interfType,jdbcType=VARCHAR},
+      FIRE_NAME = #{fireName,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
+      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+      ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+      CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      ORG_DATA = #{orgData,jdbcType=CLOB},
+      ERR_MSG = #{errMsg,jdbcType=CLOB}
+    where DATAID = #{dataid,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select DATAID, INTERF_TYPE, FIRE_NAME, STATUS, UPDATE_USER, CREATE_USER, UPDATE_TIME, 
+    CREATE_TIME, WORKFLOW_ID, ORG_CODE, DEPT_CODE, CREATE_DEPT, ORG_DATA, ERR_MSG
+    from CHB_INTERF_ERRODATA
+    where DATAID = #{dataid,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select DATAID, INTERF_TYPE, FIRE_NAME, STATUS, UPDATE_USER, CREATE_USER, UPDATE_TIME, 
+    CREATE_TIME, WORKFLOW_ID, ORG_CODE, DEPT_CODE, CREATE_DEPT, ORG_DATA, ERR_MSG
+    from CHB_INTERF_ERRODATA
+  </select>
+  
+  <select id="queryPage" resultType="com.joyintech.tams.report.errormessage.dto.ErrorMessage001" parameterType="map">
+    select *
+    from (<include refid="base_view"></include>)
+    <where>
+        <if test="createTimeStart != null and createTimeStart != ''">
+            to_char(createTime,'yyyy-MM-dd') &gt;= #{createTimeStart}
+        </if>
+        <if test="createTimeEnd != null and createTimeEnd != ''">
+           and to_char(createTime,'yyyy-MM-dd') &lt;= #{createTimeEnd}
+        </if>
+        <if test="fileName != null and fileName != ''">
+            and fireName like concat(concat('%',#{fileName}),'%')
+        </if>
+        <if test="statusList != null and statusList.size >0">
+            and status in
+            <foreach collection="statusList" open="(" close=")" separator="," item="item">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="orgCodeList != null and orgCodeList.size >0">
+            and orgCode in
+            <foreach collection="orgCodeList" open="(" close=")" separator="," item="item">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="interfTypeList != null and interfTypeList.size >0">
+            and interfType in
+            <foreach collection="interfTypeList" open="(" close=")" separator="," item="item">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </where>
+  </select>
+  
+  <select id="selectInterfTypeSelects" parameterType="map" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select INTERF_ID id,REMARK text from CHB_INTERF_CONFIG
+        <where>
+        	<if test="prodId !=null">
+			INTERF_ID like concat(concat('%',#{prodId, jdbcType=VARCHAR}),'%')
+			or REMARK like concat(concat('%',#{prodId, jdbcType=VARCHAR}),'%')
+			</if>
+        </where>
+  </select>
+  
+</mapper>

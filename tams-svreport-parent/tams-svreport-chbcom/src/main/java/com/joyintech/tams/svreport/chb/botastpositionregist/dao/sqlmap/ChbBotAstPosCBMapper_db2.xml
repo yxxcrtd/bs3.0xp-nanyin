@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chb.botastpositionregist.dao.ChbBotAstPosCBMapper_db2">
+
+
+	<!-- 批量 插入登记表-->
+	<insert id="insertRegistBatchList" parameterType="com.joyintech.tams.common.base.entity.ChbBotAstPositionSub">
+		insert into CHB_BOT_AST_POS_SUB (REGIST_SEQNO, REGIST_BANK_CODE, ISSUE_PARTY_ID, 
+		      POS_DATE, PLAN_ASSET_ID, ASSET_CODE, 
+		      TOTAL_NUM, ISSUE_AMT, UNINVEST_CASH, 
+		      POS_NUM, POS_AMT, SEND_STATUS, 
+		      CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+		      SUBMIT_TIME, SUMIT_SEQ, SUBMIT_FEEDBACK_STATUS, 
+		      STATUS, STATUS_DATE, ORG_CODE, 
+		      DEPT_CODE, CREATE_USER, CREATE_DEPT, 
+		      CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+		<foreach collection="chbBotAstPositionSubList" item="dto" open=" select * from (select " close="from sysibm.SYSDUMMY1)" separator="from sysibm.SYSDUMMY1 union all select ">
+		  #{dto.registSeqno,jdbcType=CHAR}, #{dto.registBankCode,jdbcType=VARCHAR}, #{dto.issuePartyId,jdbcType=VARCHAR}, 
+	      #{dto.posDate,jdbcType=TIMESTAMP}, #{dto.planAssetId,jdbcType=VARCHAR}, #{dto.assetCode,jdbcType=OTHER}, 
+	      #{dto.totalNum,jdbcType=DECIMAL}, #{dto.issueAmt,jdbcType=DECIMAL}, #{dto.uninvestCash,jdbcType=DECIMAL}, 
+	      #{dto.posNum,jdbcType=DECIMAL}, #{dto.posAmt,jdbcType=DECIMAL}, #{dto.sendStatus,jdbcType=VARCHAR}, 
+	      #{dto.chbSubmitDeadline,jdbcType=TIMESTAMP}, #{dto.submitDeadline,jdbcType=TIMESTAMP}, 
+	      #{dto.submitTime,jdbcType=TIMESTAMP}, #{dto.sumitSeq,jdbcType=VARCHAR}, #{dto.submitFeedbackStatus,jdbcType=VARCHAR}, 
+	      #{dto.status,jdbcType=VARCHAR},  #{dto.statusDate,jdbcType=TIMESTAMP} STATUS_DATE, #{dto.orgCode,jdbcType=VARCHAR}, 
+	      #{dto.deptCode,jdbcType=VARCHAR}, #{dto.createUser,jdbcType=VARCHAR}, #{dto.createDept,jdbcType=VARCHAR}, 
+	      sysdate CREATE_TIME,#{dto.updateUser,jdbcType=VARCHAR},sysdate UPDATE_TIME
+        </foreach>
+	</insert>
+</mapper>

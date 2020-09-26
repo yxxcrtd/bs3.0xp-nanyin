@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.batch.report.autosendcb.investorsholdinforegist.dao.InvestorsHoldInfoRegistAutoSendCBMapper">
+
+    <select id="selectAllUnregistDataCount" resultType="java.lang.Integer">
+        SELECT
+            count(1)
+        FROM
+            CHB_INVESTHOLD_INFO_SUB
+        WHERE
+            SEND_STATUS = '01'
+            and STATUS != '03'
+            <if test="holdDate != null and holdDate != ''">
+            and HOLD_DATE = to_date(#{holdDate,jdbcType=VARCHAR}, 'yyyy-MM-dd')
+            </if>
+    </select>
+
+    <select id="selectAllUnregistCheckNgDataCount" resultType="java.lang.Integer">
+        SELECT
+            COUNT(1)
+        FROM
+            CHB_INVESTHOLD_INFO_SUB investTable
+        WHERE
+            investTable.SEND_STATUS = '01'
+        AND investTable.STATUS != '03'
+        <if test="holdDate != null and holdDate != ''">
+        AND investTable.HOLD_DATE = to_date(#{holdDate,jdbcType=VARCHAR}, 'yyyy-MM-dd')
+        </if>
+        AND NOT EXISTS
+            (
+                SELECT
+                    1
+                FROM
+                    CHB_EQU_SUB equTable
+                WHERE
+                    equTable.SUBMIT_STATUS IN ('02',
+                                               '03')
+                AND equTable.REGIST_BANK_CODE = investTable.REGIST_BANK_CODE
+                AND equTable.INDENTIFY_MARK = investTable.INDENTIFY_MARK)
+    </select>
+    <insert id="insertIntoHisAllAlreadySubmitRegistData">
+    	insert into CHB_INVESTHOLD_INFO_SUB_HIS 
+      	select SEQ_INVESTHOLD_SUB.NEXTVAL,CHB_INVESTHOLD_INFO_SUB.*
+        FROM
+            CHB_INVESTHOLD_INFO_SUB
+        WHERE
+            (REGIST_BANK_CODE, PRD_REGIST_CODE, CCY, INDENTIFY_MARK, HOLD_DATE) IN
+            (
+                SELECT
+                    REGIST_BANK_CODE,
+                    PRD_REGIST_CODE,
+                    CCY,
+                    INDENTIFY_MARK,
+                    HOLD_DATE
+                FROM
+                    CHB_INVESTHOLD_INFO_SUB
+                GROUP BY
+                    REGIST_BANK_CODE,
+                    PRD_REGIST_CODE,
+                    CCY,
+                    INDENTIFY_MARK,
+                    HOLD_DATE
+                HAVING
+                    COUNT(1) > 1 )
+            and (SEND_STATUS = '02' or SEND_STATUS = '03')
+            <if test="holdDate != null and holdDate != ''">
+	        AND HOLD_DATE = to_date(#{holdDate,jdbcType=VARCHAR}, 'yyyy-MM-dd')
+	        </if>
+    </insert>
+    <delete id="deleteAllAlreadySubmitRegistData">
+        DELETE
+        FROM
+            CHB_INVESTHOLD_INFO_SUB
+        WHERE
+            (REGIST_BANK_CODE, PRD_REGIST_CODE, CCY, INDENTIFY_MARK, HOLD_DATE) IN
+            (
+                SELECT
+                    REGIST_BANK_CODE,
+                    PRD_REGIST_CODE,
+                    CCY,
+                    INDENTIFY_MARK,
+                    HOLD_DATE
+                FROM
+                    CHB_INVESTHOLD_INFO_SUB
+                GROUP BY
+                    REGIST_BANK_CODE,
+                    PRD_REGIST_CODE,
+                    CCY,
+                    INDENTIFY_MARK,
+                    HOLD_DATE
+                HAVING
+                    COUNT(1) > 1)
+            and (SEND_STATUS = '02' or SEND_STATUS = '03')
+            <if test="holdDate != null and holdDate != ''">
+	        AND HOLD_DATE = to_date(#{holdDate,jdbcType=VARCHAR}, 'yyyy-MM-dd')
+	        </if>
+    </delete>
+    
+    <delete id="truncateSubTempTable">
+        truncate table CHB_SEND_CB_TEMP
+    </delete>
+    
+    <insert id="insertUnregistCheckOkDataToTempTable">
+        insert into CHB_SEND_CB_TEMP (REGIST_SEQNO)
+		select 
+		targetTable.REGIST_SEQNO
+		from
+		(
+		    select 
+                ciis.REGIST_SEQNO              REGIST_SEQNO,
+                ROWNUM
+	        from CHB_INVESTHOLD_INFO_SUB ciis
+	        where
+	            ciis.SEND_STATUS = '01'
+	            and ciis.STATUS != '03'
+	            <if test="holdDate != null and holdDate != ''">
+	            and ciis.HOLD_DATE = to_date(#{holdDate,jdbcType=VARCHAR}, 'yyyy-MM-dd')
+	            </if>
+	           <if test="repeatHoldInfoData != null and  repeatHoldInfoData.size > 0">
+					and ciis.regist_seqno not in 
+	           		<foreach collection="repeatHoldInfoData" item="regist_seqno" open="   (" separator="," close=")">
+						#{regist_seqno,jdbcType=VARCHAR}
+					</foreach>
+	           </if>
+	            AND EXISTS
+	            (
+	                SELECT
+	                    1
+	                FROM
+	                    CHB_EQU_SUB equTable
+	                WHERE
+	                    equTable.SUBMIT_STATUS IN ('02',
+	                                               '03')
+	                AND equTable.REGIST_BANK_CODE = ciis.REGIST_BANK_CODE
+	                AND equTable.INDENTIFY_MARK = ciis.INDENTIFY_MARK)
+	             and ROWNUM &lt;= #{dataCountPerTime,jdbcType=DECIMAL}
+		) targetTable
+    </insert>
+    
+    <select id="selectAllUnregistCheckOkData" parameterType="map" resultType="com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto">
+        select  ciis.REGIST_SEQNO           registSeqno,
+                ciis.REGIST_BANK_CODE       registBankCode,
+                ciis.CHB_SUBMIT_DEADLINE    chbSubmitDeadline,
+                ciis.PRD_REGIST_CODE        prdRegistCode,
+                ciis.INDENTIFY_MARK         indentifyMark,
+                ciis.CCY                    ccy,
+                ciis.HOLD_DATE              holdDate,
+                ciis.AMOUNT                 amount,
+                ciis.AMOUNT                 amountExportExcel,
+                ciis.QTY                    qty,
+                ciis.QTY                    qtyExportExcel,
+                ciis.CNY_AMT                cnyAmt,
+                ciis.CNY_AMT                cnyAmtExportExcel,  
+                ciis.REMARK                 remark,
+                ciis.SUBMIT_DEADLINE        submitDeadline,
+                ciis.WORKFLOW_ID            workflowId,
+                ciis.SEND_STATUS            sendStatus,
+                ciis.STATUS_DATE            statusDate,
+                ciis.STATUS                 status,
+                ciis.CREATE_USER            createUser,
+                ciis.CREATE_TIME            createTime,
+                ciis.UPDATE_USER            updateUser,
+                ciis.UPDATE_TIME            updateTime,
+                ciis.ORG_CODE               orgCode,
+                ciis.DEPT_CODE              deptCode,
+                ciis.SUBMIT_TIME            submitTime,
+                ciis.SUMIT_SEQ              sumitSeq,
+                ciis.CHECK_SEQNO            checkSeqno
+        from CHB_INVESTHOLD_INFO_SUB ciis
+        inner join CHB_SEND_CB_TEMP tempTable
+            on ciis.REGIST_SEQNO = tempTable.REGIST_SEQNO
+        where
+            ciis.SEND_STATUS = '01'
+            and ciis.STATUS != '03'
+    </select>
+    
+    <update id="updateSubmitStatus">
+        update CHB_INVESTHOLD_INFO_SUB sub
+        set sub.SEND_STATUS = '02',
+            sub.submit_time = sysdate
+        where
+            sub.REGIST_SEQNO in (select REGIST_SEQNO from CHB_SEND_CB_TEMP)
+            and sub.SEND_STATUS = '01'
+            <!-- and exists (select 1 from CHB_SEND_CB_TEMP tempTable where sub.SUMIT_SEQ = tempTable.SUMIT_SEQ) -->
+    </update>
+    
+    <select id="selectUnregistDataRepeatDataByFiveElem"  parameterType="map" resultType="java.lang.String">
+ 	select ciis.regist_seqno from CHB_INVESTHOLD_INFO_SUB ciis 
+    	 where   (ciis.REGIST_BANK_CODE,ciis.INDENTIFY_MARK,ciis.PRD_REGIST_CODE,ciis.HOLD_DATE,ciis.CCY) in 
+    	   (select sub.REGIST_BANK_CODE,sub.INDENTIFY_MARK,sub.PRD_REGIST_CODE,sub.HOLD_DATE,sub.CCY
+      from CHB_INVESTHOLD_INFO_SUB sub
+    	where 1=1
+    	<if test="holdDate != null and holdDate != ''">
+	            and sub.HOLD_DATE = to_date(#{holdDate,jdbcType=VARCHAR}, 'yyyy-MM-dd')
+	     </if>
+	     GROUP BY sub.REGIST_BANK_CODE,sub.INDENTIFY_MARK,sub.PRD_REGIST_CODE,sub.HOLD_DATE,sub.CCY
+	     HAVING COUNT(*) > 1)
+    </select>
+</mapper>

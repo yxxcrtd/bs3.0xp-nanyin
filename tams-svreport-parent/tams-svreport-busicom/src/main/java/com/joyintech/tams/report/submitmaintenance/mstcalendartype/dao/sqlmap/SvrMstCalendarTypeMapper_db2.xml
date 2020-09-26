@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.submitmaintenance.mstcalendartype.dao.SvrMstCalendarTypeMapper_db2">
+
+<insert id="insertTradeCalendar" parameterType="com.joyintech.tams.report.submitmaintenance.mstcalendartype.dto.SvrMstCalendarType001Dto" >
+	insert into 
+	    MST_TRADE_CALENDAR
+	<foreach collection="calendarTypeList" item="item" open="select * from (" close=")" 
+	separator="union all">
+		select
+		      #{tradeCalendarId,jdbcType=VARCHAR} TRADE_CALENDAR_ID,
+	          #{item,jdbcType=VARCHAR} CALENDAR_ID,
+	          #{createUser,jdbcType=VARCHAR} CREATE_USER,
+	          #{createDept,jdbcType=VARCHAR} CREATE_DEPT,
+	          #{createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+	          #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
+	          #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+	    from 
+	          sysibm.SYSDUMMY1
+	</foreach>
+</insert>
+
+</mapper>   

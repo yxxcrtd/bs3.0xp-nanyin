@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ProdFactorInfo.xlsx" name="产品要素信息">
+	<Worksheet javaBean="com.joyintech.submitmaintenance.prodfactorinfo.dto.ProdFactorInfo001Dto">
+		<Row>
+			<Cell order="1" name="产品名称">prodName</Cell><!-- 产品名称 -->
+			<Cell order="2" name="产品登记编码">regCode</Cell><!-- 产品登记编码 -->
+			<Cell order="3" name="产品代码">prodId</Cell><!-- 产品代码-->
+			<Cell order="4" name="产品品牌">prodBrand</Cell><!-- 产品品牌 -->
+			<Cell order="5" name="产品期次">prodStage</Cell><!-- 产品期次 -->
+			<Cell order="6" name="募集起始日期（从）">raisePstrdate</Cell><!-- 募集起始日期（从） -->
+			<Cell order="7" name="募集起始日期（到）">raisePenddate</Cell><!-- 募集起始日期（到） -->
+			<Cell order="8" name="起点销售金额">saleAmtStr</Cell><!-- 起点销售金额 -->
+			<Cell order="9" name="计划募集金额（元）">raiseAmtPlan</Cell><!-- 计划募集金额（元）-->
+			<Cell order="10" name="产品管理方式">pmmode</Cell><!-- 产品管理方式-->
+			<Cell order="11" name="实际管理人名称">mname</Cell><!-- 实际管理人名称 -->
+			<Cell order="12" name="投资本金到账日">investPrinDate</Cell><!--投资本金到账日-->
+			<Cell order="13" name="投资收益到账日">investProfDate</Cell><!--投资收益到账日-->
+			<Cell order="14" name="产品期限">term</Cell><!--产品期限-->
+			<Cell order="15" name="投资者类型">investorType</Cell><!--投资者类型-->
+			<Cell order="16" name="客户赎回权标识">cusRedeemFlag</Cell><!--客户赎回权标识-->
+			<Cell order="17" name="是否允许提前终止">termRightFlag</Cell><!--是否允许提前终止-->
+			<Cell order="18" name="增信标识">creditFlag</Cell><!--增信标识-->
+			<Cell order="19" name="增信机构类型">creditType</Cell><!--增信机构类型-->
+			<Cell order="20" name="增信形式">creditMode</Cell><!--增信形式-->
+			<Cell order="21" name="募集币种">raiseCcy</Cell><!--募集币种-->
+			<Cell order="22" name="兑付本金币种">cashPrinCcy</Cell><!--兑付本金币种-->
+			<Cell order="23" name="兑付收益币种">cashProfCcy</Cell><!--兑付收益币种-->
+			<Cell order="24" name="投资者风险偏好">riskType</Cell><!--投资者风险偏好-->
+			<Cell order="25" name="产品风险等级">riskLevel</Cell><!--产品风险等级-->
+			<Cell order="26" name="是否有收益率测算依据">isYieldMeasBasis</Cell><!--是否有收益率测算依据-->
+			<Cell order="27" name="是否有预期收益率">isYield</Cell><!--是否有预期收益率-->
+			<Cell order="28" name="预计客户最低年收益率%">lowYield</Cell><!--预计客户最低年收益率%-->
+			<Cell order="29" name="预计客户最高年收益率%">highYield</Cell><!--预计客户最高年收益率%-->
+			<Cell order="30" name="平均预计客户年收益率%">expAvgYield</Cell><!--平均预计客户年收益率%-->
+			<Cell order="31" name="产品收益类型">profitType</Cell><!--产品收益类型-->
+			<Cell order="32" name="产品运作模式">operateMode</Cell><!--产品运作模式-->
+			<Cell order="33" name="产品资产配置方式">cmmode</Cell><!--产品资产配置方式-->
+			<Cell order="34" name="产品审批人身份证号">approverId</Cell><!--产品审批人身份证号-->
+			<Cell order="35" name="产品审批人姓名">approverName</Cell><!--产品审批人姓名-->
+			<Cell order="36" name="产品设计人身份证号">designerId</Cell><!--产品设计人身份证号-->
+			<Cell order="37" name="产品设计人姓名">designerName</Cell><!--产品设计人姓名-->
+			<Cell order="38" name="投资经理身份证号">managerId</Cell><!--投资经理身份证号-->
+			<Cell order="39" name="投资经理姓名">managerName</Cell><!--投资经理姓名-->
+			<Cell order="40" name="业务联络人姓名">liaisonName</Cell><!--业务联络人姓名-->
+			<Cell order="41" name="业务联络人座机">liaisonTel</Cell><!--业务联络人座机-->
+			<Cell order="42" name="业务联络人手机">liaisonMobile</Cell><!--业务联络人手机-->
+			<Cell order="43" name="业务联络人邮箱">liaisonEmail</Cell><!--业务联络人邮箱-->
+			<Cell order="44" name="资金投向地区">investArae</Cell><!--资金投向地区-->
+			<Cell order="45" name="产品投资国家或地区">investCountry</Cell><!--产品投资国家或地区-->
+			<Cell order="46" name="合作模式">contMode</Cell><!--合作模式-->
+			<Cell order="47" name="合作机构名称">cooperationName</Cell><!--合作机构名称-->
+			<Cell order="48" name="理财业务服务模式">finanSerModel</Cell><!--理财业务服务模式-->
+			<Cell order="49" name="会计核算方式">bookMode</Cell><!--会计核算方式-->
+			<Cell order="50" name="产品定价方式">pricedMode</Cell><!--产品定价方式-->
+			<Cell order="51" name="投资资产类型">invAssetType</Cell><!--投资资产类型-->
+			<Cell order="52" name="结构性产品挂钩标的">conPrdTraget</Cell><!--结构性产品挂钩标的-->
+			<Cell order="53" name="投资资产种类及比例">invTypeRat</Cell><!--投资资产种类及比例-->
+			<Cell order="54" name="产品销售区域">saleArea</Cell><!--产品销售区域-->
+			<Cell order="55" name="销售手续费率%">saleFeeRate</Cell><!--销售手续费率%-->
+			<Cell order="56" name="境内托管机构名称">inDepName</Cell><!--境内托管机构名称-->
+			<Cell order="57" name="境内托管机构代码">inDepCode</Cell><!--境内托管机构代码-->
+			<Cell order="58" name="境外托管机构国别">outDepCtry</Cell><!--境外托管机构国别-->
+			<Cell order="59" name="境外托管机构名称">outDepName</Cell><!--境外托管机构名称-->
+			<Cell order="60" name="托管费率%">truFeeRate</Cell><!--托管费率-->
+			<Cell order="61" name="募集起始日期">raiseVdate</Cell><!--募集起始日期-->
+			<Cell order="62" name="募集结束日期">raiseEnddate</Cell><!--募集结束日期-->
+			<Cell order="63" name="产品起始日期">prdVdate</Cell><!--产品起始日期-->
+			<Cell order="64" name="产品终止日期">prdMdate</Cell><!--产品终止日期-->
+			<Cell order="65" name="是否为结构化（分级）产品">isConstracte</Cell><!--是否为结构化（分级）产品-->
+			<Cell order="66" name="层级类别">gradeType</Cell><!--层级类别-->
+			<Cell order="67" name="收益率分档情况说明">yieldComment</Cell><!--收益率分档情况说明-->
+			<Cell order="68" name="开放模式">openMode</Cell><!--开放模式-->
+			<Cell order="69" name="规律开放周期">openCircle</Cell><!--规律开放周期-->
+			<Cell order="70" name="其他规律开放周期（天）">openCircleDays</Cell><!--其他规律开放周期（天）-->
+			<Cell order="71" name="无规律开放说明">ruleComment</Cell><!--无规律开放说明-->
+			<Cell order="72" name="首次开放周期起始日">firstOpenDay</Cell><!--"首次开放周期起始日"-->
+			<Cell order="73" name="节假日是否开放">holidayOnFlag</Cell><!--节假日是否开放-->
+			<Cell order="74" name="平均开放次数（年化）">avgOpenCount</Cell><!--平均开放次数（年化）-->
+			<Cell order="75" name="开放期业务">openBuss</Cell><!--开放期业务-->
+			<Cell order="76" name="开放期业务说明">openBussRemark</Cell><!--开放期业务说明-->
+			<Cell order="77" name="备注">remark</Cell><!--备注-->
+		</Row>
+	</Worksheet>
+</Workbook>

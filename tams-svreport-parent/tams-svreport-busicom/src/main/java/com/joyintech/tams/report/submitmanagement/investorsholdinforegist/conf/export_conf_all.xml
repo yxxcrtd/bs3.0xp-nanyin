@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="InvestorsHoldInfoRegistAll.xlsx" name="投资者持有信息登记">
+	<Worksheet javaBean="com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto">
+		<Row>
+			<Cell order="1"  name="数据状态"> status</Cell><!-- 数据状态 -->
+			<Cell order="2"  name="数据日期"> updateTime</Cell><!-- 数据日期 -->
+			<Cell order="3"  name="报送状态"> sendStatus</Cell><!-- 报送状态 -->
+			<Cell order="4"  name="报送日期"> submitTime</Cell><!-- 报送日期 -->
+			<Cell order="5"  name="报送截止日"> chbSubmitDeadline</Cell><!-- 报送截止日 -->
+			<Cell order="6"  name="反馈状态"> submitFeedbackStatus</Cell><!-- 反馈状态 -->
+			<Cell order="7" name="登记银行代码">registBankCode</Cell><!-- 登记银行代码 -->
+			<Cell order="8" name="产品登记编码">prdRegistCode</Cell><!-- 产品登记编码 -->
+			<Cell order="9" name="识别标识">indentifyMark</Cell><!-- 识别标识-->
+			<Cell order="10" name="持有日期">holdDateForExport</Cell><!-- 持有日期 -->
+			<Cell order="11" name="币种">ccy</Cell><!-- 币种 -->
+			<Cell order="13" name="份额">qty</Cell><!-- 份额 -->
+			<Cell order="12" name="金额">amount</Cell><!-- 金额 -->
+			<Cell order="14" name="折算人民币金额（元）">cnyAmt</Cell><!-- 折算人民币金额（元） -->
+		</Row>
+	</Worksheet>
+</Workbook>

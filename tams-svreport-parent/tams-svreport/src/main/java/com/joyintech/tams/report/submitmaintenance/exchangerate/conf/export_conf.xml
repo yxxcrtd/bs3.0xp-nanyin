@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="Exchangerate.xlsx" name="汇率行情维护">
+	<Worksheet javaBean="com.joyintech.tams.report.submitmaintenance.exchangerate.dto.Exchangerate001Dto">
+		<Row>
+			<Cell order="1" name="原币种">ccyOriginal</Cell><!-- 原币种 -->
+			<Cell order="2" name="折算币种">ccyConvert</Cell><!-- 折算币种  -->
+			<Cell order="3" name="公布日期">publishDate</Cell><!-- 公布日期 -->
+			<Cell order="4" name="汇率">exchangePrice</Cell><!-- 汇率-->
+		</Row>
+	</Worksheet>
+</Workbook>

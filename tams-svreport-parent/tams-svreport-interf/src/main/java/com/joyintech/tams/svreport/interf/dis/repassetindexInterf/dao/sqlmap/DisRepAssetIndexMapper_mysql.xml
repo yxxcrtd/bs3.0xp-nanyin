@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.dis.repassetindexInterf.dao.DisRepAssetIndexMapper_mysql">
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.interf.dis.repassetindexInterf.dto.RepAssetIndex" >
+        <result column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="VALUE_DATE" property="valueDate" jdbcType="DATE" />
+        <result column="BUSI_ID" property="busiId" jdbcType="VARCHAR" />
+        <result column="POS_AMT" property="posAmt" jdbcType="DECIMAL" />
+        <result column="TDY_INTINCEXP" property="tdyIntincexp" jdbcType="DECIMAL" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="TDY_POSITION" property="tdyPosition" jdbcType="DECIMAL" />
+        <result column="TDY_COST_AMT" property="tdyCostAmt" jdbcType="DECIMAL" />
+        <result column="TDY_FLOAT_INGPL" property="tdyFloatIngpl" jdbcType="DECIMAL" />
+        <result column="END_DAYS_1" property="endDays1" jdbcType="DECIMAL" />
+        <result column="END_DAYS_2" property="endDays2" jdbcType="DECIMAL" />
+        <result column="AL_FLAG" property="alFlag" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="INPUT_USER" property="inputUser" jdbcType="VARCHAR" />
+        <result column="ADAPTER_ID" property="adapterId" jdbcType="VARCHAR" />
+        <result column="RATE_TYPE" property="rateType" jdbcType="VARCHAR" />
+    </resultMap>
+    <insert id="insert" parameterType="java.util.List" >
+        insert into REP_ASSET_INDEX (SEQ_NO, BOOKSET_ID, PROD_ID, 
+            VALUE_DATE, BUSI_ID, POS_AMT, 
+            TDY_INTINCEXP, MDATE, 
+            TDY_POSITION, TDY_COST_AMT, TDY_FLOAT_INGPL, 
+            END_DAYS_1, END_DAYS_2, AL_FLAG, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, INPUT_TYPE, 
+            INPUT_USER, ADAPTER_ID, RATE_TYPE
+            )
+              <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+                 close=" from dual)">
+       #{item.seqNo,jdbcType=VARCHAR}, #{item.booksetId,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, 
+            #{item.valueDate,jdbcType=DATE}, #{item.busiId,jdbcType=VARCHAR}, #{item.posAmt,jdbcType=DECIMAL}, 
+            #{item.tdyIntincexp,jdbcType=DECIMAL},  #{item.mdate,jdbcType=DATE}, 
+            #{item.tdyPosition,jdbcType=DECIMAL}, #{item.tdyCostAmt,jdbcType=DECIMAL}, #{item.tdyFloatIngpl,jdbcType=DECIMAL}, 
+            #{item.endDays1,jdbcType=DECIMAL}, #{item.endDays2,jdbcType=DECIMAL}, #{item.alFlag,jdbcType=VARCHAR}, 
+            #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
+            #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.inputType,jdbcType=VARCHAR}, 
+            #{item.inputUser,jdbcType=VARCHAR}, #{item.adapterId,jdbcType=VARCHAR}, #{item.rateType,jdbcType=VARCHAR}
+            
+            </foreach>
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.interf.dis.repassetindexInterf.dto.RepAssetIndex" >
+        insert into REP_ASSET_INDEX
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="booksetId != null" >
+                BOOKSET_ID,
+            </if>
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="valueDate != null" >
+                VALUE_DATE,
+            </if>
+            <if test="busiId != null" >
+                BUSI_ID,
+            </if>
+            <if test="posAmt != null" >
+                POS_AMT,
+            </if>
+            <if test="tdyIntincexp != null" >
+                TDY_INTINCEXP,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="tdyPosition != null" >
+                TDY_POSITION,
+            </if>
+            <if test="tdyCostAmt != null" >
+                TDY_COST_AMT,
+            </if>
+            <if test="tdyFloatIngpl != null" >
+                TDY_FLOAT_INGPL,
+            </if>
+            <if test="endDays1 != null" >
+                END_DAYS_1,
+            </if>
+            <if test="endDays2 != null" >
+                END_DAYS_2,
+            </if>
+            <if test="alFlag != null" >
+                AL_FLAG,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="inputType != null" >
+                INPUT_TYPE,
+            </if>
+            <if test="inputUser != null" >
+                INPUT_USER,
+            </if>
+            <if test="adapterId != null" >
+                ADAPTER_ID,
+            </if>
+            <if test="rateType != null" >
+                RATE_TYPE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetId != null" >
+                #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="valueDate != null" >
+                #{valueDate,jdbcType=DATE},
+            </if>
+            <if test="busiId != null" >
+                #{busiId,jdbcType=VARCHAR},
+            </if>
+            <if test="posAmt != null" >
+                #{posAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyIntincexp != null" >
+                #{tdyIntincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="tdyPosition != null" >
+                #{tdyPosition,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyCostAmt != null" >
+                #{tdyCostAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyFloatIngpl != null" >
+                #{tdyFloatIngpl,jdbcType=DECIMAL},
+            </if>
+            <if test="endDays1 != null" >
+                #{endDays1,jdbcType=DECIMAL},
+            </if>
+            <if test="endDays2 != null" >
+                #{endDays2,jdbcType=DECIMAL},
+            </if>
+            <if test="alFlag != null" >
+                #{alFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="inputType != null" >
+                #{inputType,jdbcType=VARCHAR},
+            </if>
+            <if test="inputUser != null" >
+                #{inputUser,jdbcType=VARCHAR},
+            </if>
+            <if test="adapterId != null" >
+                #{adapterId,jdbcType=VARCHAR},
+            </if>
+            <if test="rateType != null" >
+                #{rateType,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.svreport.interf.dis.repassetindexInterf.dto.RepAssetIndex" >
+        insert into REP_ASSET_INDEX(SEQ_NO, BOOKSET_ID, PROD_ID, VALUE_DATE, BUSI_ID, POS_AMT, 
+        TDY_INTINCEXP, VDATE, MDATE, TDY_POSITION, TDY_COST_AMT, TDY_FLOAT_INGPL, END_DAYS_1, 
+        END_DAYS_2, AL_FLAG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+        INPUT_TYPE, INPUT_USER, ADAPTER_ID, RATE_TYPE)
+        select SEQ_NO, BOOKSET_ID, PROD_ID, VALUE_DATE, BUSI_ID, POS_AMT, 
+            TDY_INTINCEXP, VDATE, MDATE, TDY_POSITION, TDY_COST_AMT, TDY_FLOAT_INGPL, END_DAYS_1, 
+            END_DAYS_2, AL_FLAG, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
+            INPUT_TYPE, INPUT_USER, ADAPTER_ID, RATE_TYPE
+             from REP_ASSET_INDEX
+             where 1 = 1
+    </insert>
+    <delete id="delete">
+    delete from  REP_ASSET_INDEX  where DATE_FORMAT(VALUE_DATE,'%Y-%m-%d')= #{valueDate,jdbcType=VARCHAR}
+    </delete>
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.svreport.seq.dao.SysSeqMapper_db2" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.svreport.seq.dto.SysSeqModel" >
+    <id column="SEQDATE" property="seqdate" jdbcType="VARCHAR" />
+    <id column="SEQCODE" property="seqcode" jdbcType="VARCHAR" />
+    <result column="SEQVALUE" property="seqvalue" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="OTHER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    SEQDATE, SEQCODE, SEQVALUE, REMARK
+  </sql>
+
+  
+  <update id="mergeInfo" parameterType="com.joyintech.tams.common.svreport.seq.dto.SysSeqModel" >
+    update SYS_SEQ t1
+    using ( 
+    	select #{seqcode,jdbcType=VARCHAR} seqcode, #{seqdate,jdbcType=VARCHAR} from sysibm.SYSDUMMY1
+    ) t2
+    on (t1.SEQCODE=t2.SEQCODE and t1.SEQDATE=t2.seqdate)
+    when not matched then
+	    insert into SYS_SEQ (
+		    SEQCODE, 
+		    SEQDATE, 
+		    SEQVALUE,
+		    REMARK )
+	    values (
+	    	#{seqdate,jdbcType=VARCHAR}, 
+	    	#{seqcode,jdbcType=VARCHAR}, 
+	    	#{seqvalue,jdbcType=DECIMAL},
+	    	#{remark,jdbcType=VARCHAR})
+	when matched then
+		update SYS_SEQ
+	    	set SEQVALUE = SEQVALUE+1
+	    where 
+	    	SEQDATE = #{seqdate,jdbcType=VARCHAR}
+	    	and SEQCODE = #{seqcode,jdbcType=VARCHAR}
+  </update>
+  
+</mapper>

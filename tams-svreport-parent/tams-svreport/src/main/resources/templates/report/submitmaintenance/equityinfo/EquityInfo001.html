@@ -1,0 +1,73 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
+<head>
+<meta charset="utf-8">
+<title data-th-text="#{EquityInfo001}">投资者身份信息</title>
+<link rel="stylesheet" type="text/css" data-th-href="@{/css/report/report.css}">
+</head>
+
+<body>
+<div layout:fragment="content">
+  <div class="form-button-area">
+    <a id="EquityInfo001_btn_add" class="layui-btn layui-btn-sm btn-create btn-default" data-th-text="#{SysCommon.create}">新建</a>
+    <a id="EquityInfo001_btn_delete" class="layui-btn layui-btn-sm btn-delete btn-default" data-th-text="#{SysCommon.delete}">删除</a>
+    <a id="EquityInfo001_btn_import" class="layui-btn layui-btn-sm btn-import btn-default">导入</a>
+     <a id="EquityInfo001_btn_chbImport" class="layui-btn layui-btn-sm btn-import btn-default ">导入代销数据</a>
+  </div>
+  <div class="joyin-form-wrap joyin-filter-form condition-area">
+      <form class="layui-form" id="searchForm">
+        <div class="layui-form-item">
+          <div class="layui-inline layui-col-md4">
+            <label class="layui-form-label form-lable">证件号码</label>
+            <div class="layui-input-inline input-inline">
+              <input id="identifyNumber" name="identifyNumber" type="text" class="layui-input form-input input-lenovoselect" maxlength="18" placeholder="请输入关键词" data-th-placeholder="#{SysCommon.placeholder}">
+            </div>
+          </div>
+          <div class="layui-inline layui-col-md4">
+            <label class="layui-form-label form-lable">识别标识</label>
+            <div class="layui-input-inline input-inline">
+              <input id="indentifyMark" name="indentifyMark" type="text" class="layui-input form-input input-lenovoselect" maxlength="30" placeholder="请输入关键词" data-th-placeholder="#{SysCommon.placeholder}">
+            </div>
+          </div>
+          <div class="layui-inline layui-col-md4">
+            <label class="layui-form-label form-lable">投资者类别</label>
+            <div class="layui-input-inline input-inline">
+              <select id="holderType" name="holderType" class="input-select" allowClear="true" multiple="multiple" data-th-data-result='${HOLDER_TYPE}' data-th-formatoption="false" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}"></select>
+            </div>
+          </div>
+        </div>
+        <div class="layui-form-item">
+        <div class="layui-inline layui-col-md4">
+            <label class="layui-form-label form-lable">投资者名称</label>
+            <div class="layui-input-inline input-inline">
+              <input id="holderName" name="holderName" type="text" class="layui-input form-input input-lenovoselect" maxlength="200" placeholder="请输入关键词" data-th-placeholder="#{SysCommon.placeholder}">
+            </div>
+          </div>
+          <div class="layui-inline layui-col-md4">
+            <label class="layui-form-label form-lable">机构代码</label>
+            <div class="layui-input-inline input-inline">
+              <select id="orgCode" class="input-select" allowClear="true" multiple="multiple" data-th-data-url="@{/svreport/system/proregistcodemanage/ProRegistCodeManage001/getInstitutionCode}" placeholder="请选择"></select>
+            </div>
+          </div>
+          <div class="layui-inline layui-col-md4">
+            <label class="layui-form-label form-lable">数据状态</label>
+            <div class="layui-input-inline input-inline">
+              <select id="status" class="input-select" allowClear="true" multiple="multiple" data-th-data-result='${MAINTAIN_STATUS}' data-th-initvalue="${status}" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}"></select>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  <table class="layui-table" id="equityInfo"></table>
+</div>
+<div layout:fragment="script">
+  <script data-th-inline="javascript" type="text/javascript">
+      var isFromMain=/*[[${isFromMain}]]*/'';
+  </script>
+  <script data-th-src="@{/js/report/jquery.validate.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/joyinvalid.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/report-common.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/submitmaintenance/equityinfo/EquityInfo001.js}" type="text/javascript"></script>
+</div>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.batch.report.autosendcb.investorsholdinforegist.dao.InvestorsHoldInfoRegistAutoSendCBMapper_db2">
+
+    <insert id="insertUnregistCheckOkDataToTempTable">
+        insert into CHB_SEND_CB_TEMP (REGIST_SEQNO)
+		select 
+		targetTable.REGIST_SEQNO
+		from
+		(
+		    select 
+                ciis.REGIST_SEQNO              REGIST_SEQNO,
+              row_number() over()  ROWNUM
+	        from CHB_INVESTHOLD_INFO_SUB ciis
+	        where
+	            ciis.SEND_STATUS = '01'
+	            and ciis.STATUS != '03'
+	            <if test="holdDate != null and holdDate != ''">
+	            and ciis.HOLD_DATE = to_date(#{holdDate,jdbcType=VARCHAR}, 'yyyy-MM-dd')
+	            </if>
+	           <if test="repeatHoldInfoData != null and  repeatHoldInfoData.size > 0">
+					and ciis.regist_seqno not in 
+	           		<foreach collection="repeatHoldInfoData" item="regist_seqno" open="   (" separator="," close=")">
+						#{regist_seqno,jdbcType=VARCHAR}
+					</foreach>
+	           </if>
+	            AND EXISTS
+	            (
+	                SELECT
+	                    1
+	                FROM
+	                    CHB_EQU_SUB equTable
+	                WHERE
+	                    equTable.SUBMIT_STATUS IN ('02',
+	                                               '03')
+	                AND equTable.REGIST_BANK_CODE = ciis.REGIST_BANK_CODE
+	                AND equTable.INDENTIFY_MARK = ciis.INDENTIFY_MARK)
+	             and ROWNUM &lt;= #{dataCountPerTime,jdbcType=DECIMAL}
+		) targetTable
+    </insert>
+</mapper>

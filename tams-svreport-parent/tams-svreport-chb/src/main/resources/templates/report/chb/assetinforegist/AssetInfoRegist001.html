@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="~{layout/default}">
+
+<head>
+<style>
+
+#assetTypeInput{
+    width: 80% !important;
+    margin-right: 0!important;
+    /* padding: 0 10px 0 0; */
+}
+</style>
+<title data-th-text="#{AssetInfoRegist001}">资产要素登记</title>
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<div class="form-button-area" export="false">
+        	<a id="AssetInfoRegist001_btn_manual" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-hand"></i>手工处理</a>
+            <a id="AssetInfoRegist001_btn_cancelManual" class="layui-btn layui-btn-sm btn-default">取消手工处理</a>
+			<a id="AssetInfoRegist001_btn_chbexport" class="layui-btn layui-btn-sm btn-export btn-default">导出中债Excel</a>
+            <a id="AssetInfoRegist001_btn_exportDel" class="layui-btn layui-btn-sm btn-export btn-default">导出删除Excel</a>
+		</div>
+		<div class="joyin-form-wrap joyin-filter-form condition-area" line="2">
+			<form class="layui-form" id="searchForm">
+				<div class="layui-form-item">
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable">资产负债类别</label>
+                        <div class="layui-input-inline input-inline">
+                            <select id="assetTypeTwo" name="assetTypeTwo"
+                                class="input-select"
+                                data-th-data-result='${SVR_ASSET_TYPE_SECOND_LEVEL}'
+                                placeholder="请选择" data-th-value="${entity?.assetTypeTwo}"
+                                data-th-placeholder="#{SysCommon.selectplaceholder}" tabIndex="1"
+                                allowClear="true" multiple="true" parentId="assetType">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline layui-col-md8">
+                        <label class="layui-form-label form-lable" style="width:18%">TAB页类型</label>
+                        <div class="layui-input-inline input-inline" id="assetTypeInput">
+                            <select id="assetType" name="assetType" lay-filter="assetType" class="input-select"
+                                data-th-data-result='${SVR_ASSETDEBT_TYPE}' placeholder="请选择"
+                                data-th-placeholder="#{SysCommon.selectplaceholder}"
+                                allowClear="true" childrenIds="assetTypeTwo">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+				<div class="layui-form-item">
+					<div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable">行内资产编码</label>
+                        <div class="layui-input-inline input-inline">
+                            <input id="assetCode" name="assetCode" type="text"
+                                class="layui-input form-input input-lenovoselect" maxlength="30"
+                                data-rules="code;maxlength:30" placeholder="请输入关键词"
+                                data-th-placeholder="#{SysCommon.placeholder}">
+                        </div>
+                    </div>
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable">报送日期</label>
+                        <div class="layui-input-inline input-inline">
+                            <input id="submitDate" type="text" name="timeControl"
+                                class="layui-input form-input timeControl input-dateRangeSelect"
+                                placeholder="请选择日期区间"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable">报送状态</label>
+                        <div class="layui-input-inline input-inline">
+                            <select id="submitStatus" name="submitStatus"
+                                class="layui-input form-input input-select"
+                                data-th-data-result='${SUBMIT_STATUS}'
+                                data-th-initvalue="${submitStatus}" placeholder="请选择"
+                                data-th-placeholder="#{SysCommon.selectplaceholder}"
+                                allowClear="true" multiple="true">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                	<div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable">报送截止日</label>
+                        <div class="layui-input-inline input-inline">
+                            <input id="submitDeadLine" type="text"  name="timeControl"  class="layui-input form-input timeControl input-dateRangeSelect" 
+                            placeholder="请选择日期区间" />
+                        </div>
+                    </div>
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable">数据日期</label>
+                        <div class="layui-input-inline input-inline">
+                            <input id="statusDate" type="text" name="timeControl"
+                                class="layui-input form-input timeControl input-dateRangeSelect"
+                                placeholder="请选择日期区间" />
+                        </div>
+                    </div>
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable">反馈状态</label>
+                        <div class="layui-input-inline input-inline">
+                            <select id="submitFeedbackStatus" class="input-select"
+                                data-th-data-result='${SUBMIT_FEEDBACK_STATUS}' data-th-initvalue="${submitFeedbackStatus}"
+                                placeholder="请选择"
+                                data-th-placeholder="#{SysCommon.selectplaceholder}"
+                                allowClear="true" multiple="true">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                	<div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable">数据状态</label>
+                        <div class="layui-input-inline input-inline">
+                            <select id="status" class="layui-input form-input input-select"
+                                data-th-data-result='${SUBMITTED_STATUS}' placeholder="请选择"
+                                data-th-initvalue="${status}"
+                                data-th-placeholder="#{SysCommon.selectplaceholder}"
+                                allowClear="true" multiple="true">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable">起息日</label>
+                        <div class="layui-input-inline input-inline">
+                            <input id="vDate" type="text" name="timeControl"
+                                class="layui-input form-input timeControl input-dateRangeSelect"
+                                placeholder="请选择日期区间"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable">交易流通场所</label>
+                        <div class="layui-input-inline input-inline">
+                            <select id="tradeMarket" name="tradeMarket" class="input-select"
+                                data-th-data-result='${SVR_TRADE_MARKET}' placeholder="请选择"
+                                data-th-placeholder="#{SysCommon.selectplaceholder}"
+                                allowClear="true" multiple="true">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                	<div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable">到期日</label>
+                        <div class="layui-input-inline input-inline">
+                            <input id="mDate" type="text" name="timeControl"
+                                class="layui-input form-input timeControl input-dateRangeSelect"
+                                placeholder="请选择日期区间"/>
+                        </div>
+                    </div>
+                     <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable">币种</label>
+                        <div class="layui-input-inline input-inline">
+                            <select id="ccy" name="ccy" class="input-select"
+                                data-th-data-result='${CURRENCY_CHB}' 
+                                data-th-initvalue="${cny}" placeholder="请选择"
+                                data-th-placeholder="#{SysCommon.selectplaceholder}"
+                                allowClear="true" >
+                            </select>
+                        </div>
+                    </div>
+				</div>
+			</form>
+		</div>
+		<div>
+		<div class="layui-fluid">
+		<div class="layui-tab layui-tab-brief " id="tabList" lay-filter="tabList" style="margin-bottom: 0px;" overflow>
+			<ul class="layui-tab-title">
+                <li class="layui-this" lay-id="00">所有资产</li>
+				<li lay-id="01">本行/他行存款||大额存单</li>
+				<li lay-id="02">拆放同业/买入返售(资产)||同业拆入/卖出回购(负债)</li>
+				<li lay-id="03">债券类资产/理财直接融资工具/同业存单</li>
+				<li lay-id="04">非标准化债权类资产/信贷资产流转项目</li>
+				<li lay-id="05">票据类资产/信用证类资产</li>
+				<li lay-id="06">权益类资产</li>
+				<li lay-id="07">金融衍生品</li>
+				<li lay-id="08">QDII债券资产</li>
+				<li lay-id="09">QDII拆出/逆回购资产</li>
+				<li lay-id="10">QDII股票/基金类资产</li>
+				<li lay-id="11">QDII结构性票据类资产</li>
+				<li lay-id="12">资产管理产品</li>
+				<li lay-id="13">商品类资产</li>
+				<li lay-id="14">各类资产的其他项</li>
+				<li lay-id="L01">公募基金/私募基金</li>
+				<li lay-id="16">委外投资——协议方式</li>
+				<li lay-id="17">其他（负债）类资产</li>
+				<li lay-id="18">另类资产</li>
+			</ul>
+			<div class="layui-tab-content" >
+            <div class="layui-tab-item layui-show">
+                <table class="layui-table" id="dataTable00"></table>
+            </div>
+		    <div class="layui-tab-item">
+				<table class="layui-table" id="dataTable01"></table>
+			</div>
+		    <div class="layui-tab-item">
+				<table class="layui-table" id="dataTable02"></table>
+			</div>
+            <div class="layui-tab-item">
+                <table class="layui-table" id="dataTable03"></table>
+            </div>
+		    <div class="layui-tab-item">
+				<table class="layui-table" id="dataTable04"></table>
+			</div>
+		    <div class="layui-tab-item">
+				<table class="layui-table" id="dataTable05"></table>
+			</div>
+		    <div class="layui-tab-item">
+				<table class="layui-table" id="dataTable06"></table>
+			</div>
+		    <div class="layui-tab-item">
+				<table class="layui-table" id="dataTable07"></table>
+			</div>
+		    <div class="layui-tab-item">
+				<table class="layui-table" id="dataTable08"></table>
+			</div>
+		    <div class="layui-tab-item">
+				<table class="layui-table" id="dataTable09"></table>
+			</div>
+		    <div class="layui-tab-item">
+				<table class="layui-table" id="dataTable10"></table>
+			</div>
+		    <div class="layui-tab-item">
+				<table class="layui-table" id="dataTable11"></table>
+			</div>
+		    <div class="layui-tab-item">
+				<table class="layui-table" id="dataTable12"></table>
+			</div>
+		    <div class="layui-tab-item">
+				<table class="layui-table" id="dataTable13"></table>
+			</div>
+		    <div class="layui-tab-item">
+				<table class="layui-table" id="dataTable14"></table>
+			</div>
+		    <div class="layui-tab-item">
+				<table class="layui-table" id="dataTable15"></table>
+			</div>
+		    <div class="layui-tab-item">
+				<table class="layui-table" id="dataTable16"></table>
+			</div>
+		    <div class="layui-tab-item">
+				<table class="layui-table" id="dataTable17"></table>
+			</div>
+		    <div class="layui-tab-item">
+				<table class="layui-table" id="dataTable18"></table>
+			</div>
+		  </div>
+		</div>
+		</div>
+		</div>
+	</div>
+	<div layout:fragment="script">
+		<script data-th-inline="javascript" type="text/javascript">
+			var isMain = /*[[${isMain}]]*/'';
+			var searchDataStart=/*[[${searchDataStart}]]*/'';
+			var searchDataEnd=/*[[${searchDataEnd}]]*/'';
+			var statusT=/*[[${statusT}]]*/'';
+			var sendStatusT=/*[[${sendStatusT}]]*/'';
+			var cny=/*[[${cny}]]*/'';
+			var validKey=/*[[${cny}]]*/'';
+			var submitFeedbackStatus=/*[[${submitFeedbackStatus}]]*/'';
+		</script>
+		<script
+			data-th-src="@{/js/report/chb/assetinforegist/AssetInfoRegist001.js}"
+			type="text/javascript"></script>
+		<script data-th-src="@{/js/report/report-common.js}"
+			type="text/javascript"></script>
+	</div>
+</body>
+
+</html>

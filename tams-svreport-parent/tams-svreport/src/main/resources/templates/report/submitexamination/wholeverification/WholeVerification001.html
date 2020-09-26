@@ -1,0 +1,126 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
+<head>
+<meta charset="utf-8">
+<title data-th-text="#{WholeVerification001}">总体核查情况</title>
+<link rel="stylesheet" type="text/css" data-th-href="@{/css/report/report.css}">
+<link rel="stylesheet" type="text/css" data-th-href="@{/resources/css/modules/laydate/default/laydate.css'}"/>
+<link rel="stylesheet" type="text/css" data-th-href="@{/resources/js/layui/css/layui.css'}"/>
+</head>
+<body>
+
+</body>
+<div class="container" layout:fragment="content">
+  <div class="row">
+    <div class="column">
+      <form class="debt-form-wrap" role="form" id="WholeVerification001_searchForm" access="enter">
+        <div class="clearfix form-row">
+          <label class="col-sm-1 form-col text-right form-col-wrap">机构代码</label>
+          <div class="input-group input-group-sm col-sm-2 form-input form-input-container">
+            <input id="WholeVerification001_orgCode" name="orgCode" type="text" class="form-control" placeholder="请输入关键词" value="C12588">
+          </div>
+          <label class="col-sm-2 form-col text-right form-col-wrap">查询日期</label>
+          <%--<div class="input-group input-group-sm col-sm-2 form-input input-append date form_date">
+              <input id="WholeVerification001_date" type="text" class="form-control" placeholder="请选择日期">
+              <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+        	</div>--%>
+          <div class="layui-inline input-group input-group-sm col-sm-2 form-input input-append form-input-container">
+            <input type="text" class="layui-input form-control" id="test4" value="2017-11">
+          </div>
+          <div class="col-sm-1">
+            <button id="WholeVerification001_btn_search" type="button" class="btn btn-common btn-blue"> <i class="glyphicon glyphicon-search"></i>查询 </button>
+          </div>
+        </div>
+      </form>
+      <p class="menu-title-wrap"><span class="menu-title">报送合格率</span></p>
+      <form id="form" class="clearfix" role="form">
+        <div class="whole-form-wrap joy-pie">
+          <div class="joy-pie-div" style="width: 100%;height: 100%"></div>
+          <div class="whole-title"><a href="#tab1">存续余额同月度统计表对比</a></div>
+        </div>
+        <div class="whole-form-wrap joy-pie">
+          <div class="joy-pie-div" style="width: 100%;height: 100%"></div>
+          <div class="whole-title"><a href="#tab2">资产未注册</a></div>
+        </div>
+        <div class="whole-form-wrap joy-pie">
+          <div class="joy-pie-div" style="width: 100%;height: 100%"></div>
+          <div class="whole-title"><a href="#tab3">募集期报送完成情况</a></div>
+        </div>
+        <div class="whole-form-wrap joy-pie">
+          <div class="joy-pie-div" style="width: 100%;height: 100%"></div>
+          <div class="whole-title"><a href="#tab4">月末底层持仓报送完成情况</a></div>
+        </div>
+        <div class="whole-form-wrap joy-pie">
+          <div class="joy-pie-div" style="width: 100%;height: 100%"></div>
+          <div class="whole-title"><a href="#tab5">持仓为负的情况</a></div>
+        </div>
+        <div class="whole-form-wrap joy-pie">
+          <div class="joy-pie-div" style="width: 100%;height: 100%"></div>
+          <div class="whole-title"><a href="#tab6">交易价格偏差</a></div>
+        </div>
+        <div class="whole-form-wrap joy-pie">
+          <div class="joy-pie-div" style="width: 100%;height: 100%"></div>
+          <div class="whole-title"><a href="#tab7">资管计划底层接偏差过大</a></div>
+        </div>
+      </form>
+      <!-- <p class="menu-title-wrap"><span class="menu-title">明细数据</span></p>
+      <div class="clearfix whole-tab-wrap">
+        <ul class="nav nav-tabs tab-wrap" id="joyTab">
+          <li class="active"><a href="#tab1">存续余额同月度统计表对比</a></li>
+          <li><a href="#tab2">资产未注册</a></li>
+          <li><a href="#tab3">募集总量登记明细</a></li>
+          <li><a href="#tab4">月末底层持仓报送情况</a></li>
+          <li><a href="#tab5">持仓为负的产品</a></li>
+          <li><a href="#tab6">交易价格偏差过大的资产</a></li>
+          <li><a href="#tab7">资管计划底层接偏差过大</a></li>
+        </ul>
+      </div> -->
+      <div class="tab-content">
+        <div class="tab-pane active" id="tab1" style="width: 100%;">
+          <table class="table table-striped tab-table" id="table1" style="width: 100%">
+          </table>
+        </div>
+        <div class="tab-pane" id="tab2" style="width: 100%">
+          <table class="table table-striped tab-table" id="table2" style="width: 100%">
+          </table>
+        </div>
+        <div class="tab-pane" id="tab3" style="width: 100%">
+          <table class="table table-striped tab-table" id="table3" style="width: 100%">
+          </table>
+        </div>
+        <div class="tab-pane" id="tab4" style="width: 100%">
+          <table class="table table-striped tab-table" id="table4" style="width: 100%">
+          </table>
+        </div>
+        <div class="tab-pane" id="tab5" style="width: 100%">
+          <table class="table table-striped tab-table" id="table5" style="width: 100%">
+          </table>
+        </div>
+        <div class="tab-pane" id="tab6" style="width: 100%">
+          <table class="table table-striped tab-table" id="table6" style="width: 100%">
+          </table>
+        </div>
+        <div class="tab-pane" id="tab7" style="width: 100%">
+          <table class="table table-striped tab-table" id="table7" style="width: 100%">
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div layout:fragment="script">
+  <script data-th-inline="javascript" type="text/javascript">
+    var isFromMain="${isFromMain}";
+    var laydate = layui.laydate;
+    //年月选择器
+    laydate.render({
+        elem: '#test4',
+        type: 'month'
+    })
+  </script>
+  <script data-th-src="@{/js/report/jquery.validate.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/joyinvalid.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/report-common.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/echarts.min.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/submitexamination/wholeverification/WholeVerification001.js}" type="text/javascript"></script>
+</div>

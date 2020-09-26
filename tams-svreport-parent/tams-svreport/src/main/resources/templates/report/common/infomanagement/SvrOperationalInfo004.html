@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="~{layout/default}">
+
+<head>
+<meta charset="utf-8">
+<title data-th-text="#{SvrOperationalInfo004}">业务数据维护待维护表配置</title>
+<link rel="stylesheet" type="text/css"
+	data-th-href="@{/css/report/report.css}">
+</head>
+<body>
+	<div layout:fragment="content">
+		<form class="layui-form" role="form"
+			id="SvrOperationalInfo004_searchForm" access="enter">
+			<div class="layui-form-item">
+				<div class="layui-inline layui-col-md3">
+					<label class="layui-form-label form-lable">待维护表名称</label>
+					<div class="layui-input-inline input-inline">
+						<input type="text" id="SvrOperationalInfo004_mgrTableName"
+							name="mgrTableName" class="layui-input form-input"
+							data-th-value="${mgrTableName}">
+					</div>
+				</div>
+				<div class="layui-inline layui-col-md3">
+					<label class="layui-form-label form-lable">待维护表中文名称</label>
+					<div class="layui-input-inline input-inline">
+						<input type="text" id="SvrOperationalInfo004_mgrTableChiName"
+							name="mgrTableChiName" class="layui-input form-input"
+							data-th-value="${mgrTableChiName}" required>
+					</div>
+				</div>
+				<div class="layui-inline layui-col-md3">
+					<label class="layui-form-label form-lable">待维护表对应接口</label>
+					<div class="layui-input-inline input-inline">
+						<input type="text" id="SvrOperationalInfo004_dataObject"
+							name="dataObject" class="layui-input form-input"
+							data-th-value="${dataObject}" required>
+					</div>
+				</div>
+			</div>
+		</form>
+		<div style="margin: 0px; border: 0; padding: 0; visibility: hidden;">
+			<input type="text" id="SvrOperationalInfo004_mgrTableId"
+				data-th-value="${mgrTableId}" />
+		</div>
+		<div class="layui-inline layui-col-md6">
+			<button type="button" class="layui-btn"
+				style="display: block; margin: 0 auto">数据维护查询条件配置</button>
+			<div class="layui-table" id="queryCondition"
+				lay-filter="queryCondition"></div>
+		</div>
+		<div class="layui-inline layui-col-md6">
+			<button type="button" class="layui-btn"
+				style="display: block; margin: 0 auto">数据维护查询结果配置</button>
+			<div class="layui-table" id="dataResult" lay-filter="dataResult"></div>
+		</div>
+		<div class="layui-col-md11" style="margin: 5px;">
+			<div class="text-center">
+				<a id="SvrOperationalInfo004_BTN_submit"
+					class="layui-btn layui-btn-sm btn-submit">提交</a> <a
+					id="SvrOperationalInfo004_BTN_cancel"
+					class="layui-btn layui-btn-sm btn-cancel">取消</a>
+			</div>
+		</div>
+	</div>
+</body>
+<div layout:fragment="script">
+	<script data-th-src="@{/js/report/jquery.validate.js}"
+		type="text/javascript"></script>
+	<script data-th-src="@{/js/report/joyinvalid.js}"
+		type="text/javascript"></script>
+	<script data-th-src="@{/js/report/report-common.js}"
+		type="text/javascript"></script>
+	<script
+		data-th-src="@{/js/report/common/infomanagement/SvrOperationalInfo004.js}"
+		type="text/javascript"></script>
+	<script data-th-inline="javascript" type="text/javascript">
+		var BASE_COLUMN_TYPE_LIST = /*[[${BASE_COLUMN_TYPE_LIST}]]*/'';
+		var PK_FLAG = /*[[${PK_FLAG}]]*/'';
+		var dataTitle = '<h4 class="modal-title" id="myModalLabel">统一维护配置检查</h4>';
+		var checkUrl = '/common/infomanagement/SvrOperationalInfo004/check';
+	</script>
+</div>
+</html>

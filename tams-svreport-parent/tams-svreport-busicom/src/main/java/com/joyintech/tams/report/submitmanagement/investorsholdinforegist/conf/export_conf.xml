@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="InvestorsHoldInfoRegist001.xlsx" name="投资者持有信息登记">
+	<Worksheet javaBean="com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto">
+		<Row>
+			<Cell order="1" name="登记银行代码">registBankCode</Cell><!-- 登记银行代码 -->
+			<Cell order="2" name="产品登记编码">prdRegistCode</Cell><!-- 产品登记编码 -->
+			<Cell order="3" name="识别标识">indentifyMark</Cell><!-- 识别标识-->
+			<Cell order="4" name="持有日期">holdDateForExportCBExcel</Cell><!-- 持有日期 -->
+			<Cell order="5" name="币种">ccy</Cell><!-- 币种 -->
+			<Cell order="6" name="持有份额">qtyExportExcel</Cell><!-- 持有份额 -->
+			<Cell order="7" name="持有金额">amountExportExcel</Cell><!-- 持有金额 -->
+			<Cell order="8" name="折算人民币金额（元）">cnyAmtExportExcel</Cell><!-- 折算人民币金额（元） -->
+		</Row>
+	</Worksheet>
+</Workbook>

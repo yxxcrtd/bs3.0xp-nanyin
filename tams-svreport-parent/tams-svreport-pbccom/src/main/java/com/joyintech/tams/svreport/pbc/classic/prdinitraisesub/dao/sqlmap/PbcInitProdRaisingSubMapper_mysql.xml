@@ -1,0 +1,1085 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dao.PbcInitProdRaisingSubMapper_mysql">
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSub" >
+    <id column="REGIST_SEQNO" property="registSeqno" jdbcType="CHAR" />
+    <result column="PBC_PROD_ID" property="pbcProdId" jdbcType="VARCHAR" />
+    <result column="BUY_PLACE" property="buyPlace" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_TYPE1" property="customerType1" jdbcType="VARCHAR" />
+    <result column="CCY" property="ccy" jdbcType="CHAR" />
+    <result column="INIT_RAISING_AMTSUM" property="initRaisingAmtsum" jdbcType="DECIMAL" />
+    <result column="INIT_RAISING_AMTSUMCNY" property="initRaisingAmtsumcny" jdbcType="DECIMAL" />
+    <result column="INIT_RAISING_QTY" property="initRaisingQty" jdbcType="DECIMAL" />
+    <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+    <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+    <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
+    <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+    <result column="STATUS_DATE" property="statusDate" jdbcType="TIMESTAMP" />
+    <result column="PBC_SUBMIT_DEADLINE" property="pbcSubmitDeadline" jdbcType="TIMESTAMP" />
+    <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+    <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+    <result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
+    <result column="IVSTORIENTATION" property="ivstorientation" jdbcType="VARCHAR" />
+    <result column="VDATE" property="vdate" jdbcType="TIMESTAMP" />
+    <result column="PBC_CODE" property="pbcCode" jdbcType="VARCHAR" />
+    <result column="pbcProdIdShow" property="pbcProdIdShow" jdbcType="VARCHAR" />
+    </resultMap>
+     
+    <resultMap id="SearchResultMap" type="com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSubVo" >
+    <result column="CODE" property="code" jdbcType="CHAR" />
+    <result column="BUYPLACE" property="buyplace" jdbcType="VARCHAR" />
+    <result column="ITEM_VALUE" property="itemValue" jdbcType="VARCHAR" />
+    <result column="ITEM_CODE" property="itemCode" jdbcType="VARCHAR" />
+    <result column="RMBJE" property="rmbje" jdbcType="DECIMAL" />
+    <result column="RMBFE" property="rmbfe" jdbcType="DECIMAL" />
+    <result column="JE" property="je" jdbcType="DECIMAL" />
+    <result column="FE" property="fe" jdbcType="DECIMAL" />
+    <result column="ZRMB" property="zrmb" jdbcType="DECIMAL" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    REGIST_SEQNO, PBC_PROD_ID, BUY_PLACE, CUSTOMER_TYPE1, CCY, INIT_RAISING_AMTSUM, INIT_RAISING_AMTSUMCNY, 
+    INIT_RAISING_QTY, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, 
+    PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, 
+    CREATE_TIME, UPDATE_USER, UPDATE_TIME
+  </sql>
+  <sql id="Base_Column_List2" >
+    HIS_NO, PBC_PROD_ID, BUY_PLACE, CUSTOMER_TYPE1, CCY, INIT_RAISING_AMTSUM, INIT_RAISING_AMTSUMCNY, 
+    INIT_RAISING_QTY, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, 
+    PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, 
+    CREATE_TIME, UPDATE_USER, UPDATE_TIME
+  </sql>
+
+  <sql id="PBC_PRD_BASEINFO_SUB">
+   select a.* from (
+        SELECT
+        @rownum:=@rownum+1 rownum,
+        PBC_PROD_ID,
+        PROD_ID,
+        OPERATE_MODE,
+        IVSTORIENTATION,
+        VDATE,
+        STATUS,
+        RAISE_ENDDATE,
+        ORG_CODE,
+        IF( @PBC_PROD_ID = a.PBC_PROD_ID, @rank := @rank + 1, @rank := 1 ) AS myrank,
+        @PBC_PROD_ID := a.PBC_PROD_ID
+      FROM
+        ( SELECT * FROM pbc_prd_baseinfo_sub  ORDER BY PBC_PROD_ID, ifnull( UPDATE_TIME, CREATE_TIME ) DESC ) a,
+        ( SELECT @rownum := 0, @PBC_PROD_ID := NULL, @rank := 0 )b
+	) a
+	WHERE 1=1 limit 1
+  </sql>
+
+  <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSub" >
+    insert into PBC_INIT_PROD_RAISING_SUB (REGIST_SEQNO, PBC_PROD_ID, BUY_PLACE, 
+      CUSTOMER_TYPE1, CCY, INIT_RAISING_AMTSUM, 
+      INIT_RAISING_AMTSUMCNY, INIT_RAISING_QTY, SEND_STATUS, 
+      SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, 
+      STATUS_DATE, PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+      STATUS, CREATE_USER, ORG_CODE, 
+      CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+      UPDATE_TIME)
+    values (#{registSeqno,jdbcType=CHAR}, #{pbcProdId,jdbcType=VARCHAR}, #{buyPlace,jdbcType=VARCHAR}, 
+      #{customerType1,jdbcType=VARCHAR}, #{ccy,jdbcType=CHAR}, #{initRaisingAmtsum,jdbcType=DECIMAL}, 
+      #{initRaisingAmtsumcny,jdbcType=DECIMAL}, #{initRaisingQty,jdbcType=DECIMAL}, #{sendStatus,jdbcType=VARCHAR}, 
+      #{submitTime,jdbcType=TIMESTAMP}, #{submitFeedbackStatus,jdbcType=VARCHAR}, #{sumitSeq,jdbcType=VARCHAR}, 
+      NOW(), #{pbcSubmitDeadline,jdbcType=TIMESTAMP}, #{submitDeadline,jdbcType=TIMESTAMP},
+      #{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
+      #{createDept,jdbcType=VARCHAR}, NOW(), #{updateUser,jdbcType=VARCHAR},
+      NOW())
+  </insert>
+  
+  <select id="selectPrdRegistInfo" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	select a.PBC_PROD_ID,a.RAISE_ENDDATE,a.prod_id,
+	a.status status,a.vdate
+	from
+	(select 
+	info.prod_id,
+	info.PBC_PROD_ID,
+    info.RAISE_ENDDATE RAISE_ENDDATE,
+    deal.status,
+    info.vdate
+	from CHB_PRD_DEAL deal
+	left join chb_prd_baseinfo info1
+	on info1.prod_id = deal.prod_id
+	and info1.status != 'D'
+	inner join (<include refid="PBC_PRD_BASEINFO_SUB" />) info
+	on info.prod_id = ifnull(info1.fprod_id,info1.prod_id)
+	and info.status in ('01','02')
+	WHERE (DATE_FORMAT(info.vdate,'%Y-%m-%d') = #{vdate,jdbcType=VARCHAR}
+	or ifnull(DATE_FORMAT(deal.UPDATE_TIME,'%Y-%m-%d'),DATE_FORMAT(deal.CREATE_TIME,'%Y-%m-%d')) = #{vdate,jdbcType=VARCHAR})
+	and deal.TRADE_TYPE='01'
+	and deal.status in ('E','D','M')) a
+	where 1=1
+	<if test="prodIdList!=null and prodIdList.size()>0">
+		and a.prod_id in
+		<foreach collection="prodIdList" item="dto" open="("
+			separator="," close=")">
+			#{dto,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+  </select>
+  
+  <select id="selectPrdposition"
+	resultType="com.joyintech.tams.svreport.position.dto.ChbPrdPosition"
+	parameterType="com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSub">
+	SELECT pos.CDATE,
+	  pos.PROD_ID,
+	  pos.CCY,
+	  sum(ifnull(pos.BALANCE_QTY,0)) BALANCE_QTY,
+	  sum(ifnull(pos.BALANCE_AMT,0)) BALANCE_AMT,
+	  pos.BUY_PLACE,
+	  pos.CUSTOMER_TYPE2
+	FROM CHB_PRD_POSITION pos
+	left join chb_prd_baseinfo info
+	on info.prod_id = pos.prod_id
+	and info.status != 'D'
+	and info.fprod_id is null
+	left join chb_prd_baseinfo finfo
+	on finfo.prod_id = pos.prod_id
+	and finfo.status != 'D'
+	and info.fprod_id is not null
+	where 1=1
+	<foreach collection="sublist" item="sub" open="and (ifnull(finfo.fprod_id,info.prod_id),DATE_FORMAT(pos.cdate,'%Y-%m-%d')) in (" separator="union all" close=")">
+	select #{sub.prodId,jdbcType=VARCHAR},DATE_FORMAT(#{sub.vdate,jdbcType=DATE},'%Y-%m-%d') from dual
+	</foreach>
+	group by pos.CDATE,pos.PROD_ID,pos.CCY,pos.BUY_PLACE,pos.CUSTOMER_TYPE2
+</select>
+
+<select id="selectPsbcPrdposition"
+	resultType="com.joyintech.tams.svreport.position.dto.ChbPrdPosition"
+	parameterType="com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSub">
+	SELECT STR_TO_DATE(pos.DEALDATE ,'yyyyMMdd') CDATE,
+	  pos.FINPROD_ID PROD_ID,
+	  pos.CCY,
+	  sum(ifnull(pos.PRINQTY,0)) BALANCE_QTY,
+	  sum(ifnull(pos.DEALAMT,0)) BALANCE_AMT,
+	  pos.BUY_PLACE,
+	  pos.CUSTOMER_TYPE2
+	FROM P_INTERF_PRO_CUSTOM_DEAL pos	
+	where 1=1
+  and pos.DEALTYPE='1'
+  and (pos.BUY_PLACE not in('210200','330200','350200','370200','440300') or pos.BUY_PLACE is null)
+	<foreach collection="sublist" item="sub" open="and (pos.FINPROD_ID,pos.DEALDATE) in (" separator="union all" close=")">
+	select #{sub.prodId,jdbcType=VARCHAR},DATE_FORMAT(#{sub.vdate,jdbcType=DATE},'yyyyMMdd') from dual
+	</foreach>
+  group by pos.DEALDATE, pos.FINPROD_ID, pos.CCY, pos.BUY_PLACE, pos.CUSTOMER_TYPE2
+</select>
+
+  <select id="selectPIB2All" parameterType="map" resultMap="BaseResultMap" flushCache="true" useCache="false">
+    select
+    ifnull(t2.pbc_code,a.pbc_prod_id) PBC_PROD_ID, a.CUSTOMER_TYPE1, a.INIT_RAISING_AMTSUM, a.INIT_RAISING_AMTSUMCNY,
+    a.INIT_RAISING_QTY, a.BUY_PLACE, a.CCY
+    from PBC_INIT_PROD_RAISING_SUB a
+    left join (<include refid="PBC_PRD_BASEINFO_SUB" />) b on a.PBC_PROD_ID = b.PBC_PROD_ID
+    <!-- and a.ORG_CODE = b.ORG_CODE -->
+    LEFT JOIN(
+    SELECT
+    inside_prod_id,
+    pbc_code
+    FROM
+    pbc_prod_assetpool_code
+    WHERE
+    status='E'
+    AND code_type='01'
+    )t2 ON t2.inside_prod_id=b.PROD_ID
+    <where>
+      <if test="pbcProdIdList != null and pbcProdIdList.size > 0">
+        <foreach collection="pbcProdIdList" item="items" open="and a.PBC_PROD_ID in (" separator="," close =")">
+          #{items,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 begin -->
+      <if test="prodIdList != null and prodIdList.size > 0">
+        AND b.PROD_ID IN
+        <foreach collection="prodIdList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 end -->
+      <if test="statusList != null and statusList.size > 0">
+        and a.STATUS in
+        <foreach collection="statusList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="keyList != null and keyList.size > 0">
+        and trim(a.REGIST_SEQNO) in
+        <foreach collection="keyList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="sendStatusList != null and sendStatusList.size > 0">
+        and a.SEND_STATUS in
+        <foreach collection="sendStatusList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size > 0">
+        and a.SUBMIT_FEEDBACK_STATUS in
+        <foreach collection="submitFeedbackStatusList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="operateModeList != null and operateModeList.size > 0">
+        and b.OPERATE_MODE in
+        <foreach collection="operateModeList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="ivstorientationList != null and ivstorientationList.size > 0">
+        and b.IVSTORIENTATION in
+        <foreach collection="ivstorientationList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="statusDateStart != null and statusDateStart != ''">
+        and DATE_FORMAT(a.STATUS_DATE,'%Y-%m-%d') &gt;= #{statusDateStart}
+      </if>
+      <if test="statusDateEnd != null and statusDateEnd != ''">
+        and DATE_FORMAT(a.STATUS_DATE,'%Y-%m-%d') &lt;= #{statusDateEnd}
+      </if>
+      <if test="submitTimeStart != null and submitTimeStart != ''">
+        and DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d') &gt;= #{submitTimeStart}
+      </if>
+      <if test="submitTimeEnd != null and submitTimeEnd != ''">
+        and DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d') &lt;= #{submitTimeEnd}
+      </if>
+      <if test="pbcSubmitDeadlineDateStart != null and pbcSubmitDeadlineDateStart != ''">
+        and DATE_FORMAT(a.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{pbcSubmitDeadlineDateStart}
+      </if>
+      <if test="pbcSubmitDeadlineDateEnd != null and pbcSubmitDeadlineDateEnd != ''">
+        and DATE_FORMAT(a.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{pbcSubmitDeadlineDateEnd}
+      </if>
+      <if test="vdateStart != null and vdateStart != ''">
+        and DATE_FORMAT(b.VDATE,'%Y-%m-%d') &gt;= #{vdateStart}
+      </if>
+      <if test="vdateEnd != null and vdateEnd != ''">
+        and DATE_FORMAT(b.VDATE,'%Y-%m-%d') &lt;= #{vdateEnd}
+      </if>
+      <if test="updateTime != null and updateTime != ''">
+        and DATE_FORMAT(a.UPDATE_TIME,'%Y-%m-%d') = #{updateTime}
+      </if>
+      <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 begin -->
+      <if test="startDate != null and startDate != ''">
+        and DATE_FORMAT(b.VDATE,'%Y-%m-%d') &gt;= #{startDate}
+      </if>
+      <if test="endDate != null and endDate != ''">
+        and DATE_FORMAT(b.VDATE,'%Y-%m-%d') &lt;= #{endDate}
+      </if>
+      <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 end -->
+    </where>
+    union all
+    select
+    PBC_PROD_ID,
+    CUSTOMER_TYPE1,
+    SUM(INIT_RAISING_AMTSUM) INIT_RAISING_AMTSUM,
+    SUM(ifnull(INIT_RAISING_AMTSUMCNY,INIT_RAISING_AMTSUM)) INIT_RAISING_AMTSUMCNY,
+    SUM(INIT_RAISING_QTY) INIT_RAISING_QTY,
+    '000000' BUY_PLACE,
+    'BWB' CCY
+    from(
+    select
+    a.REGIST_SEQNO,ifnull(t2.pbc_code,a.PBC_PROD_ID)PBC_PROD_ID, a.BUY_PLACE, a.CUSTOMER_TYPE1, a.CCY, a.INIT_RAISING_AMTSUM, a.INIT_RAISING_AMTSUMCNY,
+    a.INIT_RAISING_QTY, a.SEND_STATUS, a.SUBMIT_TIME, a.SUBMIT_FEEDBACK_STATUS, a.SUMIT_SEQ, a.STATUS_DATE,
+    a.PBC_SUBMIT_DEADLINE, a.SUBMIT_DEADLINE, a.STATUS,a.CREATE_USER, a.ORG_CODE, a.CREATE_DEPT,
+    a.CREATE_TIME, a.UPDATE_USER, a.UPDATE_TIME,b.PROD_ID,b.OPERATE_MODE,b.IVSTORIENTATION,b.VDATE
+    from PBC_INIT_PROD_RAISING_SUB a left join (<include refid="PBC_PRD_BASEINFO_SUB" />) b
+    on a.PBC_PROD_ID = b.PBC_PROD_ID
+    <!--  and a.ORG_CODE = b.ORG_CODE  -->
+    LEFT JOIN(
+    SELECT
+    inside_prod_id,
+    pbc_code
+    FROM
+    pbc_prod_assetpool_code
+    WHERE
+    status='E'
+    AND code_type='01'
+    )t2 ON t2.inside_prod_id=b.PROD_ID
+    <where>
+      <if test="pbcProdId != null and pbcProdId !=''">
+        a.PBC_PROD_ID = #{pbcProdId,jdbcType=VARCHAR}
+      </if>
+      <if test="pbcProdIdList != null and pbcProdIdList.size > 0">
+        <foreach collection="pbcProdIdList" item="items" open="and a.PBC_PROD_ID in (" separator="," close =")">
+          #{items,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 begin -->
+      <if test="prodIdList != null and prodIdList.size > 0">
+        AND b.PROD_ID IN
+        <foreach collection="prodIdList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 end -->
+      <if test="prodId != null and prodId !=''">
+        and b.PROD_ID = #{prodId,jdbcType=VARCHAR}
+      </if>
+      <if test="statusList != null and statusList.size > 0">
+        and a.STATUS in
+        <foreach collection="statusList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="keyList != null and keyList.size > 0">
+        and trim(a.REGIST_SEQNO) in
+        <foreach collection="keyList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="sendStatusList != null and sendStatusList.size > 0">
+        and a.SEND_STATUS in
+        <foreach collection="sendStatusList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size > 0">
+        and a.SUBMIT_FEEDBACK_STATUS in
+        <foreach collection="submitFeedbackStatusList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="operateModeList != null and operateModeList.size > 0">
+        and b.OPERATE_MODE in
+        <foreach collection="operateModeList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="ivstorientationList != null and ivstorientationList.size > 0">
+        and b.IVSTORIENTATION in
+        <foreach collection="ivstorientationList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="statusDateStart != null and statusDateStart != ''">
+        and DATE_FORMAT(a.STATUS_DATE,'%Y-%m-%d') &gt;= #{statusDateStart}
+      </if>
+      <if test="statusDateEnd != null and statusDateEnd != ''">
+        and DATE_FORMAT(a.STATUS_DATE,'%Y-%m-%d') &lt;= #{statusDateEnd}
+      </if>
+      <if test="submitTimeStart != null and submitTimeStart != ''">
+        and DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d') &gt;= #{submitTimeStart}
+      </if>
+      <if test="submitTimeEnd != null and submitTimeEnd != ''">
+        and DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d') &lt;= #{submitTimeEnd}
+      </if>
+      <if test="pbcSubmitDeadlineDateStart != null and pbcSubmitDeadlineDateStart != ''">
+        and DATE_FORMAT(a.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{pbcSubmitDeadlineDateStart}
+      </if>
+      <if test="pbcSubmitDeadlineDateEnd != null and pbcSubmitDeadlineDateEnd != ''">
+        and DATE_FORMAT(a.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{pbcSubmitDeadlineDateEnd}
+      </if>
+      <if test="vdateStart != null and vdateStart != ''">
+        and DATE_FORMAT(a.VDATE,'%Y-%m-%d') &gt;= #{vdateStart}
+      </if>
+      <if test="vdateEnd != null and vdateEnd != ''">
+        and DATE_FORMAT(a.VDATE,'%Y-%m-%d') &lt;= #{vdateEnd}
+      </if>
+      <if test="updateTime != null and updateTime != ''">
+        and DATE_FORMAT(a.UPDATE_TIME,'%Y-%m-%d') = #{updateTime}
+      </if>
+      <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 begin -->
+      <if test="startDate != null and startDate != ''">
+        and DATE_FORMAT(b.VDATE,'%Y-%m-%d') &gt;= #{startDate}
+      </if>
+      <if test="endDate != null and endDate != ''">
+        and DATE_FORMAT(b.VDATE,'%Y-%m-%d') &lt;= #{endDate}
+      </if>
+      <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 end -->
+    </where>
+
+    ) group by
+    PBC_PROD_ID
+    ,CUSTOMER_TYPE1
+    union all
+    select
+    PBC_PROD_ID,
+    CUSTOMER_TYPE1,
+    SUM(INIT_RAISING_AMTSUM) INIT_RAISING_AMTSUM,
+    SUM(ifnull(INIT_RAISING_AMTSUMCNY,INIT_RAISING_AMTSUM)) INIT_RAISING_AMTSUMCNY,
+    SUM(INIT_RAISING_QTY) INIT_RAISING_QTY,
+    '000000' BUY_PLACE,
+    CCY
+    from(
+    select
+    a.REGIST_SEQNO,ifnull(t2.pbc_code,a.PBC_PROD_ID)PBC_PROD_ID, a.BUY_PLACE, a.CUSTOMER_TYPE1, a.CCY, a.INIT_RAISING_AMTSUM, a.INIT_RAISING_AMTSUMCNY,
+    a.INIT_RAISING_QTY, a.SEND_STATUS, a.SUBMIT_TIME, a.SUBMIT_FEEDBACK_STATUS, a.SUMIT_SEQ, a.STATUS_DATE,
+    a.PBC_SUBMIT_DEADLINE, a.SUBMIT_DEADLINE, a.STATUS,a.CREATE_USER, a.ORG_CODE, a.CREATE_DEPT,
+    a.CREATE_TIME, a.UPDATE_USER, a.UPDATE_TIME,b.PROD_ID,b.OPERATE_MODE,b.IVSTORIENTATION,b.VDATE
+    from PBC_INIT_PROD_RAISING_SUB a left join (<include refid="PBC_PRD_BASEINFO_SUB" />) b
+    on a.PBC_PROD_ID = b.PBC_PROD_ID
+    <!--  and a.ORG_CODE = b.ORG_CODE  -->
+    LEFT JOIN(
+    SELECT
+    inside_prod_id,
+    pbc_code
+    FROM
+    pbc_prod_assetpool_code
+    WHERE
+    status='E'
+    AND code_type='01'
+    )t2 ON t2.inside_prod_id=b.PROD_ID
+    <where>
+      <if test="pbcProdId != null and pbcProdId !=''">
+        a.PBC_PROD_ID = #{pbcProdId,jdbcType=VARCHAR}
+      </if>
+      <if test="pbcProdIdList != null and pbcProdIdList.size > 0">
+        <foreach collection="pbcProdIdList" item="items" open="and a.PBC_PROD_ID in (" separator="," close =")">
+          #{items,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 begin -->
+      <if test="prodIdList != null and prodIdList.size > 0">
+        AND b.PROD_ID IN
+        <foreach collection="prodIdList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 end -->
+      <if test="prodId != null and prodId !=''">
+        and b.PROD_ID = #{prodId,jdbcType=VARCHAR}
+      </if>
+      <if test="statusList != null and statusList.size > 0">
+        and a.STATUS in
+        <foreach collection="statusList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="keyList != null and keyList.size > 0">
+        and trim(a.REGIST_SEQNO) in
+        <foreach collection="keyList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="sendStatusList != null and sendStatusList.size > 0">
+        and a.SEND_STATUS in
+        <foreach collection="sendStatusList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size > 0">
+        and a.SUBMIT_FEEDBACK_STATUS in
+        <foreach collection="submitFeedbackStatusList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="operateModeList != null and operateModeList.size > 0">
+        and b.OPERATE_MODE in
+        <foreach collection="operateModeList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="ivstorientationList != null and ivstorientationList.size > 0">
+        and b.IVSTORIENTATION in
+        <foreach collection="ivstorientationList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="statusDateStart != null and statusDateStart != ''">
+        and DATE_FORMAT(a.STATUS_DATE,'%Y-%m-%d') &gt;= #{statusDateStart}
+      </if>
+      <if test="statusDateEnd != null and statusDateEnd != ''">
+        and DATE_FORMAT(a.STATUS_DATE,'%Y-%m-%d') &lt;= #{statusDateEnd}
+      </if>
+      <if test="submitTimeStart != null and submitTimeStart != ''">
+        and DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d') &gt;= #{submitTimeStart}
+      </if>
+      <if test="submitTimeEnd != null and submitTimeEnd != ''">
+        and DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d') &lt;= #{submitTimeEnd}
+      </if>
+      <if test="pbcSubmitDeadlineDateStart != null and pbcSubmitDeadlineDateStart != ''">
+        and DATE_FORMAT(a.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{pbcSubmitDeadlineDateStart}
+      </if>
+      <if test="pbcSubmitDeadlineDateEnd != null and pbcSubmitDeadlineDateEnd != ''">
+        and DATE_FORMAT(a.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{pbcSubmitDeadlineDateEnd}
+      </if>
+      <if test="vdateStart != null and vdateStart != ''">
+        and DATE_FORMAT(a.VDATE,'%Y-%m-%d') &gt;= #{vdateStart}
+      </if>
+      <if test="vdateEnd != null and vdateEnd != ''">
+        and DATE_FORMAT(a.VDATE,'%Y-%m-%d') &lt;= #{vdateEnd}
+      </if>
+      <if test="updateTime != null and updateTime != ''">
+        and DATE_FORMAT(a.UPDATE_TIME,'%Y-%m-%d') = #{updateTime}
+      </if>
+      <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 begin -->
+      <if test="startDate != null and startDate != ''">
+        and DATE_FORMAT(b.VDATE,'%Y-%m-%d') &gt;= #{startDate}
+      </if>
+      <if test="endDate != null and endDate != ''">
+        and DATE_FORMAT(b.VDATE,'%Y-%m-%d') &lt;= #{endDate}
+      </if>
+      <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 end -->
+    </where>
+
+    ) group by
+    PBC_PROD_ID
+    ,CUSTOMER_TYPE1
+    ,CCY
+    union all
+    select
+    PBC_PROD_ID,
+    CUSTOMER_TYPE1,
+    SUM(INIT_RAISING_AMTSUM) INIT_RAISING_AMTSUM,
+    SUM(ifnull(INIT_RAISING_AMTSUMCNY,INIT_RAISING_AMTSUM)) INIT_RAISING_AMTSUMCNY,
+    SUM(INIT_RAISING_QTY) INIT_RAISING_QTY,
+    BUY_PLACE,
+    'BWB' CCY
+    from(
+    select
+    a.REGIST_SEQNO,ifnull(t2.pbc_code,a.PBC_PROD_ID)PBC_PROD_ID, a.BUY_PLACE, a.CUSTOMER_TYPE1, a.CCY, a.INIT_RAISING_AMTSUM, a.INIT_RAISING_AMTSUMCNY,
+    a.INIT_RAISING_QTY, a.SEND_STATUS, a.SUBMIT_TIME, a.SUBMIT_FEEDBACK_STATUS, a.SUMIT_SEQ, a.STATUS_DATE,
+    a.PBC_SUBMIT_DEADLINE, a.SUBMIT_DEADLINE, a.STATUS,a.CREATE_USER, a.ORG_CODE, a.CREATE_DEPT,
+    a.CREATE_TIME, a.UPDATE_USER, a.UPDATE_TIME,b.PROD_ID,b.OPERATE_MODE,b.IVSTORIENTATION,b.VDATE
+    from PBC_INIT_PROD_RAISING_SUB a left join (<include refid="PBC_PRD_BASEINFO_SUB" />) b
+    on a.PBC_PROD_ID = b.PBC_PROD_ID
+    <!--  and a.ORG_CODE = b.ORG_CODE  -->
+    LEFT JOIN(
+    SELECT
+    inside_prod_id,
+    pbc_code
+    FROM
+    pbc_prod_assetpool_code
+    WHERE
+    status='E'
+    AND code_type='01'
+    )t2 ON t2.inside_prod_id=b.PROD_ID
+    <where>
+      <if test="pbcProdId != null and pbcProdId !=''">
+        a.PBC_PROD_ID = #{pbcProdId,jdbcType=VARCHAR}
+      </if>
+      <if test="pbcProdIdList != null and pbcProdIdList.size > 0">
+        <foreach collection="pbcProdIdList" item="items" open="and a.PBC_PROD_ID in (" separator="," close =")">
+          #{items,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 begin -->
+      <if test="prodIdList != null and prodIdList.size > 0">
+        AND b.PROD_ID IN
+        <foreach collection="prodIdList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 end -->
+      <if test="prodId != null and prodId !=''">
+        and b.PROD_ID = #{prodId,jdbcType=VARCHAR}
+      </if>
+      <if test="statusList != null and statusList.size > 0">
+        and a.STATUS in
+        <foreach collection="statusList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="keyList != null and keyList.size > 0">
+        and trim(a.REGIST_SEQNO) in
+        <foreach collection="keyList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="sendStatusList != null and sendStatusList.size > 0">
+        and a.SEND_STATUS in
+        <foreach collection="sendStatusList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size > 0">
+        and a.SUBMIT_FEEDBACK_STATUS in
+        <foreach collection="submitFeedbackStatusList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="operateModeList != null and operateModeList.size > 0">
+        and b.OPERATE_MODE in
+        <foreach collection="operateModeList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="ivstorientationList != null and ivstorientationList.size > 0">
+        and b.IVSTORIENTATION in
+        <foreach collection="ivstorientationList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="statusDateStart != null and statusDateStart != ''">
+        and DATE_FORMAT(a.STATUS_DATE,'%Y-%m-%d') &gt;= #{statusDateStart}
+      </if>
+      <if test="statusDateEnd != null and statusDateEnd != ''">
+        and DATE_FORMAT(a.STATUS_DATE,'%Y-%m-%d') &lt;= #{statusDateEnd}
+      </if>
+      <if test="submitTimeStart != null and submitTimeStart != ''">
+        and DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d') &gt;= #{submitTimeStart}
+      </if>
+      <if test="submitTimeEnd != null and submitTimeEnd != ''">
+        and DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d') &lt;= #{submitTimeEnd}
+      </if>
+      <if test="pbcSubmitDeadlineDateStart != null and pbcSubmitDeadlineDateStart != ''">
+        and DATE_FORMAT(a.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{pbcSubmitDeadlineDateStart}
+      </if>
+      <if test="pbcSubmitDeadlineDateEnd != null and pbcSubmitDeadlineDateEnd != ''">
+        and DATE_FORMAT(a.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{pbcSubmitDeadlineDateEnd}
+      </if>
+      <if test="vdateStart != null and vdateStart != ''">
+        and DATE_FORMAT(a.VDATE,'%Y-%m-%d') &gt;= #{vdateStart}
+      </if>
+      <if test="vdateEnd != null and vdateEnd != ''">
+        and DATE_FORMAT(a.VDATE,'%Y-%m-%d') &lt;= #{vdateEnd}
+      </if>
+      <if test="updateTime != null and updateTime != ''">
+        and DATE_FORMAT(a.UPDATE_TIME,'%Y-%m-%d') = #{updateTime}
+      </if>
+      <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 begin -->
+      <if test="startDate != null and startDate != ''">
+        and DATE_FORMAT(b.VDATE,'%Y-%m-%d') &gt;= #{startDate}
+      </if>
+      <if test="endDate != null and endDate != ''">
+        and DATE_FORMAT(b.VDATE,'%Y-%m-%d') &lt;= #{endDate}
+      </if>
+      <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 end -->
+    </where>
+
+    ) group by
+    PBC_PROD_ID
+    ,CUSTOMER_TYPE1
+    ,BUY_PLACE
+    order by
+    PBC_PROD_ID
+  </select>
+<!-- 根据条件查询 -->
+  <select id="searchPage" parameterType="map" resultType="com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSub" flushCache="true" useCache="false">
+  	select 
+	    a.REGIST_SEQNO registSeqno,
+	    ifnull(t2.pbc_code,a.pbc_prod_id) PBC_PROD_ID,
+	    a.BUY_PLACE buyPlace,
+	    a.CUSTOMER_TYPE1 customerType1,
+	    a.CCY ccy,
+	    a.INIT_RAISING_AMTSUM initRaisingAmtsum,
+	    a.INIT_RAISING_AMTSUMCNY initRaisingAmtsumcny,
+	    a.INIT_RAISING_QTY initRaisingQty,
+	    a.SEND_STATUS sendStatus,
+	    a.SUBMIT_TIME submitTime,
+	    a.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+	    a.SUMIT_SEQ sumitSeq,
+	    a.STATUS_DATE statusDate,
+	    a.PBC_SUBMIT_DEADLINE pbcSubmitDeadline,
+	    a.SUBMIT_DEADLINE submitDeadline,
+	    a.STATUS status,
+	    a.CREATE_USER createUser,
+	    a.ORG_CODE orgCode,
+	    a.CREATE_DEPT createDept,
+	    a.CREATE_TIME createTime,
+	    a.UPDATE_USER updateUser,
+	    a.UPDATE_TIME updateTime,
+	    b.PROD_ID prodId,
+	    b.OPERATE_MODE operateMode,
+	    b.IVSTORIENTATION ivstorientation,
+	    b.VDATE vdate,
+	    t2.PBC_CODE pbcCode,
+	    a.PBC_PROD_ID pbcProdIdShow
+  	from PBC_INIT_PROD_RAISING_SUB a 
+  	left join (<include refid="PBC_PRD_BASEINFO_SUB" />) b on a.PBC_PROD_ID = b.PBC_PROD_ID 
+  	<!-- and a.ORG_CODE = b.ORG_CODE -->
+	LEFT JOIN(
+        SELECT
+            inside_prod_id,
+            pbc_code
+        FROM
+            pbc_prod_assetpool_code
+        WHERE
+            status='E'
+            AND code_type='01'
+    )t2 ON t2.inside_prod_id=b.PROD_ID
+  	<where>
+        <if test="pbcProdIdList != null and pbcProdIdList.size > 0">
+            <foreach collection="pbcProdIdList" item="items" open="and a.PBC_PROD_ID in (" separator="," close =")">
+            #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+  		<!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 begin -->
+  		<if test="prodIdList != null and prodIdList.size > 0">
+            AND b.PROD_ID IN
+            <foreach collection="prodIdList" open="(" close=")" separator="," item="item">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 end -->
+  		<if test="statusList != null and statusList.size > 0">
+            and a.STATUS in
+            <foreach collection="statusList" open="(" close=")" separator="," item="item">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="keyList != null and keyList.size > 0">
+            and trim(a.REGIST_SEQNO) in
+            <foreach collection="keyList" open="(" close=")" separator="," item="item">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="sendStatusList != null and sendStatusList.size > 0">
+            and a.SEND_STATUS in
+            <foreach collection="sendStatusList" open="(" close=")" separator="," item="item">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size > 0">
+            and a.SUBMIT_FEEDBACK_STATUS in
+            <foreach collection="submitFeedbackStatusList" open="(" close=")" separator="," item="item">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="operateModeList != null and operateModeList.size > 0">
+            and b.OPERATE_MODE in
+            <foreach collection="operateModeList" open="(" close=")" separator="," item="item">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="ivstorientationList != null and ivstorientationList.size > 0">
+            and b.IVSTORIENTATION in
+            <foreach collection="ivstorientationList" open="(" close=")" separator="," item="item">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="statusDateStart != null and statusDateStart != ''">
+           and DATE_FORMAT(a.STATUS_DATE,'%Y-%m-%d') &gt;= #{statusDateStart}
+        </if>
+        <if test="statusDateEnd != null and statusDateEnd != ''">
+           and DATE_FORMAT(a.STATUS_DATE,'%Y-%m-%d') &lt;= #{statusDateEnd}
+        </if>
+         <if test="submitTimeStart != null and submitTimeStart != ''">
+           and DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d') &gt;= #{submitTimeStart}
+        </if>
+        <if test="submitTimeEnd != null and submitTimeEnd != ''">
+           and DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d') &lt;= #{submitTimeEnd}
+        </if>
+        <if test="pbcSubmitDeadlineDateStart != null and pbcSubmitDeadlineDateStart != ''">
+           and DATE_FORMAT(a.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{pbcSubmitDeadlineDateStart}
+        </if>
+        <if test="pbcSubmitDeadlineDateEnd != null and pbcSubmitDeadlineDateEnd != ''">
+           and DATE_FORMAT(a.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{pbcSubmitDeadlineDateEnd}
+        </if>
+        <if test="vdateStart != null and vdateStart != ''">
+           and DATE_FORMAT(b.VDATE,'%Y-%m-%d') &gt;= #{vdateStart}
+        </if>
+        <if test="vdateEnd != null and vdateEnd != ''">
+           and DATE_FORMAT(b.VDATE,'%Y-%m-%d') &lt;= #{vdateEnd}
+        </if>
+        <if test="updateTime != null and updateTime != ''">
+           and DATE_FORMAT(a.UPDATE_TIME,'%Y-%m-%d') = #{updateTime}
+        </if>
+        <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 begin -->
+        <if test="startDate != null and startDate != ''">
+           and DATE_FORMAT(b.VDATE,'%Y-%m-%d') &gt;= #{startDate}
+        </if>
+        <if test="endDate != null and endDate != ''">
+           and DATE_FORMAT(b.VDATE,'%Y-%m-%d') &lt;= #{endDate}
+        </if>
+        <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 end -->
+  	</where>
+  	<!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 begin -->
+  	 ORDER BY A.PBC_SUBMIT_DEADLINE ASC, A.UPDATE_TIME DESC
+  	<!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 end -->
+  </select>
+  <!-- 取消手工处理 -->
+  <update id="cancelManul" parameterType="java.util.List">
+  	update PBC_INIT_PROD_RAISING_SUB 
+  	set 
+  		SEND_STATUS = '01',
+		UPDATE_TIME = NOW(),
+		SUBMIT_TIME = null,
+		SUBMIT_FEEDBACK_STATUS = null
+  	where  trim(PBC_PROD_ID) in  
+  	<foreach collection="list" open="(" close=")" separator="," item="item">
+  		#{item.pbcProdId,jdbcType=CHAR}
+  	</foreach>
+  </update>
+  
+
+  <!-- 手工处理 -->
+  <update id="doManul" parameterType="map">
+  	update PBC_INIT_PROD_RAISING_SUB 
+  	set 
+  		SEND_STATUS = '03',
+  		SUBMIT_FEEDBACK_STATUS = '03',
+        <if test="submitadd != null and submitadd != ''">
+  			SUBMIT_TIME = NOW() + #{submitadd},
+  		</if>
+  		<if test="submitadd == null">
+  			SUBMIT_TIME = NOW(),
+  		</if>
+        UPDATE_TIME = NOW()
+        <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 begin -->
+        , STATUS_DATE = NOW()
+        <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 end -->
+  	where  PBC_PROD_ID in  
+  	<foreach collection="list" open="(" close=")" separator="," item="item">
+  		#{item.pbcProdId,jdbcType=CHAR}
+  	</foreach>
+  </update>
+  <insert id="insertHisBatchBySendStatus" parameterType="java.util.List">
+  	insert into PBC_INIT_PROD_RAISING_SUB_HIS (<include refid="Base_Column_List2"></include>)
+      select REGIST_SEQNO, PBC_PROD_ID, BUY_PLACE, 
+      CUSTOMER_TYPE1, CCY, INIT_RAISING_AMTSUM, 
+      INIT_RAISING_AMTSUMCNY, INIT_RAISING_QTY, SEND_STATUS, 
+      SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, 
+      STATUS_DATE, PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+      STATUS, CREATE_USER, ORG_CODE, 
+      CREATE_DEPT, NOW(), UPDATE_USER,
+      NOW()
+      from PBC_INIT_PROD_RAISING_SUB
+      where 
+      	PBC_PROD_ID in
+       <foreach collection="list" open="(" close=")" separator="," item="item">
+      		#{item.pbcProdId,jdbcType=CHAR}
+      </foreach>
+      	and SEND_STATUS in ('02','03')
+  </insert>
+
+<insert id="insetBatchSubFromHisByUpdateTime" parameterType="java.util.List" >
+	insert into PBC_INIT_PROD_RAISING_SUB (<include refid="Base_Column_List"></include>)
+      select HIS_NO, PBC_PROD_ID, BUY_PLACE, 
+      CUSTOMER_TYPE1, CCY, INIT_RAISING_AMTSUM, 
+      INIT_RAISING_AMTSUMCNY, INIT_RAISING_QTY, SEND_STATUS, 
+      SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, 
+      STATUS_DATE, PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+      STATUS, CREATE_USER, ORG_CODE, 
+      CREATE_DEPT, NOW(), UPDATE_USER,
+      NOW()
+      from (
+      	select <include refid="Base_Column_List2"></include>,
+      	 rank() over (partition by PBC_PROD_ID order by ifnull(update_time,create_time) desc) ranknum
+      	 from PBC_INIT_PROD_RAISING_SUB_HIS
+      	 where 
+      	PBC_PROD_ID in
+       <foreach collection="list" open="(" close=")" separator="," item="item">
+      		#{item.pbcProdId,jdbcType=CHAR}
+      </foreach>
+      )
+      where 1 = 1 limit 1
+</insert>
+
+<delete id="deleteBatchSubFromHisByUpdateTime" parameterType="java.util.List" >
+	delete from PBC_INIT_PROD_RAISING_SUB_HIS
+	where PBC_PROD_ID in (
+	    select  PBC_PROD_ID
+	      from (
+	      	select PBC_PROD_ID ,
+	      	rank() over (partition by PBC_PROD_ID order by ifnull(update_time,create_time) desc) ranknum
+	      	from PBC_INIT_PROD_RAISING_SUB_HIS
+	      	where 
+	      	PBC_PROD_ID in
+	       <foreach collection="list" open="(" close=")" separator="," item="item">
+	      		#{item.pbcProdId,jdbcType=CHAR}
+	      </foreach>
+	      )
+	      where 1 = 1 limit 1
+    )
+</delete>
+  <select id="selectRegList"
+	parameterType="com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSub"
+	resultType="com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSub">
+	select info.PROD_ID,sub.REGIST_SEQNO, sub.PBC_PROD_ID, sub.BUY_PLACE,
+	sub.CUSTOMER_TYPE1, sub.CCY, sub.INIT_RAISING_AMTSUM,
+	sub.INIT_RAISING_AMTSUMCNY,
+	sub.INIT_RAISING_QTY, sub.SEND_STATUS,sub.STATUS,info.RAISE_ENDDATE
+	from PBC_INIT_PROD_RAISING_SUB sub
+	left join (<include refid="PBC_PRD_BASEINFO_SUB" />) info
+	on info.PBC_PROD_ID=sub.PBC_PROD_ID
+	where sub.SEND_STATUS in ('02','03')
+	and info.prod_id = #{dto.prodId,jdbcType=VARCHAR}
+</select>
+  
+  <select id="selectByDimension" parameterType="map" resultMap="BaseResultMap">
+  	select 
+  		   PBC_PROD_ID,
+  		   CUSTOMER_TYPE1,
+  		   SUM(INIT_RAISING_AMTSUM) INIT_RAISING_AMTSUM, 
+  		   SUM(ifnull(INIT_RAISING_AMTSUMCNY,INIT_RAISING_AMTSUM)) INIT_RAISING_AMTSUMCNY,
+  		   SUM(INIT_RAISING_QTY) INIT_RAISING_QTY
+  		   <if test="buyPlace != null">
+  		   ,#{buyPlace} BUY_PLACE
+  		   </if>
+  		   <if test="ccy != null">
+  		   ,#{ccy} CCY
+  		   </if>
+  		   <if test="buyPlace == null">
+  		   ,BUY_PLACE 
+  		   </if>
+  		   <if test="ccy == null">
+  		   ,CCY 
+  		   </if>
+  	from(
+  		select 
+	  	a.REGIST_SEQNO,ifnull(t2.pbc_code,a.PBC_PROD_ID)PBC_PROD_ID, a.BUY_PLACE, a.CUSTOMER_TYPE1, a.CCY, a.INIT_RAISING_AMTSUM, a.INIT_RAISING_AMTSUMCNY, 
+	    a.INIT_RAISING_QTY, a.SEND_STATUS, a.SUBMIT_TIME, a.SUBMIT_FEEDBACK_STATUS, a.SUMIT_SEQ, a.STATUS_DATE, 
+	    a.PBC_SUBMIT_DEADLINE, a.SUBMIT_DEADLINE, a.STATUS,a.CREATE_USER, a.ORG_CODE, a.CREATE_DEPT, 
+	    a.CREATE_TIME, a.UPDATE_USER, a.UPDATE_TIME,b.PROD_ID,b.OPERATE_MODE,b.IVSTORIENTATION,b.VDATE
+	  	from PBC_INIT_PROD_RAISING_SUB a left join (<include refid="PBC_PRD_BASEINFO_SUB" />) b
+	  	on a.PBC_PROD_ID = b.PBC_PROD_ID
+	  	<!--  and a.ORG_CODE = b.ORG_CODE  -->
+	  	LEFT JOIN(
+	        SELECT
+	            inside_prod_id,
+	            pbc_code
+	        FROM
+	            pbc_prod_assetpool_code
+	        WHERE
+	            status='E'
+	            AND code_type='01'
+	    )t2 ON t2.inside_prod_id=b.PROD_ID
+	  	<where>
+  		<if test="pbcProdId != null and pbcProdId !=''">
+  			a.PBC_PROD_ID = #{pbcProdId,jdbcType=VARCHAR}
+  		</if>
+  		<if test="pbcProdIdList != null and pbcProdIdList.size > 0">
+            <foreach collection="pbcProdIdList" item="items" open="and a.PBC_PROD_ID in (" separator="," close =")">
+            #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+  		<!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 begin -->
+  		<if test="prodIdList != null and prodIdList.size > 0">
+            AND b.PROD_ID IN
+            <foreach collection="prodIdList" open="(" close=")" separator="," item="item">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 end -->
+  		<if test="prodId != null and prodId !=''">
+  			and b.PROD_ID = #{prodId,jdbcType=VARCHAR}
+  		</if>
+  		<if test="statusList != null and statusList.size > 0">
+            and a.STATUS in
+            <foreach collection="statusList" open="(" close=")" separator="," item="item">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="keyList != null and keyList.size > 0">
+            and trim(a.REGIST_SEQNO) in
+            <foreach collection="keyList" open="(" close=")" separator="," item="item">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="sendStatusList != null and sendStatusList.size > 0">
+            and a.SEND_STATUS in
+            <foreach collection="sendStatusList" open="(" close=")" separator="," item="item">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size > 0">
+            and a.SUBMIT_FEEDBACK_STATUS in
+            <foreach collection="submitFeedbackStatusList" open="(" close=")" separator="," item="item">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="operateModeList != null and operateModeList.size > 0">
+            and b.OPERATE_MODE in
+            <foreach collection="operateModeList" open="(" close=")" separator="," item="item">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="ivstorientationList != null and ivstorientationList.size > 0">
+            and b.IVSTORIENTATION in
+            <foreach collection="ivstorientationList" open="(" close=")" separator="," item="item">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="statusDateStart != null and statusDateStart != ''">
+           and DATE_FORMAT(a.STATUS_DATE,'%Y-%m-%d') &gt;= #{statusDateStart}
+        </if>
+        <if test="statusDateEnd != null and statusDateEnd != ''">
+           and DATE_FORMAT(a.STATUS_DATE,'%Y-%m-%d') &lt;= #{statusDateEnd}
+        </if>
+         <if test="submitTimeStart != null and submitTimeStart != ''">
+           and DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d') &gt;= #{submitTimeStart}
+        </if>
+        <if test="submitTimeEnd != null and submitTimeEnd != ''">
+           and DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d') &lt;= #{submitTimeEnd}
+        </if>
+        <if test="pbcSubmitDeadlineDateStart != null and pbcSubmitDeadlineDateStart != ''">
+           and DATE_FORMAT(a.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{pbcSubmitDeadlineDateStart}
+        </if>
+        <if test="pbcSubmitDeadlineDateEnd != null and pbcSubmitDeadlineDateEnd != ''">
+           and DATE_FORMAT(a.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{pbcSubmitDeadlineDateEnd}
+        </if>
+        <if test="vdateStart != null and vdateStart != ''">
+           and DATE_FORMAT(a.VDATE,'%Y-%m-%d') &gt;= #{vdateStart}
+        </if>
+        <if test="vdateEnd != null and vdateEnd != ''">
+           and DATE_FORMAT(a.VDATE,'%Y-%m-%d') &lt;= #{vdateEnd}
+        </if>
+        <if test="updateTime != null and updateTime != ''">
+           and DATE_FORMAT(a.UPDATE_TIME,'%Y-%m-%d') = #{updateTime}
+        </if>
+        <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 begin -->
+        <if test="startDate != null and startDate != ''">
+           and DATE_FORMAT(b.VDATE,'%Y-%m-%d') &gt;= #{startDate}
+        </if>
+        <if test="endDate != null and endDate != ''">
+           and DATE_FORMAT(b.VDATE,'%Y-%m-%d') &lt;= #{endDate}
+        </if>
+        <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 end -->
+  	</where>
+  	
+  	) group by 
+  	 PBC_PROD_ID
+  	 ,CUSTOMER_TYPE1
+  	<if test="buyPlace == null">
+  	,BUY_PLACE
+  	</if>
+  	<if test="ccy == null">
+  	,CCY
+  	</if>
+  </select>
+  
+  
+    <select id="searchListDetailCNY" parameterType="map" resultMap="SearchResultMap">
+	SELECT tab.code,tab.rmbje,tab.rmbfe from (select
+        concat_ws('','buyplace', a.CUSTOMER_TYPE1,a.BUY_PLACE) code,
+        list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.INIT_RAISING_AMTSUM rmbje, a.INIT_RAISING_QTY rmbfe
+        from PBC_INIT_PROD_RAISING_SUB a
+        LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
+        where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR}) tab
+	union all
+	select 'buyplace4000000',sum(rmbje),sum(rmbfe) from tab WHERE tab.CUSTOMER_TYPE1='4'
+	union all
+	select 'buyplace5000000',sum(rmbje),sum(rmbfe) from tab WHERE tab.CUSTOMER_TYPE1='5'
+	union all
+	select 'buyplace6000000',sum(rmbje),sum(rmbfe) from tab WHERE tab.CUSTOMER_TYPE1='6'
+	union all
+	select 'buyplace7000000',sum(rmbje),sum(rmbfe) from tab WHERE tab.CUSTOMER_TYPE1='7'
+	union all
+	select 'buyplace8000000',sum(rmbje),sum(rmbfe) from tab WHERE tab.CUSTOMER_TYPE1='8'
+	union all
+	select 'buyplace9000000',sum(rmbje),sum(rmbfe) from tab WHERE tab.CUSTOMER_TYPE1='9'
+	
+    </select>
+    
+    <select id="searchListDetailOth" parameterType="map" resultMap="SearchResultMap">
+      SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from (select
+          concat_ws('','buyplace', a.CUSTOMER_TYPE1,a.BUY_PLACE) code,
+          list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.INIT_RAISING_AMTSUM je,a.INIT_RAISING_AMTSUMCNY zrmb,a.INIT_RAISING_QTY fe
+          from PBC_INIT_PROD_RAISING_SUB a
+          LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
+          where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR}) tab
+      union all
+      select 'buyplace4000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='4' group by tab.ITEM_VALUE
+      union all
+      select 'buyplace5000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='5' group by tab.ITEM_VALUE
+      union all
+      select 'buyplace6000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='6' group by tab.ITEM_VALUE
+      union all
+      select 'buyplace7000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='7' group by tab.ITEM_VALUE
+      union all
+      select 'buyplace8000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='8' group by tab.ITEM_VALUE
+      union all
+      select 'buyplace9000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='9' group by tab.ITEM_VALUE
+      </select>
+</mapper>

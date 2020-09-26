@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
+
+<head>
+    <title data-th-text="#{RegTimePoints001}">报送时点管理</title>
+</head>
+<body>
+    <div layout:fragment="content">
+    <div class="joyin-form-wrap condition-area">
+        <form class="layui-form" id="RegTimePoints001_searchForm" access="enter">
+            <div class="layui-form-item">
+                <div class="layui-inline layui-col-md6">
+                    <label class="layui-form-label form-lable">报表名称</label>
+                    <div class="layui-input-inline input-inliner" style="width:40%;">
+                        <select id="RegTimePoints001_reportCode" class="input-select" data-th-data-result='${SVR_REPORT_CODE}' placeholder="请选择" data-th-data-url="@{/svreport/system/regtimepoints/RegTimePoints001/getReportCode}" allowClear="true" multiple="multiple" >
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
+        </div>
+        <div>
+            <table class="layui-table" id="RegTimePoints001_submitPointManeInquiry" data-withoutheight="#RegTimePoints001_buttonArea"></table>
+            <div class="point-inquiry-wrap" id="RegTimePoints001_buttonArea">
+                <label class="time-label">信息修改后</label>
+                <div class="time-input">
+                    <input type="text" class="form-control pecent-text" id="RegTimePoints001_updateSubmitPoint" data-th-value="${entity} ? ${entity.updateSubmitPoint} : 1" placeholder="1">
+                    <span class="pecent-sign">工作日</span>
+                </div>
+                <label class="time-label" style="padding-left: 10px">信息撤销后</label>
+                <div class="time-input">
+                    <input type="text" class="form-control pecent-text" id="RegTimePoints001_deleteSubmitPoint" data-th-value="${entity} ? ${entity.deleteSubmingPoint} : 1" placeholder="1">
+                    <span class="pecent-sign">工作日</span>
+                </div>
+                <div class="time-label" style="padding-left: 10px;">
+                    <button class="layui-btn layui-btn-sm" id="RegTimePoints001_btn_save">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div layout:fragment="script">
+        <script data-th-src="@{/js/report/jquery.validate.js}" type="text/javascript"></script>
+        <script data-th-src="@{/js/report/joyinvalid.js}" type="text/javascript"></script>
+        <script data-th-src="@{/js/report/system/regtimepoints/regTimePoints001.js}" type="text/javascript"></script>
+        <style>
+            .point-inquiry-wrap{
+                width: 40%;
+                margin: 0 auto;
+            }
+            .time-label{
+                float: left;
+                line-height: 32px;
+                font-weight: normal;
+                margin-bottom: 0;
+                padding-right: 0;
+                color: #444444;
+                font-size: 13px;
+                margin-right: 10px;
+            }
+            .time-input{
+                float: left;
+                position: relative;
+            }
+            .pecent-sign{
+                position: absolute;
+                right: 5px;
+                top: 10px;
+                z-index: 9999;
+            }
+            .time-input input{
+                height: 32px;
+                width: 90px;
+                padding-left: 5px;
+            }
+        </style>
+    </div>
+</body>
+</html>

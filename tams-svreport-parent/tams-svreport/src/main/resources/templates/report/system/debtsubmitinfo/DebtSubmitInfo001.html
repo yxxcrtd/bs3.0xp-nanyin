@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
+
+<head>
+    <title data-th-text="#{DebtSubmitInfo001}">中债报送信息反馈</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="joyin-form-wrap condition-area">
+            <form class="layui-form" filter='false' id="searchForm">
+                <div class="layui-form-item">
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable">报表名称</label>
+                        <div class="layui-input-inline input-inliner">
+                            <select id="repName" name="repName" class="input-select" data-th-data-result='${SVR_REPORT_CODE}' placeholder="请选择" data-th-data-url="@{/svreport/system/debtsubmitinfo/DebtSubmitInfo001/getReportCode}" allowClear="true" multiple="multiple">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable">报送日期</label>
+                        <div class="layui-input-inline input-inline">
+                            <input type="text" id="reportDate" name="timeControl"  class="layui-input form-input input-dateRangeSelect" placeholder="请选择日期区间" />
+                        </div>
+                    </div>
+                </div>
+              </form>
+           </div>
+        <div>
+            <table class="layui-table" id="debtSubmitInfo"></table>
+        </div>
+    </div>
+    <div layout:fragment="script">
+        <script data-th-inline="javascript" type="text/javascript">
+            var detailUrl='/system/debtsubmitinfo/DebtSubmitInfo002/init';
+        </script>
+        <script data-th-src="@{/js/report/jquery.validate.js}" type="text/javascript"></script>
+        <script data-th-src="@{/js/report/joyinvalid.js}" type="text/javascript"></script>
+        <script data-th-src="@{/js/report/report-common.js}" type="text/javascript"></script>
+        <script data-th-src="@{/js/report/systemManagement/debtsubmitinfo/DebtSubmitInfo001.js}" type="text/javascript"></script>
+    </div>
+</body>
+</html>

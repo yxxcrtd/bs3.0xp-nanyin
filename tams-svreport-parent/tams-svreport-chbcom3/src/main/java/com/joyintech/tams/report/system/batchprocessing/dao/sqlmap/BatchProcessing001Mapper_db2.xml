@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.system.batchprocessing.dao.BatchProcessing001Mapper_db2">
+	<insert id="insertBatchData" parameterType="com.joyintech.tams.report.system.batchprocessing.dto.BatchProcessing001Dto">
+	INSERT
+	INTO
+	    CHB_SYS_BATCH_INFO
+	    (
+	        BATCH_ID,
+	        BEAN_NAME,
+	        JOB_ID,
+	        BATCH_START_DATE,
+	        BATCH_END_DATE,
+	        LOG_FILE_CODE,
+	        TASK_STATUS,
+	        OPERATOR,
+	        START_MODE,
+	        STATUS,
+	        CREATE_USER,
+	        CREATE_TIME,
+	        UPDATE_USER,
+	        UPDATE_TIME
+	    )
+   		<foreach collection="taskList" item= "dto" separator="union all">
+			SELECT 
+				#{dto.batchId},
+				#{dto.beanName},
+				#{dto.jobId},
+				#{dto.batchStartDate,jdbcType=DATE},
+				#{dto.batchEndDate,jdbcType=DATE},
+				#{dto.logFileCode},
+				#{dto.taskStatus},
+				#{dto.operator},
+				#{dto.startMode},
+				#{dto.status},
+				#{dto.createUser},
+				#{dto.createTime,jdbcType=DATE},
+				#{dto.updateUser},
+				#{dto.updateTime,jdbcType=DATE}
+			from sysibm.SYSDUMMY1
+		</foreach>
+	</insert>
+
+</mapper>

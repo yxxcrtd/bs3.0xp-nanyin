@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.interf.dis.prodbonusregister.dao.DisProdBondsRegistrationMapper_db2">
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.interf.dis.prodbonusregister.dto.DisProdBondsRegistration">
+    <result column="ID" jdbcType="CHAR" property="id" />
+    <result column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
+    <result column="BONUS_REGISTER_DATE" jdbcType="TIMESTAMP" property="bonusRegisterDate" />
+    <result column="BONUS_DEALT_DATE" jdbcType="TIMESTAMP" property="bonusDealtDate" />
+    <result column="UNIT_BONUS_AMT" jdbcType="DECIMAL" property="unitBonusAmt" />  
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="STATUS" jdbcType="VARCHAR" property="status" />  
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />   
+  </resultMap>
+	
+ <update id="mergeRepProdInfo" parameterType="java.util.List">
+        MERGE INTO REP_PROD_BONUS_REGISTER RPI
+		USING (
+			<foreach collection="list" item="item" open="select * from("
+				close=")" separator="union all">
+				SELECT 
+					'${item.id}' ID,<!--ID-->
+					'${item.prodId}' PROD_ID,<!--产品代码-->
+					<choose><when test="item.bonusRegisterDate != null">#{item.bonusRegisterDate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> BONUS_REGISTER_DATE,<!--分红登记日-->
+					<choose><when test="item.bonusDealtDate != null">#{item.bonusDealtDate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> BONUS_DEALT_DATE,<!--分红下发日-->
+					<choose><when test="item.unitBonusAmt != null">${item.unitBonusAmt}</when><otherwise>null</otherwise></choose> UNIT_BONUS_AMT,<!--单位分红金额-->
+					'${item.inputType}' INPUT_TYPE,<!--导入方法-->
+					'${item.inputUser}' INPUT_USER,<!--导入用户-->
+					'${item.adapterId}' ADAPTER_ID,<!--适配器ID-->
+					'${item.createUser}' CREATE_USER,<!--创建人-->
+					'${item.createDept}' CREATE_DEPT,<!--创建部门-->
+					<choose><when test="item.createTime != null">#{item.createTime,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose> CREATE_TIME,<!--创建时间-->
+					'${item.updateUser}' UPDATE_USER,<!--更新人-->
+					<choose><when test="item.updateTime != null">#{item.updateTime,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose> UPDATE_TIME<!--更新时间-->					
+				FROM
+					sysibm.SYSDUMMY1
+			</foreach>
+		) TEMP
+		<!-- 业务主键匹配 -->
+		ON(
+			RPI.PROD_ID = TEMP.PROD_ID AND RPI.BONUS_REGISTER_DATE = TEMP.BONUS_REGISTER_DATE
+		)
+		<!-- 匹配到则更新  start-->
+		WHEN MATCHED THEN 
+			UPDATE SET 
+				RPI.ID = TEMP.ID,<!--产品代码-->
+				RPI.BONUS_DEALT_DATE = TEMP.BONUS_DEALT_DATE,<!--分红下发日-->
+				RPI.UNIT_BONUS_AMT = TEMP.UNIT_BONUS_AMT,<!--单位分红金额-->				
+				RPI.INPUT_TYPE = TEMP.INPUT_TYPE,<!--导入方法-->
+				RPI.INPUT_USER = TEMP.INPUT_USER,<!--导入用户-->
+				RPI.ADAPTER_ID = TEMP.ADAPTER_ID,<!--适配器ID-->
+				RPI.CREATE_USER = TEMP.CREATE_USER,<!--创建人-->
+				RPI.CREATE_DEPT = TEMP.CREATE_DEPT,<!--创建部门-->
+				RPI.CREATE_TIME = TEMP.CREATE_TIME,<!--创建时间-->
+				RPI.UPDATE_USER = TEMP.UPDATE_USER,<!--更新人-->
+				RPI.UPDATE_TIME = TEMP.UPDATE_TIME<!--更新时间-->			
+		<!-- 匹配到则更新  end-->
+		<!-- 不匹配到则插入  start-->
+		WHEN NOT MATCHED THEN
+            INSERT
+            (
+				ID,<!--ID-->
+				PROD_ID,<!--产品代码-->
+				BONUS_REGISTER_DATE,<!--分红登记日-->
+				BONUS_DEALT_DATE,<!--分红下发日-->
+				UNIT_BONUS_AMT,<!--单位分红金额-->
+				INPUT_TYPE,<!--导入方法-->
+				INPUT_USER,<!--导入用户-->
+				ADAPTER_ID,<!--适配器ID-->
+				CREATE_USER,<!--创建人-->
+				CREATE_DEPT,<!--创建部门-->
+				CREATE_TIME,<!--创建时间-->
+				UPDATE_USER,<!--更新人-->
+				UPDATE_TIME<!--更新时间-->	
+			)
+            VALUES
+           (
+				TEMP.ID,<!--ID-->
+				TEMP.PROD_ID,<!--产品代码-->
+				TEMP.BONUS_REGISTER_DATE,<!--分红登记日-->
+				TEMP.BONUS_DEALT_DATE,<!--分红下发日-->
+				TEMP.UNIT_BONUS_AMT,<!--单位分红金额-->
+				TEMP.INPUT_TYPE,<!--导入方法-->
+				TEMP.INPUT_USER,<!--导入用户-->
+				TEMP.ADAPTER_ID,<!--适配器ID-->
+				TEMP.CREATE_USER,<!--创建人-->
+				TEMP.CREATE_DEPT,<!--创建部门-->
+				TEMP.CREATE_TIME,<!--创建时间-->
+				TEMP.UPDATE_USER,<!--更新人-->
+				TEMP.UPDATE_TIME<!--更新时间-->	
+			) 
+		<!-- 不匹配到则插入  end-->
+    </update>
+</mapper>

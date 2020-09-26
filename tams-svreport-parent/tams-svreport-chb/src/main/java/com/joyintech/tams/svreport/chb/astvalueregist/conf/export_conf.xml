@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ChbAstValInfo.xls" name="资产估值信息登记中债">
+	<Worksheet javaBean="com.joyintech.tams.svreport.chb.astvalueregist.dto.ChbAstValueRegist001Dto">
+		<Row>
+			<Cell order="1" name="行内资产/负债编码">assetCode</Cell><!-- 行内资产/负债编码 -->
+			<Cell order="3" name="发行机构代码">issuePartyId</Cell><!--发行机构代码 -->
+			<Cell order="3" name="估值日期">valDateExport</Cell><!-- 估值日期 -->
+			<Cell order="4" name="单位估值（净价）">unitValNet4Scale</Cell><!-- 单位估值（净价） -->
+			<Cell order="5" name="单位估值（全价）">unitValTotal4Scale</Cell><!-- 单位估值（全价） -->
+			<Cell order="6" name="备注">remark</Cell><!-- 备注-->
+		</Row>
+	</Worksheet>
+</Workbook>

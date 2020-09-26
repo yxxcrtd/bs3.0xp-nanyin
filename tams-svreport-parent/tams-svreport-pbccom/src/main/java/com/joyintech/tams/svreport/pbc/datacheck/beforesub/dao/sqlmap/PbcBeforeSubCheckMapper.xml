@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.pbc.datacheck.beforesub.dao.PbcBeforeSubCheckMapper" >
+ 
+  <select id="selectPbcPrdBaseInfoSubCheck" resultType="com.joyintech.tams.svreport.pbc.datacheck.beforesub.dto.PbcBeforeSubCheckDto" 
+ 	parameterType="java.util.Date">
+	select r.PBC_PROD_ID prodid ,r.REGIST_SEQNO registseqno,
+	nvl(r.HIGH_YIELD_ISSUE,0) prodprofit1,nvl(r.LOW_YIELD_ISSUE,0) prodprofit2
+	from pbc_prd_baseinfo_sub r
+	where (r.SUBMIT_FEEDBACK_STATUS !='03' or  r.SUBMIT_FEEDBACK_STATUS is null)
+	and to_char(r.STATUS_DATE,'yyyy-MM-dd')<![CDATA[<=]]>to_char(#{querydate,jdbcType=DATE},'yyyy-MM-dd')
+ </select> 
+ 
+ <select id="selectPbcPrdBaseInfoEndSubCheck" resultType="com.joyintech.tams.svreport.pbc.datacheck.beforesub.dto.PbcBeforeSubCheckDto" 
+ 	parameterType="java.util.Date">
+	select r.PBC_PROD_ID prodid ,r.REGIST_SEQNO registseqno,r.CCY,
+	nvl(r.PROFIT,0) prodprofit1,nvl(r.CUSTOM_PROFIT,0) custprofit1
+	from PBC_PRD_BASEINFO_END_SUB r
+	where (r.SUBMIT_FEEDBACK_STATUS !='03' or  r.SUBMIT_FEEDBACK_STATUS is null)
+	and to_char(r.STATUS_DATE,'yyyy-MM-dd')<![CDATA[<=]]>to_char(#{querydate,jdbcType=DATE},'yyyy-MM-dd')
+ </select> 
+ 
+ <select id="selectPbcPrdRaisingSubCheck" resultType="com.joyintech.tams.svreport.pbc.datacheck.beforesub.dto.PbcBeforeSubCheckDto" 
+ 	parameterType="java.util.Date">
+	select r.PBC_PROD_ID prodid ,r.REGIST_SEQNO registseqno,f.OPERATE_MODE operateMode,
+	r.RAISING_DATE raisingDate,f.VDATE vdate,
+	r.CUSTOMER_TYPE1 customerType,f.CUSTOMER_TYPE customerType1,nvl(r.RAISING_AMTSUM,0) prodprofit1
+	from PBC_PROD_RAISING_SUB r
+    left join pbc_prd_baseinfo_sub f
+  	on f.PBC_PROD_ID=r.PBC_PROD_ID
+	where (r.SUBMIT_FEEDBACK_STATUS !='03' or  r.SUBMIT_FEEDBACK_STATUS is null)
+	/** and f.OPERATE_MODE in ('4','5')
+	AND to_char(RAISING_DATE,'yyyy-MM')!=to_char(f.VDATE,'yyyy-MM')**/
+	and to_char(r.STATUS_DATE,'yyyy-MM-dd')<![CDATA[<=]]>to_char(#{querydate,jdbcType=DATE},'yyyy-MM-dd')
+ </select>
+ <select id="selectPbcAssetDebt" resultType="com.joyintech.tams.svreport.pbc.datacheck.beforesub.dto.PbcBeforeSubCheckDto" 
+ 	parameterType="map">
+ 	select cai.asset_code assetcode from CHB_ASSET_INFO cai
+	where ASSET_TYPE='02' 
+	and PBC_ASSET_TYPE1 is null
+	and mdate>#{enddate,jdbcType=DATE}
+	and EXISTS (select 1 from chb_asset_position cap
+	where cap.asset_code=cai.asset_code and cap.cdate=#{checkdate,jdbcType=DATE})
+ </select>
+</mapper>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.dis.prodcashyield.dao.DisRepCashYieldMapper_db2" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield" >
+        <result column="BUSI_ID" property="busiId" jdbcType="VARCHAR" />
+        <result column="CASH_ID" property="cashId" jdbcType="VARCHAR" />
+        <result column="CASH_NAME" property="cashName" jdbcType="VARCHAR" />
+        <result column="CASH_TYPE" property="cashType" jdbcType="VARCHAR" />
+        <result column="CASH_TYPE2" property="cashType2" jdbcType="VARCHAR" />
+        <result column="START_DATE" property="startDate" jdbcType="DATE" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="INPUT_USER" property="inputUser" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="ADAPTER_ID" property="adapterId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="RATE" property="rate" jdbcType="DECIMAL" />
+    </resultMap>
+    
+    <insert id="insertRepCashYieldList" parameterType="java.util.List">
+	    insert into REP_CASH_YIELD
+	    (   
+	        BUSI_ID, CASH_ID, CASH_NAME, CASH_TYPE, CASH_TYPE2, START_DATE, 
+	        REMARK, INPUT_TYPE, INPUT_USER, STATUS, ADAPTER_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+	        UPDATE_USER, UPDATE_TIME, RATE
+	    )
+	    <foreach collection="list" item="item" open=" select * from (select " close="from sysibm.SYSDUMMY1)" separator="from sysibm.SYSDUMMY1 union all select ">
+	    	#{item.busiId,jdbcType=VARCHAR}, #{item.cashId,jdbcType=VARCHAR}, #{item.cashName,jdbcType=VARCHAR}, 
+            #{item.cashType,jdbcType=VARCHAR}, #{item.cashType2,jdbcType=VARCHAR}, #{item.startDate,jdbcType=DATE}, 
+            #{item.remark,jdbcType=VARCHAR}, #{item.inputType,jdbcType=VARCHAR}, #{item.inputUser,jdbcType=VARCHAR}, 
+            #{item.status,jdbcType=VARCHAR}, #{item.adapterId,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR}, 
+            #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, 
+            #{item.updateTime,jdbcType=TIMESTAMP}, #{item.rate,jdbcType=DECIMAL}
+	    </foreach>
+	
+	</insert>
+</mapper>

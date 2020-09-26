@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.dis.prodbaseinfo.dao.DisRepProdInfoMapper_db2" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.interf.dis.prodbaseinfo.dto.DisRepProdInfo" >
+        <id column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="PROD_RE" property="prodRe" jdbcType="VARCHAR" />
+        <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+        <result column="PROD_ABBR" property="prodAbbr" jdbcType="VARCHAR" />
+        <result column="RAISE_MIN" property="raiseMin" jdbcType="VARCHAR" />
+        <result column="RAISE_MAX" property="raiseMax" jdbcType="VARCHAR" />
+        <result column="RAISE_STRDATE" property="raiseStrdate" jdbcType="DATE" />
+        <result column="RAISE_ENDDATE" property="raiseEnddate" jdbcType="DATE" />
+        <result column="RAISE_CCY" property="raiseCcy" jdbcType="VARCHAR" />
+        <result column="SET_DATE" property="setDate" jdbcType="DATE" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="FIRST_OPEN_DAY" property="firstOpenDay" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="ACT_MDATE" property="actMdate" jdbcType="DATE" />
+        <result column="TERM" property="term" jdbcType="VARCHAR" />
+        <result column="WINDUP_DATE" property="windupDate" jdbcType="DATE" />
+        <result column="ISSUE_MODE" property="issueMode" jdbcType="VARCHAR" />
+        <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+        <result column="PROD_TYPE" property="prodType" jdbcType="VARCHAR" />
+        <result column="ISSUE_STATUS" property="issueStatus" jdbcType="VARCHAR" />
+        <result column="RAISE_TYPE" property="raiseType" jdbcType="VARCHAR" />
+        <result column="RISK_LEVEL" property="riskLevel" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="RAISE_AMT" property="raiseAmt" jdbcType="DECIMAL" />
+        <result column="OPEN_MODE" property="openMode" jdbcType="VARCHAR" />
+        <result column="INVEST_PROF_DATE" property="investProfDate" jdbcType="VARCHAR" />
+        <result column="INVEST_PRIN_DATE" property="investPrinDate" jdbcType="VARCHAR" />
+        <result column="IS_INDEPE_ACC" property="isIndepeAcc" jdbcType="VARCHAR" />
+        <result column="PROD_INVEST_TYPE" property="prodInvestType" jdbcType="VARCHAR" />
+        <result column="REVEAL_CHANNEL" property="revealChannel" jdbcType="VARCHAR" />
+        <result column="DEAL_CAL" property="dealCal" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="FINA_TYPE" property="finaType" jdbcType="VARCHAR" />
+        <result column="TRU_ACCOUNT" property="truAccount" jdbcType="VARCHAR" />
+        <result column="ACCT_CHNNAME" property="acctChnname" jdbcType="VARCHAR" />
+        <result column="TRU_FEE_RAGE" property="truFeeRage" jdbcType="DECIMAL" />
+        <result column="TRU_ACCOUNT_NUM" property="truAccountNum" jdbcType="VARCHAR" />
+        <result column="TRU_ACCOUNT_NAME" property="truAccountName" jdbcType="VARCHAR" />
+        <result column="PROD_TERM_TYPE" property="prodTermType" jdbcType="VARCHAR" />
+        <result column="BASIS" property="basis" jdbcType="VARCHAR" />
+        <result column="NATURE_INVEST" property="natureInvest" jdbcType="VARCHAR" />
+        <result column="TARGET_SALE" property="targetSale" jdbcType="VARCHAR" />
+        <result column="IS_LAYER" property="isLayer" jdbcType="VARCHAR" />
+        <result column="PERFORM_COMPARE" property="performCompare" jdbcType="VARCHAR" />
+        <result column="PRO_MANAGER" property="proManager" jdbcType="VARCHAR" />
+        <result column="PRO_CUSTODIAN" property="proCustodian" jdbcType="VARCHAR" />
+        <result column="HUGE_REDEEM_THRESHOLD" property="hugeRedeemThreshold" jdbcType="DECIMAL" />
+        <result column="SALE_AMT_STR" property="saleAmtStr" jdbcType="DECIMAL" />
+        <result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
+        <result column="F_PROD_ID" property="fProdId" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        PROD_ID PROD_ID, PROD_RE PROD_RE, PROD_NAME PROD_NAME, PROD_ABBR PROD_ABBR, RAISE_MIN RAISE_MIN, 
+        RAISE_MAX RAISE_MAX, RAISE_STRDATE RAISE_STRDATE, RAISE_ENDDATE RAISE_ENDDATE, RAISE_CCY RAISE_CCY, 
+        SET_DATE SET_DATE, VDATE VDATE, FIRST_OPEN_DAY FIRST_OPEN_DAY, MDATE MDATE, ACT_MDATE ACT_MDATE, 
+        TERM TERM, WINDUP_DATE WINDUP_DATE, ISSUE_MODE ISSUE_MODE, PROFIT_TYPE PROFIT_TYPE, 
+        PROD_TYPE PROD_TYPE, ISSUE_STATUS ISSUE_STATUS, RAISE_TYPE RAISE_TYPE, RISK_LEVEL RISK_LEVEL, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, RAISE_AMT RAISE_AMT, OPEN_MODE OPEN_MODE, INVEST_PROF_DATE INVEST_PROF_DATE, 
+        INVEST_PRIN_DATE INVEST_PRIN_DATE, IS_INDEPE_ACC IS_INDEPE_ACC, PROD_INVEST_TYPE PROD_INVEST_TYPE, 
+        REVEAL_CHANNEL REVEAL_CHANNEL, DEAL_CAL DEAL_CAL, STATUS STATUS, FINA_TYPE FINA_TYPE, 
+        TRU_ACCOUNT TRU_ACCOUNT, ACCT_CHNNAME ACCT_CHNNAME, TRU_FEE_RAGE TRU_FEE_RAGE, TRU_ACCOUNT_NUM TRU_ACCOUNT_NUM, 
+        TRU_ACCOUNT_NAME TRU_ACCOUNT_NAME, PROD_TERM_TYPE PROD_TERM_TYPE, BASIS BASIS, NATURE_INVEST NATURE_INVEST, 
+        TARGET_SALE TARGET_SALE, IS_LAYER IS_LAYER, PERFORM_COMPARE PERFORM_COMPARE, PRO_MANAGER PRO_MANAGER, 
+        PRO_CUSTODIAN PRO_CUSTODIAN, HUGE_REDEEM_THRESHOLD HUGE_REDEEM_THRESHOLD, SALE_AMT_STR SALE_AMT_STR, 
+        OPERATE_MODE OPERATE_MODE, F_PROD_ID F_PROD_ID
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.svreport.interf.dis.prodbaseinfo.dao.DisRepProdInfoMapper.Base_Column_List" />
+        from REP_PROD_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.svreport.interf.dis.prodbaseinfo.dao.DisRepProdInfoMapper.Base_Column_List" />
+        from REP_PROD_INFO
+        where STATUS = 'E'
+    </sql>
+
+    <update id="mergeRepProdInfo">
+        MERGE INTO REP_PROD_INFO RPI
+		USING (
+			<foreach collection="list" item="item" open="select * from("
+				close=")" separator="union all">
+				SELECT 
+					'${item.prodId}' PROD_ID,<!--产品代码-->
+					'${item.prodRe}' PROD_RE,<!--产品登记编码-->
+					'${item.prodName}' PROD_NAME,<!--产品名称-->
+					'${item.prodAbbr}' PROD_ABBR,<!--产品简称-->
+					'${item.raiseMin}' RAISE_MIN,<!--募集下限-->
+					'${item.raiseMax}' RAISE_MAX,<!--募集上限-->
+					<choose><when test="item.raiseStrdate != null">#{item.raiseStrdate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> RAISE_STRDATE,<!--募集开始日-->
+					<choose><when test="item.raiseEnddate != null">#{item.raiseEnddate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> RAISE_ENDDATE,<!--募集结束日-->
+					'${item.raiseCcy}' RAISE_CCY,<!--募集币种-->
+					<choose><when test="item.setDate != null">#{item.setDate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> SET_DATE,<!--产品成立日-->
+					<choose><when test="item.vdate != null">#{item.vdate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> VDATE,<!--产品起息日-->
+					<choose><when test="item.firstOpenDay != null">#{item.firstOpenDay,jdbcType=DATE}</when><otherwise>null</otherwise></choose> FIRST_OPEN_DAY,<!--首次开放日-->
+					<choose><when test="item.mdate != null">#{item.mdate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> MDATE,<!--产品到期日-->
+					<choose><when test="item.actMdate != null">#{item.actMdate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> ACT_MDATE,<!--实际到期日-->
+					'${item.term}' TERM,<!--产品期限-->
+					<choose><when test="item.windupDate != null">#{item.windupDate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> WINDUP_DATE,<!--产品清盘日-->
+					'${item.issueMode}' ISSUE_MODE,<!--发行方式-->
+					'${item.profitType}' PROFIT_TYPE,<!--收益类型-->
+					'${item.prodType}' PROD_TYPE,<!--产品类型-->
+					'${item.raiseType}' RAISE_TYPE,<!--募集方式-->
+					'${item.riskLevel}' RISK_LEVEL,<!--产品风险等级-->
+					'${item.createUser}' CREATE_USER,<!--创建人-->
+					'${item.createDept}' CREATE_DEPT,<!--创建部门-->
+					<choose><when test="item.createTime != null">#{item.createTime,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose> CREATE_TIME,<!--创建时间-->
+					'${item.updateUser}' UPDATE_USER,<!--更新人-->
+					<choose><when test="item.updateTime != null">#{item.updateTime,jdbcType=TIMESTAMP}</when><otherwise>null</otherwise></choose> UPDATE_TIME,<!--更新时间-->
+					<choose><when test="item.raiseAmt != null">${item.raiseAmt}</when><otherwise>null</otherwise></choose>  RAISE_AMT,<!--募集金额-->
+					'${item.openMode}' OPEN_MODE,<!--开放模式-->
+					'${item.investProfDate}' INVEST_PROF_DATE,<!--投资收益到账日-->
+					'${item.investPrinDate}' INVEST_PRIN_DATE,<!--投资本金到账日-->
+					'${item.isIndepeAcc}' IS_INDEPE_ACC,<!--是否独立开户-->
+					'${item.prodInvestType}' PROD_INVEST_TYPE,<!--投资范围/投资性质-->
+					'${item.revealChannel}' REVEAL_CHANNEL,<!--披露渠道-->
+					'${item.dealCal}' DEAL_CAL,<!--交易日历-->
+					'${item.status}' STATUS,<!--数据状态-->
+					'${item.finaType}' FINA_TYPE,<!--理财类型-->
+					'${item.truAccount}' TRU_ACCOUNT,<!--托管人账号-->
+					'${item.acctChnname}' ACCT_CHNNAME,<!--托管人名称-->
+					<choose><when test="item.truFeeRage != null">${item.truFeeRage}</when><otherwise>null</otherwise></choose>  TRU_FEE_RAGE,<!--托管费率-->
+					'${item.truAccountNum}' TRU_ACCOUNT_NUM,<!--托管账户账号-->
+					'${item.truAccountName}' TRU_ACCOUNT_NAME,<!--托管账户户名-->
+					'${item.prodTermType}' PROD_TERM_TYPE,<!--产品期限类型-->
+					'${item.basis}' BASIS,<!--计息基础-->
+					'${item.isLayer}' IS_LAYER,<!--是否分层-->
+					'${item.proManager}' PRO_MANAGER,<!--管理人-->
+					'${item.proCustodian}' PRO_CUSTODIAN,<!---->
+					<choose><when test="item.hugeRedeemThreshold != null">${item.hugeRedeemThreshold}</when><otherwise>null</otherwise></choose>  HUGE_REDEEM_THRESHOLD,<!--巨额赎回阀值-->
+					<choose><when test="item.saleAmtStr != null">${item.saleAmtStr}</when><otherwise>null</otherwise></choose>  SALE_AMT_STR,<!--起点销售金额-->
+					'${item.operateMode}' OPERATE_MODE,<!--产品运作模式-->
+					'${item.fProdId}' F_PROD_ID<!--源系统金融产品代码-->
+				FROM
+					sysibm.SYSDUMMY1
+			</foreach>
+		) TEMP
+		<!-- 业务主键匹配 -->
+		ON(
+			RPI.PROD_ID = TEMP.PROD_ID 
+		)
+		<!-- 匹配到则更新  start-->
+		WHEN MATCHED THEN 
+			UPDATE SET 
+				<!--RPI.PROD_ID = TEMP.PROD_ID,产品代码-->
+				RPI.PROD_RE = TEMP.PROD_RE,<!--产品登记编码-->
+				RPI.PROD_NAME = TEMP.PROD_NAME,<!--产品名称-->
+				RPI.PROD_ABBR = TEMP.PROD_ABBR,<!--产品简称-->
+				RPI.RAISE_MIN = TEMP.RAISE_MIN,<!--募集下限-->
+				RPI.RAISE_MAX = TEMP.RAISE_MAX,<!--募集上限-->
+				RPI.RAISE_STRDATE = TEMP.RAISE_STRDATE,<!--募集开始日-->
+				RPI.RAISE_ENDDATE = TEMP.RAISE_ENDDATE,<!--募集结束日-->
+				RPI.RAISE_CCY = TEMP.RAISE_CCY,<!--募集币种-->
+				RPI.SET_DATE = TEMP.SET_DATE,<!--产品成立日-->
+				RPI.VDATE = TEMP.VDATE,<!--产品起息日-->
+				RPI.FIRST_OPEN_DAY = TEMP.FIRST_OPEN_DAY,<!--首次开放日-->
+				RPI.MDATE = TEMP.MDATE,<!--产品到期日-->
+				RPI.ACT_MDATE = TEMP.ACT_MDATE,<!--实际到期日-->
+				RPI.TERM = TEMP.TERM,<!--产品期限-->
+				RPI.WINDUP_DATE = TEMP.WINDUP_DATE,<!--产品清盘日-->
+				RPI.ISSUE_MODE = TEMP.ISSUE_MODE,<!--发行方式-->
+				RPI.PROFIT_TYPE = TEMP.PROFIT_TYPE,<!--收益类型-->
+				RPI.PROD_TYPE = TEMP.PROD_TYPE,<!--产品类型-->
+				RPI.RAISE_TYPE = TEMP.RAISE_TYPE,<!--募集方式-->
+				RPI.RISK_LEVEL = TEMP.RISK_LEVEL,<!--产品风险等级-->
+				RPI.CREATE_USER = TEMP.CREATE_USER,<!--创建人-->
+				RPI.CREATE_DEPT = TEMP.CREATE_DEPT,<!--创建部门-->
+				RPI.CREATE_TIME = TEMP.CREATE_TIME,<!--创建时间-->
+				RPI.UPDATE_USER = TEMP.UPDATE_USER,<!--更新人-->
+				RPI.UPDATE_TIME = TEMP.UPDATE_TIME,<!--更新时间-->
+				RPI.RAISE_AMT = TEMP.RAISE_AMT,<!--募集金额-->
+				RPI.OPEN_MODE = TEMP.OPEN_MODE,<!--开放模式-->
+				RPI.INVEST_PROF_DATE = TEMP.INVEST_PROF_DATE,<!--投资收益到账日-->
+				RPI.INVEST_PRIN_DATE = TEMP.INVEST_PRIN_DATE,<!--投资本金到账日-->
+				RPI.IS_INDEPE_ACC = TEMP.IS_INDEPE_ACC,<!--是否独立开户-->
+				RPI.PROD_INVEST_TYPE = TEMP.PROD_INVEST_TYPE,<!--投资范围/投资性质-->
+				RPI.REVEAL_CHANNEL = TEMP.REVEAL_CHANNEL,<!--披露渠道-->
+				RPI.DEAL_CAL = TEMP.DEAL_CAL,<!--交易日历-->
+				RPI.STATUS = TEMP.STATUS,<!--数据状态-->
+				RPI.FINA_TYPE = TEMP.FINA_TYPE,<!--理财类型-->
+				RPI.TRU_ACCOUNT = TEMP.TRU_ACCOUNT,<!--托管人账号-->
+				RPI.ACCT_CHNNAME = TEMP.ACCT_CHNNAME,<!--托管人名称-->
+				RPI.TRU_FEE_RAGE = TEMP.TRU_FEE_RAGE,<!--托管费率-->
+				RPI.TRU_ACCOUNT_NUM = TEMP.TRU_ACCOUNT_NUM,<!--托管账户账号-->
+				RPI.TRU_ACCOUNT_NAME = TEMP.TRU_ACCOUNT_NAME,<!--托管账户户名-->
+				RPI.PROD_TERM_TYPE = TEMP.PROD_TERM_TYPE,<!--产品期限类型-->
+				RPI.BASIS = TEMP.BASIS,<!--计息基础-->
+				RPI.IS_LAYER = TEMP.IS_LAYER,<!--是否分层-->
+				RPI.PRO_MANAGER = TEMP.PRO_MANAGER,<!--管理人-->
+				RPI.PRO_CUSTODIAN = TEMP.PRO_CUSTODIAN,<!---->
+				RPI.HUGE_REDEEM_THRESHOLD = TEMP.HUGE_REDEEM_THRESHOLD,<!--巨额赎回阀值-->
+				RPI.SALE_AMT_STR = TEMP.SALE_AMT_STR,<!--起点销售金额-->
+				RPI.OPERATE_MODE = TEMP.OPERATE_MODE,<!--产品运作模式-->
+				RPI.F_PROD_ID = TEMP.F_PROD_ID<!--源系统金融产品代码-->
+		<!-- 匹配到则更新  end-->
+		<!-- 不匹配到则插入  start-->
+		WHEN NOT MATCHED THEN
+            INSERT
+            (
+				PROD_ID,<!--产品代码-->
+				PROD_RE,<!--产品登记编码-->
+				PROD_NAME,<!--产品名称-->
+				PROD_ABBR,<!--产品简称-->
+				RAISE_MIN,<!--募集下限-->
+				RAISE_MAX,<!--募集上限-->
+				RAISE_STRDATE,<!--募集开始日-->
+				RAISE_ENDDATE,<!--募集结束日-->
+				RAISE_CCY,<!--募集币种-->
+				SET_DATE,<!--产品成立日-->
+				VDATE,<!--产品起息日-->
+				FIRST_OPEN_DAY,<!--首次开放日-->
+				MDATE,<!--产品到期日-->
+				ACT_MDATE,<!--实际到期日-->
+				TERM,<!--产品期限-->
+				WINDUP_DATE,<!--产品清盘日-->
+				ISSUE_MODE,<!--发行方式-->
+				PROFIT_TYPE,<!--收益类型-->
+				PROD_TYPE,<!--产品类型-->
+				RAISE_TYPE,<!--募集方式-->
+				RISK_LEVEL,<!--产品风险等级-->
+				CREATE_USER,<!--创建人-->
+				CREATE_DEPT,<!--创建部门-->
+				CREATE_TIME,<!--创建时间-->
+				UPDATE_USER,<!--更新人-->
+				UPDATE_TIME,<!--更新时间-->
+				RAISE_AMT,<!--募集金额-->
+				OPEN_MODE,<!--开放模式-->
+				INVEST_PROF_DATE,<!--投资收益到账日-->
+				INVEST_PRIN_DATE,<!--投资本金到账日-->
+				IS_INDEPE_ACC,<!--是否独立开户-->
+				PROD_INVEST_TYPE,<!--投资范围/投资性质-->
+				REVEAL_CHANNEL,<!--披露渠道-->
+				DEAL_CAL,<!--交易日历-->
+				STATUS,<!--数据状态-->
+				FINA_TYPE,<!--理财类型-->
+				TRU_ACCOUNT,<!--托管人账号-->
+				ACCT_CHNNAME,<!--托管人名称-->
+				TRU_FEE_RAGE,<!--托管费率-->
+				TRU_ACCOUNT_NUM,<!--托管账户账号-->
+				TRU_ACCOUNT_NAME,<!--托管账户户名-->
+				PROD_TERM_TYPE,<!--产品期限类型-->
+				BASIS,<!--计息基础-->
+				IS_LAYER,<!--是否分层-->
+				PRO_MANAGER,<!--管理人-->
+				PRO_CUSTODIAN,<!---->
+				HUGE_REDEEM_THRESHOLD,<!--巨额赎回阀值-->
+				SALE_AMT_STR,<!--起点销售金额-->
+				OPERATE_MODE,<!--产品运作模式-->
+				F_PROD_ID<!--源系统金融产品代码-->
+			)
+            VALUES
+           (
+				TEMP.PROD_ID,<!--产品代码-->
+				TEMP.PROD_RE,<!--产品登记编码-->
+				TEMP.PROD_NAME,<!--产品名称-->
+				TEMP.PROD_ABBR,<!--产品简称-->
+				TEMP.RAISE_MIN,<!--募集下限-->
+				TEMP.RAISE_MAX,<!--募集上限-->
+				TEMP.RAISE_STRDATE,<!--募集开始日-->
+				TEMP.RAISE_ENDDATE,<!--募集结束日-->
+				TEMP.RAISE_CCY,<!--募集币种-->
+				TEMP.SET_DATE,<!--产品成立日-->
+				TEMP.VDATE,<!--产品起息日-->
+				TEMP.FIRST_OPEN_DAY,<!--首次开放日-->
+				TEMP.MDATE,<!--产品到期日-->
+				TEMP.ACT_MDATE,<!--实际到期日-->
+				TEMP.TERM,<!--产品期限-->
+				TEMP.WINDUP_DATE,<!--产品清盘日-->
+				TEMP.ISSUE_MODE,<!--发行方式-->
+				TEMP.PROFIT_TYPE,<!--收益类型-->
+				TEMP.PROD_TYPE,<!--产品类型-->
+				TEMP.RAISE_TYPE,<!--募集方式-->
+				TEMP.RISK_LEVEL,<!--产品风险等级-->
+				TEMP.CREATE_USER,<!--创建人-->
+				TEMP.CREATE_DEPT,<!--创建部门-->
+				TEMP.CREATE_TIME,<!--创建时间-->
+				TEMP.UPDATE_USER,<!--更新人-->
+				TEMP.UPDATE_TIME,<!--更新时间-->
+				TEMP.RAISE_AMT,<!--募集金额-->
+				TEMP.OPEN_MODE,<!--开放模式-->
+				TEMP.INVEST_PROF_DATE,<!--投资收益到账日-->
+				TEMP.INVEST_PRIN_DATE,<!--投资本金到账日-->
+				TEMP.IS_INDEPE_ACC,<!--是否独立开户-->
+				TEMP.PROD_INVEST_TYPE,<!--投资范围/投资性质-->
+				TEMP.REVEAL_CHANNEL,<!--披露渠道-->
+				TEMP.DEAL_CAL,<!--交易日历-->
+				TEMP.STATUS,<!--数据状态-->
+				TEMP.FINA_TYPE,<!--理财类型-->
+				TEMP.TRU_ACCOUNT,<!--托管人账号-->
+				TEMP.ACCT_CHNNAME,<!--托管人名称-->
+				TEMP.TRU_FEE_RAGE,<!--托管费率-->
+				TEMP.TRU_ACCOUNT_NUM,<!--托管账户账号-->
+				TEMP.TRU_ACCOUNT_NAME,<!--托管账户户名-->
+				TEMP.PROD_TERM_TYPE,<!--产品期限类型-->
+				TEMP.BASIS,<!--计息基础-->
+				TEMP.IS_LAYER,<!--是否分层-->
+				TEMP.PRO_MANAGER,<!--管理人-->
+				TEMP.PRO_CUSTODIAN,<!---->
+				TEMP.HUGE_REDEEM_THRESHOLD,<!--巨额赎回阀值-->
+				TEMP.SALE_AMT_STR,<!--起点销售金额-->
+				TEMP.OPERATE_MODE,<!--产品运作模式-->
+				TEMP.F_PROD_ID<!--源系统金融产品代码-->
+			) 
+		<!-- 不匹配到则插入  end-->
+    </update>
+</mapper>

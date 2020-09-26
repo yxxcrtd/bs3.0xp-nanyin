@@ -1,0 +1,155 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
+<head>
+<meta charset="utf-8">
+<title data-th-text="#{SvrProdPersonIssue001}">个人产品发行登记</title>
+</head>
+<body>
+<div layout:fragment="content">
+  <div class="form-button-area" export="false">
+    <a id="SvrProdPersonIssue001_btn_checkData" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-datacheck"></i>数据检查</a>
+    <!--<a id="SvrProdPersonIssue001_btn_submit" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-sent"></i>报送</a>
+    <a id="SvrProdPersonIssue001_btn_submitAgain" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-sent"></i>重新报送</a> -->
+    <a id="SvrProdPersonIssue001_btn_manual" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-hand"></i>手工处理</a>
+    <a id="SvrProdPersonIssue001_btn_cancelManual" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-hand"></i>取消手工处理</a> 
+<!--      <a id="SvrProdPersonIssue001_btn_export" class="layui-btn layui-btn-sm btn-export btn-default">导出查询结果</a> -->
+    <a id="SvrProdPersonIssue001_btn_chbexport" class="layui-btn layui-btn-sm btn-export btn-default">导出中债Excel</a>
+     <!-- <a id="SvrProdPersonIssue001_btn_exportDel" class="layui-btn layui-btn-sm btn-export btn-default">导出删除模板</a>
+     <a id="SvrProdPersonIssue001_btn_upload" class="layui-btn layui-btn-sm btn-export btn-default">上传</a>
+     <a id="SvrProdPersonIssue001_btn_download" class="layui-btn layui-btn-sm btn-import btn-default">导入</a> -->
+  </div>
+		<div class="joyin-form-wrap joyin-filter-form condition-area">
+			<form class="layui-form" id="searchForm">
+				<div class="layui-form-item">
+					<div class="layui-inline layui-col-md4">
+						<label class="layui-form-label form-lable">产品</label>
+						<div class="layui-input-inline input-inline">
+							<select id="prodId" class="input-select"
+								data-th-data-url='@{/svreport/system/proregistcodemanage/ProRegistCodeManage001/getProdID}'
+								initvalue="" placeholder="请选择"
+								data-th-placeholder="#{SysCommon.selectplaceholder}"
+								allowClear="true" multiple="multiple">
+							</select>
+						</div>
+					</div>
+					<div class="layui-inline layui-col-md4">
+						<label class="layui-form-label form-lable">募集起始日期</label>
+						<div class="layui-input-inline input-inline">
+							<input id="raiseVdate" type="text" name="timeControl"
+								class="layui-input form-input timeControl input-dateRangeSelect"
+								placeholder="请选择日期区间" />
+						</div>
+					</div>
+					<div class="layui-inline layui-col-md4">
+						<label class="layui-form-label form-lable">产品登记编码</label>
+						<div class="layui-input-inline input-inline">
+							<select id="prodRegistCode" class="input-select"
+								data-th-data-url='@{/svreport/system/proregistcodemanage/ProRegistCodeManage001/getRegCode}'
+								initvalue="" placeholder="请选择"
+								data-th-placeholder="#{SysCommon.selectplaceholder}"
+								allowClear="true" multiple="multiple">
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-inline layui-col-md4">
+						<label class="layui-form-label form-lable">产品起始日期</label>
+						<div class="layui-input-inline input-inline">
+							<input id="prdVdate" type="text" name="timeControl"
+								class="layui-input form-input timeControl input-dateRangeSelect"
+								placeholder="请选择日期区间" />
+						</div>
+					</div>
+					<div class="layui-inline layui-col-md4">
+						<label class="layui-form-label form-lable">报送日期</label>
+						<div class="layui-input-inline input-inline">
+							<input id="submitDate" type="text" name="timeControl"
+								class="layui-input form-input timeControl input-dateRangeSelect"
+								placeholder="请选择日期区间" />
+						</div>
+					</div>
+					<div class="layui-inline layui-col-md4">
+						<label class="layui-form-label form-lable">报送状态</label>
+						<div class="layui-input-inline input-inline">
+							<select id="submitStatus" name="submitStatus"
+								class="layui-input form-input input-select"
+								data-th-data-result='${SUBMIT_STATUS}'
+								data-th-initvalue="${submitStatus}" placeholder="请选择"
+								data-th-placeholder="#{SysCommon.selectplaceholder}"
+								allowClear="true" multiple="multiple">
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-inline layui-col-md4">
+						<label class="layui-form-label form-lable">报送截止日</label>
+						<div class="layui-input-inline input-inline">
+							<input id="submitDeadLine" type="text" name="timeControl"
+								class="layui-input form-input timeControl input-dateRangeSelect"
+								placeholder="请选择日期区间" />
+						</div>
+					</div>
+					<div class="layui-inline layui-col-md4">
+						<label class="layui-form-label form-lable">数据日期</label>
+						<div class="layui-input-inline input-inline">
+							<input id="updateTime" type="text" name="timeControl"
+								class="layui-input form-input timeControl input-dateRangeSelect"
+								placeholder="请选择日期区间" />
+						</div>
+					</div>
+					<div class="layui-inline layui-col-md4">
+						<label class="layui-form-label form-lable">反馈状态</label>
+						<div class="layui-input-inline input-inline">
+							<select id="submitFeedbackStatus" class="input-select"
+								data-th-data-result='${SUBMIT_FEEDBACK_STATUS}'
+								data-th-initvalue="${submitFeedbackStatus}" placeholder="请选择"
+								data-th-placeholder="#{SysCommon.selectplaceholder}"
+								allowClear="true" multiple="multiple">
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-inline layui-col-md4">
+						<label class="layui-form-label form-lable">数据状态</label>
+						<div class="layui-input-inline input-inline">
+							<select id="status" class="input-select"
+								data-th-data-result='${SUBMITTED_STATUS}' placeholder="请选择"
+								data-th-initvalue="${status}"
+								data-th-placeholder="#{SysCommon.selectplaceholder}"
+								allowClear="true" multiple="multiple">
+							</select>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div>
+    <table class="layui-table" id="prodPersonIssue">
+    </table>
+  </div>
+</div>
+<div layout:fragment="script"> 
+  <script data-th-inline="javascript" type="text/javascript">
+	var isMain=/*[[${isMain}]]*/'';
+	var searchDataStart=/*[[${searchDataStart}]]*/'';
+	var searchDataEnd=/*[[${searchDataEnd}]]*/'';
+	var submitStatus=/*[[${submitStatus}]]*/'';
+	var indentifyMark=/*[[${indentifyMark}]]*/'';
+	var submitFeedbackStatus=/*[[${submitFeedbackStatus}]]*/'';
+	var newPageTitle = '<h4 class="modal-title" id="myModalLabel">请输入删除原因</h4>';
+	var dataTitle = '<h4 class="modal-title" id="myModalLabel">产品发行登记数据检查 </h4>';
+	var pageUrl = '/chb/submitmanagement/prodPersonIssue/prodPersonIssue002/init';
+	var pageUrl1 = '/chb/submitmanagement/prodPersonIssue/prodPersonIssue003/init';
+	var checkUrl = '/chb/submitmanagement/prodpersonissue/ProdPersonIssue001/reportCheck';
+	var CHB_REGIST_013 = '<spring:message code="CHB_REGIST_013" />';
+  </script> 
+  <script data-th-src="@{/js/report/report-common.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/jquery.validate.js}" type="text/javascript"></script> 
+  <script data-th-src="@{/js/report/joyinvalid.js}" type="text/javascript"></script> 
+  <script data-th-src="@{/js/report/chb/prodpersonissue/ProdPersonIssue001.js}" type="text/javascript"></script> 
+</div>
+</body>
+</html>

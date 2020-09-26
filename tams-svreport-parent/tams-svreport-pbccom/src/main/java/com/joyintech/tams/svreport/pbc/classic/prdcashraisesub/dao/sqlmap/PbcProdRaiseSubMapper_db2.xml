@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dao.PbcProdRaiseSubMapper_db2" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub" >
+    <id column="REGIST_SEQNO" property="registSeqno" jdbcType="CHAR" />
+    <result column="RAISING_DATE" property="raisingDate" jdbcType="TIMESTAMP" />
+    <result column="PBC_PROD_ID" property="pbcProdId" jdbcType="VARCHAR" />
+    <result column="BUY_PLACE" property="buyPlace" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_TYPE1" property="customerType1" jdbcType="VARCHAR" />
+    <result column="CCY" property="ccy" jdbcType="CHAR" />
+    <result column="RAISING_AMTSUM" property="raisingAmtsum" jdbcType="DECIMAL" />
+    <result column="RAISING_AMTSUM_CNY" property="raisingAmtsumCny" jdbcType="DECIMAL" />
+    <result column="RAISING_QTY" property="raisingQty" jdbcType="DECIMAL" />
+    <result column="REDAMT" property="redamt" jdbcType="DECIMAL" />
+    <result column="REDAMT_CNY" property="redamtCny" jdbcType="DECIMAL" />
+    <result column="REDQTY" property="redqty" jdbcType="DECIMAL" />
+    <result column="ENDAMTSUM" property="endamtsum" jdbcType="DECIMAL" />
+    <result column="ENDAMTSUM_CNY" property="endamtsumCny" jdbcType="DECIMAL" />
+    <result column="ENDQTY" property="endqty" jdbcType="DECIMAL" />
+    <result column="PROD_VALUE" property="prodValue" jdbcType="DECIMAL" />
+    <result column="PROD_VALUE_CNY" property="prodValueCny" jdbcType="DECIMAL" />
+    <result column="UNIT_VALUE_TOTAL" property="unitValueTotal" jdbcType="DECIMAL" />
+    <result column="UNIT_VALUE_TOTAL_CNY" property="unitValueTotalCny" jdbcType="DECIMAL" />
+    <result column="PROD_HIGH_YIELD" property="prodHighYield" jdbcType="DECIMAL" />
+    <result column="PROD_LOW_YIELD" property="prodLowYield" jdbcType="DECIMAL" />
+    <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+    <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+    <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
+    <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+    <result column="STATUS_DATE" property="statusDate" jdbcType="TIMESTAMP" />
+    <result column="PBC_SUBMIT_DEADLINE" property="pbcSubmitDeadline" jdbcType="TIMESTAMP" />
+    <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+    <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+    <result column="YEILD_CCY" property="yieldCcy" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    REGIST_SEQNO, RAISING_DATE, PBC_PROD_ID, BUY_PLACE, CUSTOMER_TYPE1, CCY, RAISING_AMTSUM, 
+    RAISING_AMTSUM_CNY, RAISING_QTY, REDAMT, REDAMT_CNY, REDQTY, ENDAMTSUM, ENDAMTSUM_CNY, 
+    ENDQTY, PROD_VALUE, PROD_VALUE_CNY, UNIT_VALUE_TOTAL, UNIT_VALUE_TOTAL_CNY, PROD_HIGH_YIELD, 
+    PROD_LOW_YIELD, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, 
+    PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, 
+    CREATE_TIME, UPDATE_USER, UPDATE_TIME
+  </sql>
+  <sql id="Base_Column_List2" >
+    HIS_NO, RAISING_DATE, PBC_PROD_ID, BUY_PLACE, CUSTOMER_TYPE1, CCY, RAISING_AMTSUM, 
+    RAISING_AMTSUM_CNY, RAISING_QTY, REDAMT, REDAMT_CNY, REDQTY, ENDAMTSUM, ENDAMTSUM_CNY, 
+    ENDQTY, PROD_VALUE, PROD_VALUE_CNY, UNIT_VALUE_TOTAL, UNIT_VALUE_TOTAL_CNY, PROD_HIGH_YIELD, 
+    PROD_LOW_YIELD, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, 
+    PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, 
+    CREATE_TIME, UPDATE_USER, UPDATE_TIME
+  </sql>
+  <delete id="deleteBatch" parameterType="com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub">
+	delete from PBC_PROD_RAISING_SUB
+	where 1 = 1 
+	<if test="list!=null and list.size()>0">
+		<foreach collection="list" item="dto" open="and (PBC_PROD_ID,RAISING_DATE,nvl(ORG_CODE,'NULLORG')) in (" separator="union all"
+			close=")">
+			select #{dto.pbcProdId,jdbcType=VARCHAR},
+			#{dto.raisingDate,jdbcType=DATE},
+            nvl(#{dto.orgCode,jdbcType=VARCHAR},'NULLORG')
+			from sysibm.SYSDUMMY1
+		</foreach>
+		AND SEND_STATUS = '01'
+	</if>
+  </delete>
+
+  <!-- 手工处理 -->
+  <update id="doManul" parameterType="map">
+  	update PBC_PROD_RAISING_SUB 
+  	set 
+  		SEND_STATUS = '03',
+  		SUBMIT_FEEDBACK_STATUS = '03',
+        <if test="submitadd != null and submitadd != ''">
+  			SUBMIT_TIME = sysdate + #{submitadd},
+  		</if>
+  		<if test="submitadd == null">
+  			SUBMIT_TIME = sysdate,
+  		</if>
+        UPDATE_TIME = sysdate
+        <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 begin -->
+        , STATUS_DATE = sysdate
+        <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 end -->
+    <where>
+      <if test="list != null and list.size() >0">
+	      <foreach collection="list" open="(PBC_PROD_ID,RAISING_DATE) in (" close=")" separator="union all" item="item">
+	            select #{item.pbcProdId,jdbcType=CHAR},
+	            #{item.raisingDate,jdbcType=CHAR}
+	            from sysibm.SYSDUMMY1
+	      </foreach>
+      </if>
+    </where> 
+  </update>
+  <!-- 取消手工处理 -->
+  <update id="cancelManul" parameterType="java.util.List">
+  	update PBC_PROD_RAISING_SUB 
+  	set 
+  		SEND_STATUS = '01',
+		UPDATE_TIME = sysdate,
+		SUBMIT_TIME = null,
+		SUBMIT_FEEDBACK_STATUS = null
+	<where>
+      <if test="list != null and list.size() >0">
+          <foreach collection="list" open="(PBC_PROD_ID,RAISING_DATE) in (" close=")" separator="union all" item="item">
+                select #{item.pbcProdId,jdbcType=CHAR},
+                #{item.raisingDate,jdbcType=CHAR}
+                from sysibm.SYSDUMMY1
+          </foreach>
+      </if>
+    </where>
+  </update>
+     <insert id="insertHisBatchBySendStatus" parameterType="java.util.List">
+  	insert into PBC_PROD_RAISING_SUB_HIS (<include refid="Base_Column_List2"></include>)
+    select 
+      <include refid="Base_Column_List"></include>
+    from PBC_PROD_RAISING_SUB
+    <where>
+      <if test="list != null and list.size() >0">
+          <foreach collection="list" open="(PBC_PROD_ID,RAISING_DATE) in (" close=")" separator="union all" item="item">
+                select #{item.pbcProdId,jdbcType=CHAR},
+                #{item.raisingDate,jdbcType=CHAR}
+                from sysibm.SYSDUMMY1
+          </foreach>
+      </if>
+      and SEND_STATUS in ('02','03')
+    </where> 
+  </insert>
+  <insert id="insetBatchSubFromHisByUpdateTime" parameterType="java.util.List" >
+	insert into PBC_PROD_RAISING_SUB
+	 (<include refid="Base_Column_List"></include>)
+    select HIS_NO, RAISING_DATE, PBC_PROD_ID, BUY_PLACE, CUSTOMER_TYPE1, CCY, RAISING_AMTSUM, 
+    RAISING_AMTSUM_CNY, RAISING_QTY, REDAMT, REDAMT_CNY, REDQTY, ENDAMTSUM, ENDAMTSUM_CNY, 
+    ENDQTY, PROD_VALUE, PROD_VALUE_CNY, UNIT_VALUE_TOTAL, UNIT_VALUE_TOTAL_CNY, PROD_HIGH_YIELD, 
+    PROD_LOW_YIELD, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, 
+    PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, 
+    sysdate, UPDATE_USER, sysdate
+      from (
+      	select <include refid="Base_Column_List2"></include>,
+      	rank() over (partition by PBC_PROD_ID order by nvl(update_time,create_time) desc) ranknum
+      	from PBC_PROD_RAISING_SUB_HIS
+	    <where>
+	      <if test="list != null and list.size() >0">
+	          <foreach collection="list" open="(PBC_PROD_ID,RAISING_DATE) in (" close=")" separator="union all" item="item">
+	                select #{item.pbcProdId,jdbcType=CHAR},
+	                #{item.raisingDate,jdbcType=CHAR}
+	                from sysibm.SYSDUMMY1
+	          </foreach>
+	      </if>
+	    </where> 
+      )
+      where ranknum = 1
+</insert>
+<delete id="deleteBatchSubFromHisByUpdateTime" parameterType="java.util.List" >
+	delete from PBC_PROD_RAISING_SUB_HIS
+	where PBC_PROD_ID in (
+	    select  PBC_PROD_ID
+	      from (
+	      	select PBC_PROD_ID ,
+	      	rank() over (partition by PBC_PROD_ID order by nvl(update_time,create_time) desc) ranknum
+	      	from PBC_PROD_RAISING_SUB_HIS
+	        <where>
+	          <if test="list != null and list.size() >0">
+	              <foreach collection="list" open="(PBC_PROD_ID,RAISING_DATE) in (" close=")" separator="union all" item="item">
+	                    select #{item.pbcProdId,jdbcType=CHAR},
+	                    #{item.raisingDate,jdbcType=CHAR}
+	                    from sysibm.SYSDUMMY1
+	              </foreach>
+	          </if>
+	        </where> 
+	      )
+	      where ranknum = 1
+    )
+</delete>
+<delete id="deleteBatchBySendStatus" parameterType="java.util.List">
+  	delete from PBC_PROD_RAISING_SUB 
+    <where>
+      <if test="list != null and list.size() >0">
+          <foreach collection="list" open="(PBC_PROD_ID,RAISING_DATE) in (" close=")" separator="union all" item="item">
+                select #{item.pbcProdId,jdbcType=CHAR},
+                #{item.raisingDate,jdbcType=CHAR}
+                from sysibm.SYSDUMMY1
+          </foreach>
+      </if>
+        and SEND_STATUS in ('02','03')
+    </where> 
+ </delete>
+    
+     <select id="selectRegistSeqnoList" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub">
+   	select REGIST_SEQNO
+      from PBC_PROD_RAISING_SUB
+      where 1 =1
+      <if test="flag == '02'">
+      and SEND_STATUS in ('02','03')
+      </if>
+      <if test="flag == '01'">
+      and SEND_STATUS = '01'
+      </if>
+      <if test="list != null and list.size() >0">
+	      <foreach collection="list" open="and (PBC_PROD_ID,RAISING_DATE) in (" close=")" separator="union all" item="item">
+	            select #{item.pbcProdId,jdbcType=CHAR},
+	            #{item.raisingDate,jdbcType=CHAR}
+	            from sysibm.SYSDUMMY1
+	      </foreach>
+      </if>
+   </select>
+</mapper>

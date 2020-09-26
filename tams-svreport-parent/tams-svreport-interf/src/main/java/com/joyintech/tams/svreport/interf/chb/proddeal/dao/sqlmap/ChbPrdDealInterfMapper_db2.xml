@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.joyintech.tams.svreport.interf.chb.proddeal.dao.ChbPrdDealInterfMapper_db2">
+
+
+	<delete id="deletePrdDealBatchList" parameterType="com.joyintech.tams.common.base.entity.ChbPrdDeal">
+		begin
+		<foreach collection="listChbPrdDeal" item="item" index="index"
+			separator=";">
+			delete from CHB_PRD_DEAL
+			where TRADE_ID =
+			#{item.tradeId,jdbcType=VARCHAR}
+		</foreach>
+		;end
+	</delete>
+
+	<insert id="insertPrdDealBatchList" parameterType="com.joyintech.tams.common.base.entity.ChbPrdDeal">
+		insert into CHB_PRD_DEAL
+		(SEQNO,TRADE_ID,FPROD_ID,PROD_ID,
+		ISSUE_PARTY_ID,INDENTIFY_MARK,BUY_PLACE,
+		TRADE_TYPE,SETTDATE_DATE,PAY_DATE,
+		INTEREST_DATE,INT_AMT,TRADE_PRINCE,
+		UNIT_BONUS_AMOUNT,REDEMPTION_FEE,
+		TRADE_QTY,CCY,STATUS,ORG_CODE,
+		DEPT_CODE,DATA_SOURCE,REMARK,
+		REV_DATE,UPDATE_USER,UPDATE_TIME,
+		CREATE_USER,CREATE_TIME,INTEREST_CCY,CUSTOMER_TYPE1,CUSTOMER_TYPE2
+		)
+		<foreach collection="listChbPrdDeal" item="dto" index="index"
+			separator="union all" open="(" close=")">
+			select
+			#{dto.seqno,jdbcType=CHAR}, #{dto.tradeId,jdbcType=VARCHAR},
+			#{dto.fprodId,jdbcType=VARCHAR},
+			#{dto.prodId,jdbcType=VARCHAR},
+			#{dto.issuePartyId,jdbcType=VARCHAR},
+			#{dto.indentifyMark,jdbcType=VARCHAR},
+			#{dto.buyPlace,jdbcType=VARCHAR}, #{dto.tradeType,jdbcType=VARCHAR},
+			#{dto.settdateDate,jdbcType=DATE},
+			#{dto.payDate,jdbcType=DATE},
+			#{dto.interestDate,jdbcType=DATE}, #{dto.intAmt,jdbcType=DECIMAL},
+			#{dto.tradePrince,jdbcType=DECIMAL},
+			#{dto.unitBonusAmount,jdbcType=DECIMAL},
+			#{dto.redemptionFee,jdbcType=DECIMAL},
+			#{dto.tradeQty,jdbcType=DECIMAL},#{dto.ccy,jdbcType=VARCHAR},
+			#{dto.status,jdbcType=VARCHAR},
+			#{dto.orgCode,jdbcType=VARCHAR},
+			#{dto.deptCode,jdbcType=VARCHAR},#{dto.dataSource,jdbcType=VARCHAR},
+			#{dto.remark,jdbcType=VARCHAR},#{dto.revDate,jdbcType=DATE},#{dto.updateUser,jdbcType=VARCHAR},sysdate,
+			#{dto.createUser,jdbcType=VARCHAR},sysdate,#{dto.ccy,jdbcType=VARCHAR}
+			as interstCcy,#{dto.customerType1,jdbcType=VARCHAR},
+			#{dto.customerType2,jdbcType=VARCHAR}
+			from SYSIBM.SYSDUMMY1
+		</foreach>
+	</insert>
+
+	<select id="selectPrdFeeDealByDate" parameterType="map"
+		resultSetType="FORWARD_ONLY" fetchSize="1000"
+		resultType="com.joyintech.tams.common.base.entity.ChbPrdFeeDeal">
+		SELECT
+		FEEDETAIL.TRADE_ID AS tradeId,
+		DECODE(INFO.P_FINPROD_ID,NULL,NULL,INFO.FINPROD_MARKET_ID) AS fprodId,
+		DECODE(INFO.FINPROD_MARKET_ID,NULL,
+		(SELECT PROD.FINPROD_MARKET_ID FROM
+		FIN_PRODUCT_ADD INFOADD
+		LEFT JOIN FIN_PRODUCT PROD
+		ON INFOADD.FINPROD_ID
+		= PROD.FINPROD_ID
+		WHERE INFOADD.PORTFOLIO_ID = DL.FINPROD_ID FETCH FIRST 1 ROWS ONLY 
+		),
+		DECODE(INFO.P_FINPROD_ID, NULL, INFO.FINPROD_MARKET_ID,
+		DL.FINPROD_ID))
+		AS prodId,
+		DECODE(INFO.FINPROD_MARKET_ID,NULL,
+		(SELECT
+		PROD.FINPROD_NAME FROM FIN_PRODUCT_ADD INFOADD
+		LEFT JOIN FIN_PRODUCT
+		PROD
+		ON INFOADD.FINPROD_ID = PROD.FINPROD_ID
+		WHERE INFOADD.PORTFOLIO_ID
+		= DL.FINPROD_ID FETCH FIRST 1 ROWS ONLY 
+		),
+		INFO.FINPROD_NAME)
+		AS prodName,
+		FEINFO.FEE_ID feeId,
+		FEINFO.FEE_NAME feeName,
+		FEINFO.ORG_TYPE feeType,
+		DECODE(DL.FINPROD_TYPE2,'C04','11',FEINFO.ORG_TYPE2) feeSectype,
+		DL.CCY ccy,
+		FEEDETAIL.FEE_AMT amt,
+		DL.SETTLE_DATE payDate,
+		DECODE(REVDL.UPDATE_TIME,NULL,'E','D') status,
+		DL.REMARK remark,
+		DL.CREATE_TIME AS createTime,
+		NVL(DL.UPDATE_TIME,DL.CREATE_TIME) AS
+		updateTime
+		FROM TRD_PRODUCT_DEAL DL
+
+		LEFT JOIN FIN_PRODUCT INFO
+		ON
+		DL.FINPROD_ID = INFO.FINPROD_ID
+
+		LEFT JOIN TRD_PRODUCT_DEAL REVDL
+		ON
+		DL.TRADE_ID = REVDL.P_TRADE_ID
+
+		LEFT JOIN TRD_TRADE_FEE_DETAIL FEEDETAIL
+		ON DL.TRADE_ID =
+		FEEDETAIL.TRADE_ID
+
+		LEFT JOIN MST_FEEINFO FEINFO
+		ON
+		FEINFO.FEE_ID = FEEDETAIL.FEE_ID
+
+		WHERE DL.PS = 'C11'
+		<!-- AND
+		DL.FINPROD_TYPE2 IN ('C03','C04','C05','C06','C9','C10','C11') -->
+		AND
+		((REVDL.UPDATE_TIME IS NOT NULL
+		AND
+		TO_CHAR(DL.UPDATE_TIME,'yyyy-MM-dd') !=
+		TO_CHAR(REVDL.UPDATE_TIME,'yyyy-MM-dd')
+		AND
+		NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) >
+		#{batchTime,jdbcType=TIMESTAMP})
+		OR (REVDL.UPDATE_TIME IS NULL
+		AND
+		NVL(DL.UPDATE_TIME,DL.CREATE_TIME) > #{batchTime,jdbcType=TIMESTAMP})
+		)
+        and nvL(dl.p_trade_id,'NOREV') = 'NOREV'
+		AND DL.IS_CANCEL IS NOT NULL
+		<if test="prodIdList !=null and prodIdList.size()>0">
+			<!-- 产品代码不为空时 -->
+			<foreach collection="prodIdList" item="prodCode"
+				open="and INFO.FINPROD_MARKET_ID in (" close=")" separator=",">
+				#{prodCode,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+
+		<!-- UNION ALL SELECT FEEDETAIL.TRADE_ID AS tradeId, DECODE(INFO.P_FINPROD_ID,NULL,NULL,INFO.FINPROD_MARKET_ID) 
+			AS fprodId, DECODE(INFO.P_FINPROD_ID,NULL,INFO.FINPROD_MARKET_ID,DL.FINPROD_ID) 
+			AS prodId, INFO.FINPROD_NAME AS prodName, null feeId, '赎回费' feeName, '01' 
+			feeType, '02' feeSectype, DL.CCY ccy, FEEDETAIL.FEE_AMT amt, DL.SETTLE_DATE 
+			payDate, DECODE(REVDL.UPDATE_TIME,NULL,'E','D') status, '赎回费' remark, DL.CREATE_TIME 
+			AS createTime, DL.UPDATE_TIME AS updateTime FROM TRD_PRODUCT_DEAL DL LEFT 
+			JOIN FIN_PRODUCT INFO ON DL.FINPROD_ID = INFO.FINPROD_ID LEFT JOIN TRD_PRODUCT_DEAL 
+			REVDL ON DL.TRADE_ID = REVDL.P_TRADE_ID LEFT JOIN TRD_TRADE_FEE_DETAIL FEEDETAIL 
+			ON DL.TRADE_ID = FEEDETAIL.TRADE_ID WHERE DL.PS = 'C4' AND DL.FINPROD_TYPE2 
+			IN ('F16','F26') AND FEEDETAIL.FEE_TYPE = 'B15' AND ((REVDL.UPDATE_TIME IS 
+			NOT NULL AND TO_CHAR(DL.UPDATE_TIME,'yyyy-MM-dd') != TO_CHAR(REVDL.UPDATE_TIME,'yyyy-MM-dd') 
+			AND NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) = #{batchTime,jdbcType=TIMESTAMP}) 
+			OR (REVDL.UPDATE_TIME IS NULL AND NVL(DL.UPDATE_TIME,DL.CREATE_TIME) = #{batchTime,jdbcType=TIMESTAMP}) 
+			) AND DL.IS_CANCEL IS NOT NULL <if test="prodIdList !=null and prodIdList.size()>0"> 
+			产品代码不为空时 <foreach collection="prodIdList" item="prodCode" open="and INFO.FINPROD_MARKET_ID 
+			in (" close=")" separator=","> #{prodCode,jdbcType=VARCHAR} </foreach> </if> -->
+	</select>
+
+	<delete id="deletePrdFeeDealBatchList"
+		parameterType="com.joyintech.tams.common.base.entity.ChbPrdFeeDeal">
+		begin
+		<foreach collection="listChbPrdFeeDeal" item="item" index="index"
+			separator=";">
+			delete from CHB_PRD_FEE_DEAL
+			where TRADE_ID =
+			#{item.tradeId,jdbcType=VARCHAR}
+		</foreach>
+		;end
+	</delete>
+
+	<insert id="insertPrdFeeDealBatchList"
+		parameterType="com.joyintech.tams.common.base.entity.ChbPrdFeeDeal">
+		insert into CHB_PRD_FEE_DEAL
+		( SEQNO,TRADE_ID,FPROD_ID,PROD_ID,
+		PROD_NAME,REG_CODE,FEE_ID,
+		FEE_NAME,FEE_TYPE,FEE_SECTYPE,
+		CCY,AMT,PAY_DATE,ORG_CODE,
+		DEPT_CODE,STATUS,DATA_SOURCE,
+		REV_DATE,UPDATE_USER,UPDATE_TIME,
+		CREATE_USER,CREATE_TIME,REMARK
+		)
+		<foreach collection="listChbPrdFeeDeal" item="dto" index="index"
+			separator="union all" open="(" close=")">
+			select
+			#{dto.seqno,jdbcType=CHAR},
+			#{dto.tradeId,jdbcType=VARCHAR},
+			#{dto.fprodId,jdbcType=VARCHAR},
+			#{dto.prodId,jdbcType=VARCHAR},
+			#{dto.prodName,jdbcType=VARCHAR},
+			#{dto.regCode,jdbcType=VARCHAR},
+			#{dto.feeId,jdbcType=VARCHAR},
+			#{dto.feeName,jdbcType=VARCHAR},
+			#{dto.feeType,jdbcType=VARCHAR},
+			#{dto.feeSectype,jdbcType=VARCHAR},
+			#{dto.ccy,jdbcType=VARCHAR},
+			#{dto.amt,jdbcType=DECIMAL},
+			#{dto.payDate,jdbcType=DATE},
+			#{dto.orgCode,jdbcType=VARCHAR},
+			#{dto.deptCode,jdbcType=VARCHAR},
+			#{dto.status,jdbcType=VARCHAR},
+			#{dto.dataSource,jdbcType=VARCHAR},
+			#{dto.revDate,jdbcType=DATE},
+			#{dto.updateUser,jdbcType=VARCHAR},
+			sysdate,
+			#{dto.createUser,jdbcType=VARCHAR},
+			sysdate,
+			#{dto.remark,jdbcType=VARCHAR}
+			from SYSIBM.SYSDUMMY1
+		</foreach>
+	</insert>
+
+	<update id="updatePrdBaseinfo" parameterType="java.util.List">
+		begin
+		<foreach collection="listChbPrdDeal" item="item" index="index"
+			separator=";">
+			update CHB_PRD_BASEINFO
+			<set>
+				<choose>
+					<when
+						test="item.tradeType != null and item.tradeType == '16'.toString()">
+						DURATIONFLAG = '02'
+					</when>
+					<otherwise>
+						DURATIONFLAG = '01'
+					</otherwise>
+				</choose>
+			</set>
+			where NVL(FPROD_ID,PROD_ID) = #{item.prodId,jdbcType=VARCHAR}
+		</foreach>
+		;end
+	</update>
+	
+	<insert id="insertChbPrdFeeDealData"
+		parameterType="com.joyintech.tams.common.base.entity.ChbPrdFeeDeal">
+		MERGE INTO CHB_PRD_FEE_DEAL CII
+		USING (
+		<foreach collection="newDataList" item="item" open="select * from("
+			close=")" separator="union all">
+			SELECT
+			'${item.seqno}' SEQNO,
+			<choose><when test="item.fprodId!= null">'${item.fprodId}'</when><otherwise>null</otherwise></choose> FPROD_ID,
+			'${item.prodId}' PROD_ID,
+			'${item.prodName}' PROD_NAME,
+			'${item.regCode}' REG_CODE,
+			'${item.feeId}' FEE_ID,
+			'${item.feeName}' FEE_NAME,
+			'${item.feeType}' FEE_TYPE,
+			'${item.feeSectype}' FEE_SECTYPE,
+			'${item.ccy}' CCY,
+			<choose><when test="item.amt!= null">${item.amt}</when><otherwise>null</otherwise></choose> AMT,
+			<choose><when test="item.payDate!= null">#{item.payDate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> PAY_DATE,
+			'${item.orgCode}' ORG_CODE,
+			'${item.deptCode}' DEPT_CODE,
+			'${item.status}' STATUS,
+			'${item.dataSource}' DATA_SOURCE,
+			<choose><when test="item.revDate!= null">#{item.revDate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> REV_DATE,
+			'${item.updateUser}' UPDATE_USER,
+			sysdate UPDATE_TIME,
+			'${item.createUser}' CREATE_USER,
+			sysdate CREATE_TIME,
+			'${item.remark}' REMARK,
+			'${item.tradeId}' TRADE_ID
+			FROM
+			SYSIBM.SYSDUMMY1
+		</foreach>
+		) TEMP
+		<!-- 业务主键匹配 -->
+		ON(CII.TRADE_ID = TEMP.TRADE_ID)
+
+		<!-- 匹配到则更新 -->
+		WHEN MATCHED THEN UPDATE
+		SET CII.SEQNO = TEMP.SEQNO,
+		CII.FPROD_ID = TEMP.FPROD_ID,
+		CII.PROD_ID = TEMP.PROD_ID,
+		CII.PROD_NAME = TEMP.PROD_NAME,
+		CII.REG_CODE = TEMP.REG_CODE,
+		CII.FEE_ID = TEMP.FEE_ID,
+		CII.FEE_NAME = TEMP.FEE_NAME,
+		CII.FEE_TYPE = TEMP.FEE_TYPE,
+		CII.FEE_SECTYPE = TEMP.FEE_SECTYPE,
+		CII.CCY = TEMP.CCY,
+		CII.AMT = TEMP.AMT,
+		CII.PAY_DATE = TEMP.PAY_DATE,
+		CII.ORG_CODE = TEMP.ORG_CODE,
+		CII.DEPT_CODE = TEMP.DEPT_CODE,
+		CII.STATUS = decode(TEMP.STATUS,'E','M','D'),
+		CII.REV_DATE = TEMP.REV_DATE,
+		CII.REMARK = TEMP.REMARK,
+		CII.UPDATE_USER = TEMP.UPDATE_USER,
+		CII.UPDATE_TIME = sysdate
+		<!-- 未匹配到这插入 -->
+		WHEN NOT MATCHED THEN INSERT (SEQNO,FPROD_ID,PROD_ID,
+		PROD_NAME,REG_CODE,FEE_ID,
+		FEE_NAME,FEE_TYPE,FEE_SECTYPE,
+		CCY,AMT,PAY_DATE,ORG_CODE,
+		DEPT_CODE,STATUS,DATA_SOURCE,
+		REV_DATE,UPDATE_USER,UPDATE_TIME,
+		CREATE_USER,CREATE_TIME,REMARK,TRADE_ID)
+		VALUES(TEMP.SEQNO,
+		TEMP.FPROD_ID,
+		TEMP.PROD_ID,
+		TEMP.PROD_NAME,
+		TEMP.REG_CODE,
+		TEMP.FEE_ID,
+		TEMP.FEE_NAME,
+		TEMP.FEE_TYPE,
+		TEMP.FEE_SECTYPE,
+		TEMP.CCY,
+		TEMP.AMT,
+		TEMP.PAY_DATE,
+		TEMP.ORG_CODE,
+		TEMP.DEPT_CODE,
+		TEMP.STATUS,
+		TEMP.DATA_SOURCE,
+		TEMP.REV_DATE,
+		TEMP.UPDATE_USER,
+		TEMP.UPDATE_TIME,
+		TEMP.CREATE_USER,
+		TEMP.CREATE_TIME,
+		TEMP.REMARK,
+		TEMP.TRADE_ID)
+	</insert>
+	<insert id="insertDataMerge"
+		parameterType="com.joyintech.tams.common.base.entity.ChbPrdFeeDeal">
+		MERGE INTO CHB_PRD_DEAL CII
+		USING (
+		<foreach collection="newDataList" item="dto" open="select * from("
+			close=")" separator="union all">
+			SELECT
+			'${dto.seqno}' SEQNO,
+			'${dto.tradeId}' TRADE_ID,
+			<choose><when test="dto.fprodId!= null">'${dto.fprodId}'</when><otherwise>null</otherwise></choose> FPROD_ID,
+			'${dto.prodId}' PROD_ID,
+			'${dto.issuePartyId}' ISSUE_PARTY_ID,
+			'${dto.indentifyMark}' INDENTIFY_MARK,
+			'${dto.buyPlace}' BUY_PLACE,
+			'${dto.tradeType}' TRADE_TYPE,
+			<choose><when test="dto.settdateDate!= null">#{dto.settdateDate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> SETTDATE_DATE,
+			<choose><when test="dto.payDate!= null">#{dto.payDate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> PAY_DATE,
+			<choose><when test="dto.interestDate!= null">#{dto.interestDate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> INTEREST_DATE,
+			<choose><when test="dto.intAmt!= null">${dto.intAmt}</when><otherwise>null</otherwise></choose> INT_AMT,
+			<choose><when test="dto.tradePrince!= null">${dto.tradePrince}</when><otherwise>null</otherwise></choose> TRADE_PRINCE,
+			<choose><when test="dto.unitBonusAmount!= null">${dto.unitBonusAmount}</when><otherwise>null</otherwise></choose> UNIT_BONUS_AMOUNT,
+			<choose><when test="dto.redemptionFee!= null">${dto.redemptionFee}</when><otherwise>null</otherwise></choose> REDEMPTION_FEE,
+			<choose><when test="dto.tradeQty!= null">${dto.tradeQty}</when><otherwise>null</otherwise></choose> TRADE_QTY,
+			'${dto.ccy}' CCY,
+			'${dto.status}' STATUS,
+			'${dto.orgCode}' ORG_CODE,
+			'${dto.deptCode}' DEPT_CODE,
+			'${dto.dataSource}' DATA_SOURCE,
+			'${dto.remark}' REMARK,
+			<choose><when test="dto.revDate!= null">#{dto.revDate,jdbcType=DATE}</when><otherwise>null</otherwise></choose> REV_DATE,
+			'${dto.updateUser}' UPDATE_USER,
+			sysdate UPDATE_TIME,
+			'${dto.createUser}' CREATE_USER,
+			sysdate CREATE_TIME,
+			'${dto.ccy}'  INTEREST_CCY,
+			'${dto.customerType1}' CUSTOMER_TYPE1,
+			'${dto.customerType2}' CUSTOMER_TYPE2,
+			<choose><when test="dto.custCounts!= null">${dto.custCounts}</when><otherwise>null</otherwise></choose> CUST_COUNTS,
+			<choose><when test="dto.tradeCost!= null">${dto.tradeCost}</when><otherwise>null</otherwise></choose> TRADE_COST,
+			'${dto.isagency}' ISAGENCY
+			FROM
+			SYSIBM.SYSDUMMY1
+		</foreach>
+		) TEMP
+		<!-- 业务主键匹配 -->
+		ON(CII.TRADE_ID = TEMP.TRADE_ID )
+		<!-- 匹配到则更新 -->
+		WHEN MATCHED THEN UPDATE
+		SET CII.SEQNO = TEMP.SEQNO,
+		CII.FPROD_ID =TEMP.FPROD_ID,
+		CII.PROD_ID =TEMP.PROD_ID,
+		CII.ISSUE_PARTY_ID =TEMP.ISSUE_PARTY_ID,
+		CII.INDENTIFY_MARK =TEMP.INDENTIFY_MARK,
+		CII.BUY_PLACE =TEMP.BUY_PLACE,
+		CII.TRADE_TYPE =TEMP.TRADE_TYPE,
+		CII.SETTDATE_DATE = TEMP.SETTDATE_DATE,
+		CII.PAY_DATE =TEMP.PAY_DATE,
+		CII.INTEREST_DATE = TEMP.INTEREST_DATE,
+		CII.INT_AMT =TEMP.INT_AMT,
+		CII.TRADE_PRINCE =TEMP.TRADE_PRINCE,
+		CII.UNIT_BONUS_AMOUNT =TEMP.UNIT_BONUS_AMOUNT,
+		CII.REDEMPTION_FEE =TEMP.REDEMPTION_FEE,
+		CII.TRADE_QTY =TEMP.TRADE_QTY,
+		CII.CCY =TEMP.CCY,
+		CII.STATUS =decode(TEMP.STATUS,'E','M','D'),
+		CII.ORG_CODE =TEMP.ORG_CODE,
+		CII.DEPT_CODE =TEMP.DEPT_CODE,
+		CII.DATA_SOURCE =TEMP.DATA_SOURCE,
+		CII.REMARK =TEMP.REMARK,
+		CII.REV_DATE = TEMP.REV_DATE,
+		CII.UPDATE_USER =TEMP.UPDATE_USER,
+		CII.UPDATE_TIME =sysdate,
+		CII.INTEREST_CCY =TEMP.INTEREST_CCY,
+		CII.CUSTOMER_TYPE1 =TEMP.CUSTOMER_TYPE1,
+		CII.CUSTOMER_TYPE2 =TEMP.CUSTOMER_TYPE2,
+		CII.CUST_COUNTS =TEMP.CUST_COUNTS,
+		CII.TRADE_COST =TEMP.TRADE_COST,
+		CII.ISAGENCY =TEMP.ISAGENCY
+		<!-- 未匹配到这插入 -->
+		WHEN NOT MATCHED THEN INSERT (SEQNO,TRADE_ID,FPROD_ID,PROD_ID,
+		ISSUE_PARTY_ID,INDENTIFY_MARK,BUY_PLACE,
+		TRADE_TYPE,SETTDATE_DATE,PAY_DATE,
+		INTEREST_DATE,INT_AMT,TRADE_PRINCE,
+		UNIT_BONUS_AMOUNT,REDEMPTION_FEE,
+		TRADE_QTY,CCY,STATUS,ORG_CODE,
+		DEPT_CODE,DATA_SOURCE,REMARK,
+		REV_DATE,UPDATE_USER,UPDATE_TIME,
+		CREATE_USER,CREATE_TIME,INTEREST_CCY,CUSTOMER_TYPE1,CUSTOMER_TYPE2,
+		CUST_COUNTS,TRADE_COST,ISAGENCY)
+		VALUES(TEMP.SEQNO,
+		TEMP.TRADE_ID,
+		TEMP.FPROD_ID,
+		TEMP.PROD_ID,
+		TEMP.ISSUE_PARTY_ID,
+		TEMP.INDENTIFY_MARK,
+		TEMP.BUY_PLACE,
+		TEMP.TRADE_TYPE,
+		TEMP.SETTDATE_DATE,
+		TEMP.PAY_DATE,
+		TEMP.INTEREST_DATE,
+		TEMP.INT_AMT,
+		TEMP.TRADE_PRINCE,
+		TEMP.UNIT_BONUS_AMOUNT,
+		TEMP.REDEMPTION_FEE,
+		TEMP.TRADE_QTY,
+		TEMP.CCY,
+		TEMP.STATUS,
+		TEMP.ORG_CODE,
+		TEMP.DEPT_CODE,
+		TEMP.DATA_SOURCE,
+		TEMP.REMARK,
+		TEMP.REV_DATE,
+		TEMP.UPDATE_USER,
+		TEMP.UPDATE_TIME,
+		TEMP.CREATE_USER,
+		TEMP.CREATE_TIME,
+		TEMP.INTEREST_CCY,
+		TEMP.CUSTOMER_TYPE1,
+		TEMP.CUSTOMER_TYPE2,
+		TEMP.CUST_COUNTS,
+		TEMP.TRADE_COST,
+		TEMP.ISAGENCY)
+	</insert>
+</mapper>

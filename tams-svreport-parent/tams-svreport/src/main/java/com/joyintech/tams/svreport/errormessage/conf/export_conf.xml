@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ErrorMessage001.xlsx" name="数据接入检查">
+	<Worksheet javaBean="com.joyintech.tams.report.errormessage.dto.ErrorMessage001">
+		<Row>
+			<Cell order="1" name="检查时间">createTime</Cell><!-- 检查时间-->
+			<Cell order="2" name="接口类型">interfType</Cell><!-- 接口类型 -->
+			<Cell order="3" name="文件名称">fireName</Cell><!-- 文件名称 -->
+			<Cell order="4" name="业务主键">dataid</Cell><!-- 业务主键-->
+			<Cell order="5" name="检查结果">checkResult</Cell><!-- 检查结果 -->
+			<Cell order="6" name="错误信息">errMsg</Cell><!-- 错误信息-->
+		</Row>
+	</Worksheet>
+</Workbook>
