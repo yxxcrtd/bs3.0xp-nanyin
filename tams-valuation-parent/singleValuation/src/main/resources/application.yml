@@ -1,0 +1,108 @@
+server:
+  port: 8080
+  address: 0.0.0.0
+  maxHttpHeaderSize: 102400
+  context-path: /valuation
+#监听端口配置
+listener:
+  port: 8888 #端口
+  length: 8 #报文前长度信息占位长度，配置为空或者0表示不存在占位
+  encode: UTF-8 #编码
+#主配置文件，配置了这个会优先读取里面的属性覆盖主配置文件的属性
+spring:
+  jmx:
+    enabled: false
+  thymeleaf:
+    cache: false
+  profiles:
+    active: prod
+  application:
+    name: valuation-server
+    dfstype: 2
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    validationQuery: SELECT 1 FROM DUAL
+  activemq:
+    systemId: valuation
+    active: false
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+  http:
+    multipart: # 文件上传设置
+      maxFileSize: 10Mb #设置单个文件的大小
+      maxRequestSize: 100Mb #设置单次请求的文件的总大小
+shiro:
+  casClientName: valuation
+  loginUrl: /valuation/login
+
+application:
+  menuType: hover
+  menuPosition: top
+  pageStep: 100 #数据表格页码步长
+  sysCode: VAL #系统代码
+  logoAbout: /image/valuation/logo-about.png
+  logo: /image/valuation/logo.png
+  logoPA: /image/valuation/bankNameLog.png
+  isDimensionRun: true
+  sessionTimeout: 1800000 #超时自动退出
+  micorservice:
+    contextPath:
+      single: true
+      commonService: http://127.0.0.1:8080/valuation/service
+      basicDataService: http://127.0.0.1:8080/valuation/service
+      valuationService: http://127.0.0.1:8080/valuation/service
+---
+spring:
+  profiles: prod
+  thymeleaf:
+    cache: false
+  datasource:
+    url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.90.111)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.90.112)(PORT=1521))(LOAD_BALANCE=no)(FAILOVER=on))(CONNECT_DATA=(SERVICE_NAME=tamsdbpdb)))
+    username: tams212
+    password: tams212
+    maxTotal: 50
+    maxIdle: 50
+    minIdle: 20
+    timeBetweenEvictionRunsMillis: 60000  # 默认是-1
+    numTestsPerEvictionRun: 10
+    removeAbandonedOnBorrow: true
+    removeAbandonedOnMaintenance: true
+    logAbandoned: true
+    reportSqlldrDatabaseName: 192.168.90.3:1521/orcl #sqlldr用数据库连接，必须保持这种格式
+    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000 # 批处理不加该配置
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+base:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@//192.168.90.3:1521/orcl
+    username: yitihua1
+    password: yitihua1
+    maxTotal: 50
+    maxIdle: 50
+    minIdle: 20
+    timeBetweenEvictionRunsMillis: 60000  # 默认是-1
+    numTestsPerEvictionRun: 10
+    removeAbandonedOnBorrow: true
+    removeAbandonedOnMaintenance: true
+    logAbandoned: true
+    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000 # 批处理不加该配置
+
+log:
+  path: /home/tams/logs/tams
+  level: INFO
+eureka:
+  client:
+    enabled: false #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
+    serviceUrl:
+      defaultZone: http://127.0.0.1:8761/eureka/
+  instance:
+    ip-address: 127.0.0.1
+    prefer-ip-address: false
+#用户系统
+#1 jixu用户系统
+#2 joyin用户系统
+#3 joyinBatch用户系统
+jixu:
+  user:
+    type: 2

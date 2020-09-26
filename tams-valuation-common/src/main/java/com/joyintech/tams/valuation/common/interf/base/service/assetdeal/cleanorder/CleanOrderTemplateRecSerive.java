@@ -1,0 +1,348 @@
+/*
+ * 文件名：CleanOrderTemplateRecSerive.java
+ * 版权：Copyright 2017-2018 JoyinTech. Co. Ltd. All Rights Reserved.
+ * 描述：估值核算系统V1.0
+ * 修改人：chendijun
+ * 修改时间：2018年8月17日
+ * 修改内容：新建
+ * 系统名称：估值核算系统V1.0
+ */
+
+package com.joyintech.tams.valuation.common.interf.base.service.assetdeal.cleanorder;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.BokBooksetCapacctInfo;
+import com.joyintech.tams.common.base.entity.BokDealAccounting;
+import com.joyintech.tams.common.base.entity.BokDealAccountingDetail;
+import com.joyintech.tams.common.base.entity.BokDetailId;
+import com.joyintech.tams.common.base.entity.StlOrders;
+import com.joyintech.tams.common.base.entity.StlOrdersExt;
+import com.joyintech.tams.common.base.entity.ValInterflog;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
+import com.joyintech.tams.valuation.common.interf.base.dto.CleanOrderCommonResult;
+import com.joyintech.tams.valuation.common.interf.base.dto.TemplateCheckReturnResult;
+import com.joyintech.tams.valuation.common.interf.base.dto.TemplateOrderInfoReaderResult;
+import com.joyintech.tams.valuation.common.interf.base.dto.TemplateSourceFlgDTO;
+import com.joyintech.tams.valuation.common.interf.base.dto.ValBooksetInfoDto;
+import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
+import com.joyintech.tams.valuation.common.interf.base.service.common.TemplateAnalysisForXMLService;
+import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValCleanOrder;
+
+/**
+ * 结算指令接口 模板处理Service(VAL_PRD_PERIOD_DEAL_C) 〈功能详细描述〉
+ * 
+ * @author chendijun
+ * @version 1.0 2018年8月17日
+ * @see CleanOrderTemplateRecSerive
+ * @since 1.0
+ */
+@Service
+@Scope("prototype")
+public class CleanOrderTemplateRecSerive {
+
+    /**
+     * XMl文件解析Service
+     */
+    @Autowired
+    private TemplateAnalysisForXMLService templateAnalysisForXMLService;
+
+    /**
+     * 接口共通方法
+     */
+    @Autowired
+    private InterfCommonService interfCommonService;
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public CleanOrderCommonResult execute(TemplateSourceFlgDTO templateSourceFlgDTO,
+                                          TemplateOrderInfoReaderResult acctEntity) {
+        // 初始化 模板处理返回共通结果
+        CleanOrderCommonResult result = new CleanOrderCommonResult();
+        Map<String,Object> params = acctEntity.getParams();
+        List<ValCleanOrder> listValCleanOrder = new ArrayList<ValCleanOrder>();
+
+        TemplateCheckReturnResult returnResult = new TemplateCheckReturnResult();
+
+        returnResult = templateAnalysisForXMLService.execute(acctEntity);
+
+        // 2、进行数据有效性的check,并生出进入日志表的数据结构
+        listValCleanOrder = returnResult.getT(ValCleanOrder.class);
+        //设置读取数据数量
+        result.setDataNum(listValCleanOrder.size());
+        
+        // 3、根据有效数据，进行数据的编辑，并生成进入业务表的数据结构
+        Map<String, Object> map = this.handleValCleanOrder(listValCleanOrder,
+            acctEntity.getResovleDate(),params,returnResult.getValInterflog());
+
+        // 入账信息表List
+        List<BokDealAccounting> listValDealAccounting = (List<BokDealAccounting>)map.get(
+            "ValDealAccounting");
+        result.setListValDealAccounting(listValDealAccounting);
+        // 入账账务明细表List
+        List<BokDealAccountingDetail> listValDealAccountingDetail = (List<BokDealAccountingDetail>)map.get(
+            "ValDealAccountingDetail");
+        result.setListValDealAccountingDetail(listValDealAccountingDetail);
+        // 账务明细代码表
+        List<BokDetailId> listValBokDetailId = (List<BokDetailId>)map.get("ValBokDetailId");
+        result.setListValBokDetailId(listValBokDetailId);
+
+        // 结算指令
+        List<StlOrders> listValOrders = (List<StlOrders>)map.get("listValOrders");
+        result.setListValOrders(listValOrders);
+        // 结算指令扩展表
+        List<StlOrdersExt> listValOrdersExt = (List<StlOrdersExt>)map.get("listValOrdersExt");
+        result.setListValOrdersExt(listValOrdersExt);
+
+        // 添加日志
+        // 添加日志
+        result.setValInterflog((List<ValInterflog>)map.get("valInterflogList"));
+        
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("booksetIds", (List<String>)map.get("booksetIds"));
+        result.setParamMap(paramMap);
+        // 返回处理结果数据
+        return result;
+    }
+    @SuppressWarnings({"unchecked"})
+    private Map<String, Object> handleValCleanOrder(List<ValCleanOrder> listValCleanOrder,
+            Date resovleDate,Map<String,Object> params,List<ValInterflog> valInterflog) {
+		List<String> bookSetIds = (List<String>)params.get(InterfCommonConstant.接口_运行接口账套ID);
+		String valModel = (String)params.get(InterfCommonConstant.接口模式);
+        // 初始化返回结果
+        Map<String, Object> resultMap = new HashMap<>();
+        // 入账信息表
+        List<BokDealAccounting> listValDealAccounting = new ArrayList<BokDealAccounting>();
+        // 账务明细表
+        List<BokDealAccountingDetail> listValDealAccountingDetail = new ArrayList<BokDealAccountingDetail>();
+        // 账务明细代码表
+        List<BokDetailId> listValBokDetailId = new ArrayList<BokDetailId>();
+        // 结算指令
+        List<StlOrders> listValOrders = new ArrayList<StlOrders>();
+        // 结算指令扩展表
+        List<StlOrdersExt> listValOrdersExt = new ArrayList<StlOrdersExt>();
+        List<ValInterflog> valInterflogList =  new ArrayList<>();
+        List<String> booksetIds = new ArrayList<>();
+        for (ValCleanOrder dto : listValCleanOrder) {
+        	if(StringUtil.equals(valModel, InterfCommonConstant.接口模式_指定账套) && !bookSetIds.contains(dto.getProdId())){
+        		continue;
+        	}
+            dto.setCreateTime(resovleDate);// 用于去重操作
+            // T1: 结算指令表
+            StlOrders ValOrders = this.getValStlOrders(dto);
+            listValOrders.add(ValOrders);
+            // T2: 结算指令扩展表
+            StlOrdersExt ValOrdersExt = this.getValStlOrdersExt(dto,ValOrders);
+            listValOrdersExt.add(ValOrdersExt);
+            // T3: 账务明细代码表
+            BokDetailId valBokDetailId = this.getValBokDetailId(dto);
+            listValBokDetailId.add(valBokDetailId);
+            // T4: 入账信息表
+            BokDealAccounting valBokDealAccounting = this.getValDealAccounting(dto,
+                valBokDetailId,ValOrders);
+            listValDealAccounting.add(valBokDealAccounting);;
+            // T5: 入账账务明细表
+            BokDealAccountingDetail valBokDealAccountingDetail = this.getValBokDealAccountingDetail(
+                dto, valBokDetailId,ValOrders);
+            listValDealAccountingDetail.add(valBokDealAccountingDetail);
+            booksetIds.add(valBokDealAccountingDetail.getBooksetId()); 
+        }
+        resultMap.put("listValOrders", listValOrders);
+        resultMap.put("listValOrdersExt", listValOrdersExt);
+        resultMap.put("ValDealAccounting", listValDealAccounting);
+        resultMap.put("ValDealAccountingDetail", listValDealAccountingDetail);
+        resultMap.put("ValBokDetailId", listValBokDetailId);
+        valInterflogList = interfCommonService.filterValInterflogList(valInterflog, bookSetIds, valModel);
+    	resultMap.put("valInterflogList", valInterflogList);
+        if(booksetIds != null && booksetIds.size()>0){
+        	resultMap.put("booksetIds", booksetIds);
+        }
+        return resultMap;
+    }
+
+    /**
+     * T1: 结算指令表
+     * 
+     * @param dto ValCleanOrder
+     * @return StlOrders
+     * @see
+     * @since 1.0
+     */
+    private StlOrders getValStlOrders(ValCleanOrder dto) {
+        StlOrders stlOrders = new StlOrders();
+        //指令编号 = interfCommonService.getTradeid(A.指令类型,A.结算日期，“B")
+        stlOrders.setOrderId(interfCommonService.getTradeid(dto.getOrderType(), dto.getSettleDate(), "B"));
+        //业务类型 = A.业务类型
+        stlOrders.setBusiType(dto.getBusiType());
+        //指令类型 = A.指令类型
+        stlOrders.setOrderType(dto.getOrderType());
+        //结算日期 = A.结算日期
+        stlOrders.setSettleDate(dto.getSettleDate());
+        //交易编号 = A.交易编号
+        stlOrders.setTradeId(dto.getTradeId());
+        //本方资金账户 = A.本方资金账户
+        stlOrders.setMyAcctNo(dto.getMyAcctNo());
+        //收付方向 = A.收付方向
+        stlOrders.setPs(dto.getPs());
+        //对方资金账户 = A.对方资金账户
+        stlOrders.setCounterAcctNo(dto.getCounterAcctNo());
+        //结算金额 = A.结算金额
+        stlOrders.setSettleAmt(dto.getSettleAmt());
+        //币种 = A.币种
+        stlOrders.setCcy(dto.getCcy());
+        /**add 2018/11/14 start**/
+        //结算状态 = 设置固定值 数据字典：结算状态.结算成功
+        stlOrders.setSettleStatus(DictCodeList.成功失败标志_成功.getValue());
+        //指令状态 = A.数据动作标志 新增 --> 01:初始 撤销 --> 03:撤销
+        stlOrders.setOrderStatus(dto.getDataActionSign());
+        //关联系统指令编号 = A.指令编号
+        stlOrders.setfOrderId(dto.getOrderId());
+        //原指令编号 = 指令状态为撤销时： 原交易编号=调用共通设计->【详细设计-接口共通方法设计.xlsx】->撤销指令交易对应的原指令编号查询SHEET
+        //           交易状态为非撤销时：原交易编号为空
+        if(DictCodeListExt1.交易状态_撤销.getValue().equals(dto.getDataActionSign())) {
+            stlOrders.setpOrderId(interfCommonService.queryPOrderId(stlOrders));
+        } 
+
+        /**add 2018/11/14 start**/
+        //创建时间 = 固定值:系统时间
+        stlOrders.setCreateTime(dto.getCreateTime());
+        
+        return stlOrders;
+    }
+
+    /**
+     * T2: 结算指令扩展表 <功能详细描述>
+     * 
+     * @param dto ValCleanOrder
+     * @return StlOrdersExt
+     * @see
+     * @since 1.0
+     */
+    private StlOrdersExt getValStlOrdersExt(ValCleanOrder dto,StlOrders valOrders) {
+        StlOrdersExt stlOrdersExt = new StlOrdersExt();
+        //指令编号 = A.指令编号
+        stlOrdersExt.setOrderId(valOrders.getOrderId());
+        //是否随交易出账 = 固定值:N 否
+        stlOrdersExt.setIsTrade(DictCodeList.是否_否.getValue());
+        //创建时间 = 系统时间
+        stlOrdersExt.setCreateTime(dto.getCreateTime());
+
+        return stlOrdersExt;
+    }
+
+    /**
+     * T3: 账务明细代码表
+     * 
+     * @param dto ValCleanOrder
+     * @return BokDetailId
+     * @see
+     * @since 1.0
+     */
+    private BokDetailId getValBokDetailId(ValCleanOrder dto) {
+        BokDetailId bokDetailId = new BokDetailId();
+        //账套代码 = 调用共通设计->【详细设计-接口共通方法设计.xlsx】->账套信息(根据产品代码)SHEET
+        ValBooksetInfoDto booksetInfoDto = interfCommonService.getBooksetInfoByProdId(dto.getProdId());
+        if(bokDetailId != null) {
+            bokDetailId.setBooksetId(booksetInfoDto.getBooksetId());
+        }
+        
+        //业务明细代码 = A.本方资金账户
+        bokDetailId.setBusiId(dto.getMyAcctNo());
+        
+        /** modify by wujie on 20181210 start remark:查询账户类型方法变更
+        //业务明细类型 = 根据资金帐户查询对应的资金账户类型
+        StlFinProductAcct stlFinProductAcct = interfCommonService.queryValFinProductAcct(null, null, null, dto.getMyAcctNo());
+        if(stlFinProductAcct != null) {            
+            bokDetailId.setBusiDetailType(stlFinProductAcct.getAcctType());
+        }
+        **/
+        BokBooksetCapacctInfo bokBooksetCapacctInfo = 
+        		interfCommonService.queryBokBooksetCapacctInfo(bokDetailId.getBooksetId(), dto.getMyAcctNo(),dto.getCcy(),null);
+        if(bokBooksetCapacctInfo != null){
+        	bokDetailId.setBusiDetailType(bokBooksetCapacctInfo.getAcctType());
+        }
+        /**modify by wujie on 20181210 end**/
+
+        // 币种 = A.本方资金账户币种
+        bokDetailId.setCcy(dto.getCcy());
+
+        //账务明细代码 = MD5加密(A.本方资金账户+本方资金账户类型)
+        bokDetailId.setBokDetailId(interfCommonService.genMd5BokDetailId(bokDetailId));
+        //投资目的 = 默认为空
+        //证券管理户代码 = 默认为空
+        //交易编号 = A.交易编号
+        bokDetailId.setTradeId(dto.getTradeId());
+        //创建时间 = 固定值:系统时间
+        bokDetailId.setCreateTime(dto.getCreateTime());
+
+        return bokDetailId;
+    }
+
+    /**
+     * T4: 入账信息表
+     *
+     * @param dto ValCleanOrder
+     * @param bokDetailId BokDetailId
+     * @return
+     * @see
+     * @since 1.0
+     */
+    private BokDealAccounting getValDealAccounting(ValCleanOrder dto, BokDetailId bokDetailId,StlOrders valOrders) {
+        BokDealAccounting bokDealAccounting = new BokDealAccounting();
+        //账套代码 = T3.账套代码
+        bokDealAccounting.setBooksetId(bokDetailId.getBooksetId());
+        //业务编号 = A.指令编号
+        bokDealAccounting.setBusiNo(valOrders.getOrderId());
+        //业务表 = 固定值:数据字典：业务表.结算指令表
+        bokDealAccounting.setBusiTable(DictCodeList.业务表_结算指令表.getValue());
+        //业务类型 = A.业务类型
+//        bokDealAccounting.setBusiType(dto.getBusiType());
+        //录入日 = A.结算日期
+        bokDealAccounting.setBooksetDate(dto.getSettleDate());
+        //入账日 = A.结算日期
+        bokDealAccounting.setBookDate(dto.getSettleDate());
+        //实际发生日 = A.结算日期
+        bokDealAccounting.setHappenDate(dto.getSettleDate());
+        //账务明细代码 = T3.账务明细代码
+//        bokDealAccounting.setBokDetailId(bokDetailId.getBokDetailId());
+        //是否已入账 = 数据字典：是否.否
+        bokDealAccounting.setIsAccounted(DictCodeList.是否_否.getValue());
+        //入账凭证编号 = 默认为空
+        //创建时间 = 系统时间
+        bokDealAccounting.setCreateTime(dto.getCreateTime());
+        
+        return bokDealAccounting;
+    }
+
+    private BokDealAccountingDetail getValBokDealAccountingDetail(ValCleanOrder dto,
+                                                                  BokDetailId bokDetailId,StlOrders valOrders) {
+        BokDealAccountingDetail bokDealAccountingDetail = new BokDealAccountingDetail();
+        //账套代码 = T3.账套代码
+        bokDealAccountingDetail.setBooksetId(bokDetailId.getBooksetId());
+        //业务编号 = A.指令编号
+        bokDealAccountingDetail.setBusiNo(valOrders.getOrderId());
+        //业务表 = 固定值:数据字典：业务表.结算指令表
+        bokDealAccountingDetail.setBusiTable(DictCodeList.业务表_结算指令表.getValue());
+        //业务类型 = A.业务类型
+        bokDealAccountingDetail.setBusiType(dto.getBusiType());
+        //账务明细代码 = T3.账务明细代码
+        bokDealAccountingDetail.setBokDetailId(bokDetailId.getBokDetailId());
+        //创建时间 = 系统时间
+        bokDealAccountingDetail.setCreateTime(dto.getCreateTime());
+
+        return bokDealAccountingDetail;
+    }
+}
