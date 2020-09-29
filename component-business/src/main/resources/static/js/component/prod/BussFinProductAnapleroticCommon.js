@@ -219,10 +219,15 @@
         $('#' + dealModeElement).change(parentAnapleroticDealModeChange);
         // 新建按钮点击事件
         getElementById('btn_create').click(function() {
+            debugger;
             var mdate = $('#' + getElementById('mdateElement').val()).val();
             var vdate = $('#' + getElementById('vdateElement').val()).val();
             var operationType = $('#' + getElementById('operationTypeElement').val()).val();
             var calendarId = $('#' + getElementById('dealCalIdElement').val()).val();
+
+            var dealMode = $('#' + getElementById('dealModeElement').val()).val();
+            var openMode = $('#' + getElementById('openModeElement').val()).val();
+
             if(null==mdate || "" == mdate){
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0057", JoyinUtil.getLabel("FinProductBuild002.mdate")));
                 return;
@@ -247,6 +252,7 @@
             var dialogIndex = Joyin.dialog(JoyinUtil.getLabel("FinProductAnapleroticInfo002"),
                 "/invest/product/productelement/anaplerotic/FinProductAnapleroticInfo002/init",
                 "98%", "95%", {pageModel:PAGE_MODEL_NEW, applyType: 'prod', workflowId : workflowId, calendarId: calendarId ,vdate : vdate ,mdate : mdate,operationType:operationType,dealMode:$('#' + dealModeElement).val(),PROD_STYLE:PROD_STYLE,anapleroticList:anapleroticList}, function(data) {
+                	debugger;
                 	if(!data) return;
                     // 新建回补 返回列
                     var row = {

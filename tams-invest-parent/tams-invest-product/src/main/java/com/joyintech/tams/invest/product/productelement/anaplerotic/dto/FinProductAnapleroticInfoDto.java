@@ -37,7 +37,7 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 /**
  * 回补信息查询
- * 
+ *
  * @author 李俊
  * @version 1.0 2019年4月22日
  * @see FinProductAnapleroticInfoDto
@@ -60,18 +60,18 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
      */
     @PrimaryKey(Field.PK_1)
     private String anapleroticId;
-    
+
     /**
      * 操作类型
      */
     private String operateType;
-        
+
     /**
      * 产品代码
      */
     @PrimaryKey(Field.PK_3)
-    private String finprodId; 
-    
+    private String finprodId;
+
     /**
      * 市场代码
      */
@@ -84,17 +84,17 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
      * 原生效日
      */
     private Date oriEffDate;
-    
+
     /**
      * 回补形式（对应估值回补方式）
      */
     private String anapleroticType;
-    
+
     /**
      * 回补方式（对应估值回补规则）
      */
     private String anapleroticRule;
-    
+
     /**
      * 回补比例
      */
@@ -104,17 +104,17 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
      * 计费基数
      */
     private String anapleroticBasic;
-    
+
     /**
      * 资产净值日
      */
     private String astVluDateType;
-    
+
     /**
      * 回补规则(计提频率)
      */
     private String anapleroticFrequency;
-    
+
     /**
      * 首次回补日
      */
@@ -124,26 +124,26 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
      * 周期营业日准则
      */
     private String cycleTdayRule;
-   
+
     /**
      * 首次回补周期结束日
      */
     private Date firstAnapleroticCycleEndDate;
-    
+
     /**
      * 首次回补周期开始日
      */
     private Date firstAnapleroticCycleBegDate;
-    
+
     /**
      * 备注
      */
     private String remark;
     /**
-     * 
+     *
      */
     private String elementId;
-    
+
     /**
      * 回补计划列表
      */
@@ -166,19 +166,29 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
      * 回补结束日
      */
     private Date anapleroticEndDate;
-    
+
+    private Date vDate;
+
+    public Date getvDate() {
+        return vDate;
+    }
+
+    public void setvDate(Date vDate) {
+        this.vDate = vDate;
+    }
+
     /**
      * 回补实际结束日
      */
     private Date mDate;
-    
+
     /**
      * 交易日历id
      */
     private String calendarId;
-    
+
     private String pageModel;
-    
+
     /**
      * 利率类型
      */
@@ -237,25 +247,25 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
      */
     private String openMode;
     /**
-     * 
+     *
      */
     private String prodStyleList;
     /**
      * 父页面
      */
     private String parentId;
-    
+
     public String getParentId() {
-		return parentId;
-	}
+        return parentId;
+    }
 
 
-	public void setParentId(String parentId) {
-		this.parentId = parentId;
-	}
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
 
 
-	/**
+    /**
      * 获取 finprodId
      * @return finprodId.
      */
@@ -263,7 +273,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
         return finprodId;
     }
 
-    
+
     /**
      * 设置 finprodId
      * @param finprodId finprodId
@@ -272,7 +282,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
         this.finprodId = finprodId;
     }
 
-    
+
     /**
      * 获取 effDate
      * @return effDate.
@@ -282,14 +292,14 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
     }
     @PrimaryKey(Field.PK_2)
     public String getEffDateStr(){
-    	if(StringUtil.isNotEmpty(this.getEffDate())){
-    		 return DateUtil.format(this.getEffDate());
-    	}else{
-    		return null;
-    	}
-      
+        if(StringUtil.isNotEmpty(this.getEffDate())){
+            return DateUtil.format(this.getEffDate());
+        }else{
+            return null;
+        }
+
     }
-    
+
     /**
      * 设置 effDate
      * @param effDate effDate
@@ -298,7 +308,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
         this.effDate = effDate;
     }
 
-    
+
     /**
      * 获取 anapleroticType
      * @return anapleroticType.
@@ -322,7 +332,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
         this.anapleroticType = anapleroticType;
     }
 
-    
+
     /**
      * 获取 anapleroticRule
      * @return anapleroticRule.
@@ -330,7 +340,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
     public String getAnapleroticRule() {
         return anapleroticRule;
     }
-    
+
     /**
      * 获取 anapleroticRuleStr
      * @return anapleroticRule.
@@ -339,7 +349,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
         return SysDataUtil.getNameFromDataDict(DictCode.回补规则,this.getAnapleroticRule());
     }
 
-    
+
     /**
      * 设置 anapleroticRule
      * @param anapleroticRule anapleroticRule
@@ -348,7 +358,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
         this.anapleroticRule = anapleroticRule;
     }
 
-    
+
     /**
      * 获取 anapleroticRatio
      * @return anapleroticRatio.
@@ -357,7 +367,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
         return anapleroticRatio;
     }
 
-    
+
     /**
      * 设置 anapleroticRatio
      * @param anapleroticRatio anapleroticRatio
@@ -366,7 +376,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
         this.anapleroticRatio = anapleroticRatio;
     }
 
-    
+
     /**
      * 获取 anapleroticBasic
      * @return anapleroticBasic.
@@ -375,7 +385,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
         return anapleroticBasic;
     }
 
-    
+
     /**
      * 设置 anapleroticBasic
      * @param anapleroticBasic anapleroticBasic
@@ -384,7 +394,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
         this.anapleroticBasic = anapleroticBasic;
     }
 
-    
+
     /**
      * 获取 astVluDateType
      * @return astVluDateType.
@@ -393,7 +403,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
         return astVluDateType;
     }
 
-    
+
     /**
      * 设置 astVluDateType
      * @param astVluDateType astVluDateType
@@ -402,7 +412,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
         this.astVluDateType = astVluDateType;
     }
 
-    
+
     /**
      * 获取 anapleroticFrequency
      * @return anapleroticFrequency.
@@ -410,7 +420,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
     public String getAnapleroticFrequency() {
         return anapleroticFrequency;
     }
-    
+
     /**
      * 获取 anapleroticFrequencyStr
      * @return anapleroticFrequency.
@@ -419,7 +429,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
         return SysDataUtil.getNameFromDataDict(DictCode.频率,this.getAnapleroticFrequency());
     }
 
-    
+
     /**
      * 设置 anapleroticFrequency
      * @param anapleroticFrequency anapleroticFrequency
@@ -428,7 +438,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
         this.anapleroticFrequency = anapleroticFrequency;
     }
 
-    
+
     /**
      * 获取 firstAnapleroticDate
      * @return firstAnapleroticDate.
@@ -441,36 +451,36 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
      * @return firstAnapleroticCycleBegDate
      */
     public String getFirstAnapleroticCycleBegDateStr() {
-    	if(StringUtil.isNotEmpty(this.getFirstAnapleroticCycleBegDate())){
-    	    return DateUtil.format(this.getFirstAnapleroticCycleBegDate());
-    	}
-    	else{
-    	    return null;
-    	}
+        if(StringUtil.isNotEmpty(this.getFirstAnapleroticCycleBegDate())){
+            return DateUtil.format(this.getFirstAnapleroticCycleBegDate());
+        }
+        else{
+            return null;
+        }
     }
     /**
      * 首次回补日
      * @return firstAnapleroticDateStr
      */
     public String getFirstAnapleroticDateStr() {
-    	if(StringUtil.isNotEmpty(this.getFirstAnapleroticDate())){
-    	    return DateUtil.format(this.getFirstAnapleroticDate());
-    	}
-    	else{
-    	    return null;
-    	}
+        if(StringUtil.isNotEmpty(this.getFirstAnapleroticDate())){
+            return DateUtil.format(this.getFirstAnapleroticDate());
+        }
+        else{
+            return null;
+        }
     }
     /**
      * 回补结束日
      * @return anapleroticEndDateStr
      */
     public String getAnapleroticEndDateStr() {
-    	if(StringUtil.isNotEmpty(this.getAnapleroticEndDate())){
-    	    return DateUtil.format(this.getAnapleroticEndDate());
-    	}
-    	else{
-    	    return null;
-    	}
+        if(StringUtil.isNotEmpty(this.getAnapleroticEndDate())){
+            return DateUtil.format(this.getAnapleroticEndDate());
+        }
+        else{
+            return null;
+        }
     }
     /**
      * 设置 firstAnapleroticDate
@@ -480,7 +490,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
         this.firstAnapleroticDate = firstAnapleroticDate;
     }
 
-    
+
     /**
      * 获取 cycleTdayRule
      * @return cycleTdayRule.
@@ -488,7 +498,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
     public String getCycleTdayRule() {
         return cycleTdayRule;
     }
-    
+
     /**
      * 获取 cycleTdayRuleStr
      * @return cycleTdayRule.
@@ -497,7 +507,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
         return SysDataUtil.getNameFromDataDict(DictCode.营业日准则,this.getCycleTdayRule());
     }
 
-    
+
     /**
      * 设置 cycleTdayRule
      * @param cycleTdayRule cycleTdayRule
@@ -506,7 +516,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
         this.cycleTdayRule = cycleTdayRule;
     }
 
-    
+
     /**
      * 获取 firstAnapleroticCycleEndDate
      * @return firstAnapleroticCycleEndDate.
@@ -515,7 +525,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
         return firstAnapleroticCycleEndDate;
     }
 
-    
+
     /**
      * 设置 firstAnapleroticCycleEndDate
      * @param firstAnapleroticCycleEndDate firstAnapleroticCycleEndDate
@@ -524,7 +534,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
         this.firstAnapleroticCycleEndDate = firstAnapleroticCycleEndDate;
     }
 
-    
+
     /**
      * 获取 remark
      * @return remark.
@@ -533,7 +543,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
         return remark;
     }
 
-    
+
     /**
      * 设置 remark
      * @param remark remark
@@ -551,7 +561,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
         return operateType;
     }
 
-    
+
     /**
      * 设置 operateType
      * @param operateType operateType
@@ -560,7 +570,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
         this.operateType = operateType;
     }
 
-    
+
     /**
      * 获取 anapleroticEndDate
      * @return anapleroticEndDate.
@@ -569,7 +579,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
         return anapleroticEndDate;
     }
 
-    
+
     /**
      * 设置 anapleroticEndDate
      * @param anapleroticEndDate anapleroticEndDate
@@ -577,7 +587,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
     public void setAnapleroticEndDate(Date anapleroticEndDate) {
         this.anapleroticEndDate = anapleroticEndDate;
     }
-    
+
     /**
      * 获取 calendarId
      * @return calendarId.
@@ -609,7 +619,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
     public void setmDate(Date mDate) {
         this.mDate = mDate;
     }
-    
+
 
     /**
      * 获取 finprodMarketId
@@ -618,7 +628,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
     public String getFinprodMarketId() {
         return finprodMarketId;
     }
-    
+
     /**
      * 设置 finprodMarketId
      * @param finprodMarketId finprodMarketId
@@ -628,7 +638,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
     }
 
 
-    
+
     /**
      * 获取 finProductAnapleroticPlanList
      * @return finProductAnapleroticPlanList.
@@ -638,7 +648,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
     }
 
 
-    
+
     /**
      * 设置 finProductAnapleroticPlanList
      * @param finProductAnapleroticPlanList finProductAnapleroticPlanList
@@ -656,7 +666,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
     }
 
 
-    
+
     /**
      * 设置 finProductAnapleroticTabInfoDtoList
      * @param finProductAnapleroticTabInfoDtoList finProductAnapleroticTabInfoDtoList
@@ -675,7 +685,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
     }
 
 
-    
+
     /**
      * 设置 anapleroticId
      * @param anapleroticId anapleroticId
@@ -691,7 +701,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
     public FinProductAnapleroticInfoDto getFinProductAnapleroticInfoDto() {
         return finProductAnapleroticInfoDto;
     }
-    
+
     /**
      * 设置 finProductAnapleroticInfoDto
      * @param finProductAnapleroticInfoDto finProductAnapleroticInfoDto
@@ -699,7 +709,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
     public void setFinProductAnapleroticInfoDto(FinProductAnapleroticInfoDto finProductAnapleroticInfoDto) {
         this.finProductAnapleroticInfoDto = finProductAnapleroticInfoDto;
     }
-    
+
     public String getFinProductAnapleroticInfoDtoStr(){
         if( null == this.getFinProductAnapleroticInfoDto()){
             return "";
@@ -708,7 +718,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
     }
 
 
-    
+
     /**
      * 获取 finprodAbbr
      * @return finprodAbbr.
@@ -718,7 +728,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
     }
 
 
-    
+
     /**
      * 设置 finprodAbbr
      * @param finprodAbbr finprodAbbr
@@ -728,7 +738,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
     }
 
 
-    
+
     /**
      * 获取 elementId
      * @return elementId.
@@ -746,7 +756,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
     }
 
 
-    
+
     /**
      * 获取 oriEffDate
      * @return oriEffDate.
@@ -755,7 +765,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
         return oriEffDate;
     }
 
-    
+
     /**
      * 设置 oriEffDate
      * @param oriEffDate oriEffDate
@@ -765,7 +775,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
     }
 
 
-    
+
     /**
      * 获取 pageModel
      * @return pageModel.
@@ -775,7 +785,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
     }
 
 
-    
+
     /**
      * 设置 pageModel
      * @param pageModel pageModel
@@ -783,57 +793,57 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
     public void setPageModel(String pageModel) {
         this.pageModel = pageModel;
     }
-    
+
     public FinProductAnapleroticInfoDto(){
-    	
+
     }
     /**
      * 浮动管理费组件
      */
     @Valid
     private BussFinProductFloatFeeDto bussFinProductFloatFeeDto;
-    
-	public BussFinProductFloatFeeDto getBussFinProductFloatFeeDto() {
-		return bussFinProductFloatFeeDto;
-	}
+
+    public BussFinProductFloatFeeDto getBussFinProductFloatFeeDto() {
+        return bussFinProductFloatFeeDto;
+    }
 
 
-	public void setBussFinProductFloatFeeDto(BussFinProductFloatFeeDto bussFinProductFloatFeeDto) {
-		this.bussFinProductFloatFeeDto = bussFinProductFloatFeeDto;
-	}
+    public void setBussFinProductFloatFeeDto(BussFinProductFloatFeeDto bussFinProductFloatFeeDto) {
+        this.bussFinProductFloatFeeDto = bussFinProductFloatFeeDto;
+    }
     /**
      * 付费计划业务组件
      */
     @Valid
     private BussFinProductFeeInfoDto bussFinProductFeeInfoDto;
-	public BussFinProductFeeInfoDto getBussFinProductFeeInfoDto() {
-		return bussFinProductFeeInfoDto;
-	}
+    public BussFinProductFeeInfoDto getBussFinProductFeeInfoDto() {
+        return bussFinProductFeeInfoDto;
+    }
 
 
-	public void setBussFinProductFeeInfoDto(BussFinProductFeeInfoDto bussFinProductFeeInfoDto) {
-		this.bussFinProductFeeInfoDto = bussFinProductFeeInfoDto;
-	}
-	
-	/**
-	  * 是否展示生成计划
-	*/
-	private String isList;
+    public void setBussFinProductFeeInfoDto(BussFinProductFeeInfoDto bussFinProductFeeInfoDto) {
+        this.bussFinProductFeeInfoDto = bussFinProductFeeInfoDto;
+    }
 
-	public String getIsList() {
-		return isList;
-	}
-		
-		
-	public void setIsList(String isList) {
-		this.isList = isList;
-	}
-	 /**
+    /**
+     * 是否展示生成计划
+     */
+    private String isList;
+
+    public String getIsList() {
+        return isList;
+    }
+
+
+    public void setIsList(String isList) {
+        this.isList = isList;
+    }
+    /**
      * 是否回补
      */
     private String isAnaplerotic;
-    
-    
+
+
     /**
      * 获取 isAnaplerotic
      * @return isAnaplerotic.
@@ -849,187 +859,187 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
     public void setIsAnaplerotic(String isAnaplerotic) {
         this.isAnaplerotic = isAnaplerotic;
     }
-    
-  /*  @PrimaryKey(Field.PK_4)
-    public String getFinprodAbbrMd5() {
-        return EncryptUtil.getInstance().md5(this.getFinprodId());
-    }
-    @PrimaryKey(Field.PK_5)
-    public String getFinprodIdMd5() {
-        return EncryptUtil.getInstance().md5(this.getAnapleroticId());
-    }*/
+
+    /*  @PrimaryKey(Field.PK_4)
+      public String getFinprodAbbrMd5() {
+          return EncryptUtil.getInstance().md5(this.getFinprodId());
+      }
+      @PrimaryKey(Field.PK_5)
+      public String getFinprodIdMd5() {
+          return EncryptUtil.getInstance().md5(this.getAnapleroticId());
+      }*/
     private String applyType;
-	public String getApplyType() {
-		return applyType;
-	}
+    public String getApplyType() {
+        return applyType;
+    }
 
 
-	public void setApplyType(String applyType) {
-		this.applyType = applyType;
-	}
+    public void setApplyType(String applyType) {
+        this.applyType = applyType;
+    }
     /**
      * 是否生成回补计划
      */
     private String isAnapleroticList;
 
-	public String getIsAnapleroticList() {
-		return isAnapleroticList;
-	}
+    public String getIsAnapleroticList() {
+        return isAnapleroticList;
+    }
 
 
-	public void setIsAnapleroticList(String isAnapleroticList) {
-		this.isAnapleroticList = isAnapleroticList;
-	}
+    public void setIsAnapleroticList(String isAnapleroticList) {
+        this.isAnapleroticList = isAnapleroticList;
+    }
 
 
-	public Date getFirstAnapleroticCycleBegDate() {
-		return firstAnapleroticCycleBegDate;
-	}
+    public Date getFirstAnapleroticCycleBegDate() {
+        return firstAnapleroticCycleBegDate;
+    }
 
 
-	public void setFirstAnapleroticCycleBegDate(Date firstAnapleroticCycleBegDate) {
-		this.firstAnapleroticCycleBegDate = firstAnapleroticCycleBegDate;
-	}
+    public void setFirstAnapleroticCycleBegDate(Date firstAnapleroticCycleBegDate) {
+        this.firstAnapleroticCycleBegDate = firstAnapleroticCycleBegDate;
+    }
 
 
-	public BussBenchMarkInfoDto getBussBenchMarkInfoDto() {
-		return bussBenchMarkInfoDto;
-	}
+    public BussBenchMarkInfoDto getBussBenchMarkInfoDto() {
+        return bussBenchMarkInfoDto;
+    }
 
 
-	public void setBussBenchMarkInfoDto(BussBenchMarkInfoDto bussBenchMarkInfoDto) {
-		this.bussBenchMarkInfoDto = bussBenchMarkInfoDto;
-	}
+    public void setBussBenchMarkInfoDto(BussBenchMarkInfoDto bussBenchMarkInfoDto) {
+        this.bussBenchMarkInfoDto = bussBenchMarkInfoDto;
+    }
 
 
-	public String getRateType() {
-		return rateType;
-	}
+    public String getRateType() {
+        return rateType;
+    }
 
 
-	public void setRateType(String rateType) {
-		this.rateType = rateType;
-	}
+    public void setRateType(String rateType) {
+        this.rateType = rateType;
+    }
 
 
-	public BigDecimal getRate() {
-		return rate;
-	}
+    public BigDecimal getRate() {
+        return rate;
+    }
 
 
-	public void setRate(BigDecimal rate) {
-		this.rate = rate;
-	}
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
+    }
 
 
-	public String getIndexId() {
-		return indexId;
-	}
+    public String getIndexId() {
+        return indexId;
+    }
 
 
-	public void setIndexId(String indexId) {
-		this.indexId = indexId;
-	}
+    public void setIndexId(String indexId) {
+        this.indexId = indexId;
+    }
 
 
-	public String getIndexSource() {
-		return indexSource;
-	}
+    public String getIndexSource() {
+        return indexSource;
+    }
 
 
-	public void setIndexSource(String indexSource) {
-		this.indexSource = indexSource;
-	}
+    public void setIndexSource(String indexSource) {
+        this.indexSource = indexSource;
+    }
 
 
-	public BigDecimal getCoefficient() {
-		return coefficient;
-	}
+    public BigDecimal getCoefficient() {
+        return coefficient;
+    }
 
 
-	public void setCoefficient(BigDecimal coefficient) {
-		this.coefficient = coefficient;
-	}
+    public void setCoefficient(BigDecimal coefficient) {
+        this.coefficient = coefficient;
+    }
 
 
-	public BigDecimal getSpreadRate() {
-		return spreadRate;
-	}
+    public BigDecimal getSpreadRate() {
+        return spreadRate;
+    }
 
 
-	public void setSpreadRate(BigDecimal spreadRate) {
-		this.spreadRate = spreadRate;
-	}
+    public void setSpreadRate(BigDecimal spreadRate) {
+        this.spreadRate = spreadRate;
+    }
 
 
-	public String getResetType() {
-		return resetType;
-	}
+    public String getResetType() {
+        return resetType;
+    }
 
 
-	public void setResetType(String resetType) {
-		this.resetType = resetType;
-	}
+    public void setResetType(String resetType) {
+        this.resetType = resetType;
+    }
 
 
-	public String getProdStyle() {
-		return prodStyle;
-	}
+    public String getProdStyle() {
+        return prodStyle;
+    }
 
 
-	public void setProdStyle(String prodStyle) {
-		this.prodStyle = prodStyle;
-	}
+    public void setProdStyle(String prodStyle) {
+        this.prodStyle = prodStyle;
+    }
 
 
-	public String getDealMode() {
-		return dealMode;
-	}
+    public String getDealMode() {
+        return dealMode;
+    }
 
 
-	public void setDealMode(String dealMode) {
-		this.dealMode = dealMode;
-	}
+    public void setDealMode(String dealMode) {
+        this.dealMode = dealMode;
+    }
 
 
-	public String getOperationType() {
-		return operationType;
-	}
+    public String getOperationType() {
+        return operationType;
+    }
 
 
-	public void setOperationType(String operationType) {
-		this.operationType = operationType;
-	}
+    public void setOperationType(String operationType) {
+        this.operationType = operationType;
+    }
 
 
-	public String getsFinprodId() {
-		return sFinprodId;
-	}
+    public String getsFinprodId() {
+        return sFinprodId;
+    }
 
 
-	public void setsFinprodId(String sFinprodId) {
-		this.sFinprodId = sFinprodId;
-	}
+    public void setsFinprodId(String sFinprodId) {
+        this.sFinprodId = sFinprodId;
+    }
 
 
-	public String getOpenMode() {
-		return openMode;
-	}
+    public String getOpenMode() {
+        return openMode;
+    }
 
 
-	public void setOpenMode(String openMode) {
-		this.openMode = openMode;
-	}
+    public void setOpenMode(String openMode) {
+        this.openMode = openMode;
+    }
 
 
-	public String getProdStyleList() {
-		return prodStyleList;
-	}
+    public String getProdStyleList() {
+        return prodStyleList;
+    }
 
 
-	public void setProdStyleList(String prodStyleList) {
-		this.prodStyleList = prodStyleList;
-	}
+    public void setProdStyleList(String prodStyleList) {
+        this.prodStyleList = prodStyleList;
+    }
 
 
 }

@@ -8,14 +8,17 @@
             <i class="iconfont icon-arrow-down pro-down-icon"></i>
         </h3>
         <div class="pro-module-item">
-			<input th:id="|${entityName}_dealCalIdElement|" type="hidden" th:value="${dealCalIdElement}"><!-- 父画面交易日历元素Id -->
-			<input th:id="|${entityName}_vdateElement|" type="hidden" th:value="${vdateElement}"><!-- 父画面起息日历元素Id -->
-			<input th:id="|${entityName}_mdateElement|" type="hidden" th:value="${mdateElement}"><!-- 父画面到期日历元素Id -->
-			<input th:id="|${entityName}_isAnapleroticElement|" type="hidden" th:value="${isAnapleroticElement}"><!-- 父画面是否回补id -->
-			<input th:id="|${entityName}_operationTypeElement|" type="hidden" th:value="${operationTypeElement}"><!-- 父画面发行方式id -->
-        	<div class="pro-module-item">
-        		<table class="layui-table" th:id="|${entityName}_anapleroticInfo|" th:name="finProductAnapleroticTabInfoDtoList"></table>
-        	</div>
+            <input th:id="|${entityName}_dealCalIdElement|" type="hidden" th:value="${dealCalIdElement}"><!-- 父画面交易日历元素Id -->
+            <input th:id="|${entityName}_vdateElement|" type="hidden" th:value="${vdateElement}"><!-- 父画面起息日历元素Id -->
+            <input th:id="|${entityName}_mdateElement|" type="hidden" th:value="${mdateElement}"><!-- 父画面到期日历元素Id -->
+            <input th:id="|${entityName}_isAnapleroticElement|" type="hidden" th:value="${isAnapleroticElement}"><!-- 父画面是否回补id -->
+            <input th:id="|${entityName}_operationTypeElement|" type="hidden" th:value="${operationTypeElement}"><!-- 父画面发行方式id -->
+            <input th:id="|${entityName}_openModeElement|" type="hidden" th:value="${openModeElement}"><!-- 父画面 开放模式id -->
+            <input th:id="|${entityName}_dealModeElement|" type="hidden" th:value="${dealModeElement}"><!-- 父画面 产品处理模式id -->
+
+            <div class="pro-module-item">
+                <table class="layui-table" th:id="|${entityName}_anapleroticInfo|" th:name="finProductAnapleroticTabInfoDtoList"></table>
+            </div>
         </div>
     </div>
 </div>

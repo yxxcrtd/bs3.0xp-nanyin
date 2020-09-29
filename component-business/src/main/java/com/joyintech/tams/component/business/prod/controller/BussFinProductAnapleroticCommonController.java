@@ -17,7 +17,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 /**
  * 回补信息组件
- * 
+ *
  * @author 李俊
  * @version 1.0 2019年4月21日
  * @see BussFinProductAnapleroticCommonController
@@ -28,13 +28,13 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 public class BussFinProductAnapleroticCommonController extends BaseController {
     @Autowired
     private BussFinProductAnapleroticService bussFinProductAnapleroticService;
-    
+
     /**
      * {@linkplain}
      */
     @Autowired
     private MstWorkflowCommonService mstWorkflowCommonService;
-    /** 
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -53,6 +53,9 @@ public class BussFinProductAnapleroticCommonController extends BaseController {
         model.addAttribute("dealModeElement",this.getParam("dealModeElement"));
         model.addAttribute("anapleroticDealMode11",DictCodeList.处理模式_分档.getValue());
         //业绩回补增加分档初始化参数增加 2019-12-09 end
+
+        model.addAttribute("openModeElement",this.getParam("openModeElement"));
+
         return "component/prod/BussFinProductAnapleroticCommon";
     }
     /**
@@ -64,27 +67,27 @@ public class BussFinProductAnapleroticCommonController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getAnapleroticInfo")
-   public List<BussFinProductAnapleroticInfoDto> getAnapleroticInfo(){
-       String workflowId = this.getParam(GlobalConstant.WORKFLOW_ID);
-       String finprodId = this.getParam("finprodId");
-       String entityName = StringUtil.defaultString(this.getParam("entityName"),
-           BussFinProductAnapleroticService.DEFAULT_ENTITY_NAME);
-       String ptlId = this.getParam("ptlId");
-       // 快速录入标志
-       String quickFlag = this.getParam("quickFlag");
-       if (StringUtil.isNotEmpty(ptlId)){
-           return bussFinProductAnapleroticService.queryFinProductAnapleroticInfoById(ptlId);
-       }
-       else if (!WorkFlowUtil.isNotFromToDoList() && !StringUtil.equals(quickFlag, "true")) {
-           BussFinProductAnapleroticInfoDto dto = mstWorkflowCommonService.getBusinessEntityByWorkFlowId(
-               workflowId, entityName, BussFinProductAnapleroticInfoDto.class);
-           if (dto != null){
-               return dto.getFinProductAnapleroticTabInfoDtoList();
-           }
-       }
-       else if (StringUtil.isNotEmpty(finprodId)) {
-           return bussFinProductAnapleroticService.queryFinProductAnapleroticInfoById(finprodId);
-       }
-       return Collections.emptyList();
-   }
+    public List<BussFinProductAnapleroticInfoDto> getAnapleroticInfo(){
+        String workflowId = this.getParam(GlobalConstant.WORKFLOW_ID);
+        String finprodId = this.getParam("finprodId");
+        String entityName = StringUtil.defaultString(this.getParam("entityName"),
+                BussFinProductAnapleroticService.DEFAULT_ENTITY_NAME);
+        String ptlId = this.getParam("ptlId");
+        // 快速录入标志
+        String quickFlag = this.getParam("quickFlag");
+        if (StringUtil.isNotEmpty(ptlId)){
+            return bussFinProductAnapleroticService.queryFinProductAnapleroticInfoById(ptlId);
+        }
+        else if (!WorkFlowUtil.isNotFromToDoList() && !StringUtil.equals(quickFlag, "true")) {
+            BussFinProductAnapleroticInfoDto dto = mstWorkflowCommonService.getBusinessEntityByWorkFlowId(
+                    workflowId, entityName, BussFinProductAnapleroticInfoDto.class);
+            if (dto != null){
+                return dto.getFinProductAnapleroticTabInfoDtoList();
+            }
+        }
+        else if (StringUtil.isNotEmpty(finprodId)) {
+            return bussFinProductAnapleroticService.queryFinProductAnapleroticInfoById(finprodId);
+        }
+        return Collections.emptyList();
+    }
 }
