@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.tams.invest.portfolio.ptlcashflow.service;
 
 import java.util.ArrayList;
@@ -61,8 +61,8 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
  * @since 1.0
  */
 @Service
-public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto> 
-    implements BaseProcessService<PtlCashFlowDto> {
+public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
+        implements BaseProcessService<PtlCashFlowDto> {
     /**
      * 划款指令共同
      */
@@ -112,10 +112,10 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
         else if (OperationType.NEW.equals(type)) {
             action = "insert";
         }
-        
-        restTemplate.postForObject(
-            ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlCashFlow/" + action, entity,
-            Integer.class);
+
+        simpleRestTemplate.postForObject(
+                ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlCashFlow/" + action, entity,
+                Integer.class);
 
         //发送数据到第三方系统
         try {
@@ -208,12 +208,12 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
         }
         saveDataWhenStartWorkflow(entity, OperationType.NEW);
     }
-    
+
     @Override
     public void doDelete(String workflowId) {
-        restTemplate.getForObject(
-            ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlCashFlow/doDelete?workflowId="+ workflowId,
-            void.class);
+        simpleRestTemplate.getForObject(
+                ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlCashFlow/doDelete?workflowId="+ workflowId,
+                void.class);
     }
     /**
      * <一句话功能简述>
@@ -226,6 +226,7 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
     private void saveDataWhenStartWorkflow(PtlCashFlowDto entity, OperationType type) {
         entity.setActPortfolioId(entity.getPortfolioId());
         entity.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(entity.getPortfolioId()));
+
         if ("submit".equals(entity.getOperateType())||type.equals(OperationType.REVOKE)) {
 //          产品交易DTO
             List<WflTrdProductDeal> wflTrdProductDeals = getwflTrdProductDeals(entity);
@@ -236,21 +237,30 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
             // 金融产品交易信息DTO.划款指令表Entity -> 划款指令业务流程表
             List<WflStlPayOrders> stlPayOrdersDtos = getWflStlPayOrders(entity);
             if (type == OperationType.REVOKE) {
-                wflTrdProductDeals.forEach(wflTrdProductDeal -> {
-                    wflTrdProductDeal.setpTradeId(wflTrdProductDeal.getTradeId());
-                    wflTrdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
-                    wflTrdProductDeal.setTradeId(wflTrdProductDeal.getTradeId() + "R");
-                });
-                wflPaTrdProductDeals.forEach(wflTrdProductDeal -> {
-                    wflTrdProductDeal.setTradeId(wflTrdProductDeal.getTradeId() + "R");
-                });
 
-                wflTrdProductDealAdds.forEach(wflTrdProductDeal -> {
-                    wflTrdProductDeal.setTradeId(wflTrdProductDeal.getTradeId() + "R");
+
+
+                wflTrdProductDeals.forEach(wflTrdProductDeal -> {
+                    String oldTradeId = "";
+                    if(entity.getBusiNo().lastIndexOf("R") == entity.getBusiNo().length()-1){
+                        oldTradeId = StringUtil.substring(entity.getBusiNo(),0,entity.getBusiNo().length()-1);
+                    }else{
+                        oldTradeId = entity.getBusiNo();
+                    }
+                    wflTrdProductDeal.setpTradeId(oldTradeId);
+                    wflTrdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
+                    //    wflTrdProductDeal.setTradeId(wflTrdProductDeal.getTradeId() + "R");
                 });
+//                wflPaTrdProductDeals.forEach(wflTrdProductDeal -> {
+//                    wflTrdProductDeal.setTradeId(wflTrdProductDeal.getTradeId() + "R");
+//                });
+//
+//                wflTrdProductDealAdds.forEach(wflTrdProductDeal -> {
+//                    wflTrdProductDeal.setTradeId(wflTrdProductDeal.getTradeId() + "R");
+//                });
 
                 stlPayOrdersDtos.forEach(order -> {
-                    order.setTradeId(order.getTradeId() + "R");
+                    //          order.setTradeId(order.getTradeId() + "R");
                     order.setOrderStatus(DictCodeListExt1.指令状态_撤销.getValue());
                     order.setOrderId(order.getOrderId() + "R");
                 });
@@ -293,7 +303,7 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
      * @since 1.0
      */
     private FinProductTradeDto genFinProductTradeDto(PtlCashFlowDto entity) {
-     // 5.构造调用组件的输入参数DTO
+        // 5.构造调用组件的输入参数DTO
         FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
         List<BaseTradeProductDealDto> baseTradeProductDealDtos = new ArrayList<>();
         BaseTradeProductDealDto baseTradeProductDealDto = new BaseTradeProductDealDto();
@@ -334,11 +344,11 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
      * @since 1.0
      */
     private TrdProductDeal getTrdProductDeal(PtlCashFlowDto dto) {
-      //金融产品交易信息dto
+        //金融产品交易信息dto
         TrdProductDeal entity = new TrdProductDeal();
         entity.setTradeId(dto.getBusiNo());
         if(StringUtil.isNotEmpty(dto.getFinprodId())){
-        entity.setFinprodId(dto.getFinprodId());
+            entity.setFinprodId(dto.getFinprodId());
         }else{
             entity.setFinprodId("999999999999");
         }
@@ -369,7 +379,7 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
      * @since 1.0
      */
     private List<WflStlPayOrders> getWflStlPayOrders(PtlCashFlowDto entity) {
-      //划款指令表entity
+        //划款指令表entity
         List<WflStlPayOrders> wflStlPayOrdersList = new ArrayList<WflStlPayOrders>();
         List<BussTrdTransferOrderBase> list = entity.getBussTrdTransferOrder();
         if(list != null && list.size()>0){
@@ -387,7 +397,7 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
                     dto.setMyAcctNo(d.getPayAcctNo());
                     dto.setCounterAcctNo(d.getRecAcctNo());
                 }
-                
+
                 wflStlPayOrdersList.add(dto);
             }
         }
@@ -459,10 +469,10 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
          * 金融产品交易业务流程表
          */
         WflTrdProductDeal wflTrdProductDeal = new WflTrdProductDeal();
-            wflTrdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+        wflTrdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
         wflTrdProductDeal.setTradeId(entity.getBusiNo());
         if(StringUtil.isNotEmpty(entity.getFinprodId())){
-        wflTrdProductDeal.setFinprodId(entity.getFinprodId());
+            wflTrdProductDeal.setFinprodId(entity.getFinprodId());
         }else{
             wflTrdProductDeal.setFinprodId("999999999999");
         }
@@ -494,8 +504,8 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
      * @since 1.0
      */
     public List<SuggestDto> getBusiNo(String param) {
-        return restTemplate.getForList(ServiceApplication.PORTFOLIO_SERVICE_NAME
-            + "/PtlCashFlow/getBusiNo?param=" + param,SuggestDto.class);
+        return simpleRestTemplate.getForList(ServiceApplication.PORTFOLIO_SERVICE_NAME
+                + "/PtlCashFlow/getBusiNo?param=" + param,SuggestDto.class);
     }
 
     /**
@@ -511,8 +521,8 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
         map.put("param", param);
         User user = SecurityUtil.getLoginUser();
         map.put("userName", user.getUserName());
-        return restTemplate.postForPage(ServiceApplication.PORTFOLIO_SERVICE_NAME
-            + "/PtlCashFlow/getPortfolioId"  ,map,SelectOptionDto.class);
+        return simpleRestTemplate.postForPage(ServiceApplication.PORTFOLIO_SERVICE_NAME
+                + "/PtlCashFlow/getPortfolioId"  ,map,SelectOptionDto.class);
     }
     /**
      * 获取组合代码的下拉框
@@ -524,8 +534,8 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
     public List<SelectOptionDto> getPortfolioIdToNew(Map<String,Object> param) {
         User user = SecurityUtil.getLoginUser();
         param.put("userName", user.getUserName());
-        return restTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME
-            + "/PtlCashFlow/getPortfolioIdToNew" ,param,SelectOptionDto.class);
+        return simpleRestTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME
+                + "/PtlCashFlow/getPortfolioIdToNew" ,param,SelectOptionDto.class);
     }
     /**
      * <一句话功能简述>
@@ -536,8 +546,8 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
      * @since 1.0
      */
     public List<SuggestDto> getFinprodMarketId(String param) {
-        return restTemplate.getForList(ServiceApplication.PORTFOLIO_SERVICE_NAME
-            + "/PtlCashFlow/getFinprodMarketId?param=" + param,SuggestDto.class);
+        return simpleRestTemplate.getForList(ServiceApplication.PORTFOLIO_SERVICE_NAME
+                + "/PtlCashFlow/getFinprodMarketId?param=" + param,SuggestDto.class);
     }
 
     /**
@@ -551,9 +561,9 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
     public Page<PtlCashFlowDto> selectForPage(Map<String, Object> pageParam) {
         User user = SecurityUtil.getLoginUser();
         pageParam.put("userName", user.getUserName());
-        return restTemplate.postForPage(
-            ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlCashFlow/findPage",
-            pageParam, PtlCashFlowDto.class);
+        return simpleRestTemplate.postForPage(
+                ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlCashFlow/findPage",
+                pageParam, PtlCashFlowDto.class);
     }
 
     /**
@@ -565,8 +575,8 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
      * @since 1.0
      */
     public Page<SelectOptionDto> getCounterId(Map<String, Object> param) {
-        return restTemplate.postForPage(ServiceApplication.PORTFOLIO_SERVICE_NAME
-            + "/PtlCashFlow/getCounterId" , param,SelectOptionDto.class);
+        return simpleRestTemplate.postForPage(ServiceApplication.PORTFOLIO_SERVICE_NAME
+                + "/PtlCashFlow/getCounterId" , param,SelectOptionDto.class);
     }
 
     /**
@@ -578,8 +588,8 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
      * @since 1.0
      */
     public Page<SelectOptionDto> getFinprodIdToNew(Map<String, Object> param) {
-        return restTemplate.postForPage(ServiceApplication.PORTFOLIO_SERVICE_NAME
-            + "/PtlCashFlow/getFinprodIdToNew" , param,SelectOptionDto.class);
+        return simpleRestTemplate.postForPage(ServiceApplication.PORTFOLIO_SERVICE_NAME
+                + "/PtlCashFlow/getFinprodIdToNew" , param,SelectOptionDto.class);
     }
 
     /**
@@ -591,8 +601,8 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
      * @since 1.0
      */
     public PtlCashFlowDto getEntity(Map<String, Object> map) {
-        return restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME
-            + "/PtlCashFlow/getEntity" , map,PtlCashFlowDto.class);
+        return simpleRestTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME
+                + "/PtlCashFlow/getEntity" , map,PtlCashFlowDto.class);
     }
     /**
      * 导出
@@ -600,10 +610,10 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
     @Override
     protected void buildExportParam(ExportParam exportParam) {
         exportParam.config(
-            "/com/joyintech/tams/invest/portfolio/ptlcashflow/conf/export_conf.xml").dataSource(
+                "/com/joyintech/tams/invest/portfolio/ptlcashflow/conf/export_conf.xml").dataSource(
                 DataSourceType.MASERT);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -627,8 +637,8 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
      * @since 1.0
      */
     public List<SelectOptionDto> getFTradeId(Map<String, Object> param) {
-        return restTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME
-            + "/PtlCashFlow/getFTradeId" , param,SelectOptionDto.class);
+        return simpleRestTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME
+                + "/PtlCashFlow/getFTradeId" , param,SelectOptionDto.class);
     }
-    
+
 }

@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.tams.invest.portfolio.ptlcashflow.controller;
 
 import java.util.List;
@@ -84,7 +84,7 @@ public class PtlCashFlow001Controller extends BaseController{
         return super.init(model);
     }
     /**
-     * 
+     *
      * 获得业务编号
      * <功能详细描述>
      * @return
@@ -97,7 +97,7 @@ public class PtlCashFlow001Controller extends BaseController{
         return ptlCashFlowService.getBusiNo(getParam("param"));
     }
     /**
-     * 
+     *
      * 获得组合代码
      * <功能详细描述>
      * @return
@@ -110,7 +110,7 @@ public class PtlCashFlow001Controller extends BaseController{
         return ptlCashFlowService.getPortfolioId(getParam("search"));
     }
     /**
-     * 
+     *
      * 获得资产代码
      * <功能详细描述>
      * @return
@@ -132,7 +132,7 @@ public class PtlCashFlow001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("/findPage")
     public Page<PtlCashFlowDto> findPage()
-        throws Exception {
+            throws Exception {
         return ptlCashFlowService.selectForPage(RequestUtil.getParameters(getRequest()));
     }
     /**
@@ -144,10 +144,10 @@ public class PtlCashFlow001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
-        ValidateGroupDelete.class}) PtlCashFlowDto dto, BindingResult result) {
+            ValidateGroupDelete.class}) PtlCashFlowDto dto, BindingResult result) {
         return commonCheck(result, dto.getOperateType());
     }
-    
+
     /**
      * 保存
      * @param dto dto
@@ -158,8 +158,8 @@ public class PtlCashFlow001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("revoke")
     public AjaxResult revoke(@RequestBody @Validated({
-        ValidateGroupDelete.class}) PtlCashFlowDto dto, BindingResult br)
-        throws Exception {
+            ValidateGroupDelete.class}) PtlCashFlowDto dto, BindingResult br)
+            throws Exception {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -171,18 +171,19 @@ public class PtlCashFlow001Controller extends BaseController{
             List<BussTrdTransferOrderBase> list = bussSettleOrderCommService.selectOrdersByBizCode(dto.getBusiNo());
             dto.setBussTrdTransferOrder(list);
         }
+        dto.setBusiNo(dto.getBusiNo()+"R");
         params.setPageId("PtlCashFlow002");
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item -> item.getBusiNo());
         params.setBusinessType(DictCodeList.共通业务类型_自定义现金流.getValue());
         // "自定义现金流交易编号：" + 上述取得的交易编号 + "业务发生日期：" + 画面.业务发生日期 + "组合：" + 画面.组合代码对应的组合名称
         params.setComment(
-            entity -> this.getMessage("PtlCashFlow001.busiNo") + "("
-                      + entity.getBusiNo() + ")" + "-"
-                      + this.getMessage("PtlCashFlow001.settleDate") + "("
-                      + DateUtil.format(entity.getSettleDate()) + ")" + "-"
-                      + this.getMessage("PtlCashFlow001.portfolioName") + "("
-                      + entity.getPortfolioName() + ")");
+                entity -> this.getMessage("PtlCashFlow001.busiNo") + "("
+                        + entity.getBusiNo() + ")" + "-"
+                        + this.getMessage("PtlCashFlow001.settleDate") + "("
+                        + DateUtil.format(entity.getSettleDate()) + ")" + "-"
+                        + this.getMessage("PtlCashFlow001.portfolioName") + "("
+                        + entity.getPortfolioName() + ")");
         processParameter.setWorkFlowParameter(params);
         String msg = ptlCashFlowService.start(processParameter, dto);
         return new AjaxResult(msg);
@@ -197,9 +198,9 @@ public class PtlCashFlow001Controller extends BaseController{
 
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+            throws Exception {
         return ptlCashFlowService.export(this.getPageId(),
-            RequestUtil.getParameters(getRequest()));
+                RequestUtil.getParameters(getRequest()));
 
     }
 }
