@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.service.valuation.taxparametermanage.taxscheme.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,30 +34,30 @@ public class TaxScheme004Service extends CommonExportService<TaxScheme004Dto> im
 
 	@Autowired
 	private TaxScheme004Mapper taxScheme004Mapper;
-	
+
 	/**
 	 * 附加税则表
 	 */
 	@Autowired
 	private TaxAdtScheduleMapper taxAdtScheduleMapper;
-	
+
 	/**
-     * 流程审核完成时执行 {@inheritDoc}
-     */
-    @Override
-    public void doComplete(TaxScheme004Dto entity, OperationType type) {
-        if (OperationType.NEW.equals(type)) {
-            this.insertSelective(entity);
-        }
-        else if (OperationType.MODIFY.equals(type)) {
-            this.updateByPrimaryKeySelective(entity);
-        }
-        else if (OperationType.DELETE.equals(type)) {
-            this.deleteByBatch(entity.getTaxId());
-        }
-    }
-	
-	
+	 * 流程审核完成时执行 {@inheritDoc}
+	 */
+	@Override
+	public void doComplete(TaxScheme004Dto entity, OperationType type) {
+		if (OperationType.NEW.equals(type)) {
+			this.insertSelective(entity);
+		}
+		else if (OperationType.MODIFY.equals(type)) {
+			this.updateByPrimaryKeySelective(entity);
+		}
+		else if (OperationType.DELETE.equals(type)) {
+			this.deleteByBatch(entity.getTaxId());
+		}
+	}
+
+
 	/**
 	 * 新建 附加税则表
 	 * @param dto
@@ -66,7 +66,7 @@ public class TaxScheme004Service extends CommonExportService<TaxScheme004Dto> im
 	public int insertSelective(TaxScheme004Dto dto) {
 		return taxScheme004Mapper.insertSelective(dto);
 	}
-	
+
 	/**
 	 * 查询 附加税则表
 	 * @param seqNo
@@ -75,7 +75,7 @@ public class TaxScheme004Service extends CommonExportService<TaxScheme004Dto> im
 	public TaxScheme004Dto findByPrimaryKey(String seqNo) {
 		return taxScheme004Mapper.selectByPrimaryKey(seqNo);
 	}
-	
+
 	/**
 	 * 修改 附加税则表
 	 * @param dto
@@ -98,8 +98,10 @@ public class TaxScheme004Service extends CommonExportService<TaxScheme004Dto> im
 		return row;
 	}
 
+	public String getPrimaryKey() {
+		return taxScheme004Mapper.getPrimaryKey();
+	}
 
 
-	
-	
+
 }

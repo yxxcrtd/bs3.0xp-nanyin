@@ -18,8 +18,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.*;
 
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,8 +120,21 @@ public class VatDrawAttachedProcessorService {
         List<TaxBokBalanceSum> listTdyBalanceSum = new ArrayList<TaxBokBalanceSum>();
 
         // 1. 取附加税计税方式信息
-        List<AddTaxRuleDto> listAddTaxRuleDto = vatDrawAttachedMapper.getAddTaxCalType(booksetId,
-            happenDate, DictCodeListExt1.配置方案类型_税务方案.getValue());
+        List<AddTaxRuleDto> listAddTaxRuleDto = new ArrayList<>();
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+            // 获取此账套的创建机构 查找对应的附加税 税率
+            String createInst = CommonUtil.getCreateInstByID(booksetId,DictCodeList.共通业务类型_账套管理.getValue());
+            String generalInst = CommonUtil.getYHGeneralBankCode();
+            if(StringUtil.isNotEmpty(createInst) && StringUtil.isNotEmpty(generalInst)){
+                listAddTaxRuleDto = vatDrawAttachedMapper.getAddTaxCalTypeByMultiLevel(booksetId,
+                        happenDate, DictCodeListExt1.配置方案类型_税务方案.getValue(),createInst,generalInst);
+            }
+        }else{
+            listAddTaxRuleDto = vatDrawAttachedMapper.getAddTaxCalType(booksetId,
+                    happenDate, DictCodeListExt1.配置方案类型_税务方案.getValue());
+        }
+
+
         // 定义 附加税税则Map
         Map<String, AddTaxRuleDto> addTaxRuleMap = new HashMap<>();
         for (AddTaxRuleDto dto : listAddTaxRuleDto) {

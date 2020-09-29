@@ -3,12 +3,12 @@
 <mapper namespace="com.joyintech.service.valuation.taxparametermanage.taxscheme.dao.TaxScheme004Mapper">
 
     <select id="selectByPrimaryKey" resultType="com.joyintech.service.valuation.taxparametermanage.taxscheme.dto.TaxScheme004Dto" parameterType="java.lang.String" >
-        select 
-               tax_id as taxId, /*税则代码 */
-               sch_id as schId, /* 方案代码 */
-               add_tax_type as addTaxType, /* 附加税类型 */
-               tax_rate*100 as taxRate, /* 应税税率 */
-               TO_CHAR(eff_date, 'yyyy-MM-dd') as effDate/* 生效日 */
+        select
+        tax_id as taxId, /*税则代码 */
+        sch_id as schId, /* 方案代码 */
+        add_tax_type as addTaxType, /* 附加税类型 */
+        tax_rate*100 as taxRate, /* 应税税率 */
+        TO_CHAR(eff_date, 'yyyy-MM-dd') as effDate/* 生效日 */
         from TAX_ADT_SCHEDULE
         where tax_id = #{tax_id,jdbcType=VARCHAR}
     </select>
@@ -17,7 +17,7 @@
         insert into TAX_ADT_SCHEDULE
         <trim prefix="(" suffix=")" suffixOverrides="," >
             TAX_ID,
-                
+
             <if test="schId != null" >
                 SCH_ID,
             </if>
@@ -50,8 +50,13 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
-            TAX_SEQUENCE.NEXTVAL,
-            
+
+            <if test="schId != null" >
+                #{taxId,jdbcType=VARCHAR},
+            </if>
+            <if test="schId == null" >
+                TAX_SEQUENCE.NEXTVAL,
+            </if>
             <if test="schId != null" >
                 #{schId,jdbcType=VARCHAR},
             </if>
@@ -85,8 +90,8 @@
         </trim>
     </insert>
 
-    
-    
+
+
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.service.valuation.taxparametermanage.taxscheme.dto.TaxScheme004Dto" >
         update TAX_ADT_SCHEDULE
         <set >
@@ -114,19 +119,14 @@
         </set>
         where TAX_ID = #{taxId,jdbcType=VARCHAR}
     </update>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-   
-    
+
+
+    <select id="getPrimaryKey" resultType="java.lang.String" >
+        select
+        TAX_SEQUENCE.NEXTVAL
+        from dual
+    </select>
+
+
 </mapper>

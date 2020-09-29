@@ -45,7 +45,7 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 /**
  * 税务方案 - 附加税则表
- * 
+ *
  * @author zhangwei
  * @version 1.0 2018年10月10日
  * @see TaxScheme004Controller
@@ -71,18 +71,18 @@ public class TaxScheme004Controller extends BaseController {
 		String taxId = getParam("taxId");
 		String operateType = getParam("operateType");
 		String workflowId = this.getParam(GlobalConstant.WORKFLOW_ID);// 工作流ID
-		
+
 		TaxScheme004Dto dto = new TaxScheme004Dto();
 		if (StringUtils.isNotEmpty(taxId)) { // 查看 、 修改
 			dto = taxScheme004Service.findByPrimaryKey(taxId);
 		} else if(StringUtil.isNotEmpty(workflowId)) { // 流程查看页面
-            dto = taxScheme004Service.getBussinessEntityByWorkflowId(workflowId);
-            
-            taxId = dto.getTaxId(); // 避免流程，再生成主键
-        } 
-		
+			dto = taxScheme004Service.getBussinessEntityByWorkflowId(workflowId);
+
+			taxId = dto.getTaxId(); // 避免流程，再生成主键
+		}
+
 		if (StringUtils.isEmpty(taxId) || "copy".equals(operateType)) { // 新建 、复制
-		    dto.setTaxId(IDGenerator.generate()); // 主键是 Sequence，这里仅供流程参考
+			dto.setTaxId(taxScheme004Service.getPrimaryKey()); // 主键是 Sequence，这里仅供流程参考
 			dto.setSchId(schId);
 		}
 		dto.setOperateType(operateType);
@@ -94,7 +94,7 @@ public class TaxScheme004Controller extends BaseController {
 
 	/**
 	 * 提交/保存 check
-	 * 
+	 *
 	 * @param dto
 	 * @param result
 	 * @param operateType
@@ -136,37 +136,37 @@ public class TaxScheme004Controller extends BaseController {
 		return commonCheck(bindingResult, operateType);
 	}
 
-  /**
-   * 新建或修改 并启动流程
-   * @param dto
-   * @param bindingResult
-   * @return
-   */
-  @ResponseBody
-  @RequestMapping(value = PAGE_SAVE, method = RequestMethod.POST)
-  public AjaxResult save(@RequestBody TaxScheme004Dto dto) {
-    String msg = StringUtil.EMPTY;
-      
-    ProcessParameter<TaxScheme004Dto> processParameter = new ProcessParameter<>();
-    WorkFlowParameter<TaxScheme004Dto> workFlowParameter = new WorkFlowParameter<>();
-      
-    try {
-          workFlowParameter.setPageId(this.getPageId()); // 页面id
-          workFlowParameter.setElementId(this.getParam(GlobalConstant.ELEMENT_ID)); // 元素id
-          workFlowParameter.setBusinessCode(dto.getTaxId());// 业务代码编号
-          workFlowParameter.setBusinessType(DictCodeList.共通业务类型_税务方案.getValue());// 业务类型
-          workFlowParameter.setComment(entity -> WorkFlowUtil.concatComment(
-              "附加税则表" , entity.getTaxId()));// 当前工作流备注
-          processParameter.setWorkFlowParameter(workFlowParameter);// 塞入流程参数
-          
-          taxScheme004Service.start(processParameter, dto);
-          msg = getMessage("COMMON_I_0001"); // 处理正常结束
-    } catch (Exception e) {
-          this.getLogger().error("启动估值方案流程失败：", e);
-          msg = e.getMessage();
-    }
-      
-      return new AjaxResult(msg);
-  }
-	
+	/**
+	 * 新建或修改 并启动流程
+	 * @param dto
+	 * @param bindingResult
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = PAGE_SAVE, method = RequestMethod.POST)
+	public AjaxResult save(@RequestBody TaxScheme004Dto dto) {
+		String msg = StringUtil.EMPTY;
+
+		ProcessParameter<TaxScheme004Dto> processParameter = new ProcessParameter<>();
+		WorkFlowParameter<TaxScheme004Dto> workFlowParameter = new WorkFlowParameter<>();
+
+		try {
+			workFlowParameter.setPageId(this.getPageId()); // 页面id
+			workFlowParameter.setElementId(this.getParam(GlobalConstant.ELEMENT_ID)); // 元素id
+			workFlowParameter.setBusinessCode(dto.getTaxId());// 业务代码编号
+			workFlowParameter.setBusinessType(DictCodeList.共通业务类型_税务方案.getValue());// 业务类型
+			workFlowParameter.setComment(entity -> WorkFlowUtil.concatComment(
+					"附加税则表" , entity.getTaxId()));// 当前工作流备注
+			processParameter.setWorkFlowParameter(workFlowParameter);// 塞入流程参数
+
+			taxScheme004Service.start(processParameter, dto);
+			msg = getMessage("COMMON_I_0001"); // 处理正常结束
+		} catch (Exception e) {
+			this.getLogger().error("启动估值方案流程失败：", e);
+			msg = e.getMessage();
+		}
+
+		return new AjaxResult(msg);
+	}
+
 }

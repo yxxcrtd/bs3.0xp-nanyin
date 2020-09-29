@@ -27,7 +27,7 @@ import com.joyintech.workflow.engine.constant.OperationType;
 
 /**
  * 税务方案 - 附加税则表
- * 
+ *
  * @author zhangwei
  * @version 1.0 2018年10月10日
  * @see TaxScheme004Controller
@@ -35,20 +35,20 @@ import com.joyintech.workflow.engine.constant.OperationType;
  */
 //@RestController(value="serviceTaxScheme004Controller")
 @RestController("taxScheme004Ctl_dtx")
-@RequestMapping("/TaxScheme004")
+@RequestMapping("/service/TaxScheme004")
 public class TaxScheme004Controller extends BaseController {
 
-	@Autowired
-	private TaxScheme004Service taxScheme004Service;
+    @Autowired
+    private TaxScheme004Service taxScheme004Service;
 
     @GetMapping("/findByPrimaryKey")
     public TaxScheme004Dto findBySchId(String seqNo) {
         return taxScheme004Service.findByPrimaryKey(seqNo);
     }
-	
-	/**
-     * 流程完成后的操作 
-     * 
+
+    /**
+     * 流程完成后的操作
+     *
      * @param dto 业务实体
      * @return 画面地址
      * @throws Exception
@@ -59,6 +59,11 @@ public class TaxScheme004Controller extends BaseController {
     @DTXTransaction
     @PostMapping(value = "doComplete/{action}")
     public void doComplete(@RequestBody TaxScheme004Dto dto, @PathVariable("action") String action) {
-       taxScheme004Service.doComplete(dto, OperationType.valueOf(action));
+        taxScheme004Service.doComplete(dto, OperationType.valueOf(action));
+    }
+
+    @GetMapping("/getPrimaryKey")
+    public String getPrimaryKey() {
+        return taxScheme004Service.getPrimaryKey();
     }
 }
