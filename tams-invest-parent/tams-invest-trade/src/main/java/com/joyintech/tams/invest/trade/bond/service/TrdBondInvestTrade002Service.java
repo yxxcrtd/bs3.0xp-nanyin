@@ -1528,6 +1528,10 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 }else if(DictCodeList.交易方向_卖出.getValue().equals(trdFinProductDealTotal1.getPs())){
                     trdFinProductDealTotal1.setPs(DictCodeList.交易方向_买入.getValue());
                 }
+
+                // 上面copyPropertiesIgnoreNull时 错误，重新赋值
+                trdFinProductDealTotal1.setInvAim(entity.getTurnInvAim());
+
                 trdFinProductDealTotal1.setPortfolioId(交易对手_子组合);
                 trdFinProductDealTotalMapper.insertSelective(trdFinProductDealTotal1);
 
@@ -3392,4 +3396,19 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
         return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getCounterId", map,
             String.class);
     }
+
+    /**
+     * 债券投资交易新建画面查看模式查询债券投资交易信息
+     *
+     * @param tradeId 交易编号
+     * @return 债券投资交易信息
+     * @see
+     * @since 1.0
+     */
+    public String getReverseTradeDtoInvAim(String tradeId) {
+        return restTemplate.postForObject(
+                ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getReverseTradeDtoInvAim/" + tradeId, null,
+                String.class);
+    }
+
 }

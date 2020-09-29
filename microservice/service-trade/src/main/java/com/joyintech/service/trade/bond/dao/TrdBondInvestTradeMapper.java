@@ -281,4 +281,7 @@ public interface TrdBondInvestTradeMapper {
     //货币型产品投资目的默认显示摊余成本 add by liupeilin 2020-01-15 end
     
     String selectCeTradeId(Map<String, Object> param);
+
+    String getReverseTradeDtoInvAim(@Param("tradeId") String tradeId);
+
 }
