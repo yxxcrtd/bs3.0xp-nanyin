@@ -366,16 +366,12 @@ CASH_OUT_NO = #{cmsId}
 		AND A.FINPROD_ID = #{finprodId}
 	</select>
 	<select id = "selectFinprodMarketId" resultType="java.lang.Integer">
-		<!--		update by zoujiamin 20200923  bugTISHKBS-1233 调整对于已有资产或组合代码是否重复校验-->
 		SELECT
 		COUNT(FINPROD_MARKET_ID)
 		FROM
 		FIN_PRODUCT
-		LEFT JOIN FIN_PRODUCT_TYPE
-		ON FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_TYPE.FINPROD_ID
 		WHERE
-		(FIN_PRODUCT_TYPE.TYPE_8 IS NULL OR FIN_PRODUCT_TYPE.TYPE_8 IN ('F18','F17','F06'))
-		AND FIN_PRODUCT.FINPROD_MARKET_ID = #{finprodMarketId}
+		FIN_PRODUCT.FINPROD_MARKET_ID = #{finprodMarketId}
 	</select>
 	<select id = "getName" resultType="java.lang.String">
 		SELECT
