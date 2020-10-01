@@ -3411,4 +3411,17 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 String.class);
     }
 
+    /**
+     * 查找买入交易之后的卖出交易
+     *
+     * @param map 交易编号
+     * @return 债券投资交易信息
+     * @see
+     * @since 1.0
+     */
+    public int selectTradeT02(String tradeId) {
+        return restTemplate.postForObject(
+                ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/selectTradeT02/" + tradeId, null,
+                Integer.class);
+    }
 }
