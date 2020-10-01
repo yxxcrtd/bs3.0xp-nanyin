@@ -223,8 +223,10 @@ log:
 eureka:
   client:
     enabled: true
+    register-with-eureka: false
+    fetch-registry: false
     serviceUrl:
-      defaultZone: http://192.168.90.219:9101/eureka/
+      defaultZone: http://192.168.90.219:8762/eureka/
   instance:
     ip-address: 127.0.0.1
     prefer-ip-address: false
