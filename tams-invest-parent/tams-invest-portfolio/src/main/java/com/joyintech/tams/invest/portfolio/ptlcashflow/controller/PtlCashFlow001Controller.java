@@ -171,7 +171,6 @@ public class PtlCashFlow001Controller extends BaseController{
             List<BussTrdTransferOrderBase> list = bussSettleOrderCommService.selectOrdersByBizCode(dto.getBusiNo());
             dto.setBussTrdTransferOrder(list);
         }
-        dto.setBusiNo(dto.getBusiNo()+"R");
         params.setPageId("PtlCashFlow002");
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item -> item.getBusiNo());

@@ -68,12 +68,8 @@ $(function() {
             ,{field:'intAmt',width:'10%', title: 'TrdLendDuration001.intAmt',type:'money'}
             ,{field:'theoryAmt',width:'10%', title: 'TrdLendDuration001.theoryAmt',type:'money'}
             ,{field:'tradeAmt',width:'10%', title: 'TrdLendDuration001.tradeAmt',type:'money'}
-            , {field: 'statusValid', visible: false}
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit']
             ,render: function (data, type, row, meta) {
-                if (row.statusValid != '01')
-                    return "";
-                else
                     //modifiled by liupengfei for 多级法人改造 确认按钮权限控制 S
                     if(purviewElements.indexOf('_edit')!=-1){
                         return '<i class="btn iconfont edit icon-circle-correct_fill" title="确认"></i>';

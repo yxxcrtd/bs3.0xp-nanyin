@@ -166,17 +166,7 @@ public class FinProductAnapleroticInfoDto extends BaseEntity implements ProcessE
      * 回补结束日
      */
     private Date anapleroticEndDate;
-
-    private Date vDate;
-
-    public Date getvDate() {
-        return vDate;
-    }
-
-    public void setvDate(Date vDate) {
-        this.vDate = vDate;
-    }
-
+    
     /**
      * 回补实际结束日
      */

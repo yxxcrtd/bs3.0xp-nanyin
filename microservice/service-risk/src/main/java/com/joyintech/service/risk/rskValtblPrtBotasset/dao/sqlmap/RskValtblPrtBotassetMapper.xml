@@ -85,11 +85,7 @@
 			FINPROD_ID = #{finprodId, jdbcType=VARCHAR}
 		where
 			PTL_ID = #{ptlId}
-			 and (SUB_CODE = #{subCode}
-			 <!-- TISHKBS-1172 [估值表资产科目映射]映射完资产信息后，rsk_valtbl_asset_sub入表数据不正确 add by hpp 2020-09-27 -->
-			 <!--OR SUB_NAME in (SELECT SUB_NAME FROM RSK_VALTBL_ASSET_SUB WHERE SUB_CODE = #{subCode} AND PTL_ID = #{ptlId})-->
-		 		OR SUB_CODE like '%'||substr(#{subCode},8)
-			 )
+			and (SUB_CODE = #{subCode} OR SUB_NAME in (SELECT SUB_NAME FROM RSK_VALTBL_ASSET_SUB WHERE SUB_CODE = #{subCode} AND PTL_ID = #{ptlId}))
 			and FINPROD_ID is null
 	 </update>
 	 <!-- 获取不同映射count -->

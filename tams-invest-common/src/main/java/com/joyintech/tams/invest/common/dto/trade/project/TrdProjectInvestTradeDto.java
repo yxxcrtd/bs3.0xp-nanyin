@@ -235,10 +235,6 @@ public class TrdProjectInvestTradeDto extends BaseEntity {
      * 是否转让还本未支付利息
      */
     private String ispayUnpaidint;
-    /**
-     * 交易编号
-     */
-    private String tradeId;
 
     /**
      * 获取 statusValid
@@ -1130,13 +1126,5 @@ public class TrdProjectInvestTradeDto extends BaseEntity {
      */
     public void setIspayUnpaidint(String ispayUnpaidint) {
         this.ispayUnpaidint = ispayUnpaidint;
-    }
-
-    public String getTradeId() {
-        return tradeId;
-    }
-
-    public void setTradeId(String tradeId) {
-        this.tradeId = tradeId;
     }
 }

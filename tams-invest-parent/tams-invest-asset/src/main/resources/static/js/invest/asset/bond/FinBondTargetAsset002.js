@@ -54,12 +54,6 @@ $(function() {
                 return;
             }
         }
-        var text = $('#isRight').next().find('em').text();
-        if(text==='否'){
-            $('#isRight').val('N');
-        }else{
-            $('#isRight').val('Y');
-        }
         var repAssetType = $('#repAssetType').val();
         //update by zhangnian 20190920 end
         var  couponSpecies = getInterestFactorElementById('couponSpecies').val();
