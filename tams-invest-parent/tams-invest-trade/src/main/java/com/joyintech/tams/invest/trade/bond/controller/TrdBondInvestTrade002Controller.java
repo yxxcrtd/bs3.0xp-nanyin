@@ -147,13 +147,6 @@ public class TrdBondInvestTrade002Controller extends BaseController {
         }
         else if (StringUtil.isNotEmpty(tradeId)) {
             dto = trdBondInvestTrade002Service.getTrdBondInvestTradeDto(tradeId);
-            //转仓交易目的 显示为转仓交易的 交易目的
-            if(dto!=null){
-                String turnInvAim = trdBondInvestTrade002Service.getReverseTradeDtoInvAim(tradeId);
-                if(StringUtil.isNotEmpty(turnInvAim)) {
-                    dto.setTurnInvAim(turnInvAim);
-                }
-            }
         }
         else {
             String entrustId = this.getParam("entrustId");//委托

@@ -72,19 +72,19 @@ public class TamsBaseCommonService extends BaseService {
     public List<String> selectDeptCode(String institutionCode) {
         return tamsBaseMapper.selectDeptCode(institutionCode);
     }
-
-    /**
-     * 获取登录用户的机构类型
-     * @return
-     */
+    
+	/**
+	 * 获取登录用户的机构类型
+	 * @return
+	 */
     @Transactional(propagation=Propagation.REQUIRES_NEW)
     @DataSource(DataSourceType.OTHER)
     public String getInsitutionType() {
-        String institutionCode = SecurityUtil.getLoginUser().getOrgCode();
-        if(StringUtil.isNotEmpty(institutionCode)){
-            return tamsBaseMapper.selectInsitutionType(institutionCode);
-        }
-        return null;
+    	String institutionCode = SecurityUtil.getLoginUser().getOrgCode();
+    	if(StringUtil.isNotEmpty(institutionCode)){
+    		return tamsBaseMapper.selectInsitutionType(institutionCode);
+    	}
+    	return null;
     }
 
     /**
@@ -97,8 +97,8 @@ public class TamsBaseCommonService extends BaseService {
     public String getInstitutionType(String institutionCode) {
         return tamsBaseMapper.getInstitutionType(institutionCode);
     }
-
-
+    
+    
     /**
      * 查询机构类型
      * @param institutionCode 机构代码
@@ -108,97 +108,89 @@ public class TamsBaseCommonService extends BaseService {
     public String selectBankCode(String institutionCode) {
         return tamsBaseMapper.selectBankCode(institutionCode);
     }
-
-
+    
+    
     /**
-     * 获取登录用户的机构类型--- 微服务版本
-     * @return
-     */
+	 * 获取登录用户的机构类型--- 微服务版本
+	 * @return
+	 */
     @Transactional(propagation=Propagation.REQUIRES_NEW)
     @DataSource(DataSourceType.OTHER)
     public String getInsitutionType_ms() {
-
-        String userName = LoginUserUtil.getUserName();
-
-        if(StringUtil.isNotEmpty(userName)){
-            return tamsBaseMapper.getInsitutionType_ms(userName);
-        }
-
-        return null;
+    	
+    	String userName = LoginUserUtil.getUserName();
+    	
+    	if(StringUtil.isNotEmpty(userName)){
+    		return tamsBaseMapper.getInsitutionType_ms(userName);
+    	}
+    	
+    	return null;
     }
-
+    
     /**
-     * 获取登录用户的机构代码--- 微服务版本
-     * @return
-     */
+	 * 获取登录用户的机构代码--- 微服务版本
+	 * @return
+	 */
     @Transactional(propagation=Propagation.REQUIRES_NEW)
     @DataSource(DataSourceType.OTHER)
     public String getInsitutionCode_ms() {
-
-        String userName = LoginUserUtil.getUserName();
-
-        if(StringUtil.isNotEmpty(userName)){
-            return tamsBaseMapper.getInsitutionCode_ms(userName);
-        }
-
-        return null;
+    	
+    	String userName = LoginUserUtil.getUserName();
+    	
+    	if(StringUtil.isNotEmpty(userName)){
+    		return tamsBaseMapper.getInsitutionCode_ms(userName);
+    	}
+    	
+    	return null;
     }
-
-
+    
+    
     /**
-     * 根据用户获取所属机构编码-中债批处理
-     * @return
-     */
+	 * 根据用户获取所属机构编码-中债批处理
+	 * @return
+	 */
     @Transactional(propagation=Propagation.REQUIRES_NEW)
     @DataSource(DataSourceType.OTHER)
     public String getInsitutionCodeByUserName(String  userName) {
 
-        if(StringUtil.isNotEmpty(userName)){
-            return tamsBaseMapper.getInsitutionCode_ms(userName);
-        }
-
-        return null;
+    	if(StringUtil.isNotEmpty(userName)){
+    		return tamsBaseMapper.getInsitutionCode_ms(userName);
+    	}
+    	
+    	return null;
     }
-
-
+    
+    
     /**
-     * 根据用户获取所属机构类型-中债批处理
-     * @return
-     */
+	 * 根据用户获取所属机构类型-中债批处理
+	 * @return
+	 */
     @Transactional(propagation=Propagation.REQUIRES_NEW)
     @DataSource(DataSourceType.OTHER)
     public String getInsitutionTypeByUserName(String userName) {
-        if(StringUtil.isNotEmpty(userName)){
-            return tamsBaseMapper.getInsitutionType_ms(userName);
+    	if(StringUtil.isNotEmpty(userName)){
+    		return tamsBaseMapper.getInsitutionType_ms(userName);
+    	}
+    	
+    	return null;
+    }
+    
+    
+       @Transactional(propagation=Propagation.REQUIRES_NEW)
+       @DataSource(DataSourceType.OTHER)
+       public List<String> getParentInstitution(String institutionCode) {
+       	
+	       if(StringUtil.isNotEmpty(institutionCode)){
+	      		return tamsBaseMapper.getParentInstitution(institutionCode);
+	       }
+	       return null;
+	       
+       }
+
+        @Transactional(propagation=Propagation.REQUIRES_NEW)
+        @DataSource(DataSourceType.OTHER)
+        public String getYHGeneralBankCode() {
+            String bankCode =  tamsBaseMapper.getYHGeneralBankCode();
+            return bankCode == null ? "" : bankCode ;
         }
-
-        return null;
-    }
-
-
-    @Transactional(propagation=Propagation.REQUIRES_NEW)
-    @DataSource(DataSourceType.OTHER)
-    public List<String> getParentInstitution(String institutionCode) {
-
-        if(StringUtil.isNotEmpty(institutionCode)){
-            return tamsBaseMapper.getParentInstitution(institutionCode);
-        }
-        return null;
-
-    }
-
-    @Transactional(propagation=Propagation.REQUIRES_NEW)
-    @DataSource(DataSourceType.OTHER)
-    public String getYHGeneralBankCode() {
-        String bankCode =  tamsBaseMapper.getYHGeneralBankCode();
-        return bankCode == null ? "" : bankCode ;
-    }
-
-
-    @Transactional(propagation=Propagation.REQUIRES_NEW)
-    @DataSource(DataSourceType.OTHER)
-    public String getCreateInstByID(String businessId,String dataType) {
-        return tamsBaseMapper.getCreateInstByID(businessId,dataType);
-    }
-
 }

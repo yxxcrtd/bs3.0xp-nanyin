@@ -607,7 +607,6 @@
 	
 	<select id="selectIsExistTrade" resultType="int">
 		select count(0) from TRD_PRODUCT_DEAL t where t.finprod_id = #{periodProdId} and t.branch = #{branch}
-		AND t.TRADE_STATUS = '01' AND (t.IS_CANCEL='N' or t.IS_CANCEL IS NULL)
 	</select>
 	
 	<select id="checkPeriodId" resultType="int">
@@ -661,7 +660,6 @@
 		    FIN_TRADE_PRODUCT
 		 ON TRD_PRODUCT_DEAL.FINPROD_ID = FIN_TRADE_PRODUCT.FINPROD_ID
 		 AND TRD_PRODUCT_DEAL.BRANCH = FIN_TRADE_PRODUCT.BRANCH
-		where FIN_TRADE_PRODUCT.PERIOD_ID = #{periodId,jdbcType=VARCHAR}
-		AND TRD_PRODUCT_DEAL.TRADE_STATUS = '01' AND (TRD_PRODUCT_DEAL.IS_CANCEL='N' or TRD_PRODUCT_DEAL.IS_CANCEL IS NULL)
+		where FIN_TRADE_PRODUCT.PERIOD_ID = #{periodId,jdbcType=VARCHAR} 
 	</select>
 </mapper>

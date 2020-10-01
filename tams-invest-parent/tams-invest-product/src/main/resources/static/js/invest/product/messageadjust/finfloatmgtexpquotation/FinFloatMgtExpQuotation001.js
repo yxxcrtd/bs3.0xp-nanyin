@@ -217,11 +217,9 @@
                 return;
             }
             var object = {selectedItem1: selArr, operateType:"delete"};
-            Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation001/check', object, function(result) {
+            Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation001/check', object, function(result) {														
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                    WorkFlow.doDeleteList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation001/delete', object, "FinFloatMgtExpQuotation001_btn_delete", "FinFloatMgtExpQuotation002",function() {
-                         table.reload();
-                     });
+                	WorkFlow.doDeleteList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation001/delete', object, "FinFloatMgtExpQuotation001_btn_delete", "FinFloatMgtExpQuotation002");
                 });
             });
 //            Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){

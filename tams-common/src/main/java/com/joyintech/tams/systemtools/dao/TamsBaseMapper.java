@@ -40,7 +40,7 @@ public interface TamsBaseMapper {
      * @since 1.0
      */
     String selectBankCode(String orgCode);
-
+    
     /**
      * 查询机构下的所有部门代码
      * @param institutionCode 机构代码
@@ -53,41 +53,41 @@ public interface TamsBaseMapper {
     String selectSysDatadictValue(@Param("dictCode") String dictCode, @Param("itemCode") String itemCode);
 
     List<SysDataDict> selectSysDatadictValueList(String dictCode);
-
+    
     String selectSysDatadictItemCode(@Param("dictCode") String dictCode, @Param("itemValue") String itemValue);
-
+    
     String selectSysParamValue(@Param("systemCode") String systemCode, @Param("paramCode") String paramCode);
 
     List<SysDataDict> queryFirstIndustryBySecondIndustry();
-
-
-    /**
-     * 根据机构代码获取机构类型
-     *
-     * @param institutionCode
-     * @return
-     */
-    String selectInsitutionType(String institutionCode);
+    
+    
+	/**
+	 * 根据机构代码获取机构类型
+	 *
+	 * @param institutionCode
+	 * @return
+	 */
+	String selectInsitutionType(String institutionCode);
 
 
     String getInstitutionType(@Param("institutionCode") String institutionCode);
-
-
+    
+    
     /**
      * 通过用户名获取对应的机构类型
      * @param userName
      * @return
      */
     String getInsitutionType_ms(@Param("userName") String userName);
-
+    
     /**
      * 通过用户名获取对应的机构代码
      * @param userName
      * @return
      */
     String getInsitutionCode_ms(@Param("userName") String userName);
-
-
+    
+    
     /**
      * 获取所有上级机构
      * @param institutionCode
@@ -96,6 +96,4 @@ public interface TamsBaseMapper {
     List<String> getParentInstitution(@Param("institutionCode") String institutionCode);
 
     String getYHGeneralBankCode();
-
-    String getCreateInstByID(@Param("businessId") String businessId,@Param("dataType") String dataType);
 }

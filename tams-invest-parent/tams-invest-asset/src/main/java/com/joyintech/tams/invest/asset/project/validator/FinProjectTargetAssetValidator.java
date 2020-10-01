@@ -70,7 +70,7 @@ public class FinProjectTargetAssetValidator implements BeanValidator{
                 String finprodId = finProjectTargetAssetService.checkMarketExists(dto.getFinprodMarketId());
                 if (StringUtil.isNotEmpty(finprodId)) {
                     resultList.add(
-                            new ValidMessage("finprodMarketId", "资产代码已存在。"));
+                            new ValidMessage("finprodMarketId", "已存在相同资产代码或组合代码,不能重复录入。"));
                 }
             }
            if(StringUtil.equals("02", CacheUtil.getSysParam(BussinessConstant.CEMODEL))){

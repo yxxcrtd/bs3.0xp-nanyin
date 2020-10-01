@@ -26,7 +26,3 @@ target/
 .classpath
 .project
 .settings/
-
-AppLog*
-tams-integration/*
-.txlcn*

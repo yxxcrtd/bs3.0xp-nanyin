@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
-
+ 
 package com.joyintech.service.portfolio.ptlcashflow.service;
 
 import com.joyintech.framework.base.BaseService;
@@ -209,7 +209,7 @@ public class PtlCashFlowService extends BaseService<PtlCashFlowDto>{
      * @param page page
      * @param length length
      * @return PtlCashFlowDto
-     * @throws Exception
+     * @throws Exception 
      * @see
      * @since 1.0
      */
@@ -228,7 +228,7 @@ public class PtlCashFlowService extends BaseService<PtlCashFlowDto>{
         }
         setParams(param);
         return super.queryForPage(page, length,
-                () -> ptlCashFlowMapper.selectForPage(param));
+            () -> ptlCashFlowMapper.selectForPage(param));
     }
 
     private void setParams(Map<String, Object> param) {
@@ -302,14 +302,6 @@ public class PtlCashFlowService extends BaseService<PtlCashFlowDto>{
     public int delete(PtlCashFlowDto dto) {
         List<BaseTradeProductDealRevokeDto> baseTradeProductDealRevokeList = new ArrayList<>();
         BaseTradeProductDealRevokeDto baseTradeProductDealRevokeDto = new BaseTradeProductDealRevokeDto();
-
-        String oldTradeId = "";
-        if(dto.getBusiNo().lastIndexOf("R") == dto.getBusiNo().length()-1){
-            oldTradeId = StringUtil.substring(dto.getBusiNo(),0,dto.getBusiNo().length()-1);
-        }else{
-            oldTradeId = dto.getBusiNo();
-        }
-
         setBaseTradeProductDealRevokeDto(baseTradeProductDealRevokeDto,dto);
         baseTradeProductDealRevokeList.add(baseTradeProductDealRevokeDto);
         if(baseTradeProductDealService != null){
@@ -317,12 +309,12 @@ public class PtlCashFlowService extends BaseService<PtlCashFlowDto>{
         }
         //修改组合交易表
         PtlTradeKey key = new PtlTradeKey();
-        key.setBusiNo(oldTradeId);
+        key.setBusiNo(dto.getBusiNo());
         key.setPortfolioId(dto.getPortfolioId());
         key.setBusiTable(DictCodeList.业务表_金融产品表.getValue());
         PtlTrade ptlTrade = ptlTradeMapper.selectByPrimaryKey(key);
         setPtlTradeEntity(ptlTrade,dto);
-        ptlTrade.setBusiNo((dto.getBusiNo()));
+        ptlTrade.setBusiNo((dto.getBusiNo()+"R"));
         ptlTradeMapper.insert(ptlTrade);
         List<BussTrdTransferOrderBase> list = dto.getBussTrdTransferOrder();
         List<PtlCashPositionFlowDto> ptlCash = new ArrayList<>();
@@ -344,14 +336,14 @@ public class PtlCashFlowService extends BaseService<PtlCashFlowDto>{
                 positionFlowDto.setAmount(e.getSettleAmt().multiply(new BigDecimal(-1)));
             }
             if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_支付.getValue())
-                    && e.getSettleAmt() != null){
+                && e.getSettleAmt() != null){
                 positionFlowDto.setAmount(e.getSettleAmt());
             }
             positionFlowDto.setOrderId(e.getOrderId());
             if(positionFlowDto.getPortfolioId() != null && positionFlowDto.getAcctId() != null
-                    && positionFlowDto.getHodingType() != null && positionFlowDto.getCdate() != null
-                    && positionFlowDto.getCcy() != null && positionFlowDto.getAmount() != null
-                    && positionFlowDto.getOrderId() != null){
+                && positionFlowDto.getHodingType() != null && positionFlowDto.getCdate() != null
+                && positionFlowDto.getCcy() != null && positionFlowDto.getAmount() != null
+                && positionFlowDto.getOrderId() != null){
                 basePtlCashPositionInfoService.insertCashPositionFlow(positionFlowDto);
             }
         }
@@ -362,7 +354,7 @@ public class PtlCashFlowService extends BaseService<PtlCashFlowDto>{
             baseEtrCashPositionCommService.portfolioEtrCashPosition(ptlHoldDto, true);
         }
         PaTrdProductDeal paTrdProductDeal = new PaTrdProductDeal();
-        paTrdProductDeal.setTradeId((dto.getBusiNo()));
+        paTrdProductDeal.setTradeId((dto.getBusiNo()+"R"));
         if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_收取.getValue())){
             paTrdProductDeal.setPaBussType(DictCodeListExt1.平安业务类型_自定义现金流收取.getValue());
         }
@@ -387,15 +379,8 @@ public class PtlCashFlowService extends BaseService<PtlCashFlowDto>{
      * @since 1.0
      */
     private void setBaseTradeProductDealRevokeDto(BaseTradeProductDealRevokeDto baseTradeProductDealRevokeDto,
-                                                  PtlCashFlowDto dto) {
-        String oldTradeId = "";
-        if(dto.getBusiNo().lastIndexOf("R") == dto.getBusiNo().length()-1){
-            oldTradeId = StringUtil.substring(dto.getBusiNo(),0,dto.getBusiNo().length()-1);
-        }else{
-            oldTradeId = dto.getBusiNo();
-        }
-
-        //金融产品交易信息dto
+             PtlCashFlowDto dto) {
+      //金融产品交易信息dto
         TrdProductDeal entity = new TrdProductDeal();
         entity.setFinprodId(dto.getFinprodId());
         entity.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_自定义现金流.getValue());
@@ -411,34 +396,34 @@ public class PtlCashFlowService extends BaseService<PtlCashFlowDto>{
         entity.setRemark(dto.getRemark());
         entity.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
         entity.setIsCancel(DictCodeList.是否_是.getValue());
-        entity.setpTradeId(oldTradeId);
-        entity.setTradeId((dto.getBusiNo()));
+        entity.setpTradeId(dto.getBusiNo());
+        entity.setTradeId((dto.getBusiNo()+"R"));
         baseTradeProductDealRevokeDto.setTrdProductDeal(entity);
         //金融产品交易附属表
         TrdProductDealAdd entityAdd = new TrdProductDealAdd();
-        entityAdd.setTradeId((dto.getBusiNo()));
+        entityAdd.setTradeId((dto.getBusiNo()+"R"));
         entityAdd.setPortfolioId(dto.getPortfolioId());
         //entityAdd.setProdId(dto.getFinprodId());
         entityAdd.setCustomCashType(dto.getCustomCashType());
-        // 一体化对应etliu start
+     // 一体化对应etliu start
 //        entityAdd.setGenType(DictCodeListExt1.录入方式_手工维护.getValue());
         entityAdd.setGenType(DictCodeListExt1.录入方式_手工录入.getValue());
-        // 一体化对应etliu end
+     // 一体化对应etliu end
         baseTradeProductDealRevokeDto.setTrdProductDealAdd(entityAdd);
         //划款指令表entity
         List<StlPayOrdersDto> stlPayOrdersList = new ArrayList<StlPayOrdersDto>();
         List<BussTrdTransferOrderBase> list = dto.getBussTrdTransferOrder();
         if(list != null && list.size()>0){
             for( BussTrdTransferOrderBase d:list){
-                d.setTradeId((dto.getBusiNo()));
-                d.setpTradeId(oldTradeId);
+                d.setTradeId((dto.getBusiNo()+"R"));
+                d.setpTradeId(dto.getBusiNo());
                 stlPayOrdersList.add(d);
             }
         }
         baseTradeProductDealRevokeDto.setStlPayOrdersList(stlPayOrdersList);
         //设置原交易编号
-        baseTradeProductDealRevokeDto.setpTradeId(oldTradeId);
-
+        baseTradeProductDealRevokeDto.setpTradeId(dto.getBusiNo());
+        
     }
 
     /**
@@ -486,14 +471,14 @@ public class PtlCashFlowService extends BaseService<PtlCashFlowDto>{
                 positionFlowDto.setAmount(e.getSettleAmt());
             }
             if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_支付.getValue())
-                    && e.getSettleAmt() != null){
+                && e.getSettleAmt() != null){
                 positionFlowDto.setAmount(e.getSettleAmt().multiply(new BigDecimal(-1)));
             }
             positionFlowDto.setOrderId(e.getOrderId());
             if(positionFlowDto.getPortfolioId() != null && positionFlowDto.getAcctId() != null
-                    && positionFlowDto.getHodingType() != null && positionFlowDto.getCdate() != null
-                    && positionFlowDto.getCcy() != null && positionFlowDto.getAmount() != null
-                    && positionFlowDto.getOrderId() != null){
+                && positionFlowDto.getHodingType() != null && positionFlowDto.getCdate() != null
+                && positionFlowDto.getCcy() != null && positionFlowDto.getAmount() != null
+                && positionFlowDto.getOrderId() != null){
                 //组合可用现金和实际现金查询更新组件
                 basePtlCashPositionInfoService.insertCashPositionFlow(positionFlowDto);
 //                加入持仓dto
@@ -542,7 +527,7 @@ public class PtlCashFlowService extends BaseService<PtlCashFlowDto>{
      * @since 1.0
      */
     private RepTrade getRepTrade(PtlCashFlowDto dto) {
-        //根据组合代码查询产品登记编号
+      //根据组合代码查询产品登记编号
         String portfolioId = dto.getPortfolioId();
         String actPortfolio = AllTradeCommonUtil.exchangePortfolio(dto.getPortfolioId());
         if (StringUtil.isNotEmpty(actPortfolio) && !actPortfolio.equals(dto.getPortfolioId())) {
@@ -550,7 +535,7 @@ public class PtlCashFlowService extends BaseService<PtlCashFlowDto>{
         }
         String prodRegistCode = ptlCashFlowMapper.getProdRegistCode(portfolioId);
         if(StringUtil.isNotEmpty(prodRegistCode)){
-            //若能查到则将这条数据存进交易报送信息表中
+          //若能查到则将这条数据存进交易报送信息表中
             RepTrade repTrade = new RepTrade();
             repTrade.setRepFinprodRegId(prodRegistCode);
             repTrade.setRepBankTradeCode(dto.getBusiNo());
@@ -575,7 +560,7 @@ public class PtlCashFlowService extends BaseService<PtlCashFlowDto>{
     }
 
     /**
-     *
+     * 
      * 流程作废
      * <功能详细描述>
      * @param workflowId
@@ -645,12 +630,12 @@ public class PtlCashFlowService extends BaseService<PtlCashFlowDto>{
         entityAdd.setPortfolioId(dto.getPortfolioId());
         //entityAdd.setProdId(dto.getFinprodId());
         entityAdd.setCustomCashType(dto.getCustomCashType());
-
-        // 一体化对应etliu start
+        
+     // 一体化对应etliu start
 //        entityAdd.setGenType(DictCodeListExt1.录入方式_手工维护.getValue());
         entityAdd.setGenType(DictCodeListExt1.录入方式_手工录入.getValue());
-        // 一体化对应etliu end
-
+     // 一体化对应etliu end
+        
         baseTradeProductDealDto.setTrdProductDealAdd(entityAdd);
         //划款指令表entity
         List<StlPayOrdersDto> stlPayOrdersList = new ArrayList<StlPayOrdersDto>();
@@ -667,7 +652,7 @@ public class PtlCashFlowService extends BaseService<PtlCashFlowDto>{
                     d.setMyAcctNo(d.getPayAcctNo());
                     d.setCounterAcctNo(d.getRecAcctNo());
                 }
-
+                
                 stlPayOrdersList.add(d);
             }
         }
@@ -711,7 +696,7 @@ public class PtlCashFlowService extends BaseService<PtlCashFlowDto>{
 
     /**
      * 投管接口：其他现金流交易信息
-     *
+     * 
      * @param dto 接口数据
      * @return 结果
      * @throws Exception
@@ -722,7 +707,7 @@ public class PtlCashFlowService extends BaseService<PtlCashFlowDto>{
         BussinessCodeParameter parameter = new BussinessCodeParameter();
         parameter.setCommonBusinessType(DictCodeList.共通业务类型_自定义现金流);
         String code = baseGetBusinessId != null ? baseGetBusinessId.buildBussinessCode(
-                parameter) : IDGenerator.generate();
+            parameter) : IDGenerator.generate();
         dto.setBusiNo(code);
         dto.setBranch(Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
         dto.setActPortfolioId(dto.getPortfolioId());

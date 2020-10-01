@@ -679,8 +679,8 @@ public class AssetCommonService extends BaseService{
         } else {
         	repAssetBankDeposit.setRepBasis(DictCodeListExt2.计息基础_中债_ACT_365.getValue());
         }
-        if (StringUtil.equals(bussRepDepositInfoDto.getRepDepoType(), DictCodeListExt1.存款类型_结构性存款.getValue())) {
-            repAssetBankDeposit.setRepIsStruct(DictCodeList.是否_中债_是.getValue());
+        if (StringUtil.equals(bussRepDepositInfoDto.getRepIsStruct(), DictCodeList.是否_中债_是.getValue())) {
+        	repAssetBankDeposit.setRepIsStruct(DictCodeList.是否_中债_是.getValue());
         } else {
         	repAssetBankDeposit.setRepIsStruct(DictCodeList.是否_中债_否.getValue());
         }

@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
-
+ 
 package com.joyintech.service.valuation.taxparametermanage.taxscheme.dao;
 
 import org.springframework.stereotype.Repository;
@@ -25,11 +25,8 @@ import com.joyintech.service.valuation.taxparametermanage.taxscheme.dto.TaxSchem
 public interface TaxScheme004Mapper {
 
 	int insertSelective(TaxScheme004Dto dto);
-
+	
 	TaxScheme004Dto selectByPrimaryKey(String seqNo);
-
+	
 	int updateByPrimaryKeySelective(TaxScheme004Dto dto);
-
-	String getPrimaryKey();
-
 }

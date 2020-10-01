@@ -52,7 +52,7 @@ public class FinPlanNetAssetValidator implements BeanValidator {
             }
             else if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
                 if(StringUtil.isNotEmpty(dto.getFinprodMarketId())&& finPlanNetAssetService.selectFinprodMarketId(dto.getFinprodMarketId())>0){
-                    errorList.add(new ValidMessage("finprodMarketId", getMessage("FIN_ASSET_E_0007", dto.getFinprodMarketId())));
+                    errorList.add(new ValidMessage("finprodMarketId",getMessage("已存在相同资产代码或组合代码，不能重复录入。")));
                 }
             //     附件上传改为非必填 by zhuyongkang 20191010 start
              /*   if(dto.getFileCommonList().size()==0){
@@ -63,7 +63,7 @@ public class FinPlanNetAssetValidator implements BeanValidator {
         else{
             if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
                 if(finPlanNetAssetService.selectFinprodMarketId(dto.getFinprodMarketId())>0){
-                    errorList.add(new ValidMessage("finprodMarketId", getMessage("FIN_ASSET_E_0007", dto.getFinprodMarketId())));
+                    errorList.add(new ValidMessage("finprodMarketId",getMessage("已存在相同资产代码或组合代码，不能重复录入。")));
                 }
             }
             if(StringUtil.equals(dto.getCreditFlag(), DictCodeList.是否_是.getValue())

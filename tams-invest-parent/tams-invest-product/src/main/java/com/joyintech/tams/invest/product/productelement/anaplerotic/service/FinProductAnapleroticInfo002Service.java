@@ -43,7 +43,7 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 
 /**
  * 回补信息查询
- *
+ * 
  * @author 李俊
  * @version 1.0 2019年4月22日
  * @see FinProductAnapleroticInfo002Service
@@ -57,7 +57,7 @@ public class FinProductAnapleroticInfo002Service extends BaseService<FinProductA
      */
     @Autowired
     private DateCalService dateCalService;
-
+    
     /**
      * 生成回补计划
      * <功能详细描述>
@@ -68,10 +68,10 @@ public class FinProductAnapleroticInfo002Service extends BaseService<FinProductA
     public List<FinProductAnapleroticPlanDto> getProductAnapleroticPlanData(FinProductAnapleroticInfoDto Dto){
         if(!StringUtil.equals(DictCodeListExt1.频率单位_浮动管理费同频.getValue(),Dto.getAnapleroticFrequency())){
             return this.calcProductAnapleroticPlan(Dto);
-        }
+        } 
         return null;
     }
-
+    
     /**
      * 保存业绩回补信息
      * <功能详细描述>
@@ -80,10 +80,10 @@ public class FinProductAnapleroticInfo002Service extends BaseService<FinProductA
      */
     public void insertInfo(FinProductAnapleroticInfoDto Dto){
         restTemplate.postForObject(
-                ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductAnaplerotic/insertAnapleroticInfo", Dto,
-                Integer.class);
+            ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductAnaplerotic/insertAnapleroticInfo", Dto,
+            Integer.class);
     }
-
+    
     /**
      * 产品代码联动查询生效日，首次回补日，回补结束日
      * <功能详细描述>
@@ -93,12 +93,9 @@ public class FinProductAnapleroticInfo002Service extends BaseService<FinProductA
      * @since 1.0
      */
     public FinProductAnapleroticInfoDto queryAnapAndProdInfo(String finprodId,String dealMode){
-        FinProductAnapleroticInfoDto anapleroticInfoDto = restTemplate.getForObject(
-                ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductAnaplerotic/queryAnapAndProdInfo?finprodId=" + finprodId + "&dealMode=" + dealMode,
-                FinProductAnapleroticInfoDto.class);
-
-        anapleroticInfoDto.setOpenMode( getOpenMode(finprodId) );
-        return anapleroticInfoDto;
+        return restTemplate.getForObject(
+            ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductAnaplerotic/queryAnapAndProdInfo?finprodId="+finprodId+"&dealMode="+dealMode,
+            FinProductAnapleroticInfoDto.class);
     }
     /**
      * 产品代码联动查询生效日，首次回补日，回补结束日
@@ -110,8 +107,8 @@ public class FinProductAnapleroticInfo002Service extends BaseService<FinProductA
      */
     public FinProductAnapleroticInfoDto queryAnapAndProdStyleInfo(String finprodId, String dealMode){
         return restTemplate.getForObject(
-                ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductAnaplerotic/queryAnapAndProdStyleInfo?finprodId="+finprodId+"&dealMode="+dealMode,
-                FinProductAnapleroticInfoDto.class);
+            ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductAnaplerotic/queryAnapAndProdStyleInfo?finprodId="+finprodId+"&dealMode="+dealMode,
+            FinProductAnapleroticInfoDto.class);
     }
     /**
      * 产品代码查询回补现金流代码
@@ -123,15 +120,15 @@ public class FinProductAnapleroticInfo002Service extends BaseService<FinProductA
      */
     public List<FinProductAnapleroticInfoDto> queryAnapleroticInfoByFinprodId(String finprodId){
         return restTemplate.getForList(
-                ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductAnaplerotic/queryAnapleroticInfoByFinprodId?finprodId="+finprodId,
-                FinProductAnapleroticInfoDto.class);
+            ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductAnaplerotic/queryAnapleroticInfoByFinprodId?finprodId="+finprodId,
+            FinProductAnapleroticInfoDto.class);
     }
-
+    
     public AjaxResult deleteByPrimaryKey(Map<String, Object> map){
         restTemplate.postForObject(ServiceApplication.PRODUCT_SERVICE_NAME
-                + "/FinProductAnaplerotic/deleteByPrimaryKey",map,Integer.class);
-        return new AjaxResult();
-    }
+            + "/FinProductAnaplerotic/deleteByPrimaryKey",map,Integer.class);
+         return new AjaxResult();
+     }
     /**
      * 修改业绩回补信息
      * <功能详细描述>
@@ -140,10 +137,10 @@ public class FinProductAnapleroticInfo002Service extends BaseService<FinProductA
      */
     public void updateInfo(FinProductAnapleroticInfoDto Dto){
         restTemplate.postForObject(
-                ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductAnaplerotic/updateAnapleroticInfo", Dto,
-                Integer.class);
+            ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductAnaplerotic/updateAnapleroticInfo", Dto,
+            Integer.class);
     }
-
+    
     /**
      * 回补信息查询
      * <功能详细描述>
@@ -157,8 +154,8 @@ public class FinProductAnapleroticInfo002Service extends BaseService<FinProductA
         param.put("anapleroticId", anapleroticId);
         param.put("effDate", effDateStr);
         List<FinProductAnapleroticInfoDto> list = restTemplate.postForList(
-                ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductAnaplerotic/queryAnapleroticInfoById", param,
-                FinProductAnapleroticInfoDto.class);
+            ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductAnaplerotic/queryAnapleroticInfoById", param,
+            FinProductAnapleroticInfoDto.class);
         if(StringUtil.isEmptyList(list)){
             return new FinProductAnapleroticInfoDto();
         }
@@ -166,12 +163,12 @@ public class FinProductAnapleroticInfo002Service extends BaseService<FinProductA
     }
     /**
      * 计算生成回补计划
-     *
+     * 
      * @param inputDto 画面输入dto
      * @return 回补计划计划列表
      */
     public List<FinProductAnapleroticPlanDto> calcProductAnapleroticPlan(FinProductAnapleroticInfoDto inputDto) {
-
+        
  /*       Date startDate = inputDto.getFirstAnapleroticCycleEndDate();
         if(null == startDate){
             return new ArrayList<>();
@@ -216,7 +213,7 @@ public class FinProductAnapleroticInfo002Service extends BaseService<FinProductA
         List<Date> tempDivisionList = dateCalService.dateIntervalNodeList(startDate,
             inputDto.getmDate(), BussinessDictCodeList.营业日准则_向后调整.getValue(), period,
             intPayUnit);
-
+        
         if (DateUtil.compareDate(tmdate, firstenddate) > 0) {
             FinProductAnapleroticPlanDto dt = new FinProductAnapleroticPlanDto();
             // 回补区间开始日
@@ -249,7 +246,7 @@ public class FinProductAnapleroticInfo002Service extends BaseService<FinProductA
                         // 回补日
                         String anapleroticDateStr = AdjustedTradeDayCal.getAdjustedTradeDay(
                             DateUtil.format(anapleroticDate), inputDto.getCycleTdayRule(),
-                            dealCalendarHolidayList);
+                            dealCalendarHolidayList); 
                         if(StringUtil.isNotEmpty(anapleroticDate)){
                             anapleroticDate = DateUtil.parse(anapleroticDateStr);
                         }
@@ -271,7 +268,7 @@ public class FinProductAnapleroticInfo002Service extends BaseService<FinProductA
                 // 回补日
                 String anapleroticDateStr = AdjustedTradeDayCal.getAdjustedTradeDay(
                     DateUtil.format(anapleroticDate), inputDto.getCycleTdayRule(),
-                    dealCalendarHolidayList);
+                    dealCalendarHolidayList); 
                 if(StringUtil.isNotEmpty(anapleroticDate)){
                     anapleroticDate = DateUtil.parse(anapleroticDateStr);
                 }
@@ -282,141 +279,141 @@ public class FinProductAnapleroticInfo002Service extends BaseService<FinProductA
         }
         return resultList;
         */
-
+        
 
         // 上记以外的情况，代表是画面上点了【预览】按钮触发的事件，需要重新计算付费计划
-        List<FinProductAnapleroticPlanDto> resultList = new ArrayList<FinProductAnapleroticPlanDto>();
-        Date startDate = inputDto.getFirstAnapleroticCycleBegDate();  //getFirstAnapleroticDate();//    .getFirstAnapleroticCycleEndDate();
-        if(null == startDate){
-            return new ArrayList<>();
-        }
-        // 分割周期
-        String cycle = "";
-        // 分割周期单位
-        String cycleUnit = "";
+       List<FinProductAnapleroticPlanDto> resultList = new ArrayList<FinProductAnapleroticPlanDto>();
+       Date startDate = inputDto.getFirstAnapleroticCycleBegDate();  //getFirstAnapleroticDate();//    .getFirstAnapleroticCycleEndDate();
+       if(null == startDate){
+           return new ArrayList<>();
+       }
+       // 分割周期
+       String cycle = "";
+       // 分割周期单位
+       String cycleUnit = "";
 
+      
+       int year = StringUtil.toInt(CacheUtil.getSysParam(BussinessConstant.MAX_AFTER_NOW_YEAR));
+       // 区间开始日
+       // 区间结束日
+       Date endDate = inputDto.getAnapleroticEndDate();
+       if (endDate == null) {
+           // 实际到期日为空时，起息日+n年
+           endDate = DateUtil.addYear(inputDto.getFirstAnapleroticDate(), year);
+       }
+       inputDto.setmDate(endDate);
+       // 交易日历取得
+      // List<String> dealCalendarHolidayList = dateCalService.getDealCalendarHoliday(startDate,
+          // DateUtil.addDay(endDate, 8), inputDto.getCalendarId());
+       // 获取节假日 到期日前后顺延30天
+       List<String> dealCalendarHolidayList = dateCalService.getDealCalendarHoliday(
+           DateUtil.addDay(startDate, -30),
+           DateUtil.addDay(endDate, 30),
+           inputDto.getCalendarId());
+       // 首次计提日
+       String vdate = DateUtil.format(inputDto.getFirstAnapleroticDate());
+       // 实际到期日
+       String tmdate = DateUtil.format(inputDto.getmDate());
+       // 首次回补周期结束日
+       String firstenddate = DateUtil.format(inputDto.getFirstAnapleroticCycleEndDate());
+       // 回补规则
+       String feedbackrule = inputDto.getAnapleroticFrequency();
+       if(StringUtil.equals(feedbackrule,
+           DictCodeList.频率_周.getValue())){
+           cycle = "1";
+           cycleUnit = DictCodeListExt1.频率单位_周.getValue();
+       }
+       else if (StringUtil.equals(feedbackrule,
+           DictCodeList.频率_月.getValue())) {
+           cycle = "1";
+           cycleUnit = DictCodeListExt1.频率单位_月.getValue();
+       }
+       else if (StringUtil.equals(feedbackrule,
+           DictCodeList.频率_季.getValue())) {
+           cycle = "3";
+           cycleUnit = DictCodeListExt1.频率单位_月.getValue();
+       }
+       else if (StringUtil.equals(feedbackrule,
+           DictCodeList.频率_半年.getValue())) {
+           cycle = "6";
+           cycleUnit = DictCodeListExt1.频率单位_月.getValue();
+       }
+       else if (StringUtil.equals(feedbackrule,
+           DictCodeList.频率_年.getValue())) {
+           cycle = "1";
+           cycleUnit = DictCodeListExt1.频率单位_年.getValue();
+       }
+       else if (StringUtil.equals(feedbackrule,
+           DictCodeList.频率_到期一次.getValue())) {
+           cycle = "0";
+       }
+       
+       String period = "1";
+       String intPayUnit = feedbackrule;
+       // 日期区间分割
+       List<DateDivisionDto> dateIntervalDivisionList = this.dateIntervalDivision(startDate,
+               inputDto.getmDate(), cycle, cycleUnit, inputDto.getFirstAnapleroticDate());
+           
 
-        int year = StringUtil.toInt(CacheUtil.getSysParam(BussinessConstant.MAX_AFTER_NOW_YEAR));
-        // 区间开始日
-        // 区间结束日
-        Date endDate = inputDto.getAnapleroticEndDate();
-        if (endDate == null) {
-            // 实际到期日为空时，起息日+n年
-            endDate = DateUtil.addYear(inputDto.getFirstAnapleroticDate(), year);
-        }
-        inputDto.setmDate(endDate);
-        // 交易日历取得
-        // List<String> dealCalendarHolidayList = dateCalService.getDealCalendarHoliday(startDate,
-        // DateUtil.addDay(endDate, 8), inputDto.getCalendarId());
-        // 获取节假日 到期日前后顺延30天
-        List<String> dealCalendarHolidayList = dateCalService.getDealCalendarHoliday(
-                DateUtil.addDay(startDate, -30),
-                DateUtil.addDay(endDate, 30),
-                inputDto.getCalendarId());
-        // 首次计提日
-        String vdate = DateUtil.format(inputDto.getFirstAnapleroticDate());
-        // 实际到期日
-        String tmdate = DateUtil.format(inputDto.getmDate());
-        // 首次回补周期结束日
-        String firstenddate = DateUtil.format(inputDto.getFirstAnapleroticCycleEndDate());
-        // 回补规则
-        String feedbackrule = inputDto.getAnapleroticFrequency();
-        if(StringUtil.equals(feedbackrule,
-                DictCodeList.频率_周.getValue())){
-            cycle = "1";
-            cycleUnit = DictCodeListExt1.频率单位_周.getValue();
-        }
-        else if (StringUtil.equals(feedbackrule,
-                DictCodeList.频率_月.getValue())) {
-            cycle = "1";
-            cycleUnit = DictCodeListExt1.频率单位_月.getValue();
-        }
-        else if (StringUtil.equals(feedbackrule,
-                DictCodeList.频率_季.getValue())) {
-            cycle = "3";
-            cycleUnit = DictCodeListExt1.频率单位_月.getValue();
-        }
-        else if (StringUtil.equals(feedbackrule,
-                DictCodeList.频率_半年.getValue())) {
-            cycle = "6";
-            cycleUnit = DictCodeListExt1.频率单位_月.getValue();
-        }
-        else if (StringUtil.equals(feedbackrule,
-                DictCodeList.频率_年.getValue())) {
-            cycle = "1";
-            cycleUnit = DictCodeListExt1.频率单位_年.getValue();
-        }
-        else if (StringUtil.equals(feedbackrule,
-                DictCodeList.频率_到期一次.getValue())) {
-            cycle = "0";
-        }
+  
+       //List<DateDivisionDto> dateIntervalDivisionList = this.dateIntervalDivision(
+            //   finProductFloatFeeDto.getVdate(), finProductFloatFeeDto.getMdate(), cycle, cycleUnit,finProductFloatFeeDto.getFirstPayDate());//zhangwweiqi 首次付费结束日
 
-        String period = "1";
-        String intPayUnit = feedbackrule;
-        // 日期区间分割
-        List<DateDivisionDto> dateIntervalDivisionList = this.dateIntervalDivision(startDate,
-                inputDto.getmDate(), cycle, cycleUnit, inputDto.getFirstAnapleroticDate());
+       // 根据调整规则调整
+       for (int count = 0; count < dateIntervalDivisionList.size(); count++ ) {
+           DateDivisionDto dto = dateIntervalDivisionList.get(count);
+           // add by yangjiaming 20180314 关于产品付费计划的计算方法调整 start
+           /*
+            * 如果不是最后一条付费计划: 浮动管理费时： 计划中计提截止日 = 区间结束日,计划支付日 = 区间结束日的下一工作日 非浮动管理费时：计划中计提截止日 =
+            * 区间结束日,计划支付日 = 区间结束日根据营业日准则调整
+            */
 
+           // 计提结束日不会根据营业日准则顺延
+           Date startDate1 = dto.getStartDate();
+           Date endDate1 = dto.getEndDate();
+           Date tradePaymentDay = dto.getEndDate();
+           if(count>0 && startDate1.compareTo(inputDto.getFirstAnapleroticDate()) != 0 &&  startDate1.compareTo(startDate) != 0){
+        	   startDate1 = DateUtil.parse(
+                   AdjustedTradeDayCal.getAdjustedTradeDay(DateUtil.format(startDate1),
+                		   inputDto.getCycleTdayRule(), dealCalendarHolidayList));
+           }
+           if(endDate1.compareTo(startDate) != 0){
+               endDate1 = DateUtil.parse(
+                   AdjustedTradeDayCal.getAdjustedTradeDay(DateUtil.format(endDate1),
+                		   inputDto.getCycleTdayRule(), dealCalendarHolidayList));
+           }
+           
 
+           // 支付日根据营业日准则进行调整
+           tradePaymentDay = DateUtil.parse(
+               AdjustedTradeDayCal.getAdjustedTradeDay(DateUtil.format(endDate1),
+            		   inputDto.getCycleTdayRule(), dealCalendarHolidayList));
 
-        //List<DateDivisionDto> dateIntervalDivisionList = this.dateIntervalDivision(
-        //   finProductFloatFeeDto.getVdate(), finProductFloatFeeDto.getMdate(), cycle, cycleUnit,finProductFloatFeeDto.getFirstPayDate());//zhangwweiqi 首次付费结束日
-
-        // 根据调整规则调整
-        for (int count = 0; count < dateIntervalDivisionList.size(); count++ ) {
-            DateDivisionDto dto = dateIntervalDivisionList.get(count);
-            // add by yangjiaming 20180314 关于产品付费计划的计算方法调整 start
-            /*
-             * 如果不是最后一条付费计划: 浮动管理费时： 计划中计提截止日 = 区间结束日,计划支付日 = 区间结束日的下一工作日 非浮动管理费时：计划中计提截止日 =
-             * 区间结束日,计划支付日 = 区间结束日根据营业日准则调整
-             */
-
-            // 计提结束日不会根据营业日准则顺延
-            Date startDate1 = dto.getStartDate();
-            Date endDate1 = dto.getEndDate();
-            Date tradePaymentDay = dto.getEndDate();
-            if(count>0 && startDate1.compareTo(inputDto.getFirstAnapleroticDate()) != 0 &&  startDate1.compareTo(startDate) != 0){
-                startDate1 = DateUtil.parse(
-                        AdjustedTradeDayCal.getAdjustedTradeDay(DateUtil.format(startDate1),
-                                inputDto.getCycleTdayRule(), dealCalendarHolidayList));
-            }
-            if(endDate1.compareTo(startDate) != 0){
-                endDate1 = DateUtil.parse(
-                        AdjustedTradeDayCal.getAdjustedTradeDay(DateUtil.format(endDate1),
-                                inputDto.getCycleTdayRule(), dealCalendarHolidayList));
-            }
-
-
-            // 支付日根据营业日准则进行调整
-            tradePaymentDay = DateUtil.parse(
-                    AdjustedTradeDayCal.getAdjustedTradeDay(DateUtil.format(endDate1),
-                            inputDto.getCycleTdayRule(), dealCalendarHolidayList));
-
-            //update zhangweiqi 2019-3-28 开始时间和结束时间一样的 排除 begin
-            if(startDate1.compareTo(endDate1)==0){
-                if(count>0&&startDate1.compareTo(resultList.get(count-1).getAnapleroticCycleEndDate())==0){
-                    continue;
-                }
-            }
-            //update zhangweiqi 2019-3-28 开始时间和结束时间一样的 排除 end
-            FinProductAnapleroticPlanDto resultDto = new FinProductAnapleroticPlanDto();
-            // 回补区间开始日
-            resultDto.setAnapleroticCycleStartDate(startDate1);
-            // 区间结束日
-            resultDto.setAnapleroticCycleEndDate(endDate1);
-            // 回补日
-            Date anapleroticDate = resultDto.getAnapleroticCycleEndDate();
-            if(StringUtil.equals(BussinessDictCodeList.营业日准则_向后调整.getValue(), inputDto.getCycleTdayRule())){
-                // 回补日
-                String anapleroticDateStr = AdjustedTradeDayCal.getAdjustedTradeDay(
-                        DateUtil.format(anapleroticDate), inputDto.getCycleTdayRule(),
-                        dealCalendarHolidayList);
-                if(StringUtil.isNotEmpty(anapleroticDate)){
-                    anapleroticDate = DateUtil.parse(anapleroticDateStr);
-                }
-            }
-            // 回补日
-            resultDto.setAnapleroticDate(tradePaymentDay);
+           //update zhangweiqi 2019-3-28 开始时间和结束时间一样的 排除 begin
+           if(startDate1.compareTo(endDate1)==0){
+               if(count>0&&startDate1.compareTo(resultList.get(count-1).getAnapleroticCycleEndDate())==0){
+                   continue;
+               }
+           }
+           //update zhangweiqi 2019-3-28 开始时间和结束时间一样的 排除 end
+           FinProductAnapleroticPlanDto resultDto = new FinProductAnapleroticPlanDto();
+           // 回补区间开始日
+           resultDto.setAnapleroticCycleStartDate(startDate1);
+           // 区间结束日
+           resultDto.setAnapleroticCycleEndDate(endDate1);
+           // 回补日
+           Date anapleroticDate = resultDto.getAnapleroticCycleEndDate();
+          if(StringUtil.equals(BussinessDictCodeList.营业日准则_向后调整.getValue(), inputDto.getCycleTdayRule())){
+               // 回补日
+               String anapleroticDateStr = AdjustedTradeDayCal.getAdjustedTradeDay(
+                   DateUtil.format(anapleroticDate), inputDto.getCycleTdayRule(),
+                   dealCalendarHolidayList); 
+               if(StringUtil.isNotEmpty(anapleroticDate)){
+                   anapleroticDate = DateUtil.parse(anapleroticDateStr);
+               }
+           }
+           // 回补日
+           resultDto.setAnapleroticDate(tradePaymentDay);
           /* resultDto.setCashNum((long)(count + 1));
            resultDto.setCashType(DictCodeListExt1.现金流一级类型_费用.getValue());
            resultDto.setVdate(startDate1);
@@ -425,10 +422,10 @@ public class FinProductAnapleroticInfo002Service extends BaseService<FinProductA
            resultDto.setVdateUnadjust(startDate1);
            resultDto.setMdateUnadjust(endDate1);
            resultDto.setPayDateUnadjust(tradePaymentDay);*/
-            resultList.add(resultDto);
-        }
-        return resultList;
-    }
+           resultList.add(resultDto);
+       }
+       return resultList;
+     }
 
     /**
      * {@inheritDoc}
@@ -464,7 +461,7 @@ public class FinProductAnapleroticInfo002Service extends BaseService<FinProductA
     @Override
     public void doDelete(String arg0) {
         // TODO Auto-generated method stub
-
+        
     }
 
     /**
@@ -473,7 +470,7 @@ public class FinProductAnapleroticInfo002Service extends BaseService<FinProductA
     @Override
     public void doInsert(FinProductAnapleroticInfoDto arg0, OperationType arg1) {
         // TODO Auto-generated method stub
-
+        
     }
 
     /**
@@ -482,7 +479,7 @@ public class FinProductAnapleroticInfo002Service extends BaseService<FinProductA
     @Override
     public void doUpdate(FinProductAnapleroticInfoDto arg0) {
         // TODO Auto-generated method stub
-
+        
     }
 
     /**
@@ -490,7 +487,7 @@ public class FinProductAnapleroticInfo002Service extends BaseService<FinProductA
      */
     @Override
     public Map<String, Object> getRuntimeVariables(ProcessMark arg0, String arg1)
-            throws WorkFlowException {
+        throws WorkFlowException {
         // TODO Auto-generated method stub
         return null;
     }
@@ -510,63 +507,54 @@ public class FinProductAnapleroticInfo002Service extends BaseService<FinProductA
         Date startDateTemp = startDate;
         //update zhangweiqi 首次计费结束日 begin
         if(firstCalEndDate!=null){
-            DateDivisionDto dto = new DateDivisionDto();
-            dto.setStartDate(startDateTemp);
-            dto.setEndDate(firstCalEndDate);
-            list.add(dto);
-            startDateTemp=firstCalEndDate;
-            startDate=firstCalEndDate;
+             DateDivisionDto dto = new DateDivisionDto();
+             dto.setStartDate(startDateTemp);
+             dto.setEndDate(firstCalEndDate);
+             list.add(dto);
+             startDateTemp=firstCalEndDate;
+             startDate=firstCalEndDate;
         }
-        //update zhangweiqi 首次计费结束日 end
+       //update zhangweiqi 首次计费结束日 end
         // 如果cycle为‘0’，则表示为到期一次性付费
-        //选择产品代码   报系统异常 cycle="" 519行报错 add by wangcheng 20191029
+        //选择产品代码   报系统异常 cycle="" 519行报错 add by wangcheng 20191029 
         if(StringUtil.isNotEmpty(cycle)){
-            if (StringUtil.equals("0", cycle)) {
-                DateDivisionDto dto = new DateDivisionDto();
-                dto.setStartDate(startDate);
-                dto.setEndDate(endDate);
-                list.add(dto);
-            }
-            // 其他情况按周期分割
-            else {
-                int count = 1;
-                if (DateUtil.compareDate(startDateTemp, endDate) < 0) {
-                    while (true) {
-                        Date calcDate = dateCalService.naturalDateCalc(startDate, cycleUnit,
-                                Integer.parseInt(cycle) * count);
-                        if (DateUtil.compareDate(calcDate, endDate) < 0) {
-                            DateDivisionDto dto = new DateDivisionDto();
-                            dto.setStartDate(startDateTemp);
-                            dto.setEndDate(calcDate);
-                            list.add(dto);
-                            startDateTemp = calcDate;
-
-                            count++ ;
-                        }
-                        else {
-                            DateDivisionDto dto = new DateDivisionDto();
-                            dto.setStartDate(startDateTemp);
-                            dto.setEndDate(endDate);
-                            list.add(dto);
-                            break;
-                        }
-                    }
-
-                }
-                // 按区间结束日升序排序
-                Collections.sort(list);
-            }
+        	if (StringUtil.equals("0", cycle)) {
+        		DateDivisionDto dto = new DateDivisionDto();
+        		dto.setStartDate(startDate);
+        		dto.setEndDate(endDate);
+        		list.add(dto);
+        	}
+        	// 其他情况按周期分割
+        	else {
+        		int count = 1;
+        		if (DateUtil.compareDate(startDateTemp, endDate) < 0) {
+        			while (true) {
+        				Date calcDate = dateCalService.naturalDateCalc(startDate, cycleUnit,
+        						Integer.parseInt(cycle) * count);
+        				if (DateUtil.compareDate(calcDate, endDate) < 0) {
+        					DateDivisionDto dto = new DateDivisionDto();
+        					dto.setStartDate(startDateTemp);
+        					dto.setEndDate(calcDate);
+        					list.add(dto);
+        					startDateTemp = calcDate;
+        					
+        					count++ ;
+        				}
+        				else {
+        					DateDivisionDto dto = new DateDivisionDto();
+        					dto.setStartDate(startDateTemp);
+        					dto.setEndDate(endDate);
+        					list.add(dto);
+        					break;
+        				}
+        			}
+        			
+        		}
+        		// 按区间结束日升序排序
+        		Collections.sort(list);
+        	}
         }
 
         return list;
-    }
-
-
-    //判断是否高频开放
-    public String getOpenMode(String finprodId) {
-        return  restTemplate.getForObject(ServiceApplication.PRODUCT_SERVICE_NAME
-                        + "/FinProductBuild/getOpenMode?finprodId="
-                        + finprodId,
-                String.class);
-    }
+    }	
 }

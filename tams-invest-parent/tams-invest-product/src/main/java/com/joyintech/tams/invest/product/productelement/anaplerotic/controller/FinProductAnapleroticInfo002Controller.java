@@ -46,7 +46,7 @@ import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 
 /**
  * 回补信息共通
- *
+ * 
  * @author 李俊
  * @version 1.0 2019年4月21日
  * @see FinProductAnapleroticInfo002Controller
@@ -57,7 +57,7 @@ import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 @RequestMapping("/invest/product/productelement/anaplerotic/FinProductAnapleroticInfo002")
 public class FinProductAnapleroticInfo002Controller extends BaseController {
 
-
+    
     @Autowired
     private FinProductAnapleroticInfo002Service finProductAnapleroticInfo002Service;
     /**
@@ -65,16 +65,16 @@ public class FinProductAnapleroticInfo002Controller extends BaseController {
      */
     @Autowired
     private FinFloatMgtExpQuotation001Service finFloatMgtExpQuotation001Service;
-
+    
     /**
      * {@inheritDoc}
      */
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, DictCode.回补方式, DictCode.回补规则, BussinessDictCode.计息基础, DictCode.基数日期类型,
-                DictCode.频率,DictCode.营业日准则,BussinessDictCode.是否,DictCode.重置规则, DictCode.利率类型);
+            DictCode.频率,DictCode.营业日准则,BussinessDictCode.是否,DictCode.重置规则, DictCode.利率类型);
         model.addAttribute("INT_TYPE_AP_01", DictCodeList.利率类型_固定利率.getValue());
-        // 浮动利率下拉框（含利率行情、复合基准四个部分）
+     // 浮动利率下拉框（含利率行情、复合基准四个部分）
         List<SelectOptionDto> listFloatRate = new ArrayList<SelectOptionDto>();
         // 利率行情
         SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.利率行情, null);
@@ -95,66 +95,60 @@ public class FinProductAnapleroticInfo002Controller extends BaseController {
             listFloatRate.add(dto1);
         }
         model.addAttribute("INDEX_ID_SOURCE", JsonUtils.objectArray2Json(listFloatRate.toArray()));
-        //来自产品端请求
-        if (StringUtil.equals(getParam("applyType"), "prod")) {
-            //查看模式
-            if(StringUtil.equals(GlobalConstant.DETAIL_PAGE_MODEL_REFERENCE, getParam("pageModel")) || StringUtil.equals(GlobalConstant.DETAIL_PAGE_MODEL_EDIT, getParam("pageModel")) ){
-                //回补id
-                FinProductAnapleroticInfoDto  d = JsonUtils.json2Object(getParam("finProductAnapleroticInfoDto"),FinProductAnapleroticInfoDto.class);
-                model.addAttribute("entity", d);
-                BussBenchMarkInfoDto bussBenchMarkInfoDto = new BussBenchMarkInfoDto();
-                BeanUtil.copyPropertiesIgnoreNull(bussBenchMarkInfoDto, d);
-                model.addAttribute("entity_benchMark", bussBenchMarkInfoDto);
-            }
-            model.addAttribute("vdate", getParam("vdate"));
-            model.addAttribute("mdate", getParam("mdate"));
-            model.addAttribute("calendarId", getParam("calendarId"));
-            model.addAttribute("defalutApplyType", DictCodeList.关联范围_产品.getValue());
-            model.addAttribute("applyType",getParam("applyType"));
-            model.addAttribute("operationType",getParam("operationType"));
-            model.addAttribute("dealMode", getParam("dealMode"));
-            model.addAttribute("PROD_STYLE", getParam("PROD_STYLE"));
-            model.addAttribute("anapleroticList", getParam("anapleroticList"));
-            model.addAttribute("quickInputAnapleroticFlag", getParam("quickInputAnapleroticFlag"));
-            model.addAttribute("parentId",getParam("parentId"));
-        }
-        if (StringUtil.equals(this.getParam("isTodoList"), "true")) {
-            ProcessMark pro = finProductAnapleroticInfo002Service.getBusinessInfo(
-                    this.getParam(GlobalConstant.WORKFLOW_ID));
-            if (pro != null) {
-                FinProductAnapleroticInfoDto entity = (FinProductAnapleroticInfoDto)JsonUtils.json2Object(
-                        pro.getBusinessData(), FinProductAnapleroticInfoDto.class);
-                model.addAttribute("entity", entity);
-                model.addAttribute("entity_benchMark", entity.getBussBenchMarkInfoDto());
-            }
-        } else if(!StringUtil.equals(GlobalConstant.DETAIL_PAGE_MODEL_NEW, getParam("pageModel"))){
-            if(StringUtil.isEmpty(getParam("finProductAnapleroticInfoDto"))){
-                FinProductAnapleroticInfoDto entity = finProductAnapleroticInfo002Service.queryAnapleroticInfoById(getParam("anapleroticId"),getParam("effDateStr"));
-                if(StringUtil.isEmptyList(entity.getFinProductAnapleroticPlanList())){
-                    entity.setIsAnapleroticList("N");
-                    entity.setIsList("01");
-                }
-                model.addAttribute("entity", entity);
-                model.addAttribute("mdate", DateUtil.format(entity.getmDate()));
-                model.addAttribute("calendarId", entity.getCalendarId());
-                model.addAttribute("vdate", DateUtil.format(entity.getvDate()));
-
-                model.addAttribute("operationType",entity.getOperationType());
-                model.addAttribute("dealMode",entity.getDealMode());
-                model.addAttribute("openMode", finProductAnapleroticInfo002Service.getOpenMode(entity.getFinprodId()));
-
-                if(entity!=null){
-                    BussBenchMarkInfoDto bussBenchMarkInfoDto = new BussBenchMarkInfoDto();
-                    BeanUtil.copyPropertiesIgnoreNull(bussBenchMarkInfoDto, entity);
-                    model.addAttribute("entity_benchMark", bussBenchMarkInfoDto);
-                }
-            }
-        }
-        model.addAttribute("anapleroticBasic", "A/365");
-        model.addAttribute("DISPOSE_PATTERN_11", DictCodeList.处理模式_分档.getValue());
-        return super.init(model);
+           //来自产品端请求
+       if (StringUtil.equals(getParam("applyType"), "prod")) {
+           //查看模式
+           if(StringUtil.equals(GlobalConstant.DETAIL_PAGE_MODEL_REFERENCE, getParam("pageModel")) || StringUtil.equals(GlobalConstant.DETAIL_PAGE_MODEL_EDIT, getParam("pageModel")) ){
+               //回补id
+               FinProductAnapleroticInfoDto  d = JsonUtils.json2Object(getParam("finProductAnapleroticInfoDto"),FinProductAnapleroticInfoDto.class);
+               model.addAttribute("entity", d);
+               BussBenchMarkInfoDto bussBenchMarkInfoDto = new BussBenchMarkInfoDto();
+               BeanUtil.copyPropertiesIgnoreNull(bussBenchMarkInfoDto, d);
+               model.addAttribute("entity_benchMark", bussBenchMarkInfoDto);
+           }
+           model.addAttribute("vdate", getParam("vdate"));
+           model.addAttribute("mdate", getParam("mdate"));
+           model.addAttribute("calendarId", getParam("calendarId"));
+           model.addAttribute("defalutApplyType", DictCodeList.关联范围_产品.getValue());
+           model.addAttribute("applyType",getParam("applyType"));
+           model.addAttribute("operationType",getParam("operationType"));
+           model.addAttribute("dealMode", getParam("dealMode"));
+           model.addAttribute("PROD_STYLE", getParam("PROD_STYLE"));
+           model.addAttribute("anapleroticList", getParam("anapleroticList"));  
+           model.addAttribute("quickInputAnapleroticFlag", getParam("quickInputAnapleroticFlag"));  
+           model.addAttribute("parentId",getParam("parentId"));
+       }
+       if (StringUtil.equals(this.getParam("isTodoList"), "true")) {
+           ProcessMark pro = finProductAnapleroticInfo002Service.getBusinessInfo(
+               this.getParam(GlobalConstant.WORKFLOW_ID));
+           if (pro != null) {
+               FinProductAnapleroticInfoDto entity = (FinProductAnapleroticInfoDto)JsonUtils.json2Object(
+                   pro.getBusinessData(), FinProductAnapleroticInfoDto.class);
+               model.addAttribute("entity", entity);
+               model.addAttribute("entity_benchMark", entity.getBussBenchMarkInfoDto());
+           }
+       } else if(!StringUtil.equals(GlobalConstant.DETAIL_PAGE_MODEL_NEW, getParam("pageModel"))){
+    	   if(StringUtil.isEmpty(getParam("finProductAnapleroticInfoDto"))){
+	           FinProductAnapleroticInfoDto entity = finProductAnapleroticInfo002Service.queryAnapleroticInfoById(getParam("anapleroticId"),getParam("effDateStr"));
+	           if(StringUtil.isEmptyList(entity.getFinProductAnapleroticPlanList())){
+	        	   entity.setIsAnapleroticList("N");
+	        	   entity.setIsList("01");
+	           }
+	           model.addAttribute("entity", entity);	           
+	           model.addAttribute("mdate", DateUtil.format(entity.getmDate()));
+	           model.addAttribute("calendarId", entity.getCalendarId());
+	           if(entity!=null){
+	        	   BussBenchMarkInfoDto bussBenchMarkInfoDto = new BussBenchMarkInfoDto();
+	        	   BeanUtil.copyPropertiesIgnoreNull(bussBenchMarkInfoDto, entity);
+	               model.addAttribute("entity_benchMark", bussBenchMarkInfoDto);
+	           }
+    	   }
+       }
+       model.addAttribute("anapleroticBasic", "A/365");
+       model.addAttribute("DISPOSE_PATTERN_11", DictCodeList.处理模式_分档.getValue());
+       return super.init(model);
     }
-
+    
     /**
      * 回补计划生产
      * <功能详细描述>
@@ -166,9 +160,9 @@ public class FinProductAnapleroticInfo002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("calcProductAnapleroticPlan")
     public List<FinProductAnapleroticPlanDto> calcProductAnapleroticPlan(FinProductAnapleroticInfoDto Dto){
-        return finProductAnapleroticInfo002Service.getProductAnapleroticPlanData(Dto);
+           return finProductAnapleroticInfo002Service.getProductAnapleroticPlanData(Dto);
     }
-
+    
     /**
      * 数据验证
      * <功能详细描述>
@@ -181,7 +175,7 @@ public class FinProductAnapleroticInfo002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("check")
     public AjaxResult check(@Valid @RequestBody FinProductAnapleroticInfoDto Dto , BindingResult result) {
-        // update by wangcheng 20191028 start 点击计划生成 报流程中数据已存在
+    	// update by wangcheng 20191028 start 点击计划生成 报流程中数据已存在
         if (Dto.getOperateType()!=null && result != null && result.hasErrors()) {
 //            if(StringUtil.isNotEmpty(Dto.getOperateType())){
 //               return commonCheck(result, Dto.getOperateType());
@@ -190,7 +184,7 @@ public class FinProductAnapleroticInfo002Controller extends BaseController {
         }
         return new AjaxResult();
     }
-
+    
     /**
      * 数据验证
      * <功能详细描述>
@@ -210,11 +204,11 @@ public class FinProductAnapleroticInfo002Controller extends BaseController {
         List<ValidMessage> validList = new ArrayList<>();
         if(!StringUtil.isNotEmpty(Dto.getFinprodId())){
             validList.add(new ValidMessage("anapleroticRatio", this.getMessage("BUSS_COM_E_0038",
-                    this.getMessage("FinProductAnapleroticInfo.finprodId"))));
+                this.getMessage("FinProductAnapleroticInfo.finprodId"))));
         }
         if(Dto.getEffDate()==null){
             validList.add(new ValidMessage("anapleroticRatio", this.getMessage("BUSS_COM_E_0038",
-                    this.getMessage("FinProductAnapleroticInfo.effDate"))));
+                this.getMessage("FinProductAnapleroticInfo.effDate"))));
         }
 //        if(StringUtil.isEmptyList(Dto.getFinProductAnapleroticPlanList())){
 //        	if(!"01".equals(Dto.getIsList())){
@@ -226,10 +220,10 @@ public class FinProductAnapleroticInfo002Controller extends BaseController {
         if(StringUtil.equals(GlobalConstant.DETAIL_PAGE_MODEL_NEW, Dto.getPageModel())){
             String finprodidTmp = "";
             if(StringUtil.isNotEmpty(Dto.getProdStyle())){
-                finprodidTmp = Dto.getProdStyle();
+            	finprodidTmp = Dto.getProdStyle();
             }
             else{
-                finprodidTmp = Dto.getFinprodId();
+            	finprodidTmp = Dto.getFinprodId();
             }
             List<FinProductAnapleroticInfoDto> list =finProductAnapleroticInfo002Service.queryAnapleroticInfoByFinprodId(finprodidTmp);
             if(!StringUtil.isEmptyList(list)){
@@ -263,35 +257,35 @@ public class FinProductAnapleroticInfo002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody FinProductAnapleroticInfoDto dto)
-            throws Exception {
-        ProcessParameter<FinProductAnapleroticInfoDto> processParameter = new ProcessParameter<FinProductAnapleroticInfoDto>();
-        WorkFlowParameter<FinProductAnapleroticInfoDto> params = new WorkFlowParameter<FinProductAnapleroticInfoDto>();
-        params.setElementId(dto.getElementId());
-        params.setPageId(this.getPageId());
-        params.setBusinessCode(dto.getFinprodId());
-        params.setBusinessType(DictCodeListExt1.共通业务类型_回补信息调整.getValue());
-        // 设置工作流注解
-        params.setComment(
+        throws Exception {
+            ProcessParameter<FinProductAnapleroticInfoDto> processParameter = new ProcessParameter<FinProductAnapleroticInfoDto>();
+            WorkFlowParameter<FinProductAnapleroticInfoDto> params = new WorkFlowParameter<FinProductAnapleroticInfoDto>();
+            params.setElementId(dto.getElementId());
+            params.setPageId(this.getPageId());
+            params.setBusinessCode(dto.getFinprodId());
+            params.setBusinessType(DictCodeListExt1.共通业务类型_回补信息调整.getValue());
+            // 设置工作流注解
+            params.setComment(
                 entity -> this.getMessage("FinProductAnapleroticInfo.finprodId") + "("
-                        + entity.getFinprodId() + ")"
-                        + this.getMessage("FinProductAnapleroticInfo.finprodAbbr") + "("
-                        + entity.getFinprodAbbr() + ")" + this.getMessage("FinProductAnapleroticInfo.effDate")
-                        + "(" + DateUtil.format(entity.getEffDate()) + ")"
-                        + this.getMessage("FinProductBuild002.mdate") + "("
-                        + DateUtil.format(entity.getmDate()) + ")");
-        processParameter.setWorkFlowParameter(params);
-
-        // 调用工作流事件
-        String msg = finProductAnapleroticInfo002Service.start(processParameter, dto);
-        // 返回工作流错误信息
-        return new AjaxResult(msg);
+                          + entity.getFinprodId() + ")"
+                          + this.getMessage("FinProductAnapleroticInfo.finprodAbbr") + "("
+                          + entity.getFinprodAbbr() + ")" + this.getMessage("FinProductAnapleroticInfo.effDate")
+                          + "(" + DateUtil.format(entity.getEffDate()) + ")"
+                          + this.getMessage("FinProductBuild002.mdate") + "("
+                          + DateUtil.format(entity.getmDate()) + ")");
+            processParameter.setWorkFlowParameter(params);
+            
+            // 调用工作流事件
+            String msg = finProductAnapleroticInfo002Service.start(processParameter, dto);
+            // 返回工作流错误信息
+            return new AjaxResult(msg);
     }
-
+    
     /**
      * 回补信息新建临时信息
-     *
+     * 
      * @param dto 回补信息
-     * @return
+     * @return 
      * @see
      * @since 1.0
      */
@@ -300,7 +294,7 @@ public class FinProductAnapleroticInfo002Controller extends BaseController {
     public AjaxResult finProductAnapleroticSave(@RequestBody FinProductAnapleroticInfoDto dto) {
         AjaxResult result = new AjaxResult();
         result.setData(dto);
-        return result;
+       return result;
     }
     @ResponseBody
     @RequestMapping("queryAnapAndProdInfo")
