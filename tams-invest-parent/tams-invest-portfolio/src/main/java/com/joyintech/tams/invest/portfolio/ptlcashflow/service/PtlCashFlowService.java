@@ -113,7 +113,7 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
             action = "insert";
         }
 
-        simpleRestTemplate.postForObject(
+        restTemplate.postForObject(
                 ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlCashFlow/" + action, entity,
                 Integer.class);
 
@@ -211,7 +211,7 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
 
     @Override
     public void doDelete(String workflowId) {
-        simpleRestTemplate.getForObject(
+        restTemplate.getForObject(
                 ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlCashFlow/doDelete?workflowId="+ workflowId,
                 void.class);
     }
@@ -504,7 +504,7 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
      * @since 1.0
      */
     public List<SuggestDto> getBusiNo(String param) {
-        return simpleRestTemplate.getForList(ServiceApplication.PORTFOLIO_SERVICE_NAME
+        return restTemplate.getForList(ServiceApplication.PORTFOLIO_SERVICE_NAME
                 + "/PtlCashFlow/getBusiNo?param=" + param,SuggestDto.class);
     }
 
@@ -521,7 +521,7 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
         map.put("param", param);
         User user = SecurityUtil.getLoginUser();
         map.put("userName", user.getUserName());
-        return simpleRestTemplate.postForPage(ServiceApplication.PORTFOLIO_SERVICE_NAME
+        return restTemplate.postForPage(ServiceApplication.PORTFOLIO_SERVICE_NAME
                 + "/PtlCashFlow/getPortfolioId"  ,map,SelectOptionDto.class);
     }
     /**
@@ -534,7 +534,7 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
     public List<SelectOptionDto> getPortfolioIdToNew(Map<String,Object> param) {
         User user = SecurityUtil.getLoginUser();
         param.put("userName", user.getUserName());
-        return simpleRestTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME
+        return restTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME
                 + "/PtlCashFlow/getPortfolioIdToNew" ,param,SelectOptionDto.class);
     }
     /**
@@ -546,7 +546,7 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
      * @since 1.0
      */
     public List<SuggestDto> getFinprodMarketId(String param) {
-        return simpleRestTemplate.getForList(ServiceApplication.PORTFOLIO_SERVICE_NAME
+        return restTemplate.getForList(ServiceApplication.PORTFOLIO_SERVICE_NAME
                 + "/PtlCashFlow/getFinprodMarketId?param=" + param,SuggestDto.class);
     }
 
@@ -561,7 +561,7 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
     public Page<PtlCashFlowDto> selectForPage(Map<String, Object> pageParam) {
         User user = SecurityUtil.getLoginUser();
         pageParam.put("userName", user.getUserName());
-        return simpleRestTemplate.postForPage(
+        return restTemplate.postForPage(
                 ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlCashFlow/findPage",
                 pageParam, PtlCashFlowDto.class);
     }
@@ -575,7 +575,7 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
      * @since 1.0
      */
     public Page<SelectOptionDto> getCounterId(Map<String, Object> param) {
-        return simpleRestTemplate.postForPage(ServiceApplication.PORTFOLIO_SERVICE_NAME
+        return restTemplate.postForPage(ServiceApplication.PORTFOLIO_SERVICE_NAME
                 + "/PtlCashFlow/getCounterId" , param,SelectOptionDto.class);
     }
 
@@ -588,7 +588,7 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
      * @since 1.0
      */
     public Page<SelectOptionDto> getFinprodIdToNew(Map<String, Object> param) {
-        return simpleRestTemplate.postForPage(ServiceApplication.PORTFOLIO_SERVICE_NAME
+        return restTemplate.postForPage(ServiceApplication.PORTFOLIO_SERVICE_NAME
                 + "/PtlCashFlow/getFinprodIdToNew" , param,SelectOptionDto.class);
     }
 
@@ -601,7 +601,7 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
      * @since 1.0
      */
     public PtlCashFlowDto getEntity(Map<String, Object> map) {
-        return simpleRestTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME
+        return restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME
                 + "/PtlCashFlow/getEntity" , map,PtlCashFlowDto.class);
     }
     /**
@@ -637,7 +637,7 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
      * @since 1.0
      */
     public List<SelectOptionDto> getFTradeId(Map<String, Object> param) {
-        return simpleRestTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME
+        return restTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME
                 + "/PtlCashFlow/getFTradeId" , param,SelectOptionDto.class);
     }
 
