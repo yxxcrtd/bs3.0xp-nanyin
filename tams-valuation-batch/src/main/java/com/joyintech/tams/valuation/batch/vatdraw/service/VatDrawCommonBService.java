@@ -154,6 +154,7 @@ public class VatDrawCommonBService {
             else {
                 // round(发生含税销售 * 税率,n)/(1+税率)
                 //系统参数（增值税计算中间精度位数）！=null add by yanya 20190924
+                //System.out.println("=======VAT_CALC_DIGIT===========" + CacheUtil.getSysParam("VAT_CALC_DIGIT") + "==================");
                 if(StringUtil.isNotEmpty(CacheUtil.getSysParam("VAT_CALC_DIGIT"))) {
                     //系统参数（增值税计算中间精度位数）
                     int vatCalcDigitNum = Integer.valueOf(CacheUtil.getSysParam("VAT_CALC_DIGIT"));
