@@ -223,6 +223,10 @@
             var vdate = $('#' + getElementById('vdateElement').val()).val();
             var operationType = $('#' + getElementById('operationTypeElement').val()).val();
             var calendarId = $('#' + getElementById('dealCalIdElement').val()).val();
+
+            var dealMode = $('#' + getElementById('dealModeElement').val()).val();
+            var openMode = $('#' + getElementById('openModeElement').val()).val();
+
             if(null==mdate || "" == mdate){
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0057", JoyinUtil.getLabel("FinProductBuild002.mdate")));
                 return;

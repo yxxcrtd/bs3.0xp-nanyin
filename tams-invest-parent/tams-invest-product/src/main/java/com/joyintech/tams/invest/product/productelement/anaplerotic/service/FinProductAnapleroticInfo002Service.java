@@ -93,9 +93,12 @@ public class FinProductAnapleroticInfo002Service extends BaseService<FinProductA
      * @since 1.0
      */
     public FinProductAnapleroticInfoDto queryAnapAndProdInfo(String finprodId,String dealMode){
-        return restTemplate.getForObject(
-            ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductAnaplerotic/queryAnapAndProdInfo?finprodId="+finprodId+"&dealMode="+dealMode,
-            FinProductAnapleroticInfoDto.class);
+        FinProductAnapleroticInfoDto anapleroticInfoDto = restTemplate.getForObject(
+                ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductAnaplerotic/queryAnapAndProdInfo?finprodId=" + finprodId + "&dealMode=" + dealMode,
+                FinProductAnapleroticInfoDto.class);
+
+        anapleroticInfoDto.setOpenMode( getOpenMode(finprodId) );
+        return anapleroticInfoDto;
     }
     /**
      * 产品代码联动查询生效日，首次回补日，回补结束日
@@ -556,5 +559,14 @@ public class FinProductAnapleroticInfo002Service extends BaseService<FinProductA
         }
 
         return list;
-    }	
+    }
+
+
+    //判断是否高频开放
+    public String getOpenMode(String finprodId) {
+        return  restTemplate.getForObject(ServiceApplication.PRODUCT_SERVICE_NAME
+                        + "/FinProductBuild/getOpenMode?finprodId="
+                        + finprodId,
+                String.class);
+    }
 }

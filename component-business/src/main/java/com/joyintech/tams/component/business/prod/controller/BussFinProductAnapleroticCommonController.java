@@ -53,6 +53,9 @@ public class BussFinProductAnapleroticCommonController extends BaseController {
         model.addAttribute("dealModeElement",this.getParam("dealModeElement"));
         model.addAttribute("anapleroticDealMode11",DictCodeList.处理模式_分档.getValue());
         //业绩回补增加分档初始化参数增加 2019-12-09 end
+
+        model.addAttribute("openModeElement",this.getParam("openModeElement"));
+
         return "component/prod/BussFinProductAnapleroticCommon";
     }
     /**
