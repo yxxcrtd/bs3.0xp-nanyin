@@ -13,6 +13,7 @@ package com.joyintech.tams.valuation.valnavbar;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +23,8 @@ import com.joyintech.framework.navbar.UserNavbar;
 @Component
 @Primary
 public class ValNavBarService implements UserNavBarService {
+
+	private @Value("${url.batch}") String urlBatch;
 
 	@Override
 	public List<UserNavbar> getUserNavbar() {
@@ -33,6 +36,11 @@ public class ValNavBarService implements UserNavBarService {
 //        bar.setUrl("valuation/documentmanagement/DocumentManagement001/init");
 //        bar.setAction("layui.layer.open({type : 2,title:'操作手册管理', shade : 0.8, area:['90%', '80%'], content:'valuation/documentmanagement/DocumentManagement001/init'})");
 //        list.add(bar);
+
+		UserNavbar bar = new UserNavbar();
+		bar.setName("更新批缓存");
+		bar.setUrl(urlBatch);
+		list.add(bar);
         
 		return list;
 	}

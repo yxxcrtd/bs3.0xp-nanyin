@@ -249,3 +249,6 @@ workflow:
   isSentMessage: false
   serviceName: messageService
 
+url:
+  batch: http://localhost:8084/main/about/refreshCache
+
