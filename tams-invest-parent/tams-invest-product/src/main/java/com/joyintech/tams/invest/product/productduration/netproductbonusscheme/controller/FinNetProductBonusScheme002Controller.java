@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.base.entity.ProcessMark;
+import com.joyintech.workflow.engine.WorkflowContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -123,24 +125,35 @@ public class FinNetProductBonusScheme002Controller extends BaseController {
               //add by gcl 2019/4/1 end
             }
             else{
-                Map<String,Object> map = new HashMap<>();
-                if(StringUtil.isNotEmpty(finNetProductBonusSchemeInfo.getProdStyle())){
-                    map.put("finprodId",finNetProductBonusSchemeInfo.getProdStyle());
-                }
-                else{
-                    map.put("finprodId",finNetProductBonusSchemeInfo.getFinprodId());
-                }
-                map.put("vluRefDate",DateUtil.format(finNetProductBonusSchemeInfo.getVluRefDate()));
-                FinNetProductBonusSchemeDto dto = finNetProductBonusSchemeService.getTdyUnitValueAndTdyShareAmt(map);
-                if(dto != null){
-                    BigDecimal tdyAssetAmt = dto.getTdyAssetAmt();
-                    if(tdyAssetAmt != null && finNetProductBonusSchemeInfo.getTotalAmt() != null
-                        && finNetProductBonusSchemeInfo.getTdyShareAmt() != null){
-//                        finNetProductBonusSchemeInfo.setNetvalue((tdyAssetAmt.subtract(finNetProductBonusSchemeInfo.getTotalAmt()))
-//                            .divide(finNetProductBonusSchemeInfo.getTdyShareAmt()));
-                        finNetProductBonusSchemeInfo.setNetvalue(ArithmeticUtil.divide(tdyAssetAmt.subtract(
-                                finNetProductBonusSchemeInfo.getTotalAmt()), finNetProductBonusSchemeInfo.getTdyShareAmt(), 4));
-                    }
+//                Map<String,Object> map = new HashMap<>();
+//                if(StringUtil.isNotEmpty(finNetProductBonusSchemeInfo.getProdStyle())){
+//                    map.put("finprodId",finNetProductBonusSchemeInfo.getProdStyle());
+//                }
+//                else{
+//                    map.put("finprodId",finNetProductBonusSchemeInfo.getFinprodId());
+//                }
+//                map.put("vluRefDate",DateUtil.format(finNetProductBonusSchemeInfo.getVluRefDate()));
+//                FinNetProductBonusSchemeDto dto = finNetProductBonusSchemeService.getTdyUnitValueAndTdyShareAmt(map);
+//                if(dto != null){
+//                    BigDecimal tdyAssetAmt = dto.getTdyAssetAmt();
+//                    if(tdyAssetAmt != null && finNetProductBonusSchemeInfo.getTotalAmt() != null
+//                        && finNetProductBonusSchemeInfo.getTdyShareAmt() != null){
+////                        finNetProductBonusSchemeInfo.setNetvalue((tdyAssetAmt.subtract(finNetProductBonusSchemeInfo.getTotalAmt()))
+////                            .divide(finNetProductBonusSchemeInfo.getTdyShareAmt()));
+//                        finNetProductBonusSchemeInfo.setNetvalue(ArithmeticUtil.divide(tdyAssetAmt.subtract(
+//                                finNetProductBonusSchemeInfo.getTotalAmt()), finNetProductBonusSchemeInfo.getTdyShareAmt(), 4));
+//                    }
+//                }
+                ProcessMark processMark;
+                try {
+                    finNetProductBonusSchemeInfo.setFinprodId(finNetProductBonusSchemeInfo.getFinprodId());
+                    finNetProductBonusSchemeInfo.setDealType("bonusScheRegister");
+                    finNetProductBonusSchemeInfo.setTradeId(bonusPlanId);
+                    processMark = WorkflowContext.getProcessMarkService().getParameterByAnnotation(finNetProductBonusSchemeInfo);
+                    processMark.setPageId("FinNetProductBonusScheme002");
+                    finNetProductBonusSchemeInfo = finNetProductBonusSchemeService.getBussinessEntityByPk(processMark);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
             model.addAttribute("entity", finNetProductBonusSchemeInfo);
