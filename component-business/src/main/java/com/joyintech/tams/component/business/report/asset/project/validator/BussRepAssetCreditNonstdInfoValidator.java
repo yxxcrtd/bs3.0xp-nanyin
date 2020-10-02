@@ -120,10 +120,11 @@ public class BussRepAssetCreditNonstdInfoValidator implements BeanValidator{
                         resultList.add(new ValidMessage("repIndustryLevel2",
                                 getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repIndustryLevel2"))));
                     }
-                    if(StringUtil.isEmpty(dto.getRepGuaType())){
-                        resultList.add(new ValidMessage("repGuaType",
-                                getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repGuaType"))));
-                    }
+//                    update by zoujiamin 20201002 bugTISHKBS-1250:取消担保方式校验
+//                    if(StringUtil.isEmpty(dto.getRepGuaType())){
+//                        resultList.add(new ValidMessage("repGuaType",
+//                                getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repGuaType"))));
+//                    }
                     if(StringUtil.isEmpty(dto.getRepGuaTypeRemark())){
                         resultList.add(new ValidMessage("repGuaTypeRemark",
                                 getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repGuaTypeRemark"))));
