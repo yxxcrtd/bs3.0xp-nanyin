@@ -237,20 +237,26 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
             List<WflStlPayOrders> stlPayOrdersDtos = getWflStlPayOrders(entity);
             if (type == OperationType.REVOKE) {
                 wflTrdProductDeals.forEach(wflTrdProductDeal -> {
-                    wflTrdProductDeal.setpTradeId(wflTrdProductDeal.getTradeId());
+                    String oldTradeId = "";
+                    if(entity.getBusiNo().lastIndexOf("R") == entity.getBusiNo().length()-1){
+                        oldTradeId = StringUtil.substring(entity.getBusiNo(),0,entity.getBusiNo().length()-1);
+                    }else{
+                        oldTradeId = entity.getBusiNo();
+                    }
+                    wflTrdProductDeal.setpTradeId(oldTradeId);
                     wflTrdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
-                    wflTrdProductDeal.setTradeId(wflTrdProductDeal.getTradeId() + "R");
+                    //    wflTrdProductDeal.setTradeId(wflTrdProductDeal.getTradeId() + "R");
                 });
-                wflPaTrdProductDeals.forEach(wflTrdProductDeal -> {
-                    wflTrdProductDeal.setTradeId(wflTrdProductDeal.getTradeId() + "R");
-                });
-
-                wflTrdProductDealAdds.forEach(wflTrdProductDeal -> {
-                    wflTrdProductDeal.setTradeId(wflTrdProductDeal.getTradeId() + "R");
-                });
+//                wflPaTrdProductDeals.forEach(wflTrdProductDeal -> {
+//                    wflTrdProductDeal.setTradeId(wflTrdProductDeal.getTradeId() + "R");
+//                });
+//
+//                wflTrdProductDealAdds.forEach(wflTrdProductDeal -> {
+//                    wflTrdProductDeal.setTradeId(wflTrdProductDeal.getTradeId() + "R");
+//                });
 
                 stlPayOrdersDtos.forEach(order -> {
-                    order.setTradeId(order.getTradeId() + "R");
+                    //          order.setTradeId(order.getTradeId() + "R");
                     order.setOrderStatus(DictCodeListExt1.指令状态_撤销.getValue());
                     order.setOrderId(order.getOrderId() + "R");
                 });

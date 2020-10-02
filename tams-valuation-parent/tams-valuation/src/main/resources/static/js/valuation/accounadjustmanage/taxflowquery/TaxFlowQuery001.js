@@ -63,7 +63,7 @@ $(function () {
      */
     var exportExcel = function() {
         if (table != null && table != '') {
-            var selArr = table.getAllRows();
+            var selArr = table.getAllCheckedRows();
             var datas = JSON.stringify(selArr);
         }
         if (!selArr || selArr.length == 0) {

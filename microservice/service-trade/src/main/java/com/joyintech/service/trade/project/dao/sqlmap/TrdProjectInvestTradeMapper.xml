@@ -389,7 +389,9 @@
           #{01}
          ELSE
          #{02}
-       END settleSpeed
+       END settleSpeed,
+        TPD.TRADE_ID as tradeId
+
         <!--交易表中入库的时候进行了转换，数值转换，导致查询的时候也要进行转换 yjm end 20190809-->
         from
         <!-- qiangchengxi 卖出到账流入核对 20190325 start -->

@@ -137,6 +137,12 @@ public class FinProductAnapleroticInfo002Controller extends BaseController {
 	           model.addAttribute("entity", entity);	           
 	           model.addAttribute("mdate", DateUtil.format(entity.getmDate()));
 	           model.addAttribute("calendarId", entity.getCalendarId());
+               model.addAttribute("vdate", DateUtil.format(entity.getvDate()));
+
+               model.addAttribute("operationType",entity.getOperationType());
+               model.addAttribute("dealMode",entity.getDealMode());
+               model.addAttribute("openMode", finProductAnapleroticInfo002Service.getOpenMode(entity.getFinprodId()));
+
 	           if(entity!=null){
 	        	   BussBenchMarkInfoDto bussBenchMarkInfoDto = new BussBenchMarkInfoDto();
 	        	   BeanUtil.copyPropertiesIgnoreNull(bussBenchMarkInfoDto, entity);
