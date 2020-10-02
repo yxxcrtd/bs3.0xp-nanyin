@@ -66,349 +66,349 @@ public class ValBondMarketQuotationInfoImportDataService extends CommonExportSer
 
 
 
-    /**
-     * 导入文件
-     * <p>
-     * 解析excel文件并进行验证
-     * </p>
-     *
+	/**
+	 * 导入文件
+	 * <p>
+	 * 解析excel文件并进行验证
+	 * </p>
+	 *
 
-     * @return 导入结果
-     */
-    public List<ExcelValidDto> importData(List<List<String>> dataList, List<List<String>> tempList,String userName, String orgCode, String deptCode) {
-        if (!StringUtil.isEmptyList(dataList)) {
-            List<String> headList = new ArrayList<String>();
-            headList.add("资产代码");
-            headList.add("债券简称");
-            headList.add("估值来源");
-            headList.add("估值日");
+	 * @return 导入结果
+	 */
+	public List<ExcelValidDto> importData(List<List<String>> dataList, List<List<String>> tempList,String userName, String orgCode, String deptCode) {
+		if (!StringUtil.isEmptyList(dataList)) {
+			List<String> headList = new ArrayList<String>();
+			headList.add("资产代码");
+			headList.add("债券简称");
+//            headList.add("估值来源");
+			headList.add("估值日");
 //            headList.add("剩余期限");
-            headList.add("收盘价净价");
-            headList.add("平均价净价");
-            headList.add("买一价净价");
-            headList.add("卖一价净价");
-            headList.add("最高价净价");
-            headList.add("最低价净价");
-            headList.add("收盘价全价");
-            headList.add("平均价全价");
-            headList.add("买一价全价");
-            headList.add("卖一价全价");
-            headList.add("最高价全价");
-            headList.add("最低价全价");
-            List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
-            if (!StringUtil.isEmptyList(tempCheckResult)) {
-                return tempCheckResult;
-            }
-            if (null != dataList) {
-                List<MstBondMarketInfo> entities = new ArrayList<>(dataList.size());
-                List<ExcelValidDto> checkResult= convertToEntity(dataList, entities,userName,deptCode);
-                if(checkResult.isEmpty()) {
-	                for(MstBondMarketInfo dto : entities){
-	                	mstBondMarketInfoMapper.insertFull(dto);
-	                }
-                }
-                return checkResult;
-            }
-        }else{
-        	List<ExcelValidDto> checkResult = new ArrayList<>();
-        	ExcelValidDto excelValidDto = new ExcelValidDto();
-        	String errorMsg = "模板为空，请输入数据！";
-        	excelValidDto.setErrorInfo(errorMsg);
-        	checkResult.add(excelValidDto);
-        	return checkResult;
-        }
-        return null;
-    }
+			headList.add("收盘价净价");
+			headList.add("平均价净价");
+			headList.add("买一价净价");
+			headList.add("卖一价净价");
+			headList.add("最高价净价");
+			headList.add("最低价净价");
+			headList.add("收盘价全价");
+			headList.add("平均价全价");
+			headList.add("买一价全价");
+			headList.add("卖一价全价");
+			headList.add("最高价全价");
+			headList.add("最低价全价");
+			List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
+			if (!StringUtil.isEmptyList(tempCheckResult)) {
+				return tempCheckResult;
+			}
+			if (null != dataList) {
+				List<MstBondMarketInfo> entities = new ArrayList<>(dataList.size());
+				List<ExcelValidDto> checkResult= convertToEntity(dataList, entities,userName,deptCode);
+				if(checkResult.isEmpty()) {
+					for(MstBondMarketInfo dto : entities){
+						mstBondMarketInfoMapper.insertFull(dto);
+					}
+				}
+				return checkResult;
+			}
+		}else{
+			List<ExcelValidDto> checkResult = new ArrayList<>();
+			ExcelValidDto excelValidDto = new ExcelValidDto();
+			String errorMsg = "模板为空，请输入数据！";
+			excelValidDto.setErrorInfo(errorMsg);
+			checkResult.add(excelValidDto);
+			return checkResult;
+		}
+		return null;
+	}
 
-    /**
-     * excel数据转为java对象
-     * <p> 将excel导入的数据，按行转为ProRegistCodeManage001Dto  FinProductValuation对象，同时验证各字段值</p>
-     *
-     * @param dataList excel导入的数据
-     * @param entities 转化后的列表
-     * @param box
-     * @return 验证信息
-     */
-    private List<ExcelValidDto> convertToEntity(List<List<String>> dataList,List<MstBondMarketInfo> entities,String userName,String deptCode) {
+	/**
+	 * excel数据转为java对象
+	 * <p> 将excel导入的数据，按行转为ProRegistCodeManage001Dto  FinProductValuation对象，同时验证各字段值</p>
+	 *
+	 * @param dataList excel导入的数据
+	 * @param entities 转化后的列表
+	 * @param box
+	 * @return 验证信息
+	 */
+	private List<ExcelValidDto> convertToEntity(List<List<String>> dataList,List<MstBondMarketInfo> entities,String userName,String deptCode) {
 
-        List<ExcelValidDto> checkResult = new ArrayList<>();
-        //估值来源枚举值：银行间、商业银行柜台交易、上交所、深交所、机构间私募系统、理财直接融资工具平台、其他场外、交易所、场外。
-        String[] valueSourceStr = {"银行间","商业银行柜台交易","上交所","深交所","机构间私募系统","理财直接融资工具平台","其他场外","交易所","场外"};
-        List valueSourceList = Arrays.asList(valueSourceStr);
-        Date sysDate = DateUtil.platDateFromCache();// 获取平台日期
-        Date nowDate = new Date();
-        for (int i = 0; i < dataList.size(); i++ ) {
-        	//是否正常标志
-        	boolean flag = true;
-            List<String> list = dataList.get(i);            
-           
-            Map<String,Object> param = new HashMap<String,Object>();
-            // 验证消息
-            List<String> message = new ArrayList<>();
-            //资产代码
-            if(list.get(0) == null || list.get(0).trim().equals("")){
-            	flag = false;
-            	message.add("资产代码不能为空");
-            }else{
-            	 param.put("finprodId",list.get(0));
-            	 String  result = valBondMarketInfo001Mapper.checkFinprod(param);
-            	 if(StringUtils.isEmpty(result)){
-            		 flag = false;
-                 	message.add("资产代码不存在");
-                 }
-            }
-            //债券简称
-            if(list.get(1) == null || list.get(1).trim().equals("")){
-            	flag = false;
-            	message.add("债券简称不能为空");
-            }
-            //验证债券简称与资产代码是否匹配
-            if(flag){
-            	param.put("finprodId",list.get(0));
-            	param.put("finprodName",list.get(1));
-            	String  result = valBondMarketInfo001Mapper.checkFinprodIdAndFinprodName(param);
-            	if(StringUtils.isEmpty(result)){
-            		flag = false;
-            		message.add("资产代码与债券简称不匹配");
-            	}
-            }            
-            //估值来源
-            if(list.get(2) == null || list.get(2).trim().equals("")){
-            	flag = false;
-            	message.add("估值来源不能为空");
-            }else{
-            	if(!valueSourceList.contains(list.get(2).trim())){
-            		flag = false;
-                	message.add("估值来源不在枚举值之中");
-            	}
-            }
-            //估值日
-            if(list.get(3) == null || list.get(3).trim().equals("")){
-            	flag = false;
-            	message.add("估值日不能为空");
-            }else{
-            	if (!checkDate(list.get(3))) {
-            		flag = false;
-                	message.add("估值日期格式不正确");
-                } 
-            }
-            //剩余期限
+		List<ExcelValidDto> checkResult = new ArrayList<>();
+		//估值来源枚举值：银行间、商业银行柜台交易、上交所、深交所、机构间私募系统、理财直接融资工具平台、其他场外、交易所、场外。
+		String[] valueSourceStr = {"银行间","商业银行柜台交易","上交所","深交所","机构间私募系统","理财直接融资工具平台","其他场外","交易所","场外"};
+		List valueSourceList = Arrays.asList(valueSourceStr);
+		Date sysDate = DateUtil.platDateFromCache();// 获取平台日期
+		Date nowDate = new Date();
+		for (int i = 0; i < dataList.size(); i++ ) {
+			//是否正常标志
+			boolean flag = true;
+			List<String> list = dataList.get(i);
+
+			Map<String,Object> param = new HashMap<String,Object>();
+			// 验证消息
+			List<String> message = new ArrayList<>();
+			//资产代码
+			if(list.get(0) == null || list.get(0).trim().equals("")){
+				flag = false;
+				message.add("资产代码不能为空");
+			}else{
+				param.put("finprodId",list.get(0));
+				String  result = valBondMarketInfo001Mapper.checkFinprod(param);
+				if(StringUtils.isEmpty(result)){
+					flag = false;
+					message.add("资产代码不存在");
+				}
+			}
+			//债券简称
+			if(list.get(1) == null || list.get(1).trim().equals("")){
+				flag = false;
+				message.add("债券简称不能为空");
+			}
+			//验证债券简称与资产代码是否匹配
+			if(flag){
+				param.put("finprodId",list.get(0));
+				param.put("finprodName",list.get(1));
+				String  result = valBondMarketInfo001Mapper.checkFinprodIdAndFinprodName(param);
+				if(StringUtils.isEmpty(result)){
+					flag = false;
+					message.add("资产代码与债券简称不匹配");
+				}
+			}
+			//估值来源
+//            if(list.get(2) == null || list.get(2).trim().equals("")){
+//            	flag = false;
+//            	message.add("估值来源不能为空");
+//            }else{
+//            	if(!valueSourceList.contains(list.get(2).trim())){
+//            		flag = false;
+//                	message.add("估值来源不在枚举值之中");
+//            	}
+//            }
+			//估值日
+			if(list.get(2) == null || list.get(2).trim().equals("")){
+				flag = false;
+				message.add("估值日不能为空");
+			}else{
+				if (!checkDate(list.get(2))) {
+					flag = false;
+					message.add("估值日期格式不正确");
+				}
+			}
+			//剩余期限
 //            if(list.get(4) == null || list.get(4).trim().equals("")){
 //            	flag = false;
 //            	message.add("剩余期限不能为空");
 //            }
-            //收盘价净价
-            if(list.get(4) == null || list.get(4).trim().equals("")){
-            	flag = false;
-            	message.add("收盘价净价不能为空");
-            }else{
-            	if(!checkFigure(list.get(4))){
-            		flag = false;
-                	message.add("收盘价净价不是数字");
-            	}
-            }
-            //平均价净价
-            if(list.get(5) == null || list.get(5).trim().equals("")){
-            	flag = false;
-            	message.add("平均价净价不能为空");
-            }else{
-            	if(!checkFigure(list.get(5))){
-            		flag = false;
-                	message.add("平均价净价不是数字");
-            	}
-            }
-            //买一价净价
-            if(list.get(6) == null || list.get(6).trim().equals("")){
-            	flag = false;
-            	message.add("买一价净价不能为空");
-            }else{
-            	if(!checkFigure(list.get(6))){
-            		flag = false;
-                	message.add("买一价净价不是数字");
-            	}
-            }
-            //卖一价净价
-            if(list.get(7) == null || list.get(7).trim().equals("")){
-            	flag = false;
-            	message.add("卖一价净价不能为空");
-            }else{
-            	if(!checkFigure(list.get(7))){
-            		flag = false;
-                	message.add("卖一价净价不能为空");
-            	}
-            }
-            //最高价净价
-            if(list.get(8) == null || list.get(8).trim().equals("")){
-            	flag = false;
-            	message.add("最高价净价不能为空");
-            }else{
-            	if(!checkFigure(list.get(8))){
-            		flag = false;
-                	message.add("最高价净价不是数字");
-            	}
-            }
-            //最低价净价
-            if(list.get(9) == null || list.get(9).trim().equals("")){
-            	flag = false;
-            	message.add("最低价净价不能为空");
-            }else{
-            	if(!checkFigure(list.get(9))){
-            		flag = false;
-                	message.add("最低价净价不是数字");
-            	}
-            }
-            //收盘价全价
-            if(StringUtils.isNotEmpty(list.get(10))){
-            	if(!checkFigure(list.get(10))){
-            		flag = false;
-                	message.add("收盘价全价不是数字");
-            	}
-        	} 
-            //平均价全价
-            if(StringUtils.isNotEmpty(list.get(11))){
-            	if(!checkFigure(list.get(11))){
-            		flag = false;
-                	message.add("平均价全价不是数字");
-            	}
-        	}
-            //买一价全价
-            if(StringUtils.isNotEmpty(list.get(12))){
-            	if(!checkFigure(list.get(12))){
-            		flag = false;
-                	message.add("买一价全价不是数字");
-            	}
-        	}
-            //卖一价全价
-            if(StringUtils.isNotEmpty(list.get(13))){
-            	if(!checkFigure(list.get(13))){
-            		flag = false;
-                	message.add("卖一价全价不是数字");
-            	}
-        	}
-            //最高价全价
-            if(StringUtils.isNotEmpty(list.get(14))){
-            	if(!checkFigure(list.get(14))){
-            		flag = false;
-                	message.add("最高价全价不是数字");
-            	}
-        	}
-            //最低价全价
-            if(StringUtils.isNotEmpty(list.get(15))){
-            	if(!checkFigure(list.get(15))){
-            		flag = false;
-                	message.add("最低价全价不是数字");
-            	}
-        	}
-            //主键校验
-            if(flag){
-            	param.put("finprodId",list.get(0));
-            	param.put("tradeDate", DateUtil.parse(list.get(3)));
-            	String  result = valBondMarketInfo001Mapper.getRegistExcelList(param);
-            	if(StringUtils.isNotEmpty(result)){
-            		flag = false;
-            		message.add("存在和资产代码与估值日相同的数据");
-            	}                    	
-            }
-            
-            if(flag){
-            	MstBondMarketInfo entity = new MstBondMarketInfo();
-                //资产代码            
-                entity.setSecId(list.get(0));           
-                //估值日           
-                entity.setValueDate(DateUtil.parse(list.get(3)));                
-                //收盘价            
-                entity.setClosePrice(new BigDecimal(list.get(4)));            	            
-                //平均价            
-                entity.setAveragePrice(new BigDecimal(list.get(5)));            	            
-                //最高价            
-                entity.setMaxPrice(new BigDecimal(list.get(8)));            	            
-                //最低价            
-                entity.setMinPrice(new BigDecimal(list.get(9)));            	            
-                //买一价           
-                entity.setBuyOnePrice(new BigDecimal(list.get(6)));            	            
-                //卖一价           
-                entity.setSellOnePrice(new BigDecimal(list.get(7)));   
-                //收盘价全价
-                if(StringUtils.isNotEmpty(list.get(10))){
-                	entity.setClosePriceFull(new BigDecimal(list.get(10)));  
-            	} 
-                //平均价全价
-                if(StringUtils.isNotEmpty(list.get(11))){
-                	entity.setAveragePriceFull(new BigDecimal(list.get(11))); 
-            	}
-                //买一价全价
-                if(StringUtils.isNotEmpty(list.get(12))){
-                	entity.setBuyOnePriceFull(new BigDecimal(list.get(12))); 
-            	}
-                //卖一价全价
-                if(StringUtils.isNotEmpty(list.get(13))){
-                	entity.setSellOnePriceFull(new BigDecimal(list.get(13))); 
-            	}
-                //最高价全价
-                if(StringUtils.isNotEmpty(list.get(14))){
-                	entity.setMaxPriceFull(new BigDecimal(list.get(14))); 
-            	}
-                //最低价全价
-                if(StringUtils.isNotEmpty(list.get(15))){
-                	entity.setMinPriceFull(new BigDecimal(list.get(15))); 
-            	}
-                entity.setInputType(DictCodeListExt1.录入方式_系统导入.getValue());             
-                entity.setCreateUser(userName);
-                entity.setCreateDept(deptCode);                
-                entity.setCreateTime(nowDate);
-                entity.setUpdateUser(userName);
-                entity.setUpdateTime(nowDate);   
-                entities.add(entity);
-            }
-            
-            if (CollectionUtils.isNotEmpty(message)) {
-                checkResult.add(new ExcelValidDto(list.get(0), String.valueOf(i+2),
-                        StringUtil.joinString(message, GlobalConstant.SEMICOLON)));
-            }
-        }
-        return checkResult;
-    }
+			//收盘价净价
+			if(list.get(3) == null || list.get(3).trim().equals("")){
+				flag = false;
+				message.add("收盘价净价不能为空");
+			}else{
+				if(!checkFigure(list.get(3))){
+					flag = false;
+					message.add("收盘价净价不是数字");
+				}
+			}
+			//平均价净价
+			if(list.get(4) == null || list.get(4).trim().equals("")){
+				flag = false;
+				message.add("平均价净价不能为空");
+			}else{
+				if(!checkFigure(list.get(4))){
+					flag = false;
+					message.add("平均价净价不是数字");
+				}
+			}
+			//买一价净价
+			if(list.get(5) == null || list.get(5).trim().equals("")){
+				flag = false;
+				message.add("买一价净价不能为空");
+			}else{
+				if(!checkFigure(list.get(5))){
+					flag = false;
+					message.add("买一价净价不是数字");
+				}
+			}
+			//卖一价净价
+			if(list.get(6) == null || list.get(6).trim().equals("")){
+				flag = false;
+				message.add("卖一价净价不能为空");
+			}else{
+				if(!checkFigure(list.get(6))){
+					flag = false;
+					message.add("卖一价净价不能为空");
+				}
+			}
+			//最高价净价
+			if(list.get(7) == null || list.get(7).trim().equals("")){
+				flag = false;
+				message.add("最高价净价不能为空");
+			}else{
+				if(!checkFigure(list.get(7))){
+					flag = false;
+					message.add("最高价净价不是数字");
+				}
+			}
+			//最低价净价
+			if(list.get(8) == null || list.get(8).trim().equals("")){
+				flag = false;
+				message.add("最低价净价不能为空");
+			}else{
+				if(!checkFigure(list.get(8))){
+					flag = false;
+					message.add("最低价净价不是数字");
+				}
+			}
+			//收盘价全价
+			if(StringUtils.isNotEmpty(list.get(9))){
+				if(!checkFigure(list.get(9))){
+					flag = false;
+					message.add("收盘价全价不是数字");
+				}
+			}
+			//平均价全价
+			if(StringUtils.isNotEmpty(list.get(10))){
+				if(!checkFigure(list.get(10))){
+					flag = false;
+					message.add("平均价全价不是数字");
+				}
+			}
+			//买一价全价
+			if(StringUtils.isNotEmpty(list.get(11))){
+				if(!checkFigure(list.get(11))){
+					flag = false;
+					message.add("买一价全价不是数字");
+				}
+			}
+			//卖一价全价
+			if(StringUtils.isNotEmpty(list.get(12))){
+				if(!checkFigure(list.get(12))){
+					flag = false;
+					message.add("卖一价全价不是数字");
+				}
+			}
+			//最高价全价
+			if(StringUtils.isNotEmpty(list.get(13))){
+				if(!checkFigure(list.get(13))){
+					flag = false;
+					message.add("最高价全价不是数字");
+				}
+			}
+			//最低价全价
+			if(StringUtils.isNotEmpty(list.get(14))){
+				if(!checkFigure(list.get(14))){
+					flag = false;
+					message.add("最低价全价不是数字");
+				}
+			}
+			//主键校验
+			if(flag){
+				param.put("finprodId",list.get(0));
+				param.put("tradeDate", DateUtil.parse(list.get(2)));
+				String  result = valBondMarketInfo001Mapper.getRegistExcelList(param);
+				if(StringUtils.isNotEmpty(result)){
+					flag = false;
+					message.add("存在和资产代码与估值日相同的数据");
+				}
+			}
 
-        
-    /**
-     * 导入文件之前检查文件 导入的excel是否有重复数据
-     *
-     * param fileName 导入的文件名名
-     * @return 检查结果
-     * @see
-     * @since 1.0
-     */
-    public AjaxResult checkConfirmMsgForImportData(List<List<String>> dataList) {
-        AjaxResult webResult = new AjaxResult();
-        List<ValidMessage> errorList = new ArrayList<>();        
-    	//判断excel表中资产代码和估值日是否冲突
-    	for (int i = 0; i < dataList.size(); i++ ) {
-    		for (int j = i+1; j < dataList.size(); j++ ) {
-    			if(StringUtils.equals(dataList.get(i).get(0), dataList.get(j).get(0)) &&
-    					StringUtils.equals(dataList.get(i).get(3), dataList.get(j).get(3))){
-    				ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行资产代码和估值日与"+"第"+(j+2)+"行资产代码和估值日相同");
-                    errorList.add(validMessage);
-    			}
-    		}
-    	}
-    	//判断excel表中估值日和估值来源是否冲突
-    	for (int i = 0; i < dataList.size(); i++ ) {
-    		for (int j = i+1; j < dataList.size(); j++ ) {
-    			if(StringUtils.equals(dataList.get(i).get(2), dataList.get(j).get(2)) &&
-    					StringUtils.equals(dataList.get(i).get(3), dataList.get(j).get(3))){
-    				ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行估值日和估值来源与"+"第"+(j+2)+"行估值日和估值来源相同");
-                    errorList.add(validMessage);
-    			}
-    		}
-    	}
+			if(flag){
+				MstBondMarketInfo entity = new MstBondMarketInfo();
+				//资产代码
+				entity.setSecId(list.get(0));
+				//估值日
+				entity.setValueDate(DateUtil.parse(list.get(2)));
+				//收盘价
+				entity.setClosePrice(new BigDecimal(list.get(3)));
+				//平均价
+				entity.setAveragePrice(new BigDecimal(list.get(4)));
+				//最高价
+				entity.setMaxPrice(new BigDecimal(list.get(7)));
+				//最低价
+				entity.setMinPrice(new BigDecimal(list.get(8)));
+				//买一价
+				entity.setBuyOnePrice(new BigDecimal(list.get(5)));
+				//卖一价
+				entity.setSellOnePrice(new BigDecimal(list.get(6)));
+				//收盘价全价
+				if(StringUtils.isNotEmpty(list.get(9))){
+					entity.setClosePriceFull(new BigDecimal(list.get(9)));
+				}
+				//平均价全价
+				if(StringUtils.isNotEmpty(list.get(10))){
+					entity.setAveragePriceFull(new BigDecimal(list.get(10)));
+				}
+				//买一价全价
+				if(StringUtils.isNotEmpty(list.get(11))){
+					entity.setBuyOnePriceFull(new BigDecimal(list.get(11)));
+				}
+				//卖一价全价
+				if(StringUtils.isNotEmpty(list.get(12))){
+					entity.setSellOnePriceFull(new BigDecimal(list.get(12)));
+				}
+				//最高价全价
+				if(StringUtils.isNotEmpty(list.get(13))){
+					entity.setMaxPriceFull(new BigDecimal(list.get(13)));
+				}
+				//最低价全价
+				if(StringUtils.isNotEmpty(list.get(14))){
+					entity.setMinPriceFull(new BigDecimal(list.get(14)));
+				}
+				entity.setInputType(DictCodeListExt1.录入方式_系统导入.getValue());
+				entity.setCreateUser(userName);
+				entity.setCreateDept(deptCode);
+				entity.setCreateTime(nowDate);
+				entity.setUpdateUser(userName);
+				entity.setUpdateTime(nowDate);
+				entities.add(entity);
+			}
 
-        if(errorList.size() == 0){
-        	webResult.setData(NO_INFO_SHOWOUT);
-        }else{
-        	webResult.setErrorList(errorList);
-        }
-        return webResult;
-    }
+			if (CollectionUtils.isNotEmpty(message)) {
+				checkResult.add(new ExcelValidDto(list.get(0), String.valueOf(i+2),
+						StringUtil.joinString(message, GlobalConstant.SEMICOLON)));
+			}
+		}
+		return checkResult;
+	}
+
+
+	/**
+	 * 导入文件之前检查文件 导入的excel是否有重复数据
+	 *
+	 * param fileName 导入的文件名名
+	 * @return 检查结果
+	 * @see
+	 * @since 1.0
+	 */
+	public AjaxResult checkConfirmMsgForImportData(List<List<String>> dataList) {
+		AjaxResult webResult = new AjaxResult();
+		List<ValidMessage> errorList = new ArrayList<>();
+		//判断excel表中资产代码和估值日是否冲突
+		for (int i = 0; i < dataList.size(); i++ ) {
+			for (int j = i+1; j < dataList.size(); j++ ) {
+				if(StringUtils.equals(dataList.get(i).get(0), dataList.get(j).get(0)) &&
+						StringUtils.equals(dataList.get(i).get(2), dataList.get(j).get(2))){
+					ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行资产代码和估值日与"+"第"+(j+2)+"行资产代码和估值日相同");
+					errorList.add(validMessage);
+				}
+			}
+		}
+//    	//判断excel表中估值日和估值来源是否冲突
+//    	for (int i = 0; i < dataList.size(); i++ ) {
+//    		for (int j = i+1; j < dataList.size(); j++ ) {
+//    			if(StringUtils.equals(dataList.get(i).get(2), dataList.get(j).get(2)) &&
+//    					StringUtils.equals(dataList.get(i).get(3), dataList.get(j).get(3))){
+//    				ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行估值日和估值来源与"+"第"+(j+2)+"行估值日和估值来源相同");
+//                    errorList.add(validMessage);
+//    			}
+//    		}
+//    	}
+
+		if(errorList.size() == 0){
+			webResult.setData(NO_INFO_SHOWOUT);
+		}else{
+			webResult.setErrorList(errorList);
+		}
+		return webResult;
+	}
     
     /**
      * 判断是否为数字
