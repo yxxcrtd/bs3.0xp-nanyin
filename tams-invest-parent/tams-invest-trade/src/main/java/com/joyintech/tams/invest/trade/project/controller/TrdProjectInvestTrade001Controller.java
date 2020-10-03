@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
@@ -13,6 +14,7 @@ import com.joyintech.tams.component.business.settle.BussSettleOrderCommService;
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
+import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -90,6 +92,9 @@ public class TrdProjectInvestTrade001Controller extends BaseController {
      */
     @Autowired
     private TrdCommonBaseService trdCommonBaseService;
+
+    @Autowired
+    private TrdBondInvestTrade002Service trdBondInvestTrade002Service;
 
     /**
      * 需要初始化的下拉菜单
@@ -186,6 +191,16 @@ public class TrdProjectInvestTrade001Controller extends BaseController {
     @RequestMapping("revokeCheck")
     public AjaxResult revokeCheck(@Validated({ValidateGroupDelete.class}) TrdProjectInvestTrade001Dto dto,
                                   BindingResult result) {
+        // TISHKBS-1349 债券 进行买入交易后 隔天做卖出交易 卖出交易完成后对买入交易进行撤销,此时不提示存在后续交易 增加提示 add by caojin 20201001 start
+        int T02sum = trdBondInvestTrade002Service.selectTradeT02(dto.getBizCode());
+        if(T02sum > 0){
+            ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+            errorList.add(new ValidMessage(this.getMessage("后续存在有效的卖出交易！")));
+            AjaxResult ar = new AjaxResult();
+            ar.setErrorList(errorList);
+            return ar;
+        }
+        // TISHKBS-1349 债券 进行买入交易后 隔天做卖出交易 卖出交易完成后对买入交易进行撤销,此时不提示存在后续交易 增加提示 add by caojin 20201001 end
         // 确认提醒 TISHKBS-1113【组合资金账户头寸查询】内转交易撤销提醒 add by hpp 2020-09-17 start
         if (result.getErrorCount() == 0) {
             AjaxResult ajaxResult = new AjaxResult();

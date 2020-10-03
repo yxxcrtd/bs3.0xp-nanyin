@@ -505,4 +505,14 @@ public class TrdBondInvestTradeController {
         return tradeid;
     }
 
+    /**
+     * 查找买入交易之后的卖出交易
+     *
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("selectTradeT02/{tradeId}")
+    public int selectTradeT02(@PathVariable("tradeId") String tradeId){
+        return trdBondInvestTradeService.selectTradeT02(tradeId);
+    }
 }
