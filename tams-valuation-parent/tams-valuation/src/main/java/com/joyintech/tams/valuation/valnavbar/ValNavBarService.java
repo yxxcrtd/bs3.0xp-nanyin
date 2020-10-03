@@ -24,7 +24,7 @@ import com.joyintech.framework.navbar.UserNavbar;
 @Primary
 public class ValNavBarService implements UserNavBarService {
 
-	private @Value("${url.batch}") String urlBatch;
+	private @Value("${url.batch:}") String urlBatch;
 
 	@Override
 	public List<UserNavbar> getUserNavbar() {
@@ -37,10 +37,12 @@ public class ValNavBarService implements UserNavBarService {
 //        bar.setAction("layui.layer.open({type : 2,title:'操作手册管理', shade : 0.8, area:['90%', '80%'], content:'valuation/documentmanagement/DocumentManagement001/init'})");
 //        list.add(bar);
 
-		UserNavbar bar = new UserNavbar();
-		bar.setName("更新批缓存");
-		bar.setUrl(urlBatch);
-		list.add(bar);
+		if (!"".equals(urlBatch)) {
+			UserNavbar bar = new UserNavbar();
+			bar.setName("更新批缓存");
+			bar.setUrl(urlBatch);
+			list.add(bar);
+		}
         
 		return list;
 	}
