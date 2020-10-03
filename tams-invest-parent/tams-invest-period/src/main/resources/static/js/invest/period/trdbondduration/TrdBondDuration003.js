@@ -302,6 +302,10 @@ var TrdBondDuration003 = function () {
                 Joyin.error("请输入资金到账日。")
                 return;
             }
+            if ($('#settleDate').val() < $('#payDate').val()) {
+                Joyin.error("资金到账日不能早于支付日。")
+                return;
+            }
             if (TrdBondDuration003.isCalcConditionChanged()) {
                 return;
             }
