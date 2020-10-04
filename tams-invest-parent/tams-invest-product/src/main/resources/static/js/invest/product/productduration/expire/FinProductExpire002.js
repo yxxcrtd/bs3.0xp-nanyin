@@ -3,7 +3,6 @@
 	  // 生成指令参数保存  add by dingjunfeng
     var calcConditionObjBackUp = null;
     var init = false;
-    var revAmt = null;
     var subProductTableOption = {
 //    		ajax: {
 //                url: JoyinUtil.getRealPath('invest/product/productduration/addreduce/FinProductAddReduce002/findReduceInfoData'),
@@ -346,10 +345,6 @@
         }
         var finProductExpireMInfoDtoList = loadSubProdInfo.getAllRows();
         object.finProductExpireMInfoDtoList = finProductExpireMInfoDtoList;
-        if($('#FinProductExpire002_reduceAmt').val() > revAmt){
-            Joyin.error("赎回金额大于认购金额！");
-            return;
-        }
         if(operateType === 'revoke') {//撤销
         	object.effectStatus = '01';
         	object.busiNo = object.bussTrdTransferOrder[0].tradeId;
@@ -452,7 +447,6 @@
     		   	 $('#FinProductExpire002_cusProfit').val(interestSum);
     		   	 $('#FinProductExpire002_actCusProfit').val(actInterestSum);
     		   	 $('#FinProductExpire002_reduceAmt').val(reduceAmtSum);
-                 revAmt = reduceAmtSum;
     		}
     	});
 
