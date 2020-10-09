@@ -107,6 +107,15 @@ var QueryFunc=function(){
     			});
     		}
     	}
+    	//补充回显画面提交序列化不完全数据 start add by yujinfa
+    	if((!object.bussRepAssetMngProdInfo.repYieldFlag)&&(pageModel == 1)){
+    	    object.bussRepAssetMngProdInfo.repYieldFlag = bussRepAssetMngProdInfo_repYieldFlag;
+    	}
+    	if((!object.bussRepAssetMngProdInfo.repIsCtrlBottom)&&(pageModel == 1)){
+    	    object.bussRepAssetMngProdInfo.repIsCtrlBottom = bussRepAssetMngProdInfo_repIsCtrlBottom;
+    	}
+        //补充回显画面提交序列化不完全数据 end add by yujinfa
+
         Joyin.ajaxJson(basePath + 'invest/asset/plan/plancur/FinPlanAssetC002/check', object, function(result) {
             Joyin.ajaxJson(basePath + 'invest/asset/common/isHoliday', {
                 mdate: object.mdate,
