@@ -567,6 +567,13 @@
                     getElementById('dealMode').val(result.dealMode).trigger('change');
                     getElementById('openMode').val(result.openMode).trigger('change');
 
+                     // 开放  高频开放
+                    if(result.operationType == '02' && result.openMode == '02' ){
+                        getElementById('firstAnapleroticCycleStrDateDiv').hide();
+                    }else{
+                        getElementById('firstAnapleroticCycleStrDateDiv').show();
+                    }
+
                 }
                 getElementById('rateType').val(result.rateType).trigger("blur").trigger('change');
                 getElementById('rate').val(result.rate).trigger("blur").trigger('change');
