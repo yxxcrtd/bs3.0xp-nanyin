@@ -300,6 +300,8 @@ public class ViewCompareDetailController extends BaseController {
 
                     if(CommonUtil.isBAmodel() && StringUtil.equals("SvrChbAstValueRegist001",pageId) && StringUtil.equals("CHB_AST_VAL_SUB",tableName) ){
                         tableName = "CHB_ASSET_SUB_STATUS";
+                    }else if(CommonUtil.isBAmodel() && StringUtil.equals("SvrAssetInfoRegist001",pageId) && StringUtil.equals("CHB_ASSET_INFO_SUB",tableName) ){
+                        tableName = "CHB_ASSET_SUB_STATUS";
                     }
 
                     final StringBuilder sb = new StringBuilder();
