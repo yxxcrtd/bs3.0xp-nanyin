@@ -61,4 +61,10 @@ public class TaxScheme004Controller extends BaseController {
     public void doComplete(@RequestBody TaxScheme004Dto dto, @PathVariable("action") String action) {
        taxScheme004Service.doComplete(dto, OperationType.valueOf(action));
     }
+
+    @GetMapping("/getPrimaryKey")
+    public String getPrimaryKey() {
+        return taxScheme004Service.getPrimaryKey();
+    }
+
 }

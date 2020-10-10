@@ -29,4 +29,6 @@ public interface TaxScheme004Mapper {
 	TaxScheme004Dto selectByPrimaryKey(String seqNo);
 	
 	int updateByPrimaryKeySelective(TaxScheme004Dto dto);
+
+	String getPrimaryKey();
 }

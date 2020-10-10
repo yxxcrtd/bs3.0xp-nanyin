@@ -50,8 +50,12 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
-            TAX_SEQUENCE.NEXTVAL,
-            
+            <if test="schId != null" >
+                #{taxId,jdbcType=VARCHAR},
+            </if>
+            <if test="schId == null" >
+                TAX_SEQUENCE.NEXTVAL,
+            </if>
             <if test="schId != null" >
                 #{schId,jdbcType=VARCHAR},
             </if>
@@ -114,19 +118,12 @@
         </set>
         where TAX_ID = #{taxId,jdbcType=VARCHAR}
     </update>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+    <select id="getPrimaryKey" resultType="java.lang.String" >
+        select
+        TAX_SEQUENCE.NEXTVAL
+        from dual
+    </select>
     
 
-   
-    
 </mapper>
