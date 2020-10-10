@@ -150,7 +150,7 @@
                                         return;
                  }
                  if (new Date(anapleroticEndDate).DateDiff('d', getElementById('mdate').val() ) < 0) {
-                        Joyin.error(JoyinUtil.getMessage("到期日必须大于等于回补计提结束日，请重新输入！"));
+                        Joyin.error(JoyinUtil.getMessage("回补计提结束日必须小于等于到期日，请重新输入！"));
                          return;
                   }
         }
@@ -173,7 +173,7 @@
                                         return;
                  }
                  if (new Date(anapleroticEndDate).DateDiff('d', getElementById('mdate').val() ) < 0) {
-                        Joyin.error(JoyinUtil.getMessage("到期日必须大于等于回补计提结束日，请重新输入！"));
+                        Joyin.error(JoyinUtil.getMessage("回补计提结束日必须小于等于到期日，请重新输入！"));
                          return;
                   }
             }
