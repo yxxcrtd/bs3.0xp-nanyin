@@ -315,7 +315,7 @@
      * 根据发行方式生成首次回补日
      */
     var operationTypeChange = function(){
-        if(pageModel != PAGE_MODEL_NEW && quickInputAnapleroticFlag ==='true'){
+        if(pageModel != PAGE_MODEL_NEW && quickInputAnapleroticFlag ==='true' && applyType !='prod'){
             $('#firstAnapleroticDate').val('');
             //回补计提结束日
             getElementById('anapleroticEndDate').val('');
