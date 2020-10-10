@@ -612,7 +612,7 @@
                         msg = JoyinUtil.getMessage('BUSS_COM_E_0036',[JoyinUtil.getLabel("BussFinRepayment.mdate"),JoyinUtil.getLabel("FinRepayPlan.vdate")]);
                     }
                     if(new Date(new Date(obj.mdate).format("yyyy-MM-dd")).DateDiff('d',mdate)<0){
-                        msg = JoyinUtil.getMessage('BUSS_COM_E_0003',[JoyinUtil.getLabel("FinRepayPlan.mdate"),JoyinUtil.getLabel("BussFinRepayment.mdate")]);
+                        msg = JoyinUtil.getMessage('BUSS_COM_E_0003',[JoyinUtil.getLabel("BussFinRepayment.mdate"),JoyinUtil.getLabel("FinRepayPlan.mdate")]);
                     }
                 }
                 if(obj.prinAmt==''||typeof obj.prinAmt == 'undefined'){
