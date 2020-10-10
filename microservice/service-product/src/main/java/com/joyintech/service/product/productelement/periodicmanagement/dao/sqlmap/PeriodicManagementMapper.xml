@@ -607,6 +607,7 @@
 	
 	<select id="selectIsExistTrade" resultType="int">
 		select count(0) from TRD_PRODUCT_DEAL t where t.finprod_id = #{periodProdId} and t.branch = #{branch}
+		AND t.TRADE_STATUS = '01' AND (t.IS_CANCEL='N' or t.IS_CANCEL IS NULL)
 	</select>
 	
 	<select id="checkPeriodId" resultType="int">
