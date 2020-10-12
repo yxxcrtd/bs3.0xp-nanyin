@@ -281,6 +281,118 @@ FROM
 	<if test="type5 != null and type5 !=''">
 		AND C.TYPE_5  = #{type5}
 	</if>
+
+	union all
+	<!--标准债-->
+
+	select sum(stasec.pleAmt) * stasec.pledgeRatio  as PLEDGE_AMT,
+	stasec.pledgeRatio * 100 as pledgeRatio,
+	sum(stasec.pleAmt) as pledgeFaceValue,
+	stasec.type_4,
+	stasec.type_5,
+	stasec.finprodType2,
+	stasec.finprodMarketId,
+	stasec.finprodAbbr,
+	stasec.registOrg,
+	stasec.companyNature,
+	stasec.isSecBond,
+	stasec.counterId,
+	null,
+	null,
+	null,
+	null,
+	stasec.gradeResult
+	from (
+
+	select nvl(pspf.amount,0)*100 pleAmt ,
+	nvl(fscr.scale,0)  as pledgeRatio,
+	C.TYPE_4,
+	C.TYPE_5,
+	'标准债' as finprodType2,
+	fp.finprod_market_id as finprodMarketId,
+	fp.FINPROD_ABBR as finprodAbbr,
+	fp.REGIST_ORG as registOrg,
+	decode(E.PARTY_TYPE2,
+	'01',
+	'国有企业',
+	'02',
+	'集体企业',
+	'03',
+	'民营企业',
+	'04',
+	'外资企业',
+	'05',
+	'公众企业',
+	'99',
+	'其他企业') companyNature,
+	(CASE
+	WHEN F.IS_SEC_BOND = 'Y' THEN
+	'次级债'
+	ELSE
+	null
+	END) isSecBond,
+	pp.PORTFOLIO_ID counterId,
+	(	select decode(I.GRADE_RESULT,'01','AAA+','02','AAA','03','AAA-','04','AA+','05','AA','06','AA-','07','A+','08','A','09','A-','10','A-1','11','A-2','12','A-3','13','BBB+','14','BBB','15','BBB-','16','BB+','17','BB','18','BB-','19','B+','20','B','21','B-','22','CCC+','23','CCC','24','CCC-','25','CC+','26','CC','27','CC-','28','C+','29','C','30','C-','31','D','')
+	from MST_BOND_CREDIT_RATING I
+	where I.O_TYPE = '01'
+	and I.O_CODE = fp.FINPROD_MARKET_ID
+	and I.GRADE_DATE &lt;= TO_DATE(#{sysDate},'YYYY-MM-DD')
+	and I.GRADE_DATE =(
+	select max(a.GRADE_DATE)
+	from MST_BOND_CREDIT_RATING a  where a.O_TYPE='01' and a.O_CODE= I.O_CODE and a.GRADE_DATE &lt;= TO_DATE(#{sysDate},'YYYY-MM-DD')
+
+	)
+	and I.GRADE_RESULT = (
+	select max(GRADE_RESULT)
+	from MST_BOND_CREDIT_RATING  where O_TYPE='01' and O_CODE= I.O_CODE and GRADE_DATE = I.GRADE_DATE
+	)
+	) gradeResult
+	from trd_stasec_flow tsf
+	left join trd_stasec_flow_detail tsfd on tsfd.seqno=tsf.seqno   and tsfd.BRANCH = '0'
+	left join ptl_sec_position_flow pspf on tsf.seqno =pspf.trade_id  and pspf.finprod_id=tsfd.finprod_id
+	AND tsf.portfolio_id = pspf.portfolio_id and tsf.sec_acct_id = pspf.sec_acct_id  and tsf.cdate = pspf.cdate
+	left join ptl_portfolio pp on pp.portfolio_id = tsf.portfolio_id
+	left join fin_product fp on fp.finprod_id=tsfd.finprod_id
+	LEFT JOIN MST_CUSTOMER_INFO_ADD E ON E.CUSTOMER_ID = fp.ISSUER
+	LEFT JOIN FIN_PRODUCT_ADD F 	ON fp.finprod_id = F.FINPROD_ID
+	left join fin_product_type C on fp.finprod_id=C.Finprod_Id
+	LEFT JOIN FIN_PRODUCT_ADD fpa ON pp.PORTFOLIO_ID=fpa.PORTFOLIO_ID
+	left join fin_stdsec_converse_radio fscr ON fscr.finprod_id = tsfd.finprod_id 	AND fscr.BRANCH = '0' and fscr.vdate &lt;= TO_DATE(#{sysDate},'YYYY-MM-DD') 	and fscr.mdate >= TO_DATE(#{sysDate},'YYYY-MM-DD')
+	where tsf.cdate &lt;= TO_DATE(#{sysDate},'YYYY-MM-DD')
+	<if test="counterIdList != null and counterIdList.size()>0">
+		<foreach collection="counterIdList" open="AND pp.PORTFOLIO_ID IN (" item="counterId" separator="," close=")">
+			#{counterId,jdbcType=VARCHAR}
+		</foreach>
+	</if>
+	<!--  add by wangyang1 【吉林银行】 增加 产品经理  2019年9月29日 start -->
+	<if test=" prodManager !=null and prodManager.size()>0 " >
+		AND fpa.PROD_MANAGER IN
+		<foreach collection="prodManager" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</if>
+	<!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
+	<if test="finprodMarketId != null and finprodMarketId !=''">
+		AND fp.finprod_market_id LIKE CONCAT(CONCAT('%',#{finprodMarketId}),'%')
+	</if>
+	<if test="type4 != null and type4 !=''">
+		AND C.TYPE_4  = #{type4}
+	</if>
+	<if test="type5 != null and type5 !=''">
+		AND C.TYPE_5  = #{type5}
+	</if>
+	)stasec
+	group by stasec.pledgeRatio,
+	stasec.type_4,
+	stasec.type_5,
+	stasec.finprodType2,
+	stasec.finprodMarketId,
+	stasec.finprodAbbr,
+	stasec.registOrg,
+	stasec.companyNature,
+	stasec.isSecBond,
+	stasec.counterId,
+	stasec.gradeResult
 </select>
 
 	<select id="substitutionFindPage" resultType="com.joyintech.service.portfolio.portfolioanalysis.ptlrepopledgesearch.dto.PtlSubstitutionRepoPledgeDto">
