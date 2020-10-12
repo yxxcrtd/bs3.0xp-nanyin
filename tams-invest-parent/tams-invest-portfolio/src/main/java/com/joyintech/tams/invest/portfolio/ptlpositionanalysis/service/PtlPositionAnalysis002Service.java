@@ -933,12 +933,25 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
         String displayType = map.get("displayType").toString();
         map.put("export", "Y");
         Page<PtlPositionAnalysis003Dto> list = selectForPage(map);
+
+        Map<String, String> institutionNameMap = new HashMap<>();
+        list.getRoot().forEach(name -> {
+            if ("root".equals(name.getParentInfo())) {
+                institutionNameMap.put(name.getTypeName(), name.getBelongInstitutionNameNew());
+            }
+        });
+
         list.getRoot().forEach(item -> {
             map.put("parentId", item.getChildInfo());
             if (item.getHasChildren().equals("01")) {
                 Page<PtlPositionAnalysis003Dto> ptlPositionAnalysis003DtoPage = selectForPage(map);
                 for (PtlPositionAnalysis003Dto entity : ptlPositionAnalysis003DtoPage.getRoot()) {
-                    pageList.add(entity);
+                    for (String key : institutionNameMap.keySet()) {
+                        if (entity.getParentInfo().startsWith(key + "F0")) { // todo 没有完全相等的条件
+                            entity.setBelongInstitutionNameNew(institutionNameMap.get(key).toString());
+                        }
+                        pageList.add(entity);
+                    }
                 }
             }
         });
