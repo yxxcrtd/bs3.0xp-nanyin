@@ -288,6 +288,7 @@ public class TrdPlanNetDurationService extends BaseService<TrdPlanNetDurationDto
              repTrade.setRepIssuePartyId(entity.getRepIssuePartyId());
 //   行内交易编码
 //   repTrade.setRepBankTradeCode(entity.getTradeId());
+             repTrade.setRepBankTradeCode(deal.getTradeId());
 //   行内资产/负债编码
              repTrade.setRepBankAssetCode(entity.getFinprodMarketId());
 //   币种
