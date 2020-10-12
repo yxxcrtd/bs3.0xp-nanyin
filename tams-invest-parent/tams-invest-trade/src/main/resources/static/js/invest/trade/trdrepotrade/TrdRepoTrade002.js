@@ -1811,6 +1811,13 @@
                 refreshRebackIntAmt();
         });
         
+		// 回购期限
+		$('#term').on('change',function(){
+			if($('#tradeMarket').val() == TRADE_PLACE_01 || ($('#tradeMarket').val() == TRADE_PLACE_02  && $("#repoType").val() == TARGET_BACK_TYPE_H01)){
+				repoTermChangeAction();
+			}
+		});
+        
         $('#secAcctId').on("change", function () {
                 var repoType = $("#repoType").val();
                 if ($("#secAcctId").val()) {
