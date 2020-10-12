@@ -271,10 +271,18 @@
         Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finintpaydateadjustment/FinIntPayDateAdjustment001/check', object, function(result) {
             Joyin.confirm(result.data, function() {
                 if(operateType === 'save') {
-                    WorkFlow.doSaveList(basePath + 'invest/product/messageadjust/finintpaydateadjustment/FinIntPayDateAdjustment001/save', object, "FinIntPayDateAdjustment001_btn_save");
+                    WorkFlow.doSaveList(basePath + 'invest/product/messageadjust/finintpaydateadjustment/FinIntPayDateAdjustment001/save', object, "FinIntPayDateAdjustment001_btn_save","FinIntPayDateAdjustment001",function(){
+                        //$('#FinIntPayDateAdjustment001_btn_save').prop('disabled',false).removeClass('layui-btn-disabled');
+                        $('#FinIntPayDateAdjustment001_btn_save').attr('style',"display:display");
+                        $('#FinIntPayDateAdjustment001_btn_save_disabled').attr('style',"display:none");
+                    });
                 }
                 else {
-                    WorkFlow.doSubmitList(basePath + 'invest/product/messageadjust/finintpaydateadjustment/FinIntPayDateAdjustment001/save', object, "FinIntPayDateAdjustment001_btn_submit");
+                    WorkFlow.doSubmitList(basePath + 'invest/product/messageadjust/finintpaydateadjustment/FinIntPayDateAdjustment001/save', object, "FinIntPayDateAdjustment001_btn_submit","FinIntPayDateAdjustment001",function(){
+                        //$('#FinIntPayDateAdjustment001_btn_submit').prop('disabled',false).removeClass('layui-btn-disabled');
+                        $('#FinIntPayDateAdjustment001_btn_submit').attr('style',"display:display");
+                        $('#FinIntPayDateAdjustment001_btn_submit_disabled').attr('style',"display:none");
+                    });
                 }
             });
         });
