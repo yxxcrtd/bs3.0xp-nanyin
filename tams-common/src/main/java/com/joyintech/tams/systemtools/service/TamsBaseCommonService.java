@@ -193,4 +193,11 @@ public class TamsBaseCommonService extends BaseService {
             String bankCode =  tamsBaseMapper.getYHGeneralBankCode();
             return bankCode == null ? "" : bankCode ;
         }
+
+        @Transactional(propagation=Propagation.REQUIRES_NEW)
+        @DataSource(DataSourceType.OTHER)
+        public String getCreateInstByID(String businessId,String dataType) {
+            return tamsBaseMapper.getCreateInstByID(businessId,dataType);
+        }
+
 }

@@ -282,9 +282,11 @@ public interface TrdBondInvestTradeMapper {
     
     String selectCeTradeId(Map<String, Object> param);
 
+    String getReverseTradeDtoInvAim(@Param("tradeId") String tradeId);
+
     /**
      * 查询买入交易后续的卖出交易
-     * @param param
+     * @param tradeId
      * @return
      * @see
      * @since 1.0

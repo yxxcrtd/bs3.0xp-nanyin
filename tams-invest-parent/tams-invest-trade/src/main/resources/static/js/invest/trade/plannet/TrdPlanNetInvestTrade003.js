@@ -166,11 +166,11 @@ $(function() {
                 } else {
                     $('#tradeAmt').attr('disabled',false);
                 }
-                if ($('#shareAmt').val()){
-                    $('#shareAmt').attr('disabled',true);
-                } else {
-                    $('#shareAmt').attr('disabled',false);
-                }
+//                if ($('#shareAmt').val()){
+//                    $('#shareAmt').attr('disabled',true);
+//                } else {
+//                    $('#shareAmt').attr('disabled',false);
+//                }
                 //赎回确认的时候如果交易金额或者交易份额为空的时候可编辑 yjm end 20191014
                 // $('#channelFee_div').show();
                 if(ps == ps_T24 && single==1){
@@ -328,7 +328,17 @@ $(function() {
         	}
         });*/
         //需求提出不要反算金额 yjm end 20191029
-        
+
+
+        $('#shareAmt').change(function(){
+            if($('#ps').val() == ps_T19 || $('#ps').val() == ps_T24 ){
+                var unitCprice = $('#unitCprice').val();
+                var shareAmt = $('#shareAmt').val();
+                if(unitCprice && shareAmt){
+                    $('#tradeAmt').val(unitCprice*shareAmt).trigger('blur');
+                }
+            }
+        });
         
         $('#expectedArrivalDate').change(function(){
             var expectedArrivalDate = $('#expectedArrivalDate').val();

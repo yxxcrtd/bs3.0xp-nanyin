@@ -150,7 +150,7 @@
                                         return;
                  }
                  if (new Date(anapleroticEndDate).DateDiff('d', getElementById('mdate').val() ) < 0) {
-                        Joyin.error(JoyinUtil.getMessage("到期日必须大于等于回补计提结束日，请重新输入！"));
+                        Joyin.error(JoyinUtil.getMessage("回补计提结束日必须小于等于到期日，请重新输入！"));
                          return;
                   }
         }
@@ -173,7 +173,7 @@
                                         return;
                  }
                  if (new Date(anapleroticEndDate).DateDiff('d', getElementById('mdate').val() ) < 0) {
-                        Joyin.error(JoyinUtil.getMessage("到期日必须大于等于回补计提结束日，请重新输入！"));
+                        Joyin.error(JoyinUtil.getMessage("回补计提结束日必须小于等于到期日，请重新输入！"));
                          return;
                   }
             }
@@ -315,7 +315,7 @@
      * 根据发行方式生成首次回补日
      */
     var operationTypeChange = function(){
-        if(pageModel != PAGE_MODEL_NEW && quickInputAnapleroticFlag ==='true'){
+        if(pageModel != PAGE_MODEL_NEW && quickInputAnapleroticFlag ==='true' && applyType !='prod'){
             $('#firstAnapleroticDate').val('');
             //回补计提结束日
             getElementById('anapleroticEndDate').val('');
@@ -566,6 +566,13 @@
                     getElementById('operationType').val(result.operationType).trigger('change');
                     getElementById('dealMode').val(result.dealMode).trigger('change');
                     getElementById('openMode').val(result.openMode).trigger('change');
+
+                     // 开放  高频开放
+                    if(result.operationType == '02' && result.openMode == '02' ){
+                        getElementById('firstAnapleroticCycleStrDateDiv').hide();
+                    }else{
+                        getElementById('firstAnapleroticCycleStrDateDiv').show();
+                    }
 
                 }
                 getElementById('rateType').val(result.rateType).trigger("blur").trigger('change');

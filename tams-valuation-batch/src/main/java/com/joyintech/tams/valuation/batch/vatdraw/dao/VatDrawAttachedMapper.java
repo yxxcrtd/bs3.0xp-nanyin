@@ -74,4 +74,11 @@ public interface VatDrawAttachedMapper {
                                                  @Param("bookDate") Date bookDate,
                                                  @Param("bookOrder") BigDecimal bookOrder,
                                                  @Param("booksetId") String booksetId);
+
+    List<AddTaxRuleDto> getAddTaxCalTypeByMultiLevel(@Param("booksetId") String booksetId,
+                                                     @Param("happenDate") Date happenDate,
+                                                     @Param("schemeType") String schemeType,
+                                                     @Param("createInst") String createInst);
+
+
 }

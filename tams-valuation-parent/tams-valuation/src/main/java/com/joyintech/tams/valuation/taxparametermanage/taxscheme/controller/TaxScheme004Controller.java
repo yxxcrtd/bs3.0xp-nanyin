@@ -82,7 +82,7 @@ public class TaxScheme004Controller extends BaseController {
         } 
 		
 		if (StringUtils.isEmpty(taxId) || "copy".equals(operateType)) { // 新建 、复制
-		    dto.setTaxId(IDGenerator.generate()); // 主键是 Sequence，这里仅供流程参考
+		    dto.setTaxId(taxScheme004Service.getPrimaryKey()); // 主键是 Sequence，这里仅供流程参考
 			dto.setSchId(schId);
 		}
 		dto.setOperateType(operateType);

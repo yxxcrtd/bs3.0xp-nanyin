@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
+import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.joyintech.framework.constant.GlobalConstant;
@@ -40,6 +42,12 @@ public class MstCaptialAccountValidator implements BeanValidator{
      */
     @Autowired
     private MstCaptialAccountService mstCaptialAccountService;
+
+    /**
+     * 工作流CommonServic
+     */
+    @Autowired
+    private MstWorkflowCommonService mstWorkflowCommonService;
     
     @Override
     public List<ValidMessage> valid(Object value) {
@@ -93,6 +101,26 @@ public class MstCaptialAccountValidator implements BeanValidator{
                     }else {
                         errorList.add(new ValidMessage("largePayno", getMessage("COMMON_E_0057",getMessage("MstCaptialAccount002.accountOutlet"))));
                     }
+
+                    //  增加校验  账号 + 开户网点/大额支付行号  全局唯一
+                    Map<String, Object> param = new HashMap<String, Object>();
+                    param.put("busiAcctNo", dto.getBusiAcctNo());
+                    param.put("largePayno", dto.getLargePayno());
+                    int cnt =  mstCaptialAccountService.getUniqueAcctNoPayNo(param);
+
+                    if(cnt>0){
+                        errorList.add(new ValidMessage("largePayno", "账号+开户网点/大额支付行号，不可重复，请重新输入"));
+                    }
+
+                    //增加流程中的校验  账号 + 开户网点/大额支付行号  全局唯一
+                    WflValidInputParameter inputParam = new WflValidInputParameter();
+                    inputParam.setPageId("MstCaptialAccount002");
+                    inputParam.setBusinessDataPk1(dto.getBusiAcctNo());
+                    inputParam.setBusinessDataPk2(dto.getLargePayno());
+                    if(mstWorkflowCommonService.isInWflProcess(inputParam)){
+                        errorList.add(new ValidMessage("账号+开户网点/大额支付行号 已在流程中，不可重复提交"));
+                    }
+
                 }
                 else if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)){
                     if(!StringUtil.equals(dto.getCcy(), "CNY")){

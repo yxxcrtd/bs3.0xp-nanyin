@@ -215,5 +215,13 @@ public class MstCaptialAccountService extends CommonExportService<MstCaptialAcco
     			ServiceApplication.BASICDATA_SERVICE_NAME + "/MstCaptialAccount/selectCheck",
     			map, MstCaptialAccountDto.class);
     }
+
+    public int getUniqueAcctNoPayNo(Map<String, Object> map) {
+
+        return restTemplate.postForObject(
+                ServiceApplication.BASICDATA_SERVICE_NAME + "/MstCaptialAccount/getUniqueAcctNoPayNo",
+                map, Integer.class);
+
+    }
     
 }

@@ -53,4 +53,15 @@ public class TaxScheme004Service extends CommonExportService<TaxScheme004Dto> im
             ServiceApplication.VALUATION_SERVICE_NAME + "/TaxScheme004/findByPrimaryKey?seqNo=" + seqNo,
             TaxScheme004Dto.class);
     }
+
+    /**
+     * 查询 附加税则表
+     *
+     * @return
+     */
+    public String getPrimaryKey() {
+        return restTemplate.getForObject(
+                ServiceApplication.VALUATION_SERVICE_NAME + "/TaxScheme004/getPrimaryKey",
+                String.class);
+    }
 }

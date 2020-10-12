@@ -18,8 +18,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.*;
 
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +47,7 @@ import com.joyintech.tams.common.base.entity.TaxBokBalanceSum;
 
 /**
  * 附加税计提批处理Processor逻辑Service
- * 
+ *
  * @author weipeng
  * @version 1.0 2018年8月6日
  * @see VatDrawAttachedProcessorService
@@ -86,10 +89,10 @@ public class VatDrawAttachedProcessorService {
      * 税额结转频率
      */
     public static final String TAX_CARRYOVER_CYCLE = "TAX_CARRYOVER_CYCLE";
-    
+
     /**
      * process 数据处理
-     * 
+     *
      * @param param1 参数
      * @return BookGenerateResult
      * @see
@@ -117,8 +120,21 @@ public class VatDrawAttachedProcessorService {
         List<TaxBokBalanceSum> listTdyBalanceSum = new ArrayList<TaxBokBalanceSum>();
 
         // 1. 取附加税计税方式信息
-        List<AddTaxRuleDto> listAddTaxRuleDto = vatDrawAttachedMapper.getAddTaxCalType(booksetId,
-            happenDate, DictCodeListExt1.配置方案类型_税务方案.getValue());
+        List<AddTaxRuleDto> listAddTaxRuleDto = new ArrayList<>();
+
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+            // 获取此账套的创建机构 查找对应的附加税 税率
+            String createInst = CommonUtil.getCreateInstByID(booksetId,DictCodeList.共通业务类型_账套管理.getValue());
+            // String generalInst = CommonUtil.getYHGeneralBankCode();
+            if(StringUtil.isNotEmpty(createInst) ){
+                listAddTaxRuleDto = vatDrawAttachedMapper.getAddTaxCalTypeByMultiLevel(booksetId,
+                        happenDate, DictCodeListExt1.配置方案类型_税务方案.getValue(),createInst);
+            }
+        }else{
+            listAddTaxRuleDto = vatDrawAttachedMapper.getAddTaxCalType(booksetId,
+                    happenDate, DictCodeListExt1.配置方案类型_税务方案.getValue());
+        }
+
         // 定义 附加税税则Map
         Map<String, AddTaxRuleDto> addTaxRuleMap = new HashMap<>();
         for (AddTaxRuleDto dto : listAddTaxRuleDto) {
@@ -128,15 +144,15 @@ public class VatDrawAttachedProcessorService {
         // 2. 查询账务明细最大的处理序列
         // max_tdy_处理序列 = max_增值税处理序列
         BigDecimal max_bookOrder = vatDrawAttachedMapper.querySumMaxBookOrders(happenDate,
-            bookDate, booksetId, null);
+                bookDate, booksetId, null);
         // max_附加税处理序列
         BigDecimal max_addBookOrder = vatDrawAttachedMapper.querySumMaxBookOrders(
-            DateUtil.addDay(happenDate, -1), bookDate, booksetId,
-            DictCodeList.附加税类型_城建税.getValue());
+                DateUtil.addDay(happenDate, -1), bookDate, booksetId,
+                DictCodeList.附加税类型_城建税.getValue());
 
         // 3.查询发生日增值税余额.
         List<TaxBokBalanceSum> listTdyBalance = vatDrawAttachedMapper.queryTdyTaxBalanceSum(
-            happenDate, bookDate, max_bookOrder, booksetId);
+                happenDate, bookDate, max_bookOrder, booksetId);
         // 分组:增值税类型,确认类型
         Map<String, TaxBokBalanceSum> tdyTaxBalanceSumMap = new HashMap<>();
         for (TaxBokBalanceSum item : listTdyBalance) {
@@ -146,7 +162,7 @@ public class VatDrawAttachedProcessorService {
         // 4 查询各账套附加税昨日余额汇总
         // 返回结果中，每种附加税类型对应只有一条数据
         List<TaxBokBalanceSum> listYtsTaxBalanceSum = vatDrawMapper.queryYtsTaxBalanceSum(
-            DateUtil.addDay(happenDate, -1), bookDate, max_addBookOrder, booksetId);
+                DateUtil.addDay(happenDate, -1), bookDate, max_addBookOrder, booksetId);
         // listYtsTaxBalanceSum 转换为map，主键为 增值税类型+确认标识
         // 定义昨日汇总余额Map
         Map<String, TaxBokBalanceSum> ytsTaxBalanceSumMap = new HashMap<>();
@@ -164,16 +180,16 @@ public class VatDrawAttachedProcessorService {
         BigDecimal tdyHappenAmt3 = BigDecimal.ZERO;
         if (MapUtils.isNotEmpty(tdyTaxBalanceSumMap)) {
             tdyHappenAmt1 = tdyTaxBalanceSumMap.get(
-                DictCodeList.增值税类型_利息收入.getValue() + DictCodeList.增值税_确认类型_发生计税.getValue()).getTaxAmt();
+                    DictCodeList.增值税类型_利息收入.getValue() + DictCodeList.增值税_确认类型_发生计税.getValue()).getTaxAmt();
             tdyHappenAmt2 = tdyTaxBalanceSumMap.get(
-                DictCodeList.增值税类型_红利收入.getValue() + DictCodeList.增值税_确认类型_发生计税.getValue()).getTaxAmt();
+                    DictCodeList.增值税类型_红利收入.getValue() + DictCodeList.增值税_确认类型_发生计税.getValue()).getTaxAmt();
             tdyHappenAmt3 = tdyTaxBalanceSumMap.get(
-                DictCodeList.增值税类型_价差收入.getValue() + DictCodeList.增值税_确认类型_发生计税.getValue()).getTaxAmt();
+                    DictCodeList.增值税类型_价差收入.getValue() + DictCodeList.增值税_确认类型_发生计税.getValue()).getTaxAmt();
         }
 
         // 计税基数M = 利息收入当日发生额 + 红利收入当日发生额 + 价差收入当日发生额
         BigDecimal M = ArithmeticUtil.doAdd(NumberEnum.MONEY.getCode(), null, tdyHappenAmt1,
-            tdyHappenAmt2, tdyHappenAmt3);
+                tdyHappenAmt2, tdyHappenAmt3);
 
         // 共通元素设置
         // 初始化定义 - 金额场景要素 map定义
@@ -196,46 +212,46 @@ public class VatDrawAttachedProcessorService {
         // 增值税汇总附加税分别入库
         // 城建税 今日附加税确认汇总入库
         /**MODIFY BY YANYA ON 20190917 根据map中动态准则 START
-        this.addTdyBalanceSumToList(addTaxRuleMap, ytsTaxBalanceSumMap, acctEntity,
-            accountAmountMap, listTdyBalanceSum, M, DictCodeList.附加税类型_城建税.getValue(),
-            DictCodeList.增值税_确认类型_发生计税.getValue(), max_bookOrder);
+         this.addTdyBalanceSumToList(addTaxRuleMap, ytsTaxBalanceSumMap, acctEntity,
+         accountAmountMap, listTdyBalanceSum, M, DictCodeList.附加税类型_城建税.getValue(),
+         DictCodeList.增值税_确认类型_发生计税.getValue(), max_bookOrder);
 
-        // 教育税 今日附加税确认汇总入库
-        this.addTdyBalanceSumToList(addTaxRuleMap, ytsTaxBalanceSumMap, acctEntity,
-            accountAmountMap, listTdyBalanceSum, M, DictCodeList.附加税类型_教育税.getValue(),
-            DictCodeList.增值税_确认类型_发生计税.getValue(), max_bookOrder);
+         // 教育税 今日附加税确认汇总入库
+         this.addTdyBalanceSumToList(addTaxRuleMap, ytsTaxBalanceSumMap, acctEntity,
+         accountAmountMap, listTdyBalanceSum, M, DictCodeList.附加税类型_教育税.getValue(),
+         DictCodeList.增值税_确认类型_发生计税.getValue(), max_bookOrder);
 
-        // 地方教育税 今日附加税确认汇总入库
-        this.addTdyBalanceSumToList(addTaxRuleMap, ytsTaxBalanceSumMap, acctEntity,
-            accountAmountMap, listTdyBalanceSum, M, DictCodeList.附加税类型_地方教育税.getValue(),
-            DictCodeList.增值税_确认类型_发生计税.getValue(), max_bookOrder); **/
+         // 地方教育税 今日附加税确认汇总入库
+         this.addTdyBalanceSumToList(addTaxRuleMap, ytsTaxBalanceSumMap, acctEntity,
+         accountAmountMap, listTdyBalanceSum, M, DictCodeList.附加税类型_地方教育税.getValue(),
+         DictCodeList.增值税_确认类型_发生计税.getValue(), max_bookOrder); **/
         //动态循环map中附加税税则
         for(String key: addTaxRuleMap.keySet()){
             this.addTdyBalanceSumToList(addTaxRuleMap, ytsTaxBalanceSumMap, acctEntity,
-                accountAmountMap, listTdyBalanceSum, M, key,
-                DictCodeList.增值税_确认类型_发生计税.getValue(), max_bookOrder);
+                    accountAmountMap, listTdyBalanceSum, M, key,
+                    DictCodeList.增值税_确认类型_发生计税.getValue(), max_bookOrder);
         }
         /**MODIFY BY YANYA ON 20190917 根据map中动态准则  END**/
         // 调入账共通处理
         vatDrawCommonService.resultCommonHandle(accountAmountMap, tableId, remark, acctEntity,
-            returnResult, DictCodeList.冲正标识_正常交易.getValue());
+                returnResult, DictCodeList.冲正标识_正常交易.getValue());
 
         // 6.计算预估计税基数
         // 6.1 单日全提
         // 读取配置[是否预估利息收入增值税附加]
         // 
         List<BooksetTaxConfigDto> listConfig = vatDrawCommonService.queryBooksetTaxConfig(
-            booksetId, "ISCALCINTALT");
+                booksetId, "ISCALCINTALT");
         // 定义 计税基数M
         M = BigDecimal.ZERO;
         // 是的场合
         if (CollectionUtils.isEmpty(listConfig) || DictCodeList.是否_是.getValue().equals(listConfig.get(0).getConfigValue())) {
             // 定义 预估利息收入计税余额
             BigDecimal tdyTaxAmt1 = tdyTaxBalanceSumMap.get(
-                DictCodeList.增值税类型_利息收入.getValue() + DictCodeList.增值税_确认类型_预估计税.getValue()).getTaxAmt();
+                    DictCodeList.增值税类型_利息收入.getValue() + DictCodeList.增值税_确认类型_预估计税.getValue()).getTaxAmt();
             // 定义 预估红利收入计税余额
             BigDecimal tdyTaxAmt2 = tdyTaxBalanceSumMap.get(
-                DictCodeList.增值税类型_红利收入.getValue() + DictCodeList.增值税_确认类型_预估计税.getValue()).getTaxAmt();
+                    DictCodeList.增值税类型_红利收入.getValue() + DictCodeList.增值税_确认类型_预估计税.getValue()).getTaxAmt();
             // 计税基数M2 = 预估利息收入计税余额 + 预估红利收入计税余额
             M = ArithmeticUtil.doAdd(NumberEnum.MONEY.getCode(), null, tdyTaxAmt1, tdyTaxAmt2);
         }
@@ -245,7 +261,7 @@ public class VatDrawAttachedProcessorService {
         if (CollectionUtils.isEmpty(listConfig) || DictCodeList.是否_是.getValue().equals(listConfig.get(0).getConfigValue())) {
             // 定义 预估价差收入计税余额
             BigDecimal tdyTaxAmt3 = tdyTaxBalanceSumMap.get(
-                DictCodeList.增值税类型_价差收入.getValue() + DictCodeList.增值税_确认类型_预估计税.getValue()).getTaxAmt();
+                    DictCodeList.增值税类型_价差收入.getValue() + DictCodeList.增值税_确认类型_预估计税.getValue()).getTaxAmt();
             // 计税基数M2 = 计税基数M2 + 预估价差收入计税余额
             M = ArithmeticUtil.doAdd(NumberEnum.MONEY.getCode(), null, M, tdyTaxAmt3);
         }
@@ -267,29 +283,29 @@ public class VatDrawAttachedProcessorService {
         // 增值税汇总附加税分别入库
         // 城建税 今日附加税预估汇总入库
         /**MODIFY BY YANYA ON 20190917 根据map中动态准则  START
-        this.addTdyBalanceSumToList(addTaxRuleMap, ytsTaxBalanceSumMap, acctEntity,
-            accountAmountMap, listTdyBalanceSum, M, DictCodeList.附加税类型_城建税.getValue(),
-            DictCodeList.增值税_确认类型_预估计税.getValue(), max_bookOrder);
+         this.addTdyBalanceSumToList(addTaxRuleMap, ytsTaxBalanceSumMap, acctEntity,
+         accountAmountMap, listTdyBalanceSum, M, DictCodeList.附加税类型_城建税.getValue(),
+         DictCodeList.增值税_确认类型_预估计税.getValue(), max_bookOrder);
 
-        // 教育税 今日附加税预估汇总入库
-        this.addTdyBalanceSumToList(addTaxRuleMap, ytsTaxBalanceSumMap, acctEntity,
-            accountAmountMap, listTdyBalanceSum, M, DictCodeList.附加税类型_教育税.getValue(),
-            DictCodeList.增值税_确认类型_预估计税.getValue(), max_bookOrder);
+         // 教育税 今日附加税预估汇总入库
+         this.addTdyBalanceSumToList(addTaxRuleMap, ytsTaxBalanceSumMap, acctEntity,
+         accountAmountMap, listTdyBalanceSum, M, DictCodeList.附加税类型_教育税.getValue(),
+         DictCodeList.增值税_确认类型_预估计税.getValue(), max_bookOrder);
 
-        // 地方教育税 今日附加税预估汇总入库
-        this.addTdyBalanceSumToList(addTaxRuleMap, ytsTaxBalanceSumMap, acctEntity,
-            accountAmountMap, listTdyBalanceSum, M, DictCodeList.附加税类型_地方教育税.getValue(),
-            DictCodeList.增值税_确认类型_预估计税.getValue(), max_bookOrder);**/
+         // 地方教育税 今日附加税预估汇总入库
+         this.addTdyBalanceSumToList(addTaxRuleMap, ytsTaxBalanceSumMap, acctEntity,
+         accountAmountMap, listTdyBalanceSum, M, DictCodeList.附加税类型_地方教育税.getValue(),
+         DictCodeList.增值税_确认类型_预估计税.getValue(), max_bookOrder);**/
         //动态循环map中附加税税则
         for(String key: addTaxRuleMap.keySet()){
             this.addTdyBalanceSumToList(addTaxRuleMap, ytsTaxBalanceSumMap, acctEntity,
-                accountAmountMap, listTdyBalanceSum, M, key,
-                DictCodeList.增值税_确认类型_预估计税.getValue(), max_bookOrder);
+                    accountAmountMap, listTdyBalanceSum, M, key,
+                    DictCodeList.增值税_确认类型_预估计税.getValue(), max_bookOrder);
         }
         /**MODIFY BY YANYA ON 20190917 根据map中动态准则  END**/
         // 调入账共通处理
         vatDrawCommonService.resultCommonHandle(accountAmountMap, tableId, remark, acctEntity,
-            returnResult, DictCodeList.冲正标识_正常交易.getValue());
+                returnResult, DictCodeList.冲正标识_正常交易.getValue());
 
         // 6.2冲销昨日全提
         // 定义昨日汇总集合 = 3.查询结果(增值税类型 in (城建税,教育税,地方教育税),确认类型=预估计税)
@@ -299,10 +315,10 @@ public class VatDrawAttachedProcessorService {
             // 增值税类型 in (城建税,教育税,地方教育税,水利基金税),确认类型=预估计税
             String vatType = item.getVatType();
             if ((vatType.equals(DictCodeList.附加税类型_城建税.getValue())
-                 || vatType.equals(DictCodeList.附加税类型_教育税.getValue())
-                 || vatType.equals(DictCodeList.附加税类型_地方教育税.getValue())
-                 || vatType.equals(DictCodeList.附加税类型_水利基金税.getValue()))
-                && DictCodeList.增值税_确认类型_预估计税.getValue().equals(item.getTaxPType())) {
+                    || vatType.equals(DictCodeList.附加税类型_教育税.getValue())
+                    || vatType.equals(DictCodeList.附加税类型_地方教育税.getValue())
+                    || vatType.equals(DictCodeList.附加税类型_水利基金税.getValue()))
+                    && DictCodeList.增值税_确认类型_预估计税.getValue().equals(item.getTaxPType())) {
                 return true;
             }
             return false;
@@ -326,72 +342,72 @@ public class VatDrawAttachedProcessorService {
                 remark = "增值税估计-直投-附加税";
             }
             /**MODIFY BY YANYA ON 20190918 增值税估计-附加税增加统一方法  START 
-            if (taxBalanceSumMap.get(DictCodeList.附加税类型_城建税.getValue()) != null) {
-                accountAmountMap.put(BookConstant.T_URBAN, taxBalanceSumMap.get(DictCodeList.附加税类型_城建税.getValue()).getTaxAmt().negate());
-                accountAmountMap.put(BookConstant.PI_URBAN, taxBalanceSumMap.get(DictCodeList.附加税类型_城建税.getValue()).getTaxAmt().negate());
-                
-                accountAmountMap.put(BookConstant.T_URBAN+BookConstant.BCCYAMT, taxBalanceSumMap.get(DictCodeList.附加税类型_城建税.getValue()).getTaxAmt().negate());
-                accountAmountMap.put(BookConstant.PI_URBAN+BookConstant.BCCYAMT, taxBalanceSumMap.get(DictCodeList.附加税类型_城建税.getValue()).getTaxAmt().negate());
-            }
-            else {
-                // Key
-                accountAmountMap.put(BookConstant.T_URBAN, BigDecimal.ZERO);
-                accountAmountMap.put(BookConstant.PI_URBAN, BigDecimal.ZERO);
-                
-                accountAmountMap.put(BookConstant.T_URBAN+BookConstant.BCCYAMT, BigDecimal.ZERO);
-                accountAmountMap.put(BookConstant.PI_URBAN+BookConstant.BCCYAMT, BigDecimal.ZERO);
-            }
-            if (taxBalanceSumMap.get(DictCodeList.附加税类型_教育税.getValue()) != null) {
-                // key
-                accountAmountMap.put(BookConstant.T_EDU, taxBalanceSumMap.get(DictCodeList.附加税类型_教育税.getValue()).getTaxAmt().negate());
-                accountAmountMap.put(BookConstant.PI_EDU, taxBalanceSumMap.get(DictCodeList.附加税类型_教育税.getValue()).getTaxAmt().negate());
-                
-                
-                accountAmountMap.put(BookConstant.T_EDU+BookConstant.BCCYAMT, taxBalanceSumMap.get(DictCodeList.附加税类型_教育税.getValue()).getTaxAmt().negate());
-                accountAmountMap.put(BookConstant.PI_EDU+BookConstant.BCCYAMT, taxBalanceSumMap.get(DictCodeList.附加税类型_教育税.getValue()).getTaxAmt().negate());
-            }
-            else {
-                // key
-                accountAmountMap.put(BookConstant.T_EDU, BigDecimal.ZERO);
-                accountAmountMap.put(BookConstant.PI_EDU, BigDecimal.ZERO);
-                
-                accountAmountMap.put(BookConstant.T_EDU+BookConstant.BCCYAMT, BigDecimal.ZERO);
-                accountAmountMap.put(BookConstant.PI_EDU+BookConstant.BCCYAMT, BigDecimal.ZERO);
-            }
-            if (taxBalanceSumMap.get(DictCodeList.附加税类型_地方教育税.getValue()) != null) {
-                // key
-                accountAmountMap.put(BookConstant.T_LEDU, taxBalanceSumMap.get(DictCodeList.附加税类型_地方教育税.getValue()).getTaxAmt().negate());
-                accountAmountMap.put(BookConstant.PI_LEDU, taxBalanceSumMap.get(DictCodeList.附加税类型_地方教育税.getValue()).getTaxAmt().negate());
-                
-                accountAmountMap.put(BookConstant.T_LEDU+BookConstant.BCCYAMT, taxBalanceSumMap.get(DictCodeList.附加税类型_地方教育税.getValue()).getTaxAmt().negate());
-                accountAmountMap.put(BookConstant.PI_LEDU+BookConstant.BCCYAMT, taxBalanceSumMap.get(DictCodeList.附加税类型_地方教育税.getValue()).getTaxAmt().negate());
-            }
-            else {
-                accountAmountMap.put(BookConstant.T_LEDU, BigDecimal.ZERO);
-                accountAmountMap.put(BookConstant.PI_LEDU, BigDecimal.ZERO);
-                
-                accountAmountMap.put(BookConstant.T_LEDU+BookConstant.BCCYAMT, BigDecimal.ZERO);
-                accountAmountMap.put(BookConstant.PI_LEDU+BookConstant.BCCYAMT, BigDecimal.ZERO);
-            }
-            if (taxBalanceSumMap.get(DictCodeList.附加税类型_水利基金税.getValue()) != null) {
-                accountAmountMap.put(BookConstant.T_WATER, taxBalanceSumMap.get(DictCodeList.附加税类型_水利基金税.getValue()).getTaxAmt().negate());
-                accountAmountMap.put(BookConstant.PI_WATER, taxBalanceSumMap.get(DictCodeList.附加税类型_水利基金税.getValue()).getTaxAmt().negate());
-                
-                accountAmountMap.put(BookConstant.T_WATER+BookConstant.BCCYAMT, taxBalanceSumMap.get(DictCodeList.附加税类型_水利基金税.getValue()).getTaxAmt().negate());
-                accountAmountMap.put(BookConstant.PI_WATER+BookConstant.BCCYAMT, taxBalanceSumMap.get(DictCodeList.附加税类型_水利基金税.getValue()).getTaxAmt().negate());
-            }**/
+             if (taxBalanceSumMap.get(DictCodeList.附加税类型_城建税.getValue()) != null) {
+             accountAmountMap.put(BookConstant.T_URBAN, taxBalanceSumMap.get(DictCodeList.附加税类型_城建税.getValue()).getTaxAmt().negate());
+             accountAmountMap.put(BookConstant.PI_URBAN, taxBalanceSumMap.get(DictCodeList.附加税类型_城建税.getValue()).getTaxAmt().negate());
+
+             accountAmountMap.put(BookConstant.T_URBAN+BookConstant.BCCYAMT, taxBalanceSumMap.get(DictCodeList.附加税类型_城建税.getValue()).getTaxAmt().negate());
+             accountAmountMap.put(BookConstant.PI_URBAN+BookConstant.BCCYAMT, taxBalanceSumMap.get(DictCodeList.附加税类型_城建税.getValue()).getTaxAmt().negate());
+             }
+             else {
+             // Key
+             accountAmountMap.put(BookConstant.T_URBAN, BigDecimal.ZERO);
+             accountAmountMap.put(BookConstant.PI_URBAN, BigDecimal.ZERO);
+
+             accountAmountMap.put(BookConstant.T_URBAN+BookConstant.BCCYAMT, BigDecimal.ZERO);
+             accountAmountMap.put(BookConstant.PI_URBAN+BookConstant.BCCYAMT, BigDecimal.ZERO);
+             }
+             if (taxBalanceSumMap.get(DictCodeList.附加税类型_教育税.getValue()) != null) {
+             // key
+             accountAmountMap.put(BookConstant.T_EDU, taxBalanceSumMap.get(DictCodeList.附加税类型_教育税.getValue()).getTaxAmt().negate());
+             accountAmountMap.put(BookConstant.PI_EDU, taxBalanceSumMap.get(DictCodeList.附加税类型_教育税.getValue()).getTaxAmt().negate());
+
+
+             accountAmountMap.put(BookConstant.T_EDU+BookConstant.BCCYAMT, taxBalanceSumMap.get(DictCodeList.附加税类型_教育税.getValue()).getTaxAmt().negate());
+             accountAmountMap.put(BookConstant.PI_EDU+BookConstant.BCCYAMT, taxBalanceSumMap.get(DictCodeList.附加税类型_教育税.getValue()).getTaxAmt().negate());
+             }
+             else {
+             // key
+             accountAmountMap.put(BookConstant.T_EDU, BigDecimal.ZERO);
+             accountAmountMap.put(BookConstant.PI_EDU, BigDecimal.ZERO);
+
+             accountAmountMap.put(BookConstant.T_EDU+BookConstant.BCCYAMT, BigDecimal.ZERO);
+             accountAmountMap.put(BookConstant.PI_EDU+BookConstant.BCCYAMT, BigDecimal.ZERO);
+             }
+             if (taxBalanceSumMap.get(DictCodeList.附加税类型_地方教育税.getValue()) != null) {
+             // key
+             accountAmountMap.put(BookConstant.T_LEDU, taxBalanceSumMap.get(DictCodeList.附加税类型_地方教育税.getValue()).getTaxAmt().negate());
+             accountAmountMap.put(BookConstant.PI_LEDU, taxBalanceSumMap.get(DictCodeList.附加税类型_地方教育税.getValue()).getTaxAmt().negate());
+
+             accountAmountMap.put(BookConstant.T_LEDU+BookConstant.BCCYAMT, taxBalanceSumMap.get(DictCodeList.附加税类型_地方教育税.getValue()).getTaxAmt().negate());
+             accountAmountMap.put(BookConstant.PI_LEDU+BookConstant.BCCYAMT, taxBalanceSumMap.get(DictCodeList.附加税类型_地方教育税.getValue()).getTaxAmt().negate());
+             }
+             else {
+             accountAmountMap.put(BookConstant.T_LEDU, BigDecimal.ZERO);
+             accountAmountMap.put(BookConstant.PI_LEDU, BigDecimal.ZERO);
+
+             accountAmountMap.put(BookConstant.T_LEDU+BookConstant.BCCYAMT, BigDecimal.ZERO);
+             accountAmountMap.put(BookConstant.PI_LEDU+BookConstant.BCCYAMT, BigDecimal.ZERO);
+             }
+             if (taxBalanceSumMap.get(DictCodeList.附加税类型_水利基金税.getValue()) != null) {
+             accountAmountMap.put(BookConstant.T_WATER, taxBalanceSumMap.get(DictCodeList.附加税类型_水利基金税.getValue()).getTaxAmt().negate());
+             accountAmountMap.put(BookConstant.PI_WATER, taxBalanceSumMap.get(DictCodeList.附加税类型_水利基金税.getValue()).getTaxAmt().negate());
+
+             accountAmountMap.put(BookConstant.T_WATER+BookConstant.BCCYAMT, taxBalanceSumMap.get(DictCodeList.附加税类型_水利基金税.getValue()).getTaxAmt().negate());
+             accountAmountMap.put(BookConstant.PI_WATER+BookConstant.BCCYAMT, taxBalanceSumMap.get(DictCodeList.附加税类型_水利基金税.getValue()).getTaxAmt().negate());
+             }**/
             for(String key : taxBalanceSumMap.keySet()) {
                 this.addBalanceSumToMap(taxBalanceSumMap, accountAmountMap, key);
             }
             /**MODIFY BY YANYA ON 20190918 增值税估计-附加税增加统一方法  END **/
             // 调入账共通处理
             vatDrawCommonService.resultCommonHandle(accountAmountMap, tableId, remark, acctEntity,
-                returnResult, DictCodeList.冲正标识_冲销交易.getValue());
+                    returnResult, DictCodeList.冲正标识_冲销交易.getValue());
         }
 
         // 账务明细（当前表）+科目明细入返回结果
         returnResult.setProdId(
-            acctEntity.getBooksetId() + GlobalConstant.SPLIT + acctEntity.getBokDetailId());
+                acctEntity.getBooksetId() + GlobalConstant.SPLIT + acctEntity.getBokDetailId());
         vatBatchResult.setBookGenerateResult(returnResult);
         // 增值税附加税余额汇总入结果
         vatBatchResult.setListTaxBokBalanceSum(listTdyBalanceSum);
@@ -400,7 +416,7 @@ public class VatDrawAttachedProcessorService {
 
     /**
      * 根据增值税类型和确认标识 生成 今日附加税余额汇总 并存入入库集合中
-     * 
+     *
      * @param addTaxRuleMap 附加税税则Map
      * @param ytsTaxBalanceSumMap 昨日余额汇总map
      * @param acctEntity reader返回结果
@@ -426,16 +442,16 @@ public class VatDrawAttachedProcessorService {
         TaxBokBalanceSum ystTaxBalanceSum = ytsTaxBalanceSumMap.get(vatType + taxPType);
         // 创建 今日附加税余额汇总
         TaxBokBalanceSum tdyTaxBalanceSum = vatDrawCommonService.createTdyBalanceSumByYst(
-            ystTaxBalanceSum, bookOrder, acctEntity);
+                ystTaxBalanceSum, bookOrder, acctEntity);
         tdyTaxBalanceSum.setVatType(vatType);
         tdyTaxBalanceSum.setTaxPType(taxPType);
-        
+
         // if (附加税税则map.get(参数.增值税类型) != null)
         if (addTaxRuleMap.get(vatType) != null) {
             // 金额元素.城建税税额 = 附加税计税共通(计税基数M,附加税税则map.get(参数.增值税类型).get税率());
             BigDecimal taxRate = addTaxRuleMap.get(vatType).getTaxRate();
             taxAmt = vatDrawCommonService.addTaxCalculate(taxBase, taxRate, decimalDigits,
-                roundingMode);
+                    roundingMode);
         }
         // 即使为空也要记录入库
         else {
@@ -443,20 +459,20 @@ public class VatDrawAttachedProcessorService {
         }
 
         if (DictCodeList.增值税_确认类型_预估计税.getValue().equals(taxPType)) {
-        	// 计税收入余额 = 计税基数M
+            // 计税收入余额 = 计税基数M
             tdyTaxBalanceSum.setIncomeAmtAll(taxBase);
             // 计税发生额= 今日计税余额 - 昨日.计税余额 
             tdyTaxBalanceSum.setHappenAmt(ArithmeticUtil.subtract(taxAmt,
-                tdyTaxBalanceSum.getTaxAmt(), NumberEnum.MONEY.getCode(), null));
-            
+                    tdyTaxBalanceSum.getTaxAmt(), NumberEnum.MONEY.getCode(), null));
+
             tdyTaxBalanceSum.setTaxAmt(taxAmt);
-            
+
             // 金额场景元素塞值
             if (vatType.equals(DictCodeList.附加税类型_城建税.getValue())) {
                 // key
                 accountAmountMap.put(BookConstant.T_URBAN, taxAmt);
                 accountAmountMap.put(BookConstant.PI_URBAN, taxAmt);
-                
+
                 accountAmountMap.put(BookConstant.T_URBAN+BookConstant.BCCYAMT, taxAmt);
                 accountAmountMap.put(BookConstant.PI_URBAN+BookConstant.BCCYAMT, taxAmt);
             }
@@ -464,16 +480,16 @@ public class VatDrawAttachedProcessorService {
                 // key
                 accountAmountMap.put(BookConstant.T_EDU, taxAmt);
                 accountAmountMap.put(BookConstant.PI_EDU, taxAmt);
-                
+
                 accountAmountMap.put(BookConstant.T_EDU+BookConstant.BCCYAMT, taxAmt);
                 accountAmountMap.put(BookConstant.PI_EDU+BookConstant.BCCYAMT, taxAmt);
-                
+
             }
             if (vatType.equals(DictCodeList.附加税类型_地方教育税.getValue())) {
                 // key
                 accountAmountMap.put(BookConstant.T_LEDU, taxAmt);
                 accountAmountMap.put(BookConstant.PI_LEDU, taxAmt);
-                
+
                 accountAmountMap.put(BookConstant.T_LEDU+BookConstant.BCCYAMT, taxAmt);
                 accountAmountMap.put(BookConstant.PI_LEDU+BookConstant.BCCYAMT, taxAmt);
             }
@@ -481,7 +497,7 @@ public class VatDrawAttachedProcessorService {
             if (vatType.equals(DictCodeList.附加税类型_水利基金税.getValue())) {
                 accountAmountMap.put(BookConstant.T_WATER, taxAmt);
                 accountAmountMap.put(BookConstant.PI_WATER, taxAmt);
-                
+
                 accountAmountMap.put(BookConstant.T_WATER+BookConstant.BCCYAMT, taxAmt);
                 accountAmountMap.put(BookConstant.PI_WATER+BookConstant.BCCYAMT, taxAmt);
             }
@@ -489,7 +505,7 @@ public class VatDrawAttachedProcessorService {
         else {
             // 计税收入余额 = 计税基数M
             tdyTaxBalanceSum.setIncomeAmtAll(taxBase);
-            
+
             BigDecimal happenAmt = BigDecimal.ZERO;
             List<BooksetTaxConfigDto> listConfig = vatDrawCommonService.queryBooksetTaxConfig(
                     acctEntity.getBooksetId(), TAX_CARRYOVER_CYCLE);
@@ -509,13 +525,13 @@ public class VatDrawAttachedProcessorService {
             }
             tdyTaxBalanceSum.setHappenAmt(happenAmt);
             tdyTaxBalanceSum.setTaxAmt(taxAmt);
-            
+
             // 金额场景元素塞值
             if (vatType.equals(DictCodeList.附加税类型_城建税.getValue())) {
                 // key
                 accountAmountMap.put(BookConstant.T_URBAN, happenAmt);
                 accountAmountMap.put(BookConstant.VAT_URBAN, happenAmt);
-                
+
                 accountAmountMap.put(BookConstant.T_URBAN+BookConstant.BCCYAMT, happenAmt);
                 accountAmountMap.put(BookConstant.VAT_URBAN+BookConstant.BCCYAMT, happenAmt);
             }
@@ -523,7 +539,7 @@ public class VatDrawAttachedProcessorService {
                 // key
                 accountAmountMap.put(BookConstant.T_EDU, happenAmt);
                 accountAmountMap.put(BookConstant.VAT_EDU, happenAmt);
-                
+
                 accountAmountMap.put(BookConstant.T_EDU+BookConstant.BCCYAMT, happenAmt);
                 accountAmountMap.put(BookConstant.VAT_EDU+BookConstant.BCCYAMT, happenAmt);
             }
@@ -531,7 +547,7 @@ public class VatDrawAttachedProcessorService {
                 // key
                 accountAmountMap.put(BookConstant.T_LEDU, happenAmt);
                 accountAmountMap.put(BookConstant.VAT_LEDU, happenAmt);
-                
+
                 accountAmountMap.put(BookConstant.T_LEDU+BookConstant.BCCYAMT, happenAmt);
                 accountAmountMap.put(BookConstant.VAT_LEDU+BookConstant.BCCYAMT, happenAmt);
             }
@@ -539,21 +555,21 @@ public class VatDrawAttachedProcessorService {
             if (vatType.equals(DictCodeList.附加税类型_水利基金税.getValue())) {
                 accountAmountMap.put(BookConstant.T_WATER, happenAmt);
                 accountAmountMap.put(BookConstant.VAT_WATER, happenAmt);
-                
+
                 accountAmountMap.put(BookConstant.T_WATER+BookConstant.BCCYAMT, happenAmt);
                 accountAmountMap.put(BookConstant.VAT_WATER+BookConstant.BCCYAMT, happenAmt);
             }
         }
-        
-     // 入库
+
+        // 入库
         listTdyBalanceSum.add(tdyTaxBalanceSum);
 
     }
-    
+
     /**
-     * 
+     *
      * 增值税估计-附加税 并存入入库集合中 ADD BY YANYA 20190918
-     * 
+     *
      * @param taxBalanceSumMap 余额汇总map
      * @param accountAmountMap 金额场景元素map
      * @param taxPType 增值税类型
@@ -561,66 +577,66 @@ public class VatDrawAttachedProcessorService {
      * @since 1.0
      */
     private void addBalanceSumToMap(Map<String, TaxBokBalanceSum> taxBalanceSumMap,
-                                        Map<String, BigDecimal> accountAmountMap,
-                                        String taxPType) {
+                                    Map<String, BigDecimal> accountAmountMap,
+                                    String taxPType) {
         if (DictCodeList.附加税类型_城建税.getValue().equals(taxPType) && taxBalanceSumMap.get(DictCodeList.附加税类型_城建税.getValue()) != null) {
             accountAmountMap.put(BookConstant.T_URBAN, taxBalanceSumMap.get(DictCodeList.附加税类型_城建税.getValue()).getTaxAmt().negate());
             accountAmountMap.put(BookConstant.PI_URBAN, taxBalanceSumMap.get(DictCodeList.附加税类型_城建税.getValue()).getTaxAmt().negate());
-            
+
             accountAmountMap.put(BookConstant.T_URBAN+BookConstant.BCCYAMT, taxBalanceSumMap.get(DictCodeList.附加税类型_城建税.getValue()).getTaxAmt().negate());
             accountAmountMap.put(BookConstant.PI_URBAN+BookConstant.BCCYAMT, taxBalanceSumMap.get(DictCodeList.附加税类型_城建税.getValue()).getTaxAmt().negate());
         }
         /**MODIFY BY YANYA ON 20190917 附加税类型_城建税去除为0的处理  START
-        else {
-            // Key
-            accountAmountMap.put(BookConstant.T_URBAN, BigDecimal.ZERO);
-            accountAmountMap.put(BookConstant.PI_URBAN, BigDecimal.ZERO);
-            
-            accountAmountMap.put(BookConstant.T_URBAN+BookConstant.BCCYAMT, BigDecimal.ZERO);
-            accountAmountMap.put(BookConstant.PI_URBAN+BookConstant.BCCYAMT, BigDecimal.ZERO);
-        }**/
+         else {
+         // Key
+         accountAmountMap.put(BookConstant.T_URBAN, BigDecimal.ZERO);
+         accountAmountMap.put(BookConstant.PI_URBAN, BigDecimal.ZERO);
+
+         accountAmountMap.put(BookConstant.T_URBAN+BookConstant.BCCYAMT, BigDecimal.ZERO);
+         accountAmountMap.put(BookConstant.PI_URBAN+BookConstant.BCCYAMT, BigDecimal.ZERO);
+         }**/
         /**MODIFY BY YANYA ON 20190917 附加税类型_城建税去除为0的处理  END**/
         if (DictCodeList.附加税类型_教育税.getValue().equals(taxPType) && taxBalanceSumMap.get(DictCodeList.附加税类型_教育税.getValue()) != null) {
             // key
             accountAmountMap.put(BookConstant.T_EDU, taxBalanceSumMap.get(DictCodeList.附加税类型_教育税.getValue()).getTaxAmt().negate());
             accountAmountMap.put(BookConstant.PI_EDU, taxBalanceSumMap.get(DictCodeList.附加税类型_教育税.getValue()).getTaxAmt().negate());
-            
-            
+
+
             accountAmountMap.put(BookConstant.T_EDU+BookConstant.BCCYAMT, taxBalanceSumMap.get(DictCodeList.附加税类型_教育税.getValue()).getTaxAmt().negate());
             accountAmountMap.put(BookConstant.PI_EDU+BookConstant.BCCYAMT, taxBalanceSumMap.get(DictCodeList.附加税类型_教育税.getValue()).getTaxAmt().negate());
         }
         /**MODIFY BY YANYA ON 20190917 附加税类型_教育税去除为0的处理  START
-        else {
-            // key
-            accountAmountMap.put(BookConstant.T_EDU, BigDecimal.ZERO);
-            accountAmountMap.put(BookConstant.PI_EDU, BigDecimal.ZERO);
-            
-            accountAmountMap.put(BookConstant.T_EDU+BookConstant.BCCYAMT, BigDecimal.ZERO);
-            accountAmountMap.put(BookConstant.PI_EDU+BookConstant.BCCYAMT, BigDecimal.ZERO);
-        }**/
+         else {
+         // key
+         accountAmountMap.put(BookConstant.T_EDU, BigDecimal.ZERO);
+         accountAmountMap.put(BookConstant.PI_EDU, BigDecimal.ZERO);
+
+         accountAmountMap.put(BookConstant.T_EDU+BookConstant.BCCYAMT, BigDecimal.ZERO);
+         accountAmountMap.put(BookConstant.PI_EDU+BookConstant.BCCYAMT, BigDecimal.ZERO);
+         }**/
         /**MODIFY BY YANYA ON 20190917 附加税类型_教育税去除为0的处理  END**/
         if (DictCodeList.附加税类型_地方教育税.getValue().equals(taxPType) && taxBalanceSumMap.get(DictCodeList.附加税类型_地方教育税.getValue()) != null) {
             // key
             accountAmountMap.put(BookConstant.T_LEDU, taxBalanceSumMap.get(DictCodeList.附加税类型_地方教育税.getValue()).getTaxAmt().negate());
             accountAmountMap.put(BookConstant.PI_LEDU, taxBalanceSumMap.get(DictCodeList.附加税类型_地方教育税.getValue()).getTaxAmt().negate());
-            
+
             accountAmountMap.put(BookConstant.T_LEDU+BookConstant.BCCYAMT, taxBalanceSumMap.get(DictCodeList.附加税类型_地方教育税.getValue()).getTaxAmt().negate());
             accountAmountMap.put(BookConstant.PI_LEDU+BookConstant.BCCYAMT, taxBalanceSumMap.get(DictCodeList.附加税类型_地方教育税.getValue()).getTaxAmt().negate());
         }
         /**MODIFY BY YANYA ON 20190917 附加税类型_地方教育税去除为0的处理  START
-        else {
-            accountAmountMap.put(BookConstant.T_LEDU, BigDecimal.ZERO);
-            accountAmountMap.put(BookConstant.PI_LEDU, BigDecimal.ZERO);
-            
-            accountAmountMap.put(BookConstant.T_LEDU+BookConstant.BCCYAMT, BigDecimal.ZERO);
-            accountAmountMap.put(BookConstant.PI_LEDU+BookConstant.BCCYAMT, BigDecimal.ZERO);
-        }**/
+         else {
+         accountAmountMap.put(BookConstant.T_LEDU, BigDecimal.ZERO);
+         accountAmountMap.put(BookConstant.PI_LEDU, BigDecimal.ZERO);
+
+         accountAmountMap.put(BookConstant.T_LEDU+BookConstant.BCCYAMT, BigDecimal.ZERO);
+         accountAmountMap.put(BookConstant.PI_LEDU+BookConstant.BCCYAMT, BigDecimal.ZERO);
+         }**/
         /**MODIFY BY YANYA ON 20190917 附加税类型_地方教育税去除为0的处理  END**/
         /**MODIFY BY YANYA ON 20190917 水利基金税  start **/
         if (DictCodeList.附加税类型_水利基金税.getValue().equals(taxPType) && taxBalanceSumMap.get(DictCodeList.附加税类型_水利基金税.getValue()) != null) {
             accountAmountMap.put(BookConstant.T_WATER, taxBalanceSumMap.get(DictCodeList.附加税类型_水利基金税.getValue()).getTaxAmt().negate());
             accountAmountMap.put(BookConstant.PI_WATER, taxBalanceSumMap.get(DictCodeList.附加税类型_水利基金税.getValue()).getTaxAmt().negate());
-            
+
             accountAmountMap.put(BookConstant.T_WATER+BookConstant.BCCYAMT, taxBalanceSumMap.get(DictCodeList.附加税类型_水利基金税.getValue()).getTaxAmt().negate());
             accountAmountMap.put(BookConstant.PI_WATER+BookConstant.BCCYAMT, taxBalanceSumMap.get(DictCodeList.附加税类型_水利基金税.getValue()).getTaxAmt().negate());
         }

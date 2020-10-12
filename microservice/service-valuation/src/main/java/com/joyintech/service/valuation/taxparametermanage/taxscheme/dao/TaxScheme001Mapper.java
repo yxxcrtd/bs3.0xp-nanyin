@@ -49,6 +49,14 @@ public interface TaxScheme001Mapper {
     List<TaxScheme001Dto> selectAdtTax(Map<String, Object> parameters);
 
     /**
+     * 二级法人  模式    获取   附加税则表
+     * @param parameters
+     * @return
+     */
+    List<TaxScheme001Dto> findAdtTaxEJFR(Map<String, Object> parameters);
+
+
+    /**
      * 获取资产应税表
      * @param pageParam
      * @return

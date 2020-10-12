@@ -1217,6 +1217,19 @@
 		  and IS_CANCEL = 'Y'
     </select>
 
+    <select id="getReverseTradeDtoInvAim" resultType="java.lang.String">
+        SELECT INV_AIM
+        FROM TRD_PRODUCT_DEAL TPD2
+        WHERE R_TRADE_ID IN (
+        SELECT TPD1.TRADE_ID
+        FROM TRD_PRODUCT_DEAL TPD1
+        INNER JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TFPDT1
+        ON TPD1.TOTLE_TRADE_ID = TFPDT1.TOTLE_TRADE_ID
+        WHERE TFPDT1.TOTLE_TRADE_ID = #{tradeId}
+        )
+        AND ROWNUM = 1
+    </select>
+
     <select id="selectTradeT02" resultType="java.lang.Integer">
             with tradeT01 as(
             select * from

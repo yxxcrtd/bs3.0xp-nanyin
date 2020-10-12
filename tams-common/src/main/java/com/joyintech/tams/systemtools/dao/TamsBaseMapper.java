@@ -96,4 +96,7 @@ public interface TamsBaseMapper {
     List<String> getParentInstitution(@Param("institutionCode") String institutionCode);
 
     String getYHGeneralBankCode();
+
+    String getCreateInstByID(@Param("businessId") String businessId,@Param("dataType") String dataType);
+
 }
