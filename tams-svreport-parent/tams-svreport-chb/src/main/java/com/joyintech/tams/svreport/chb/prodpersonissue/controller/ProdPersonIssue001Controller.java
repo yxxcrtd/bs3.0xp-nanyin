@@ -113,8 +113,8 @@ public class ProdPersonIssue001Controller extends BaseController {
 	 		  File outFile = prodPersonIssue001Service.makeFile(
 	 	             "/com/joyintech/tams/svreport/chb/prodpersonissue/conf/export_conf.xml", dataList);
 	 	         return ExportUtil.export(
-	 	             this.getMessage(this.getPageId()) + GlobalConstant.OPEN_PARENTHESIS
-	 	                                  + DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS
+	 	             this.getMessage("产品发行登记") + GlobalConstant.OPEN_PARENTHESIS
+	 	                                  + DateUtil.format(DateUtil.parse(DateUtil.getSysDate())) + GlobalConstant.CLOSE_PARENTHESIS
 	 	                                  + GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
 	 	             outFile, true);
 	 	         
