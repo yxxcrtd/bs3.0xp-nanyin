@@ -117,6 +117,7 @@
         var 平安业务类型_计划类资产货币型_赎回到账 = /*[[${PA_BUSINESS_TYPE73}]]*/'';
         var 计划类资产货币型_申购申请 = /*[[${PA_BUSINESS_TYPE97}]]*/'';
         var 逆回购到期 = /*[[${PA_BUSINESS_TYPE51}]]*/'';
+        var 正回购到期 =  /*[[${PA_BUSINESS_TYPE52}]]*/'';
         var 平安业务类型_通道费用支付 = /*[[${PA_BUSINESS_TYPE118}]]*/'';
 
         var 轧差指令查看URL =  /*[[@{/invest/settle/netting/NettingManagement002/init}]]*/'';
@@ -335,6 +336,9 @@
                 url = 买断式回购存续期URL;
             }
             else if (paBussType == 逆回购到期) {
+                url = 回购存续期URL;
+            }
+            else if (paBussType == 正回购到期) {
                 url = 回购存续期URL;
             }
             else if (paBussType == 平安业务类型_通道费用支付) {

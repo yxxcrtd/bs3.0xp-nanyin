@@ -76,7 +76,7 @@ public class TrdLendDuration002Controller extends BaseController {
         Map<String, Object> map = RequestUtil.getPageParam();
         TrdLendDuration001Dto entity = null;
         String workflowId = (String)map.get(GlobalConstant.WORKFLOW_ID);
-        if (StringUtil.isNotEmpty(workflowId)) {
+        if (StringUtil.isNotEmpty(workflowId)&&(!WorkFlowUtil.isNotFromToDoList())) {
             entity = trdLendDuration001Service.getBussinessEntityByWorkflowId(workflowId);
         }
         else {
