@@ -157,4 +157,18 @@
 		WHERE
 			SEQ_NO = #{workFlowId,jdbcType=VARCHAR}
 	</update>
+
+	<select id="getUniqueAcctNoPayNo" resultType="java.lang.Integer">
+		select
+		count(1)
+		from STL_CAPACCT_INFO
+		<where>
+			<if test="busiAcctNo != null and busiAcctNo != ''">
+				AND	BUSI_ACCT_NO = #{busiAcctNo,jdbcType=VARCHAR}
+			</if>
+			<if test="largePayno != null and largePayno != ''">
+				AND	LARGE_PAYNO = #{largePayno,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
 </mapper>

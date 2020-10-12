@@ -152,4 +152,10 @@ public class MstCaptialAccountController {
     public int updateTitle(@RequestBody Map<String, Object> map){
         return mstCaptialAccountService.updateTitle(map);
     }
+
+    @PostMapping("/getUniqueAcctNoPayNo")
+    public int getUniqueAcctNoPayNo(@RequestBody Map<String, Object> map){
+        return mstCaptialAccountService.getUniqueAcctNoPayNo(map);
+    }
+
 }

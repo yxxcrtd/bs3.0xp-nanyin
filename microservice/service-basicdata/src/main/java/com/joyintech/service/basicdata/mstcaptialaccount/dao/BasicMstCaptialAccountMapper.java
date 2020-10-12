@@ -118,5 +118,7 @@ public interface BasicMstCaptialAccountMapper {
     List<MstCaptialAccountDto> checkAllCodeIsUse(List<MstCaptialAccountDto> item);
 
     int updateTitle(Map<String, Object> map);
+
+    int getUniqueAcctNoPayNo(Map<String, Object> map);
     
 }
