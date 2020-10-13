@@ -446,6 +446,9 @@ $(function() {
                     $.each(Joyin.curfromData['FinBondTargetAsset002'],function(id, value){
                         resetForm(id, value.odata, '');
                     });
+                    
+                    $('#repAssetType').val(result.data.repAssetType).trigger('change');
+
                     $.each(result.data, function(id, value) {
                         setData(id, value, '');
                     });
@@ -455,7 +458,7 @@ $(function() {
                     		setData(id, value, '');
                     	}
                     });
-                    $('#repAssetType').val(result.data.repAssetType).trigger('change');
+
                     if(result.data.baseFinProductBaseInfoList[0].finProductAdd){
                     	// 是否次级债
 	                    var isSecBond = result.data.baseFinProductBaseInfoList[0].finProductAdd.isSecBond;
