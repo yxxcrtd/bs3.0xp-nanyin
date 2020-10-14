@@ -10,9 +10,15 @@
  
 package com.joyintech.tams.invest.asset.bond.controller;
 
+import com.joyintech.framework.ajax.JoyinMessage;
+import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +65,9 @@ public class FinBondTargetAsset001Controller extends BaseController{
    
     @Autowired
     private FinBondTargetAssetService finBondTargetAssetService;
-    
+
+    @Autowired
+    private CommonBusinessService commonBusinessService;
     /**
      * 初始化数据字典下拉框
      */
@@ -117,7 +125,41 @@ public class FinBondTargetAsset001Controller extends BaseController{
         ValidateGroupDelete.class}) FinBondTargetAssetDto dto, BindingResult result) {
         return commonCheck(result, dto.getOperateType());
     }
-    
+
+
+    @ResponseBody
+    @RequestMapping("editCheck")
+    public AjaxResult editCheck(){
+        Map<String,Object> param = RequestUtil.getPageParam();
+        //判断是否存在交易
+        List<JoyinMessage> joyinMessages = new ArrayList<>();
+        List<ValidMessage> errorList = new ArrayList<ValidMessage>();
+        //区分含权债债券标的；含权债债券标的做完含权交易硬控不可改标的信息 add by yujinfa start
+        String isRightStr = (String) param.get("isRightStr");
+        AjaxResult wr = new AjaxResult();
+        if(null != commonBusinessService){
+            if(commonBusinessService.isTransInAsset((String)param.get("finprodId"))>0&&(DictCodeList.是否_否.getCodeName().equals(isRightStr))){
+                JoyinMessage ms = new JoyinMessage(getMessage("FIN_ASSET_W_0002"),
+                        MessageType.确认消息);
+                joyinMessages.add(ms);
+                wr.setJoyinMessages(joyinMessages);
+                return wr;
+            }
+            else if(commonBusinessService.isTransInAsset((String)param.get("finprodId"))>0&&(DictCodeList.是否_是.getCodeName().equals(isRightStr))){
+                errorList.add(new ValidMessage(getMessage("含权债已存在行权交易，不允许修改资产信息!")));
+                wr.setErrorList(errorList);
+                return wr;
+            }
+            else{
+                return wr;
+            }
+        }
+        else{
+                return wr;
+        }
+        //区分含权债债券标的；含权债债券标的做完含权交易硬控不可改标的信息 add by yujinfa end
+    }
+
     
     /**
      * 删除

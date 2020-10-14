@@ -116,7 +116,7 @@
         data.pageModel = PAGE_MODEL_EDIT;
         var object = {selectedItem: [data]};//请求参数
         Joyin.ajaxJson(basePath + 'invest/asset/bond/FinBondTargetAsset001/check', object, function(result) {//请求路径，请求参数回调函数
-            Joyin.ajax(basePath + 'invest/asset/common/editCheck', data, function(editResult){
+            Joyin.ajax(basePath + 'invest/asset/bond/FinBondTargetAsset001/editCheck', data, function(editResult){
                 Joyin.dialog(JoyinUtil.getLabel("FinBondTargetAsset002.editTitle"),
                         basePath + "invest/asset/bond/FinBondTargetAsset002/init",//打开新界面
                         "98%", "98%", {pageModel:PAGE_MODEL_EDIT,//请求的page_model
