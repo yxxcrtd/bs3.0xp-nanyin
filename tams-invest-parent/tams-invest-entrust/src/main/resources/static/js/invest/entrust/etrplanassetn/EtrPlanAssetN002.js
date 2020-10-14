@@ -115,13 +115,18 @@
         });
     }
     var init = function(){
-        $('#ps').change();
+//      计划类净值型指令，交易方向为卖出，保存后在待办事项中查看，委托金额可输入不置灰，与新建界面不一致 add by yujinfa start
+        var ps= $('#ps').val();
 //        $('#assetType2').change();
         if($('#finprodId').val() != null && $('#finprodId').val() != ''){
         $('#finprodId').change();
         }
-        $('#entrustAmt').change();
-        $('#entrustNum').change();
+        $('#ps').change();
+        if(!(pageModel === PAGE_MODEL_EDIT&&(ps == T06 || ps == T02))){
+                $('#entrustAmt').change();
+                $('#entrustNum').change();
+        }
+//      计划类净值型指令，交易方向为卖出，保存后在待办事项中查看，委托金额可输入不置灰，与新建界面不一致 add by yujinfa end
     }
     /**
      * 画星星
