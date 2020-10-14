@@ -1,5 +1,6 @@
 $(function() {
-    
+
+    var process;
     /**
      * 获取查询参数
      */
@@ -55,8 +56,8 @@ $(function() {
             $('#RskValTableImport002_btn').show();
         }
     });
-    
-    
+
+
     function saveOrSubmit(operateType) {
         if(table!=null && table!=''){
             var selArr = $("#valTable").data('joyintable').table.table.config.data;
@@ -77,60 +78,76 @@ $(function() {
             }
         })
     };
-    
-    /**
+
+
+/**
      * 最终提交
      */
     var finalSubmit = function(object){
         var processIndex = showProcess($('#ptlId').val());
+        startProgressBar(process, 'JOY_process',20);
+        startProgressBar(process, 'JOY_process',50);
+        startProgressBar(process, 'JOY_process',90);
+        startProgressBar(process, 'JOY_process',100);
         Joyin.ajaxJson(basePath + 'invest/risk/valtblimport/RskValTableImport002/save',
                 object,function(result){
-                    setTimeout(function() {
-                    layer.close(processIndex);
-                    //点击保存后关闭窗口
-                    var index = parent.layer.getFrameIndex(window.name);
-                    parent.layer.close(index);
-                }, 1000);
+//                    setTimeout(function() {
+//                        layer.close(processIndex);
+//                        //点击保存后关闭窗口
+//                        var index = parent.layer.getFrameIndex(window.name);
+//                        parent.layer.close(index);
+//                    }, 1000);
+
+                        layer.close(processIndex);
+                        //点击保存后关闭窗口
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+
                 });
     }
 
     var  showProcess = function(barId){
-        // 弹框进度条
-        var processIndex = layer.open({
-            type: 1
-            ,title: false //不显示标题栏
-            ,closeBtn: false
-            ,area: '300px;'
-            ,shade: 0.6
-            ,id: 'JOY_process' //设定一个id，防止重复弹出
-            ,moveType: 1 //拖拽模式，0或者1
-            ,content: '<div class="layui-progress layui-progress-big" lay-showpercent="true" lay-filter="' + barId + '"><div class="layui-progress-bar" lay-percent="0%">0%</div></div>'
-            ,success: function(layero){
-                layero.css('background', 'transparent');
-                // 开始进度条
-                startProgressBar(layero, barId, function() {
-                    //layer.close(processIndex);
-                });
-            }
-        });
-        return processIndex;
-    }
+            // 弹框进度条
+            var processIndex = layer.open({
+                type: 1
+                ,title: false //不显示标题栏
+                ,closeBtn: false
+                ,area: '300px;'
+                ,shade: 0.6
+                ,id: 'JOY_process' //设定一个id，防止重复弹出
+                ,moveType: 1 //拖拽模式，0或者1
+                ,content: '<div class="layui-progress layui-progress-big" lay-showpercent="true" lay-filter="JOY_process"><div class="layui-progress-bar" lay-percent="0%">0%</div></div>'
+                ,success: function(layero){
+                process = layero;
+                    layero.css('background', 'transparent');
+                    // 开始进度条
+                    startProgressBar(layero, 'JOY_process', 0,function() {
+                        //layer.close(processIndex);
+                    });
+                }
+            });
+            return processIndex;
+        }
 
     /**
      * 进度条开始
      * @callback 进度完成后的回调
      */
-    function startProgressBar($progerssBar, barId, callback) {
+    function startProgressBar($progerssBar, barId,n, callback) {
         if($progerssBar && $progerssBar.length > 0) {
-            var n = 0, timer = setInterval(function(){
-                n = n + Math.random()*10|0;
-                if(n>100){
-                    n = 100;
-                    clearInterval(timer);
-                }
+//            var n = 0;
+//            var timer = setInterval(function(){
+//                n = n + Math.random()*10|0;
+//                if(n>100){
+//                    n = 100;
+//                    clearInterval(timer);
+//                }
+//                layui.element.progress(barId, n+'%');
+//                $progerssBar.find('.layui-progress-bar').text(n+'%');
+//            }, 300+Math.random()*1000);
+
                 layui.element.progress(barId, n+'%');
                 $progerssBar.find('.layui-progress-bar').text(n+'%');
-            }, 300+Math.random()*1000);
         }
     }
 
