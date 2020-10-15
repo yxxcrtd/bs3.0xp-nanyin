@@ -215,7 +215,7 @@ public class ExpReturnTaTradeBookProcessorService {
                 BigDecimal varYflr = BigDecimal.ZERO;
                 // 设置账务引擎参数
                 ad.setTableId(DictCodeListTableId.会计场景代码_产品_预期收益型_兑付客户收益.getValue());
-                if(!DictCodeList.是否_是.getValue().equals(dealNow.getIsClean())||(DictCodeList.交易方向_赎回收益确认.getValue().equals(dealNow.getPs())
+                if(DictCodeList.是否_否.getValue().equals(dealNow.getIsClean())||(DictCodeList.交易方向_赎回收益确认.getValue().equals(dealNow.getPs())
                     && !ArithmeticUtil.equals(varSszb, dealNow.getShareAmt()))){
                     varYflr=dealNow.getTradeAmt();
                 }else{
