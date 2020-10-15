@@ -949,4 +949,15 @@ public class FinFundTargetDto extends FinProduct implements ProcessEntity {
     public String getTrmFundTypeStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.交易所基金类型, this.getTrmFundType());
     }
+
+    private String oldFinprodMarketId;
+
+    public String getOldFinprodMarketId() {
+        return oldFinprodMarketId;
+    }
+
+    public void setOldFinprodMarketId(String oldFinprodMarketId) {
+        this.oldFinprodMarketId = oldFinprodMarketId;
+    }
+
 }
