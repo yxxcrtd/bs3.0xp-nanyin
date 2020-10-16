@@ -4,10 +4,11 @@
 	<parent>
 		<groupId>com.joyintech</groupId>
 		<artifactId>tams-parent</artifactId>
-		<version>0.0.1</version>
+		<version>0.0.3</version>
 	</parent>
 	<artifactId>service-invest-interf</artifactId>
 	<name>service-invest-interf</name>
+	<version>0.1.1</version>
 	<description>投管接口服务</description>
 
 
@@ -74,17 +75,17 @@
                </executions>
             </plugin>
 			
-            <plugin>
+            <!-- <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <!--for war-->
-                  <!-- <mainClass>org.springframework.boot.loader.WarLauncher</mainClass>-->
-                  <!-- <addResources>true</addResources>-->
-                  <!-- <classifier>exec</classifier> -->
-                  <!-- <fork>true</fork> --><!-- 如果没有该项配置，devtools不会起作用，即应用不会restart -->
+                    for war
+                  <mainClass>org.springframework.boot.loader.WarLauncher</mainClass>
+                  <addResources>true</addResources>
+                  <classifier>exec</classifier>
+                  <fork>true</fork>如果没有该项配置，devtools不会起作用，即应用不会restart
                 </configuration>
-            </plugin>
+            </plugin> -->
         </plugins>
     </build>
 </project>

@@ -37,7 +37,7 @@ import java.util.Map;
  * @see AssetCommonController
  * @since 1.0
  */
-@RestController
+@RestController("backAssetCommonController")
 @RequestMapping("/AssetCommon")
 public class AssetCommonController {
 
