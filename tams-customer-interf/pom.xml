@@ -5,9 +5,8 @@
 	<parent>
 		<groupId>com.joyintech</groupId>
 		<artifactId>tams-parent</artifactId>
-		<version>0.0.1</version>
+		<version>0.0.3</version>
 	</parent>
-	<groupId>com.joyintech</groupId>
 	<artifactId>tams-customer-interf</artifactId>
 	<version>1.0</version>
 	<name>tams-customer-interf</name>

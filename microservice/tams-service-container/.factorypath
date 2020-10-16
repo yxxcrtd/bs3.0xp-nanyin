@@ -1,16 +1,11 @@
 <factorypath>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/oracle/ojdbc6/11.2.0.1.0/ojdbc6-11.2.0.1.0.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/tams-invest-common/1.0.0/tams-invest-common-1.0.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/joda-time/joda-time/2.9.9/joda-time-2.9.9.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/joyintech-tools/0.0.1/joyintech-tools-0.0.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/apache/activemq/activemq-pool/5.14.5/activemq-pool-5.14.5.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/apache/geronimo/specs/geronimo-jta_1.0.1B_spec/1.0.1/geronimo-jta_1.0.1B_spec-1.0.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/google/code/gson/gson/2.8.2/gson-2.8.2.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/deepoove/poi-tl/1.6.0-beta1/poi-tl-1.6.0-beta1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/framework-redis/0.0.1/framework-redis-0.0.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/boot/spring-boot-actuator/1.5.9.RELEASE/spring-boot-actuator-1.5.9.RELEASE.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/tams-valuation-api/2.0.0/tams-valuation-api-2.0.0.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/jixu/JixuUtil/0.0.1/JixuUtil-0.0.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/quartz-scheduler/quartz-jobs/2.3.0/quartz-jobs-2.3.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/javax/persistence/javax.persistence-api/2.2/javax.persistence-api-2.2.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar" enabled="true" runInBatchMode="false"/>
@@ -52,14 +47,10 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/commons-logging/commons-logging/1.2/commons-logging-1.2.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/apache/httpcomponents/httpmime/4.5.3/httpmime-4.5.3.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/commons-fileupload/commons-fileupload/1.2.2/commons-fileupload-1.2.2.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/tams-common/2.0.0/tams-common-2.0.0.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/framework-core/0.0.1/framework-core-0.0.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/framework-security/0.0.1/framework-security-0.0.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/apache/shiro/shiro-spring/1.3.2/shiro-spring-1.3.2.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/apache/shiro/shiro-core/1.3.2/shiro-core-1.3.2.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/apache/shiro/shiro-web/1.3.2/shiro-web-1.3.2.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/auth0/java-jwt/3.2.0/java-jwt-3.2.0.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/org/bouncycastle/bcprov-jdk15on/1.55/bcprov-jdk15on-1.55.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/github/theborakompanioni/thymeleaf-extras-shiro/2.0.0/thymeleaf-extras-shiro-2.0.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/apache/shiro/shiro-ehcache/1.3.2/shiro-ehcache-1.3.2.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/crazycake/shiro-redis/3.2.3/shiro-redis-3.2.3.jar" enabled="true" runInBatchMode="false"/>
@@ -69,15 +60,11 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/org/jasig/cas/client/cas-client-support-saml/3.4.1/cas-client-support-saml-3.4.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/google/guava/guava/18.0/guava-18.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/io/buji/buji-pac4j/3.0.0/buji-pac4j-3.0.0.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/framework-data/0.0.1/framework-data-0.0.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/apache/commons/commons-dbcp2/2.1.1/commons-dbcp2-2.1.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/db2jcc4/1.0/db2jcc4-1.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/mysql/mysql-connector-java/5.1.44/mysql-connector-java-5.1.44.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/framework-web/0.0.1/framework-web-0.0.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/boot/spring-boot-starter-websocket/1.5.9.RELEASE/spring-boot-starter-websocket-1.5.9.RELEASE.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/spring-websocket/4.3.13.RELEASE/spring-websocket-4.3.13.RELEASE.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/component-base/0.0.1/component-base-0.0.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/framework-dtx/0.0.1/framework-dtx-0.0.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/codingapi/txlcn/txlcn-tc/5.0.3.RELEASE/txlcn-tc-5.0.3.RELEASE.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/codingapi/txlcn/txlcn-logger/5.0.3.RELEASE/txlcn-logger-5.0.3.RELEASE.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/codingapi/txlcn/txlcn-common/5.0.3.RELEASE/txlcn-common-5.0.3.RELEASE.jar" enabled="true" runInBatchMode="false"/>
@@ -96,14 +83,11 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/com/esotericsoftware/kryo-shaded/4.0.0/kryo-shaded-4.0.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/esotericsoftware/minlog/1.3.0/minlog-1.3.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/codingapi/txlcn/txlcn-txmsg-netty/5.0.3.RELEASE/txlcn-txmsg-netty-5.0.3.RELEASE.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/service/service-interf/1.0.0/service-interf-1.0.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/boot/spring-boot-starter-tomcat/1.5.9.RELEASE/spring-boot-starter-tomcat-1.5.9.RELEASE.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/apache/tomcat/embed/tomcat-embed-core/8.5.23/tomcat-embed-core-8.5.23.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/apache/tomcat/tomcat-annotations-api/8.5.23/tomcat-annotations-api-8.5.23.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/apache/tomcat/embed/tomcat-embed-el/8.5.23/tomcat-embed-el-8.5.23.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/apache/tomcat/embed/tomcat-embed-websocket/8.5.23/tomcat-embed-websocket-8.5.23.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/framework-log/0.0.1/framework-log-0.0.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/joyintech-workflow/0.0.1/joyintech-workflow-0.0.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/activiti/activiti-spring-boot-starter-basic/5.22.0/activiti-spring-boot-starter-basic-5.22.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/activiti/activiti-engine/5.22.0/activiti-engine-5.22.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/activiti/activiti-bpmn-converter/5.22.0/activiti-bpmn-converter-5.22.0.jar" enabled="true" runInBatchMode="false"/>
@@ -165,14 +149,8 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/net/minidev/json-smart/2.2.1/json-smart-2.2.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/net/minidev/accessors-smart/1.1/accessors-smart-1.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/ow2/asm/asm/5.0.3/asm-5.0.3.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/service-product/2.0.1/service-product-2.0.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/service-asset/2.0.1/service-asset-2.0.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/service-basicdata/2.0.1.3/service-basicdata-2.0.1.3.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/service-chb/3.0.0/service-chb-3.0.0.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/tams-svreport-chbcom/3.0.0/tams-svreport-chbcom-3.0.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/net/sf/jxls/jxls-core/1.0/jxls-core-1.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/apache/commons/commons-jexl/2.1.1/commons-jexl-2.1.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/tams-svreport-common/3.0.0/tams-svreport-common-3.0.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/cglib/cglib/2.2.2/cglib-2.2.2.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/asm/asm/3.3.1/asm-3.3.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/AF/3.1/AF-3.1.jar" enabled="true" runInBatchMode="false"/>
@@ -181,10 +159,6 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/commons-httpclient/3.1/commons-httpclient-3.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/codehaus/jettison/jettison/1.3.7/jettison-1.3.7.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/stax/stax-api/1.0.1/stax-api-1.0.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/service-chb3/3.0.0/service-chb3-3.0.0.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/tams-svreport-chbcom3/3.0.0/tams-svreport-chbcom3-3.0.0.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/tams-svreport/3.0.0/tams-svreport-3.0.0.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/tams-svreport-interf/3.0.0/tams-svreport-interf-3.0.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/bcmail-jdk14/1.45/bcmail-jdk14-1.45.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/cryppkg/1.2/cryppkg-1.2.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/sadk/3.0.0.2/sadk-3.0.0.2.jar" enabled="true" runInBatchMode="false"/>
@@ -198,14 +172,6 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/axis2-transport-local/1.5/axis2-transport-local-1.5.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/neethi/2.0.4/neethi-2.0.4.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/wsdl4j/1.6.2/wsdl4j-1.6.2.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/tams-svreport-chb/3.0.0/tams-svreport-chb-3.0.0.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/tams-svreport-chb3/3.0.0/tams-svreport-chb3-3.0.0.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/tams-svreport-pbc/3.0.0/tams-svreport-pbc-3.0.0.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/service-common/2.0.1/service-common-2.0.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/service-disclosure/2.0.1/service-disclosure-2.0.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/tams-disclosure-busicommon/3.0.0/tams-disclosure-busicommon-3.0.0.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/tams-disclosure-common/3.0.0/tams-disclosure-common-3.0.0.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/tams-disclosure-interf/3.0.0/tams-disclosure-interf-3.0.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/hsqldb/2.4.0/hsqldb-2.4.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/itext/2.1.7/itext-2.1.7.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/jasperreports/6.6.0/jasperreports-6.6.0.jar" enabled="true" runInBatchMode="false"/>
@@ -226,33 +192,15 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/security/spring-security-core/4.2.3.RELEASE/spring-security-core-4.2.3.RELEASE.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/aopalliance/aopalliance/1.0/aopalliance-1.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/security/spring-security-acl/4.2.3.RELEASE/spring-security-acl-4.2.3.RELEASE.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/service-document/2.0.1/service-document-2.0.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/service-entrust/2.0.1/service-entrust-2.0.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/service-invest-interf/0.0.1/service-invest-interf-0.0.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/junit/junit/4.12/junit-4.12.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/boot/spring-boot-test/1.5.9.RELEASE/spring-boot-test-1.5.9.RELEASE.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/spring-test/4.3.13.RELEASE/spring-test-4.3.13.RELEASE.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/service-pbc/3.0.0/service-pbc-3.0.0.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/tams-svreport-pbccom/3.0.0/tams-svreport-pbccom-3.0.0.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/service-period/2.0.1/service-period-2.0.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/component-business/0.0.1/component-business-0.0.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/service-portfolio/2.0.1/service-portfolio-2.0.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/service-report/2.0.1/service-report-2.0.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/service-customer-report/1.0.0/service-customer-report-1.0.0.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/service-risk/2.0.1/service-risk-2.0.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/service-risk-redis/2.0.1/service-risk-redis-2.0.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/service-risk-redis-inf/1.0.0/service-risk-redis-inf-1.0.0.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/service-settle/2.0.1/service-settle-2.0.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/service-svrcom/3.0.0/service-svrcom-3.0.0.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/tams-svreport-busicom/3.0.0/tams-svreport-busicom-3.0.0.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/service-trade/2.0.1/service-trade-2.0.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/service-valuation/2.0.1/service-valuation-2.0.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/tams-valuation-common/2.0.0/tams-valuation-common-2.0.0.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/org/apache/tomcat/tomcat-jdbc/8.5.23/tomcat-jdbc-8.5.23.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/org/apache/tomcat/tomcat-juli/8.5.23/tomcat-juli-8.5.23.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/github/albfernandez/javadbf/1.5.1/javadbf-1.5.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/dc-client/3.2/dc-client-3.2.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/tams-calculation/2.0.5.2.1/tams-calculation-2.0.5.2.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/joyintech/joyintech-system/0.0.1/joyintech-system-0.0.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/jixu/jixu/0.0.1/jixu-0.0.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/net/sf/jasperreports/jasperreports/6.5.0/jasperreports-6.5.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/apache/httpcomponents/fluent-hc/4.2.5/fluent-hc-4.2.5.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/codehaus/groovy/groovy-all/2.4.13/groovy-all-2.4.13.jar" enabled="true" runInBatchMode="false"/>
@@ -305,6 +253,7 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/cloud/spring-cloud-commons/1.3.0.RELEASE/spring-cloud-commons-1.3.0.RELEASE.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/security/spring-security-rsa/1.0.3.RELEASE/spring-security-rsa-1.0.3.RELEASE.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/bouncycastle/bcpkix-jdk15on/1.55/bcpkix-jdk15on-1.55.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/org/bouncycastle/bcprov-jdk15on/1.55/bcprov-jdk15on-1.55.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/boot/spring-boot-starter/1.5.9.RELEASE/spring-boot-starter-1.5.9.RELEASE.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/boot/spring-boot/1.5.9.RELEASE/spring-boot-1.5.9.RELEASE.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/boot/spring-boot-autoconfigure/1.5.9.RELEASE/spring-boot-autoconfigure-1.5.9.RELEASE.jar" enabled="true" runInBatchMode="false"/>
@@ -358,8 +307,6 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/com/github/jsqlparser/jsqlparser/1.3/jsqlparser-1.3.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/mybatis/spring/boot/mybatis-spring-boot-starter/1.3.0/mybatis-spring-boot-starter-1.3.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/boot/spring-boot-starter-jdbc/1.5.9.RELEASE/spring-boot-starter-jdbc-1.5.9.RELEASE.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/org/apache/tomcat/tomcat-jdbc/8.5.23/tomcat-jdbc-8.5.23.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/org/apache/tomcat/tomcat-juli/8.5.23/tomcat-juli-8.5.23.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/spring-jdbc/4.3.13.RELEASE/spring-jdbc-4.3.13.RELEASE.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/mybatis/spring/boot/mybatis-spring-boot-autoconfigure/1.3.0/mybatis-spring-boot-autoconfigure-1.3.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/mybatis/mybatis/3.4.4/mybatis-3.4.4.jar" enabled="true" runInBatchMode="false"/>
