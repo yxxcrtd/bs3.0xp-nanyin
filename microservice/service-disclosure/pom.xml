@@ -8,6 +8,7 @@
 	</parent>
 	<artifactId>service-disclosure</artifactId>
 	<name>service-disclosure</name>
+	<version>2.1.1</version>
 	<packaging>jar</packaging>
 <!-- 	<packaging>war</packaging> -->
 
