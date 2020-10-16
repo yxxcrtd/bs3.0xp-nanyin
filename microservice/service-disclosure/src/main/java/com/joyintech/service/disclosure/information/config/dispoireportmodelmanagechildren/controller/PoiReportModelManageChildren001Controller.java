@@ -20,7 +20,7 @@ import java.util.Map;
  *
  * @author kx
  */
-@RestController
+@RestController("backPoiReportModelManageChildren001Controller")
 @RequestMapping("/PoiReportModelManageChildren001")
 public class PoiReportModelManageChildren001Controller extends BaseController {
 
