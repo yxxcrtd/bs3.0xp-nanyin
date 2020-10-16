@@ -395,9 +395,14 @@
             
         	// modify by wj 20200508  TISHKBS-387 计划类、项目类资产中间还本不能自己调整金额
 
-        	
+
             // 检查生成划款指令参数是否发生变化
-            generateOrders(function () {
+
+            // 检查生成划款指令参数是否发生变化
+            if (isCalcConditionChanged()) {
+                return;
+            }
+           // generateOrders(function () {
                 var object = $.serializeToObject('#informationForm', true);
                 object.operateType = operateType;
                 if(typeof workflowId != 'undefined' && workflowId){
@@ -413,7 +418,7 @@
                         }
                     });
                 });
-            });
+           // });
         }
 
         /**
