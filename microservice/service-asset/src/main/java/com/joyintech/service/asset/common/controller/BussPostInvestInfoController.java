@@ -26,7 +26,7 @@ import com.joyintech.service.asset.common.service.BussPostInvestInfoService;
  * @see BussPostInvestInfoController
  * @since 1.0
  */
-@RestController
+@RestController("backBussPostInvestInfoController")
 @RequestMapping("/BussPostInvestInfo")
 public class BussPostInvestInfoController {
 

@@ -26,7 +26,7 @@ import com.joyintech.service.asset.common.service.BussRepAssetAstBillInfoService
  * @see BussRepAssetAstBillInfoController
  * @since 1.0
  */
-@RestController
+@RestController("backBussRepAssetAstBillInfoController")
 @RequestMapping("/BussRepAssetAstBillInfo")
 public class BussRepAssetAstBillInfoController {
 

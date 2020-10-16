@@ -57,7 +57,7 @@ import java.util.Map;
  * @see FinFundTargetService
  * @since 1.0
  */
-@Service
+@Service("backFinFundTargetService")
 public class FinFundTargetService extends BaseService<FinFundTargetDto> {
     @Autowired
     private FinFundTargetMapper finFundTargetMapper;

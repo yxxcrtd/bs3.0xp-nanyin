@@ -33,7 +33,7 @@ import com.joyintech.service.asset.credit.dto.InterfCreditItemInfoDto;
  * @see FinCreditProjectService
  * @since 1.0
  */
-@Service
+@Service("backFinCreditProjectService")
 public class FinCreditProjectService extends BaseService<InterfCreditItemInfoDto>{
 
     @Autowired

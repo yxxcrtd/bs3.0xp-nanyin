@@ -28,7 +28,7 @@ import com.joyintech.service.asset.common.service.BussReduceShareInfoService;
  * @see BussReduceShareInfoController
  * @since 1.0
  */
-@RestController
+@RestController("backBussReduceShareInfoController")
 @RequestMapping("/BussReduceShareInfo")
 public class BussReduceShareInfoController {
 

@@ -58,7 +58,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @see FinDepositTargetService
  * @since 1.0
  */
-@Service
+@Service("backFinDepositTargetService")
 public class FinDepositTargetService extends BaseService<FinDepositTargetDto>{
    
     // 一体化对应etliu

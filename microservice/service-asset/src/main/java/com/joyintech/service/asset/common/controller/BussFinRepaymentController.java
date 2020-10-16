@@ -27,7 +27,7 @@ import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
  * @see BussFinRepaymentController
  * @since 1.0
  */
-@RestController
+@RestController("backBussFinRepaymentController")
 @RequestMapping("/BussFinRepayment")
 public class BussFinRepaymentController {
 

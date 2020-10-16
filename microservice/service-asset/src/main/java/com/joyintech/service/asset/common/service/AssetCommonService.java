@@ -50,7 +50,7 @@ import java.util.*;
  * @see AssetCommonService
  * @since 1.0
  */
-@Service
+@Service("backAssetCommonService")
 public class AssetCommonService extends BaseService{
   //授权额度管理
     @Autowired(required=false)

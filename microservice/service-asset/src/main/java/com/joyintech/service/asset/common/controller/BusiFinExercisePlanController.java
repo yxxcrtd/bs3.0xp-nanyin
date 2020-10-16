@@ -28,7 +28,7 @@ import com.joyintech.service.asset.common.service.BusiFinExercisePlanService;
  * @see BusiFinExercisePlanController
  * @since 1.0
  */
-@RestController
+@RestController("backBusiFinExercisePlanController")
 @RequestMapping("/BusiFinExercisePlan")
 public class BusiFinExercisePlanController {
     

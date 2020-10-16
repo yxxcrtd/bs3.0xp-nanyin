@@ -33,7 +33,7 @@ import com.joyintech.tams.common.base.entity.FinProductRecomment;
  * @see BussFinRecommentController
  * @since 1.0
  */
-@RestController
+@RestController("backBussFinRecommentController")
 @RequestMapping("/BussFinRecomment")
 public class BussFinRecommentController {
 

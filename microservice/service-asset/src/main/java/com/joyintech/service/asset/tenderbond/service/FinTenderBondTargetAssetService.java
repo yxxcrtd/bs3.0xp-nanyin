@@ -58,7 +58,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
  * @see FinTenderBondTargetAssetService
  * @since 1.0
  */
-@Service
+@Service("backFinTenderBondTargetAssetService")
 public class FinTenderBondTargetAssetService extends BaseService<FinTenderBondTargetAssetDto>{
     /**
      * 基础--标的类金融产品

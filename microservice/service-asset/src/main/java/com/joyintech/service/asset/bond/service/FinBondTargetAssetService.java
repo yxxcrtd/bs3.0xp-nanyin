@@ -64,7 +64,7 @@ import com.joyintech.tams.invest.common.dto.MstFileOutputParameter;
  * @see FinBondTargetAssetService
  * @since 1.0
  */
-@Service
+@Service("backFinBondTargetAssetService")
 public class FinBondTargetAssetService extends BaseService<FinBondTargetAssetDto>{
     /**
      * 基础--标的类金融产品

@@ -34,7 +34,7 @@ import com.joyintech.service.asset.common.dto.FinPayPlanDto;
  * @see FinPayPlanService
  * @since 1.0
  */
-@Service
+@Service("backFinPayPlanService")
 public class FinPayPlanService {
 
     @Autowired

@@ -26,7 +26,7 @@ import com.joyintech.service.asset.common.service.FinInterestFactorService;
  * @see FinInterestFactorController
  * @since 1.0
  */
-@RestController
+@RestController("backFinInterestFactorController")
 @RequestMapping("/FinInterestFactor")
 public class FinInterestFactorController {
         

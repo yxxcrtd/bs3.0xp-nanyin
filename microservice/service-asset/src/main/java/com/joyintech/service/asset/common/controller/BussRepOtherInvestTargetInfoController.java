@@ -26,7 +26,7 @@ import com.joyintech.service.asset.common.service.BussRepOtherInvestTargetInfoSe
  * @see BussRepOtherInvestTargetInfoController
  * @since 1.0
  */
-@RestController
+@RestController("backBussRepOtherInvestTargetInfoController")
 @RequestMapping("/BussRepOtherInvestTargetInfo")
 public class BussRepOtherInvestTargetInfoController {
 

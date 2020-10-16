@@ -26,7 +26,7 @@ import com.joyintech.service.asset.common.service.BussRepDepositInfoService;
  * @see BussRepDepositInfoController
  * @since 1.0
  */
-@RestController
+@RestController("backBussRepDepositInfoController")
 @RequestMapping("/BussRepDepositInfo")
 public class BussRepDepositInfoController {
 

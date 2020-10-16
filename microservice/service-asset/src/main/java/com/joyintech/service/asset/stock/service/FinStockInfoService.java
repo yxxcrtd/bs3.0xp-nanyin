@@ -54,7 +54,7 @@ import com.joyintech.tams.invest.common.valuationinterf.dto.InterBorrowBaseInfoI
  * @see FinStockInfoService
  * @since 1.0
  */
-@Service
+@Service("backFinStockInfoService")
 public class FinStockInfoService extends BaseService<FinStockInfoDto>{
    
     // 一体化对应etliu

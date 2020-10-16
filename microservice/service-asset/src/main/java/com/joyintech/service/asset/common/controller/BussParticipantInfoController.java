@@ -31,7 +31,7 @@ import com.joyintech.service.asset.common.service.BussParticipantInfoService;
  * @see BussParticipantInfoController
  * @since 1.0
  */
-@RestController
+@RestController("backBussParticipantInfoController")
 @RequestMapping("/BussParticipantInfo")
 public class BussParticipantInfoController {
 

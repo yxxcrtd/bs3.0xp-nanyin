@@ -26,7 +26,7 @@ import com.joyintech.service.asset.common.service.BussFinBondRepInfoService;
  * @see BussFinBondRepInfoController
  * @since 1.0
  */
-@RestController
+@RestController("backBussFinBondRepInfoController")
 @RequestMapping("/BussFinBondRepInfo")
 public class BussFinBondRepInfoController {
 

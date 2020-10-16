@@ -26,7 +26,7 @@ import com.joyintech.service.asset.common.service.BussRepEquityInfoService;
  * @see BussRepEquityInfoController
  * @since 1.0
  */
-@RestController
+@RestController("backBussRepEquityInfoController")
 @RequestMapping("/BussRepEquityInfo")
 public class BussRepEquityInfoController {
 
