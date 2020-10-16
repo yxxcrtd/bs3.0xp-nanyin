@@ -63,7 +63,7 @@ import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
  * @see EtrLendSpecInfoService
  * @since 1.0
  */
-@Service
+@Service("backEtrLendSpecInfoService")
 public class EtrLendSpecInfoService extends BaseService<EtrLendSpecInfoDto> {
 
     /**

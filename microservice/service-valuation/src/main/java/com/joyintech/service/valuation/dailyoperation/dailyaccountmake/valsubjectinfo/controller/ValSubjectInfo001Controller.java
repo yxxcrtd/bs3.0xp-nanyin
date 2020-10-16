@@ -31,7 +31,7 @@ import com.joyintech.service.valuation.dailyoperation.dailyaccountmake.valsubjec
  * @see ValSubjectInfo001Controller
  * @since 1.0
  */
-@RestController
+@RestController("backValSubjectInfo001Controller")
 @RequestMapping("/ValSubjectInfo001")
 public class ValSubjectInfo001Controller {
 

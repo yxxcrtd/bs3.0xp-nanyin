@@ -31,7 +31,7 @@ import com.joyintech.service.risk.stresstestmanage.flowrisksstresstestview.servi
  * @see FlowRiskStressTestView003Controller
  * @since 1.0
  */
-@RestController
+@RestController("backFlowRiskStressTestView003Controller")
 @RequestMapping("/FlowRiskStressTestView003")
 public class FlowRiskStressTestView003Controller {
     

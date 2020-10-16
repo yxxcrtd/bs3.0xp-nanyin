@@ -43,6 +43,12 @@
           <groupId>com.joyintech</groupId>
           <artifactId>framework-data</artifactId>
         </dependency>
+        
+        <dependency>
+	        <groupId>org.apache.tomcat</groupId>
+		    <artifactId>tomcat-jdbc</artifactId>
+		    <version>8.5.23</version>
+        </dependency>
 	</dependencies>
 	<properties>
         <start-class>com.joyintech.service.risk.RiskApplication</start-class>

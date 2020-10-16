@@ -35,7 +35,7 @@ import com.joyintech.tams.common.base.entity.ProductBaseInfo;
  * @see ProdDevelopManageService
  * @since 1.0
  */
-@Service
+@Service("backProdDevelopManageService")
 public class ProdDevelopManageService extends BaseService<ProdDevelopManageDto> {
 
     /**

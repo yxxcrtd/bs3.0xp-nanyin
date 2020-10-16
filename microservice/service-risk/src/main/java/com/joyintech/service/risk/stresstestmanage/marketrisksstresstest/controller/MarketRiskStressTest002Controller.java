@@ -42,7 +42,7 @@ import com.joyintech.service.risk.stresstestmanage.riskfactor.dto.RiskFactor003D
  * @see MarketRiskStressTest002Controller
  * @since 1.0
  */
-@RestController
+@RestController("backMarketRiskStressTest002Controller")
 @RequestMapping("/MarketRiskStressTest002")
 public class MarketRiskStressTest002Controller {
     

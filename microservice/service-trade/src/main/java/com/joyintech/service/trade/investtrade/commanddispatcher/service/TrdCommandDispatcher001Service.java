@@ -56,7 +56,7 @@ import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInves
  * @see TrdCommandDispatcher001Service
  * @since 1.0
  */
-@Service
+@Service("backTrdCommandDispatcher001Service")
 public class TrdCommandDispatcher001Service extends BaseService<TrdCommandDispatcher001Dto> {
 
     /**

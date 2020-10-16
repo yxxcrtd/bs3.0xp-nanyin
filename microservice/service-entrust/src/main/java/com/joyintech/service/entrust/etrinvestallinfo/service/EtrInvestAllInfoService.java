@@ -39,7 +39,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
  * @see EtrInvestAllInfoService
  * @since 1.0
  */
-@Service
+@Service("backEtrInvestAllInfoService")
 public class EtrInvestAllInfoService extends BaseService<EtrInvestAllInfoDto> {
     /**
      * 自定义mapper

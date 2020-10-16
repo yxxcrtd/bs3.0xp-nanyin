@@ -36,7 +36,7 @@ import com.joyintech.service.risk.creditmanagement.ceorg.service.CeOrg002Service
  * @see CeOrg002Controller
  * @since 1.0
  */
-@RestController
+@RestController("backCeOrg002Controller")
 @RequestMapping("/CeOrg002")
 public class CeOrg002Controller {
 

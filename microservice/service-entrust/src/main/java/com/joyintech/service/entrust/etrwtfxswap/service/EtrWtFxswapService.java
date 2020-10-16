@@ -55,7 +55,7 @@ import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
  * @see EtrWtFxswapService
  * @since 1.0
  */
-@Service
+@Service("backEtrWtFxswapService")
 public class EtrWtFxswapService extends BaseService<EtrWtFxswapDto>{
     /**
      * 投资委托基础组件

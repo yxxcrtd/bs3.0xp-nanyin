@@ -32,7 +32,7 @@ import com.joyintech.tams.common.base.entity.SttScene;
  * @see FlowRiskStressTestView003Service
  * @since 1.0
  */
-@Service
+@Service("backFlowRiskStressTestView003Service")
 public class FlowRiskStressTestView003Service extends BaseService<FlowRiskStressTestView003Dto> {
     
     @Autowired

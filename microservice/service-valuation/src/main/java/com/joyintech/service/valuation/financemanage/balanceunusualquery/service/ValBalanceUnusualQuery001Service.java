@@ -39,7 +39,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
  * @see ValBalanceUnusualQuery001Service
  * @since 1.0
  */
-@Service
+@Service("backValBalanceUnusualQuery001Service")
 public class ValBalanceUnusualQuery001Service extends CommonExportService<ValBalanceUnusualQuery001Dto> {
 
     @Autowired

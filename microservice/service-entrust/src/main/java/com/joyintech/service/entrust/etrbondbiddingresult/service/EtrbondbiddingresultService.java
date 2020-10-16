@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Service
+@Service("backEtrbondbiddingresultService")
 public class EtrbondbiddingresultService extends BaseService<EtrbondbiddingresultDto> {
 
 	@Autowired

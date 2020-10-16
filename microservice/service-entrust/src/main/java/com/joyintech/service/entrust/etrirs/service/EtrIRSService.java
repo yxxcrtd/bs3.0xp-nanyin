@@ -59,7 +59,7 @@ import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
  * @see EtIRSService
  * @since 1.0
  */
-@Service
+@Service("backEtrIRSService")
 public class EtrIRSService extends BaseService<EtrIRSDto> {
 
     /**

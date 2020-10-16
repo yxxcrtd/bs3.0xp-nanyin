@@ -31,7 +31,7 @@ import com.joyintech.service.valuation.dailyoperation.dailyaccountmake.valelectr
  * @see ValElectReconciliation002Controller
  * @since 1.0
  */
-@RestController
+@RestController("backValElectReconciliation002Controller")
 @RequestMapping("/ValElectReconciliation002")
 public class ValElectReconciliation002Controller {
 

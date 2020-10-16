@@ -26,7 +26,7 @@ import com.joyintech.tams.common.base.entity.RskValtblAssetSub;
 import com.joyintech.tams.common.base.entity.RskValtblSumAssetSub;
 
 
-@Service
+@Service("backRskValTableImportService")
 public class RskValTableImportService {
 	
     @Autowired

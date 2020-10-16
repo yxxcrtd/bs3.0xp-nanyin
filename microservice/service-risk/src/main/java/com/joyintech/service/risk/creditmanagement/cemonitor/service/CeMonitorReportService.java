@@ -18,7 +18,7 @@ import com.joyintech.service.risk.creditmanagement.cemonitor.dto.CreditLinesDeal
  * @author: 裴家俊
  * @create: 2018-11-01 14:38
  **/
-@Service
+@Service("backCeMonitorReportService")
 public class CeMonitorReportService extends BaseService<CreditLinesDealDto> {
     /**
      * 授信额度监测mapper

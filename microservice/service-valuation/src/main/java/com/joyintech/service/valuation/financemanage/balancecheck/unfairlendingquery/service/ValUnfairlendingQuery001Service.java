@@ -32,7 +32,7 @@ import com.joyintech.service.valuation.financemanage.balancecheck.unfairlendingq
  * @see ValUnfairlendingQuery001Service
  * @since 1.0
  */
-@Service
+@Service("backValUnfairlendingQuery001Service")
 public class ValUnfairlendingQuery001Service extends CommonExportService<ValUnfairlendingQuery001Dto> {
 
 	@Autowired

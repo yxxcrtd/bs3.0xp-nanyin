@@ -36,7 +36,7 @@ import com.joyintech.tams.common.base.entity.SttScene;
  * @see MarketRiskSceneManage001Service
  * @since 1.0
  */
-@Service
+@Service("backMarketRiskSceneManage001Service")
 public class MarketRiskSceneManage001Service extends BaseService<MarketRiskSceneManage001Dto> {
     
     @Autowired

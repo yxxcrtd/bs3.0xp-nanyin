@@ -17,7 +17,7 @@ import com.joyintech.service.trade.pretrdrepotrade.dto.PreTrdRepoTrade001Dto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 
-@Service
+@Service("backPreTrdRepoTrade001Service")
 public class PreTrdRepoTrade001Service extends BaseService<PreTrdRepoTrade001Dto> {
     /**
      * 投资委托基础组件

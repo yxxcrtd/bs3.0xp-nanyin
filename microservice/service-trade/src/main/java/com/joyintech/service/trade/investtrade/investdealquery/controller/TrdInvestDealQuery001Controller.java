@@ -28,7 +28,7 @@ import com.joyintech.service.trade.investtrade.investdealquery.service.TrdInvest
  * 
  * @author wangkang
  */
-@RestController
+@RestController("backTrdInvestDealQuery001Controller")
 @RequestMapping("/TrdInvestDealQuery001")
 public class TrdInvestDealQuery001Controller {
 

@@ -32,7 +32,7 @@ import com.joyintech.service.risk.stresstestmanage.marketriskstresstestview.serv
  * @since 1.0
  */
 
-@RestController
+@RestController("backMarketRiskStressTestView002Controller")
 @RequestMapping("/MarketRiskStressTestView002")
 public class MarketRiskStressTestView002Controller{
 

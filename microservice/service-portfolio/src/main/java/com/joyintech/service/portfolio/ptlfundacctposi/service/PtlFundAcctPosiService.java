@@ -36,7 +36,7 @@ import com.joyintech.service.portfolio.ptlfundacctposi.dto.PtlFundAcctPosiDto;
  * @see PtlFundAcctPosiService
  * @since 1.0
  */
-@Service
+@Service("backPtlFundAcctPosiService")
 public class PtlFundAcctPosiService extends BaseService<PtlFundAcctPosiDto>{
 	
 	@Autowired

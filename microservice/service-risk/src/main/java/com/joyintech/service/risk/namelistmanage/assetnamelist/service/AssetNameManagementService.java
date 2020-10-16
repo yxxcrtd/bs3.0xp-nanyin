@@ -34,7 +34,7 @@ import java.util.Map;
  * @see AssetNameManagementService
  * @since 1.0
  */
-@Service
+@Service("backAssetNameManagementService")
 public class AssetNameManagementService extends BaseService<RskAccessListDto> {
 
     @Autowired

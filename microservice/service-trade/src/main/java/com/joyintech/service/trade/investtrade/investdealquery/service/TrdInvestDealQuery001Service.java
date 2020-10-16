@@ -32,7 +32,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 
-@Service
+@Service("backTrdInvestDealQuery001Service")
 @Transactional(rollbackFor=Exception.class)
 public class TrdInvestDealQuery001Service extends BaseService<TrdInvestDealQuery001Dto>{
 	/**

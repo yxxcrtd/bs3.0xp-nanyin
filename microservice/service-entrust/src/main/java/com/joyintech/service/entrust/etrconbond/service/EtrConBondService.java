@@ -56,7 +56,7 @@ import java.util.*;
  * @see EtrConBondService
  * @since 1.0
  */
-@Service
+@Service("backEtrConBondService")
 public class EtrConBondService extends BaseService{
     
     /**

@@ -33,7 +33,7 @@ import com.joyintech.service.report.balance.service.RepFinProductBalanceService;
  * @see RepFinProductBalanceController
  * @since 1.0
  */
-@RestController
+@RestController("backRepFinProductBalanceController")
 @RequestMapping("/RepFinProductBalance")
 public class RepFinProductBalanceController {
 

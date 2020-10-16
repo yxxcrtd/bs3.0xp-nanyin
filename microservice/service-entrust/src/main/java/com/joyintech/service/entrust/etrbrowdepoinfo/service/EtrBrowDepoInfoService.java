@@ -49,7 +49,7 @@ import java.util.*;
  * @see EtrBrowDepoInfoService
  * @since 1.0
  */
-@Service
+@Service("backEtrBrowDepoInfoService")
 public class EtrBrowDepoInfoService extends BaseService<EtrBrowDepoInfoDto> {
 
     /**

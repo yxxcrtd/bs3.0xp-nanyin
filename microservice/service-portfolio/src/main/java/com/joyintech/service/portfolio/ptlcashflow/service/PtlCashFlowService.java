@@ -55,7 +55,7 @@ import java.util.Map;
  * @see PtlCashFlowService
  * @since 1.0
  */
-@Service
+@Service("backPtlCashFlowService")
 public class PtlCashFlowService extends BaseService<PtlCashFlowDto>{
     /**
      * ptlCashFlowMapper

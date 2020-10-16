@@ -37,7 +37,7 @@ import com.joyintech.service.risk.stresstestmanage.flowriskscenemanage.service.F
  * @see FlowRiskSceneManage001Controller
  * @since 1.0
  */
-@RestController
+@RestController("backFlowRiskSceneManage001Controller")
 @RequestMapping("/FlowRiskSceneManage001")
 public class FlowRiskSceneManage001Controller {
 

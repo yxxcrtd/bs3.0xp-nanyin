@@ -55,7 +55,7 @@ import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
  * @see EtrWtSpotexService
  * @since 1.0
  */
-@Service
+@Service("backEtrWtSpotexService")
 public class EtrWtSpotexService extends BaseService<EtrWtSpotexDto> {
 
     /**

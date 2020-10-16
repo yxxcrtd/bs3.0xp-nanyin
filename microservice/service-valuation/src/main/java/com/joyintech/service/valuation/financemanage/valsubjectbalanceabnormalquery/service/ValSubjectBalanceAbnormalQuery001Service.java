@@ -30,7 +30,7 @@ import com.joyintech.service.valuation.financemanage.valsubjectbalanceabnormalqu
  * @see ValSubjectBalanceAbnormalQuery001Service
  * @since 1.0
  */
-@Service
+@Service("backValSubjectBalanceAbnormalQuery001Service")
 public class ValSubjectBalanceAbnormalQuery001Service extends CommonExportService<ValSubjectBalanceAbnormalQuery001Dto> {
 
     @Autowired

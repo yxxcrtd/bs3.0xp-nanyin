@@ -38,7 +38,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
  * @see RepFinProductPerIssRegistService
  * @since 1.0
  */
-@Service
+@Service("backRepFinProductPerIssRegistService")
 public class RepFinProductPerIssRegistService extends BaseService<RepFinProductPerIssRegistDto> {
     @Autowired
     private RepFinProductPerIssRegistMapper repFinProductPerIssRegistMapper;

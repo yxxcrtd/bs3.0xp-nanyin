@@ -24,7 +24,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
  * @Date 2020/1/9 0009
  * @Version V1.0
  **/
-@Service
+@Service("backCstpTrdMatchInfoService")
 public class CstpTrdMatchInfoService extends BaseService<CstpTrdMatchInfoDto> {
 
     @Autowired

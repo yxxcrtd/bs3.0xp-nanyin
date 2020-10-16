@@ -19,7 +19,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.trade.primarybiddingmanage.dao.PrimaryBiddingManage001Mapper;
 import com.joyintech.service.trade.primarybiddingmanage.dto.PrimaryBiddingManageDto;
 
-@Service
+@Service("backPrimaryBiddingManage001Service")
 public class PrimaryBiddingManage001Service extends BaseService<PrimaryBiddingManageDto> {
 	@Autowired
 	private PrimaryBiddingManage001Mapper primaryBiddingManage001Mapper;

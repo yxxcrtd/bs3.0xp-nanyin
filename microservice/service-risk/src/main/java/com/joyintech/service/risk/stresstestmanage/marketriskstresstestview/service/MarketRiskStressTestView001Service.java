@@ -30,7 +30,7 @@ import com.joyintech.service.risk.conf.DataSourceType;
  * @version 1.0 2019年8月24日
  * @since 1.0
  */
-@Service
+@Service("backMarketRiskStressTestView001Service")
 public class MarketRiskStressTestView001Service extends BaseService<MarketRiskStressTestView001Dto>{
 
     @Autowired

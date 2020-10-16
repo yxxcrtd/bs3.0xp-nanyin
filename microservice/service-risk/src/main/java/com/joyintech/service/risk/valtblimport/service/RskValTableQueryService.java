@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-@Service
+@Service("backRskValTableQueryService")
 public class RskValTableQueryService extends BaseService<RskValtblAssetSumDto> {
 
     @Autowired

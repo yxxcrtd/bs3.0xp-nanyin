@@ -17,7 +17,7 @@ import com.joyintech.service.trade.primarybiddingmanage.dto.PrimaryBiddingManage
 import com.joyintech.service.trade.primarybiddingmanage.dto.PrimaryBiddingPortfolioDto;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 
-@Service
+@Service("backPrimaryBiddingManage002Service")
 public class PrimaryBiddingManage002Service extends BaseService<PrimaryBiddingManageDto> {
 
     @Autowired

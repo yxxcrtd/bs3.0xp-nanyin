@@ -22,7 +22,7 @@ import com.joyintech.tams.report.home.service.BusinessHomeService;
  * @see BusinessHomeController
  * @since 1.0
  */
-@RestController
+@RestController("backBusinessHomeController")
 @RequestMapping("/BusinessHome")
 public class BusinessHomeController extends BaseController {
 

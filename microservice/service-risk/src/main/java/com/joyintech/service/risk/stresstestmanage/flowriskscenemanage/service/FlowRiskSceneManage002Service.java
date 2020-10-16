@@ -60,7 +60,7 @@ import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
  * @see FlowRiskSceneManage002Service
  * @since 1.0
  */
-@Service
+@Service("backFlowRiskSceneManage002Service")
 public class FlowRiskSceneManage002Service extends BaseService<FlowRiskSceneManage001Dto> {
 	
 	@Autowired

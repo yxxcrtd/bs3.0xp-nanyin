@@ -24,7 +24,7 @@ import com.joyintech.service.risk.creditmanagement.ceorg.dto.CreditLinesOrgDto;
  * @see CeOrg001Service
  * @since 1.0
  */
-@Service
+@Service("backCeOrg001Service")
 public class CeOrg001Service extends BaseService<CreditLinesOrgDto> {
 	
 	@Autowired

@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service
+@Service("backValRateSwapInformationService")
 public class ValRateSwapInformationService extends BaseService<ValRateSwapInformationDto> {
 
     @Autowired

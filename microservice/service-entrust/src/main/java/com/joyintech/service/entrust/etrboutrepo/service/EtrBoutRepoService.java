@@ -62,7 +62,7 @@ import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommSer
  * @see EtrBoutRepoService
  * @since 1.0
  */
-@Service
+@Service("backEtrBoutRepoService")
 public class EtrBoutRepoService extends BaseService<EtrBoutRepoDto> {
 
     /**

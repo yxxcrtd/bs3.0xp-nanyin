@@ -39,7 +39,7 @@ import com.joyintech.service.valuation.financemanage.balancecheck.unfairlendingq
  * @since 1.0
  */
 
-@RestController
+@RestController("backValUnfairlendingQuery001Controller")
 @RequestMapping("/ValUnfairlendingQuery001")
 public class ValUnfairlendingQuery001Controller extends BaseController {
 

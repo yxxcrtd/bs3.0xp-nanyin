@@ -47,7 +47,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
  * @see ValBondTargetAssetService
  * @since 1.0
  */
-@Service
+@Service("backValBondTargetAssetService")
 public class ValBondTargetAssetService extends BaseService<ValBondTargetAssetDto>{
     /**
      * 基础--标的类金融产品

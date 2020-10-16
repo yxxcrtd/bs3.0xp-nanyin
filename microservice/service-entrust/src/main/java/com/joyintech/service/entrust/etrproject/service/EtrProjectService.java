@@ -57,7 +57,7 @@ import java.util.*;
  * @see EtrProjectService
  * @since 1.0
  */
-@Service
+@Service("backEtrProjectService")
 public class EtrProjectService extends BaseService<EtrProjectDto> {
     /**
      * 平台日获取接口

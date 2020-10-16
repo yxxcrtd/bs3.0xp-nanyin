@@ -36,7 +36,7 @@ import com.joyintech.tams.invest.common.component.base.core.impl.PlatformDateImp
  * @see SysParamInfService
  * @since 1.0
  */
-@Service
+@Service("backSysParamInfService")
 public class SysParamInfService {
 
     /**

@@ -25,7 +25,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
  * @see ValInterestRateQuotationInfoService
  * @since 1.0
  */
-@Service
+@Service("backValInterestRateQuotationInfoService")
 @Transactional
 public class ValInterestRateQuotationInfoService extends BaseService<ValInterestRateQuotationInfoDto> {
 

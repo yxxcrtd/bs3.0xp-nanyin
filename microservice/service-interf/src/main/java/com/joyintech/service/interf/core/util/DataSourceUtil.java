@@ -25,7 +25,7 @@ import com.joyintech.framework.util.StringUtil;
  * @see DataSourceUtil
  * @since 1.0
  */
-@Component
+@Component("backDataSourceUtil")
 public final class DataSourceUtil {
 
     /**

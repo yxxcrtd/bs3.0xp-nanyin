@@ -33,7 +33,7 @@ import com.joyintech.service.risk.penetrationmanagement.rskvalsumname.dto.RskVal
  * @see RskValSumname002Service
  * @since 1.0
  */
-@Service
+@Service("backRskValSumname002Service")
 public class RskValSumname002Service extends BaseService<RskValSumnameDto>{
     /**
      * 汇总映射mapper

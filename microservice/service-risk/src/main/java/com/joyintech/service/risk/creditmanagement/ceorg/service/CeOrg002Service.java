@@ -40,7 +40,7 @@ import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
  * @see CeOrg002Service
  * @since 1.0
  */
-@Service
+@Service("backCeOrg002Service")
 public class CeOrg002Service extends BaseService<CreditMstInfoDto> {
 	
 	@Autowired

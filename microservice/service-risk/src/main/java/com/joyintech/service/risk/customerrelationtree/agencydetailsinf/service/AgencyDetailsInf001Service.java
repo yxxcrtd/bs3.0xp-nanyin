@@ -23,7 +23,7 @@ import com.joyintech.service.risk.customerrelationtree.agencydetailsinf.dto.Agen
  * @see AgencyDetailsInf001Service
  * @since 1.0
  */
-@Service
+@Service("backAgencyDetailsInf001Service")
 public class AgencyDetailsInf001Service extends BaseService<AgencyDetailsInf001Dto> {
 	
 	@Autowired

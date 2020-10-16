@@ -40,7 +40,7 @@ import com.joyintech.service.report.debtreport.repfinproductregistcodemng.dto.Re
  * @see RepFinProductRegistCodeMngService
  * @since 1.0
  */
-@Service
+@Service("backRepFinProductRegistCodeMngService")
 public class RepFinProductRegistCodeMngService extends BaseService<RepFinProductRegistCodeMngDto>{
     
     /**

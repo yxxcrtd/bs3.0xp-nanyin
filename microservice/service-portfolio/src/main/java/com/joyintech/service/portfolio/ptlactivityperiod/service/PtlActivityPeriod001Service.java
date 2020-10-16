@@ -52,7 +52,7 @@ import java.util.*;
  * @see PtlActivityPeriod001Service
  * @since 1.0
  */
-@Service
+@Service("backPtlActivityPeriod001Service")
 public class PtlActivityPeriod001Service extends BaseService<PtlActivityPeriod001Dto>{
     /**
      * 注入活期结息Mapper

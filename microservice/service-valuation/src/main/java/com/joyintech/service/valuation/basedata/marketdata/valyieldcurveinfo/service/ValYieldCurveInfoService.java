@@ -39,7 +39,7 @@ import com.joyintech.service.valuation.basedata.marketdata.valyieldcurveinfo.dto
  * @see ValYieldCurveInfoService
  * @since 1.0
  */
-@Service
+@Service("backValYieldCurveInfoService")
 @Transactional(rollbackFor = Exception.class)
 public class ValYieldCurveInfoService extends BaseService<ValYieldCurveInfoDto>{
 

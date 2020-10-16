@@ -35,7 +35,7 @@ import com.joyintech.service.risk.stresstestmanage.riskfactor.dao.RiskFactor001M
  * @version 1.0 2019年8月24日
  * @since 1.0
  */
-@Service
+@Service("backRiskFactor001Service")
 public class RiskFactor001Service extends BaseService<RiskFactor001Dto> {
 
     @Autowired

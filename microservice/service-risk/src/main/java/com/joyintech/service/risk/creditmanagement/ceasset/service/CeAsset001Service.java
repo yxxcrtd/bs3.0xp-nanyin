@@ -28,7 +28,7 @@ import com.joyintech.service.risk.creditmanagement.ceasset.dto.CreditLinesAstDto
  * @see CeAsset001Service
  * @since 1.0
  */
-@Service
+@Service("backCeAsset001Service")
 public class CeAsset001Service extends BaseService<CreditLinesAstDto> {
 	
 	@Autowired

@@ -45,7 +45,7 @@ import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
  * @see MarketRiskStressTest002Service
  * @since 1.0
  */
-@Service
+@Service("backMarketRiskStressTest002Service")
 public class MarketRiskStressTest002Service extends BaseService<MarketRiskStressTest002Dto> {
     
     @Autowired

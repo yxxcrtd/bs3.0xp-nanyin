@@ -41,7 +41,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
  * @see RepFinProductExpirationService
  * @since 1.0
  */
-@Service
+@Service("backRepFinProductExpirationService")
 public class RepFinProductExpirationService extends BaseService<RepFinProductExpirationDto>{
     
     /**
