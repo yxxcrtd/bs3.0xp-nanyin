@@ -1,6 +1,5 @@
 package com.joyintech.invest.interf.common.core.utility.s026;
 
-import com.joyintech.invest.interf.InvestInterfApplication;
 import com.joyintech.invest.interf.common.core.controller.InterfCoreController;
 import com.joyintech.invest.interf.common.core.service.InterfRecvComponent;
 import org.junit.Test;
