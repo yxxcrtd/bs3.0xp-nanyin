@@ -1,4 +1,84 @@
 (function () {
+	
+	/**
+	 * 回购期限
+	 */
+	var repoTermChangeAction = function(){
+		var repoterm = $('#term').val();
+		var re = /^[0-9]*$/;
+        if(repoterm && re.test(repoterm)){
+            var vdate = $('#vdate').val();
+            if(vdate){
+                //回购期限联动期限品种
+            	$('#termTypeReback').val(getTermType(vdate,repoterm)).trigger('change');
+            }
+        }else{
+        	$('#termTypeReback').val("").trigger('change');
+        }
+	};
+	
+    /**
+     * 获取期限品种  date(yyyy-MM-dd),repoterm
+     */
+    function getTermType(date,repoterm) {
+    	if(repoterm&&repoterm<=21){
+    		//期限品种小于21天
+    		if(repoterm==1){
+    			return REPO_TYPE_R001;
+    		}
+    		if(repoterm>1&&repoterm<=7){
+    			return REPO_TYPE_R007;
+    		}
+    		if(repoterm>7&&repoterm<=14){
+    			return REPO_TYPE_R014;
+    		}
+    		if(repoterm>14&&repoterm<=21){
+    			return REPO_TYPE_R021;
+    		}
+    	}
+    	var day=0;
+    	//date为空时  返回0
+    	if(date&&repoterm){
+    		//获取日期
+    		date =DateUtil.parse(date);
+    		//获取之后月00天 即本月最后一天
+    		day= new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+1,0).getDate();
+    		if(repoterm<=day){
+    			return REPO_TYPE_R1M;
+    		}
+    		day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+2,0).getDate();
+    		if(repoterm<=day){
+    			return REPO_TYPE_R2M;
+    		}
+    		day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+3,0).getDate();
+    		if(repoterm<=day){
+    			return REPO_TYPE_R3M;
+    		}
+    		day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+4,0).getDate();
+    		if(repoterm<=day){
+    			return REPO_TYPE_R4M;
+    		}
+    		day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+5,0).getDate();
+    		day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+6,0).getDate();
+    		if(repoterm<=day){
+    			return REPO_TYPE_R6M;
+    		}
+    		day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+7,0).getDate();
+    		day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+8,0).getDate();
+    		day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+9,0).getDate();
+    		if(repoterm<=day){
+    			return REPO_TYPE_R9M;
+    		}
+    		day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+10,0).getDate();
+    		day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+11,0).getDate();
+    		day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+12,0).getDate();
+    		if(repoterm<=day){
+    			return REPO_TYPE_R1Y;
+    		}
+    	}
+    	return null;
+    }
+    
     var isSectId = false;
     //是否来自与Cstp
     var isFromCstp = false;
