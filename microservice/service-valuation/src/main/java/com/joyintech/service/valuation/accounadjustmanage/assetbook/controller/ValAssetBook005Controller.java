@@ -40,7 +40,7 @@ import com.joyintech.tams.valuation.common.service.BaseCommonService;
  */
 @Controller(value="serviceValAssetBook005Controller")
 @PageId("ValAssetBook005")
-@RequestMapping("/valuation/accounadjustmanage/assetbook/ValAssetBook005")
+@RequestMapping("/service/valuation/accounadjustmanage/assetbook/ValAssetBook005")
 public class ValAssetBook005Controller extends BaseController {
 
 //    /**

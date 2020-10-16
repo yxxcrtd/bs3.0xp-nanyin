@@ -42,7 +42,7 @@ import com.joyintech.tams.valuation.common.constants.GlobalConstant;
  */
 //@RestController(value="serviceDataCleanController001")
 @RestController("dataCleanControllerCtl_dtx")
-@RequestMapping("/valuation/datatransplant/DataClean001")
+@RequestMapping("/service/valuation/datatransplant/DataClean001")
 public class DataCleanController001 extends BaseController {
 
     @Autowired
