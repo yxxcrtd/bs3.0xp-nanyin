@@ -34,7 +34,7 @@ import com.joyintech.service.basicdata.mstindexquotationinfo.dto.MstIndexQuotati
  * @see MstIndexQuotationInfoService
  * @since 1.0
  */
-@Service
+@Service("backMstIndexQuotationInfoService")
 public class MstIndexQuotationInfoService extends BaseService<MstIndexQuotationInfo001Dto>{
 
     /**

@@ -28,7 +28,7 @@ import com.joyintech.tams.common.base.entity.MstBondCreditRating;
  * @see MstBondCreditRatingService
  * @since 1.0
  */
-@Service
+@Service("backMstBondCreditRatingService")
 public class MstBondCreditRatingService extends BaseService<MstBondCreditRating>{
     
     /**

@@ -22,7 +22,7 @@ import com.joyintech.service.basicdata.mstbondfirstmarketcalendar.dto.MstBondFir
 
 import com.joyintech.tams.constant.DictCodeListExt1;
 
-@Service
+@Service("backMstBondFirstMarketCalendar001Service")
 public class MstBondFirstMarketCalendar001Service extends BaseService<MstBondFirstMarketCalendar001Dto> {
 
 	

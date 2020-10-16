@@ -30,7 +30,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
-@Service
+@Service("backOperationManageService")
 public class OperationManageService extends BaseService<OperationManageDto>{
 	
 	@Autowired

@@ -39,7 +39,7 @@ import com.joyintech.service.basicdata.mstperformancebenchmark.dto.MstPerformanc
  * @see MstPerformanceBenchMarkService
  * @since 1.0
  */
-@Service
+@Service("backMstPerformanceBenchMarkService")
 public class MstPerformanceBenchMarkService extends BaseService<MstPerformanceBenchMarkDto>{
 
     /**

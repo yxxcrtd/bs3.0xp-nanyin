@@ -29,7 +29,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
  * @see MstFeeVarietiesService
  * @since 1.0
  */
-@Service
+@Service("backMstFeeVarietiesService")
 public class MstFeeVarietiesService extends BaseService<MstFeeVarietiesDto>{
     /**
      * 定义mapper文件

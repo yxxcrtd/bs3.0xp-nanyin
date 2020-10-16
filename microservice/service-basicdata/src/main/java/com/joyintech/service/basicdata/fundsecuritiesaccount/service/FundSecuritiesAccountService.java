@@ -33,7 +33,7 @@ import com.joyintech.tams.common.base.entity.StlSecAcctInfo;
  * @see FundSecuritiesAccountService
  * @since 1.0
  */
-@Service
+@Service("backFundSecuritiesAccountService")
 public class FundSecuritiesAccountService extends BaseService<FundSecuritiesAccountDto>{
 
     /**

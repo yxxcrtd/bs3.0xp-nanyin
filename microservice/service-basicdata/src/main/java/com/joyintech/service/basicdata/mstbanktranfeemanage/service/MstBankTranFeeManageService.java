@@ -45,7 +45,7 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
  * @see MstBankTranFeeManageService
  * @since 1.0
  */
-@Service
+@Service("backMstBankTranFeeManageService")
 public class MstBankTranFeeManageService extends BaseService<MstBankTranFeeManageDto> {
     @Autowired
     private MstBankTranFeeManageMapper mstBankTranFeeManageMapper;

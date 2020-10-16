@@ -28,7 +28,7 @@ import com.joyintech.service.basicdata.mstmarketinstitutions.dto.PaRskCustomerRa
  * @see PaRskCustomerRatingService
  * @since 1.0
  */
-@Service
+@Service("backPaRskCustomerRatingService")
 public class PaRskCustomerRatingService extends BaseService<PaRskCustomerRatingDto>{
     
     /**

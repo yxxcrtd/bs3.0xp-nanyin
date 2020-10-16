@@ -35,7 +35,7 @@ import java.util.*;
  * @description:
  */
 
-@Service
+@Service("backMstNetAssetQuotationInfoImportDataService")
 public class MstNetAssetQuotationInfoImportDataService extends CommonExportService<MstNetAssetQuotationInfo001Dto>  {
 
 

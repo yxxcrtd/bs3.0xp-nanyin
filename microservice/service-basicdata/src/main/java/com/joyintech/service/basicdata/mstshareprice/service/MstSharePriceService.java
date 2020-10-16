@@ -35,7 +35,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
  * @see MstSharePriceService
  * @since 1.0
  */
-@Service
+@Service("backMstSharePriceService")
 @Transactional(rollbackFor = Exception.class)
 public class MstSharePriceService extends BaseService<MstSharePriceDto>{
 

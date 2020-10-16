@@ -36,7 +36,7 @@ import com.joyintech.service.basicdata.mstsecuritiesaccount.dto.MstSecuritiesAcc
  * @see MstSecuritiesAccountService
  * @since 1.0
  */
-@Service
+@Service("backMstSecuritiesAccountService")
 public class MstSecuritiesAccountService extends BaseService<MstSecuritiesAccountDto>{
 //    /**
 //     * 附件信息共通Service
