@@ -39,7 +39,6 @@
         <module>tams-valuation-common</module>
         <module>tams-valuation-parent</module>
         <module>tams-valuation-report</module>
-        <module>tams/app</module>
         
         <!-- 批处理  -->
         <module>tams-disclosure-batch</module>
@@ -74,8 +73,14 @@
         <module>microservice/service-trade</module>
         <module>microservice/service-valuation</module>
         <module>microservice/service-invest-interf</module>
+        <module>microservice/service-interf</module>
+				<module>microservice/service-risk-redis</module>
+			  <module>microservice/service-risk-redis-inf</module>
 <!--         几许中心包 -->
         <module>JixuCenter</module>
+
+        <module>microservice/tams-service-container</module>
+        <module>tams/app</module>
         
     </modules>
 </project>

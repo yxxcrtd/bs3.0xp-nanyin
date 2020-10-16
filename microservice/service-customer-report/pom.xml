@@ -9,7 +9,7 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>service-customer-report</artifactId>
-	<version>1.1.0</version>
+	<version>1.0.0</version>
 	<name>service-customer-report</name>
 	<description>自定义报表服务</description>
 
