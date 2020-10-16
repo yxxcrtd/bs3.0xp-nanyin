@@ -12,17 +12,17 @@ spring:
     name: TamsMicroservice #服务名称
   profiles:
     active: dtx
-#  activemq:
-#    brokerUrl: tcp://localhost:61616
-#    user: system
-#    active: true
-#    password: manager
-#    maximumRedeliveries: 10
-#    initialRedeliveryDelay: 1
-#    backOffMultiplier: 2
-#    useExponentialBackOff: true
-#    maximumRedeliveryDelay: -1
-#    systemId: framework
+  activemq:
+    brokerUrl: tcp://localhost:61616
+    user: system
+    active: false
+    password: manager
+    maximumRedeliveries: 10
+    initialRedeliveryDelay: 1
+    backOffMultiplier: 2
+    useExponentialBackOff: true
+    maximumRedeliveryDelay: -1
+    systemId: framework
   thymeleaf:
     cache: false
   jmx:
