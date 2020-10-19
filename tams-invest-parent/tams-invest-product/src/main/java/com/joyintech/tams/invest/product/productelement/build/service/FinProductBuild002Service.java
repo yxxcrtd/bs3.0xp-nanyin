@@ -297,6 +297,9 @@ public class FinProductBuild002Service extends BaseService<FinProductBuild002Dto
         		entity.setFinprodId(commonBusinessService != null ? commonBusinessService.getFinProdId(
                       entity.getFinprodMarketId(), DictCodeListExt1.金融产品类型_投管用_理财产品.getValue(),
                       null) : IDGenerator.generate());
+
+        		entity.setRepFinprodInsId(entity.getFinprodMarketId());
+
         	}
             // 生成金融产品代码
 //            entity.setFinprodId(commonBusinessService != null ? commonBusinessService.getFinProdId(

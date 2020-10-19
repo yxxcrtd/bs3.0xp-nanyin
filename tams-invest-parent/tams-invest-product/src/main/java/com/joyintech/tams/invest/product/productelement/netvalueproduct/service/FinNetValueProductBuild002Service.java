@@ -274,6 +274,8 @@ public class FinNetValueProductBuild002Service extends BaseService<FinNetValuePr
             	// 生成金融产品代码
                 entity.setFinprodId(commonBusinessService != null ? commonBusinessService.getFinProdId(entity.getFinprodMarketId(),
                     DictCodeListExt1.金融产品类型_投管用_理财产品.getValue(), null) : IDGenerator.generate());
+
+                entity.setRepFinprodInsId(entity.getFinprodMarketId());
         	}
             // 分支序号
             entity.setBranch(Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
@@ -680,7 +682,7 @@ public class FinNetValueProductBuild002Service extends BaseService<FinNetValuePr
     /**
      * 查询机构
      *
-     * @param dto dto
+     * @param map map
      * @return 结果
      * @throws Exception 异常
      * @see

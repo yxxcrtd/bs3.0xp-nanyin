@@ -105,7 +105,7 @@
             CREATE_USER, CREATE_DEPT, CREATE_TIME, 
             UPDATE_USER, UPDATE_TIME, CONTRACT_NO, 
             IS_FIN_ORG, SPONSOR, INVEST_ADVISER, 
-            LIQUIDATION_YESNO)
+            LIQUIDATION_YESNO,REP_FINPROD_INS_ID)
         values (#{finprodId,jdbcType=VARCHAR}, #{finprodType,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR}, 
             #{finprodAbbr,jdbcType=VARCHAR}, #{finprodName,jdbcType=VARCHAR}, #{profitType,jdbcType=VARCHAR}, 
             #{couponSpecies,jdbcType=VARCHAR}, #{chlFinprodId,jdbcType=VARCHAR}, #{finprodMarketId,jdbcType=VARCHAR}, 
@@ -122,7 +122,7 @@
             #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
             #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{contractNo,jdbcType=VARCHAR}, 
             #{isFinOrg,jdbcType=VARCHAR}, #{sponsor,jdbcType=VARCHAR}, #{investAdviser,jdbcType=VARCHAR}, 
-            #{liquidationYesno,jdbcType=VARCHAR})
+            #{liquidationYesno,jdbcType=VARCHAR},#{repFinprodInsId,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinProduct" >
         insert into FIN_PRODUCT
