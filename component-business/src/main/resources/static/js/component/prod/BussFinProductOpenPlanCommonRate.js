@@ -441,7 +441,11 @@
 	var openCycleUnitChange = function (){
 		var selectedValue = getElementById('openCycleUnit').val();
 		var openMode = getElementById('openMode').val();
-		
+		//BS-1977 start
+		if(selectedValue==null){
+			return;
+		}
+		//BS-1977 end
 		if (openMode && openMode === OPENMODE_01){
 			if (!selectedValue || selectedValue == PERIOD_UNIT_01){
 				getElementById('dayOfWeek').val('').prop('disabled', true).trigger('change');
@@ -1339,7 +1343,10 @@
 	    if(getElementById('calcRule').val() === CALC_METHOD_01){
 	        getElementById('tradedayRule').val(TDAY_RULE_02).trigger('change').prop('disabled', true);
         } else {
-            getElementById('tradedayRule').val(TDAY_RULE_02).trigger('change').prop('disabled', false);
+        	//TISHKBS-1393 start
+//        	getElementById('tradedayRule').val(TDAY_RULE_02).trigger('change').prop('disabled', false);
+            getElementById('tradedayRule').prop('disabled', false);
+            //TISHKBS-1393 end
         }
 	}
 	
