@@ -93,15 +93,12 @@
         #{PA_BUSINESS_TYPE37},
         #{PA_BUSINESS_TYPE137},
         #{PA_BUSINESS_TYPE138},
-        #{PA_BUSINESS_TYPE100},
-        <!--add by  caiqun 20200921 09债券类资产买入  29净值型计划申购申请  97货币型计划申购申请 用TRD_FIN_PRODUCT_DEAL_TOTAL关联STL_PAY_ORDERS  start-->
-        #{PA_BUSINESS_TYPE97},
-        #{PA_BUSINESS_TYPE29})
+        #{PA_BUSINESS_TYPE100})
+        <!--add by  caiqun 20200921 09债券类资产买入  用TRD_FIN_PRODUCT_DEAL_TOTAL关联STL_PAY_ORDERS  start-->
         OR (T5.PA_BUSS_TYPE IN (#{PA_BUSINESS_TYPE09}) AND (T4.TRADE_MARKET IN (#{TP03}, #{TP04}) AND T4.TRADE_MARKET_MODE = #{STM_01})/*以及交易所一级市场债券买入*/)
         OR (T5.PA_BUSS_TYPE IN (#{PA_BUSINESS_TYPE09}) AND (T4.TRADE_MARKET IN (#{TP01}) AND T4.TRADE_MARKET_MODE = #{STM_01} AND T4.TRADE_PLAT in (#{SHARES_TRADE_PLATFORM_01},#{SHARES_TRADE_PLATFORM_99}))/*银行间一级市场交易平台是其他*/)
         OR (T5.PA_BUSS_TYPE IN (#{PA_BUSINESS_TYPE09}) AND FPA.PAY_TYPE = #{PAY_TYPE01})
-        OR (T4.FINPROD_TYPE2 IN (#{F29}) AND T10.PS = #{PS01})
-        <!--add by  caiqun 20200921 09债券类资产买入  29净值型计划申购申请  97货币型计划申购申请 用TRD_FIN_PRODUCT_DEAL_TOTAL关联STL_PAY_ORDERS end-->
+        <!--add by  caiqun 20200921 09债券类资产买入  用TRD_FIN_PRODUCT_DEAL_TOTAL关联STL_PAY_ORDERS end-->
         OR (T5.PA_BUSS_TYPE IN (#{PA_BUSINESS_TYPE52}, #{PA_BUSINESS_TYPE76}) AND FPA.PAY_TYPE = #{PAY_TYPE01})
         OR (T4.FINPROD_TYPE2 IN (#{F29}, #{F30}, #{F10}, #{F11}, #{F12}, #{F13}, #{F14}) AND T10.PS = #{PS01})
         OR (T4.FINPROD_TYPE2 = #{F35})
@@ -207,21 +204,21 @@
         #{PA_BUSINESS_TYPE64},
         #{PA_BUSINESS_TYPE21},
         #{PA_BUSINESS_TYPE22},
-        #{PA_BUSINESS_TYPE25})
-        <!--add by  caiqun 20200921 09债券类资产买入  29净值型计划申购申请  97货币型计划申购申请 用TRD_FIN_PRODUCT_DEAL_TOTAL关联STL_PAY_ORDERS  start-->
-        <!--#{PA_BUSINESS_TYPE97},
+        #{PA_BUSINESS_TYPE25},
+        #{PA_BUSINESS_TYPE97},
         #{PA_BUSINESS_TYPE29})
+        <!--add by  caiqun 20200921 09债券类资产买入  用TRD_FIN_PRODUCT_DEAL_TOTAL关联STL_PAY_ORDERS  start-->
+        <!--
         OR (T8.PA_BUSS_TYPE IN (#{PA_BUSINESS_TYPE09}) AND (T4.TRADE_MARKET IN (#{TP03}, #{TP04}) AND T4.TRADE_MARKET_MODE = #{STM_01})/*以及交易所一级市场债券买入*/)
         OR (T8.PA_BUSS_TYPE IN (#{PA_BUSINESS_TYPE09}) AND (T4.TRADE_MARKET IN (#{TP01}) AND T4.TRADE_MARKET_MODE = #{STM_01} AND T4.TRADE_PLAT in (#{SHARES_TRADE_PLATFORM_01},#{SHARES_TRADE_PLATFORM_99}))/*银行间一级市场交易平台是其他*/)
         OR (T8.PA_BUSS_TYPE IN (#{PA_BUSINESS_TYPE09}, #{PA_BUSINESS_TYPE12}, #{PA_BUSINESS_TYPE19}, #{PA_BUSINESS_TYPE75})
         AND FPA.PAY_TYPE = #{PAY_TYPE01}
         )
-        OR (T4.FINPROD_TYPE2 IN (#{F29}, #{F30}, #{F10}, #{F11}, #{F12}, #{F13}, #{F14}) AND T10.PS = #{PS01})
         -->
-        OR (T8.PA_BUSS_TYPE IN (#{PA_BUSINESS_TYPE12}, #{PA_BUSINESS_TYPE19}, #{PA_BUSINESS_TYPE75}) AND FPA.PAY_TYPE = #{PAY_TYPE01})
-        OR (T4.FINPROD_TYPE2 IN (#{F30}, #{F10}, #{F11}, #{F12}, #{F13}, #{F14}) AND T10.PS = #{PS01})
-        <!--add by  caiqun 20200921 09债券类资产买入  29净值型计划申购申请  97货币型计划申购申请 用TRD_FIN_PRODUCT_DEAL_TOTAL关联STL_PAY_ORDERS  end-->
-        OR (T4.FINPROD_TYPE2 = #{F35})
+        OR (T8.PA_BUSS_TYPE IN (#{PA_BUSINESS_TYPE12}, #{PA_BUSINESS_TYPE19}, #{PA_BUSINESS_TYPE75}) AND FPA.PAY_TYPE = #{PAY_TYPE01})        
+		<!--add by  caiqun 20200921 09债券类资产买入  用TRD_FIN_PRODUCT_DEAL_TOTAL关联STL_PAY_ORDERS  end-->
+        OR (T4.FINPROD_TYPE2 IN (#{F29},#{F30}, #{F10}, #{F11}, #{F12}, #{F13}, #{F14}) AND T10.PS = #{PS01})
+	    OR (T4.FINPROD_TYPE2 = #{F35})
         )
         /*金融产品交易扩展.平安业务类型 IN (数据字典.平安业务类型.存款类资产买入、项目类资产买入、普通拆入、普通拆出、普通拆入到期)*/
         /*金融产品交易扩展.平安业务类型 IN (数据字典.平安业务类型.特拆拆入、特拆拆入到期)*/
