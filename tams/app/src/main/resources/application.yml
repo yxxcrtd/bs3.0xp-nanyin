@@ -172,6 +172,8 @@ application:
 #      quotaService: http://127.0.0.1:8114
 #      reportService: http://127.0.0.1:8114
 #      riskService: http://127.0.0.1:8114
+#      riskRdsService: http://127.0.0.1:8114
+#      riskInfService: http://127.0.0.1:8114
 #      settleService: http://127.0.0.1:8114
 #      tradeService: http://127.0.0.1:8114
 #      disclosureService: http://127.0.0.1:8114
@@ -180,8 +182,6 @@ application:
 #      chb3Service: http://127.0.0.1:8114
 #      svrcomService: http://127.0.0.1:8114
 #      pbcService: http://127.0.0.1:8114
-#      riskRdsService: http://127.0.0.1:8114
-#      riskInfService: http://127.0.0.1:8114
 #      channelService: http://127.0.0.1:8114 
 #      customerInterfService: http://127.0.0.1:8114
 #      tamsServer: http://127.0.0.1:8114
@@ -204,6 +204,8 @@ application:
       quotaService: http://127.0.0.1:${server.port}/tams
       reportService: http://127.0.0.1:${server.port}/tams
       riskService: http://127.0.0.1:${server.port}/tams
+      riskRdsService: http://127.0.0.1:${server.port}/tams
+      riskInfService: http://127.0.0.1:${server.port}/tams
       settleService: http://127.0.0.1:${server.port}/tams
       tradeService: http://127.0.0.1:${server.port}/tams
       disclosureService: http://127.0.0.1:${server.port}/tams
@@ -212,8 +214,6 @@ application:
       chb3Service: http://127.0.0.1:${server.port}/tams
       svrcomService: http://127.0.0.1:${server.port}/tams
       pbcService: http://127.0.0.1:${server.port}/tams
-      riskRdsService: http://127.0.0.1:${server.port}/tams
-      riskInfService: http://127.0.0.1:${server.port}/tams
       channelService: http://127.0.0.1:${server.port}/tams
       customerInterfService: http://127.0.0.1:${server.port}/tams
       tamsServer: http://127.0.0.1:${server.port}/tams
@@ -236,6 +236,8 @@ application:
 #      quotaService: http://TamsMicroservice
 #      reportService: http://TamsMicroservice
 #      riskService: http://TamsMicroservice
+#      riskRdsService: http://TamsMicroservice
+#      riskInfService: http://TamsMicroservice
 #      settleService: http://TamsMicroservice
 #      tradeService: http://TamsMicroservice
 #      disclosureService: http://TamsMicroservice
@@ -244,8 +246,6 @@ application:
 #      chb3Service: http://TamsMicroservice
 #      svrcomService: http://TamsMicroservice
 #      pbcService: http://TamsMicroservice
-#      riskRdsService: http://TamsMicroservice
-#      riskInfService: http://TamsMicroservice
 #      channelService: http://TamsMicroservice
 #      customerInterfService: http://TamsMicroservice
 #      tamsServer: http://TamsMicroservice
@@ -387,6 +387,8 @@ workflow:
   isSentMessage: false
   serviceName: messageService
 
+
+#清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
 url:
   batch: http://localhost:8084/main/about/refreshCache
 
