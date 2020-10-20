@@ -88,6 +88,11 @@ public class PtlPositionReportService extends BaseService<PtlPositionAnalysis003
             });
             Page<PtlPositionAnalysis003Dto> pagelist = new Page<>();
             pagelist.setRoot(resultList);
+            int total = resultList.size()/length;
+            if(resultList.size()%length>0) {
+            	total++;
+            }
+            pagelist.setTotal(total);
             return pagelist;
         }
         Page<PtlPositionAnalysis003Dto> list = super.queryForPage(page, length, () -> ptlPositionAnalysisMapper.secReportPage(pageParam));
