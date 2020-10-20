@@ -602,7 +602,7 @@
         var list = getAllRows();var msg;
         var sumAmt = 0;
         if(!list || list.length == 0) {
-            msg = JoyinUtil.getMessage('COMMON_E_0057',JoyinUtil.getLabel("FinPayInterestStdInfo.table.title"));
+            msg = JoyinUtil.getMessage('COMMON_E_0057',JoyinUtil.getLabel("BussFinRepayPlan.table.title"));
         }else{
             $.each(list,function(index,obj){
                 if(obj.mdate==''||typeof obj.mdate == 'undefined'){
