@@ -982,27 +982,21 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
         for(PtlPositionAnalysis003Dto item: list.getRoot()) {
           map.put("parentId", item.getChildInfo());
           if (item.getHasChildren().equals("01")) {
-          	Page<PtlPositionAnalysis003Dto> ptlPositionAnalysis003DtoPage;
-          	int selectPage = 1;
-          	do {
-          		map.put("page",selectPage);
-          		ptlPositionAnalysis003DtoPage = selectForPage(map);
-          		for (PtlPositionAnalysis003Dto entity : ptlPositionAnalysis003DtoPage.getRoot()) {
-                      for (String key : institutionNameMap.keySet()) {
-                          if (entity.getParentInfo().startsWith(key + "F0")) { // todo 没有完全相等的条件
-                              entity.setBelongInstitutionNameNew(institutionNameMap.get(key)!=null?institutionNameMap.get(key).toString():"");
-                          }
-                          if(popNum>0) {
-                          	popNum--;
-                          }
-                          else {
-                          	pageList.add(entity);
-                          }
-                      }
-                  }
-          		selectPage++;
-          	}
-          	while(ptlPositionAnalysis003DtoPage!=null&&ptlPositionAnalysis003DtoPage.getTotal()>=selectPage);
+        	//子查询中并未调用queryForPage包装分页，该结果为全部查询结果，不需要循环
+          	Page<PtlPositionAnalysis003Dto> ptlPositionAnalysis003DtoPage=selectForPage(map);
+          	for (PtlPositionAnalysis003Dto entity : ptlPositionAnalysis003DtoPage.getRoot()) {
+                for (String key : institutionNameMap.keySet()) {
+                    if (entity.getParentInfo().startsWith(key + "F0")) { // todo 没有完全相等的条件
+                        entity.setBelongInstitutionNameNew(institutionNameMap.get(key)!=null?institutionNameMap.get(key).toString():"");
+                    }
+                    if(popNum>0) {
+                    	popNum--;
+                    }
+                    else {
+                    	pageList.add(entity);
+                    }
+                }
+            }
           }
         };
         
