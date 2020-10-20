@@ -195,6 +195,10 @@
             OR
             <!-- 撤销数据对应撤销流程 -->
             (T1.P_TRADE_ID = T6.TRADE_ID and t6.action_type IN (#{revoke},'delete'))
+            <!--针对 债券 ，基金，撤销 时，流程表中是直接 加 R的-->
+            OR((T1.TOTLE_TRADE_ID = T6.TRADE_ID) and
+            t6.action_type in (#{revoke}) AND T6.BUSINESS_TYPE  IN ('TRD02', 'TRD14')
+            )
             AND T6.BUSINESS_TYPE NOT IN ('126','38','V19','V20')
             LEFT JOIN SYS_WFL_BUSINESS_NODE T7 ON T6.SEQ_NO = T7.SEQ_NO
             LEFT JOIN STL_CAPACCT_INFO T8 ON T5.MY_ACCT_NO=T8.ACCT_NO
