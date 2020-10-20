@@ -603,10 +603,11 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
                     }
                 }
                 // 交易状态=“撤销”
-                trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
+                //trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
                 trdProductDeal.setIsCancel(DictCodeList.是否_是.getValue());
                 trdProductDealMapper.updateByPrimaryKeySelective(trdProductDeal);
 
+				trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
                 trdProductDeal.setIsCancel(DictCodeList.是否_否.getValue());
                 // 原交易编号=金融产品交易信息DTO.金融产品交易Entity.交易编号
                 trdProductDeal.setpTradeId(trdProductDeal.getTradeId());
