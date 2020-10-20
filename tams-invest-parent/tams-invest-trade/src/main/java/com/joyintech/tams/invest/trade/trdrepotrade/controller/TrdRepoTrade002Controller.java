@@ -194,6 +194,19 @@ public class TrdRepoTrade002Controller extends BaseController {
         model.addAttribute("GEN_PAY_ORDERS_AUTO",CacheUtil.getSysParam(BussinessConstant.GEN_PAY_ORDERS_AUTO));
         //add by lizhi 是否限制划款指令开关 2020年2月26日  end
         model.addAttribute("PINAN_ASSET_TYPE_F07",DictCodeList.平安资产类型_质押式回购.getValue());
+        
+		model.addAttribute("REPO_TYPE_R001", DictCodeList.回购期限品种_R001.getValue());
+		model.addAttribute("REPO_TYPE_R007", DictCodeList.回购期限品种_R007.getValue());
+		model.addAttribute("REPO_TYPE_R014", DictCodeList.回购期限品种_R014.getValue());
+		model.addAttribute("REPO_TYPE_R021", DictCodeList.回购期限品种_R021.getValue());
+		model.addAttribute("REPO_TYPE_R1M", DictCodeList.回购期限品种_R1M.getValue());
+		model.addAttribute("REPO_TYPE_R2M", DictCodeList.回购期限品种_R2M.getValue());
+		model.addAttribute("REPO_TYPE_R3M", DictCodeList.回购期限品种_R3M.getValue());
+		model.addAttribute("REPO_TYPE_R4M", DictCodeList.回购期限品种_R4M.getValue());
+		model.addAttribute("REPO_TYPE_R6M", DictCodeList.回购期限品种_R6M.getValue());
+		model.addAttribute("REPO_TYPE_R9M", DictCodeList.回购期限品种_R9M.getValue());
+		model.addAttribute("REPO_TYPE_R1Y", DictCodeList.回购期限品种_R1Y.getValue());
+		
         return super.init(model);
     }
 
