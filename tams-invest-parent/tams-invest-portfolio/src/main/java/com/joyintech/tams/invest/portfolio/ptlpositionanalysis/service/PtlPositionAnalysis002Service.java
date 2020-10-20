@@ -948,7 +948,8 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                 for (PtlPositionAnalysis003Dto entity : ptlPositionAnalysis003DtoPage.getRoot()) {
                     for (String key : institutionNameMap.keySet()) {
                         if (entity.getParentInfo().startsWith(key + "F0")) { // todo 没有完全相等的条件
-                            entity.setBelongInstitutionNameNew(institutionNameMap.get(key).toString());
+                            entity.setBelongInstitutionNameNew(institutionNameMap.get(key)!=null?institutionNameMap.get(key).toString():"");
+//                            entity.setBelongInstitutionNameNew(""+institutionNameMap.get(key).toString());
                         }
                         pageList.add(entity);
                     }
