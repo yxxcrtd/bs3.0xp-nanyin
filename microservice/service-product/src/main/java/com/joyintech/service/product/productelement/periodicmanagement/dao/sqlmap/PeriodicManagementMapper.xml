@@ -327,6 +327,7 @@
 	
 	<!-- 期次管理查询 -->
 	<select id="selectForPage" resultType="com.joyintech.service.product.productelement.periodicmanagement.dto.PeriodicManagement001Dto">
+			select * from (
 			<choose>
 			<when test="validStatus != null and validStatus == VALID_STATUS_01">
 				<include refid="validStatus01_sql"></include>
@@ -339,7 +340,8 @@
 				union all
 				<include refid="validStatus01_sql"/>
 			</otherwise>
-		</choose>
+			</choose>
+		) order by PERIODPRODID , STARTDATE
 	</select>
 	
 	<select id="getInvestCycle" resultType="com.joyintech.framework.select.SelectOptionDto">
