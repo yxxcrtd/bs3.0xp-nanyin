@@ -665,7 +665,7 @@
      * 计算费用
      */
     var calFee = function(){
-    	debugger;
+//    	debugger;
         if(!$("#tradeDate").val()){
             return;
         }
@@ -1306,7 +1306,9 @@
 				/*$('#TrdOutRightRepoTrade002_mdate').attr('disabled',true);*/
 				//YHZGCPB20200617004   银行间质押式正回购交易选择期限品种R007,修改回购期限为2天，点击保存按钮，在待办中双击查看此数据，回购期限变成了7天，导致到期结算金额错误 leipeng 20200619
 				if(!$('#workflowId').val()){
-					$('#term').val(repoterm).trigger('change');
+				    if($('#term').val()!=repoterm){
+				    $('#term').val(repoterm).trigger('change');
+				    }
         		}
 			}
 //		}

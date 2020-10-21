@@ -84,6 +84,13 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
         String searchDate = map.get("searchDate").toString(); // 查询日期
         List<PtlPositionAnalysis003Dto> pageList = new ArrayList<>();
         Page<PtlPositionAnalysis003Dto> list = restTemplate.postForPage(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlPositionAnalysis/secReportPage", map, PtlPositionAnalysis003Dto.class);
+        
+        //设置页面显示长度的初始值，这个正常情况下在map里会有设置
+        int pageSize = 20;
+        int total = 0;
+        if(map.get("length")!=null) {
+        	pageSize = Integer.parseInt((String)map.get("length"));
+        }
 
         // 根据下钻层级重新组装树机构类型
         String level = map.get("deepLevel").toString();
@@ -140,7 +147,11 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                     }
                 }
                 list.setRoot(pageList);
-                list.setTotal(pageList.size());
+                total = pageList.size()/pageSize;
+                if(pageList.size()%pageSize>0){
+                    total++;
+                }
+                list.setTotal(total);
                 return list;
             } else if (level.equals(DictCodeListExt3.下钻层级_资产二级分类.getValue())) {
                 if (displayType.equals(DictCodeListExt3.展示方式_多组合汇总.getValue())) {
@@ -218,7 +229,12 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                     }
                 }
                 list.setRoot(pageList);
-                list.setTotal(pageList.size());
+                total = pageList.size()/pageSize;
+                if(pageList.size()%pageSize>0){
+                    total++;
+                }
+                list.setTotal(total);
+//                list.setTotal(pageList.size());
                 return list;
             } else if (level.equals(DictCodeListExt3.下钻层级_资产三级分类.getValue())) {
                 if (displayType.equals(DictCodeListExt3.展示方式_多组合汇总.getValue())) {
@@ -345,7 +361,12 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                             return o.getParentInfo() + "," + o.getChildInfo();
                         }))), ArrayList::new));
                 list.setRoot(pageNewList);
-                list.setTotal(pageNewList.size());
+                total = pageNewList.size()/pageSize;
+                if(pageNewList.size()%pageSize>0){
+                    total++;
+                }
+                list.setTotal(total);
+//                list.setTotal(pageNewList.size());
                 return list;
             } else if (level.equals(DictCodeListExt3.下钻层级_资产四级分类.getValue())) {
                 if (displayType.equals(DictCodeListExt3.展示方式_多组合汇总.getValue())) {
@@ -509,7 +530,12 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                             return o.getParentInfo() + "," + o.getChildInfo();
                         }))), ArrayList::new));
                 list.setRoot(pageNewList);
-                list.setTotal(pageNewList.size());
+                total = pageNewList.size()/pageSize;
+                if(pageNewList.size()%pageSize>0){
+                    total++;
+                }
+                list.setTotal(total);
+//                list.setTotal(pageNewList.size());
                 return list;
             } else if (level.equals(DictCodeListExt3.下钻层级_资产五级分类.getValue())) {
                 if (displayType.equals(DictCodeListExt3.展示方式_多组合汇总.getValue())) {
@@ -703,7 +729,12 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                             return o.getParentInfo() + "," + o.getChildInfo();
                         }))), ArrayList::new));
                 list.setRoot(pageNewList);
-                list.setTotal(pageNewList.size());
+                total = pageNewList.size()/pageSize;
+                if(pageNewList.size()%pageSize>0){
+                    total++;
+                }
+                list.setTotal(total);
+//                list.setTotal(pageNewList.size());
                 return list;
             }
         }
@@ -932,6 +963,13 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
         String level = map.get("deepLevel").toString();
         String displayType = map.get("displayType").toString();
         map.put("export", "Y");
+        //剔除之前导出文件中包含的数据
+        int thisPage = (int)map.get("page");
+        int pageSize = (int)map.get("length");
+        int popNum = (thisPage-1)*pageSize; 
+        //全部查出
+        map.put("page", 1);
+        map.put("length", Integer.toString(pageSize));
         Page<PtlPositionAnalysis003Dto> list = selectForPage(map);
 
         Map<String, String> institutionNameMap = new HashMap<>();
@@ -941,21 +979,33 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
             }
         });
 
-        list.getRoot().forEach(item -> {
-            map.put("parentId", item.getChildInfo());
-            if (item.getHasChildren().equals("01")) {
-                Page<PtlPositionAnalysis003Dto> ptlPositionAnalysis003DtoPage = selectForPage(map);
-                for (PtlPositionAnalysis003Dto entity : ptlPositionAnalysis003DtoPage.getRoot()) {
-                    for (String key : institutionNameMap.keySet()) {
-                        if (entity.getParentInfo().startsWith(key + "F0")) { // todo 没有完全相等的条件
-                            entity.setBelongInstitutionNameNew(institutionNameMap.get(key).toString());
-                        }
-                        pageList.add(entity);
+        for(PtlPositionAnalysis003Dto item: list.getRoot()) {
+          map.put("parentId", item.getChildInfo());
+          if (item.getHasChildren().equals("01")) {
+        	//子查询中并未调用queryForPage包装分页，该结果为全部查询结果，不需要循环
+          	Page<PtlPositionAnalysis003Dto> ptlPositionAnalysis003DtoPage=selectForPage(map);
+          	for (PtlPositionAnalysis003Dto entity : ptlPositionAnalysis003DtoPage.getRoot()) {
+                for (String key : institutionNameMap.keySet()) {
+                    if (entity.getParentInfo().startsWith(key + "F0")) { // todo 没有完全相等的条件
+                        entity.setBelongInstitutionNameNew(institutionNameMap.get(key)!=null?institutionNameMap.get(key).toString():"");
+                    }
+                    if(popNum>0) {
+                    	popNum--;
+                    }
+                    else {
+                    	pageList.add(entity);
                     }
                 }
             }
-        });
-        list.setTotal(pageList.size());
+          }
+        };
+        
+        //计算总页数
+        int total = pageList.size()/pageSize;
+        if(pageList.size()%pageSize>0) {
+        	total = total+1;
+        }
+        list.setTotal(total);
         list.setRoot(pageList);
         return list;
     }

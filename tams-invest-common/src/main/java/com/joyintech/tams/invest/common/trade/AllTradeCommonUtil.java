@@ -167,18 +167,16 @@ public class AllTradeCommonUtil {
                 String chlModelType = CacheUtil.getSysParam("CHL_MODEL_TYPE");
                 if (StringUtil.isNotEmpty(chlModelType) && chlModelType.equals("01")) {
                     inputDto.getTrdProductDeal().setChlId(null);
-
-                }
-                //项目类  计划类净值 通道信息置空  逾期信息置空
-                else if (StringUtil.equals(deal.getBusiType(), DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue())
-                		||StringUtil.equals(deal.getBusiType(), DictCodeList.共通业务类型_项目类资产交易.getValue())
-                		||StringUtil.equals(deal.getBusiType(), DictCodeList.共通业务类型_项目类资产存续期.getValue())
-            			||StringUtil.equals(deal.getBusiType(), DictCodeList.共通业务类型_计划类资产_利率型_存续期.getValue())
-            			||StringUtil.equals(deal.getBusiType(), DictCodeList.业务类型_逾期交易.getValue())
-            			){
-                	inputDto.getTrdProductDeal().setChlId(null);
-                }
-                else {
+                    //项目类  计划类净值 通道信息置空  逾期信息置空
+                    if (StringUtil.equals(deal.getBusiType(), DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue())
+                            ||StringUtil.equals(deal.getBusiType(), DictCodeList.共通业务类型_项目类资产交易.getValue())
+                            ||StringUtil.equals(deal.getBusiType(), DictCodeList.共通业务类型_项目类资产存续期.getValue())
+                            ||StringUtil.equals(deal.getBusiType(), DictCodeList.共通业务类型_计划类资产_利率型_存续期.getValue())
+                            ||StringUtil.equals(deal.getBusiType(), DictCodeList.业务类型_逾期交易.getValue())
+                    ){
+                        inputDto.getTrdProductDeal().setChlId(null);
+                    }
+                }else {
                     isChlIdTZ = StringUtil.isNotEmpty(inputDto.getTrdProductDeal().getChlId());
                 }
             }
