@@ -21,6 +21,8 @@ import com.joyintech.service.valuation.financialstatement.assetliailitystatement
 import com.joyintech.service.valuation.financialstatement.assetliailitystatement.dto.AssetLiabilityStatementQuery001SearchDto;
 import com.joyintech.service.valuation.financialstatement.assetliailitystatement.dto.AssetLiabilityStatementQueryDto;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.jasypt.commons.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -168,15 +170,21 @@ public class AssetLiabilityStatementQuery001Service extends CommonExportService<
             datedto = mapper.getDateInfo1(pageParam);
         }else{
             List<AssetLiabilityStatementQuery001SearchDto> dateList = mapper.getDateInfo2(pageParam);
-            for(AssetLiabilityStatementQuery001SearchDto item:dateList){
-                if(datedto.getReportDate() == null || datedto.getReportDate() == ""){
-                    datedto.setReportDate(item.getReportDate());
-                }else{
-                    if(datedto.getReportDate().compareTo(item.getReportDate()) > 0){
-                        datedto.setReportDate(item.getReportDate());
-                    }
-                }
-            }
+            if(dateList.size()>0){
+				for(AssetLiabilityStatementQuery001SearchDto item:dateList){
+					if(datedto.getReportDate() == null || datedto.getReportDate() == ""){
+						datedto.setReportDate(item.getReportDate());
+					}else{
+						if(datedto.getReportDate().compareTo(item.getReportDate()) > 0){
+							datedto.setReportDate(item.getReportDate());
+						}
+					}
+				}
+			// add by caiqun 20201021 报表维度选择全账套，配置产品组时没有选择任何产品，datedto.setReportDate取值为空下面格式日期会报错
+			// 改成为空时取平台日
+			}else{
+				datedto.setReportDate(DateUtil.getSysDate());
+			}
         }
         if(DictCodeListExt1.报表期限类型_日报.getValue().equals(reportTermType)){
             datedto.setReportDate(DateUtil.format(DateUtil.addDate(DateUtil.parse(datedto.getReportDate()), 0, 0, -1)));
