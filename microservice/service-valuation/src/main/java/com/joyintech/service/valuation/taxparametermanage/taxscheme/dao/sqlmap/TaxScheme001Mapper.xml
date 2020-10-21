@@ -209,6 +209,7 @@
             </if>
         </where>
 
+        <if test="checkModel == null or checkModel == ''  or checkModel != '01'">
         union all
 
         select
@@ -258,6 +259,7 @@
             AND NOT EXISTS ( SELECT 1 FROM Data_Auth_Notify_Inst dani
             WHERE dani.business_id = t.tax_id AND dani.model_type = '02' AND dani.data_type = 'TAXADT' )
         </where>
+        </if>
     </select>
 	
 	<select id="selectTaxable" resultType="com.joyintech.service.valuation.taxparametermanage.taxscheme.dto.TaxScheme001Dto">

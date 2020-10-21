@@ -10,8 +10,12 @@
 
 package com.joyintech.tams.valuation.taxparametermanage.taxscheme.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -88,6 +92,12 @@ public class TaxScheme004Controller extends BaseController {
 		dto.setOperateType(operateType);
 		model.addAttribute("entity", dto);
 
+        if(MultilevelDataAuthorityUtil.isEnabled()) {
+            model.addAttribute("institutionCode", MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName()));
+        }else{
+            model.addAttribute("institutionCode","");
+        }
+
 		super.setSelectOptionToModel(model, DictCode.附加税类型);
 		return super.init(model);
 	}
@@ -96,8 +106,7 @@ public class TaxScheme004Controller extends BaseController {
 	 * 提交/保存 check
 	 * 
 	 * @param dto
-	 * @param result
-	 * @param operateType
+	 * @param bindingResult
 	 * @return
 	 * @throws Exception
 	 */
@@ -125,12 +134,28 @@ public class TaxScheme004Controller extends BaseController {
 			if (GlobalConstant.DETAIL_PAGE_MODEL_EDIT.equals(dto.getPageModel())) {// 修改时忽略本身
 				params.put("owner", dto.getTaxId());
 			}
-			long count = taxScheme001Service.findAdtTaxByPage(params).getRecords();
-			if (count > 0) {
-				msg = "税则表中已存在附加税类型_生效日相同的数据，请确保数据唯一性。";
-				return new AjaxResult(msg, MessageType.错误消息);
-			}
 
+			if(MultilevelDataAuthorityUtil.isEnabled()){
+
+			    // 校验模式  不校验公共数据  仅校验 成员行可新建生效日与公共附加税税则生效日一致的税则；成员行不能新建本机构生效日相同的税则
+			    params.put("checkModel","01");
+
+                List<String> treeInstCode = new ArrayList<>();
+                treeInstCode.add(dto.getInstitutionCode());
+                params.put("instCode",treeInstCode);
+
+                long count = taxScheme001Service.findAdtTaxByPage(params).getRecords();
+                if (count > 0) {
+                    msg = "税则表中已存在同机构下附加税类型_生效日相同的数据，请确保数据唯一性。";
+                    return new AjaxResult(msg, MessageType.错误消息);
+                }
+            }else {
+                long count = taxScheme001Service.findAdtTaxByPage(params).getRecords();
+                if (count > 0) {
+                    msg = "税则表中已存在附加税类型_生效日相同的数据，请确保数据唯一性。";
+                    return new AjaxResult(msg, MessageType.错误消息);
+                }
+            }
 		}
 
 		return commonCheck(bindingResult, operateType);
@@ -139,7 +164,6 @@ public class TaxScheme004Controller extends BaseController {
   /**
    * 新建或修改 并启动流程
    * @param dto
-   * @param bindingResult
    * @return
    */
   @ResponseBody

@@ -549,6 +549,25 @@ $(function () {
 		 * 绑定事件：附加税则表 - 编辑
 		 */
 		adtTaxTable.bind('click', '.edit', function(data, index) {
+            if(isEJFRflag ){
+            // 1.默认方案 当新建附加税税则生效日小于或等于平台日期时，不允许编辑
+            // 2.默认方案  当新建附加税税则大于平台日期时，允许编辑
+            // 3.公共附加税税则，不允许编辑
+               if(data.updateFlg == '02'){
+               // 公共数据不让删除
+                    Joyin.alert("公共附加税税则不允许编辑",2);
+                    return false;
+               }
+               if(data.isDefault==='Y'){
+                    var effDate = data.effDate;
+                    // 生效日
+                    if(new Date(platDate).DateDiff('d',effDate)<=0){
+                        Joyin.alert("默认方案下非公共附加税税则生效日小于或等于平台日期时，不允许编辑",2);
+                        return false;
+                    }
+               }
+            }
+
 		   	Joyin.dialog(JoyinUtil.getLabel("编辑附加税则表（ "+ "<span style='color:red'> * </span>" + "必填）"),
 		               basePath + "valuation/taxparametermanage/taxscheme/TaxScheme004/init",
 		               "65%", "85%", {pageModel:PAGE_MODEL_EDIT, taxId: data.taxId, operateType: "edit"},function(){
@@ -574,18 +593,40 @@ $(function () {
 			var object = {};
 	    	object.taxId = data.taxId;
 	    	var isDefault =data.isDefault;
-	    	if(isDefault==='Y'){
-	    		Joyin.alert("默认税务方案附加税则表中内容不可删除",2);
+
+	    	if(isEJFRflag ){
+	    	// 1.删除规则修改  默认方案 当新建附加税税则生效日小于或等于平台日期时，不允许删除；
+	    	// 2.默认方案  当新建附加税税则大于平台日期时，允许删除
+	    	// 3.公共附加税税则，不允许删除
+	    	   if(data.updateFlg == '02'){
+	    	   // 公共数据不让删除
+	    	        Joyin.alert("公共附加税税则不允许删除",2);
+	    	        return false;
+	    	   }
+	    	   if(isDefault==='Y'){
+	    	        var effDate = data.effDate;
+	    	        // 生效日
+                    if(new Date(platDate).DateDiff('d',effDate)<=0){
+                        Joyin.alert("默认方案下非公共附加税税则生效日小于或等于平台日期时，不允许删除",2);
+                        return false;
+                    }
+	    	   }
 	    	}else{
-	    		object.operateType = "delete";
-			   	Joyin.ajaxJson(basePath + 'valuation/taxparametermanage/taxscheme/TaxScheme001/check', object, function(result) {
-			           Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-			        	   WorkFlow.doDeleteList(basePath + 'valuation/taxparametermanage/taxscheme/TaxScheme001/deleteAdtTax', object, "TaxScheme001_btn_adtTax_delete", "TaxScheme004",function() {
-			        		   adtTaxTable.reload();
-	       	              });
-			           });
-		       });
+                if(isDefault==='Y'){
+                    Joyin.alert("默认税务方案附加税则表中内容不可删除",2);
+                    return false;
+                }
 	    	}
+
+            object.operateType = "deleteAdtTax";
+            Joyin.ajaxJson(basePath + 'valuation/taxparametermanage/taxscheme/TaxScheme001/check', object, function(result) {
+                   Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
+                       WorkFlow.doDeleteList(basePath + 'valuation/taxparametermanage/taxscheme/TaxScheme001/deleteAdtTax', object, "TaxScheme001_btn_adtTax_delete", "TaxScheme004",function() {
+                           adtTaxTable.reload();
+                      });
+                   });
+           });
+
 	   });
 		
       /** 事件绑定: 附加税则表-批量删除 */
@@ -598,6 +639,31 @@ $(function () {
       		object.taxId = rowArr[0].taxId;
       		object.effDate = rowArr[0].effDate;
       		object.isDefault = rowArr[0].isDefault;
+
+      		if(isEJFRflag ){
+            // 1.删除规则修改  默认方案 当新建附加税税则生效日小于或等于平台日期时，不允许删除；
+            // 2.默认方案  当新建附加税税则大于平台日期时，允许删除
+            // 3.公共附加税税则，不允许删除
+               if(rowArr[0].updateFlg == '02'){
+               // 公共数据不让删除
+                    Joyin.alert("公共附加税税则不允许删除",2);
+                    return false;
+               }
+               if(rowArr[0].isDefault==='Y'){
+                    var effDate = rowArr[0].effDate;
+                    // 生效日
+                    if(new Date(platDate).DateDiff('d',effDate)<=0){
+                        Joyin.alert("默认方案下非公共附加税税则生效日小于或等于平台日期时，不允许删除",2);
+                        return false;
+                    }
+               }
+            }else{
+                if(rowArr[0].isDefault==='Y'){
+                    Joyin.alert("默认税务方案附加税则表中内容不可删除",2);
+                    return false;
+                }
+            }
+
   	    	object.operateType = "deleteAdtTax";
   		   	Joyin.ajaxJson(basePath + 'valuation/taxparametermanage/taxscheme/TaxScheme001/check', object, function(result) {
   		   		   object.operateType = "delete";

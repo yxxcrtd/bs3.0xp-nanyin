@@ -156,8 +156,15 @@ public class TaxScheme004Dto extends BaseEntity implements ProcessEntity {
     public void setPageModel(String pageModel) {
         this.pageModel = pageModel;
     }
-    
-    
-    
-	
+
+	@PrimaryKey(value=Field.PK_5)
+    private String institutionCode;
+
+	public String getInstitutionCode() {
+		return institutionCode;
+	}
+
+	public void setInstitutionCode(String institutionCode) {
+		this.institutionCode = institutionCode;
+	}
 }

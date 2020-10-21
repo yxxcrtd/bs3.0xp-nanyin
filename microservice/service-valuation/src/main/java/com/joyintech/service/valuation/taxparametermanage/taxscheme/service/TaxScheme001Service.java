@@ -81,8 +81,7 @@ public class TaxScheme001Service extends CommonExportService<TaxScheme001Dto>{
     public Page<TaxScheme001Dto> findAdtTaxByPage(int page, int length, Map<String, Object> parameters) throws Exception {
 
         if(MultilevelDataAuthorityUtil.isEnabled()){
-            List<String> treeInstCode = LoginUserUtil.getTreeInstCode();
-            parameters.put("instCode",treeInstCode);
+
             return super.queryForPage(page, length, ()-> taxScheme001Mapper.findAdtTaxEJFR(parameters));
         }else {
             return super.queryForPage(page, length, ()-> taxScheme001Mapper.selectAdtTax(parameters));
