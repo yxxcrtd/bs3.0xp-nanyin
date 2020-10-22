@@ -155,6 +155,9 @@ public class TaFloadFeeAccountsService {
         // 标的_业绩报酬计算规则
         List<TargetPerfRewardCalRule> targetPerfRewardCalRuleList = (List<TargetPerfRewardCalRule>)targetInfo.get(
             ValDictCodeList.标的_业绩报酬计算规则.getValue());
+        if(targetPerfRewardCalRuleList.size() <= 0){
+            return null;
+        }
         TargetPerfRewardCalRule targetPerfRewardCalRule = targetPerfRewardCalRuleList.get(
             targetPerfRewardCalRuleList.size() - 1);
 
