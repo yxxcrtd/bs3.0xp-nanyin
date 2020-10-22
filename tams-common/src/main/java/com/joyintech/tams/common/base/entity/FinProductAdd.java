@@ -1276,4 +1276,16 @@ public class FinProductAdd extends BaseEntity {
     public void setCalRateType(String calRateType) {
         this.calRateType = calRateType;
     }
+
+
+    private String repFinprodInsId;
+
+    public String getRepFinprodInsId() {
+        return repFinprodInsId;
+    }
+
+    public void setRepFinprodInsId(String repFinprodInsId) {
+        this.repFinprodInsId = repFinprodInsId;
+    }
+
 }

@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCodeListExt3;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -298,8 +299,9 @@ public class FinProductBuild002Service extends BaseService<FinProductBuild002Dto
                       entity.getFinprodMarketId(), DictCodeListExt1.金融产品类型_投管用_理财产品.getValue(),
                       null) : IDGenerator.generate());
 
-        		entity.setRepFinprodInsId(entity.getFinprodMarketId());
-
+        		if(StringUtil.isEmpty(entity.getRepFinprodInsId())) {
+                    entity.setRepFinprodInsId(entity.getFinprodMarketId());
+                }
         	}
             // 生成金融产品代码
 //            entity.setFinprodId(commonBusinessService != null ? commonBusinessService.getFinProdId(
@@ -518,6 +520,27 @@ public class FinProductBuild002Service extends BaseService<FinProductBuild002Dto
                     entity.getBussRepFinProductInfoDto().setRepIsCashManage(entity.getIsCashManage());
                     /**20191203 add by taoran end **/
                     bussRepFinProductInfoService.insert(entity.getBussRepFinProductInfoDto());
+
+                    // 二级法人权限处理 WY
+                    if(MultilevelDataAuthorityUtil.isEnabled() &&   StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.PRODUCTT_IS_MERGER), DictCodeList.是否_是.getValue())  ) {
+                        //创建机构代码
+                        String createInst =   MultilevelDataAuthorityUtil.getService().queryOrganizationCode(entity.getCreateUser());
+                        entity.setCreateInst(createInst);
+                        // 有查询权限的机构代码
+                        List<String> searchOrgCodeList = null;
+                        // 有编辑权限的机构代码
+                        List<String> editOrgCodeList = null;
+                        // 新建或修改时重新设置二级法人权限，删除时则清空
+                        if (!OperationType.DELETE.equals(type)) {
+                            //获取所有父级机构。  拥有查看权限
+                            searchOrgCodeList = CommonUtil.getParentInstitution(createInst);
+                            // 仅资产的创建机构（当前登录用户所在机构）有编辑权限
+                            editOrgCodeList = Arrays.asList(entity.getCreateInst());
+                        }
+                        // 记录二级法人权限
+                        insertDataAuthTypeInst(entity.getBussRepFinProductInfoDto().getRepFinprodId(), searchOrgCodeList, editOrgCodeList, DictCodeListExt3.共通业务类型_产品申报登记要素管理.getValue());
+                    }
+
                 }
 
               this.insertOtherData(entity, ptlFlag);  //edit by dongenkuo 20190311 创建组合放在service层，此处注释掉

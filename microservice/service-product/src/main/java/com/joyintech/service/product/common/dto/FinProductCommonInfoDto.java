@@ -266,7 +266,7 @@ public class FinProductCommonInfoDto extends FinProduct{
     /**
      * 行内标识码
      */
-//    private String repFinprodInsId;
+    private String repFinprodInsId;
     public String getIsCashManage() {
 		return isCashManage;
 	}
@@ -1117,14 +1117,14 @@ public Integer getRepFinprodStageC() {
 	}
 
 
-//	public String getRepFinprodInsId() {
-//		return repFinprodInsId;
-//	}
+	public String getRepFinprodInsId() {
+		return repFinprodInsId;
+	}
 
 
-//	public void setRepFinprodInsId(String repFinprodInsId) {
-//		this.repFinprodInsId = repFinprodInsId;
-//	}
+	public void setRepFinprodInsId(String repFinprodInsId) {
+		this.repFinprodInsId = repFinprodInsId;
+	}
 	
 	/**
      * 回补信息集合

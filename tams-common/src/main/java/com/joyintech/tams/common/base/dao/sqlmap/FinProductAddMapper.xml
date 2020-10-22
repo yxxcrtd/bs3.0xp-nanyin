@@ -108,7 +108,7 @@
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FinProductAdd" >
-        insert into FIN_PRODUCT_ADD (FINPROD_ID, SALE_DEPARTMENT, SALE_LAYER, 
+        insert into FIN_PRODUCT_ADD (FINPROD_ID, SALE_DEPARTMENT, SALE_LAYER,
             SALE_PERIOD, PUR_SPEED, RED_SPEED, 
             IS_SEC_BOND, WIND_ID, IS_AUTO_UPDATE, 
             PORTFOLIO_ID, PROD_REGIST_CODE, IS_CYCLE, 
@@ -129,7 +129,7 @@
             PUR_RED_ID, PUR_RED_ABBR, PUR_START_LOW, 
             RED_START_LOW, ETF_TYPE, ETF_MIN_PRUNIT, 
             IS_RECEIPT, IS_NETPRICE, CREATE_ORG, 
-            VAL_ORG
+            VAL_ORG,REP_FINPROD_INS_ID
             <if test="calRateType != null" >
                 ,cal_Rate_Type
             </if>)
@@ -154,7 +154,7 @@
             #{purRedId,jdbcType=VARCHAR}, #{purRedAbbr,jdbcType=VARCHAR}, #{purStartLow,jdbcType=DECIMAL}, 
             #{redStartLow,jdbcType=DECIMAL}, #{etfType,jdbcType=VARCHAR}, #{etfMinPrunit,jdbcType=DECIMAL}, 
             #{isReceipt,jdbcType=VARCHAR}, #{isNetprice,jdbcType=VARCHAR}, #{createOrg,jdbcType=VARCHAR}, 
-            #{valOrg,jdbcType=VARCHAR}
+            #{valOrg,jdbcType=VARCHAR},#{repFinprodInsId,jdbcType=VARCHAR}
             <if test="calRateType != null" >
                 ,#{calRateType,jdbcType=VARCHAR}
             </if>)
