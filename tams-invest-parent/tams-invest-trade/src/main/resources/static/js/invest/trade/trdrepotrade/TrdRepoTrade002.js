@@ -1271,6 +1271,11 @@
 		var termType = $('#termTypeReback').val();
 //		if($("#repoType").val()&&$("#repoType").val()==TARGET_BACK_TYPE_H02){
 			if ($('#termTypeReback').val()){
+				if(termType == REPO_TYPE_R001 || termType == REPO_TYPE_R007 || termType == REPO_TYPE_R014 || termType == REPO_TYPE_R021 || 
+						termType == REPO_TYPE_R1M || termType == REPO_TYPE_R2M || termType == REPO_TYPE_R3M || 
+						termType == REPO_TYPE_R4M || termType == REPO_TYPE_R6M || termType == REPO_TYPE_R9M ||termType == REPO_TYPE_R1Y ){
+					return;
+				}
 				var repoterm = '';
 				if (termType == R001 || termType == GC001 || termType == R_001 || termType == RC001){
 					repoterm = 1;
