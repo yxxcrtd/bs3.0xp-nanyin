@@ -106,10 +106,31 @@ public class TrdRepoTrade004Controller extends BaseController {
             }
             tradeId=dto.getTradeId();
             //选出质押券列表
+            if(!StringUtil.isEmptyList(dto.getOutDataTable())) {
+                dto.getOutDataTable().stream().forEach(item -> {
+                    if (item.getPledgeRatio() != null && !item.getPledgeRatio().equals(BigDecimal.ZERO)) {
+                        item.setAvaPledgePrin(ArithmeticUtil.multiply(ArithmeticUtil.divide(item.getPledgePrin(), item.getPledgeRatio(), 4),new BigDecimal(100)));
+                    } else {
+                        item.setAvaPledgePrin(item.getPledgePrin());
+                    }
+                });
+            }
+
             model.addAttribute("entity_outBussRepoSec",
                     dto.getOutDataTable() == null ? null : JsonUtils.object2Json(
                             dto.getOutDataTable()));
             //最终质押券列表
+            //选出质押券列表
+            if(!StringUtil.isEmptyList(dto.getBussResultRepoSec())) {
+                dto.getBussResultRepoSec().stream().forEach(item -> {
+                    if (item.getPledgeRatio() != null && !item.getPledgeRatio().equals(BigDecimal.ZERO)) {
+                        item.setAvaPledgePrin(ArithmeticUtil.multiply(ArithmeticUtil.divide(item.getPledgePrin(), item.getPledgeRatio(), 4),new BigDecimal(100)));
+                    } else {
+                        item.setAvaPledgePrin(item.getPledgePrin());
+                    }
+                });
+            }
+
             model.addAttribute("bussResultRepoSecMsg",
                     dto.getBussResultRepoSec() == null ? null : JsonUtils.object2Json(
                             dto.getBussResultRepoSec()));
@@ -144,6 +165,16 @@ public class TrdRepoTrade004Controller extends BaseController {
             }
 
             Page<PledgeBondInfoDto> trdRepoTrade001DtoPage = trdRepoTrade004Service.findOutPage(outRepoSecParm);
+
+            if(!StringUtil.isEmptyList(trdRepoTrade001DtoPage.getRoot())) {
+                trdRepoTrade001DtoPage.getRoot().stream().forEach(item -> {
+                    if (item.getPledgeRatio() != null && !item.getPledgeRatio().equals(BigDecimal.ZERO)) {
+                        item.setAvaPledgePrin(ArithmeticUtil.multiply(ArithmeticUtil.divide(item.getPledgePrin(), item.getPledgeRatio(), 4),new BigDecimal(100)));
+                    } else {
+                        item.setAvaPledgePrin(item.getPledgePrin());
+                    }
+                });
+            }
             model.addAttribute("entity_outBussRepoSec",
                     JsonUtils.object2Json(
                             trdRepoTrade001DtoPage.getRoot().stream().filter(a->(a.getPledgePrin()==null?new BigDecimal(0):a.getPledgePrin()).compareTo(new BigDecimal(0))!=0).collect(Collectors.toList())));
