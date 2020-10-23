@@ -529,14 +529,17 @@ function getColumns() {
 				});
 
 			} else {
-				colList = cols;
-				layui.use([ 'table' ], function() {
-					var table = layui.table;
-					table.render({
-						elem : '#dataTable',
-						cols : [ cols ]
+				if(cols.length > 1) {
+					colList = cols;
+					layui.use(['table'], function () {
+						var table = layui.table;
+						table.render({
+							elem: '#dataTable',
+							cols: [cols]
+						});
 					});
-				});
+					showTables();
+				}
 			}
 
 		}

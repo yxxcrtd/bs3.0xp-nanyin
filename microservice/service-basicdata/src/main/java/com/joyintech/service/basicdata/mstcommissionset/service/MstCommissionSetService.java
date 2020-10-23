@@ -28,7 +28,7 @@ import com.joyintech.service.basicdata.mstcommissionset.dto.MstCommissionSetDto;
  * @see MstCommissionSetService
  * @since 1.0
  */
-@Service
+@Service("backMstCommissionSetService")
 public class MstCommissionSetService extends BaseService<MstCommissionSetDto>{
     /**
      * 定义mapper

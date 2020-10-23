@@ -167,18 +167,16 @@ public class AllTradeCommonUtil {
                 String chlModelType = CacheUtil.getSysParam("CHL_MODEL_TYPE");
                 if (StringUtil.isNotEmpty(chlModelType) && chlModelType.equals("01")) {
                     inputDto.getTrdProductDeal().setChlId(null);
-
-                }
-                //项目类  计划类净值 通道信息置空  逾期信息置空
-                else if (StringUtil.equals(deal.getBusiType(), DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue())
-                		||StringUtil.equals(deal.getBusiType(), DictCodeList.共通业务类型_项目类资产交易.getValue())
-                		||StringUtil.equals(deal.getBusiType(), DictCodeList.共通业务类型_项目类资产存续期.getValue())
-            			||StringUtil.equals(deal.getBusiType(), DictCodeList.共通业务类型_计划类资产_利率型_存续期.getValue())
-            			||StringUtil.equals(deal.getBusiType(), DictCodeList.业务类型_逾期交易.getValue())
-            			){
-                	inputDto.getTrdProductDeal().setChlId(null);
-                }
-                else {
+                    //项目类  计划类净值 通道信息置空  逾期信息置空
+                    if (StringUtil.equals(deal.getBusiType(), DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue())
+                            ||StringUtil.equals(deal.getBusiType(), DictCodeList.共通业务类型_项目类资产交易.getValue())
+                            ||StringUtil.equals(deal.getBusiType(), DictCodeList.共通业务类型_项目类资产存续期.getValue())
+                            ||StringUtil.equals(deal.getBusiType(), DictCodeList.共通业务类型_计划类资产_利率型_存续期.getValue())
+                            ||StringUtil.equals(deal.getBusiType(), DictCodeList.业务类型_逾期交易.getValue())
+                    ){
+                        inputDto.getTrdProductDeal().setChlId(null);
+                    }
+                }else {
                     isChlIdTZ = StringUtil.isNotEmpty(inputDto.getTrdProductDeal().getChlId());
                 }
             }
@@ -271,8 +269,8 @@ public class AllTradeCommonUtil {
                     // 20200204 魏鹏：增加通道(一次性划款)内部转仓交易时通道划款的处理 设计变更 start
                     // IF 数据字典：是否.是 eq 输入.接口数据.是否转仓交易 AND 数据字典：划款方式.一次性划款 eq 变量.通道标的扩展信息Dto.划款方式
                     // update by caiqun 20200903 TISHKBS-1038一次性划款的通道，未做通道资金划拨，债券买入交易（通过该通道投资）审批通过后，入账信息表（BOK_DEAL_ACCOUNTING）表无数据
-                    //if(DictCodeList.是否_是.getValue().equals(inputDto.getIsSwapTransaction()) &&
-                    if(DictCodeListExt2.划款方式_一次性划款.getValue().equals(payType.getPayType())){
+                    if(DictCodeList.是否_是.getValue().equals(inputDto.getIsSwapTransaction()) &&
+                            DictCodeListExt2.划款方式_一次性划款.getValue().equals(payType.getPayType())){
                         // 调用接口【理财产品借通道投资交易】
                         // 2.4 产品买卖通道交易，调用接口【理财产品借通道投资交易】
                         ChannelProdDeal channelProdDeal = do生成ChannelProdDeal(deal, inputDto);

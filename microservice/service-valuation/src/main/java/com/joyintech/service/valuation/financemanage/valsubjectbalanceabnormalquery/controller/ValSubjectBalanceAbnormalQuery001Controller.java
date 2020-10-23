@@ -39,7 +39,7 @@ import com.joyintech.tams.valuation.common.service.BaseCommonService;
  * @see ValSubjectBalanceAbnormalQuery001Controller
  * @since 1.0
  */
-@RestController
+@RestController("backValSubjectBalanceAbnormalQuery001Controller")
 @RequestMapping("/ValSubjectBalanceAbnormalQuery001")
 public class ValSubjectBalanceAbnormalQuery001Controller extends BaseController {
 

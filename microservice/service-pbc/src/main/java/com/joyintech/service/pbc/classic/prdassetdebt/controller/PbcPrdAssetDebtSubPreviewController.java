@@ -18,7 +18,7 @@ import com.joyintech.tams.svreport.pbc.report.dto.PbcLoanDetailInfoSub;
  * @author hpp
  *
  */
-@RestController
+@RestController("backPbcPrdAssetDebtSubPreviewController")
 @RequestMapping("/PbcPrdAssetDebtSubPreview")
 public class PbcPrdAssetDebtSubPreviewController {
 	

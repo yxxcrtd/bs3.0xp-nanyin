@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * 质押式回购交易预录入
  */
-@RestController
+@RestController("backPreTrdRepoTrade001Controller")
 @RequestMapping("/PreTrdRepoTrade001")
 public class PreTrdRepoTrade001Controller {
 

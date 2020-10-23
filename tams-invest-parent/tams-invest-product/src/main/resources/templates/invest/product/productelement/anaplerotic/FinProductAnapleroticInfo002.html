@@ -23,7 +23,10 @@
 			<input id ="anapleroticId" name='anapleroticId' type="hidden" th:value="${entity?.anapleroticId}">
 			<input id ="isList" name='isList' type="hidden" th:value="${entity?.isList}">
 			<input id ="isAnapleroticList" name='isAnapleroticList' type="hidden" th:value="${entity?.isAnapleroticList}">
-			<input id ="operationType" name='operationType' type="hidden" th:value="${operationType}">
+			<input id ="operationType" name='operationType' type="hidden"  th:value="${operationType}">
+			<input id ="dealMode" name='dealMode' type="hidden" th:value="${dealMode}">
+			<input id ="openMode" name='openMode' type="hidden" th:value="${openMode}">
+
 			<div class="pro-module-wrap" id = "finprodInfoDiv">
 				<div class="pro-module">
 					<h3 class="pro-module-title">
@@ -175,7 +178,7 @@
 											class="layui-input form-input input-select"
 											th:initValue="${entity_benchMark?.rateType}"
 											data-th-data-result="${INT_TYPE}" searchable="false"
-											placeholder="请输入内容"
+											placeholder="请输入内容" required
 											data-th-placeholder="#{SysCommon.placeholder}">
 									</select>
 								</div>

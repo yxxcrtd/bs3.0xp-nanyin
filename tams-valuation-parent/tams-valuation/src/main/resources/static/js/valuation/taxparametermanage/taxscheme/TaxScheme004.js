@@ -7,6 +7,7 @@ $(function () {
 		var object = $.serializeToObject('#dataForm');
 		object.pageModel = pageModel;
 		object.operateType = operateType;
+		object.institutionCode = institutionCode;
 		
 		Joyin.ajaxJson(basePath + 'valuation/taxparametermanage/taxscheme/TaxScheme004/check', object, function(result) {
 		    Joyin.confirm(result.data, function() {

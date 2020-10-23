@@ -28,7 +28,7 @@ import com.joyintech.service.basicdata.versionswitch.dao.VersionSwitchMapper;
  * @see VersionSwitchService
  * @since 1.0
  */
-@Service
+@Service("backVersionSwitchService")
 @Transactional(rollbackFor = Exception.class)
 public class VersionSwitchService {
 

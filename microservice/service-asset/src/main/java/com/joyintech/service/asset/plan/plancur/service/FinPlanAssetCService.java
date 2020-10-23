@@ -53,7 +53,7 @@ import java.util.Map;
  * @see FinPlanAssetCService
  * @since 1.0
  */
-@Service
+@Service("backFinPlanAssetCService")
 public class FinPlanAssetCService extends BaseService<FinPlanAssetCDto> {
     @Autowired
     private FinPlanAssetCMapper finPlanAssetCMapper;

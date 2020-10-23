@@ -1202,6 +1202,21 @@
                 and (instr(TOTLE_TRADE_ID, #{search}) > 0)
             </if>
         </where>
+        <!--add by yujinfa for 添加流程中的业务编号显示 Start-->
+        UNION ALL
+            SELECT DISTINCT
+                /* 业务编号 */ T1.TOTLE_TRADE_ID id,
+                              T1.TOTLE_TRADE_ID text,
+                              T1.PORTFOLIO_ID  PORTFOLIO_ID
+            FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL T1
+
+        <where>
+            T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF01}
+            <if test="search != null and search != ''">
+                and (instr(TOTLE_TRADE_ID, #{search}) > 0)
+            </if>
+        </where>
+        <!--add by yujinfa for 添加流程中的业务编号显示 End-->
     </select>
     <!--add by liupengfei for 多级法人改造E-->
 </mapper>

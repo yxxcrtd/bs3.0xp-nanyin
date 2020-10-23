@@ -54,6 +54,12 @@ $(function() {
                 return;
             }
         }
+        var text = $('#isRight').next().find('em').text();
+        if(text==='否'){
+            $('#isRight').val('N');
+        }else{
+            $('#isRight').val('Y');
+        }
         var repAssetType = $('#repAssetType').val();
         //update by zhangnian 20190920 end
         var  couponSpecies = getInterestFactorElementById('couponSpecies').val();
@@ -440,6 +446,9 @@ $(function() {
                     $.each(Joyin.curfromData['FinBondTargetAsset002'],function(id, value){
                         resetForm(id, value.odata, '');
                     });
+                    
+                    $('#repAssetType').val(result.data.repAssetType).trigger('change');
+
                     $.each(result.data, function(id, value) {
                         setData(id, value, '');
                     });
@@ -449,7 +458,7 @@ $(function() {
                     		setData(id, value, '');
                     	}
                     });
-                    $('#repAssetType').val(result.data.repAssetType).trigger('change');
+
                     if(result.data.baseFinProductBaseInfoList[0].finProductAdd){
                     	// 是否次级债
 	                    var isSecBond = result.data.baseFinProductBaseInfoList[0].finProductAdd.isSecBond;

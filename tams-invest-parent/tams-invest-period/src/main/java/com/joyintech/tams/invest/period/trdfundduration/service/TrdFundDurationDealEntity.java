@@ -208,6 +208,8 @@ public class TrdFundDurationDealEntity extends BaseService<TrdFundDuration001Dto
                     baseTradeProductDealDto.setStlPayOrdersList(stls);
                 }
                 TrdProductDeal deal1 = baseTradeProductDealDto.getTrdProductDeal();
+                //给原交易编号赋值 TISHKBS-1365  add by caojin 20201004
+                deal1.setbTradeId(deal1.getTradeId());
                 deal1.setTradeId(deal1.getTradeId() + 'R');
                 deal1.setCreateUser(tradeDto.getCreateUser());
                 deal1.setCreateTime(tradeDto.getCreateTime());

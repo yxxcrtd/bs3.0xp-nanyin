@@ -17,7 +17,7 @@ import java.util.List;
  * @see BussFinProductCreditController
  * @since 1.0
  */
-@RestController
+@RestController("backBussFinProductCreditController")
 @RequestMapping("/BussFinProductCredit")
 public class BussFinProductCreditController {
     @Autowired

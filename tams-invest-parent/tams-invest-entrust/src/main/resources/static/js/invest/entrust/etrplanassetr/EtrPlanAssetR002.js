@@ -6,15 +6,19 @@
     var getriskdata = function () {
         var entrustAmt = $('#entrustAmt').val();
         var entrustNum = $('#entrustNum').val();
+        var ps = $('#ps').val();
         if(entrustAmt){
             var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:$('#entrustAmt').val(),assetType:fintype,isEnabled:'01',assetCode:$('#finprodIdhid').val()}
             var object = {tradeDirection:['ps','EtrPlanAssetR002.ps'],portfolioCode:['portfolioId','EtrPlanAssetR002.portfolioId'],tradeAmount:['entrustAmt','EtrPlanAssetR002.entrustAmt'],assetType:['assetType1','EtrPlanAssetR002.assetType1'],data:obj}
         }else if(entrustNum){
             var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:$('#entrustNum').val(),assetType:fintype,isEnabled:'01',assetCode:$('#finprodIdhid').val()}
             var object = {tradeDirection:['ps','EtrPlanAssetR002.ps'],portfolioCode:['portfolioId','EtrPlanAssetR002.portfolioId'],tradeAmount:['entrustNum','EtrPlanAssetR002.entrustNum'],assetType:['assetType1','EtrPlanAssetR002.assetType1'],data:obj}
-        }else{
+        }else if('T01'==ps){
             var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:$('#entrustAmt').val(),assetType:fintype,isEnabled:'01',assetCode:$('#finprodIdhid').val()}
             var object = {tradeDirection:['ps','EtrPlanAssetR002.ps'],portfolioCode:['portfolioId','EtrPlanAssetR002.portfolioId'],tradeAmount:['entrustAmt','EtrPlanAssetR002.entrustAmt'],assetType:['assetType1','EtrPlanAssetR002.assetType1'],data:obj}
+        }else{
+            var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:$('#entrustNum').val(),assetType:fintype,isEnabled:'01',assetCode:$('#finprodIdhid').val()}
+            var object = {tradeDirection:['ps','EtrPlanAssetR002.ps'],portfolioCode:['portfolioId','EtrPlanAssetR002.portfolioId'],tradeAmount:['entrustNum','EtrPlanAssetR002.entrustNum'],assetType:['assetType1','EtrPlanAssetR002.assetType1'],data:obj}
         }
         return object;
     }

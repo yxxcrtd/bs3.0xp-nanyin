@@ -28,7 +28,7 @@ import com.joyintech.service.risk.stresstestmanage.riskfactor.service.RiskFactor
  * @version 1.0 2019年8月23日
  * @since 1.0
  */
-@RestController
+@RestController("backRiskFactor003Controller")
 @RequestMapping("/RiskFactor003")
 public class RiskFactor003Controller {
 

@@ -19,7 +19,7 @@ import java.util.Map;
  * @create 2019- 11-19 15:32
  */
 
-@Service
+@Service("backTransferMessageService")
 public class TransferMessageService extends BaseService<TransferMessageDto> {
 
     @Autowired

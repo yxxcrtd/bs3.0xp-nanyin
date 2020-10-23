@@ -30,7 +30,7 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 /**
  * 产品规划共通
  */
-@Service
+@Service("backPlanningCommonService")
 @Transactional(rollbackFor = Exception.class)
 public class PlanningCommonService extends BaseService<PrdRiskLevel> {
 

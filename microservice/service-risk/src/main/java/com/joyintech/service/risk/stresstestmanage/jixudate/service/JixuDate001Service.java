@@ -28,7 +28,7 @@ import com.joyintech.tams.common.base.entity.SttDataReady;
  * @see JixuDate001Service
  * @since 1.0
  */
-@Service
+@Service("backJixuDate001Service")
 public class JixuDate001Service {
     
     @Autowired(required=false)

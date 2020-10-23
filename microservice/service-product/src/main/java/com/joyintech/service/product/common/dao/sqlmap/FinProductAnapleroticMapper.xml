@@ -12,7 +12,10 @@
         <result column="CycleTdayRule" property="cycleTdayRule" jdbcType="VARCHAR" />
         <result column="AnapleroticRatio" property="anapleroticRatio" jdbcType="NUMERIC" />
         <result column="FinprodAbbr" property="finprodAbbr" jdbcType="VARCHAR" />
-        <result column="mdate" property="mDate" jdbcType="VARCHAR" />
+		<result column="vdate" property="vDate" jdbcType="VARCHAR" />
+		<result column="mdate" property="mDate" jdbcType="VARCHAR" />
+		<result column="operationType" property="operationType" jdbcType="VARCHAR" />
+		<result column="dealMode" property="dealMode" jdbcType="VARCHAR" />
         <result column="CalendarId" property="calendarId" jdbcType="VARCHAR" />   
         <result column="rateType" property="rateType" jdbcType="VARCHAR" />
         <result column="rate" property="rate" jdbcType="DECIMAL" />
@@ -41,7 +44,10 @@
 	        <result column="AstVluDateType" property="astVluDateType" jdbcType="VARCHAR" />
 	        <result column="AnapleroticRatio" property="anapleroticRatio" jdbcType="NUMERIC" />
 	        <result column="Remark" property="remark" jdbcType="VARCHAR" />
-	        <result column="mdate" property="mDate" jdbcType="VARCHAR" />
+			<result column="vdate" property="vDate" jdbcType="VARCHAR" />
+			<result column="mdate" property="mDate" jdbcType="VARCHAR" />
+			<result column="operationType" property="operationType" jdbcType="VARCHAR" />
+			<result column="dealMode" property="dealMode" jdbcType="VARCHAR" />
 	        <result column="FinprodAbbr" property="finprodAbbr" jdbcType="VARCHAR" />
 	        <result column="CalendarId" property="calendarId" jdbcType="VARCHAR" />
 	        <result column="rateType" property="rateType" jdbcType="VARCHAR" />
@@ -150,7 +156,10 @@
 		       b.FINPROD_ID FinprodId,
 		       h.remark Remark,
 		       g.FINPROD_ABBR FinprodAbbr,
+			   g.vdate,
 		       g.mdate,
+		       g.OPERATION_TYPE operationType,
+		       e.DEAL_MODE dealMode,
 		       g.CALENDAR_ID CalendarId,
 		       c.ACCR_CYCLE_UNIT AnapleroticFrequency, /*回补规则*/
 		       c.ACCR_TDAY_RULE CycleTdayRule,/*营业日准则*/ 
@@ -284,7 +293,10 @@
 		       b.FINPROD_ID FinprodId,
 		       h.remark Remark,
 		       g.FINPROD_ABBR FinprodAbbr,
-		       g.mdate,
+				g.vdate,
+				g.mdate,
+				g.OPERATION_TYPE operationType,
+				e.DEAL_MODE dealMode,
 		       g.CALENDAR_ID CalendarId,
 		       c.ACCR_CYCLE_UNIT AnapleroticFrequency, /*回补规则*/
 		       c.ACCR_TDAY_RULE CycleTdayRule,/*营业日准则*/ 
@@ -371,7 +383,10 @@
 		       nvl(k.FINPROD_ID,b.FINPROD_ID) FinprodId,
 		       h.remark Remark,
 		       g.FINPROD_ABBR FinprodAbbr,
+			   g.vdate,
 		       g.mdate,
+			   g.OPERATION_TYPE operationType,
+			   e.DEAL_MODE dealMode,
 		       g.CALENDAR_ID CalendarId,
 		       c.ACCR_CYCLE_UNIT AnapleroticFrequency, /*回补规则*/
 		       c.ACCR_TDAY_RULE CycleTdayRule,/*营业日准则*/ 

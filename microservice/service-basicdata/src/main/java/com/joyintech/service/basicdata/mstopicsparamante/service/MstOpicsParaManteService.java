@@ -33,7 +33,7 @@ import com.joyintech.service.basicdata.mstopicsparamante.dto.MstOpicsParaManteDt
  * @see MstOpicsParaManteService
  * @since 1.0
  */
-@Service
+@Service("backMstOpicsParaManteService")
 @Transactional
 public class MstOpicsParaManteService extends BaseService<MstOpicsParaManteDto> {
 

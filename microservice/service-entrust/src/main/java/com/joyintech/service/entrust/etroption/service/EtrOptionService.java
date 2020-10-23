@@ -61,7 +61,7 @@ import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
  * @see EtrOptionService
  * @since 1.0
  */
-@Service
+@Service("backEtrOptionService")
 public class EtrOptionService extends BaseService<EtrOptionDto> {
 
     /**

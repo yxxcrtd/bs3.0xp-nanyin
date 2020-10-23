@@ -94,7 +94,8 @@
 								class="layui-input form-input input-select"
 								data-th-placeholder="#{SysCommon.placeholder}"
 								data-th-initValue='${entity?.repProfitType}'													
-								data-th-data-result="${SVR_PROD_PROFIT_TYPE}" required>
+								data-th-data-result="${SVR_PROD_PROFIT_TYPE}"
+									childrenIds="repOperateMode" required>
 							</select>
 						</div>
 					</div>
@@ -248,7 +249,7 @@
 						<div class="layui-input-inline input-inline">
 							<select th:id="repOperateMode" th:name="repOperateMode"
 								class="layui-input form-input input-select"
-								data-th-data-result="${SVR_OPERATEMODE_DECLARE}" placeholder="请输入内容"
+								data-th-data-result="${SVR_OPERATEMODE_DECLARE}" placeholder="请输入内容" parentIds="repProfitType"
 								data-th-initValue="${entity?.repOperateMode}" data-th-placeholder="#{SysCommon.placeholder}" 
 								data-th-required="(${pageId} neq 'FinProductModule002')">
 							</select>

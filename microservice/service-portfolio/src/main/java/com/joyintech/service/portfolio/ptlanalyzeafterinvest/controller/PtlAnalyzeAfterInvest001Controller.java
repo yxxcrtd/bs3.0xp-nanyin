@@ -32,7 +32,7 @@ import java.util.Map;
  * @see
  * @since 1.0
  */
-@RestController
+@RestController("backPtlAnalyzeAfterInvest001Controller")
 @RequestMapping("/PtlAnalyzeAfterInvest")
 public class PtlAnalyzeAfterInvest001Controller {
 

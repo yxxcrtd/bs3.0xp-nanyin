@@ -41,6 +41,10 @@ public class TrdBondDuration003DtoValidator implements PeriodCommonValidator {
     public List<ValidMessage> bussValid(Object value) {
         List<ValidMessage> errorList = new ArrayList<>();
         TrdBondDuration003ProcessDto dto = (TrdBondDuration003ProcessDto)value;
+        if (dto.getSettleDate()!= null && dto.getPayDate()!= null && dto.getSettleDate().compareTo(dto.getPayDate()) <0) {
+        	errorList.add(
+                    new ValidMessage("settleDate", "资金到账日不能小于支付日！"));
+        }
         errorList.addAll(bussTrdTransferOrderService.check(dto.getBussTrdTransferOrder()));
         return errorList;
     }

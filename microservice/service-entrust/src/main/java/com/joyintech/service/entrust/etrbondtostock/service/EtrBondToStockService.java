@@ -44,7 +44,7 @@ import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommSer
  * @see EtrBondToStockService
  * @since 1.0
  */
-@Service
+@Service("backEtrBondToStockService")
 public class EtrBondToStockService extends BaseService<EtrBondToStockDto>{
 
     /**

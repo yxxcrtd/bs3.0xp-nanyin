@@ -39,7 +39,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
  * @see ValSharePriceService
  * @since 1.0
  */
-@Service
+@Service("backValSharePriceService")
 @Transactional(rollbackFor = Exception.class)
 public class ValSharePriceService extends BaseService<ValSharePriceDto>{
 

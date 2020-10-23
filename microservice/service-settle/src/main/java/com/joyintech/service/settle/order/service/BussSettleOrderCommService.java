@@ -37,7 +37,7 @@ import java.util.*;
 /**
  * 清算指令共通
  */
-@Service
+@Service("backBussSettleOrderCommService")
 public class BussSettleOrderCommService {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());

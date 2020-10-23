@@ -30,7 +30,7 @@ import com.joyintech.service.risk.stresstestmanage.flowrisksstresstestview.dao.F
  * @version 1.0 2019年8月24日
  * @since 1.0
  */
-@Service
+@Service("backFlowRiskStressTestView002Service")
 public class FlowRiskStressTestView002Service extends BaseService<FlowRiskStressTestView002Dto>{
 
     @Autowired

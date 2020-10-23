@@ -22,7 +22,7 @@ import com.joyintech.tams.disclosure.information.manage.prodfilemanage.service.R
  * @author hpp 
  *
  */
-@RestController
+@RestController("backReportProdFileManage001Controller")
 @RequestMapping("/ReportProdFileManage001")
 public class ReportProdFileManage001Controller extends BaseController{
 

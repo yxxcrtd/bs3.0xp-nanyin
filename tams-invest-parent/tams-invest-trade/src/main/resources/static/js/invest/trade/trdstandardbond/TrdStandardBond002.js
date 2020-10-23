@@ -74,7 +74,7 @@
             , {field: 'portfolioId', visible: false}
             , {field: 'tradePlace', visible: false}
             , {field: 'secAcctId', visible: false}
-            , {field: 'AvaStrdPrinAmt', visible: false}
+            //, {field: 'AvaStrdPrinAmt', visible: false}
 
         ]
     });

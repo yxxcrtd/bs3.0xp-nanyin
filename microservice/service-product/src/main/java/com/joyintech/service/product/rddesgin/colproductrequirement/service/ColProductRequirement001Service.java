@@ -20,7 +20,7 @@ import com.joyintech.service.product.rddesgin.colproductrequirement.dto.ColProdu
  * @see ColProductRequirement001Dto
  * @since 1.0
  */
-@Service
+@Service("backColProductRequirement001Service")
 public class ColProductRequirement001Service extends BaseService<ColProductRequirement001Dto> {
 
 	@Autowired

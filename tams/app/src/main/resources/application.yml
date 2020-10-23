@@ -15,13 +15,17 @@ spring:
   thymeleaf:
     cache: false
   profiles:
-    active: dtx
+    active: allinone
   application:
     name: tams-server
     dfstype: 2
   datasource:
+    type: org.apache.commons.dbcp2.BasicDataSource
     driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams0810
+    password: zgtams0810
     maxTotal: 10
     maxIdle: 10
     minIdle: 5
@@ -32,8 +36,16 @@ spring:
     logAbandoned: true
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
   activemq:
-    systemId: tams
     active: false
+    systemId: tams
+    brokerUrl: tcp://localhost:61616
+    user: system
+    password: manager
+    maximumRedeliveries: 10
+    initialRedeliveryDelay: 1
+    backOffMultiplier: 2
+    useExponentialBackOff: true
+    maximumRedeliveryDelay: -1
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
   http:
@@ -42,6 +54,7 @@ spring:
       maxRequestSize: 100Mb
 base:
   datasource:
+    type: org.apache.commons.dbcp2.BasicDataSource
     driverClassName: oracle.jdbc.driver.OracleDriver
     maxTotal: 10
     maxIdle: 10
@@ -81,6 +94,21 @@ stresstest:
     logAbandoned: true
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
     testWhileIdle: true
+#wind数据库配置
+wind:
+  datasource:
+    type: org.apache.commons.dbcp2.BasicDataSource
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    validationQuery: SELECT 1 FROM DUAL
+    maxTotal: 50
+    maxIdle: 50
+    minIdle: 20
+    timeBetweenEvictionRunsMillis: 60000  # 默认是-1
+    numTestsPerEvictionRun: 10
+    removeAbandonedOnBorrow: true
+    removeAbandonedOnMaintenance: true
+    logAbandoned: true
+    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.jdbc.ReadTimeout=50000
 tx-lcn:
   springcloud:
     loadbalance:
@@ -128,10 +156,105 @@ application:
   reportCbFeedBackHandleCountOneTime: 10000
   riskTestMaxCorePoolSize: 20
   riskTestmaxSubmitProductSize: 50
+#  不使用服务注册中心,tams和tams-service-container分开部署的方式
+#  loadbalance: false
+#  micorservice:
+#    contextPath:
+#      single: true
+#      commonService: http://127.0.0.1:8114
+#      basicDataService: http://127.0.0.1:8114
+#      documentService: http://127.0.0.1:8114
+#      entrustService: http://127.0.0.1:8114
+#      periodService: http://127.0.0.1:8114
+#      assetService: http://127.0.0.1:8114
+#      portfolioService: http://127.0.0.1:8114
+#      productService: http://127.0.0.1:8114
+#      quotaService: http://127.0.0.1:8114
+#      reportService: http://127.0.0.1:8114
+#      riskService: http://127.0.0.1:8114
+#      riskRdsService: http://127.0.0.1:8114
+#      riskInfService: http://127.0.0.1:8114
+#      settleService: http://127.0.0.1:8114
+#      tradeService: http://127.0.0.1:8114
+#      disclosureService: http://127.0.0.1:8114
+#      valuationService: http://127.0.0.1:8114
+#      chbService: http://127.0.0.1:8114
+#      chb3Service: http://127.0.0.1:8114
+#      svrcomService: http://127.0.0.1:8114
+#      pbcService: http://127.0.0.1:8114
+#      channelService: http://127.0.0.1:8114 
+#      customerInterfService: http://127.0.0.1:8114
+#      tamsServer: http://127.0.0.1:8114
+#      investInterfService: http://127.0.0.1:8114
+#      adapterService: http://127.0.0.1:8114
+
+#  不使用服务注册中心,tams和tams-service-container整体部署的方式
+  loadbalance: false
+  micorservice:
+    contextPath:
+      single: true
+      commonService: http://127.0.0.1:${server.port}/tams
+      basicDataService: http://127.0.0.1:${server.port}/tams
+      documentService: http://127.0.0.1:${server.port}/tams
+      entrustService: http://127.0.0.1:${server.port}/tams
+      periodService: http://127.0.0.1:${server.port}/tams
+      assetService: http://127.0.0.1:${server.port}/tams
+      portfolioService: http://127.0.0.1:${server.port}/tams
+      productService: http://127.0.0.1:${server.port}/tams
+      quotaService: http://127.0.0.1:${server.port}/tams
+      reportService: http://127.0.0.1:${server.port}/tams
+      riskService: http://127.0.0.1:${server.port}/tams
+      riskRdsService: http://127.0.0.1:${server.port}/tams
+      riskInfService: http://127.0.0.1:${server.port}/tams
+      settleService: http://127.0.0.1:${server.port}/tams
+      tradeService: http://127.0.0.1:${server.port}/tams
+      disclosureService: http://127.0.0.1:${server.port}/tams
+      valuationService: http://127.0.0.1:${server.port}/tams
+      chbService: http://127.0.0.1:${server.port}/tams
+      chb3Service: http://127.0.0.1:${server.port}/tams
+      svrcomService: http://127.0.0.1:${server.port}/tams
+      pbcService: http://127.0.0.1:${server.port}/tams
+      channelService: http://127.0.0.1:${server.port}/tams
+      customerInterfService: http://127.0.0.1:${server.port}/tams
+      tamsServer: http://127.0.0.1:${server.port}/tams
+      investInterfService: http://127.0.0.1:${server.port}/tams
+      adapterService: http://127.0.0.1:${server.port}/tams
+
+# 使用服务注册中心的方式
+#  loadbalance: true
+#  micorservice:
+#    contextPath:
+#      single: true
+#      commonService: http://TamsMicroservice
+#      basicDataService: http://TamsMicroservice
+#      documentService: http://TamsMicroservice
+#      entrustService: http://TamsMicroservice
+#      periodService: http://TamsMicroservice
+#      assetService: http://TamsMicroservice
+#      portfolioService: http://TamsMicroservice
+#      productService: http://TamsMicroservice
+#      quotaService: http://TamsMicroservice
+#      reportService: http://TamsMicroservice
+#      riskService: http://TamsMicroservice
+#      riskRdsService: http://TamsMicroservice
+#      riskInfService: http://TamsMicroservice
+#      settleService: http://TamsMicroservice
+#      tradeService: http://TamsMicroservice
+#      disclosureService: http://TamsMicroservice
+#      valuationService: http://TamsMicroservice
+#      chbService: http://TamsMicroservice
+#      chb3Service: http://TamsMicroservice
+#      svrcomService: http://TamsMicroservice
+#      pbcService: http://TamsMicroservice
+#      channelService: http://TamsMicroservice
+#      customerInterfService: http://TamsMicroservice
+#      tamsServer: http://TamsMicroservice
+#      investInterfService: http://TamsMicroservice
+#      adapterService: http://TamsMicroservice
 
 ---
 spring:
-  profiles: yitihua-jicheng
+  profiles: allinone
   thymeleaf:
     cache: false
   redis:
@@ -140,36 +263,46 @@ spring:
     host: 192.168.90.198
     port: 6379
     timeout: 20000
+#  redis:
+#    cluster:
+#      nodes: 192.168.70.212:7001,192.168.70.212:7002,192.168.70.212:7003,192.168.70.212:7004,192.168.70.212:7005,192.168.70.212:7006
+#  redislock:
+#    redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.201:1521/orcl
-    username: tams1_ejfr10
-    password: tams1_ejfr10
-    reportSqlldrDatabaseName: 192.168.90.201:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams0810
+    password: zgtams0810
+    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.201:1521/orcl
-  sqldiruserName: tams1_ejfr10
-  sqldirpassword: tams1_ejfr10
+  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+  sqldiruserName: zgtams0810
+  sqldirpassword: zgtams0810
 shiro:
   ssoEnable: true
   allowUrl: /service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.201:1521/orcl
-    username: tams1_ejfr10
-    password: tams1_ejfr10
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams0810
+    password: zgtams0810
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.201:1521/orcl
-    username: tams1_ejfr10
-    password: tams1_ejfr10
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams0810
+    password: zgtams0810
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.201:1521/orcl
-    username: tams1_ejfr10
-    password: tams1_ejfr10
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams0810
+    password: zgtams0810
+wind:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams0810
+    password: zgtams0810
 log:
   path: /home/tams/logs/tams
-  level: INFO
+  level: debug
 eureka:
   client:
     enabled: false
@@ -182,7 +315,7 @@ xinping:
     urlPort: 9191
 tx-lcn:
   client:
-    managerAddress: 192.168.90.198:8070
+    managerAddress: 192.168.90.219:8070
 ---
 spring:
   profiles: dtx
@@ -194,29 +327,34 @@ spring:
     timeout: 20000
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls
+    username: zgtams0810
+    password: zgtams0810
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
 application:
   url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  username: zgtams0702ls
-  password: zgtams0702ls
+  username: zgtams0810
+  password: zgtams0810
 base:
   datasource:
     driverClassName: oracle.jdbc.driver.OracleDriver
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls
+    username: zgtams0810
+    password: zgtams0810
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls
+    username: zgtams0810
+    password: zgtams0810
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls
+    username: zgtams0810
+    password: zgtams0810
+wind:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams0810
+    password: zgtams0810
 log:
   path: ${user.home}/tams/logs/tams
   level: DEBUG
@@ -248,4 +386,9 @@ tx-lcn:
 workflow:
   isSentMessage: false
   serviceName: messageService
+
+
+#清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
+url:
+  batch: http://localhost:8084/main/about/refreshCache
 

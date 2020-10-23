@@ -808,4 +808,39 @@ public class FinProductAnapleroticInfoDto extends BaseEntity {
 		this.sFinprodId = sFinprodId;
 	}
 
+
+	private Date vDate;
+
+    /**
+     * 产品款型
+     */
+    private String dealMode;
+    /**
+     * 发行方式
+     */
+    private String operationType;
+
+    public Date getvDate() {
+        return vDate;
+    }
+
+    public void setvDate(Date vDate) {
+        this.vDate = vDate;
+    }
+
+    public String getDealMode() {
+        return dealMode;
+    }
+
+    public void setDealMode(String dealMode) {
+        this.dealMode = dealMode;
+    }
+
+    public String getOperationType() {
+        return operationType;
+    }
+
+    public void setOperationType(String operationType) {
+        this.operationType = operationType;
+    }
 }

@@ -1012,4 +1012,15 @@ public class FinProduct extends BaseEntity {
     }
 
     // add by jiangpeng on 20200721 公募基金标的 接口 end
+
+
+//    private String repFinprodInsId;
+//
+//    public String getRepFinprodInsId() {
+//        return repFinprodInsId;
+//    }
+//
+//    public void setRepFinprodInsId(String repFinprodInsId) {
+//        this.repFinprodInsId = repFinprodInsId;
+//    }
 }

@@ -38,7 +38,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
  * @see PtlFutureCashPosiService
  * @since 1.0
  */
-@Service
+@Service("backPtlFutureCashPosiService")
 public class PtlFutureCashPosiService extends BaseService<PtlFutureCashPosiDto> {
 
     /**

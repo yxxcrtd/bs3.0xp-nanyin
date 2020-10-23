@@ -35,7 +35,7 @@ import com.joyintech.service.basicdata.exchangerateinfo.dto.MstExchangeQuotation
  * @see MstExchangeQuotationInfoService
  * @since 1.0
  */
-@Service
+@Service("backMstExchangeQuotationInfoService")
 @Transactional(rollbackFor = Exception.class)
 public class MstExchangeQuotationInfoService extends BaseService<MstExchangeQuotationInfoDto>{
 

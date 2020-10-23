@@ -1,4 +1,84 @@
 (function () {
+	
+	/**
+	 * 回购期限
+	 */
+	var repoTermChangeAction = function(){
+		var repoterm = $('#term').val();
+		var re = /^[0-9]*$/;
+        if(repoterm && re.test(repoterm)){
+            var vdate = $('#vdate').val();
+            if(vdate){
+                //回购期限联动期限品种
+            	$('#termTypeReback').val(getTermType(vdate,repoterm)).trigger('change');
+            }
+        }else{
+        	$('#termTypeReback').val("").trigger('change');
+        }
+	};
+	
+    /**
+     * 获取期限品种  date(yyyy-MM-dd),repoterm
+     */
+    function getTermType(date,repoterm) {
+    	if(repoterm&&repoterm<=21){
+    		//期限品种小于21天
+    		if(repoterm==1){
+    			return REPO_TYPE_R001;
+    		}
+    		if(repoterm>1&&repoterm<=7){
+    			return REPO_TYPE_R007;
+    		}
+    		if(repoterm>7&&repoterm<=14){
+    			return REPO_TYPE_R014;
+    		}
+    		if(repoterm>14&&repoterm<=21){
+    			return REPO_TYPE_R021;
+    		}
+    	}
+    	var day=0;
+    	//date为空时  返回0
+    	if(date&&repoterm){
+    		//获取日期
+    		date =DateUtil.parse(date);
+    		//获取之后月00天 即本月最后一天
+    		day= new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+1,0).getDate();
+    		if(repoterm<=day){
+    			return REPO_TYPE_R1M;
+    		}
+    		day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+2,0).getDate();
+    		if(repoterm<=day){
+    			return REPO_TYPE_R2M;
+    		}
+    		day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+3,0).getDate();
+    		if(repoterm<=day){
+    			return REPO_TYPE_R3M;
+    		}
+    		day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+4,0).getDate();
+    		if(repoterm<=day){
+    			return REPO_TYPE_R4M;
+    		}
+    		day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+5,0).getDate();
+    		day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+6,0).getDate();
+    		if(repoterm<=day){
+    			return REPO_TYPE_R6M;
+    		}
+    		day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+7,0).getDate();
+    		day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+8,0).getDate();
+    		day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+9,0).getDate();
+    		if(repoterm<=day){
+    			return REPO_TYPE_R9M;
+    		}
+    		day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+10,0).getDate();
+    		day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+11,0).getDate();
+    		day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+12,0).getDate();
+    		if(repoterm<=day){
+    			return REPO_TYPE_R1Y;
+    		}
+    	}
+    	return null;
+    }
+    
     var isSectId = false;
     //是否来自与Cstp
     var isFromCstp = false;
@@ -585,7 +665,7 @@
      * 计算费用
      */
     var calFee = function(){
-    	debugger;
+//    	debugger;
         if(!$("#tradeDate").val()){
             return;
         }
@@ -1191,6 +1271,11 @@
 		var termType = $('#termTypeReback').val();
 //		if($("#repoType").val()&&$("#repoType").val()==TARGET_BACK_TYPE_H02){
 			if ($('#termTypeReback').val()){
+				if(termType == REPO_TYPE_R001 || termType == REPO_TYPE_R007 || termType == REPO_TYPE_R014 || termType == REPO_TYPE_R021 || 
+						termType == REPO_TYPE_R1M || termType == REPO_TYPE_R2M || termType == REPO_TYPE_R3M || 
+						termType == REPO_TYPE_R4M || termType == REPO_TYPE_R6M || termType == REPO_TYPE_R9M ||termType == REPO_TYPE_R1Y ){
+					return;
+				}
 				var repoterm = '';
 				if (termType == R001 || termType == GC001 || termType == R_001 || termType == RC001){
 					repoterm = 1;
@@ -1226,7 +1311,9 @@
 				/*$('#TrdOutRightRepoTrade002_mdate').attr('disabled',true);*/
 				//YHZGCPB20200617004   银行间质押式正回购交易选择期限品种R007,修改回购期限为2天，点击保存按钮，在待办中双击查看此数据，回购期限变成了7天，导致到期结算金额错误 leipeng 20200619
 				if(!$('#workflowId').val()){
-					$('#term').val(repoterm).trigger('change');
+				    if($('#term').val()!=repoterm){
+				    $('#term').val(repoterm).trigger('change');
+				    }
         		}
 			}
 //		}
@@ -1810,6 +1897,13 @@
         $('#prinAmt, #rebackPrice, #basis').on("change", function () {
                 refreshRebackIntAmt();
         });
+        
+		// 回购期限
+		$('#term').on('change',function(){
+			if($('#tradeMarket').val() == TRADE_PLACE_01 || ($('#tradeMarket').val() == TRADE_PLACE_02  && $("#repoType").val() == TARGET_BACK_TYPE_H01)){
+				repoTermChangeAction();
+			}
+		});
         
         $('#secAcctId').on("change", function () {
                 var repoType = $("#repoType").val();

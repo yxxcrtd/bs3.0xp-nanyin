@@ -1217,4 +1217,36 @@
 		  and IS_CANCEL = 'Y'
     </select>
 
+    <select id="getReverseTradeDtoInvAim" resultType="java.lang.String">
+        SELECT INV_AIM
+        FROM TRD_PRODUCT_DEAL TPD2
+        WHERE R_TRADE_ID IN (
+        SELECT TPD1.TRADE_ID
+        FROM TRD_PRODUCT_DEAL TPD1
+        INNER JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TFPDT1
+        ON TPD1.TOTLE_TRADE_ID = TFPDT1.TOTLE_TRADE_ID
+        WHERE TFPDT1.TOTLE_TRADE_ID = #{tradeId}
+        )
+        AND ROWNUM = 1
+    </select>
+
+    <select id="selectTradeT02" resultType="java.lang.Integer">
+            with tradeT01 as(
+            select * from
+            TRD_FIN_PRODUCT_DEAL_TOTAL
+            where TOTLE_TRADE_ID = #{tradeId}
+            and ps = 'T01'
+            )
+            select count(1)
+            from TRD_FIN_PRODUCT_DEAL_TOTAL
+            left join tradeT01
+            on tradeT01.PORTFOLIO_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.PORTFOLIO_ID
+            and tradeT01.FINPROD_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_ID
+            where TRD_FIN_PRODUCT_DEAL_TOTAL.ps = 'T02'
+            and TRD_FIN_PRODUCT_DEAL_TOTAL.IS_CANCEL = 'N'
+            and TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_STATUS = '01'
+            and TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_DATE > tradeT01.TRADE_DATE
+            and tradeT01.PORTFOLIO_ID is not null
+    </select>
+
 </mapper>

@@ -845,5 +845,26 @@ public class CommonUtil {
 	public static List<String> getParentInstitution(String institutionCode){
 		return baseCommonService.getParentInstitution(institutionCode);
 	}
-	
+
+	/**
+	 * 通过 业务id dataTYpe 获取创建机构
+	 * 02的数据仅有一条
+	 * @param businessId
+	 * @param dataType
+	 * @return
+	 */
+	public static String getCreateInstByID(String businessId,String dataType){
+		return baseCommonService.getCreateInstByID(businessId,dataType);
+	}
+
+
+	/**
+	 * 获取省联社机构 联社模式仅有一个省联社
+	 * @return
+	 */
+	public static String getYHGeneralBankCode(){
+		return baseCommonService.getYHGeneralBankCode();
+	}
+
+
 }

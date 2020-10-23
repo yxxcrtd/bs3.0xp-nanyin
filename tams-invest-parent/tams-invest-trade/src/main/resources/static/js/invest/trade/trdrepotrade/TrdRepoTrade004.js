@@ -61,7 +61,8 @@ var getPageParams = function() {
          cols:[
             {field:'bondCode',sortField:'bondCode', width:100, title: '债券代码'}
             ,{field:'bondAbbrName', sortField:'bondAbbrName',width:200, title: '债券简称'}
-            ,{field:'pledgePrin',sortField:'pledgePrin', width:200, title: '质押券面总额（元）',type:'money'}
+            ,{field:'avaPledgePrin',sortable: false, width:200, title: '可质押券面总额（元）',type:'money'}
+            ,{field:'pledgePrin',sortField:'pledgePrin', width:200, title: '折算后质押券面总额（元）',type:'money'}
             ,{field:'prin',sortField:'prin', width:150, title: '换出面额（元）',edit: true,type:'money'}
             ,{field:'pledgeRatio', sortField:'pledgeRatio',width:140, title: '折算比例%'}
 
@@ -132,7 +133,8 @@ var setBussRepoSecInput = function () {
         cols:[
             {field:'bondCode',sortField:'bondCode', width:100, title: '债券代码'}
             ,{field:'bondAbbrName', sortField:'bondAbbrName',width:200, title: '债券简称'}
-            ,{field:'pledgePrin',sortField:'avaPledgePrin', width:200, title: '质押券面总额（元）',type:'money'}
+            ,{field:'avaPledgePrin',sortable: false, width:200, title: '可质押券面总额（元）',type:'money'}
+            ,{field:'pledgePrin',sortField:'pledgePrin', width:200, title: '折算后质押券面总额（元）',type:'money'}
             ,{field:'firstNetPrice',sortField:'firstNetPrice', width:150, title: '首次净价',type:'money'}
             ,{field:'pledgeRatio', sortField:'pledgeRatio',width:140, title: '折算比例%'}
 
@@ -267,6 +269,7 @@ var outOk = function () {
 
             if ($.inArray(inSelectedAllRows[k].bondCode, resultArrlist) == -1) {
                 var newdate = inSelectedAllRows[k];
+                newdate.pledgePrin = JoyinMath.doDiv(JoyinMath.doMul(newdate.pledgePrin , newdate.pledgeRatio,2) ,100,2);
                 resultTable.addRow(newdate);
                 resultArrlist.push(newdate.bondCode);
             }
@@ -291,7 +294,8 @@ var outOk = function () {
                         if(inSelectedAllRows!=null && inSelectedAllRows.length>0 ) {
                             for (var kk = inSelectedAllRows.length - 1; kk >= 0; kk--) {
                                 if (inSelectedAllRows[kk].bondCode == resultTable.getAllRows()[k].bondCode) {
-                                    avaPledgePrinValue=JoyinMath.doAdd(avaPledgePrinValue,inSelectedAllRows[kk].pledgePrin);
+                                    avaPledgePrinValue=JoyinMath.doAdd(avaPledgePrinValue,JoyinMath.doDiv(JoyinMath.doMul(inSelectedAllRows[kk].pledgePrin , inSelectedAllRows[kk].pledgeRatio,2) ,100,2));
+
                                 }
                             }
                         }

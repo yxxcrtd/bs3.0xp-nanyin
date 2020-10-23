@@ -26,7 +26,7 @@ import com.joyintech.service.asset.common.dto.BussRepAssetCreditNonstdInfoDto;
  * @see BussRepAssetCreditNonstdInfoController
  * @since 1.0
  */
-@RestController
+@RestController("backBussRepAssetCreditNonstdInfoController")
 @RequestMapping("/BussRepAssetCreditNonstdInfo")
 public class BussRepAssetCreditNonstdInfoController {
 

@@ -4,19 +4,15 @@
 	<parent>
 		<groupId>com.joyintech</groupId>
 		<artifactId>tams-parent</artifactId>
-		<version>0.0.1</version>
+		<version>0.0.3</version>
 	</parent>
 	<artifactId>service-invest-interf</artifactId>
 	<name>service-invest-interf</name>
+	<version>0.1.1</version>
 	<description>投管接口服务</description>
 
 
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-		</dependency>
-		
 		 <dependency>
           <groupId>com.joyintech</groupId>
           <artifactId>framework-log</artifactId>
@@ -26,7 +22,6 @@
           <groupId>com.joyintech</groupId>
           <artifactId>framework-data</artifactId>
         </dependency>
-
 
         <dependency>
             <groupId>junit</groupId>
@@ -40,13 +35,13 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
         </dependency>
-
     </dependencies>
 	
-	
+    <!-- 
     <properties>
         <start-class>com.joyintech.invest.interf.InvestApplication</start-class>
-    </properties>
+    </properties> 
+    -->
 	<build>
         <finalName>service-invest-interf</finalName>
         <plugins>
@@ -74,17 +69,17 @@
                </executions>
             </plugin>
 			
-            <plugin>
+            <!-- <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <!--for war-->
-                  <!-- <mainClass>org.springframework.boot.loader.WarLauncher</mainClass>-->
-                  <!-- <addResources>true</addResources>-->
-                  <!-- <classifier>exec</classifier> -->
-                  <!-- <fork>true</fork> --><!-- 如果没有该项配置，devtools不会起作用，即应用不会restart -->
+                    for war
+                  <mainClass>org.springframework.boot.loader.WarLauncher</mainClass>
+                  <addResources>true</addResources>
+                  <classifier>exec</classifier>
+                  <fork>true</fork>如果没有该项配置，devtools不会起作用，即应用不会restart
                 </configuration>
-            </plugin>
+            </plugin> -->
         </plugins>
     </build>
 </project>

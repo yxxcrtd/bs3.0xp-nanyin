@@ -28,7 +28,7 @@ import com.joyintech.service.asset.common.service.BusiFinBondRatingInfoService;
  * @see BusiFinBondRatingInfoController
  * @since 1.0
  */
-@RestController
+@RestController("backBusiFinBondRatingInfoController")
 @RequestMapping("/BusiFinBondRatingInfo")
 public class BusiFinBondRatingInfoController {
 

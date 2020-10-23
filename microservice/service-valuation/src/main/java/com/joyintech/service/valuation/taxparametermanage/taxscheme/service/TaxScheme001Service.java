@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,24 +72,38 @@ public class TaxScheme001Service extends CommonExportService<TaxScheme001Dto>{
 	public List<TaxScheme001Dto> findVatTax(Map<String, Object> parameters) throws Exception {
 		return taxScheme001Mapper.selectVatTax(parameters);
 	}
-	
-	/**
+
+    /**
      * 获取附加税则表 - 分页
      * @return
      * @throws Exception
      */
-	public Page<TaxScheme001Dto> findAdtTaxByPage(int page, int length, Map<String, Object> parameters) throws Exception {
-		return super.queryForPage(page, length, ()-> taxScheme001Mapper.selectAdtTax(parameters));
-	}
-	
-	/**
-     * 获取附加税则表 
+    public Page<TaxScheme001Dto> findAdtTaxByPage(int page, int length, Map<String, Object> parameters) throws Exception {
+
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+
+            return super.queryForPage(page, length, ()-> taxScheme001Mapper.findAdtTaxEJFR(parameters));
+        }else {
+            return super.queryForPage(page, length, ()-> taxScheme001Mapper.selectAdtTax(parameters));
+        }
+    }
+
+    /**
+     * 获取附加税则表
      * @return
      * @throws Exception
      */
-	public List<TaxScheme001Dto> findAdtTax(Map<String, Object> parameters) throws Exception {
-		return taxScheme001Mapper.selectAdtTax(parameters);
-	}
+    public List<TaxScheme001Dto> findAdtTax(Map<String, Object> parameters) throws Exception {
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+
+            List<String> treeInstCode = LoginUserUtil.getTreeInstCode();
+            parameters.put("instCode",treeInstCode);
+            return  taxScheme001Mapper.findAdtTaxEJFR(parameters);
+        }else {
+            return taxScheme001Mapper.selectAdtTax(parameters);
+        }
+    }
+
 
     /**
      * 获取资产应税表 - 分页

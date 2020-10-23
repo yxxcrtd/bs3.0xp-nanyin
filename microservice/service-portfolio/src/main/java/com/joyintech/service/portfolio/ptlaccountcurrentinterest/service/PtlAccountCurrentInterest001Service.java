@@ -50,7 +50,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
  * @see PtlAccountCurrentInterest001Service
  * @since 1.0
  */
-@Service
+@Service("backPtlAccountCurrentInterest001Service")
 public class PtlAccountCurrentInterest001Service extends BaseService<PtlAccountCurrentInterest001Dto>{
     /**
      * 注入账户活期利率Mapper

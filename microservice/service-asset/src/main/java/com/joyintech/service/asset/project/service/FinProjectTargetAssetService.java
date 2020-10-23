@@ -59,7 +59,7 @@ import java.util.Map;
  * @see
  * @since 1.0
  */
-@Service
+@Service("backFinProjectTargetAssetService")
 public class FinProjectTargetAssetService extends BaseService<FinProjectTargetAssetDto>{
 
     @Autowired

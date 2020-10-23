@@ -64,7 +64,7 @@ import com.joyintech.tams.invest.common.dto.MstFileOutputParameter;
  * @see FinBondTargetAssetService
  * @since 1.0
  */
-@Service
+@Service("backFinBondTargetAssetService")
 public class FinBondTargetAssetService extends BaseService<FinBondTargetAssetDto>{
     /**
      * 基础--标的类金融产品
@@ -314,10 +314,12 @@ public class FinBondTargetAssetService extends BaseService<FinBondTargetAssetDto
             		if(cnt<=0){
             			if(DictCodeList.评级类型_债项评级.getValue().equals(mstBondCreditRatingEntity.getoType())) {
                     		mstBondCreditRatingMapper.insert(mstBondCreditRatingEntity);
-                    	}else if(DictCodeList.评级类型_主体评级.getValue().equals(mstBondCreditRatingEntity.getoType())) {
-                    	    mstBondCreditRatingEntity.setoCode(entity.getIssuer());
-                            mstBondCreditRatingMapper.insert(mstBondCreditRatingEntity);
                     	}
+                        //主体评级根据债券发行人在市场机构里维护，债券标的评级信息里不维护主体评级  modify bu caojin 20201004
+//            			else if(DictCodeList.评级类型_主体评级.getValue().equals(mstBondCreditRatingEntity.getoType())) {
+//                    	    mstBondCreditRatingEntity.setoCode(entity.getIssuer());
+//                            mstBondCreditRatingMapper.insert(mstBondCreditRatingEntity);
+//                    	}
             		}
                 	
                 }

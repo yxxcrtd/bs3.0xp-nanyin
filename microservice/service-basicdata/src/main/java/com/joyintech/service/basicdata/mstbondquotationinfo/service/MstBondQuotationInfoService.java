@@ -33,7 +33,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 /**
  * @author wangzehui
  */
-@Service
+@Service("backMstBondQuotationInfoService")
 public class MstBondQuotationInfoService extends BaseService<MstBondQuotationInfoDto>{
     /**
      * 定义mapper(mine)

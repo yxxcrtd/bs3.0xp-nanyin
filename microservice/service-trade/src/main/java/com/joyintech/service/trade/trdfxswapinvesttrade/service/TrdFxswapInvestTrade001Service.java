@@ -49,7 +49,7 @@ import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
  * @see TrdFxswapInvestTrade001Service
  * @since 1.0
  */
-@Service
+@Service("backTrdFxswapInvestTrade001Service")
 @Transactional(rollbackFor = Exception.class)
 public class TrdFxswapInvestTrade001Service extends BaseService<TrdFxswapInvestTrade001Dto> {
 

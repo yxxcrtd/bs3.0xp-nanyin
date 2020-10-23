@@ -63,7 +63,7 @@
         */,{field:'issueStatus', visible:false}
 		,{field:'finprodId', visible:false}
 		,{field:'sendStatus', visible:false}
-		,{field:'sendRemark', visible:false}
+//		,{field:'sendRemark', visible:false}
 		,{field:'liquidationYesno', visible:false}
 		,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
 	];

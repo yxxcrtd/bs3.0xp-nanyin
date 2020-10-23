@@ -28,7 +28,7 @@ import com.joyintech.service.risk.stresstestmanage.jixudate.service.JixuDate001S
  * @see JixuDate001Controller
  * @since 1.0
  */
-@RestController
+@RestController("backJixuDate001Controller")
 @RequestMapping("/JixuDate001")
 public class JixuDate001Controller {
 

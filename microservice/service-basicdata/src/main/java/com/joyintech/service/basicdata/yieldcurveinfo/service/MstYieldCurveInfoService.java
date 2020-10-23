@@ -39,7 +39,7 @@ import com.joyintech.service.basicdata.yieldcurveinfo.dto.MstYieldCurveInfoDto;
  * @see MstYieldCurveInfoService
  * @since 1.0
  */
-@Service
+@Service("backMstYieldCurveInfoService")
 @Transactional(rollbackFor = Exception.class)
 public class MstYieldCurveInfoService extends BaseService<MstYieldCurveInfoDto>{
 

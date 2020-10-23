@@ -327,6 +327,7 @@
 	
 	<!-- 期次管理查询 -->
 	<select id="selectForPage" resultType="com.joyintech.service.product.productelement.periodicmanagement.dto.PeriodicManagement001Dto">
+			select * from (
 			<choose>
 			<when test="validStatus != null and validStatus == VALID_STATUS_01">
 				<include refid="validStatus01_sql"></include>
@@ -339,7 +340,8 @@
 				union all
 				<include refid="validStatus01_sql"/>
 			</otherwise>
-		</choose>
+			</choose>
+		) order by PERIODPRODID , STARTDATE
 	</select>
 	
 	<select id="getInvestCycle" resultType="com.joyintech.framework.select.SelectOptionDto">
@@ -607,6 +609,7 @@
 	
 	<select id="selectIsExistTrade" resultType="int">
 		select count(0) from TRD_PRODUCT_DEAL t where t.finprod_id = #{periodProdId} and t.branch = #{branch}
+		AND t.TRADE_STATUS = '01' AND (t.IS_CANCEL='N' or t.IS_CANCEL IS NULL)
 	</select>
 	
 	<select id="checkPeriodId" resultType="int">

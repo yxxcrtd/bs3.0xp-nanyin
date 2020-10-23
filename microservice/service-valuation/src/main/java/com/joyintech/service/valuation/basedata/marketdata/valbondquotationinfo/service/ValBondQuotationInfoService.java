@@ -31,7 +31,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 /**
  * @author wangzehui
  */
-@Service
+@Service("backValBondQuotationInfoService")
 public class ValBondQuotationInfoService extends BaseService<ValBondQuotationInfoDto>{
     /**
      * 定义mapper(mine)

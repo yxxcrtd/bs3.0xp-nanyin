@@ -39,7 +39,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
  * @see RskValtblPrtBotassetService
  * @since 1.0
  */
-@Service
+@Service("backRskValtblPrtBotassetService")
 public class RskValtblPrtBotassetService extends BaseService<RskValtblPrtBotassetMapDto>{
 
     @Autowired

@@ -15,7 +15,7 @@ import java.util.Map;
  * @Date 2020/1/9 0009
  * @Version V1.0
  **/
-@RestController
+@RestController("backCstpTrdMatchInfoController")
 @RequestMapping("/CSTPTrdMatchInfo")
 public class CstpTrdMatchInfoController {
     @Autowired

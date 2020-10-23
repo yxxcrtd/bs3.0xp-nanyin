@@ -99,7 +99,9 @@ public class TaxScheme004Service extends CommonExportService<TaxScheme004Dto> im
 	}
 
 
-
+	public String getPrimaryKey() {
+		return taxScheme004Mapper.getPrimaryKey();
+	}
 	
 	
 }

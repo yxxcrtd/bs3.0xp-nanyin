@@ -87,7 +87,7 @@ public class TrdRepoDuration002Controller extends BaseController {
         String isTodoList = RequestUtil.getParam("isTodoList");
         TrdRepoDuration002Dto entity;
         String workflowId = RequestUtil.getParam("workflowId");
-        if (StringUtil.isNotEmpty(isTodoList) && StringUtil.equals(isTodoList, "true") || StringUtil.isNotEmpty(workflowId)) {
+        if (StringUtil.isNotEmpty(isTodoList) && StringUtil.equals(isTodoList, "true") || (StringUtil.isNotEmpty(workflowId)&&!WorkFlowUtil.isNotFromToDoList())) {
             entity = trdRepoDuration002Service.getBussinessEntityByWorkflowId(workflowId);
             if(entity.getPstype()!=null && entity.getPstype().equals(DictCodeList.交易方向_到期续做.getValue())
                     && bustype==null){//流程中显示到期续做信息

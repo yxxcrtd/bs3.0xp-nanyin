@@ -31,7 +31,7 @@ import java.util.Map;
  * @see
  * @since 1.0
  */
-@Service
+@Service("backPtlAnalyzeAfterInvest001Service")
 public class PtlAnalyzeAfterInvest001Service extends BaseService<PtlAnalyzeAfterInvest001Dto> {
     @Autowired
     private PtlAnalyzeAfterInvest001Mapper ptlAnalyzeAfterInvest001Mapper;

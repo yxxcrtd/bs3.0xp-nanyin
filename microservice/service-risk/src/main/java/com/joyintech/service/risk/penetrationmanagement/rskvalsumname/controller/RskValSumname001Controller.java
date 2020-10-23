@@ -33,7 +33,7 @@ import com.joyintech.service.risk.penetrationmanagement.rskvalsumname.service.Rs
  * @see RskValSumname001Controller
  * @since 1.0
  */
-@RestController
+@RestController("backRskValSumname001Controller")
 @RequestMapping("/RskValSumname001")
 public class RskValSumname001Controller {
     /**

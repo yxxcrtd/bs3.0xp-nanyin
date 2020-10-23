@@ -55,7 +55,7 @@ import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
  * @see EtrForwexService
  * @since 1.0
  */
-@Service
+@Service("backEtrForwexService")
 public class EtrForwexService extends BaseService<EtrForwexDto> {
 	
 	/**

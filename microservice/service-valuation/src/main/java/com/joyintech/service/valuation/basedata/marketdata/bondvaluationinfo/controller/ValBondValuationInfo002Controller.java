@@ -33,7 +33,7 @@ import com.joyintech.service.valuation.basedata.marketdata.bondvaluationinfo.ser
  * @since 1.0
  */
 @RestController(value="serviceValBondValuationInfo002Controller")
-@RequestMapping("/valuation/basedata/marketdata/bondvaluationinfo/ValBondValuationInfo002")
+@RequestMapping("/service/valuation/basedata/marketdata/bondvaluationinfo/ValBondValuationInfo002")
 public class ValBondValuationInfo002Controller extends BaseController {
 
     /**

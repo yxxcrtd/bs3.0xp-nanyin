@@ -33,7 +33,7 @@ import com.joyintech.service.valuation.interf.inertfLog.service.ValInertfLog001S
  * @since 1.0
  */
 @RestController(value="serviceValInertfLog002Controller")
-@RequestMapping("/valuation/interf/inertfLog/ValInertfLog002")
+@RequestMapping("/service/valuation/interf/inertfLog/ValInertfLog002")
 public class ValInertfLog002Controller extends BaseController {
 
     /**

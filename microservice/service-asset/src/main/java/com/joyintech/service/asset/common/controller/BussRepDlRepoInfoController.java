@@ -26,7 +26,7 @@ import com.joyintech.service.asset.common.service.BussRepDlRepoInfoService;
  * @see BussRepDlRepoInfoController
  * @since 1.0
  */
-@RestController
+@RestController("backBussRepDlRepoInfoController")
 @RequestMapping("/BussRepDlRepoInfo")
 public class BussRepDlRepoInfoController {
     @Autowired

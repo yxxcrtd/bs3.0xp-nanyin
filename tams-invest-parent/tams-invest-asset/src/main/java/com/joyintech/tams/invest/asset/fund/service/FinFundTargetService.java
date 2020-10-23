@@ -286,8 +286,8 @@ public class FinFundTargetService extends CommonExportService<FinFundTargetDto> 
         }
         BeanUtil.copyPropertiesIgnoreNull(fundTargetDto, baseInfoDto.getFinProduct());
         //附属表信息
-        fundTargetDto.setPurSpeed(StringUtil.numberToString(baseInfoDto.getFinProductAdd().getPurSpeed()));
-        fundTargetDto.setRedSpeed(StringUtil.numberToString(baseInfoDto.getFinProductAdd().getRedSpeed()));
+        fundTargetDto.setPurSpeed(StringUtil.isEmpty(StringUtil.numberToString(baseInfoDto.getFinProductAdd().getPurSpeed()))?"0":StringUtil.numberToString(baseInfoDto.getFinProductAdd().getPurSpeed()));
+        fundTargetDto.setRedSpeed(StringUtil.isEmpty(StringUtil.numberToString(baseInfoDto.getFinProductAdd().getRedSpeed()))?"0":StringUtil.numberToString(baseInfoDto.getFinProductAdd().getPurSpeed()));
         fundTargetDto.setIsCompoundInt(baseInfoDto.getFinProductAdd().getIsCompoundInt());
         //基金类型
         fundTargetDto.setFundType(baseInfoDto.getFinProductType().getType4());

@@ -2,14 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.joyintech</groupId>
 		<artifactId>tams-parent</artifactId>
-		<version>0.0.1</version>
+		<version>0.0.3</version>
 	</parent>
 	
-    <groupId>com.joyintech</groupId>
+    <modelVersion>4.0.0</modelVersion>
     <artifactId>tams-base</artifactId>
     <version>2.1.2</version>
     <packaging>pom</packaging>
@@ -40,7 +39,6 @@
         <module>tams-valuation-common</module>
         <module>tams-valuation-parent</module>
         <module>tams-valuation-report</module>
-        <module>tams/app</module>
         
         <!-- 批处理  -->
         <module>tams-disclosure-batch</module>
@@ -75,8 +73,14 @@
         <module>microservice/service-trade</module>
         <module>microservice/service-valuation</module>
         <module>microservice/service-invest-interf</module>
+        <module>microservice/service-interf</module>
+				<module>microservice/service-risk-redis</module>
+			  <module>microservice/service-risk-redis-inf</module>
 <!--         几许中心包 -->
         <module>JixuCenter</module>
+
+        <module>microservice/tams-service-container</module>
+        <module>tams/app</module>
         
     </modules>
 </project>

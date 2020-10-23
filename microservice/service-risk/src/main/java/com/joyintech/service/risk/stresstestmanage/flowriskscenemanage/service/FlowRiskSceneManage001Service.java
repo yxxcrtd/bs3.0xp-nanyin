@@ -32,7 +32,7 @@ import com.joyintech.service.risk.stresstestmanage.flowriskscenemanage.dto.FlowR
  * @see FlowRiskSceneManage001Service
  * @since 1.0
  */
-@Service
+@Service("backFlowRiskSceneManage001Service")
 public class FlowRiskSceneManage001Service extends BaseService<FlowRiskSceneManage001Dto> {
 	
 	@Autowired

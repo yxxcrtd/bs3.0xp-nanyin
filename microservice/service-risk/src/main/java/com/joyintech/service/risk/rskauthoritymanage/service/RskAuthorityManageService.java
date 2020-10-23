@@ -50,7 +50,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
  * @see RskAuthorityManageService
  * @since 1.0
  */
-@Service
+@Service("backRskAuthorityManageService")
 public class RskAuthorityManageService extends BaseService<RskAuthorityManageDto> {
     @Autowired
     private RskAuthorityManageMapper rskAuthorityManageMapper;

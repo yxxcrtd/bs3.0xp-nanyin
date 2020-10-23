@@ -6,7 +6,7 @@
 		SELECT
 		distinct
 		A.FINPROD_MARKET_ID id,
-		A.FINPROD_NAME text,
+		A.FINPROD_MARKET_ID || ':' || A.FINPROD_NAME text,
 		<!-- 20-06-09 产品端二级法人改造 wangyang1 start -->
 		A.FINPROD_ID finprodId,
 		<!-- 20-06-09 产品端二级法人改造 wangyang1 end -->

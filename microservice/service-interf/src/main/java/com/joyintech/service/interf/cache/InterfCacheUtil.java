@@ -27,7 +27,7 @@ import com.joyintech.framework.util.StringUtil;
  * @see InterfCacheUtil
  * @since 1.0
  */
-@Component
+@Component("backInterfCacheUtil")
 public class InterfCacheUtil {
 
     /**

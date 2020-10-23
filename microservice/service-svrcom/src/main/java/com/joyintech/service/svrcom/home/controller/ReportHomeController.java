@@ -34,7 +34,7 @@ import com.joyintech.tams.report.home.service.ReportHomeService;
  * @see ReportHomeController
  * @since 1.0
  */
-@RestController
+@RestController("backReportHomeController")
 @RequestMapping("/ReportHome")
 public class ReportHomeController extends BaseController {
 

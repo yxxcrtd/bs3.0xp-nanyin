@@ -371,7 +371,9 @@ public class FinFloatMgtExpQuotationService extends BaseService<FinFloatMgtExpQu
             }
             // 封闭式产品 保存到期日计提。
             else if (StringUtil.equals(DictCodeList.开放类型_封闭式.getValue(), finProduct.getOperationType())
-                    &&finOpenRuleBak != null) {
+                //TISHKBS-1363  封闭式产品没有开放计划 modify by caojin 20201004
+//                    &&finOpenRuleBak != null
+            ) {
                 // 1、现金流计提规则表：
                 FinFloatCountingRule finCashCountingRule = new FinFloatCountingRule();
                 finCashCountingRule.setCashId(entity.getCashId());
@@ -383,10 +385,11 @@ public class FinFloatMgtExpQuotationService extends BaseService<FinFloatMgtExpQu
                 }*/                        
                 finCashCountingRule.setEffDate(entity.getEffDate());
                 finCashCountingRule.setAccrType(DictCodeList.计提类型_固定频率.getValue());
-                finCashCountingRule.setAccrCycle(finOpenRuleBak.getOpenCycle());
-                finCashCountingRule.setAccrCycleUnit(finOpenRuleBak.getOpenCycleUnit());
-                finCashCountingRule.setAccrDayType(finOpenRuleBak.getDayType());
-                finCashCountingRule.setAccrDayValue(finOpenRuleBak.getDayValue());
+                //TISHKBS-1363  封闭式产品没有开放计划 modify by caojin 20201004
+//                finCashCountingRule.setAccrCycle(finOpenRuleBak.getOpenCycle());
+                finCashCountingRule.setAccrCycleUnit(entity.getPayCycle());
+//                finCashCountingRule.setAccrDayType(finOpenRuleBak.getDayType());
+//                finCashCountingRule.setAccrDayValue(finOpenRuleBak.getDayValue());
                 finCashCountingRule.setAccrTdayRule(DictCodeList.营业日准则_不调整.getValue());
                 finCashCountingRule.setfAccrDate(entity.getfAccrDate());
                 if (StringUtil.isNotEmpty(entity.geteAccrDate())) {

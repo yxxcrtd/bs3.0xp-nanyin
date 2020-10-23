@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Service
+@Service("backPtlSubFundsMange002Service")
 @Transactional(rollbackFor = Exception.class)
 public class PtlSubFundsMange002Service extends BaseService<PtlSingleIssuerPositionAnalysisDto> {
 

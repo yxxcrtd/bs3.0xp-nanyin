@@ -42,7 +42,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
  * @see RepFinProductEstablishService
  * @since 1.0
  */
-@Service
+@Service("backRepFinProductEstablishService")
 public class RepFinProductEstablishService extends BaseService<RepFinProductEstablishDto> {
     
 	/**

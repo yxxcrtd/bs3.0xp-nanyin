@@ -956,4 +956,12 @@ public class TrdBondInvestTradeService extends BaseService {
         String tradeid = trdBondInvestTradeMapper.selectCeTradeId(param);
         return tradeid;
     }
+
+    public String getReverseTradeDtoInvAim(String tradeId) {
+        return trdBondInvestTradeMapper.getReverseTradeDtoInvAim(tradeId);
+    }
+
+    public int selectTradeT02(String tradeId) {
+        return trdBondInvestTradeMapper.selectTradeT02(tradeId);
+    }
 }

@@ -42,7 +42,7 @@ import com.joyintech.service.basicdata.mstnetassetquotationinfo.dto.MstNetAssetQ
  * @since 1.0
  */
 
-@Service
+@Service("backMstNetAssetQuotationInfo001Service")
 @Transactional
 public class MstNetAssetQuotationInfo001Service extends BaseService<MstNetAssetQuotationInfo001Dto> 
     {

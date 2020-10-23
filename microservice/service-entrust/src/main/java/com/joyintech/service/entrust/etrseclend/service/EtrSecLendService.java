@@ -63,7 +63,7 @@ import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
  * @see EtrSecLendService
  * @since 1.0
  */
-@Service
+@Service("backEtrSecLendService")
 public class EtrSecLendService extends BaseService {
 
     /**

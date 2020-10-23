@@ -182,7 +182,9 @@
                         //获取参考日净值和参考日份额
                         Joyin.ajax(getTdyUnitValueAndTdyShareAmt, object1, function (data) {
                             if (data) {
-                                $('#tdyUnitValue').val(data.tdyUnitValue);
+                                if(pageModel != PAGE_MODEL_REFERENCE){
+                                    $('#tdyUnitValue').val(data.tdyUnitValue);
+                                }
                                 $('#tdyShareAmt').val(data.tdyShareAmt);
                                 //获得分红净资产
                                 $('#tdyAssetAmt').val(data.tdyAssetAmt);
@@ -417,7 +419,9 @@
             Joyin.ajax(getTdyUnitValueAndTdyShareAmt, object1, function (data) {
                 if (data) {
                 	//参考日净值保留4位小数
-                    $('#tdyUnitValue').val(parseFloat(data.tdyUnitValue).toFixed(4));
+                	if(pageModel != PAGE_MODEL_REFERENCE){
+                        $('#tdyUnitValue').val(parseFloat(data.tdyUnitValue).toFixed(4));
+                	}
                     $('#tdyShareAmt').val(data.tdyShareAmt);
                     //获得分红净资产
                     $('#tdyAssetAmt').val(data.tdyAssetAmt);

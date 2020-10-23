@@ -27,7 +27,7 @@ import java.util.Map;
  * @version 1.0 2019年8月24日
  * @since 1.0
  */
-@Service
+@Service("backRiskFactorConfigService")
 public class RiskFactorConfigService extends BaseService<RiskFactor003Dto> {
 
     @Autowired

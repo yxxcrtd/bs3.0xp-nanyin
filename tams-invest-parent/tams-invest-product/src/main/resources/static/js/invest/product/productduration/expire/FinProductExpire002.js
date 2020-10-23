@@ -26,8 +26,8 @@
 		            ,{field: 'finprodId', title: '产品代码', visible:false,sortable: false}
 		            , {field: 'prodStyle', title: '产品款型', width: 200, sortable: false, visible: true}
 		            , {field: 'remainPrinAmt', title: '计息本金', width: 200, sortable: false, type: 'number', visible: false}
-		            , {field: 'vDate', title: '计息开始日', width: 200, sortable: false, edit: true}
-		            , {field: 'mDate', title: '计息结束日', width: 200, sortable: false, edit: true}
+		            , {field: 'vDate', title: '计息开始日', width: 200, sortable: false, edit: false}
+		            , {field: 'mDate', title: '计息结束日', width: 200, sortable: false, edit: false}
 		            , {field: 'interest', title: '应付客户收益', width: 200, sortable: false, type: 'number'}
 		            , {field: 'actInterest', title: '实付客户收益', width: 200, sortable: false, type: 'number', edit: true}
 		            , {field: 'reduceAmt', title: '本期客户赎回本金', width: 200, sortable: false, type: 'number', edit: true}

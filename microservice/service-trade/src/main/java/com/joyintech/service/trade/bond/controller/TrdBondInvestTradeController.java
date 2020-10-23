@@ -505,4 +505,30 @@ public class TrdBondInvestTradeController {
         return tradeid;
     }
 
+
+    /**
+     * 查询债券投资交易信息
+     *
+     * @param tradeId 交易编号
+     * @return 债券投资交易信息
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("getReverseTradeDtoInvAim/{tradeId}")
+    public String getReverseTradeDtoInvAim(@PathVariable("tradeId") String tradeId)
+            throws Exception {
+        return trdBondInvestTradeService.getReverseTradeDtoInvAim(tradeId);
+    }
+
+    /**
+     * 查找买入交易之后的卖出交易
+     *
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("selectTradeT02/{tradeId}")
+    public int selectTradeT02(@PathVariable("tradeId") String tradeId){
+        return trdBondInvestTradeService.selectTradeT02(tradeId);
+    }
 }

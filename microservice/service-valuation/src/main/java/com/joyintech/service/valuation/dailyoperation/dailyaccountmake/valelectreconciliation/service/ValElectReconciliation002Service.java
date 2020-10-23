@@ -10,7 +10,7 @@ import com.joyintech.service.valuation.dailyoperation.dailyaccountmake.valelectr
 import com.joyintech.service.valuation.dailyoperation.dailyaccountmake.valelectreconciliation.dto.ValElectReconciliation002Dto;
 import com.joyintech.tams.constant.DictCodeListExt1;
 
-@Service
+@Service("backValElectReconciliation002Service")
 public class ValElectReconciliation002Service extends CommonExportService<ValElectReconciliation002Dto> {
 
     @Autowired

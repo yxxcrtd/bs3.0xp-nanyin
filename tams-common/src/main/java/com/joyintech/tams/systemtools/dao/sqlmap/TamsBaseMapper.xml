@@ -129,4 +129,13 @@
         FROM SYS_INSTITUTION SI
         WHERE INSTITUTION_TYPE = '01'
     </select>
+
+    <select id="getCreateInstByID" resultType="java.lang.String">
+        SELECT INSTITUTION_CODE
+        FROM Data_Auth_Notify_Inst SI
+        WHERE BUSINESS_ID = #{businessId}
+        and model_type = '02'
+        and data_type = #{dataType}
+    </select>
+
 </mapper>

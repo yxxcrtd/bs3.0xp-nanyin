@@ -50,7 +50,7 @@ import java.util.Map;
  * @see FinPlanProfitAssetService
  * @since 1.0
  */
-@Service
+@Service("backFinPlanProfitAssetService")
 public class FinPlanProfitAssetService extends BaseService<FinPlanProfitAssetDto>{
     //    中债资产其他要素 Mapper
     @Autowired

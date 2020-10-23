@@ -35,7 +35,7 @@ import com.joyintech.service.valuation.basedata.marketdata.valexchangerateinfo.d
  * @see ValExchangeQuotationInfoService
  * @since 1.0
  */
-@Service
+@Service("backValExchangeQuotationInfoService")
 @Transactional(rollbackFor = Exception.class)
 public class ValExchangeQuotationInfoService extends BaseService<ValExchangeQuotationInfoDto>{
 

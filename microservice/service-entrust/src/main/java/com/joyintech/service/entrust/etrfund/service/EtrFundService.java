@@ -56,7 +56,7 @@ import java.util.*;
  * @see EtrFundService
  * @since 1.0
  */
-@Service
+@Service("backEtrFundService")
 public class EtrFundService extends BaseService<EtrFundDto> {
     /**
      * 自定义mappper

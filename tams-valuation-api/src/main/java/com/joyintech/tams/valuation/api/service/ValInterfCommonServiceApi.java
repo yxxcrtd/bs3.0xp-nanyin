@@ -2536,14 +2536,6 @@ public class ValInterfCommonServiceApi {
                         }
                     }
 
-                    // TISHKBS-1038 add by caiqun 20200911 如果是一次性划款，且已经做过通道资金划款生成了核算主体则不再生成入账信息 start
-                    FinProductAdd payType = finProductAddMapper.selectByPrimaryKey(deal.getChlId());
-                    if (DictCodeListExt2.划款方式_一次性划款.getValue().equals(payType.getPayType())
-                            && CollectionUtils.isNotEmpty(listBokBooksetSonDto)) {
-                        return null;
-                    }
-                    // TISHKBS-1038 add by caiqun 20200911 如果是一次性划款，且已经做过通道资金划款生成了核算主体则不再生成入账信息 end
-
                     //生成产品通道账套存入data_auth_notify_inst 表中，实现联社数据权限隔离 start
                     if(MultilevelDataAuthorityUtil.isEnabled()) {
                         //创建机构代码

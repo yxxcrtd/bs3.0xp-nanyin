@@ -45,7 +45,7 @@ import java.util.*;
  * @author: junYin
  * @date: 2019-06-04 11:16
 */
-@Service
+@Service("backEtrStockService")
 public class EtrStockService extends BaseService<EtrStockDto>{
 
     /**

@@ -162,8 +162,10 @@ RskValAssetCode003 = function(){
                 targetArr.push(targetNodes[i].id);
             }
         }
+
+        var sourceNodes = [];
         if(null!=treeSourceObj){
-            var sourceNodes = treeSourceObj.getCheckedNodes(true);
+            sourceNodes = treeSourceObj.getCheckedNodes(true);
             for (var i = 0; i < sourceNodes.length; i++) {
                 sourceArr.push(sourceNodes[i].id);
             }
@@ -179,10 +181,27 @@ RskValAssetCode003 = function(){
                                     id:$('#id').val()  //资产科目映射id
                                     },function(){
                                         table.reload();//回调函数，表格刷新
-                                        refreshAddTree();
+//                                        if(isCommit!=1){
+//                                            for (var i = 0; i < sourceNodes.length; i++) {
+//                                                 sourceNodes[i].checked = false;
+//                                            }
+//                                        }
+                                        if(isCommit == 1){
+                                           refreshAddTree();
+                                        }
+                                        //reloadTree();
                                     });
         });
     }
+
+    var isCommit = 0;
+
+    var isConfirm = function(){
+
+        isCommit =  1;
+    }
+
+
     /**
      * 画面加载完成
      */
@@ -193,15 +212,16 @@ RskValAssetCode003 = function(){
             //加载源科目树、目标树
             reloadTree();
         });
-        
+
         //添加
         $('#RskValAssetCode003_btn_add').click(function(){
+            isCommit = 0;
             showDialog();
         });
-        
+
         //删除
         $('#RskValAssetCode003_btn_delete').click(function() {
-            var deleteArr = new Array() 
+            var deleteArr = new Array()
             if(table!=null && table!=''){
                 var selArr = table.getAllCheckedRows();
             }
@@ -224,4 +244,8 @@ RskValAssetCode003 = function(){
            /* });*/
         });
     });
+
+     window.RskValAssetAction = {
+            isConfirm: isConfirm
+     }
 }());

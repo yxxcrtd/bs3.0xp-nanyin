@@ -25,7 +25,7 @@ import java.util.Map;
  * @Author wangXiaoYong
  * @create 2019/11/19
  */
-@Service
+@Service("backTradeCostManagement002Service")
 public class TradeCostManagement002Service extends BaseService<TradeCostManagement002Dto> {
 
     @Autowired

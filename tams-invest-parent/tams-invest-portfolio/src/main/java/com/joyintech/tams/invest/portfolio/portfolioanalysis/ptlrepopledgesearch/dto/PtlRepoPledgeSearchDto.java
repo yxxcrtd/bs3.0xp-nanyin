@@ -349,7 +349,7 @@ public class PtlRepoPledgeSearchDto extends FinDealPledge {
     }
 
     public String getFinprodType2Name() {
-        return SysDataUtil.getNameFromDataDict(DictCode.金融产品类型_投管用,getFinprodType2());
+        return SysDataUtil.getNameFromDataDict(DictCode.金融产品类型_投管用,getFinprodType2())==null?getFinprodType2():SysDataUtil.getNameFromDataDict(DictCode.金融产品类型_投管用,getFinprodType2());
     }
 
     public void setFinprodType2Name(String finprodType2Name) {

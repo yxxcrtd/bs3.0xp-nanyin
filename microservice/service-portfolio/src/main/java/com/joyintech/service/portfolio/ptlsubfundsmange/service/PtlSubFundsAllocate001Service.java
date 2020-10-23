@@ -45,7 +45,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
  * @see PtlSubFundsAllocate001Service
  * @since 1.0
  */
-@Service
+@Service("backPtlSubFundsAllocate001Service")
 public class PtlSubFundsAllocate001Service extends BaseService<PtlSubFundsAllocateDto> {
 
     @Autowired

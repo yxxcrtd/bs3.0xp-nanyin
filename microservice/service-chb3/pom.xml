@@ -4,10 +4,10 @@
 	<parent>
 		<groupId>com.joyintech</groupId>
 		<artifactId>tams-parent</artifactId>
-		<version>0.0.1</version>
+		<version>0.0.3</version>
 	</parent>
 	<artifactId>service-chb3</artifactId>
-	<version>3.0.0</version>
+	<version>3.1.0</version>
 	<name>service-chb3</name>
 	<description>中债三期服务</description>
 
@@ -67,17 +67,19 @@
 			   </executions>
 		    </plugin>
 			
+            <!-- 
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <!--for war-->
-                  <!-- <mainClass>org.springframework.boot.loader.WarLauncher</mainClass>-->
-                  <!-- <addResources>true</addResources>-->
-                  <!-- <classifier>exec</classifier> -->
-                  <!-- <fork>true</fork> --><!-- 如果没有该项配置，devtools不会起作用，即应用不会restart -->
+                    for war
+                  <mainClass>org.springframework.boot.loader.WarLauncher</mainClass>
+                  <addResources>true</addResources>
+                  <classifier>exec</classifier>
+                  <fork>true</fork>如果没有该项配置，devtools不会起作用，即应用不会restart
                 </configuration>
-            </plugin>
+            </plugin> 
+            -->
         </plugins>
     </build>
 </project>

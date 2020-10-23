@@ -36,7 +36,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
  * @see RepFinProductAssetBalanceService
  * @since 1.0
  */
-@Service
+@Service("backRepFinProductAssetBalanceService")
 public class RepFinProductAssetBalanceService extends BaseService<RepFinProductAssetBalanceDto>{
 
     @Autowired

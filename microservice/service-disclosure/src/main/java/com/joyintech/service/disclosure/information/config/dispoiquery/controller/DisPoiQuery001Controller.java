@@ -22,7 +22,7 @@ import java.util.Map;
  *
  * @author kx
  */
-@RestController
+@RestController("backDisPoiQuery001Controller")
 @RequestMapping("/DisPoiQuery001")
 public class DisPoiQuery001Controller extends BaseController {
 

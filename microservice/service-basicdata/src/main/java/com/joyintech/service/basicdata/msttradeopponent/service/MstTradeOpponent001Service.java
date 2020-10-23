@@ -42,7 +42,7 @@ import com.joyintech.service.basicdata.msttradeopponent.dto.MstTradeOpponentDto;
  * @see MstTradeOpponent001Service
  * @since 1.0
  */
-@Service
+@Service("backMstTradeOpponent001Service")
 public class MstTradeOpponent001Service extends BaseService<MstTradeOpponentDto>{
     /**
      * 注入实体Mapper

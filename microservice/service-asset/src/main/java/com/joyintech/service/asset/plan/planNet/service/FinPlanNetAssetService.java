@@ -51,7 +51,7 @@ import java.util.Map;
  * @see FinPlanNetAssetService
  * @since 1.0
  */
-@Service
+@Service("backFinPlanNetAssetService")
 public class FinPlanNetAssetService extends BaseService<FinPlanNetAssetDto> {
     
     /**

@@ -48,7 +48,7 @@ import com.joyintech.service.basicdata.mstmarketinstitutions.dto.MstMarketInstit
  * @see MstMarketInstitutionsService
  * @since 1.0
  */
-@Service
+@Service("backMstMarketInstitutionsService")
 public class MstMarketInstitutionsService extends BaseService<MstMarketInstitutionsDto> {
     /**
      * 市场机构mapper注入

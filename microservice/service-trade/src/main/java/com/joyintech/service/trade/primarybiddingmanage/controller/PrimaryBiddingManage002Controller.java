@@ -18,7 +18,7 @@ import com.joyintech.service.trade.primarybiddingmanage.service.PrimaryBiddingMa
  * @see PrimaryBiddingManage002Controller
  * @since 1.0
  */
-@RestController
+@RestController("backPrimaryBiddingManage002Controller")
 @RequestMapping("/PrimaryBiddingManage002")
 public class PrimaryBiddingManage002Controller {
 

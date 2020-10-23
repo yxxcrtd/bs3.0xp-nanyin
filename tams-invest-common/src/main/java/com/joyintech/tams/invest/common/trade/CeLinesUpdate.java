@@ -52,11 +52,13 @@ public class CeLinesUpdate  extends CelinesUpdateFactory{
 	    boolean isCreditSoftControl = Boolean.parseBoolean(CacheUtil.getSysParam("IS_CREDIT_SOFTCONTROL")); 
 		if (StringUtil.equals(BussinessDictCodeList.监控授信开关_关.getValue(), CacheUtil.getSysParam(BussinessConstant.ISCREDIT))) {
             // 软控为true时保存仍进行额度修改
-		    if (isCreditSoftControl){
-                if (!isSave) {
-                    return list;
-                }
-            }
+//		    if (isCreditSoftControl){
+//                if (!isSave) {
+//                    return list;
+//                }
+//            }
+		    
+		    return list;
 	    }
 		//交易相关信息model
 		// 交易撤销时交易对手代码会被修改为市场机构bug修正 modify by renping 20190919 start

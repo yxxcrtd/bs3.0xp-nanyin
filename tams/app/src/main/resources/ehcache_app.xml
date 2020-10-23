@@ -6,7 +6,7 @@
                 磁盘存储配置：用来指定缓存在磁盘上的存储位置。
                  可以使用JavaVM环境变量(user.home, user.dir, java.io.tmpdir)
     -->
-    <diskStore path="/home/tams/cache/app" />
+    <diskStore path="java.io.tmpdir" />
     
     <!--
                 指定CacheManagerEventListenerFactory，这个对象在缓存添加的时候会得到相应的通知。

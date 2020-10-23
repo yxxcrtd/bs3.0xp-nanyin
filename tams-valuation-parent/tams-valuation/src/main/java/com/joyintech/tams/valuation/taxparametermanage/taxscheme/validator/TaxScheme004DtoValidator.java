@@ -13,6 +13,7 @@ package com.joyintech.tams.valuation.taxparametermanage.taxscheme.validator;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,6 +81,11 @@ public class TaxScheme004DtoValidator implements BeanValidator {
                 validParam2.setBusinessDataPk2(dto.getSchId());
                 validParam2.setBusinessDataPk3(dto.getAddTaxType());
                 validParam2.setBusinessDataPk4(dto.getEffDate());
+
+                if(MultilevelDataAuthorityUtil.isEnabled()){
+                    validParam2.setBusinessDataPk5(dto.getInstitutionCode());
+                }
+
                 if (mstWorkflowCommonService.isInWflProcess(validParam2)) {
                     // 流程存在情况
                     errorList.add(new ValidMessage(getMessage("COMMON_E_0021", "标识", "附加税类型+生效日组成唯一性数据")));

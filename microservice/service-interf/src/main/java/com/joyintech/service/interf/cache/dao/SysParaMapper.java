@@ -24,7 +24,7 @@ import com.joyintech.service.interf.cache.entity.SysPara;
  * @see SysParaMapper
  * @since 1.0
  */
-@Repository("InterfSysParaMapper")
+@Repository("backInterfSysParaMapper")
 public interface SysParaMapper {
 
 	/**

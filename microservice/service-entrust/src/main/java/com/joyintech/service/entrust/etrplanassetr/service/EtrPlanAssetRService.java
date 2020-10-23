@@ -57,7 +57,7 @@ import java.util.*;
  * @see EtrPlanAssetRService
  * @since 1.0
  */
-@Service
+@Service("backEtrPlanAssetRService")
 public class EtrPlanAssetRService extends BaseService<EtrPlanAssetRDto> {
 
     /**

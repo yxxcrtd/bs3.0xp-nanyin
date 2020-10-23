@@ -32,7 +32,7 @@ import com.joyintech.service.report.balance.service.RepFinProductAssetBalanceSer
  * @see RepFinProductAssetBalanceController
  * @since 1.0
  */
-@RestController
+@RestController("backRepFinProductAssetBalanceController")
 @RequestMapping("/RepFinProductAssetBalance")
 public class RepFinProductAssetBalanceController {
 

@@ -21,6 +21,7 @@ import javax.validation.Valid;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -73,6 +74,9 @@ public class ValNetValueConfirm001Contoller extends BaseController {
      */
     @Autowired
     private ValNetValueConfirm001Service valNetValueConfirm001Service;
+
+    @Autowired(required=false)
+    private IPlatformDate iPlatformDate;
     
     /**
      * 重写init方法，加载页面
@@ -108,6 +112,11 @@ public class ValNetValueConfirm001Contoller extends BaseController {
                 return "valuation/dailyoperation/dailyaccountmake/valnetvalueconfirm/ValNetValueConfirm002";
             }
 
+        }
+
+
+        if (null != iPlatformDate) {
+            model.addAttribute("platDate", DateUtil.format(iPlatformDate.getSysDate()) + " - " + DateUtil.format(iPlatformDate.getSysDate()));
         }
         
         return super.init(model);

@@ -80,8 +80,8 @@ public class ValFundMarketQuotationInfoImportDataService extends CommonExportSer
             headList.add("基金代码");
             headList.add("基金名称");
             headList.add("基金类型");
-            headList.add("估值日");
-            headList.add("剩余期限");
+            headList.add("估值日期");
+//            headList.add("剩余期限");
             headList.add("收盘价");
             headList.add("平均价");
             headList.add("最高价");
@@ -96,19 +96,19 @@ public class ValFundMarketQuotationInfoImportDataService extends CommonExportSer
                 List<MstFundMarketInfo> entities = new ArrayList<>(dataList.size());
                 List<ExcelValidDto> checkResult= convertToEntity(dataList, entities,userName,deptCode);
                 if(checkResult.isEmpty()) {
-	                for(MstFundMarketInfo dto : entities){
-	                	mstFundMarketInfoMapper.insert(dto);
-	                }
+                    for(MstFundMarketInfo dto : entities){
+                        mstFundMarketInfoMapper.insert(dto);
+                    }
                 }
                 return checkResult;
             }
         }else{
-        	List<ExcelValidDto> checkResult = new ArrayList<>();
-        	ExcelValidDto excelValidDto = new ExcelValidDto();
-        	String errorMsg = "模板为空，请输入数据！";
-        	excelValidDto.setErrorInfo(errorMsg);
-        	checkResult.add(excelValidDto);
-        	return checkResult;
+            List<ExcelValidDto> checkResult = new ArrayList<>();
+            ExcelValidDto excelValidDto = new ExcelValidDto();
+            String errorMsg = "模板为空，请输入数据！";
+            excelValidDto.setErrorInfo(errorMsg);
+            checkResult.add(excelValidDto);
+            return checkResult;
         }
         return null;
     }
@@ -131,154 +131,154 @@ public class ValFundMarketQuotationInfoImportDataService extends CommonExportSer
         Date sysDate = DateUtil.platDateFromCache();// 获取平台日期
         Date nowDate = new Date();
         for (int i = 0; i < dataList.size(); i++ ) {
-        	//是否正常标志
-        	boolean flag = true;
-            List<String> list = dataList.get(i);            
-           
+            //是否正常标志
+            boolean flag = true;
+            List<String> list = dataList.get(i);
+
             Map<String,Object> param = new HashMap<String,Object>();
             // 验证消息
             List<String> message = new ArrayList<>();
             //基金代码
             if(list.get(0) == null || list.get(0).trim().equals("")){
-            	flag = false;
-            	message.add("基金代码不能为空");
+                flag = false;
+                message.add("基金代码不能为空");
             }else{
-            	 param.put("finprodId",list.get(0));
-            	 param.put("prodtype2", "F06");
-            	 String  result = valFundMarketInfo001mapper.checkFinprod(param);
-            	 if(StringUtils.isEmpty(result)){
-            		 flag = false;
-                 	message.add("基金代码不存在");
-                 }
+                param.put("finprodId",list.get(0));
+                param.put("prodtype2", "F06");
+                String  result = valFundMarketInfo001mapper.checkFinprod(param);
+                if(StringUtils.isEmpty(result)){
+                    flag = false;
+                    message.add("基金代码不存在");
+                }
             }
             //基金名称
             if(list.get(1) == null || list.get(1).trim().equals("")){
-            	flag = false;
-            	message.add("基金名称不能为空");
+                flag = false;
+                message.add("基金名称不能为空");
             }
             //基金类型
             if(list.get(2) == null || list.get(2).trim().equals("")){
-            	flag = false;
-            	message.add("基金类型不能为空");
+                flag = false;
+                message.add("基金类型不能为空");
             }else{
-            	if(!valueSourceList.contains(list.get(2).trim())){
-            		flag = false;
-                	message.add("基金类型不在枚举值之中");
-            	}
+                if(!valueSourceList.contains(list.get(2).trim())){
+                    flag = false;
+                    message.add("基金类型不在枚举值之中");
+                }
             }
             //估值日
             if(list.get(3) == null || list.get(3).trim().equals("")){
-            	flag = false;
-            	message.add("估值日不能为空");
+                flag = false;
+                message.add("估值日不能为空");
             }else{
-            	if (!checkDate(list.get(3))) {
-            		flag = false;
-                	message.add("估值日期格式不正确");
-                } 
+                if (!checkDate(list.get(3))) {
+                    flag = false;
+                    message.add("估值日期格式不正确");
+                }
             }
-            //剩余期限
-            if(list.get(4) == null || list.get(4).trim().equals("")){
-            	flag = false;
-            	message.add("剩余期限不能为空");
-            }
+//            //剩余期限
+//            if(list.get(4) == null || list.get(4).trim().equals("")){
+//            	flag = false;
+//            	message.add("剩余期限不能为空");
+//            }
             //收盘价
-            if(list.get(5) == null || list.get(5).trim().equals("")){
-            	flag = false;
-            	message.add("收盘价不能为空");
+            if(list.get(4) == null || list.get(4).trim().equals("")){
+                flag = false;
+                message.add("收盘价不能为空");
             }else{
-            	if(!checkFigure(list.get(5))){
-            		flag = false;
-                	message.add("收盘价不是数字");
-            	}
+                if(!checkFigure(list.get(4))){
+                    flag = false;
+                    message.add("收盘价不是数字");
+                }
             }
             //平均价
-            if(list.get(6) == null || list.get(6).trim().equals("")){
-            	flag = false;
-            	message.add("平均价不能为空");
+            if(list.get(5) == null || list.get(5).trim().equals("")){
+                flag = false;
+                message.add("平均价不能为空");
             }else{
-            	if(!checkFigure(list.get(6))){
-            		flag = false;
-                	message.add("平均价不是数字");
-            	}
+                if(!checkFigure(list.get(5))){
+                    flag = false;
+                    message.add("平均价不是数字");
+                }
             }
             //最高价
-            if(list.get(7) == null || list.get(7).trim().equals("")){
-            	flag = false;
-            	message.add("最高价不能为空");
+            if(list.get(6) == null || list.get(6).trim().equals("")){
+                flag = false;
+                message.add("最高价不能为空");
             }else{
-            	if(!checkFigure(list.get(7))){
-            		flag = false;
-                	message.add("最高价不是数字");
-            	}
+                if(!checkFigure(list.get(6))){
+                    flag = false;
+                    message.add("最高价不是数字");
+                }
             }
             //最低价
-            if(list.get(8) == null || list.get(8).trim().equals("")){
-            	flag = false;
-            	message.add("最低价不能为空");
+            if(list.get(7) == null || list.get(7).trim().equals("")){
+                flag = false;
+                message.add("最低价不能为空");
             }else{
-            	if(!checkFigure(list.get(8))){
-            		flag = false;
-                	message.add("最低价不能为空");
-            	}
+                if(!checkFigure(list.get(7))){
+                    flag = false;
+                    message.add("最低价不能为空");
+                }
             }
             //买一价
-            if(list.get(9) == null || list.get(9).trim().equals("")){
-            	flag = false;
-            	message.add("买一价不能为空");
+            if(list.get(8) == null || list.get(8).trim().equals("")){
+                flag = false;
+                message.add("买一价不能为空");
             }else{
-            	if(!checkFigure(list.get(9))){
-            		flag = false;
-                	message.add("买一价不是数字");
-            	}
+                if(!checkFigure(list.get(8))){
+                    flag = false;
+                    message.add("买一价不是数字");
+                }
             }
             //卖一价
-            if(list.get(10) == null || list.get(10).trim().equals("")){
-            	flag = false;
-            	message.add("卖一价不能为空");
+            if(list.get(9) == null || list.get(9).trim().equals("")){
+                flag = false;
+                message.add("卖一价不能为空");
             }else{
-            	if(!checkFigure(list.get(10))){
-            		flag = false;
-                	message.add("卖一价不是数字");
-            	}
+                if(!checkFigure(list.get(9))){
+                    flag = false;
+                    message.add("卖一价不是数字");
+                }
             }
             //主键校验
             if(flag){
-            	param.put("finprodId",list.get(0));
-            	param.put("tradeDate", DateUtil.parse(list.get(3)));
-            	String  result = valFundMarketInfo001mapper.getRegistExcelList(param);
-            	if(StringUtils.isNotEmpty(result)){
-            		flag = false;
-            		message.add("存在和基金代码与估值日相同的数据");
-            	}                    	
+                param.put("finprodId",list.get(0));
+                param.put("tradeDate", DateUtil.parse(list.get(3)));
+                String  result = valFundMarketInfo001mapper.getRegistExcelList(param);
+                if(StringUtils.isNotEmpty(result)){
+                    flag = false;
+                    message.add("存在和基金代码与估值日相同的数据");
+                }
             }
-            
+
             if(flag){
-            	MstFundMarketInfo entity = new MstFundMarketInfo();
-                //资产代码            
-                entity.setFundCode(list.get(0));           
-                //估值日           
-                entity.setValueDate(DateUtil.parse(list.get(3)));                
-                //收盘价            
-                entity.setClosePrice(new BigDecimal(list.get(5)));            	            
-                //平均价            
-                entity.setAveragePrice(new BigDecimal(list.get(6)));            	            
-                //最高价            
-                entity.setMaxPrice(new BigDecimal(list.get(9)));            	            
-                //最低价            
-                entity.setMinPrice(new BigDecimal(list.get(10)));            	            
-                //买一价           
-                entity.setBuyOnePrice(new BigDecimal(list.get(7)));            	            
-                //卖一价           
-                entity.setSellOnePrice(new BigDecimal(list.get(8)));            	
-                entity.setInputType(DictCodeListExt1.录入方式_系统导入.getValue());             
+                MstFundMarketInfo entity = new MstFundMarketInfo();
+                //资产代码
+                entity.setFundCode(list.get(0));
+                //估值日
+                entity.setValueDate(DateUtil.parse(list.get(3)));
+                //收盘价
+                entity.setClosePrice(new BigDecimal(list.get(4)));
+                //平均价
+                entity.setAveragePrice(new BigDecimal(list.get(5)));
+                //最高价
+                entity.setMaxPrice(new BigDecimal(list.get(6)));
+                //最低价
+                entity.setMinPrice(new BigDecimal(list.get(7)));
+                //买一价
+                entity.setBuyOnePrice(new BigDecimal(list.get(8)));
+                //卖一价
+                entity.setSellOnePrice(new BigDecimal(list.get(9)));
+                entity.setInputType(DictCodeListExt1.录入方式_系统导入.getValue());
                 entity.setCreateUser(userName);
                 entity.setCreateDept(deptCode);
                 entity.setCreateTime(nowDate);
                 entity.setUpdateUser(userName);
-                entity.setUpdateTime(nowDate);   
+                entity.setUpdateTime(nowDate);
                 entities.add(entity);
             }
-            
+
             if (CollectionUtils.isNotEmpty(message)) {
                 checkResult.add(new ExcelValidDto(list.get(0), String.valueOf(i+2),
                         StringUtil.joinString(message, GlobalConstant.SEMICOLON)));

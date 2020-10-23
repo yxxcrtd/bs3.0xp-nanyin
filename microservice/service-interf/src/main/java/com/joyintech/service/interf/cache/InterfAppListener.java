@@ -30,7 +30,7 @@ import com.joyintech.service.interf.cache.service.SysParamInfService;
  * @see InterfAppListener
  * @since 1.0
  */
-@Component
+@Component("backInterfAppListener")
 public class InterfAppListener extends TimerTask implements AppStartupListener {
 
     /**

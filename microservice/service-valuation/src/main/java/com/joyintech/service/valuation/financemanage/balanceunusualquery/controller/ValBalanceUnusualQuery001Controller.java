@@ -34,7 +34,7 @@ import com.joyintech.tams.valuation.common.service.BaseCommonService;
  * @since 1.0
  */
 
-@RestController
+@RestController("backValBalanceUnusualQuery001Controller")
 @RequestMapping("/ValBalanceUnusualQuery001")
 public class ValBalanceUnusualQuery001Controller extends BaseController {
     

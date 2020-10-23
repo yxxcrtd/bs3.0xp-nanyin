@@ -22,7 +22,7 @@ import java.util.Map;
  * @Author wangXiaoYong
  * @create 2019/11/19
  */
-@Service
+@Service("backTradeCostManagement001Service")
 public class TradeCostManagement001Service extends BaseService<TradeCostManagement001Dto> {
 
 

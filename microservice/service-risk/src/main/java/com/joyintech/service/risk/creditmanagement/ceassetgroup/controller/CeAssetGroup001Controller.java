@@ -33,7 +33,7 @@ import com.joyintech.service.risk.creditmanagement.ceassetgroup.service.CeAssetG
  * @see CeAssetGroup001Controller
  * @since 1.0
  */
-@RestController
+@RestController("backCeAssetGroup001Controller")
 @RequestMapping("/CeAssetGroup001")
 public class CeAssetGroup001Controller {
 

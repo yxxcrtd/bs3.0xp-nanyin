@@ -38,7 +38,7 @@ import com.joyintech.tams.invest.common.dto.MstFileOutputParameter;
  * @see MstCaptialAccountService
  * @since 1.0
  */
-@Service
+@Service("backMstCaptialAccountService")
 public class MstCaptialAccountService extends BaseService<MstCaptialAccountDto>{
     
     /**
@@ -215,6 +215,10 @@ public class MstCaptialAccountService extends BaseService<MstCaptialAccountDto>{
 
     public int updateTitle(Map<String, Object> map){
         return basicMstCaptialAccountMapper.updateTitle(map);
+    }
+
+    public int getUniqueAcctNoPayNo(Map<String, Object> map){
+        return basicMstCaptialAccountMapper.getUniqueAcctNoPayNo(map);
     }
     
 }

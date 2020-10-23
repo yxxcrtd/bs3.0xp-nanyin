@@ -11,7 +11,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.service.trade.investtrade.investdealquery.dao.AssetTransferExport001Mapper;
 import com.joyintech.service.trade.investtrade.investdealquery.dto.AssetTransferExport001Dto;
 
-@Service
+@Service("backAssetTransferExport001Service")
 @Transactional(rollbackFor=Exception.class)
 public class AssetTransferExport001Service  extends BaseService<AssetTransferExport001Dto>{
 

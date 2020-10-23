@@ -12,7 +12,7 @@ import com.joyintech.service.valuation.dailyoperation.dailyaccountmake.valsubjec
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 
-@Service
+@Service("backValSubjectInfo001Service")
 public class ValSubjectInfo001Service extends CommonExportService<ValSubjectInfo001Dto> {
 
     @Autowired

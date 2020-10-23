@@ -32,7 +32,7 @@ import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommSer
  * @since 1.0
  */
 @SuppressWarnings("rawtypes")
-@Service
+@Service("backPrimaryBiddingManage003Service")
 public class PrimaryBiddingManage003Service extends BaseService<BidOrderBidPriceDto> {
 
     @Autowired

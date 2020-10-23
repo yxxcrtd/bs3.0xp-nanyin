@@ -681,8 +681,11 @@ public class CommonAutoCouponService extends BaseService{
                     }else{
                         finExercisePlan.setActExerciseDate(optionpayday);//实际行权日               
                     }
-                         
-                    finExercisePlan.setExerciseDate(theoryoptionpayday);//行权信息表理论行权日
+
+                    //finExercisePlan.setExerciseDate(theoryoptionpayday);//行权信息表理论行权日
+                    // TISHKBS-1382
+                    finExercisePlan.setExerciseDate(payhsrcsecoption.getTheoryoptionpayday());//行权信息表理论行权日
+
                     finExercisePlan.setExercisePrice(payhsrcsecoption.getOptionprice());
                     /**--现行权条款取行权信息表行权条款 add by shenchen 2019-04-11--**/
                     //finExercisePlan.setExerciseRemark(interfCbondspecialconditions.getbInfoContent());//中国债券特殊条款注释

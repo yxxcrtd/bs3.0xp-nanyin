@@ -58,7 +58,7 @@ import java.util.*;
  * @see EtrInvestBondInfoService
  * @since 1.0
  */
-@Service
+@Service("backEtrInvestBondInfoService")
 public class EtrInvestBondInfoService extends BaseService<EtrInvestBondInfoDto> {
 
     /**

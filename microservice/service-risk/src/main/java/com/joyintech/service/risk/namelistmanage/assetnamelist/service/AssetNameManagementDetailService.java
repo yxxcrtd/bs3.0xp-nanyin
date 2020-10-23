@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * @see AssetNameManagementService
  * @since 1.0
  */
-@Service
+@Service("backAssetNameManagementDetailService")
 public class AssetNameManagementDetailService extends BaseService<RskAccessListDetailDto> {
 
     @Autowired

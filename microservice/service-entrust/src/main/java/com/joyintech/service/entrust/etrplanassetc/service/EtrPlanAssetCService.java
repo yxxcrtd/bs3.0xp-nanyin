@@ -54,7 +54,7 @@ import java.util.*;
  * @see EtrPlanAssetCService
  * @since 1.0
  */
-@Service
+@Service("backEtrPlanAssetCService")
 public class EtrPlanAssetCService extends BaseService<EtrPlanAssetCDto>{
 
     /**

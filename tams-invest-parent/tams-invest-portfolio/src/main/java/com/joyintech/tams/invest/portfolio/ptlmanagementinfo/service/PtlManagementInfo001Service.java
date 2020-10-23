@@ -111,7 +111,7 @@ public class PtlManagementInfo001Service extends CommonExportService<PtlManageme
 
     @Autowired
     private PtlPortfolioMapper ptlPortfolioMapper;
-    
+
     @Autowired
     private FileAttachmentProcess fileAttachmentProcess;
 
@@ -229,7 +229,7 @@ public class PtlManagementInfo001Service extends CommonExportService<PtlManageme
             }
             ResultObject resultObject = updatePortfolio(entity);
             if (!StringUtil.equals(resultObject.getResultCode(), ResultCode.SUCCESS.getCode())) {
-            	throw new RuntimeException(resultObject.getResultMsg());
+                throw new RuntimeException(resultObject.getResultMsg());
             }
             String portfolioId = entity.getPortfolioId();
             if (!ptlPortfolios.isEmpty()) {
@@ -285,7 +285,7 @@ public class PtlManagementInfo001Service extends CommonExportService<PtlManageme
             //创建机构代码
             String createInst =   MultilevelDataAuthorityUtil.getService().queryOrganizationCode(entity.getCreateUser());
             entity.setCreateInst(createInst);
-   
+
             // 有查询权限的机构代码
             List<String> searchOrgCodeList = null;
             // 有编辑权限的机构代码
@@ -300,7 +300,7 @@ public class PtlManagementInfo001Service extends CommonExportService<PtlManageme
             // 记录二级法人权限
             insertDataAuthTypeInst(entity.getPortfolioId(), searchOrgCodeList, editOrgCodeList,DictCodeList.共通业务类型_组合管理.getValue());
 //            insertDataAuthTypeInst(entity.getPortfolioId(), searchOrgCodeList, editOrgCodeList,DictCodeList.共通业务类型_交易对手管理.getValue());
-        }  
+        }
         //----add by 裴家俊 核风险 产品或组合进redis 2020-01-07 -----start----------------
         if (CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)) {
             threadPoolTaskExecutor.execute(()->{
@@ -319,7 +319,7 @@ public class PtlManagementInfo001Service extends CommonExportService<PtlManageme
                     logger.info("----------->组合关联指标进入redis开始--------------");
                     redisRriter.dealRiskPtlIndicator(cond);
                     logger.info("----------->组合关联指标进入redis结束--------------");
-               } catch (InterruptedException e) {
+                } catch (InterruptedException e) {
                     logger.error("===========组合进入redis异常=============",e);
                 }
             });
@@ -568,24 +568,25 @@ public class PtlManagementInfo001Service extends CommonExportService<PtlManageme
                         }
                     }
                 }
-            } 
-        }else {
-            for (TreeNode<NodeDto> treeNode : tree) {
-                if (StringUtil.equals(treeNode.getId(), LoginUserUtil.getUserName())) {
-                    treeNode.setChecked(true);
-                    while (treeNode != null && StringUtil.isNotEmpty(treeNode.getpId()) && !StringUtil.equals(treeNode.getpId(), treeNode.getId())) {
-                        TreeNode<NodeDto> temp = null;
-                        for (TreeNode<NodeDto> node : tree) {
-                            if (StringUtil.equals(node.getId(), treeNode.getpId())) {
-                                node.setChecked(true);
-                                temp = node;
-                            }
-                        }
-                        treeNode = temp;
-                    }
-                }
             }
-        } 
+        }
+//        else {
+//            for (TreeNode<NodeDto> treeNode : tree) {
+//                if (StringUtil.equals(treeNode.getId(), LoginUserUtil.getUserName())) {
+//                    treeNode.setChecked(true);
+//                    while (treeNode != null && StringUtil.isNotEmpty(treeNode.getpId()) && !StringUtil.equals(treeNode.getpId(), treeNode.getId())) {
+//                        TreeNode<NodeDto> temp = null;
+//                        for (TreeNode<NodeDto> node : tree) {
+//                            if (StringUtil.equals(node.getId(), treeNode.getpId())) {
+//                                node.setChecked(true);
+//                                temp = node;
+//                            }
+//                        }
+//                        treeNode = temp;
+//                    }
+//                }
+//            }
+//        }
         return tree;
 
     }
@@ -608,14 +609,14 @@ public class PtlManagementInfo001Service extends CommonExportService<PtlManageme
     // add by xingxiaokang 2020-03-09 start 自动生成的组合在流程中增加附件，审批及生效后附件没显示
     @Override
     public void doUpdate(PtlManagementInfoDto entity) {
-    	//文件信息
+        //文件信息
         if (CollectionUtils.isNotEmpty(entity.getFileArray())
                 && StringUtil.isNotEmpty(entity.getPortfolioId())) {
             // 将附件和当前业务对象绑定（更新附件的业务代码）
             fileAttachmentProcess.updateBussinessNo(
-            		entity.getFileArray().stream().map(UploadFile::getFileNo).collect(
+                    entity.getFileArray().stream().map(UploadFile::getFileNo).collect(
                             Collectors.toList()),
-            		entity.getPortfolioId());
+                    entity.getPortfolioId());
         }
     }
     // add by xingxiaokang 2020-03-09 end

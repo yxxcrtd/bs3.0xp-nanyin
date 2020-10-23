@@ -32,7 +32,7 @@ import com.joyintech.service.basicdata.mstperformancebenchmark.dto.ComponentInfo
  * @see ComponentInfoService
  * @since 1.0
  */
-@Service
+@Service("backComponentInfoService")
 public class ComponentInfoService extends BaseService<ComponentInfoDto>{
     
     /**

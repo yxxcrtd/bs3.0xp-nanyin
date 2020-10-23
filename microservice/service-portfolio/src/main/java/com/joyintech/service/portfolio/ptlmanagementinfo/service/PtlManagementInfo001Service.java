@@ -94,7 +94,7 @@ import com.joyintech.tams.valuation.common.interf.common.ResultObject;
  * @see PtlManagementInfo001Service
  * @since 1.0
  */
-@Service
+@Service("backPtlManagementInfo001Service")
 public class PtlManagementInfo001Service extends BaseService<PtlManagementInfoDto> {
 
     // 注入组合微服务的Mapper

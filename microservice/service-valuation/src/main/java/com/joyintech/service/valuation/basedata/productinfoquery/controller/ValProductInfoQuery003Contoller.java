@@ -25,7 +25,7 @@ import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.controll
  * @since 2.0
  */
 @RestController(value="serviceValProductInfoQuery003Contoller")
-@RequestMapping("/valuation/basedata/productinfoquery/ValProductInfoQuery003")
+@RequestMapping("/service/valuation/basedata/productinfoquery/ValProductInfoQuery003")
 public class ValProductInfoQuery003Contoller extends BaseController {
 
 //    @Override

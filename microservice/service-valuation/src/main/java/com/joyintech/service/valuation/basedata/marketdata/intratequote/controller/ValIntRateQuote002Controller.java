@@ -27,7 +27,7 @@ import com.joyintech.service.valuation.basedata.marketdata.finproductvaluation.d
  * @since 1.0
  */
 @RestController(value="serviceValIntRateQuote002Controller")
-@RequestMapping("/valuation/basedata/marketdata/intratequote/ValIntRateQuote002")
+@RequestMapping("/service/valuation/basedata/marketdata/intratequote/ValIntRateQuote002")
 public class ValIntRateQuote002Controller extends BaseController{
             
     

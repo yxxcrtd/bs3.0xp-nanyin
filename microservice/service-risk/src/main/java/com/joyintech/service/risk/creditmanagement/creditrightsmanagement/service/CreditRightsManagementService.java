@@ -23,7 +23,7 @@ import com.joyintech.service.risk.creditmanagement.creditrightsmanagement.dto.Cr
  * @author huwenbin
  *
  */
-@Service
+@Service("backCreditRightsManagementService")
 public class CreditRightsManagementService extends BaseService<CreditRightsManagementDto>{
 	/**
 	 * 自定义Mapper

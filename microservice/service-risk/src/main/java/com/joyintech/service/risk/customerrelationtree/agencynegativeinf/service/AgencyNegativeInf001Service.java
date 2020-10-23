@@ -30,7 +30,7 @@ import java.util.Map;
  * @see AgencyNegativeInf001Service
  * @since 1.0
  */
-@Service
+@Service("backAgencyNegativeInf001Service")
 public class AgencyNegativeInf001Service extends BaseService<AgencyNegativeInf001Dto> {
 
     @Autowired

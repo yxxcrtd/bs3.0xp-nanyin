@@ -24,7 +24,7 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Service
+@Service("backEtrMoneyCalculationService")
 public class EtrMoneyCalculationService  extends BaseService<EtrMoneyCalculationDto> {
     @Autowired
     private EtrMoneyCalculationMapper etrMoneyCalculationMapper;

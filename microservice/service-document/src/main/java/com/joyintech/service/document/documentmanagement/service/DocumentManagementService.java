@@ -38,7 +38,7 @@ import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
  * @see DocumentManagementService
  * @since 1.0
  */
-@Service
+@Service("backDocumentManagementService")
 public class DocumentManagementService  extends BaseService<DocumentManagementDto>{
     @Autowired
     private DocumentManagementMapper documentManagementMapper;

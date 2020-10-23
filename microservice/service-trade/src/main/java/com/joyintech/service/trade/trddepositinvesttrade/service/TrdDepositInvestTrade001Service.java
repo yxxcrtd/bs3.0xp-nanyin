@@ -54,7 +54,7 @@ import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
  * @see TrdDepositInvestTrade001Service
  * @since 1.0
  */
-@Service
+@Service("backTrdDepositInvestTrade001Service")
 @Transactional(rollbackFor=Exception.class)
 public class TrdDepositInvestTrade001Service extends BaseService<TrdDepositInvestTrade001Dto>{
 //    @Autowired(required = false)

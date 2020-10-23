@@ -36,7 +36,7 @@ import com.joyintech.service.risk.customerrelationtree.agencydetailsinf.service.
  * @see AgencyDetailsInf001Controller
  * @since 1.0
  */
-@RestController
+@RestController("backAgencyDetailsInf001Controller")
 @RequestMapping("/AgencyDetailsInf001")
 public class AgencyDetailsInf001Controller {
 

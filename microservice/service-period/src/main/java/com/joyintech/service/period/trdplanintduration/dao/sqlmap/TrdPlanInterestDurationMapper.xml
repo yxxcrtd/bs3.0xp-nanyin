@@ -156,7 +156,7 @@
             AND T1.FINPROD_ID = PSV.FINPROD_ID AND PSV.INV_AIM = '999999'
                                     <where>
                                     T1.AMOUNT > 0 AND T1.HODING_TYPE = #{POSITION_TYPE03}
-                                    <if test="cashTypeSb != null and !cashTypeSb.isEmpty()">
+                                    <if test="cashTypeSb != null and !cashTypeSb.isEmpty() and !cashTypeSb.contains(CASH_CLASS_TYPE03)">
                                         AND (instr(#{cashTypeSb}, T2.CASH_TYPE) > 0)
                                     </if>
                                     <if test="finprodId != null and !finprodId.isEmpty()">

@@ -31,7 +31,7 @@ import com.joyintech.service.risk.customerrelationtree.agencydetailsinf.dto.Seni
  * @see AgencyDetailsInf002Service
  * @since 1.0
  */
-@Service
+@Service("backAgencyDetailsInf002Service")
 public class AgencyDetailsInf002Service extends BaseService<SeniorExecutiveInfDto> {
 	@Autowired
 	private AgencyDetailsInf002Mapper agencyDetailsInf002Mapper;

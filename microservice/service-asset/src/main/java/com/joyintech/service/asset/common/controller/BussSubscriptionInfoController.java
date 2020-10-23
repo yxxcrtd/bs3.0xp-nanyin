@@ -28,7 +28,7 @@ import com.joyintech.service.asset.common.service.BussSubscriptionInfoService;
  * @see BussSubscriptionInfoController
  * @since 1.0
  */
-@RestController
+@RestController("backBussSubscriptionInfoController")
 @RequestMapping("/BussSubscriptionInfo")
 public class BussSubscriptionInfoController{
 

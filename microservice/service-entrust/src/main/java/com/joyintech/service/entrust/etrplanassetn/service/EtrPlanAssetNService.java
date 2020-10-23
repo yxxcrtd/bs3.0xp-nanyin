@@ -57,7 +57,7 @@ import java.util.*;
  * @see EtrPlanAssetNService
  * @since 1.0
  */
-@Service
+@Service("backEtrPlanAssetNService")
 public class EtrPlanAssetNService extends BaseService<EtrPlanAssetNDto> {
     @Autowired
     private MstCounterPartyMapper mstCounterPartyMapper;

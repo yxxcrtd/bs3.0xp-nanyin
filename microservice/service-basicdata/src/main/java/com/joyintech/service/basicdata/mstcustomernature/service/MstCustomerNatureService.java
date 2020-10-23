@@ -33,7 +33,7 @@ import java.util.Map;
  * @see MstCustomerNatureService
  * @since 1.0
  */
-@Service
+@Service("backMstCustomerNatureService")
 @Transactional
 public class MstCustomerNatureService extends BaseService<MstCustomerNatureDto> {
 

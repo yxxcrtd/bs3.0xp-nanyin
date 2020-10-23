@@ -15,6 +15,8 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
@@ -42,6 +44,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 税务方案 - 主界面
@@ -103,7 +106,11 @@ public class TaxScheme001Controller extends BaseController {
 
         super.setSelectOptionToModel(model, DictCode.会计场景代码);
         super.setSelectOptionToModel(model, DictCode.增值税类型);
-
+        if(MultilevelDataAuthorityUtil.isEnabled()) {
+            model.addAttribute("institutionCode", MultilevelDataAuthorityUtil.getService().queryAuthorizedOrgCodeByUserName(LoginUserUtil.getUserName()));
+        }else{
+            model.addAttribute("institutionCode","");
+        }
 		return super.init(model);
 	}
 
@@ -140,7 +147,13 @@ public class TaxScheme001Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping("findAdtTax")
 	public Page<TaxScheme001Dto> findAdtTax() throws Exception {
-		return taxScheme001Service.findAdtTaxByPage(RequestUtil.getPageParam());
+        Map<String, Object> param = RequestUtil.getPageParam();
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+            List<String> treeInstCode = LoginUserUtil.getTreeInstCode();
+            param.put("instCode",treeInstCode);
+        }
+
+		return taxScheme001Service.findAdtTaxByPage(param);
 	}
 
 	/**
@@ -230,6 +243,12 @@ public class TaxScheme001Controller extends BaseController {
             }
         }
         //默认税务方案里面的内容（增值税则表，附加税则表等），不可删除，根据是否默认字段，‘Y’默认不可删，‘N’可以删除
+
+        if(StringUtil.equals("deleteAdtTax",dto.getOperateType())){
+            // 删除附加税的时候 特殊处理 前台已经校验
+
+
+        }else
         if(StringUtil.isNotEmpty(dto.getIsDefault())&&dto.getIsDefault().equals(DictCodeList.是否_是.getValue())){
              msg = "默认税务方案里面的内容，均不可删除";
              return new AjaxResult(msg, MessageType.错误消息);

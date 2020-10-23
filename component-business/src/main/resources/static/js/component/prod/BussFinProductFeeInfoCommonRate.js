@@ -82,8 +82,8 @@
             ,{field:'prodStyle', width:100, title: 'BussFinProductFeeInfo.prodStyle', sortable: false, edit:true,visible : (getElementById('pageId').val() === 'FinNetValueProductBuild002' && $('#' + dealModeElement).val() ===DISPOSE_PATTERN_11) , editOption:{type:'select', formatoption : false, result: PROD_STYLE}}
             ,{field:'feeRate', width:100, title: 'BussFinProductFeeInfo.feeRate', sortable: false, edit:true}
             //,{field:'basicBill',visible : false}
-            ,{field:'basicBill', width:150, title: 'BussFinProductFeeInfo.basicBill', sortable: false,
-            	edit:true,
+            ,{field:'basicBillStr',sortField:'basicBill', width:150, title: 'BussFinProductFeeInfo.basicBill', sortable: false,
+            	edit:false,
             	editOption:{type:'select',result:BILL_BASE_FEE_KIND}
             }
             ,{field:'basis', width:100, title: 'BussFinProductFeeInfo.basis', sortable: false,

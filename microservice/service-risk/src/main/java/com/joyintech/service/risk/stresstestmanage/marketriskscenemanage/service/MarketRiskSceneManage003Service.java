@@ -50,7 +50,7 @@ import com.joyintech.tams.constant.DictCodeListRsk;
  * @see MarketRiskSceneManage003Service
  * @since 1.0
  */
-@Service
+@Service("backMarketRiskSceneManage003Service")
 public class MarketRiskSceneManage003Service extends BaseService<MarketRiskSceneManage003Dto> {
 
 	//多线程

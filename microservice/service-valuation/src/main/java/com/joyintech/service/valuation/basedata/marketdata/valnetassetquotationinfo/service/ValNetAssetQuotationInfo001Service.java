@@ -40,7 +40,7 @@ import com.joyintech.service.valuation.basedata.marketdata.valnetassetquotationi
  * @since 1.0
  */
 
-@Service
+@Service("backValNetAssetQuotationInfo001Service")
 @Transactional
 public class ValNetAssetQuotationInfo001Service extends BaseService<ValNetAssetQuotationInfo001Dto> 
     {

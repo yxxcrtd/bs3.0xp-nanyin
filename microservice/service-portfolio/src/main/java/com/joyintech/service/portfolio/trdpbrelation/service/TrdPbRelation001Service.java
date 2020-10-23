@@ -37,7 +37,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
  * @since 1.0
  *
  */
-@Service
+@Service("backTrdPbRelation001Service")
 public class TrdPbRelation001Service extends CommonExportService<TrdPbRelation001Dto> {
 
 	@Autowired

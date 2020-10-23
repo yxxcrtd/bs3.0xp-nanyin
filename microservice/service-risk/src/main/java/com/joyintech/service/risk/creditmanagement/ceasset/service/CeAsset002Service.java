@@ -28,7 +28,7 @@ import com.joyintech.service.risk.creditmanagement.ceorg.dto.CreditMstInfoDto;
  * @see CeAsset002Service
  * @since 1.0
  */
-@Service
+@Service("backCeAsset002Service")
 public class CeAsset002Service extends BaseService<CreditMstInfoDto> {
 	
 	@Autowired

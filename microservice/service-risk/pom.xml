@@ -4,10 +4,10 @@
 	<parent>
 		<groupId>com.joyintech</groupId>
 		<artifactId>tams-parent</artifactId>
-		<version>0.0.1</version>
+		<version>0.0.3</version>
 	</parent>
 	<artifactId>service-risk</artifactId>
-	<version>2.0.1</version>
+	<version>2.1.1</version>
 	<name>service-risk</name>
 	<description>风险管理服务</description>
 	<dependencies>
@@ -43,6 +43,12 @@
           <groupId>com.joyintech</groupId>
           <artifactId>framework-data</artifactId>
         </dependency>
+        
+        <dependency>
+	        <groupId>org.apache.tomcat</groupId>
+		    <artifactId>tomcat-jdbc</artifactId>
+		    <version>8.5.23</version>
+        </dependency>
 	</dependencies>
 	<properties>
         <start-class>com.joyintech.service.risk.RiskApplication</start-class>
@@ -69,17 +75,19 @@
                </executions>
             </plugin>
 			
+            <!-- 
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <!--for war-->
-                  <!-- <mainClass>org.springframework.boot.loader.WarLauncher</mainClass>-->
-                  <!-- <addResources>true</addResources>-->
-                  <!-- <classifier>exec</classifier> -->
-                  <!-- <fork>true</fork> --><!-- 如果没有该项配置，devtools不会起作用，即应用不会restart -->
+                    for war
+                  <mainClass>org.springframework.boot.loader.WarLauncher</mainClass>
+                  <addResources>true</addResources>
+                  <classifier>exec</classifier>
+                  <fork>true</fork>如果没有该项配置，devtools不会起作用，即应用不会restart
                 </configuration>
-            </plugin>
+            </plugin> 
+            -->
         </plugins>
     </build>
 </project>

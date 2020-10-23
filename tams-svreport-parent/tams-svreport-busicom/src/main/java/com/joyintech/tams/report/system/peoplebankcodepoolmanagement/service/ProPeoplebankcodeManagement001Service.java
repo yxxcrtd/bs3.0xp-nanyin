@@ -1,12 +1,6 @@
 package com.joyintech.tams.report.system.peoplebankcodepoolmanagement.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -107,7 +101,7 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 	public  List<ProPeoplebankcodeManagement001Dto>  getList(List<ProPeoplebankcodeManagement001Dto>  list){
 		
 		//定义map
-		Map<String,ProPeoplebankcodeManagement001Dto>  map=new  HashMap<String,ProPeoplebankcodeManagement001Dto>();
+		Map<String,ProPeoplebankcodeManagement001Dto> map=new  LinkedHashMap<String,ProPeoplebankcodeManagement001Dto>();
 		
 		for(ProPeoplebankcodeManagement001Dto  dto:list){
 			//将list存放在map中

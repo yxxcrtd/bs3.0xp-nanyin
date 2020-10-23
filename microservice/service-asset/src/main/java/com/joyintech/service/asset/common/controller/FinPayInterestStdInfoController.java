@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @see FinPayInterestStdInfoController
  * @since 1.0
  */
-@RestController
+@RestController("backFinPayInterestStdInfoController")
 @RequestMapping("/FinPayInterestStdInfo")
 public class FinPayInterestStdInfoController {
     

@@ -250,7 +250,7 @@ public class TrdFundInvestTrade001Service extends CommonExportService<TrdFundInv
         
         if(StringUtil.equals(DictCodeList.交易方向_赎回确认.getValue(), entity.getPs())) {
             if (null != entity.getTradeId() && !"".equals(entity.getTradeId())){
-            	List<String> tradeids = new ArrayList<>();
+                List<String> tradeids = riskCreditListCommonValidatorService.selectTradeidByBTtradid(entity.getTradeId());
             	if (StringUtil.isNotEmpty(tradeids)) {
                 	for(String tradeid : tradeids) {
                         riskCreditListCommonValidatorService.deleteCredit(tradeid);

@@ -44,7 +44,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
  * @since 2.0
  */
 @RestController(value="serviceValProductInfoQuery004Contoller")
-@RequestMapping("/valuation/basedata/productinfoquery/ValProductInfoQuery004")
+@RequestMapping("/service/valuation/basedata/productinfoquery/ValProductInfoQuery004")
 public class ValProductInfoQuery004Contoller extends BaseController {
 
     @Autowired

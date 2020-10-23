@@ -43,6 +43,8 @@ $(function() {
     }
     $(function() {
         $('#RskValAssetCode004_btn_save').click(function(){
+         // RskValAssetAction.isConfirm();
+            parent.window['RskValAssetAction'].isConfirm();
             submit();
         })
     });
