@@ -280,7 +280,7 @@ public class FinProductBuild002Service extends BaseService<FinProductBuild002Dto
         		//当分开时，金融产品代码为F16+行内标识码
             	if(type == OperationType.NEW){
             		// 生成金融产品代码
-                    entity.setFinprodId(commonBusinessService != null ? commonBusinessService.getFinProdId(entity.getRepFinprodInsId(),
+                    entity.setFinprodId(commonBusinessService != null ? commonBusinessService.getFinProdId(entity.getFinprodMarketId(),
                         DictCodeListExt1.金融产品类型_投管用_理财产品.getValue(), null) : IDGenerator.generate());
                     entity.getBussRepFinProductInfoDto().setIsMerger(DictCodeList.是否_否.getValue());
             	}
