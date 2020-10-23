@@ -156,6 +156,7 @@ $(function () {
     }
     
     var commonChangeAction = function(){
+
     	if(fromToDoList){
     		return;
     	}
@@ -287,6 +288,7 @@ $(function () {
     
     //业绩基准利率类型
     $('#BussBenchMarkInfo_rateType').on('change', function () {
+
     	var rateType = $('#BussBenchMarkInfo_rateType').val();
     	if(rateType == '01'){
     		$('#BussBenchMarkInfo_indexId').val('').trigger('change').prop('disabled', true);
@@ -305,6 +307,7 @@ $(function () {
     
     //
     $('#BussFinProductFloatFee_rateType').on('change', function () {
+
     	var rateType = $('#BussFinProductFloatFee_rateType').val();
     	if(rateType == '01'){
     		$('#BussFinProductFloatFee_indexId').val('').trigger('change').prop('disabled', true);
@@ -381,7 +384,7 @@ $(function () {
     		$('#BussFinProductFloatFee_coefficient').val('').trigger('change').prop('disabled', true);
     		$('#BussFinProductFloatFee_spreadRate').val('').trigger('change').prop('disabled', true);
     		$('#BussFinProductFloatFee_resetType').val('').trigger('change').prop('disabled', true);
-    		$('#BussFinProductFloatFee_rate').val('').trigger('change').prop('disabled', false);
+    		$('#BussFinProductFloatFee_rate').trigger('change').prop('disabled', false);
     	}
 //    	else{
 //    		$('#BussFinProductFloatFee_indexId').val('').trigger('change').prop('disabled', false);
