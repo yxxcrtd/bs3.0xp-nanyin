@@ -446,7 +446,7 @@
         group by
             A.TOTLE_TRADE_ID, A.PORTFOLIO_ID, C.FINPROD_ABBR, C.PROFIT_TYPE,C.FINPROD_ID, C.FINPROD_MARKET_ID, A.PROD_ID, A.TRADE_DATE, fpa.SALE_DEPARTMENT, C.CCY, fpa.IS_LAY,
             A.TRADE_AMT, A.SHARE_AMT, A.RED_COST, A.RED_PROFIT, fpa.IS_CYCLE, A.SETTLE_DATE, A.PS,TPDA.GEN_TYPE,A.IS_CANCEL,A.PRIN_AMT,A.INT_AMT, A.REMARK
-    	order by cashDate
+    	order by cashDate,confirmDate
     </select>
     
     <select id="selectTotalData" resultType="com.joyintech.service.product.durdeal.dto.FinProductDurDealDto">
