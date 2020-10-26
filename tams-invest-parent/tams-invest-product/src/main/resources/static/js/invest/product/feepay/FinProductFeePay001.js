@@ -137,10 +137,12 @@
 									title : 'FinProductFeePay001.table.feeAmt',
 									width : 100,
 									type : 'number'
-								}, {
-									field : 'finprodId',
-									visible : false
-								}, {
+								},
+//								{
+//									field : 'finprodId',
+//									visible : false
+//								},
+								{
 									field : 'feeId',
 									visible : false
 								}, {
