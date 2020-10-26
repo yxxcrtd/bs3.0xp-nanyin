@@ -250,7 +250,8 @@ width: 90px !important;
 							<select th:id="|${bussFinProductOpenPlanDto}_calcRule|" th:name="|${bussFinProductOpenPlanDto}.calcRule|"
 								searchable="false" class="layui-input form-input input-select"
 								placeholder="请输入内容" th:initValue="${entity?.calcRule}"
-								data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${CALC_METHOD}">
+								data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${CALC_METHOD}"
+									data-th-required="${pageId} eq 'FinProductBuild002' or ${pageId} eq 'FinNetValueProductBuild002'" >
 							</select>
 						</div>
 					</div>
@@ -554,7 +555,8 @@ width: 90px !important;
                         <select th:id="|${bussFinProductOpenPlanRedDto}_calcRule|" th:name="|${bussFinProductOpenPlanRedDto}.calcRule|"
 								searchable="false" class="layui-input form-input input-select"
 								placeholder="请输入内容" th:initValue="${redentity?.calcRule}"
-								data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${CALC_METHOD}">
+								data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${CALC_METHOD}"
+								data-th-required="${pageId} eq 'FinProductBuild002' or ${pageId} eq 'FinNetValueProductBuild002'" >
 							</select>
 						</div>
 					</div>
