@@ -6,7 +6,7 @@
             <Cell order="2" name="产品代码">marketId</Cell>
             <Cell order="3" name="产品简称">finprodAbbr</Cell>
             <Cell order="4" name="确认日">confirmDateStr</Cell>
-            <Cell order="5" name="现金流日期">cashDate</Cell> 
+            <Cell order="5" name="现金流日期">cashDateStr</Cell>
             <Cell order="6" name="交易类型">dealTypeStr</Cell>
             <Cell order="7" name="币种">ccyStr</Cell>         
             <Cell order="8" name="申购金额">tdyBuyMoney</Cell>
