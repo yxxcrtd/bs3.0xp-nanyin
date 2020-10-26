@@ -61,8 +61,7 @@ var getPageParams = function() {
          cols:[
             {field:'bondCode',sortField:'bondCode', width:100, title: '债券代码'}
             ,{field:'bondAbbrName', sortField:'bondAbbrName',width:200, title: '债券简称'}
-            ,{field:'avaPledgePrin',sortable: false, width:200, title: '可质押券面总额（元）',type:'money'}
-            ,{field:'pledgePrin',sortField:'pledgePrin', width:200, title: '折算后质押券面总额（元）',type:'money'}
+            ,{field:'pledgePrin',sortField:'pledgePrin', width:200, title: '质押券面总额（元）',type:'money'}
             ,{field:'prin',sortField:'prin', width:150, title: '换出面额（元）',edit: true,type:'money'}
             ,{field:'pledgeRatio', sortField:'pledgeRatio',width:140, title: '折算比例%'}
 
@@ -81,7 +80,7 @@ var getPageParams = function() {
 
                          var outSumAmtValue = 0;
                          for (var i = outTable.getAllRows().length - 1; i >= 0; i--) {
-                             outSumAmtValue = JoyinMath.doAdd(outSumAmtValue, outTable.getAllRows()[i].prin);
+                             outSumAmtValue = JoyinMath.doAdd(outSumAmtValue, outTable.getAllRows()[i].prin * outTable.getAllRows()[i].pledgeRatio/100);
                          }
                          $("#outSumAmt").val(outSumAmtValue);//换出质押券换出债券汇总券面总额计算值
                      }
@@ -89,7 +88,7 @@ var getPageParams = function() {
              }
          },
         searchOnInit: true,
-        //显示选择框 add by yzg 
+        //显示选择框 add by yzg
         //checkbox:false
     });
 
@@ -133,8 +132,7 @@ var setBussRepoSecInput = function () {
         cols:[
             {field:'bondCode',sortField:'bondCode', width:100, title: '债券代码'}
             ,{field:'bondAbbrName', sortField:'bondAbbrName',width:200, title: '债券简称'}
-            ,{field:'avaPledgePrin',sortable: false, width:200, title: '可质押券面总额（元）',type:'money'}
-            ,{field:'pledgePrin',sortField:'pledgePrin', width:200, title: '折算后质押券面总额（元）',type:'money'}
+            ,{field:'pledgePrin',sortField:'avaPledgePrin', width:200, title: '质押券面总额（元）',type:'money'}
             ,{field:'firstNetPrice',sortField:'firstNetPrice', width:150, title: '首次净价',type:'money'}
             ,{field:'pledgeRatio', sortField:'pledgeRatio',width:140, title: '折算比例%'}
 
@@ -199,7 +197,7 @@ var outOk = function () {
 
             var outSumAmtValue = 0;
             for (var i = entity_outBussRepoSec.length - 1; i >= 0; i--) {
-                outSumAmtValue = JoyinMath.doAdd(outSumAmtValue, entity_outBussRepoSec[i].prin);
+                outSumAmtValue = JoyinMath.doAdd(outSumAmtValue, entity_outBussRepoSec[i].prin * entity_outBussRepoSec[i].pledgeRatio/100 );
             }
             $("#outSumAmt").val(outSumAmtValue);//换出质押券换出债券汇总券面总额计算值
         }
@@ -269,7 +267,6 @@ var outOk = function () {
 
             if ($.inArray(inSelectedAllRows[k].bondCode, resultArrlist) == -1) {
                 var newdate = inSelectedAllRows[k];
-                newdate.pledgePrin = JoyinMath.doDiv(JoyinMath.doMul(newdate.pledgePrin , newdate.pledgeRatio,2) ,100,2);
                 resultTable.addRow(newdate);
                 resultArrlist.push(newdate.bondCode);
             }
@@ -294,8 +291,7 @@ var outOk = function () {
                         if(inSelectedAllRows!=null && inSelectedAllRows.length>0 ) {
                             for (var kk = inSelectedAllRows.length - 1; kk >= 0; kk--) {
                                 if (inSelectedAllRows[kk].bondCode == resultTable.getAllRows()[k].bondCode) {
-                                    avaPledgePrinValue=JoyinMath.doAdd(avaPledgePrinValue,JoyinMath.doDiv(JoyinMath.doMul(inSelectedAllRows[kk].pledgePrin , inSelectedAllRows[kk].pledgeRatio,2) ,100,2));
-
+                                    avaPledgePrinValue=JoyinMath.doAdd(avaPledgePrinValue,inSelectedAllRows[kk].pledgePrin);
                                 }
                             }
                         }
@@ -313,7 +309,7 @@ var outOk = function () {
     if (resultTable.getAllRows() != null && resultTable.getAllRows().length > 0) {
         var sumAmtValue = 0;
         for (var i = resultTable.getAllRows().length - 1; i >= 0; i--) {
-            sumAmtValue = JoyinMath.doAdd(sumAmtValue, resultTable.getAllRows()[i].pledgePrin);
+            sumAmtValue = JoyinMath.doAdd(sumAmtValue, resultTable.getAllRows()[i].pledgePrin * resultTable.getAllRows()[i].pledgeRatio/100);
 
         }
         $("#sumAmt").val(sumAmtValue);

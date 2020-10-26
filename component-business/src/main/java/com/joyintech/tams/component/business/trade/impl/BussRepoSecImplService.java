@@ -191,7 +191,9 @@ public class BussRepoSecImplService implements BussRepoSecService {
                     // 质押率 = 输出质押品DTO.质押率
                     finDealPledge.setPledgeRatio(ArithmeticUtil.divide(pledgeBond.getPledgeRatio(), new BigDecimal("100"), 4));
                     // 质押金额 = 输出质押品DTO.质押金额
-                    finDealPledge.setPledgeAmt(ArithmeticUtil.multiply(pledgeBond.getPledgePrin(), finDealPledge.getPledgeRatio()));
+                    //finDealPledge.setPledgeAmt(ArithmeticUtil.multiply(pledgeBond.getPledgePrin(), finDealPledge.getPledgeRatio()));
+                    finDealPledge.setPledgeAmt(pledgeBond.getPledgePrin());
+
                     finDealPledgeMapper.insertSelective(finDealPledge);
                 }
             }
