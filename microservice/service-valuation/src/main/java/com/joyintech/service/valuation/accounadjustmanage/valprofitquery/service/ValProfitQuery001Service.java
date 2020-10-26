@@ -798,14 +798,20 @@ public class ValProfitQuery001Service extends CommonExportService<ValProfitQuery
             datedto = valProfitQuery001Mapper.getDateInfo1(pageParam);
         }else{
             List<ValProfitQuery001Dto> dateList = valProfitQuery001Mapper.getDateInfo2(pageParam);
-            for(ValProfitQuery001Dto item:dateList){
-                if(datedto.getReportDate() == null || datedto.getReportDate() == ""){
-                    datedto.setReportDate(item.getReportDate());
-                }else{
-                    if(datedto.getReportDate().compareTo(item.getReportDate()) > 0){
+            if(dateList.size()>0){
+                for(ValProfitQuery001Dto item:dateList){
+                    if(datedto.getReportDate() == null || datedto.getReportDate() == ""){
                         datedto.setReportDate(item.getReportDate());
+                    }else{
+                        if(datedto.getReportDate().compareTo(item.getReportDate()) > 0){
+                            datedto.setReportDate(item.getReportDate());
+                        }
                     }
                 }
+            // add by caiqun 20201026 报表维度选择全账套，配置产品组时没有选择任何产品，datedto.setReportDate取值为空下面格式日期会报错
+            // 改成为空时取平台日
+            }else{
+                datedto.setReportDate(DateUtil.getSysDate());
             }
         }
         if(DictCodeListExt1.报表期限类型_日报.getValue().equals(reportTermType)){

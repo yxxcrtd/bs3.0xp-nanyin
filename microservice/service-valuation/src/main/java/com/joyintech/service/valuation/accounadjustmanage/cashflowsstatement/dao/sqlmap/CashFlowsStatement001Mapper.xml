@@ -315,8 +315,8 @@
 					inv_aim_method
 				from BOK_DEAL_ACCOUNTING acct
 				where acct.busi_no = jx.tanum
-				AND  acct.BOOKSET_ID in
 				<if test="booksetId !=null and booksetId !='' ">
+					AND  acct.BOOKSET_ID in
 					<foreach collection="booksetId.split(',')" item="item" open="(" separator="," close=")">
 						#{item}
 					</foreach>

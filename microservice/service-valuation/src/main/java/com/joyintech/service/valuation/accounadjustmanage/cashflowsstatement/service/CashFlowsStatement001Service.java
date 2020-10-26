@@ -1334,15 +1334,22 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
             datedto = cashFlowsStatement001Mapper.getDateInfo1(pageParam);
         }else{
             List<CashFlowsStatement001Dto> dateList = cashFlowsStatement001Mapper.getDateInfo2(pageParam);
-            for(CashFlowsStatement001Dto item:dateList){
-                if(datedto.getReportDate() == null || datedto.getReportDate() == ""){
-                    datedto.setReportDate(item.getReportDate());
-                }else{
-                    if(datedto.getReportDate().compareTo(item.getReportDate()) > 0){
+            if(dateList.size()>0){
+                for(CashFlowsStatement001Dto item:dateList){
+                    if(datedto.getReportDate() == null || datedto.getReportDate() == ""){
                         datedto.setReportDate(item.getReportDate());
+                    }else{
+                        if(datedto.getReportDate().compareTo(item.getReportDate()) > 0){
+                            datedto.setReportDate(item.getReportDate());
+                        }
                     }
                 }
+             // add by caiqun 20201026 报表维度选择全账套，配置产品组时没有选择任何产品，datedto.setReportDate取值为空下面格式日期会报错
+             // 改成为空时取平台日
+            }else{
+                datedto.setReportDate(DateUtil.getSysDate());
             }
+
         }
         if(DictCodeListExt1.报表期限类型_日报.getValue().equals(reportTermType)){
             datedto.setReportDate(DateUtil.format(DateUtil.addDate(DateUtil.parse(datedto.getReportDate()), 0, 0, -1)));
