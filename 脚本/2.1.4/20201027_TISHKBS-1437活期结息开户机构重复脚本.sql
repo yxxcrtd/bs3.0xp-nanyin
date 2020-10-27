@@ -1,0 +1,1 @@
+delete from  data_auth_mapper_config  where sql_id ='com.joyintech.service.portfolio.ptlactivityperiod.dao.PtlActivityPeriod001Mapper.getBankDep';
