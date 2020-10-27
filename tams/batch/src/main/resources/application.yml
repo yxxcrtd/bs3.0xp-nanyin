@@ -181,26 +181,53 @@ spring:
     timeout: 20000
   datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zjtams2122_dev
-    password: zjtams2122_dev 
+    username: zgtams0810
+    password: zgtams0810 
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName: zjtams2122_dev
-  sqldirpassword: zjtams2122_dev
+  sqldiruserName: zgtams0810
+  sqldirpassword: zgtams0810
+  loadbalance: false
+  micorservice:
+    contextPath:
+      single: true
+      commonService: http://127.0.0.1:8080/tams
+      basicDataService: http://127.0.0.1:8080/tams
+      documentService: http://127.0.0.1:8080/tams
+      entrustService: http://127.0.0.1:8080/tams
+      periodService: http://127.0.0.1:8080/tams
+      assetService: http://127.0.0.1:8080/tams
+      portfolioService: http://127.0.0.1:8080/tams
+      productService: http://127.0.0.1:8080/tams
+      quotaService: http://127.0.0.1:8080/tams
+      reportService: http://127.0.0.1:8080/tams
+      riskService: http://127.0.0.1:8080/tams
+      riskRdsService: http://127.0.0.1:8080/tams
+      riskInfService: http://127.0.0.1:8080/tams
+      settleService: http://127.0.0.1:8080/tams
+      tradeService: http://127.0.0.1:8080/tams
+      disclosureService: http://127.0.0.1:8080/tams
+      valuationService: http://127.0.0.1:8080/tams
+      chbService: http://127.0.0.1:8080/tams
+      chb3Service: http://127.0.0.1:8080/tams
+      svrcomService: http://127.0.0.1:8080/tams
+      pbcService: http://127.0.0.1:8080/tams
+      investInterfService: http://127.0.0.1:8080/tams
+      tamsServer: http://127.0.0.1:8080
 #base数据库配置
 base:
   datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zjtams2122_dev
-    password: zjtams2122_dev
+    username: zgtams0810
+    password: zgtams0810
 #interf数据源配置
 interf:  
    datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zjtams2122_dev
-    password: zjtams2122_dev
+    username: zgtams0810
+    password: zgtams0810
 #日志路径配置
 log:
   path: /home/tams/logs/batch
