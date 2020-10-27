@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.BokValbalTableStatus;
+import com.joyintech.tams.common.base.entity.BokValbalTableStatusKey;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -828,7 +830,26 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
             // 估值表余额表状态表 入库
             if (result.getBokValbalTableStatus() != null) {
-                bokValbalTableStatusMapper.insert(result.getBokValbalTableStatus());
+                //增加一个估值参数，通过参数控制是否修改状态 IS_CHANGE_STATUS_VALNETVALUECONFIRM
+                //净值确认下发重新跑批时是否修改确认状态、下发状态 Y:是 N 否
+                String isChangeStatusValNetValyeConfirm = CacheUtil.getSysParam("IS_CHANGE_STATUS_VALNETVALUECONFIRM");
+                if(StringUtil.isNotBlank(isChangeStatusValNetValyeConfirm)
+                        && StringUtil.equals(DictCodeList.是否_否.getValue(),isChangeStatusValNetValyeConfirm)){
+//                    bokValbalTableStatusMapper.insert(result.getBokValbalTableStatus());
+                      //根据主键查询数据是否存在
+                    BokValbalTableStatusKey key =new BokValbalTableStatusKey();
+                    key.setFinprodId(result.getBokValbalTableStatus().getFinprodId());
+                    key.setValBalFlag(result.getBokValbalTableStatus().getValBalFlag());
+                    key.setValDate(result.getBokValbalTableStatus().getValDate());
+                    BokValbalTableStatus bokValbalTableStatus = bokValbalTableStatusMapper.selectByPrimaryKey(key);
+                    if(bokValbalTableStatus !=null){
+                        return;
+                    }else{
+                        bokValbalTableStatusMapper.insert(result.getBokValbalTableStatus());
+                    }
+                }else{
+                    bokValbalTableStatusMapper.insert(result.getBokValbalTableStatus());
+                }
             }
             // 估值表余额表生成日志表 入库
             if (result.getBokValbalTableLog() != null) {
