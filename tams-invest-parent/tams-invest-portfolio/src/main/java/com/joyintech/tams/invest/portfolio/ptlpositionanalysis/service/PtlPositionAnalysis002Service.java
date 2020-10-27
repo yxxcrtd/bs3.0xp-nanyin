@@ -982,11 +982,23 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
         for(PtlPositionAnalysis003Dto item: list.getRoot()) {
           map.put("parentId", item.getChildInfo());
           if (item.getHasChildren().equals("01")) {
+        	//获取父层的组合代码
+        	String portfolioId = null;
+        	for(PtlPositionAnalysis003Dto ptlPositionAnalysis003Dto: list.getRoot()) {
+        		if(StringUtil.equals(ptlPositionAnalysis003Dto.getChildInfo(),item.getParentInfo())){
+        			portfolioId = ptlPositionAnalysis003Dto.getPortfolioId();
+        		}
+        	}
+        	
         	//子查询中并未调用queryForPage包装分页，该结果为全部查询结果，不需要循环
           	Page<PtlPositionAnalysis003Dto> ptlPositionAnalysis003DtoPage=selectForPage(map);
           	for (PtlPositionAnalysis003Dto entity : ptlPositionAnalysis003DtoPage.getRoot()) {
+          		if (displayType.equals(DictCodeListExt3.展示方式_单组合汇总.getValue())) {
+          			entity.setPortfolioId(portfolioId);
+          		}
                 for (String key : institutionNameMap.keySet()) {
-                    if (entity.getParentInfo().startsWith(key + "F0")) { // todo 没有完全相等的条件
+                	//资产一级分类 不止F00-F09,还会出现F1的情形，考虑到后续可能的扩展，此处去掉0
+                    if (entity.getParentInfo().startsWith(key + "F")) { // todo 没有完全相等的条件
                         entity.setBelongInstitutionNameNew(institutionNameMap.get(key)!=null?institutionNameMap.get(key).toString():"");
                     }
                 }
