@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -135,6 +138,15 @@ public class PtlActivityPeriod001Controller {
     @PostMapping("getBankDep/{page}/{length}")
     public Page<SelectOptionDto> getBankDep(@RequestBody Map<String,Object> map,
                                             @PathVariable int page,@PathVariable int length){
+        //二级法人改造
+        if(MultilevelDataAuthorityUtil.isEnabled()) {
+            //当前用户所属机构代码
+            String createInst =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
+            //右上角选择框为空时 存放本级机构及有权限的下级机构 选择时 存放所选机构
+            List<String> resourcesTreeInstCodeList =  LoginUserUtil.getTreeInstCode();
+            map.put("institutionCode",createInst);
+            map.put("resourcesTreeInstCodeList",resourcesTreeInstCodeList);
+        }
         return ptlActivityPeriod001Service.getBankDep(map,page,length);
     }
     

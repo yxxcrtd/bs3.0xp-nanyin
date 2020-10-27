@@ -41,4 +41,6 @@ public interface ValFileGenDelMapper {
     void deleteTableLog(Map<String, Object> params);
     
     void deleteTableStatus(Map<String, Object> params);
+
+    void deleteTableStatusExt(Map<String, Object> params);
 }

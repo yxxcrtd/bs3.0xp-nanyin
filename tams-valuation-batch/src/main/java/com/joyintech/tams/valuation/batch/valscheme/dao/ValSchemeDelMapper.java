@@ -39,5 +39,13 @@ public interface ValSchemeDelMapper {
      * @since 1.0
      */
     void deleteValbalTableLog (ValSchemeDelResult result);
+
+    /**
+     * 删除估值余额表数据,删除确认状态/下发状态为空的数据
+     * @param result 参数
+     * @see
+     * @since 1.0
+     */
+    void deleteValbalTableStatusExt (ValSchemeDelResult result);
     
 }

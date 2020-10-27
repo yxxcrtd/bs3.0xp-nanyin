@@ -20,4 +20,15 @@
         </if>	
     	AND VAL_DATE = #{bookDate}
     </update>
+
+    <update id="deleteValbalTableStatusExt" parameterType="com.joyintech.tams.valuation.batch.valscheme.dto.ValSchemeDelResult">
+        DELETE FROM BOK_VALBAL_TABLE_STATUS
+        WHERE VAL_BAL_FLAG = #{fileType}
+        <if test="prodId != null and prodId != ''">
+            AND FINPROD_ID = #{prodId}
+        </if>
+        AND VAL_DATE = #{bookDate}
+        AND confirm_status is null
+        and notice_status is  null
+    </update>
 </mapper>

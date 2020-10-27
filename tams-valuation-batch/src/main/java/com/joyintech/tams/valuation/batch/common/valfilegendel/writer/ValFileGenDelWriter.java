@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +64,15 @@ public class ValFileGenDelWriter extends BaseWriter<NeedToWriteEntity> {
             valFileGenDelMapper.deleteValTableData(param);
         }
         valFileGenDelMapper.deleteTableLog(param);
-        valFileGenDelMapper.deleteTableStatus(param);
+        //增加一个估值参数，通过参数控制是否修改状态 IS_CHANGE_STATUS_VALNETVALUECONFIRM
+        //净值确认下发重新跑批时是否修改确认状态、下发状态 Y:是 N 否
+        String isChangeStatusValNetValyeConfirm = CacheUtil.getSysParam("IS_CHANGE_STATUS_VALNETVALUECONFIRM");
+        if(StringUtil.isNotBlank(isChangeStatusValNetValyeConfirm)
+                && StringUtil.equals(DictCodeList.是否_否.getValue(),isChangeStatusValNetValyeConfirm)){
+            //是否修改确认状态、下发状态是否的情况，则删除确认状态/下发状态为空的数据
+            valFileGenDelMapper.deleteTableStatusExt(param);
+        }else{
+            valFileGenDelMapper.deleteTableStatus(param);
+        }
     }
 }
