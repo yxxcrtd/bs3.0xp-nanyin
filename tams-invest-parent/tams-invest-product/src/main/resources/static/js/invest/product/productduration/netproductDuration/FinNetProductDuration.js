@@ -1023,7 +1023,7 @@ $(function() {
             			$('#redDealNum').attr("disabled",false);
             			$('#redDealAmt').attr("disabled",false);
             			$('#redFeeLc').attr("disabled",false);
-            			$('#redTotalNetValue').attr("disabled",false);
+//            			$('#redTotalNetValue').attr("disabled",false);
             			$('#redFee').attr("disabled",false);
             			$('#redPurFeeHd').attr("disabled",false);
             			$('#redCost').attr("disabled",false);
@@ -1090,7 +1090,7 @@ $(function() {
             			$('#redDealNum').attr("disabled",false);
             			$('#redDealAmt').attr("disabled",false);
             			$('#redFeeLc').attr("disabled",false);
-            			$('#redTotalNetValue').attr("disabled",false);
+//            			$('#redTotalNetValue').attr("disabled",false);
             			$('#redFee').attr("disabled",false);
             			$('#redPurFeeHd').attr("disabled",false);
             			$('#redCost').attr("disabled",false);
