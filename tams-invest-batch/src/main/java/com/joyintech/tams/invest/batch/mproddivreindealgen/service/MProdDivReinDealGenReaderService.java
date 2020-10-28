@@ -79,7 +79,8 @@ public class MProdDivReinDealGenReaderService extends BaseService{
         paramMap.put("BUSI_TABLE_02", DictCodeList.业务表_金融产品表.getValue()); 
         paramMap.put("PROFIT_TYPE_03", DictCodeList.收益类型_货币型.getValue()); 
         paramMap.put("BONUS_MODE_02", DictCodeList.分红方式_红利再投.getValue()); 
-        paramMap.put("LOSS_HANDLE_MODE_01", DictCodeListExt1.亏损处理方式_缩减当前份额.getValue()); 
+        paramMap.put("LOSS_HANDLE_MODE_01", DictCodeListExt1.亏损处理方式_缩减当前份额.getValue());
+        paramMap.put("productIdList",param.get("productIdList"));
         List<MProdDivReinDealGenReaderResult> resultList = new ArrayList<MProdDivReinDealGenReaderResult>();
         List<MProdDivReinDealGenReaderResult> result = mProdDivReinDealGenMapper.selectProdDivReinInfo(paramMap);
         Map<String,MProdDivReinDealGenReaderResult> map = new HashMap<String,MProdDivReinDealGenReaderResult>();
