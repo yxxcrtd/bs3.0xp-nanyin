@@ -196,8 +196,11 @@ public class TrdRepoTrade004Service extends BaseService<TrdRepoTrade004Dto> impl
                         positionFlowDto.setCcy(entity.getCcy());//币种
                         positionFlowDto.setCdate(entity.getSubstitutionDate()); // 置换日期
                         positionFlowDto.setTradeId(entity.getTradeId());//交易编号
-                        positionFlowDto.setHodingType(DictCodeList.持仓类型_可用.getValue()); //持仓类型
-                        positionFlowDto.setAmount(item.getAvaPledgePrin().divide(new BigDecimal(100)));//质押券面额/100
+                        positionFlowDto.setHodingType(DictCodeList.持仓类型_质押.getValue()); //持仓类型
+                        //positionFlowDto.setAmount(item.getAvaPledgePrin().divide(new BigDecimal(100)));//质押券面额/100
+                        positionFlowDto.setAmount(item.getPledgePrin().divide(new BigDecimal(100)));//质押券面额/100
+
+
                         positionFlowDto.setInvAim(StringUtil.isEmpty(item.getInvAim()) ? "999999" : item.getInvAim());
                         basePtlSecPositionInfoServiceImpl.inertSecPositionFlow(positionFlowDto);
                     }
@@ -346,7 +349,7 @@ public class TrdRepoTrade004Service extends BaseService<TrdRepoTrade004Dto> impl
                         entity.getSecAcctId());
                 positionFlowParm.put("finprodId",item.getFinprodId());
                 positionFlowParm.put("substitutionDate",DateUtil.format(entity.getSubstitutionDate(),"yyyy-MM-dd"));
-                positionFlowParm.put("hodingType",DictCodeList.持仓类型_可用.getValue());
+                positionFlowParm.put("hodingType",DictCodeList.持仓类型_质押.getValue());
                 deletePtlSecPositionFlowByParm(positionFlowParm);
 
                 //换入时按质押式正回购持仓 处理  AC-》FVOCI-》FVTPL
