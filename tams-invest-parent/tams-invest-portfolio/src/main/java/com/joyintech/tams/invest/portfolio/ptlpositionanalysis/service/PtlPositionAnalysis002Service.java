@@ -998,7 +998,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
           		}
                 for (String key : institutionNameMap.keySet()) {
                 	//资产一级分类 不止F00-F09,还会出现F1的情形，考虑到后续可能的扩展，此处去掉0
-                    if (entity.getParentInfo().startsWith(key + "F")) { // todo 没有完全相等的条件
+                    if (entity.getParentInfo().startsWith(key + "F0")||entity.getParentInfo().startsWith(key + "F1")) { // todo 没有完全相等的条件
                         entity.setBelongInstitutionNameNew(institutionNameMap.get(key)!=null?institutionNameMap.get(key).toString():"");
                     }
                 }
