@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.util.CacheUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -293,7 +294,15 @@ public class ProdTerminationRegist001Service extends SvrCommonExportService<Prod
         
         com.joyintech.framework.grid.Page<ProdTerminationRegist001Dto> page = new com.joyintech.framework.grid.Page<ProdTerminationRegist001Dto>();
         page.setRoot(data);
-        page.setTotal(data.size());
+        //page.setTotal(data.size());
+		int pageSize = StringUtil.integerValueOf(pageParam.get(GlobalConstant.PARAM_LENGTH).toString(), StringUtil.integerValueOf(CacheUtil.getSysParam(GlobalConstant.EXPORT_EXCEL_ROW_COUNT),50000));
+
+		if(data!=null){
+			page.setTotal(data.size()/pageSize+1);
+		}else{
+			page.setTotal(0);
+		}
+
         return  page;
     }
 	/**
