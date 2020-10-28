@@ -346,7 +346,6 @@ select * from (
 			#{item}
 		</foreach>
 	</if>
-	WHERE 1 = 1
       <where>
       	<if test="search != null and !''.equals(search)">
     		AND S.BANK_DEP LIKE CONCAT('%',CONCAT(#{search},'%'))
