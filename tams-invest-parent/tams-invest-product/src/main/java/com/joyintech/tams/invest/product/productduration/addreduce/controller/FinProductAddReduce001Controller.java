@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.product.productduration.addreduce.controller;
 
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 
@@ -9,6 +10,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.tams.invest.product.productduration.establish.service.FinProductEstablish001Service;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -59,6 +61,9 @@ public class FinProductAddReduce001Controller extends BaseController {
 
 //    @Autowired
 //    private FinProductAddReduce002Service finProductAddReduce002Service;
+
+    @Autowired
+    private FinProductEstablish001Service finProductEstablish001Service;
 
     @Autowired
     private FinProductAddReduceWorkflowService revokeWorkflowService;
@@ -157,6 +162,17 @@ public class FinProductAddReduce001Controller extends BaseController {
 		if (!DictCodeListExt1.有效状态_有效.getValue().equals(dto.getEffectStatus())) {
 			errorList.add(new ValidMessage("只有有效的交易才能撤销!"));
 		}
+
+        //        TISHKBS-1470 : 产品存续期赎回到期交易撤销时增加对后续交易判断  ，复用申购的服务，时间取交割日(确认日)     by zjm  2020/10/28
+        if (StringUtil.isNotEmpty(dto.getFinprodId())) {
+            int num = finProductEstablish001Service.selectDealAdd(
+                    dto.getFinprodId().substring(4, dto.getFinprodId().length()),
+                    dto.getSettleDate());
+            if (num > 0) {
+                errorList.add(new ValidMessage("有后续交易，不能撤销!"));
+            }
+        }
+
 		if (StringUtils.isNotEmpty(dto.getSettleDate()) &&
 				dto.getSettleDate().compareTo(DateUtil.getSysDate()) < 0) {
 			ValidMessage addRst = new ValidMessage("仅允许撤销确认日大于等于平台日期的交易!");

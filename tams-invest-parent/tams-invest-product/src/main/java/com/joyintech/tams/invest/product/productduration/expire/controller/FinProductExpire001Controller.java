@@ -15,6 +15,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.invest.product.productduration.establish.service.FinProductEstablish001Service;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -63,6 +65,10 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 @PageId(value = "FinProductExpire001")
 @RequestMapping("/invest/product/productduration/expire/FinProductExpire001")
 public class FinProductExpire001Controller extends BaseController {
+
+
+    @Autowired
+    private FinProductEstablish001Service finProductEstablish001Service;
 
     /**
      * {@linkplain}
@@ -173,6 +179,17 @@ public class FinProductExpire001Controller extends BaseController {
 		if (!DictCodeListExt1.有效状态_有效.getValue().equals(finProductExpire001Dto.getEffectStatus())) {
 			errorList.add(new ValidMessage("只有有效的交易才能撤销!"));
 		}
+
+//        TISHKBS-1470 : 产品存续期赎回到期交易撤销时增加对后续交易判断  ，复用申购的服务，时间取到期日     by zjm  2020/10/28
+        if (StringUtil.isNotEmpty(finProductExpire001Dto.getFinprodId())) {
+            int num = finProductEstablish001Service.selectDealAdd(
+                    finProductExpire001Dto.getFinprodId().substring(4, finProductExpire001Dto.getFinprodId().length()),
+                    finProductExpire001Dto.getMdateStr());
+            if (num > 0) {
+                errorList.add(new ValidMessage("有后续交易，不能撤销!"));
+            }
+        }
+
 		if (StringUtil.isEmptyList(errorList)) {
 			if (StringUtil.equalsIgnoreCase(BussinessConstant.REVOKE,
 					finProductExpire001Dto.getOperateType())) {
