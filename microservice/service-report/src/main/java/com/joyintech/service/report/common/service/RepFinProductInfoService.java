@@ -370,12 +370,15 @@ public class RepFinProductInfoService {
         // 申报要素更新人行字段
         RepProdDeclare repProdDeclare = new RepProdDeclare();
         repProdDeclare.setRepFinprodId(bussRepFinProductInfoDto.getRepFinprodId());
+        repProdDeclare.setRepFinprodInsId(bussRepFinProductInfoDto.getRepFinprodInsId());
         repProdDeclare.setCustomerType(bussRepFinProductInfoDto.getCustomerType());
         repProdDeclare.setRepHighYield(bussRepFinProductInfoDto.getRepHighYield());
         repProdDeclare.setRepLowYield(bussRepFinProductInfoDto.getRepLowYield());
         repProdDeclare.setRepIsYieldBasis(bussRepFinProductInfoDto.getRepIsYieldBasis());
         repProdDeclare.setRepFiduciaryDuty(bussRepFinProductInfoDto.getRepFiduciaryDuty());
-        repProdDeclareMapper.updateByPrimaryKeySelective(repProdDeclare);
+        //repProdDeclareMapper.updateByPrimaryKeySelective(repProdDeclare);
+        repProdDeclareMapper.updateByRepFinprodInsId(repProdDeclare);
+
         // 将产品端中债报送Dto.产品发行报送信息
         repProdIssueMapper.insertSelective(baseRepFinProductInfoDto.getRepProdIssue());
 

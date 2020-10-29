@@ -156,6 +156,11 @@
 			finprod_type2
 			= 'F16'
 			AND ps = 'C1'
+			AND NOT EXISTS ( SELECT 1 FROM TRD_FIN_PRODUCT_DEAL_TOTAL total
+			WHERE total.totle_trade_id = TRD_PRODUCT_DEAL.Totle_Trade_Id
+			AND total.finprod_id = TRD_PRODUCT_DEAL.finprod_id AND total.finprod_type2
+			= 'F16'
+			AND total.ps = 'C1' )
 			union all
 			<!--分档 -->
 			SELECT

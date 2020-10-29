@@ -17,5 +17,7 @@ public interface RepProdDeclareMapper {
 
     int updateByPrimaryKeySelective(RepProdDeclare record);
 
+    int updateByRepFinprodInsId(RepProdDeclare record);
+
     int updateByPrimaryKey(RepProdDeclare record);
 }
