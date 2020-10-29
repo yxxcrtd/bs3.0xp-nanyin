@@ -289,6 +289,7 @@ public class ChbBotAstPositionRegist001Service extends SvrCommonExportService<Ch
 //        data =  restTemplate.postForList(
 //                    SvrServiceApplication.CHB_SERVICE_NAME + "/ChbBotAstPositionRegist/searchPageExport",pageParam,
 //                    ChbBotAstPositionRegist001Dto.class);
+		page = searchPage(pageParam);
     }  else {
            @SuppressWarnings("unchecked")
            List<ChbBotAstPositionRegist001Dto> dataList =  (List<ChbBotAstPositionRegist001Dto>) pageParam.get("botAstPosList");
@@ -318,7 +319,7 @@ public class ChbBotAstPositionRegist001Service extends SvrCommonExportService<Ch
     /**
 	 * <一句话功能简述> <功能详细描述>
 	 *
-	 * @param upKey
+	 * @param map
 	 * @see
 	 * @since 1.0
 	 */
@@ -418,7 +419,7 @@ public class ChbBotAstPositionRegist001Service extends SvrCommonExportService<Ch
 	/**
 	 * 已手工处理的数据将报送状态改为未报送
 	 *
-	 * @param upKey
+	 * @param map
 	 *            传入主键
 	 * @see
 	 * @since 1.0
