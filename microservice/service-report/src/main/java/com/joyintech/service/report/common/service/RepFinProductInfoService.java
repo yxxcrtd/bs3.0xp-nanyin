@@ -261,11 +261,13 @@ public class RepFinProductInfoService {
             // 申报要素更新中债信息
             RepProdDeclare repProdDeclare = baseRepFinProductInfoDto.getRepProdDeclare();//fixed BS-691 BUG add by zhouxiuping at 20200720
             repProdDeclare.setRepFinprodId(bussRepFinProductInfoDto.getRepFinprodId());
+            repProdDeclare.setRepFinprodInsId(bussRepFinProductInfoDto.getRepFinprodInsId());
             repProdDeclare.setCustomerType(bussRepFinProductInfoDto.getCustomerType());
             repProdDeclare.setRepIsYieldBasis(bussRepFinProductInfoDto.getRepIsYieldBasis());
             repProdDeclare.setRepFiduciaryDuty(bussRepFinProductInfoDto.getRepFiduciaryDuty());//fixed BS-691 BUG add by zhouxiuping at 20200720
 
-            repProdDeclareMapper.updateByPrimaryKeySelective(repProdDeclare);
+            //repProdDeclareMapper.updateByPrimaryKeySelective(repProdDeclare);
+            repProdDeclareMapper.updateByRepFinprodInsId(repProdDeclare);
             // 将产品端中债报送Dto.产品发行报送信息
             repProdIssueMapper.insertSelective(baseRepFinProductInfoDto.getRepProdIssue());
     	}
