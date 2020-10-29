@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.batch.prdvaluationfeebefore.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -290,7 +291,7 @@ public class PrdValuationFeeBeforeProcessorService {
         if (!DictCodeList.收益类型_收益型.getValue().equals(acctEntity.getAcctmode())) {
             // 变量.计提结束日费前单位净值 = 变量.费前资产净值 / 计提结束日实收资本余额
             BigDecimal endPlanUnitValue = ArithmeticUtil.divide(endPlanAssetValue,
-                endPlaneForRealCapital);
+                endPlaneForRealCapital,14, RoundingMode.HALF_UP);
 
             /*MODIFY BY WUJIE ON 20190819
             // 对【计提结束日费前单位净值】进行估值小数位处理:根据 参数.估值小数位处理方式 + 参数.估值小数位位数 处理
