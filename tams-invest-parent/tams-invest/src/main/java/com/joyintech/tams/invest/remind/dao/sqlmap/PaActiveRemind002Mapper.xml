@@ -318,6 +318,7 @@
 		FIN_PRODUCT.FINPROD_TYPE2 = #{finType_F16}
 		AND
 		FIN_PRODUCT.P_FINPROD_ID IS NULL
+		AND FIN_PRODUCT_ADD.ISSUE_STATUS = '03'
 		<!-- add 组合权限配置 yzg 20200313 start-->
 		and PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
 		<!-- 过滤已做到期交易 -->
