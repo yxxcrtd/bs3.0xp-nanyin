@@ -15,7 +15,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import com.joyintech.tams.invest.product.productduration.establish.service.FinProductEstablish001Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -76,9 +75,7 @@ public class FinProductPayInt001Controller extends BaseController {
      */
     @Autowired
     private FinProductPayInt003Service finProductPayInt003Service;
-    
-    @Autowired
-    private FinProductEstablish001Service finProductEstablish001Service;
+
 
     @Autowired
     private IPlatformDate platformDateImpl;
@@ -181,15 +178,6 @@ public class FinProductPayInt001Controller extends BaseController {
                 errorList.add(validMessage);
         }
 
-//        TISHKBS-1470 : 产品存续期赎回到期交易撤销时增加对后续交易判断  ，复用申购的服务，时间取支付日     by zjm  2020/10/28
-        if (StringUtil.isNotEmpty(finProductPayInt001Dto.getFinprodId())) {
-            int num = finProductEstablish001Service.selectDealAdd(
-                    finProductPayInt001Dto.getFinprodId().substring(4, finProductPayInt001Dto.getFinprodId().length()),
-                    finProductPayInt001Dto.getPayDateStr());
-            if (num > 0) {
-                errorList.add(new ValidMessage("有后续交易，不能撤销!"));
-            }
-        }
         
         if (WorkFlowUtil.isNotFromToDoList()) {
         	
