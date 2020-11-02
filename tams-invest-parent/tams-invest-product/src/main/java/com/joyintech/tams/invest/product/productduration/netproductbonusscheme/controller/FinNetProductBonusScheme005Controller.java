@@ -111,19 +111,19 @@ public class FinNetProductBonusScheme005Controller extends BaseController {
             if(StringUtil.equals(finNetProductBonusSchemeInfo.getBonuScalcFlag(),DictCodeList.分红方案_按单位分红.getValue())
                 && finNetProductBonusSchemeInfo.getUnitBonusVlu() != null
                 && finNetProductBonusSchemeInfo.getTdyUnitValue() != null){
-//                finNetProductBonusSchemeInfo.setNetvalue(finNetProductBonusSchemeInfo.getTdyUnitValue().subtract(
-//                    finNetProductBonusSchemeInfo.getUnitBonusVlu()));
-                ProcessMark processMark;
-                try {
-                    finNetProductBonusSchemeInfo.setFinprodId(finNetProductBonusSchemeInfo.getFinprodId());
-                    finNetProductBonusSchemeInfo.setDealType("bonusScheRegister");
-                    finNetProductBonusSchemeInfo.setTradeId(bonusPlanId);
-                    processMark = WorkflowContext.getProcessMarkService().getParameterByAnnotation(finNetProductBonusSchemeInfo);
-                    processMark.setPageId("FinNetProductBonusScheme002");
-                    finNetProductBonusSchemeInfo = finNetProductBonusSchemeService.getBussinessEntityByPk(processMark);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                finNetProductBonusSchemeInfo.setNetvalue(finNetProductBonusSchemeInfo.getTdyUnitValue().subtract(
+                    finNetProductBonusSchemeInfo.getUnitBonusVlu()));
+//                ProcessMark processMark;
+//                try {
+//                    finNetProductBonusSchemeInfo.setFinprodId(finNetProductBonusSchemeInfo.getFinprodId());
+//                    finNetProductBonusSchemeInfo.setDealType("bonusScheRegister");
+//                    finNetProductBonusSchemeInfo.setTradeId(bonusPlanId);
+//                    processMark = WorkflowContext.getProcessMarkService().getParameterByAnnotation(finNetProductBonusSchemeInfo);
+//                    processMark.setPageId("FinNetProductBonusScheme002");
+//                    finNetProductBonusSchemeInfo = finNetProductBonusSchemeService.getBussinessEntityByPk(processMark);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
             }
             else{
                 Map<String,Object> map = new HashMap<>();

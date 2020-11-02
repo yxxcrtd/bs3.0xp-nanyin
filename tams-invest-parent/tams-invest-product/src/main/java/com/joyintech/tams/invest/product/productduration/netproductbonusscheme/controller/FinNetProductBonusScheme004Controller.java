@@ -108,20 +108,20 @@ public class FinNetProductBonusScheme004Controller extends BaseController {
                 && finNetProductBonusSchemeInfo.getUnitBonusVlu() != null
                 && finNetProductBonusSchemeInfo.getTdyUnitValue() != null){
 
-//                finNetProductBonusSchemeInfo.setNetvalue(finNetProductBonusSchemeInfo.getTdyUnitValue().subtract(
-//                    finNetProductBonusSchemeInfo.getUnitBonusVlu()));
+                finNetProductBonusSchemeInfo.setNetvalue(finNetProductBonusSchemeInfo.getTdyUnitValue().subtract(
+                    finNetProductBonusSchemeInfo.getUnitBonusVlu()));
 
-                ProcessMark processMark;
-                try {
-                    finNetProductBonusSchemeInfo.setFinprodId(finNetProductBonusSchemeInfo.getFinprodId());
-                    finNetProductBonusSchemeInfo.setDealType("bonusScheRegister");
-                    finNetProductBonusSchemeInfo.setTradeId(bonusPlanId);
-                    processMark = WorkflowContext.getProcessMarkService().getParameterByAnnotation(finNetProductBonusSchemeInfo);
-                    processMark.setPageId("FinNetProductBonusScheme002");
-                    finNetProductBonusSchemeInfo = finNetProductBonusSchemeService.getBussinessEntityByPk(processMark);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+//                ProcessMark processMark;
+//                try {
+//                    finNetProductBonusSchemeInfo.setFinprodId(finNetProductBonusSchemeInfo.getFinprodId());
+//                    finNetProductBonusSchemeInfo.setDealType("bonusScheRegister");
+//                    finNetProductBonusSchemeInfo.setTradeId(bonusPlanId);
+//                    processMark = WorkflowContext.getProcessMarkService().getParameterByAnnotation(finNetProductBonusSchemeInfo);
+//                    processMark.setPageId("FinNetProductBonusScheme002");
+//                    finNetProductBonusSchemeInfo = finNetProductBonusSchemeService.getBussinessEntityByPk(processMark);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
 
 
             }
