@@ -1248,5 +1248,74 @@
 		set IS_CANCEL = #{isCancle,jdbcType=VARCHAR}
 		WHERE TOTLE_TRADE_ID = #{totalTradeId,jdbcType=VARCHAR}
 	</update>
-
+	<select id="selectTrdProductChlDealsByTotalTradeId" resultType="com.joyintech.tams.common.base.entity.TrdProductDeal">
+		SELECT
+		ipd.TRADE_ID,
+		ipd.BUSI_TYPE,
+		ipd.FINPROD_ID,
+		ipd.FINPROD_TYPE,
+		ipd.FINPROD_TYPE2,
+		ipd.BRANCH,
+		ipd.TRADE_DATE,
+		ipd.VDATE,
+		ipd.MDATE,
+		ipd.SETTLE_DATE,
+		ipd.CCY,
+		ipd.CPRICE_DATE,
+		ipd.UNIT_CPRICE,
+		ipd.UNIT_INT,
+		ipd.UNIT_FPRICE,
+		ipd.PAR_VALUE,
+		ipd.CPRICE_AMT,
+		ipd.SHARE_AMT,
+		ipd.PRIN_AMT,
+		ipd.INT_AMT,
+		ipd.FPRICE_AMT,
+		ipd.FEE_AMT_PAY,
+		ipd.TRADE_AMT,
+		ipd.FEE_AMT_UNPAY,
+		ipd.FEE_AMT,
+		ipd.PS,
+		ipd.YIELD,
+		ipd.EXER_YIELD,
+		ipd.INV_AIM,
+		ipd.TRADE_STATUS,
+		ipd.IS_CANCEL,
+		ipd.P_TRADE_ID,
+		ipd.IS_CLEAN,
+		ipd.TOTLE_TRADE_ID,
+		ipd.R_TRADE_ID,
+		ipd.B_TRADE_ID,
+		ipd.CHL_ID,
+		ipd.COUNTER_ID,
+		ipd.TRADE_MARKET,
+		ipd.TRADE_PLAT,
+		ipd.TRADE_MARKET_MODE,
+		ipd.TRADER,
+		ipd.SEC_MANAGE_ACCT_ID,
+		ipd.F_TRADE_ID,
+		ipd.CASH_ID,
+		ipd.REMARK,
+		ipd.REGIST_ORG,
+		ipd.CANCEL_REMARK,
+		ipd.CREATE_USER,
+		ipd.CREATE_DEPT,
+		ipd.CREATE_TIME,
+		ipd.UPDATE_USER,
+		ipd.UPDATE_TIME,
+		ipd.SETTLE_SPEED,
+		ipd.COUNTER_TRADER,
+		ipd.COUNTER_CONTACT,
+		ipd.DELIVERY_TYPE,
+		ipd.PAY_DATE,
+		ipd.SALE_CODE
+		FROM
+		TRD_PRODUCT_DEAL ipd
+		where ipd.TOTLE_TRADE_ID= #{totalTradeId,jdbcType=VARCHAR}
+	</select>
+	<update id="updateChlTrdProDeal">
+		update TRD_PRODUCT_DEAL
+		set IS_CANCEL = #{isCancle,jdbcType=VARCHAR},Trade_Status = #{tradeStatus,jdbcType=VARCHAR}
+		WHERE TRADE_ID =#{trdProductDealList,jdbcType=VARCHAR}
+	</update>
 </mapper>

@@ -9,6 +9,7 @@ import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.security.SecurityUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -530,6 +531,21 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
         List<BaseTradeProductDealDto> baseTradeProductDealDtoList = restTemplate.getForList(
             ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/selectTotelTradeInfo?tradeId=" + entity.getBizCode(),
             BaseTradeProductDealDto.class);
+        //如果是通过通道的交易，也需要撤销带通道的交易编号
+        if(null!=entity.getChlId()){
+            List<TrdProductDeal>  chlList=baseTradeProductDealService.selectTrdProductChlDealsByTotalTradeId(entity.getTradeId());//根据交易编号，查询通道交易编号
+            if(null!=chlList && chlList.size()>0){
+                for(TrdProductDeal chlDeal:chlList){
+                    //更新，是否已撤销 = 数据字典缓存.是否.是
+                    Map<String,Object> map = new HashMap<String,Object>();
+                    map.put("tradeStatus", DictCodeListExt1.交易状态_撤销.getValue());
+                    map.put("isCancle", DictCodeList.是否_是.getValue());
+                    map.put("trdProductDealList", chlDeal.getTradeId());
+                    baseTradeProductDealMapper.updateChlTrdProDeal(map);
+
+                }
+            }
+        }
 
         FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
         if (!com.joyintech.framework.util.StringUtil.isEmptyList(baseTradeProductDealDtoList)) {

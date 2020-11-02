@@ -91,5 +91,25 @@ public interface BaseTradeProductDealMapper {
      * @since 1.0
      */
     int updateTrdProdTotalDeal(Map<String, Object> map);
+    /**
+     *
+     * 金融产品交易查询
+     * <功能详细描述>
+     * @param totalTradeId
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<TrdProductDeal> selectTrdProductChlDealsByTotalTradeId(@Param("totalTradeId") String totalTradeId);
+    /**
+     *
+     * 更新金融产品交易表是否已撤销：是
+     * <功能详细描述>
+     * @param map Map<String,Object>
+     * @return map
+     * @see
+     * @since 1.0
+     */
+    int updateChlTrdProDeal(Map<String, Object> map);
 
 }
