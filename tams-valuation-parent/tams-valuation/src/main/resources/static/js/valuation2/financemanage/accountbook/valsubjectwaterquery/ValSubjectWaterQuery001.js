@@ -54,7 +54,7 @@ $(function() {
         cellMinWidth : 100,
         cols : [ {field : 'bookDate', title : '记账日期',width:120, sort : true}, 
         { field : 'vouchNum', title : '记账流水号',width:200, sort : true}, 
-        { field : 'bankSerialNumber', title : '银行记账流水号',width:200, sort : false},
+        { field : 'bankSerialNumber', title : '银行记账流水号',width:200, sortable : false},
         {field : 'booksetId',title : '账套代码',width:200,sort : true}, 
         {field : 'booksetName',title : '账套名称', width:180,sort : true }, 
         {field : 'busiId', title : '资产/负债代码',width:180,sort : true },  
