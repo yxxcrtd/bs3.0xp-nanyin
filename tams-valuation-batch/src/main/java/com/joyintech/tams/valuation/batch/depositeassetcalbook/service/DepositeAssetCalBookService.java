@@ -266,6 +266,8 @@ public class DepositeAssetCalBookService {
                         happenDateNow, DateUtil.addDay(happenDateNow, 1), prinList, quoteList);
                     // 变量.应收利息 = 返回值.总利息金额
                     interest = calCommonResult.getTotalInterestAmt();
+                    interest = ArithmeticUtil.round(interest,
+                            NumberEnum.MONEY);
                 } 
                 else {
                     interest = BigDecimal.ZERO; 
@@ -275,7 +277,8 @@ public class DepositeAssetCalBookService {
             // 结果集发生日 大于 标的到期日前一天
             // 结果集发生日 大于 标的到期日前一天
             else  if (DateUtil.compareDate(happenDateNow, mdateYsdWithTarget) <= 0) {
-                if (DictCodeList.计提方式_区间倒减.getValue().equals(calType)) {
+                //到期日前一天恒定使用区间倒减的算法
+                if (DictCodeList.计提方式_区间倒减.getValue().equals(calType)||DateUtil.compareDate(happenDateNow, mdateYsdWithTarget) == 0) {
                     // 1、计算上次付息日到发生日的应收利息
                     // 调用共通设计->【标的类共通方法】->当前付息区间查询
                     List<TargetCashPlan> listCashPlan = finProductCommonService.getCurrentIntRange(
@@ -345,10 +348,15 @@ public class DepositeAssetCalBookService {
                         }
                     });
                     quoteList.add(latestQuoteInfo);
+
+
+
                     CalCommonResult calCommonResult = calculationCommonService.calCommon(
                         happenDateNow, DateUtil.addDay(happenDateNow, 1), prinList, quoteList);
                     // 变量.应收利息 = 返回值.总利息金额
                     interest = calCommonResult.getTotalInterestAmt();
+                    interest = ArithmeticUtil.round(interest,
+                            NumberEnum.MONEY);
                 }
             }
             else {
