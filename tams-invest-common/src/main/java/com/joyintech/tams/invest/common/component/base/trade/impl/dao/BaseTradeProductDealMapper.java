@@ -111,5 +111,15 @@ public interface BaseTradeProductDealMapper {
      * @since 1.0
      */
     int updateChlTrdProDeal(Map<String, Object> map);
+    /**
+     *
+     * 更新指令交易表是否已撤销：是
+     * <功能详细描述>
+     * @param map Map<String,Object>
+     * @return map
+     * @see
+     * @since 1.0
+     */
+    int updateStlTrdProDeal(Map<String, Object> map);
 
 }

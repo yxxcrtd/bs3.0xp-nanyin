@@ -1318,4 +1318,9 @@
 		set IS_CANCEL = #{isCancle,jdbcType=VARCHAR},Trade_Status = #{tradeStatus,jdbcType=VARCHAR}
 		WHERE TRADE_ID =#{trdProductDealList,jdbcType=VARCHAR}
 	</update>
+	<update id="updateStlTrdProDeal">
+		update stl_orders
+		set order_status = #{tradeStatus,jdbcType=VARCHAR}
+		WHERE TRADE_ID =#{trdProductDealList,jdbcType=VARCHAR}
+	</update>
 </mapper>

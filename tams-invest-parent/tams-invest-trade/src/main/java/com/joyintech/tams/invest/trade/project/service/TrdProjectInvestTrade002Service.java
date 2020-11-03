@@ -542,6 +542,8 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
                     map.put("isCancle", DictCodeList.是否_是.getValue());
                     map.put("trdProductDealList", chlDeal.getTradeId());
                     baseTradeProductDealMapper.updateChlTrdProDeal(map);
+                    //修改指令状态
+                    baseTradeProductDealMapper.updateStlTrdProDeal(map);
 
                 }
             }
