@@ -47,7 +47,8 @@ public class BussRepFundInfoValidator implements BeanValidator{
         String  type6 = dto.getType6();
         if(StringUtil.equals(finprodType2, DictCodeListExt1.金融产品类型_投管用_基金.getValue())
             ||(StringUtil.equals(finprodType2, DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue())
-                &&StringUtil.equals(dto.getRepAssetType(), DictCodeListExt2.资产_负债二级类别_基础设施基金.getValue()))
+                && ( StringUtil.equals(dto.getRepAssetType(), DictCodeListExt2.资产_负债二级类别_基础设施基金.getValue()) ||
+                StringUtil.equals(dto.getRepAssetType(), DictCodeListExt2.资产_负债二级类别_其他私募股权投资基金.getValue()) ))
             ){
             if(StringUtil.isEmpty(dto.getRepAssetType())){
                 resultList.add(new ValidMessage("repAssetType",
