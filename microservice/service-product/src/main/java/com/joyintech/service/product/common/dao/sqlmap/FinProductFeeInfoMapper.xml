@@ -5,6 +5,7 @@
     <select id="queryFeeInfoList" resultType="com.joyintech.framework.select.SelectOptionDto" parameterType="java.lang.String">
     	select  FEE_ID id,
     			FEE_NAME text
+				,  BASIC_BILL||','||BASIS  object
     	from MST_FEEINFO
     	  <where>
     	  	  <choose>
