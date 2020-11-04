@@ -102,6 +102,7 @@ $(function() {
              ,{field:'issuer',title: 'FinPlanProfitAsset002.issuer'}
              // 增加推荐方与推荐费率 add by renping 20191014 start
              ,{field:'recommenderName',  title: 'FinPlanProfitAsset002.recommender', width:150,  sortField:'recommender'}
+             ,{field:'parentPlanStr',  title: 'FinPlanProfitAsset002.parentPlan', width:150, sort:false}
              // 增加推荐方与推荐费率 add by renping 20191014 end
              // 调整操作列宽 by 赵东东 2019.10.29
              ,{field:'operation',width:100,title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}

@@ -23,6 +23,7 @@
             <!-- add by 张普裕  2019/10/16 更新导出模板 end -->
 			<!-- 增加推荐方与推荐费率 add by renping 20191014 start -->
             <Cell order="13" name="资产推荐方">recommenderName</Cell>
+            <Cell order="14" name="母计划">parentPlanStr</Cell>
 			<!-- 增加推荐方与推荐费率 add by renping 20191014 end -->
         </Row>
     </Worksheet>

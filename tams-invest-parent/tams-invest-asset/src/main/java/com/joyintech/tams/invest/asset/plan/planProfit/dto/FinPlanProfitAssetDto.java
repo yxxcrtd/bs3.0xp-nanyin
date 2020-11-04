@@ -1854,4 +1854,17 @@ public class FinPlanProfitAssetDto extends FinProduct implements ProcessEntity {
     public void setCalRateType(String calRateType) {
         this.calRateType = calRateType;
     }
+
+    /**
+     * 是否母计划
+     */
+    private String parentPlanStr;
+
+    public String getParentPlanStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.是否, this.getParentPlan());
+    }
+
+    public void setParentPlanStr(String parentPlanStr) {
+        this.parentPlanStr = parentPlanStr;
+    }
 }
