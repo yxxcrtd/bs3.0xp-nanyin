@@ -85,9 +85,9 @@ public class TrdProjectInvestTradeEditDtoValidator implements TradeCommonValidat
         if(bussCommonMapperDelegateService != null && StringUtil.isNotEmpty(dto.getFinprodId())){
             FinProduct finProduct = bussCommonMapperDelegateService.selectBySinglePrimaryKey(FinProductMapper.class, dto.getFinprodId(), FinProduct.class);
 
-//            if(finProduct != null && finProduct.getVdate() != null && (DateUtil.compareDate(DateUtil.parse(dto.getTradeDate()), finProduct.getVdate())<0)){
-//            	errorList.add(new ValidMessage("tradeDate",getMessage("BUSS_COM_E_0004",getMessage("TrdPlanRateInvestTrade002.tradeDate"),getMessage("TrdPlanRateInvestTrade002.vdate"))));
-//            }
+            if(finProduct != null && finProduct.getVdate() != null && (DateUtil.compareDate(DateUtil.parse(dto.getTradeDate()), finProduct.getVdate())<0)){
+            	errorList.add(new ValidMessage("tradeDate",getMessage("BUSS_COM_E_0004",getMessage("TrdPlanRateInvestTrade002.tradeDate"),getMessage("TrdPlanRateInvestTrade002.vdate"))));
+            }
             if(finProduct != null && finProduct.getMdate() != null && (DateUtil.compareDate(DateUtil.parse(dto.getSettleDate()), finProduct.getMdate())>0)){
             	errorList.add(new ValidMessage("settleDate",getMessage("BUSS_COM_E_0003",getMessage("TrdPlanRateInvestTrade002.settleDate"),getMessage("TrdPlanRateInvestTrade002.mdate"))));
             }
