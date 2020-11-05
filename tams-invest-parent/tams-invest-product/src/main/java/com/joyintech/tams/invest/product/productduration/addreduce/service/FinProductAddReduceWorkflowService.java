@@ -373,12 +373,13 @@ public class FinProductAddReduceWorkflowService extends BaseService<FinProductAd
         wflStlPayOrders.forEach(wflTrdProductDeal -> wflStlPayOrdersMapper.insertSelective(wflTrdProductDeal));
 
         // 调用业务组件.【金融产品交易共通.交易产品接口】,写入[可用]的组合持仓流水及现金流水
-        BussTrdPositionDto bussTrdPositionDto = new BussTrdPositionDto();
-        bussTrdPositionDto.setPortfolioId(entity.getPtlId());
-        bussTrdPositionDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
-        bussTrdPositionDto.setTrdProductDealList(trade.getTrdProductDeals());
-        bussTrdPositionDto.setStlPayOrders(trade.getStlPayOrders());
-        baseTradeProductDealCommService.trdProductInsertPosition(bussTrdPositionDto);
+//        BussTrdPositionDto bussTrdPositionDto = new BussTrdPositionDto();
+//        bussTrdPositionDto.setPortfolioId(entity.getPtlId());
+//        bussTrdPositionDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+//        bussTrdPositionDto.setTrdProductDealList(trade.getTrdProductDeals());
+//        bussTrdPositionDto.setStlPayOrders(trade.getStlPayOrders());
+//        baseTradeProductDealCommService.trdProductInsertPosition(bussTrdPositionDto);
+
         // PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();
         // setHoldingType(entity.getProductTradeInfoDto(), DictCodeList.持仓类型_可用, true);
         // ptlPositionHoldDto.setPtlSecPositionFlows(entity.getProductTradeInfoDto().getPtlSecPositionFlows());
@@ -562,7 +563,9 @@ public class FinProductAddReduceWorkflowService extends BaseService<FinProductAd
         }
         bussTrdPositionDto.setTrdProductDealList(trade.getTrdProductDeals());
         bussTrdPositionDto.setStlPayOrders(trade.getStlPayOrders());
+
         baseTradeProductDealCommService.trdProductInsertPosition(bussTrdPositionDto);
+
         // if (isRevoke) {
         // entity.getProductTradeInfoDto().setPtlSecPositionFlows(list);
         // entity.getProductTradeInfoDto().setPtlCashPositionFlows(new ArrayList<>());
