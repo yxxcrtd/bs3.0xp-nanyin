@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,9 +40,6 @@ public class TrdProjectInvestTradeService extends BaseService<TrdProjectInvestTr
     @Autowired
     private TrdProjectInvestTradeMapper trdProjectInvestTradeMapper;
 
-    @Autowired
-    private IPlatformDate platformDateImpl;
-
     public Page<SelectOptionDto> findEntrustId(int page, int length, Map<String, Object> param) {
         return super.queryForPageForSelectReturn(page, length, () -> trdProjectInvestTradeMapper.findEntrustId(param));
     }
@@ -73,9 +67,6 @@ public class TrdProjectInvestTradeService extends BaseService<TrdProjectInvestTr
     }
 
     public Page<SelectOptionDto> getFinprodMarketId(int page, int length, Map<String, Object> param) {
-        if (StringUtil.isNotEmpty(param)&&!StringUtil.isNotEmpty(param.get("tradeDate"))){
-            param.put("tradeDate", platformDateImpl.getSysDateStr());
-        }
         return queryForPageForSelectReturn(page, length, () -> trdProjectInvestTradeMapper.getFinprodMarketId(param));
     }
 
