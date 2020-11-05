@@ -238,6 +238,7 @@ public class InterestSubAmtCal {
         secInfoModel.setStartDate(BasicUtil.dateToLocal(scai.getVdate()));
         secInfoModel.setEndDate(BasicUtil.dateToLocal(scai.getMdate()));
         secInfoModel.setBondsType(Variety.附息);
+        secInfoModel.setFirstPayDate(BasicUtil.dateToLocal(isr.getFirstPayDate()));
         if(StringUtil.equals(DictCodeListExt1.计息基础_A_A_D.getValue(), basis)){
             secInfoModel.setBasis(Basis.A_A_D);
         }
