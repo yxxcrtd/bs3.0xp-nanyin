@@ -606,6 +606,7 @@
 		       A.FINPROD_ID,
 		       A.remainPrinAmt,
 		       A.reduceAmt,
+               A.reduceAmtTher,
 		       A.PROD_STYLE,
 		       to_char(A.vDate, 'yyyy-MM-dd') vDate,
 		       to_char(A.mDate, 'yyyy-MM-dd') mDate,
@@ -617,6 +618,7 @@
 		                T1.FINPROD_ID,
 		                T3.tdy_prin_amt-nvl(T6.prinAmt,0) remainPrinAmt,
 		                T3.tdy_prin_amt-nvl(T6.prinAmt,0) reduceAmt,
+                        T3.tdy_prin_amt-nvl(T6.prinAmt,0) reduceAmtTher,
 		                T3.tdy_unpaid_intincexp - NVL(t5.intamt, 0)
 		                 /*- NVL(t6.intamt, 0)*/
 		                 interest,
@@ -698,6 +700,16 @@
 		           </choose>
 		       AND NVL(T3.TDY_PRIN_AMT, 0) != 0   
 		       AND T1.VDATE &lt;= TO_DATE(#{tradeDate}, 'yyyy-MM-dd')) A
+    </select>
+
+    <select id="getRePayAndIntpFlag" resultType="java.lang.Integer">
+        select count(1)
+        from fin_cash_plan fcp
+        inner join fin_product fp on fcp.finprod_id = fp.finprod_id
+            and fcp.pay_date != fp.mdate
+        where fcp.pay_date = TO_DATE(#{tradeDate}, 'yyyy-MM-dd')
+        and fcp.finprod_id = #{finprodId}
+        and fcp.cash_type = '01'
     </select>
     
 </mapper>
