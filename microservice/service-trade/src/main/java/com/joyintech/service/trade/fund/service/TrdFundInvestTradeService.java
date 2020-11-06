@@ -325,9 +325,9 @@ public class TrdFundInvestTradeService extends BaseService<TrdFundInvestTradeDto
      */
     public Page<SelectOptionDto> getFinprodId(int page, int length, Map<String, Object> param) {
         param.put("FINPROD_TYPE_TG", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
-        if (StringUtil.isNotEmpty(param)&&!StringUtil.isNotEmpty(param.get("tradeDateVdate"))){
-            param.put("tradeDateVdate", platformDateImpl.getSysDateStr());
-        }
+//        if (StringUtil.isNotEmpty(param)&&!StringUtil.isNotEmpty(param.get("tradeDateVdate"))){
+//            param.put("tradeDateVdate", platformDateImpl.getSysDateStr());
+//        }
         return this.queryForPageForSelectReturn(page, length, () -> trdFundInvestTradeMapper.getFinprodId(param));
     }
 
