@@ -75,6 +75,16 @@ public class ReduceInfoDto extends PrdLayerParam {
     private BigDecimal actInterest;
 
     /**
+     * 理论金额
+     */
+    private BigDecimal reduceAmtTher;
+
+    /**
+     * 赎回日是否等于付息日标识
+     */
+    private Boolean rePayAndIntpFlag;
+
+    /**
      * 获取 indexNo
      *
      * @return indexNo
@@ -314,5 +324,21 @@ public class ReduceInfoDto extends PrdLayerParam {
         if (layType == null || "".equals(layType))
             return "";
         return layType;
+    }
+
+    public BigDecimal getReduceAmtTher() {
+        return reduceAmtTher;
+    }
+
+    public void setReduceAmtTher(BigDecimal reduceAmtTher) {
+        this.reduceAmtTher = reduceAmtTher;
+    }
+
+    public Boolean getRePayAndIntpFlag() {
+        return rePayAndIntpFlag;
+    }
+
+    public void setRePayAndIntpFlag(Boolean rePayAndIntpFlag) {
+        this.rePayAndIntpFlag = rePayAndIntpFlag;
     }
 }
