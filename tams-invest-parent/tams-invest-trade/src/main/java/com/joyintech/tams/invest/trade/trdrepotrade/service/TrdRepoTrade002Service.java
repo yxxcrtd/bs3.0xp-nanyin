@@ -2014,7 +2014,9 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
                 && DictCodeList.回购拆借方向_逆回购.getValue().equals(inputDto.getPs())) {
             if (inputDto.getPrinAmt() != null && inputDto.getBussTrdAvailableCashQuery() != null
                     && inputDto.getBussTrdAvailableCashQuery().getAvalibleCash() != null
-                    && inputDto.getPrinAmt().compareTo(inputDto.getBussTrdAvailableCashQuery().getAvalibleCash()) > 0) {
+                    && StringUtil.isEmpty(inputDto.getChlId())
+                    && inputDto.getPrinAmt().compareTo(inputDto.getBussTrdAvailableCashQuery().getAvalibleCash()) > 0
+            ) {
                 if (StringUtil.isNotBlank(confirmMsg)) {
                     confirmMsg += changeLineMark;
                 }
