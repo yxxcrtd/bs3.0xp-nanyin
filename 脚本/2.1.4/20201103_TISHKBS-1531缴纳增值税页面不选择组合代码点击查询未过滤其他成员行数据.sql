@@ -1,3 +1,3 @@
 --TISHKBS-1531缴纳增值税页面不选择组合代码点击查询未过滤其他成员行数据
-delete from ZGTAMS0702LS.DATA_AUTH_MAPPER_CONFIG where SQL_ID = 'com.joyintech.tams.invest.product.paythevatquery.dao.PayTheVatQuery002Mapper.checkdate';
+delete from DATA_AUTH_MAPPER_CONFIG where SQL_ID = 'com.joyintech.tams.invest.product.paythevatquery.dao.PayTheVatQuery002Mapper.checkdate';
 INSERT INTO DATA_AUTH_MAPPER_CONFIG (SQL_ID, FILTER_TYPE, IS_NEST, JOIN_COLUMN_NAME, FILTER_SQL, SYSTEM_CODE, PAGE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADD_COLUMN, ADD_COLUMN_NAME, DATA_TYPE) VALUES ('com.joyintech.tams.invest.product.paythevatquery.dao.PayTheVatQuery002Mapper.checkdate', '2', '02', 'booksetId', null, 'FIN', 'FinproductPayTheVatQuery002', 'admin', null, TIMESTAMP '2020-07-03 17:44:49', 'wy', TIMESTAMP '2020-07-03 17:44:49', null, null, 'V08');
