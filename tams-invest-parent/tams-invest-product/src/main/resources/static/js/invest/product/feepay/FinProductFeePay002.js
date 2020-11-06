@@ -590,15 +590,23 @@ $(function() {
 		var endDate = $('#FinProductFeePay002_positionEndDate').val();
 		var feeId = $('#FinProductFeePay002_feeId').val();
 		var ptlId = $('#FinProductFeePay002_ptlId').val();
+		var feeType = $('#FinProductFeePay002_hidden_feeType').val();
+		var chargeType = $('#FinProductFeePay002_hidden_chargeType').val();
 		if (endDate && feeId && ptlId){
 			var startDate = $('#FinProductFeePay002_positionStartDate').val();
 			if (startDate && endDate <= startDate){
 				// 计提结束日不能小于等于计提开始日
-				Joyin.error(JoyinUtil.getMessage('FIN_PROD_E_0015',[JoyinUtil.getLabel("FinProductFeePay002.positionEndDate"), JoyinUtil.getLabel("FinProductFeePay002.positionStartDate")]));
+				if(chargeType === feeChargetype_norule){
+					//交易手续费，结算服务费展示计提开始日和结束日 yzg 20191218 start
+					if(!(feeType != feeType_tradeFee && feeType != feeType_settle)){
+						Joyin.error(JoyinUtil.getMessage('FIN_PROD_E_0015',[JoyinUtil.getLabel("FinProductFeePay002.positionEndDate"), JoyinUtil.getLabel("FinProductFeePay002.positionStartDate")]));
+					}
+				}else {
+					Joyin.error(JoyinUtil.getMessage('FIN_PROD_E_0015',[JoyinUtil.getLabel("FinProductFeePay002.positionEndDate"), JoyinUtil.getLabel("FinProductFeePay002.positionStartDate")]));
+				}
 				$('#FinProductFeePay002_positionEndDate').val('');
 			}else{
 				var ptlId = $('#FinProductFeePay002_ptlId').val();
-				var feeType = $('#FinProductFeePay002_hidden_feeType').val();
 				if (ptlId && feeType){
 					reloadTable();
 					//交易手续费、结算服务费根据计提结束日带出金额 add by yzg 20191218 start
@@ -762,7 +770,6 @@ $(function() {
                 }
         	}
         }
-        
         Joyin.ajaxJson(basePath + 'invest/product/feepay/FinProductFeePay002/check',object, function(result) {
             Joyin.confirm(result.data, function() {
                     if(operateType === 'save') {
