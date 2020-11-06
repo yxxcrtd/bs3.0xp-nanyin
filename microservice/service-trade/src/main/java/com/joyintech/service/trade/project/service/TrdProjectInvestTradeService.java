@@ -73,9 +73,9 @@ public class TrdProjectInvestTradeService extends BaseService<TrdProjectInvestTr
     }
 
     public Page<SelectOptionDto> getFinprodMarketId(int page, int length, Map<String, Object> param) {
-        if (StringUtil.isNotEmpty(param)&&!StringUtil.isNotEmpty(param.get("tradeDate"))){
-            param.put("tradeDate", platformDateImpl.getSysDateStr());
-        }
+//        if (StringUtil.isNotEmpty(param)&&!StringUtil.isNotEmpty(param.get("tradeDate"))){
+//            param.put("tradeDate", platformDateImpl.getSysDateStr());
+//        }
         return queryForPageForSelectReturn(page, length, () -> trdProjectInvestTradeMapper.getFinprodMarketId(param));
     }
 
