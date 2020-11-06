@@ -6,13 +6,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import com.joyintech.tams.common.base.entity.FinFloatAccrualSche;
-import com.joyintech.tams.common.base.entity.FinFloatCalcRuleDetail;
-import com.joyintech.tams.common.base.entity.FinFloatCalcRuleDetailKey;
-import com.joyintech.tams.common.base.entity.FinOpenRule;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.product.messageadjust.finfloatmgtexpquotation.dto.IntRateWeight;
 import com.joyintech.service.product.messageadjust.bmquotation.dto.BussBenchMarkInfoDto;
@@ -212,5 +209,7 @@ public interface FinFloatMgtExpQuotationMapper {
     * @param cashId 现金流Id
     * @return
     */
-   int deleteCashPlanByCashId(@Param("cashId")String cashId);  
+   int deleteCashPlanByCashId(@Param("cashId")String cashId);
+
+   int deleteFloatAccrByPrimaryKey(FinFloatAccrualScheKey key);
 }
