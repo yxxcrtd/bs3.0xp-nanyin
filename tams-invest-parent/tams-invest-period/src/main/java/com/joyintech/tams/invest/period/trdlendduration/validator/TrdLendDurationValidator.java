@@ -13,6 +13,9 @@ package com.joyintech.tams.invest.period.trdlendduration.validator;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
+import com.joyintech.tams.constant.DictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +41,10 @@ public class TrdLendDurationValidator implements PeriodCommonValidator{
      */
     @Autowired(required = false)
     private BussTrdTransferOrderService bussTrdTransferOrderService;
+
+    @Autowired
+    private MstWorkflowCommonService mstWorkflowCommonService;
+
     /**
      * {@inheritDoc}
      */
@@ -50,6 +57,21 @@ public class TrdLendDurationValidator implements PeriodCommonValidator{
             if (DateUtil.compareDate(dto.getSettleDate(), dto.getMdate())==-1) {
                 messageList.add(new ValidMessage("资金到账日需要大于等于到期日"));
             }
+
+
+            // 校验是否多次提交    1.保存进入待办提交  2.直接提交。
+            WflValidInputParameter parameter = new WflValidInputParameter();
+            parameter.setPageId("TrdLendDuration002");
+            parameter.setWorkflowId(dto.getWorkflowId());
+            //parameter.setBusinessDataPk1(dto.getCurveCode());
+            parameter.setBusinessDataPk2(dto.getLoanMaturityTransaction());
+            parameter.setBusinessDataPk3(dto.getFinprodId());
+
+            if(mstWorkflowCommonService.isInWflProcess(parameter)){
+                messageList.add(new ValidMessage("此拆借到期确认交易已在流程中，不可重复提交"));
+            }
+
+
         }
         //撤销check
         if(StringUtil.equals(dto.getOperateType(), "revoke")){
