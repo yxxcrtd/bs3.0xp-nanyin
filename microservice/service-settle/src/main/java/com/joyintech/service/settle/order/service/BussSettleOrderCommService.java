@@ -1963,7 +1963,13 @@ public class BussSettleOrderCommService {
      * @throws Exception
      */
     public List<SelectOptionDto> queryAcctList(Map<String, Object> paramMap) {
-        return bussSettleOrderCommMapper.queryAcctList(paramMap);
+        List<SelectOptionDto> selectList =  bussSettleOrderCommMapper.queryAcctList(paramMap);
+        for (SelectOptionDto dto : selectList){
+          if (dto.getId().startsWith(":")){
+              dto.setId(dto.getId().substring(1,dto.getId().length()));
+          }
+        }
+        return selectList;
     }
 
     /**

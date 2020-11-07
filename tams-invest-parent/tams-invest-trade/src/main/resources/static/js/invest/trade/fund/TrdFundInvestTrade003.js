@@ -264,6 +264,7 @@ $(function () {
     	  if ($("#ps").val() == ps_T19) {
               $("#channelAmt_div").show();
               $("#channelAmt").prop("disabled", false);
+              $("#tradeAmt").prop("disabled", false);
           } else if ($("#ps").val() ==ps_T24) {
               $("#channelAmt_div").show();
           }else {
