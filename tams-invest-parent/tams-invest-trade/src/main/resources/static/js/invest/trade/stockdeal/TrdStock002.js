@@ -71,7 +71,7 @@ var table;
         if($('#finprodId').select2('data')[0].id){
         	if (data && data.finprodId) {
         	// 资产名称文本框根据资产代码选择自动显示对应名称;
-            $("#finprodName").val(data.finprodName).trigger('change');
+            $("#finprodName").val(data.finprodId).trigger('change');
             // 同时带出资产相关信息，包括上市版，交易场所，币种;
             $("#board").val(data.board).trigger('change');
             $("#tradeMarket").val(data.tradeMarket).trigger('change');
