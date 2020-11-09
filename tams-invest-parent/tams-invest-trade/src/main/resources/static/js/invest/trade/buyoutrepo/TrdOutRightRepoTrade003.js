@@ -706,6 +706,22 @@
         // add by 王国显 费用设置 20190722 start
         $('#TrdOutRightRepoTrade002_tradeMarket').trigger('change');
         // add by 王国显 费用设置 20190722 end
+        $('#trdInvestPersonInfo_counterId').on("change",function(){
+            var counterId = $('#trdInvestPersonInfo_counterId');
+            if (counterId.select2('data') && counterId.select2('data')[0]) {
+                var 交易对手 = counterId.select2('data')[0].object;
+                // 【债券投资委托】交易对手选择内部交易对手时，清算速度为T+0不可改
+                if (交易对手 == 'N') {
+                    if (pageModel != PAGE_MODEL_REFERENCE) {
+                        $('#settleSpeed').val("01").prop("disabled", true).trigger("change");
+                    }
+                } else {
+                    if (pageModel != PAGE_MODEL_REFERENCE) {
+                        $('#settleSpeed').prop("disabled", false).trigger("change");
+                    }
+                }
+            }
+        });
     };
     
     function saveOrSubmit(operateType) {
@@ -1604,23 +1620,6 @@
 		$('#TrdOutRightRepoTrade002_termType').change(function(){
 			termTypeChangeAction();
 		});*/
-
-        $('#trdInvestPersonInfo_counterId').on("change",function(){
-            var counterId = $('#trdInvestPersonInfo_counterId');
-            if (counterId.select2('data') && counterId.select2('data')[0]) {
-                var 交易对手 = counterId.select2('data')[0].object;
-                // 【债券投资委托】交易对手选择内部交易对手时，清算速度为T+0不可改
-                if (交易对手 == 'N') {
-                    if (pageModel != PAGE_MODEL_REFERENCE) {
-                        $('#settleSpeed').val("01").prop("disabled", true).trigger("change");
-                    }
-                } else {
-                    if (pageModel != PAGE_MODEL_REFERENCE) {
-                        $('#settleSpeed').prop("disabled", false).trigger("change");
-                    }
-                }
-            }
-        });
 
 		// 回购期限
 		$('#TrdOutRightRepoTrade002_repoterm').on('change',function(){
