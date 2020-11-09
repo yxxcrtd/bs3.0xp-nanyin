@@ -171,10 +171,10 @@ public class InterestSubAmtCal {
         	Date tempDate1 = null;
 			if (CalendarUtil.isleapyear(isd.getVdate())) {
 				tempDate1 = CalendarUtil.set(isd.getVdate(), Calendar.DATE, 29);
-				tempDate1 = CalendarUtil.set(isd.getVdate(), Calendar.MONTH, 1);
+				tempDate1 = CalendarUtil.set(tempDate1, Calendar.MONTH, 1);
 			} else if (CalendarUtil.isleapyear(isd.getMdate())) {
 				tempDate1 = CalendarUtil.set(isd.getMdate(), Calendar.DATE, 29);
-				tempDate1 = CalendarUtil.set(isd.getMdate(), Calendar.MONTH, 1);
+				tempDate1 = CalendarUtil.set(tempDate1, Calendar.MONTH, 1);
 			}
 			if (tempDate1 != null && tempDate1.compareTo(isd.getVdate()) >= 0
 					&& tempDate1.compareTo(isd.getMdate()) < 0) {

@@ -452,7 +452,7 @@
 	      	and a.cash_id = #{anapleroticId}
 	      </if>
     </select>
-    <delete id="deleteAnapleroticBaseByFinprodId" parameterType="java.lang.String">
+    <delete id="deleteAnapleroticBaseByFinprodId">
         delete from FIN_BASE_RULE_INFO
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
         and EFF_DATE = #{effDate,jdbcType=DATE}

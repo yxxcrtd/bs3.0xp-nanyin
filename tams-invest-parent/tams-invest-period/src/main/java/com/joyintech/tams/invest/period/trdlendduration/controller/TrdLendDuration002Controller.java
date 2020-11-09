@@ -91,6 +91,7 @@ public class TrdLendDuration002Controller extends BaseController {
                 entity.setTradeAmt(entity.getTheoryAmt());
             } 
         }
+        model.addAttribute("workflowId", workflowId);
         model.addAttribute(GlobalConstant.ENTITY,entity );
         if(CollectionUtils.isNotEmpty(entity.getBussTrdTransferOrder())) {
             model.addAttribute("entity_bussTrdTransferOrderDto", JsonUtils.object2Json(entity.getBussTrdTransferOrder().get(0)));
