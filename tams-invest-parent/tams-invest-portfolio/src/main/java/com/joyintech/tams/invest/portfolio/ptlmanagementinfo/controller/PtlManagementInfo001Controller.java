@@ -80,8 +80,18 @@ public class PtlManagementInfo001Controller extends BaseController{
     @RequestMapping("findPage")
     public Page<PtlManagementInfoDto> findPage()
         throws Exception {
-        return ptlManagementInfo001Service.selectForPage(
+        Page<PtlManagementInfoDto> page = ptlManagementInfo001Service.selectForPage(
             RequestUtil.getParameters(getRequest()));
+        if (StringUtil.isNotEmpty(page)&&StringUtil.isNotEmpty(page.getRoot())){
+            page.getRoot().stream().forEach(item->{
+                if (StringUtil.equals(item.getPortfolioType(),DictCodeListExt1.组合类型_委外组合.getValue())){
+                     item.setUpdateFlg(DictCodeListExt1.是或否_否.getValue());
+                }else{
+                    item.setUpdateFlg(DictCodeListExt1.是或否_是.getValue());
+                }
+            });
+        }
+        return page;
     }
     /**
      * 删除按钮点击时的check
