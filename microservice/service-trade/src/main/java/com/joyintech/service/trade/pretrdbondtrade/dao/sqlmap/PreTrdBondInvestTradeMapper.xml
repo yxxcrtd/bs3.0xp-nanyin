@@ -376,7 +376,7 @@
 		  T1.unit_int unitInt,
 		  T1.yield     *100 yield,
 		  T1.exer_yield*100 exerYield,
-		  T1.share_amt/100 shareAmt,
+		  T1.share_amt*100 shareAmt,
 		  T1.TRADER,
 		  T1.COUNTER_ID,
 		  T1.COUNTER_TRADER,
