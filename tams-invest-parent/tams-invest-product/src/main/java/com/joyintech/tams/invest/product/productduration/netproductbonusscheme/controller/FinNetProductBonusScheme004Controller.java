@@ -111,19 +111,6 @@ public class FinNetProductBonusScheme004Controller extends BaseController {
                 finNetProductBonusSchemeInfo.setNetvalue(finNetProductBonusSchemeInfo.getTdyUnitValue().subtract(
                     finNetProductBonusSchemeInfo.getUnitBonusVlu()));
 
-//                ProcessMark processMark;
-//                try {
-//                    finNetProductBonusSchemeInfo.setFinprodId(finNetProductBonusSchemeInfo.getFinprodId());
-//                    finNetProductBonusSchemeInfo.setDealType("bonusScheRegister");
-//                    finNetProductBonusSchemeInfo.setTradeId(bonusPlanId);
-//                    processMark = WorkflowContext.getProcessMarkService().getParameterByAnnotation(finNetProductBonusSchemeInfo);
-//                    processMark.setPageId("FinNetProductBonusScheme002");
-//                    finNetProductBonusSchemeInfo = finNetProductBonusSchemeService.getBussinessEntityByPk(processMark);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-
-
             }
             else{
                 Map<String,Object> map = new HashMap<>();
@@ -139,6 +126,24 @@ public class FinNetProductBonusScheme004Controller extends BaseController {
                     }
                 }
             }
+
+            ProcessMark processMark;
+            FinNetProductBonusSchemeDto temp1 =  new FinNetProductBonusSchemeDto();
+
+            try {
+                temp1.setFinprodId(finNetProductBonusSchemeInfo.getFinprodId());
+                temp1.setDealType("bonusScheRegister");
+                temp1.setTradeId(bonusPlanId);
+                processMark = WorkflowContext.getProcessMarkService().getParameterByAnnotation(temp1);
+                processMark.setPageId("FinNetProductBonusScheme002");
+                temp1 = finNetProductBonusSchemeService.getBussinessEntityByPk(processMark);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            finNetProductBonusSchemeInfo.setTdyUnitValue(temp1.getTdyUnitValue());
+            finNetProductBonusSchemeInfo.setNetvalue(temp1.getNetvalue());
+
+
             model.addAttribute("entity", finNetProductBonusSchemeInfo);
             Map<String,Object> param0 = new HashMap<String,Object>();
             param0.put("finprodId", finNetProductBonusSchemeInfo.getFinprodId());
