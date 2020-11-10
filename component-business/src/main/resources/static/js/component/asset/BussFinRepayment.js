@@ -674,6 +674,7 @@
      * 保存验证
      */
     function check() {
+        debugger;
         // 付息计划列表为空时
         var list = getAllRows();debugger;
         if(!list || list.length == 0) {
@@ -741,6 +742,11 @@
      */
     var isComfirmCheck = function(){
         var list = getAllRows();var msg;
+
+        if(!list || list.length == 0) {
+            msg = JoyinUtil.getMessage('COMMON_E_0057',"还本计划");
+         }
+
         if(list){
             $.each(list,function(index,obj){
                 if(obj.payDate==''||typeof obj.payDate == 'undefined'){
