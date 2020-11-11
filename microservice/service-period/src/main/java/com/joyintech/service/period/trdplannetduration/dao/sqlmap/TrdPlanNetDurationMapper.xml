@@ -382,6 +382,7 @@
     FIN_PRODUCT fp
     left join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID = fp.FINPROD_ID
     where fp.FINPROD_MARKET_ID = #{finprodMarketId}
+        AND fp.FINPROD_TYPE2 = 'F17'
     </select>
     <select id="portfolioIdLink" resultType="java.util.Map">
         <!-- select

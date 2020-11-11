@@ -2147,6 +2147,10 @@
         $('#settleSpeedStr').change(function(){
 			settleSpeedChangeAction();
 		});
+		//
+        $('#calendarId').change(function(){
+            settleSpeedChangeAction();
+        });
 		// add by wangguoxian 费用设置 20190807 start
         // 交易日，期限品种改变时
         $("#tradeDate").change(function(){

@@ -1966,6 +1966,12 @@
         $('#settleSpeedStr').change(function(){
                 settleSpeedChangeAction();
 		});
+
+		$('#calendarId').on("change", function () {
+           // 日历更新重新算 起息日
+            settleSpeedChangeAction();
+        });
+
 		// add by wangguoxian 费用设置 20190807 start
         // 交易日，期限品种改变时
         $("#tradeDate").change(function(){
