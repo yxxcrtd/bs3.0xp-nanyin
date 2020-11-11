@@ -1738,7 +1738,18 @@ var table;
 	                        dealinfo.tradeDate = $("#tradeDate").val();
 	                        dealinfo.ps = $("#ps").val();
 	                        dealinfo.ccy = $("#ccy").val();
-	                        dealinfo.tradeAmt = tmpList[dealObj].fpriceAmt; // TODO 多组合有通道费
+	                        if (null!=$('#tradeMarket').val()&&($('#tradeMarket').val()==TRADE_PLACE_02||$('#tradeMarket').val()==TRADE_PLACE_03)) {
+                                if($("#tradeAmtAndFee").val()){
+                                    dealinfo.tradeAmt = tmpList[dealObj].tradeAmtAndFee;
+                                }
+                                else{
+                                    dealinfo.tradeAmt = tmpList[dealObj].fpriceAmt;
+                                }
+                            }
+                            else{
+                                dealinfo.tradeAmt = tmpList[dealObj].fpriceAmt;
+                            }
+//	                        dealinfo.tradeAmt = tmpList[dealObj].fpriceAmt; // TODO 多组合有通道费
 	                        dealinfo.portfolioId = tmpList[dealObj].portfolioId;
 	                        dealinfo.counterId = $("#trdInvestPersonInfo_counterId").val();
 	                        dealinfo.tradeMarket = $("#tradeMarket").val();

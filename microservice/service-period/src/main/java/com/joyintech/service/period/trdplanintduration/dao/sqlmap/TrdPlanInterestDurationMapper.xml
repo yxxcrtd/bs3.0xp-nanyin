@@ -192,7 +192,7 @@
                                     and tpsp.CDATE &lt; t2.MDATE
                                     )
                                     and nvl(pp.PARENT_PORTFOLIO_ID,'null') = 'null'
-                                    and T2.PAY_DATE >= #{PLATEFORM_DATE}
+                                    and T2.PAY_DATE >= to_date(#{PLATEFORM_DATE},'yyyy-MM-dd')
                                     <!--小于计息截止日的最大持仓 丁志鹏 2019/08/28 end-->
                                     <if test="chlId != null and !chlId.isEmpty()">
                                         AND T1.SEC_ACCT_ID = #{chlId}
@@ -231,7 +231,7 @@
                               AND T6.EFF_DATE &lt;= T8.MDATE
                               AND T6.EFF_DATE > fccr.EFF_DATE
                )
-            and T8.PAY_DATE >= #{PLATEFORM_DATE}
+            and T8.PAY_DATE >= to_date(#{PLATEFORM_DATE},'yyyy-MM-dd')
              and T10.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF17}
              AND T10.PROFIT_TYPE = #{PROFIT_TYPE02}
             <if test="cashType != null and !cashType.isEmpty() and CASH_CLASS_TYPE01 == cashType">

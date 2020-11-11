@@ -281,6 +281,7 @@
      * 交易场所、回购类型、交易方向改变时
      */
     var repoTypeOnChange = function (isInit) {
+    
         var repoType = $("#repoType").val();
         // var ps = $("#ps").val();
         //深交所 协议 期限品种非必填
@@ -301,7 +302,7 @@
         
         // 1) 当回购类型为质押式协议回购时，期限品种隐藏
         if (repoType == TARGET_BACK_TYPE_H01) {
-            if (!isInit) {
+            if (!isInit && !isTodoList) {
                 $("#termTypeReback").val("");
             }
             $('#termTypeReback').prop('disabled', true);
@@ -327,7 +328,7 @@
         // 买断式回购从回购资产交易画面移除了，本处不作判断
         // 2) 当回购类型为质押式竞价回购和买断式回购时，期限品种为文本框，文本框支持输入联想，期限品种枚举值为：
         {
-            if (!isInit) {
+            if (!isInit && !isTodoList) {
                 $("#termTypeReback").val("");
                 $("#term").val("").trigger("change");
             }
