@@ -20,6 +20,7 @@ import org.springframework.stereotype.Repository;
 
 import com.joyintech.service.asset.common.dto.FinStageManagementDto;
 
+
 /**
  *  期次管理
  * 〈功能详细描述〉
@@ -69,4 +70,13 @@ public interface FinStageManagementMapper {
     void deleteFinCashPayRule(@Param("finprodId") String finprodId);
 
     List<ProcessMark> isWorkFlowCheck(Map<String, Object> map);
+    /**
+     * 根据产品代码得到起息日和到期日add by yujiaping 2020-11-10
+     * <功能详细描述>
+     * @param finprodId
+     * @return
+     * @see
+     * @since 1.0
+     */
+    FinStageManagementDto getVdateAndMdate(@Param("finprodId")String finprodId);
 }

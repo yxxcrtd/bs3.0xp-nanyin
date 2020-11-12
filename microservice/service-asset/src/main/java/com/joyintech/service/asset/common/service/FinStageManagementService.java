@@ -154,4 +154,15 @@ public class FinStageManagementService extends BaseService<RateAdjDto>{
     public List<ProcessMark> isWorkFlowCheck(Map<String, Object> map) {
         return finStageManagementMapper.isWorkFlowCheck(map);
     }
+    /**
+     * 根据产品代码得到起息日和到期日add by yujiaping 2020-11-10
+     * <功能详细描述>
+     * @param finprodId
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public FinStageManagementDto getVdateAndMdate(String finprodId){
+        return finStageManagementMapper.getVdateAndMdate(finprodId);
+    }
 }

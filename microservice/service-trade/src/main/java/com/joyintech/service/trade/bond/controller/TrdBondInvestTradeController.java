@@ -531,4 +531,17 @@ public class TrdBondInvestTradeController {
     public int selectTradeT02(@PathVariable("tradeId") String tradeId){
         return trdBondInvestTradeService.selectTradeT02(tradeId);
     }
+
+    /* add by msk 新增查询通道划款交易 20201111 start */
+    /**
+     * 查找通道划款交易
+     *
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("selectchlTrade/{chlId}")
+    public int selectchlTrade(@PathVariable("chlId") String chlId){
+        return trdBondInvestTradeService.selectchlTrade(chlId);
+    }
+    /* add by msk 新增查询通道划款交易 20201111 end */
 }

@@ -40,6 +40,12 @@ public class FinPlanNetAssetValidator implements BeanValidator {
             errorList.add(new ValidMessage("vdate",getMessage("BUSS_COM_E_0035",getMessage("FinPlanNetAsset002.vDate"), 
                 getMessage("FinPlanNetAsset002.mDate"))));
         }
+        //add by mashukai FIX BUG TISHKBS-1465 新增发行金额必填校验 20201110 start
+        if(dto.getIssueAmt() == null){
+            errorList.add(new ValidMessage("issueAmt",getMessage("请输入发行金额",getMessage("FinPlanNetAsset002.issueAmt"),
+                    getMessage("FinPlanNetAsset002.issueAmt"))));
+        }
+        //add by mashukai FIX BUG TISHKBS-1465 新增发行金额必填校验 20201110 end
         if (WorkFlowUtil.isNotFromToDoList()) {
             if (StringUtil.equals(dto.getOperateType(), "delete")) {
                 if(dto.getSelectedItem()!=null||dto.getSelectedItem().size()>0){

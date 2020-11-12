@@ -398,6 +398,24 @@
                 	AND rep.REP_FINPROD_INS_ID != #{repFinprodInsId,jdbcType=VARCHAR}
                 </if>
         )
+	<!--add by mashukai FIX BUG TISHKBS-1569 20201112 start  -->
+	and not EXISTS (
+			SELECT distinct BUSINESS_DATA_PK2
+			FROM SYS_DATA_PROCESS_MARK pm
+			INNER JOIN
+			(SELECT MAX(HIS_NO) HIS_NO,
+			WORKFLOW_ID
+			FROM SYS_DATA_PROCESS_MARK
+			WHERE PAGE_ID IN ( 'FinProductBuild002' , 'FinNetValueProductBuild002' )
+			GROUP BY WORKFLOW_ID
+			)tempHis
+			ON pm.HIS_NO       = tempHis.HIS_NO
+			AND pm.WORKFLOW_ID = tempHis.WORKFLOW_ID
+			WHERE pm.status   IN ('A','U','P')
+			AND pm.PAGE_ID    IN ( 'FinProductBuild002' , 'FinNetValueProductBuild002' )
+			and rep.REP_FINPROD_INS_ID = pm.BUSINESS_DATA_PK2
+		)
+	<!--add by mashukai FIX BUG TISHKBS-1569 20201112 end  -->
         <if test="search != null and search != ''">
 			AND   (rep.REP_FINPROD_INS_ID like concat(concat('%',#{search}),'%') 
         	or rep.REP_FINPROD_NAME like concat(concat('%',#{search}),'%') )
