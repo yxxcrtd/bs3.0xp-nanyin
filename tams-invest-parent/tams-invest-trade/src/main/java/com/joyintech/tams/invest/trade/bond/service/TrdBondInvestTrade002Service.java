@@ -3426,5 +3426,19 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 String.class);
     }
 
-
+	/* add by msk 新增查询通道划款交易 TISHKBS-1038  20201111 start */
+    /**
+     * 查找通道划款交易
+     *
+     * @param chlId 交易编号
+     * @return 通道划款交易信息
+     * @see
+     * @since 1.0
+     */
+    public int selectchlTrade(String chlId) {
+        return restTemplate.postForObject(
+                ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/selectchlTrade/" + chlId, null,
+                Integer.class);
+    }
+    /* add by msk 新增查询通道划款交易 TISHKBS-1038  20201111 end */
 }
