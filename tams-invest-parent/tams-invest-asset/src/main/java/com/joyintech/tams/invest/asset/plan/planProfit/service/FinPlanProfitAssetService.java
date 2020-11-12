@@ -318,8 +318,13 @@ public class FinPlanProfitAssetService extends CommonExportService<FinPlanProfit
         finProductType.setFinprodId(finProduct.getFinprodId());
         finProductType.setBranch(branch);
         finProductType.setType6(dto.getCategory());
-        finProductType.setType7(dto.getType());
-        
+        /* 四级分类为“自主管理”和“委托投资”都可以自动生成委外组合 yujiaping 2020-11-12 start*/
+        if(dto.getType().equals("04")) {       	
+        	finProductType.setType7("04");
+        }else{
+        	finProductType.setType7("02");
+        }       
+        /*  四级分类为“自主管理”和“委托投资”都可以自动生成委外组合 yujiaping 2020-11-12 end*/
 		 /*   start、zhuyongkang、2019.7.1、9原因   */
         finProductType.setType9(dto.getType9());
         finProductType.setType10(dto.getType10());
