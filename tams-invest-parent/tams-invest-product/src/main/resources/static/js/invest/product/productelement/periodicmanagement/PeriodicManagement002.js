@@ -170,7 +170,7 @@ $(function () {
     				$('#investCycle2').val(result.investCycle).prop('disabled', false).trigger('change');
     				}
     			} 
-    			$('#investCycle2').val(result.investCycle).prop('disabled', true).trigger('change');
+    			// $('#investCycle2').val(result.investCycle).prop('disabled', true).trigger('change');
     			if(pageModel==PAGE_MODEL_REFERENCE){
     				commonChangeAction();
     			}
