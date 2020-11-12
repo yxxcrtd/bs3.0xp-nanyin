@@ -100,6 +100,22 @@
     </select>
     
     <!-- 标的类金融产品    多级法人改造 hxy 20200618-->
+	<select id='getBooksetCapacctInfo' resultType="com.joyintech.framework.select.SuggestDto">
+		SELECT
+		BCI.ACCT_NO AS code,
+		BCI.ACCT_NO AS name,
+		BCI.ACCT_NO AS shortName,
+		<if test="finprodType != null" >
+			#{finprodType} AS hidCode
+		</if>
+		<if test="finprodType == null" >
+			BCI.ACCT_NO AS hidCode
+		</if>
+		FROM BOK_BOOKSET_CAPACCT_INFO BCI
+		WHERE BCI.BOOKSET_ID = #{booksetId}
+	</select>
+
+    <!-- 交易类金融产品 多级法人改造 hxy 20200618 -->
     <select id='getFinProduct' resultType="com.joyintech.framework.select.SuggestDto">
     	SELECT
 		    FINPROD_ID AS code,
@@ -115,8 +131,8 @@
         AND FP.FINPROD_TYPE IN ('F01','F06','F07','F17','F16','F21','F26') /** modify by yanya on 20200106 增加通道类型 F26 **/
         </if>
     </select>
-    
-    <!-- 交易类金融产品 多级法人改造 hxy 20200618 -->
+
+    <!-- 费用类金融产品 -->
     <select id='getFinTradeProduct' resultType="com.joyintech.framework.select.SuggestDto">
     	SELECT distinct
 		    FP.FINPROD_ID AS code,
@@ -133,8 +149,8 @@
         </if>
         AND (FP.BRANCH = '0' OR FP.BRANCH IS NULL)
     </select>
-    
-    <!-- 费用类金融产品 -->
+
+    <!-- 现金类金融产品代码 -->
     <select id='getFinCashInfo' resultType="com.joyintech.framework.select.SuggestDto">
     	SELECT
 		    FCI.CASH_ID AS code,
@@ -150,18 +166,7 @@
 		AND FCI.CASH_TYPE_2 = #{finprodType}
 		</if>
     </select>
-    
-    <!-- 现金类金融产品代码 -->
-    <select id='getBooksetCapacctInfo' resultType="com.joyintech.framework.select.SuggestDto">
-    	SELECT
-		    BCI.ACCT_NO AS code,
-		    BCI.ACCT_NO AS name,
-		    BCI.ACCT_NO AS shortName,
-		    BCI.ACCT_NO AS hidCode
-		FROM BOK_BOOKSET_CAPACCT_INFO BCI
-		WHERE BCI.BOOKSET_ID = #{booksetId}
-    </select>
-    
+
     <!-- 基础科目性质查询 -->
     <select id="getValSubjectNatureList" resultType="String" parameterType="java.util.Map">
     	SELECT BASE_SUBJECT_NATURE
