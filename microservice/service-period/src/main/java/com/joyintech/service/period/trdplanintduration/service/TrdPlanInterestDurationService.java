@@ -67,6 +67,8 @@ public class TrdPlanInterestDurationService extends BaseService {
     public Page<TrdPlanInterestDurationDto> findPage(int page, int length, Map<String, Object> param) {
         setParams(param);
         setParamsForSearch(param);
+        String plateDate = platformDateImpl.getSysDateStr();
+        param.put("PLATEFORM_DATE", plateDate);
         Page<TrdPlanInterestDurationDto> pageR = new Page<>();
         List<TrdPlanInterestDurationDto> search =  trdPlanInterestDurationMapper.findPage(param);
         List<TrdPlanInterestDurationDto> root = new ArrayList<TrdPlanInterestDurationDto>();
@@ -91,6 +93,8 @@ public class TrdPlanInterestDurationService extends BaseService {
     public List<TrdPlanInterestDurationDto> selectAllData(Map<String, Object> param) {
         setParams(param);
         setParamsForSearch(param);
+        String plateDate = platformDateImpl.getSysDateStr();
+        param.put("PLATEFORM_DATE", plateDate);  
         return trdPlanInterestDurationMapper.findPage(param);
     }
 
@@ -148,8 +152,7 @@ public class TrdPlanInterestDurationService extends BaseService {
         param.put("PROFIT_TYPE02", DictCodeList.收益类型_收益型.getValue());
 
         String plateDate = platformDateImpl.getSysDateStr();
-        param.put("PLATEFORM_DATE", plateDate);
-        //param.put("PLATEFORM_DATE", DateUtil.parse(plateDate));
+        param.put("PLATEFORM_DATE", DateUtil.parse(plateDate));
         if (param.get(BussinessConstant.PLUS_DAYS) != null) {
             param.put("PLATEFORM_DATE_OTHER", DateUtil.plusDays(plateDate, (Integer)param.get(BussinessConstant.PLUS_DAYS)));
         }
