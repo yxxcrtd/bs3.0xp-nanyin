@@ -153,7 +153,10 @@ var etrAmt = '';
 	                var message = '';
 	                if (object.ps === PS_T01 && object.prinAmt && object.bussTrdAvailableCashQuery && object.bussTrdAvailableCashQuery.avalibleCash && Number(object.bussTrdAvailableCashQuery.avalibleCash) < Number(object.prinAmt)){
 	                    message = JoyinUtil.getMessage("TRD_C_0002");
-	                }else{
+	                }else if (object.ps === PS_T02 && object.prinAmt && object.bussTrdAvailableCashQuery && object.bussTrdAvailableCashQuery.assetPosition && Number(object.bussTrdAvailableCashQuery.assetPosition) < Number(object.prinAmt)){
+                        message = JoyinUtil.getMessage("TRD_C_0007");
+                    }
+	                else{
 	                    message = JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.save"));
 	                    if (operateType === 'submit') {
 	                        message = JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.submit"));
