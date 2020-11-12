@@ -90,7 +90,7 @@ public class FinProductFeePay002Validator implements BeanValidator {
             FinProduct finProduct = bussCommonMapperDelegateService.selectBySinglePrimaryKey(FinProductMapper.class, finProductFeePay002Dto.getFinprodId(), FinProduct.class);
             if(finProduct != null && finProduct.getVdate() != null && (DateUtil.compareDate(finProductFeePay002Dto.getPayDate(), finProduct.getVdate())<0)){
                 validList.add(new ValidMessage("payDate",getMessage("BUSS_COM_E_0004",
-                        getMessage("FinProductFeePay002.payDate"),"起息日")));
+                        getMessage("FinProductFeePay002.payDate"),"产品起息日")));
             }
         }
 
