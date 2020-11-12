@@ -14,8 +14,10 @@ import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.service.asset.common.dto.FinStageManagementDto;
 import com.joyintech.service.asset.common.service.FinStageManagementService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,6 +72,18 @@ public class FinStageManagementController {
     @PostMapping("isWorkFlowCheck")
     public List<ProcessMark> isWorkFlowCheck(@RequestBody Map<String, Object> map) throws Exception{
         return finStageManagementService.isWorkFlowCheck(map);
+    }
+    /**
+     * 根据产品代码得到起息日和到期日 add by yujiaping 2020-11-10
+     * <功能详细描述>
+     * @param finprodId
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @GetMapping("getVdateAndMdate")
+    public FinStageManagementDto getVdateAndMdate(String finprodId){
+        return finStageManagementService.getVdateAndMdate(finprodId);
     }
     
 }

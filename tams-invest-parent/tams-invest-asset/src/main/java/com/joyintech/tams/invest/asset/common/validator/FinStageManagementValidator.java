@@ -16,11 +16,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.invest.asset.common.dto.FinStageManagementDto;
+import com.joyintech.tams.invest.asset.common.service.FinStageManagementService;
 
 /**
  *  期次管理业务验证
@@ -33,10 +36,14 @@ import com.joyintech.tams.invest.asset.common.dto.FinStageManagementDto;
 @Component
 public class FinStageManagementValidator implements BeanValidator{
 
+	@Autowired
+	private FinStageManagementService finStageManagementService;
+	 
     @Override
     public List<ValidMessage> valid(Object value) {
         List<ValidMessage> resultList = new ArrayList<ValidMessage>();
         FinStageManagementDto dto = (FinStageManagementDto)value;
+        String finprodId = dto.getFinprodId();
         Set<String> set = new HashSet<String>();
         dto.getSelectedItem().forEach(item ->{
             if(null==item.getVdate()){
@@ -47,6 +54,17 @@ public class FinStageManagementValidator implements BeanValidator{
                 resultList.add(new ValidMessage("mdate",
                     getMessage("COMMON_E_0057", getMessage("FinStageManagement.mdate"))));
             }
+            /*增加校验 计划类利率型期次管理子计划期次信息的起息日、到期日都必须大于母计划的起息日 add by yujiaping 2020-11-10 start*/
+            if(null != item.getVdate() && null != item.getMdate()) {
+            FinStageManagementDto vmdto = finStageManagementService.getVdateAndMdate(finprodId);
+            if(DateUtil.compareDate(item.getVdate(),vmdto.getVdate()) <= 0){
+            	resultList.add(new ValidMessage("子计划期次信息的起息日必须大于母计划的起息日！"));
+            }
+            if(DateUtil.compareDate(item.getMdate(),vmdto.getVdate()) <= 0){
+            	resultList.add(new ValidMessage("子计划期次信息的到期日必须大于母计划的起息日！"));
+            }
+            }
+            /*增加校验 计划类利率型期次管理子计划期次信息的起息日、到期日都必须大于母计划的起息日 add by yujiaping 2020-11-10 end*/
             if(null==item.getIssueAmt()){
                 resultList.add(new ValidMessage("issueAmt",
                     getMessage("COMMON_E_0057", getMessage("FinStageManagement.issueAmt"))));
