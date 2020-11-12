@@ -15,6 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +63,10 @@ public class FinProductFeePay002Validator implements BeanValidator {
 
     @Autowired
     MstWorkflowCommonService mstWorkflowCommonService;
-     
+
+    @Autowired
+    private BussCommonMapperDelegateService bussCommonMapperDelegateService;
+
     /**
      * {@inheritDoc}
      */
@@ -80,6 +86,13 @@ public class FinProductFeePay002Validator implements BeanValidator {
             validList.add(new ValidMessage(this.getMessage("COMMON_E_0012", finProductFeePay002Dto.getFinprodId()+":"+finProductFeePay002Dto.getFeeName())));
         }
 
+        if(bussCommonMapperDelegateService != null && StringUtil.isNotEmpty(finProductFeePay002Dto.getFinprodId())) {
+            FinProduct finProduct = bussCommonMapperDelegateService.selectBySinglePrimaryKey(FinProductMapper.class, finProductFeePay002Dto.getFinprodId(), FinProduct.class);
+            if(finProduct != null && finProduct.getVdate() != null && (DateUtil.compareDate(finProductFeePay002Dto.getPayDate(), finProduct.getVdate())<0)){
+                validList.add(new ValidMessage("payDate",getMessage("BUSS_COM_E_0004",
+                        getMessage("FinProductFeePay002.payDate"),"起息日")));
+            }
+        }
 
         // 划款指令check
         if (bussTrdTransferOrderService != null) {
