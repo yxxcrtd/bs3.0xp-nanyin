@@ -1249,4 +1249,31 @@
             and tradeT01.PORTFOLIO_ID is not null
     </select>
 
+    <!--add by mashukai 20201111 新增查询通道划款交易 TISHKBS-1038 start -->
+    <select id="selectchlTrade" resultType="java.lang.Integer">
+    with temp as (
+      SELECT distinct T.CHL_ID
+      FROM TRD_PRODUCT_DEAL T
+      WHERE T.IS_CANCEL = 'N'
+      AND T.TRADE_STATUS IN ( '01' , '03' )
+      AND T.PS = 'HK09'
+      AND T.CHL_ID = #{chlId,jdbcType=VARCHAR}
+    )
+    select
+      case when
+        t.PAY_TYPE = '01' Then 1
+      when t.PAY_TYPE = '02' and t.CHL_ID is not null then 1
+      else 0 end as count
+      from (
+      SELECT distinct FPA.PAY_TYPE,FP.FINPROD_ID,Tp.CHL_ID
+      FROM  FIN_PRODUCT FP
+      LEFT JOIN FIN_PRODUCT_ADD FPA
+      ON FPA.FINPROD_ID = FP.FINPROD_ID
+      left join temp tp on Tp.CHL_ID = FP.FINPROD_ID
+      WHERE
+      FP.IS_CHL = 'Y'
+      and FP.FINPROD_ID = #{chlId,jdbcType=VARCHAR}
+      )t
+    </select>
+    <!--add by mashukai 20201111 新增查询通道划款交易 TISHKBS-1038 end -->
 </mapper>

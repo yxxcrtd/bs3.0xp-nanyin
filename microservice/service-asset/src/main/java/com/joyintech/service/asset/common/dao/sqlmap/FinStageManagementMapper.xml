@@ -82,6 +82,18 @@ WHERE
 	T7.CASH_ID
 	order by T1.VDATE asc,T6.SALE_PERIOD asc
 </select>
+<!-- 根据产品代码得到起息日和到期日add by yujiaping 2020-11-10 -->
+	<select id="getVdateAndMdate" resultType="com.joyintech.service.asset.common.dto.FinStageManagementDto">
+		SELECT
+			VDATE vdate,
+			MDATE mdate,
+			CALENDAR_ID calendarId
+		FROM
+			FIN_PRODUCT
+		<where>
+			FINPROD_ID = #{finprodId}
+		</where>
+	</select>
 <sql id="getAllFinprodIds">
 select FINPROD_ID from FIN_PRODUCT where P_FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
 </sql>

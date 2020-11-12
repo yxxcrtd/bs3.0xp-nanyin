@@ -241,7 +241,14 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
                 认购确认_申购确认_赎回确认_除权登记_红利再投.contains(baseTradeDto.getTrdProductDeal().getPs())&&
                         DictCodeList.收益类型_货币型.getValue().equals(profitType)&& DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(baseTradeDto.getTrdProductDeal().getFinprodType2())){
             //查询划款指令详细信息
-            List<BussTrdTransferOrderBase> bttob = bussSettleOrderCommService.selectOrdersByBizCode(baseTradeDto.getTrdProductDeal().getbTradeId());
+            /*----------------------TISHKBS-1583 计划类净值型存续期交易撤销报错,前置交易编号为空时取交易编号去掉R modify by msk start--------------------*/
+            List<BussTrdTransferOrderBase> bttob;
+            if(StringUtil.isNotEmpty(baseTradeDto.getTrdProductDeal().getbTradeId())){
+                bttob = bussSettleOrderCommService.selectOrdersByBizCode(baseTradeDto.getTrdProductDeal().getbTradeId());
+            }else{
+                bttob = bussSettleOrderCommService.selectOrdersByBizCode(baseTradeDto.getTrdProductDeal().getTradeId().substring(0,(baseTradeDto.getTrdProductDeal().getTradeId().length()-1)));
+            }
+            /*----------------------TISHKBS-1583 计划类净值型存续期交易撤销报错,前置交易编号为空时取交易编号去掉R modify by msk end--------------------*/
             List<BussTrdTransferOrderDto> reslist = new ArrayList<BussTrdTransferOrderDto>();
             if (bttob != null && bttob.size() > 0) {
                 List<BussTrdTransferOrderDto> bttodList = new ArrayList<>();

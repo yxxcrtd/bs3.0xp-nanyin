@@ -474,4 +474,17 @@ public class FinStageManagementService extends CommonExportService<FinStageManag
         map.put("pageId","FinStageManagement");
         return restTemplate.postForList(ServiceApplication.ASSET_SERVICE_NAME + "/FinStageManagement/isWorkFlowCheck",map, ProcessMark.class);
     }
+    /**
+     * 根据产品代码得到起息日和到期日 add by yujiaping 2020-11-10
+     * <功能详细描述>
+     * @param finprodId String
+     * @return FinFloatMgtExpQuotation001Dto
+     * @see
+     * @since 1.0
+     */
+    public FinStageManagementDto getVdateAndMdate(String finprodId){
+        return simpleRestTemplate.getForObject(
+                ServiceApplication.ASSET_SERVICE_NAME + "/FinStageManagement/getVdateAndMdate?finprodId=" +finprodId, 
+                FinStageManagementDto.class);
+    }
 }

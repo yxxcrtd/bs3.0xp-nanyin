@@ -204,10 +204,13 @@
 											<label class="layui-form-label form-label-wrap"
 												   data-th-text="#{FinPlanNetAsset002.issueAmt}">发行金额</label>
 											<div class="layui-input-inline input-inline">
+												<!--add by mashukai FIX BUG TISHKBS-1465发行金额设为必填 20201110 start -->
 												<input type="text" data-fixtype="2" unit="1"
 													   class="layui-input form-input text-money" id="issueAmt"
 													   name="issueAmt" data-th-value="${entity?.issueAmt}"
-													   data-moneymemory="" data-th-data-textrange="2">
+													   data-moneymemory="" data-th-data-textrange="2"
+													   required="required">
+												<!--add by mashukai FIX BUG TISHKBS-1465发行金额设为必填 20201110 end -->
 												<span class="input-right-show">元</span>
 											</div>
 										</div>
