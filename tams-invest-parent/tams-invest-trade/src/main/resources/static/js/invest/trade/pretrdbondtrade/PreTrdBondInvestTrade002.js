@@ -120,7 +120,7 @@
             for(var i=0;i<table.getAllRows().length;i++){
                 if("T01"==$("#ps").val()){
                     if(dataRows[i].fpriceAmt && dataRows[i].bussTrdAvailableCashQueryavalibleCash){
-                        if(dataRows[i].fpriceAmt > dataRows[i].bussTrdAvailableCashQueryavalibleCash){
+                        if(parseFloat(dataRows[i].fpriceAmt) > parseFloat(dataRows[i].bussTrdAvailableCashQueryavalibleCash)){
                             Joyin.error("交易方向为买入时，全价总额不得大于组合剩余可用现金！");
                             return;
                         }

@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -374,6 +375,9 @@ public class FinNetProductDurationService extends BaseService<FinNetProductDurat
 		if(StringUtil.isNotEmpty(map.get("cDate"))&&Long.class.isAssignableFrom(map.get("cDate").getClass())) {
 			Date date = new Date(Long.valueOf(map.get("cDate").toString()));
 			map.put("cDate", date);
+		}
+		if(StringUtil.isNotEmpty(map.get("confirmDate"))) {
+			map.put("confirmDate", DateUtil.parse(map.get("confirmDate").toString()));
 		}
 		List<FinNetProductDurationDto> list = finNetProductDurationMapper.getPeriodInfoList(map);
 		//通过期次结束日，产品代码，Breach获取净值日，单位净值
