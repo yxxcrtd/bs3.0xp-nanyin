@@ -413,7 +413,7 @@
 			AND pm.WORKFLOW_ID = tempHis.WORKFLOW_ID
 			WHERE pm.status   IN ('A','U','P')
 			AND pm.PAGE_ID    IN ( 'FinProductBuild002' , 'FinNetValueProductBuild002' )
-			and rep.REP_FINPROD_INS_ID = pm.BUSINESS_DATA_PK2
+			and rep.REP_FINPROD_INS_ID = TO_CHAR(SUBSTR(SUBSTR(pm.BUSINESS_DATA,instr(pm.BUSINESS_DATA,'"repFinprodInsId":"')+19),1,instr(SUBSTR(pm.BUSINESS_DATA,instr(pm.BUSINESS_DATA,'"repFinprodInsId":"')+19),'"',1)-1))
 		)
 	<!--add by mashukai FIX BUG TISHKBS-1569 20201112 end  -->
         <if test="search != null and search != ''">
