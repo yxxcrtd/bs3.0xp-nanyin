@@ -367,7 +367,10 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
             {"募集理财资金收到的现金","筹资活动现金流入小计",
             	"F16,C1,P,TRADEAMT|"
             	+ "F16,C2,P,TRADEAMT|"
-            	+ "F16,C3,P,TRADEAMT","ORI"},
+            	+ "F16,C3,P,TRADEAMT|"
+                + "F22,C1,P,TRADEAMT|"
+                + "F22,C2,P,TRADEAMT|"
+                + "F22,C3,P,TRADEAMT","ORI"},
             {"借款收到的现金","筹资活动现金流入小计",
             		"F08,T01,P,TRADEAMT","ORI"},
             {"收到的其他与筹资活动有关的现金","筹资活动现金流入小计","","ORI"},
