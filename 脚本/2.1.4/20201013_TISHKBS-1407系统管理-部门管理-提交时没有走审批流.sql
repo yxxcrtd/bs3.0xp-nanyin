@@ -1,1 +1,1 @@
-UPDATE  SYS_PAGE set   IS_NEED_WORKFLOW = '01' where PAGE_ID = 'SysDepartment002'
+UPDATE  SYS_PAGE set   IS_NEED_WORKFLOW = '01' where PAGE_ID = 'SysDepartment002';
