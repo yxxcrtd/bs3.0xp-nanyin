@@ -15,6 +15,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.joyintech.framework.util.DateUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -63,6 +64,8 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 @PageId(value = "FinProductExpire001")
 @RequestMapping("/invest/product/productduration/expire/FinProductExpire001")
 public class FinProductExpire001Controller extends BaseController {
+
+
 
     /**
      * {@linkplain}
@@ -173,6 +176,8 @@ public class FinProductExpire001Controller extends BaseController {
 		if (!DictCodeListExt1.有效状态_有效.getValue().equals(finProductExpire001Dto.getEffectStatus())) {
 			errorList.add(new ValidMessage("只有有效的交易才能撤销!"));
 		}
+		
+
 		if (StringUtil.isEmptyList(errorList)) {
 			if (StringUtil.equalsIgnoreCase(BussinessConstant.REVOKE,
 					finProductExpire001Dto.getOperateType())) {

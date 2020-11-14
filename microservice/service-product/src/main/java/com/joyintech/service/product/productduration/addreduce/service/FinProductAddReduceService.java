@@ -6,9 +6,11 @@ package com.joyintech.service.product.productduration.addreduce.service;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.common.base.dao.PaTrdFinProductDealTotalMapper;
 import com.joyintech.tams.common.base.dao.TrdFinProductDealTotalMapper;
 
@@ -119,6 +121,18 @@ public class FinProductAddReduceService extends BaseService<FinProductAddReduceD
         //支持分层产品付息 mod by menghongwei 20190610 start
         //List<ReduceInfoDto> result = finProductAddReduceMapper.findReduceInfoData(param);
         List<ReduceInfoDto> result = finProductAddReduceMapper.findReduceInfoDataNew(param);
+        if(result!=null && result.size()>0){
+            //部分赎回：判断赎回/到期日=付息日 且 赎回/到期日！=到期日 时应付客户收益=0
+            Map<String, Object> tempparams = new HashMap<>();
+            tempparams.put("finprodId", param.get("finprodId"));
+            tempparams.put("tradeDate", param.get("tradeDate"));
+            int count = finProductAddReduceMapper.getRePayAndIntpFlag(tempparams);
+            if(count>0){
+                result.get(0).setRePayAndIntpFlag(true);
+            }else{
+                result.get(0).setRePayAndIntpFlag(false);
+            }
+        }
         //支持分层产品付息 mod by menghongwei 20190610 end
         result.forEach(reduceInfoDto -> {
             reduceInfoDto.setActInterest(reduceInfoDto.getInterest());

@@ -1630,11 +1630,13 @@ var table;
                         if (pageModel != PAGE_MODEL_REFERENCE) {
                             $('#integrateTradeAmt').val(0).prop("disabled", true).trigger("change");
                             $('#ownTradeAmt').val($("#tradeAmt").val()).prop("disabled", true).trigger("change");
+                            $('#settleSpeed').val(0).prop("disabled", true);
                         }
                     } else {
                         if (pageModel != PAGE_MODEL_REFERENCE) {
                             $('#integrateTradeAmt').prop("disabled", false).trigger("change");
                             $('#ownTradeAmt').prop("disabled", false);
+                            $('#settleSpeed').prop("disabled", false);
                         }
                     }
                 }

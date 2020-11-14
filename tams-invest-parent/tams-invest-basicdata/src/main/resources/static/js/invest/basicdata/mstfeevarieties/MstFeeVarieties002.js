@@ -176,7 +176,7 @@
         			$('#feeName').val("").attr("disabled",false).trigger('change');
         		}
         		$('#chargeType').val("01").attr("disabled",true).trigger('change');
-        		$('#basicBill').val("03").attr("disabled",true).trigger('change');
+        		//$('#basicBill').val("03").attr("disabled",true).trigger('change');
         		$('#basis').val("A/365").attr("disabled",true).trigger('change');
         	}
         	//浮动差额中收时

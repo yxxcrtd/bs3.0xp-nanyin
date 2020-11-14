@@ -17,6 +17,8 @@ import java.util.Date;
 import java.util.List;
 //import java.util.Map;
 
+import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -47,6 +49,10 @@ public class FinFloatMgtExpQuotationValidator implements BeanValidator{
      */
     @Autowired
     private FinFloatMgtExpQuotation001Service finFloatMgtExpQuotation001Service;
+
+    @Autowired
+    private MstWorkflowCommonService mstWorkflowCommonService;
+
     /**
      * 判断交易日历共通
      */
@@ -186,6 +192,15 @@ public class FinFloatMgtExpQuotationValidator implements BeanValidator{
                                 getMessage("FinFloatMgtExpQuotation001.effDate")+":"+DateUtil.format(effDate),
                                 "平台日:"+DateUtil.getSysDate())));
                         }
+
+                        WflValidInputParameter inputParameter = new WflValidInputParameter();
+                        inputParameter.setBusinessDataPk1(dto.getFinprodId());
+                        inputParameter.setBusinessDataPk2(DateUtil.format(effDate));
+                        inputParameter.setPageId("FinFloatMgtExpQuotation002");
+                        if (null != mstWorkflowCommonService && mstWorkflowCommonService.isInWflProcess(inputParameter)) {
+                            errorList.add(new ValidMessage(this.getMessage("COMMON_E_0012",dto.getFinprodId())));
+                        }
+
                     }
                 }
             }

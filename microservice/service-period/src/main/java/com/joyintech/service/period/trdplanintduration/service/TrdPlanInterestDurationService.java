@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -66,12 +67,34 @@ public class TrdPlanInterestDurationService extends BaseService {
     public Page<TrdPlanInterestDurationDto> findPage(int page, int length, Map<String, Object> param) {
         setParams(param);
         setParamsForSearch(param);
-        return queryForPageForSelectReturn(page, length, () -> trdPlanInterestDurationMapper.findPage(param));
+        String plateDate = platformDateImpl.getSysDateStr();
+        param.put("PLATEFORM_DATE", plateDate);
+        Page<TrdPlanInterestDurationDto> pageR = new Page<>();
+        List<TrdPlanInterestDurationDto> search =  trdPlanInterestDurationMapper.findPage(param);
+        List<TrdPlanInterestDurationDto> root = new ArrayList<TrdPlanInterestDurationDto>();
+        for(int i=0;i<length;i++) {
+        	int index = (page-1)*length+i;
+        	if(index<search.size()) {
+        		root.add(search.get(index));
+        	}
+        }
+        int total = search.size()/length;
+        if(search.size()%length>0) {
+        	total++;
+        }
+        pageR.setPage(page);
+        pageR.setRecords(search.size());
+        pageR.setTotal(total);
+        pageR.setRoot(root);
+        //return queryForPageForSelectReturn(page, length, () -> trdPlanInterestDurationMapper.findPage(param));
+        return pageR;
     }
 
     public List<TrdPlanInterestDurationDto> selectAllData(Map<String, Object> param) {
         setParams(param);
         setParamsForSearch(param);
+        String plateDate = platformDateImpl.getSysDateStr();
+        param.put("PLATEFORM_DATE", plateDate);  
         return trdPlanInterestDurationMapper.findPage(param);
     }
 

@@ -2360,9 +2360,10 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 // || StringUtil.equals(DictCodeList.息票品种_零息.getValue(), secInfoModelDto.getBondsType())) {
                 // add by 张年 20190909 start
                 // 行权-回售 行权-赎回 交割日不加1
-                if (!StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue())
-                    && !StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_赎回.getValue())) {
-                    tempSettleDate = DateUtil.addDay(tempSettleDate, 1);
+                //sjj modify 20201111 与需求确认行权-回售同卖出逻辑
+//                if (!StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue()) &&
+                  if(!StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_赎回.getValue())) {
+                        tempSettleDate = DateUtil.addDay(tempSettleDate, 1);
                 }
                 // add by 张年 20190909 end
                 // }
@@ -3425,5 +3426,19 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 String.class);
     }
 
-
+	/* add by msk 新增查询通道划款交易 TISHKBS-1038  20201111 start */
+    /**
+     * 查找通道划款交易
+     *
+     * @param chlId 交易编号
+     * @return 通道划款交易信息
+     * @see
+     * @since 1.0
+     */
+    public int selectchlTrade(String chlId) {
+        return restTemplate.postForObject(
+                ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/selectchlTrade/" + chlId, null,
+                Integer.class);
+    }
+    /* add by msk 新增查询通道划款交易 TISHKBS-1038  20201111 end */
 }

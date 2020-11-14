@@ -324,7 +324,9 @@ public class RepoNDealDrawBookDetailProcessService {
                             glb_subjectNum, glb_subjectAmt, DateUtil.addDay(happenDateNow, 1), calType,
                             glb_subjectProfit)[1];
                     // 变量.应计利息 = 返回值.发生应计利息
-                    glb_subjectInt = calRepo;
+                    // update by caiqun 20201102 合并代码TISHKBS-1527
+                    //glb_subjectInt = calRepo;
+                    glb_subjectInt=ArithmeticUtil.round(calRepo, NumberEnum.MONEY);
                 }
                 else {
                     // 变量.应计利息 = 0

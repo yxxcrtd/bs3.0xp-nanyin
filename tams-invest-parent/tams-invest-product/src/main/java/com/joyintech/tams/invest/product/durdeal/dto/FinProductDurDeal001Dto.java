@@ -868,4 +868,9 @@ public class FinProductDurDeal001Dto extends BaseEntity {
     public void setPermitFlag(String permitFlag) {
         this.permitFlag = permitFlag;
     }
+
+    public String getCashDateStr() {
+        return DateUtil.format(cashDate);
+    }
+
 }

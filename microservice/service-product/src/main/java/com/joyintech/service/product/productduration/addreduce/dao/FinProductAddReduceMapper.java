@@ -58,4 +58,6 @@ public interface FinProductAddReduceMapper {
     List<SelectOptionDto> getProdId01(Map<String, Object> param);
     
     List<ReduceInfoDto> findReduceInfoDataNew(Map<String, Object> param);
+
+    Integer getRePayAndIntpFlag(Map<String, Object> tempparams);
 }

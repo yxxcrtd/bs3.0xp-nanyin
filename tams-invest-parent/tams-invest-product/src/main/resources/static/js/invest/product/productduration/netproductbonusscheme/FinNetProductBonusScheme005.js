@@ -7,7 +7,7 @@
 
     //初始化
     var init = function () {
-    	
+    	debugger;
         
         if(pageModel == PAGE_MODEL_NEW){
         	//确认日默认除权日+1天
@@ -273,6 +273,11 @@
         $('#vluRefDate').change(function() {
         	vluRefDateChange();
         });
+
+        if( $('#tdyUnitValue')  && $('#bonusShareAmt') ){
+            bonusShareNumChange();
+        }
+
     });
 }());
 

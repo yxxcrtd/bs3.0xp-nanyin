@@ -204,7 +204,7 @@
             ava.PORTFOLIO_ID portfolioId,
             fp.FINPROD_MARKET_ID bondCode,
             fp.FINPROD_ID finProdId,
-            fp.FINPROD_NAME bondName,
+            fp.FINPROD_ABBR bondName,
             ava.TRADE_PLACE tradePlace,
             ava.SEC_ACCT_ID secAcctId,
             ava.CCY ccy,

@@ -6,7 +6,7 @@
 			BOK_DEAL_ACCOUNTING.BOOKSET_ID booksetId,
 			BOK_DEAL_ACCOUNTING.BUSI_NO busiNo,
 			BOK_DEAL_ACCOUNTING.BUSI_TABLE busiTable,							
-			TRD_PRODUCT_DEAL.trade_id  tradeId,																
+			TRD_PRODUCT_DEAL.trade_id  tradeId,
 			PTL_TRADE.busi_table plBusiTable,
 			PTL_TRADE.PORTFOLIO_ID portfolioId,
 			TRD_FIN_PRODUCT_DEAL_TOTAL.totle_trade_id totleTradeId
@@ -57,6 +57,12 @@
 		    AND BOK_DEAL_ACCOUNTING_DETAIL.busi_table = BOK_DEAL_ACCOUNTING.busi_table
 		 WHERE 
 			FIN_PRODUCT.profit_type = #{PROFIT_TYPE_03}
+			<if test="productIdList != null and productIdList.size > 0">
+				AND FIN_PRODUCT.finprod_id IN
+				<foreach collection="productIdList" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
 
 </select>
 <select id="selectProdDivReinInfo" resultType="com.joyintech.tams.invest.batch.mproddivreindealgen.dto.MProdDivReinDealGenReaderResult">
@@ -105,6 +111,12 @@
     AND (BOK_POSITION_PRD.tdy_unpaid_intincexp <![CDATA[ >]]> 0 OR (
     PRD_VAL_PARAM.DEAL_LOSS_MODE = #{LOSS_HANDLE_MODE_01} AND BOK_POSITION_PRD.tdy_unpaid_intincexp <![CDATA[<]]> 0
     ))
+	<if test="productIdList != null and productIdList.size > 0">
+		AND FIN_PRODUCT.finprod_id IN
+		<foreach collection="productIdList" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</if>
 </select>
 	<!-- 通过交易id与组合代码删除组合持仓流水表信息 -->
 	<delete id="deletePtlSecPositionFlow">

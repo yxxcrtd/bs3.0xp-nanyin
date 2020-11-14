@@ -281,6 +281,7 @@
      * 交易场所、回购类型、交易方向改变时
      */
     var repoTypeOnChange = function (isInit) {
+    
         var repoType = $("#repoType").val();
         // var ps = $("#ps").val();
         //深交所 协议 期限品种非必填
@@ -301,7 +302,7 @@
         
         // 1) 当回购类型为质押式协议回购时，期限品种隐藏
         if (repoType == TARGET_BACK_TYPE_H01) {
-            if (!isInit) {
+            if (!isInit && !isTodoList) {
                 $("#termTypeReback").val("");
             }
             $('#termTypeReback').prop('disabled', true);
@@ -327,7 +328,7 @@
         // 买断式回购从回购资产交易画面移除了，本处不作判断
         // 2) 当回购类型为质押式竞价回购和买断式回购时，期限品种为文本框，文本框支持输入联想，期限品种枚举值为：
         {
-            if (!isInit) {
+            if (!isInit && !isTodoList) {
                 $("#termTypeReback").val("");
                 $("#term").val("").trigger("change");
             }
@@ -987,6 +988,22 @@
             if(isSectId&&pageModel==PAGE_MODEL_NEW){
                 $("#secAcctId").prop("disabled", true);
             }
+            $('#trdInvestPersonInfo_counterId').on("change",function(){
+                var counterId = $('#trdInvestPersonInfo_counterId');
+                if (counterId.select2('data') && counterId.select2('data')[0]) {
+                    var 交易对手 = counterId.select2('data')[0].object;
+                    // 【债券投资委托】交易对手选择内部交易对手时，清算速度为T+0不可改
+                    if (交易对手 == 'N') {
+                        if (pageModel != PAGE_MODEL_REFERENCE) {
+                            $('#settleSpeed').val(01).prop("disabled", true).trigger("change");
+                        }
+                    } else {
+                        if (pageModel != PAGE_MODEL_REFERENCE) {
+                            $('#settleSpeed').prop("disabled", false).trigger("change");
+                        }
+                    }
+                }
+            });
         }
     };
 
@@ -1949,6 +1966,12 @@
         $('#settleSpeedStr').change(function(){
                 settleSpeedChangeAction();
 		});
+
+		$('#calendarId').on("change", function () {
+           // 日历更新重新算 起息日
+            settleSpeedChangeAction();
+        });
+
 		// add by wangguoxian 费用设置 20190807 start
         // 交易日，期限品种改变时
         $("#tradeDate").change(function(){
@@ -1968,7 +1991,6 @@
         });
 
         // add by wangguoxian 费用设置 20190807 end
-
 
         // 银行间成交编号(当交易场所选择银行间时，银行间成交编号可编辑)
         $('#fTradeId').change(function(){

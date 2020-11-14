@@ -107,8 +107,10 @@ public class FinNetProductBonusScheme004Controller extends BaseController {
             if(StringUtil.equals(finNetProductBonusSchemeInfo.getBonuScalcFlag(),DictCodeList.分红方案_按单位分红.getValue())
                 && finNetProductBonusSchemeInfo.getUnitBonusVlu() != null
                 && finNetProductBonusSchemeInfo.getTdyUnitValue() != null){
+
                 finNetProductBonusSchemeInfo.setNetvalue(finNetProductBonusSchemeInfo.getTdyUnitValue().subtract(
                     finNetProductBonusSchemeInfo.getUnitBonusVlu()));
+
             }
             else{
                 Map<String,Object> map = new HashMap<>();
@@ -124,6 +126,24 @@ public class FinNetProductBonusScheme004Controller extends BaseController {
                     }
                 }
             }
+
+            ProcessMark processMark;
+            FinNetProductBonusSchemeDto temp1 =  new FinNetProductBonusSchemeDto();
+
+            try {
+                temp1.setFinprodId(finNetProductBonusSchemeInfo.getFinprodId());
+                temp1.setDealType("bonusScheRegister");
+                temp1.setTradeId(bonusPlanId);
+                processMark = WorkflowContext.getProcessMarkService().getParameterByAnnotation(temp1);
+                processMark.setPageId("FinNetProductBonusScheme002");
+                temp1 = finNetProductBonusSchemeService.getBussinessEntityByPk(processMark);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            finNetProductBonusSchemeInfo.setTdyUnitValue(temp1.getTdyUnitValue());
+            finNetProductBonusSchemeInfo.setNetvalue(temp1.getNetvalue());
+
+
             model.addAttribute("entity", finNetProductBonusSchemeInfo);
             Map<String,Object> param0 = new HashMap<String,Object>();
             param0.put("finprodId", finNetProductBonusSchemeInfo.getFinprodId());

@@ -964,15 +964,22 @@ public class OwnerEquityChange001Service extends CommonExportService<OwnerEquity
             datedto = ownerEquityChange001Mapper.getDateInfo1(pageParam);
         }else{
             List<OwnerEquityChange001Dto> dateList = ownerEquityChange001Mapper.getDateInfo2(pageParam);
-            for(OwnerEquityChange001Dto item:dateList){
-                if(datedto.getValDate() == null || datedto.getValDate() == ""){
-                    datedto.setValDate(item.getValDate());
-                }else{
-                    if(datedto.getValDate().compareTo(item.getValDate()) > 0){
+            if(dateList.size()>0){
+                for(OwnerEquityChange001Dto item:dateList){
+                    if(datedto.getValDate() == null || datedto.getValDate() == ""){
                         datedto.setValDate(item.getValDate());
+                    }else{
+                        if(datedto.getValDate().compareTo(item.getValDate()) > 0){
+                            datedto.setValDate(item.getValDate());
+                        }
                     }
                 }
+            // add by caiqun 20201026 报表维度选择全账套，配置产品组时没有选择任何产品，datedto.setValDate取值为空下面格式日期会报错
+            // 改成为空时取平台日
+            }else{
+                datedto.setValDate(DateUtil.getSysDate());
             }
+
         }
         if(DictCodeListExt1.报表期限类型_日报.getValue().equals(reportTermType)){
             datedto.setValDate(DateUtil.format(DateUtil.addDate(DateUtil.parse(datedto.getValDate()), 0, 0, -1)));

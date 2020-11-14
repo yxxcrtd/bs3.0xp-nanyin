@@ -205,9 +205,10 @@ public class RiskUtil {
 		Map<String,String> expMap=new HashMap<>();
 		if(cond.indexOf(">")>-1||cond.indexOf(">=")>-1){
 			expMap=dealParamMinMax(fixParamList,exp,expMap,RiskUtil.MAX);
-		}
-		if(cond.indexOf("<")>-1||cond.indexOf("<=")>-1){
+		}else if(cond.indexOf("<")>-1||cond.indexOf("<=")>-1){
 			expMap=dealParamMinMax(fixParamList,exp,expMap,RiskUtil.MIN);
+		}else{
+			expMap=dealParamMinMax(fixParamList,exp,expMap,RiskUtil.MAX);
 		}
 		List<String> expArray=new ArrayList<String>();
 		for (Map.Entry<String, String> entry : expMap.entrySet()) {

@@ -474,7 +474,7 @@ var table;
             }
         }
     });
-    
+
     /**
      * 画面联动处理
      * 1.2交易市场
@@ -717,6 +717,7 @@ var table;
         }
     }
     // 一体化对应etliu end
+
 
     /**
      * 投资目的变化更新资产可用持仓
@@ -1737,7 +1738,18 @@ var table;
 	                        dealinfo.tradeDate = $("#tradeDate").val();
 	                        dealinfo.ps = $("#ps").val();
 	                        dealinfo.ccy = $("#ccy").val();
-	                        dealinfo.tradeAmt = tmpList[dealObj].fpriceAmt; // TODO 多组合有通道费
+	                        if (null!=$('#tradeMarket').val()&&($('#tradeMarket').val()==TRADE_PLACE_02||$('#tradeMarket').val()==TRADE_PLACE_03)) {
+                                if($("#tradeAmtAndFee").val()){
+                                    dealinfo.tradeAmt = tmpList[dealObj].tradeAmtAndFee;
+                                }
+                                else{
+                                    dealinfo.tradeAmt = tmpList[dealObj].fpriceAmt;
+                                }
+                            }
+                            else{
+                                dealinfo.tradeAmt = tmpList[dealObj].fpriceAmt;
+                            }
+//	                        dealinfo.tradeAmt = tmpList[dealObj].fpriceAmt; // TODO 多组合有通道费
 	                        dealinfo.portfolioId = tmpList[dealObj].portfolioId;
 	                        dealinfo.counterId = $("#trdInvestPersonInfo_counterId").val();
 	                        dealinfo.tradeMarket = $("#tradeMarket").val();
@@ -1809,7 +1821,23 @@ var table;
                     });
                 }
             }
-            
+
+            $('#trdInvestPersonInfo_counterId').on("change",function(){
+                var counterId = $('#trdInvestPersonInfo_counterId');
+                if (counterId.select2('data') && counterId.select2('data')[0]){
+                    var 交易对手 = counterId.select2('data')[0].object;
+                    // 【债券投资委托】交易对手选择内部交易对手时，清算速度为T+0不可改
+                    if (交易对手 == 'N') {
+                        if (pageModel != PAGE_MODEL_REFERENCE) {
+                            $('#settleSpeed').val("01").prop("disabled", true).trigger("change");
+                        }
+                    } else {
+                        if (pageModel != PAGE_MODEL_REFERENCE) {
+                            $('#settleSpeed').prop("disabled", false).trigger("change");
+                        }
+                    }
+                }
+            });
             // 触发画面联动处理
             // $("#tradeMarket").trigger("change");
             // $("#tradeMarketMode").trigger("change", true);

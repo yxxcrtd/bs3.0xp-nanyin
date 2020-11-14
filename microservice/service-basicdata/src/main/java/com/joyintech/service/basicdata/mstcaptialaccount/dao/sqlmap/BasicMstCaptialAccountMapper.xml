@@ -75,6 +75,9 @@
 		<where>
 			<if test="acctName != null and acctName != ''">
 				ACCT_NAME like concat('%',concat(#{acctName,jdbcType=VARCHAR},'%'))
+				/* 账户名称既可通过账户模糊查询也可通过账户名称模糊查询 add by yujiaping 2020-11-11 start*/
+				OR BUSI_ACCT_NO like concat('%',concat(#{acctName,jdbcType=VARCHAR},'%'))
+				/* 账户名称既可通过账户模糊查询也可通过账户名称模糊查询 add by yujiaping 2020-11-11 end*/
 			</if>
 		</where>
     </select>

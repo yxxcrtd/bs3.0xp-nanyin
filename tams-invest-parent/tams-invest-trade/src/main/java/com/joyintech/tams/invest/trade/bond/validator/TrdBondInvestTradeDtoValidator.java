@@ -423,6 +423,16 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
         	errorList.add(validMessage);
         }
 
+        //add by msk TISHKBS-1038 新增一次性划款通道交易前是否划款判断 start
+        if(!"".equals(inputDto.getChlId())&&inputDto.getChlId()!=null){
+            Integer count = trdBondInvestTrade002Service.selectchlTrade(inputDto.getChlId());
+            if(count <= 0){
+                ValidMessage validMessage = new ValidMessage(getMessage("通过一次性通道投资请先进行划款！",getMessage("invest.channelId")));
+                errorList.add(validMessage);
+            }
+        }
+        //add by msk TISHKBS-1038 新增一次性划款通道交易前是否划款判断 end
+
         // add by 裴家俊 2019-05-23--start----
         if(StringUtil.equals(inputDto.getOperateType(), "save") || StringUtil.equals(inputDto.getOperateType(), "submit")){
             if(inputDto.getTrdInvestPersonInfo() != null && StringUtil.isEmpty(inputDto.getTrdInvestPersonInfo().getCounterId()) && !StringUtil.equals(DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue(), inputDto.getWindtypeone())){

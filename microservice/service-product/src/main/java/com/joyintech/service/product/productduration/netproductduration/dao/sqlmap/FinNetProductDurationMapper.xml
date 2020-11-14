@@ -334,11 +334,19 @@
 		   where cinfo.finprod_id = #{finprodId,jdbcType=VARCHAR}
 		   and cinfo.cash_type_1 = #{cashType1,jdbcType=VARCHAR}
 		   and cinfo.cash_type_2 = #{cashType2,jdbcType=VARCHAR}
+		   AND NOT EXISTS (
+				SELECT 1 FROM TRD_PRODUCT_DEAL
+				WHERE cinfo.FINPROD_ID = TRD_PRODUCT_DEAL.FINPROD_ID
+				AND cplan.MDATE = TRD_PRODUCT_DEAL.MDATE
+				AND (TRD_PRODUCT_DEAL.PS = #{ps_C7} OR TRD_PRODUCT_DEAL.PS = #{ps_C9} OR TRD_PRODUCT_DEAL.PS = #{ps_C10})
+				AND TRD_PRODUCT_DEAL.IS_CANCEL = #{YES_OR_NO_N}
+				AND TRD_PRODUCT_DEAL.TRADE_STATUS = #{TRADE_STATUS01}
+			)
 		   <!-- 增加当前付息结束日必须不大于平台日判断 ,并且当天可以多次分红 modify by wm start 2019-06-19 -->
 		   <!--  and (cplan.mdate > nvl(f.trade_date,cplan.vdate) or crule.pay_cycle in (#{payCycle07},#{payCycle09}))-->
 		   <if test="dealType == PS_C9">
 		   	and ((cplan.mdate > nvl(f.trade_date,cplan.vdate) and  cplan.mdate  <![CDATA[<= ]]> to_date(#{PlatformDay,jdbcType=DATE},'yyyy-MM-dd')) 
-		   	or(cplan.mdate =  NVL(f.trade_date,cplan.vdate) and tot.SETTLE_DATE = to_date(#{PlatformDay,jdbcType=DATE},'yyyy-MM-dd'))
+		   	or (cplan.mdate =  NVL(f.trade_date,cplan.vdate) and tot.SETTLE_DATE = to_date(#{PlatformDay,jdbcType=DATE},'yyyy-MM-dd'))
 		   	or  crule.pay_cycle in (#{payCycle07},#{payCycle09}))<!-- fixed BS-1113 modify by zxp start 2020-07-12 -->
 			   <!--  TISHKBS-1290 货币型产品现金分红：存续期交易时进行产品现金分红交易，未正确带出计息结束日 -->
             </if>
@@ -673,7 +681,8 @@
 			    left join ptl_sec_position ptl ON fin_trade_product.finprod_id = ptl.finprod_id
 	           		AND fin_trade_product.branch = ptl.branch
 	        	left join FIN_PRODUCT ON FIN_PRODUCT.FINPROD_ID = FIN_TRADE_PRODUCT.FINPROD_ID 
-	        WHERE FIN_PRODUCT.p_finprod_id = #{finprodId,jdbcType=VARCHAR} AND ptl.cdate = #{cDate,jdbcType=DATE} AND ptl.amount > 0 
+	        WHERE FIN_PRODUCT.p_finprod_id = #{finprodId,jdbcType=VARCHAR} AND ptl.cdate = #{cDate,jdbcType=DATE}
+	          AND ptl.amount > 0 AND #{confirmDate,jdbcType=DATE} > fin_trade_product.vdate
 		)ORDER BY  M_DATE ASC 
 		
 	</select>

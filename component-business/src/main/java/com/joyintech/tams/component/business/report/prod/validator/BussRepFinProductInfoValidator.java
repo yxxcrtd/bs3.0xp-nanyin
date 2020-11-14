@@ -769,7 +769,14 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
         if (StringUtil.isEmpty(dto.getRepInvestFeeRate())) {
             resultList.add(new ValidMessage("repInvestFeeRate", getMessage("BUSS_COM_E_0038",
                     getMessage("ProductReportRegister001.repInvestFeeRate"))));
-        } 
+        }
+
+        // 是否为结构化(分级)产品
+        if(StringUtil.isEmpty(dto.getRepIsConstracte())){
+            resultList.add(new ValidMessage("repIsConstracte","请输入是否为结构化(分级)产品"));
+        }
+
+
         return resultList;
     }
 }

@@ -959,6 +959,246 @@
         </set>
         where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
     </update>
+
+    <update id="updateByRepFinprodInsId" parameterType="com.joyintech.tams.common.base.entity.RepProdDeclare" >
+        update REP_PROD_DECLARE
+        <set >
+            <if test="repFinprodName != null" >
+                REP_FINPROD_NAME = #{repFinprodName,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinprodRegId != null" >
+                REP_FINPROD_REG_ID = #{repFinprodRegId,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinprodId != null" >
+                REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinprodBrand != null" >
+                REP_FINPROD_BRAND = #{repFinprodBrand,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinprodStage != null" >
+                REP_FINPROD_STAGE = #{repFinprodStage,jdbcType=DECIMAL},
+            </if>
+            <if test="repIssuePartyId != null" >
+                REP_ISSUE_PARTY_ID = #{repIssuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="repApproverId != null" >
+                REP_APPROVER_ID = #{repApproverId,jdbcType=VARCHAR},
+            </if>
+            <if test="repApproverName != null" >
+                REP_APPROVER_NAME = #{repApproverName,jdbcType=VARCHAR},
+            </if>
+            <if test="repDesignerId != null" >
+                REP_DESIGNER_ID = #{repDesignerId,jdbcType=VARCHAR},
+            </if>
+            <if test="repDesignerName != null" >
+                REP_DESIGNER_NAME = #{repDesignerName,jdbcType=VARCHAR},
+            </if>
+            <if test="repManagerId != null" >
+                REP_MANAGER_ID = #{repManagerId,jdbcType=VARCHAR},
+            </if>
+            <if test="repManagerName != null" >
+                REP_MANAGER_NAME = #{repManagerName,jdbcType=VARCHAR},
+            </if>
+            <if test="repLiaisonName != null" >
+                REP_LIAISON_NAME = #{repLiaisonName,jdbcType=VARCHAR},
+            </if>
+            <if test="repLiaisonTel != null" >
+                REP_LIAISON_TEL = #{repLiaisonTel,jdbcType=VARCHAR},
+            </if>
+            <if test="repLiaisonMobile != null" >
+                REP_LIAISON_MOBILE = #{repLiaisonMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="repLiaisonEmail != null" >
+                REP_LIAISON_EMAIL = #{repLiaisonEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="repProfitType != null" >
+                REP_PROFIT_TYPE = #{repProfitType,jdbcType=VARCHAR},
+            </if>
+            <if test="repTerm != null" >
+                REP_TERM = #{repTerm,jdbcType=VARCHAR},
+            </if>
+            <if test="repInvestorType != null" >
+                REP_INVESTOR_TYPE = #{repInvestorType,jdbcType=VARCHAR},
+            </if>
+            <if test="repInvestArea != null" >
+                REP_INVEST_AREA = #{repInvestArea,jdbcType=VARCHAR},
+            </if>
+            <if test="repInvestCountry != null" >
+                REP_INVEST_COUNTRY = #{repInvestCountry,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinanSerModel != null" >
+                REP_FINAN_SER_MODEL = #{repFinanSerModel,jdbcType=VARCHAR},
+            </if>
+            <if test="repOperateMode != null" >
+                REP_OPERATE_MODE = #{repOperateMode,jdbcType=VARCHAR},
+            </if>
+            <if test="repBookMode != null" >
+                REP_BOOK_MODE = #{repBookMode,jdbcType=VARCHAR},
+            </if>
+            <if test="repCmmode != null" >
+                REP_CMMODE = #{repCmmode,jdbcType=VARCHAR},
+            </if>
+            <if test="repPmmode != null" >
+                REP_PMMODE = #{repPmmode,jdbcType=VARCHAR},
+            </if>
+            <if test="repMname != null" >
+                REP_MNAME = #{repMname,jdbcType=VARCHAR},
+            </if>
+            <if test="repPricedMode != null" >
+                REP_PRICED_MODE = #{repPricedMode,jdbcType=VARCHAR},
+            </if>
+            <if test="repInvAssetType != null" >
+                REP_INV_ASSET_TYPE = #{repInvAssetType,jdbcType=VARCHAR},
+            </if>
+            <if test="repConPrdTraget != null" >
+                REP_CON_PRD_TRAGET = #{repConPrdTraget,jdbcType=VARCHAR},
+            </if>
+            <if test="repContMode != null" >
+                REP_CONT_MODE = #{repContMode,jdbcType=VARCHAR},
+            </if>
+            <if test="repCoopName != null" >
+                REP_COOP_NAME = #{repCoopName,jdbcType=VARCHAR},
+            </if>
+            <if test="repInvTypeRat != null" >
+                REP_INV_TYPE_RAT = #{repInvTypeRat,jdbcType=VARCHAR},
+            </if>
+            <if test="repIsYield != null" >
+                REP_IS_YIELD = #{repIsYield,jdbcType=VARCHAR},
+            </if>
+            <if test="repHighYield != null" >
+                REP_HIGH_YIELD = #{repHighYield,jdbcType=DECIMAL},
+            </if>
+            <if test="repLowYield != null" >
+                REP_LOW_YIELD = #{repLowYield,jdbcType=DECIMAL},
+            </if>
+            <if test="repIsYieldBasis != null" >
+                REP_IS_YIELD_BASIS = #{repIsYieldBasis,jdbcType=VARCHAR},
+            </if>
+            <if test="repRiskType != null" >
+                REP_RISK_TYPE = #{repRiskType,jdbcType=VARCHAR},
+            </if>
+            <if test="repSaleArea != null" >
+                REP_SALE_AREA = #{repSaleArea,jdbcType=VARCHAR},
+            </if>
+            <if test="repRaiseCcy != null" >
+                REP_RAISE_CCY = #{repRaiseCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="repCashPrinCcy != null" >
+                REP_CASH_PRIN_CCY = #{repCashPrinCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="repCashProfCcy != null" >
+                REP_CASH_PROF_CCY = #{repCashProfCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="repSaleAmtStr != null" >
+                REP_SALE_AMT_STR = #{repSaleAmtStr,jdbcType=DECIMAL},
+            </if>
+            <if test="repRaiseAmtPlan != null" >
+                REP_RAISE_AMT_PLAN = #{repRaiseAmtPlan,jdbcType=DECIMAL},
+            </if>
+            <if test="repRaisePstrdate != null" >
+                REP_RAISE_PSTRDATE = #{repRaisePstrdate,jdbcType=DATE},
+            </if>
+            <if test="repRaisePenddate != null" >
+                REP_RAISE_PENDDATE = #{repRaisePenddate,jdbcType=DATE},
+            </if>
+            <if test="repInvestPrinDate != null" >
+                REP_INVEST_PRIN_DATE = #{repInvestPrinDate,jdbcType=VARCHAR},
+            </if>
+            <if test="repInvestProfDate != null" >
+                REP_INVEST_PROF_DATE = #{repInvestProfDate,jdbcType=VARCHAR},
+            </if>
+            <if test="repSaleFeeRate != null" >
+                REP_SALE_FEE_RATE = #{repSaleFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="repInDepName != null" >
+                REP_IN_DEP_NAME = #{repInDepName,jdbcType=VARCHAR},
+            </if>
+            <if test="repInDepCode != null" >
+                REP_IN_DEP_CODE = #{repInDepCode,jdbcType=VARCHAR},
+            </if>
+            <if test="repOutDepCtry != null" >
+                REP_OUT_DEP_CTRY = #{repOutDepCtry,jdbcType=VARCHAR},
+            </if>
+            <if test="repOutDepName != null" >
+                REP_OUT_DEP_NAME = #{repOutDepName,jdbcType=VARCHAR},
+            </if>
+            <if test="repTruFeeRate != null" >
+                REP_TRU_FEE_RATE = #{repTruFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="repRiskLevel != null" >
+                REP_RISK_LEVEL = #{repRiskLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="repTermRightFlag != null" >
+                REP_TERM_RIGHT_FLAG = #{repTermRightFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="repCusRedeemFlag != null" >
+                REP_CUS_REDEEM_FLAG = #{repCusRedeemFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="repCreditFlag != null" >
+                REP_CREDIT_FLAG = #{repCreditFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="repCreditType != null" >
+                REP_CREDIT_TYPE = #{repCreditType,jdbcType=VARCHAR},
+            </if>
+            <if test="repCreditMode != null" >
+                REP_CREDIT_MODE = #{repCreditMode,jdbcType=VARCHAR},
+            </if>
+            <if test="repRemark != null" >
+                REP_REMARK = #{repRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="repDeclareDate != null" >
+                REP_DECLARE_DATE = #{repDeclareDate,jdbcType=DATE},
+            </if>
+            <if test="repSendStatus != null" >
+                REP_SEND_STATUS = #{repSendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="repStatusDate != null" >
+                REP_STATUS_DATE = #{repStatusDate,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="excFinSector != null" >
+                EXC_FIN_SECTOR = #{excFinSector,jdbcType=VARCHAR},
+            </if>
+            <if test="isShortTerm != null" >
+                IS_SHORT_TERM = #{isShortTerm,jdbcType=VARCHAR},
+            </if>
+            <if test="shortTerm != null" >
+                SHORT_TERM = #{shortTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="isFreeRedem != null" >
+                IS_FREE_REDEM = #{isFreeRedem,jdbcType=VARCHAR},
+            </if>
+            <if test="customerType != null" >
+                CUSTOMER_TYPE = #{customerType,jdbcType=VARCHAR},
+            </if>
+            <if test="repIssueType != null" >
+                REP_ISSUE_TYPE = #{repIssueType,jdbcType=VARCHAR},
+            </if>
+            <if test="repYield != null" >
+                REP_YIELD = #{repYield,jdbcType=VARCHAR},
+            </if>
+            <if test="repInvestNature != null" >
+                REP_INVEST_NATURE = #{repInvestNature,jdbcType=VARCHAR},
+            </if>
+            <if test="repIsCashManage != null" >
+                REP_IS_CASH_MANAGE = #{repIsCashManage,jdbcType=VARCHAR},
+            </if>
+            <if test="repInvestFeeRate != null" >
+                REP_INVEST_FEE_RATE = #{repInvestFeeRate,jdbcType=VARCHAR},
+            </if>
+            <if test="repFiduciaryDuty != null" >
+                REP_FIDUCIARY_DUTY = #{repFiduciaryDuty,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where  REP_FINPROD_INS_ID = #{repFinprodInsId,jdbcType=VARCHAR}
+
+    </update>
+
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepProdDeclare" >
         update REP_PROD_DECLARE
         set REP_FINPROD_NAME = #{repFinprodName,jdbcType=VARCHAR},

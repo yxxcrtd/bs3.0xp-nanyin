@@ -89,6 +89,7 @@
 //    };
     // 业绩基准利率类型改变时触发的事件
     $('#rateType').change(function() {
+    debugger;
         if( $('#rateType').val() === '') {
             $('#rate').val('').trigger('change').prop('disabled', false);
             $('#indexId').val('').trigger('change').prop('disabled', false);
@@ -691,6 +692,7 @@
         $('#FinProductAnapleroticInfo002_btn_submit').click(function() {
             saveOrSubmit('submit');
         });
+        $('#rateType').trigger('change');
     });
 
 }());

@@ -737,8 +737,8 @@
 		    select investdealsub.prod_id prod_id,
 		    assetinfosub.asset_code asset_code,
 		   	decode( investdealsub.num,0,0,investdealsub.CNY_AMT/investdealsub.num) unit_price,
-		    rank() over (partition by investdealsub.prod_id,assetinfosub.asset_code order by investdealsub.CNY_AMT/investdealsub.num desc) rowindexlast,
-		    rank() over (partition by investdealsub.prod_id,assetinfosub.asset_code order by investdealsub.CNY_AMT/investdealsub.num asc) rowindexfirst
+		    rank() over (partition by investdealsub.prod_id,assetinfosub.asset_code order by decode( investdealsub.num,0,0,investdealsub.CNY_AMT/investdealsub.num) desc) rowindexlast,
+		    rank() over (partition by investdealsub.prod_id,assetinfosub.asset_code order by decode( investdealsub.num,0,0,investdealsub.CNY_AMT/investdealsub.num) asc) rowindexfirst
 		    from chb_invest_trade_sub investdealsub
 		    left join chb_asset_info_sub assetinfosub
 		    on assetinfosub.asset_code = investdealsub.asset_code

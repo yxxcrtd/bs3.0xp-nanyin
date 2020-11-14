@@ -108,7 +108,8 @@
                     number =  JoyinMath.doAdd(number,table.getAllRows()[i].tradeAmt,2);
                 }
             }
-            if(JoyinMath.doAdd($('#tradeAmt').val()*10000,0,2)!=number){
+            // if(JoyinMath.doAdd($('#tradeAmt').val()*10000,0,2)!=number){
+            if(JoyinMath.doAdd($('#tradeAmt').val(),0,2)!=number){
                 Joyin.warn("组合分配劵面总额和金额信息券面总额不一致！");
                 return;
             }
@@ -119,7 +120,7 @@
             for(var i=0;i<table.getAllRows().length;i++){
                 if("T01"==$("#ps").val()){
                     if(dataRows[i].fpriceAmt && dataRows[i].bussTrdAvailableCashQueryavalibleCash){
-                        if(dataRows[i].fpriceAmt > dataRows[i].bussTrdAvailableCashQueryavalibleCash){
+                        if(parseFloat(dataRows[i].fpriceAmt) > parseFloat(dataRows[i].bussTrdAvailableCashQueryavalibleCash)){
                             Joyin.error("交易方向为买入时，全价总额不得大于组合剩余可用现金！");
                             return;
                         }
@@ -139,7 +140,8 @@
             var isTrue = false;
             var params = {};
             params.fTradeId = $('#fTradeId').val();
-            params.tradeAmt = $('#tradeAmt').val()*10000;
+            // params.tradeAmt = $('#tradeAmt').val()*10000;
+            params.tradeAmt = $('#tradeAmt').val();
             params.workflowId = $('#workflowId').val();
             Joyin.ajaxJson(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/isAllTradeAmtByFTradeId'), params, function (result) {
                 if(result&&!result.data){
@@ -162,7 +164,8 @@
         /*if(FileCommon) {
             object.uploadFileList = FileCommon.getUploadFileInfo();
         }*/
-        object.tradeAmt = $('#tradeAmt').val()*10000;
+        // object.tradeAmt = $('#tradeAmt').val()*10000;
+        object.tradeAmt = $('#tradeAmt').val();
         object.entrustNum = entrustNum; // 委托时的券面总额
         object.entrustPrice = entrustPrice; // 委托时的净价
         object.entrustYield = entrustYield; // 委托时的到期收益率
@@ -502,7 +505,8 @@
             paramObj.secManageAcctId = data.secManageAcctIdDuo;
         }
         paramObj.calculateField = $("[name=calculateField]:checked").val();
-        paramObj.tradeAmt = $("#tradeAmt").val()*10000;
+        // paramObj.tradeAmt = $("#tradeAmt").val()*10000;
+        paramObj.tradeAmt = $("#tradeAmt").val();
         paramObj.unitCprice = $("#unitCprice").val();
         paramObj.unitInt = $("#unitInt").val();
         paramObj.unitFprice = $("#unitFprice").val();
@@ -597,7 +601,8 @@
     }
 
     function extractedTime(){//时间优先
-        var tradeAmt = $('#tradeAmt').val()*10000;
+        // var tradeAmt = $('#tradeAmt').val()*10000;
+        var tradeAmt = $('#tradeAmt').val();
         tradeAmt = JoyinMath.doAdd(tradeAmt,0,2);
        if(tradeAmt){
            var all = 0;
@@ -643,7 +648,8 @@
     }
 
     function extractedNumber() {//数量优先
-        var tradeAmt = $('#tradeAmt').val()*10000;
+        // var tradeAmt = $('#tradeAmt').val()*10000;
+        var tradeAmt = $('#tradeAmt').val();
         if(tradeAmt){
             var allRows = getAllRowsForEntrustId();
             //先按照劵面总额排序
@@ -667,7 +673,8 @@
                 var numberAll = 0;
                 var data = result.data;
                 if (!isCSTP) {
-                    $("#tradeAmt").val((data.tradeAmt)/10000).trigger("blur");
+                    // $("#tradeAmt").val((data.tradeAmt)/10000).trigger("blur");
+                    $("#tradeAmt").val((data.tradeAmt)).trigger("blur");
                     $("#unitCprice").val(data.unitCprice).trigger("blur");
                     $("#unitFprice").val(data.unitFprice).trigger("blur");
                     $("#cpriceAmt").val(data.cpriceAmt).trigger("blur");
@@ -1064,13 +1071,15 @@
                     });
                 }
             },false);
-            $('#tradeAmt').val(tradeAmtAll/10000).trigger("blur");
+            // $('#tradeAmt').val(tradeAmtAll/10000).trigger("blur");
+            $('#tradeAmt').val(tradeAmtAll).trigger("blur");
             setTimeout(function () {
                 table.addRow(rowDatas);
                 setMoney(rowDatas);
                 if(fTradeId){//cstp匹配交易过来的时候
                     if(prinamt<tradeAmtAllEntrust){
-                        $('#tradeAmt').val(prinamt/10000).trigger('change').trigger("blur");
+                        // $('#tradeAmt').val(prinamt/10000).trigger('change').trigger("blur");
+                        $('#tradeAmt').val(prinamt).trigger('change').trigger("blur");
                         extractedNumber();
                     }
                 }
@@ -1375,7 +1384,8 @@
    
 	//按照比例计算净价总额
     function extractedCpriceAmt() {
-        var tradeAmtAll = $('#tradeAmt').val()*10000;
+        // var tradeAmtAll = $('#tradeAmt').val()*10000;
+        var tradeAmtAll = $('#tradeAmt').val();
         var all = 0;
         for (var i = 0; i < table.getAllRows().length; i++) {
             var tradeAmt = table.getAllRows()[i].tradeAmt;
@@ -1402,7 +1412,8 @@
     }
     //按照比例计算应计利息总额
     function extractedIntAmt(intAmtPara) {
-        var tradeAmtAll = $('#tradeAmt').val()*10000;
+        // var tradeAmtAll = $('#tradeAmt').val()*10000;
+        var tradeAmtAll = $('#tradeAmt').val();
         var all = 0;
         for (var i = 0; i < table.getAllRows().length; i++) {
             var tradeAmt = table.getAllRows()[i].tradeAmt;
@@ -1430,7 +1441,8 @@
     }
 
     function extractedJiSuan(isTrue,returnVal) {
-        var tradeAmtAl = $('#tradeAmt').val()*10000;
+        // var tradeAmtAl = $('#tradeAmt').val()*10000;
+        var tradeAmtAl = $('#tradeAmt').val();
         var alltradeAmt = 0;
         for (var i = 0; i < table.getAllRows().length; i++) {
             var tradeAmt = table.getAllRows()[i].tradeAmt;
@@ -1584,7 +1596,8 @@
                     // 交易对手号代码
                     // 票值
                     if (result.prinamt && result.prinamt != ''){
-                        $('#tradeAmt').val((result.prinamt)/10000).trigger('change').trigger("blur");// 本金金额(券面总额)
+                        // $('#tradeAmt').val((result.prinamt)/10000).trigger('change').trigger("blur");// 本金金额(券面总额)
+                        $('#tradeAmt').val(result.prinamt).trigger('change').trigger("blur");
                         if($('#tradeAmt').val()){
                             $('#tradeAmt').attr('disabled', false);
                         }
@@ -1861,7 +1874,8 @@
     var calcFeeDataByFTradeId = function () {
         var paramObj = $.serializeToObject('#submitForm', true);
         paramObj.calculateField = $("[name=calculateField]:checked").val();
-        paramObj.tradeAmt = $("#tradeAmt").val()*10000;
+        // paramObj.tradeAmt = $("#tradeAmt").val()*10000;
+        paramObj.tradeAmt = $("#tradeAmt").val();
         paramObj.unitCprice = $("#unitCprice").val();
         paramObj.unitInt = $("#unitInt").val();
         paramObj.unitFprice = $("#unitFprice").val();

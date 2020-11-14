@@ -134,6 +134,14 @@ public class TrdPlanCurrDuration001Validator implements BeanValidator{
                         messageList.add(new ValidMessage("reInvesDate",getMessage("FIN_PROD_E_0017",getMessage("TrdFundDuration001.exRightsDate"),getMessage("TrdFundDuration001.reInvesDate"))));
                     }
                 }
+            }else if(StringUtil.equals(dto.getBonusMode(),DictCodeList.分红方式_红利再投.getValue())){
+                if(!StringUtil.isNotEmpty(dto.getRegistDate())){
+                    messageList.add(new ValidMessage("registDate",getMessage("FW_E_0006",getMessage("TrdFundDuration001.registDate"))));
+                }
+                if(!StringUtil.isNotEmpty(dto.getTradeAmt())) {
+                    messageList.add(new ValidMessage("tradeAmt",getMessage("FW_E_0006",getMessage("TrdFundDuration001.tradeAmt"))));
+                }
+
             }
         }
         return messageList;

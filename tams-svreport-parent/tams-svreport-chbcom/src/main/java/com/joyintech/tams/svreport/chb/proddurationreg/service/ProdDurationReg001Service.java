@@ -281,6 +281,9 @@ public class ProdDurationReg001Service extends SvrCommonExportService<ProdDurati
 //                    SvrServiceApplication.CHB_SERVICE_NAME + "/ProdDurationReg/selectAllData",pageParam,
 //                    ProdDurationReg001Dto.class);
 //            page = selectForPage(pageParam);
+
+			page = selectForPage(pageParam);
+
         }  else {
             @SuppressWarnings("unchecked")
             List<ProdDurationReg001Dto> dataList =  (List<ProdDurationReg001Dto>) pageParam.get("prodDurationList");
@@ -419,7 +422,7 @@ public class ProdDurationReg001Service extends SvrCommonExportService<ProdDurati
 	/**
 	 * 已手工处理的数据将报送状态改为未报送
 	 *
-	 * @param upKey
+	 * @param map
 	 *            传入主键
 	 * @see
 	 * @since 1.0
@@ -480,7 +483,7 @@ public class ProdDurationReg001Service extends SvrCommonExportService<ProdDurati
 	}
 	 /**
      * 数据检查
-     * @param checkKeys 检查数据的关键字
+     * @param param 检查数据的关键字
      * @return 检查结果
      * @see
      * @since 1.0
@@ -572,7 +575,7 @@ public class ProdDurationReg001Service extends SvrCommonExportService<ProdDurati
 	}
 	/**
      * 配置项中非空处理
-     * @param Count
+     * @param count
      * @param flag
      * @return
      */

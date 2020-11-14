@@ -42,10 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 产品到期确认
@@ -1302,12 +1299,17 @@ public class FinProductExpire002Service extends BaseService<FinProductExpire002D
         else if (StringUtil.isNotEmpty(dto.getMdate()) && dto.getMdate().compareTo(info.getMdate()) == 0) {
             PrdMdateAdjust cond = new PrdMdateAdjust();
             cond.setFinprodId(dto.getFinprodId());
-            cond.setAdjustType("01");
+//            cond.setAdjustType("01");
             List<PrdMdateAdjust> listPrdMdateAdjust = restTemplate.postForList(
                 ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductCommon/queryPrdMdateAdjustByModel", cond,
                 PrdMdateAdjust.class);
             if (listPrdMdateAdjust != null && listPrdMdateAdjust.size() > 0) {
-                return DictCodeList.交易方向_提前终止.getValue();
+                PrdMdateAdjust prdMdateAdjust = listPrdMdateAdjust.stream().sorted((item1, item2)->DateUtil.compareDate(item2.getUpdateTime(),item1.getUpdateTime())).findFirst().get();
+                if (DateUtil.compareDate(prdMdateAdjust.getMdate(),prdMdateAdjust.getMdateUnadjust())==1){
+                    return DictCodeList.交易方向_产品到期.getValue();
+                }else{
+                    return DictCodeList.交易方向_提前终止.getValue();
+                }
             }
             return DictCodeList.交易方向_产品到期.getValue();
         } // 如果超过到期日就置空交易类型

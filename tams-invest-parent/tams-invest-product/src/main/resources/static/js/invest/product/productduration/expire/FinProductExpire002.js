@@ -3,6 +3,7 @@
 	  // 生成指令参数保存  add by dingjunfeng
     var calcConditionObjBackUp = null;
     var init = false;
+    var rePayAndIntpFlag =false;
     var subProductTableOption = {
 //    		ajax: {
 //                url: JoyinUtil.getRealPath('invest/product/productduration/addreduce/FinProductAddReduce002/findReduceInfoData'),
@@ -31,6 +32,8 @@
 		            , {field: 'interest', title: '应付客户收益', width: 200, sortable: false, type: 'number'}
 		            , {field: 'actInterest', title: '实付客户收益', width: 200, sortable: false, type: 'number', edit: true}
 		            , {field: 'reduceAmt', title: '本期客户赎回本金', width: 200, sortable: false, type: 'number', edit: true}
+		            , {field: 'reduceAmtTher', title: '本期客户赎回本金', type: 'number', visible: false}
+		            , {field: 'idEditFlag', title: '兑付客户收益是否能编辑', type: 'number', visible: false}
 		        ],
 		        beforeEditCell : function(preVal, field, rowData){
 		        	//add by wm 当为到期交易时，不允许编辑本金框 start 2019-08-02
@@ -38,6 +41,10 @@
 		        		return false;
 		        	}
 		        	//add by wm 当为到期交易时，不允许编辑本金框 end 2019-08-02
+		        	if(field =='actInterest' && rowData.idEditFlag ){
+                       return false;
+                    }
+
 		  	      return true;
 		  	    },
 		  	    editCell: function(value, data, field, cell, column){
@@ -56,10 +63,27 @@
 				  	   		 if(arr[i].reduceAmt==""||arr[i].reduceAmt==null){
 				  	   		     arr[i].reduceAmt = 0;
 				  	   		 }
+				  	   		 if(arr[i].reduceAmtTher==""||arr[i].reduceAmtTher==null){
+                                 arr[i].reduceAmtTher = 0;
+                             }
+					  	    //部分赎回：判断赎回/到期日=付息日 且 赎回/到期日！=到期日 时应付客户收益=0
+					  	    if(field == 'reduceAmt'){
+                                if(arr[i].reduceAmt && arr[i].reduceAmtTher){
+    					  	        if(rePayAndIntpFlag && parseFloat(arr[i].reduceAmt) != parseFloat(arr[i].reduceAmtTher)){
+                                        arr[i].actInterest = 0;
+                                        arr[i].interest = 0;
+                                        arr[i].idEditFlag = true;
+
+    					  	        }else{
+    					  	            arr[i].idEditFlag = false;
+    					  	        }
+                                }
+					  	    }
 					  	   	interestSum = JoyinMath.doAdd(interestSum, arr[i].interest, 2, JoyinMath.ROUND_HALF_UP);
 					  	   	actInterestSum = JoyinMath.doAdd(actInterestSum, arr[i].actInterest, 2, JoyinMath.ROUND_HALF_UP);
 					  	    reduceAmtSum = JoyinMath.doAdd(reduceAmtSum, arr[i].reduceAmt, 2, JoyinMath.ROUND_HALF_UP);
 		  	   		 }
+					 loadSubProdInfo.reload({data:arr});
 		  		   	 $('#FinProductExpire002_cusProfit').val(interestSum);
 		  		   	 $('#FinProductExpire002_actCusProfit').val(actInterestSum);
 		  		   	 $('#FinProductExpire002_reduceAmt').val(reduceAmtSum);
@@ -416,6 +440,9 @@
     	Joyin.ajax(JoyinUtil.getRealPath('invest/product/productduration/addreduce/FinProductAddReduce002/findReduceInfoData'),
     			{finprodId : finprodId,tradeDate:tradeDate,isLay:isLay}, function(result){
     		if (result){
+    		    if(result[0]){
+    		        rePayAndIntpFlag = result[0].rePayAndIntpFlag;
+    		    }
      		     //周期型产品展示子产品号
     			if($('#FinProductExpire002_dealMode').val()=='10'){
     				loadSubProdInfo.showColumns([{field:'indexNo',visible: true}]);
@@ -425,7 +452,7 @@
     			loadSubProdInfo.clear(function () {
 					loadSubProdInfo.addRow(result)
                 });
-    			
+
     			 var arr = loadSubProdInfo.getAllRows();
     	    	 var interestSum = 0;
     	    	 var actInterestSum = 0;

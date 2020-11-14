@@ -408,7 +408,7 @@
                     LEFT JOIN FIN_PRODUCT_ADD ON FIN_PRODUCT_ADD.FINPROD_ID = psv.FINPROD_ID
                     LEFT JOIN PTL_PORTFOLIO pp ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
                     LEFT JOIN PTL_CASH_POSITION pcp ON psv.PORTFOLIO_ID = pcp.PORTFOLIO_ID and psv.cdate = pcp.cdate
-                    INNER JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID and fpt.TYPE_8 is not null
+                    left JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID and fpt.TYPE_8 is not null
                 WHERE
                     TO_CHAR (psv.CDATE, 'yyyy-mm-dd') = #{searchDate}
                     and pcp.portfolio_Id is not NULL

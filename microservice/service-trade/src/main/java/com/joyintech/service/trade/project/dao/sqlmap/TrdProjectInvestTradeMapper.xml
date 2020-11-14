@@ -54,6 +54,9 @@
             <if test="profitType != null and profitType != ''">
                 and T1.PROFIT_TYPE = #{profitType}
             </if>
+            <if test="tradeDate != null and tradeDate != ''">
+                and TO_DATE(#{tradeDate}, 'yyyy-MM-dd') >= T1.VDATE
+            </if>
         </where>
     </select>
 

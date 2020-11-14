@@ -66,7 +66,10 @@
 <select id="getAssetCodeList" resultType="com.joyintech.framework.select.SelectOptionDto">
 		SELECT
 		       FINPROD_MARKET_ID id,
-	           FINPROD_MARKET_ID text /*modify by liupeilin*/
+		       /*资产代码字段的选框值改为：资产代码：资产简称 add by yujiaping 2020-11-10 start*/
+	         <!--   FINPROD_MARKET_ID text /*modify by liupeilin*/ -->
+	           FINPROD_ABBR  text 
+	           /*资产代码字段的选框值改为：资产代码：资产简称 add by yujiaping 2020-11-10 end*/
                /*多级法人改造，增加FIN_PRODUCT.FINPROD_ID查询字段 add by caojin 2020/6/9 start  */
 		       ,FINPROD_ID finprodId
 		       /*多级法人改造，增加FIN_PRODUCT.FINPROD_ID查询字段 add by caojin 2020/6/9 end  */
@@ -80,8 +83,10 @@
 		       AND FINPROD_TYPE2=#{TYPE_TOUGUAN_F17}
 		       AND FINPROD_MARKET_ID IS NOT NULL
 		       <if test="search != null and search != ''">
-		       	AND (FINPROD_MARKET_ID like concat(concat('%', #{search,jdbcType=VARCHAR}),'%')
-
+		       AND (FINPROD_MARKET_ID like concat(concat('%', #{search,jdbcType=VARCHAR}),'%')
+		          /*可支持代码和简称的双双模糊查询 add by yujiaping 2020-11-10 start */
+                         OR FINPROD_ABBR like concat(concat('%', #{search,jdbcType=VARCHAR}),'%')
+                  /*可支持代码和简称的双双模糊查询 add by yujiaping 2020-11-10 end */
 		       	)
 		       </if>
 		       <if test="initValue != null and initValue != ''">

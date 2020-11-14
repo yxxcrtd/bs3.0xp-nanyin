@@ -374,5 +374,14 @@ public class BaseTradeProductDealServiceImpl implements BaseTradeProductDealServ
         trdProductDealList = baseTradeProductDealMapper.selectTrdProductDealsByTotalTradeId(totalTradeId);
         return trdProductDealList;
     }
+    /**
+     * 金融产品汇总交易查询
+     */
+    @Override
+    public List<TrdProductDeal> selectTrdProductChlDealsByTotalTradeId(String totalTradeId) {
+        List<TrdProductDeal> trdProductDealList = new ArrayList<TrdProductDeal>();
+        trdProductDealList = baseTradeProductDealMapper.selectTrdProductChlDealsByTotalTradeId(totalTradeId);
+        return trdProductDealList;
+    }
 
 }

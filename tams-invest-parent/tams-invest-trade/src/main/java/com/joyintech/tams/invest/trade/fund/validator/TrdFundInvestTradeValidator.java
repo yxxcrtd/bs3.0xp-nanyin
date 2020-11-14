@@ -11,6 +11,9 @@ import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.constant.DictCodeList;
@@ -66,6 +69,8 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
     @Autowired(required = false)
     private BussTrdTransferOrderService bussTrdTransferOrderService;
 
+//    @Autowired
+//    private BussCommonMapperDelegateService bussCommonMapperDelegateService;
     /**
      * {@inheritDoc}
      */
@@ -149,6 +154,12 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
             if (DictCodeListExt2.交易方向_转换申请.getValue().equals(dto.getPs()) && StringUtil.isEmpty(dto.getrFinprodId())) {
                 errorList.add(new ValidMessage("changeToFinprodMarketId", "基金转换申请时，转入资产必填。"));
             }
+//            if(bussCommonMapperDelegateService != null && StringUtil.isNotEmpty(dto.getFinprodId())) {
+//                FinProduct finProduct = bussCommonMapperDelegateService.selectBySinglePrimaryKey(FinProductMapper.class, dto.getFinprodId(), FinProduct.class);
+//                if (finProduct != null && finProduct.getVdate() != null && (DateUtil.compareDate(DateUtil.parse(dto.getTradeDateString()), finProduct.getVdate()) < 0)) {
+//                    errorList.add(new ValidMessage("tradeDate", getMessage("BUSS_COM_E_0004", getMessage("TrdFundInvestTrade002.tradeDate2"), "成立日期")));
+//                }
+//            }
         }
         // 场内基金改造 add by renping 20191117 end
         String entrustId = dto.getEntrustId();
@@ -569,6 +580,16 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
             // }
             // }
         }
+
+        //add by msk TISHKBS-1038 新增一次性划款通道交易前是否划款判断 start
+        if(!"".equals(dto.getChlId())&&dto.getChlId()!=null){
+            Integer count = trdFundInvestTrade002Service.selectchlTrade(dto.getChlId());
+            if(count <= 0){
+                ValidMessage validMessage = new ValidMessage(getMessage("通过一次性通道投资请先进行划款！",getMessage("invest.channelId")));
+                errorList.add(validMessage);
+            }
+        }
+        //add by msk TISHKBS-1038 新增一次性划款通道交易前是否划款判断 end
         return errorList;
     }
 

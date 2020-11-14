@@ -108,9 +108,14 @@
 			AND   (CUSTOMER_ID like concat(concat('%',#{search}),'%') 
         	or CUSTOMER_NAME like concat(concat('%',#{search}),'%') )
 		 </if>
-		 <if test="initValue != null and initValue != ''">
-   			and CUSTOMER_ID = #{initValue}
+		 <!--modify by mashukai BS-1995草稿箱同业机构字段反显没有值问题 20201113 start -->
+		 <if test="initValue != null and initValue.size() > 0">
+   			and CUSTOMER_ID in
+   			<foreach collection="initValue" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
    		</if>
+   		<!-- modify by mashukai BS-1995草稿箱同业机构字段反显没有值问题 20201113 end-->
 	</select>	
 	
     <select id="queryCounterpartyInfo" resultType="com.joyintech.framework.select.SelectOptionDto" >
@@ -398,6 +403,28 @@
                 	AND rep.REP_FINPROD_INS_ID != #{repFinprodInsId,jdbcType=VARCHAR}
                 </if>
         )
+	<!--add by mashukai FIX BUG TISHKBS-1569 20201112 start  -->
+	and not EXISTS (
+			SELECT distinct BUSINESS_DATA_PK2
+			FROM SYS_DATA_PROCESS_MARK pm
+			INNER JOIN
+			(SELECT MAX(HIS_NO) HIS_NO,
+			WORKFLOW_ID
+			FROM SYS_DATA_PROCESS_MARK
+			WHERE PAGE_ID IN ( 'FinProductBuild002' , 'FinNetValueProductBuild002' )
+			GROUP BY WORKFLOW_ID
+			)tempHis
+			ON pm.HIS_NO       = tempHis.HIS_NO
+			AND pm.WORKFLOW_ID = tempHis.WORKFLOW_ID
+			WHERE pm.status   IN ('A','U','P')
+			AND pm.PAGE_ID    IN ( 'FinProductBuild002' , 'FinNetValueProductBuild002' )
+			and rep.REP_FINPROD_INS_ID = TO_CHAR(SUBSTR(SUBSTR(pm.BUSINESS_DATA,instr(pm.BUSINESS_DATA,'"repFinprodInsId":"')+19),1,instr(SUBSTR(pm.BUSINESS_DATA,instr(pm.BUSINESS_DATA,'"repFinprodInsId":"')+19),'"',1)-1))
+			<if test="workflowId != null and workflowId != ''">
+				AND pm.WORKFLOW_ID <![CDATA[<>]]> #{workflowId,jdbcType=VARCHAR}
+			</if>
+		)
+
+	<!--add by mashukai FIX BUG TISHKBS-1569 20201112 end  -->
         <if test="search != null and search != ''">
 			AND   (rep.REP_FINPROD_INS_ID like concat(concat('%',#{search}),'%') 
         	or rep.REP_FINPROD_NAME like concat(concat('%',#{search}),'%') )

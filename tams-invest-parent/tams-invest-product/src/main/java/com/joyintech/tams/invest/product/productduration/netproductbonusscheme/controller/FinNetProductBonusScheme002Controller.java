@@ -116,13 +116,26 @@ public class FinNetProductBonusScheme002Controller extends BaseController {
             if(StringUtil.equals(finNetProductBonusSchemeInfo.getBonuScalcFlag(),DictCodeList.分红方案_按单位分红.getValue())
                 && finNetProductBonusSchemeInfo.getUnitBonusVlu() != null
                 && finNetProductBonusSchemeInfo.getTdyUnitValue() != null){
-            	BigDecimal big = finNetProductBonusSchemeInfo.getTdyUnitValue().subtract(finNetProductBonusSchemeInfo.getUnitBonusVlu());
-            	//add by gcl 2019/4/1 start
-            	DecimalFormat df1 = new DecimalFormat("0.0000");
-                String str =df1.format(big);
-                BigDecimal bd=new BigDecimal(str);
-                finNetProductBonusSchemeInfo.setNetvalue(bd);
+//            	BigDecimal big = finNetProductBonusSchemeInfo.getTdyUnitValue().subtract(finNetProductBonusSchemeInfo.getUnitBonusVlu());
+//            	//add by gcl 2019/4/1 start
+//            	DecimalFormat df1 = new DecimalFormat("0.0000");
+//                String str =df1.format(big);
+//                BigDecimal bd=new BigDecimal(str);
+//                finNetProductBonusSchemeInfo.setNetvalue(bd);
               //add by gcl 2019/4/1 end
+
+                ProcessMark processMark;
+                try {
+                    finNetProductBonusSchemeInfo.setFinprodId(finNetProductBonusSchemeInfo.getFinprodId());
+                    finNetProductBonusSchemeInfo.setDealType("bonusScheRegister");
+                    finNetProductBonusSchemeInfo.setTradeId(bonusPlanId);
+                    processMark = WorkflowContext.getProcessMarkService().getParameterByAnnotation(finNetProductBonusSchemeInfo);
+                    processMark.setPageId("FinNetProductBonusScheme002");
+                    finNetProductBonusSchemeInfo = finNetProductBonusSchemeService.getBussinessEntityByPk(processMark);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
             else{
 //                Map<String,Object> map = new HashMap<>();

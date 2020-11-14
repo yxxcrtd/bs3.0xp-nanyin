@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.product.productduration.addreduce.controller;
 
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 
@@ -59,6 +60,7 @@ public class FinProductAddReduce001Controller extends BaseController {
 
 //    @Autowired
 //    private FinProductAddReduce002Service finProductAddReduce002Service;
+
 
     @Autowired
     private FinProductAddReduceWorkflowService revokeWorkflowService;
@@ -157,6 +159,8 @@ public class FinProductAddReduce001Controller extends BaseController {
 		if (!DictCodeListExt1.有效状态_有效.getValue().equals(dto.getEffectStatus())) {
 			errorList.add(new ValidMessage("只有有效的交易才能撤销!"));
 		}
+
+
 		if (StringUtils.isNotEmpty(dto.getSettleDate()) &&
 				dto.getSettleDate().compareTo(DateUtil.getSysDate()) < 0) {
 			ValidMessage addRst = new ValidMessage("仅允许撤销确认日大于等于平台日期的交易!");

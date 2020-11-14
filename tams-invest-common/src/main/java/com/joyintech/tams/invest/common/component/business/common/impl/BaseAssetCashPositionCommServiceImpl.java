@@ -2127,6 +2127,16 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                 }
                 //活期存放结息 交易方向为红利再投 结息方式为结转为本金  end
 
+                //活期存放结息 交易方向为收息到账 结息方式为结转为现金结息,撤销交易
+                else if (DictCodeListExt1.金融产品类型_投管用_存款.getValue().equals(deal.getFinprodType2())
+                        && DictCodeListExt3.存款类资产类型_活期存放.getValue().equals(assetType2)
+                        && DictCodeList.交易方向_中间付息.getValue().equals(deal.getPs())) {
+                    resultDto.setCdate(deal.getTradeDate());
+                    resultDto.setAmount(deal.getTradeAmt());
+                    result.add(resultDto);
+                    return result;
+                }
+
                 // 增加期权存续期 liutf 2020/01/08开始
                 else if(StringUtils.equals(deal.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_期权.getValue())&&
                         StringUtils.equals(deal.getPsPayment(), DictCodeListExt3.收付方向_收取.getValue())){

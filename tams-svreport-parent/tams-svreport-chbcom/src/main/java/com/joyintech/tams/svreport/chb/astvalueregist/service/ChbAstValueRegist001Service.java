@@ -323,7 +323,11 @@ public class ChbAstValueRegist001Service extends SvrCommonExportService<ChbAstVa
         	//update by leipeng 20200701 资产多法人改造 如果联社模式使用查询..非联社模式沿用以前方式
         	if(CommonUtil.isBAmodel()){
     			page = searchPage(pageParam);
-    		}
+    		}else{
+
+				page = queryForPage(
+						pagenum,legth,()->chbAstValueRegist001Mapper.searchPage(pageParam));
+			}
 //            data =  restTemplate.postForList(
 //                    SvrServiceApplication.CHB_SERVICE_NAME + "/ChbAstValueRegist/searchPageExport",pageParam,
 //                    ChbAstValueRegist001Dto.class);

@@ -333,15 +333,19 @@ select * from (
 		distinct 
 		S.BANK_DEP id,
 		S.BANK_DEP text
-		/*多级法人改造，增加STL_CAPACCT_INFO.SEQ_NO查询字段 add by caojin 2020/6/12 start  */
-	   ,S.SEQ_NO  seqNo
-	   /*多级法人改造，增加STL_CAPACCT_INFO.SEQ_NO查询字段 add by caojin 2020/6/12 end  */
 	  FROM
 	  	 PTL_CAPACCT_INFO P
 	 INNER 
 	 	 JOIN STL_CAPACCT_INFO S
 	    ON P.ACCT_NO = S.ACCT_NO
 	    AND P.CCY = S.CCY
+	<if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+		INNER JOIN DATA_AUTH_NOTIFY_INST di on di.BUSINESS_ID = S.seq_No AND di.MODEL_TYPE = '02' and di.data_type = 'MST09'
+		AND di.INSTITUTION_CODE IN
+		<foreach collection="resourcesTreeInstCodeList" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</if>
       <where>
       	<if test="search != null and !''.equals(search)">
     		AND S.BANK_DEP LIKE CONCAT('%',CONCAT(#{search},'%'))

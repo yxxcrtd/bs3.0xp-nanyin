@@ -486,9 +486,9 @@
 	<select id="getFinprodId" resultMap="finprodIdMap">
 	SELECT
 		A.FINPROD_ID id,
-		A.FINPROD_MARKET_ID text,
+		A.FINPROD_MARKET_ID,
 		A.FINPROD_ID,
-		A.FINPROD_NAME,
+		A.FINPROD_NAME text,
 		A.TRADE_MARKET,
 		A.CCY,
 		b.board

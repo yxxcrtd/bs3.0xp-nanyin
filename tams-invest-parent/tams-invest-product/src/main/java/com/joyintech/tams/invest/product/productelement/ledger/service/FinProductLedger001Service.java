@@ -123,7 +123,7 @@ public class FinProductLedger001Service extends CommonExportService<FinProductLe
         
         List<FinProductLedger001Dto> rlist = new ArrayList<FinProductLedger001Dto>();
         for (FinProductLedger001Dto mdto : ldto) {
-    		long remainDays = DateUtil.getBetweenDayNumber(queryDate,mdto.getMdate());
+    		long remainDays = DateUtil.getBetweenDayNumber(queryDate.compareTo(mdto.getMdate())<=0?queryDate:mdto.getMdate(),mdto.getMdate());
     		mdto.setRemainDays(remainDays);
     		if(mdto.getProdUnitValue()!=null && BigDecimal.ZERO.compareTo(mdto.getProdUnitValue())!=0
     				&&mdto.getSubDealNum()!=null && BigDecimal.ZERO.compareTo(mdto.getSubDealNum())!=0) {

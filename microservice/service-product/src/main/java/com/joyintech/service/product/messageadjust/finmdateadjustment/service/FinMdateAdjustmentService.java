@@ -337,7 +337,7 @@ public class FinMdateAdjustmentService extends BaseService<FinMdateAdjustmentDto
                 	finFloatAccrualScheMapper.deleteByPrimaryKey(accrPlanList.get(0));
                 	FinFloatAccrualSche finFloatAccrualSche = new FinFloatAccrualSche();
                     finFloatAccrualSche.setCashId(cashId_accr);
-                    finFloatAccrualSche.setAccrDate(finProduct.getMdate());
+                    finFloatAccrualSche.setAccrDate(prdMdateAdjust.geteAccrDate());
                     finFloatAccrualSche.setAccrStrDate(DateUtil.addDay(finProduct.getVdate(), -1));
                     finFloatAccrualSche.setAccrEndDate(finProduct.getMdate());
                     finFloatAccrualScheMapper.insert(finFloatAccrualSche);

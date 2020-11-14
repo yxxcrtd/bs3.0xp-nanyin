@@ -1435,10 +1435,15 @@
         });
     	
     	$('#FinNetValueProductBuild002_period').change(function() {
+    	    //debugger;
         	if($('#FinNetValueProductBuild002_period').val() === TERM_TYPE_01) {
         		$('#cfDiv').show();
         		$('#FinNetValueProductBuild002_continueFlag').trigger('change').prop('disabled', false);
         		$('#FinNetValueProductBuild002_investmentCycle').trigger('change').prop('disabled', false);
+//        		$('#FinNetValueProductBuild002_investmentCycle').attr('required', true).trigger('change');
+//                $('#FinNetValueProductBuild002_investmentCycle').append($('<i class="must">*</i>'));
+                $('#FinNetValueProductBuild002_investmentCycle').parent().parent().find('.layui-form-label').append('<i class="must">*</i>');
+
         		$('#periodDiv').hide();
         		$('#bussOpenPlandiv').show();
         		if(parentPageId !== 'FinOpenPlanMaintenance002'){
@@ -1446,6 +1451,8 @@
         		}
         	}
         	else if($('#FinNetValueProductBuild002_period').val() === TERM_TYPE_02) {
+
+
         		$('#cfDiv').show();
         		$('#FinNetValueProductBuild002_continueFlag').trigger('change').prop('disabled', false);
         		if(isLoaded()){
@@ -1454,10 +1461,16 @@
         		else{
             		$('#FinNetValueProductBuild002_investmentCycle').trigger('change').prop('disabled', true);
         		}
+        		$('#FinNetValueProductBuild002_investmentCycle').attr('required', false).trigger('change');
+
         		$('#bussOpenPlandiv').show();
         		$('#periodDiv').show();
+
+        		$('#FinNetValueProductBuild002_investmentCycle').parent().parent().find('.layui-form-label .must').remove();
+
         	}
         	else if($('#FinNetValueProductBuild002_period').val() === TERM_TYPE_03) {
+
         		$('#cfDiv').hide();
         		if(isLoaded()){
             		$('#FinNetValueProductBuild002_investmentCycle').val('').trigger('change').prop('disabled', true);
@@ -1472,6 +1485,9 @@
         		if(parentPageId !== 'FinOpenPlanMaintenance002'){
         			BussFinProductInvestPeriod.cleanTable();
         		}
+
+        	    $('#FinNetValueProductBuild002_investmentCycle').parent().parent().find('.layui-form-label .must').remove();
+
         	}
         	else{
         		$('#cfDiv').hide();
@@ -1485,6 +1501,7 @@
         		if ($("#FinOpenPlanMaintenance002_dealMode").val() !== '10'){
         			$('#bussOpenPlandiv').hide();
         		}
+                $('#FinNetValueProductBuild002_investmentCycle').parent().parent().find('.layui-form-label .must').remove();
         	}
              
         });

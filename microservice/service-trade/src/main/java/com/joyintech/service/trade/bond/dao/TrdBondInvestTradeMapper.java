@@ -293,4 +293,14 @@ public interface TrdBondInvestTradeMapper {
      */
     int selectTradeT02(@Param("tradeId") String tradeId);
 
+    /* add by msk 新增查询通道划款交易 20201111 TISHKBS-1038 start */
+    /**
+     * 查询通道划款交易
+     * @param chlId
+     * @return
+     * @see
+     * @since 1.0
+     */
+    int selectchlTrade(@Param("chlId") String chlId);
+    /* add by msk 新增查询通道划款交易 20201111 TISHKBS-1038 end */
 }

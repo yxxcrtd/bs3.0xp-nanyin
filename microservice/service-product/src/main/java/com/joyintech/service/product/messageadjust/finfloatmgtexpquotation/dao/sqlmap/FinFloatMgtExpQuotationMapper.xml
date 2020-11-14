@@ -548,4 +548,8 @@
         delete from FIN_CASH_PLAN
         where CASH_ID = #{cashId,jdbcType=VARCHAR}
     </delete>
+	<delete id="deleteFloatAccrByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinFloatAccrualScheKey" >
+		delete from FIN_FLOAT_ACCRUAL_SCHE
+		where CASH_ID = #{cashId,jdbcType=VARCHAR}
+	</delete>
 </mapper>

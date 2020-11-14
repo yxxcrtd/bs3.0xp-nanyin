@@ -341,6 +341,9 @@
         <if test="finprodId != null and finprodId != '' and changeTo != null and changeTo">
             AND T1.FINPROD_MARKET_ID != #{finprodId,jdbcType=VARCHAR}
         </if>
+        <if test="tradeDateVdate != null and tradeDateVdate != ''">
+            AND TO_DATE(#{tradeDateVdate}, 'yyyy-MM-dd') >= T1.VDATE
+        </if>
         <!-- 暂时注释交易自动加券-->
        <!-- union
         select interf.F_INFO_CODE id,

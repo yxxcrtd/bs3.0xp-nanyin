@@ -1023,7 +1023,7 @@ $(function() {
             			$('#redDealNum').attr("disabled",false);
             			$('#redDealAmt').attr("disabled",false);
             			$('#redFeeLc').attr("disabled",false);
-            			$('#redTotalNetValue').attr("disabled",false);
+//            			$('#redTotalNetValue').attr("disabled",false);
             			$('#redFee').attr("disabled",false);
             			$('#redPurFeeHd').attr("disabled",false);
             			$('#redCost').attr("disabled",false);
@@ -1090,7 +1090,7 @@ $(function() {
             			$('#redDealNum').attr("disabled",false);
             			$('#redDealAmt').attr("disabled",false);
             			$('#redFeeLc').attr("disabled",false);
-            			$('#redTotalNetValue').attr("disabled",false);
+//            			$('#redTotalNetValue').attr("disabled",false);
             			$('#redFee').attr("disabled",false);
             			$('#redPurFeeHd').attr("disabled",false);
             			$('#redCost').attr("disabled",false);
@@ -2028,6 +2028,14 @@ $(function() {
                 data.counterId = '324';                
                 var dealType = $('#dealType').val();
                 var profitType = $('#profitType').val();
+				if (!$("#finprodMarketId").val()) {
+					Joyin.error(JoyinUtil.getMessage('BUSS_COM_E_0038',JoyinUtil.getLabel("FinNetProductDuration.finprodMarketId")))
+					return;
+				}
+				if (!$("#dealType").val()) {
+					Joyin.error(JoyinUtil.getMessage('BUSS_COM_E_0038',JoyinUtil.getLabel("FinNetProductDuration.dealType")));
+					return;
+				}
                 if("01"==profitType){
                 	if("C1"==dealType){
                     	data.tradeAmt = $('#subDealAmt').val();

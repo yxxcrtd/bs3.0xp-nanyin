@@ -555,7 +555,7 @@ public class FinProductCommonService extends BaseService {
     @Transactional
     public void updatePtlCapacctAcct(FinProductCommonInfoDto finProductCommonInfoDto){
     	//首先删除组合资金账户
-//    	productCommonMapper.deletePtlCapacctInfo(finProductCommonInfoDto.getPtlId());
+    	productCommonMapper.deletePtlCapacctInfo(finProductCommonInfoDto.getPtlId());
     	List<BussFinProductFundAccountInfoDto> fundList = finProductCommonInfoDto.getBussFinProductFundAccountInfoDto();
     	for (BussFinProductFundAccountInfoDto dto : fundList) {
     		

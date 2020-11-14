@@ -57,6 +57,29 @@ $(function () {
     	finprodIdChangrAction();
     	commonChangeAction();
     });
+
+    $('#BussFinProductFloatFee_feeId').on('change',function(){
+        feeIdChangeAction();
+    });
+
+    var feeIdChangeAction = function(){
+       var data =  $('#BussFinProductFloatFee_feeId').select2('data')[0].object;
+       $("#BussFinProductFloatFee_basicBill").val('').attr("disabled",false).trigger('change');
+       $("#BussFinProductFloatFee_basis").val('').attr("disabled",false).trigger('change');
+
+       if(data!=null && data!=''){
+           var dataArr=data.split(",");
+           if(dataArr!=null && dataArr[0]){
+                 $("#BussFinProductFloatFee_basicBill").val(dataArr[0]).attr("disabled",true).trigger('change');
+           }
+
+           if(dataArr!=null && dataArr[1]){
+                 $("#BussFinProductFloatFee_basis").val(dataArr[1]).attr("disabled",true).trigger('change');
+           }
+
+       }
+
+    }
     
     /**
      * 投资周期文本框change事件
@@ -147,7 +170,7 @@ $(function () {
     				$('#investCycle2').val(result.investCycle).prop('disabled', false).trigger('change');
     				}
     			} 
-    			$('#investCycle2').val(result.investCycle).prop('disabled', true).trigger('change');
+    			// $('#investCycle2').val(result.investCycle).prop('disabled', true).trigger('change');
     			if(pageModel==PAGE_MODEL_REFERENCE){
     				commonChangeAction();
     			}

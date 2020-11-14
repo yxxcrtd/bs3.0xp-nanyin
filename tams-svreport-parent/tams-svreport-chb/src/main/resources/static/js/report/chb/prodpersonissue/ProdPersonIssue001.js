@@ -164,7 +164,7 @@ $(function(){
             param = getPageParams();
             param.flag = flag;
             if(flag=="0"){
-            	param.status="01";
+            	//param.status="01";
             	param.submitStatus="01";
             }
             param.exportflag = 'export';

@@ -75,7 +75,8 @@ public class FinProductPayInt001Controller extends BaseController {
      */
     @Autowired
     private FinProductPayInt003Service finProductPayInt003Service;
-    
+
+
     @Autowired
     private IPlatformDate platformDateImpl;
     
@@ -175,7 +176,8 @@ public class FinProductPayInt001Controller extends BaseController {
 		if(finProductPayInt001Dto.getPayDate().compareTo(platformDateImpl.getSysDate())<0) {
         	ValidMessage validMessage = new ValidMessage("","支付日不能小于平台日期");
                 errorList.add(validMessage);
-        }  
+        }
+
         
         if (WorkFlowUtil.isNotFromToDoList()) {
         	

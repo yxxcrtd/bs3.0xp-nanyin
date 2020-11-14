@@ -493,7 +493,9 @@ public class FinFloatMgtExpQuotationService extends BaseService<FinFloatMgtExpQu
                 	//删除现金流计提规则
                 	finfloatCountingRuleMapper.deleteByPrimaryKey(countKey);
                 	//删除现金流计提计划
+                    //scheKey.setAccrDate(entity.getfAccrDate());
                 	finFloatAccrualScheMapper.deleteByPrimaryKey(scheKey);
+                    finFloatMgtExpQuotationMapper.deleteFloatAccrByPrimaryKey(scheKey);
                 	//删除现金流支付规则
                 	finCashPayRuleMapper.deleteByPrimaryKey(payKey);
                 	//删除现金流付费计划

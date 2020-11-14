@@ -662,7 +662,7 @@
     select t2.finprod_market_id bondCode,
     t2.finprod_id finprodId,
     t2.finprod_abbr bondAbbrName,
-    t1.pledge_amt pledgePrin,
+    t1.PLEDGE_NUMBER * 100 pledgePrin,
     null as prin,
     t1.pledge_ratio*100  pledgeRatio
     from fin_deal_pledge t1
