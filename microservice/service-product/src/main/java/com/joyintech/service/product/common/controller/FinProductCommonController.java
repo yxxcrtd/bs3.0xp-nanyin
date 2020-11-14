@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.framework.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -373,6 +374,10 @@ public class FinProductCommonController {
     	List<String> customerType = new ArrayList<String>();
     	customerType.add(DictCodeList.客户类型_法人.getValue());
         map.put("customerType", customerType);
+        //add by mashukai BS-1995草稿箱同业机构字段反显没有值问题 20201113 start
+        String initValueStr = (String) map.get("initValue");
+         map.put("initValue",StringUtil.splitToList(",",initValueStr));
+        //add by mashukai BS-1995草稿箱同业机构字段反显没有值问题 20201113 end
         return finProductCommonService.getCustomerName(map,page,length);
      }
     /**
