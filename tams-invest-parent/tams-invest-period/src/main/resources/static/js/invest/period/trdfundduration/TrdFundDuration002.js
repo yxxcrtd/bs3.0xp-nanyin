@@ -63,7 +63,7 @@
         , {
             field : 'tradeAmt',
             width : "200",
-            // edit : true,
+            edit : true,
             title : 'IntDetailDuration.tradeAmt',
             type : 'money',
             sortable : false
@@ -86,7 +86,38 @@
                     }
                     return '<i class="btn layui-icon detail" data-ignore="true" title="明细">&#xe60a;</i>';
                 }
-            }],
+    }],
+        editCell : function(value, row, field, cell, column) {
+            if (field == 'tradeAmt') {
+                if (!value) {
+                    // 不能为空
+                    revertFlag = true;
+                    var msg = JoyinUtil.getMessage(JoyinMessage.COMMON_E_0057,
+                            JoyinUtil.getLabel('IntDetailDuration.tradeAmt'));
+                    Joyin.alert(msg, 2);
+                } else if (parseInt(value) <= 0) {
+                    // 不能小于零
+                    revertFlag = true;
+                    var msg = JoyinUtil.getMessage(
+                            JoyinMessage.BUSS_COM_E_0004,
+                            [ JoyinUtil.getLabel('IntDetailDuration.tradeAmt'),
+                                    0 ]);
+                    Joyin.alert(msg, 2);
+                } else {
+                    var intDetailList = repoInfoTable.getAllRows();
+                    var sumTradeAmt = 0;
+                    var sumQty = 0;
+                    var sumRegistShare = 0;
+                    // // 汇总
+                    $.each(intDetailList, function (i, v) {
+                        sumTradeAmt = JoyinMath.doAdd(v.tradeAmt, sumTradeAmt);
+                        sumQty = JoyinMath.doAdd(v.qty, sumQty);
+                        sumRegistShare = JoyinMath.doAdd(v.registShare, sumRegistShare);
+                    });
+                    $('#tradeAmt').val(sumTradeAmt);
+                }
+            }
+        },
         // beforeEditCell : function(value, field, row, cell, column) {
         // 	editCellData = _.clone(row);
     	// 	return true;
@@ -148,7 +179,7 @@
         //     }
         //     repoInfoTable.renderRow(row.LAY_TABLE_INDEX, row);
         //     finAssetIntInfoList = repoInfoTable.getAllRows();
-        //     resetTableData();
+        //     // resetTableData();
         // },
         done : function() {
             if (pageModel != PAGE_MODEL_REFERENCE){
@@ -685,27 +716,27 @@
             }
         }
         // // 单位分红净值
-        // var unitCprice = $("#unitCprice").val();
-        // var tradeAmt = $("#tradeAmt").val();
-        // var assetType = $("#assetType").val();
+        var unitCprice = $("#unitCprice").val();
+        var tradeAmt = $("#tradeAmt").val();
+        var assetType = $("#assetType").val();
         // // 分配处理每一行
-        // for (var i = 0; i < finAssetIntInfos.length; i++) {
-        //     if (finAssetIntInfos[i].useFlg
-        //             && finAssetIntInfos[i].useFlg === 'Y') {
-        //         continue;
-        //     }
-        //     if (unitCprice) {
-        //         finAssetIntInfos[i].unitCprice = unitCprice;
-        //         // 分红金额
-        //         var tradeAmt = JoyinMath.doMul(unitCprice,
-        //                 finAssetIntInfos[i].registShare, 2,
-        //                 JoyinMath.ROUND_HALF_UP);
-        //         finAssetIntInfos[i].tradeAmt = tradeAmt;
-        //         if (FUND_ASSET_TYPE_F01 == assetType) {
-        //             finAssetIntInfos[i].qty = tradeAmt;
-        //         }
-        //     }
-        // }
+        for (var i = 0; i < finAssetIntInfos.length; i++) {
+            if (finAssetIntInfos[i].useFlg
+                    && finAssetIntInfos[i].useFlg === 'Y') {
+                continue;
+            }
+            if (unitCprice) {
+                finAssetIntInfos[i].unitCprice = unitCprice;
+                // 分红金额
+                var tradeAmt = JoyinMath.doMul(unitCprice,
+                        finAssetIntInfos[i].registShare, 2,
+                        JoyinMath.ROUND_HALF_UP);
+                finAssetIntInfos[i].tradeAmt = tradeAmt;
+                if (FUND_ASSET_TYPE_F01 == assetType) {
+                    finAssetIntInfos[i].qty = tradeAmt;
+                }
+            }
+        }
         repoInfoTable.clear(function() {
             var unitCprice = $("#unitCprice").val();
             $.each(finAssetIntInfos, function(i, v) {
@@ -743,7 +774,7 @@
         // var sumTradeAmt = 0;
         // var sumQty = 0;
         // var sumRegistShare = 0;
-        // // 汇总
+        // // // 汇总
         // $.each(intDetailList, function(i, v) {
         //     sumTradeAmt = JoyinMath.doAdd(v.tradeAmt, sumTradeAmt);
         //     sumQty = JoyinMath.doAdd(v.qty, sumQty);
