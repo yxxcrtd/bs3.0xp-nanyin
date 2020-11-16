@@ -243,7 +243,7 @@
                 Joyin.ajaxJson(basePath + 'invest/product/feepay/FinProductFeePay001/check', data, function(result) {
                     Joyin.ajaxJson(basePath + 'invest/product/feepay/FinProductFeePay001/checkHasAfterTrade', data, function(result) {
                         if(result == true){
-                    	    Joyin.confirm(JoyinUtil.getMessage("BUSS_COM_E_0039",JoyinUtil.getLabel("FinFloatMgtExpQuotation002.fAccrDate")+object.fAccrDate), function() {
+                    	    Joyin.confirm(JoyinUtil.getMessage("BUSS_COM_E_0097"), function() {
                                 Joyin.prompt(JoyinUtil.getLabel("pingan.common.revokeReason"), 0, function (result) {
                                 result = result.replace(/\s+/g,"");
                                 if (!result) {
