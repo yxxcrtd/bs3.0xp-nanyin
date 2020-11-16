@@ -390,7 +390,10 @@ public class TrdRepoTrade002DtoValidator implements TradeCommonValidator {
 
         //add by msk TISHKBS-1038 新增一次性划款通道交易前是否划款判断 start
         if(!"".equals(inputDto.getChlId())&&inputDto.getChlId()!=null){
-            Integer count = trdRepoTrade002Service.selectchlTrade(inputDto.getChlId());
+            Map<String,Object> sMap= new HashMap<String ,Object>();
+            sMap.put("chlId",inputDto.getChlId());
+            sMap.put("finprodId",inputDto.getPortfolioId());
+            Integer count = trdRepoTrade002Service.selectchlTrade(sMap);
             if(count <= 0){
                 ValidMessage validMessage = new ValidMessage(getMessage("通过一次性通道投资请先进行划款！",getMessage("invest.channelId")));
                 errorList.add(validMessage);

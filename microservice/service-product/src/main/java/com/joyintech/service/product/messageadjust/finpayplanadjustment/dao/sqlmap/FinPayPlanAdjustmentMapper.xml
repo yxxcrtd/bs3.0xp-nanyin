@@ -132,8 +132,7 @@
 		<if test="prodType != null and prodType != '' ">
 			and PRD_LAYER_PARAM.PROD_STYLE = #{prodType}
 		</if>	
-		AND EXISTS (SELECT 1 FROM FIN_CASH_PLAN
-   				WHERE FIN_CASH_INFO.CASH_ID = FIN_CASH_PLAN.CASH_ID)										
+<!--		AND EXISTS (SELECT 1 FROM FIN_CASH_PLAN WHERE FIN_CASH_INFO.CASH_ID = FIN_CASH_PLAN.CASH_ID) 									-->
 	</select>
 	<!-- 根据产品代码和费用名称，联动带出产品对应费用的付费计划 -->
 	<select id="selectForPage" resultMap="BaseResultMap">

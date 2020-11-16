@@ -966,8 +966,8 @@ public class TrdBondInvestTradeService extends BaseService {
     }
 
     /* add by msk 新增查询通道划款交易 TISHKBS-1038 20201111 start */
-    public int selectchlTrade(String chlId) {
-        return trdBondInvestTradeMapper.selectchlTrade(chlId);
+    public int selectchlTrade(Map<String,Object> map) {
+        return trdBondInvestTradeMapper.selectchlTrade(map);
     }
     /* add by msk 新增查询通道划款交易 TISHKBS-1038 20201111 end */
 }

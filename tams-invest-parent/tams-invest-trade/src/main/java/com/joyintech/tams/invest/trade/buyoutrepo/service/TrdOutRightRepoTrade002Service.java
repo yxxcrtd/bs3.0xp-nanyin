@@ -1873,14 +1873,14 @@ public class TrdOutRightRepoTrade002Service extends BaseService<TrdOutRightRepoT
 	/**
 	 * 查找通道划款交易
 	 *
-	 * @param chlId 交易编号
+	 * @param map 交易编号
 	 * @return 通道划款交易信息
 	 * @see
 	 * @since 1.0
 	 */
-	public int selectchlTrade(String chlId) {
+	public int selectchlTrade(Map<String,Object> map) {
 		return restTemplate.postForObject(
-				ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/selectchlTrade/" + chlId, null,
+				ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/selectchlTrade/", map,
 				Integer.class);
 	}
 	/* add by msk 新增查询通道划款交易 20201111 end */

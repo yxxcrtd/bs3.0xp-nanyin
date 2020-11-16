@@ -408,4 +408,16 @@ public class FinProductFeePayController {
     public String queryVDate(String ptlId) {
         return finProductFeePayService.queryVdate(ptlId);
     }
+
+
+    /**
+     *
+     * @param map
+     * @return 待处理的计划个数
+     */
+    @PostMapping("checkHasAfterTrade")
+    public int checkHasAfterTrade(@RequestBody Map<String, Object> map) {
+        return finProductFeePayService.checkHasAfterTrade(map);
+        //return 0;
+    }
 }

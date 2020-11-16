@@ -583,10 +583,30 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
 
         //add by msk TISHKBS-1038 新增一次性划款通道交易前是否划款判断 start
         if(!"".equals(dto.getChlId())&&dto.getChlId()!=null){
-            Integer count = trdFundInvestTrade002Service.selectchlTrade(dto.getChlId());
-            if(count <= 0){
-                ValidMessage validMessage = new ValidMessage(getMessage("通过一次性通道投资请先进行划款！",getMessage("invest.channelId")));
-                errorList.add(validMessage);
+            Integer count;
+            Map<String,Object> sMap= new HashMap<String ,Object>();
+            if(!StringUtil.equals(dto.getTrdInvestPersonInfo().getIsOutTrade(), DictCodeList.是否_否.getValue()) &&
+                (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue()) ||
+                        StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue()) ||
+                        StringUtil.equals(dto.getPs(), DictCodeList.交易方向_认购.getValue()))){
+                sMap.put("chlId",dto.getChlId());
+                sMap.put("finprodId",dto.getPortfolioId());
+                count = trdFundInvestTrade002Service.selectchlTrade(sMap);
+                if(count <= 0){
+                    ValidMessage validMessage = new ValidMessage(getMessage("通过一次性通道投资请先进行划款！",getMessage("invest.channelId")));
+                    errorList.add(validMessage);
+                }
+
+            }else if(StringUtil.equals(dto.getTrdInvestPersonInfo().getIsOutTrade(), DictCodeList.是否_否.getValue()) &&
+                        (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue()) ||
+                            StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())     )){
+                sMap.put("chlId",dto.getChlId());
+                sMap.put("counterId",dto.getCounterId());
+                count = trdFundInvestTrade002Service.selectchlTrade(sMap);
+                if(count <= 0){
+                    ValidMessage validMessage = new ValidMessage(getMessage("交易对手通过一次性通道投资请先进行划款！",getMessage("invest.channelId")));
+                    errorList.add(validMessage);
+                }
             }
         }
         //add by msk TISHKBS-1038 新增一次性划款通道交易前是否划款判断 end

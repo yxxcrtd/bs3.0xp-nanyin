@@ -13,6 +13,7 @@ package com.joyintech.tams.valuation.batch.deltrightdealbook.service;
 import com.joyintech.calculation.config.NumberEnum;
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.BokDetailId;
@@ -40,6 +41,7 @@ import com.joyintech.tams.valuation.common.constants.BookConstant;
 import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -354,16 +356,33 @@ public class DeltRightDealBookProcessorService {
                     NumberEnum.MONEY.getCode());
                 // 定义 买卖价差 = 交易明细.交易金额 - (交易明细.交易份额 + 变量.冲减溢折价) - 交易明细.利息总额
                 /** modify by yanya on 20200226 **/
-                //定义  变量.买卖价差=交易明细.交易金额 - (交易明细.交易份额 + 变量.冲减溢折价)  - 交易明细.利息总额 - 各种变量.交易各种费用.通道费
-                BigDecimal saleDiffer = ArithmeticUtil.doSub(dealNow.getTradeAmt(),
-                    dealNow.getShareAmt(), scourSpilledPrice, dealNow.getIntAmt(),
-                        accountAmountMap.get(BookConstant.REAL_CHLAMT));
                 // 实收金额 <- 交易明细.交易金额
                 accountAmountMap.put(BookConstant.DEALAMT,
                     ArithmeticUtil.round(dealNow.getTradeAmt(), NumberEnum.MONEY));
-                // 应收利息 <- 交易明细.利息总额
+//                accountAmountMap.put(BookConstant.INTAMT,
+//                    ArithmeticUtil.round(dealNow.getIntAmt(), NumberEnum.MONEY));
+                BigDecimal varCjyjlx = BigDecimal.ZERO;
+                if(dealNow.getShareAmt().compareTo(costQuantity)> 0){
+                    varCjyjlx = ArithmeticUtil.divide(
+                            ArithmeticUtil.multiply(interestBalance, dealNow.getShareAmt()), costQuantity,
+                            NumberEnum.MONEY.getCode());
+                    // 冲减应计利息方式 01、按比例冲减 02、按实付利息冲减
+                    String offsetIntamtMode = CacheUtil.getSysParam("OFFSET_INTAMT_MODE_JHL");
+                    if (StringUtils.isNotEmpty(offsetIntamtMode)
+                            && offsetIntamtMode.equals(DictCodeList.冲减应计利息方式_按实付利息冲减.getValue())) {
+                        varCjyjlx = dealNow.getIntAmt();
+                    }
+                }else{
+                    varCjyjlx = interestBalance;
+                }
                 accountAmountMap.put(BookConstant.INTAMT,
-                    ArithmeticUtil.round(dealNow.getIntAmt(), NumberEnum.MONEY));
+                        ArithmeticUtil.round(varCjyjlx, NumberEnum.MONEY));
+
+                //定义  变量.买卖价差=交易明细.交易金额 - (交易明细.交易份额 + 变量.冲减溢折价)  - 交易明细.利息总额 - 各种变量.交易各种费用.通道费
+                BigDecimal saleDiffer = ArithmeticUtil.doSub(dealNow.getTradeAmt(),
+                        dealNow.getShareAmt(), scourSpilledPrice, interestBalance,
+                        accountAmountMap.get(BookConstant.REAL_CHLAMT));
+
                 // 本金金额 <-交易明细.交易份额
                 accountAmountMap.put(BookConstant.COST,
                     ArithmeticUtil.round(dealNow.getShareAmt(), NumberEnum.MONEY));

@@ -225,7 +225,7 @@ public class TrdPlanCurrDuration002Controller extends BaseController{
         parameter.setCommonBusinessType(DictCodeList.共通业务类型_资产存续期交易);
         if(StringUtil.isEmpty(dto.getbTradeId())){
             //       为非货币现金分红及非货币红利再投时 设置前置交易编号
-            if(StringUtil.equals(dto.getType(),"05")){
+            if(StringUtil.equals(dto.getType(),"05") || StringUtil.equals(dto.getType(),"06")){
                 dto.setbTradeId(dto.getTotleTradeId());
             }
             dto.setTotleTradeId(baseGetBusinessId.buildBussinessCode(parameter));

@@ -836,7 +836,6 @@ public class FinProductFeePayService extends BaseService<FinProductFeePayDto> {
      * 	查询组合起息日
      * 
      * @param ptlId 组合代码
-     * @param feeId 费用Id
      * @return 上次计提结束日
      */
     public String queryVdate(String ptlId) {
@@ -846,5 +845,10 @@ public class FinProductFeePayService extends BaseService<FinProductFeePayDto> {
               lastPayDate = DateUtil.format(ptlPortfolio.getVdate());
             }
         return lastPayDate;
+    }
+
+    public int checkHasAfterTrade(Map<String, Object> map) {
+
+        return finProductFeePayMapper.checkHasAfterTrade(map);
     }
 }

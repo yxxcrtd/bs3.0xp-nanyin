@@ -277,4 +277,7 @@ public interface FinProductFeePayMapper {
      * @return
      */
     MstFeeinfo selectMstFeeInfo(@Param("finprodId") String finprodId, @Param("feeId") String feeId,@Param("enddate") String enddate);
+
+    int checkHasAfterTrade(Map<String, Object> map);
+
 }

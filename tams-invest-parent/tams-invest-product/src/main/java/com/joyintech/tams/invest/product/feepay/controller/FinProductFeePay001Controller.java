@@ -11,11 +11,15 @@
 package com.joyintech.tams.invest.product.feepay.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
+
+import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.product.messageadjust.finfloatmgtexpquotation.dto.FinFloatMgtExpQuotation001Dto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -368,5 +372,28 @@ public class FinProductFeePay001Controller extends BaseController {
     @RequestMapping("queryFeeInfoByFeeId")
     public MstFeeinfo queryFeeInfoByFeeId(String feeId) {
         return mstFeeinfoMapper.selectByPrimaryKey(feeId);
+    }
+
+    @ResponseBody
+    @RequestMapping("/checkHasAfterTrade")
+    public boolean checkHasAfterTrade(@RequestBody FinProductFeePay001Dto dto){
+//        String finprodId = StringUtil.isNotEmpty(dto.getpFinprodId())?dto.getpFinprodId():dto.getFinprodId();//支持分层
+//        FinProduct finProduct = finProductFeePay001Service.getFinProduct(finprodId);
+//        boolean flag = finProductFeePay001Service.isDealCalendarHoliday(dto.getfAccrDate(),finProduct.getCalendarId());
+//        String msg = null;
+//        if(!flag){
+//            msg = getMessage("BUSS_COM_E_0039",getMessage("FinFloatMgtExpQuotation002.fAccrDate")+dto.getfAccrDate());
+//        }
+
+        Map<String,Object> param = new HashMap<>();
+        param.put("tradeId",dto.getTradeId());
+        param.put("feeId",dto.getFeeId());
+        param.put("mDate",dto.getMdateStr());
+        param.put("payDate",dto.getPayDateStr());
+        int result = finProductFeePay001Service.checkHasAfterTrade(param);
+        if(result > 0 ){
+            return true;
+        }
+        return false;
     }
 }
