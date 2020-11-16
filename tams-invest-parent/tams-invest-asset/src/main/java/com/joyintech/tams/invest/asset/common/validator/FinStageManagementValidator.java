@@ -57,13 +57,16 @@ public class FinStageManagementValidator implements BeanValidator{
             /*增加校验 计划类利率型期次管理子计划期次信息的起息日、到期日都必须大于母计划的起息日 add by yujiaping 2020-11-10 start*/
             if(null != item.getVdate() && null != item.getMdate()) {
             FinStageManagementDto vmdto = finStageManagementService.getVdateAndMdate(finprodId);
-            if(DateUtil.compareDate(item.getVdate(),vmdto.getVdate()) <= 0){
-            	resultList.add(new ValidMessage("子计划期次信息的起息日必须大于母计划的起息日！"));
+            if(DateUtil.compareDate(item.getVdate(),vmdto.getVdate()) < 0){
+            	resultList.add(new ValidMessage("子计划期次信息的起息日不可小于母计划的起息日！"));
             }
             if(DateUtil.compareDate(item.getMdate(),vmdto.getVdate()) <= 0){
             	resultList.add(new ValidMessage("子计划期次信息的到期日必须大于母计划的起息日！"));
             }
+            if(DateUtil.compareDate(item.getMdate(),item.getVdate()) <= 0){
+        	    resultList.add(new ValidMessage("到期日必须大于起息日！"));
             }
+         }
             /*增加校验 计划类利率型期次管理子计划期次信息的起息日、到期日都必须大于母计划的起息日 add by yujiaping 2020-11-10 end*/
             if(null==item.getIssueAmt()){
                 resultList.add(new ValidMessage("issueAmt",

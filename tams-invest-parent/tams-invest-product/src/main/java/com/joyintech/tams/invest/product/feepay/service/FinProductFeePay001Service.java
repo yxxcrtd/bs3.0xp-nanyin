@@ -95,4 +95,10 @@ public class FinProductFeePay001Service extends CommonExportService<FinProductFe
     public Page<FinProductFeePay001Dto> selectPageData(Map<String, Object> selectParam) {
         return selectForPage(selectParam);
     }
+
+    public int checkHasAfterTrade(Map<String,Object> param) {
+        return restTemplate.postForObject(ServiceApplication.PRODUCT_SERVICE_NAME
+                        + "/FinProductFeePay/checkHasAfterTrade", param,
+                Integer.class);
+    }
 }

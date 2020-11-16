@@ -29,8 +29,10 @@
 				<input type="text" name="finprodId" data-th-value='${finprodId}'
 					hidden>
 				<!-- 隐藏字段 工作流代码 -->
-				<input type="text" name="workflowId" data-th-value='${workflowId}'
+				<!-- modify by mashukai 行内识别码过滤流程中数据 TISHKBS-1569 20201114 start -->
+				<input type="text" id="FinNetValueProductBuild002_workflowId" name="workflowId" data-th-value='${workflowId}'
 					hidden>
+				<!-- modify by mashukai 行内识别码过滤流程中数据 TISHKBS-1569 20201114 end -->
 				<!-- 隐藏字段 新建费用时缓存key值 -->
 				<input type="text" id="FinProductBuild002_feeNewAddId"
 					name="feeNewAddId" data-th-value='${feeNewAddId}' hidden>
@@ -259,15 +261,18 @@
 									<div class="form-inline-wrap">
 											<label class="layui-form-label form-label-wrap"
 												data-th-text="#{ProductReportRegister001.repFinprodInsId}">行内标识码</label>
+											<!-- modify by mashukai 行内识别码过滤流程中数据 TISHKBS-1569 20201114 start -->
 											<div class="layui-input-inline input-inline">
 													<select type="text" name="repFinprodInsId"
 														id="FinNetValueProductBuild002_repFinprodInsId"
-														class="layui-input form-input input-select" 
+														class="layui-input form-input input-select"
+														data-th-parentids="|FinNetValueProductBuild002_workflowId|"
 														data-th-placeholder="#{SysCommon.placeholder}"
 														data-th-data-url="@{/invest/product/common/queryRepFinprodInsId(repFinprodInsId=${entity?.repFinprodInsId})}"
 														data-th-initValue='${entity?.repFinprodInsId}' required>
 													</select>
 											</div>
+											<!-- modify by mashukai 行内识别码过滤流程中数据 TISHKBS-1569 20201114 end -->
 										</div>
 									<div class="form-inline-wrap">
 										<!--  

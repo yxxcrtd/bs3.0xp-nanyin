@@ -586,7 +586,7 @@ public class FinNetValueProductBuild002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("isHoliday")
-    public boolean isHoliday(@RequestBody FinNetValueProductBuild002Dto finNetValueProductBuild002Dto) { 
+    public boolean isHoliday(@RequestBody FinNetValueProductBuild002Dto finNetValueProductBuild002Dto) {
     	boolean flages = false;
     	Date vdate = finNetValueProductBuild002Dto.getVdate();
     	Date mdate = finNetValueProductBuild002Dto.getMdate();
@@ -625,5 +625,15 @@ public class FinNetValueProductBuild002Controller extends BaseController {
         map.put("profitTypeList", profitTypeList);
         return finProductModule001Service.getTempletNameList(map);
     }
-    
+
+    //add by mashukai BS-1995草稿箱同业机构字段反显没有值问题 20201113 start
+    @Override
+    public Object after(String draftobj, Model model) {
+        FinNetValueProductBuild002Dto dto = JsonUtils.json2Object(draftobj,FinNetValueProductBuild002Dto.class);
+        if(StringUtil.isNotEmpty(dto.getSameOrg())){
+            model.addAttribute("sameOrg",dto.getSameOrg());
+        }
+        return dto;
+    }
+    //add by mashukai BS-1995草稿箱同业机构字段反显没有值问题 20201113 end
 }

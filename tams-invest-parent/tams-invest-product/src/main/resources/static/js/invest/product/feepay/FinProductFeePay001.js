@@ -241,13 +241,29 @@
         		data.operateType = 'revoke';
         		data.pageModel = PAGE_MODEL_REFERENCE;
                 Joyin.ajaxJson(basePath + 'invest/product/feepay/FinProductFeePay001/check', data, function(result) {
-                	Joyin.prompt(JoyinUtil.getLabel("pingan.common.revokeReason"), 0, function (result) {
-                    result = result.replace(/\s+/g,"");
-                    if (!result) {
-                        result = '无';
-                    }
-                        data.revokeReason = result;
-                        WorkFlow.doRevokeList(basePath + 'invest/product/feepay/FinProductFeePay001/doRevoke', data, "FinProductFeePay001_btn_revoke", "FinProductFeePay002");
+                    Joyin.ajaxJson(basePath + 'invest/product/feepay/FinProductFeePay001/checkHasAfterTrade', data, function(result) {
+                        if(result == true){
+                    	    Joyin.confirm(JoyinUtil.getMessage("BUSS_COM_E_0039",JoyinUtil.getLabel("FinFloatMgtExpQuotation002.fAccrDate")+object.fAccrDate), function() {
+                                Joyin.prompt(JoyinUtil.getLabel("pingan.common.revokeReason"), 0, function (result) {
+                                result = result.replace(/\s+/g,"");
+                                if (!result) {
+                                    result = '无';
+                                }
+                                    data.revokeReason = result;
+                                    WorkFlow.doRevokeList(basePath + 'invest/product/feepay/FinProductFeePay001/doRevoke', data, "FinProductFeePay001_btn_revoke", "FinProductFeePay002");
+                                });
+                            });
+                        }else{
+                            Joyin.prompt(JoyinUtil.getLabel("pingan.common.revokeReason"), 0, function (result) {
+                                result = result.replace(/\s+/g,"");
+                                if (!result) {
+                                    result = '无';
+                                }
+                                data.revokeReason = result;
+                                WorkFlow.doRevokeList(basePath + 'invest/product/feepay/FinProductFeePay001/doRevoke', data, "FinProductFeePay001_btn_revoke", "FinProductFeePay002");
+                            });
+
+                        }
                     });
                 });
             }else{
