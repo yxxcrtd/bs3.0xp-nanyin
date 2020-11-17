@@ -26,6 +26,7 @@ width: 90px !important;
 				<span class="title-des">申购</span><i
 					class="iconfont icon-arrow-down pro-down-icon"></i>
 			</h4>
+			<!-- modify by mashukai 20201116 BS-2025 草稿箱开放模式反显值不对 start -->
 			<div class="layui-form-item">
 				<div class="form-inline-wrap" >
 					<label class="layui-form-label form-label-wrap"
@@ -34,7 +35,7 @@ width: 90px !important;
 						<select th:id="|${bussFinProductOpenPlanDto}_openMode|"
 								th:name="|${bussFinProductOpenPlanDto}.openMode|"
 								class="layui-input form-input input-select"
-								th:initValue="${pageModel} eq ${pageModelNew} ? ${OPENMODE_01} : ${entity?.openMode}"
+								th:initValue="${pageModel} eq ${pageModelNew} and (${workflowId}=='' or ${workflowId}== null)? ${OPENMODE_01} : ${entity?.openMode}"
 								data-th-data-result="${OPENMODE}" searchable="false"
 								placeholder="请输入内容"
 								data-th-placeholder="#{SysCommon.placeholder}"
@@ -49,7 +50,7 @@ width: 90px !important;
 							<select th:id="|${bussFinProductOpenPlanDto}_openDaysType|"
 								th:name="|${bussFinProductOpenPlanDto}.openDaysType|"
 								class="layui-input form-input input-select"
-								th:initValue="${pageModel} eq ${pageModelNew} ? ${OPEN_DAYS_TYPE_01} : ${entity?.openDaysType}"
+								th:initValue="${pageModel} eq ${pageModelNew} and (${workflowId}=='' or ${workflowId}== null)? ${OPEN_DAYS_TYPE_01} : ${entity?.openDaysType}"
 								data-th-data-result="${OPEN_DAYS_TYPE}" searchable="false"
 								placeholder="请输入内容"
 								allowClear="false"
@@ -200,7 +201,7 @@ width: 90px !important;
 									data-th-required="${pageId} eq 'FinProductBuild002'">
 								</select> -->
 								<select th:id="|${bussFinProductOpenPlanDto}_calcMethod|" th:name="|${bussFinProductOpenPlanDto}.calcMethod|"
-									th:initValue="${pageModel} eq ${pageModelNew} ? ${CALC_RULE_01} : ${entity?.calcMethod}" searchable="false"
+									th:initValue="${pageModel} eq ${pageModelNew} and (${workflowId}=='' or ${workflowId}== null)? ${CALC_RULE_01} : ${entity?.calcMethod}" searchable="false"
 									class="layui-input form-input input-select" placeholder="请输入内容"
 									data-th-placeholder="#{SysCommon.placeholder}"
 									data-th-data-result="${CALC_RULE}"
@@ -228,7 +229,7 @@ width: 90px !important;
 						<div class="layui-input-inline input-inline">
 							<select th:id="|${bussFinProductOpenPlanDto}_tradedayRule|"
 								th:name="|${bussFinProductOpenPlanDto}.tradedayRule|"
-								th:initValue="${pageModel} eq ${pageModelNew} ? ${TDAY_RULE_02} : ${entity?.tradedayRule}"
+								th:initValue="${pageModel} eq ${pageModelNew} and (${workflowId}=='' or ${workflowId}== null)? ${TDAY_RULE_02} : ${entity?.tradedayRule}"
 								searchable="false" class="layui-input form-input input-select"
 								placeholder="请输入内容"
 								data-th-placeholder="#{SysCommon.placeholder}"
@@ -237,6 +238,7 @@ width: 90px !important;
 						</div>
 					</div>
 				</div>
+				<!-- modify by mashukai 20201116 BS-2025 草稿箱开放模式反显值不对 end -->
 				<div class="layui-form-item">
 					<div class="form-inline-wrap">
 						<label class="layui-form-label form-label-wrap" th:text="#{FinProductOpenRule.calcRule}">推算规则</label>
@@ -332,6 +334,7 @@ width: 90px !important;
 				<span class="title-des">赎回</span><i
 					class="iconfont icon-arrow-down pro-down-icon"></i>
 			</h4>
+			<!-- modify by mashukai 20201116 BS-1993,BS-1996 开放计划，赎回计划反显值不对 start -->
 			<div class="pro-module-item">
 				<div class="layui-form-item">
 					<div class="form-inline-wrap">
@@ -341,7 +344,7 @@ width: 90px !important;
 							<select th:id="|${bussFinProductOpenPlanRedDto}_openMode|"
 								th:name="|${bussFinProductOpenPlanRedDto}.openMode|"
 								class="layui-input form-input input-select"
-								th:initValue="${pageModel} eq ${pageModelNew} ? ${OPENMODE_01} : ${redentity?.openMode}"
+								th:initValue="${pageModel} eq ${pageModelNew} and ${isDraft}=='false'? ${OPENMODE_01} : ${redentity?.openMode}"
 								data-th-data-result="${OPENMODE}" searchable="false"
 								placeholder="请输入内容"
 								data-th-placeholder="#{SysCommon.placeholder}"
@@ -356,7 +359,7 @@ width: 90px !important;
 							<select th:id="|${bussFinProductOpenPlanRedDto}_openDaysType|"
 								th:name="|${bussFinProductOpenPlanRedDto}.openDaysType|"
 								class="layui-input form-input input-select"
-								th:initValue="${pageModel} eq ${pageModelNew} ? ${OPEN_DAYS_TYPE_01} : ${entity?.openDaysType}"
+								th:initValue="${pageModel} eq ${pageModelNew} and ${isDraft}=='false'? ${OPEN_DAYS_TYPE_01} : ${entity?.openDaysType}"
 								data-th-data-result="${OPEN_DAYS_TYPE}" searchable="false"
 								placeholder="请输入内容"
 								allowClear="false"
@@ -505,7 +508,7 @@ width: 90px !important;
 								data-th-required="${pageId} eq 'FinProductBuild002'">
 							</select>-->
                         <select th:id="|${bussFinProductOpenPlanRedDto}_calcMethod|" th:name="|${bussFinProductOpenPlanRedDto}.calcMethod|"
-								th:initValue="${pageModel} eq ${pageModelNew} ? ${CALC_RULE_01} : ${redentity?.calcMethod}" searchable="false"
+								th:initValue="${pageModel} eq ${pageModelNew} and ${isDraft}=='false'? ${CALC_RULE_01} : ${redentity?.calcMethod}" searchable="false"
 								class="layui-input form-input input-select" placeholder="请输入内容"
 								data-th-placeholder="#{SysCommon.placeholder}"
 								data-th-data-result="${CALC_RULE}"
@@ -530,7 +533,7 @@ width: 90px !important;
 						<div class="layui-input-inline input-inline">
 							<select th:id="|${bussFinProductOpenPlanRedDto}_tradedayRule|"
 								th:name="|${bussFinProductOpenPlanRedDto}.tradedayRule|"
-								th:initValue="${pageModel} eq ${pageModelNew} ? ${TDAY_RULE_02} : ${redentity?.tradedayRule}"
+								th:initValue="${pageModel} eq ${pageModelNew} and ${isDraft}=='false'? ${TDAY_RULE_02} : ${redentity?.tradedayRule}"
 								searchable="false" class="layui-input form-input input-select"
 								placeholder="请输入内容"
 								data-th-placeholder="#{SysCommon.placeholder}"
@@ -538,7 +541,8 @@ width: 90px !important;
 							</select>
 						</div>
 					</div>
-				</div>	
+				</div>
+				<!-- modify by mashukai 20201116 BS-1993,BS-1996 开放计划，赎回计划反显值不对 end -->
 				<div class="layui-form-item"> 
 					<div class="form-inline-wrap">
 						<label class="layui-form-label form-label-wrap"

@@ -90,6 +90,11 @@
         param.issuer = $("#issuer").val();
         //融资人主体
         param.financier = $("#financier").val();
+        //add by mashukai 20201117 BS-2009 草稿箱债券评级反显无数据问题 start
+        if(isDraft){
+            param.isDraft = isDraft.toString();
+        }
+        //add by mashukai 20201117 BS-2009 草稿箱债券评级反显无数据问题 end
         return param;
     }
     

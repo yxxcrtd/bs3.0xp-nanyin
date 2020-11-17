@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +35,6 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.SpringContextUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.component.business.common.dto.BaseFinProductBaseInfoDto;
@@ -288,4 +285,15 @@ public class FinFundTarget002Controller extends BaseController{
         String msg = finFundTargetService.start(processParameter, dto);
         return new AjaxResult(msg);
     }
+
+    //modify by mashukai 20201117 BS-2006公募基金草稿箱提交时中债报送信息反显没有值问题
+    @Override
+    public Object after(String draftobj, Model model) {
+        FinFundTargetDto dto = JsonUtils.json2Object(draftobj,FinFundTargetDto.class);
+        if(StringUtil.isNotEmpty(getParam(GlobalConstant.WORKFLOW_ID))){
+            dto.setWorkflowId(getParam(GlobalConstant.WORKFLOW_ID));
+        }
+        return dto;
+    }
+    //modify by mashukai 20201117 BS-2006公募基金草稿箱提交时中债报送信息反显没有值问题
 }

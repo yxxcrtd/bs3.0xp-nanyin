@@ -354,5 +354,14 @@
 //		}
 //    	//隐藏目标客户类型【该字段净值化产品已放到募集要素内
 //    	 getElementById('repInvestorType').parent().parent().hide();
+
+//add by yangwenjun 20201117 草稿箱功能行内识别码带出中债报送信息相关处理 start
+        if(isDraft){
+		    var repFinprodId = $('#FinNetValueProductBuild002_repFinprodInsId').val();
+                	if(repFinprodId){
+                		BussRepFinProductInfo.repInitByRepFinprodIdAction(repFinprodId);
+                	};
+		}
+//add by yangwenjun 20201117 草稿箱功能行内识别码带出中债报送信息相关处理 end
 	});
 }());

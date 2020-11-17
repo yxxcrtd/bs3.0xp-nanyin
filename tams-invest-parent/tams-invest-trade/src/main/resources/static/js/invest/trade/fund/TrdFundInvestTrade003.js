@@ -640,7 +640,9 @@ $(function () {
             var ps = $('#ps').val();
             var unitCprice = $('#unitCprice').val();
             if (unitCprice && tradeAmt && pageModel != PAGE_MODEL_REFERENCE) {
-                $('#shareAmt').val((Number(tradeAmt) - getPayWithTradeFee()) / unitCprice).trigger('blur');
+                if ($("#ps").val() != ps_T19) {
+                    $('#shareAmt').val((Number(tradeAmt) - getPayWithTradeFee()) / unitCprice).trigger('blur');
+                }
             }
         });
 

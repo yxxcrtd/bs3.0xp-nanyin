@@ -96,13 +96,24 @@
 	                    <div class="layui-input-inline input-inline">
 	                      <input type="text" id="busVouchnum" name="busVouchnum" class="layui-input form-input" placeholder="请输入" value="">
 	                    </div>
-	                </div>
-                    <div class="layui-inline layui-col-md4">
-                            <label class="layui-form-label form-lable">凭证是否展示分录</label>
-                            <div class="layui-input-inline input-inline">
-                                    <input type="checkbox" id="isShowfl"  name="isShowfl" lay-skin="switch"  lay-text="是|否" lay-filter="isShowfl" checked>
-                            </div>
-                    </div>
+	               </div>
+                   <div class="layui-inline layui-col-md4">
+                           <label class="layui-form-label form-lable">凭证是否展示分录</label>
+                           <div class="layui-input-inline input-inline">
+                                   <input type="checkbox" id="isShowfl"  name="isShowfl" lay-skin="switch"  lay-text="是|否" lay-filter="isShowfl" checked>
+                           </div>
+                   </div>
+                   <div class="layui-inline layui-col-md4">
+                       <label class="layui-form-label form-lable">科目号</label>
+                       <div class="layui-input-inline input-inline">
+                           <select type="text" id="subjectNo" name="subjectNo"
+                                   class="layui-input form-input input-select"
+                                   parentIds = "subjectLevel" formatoption = "false"
+                                   data-th-data-url='@{/valuation/accounadjustmanage/subjectset/ValSubjectSet001/getSubjectId2}'
+                                   allowClear="true" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}">
+                           </select>
+                       </div>
+                   </div>
             </div>
         </form>
     </div>

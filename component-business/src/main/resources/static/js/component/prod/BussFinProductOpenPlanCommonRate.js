@@ -5,7 +5,12 @@
 	var getElementByRedId = function(id) {
 		return $('#' + bussFinProductOpenPlanRedDto + '_' + id);
 	};
-	
+
+	// add by mashukai 20201116 BS-1993,BS-1996 开放计划，赎回计划反显值不对 start
+	if(isDraft && sameFlag1=='N'){
+		$("#red_div").show();
+	}
+	// add by mashukai 20201116 BS-1993,BS-1996 开放计划，赎回计划反显值不对 end
 	/**
 	 * 初始化加载tableFlag 
 	 */

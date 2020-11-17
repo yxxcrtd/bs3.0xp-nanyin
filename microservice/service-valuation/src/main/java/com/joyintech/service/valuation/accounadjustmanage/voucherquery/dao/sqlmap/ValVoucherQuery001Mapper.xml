@@ -60,7 +60,10 @@
                             AND (
                                 B.BUSI_ID LIKE '%' || #{busiId} || '%'
                             )
-                        </if>    
+                        </if>
+                        <if test="subjectNo !=null and subjectNo !='' ">
+                            AND NVL(B.DETAIL_SUBJECT_NO,B.SUBJECT_NO) = #{subjectNo}
+                        </if>
                 )
                 AND bb.BOOKSET_TYPE in (#{booksetType} ,#{booksetType2})      
                 <!-- 账套 -->        
@@ -234,6 +237,9 @@
                 </if>
                 <if test="happenDateEnd !=null">
                     AND B.HAPPEN_DATE &lt;= #{happenDateEnd}
+                </if>
+                <if test="subjectNo !=null and subjectNo !='' ">
+                    AND NVL(B.DETAIL_SUBJECT_NO,B.SUBJECT_NO) = #{subjectNo}
                 </if>
             ORDER BY 
                 A.BOOK_DATE DESC,
