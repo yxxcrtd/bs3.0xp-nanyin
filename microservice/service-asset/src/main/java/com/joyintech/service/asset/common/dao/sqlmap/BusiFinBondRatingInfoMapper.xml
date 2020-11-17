@@ -16,6 +16,8 @@
 		<!-- 数据库字段名改变更改sql字段名 by 赵东东 2019.11.25 start -->
 		<!--T.SEC_ISSUE_ID    sec_Issue_Id,-->
 		<!-- 数据库字段名改变更改sql字段名 by 赵东东 2019.11.25 end -->
+		T.GRADE_EXPECTATION gradeExpectation,
+		T.DIRECTION_CHANGE directionChange,
 		T.INPUT_TYPE      inputType,
 		T.CREATE_USER     createUser,
 		T.CREATE_DEPT     createDept,
