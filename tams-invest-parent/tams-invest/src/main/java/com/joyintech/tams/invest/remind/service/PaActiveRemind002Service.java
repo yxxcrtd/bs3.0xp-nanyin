@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -585,6 +586,7 @@ public class PaActiveRemind002Service extends BaseService<PaActiveRemind001Dto> 
             this.selramindR3S15(param, dto);
         }
         if(StringUtil.isEmpty(smallCategory) || StringUtil.equals(smallCategory, BussinessDictCodeList.提醒类型_小分类_计划类利率型存续期.getValue())) {
+        	param.put("quaryDateStr",DateUtil.format((Date)param.get("quaryDate"))); 
             dto.addAll(paActiveRemind002Mapper.selramindR3S10(param));
         }
 //    	if(StringUtil.isEmpty(smallCategory) || StringUtil.equals(smallCategory, BussinessDictCodeList.提醒类型_小分类_计划类利率型存续期回款确认.getValue())) {
