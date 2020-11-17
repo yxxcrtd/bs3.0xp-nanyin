@@ -1256,6 +1256,10 @@
       FROM TRD_PRODUCT_DEAL T
       LEFT JOIN TRD_PRODUCT_DEAL_ADD TPDA
         ON TPDA.TRADE_ID = T.TRADE_ID
+      <if test="counterId != null and counterId != ''">
+          LEFT JOIN FIN_PRODUCT_ADD FPA
+            ON FPA.FINPROD_ID = T.FINPROD_ID
+      </if>
       WHERE T.IS_CANCEL = 'N'
       AND T.TRADE_STATUS IN ( '01' , '03' )
       AND T.PS = 'HK09'
@@ -1264,7 +1268,7 @@
           AND TPDA.PORTFOLIO_ID = #{finprodId,jdbcType=VARCHAR}
       </if>
       <if test="counterId != null and counterId != ''">
-        AND T.FINPROD_ID = #{counterId,jdbcType=VARCHAR}
+        AND FPA.PORTFOLIO_ID = #{counterId,jdbcType=VARCHAR}
       </if>
     )
     select
