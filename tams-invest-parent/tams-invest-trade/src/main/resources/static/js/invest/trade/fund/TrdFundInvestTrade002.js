@@ -1119,6 +1119,10 @@ $(function () {
             }
         })
 
+        $("#purCfmDate").change(function () {
+            $("#expectedArrivalDate").val( $("#purCfmDate").val()).trigger("change");
+        })
+
         // zhangnian add 20190917 交易日期+清算速度 联动计算确认日期 start
         var calcCfmDate = function () {
             var selectData = $('#finprodId').select2('data')[0].object;
