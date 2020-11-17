@@ -283,11 +283,14 @@ public class TrdFundInvestTrade003Controller extends BaseController {
                     dto.setPageModel(GlobalConstant.DETAIL_PAGE_MODEL_REFERENCE);
                     model.addAttribute("single", 1);
                     dto.setbTradeId(dto.getTradeId());
+                    dto.setPrinAmt(dto.getTradeAmt());
                 }
                 if (!StringUtil.isNotEmpty(dto.getbTradeId())) {
                     dto.setbTradeId(dto.getTradeId());
                 }
-
+                if (DictCodeList.交易方向_赎回确认.getValue().equals(dto.getPs())) {
+                    dto.setPrinAmt(dto.getTradeAmt());
+                }
                 model.addAttribute("tradeId", dto.getTradeId());
                 model.addAttribute("entity_trdInvestPersonInfo", JsonUtils.object2Json(dto.getTrdInvestPersonInfo()));
                 model.addAttribute("businessId", dto.getTradeId());
@@ -301,6 +304,9 @@ public class TrdFundInvestTrade003Controller extends BaseController {
             }
             if (DictCodeListExt2.交易方向_转换赎回确认.getValue().equals(dto.getPs())) {
                 dto.setPs(DictCodeListExt2.交易方向_转换确认.getValue());
+            }
+            if (DictCodeList.交易方向_赎回确认.getValue().equals(dto.getPs())) {
+                dto.setPrinAmt(dto.getTradeAmt());
             }
             TrdInvestPersonInfo002Dto tipiDto = dto.getTrdInvestPersonInfo();
             model.addAttribute("entity_trdInvestPersonInfo", JsonUtils.object2Json(tipiDto));
