@@ -55,11 +55,14 @@
         if(object.bussRepFundInfoDto != null){
         	object.bussRepFundInfoDto.finprodType2 = finprodType2;
         }
-        if(object.finprodMarketId==null || object.finprodMarketId=='' || object.finprodMarketId==undefined){
-            Joyin.error("资产代码必填,不能为空");
-            return false;
+        //modify by mashukai 20201117 BS-2006 公募基金草稿箱提交时校验资产代码问题
+        if(!draftoption){
+            if((object.finprodMarketId==null || object.finprodMarketId=='' || object.finprodMarketId==undefined)){
+                Joyin.error("资产代码必填,不能为空");
+                return false;
+            }
         }
-
+        //modify by mashukai 20201117 BS-2006公募基金草稿箱提交时校验资产代码问题
 		if (object.tradeMarketId != null) {
 			object.finprodMarketId = object.finprodMarketId + object.tradeMarketId;
 		}else {
