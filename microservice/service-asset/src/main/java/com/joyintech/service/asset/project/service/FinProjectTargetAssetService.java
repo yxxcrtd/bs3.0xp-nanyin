@@ -392,10 +392,10 @@ public class FinProjectTargetAssetService extends BaseService<FinProjectTargetAs
         		&& !entity.getBusiFinBondRatingInfoDto().getMstBondCreditRatingList().isEmpty()){
         	List<MstBondCreditRating> MstBondCreditRatingList = entity.getBusiFinBondRatingInfoDto().getMstBondCreditRatingList();
         	for(MstBondCreditRating mstBondCreditRating : MstBondCreditRatingList) {
-        		if("02".equals(mstBondCreditRating.getoType())) {
+//        		if("02".equals(mstBondCreditRating.getoType())) {
         			mstBondCreditRating.setoCode(entity.getFinprodMarketId());
             		mstBondCreditRatingMapper.insert(mstBondCreditRating);
-            	}
+//            	}
         	}
         }
     }
@@ -586,10 +586,10 @@ public class FinProjectTargetAssetService extends BaseService<FinProjectTargetAs
                 List<MstBondCreditRating> mstBondCreditRatingList = entity.getBusiFinBondRatingInfoDto().getMstBondCreditRatingList();
                 for(MstBondCreditRating mstBondCreditRatingEntity:mstBondCreditRatingList){
                 	//20191125	add  债券标的评级修改，只处理债项数据。
-                	if("02".equals(mstBondCreditRatingEntity.getoType())) {
+//                	if("02".equals(mstBondCreditRatingEntity.getoType())) {
                 		mstBondCreditRatingEntity.setoCode(entity.getFinprodMarketId());
                 		mstBondCreditRatingMapper.insert(mstBondCreditRatingEntity);
-                	}
+//                	}
                 }
             }
         }
