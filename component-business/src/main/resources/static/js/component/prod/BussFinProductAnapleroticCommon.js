@@ -239,6 +239,13 @@
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0057", JoyinUtil.getLabel("FinProductBuild002.calendarId")));
                 return;
             }
+
+            if(operationType==='02' && null == openMode ){
+                // 开放情况下  开放模式
+                Joyin.error(JoyinUtil.getMessage("COMMON_E_0057", JoyinUtil.getLabel("FinProductOpenRule.openMode")));
+                return;
+            }
+
             var anapleroticInfoList = bussFinProductAnapleroticInfoTable.getAllRows();
             if($('#' + dealModeElement).val() != anapleroticDealMode11 && anapleroticInfoList && anapleroticInfoList.length>0){
                 Joyin.error(JoyinUtil.getMessage("REPORT_COMMON_E_0028", "回补信息"));
