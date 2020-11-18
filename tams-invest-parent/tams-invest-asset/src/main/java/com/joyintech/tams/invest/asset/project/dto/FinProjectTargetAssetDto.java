@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.tams.invest.asset.project.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -68,19 +68,19 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
      * <意义，目的和功能，以及可能被用到的地方>
      */
     private static final long serialVersionUID = 1L;
-    
+
     /**
      * 操作类型
      */
     private String operateType;
-    
+
     private String pageModel;
 
     /**
      * 选择数据
      */
     private List<FinProjectTargetAssetDto> selectedItem;
-    
+
     /**
      * 基础组件-标的金融产品
      */
@@ -89,7 +89,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
      * 债券资产报送信息
      */
     private BaseRepBondAssetInfoDto baseRepBondAssetInfoDto;
-    
+
     /**
      * 基金资产报送信息
      */
@@ -99,17 +99,17 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
      * 计划类资产报送信息
      */
     private BaseRepMngAssetPlanInfoDto baseRepMngAssetPlanInfoDto;
-    
+
     /**
      * 非标资产(票据或信用)中债报送
      */
     private BaseRepAssetAstBillInfoDto baseRepAssetAstBillInfoDto;
-    
+
     /**
      * 信贷及非标资产中债报送
      */
     private BaseRepAssetCreditNonstdInfoDto baseRepAssetCreditNonstdInfoDto;
-    
+
     /**
      * 权益类资产中债报送
      */
@@ -122,20 +122,20 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
      * 负债信息
      */
     private BaseRepAssetDeptInfoDto baseRepAssetDeptInfoDto;
-    
+
     /**
      * 业务组件--计息要素
      */
-    
+
     @Valid
     private FinInterestFactorDto finInterestFactorDto;
-    
+
     /**
      * 业务组件--付息信息
      */
     @Valid
     private FinPayInterestStdInfoDto  finPayInterestStdInfoDto;
-    
+
     /**
      *业务组件--还本信息
      */
@@ -146,25 +146,25 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
      */
     @Valid
     private BussPostInvestInfoDto bussPostInvestInfoDto;
-    
+
     /**
      * 业务组件--减持信息
      */
     @Valid
     private BussReduceShareInfoDto bussReduceShareInfoDto;
-    
+
     /**
      * 业务组件--认购信息
      */
     @Valid
     private BussSubscriptionInfoDto bussSubscriptionInfoDto;
-    
+
     /**
      * 参与方信息
      */
     @Valid
     private BussParticipantInfoDto bussParticipantInfoDto;
-    
+
     /**
      * 业务组件-债券报送信息
      */
@@ -212,13 +212,13 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
      * 附件信息DTO
      */
     private List<UploadFile> fileArray;
-    
-    /**	
-     * 2019 11 26 add  
+
+    /**
+     * 2019 11 26 add
      * 项目类标的新增评级信息tab页
      * 债券评级信息DTO
      */
-    @Valid
+//    @Valid
     private BusiFinBondRatingInfoDto busiFinBondRatingInfoDto;
 
 
@@ -226,12 +226,12 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
      * 法审编号
      */
     private String trialNo;
-    
+
     /**
      * 批复文件
      *//*
     private List<UploadFile> fileArrayCms1;
-    
+
     *//**
      * CMS批复文件
      *//*
@@ -240,7 +240,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
      * 金融产品扩展(平安个性)
      */
     private PaFinProduct paFinProduct;
-    
+
     /**
      * 金融产品买断利率(平安个性)
      */
@@ -259,27 +259,27 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
      * 出账编号
      *//*
     private String cashOutNo;  */
-    
-    
+
+
     /**
      * 实际授信主体
      */
     private String actualCreditProvid;
     /**
-     * 源起息日 
+     * 源起息日
      */
     private Date oldVdate;
-    
+
     /**
      * 资产类别
      */
     private String type6;
-    
+
     /**
      * 资产二级分类
      */
     private String type7;
-    
+
     /**
      * 资产来源，行内、行外
      */
@@ -289,7 +289,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
      * 资产提供行，多选，逗号分隔
      */
     private String assetProvider;
-    
+
     /**
      * 资产来源条线
      */
@@ -314,32 +314,32 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
      * 项目投向行业二级分类
      */
     private String projInvestIndustry2;
-    
+
     /**
      * 收益率
      */
     private BigDecimal rate;
-    
+
     /**
      * 计息基础
      */
     private String basis;
-    
+
     /**
      * 买断利率
      */
     private BigDecimal buyOutRate;
-    
+
     /**
      * 利率类型，固定利率、浮动利率
      */
     private String intType;
-    
-   /* *//**
+
+    /* *//**
      * 资产附件类型编号--批复文件
      *//*
     private String assetAttachNo1;
-    
+
     *//**
      * 资产附件类型编号--Cms批复文件
      *//*
@@ -377,7 +377,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
      * 是否占用主体授信
      */
     private String creditFlag;
-    
+
     /**
      * 组合entity
      */
@@ -388,17 +388,17 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
      * 资产二级分类
      */
     private String type9;
-    
+
     /**
      * 资产三级分类
      */
     private String type10;
-    
+
     /**
      * 资产四级分类
      */
     private String type11;
-    
+
     /**
      * 资产五级分类
      */
@@ -480,7 +480,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
 
     /**
      * 获取 bussFinRecommentDto
-     * 
+     *
      * @return bussFinRecommentDto.
      */
     public BussFinRecommentDto getBussFinRecommentDto() {
@@ -489,7 +489,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
 
     /**
      * 设置 bussFinRecommentDto
-     * 
+     *
      * @param bussFinRecommentDto bussFinRecommentDto
      */
     public void setBussFinRecommentDto(BussFinRecommentDto bussFinRecommentDto) {
@@ -499,7 +499,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
 
     /**
      * 获取 type9
-     * 
+     *
      * @return type9.
      */
     @NotEmpty(fieldName = "FinProjectTargetAsset002.type9" ,groups = {ValidateGroupEdit.class})
@@ -509,7 +509,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
 
     /**
      * 设置 type9
-     * 
+     *
      * @param type9
      *            type9
      */
@@ -519,7 +519,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
 
     /**
      * 获取 type10
-     * 
+     *
      * @return type10.
      */
     @NotEmpty(fieldName = "FinProjectTargetAsset002.type10" ,groups = {ValidateGroupEdit.class})
@@ -529,7 +529,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
 
     /**
      * 设置 type10
-     * 
+     *
      * @param type10
      *            type10
      */
@@ -539,7 +539,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
 
     /**
      * 获取 type11
-     * 
+     *
      * @return type11.
      */
 //    @NotEmpty(fieldName = "FinProjectTargetAsset002.type11" ,groups = {ValidateGroupEdit.class})
@@ -549,7 +549,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
 
     /**
      * 设置 type11
-     * 
+     *
      * @param type11
      *            type11
      */
@@ -559,7 +559,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
 
     /**
      * 获取 type12
-     * 
+     *
      * @return type12.
      */
 //    @NotEmpty(fieldName = "FinProjectTargetAsset002.type12" ,groups = {ValidateGroupEdit.class})
@@ -569,7 +569,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
 
     /**
      * 设置 type12
-     * 
+     *
      * @param type12
      *            type12
      */
@@ -579,7 +579,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
 
     /**
      * 获取 type9Name
-     * 
+     *
      * @return type9Name.
      */
     public String getType9Name() {
@@ -588,7 +588,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
 
     /**
      * 获取 type10Name
-     * 
+     *
      * @return type10Name.
      */
     public String getType10Name() {
@@ -597,7 +597,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
 
     /**
      * 获取 type11Name
-     * 
+     *
      * @return type11Name.
      */
     public String getType11Name() {
@@ -606,7 +606,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
 
     /**
      * 获取 Type12Name
-     * 
+     *
      * @return Type12Name.
      */
     public String getType12Name() {
@@ -621,7 +621,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return creditFlag;
     }
 
-    
+
     /**
      * 设置 creditFlag
      * @param creditFlag creditFlag
@@ -629,15 +629,15 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     public void setCreditFlag(String creditFlag) {
         this.creditFlag = creditFlag;
     }
-    
+
     /**
      * 金融产品代码
      */
-    
+
     public String getFinprodId(){
         return super.getFinprodId();
     }
-    
+
     @Override
     @PrimaryKey(Field.PK_1)
     public String getFinprodMarketId(){
@@ -653,15 +653,15 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     public String getFinprodName(){
         return super.getFinprodName();
     }
-    
+
     @Override
     @Amount(fieldName = "FinProjectTargetAsset002.issueAmt", maxIntBit = 16, maxDecBit = 2,groups = {
-        ValidateGroupEdit.class})
+            ValidateGroupEdit.class})
     @NotEmpty(fieldName = "FinProjectTargetAsset002.issueAmt", groups = {ValidateGroupEdit.class})
     public BigDecimal getIssueAmt(){
         return super.getIssueAmt();
     }
-    
+
     /**
      * 本金收益特征，保本、非保本
      */
@@ -669,17 +669,17 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     public String getCapiIncomeFeature(){
         return super.getCapiIncomeFeature();
     }
-    
+
     @NotEmpty(fieldName = "FinProjectTargetAsset002.ccy", groups = {ValidateGroupEdit.class})
     public String getCcy(){
         return super.getCcy();
     }
-    
+
     @NotEmpty(fieldName = "FinProjectTargetAsset002.vdate", groups = {ValidateGroupEdit.class})
     public Date getVdate(){
         return super.getVdate();
     }
-    
+
     @NotEmpty(fieldName = "FinProjectTargetAsset002.mdate", groups = {ValidateGroupEdit.class})
     public Date getMdate(){
         return super.getMdate();
@@ -705,7 +705,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     }
 
 
-    
+
     /**
      * 设置 operateType
      * @param operateType operateType
@@ -715,7 +715,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     }
 
 
-    
+
     /**
      * 获取 pageModel
      * @return pageModel.
@@ -725,7 +725,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     }
 
 
-    
+
     /**
      * 设置 pageModel
      * @param pageModel pageModel
@@ -735,7 +735,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     }
 
 
-    
+
     /**
      * 获取 selectedItem
      * @return selectedItem.
@@ -745,7 +745,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     }
 
 
-    
+
     /**
      * 设置 selectedItem
      * @param selectedItem selectedItem
@@ -754,9 +754,9 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.selectedItem = selectedItem;
     }
 
-    
-    
-    
+
+
+
     /**
      * 获取 baseFinProductBaseInfoList
      * @return baseFinProductBaseInfoList.
@@ -765,7 +765,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return baseFinProductBaseInfoList;
     }
 
-    
+
     /**
      * 设置 baseFinProductBaseInfoList
      * @param baseFinProductBaseInfoList baseFinProductBaseInfoList
@@ -774,9 +774,9 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.baseFinProductBaseInfoList = baseFinProductBaseInfoList;
     }
 
-    
-    
-    
+
+
+
     /**
      * 获取 bussPostInvestInfoDto
      * @return bussPostInvestInfoDto.
@@ -785,7 +785,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return bussPostInvestInfoDto;
     }
 
-    
+
     /**
      * 设置 bussPostInvestInfoDto
      * @param bussPostInvestInfoDto bussPostInvestInfoDto
@@ -793,9 +793,9 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     public void setBussPostInvestInfoDto(BussPostInvestInfoDto bussPostInvestInfoDto) {
         this.bussPostInvestInfoDto = bussPostInvestInfoDto;
     }
-    
-    
-    
+
+
+
     /**
      * 获取 bussReduceShareInfoDto
      * @return bussReduceShareInfoDto.
@@ -804,7 +804,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return bussReduceShareInfoDto;
     }
 
-    
+
     /**
      * 设置 bussReduceShareInfoDto
      * @param bussReduceShareInfoDto bussReduceShareInfoDto
@@ -813,7 +813,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.bussReduceShareInfoDto = bussReduceShareInfoDto;
     }
 
-    
+
     /**
      * 获取 paFinProduct
      * @return paFinProduct.
@@ -822,7 +822,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return paFinProduct;
     }
 
-    
+
     /**
      * 设置 paFinProduct
      * @param paFinProduct paFinProduct
@@ -831,9 +831,9 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.paFinProduct = paFinProduct;
     }
 
-    
-    
-    
+
+
+
     /**
      * 获取 paFinProductBuyoutRate
      * @return paFinProductBuyoutRate.
@@ -842,7 +842,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return paFinProductBuyoutRate;
     }
 
-    
+
     /**
      * 设置 paFinProductBuyoutRate
      * @param paFinProductBuyoutRate paFinProductBuyoutRate
@@ -859,7 +859,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return bussSubscriptionInfoDto;
     }
 
-    
+
     /**
      * 设置 bussSubscriptionInfoDto
      * @param bussSubscriptionInfoDto bussSubscriptionInfoDto
@@ -877,7 +877,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     }
 
 
-    
+
     /**
      * 设置 elementId
      * @param elementId elementId
@@ -898,7 +898,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return type6;
     }
 
-    
+
     /**
      * 设置 type6
      * @param type6 type6
@@ -907,7 +907,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.type6 = type6;
     }
 
-    
+
     /**
      * 获取 rate
      * @return rate.
@@ -916,7 +916,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return rate;
     }
 
-    
+
     /**
      * 设置 rate
      * @param rate rate
@@ -925,7 +925,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.rate = rate;
     }
 
-    
+
     /**
      * 获取 basis
      * @return basis.
@@ -934,7 +934,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return basis;
     }
 
-    
+
     /**
      * 设置 basis
      * @param basis basis
@@ -942,9 +942,9 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     public void setBasis(String basis) {
         this.basis = basis;
     }
-    
-    
-    
+
+
+
     /**
      * 获取 type7
      * @return type7.
@@ -953,7 +953,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return type7;
     }
 
-    
+
     /**
      * 设置 type7
      * @param type7 type7
@@ -962,7 +962,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.type7 = type7;
     }
 
-    
+
     /**
      * 获取 assetSource
      * @return assetSource.
@@ -971,7 +971,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return assetSource;
     }
 
-    
+
     /**
      * 设置 assetSource
      * @param assetSource assetSource
@@ -980,7 +980,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.assetSource = assetSource;
     }
 
-    
+
     /**
      * 获取 assetProvider
      * @return assetProvider.
@@ -989,7 +989,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return assetProvider;
     }
 
-    
+
     /**
      * 设置 assetProvider
      * @param assetProvider assetProvider
@@ -998,7 +998,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.assetProvider = assetProvider;
     }
 
-    
+
     /**
      * 获取 assetSourceUnit
      * @return assetSourceUnit.
@@ -1007,7 +1007,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return assetSourceUnit;
     }
 
-    
+
     /**
      * 设置 assetSourceUnit
      * @param assetSourceUnit assetSourceUnit
@@ -1016,7 +1016,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.assetSourceUnit = assetSourceUnit;
     }
 
-    
+
     /**
      * 获取 loadBank
      * @return loadBank.
@@ -1025,7 +1025,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return loadBank;
     }
 
-    
+
     /**
      * 设置 loadBank
      * @param loadBank loadBank
@@ -1039,7 +1039,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     public String getRemark(){
         return super.getRemark();
     }
-    
+
     /**
      * 获取 settleDays
      * @return settleDays.
@@ -1050,7 +1050,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return settleDays;
     }
 
-    
+
     /**
      * 设置 settleDays
      * @param settleDays settleDays
@@ -1059,7 +1059,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.settleDays = settleDays;
     }
 
-    
+
     /**
      * 获取 projInvestIndustry
      * @return projInvestIndustry.
@@ -1068,7 +1068,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return projInvestIndustry;
     }
 
-    
+
     /**
      * 设置 projInvestIndustry
      * @param projInvestIndustry projInvestIndustry
@@ -1077,7 +1077,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.projInvestIndustry = projInvestIndustry;
     }
 
-    
+
     /**
      * 获取 projInvestIndustry2
      * @return projInvestIndustry2.
@@ -1086,7 +1086,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return projInvestIndustry2;
     }
 
-    
+
     /**
      * 设置 projInvestIndustry2
      * @param projInvestIndustry2 projInvestIndustry2
@@ -1095,8 +1095,8 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.projInvestIndustry2 = projInvestIndustry2;
     }
 
-    
-    
+
+
     /**
      * 获取 buyOutRate
      * @return buyOutRate.
@@ -1106,7 +1106,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return buyOutRate;
     }
 
-    
+
     /**
      * 设置 buyOutRate
      * @param buyOutRate buyOutRate
@@ -1126,7 +1126,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     public String getCcyName(){
         return SysDataUtil.getNameFromDataDict(DictCode.币种, this.getCcy());
     }
-     
+
     /**
      * 计息基础name
      * <功能详细描述>
@@ -1137,7 +1137,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     public String getBasisName(){
         return SysDataUtil.getNameFromDataDict(DictCode.计息基础, this.getBasis());
     }
-    
+
     /**
      * 资产类别
      * <功能详细描述>
@@ -1149,7 +1149,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return SysDataUtil.getNameFromDataDict(DictCode.项目类一级分类, this.getType6());
     }
 
-    
+
     /**
      * 获取 oldVdate
      * @return oldVdate.
@@ -1158,7 +1158,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return oldVdate;
     }
 
-    
+
     /**
      * 设置 oldVdate
      * @param oldVdate oldVdate
@@ -1167,7 +1167,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.oldVdate = oldVdate;
     }
 
-    
+
     /**
      * 获取 bussRepEquityInfoDto
      * @return bussRepEquityInfoDto.
@@ -1176,7 +1176,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return bussRepEquityInfoDto;
     }
 
-    
+
     /**
      * 设置 bussRepEquityInfoDto
      * @param bussRepEquityInfoDto bussRepEquityInfoDto
@@ -1185,7 +1185,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.bussRepEquityInfoDto = bussRepEquityInfoDto;
     }
 
-    
+
     /**
      * 获取 bussRepAssetCreditNonstdInfoDto
      * @return bussRepAssetCreditNonstdInfoDto.
@@ -1194,7 +1194,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return bussRepAssetCreditNonstdInfoDto;
     }
 
-    
+
     /**
      * 设置 bussRepAssetCreditNonstdInfoDto
      * @param bussRepAssetCreditNonstdInfoDto bussRepAssetCreditNonstdInfoDto
@@ -1203,7 +1203,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.bussRepAssetCreditNonstdInfoDto = bussRepAssetCreditNonstdInfoDto;
     }
 
-    
+
     /**
      * 获取 bussFinBondRepInfoDto
      * @return bussFinBondRepInfoDto.
@@ -1212,7 +1212,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return bussFinBondRepInfoDto;
     }
 
-    
+
     /**
      * 设置 bussFinBondRepInfoDto
      * @param bussFinBondRepInfoDto bussFinBondRepInfoDto
@@ -1221,7 +1221,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.bussFinBondRepInfoDto = bussFinBondRepInfoDto;
     }
 
-    
+
     /**
      * 获取 bussRepFundInfoDto
      * @return bussRepFundInfoDto.
@@ -1230,7 +1230,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return bussRepFundInfoDto;
     }
 
-    
+
     /**
      * 设置 bussRepFundInfoDto
      * @param bussRepFundInfoDto bussRepFundInfoDto
@@ -1239,7 +1239,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.bussRepFundInfoDto = bussRepFundInfoDto;
     }
 
-    
+
     /**
      * 获取 bussRepAssetAstBillInfoDto
      * @return bussRepAssetAstBillInfoDto.
@@ -1248,7 +1248,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return bussRepAssetAstBillInfoDto;
     }
 
-    
+
     /**
      * 设置 bussRepAssetAstBillInfoDto
      * @param bussRepAssetAstBillInfoDto bussRepAssetAstBillInfoDto
@@ -1257,7 +1257,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.bussRepAssetAstBillInfoDto = bussRepAssetAstBillInfoDto;
     }
 
-    
+
     /**
      * 获取 bussRepOtherInvestTargetInfoDto
      * @return bussRepOtherInvestTargetInfoDto.
@@ -1266,7 +1266,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return bussRepOtherInvestTargetInfoDto;
     }
 
-    
+
     /**
      * 设置 bussRepOtherInvestTargetInfoDto
      * @param bussRepOtherInvestTargetInfoDto bussRepOtherInvestTargetInfoDto
@@ -1275,7 +1275,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.bussRepOtherInvestTargetInfoDto = bussRepOtherInvestTargetInfoDto;
     }
 
-    
+
     /**
      * 获取 baseRepBondAssetInfoDto
      * @return baseRepBondAssetInfoDto.
@@ -1284,7 +1284,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return baseRepBondAssetInfoDto;
     }
 
-    
+
     /**
      * 设置 baseRepBondAssetInfoDto
      * @param baseRepBondAssetInfoDto baseRepBondAssetInfoDto
@@ -1293,7 +1293,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.baseRepBondAssetInfoDto = baseRepBondAssetInfoDto;
     }
 
-    
+
     /**
      * 获取 baseRepAssetAstBillInfoDto
      * @return baseRepAssetAstBillInfoDto.
@@ -1302,7 +1302,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return baseRepAssetAstBillInfoDto;
     }
 
-    
+
     /**
      * 设置 baseRepAssetAstBillInfoDto
      * @param baseRepAssetAstBillInfoDto baseRepAssetAstBillInfoDto
@@ -1311,7 +1311,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.baseRepAssetAstBillInfoDto = baseRepAssetAstBillInfoDto;
     }
 
-    
+
     /**
      * 获取 baseRepAssetCreditNonstdInfoDto
      * @return baseRepAssetCreditNonstdInfoDto.
@@ -1320,7 +1320,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return baseRepAssetCreditNonstdInfoDto;
     }
 
-    
+
     /**
      * 设置 baseRepAssetCreditNonstdInfoDto
      * @param baseRepAssetCreditNonstdInfoDto baseRepAssetCreditNonstdInfoDto
@@ -1329,7 +1329,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.baseRepAssetCreditNonstdInfoDto = baseRepAssetCreditNonstdInfoDto;
     }
 
-    
+
     /**
      * 获取 baseRepAssetEquityInfoDto
      * @return baseRepAssetEquityInfoDto.
@@ -1338,7 +1338,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return baseRepAssetEquityInfoDto;
     }
 
-    
+
     /**
      * 设置 baseRepAssetEquityInfoDto
      * @param baseRepAssetEquityInfoDto baseRepAssetEquityInfoDto
@@ -1347,7 +1347,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.baseRepAssetEquityInfoDto = baseRepAssetEquityInfoDto;
     }
 
-    
+
     /**
      * 获取 baseRepOtherInvestTargetInfoDto
      * @return baseRepOtherInvestTargetInfoDto.
@@ -1356,7 +1356,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return baseRepOtherInvestTargetInfoDto;
     }
 
-    
+
     /**
      * 设置 baseRepOtherInvestTargetInfoDto
      * @param baseRepOtherInvestTargetInfoDto baseRepOtherInvestTargetInfoDto
@@ -1365,7 +1365,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.baseRepOtherInvestTargetInfoDto = baseRepOtherInvestTargetInfoDto;
     }
 
-    
+
     /**
      * 获取 baseRepAssetDeptInfoDto
      * @return baseRepAssetDeptInfoDto.
@@ -1374,7 +1374,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return baseRepAssetDeptInfoDto;
     }
 
-    
+
     /**
      * 设置 baseRepAssetDeptInfoDto
      * @param baseRepAssetDeptInfoDto baseRepAssetDeptInfoDto
@@ -1383,7 +1383,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.baseRepAssetDeptInfoDto = baseRepAssetDeptInfoDto;
     }
 
-    
+
     /**
      * 获取 baseRepFundAssetInfoDto
      * @return baseRepFundAssetInfoDto.
@@ -1392,7 +1392,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return baseRepFundAssetInfoDto;
     }
 
-    
+
     /**
      * 设置 baseRepFundAssetInfoDto
      * @param baseRepFundAssetInfoDto baseRepFundAssetInfoDto
@@ -1401,7 +1401,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.baseRepFundAssetInfoDto = baseRepFundAssetInfoDto;
     }
 
-    
+
     /**
      * 获取 bussParticipantInfoDto
      * @return bussParticipantInfoDto.
@@ -1410,7 +1410,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return bussParticipantInfoDto;
     }
 
-    
+
     /**
      * 设置 bussParticipantInfoDto
      * @param bussParticipantInfoDto bussParticipantInfoDto
@@ -1419,7 +1419,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.bussParticipantInfoDto = bussParticipantInfoDto;
     }
 
-    
+
     /**
      * 获取 finInterestFactorDto
      * @return finInterestFactorDto.
@@ -1428,7 +1428,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return finInterestFactorDto;
     }
 
-    
+
     /**
      * 设置 finInterestFactorDto
      * @param finInterestFactorDto finInterestFactorDto
@@ -1438,7 +1438,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     }
 
 
-    
+
     /**
      * 获取 fileArray
      * @return fileArray.
@@ -1448,7 +1448,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     }
 
 
-    
+
     /**
      * 设置 fileArray
      * @param fileArray fileArray
@@ -1456,16 +1456,16 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     public void setFileArray(List<UploadFile> fileArray) {
         this.fileArray = fileArray;
     }
-    
+
     public BusiFinBondRatingInfoDto getBusiFinBondRatingInfoDto() {
-		return busiFinBondRatingInfoDto;
-	}
+        return busiFinBondRatingInfoDto;
+    }
 
-	public void setBusiFinBondRatingInfoDto(BusiFinBondRatingInfoDto busiFinBondRatingInfoDto) {
-		this.busiFinBondRatingInfoDto = busiFinBondRatingInfoDto;
-	}
+    public void setBusiFinBondRatingInfoDto(BusiFinBondRatingInfoDto busiFinBondRatingInfoDto) {
+        this.busiFinBondRatingInfoDto = busiFinBondRatingInfoDto;
+    }
 
-	/**
+    /**
      * 获取 finPayInterestStdInfoDto
      * @return finPayInterestStdInfoDto.
      */
@@ -1474,7 +1474,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     }
 
 
-    
+
     /**
      * 设置 finPayInterestStdInfoDto
      * @param finPayInterestStdInfoDto finPayInterestStdInfoDto
@@ -1484,7 +1484,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     }
 
 
-    
+
     /**
      * 获取 bussFinRepaymentDto
      * @return bussFinRepaymentDto.
@@ -1494,7 +1494,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     }
 
 
-    
+
     /**
      * 设置 bussFinRepaymentDto
      * @param bussFinRepaymentDto bussFinRepaymentDto
@@ -1504,7 +1504,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     }
 
 
-    
+
     /**
      * 获取 cashOutNo
      * @return cashOutNo.
@@ -1515,7 +1515,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     }
 
 
-    
+
     *//**
      * 设置 cashOutNo
      * @param cashOutNo cashOutNo
@@ -1525,7 +1525,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     }*/
 
 
-    
+
     /**
      * 获取 actualCreditProvid
      * @return actualCreditProvid.
@@ -1535,7 +1535,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     }
 
 
-    
+
     /**
      * 设置 actualCreditProvid
      * @param actualCreditProvid actualCreditProvid
@@ -1545,12 +1545,12 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     }
 
 
-    
-    
 
 
-    
-    
+
+
+
+
     /**
      * 获取 fileArrayCms1
      * @return fileArrayCms1.
@@ -1560,7 +1560,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     }
 
 
-    
+
     *//**
      * 设置 fileArrayCms1
      * @param fileArrayCms1 fileArrayCms1
@@ -1579,7 +1579,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     }
 
 
-    
+
     *//**
      * 设置 fileArrayCms2
      * @param fileArrayCms2 fileArrayCms2
@@ -1589,7 +1589,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     }
 
 
-    
+
     *//**
      * 获取 assetAttachNo1
      * @return assetAttachNo1.
@@ -1599,7 +1599,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     }
 
 
-    
+
     *//**
      * 设置 assetAttachNo1
      * @param assetAttachNo1 assetAttachNo1
@@ -1609,7 +1609,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     }
 
 
-    
+
     *//**
      * 获取 assetAttachNo2
      * @return assetAttachNo2.
@@ -1619,7 +1619,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     }
 
 
-    
+
     *//**
      * 设置 assetAttachNo2
      * @param assetAttachNo2 assetAttachNo2
@@ -1628,10 +1628,10 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.assetAttachNo2 = assetAttachNo2;
     }
 */
-    
-    
-    
-    
+
+
+
+
     /**
      * 获取 intType
      * @return intType.
@@ -1640,7 +1640,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return intType;
     }
 
-    
+
     /**
      * 设置 intType
      * @param intType intType
@@ -1656,7 +1656,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     public String getVdateStr(){
         return DateUtil.format(this.getVdate());
     }
-    
+
     public String getMdateStr(){
         return DateUtil.format(this.getMdate());
     }
@@ -1668,7 +1668,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return seqno;
     }
 
-    
+
     /**
      * 设置 seqno
      * @param seqno seqno
@@ -1677,7 +1677,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.seqno = seqno;
     }
 
-    
+
     /**
      * 获取 creditMstId
      * @return creditMstId.
@@ -1686,7 +1686,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return creditMstId;
     }
 
-    
+
     /**
      * 设置 creditMstId
      * @param creditMstId creditMstId
@@ -1695,7 +1695,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.creditMstId = creditMstId;
     }
 
-    
+
     /**
      * 获取 customerId
      * @return customerId.
@@ -1704,7 +1704,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return customerId;
     }
 
-    
+
     /**
      * 设置 customerId
      * @param customerId customerId
@@ -1713,7 +1713,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.customerId = customerId;
     }
 
-    
+
     /**
      * 获取 pflsh
      * @return pflsh.
@@ -1722,7 +1722,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return pflsh;
     }
 
-    
+
     /**
      * 设置 pflsh
      * @param pflsh pflsh
@@ -1731,7 +1731,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.pflsh = pflsh;
     }
 
-    
+
     /**
      * 获取 hapCreditAmt
      * @return hapCreditAmt.
@@ -1740,7 +1740,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         return hapCreditAmt;
     }
 
-    
+
     /**
      * 设置 hapCreditAmt
      * @param hapCreditAmt hapCreditAmt
@@ -1750,9 +1750,9 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     }
 
 
-	public PtlPortfolio getPtlPortfolio() {
-		return ptlPortfolio;
-	}
+    public PtlPortfolio getPtlPortfolio() {
+        return ptlPortfolio;
+    }
     /**
      * 获取 investNature
      *
@@ -1763,10 +1763,10 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     }
 
 
-	public void setPtlPortfolio(PtlPortfolio ptlPortfolio) {
-		this.ptlPortfolio = ptlPortfolio;
-	}
-    
+    public void setPtlPortfolio(PtlPortfolio ptlPortfolio) {
+        this.ptlPortfolio = ptlPortfolio;
+    }
+
 
 
     /**

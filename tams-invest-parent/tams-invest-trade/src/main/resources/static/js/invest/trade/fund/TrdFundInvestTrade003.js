@@ -565,9 +565,9 @@ $(function () {
                 }
             } else if ((ps == ps_T19)) {
                 if (unitCprice != null && unitCprice != '' && shareAmt) {
-                    var tradeAmtHid = shareAmt * unitCprice;
-                    $('#tradeAmt').val(tradeAmtHid).trigger('blur');
-                    $('#tradeAmtHid').val(tradeAmtHid).trigger('blur');
+                    // var tradeAmtHid = shareAmt * unitCprice;
+                    // $('#tradeAmt').val(tradeAmtHid).trigger('blur');
+                    // $('#tradeAmtHid').val(tradeAmtHid).trigger('blur');
                     $('#feeAmtPay').change();
                 }
             } else if (ps == ps_T24) {
@@ -652,7 +652,7 @@ $(function () {
                 var unitCprice = $('#unitCprice').val();
                 var shareAmt = $('#shareAmt').val();
                 if (unitCprice && shareAmt) {
-                    $('#tradeAmt').val(unitCprice * shareAmt + parseFloat(carryAmt) - getPayWithTradeFee()).trigger('blur');
+                    // $('#tradeAmt').val(unitCprice * shareAmt + parseFloat(carryAmt) - getPayWithTradeFee()).trigger('blur');
                 }
             }
         });
@@ -678,7 +678,7 @@ $(function () {
                 var carryAmt = $('#carryAmt').val() || 0;
                 if ($("#ps").val() == ps_T19 && $("#chlId").val() && $("#chlId").select2("data")[0] && $("#chlId").select2("data")[0].object
                     && $("#chlId").select2("data")[0].object.collectType == collectType_01) {
-                    $('#tradeAmt').val(parseFloat(tradeAmtHid) + parseFloat(carryAmt) - getPayWithTradeFee()).trigger('blur');
+                    // $('#tradeAmt').val(parseFloat(tradeAmtHid) + parseFloat(carryAmt) - getPayWithTradeFee()).trigger('blur');
                 }
             }
         })
@@ -695,7 +695,7 @@ $(function () {
                 var shareAmt = $('#shareAmt').val() || 0;
                 var carryAmt = $('#carryAmt').val() || 0;
                 var unitCprice = $('#unitCprice').val();
-                if (shareAmt && unitCprice) {
+                if (shareAmt && unitCprice && ps != ps_T19) {
                     $('#tradeAmt').val(parseFloat(shareAmt) * parseFloat(unitCprice) + parseFloat(carryAmt) - getPayWithTradeFee()).trigger('blur');
                 }
             }

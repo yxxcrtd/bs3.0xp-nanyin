@@ -945,7 +945,14 @@
 		'12' cur_asset_type,/*其他支出*/
 		prdfeedeal.fee_name cur_assetdet_type,
 		prdfeedeal.PAY_DATE dealdate,
-		'无' TRADE_COUNTER,
+        <!-- 托管费改造 2020.11.16 shengqiqiang start  -->
+        /*托管费*/
+        case when feeinfo.FEE_TYPE = '01' then  (select MCI.CUSTOMER_NAME  from fin_product  F
+        LEFT JOIN MST_CUSTOMER_INFO MCI ON MCI.CUSTOMER_ID = F.TRUSTEE_ID
+        where F.FINPROD_MARKET_ID = prdfeedeal.prod_id AND F.FINPROD_TYPE2 = 'F16' )
+        /*其他费用*/
+        else  '无' end  TRADE_COUNTER,/*交易对手*/
+        <!-- 托管费改造 2020.11.16 shengqiqiang end  -->
 		null unit_price_full,
 		null UNIT_PRICE_NET,
 		null END_RATE,
@@ -981,10 +988,19 @@
 		NULL DEALTYPE, /*交易类型*/
         prodinfo.prodtype prodtype/*产品类型N M净值型*/
         ,NULL ASSET_METHOD
-		,NULL RIVAL_PARTY_TYPE
+        <!-- 托管费改造 2020.11.16 shengqiqiang start  -->
+        /*托管费*/
+        ,case when feeinfo.FEE_TYPE = '01' then  '04'
+        /*其他费用*/
+        else  NULL end  RIVAL_PARTY_TYPE /*交易对手二级类型*/
+        <!-- 托管费改造 2020.11.16 shengqiqiang end -->
 		FROM chb_prd_fee_deal prdfeedeal
         left join chb_prd_baseinfo prodinfo
         on prodinfo.prod_id = prdfeedeal.PROD_ID
+        <!-- 托管费改造 2020.11.16 shengqiqiang start  -->
+        left join mst_feeinfo feeinfo
+        on  prdfeedeal.FEE_ID = feeinfo.FEE_ID
+        <!-- 托管费改造 2020.11.16 shengqiqiang end -->
 		where 1 =1 
 		and prdfeedeal.FEE_TYPE = '02'/*他行费用*/
 		<!-- and prdfeedeal.FEE_SECTYPE in ('05','06','07','09') -->

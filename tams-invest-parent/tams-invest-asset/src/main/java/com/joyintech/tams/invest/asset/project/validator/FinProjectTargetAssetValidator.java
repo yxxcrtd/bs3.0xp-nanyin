@@ -10,10 +10,10 @@
  
 package com.joyintech.tams.invest.asset.project.validator;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
+import com.joyintech.tams.common.base.entity.MstBondCreditRating;
+import com.joyintech.tams.component.business.bond.dto.BusiFinBondRatingInfoDto;
 import com.joyintech.tams.invest.asset.project.service.FinProjectTargetAssetService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -152,6 +152,55 @@ public class FinProjectTargetAssetValidator implements BeanValidator{
 						getMessage("COMMON_E_0057", getMessage("FinProjectTargetAsset002.type12"))));
 			}
 		}
+		if (!StringUtil.isNotEmpty(dto.getBusiFinBondRatingInfoDto())){
+            return resultList;
+        }
+        List<MstBondCreditRating> mstBondCreditRatingList = dto.getBusiFinBondRatingInfoDto().getMstBondCreditRatingList();
+//        校验重复的评级信息
+        Set<String> keySet = new HashSet<>();
+        if(null!=mstBondCreditRatingList&&!mstBondCreditRatingList.isEmpty()){
+            for(MstBondCreditRating entity:mstBondCreditRatingList){
+                //评级类型不可为空
+                if(StringUtil.isEmpty(entity.getoType())){
+                    resultList.add(new ValidMessage("",
+                            getMessage("COMMON_E_0057", getMessage("BusiFinBondRatingInfo.gradeType"))));
+                    break;
+                }
+                //评级结果不可为空
+                if(StringUtil.isEmpty(entity.getGradeResult())){
+                    resultList.add(new ValidMessage("",
+                            getMessage("COMMON_E_0057", getMessage("BusiFinBondRatingInfo.gradeResult"))));
+                    break;
+                }
+//                if(null==entity.getGradeDate()){
+//                    resultList.add(new ValidMessage("",
+//                            getMessage("COMMON_E_0057", getMessage("BusiFinBondRatingInfo.gradeDate"))));
+//                    break;
+//                }
+//                if(StringUtil.isEmpty(entity.getGradeOrgId())){
+//                    resultList.add(new ValidMessage("",
+//                            getMessage("COMMON_E_0057", getMessage("BusiFinBondRatingInfo.gradeOrgId"))));
+//                    break;
+//                }
+//                MstBondCreditRating newEntity = new MstBondCreditRating();
+//                newEntity.setGradeOrgId(entity.getGradeOrgId());
+//                newEntity.setGradeDate(entity.getGradeDate());
+//                newEntity.setGradeType(entity.getGradeType());
+//                增加check 同一评级机构、评级日期、评级类型只能有一条数据，不能重复。
+//                原检验逻辑 未重写hsahcode 方法导致校验失败
+                StringBuffer sb = new StringBuffer();
+                sb.append(entity.getGradeOrgId()).append(GlobalConstant.VERTICAL_LINE).append(DateUtil.format(entity.getGradeDate())).append(GlobalConstant.VERTICAL_LINE).append(entity.getoType());
+                if(!keySet.add(sb.toString())){
+                    resultList.add(new ValidMessage("",
+                            getMessage("FIN_ASSET_E_0018")));
+                    break;
+                }
+//                if(!set.add(newEntity)){
+//                    resultList.add(new ValidMessage("",
+//                        getMessage("FIN_ASSET_E_0018")));
+//                }
+            }
+        }
         return resultList;
     }
 

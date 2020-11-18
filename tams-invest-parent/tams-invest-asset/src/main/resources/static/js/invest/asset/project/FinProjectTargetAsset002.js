@@ -141,8 +141,8 @@ $(function() {
         }*/
         //评级信息
         object.busiFinBondRatingInfoDto = {};
-        if(BusiFinBondRatingInfo){
-            object.busiFinBondRatingInfoDto.mstBondCreditRatingList = BusiFinBondRatingInfo.getAllRows();  
+        if(BusiFinProjectRatingInfo){
+            object.busiFinBondRatingInfoDto.mstBondCreditRatingList = BusiFinProjectRatingInfo.getAllRows();
         }
         Joyin.ajaxJson(basePath + 'invest/asset/project/FinProjectTargetAsset002/check', object, function(
                     result) {
