@@ -633,7 +633,8 @@ public class FinNetValueProductBuild002Controller extends BaseController {
         if(StringUtil.isNotEmpty(dto.getSameOrg())){
             model.addAttribute("sameOrg",dto.getSameOrg());
         }
-        return dto;
+        return super.after(draftobj, model);
     }
     //add by mashukai BS-1995草稿箱同业机构字段反显没有值问题 20201113 end
+
 }

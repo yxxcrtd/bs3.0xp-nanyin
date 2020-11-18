@@ -73,6 +73,7 @@
 					</if>
 				/** left join FIN_TRADE_PRODUCT finTrade
                  	on finTrade.FINPROD_TYPE2 = 'F35' and finTrade.finprod_id = A.finprod_id**/
+		        where A.IS_CANCEL='N'
 				/**UNION ALL **/
 				UNION
                 SELECT <!-- modify by wujie on 20200213
@@ -119,6 +120,7 @@
 				) DEAL
             LEFT JOIN SOTMP OT
             ON DEAL.TRADE_ID = OT.TRADE_ID
+		  where D.IS_CANCEL='N'
         ) T
 		WHERE TO_CHAR(T.SETTLE_DATE,'yyyy-MM-dd') &gt;= #{vdate,jdbcType=VARCHAR}
 		AND	TO_CHAR(T.SETTLE_DATE,'yyyy-MM-dd') &lt;= #{mdate,jdbcType=VARCHAR}

@@ -289,11 +289,13 @@ public class FinFundTarget002Controller extends BaseController{
     //modify by mashukai 20201117 BS-2006公募基金草稿箱提交时中债报送信息反显没有值问题
     @Override
     public Object after(String draftobj, Model model) {
-        FinFundTargetDto dto = JsonUtils.json2Object(draftobj,FinFundTargetDto.class);
+        Map<String,Object> map =model.asMap();
+        FinFundTargetDto dto = (FinFundTargetDto)map.get("entity");
         if(StringUtil.isNotEmpty(getParam(GlobalConstant.WORKFLOW_ID))){
             dto.setWorkflowId(getParam(GlobalConstant.WORKFLOW_ID));
+            model.addAttribute("entity",dto);
         }
-        return dto;
+        return super.after(draftobj, model);
     }
     //modify by mashukai 20201117 BS-2006公募基金草稿箱提交时中债报送信息反显没有值问题
 }

@@ -99,8 +99,8 @@
                         table.addRow(rows);
 	                 })
     	}
-     }      
-    
+     }
+
     
     /*
 	 * 获取预览时所需参数
@@ -275,7 +275,16 @@
         		getElementById('firstPayDate').prop('disabled', true).val('').trigger('change');
         	}
         });
-        
+
+        //add by mashukai 20201118 BS-1997 草稿箱功能，新建开放式货币型产品，分红计划存草稿无效。 start
+        if(isDraft){
+			Joyin.ajax(JoyinUtil.getRealPath('/component/prod/BussFinProductBonusPlanCommon/calcProductInterestPlan'),
+				getPreviewParams(), function(rows) {
+					table.table ? table.clear() : table.load();
+					table.addRow(rows);
+				});
+		}
+		//add by mashukai 20201118 BS-1997 草稿箱功能，新建开放式货币型产品，分红计划存草稿无效。 end
         // 分红规则改变时触发的事件
         getElementById('payCycle').change(function() {
             if(getElementById('payCycle').val() === '' || getElementById('payCycle').val() === BONUS_RULE_02) {
@@ -297,7 +306,7 @@
                 getElementById('payCycleVal').prop('disabled', true).val('').trigger('change');
                 getElementById('payCycleUnit').prop('disabled', true).val('').trigger('change');
                 getElementById('calcRule').prop('disabled', true).val(CALC_RULE_01).trigger('change');
-                
+
                 getElementById('endTdayRule').prop('disabled', true).val('').trigger('change');
                 getElementById('payTdayRule').prop('disabled', false);
                 getElementById('planDiv').show();
