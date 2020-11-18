@@ -148,6 +148,7 @@ public class FinProductPayInt003Service extends BaseService<FinProductPayInt003D
     
     @Autowired
     private BooksetCommonService booksetCommonService;
+
     /**
      * 1.6.1产品基本信息
      *
@@ -488,6 +489,9 @@ public class FinProductPayInt003Service extends BaseService<FinProductPayInt003D
 
     @Autowired
     private BaseEtrCashPositionCommServiceImpl baseEtrCashPositionCommServiceImpl;
+
+    @Autowired
+    private FinProductAddMapper finProductAddMapper;
     /**
      * 7.3写入[实际]的组合持仓流水及现金流水
      *
@@ -498,6 +502,10 @@ public class FinProductPayInt003Service extends BaseService<FinProductPayInt003D
      */
     private void handleCashSecFlowData(FinProductPayInt003Dto entity, boolean needNegate) {
         // 组合持仓流水
+        if (!StringUtil.isNotEmpty(entity.getPortfolioId())){
+            FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey(entity.getFinprodId());
+            entity.setPortfolioId(finProductAdd.getPortfolioId());
+        }
         List<PtlSecPositionFlowDto> ptlSecPositionFlows = new ArrayList<>();
         PtlSecPositionFlowDto ptlSecPositionFlowDto = new PtlSecPositionFlowDto();
         ptlSecPositionFlowDto.setPortfolioId(entity.getPortfolioId()); // 组合代码

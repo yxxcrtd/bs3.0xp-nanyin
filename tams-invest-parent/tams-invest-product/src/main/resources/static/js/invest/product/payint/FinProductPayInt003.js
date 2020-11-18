@@ -91,7 +91,7 @@
         	object.bussId = object.bussTrdTransferOrder[0].tradeId;
         	Joyin.ajaxJson(basePath + 'invest/product/payint/FinProductPayInt001/check', object, function(result) {
         		Joyin.confirm(result.data, function() {
-        			WorkFlow.doDeleteList(basePath + 'invest/product/payint/FinProductPayInt001/doRevoke', object, "FinProductPayInt003_btn_revoke", "FinProductPayInt003");
+        			WorkFlow.doRevokeList(basePath + 'invest/product/payint/FinProductPayInt001/doRevoke', object, "FinProductPayInt003_btn_revoke", "FinProductPayInt003");
         		});
         	});
         }else{
