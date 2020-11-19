@@ -497,6 +497,71 @@
             getElementById('spreadRate').trigger('change').prop('disabled', false);
             getElementById('resetType').val('').trigger('change').prop('disabled', false);
         }
+		var payCycle = getElementById('payCycle').val();
+		if(payCycle == "08"){
+			getElementById('firstPayDate').val("").trigger('change').prop('disabled', true);
+			getElementById('endTdayRule').val("").trigger('change').prop('disabled', true);
+			getElementById('payTdayRule').val("").trigger('change').prop('disabled', true);
+		}else if(payCycle == "03" && vdate){
+			if(!getElementById('firstPayDate').val()){
+				var newDate = Date.ofDate(vdate).DateAdd("m",1);
+				if(mdate && (newDate - Date.ofDate(mdate)>0)){
+					getElementById('firstPayDate').val(mdate).trigger('change').prop('disabled', false);
+				}else{
+					getElementById('firstPayDate').val(newDate.Format('yyyy-MM-dd')).trigger('change').prop('disabled', false);
+				}
+			}
+
+			getElementById('endTdayRule').trigger('change').prop('disabled', false);
+			getElementById('payTdayRule').trigger('change').prop('disabled', false);
+
+		}else if(payCycle == "04" &&  vdate){
+			if(!getElementById('firstPayDate').val()){
+				var newDate = Date.ofDate(vdate).DateAdd("m",3);
+				if(mdate && (newDate - Date.ofDate(mdate)>0)){
+					getElementById('firstPayDate').val(mdate).trigger('change').prop('disabled', false);
+				}else{
+					getElementById('firstPayDate').val(newDate.Format('yyyy-MM-dd')).trigger('change').prop('disabled', false);
+				}
+			}
+			getElementById('endTdayRule').trigger('change').prop('disabled', false);
+			getElementById('payTdayRule').trigger('change').prop('disabled', false);
+
+		}else if(payCycle == "05" &&  vdate){
+			if(!getElementById('firstPayDate').val()){
+				var newDate = Date.ofDate(vdate).DateAdd("y",1);
+				if(mdate && (newDate - Date.ofDate(mdate)>0)){
+					getElementById('firstPayDate').val(mdate).trigger('change').prop('disabled', false);
+				}else{
+					getElementById('firstPayDate').val(newDate.Format('yyyy-MM-dd')).trigger('change').prop('disabled', false);
+				}
+			}
+			getElementById('endTdayRule').trigger('change').prop('disabled', false);
+			getElementById('payTdayRule').trigger('change').prop('disabled', false);
+
+		}else if(payCycle == "06" &&  vdate){
+			if(!getElementById('firstPayDate').val()){
+				var newDate = Date.ofDate(vdate).DateAdd("m",6);
+				if(mdate && (newDate - Date.ofDate(mdate)>0)){
+					getElementById('firstPayDate').val(mdate).trigger('change').prop('disabled', false);
+				}else{
+					getElementById('firstPayDate').val(newDate.Format('yyyy-MM-dd')).trigger('change').prop('disabled', false);
+				}
+			}
+			getElementById('endTdayRule').trigger('change').prop('disabled', false);
+			getElementById('payTdayRule').trigger('change').prop('disabled', false);
+
+		}else if(payCycle == "07" && mdate){
+			if(!getElementById('firstPayDate').val())
+				getElementById('firstPayDate').val(mdate).trigger('change').prop('disabled', false);
+			getElementById('endTdayRule').trigger('change').prop('disabled', false);
+			getElementById('payTdayRule').trigger('change').prop('disabled', false);
+		}else{
+			getElementById('firstPayDate').trigger('change').prop('disabled', false);
+			getElementById('endTdayRule').trigger('change').prop('disabled', false);
+			getElementById('payTdayRule').trigger('change').prop('disabled', false);
+
+		}
     });
     
     /*
