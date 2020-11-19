@@ -80,8 +80,13 @@ public class BussTrdTransferOrderController extends BaseController {
                 for (String item : bizCodeList) {
                     list.addAll(bussSettleOrderCommService.selectOrdersByBizCode(item));
                 }
-                if (list != null && !list.isEmpty()) {
-                    entity = list.get(0);
+                if (StringUtil.equals("bussFinProductFeePay",StringUtil.defaultString(this.getParam("entityName"),
+                        BussTrdTransferOrderService.DEFAULT_ENTITY_NAME))) {
+                    model.addAttribute("entityList", list);
+                }else{
+                    if (list != null && !list.isEmpty()) {
+                        entity = list.get(0);
+                    }
                 }
             }
             // bizCode修改为支持多个交易编号用逗号分隔 by renping 20190916 end
