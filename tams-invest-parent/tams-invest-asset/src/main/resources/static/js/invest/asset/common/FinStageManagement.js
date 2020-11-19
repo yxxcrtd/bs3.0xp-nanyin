@@ -180,7 +180,7 @@ $(function() {
         });
     	//期次子计划存在交易不能删除 yzg 20190909 end
     });
-
+    
     function saveOrSubmit(operateType) {
         if(table!=null && table!=''){
             var selArr = table.getAllRows();
@@ -217,25 +217,5 @@ $(function() {
         $('#FinStageManagement_btn_submit').click(function() {
             saveOrSubmit('submit');
         });
-
-        // add by mashukai 20201119 TISHKBS-1376 期次管理导出新增
-        /**
-         * 产品系列发行试算-导出
-         */
-        $('#FinStageManagement_btn_export').click(function(){
-            var selArr = table.getAllRows();
-            if(selArr.length > 0){
-                for(var i = 0;i<selArr.length;i++){
-                    selArr[i].finprodMarketId = finprodMarketId;
-                    selArr[i].finprodName = finprodName;
-                }
-            }
-            debugger;
-            var datas = JSON.stringify(selArr);
-            Joyin.exportExcel('export', {
-                datas : datas
-            });
-        });
-        // add by mashukai 20201119 TISHKBS-1376 期次管理导出新增
     });
 });

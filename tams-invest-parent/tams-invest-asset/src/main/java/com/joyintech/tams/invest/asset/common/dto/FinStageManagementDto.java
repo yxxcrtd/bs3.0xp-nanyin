@@ -400,26 +400,6 @@ public class FinStageManagementDto extends FinProduct implements ITableRow,Proce
         }
         return StringUtil.EMPTY;
     }
+    
 
-    //add by mashukai 20201119 期次管理导出新增 start
-    String vdateStr;
-
-    String mdateStr;
-
-    public String getVdateStr() {
-        return vdateStr;
-    }
-
-    public void setVdateStr(String vdateStr) {
-        this.vdateStr = vdateStr;
-    }
-
-    public String getMdateStr() {
-        return mdateStr;
-    }
-
-    public void setMdateStr(String mdateStr) {
-        this.mdateStr = mdateStr;
-    }
-    //add by mashukai 20201119 期次管理导出新增 end
 }
