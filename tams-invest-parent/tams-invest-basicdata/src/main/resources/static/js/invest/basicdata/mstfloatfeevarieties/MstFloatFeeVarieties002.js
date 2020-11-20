@@ -316,6 +316,7 @@
     	getElementById('rateType').change(function() {
     		rateTypeChange();
         });
+ // modify by yujiaping 2020-11-20 TISHKBS-738 净值型产品新建-分档产品，浮动管理费当“付费规则”非“不规则”时，首次计费结束日默认产品起息日+付费规则的周期，系统当前未联动start
     	getElementById('payCycle').change(function(){
     		var payCycle = getElementById('payCycle').val();
     		if(payCycle == "08"){
@@ -323,66 +324,74 @@
     			getElementById('endTdayRule').val("").trigger('change').prop('disabled', true);
     			getElementById('payTdayRule').val("").trigger('change').prop('disabled', true);
     		}else if(payCycle == "03" && vdate){
-    			if(!getElementById('firstPayDate').val()){
+    			//if(!getElementById('firstPayDate').val()){
     				var newDate = Date.ofDate(vdate).DateAdd("m",1);
     				if(mdate && (newDate - Date.ofDate(mdate)>0)){
     					getElementById('firstPayDate').val(mdate).trigger('change').prop('disabled', false);
     				}else{
     					getElementById('firstPayDate').val(newDate.Format('yyyy-MM-dd')).trigger('change').prop('disabled', false);
     				}
-    			}
+    			//}
     			
     			getElementById('endTdayRule').trigger('change').prop('disabled', false);
     			getElementById('payTdayRule').trigger('change').prop('disabled', false);
 
     		}else if(payCycle == "04" &&  vdate){
-    			if(!getElementById('firstPayDate').val()){
+    			//if(!getElementById('firstPayDate').val()){
     				var newDate = Date.ofDate(vdate).DateAdd("m",3);
     				if(mdate && (newDate - Date.ofDate(mdate)>0)){
     					getElementById('firstPayDate').val(mdate).trigger('change').prop('disabled', false);
     				}else{
     					getElementById('firstPayDate').val(newDate.Format('yyyy-MM-dd')).trigger('change').prop('disabled', false);
     				}
-    			}
+    			//}
     			getElementById('endTdayRule').trigger('change').prop('disabled', false);
     			getElementById('payTdayRule').trigger('change').prop('disabled', false);
 				
 			}else if(payCycle == "05" &&  vdate){
-				if(!getElementById('firstPayDate').val()){
+				//if(!getElementById('firstPayDate').val()){
     				var newDate = Date.ofDate(vdate).DateAdd("y",1);
     				if(mdate && (newDate - Date.ofDate(mdate)>0)){
     					getElementById('firstPayDate').val(mdate).trigger('change').prop('disabled', false);
     				}else{
     					getElementById('firstPayDate').val(newDate.Format('yyyy-MM-dd')).trigger('change').prop('disabled', false);
     				}
-    			}
+    			//}
 				getElementById('endTdayRule').trigger('change').prop('disabled', false);
     			getElementById('payTdayRule').trigger('change').prop('disabled', false);
 				
 			}else if(payCycle == "06" &&  vdate){
-				if(!getElementById('firstPayDate').val()){
+				//if(!getElementById('firstPayDate').val()){
     				var newDate = Date.ofDate(vdate).DateAdd("m",6);
     				if(mdate && (newDate - Date.ofDate(mdate)>0)){
     					getElementById('firstPayDate').val(mdate).trigger('change').prop('disabled', false);
     				}else{
     					getElementById('firstPayDate').val(newDate.Format('yyyy-MM-dd')).trigger('change').prop('disabled', false);
     				}
-    			}
+    			//}
 				getElementById('endTdayRule').trigger('change').prop('disabled', false);
     			getElementById('payTdayRule').trigger('change').prop('disabled', false);
 				
 			}else if(payCycle == "07" && mdate){
-				if(!getElementById('firstPayDate').val())
+				//if(!getElementById('firstPayDate').val())
 				getElementById('firstPayDate').val(mdate).trigger('change').prop('disabled', false);
     			getElementById('endTdayRule').trigger('change').prop('disabled', false);
     			getElementById('payTdayRule').trigger('change').prop('disabled', false);
-			}else{
-				getElementById('firstPayDate').trigger('change').prop('disabled', false);
-    			getElementById('endTdayRule').trigger('change').prop('disabled', false);
+			}else if(payCycle == "02" && mdate){
+				//if(!getElementById('firstPayDate').val()){
+    				var newDate = Date.ofDate(vdate).DateAdd("d",7);
+    				if(mdate && (newDate - Date.ofDate(mdate)>0)){
+    					getElementById('firstPayDate').val(mdate).trigger('change').prop('disabled', false);
+    				}else{
+    					getElementById('firstPayDate').val(newDate.Format('yyyy-MM-dd')).trigger('change').prop('disabled', false);
+    				}
+    			//}
+				getElementById('endTdayRule').trigger('change').prop('disabled', false);
     			getElementById('payTdayRule').trigger('change').prop('disabled', false);
 
 			}
     	});
+// modify by yujiaping 2020-11-20 TISHKBS-738 净值型产品新建-分档产品，浮动管理费当“付费规则”非“不规则”时，首次计费结束日默认产品起息日+付费规则的周期，系统当前未联动end
     	getElementById('provisionFirstDay').change(function() {
 			var provisionFirstDay = getElementById('provisionFirstDay').val();
 			var object = JSON.parse(prdinfo);
