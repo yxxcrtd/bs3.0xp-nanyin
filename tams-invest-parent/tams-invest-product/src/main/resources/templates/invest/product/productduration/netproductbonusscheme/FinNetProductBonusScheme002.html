@@ -35,6 +35,9 @@
                                 <input type="text" id="tdyAssetAmt" name="tdyAssetAmt" class="layui-input form-input"  style = "display: none">
                                 <input type="text" name="dealType" value="bonusScheRegister" class="layui-input form-input"  style = "display: none">
                                 <input type="text" id="dealMode" name="dealMode" class="layui-input form-input" data-th-value="${entity?.dealMode}" style = "display: none">
+                               <!--  add by yujiaping 2020-11-20 TISHKBS-809净值型产品分红方案管理，封闭式产品的除权日、权益登记日校验start -->
+                                <input type="text" id="operationType" name="operationType" class="layui-input form-input"  style = "display: none">
+                                <!-- add by yujiaping 2020-11-20 TISHKBS-809净值型产品分红方案管理，封闭式产品的除权日、权益登记日校验end -->
                                 <div class=" form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap"
                                            data-th-text="#{FinNetProductBonusScheme002.finprodMarketId}">产品代码</label>

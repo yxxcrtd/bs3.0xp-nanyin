@@ -122,7 +122,10 @@
 		A.FINPROD_ABBR || ','|| A.FINPROD_NAME || ',' || A.FINPROD_ID 
 		|| ',' || B.UNITVALUE_DEC || ',' || C.PUR_SPEED||','|| A.CCY
 		|| ',' || D.DEAL_MODE
-		||','|| PTL.PORTFOLIO_ID object,
+		||','|| PTL.PORTFOLIO_ID
+		<!--add by yujiaping 2020-11-20 TISHKBS-809净值型产品分红方案管理，封闭式产品的除权日、权益登记日校验start-->
+	    ||','|| A.OPERATION_TYPE object,
+	    <!--add by yujiaping 2020-11-20 TISHKBS-809净值型产品分红方案管理，封闭式产品的除权日、权益登记日校验end-->
 		A.FINPROD_ID finprodId
 		FROM
 		FIN_PRODUCT A 
