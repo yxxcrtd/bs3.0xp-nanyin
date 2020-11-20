@@ -54,7 +54,7 @@
         </where>
     </select>
 
-    <delete id="removeByBusinessId" parameterType="java.lang.String">
+    <delete id="removeByBusinessCode" parameterType="java.lang.String">
         DELETE FROM SYS_UPLOAD_FILE_INFO
         <where>
             BUSINESS_ID = #{businessCode, jdbcType=VARCHAR}
