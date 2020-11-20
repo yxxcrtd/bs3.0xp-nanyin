@@ -680,6 +680,22 @@ public class VatDrawProcessorBService {
         // 4.1 查询发生日当天最新的凭证:
         List<BookLatestInfoDto> listBookLatestInfo = accountingCommonService.getBookLatestInfo(
             booksetId, bookDate, null, null, null, null, happenDate, null, null, null);
+        // add by xiongran 20201120 TISHKBS-1610 start
+        List<BookLatestInfoDto> listBookLatestInfo2=new ArrayList<BookLatestInfoDto>();
+        if(StringUtil.isNotEmpty(cfConfigs.get("SH_DEAL_ORDER"))&&StringUtil.equals(cfConfigs.get("SH_DEAL_ORDER"),"02")){
+            Iterator<BookLatestInfoDto> it = listBookLatestInfo.iterator();
+            while (it.hasNext()){
+                BookLatestInfoDto dto=it.next();
+                if((dto.getBusiId().contains("SH")||dto.getBusiId().contains("SZ"))&&
+                        (dto.getTableId().equals("1316")||dto.getTableId().equals("1325"))
+                ){
+                    it.remove();
+                    listBookLatestInfo2.add(dto);
+                }
+            }
+        }
+		// add by xiongran 20201120 TISHKBS-1610 end
+
         Collections.sort(listBookLatestInfo, new Comparator<BookLatestInfoDto>() {
 
             @Override
@@ -688,6 +704,19 @@ public class VatDrawProcessorBService {
             }
         });
 
+		// add by xiongran 20201120 TISHKBS-1610 start
+        if(StringUtil.isNotEmpty(cfConfigs.get("SH_DEAL_ORDER"))&&StringUtil.equals(cfConfigs.get("SH_DEAL_ORDER"),"02")) {
+
+            Collections.sort(listBookLatestInfo2, new Comparator<BookLatestInfoDto>() {
+
+                @Override
+                public int compare(BookLatestInfoDto o1, BookLatestInfoDto o2) {
+                    return o1.getBookOrder().compareTo(o2.getBookOrder());
+                }
+            });
+            listBookLatestInfo.addAll(listBookLatestInfo2);
+        }
+		// add by xiongran 20201120 TISHKBS-1610 end
         // 4.2 根据上述查询结果,账务明细代码排重后取税则
         List<String> listBokDetailId = new ArrayList<String>();
         for (
@@ -3564,7 +3593,9 @@ public class VatDrawProcessorBService {
             BigDecimal tdyTaxAmt = vatDrawCommonService.taxCalculate(amtDto.getYgjcIncomeDurAmt(),
                 TAX_RATE_DEF, scale, roundingMode, cfConfigs.get(TAX_CALC_FORMULA));
             // 变量.发生额 = 变量.今日税余额 - 增值税额余额
-            happenAmt = ArithmeticUtil.subtract(tdyTaxAmt, tdyBalanceSum.getTaxAmt());
+            //update by xr for TISHKBS-1463 start
+            happenAmt = ArithmeticUtil.subtract(tdyTaxAmt, tdyBalanceSum.getTaxAmtSum());
+            //update by xr for TISHKBS-1463 end
         }
 //        // 定义计税发生额汇总 = 昨日.计税发生额汇总
 //        BigDecimal taxAmtSum = tdyBalanceSum.getTaxAmtSum().add(amtDto.getMaygjcAmt());
