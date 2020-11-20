@@ -303,21 +303,24 @@ public class FinProductFeePay004Service extends BaseService<FinProductFeePay005D
     @Override
     public void doComplete(FinProductFeePay005Dto entityDto, OperationType type) {
         if (type == OperationType.NEW) {
-
-            StlPayOrders stlPayOrders = this.genStlPayOrdersDto(entityDto, entityDto.getTradeId());
-            if (baseGetBussinessId != null) {
-                BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
-                bussinessCodeParameter.setSeqNo("9998");
-                stlPayOrders.setOrderId(baseGetBussinessId.buildBussinessCode(bussinessCodeParameter));
-            } else {
-                stlPayOrders.setOrderId(IDGenerator.generate());
+            List<StlPayOrders> stlPayOrdersList = this.genStlPayOrdersDtos(entityDto, entityDto.getTradeId());
+            BigDecimal settleAmt = BigDecimal.ZERO;
+            for (StlPayOrders stlPayOrders :stlPayOrdersList) {
+                if (baseGetBussinessId != null) {
+                    BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
+                    bussinessCodeParameter.setSeqNo("9998");
+                    stlPayOrders.setOrderId(baseGetBussinessId.buildBussinessCode(bussinessCodeParameter));
+                } else {
+                    stlPayOrders.setOrderId(IDGenerator.generate());
+                }
+                if (StringUtil.equals(stlPayOrders.getPortfolioId(),entityDto.getFinProductFeePay().get(0).getFinprodMarketId())){
+                    settleAmt = stlPayOrders.getSettleAmt();
+                }
             }
             // 金融产品交易汇总表
             TrdFinProductDealTotal trdFinProductDealTotal = this.genTrdFinProductDealTotal(entityDto,
-                    stlPayOrders.getSettleAmt());
-
+                    settleAmt);
             trdFinProductDealTotalMapper.insertSelective(trdFinProductDealTotal);
-            
             // 20191212add 产品费用支付新增插表
             TrdAsynHandleStatus trdAsynHandleStatus = new TrdAsynHandleStatus();
             trdAsynHandleStatus.setTradeId(entityDto.getTradeId());
@@ -337,9 +340,11 @@ public class FinProductFeePay004Service extends BaseService<FinProductFeePay005D
             PtlTrade ptlTrade = this.genPtlTrdea(entityDto);
 
             ptlTradeMapper.insertSelective(ptlTrade);
+            for (StlPayOrders stlPayOrders :stlPayOrdersList) {
+                stlPayOrders.setTradeId(entityDto.getTradeId());
+                stlPayOrdersMapper.insertSelective(stlPayOrders);
+            }
 
-            stlPayOrders.setTradeId(entityDto.getTradeId());
-            stlPayOrdersMapper.insertSelective(stlPayOrders);
 
             String tempFinprodType = productCommonService.convertFeeTypeToCashType(entityDto.getFeeType());
             if (StringUtil.isEmpty(tempFinprodType)) {
@@ -368,15 +373,17 @@ public class FinProductFeePay004Service extends BaseService<FinProductFeePay005D
 
             // 组合现金流水Entity
             List<PtlCashPositionFlowDto> ptlCashPositionFlows = new ArrayList<PtlCashPositionFlowDto>();
-            PtlCashPositionFlowDto ptlCashPositionFlowDto = new PtlCashPositionFlowDto();
-            ptlCashPositionFlowDto.setPortfolioId(ptlTrade.getBusiId());
-            ptlCashPositionFlowDto.setAcctId(stlPayOrders.getMyAcctNo());
-            ptlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_实际.getValue());
-            ptlCashPositionFlowDto.setCdate(entityDto.getPayDate());
-            ptlCashPositionFlowDto.setCcy(stlPayOrders.getCcy());
-            ptlCashPositionFlowDto.setAmount(stlPayOrders.getSettleAmt().negate());
-            ptlCashPositionFlowDto.setOrderId(stlPayOrders.getOrderId());
-            ptlCashPositionFlows.add(ptlCashPositionFlowDto);
+            for (StlPayOrders stlPayOrders :stlPayOrdersList) {
+                PtlCashPositionFlowDto ptlCashPositionFlowDto = new PtlCashPositionFlowDto();
+                ptlCashPositionFlowDto.setPortfolioId(ptlTrade.getBusiId());
+                ptlCashPositionFlowDto.setAcctId(stlPayOrders.getMyAcctNo());
+                ptlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_实际.getValue());
+                ptlCashPositionFlowDto.setCdate(entityDto.getPayDate());
+                ptlCashPositionFlowDto.setCcy(stlPayOrders.getCcy());
+                ptlCashPositionFlowDto.setAmount(stlPayOrders.getSettleAmt().negate());
+                ptlCashPositionFlowDto.setOrderId(stlPayOrders.getOrderId());
+                ptlCashPositionFlows.add(ptlCashPositionFlowDto);
+            }
 //          委托指令流水共通调用
             //增加委托指令流水逻辑
             if(baseEtrCashPositionCommService!=null){
@@ -508,6 +515,41 @@ public class FinProductFeePay004Service extends BaseService<FinProductFeePay005D
         }
         stlPayOrders.setCreateTime(entityDto.getCreateTime());
         return stlPayOrders;
+    }
+
+    /**
+     * 生成划款指令信息
+     *
+     * @param entityDto 产品费用支付Dto
+     * @param tradeId 交易编号
+     * @return 划款指令信息
+     * @see
+     * @since 1.0
+     */
+    private List<StlPayOrders> genStlPayOrdersDtos(FinProductFeePay005Dto entityDto, String tradeId) {
+        entityDto.setBussTrdTransferOrder(
+                bussTrdTransferOrderService.save(entityDto.getBussTrdTransferOrder()));
+        // 划款指令表Entity
+        List<StlPayOrders> stlPayOrdersList = new ArrayList<>();
+        if (!StringUtil.isEmptyList(entityDto.getBussTrdTransferOrder())) {
+            for (BussTrdTransferOrderDto bussTrdTransferOrderDto:entityDto.getBussTrdTransferOrder()) {
+                StlPayOrders stlPayOrders = new StlPayOrders();
+                BeanUtil.copyPropertiesIgnoreNull(stlPayOrders, bussTrdTransferOrderDto);
+                stlPayOrders.setTradeId(tradeId);
+                stlPayOrders.setWorkflowId(entityDto.getWorkflowId());
+
+                List<? extends DataDictItem> yesNoItemList = SysDataUtil.getDataDictItem(
+                        DictCode.是否.getValue());
+                yesNoItemList.forEach(item -> {
+                    if (StringUtil.equals(item.getItemValue(), stlPayOrders.getIsNeedSend())) {
+                        stlPayOrders.setIsNeedSend(item.getItemCode());
+                    }
+                });
+                stlPayOrders.setCreateTime(entityDto.getCreateTime());
+                stlPayOrdersList.add(stlPayOrders);
+            }
+        }
+        return stlPayOrdersList;
     }
 
     /**
@@ -685,10 +727,10 @@ public class FinProductFeePay004Service extends BaseService<FinProductFeePay005D
         finProductFeePay003DtoList.add(finProductFeePay003Dto);
         entity.setFeeInfoList(finProductFeePay003DtoList);
         // 划款指令
-        if (!StringUtil.isEmptyList(entityDto.getBussTrdTransferOrder())) {
-            entityDto.getBussTrdTransferOrder().get(0).setSettleAmt(entity.getActPayAmt());
-            entityDto.getBussTrdTransferOrder().get(0).setPortfolioId(entity.getPtlId());
-        }
+//        if (!StringUtil.isEmptyList(entityDto.getBussTrdTransferOrder())) {
+//            entityDto.getBussTrdTransferOrder().get(0).setSettleAmt(entity.getActPayAmt());
+//            entityDto.getBussTrdTransferOrder().get(0).setPortfolioId(entity.getPtlId());
+//        }
         StlPayOrders stlPayOrders = this.genStlPayOrdersDto(entityDto, entity.getTradeId());
         if (baseGetBussinessId != null) {
             BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
