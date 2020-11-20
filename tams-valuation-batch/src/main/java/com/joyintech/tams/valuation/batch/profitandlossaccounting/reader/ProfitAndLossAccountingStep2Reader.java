@@ -66,9 +66,11 @@ public class ProfitAndLossAccountingStep2Reader extends BaseReader<ProfitAndLoss
                 result.add(x);
             }
             /**ADD BY WUJIE ON 20190730 START**/
-            else if (calculationCommonService.isTradeDealAccount(x.getBooksetId(),x.getHappenDate(),pslist)) {
+            //update by xr for TISHKBS-1174 start
+            else if (calculationCommonService.isTradeDealAccount2(x.getBooksetId(),x.getHappenDate(),pslist)) {
                     result.add(x);
             }
+            //update by xr for TISHKBS-1174 end
             /**ADD BY WUJIE ON 20190730 END**/
         });
 

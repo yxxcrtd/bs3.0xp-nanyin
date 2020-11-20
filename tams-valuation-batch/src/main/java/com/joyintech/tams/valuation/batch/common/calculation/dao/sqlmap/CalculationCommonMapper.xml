@@ -96,6 +96,10 @@ ORDER BY (DECODE(BOOKSET_ID ,'ALL',2,1))
                 #{ps}
             </foreach>
 		</if>
+
+		<if test="tradeStatus != null and tradeStatus!='' ">
+			and D.TRADE_STATUS=#{tradeStatus}
+		</if>
 		AND EXISTS (
 			SELECT * FROM BOK_DEAL_ACCOUNTING C WHERE D.TRADE_ID = C.BUSI_NO
 			AND C.BOOKSET_ID = #{BOOKSET_ID}

@@ -2734,4 +2734,20 @@ public class CalculationCommonService {
         }
         return null;
     }
+
+
+    public boolean isTradeDealAccount2(String booksetId,Date tradeDate,List<String> pslist) {
+
+        boolean flag = false;
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("BOOKSET_ID", booksetId);
+        map.put("TRADE_DATE", tradeDate);
+        map.put("pslist", pslist);
+        map.put("tradeStatus","01");
+        int count = calculationCommonMapper.tradeDealAccountCount(map);
+        if(count>0){
+            flag = true;
+        }
+        return flag;
+    }
 }
