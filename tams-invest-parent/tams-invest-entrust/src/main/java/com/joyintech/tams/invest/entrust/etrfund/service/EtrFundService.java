@@ -180,7 +180,7 @@ public class EtrFundService extends CommonExportService<EtrFundDto> implements B
     /**
      * 撤回委托
      * <功能详细描述>
-     * @param dto 实体类
+     * @param entrustId 实体类
      * @return boolean
      * @see
      * @since 1.0
@@ -355,7 +355,7 @@ public class EtrFundService extends CommonExportService<EtrFundDto> implements B
     /**
      * 组合可用现金查询
      * <功能详细描述>
-     * @param dto
+     * @param param
      * @return
      * @see
      * @since 1.0
@@ -450,7 +450,7 @@ public class EtrFundService extends CommonExportService<EtrFundDto> implements B
      *
      * 查询授权额度
      * <功能详细描述>
-     * @param map
+     * @param dto
      * @return
      * @see
      * @since 1.0
@@ -559,7 +559,7 @@ public class EtrFundService extends CommonExportService<EtrFundDto> implements B
      * 
      * 查询标的附属表信息
      * <功能详细描述>
-     * @param issuer
+     * @param finprodId
      * @return
      * @see
      * @since 1.0
@@ -875,7 +875,7 @@ public class EtrFundService extends CommonExportService<EtrFundDto> implements B
     /**
      * 验证导入的数据
      * 
-     * @param tempList 导入的数据
+     * @param fileName 导入的数据
      * @return wr 报错信息与正确的数据
      */
     public AjaxResult checkImportData(String fileName) {
@@ -1232,5 +1232,14 @@ public class EtrFundService extends CommonExportService<EtrFundDto> implements B
             wr.setData(resultMap);
         }
         return wr;
+    }
+
+
+    public List<String> getSameNameCounterId(Map<String, Object> param) {
+
+        return restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME+"/EtrFund/findSameNameCounterId", param,
+                List.class);
+
     }
 }

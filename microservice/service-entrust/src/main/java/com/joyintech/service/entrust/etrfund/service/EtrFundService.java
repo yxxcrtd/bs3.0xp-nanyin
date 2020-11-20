@@ -700,4 +700,9 @@ public class EtrFundService extends BaseService<EtrFundDto> {
             return null;
         }
     }
+
+    public List<String> findSameNameCounterId(Map<String, Object> map) {
+        return etrFundMapper.findSameNameCounterId(map);
+    }
+
 }

@@ -575,4 +575,11 @@
         </where>
     
     </select>
+
+    <select id="findSameNameCounterId" resultType="java.lang.String">
+        SELECT mcp.counter_id counterId FROM MST_COUNTER_PARTY mcp WHERE EXISTS (
+        SELECT 1 FROM MST_COUNTER_PARTY mcp2 WHERE mcp.COUNTER_name = mcp2.COUNTER_name and
+        counter_id = #{counterId}
+        )
+    </select>
 </mapper>

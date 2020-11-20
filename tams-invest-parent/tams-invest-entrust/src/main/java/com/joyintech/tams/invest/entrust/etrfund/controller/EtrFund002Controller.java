@@ -12,9 +12,11 @@ package com.joyintech.tams.invest.entrust.etrfund.controller;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,8 +147,29 @@ public class EtrFund002Controller extends BaseController{
         model.addAttribute("TRADE_PLACE_03",DictCodeListExt1.交易场所_上海证券交易所.getValue());
         model.addAttribute("TRADE_PLACE_04",DictCodeListExt1.交易场所_深圳证券交易所.getValue());
         model.addAttribute("TRADE_PLACE_06",DictCodeListExt1.交易场所_OTC场外.getValue());
-        model.addAttribute("JYDSJYS000000001",BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
-        model.addAttribute("JYDSJYS000000002",BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
+
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+
+            Map<String,Object> param1 = new HashMap<>();
+            param1.put("counterId",BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
+            List<String> list = etrFundService.getSameNameCounterId(param1);
+            if (!StringUtil.isEmptyList(list)){
+                model.addAttribute("JYDSJYS000000001",list.get(0));
+            }
+
+            param1.put("counterId",BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
+            List<String> list2 = etrFundService.getSameNameCounterId(param1);
+            if (!StringUtil.isEmptyList(list2)){
+                model.addAttribute("JYDSJYS000000002",list2.get(0));
+            }
+
+        }else {
+            model.addAttribute("JYDSJYS000000001", BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
+            model.addAttribute("JYDSJYS000000002",BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
+
+        }
+
+
         model.addAttribute("ETR_CHECK_CASH_SWITCH",CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_CASH_SWITCH)==null?"01":CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_CASH_SWITCH));
         return super.init(model);
     }
@@ -170,7 +193,7 @@ public class EtrFund002Controller extends BaseController{
     /**
      * 获取新建界面的资产代码联想下拉框框
      * <功能详细描述>
-     * @param param
+     *
      * @return
      * @see
      * @since 1.0
@@ -275,7 +298,7 @@ public class EtrFund002Controller extends BaseController{
      * 
      * 组合可用现金查询
      * <功能详细描述>
-     * @param dto
+     * @param param
      * @return
      * @see
      * @since 1.0
@@ -333,7 +356,7 @@ public class EtrFund002Controller extends BaseController{
     
     /**
      * 通道查询下拉框查询
-     * @param map
+     *
      * @return
      * @see
      */
