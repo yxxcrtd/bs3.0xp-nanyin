@@ -2614,6 +2614,17 @@ $(function() {
     
     //判断是提交或是保存
     function saveOrSubmit(operateType) {
+    	//TISHKBS-1443 add by yujiaping 2020-11-19 开放式产品添加限制产品不能在到期日之后做申赎的存续期 start
+        var mDate = $('#mDate').val();
+		var confirmDate = $('#purConfirmDate').val();
+		if(!confirmDate){confirmDate = $('#purConfirmDate03').val();}
+        if(!confirmDate){confirmDate = $('#redConfirmDate').val();}
+        if(!confirmDate){confirmDate = $('#redConfirmDate03').val();}
+		if(mDate && confirmDate && confirmDate > mDate){
+			Joyin.error("确认日不能大于产品到期日!");
+			return;
+		}
+		//TISHKBS-1443 add by yujiaping 2020-11-19 开放式产品添加限制产品不能在到期日之后做申赎的存续期 end
         var object = $.serializeToObject('#submitForm', true);
         object.pageModel = pageModel;
         object.operateType = operateType;

@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.asset.common.controller;
 
+import java.io.File;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,8 +18,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.base.entity.ProcessMark;
+import com.joyintech.framework.util.*;
+import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -224,6 +228,37 @@ public class FinStageManagementController extends BaseController{
        // 系统页面表IS_NEED_WORKFLOW 是否走流程，01-是，02-否
        String msg = finStageManagementService.start(parameter, dto);
        return new AjaxResult(msg);
+
    }
-   
+
+
+   //add by mashukai 20201119 	TISHKBS-1376 计划类利率型资产期次没办法导出，没有一个界面可以导出期次信息的起息日，到期日，及期次的利率 start
+    /**
+     * 导出
+     * @return
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping(ACTION_EXPORT)
+    public ResponseEntity<byte[]> export()
+            throws Exception {
+        String datas = this.getParam("datas");
+        List<FinStageManagementDto> dtoList =new ArrayList<FinStageManagementDto>();
+        if(StringUtil.isNotEmpty(datas)){
+            dtoList = JsonUtils.json2List(datas,FinStageManagementDto.class);
+            for(FinStageManagementDto pDto:dtoList){
+                String vstr = DateUtil.format(pDto.getVdate(),"yyyy-MM-dd");
+                String mstr = DateUtil.format(pDto.getMdate(),"yyyy-MM-dd");
+                pDto.setMdateStr(mstr);
+                pDto.setVdateStr(vstr);
+            }
+        }else{
+            dtoList.add(new FinStageManagementDto());
+        }
+        File outFile = finStageManagementService.makeFile("/com/joyintech/tams/invest/asset/common/conf/export_conf.xml",dtoList);
+        return ExportUtil.export(this.getMessage(this.getPageId()) + SystemGlobalConstant.POINT
+                + FileNameUtil.getFileExtName(outFile),outFile,true);
+    }
+    //add by mashukai 20201119 	TISHKBS-1376 计划类利率型资产期次没办法导出，没有一个界面可以导出期次信息的起息日，到期日，及期次的利率 end
 }

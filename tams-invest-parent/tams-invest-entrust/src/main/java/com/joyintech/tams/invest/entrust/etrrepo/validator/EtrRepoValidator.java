@@ -97,13 +97,14 @@ public class EtrRepoValidator implements EtrCommonValidator {
 //            }
             // delete by renping 改为共通处理 2019-08-22 end
 
+            //modify by mashukai 20201120 TISHKBS-1528 质押式回购指令中，“质押券信息”应设置为非必填项，测试系统为必填项 start
         	  if (DictCodeList.回购类型_质押式协议回购.getValue().equals(dto.getAssetType1())
                       && dto.getBussRepoSec() != null) {
-                  if (StringUtil.isEmptyList(dto.getBussRepoSec().getPledgeBondList())&&!StringUtil.equals(dto.getPs(), DictCodeList.回购拆借方向_逆回购.getValue())) {
+                  if (StringUtil.isEmptyList(dto.getBussRepoSec().getPledgeBondList())&& StringUtil.equals(dto.getPs(), DictCodeList.回购拆借方向_正回购.getValue())) {
                       errorList.add(new ValidMessage("","请输入质押券信息！"));
                   }
               }
-
+            //modify by mashukai 20201120 TISHKBS-1528 质押式回购指令中，“质押券信息”应设置为非必填项，测试系统为必填项 end
             if (dto.getMdate() != null && dto.getVdate() != null) {
                 if (dto.getMdate().before(dto.getVdate())) {
                     errorList.add(new ValidMessage("vdate", this.getMessage("ETR_X_005")));
