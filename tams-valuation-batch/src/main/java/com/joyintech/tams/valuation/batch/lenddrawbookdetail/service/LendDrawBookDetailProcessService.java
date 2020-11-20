@@ -233,22 +233,26 @@ public class LendDrawBookDetailProcessService {
 
             // 结果集发生日 [小于] 标的到期日
             if (happenDateNow.compareTo(dealInfoForTarget.getMdate()) < 0) {
-                // if（变量.计提方式 = 【数据字典】.计提方式."区间倒减"）
-                if (DictCodeList.计提方式_区间倒减.getValue().equals(calType)) {
-                    // 定义 变量.计提开始日
-                    Date vDate = null;
-                    // 变量.当前计划 = 调用标的类共通【当前付息区间查询（参数.发生日,计提类账务处理结果.业务明细代码）】 (理论上是必有数据的，故下面不做为空处理)
-                    List<TargetCashPlan> listCashPlan = finProductCommonService.getCurrentIntRange(
-                        dto.getBusiId(), happenDateNow);
-                    TargetCashPlan targetCashPlan = new TargetCashPlan();
-                    if (listCashPlan != null && listCashPlan.size() > 0) {
-                        targetCashPlan = listCashPlan.get(0);
-                        vDate = targetCashPlan.getVdate();
-                    }
-                    else {
-                        vDate = dealInfoForTarget.getVdate();
-                    }
 
+                //update by xr for  TISHKBS-1540
+                // 变量.当前计划 = 调用标的类共通【当前付息区间查询（参数.发生日,计提类账务处理结果.业务明细代码）】 (理论上是必有数据的，故下面不做为空处理)
+                List<TargetCashPlan> listCashPlan = finProductCommonService.getCurrentIntRange(
+                        dto.getBusiId(), happenDateNow);
+                TargetCashPlan targetCashPlan = new TargetCashPlan();  // 定义 变量.计提开始日
+                Date vDate = null;
+                Date qjmdate=null;
+                if (listCashPlan != null && listCashPlan.size() > 0) {
+                    targetCashPlan = listCashPlan.get(0);
+                    vDate = targetCashPlan.getVdate();
+                    qjmdate= targetCashPlan.getMdate();
+                }
+                else {
+                    vDate = dealInfoForTarget.getVdate();
+                }
+                // if（变量.计提方式 = 【数据字典】.计提方式."区间倒减"）
+                //每日新增算法钟，当区间最后一天是，需按区间倒减算法去计算
+                if (DictCodeList.计提方式_区间倒减.getValue().equals(calType) ||(qjmdate!=null && DateUtil.compareDate(happenDateNow,
+                        DateUtil.addDay(qjmdate, -1)) == 0) ) {
                     // 当前计划 不为空判断，避免空指针错误
                     if (vDate != null) {
                         // 定义本金列表
@@ -259,12 +263,12 @@ public class LendDrawBookDetailProcessService {
                         principalInfoList.add(principalInfo);
                         // 获取总利息金额[调用共通方法：：计算类共通方法 - 通用计算]
                         BigDecimal totalInterestAmt = calculationCommonService.calCommon(vDate,
-                            DateUtil.addDay(happenDateNow, 1), principalInfoList,
-                            quoteInfoList).getTotalInterestAmt();;
+                                DateUtil.addDay(happenDateNow, 1), principalInfoList,
+                                quoteInfoList).getTotalInterestAmt();;
 
                         // 变量.应收利息 = 总利息金额 - 变量.应收利息前一日余额
                         interestVar = ArithmeticUtil.doSub(totalInterestAmt,
-                            interestBlanceForYstVar);
+                                interestBlanceForYstVar);
                         // 调用金额共通方法设置有效小数位
                         interestVar = ArithmeticUtil.round(interestVar, NumberEnum.MONEY);
                     }
