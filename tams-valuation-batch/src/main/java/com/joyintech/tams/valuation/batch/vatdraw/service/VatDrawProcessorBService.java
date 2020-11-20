@@ -88,7 +88,7 @@ public class VatDrawProcessorBService {
     /**
      * 定义 明细数据小数位数 = 10
      */
-    private int decimalDigits = 2;
+    private int decimalDigits = 14;
 
     /**
      * 定义 明细数据位数处理方式 = 四舍五入
