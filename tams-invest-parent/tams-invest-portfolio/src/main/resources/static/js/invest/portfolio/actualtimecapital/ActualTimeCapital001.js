@@ -9,8 +9,12 @@ $(function() {
         if(null != acctNo && "" != acctNo){
             acctNo=object.acctNo.join(',');
         }
+        var portfolioId = object.portfolioId;
+        if(null != portfolioId && "" != portfolioId){
+            portfolioId=object.portfolioId.join(',');
+        }
         return {
-        	portfolioId: object.portfolioId.join(','),//组合代码 // update by caiqun  工单YHZGCPB20200806001实时资金头寸里不能同时查询多个产品的现金 20200813 end
+        	portfolioId:portfolioId,//组合代码 // update by caiqun  工单YHZGCPB20200806001实时资金头寸里不能同时查询多个产品的现金 20200813 end
         	cdate : $('#cdate').val(),//日期
         	acctNo: acctNo//资金账户
         }
@@ -97,9 +101,11 @@ $(function() {
         // 绑定查询按钮
         $('#ActualTimeCapital001_btn_search').click(function() {
         	var strError = '';
-            if(!$('#portfolioId').val()){
-                strError = "请输入"+JoyinUtil.getLabel("ActualTimeCapital001.portfolioId")+"<br>";
-            }
+//add by yangwenjun 20201120 实时资金头寸查询-查询条件“组合代码”修改为非必填 start
+//            if(!$('#portfolioId').val()){
+//                strError = "请输入"+JoyinUtil.getLabel("ActualTimeCapital001.portfolioId")+"<br>";
+//            }
+//add by yangwenjun 20201120 实时资金头寸查询-查询条件“组合代码”修改为非必填 end
             if(!$('#cdate').val()){
                 strError = strError + "请输入"+JoyinUtil.getLabel("ActualTimeCapital001.cdate");
             }

@@ -74,12 +74,14 @@ public class ActualTimeCapital001Controller extends BaseController {
         String portfolioId = (String)map.get("portfolioId");
         if(StringUtil.isNotEmpty(portfolioId)) {
             map.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA, portfolioId));
-            temp = actualTimeCapital001Service.getAcctInfo(map);
         }
+        temp = actualTimeCapital001Service.getAcctInfo(map);
         // update by caiqun  工单YHZGCPB20200806001实时资金头寸里不能同时查询多个产品的现金,资金账户根据组合代码刷选并去重 20200814 end
-        else {
-            temp = new ArrayList<SelectOptionDto>();
-        }
+//modify by yangwenjun 20201120 可以不输入组合代码查询全部资金账户 start
+//        else {
+//            temp = new ArrayList<SelectOptionDto>();
+//        }
+//modify by yangwenjun 20201120 可以不输入组合代码查询全部资金账户 end
         return temp;
     }
 
