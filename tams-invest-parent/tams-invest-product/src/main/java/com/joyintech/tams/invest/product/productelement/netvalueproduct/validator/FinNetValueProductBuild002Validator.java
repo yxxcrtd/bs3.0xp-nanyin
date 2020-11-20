@@ -533,6 +533,26 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                 	validList.add(new ValidMessage(this.getMessage("FIN_PROD_E_0135")));
                 }
             }
+            
+            //add by yujiaping 2020-11-18 TISHKBS-734“分档"产品，浮动管理费增加计提结束日不能大于产品到期日的校验 start
+            if (!StringUtil.isEmptyList(entity.getBussFinProductFloatFeeDto().getBussFinProductFloatFeeInfoDtoList())) {
+            	 for(BussFinProductFloatFeeDto bussFinProductFloatFeeDto : 
+                     entity.getBussFinProductFloatFeeDto().getBussFinProductFloatFeeInfoDtoList()) {
+                if(StringUtil.isNotEmpty(bussFinProductFloatFeeDto.getFeeId())
+                    && (StringUtil.equals(DictCodeList.处理模式_分档.getValue(), entity.getDealMode())) ){                 
+                    if (StringUtil.isNotEmpty(
+                    		bussFinProductFloatFeeDto.geteAccrDate())) {
+                        if (StringUtil.isNotEmpty(entity.getMdate()) && DateUtil.compareDate(
+                        		bussFinProductFloatFeeDto.geteAccrDate(),
+                            entity.getMdate()) > 0) {
+                            validList.add(new ValidMessage("浮动管理费的计提结束日不能大于到期日。"));
+                        }
+                    }
+                }
+            }
+          }//add by yujiaping 2020-11-18 TISHKBS-734“分档”产品，浮动管理费增加计提结束日不能大于产品到期日的校验 end
+            
+            
             if(!StringUtil.isEmptyList(entity.getBussFinProductFloatFeeDto().getBussFinProductFloatFeeInfoDtoList())
                 && (StringUtil.equals(DictCodeList.处理模式_分档周期型.getValue(), entity.getDealMode())||
                 StringUtil.equals(DictCodeList.处理模式_分档.getValue(), entity.getDealMode()))){

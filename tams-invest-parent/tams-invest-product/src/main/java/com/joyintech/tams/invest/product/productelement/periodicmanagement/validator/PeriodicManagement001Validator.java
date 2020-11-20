@@ -104,7 +104,10 @@ public class PeriodicManagement001Validator  implements BeanValidator {
 			if(!StringUtil.isNotEmpty(dto.getStartDate())){
 				errorList.add(new ValidMessage(getMessage("请输入期次开始日")));
 			}
-			if(!StringUtil.isNotEmpty(dto.getEndDate())){
+			if(!StringUtil.isNotEmpty(dto.getEndDate()) 
+				// TISHKBS-818 add by yujiaping 2020-11-19 期次结束日，若为单一固定期限或者多固定期限，必填；若为无固定期限，则选填start
+				&& !StringUtil.equals(dto.getTermType(), DictCodeListExt2.期限类型_无固定期限.getValue()) ){
+				// TISHKBS-818 add by yujiaping 2020-11-19 期次结束日，若为单一固定期限或者多固定期限，必填；若为无固定期限，则选填end
 				errorList.add(new ValidMessage(getMessage("请输入期次结束日")));
 			}
 			
