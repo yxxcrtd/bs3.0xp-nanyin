@@ -1,5 +1,6 @@
 package com.joyintech.service.product.productelement.periodicmanagement.service;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,7 +97,8 @@ public class PeriodicManagementService extends BaseService<PeriodicManagement001
 	 * @return
 	 */
 	public FinProductFloatFeeDto selectFloatFeeInfo(Map<String, Object> param){
-		return periodicManagementMapper.selectFloatFeeInfo(param);
+		List<FinProductFloatFeeDto> feeDtoList = periodicManagementMapper.selectFloatFeeInfo(param);
+		return StringUtil.isEmptyList(feeDtoList)? null :feeDtoList.get(0);
 	}
 
 	public List<FinFloatCalcRuleDetail> selectFloatFeeList(Map<String, Object> param) {

@@ -993,12 +993,12 @@
 	           AND SYS_ACTIVEREMINDER_INFO.FINPROD_ID = fp.FINPROD_MARKET_ID)
 	</select>
 	<!-- 计划类（利率型）存续期 -->
-    <select id="selramindR3S10"
+        <select id="selramindR3S10"
 			resultType="com.joyintech.tams.invest.remind.dto.PaActiveRemind001Dto">
 		select distinct temp.* from(	
              select 
-                remType,assetCode,assetId,assetName,reminder,mdate,menuId,
-                url,lable,dealF,closF,days
+            	T4.remType,T4.assetCode,T4.assetId,T4.assetName,T4.reminder,T4.mdate,
+        		T4.menuId,T4.url,T4.lable,T4.dealF,T4.closF,T4.days
             from (
 		        SELECT #{R3S10} as remType,
 		        T2.FINPROD_MARKET_ID as assetCode,
@@ -1061,28 +1061,6 @@
 		    	    AND TPDA.FINPROD_ID = T1.FINPROD_ID
 			        AND T3.PORTFOLIO_ID =TPDA.PORTFOLIO_ID
 			        AND ((TPDA.CHL_ID is NULL and t3.sec_acct_id='999999') OR TPDA.CHL_ID = T3.SEC_ACCT_ID))
-			        <!-- 过滤配置关闭提醒 -->
-			        AND NOT EXISTS(
-			        SELECT 1 FROM SYS_ACTIVEREMINDER_INFO
-			        WHERE
-			        SYS_ACTIVEREMINDER_INFO.REM_TYPE = #{R3S10}
-			        AND
-			        SYS_ACTIVEREMINDER_INFO.EFFFLAG = #{noFlag}
-			        AND
-			        SYS_ACTIVEREMINDER_INFO.FINPROD_ID = T2.FINPROD_MARKET_ID
-			        AND
-			        SYS_ACTIVEREMINDER_INFO.MDATE = T1.MDATE
-			        )
-			        /*组合权限*/
-			        AND EXISTS(
-			            SELECT 1 FROM PTL_PORTFOLIO_AUTHORITY ppa
-				        <where>
-				            T3.PORTFOLIO_ID  = ppa.PORTFOLIO_ID 
-					        <if test="userId != null and userId != ''">
-						        and ppa.USER_ID = #{userId}
-					        </if>
-				        </where>
-			        )
 		        </where>
             )T4
             <!--不存在更大的持仓-->
@@ -1091,8 +1069,16 @@
                 AND tpsp.SEC_ACCT_ID = T4.SEC_ACCT_ID
                 AND tpsp.FINPROD_ID = T4.assetId
                 AND tpsp.CDATE > T4.CDATE
-                AND tpsp.CDATE &lt; t4.mdate 
-            where tpsp.HODING_TYPE is null
+                AND tpsp.CDATE &lt; t4.mdate
+			left join SYS_ACTIVEREMINDER_INFO on SYS_ACTIVEREMINDER_INFO.REM_TYPE = #{R3S10}
+				AND SYS_ACTIVEREMINDER_INFO.EFFFLAG = #{noFlag}
+				AND SYS_ACTIVEREMINDER_INFO.FINPROD_ID = t4.assetCode
+				AND SYS_ACTIVEREMINDER_INFO.MDATE = T4.MDATE
+			inner join PTL_PORTFOLIO_AUTHORITY ppa on  T4.PORTFOLIO_ID  = T4.PORTFOLIO_ID
+				   <if test="userId != null and userId != ''">
+				   		and ppa.USER_ID = #{userId}
+				   </if>
+            where tpsp.HODING_TYPE is null AND SYS_ACTIVEREMINDER_INFO.SEQNO IS NULL
 	    )temp
 	    <!--过滤已做交易 -->
 	    left join TRD_PRODUCT_DEAL T3 on  temp.assetId = T3.FINPROD_ID and  temp.mdate = T3.MDATE  AND T3.IS_CANCEL = 'N'

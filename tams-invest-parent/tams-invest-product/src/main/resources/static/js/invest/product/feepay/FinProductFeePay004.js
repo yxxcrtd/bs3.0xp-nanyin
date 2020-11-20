@@ -22,37 +22,39 @@ $(function() {
         if(isDone){
             if(window.BussTrdTransferOrder && window.BussTrdTransferOrder['bussFinProductFeePay']) {
                 window.BussTrdTransferOrder['bussFinProductFeePay'].setStlCommandInput(function () {
-                	if (!$("#FinProductFeePay004_hidden_tradeAmtSum").val() || typeof $("#FinProductFeePay004_hidden_tradeAmtSum").val() == 'undefined'){
-                		Joyin.error(JoyinUtil.getMessage('FW_E_0006',[JoyinUtil.getLabel("FinProductFeePay004.actPayAmtSum")]));
-                		return null;
-                	}
-                	if (!$("#FinProductFeePay004_payDate").val() || typeof $("#FinProductFeePay004_payDate").val() == 'undefined'){
-                		Joyin.error(JoyinUtil.getMessage('FW_E_0006',[JoyinUtil.getLabel("FinProductFeePay004.payDate")]));
-                		return null;
-                	}
-                	var allData;
-            		var allData = prodInfoTable.getAllRows();
-            		if(!allData){
-                		Joyin.error(JoyinUtil.getMessage('FIN_PROD_E_0096',[JoyinUtil.getLabel("FinProductFeePay004.field.prodTable")]));
-                		return null;
-            		}  
-            		var portfolioId = '';
-            		if(allData.length > 0){
-            		    portfolioId = allData[0].ptlId;
-            		}
-            		// 划款指令所需参数
-            		return {
-                    	'isTotalTrade':yesFlag
-                        ,'portfolioId' : portfolioId
-                        ,'deal':{
-                        	'finprodType2' : $('#FinProductFeePay004_hidden_feeType').val(),
-                        	'ps' : ps,
-                        	'tradeDate' : $('#FinProductFeePay004_payDate').val(),
-                        	'tradeAmt' : $("#FinProductFeePay004_hidden_tradeAmtSum").val(),
-                            'ccy' : $('#FinProductFeePay004_ccy').val()
-                        }
-                    };
-                });
+					if (!$("#FinProductFeePay004_hidden_tradeAmtSum").val() || typeof $("#FinProductFeePay004_hidden_tradeAmtSum").val() == 'undefined') {
+						Joyin.error(JoyinUtil.getMessage('FW_E_0006', [JoyinUtil.getLabel("FinProductFeePay004.actPayAmtSum")]));
+						return null;
+					}
+					if (!$("#FinProductFeePay004_payDate").val() || typeof $("#FinProductFeePay004_payDate").val() == 'undefined') {
+						Joyin.error(JoyinUtil.getMessage('FW_E_0006', [JoyinUtil.getLabel("FinProductFeePay004.payDate")]));
+						return null;
+					}
+					var allData = prodInfoTable.getAllRows();
+					if (!allData) {
+						Joyin.error(JoyinUtil.getMessage('FIN_PROD_E_0096', [JoyinUtil.getLabel("FinProductFeePay004.field.prodTable")]));
+						return null;
+					}
+					var list = new Array();
+					for (var dealObj in allData){
+						if(allData[dealObj].actPayAmt!=0&&allData[dealObj].actPayAmt!=null&&allData[dealObj].actPayAmt!=" ") {
+							var dealinfo = {};
+							dealinfo.tradeDate = $('#FinProductFeePay004_payDate').val();
+							dealinfo.portfolioId =  allData[dealObj].ptlId;
+							dealinfo.ccy= $('#FinProductFeePay004_ccy').val();
+							dealinfo.finprodType2 = $('#FinProductFeePay004_hidden_feeType').val();
+							dealinfo.tradeAmt=allData[dealObj].actPayAmt;
+							dealinfo.ps = ps;
+							list.push(dealinfo);
+						}
+					}
+					// 划款指令所需参数
+					return {
+						'isTotalTrade': yesFlag
+						, 'portfolioId': 'fee'
+						, 'deal': list
+					};
+                }, true);
             }
         }
     };

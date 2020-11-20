@@ -306,6 +306,9 @@ public class TrdFundInvestTrade003Controller extends BaseController {
                 dto.setPs(DictCodeListExt2.交易方向_转换确认.getValue());
             }
             if (DictCodeList.交易方向_赎回确认.getValue().equals(dto.getPs())) {
+                if (!StringUtil.isNotEmpty(dto.getTradeAmt())){
+                    dto.setTradeAmt(ArithmeticUtil.multiply(dto.getUnitCprice(),dto.getShareAmt()));
+                }
                 dto.setPrinAmt(dto.getTradeAmt());
             }
             TrdInvestPersonInfo002Dto tipiDto = dto.getTrdInvestPersonInfo();

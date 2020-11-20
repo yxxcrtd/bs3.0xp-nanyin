@@ -71,7 +71,7 @@
                 UNION ALL
             </if>
             SELECT * FROM (
-                select
+                select  /*+ use_hash(T8 T10) */
                   /* 有效状态 */ '${PAGE_DATE_STATUS01}'           statusValid,
                   /* 业务编号 */ null                              busiCode,
                   /* 类型 */    t8.CASH_TYPE, T10.FINPROD_ID, T10.CCY,

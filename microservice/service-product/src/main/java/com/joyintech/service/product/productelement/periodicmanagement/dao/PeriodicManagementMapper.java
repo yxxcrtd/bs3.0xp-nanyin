@@ -30,7 +30,7 @@ public interface PeriodicManagementMapper {
 
 	FinBaseRuleDto selectBenchMarkInfo(Map<String, Object> param);
 
-	FinProductFloatFeeDto selectFloatFeeInfo(Map<String, Object> param);
+	List<FinProductFloatFeeDto> selectFloatFeeInfo(Map<String, Object> param);
 
 	List<FinFloatCalcRuleDetail> selectFloatFeeList(Map<String, Object> param);
 	
