@@ -874,7 +874,7 @@
 			SUM(bpp.tdy_prin_amt * bpp.tdy_yield) / SUM(bpp.tdy_prin_amt) * 100 
 		</if>
 		<if test="dealMode!=null and (dealMode !=dealModeFD and dealMode !=dealModeZQX)">
-			bpp.tdy_yield
+			bpp.tdy_yield * 100
 		</if>
 		from bok_position_prd bpp 
 		where bpp.cdate = #{queryDate}
