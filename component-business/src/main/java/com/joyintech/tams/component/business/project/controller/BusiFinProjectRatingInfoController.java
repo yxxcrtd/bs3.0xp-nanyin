@@ -88,7 +88,10 @@ public class BusiFinProjectRatingInfoController extends BaseController{
     public List<MstBondCreditRating> initInfo() {
         List<MstBondCreditRating> mstBondCreditRatingList = new ArrayList<MstBondCreditRating>();
         String finprodId = this.getParam("finprodId");
-        if(StringUtil.isNotEmpty(finprodId)){
+        //modify by mashukai 20201123 BS-2009 草稿箱评级信息反显无数据问题 start
+        String isDraft = this.getParam("isDraft");
+        if(StringUtil.isNotEmpty(finprodId) || "true".equals(isDraft)){
+        //modify by mashukai 20201123 BS-2009 草稿箱评级信息反显无数据问题 end
 	        if(!WorkFlowUtil.isNotFromToDoList()){
 	            String workFlowId = this.getParam("workflowId");
 	            String entityName = StringUtil.defaultString(this.getParam("entityName"),
