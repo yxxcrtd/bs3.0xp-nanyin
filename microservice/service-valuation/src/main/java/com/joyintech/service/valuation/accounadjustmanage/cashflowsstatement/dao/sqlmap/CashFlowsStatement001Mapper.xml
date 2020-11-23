@@ -202,7 +202,7 @@
     
     <select id="selectCashAmt" parameterType="map" resultType="java.math.BigDecimal">
     	SELECT
-    		NVL(SUM(A.O_AMT),0)
+    		NVL(SUM(A.B_AMT),0)
     	FROM BOK_BALANCE A,BOK_SUBJECT B,BOK_BOOKSET C
     	WHERE A.BOOKSET_ID = C.BOOKSET_ID
     	AND B.BOOKSET_ID = C.BOOKSET_ID_TMPL
