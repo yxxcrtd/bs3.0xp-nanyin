@@ -17,6 +17,8 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.joyintech.framework.base.entity.ProcessMark;
+import com.joyintech.workflow.engine.WorkflowContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -127,6 +129,8 @@ public class ValManualVoucher003Controller extends BaseController {
         
         // 判断是修改操作还是新建操作
         String seqno = getParam("seqno");
+
+        String operateType = getParam("operateType");
         if (StringUtil.isNotEmpty(seqno)) {
             ValManualVoucher001Dto entity = valManualVoucher003Service.getBySeqno(seqno);
             model.addAttribute("entity", entity);
@@ -150,8 +154,30 @@ public class ValManualVoucher003Controller extends BaseController {
             model.addAttribute("busiId", entity.getBusiId());
             model.addAttribute("busiName", entity.getBusiName());
             model.addAttribute("busiDetailType", entity.getBusiDetailType());
-        }
-        else {
+        }else if(operateType!=null&&operateType.equals("copy")){
+            String tradeId = getParam("tradeId");
+            ProcessMark processMark;
+            ValManualVoucher003Dto dto =  new ValManualVoucher003Dto();
+            try {
+                dto.setSeqno(tradeId);
+                processMark = WorkflowContext.getProcessMarkService().getParameterByAnnotation(dto);
+                processMark.setPageId("ValManualVoucher003");
+                dto = valManualVoucher003Service.getBussinessEntityByPk(processMark);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            dto.setSeqno(null);
+            model.addAttribute("entity", dto);
+            model.addAttribute("offsetFlag", dto.getOffsetFlag());
+            model.addAttribute("workflowId", dto.getWorkflowId());
+
+            // 入账日期默认为系统平台日
+            model.addAttribute("sysDate",DateUtil.format(dto.getBookDate(), "yyyy-MM-dd"));
+            /** add by yanya on 20191030 增加资产代码及业务明细类型**/
+            model.addAttribute("busiId", dto.getBusiId());
+            model.addAttribute("busiName", dto.getBusiName());
+            model.addAttribute("busiDetailType", dto.getBusiDetailType());
+        }else {
             // 冲销标志默认值
             model.addAttribute("offsetFlag", DictCodeList.冲正标识_正常交易.getValue());
             // 借贷方向设一个默认值
