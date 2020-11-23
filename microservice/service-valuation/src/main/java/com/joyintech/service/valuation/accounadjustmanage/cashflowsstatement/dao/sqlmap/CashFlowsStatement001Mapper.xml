@@ -57,7 +57,7 @@
                             A.PRIN_AMT
                        END PRIN_AMT,
                        A.INT_AMT,
-                       A.TRADE_AMT,
+		               DECODE(PCI.ACCT_TYPE,'A07',0,A.TRADE_AMT) TRADE_AMT,
                        A.TRADE_STATUS
 					   /**	,finTrade.EXC_PS**/
                   FROM TRD_PRODUCT_DEAL A
@@ -71,6 +71,12 @@
 							#{item}
 						</foreach>
 					</if>
+				INNER JOIN TRD_PRODUCT_DEAL_ADD TPDA
+					ON A.TRADE_ID = TPDA.TRADE_ID
+				LEFT JOIN PTL_CAPACCT_INFO PCI
+					ON A.FINPROD_ID = PCI.ACCT_NO
+					AND TPDA.PORTFOLIO_ID = PCI.PORTFOLIO_ID
+					AND A.CCY = PCI.CCY AND PCI.ACCT_TYPE ='A07'
 				/** left join FIN_TRADE_PRODUCT finTrade
                  	on finTrade.FINPROD_TYPE2 = 'F35' and finTrade.finprod_id = A.finprod_id**/
 		        where A.IS_CANCEL='N'

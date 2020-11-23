@@ -143,7 +143,8 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
             				+ "F07,T26,P,INTAMT,03|"	
             				/**add by wujie on 20200213 end**/
             				+ "F03,T02,P,INTAMT,03|"
-            				+ "F03,T07,P,INTAMT,03","ORI"},
+            				+ "F03,T07,P,INTAMT,03|"
+                            + "F20,T09,P,TRADEAMT,15","ORI"},
             {"收到其他与经营活动有关的现金","经营活动现金流入小计",
             					"F09,T02,P,TRADEAMT|"
             					+ "F09,T23,P,PRINAMT|"
