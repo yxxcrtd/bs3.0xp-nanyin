@@ -285,7 +285,8 @@
 		    C.BRANCH AS branch,/**分支序号**/
 		    B.CAPITAL AS tdyPrinAmt,/**当日本金**/
 		    B.CAPITAL AS tdyShareAmt,/**当日份额**/
-		    B.TDY_YIELD AS tdyYield,/**当日收益率**/
+<!--		    B.TDY_YIELD AS tdyYield,/**当日收益率**/-->
+		   (CASE WHEN B.PROFIT_TYPE =  #{profitType02,jdbcType=VARCHAR} THEN B.INT_RATE ELSE B.TDY_YIELD END)  AS tdyYield,/**当日收益率**/
   			B.NET_ASSET_VALUE AS tdyAssetAmt,/**当日资产净值**/
         	(CASE WHEN B.PROFIT_TYPE =  #{profitType,jdbcType=VARCHAR} THEN B.NET_UNIT_VALUE ELSE B.P_YIELD END) AS tdyUnitValue, /**当日单位净值**/
 			<!-- MODIFY BY WUJIE ON 20191024 START

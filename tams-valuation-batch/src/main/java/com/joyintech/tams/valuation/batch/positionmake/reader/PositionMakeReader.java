@@ -85,6 +85,7 @@ public class PositionMakeReader extends BaseReader<PositionMakeReaderResult> {
         sqlMap.put("busiDetailType", DictCodeListExt1.金融产品类型_理财产品.getValue());// 业务明细类型
         sqlMap.put("busiDetailTypeSub", DictCodeListExt1.金融产品类型_理财子产品.getValue());// 业务明细类型
         sqlMap.put("profitType", DictCodeList.收益类型_净值型.getValue());// 收益类型
+        sqlMap.put("profitType02", DictCodeList.收益类型_收益型.getValue());// 收益类型
         sqlMap.put("booksetIds", (List<String>)this.getParams().get(GlobalConstant.BOOKSETS));
         
         /**
