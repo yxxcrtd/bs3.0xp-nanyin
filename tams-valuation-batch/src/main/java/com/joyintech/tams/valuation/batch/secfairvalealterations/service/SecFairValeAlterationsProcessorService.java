@@ -788,8 +788,11 @@ public class SecFairValeAlterationsProcessorService {
                 rtnResult.getBokSummaryList().add(bokSummaryTableNew);
             }
             // 3.3 行情价格警告信息赋值      ------add wangwei1 20190131
+            //modify by mashukai 20201123  TISHKBS-1631	start
             if (!DictCodeList.息票品种_零息.getValue().equals(rstBaseinfo.getCouponSpecies())
-                    && !DictCodeList.息票品种_贴现.getValue().equals(rstBaseinfo.getCouponSpecies())) {
+                    && !DictCodeList.息票品种_贴现.getValue().equals(rstBaseinfo.getCouponSpecies())
+                    && (marketPriceDto.getSchemeValDate()!= null)  ) {
+            //modify by mashukai 20201123  TISHKBS-1631	end
                     BokBatchMarketwarningInfo bokBatchMarketwarningInfo =new BokBatchMarketwarningInfo();
                     //1.获取批处理信息 
                     SysBatchExecInfo sysBatchExecInfo = (SysBatchExecInfo) param1.get("BATCHINFO");

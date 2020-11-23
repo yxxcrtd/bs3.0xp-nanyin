@@ -89,6 +89,12 @@
         param.issuer = $("#issuer").val();
         //融资人主体
         param.financier = $("#financier").val();
+
+        //add by mashukai 20201123 BS-2009 草稿箱评级信息反显无数据问题 start
+        if(isDraft){
+            param.isDraft = isDraft.toString();
+        }
+        //add by mashukai 20201123 BS-2009 草稿箱评级信息反显无数据问题 end
         return param;
     }
     // 公开接口

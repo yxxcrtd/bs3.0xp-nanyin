@@ -452,14 +452,16 @@ public class FinProductCommonService {
                                 marketPriceDto.setPrice(marketPriceDto.getAllPrice());
                             }
                         }
+                        //modify by mashukai 合并修改 TISHKBS-1631 20201123	start
+                        //理论估值日期
+                        String isHoliday = calculationCommonService.getIsHoliday(queryDate,targetFinProduct.getCalendarId());
+                        if("0".equals(isHoliday)){
+                            marketPriceDto.setSchemeValDate(queryDate);
+                        }else{
+                            marketPriceDto.setSchemeValDate(calculationCommonService.getCDate(queryDate,targetFinProduct.getCalendarId() ));
+                        }
+                        //modify by mashukai 合并修改 TISHKBS-1631 20201123	end
                     }
-                }
-                //理论估值日期
-                String isHoliday = calculationCommonService.getIsHoliday(queryDate,targetFinProduct.getCalendarId());
-                if("0".equals(isHoliday)){
-                    marketPriceDto.setSchemeValDate(queryDate);
-                }else{
-                    marketPriceDto.setSchemeValDate(calculationCommonService.getCDate(queryDate,targetFinProduct.getCalendarId() ));
                 }
                 return marketPriceDto;
             }

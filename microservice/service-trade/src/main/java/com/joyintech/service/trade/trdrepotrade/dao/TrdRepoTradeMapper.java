@@ -207,4 +207,11 @@ public interface TrdRepoTradeMapper {
     BigDecimal selectDoEntrustMoney(Map<String, Object> param);
 
     List<TrdMatchInfo> selectPreTradeId(Map<String, Object> params);
+
+    /**
+     * add by yangwenjun 20201123 根据业务编号查询合作资产
+     * @param tradeId
+     * @return
+     */
+    String getChlId(String tradeId);
 }
