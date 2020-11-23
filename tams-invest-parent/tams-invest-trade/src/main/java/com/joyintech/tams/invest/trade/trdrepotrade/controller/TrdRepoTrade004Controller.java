@@ -50,6 +50,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
@@ -314,6 +315,21 @@ public class TrdRepoTrade004Controller extends BaseController {
         dto.setBussinessCode(bussinessCode);
         String msg = trdRepoTrade004Service.start(processParameter, dto);
         return new AjaxResult(msg);
+    }
+
+    /**
+     * add by yangwenjun 20201123 根据业务编号查询合作资产
+     * @param param
+     * @return
+     */
+    @RequestMapping("getChlId")
+    @ResponseBody
+    public Map<String, String> getChlId(@RequestBody Map<String, Object> param) {
+        String tradeId=(String)param.get("tradeId");
+        String chlId = trdRepoTrade004Service.getChlId(tradeId);
+        Map<String,String> map=new HashMap<>();
+        map.put("chlId",chlId);
+        return map;
     }
 
 }

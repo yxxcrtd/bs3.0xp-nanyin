@@ -189,21 +189,28 @@
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0058"));
                 return;
             }
-            //只有交易状态为有效，回购类型为质押式协议回购才允许进行质押券置换操作
-            if(selArr[0]["validStatusText"]=='有效' &&selArr[0]["repoTypeText"]=='质押式协议回购') {
-
-                Joyin.dialog(JoyinUtil.getLabel("TrdStandardBond004"), basePath
-                    + "invest/trade/trdrepotrade/TrdRepoTrade004/init", "99%", "99%", selArr[0], {
-                    pageModel: PAGE_MODEL_EDIT
-                }, function () {
-                    listTbl.reload();
-                });
-            }
-            else
-            {
-                Joyin.error(JoyinUtil.getMessage("请选择交易状态为有效、回购类型为质押式协议回购的数据进行操作!"));
+            if(selArr[0]["validStatusText"]!='有效' || selArr[0]["repoTypeText"]!='质押式协议回购'){
+                Joyin.error(JoyinUtil.getMessage("请选择交易状态为有效、回购类型为质押式协议回购、直投的数据进行操作!"));
                 return;
             }
+            //update by yangwenjun 20201123 质押式回购-交易所协议回购-通道买入无法做质押券置换 start
+            var param={
+                tradeId:selArr[0]["tradeId"]
+            }
+            Joyin.ajaxJson(basePath+'invest/trade/trdrepotrade/TrdRepoTrade004/getChlId',param,function(result){
+                var chlId=result.chlId;
+                 //只有交易状态为有效，回购类型为质押式协议回购才允许进行质押券置换操作
+                if(chlId&&chlId!=''){
+                    Joyin.error(JoyinUtil.getMessage("请选择交易状态为有效、回购类型为质押式协议回购、直投的数据进行操作!"));
+                    return;
+                }else{
+                    Joyin.dialog(JoyinUtil.getLabel("TrdStandardBond004"), basePath+ "invest/trade/trdrepotrade/TrdRepoTrade004/init", "99%", "99%", selArr[0],{pageModel: PAGE_MODEL_EDIT}, function () {
+                         listTbl.reload();
+                    });
+                }
+            });
+            //update by yangwenjun 20201123 质押式回购-交易所协议回购-通道买入无法做质押券置换 end
+
         });
 
         /**
