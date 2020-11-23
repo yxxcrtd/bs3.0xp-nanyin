@@ -1243,7 +1243,8 @@ public class ChbTransMonthReport001Service extends SvrCommonExportService<ChbTra
 	        			if (singleRule.getRuleCodeList().get(i).toUpperCase().equals("RATINGAA-|RATINGNULL")){
 	        				if(xyz.contains(pos.getAssettype2()) 
 	        						&& ((pos.getRating()!=null &&compareRating(pos.getRating(),singleRule.getRuleValueList().get(i)) < 0 )
-	        								  ||pos.getRating() == null)){
+	        								  ||pos.getRating() == null)
+										&& "02".equals(pos.getIssueMode())){
 	        					isPattern = true;
 	        				}else{
 	        					isPattern = false;

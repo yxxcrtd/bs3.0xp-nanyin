@@ -59,6 +59,35 @@ public class ChbTransMonthAssetPosition {
      * @return
      */
     private List<String> institutionlist;
+    //add by mashukai 20201020 增加发行方式,产品代码 start
+	/**
+	 * 发行方式
+	 * @return
+	 */
+	private String issueMode;
+
+	/**
+	 * 产品代码
+	 * @return
+	 */
+	private String prodId;
+
+	public String getProdId() {
+		return prodId;
+	}
+
+	public void setProdId(String prodId) {
+		this.prodId = prodId;
+	}
+
+	public String getIssueMode() {
+		return issueMode;
+	}
+
+	public void setIssueMode(String issueMode) {
+		this.issueMode = issueMode;
+	}
+	//add by mashukai 20201020 增加发行方式 end
 	public Date getStartdate() {
 		return startdate;
 	}
