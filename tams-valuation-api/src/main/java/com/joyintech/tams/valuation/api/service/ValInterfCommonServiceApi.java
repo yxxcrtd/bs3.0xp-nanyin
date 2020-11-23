@@ -2137,6 +2137,7 @@ public class ValInterfCommonServiceApi {
         trdProductDealVo.setTradeStatus(dealList.get(0).getTradeStatus());
         /**add by wujie on 20190530 start**/
         trdProductDealVo.setChlId(dealList.get(0).getChlId());
+        trdProductDealVo.setPayDate(dealList.get(0).getPayDate());
         /**add by wujie on 20190530 end**/
         // 2.2.2 初始化金融产品交易附属表
         trdProductDealAddVo.setTradeId(trdProductDealVo.getTradeId());//交易编号
