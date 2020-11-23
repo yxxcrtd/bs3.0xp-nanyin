@@ -82,7 +82,11 @@
 		console.log(row.finprodId);
        var label='';
        var pagePath='';
-       pagePath = "invest/product/productelement/netvalueproduct/FinNetValueProductBuild002/init";
+       if(row.profitType == '02'){
+            pagePath = "invest/product/productelement/build/FinProductBuild002/init";
+       }else{
+            pagePath = "invest/product/productelement/netvalueproduct/FinNetValueProductBuild002/init";
+       }
        Joyin.dialog(JoyinUtil.getLabel(label), basePath + pagePath,
            "98%", "95%", {
                pageModel: PAGE_MODEL_REFERENCE,

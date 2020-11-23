@@ -2142,7 +2142,7 @@
        when '02' then YJ.yield
        else  YJ2.rate end rateRepYield,
        -->
-		PRD_STANDING_BOOK.RATE rateRepYieldStr,
+		nvl(PRD_STANDING_BOOK.RATE,FIN_RATE_INFO.RATE * 100) rateRepYieldStr,
 		(case when
 		PRD_SALE_PARAM.FIRST_SALE_VDATE &lt;= to_date(#{queryDate}, 'yyyy-MM-dd') and FIN_PRODUCT.VDATE
 		&gt;to_date(#{queryDate}, 'yyyy-MM-dd') then '新发'
