@@ -1031,7 +1031,7 @@ public class ValInvest2JixuServiceImpl implements ValInvest2JixuService {
 			result.setAssetType(trdProductDeal.getFinprodType2());
 			//根据组合代码查询金融产品：净值型和货币型可以找到，预期收益型会返回空
 			FinProduct finProduct = dealCommonService.queryFinProductByPortfolidId(trdProductDealAdd.getPortfolioId());
-			String booksetid = (finProduct.getFinprodId() == null ? trdProductDealAdd.getPortfolioId() : finProduct.getFinprodId());
+			String booksetid = ( (finProduct == null || finProduct.getFinprodId() == null ) ? trdProductDealAdd.getPortfolioId() : finProduct.getFinprodId());
 			// 产品代码  = 金融产品交易附属.投资组合代码
 			result.setPort(booksetid);
 			// 合同编号 = 股票代码
