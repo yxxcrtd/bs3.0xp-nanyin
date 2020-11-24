@@ -200,6 +200,18 @@ public class TrdPlanCcyInvestTrade001Controller extends BaseController {
                 ar.setErrorList(errorList);
                 return ar;
         	}
+        	if(result.getErrorCount() == 0){// 确认时校验 add by yangwenjun 20201124
+                WflValidInputParameter parameter = new WflValidInputParameter();
+                parameter.setPageId("TrdPlanCcyInvestTrade003");
+                parameter.setBusinessDataPk3(dto.getTradeId());
+                if (mstWorkflowCommonService.isInWflProcess(parameter)) {
+                    ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+                    errorList.add(new ValidMessage(this.getMessage("BUSS_COM_E_0041")));
+                    AjaxResult ar = new AjaxResult();
+                    ar.setErrorList(errorList);
+                    return ar;
+                }
+            }
         }
         return commonCheck(result, dto.getOperateType());
     }
