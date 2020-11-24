@@ -123,10 +123,10 @@
 					</if>
 				/**left join FIN_TRADE_PRODUCT finTrade
 				on finTrade.FINPROD_TYPE2 = 'F35' and finTrade.finprod_id = D.finprod_id **/
-				) DEAL
-            LEFT JOIN SOTMP OT
-            ON DEAL.TRADE_ID = OT.TRADE_ID
-		  where D.IS_CANCEL='N'
+				where D.IS_CANCEL='N'
+		) DEAL
+		LEFT JOIN SOTMP OT
+		ON DEAL.TRADE_ID = OT.TRADE_ID
         ) T
 		WHERE TO_CHAR(T.SETTLE_DATE,'yyyy-MM-dd') &gt;= #{vdate,jdbcType=VARCHAR}
 		AND	TO_CHAR(T.SETTLE_DATE,'yyyy-MM-dd') &lt;= #{mdate,jdbcType=VARCHAR}

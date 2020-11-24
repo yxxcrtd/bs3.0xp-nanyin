@@ -25,6 +25,9 @@
 		                             from PTL_SEC_VALUTION psv
 		                       inner join PTL_PORTFOLIO pp on psv.PORTFOLIO_ID=pp.PORTFOLIO_ID
 		                       inner join FIN_PRODUCT fp on fp.FINPROD_ID=psv.FINPROD_ID
+		                    <!--   add  by yujiaping 2020-11-24 ZGBUGTWO-244【单一资产持仓分析】改为不可以查询到通道的信息start --> 
+		                       and fp.FINPROD_TYPE2 != 'F28' and fp.FINPROD_TYPE2 is not null
+		                    <!--   add  by yujiaping 2020-11-24 ZGBUGTWO-244【单一资产持仓分析】改为不可以查询到通道的信息end -->
 		                       inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID
 		                            where 1=1
 		                            <if test="finprodIdList != null and finprodIdList.size()>0">
@@ -69,6 +72,9 @@
 		                             from PTL_SEC_PIERCE_VALUTION psv
 		                       inner join PTL_PORTFOLIO pp on psv.PORTFOLIO_ID=pp.PORTFOLIO_ID
 		                       inner join FIN_PRODUCT fp on fp.FINPROD_ID=psv.FINPROD_ID
+		                    <!--   add  by yujiaping 2020-11-24 ZGBUGTWO-244【单一资产持仓分析】改为不可以查询到通道的信息start --> 
+		                       and fp.FINPROD_TYPE2 != 'F28' and fp.FINPROD_TYPE2 is not null
+		                    <!--   add  by yujiaping 2020-11-24 ZGBUGTWO-244【单一资产持仓分析】改为不可以查询到通道的信息end -->
 		                            where 1=1
 		                            <if test="finprodIdList != null and finprodIdList.size()>0">
 		                               AND fp.FINPROD_MARKET_ID IN

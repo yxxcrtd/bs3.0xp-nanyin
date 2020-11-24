@@ -472,7 +472,7 @@
         	    Joyin.error("请输入红利再投日");
                 return false;
         	}
-        	if (($("#assetType").val()==FUND_ASSET_TYPE_F02||bonusMode == BONUS_MODE_01) && !$("#exRightsDate").val()) {
+        	if ($("#assetType").val()==FUND_ASSET_TYPE_F02 && !$("#exRightsDate").val()) {
                 Joyin.error("请输入除权日");
                 return false;
             }
@@ -840,7 +840,11 @@
     	var bonusMode = $('#bonusMode').val();
         if (assetType == FUND_ASSET_TYPE_F01 && bonusMode == BONUS_MODE_02) {
             // 权益登记日 除权日 权益登记日份额 单位分红净值不显示
-            $('.currency').hide();
+//            $('.currency').hide();
+            $("#exRightsDate").val('').trigger("change");
+            $("#registDate").val('').trigger("change");
+            $("#exRightsDate").attr("disabled",true);
+            $("#registDate").attr("disabled",true);
 //            $('#unitCprice').attr("disabled","true");
 //        	triValueChange('unitCprice',1);
             triValueChange('unitCprice');
@@ -850,11 +854,17 @@
         else if(assetType == FUND_ASSET_TYPE_F01 && bonusMode == BONUS_MODE_01){
         	$('.currency').show();
             triValueChange('tradeAmt');
+            $("#exRightsDate").val('').trigger("change");
+            $("#registDate").val('').trigger("change");
+            $("#exRightsDate").attr("disabled",true);
+            $("#registDate").attr("disabled",true);
         }
         else if(assetType == FUND_ASSET_TYPE_F02){
         	triValueChange('unitCprice');
             // 展示联动区域
             $('.currency').show();
+             $("#exRightsDate").attr("disabled",false);
+             $("#registDate").attr("disabled",false);
         }
      // 判断分红类型
         if (bonusMode == BONUS_MODE_01) {

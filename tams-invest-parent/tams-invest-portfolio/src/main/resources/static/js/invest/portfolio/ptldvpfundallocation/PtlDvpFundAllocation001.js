@@ -44,7 +44,7 @@
                     workflowId:data.workflowId?data.workflowId:''});//主键组合代码
         },
         cols:[
-            {field:'orderStatusStr', width:80 , title: 'PtlDvpFundAllocation001.orderStatus',sortField:'orderStatus'}
+            {field:'orderStatusStr', width:110 , title: 'PtlDvpFundAllocation001.orderStatus',sortField:'orderStatus'}
             ,{field:'tradeId', width:150 , title: '业务编号',sortField:'tradeId'}
             //,{field:'orderId', width:150 , title: '指令编号',sortField:'orderId'}
             ,{field:'portfolioId', width:200 , title: 'PtlDvpFundAllocation001.portfolioId',sortField:'portfolioId'}

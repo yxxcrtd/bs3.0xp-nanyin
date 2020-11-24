@@ -187,6 +187,17 @@ public class TrdPlanNetInvestTrade001Controller extends BaseController {
                 }
             }
             // 确认提醒 TISHKBS-1113【组合资金账户头寸查询】内转交易撤销提醒 add by hpp 2020-09-17 end
+        }else if (StringUtil.equals(dto.getOperateType(), "confirm") && result.getErrorCount() == 0) {// 确认时校验 add by yangwenjun 20201124
+            WflValidInputParameter parameter = new WflValidInputParameter();
+            parameter.setPageId("TrdPlanNetInvestTrade003");
+            parameter.setBusinessDataPk3(dto.getTradeId());
+            if (mstWorkflowCommonService.isInWflProcess(parameter)) {
+                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+                errorList.add(new ValidMessage(this.getMessage("BUSS_COM_E_0041")));
+                AjaxResult ar = new AjaxResult();
+                ar.setErrorList(errorList);
+                return ar;
+            }
         }
         
         return commonCheck(result, dto.getOperateType());
