@@ -61,8 +61,8 @@ $(function() {
               {title: '折算人民币累计净值',field:'cnyTalValue', type:'money', digit:5, width:200, sortField:'cnyTalValue'}, 
               {title: '每万份份额分红',field:'shareAmtWan', type:'money', digit:5, width:150, sortField:'shareAmtWan'},
               {title: '每万份现金分红',field:'cashAmtWan', type:'money', digit:5, width:150, sortField:'cashAmtWan'},
-              {title: '实现收益率(%)',field:'reaYield', type:'money', digit:5, width:200, sortField:'reaYield'},
-              {title: '最新预期收益率(%)',field:'newExpYield', type:'money', digit:5, width:200, sortField:'newExpYield'},
+              {title: '实现收益率(%)',field:'reaYield', type:'number', digit:5, width:200, sortField:'reaYield'},
+              {title: '最新预期收益率(%)',field:'newExpYield', type:'number', digit:5, width:200, sortField:'newExpYield'},
               {title: '银行实现收益(元)',field:'bankImpInt',type:'money', width:200, sortField:'bankImpInt'},
               {title: '业务开始日', field:'vdate', type:'date',format:'yyyy-MM-dd', width:100, sortField:'vdate'},
               {title: '业务结束日', field:'mdate', type:'date', width:100, sortField:'mdate'},
@@ -74,11 +74,11 @@ $(function() {
               {title: '备注',field:'remark', width:100, sortField:'remark'},
   //            {field: '主键',field:'registSeqno',visible:false, sortField:''},
               {field: 'sendStatus',visible:false, sortField:'sendStatus'}
-              
-          ]
+
+              ]
       });
-      
-      
+
+
       //导出中债Excel
       $('#ProdDurationReg001_btn_chbexport').click(function() {
           exportExcel("0");
