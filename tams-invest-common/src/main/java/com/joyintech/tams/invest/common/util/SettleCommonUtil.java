@@ -211,5 +211,9 @@ public class SettleCommonUtil {
         // 指令处理状态_处理失败
         params.put("COMMAND_DEAL_STATUS_UNDO", DictCodeList.指令处理状态_处理失败.getValue());
         params.put("PAY_TYPE0104", DictCodeListExt3.平安业务类型_货币型产品轧差清算.getValue());
+
+        //增加平安业务类型_计划类资产_净值型_卖出 add by yujinfa 20201021 start
+        params.put("PA_BUSINESS_TYPE200", DictCodeListExt1.平安业务类型_计划类资产_净值型_卖出.getValue());
+        //增加平安业务类型_计划类资产_净值型_卖出 add by yujinfa 20201021 end
     }
 }
