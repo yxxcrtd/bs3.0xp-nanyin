@@ -572,13 +572,27 @@
                 <div class="layui-form-item">
                     <div class="form-inline-wrap">
                             <label class="layui-form-label form-label-wrap" data-th-text="#{BussRepAssetCreditNonstdInfo.repDeferredInterestType}" >利息递延条款类型</label>
-                            <div class="layui-input-inline input-inline">
+                            <div th:if="${entity}" class="layui-input-inline input-inline">
+                            	<select th:id="|${entityName}_repDeferredInterestType|" th:name="|${entityName}.repDeferredInterestType|"
+                                   	th:initValue="${entity.repDeferredInterestType}" class="layui-input form-input input-select"
+                                    placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"  
+                                    data-th-data-result="${SVR_DEFERRED_INTEREST_TYPE}" required>
+                                </select>
+                             </div>
+                             <div th:unless="${entity}" class="layui-input-inline input-inline">
+                            	<select th:id="|${entityName}_repDeferredInterestType|" th:name="|${entityName}.repDeferredInterestType|"
+                                   	th:initValue="${SVR_DEFERRED_INTEREST_TYPE_01}" class="layui-input form-input input-select"
+                                    placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"  
+                                    data-th-data-result="${SVR_DEFERRED_INTEREST_TYPE}" required>
+                                </select>
+                             </div>
+                                <!-- 
                                 <select th:id="|${entityName}_repDeferredInterestType|" th:name="|${entityName}.repDeferredInterestType|"
                                     th:initValue="${entity?.repDeferredInterestType?:SVR_DEFERRED_INTEREST_TYPE_01}" class="layui-input form-input input-select"
                                     placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"  
                                     data-th-data-result="${SVR_DEFERRED_INTEREST_TYPE}" required>
-                                 </select>
-                            </div>
+                                </select>
+                                -->
                      </div>
                     <div class="form-inline-wrap">
                             <label class="layui-form-label form-label-wrap" data-th-text="#{BussRepAssetCreditNonstdInfo.repDeferredInterestInt}" >递延利息是否计息</label>
