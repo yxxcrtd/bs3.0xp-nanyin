@@ -1536,6 +1536,11 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 trdFinProductDealTotalMapper.insertSelective(trdFinProductDealTotal1);
 
                 PaTrdFinProductDealTotal paTrdFinDealTotal1 = entity.getPaTrdFinProductDealTotal();
+                if(DictCodeListExt1.平安业务类型_债券类资产买入.getValue().equals(paTrdFinDealTotal1.getPaBussType())){
+                    paTrdFinDealTotal1.setPaBussType(DictCodeListExt1.平安业务类型_债券类资产卖出.getValue());
+                }else if(DictCodeListExt1.平安业务类型_债券类资产卖出.getValue().equals(paTrdFinDealTotal1.getPaBussType())){
+                    paTrdFinDealTotal1.setPaBussType(DictCodeListExt1.平安业务类型_债券类资产买入.getValue());
+                }
                 paTrdFinDealTotal1.setTotleTradeId(反向交易编号);
                 paTrdFinProductDealTotalMapper.insertSelective(paTrdFinDealTotal1);
 
