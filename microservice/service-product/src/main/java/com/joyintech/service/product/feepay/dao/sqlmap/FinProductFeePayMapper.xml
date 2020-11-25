@@ -1395,6 +1395,25 @@
 	   	  	and MST_FEEINFO.FEE_ID = #{initValue}
 	   	  </if>
 	   	  <!-- 产品没挂的计提的差额中收(收益型产品) -->
+		 <!-- 产品挂的计提的浮动管理费(净值周期性产品) -->
+		union all
+		select DISTINCT MST_FEEINFO.FEE_ID id,
+		MST_FEEINFO.FEE_ID || ':' || MST_FEEINFO.FEE_NAME text
+		from FIN_CASH_INFO,
+		FIN_PRODUCT,
+		MST_FEEINFO,
+		FIN_PRODUCT_ADD,
+		FIN_CASH_PAY_RULE
+		where MST_FEEINFO.APPLY_TYPE in (#{relationProd}, #{relationOther})
+		and FIN_CASH_INFO.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+		and FIN_CASH_INFO.FEE_ID = MST_FEEINFO.FEE_ID
+		and FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
+		and FIN_CASH_INFO.CASH_ID = FIN_CASH_PAY_RULE.CASH_ID
+		and FIN_CASH_INFO.CASH_TYPE_1 = #{cashType1}
+		and FIN_PRODUCT_ADD.PORTFOLIO_ID =  #{ptlId}
+		and MST_FEEINFO.CHARGE_TYPE = #{chargeType01}
+		and MST_FEEINFO.fee_type= #{feeType12}
+		and FIN_PRODUCT_ADD.is_cycle= #{yes}
 	   	  union all
    		  select MST_FEEINFO.FEE_ID id,
     			 MST_FEEINFO.FEE_ID || ':' || MST_FEEINFO.FEE_NAME text
@@ -1926,8 +1945,70 @@
 			      and FIN_PRODUCT_ADD.PORTFOLIO_ID = #{ptlId}
 			      and PTL_FEE_POSITION.PTL_FEE_TYPE = #{feeType}
 			      and PTL_FEE_POSITION.CDATE = to_date(#{calcEndDate}, 'yyyy-MM-dd') - 1
-			      and PTL_PORTFOLIO.PROFIT_TYPE = #{profitType}                                                    
-			)TEMP left join sys_datadict_list on TEMP.basicBill = sys_datadict_list.item_code and dict_code = 'BILL_BASE_FEE_KIND'
+			      and PTL_PORTFOLIO.PROFIT_TYPE = #{profitType}
+
+		<!--周期型产品浮动管理费-->
+		<if test="feeType != null and feeType == 'C04'">
+		union all
+		select  distinct pp.PORTFOLIO_ID finprodMarketId
+		,fpa.FINPROD_ID finprodId
+		,''  as sFinprodId
+		,MST_FEEINFO.FEE_ID  feeId
+		,MST_FEEINFO.BASIC_BILL basicBill<!-- 计费基数 -->
+		,MST_FEEINFO.Fee_Name feeName
+		,#{feeType} feeType
+		,nvl(payd.MDATE,pp.vdate) as calcStartDate
+		,CASE WHEN FIN_FLOAT_COUNTING_RULE.E_ACCR_DATE &lt; to_date(#{calcEndDate}, 'yyyy-MM-dd')
+		THEN FIN_FLOAT_COUNTING_RULE.E_ACCR_DATE
+		ELSE to_date(#{calcEndDate}, 'yyyy-MM-dd') END as calcEndDate
+
+		,MST_FEEINFO.ccy
+		,nvl(td.sumintamt,0)-nvl(payd.sumfeepay,0) as actPayAmt
+		,nvl(td.sumintamt,0)-nvl(payd.sumfeepay,0) as payAmt
+		from (select tpd.finprod_id as finprod_id,sum(nvl(tpd.int_amt,0)) as sumintamt
+			from trd_product_deal tpd where tpd.busi_type='34' and  tpd.trade_date &lt; to_date(#{calcEndDate}, 'yyyy-MM-dd')
+			group by tpd.finprod_id
+			)  td
+			inner join FIN_PRODUCT fp
+			on td.finprod_id=fp.finprod_id
+			inner join FIN_PRODUCT_ADD fpa
+			on fpa.finprod_id=nvl(fp.p_finprod_id,fp.finprod_id)
+			inner join PTL_PORTFOLIO pp
+			on  fpa.PORTFOLIO_ID = pp.PORTFOLIO_ID
+			left join (
+			select  d.finprod_id,sum(decode(d.is_clean,'Y',nvl(pd.theory_int,0),nvl(d.trade_amt,0))) as sumfeepay ,
+			max(d.mdate) as mdate from trd_product_deal d
+			inner join trd_trade_fee_detail ttd
+			on d.trade_id=ttd.trade_id
+			inner join pa_trd_product_deal pd
+			on d.trade_id=pd.trade_id
+			where  ttd.fee_id= #{feeId} and d.ps= #{ps} and d.finprod_type2=#{cashType2_C04}
+			AND d.IS_CANCEL =#{isCancel}
+			AND d.TRADE_STATUS =#{tradeStatus_01} and   d.MDATE &lt; to_date(#{calcEndDate}, 'yyyy-MM-dd')
+			group by   d.finprod_id
+
+			)payd
+			on fpa.finprod_id = payd.finprod_id
+			left join (select mst1.fee_id,mst1.BASIC_BILL,mst1.Fee_Name,fc1.ccy,fc1.cash_id,fpa1.PORTFOLIO_ID
+			from MST_FEEINFO mst1
+			inner join FIN_CASH_INFO fc1
+			on mst1.fee_id=fc1.fee_id
+			  and fc1.cash_type_1= #{cashType1}
+			and fc1.CASH_TYPE_2 = #{cashType2_C04}
+			and fc1.finprod_type='01'
+			inner join FIN_PRODUCT fp1
+			on fc1.finprod_id=fp1.finprod_id
+			inner join fin_product_add fpa1
+			on fp1.finprod_id=fpa1.finprod_id
+			where  mst1.fee_id=#{feeId}   and fpa1.PORTFOLIO_ID=#{ptlId}
+			) mst_feeinfo
+			on fpa.PORTFOLIO_ID=mst_feeinfo.PORTFOLIO_ID
+			LEFT JOIN FIN_FLOAT_COUNTING_RULE ON
+			FIN_FLOAT_COUNTING_RULE.CASH_ID = mst_feeinfo.CASH_ID
+			where fpa.finprod_id = 'F16_'||#{ptlId}
+             and fpa.is_cycle='Y'
+		</if>
+		)TEMP left join sys_datadict_list on TEMP.basicBill = sys_datadict_list.item_code and dict_code = 'BILL_BASE_FEE_KIND'
 	</select>
 	
 	<!-- 获取支付类型 -->
