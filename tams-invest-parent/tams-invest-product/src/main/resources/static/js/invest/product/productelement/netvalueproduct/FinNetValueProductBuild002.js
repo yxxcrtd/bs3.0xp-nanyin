@@ -826,8 +826,14 @@
 //            	$('#FinNetValueProductBuild002_period').val('').trigger('change').prop('disabled', false);
 //            	$('#FinNetValueProductBuild002_investDays').val('').trigger('change').prop('disabled', false);
             	$('#FinNetValueProductBuild002_operationType').val("02").prop("disabled",true).trigger("change");
-        	    FinProductCommon.getElementById('investmentCycle').val("").parent().parent().show();
-        	    FinProductCommon.getElementById('period').val("").parent().parent().show();
+        	    //FinProductCommon.getElementById('investmentCycle').val("").parent().parent().show();
+        	    //FinProductCommon.getElementById('period').val("").parent().parent().show();
+            	//BS-2036 草稿箱功能，产品处理模式选择周期，期限任意选择一个存为草稿，打开该草稿时显示是空 start
+            	FinProductCommon.getElementById('period').parent().parent().show();
+            	FinProductCommon.getElementById('investmentCycle').parent().parent().show();
+            	FinProductCommon.getElementById('period').trigger("change");
+            	FinProductCommon.getElementById('investmentCycle').trigger("change");
+            	//BS-2036 草稿箱功能，产品处理模式选择周期，期限任意选择一个存为草稿，打开该草稿时显示是空 end
             } 
             else {
 //            	$('#FinNetValueProductBuild002_period').val('').trigger('change').prop('disabled', true);
