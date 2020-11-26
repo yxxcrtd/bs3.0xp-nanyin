@@ -42,7 +42,8 @@ public class FinPlanNetAssetValidator implements BeanValidator {
         }
         //modify by mashukai ZGBS-32 计划类净值型标的，点击删除按钮，提示请输入发行金额 20201126 start
         //add by mashukai FIX BUG TISHKBS-1465 新增发行金额必填校验 20201110 start
-        if(dto.getIssueAmt() == null && StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
+        if(dto.getIssueAmt() == null &&
+                (StringUtil.equals(dto.getOperateType(), "save") || StringUtil.equals(dto.getOperateType(), "submit"))){
             errorList.add(new ValidMessage("issueAmt",getMessage("请输入发行金额",getMessage("FinPlanNetAsset002.issueAmt"),
                     getMessage("FinPlanNetAsset002.issueAmt"))));
         }

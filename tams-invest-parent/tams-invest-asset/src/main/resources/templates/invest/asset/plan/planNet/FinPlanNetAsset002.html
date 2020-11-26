@@ -255,12 +255,13 @@
 													data-th-initValue='${entity?.transMode}' />
 											</div>
 										</div>-->
+										<!-- modify by mashukai ZGBS-31 申购，赎回确认速度最大长度10 20201126 start-->
 										<div class=" form-inline-wrap">
 											<label class="layui-form-label form-label-wrap purSpeed"
 												   data-th-text="#{FinPlanNetAsset002.purSpeed}">申购确认速度</label>
 											<div class="layui-input-inline input-inline delaytime-inline-wrap">
 												<label class="layui-form-label form-label-wrap rate-text"  required="required" style="float: left;display: inline-block;width: 6%;">T+</label>
-												<input type="text" id="purSpeed" name="purSpeed"  th:value="${entity?.purSpeed}" class="layui-input form-input"
+												<input type="text" id="purSpeed" name="purSpeed"  maxlength="10" th:value="${entity?.purSpeed}" class="layui-input form-input"
 													   onkeyup="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'')}else{this.value=parseInt(this.value.replace(/\D/g,''))}" onafterpaste="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'0')}else{this.value=parseInt(this.value.replace(/\D/g,''))}"
 													   style="float: left;display: inline-block; width: 90%;"/>
 											</div>
@@ -270,11 +271,12 @@
 												   data-th-text="#{FinPlanNetAsset002.redSpeed }">赎回确认速度</label>
 											<div class="layui-input-inline input-inline delaytime-inline-wrap">
 												<label class="layui-form-label form-label-wrap rate-text"   required="required"  style="float: left;display: inline-block;width: 6%;">T+</label>
-												<input type="text" id="redSpeed" name="redSpeed"  th:value="${entity?.redSpeed}" class="layui-input form-input"
+												<input type="text" id="redSpeed" name="redSpeed" maxlength="10" th:value="${entity?.redSpeed}" class="layui-input form-input"
 													   onkeyup="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'')}else{this.value=parseInt(this.value.replace(/\D/g,''))}" onafterpaste="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'0')}else{this.value=parseInt(this.value.replace(/\D/g,''))}"
 													   style="float: left;display: inline-block; width: 90%;"/>
 											</div>
 										</div>
+										<!-- modify by mashukai ZGBS-31 申购，赎回确认速度最大长度10 20201126 end-->
 										<div class=" form-inline-wrap">
 											<label class="layui-form-label form-label-wrap"
 												data-th-text="#{FinPlanNetAsset002.ccy}">币种</label>
