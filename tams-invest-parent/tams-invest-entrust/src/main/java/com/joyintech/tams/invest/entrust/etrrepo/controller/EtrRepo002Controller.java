@@ -121,6 +121,9 @@ public class EtrRepo002Controller extends BaseController {
         model.addAttribute("R3M", DictCodeList.回购期限品种_R3M.getValue());
         model.addAttribute("R4M", DictCodeList.回购期限品种_R4M.getValue());
         model.addAttribute("R6M", DictCodeList.回购期限品种_R6M.getValue());
+        model.addAttribute("R9M", DictCodeList.回购期限品种_R9M.getValue());
+        model.addAttribute("R1Y", DictCodeList.回购期限品种_R1Y.getValue());
+
         Date sysDate = DateUtil.platDateFromCache();
         model.addAttribute("sysDate", DateUtil.format(sysDate));
         String entrustId = getParam("entrustId");
