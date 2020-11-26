@@ -378,7 +378,8 @@
                 tradeP01: TRADE_PLACE_01,
                 repoType: $('#repoType').val(),
                 repoTypeH02: TARGET_BACK_TYPE_H02,
-                repoTypeH01: TARGET_BACK_TYPE_H01
+                repoTypeH01: TARGET_BACK_TYPE_H01,
+                repoTypeH04: TARGET_BACK_TYPE_H04
             });
         }
     };
@@ -446,15 +447,15 @@
             // add by wangguoxian 费用设置 20190719 end
 
             //add by nixiukuan 当交易场所选择银行间时候隐藏回购类型 20191025 start
-            $("#repoTypeDiv").hide();
+           /* $("#repoTypeDiv").hide();*/
             //add by nixiukuan 当交易场所选择 20191025 end
         }
-        else
+        /*else
         {
             //add by nixiukuan 当交易场所选择银行间时候隐藏回购类型 20191025 start
             $("#repoTypeDiv").show();
             //add by nixiukuan 当交易场所选择 20191025 end
-        }
+        }*/
         if (pageModel != PAGE_MODEL_REFERENCE) {
             $('#termTypeReback').tradeRepTypeChange({
                 termType: 'termTypeReback',
@@ -465,7 +466,8 @@
                 tradeP01: TRADE_PLACE_01,
                 repoType: $('#repoType').val(),
                 repoTypeH02: TARGET_BACK_TYPE_H02,
-                repoTypeH01: TARGET_BACK_TYPE_H01
+                repoTypeH01: TARGET_BACK_TYPE_H01,
+                repoTypeH04: TARGET_BACK_TYPE_H04
             });
         }
         // add by wangguoxian 费用设置 20190719 start
@@ -1247,35 +1249,57 @@
     		if($("#tradeMarket").val()==TRADE_PLACE_01){
     			//银行间
     			$("#calendarId").textSelect('setValue', '03'); 
+    			// BS-1144银行间:回购类型为质押式回购  add by yujiaping 2020-11-25 start
+    			$("#repoType").textSelect('setValue', TARGET_BACK_TYPE_H04);
     			if(pageModel!=PAGE_MODEL_REFERENCE){
-                    $('#repoType').val('H01').trigger('change');
-                    $('#repoType').attr('disabled',true);
+                    $('#repoType').attr('disabled',false);
+    				var $repoType = $('#repoType');
+                     if($("#tradeMarket").val() == TRADE_PLACE_01){
+                         $repoType.updateChosenArr({
+                             item: [TARGET_BACK_TYPE_H04],
+                             chosen: TARGET_BACK_TYPE_H04,
+                             disabled: false
+                         });
+                     }
+                     //BS-1144银行间:回购类型为质押式回购  add by yujiaping 2020-11-25 end
+                    /*$('#repoType').val('H01').trigger('change');
+                    $('#repoType').attr('disabled',true);*/
     			}
     		}else if($("#tradeMarket").val()==TRADE_PLACE_02){
     			//上交所
     			$("#calendarId").textSelect('setValue', '04'); 
     			//默认回购类型质押式竞价回购
+    			$("#repoType").textSelect('setValue', TARGET_BACK_TYPE_H02);
             	if(pageModel!=PAGE_MODEL_REFERENCE){
-            		$("#repoType").textSelect('setValue', TARGET_BACK_TYPE_H02);
                     $('#repoType').attr('disabled',false);
+                    //上交所:回购类型去掉质押式回购  add by yujiaping 2020-11-25 start
+                    var $repoType = $('#repoType');
+                    if($("#tradeMarket").val() == TRADE_PLACE_02){
+                        $repoType.updateChosenArr({
+                            item: [TARGET_BACK_TYPE_H01,TARGET_BACK_TYPE_H02],
+                            chosen: TARGET_BACK_TYPE_H02,
+                            disabled: false
+                        });
+                    }
+                    //上交所:回购类型去掉质押式回购  add by yujiaping 2020-11-25 end
             	}
     		}else if($("#tradeMarket").val()==TRADE_PLACE_03){
     			//深交所
     			$("#calendarId").textSelect('setValue', '05'); 
     			//默认回购类型质押式竞价回购
+    			$("#repoType").textSelect('setValue', TARGET_BACK_TYPE_H02);
             	if(pageModel!=PAGE_MODEL_REFERENCE){
-            		$("#repoType").textSelect('setValue', TARGET_BACK_TYPE_H02);
                     $('#repoType').attr('disabled',false);
                     var $repoType = $('#repoType');
-                    //深圳证券交易所:回购类型为质押式竞价回购  add by start 
-                    if($("#tradeMarket").val() == TRADE_PLACE_03){
+                    //BS-1144深圳证券交易所:回购类型放开质押式协议回购  add by yujiaping 2020-11-25 start
+                   if($("#tradeMarket").val() == TRADE_PLACE_03){
                         $repoType.updateChosenArr({
-                            item: [TARGET_BACK_TYPE_H02],
+                            item: [TARGET_BACK_TYPE_H01,TARGET_BACK_TYPE_H02],
                             chosen: TARGET_BACK_TYPE_H02,
                             disabled: false
                         });
                     }
-                    //深圳证券交易所:回购类型为质押式竞价回购  add by end
+                    //BS-1144深圳证券交易所:回购类型为质押式竞价回购 add by yujiaping 2020-11-25 end
             	}
     		}
     	}

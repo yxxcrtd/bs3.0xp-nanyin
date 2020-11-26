@@ -35,13 +35,13 @@
                 $("#actTradeFee").attr("disabled","true");
             }
         }
-        if($("#tradeMarket").val()==JYCS_YHJ){ 
+       /* if($("#tradeMarket").val()==JYCS_YHJ){ 
         	 $(".type6Wrap").hide();
         	 $("#repoTypeDiv").hide();
         }else{
         	 $(".type6Wrap").show();
         	 $("#repoTypeDiv").show();
-        }
+        }*/
         if($("#chlId").val()){
             $("#channelFee_div").show();
         }

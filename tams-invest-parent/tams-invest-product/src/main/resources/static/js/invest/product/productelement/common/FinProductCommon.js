@@ -65,7 +65,10 @@ var FinProductCommon = function() {
             	if(dealMode === DISPOSE_PATTERN_01 || dealMode === DISPOSE_PATTERN_11){
             	    FinProductCommon.getElementById('investmentCycle').attr('checked',false).val("").parent().parent().hide();
             	} else {
-            	    FinProductCommon.getElementById('investmentCycle').val("").parent().parent().show();
+            		//BS-2036 期限选择单一固定期限，投资周期未反显 start
+            	    //FinProductCommon.getElementById('investmentCycle').val("").parent().parent().show();
+            		FinProductCommon.getElementById('investmentCycle').parent().parent().show();
+            		//BS-2036 期限选择单一固定期限，投资周期未反显 end
             	}
         		// 开放类型  add zhangweiqi 开发类型放开
                // FinProductCommon.getElementById('operationType').prop('disabled', true);

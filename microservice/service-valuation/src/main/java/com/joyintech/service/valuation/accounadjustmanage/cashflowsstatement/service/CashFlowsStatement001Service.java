@@ -223,6 +223,7 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
                     "投资活动现金流入小计",
                     "F01,T23,P,TRADEAMT,02|"+
                             "F01,T02,P,PRINAMT,02|"+
+                            "F01,T02,N,FEE_AMT_PAY,02|"+
                     		/**modify by wujie on 20200213 start
                             "F01,T31,P,TRADEAMT|"+
                             "F01,T34,P,PRINAMT|"+
@@ -846,6 +847,9 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
                     if ("SELLTRADEAMT".equals(amtFlag)) {
                         // 卖出端交易金额
                         retValue = retValue.add(dto.getSellTradeAmt().multiply(direction));
+                    }
+                    if ("FEE_AMT_PAY".equals(amtFlag)) {
+                        retValue = retValue.add(dto.getFeeamtpay().multiply(direction));
                     }
                 }
             }
