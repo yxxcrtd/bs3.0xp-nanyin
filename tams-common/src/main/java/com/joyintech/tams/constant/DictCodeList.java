@@ -1620,6 +1620,7 @@ public enum DictCodeList implements BaseDictCodeList {
 	回购类型_质押式协议回购(DictCode.回购类型,"H01","质押式协议回购"),
 	回购类型_质押式竞价回购(DictCode.回购类型,"H02","质押式竞价回购"),
 	回购类型_买断式回购(DictCode.回购类型,"H03","买断式回购"),
+	回购类型_质押式回购(DictCode.回购类型,"H04","质押式回购"),
 	计息基础_A_A(DictCode.计息基础,"A/A","A/A"),
 	共通业务类型_货币基金申购(DictCode.共通业务类型,"TRD29","货币基金申购"),
 	共通业务类型_货币基金赎回(DictCode.共通业务类型,"TRD30","货币基金赎回"),
