@@ -113,7 +113,7 @@
                     </if>
                     AND wptpd.PA_BUSS_TYPE IN (#{PINAN_BUSINESS_TYPE_19}, #{PINAN_BUSINESS_TYPE_20})
 		             <if test="repoType != null and repoType != ''">
-		                AND wtpdo.REPO_TYPE = #{repoType} and wtpd.trade_market !=#{TRADE_PLACE_01}
+		                AND wtpdo.REPO_TYPE = #{repoType} <!-- and wtpd.trade_market !=#{TRADE_PLACE_01} -->
 		            </if>
 		            <if test="ps != null and ps != ''">
 		                and wptpd.BACK_LEND_DIRECTION = #{ps}
@@ -190,7 +190,7 @@
                     </if>
                     AND ptpd.PA_BUSS_TYPE IN (#{PINAN_BUSINESS_TYPE_19}, #{PINAN_BUSINESS_TYPE_20})
                       <if test="repoType != null and repoType != ''">
-                        AND fpt.TYPE_6 = #{repoType} and tpd.trade_market !=#{TRADE_PLACE_01}
+                        AND fpt.TYPE_6 = #{repoType} <!-- and tpd.trade_market !=#{TRADE_PLACE_01} -->
                     </if>
                     <if test="ps != null and ps != ''">
                         and ptpd.BACK_LEND_DIRECTION = #{ps}
@@ -281,7 +281,7 @@
                     </if>
                     AND ptpd.PA_BUSS_TYPE IN (#{PINAN_BUSINESS_TYPE_19}, #{PINAN_BUSINESS_TYPE_20})
                       <if test="repoType != null and repoType != ''">
-                        AND fpt.TYPE_6 = #{repoType} and tpd.trade_market !=#{TRADE_PLACE_01}
+                        AND fpt.TYPE_6 = #{repoType} <!-- and tpd.trade_market !=#{TRADE_PLACE_01} -->
                     </if>
                     <if test="ps != null and ps != ''">
                         and ptpd.BACK_LEND_DIRECTION = #{ps}

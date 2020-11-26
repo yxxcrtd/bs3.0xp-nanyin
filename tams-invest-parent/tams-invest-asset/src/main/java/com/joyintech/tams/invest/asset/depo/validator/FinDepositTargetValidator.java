@@ -72,11 +72,13 @@ public class FinDepositTargetValidator implements BeanValidator{
             }
         }
         else{
+            //modify by mashukai 20201126 ZGBS-28 存款标的提交成功，审批时退回，退回的数据修改后不能保存 start
         	//有效状态资产不能保存  zhangyf 20190809 start
-        	if(StringUtil.equals(dto.getOperateType(), "save") && StringUtil.isNotEmpty(dto.getFinprodId())) {
-        		resultList.add(new ValidMessage("",getMessage("有效状态的资产可以提交，不能保存！")));
-        	}
+//        	if(StringUtil.equals(dto.getOperateType(), "save") && StringUtil.isNotEmpty(dto.getFinprodId())) {
+//        		resultList.add(new ValidMessage("",getMessage("有效状态的资产可以提交，不能保存！")));
+//        	}
         	//有效状态资产不能保存  zhangyf 20190809 end
+            //modify by mashukai 20201126 ZGBS-28 存款标的提交成功，审批时退回，退回的数据修改后不能保存 end
             if(StringUtil.equals(dto.getCreditFlag(), DictCodeList.是否_是.getValue())
                 && (dto.getActualCreditProvid() == null || StringUtil.equals(dto.getActualCreditProvid(), ""))){
                 resultList.add(

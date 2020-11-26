@@ -248,6 +248,10 @@ public class TrdRepoTrade002Controller extends BaseController {
         model.addAttribute("TARGET_BACK_TYPE_H01", DictCodeList.回购类型_质押式协议回购.getValue());
         // 回购类型_质押式竞价回购
         model.addAttribute("TARGET_BACK_TYPE_H02", DictCodeList.回购类型_质押式竞价回购.getValue());
+        //add by yujiaping 2020-11-25 BS-1144 交易市场选择“银行间”，回购类型为“质押式回购”start
+        // 回购类型_质押式回购
+        model.addAttribute("TARGET_BACK_TYPE_H04", DictCodeList.回购类型_质押式回购.getValue());
+        //add by yujiaping 2020-11-25 BS-1144 交易市场选择“银行间”，回购类型为“质押式回购”end
         // 清算速度_T_0
         model.addAttribute("ACCOUNT_SPEED_01", DictCodeList.清算速度_T_0.getValue());
         // 清算速度_T_1

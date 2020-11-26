@@ -1,5 +1,4 @@
 (function(){
-	
 	/**
 	 * 初始化方法
 	 */
@@ -11,7 +10,15 @@
         }
         //投资周期 默认不显示
         if(pageModel == PAGE_MODEL_NEW){
-    	    FinProductCommon.getElementById('investmentCycle').attr('checked',false).val("").parent().parent().hide();
+        	//BS-2036 期限选择单一固定期限，投资周期未反显 start
+        	var initMode = $("#FinNetValueProductBuild002_dealMode").attr("initvalue");
+        	if(isDraft&&initMode=="10"){
+        		//FinProductCommon.getElementById('investmentCycle').attr('checked',false).parent().parent().hide();
+        	}
+        	else{
+        		FinProductCommon.getElementById('investmentCycle').attr('checked',false).val("").parent().parent().hide();
+        	}
+        	//BS-2036 期限选择单一固定期限，投资周期未反显 end
         }
         //通过系统参数来判断产品与申报信息是否合并
         if(productIsMerger === YES){
@@ -905,13 +912,14 @@
 		//add by yejiejie 2109-3-8 end
 		
 		//给了收益标识默认值，要执行其上面的联动
-		if(pageModel === PAGE_MODEL_NEW ) {
+		// BS-2036 草稿箱反显，期限选择多固定期限，是否续投选择为是未正确显示 start
+		if(pageModel === PAGE_MODEL_NEW&&isDraft==false ) {
+	    // BS-2036 草稿箱反显，期限选择多固定期限，是否续投选择为是未正确显示 end
 			FinProductCommon.profitTypeSelect();
 		}
 		//唤醒change事件
 		$("#FinNetValueProductBuild002_period").trigger('change');
 	});
-
 }());
 
 //add by wangyang1 [吉林个性化] 2019年9月26日 start 
