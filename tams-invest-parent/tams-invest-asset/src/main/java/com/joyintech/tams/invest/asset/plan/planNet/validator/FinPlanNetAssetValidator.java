@@ -40,12 +40,14 @@ public class FinPlanNetAssetValidator implements BeanValidator {
             errorList.add(new ValidMessage("vdate",getMessage("BUSS_COM_E_0035",getMessage("FinPlanNetAsset002.vDate"), 
                 getMessage("FinPlanNetAsset002.mDate"))));
         }
+        //modify by mashukai ZGBS-32 计划类净值型标的，点击删除按钮，提示请输入发行金额 20201126 start
         //add by mashukai FIX BUG TISHKBS-1465 新增发行金额必填校验 20201110 start
-        if(dto.getIssueAmt() == null){
+        if(dto.getIssueAmt() == null && StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
             errorList.add(new ValidMessage("issueAmt",getMessage("请输入发行金额",getMessage("FinPlanNetAsset002.issueAmt"),
                     getMessage("FinPlanNetAsset002.issueAmt"))));
         }
         //add by mashukai FIX BUG TISHKBS-1465 新增发行金额必填校验 20201110 end
+        //modify by mashukai ZGBS-32 计划类净值型标的，点击删除按钮，提示请输入发行金额 20201126 end
         if (WorkFlowUtil.isNotFromToDoList()) {
             if (StringUtil.equals(dto.getOperateType(), "delete")) {
                 if(dto.getSelectedItem()!=null||dto.getSelectedItem().size()>0){
