@@ -46,6 +46,86 @@
         var object = {tradeDirection:['ps','EtrRepo002.ps'],portfolioCode:['portfolioId','EtrRepo002.portfolioId'],tradeAmount:['entrustAmt','EtrRepo002.entrustAmt'],assetType:['assetType1','EtrRepo002.assetType1'],data:obj}
         return object;
     }
+
+
+    /**
+     * 回购期限
+     */
+    var repoTermChangeAction = function(){
+        var repoterm = $('#repoTerm').val();
+        var re = /^[0-9]*$/;
+        if(repoterm && re.test(repoterm)){
+            var vdate = $('#vdate').val();
+            if(vdate){
+                //回购期限联动期限品种
+                $('#termType').val(getTermType(vdate,repoterm)).trigger('change');
+            }
+        }else{
+            $('#termType').val("").trigger('change');
+        }
+    };
+
+    /**
+     * 获取期限品种  date(yyyy-MM-dd),repoterm
+     */
+    function getTermType(date,repoterm) {
+        if(repoterm&&repoterm<=21){
+            //期限品种小于21天
+            if(repoterm==1){
+                return R001;
+            }
+            if(repoterm>1&&repoterm<=7){
+                return R007;
+            }
+            if(repoterm>7&&repoterm<=14){
+                return R014;
+            }
+            if(repoterm>14&&repoterm<=21){
+                return R021;
+            }
+        }
+        var day=0;
+        //date为空时  返回0
+        if(date&&repoterm){
+            //获取日期
+            date =DateUtil.parse(date);
+            //获取之后月00天 即本月最后一天
+            day= new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+1,0).getDate();
+            if(repoterm<=day){
+                return R1M;
+            }
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+2,0).getDate();
+            if(repoterm<=day){
+                return R2M;
+            }
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+3,0).getDate();
+            if(repoterm<=day){
+                return R3M;
+            }
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+4,0).getDate();
+            if(repoterm<=day){
+                return R4M;
+            }
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+5,0).getDate();
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+6,0).getDate();
+            if(repoterm<=day){
+                return R6M;
+            }
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+7,0).getDate();
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+8,0).getDate();
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+9,0).getDate();
+            if(repoterm<=day){
+                return R9M;
+            }
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+10,0).getDate();
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+11,0).getDate();
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+12,0).getDate();
+            if(repoterm<=day){
+                return R1Y;
+            }
+        }
+        return null;
+    }
     /**
      * 保存或提交
      * 
@@ -383,6 +463,13 @@
             }
         });
 
+        // 回购期限
+        $('#repoTerm').on('change',function(){
+            if($('#tradeMarket').val() == tradeP01 || ($('#tradeMarket').val() == tradeP02  && $("#assetType1").val() == repoTypeH01)){
+                repoTermChangeAction();
+            }
+        });
+
         $('#tradeMarket').on("change", function (e, isInit) {
             var tradeMarket = $('#tradeMarket').val();
             var assetType1 = $('#assetType1').val();
@@ -660,6 +747,13 @@
         
         $('#termType').change(function(){
             var termType = $('#termType').val();
+
+            if(termType == R001 || termType == R007 || termType == R014 || termType == R021 ||
+            						termType == R1M || termType == R2M || termType == R3M ||
+            						termType == R4M || termType == R6M || termType == R9M ||termType == R1Y ){
+            					return;
+            }
+
             if(termType == GC001){
                 $('#repoTerm').val(1).attr('disabled',true).change();
                 $('#mdateAdd').attr('disabled',true);
@@ -687,19 +781,21 @@
             }else if(termType == GC182){
                 $('#repoTerm').val(182).attr('disabled',true).change();
                 $('#mdateAdd').attr('disabled',true);
-            }else if(termType == R001){
-                $('#repoTerm').val(1).attr('disabled',true).change();
-                $('#mdateAdd').attr('disabled',true);
-            }else if(termType == R007){
-                $('#repoTerm').val(7).attr('disabled',true).change();
-                $('#mdateAdd').attr('disabled',true);
-            }else if(termType == R014){
-                $('#repoTerm').val(14).attr('disabled',true).change();
-                $('#mdateAdd').attr('disabled',true);
-            }else if(termType == R021){
-                $('#repoTerm').val(21).attr('disabled',true).change();
-                $('#mdateAdd').attr('disabled',true);
-            }else if(termType == RC001){
+            }
+//            else if(termType == R001){
+//                $('#repoTerm').val(1).attr('disabled',true).change();
+//                $('#mdateAdd').attr('disabled',true);
+//            }else if(termType == R007){
+//                $('#repoTerm').val(7).attr('disabled',true).change();
+//                $('#mdateAdd').attr('disabled',true);
+//            }else if(termType == R014){
+//                $('#repoTerm').val(14).attr('disabled',true).change();
+//                $('#mdateAdd').attr('disabled',true);
+//            }else if(termType == R021){
+//                $('#repoTerm').val(21).attr('disabled',true).change();
+//                $('#mdateAdd').attr('disabled',true);
+//            }
+            else if(termType == RC001){
                 $('#repoTerm').val(1).attr('disabled',true).change();
                 $('#mdateAdd').attr('disabled',true);
             }else if(termType == RC003){
@@ -735,22 +831,24 @@
             }else if(termType == R_182){
                 $('#repoTerm').val(182).attr('disabled',true).change();
                 $('#mdateAdd').attr('disabled',true);
-            }else if(termType == R1M){
-                $('#repoTerm').val(30).attr('disabled',true).change();
-                $('#mdateAdd').attr('disabled',true);
-            }else if(termType == R2M){
-                $('#repoTerm').val(60).attr('disabled',true).change();
-                $('#mdateAdd').attr('disabled',true);
-            }else if(termType == R3M){
-                $('#repoTerm').val(90).attr('disabled',true).change();
-                $('#mdateAdd').attr('disabled',true);
-            }else if(termType == R4M){
-                $('#repoTerm').val(120).attr('disabled',true).change();
-                $('#mdateAdd').attr('disabled',true);
-            }else if(termType == R6M){
-                $('#repoTerm').val(180).attr('disabled',true).change();
-                $('#mdateAdd').attr('disabled',true);
-            }else{
+            }
+//            else if(termType == R1M){
+//                $('#repoTerm').val(30).attr('disabled',true).change();
+//                $('#mdateAdd').attr('disabled',true);
+//            }else if(termType == R2M){
+//                $('#repoTerm').val(60).attr('disabled',true).change();
+//                $('#mdateAdd').attr('disabled',true);
+//            }else if(termType == R3M){
+//                $('#repoTerm').val(90).attr('disabled',true).change();
+//                $('#mdateAdd').attr('disabled',true);
+//            }else if(termType == R4M){
+//                $('#repoTerm').val(120).attr('disabled',true).change();
+//                $('#mdateAdd').attr('disabled',true);
+//            }else if(termType == R6M){
+//                $('#repoTerm').val(180).attr('disabled',true).change();
+//                $('#mdateAdd').attr('disabled',true);
+//            }
+            else{
                 $('#mdateAdd').attr('disabled',false);
                 $('#repoTerm').attr('disabled',false);
             }
