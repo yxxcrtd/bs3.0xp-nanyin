@@ -22,7 +22,8 @@
 		T.PS,
 		SUM(NVL(T.PRIN_AMT,0)*DECODE(T.TRADE_STATUS,'03',-1,1)) prinamt,
 		SUM(NVL(T.INT_AMT,0)*DECODE(T.TRADE_STATUS,'03',-1,1)) intamt,
-		SUM(NVL(T.TRADE_AMT,0)*DECODE(T.TRADE_STATUS,'03',-1,1)) tradeamt
+		SUM(NVL(T.TRADE_AMT,0)*DECODE(T.TRADE_STATUS,'03',-1,1)) tradeamt,
+		SUM(NVL(T.FEE_AMT_PAY,0)*DECODE(T.TRADE_STATUS,'03',-1,1)) feeamtpay
 		FROM (
 		    SELECT 
 		       DEAL.FINPROD_TYPE,
@@ -34,7 +35,8 @@
                NVL(OT.SETTLE_DATE, DEAL.SETTLE_DATE) SETTLE_DATE,
                DEAL.INT_AMT,
                DEAL.TRADE_AMT,
-               DEAL.TRADE_STATUS
+               DEAL.TRADE_STATUS,
+		       DEAL.FEE_AMT_PAY
                from (SELECT A.FINPROD_TYPE,
                		 <!-- add by wujie on 20200213 start -->
                      A.BUSI_TYPE,
@@ -58,6 +60,7 @@
                        END PRIN_AMT,
                        A.INT_AMT,
 		               DECODE(PCI.ACCT_TYPE,'A07',0,A.TRADE_AMT) TRADE_AMT,
+		               A.FEE_AMT_PAY FEE_AMT_PAY,
                        A.TRADE_STATUS
 					   /**	,finTrade.EXC_PS**/
                   FROM TRD_PRODUCT_DEAL A
@@ -107,6 +110,7 @@
                        END PRIN_AMT,
                        D.INT_AMT,
                        D.TRADE_AMT,
+		               D.FEE_AMT_PAY,
                        D.TRADE_STATUS
 					   /**,finTrade.EXC_PS**/
 		FROM STL_ORDERS C
