@@ -89,6 +89,9 @@ public class EtrRepo002Controller extends BaseController {
         model.addAttribute("tradeP03", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
         model.addAttribute("repoTypeH01", DictCodeList.回购类型_质押式协议回购.getValue());
         model.addAttribute("repoTypeH02", DictCodeList.回购类型_质押式竞价回购.getValue());
+        //BS-1144银行间:回购类型为质押式回购  add by yujiaping 2020-11-26 start
+        model.addAttribute("repoTypeH04", DictCodeList.回购类型_质押式回购.getValue());
+        //BS-1144银行间:回购类型为质押式回购  add by yujiaping 2020-11-26 end
         model.addAttribute("speed0", DictCodeList.清算速度_T_0.getValue());
         model.addAttribute("speed1", DictCodeList.清算速度_T_1.getValue());
         model.addAttribute("GC001", DictCodeList.回购期限品种_GC001.getValue());

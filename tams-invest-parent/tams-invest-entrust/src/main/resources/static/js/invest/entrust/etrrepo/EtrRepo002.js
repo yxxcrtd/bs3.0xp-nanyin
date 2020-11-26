@@ -415,7 +415,7 @@
                     $('#settleSpreed').val(speed0).attr('disabled',false).trigger('change');
                 }
                 $('#termType_div').show();
-                $('#assetType1').val(repoTypeH01).attr('disabled',true).change();               
+                $('#assetType1').val(repoTypeH04).attr('disabled',true).change();               
                 if (pageModel == PAGE_MODEL_NEW) {
                     $("#chlId").val('').trigger("change").prop("disabled", false);
                 }
@@ -436,7 +436,9 @@
                 tradeP01: tradeP01,
                 repoType: $('#assetType1').val(),
                 repoTypeH02: repoTypeH02,
-                repoTypeH01: repoTypeH01});
+                repoTypeH01: repoTypeH01,
+                repoTypeH04: repoTypeH04
+                });
             
             if ($('#assetType1').val() == repoTypeH02) {
             	$("#repoTerm").val("").prop("disabled", true);
@@ -462,9 +464,37 @@
             var tradeMarket = $('#tradeMarket').val();
             if(tradeMarket == tradeP01){
                 $('#calendarId').textSelect('setValue','03');
+                //add by yujiaping 2020-11-26 BS-1144 交易市场选择“银行间”，回购类型为“质押式回购”start
+                if(pageModel!=PAGE_MODEL_REFERENCE){
+            		$("#assetType1").textSelect('setValue', repoTypeH04);
+                    $('#assetType1').attr('disabled',false);
+                    var $repoType = $('#assetType1');
+                    if($("#tradeMarket").val() == tradeP01){
+                        $repoType.updateChosenArr({
+                            item: [repoTypeH04],
+                            chosen: repoTypeH04,
+                            disabled: false
+                        });
+                    }
+            	}
+                //add by yujiaping 2020-11-26 BS-1144 交易市场选择“银行间”，回购类型为“质押式回购”end
             }
             if(tradeMarket == tradeP02){
                 $('#calendarId').textSelect('setValue','04');
+                //上交所:回购类型去掉质押式回购  add by yujiaping 2020-11-26 start
+                if(pageModel!=PAGE_MODEL_REFERENCE){
+            		$("#assetType1").textSelect('setValue', repoTypeH02);
+                    $('#assetType1').attr('disabled',false);
+                    var $repoType = $('#assetType1');
+                    if($("#tradeMarket").val() == tradeP02){
+                        $repoType.updateChosenArr({
+                            item: [repoTypeH02,repoTypeH01],
+                            chosen: repoTypeH02,
+                            disabled: false
+                        });
+                    }
+            	}
+                //上交所:回购类型去掉质押式回购  add by yujiaping 2020-11-26 end
             }
             if(tradeMarket == tradeP03){
                 $('#calendarId').textSelect('setValue','05');
@@ -476,7 +506,9 @@
                                     //深圳证券交易所:回购类型为质押式竞价回购  add by start
                                     if($("#tradeMarket").val() == tradeP03){
                                         $repoType.updateChosenArr({
-                                            item: [repoTypeH02],
+                                        	//BS-1144深圳证券交易所:回购类型放开质押式协议回购  add by yujiaping 2020-11-26 start
+                                            item: [repoTypeH02,repoTypeH01],
+                                            //BS-1144深圳证券交易所:回购类型放开质押式协议回购  add by yujiaping 2020-11-26 end
                                             chosen: repoTypeH02,
                                             disabled: false
                                         });
@@ -484,11 +516,11 @@
                                     //深圳证券交易所:回购类型为质押式竞价回购  add by end
                             	}
             }
-            if (tradeMarket == tradeP01){
+           /* if (tradeMarket == tradeP01){
                 $('#assetType1Div').hide();
             } else {
                 $('#assetType1Div').show();
-            }
+            }*/
         });
         //bug:YUCHUBS-429 guyunfei 2019/08/31 end--
         
@@ -554,7 +586,9 @@
                 tradeP01: tradeP01,
                 repoType: assetType1,
                 repoTypeH02: repoTypeH02,
-                repoTypeH01: repoTypeH01});
+                repoTypeH01: repoTypeH01,
+                repoTypeH04: repoTypeH04
+                });
            
             if (assetType1 == repoTypeH02) {
             	$("#repoTerm").val("").prop("disabled", true);
