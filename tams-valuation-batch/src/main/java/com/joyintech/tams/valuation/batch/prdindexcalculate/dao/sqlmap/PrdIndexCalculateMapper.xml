@@ -49,7 +49,7 @@
 			#{item}
 		</foreach>
 		) C where A.PROD_ID = C.FINPROD_MARKET_ID
-		)
+		))
 		AND A.VALUE_DATE = #{booksetdate,jdbcType=DATE}
 	</delete>
 
