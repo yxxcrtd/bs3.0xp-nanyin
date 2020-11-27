@@ -528,4 +528,17 @@ public class SysCoreService extends BaseService {
         DynamicDataSourceHolder.clear();
         return i;
     }
+
+
+    /**
+     * 资产是否存在交易
+     *
+     * @param finprodId 金融产品代码
+     * @return 交易笔数
+     * @see
+     * @since 1.0
+     */
+    public int isBondExerciseAsset(String finprodId) {
+        return sysCoreMapper.isBondExerciseAsset(finprodId);
+    }
 }

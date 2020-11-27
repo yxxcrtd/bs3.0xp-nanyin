@@ -145,7 +145,7 @@ public class FinBondTargetAsset001Controller extends BaseController{
                 wr.setJoyinMessages(joyinMessages);
                 return wr;
             }
-            else if(commonBusinessService.isTransInAsset((String)param.get("finprodId"))>0&&(DictCodeList.是否_是.getCodeName().equals(isRightStr))){
+            else if(commonBusinessService.isBondExerciseAsset((String)param.get("finprodId"))>0&&(DictCodeList.是否_是.getCodeName().equals(isRightStr))){
                 errorList.add(new ValidMessage(getMessage("含权债已存在行权交易，不允许修改资产信息!")));
                 wr.setErrorList(errorList);
                 return wr;

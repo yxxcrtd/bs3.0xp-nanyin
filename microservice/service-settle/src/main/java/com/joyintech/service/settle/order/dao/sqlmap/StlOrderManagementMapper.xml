@@ -206,9 +206,9 @@
         #{PA_BUSINESS_TYPE22},
         #{PA_BUSINESS_TYPE25},
         #{PA_BUSINESS_TYPE97},
-        #{PA_BUSINESS_TYPE29})
+        #{PA_BUSINESS_TYPE29},
         <!--add by  yujinfa 20201021 增加计划类净值型卖出 start-->
-        #{PA_BUSINESS_TYPE200},
+        #{PA_BUSINESS_TYPE200})
         <!--add by  yujinfa 20201021 增加计划类净值型卖出 end-->
         <!--add by  caiqun 20200921 09债券类资产买入  用TRD_FIN_PRODUCT_DEAL_TOTAL关联STL_PAY_ORDERS  start-->
         <!--

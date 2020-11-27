@@ -153,6 +153,8 @@ public class CommonBusinessService extends BaseService {
             Integer.class);
     }
 
+
+
     /**
      * 获取最大交易日期 <功能详细描述>
      *
@@ -1188,4 +1190,19 @@ public class CommonBusinessService extends BaseService {
        return result;
    };
 
+
+
+
+    /**
+     * 资产是否存在交易
+     *
+     * @param finprodId 金融产品代码
+     * @return 交易笔数
+     * @see
+     * @since 1.0
+     */
+    public int isBondExerciseAsset(String finprodId) {
+        return restTemplate.getForObject(ServiceApplication.COMMON_SERVICE_NAME + "/core/isBondExerciseAsset?finprodId=" + finprodId,
+                Integer.class);
+    }
 }

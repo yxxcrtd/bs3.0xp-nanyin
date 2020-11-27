@@ -25,13 +25,17 @@
 	var mdate3=null;
 	
 	var getSearchParams = function(){
-		
 		var param = {};
 		param.initFlag = initFlag;
 		param.profitType = $("#"+profitType).val();
 		if (!initFlag){
 			param.finprodId = openPlanFinprodId;
-			param.workflowId = workflowId;
+			if(workflowId==null||workflowId==undefined){
+				param.workflowId = $("#workflowIdBackUp").val();
+			}
+			else{
+				param.workflowId = workflowId;
+			}
 			//为净值型产品修改
 			if(getElementById('openType').val()&&getElementById('openType').val()!='03'){
 				param.openType = getElementById('openType').val();
@@ -142,7 +146,13 @@
 		param.profitType = $("#"+profitType).val();
 		if (!initFlag){
 			param.finprodId = openPlanFinprodId;
-			param.workflowId = workflowId;
+			debugger;
+			if(workflowId==null||workflowId==undefined){
+				param.workflowId = $("#workflowIdBackUp").val();
+			}
+			else{
+				param.workflowId = workflowId;
+			}
 			param.entityName = bussFinProductOpenPlanDto;
 			param.openType="02";
 		}else{
