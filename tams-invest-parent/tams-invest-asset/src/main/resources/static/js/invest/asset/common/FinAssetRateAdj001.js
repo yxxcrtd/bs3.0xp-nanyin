@@ -180,9 +180,19 @@ $(function() {
                     });
                 }
             }
+            //add by yujiaping 2020-11-27 ZGBS-21债券标的，利率调整，利率不可以输入负数 start
+            if(field == "yield"){
+             if (value != null && value != ''){
+            	if(value < 0){
+            		  Joyin.error('利率不可为负数', function () {
+                          table.renderRow(data.LAY_TABLE_INDEX, {yield: " "});
+                      });
+            	}
+             }
+           }
+            //add by yujiaping 2020-11-27 ZGBS-21债券标的，利率调整，利率不可以输入负数 end
         }
     });
-    
     
     /**
      * 绑定删除事件
