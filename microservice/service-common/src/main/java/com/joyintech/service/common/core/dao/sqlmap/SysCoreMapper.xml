@@ -878,4 +878,24 @@ SELECT F.FINPROD_NAME,
 		order by pm.create_time desc
 	</select>
 	<!--判断交易是否通过正常流程新建的 yjm end 20191016-->
+
+	<!--判断债券资产是否存在行权交易 zxp end 20201125-->
+	<select id = "isBondExerciseAsset" resultType="java.lang.Integer">
+		SELECT
+		SUM (num)
+		FROM(
+		SELECT COUNT(TRADE_ID) num
+		FROM TRD_PRODUCT_DEAL
+		WHERE FINPROD_ID = #{finprodId}
+		AND TRADE_STATUS = '01' AND (IS_CANCEL='N' or IS_CANCEL IS NULL)
+		AND PS IN ('T03','T39')
+		UNION ALL
+		SELECT COUNT(TRADE_ID) num
+		FROM WFL_TRD_PRODUCT_DEAL
+		WHERE FINPROD_ID = #{finprodId}
+		AND PS IN ('T03','T39')
+		)
+		<!--判断债券资产是否存在行权交易 zxp end 20201125-->
+	</select>
+
 </mapper>
