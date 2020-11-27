@@ -492,7 +492,7 @@ public class AutoPeriodSecOverCommonService {
     	// 金融产品交易及相关-利息   列表.实收利息>0时录入
     	if(StringUtil.isNotEmpty(finAssetIntInfo)
     			&&StringUtil.isNotEmpty(finAssetIntInfo.getIntAmt())
-    			&&finAssetIntInfo.getIntAmt().compareTo(BigDecimal.ZERO)>0){
+    			&&finAssetIntInfo.getIntAmt().compareTo(BigDecimal.ZERO)>= 0){
     		//交易表信息
     		TrdProductDeal trdProductDeal =  new TrdProductDeal();
 			//利息总额 列表.实收利息 - 上述还本未付息利息中利息总额合计值
