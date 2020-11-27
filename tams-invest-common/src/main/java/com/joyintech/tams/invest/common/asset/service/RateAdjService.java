@@ -67,7 +67,7 @@ public class RateAdjService extends BaseService{
         Long branch =StringUtil.isEmpty(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE))?0:Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE));
         // 资产公共DTO
         AssetCommonInfoDto scai =  getAssetBasicInfoByFinprodId(entity.getFinprodId());
-        if (scai == null || scai.getInvList() == null || scai.getInvList().isEmpty()) {
+        if (scai == null ) {
             return null;
         }
         // 利息计划
