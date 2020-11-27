@@ -784,7 +784,9 @@
     		}else if(data.length>1){
     			$("#red_div").show();
 				getElementById('openType').val('01');
-				getElementById('sameFLag').prop("checked",false);
+                if(getElementById('sameFLag').next().find("em").text()==="是"){
+				    getElementById('sameFLag').next().trigger("click");
+			    }
 				layui.form.render('checkbox');
     			for(var i=0;i<data.length;i++){
     				if(data[i].openType=="01")FinProductCommon.initPageDataAction(bussFinProductOpenPlanDto, data[i]);
@@ -820,10 +822,14 @@
     	FinProductCommon.initPageDataAction('bussFinProductOpenPlanDto', bussFinProductOpenPlanDto);
     	
     	if(bussFinProductOpenPlanDto.openType === '03') {
-    		getElementById('sameFLag').prop("checked",true);
+            if(getElementById('sameFLag').next().find("em").text()==="否"){
+				getElementById('sameFLag').next().trigger("click");
+			}
     	}
     	else {
-    		getElementById('sameFLag').prop("checked",false);
+            if(getElementById('sameFLag').next().find("em").text()==="是"){
+				getElementById('sameFLag').next().trigger("click");
+			}
     	}
 	}
 	
@@ -1221,7 +1227,12 @@
         	else{
             	$('#FinNetValueProductBuild002_period').trigger('change').prop('disabled', false);
         	}
+        	//BS-2042  草稿箱功能，净值型产品产品处理模式为单一固定期限，选择开放模式为高频开放，使用草稿时，出现了赎回计划（错误）） start
 			getElementById('openType').val('01');
+			if(getElementById('sameFLag').next().find("em").text()==="是"){
+				getElementById('sameFLag').next().trigger("click");
+			}
+			//BS-2042  草稿箱功能，净值型产品产品处理模式为单一固定期限，选择开放模式为高频开放，使用草稿时，出现了赎回计划（错误）） end
         } 
         else {
         	$('#div1').show();
@@ -1232,6 +1243,12 @@
         	else{
             	$('#FinNetValueProductBuild002_period').trigger('change').prop('disabled', false);
         	}
+        	//BS-2042  草稿箱功能，净值型产品产品处理模式为单一固定期限，选择开放模式为高频开放，使用草稿时，出现了赎回计划（错误）） start
+			getElementById('openType').val('03');
+			if(getElementById('sameFLag').next().find("em").text()==="否"){
+				getElementById('sameFLag').next().trigger("click");
+			}
+			//BS-2042  草稿箱功能，净值型产品产品处理模式为单一固定期限，选择开放模式为高频开放，使用草稿时，出现了赎回计划（错误）） end
         }
     }
 	var profitTypeChangeEx = function () {
@@ -1295,12 +1312,15 @@
 			getElementByRedId("redSpeed").val('');
 			if(tableRed.table)
 			tableRed.clear();
-			getElementById('sameFLag').prop("checked",true).trigger("change");;
+            if(getElementById('sameFLag').next().find("em").text()==="否"){
+				getElementById('sameFLag').next().trigger("click");
+			}
 		}else{
 			$("#red_div").show();
 			getElementById('openType').val('01');
-			if(getElementById('sameFLag').next().find("em").text()==="否")
-			getElementById('sameFLag').prop("checked",false).trigger("change");
+            if(getElementById('sameFLag').next().find("em").text()==="是"){
+				getElementById('sameFLag').next().trigger("click");
+			}
 			
 		}
 		if(pageModel != PAGE_MODEL_NEW ){
