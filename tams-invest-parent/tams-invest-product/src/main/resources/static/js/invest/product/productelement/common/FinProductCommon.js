@@ -74,21 +74,39 @@ var FinProductCommon = function() {
                // FinProductCommon.getElementById('operationType').prop('disabled', true);
                 if (dealMode === DISPOSE_PATTERN_01) {
                   //  FinProductCommon.getElementById('operationType').val(ISSUE_MODE_02).trigger("change");
-                    
-                    FinProductCommon.getElementById('continueFlag').attr('checked',false).val("").parent().parent().hide();
+                	
                     if (pageId === 'FinNetValueProductBuild002'){
-                    	$("#"+pageId+"_continueFlag").val('').trigger("change").prop('disabled', false);
+                    	if($("#draftInit").val()=="Y"){
+                        	FinProductCommon.getElementById('continueFlag').attr('checked',false).parent().parent().hide();
+                        	$("#"+pageId+"_continueFlag").trigger("change").prop('disabled', false);
+                    	}
+                    	else{
+                        	FinProductCommon.getElementById('continueFlag').attr('checked',false).val("").parent().parent().hide();
+                        	$("#"+pageId+"_continueFlag").val('').trigger("change").prop('disabled', false);
+                    	}
                     	$("#"+pageId+"_operationType").prop('disabled', false);
 	                    $("#bussFinProductOpenPlanDto_sameFLag").prop('disabled', false).parent().parent().show();
                     }
+                    else{
+                    	FinProductCommon.getElementById('continueFlag').attr('checked',false).val("").parent().parent().hide();
+                    }
                    
                 } else {
-                	 FinProductCommon.getElementById('continueFlag').val("").parent().parent().show();
                 	 if (pageId === 'FinNetValueProductBuild002'){
-                		 $("#"+pageId+"_continueFlag").val('N').trigger("change").prop('disabled', true);
+                		 if($("#draftInit").val()=="Y"){
+                    		 FinProductCommon.getElementById('continueFlag').parent().parent().show();
+                    		 $("#"+pageId+"_continueFlag").trigger("change").prop('disabled', true); 
+                		 }
+                		 else{
+                    		 FinProductCommon.getElementById('continueFlag').val("").parent().parent().show();
+                    		 $("#"+pageId+"_continueFlag").val('N').trigger("change").prop('disabled', true);                			 
+                		 }
 //                		 $("#"+pageId+"_operationType").val('02').trigger("change").prop('disabled', true);
                 		//根据需求要求去掉
 //	                     $("#bussFinProductOpenPlanDto_sameFLag").prop('disabled', true).parent().parent().hide();
+                	 }
+                	 else{
+                		 FinProductCommon.getElementById('continueFlag').val("").parent().parent().show();
                 	 }
                 }
                 // 利率类型

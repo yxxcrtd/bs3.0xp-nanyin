@@ -11,9 +11,8 @@
         //投资周期 默认不显示
         if(pageModel == PAGE_MODEL_NEW){
         	//BS-2036 期限选择单一固定期限，投资周期未反显 start
-        	var initMode = $("#FinNetValueProductBuild002_dealMode").attr("initvalue");
-        	if(isDraft&&initMode=="10"){
-        		//FinProductCommon.getElementById('investmentCycle').attr('checked',false).parent().parent().hide();
+        	if(isDraft){
+        		FinProductCommon.getElementById('investmentCycle').attr('checked',false).parent().parent().hide();
         	}
         	else{
         		FinProductCommon.getElementById('investmentCycle').attr('checked',false).val("").parent().parent().hide();
@@ -913,9 +912,13 @@
 		
 		//给了收益标识默认值，要执行其上面的联动
 		// BS-2036 草稿箱反显，期限选择多固定期限，是否续投选择为是未正确显示 start
-		if(pageModel === PAGE_MODEL_NEW&&isDraft==false ) {
+		if(pageModel === PAGE_MODEL_NEW) {
 	    // BS-2036 草稿箱反显，期限选择多固定期限，是否续投选择为是未正确显示 end
+			if(isDraft){
+				$("#draftInit").val("Y");
+			}
 			FinProductCommon.profitTypeSelect();
+			$("#draftInit").val("");
 		}
 		//唤醒change事件
 		$("#FinNetValueProductBuild002_period").trigger('change');
