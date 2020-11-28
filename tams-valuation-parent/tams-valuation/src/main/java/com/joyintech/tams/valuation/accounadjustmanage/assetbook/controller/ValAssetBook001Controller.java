@@ -75,6 +75,9 @@ public class ValAssetBook001Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.账套类别);
         this.setSelectOptionToModel(model, DictCode.金融产品类型);
         model.addAttribute("defaultType", DictCodeList.账套类别_账套模板.getValue());
+        Date sysDate = DateUtil.platDateFromCache();
+        String morenDate = DateUtil.format(sysDate);
+        model.addAttribute("sysDate", morenDate);
         return super.init(model);
     }
     
