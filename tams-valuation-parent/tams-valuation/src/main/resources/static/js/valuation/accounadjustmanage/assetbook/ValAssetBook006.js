@@ -69,28 +69,21 @@
         object.workflowId=workflowId;
     	object.booksetId=booksetId;
         object.valAssetBook006DtoList = valAssetBook006DtoList;
-        Joyin.confirm(message(object), function() {
-            if(confirmFlag){
+        if(!(object.valAssetBook006DtoList.length!=null&&object.valAssetBook006DtoList.length!=''&&object.valAssetBook006DtoList.length!=0) && (object.workflowId==''||object.workflowId==null)){
+            Joyin.error(JoyinUtil.getMessage("并未有参数被修改!"));
+            return;
+        }
+        Joyin.confirm("是否确认修改？", function() {
                 if(operateType=='submit'){
                     WorkFlow.doSubmitList(basePath + 'valuation/accounadjustmanage/assetbook/ValAssetBook006/save', object, "ValAssetBook006_btn_save");
                 }else if(operateType=='save'){
                     WorkFlow.doSaveList(basePath + 'valuation/accounadjustmanage/assetbook/ValAssetBook006/save', object, "ValAssetBook006_btn_submit");
                 }
-            }
         });
     };
 
     function message(object){
-        if(object.valAssetBook006DtoList.length!=null&&object.valAssetBook006DtoList.length!=''&&object.valAssetBook006DtoList.length!=0){
-            confirmFlag=true;
-            return "是否确认修改？";
-        }else if(object.workflowId!=null && object.workflowId!=''){
-            confirmFlag=true;
-            return "是否确认修改？";
-        }else{
-            confirmFlag=false;
-            return("并未有参数被修改，请确认！")
-        }
+
     }
     /**
      * 画面加载完成
