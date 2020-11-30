@@ -51,6 +51,7 @@ import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -483,15 +484,58 @@ public class PtlManagementInfo001Service extends CommonExportService<PtlManageme
     }
 
     public List<TreeNode<NodeDto>> getTree(Map<String, Object> map) {
+
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+
+
+
+            String userOrgType = LoginUserUtil.getUserOrgType();
+            //List<String> instCode = LoginUserUtil.getInstCode();
+            String userOrgCode = MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
+
+            String  portfolioId = (String)map.get("portfolioId");
+
+            List<String> resourceOrgCode = new ArrayList<>();
+            //String orgCode = "";
+            if(StringUtils.equals(userOrgType,"01") || StringUtils.equals(userOrgType,"02")  ){
+                //如果登录用户是省联社用户
+
+                if(StringUtils.isNotEmpty(portfolioId)){
+                    // 组合机构id
+                    String portfolioOrgCode = MultilevelDataAuthorityUtil.getOrgCodeByBussinessIDType(portfolioId, "02", DictCodeList.共通业务类型_组合管理.getValue());
+
+                    if(StringUtils.isNotEmpty(portfolioOrgCode)){
+                        resourceOrgCode = com.joyintech.tams.systemtools.util.CommonUtil.getParentInstitution(portfolioOrgCode);
+
+                        userOrgCode = portfolioOrgCode ;
+                    }else{
+                        resourceOrgCode = MultilevelDataAuthorityUtil.getChildrenOrgCode(userOrgCode);
+                    }
+
+                }else {
+                    resourceOrgCode = MultilevelDataAuthorityUtil.getChildrenOrgCode(userOrgCode);
+                }
+            }else{
+                // 如果是市级 或者成员行
+                resourceOrgCode = com.joyintech.tams.systemtools.util.CommonUtil.getParentInstitution(userOrgCode);
+            }
+
+            map.put("institutionCode",userOrgCode);
+            resourceOrgCode.add(userOrgCode);
+            map.put("resourcesTreeInstCodeList",resourceOrgCode);
+
+        }
+
+
         List<TreeNode<NodeDto>> tree = new ArrayList<>();
         List<NodeDto> inisNodeList = restTemplate.postForList(
-                ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlmanagementinfo/getInstitu", "",
+                ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlmanagementinfo/getInstitu", map,
                 NodeDto.class);
         List<NodeDto> depNodeList = restTemplate.postForList(
-                ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlmanagementinfo/getDep", "",
+                ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlmanagementinfo/getDep", map,
                 NodeDto.class);
         List<NodeDto> userNodeList = restTemplate.postForList(
-                ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlmanagementinfo/getUser", "",
+                ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlmanagementinfo/getUser", map,
                 NodeDto.class);
         if (inisNodeList != null && inisNodeList.size() > 0) {
             for (NodeDto insNode : inisNodeList) {

@@ -875,7 +875,7 @@
 	</select>
 	<!-- 核redis版本风险 裴家俊 2020-01-07 end  -->
 	<select id="getUserList" resultType="com.joyintech.service.portfolio.ptlmanagementinfo.dto.NodeDto">
-		SELECT SYS_USER.USER_NAME code,
+		SELECT distinct SYS_USER.USER_NAME code,
 		SYS_USER.REAL_NAME name,
 		SYS_USER.DEPT_CODE upperCode
 		FROM SYS_USER SYS_USER

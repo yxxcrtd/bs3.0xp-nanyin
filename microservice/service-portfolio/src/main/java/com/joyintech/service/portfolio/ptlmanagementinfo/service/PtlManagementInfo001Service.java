@@ -715,21 +715,21 @@ public class PtlManagementInfo001Service extends BaseService<PtlManagementInfoDt
 
     @DataSource(DataSourceType.OTHER)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public List<NodeDto> getInstitu() {
+    public List<NodeDto> getInstitu(Map<String,Object> param) {
         //多级法人改造 add by jingqiongqiong 20200618
-        Map<String, Object> param = new HashMap<String, Object>();
-        // 二级法人权限处理
-        if(MultilevelDataAuthorityUtil.isEnabled()) {
-            //当前用户所属机构代码
-            String createInst =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
-            param.put("institutionCode",createInst);
-            //
-            List<String> searchOrgCodeList = com.joyintech.tams.systemtools.util.CommonUtil.getParentInstitution(createInst);
-            if(StringUtil.isNotEmpty(searchOrgCodeList)){
-                searchOrgCodeList.add(createInst);
-            }
-            param.put("resourcesTreeInstCodeList",searchOrgCodeList);
-        }
+//        Map<String, Object> param = new HashMap<String, Object>();
+//        // 二级法人权限处理
+//        if(MultilevelDataAuthorityUtil.isEnabled()) {
+//            //当前用户所属机构代码
+//            String createInst =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
+//            param.put("institutionCode",createInst);
+//            //
+//            List<String> searchOrgCodeList = com.joyintech.tams.systemtools.util.CommonUtil.getParentInstitution(createInst);
+//            if(StringUtil.isNotEmpty(searchOrgCodeList)){
+//                searchOrgCodeList.add(createInst);
+//            }
+//            param.put("resourcesTreeInstCodeList",searchOrgCodeList);
+//        }
         return ptlManagementInfo001Mapper.getInstitu(param);
         //多级法人改造 add by jingqiongqiong 20200618
     }
@@ -750,39 +750,39 @@ public class PtlManagementInfo001Service extends BaseService<PtlManagementInfoDt
 
     @DataSource(DataSourceType.OTHER)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public List<NodeDto> getDep() {
-        //多级法人改造 add by jingqiongqiong 20200618
-        Map<String, Object> param = new HashMap<String, Object>();
-        // 二级法人权限处理
-        if(MultilevelDataAuthorityUtil.isEnabled()) {
-            //当前用户所属机构代码
-            String createInst =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
-            param.put("institutionCode",createInst);
-            //
-            List<String> searchOrgCodeList = com.joyintech.tams.systemtools.util.CommonUtil.getParentInstitution(createInst);
-            if(StringUtil.isNotEmpty(searchOrgCodeList)){
-                searchOrgCodeList.add(createInst);
-            }
-            param.put("resourcesTreeInstCodeList",searchOrgCodeList);
-        }
+    public List<NodeDto> getDep(Map<String,Object> param) {
+//        //多级法人改造 add by jingqiongqiong 20200618
+//        Map<String, Object> param = new HashMap<String, Object>();
+//        // 二级法人权限处理
+//        if(MultilevelDataAuthorityUtil.isEnabled()) {
+//            //当前用户所属机构代码
+//            String createInst =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
+//            param.put("institutionCode",createInst);
+//            //
+//            List<String> searchOrgCodeList = com.joyintech.tams.systemtools.util.CommonUtil.getParentInstitution(createInst);
+//            if(StringUtil.isNotEmpty(searchOrgCodeList)){
+//                searchOrgCodeList.add(createInst);
+//            }
+//            param.put("resourcesTreeInstCodeList",searchOrgCodeList);
+//        }
         return ptlManagementInfo001Mapper.getDep(param);
         //多级法人改造 add by jingqiongqiong 20200618
     }
 
     @DataSource(DataSourceType.OTHER)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public List<NodeDto> getUser() {
+    public List<NodeDto> getUser(Map<String,Object> param) {
         //多级法人改造 add by jingqiongqiong 20200618
         List<NodeDto> returnList = new ArrayList<NodeDto>();
-        Map<String, Object> param = new HashMap<String, Object>();
-        // 二级法人权限处理
-        if(MultilevelDataAuthorityUtil.isEnabled()) {
-            //当前用户所属机构代码
-            String createInst =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
-            param.put("institutionCode",createInst);
-            List<String> searchOrgCodeList = com.joyintech.tams.systemtools.util.CommonUtil.getParentInstitution(createInst);
-            param.put("resourcesTreeInstCodeList",searchOrgCodeList);
-        }
+//        Map<String, Object> param = new HashMap<String, Object>();
+//        // 二级法人权限处理
+//        if(MultilevelDataAuthorityUtil.isEnabled()) {
+//            //当前用户所属机构代码
+//            String createInst =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
+//            param.put("institutionCode",createInst);
+//            List<String> searchOrgCodeList = com.joyintech.tams.systemtools.util.CommonUtil.getParentInstitution(createInst);
+//            param.put("resourcesTreeInstCodeList",searchOrgCodeList);
+//        }
 
         List<NodeDto> createInstList=ptlManagementInfo001Mapper.getUser(param);
         List<NodeDto> resourcesTreeInstCodeList=ptlManagementInfo001Mapper.getUserList(param);
