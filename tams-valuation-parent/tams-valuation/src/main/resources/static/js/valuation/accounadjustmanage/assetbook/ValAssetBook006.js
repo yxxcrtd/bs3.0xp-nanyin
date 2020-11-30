@@ -66,17 +66,25 @@
 
 
     function submit(operateType) {
+        object.workflowId=workflowId;
     	object.booksetId=booksetId;
         object.valAssetBook006DtoList = valAssetBook006DtoList;
         Joyin.confirm(message(object), function() {
             if(confirmFlag){
-                WorkFlow.doSubmitList(basePath + 'valuation/accounadjustmanage/assetbook/ValAssetBook006/save', object, "ValAssetBook006_btn_submit");
+                if(operateType=='submit'){
+                    WorkFlow.doSubmitList(basePath + 'valuation/accounadjustmanage/assetbook/ValAssetBook006/save', object, "ValAssetBook006_btn_save");
+                }else if(operateType=='save'){
+                    WorkFlow.doSaveList(basePath + 'valuation/accounadjustmanage/assetbook/ValAssetBook006/save', object, "ValAssetBook006_btn_submit");
+                }
             }
         });
     };
 
     function message(object){
         if(object.valAssetBook006DtoList.length!=null&&object.valAssetBook006DtoList.length!=''&&object.valAssetBook006DtoList.length!=0){
+            confirmFlag=true;
+            return "是否确认修改？";
+        }else if(object.workflowId!=null && object.workflowId!=''){
             confirmFlag=true;
             return "是否确认修改？";
         }else{
@@ -89,6 +97,7 @@
      */
     $(function() {
         if(modifyFlag=='false'){
+            $('#ValAssetBook006_btn_save').hide();
             $('#ValAssetBook006_btn_submit').hide();
         }
     	// 绑定按钮事件
@@ -98,6 +107,9 @@
 
         $('#ValAssetBook006_btn_submit').click(function() {
             submit('submit');
+        });
+        $('#ValAssetBook006_btn_save').click(function() {
+            submit('save');
         });
     });
 }());
