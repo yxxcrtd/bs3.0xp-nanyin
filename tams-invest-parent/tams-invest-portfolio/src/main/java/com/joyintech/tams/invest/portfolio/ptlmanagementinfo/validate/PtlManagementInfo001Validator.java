@@ -9,11 +9,7 @@
  */
 
 package com.joyintech.tams.invest.portfolio.ptlmanagementinfo.validate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
@@ -173,8 +169,12 @@ public class PtlManagementInfo001Validator implements BeanValidator{
             Iterator<FundAccountInfoDto> it = dto.getFundAccountInfoDto().iterator();
             Set<String> set = new HashSet<>();
             Set<String> acctTypeSet = new HashSet<>();
+            Set<String> acctTypeNoSet = new TreeSet<>();
             while(it.hasNext()){
                 FundAccountInfoDto nextDto = it.next();
+
+                acctTypeNoSet.add(nextDto.getAcctType()+nextDto.getAcctNo());
+
                 acctTypeSet.add(nextDto.getAcctType()+nextDto.getCcy());
                 if(StringUtil.isNotEmpty(nextDto.getAcctType()) && StringUtil.equals(nextDto.getAcctType(), DictCodeListExt1.资金账户类型_产品托管户.getValue())){
                     hasSecManageAcct = true;
@@ -191,6 +191,12 @@ public class PtlManagementInfo001Validator implements BeanValidator{
 //            if(set.size() < dto.getFundAccountInfoDto().size()){
 //                errorList.add(new ValidMessage("fundAccountInfoDto",getMessage("BUSS_COM_E_0006",getMessage("PtlManagementInfo001.funInfo"))));
 //            }
+
+            //* ZGBS-16
+             //       * 【组合管理】：组合信息中，如果有两个相同的券商资金账户，审批提交时报异常提醒
+            if(acctTypeNoSet.size() < dto.getFundAccountInfoDto().size()){
+                errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0006",getMessage("FundAccountInfo.acctType"),getMessage("FundAccountInfo.acctNo"))));
+            }
             //必须存在托管账户
             if(!hasSecManageAcct){
                 errorList.add(new ValidMessage(getMessage("PtlManagementInfo001.selectAcct")));
