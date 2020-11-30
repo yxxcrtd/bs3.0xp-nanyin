@@ -7,7 +7,7 @@
 	};
 
 	// add by mashukai 20201116 BS-1993,BS-1996 开放计划，赎回计划反显值不对 start
-	if(isDraft && sameFlag1=='N'){
+	if(isDraft && sameFlag1=='N'&& $('#FinNetValueProductBuild002_dealMode').val() != '10'){
 		$("#red_div").show();
 	}
 	// add by mashukai 20201116 BS-1993,BS-1996 开放计划，赎回计划反显值不对 end
@@ -1299,22 +1299,26 @@
 			if(tableRed.table)
 			tableRed.clear();
 		}*/
-	   if(getElementById('sameFLag').next().find("em").text()==="是"){
+	   //周期型产品不属于申赎同频，也不存在赎回计划
+	   if(getElementById('sameFLag').next().find("em").text()==="是"||$('#FinNetValueProductBuild002_dealMode').val() === '10'){
+		   	debugger;
 			$("#red_div").hide();
-			getElementById('openType').val('03');
-			getElementByRedId("openMode").val('');
-			getElementByRedId("openDays").val('');
-			getElementByRedId("openCycle").val('');
-			getElementByRedId("calcMethod").val('');
-			getElementByRedId("firstOpenDate").val('');
-			getElementByRedId("cpriceRule").val('');
-			getElementByRedId("tradedayRule").val('');
-			getElementByRedId("redSpeed").val('');
 			if(tableRed.table)
 			tableRed.clear();
-            if(getElementById('sameFLag').next().find("em").text()==="否"){
-				getElementById('sameFLag').next().trigger("click");
-			}
+            if($('#FinNetValueProductBuild002_dealMode').val() != '10'){
+    			getElementById('openType').val('03');
+    			getElementByRedId("openMode").val('');
+    			getElementByRedId("openDays").val('');
+    			getElementByRedId("openCycle").val('');
+    			getElementByRedId("calcMethod").val('');
+    			getElementByRedId("firstOpenDate").val('');
+    			getElementByRedId("cpriceRule").val('');
+    			getElementByRedId("tradedayRule").val('');
+    			getElementByRedId("redSpeed").val('');
+                if(getElementById('sameFLag').next().find("em").text()==="否"){
+    				getElementById('sameFLag').next().trigger("click");
+    			}
+            }
 		}else{
 			$("#red_div").show();
 			getElementById('openType').val('01');
