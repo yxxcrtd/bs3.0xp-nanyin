@@ -1,7 +1,6 @@
 package com.joyintech.service.valuation.accounadjustmanage.assetbook.controller;
 
 import com.joyintech.framework.annotation.DTXTransaction;
-import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.valuation.accounadjustmanage.assetbook.dto.ValAssetBook006Dto;
@@ -13,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * add by yangwenjun 20201130 账套参数修改功能
+ */
 @RestController("ValAssetBook006Ctr_dtx")
 @RequestMapping("/ValAssetBook006")
 public class ValAssetBook006Controller{

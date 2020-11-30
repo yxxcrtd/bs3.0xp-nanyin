@@ -6,7 +6,6 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.RequestUtil;
@@ -14,9 +13,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.valuation.accounadjustmanage.assetbook.dto.ValAssetBook006Dto;
 import com.joyintech.tams.valuation.accounadjustmanage.assetbook.service.ValAssetBook006Service;
@@ -39,6 +36,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * add by yangwenjun 20201130 账套参数修改功能
+ */
 @Controller
 @PageId("ValAssetBook006")
 @RequestMapping("/valuation/accounadjustmanage/assetbook/ValAssetBook006")
@@ -106,8 +106,6 @@ public class ValAssetBook006Controller extends BaseController {
     public AjaxResult check(@RequestBody @Validated({
             ValidateGroupDelete.class}) ValAssetBook006Dto dto, BindingResult result) {
         if (result.getErrorCount() == 0) {
-            String s=CacheUtil.getSysParam("AUTHORITY_TYPE");
-            String sd= CommonUtil.getInsitutionTypeByUserName(LoginUserUtil.getUserName());
             if("02".equals(CacheUtil.getSysParam("AUTHORITY_TYPE"))&&!"01".equals(CommonUtil.getInsitutionTypeByUserName(LoginUserUtil.getUserName()))){
                 return new AjaxResult("仅省级机构能修改账套模板！", MessageType.错误消息);
             }

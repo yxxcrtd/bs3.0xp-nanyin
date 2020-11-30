@@ -4,10 +4,8 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.MstBondCreditRating;
 import com.joyintech.tams.valuation.accounadjustmanage.assetbook.dto.ValAssetBook006Dto;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
-import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * add by yangwenjun 20201130 账套参数修改功能
+ */
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class ValAssetBook006Service extends CommonExportService<ValAssetBook006Dto> implements BaseProcessService<ValAssetBook006Dto> {
