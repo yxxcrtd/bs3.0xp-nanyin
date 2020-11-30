@@ -18,8 +18,8 @@
     <select id="selectCashPosition" resultType="java.math.BigDecimal" >
         select
         SUM(AMOUNT)
-        from PTL_CASH_POSITION
-        where CDATE = #{cdate,jdbcType=DATE}
+        from PTL_CASH_POSITION_FLOW
+        where CDATE &lt;= #{cdate,jdbcType=DATE}
         <include refid="whereSql"/>
         <if test="acctType != null and !acctType.isEmpty() and needAcctType">
             and ACCT_ID in (
