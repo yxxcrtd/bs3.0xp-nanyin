@@ -9,11 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * add by yangwenjun 20201130 账套参数修改功能
+ */
 @Service(value="serviceValAssetBook006Service")
 @Transactional(rollbackFor = Exception.class)
 public class ValAssetBook006Service extends CommonExportService<ValAssetBook006Dto> {

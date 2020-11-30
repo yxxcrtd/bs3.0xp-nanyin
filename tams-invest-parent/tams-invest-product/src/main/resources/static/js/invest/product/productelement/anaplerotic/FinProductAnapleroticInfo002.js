@@ -344,6 +344,7 @@
             getElementById('anapleroticEndDate').val(getElementById('firstAnapleroticDate').val()).prop('disabled', true);
             getElementById('firstAnapleroticCycleBegDate').val(Date.ofDate($("#FinNetValueProductBuild002_vdate",parent.document).val()).DateAdd("d", -1).format('yyyy-MM-dd'));
         }else if(operationType == '02'){
+            getElementById('anapleroticEndDate').prop('disabled', false);
         // 开放
             if(applyType =='prod' && $("#bussFinProductOpenPlanDto_openMode",parent.document).val() =='02'){
             //高频开放
