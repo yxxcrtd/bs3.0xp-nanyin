@@ -489,7 +489,7 @@ $(function() {
 				,{field:'purNetValueLayerDate', title: 'FinNetProductDuration.purNetValueLayerDate', width: 160, sortable: false, edit: true, type:'date' }
 				,{field:'purUnitNetLayerValue', title: 'FinNetProductDuration.purUnitNetLayerValue', width: 160,  sortable: false }
 				,{field:'purDealLayerAmt', title: 'FinNetProductDuration.purDealLayerAmt', width: 160, edit: true, sortable: false, type:'number' }
-				,{field:'purDealLayerNum', title: 'FinNetProductDuration.purDealLayerNum',  width: 160, edit: false, sortable: false, type:'number'}
+				,{field:'purDealLayerNum', title: 'FinNetProductDuration.purDealLayerNum',  width: 160, edit: true, sortable: false, type:'number'}
 				,{field:'purLayerFee', title: 'FinNetProductDuration.purLayerFee',  width: 160, edit: true, sortable: false, type:'number'}
 				,{field:'finprodId', visible: false}
 				,{field:'finprodType', visible: false}
@@ -517,7 +517,7 @@ $(function() {
 	    		getLayerNetValueInfo(data);
 	    		rowData.purUnitNetLayerValue = data.purUnitNetLayerValue;
 	    	}
-	   		if(data.purUnitNetLayerValue && data.purDealLayerAmt){        		
+	   		if(data.purUnitNetLayerValue && data.purDealLayerAmt && field == 'purDealLayerAmt'){        		
 	   			rowData.purDealLayerNum = Number(JoyinMath.doDiv(data.purDealLayerAmt,data.purUnitNetLayerValue,2));
         	} 
 	    	layAmtPurNetTable.renderRow(data.LAY_TABLE_INDEX, rowData);
