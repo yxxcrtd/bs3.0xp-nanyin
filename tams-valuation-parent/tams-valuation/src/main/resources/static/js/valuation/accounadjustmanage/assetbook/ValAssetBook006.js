@@ -27,7 +27,7 @@
              {field:'paramName', title: '参数名称'},
         	 {field:'paramCode', title: '参数代码'},
         	 {field:'paramValue',title:'参数值'},
-        	 {field:'objParamValue',edit:modifyFlag=='false'?false:true, title: '修改后参数值'},
+        	 {field:'objParamValue',edit:modifyFlag=='false'?false:true, title: '修改参数值',sortable : false},
         	 {field:'remark', title: '备注'}
         ],
         editCell:function(value, data, field, cell, column){
