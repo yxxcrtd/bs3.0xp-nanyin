@@ -82,9 +82,10 @@
         });
     };
 
-    function message(object){
-
-    }
+    //导出
+    var exportExcel = function () {
+        Joyin.exportExcel('export', getSearchParams());
+    };
     /**
      * 画面加载完成
      */
@@ -104,5 +105,8 @@
         $('#ValAssetBook006_btn_save').click(function() {
             submit('save');
         });
+        $('#ValAssetBook006_btn_export').click(function(){
+            exportExcel();
+        })
     });
 }());

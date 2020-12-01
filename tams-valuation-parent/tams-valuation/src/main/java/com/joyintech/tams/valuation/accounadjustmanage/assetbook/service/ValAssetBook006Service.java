@@ -1,13 +1,18 @@
 package com.joyintech.tams.valuation.accounadjustmanage.assetbook.service;
 
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.valuation.accounadjustmanage.assetbook.dto.ValAssetBook006Dto;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,4 +52,14 @@ public class ValAssetBook006Service extends CommonExportService<ValAssetBook006D
         return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME+"/ValAssetBook006/getParamCode",
                 pageParam, SuggestDto.class);
     }
+
+    @Override
+    protected void buildExportParam(ExportParam exportParam) {
+        exportParam.config("/com/joyintech/tams/valuation/accounadjustmanage/assetbook/config/export_param.xml").dataSource(DataSourceType.MASERT);
+    }
+    @Override
+    public Page<ValAssetBook006Dto> selectPageData(Map<String, Object> selectParam) {
+        return findPage(selectParam);
+    }
+
 }

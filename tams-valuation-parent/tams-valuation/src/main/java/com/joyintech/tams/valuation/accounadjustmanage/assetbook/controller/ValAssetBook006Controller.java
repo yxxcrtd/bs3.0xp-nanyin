@@ -23,6 +23,7 @@ import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -122,5 +123,11 @@ public class ValAssetBook006Controller extends BaseController {
         }
 
         return commonCheck(result, "edit");
+    }
+
+    @RequestMapping("export")
+    public ResponseEntity<byte[]> export()
+            throws Exception {
+        return valAssetBook006Service.export(this.getPageId(), RequestUtil.getParameters(getRequest()));
     }
 }
