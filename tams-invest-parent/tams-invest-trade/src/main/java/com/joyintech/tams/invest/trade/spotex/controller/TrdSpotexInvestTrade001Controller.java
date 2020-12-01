@@ -12,6 +12,8 @@ package com.joyintech.tams.invest.trade.spotex.controller;
 
 import javax.validation.Valid;
 
+import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.tams.constant.DictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -40,7 +42,10 @@ import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 外汇即期交易查询Controller
@@ -175,5 +180,22 @@ public class TrdSpotexInvestTrade001Controller extends BaseController {
         throws Exception {
         return trdSpotexInvestTrade001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
+    }
+
+    /**
+     * 获取委托代码
+     * @return 联想文本框实体类集合
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("getEntrustIdByType")
+    public List<SuggestDto> getEntrustIdByType() {
+        String entrustId = getParam("param");
+        Map<String, Object> map = new HashMap<>();
+        map.put("param", entrustId);
+        map.put("finProdType", Arrays.asList(DictCodeListExt1.金融产品类型_即期.getValue()));
+        map.put("ENTRUST_STATUS_LIST", Arrays.asList(DictCodeList.委托状态_已接收.getValue(),
+                DictCodeList.委托状态_已完成.getValue(), DictCodeList.委托状态_已关闭.getValue()));
+        return trdSpotexInvestTrade001Service.getEntrustIdByType(map);
     }
 }

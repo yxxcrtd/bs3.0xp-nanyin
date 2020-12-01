@@ -6,6 +6,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.trade.option.dto.TrdOptionTrade001Dto;
 import org.springframework.stereotype.Service;
@@ -115,4 +116,15 @@ public class TrdOptionTrade001Service  extends CommonExportService<TrdOptionTrad
                 null, Boolean.class);
     }
 
+    /**
+     * 获取委托代码
+     * @param map 请求参数
+     * @return 联想文本框实体类
+     * @since 1.0
+     */
+    public List<SuggestDto> getEntrustIdByType(Map<String,Object> map){
+        return restTemplate.postForList(
+                ServiceApplication.COMMON_SERVICE_NAME + "/CommonSelect/getEntrustId", map,
+                SuggestDto.class);
+    }
 }

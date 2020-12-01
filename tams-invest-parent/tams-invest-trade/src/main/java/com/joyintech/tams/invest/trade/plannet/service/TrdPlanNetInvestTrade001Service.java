@@ -17,6 +17,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -526,5 +527,17 @@ public class TrdPlanNetInvestTrade001Service extends CommonExportService<TrdPlan
             return null;
         }
 //        return null;
+    }
+
+    /**
+     * 获取委托代码
+     * @param map 请求参数
+     * @return 联想文本框实体类
+     * @since 1.0
+     */
+    public List<SuggestDto> getEntrustIdByType(Map<String,Object> map){
+        return restTemplate.postForList(
+                ServiceApplication.COMMON_SERVICE_NAME + "/CommonSelect/getEntrustId", map,
+                SuggestDto.class);
     }
 }

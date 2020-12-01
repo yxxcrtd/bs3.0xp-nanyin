@@ -198,6 +198,12 @@
                     #{item}
                 </foreach>
             </if>
+            <if test="finProdType != null and finProdType.size() > 0">
+                AND FINPROD_TYPE2 IN
+                <foreach collection="finProdType" open="(" close=")" item="item1" separator=",">
+                    #{item1}
+                </foreach>
+            </if>
         </where>
     </select>
     <select id="getPortfolioId" resultType="com.joyintech.framework.select.SuggestDto">

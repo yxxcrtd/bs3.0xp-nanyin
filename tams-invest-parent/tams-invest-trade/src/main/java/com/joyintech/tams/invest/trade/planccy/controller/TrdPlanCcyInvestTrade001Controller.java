@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.trade.planccy.controller;
 
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
@@ -51,10 +52,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 计划类货币交易查询
@@ -351,5 +349,22 @@ public class TrdPlanCcyInvestTrade001Controller extends BaseController {
     	param.put("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE"));
         return trdPlanCcyInvestTrade001Service.export(this.getPageId(),
         		param);
+    }
+
+    /**
+     * 获取委托代码
+     * @return 联想文本框实体类集合
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("getEntrustIdByType")
+    public List<SuggestDto> getEntrustIdByType() {
+        String entrustId = getParam("param");
+        Map<String, Object> map = new HashMap<>();
+        map.put("param", entrustId);
+        map.put("finProdType", Arrays.asList(DictCodeListExt1.金融产品类型_计划类资产.getValue()));
+        map.put("ENTRUST_STATUS_LIST", Arrays.asList(DictCodeList.委托状态_已接收.getValue(),
+                DictCodeList.委托状态_已完成.getValue(), DictCodeList.委托状态_已关闭.getValue()));
+        return trdPlanCcyInvestTrade001Service.getEntrustIdByType(map);
     }
 }

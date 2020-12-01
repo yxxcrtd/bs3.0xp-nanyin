@@ -1,9 +1,11 @@
 package com.joyintech.tams.invest.trade.project.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.security.SecurityUtil;
 
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.stereotype.Service;
@@ -110,5 +112,18 @@ public class TrdProjectInvestTrade001Service extends CommonExportService<TrdProj
         params.put("ENTRUST_STATUS06", DictCodeList.委托状态_已关闭);
         return restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME + "/TrdProjectInvestTrade/findEntrustId", params,
                 SelectOptionDto.class);
+    }
+
+    /**
+     * 获取委托代码
+     * @param map 请求参数
+     * @return 联想文本框实体类
+     * @see
+     * @since 1.0
+     */
+    public List<SuggestDto> getEntrustIdByType(Map<String,Object> map){
+        return restTemplate.postForList(
+                ServiceApplication.COMMON_SERVICE_NAME + "/CommonSelect/getEntrustId", map,
+                SuggestDto.class);
     }
 }
