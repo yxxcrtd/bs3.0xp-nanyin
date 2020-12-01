@@ -13,7 +13,9 @@
             <input type="hidden" id="isLay" name="isLay" data-th-value="${entity?.isLay}" />
             <!-- <input type="hidden" id="layType" name="layType" data-th-value="${entity?.layType}" /> -->
             <input type="hidden" id="bussId" name="bussId" data-th-value="${entity?.bussId}" />
-            <input type="text" name="workflowId" data-th-value='${workflowId}' hidden>
+            <!-- add by TISHKBS-1519 mashukai 收益型产品中间付息撤销流程中页面隐藏撤销按钮 start -->
+            <input type="text" id="workflowId" name="workflowId" data-th-value='${workflowId}' hidden>
+            <!-- add by TISHKBS-1519 mashukai 收益型产品中间付息撤销流程中页面隐藏撤销按钮 end -->
             <input type="hidden" id="dealMode" name="dealMode" data-th-value="${entity?.dealMode}" />
             <input type="text" id="operateType" name="operateType" class="layui-input form-input" data-th-value="${entity?.operateType}" style = "display: none">
             <!-- 产品基本信息 -->

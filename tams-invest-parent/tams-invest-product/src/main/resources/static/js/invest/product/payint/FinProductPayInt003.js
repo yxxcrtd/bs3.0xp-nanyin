@@ -304,6 +304,11 @@
 		}else{
 			$('#FinProductPayInt003_btn_revoke').hide();
 		}
+		//add by TISHKBS-1519 mashukai 收益型产品中间付息撤销流程中页面隐藏撤销按钮 start
+		if($('#workflowId').val()){
+			$('#FinProductPayInt003_btn_revoke').hide();
+		}
+        //add by TISHKBS-1519 mashukai 收益型产品中间付息撤销流程中页面隐藏撤销按钮 end
     	init();
     	$("#remark").val("客户收益支付");
     	//产品代码联动事件
