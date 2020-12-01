@@ -150,8 +150,44 @@
     <select id="findPage" resultType="com.joyintech.tams.invest.common.dto.settle.fundback.FundBackgroundManagementDto">
         WITH WFL_ORDERS AS (SELECT * FROM WFL_STL_PAY_ORDERS T5 WHERE T5.ORDER_ID = (
         SELECT MAX(T52.ORDER_ID) FROM WFL_STL_PAY_ORDERS T52 WHERE T5.TRADE_ID = T52.TRADE_ID)),
-        PAY_ORDERS AS (SELECT * FROM STL_PAY_ORDERS T5 WHERE T5.ORDER_ID = (
-        SELECT MAX(T52.ORDER_ID) FROM STL_PAY_ORDERS T52 WHERE T5.TRADE_ID = T52.TRADE_ID))
+        PAY_ORDERS1 AS
+        (
+            SELECT T5.*
+            FROM
+            STL_PAY_ORDERS T5
+            WHERE T5.ORDER_ID = (
+                SELECT MAX(T52.ORDER_ID) ORDER_ID
+                FROM STL_PAY_ORDERS T52
+                WHERE T5.TRADE_ID = T52.TRADE_ID
+                AND NOT EXISTS
+                    (
+                    SELECT SPO.ORDER_ID ORDER_ID
+                    FROM STL_PAY_ORDERS SPO
+                    LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TFPDT
+                    ON TFPDT.TOTLE_TRADE_ID = SPO.TRADE_ID
+                    LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL PTFPDT
+                    ON PTFPDT.TOTLE_TRADE_ID  = TFPDT.TOTLE_TRADE_ID
+                    WHERE PTFPDT.PA_BUSS_TYPE = '08'
+                    AND T52.ORDER_ID = SPO.ORDER_ID
+                    )
+            )
+        ),
+        PAY_ORDERS2 AS
+        (
+            SELECT SPO.*
+            FROM STL_PAY_ORDERS SPO
+            LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TFPDT
+            ON TFPDT.TOTLE_TRADE_ID = SPO.TRADE_ID
+            LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL PTFPDT
+            ON PTFPDT.TOTLE_TRADE_ID  = TFPDT.TOTLE_TRADE_ID
+            WHERE PTFPDT.PA_BUSS_TYPE = '08'
+        ),
+        PAY_ORDERS AS
+        (
+            SELECT * FROM PAY_ORDERS1
+            UNION ALL
+            SELECT * FROM PAY_ORDERS2
+        )
         /*1、 查询产品端交易（产品成立、产品到期、中间付息、产品强减、费用支付， 拆借到期）*/
         <if test="statusValid == null or statusValid.isEmpty() or statusValid == TRADE_FLOW_STATUS01">
             SELECT
