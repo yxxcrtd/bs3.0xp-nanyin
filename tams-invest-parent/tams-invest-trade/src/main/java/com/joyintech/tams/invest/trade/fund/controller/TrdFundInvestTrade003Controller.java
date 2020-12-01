@@ -271,6 +271,9 @@ public class TrdFundInvestTrade003Controller extends BaseController {
                 }
                 else if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
                     dto.setPs(DictCodeList.交易方向_赎回确认.getValue());
+                    if (StringUtil.equals(pageModel, GlobalConstant.DETAIL_PAGE_MODEL_NEW) && !StringUtil.isNotEmpty(dto.getTradeAmt())){
+                        dto.setTradeAmt(ArithmeticUtil.multiply(dto.getUnitCprice(),dto.getShareAmt()));
+                    }
                     dto.setPrinAmt(dto.getTradeAmt());
                 }
                 else if (StringUtil.equals(dto.getPs(), DictCodeListExt2.交易方向_转换申请.getValue())) {
