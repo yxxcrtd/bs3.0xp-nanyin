@@ -941,6 +941,20 @@ function setFinprodAbbr() {
 //START 引用组件时  未添加此方法  导致js报错
 // modify by wj 20200426 TISHKBS-270  净值型分档产品，在产品分层信息中添加产品款型，添加到第二个的时候，选择目标客户类型出现界面错乱
 var tarCustomerTypeChange = function(){
-	
+	var LayeredTableInfo = BussFinProductLayered.getAllRows();
+	if($("#bussFinProductSaleParamDto_investorType").val()=='04'){
+		$("#bussFinProductSaleParamDto_sameOrg").removeAttr("disabled");
+	}
+	else{
+		for(var i in LayeredTableInfo){
+			if(LayeredTableInfo[i].tarCustomerType && LayeredTableInfo[i].tarCustomerType.indexOf("04") != -1){
+				$("#bussFinProductSaleParamDto_sameOrg").removeAttr("disabled");
+				break;
+			}
+			else{
+				$("#bussFinProductSaleParamDto_sameOrg").attr("disabled","disabled");
+			}
+		}
+	}
 }
 //END 引用组件时  未添加此方法  导致js报错
