@@ -105,7 +105,7 @@ public class BasePtlCashPositionInfoServiceImpl implements BasePtlCashPositionIn
         Date maxCdate = basePtlCashPositionInfoMapper.selectCashPositionMaxCdate(positionQueryDto);
         positionQueryDto.setCdate(maxCdate);
 
-        return basePtlCashPositionInfoMapper.selectCashPosition(positionQueryDto);
+        return basePtlCashPositionInfoMapper.selectCashPositionNew(positionQueryDto);
     }
 
     /**BaseTradeProductDealCommService
