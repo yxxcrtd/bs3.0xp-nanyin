@@ -583,6 +583,14 @@ public class FinProductBuild002Validator implements BeanValidator {
                 }
             }
             List<FinOpenPlan> finOpenPlanList = entity.getBussFinProductOpenPlanDto().getFinOpenPlanList();
+   //add by yujiaping 2020-12-2  ZGBS-50 非高频开放的产品提交时，如无开放计划限制提交，给出提醒：非高频开放的产品，开放计划不能为空start
+            if(!StringUtil.equals(entity.getBussFinProductOpenPlanDto().getOpenMode(), DictCodeList.开放模式_高频开放.getValue())){
+            	if(StringUtil.isEmptyList(finOpenPlanList)) {
+            		validList.add(new ValidMessage("bussFinProductOpenPlanDto.finOpenPlanList",
+                            this.getMessage("非高频开放的产品，开放计划不能为空。")));
+            	}
+            }
+    //add by yujiaping 2020-12-2  ZGBS-50 非高频开放的产品提交时，如无开放计划限制提交，给出提醒：非高频开放的产品，开放计划不能为空end
             if (!StringUtil.isEmptyList(finOpenPlanList)
                 && StringUtil.isNotEmpty(entity.getVdate())&&StringUtil.equals(
                         entity.getOperationType(), DictCodeList.开放类型_开放式.getValue())) {

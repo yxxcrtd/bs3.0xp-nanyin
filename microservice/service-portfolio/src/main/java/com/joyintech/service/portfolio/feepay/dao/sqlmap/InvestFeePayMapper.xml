@@ -399,6 +399,7 @@
 		AND to_date(#{enddate}, 'yyyy-MM-dd') > tpd.TRADE_DATE
 		AND tpda.PORTFOLIO_ID = #{ptlId}
 		AND tpd.FINPROD_TYPE2 != #{FINPROD_TYPE2_C11}
+		AND tpd.CHL_ID IS NULL
 	</select>
 	
 	<!-- 根据交易编号组合费用明细列表（审批通过后） -->
