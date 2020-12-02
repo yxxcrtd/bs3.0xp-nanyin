@@ -81,6 +81,11 @@ public class TrdVouchDeal extends BaseEntity {
     private String accountOrder;
 
     /**
+     * 业务类型--仅供查询使用
+     */
+    private String finprodType;
+
+    /**
      * 取得 交易编号
      * @return 交易编号
      */
@@ -311,4 +316,12 @@ public class TrdVouchDeal extends BaseEntity {
 	public void setAccountOrder(String accountOrder) {
 		this.accountOrder = accountOrder;
 	}
+
+    public String getFinprodType() {
+        return finprodType;
+    }
+
+    public void setFinprodType(String finprodType) {
+        this.finprodType = finprodType;
+    }
 }
