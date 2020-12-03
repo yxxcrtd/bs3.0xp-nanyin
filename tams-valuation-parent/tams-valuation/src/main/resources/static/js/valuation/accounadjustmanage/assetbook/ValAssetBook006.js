@@ -69,6 +69,9 @@
         object.workflowId=workflowId;
     	object.booksetId=booksetId;
         object.valAssetBook006DtoList = valAssetBook006DtoList;
+        if(workflowId!=null&&workflowId!=''){
+            object.valAssetBook006DtoList=table.getAllRows();
+        }
         if(!(object.valAssetBook006DtoList.length!=null&&object.valAssetBook006DtoList.length!=''&&object.valAssetBook006DtoList.length!=0) && (object.workflowId==''||object.workflowId==null)){
             Joyin.error(JoyinUtil.getMessage("并未有参数被修改!"));
             return;
