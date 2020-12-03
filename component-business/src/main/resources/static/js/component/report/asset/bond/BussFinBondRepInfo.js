@@ -26,11 +26,30 @@
                     else{
                     	getElementById("repPartyType2").val(PARTY_TYPE2_99).trigger("change");
                     }
+                    // 20200819 发行人联动处理优化：若市场机构未接入该信息，则从快录的信息中获取 wangwei start
+                    // if(getElementById("repPartyType1").val()==null||getElementById("repPartyType1").val()==""){
+                    //     getElementById("repPartyType1").val(data.repPartyType1).trigger("change");
+                    // }
+                    // getElementById("repIndustry").val(data.repIndustry).trigger("change");
+                    // getElementById("repIndustryLevel2").val(data.repIndustryLevel2).trigger("change");
+                    // 发行机构类型（按规模划分）需要进行参数映射处理
                     if(getElementById("repPartyType1").val()==null||getElementById("repPartyType1").val()==""){
-                        getElementById("repPartyType1").val(data.repPartyType1).trigger("change");
+                        if (data.repPartyType1 == '01' || data.repPartyType1 == '02' || data.repPartyType1 == '03'){
+                            getElementById("repPartyType1").val("01").trigger("change");
+                        }else if(data.repPartyType1 == '04'){
+                            getElementById("repPartyType1").val("02").trigger("change");
+                        }else{
+                            getElementById("repPartyType1").val("99").trigger("change");
+                        }
                     }
-                    getElementById("repIndustry").val(data.repIndustry).trigger("change");
-                    getElementById("repIndustryLevel2").val(data.repIndustryLevel2).trigger("change");
+                    // wind提供的机构信息存在所属行业为空的情况，该场合快录时取快录的机构所属行业信息
+                    if(getElementById("repIndustry").val()==null||getElementById("repIndustry").val()==""){
+                        getElementById("repIndustry").val(data.repIndustry).trigger("change");
+                    }
+                    if(getElementById("repIndustryLevel2").val()==null||getElementById("repIndustryLevel2").val()==""){
+                        getElementById("repIndustryLevel2").val(data.repIndustryLevel2).trigger("change");
+                    }
+                    // 20200819 发行人联动处理优化：若市场机构未接入该信息，则从快录的信息中获取 wangwei end
                 });
     		}
     		else{

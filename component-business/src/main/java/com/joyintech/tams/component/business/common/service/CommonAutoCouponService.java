@@ -379,6 +379,22 @@ public class CommonAutoCouponService extends BaseService{
                 finProductAdd.setIsSecBond(interfPayhsrcsecinfo.getIssecbond());
                 //是否城投债
                 finProductAdd.setIsCityBond(interfPayhsrcsecinfo.getCityInvestSecWind());
+                // 20200819 债券自动加券优化-判断城投债级别 wangwei start
+                // 城投债的场合需要判断城投债级别
+                if (StringUtil.isNotEmpty(finProductAdd.getIsCityBond())
+                        && StringUtil.equals(DictCodeList.是否_是.getValue(), finProductAdd.getIsCityBond())) {
+                    if (StringUtil.isNotEmpty(interfPayhsrcsecinfo.getCityInvestSecCounty())) {
+                        // 若接口表中城投债县及县级市字段不为空，则城投债级别为县及县级市
+                        finProductAdd.setCityBondLev("03");
+                    } else if (StringUtil.isNotEmpty(interfPayhsrcsecinfo.getCityInvestSecCities())) {
+                        // 若接口表中城投债县及县级市字段不为空，则城投债级别为县及县级市
+                        finProductAdd.setCityBondLev("02");
+                    } else if (StringUtil.isNotEmpty(interfPayhsrcsecinfo.getCityInvestSecProvinces())){
+                        // 其他场合城投债级别为省及省会（单列市）
+                        finProductAdd.setCityBondLev("01");
+                    }
+                }
+                // 20200819 债券自动加券优化-判断城投债级别 wangwei end
                 baseFinProductBaseInfoDto.setFinProductAdd(finProductAdd);
                 //new金融产品分类
                 FinProductType finProductType = new FinProductType();
