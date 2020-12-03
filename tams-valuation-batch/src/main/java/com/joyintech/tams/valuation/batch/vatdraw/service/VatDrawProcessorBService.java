@@ -3438,7 +3438,7 @@ public class VatDrawProcessorBService {
             BigDecimal tdyTaxAmt = vatDrawCommonService.taxCalculate(amtDto.getFsjcIncomeDurAmt(),
                 TAX_RATE_DEF, scale, roundingMode, cfConfigs.get(TAX_CALC_FORMULA));
             // 变量.发生额 = 变量.今日税余额 - 增值税额余额
-            happenAmt = ArithmeticUtil.subtract(tdyTaxAmt, tdyBalanceSum.getTaxAmt());
+            happenAmt = ArithmeticUtil.subtract(tdyTaxAmt, tdyBalanceSum.getTaxAmtSum());
         }
 //        // 定义计税发生额汇总 = 计税发生额汇总
 //        BigDecimal taxAmtSum = tdyBalanceSum.getTaxAmtSum().add(amtDto.getMaqrjcAmt());
