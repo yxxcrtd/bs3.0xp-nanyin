@@ -78,7 +78,10 @@
             ,{field:'coefficient', visible:false}
             ,{field:'spreadRate', visible:false}
             ,{field:'resetType', visible:false,editOption:{type:'select',formatoption:true,result: EFFECTIVE_RULE}}
-            ,{field:'resetTypeName',title: '业绩基准重置规则',sortable: false,edit:true,editOption:{type:'select',formatoption:true,result: EFFECTIVE_RULE}}
+            //add by yujiaping 2020-12-3 ZGBUGTWO-1 浮动管理费列表 增加 利率类型 start
+            ,{field:'rateTypeName',width:100,title: '利率类型', sortable:false,editOption:{type:'select',formatoption:true,result: INT_TYPE}}
+            //add by yujiaping 2020-12-3 ZGBUGTWO-1 浮动管理费列表 增加 利率类型 end
+            ,{field:'resetTypeName',width:100,title: '业绩基准重置规则',sortable: false,edit:true,editOption:{type:'select',formatoption:true,result: EFFECTIVE_RULE}}
             ,{field:'remark', visible:false}
             ,{field:'operation',title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
             
@@ -132,6 +135,15 @@
                 		resetTypeName = '期末'
             		else if(result.resetType==03)
                 		resetTypeName = '当期生效'
+              //add by yujiaping 2020-12-3 ZGBUGTWO-1 浮动管理费列表 增加 利率类型 start
+                var rateTypeName = '';
+                if(result.rateType == 01){
+                	rateTypeName = '固定利率'
+                }
+                else if(result.rateType == 02){
+                	rateTypeName = '浮动利率'
+                }
+              //add by yujiaping 2020-12-3 ZGBUGTWO-1 浮动管理费列表 增加 利率类型 end
 	        		var row = {
 	                          feeId: result.feeId,
 	                          basicBill: result.basicBill,
@@ -151,6 +163,9 @@
 	                          accrType: result.accrType,
 	                          finFloatCalcRuleDetailDtoList : result.finFloatCalcRuleDetailDtoList,
 	                          rateType: result.rateType,
+	                          //add by yujiaping 2020-12-3 ZGBUGTWO-1 浮动管理费列表 增加 利率类型 start
+	                          rateTypeName:rateTypeName,
+	                          //add by yujiaping 2020-12-3 ZGBUGTWO-1 浮动管理费列表 增加 利率类型 end
 	                          rate: result.rate,
 	                          indexId: result.indexId,
 	                          coefficient: result.coefficient,
@@ -217,6 +232,15 @@
                     		resetTypeName = '期末'
                 		else if(data.resetType==03)
                     		resetTypeName = '当期生效'
+                  //add by yujiaping 2020-12-3 ZGBUGTWO-1 浮动管理费列表 增加 利率类型 start
+                          var rateTypeName = '';
+                               if(data.rateType == 01){
+                                	rateTypeName = '固定利率'
+                                }
+                                else if(data.rateType == 02){
+                                	rateTypeName = '浮动利率'
+                               }
+                   //add by yujiaping 2020-12-3 ZGBUGTWO-1 浮动管理费列表 增加 利率类型 end
                       if(!data) return;
                       // 新建费用品种后，在费用列表中，添加一行数据，费用名称，费用类型，计费基数，计算基础，默认带出上述添加的数据。
                       
@@ -238,6 +262,9 @@
                       interValRule: data.interValRule,
                       accrType: data.accrType,
                       rateType: data.rateType,
+                      //add by yujiaping 2020-12-3 ZGBUGTWO-1 浮动管理费列表 增加 利率类型 start
+                      rateTypeName:rateTypeName,
+                      //add by yujiaping 2020-12-3 ZGBUGTWO-1 浮动管理费列表 增加 利率类型 end
                       rate: data.rate,
                       indexId: data.indexId,
                       coefficient: data.coefficient,
