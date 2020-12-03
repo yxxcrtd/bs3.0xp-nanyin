@@ -637,10 +637,10 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                             
                         }
                         //add by wm 增加分档产品针对分层设置了浮动管理费没有设置相应的业绩基准校验start 2019-08-09
-                        if(idMarkLayer||bussBenchMarkLayeredMap.get(bussFinProductFloatFeeDto.getProdStyle())==null){
+                       /* if(idMarkLayer||bussBenchMarkLayeredMap.get(bussFinProductFloatFeeDto.getProdStyle())==null){
                         	validList.add(new ValidMessage(
                                     this.getMessage("FIN_PROD_E_0132",bussFinProductFloatFeeDto.getProdStyle())));
-                        }
+                        }*/
                         //add by wm 增加分档产品针对分层设置了浮动管理费没有设置相应的业绩基准校验end 2019-08-09
                     }
                 }
