@@ -362,7 +362,7 @@ public class DeltRightDealBookProcessorService {
 //                accountAmountMap.put(BookConstant.INTAMT,
 //                    ArithmeticUtil.round(dealNow.getIntAmt(), NumberEnum.MONEY));
                 BigDecimal varCjyjlx = BigDecimal.ZERO;
-                if(dealNow.getShareAmt().compareTo(costQuantity)> 0){
+                if(dealNow.getShareAmt().compareTo(costQuantity) < 0){
                     varCjyjlx = ArithmeticUtil.divide(
                             ArithmeticUtil.multiply(interestBalance, dealNow.getShareAmt()), costQuantity,
                             NumberEnum.MONEY.getCode());
