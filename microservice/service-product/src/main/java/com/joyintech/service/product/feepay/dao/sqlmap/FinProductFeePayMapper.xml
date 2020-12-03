@@ -6,25 +6,9 @@
 		select * from (
 		<choose>
 			<when test="status != null and status == effectStatus">
-				<!-- <include refid="queryEffectFeeInfoListNC"></include>
-				UNION ALL
-				<include refid="queryEffectFeeInfoListY"></include>
-				
-				UNION ALL
-				<include refid="queryEffectFeeInfoListTax"></include>
-				
-				UNION ALL
-				<include refid="queryEffectFeeInfoListOth"></include> -->
-				
-				<!-- <include refid="queryEffectFeeInfoNoLayeredListNoPlan"></include>
-				UNION ALL
-				<include refid="queryEffectFeeInfoNoLayeredList"></include>
-				UNION ALL
-				<include refid="queryEffectFeeInfoLayeredList"></include>
-				UNION ALL
-				<include refid="queryEffectFeeInfoLayeredListNoPlan"></include> -->
-				<include refid="queryEffectFeeInfoListNew"></include>
-				
+				<!-- modify by mashukai 20201203 TISHKBS-1209 start -->
+				<include refid="queryEffectFeeInfoListPage"></include>
+				<!-- modify by mashukai 20201203 TISHKBS-1209 end -->
 			</when>
 			<when test="status != null and status == pendingStatus">
 				<include refid="queryPendingFeeInfoNoLayeredList"></include>
@@ -49,9 +33,9 @@
 				<include refid="queryEffectFeeInfoNoLayeredList"></include>
 				UNION ALL
 				<include refid="queryEffectFeeInfoLayeredList"></include> -->
-				
-				<include refid="queryEffectFeeInfoListNew"></include>
-				
+				<!-- modify by mashukai 20201203 TISHKBS-1209 start -->
+				<include refid="queryEffectFeeInfoListPage"></include>
+				<!-- modify by mashukai 20201203 TISHKBS-1209 start -->
 				UNION ALL
 				<include refid="queryPendingFeeInfoNoLayeredList"></include>
 				UNION ALL
@@ -1251,11 +1235,131 @@
 			and PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
 		 </if>
 		/*用户查看组合权限 jyl 20191225 end*/
-		
+
 	</sql>
-	
-	
-	
+
+	<!-- add by mashukai 20201203 TISHKBS-1209 start -->
+	<!-- 有效费用数据页面-->
+	<sql id="queryEffectFeeInfoListPage">
+
+		SELECT
+		'${effectStatus}' effectStatus
+		,TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID ptlId
+		,FIN_PRODUCT.FINPROD_MARKET_ID finprodMarketId
+		,FIN_PRODUCT.FINPROD_ID finprodId
+		,null saleDepartment
+		,decode(MST_FEEINFO.FEE_ID ,NULL,MST_FEEINFO1.FEE_ID,MST_FEEINFO.FEE_ID)as feeId
+		,decode(MST_FEEINFO.FEE_NAME,NULL,MST_FEEINFO1.FEE_NAME,MST_FEEINFO.FEE_NAME) as feeName
+		<!-- 修改费用类型取值方式 modify by wm  -->
+		<!--,TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_TYPE feeType-->
+		,TRD_TRADE_FEE_DETAIL.FEE_TYPE feeType
+		<!-- 修改费用类型取值方式 modify by wm  -->
+		/*新增费用类型检索 guyunfei 20190923 start*/
+		,decode(MST_FEEINFO.FEE_TYPE ,NULL,MST_FEEINFO1.FEE_TYPE,MST_FEEINFO.FEE_TYPE) as feeType1
+		/*新增费用类型检索 guyunfei 20190923 end*/
+		,MST_FEEINFO.BASIS basis
+		,TRD_PRODUCT_DEAL.VDATE as VDATE
+		,TRD_PRODUCT_DEAL.MDATE as MDATE
+		,TRD_PRODUCT_DEAL.SETTLE_DATE as payDate
+		,TRD_PRODUCT_DEAL.TRADE_AMT as feeAmt
+		,TRD_PRODUCT_DEAL.TOTLE_TRADE_ID   tradeId
+		,FIN_PRODUCT.FINPROD_ABBR finprodAbbr
+		,STL_PAY_ORDERS.My_Acct_No as manageAcctount
+		,STL_PAY_ORDERS.COUNTER_ACCT_NO as feeAccount
+		,STL_PAY_ORDERS.CCY as CCY
+		,TRD_PRODUCT_DEAL.VDATE positionStartDate
+		,TRD_PRODUCT_DEAL.MDATE positionEndDate
+		,TRD_TRADE_FEE_DETAIL.is_prepaid isPerpaid
+		<!-- 分层产品明细需要 add by yzg start 20191227 -->
+		,FIN_CASH_INFO.CASH_ID cashId
+		<!-- 分层产品明细需要 add by yzg end 20191227 -->
+		FROM
+		TRD_FIN_PRODUCT_DEAL_TOTAL
+		INNER JOIN PTL_TRADE
+		ON    TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID=   PTL_TRADE.BUSI_NO
+
+		left join TRD_PRODUCT_DEAL
+		ON TRD_PRODUCT_DEAL.TOTLE_TRADE_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID
+		left join TRD_PRODUCT_DEAL_ADD
+		on TRD_PRODUCT_DEAL_ADD.TRADE_ID = TRD_PRODUCT_DEAL.TRADE_ID
+
+		LEFT JOIN STL_PAY_ORDERS
+		ON    TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID = STL_PAY_ORDERS.TRADE_ID
+			AND STL_PAY_ORDERS.PORTFOLIO_ID = TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID
+		LEFT JOIN        FIN_PRODUCT
+		ON    TRD_PRODUCT_DEAL.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+		LEFT JOIN        FIN_CASH_INFO
+		ON    FIN_CASH_INFO.CASH_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.CASH_ID
+		AND    FIN_CASH_INFO.CASH_TYPE_1 =#{cashType1}
+		LEFT JOIN        MST_FEEINFO
+		ON    FIN_CASH_INFO.FEE_ID = MST_FEEINFO.FEE_ID
+		LEFT JOIN        TRD_TRADE_FEE_DETAIL
+		ON    TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID = TRD_TRADE_FEE_DETAIL.TRADE_ID
+		LEFT JOIN        MST_FEEINFO MST_FEEINFO1
+		ON    TRD_TRADE_FEE_DETAIL.FEE_ID = MST_FEEINFO1.FEE_ID
+		LEFT JOIN FIN_PRODUCT_ADD
+		ON FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
+		LEFT JOIN PTL_PORTFOLIO_AUTHORITY
+		ON FIN_PRODUCT_ADD.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
+		WHERE 1=1
+		AND TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_STATUS=#{tradeStatus}
+		AND TRD_FIN_PRODUCT_DEAL_TOTAL.IS_CANCEL=#{noFlag}
+		AND TRD_FIN_PRODUCT_DEAL_TOTAL.BUSI_TYPE=#{businessType}
+
+		<!-- 产品费用新建页面条件追加 -->
+		<if test="cashId != null and cashId != ''">
+			and FIN_CASH_INFO.CASH_ID = #{cashId}
+		</if>
+		<if test="mdate != null and mdate != ''">
+			and TRD_FIN_PRODUCT_DEAL_TOTAL.MDATE = to_date(#{mdate}, 'yyyy-MM-dd')
+		</if>
+
+		<if test="feeAccount != null and feeAccount.size() > 0">
+			and STL_PAY_ORDERS.COUNTER_ACCT_NO in
+			<foreach collection="feeAccount" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="ccy != null and ccy.size() > 0">
+			and FIN_PRODUCT.CCY in
+			<foreach collection="ccy" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="ptlId != null and ptlId.size() > 0">
+			<!-- 一体化对应etliu -->
+			and PTL_TRADE.PORTFOLIO_ID in
+			<foreach collection="ptlId" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="finprodId != null and finprodId.size() > 0">
+			and FIN_PRODUCT.FINPROD_ID in
+			<foreach collection="finprodId" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="feeId != null and feeId != ''">
+			and nvl(MST_FEEINFO.FEE_ID,MST_FEEINFO1.FEE_ID) = #{feeId}
+		</if>
+		<if test="payDateStart != null and payDateStart != ''">
+			and TRD_FIN_PRODUCT_DEAL_TOTAL.SETTLE_DATE &gt;= to_date(#{payDateStart}, 'yyyy-MM-dd')
+		</if>
+		<if test="payDateEnd != null and payDateEnd != ''">
+			and TRD_FIN_PRODUCT_DEAL_TOTAL.SETTLE_DATE &lt;= to_date(#{payDateEnd}, 'yyyy-MM-dd')
+		</if>
+		/*新增费用类型检索 guyunfei 20190923 start*/
+		<if test="feeType != null and feeType != ''">
+			and decode(MST_FEEINFO.FEE_TYPE ,NULL,MST_FEEINFO1.FEE_TYPE,MST_FEEINFO.FEE_TYPE) = #{feeType}
+		</if>
+		/*新增费用类型检索 guyunfei 20190923 end*/
+		/*用户查看组合权限 jyl 20191225 start*/
+		<if test="userId != null and userId != ''">
+			and PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
+		</if>
+		/*用户查看组合权限 jyl 20191225 end*/
+	</sql>
+	<!-- modify by mashukai 20201203 TISHKBS-1209 start -->
 	
 	<!-- 预期收益型查汇总表 (产品挂的五种费用)-->
 	<sql id="queryEffectFeeInfoListY">
