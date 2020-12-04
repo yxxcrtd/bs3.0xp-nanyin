@@ -431,7 +431,9 @@
 	<if test="model_type != null">
       	PRD.REG_CODE ISSUE_PARTY_ID ,/*发行机构代码*/
      </if>
-	/*baseinfo.ISSUE_PARTY_ID ,发行机构代码*/
+	<if test="model_type == null">
+		baseinfo.ISSUE_PARTY_ID  ,/*发行机构代码*/
+	</if>
 	baseinfo.APPROVER_ID,/*产品审批人身份证号*/
 	baseinfo.APPROVER_NAME,/*产品审批人姓名*/
 	baseinfo.DESIGNER_ID,/*产品设计人身份证号*/

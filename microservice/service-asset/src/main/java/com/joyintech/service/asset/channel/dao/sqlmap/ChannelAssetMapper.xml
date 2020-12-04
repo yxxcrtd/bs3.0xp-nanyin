@@ -71,7 +71,7 @@ FROM
     
     <select id="getSecAcctId" resultType="com.joyintech.framework.select.SelectOptionDto">
 		SELECT
-		FINPROD_MARKET_ID text,
+		FINPROD_NAME text,
 		FINPROD_ID id
 		FROM FIN_PRODUCT
 		<where>
