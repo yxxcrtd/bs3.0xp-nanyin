@@ -188,12 +188,18 @@ $(function() {
                           table.renderRow(data.LAY_TABLE_INDEX, {yield: " "});
                       });
             	}
+                var valueStr =  value.toString()
+            	if (valueStr.substr(0,valueStr.indexOf(".") == -1 ? valueStr.length : valueStr.indexOf(".")).length > 16){
+                    Joyin.error('利率值长度超出范围(16位)', function () {
+                        table.renderRow(data.LAY_TABLE_INDEX, {yield: ""});
+                    });
+                }
              }
            }
             //add by yujiaping 2020-11-27 ZGBS-21债券标的，利率调整，利率不可以输入负数 end
         }
     });
-    
+
     /**
      * 绑定删除事件
      */
