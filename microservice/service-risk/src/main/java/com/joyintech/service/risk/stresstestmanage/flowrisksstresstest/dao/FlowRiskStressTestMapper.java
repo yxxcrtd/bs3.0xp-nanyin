@@ -66,7 +66,17 @@ public interface FlowRiskStressTestMapper {
      * @see
      * @since 1.0
      */
-    void stressTestLoad(Map<String,Object> param);
+    void stressTestLoad(Map<String,Object> param);    
+    /**
+     * 调存储过程  Clob版
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @see
+     * @since 1.0
+     */
+    void stressTestLoadClob(Map<String,Object> param);
+    
+    
     /**
      * 情景下拉框
      * <一句话功能简述>

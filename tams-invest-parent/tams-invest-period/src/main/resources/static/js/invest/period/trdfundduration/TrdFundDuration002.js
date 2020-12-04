@@ -841,21 +841,21 @@
         if (assetType == FUND_ASSET_TYPE_F01 && bonusMode == BONUS_MODE_02) {
             // 权益登记日 除权日 权益登记日份额 单位分红净值不显示
 //            $('.currency').hide();
-            $("#exRightsDate").val('').trigger("change");
-            $("#registDate").val('').trigger("change");
+            $("#exRightsDate").val(sysDate).trigger("change");
+            $("#registDate").val(sysDate).trigger("change");
             $("#exRightsDate").attr("disabled",true);
             $("#registDate").attr("disabled",true);
 //            $('#unitCprice').attr("disabled","true");
 //        	triValueChange('unitCprice',1);
             triValueChange('unitCprice');
-            triValueChange('exRightsDate');
+//            triValueChange('exRightsDate');
         }
         // 资产类型为非货币
         else if(assetType == FUND_ASSET_TYPE_F01 && bonusMode == BONUS_MODE_01){
         	$('.currency').show();
             triValueChange('tradeAmt');
-            $("#exRightsDate").val('').trigger("change");
-            $("#registDate").val('').trigger("change");
+            $("#exRightsDate").val(sysDate).trigger("change");
+            $("#registDate").val(sysDate).trigger("change");
             $("#exRightsDate").attr("disabled",true);
             $("#registDate").attr("disabled",true);
         }
@@ -863,6 +863,8 @@
         	triValueChange('unitCprice');
             // 展示联动区域
             $('.currency').show();
+            $("#exRightsDate").val('').trigger("change");
+            $("#registDate").val('').trigger("change");
              $("#exRightsDate").attr("disabled",false);
              $("#registDate").attr("disabled",false);
         }

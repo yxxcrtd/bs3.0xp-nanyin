@@ -58,7 +58,7 @@ $(function () {
            //{field:'bccyFmt', title: '记账币种', sortField:"bCcy",width:140},
            {field:'bCcy', title: '记账币种',width:140},          
            {field:'bHappenAmt', type:"money", title: '本币金额',width:200},           
-           {field:'tableIdFmt', title: '业务类别', sortField:"tableId", width:250},
+           {field:'tableIdFmt', title: '业务类型', sortField:"tableId", width:250},
            {field:'busiId', title: '资产/负债代码',width:320},
            {field:'busiName', title: '资产/负债名称',width:180},
            {field:'tradeId',title: '业务编号',width:200},

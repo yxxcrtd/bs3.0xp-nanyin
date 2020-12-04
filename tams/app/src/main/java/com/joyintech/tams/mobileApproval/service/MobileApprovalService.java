@@ -616,11 +616,11 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
         //汇总出资产预审批的当前核审人
         List<ReturnTodoDto> dtoList = mobileApprovalMapper.queryTodoList(para);
         for (int i = 0; i < dtoList.size(); i++) {
-            if("EtrStandardBond002".equals(dtoList.get(i).getPageId())||
+            if(!("EtrStandardBond002".equals(dtoList.get(i).getPageId())||
                     ("TrdPlanNetInvestTrade003".equals(dtoList.get(i).getPageId())&&dtoList.get(i).getTradeStatus().equals("NEW"))||
                     ("TrdFundInvestTrade003".equals(dtoList.get(i).getPageId())&&dtoList.get(i).getTradeStatus().equals("NEW"))||
                     ("TrdPlanCcyInvestTrade003".equals(dtoList.get(i).getPageId())&&dtoList.get(i).getTradeStatus().equals("NEW"))
-            ) {
+            )){
                 dtoList.remove(i);
             }
         }
@@ -818,7 +818,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
         if(opinions.size()>0) {
             firstUser=opinions.get(0).getUserId();
             opinions.get(0).setOpinions("新建");
-            opinions.remove(opinions.size()-1);
+          //  opinions.remove(opinions.size()-1);
             for(int i=0;i<opinions.size();i++){
                 opinions.get(i).setCreateDate(simpleDateFormat.format(opinionsTime.get(i).getOperTime()));
             }

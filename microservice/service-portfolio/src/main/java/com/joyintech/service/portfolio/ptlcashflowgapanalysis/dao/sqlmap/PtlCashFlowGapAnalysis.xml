@@ -93,6 +93,8 @@
         left join TRD_FIN_PRODUCT_DEAL_TOTAL tfpdt on spo.TRADE_ID = tfpdt.TOTLE_TRADE_ID
         left join PA_TRD_FIN_PRODUCT_DEAL_TOTAL ptfpdt on ptfpdt.TOTLE_TRADE_ID = tfpdt.TOTLE_TRADE_ID
         left join FIN_PRODUCT fp on fp.FINPROD_ID = nvl(trd.FINPROD_ID,tfpdt.FINPROD_ID)
+        left join FIN_PRODUCT fp1 on fp1.FINPROD_MARKET_ID=pcpf.PORTFOLIO_ID
+        left join FIN_PRODUCT_ADD fpa on fpa.FINPROD_ID=fp1.FINPROD_ID
         left join FIN_TRADE_PRODUCT FTP on FTP.FINPROD_ID = nvl(trd.FINPROD_ID,tfpdt.FINPROD_ID)
         left join FIN_PRODUCT_ADD on fp.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
         left join PTL_PORTFOLIO_AUTHORITY pa on pa.portfolio_id = pp.portfolio_id
@@ -114,10 +116,10 @@
         </if>
         <!--  add by wangyang1 【吉林银行】 增加 产品经理  2019年9月29日 start -->
         <if test=" prodManager !=null and prodManager.size()>0" >
-            AND (FIN_PRODUCT_ADD.PROD_MANAGER IN
+            AND (fpa.PROD_MANAGER IN
             <foreach collection="prodManager" item="item" index="index" open="(" close=")" separator=",">
                 <if test="(index % 998) == 0">
-                    null) OR FIN_PRODUCT_ADD.PROD_MANAGER IN (
+                    null) OR fpa.PROD_MANAGER IN (
                 </if>
                 #{item}
             </foreach>)

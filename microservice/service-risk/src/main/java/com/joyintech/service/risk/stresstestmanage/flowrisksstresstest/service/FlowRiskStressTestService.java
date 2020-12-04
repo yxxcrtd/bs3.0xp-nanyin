@@ -357,7 +357,27 @@ public class FlowRiskStressTestService extends BaseService<FlowRiskStressTest001
      */
     public void stressTestLoad(Map<String,Object> param){
         DynamicDataSourceHolder.putDataSource(DataSourceType.STRESSTEST);
-        flowRiskStressTestMapper.stressTestLoad(param);
+        String inObjectIds = (String) param.get("in_object_ids");
+        //oracle11 varchar缓冲区上限4000，存储过程中有拼接，预留100
+        if(inObjectIds.length()>3900) {
+        	int vObjectCount = 1;
+        	int index = 0;
+        	while(true) {
+        		index = inObjectIds.indexOf(",",index);
+        		if(index==-1) {
+        			break;
+        		}
+        		else {
+        			index++;
+        			vObjectCount++;
+        		}
+        	}
+        	param.put("v_object_count", vObjectCount);
+        	flowRiskStressTestMapper.stressTestLoadClob(param);
+        }
+        else {
+        	flowRiskStressTestMapper.stressTestLoad(param);
+        }
         DynamicDataSourceHolder.clearDataSource();
     }
     

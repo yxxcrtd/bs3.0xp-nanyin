@@ -10,9 +10,7 @@
  
 package com.joyintech.tams.invest.trade.trddepositinvesttrade.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 import com.joyintech.framework.util.StringUtil;
@@ -339,4 +337,22 @@ public class TrdDepositInvestTrade001Controller extends BaseController{
             String msg = trdDepositInvestTrade002Service.start(processParameter, dto);
             return new AjaxResult(msg);
         }
+
+    /**
+     * 获取委托代码
+     * @return 联想文本框实体类集合
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("getEntrustIdByType")
+    public List<SuggestDto> getEntrustIdByType() {
+        String entrustId = getParam("param");
+        Map<String, Object> map = new HashMap<>();
+        map.put("param", entrustId);
+        map.put("finProdType", Arrays.asList(DictCodeListExt1.金融产品类型_存款.getValue()));
+        map.put("ENTRUST_STATUS_LIST", Arrays.asList(DictCodeList.委托状态_已接收.getValue(),
+                DictCodeList.委托状态_已完成.getValue(), DictCodeList.委托状态_已关闭.getValue()));
+        return trdDepositInvestTrade001Service.getEntrustIdByType(map);
+    }
 }

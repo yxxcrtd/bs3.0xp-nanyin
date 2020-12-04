@@ -27,7 +27,8 @@
 		    DEAL.BOOKSET_ID AS booksetId,
 		    BB.BOOKSET_NAME as booksetName, 
 		    DEAL.BOOK_ID as bookId,
-		    DEAL.BUSI_DETAIL_TYPE as tableId,
+			<!--DEAL.BUSI_DETAIL_TYPE as tableId,-->
+		    DEAL.FINPROD_TYPE as tableId,
 		    <if test="isShowfl == 'yes'">
 		    DETAIL.SUBJECT_NO AS subjectNo,
 		    DETAIL.SUBJECT_NAME AS subjectName,
@@ -74,7 +75,7 @@
 		        </if>
             <!-- 业务类别 -->
             <if test="finprodType !=null and finprodType !='' ">
-                AND DEAL.BUSI_DETAIL_TYPE = #{finprodType} 
+                AND DEAL.FINPROD_TYPE = #{finprodType}
             </if>
             <!-- 资产/负债代码 -->
             <if test="busiId !=null and busiId !='' ">
@@ -106,6 +107,7 @@
 		    BB.BOOKSET_NAME,
 		    DEAL.BOOK_ID,
 		    DEAL.BUSI_DETAIL_TYPE,
+			DEAL.FINPROD_TYPE,
 		    <if test="isShowfl == 'yes'">
 		    DETAIL.SUBJECT_NO,
 		    DETAIL.SUBJECT_NAME,

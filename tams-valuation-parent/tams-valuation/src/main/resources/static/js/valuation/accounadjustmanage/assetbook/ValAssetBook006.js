@@ -27,7 +27,7 @@
              {field:'paramName', title: '参数名称'},
         	 {field:'paramCode', title: '参数代码'},
         	 {field:'paramValue',title:'参数值'},
-        	 {field:'objParamValue',edit:modifyFlag=='false'?false:true, title: '修改后参数值'},
+        	 {field:'objParamValue',edit:modifyFlag=='false'?false:true, title: '修改参数值',sortable : false},
         	 {field:'remark', title: '备注'}
         ],
         editCell:function(value, data, field, cell, column){
@@ -69,6 +69,9 @@
         object.workflowId=workflowId;
     	object.booksetId=booksetId;
         object.valAssetBook006DtoList = valAssetBook006DtoList;
+        if(workflowId!=null&&workflowId!=''){
+            object.valAssetBook006DtoList=table.getAllRows();
+        }
         if(!(object.valAssetBook006DtoList.length!=null&&object.valAssetBook006DtoList.length!=''&&object.valAssetBook006DtoList.length!=0) && (object.workflowId==''||object.workflowId==null)){
             Joyin.error(JoyinUtil.getMessage("并未有参数被修改!"));
             return;
@@ -82,9 +85,10 @@
         });
     };
 
-    function message(object){
-
-    }
+    //导出
+    var exportExcel = function () {
+        Joyin.exportExcel('export', getSearchParams());
+    };
     /**
      * 画面加载完成
      */
@@ -104,5 +108,8 @@
         $('#ValAssetBook006_btn_save').click(function() {
             submit('save');
         });
+        $('#ValAssetBook006_btn_export').click(function(){
+            exportExcel();
+        })
     });
 }());

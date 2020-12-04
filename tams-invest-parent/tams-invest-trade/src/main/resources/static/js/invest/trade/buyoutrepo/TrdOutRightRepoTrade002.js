@@ -659,7 +659,7 @@
         // add by 王国显 费用设置 20190722 start
         $('#TrdOutRightRepoTrade002_tradeMarket').trigger('change');
         // add by 王国显 费用设置 20190722 end
-		$('#trdInvestPersonInfo_counterId').on("change",function(){
+		/*$('#trdInvestPersonInfo_counterId').on("change",function(){
 			var counterId = $('#trdInvestPersonInfo_counterId');
 			if (counterId.select2('data') && counterId.select2('data')[0]) {
 				var 交易对手 = counterId.select2('data')[0].object;
@@ -674,7 +674,7 @@
 					}
 				}
 			}
-		});
+		});*/
     };
     
     function saveOrSubmit(operateType) {

@@ -27,6 +27,14 @@
 	    )
     </select>
     
+  	<select id="stressTestLoadClob" statementType="CALLABLE" parameterType="java.util.Map">
+	    CALL PKG_FLOW_STRESS_TEST_CLOB.P_FLOW_STRESS_TEST(
+	        #{in_test_id, mode=IN, jdbcType=VARCHAR},
+	        #{in_object_ids, mode=IN, jdbcType=CLOB},
+	        #{v_object_count,mode=IN,jdbcType=INTEGER}
+	    )
+    </select>
+    
     <select id="querySceneOption"  resultType="com.joyintech.framework.select.SelectOptionDto" parameterType="Map">
 		SELECT 
 			c.id,

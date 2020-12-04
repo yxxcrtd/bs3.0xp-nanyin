@@ -488,6 +488,7 @@ $(function() {
 				}
                 conPriceChange();
     			  layui.form.render();
+
    		 });
 		} else {
 			Joyin.error(JoyinUtil.getMessage('BUSS_COM_E_0038',JoyinUtil.getLabel('FinBondTargetAsset002.finprodId')));
@@ -495,7 +496,9 @@ $(function() {
     }
     var issuerChange = function(){
         var customerId = $('#issuer').val();
-        AssetCommon.getRepInfoByIssuer(customerId);
+        if(customerId){
+            AssetCommon.getRepInfoByIssuer(customerId);
+        }
     }
     window.componentLoadCallback = function(isDone, pagePath, params){
         if(isDone){

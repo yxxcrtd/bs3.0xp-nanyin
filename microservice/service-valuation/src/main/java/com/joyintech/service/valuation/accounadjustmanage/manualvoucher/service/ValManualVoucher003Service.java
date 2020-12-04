@@ -706,6 +706,7 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
         for (ValManualVoucher003AddDto item : dto.getListAddDto()) {
             item.setInvAim(invAim);
         }
+        deal.setFinprodType(dto.getFinprodType());
         // 登录
         trdVouchDealMapper.insert(deal);
         return deal;

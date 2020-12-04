@@ -11,6 +11,7 @@ package com.joyintech.tams.invest.trade.lend.controller;
 
 import javax.validation.Valid;
 
+import com.joyintech.framework.select.SuggestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -40,6 +41,11 @@ import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 拆借投资交易查询
@@ -142,5 +148,24 @@ public class TrdLendInvestTrade001Controller extends BaseController {
         String msg = trdLendInvestTrade002Service.start(processParameter, inputDto);
 
         return new AjaxResult(msg);
+    }
+
+    /**
+     * 获取委托代码
+     * @return 联想文本框实体类集合
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("getEntrustIdByType")
+    public List<SuggestDto> getEntrustIdByType() {
+        String entrustId = getParam("param");
+        Map<String, Object> map = new HashMap<>();
+        map.put("param", entrustId);
+        map.put("finProdType", Arrays.asList(DictCodeListExt1.金融产品类型_拆入.getValue(),
+                DictCodeListExt1.金融产品类型_拆出.getValue()));
+        map.put("ENTRUST_STATUS_LIST", Arrays.asList(DictCodeList.委托状态_已接收.getValue(),
+                DictCodeList.委托状态_已完成.getValue(), DictCodeList.委托状态_已关闭.getValue()));
+        return trdLendInvestTrade001Service.getEntrustIdByType(map);
     }
 }

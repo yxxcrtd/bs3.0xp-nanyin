@@ -41,9 +41,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 基金存续期新建画面
@@ -80,6 +78,12 @@ public class TrdFundDuration002Controller extends BaseController {
 //        获取业务类型
         String type = (String)param.get("type");
         String workflowId = (String)param.get(GlobalConstant.WORKFLOW_ID);
+        Date sysDate=DateUtil.parse(DateUtil.getSysDate()); //取时间
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(sysDate);
+        calendar.add(calendar.DATE,-1); //把日期往前一天
+        sysDate=calendar.getTime();
+        model.addAttribute("sysDate",DateUtil.format(sysDate, "yyyy-MM-dd"));
 //      交易人
         String trader = SecurityUtil.getLoginUser().getUserName();
         setSelectOptionToModel(model,DictCode.基金类资产类型

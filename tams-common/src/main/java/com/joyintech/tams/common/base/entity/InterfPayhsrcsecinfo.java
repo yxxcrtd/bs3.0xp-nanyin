@@ -322,6 +322,13 @@ CNY 人民币、HKD 港币、JPY 日元、USD 美元"
      */
     private String issuerInstitutions;
 
+    // 20200819 龙江银行修改-查询债券接口信息表增加查询字段 wangwei start
+    /**
+     * 发行机构所属行业二级分类
+     */
+    private String issuerinstitutionssecond;
+    // 20200819 龙江银行修改-查询债券接口信息表增加查询字段 wangwei end
+
     /**
      * 取得 债券简称
      * @return 债券简称
@@ -1305,4 +1312,23 @@ CNY 人民币、HKD 港币、JPY 日元、USD 美元"
     public void setIssuerInstitutions(String issuerInstitutions) {
         this.issuerInstitutions = issuerInstitutions == null ? null : issuerInstitutions.trim();
     }
+
+    // 20200819 龙江银行修改-查询债券接口信息表增加查询字段 wangwei start
+
+    /**
+     * 取得 发行机构所属行业二级分类
+     * @return 发行机构所属行业二级分类
+     */
+    public String getIssuerinstitutionssecond() {
+        return issuerinstitutionssecond;
+    }
+
+    /**
+     * 设置 发行机构所属行业二级分类
+     * @param issuerinstitutionssecond 发行机构所属行业二级分类
+     */
+    public void setIssuerinstitutionssecond(String issuerinstitutionssecond) {
+        this.issuerinstitutionssecond = issuerinstitutionssecond;
+    }
+    // 20200819 龙江银行修改-查询债券接口信息表增加查询字段 wangwei end
 }
