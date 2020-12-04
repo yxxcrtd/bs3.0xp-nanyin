@@ -146,7 +146,6 @@
 		param.profitType = $("#"+profitType).val();
 		if (!initFlag){
 			param.finprodId = openPlanFinprodId;
-			debugger;
 			if(workflowId==null||workflowId==undefined){
 				param.workflowId = $("#workflowIdBackUp").val();
 			}
@@ -1301,7 +1300,6 @@
 		}*/
 	   //周期型产品不属于申赎同频，也不存在赎回计划
 	   if(getElementById('sameFLag').next().find("em").text()==="是"||$('#FinNetValueProductBuild002_dealMode').val() === '10'){
-		   	debugger;
 			$("#red_div").hide();
 			if(tableRed.table)
 			tableRed.clear();
@@ -1348,7 +1346,11 @@
 	 */
 	var openDaysTypeChange =  function(){
 	    if(getElementById('openDaysType').val() === OPEN_DAYS_TYPE_01){
-	        getElementById('openDays').trigger('change').prop('disabled', false);
+	    	//BS-2045 高频开放开放天数置灰  start
+	    	if(getElementById('openMode').val()!= OPENMODE_02){
+	    		getElementById('openDays').trigger('change').prop('disabled', false);
+	    	}
+	    	//BS-2045 高频开放开放天数置灰  end
 	    } else if(getElementById('openDaysType').val() === OPEN_DAYS_TYPE_02){
 	        getElementById('openDays').val('').prop('disabled', true);
 	        getElementById('calcRule').val('').trigger('change');
@@ -1359,7 +1361,11 @@
 	 */
 	var openDaysTypeRedChange =  function(){
 	    if(getElementByRedId('openDaysType').val() === OPEN_DAYS_TYPE_01){
-	        getElementByRedId('openDays').trigger('change').prop('disabled', false);
+	    	//BS-2045 高频开放开放天数置灰  start
+	    	if(getElementByRedId('openMode').val()!= OPENMODE_02){
+	    		getElementByRedId('openDays').trigger('change').prop('disabled', false);
+	    	}
+	    	//BS-2045 高频开放开放天数置灰  end
         } else if(getElementByRedId('openDaysType').val() === OPEN_DAYS_TYPE_02){
             getElementByRedId('openDays').val('').prop('disabled', true);
             getElementByRedId('calcRule').val('').trigger('change');
