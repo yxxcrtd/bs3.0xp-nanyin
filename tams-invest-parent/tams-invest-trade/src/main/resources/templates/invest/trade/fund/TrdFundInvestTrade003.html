@@ -458,7 +458,7 @@
                 <!--add by zhangpuyu 2019/10/30 start -->
                 <!-- 附件信息 -->
                 <div class="page-component" th:data-path="@{/component/core/FileCommon/init}"
-                     th:data-params="|{entityName: 'FileCommon', businessId: '${businessId ?: ''}'}|"></div>
+                     th:data-params="|{entityName: 'FileCommon', businessId: '${TRADESTATU03=='03' ? (PTRADEID?:'') : (businessId ?: '') }  '}|"></div>
                 <div class="pro-module-wrap">
                     <div class="pro-module">
                         <h3 class="pro-module-title">

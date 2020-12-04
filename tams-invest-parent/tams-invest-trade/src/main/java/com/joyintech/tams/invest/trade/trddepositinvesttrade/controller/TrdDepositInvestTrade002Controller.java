@@ -26,6 +26,7 @@ import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -154,7 +155,9 @@ public class TrdDepositInvestTrade002Controller extends BaseController {
         model.addAttribute("IS_CAL_LOADRATE", CacheUtil.getSysParam(BussinessConstant.IS_CAL_LOADRATE));
         
         model.addAttribute("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE")==null?"01":CacheUtil.getSysParam("IS_SHOW_TYPE"));
-        
+        model.addAttribute("TRADESTATU03","");
+        model.addAttribute("PTRADEID","");
+
         TrdInvestPersonInfo002Dto dto = new TrdInvestPersonInfo002Dto();
         model.addAttribute("TrdInvestPersonInfo002Dto", JsonUtils.object2Json(dto));
         BussTrdTransferOrderDto bussTrdTransferOrderDto = new BussTrdTransferOrderDto();
@@ -212,6 +215,13 @@ public class TrdDepositInvestTrade002Controller extends BaseController {
                 }
                 finprodId = trdProductDeal.getFinprodId();
                 TrdDepositInvestTrade001Dto entity = trdDepositInvestTrade002Service.getFinInfo(finprodId);
+
+                if(trdProductDeal!=null && StringUtils.equals(trdProductDeal.getTradeStatus(),DictCodeListExt1.交易状态_撤销.getValue())){
+                    // 如果为撤销
+                    model.addAttribute("TRADESTATU03",DictCodeListExt1.交易状态_撤销.getValue());
+                    model.addAttribute("PTRADEID",trdProductDeal.getpTradeId());
+                }
+
                 entity.setPrinAmt(trdProductDeal.getPrinAmt());
                 entity.setTradeDate(trdProductDeal.getTradeDate());
                 entity.setIntAmt(trdProductDeal.getIntAmt());
