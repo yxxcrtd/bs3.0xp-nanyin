@@ -33,7 +33,7 @@
 		(select  BUSI_ID from  BOK_ACCT_LAYERING_INFO  WHERE   BOOKSET_ID IN
 			<foreach item="item" index="index" collection="bookSetList" separator="," open="("
 				 	close=")">
-				<if test="(index % 1000) == 999">
+				<if test="(index % 999) == 998">
 					null) OR BOOKSET_ID in (
 				</if>
 				#{item}

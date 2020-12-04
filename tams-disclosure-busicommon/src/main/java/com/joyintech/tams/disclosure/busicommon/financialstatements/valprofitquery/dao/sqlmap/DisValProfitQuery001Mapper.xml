@@ -124,8 +124,11 @@
 		and bb.SUBJECT_NO like '6%'
 		and to_char(bb.BALANCE_DATE,'yyyy-MM-dd')&gt;=#{vdate}
 		and to_char(bb.BALANCE_DATE,'yyyy-MM-dd')&lt;=#{mdate}
-		and bb.BOOKSET_ID IN
-		<foreach collection="accounts" item="item" separator="," open="(" close=")">
+		and (bb.BOOKSET_ID IN
+		<foreach collection="accounts" item="item" index="index" separator="," open="(" close="))">
+            <if test="(index % 999) == 998">
+                null) OR bb.BOOKSET_ID in (
+            </if>
 			#{item.code}
 		</foreach>
 	</select>

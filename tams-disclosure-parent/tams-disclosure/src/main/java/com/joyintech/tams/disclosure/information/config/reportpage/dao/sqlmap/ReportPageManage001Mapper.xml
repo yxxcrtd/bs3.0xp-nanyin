@@ -61,8 +61,11 @@
 	    set REPORT_TYPE = #{flag,jdbcType=VARCHAR}
 	    <where>
             <if test="selectData != null  and selectData.size()>0">
-                <foreach collection="selectData" item="item" open="and REP_ID in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
+                <foreach collection="selectData" item="item" index="index" open="and REP_ID in(" separator="," close=")">
+					<if test="(index % 999) == 998">
+						null) OR REP_ID in (
+					</if>
+                	#{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
         </where>

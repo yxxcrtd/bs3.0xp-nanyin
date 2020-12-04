@@ -67,15 +67,21 @@
                     AND A.BOOKSET_ID = #{booksetId} 
                 </if> -->
                 <if test="booksetId != null and booksetId.length > 0">
-                     AND A.BOOKSET_ID IN
-                    <foreach collection="booksetId.split(',')" item="item" open="( " close=" )" separator=",">
+                     AND (A.BOOKSET_ID IN
+                    <foreach collection="booksetId.split(',')" item="item" index="index" open="( " close=" ）)" separator=",">
+                        <if test="(index % 999) == 998">
+                            null) OR A.BOOKSET_ID in (
+                        </if>
                         #{item}
                     </foreach>
                 </if>
                 <!-- 业务类别 -->
                 <if test="tableIds != null and tableIds.length > 0">
-                     AND A.COM_TABLE_ID IN
-                    <foreach collection="tableIds" item="tableId" open="( " close=" )" separator=",">
+                     AND (A.COM_TABLE_ID IN
+                    <foreach collection="tableIds" item="tableId" index="index" open="( " close=" ))" separator=",">
+                        <if test="(index % 999) == 998">
+                            null) OR A.COM_TABLE_ID in (
+                        </if>
                         #{tableId}
                     </foreach>
                 </if>
@@ -183,16 +189,22 @@
                     AND A.BOOKSET_ID = #{booksetId} 
                 </if> -->
                 <if test="booksetId != null and booksetId.length > 0">
-                     AND A.BOOKSET_ID IN
-                    <foreach collection="booksetId.split(',')" item="item" open="( " close=" )" separator=",">
+                     AND (A.BOOKSET_ID IN
+                    <foreach collection="booksetId.split(',')" item="item" index="index" open="( " close=" ))" separator=",">
+                        <if test="(index % 999) == 998">
+                            null) OR A.BOOKSET_ID in (
+                        </if>
                         #{item}
                     </foreach>
                 </if>
                 
                 <!-- 业务类别 -->
                 <if test="tableIds != null and tableIds.length > 0">
-                     AND A.COM_TABLE_ID IN
-                    <foreach collection="tableIds" item="tableId" open="( " close=" )" separator=",">
+                     AND (A.COM_TABLE_ID IN
+                    <foreach collection="tableIds" item="tableId" index="index" open="( " close=" ))" separator=",">
+                        <if test="(index % 999) == 998">
+                            null) OR A.COM_TABLE_ID in (
+                        </if>
                         #{tableId}
                     </foreach>
                 </if>
