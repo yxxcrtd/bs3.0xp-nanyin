@@ -14,7 +14,6 @@
     }
     $(function() {
     	$("#"+issuerElement).change(function() {
-    		
     		if($('#'+issuerElement).val() != null && $('#'+issuerElement).val() != ''){
     			var params = {'issuer': $('#'+issuerElement).val()};
                 Joyin.ajaxJson(JoyinUtil.getRealPath('/component/report/asset/bond/BussFinBondRepInfo/getInfoByIssuer'), params, function (data) {
@@ -53,13 +52,13 @@
                 });
     		}
     		else{
-    			getElementById("repPartyType3").val('').trigger("change");
-                getElementById("repPartyType2").val('').trigger("change");
-                if(getElementById("repPartyType1").val()==null||getElementById("repPartyType1").val()==""){
-                    getElementById("repPartyType1").val('').trigger("change");
-                }
-                getElementById("repIndustry").val('').trigger("change");
-                getElementById("repIndustryLevel2").val('').trigger("change");
+//    			getElementById("repPartyType3").val('').trigger("change");
+//                getElementById("repPartyType2").val('').trigger("change");
+//                if(getElementById("repPartyType1").val()==null||getElementById("repPartyType1").val()==""){
+//                    getElementById("repPartyType1").val('').trigger("change");
+//                }
+//                getElementById("repIndustry").val('').trigger("change");
+//                getElementById("repIndustryLevel2").val('').trigger("change");
     		}
     	});
         getElementById('repPartyType1').change(function(){
