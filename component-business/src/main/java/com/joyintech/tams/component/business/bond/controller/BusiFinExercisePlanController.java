@@ -88,7 +88,7 @@ public class BusiFinExercisePlanController extends BaseController{
     public List<FinExercisePlan> initPlan() {
         List<FinExercisePlan> finExercisePlanList = new ArrayList<FinExercisePlan>();
         String finprodId = this.getParam("finprodId");
-        if(StringUtil.isNotEmpty(finprodId)){
+        //BS-2046 快录保存时会清空finprodId，从而导致草稿箱回显时行权计划显示失败
         if(!WorkFlowUtil.isNotFromToDoList()){
             String workFlowId = this.getParam("workflowId");
             String entityName = StringUtil.defaultString(this.getParam("entityName"),
@@ -98,7 +98,8 @@ public class BusiFinExercisePlanController extends BaseController{
             if( null != busiFinExercisePlanDto && busiFinExercisePlanDto.getFinExercisePlanList() != null){
                 finExercisePlanList = busiFinExercisePlanDto.getFinExercisePlanList();
             }
-        }else{
+        }
+        else if(StringUtil.isNotEmpty(finprodId)){
             //查询行权计划
             Map<String,Object> param = new HashMap<String,Object>();
             param.put("finprodId", finprodId);
@@ -111,7 +112,6 @@ public class BusiFinExercisePlanController extends BaseController{
             param.put("execType01", DictCodeList.行权状态_未行权.getValue());
             param.put("execType02", DictCodeList.行权状态_已行权.getValue());
             finExercisePlanList = busiFinExercisePlanService.getfinExercisePlanByProductId(param);
-        }
         }
         return finExercisePlanList;
     }
