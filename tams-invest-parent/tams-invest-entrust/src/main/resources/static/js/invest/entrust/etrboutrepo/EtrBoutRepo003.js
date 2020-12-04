@@ -407,6 +407,22 @@
         var objects = object.selectedItem;
         for ( var index in objects) {
             var temp = objects[index];
+            // 指令授信 start
+            temp.inputValue1 = 'F10';
+            temp.tradeAmt = temp.entrustAmt;
+            temp.prinAmt = temp.entrustAmt;
+            temp.tradeDate = temp.vdate;
+            temp.counterId = temp.counterId;
+            // 买断式回购可不加回购类型
+            // temp.repoType = temp.busAssetType1;
+            // temp.remark = temp.repoType;
+//            temp.assetType1 = temp.busAssetType1;
+            if(temp.ps == '03'){
+            	temp.finprodType2 = 'F04';
+            }else{
+            	temp.finprodType2 = 'F05';
+            }
+            // 指令授信 end
             temp.operateType = operateType;
             temp.pageModel = pageModel;
             if (operateType === 'submit') {

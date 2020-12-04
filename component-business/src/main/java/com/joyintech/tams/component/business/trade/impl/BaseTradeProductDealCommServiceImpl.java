@@ -422,6 +422,17 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
             	else{
             		status.setFinishAmt(baseTradeProductDealDto.getTrdProductDeal().getShareAmt());
             	}
+            }else if(StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
+                EtrEntrust etr =etrEntrustMapper.selectByPrimaryKey(baseTradeProductDealDto.getTrdProductDealAdd().getEntrustId());
+
+              //委托是数量 更新数量
+            	if(StringUtil.isNotEmpty(etr)&&StringUtil.isNotEmpty(etr.getEntrustNum())){
+            		status.setFinishAmt(baseTradeProductDealDto.getTrdProductDeal().getShareAmt());
+            	}
+            	//委托是数量 更新数量
+            	else{
+            		status.setFinishAmt(baseTradeProductDealDto.getTrdProductDeal().getTradeAmt());
+            	}
             }
             else {
                 status.setFinishAmt(StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdProductDeal().getPrinAmt())?baseTradeProductDealDto.getTrdProductDeal().getPrinAmt(): StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdProductDeal().getShareAmt())?baseTradeProductDealDto.getTrdProductDeal().getShareAmt():baseTradeProductDealDto.getTrdProductDeal().getTradeAmt());

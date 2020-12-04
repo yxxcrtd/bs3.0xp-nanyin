@@ -152,8 +152,19 @@ public class CommonBusinessService extends BaseService {
         return restTemplate.getForObject(ServiceApplication.COMMON_SERVICE_NAME + "/core/isTransInAsset?finprodId=" + finprodId,
             Integer.class);
     }
-
-
+    
+    /**
+     * 资产是否存在指令
+     *
+     * @param finprodId 金融产品代码
+     * @return 交易笔数
+     * @see
+     * @since 1.0
+     */
+    public int isEtrsInAsset(String finprodId) {
+        return simpleRestTemplate.getForObject(ServiceApplication.COMMON_SERVICE_NAME + "/core/isEtrsInAsset?finprodId=" + finprodId,
+            Integer.class);
+    }
 
     /**
      * 获取最大交易日期 <功能详细描述>
@@ -1190,6 +1201,34 @@ public class CommonBusinessService extends BaseService {
        return result;
    };
 
+ //温州个性化 增加entrustId参数查询详情功能 start
+   /**
+    * 根据主键查询
+    *
+    * @param entrustId   String
+    * @param finprodId   String
+    * @param portfolioId String
+    * @return EtrBrowDepoInfoDto
+    * @see
+    * @since 1.0
+    */
+   public Map<String, Object> selectByEntrustId(String entrustId) {
+	   return commonBusinessMapper.selectByEntrustId(entrustId);
+   }
+
+   /**
+    * 根据产品代码查应占用授信的机构    
+    * 
+    * @param finprodId
+    * @return
+    */
+   public String selectCustomer(Map<String, Object> map) {
+	   map.put("fzq", DictCodeList.平安资产类型_债券.getValue());
+	   map.put("fck", DictCodeList.平安资产类型_存款.getValue());
+	   map.put("fxml", DictCodeList.平安资产类型_项目类资产.getValue());
+	   return commonBusinessMapper.selectCustomer(map);
+   }
+   //温州个性化 增加entrustId参数查询详情功能 end
 
 
 

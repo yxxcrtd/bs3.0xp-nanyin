@@ -352,10 +352,24 @@
         var objects = object.selectedItem;
         for ( var index in objects) {
             var temp = objects[index];
+            
+            // 指令授信 start
+            temp.finprodType2 = 'F10';
+            temp.inputValue1 = 'F17';
+            temp.tradeDate = temp.vdate;
+            temp.counterId = temp.counterId;
+            temp.tradeAmt =JoyinMath.doMul(temp.entrustNum,temp.price);
+            temp.prinAmt =JoyinMath.doMul(temp.entrustNum,temp.price);
+            if(temp.entrustAmt) {
+            	temp.tradeAmt = temp.entrustAmt;
+            	temp.prinAmt = temp.entrustAmt;
+            }
+            // 指令授信 end
+            
             temp.operateType = operateType;
             temp.pageModel = pageModel;
             if (operateType === 'submit') {
-                temp.elementId = 'EtrFund002_btn_submit';
+                temp.elementId = 'EtrStock002_btn_submit';
             }
         }
         Joyin.ajaxJson(basePath + 'invest/entrust/etrstock/EtrStock003/check', objects, function(

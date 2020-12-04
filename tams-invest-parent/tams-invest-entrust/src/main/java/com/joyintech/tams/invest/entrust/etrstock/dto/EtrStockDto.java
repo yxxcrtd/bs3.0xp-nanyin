@@ -98,10 +98,23 @@ public class EtrStockDto extends EtrEntrust implements ProcessEntity {
      */
     private String secAcctId;
     /**
+     * 资产本金（授信用）
+     */
+    private BigDecimal prinAmt;
+
+    /**
+     * 后台取为平台日（授信用）
+     */
+    private Date tradeDate;
+    
+    private String inputValue1;
+    private String inputValue2;
+    private String inputValue3;
+    /**
      * 获取证券托管户
      * @return
      */
-    @NotEmpty(fieldName = "EtrStock002.secAcctId", groups = {ValidateGroupEdit.class})
+//    @NotEmpty(fieldName = "EtrStock002.secAcctId", groups = {ValidateGroupEdit.class})
     public String getSecAcctId() {
         return secAcctId;
     }
@@ -580,6 +593,46 @@ public class EtrStockDto extends EtrEntrust implements ProcessEntity {
     public String getPriceModelStr(){
         return SysDataUtil.getNameFromDataDict(DictCode.价格模式, super.getPriceModel());
     }
+
+	public BigDecimal getPrinAmt() {
+		return prinAmt;
+	}
+
+	public void setPrinAmt(BigDecimal prinAmt) {
+		this.prinAmt = prinAmt;
+	}
+
+	public Date getTradeDate() {
+		return tradeDate;
+	}
+
+	public void setTradeDate(Date tradeDate) {
+		this.tradeDate = tradeDate;
+	}
+
+	public String getInputValue1() {
+		return inputValue1;
+	}
+
+	public void setInputValue1(String inputValue1) {
+		this.inputValue1 = inputValue1;
+	}
+
+	public String getInputValue2() {
+		return inputValue2;
+	}
+
+	public void setInputValue2(String inputValue2) {
+		this.inputValue2 = inputValue2;
+	}
+
+	public String getInputValue3() {
+		return inputValue3;
+	}
+
+	public void setInputValue3(String inputValue3) {
+		this.inputValue3 = inputValue3;
+	}
     
     /*public BigDecimal getBusEntrustNum(){
         return this.getEntrustNum()==null?super.getEntrustNum():getEntrustNum();

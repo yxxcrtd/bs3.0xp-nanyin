@@ -152,6 +152,23 @@
          * 获取列表参数
          */
         var object = $.serializeToObject('#searchForm');
+        
+        // 指令授信 start
+        object.inputValue1 = 'F07';
+        object.tradeAmt = object.entrustAmt;
+        object.prinAmt = object.entrustAmt;
+        object.tradeDate = $('#vdate').val();
+        object.counterId = object.etrInvestPersonInfo.counterId;
+        object.branch = '0';
+        object.repoType = $('#assetType1').val();
+//        object.remark = object.repoType;
+        if(object.ps == '03'){
+        	object.finprodType2 = 'F02';
+        }else{
+        	object.finprodType2 = 'F03';
+        }
+        // 指令授信 end
+        
         object.etrInvestPersonInfo.invManagerId = $('#etrInvestPersonInfo_invManagerId').val();
         object.operateType = operateType;
 		object.assetType1 = $('#assetType1').val();

@@ -261,7 +261,7 @@
 		order by pm.create_time desc 
 	    </select>
 	    
-	    <select id="selectAssetTrade" resultType="java.lang.Integer">
+	    <select id="selectAssetTrade" resultType="java.lang.String">
 			SELECT
 		  		WTPDA.PORTFOLIO_ID portfolioId
 		  	FROM

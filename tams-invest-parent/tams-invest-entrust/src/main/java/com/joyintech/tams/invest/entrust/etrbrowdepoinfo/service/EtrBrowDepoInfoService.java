@@ -23,12 +23,15 @@ import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.security.User;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.system.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
+import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
@@ -38,11 +41,12 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
+import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
+import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.common.util.ExcelUtil;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etrbrowdepoinfo.dto.EtrBrowDepoInfoDto;
-import com.joyintech.tams.invest.entrust.etrwtspotex.dto.EtrInvestPersonInfoDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -168,9 +172,15 @@ public class EtrBrowDepoInfoService extends CommonExportService<EtrBrowDepoInfoD
      * @since 1.0
      */
     public boolean recallDelegate(EtrBrowDepoInfoDto dto) {
-        return restTemplate.postForObject(
+        Boolean res = restTemplate.postForObject(
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBrowDepoInfo/recall", dto,
                 boolean.class);
+        
+        //处理投资指令授信 20200526 start
+        dealCloseEtrIsNeedOccupyCre(dto.getEntrustId());
+        //处理投资指令授信 20200526 end
+        
+        return res;
     }
 
     /**
@@ -182,10 +192,18 @@ public class EtrBrowDepoInfoService extends CommonExportService<EtrBrowDepoInfoD
      * @see
      * @since 1.0
      */
-    public boolean closeDelegate(String entrustId, String closeWay) {
-        return restTemplate.getForObject(
+    public boolean closeDelegate(String entrustId, String closeWay, String entrustStatus) {
+        boolean res = restTemplate.getForObject(
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBrowDepoInfo/close?entrustId=" + entrustId + "&closeWay=" + closeWay,
                 boolean.class);
+        
+        //处理投资指令授信 20200526 start
+    	// 已撤回/已退回 的不做授信处理
+    	if (! DictCodeList.委托状态_已撤回.getValue().equals(entrustStatus) && ! DictCodeList.委托状态_已退回.getValue().equals(entrustStatus)) {
+    		dealCloseEtrIsNeedOccupyCre(entrustId);
+    	}
+        //处理投资指令授信 20200526 end
+        return res;
     }
 
     /**
@@ -343,6 +361,13 @@ public class EtrBrowDepoInfoService extends CommonExportService<EtrBrowDepoInfoD
         restTemplate.postForObject(
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBrowDepoInfo/doComplete",
                 entity, Integer.class);
+        
+        //处理投资指令授信 start
+        // 买入交易提交占用授信,卖出交易流程走完占用
+        if(entity.getPs() != null && !entity.getPs().equals(DictCodeList.交易方向_买入.getValue())) {
+            dealEtrIsNeedOccupyCre(entity, null);
+        }
+        //处理投资指令授信 end
 
     }
 
@@ -355,6 +380,13 @@ public class EtrBrowDepoInfoService extends CommonExportService<EtrBrowDepoInfoD
         restTemplate.postForObject(
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBrowDepoInfo/doInsert",
                 entity, Integer.class);
+        
+        //处理投资指令授信 start
+        // 买入交易提交占用授信,卖出交易流程走完占用
+        if(entity.getPs() != null && entity.getPs().equals(DictCodeList.交易方向_买入.getValue())) {
+            dealEtrIsNeedOccupyCre(entity, null);
+        }
+        //处理投资指令授信 end
     }
 
     /**
@@ -365,6 +397,13 @@ public class EtrBrowDepoInfoService extends CommonExportService<EtrBrowDepoInfoD
         restTemplate.postForObject(
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBrowDepoInfo/doInsert",
                 entity, Integer.class);
+        
+        //处理投资指令授信 start
+        // 买入交易提交占用授信,卖出交易流程走完占用
+        if(entity.getPs() != null && entity.getPs().equals(DictCodeList.交易方向_买入.getValue())) {
+            dealEtrIsNeedOccupyCre(entity, null);
+        }
+        //处理投资指令授信 end
     }
 
     /**
@@ -748,4 +787,87 @@ public class EtrBrowDepoInfoService extends CommonExportService<EtrBrowDepoInfoD
         return wr;
     }
     // add by gaopeng 20191219 多组合多资产导入 end
+    
+    // 指令授信 start
+    public TrdProductDeal prepareDeal(EtrBrowDepoInfoDto entity) {
+        TrdProductDeal trdProductDeal = new TrdProductDeal();
+        BeanUtil.copyPropertiesIgnoreNull(trdProductDeal,entity);
+        trdProductDeal.setTradeId(entity.getEntrustId());
+        trdProductDeal.setpTradeId(entity.getEntrustId());
+        trdProductDeal.setCounterId(entity.getBussEtrInvestPersonInfoDto().getCounterId());
+        trdProductDeal.setTradeAmt(entity.getPrinAmt());
+        trdProductDeal.setPrinAmt(entity.getPrinAmt());
+        return trdProductDeal;
+    }
+    
+    
+    /**
+     * 交易授信处理
+     * @param entrustId
+     */
+    public void dealEtrIsNeedOccupyCre(EtrBrowDepoInfoDto entity, String operationType) {
+        AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
+        inputDto.setProdid(entity.getPortfolioId());
+        inputDto.setProdFinprodType(DictCodeListExt1.金融产品类型_投资组合.getValue());
+        TrdProductDeal trdProductDeal = prepareDeal(entity);
+        inputDto.setTrdProductDeal(trdProductDeal);
+
+        TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
+        trdProductDealAdd.setTradeId(trdProductDeal.getrTradeId());
+        trdProductDealAdd.setPortfolioId(entity.getPortfolioId());
+//        trdProductDealAdd.setCreditSource(entity.getCreditSource());
+        inputDto.setTrdProductDealAdd(trdProductDealAdd);
+
+        trdProductDeal.setTradeStatus(operationType);
+        AllTradeCommonUtil.do投资指令授信(inputDto);
+    }
+    
+    /**
+     * 关闭/撤回指令授信处理
+     * @param entrustId
+     */
+    public void dealCloseEtrIsNeedOccupyCre(String entrustId) {
+		Map<String, Object> map = commonBusinessService.selectByEntrustId(entrustId);
+        AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
+        inputDto.setProdid((String)map.get("portfolioId"));
+        inputDto.setProdFinprodType(DictCodeListExt1.金融产品类型_投资组合.getValue());
+        TrdProductDeal trdProductDeal = (TrdProductDeal) BeanUtil.mapToObject(map,TrdProductDeal.class);
+        trdProductDeal.setpTradeId((String)map.get("entrustId"));
+        trdProductDeal.setTradeAmt((BigDecimal)map.get("entrustAmt"));
+        trdProductDeal.setPrinAmt((BigDecimal)map.get("entrustAmt")); 
+        trdProductDeal.setTradeDate((Date)map.get("entrustDate"));
+        trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
+        inputDto.setTrdProductDeal(trdProductDeal);
+        
+        TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
+        trdProductDealAdd.setTradeId(trdProductDeal.getrTradeId());
+        trdProductDealAdd.setPortfolioId((String)map.get("portfolioId"));
+//        trdProductDealAdd.setCreditSource((String)map.get("creditSource"));
+        inputDto.setTrdProductDealAdd(trdProductDealAdd);
+
+        AllTradeCommonUtil.do投资指令授信(inputDto);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void doBack(EtrBrowDepoInfoDto entity) {
+        // 买入交易提交占用授信,卖出交易流程走完占用
+        if(entity.getPs() != null && entity.getPs().equals(DictCodeList.交易方向_买入.getValue())) {
+            dealEtrIsNeedOccupyCre(entity, DictCodeListExt1.交易状态_撤销.getValue());
+        } 
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void doRevoke(EtrBrowDepoInfoDto entity) {
+        // 买入交易提交占用授信,卖出交易流程走完占用
+        if(entity.getPs() != null && entity.getPs().equals(DictCodeList.交易方向_买入.getValue())) {
+            dealEtrIsNeedOccupyCre(entity, DictCodeListExt1.交易状态_撤销.getValue());
+        }
+    }
+    // 指令授信 end
 }

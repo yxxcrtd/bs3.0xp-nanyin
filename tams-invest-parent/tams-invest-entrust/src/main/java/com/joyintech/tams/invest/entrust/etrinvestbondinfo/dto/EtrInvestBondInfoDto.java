@@ -210,6 +210,95 @@ public class EtrInvestBondInfoDto extends EtrEntrust implements ProcessEntity {
      */
     private String counterIdName;
 
+
+    /**
+     * 资产本金（授信用）
+     */
+    private BigDecimal prinAmt;
+
+    /**
+     * 后台取为平台日（授信用）
+     */
+    private Date tradeDate;
+
+    /**
+     * 数量（授信用）
+     */
+    private BigDecimal shareAmt;
+
+    /**
+     * 组合T日可用现金，用于App显示
+     * @return
+     */
+    private String appProAvailableCash;
+
+    /**
+     * 组合T+1日可用现金，用于App显示
+     * @return
+     */
+    private String appProAvailableCashT1;
+
+    /**
+     * 资产可用持仓，用于App显示
+     * @return
+     */
+    private String appAssetAvailablePosition;
+
+    /**
+     * 资产T+1日可用持仓，用于App显示
+     * @return
+     */
+    private String appAssetAvailablePosition1;
+
+    private String inputValue1;
+    private String inputValue2;
+    private String inputValue3;
+    public String getAppProAvailableCash() {
+        return appProAvailableCash;
+    }
+
+    public void setAppProAvailableCash(String appProAvailableCash) {
+        this.appProAvailableCash = appProAvailableCash;
+    }
+
+    public String getAppProAvailableCashT1() {
+        return appProAvailableCashT1;
+    }
+
+    public void setAppProAvailableCashT1(String appProAvailableCashT1) {
+        this.appProAvailableCashT1 = appProAvailableCashT1;
+    }
+
+    public String getAppAssetAvailablePosition() {
+        return appAssetAvailablePosition;
+    }
+
+    public void setAppAssetAvailablePosition(String appAssetAvailablePosition) {
+        this.appAssetAvailablePosition = appAssetAvailablePosition;
+    }
+
+    public String getAppAssetAvailablePosition1() {
+        return appAssetAvailablePosition1;
+    }
+
+    public void setAppAssetAvailablePosition1(String appAssetAvailablePosition1) {
+        this.appAssetAvailablePosition1 = appAssetAvailablePosition1;
+    }
+
+
+    /**
+     * 利率审批编号
+     */
+    private String rateApprovalCode;
+
+    public String getRateApprovalCode() {
+        return rateApprovalCode;
+    }
+
+    public void setRateApprovalCode(String rateApprovalCode) {
+        this.rateApprovalCode = rateApprovalCode;
+    }
+
     /**
      * 获取 counterIdName
      * 
@@ -330,11 +419,6 @@ public class EtrInvestBondInfoDto extends EtrEntrust implements ProcessEntity {
      * 通道可用现金
      */
     private BigDecimal channelAvailableCash;
-
-    /**
-     * 授信来源
-     */
-    private String creditSource;
 
     /**
      * 获取 indexId
@@ -1502,11 +1586,52 @@ public class EtrInvestBondInfoDto extends EtrEntrust implements ProcessEntity {
         this.entrustIntegrateNum = entrustIntegrateNum;
     }
 
-    public String getCreditSource() {
-        return creditSource;
-    }
+	public BigDecimal getPrinAmt() {
+		return prinAmt;
+	}
 
-    public void setCreditSource(String creditSource) {
-        this.creditSource = creditSource;
-    }
+	public void setPrinAmt(BigDecimal prinAmt) {
+		this.prinAmt = prinAmt;
+	}
+
+	public Date getTradeDate() {
+		return tradeDate;
+	}
+
+	public void setTradeDate(Date tradeDate) {
+		this.tradeDate = tradeDate;
+	}
+
+	public BigDecimal getShareAmt() {
+		return shareAmt;
+	}
+
+	public void setShareAmt(BigDecimal shareAmt) {
+		this.shareAmt = shareAmt;
+	}
+
+	public String getInputValue1() {
+		return inputValue1;
+	}
+
+	public void setInputValue1(String inputValue1) {
+		this.inputValue1 = inputValue1;
+	}
+
+	public String getInputValue2() {
+		return inputValue2;
+	}
+
+	public void setInputValue2(String inputValue2) {
+		this.inputValue2 = inputValue2;
+	}
+
+	public String getInputValue3() {
+		return inputValue3;
+	}
+
+	public void setInputValue3(String inputValue3) {
+		this.inputValue3 = inputValue3;
+	}
+
 }

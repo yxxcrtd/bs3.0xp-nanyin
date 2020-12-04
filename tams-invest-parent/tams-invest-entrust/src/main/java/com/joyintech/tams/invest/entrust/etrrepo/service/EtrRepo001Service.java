@@ -10,16 +10,6 @@
  
 package com.joyintech.tams.invest.entrust.etrrepo.service;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import org.apache.poi.ss.usermodel.Cell;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
@@ -27,13 +17,27 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.security.User;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
+import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
+import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
+import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.entrust.etrrepo.dto.EtrRepoDto;
+import org.apache.poi.ss.usermodel.Cell;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 查询service
@@ -46,6 +50,9 @@ import com.joyintech.tams.invest.entrust.etrrepo.dto.EtrRepoDto;
 @Service
 public class EtrRepo001Service extends CommonExportService<EtrRepoDto>{
 
+
+    @Autowired
+    private CommonBusinessService commonBusinessService;
     /**
      * 项目类委托分页查询 <功能详细描述>
      *
@@ -95,11 +102,20 @@ public class EtrRepo001Service extends CommonExportService<EtrRepoDto>{
      * @see
      * @since 1.0
      */
-    public boolean closeDelegate(String entrustId, String closeWay) {
-        return restTemplate.getForObject(
+    public boolean closeDelegate(String entrustId, String closeWay, String entrustStatus) {
+        boolean res = restTemplate.getForObject(
             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrRepo/close?entrustId=" + entrustId
                                          + "&closeWay=" + closeWay,
             boolean.class);
+        
+        
+     	//处理投资指令授信 20200526 start
+     	// 已撤回/已退回 的不做授信处理
+     	if (! DictCodeList.委托状态_已撤回.getValue().equals(entrustStatus) && ! DictCodeList.委托状态_已退回.getValue().equals(entrustStatus)) {
+             dealCloseEtrIsNeedOccupyCre(entrustId);
+     	}
+         //处理投资指令授信 20200526 end
+         return res;
     }
 
     /**
@@ -110,8 +126,13 @@ public class EtrRepo001Service extends CommonExportService<EtrRepoDto>{
      * @since 1.0
      */
     public boolean recallDelegate(EtrRepoDto dto) {
-        return restTemplate.postForObject(
+        Boolean res = restTemplate.postForObject(
             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrRepo/recall", dto, boolean.class);
+        
+        //处理投资指令授信 20200526 start
+        dealCloseEtrIsNeedOccupyCre(dto.getEntrustId());
+        //处理投资指令授信 20200526 end
+        return res ;
     }
     /**
      * 校验方法
@@ -169,4 +190,33 @@ public class EtrRepo001Service extends CommonExportService<EtrRepoDto>{
             cell.setCellValue(value+"%");
         }
     }
+    
+    // 指令授信 start
+    
+    /**
+     * 关闭/撤回指令授信处理
+     * @param entrustId
+     */
+    public void dealCloseEtrIsNeedOccupyCre(String entrustId) {
+		Map<String, Object> map = commonBusinessService.selectByEntrustId(entrustId);
+        AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
+        inputDto.setProdid((String)map.get("portfolioId"));
+        inputDto.setProdFinprodType(DictCodeListExt1.金融产品类型_投资组合.getValue());
+        TrdProductDeal trdProductDeal = (TrdProductDeal) BeanUtil.mapToObject(map,TrdProductDeal.class);
+        trdProductDeal.setpTradeId((String)map.get("entrustId"));
+        trdProductDeal.setTradeAmt((BigDecimal)map.get("entrustAmt"));
+        trdProductDeal.setPrinAmt((BigDecimal)map.get("entrustAmt")); 
+        trdProductDeal.setTradeDate((Date)map.get("entrustDate"));
+        trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
+        inputDto.setTrdProductDeal(trdProductDeal);
+        
+        TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
+        trdProductDealAdd.setTradeId(trdProductDeal.getrTradeId());
+        trdProductDealAdd.setPortfolioId((String)map.get("portfolioId"));
+//        trdProductDealAdd.setCreditSource((String)map.get("creditSource"));
+        inputDto.setTrdProductDealAdd(trdProductDealAdd);
+
+        AllTradeCommonUtil.do投资指令授信(inputDto);
+    }
+    // 指令授信 end
 }

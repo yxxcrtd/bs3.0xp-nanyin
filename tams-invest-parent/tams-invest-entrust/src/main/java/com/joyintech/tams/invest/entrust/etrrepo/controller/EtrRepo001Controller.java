@@ -133,7 +133,7 @@ public class EtrRepo001Controller extends BaseController {
         List<EtrRepoDto> dtolist = dto.getSelectedItem();
         if(dtolist != null && dtolist.size()>0){
             for(EtrRepoDto entity : dtolist){
-                etrRepo001Service.closeDelegate(entity.getEntrustId(), entity.getCloseWay());
+                etrRepo001Service.closeDelegate(entity.getEntrustId(), entity.getCloseWay(), entity.getEntrustStatus());
             }
             return new AjaxResult(this.getMessage("ETR_X_003"));
         }

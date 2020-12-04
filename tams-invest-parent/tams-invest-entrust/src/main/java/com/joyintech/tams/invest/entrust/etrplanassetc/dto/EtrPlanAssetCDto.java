@@ -199,6 +199,20 @@ public class EtrPlanAssetCDto extends EtrEntrust implements ProcessEntity {
      * 资产四级分类
      */
     private String assetType11;
+    
+    /**
+     * 资产本金（授信用）
+     */
+    private BigDecimal prinAmt;
+    
+    /**
+     * 后台取为平台日（授信用）
+     */
+    private Date tradeDate;
+    
+    private String inputValue1;
+    private String inputValue2;
+    private String inputValue3;
     /**
      * 获取 assetType10
      * @return assetType10.
@@ -680,4 +694,45 @@ public class EtrPlanAssetCDto extends EtrEntrust implements ProcessEntity {
     public BigDecimal getBusEntrustAmt(){
         return this.getEntrustAmt()==null?super.getEntrustNum():getEntrustAmt();
     }
+
+	public BigDecimal getPrinAmt() {
+		return prinAmt;
+	}
+
+	public void setPrinAmt(BigDecimal prinAmt) {
+		this.prinAmt = prinAmt;
+	}
+
+	public Date getTradeDate() {
+		return tradeDate;
+	}
+
+	public void setTradeDate(Date tradeDate) {
+		this.tradeDate = tradeDate;
+	}
+
+	public String getInputValue1() {
+		return inputValue1;
+	}
+
+	public void setInputValue1(String inputValue1) {
+		this.inputValue1 = inputValue1;
+	}
+
+	public String getInputValue2() {
+		return inputValue2;
+	}
+
+	public void setInputValue2(String inputValue2) {
+		this.inputValue2 = inputValue2;
+	}
+
+	public String getInputValue3() {
+		return inputValue3;
+	}
+
+	public void setInputValue3(String inputValue3) {
+		this.inputValue3 = inputValue3;
+	}
+    
 }

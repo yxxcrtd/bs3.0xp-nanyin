@@ -70,6 +70,20 @@
          * 获取列表参数
          */
         var object = $.serializeToObject('#searchForm',true);
+        
+        // 指令授信 start
+        object.finprodType2 = 'F06';
+        object.inputValue1 = 'F02';
+        object.tradeDate = $('#vdate').val();
+        object.counterId = $('#bussEtrInvestPersonInfoDto_counterId').val();
+        object.tradeAmt = object.entrustNum;
+        object.prinAmt = object.entrustNum;
+        if($('#entrustAmt').val()) {
+        	object.tradeAmt =$('#entrustAmt').val();
+        	object.prinAmt =$('#entrustAmt').val();
+        }
+        // 指令授信 end
+        
         if ($('#select2-finprodMarketId-container').attr('title')){
             object.finprodName = $('#select2-finprodMarketId-container').attr('title');
         }
@@ -106,45 +120,47 @@
         if(object.ps != T04){
             object.assetAvailablePosition = $('#assetAvailablePosition').val();
         }
-        Joyin.ajaxJson(basePath + 'invest/entrust/etrfund/EtrFund002/checkAuthorization', object, function(result2) {
-        Joyin.ajaxJson(basePath + 'invest/entrust/etrfund/EtrFund002/check',object,
-          function(result) {
-            if(object.ps == T04 || object.ps == T01){
-                if($('#proAvailableCash').val() != null && $('#proAvailableCash').val() != '' && $('#entrustAmt').val() != null && $('#entrustAmt').val() != ''){
-                    if(parseInt($('#entrustAmt').val()) > parseInt($('#proAvailableCash').val())&&ETR_CHECK_CASH_SWITCH == 01){
-                        Joyin.confirm("委托金额必须小于等于组合T日可用现金,确认保存或提交吗",function() {
-                            //Joyin.confirm(result.data,function() {
-                                if (operateType === 'save') {
-                                    WorkFlow.doSaveList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_save");
-                                } else {
-                                    WorkFlow.doSubmitList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_submit");
-                                }
-                            //});
-                        },function(){
-                            return false;
-                        })
-                    }
-                    else{
-                        Joyin.confirm(result.data,function() {
-                            if (operateType === 'save') {
-                                WorkFlow.doSaveList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_save");
-                            } else {
-                                WorkFlow.doSubmitList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_submit");
-                            }
-                        });
-                    }
-                }
-            }
-            else{
-                Joyin.confirm(result.data,function() {
-                    if (operateType === 'save') {
-                        WorkFlow.doSaveList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_save");
-                    } else {
-                        WorkFlow.doSubmitList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_submit");
-                    }
-                });
-            }
-           });
+        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
+	        Joyin.ajaxJson(basePath + 'invest/entrust/etrfund/EtrFund002/checkAuthorization', object, function(result2) {
+	        Joyin.ajaxJson(basePath + 'invest/entrust/etrfund/EtrFund002/check',object,
+	          function(result) {
+	            if(object.ps == T04 || object.ps == T01){
+	                if($('#proAvailableCash').val() != null && $('#proAvailableCash').val() != '' && $('#entrustAmt').val() != null && $('#entrustAmt').val() != ''){
+	                    if(parseInt($('#entrustAmt').val()) > parseInt($('#proAvailableCash').val())&&ETR_CHECK_CASH_SWITCH == 01){
+	                        Joyin.confirm("委托金额必须小于等于组合T日可用现金,确认保存或提交吗",function() {
+	                            //Joyin.confirm(result.data,function() {
+	                                if (operateType === 'save') {
+	                                    WorkFlow.doSaveList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_save");
+	                                } else {
+	                                    WorkFlow.doSubmitList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_submit");
+	                                }
+	                            //});
+	                        },function(){
+	                            return false;
+	                        })
+	                    }
+	                    else{
+	                        Joyin.confirm(result.data,function() {
+	                            if (operateType === 'save') {
+	                                WorkFlow.doSaveList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_save");
+	                            } else {
+	                                WorkFlow.doSubmitList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_submit");
+	                            }
+	                        });
+	                    }
+	                }
+	            }
+	            else{
+	                Joyin.confirm(result.data,function() {
+	                    if (operateType === 'save') {
+	                        WorkFlow.doSaveList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_save");
+	                    } else {
+	                        WorkFlow.doSubmitList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_submit");
+	                    }
+	                });
+	            }
+	           });
+	        });
         });
     }
     

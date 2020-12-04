@@ -143,7 +143,7 @@ public class EtrLendSpecInfo001Controller extends BaseController {
         List<EtrLendSpecInfoDto> dtolist = dto.getSelectedItem();
         if(dtolist != null && dtolist.size()>0){
             for(EtrLendSpecInfoDto entity : dtolist){
-                etrLendSpecInfoService.closeDelegate(entity.getEntrustId(), entity.getCloseWay());
+                etrLendSpecInfoService.closeDelegate(entity.getEntrustId(), entity.getCloseWay(), entity.getEntrustStatus());
             }
             return new AjaxResult(this.getMessage("ETR_X_003"));
         }

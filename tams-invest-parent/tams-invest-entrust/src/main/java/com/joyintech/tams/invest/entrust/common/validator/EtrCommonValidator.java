@@ -89,6 +89,9 @@ public interface EtrCommonValidator extends BeanValidator {
      */
     @Override
     default List<ValidMessage> valid(Object value) {
+    	// 判断是否为撤销或关闭状态不走授信check
+    	boolean isClose = true;
+    	
         // 先执行各个画面的业务check
         List<ValidMessage> validMessageList = this.bussValid(value);
         //名单管理  isNameSoftControl true:软控  false:硬控
@@ -201,6 +204,14 @@ public interface EtrCommonValidator extends BeanValidator {
                 String windtypeone = null;
                 String tradeMarket = null;
                 String ps = null;
+                // 授权改造 add by zcw 20200909 start
+                // 授权一级类型
+                String assetType = null;
+                // 授权二级类型
+                String assetSecType = null;
+                // 授权三级类型
+                String assetSecTypeThree = null;
+                // 授权改造 add by zcw 20200909 end
                 // 资产类型改为授权类型 add by renping 2019-08-06  start
                 String finprodId = null;
                 // 资产类型改为授权类型 add by renping 2019-08-06  end
@@ -213,6 +224,9 @@ public interface EtrCommonValidator extends BeanValidator {
                 // 债券投资交易
                 if (value instanceof EtrInvestBondInfoDto) {
                     EtrInvestBondInfoDto inputDto = (EtrInvestBondInfoDto)value;
+                    if(StringUtil.isNotEmpty(inputDto.getOperateType()) && (inputDto.getOperateType().equals("recall")||
+                    		inputDto.getOperateType().equals("close")||inputDto.getOperateType().equals("delete")))
+                    	isClose = false;
                     // 副总裁/总裁助理授权额度检查相关处理
                     counterId = inputDto.getCounterId();
                     // 修改债券获取金额by赵东东 2019.9.4 start
@@ -223,6 +237,8 @@ public interface EtrCommonValidator extends BeanValidator {
                     tradeMarket = inputDto.getTradeMarket();
                     trdProductDeal = new TrdProductDeal();
                     BeanUtil.copyPropertiesIgnoreNull(trdProductDeal, inputDto);
+                    // 债券取券面/100
+                    trdProductDeal.setShareAmt(trdProductDeal.getPrinAmt().divide(new BigDecimal("100")));
                     ps = inputDto.getPs();
                     finprodId = inputDto.getFinprodId();
                 }
@@ -238,6 +254,13 @@ public interface EtrCommonValidator extends BeanValidator {
                     tradeMarket = inputDto.getTradeMarket();
                     trdProductDeal = new TrdProductDeal();
                     BeanUtil.copyPropertiesIgnoreNull(trdProductDeal, inputDto);
+                    // 指令授信 start
+                    if(!StringUtil.isNotEmpty(trdProductDeal.getPs()) || trdProductDeal.getPs().equals(DictCodeListExt1.交易方向_债转股.getValue())
+                            || (trdProductDeal.getPs().equals(DictCodeListExt1.拆借资产类型_拆出.getValue())
+                                &&StringUtil.equals(trdProductDeal.getInputValue1(), DictCodeList.平安资产类型_拆借.getValue()))) {
+                    	trdProductDeal.setPs(DictCodeList.交易方向_买入.getValue());
+                    }
+                    // 指令授信 end
                     ps = inputDto.getPs();
                     inputValue1 = DictCodeList.平安资产类型_拆借.getValue();
                     inputValue2 = ps;
@@ -245,7 +268,9 @@ public interface EtrCommonValidator extends BeanValidator {
                 // 存款类资产投资交易
                 else if (value instanceof EtrBrowDepoInfoDto) {
                     EtrBrowDepoInfoDto inputDto = (EtrBrowDepoInfoDto)value;
-
+                    if(StringUtil.isNotEmpty(inputDto.getOperateType()) && (inputDto.getOperateType().equals("recall")||
+                    		inputDto.getOperateType().equals("close")||inputDto.getOperateType().equals("delete")))
+                    	isClose = false;
                     // 副总裁/总裁助理授权额度检查相关处理
                     counterId = inputDto.getCounterId();
                     prinAmt = inputDto.getEntrustAmt();
@@ -260,7 +285,9 @@ public interface EtrCommonValidator extends BeanValidator {
                 // 基金类投资交易
                 else if (value instanceof EtrFundDto) {
                     EtrFundDto inputDto = (EtrFundDto)value;
-
+                    if(StringUtil.isNotEmpty(inputDto.getOperateType()) && (inputDto.getOperateType().equals("recall")||
+                    		inputDto.getOperateType().equals("close")||inputDto.getOperateType().equals("delete")))
+                    	isClose = false;
                     // 副总裁/总裁助理授权额度检查相关处理
                     counterId = inputDto.getCounterId();
                     prinAmt = inputDto.getEntrustAmt();
@@ -277,6 +304,9 @@ public interface EtrCommonValidator extends BeanValidator {
                     // 修改强转类型by赵东东2019.9.4 start
                     /* EtrFundDto inputDto = (EtrFundDto)value; */
                     EtrPlanAssetNDto inputDto = (EtrPlanAssetNDto)value;
+                    if(StringUtil.isNotEmpty(inputDto.getOperateType()) && (inputDto.getOperateType().equals("recall")||
+                    		inputDto.getOperateType().equals("close")||inputDto.getOperateType().equals("delete")))
+                    	isClose = false;
                     // 修改强转类型by赵东东2019.9.4 start
                     // 副总裁/总裁助理授权额度检查相关处理
                     counterId = inputDto.getCounterId();
@@ -292,7 +322,9 @@ public interface EtrCommonValidator extends BeanValidator {
                 // 计划类资产（利率型）交易
                 else if (value instanceof EtrPlanAssetRDto) {
                     EtrPlanAssetRDto inputDto = (EtrPlanAssetRDto)value;
-
+                    if(StringUtil.isNotEmpty(inputDto.getOperateType()) && (inputDto.getOperateType().equals("recall")||
+                    		inputDto.getOperateType().equals("close")||inputDto.getOperateType().equals("delete")))
+                    	isClose = false;
                     // 副总裁/总裁助理授权额度检查相关处理
                     counterId = inputDto.getCounterId();
                     prinAmt = inputDto.getEntrustAmt();
@@ -310,7 +342,9 @@ public interface EtrCommonValidator extends BeanValidator {
                 // 回购资产交易
                 else if (value instanceof EtrRepoDto) {
                     EtrRepoDto inputDto = (EtrRepoDto)value;
-
+                    if(StringUtil.isNotEmpty(inputDto.getOperateType()) && (inputDto.getOperateType().equals("recall")||
+                    		inputDto.getOperateType().equals("close")||inputDto.getOperateType().equals("delete")))
+                    	isClose = false;
                     // 副总裁/总裁助理授权额度检查相关处理
                     counterId = inputDto.getCounterId();
                     prinAmt = inputDto.getEntrustAmt();
@@ -327,7 +361,9 @@ public interface EtrCommonValidator extends BeanValidator {
                 // 项目类资产交易
                 else if (value instanceof EtrProjectDto) {
                     EtrProjectDto inputDto = (EtrProjectDto)value;
-
+                    if(StringUtil.isNotEmpty(inputDto.getOperateType()) && (inputDto.getOperateType().equals("recall")||
+                    		inputDto.getOperateType().equals("close")||inputDto.getOperateType().equals("delete")))
+                    	isClose = false;
                     // 副总裁/总裁助理授权额度检查相关处理
                     counterId = inputDto.getCounterId();
                     prinAmt = inputDto.getEntrustAmt();
@@ -342,7 +378,9 @@ public interface EtrCommonValidator extends BeanValidator {
                 //  计划类资产（货币型）交易
                 else if (value instanceof EtrPlanAssetCDto) {
                     EtrPlanAssetCDto inputDto = (EtrPlanAssetCDto)value;
-
+                    if(StringUtil.isNotEmpty(inputDto.getOperateType()) && (inputDto.getOperateType().equals("recall")||
+                    		inputDto.getOperateType().equals("close")||inputDto.getOperateType().equals("delete")))
+                    	isClose = false;
                     // 副总裁/总裁助理授权额度检查相关处理
                     counterId = inputDto.getCounterId();
                     prinAmt = inputDto.getEntrustAmt();
@@ -357,7 +395,9 @@ public interface EtrCommonValidator extends BeanValidator {
                 //  买断式回购
                 else if (value instanceof EtrBoutRepoDto) {
                     EtrBoutRepoDto inputDto = (EtrBoutRepoDto)value;
-
+                    if(StringUtil.isNotEmpty(inputDto.getOperateType()) && (inputDto.getOperateType().equals("recall")||
+                    		inputDto.getOperateType().equals("close")||inputDto.getOperateType().equals("delete")))
+                    	isClose = false;
                     // 副总裁/总裁助理授权额度检查相关处理
                     counterId = inputDto.getCounterId();
                     prinAmt = inputDto.getEntrustAmt();
@@ -373,7 +413,9 @@ public interface EtrCommonValidator extends BeanValidator {
                 // 债券借贷
                 else if (value instanceof EtrSecLendDto) {
                     EtrSecLendDto inputDto = (EtrSecLendDto)value;
-
+                    if(StringUtil.isNotEmpty(inputDto.getOperateType()) && (inputDto.getOperateType().equals("recall")||
+                    		inputDto.getOperateType().equals("close")||inputDto.getOperateType().equals("delete")))
+                    	isClose = false;
                     // 副总裁/总裁助理授权额度检查相关处理
                     counterId = inputDto.getCounterId();
                     // 修改获取金额by赵东东 2019.8.23 start
@@ -393,7 +435,9 @@ public interface EtrCommonValidator extends BeanValidator {
                 // 股票
                 else if (value instanceof EtrStockDto) {
                     EtrStockDto inputDto = (EtrStockDto)value;
-
+                    if(StringUtil.isNotEmpty(inputDto.getOperateType()) && (inputDto.getOperateType().equals("recall")||
+                    		inputDto.getOperateType().equals("close")||inputDto.getOperateType().equals("delete")))
+                    	isClose = false;
                     // 副总裁/总裁助理授权额度检查相关处理
                     counterId = inputDto.getCounterId();
                     prinAmt = inputDto.getEntrustAmt();
@@ -415,7 +459,9 @@ public interface EtrCommonValidator extends BeanValidator {
                 // 外汇即期
                 else if (value instanceof EtrWtSpotexDto) {
                     EtrWtSpotexDto inputDto = (EtrWtSpotexDto)value;
-
+                    if(StringUtil.isNotEmpty(inputDto.getOperateType()) && (inputDto.getOperateType().equals("recall")||
+                    		inputDto.getOperateType().equals("close")||inputDto.getOperateType().equals("delete")))
+                    	isClose = false;
                     // 副总裁/总裁助理授权额度检查相关处理
                     counterId = inputDto.getCounterId();
                     prinAmt = inputDto.getEntrustAmt();
@@ -430,7 +476,9 @@ public interface EtrCommonValidator extends BeanValidator {
                 // 外汇远期
                 else if (value instanceof EtrForwexDto) {
                     EtrForwexDto inputDto = (EtrForwexDto)value;
-
+                    if(StringUtil.isNotEmpty(inputDto.getOperateType()) && (inputDto.getOperateType().equals("recall")||
+                    		inputDto.getOperateType().equals("close")||inputDto.getOperateType().equals("delete")))
+                    	isClose = false;
                     // 副总裁/总裁助理授权额度检查相关处理
                     counterId = inputDto.getCounterId();
                     prinAmt = inputDto.getEntrustAmt();
@@ -445,7 +493,9 @@ public interface EtrCommonValidator extends BeanValidator {
                 // 外汇掉期
                 else if (value instanceof EtrWtFxswapDto) {
                     EtrWtFxswapDto inputDto = (EtrWtFxswapDto) value;
-
+                    if(StringUtil.isNotEmpty(inputDto.getOperateType()) && (inputDto.getOperateType().equals("recall")||
+                    		inputDto.getOperateType().equals("close")||inputDto.getOperateType().equals("delete")))
+                    	isClose = false;
                     // 副总裁/总裁助理授权额度检查相关处理
                     counterId = inputDto.getCounterId();
                     // 修改获取交易金额by赵东东 2019.8.23 start
@@ -464,7 +514,9 @@ public interface EtrCommonValidator extends BeanValidator {
                 // 利率互换
                 else if (value instanceof EtrIRSDto) {
                     EtrIRSDto inputDto = (EtrIRSDto)value;
-
+                    if(StringUtil.isNotEmpty(inputDto.getOperateType()) && (inputDto.getOperateType().equals("recall")||
+                    		inputDto.getOperateType().equals("close")||inputDto.getOperateType().equals("delete")))
+                    	isClose = false;
                     // 副总裁/总裁助理授权额度检查相关处理
                     counterId = inputDto.getCounterId();
                     // 修改金额的大小by赵东东 2019.8.23 start
@@ -483,6 +535,9 @@ public interface EtrCommonValidator extends BeanValidator {
                 // 可转债 add by gejiaao
                 else if (value instanceof EtrConBondDto) {
                     EtrConBondDto inputDto = (EtrConBondDto)value;
+                    if(StringUtil.isNotEmpty(inputDto.getOperateType()) && (inputDto.getOperateType().equals("recall")||
+                    		inputDto.getOperateType().equals("close")||inputDto.getOperateType().equals("delete")))
+                    	isClose = false;
                     EtrConBondService etrConBondService = SpringContextUtil.getBean(EtrConBondService.class);
                     // 副总裁/总裁助理授权额度检查相关处理
                     counterId = inputDto.getEtrInvestPersonInfo().getCounterId();
@@ -498,6 +553,9 @@ public interface EtrCommonValidator extends BeanValidator {
                 // 可转债转股 add by gaopeng  20191123
                 else if (value instanceof EtrBondToStockDto) {
                     EtrBondToStockDto inputDto = (EtrBondToStockDto)value;
+                    if(StringUtil.isNotEmpty(inputDto.getOperateType()) && (inputDto.getOperateType().equals("recall")||
+                    		inputDto.getOperateType().equals("close")||inputDto.getOperateType().equals("delete")))
+                    	isClose = false;
                     EtrBondToStockService etrBondToStockService = SpringContextUtil.getBean(EtrBondToStockService.class);
                     // 副总裁/总裁助理授权额度检查相关处理
                     counterId = inputDto.getEtrInvestPersonInfo().getCounterId();

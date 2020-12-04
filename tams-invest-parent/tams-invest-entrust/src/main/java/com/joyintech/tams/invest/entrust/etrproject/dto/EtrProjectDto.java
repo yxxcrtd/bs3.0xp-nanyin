@@ -10,18 +10,8 @@
 
 package com.joyintech.tams.invest.entrust.etrproject.dto;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
-import javax.validation.Valid;
-
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.framework.annotation.PageId;
-import com.joyintech.workflow.engine.annotation.PrimaryKey;
-import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.Amount;
@@ -29,11 +19,20 @@ import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.component.business.trade.dto.BussEtrInvestPersonInfoDto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.entrust.etrproject.validator.EtrProjectValidator;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
+import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+
+import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 项目类委托dto
@@ -93,6 +92,11 @@ public class EtrProjectDto extends EtrEntrust implements ProcessEntity {
      * 本金金额
      */
     private BigDecimal prinAmt;
+
+    /**
+     * 后台取为平台日（授信用）
+     */
+    private Date tradeDate;
     /**
      * 清算速度
      */
@@ -173,6 +177,21 @@ public class EtrProjectDto extends EtrEntrust implements ProcessEntity {
      * 资产四级分类
      */
     private String type11;
+
+    /**
+     * 利率审批编号
+     */
+    private String rateApprovalCode;
+
+
+    public String getRateApprovalCode() {
+        return rateApprovalCode;
+    }
+
+
+    public void setRateApprovalCode(String rateApprovalCode) {
+        this.rateApprovalCode = rateApprovalCode;
+    }
 
     /**
      * 获取 type9
@@ -277,7 +296,9 @@ public class EtrProjectDto extends EtrEntrust implements ProcessEntity {
      * 风险试算实体类
      */
     private List<RiskTrialRetDto> riskTrialRetDto;
-
+    private String inputValue1;
+    private String inputValue2;
+    private String inputValue3;
 
 
     /**
@@ -294,11 +315,6 @@ public class EtrProjectDto extends EtrEntrust implements ProcessEntity {
      * 交易对手类型
      */
     private String counterType;
-
-    /**
-     * 授信来源
-     */
-    private String creditSource;
 
     /**
      * 获取 counterType
@@ -835,11 +851,44 @@ public class EtrProjectDto extends EtrEntrust implements ProcessEntity {
         this.chlIdName = chlIdName;
     }
 
-    public String getCreditSource() {
-        return creditSource;
-    }
 
-    public void setCreditSource(String creditSource) {
-        this.creditSource = creditSource;
-    }
+	public Date getTradeDate() {
+		return tradeDate;
+	}
+
+
+	public void setTradeDate(Date tradeDate) {
+		this.tradeDate = tradeDate;
+	}
+
+
+	public String getInputValue1() {
+		return inputValue1;
+	}
+
+
+	public void setInputValue1(String inputValue1) {
+		this.inputValue1 = inputValue1;
+	}
+
+
+	public String getInputValue2() {
+		return inputValue2;
+	}
+
+
+	public void setInputValue2(String inputValue2) {
+		this.inputValue2 = inputValue2;
+	}
+
+
+	public String getInputValue3() {
+		return inputValue3;
+	}
+
+
+	public void setInputValue3(String inputValue3) {
+		this.inputValue3 = inputValue3;
+	}
+
 }

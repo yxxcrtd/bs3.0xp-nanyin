@@ -10,15 +10,7 @@
  
 package com.joyintech.tams.invest.entrust.etrboutrepo.dto;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
-import javax.validation.Valid;
-
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.DateUtil;
@@ -27,6 +19,8 @@ import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.component.business.trade.dto.BussEtrInvestPersonInfoDto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
@@ -35,6 +29,11 @@ import com.joyintech.tams.invest.entrust.etrboutrepo.validator.EtrBoutRepoValida
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+
+import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 〈一句话功能简述〉
@@ -228,6 +227,25 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
      * 交易对手名称
      */
     private String counterIdName;
+    
+    /**
+     * 资产本金（授信用）
+     */
+    private BigDecimal prinAmt;
+    
+    /**
+     * 后台取为平台日（授信用）
+     */
+    private Date tradeDate;
+    
+    /**
+     * 数量（授信用）
+     */
+    private BigDecimal shareAmt;
+    
+    private String inputValue1;
+    private String inputValue2;
+    private String inputValue3;
      /**
       * 
       * 获取交易对手名称
@@ -960,4 +978,42 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public String getPriceModel() {
         return super.getPriceModel();
     }
+	public BigDecimal getPrinAmt() {
+		return prinAmt;
+	}
+	public void setPrinAmt(BigDecimal prinAmt) {
+		this.prinAmt = prinAmt;
+	}
+	public Date getTradeDate() {
+		return tradeDate;
+	}
+	public void setTradeDate(Date tradeDate) {
+		this.tradeDate = tradeDate;
+	}
+	public BigDecimal getShareAmt() {
+		return shareAmt;
+	}
+	public void setShareAmt(BigDecimal shareAmt) {
+		this.shareAmt = shareAmt;
+	}
+	public String getInputValue1() {
+		return inputValue1;
+	}
+	public void setInputValue1(String inputValue1) {
+		this.inputValue1 = inputValue1;
+	}
+	public String getInputValue2() {
+		return inputValue2;
+	}
+	public void setInputValue2(String inputValue2) {
+		this.inputValue2 = inputValue2;
+	}
+	public String getInputValue3() {
+		return inputValue3;
+	}
+	public void setInputValue3(String inputValue3) {
+		this.inputValue3 = inputValue3;
+	}
+    
+    
 }

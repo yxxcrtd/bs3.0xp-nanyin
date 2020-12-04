@@ -5,16 +5,15 @@
 
 package com.joyintech.tams.component.business.common.dao;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
-
 import com.joyintech.tams.common.base.entity.MstExchargeQuote;
 import com.joyintech.tams.common.base.entity.StlDvpOrders;
 import com.joyintech.tams.common.base.entity.StlPayOrders;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 业务共通组件.资产头寸现金持仓共通组件的Mapper
@@ -49,4 +48,39 @@ public interface CommonBusinessMapper {
      */
     MstExchargeQuote getExchangeRate(Map<String, Object> map);
     // 资产类型改为授权类型 add by renping 2019-08-19  end
+    
+    /**
+     * 
+     * 根据entrustId查询指令详情(用于授信)
+     * <功能详细描述>
+     * @param entrustId String
+     * @return List<EtrBrowDepoInfoDto>
+     * @see
+     * @since 1.0
+     */
+    Map<String, Object> selectByEntrustId(@Param("entrustId") String entrustId);
+    
+    /**
+     * 根据产品代码查应占用授信的机构    
+     * 
+     * @param finprodId
+     * @return
+     */
+    String selectCustomer(Map<String,Object> map);
+    
+    /**
+     * 根据组合查找有权限的用户
+     * 
+     * @param finprodId
+     * @return
+     */
+    List<String> selectUserByPortfolioId(String portfolioId);
+    
+    /**
+     * 查找组合托管户
+     * 
+     * @param finprodId
+     * @return
+     */
+    List<String> selectAcctNo(@Param("portfolioId") String portfolioId, @Param("ccy") String ccy, @Param("acctType") String acctType);
 }

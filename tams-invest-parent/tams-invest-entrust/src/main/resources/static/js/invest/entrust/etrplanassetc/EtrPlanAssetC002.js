@@ -43,6 +43,18 @@
         if ($('#select2-finprodId-container').attr('title')){
             object.finprodName = $('#select2-finprodId-container').attr('title');
         }
+        // 指令授信 start
+        object.finprodType2 = 'F17';
+        object.inputValue1 = 'F09';
+        object.tradeAmt = object.entrustNum;
+        object.prinAmt = object.entrustNum;
+        if($('#entrustAmt').val()) {
+        	object.tradeAmt =$('#entrustAmt').val();
+        	object.prinAmt =$('#entrustAmt').val();
+        }
+        object.tradeDate = $('#vdate').val();
+        object.counterId = $('#etrInvestPersonInfo_counterId').val();
+        // 指令授信 end
         object.etrInvestPersonInfo.invManagerId = $('#etrInvestPersonInfo_invManagerId').val();
         object.operateType = operateType;
         object.pageModel = pageModel;
@@ -65,17 +77,19 @@
                 });
             }
         }
-        Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetc/EtrPlanAssetC002/checkAuthorization', object, function(result2) {
-	        Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetc/EtrPlanAssetC002/check',object,
-	          function(result) {
-	              Joyin.confirm(result.data,function() {
-	                   if (operateType === 'save') {
-	                       WorkFlow.doSaveList(basePath+'invest/entrust/etrplanassetc/EtrPlanAssetC002/save',object,"EtrPlanAssetC002_btn_save");
-	                   } else {
-	                       WorkFlow.doSubmitList(basePath+'invest/entrust/etrplanassetc/EtrPlanAssetC002/save',object,"EtrPlanAssetC002_btn_submit");
-	                   }
-	               });
-	           });
+        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
+	        Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetc/EtrPlanAssetC002/checkAuthorization', object, function(result2) {
+		        Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetc/EtrPlanAssetC002/check',object,
+		          function(result) {
+		              Joyin.confirm(result.data,function() {
+		                   if (operateType === 'save') {
+		                       WorkFlow.doSaveList(basePath+'invest/entrust/etrplanassetc/EtrPlanAssetC002/save',object,"EtrPlanAssetC002_btn_save");
+		                   } else {
+		                       WorkFlow.doSubmitList(basePath+'invest/entrust/etrplanassetc/EtrPlanAssetC002/save',object,"EtrPlanAssetC002_btn_submit");
+		                   }
+		               });
+		           });
+	        });
         });
     }
   //查询组合可用现金
