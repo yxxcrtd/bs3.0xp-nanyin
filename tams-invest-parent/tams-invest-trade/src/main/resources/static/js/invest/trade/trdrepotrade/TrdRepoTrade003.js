@@ -1306,7 +1306,7 @@
                     window.BussTrdTransferOrder['bussTrdTransferOrder'].bussTrdTransferOrderTable.clear();
                 }
             }
-            $('#trdInvestPersonInfo_counterId').on("change",function(){
+            /*$('#trdInvestPersonInfo_counterId').on("change",function(){
                 var counterId = $('#trdInvestPersonInfo_counterId');
                 if (counterId.select2('data') && counterId.select2('data')[0]) {
                     var 交易对手 = counterId.select2('data')[0].object;
@@ -1321,7 +1321,7 @@
                         }
                     }
                 }
-            });
+            });*/
         }
     };
     

@@ -1822,7 +1822,7 @@ var table;
                 }
             }
 
-            $('#trdInvestPersonInfo_counterId').on("change",function(){
+          /*  $('#trdInvestPersonInfo_counterId').on("change",function(){
                 var counterId = $('#trdInvestPersonInfo_counterId');
                 if (counterId.select2('data') && counterId.select2('data')[0]){
                     var 交易对手 = counterId.select2('data')[0].object;
@@ -1837,7 +1837,7 @@ var table;
                         }
                     }
                 }
-            });
+            });*/
             // 触发画面联动处理
             // $("#tradeMarket").trigger("change");
             // $("#tradeMarketMode").trigger("change", true);
