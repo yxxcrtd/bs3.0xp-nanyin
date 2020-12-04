@@ -190,6 +190,9 @@
       <if test="model_type != null">
       	DAI.INSTITUTION_CODE ORG_CODE  ,  --<!--  机构代码   -->
       </if>
+        <if test="model_type == null">
+            D.REP_ISSUE_PARTY_ID ORG_CODE  ,  --<!--  机构代码   -->
+        </if>
       T.FINPROD_NAME PROD_NAME  ,  --<!--  产品名称   -->
       
       /****add by leipeng 20200628 添加多法人模式查询所属机构 START**/
