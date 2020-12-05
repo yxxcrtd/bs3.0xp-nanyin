@@ -14,16 +14,28 @@ $(function() {
 
     function saveOrSubmit(operateType) {
         var intSettType = $('#intSettType').val();
-        if(intSettType == INT_SETT_TYPE_02 && GEN_PAY_ORDERS_AUTO == '01') {
-            window.BussTrdTransferOrder['bussTrdTransferOrder'].generateOrders(function () {
-                realSaveOrSubmit(operateType);
-            });
+        //add by yujiaping 2020-12-5 BS-1562【存款类存续期】同一资产同一计息结束日只能做一次活期存放结息start
+        var mdateProd = $('#mdateProd').val();
+        var finprodMarketId = $('#finprodMarketId').val();
+        	Joyin.ajax(basePath + "invest/period/trddepoduration/TrdDepoDuration002/getTradeId",{finprodMarketId:finprodMarketId,mdateProd:mdateProd},
+        			function(result){
+        		if(result.data){
+        			Joyin.error(JoyinUtil.getMessage("资产在同一个计息结束日不可以重复做活期存放结息!"));
+        			return;
+        		}else{
+        			 if(intSettType == INT_SETT_TYPE_02 && GEN_PAY_ORDERS_AUTO == '01') {
+        		            window.BussTrdTransferOrder['bussTrdTransferOrder'].generateOrders(function () {
+        		                realSaveOrSubmit(operateType);
+        		            });
+        		        }
+        		        else {
+        		            realSaveOrSubmit(operateType);
+        		        }
+        		}
+        	});
+        	//add by yujiaping 2020-12-5 BS-1562【存款类存续期】同一资产同一计息结束日只能做一次活期存放结息end
         }
-        else {
-            realSaveOrSubmit(operateType);
-        }
-    }
-
+    
     function realSaveOrSubmit(operateType) {
         var intSettType = $('#intSettType').val();
         if(intSettType == INT_SETT_TYPE_02){

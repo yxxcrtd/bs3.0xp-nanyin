@@ -472,6 +472,11 @@ public class TrdDepoDurationService extends BaseService<TrdDepoDurationDto> {
         return trdDepoDurationMapper.countCashMatch(busiCode);
     }
 
+    //add by yujiaping 2020-12-5 BS-1562【存款类存续期】同一资产同一计息结束日只能做一次活期存放结息start
+    public Map<String, Object> getTradeId(Map<String, Object> map) {
+        return trdDepoDurationMapper.getTradeId(map);
+    }
+    //add by yujiaping 2020-12-5 BS-1562【存款类存续期】同一资产同一计息结束日只能做一次活期存放结息end
     /**
      *
      * 市场代码联动 <功能详细描述>
