@@ -47,7 +47,7 @@ public class RskValAssetCodeController {
     
     
     @PostMapping("/selectAll")
-    List<RskValtblAssetSubMapDto> selectAll(@RequestBody Map<String,Object> map){
+    public List<RskValtblAssetSubMapDto> selectAll(@RequestBody Map<String,Object> map){
         return rskValAssetCodeService.selectAll(map);
     }
     

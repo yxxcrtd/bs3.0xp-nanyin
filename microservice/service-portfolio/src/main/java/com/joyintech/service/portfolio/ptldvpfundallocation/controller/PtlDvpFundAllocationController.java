@@ -196,7 +196,7 @@ public class PtlDvpFundAllocationController {
 	 * @return 余额
 	 */
     @PostMapping("/getDvpAmount")
-	String getDvpAmount(@RequestBody Map<String, Object> paramMap){
+	public String getDvpAmount(@RequestBody Map<String, Object> paramMap){
 		return ptlDvpFundAllocationService.getAmount(paramMap);
 	}
 }

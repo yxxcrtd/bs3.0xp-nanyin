@@ -34,7 +34,7 @@ public class FinSubmittedModuleController {
      * @since 1.0
      */
     @PostMapping("/getSchemeName")
-    List<FinSubmittedModuleDto> getSchemeName(@RequestBody Map<String,Object> map){
+    public List<FinSubmittedModuleDto> getSchemeName(@RequestBody Map<String,Object> map){
         return finSubmittedModule001Service.getSchemeName(map);
     }
 

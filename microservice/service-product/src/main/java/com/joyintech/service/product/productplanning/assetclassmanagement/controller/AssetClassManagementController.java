@@ -77,7 +77,7 @@ public class AssetClassManagementController {
 	     * @since 1.0
 	     */
 	    @PostMapping("/selectByPrimaryKey")
-	    AssetClassManagementDto selectByPrimaryKey(@RequestBody Map<String, Object> param) {
+	    public AssetClassManagementDto selectByPrimaryKey(@RequestBody Map<String, Object> param) {
 	        return assetClassManagementService.selectByPrimaryKey(param);
 	    }
 	    /**

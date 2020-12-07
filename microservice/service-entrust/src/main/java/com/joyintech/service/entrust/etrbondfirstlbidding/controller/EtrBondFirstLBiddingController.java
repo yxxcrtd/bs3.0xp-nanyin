@@ -119,7 +119,7 @@ public class EtrBondFirstLBiddingController {
      * @since 1.0
      */
     @PostMapping("getentrustIdAdd/{page}/{length}")
-    Page<SelectOptionDto> getentrustIdAdd(@RequestBody Map<String, Object> param,@PathVariable("page") int page,
+    public Page<SelectOptionDto> getentrustIdAdd(@RequestBody Map<String, Object> param,@PathVariable("page") int page,
                                           @PathVariable("length") int length){
         return service.getentrustIdAdd(page,length,param);
     }
@@ -286,7 +286,7 @@ public class EtrBondFirstLBiddingController {
      * @since 1.0
      */
     @PostMapping("getMainConsignee/{page}/{length}")
-    Page<SelectOptionDto> getMainConsignee(@RequestBody Map<String, Object> param,@PathVariable("page") int page,
+    public Page<SelectOptionDto> getMainConsignee(@RequestBody Map<String, Object> param,@PathVariable("page") int page,
                                           @PathVariable("length") int length){
         return service.getMainConsignee(page,length,param);
     }

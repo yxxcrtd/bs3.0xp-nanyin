@@ -234,7 +234,7 @@ public class TrdDepoDurationController {
      * @since 1.0
      */
     @PostMapping("findDealByTotalId")
-    List<TrdProductDeal> findDealByTotalId(@RequestBody String busiCode) {
+    public List<TrdProductDeal> findDealByTotalId(@RequestBody String busiCode) {
         return trdDepoDurationService.findDealByTotalId(busiCode);
     }
     /**
@@ -247,7 +247,7 @@ public class TrdDepoDurationController {
      * @since 1.0
      */
     @PostMapping("getBusiCode/{page}/{length}")
-    Page<SelectOptionDto> getBusiCode(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
+    public Page<SelectOptionDto> getBusiCode(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
                                       @PathVariable("length") int length){
         return trdDepoDurationService.getBusiCode(page, length, param);
     }

@@ -46,7 +46,7 @@ public class MstCalendarTypeController {
      * @since 1.0
      */
     @PostMapping("/getCalendarType")
-    List<SelectOptionDto> getCalendarType(@RequestBody Map<String, Object> map) {
+    public List<SelectOptionDto> getCalendarType(@RequestBody Map<String, Object> map) {
         return mstCalendarTypeService.getCalendarType(map);
     }
 
@@ -136,7 +136,7 @@ public class MstCalendarTypeController {
      * @since 1.0
      */
     @PostMapping("/getCalendarName")
-    List<SelectOptionDto> getCalendarName(@RequestBody Map<String, Object> param) {
+    public List<SelectOptionDto> getCalendarName(@RequestBody Map<String, Object> param) {
         return mstCalendarTypeService.getCalendarName(param);
     }
 
@@ -163,7 +163,7 @@ public class MstCalendarTypeController {
      * @since 1.0
      */
     @PostMapping("/selectCalendar")
-    MstCalendarType001Dto selectCalendar(@RequestBody Map<String, Object> param) {
+    public MstCalendarType001Dto selectCalendar(@RequestBody Map<String, Object> param) {
         return mstCalendarTypeService.selectCalendar(param);
     }
 
