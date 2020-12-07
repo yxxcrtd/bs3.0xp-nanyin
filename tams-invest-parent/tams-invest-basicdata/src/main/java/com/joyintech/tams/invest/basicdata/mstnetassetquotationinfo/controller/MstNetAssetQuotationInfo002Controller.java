@@ -10,22 +10,6 @@
  
 package com.joyintech.tams.invest.basicdata.mstnetassetquotationinfo.controller;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
@@ -35,15 +19,27 @@ import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.invest.basicdata.mstnetassetquotationinfo.dto.MstNetAssetQuotationInfo001Dto;
-import com.joyintech.tams.invest.basicdata.mstnetassetquotationinfo.service.MstNetAssetQuotationInfo001Service;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.basicdata.mstnetassetquotationinfo.dto.MstNetAssetQuotationInfo001Dto;
+import com.joyintech.tams.invest.basicdata.mstnetassetquotationinfo.service.MstNetAssetQuotationInfo001Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 新建净值型资产信息
@@ -184,11 +180,12 @@ public class MstNetAssetQuotationInfo002Controller extends BaseController{
             dto.setFinprodId(IDGenerator.generate());
         }
         params.setBusinessCode(dto.getFinprodId());
-        if(StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_净值型.getValue())){
-        	params.setBusinessType(DictCodeList.共通业务类型_计划类资产_净值型_信息.getValue());
-        }else{
-        	params.setBusinessType(DictCodeList.共通业务类型_计划类资产_货币型_信息.getValue());
-        }
+//        if(StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_净值型.getValue())){
+//        	params.setBusinessType(DictCodeList.共通业务类型_计划类资产_净值型_信息.getValue());
+//        }else{
+//        	params.setBusinessType(DictCodeList.共通业务类型_计划类资产_货币型_信息.getValue());
+//        }
+        params.setBusinessType(DictCodeList.共通业务类型_计划类资产行情信息.getValue());
         // 设置流程业务说明:资产代码 + "(" + 资产代码 + ")" + "-"  + "估值日期" + "-"  + "估值日期"
         params.setComment(
             entity -> this.getMessage("MstNetAssetQuotationInfo001.assetCode") + "("+entity.getFinProdMarketId()+ ")"
