@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.calculation.config.NumberEnum;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.BookLatestInfoDto;
@@ -291,8 +292,13 @@ public class RepoNDealDrawBookDetailProcessService {
                         }
                     }
                 }
-                if(happenDateNow.compareTo(dealInfoForTarget.getVdate())>=0) {
-
+                Date mDateTemp;
+                if(DictCodeListExt1.交易所回购计提天数方式_实际占款天数.getValue().equals(CacheUtil.getSysParam("SE_REP_DAY_TYPE"))){
+                     mDateTemp = dealInfoForTarget.getMpayDate();
+                }else{
+                    mDateTemp = DateUtil.addDay(dealInfoForTarget.getMdate(),1);
+                }
+                if(happenDateNow.compareTo(dealInfoForTarget.getVdate())>=0 && happenDateNow.compareTo(mDateTemp) < 0) {
                     if(glb_subjectAmt.compareTo(BigDecimal.ZERO)==0 && 次日计提成本科目余额.compareTo(BigDecimal.ZERO)==0) {
                         glb_subjectInt=glb_subjectInt.negate();
                     }else {
