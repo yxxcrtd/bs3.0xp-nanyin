@@ -301,7 +301,12 @@
 	,is_under_trade,prod_id,CHL_CPCT_ID,dealdate
   </select>
   <insert id="insertYsdPosition" parameterType="java.util.Map" >
-    insert into CHB_ASSET_POSITION 
+    insert into CHB_ASSET_POSITION (
+    	POSUUID,PROD_ID,ASSET_CODE,INVEST_TYPE,CHL_ID,
+    	DEALAMT,DEALQTY,ACCUAMT,ACCUQTY,CDATE,ORG_CODE,DEPT_CODE,
+    	CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME,TRADE_TYPE,
+    	IS_UNDER_TRADE,INVEST_VARIETY,CCY
+    )
 		SELECT f_guid,
 		PROD_ID,
 		ASSET_CODE,
