@@ -547,7 +547,9 @@ var table;
         var tradeAmt = $('#tradeAmt').val();
         var integrateTradeAmt = $("#integrateTradeAmt").val();
         if (!integrateTradeAmt) {
-            $("#integrateTradeAmt").val(0)
+    //modify by yujiaping 2020-12-08 ZGBS-64【债券二级交易】卖出交易，交易对手选择内部产品时，计算要素未变更，也弹出提醒，请重新点击计算按钮start
+            $("#integrateTradeAmt").val('0.00')
+    //modify by yujiaping 2020-12-08 ZGBS-64【债券二级交易】卖出交易，交易对手选择内部产品时，计算要素未变更，也弹出提醒，请重新点击计算按钮end
             integrateTradeAmt = 0;
         }
 
