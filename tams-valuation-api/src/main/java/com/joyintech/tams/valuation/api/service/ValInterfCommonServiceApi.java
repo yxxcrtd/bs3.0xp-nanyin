@@ -10,10 +10,7 @@ import com.jixu.msg.dto.JJPortfolioDto;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.security.data.MultilevelDataAuthorityService;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.*;
@@ -2137,8 +2134,12 @@ public class ValInterfCommonServiceApi {
         trdProductDealVo.setTradeStatus(dealList.get(0).getTradeStatus());
         /**add by wujie on 20190530 start**/
         trdProductDealVo.setChlId(dealList.get(0).getChlId());
-        trdProductDealVo.setPayDate(dealList.get(0).getPayDate());
         /**add by wujie on 20190530 end**/
+        if(DictCodeList.业务类型_债券质押式回购交易.getValue().equals(trdProductDealVo.getBusiType())
+            && (DictCodeListExt1.交易场所_上海证券交易所.getValue().equals(trdProductDealVo.getTradeMarket())
+                || DictCodeListExt1.交易场所_深圳证券交易所.getValue().equals(trdProductDealVo.getTradeMarket()))){
+            trdProductDealVo.setPayDate(dealList.get(0).getPayDate());
+        }
         // 2.2.2 初始化金融产品交易附属表
         trdProductDealAddVo.setTradeId(trdProductDealVo.getTradeId());//交易编号
         trdProductDealAddVo.setPortfolioId(prodid);//投资组合代码

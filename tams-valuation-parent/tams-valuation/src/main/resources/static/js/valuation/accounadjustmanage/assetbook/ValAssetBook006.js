@@ -32,7 +32,7 @@
         ],
         editCell:function(value, data, field, cell, column){
             if(field=='objParamValue'){
-            var flag=true;
+                var flag=true;
                 if(value!=null&&value!=''){
                     if(value!=data.paramValue){
                         for(j=0;j<valAssetBook006DtoList.length;j++){
@@ -48,6 +48,7 @@
                         for(l=0;l<valAssetBook006DtoList.length;l++){
                             if(valAssetBook006DtoList[l].paramCode==data.paramCode){
                                 valAssetBook006DtoList.splice(l,1);
+                                l--;
                             }
                         }
                     }
@@ -55,6 +56,7 @@
                     for(k=0;k<valAssetBook006DtoList.length;k++){
                         if(valAssetBook006DtoList[k].paramCode==data.paramCode){
                             valAssetBook006DtoList.splice(k,1);
+                            k--;
                         }
                     }
                 }
@@ -70,9 +72,16 @@
     	object.booksetId=booksetId;
         object.valAssetBook006DtoList = valAssetBook006DtoList;
         if(workflowId!=null&&workflowId!=''){
-            object.valAssetBook006DtoList=table.getAllRows();
+            valAssetBook006DtoList=table.getAllRows();
+            for(m=0;m<valAssetBook006DtoList.length;m++){
+                if(valAssetBook006DtoList[m].objParamValue==null||valAssetBook006DtoList[m].objParamValue==''||valAssetBook006DtoList[m].objParamValue==valAssetBook006DtoList[m].paramValue){
+                    valAssetBook006DtoList.splice(m,1);
+                    m--;
+                }
+            }
+            object.valAssetBook006DtoList=valAssetBook006DtoList;
         }
-        if(!(object.valAssetBook006DtoList.length!=null&&object.valAssetBook006DtoList.length!=''&&object.valAssetBook006DtoList.length!=0) && (object.workflowId==''||object.workflowId==null)){
+        if(!(object.valAssetBook006DtoList.length!=null&&object.valAssetBook006DtoList.length!=''&&object.valAssetBook006DtoList.length!=0)){
             Joyin.error(JoyinUtil.getMessage("并未有参数被修改!"));
             return;
         }

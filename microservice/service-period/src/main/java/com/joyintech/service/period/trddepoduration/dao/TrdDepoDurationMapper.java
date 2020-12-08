@@ -78,6 +78,10 @@ public interface TrdDepoDurationMapper {
 	 * @since 1.0
 	 */
 	List<SelectOptionDto> getFinprodMarketId(Map<String, Object> param);
+	
+	//add by yujiaping 2020-12-5 BS-1562【存款类存续期】同一资产同一计息结束日只能做一次活期存放结息start
+	Map<String, Object> getTradeId(Map<String, Object> map);
+	//add by yujiaping 2020-12-5 BS-1562【存款类存续期】同一资产同一计息结束日只能做一次活期存放结息end
     /**
      * 
      * 市场代码联动

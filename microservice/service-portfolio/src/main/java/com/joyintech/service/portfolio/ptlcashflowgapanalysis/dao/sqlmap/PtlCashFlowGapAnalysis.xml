@@ -711,7 +711,7 @@
         and not exists (
         select 1 from TRD_PRODUCT_DEAL tpd
         where tpd.CASH_ID = fcp.CASH_ID
-        and tpd.MDATE > FCP.VDATE
+        and tpd.MDATE >= FCP.VDATE
         AND FCP.MDATE >= TPD.MDATE
         and tpd.TRADE_STATUS = #{TRADE_STATUS_01, jdbcType=VARCHAR}
         AND TPD.IS_CANCEL='N'
@@ -772,7 +772,7 @@
         and not exists (
         select 1 from TRD_PRODUCT_DEAL tpd
         where tpd.CASH_ID = fcp.CASH_ID
-        and tpd.MDATE > FCP.VDATE
+        and tpd.MDATE >= FCP.VDATE
         AND FCP.MDATE >= TPD.MDATE
         and tpd.TRADE_STATUS = #{TRADE_STATUS_01, jdbcType=VARCHAR}
         AND TPD.IS_CANCEL='N'

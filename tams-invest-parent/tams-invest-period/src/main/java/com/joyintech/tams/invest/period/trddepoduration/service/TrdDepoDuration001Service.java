@@ -229,6 +229,13 @@ implements BaseProcessService<TrdDepoDuration001Dto>{
     public int countCashMatch(String busiCode) {
         return restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdDepoDuration/countCashMatch", busiCode, Integer.class);
     }
+    
+    //add by yujiaping 2020-12-5 BS-1562【存款类存续期】同一资产同一计息结束日只能做一次活期存放结息start
+    @SuppressWarnings("unchecked")
+	public Map<String,Object> getTradeId(Map<String, Object> pageParam) {
+        return restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdDepoDuration/getTradeId", pageParam, Map.class);
+    }
+    //add by yujiaping 2020-12-5 BS-1562【存款类存续期】同一资产同一计息结束日只能做一次活期存放结息end
 
     /**
      * 资产代码联动查询

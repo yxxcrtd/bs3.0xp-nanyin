@@ -320,7 +320,7 @@
 					<!--</div> -->
 					<!-- 附件信息 -->
 					<div name="fileArray" class="page-component" th:data-path="@{/component/core/FileCommon/init}"
-						 th:data-params="|{entityName: 'fileArray', businessId: '${tradeId ?: ''}'}|"></div>
+						 th:data-params="|{entityName: 'fileArray', businessId: '${TRADESTATU03=='03' ? (PTRADEID?:'') : (tradeId ?: '') } '}|"></div>
 					<div class="pro-module-wrap">
 						<div class="pro-module">
 							<h3 class="pro-module-title"><span class="title-des">备注</span><i class="iconfont icon-arrow-down pro-down-icon"></i></h3>

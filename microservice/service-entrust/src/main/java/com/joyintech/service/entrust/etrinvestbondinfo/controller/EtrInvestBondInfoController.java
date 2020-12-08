@@ -122,7 +122,7 @@ public class EtrInvestBondInfoController {
      * @since 1.0
      */
     @PostMapping("getentrustIdAdd/{page}/{length}")
-    Page<SelectOptionDto> getentrustIdAdd(@RequestBody Map<String, Object> param,@PathVariable("page") int page,
+    public Page<SelectOptionDto> getentrustIdAdd(@RequestBody Map<String, Object> param,@PathVariable("page") int page,
                                           @PathVariable("length") int length){
         Page<SelectOptionDto> temp = etrInvestBondInfoService.getentrustIdAdd(page,length,param);
         return temp;

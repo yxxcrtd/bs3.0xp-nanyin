@@ -12,6 +12,7 @@ import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -140,6 +141,10 @@ public class TrdFundInvestTrade003Controller extends BaseController {
         model.addAttribute("YES_OR_NO_N", DictCodeList.是否_否.getValue());
         model.addAttribute("FINPROD_TYPE_F06", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
         model.addAttribute("collectType_01", DictCodeListExt2.收取方式_回款前扣除.getValue());
+
+        model.addAttribute("TRADESTATU03","");
+        model.addAttribute("PTRADEID","");
+
         TrdFundInvestTradeConfirmDto dto = new TrdFundInvestTradeConfirmDto();
         String tradeId = this.getParam("tradeId");
         String status = this.getParam("validStatus");
@@ -205,6 +210,12 @@ public class TrdFundInvestTrade003Controller extends BaseController {
             else {
                 dto = trdFundInvestTrade003Service.getTrdFundDto(RequestUtil.getPageParam());
                 // dto.setFeeAmtPay(ArithmeticUtil.subtract(dto.getFeeAmtPay(), dto.getChannelAmt()));
+                if(StringUtils.equals(status,DictCodeListExt1.交易状态_撤销.getValue())){
+                    // 如果为撤销
+                    model.addAttribute("TRADESTATU03",DictCodeListExt1.交易状态_撤销.getValue());
+                    model.addAttribute("PTRADEID",dto.getpTradeId());
+                }
+
                 Map<String, Object> param = new HashMap<>();
                 param.put("finprodId", dto.getFinprodId());
                 Map<String, Object> result = trdFundInvestTrade003Service.getPurSpeed(param);

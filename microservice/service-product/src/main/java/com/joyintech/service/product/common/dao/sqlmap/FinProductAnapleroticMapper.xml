@@ -126,12 +126,18 @@
 		  </if>
 	      <if test="finprodIds != null and finprodIds.length > 0">
 	     	 and (b.FINPROD_ID in
-	      			<foreach collection="finprodIds" item="item" open="(" separator="," close=")"> 
+	      			<foreach collection="finprodIds" item="item" index="index" open="(" separator="," close=")">
+						<if test="(index % 999) == 998">
+							null) OR b.FINPROD_ID in (
+						</if>
 	      				#{item}
 	      			</foreach>
 	      			OR
-	      		   g.P_FINPROD_ID in 
-	      		   <foreach collection="finprodIds" item="item" open="(" separator="," close=")"> 
+	      		   g.P_FINPROD_ID in
+	      		   <foreach collection="finprodIds" item="item" index="index" open="(" separator="," close=")">
+					   <if test="(index % 999) == 998">
+						   null) OR g.P_FINPROD_ID in (
+					   </if>
 	      				#{item}
 	      			</foreach>
 	      		)

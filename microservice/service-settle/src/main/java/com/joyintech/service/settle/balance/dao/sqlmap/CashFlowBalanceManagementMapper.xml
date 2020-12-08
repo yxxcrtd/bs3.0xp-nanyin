@@ -243,12 +243,19 @@
 				</if>
 				<!--  add by wangyang1 【吉林银行】 增加 托管账户 end -->
 				<if test="portfolioId != null and !portfolioId.isEmpty()">
-					<foreach collection="portfolioId" open="AND T3.PORTFOLIO_ID in (" close=")" item="item" separator=",">#{item}</foreach>
+					<foreach collection="portfolioId" open="AND （T3.PORTFOLIO_ID in (" close=")）" item="item" index="index" separator=",">
+						<if test="(index % 999) == 998">
+							null) OR T3.PORTFOLIO_ID in (
+						</if>
+						#{item}</foreach>
 				</if>
 				<!--  add by wangyang1 【吉林银行】 增加 产品经理  2019年9月29日 start --> 
 	            <if test="prodManager !=null and prodManager.size() > 0" > 
-					AND FIN_PRODUCT_ADD.PROD_MANAGER IN
-					<foreach collection="prodManager" item="item" open="(" close=")" separator=",">
+					AND (FIN_PRODUCT_ADD.PROD_MANAGER IN
+					<foreach collection="prodManager" item="item" index="index" open="(" close="))" separator=",">
+						<if test="(index % 999) == 998">
+							null) OR FIN_PRODUCT_ADD.PROD_MANAGER in (
+						</if>
 						#{item}
 					</foreach>
 				</if>
@@ -423,19 +430,31 @@
 	AND (PAY_ORDERS.COUNTER_ACCT_NO IS NULL OR PAY_ORDERS.MY_ACCT_NO != PAY_ORDERS.COUNTER_ACCT_NO)
 	AND T4.PORTFOLIO_ID IS NOT NULL
 	<if test="portfolioId != null and !portfolioId.isEmpty()">
-		<foreach collection="portfolioId" open="AND T4.PORTFOLIO_ID in ("
-				 close=")" item="item" separator=",">#{item}</foreach>
+		<foreach collection="portfolioId" open="AND (T4.PORTFOLIO_ID in ("
+				 close="))" item="item" index="index" separator=",">
+			<if test="(index % 999) == 998">
+				null) OR T4.PORTFOLIO_ID in (
+			</if>
+			#{item}</foreach>
 	</if>
 	<!--  add by wangyang1 【吉林银行】 增加 产品经理  2019年9月29日 start -->
 	<if test="prodManager !=null and prodManager.size() > 0" >
-		AND FIN_PRODUCT_ADD.PROD_MANAGER IN
-		<foreach collection="prodManager" item="item" open="(" close=")" separator=",">
+		AND (FIN_PRODUCT_ADD.PROD_MANAGER IN
+		<foreach collection="prodManager" item="item" index="index" open="(" close="))" separator=",">
+			<if test="(index % 999) == 998">
+				null) OR FIN_PRODUCT_ADD.PROD_MANAGER in (
+			</if>
 			#{item}
 		</foreach>
 	</if>
 	<!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
 	<if test="finprodId != null and !finprodId.isEmpty()">
-		<foreach collection="finprodId" open="AND T6.FINPROD_ID in (" close=")" item="item" separator=",">#{item}</foreach>
+		<foreach collection="finprodId" open="AND (T6.FINPROD_ID in (" close="))" item="item" index="index" separator=",">
+			<if test="(index % 999) == 998">
+				null) OR T6.FINPROD_ID in (
+			</if>
+			#{item}
+		</foreach>
 		<!--<AND T6.FINPROD_ID = #{finprodId}-->
 	</if>
 	<!--<if test="paBizType != null and !paBizType.isEmpty()"> -->
@@ -510,19 +529,27 @@
 		AND (PAY_ORDERS.COUNTER_ACCT_NO IS NULL OR PAY_ORDERS.MY_ACCT_NO != PAY_ORDERS.COUNTER_ACCT_NO)
 		AND T4.PORTFOLIO_ID IS NOT NULL
 		<if test="portfolioId != null and !portfolioId.isEmpty()">
-			<foreach collection="portfolioId" open="AND T4.PORTFOLIO_ID in ("
-					 close=")" item="item" separator=",">#{item}</foreach>
+			<foreach collection="portfolioId" open="AND (T4.PORTFOLIO_ID in ("
+					 close="))" item="item" index="index" separator=",">
+				<if test="(index % 999) == 998">
+					null) OR T4.PORTFOLIO_ID in (
+				</if>
+				#{item}
+			</foreach>
 		</if>
 		<!--  add by wangyang1 【吉林银行】 增加 产品经理  2019年9月29日 start -->
 		<if test="prodManager !=null and prodManager.size() > 0" >
-			AND FIN_PRODUCT_ADD.PROD_MANAGER IN
-			<foreach collection="prodManager" item="item" open="(" close=")" separator=",">
+			AND (FIN_PRODUCT_ADD.PROD_MANAGER IN
+			<foreach collection="prodManager" item="item" index="index" open="(" close="))" separator=",">
+				<if test="(index % 999) == 998">
+					null) OR FIN_PRODUCT_ADD.PROD_MANAGER in (
+				</if>
 				#{item}
 			</foreach>
 		</if>
 		<!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
 		<if test="finprodId != null and !finprodId.isEmpty()">
-			AND（
+			AND(
 			<foreach collection="finprodId" open="T6.FINPROD_ID in (" close=")" item="item" separator=",">#{item}</foreach>
 			OR
 			<foreach collection="finprodId" open="OPT_TARGET_INFO.TARGET_ID in (" close=")" item="item" separator=",">#{item}</foreach>

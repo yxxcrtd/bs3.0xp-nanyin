@@ -111,8 +111,11 @@ AND		deal.PS IN ('T07', 'T08', 'T09')
 	WHERE			
 		A.TRADE_DATE = B.BOOKSET_DATE
 		AND B.TASK_ID = #{taskId}
-		AND A.PS IN 
-		<foreach collection="listPs" item="ps" open="( " close=" )" separator=",">
+		AND (A.PS IN
+		<foreach collection="listPs" item="ps" index="index" open="( " close=" ))" separator=",">
+			<if test="(index % 999) == 998">
+				null) OR A.PS in (
+			</if>
 	        #{ps}
 	    </foreach>
 		AND D.GEN_TYPE = #{genType}
@@ -138,8 +141,11 @@ AND		deal.PS IN ('T07', 'T08', 'T09')
 	where
 	1 = 1
 	 <if test="tradeList !=null ">
-	     and TRADE_ID in
-	               <foreach collection="tradeList" item="tradeId" open="( " close=" )" separator=",">
+	     and (TRADE_ID in
+		   <foreach collection="tradeList" item="tradeId" index="index" open="( " close=" ))" separator=",">
+			   <if test="(index % 999) == 998">
+				   null) OR TRADE_ID in (
+			   </if>
 	          #{tradeId}
 	      </foreach>
 	 </if>
@@ -152,8 +158,11 @@ AND		deal.PS IN ('T07', 'T08', 'T09')
 	where
 	1 = 1
 	 <if test="tradeList !=null ">
-	     and BUSI_NO in
-	               <foreach collection="tradeList" item="tradeId" open="( " close=" )" separator=",">
+	     and (BUSI_NO in
+		   <foreach collection="tradeList" item="tradeId" index="index" open="( " close=" ))" separator=",">
+			   <if test="(index % 999) == 998">
+				   null) OR BUSI_NO in (
+			   </if>
 	          #{tradeId}
 	      </foreach>
 	 </if>
@@ -167,9 +176,12 @@ AND		deal.PS IN ('T07', 'T08', 'T09')
 	where
 	1 = 1
 	 <if test="tradeList !=null ">
-	     and BUSI_NO in
-	               <foreach collection="tradeList" item="tradeId" open="( " close=" )" separator=",">
-	          #{tradeId}
+	     and (BUSI_NO in
+		   <foreach collection="tradeList" item="tradeId" index="index" open="( " close=" ))" separator=",">
+			   <if test="(index % 999) == 998">
+				   null) OR BUSI_NO in (
+			   </if>
+		  		#{tradeId}
 	      </foreach>
 	 </if>
 	 AND BUSI_TABLE = '02'
@@ -183,8 +195,11 @@ AND		deal.PS IN ('T07', 'T08', 'T09')
 	where
 	1 = 1
 	 <if test="tradeList !=null ">
-	     and TRADE_ID in
-	               <foreach collection="tradeList" item="tradeId" open="( " close=" )" separator=",">
+	     and (TRADE_ID in
+		   <foreach collection="tradeList" item="tradeId" index="index" open="( " close=" ))" separator=",">
+			   <if test="(index % 999) == 998">
+				   null) OR TRADE_ID in (
+			   </if>
 	          #{tradeId}
 	      </foreach>
 	 </if>
@@ -197,10 +212,13 @@ AND		deal.PS IN ('T07', 'T08', 'T09')
 	where
 	1 = 1
 	 <if test="tradeList !=null ">
-	     and TRADE_ID in
-	               <foreach collection="tradeList" item="tradeId" open="( " close=" )" separator=",">
-	          #{tradeId}
-	      </foreach>
+	     and (TRADE_ID in
+		 <foreach collection="tradeList" item="tradeId" index="index" open="( " close=" ))" separator=",">
+		   <if test="(index % 999) == 998">
+			   null) OR TRADE_ID in (
+		   </if>
+		   #{tradeId}
+	     </foreach>
 	 </if>
 	</delete>
 	
@@ -383,8 +401,11 @@ INNER JOIN FIN_PRODUCT pro
 		<!-- AND		pro.FINPROD_TYPE = ple.PLEDGE_FINPROD_TYPE -->
 WHERE	1=1
 	<if test="trdFinprodTypeList !=null and trdFinprodTypeList.size > 0">
-	     AND fin.FINPROD_TYPE in
-	               <foreach collection="trdFinprodTypeList" item="trdFinprodType" open="( " close=" )" separator=",">
+	     AND (fin.FINPROD_TYPE in
+		   <foreach collection="trdFinprodTypeList" item="trdFinprodType" index="index" open="( " close=" ))" separator=",">
+			   <if test="(index % 999) == 998">
+				   null) OR fin.FINPROD_TYPE in (
+			   </if>
 	          #{trdFinprodType}
 	      </foreach>
 	 </if>			

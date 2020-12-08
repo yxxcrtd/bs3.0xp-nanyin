@@ -38,7 +38,7 @@
         // 产品收益类型为货币型时，页面指标显示变为货币型的相应指标
         if(profitTypeMoney == $("#profitTypeCode").val()){
             $("#netUnitValueLabel").html("万份收益");
-            $("#netUnitValueEditLabel").html("修改后万分收益");
+            $("#netUnitValueEditLabel").html("修改后万份收益");
             $("#assetValueEditLabel").html("修改后本日收益");
         }   
         

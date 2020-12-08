@@ -1528,6 +1528,9 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 }else if(DictCodeList.交易方向_卖出.getValue().equals(trdFinProductDealTotal1.getPs())){
                     trdFinProductDealTotal1.setPs(DictCodeList.交易方向_买入.getValue());
                 }
+                //add by yujiaping 2020-12-07 BS-1501  内部转仓转转仓，清算速度不做特殊处理，卖出是什么买入就是什么start
+                trdFinProductDealTotal1.setSettleSpeed(Long.valueOf(entity.getSettleSpeedStr()));
+                //add by yujiaping 2020-12-07 BS-1501  内部转仓转转仓，清算速度不做特殊处理，卖出是什么买入就是什么end
 
                 // 上面copyPropertiesIgnoreNull时 错误，重新赋值
                 trdFinProductDealTotal1.setInvAim(entity.getTurnInvAim());

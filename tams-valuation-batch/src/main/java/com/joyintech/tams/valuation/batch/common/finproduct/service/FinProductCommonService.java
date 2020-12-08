@@ -1540,7 +1540,10 @@ public class FinProductCommonService {
     		//市价折算方式 ="按占比计算"
     		if(ValDictCodeList.债券市价折算方式_按占比计算.getValue().equals(conversionMode)) {
     			//市价*估值日债券面值/行情日债券面值
-    			return netprice.multiply(BigDecimal.valueOf(faceQueryValuation)).divide(BigDecimal.valueOf(faceQueryQuotation));
+                // update by caiqun TISHKBS-1659 除法的时候  小数位没有精确所以报错 start
+                //return netprice.multiply(BigDecimal.valueOf(faceQueryValuation)).divide(BigDecimal.valueOf(faceQueryQuotation));
+                return ArithmeticUtil.divide(netprice.multiply(BigDecimal.valueOf(faceQueryValuation)), BigDecimal.valueOf(faceQueryQuotation), NumberEnum.HIGH_PREC_NUM.getCode());
+                // update by caiqun TISHKBS-1659 除法的时候  小数位没有精确所以报错 end
     		}else if(ValDictCodeList.债券市价折算方式_按金额计算.getValue().equals(conversionMode)){
     			//市价-(行情日债券面值 - 估值日债券面值)
     			return netprice.subtract(BigDecimal.valueOf(faceQueryQuotation)).add(BigDecimal.valueOf(faceQueryValuation));
