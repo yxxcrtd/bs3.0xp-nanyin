@@ -463,7 +463,15 @@ public class FinProductBuild002Service extends BaseService<FinProductBuild002Dto
 //                    entity.getBussRepFinProductInfoDto().setRepRaisePstrdate(entity.getFirstSaleVdate());
 //                    entity.getBussRepFinProductInfoDto().setRepRaisePenddate(entity.getFirstSaleVdate());
                     //发行机构代码
-                    entity.getBussRepFinProductInfoDto().setRepIssuePartyId(CacheUtil.getSysParam("SVR_ISSUE_PARTY_ID"));
+                    // update by shengqiqiang 产品新建时登记银行代码从 机构登记银行代码管理 功能接入  2020.12.8 start
+                    if(CommonUtil.isBAmodel()){
+                        entity.getBussRepFinProductInfoDto().setRepIssuePartyId(CommonUtil.getInstitutionCodeByLoginUser_ms());
+                    } else {
+                        entity.getBussRepFinProductInfoDto().setRepIssuePartyId(CommonUtil.selectBankCode());
+                    }
+                    //entity.getBussRepFinProductInfoDto().setRepIssuePartyId(CacheUtil.getSysParam("SVR_ISSUE_PARTY_ID"));
+                    // update by shengqiqiang 产品新建时登记银行代码从 机构登记银行代码管理 功能接入  2020.12.8 end
+                    
                     //报送信息存值 募集起始日期 yjm end 20190801
                     entity.getBussRepFinProductInfoDto().setRepFinprodId(entity.getFinprodId());
                     entity.getBussRepFinProductInfoDto().setRepFinprodName(entity.getFinprodName());
