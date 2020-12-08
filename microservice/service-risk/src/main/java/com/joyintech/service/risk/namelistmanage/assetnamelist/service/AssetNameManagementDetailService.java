@@ -7,14 +7,11 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.risk.namelistmanage.assetnamelist.dao.AssetNameManagementDetailMapper;
 import com.joyintech.service.risk.namelistmanage.assetnamelist.dao.AssetNameManagementMapper;
 import com.joyintech.service.risk.namelistmanage.assetnamelist.dto.RskAccessListDetailDto;
-import com.joyintech.service.risk.namelistmanage.assetnamelist.dto.RskAccessListDto;
 import com.joyintech.service.risk.namelistmanage.assetnamelist.dto.RskAccessListLogDto;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
-import com.netflix.discovery.converters.Auto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -72,9 +69,10 @@ public class AssetNameManagementDetailService extends BaseService<RskAccessListD
      * @return
      */
     public List<RskAccessListDetailDto> selectAssetListDetail(Map<String,Object> map){
-        if(StringUtil.isNotEmpty(map.get("workflowId"))){
-            return assetNameManagementDetailMapper.selectAssetListDetailInworkflow(map);
-        }
+        //delete by yangwenjun 20201208 ZGBS-68
+//        if(StringUtil.isNotEmpty(map.get("workflowId"))){
+//            return assetNameManagementDetailMapper.selectAssetListDetailInworkflow(map);
+//        }
         return assetNameManagementDetailMapper.selectAssetListDetailValid(map);
     }
 
