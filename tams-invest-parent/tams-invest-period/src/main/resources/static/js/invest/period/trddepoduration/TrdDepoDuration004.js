@@ -19,7 +19,7 @@ $(function() {
         var finprodMarketId = $('#finprodMarketId').val();
         	Joyin.ajax(basePath + "invest/period/trddepoduration/TrdDepoDuration002/getTradeId",{finprodMarketId:finprodMarketId,mdateProd:mdateProd},
         			function(result){
-        		if(result.data){
+        		if(result.data.RESULT != 0){
         			Joyin.error(JoyinUtil.getMessage("资产在同一个计息结束日不可以重复做活期存放结息!"));
         			return;
         		}else{
