@@ -123,4 +123,48 @@
 		delete from PTL_SEC_POSITION_FLOW where PORTFOLIO_ID = #{portfolidId,jdbcType = VARCHAR}
 		and TRADE_ID = #{tradeId,jdbcType = VARCHAR}
 	</delete>
+
+	<!-- add by mashukai TISHKBS-1640  高频开放货币型产品跑批过滤节假日 start-->
+	<select id="selectProdList" resultType="String" parameterType="java.util.List">
+		SELECT
+			FP.FINPROD_ID
+		FROM FIN_PRODUCT FP
+		<where>
+			<if test="list != null and list.size > 0">
+				AND (FP.finprod_id IN
+				<foreach collection="list" item="item" index="index" open="(" close="))" separator=",">
+					<if test="(index % 999) == 998">
+						null) OR FP.finprod_id in (
+					</if>
+					#{item}
+				</foreach>
+			</if>
+			AND NOT EXISTS (
+				SELECT
+					1
+				FROM FIN_PRODUCT
+				INNER JOIN FIN_CASH_INFO
+				ON FIN_PRODUCT.finprod_id = FIN_CASH_INFO.finprod_id
+				AND	FIN_CASH_INFO.finprod_type = '01'
+				AND	FIN_CASH_INFO.cash_type_2 = 'C01'
+				INNER JOIN	FIN_OPEN_RULE
+				ON	FIN_OPEN_RULE.cash_id = FIN_CASH_INFO.cash_id
+				<where>
+					<if test="list != null and list.size > 0">
+						AND (FIN_PRODUCT.finprod_id IN
+						<foreach collection="list" item="item" index="index" open="(" close="))" separator=",">
+							<if test="(index % 999) == 998">
+								null) OR FIN_PRODUCT.finprod_id in (
+							</if>
+							#{item}
+						</foreach>
+					</if>
+					AND FIN_OPEN_RULE.OPEN_MODE ='02'
+					AND FP.FINPROD_ID = FIN_PRODUCT.finprod_id
+				</where>
+			)
+		</where>
+	</select>
+	<!-- add by mashukai TISHKBS-1640  高频开放货币型产品跑批过滤节假日 end-->
+
 </mapper>
