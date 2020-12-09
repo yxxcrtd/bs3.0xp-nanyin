@@ -645,6 +645,9 @@ $(function() {
 	        });
             byBasis();
         }
+        if(objBuyOutRate!=null&&objBuyOutRate!=''){
+            $('#buyOutRate').val(objBuyOutRate).trigger('change');
+        }
     }
     var init = function(){
     	if($('#type6').val()==ASSET_TYPE_PROJECT_01
