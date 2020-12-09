@@ -18,6 +18,7 @@ import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.redisinit.dto.ImplCond;
 import com.joyintech.tams.invest.common.redisinit.service.RiskRedisInitService;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -70,6 +71,12 @@ public class AssetInputRedisAop {
         if(!StringUtil.isNotEmpty(joinPoint.getArgs())){
             return;
         }
+        Object[] args = joinPoint.getArgs();
+        FinProduct finProduct = (FinProduct) args[0];
+        if(StringUtils.equals("99",finProduct.getModelType())){
+            return;
+        }
+
         if (CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)) {
             threadPoolTaskExecutor.execute(()->{
                 try {
@@ -77,8 +84,8 @@ public class AssetInputRedisAop {
                     logger.info("===========资产进入redis开始=============");
                     ImplCond cond = new ImplCond();
                     cond.setDel(false);
-                    Object[] args = joinPoint.getArgs();
-                    FinProduct finProduct = (FinProduct) args[0];
+//                    Object[] args = joinPoint.getArgs();
+//                    FinProduct finProduct = (FinProduct) args[0];
                     if (StringUtil.isNotEmpty(finProduct) && StringUtil.isNotEmpty(finProduct.getFinprodId())) {
                         cond.setAssetIdArray(finProduct.getFinprodId());
                         // 设置平台时间
