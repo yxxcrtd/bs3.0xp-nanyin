@@ -11,7 +11,8 @@
         else to_char(to_number(b.yvalue))
         end as yvalue, -->
         b.yvalue,
-        b.keyvalue,b.data,ftrtype2 from (
+        decode(substr(b.keyvalue,1,1),'.','0'||b.keyvalue,b.keyvalue) keyvalue,
+        b.data,ftrtype2 from (
         SELECT * FROM (${sql}
         <if test="Selectcriteria !=null and Selectcriteria !=''">
             and ${Selectcriteria}
