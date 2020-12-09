@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
@@ -58,10 +59,16 @@ public class TrdPlanRateInvestTradeDtoValidator implements TradeCommonValidator 
     
     @Autowired
 	private TradeCommonService tradeCommonService;
+    
+    @Value("${flag:false}")
+    private boolean flag;
 
     @Override
     public List<ValidMessage> bussValid(Object value){
         ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+        if(flag) {
+        	return errorList;
+        }
         TrdPlanRateInvestTradeDto dto = (TrdPlanRateInvestTradeDto)value;
 //        if(dto.getOperateType().equals("submit")){
 //            if(StringUtil.isEmptyList(dto.getFileArray())){

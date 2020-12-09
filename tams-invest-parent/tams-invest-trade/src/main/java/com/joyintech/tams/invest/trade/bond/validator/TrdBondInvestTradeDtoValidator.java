@@ -19,6 +19,7 @@ import java.util.Map;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.joyintech.calculation.util.ArithmeticUtil;
@@ -69,6 +70,8 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
     @Autowired(required = false)
     private BaseEtrInvestInfoService baseEtrInvestInfoService;
 
+    @Value("${flag:false}")
+    private boolean flag;
     /**
      * {@inheritDoc}
      */
@@ -76,6 +79,10 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
     public List<ValidMessage> bussValid(Object value) {
         TrdBondInvestTradeDto inputDto = (TrdBondInvestTradeDto)value;
         List<ValidMessage> errorList = new ArrayList<>();
+        
+        if(flag) {
+        	return errorList;
+        }
 
         // 交易所债一级市场时，交易平台非必填 add by renping 20191105 start
         if (!((StringUtil.equals(inputDto.getTradeMarket(),

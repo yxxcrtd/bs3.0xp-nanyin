@@ -25,6 +25,7 @@ import com.joyintech.tams.component.business.common.service.BasRiskMathCommServi
 import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
+import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto;
@@ -226,6 +227,12 @@ public class TrdPlanRateInvestTrade002Service extends CommonExportService<TrdPla
     
     @Autowired
     private RiskCreditListCommonValidatorService riskCreditListCommonValidatorService;
+    
+    /**
+     * BaseGetBusinessId
+     */
+    @Autowired(required = false)
+    private BaseGetBusinessId baseGetBusinessId;
     
     /**
      * 交易及存续期交易，保存进待办，点批量审批时候需要报错。
@@ -2169,5 +2176,58 @@ public class TrdPlanRateInvestTrade002Service extends CommonExportService<TrdPla
 		result.put("id", id);
 		return result;
 	}
+	
+	 @Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor = Exception.class)
+	    public void save(TrdPlanRateInvestTradeDto dto) {
+	    	dto.setActPortfolioId(dto.getPortfolioId());
+	    	dto.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(dto.getPortfolioId()));
+	        if (dto.getBussTrdTransferOrder() != null && dto.getBussTrdTransferOrder().size() > 0
+	                && dto.getBussTrdTransferOrder().get(0) != null && !dto.getBussTrdTransferOrder().get(0).toString().isEmpty()) {
+	            if (bussTrdTransferOrderService != null) {
+	            	dto.setBussTrdTransferOrder(bussTrdTransferOrderService.save(dto.getBussTrdTransferOrder()));
+	            }
+	            StlPayOrdersDto stlPayOrdersDto = new StlPayOrdersDto();
+	            BeanUtil.copyPropertiesIgnoreNull(stlPayOrdersDto, dto.getBussTrdTransferOrder().get(0));
+	            String orderId = "";
+	    		if (baseGetBusinessId != null) {
+	    			BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
+	    			bussinessCodeParameter.setSeqNo("9998");
+	    			orderId = baseGetBusinessId.buildBussinessCode(bussinessCodeParameter);
+	    		} else {
+	    			orderId = IDGenerator.generate();
+	    		}
+	    		stlPayOrdersDto.setOrderId(orderId);
+	            List<StlPayOrdersDto> list = new ArrayList<StlPayOrdersDto>();
+	            list.add(stlPayOrdersDto);
+	            dto.setStlPayOrdersList(list);
+	        }
+	        TrdPlanRateInvestTradeDto entity = this.setEntity(dto);
+	        
+	        //入库
+	        entity.setActPortfolioId(entity.getPortfolioId());
+	        entity.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(entity.getPortfolioId()));
+	        entity.getFinProductTradeDto().setWorkflowStatus(DictCodeListExt1.交易流程状态_有效.getValue());
+	        
+	        FinProductTradeDto finProductTradeDto = entity.getFinProductTradeDto();
+	        
+	        for(BaseTradeProductDealDto baseTradeProductDealDto:finProductTradeDto.getBaseTradeProductDealDtos()) {
+	        	//金融产品汇总表
+	        	if(baseTradeProductDealDto.getTrdFinProductDealTotal()!=null){
+	        		trdFinProductDealTotalMapper.insert(baseTradeProductDealDto.getTrdFinProductDealTotal());
+	        	}
+
+	        	//金融产品交易
+	        	trdProductDealMapper.insert(baseTradeProductDealDto.getTrdProductDeal());
+
+	        	//金融产品交易附属表
+	        	trdProductDealAddMapper.insert(baseTradeProductDealDto.getTrdProductDealAdd());
+	        	//划款指令表
+	        	if(baseTradeProductDealDto.getStlPayOrdersList() != null){
+	        		for(StlPayOrders stlPayOrders:baseTradeProductDealDto.getStlPayOrdersList()){
+	        			stlPayOrdersMapper.insert(stlPayOrders);
+	        		}
+	        	}
+	        }
+	    }
 
 }

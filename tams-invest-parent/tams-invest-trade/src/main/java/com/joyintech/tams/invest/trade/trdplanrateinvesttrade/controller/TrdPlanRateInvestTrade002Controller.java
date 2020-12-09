@@ -28,6 +28,7 @@ import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.trade.dao.TrdCommonBaseMapper;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -120,6 +121,9 @@ public class TrdPlanRateInvestTrade002Controller extends BaseController{
 
     @Autowired
     private TrdCommonController trdCommonController;
+    
+    @Value("${flag:false}")
+    private boolean flag;
     
     /**
      * 初始化方法
@@ -387,6 +391,38 @@ public class TrdPlanRateInvestTrade002Controller extends BaseController{
             return new AjaxResult(br);
         }
         
+        if (flag) {
+            BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter(); 
+            if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())){
+             // 一体化对应etliu end
+                bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_净值型资产申购);
+                if(StringUtil.equals(DictCodeList.计划类资产一级分类_券商资产管理计划, dto.getFinprodType())){
+                    bussinessCodeParameter.setType1(DictCodeList.业务编号一级分类_券商资产管理计划);
+                }else if(StringUtil.equals(DictCodeList.计划类资产一级分类_信托产品, dto.getFinprodType())){
+                    bussinessCodeParameter.setType1(DictCodeList.业务编号一级分类_信托产品);
+                }else{
+                    bussinessCodeParameter.setType1(DictCodeList.业务编号一级分类_保险资产管理计划);
+                }
+            }else if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())){
+                bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_净值型资产赎回);
+                if(StringUtil.equals(DictCodeList.计划类资产一级分类_券商资产管理计划, dto.getFinprodType())){
+                    bussinessCodeParameter.setType1(DictCodeList.业务编号一级分类_券商资产管理计划);
+                }else if(StringUtil.equals(DictCodeList.计划类资产一级分类_信托产品, dto.getFinprodType())){
+                    bussinessCodeParameter.setType1(DictCodeList.业务编号一级分类_信托产品);
+                }else{
+                    bussinessCodeParameter.setType1(DictCodeList.业务编号一级分类_保险资产管理计划);
+                }
+            }
+            if(baseGetBusinessId != null){
+                String tradId = baseGetBusinessId.buildBussinessCode(bussinessCodeParameter) != null ? baseGetBusinessId.buildBussinessCode(bussinessCodeParameter) : IDGenerator.generate(); 
+                dto.setTotleTradeId(tradId);
+            }
+            String  tradeId=trdPlanRateInvestTrade002Service.getTradeId(dto.getPs(),dto.getFinprodType());//获取买入卖出交易的交易编号
+            dto.setTradeId(tradeId);
+            dto.setCounterId(dto.getTrdInvestPersonInfo002Dto().getCounterId());
+        	trdPlanRateInvestTrade002Service.save(dto);
+        	return new AjaxResult("成功");
+		}
         
         
         ProcessParameter<TrdPlanRateInvestTradeDto> processParameter = new ProcessParameter<TrdPlanRateInvestTradeDto>();

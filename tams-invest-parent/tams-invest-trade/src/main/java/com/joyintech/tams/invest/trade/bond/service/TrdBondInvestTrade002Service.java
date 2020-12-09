@@ -3449,4 +3449,40 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 Integer.class);
     }
     /* add by msk 新增查询通道划款交易 TISHKBS-1038  20201111 end */
+    
+    @Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor = Exception.class)
+    public void fastSave(TrdBondInvestTradeDto dto) {
+    	//****
+    	prepareEntity(dto);
+    	dto.setActPortfolioId(dto.getPortfolioId());
+    	dto.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(dto.getPortfolioId()));
+        TrdFinProductDealTotal trdFinProductDealTotal = new TrdFinProductDealTotal();
+        BeanUtil.copyPropertiesIgnoreNull(trdFinProductDealTotal, dto);
+        trdFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+        trdFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
+        trdFinProductDealTotal.setPortfolioId(dto.getActPortfolioId());
+        trdFinProductDealTotal.setSettleSpeed(Long.valueOf(dto.getSettleSpeedStr()));
+        trdFinProductDealTotalMapper.insertSelective(trdFinProductDealTotal);
+        
+        TrdDealTotalAdd trdDealTotalAdd = 生成汇总附属表(dto); 
+        trdDealTotalAddMapper.insertSelective(trdDealTotalAdd);
+    	
+        
+        StlPayOrders stlPayOrders = new StlPayOrders();
+        for (BussTrdTransferOrderDto order : dto.getBussTrdTransferOrder()) {
+            BeanUtil.copyPropertiesIgnoreNull(stlPayOrders, order);
+            String orderId = "";
+    		if (baseGetBusinessId != null) {
+    			BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
+    			bussinessCodeParameter.setSeqNo("9998");
+    			orderId = baseGetBusinessId.buildBussinessCode(bussinessCodeParameter);
+    		} else {
+    			orderId = IDGenerator.generate();
+    		}
+    		stlPayOrders.setOrderId(orderId);
+            stlPayOrders.setOrderStatus(DictCodeListExt1.指令状态_新建.getValue());
+            stlPayOrders.setTradeId(dto.getTotleTradeId());
+            stlPayOrdersMapper.insertSelective(stlPayOrders);
+        }
+    }
 }

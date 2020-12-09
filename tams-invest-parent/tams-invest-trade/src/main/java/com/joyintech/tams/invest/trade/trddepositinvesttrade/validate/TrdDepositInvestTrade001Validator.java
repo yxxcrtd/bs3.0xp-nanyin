@@ -16,6 +16,7 @@ import java.util.List;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,9 +57,15 @@ public class TrdDepositInvestTrade001Validator implements TradeCommonValidator{
     @Autowired
     private BussTrdTransferOrderService bussTrdTransferOrderService;
     
+    @Value("${flag:false}")
+    private boolean flag;
+    
     @Override
     public List<ValidMessage> bussValid(Object value){
         ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+        if(flag) {
+        	return errorList;
+        }
         TrdDepositInvestTrade001Dto dto = (TrdDepositInvestTrade001Dto)value;
         if(dto.getOperateType().equals("submit")){
             // 划款指令

@@ -252,6 +252,9 @@ application:
 #      investInterfService: http://TamsMicroservice
 #      adapterService: http://TamsMicroservice
 
+#交易压力测试性能优化开关
+flag: false
+
 ---
 spring:
   profiles: allinone

@@ -28,6 +28,7 @@ import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -113,6 +114,9 @@ public class TrdBondInvestTrade002Controller extends BaseController {
     @Autowired
     private TrdCommonController trdCommonController;
 
+    @Value("${flag:false}")
+    private boolean flag;
+    
     @Override
     public String init(Model model) {
         setSelectOptions(model);
@@ -707,7 +711,17 @@ public class TrdBondInvestTrade002Controller extends BaseController {
     @ResponseBody
     AjaxResult save(@RequestBody TrdBondInvestTradeDto dto)
         throws Exception {
-        
+    	if(flag) {
+			if (baseGetBusinessId != null) {
+                BussinessCodeParameter codeParameter = getBussinessCodeParameter(dto.getPs());
+                dto.setTotleTradeId(baseGetBusinessId.buildBussinessCode(codeParameter));
+			}
+			else {
+				dto.setTotleTradeId(IDGenerator.generate());
+			}
+    		trdBondInvestTrade002Service.fastSave(dto);
+    		return new AjaxResult("成功");
+    	}
     	List<TrdBondInvestTradeDto> dtoList = new ArrayList<>();
     	List<BussTrdTransfenpeiDto> fenpeiList = dto.getBussTrdTransfenpeiDto();
     	List<BussTrdTransferOrderDto> orderList = dto.getBussTrdTransferOrder();
