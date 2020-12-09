@@ -555,6 +555,8 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         etrEntrust.setEntrustStatus(entrustStatus);
         // 修改委托指令表中值
         int flag = etrEntrustMapper.updateByPrimaryKeySelective(etrEntrust);
+        // 修改委托指令分发表中值 add by yangwenjun 20201209
+        etrEntrustMapper.updateByPrimaryKeySelective1(etrEntrust);
         // 判断更新委托状态执行成功
         if (flag == 1) {
             return true;
