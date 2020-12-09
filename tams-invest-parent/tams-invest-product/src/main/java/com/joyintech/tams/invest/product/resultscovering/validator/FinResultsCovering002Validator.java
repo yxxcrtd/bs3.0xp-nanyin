@@ -1,10 +1,15 @@
 package com.joyintech.tams.invest.product.resultscovering.validator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.invest.product.common.service.ProductCommonService;
+import com.joyintech.tams.invest.product.resultscovering.dto.FinResultsCovering001Dto;
+import com.joyintech.tams.invest.product.resultscovering.service.FinResultsCovering001Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +25,10 @@ public class FinResultsCovering002Validator implements BeanValidator {
 
 	@Autowired
 	private ProductCommonService productCommonService;
+
+	@Autowired
+	private FinResultsCovering001Service finResultsCovering001Service;
+
 
 	@Override
 	public List<ValidMessage> valid(Object value) {
@@ -79,7 +88,26 @@ public class FinResultsCovering002Validator implements BeanValidator {
 				}
 			}
 		}
+
+		//add by mashukai 20201209 工单号：YHZGCPB20201207002 业绩回补增加校验，同一产品同一回补日只能做一次回补交易 start
+		if (validList.size() <= 0){
+			Map<String, Object> dataMap = new HashMap<String, Object>();
+			String coveringDateStr = DateUtil.format(entity.getCoveringDate());
+			dataMap.put("prodId",entity.getProdId());
+			dataMap.put("coveringDateStart",coveringDateStr);
+			dataMap.put("coveringDateEnd",coveringDateStr);
+			Page<FinResultsCovering001Dto> page =  finResultsCovering001Service.selectForPage(dataMap);
+			int count = 0;
+			for(FinResultsCovering001Dto dto : page.getRoot()){
+				if (StringUtil.equals(dto.getTradeStatus(),"01") || StringUtil.equals(dto.getTradeStatus(),"04")){
+					count++;
+				}
+			}
+			if (count > 0){
+				validList.add(new ValidMessage("prodId", this.getMessage(page.getRoot().get(0).getProdAbbr()+"回补日当天已存在有效或流程中数据")));
+			}
+		}
+		//add by mashukai 20201209 工单号：YHZGCPB20201207002 业绩回补增加校验，同一产品同一回补日只能做一次回补交易 end
 		return validList;
 	}
-
 }
