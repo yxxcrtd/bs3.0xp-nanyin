@@ -179,6 +179,9 @@
 		FROM PTL_SEC_ACCT A
 		INNER JOIN STL_SEC_ACCT_INFO B ON A.ACCT_NO = B.SEC_ACCT_ID
 		INNER JOIN STL_CAPACCT_INFO C on B.TRD_ACCT_ID = C.ACCT_NO
+<!-- add by yujiaping 2020-12-10 TISHKBS-1680【DVP资金调拨】划款类型选择托管户-DVP账户，收款账户下拉框应该只有组合所绑定的中债DVP账户start -->
+		INNER JOIN PTL_CAPACCT_INFO D on B.TRD_ACCT_ID = D.ACCT_NO
+<!-- add by yujiaping 2020-12-10 TISHKBS-1680【DVP资金调拨】划款类型选择托管户-DVP账户，收款账户下拉框应该只有组合所绑定的中债DVP账户end -->
 		<where>
 			<if test="search != null and !search.isEmpty()">
 				AND (B.TRD_ACCT_ID LIKE CONCAT('%',CONCAT(#{search},'%'))
@@ -193,6 +196,14 @@
 			<if test="ccy != null and !ccy.isEmpty()">
 				AND C.CCY = #{ccy}
 			</if>
+<!-- add by yujiaping 2020-12-10 TISHKBS-1680【DVP资金调拨】划款类型选择托管户-DVP账户，收款账户下拉框应该只有组合所绑定的中债DVP账户start -->
+            <if test="portfolioId != null and !portfolioId.isEmpty()">
+				AND D.PORTFOLIO_ID = #{portfolioId}
+			</if>
+			<if test="acctType != null and !acctType.isEmpty()">
+				AND D.ACCT_TYPE = #{acctType}
+			</if>
+<!-- add by yujiaping 2020-12-10 TISHKBS-1680【DVP资金调拨】划款类型选择托管户-DVP账户，收款账户下拉框应该只有组合所绑定的中债DVP账户end -->
 		</where>
 	</select>
 

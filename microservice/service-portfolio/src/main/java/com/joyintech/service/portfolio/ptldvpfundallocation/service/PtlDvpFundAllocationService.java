@@ -211,17 +211,23 @@ public class PtlDvpFundAllocationService extends BaseService<PtlDvpFundAllocatio
         }
 
         String REGIST_ORG = null;
+        //add by yujiaping 2020-12-10 TISHKBS-1680【DVP资金调拨】划款类型选择托管户-DVP账户，收款账户下拉框应该只有组合所绑定的中债DVP账户
+        String acctType = null;
         if (StringUtil.equals(BussinessDictCodeList.交易方向_托管户_上清DVP.getValue(), payType)
             || StringUtil.equals(BussinessDictCodeList.交易方向_中债DVP_上清DVP.getValue(), payType)) {
             REGIST_ORG = BussinessDictCodeList.登记托管机构_上海清算所.getValue();
+            acctType =  BussinessDictCodeList.资金账户类型_上清所DVP账户.getValue();
         }
         else if (StringUtil.equals(BussinessDictCodeList.交易方向_托管户_中债DVP.getValue(), payType)
                  || StringUtil.equals(BussinessDictCodeList.交易方向_上清DVP_中债DVP.getValue(),
                      payType)) {
             REGIST_ORG = BussinessDictCodeList.登记托管机构_中央国债登记结算有限责任公司.getValue();
+            acctType =  BussinessDictCodeList.资金账户类型_中债登DVP账户.getValue();
         }
 
         map.put("REGIST_ORG", REGIST_ORG);
+        map.put("acctType", acctType);
+       // add by yujiaping 2020-12-10 TISHKBS-1680【DVP资金调拨】划款类型选择托管户-DVP账户，收款账户下拉框应该只有组合所绑定的中债DVP账户
 
         return ptlDvpFundAllocationMapper.getPtlSecTrdAcctNo(map);
     }
@@ -249,16 +255,22 @@ public class PtlDvpFundAllocationService extends BaseService<PtlDvpFundAllocatio
         }
 
         String REGIST_ORG = null;
+        //add by yujiaping 2020-12-10 TISHKBS-1680【DVP资金调拨】划款类型选择托管户-DVP账户，收款账户下拉框应该只有组合所绑定的中债DVP账户
+        String acctType = null;
         if (StringUtil.equals(BussinessDictCodeList.交易方向_上清DVP_托管户.getValue(), payType)
             || StringUtil.equals(BussinessDictCodeList.交易方向_上清DVP_中债DVP.getValue(), payType)) {
             REGIST_ORG = BussinessDictCodeList.登记托管机构_上海清算所.getValue();
+            acctType =  BussinessDictCodeList.资金账户类型_上清所DVP账户.getValue();
         }
         else if (StringUtil.equals(BussinessDictCodeList.交易方向_中债DVP_托管户.getValue(), payType)
                  || StringUtil.equals(BussinessDictCodeList.交易方向_中债DVP_上清DVP.getValue(),
                      payType)) {
             REGIST_ORG = BussinessDictCodeList.登记托管机构_中央国债登记结算有限责任公司.getValue();
+            acctType =  BussinessDictCodeList.资金账户类型_中债登DVP账户.getValue();
         }
         map.put("REGIST_ORG", REGIST_ORG);
+        map.put("acctType", acctType);
+        // add by yujiaping 2020-12-10 TISHKBS-1680【DVP资金调拨】划款类型选择托管户-DVP账户，收款账户下拉框应该只有组合所绑定的中债DVP账户
 
         return ptlDvpFundAllocationMapper.getPtlSecTrdAcctNo(map);
     }
