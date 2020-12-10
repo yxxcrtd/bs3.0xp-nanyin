@@ -88,14 +88,20 @@ $(function(){
      * 导出事件
      */
     var exportExcel = function() {
+    	//modify by yujiaping 2020-12-10 BS-1409【 质押式回购交易预录入】未选择点击导出应导出全部，选中点击导出，只导出选中数据start
         if(table!=null && table!=''){
             var selArr = table.getAllCheckedRows();//判断表格不为空，然后获取选择的数据
+            var datas = JSON.stringify(selArr);
         }
-        if (!selArr || selArr.length == 0) {//判断是否选择，如果没有则报错COMMON_E_0026
-            Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0026"));
-            return;
+        if (!selArr || selArr.length == 0) {
+        	 var paramObj = getPageParams();
+             Joyin.exportExcel('export', paramObj);
+        }else{
+        	 Joyin.exportExcel('export', {
+                 datas : datas
+             });
         }
-        var object = {
+        /*var object = {
             operateType: 'export',
             preTrdRepoTrade002DtoList: selArr
         }
@@ -104,7 +110,8 @@ $(function(){
                 object.preTrdRepoTrade002DtoList = JSON.stringify(selArr);
                 Joyin.exportExcel('export', object);
             });
-        },false)
+        },false)*/
+    	//modify by yujiaping 2020-12-10 BS-1409【 质押式回购交易预录入】未选择点击导出应导出全部，选中点击导出，只导出选中数据end
     };
 
     /**

@@ -12,6 +12,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
@@ -39,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.joyintech.framework.grid.Page;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -121,7 +123,23 @@ public class PreTrdRepoTrade001Controller extends BaseController {
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export() throws Exception {
-        return preTrdRepoTrade001Service.export(this.getPageId(), RequestUtil.getPageParam());
+    	//modify by yujiaping 2020-12-10 BS-1409【 质押式回购交易预录入】未选择点击导出应导出全部，选中点击导出，只导出选中数据start
+    	String datas = this.getParam("datas");
+    	List<PreTrdRepoTrade002Dto> listdto ;
+    	if(datas == null) {
+    		return preTrdRepoTrade001Service.export(this.getPageId(), RequestUtil.getPageParam());    		
+    	}
+       listdto = JsonUtils.json2List(datas, PreTrdRepoTrade002Dto.class);
+       File outfile = preTrdRepoTrade001Service.makeFile(
+    		   "/com/joyintech/tams/invest/trade/pretrdrepotrade/conf/export_conf.xml", listdto);
+       return ExportUtil.export(
+               this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+                                    + DateUtil.format(DateUtil.platDateFromCache())
+                                    + SystemGlobalConstant.CLOSE_PARENTHESIS
+                                    + SystemGlobalConstant.POINT
+                                    + FileNameUtil.getFileExtName(outfile),
+               outfile, true);
+   	//modify by yujiaping 2020-12-10 BS-1409【 质押式回购交易预录入】未选择点击导出应导出全部，选中点击导出，只导出选中数据end
     }
 
     /**
