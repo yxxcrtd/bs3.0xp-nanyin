@@ -192,6 +192,8 @@ $(function() {
         }
     }
     $(function() {
+    	$("#intAmtTheory_div").hide();
+    	$("#vdate_div").hide();
         //资产代码的联动
         $('#finprodMarketId').change(function(){
             var finprodMarketId = $('#finprodMarketId').val();
