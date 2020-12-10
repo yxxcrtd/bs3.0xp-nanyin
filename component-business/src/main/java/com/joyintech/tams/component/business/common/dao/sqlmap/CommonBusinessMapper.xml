@@ -168,9 +168,9 @@
              T1.COUNTER_TRADER        "counterTrader",
              T1.CONTACT_INFO            "contactInfo",
              T1.CHL_ID                 "chlId",
-             T2.IS_AGREEMENT_END       "isAgreementEnd",
-             T2.CREDIT_SOURCE         "creditSource",
-             T2.RATE_APPROVAL_CODE    "rateApprovalCode"
+             T2.IS_AGREEMENT_END       "isAgreementEnd"
+             <!--T2.CREDIT_SOURCE         "creditSource",-->
+             <!--T2.RATE_APPROVAL_CODE    "rateApprovalCode"-->
          from
              ETR_ENTRUST T1
              LEFT JOIN ETR_ENTRUST_ADD T2 ON T1.ENTRUST_ID = T2.ENTRUST_ID
