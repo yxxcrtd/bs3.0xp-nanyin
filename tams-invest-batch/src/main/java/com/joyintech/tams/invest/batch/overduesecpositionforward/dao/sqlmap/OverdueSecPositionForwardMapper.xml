@@ -136,9 +136,11 @@
         where
         ftp.FINPROD_ID = psr.FINPROD_ID
         and ptlHold.PORTFOLIO_ID = psr.PORTFOLIO_ID
-        and (ptlHold.sec_acct_id=psr.sec_acct_id 
-              or (substr(ptlHold.sec_acct_id,1,3)!='F28' 
+        <!--modify by mashukai 20201210 TISHKBS-1664 在项目类资产付息日进行付息后，撤销付息交易，在应收款项查询界面查不到数据 start-->
+        and (ptlHold.CHl_ID =psr.sec_acct_id
+              or (substr(ptlHold.CHl_ID,1,3)!='F28'
               and psr.sec_acct_id ='999999'))/*ADD BY KYF 20200415 既有直投又有通道的情况*/
+        <!--modify by mashukai 20201210 TISHKBS-1664 在项目类资产付息日进行付息后，撤销付息交易，在应收款项查询界面查不到数据 end-->
         and ftp.BRANCH = psr.BRANCH
         and psr.INV_AIM =  ptlHold.INV_AIM
         and psr.CDATE = #{PRE_PLATE_DATE}
@@ -160,9 +162,11 @@
         where
         ftp.FINPROD_ID = psv.FINPROD_ID
         and ptlHold.PORTFOLIO_ID = psv.PORTFOLIO_ID
-        and (ptlHold.sec_acct_id=psv.sec_acct_id 
-              or (substr(ptlHold.sec_acct_id,1,3)!='F28' 
+        <!--modify by mashukai 20201210 TISHKBS-1664 在项目类资产付息日进行付息后，撤销付息交易，在应收款项查询界面查不到数据 start-->
+        and (ptlHold.CHl_ID=psv.sec_acct_id
+              or (substr(ptlHold.CHl_ID,1,3)!='F28'
               and psv.sec_acct_id ='999999'))
+        <!--modify by mashukai 20201210 TISHKBS-1664 在项目类资产付息日进行付息后，撤销付息交易，在应收款项查询界面查不到数据 end-->
         and psv.INV_AIM =  ptlHold.INV_AIM
         and psv.CDATE = nvl(fcpmid.MDATE,fcp.MDATE) -1
 
@@ -189,20 +193,40 @@
 
         -->
         left join (
-            select
+        <!--modify by mashukai 20201210 TISHKBS-1664 在项目类资产付息日进行付息后，撤销付息交易，在应收款项查询界面查不到数据 start-->
+        select
+            t.CDATE,
+            t.INV_AIM,
+            t.CHl_ID,
+            t.FINPROD_ID,
+            t.PORTFOLIO_ID,
+            t.SEC_ACCT_ID,
+            SUM(t.AMOUNT) AMOUNT
+            from (
+                select
                 psp.CDATE,
                 psp.INV_AIM,
-                psp.SEC_ACCT_ID,
+                decode(#{chlFlag,jdbcType=VARCHAR},'01',decode(FP.FINPROD_TYPE2,'F18','999999','F27','999999','F17','999999',psp.SEC_ACCT_ID),psp.SEC_ACCT_ID) CHl_ID,
                 psp.FINPROD_ID,
                 psp.PORTFOLIO_ID,
-                SUM(psp.AMOUNT) AMOUNT
+                psp.SEC_ACCT_ID,
+                psp.AMOUNT
                 from
                 PTL_SEC_POSITION psp
+                left join fin_product FP
+                on PSP.FINPROD_ID = FP.FINPROD_ID
                 where
                 psp.HODING_TYPE = #{POSITION_TYPE_SJ}
                 and psp.BRANCH = #{BRANCH}
-                group by
-                psp.CDATE,psp.INV_AIM,psp.SEC_ACCT_ID,psp.FINPROD_ID,psp.PORTFOLIO_ID
+            )t
+            GROUP BY
+            t.CDATE,
+            t.INV_AIM,
+            t.CHl_ID,
+            t.FINPROD_ID,
+            t.PORTFOLIO_ID,
+            t.SEC_ACCT_ID
+        <!--modify by mashukai 20201210 TISHKBS-1664 在项目类资产付息日进行付息后，撤销付息交易，在应收款项查询界面查不到数据 end-->
         ) ptlHold on ptlHold.CDATE = ftp.MDATE -1 and ptlHold.FINPROD_ID = ftp.FINPROD_ID
         <!--
         连接 金融产品分类表
