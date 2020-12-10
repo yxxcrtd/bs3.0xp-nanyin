@@ -225,7 +225,9 @@
             var currentCalcParam = getCalcParam();
             for ( var key in currentCalcParam) {
                 //---update by jjpei 20190731---排除riskMathFlag----
-                if (key == 'selectValue'||key=='riskMathFlag') {
+                if (key == 'selectValue'||key=='riskMathFlag'||key=='counterId'||key=='secAcctId'
+                	||key=='acctNo'||key=='acctName'||key=='acctBankDep'||key=='acctBankDepoPayno'
+                		||key=='secAcctName'||key=='registOrg'||key=='counterTrader') {
                     continue;
                 }
                 //---update by jjpei 20190731---排除riskMathFlag----
