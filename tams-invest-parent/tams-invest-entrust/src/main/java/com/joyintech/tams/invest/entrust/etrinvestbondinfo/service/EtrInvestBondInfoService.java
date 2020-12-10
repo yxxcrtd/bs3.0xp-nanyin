@@ -1503,7 +1503,7 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
                     if (this.getBondInfoByFinprodMarketId(finprodMarketId) == null) {
                         confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                             getMessage("ETR_E_0017",
-                                getMessage("EtrInvestBondInfo004.finProductId"), lineNo));
+                                getMessage("EtrInvestBondInfo004.finprodId"), lineNo));
                     }
                 }
             }
