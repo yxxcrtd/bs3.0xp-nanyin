@@ -146,6 +146,9 @@ public class BaseFinProductOpenPlanServiceImpl implements BaseFinProductOpenPlan
         }
         
         if (DictCodeList.收益类型_净值型.getValue().equals(finProduct.getProfitType())) {
+        	//add by yujiaping 2020-12-11 TISHKBS-1671【开放计划调整】开放计划调整后生成的浮动管理费计提计划错误start
+        	finOpenPlanList.sort((x, y) -> x.getOpenNdate().compareTo(y.getOpenNdate()));
+        	//add by yujiaping 2020-12-11 TISHKBS-1671【开放计划调整】开放计划调整后生成的浮动管理费计提计划错误end
         	for (int i = 0; i < finOpenPlanList.size(); i++) {
         		FinFloatAccrualSche sche = new FinFloatAccrualSche();
         		FinOpenPlan open = finOpenPlanList.get(i);
@@ -161,6 +164,9 @@ public class BaseFinProductOpenPlanServiceImpl implements BaseFinProductOpenPlan
         		llistFinFloatAccrualSche.add(sche);
         	}
         } else if (DictCodeList.收益类型_货币型.getValue().equals(finProduct.getProfitType())) {
+        	//add by yujiaping 2020-12-11 TISHKBS-1671【开放计划调整】开放计划调整后生成的浮动管理费计提计划错误start
+        	finOpenPlanList.sort((x, y) -> x.getOpenDateEnd().compareTo(y.getOpenDateEnd()));
+        	//add by yujiaping 2020-12-11 TISHKBS-1671【开放计划调整】开放计划调整后生成的浮动管理费计提计划错误end
         	for (int i = 0; i < finOpenPlanList.size(); i++) {
         		FinFloatAccrualSche sche = new FinFloatAccrualSche();
         		FinOpenPlan open = finOpenPlanList.get(i);
