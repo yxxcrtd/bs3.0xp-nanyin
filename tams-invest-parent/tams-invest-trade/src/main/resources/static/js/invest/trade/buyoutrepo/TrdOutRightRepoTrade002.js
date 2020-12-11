@@ -798,7 +798,7 @@
                             'calendarId': calendarId,
                             'tradeDate': vdate
                         }, function (date) {
-                            $("#TrdOutRightRepoTrade002_vdate").val(date);
+                            $("#TrdOutRightRepoTrade002_vdate").val(date).trigger('change');
                         });
                     }
                 },false);
