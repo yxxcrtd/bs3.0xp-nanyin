@@ -10,7 +10,6 @@
  
 package com.joyintech.tams.invest.batch.entrust.dao;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,4 +29,6 @@ public interface EntrustStatusMapper {
     void updateEntrustStatus(Map<String, String> sysDate);
 
     List<String> selectEntrustIds(Map<String, String> sysDate);
+
+    void updateDistributeStatus(Map<String, String> sysDate);
 }
