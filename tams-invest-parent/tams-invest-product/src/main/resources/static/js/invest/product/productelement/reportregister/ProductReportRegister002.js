@@ -188,8 +188,12 @@
 				$("#shortTerm").attr("disabled",true);
 				$("#isFreeRedem").val('').trigger('change');
 				$("#isFreeRedem").attr("disabled",true);
+				//add by yujiaping 2020-12-11 TISHKBS-1673 产品申报登记要素管理-产品运作模式为封闭式的置灰 是否现金管理类start
+				$('#repIsCashManage').val('').trigger('change').attr('disabled',true);
+				//add by yujiaping 2020-12-11 TISHKBS-1673 产品申报登记要素管理-产品运作模式为封闭式的置灰 是否现金管理类end
 			}else{
 				$("#isShortTerm").attr("disabled",false);
+				$('#repIsCashManage').attr('disabled', false);
 			}
 	});
 	/**

@@ -489,7 +489,7 @@ public class ProductReportRegister002Dto extends BaseEntity implements ProcessEn
     /**
      * 是否现金管理类
      */
-    @NotEmpty(fieldName="ProductReportRegister001.repIsCashManage",groups = {ValidateGroupEdit.class})
+    //@NotEmpty(fieldName="ProductReportRegister001.repIsCashManage",groups = {ValidateGroupEdit.class})
     private String repIsCashManage;
 
     /**

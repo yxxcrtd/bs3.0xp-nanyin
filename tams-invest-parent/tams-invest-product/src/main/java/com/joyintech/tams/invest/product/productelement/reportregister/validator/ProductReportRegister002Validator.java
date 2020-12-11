@@ -412,6 +412,11 @@ public class ProductReportRegister002Validator implements BeanValidator {
 			validList.add(new ValidMessage("excFinSector",
 					getMessage("BUSS_COM_E_0038", getMessage("BussRepFinProductInfo.excFinSector"))));
 		}
+		//是否现金管理类 产品运作模式开放式必填
+        if (!StringUtil.isNotEmpty(entity.getRepIsCashManage()) 
+        		&& (StringUtil.equals(entity.getRepOperateMode(), "03") || StringUtil.equals(entity.getRepOperateMode(),"04") )) {
+            validList.add(new ValidMessage("请输入是否现金管理类"));
+        }
 		return validList;
 	}
 
