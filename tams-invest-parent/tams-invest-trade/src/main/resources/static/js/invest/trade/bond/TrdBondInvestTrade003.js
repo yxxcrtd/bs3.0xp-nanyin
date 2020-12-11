@@ -1907,6 +1907,10 @@ var table;
         var entrustId = $("#entrustId").val();
         var bondFirstSign = $("#bondFirstSign").val();
         var distribution = $('#TrdBondInvestTrade003_distribution').val();
+        if(distribution==null||distribution==''){
+            Joyin.error("请选择分配方式！");
+            return;
+        }
         var ps = $('#ps').val();
         if(entrustId){
             Joyin.ajaxSync(basePath + 'invest/trade/bond/TrdBondInvestTrade003/getEntrustInfos2', {'entrustId':entrustId,'distribution':distribution,'ps':ps,'bondFirstSign':bondFirstSign},function (data) {
