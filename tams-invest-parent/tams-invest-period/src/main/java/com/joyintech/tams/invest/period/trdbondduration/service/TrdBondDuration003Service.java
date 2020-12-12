@@ -221,7 +221,18 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
             execute交易共通(entity, DictCodeListExt1.交易流程状态_流程中);
         }
         else if (type == OperationType.REVOKE) {
-            // TODO
+        	 //删除原来数据
+        	 wflTrdFinProductDealTotalMapper.deleteByWorkflowId(entity.getWorkflowId());
+             // TODO
+        	 Map<String, Object> params = new HashMap<>();
+             params.put("bizCode", entity.getBizCode());
+             String ps = entity.getPs();
+             WflTrdFinProductDealTotal wflTrdFinProductDealTotal = new WflTrdFinProductDealTotal();
+             BeanUtils.copyProperties(entity.getTrdFinProductDealTotal(), wflTrdFinProductDealTotal, "createTime", "updateTime");
+             wflTrdFinProductDealTotal.setWorkflowId(entity.getWorkflowId());
+             wflTrdFinProductDealTotal.setWorkflowStatus(DictCodeListExt1.交易流程状态_撤销.getValue());
+             wflTrdFinProductDealTotal.setPs(entity.getPs());
+             wflTrdFinProductDealTotalMapper.insertSelective(wflTrdFinProductDealTotal);
         }
     }
 
