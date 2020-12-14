@@ -863,8 +863,8 @@
         	triValueChange('unitCprice');
             // 展示联动区域
             $('.currency').show();
-            $("#exRightsDate").val('').trigger("change");
-            $("#registDate").val('').trigger("change");
+//            $("#exRightsDate").val('').trigger("change");
+//            $("#registDate").val('').trigger("change");
              $("#exRightsDate").attr("disabled",false);
              $("#registDate").attr("disabled",false);
         }
