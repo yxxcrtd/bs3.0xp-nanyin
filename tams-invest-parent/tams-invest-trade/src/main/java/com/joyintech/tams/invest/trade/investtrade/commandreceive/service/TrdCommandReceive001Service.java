@@ -649,7 +649,7 @@ public class TrdCommandReceive001Service extends CommonExportService<TrdCommandR
 				else{
 						BigDecimal entrustNum = tradeCommonService.getEntrustAmtByEntrustId(dto.getEntrustId());
 						BigDecimal wflPrinAmt = tradeCommonService.getWflPrinAmt(dto.getEntrustId(), dto.getFinprodType2(), null);
-						if(entrustNum.compareTo(wflPrinAmt) != 1) {
+						if(entrustNum!=null&&entrustNum.compareTo(wflPrinAmt) != 1) {
 							ValidMessage validMessage = new ValidMessage("当前交易流程交易额度与已完成额度之和已等于委托额度");
 							list.add(validMessage);
 						}
