@@ -1,0 +1,5 @@
+批处理说明
+批处理名称：理财报表生成批处理
+批处理主要功能：
+        生成 理财产品状态表(FIN_PRODUCT_STATUS) 理财产品信息表(FIN_PRODUCT_INFO) 数据
+        是否生成数据需要在 报表生成配置表(REP_BATCH_CONFIG) 中配置参数
