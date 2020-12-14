@@ -122,7 +122,8 @@ public class EtrInvestBondInfo003Controller extends BaseController {
         model.addAttribute("aim01", DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue());
         model.addAttribute("aim02", DictCodeListExt1.投资目的_摊余成本类.getValue());
         model.addAttribute("N", DictCodeList.是否_否.getValue());
-        model.addAttribute("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE")==null?"01":CacheUtil.getSysParam("IS_SHOW_TYPE"));        String entrustId = getParam("entrustId");
+        model.addAttribute("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE")==null?"01":CacheUtil.getSysParam("IS_SHOW_TYPE"));
+        String entrustId = getParam("entrustId");
         String finprodId = getParam("finprodId");
         String portfolioId = getParam("portfolioId");
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
