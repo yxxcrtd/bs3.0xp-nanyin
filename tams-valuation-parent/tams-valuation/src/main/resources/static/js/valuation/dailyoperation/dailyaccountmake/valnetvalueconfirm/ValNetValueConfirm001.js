@@ -95,6 +95,8 @@ $(function () {
                {field:'tdyYield', title: '当日年化收益率%',width:160,sort: true,align:"right", unit: 10000},
                {field:'sevenDayRate', title: '七日年化收益率%',width:160,sort: true,align:"right", unit: 10000},
                {field:'payProfit', title: '应付利润',width:120,sort: true,type:'money',unit: 10000},
+               {field:'unitvaluedec', title: '单位净值小数位', visible:false},
+               {field:'unitvaluemode', title: '单位净值位数处理方式', visible:false},
                {field:'operation', title: '操作',fixed : 'right',
             	   //update by hechuan 2019-10-09 start
             	   type: 'action',

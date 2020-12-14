@@ -345,9 +345,12 @@
         var vluRefDate = $("#vluRefDate").val();
         var finprodId = $("#finprodId").val();
         var tdyAssetAmt = $('#tdyAssetAmt').val();//分红前净资产
+
+        $("#netvalue").attr("data-textrange", parseInt(unitvalueDec));
+
         if(bonuScalcFlag == bonuScalcFlagUnit && tdyUnitValue && unitBonusVlu && unitvalueDec){
             $("#netvalue").val(JoyinMath.doMinus(Number(tdyUnitValue),Number(unitBonusVlu),parseInt(unitvalueDec)));
-            
+
         }
         if(vluRefDate && finprodId && bonuScalcFlag != bonuScalcFlagUnit && unitvalueDec && tdyShareAmt && totalAmt && tdyAssetAmt){
             var minus = JoyinMath.doMinus(Number(tdyAssetAmt),Number(totalAmt),parseInt(unitvalueDec))

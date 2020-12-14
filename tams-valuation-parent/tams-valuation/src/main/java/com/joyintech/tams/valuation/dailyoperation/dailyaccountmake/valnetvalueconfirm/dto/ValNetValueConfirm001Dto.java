@@ -169,6 +169,16 @@ public class ValNetValueConfirm001Dto extends BaseEntity implements ProcessEntit
      */
     private BigDecimal prdAssetVal;
 
+    /**
+     * 产品单位净值位数处理方式
+     */
+    private BigDecimal unitvaluedec;
+
+    /**
+     * 产品净资产
+     */
+    private String unitvaluemode;
+
 
 
     public String getProfitType() {
@@ -622,9 +632,22 @@ public class ValNetValueConfirm001Dto extends BaseEntity implements ProcessEntit
 	public void setTdyYield(BigDecimal tdyYield) {
 		this.tdyYield = tdyYield;
 	}
-    
-  
 
-}     				
+    public BigDecimal getUnitvaluedec() {
+        return unitvaluedec;
+    }
+
+    public void setUnitvaluedec(BigDecimal unitvaluedec) {
+        this.unitvaluedec = unitvaluedec;
+    }
+
+    public String getUnitvaluemode() {
+        return unitvaluemode;
+    }
+
+    public void setUnitvaluemode(String unitvaluemode) {
+        this.unitvaluemode = unitvaluemode;
+    }
+}
       			
       
