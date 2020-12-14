@@ -177,7 +177,7 @@ public class InvestFeePayController {
      * @return 费用明细
      */
     @GetMapping("queryPayFeeInfoList")
-    public List<InvestFeePayPositionDetailDto> queryPayFeeInfoList(String secAcctId, String org, 
+    public List<InvestFeePayPositionDetailDto> queryPayFeeInfoList(String secAcctId, String org,
                                                                    String cdate, String feeType) {
         return investFeePayService.queryPayFeeInfoList(secAcctId, org, cdate, feeType);
     }
