@@ -30,7 +30,8 @@
 			      on  bb.bookset_id = ti.SUBJECT_NATURE
 	<!--      		  and bb.BOOKSET_TYPE = #{acctSubjectType} -->
 			left join FIN_PRODUCT fp
-			      on  fp.finprod_id = bb.ACCT_SUBJECT_ID
+			      on  (fp.finprod_id = bb.ACCT_SUBJECT_ID
+			          or fp.finprod_market_id = bb.ACCT_SUBJECT_ID)
 			where 1=1
 			 <if test="sumDimen != null and sumDimen != '' and sumDimen=='04'">
 	  			and ti.DECLARE_TYPE = '04'
@@ -179,7 +180,8 @@
 	  on BBD.BOOKSET_ID = BB.BOOKSET_ID
 	  
 	  inner join FIN_PRODUCT FP
-	  on FP.FINPROD_ID = BB.ACCT_SUBJECT_ID
+	  on (FP.FINPROD_MARKET_ID = BB.ACCT_SUBJECT_ID
+	     or FP.FINPROD_ID = BB.ACCT_SUBJECT_ID)
 	  and FP.FINPROD_TYPE = #{finprodType}
 	  
 	  inner join FIN_PRODUCT_ADD fpt
@@ -187,10 +189,11 @@
 <!-- 	  /** and fpt.finprod_type = #{finprodType}  */ -->
 	  
 	  inner join FIN_CASH_INFO FCI 
-	  on FP.FINPROD_ID=FCI.FINPROD_ID
+	  on (FP.FINPROD_MARKET_ID=FCI.FINPROD_ID
+	     or FP.FINPROD_ID=FCI.FINPROD_ID)
 	  
 	  AND FCI.CASH_TYPE_2 IN (#{cashType2})
-	  WHERE BB.ACCT_SUBJECT_TYPE = #{acctSubjectType}
+	  WHERE BB.ACCT_SUBJECT_TYPE in ('F16','F18')
  	  <![CDATA[and BB.END_DATE > #{declareStart,jdbcType=DATE}]]> 
 	</select>
 	
