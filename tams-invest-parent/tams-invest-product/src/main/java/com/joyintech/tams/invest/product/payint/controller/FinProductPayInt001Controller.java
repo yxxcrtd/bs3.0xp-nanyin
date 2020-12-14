@@ -15,6 +15,10 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.tams.component.business.settle.BussSettleOrderCommService;
+import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
+import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -85,7 +89,11 @@ public class FinProductPayInt001Controller extends BaseController {
      */
     @Autowired(required = false)
     private LeaveMarkProcessService leaveMarkProcessService;
-    
+    /**
+     * 划款指令组件
+     */
+    @Autowired
+    private BussSettleOrderCommService bussSettleOrderCommService;
     /**
      * {@inheritDoc}
      */
@@ -221,6 +229,17 @@ public class FinProductPayInt001Controller extends BaseController {
         processParameter.setPageId("FinProductPayInt003");
         processParameter.setOperationType(OperationType.REVOKE);
         inputDto.setTradeId(inputDto.getBussId());
+        //划款指令
+        if (inputDto != null && StringUtil.isEmptyList(inputDto.getBussTrdTransferOrder())){
+            List<BussTrdTransferOrderBase> orderDtolist = bussSettleOrderCommService.selectOrdersByBizCode(inputDto.getBussId()) ;
+            if (!StringUtil.isEmptyList(orderDtolist)){
+                List<BussTrdTransferOrderDto> bussTrdTransferOrderDtoList = new ArrayList<BussTrdTransferOrderDto>();
+                BussTrdTransferOrderDto bussTrdTransferOrderDto = new BussTrdTransferOrderDto();
+                BeanUtil.copyPropertiesIgnoreNull(bussTrdTransferOrderDto, orderDtolist.get(0));
+                bussTrdTransferOrderDtoList.add(bussTrdTransferOrderDto);
+                inputDto.setBussTrdTransferOrder(bussTrdTransferOrderDtoList);
+            }
+        }
         workFlowParameter.setPageId("FinProductPayInt003");
         workFlowParameter.setElementId(inputDto.getElementId());
         workFlowParameter.setBusinessCode(inputDto.getBussId());
