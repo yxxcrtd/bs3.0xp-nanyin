@@ -13,6 +13,7 @@ package com.joyintech.service.common.risk.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.common.base.entity.PtlPortfolio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -60,5 +61,16 @@ public class RiskSelectController {
     @RequestMapping("getPtlPortfolioInfo")
     public PtlPortfolio getPtlPortfolioInfo(@RequestBody Map<String,Object> map){
         return riskSelectService.getPtlPortfolioInfo(map);
+    }
+
+    @RequestMapping("getRiskInfoByPortfolioId")
+    public PtlPortfolio getRiskInfoByPortfolioId(@RequestBody Map<String,Object> map){
+        map.put("sysDate", DateUtil.parse(DateUtil.getSysDate()));
+        List<Map<String,Object>> result = riskSelectService.getRiskInfoByPortfolioId(map);
+        PtlPortfolio ptlPortfolio = new PtlPortfolio();
+        if (!result.isEmpty() && result.size() > 0) {
+            ptlPortfolio.setPortfolioId((String)result.get(0).get("PORTFOLIO_ID"));
+        }
+        return ptlPortfolio;
     }
 }

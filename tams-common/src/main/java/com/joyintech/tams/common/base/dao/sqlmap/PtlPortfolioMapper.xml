@@ -251,4 +251,15 @@
             RISK_ENABLED = #{riskEnabled,jdbcType=VARCHAR}
         where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
     </update>
+
+    <select id="getRiskInfoByPortfolioId" parameterType="java.util.Map"
+            resultType="java.util.Map">
+        SELECT
+               PORTFOLIO_ID
+        FROM RSK_PORTFOLIO_INDICATOR
+        WHERE PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          AND START_DATE <![CDATA[<=]]> #{sysDate,jdbcType=VARCHAR}
+          AND ( END_DATE <![CDATA[>=]]> #{sysDate,jdbcType=VARCHAR}
+                OR END_DATE IS NULL)
+    </select>
 </mapper>

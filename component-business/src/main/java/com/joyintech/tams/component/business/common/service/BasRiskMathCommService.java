@@ -160,4 +160,21 @@ public class BasRiskMathCommService extends BaseService{
         return restTemplate.postForObject(ServiceApplication.COMMON_SERVICE_NAME + "/RiskSelect/getPtlPortfolioInfo",
                 map,PtlPortfolio.class);
     }
+
+    /**
+     * 按组合代码检查是否配置风险指标
+     * @param portfolioId 组合代码
+     * @return 结果
+     */
+    public String isSetRiskByPortfolioId(String portfolioId) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("portfolioId", portfolioId);
+        String resultFlag = "Y";
+        PtlPortfolio ptlPortfolio = restTemplate.postForObject(
+                ServiceApplication.COMMON_SERVICE_NAME + "/RiskSelect/getRiskInfoByPortfolioId", map, PtlPortfolio.class);
+        if (!StringUtil.isNotEmpty(ptlPortfolio.getPortfolioId())) {
+            resultFlag = "N";
+        }
+        return resultFlag;
+    }
 }

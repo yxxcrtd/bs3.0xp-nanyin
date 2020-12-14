@@ -713,8 +713,27 @@
         }
         Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/insert',rows);
     }
+
+    /**
+     * 检查 产品是否配置了指标
+     * @param portfolioName 组合代码控件的id 空值默认为 "portfolioId"
+     * @author jiangpeng
+     * @returns {string}
+     */
+    var checkPortfolioIdRisk = function (portfolioName) {
+        var resultFlag = "Y";
+        if (portfolioName === "" || portfolioName === null || portfolioName === undefined) {
+            portfolioName = "portfolioId";
+        }
+        var portfolioId = $("#" + portfolioName).val();
+        Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/isSetRiskByPortfolioId', portfolioId, function (result) {
+            resultFlag = result.data.flag;
+        }, false);
+
+        return resultFlag;
+    }
     
-    var saveOrSubmitCheck = function(mes){
+    var saveOrSubmitCheck = function(mes,portfolioName){
         if(mes == 'save'){
             mes = JoyinUtil.getLabel("SysCommon.save");
         }else if(mes == 'submit'){
@@ -726,7 +745,8 @@
             //内部交易对手不需要风险测试              
             var paramConterId=["etrInvestPersonInfo.counterId","bussEtrInvestPersonInfoDto.counterId","trdInvestPersonInfo.counterId","trdInvestPersonInfo002Dto.counterId"];
             var counterType=findCounterType(paramConterId);
-            if(counterType != 'N'){
+            var portfolioIdRisk = checkPortfolioIdRisk(portfolioName);
+            if(counterType != 'N' && portfolioIdRisk != 'N'){
                 Joyin.alert(JoyinUtil.getMessage('ETR_X_013'),2);
                 return ;
             }            
