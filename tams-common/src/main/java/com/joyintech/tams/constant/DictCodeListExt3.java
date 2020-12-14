@@ -785,8 +785,15 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     记账顺序_计提后(
         DictCode.记账顺序, "02", "计提后"
     ),
-
-
+    /**
+     * 报表生成配置表 add by jiangpeng on 20201205
+     */
+    报表生成配置表_理财产品状态表(
+            DictCode.报表生成配置表,"REP_PROD_STATUS","理财产品状态表"
+    ),
+    报表生成配置表_理财产品信息表(
+            DictCode.报表生成配置表,"REP_PROD_MESSAGE","理财产品信息表"
+    ),
     ;
 
     /**
