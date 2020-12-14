@@ -110,7 +110,7 @@
             }
             // if(JoyinMath.doAdd($('#tradeAmt').val()*10000,0,2)!=number){
             if(JoyinMath.doAdd($('#tradeAmt').val(),0,2)!=number){
-                Joyin.warn("组合分配劵面总额和金额信息券面总额不一致！");
+                Joyin.error("组合分配劵面总额和金额信息券面总额不一致！");
                 return;
             }
         }
@@ -131,7 +131,7 @@
                 }
             }
             if(JoyinMath.doAdd($('#fpriceAmt').val(),0,2)!=number){
-                Joyin.warn("组合分配全价总额和金额信息全价总额不一致！");
+                Joyin.error("组合分配全价总额和金额信息全价总额不一致！");
                 return;
             }
         }
