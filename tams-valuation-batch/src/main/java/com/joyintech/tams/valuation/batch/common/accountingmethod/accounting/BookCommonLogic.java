@@ -47,6 +47,7 @@ import com.joyintech.tams.common.base.entity.BokDetailId;
 import com.joyintech.tams.common.base.entity.BokMatchRlat;
 import com.joyintech.tams.common.base.entity.BokTradeOrder;
 import com.joyintech.tams.common.base.entity.FinTradeProduct;
+import com.joyintech.tams.common.base.entity.PaTrdProductDeal;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
 
@@ -1075,6 +1076,16 @@ public class BookCommonLogic {
     	return accountingMethodMapper.selectBokDetailId(booksetId, busiId, busiDetailType);
     }
     
+    /**   * 根据账套代码、交易日期、业务明细类型查询账务明细代码
+     * @param booksetId
+     * @param busiId
+     * @param busiDetailType
+     * @return
+             */
+    public BokDetailId selectBokdetailIdYT(String booksetId, String tradeDate, String busiDetailType){
+        return accountingMethodMapper.selectBokDetailIdYT(booksetId, tradeDate, busiDetailType);
+    }
+    
     /**
      * 查询批处理待执行任务中的账套代码List
      * @param params 参数
@@ -1084,5 +1095,16 @@ public class BookCommonLogic {
      */
     public List<String> getBatchExcuteProdList(Map<String, Object> params){
     	return accountingMethodMapper.getBatchExcuteProdList(params);
+    }
+    
+    /**
+     * 查询金融交易表
+     * @param params 参数
+     * @return PaTrdProductDeal
+     * @see
+     * @since 1.0
+     */
+    public PaTrdProductDeal getPaTrdProductDeal(Map<String, Object> params) {
+    	return accountingMethodMapper.getPaTrdProductDeal(params);
     }
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.dto.common.TrdCommonParam;
 import com.joyintech.tams.invest.common.dto.common.TrdCommonWflParam;
 import com.joyintech.tams.invest.common.product.dto.FinProductExpireBaseTrdDto;
@@ -17,15 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.joyintech.tams.common.base.entity.BokPositionPrdfee;
-import com.joyintech.tams.common.base.entity.MstFeeinfo;
-import com.joyintech.tams.common.base.entity.PrdLayerParam;
-import com.joyintech.tams.common.base.entity.PtlFeePosition;
-import com.joyintech.tams.common.base.entity.PtlTrade;
-import com.joyintech.tams.common.base.entity.StlPayOrders;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
@@ -110,6 +102,16 @@ public class InvestFeePayController {
     }
 
     /**
+     * 查询费用上次计提结束日
+     * @param secAcctId 证券账户
+     * @return 上次计提结束日
+     */
+    @GetMapping("queryStartDate")
+    public String queryStartDate(String secAcctId) {
+        return investFeePayService.queryStartDate(secAcctId);
+    }
+
+    /**
      * 查询费用待支付费用
      * @param secAcctId 证券账户
      * @param feeType 费用类型
@@ -130,8 +132,8 @@ public class InvestFeePayController {
      * @return 待支付费用
      */
     @GetMapping("queryPayTradeAmt")
-    public BigDecimal queryPayTradeAmt(String secAcctId, String org, String cdate, String feeType) {
-        return investFeePayService.queryPayTradeAmt(secAcctId, org, cdate, feeType);
+    public BigDecimal queryPayTradeAmt(String secAcctId, String org, String cdate, String startDate, String feeType,String confirmFlag) {
+        return investFeePayService.queryPayTradeAmt(secAcctId, org, cdate, startDate, feeType, confirmFlag);
     }
 
     /**
@@ -177,9 +179,9 @@ public class InvestFeePayController {
      * @return 费用明细
      */
     @GetMapping("queryPayFeeInfoList")
-    public List<InvestFeePayPositionDetailDto> queryPayFeeInfoList(String secAcctId, String org,
-                                                                   String cdate, String feeType) {
-        return investFeePayService.queryPayFeeInfoList(secAcctId, org, cdate, feeType);
+    public List<InvestFeePayPositionDetailDto> queryPayFeeInfoList(String secAcctId, String org, 
+                                                                   String cdate, String startDate,String feeType,String confirmFlag) {
+        return investFeePayService.queryPayFeeInfoList(secAcctId, org, cdate, startDate, feeType, confirmFlag);
     }
 
     /**
@@ -193,8 +195,8 @@ public class InvestFeePayController {
      */
     @GetMapping("queryFeePositionDetail")
     public List<InvestFeePayPositionDetailDto> queryFeePositionDetail(String feeType, String startDate, String enddate, 
-                                                                      String secAcctId, String ptlId) {
-        return investFeePayService.queryFeePositionDetail(feeType, startDate, enddate, secAcctId, ptlId);
+                                                                      String secAcctId, String ptlId,String confirmFlag,String tradeId) {
+        return investFeePayService.queryFeePositionDetail(feeType, startDate, enddate, secAcctId, ptlId, confirmFlag,tradeId);
     }
 
     /** 根据交易编号查询费用明细信息
@@ -450,4 +452,26 @@ public class InvestFeePayController {
     public InvestFeePayDto queryByPtlId(String ptlId) {
         return investFeePayService.queryByPtlId(ptlId);
     }
+    @PostMapping("selectDetail/{page}/{length}")
+    public Page<InvestFeePayFeeDetailDto> selectDetail(@RequestBody Map<String, Object> pageParam, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+        return investFeePayService.selectDetail(page,length,pageParam);
+    }
+
+    @Transactional
+    @DTXTransaction
+    @PostMapping("updateTrdAccountmfConfigDto")
+    public void updateTrdAccountmfConfigDto(@RequestBody InvestFeePayDto entity) {
+        investFeePayService.updateTrdAccountmfConfigDto(entity);
+    }
+
+    /**
+     * 查询数据的录入方式
+     * @param tradeId
+     * @return
+     */
+    @GetMapping("inputDataType")
+    public String inputDataType(String tradeId) {
+        return investFeePayService.inputDataType(tradeId);
+    }
+
 }

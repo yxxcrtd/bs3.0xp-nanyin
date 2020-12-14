@@ -3,15 +3,22 @@
  */
 package com.joyintech.service.portfolio.feepay.service;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
- 
+
+import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -22,17 +29,39 @@ import com.joyintech.service.portfolio.feepay.dao.InvestFeePayMapper;
 import com.joyintech.service.portfolio.feepay.dto.InvestFeePayDto;
 import com.joyintech.service.portfolio.feepay.dto.InvestFeePayFeeDetailDto;
 import com.joyintech.service.portfolio.feepay.dto.InvestFeePayPositionDetailDto;
-import com.joyintech.tams.common.base.dao.*;
-import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.base.dao.MstFeeinfoMapper;
+import com.joyintech.tams.common.base.dao.PaTrdFinProductDealTotalMapper;
+import com.joyintech.tams.common.base.dao.PaTrdProductDealMapper;
+import com.joyintech.tams.common.base.dao.PtlPortfolioMapper;
+import com.joyintech.tams.common.base.dao.PtlTradeMapper;
+import com.joyintech.tams.common.base.dao.StlPayOrdersMapper;
+import com.joyintech.tams.common.base.dao.TrdFinProductDealTotalMapper;
+import com.joyintech.tams.common.base.dao.TrdProductDealAddMapper;
+import com.joyintech.tams.common.base.dao.TrdProductDealMapper;
+import com.joyintech.tams.common.base.entity.BokDetailId;
+import com.joyintech.tams.common.base.entity.MstFeeinfo;
+import com.joyintech.tams.common.base.entity.PaTrdFinProductDealTotal;
+import com.joyintech.tams.common.base.entity.PaTrdProductDeal;
+import com.joyintech.tams.common.base.entity.PrdLayerParam;
+import com.joyintech.tams.common.base.entity.PtlTrade;
+import com.joyintech.tams.common.base.entity.StlPayOrders;
+import com.joyintech.tams.common.base.entity.TrdAccountmfConfigDto;
+import com.joyintech.tams.common.base.entity.TrdFinProductDealTotal;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
+import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
+import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.common.TrdCommonParam;
 import com.joyintech.tams.invest.common.dto.common.TrdCommonWflParam;
 import com.joyintech.tams.invest.common.product.dto.FinProductExpireBaseTrdDto;
 import com.joyintech.tams.invest.common.service.MapperDelegateService;
+import com.joyintech.tams.valuation.common.batch.finproduct.entity.SubjectBalance;
+import com.joyintech.tams.valuation.common.batch.finproduct.entity.SubjectBalanceSearchDto;
+import com.joyintech.tams.valuation.common.constants.BookConstant;
+import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
 
 /**
  * @author malinlin
@@ -128,9 +157,482 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
         map.put("feeType06", DictCodeList.费用品种类型_交易手续费.getValue());
         map.put("feeType07", DictCodeList.费用品种类型_结算服务费.getValue());
         map.put("feeType14", DictCodeList.费用品种类型_佣金.getValue());
-        return super.queryForPage(page, length, () -> investFeePayMapper.selectForPage(map));
+//        Page<InvestFeePayDto> pageDto = super.queryForPage(page, length, () -> this.selectForList(map));
+        List<InvestFeePayDto> list = selectForList(map);
+        sort(list, (String)map.get("key"), (String)map.get("order"),InvestFeePayDto.class);
+        Page<InvestFeePayDto> pageDto = new Page<>();
+        pageDto.setRecords(list.size());
+        if((page-1) * length > list.size()){
+            page = 1;
+        }
+        pageDto.setPage(page);
+        pageDto.setRoot(list.subList((page-1) * length, Math.min(list.size(),page * length)));
+        return pageDto;
     }
     
+    /**
+     * 排序
+     * @param list  排序的list
+     * @param key   排序关键字
+     * @param order 升降序
+     * @param clazz 类
+     * @param <T>
+     */
+    private <T> void sort(List<T> list, String key, String order, Class<T> clazz) throws Exception {
+        if(StringUtil.isEmpty(key)){
+            return ;
+        }
+        if(list == null || list.size() < 2){
+            return ;
+        }
+        Field field = clazz.getDeclaredField(key);
+        field.setAccessible(true);
+        list.sort((t1,t2) -> lambdaWrapper(order, field, t1, t2));
+    }
+
+    /**
+     * 包装lambda
+     */
+    private <T> int lambdaWrapper(String order, Field field, T t1, T t2) {
+        try {
+            Object o1 = field.get(t1);
+            Object o2 = field.get(t2);
+            if(o1 == null && o2 == null) {
+                return 0;
+            }
+            if(o1 == null) {
+                return "asc".equals (order)  ? 1 : -1;
+            }
+            if(o2 == null) {
+                return "asc".equals (order)  ? -1 : 1;
+            }
+            if(o1 instanceof Comparable && o2 instanceof Comparable){
+                return "asc".equals (order)  ? ((Comparable) o1).compareTo(o2) : ((Comparable) o2).compareTo(o1);
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * 根据条件查询数据
+     *
+     * @param map map
+     * @return Page类 Page
+     * @throws Exception 异常信息
+     */
+    private List<InvestFeePayDto> selectForList(Map<String, Object> map) {
+        if(StringUtil.equals(map.get("status"),"02")){
+            return listAdd(new ArrayList<InvestFeePayDto>(), map);
+        }
+        List<InvestFeePayDto> list = investFeePayMapper.selectForPage(map);
+        if(StringUtil.isEmpty((String)map.get("status"))){
+            list = listAdd(list, map);
+        }
+        return list;
+    }
+
+    /**
+     * 添加待处理数据
+     * @return
+     */
+    private List<InvestFeePayDto> listAdd(List<InvestFeePayDto> list, Map<String, Object> param) {
+        Date batchDate = iPlatformDate.getSysDate();
+        if(StringUtil.isNotEmpty((String)param.get("feeType")) && !StringUtil.equals(DictCodeList.费用品种类型_账户维护费.getValue(),param.get("feeType"))){
+            return list;
+        }
+        if(StringUtil.isNotEmpty((String)param.get("paydate"))){
+            String payDateStart = (String)param.get("payDateStart");
+            String payDateEnd = (String)param.get("payDateEnd");
+            if(DateUtil.compareDate(batchDate,DateUtil.parse(payDateStart)) < 0 || DateUtil.compareDate(batchDate,DateUtil.parse(payDateEnd)) > 0){
+                return list;
+            }
+        }
+        
+        // 生成待办数据 update qz begin
+        List<InvestFeePayDto> newlist =  new ArrayList<>();
+        // 1 获取需要生成预提交易类标的的配置信息
+        List<TrdAccountmfConfigDto> taclists = investFeePayMapper.selectTACInfoByDate(DateUtil.format(batchDate, "yyyy-MM-dd"));
+        for(TrdAccountmfConfigDto dto : taclists) {
+        	String secAcctIdStr = (String)param.get("secAcctId");
+        	if(StringUtil.isEmpty(secAcctIdStr) || (StringUtil.isNotEmpty(secAcctIdStr) && StringUtil.equals(dto.getSecAcctId(),secAcctIdStr)) ){
+        		// 2 获取费用上次支付的计提结束日
+        		Map<String, Object> mapPay = new HashMap<String, Object>();
+        		mapPay.put("isCancel", DictCodeList.是否_否.getValue());
+        		mapPay.put("tradeStatus", DictCodeListExt1.交易状态_初始.getValue());
+        		mapPay.put("secAcctId", dto.getSecAcctId());
+        		mapPay.put("payCycle", DictCodeList.频率_不规则.getValue());
+        		mapPay.put("flag", DictCodeList.是否_否.getValue());
+        		mapPay.put("feeType1", DictCodeListExt1.一次性费用类型_账户维护费.getValue());
+                String lastPayDateStr = investFeePayMapper.queryLastPayDate(mapPay);
+        		// 2.1 如果未支付则为计提开始日
+        		Date lastPayDate = null;
+        		if(StringUtil.isEmpty(lastPayDateStr)) {
+        			lastPayDate = dto.getPositionStartDate();
+        		}else {
+        			lastPayDate = DateUtil.parse(lastPayDateStr);
+        		}
+                // 3 查询账务明细(大于上次支付日小于等于平台日)
+        		Map<String, Object> mapBok = new HashMap<>();
+        		mapBok.put("secAcctId",dto.getSecAcctId());
+        		mapBok.put("startDate",lastPayDate);
+        		mapBok.put("endDate",batchDate);
+        		mapBok.put("feeType",DictCodeListExt1.一次性费用类型_账户维护费.getValue());
+                List<BokDetailId> bokDetailIds = investFeePayMapper.selectFinDetail2(mapBok);
+                if(bokDetailIds != null && bokDetailIds.size() != 0){
+                	for(BokDetailId detail : bokDetailIds){
+                		// 4 判断是否满足几号
+                		Date payDate = DateUtil.setDays(detail.getMdate(), Integer.parseInt(dto.getPayDate()));
+                		if(payDate.compareTo(batchDate) > 0) {
+                			continue;
+                		}
+                		
+                		// 5 判断待处理是否已在流程中
+                		Map<String, Object> map = new HashMap<>();
+                		map.put("secAcctId",dto.getSecAcctId());
+                		map.put("startDate",detail.getVdate());
+                		map.put("endDate",detail.getMdate());
+                		int count = investFeePayMapper.selectInFlowDataCountByMap(map);
+                		if(count > 0) {
+                			continue;
+                		}
+                		
+                        BigDecimal balance =  this.getSubjectBalance(detail.getBooksetId(),detail.getBokDetailId(),detail.getMdate(),detail.getMdate());
+                    	InvestFeePayDto feePayDto = new InvestFeePayDto();
+                        feePayDto.setSecAcctId(dto.getSecAcctId()); //证券账户
+                        feePayDto.setFeeType1(DictCodeList.费用品种类型_账户维护费.getValue());
+                        feePayDto.setFeeName(DictCodeList.费用品种类型_账户维护费.getCodeName());
+                        feePayDto.setPositionStartDate(detail.getVdate());
+                        feePayDto.setPositionEndDate(detail.getMdate());
+                        feePayDto.setPayDate(batchDate);
+                        feePayDto.setFeeAmt(balance);
+                        feePayDto.setEffectStatus(DictCodeListExt1.有效状态_待处理.getValue());
+                        newlist.add(feePayDto);
+                	}
+                }
+        	}
+        }
+        newlist = transform(newlist);
+        list.addAll(newlist);
+        return list;
+        // 生成待办数据 update qz end
+        
+//        List<InvestFeePayDto> newlist =  new ArrayList<>();
+//        //上季度最后一天
+//        Date lastDay = getLastDayQuarter(batchDate, -3);
+//        //1 获取需要生成预提交易类标的的配置信息
+//        List<TrdAccountmfConfigDto> taclists = investFeePayMapper.selectTACInfoByDate(DateUtil.format(batchDate, "yyyy-MM-dd"));
+//        for(TrdAccountmfConfigDto dto : taclists) {
+//            Date minDate =  DateUtil.addDay(getFirstDayQuarter(dto.getPositionStartDate(), 3), Integer.valueOf(dto.getPayDate()));
+//            //平台日大于等于最小支付日
+//            if (DateUtil.compareDate(batchDate, minDate) >= 0) {
+//                String secAcctIdStr = (String)param.get("secAcctId");
+//                if(StringUtil.isEmpty(secAcctIdStr) || (StringUtil.isNotEmpty(secAcctIdStr) && StringUtil.equals(dto.getSecAcctId(),secAcctIdStr)) ){
+//                    String lastPayDateStr = this.queryLastPayDate(dto.getSecAcctId(),lastDay);
+//                    Date lastPayDate = DateUtil.parse(lastPayDateStr);
+//                    if(StringUtil.isEmpty(lastPayDateStr)){
+//                        Map<String, Object> map = new HashMap<>();
+//                        map.put("secAcctId", dto.getSecAcctId());
+//                        map.put("org", this.querySecAcctOrg(dto.getSecAcctId()));
+//                        map.put("cdate", DateUtil.getSysDate());
+//                        lastPayDate = DateUtil.parse(investFeePayMapper.queryConfigStartDate(map));
+//                    }
+//                    //判断是否已经生成有效数据
+//                    Map<String, Object> map = new HashMap<>();
+//                    map.put("secAcctId",dto.getSecAcctId());
+//                    map.put("startDate",lastPayDate);
+//                    // 上一支付日，所在季度最后一天
+//                    Date lastPayDateQuarter = getLastDayQuarter(lastPayDate, 0);
+//                    map.put("endDate",DateUtil.addDay(lastPayDateQuarter,1));
+//                    if(investFeePayMapper.selectEffectDataCount(map) == 0 && investFeePayMapper.selectInFlowDataCountByMap(map) == 0){
+//                        InvestFeePayDto feePayDto = new InvestFeePayDto();
+//                        feePayDto.setSecAcctId(dto.getSecAcctId()); //证券账户
+//                        feePayDto.setFeeType1(DictCodeList.费用品种类型_账户维护费.getValue());
+//                        feePayDto.setFeeName(DictCodeList.费用品种类型_账户维护费.getCodeName());
+//                        feePayDto.setPositionStartDate(lastPayDate);
+//                        feePayDto.setPositionEndDate(DateUtil.addDay(lastPayDateQuarter,1));
+//                        feePayDto.setPayDate(batchDate);
+//                        map.put("feeType",DictCodeListExt1.一次性费用类型_账户维护费.getValue());
+////                        map.put("startDate",lastPayDate);
+//                        List<BokDetailId> bokDetailIds = investFeePayMapper.selectFinDetail(map);
+//                        if(bokDetailIds != null && bokDetailIds.size() != 0){
+//                            BigDecimal balance = BigDecimal.ZERO;
+//                            for(BokDetailId detail : bokDetailIds){
+//                                BigDecimal tmpBalance =  this.getSubjectBalance(detail.getBooksetId(),detail.getBokDetailId(),lastPayDateQuarter,lastPayDateQuarter);
+//                                balance = ArithmeticUtil.doAdd(balance, tmpBalance);
+//                            }
+//                            feePayDto.setFeeAmt(balance);
+//                            //feePayDto.setActPayAmt(balance);
+//                            feePayDto.setEffectStatus(DictCodeListExt1.有效状态_待处理.getValue());
+//                            newlist.add(feePayDto);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        newlist = transform(newlist);
+//        list.addAll(newlist);
+//        return list;
+    }
+
+    /**
+     * 通过证券账户和计提开始日，计提结束日进行分组
+     * 取分组后的第一条数据
+     * @param listdto  原list
+     * @return
+     */
+    private List<InvestFeePayDto> transform(List<InvestFeePayDto> listdto){
+        if(listdto == null || listdto.size() < 2){
+            return listdto;
+        }
+        List<InvestFeePayDto> listnew = new ArrayList<>();
+        Map<String, List<InvestFeePayDto>> map = listdto.stream().collect(Collectors.groupingBy(dto -> dto.getSecAcctId() + "$" + DateUtil.format(dto.getPositionStartDate()) +"$"+DateUtil.format(dto.getPositionEndDate()),LinkedHashMap::new,Collectors.toList()));
+        for (Map.Entry<String,List<InvestFeePayDto>> entry: map.entrySet()) {
+            List<InvestFeePayDto> list = entry.getValue();
+            listnew.add(list.get(0));
+        }
+        return listnew;
+    }
+
+    /**
+     * 调用公用方法：【科目余额查询 - 期待方向】，获取科目余额信息中的科目余额数据
+     * @param booksetId
+     * @param happenDate
+     * @param bookDate
+     * @return
+     */
+    private BigDecimal getSubjectBalance(String booksetId,String bokDetailId, Date happenDate, Date bookDate ){
+        // 塞入要查询的基础科目性质
+        List<String> baseSubjectNatureList = new ArrayList<>();;
+        baseSubjectNatureList.add(DictCodeBaseSubjectNatrue.预提费用.getValue());
+
+        //设值科目余额查询参数Dto
+        SubjectBalanceSearchDto searchDto = new SubjectBalanceSearchDto();
+        searchDto.setBooksetId(booksetId);
+        searchDto.setBokDetailId(bokDetailId);
+        searchDto.setHappenDate(happenDate);
+        searchDto.setBookDate(bookDate);
+        searchDto.setBaseSubjectNatureList(baseSubjectNatureList);
+        // 调用公用方法：【科目余额查询-期待方向 】,获取科目余额信息
+        List<SubjectBalance> balanceList = this.getSubjectBalanceExpectDirection(
+                searchDto, DictCodeList.余额方向_贷方.getValue());
+
+        BigDecimal balance = BigDecimal.ZERO;
+        if(balanceList != null && !balanceList.isEmpty()){
+            balance = balanceList.get(0).getBalance();
+        }
+        return balance;
+    }
+
+    /**
+     * 科目余额查询 - 期待方向
+     *
+     * @param searchDto 科目余额查询参数Dto
+     * @param expBalanceDirect 期待余额方向
+     * @return List<SubjectBalance> 科目余额信息List
+     * @see
+     * @since 1.0
+     */
+    public List<SubjectBalance> getSubjectBalanceExpectDirection(SubjectBalanceSearchDto searchDto,
+                                                                 String expBalanceDirect) {
+
+        // 调用共通方法：科目余额查询
+        List<SubjectBalance> subjectBalanceList = this.getSubjectLatestBalance(searchDto);
+
+        // 循环科目余额，更新相关信息
+        for (SubjectBalance vo : subjectBalanceList) {
+            // 获取余额方向
+            String actBalanceDirect = vo.getBalFlagHappenDate();
+            // 获取科目余额
+            BigDecimal actBalance = (vo.getBalance() != null) ? vo.getBalance() : BigDecimal.ZERO;
+            // 获取本币科目余额
+            BigDecimal bactBalance = (vo.getbAmt() != null) ? vo.getbAmt() : BigDecimal.ZERO;
+            // 获取数量余额
+            BigDecimal actnum = vo.getNum();
+
+            // 调用共通方法：余额方向处理_期待方向
+            Map<String, Object> directionInfo = this.balanceDirectDealExpectDirection(
+                    expBalanceDirect, actBalanceDirect, actBalance, actnum);
+
+            // 调用共通方法：余额方向处理_期待方向
+            Map<String, Object> directionInfoben = this.balanceDirectDealExpectDirection(
+                    expBalanceDirect, actBalanceDirect, bactBalance, actnum);
+            // 获取原币返回值余额
+            BigDecimal balance = directionInfo.get(
+                    "balance") == null ? BigDecimal.ZERO : (BigDecimal)directionInfo.get("balance");
+            // 获取本币返回值余额
+            BigDecimal benbalance = directionInfoben.get(
+                    "balance") == null ? BigDecimal.ZERO : (BigDecimal)directionInfoben.get("balance");
+            // 获取返回值数量
+            BigDecimal num = directionInfo.get(
+                    "num") == null ? BigDecimal.ZERO : (BigDecimal)directionInfo.get("num");
+
+            // 塞入科目余额信息中
+            vo.setBalance(balance);// 原币科目余额
+            vo.setbAmt(benbalance);// 本币科目余额
+            vo.setNum(num);// 数量余额
+            vo.setBalFlagHappenDate(expBalanceDirect);// 余额方向
+        }
+
+        return subjectBalanceList;
+    }
+
+    /**
+     * 科目余额查询共通--不需要考虑分支特殊处理
+     *
+     * @return List<SubjectBalance> 结果集
+     * @param searchDto 科目余额查询参数Dto
+     * @see
+     * @since 1.0
+     */
+    public List<SubjectBalance> getSubjectLatestBalance(SubjectBalanceSearchDto searchDto) {
+        // 定义传递参数
+        // 若分支序号为空，则查询默认的分支序号
+        if (searchDto.getBranch() == null) {
+            searchDto.setBranch(BookConstant.DEFALUT_BRANCH); // 默认分支号
+        }
+        List<SubjectBalance> list = investFeePayMapper.queryCurrentLatestBalance(searchDto);
+        return list;
+    }
+
+    /**
+     * 公用处理：余额方向处理_期待方向
+     *
+     * @param expBalanceDirect 期待余额方向
+     * @param actBalanceDirect 实际余额方向
+     * @param actBalance 实际余额
+     * @param actnum 实际数量
+     * @return 余额、数量
+     * @see
+     * @since 1.0
+     */
+    public Map<String, Object> balanceDirectDealExpectDirection(String expBalanceDirect,
+                                                                String actBalanceDirect,
+                                                                BigDecimal actBalance,
+                                                                BigDecimal actnum) {
+        // 余额
+        BigDecimal balance = BigDecimal.ZERO;
+        // 数量
+        BigDecimal num = BigDecimal.ZERO;
+        // 空指针排除
+        actBalance = actBalance == null ? BigDecimal.ZERO : actBalance;
+        actnum = actnum == null ? BigDecimal.ZERO : actnum;
+
+        if (expBalanceDirect.equals(DictCodeList.余额方向_借方.getValue())) {
+            if (actBalanceDirect.equals(DictCodeList.余额方向_借方.getValue())) {
+                balance = actBalance;
+                num = actnum;
+            }
+            if (actBalanceDirect.equals(DictCodeList.余额方向_贷方.getValue())) {
+                balance = ArithmeticUtil.multiply(actBalance, new BigDecimal(-1));
+                num = ArithmeticUtil.multiply(actnum, new BigDecimal(-1));
+            }
+        }
+
+        if (expBalanceDirect.equals(DictCodeList.余额方向_贷方.getValue())) {
+            if (actBalanceDirect.equals(DictCodeList.余额方向_贷方.getValue())) {
+                balance = actBalance;
+                num = actnum;
+            }
+            if (actBalanceDirect.equals(DictCodeList.余额方向_借方.getValue())) {
+                balance = ArithmeticUtil.multiply(actBalance, new BigDecimal(-1));
+                num = ArithmeticUtil.multiply(actnum, new BigDecimal(-1));
+            }
+        }
+
+        // 定义返回值
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("balance", balance);// 余额
+        params.put("num", num);// 数量
+
+        return params;
+    }
+
+    /**
+     * 获取月份
+     * @param date
+     * @return
+     */
+    public String getMonth(Date date){
+        return String.valueOf(DateUtil.getMonth(DateUtil.format(date, "yyyy-MM-dd")));
+    }
+
+    /**
+     * 上季度第一天日期
+     * @param date
+     * @return
+     */
+    public Date getFirstDayOfQuarter(Date date) throws ParseException {
+        //取得日历
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MONTH,-3); // 日历减3个月,即上季度
+        return DateUtil.getFirstDayOfQuarter(calendar.getTime());
+    }
+
+    /**
+     * 取得季度最后一天日期
+     * @param date 日期
+     * @return
+     */
+    public Date getFirstDayQuarter(Date date, int addMonths){
+        //取得日历
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MONTH, addMonths); // 月份改变
+        int year = calendar.get(Calendar.YEAR);// 年份
+        int remainder = calendar.get(Calendar.MONTH) % 3;
+        int month = calendar.get(Calendar.MONTH) - remainder + 1;
+        String mmdd = String.format("%02d", month) + "-01";// 月/日
+        String lastDate = year + "-" + mmdd;
+        return DateUtil.parse(lastDate) ;
+    }
+
+    /**
+     * 取得季度最后一天日期
+     * @param date 日期
+     * @return
+     */
+    public Date getLastDayQuarter(Date date, int addMonths){
+        //取得日历
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MONTH, addMonths); // 月份改变
+        int year = calendar.get(Calendar.YEAR);// 年份
+        int mouth = calendar.get(Calendar.MONTH) + 1;// 月份
+        String mmdd = "";// 月/日
+        // 根据月份,判断是哪个季度
+        switch( mouth){
+            case 1: case 2: case 3:
+                mmdd = "03-31"; // 第一季度最后一天是03-31
+                break;
+            case 4: case 5: case 6:
+                mmdd = "06-30"; // 第二季度最后一天是06-30
+                break;
+            case 7: case 8: case 9:
+                mmdd = "09-30";// 第三季度最后一天是09-30
+                break;
+            case 10: case 11: case 12:
+                mmdd = "12-31";// 第四季度最后一天是12-31
+                break;
+        }
+        String lastDate = year + "-" + mmdd;
+        return DateUtil.parse(lastDate) ;
+    }
+
+    /**
+     * 获取季度第一个月
+     * @param date
+     * @return
+     */
+    public int getNowQuarterly(Date date){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int remainder = calendar.get(Calendar.MONTH) % 3;
+        int month = calendar.get(Calendar.MONTH) - remainder + 1;
+        return month;
+    }
     /**
      * 证券账户联想文本框service层实现
      *
@@ -219,11 +721,13 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_交易手续费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_佣金.getValue())) {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_佣金.getValue());
+        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_账户维护费.getValue())) {
+            map.put("feeType1", DictCodeListExt1.一次性费用类型_账户维护费.getValue());
         }
         return investFeePayMapper.queryUnpayPosition(map);
     }
 
-    public BigDecimal queryPayTradeAmt(String secAcctId, String org, String cdate, String feeType) {
+    public BigDecimal queryPayTradeAmt(String secAcctId, String org, String cdate, String startDate,String feeType,String confirmFlag) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("secAcctId", secAcctId);
         map.put("org", org);
@@ -236,6 +740,20 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_交易手续费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_佣金.getValue())) {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_佣金.getValue());
+        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_账户维护费.getValue())) {
+            BigDecimal balance = BigDecimal.ZERO;
+            if(StringUtil.isNotEmpty(secAcctId) && StringUtil.isNotEmpty(startDate) && StringUtil.isNotEmpty(cdate)) {
+                map.put("startDate", DateUtil.parse(startDate));
+                if (StringUtil.isNotEmpty(confirmFlag) && StringUtil.equals(confirmFlag, "confirm") ) {
+                    map.put("endDate", DateUtil.parse(cdate));
+                }
+                List<BokDetailId> bokDetailIds = investFeePayMapper.selectFinDetail(map);
+                for (BokDetailId detail : bokDetailIds) {
+                    BigDecimal tmpBalance = this.getSubjectBalance(detail.getBooksetId(), detail.getBokDetailId(), DateUtil.parse(cdate), DateUtil.parse(cdate));
+                    balance = ArithmeticUtil.doAdd(balance, tmpBalance);
+                }
+            }
+            return balance;
         }
         BigDecimal pay = investFeePayMapper.queryPayFeeAmtByPosition(map);
         BigDecimal payed = BigDecimal.ZERO;
@@ -318,7 +836,7 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
      * @see
      * @since 1.0
      */
-    public List<InvestFeePayPositionDetailDto> queryPayFeeInfoList(String secAcctId, String org, String cdate, String feeType) {
+    public List<InvestFeePayPositionDetailDto> queryPayFeeInfoList(String secAcctId, String org, String cdate,String startDate, String feeType,String confirmFlag) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("secAcctId", secAcctId);
         map.put("org", org);
@@ -330,8 +848,48 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_交易手续费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_佣金.getValue())) {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_佣金.getValue());
+        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_账户维护费.getValue())) {
+            Map<String, Object> map2 = new HashMap<String, Object>();
+            map2.put("feeType",DictCodeListExt1.一次性费用类型_账户维护费.getValue());
+            map2.put("secAcctId",secAcctId);
+            map2.put("startDate",DateUtil.parse(startDate));
+            if (StringUtil.isNotEmpty(confirmFlag) && StringUtil.equals(confirmFlag, "confirm") ) {
+                map2.put("endDate",DateUtil.parse(cdate));
+            }
+            List<BokDetailId> bokDetailIds= investFeePayMapper.selectFinDetail(map2);
+            List<InvestFeePayPositionDetailDto> feeList = new ArrayList<>();
+
+            Map<String, List<BokDetailId>> transformMap = bokDetailIds.stream().collect(Collectors.groupingBy(dto -> dto.getBusiId(),LinkedHashMap::new,Collectors.toList()));
+            for(Map.Entry<String, List<BokDetailId>> entry : transformMap.entrySet()){
+                BigDecimal balance = BigDecimal.ZERO;
+                InvestFeePayPositionDetailDto feePay = new InvestFeePayPositionDetailDto();
+                feePay.setPtlId(entry.getKey());
+                List<BokDetailId> list = entry.getValue();
+                for(BokDetailId detail : list){
+                    BigDecimal tmpBalance =  this.getSubjectBalance(detail.getBooksetId(),detail.getBokDetailId(),DateUtil.parse(cdate),DateUtil.parse(cdate));
+                    balance = ArithmeticUtil.doAdd(balance, tmpBalance);
+                    feePay.setPortFolioName(detail.getBusiDetailType());
+                }
+                feePay.setPayAmt(balance);
+                feePay.setActPayAmt(balance);
+                feePay.setAdjustAmt(BigDecimal.ZERO);
+                feePay.setSecAcctId(secAcctId);
+                feeList.add(feePay);
+            }
+
+//            for(BokDetailId detail : bokDetailIds){
+//                BigDecimal tmpBalance =  this.getSubjectBalance(detail.getBooksetId(),detail.getBokDetailId(),DateUtil.parse(cdate),DateUtil.parse(cdate));
+//                InvestFeePayPositionDetailDto feePay = new InvestFeePayPositionDetailDto();
+//                feePay.setPayAmt(tmpBalance);
+//                feePay.setActPayAmt(tmpBalance);
+//                feePay.setAdjustAmt(BigDecimal.ZERO);
+//                feePay.setPtlId(detail.getBusiId());
+//                feePay.setPortFolioName(detail.getBusiDetailType());
+//                feePay.setSecAcctId(secAcctId);
+//                feeList.add(feePay);
+//            }
+            return feeList;
         }
-        
         List<InvestFeePayPositionDetailDto> feeList = investFeePayMapper.queryPayFeeInfoList(map);
         return feeList;
     }
@@ -346,7 +904,7 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
      * @return 费用明细
      */
     public List<InvestFeePayPositionDetailDto> queryFeePositionDetail(String feeType, String startDate, String enddate, 
-                                                                      String secAcctId, String ptlId) {
+                                                                      String secAcctId, String ptlId,String confirmFlag,String tradeId) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("feeType", feeType);
         map.put("startDate", startDate);
@@ -362,6 +920,41 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_交易手续费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_佣金.getValue())) {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_佣金.getValue());
+        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_账户维护费.getValue())) {
+            Map<String, Object> map2 = new HashMap<String, Object>();
+            map2.put("feeType",DictCodeListExt1.一次性费用类型_账户维护费.getValue());
+            map2.put("secAcctId",secAcctId);
+            map2.put("startDate",DateUtil.parse(startDate));
+            if (StringUtil.isNotEmpty(confirmFlag) && StringUtil.equals(confirmFlag, "confirm") ) {
+                map2.put("endDate", DateUtil.parse(enddate));
+            }
+            if(StringUtil.isNotEmpty(tradeId)){
+                String type = this.inputDataType(tradeId);
+                String typeWfl = investFeePayMapper.inputWflDataType(tradeId);
+                if(StringUtil.equals(DictCodeListExt1.生成方式_批处理生成.getValue(),type) || StringUtil.equals(DictCodeListExt1.生成方式_批处理生成.getValue(),typeWfl)){
+                    map2.put("endDate", DateUtil.parse(enddate));
+                }
+            }
+            map2.put("ptlId", ptlId);
+            List<BokDetailId> bokDetailIds= investFeePayMapper.selectFinDetail(map2);
+            List<InvestFeePayPositionDetailDto> feeList = new ArrayList<>();
+            for(BokDetailId detail : bokDetailIds){
+                BigDecimal tmpBalance =  this.getSubjectBalance(detail.getBooksetId(),detail.getBokDetailId(),DateUtil.parse(enddate),DateUtil.parse(enddate));
+                InvestFeePayPositionDetailDto feePay = new InvestFeePayPositionDetailDto();
+                feePay.setPtlId(ptlId);
+                feePay.setPortFolioName(detail.getBusiDetailType());
+                feePay.setTradeType(DictCodeListExt1.金融产品类型_预提费用.getValue());
+                feePay.setPs(DictCodeListExt1.金融产品类型_交易费用.getValue());
+                feePay.setAssetCode(ptlId);
+                feePay.setAssetName(detail.getBusiDetailType());
+                feePay.setTradeAmt(tmpBalance);
+                feePay.setTradeDate(enddate);
+                feePay.setFeeType(DictCodeListExt1.一次性费用类型_账户维护费.getValue());
+                feePay.setPayAmt(tmpBalance);
+                feePay.setSecAcctId(secAcctId);
+                feeList.add(feePay);
+            }
+            return feeList;
         }
         return investFeePayMapper.queryFeePositionDetail(map);
     }
@@ -480,9 +1073,44 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_交易手续费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_佣金.getValue())) {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_佣金.getValue());
+        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_账户维护费.getValue())) {
+            map.put("feeType1", DictCodeListExt1.一次性费用类型_账户维护费.getValue());
         }
         String lastPayDate = investFeePayMapper.queryLastPayDate(map);
         return lastPayDate;
+    }
+
+    /**
+     * 查询费用上次计提结束日
+     *
+     * @return 上次计提结束日
+     */
+    public String queryLastPayDate(String secAcctId,Date lastDate) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("isCancel", DictCodeList.是否_否.getValue());
+        map.put("tradeStatus", DictCodeListExt1.交易状态_初始.getValue());
+        map.put("secAcctId", secAcctId);
+        map.put("payCycle", DictCodeList.频率_不规则.getValue());
+        map.put("flag", DictCodeList.是否_否.getValue());
+        map.put("cdate", DateUtil.format(lastDate));
+        map.put("feeType1", DictCodeListExt1.一次性费用类型_账户维护费.getValue());
+        String lastPayDate = investFeePayMapper.queryLastPayDate(map);
+        return lastPayDate;
+    }
+
+    /**
+     * 账户维护费 查询费用上次计提结束日
+     *
+     * @return 上次计提结束日
+     */
+    public String queryStartDate(String secAcctId) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("secAcctId", secAcctId);
+        map.put("org", this.querySecAcctOrg(secAcctId));
+        map.put("finprodType", DictCodeListExt1.金融产品类型_预提费用.getValue());
+        map.put("cdate", DateUtil.getSysDate());
+        String lastPayDate = investFeePayMapper.queryStartDate(map);
+        return StringUtil.isNotEmpty(lastPayDate) ?  lastPayDate : investFeePayMapper.queryConfigStartDate(map);
     }
 
     /**
@@ -870,4 +1498,31 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
         return investFeePayMapper.queryByPtlId(map);
     }
     
+    public Page<InvestFeePayFeeDetailDto> selectDetail(int page, int length, Map<String, Object> pageParam)
+            throws Exception {
+        return this.queryForPageForSelectReturn(page,length,() -> investFeePayMapper.selectDetail(pageParam));
+    }
+
+    /**
+     * 账户维护费，流程生效后更新
+     * @param entity
+     * @return
+     */
+    public void updateTrdAccountmfConfigDto(InvestFeePayDto entity) {
+        TrdAccountmfConfigDto dto = new TrdAccountmfConfigDto();
+        dto.setSecAcctId(entity.getSecAcctId());
+        dto.setRegistOrg(entity.getRegTrustOrg());
+        dto.setPositionStartDate(entity.getStartDate());
+        dto.setActPositionEndDate(entity.getEndDate());
+        investFeePayMapper.updateTrdAccountmfConfigDto(dto);
+    }
+
+    /**
+     * 查询数据的录入方式
+     * @param tradeId
+     * @return
+     */
+    public String inputDataType(String tradeId) {
+        return investFeePayMapper.inputDataType(tradeId);
+    }
 }

@@ -6895,6 +6895,17 @@ public class InterfCommonService {
             		busiDetailType = bokBookset.getAcctSubjectType();
             	}
             }
+            
+            //预提费用支付
+            if(StringUtil.equals(trdProductDeal.getFeeType(), DictCodeListExt3.投资端费用品种类型_账户维护费.getValue())){
+            	// 变量.业务明细代码 = 输入.证券账户+产品代码+计提开始日
+            	busiId = trdProductDeal.getSecManageAcctId()+prodId+DateUtil.format(trdProductDeal.getVdate(), "yyyyMMdd");
+                // 变量.业务明细类型 = 数据字典.金融产品类型.预提费用
+                busiDetailType = DictCodeListExt1.金融产品类型_预提费用.getValue();
+                invAim = null;
+                breach = null;
+                ccy = null;
+            }
             bookNo = getBokDetailId(busiId, null, busiDetailType, invAim,
                     breach, ccy).getBokDetailId();
             

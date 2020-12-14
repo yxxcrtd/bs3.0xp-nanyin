@@ -9,6 +9,17 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class TrdProductDeal extends BaseEntity {
+	//费用类型
+	private String feeType;
+	
+    public String getFeeType() {
+		return feeType;
+	}
+
+	public void setFeeType(String feeType) {
+		this.feeType = feeType;
+	}
+	
     /**
      * 交易编号
      */

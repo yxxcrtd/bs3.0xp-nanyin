@@ -782,6 +782,10 @@ public enum ValDictCodeList implements BaseDictCodeList {
     账套配置表参数项_债券借贷费用损益计入方式(
             ValDictCode.账套配置表参数项, "BOND_LENDING_DEAL_FEE_SUBJECT", "债券借贷费用损益计入方式"
     ),
+    
+    账套配置表参数项_预提费用计提方式(
+        ValDictCode.账套配置表参数项, "TOCAL_ACCR_TYPE", "预提费用计提方式"
+    ),
 
     ;
 

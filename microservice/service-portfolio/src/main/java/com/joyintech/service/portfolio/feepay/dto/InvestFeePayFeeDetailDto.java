@@ -126,6 +126,13 @@ public class InvestFeePayFeeDetailDto extends BaseEntity {
      */
     private String portFolioName;
     
+    private String tradeId;
+    public String getTradeId() {
+        return tradeId;
+    }
+    public void setTradeId(String tradeId) {
+        this.tradeId = tradeId;
+    }
     public String getsFinprodId() {
 		return sFinprodId;
 	}

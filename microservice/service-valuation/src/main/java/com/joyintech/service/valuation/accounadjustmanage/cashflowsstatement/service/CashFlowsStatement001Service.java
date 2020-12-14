@@ -199,7 +199,10 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
             					+ "C07,C12,P,TRADEAMT|"
             					+ "C07,C13,N,TRADEAMT|"
             					+ "C10,C11,P,TRADEAMT|"
-                                + "C11,C11,P,TRADEAMT|"
+            					/**JSBSW-106、JSBSW-116  晋商问题 : 新增账户维护费、投资费用支付中其他费用 add by hpp 20200812 start*/
+            					+ "C20,C11,P,TRADEAMT|"
+            					+ "C11,C11,P,TRADEAMT|"
+            					/**JSBSW-106、JSBSW-116  晋商问题 : 新增账户维护费、投资费用支付中其他费用 add by hpp 20200812 end*/
             					+ "C11,T10,P,TRADEAMT","ORI"},
             {"支付其他与经营活动有关的现金","经营活动现金流出小计",
             						"F09,T01,P,PRINAMT|"
