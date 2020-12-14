@@ -882,7 +882,9 @@
     var init = function() {
         // 资产类型
 //        assetTypeChagne();
-    	bonusModeChange();
+        if(pageModel != PAGE_MODEL_REFERENCE){
+    	    bonusModeChange();
+    	}
         var assetType = $("#assetType").val();
         if(assetType == FUND_ASSET_TYPE_F01){
             $(".unitCprice").hide();
