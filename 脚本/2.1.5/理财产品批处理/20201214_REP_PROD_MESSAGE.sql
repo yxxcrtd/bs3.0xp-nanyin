@@ -1,5 +1,5 @@
 DROP TABLE REP_PROD_MESSAGE;
--- CREATE TABLE  理财产品信息表
+-- CREATE TABLE  ���Ʋ�Ʒ��Ϣ��
 CREATE TABLE REP_PROD_MESSAGE (
 	FINPROD_ID VARCHAR2(50) NOT NULL,
 	PROD_REGIST_CODE VARCHAR2(15),
@@ -107,209 +107,209 @@ CREATE TABLE REP_PROD_MESSAGE (
  
 -- Add comments to the table 
 comment on table REP_PROD_MESSAGE
-  is '理财产品信息表';
+  is '���Ʋ�Ʒ��Ϣ��';
 -- Add comments to the columns 
 comment on column REP_PROD_MESSAGE.FINPROD_ID
-  is '产品ID';
+  is '��ƷID';
 comment on column REP_PROD_MESSAGE.PROD_REGIST_CODE
-  is '产品登记编码';
+  is '��Ʒ�ǼǱ���';
 comment on column REP_PROD_MESSAGE.PROD_ID
-  is '理财产品代码';
+  is '���Ʋ�Ʒ����';
 comment on column REP_PROD_MESSAGE.PROD_INS_ID
-  is '行内标识码';
+  is '���ڱ�ʶ��';
 comment on column REP_PROD_MESSAGE.FINPROD_ABBR
-  is '产品名称';
+  is '��Ʒ����';
 comment on column REP_PROD_MESSAGE.PROD_BRAND
-  is '产品品牌';
+  is '��ƷƷ��';
 comment on column REP_PROD_MESSAGE.ISSUE_PARTY_ID
-  is '发行机构代码';
+  is '���л�������';
 comment on column REP_PROD_MESSAGE.ISSUE_PARTY_NAME
-  is '发行机构名称';
+  is '���л�������';
 comment on column REP_PROD_MESSAGE.ISSUER_TYPE
-  is '发行机构类型 03 城商行';
+  is '���л������� 03 ������';
 comment on column REP_PROD_MESSAGE.PROD_STAGE
-  is '产品期次';
+  is '��Ʒ�ڴ�';
 comment on column REP_PROD_MESSAGE.PROFIT_TYPE
-  is '产品收益类型  01 保证收益/02 保本浮动收益/03 非保本浮动收益';
+  is '��Ʒ��������  01 ��֤����/02 ������������/03 �Ǳ�����������';
 comment on column REP_PROD_MESSAGE.TERMTYPE
-  is '产品期限';
+  is '��Ʒ����';
 comment on column REP_PROD_MESSAGE.RISK_LEVEL
-  is '产品风险等级';
+  is '��Ʒ���յȼ�';
 comment on column REP_PROD_MESSAGE.SALETARGET
-  is '目标客户类型';
+  is 'Ŀ��ͻ�����';
 comment on column REP_PROD_MESSAGE.INVEST_ARAE
-  is '资金投向地区';
+  is '�ʽ�Ͷ�����';
 comment on column REP_PROD_MESSAGE.OPERATE_MODE
-  is '产品运作模式';
+  is '��Ʒ����ģʽ';
 comment on column REP_PROD_MESSAGE.REP_BOOK_MODE
-  is '会计核算方式  01 表内/02 表外';
+  is '��ƺ��㷽ʽ  01 ����/02 ����';
 comment on column REP_PROD_MESSAGE.CMMODE
-  is '产品资产配置方式';
+  is '��Ʒ�ʲ����÷�ʽ';
 comment on column REP_PROD_MESSAGE.PMMODE
-  is '产品管理模式';
+  is '��Ʒ����ģʽ';
 comment on column REP_PROD_MESSAGE.MNAME
-  is '实际管理人';
+  is 'ʵ�ʹ�����';
 comment on column REP_PROD_MESSAGE.MANAGE_TYPE
-  is '管理方式';
+  is '������ʽ';
 comment on column REP_PROD_MESSAGE.APPROVER_ID
-  is '产品审批人身份证号';
+  is '��Ʒ����������֤��';
 comment on column REP_PROD_MESSAGE.APPROVER_NAME
-  is '产品审批人姓名';
+  is '��Ʒ����������';
 comment on column REP_PROD_MESSAGE.DESIGNER_ID
-  is '产品设计人身份证号';
+  is '��Ʒ���������֤��';
 comment on column REP_PROD_MESSAGE.DESIGNER_NAME
-  is '产品设计人姓名';
+  is '��Ʒ���������';
 comment on column REP_PROD_MESSAGE.MANAGER_ID
-  is '投资经理身份证号';
+  is 'Ͷ�ʾ�������֤��';
 comment on column REP_PROD_MESSAGE.MANAGER_NAME
-  is '投资经理姓名';
+  is 'Ͷ�ʾ�������';
 comment on column REP_PROD_MESSAGE.PRICED_MODE
-  is '产品定价方式';
+  is '��Ʒ���۷�ʽ';
 comment on column REP_PROD_MESSAGE.INV_ASSET_TYPE
-  is '投资资产类型';
+  is 'Ͷ���ʲ�����';
 comment on column REP_PROD_MESSAGE.CON_PRD_TRAGET
-  is '结构性产品挂钩标的';
+  is '�ṹ�Բ�Ʒ�ҹ����';
 comment on column REP_PROD_MESSAGE.CONT_MODE
-  is '合作模式';
+  is '����ģʽ';
 comment on column REP_PROD_MESSAGE.COOPERATION_NAME
-  is '合作机构名称';
+  is '������������';
 comment on column REP_PROD_MESSAGE.INV_TYPE_RAT
-  is '投资资产种类及比例';
+  is 'Ͷ���ʲ����༰����';
 comment on column REP_PROD_MESSAGE.IS_YIELD
-  is '是否有预期收益率';
+  is '�Ƿ���Ԥ��������';
 comment on column REP_PROD_MESSAGE.IS_YIELD_MEAS_BASIS
-  is '是否有收益率测算依据';
+  is '�Ƿ��������ʲ�������';
 comment on column REP_PROD_MESSAGE.RAISE_CCY
-  is '募集币种';
+  is 'ļ������';
 comment on column REP_PROD_MESSAGE.CASH_PRIN_CCY
-  is '兑付本金币种';
+  is '�Ҹ��������';
 comment on column REP_PROD_MESSAGE.CASH_PROF_CCY
-  is '兑付收益币种';
+  is '�Ҹ��������';
 comment on column REP_PROD_MESSAGE.INVEST_PRIN_DATE
-  is '投资本金到账日';
+  is 'Ͷ�ʱ�������';
 comment on column REP_PROD_MESSAGE.INVEST_PROF_DATE
-  is '投资收益到账日';
+  is 'Ͷ�����浽����';
 comment on column REP_PROD_MESSAGE.TERM_RIGHT_FLAG
-  is '发行机构提前终止权标识';
+  is '���л�����ǰ��ֹȨ��ʶ';
 comment on column REP_PROD_MESSAGE.CUS_REDEEM_FLAG
-  is '客户赎回权标识';
+  is '�ͻ����Ȩ��ʶ';
 comment on column REP_PROD_MESSAGE.CREDIT_FLAG
-  is '产品增信标识';
+  is '��Ʒ���ű�ʶ';
 comment on column REP_PROD_MESSAGE.CREDIT_MODE
-  is '产品增信形式';
+  is '��Ʒ������ʽ';
 comment on column REP_PROD_MESSAGE.IS_CONSTRACTE
-  is '是否为结构化（分级）产品';
+  is '�Ƿ�Ϊ�ṹ�����ּ�����Ʒ';
 comment on column REP_PROD_MESSAGE.GRADE_TYPE
-  is '层级类别';
+  is '�㼶���';
 comment on column REP_PROD_MESSAGE.YIELD_COMMENT
-  is '收益率分档说明';
+  is '�����ʷֵ�˵��';
 comment on column REP_PROD_MESSAGE.OPEN_MODE
-  is '开放模式';
+  is '����ģʽ';
 comment on column REP_PROD_MESSAGE.OPEN_CIRCLE
-  is '规律开放周期';
+  is '���ɿ�������';
 comment on column REP_PROD_MESSAGE.OPEN_CIRCLE_DAYS
-  is '其他规律开放周期';
+  is '�������ɿ�������';
 comment on column REP_PROD_MESSAGE.HOLIDAY_ON_FLAG
-  is '节假日是否开放';
+  is '�ڼ����Ƿ񿪷�';
 comment on column REP_PROD_MESSAGE.AVG_OPEN_COUNT
-  is '平均开放次数';
+  is 'ƽ�����Ŵ���';
 comment on column REP_PROD_MESSAGE.OPEN_BUSS
-  is '开放期业务';
+  is '������ҵ��';
 comment on column REP_PROD_MESSAGE.RAISE_VDATE
-  is '募集起始日期';
+  is 'ļ����ʼ����';
 comment on column REP_PROD_MESSAGE.RAISE_ENDDATE
-  is '募集结束日期';
+  is 'ļ����������';
 comment on column REP_PROD_MESSAGE.PRD_VDATE
-  is '产品起始日期';
+  is '��Ʒ��ʼ����';
 comment on column REP_PROD_MESSAGE.PRD_MDATE
-  is '产品终止日期';
+  is '��Ʒ��ֹ����';
 comment on column REP_PROD_MESSAGE.REAL_MDATE
-  is '产品实际终止日期';
+  is '��Ʒʵ����ֹ����';
 comment on column REP_PROD_MESSAGE.REP_DECLARE_DATE
-  is '报告登记日';
+  is '����Ǽ���';
 comment on column REP_PROD_MESSAGE.REP_ISSUE_DATE
-  is '发行登记日';
+  is '���еǼ���';
 comment on column REP_PROD_MESSAGE.SUBMIT_TIME
-  is '募集登记日';
+  is 'ļ���Ǽ���';
 comment on column REP_PROD_MESSAGE.DURATIONFLAG
-  is '产品状态';
+  is '��Ʒ״̬';
 comment on column REP_PROD_MESSAGE.REP_SALE_AREA
-  is '产品销售区域';
+  is '��Ʒ��������';
 comment on column REP_PROD_MESSAGE.ISAGENCY
-  is '是否有其他机构代销';
+  is '�Ƿ���������������';
 comment on column REP_PROD_MESSAGE.IN_DEP_CODE
-  is '境内托管机构代码';
+  is '�����йܻ�������';
 comment on column REP_PROD_MESSAGE.IN_DEP_NAME
-  is '境内托管机构名称';
+  is '�����йܻ�������';
 comment on column REP_PROD_MESSAGE.OUT_DEP_CTRY
-  is '境外托管机构国别';
+  is '�����йܻ�������';
 comment on column REP_PROD_MESSAGE.OUT_DEP_NAME
-  is '境外托管机构名称';
+  is '�����йܻ�������';
 comment on column REP_PROD_MESSAGE.BUSI_ACCT_NO
-  is '理财产品资金托管账号';
+  is '���Ʋ�Ʒ�ʽ��й��˺�';
 comment on column REP_PROD_MESSAGE.ACCT_NAME
-  is '理财产品资金托管账户';
+  is '���Ʋ�Ʒ�ʽ��й��˻�';
 comment on column REP_PROD_MESSAGE.IS_NEW
-  is '是否新产品';
+  is '�Ƿ��²�Ʒ';
 comment on column REP_PROD_MESSAGE.RAISE_TYPE
-  is '产品募集方式';
+  is '��Ʒļ����ʽ';
 comment on column REP_PROD_MESSAGE.IVSTORIENTATION
-  is '产品投资性质';
+  is '��ƷͶ������';
 comment on column REP_PROD_MESSAGE.IS_SHORT_TERM
-  is '是否设置最短持有期限';
+  is '�Ƿ�������̳�������';
 comment on column REP_PROD_MESSAGE.SHORT_TERM
-  is '最短持有期限（天）';
+  is '��̳������ޣ��죩';
 comment on column REP_PROD_MESSAGE.IS_FREE_REDEM
-  is '最短持有期后是否自由赎回';
+  is '��̳����ں��Ƿ��������';
 comment on column REP_PROD_MESSAGE.CASH_MANA_CATE
-  is '是否为现金管理类理财产品';
+  is '�Ƿ�Ϊ�ֽ���������Ʋ�Ʒ';
 comment on column REP_PROD_MESSAGE.YIELD_HIGH
-  is '业绩比较基准上限';
+  is 'ҵ���Ƚϻ�׼����';
 comment on column REP_PROD_MESSAGE.YIELD_LOW
-  is '业绩比较基准下限';
+  is 'ҵ���Ƚϻ�׼����';
 comment on column REP_PROD_MESSAGE.YIELD_REMARK
-  is '业绩比较基准说明';
+  is 'ҵ���Ƚϻ�׼˵��';
 comment on column REP_PROD_MESSAGE.INVEST_FEE_RATE
-  is '投资管理费率';
+  is 'Ͷ�ʹ�������';
 comment on column REP_PROD_MESSAGE.EXC_FIN_SECTOR
-  is '是否金融同业专属';
+  is '�Ƿ����ͬҵר��';
 comment on column REP_PROD_MESSAGE.HIGH_YIELD
-  is '申报期预计客户最高年收益率';
+  is '�걨��Ԥ�ƿͻ������������';
 comment on column REP_PROD_MESSAGE.LOW_YIELD
-  is '申报期预计客户最低年收益率';
+  is '�걨��Ԥ�ƿͻ������������';
 comment on column REP_PROD_MESSAGE.HIGH_YIELD_ISSUE
-  is '发行期预计客户最高年收益率';
+  is '������Ԥ�ƿͻ������������';
 comment on column REP_PROD_MESSAGE.LOW_YIELD_ISSUE
-  is '发行期预计客户最低年收益率';
+  is '������Ԥ�ƿͻ������������';
 comment on column REP_PROD_MESSAGE.EXP_AVG_YIELD
-  is '发行期预计平均收益率';
+  is '������Ԥ��ƽ��������';
 comment on column REP_PROD_MESSAGE.TRU_FEE_RATE
-  is '托管费率';
+  is '�йܷ���';
 comment on column REP_PROD_MESSAGE.RAISE_AMT_PLAN
-  is '计划募集金额';
+  is '�ƻ�ļ�����';
 comment on column REP_PROD_MESSAGE.TOTAL_AMT
-  is '实际募集金额';
+  is 'ʵ��ļ�����';
 comment on column REP_PROD_MESSAGE.REP_ACT_ACHI_PROFIT
-  is '银行实际实现收入';
+  is '����ʵ��ʵ������';
 comment on column REP_PROD_MESSAGE.REP_CASH_CUS_PROFIT
-  is '兑付客户收益';
+  is '�Ҹ��ͻ�����';
 comment on column REP_PROD_MESSAGE.REP_CASH_CUS_SUM
-  is '兑付客户总金额';
+  is '�Ҹ��ͻ��ܽ��';
 comment on column REP_PROD_MESSAGE.REP_CUS_ACT_YEAR_YIELD
-  is '客户实际年化收益率';
+  is '�ͻ�ʵ���껯������';
 comment on column REP_PROD_MESSAGE.REP_PROD_ACT_YEAR_YIELD
-  is '产品实际年化收益率';
+  is '��Ʒʵ���껯������';
 comment on column REP_PROD_MESSAGE.CDATE
-  is '产品统计日';
+  is '��Ʒͳ����';
 comment on column REP_PROD_MESSAGE.CREATE_USER
-  is '创建人';
+  is '������';
 comment on column REP_PROD_MESSAGE.CREATE_DEPT
-  is '创建部门';
+  is '��������';
 comment on column REP_PROD_MESSAGE.CREATE_TIME
-  is '创建时间';
+  is '����ʱ��';
 comment on column REP_PROD_MESSAGE.UPDATE_USER
-  is '最后更新人';
+  is '��������';
 comment on column REP_PROD_MESSAGE.UPDATE_TIME
-  is '最后更新时间';
+  is '������ʱ��';
 
 	

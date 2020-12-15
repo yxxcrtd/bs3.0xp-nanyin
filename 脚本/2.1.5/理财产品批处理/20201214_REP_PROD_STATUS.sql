@@ -1,5 +1,5 @@
 DROP TABLE REP_PROD_STATUS;
--- CREATE TABLE  理财产品状态表
+-- CREATE TABLE  ���Ʋ�Ʒ״̬��
 CREATE TABLE REP_PROD_STATUS (
 	FINPROD_ID VARCHAR2(50) NOT NULL,
 	PROD_REGIST_CODE VARCHAR2(15),
@@ -37,69 +37,69 @@ CREATE TABLE REP_PROD_STATUS (
  
 -- Add comments to the table 
 comment on table REP_PROD_STATUS
-  is '理财产品状态表';
+  is '���Ʋ�Ʒ״̬��';
 -- Add comments to the columns 
 comment on column REP_PROD_STATUS.FINPROD_ID
-  is '产品ID';
+  is '��ƷID';
 comment on column REP_PROD_STATUS.PROD_REGIST_CODE
-  is '产品登记编码';
+  is '��Ʒ�ǼǱ���';
 comment on column REP_PROD_STATUS.FINPROD_ABBR
-  is '产品名称';
+  is '��Ʒ����';
 comment on column REP_PROD_STATUS.ISSUE_PARTY_ID
-  is '发行机构代码';
+  is '���л�������';
 comment on column REP_PROD_STATUS.ISSUE_PARTY_NAME
-  is '发行机构名称';
+  is '���л�������';
 comment on column REP_PROD_STATUS.REP_APPLY_CNY
-  is '累计申购金额';
+  is '�ۼ��깺���';
 comment on column REP_PROD_STATUS.REP_SUM_APPLY_SHARE
-  is '累计申购份额';
+  is '�ۼ��깺�ݶ�';
 comment on column REP_PROD_STATUS.REP_CASH_CNY
-  is '累计兑付金额';
+  is '�ۼƶҸ����';
 comment on column REP_PROD_STATUS.REP_CASH_PROFIT_CNY
-  is '累计兑付收益金额';
+  is '�ۼƶҸ�������';
 comment on column REP_PROD_STATUS.REP_SUM_CASH_SHARE
-  is '累计赎回份额';
+  is '�ۼ���طݶ�';
 comment on column REP_PROD_STATUS.PROD_STATUS
-  is '产品统计日状态 存续/终止(1/0)';
+  is '��Ʒͳ����״̬ ����/��ֹ(1/0)';
 comment on column REP_PROD_STATUS.PROD_PRD_AMT
-  is '产品存续余额';
+  is '��Ʒ�������';
 comment on column REP_PROD_STATUS.ORIGINAL_VALUE
-  is '初始净值';
+  is '��ʼ��ֵ';
 comment on column REP_PROD_STATUS.NET_VALUE
-  is '产品净值';
+  is '��Ʒ��ֵ';
 comment on column REP_PROD_STATUS.TOTAL_NET_NALUE
-  is '累计净值';
+  is '�ۼƾ�ֵ';
 comment on column REP_PROD_STATUS.VALUE_CCY
-  is '净值币种';
+  is '��ֵ����';
 comment on column REP_PROD_STATUS.REP_INIT_NETVAL_CNY
-  is '折算人民币初始净值';
+  is '��������ҳ�ʼ��ֵ';
 comment on column REP_PROD_STATUS.REP_NETVAL_CNY
-  is '折算人民币净值';
+  is '��������Ҿ�ֵ';
 comment on column REP_PROD_STATUS.REP_SUM_NETVAL_CNY
-  is '折算人民币累计净值';
+  is '����������ۼƾ�ֵ';
 comment on column REP_PROD_STATUS.REA_YIELD
-  is '实现收益率';
+  is 'ʵ��������';
 comment on column REP_PROD_STATUS.REP_NEW_EXPECTED_YIELD
-  is '最新预期收益率';
+  is '����Ԥ��������';
 comment on column REP_PROD_STATUS.BANK_IMP_INT
-  is '银行实现收益';
+  is '����ʵ������';
 comment on column REP_PROD_STATUS.CDATE
-  is '产品统计日';
+  is '��Ʒͳ����';
 comment on column REP_PROD_STATUS.OPEN_PRODD_END_SCALE
-  is '开放式产品易变现资产期末持仓占比'; 
+  is '����ʽ��Ʒ�ױ����ʲ���ĩ�ֲ�ռ��'; 
 comment on column REP_PROD_STATUS.CLOSE_PRODD_END_SCALE
-  is '封闭式产品债权类资产平均期限错配比'; 
+  is '���ʽ��ƷծȨ���ʲ�ƽ�����޴����'; 
 comment on column REP_PROD_STATUS.NON_STAND_BOND_RATIO
-  is '非标债权资产持仓比例'; 
+  is '�Ǳ�ծȨ�ʲ��ֱֲ���'; 
 comment on column REP_PROD_STATUS.CREATE_USER
-  is '创建人';
+  is '������';
 comment on column REP_PROD_STATUS.CREATE_DEPT
-  is '创建部门';
+  is '��������';
 comment on column REP_PROD_STATUS.CREATE_TIME
-  is '创建时间';
+  is '����ʱ��';
 comment on column REP_PROD_STATUS.UPDATE_USER
-  is '最后更新人';
+  is '��������';
 comment on column REP_PROD_STATUS.UPDATE_TIME
-  is '最后更新时间';
+  is '������ʱ��';
 
 	
