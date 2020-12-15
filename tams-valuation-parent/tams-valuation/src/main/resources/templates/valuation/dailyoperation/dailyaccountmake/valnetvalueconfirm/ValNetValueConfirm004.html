@@ -24,8 +24,8 @@
                     <label class="layui-form-label form-lable" id="netUnitValueLabel">单位净值</label>
                     <div class="layui-input-inline input-inline">
                         <input type="text" id="netUnitValue" name="netUnitValue"
-                           data-textrange="4" readonly
-                            class="layui-input form-input text-number" maxlength='6' data-th-value="${entity?.netUnitValue}" >
+                               data-th-data-textrange="${entity?.unitvaluedec}" readonly
+                            class="layui-input form-input text-number" maxlength='10' data-th-value="${entity?.netUnitValue}" >
                     </div>
                 </div>
             </div>

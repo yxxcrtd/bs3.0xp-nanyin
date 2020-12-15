@@ -189,8 +189,10 @@
                         //获取参考日净值和参考日份额
                         Joyin.ajax(getTdyUnitValueAndTdyShareAmt, object1, function (data) {
                             if (data) {
+                                $('#tdyUnitValue').attr("data-textrange", parseInt($('#unitvalueDec').val())).trigger('change');
                                 if(pageModel != PAGE_MODEL_REFERENCE){
-                                    $('#tdyUnitValue').val(data.tdyUnitValue);
+                                    $('#tdyUnitValue').val(data.tdyUnitValue).trigger('change');
+                                    $('#tdyUnitValue').trigger('blur');
                                 }
                                 $('#tdyShareAmt').val(data.tdyShareAmt);
                                 //获得分红净资产
