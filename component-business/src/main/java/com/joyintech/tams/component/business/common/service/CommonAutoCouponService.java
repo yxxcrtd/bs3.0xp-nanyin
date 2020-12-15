@@ -1087,13 +1087,13 @@ public class CommonAutoCouponService extends BaseService{
                 finProductTypeConfig.setInputValue1(BussinessDictCodeList.平安资产类型_基金.getValue());
                 finProductTypeConfig.setInputValue2(infChinamutualfunddescription.getfInfoType());
                 finProductTypeConfig.setInputValue3(infChinamutualfunddescription.getfInfoType2());
-                if (StringUtil.equals(BussinessDictCodeList.基金类资产类型_非货币基金.getValue(),infChinamutualfunddescription.getfInfoType())
-                        && StringUtil.equals(BussinessDictCodeList.基金类资产二级类型_债券基金.getValue(), infChinamutualfunddescription.getfInfoType2())
-                && (StringUtil.equals(CacheUtil.getSysParam("IS_SHOW_TYPE"), "01") ||
-                        StringUtil.isEmpty(CacheUtil.getSysParam("IS_SHOW_TYPE")))){
-                    finProductTypeConfig.setInputValue2(StringUtil.EMPTY);
-                    finProductTypeConfig.setInputValue3(StringUtil.EMPTY);
-                }
+//                if (StringUtil.equals(BussinessDictCodeList.基金类资产类型_非货币基金.getValue(),infChinamutualfunddescription.getfInfoType())
+//                        && StringUtil.equals(BussinessDictCodeList.基金类资产二级类型_债券基金.getValue(), infChinamutualfunddescription.getfInfoType2())
+//                && (StringUtil.equals(CacheUtil.getSysParam("IS_SHOW_TYPE"), "01") ||
+//                        StringUtil.isEmpty(CacheUtil.getSysParam("IS_SHOW_TYPE")))){
+//                    finProductTypeConfig.setInputValue2(StringUtil.EMPTY);
+//                    finProductTypeConfig.setInputValue3(StringUtil.EMPTY);
+//                }
                 finProductTypeConfig = restTemplate.postForObject(ServiceApplication.ASSET_SERVICE_NAME + "/AssetCommon/getAssetThreeType",
                         finProductTypeConfig, FinProductTypeConfig.class);
 
