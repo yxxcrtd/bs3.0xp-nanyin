@@ -737,13 +737,15 @@
                 }
             }
         }
-        repoInfoTable.clear(function() {
-            var unitCprice = $("#unitCprice").val();
-            $.each(finAssetIntInfos, function(i, v) {
-                v.unitCprice = unitCprice;
-                repoInfoTable.addRow(v);
+        if(repoInfoTable.table){
+            repoInfoTable.clear(function() {
+                var unitCprice = $("#unitCprice").val();
+                $.each(finAssetIntInfos, function(i, v) {
+                    v.unitCprice = unitCprice;
+                    repoInfoTable.addRow(v);
+                });
             });
-        });
+        }
     }
 
     function saveOrSubmit(operateType) {
