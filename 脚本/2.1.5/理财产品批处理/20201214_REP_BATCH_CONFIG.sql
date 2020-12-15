@@ -1,5 +1,5 @@
 DROP TABLE REP_BATCH_CONFIG;
--- CREATE TABLE  æŠ¥è¡¨ç”Ÿæˆé…ç½®è¡¨
+-- CREATE TABLE  ±¨±íÉú³ÉÅäÖÃ±í
 CREATE TABLE REP_BATCH_CONFIG (
 	REP_CODE VARCHAR2(50) NOT NULL,
 	REP_NAME VARCHAR2(50),
@@ -15,25 +15,25 @@ CREATE TABLE REP_BATCH_CONFIG (
  
 -- Add comments to the table 
 comment on table REP_BATCH_CONFIG
-  is 'æŠ¥è¡¨ç”Ÿæˆé…ç½®è¡¨';
+  is '±¨±íÉú³ÉÅäÖÃ±í';
 -- Add comments to the columns 
 comment on column REP_BATCH_CONFIG.REP_CODE
-  is 'æŠ¥è¡¨CODE ';
+  is '±¨±íCODE ';
 comment on column REP_BATCH_CONFIG.REP_NAME
-  is 'æŠ¥è¡¨NAME';
+  is '±¨±íNAME';
 comment on column REP_BATCH_CONFIG.IS_RUN
-  is 'æ˜¯å¦ç”Ÿæˆ';
+  is 'ÊÇ·ñÉú³É';
 comment on column REP_BATCH_CONFIG.REMARK
-  is 'å¤‡æ³¨';
+  is '±¸×¢';
 comment on column REP_BATCH_CONFIG.CREATE_USER
-  is 'åˆ›å»ºäºº';
+  is '´´½¨ÈË';
 comment on column REP_BATCH_CONFIG.CREATE_DEPT
-  is 'åˆ›å»ºéƒ¨é—¨';
+  is '´´½¨²¿ÃÅ';
 comment on column REP_BATCH_CONFIG.CREATE_TIME
-  is 'åˆ›å»ºæ—¶é—´';
+  is '´´½¨Ê±¼ä';
 comment on column REP_BATCH_CONFIG.UPDATE_USER
-  is 'æœ€åŽæ›´æ–°äºº';
+  is '×îºó¸üÐÂÈË';
 comment on column REP_BATCH_CONFIG.UPDATE_TIME
-  is 'æœ€åŽæ›´æ–°æ—¶é—´';
+  is '×îºó¸üÐÂÊ±¼ä';
 
 	

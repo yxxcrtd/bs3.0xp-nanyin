@@ -1,11 +1,11 @@
---æ‰¹å¤„ç†ä»»åŠ¡
+--Åú´¦ÀíÈÎÎñ
 delete from SYS_BATCH_TASK where TASK_ID = '3052';
 
 INSERT INTO SYS_BATCH_TASK
 (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-VALUES('3052', 'SVR', 'ç†è´¢æŠ¥è¡¨ç”Ÿæˆæ‰¹å¤„ç†', NULL, 'productReportTask', 3270, 'system', NULL, sysdate, 'system', sysdate);
+VALUES('3052', 'SVR', 'Àí²Æ±¨±íÉú³ÉÅú´¦Àí', NULL, 'productReportTask', 3270, 'system', NULL, sysdate, 'system', sysdate);
 
---æ‰¹å¤„ç†ä»»åŠ¡ç»„ä»»åŠ¡å…³è”
+--Åú´¦ÀíÈÎÎñ×éÈÎÎñ¹ØÁª
 delete from SYS_BATCH_JOB where TASK_ID = '3052';
 
 INSERT INTO SYS_BATCH_JOB
