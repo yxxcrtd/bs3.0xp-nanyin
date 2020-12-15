@@ -841,23 +841,23 @@
         if (assetType == FUND_ASSET_TYPE_F01 && bonusMode == BONUS_MODE_02) {
             // 权益登记日 除权日 权益登记日份额 单位分红净值不显示
 //            $('.currency').hide();
-            $("#exRightsDate").val(sysDate).trigger("change");
-            $("#registDate").val(sysDate).trigger("change");
-            $("#exRightsDate").attr("disabled",true);
-            $("#registDate").attr("disabled",true);
+//            $("#exRightsDate").val(sysDate).trigger("change");
+//            $("#registDate").val(sysDate).trigger("change");
+//            $("#exRightsDate").attr("disabled",true);
+//            $("#registDate").attr("disabled",true);
 //            $('#unitCprice').attr("disabled","true");
 //        	triValueChange('unitCprice',1);
             triValueChange('unitCprice');
-//            triValueChange('exRightsDate');
+            triValueChange('exRightsDate');
         }
         // 资产类型为非货币
         else if(assetType == FUND_ASSET_TYPE_F01 && bonusMode == BONUS_MODE_01){
         	$('.currency').show();
             triValueChange('tradeAmt');
-            $("#exRightsDate").val(sysDate).trigger("change");
-            $("#registDate").val(sysDate).trigger("change");
-            $("#exRightsDate").attr("disabled",true);
-            $("#registDate").attr("disabled",true);
+//            $("#exRightsDate").val(sysDate).trigger("change");
+//            $("#registDate").val(sysDate).trigger("change");
+//            $("#exRightsDate").attr("disabled",true);
+//            $("#registDate").attr("disabled",true);
         }
         else if(assetType == FUND_ASSET_TYPE_F02){
         	triValueChange('unitCprice');
@@ -865,8 +865,8 @@
             $('.currency').show();
 //            $("#exRightsDate").val('').trigger("change");
 //            $("#registDate").val('').trigger("change");
-             $("#exRightsDate").attr("disabled",false);
-             $("#registDate").attr("disabled",false);
+//             $("#exRightsDate").attr("disabled",false);
+//             $("#registDate").attr("disabled",false);
         }
      // 判断分红类型
         if (bonusMode == BONUS_MODE_01) {
@@ -882,9 +882,9 @@
     var init = function() {
         // 资产类型
 //        assetTypeChagne();
-        if(pageModel != PAGE_MODEL_REFERENCE){
+//        if(pageModel != PAGE_MODEL_REFERENCE){
     	    bonusModeChange();
-    	}
+//    	}
         var assetType = $("#assetType").val();
         if(assetType == FUND_ASSET_TYPE_F01){
             $(".unitCprice").hide();
