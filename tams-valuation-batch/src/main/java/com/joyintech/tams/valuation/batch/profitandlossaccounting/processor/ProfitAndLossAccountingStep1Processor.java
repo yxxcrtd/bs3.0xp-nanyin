@@ -148,6 +148,7 @@ public class ProfitAndLossAccountingStep1Processor extends BaseProcessor<NeedOpe
         // 1.3 公允价值变动损益的基础科目性质查询
         List<String> 公允价值变动损益基础科目性质列表 = accountingCommonService.getValSubjectNatureList(
             DictCodeListExt1.分组代码_公允价值变动损益对应查询科目.getValue());
+        公允价值变动损益基础科目性质列表.add(DictCodeBaseSubjectNatrue.其他综合收益.getValue());
 
         // 1.4 本期利润_已实现余额查询
         科目性质列表.clear();
