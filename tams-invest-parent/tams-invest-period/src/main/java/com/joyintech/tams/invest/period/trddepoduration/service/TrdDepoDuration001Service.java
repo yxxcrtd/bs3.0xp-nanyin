@@ -271,6 +271,18 @@ implements BaseProcessService<TrdDepoDuration001Dto>{
     }
 
     /**
+     * 组合代码联动查询
+     * add by jiangpeng on 20201215 ZGBS-69
+     * @param pageParam 画面的条件
+     * @return 画面查询结果
+     * @since 1.0
+     */
+    @SuppressWarnings("unchecked")
+    public Map<String,Object> getPortfolioName(Map<String, Object> pageParam) {
+        return restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdDepoDuration/getPortfolioName", pageParam, Map.class);
+    }
+
+    /**
      * 剩余本金联动处理
      * <功能详细描述>
      * @param pageParam 画面的条件

@@ -103,6 +103,16 @@ public interface TrdDepoDurationMapper {
      */
 	Map<String, Object> portfolioIdLink(Map<String, Object> map);
 	/**
+	 *
+	 * 组合代码联动
+	 * add by jiangpeng on 20201215 ZGBS-69
+	 * @param map 参数
+	 * @return 联动的详情数据
+	 * @see
+	 * @since 1.0
+	 */
+	Map<String, Object> getPortfolioName(Map<String, Object> map);
+	/**
 	 * 剩余本金计算联动
 	 * <功能详细描述>
 	 * @param map 画面参数

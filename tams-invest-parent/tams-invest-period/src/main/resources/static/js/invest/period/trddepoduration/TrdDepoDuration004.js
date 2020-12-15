@@ -253,7 +253,9 @@ $(function() {
             var portfolioId = $('#portfolioId').val();
             //需求变更 存款存续期提前支取不要 托管账户 yjm start 20190918
             if(portfolioId || portfolioId !=''){
-                Joyin.ajax(basePath + "invest/period/trddepoduration/TrdDepoDuration002/portfolioIdLink",{portfolioId:portfolioId},
+                // Joyin.ajax(basePath + "invest/period/trddepoduration/TrdDepoDuration002/portfolioIdLink",{portfolioId:portfolioId},
+                // modify by jiangpeng on 20201215 ZGBS-69
+                Joyin.ajax(basePath + "invest/period/trddepoduration/TrdDepoDuration004/getPortfolioName",{portfolioId:portfolioId},
                         function(result){
                     if(result.data){
                         triValueChange('portfolioName',result.data.PORTFOLIONAME);
