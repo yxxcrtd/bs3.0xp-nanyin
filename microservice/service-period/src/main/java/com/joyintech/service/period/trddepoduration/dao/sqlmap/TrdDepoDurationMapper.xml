@@ -641,6 +641,20 @@
         </if>
     </where>
     </select>
+
+    <!--组合代码联动 add by jiangpeng on 20201215 ZGBS-69 -->
+    <select id="getPortfolioName" resultType="java.util.Map">
+        select
+            pp.PORTFOLIO_ID portfolioId,
+            pp.PORTFOLIO_NAME portfolioName
+        from PTL_PORTFOLIO pp
+        <where>
+            <if test="portfolioId != null and portfolioId !=''">
+                pp.PORTFOLIO_ID = #{portfolioId}
+            </if>
+        </where>
+    </select>
+
     <select id="calResiPrincipal" resultType="java.util.Map">
     select
     psp.AMOUNT resiPrincipal
