@@ -10,13 +10,6 @@
  
 package com.joyintech.tams.invest.entrust.etrfund.validator;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -30,6 +23,12 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.entrust.common.validator.EtrCommonValidator;
 import com.joyintech.tams.invest.entrust.etrfund.dto.EtrFundDto;
 import com.joyintech.tams.invest.entrust.etrfund.service.EtrFundService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 基金委托check
@@ -215,7 +214,7 @@ public class EtrFundValidator implements EtrCommonValidator {
                 }
               //委托价格，当交易方向为买入/卖出，且交易场所和交易对手都是交易所时显示，且必填
                 if(!StringUtil.isNotEmpty(etrFundDto.getPrice())){
-                	if(!StringUtil.equals(etrFundDto.getCounterType(), DictCodeList.是否_否.getValue())){
+                	if(!StringUtil.equals(etrFundDto.getCounterType(), DictCodeList.是否_否.getValue())&&!etrFundDto.getPs().equals(DictCodeListExt2.交易方向_转换申请.getValue())){
                 		errorList.add(new ValidMessage("price", getMessage("ETR_X_012", getMessage("EtrFund002.price"))));
                 	}
                 }
