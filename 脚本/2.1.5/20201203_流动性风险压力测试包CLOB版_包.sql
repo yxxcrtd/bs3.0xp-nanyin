@@ -23,3 +23,4 @@ CREATE OR REPLACE PACKAGE PKG_FLOW_STRESS_TEST_CLOB  IS
   --流动性风险压力测试计算，将计算结果存储到压测指标值表和轻中重度指标值表
   PROCEDURE P_FLOW_STRESS_TEST(in_test_id IN VARCHAR2,in_object_ids IN CLOB,v_object_count IN INTEGER);
 END PKG_FLOW_STRESS_TEST_CLOB;
+/
