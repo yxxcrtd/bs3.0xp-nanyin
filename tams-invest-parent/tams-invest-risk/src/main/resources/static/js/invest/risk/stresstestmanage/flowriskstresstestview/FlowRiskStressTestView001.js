@@ -164,7 +164,10 @@ $(function() {
 									render : function(data, type, row, meta) {
 										if(row.exeStatus=='01' && purviewElements.indexOf('_batch')!=-1){
 										return '<span class="jyiconfont jyicon-detail batch btn" title="详细结果" style="color:#208fff;margin-left:6px;"></span>';
-										//return "<a onclick='openDetailResult()' style='border-bottom: 1px solid black'>"+'详细结果'+"</a>";
+										}
+										if(row.exeStatus=='03'&&purviewElements.indexOf('_manual')!=-1){
+											//return '<i class="iconfont icon-reset manual btn" title="重新运行"></i>';
+											return '<i class="layui-icon layui-icon-refresh-3 manual btn" style="color: #1E9FFF;" title="重新运行"></i>  '
 										}
 									},
 									sortable : false
@@ -176,16 +179,14 @@ $(function() {
 	 * @returns
 	 */
 	function openNew() {
-		Joyin
-				.dialog(
-						JoyinUtil.getLabel("FlowRiskStressTest001"),
-						JoyinUtil
-								.getRealPath("invest/risk/stresstestmanage/flowriskstresstest/FlowRiskStressTest001/init"),
-						"1000", "91%", {
-							pageModel : PAGE_MODEL_NEW
-						}, function() {
-							//table.reload();
-						});
+		Joyin.dialog(
+			JoyinUtil.getLabel("FlowRiskStressTest001"),
+			JoyinUtil.getRealPath("invest/risk/stresstestmanage/flowriskstresstest/FlowRiskStressTest001/init"),
+				"1000", "91%", {
+					pageModel : PAGE_MODEL_NEW
+			}, function() {
+				//table.reload();
+		});
 	}
 	/**
 	 * 画面加载完成
@@ -209,6 +210,15 @@ $(function() {
 		    
 		 //   Joyin.dialog(JoyinUtil.getLabel("invest.channelId")+JoyinUtil.getLabel("ChannelAsset002.title"), '../ChannelAsset002/init', '98%', '98%');
 		    
+		});
+		table.bind('click', '.manual', function(data, index) {
+		    var object = {testId:data.testId,testName:data.testName};//请求参数
+            Joyin.ajaxJson(basePath + "invest/risk/stresstestmanage/flowriskstresstestview/FlowRiskStressTestView001/restart",object,function (result){
+            	Joyin.alert("后台已执行！请在压力测试概览中查看！",1,function(){
+            		table.load();
+            	});
+            	//layer.msg(result.message); 
+            });
 		});
 	});
 }());
