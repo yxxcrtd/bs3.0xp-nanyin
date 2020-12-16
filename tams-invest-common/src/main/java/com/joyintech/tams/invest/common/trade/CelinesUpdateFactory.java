@@ -1,24 +1,12 @@
 package com.joyintech.tams.invest.common.trade;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.common.base.entity.CreditLines;
-import com.joyintech.tams.common.base.entity.CreditLinesDeal;
-import com.joyintech.tams.common.base.entity.RiskWeight;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
+import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -30,6 +18,12 @@ import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.CreditLinesDealCommon;
 import com.joyintech.tams.invest.common.trade.dto.FinProductCredit;
 import com.joyintech.tams.invest.common.trade.service.ICreditLinesBussness;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.*;
 
 public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness {
 
@@ -45,6 +39,11 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
     //授信共通model，方法返回参数
     CreditLinesDealCommon common =new CreditLinesDealCommon();
     private FinProductCredit finProductCredit;
+    /**
+     * 委托指令Mapper
+     */
+    @Autowired
+    private EtrEntrustMapper etrEntrustMapper;
 
     //默认构造
     public  CelinesUpdateFactory()
@@ -169,17 +168,24 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
             return list;
         }
         // 买入卖出交易对手为内部则判断为转仓 转仓交易不走授信
-        if(model.getCounterId() != null && creditLinesMapper.isNbDeal(model.getCounterId(),DictCodeListExt1.交易对手类型_市场机构.getValue())<1 && 
+        if(StringUtil.isNotEmpty(model.getCounterId()) && creditLinesMapper.isNbDeal(model.getCounterId(),DictCodeListExt1.交易对手类型_市场机构.getValue())<1 && 
         		(DictCodeList.交易方向_买入.getValue().equals(model.getPs()) || DictCodeList.交易方向_卖出.getValue().equals(model.getPs()))) {
         	return list;
         }
         // 若不是底层资产交易并且不是存续期交易，则需要根据交易对手判断是否占用授信
         if(isNotBottomflag && flagarrisNeedOccupyCreCounter){
             //根据交易方向、是否内部交易判断 是否占用授信
-            int count =creditLinesMapper.isNbDeal(model.getCounterId(),DictCodeListExt1.交易对手类型_市场机构.getValue());
-            if(count<1) {
-                return list;
-            }
+        	// 温州个性化 指令交易时CounterId不必填，为空时不走以下判断 20200527 start
+        	if (StringUtil.isNotEmpty(model.getCounterId())) {
+                int count =creditLinesMapper.isNbDeal(model.getCounterId(),DictCodeListExt1.交易对手类型_市场机构.getValue());
+                if(count<1) {
+                    return list;
+                }
+        	}else {
+        		// 将 null设置为空防止报错
+        		model.setCounterId("");
+        	}
+            // 温州个性化 指令交易时CounterId不必填，为空时不走以下判断 20200527 end
         }
         return null;
     }
@@ -248,6 +254,16 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                 if (flagarrisNeedOccupyCreCounter) {
                     counterId = creditLinesMapper.getPartyIdBycounterId(model.getCounterId(),
                             DictCodeListExt1.交易对手类型_市场机构.getValue());
+                    if(StringUtil.isEmpty(counterId) && StringUtil.isNotEmpty(model.getEntrustId())){
+                            EtrEntrust etrEntrustDto = etrEntrustMapper.selectByPrimaryKey(model.getEntrustId());
+                            if(null!=etrEntrustDto){
+                                counterId = creditLinesMapper.getPartyIdBycounterId(etrEntrustDto.getCounterId(),
+                                        DictCodeListExt1.交易对手类型_市场机构.getValue());
+                                if(StringUtil.isEmpty(model.getFinprodType2())){
+                                    model.setFinprodType2(etrEntrustDto.getFinprodType2());
+                                }
+                            }
+                    }
                 }
                 //存续期交易
                 else {
@@ -392,8 +408,9 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
 
         
         if(StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue())){
-            // 买断式回购逆回购买入保存时从质押品取
-            if(StringUtil.equals(model.getPs(), DictCodeList.交易方向_买入.getValue()) && isSave){
+            // 买断式回购逆回购买入保存时从质押品取切非指令交易
+            if(StringUtil.equals(model.getPs(), DictCodeList.交易方向_买入.getValue()) && isSave
+            		&& !(StringUtil.isNotEmpty(inputmodel.getDealType()) && "Z".equals(inputmodel.getDealType()))){
                 //买断式回购逆回购买入质押式抵押品表中取
                 todocredit_amt=creditLinesMapper.getPledgeNum(model.getFinprodId());
             }
@@ -441,7 +458,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
         }
         else if(StringUtil.equals(model.getInputValue1(), DictCodeList.平安资产类型_计划类资产_净值型.getValue())
               ||StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())){ 
-                  todocredit_amt =model.getTradeAmt(); 
+                  todocredit_amt =model.getTradeAmt() == null?BigDecimal.ZERO : model.getTradeAmt(); 
         }
         else if (StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_利率互换.getValue())){
             todocredit_amt=model.getShareAmt();
@@ -488,6 +505,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
         Boolean isEnoughCreditflag=true;
         List<String> seqnoList =this.seqnoList();
         List<CreditLinesDetail> listlist =new ArrayList<>();
+        if(todocredit_amt.compareTo(BigDecimal.ZERO) == 0) return null;
         for(CreditLines creditLines:creLineslist){
             Map<String,Object> mapforprehapamt = new HashMap<>();
             mapforprehapamt.put("creditMstId",creditLines.getCreditMstId());
@@ -502,12 +520,17 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
             hapCreditAmt = BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) < 0 ? hapCreditAmt.add(todocredit_amt):BigDecimal.ZERO;
             //新增只有买入或申购时候额度监控 by nixiukuan 20191009
             //修复【二级法人-机构授信】当交易额度超过机构授信总额度之后，没有占用授信额度BUG by jqq start
-            if(hapCreditAmt.compareTo(creditLines.getCreditAmt())>0 && flagps1 && !isSave){
-                //提示 授信额度不够,并且直接返回提示语，不再进行下次循环
-                isEnoughCreditflag=false;
-                    common.setErrMessage(getMessage("BUSS_COM_CRE_002"));
-                list.add(common);
-                return list;
+            // 从划款指令做的交易，不判断是否授信 start
+            if(StringUtil.isNotEmpty(inputmodel.getDealType()) && "E".equals(inputmodel.getDealType())){
+            }else {
+                //新增只有买入或申购时候额度监控 by nixiukuan 20191009
+                if(hapCreditAmt.compareTo(creditLines.getCreditAmt())>0 && flagps1 && !isSave){
+                    //提示 授信额度不够,并且直接返回提示语，不再进行下次循环
+                    isEnoughCreditflag=false;
+                        common.setErrMessage(getMessage("BUSS_COM_CRE_002"));
+                    list.add(common);
+                    return list;
+                }
             }
             //修复【二级法人-机构授信】当交易额度超过机构授信总额度之后，没有占用授信额度BUG by jqq end
             if(!creditLines.getCreditMstId().equals(BussinessDictCodeList.授信配置代码_资产授信.getValue())&&!creditLines.getCreditMstId().equals(BussinessDictCodeList.授信配置代码_机构授信.getValue())&&!creditLines.getCreditMstId().equals(BussinessDictCodeList.授信配置代码_系列授信.getValue())) {
@@ -553,8 +576,15 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                 creditLines.setHapCreditAmt(hapCreditAmt);
                 creditLines.setUpdateTime(model.getUpdateTime());
                 creditLines.setUpdateUser(model.getUpdateUser());
-                if(isSave && !DictCodeListExt1.交易状态_撤销.getValue().equals(model.getTradeStatus())){
-                    creditLinesMapper.updateLinesByPrimaryKeySelective(creditLines);
+            	// 指令卖出交易是否影响授信开关 
+            	boolean flag = Boolean.parseBoolean(CacheUtil.getSysParam("IS_ETR_SELL_CREDIT"));
+            	if(isSave && !DictCodeListExt1.交易状态_撤销.getValue().equals(model.getTradeStatus())){
+                	// 指令交易时&&卖出交易&&指令卖出交易是否影响授信开关为false -- 不做指令扣减及后续交易
+                	if(StringUtil.isNotEmpty(inputmodel.getDealType()) && "Z".equals(inputmodel.getDealType()) &&
+                			flagps && !flag ) {
+                	}else {
+                		creditLinesMapper.updateLinesByPrimaryKeySelective(creditLines);
+                    }
                 }
                 if(isNotBottomflag){
                     //2.0 存额度占用明细表
@@ -570,19 +600,31 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                     creditLinesDeal.setUpdateTime(model.getUpdateTime());
                     creditLinesDeal.setUpdateUser(model.getUpdateUser());
                     if(isSave && !DictCodeListExt1.交易状态_撤销.getValue().equals(model.getTradeStatus())){
-                        if(null != model.getTradeStatus() && (DictCodeListExt1.交易状态_撤销.getValue().equals(model.getTradeStatus()))){
-                            String tradeid = model.getTradeId();
-                            if (DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(model.getFinprodType2())
-                                || DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(model.getFinprodType2())){
-                                tradeid = model.getTradeId().substring(0, model.getTradeId().length() - 1);
+                    	// 指令交易时&&卖出交易&&指令卖出交易是否影响授信开关为false -- 不做指令扣减及后续交易
+                    	if(StringUtil.isNotEmpty(inputmodel.getDealType()) && "Z".equals(inputmodel.getDealType()) &&
+                    			flagps && !flag ) {
+                    	}else {
+                            if(null != model.getTradeStatus() && (DictCodeListExt1.交易状态_撤销.getValue().equals(model.getTradeStatus()))){
+                                String tradeid = model.getTradeId();
+                                if (DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(model.getFinprodType2())
+                                    || DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(model.getFinprodType2())){
+                                    tradeid = model.getTradeId().substring(0, model.getTradeId().length() - 1);
+                                }
+                                //删除原占用的
+                                creditLinesMapper.deleteLinesDealByTradeid(creditLines.getSeqno(),tradeid);
                             }
-                            //删除原占用的
-                            creditLinesMapper.deleteLinesDealByTradeid(creditLines.getSeqno(),tradeid);
-                        }
-                        else
-                        {
-                            creditLinesMapper.insertLinesDeal(creditLinesDeal);
-                        }
+                            else
+                            {
+                                creditLinesMapper.insertLinesDeal(creditLinesDeal);
+                            }
+                            // 指令做的交易 && 卖出交易 && 指令卖出交易是否影响授信开关为false  -- 不做操作原指令交易授信
+                            if(StringUtil.isNotEmpty(inputmodel.getDealType()) && "E".equals(inputmodel.getDealType()) &&
+                        			flagps && !flag ) {
+                        	}else {
+                                //委托指令生成的交易需要单独处理委托指令这快的额度占用及释放
+                                dealEntrustCreditOccure(model,creditLines);
+                        	}
+                    	}
                     }
                 }else{
                     //2.1 存授信额度底层持仓关联表
@@ -750,5 +792,182 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
     		}
     	}
         return new ArrayList<CreditLines>(creLinesMap.values());
+    }
+    
+    
+    public void dealEntrustCreditOccure(TrdProductDeal model,CreditLines creditLines){
+        //2.查询风险系数,资产类型
+    	RiskWeight rskDTO = new RiskWeight();
+        Map<String, Object> params = new HashMap<>();
+        if (StringUtil.equals(model.getInputValue1(), DictCodeList.平安资产类型_拆借.getValue())){
+            params.put("type1", model.getInputValue1());
+            params.put("type2", model.getInputValue3());
+            params.put("tradedate", model.getTradeDate());
+            rskDTO = creditLinesMapper.getRskByAssetType(params);
+        } else if (StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())){
+            params.put("type1", DictCodeList.平安资产类型_质押式回购.getValue());
+            params.put("type2", model.getInputValue2());
+            params.put("tradedate", model.getTradeDate());
+            rskDTO = creditLinesMapper.getRskByAssetType(params);
+        } else if (StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue())){
+            params.put("type1", DictCodeList.平安资产类型_买断式回购.getValue());
+            params.put("tradedate", model.getTradeDate());
+            rskDTO = creditLinesMapper.getRskByAssetType(params);
+        }  else if (StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())){
+            params.put("type1", DictCodeListExt2.平安资产类型_股票.getValue());
+            params.put("tradedate", model.getTradeDate());
+            rskDTO = creditLinesMapper.getRskByAssetType(params);
+        } else {
+            rskDTO=creditLinesMapper.getRsk(model.getFinprodId(),model.getTradeDate());
+        }
+        String type8=creditLinesMapper.getTypeByFinprodId(model.getFinprodId());
+        
+        BigDecimal todocredit_amt =BigDecimal.ZERO;
+
+        if(StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue())){
+            // 买断式回购逆回购买入保存时从质押品取切非指令交易
+            if(StringUtil.equals(model.getPs(), DictCodeList.交易方向_买入.getValue()) && isSave
+            		&& !(StringUtil.isNotEmpty(inputmodel.getDealType()) && "Z".equals(inputmodel.getDealType()))){
+                //买断式回购逆回购买入质押式抵押品表中取
+                todocredit_amt=creditLinesMapper.getPledgeNum(model.getFinprodId());
+            }
+            // 逆回购交易流程中只能从这取到券面
+            else{ 	
+                //待处理额度从质押式抵押品表中取
+                todocredit_amt =model.getPrinAmt();
+            }
+        }else if(StringUtil.equals(type8, DictCodeList.平安资产类型_债券.getValue())){
+            //最新面值
+            BigDecimal newfaceValue=creditLinesMapper.getFaceValue(model);
+            if(flagarrisNeedOccupyCreCounter || StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())){
+                //待处理额度=最新面值*(参数.金融产品交易DTO.交易份额，债券数量)*rskDTO.风险权数
+                //债券借贷没除100
+                if (StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue())){
+                    todocredit_amt=(newfaceValue==null?BigDecimal.valueOf(100):newfaceValue).multiply(model.getShareAmt().divide(BigDecimal.valueOf(100)));
+                } else {
+                	if(isSave) {
+                        todocredit_amt=(newfaceValue==null?BigDecimal.valueOf(100):newfaceValue).multiply(model.getShareAmt());
+
+                	}else {
+                        todocredit_amt=(newfaceValue==null?BigDecimal.valueOf(100):newfaceValue).multiply(model.getTradeAmt()).divide(BigDecimal.valueOf(100));
+                	}
+                }
+            }else{
+                if (StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue())){
+                    todocredit_amt=model.getShareAmt();
+                } else {
+                	if(isSave) {
+                        todocredit_amt=model.getShareAmt().multiply(BigDecimal.valueOf(100));
+
+                	}else {
+                		todocredit_amt=model.getTradeAmt();
+                	}
+                }
+            }
+            if(model.getPs().equals(DictCodeList.回购拆借方向_逆回购.getValue())){
+            	todocredit_amt=model.getPrinAmt().multiply(newfaceValue==null?BigDecimal.valueOf(100):newfaceValue).divide(BigDecimal.valueOf(100));
+            }
+            //还本时按还本面值计算  20190905 add by xkni
+            if(model.getPs().equals(DictCodeList.交易方向_还本到账.getValue()))
+            {
+                todocredit_amt=model.getPrinAmt();
+            }
+        }
+        else if(StringUtil.equals(model.getInputValue1(), DictCodeList.平安资产类型_计划类资产_净值型.getValue())
+              ||StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())){ 
+            todocredit_amt =model.getTradeAmt() == null?BigDecimal.ZERO : model.getTradeAmt(); 
+
+        }
+        else if (StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_利率互换.getValue())){
+            todocredit_amt=model.getShareAmt();
+        }
+        /*else if(StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_存款.getValue())||StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue())||StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue())||StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())||StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
+            todocredit_amt =model.getPrinAmt();//本金金额
+        }
+        //j)	衍生品资产
+        else if(StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_即期.getValue())||StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_远期.getValue())||StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_掉期.getValue())||StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_利率互换.getValue())) {
+            //	todocredit_amt =model.getPrinAmt();//本币名义本金
+        }*/
+        else{
+            //待处理额度=参数.金融产品交易DTO.交易本金*rskDTO.风险权数
+            todocredit_amt=model.getPrinAmt();
+        } 
+        if(rskDTO != null && (rskDTO.getRiskWeight() != null)){
+            todocredit_amt=todocredit_amt.multiply(rskDTO.getRiskWeight());
+        }
+
+        //b.根据交易方向&交易状态 判断占用/释放交易方向_卖出
+        String[] arrps = {DictCodeList.交易方向_卖出.getValue(),DictCodeList.交易方向_行权_回售.getValue(),
+                DictCodeList.交易方向_赎回确认.getValue(),DictCodeList.交易方向_提前支取.getValue(),
+                DictCodeList.交易方向_行权_赎回.getValue(),DictCodeList.交易方向_还本到账.getValue()};
+        String[] arrps1 = {DictCodeList.交易方向_买入.getValue(),DictCodeList.交易方向_申购.getValue()};
+        //股票处理
+        if(model.getPs().equals(DictCodeListExt2.交易方向_新股中签.getValue())||model.getPs().equals(DictCodeListExt2.交易方向_配股.getValue())||model.getPs().equals(DictCodeListExt2.交易方向_增发.getValue()))
+        {
+            model.setPs(DictCodeList.交易方向_买入.getValue());
+        }
+        Boolean flagps = Arrays.asList(arrps).contains(model.getPs());
+        Boolean flagps1 = Arrays.asList(arrps1).contains(model.getPs());
+
+        //交易方向为卖出初始状态时 或者买入撤销时候 要退回原占用的额度；交易方向为买入撤销时要释放原占用的额度  edit by xkni 20190830
+        if((DictCodeListExt1.交易状态_初始.getValue().equals(model.getTradeStatus()==null?DictCodeListExt1.交易状态_初始.getValue():model.getTradeStatus()) && flagps )
+                ||(DictCodeListExt1.交易状态_撤销.getValue().equals(model.getTradeStatus()) && flagps1)){
+            //待处理额度=待处理额度*-1(释放原占用)
+            todocredit_amt=todocredit_amt.negate();
+        }
+    	// 仅从划款指令做的交易需要做以下处理&&且指令存在时（非卖出交易，指令未关闭撤回。）
+        Map<String,Object> map = new HashMap<>(); 
+        map.put("seqno", creditLines.getSeqno());
+        map.put("tradeid", model.getEntrustId());
+        CreditLinesDeal credit = creditLinesMapper.getCeLinesInfo(map);
+    	if(StringUtil.isNotEmpty(inputmodel.getDealType()) && "E".equals(inputmodel.getDealType()) && credit != null){
+            // 查询委托额度
+            if (StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
+            	EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(model.getEntrustId());
+             	BigDecimal entrustNum = etrEntrust.getEntrustNum();
+                if (entrustNum == null) {
+                }else { 
+                	todocredit_amt =model.getShareAmt().multiply(etrEntrust.getPrice());
+                    if(rskDTO != null && (rskDTO.getRiskWeight() != null)){
+                        todocredit_amt=todocredit_amt.multiply(rskDTO.getRiskWeight());
+                    }
+                }
+            }
+            if(null != model.getTradeStatus() && (DictCodeListExt1.交易状态_撤销.getValue().equals(model.getTradeStatus()))){
+            	// 更新额度管理中 已占用额度(指令交易扣除上面已经新增的额度，指令)
+                creditLines.setHapCreditAmt(todocredit_amt.negate());
+                creditLines.setUpdateTime(model.getUpdateTime());
+                creditLines.setUpdateUser(model.getUpdateUser());
+                //在当前已占用额度基础上占用或者释放该笔委托交易的额度
+                creditLinesMapper.updateLinesByPrimaryKey(creditLines);
+
+                //3.更新原指令交易额度占用明细数据
+                CreditLinesDeal creditLinesDeal=new CreditLinesDeal();
+                creditLinesDeal.setTradeAmt(todocredit_amt.negate());
+                creditLinesDeal.setUpdateTime(model.getUpdateTime());
+                creditLinesDeal.setUpdateUser(model.getUpdateUser());
+                creditLinesDeal.setSeqno(creditLines.getSeqno());
+                creditLinesDeal.setCreditOccureType("01");
+                creditLinesDeal.setTradeId(model.getEntrustId());
+                creditLinesMapper.updateLinesDealByPrimaryKey(creditLinesDeal);
+            }else{
+            	// 更新额度管理中 已占用额度(指令交易扣除上面已经新增的额度，指令)
+                creditLines.setHapCreditAmt(todocredit_amt.negate());
+                creditLines.setUpdateTime(model.getUpdateTime());
+                creditLines.setUpdateUser(model.getUpdateUser());
+                //在当前已占用额度基础上占用或者释放该笔委托交易的额度
+                creditLinesMapper.updateLinesByPrimaryKey(creditLines);
+
+                //3.更新原指令交易额度占用明细数据
+                CreditLinesDeal creditLinesDeal=new CreditLinesDeal();
+                creditLinesDeal.setTradeAmt(todocredit_amt.negate());
+                creditLinesDeal.setUpdateTime(model.getUpdateTime());
+                creditLinesDeal.setUpdateUser(model.getUpdateUser());
+                creditLinesDeal.setSeqno(creditLines.getSeqno());
+                creditLinesDeal.setTradeId(model.getEntrustId());
+                creditLinesMapper.updateLinesDealByPrimaryKey(creditLinesDeal);
+            }
+
+        }
     }
 }
