@@ -298,4 +298,28 @@
 		</foreach>
 		;end;
 	</update>
+	
+	<select id="selectCode" resultType="java.util.Map">
+        select 
+        cpc.REG_CODE regCode
+        from 
+        CHB_PRDRESIST_CODE cpc      
+        <where>        	
+        	<if test="regCode != null  and regCode !='' " >
+                 cpc.REG_CODE = #{regCode,jdbcType=VARCHAR}
+            </if>
+            <if test="prodId != null  and prodId !='' " >
+                and cpc.PRODID != #{prodId,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+    <select id="selectId" resultType="java.util.Map">
+        select 
+        cpc.PRODID prodId      
+        from 
+        CHB_PRDRESIST_CODE cpc      
+         <where>       
+         cpc.PRODID = #{prodId}
+        </where>
+    </select>
 </mapper>

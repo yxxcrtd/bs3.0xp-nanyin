@@ -121,4 +121,7 @@ public interface ProRegistCodeManage001Mapper {
     List<ChbPrdBaseinfo> getProdinfoByInsId(Map<String, Object> param);
     
     int updateOperateModeByProdId(@Param("list")List<ProRegistCodeManage001Dto>list);
+    
+    Map<String, Object> selectId(Map<String, Object> map);
+    Map<String, Object> selectCode(Map<String, Object> map);
 }

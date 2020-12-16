@@ -1,0 +1,16 @@
+--2020-12-15 产品登记编码增加新建功能
+--画面表
+DELETE FROM SYS_PAGE WHERE PAGE_ID='ProRegistCodeManage003';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('ProRegistCodeManage003', 'REP', '/svreport/system/proregistcodemanage/ProRegistCodeManage003', 'report/system/proregistcodemanage/ProRegistCodeManage003', null, null, null, '02', '01', '产品登记编码新建', 'system', null,sysdate, 'system',sysdate);
+--画面元素表
+DELETE FROM SYS_PAGE_ELEMENT WHERE PAGE_ID='ProRegistCodeManage001' AND ELEMENT_ID='ProRegistCodeManage001_btn_add';
+INSERT INTO SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG)
+VALUES ('ProRegistCodeManage001', 'ProRegistCodeManage001_btn_add', '01', '01', null, '新建', 'system', null,sysdate, 'system',sysdate, 'C');
+--工作流
+DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID='ProRegistCodeManage003' AND ELEMENT_ID='ProRegistCodeManage003_btn_save';
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
+VALUES ('ProRegistCodeManage003', 'ProRegistCodeManage003_btn_save', 'oneApproval', 'system', null,sysdate, 'system', sysdate, 'ALL', '02');
+DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID='ProRegistCodeManage003' AND ELEMENT_ID='ProRegistCodeManage003_btn_submit';
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
+VALUES ('ProRegistCodeManage003', 'ProRegistCodeManage003_btn_submit', 'oneApproval', 'system', null,sysdate, 'system', sysdate, 'ALL', '02');
