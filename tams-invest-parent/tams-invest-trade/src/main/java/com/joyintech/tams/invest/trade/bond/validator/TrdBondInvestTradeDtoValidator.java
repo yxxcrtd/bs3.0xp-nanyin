@@ -473,7 +473,7 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
             param.put("portfolioId", inputDto.getTrdInvestPersonInfo().getCounterId());
             param.put("zhilingtype", inputDto.getZhilingtype());   
             param.put("search", inputDto.getSecManageAcctId());            ;
-           if (StringUtil.isEmptyList(trdBondInvestTrade002Service.getSecManageAcctId(param))){
+           if (StringUtil.isEmpty(inputDto.getChlId()) && StringUtil.isEmptyList(trdBondInvestTrade002Service.getSecManageAcctId(param))){
                ValidMessage validMessage = new ValidMessage("trdInvestPersonInfo.counterId", "卖出交易的内部交易对手证券托管户不存在:" + inputDto.getSecManageAcctId());
                errorList.add(validMessage);
            }
