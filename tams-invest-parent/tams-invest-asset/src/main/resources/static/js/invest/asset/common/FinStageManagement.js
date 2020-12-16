@@ -90,6 +90,11 @@ $(function() {
                 if(list){
                     $.each(list,function(index,obj){
                         if(data.vdate == new Date(obj.vdate).format("yyyy-MM-dd")){
+ //add by yujiaping 2020-12-16 ZGBS-81【计划类利率型标的】子计划期次生成出现NAN start
+                        	if(obj.periodCount == null){
+                        		obj.periodCount = 0;
+                        	}
+ //add by yujiaping 2020-12-16 ZGBS-81【计划类利率型标的】子计划期次生成出现NAN end
                             if(max<=obj.periodCount){
                                 max = obj.periodCount;
                             }
