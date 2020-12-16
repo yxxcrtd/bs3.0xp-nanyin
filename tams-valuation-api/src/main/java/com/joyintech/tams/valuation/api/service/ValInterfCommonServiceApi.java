@@ -688,10 +688,12 @@ public class ValInterfCommonServiceApi {
         		if("VAL_DEC_DIGITS".equals(key)){
         			qtMap.put("SHOW_BEFORE_DEC_DIGITS", mapBooksetParam.get(key));
         			qtMap.put("SHOW_AFTER_DEC_DIGITS", mapBooksetParam.get(key));
+                    qtMap.put("SHOW_TOTBOUNS_DEC_DIGITS", mapBooksetParam.get(key));
         		}
         		else if("VAL_DEC_TYPE".equals(key)){
         			qtMap.put("SHOW_BEFORE_DEC_TYPE", mapBooksetParam.get(key));
         			qtMap.put("SHOW_AFTER_DEC_TYPE", mapBooksetParam.get(key));
+                    qtMap.put("SHOW_TOTBOUNS_DEC_TYPE", mapBooksetParam.get(key));
         		}
         		else if("YEILD_DEC_DIGITS".equals(key)){
         			qtMap.put("TDY_YEILD_DEC_DIGITS", mapBooksetParam.get(key));

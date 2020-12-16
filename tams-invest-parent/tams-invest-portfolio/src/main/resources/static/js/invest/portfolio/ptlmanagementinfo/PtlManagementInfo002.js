@@ -55,6 +55,8 @@
         }
         if(pageModel!=PAGE_MODEL_NEW){
                 $("#portfolioId").attr("disabled",true);
+                $("#unitvalueDec").attr("disabled",true);
+                $("#unitvalueMode").attr("disabled",true);
                 //modify by wm start 框架升级导致js报错问题修复 2019-11-28
                 $('#' + userIdList.join(',#')).prop("checked",true);
 //                for(var i in userIdList){
