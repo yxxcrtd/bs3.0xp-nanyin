@@ -153,12 +153,13 @@ public class EtrCommonController extends BaseController {
                 	AllTradeCommonInputDto inputDto =new AllTradeCommonInputDto();
                 	inputDto.setTrdProductDeal(trdProductDeal);
                 	// TODO 回购类型
-                	inputDto.setRepoType(trdProductDeal.getRemark());
+//                	inputDto.setRepoType(trdProductDeal.getRemark());
+                    inputDto.setRepoType(trdProductDeal.getInputValue2());
                 	List<CreditLinesDealCommon> list = ceLinesUpdate.isNeedOccupyCre(inputDto, true,false,false);
                 	if(list !=null && list.size()>0){
                 		if(list.get(0).getErrMessage() !=null && (getMessage("BUSS_COM_CRE_001").equals(list.get(0).getErrMessage()) 
                 				|| getMessage("BUSS_COM_CRE_002").equals(list.get(0).getErrMessage()))){
-                			list.get(0).setErrMessage(getMessage("BUSS_COM_CRE_004")); 
+                			list.get(0).setErrMessage(getMessage("BUSS_COM_CRE_004"));
                 		}
                 		JoyinMessage joyinMessage = new JoyinMessage(list.get(0).getErrMessage(), MessageType.确认消息);
                 		joyinMessages.add(joyinMessage);

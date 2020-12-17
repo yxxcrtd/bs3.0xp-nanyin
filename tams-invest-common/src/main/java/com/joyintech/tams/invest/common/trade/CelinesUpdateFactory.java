@@ -300,9 +300,9 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                 if (StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
                     repType = inputmodel.getRepoType();
                     // repType 为空时（银行间质押式回购）默认为质押式协议回购
-                    if (!StringUtil.isNotEmpty(repType)) {
-                        repType = DictCodeList.回购类型_质押式协议回购.getValue();
-                    }
+//                    if (!StringUtil.isNotEmpty(repType)) {
+//                        repType = DictCodeList.回购类型_质押式协议回购.getValue();
+//                    }
                 }
                 //授信参数传值方式修改 start
                 mapParm.put("repType", repType);
