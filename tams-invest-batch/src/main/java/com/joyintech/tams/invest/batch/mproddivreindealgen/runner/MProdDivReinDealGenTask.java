@@ -105,9 +105,6 @@ public class MProdDivReinDealGenTask extends BatchBaseService{
 
     //add by mashukai TISHKBS-1640  高频开放货币型产品跑批过滤节假日 start
     @Autowired
-    private DateCalcMapper dateCalcMapper;
-
-    @Autowired
     private MProdDivReinDealGenMapper mProdDivReinDealGenMapper;
     //add by mashukai TISHKBS-1640  高频开放货币型产品跑批过滤节假日 end
     /**
@@ -131,7 +128,7 @@ public class MProdDivReinDealGenTask extends BatchBaseService{
             String executeDateDtr = DateUtil.format(executeDate);
             dateMap.put("startDate",executeDate);
             dateMap.put("endDate",executeDate);
-            List<String> holiday = dateCalcMapper.getDealCalendarHoliday(dateMap);
+            List<String> holiday = mProdDivReinDealGenMapper.getIsHoliday(dateMap);
             if(holiday != null && holiday.contains(executeDateDtr)){
                 logger.info("系统参数控制货币型高频开放产品节假日不自动进行红利再投");
                 List<String> productIdList = mProdDivReinDealGenMapper.selectProdList(this.getProductIdList());

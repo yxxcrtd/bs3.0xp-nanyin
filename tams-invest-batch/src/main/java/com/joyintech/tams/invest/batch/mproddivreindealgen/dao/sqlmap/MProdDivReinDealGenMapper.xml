@@ -165,6 +165,21 @@
 			)
 		</where>
 	</select>
-	<!-- add by mashukai TISHKBS-1640  高频开放货币型产品跑批过滤节假日 end-->
 
+	<select id="getIsHoliday" resultType="java.lang.String">
+		select
+		to_char(CDATE, 'yyyy-MM-dd') as HOLIDATE
+		from
+		MST_HOLIDAY
+		where
+		IS_HOLIDAY > 0
+		<if test="startDate != null">
+			and CDATE >= #{startDate, jdbcType=DATE}
+		</if>
+		<if test="endDate != null">
+			and CDATE &lt;= #{endDate, jdbcType=DATE}
+		</if>
+		AND CALENDAR_ID = '01'    /*中国法定节假日*/
+	</select>
+	<!-- add by mashukai TISHKBS-1640  高频开放货币型产品跑批过滤节假日 end-->
 </mapper>
