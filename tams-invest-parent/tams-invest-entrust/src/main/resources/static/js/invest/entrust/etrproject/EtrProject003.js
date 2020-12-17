@@ -135,14 +135,16 @@
      */
     function saveOrSubmit(operateType) {
         var s;
-        if(BaseRiskMathComm) {
-            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
-            if(!s && s != ''){
-                return;
+        if(typeof(BaseRiskMathComm) != 'undefined') {
+            if (BaseRiskMathComm) {
+                s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+                if (!s && s != '') {
+                    return;
+                }
+                if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())) {
+                    return;
+                }
             }
-            if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
-                return;
-        }
         }
         /**
          * 获取列表参数

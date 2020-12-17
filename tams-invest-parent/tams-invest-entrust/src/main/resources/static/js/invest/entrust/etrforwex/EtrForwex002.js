@@ -170,11 +170,13 @@
     window.componentLoadCallback = function(isDone, pagePath, params){
         if(isDone){
             //----add by jjpei 20190718 风险试算-----start---------
-            var riskParam = getRiskData();
-            if (pageModel==PAGE_MODEL_NEW){
-                riskParam.data =null;
-            }
-            window.BaseRiskMathComm.getparam(riskParam);
+			if(typeof(BaseRiskMathComm) != 'undefined') {
+				var riskParam = getRiskData();
+				if (pageModel == PAGE_MODEL_NEW) {
+					riskParam.data = null;
+				}
+				window.BaseRiskMathComm.getparam(riskParam);
+			}
             //----add by jjpei 20190718 风险试算-----end---------
         	// 调用共同方法  根据货币对得到全价的精度
         	window.EtrForeingExchange.setDecimalPoint('curPair','price',2);
@@ -190,16 +192,17 @@
      */
     function saveOrSubmit(operateType) {
         var s;
-        if(BaseRiskMathComm) {
-            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
-            if(!s && s != ''){
-                return;
-            }
-            if (window.BaseRiskMathComm.isCalcConditionChanged(getRiskData())){
-                return;
-            }
-        }
-
+		if(typeof(BaseRiskMathComm) != 'undefined') {
+			if (BaseRiskMathComm) {
+				s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+				if (!s && s != '') {
+					return;
+				}
+				if (window.BaseRiskMathComm.isCalcConditionChanged(getRiskData())) {
+					return;
+				}
+			}
+		}
         /**
          * 获取列表参数
          */

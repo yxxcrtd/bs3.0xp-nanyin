@@ -78,6 +78,7 @@ var table;
     function realSaveOrSubmit(operateType) {
 		var s;
 		var maxTradeamt = 0;
+        if(typeof(BaseRiskMathComm) != 'undefined') {
 		if(BaseRiskMathComm) {
 			s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
 			if(!s && s != ''){
@@ -85,6 +86,7 @@ var table;
 			}
 			if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
 				return;
+                }
 			}
 		}
 		// 检查计算元素是否发生变化
@@ -1699,11 +1701,13 @@ var table;
     };
     window.componentLoadCallback = function(isDone, pagePath, params){
         if(isDone){
+            if(typeof(BaseRiskMathComm) != 'undefined') {
             var riskparam = getriskdata();
             if (pageModel==PAGE_MODEL_NEW){
                 riskparam.data =null;
             }
             window.BaseRiskMathComm.getparam(riskparam);
+            }
             window.BussTrdTransferOrder['bussTrdTransferOrder'].setStlCommandInput(function () {
                 var rows = table.getAllRows();
                 var isTrue = false;

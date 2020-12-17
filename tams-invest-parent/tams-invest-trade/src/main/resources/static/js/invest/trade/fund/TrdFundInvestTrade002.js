@@ -299,6 +299,7 @@ $(function () {
     	// 划款指令隐藏时，自动生成划款指令信息
     	generateOrders(function () {
 	        var s;
+            if(typeof(BaseRiskMathComm) != 'undefined') {
 	        if (BaseRiskMathComm&&$("#ps").val()!=ps_T06 ) {
 	            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
 	            if (!s && s != '') {
@@ -306,6 +307,7 @@ $(function () {
 	            }
 	            if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())) {
 	                return;
+                    }
 	            }
 	        }
 	        if (window.BussTrdTransferOrder['bussTrdTransferOrder'].isCalcConditionChanged()) {
@@ -1170,11 +1172,13 @@ $(function () {
 
         window.componentLoadCallback = function (isDone, pagePath, params) {
             if (isDone) {
+                if(typeof(BaseRiskMathComm) != 'undefined') {
                 var riskparam = getriskdata();
                 if (pageModel == PAGE_MODEL_NEW) {
                     riskparam.data = null;
                 }
                 window.BaseRiskMathComm.getparam(riskparam);
+                }
                 window.BussTrdTransferOrder['bussTrdTransferOrder'].setStlCommandInput(function () {
                     var selectData = $('#finprodId').select2('data')[0].object;
                     if (!selectData) {

@@ -24,12 +24,13 @@
                     </div>
                     </form>
                 <!-- 风险试算 -->
-                <div id="baseRiskMathComm" class="page-component" th:data-path="@{/component/common/BaseRiskMathComm/init}" th:data-params="|{workflowId: '${workflowId}',entityName:'riskTrialRetDto',tradeId:'${tradeId}'}|"></div>
+                <div th:if="${isEleShow['EtrFund003_BaseRiskMathComm']} ne 'N' and ${isEleShow['BaseRiskMathComm']} ne 'N'" id="baseRiskMathComm" class="page-component" th:data-path="@{/component/common/BaseRiskMathComm/init}" th:data-params="|{workflowId: '${workflowId}',entityName:'riskTrialRetDto',tradeId:'${tradeId}'}|"></div>
             </div>
             <div class="pro-module-wrapper pro-module-block">
                 <div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin: 50px;">
                     <div class="text-center">
-                        <a id="EtrFund003_btn_riskcal" class="layui-btn layui-btn-sm"
+                        <a th:if="${isEleShow['EtrFund003_btn_riskcal']} ne 'N' and ${isEleShow['BaseRiskMathComm_btn_riskcal']} ne 'N'"
+                           id="EtrFund003_btn_riskcal" class="layui-btn layui-btn-sm"
                            data-th-text="#{EtrInvestBondInfo002.riskcal}">风险试算</a>
                         <a id="EtrFund003_btn_submit" class="layui-btn layui-btn-sm  btn-submit"
                            data-th-text="#{SysCommon.submit}">提交</a>

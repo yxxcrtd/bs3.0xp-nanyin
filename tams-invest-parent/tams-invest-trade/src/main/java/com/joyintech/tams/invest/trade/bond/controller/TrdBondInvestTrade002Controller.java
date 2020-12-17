@@ -274,6 +274,13 @@ public class TrdBondInvestTrade002Controller extends BaseController {
         //add by lizhi 是否限制划款指令开关 2020年2月26日  start
         model.addAttribute("GEN_PAY_ORDERS_AUTO",CacheUtil.getSysParam(BussinessConstant.GEN_PAY_ORDERS_AUTO));
         //add by lizhi 是否限制划款指令开关 2020年2月26日  end
+        PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
+        pageElementConfigDto.setPageId("BaseRiskMathComm");
+        Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
+        pageElementConfigDto.setPageId(this.getPageId());
+        Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
+        isEleShow.putAll(map);
+        model.addAttribute("isEleShow", isEleShow);
         return super.init(model);
     }
 

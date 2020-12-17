@@ -12,6 +12,8 @@ import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -338,6 +340,13 @@ public class TrdFundInvestTrade003Controller extends BaseController {
         model.addAttribute("UNIT_CPRICE", dto.getUnitCprice());
         model.addAttribute("isShowType",
             CacheUtil.getSysParam("IS_SHOW_TYPE") == null ? "01" : CacheUtil.getSysParam("IS_SHOW_TYPE"));
+        PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
+        pageElementConfigDto.setPageId("BaseRiskMathComm");
+        Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
+        pageElementConfigDto.setPageId(this.getPageId());
+        Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
+        isEleShow.putAll(map);
+        model.addAttribute("isEleShow", isEleShow);
         return super.init(model);
     }
 

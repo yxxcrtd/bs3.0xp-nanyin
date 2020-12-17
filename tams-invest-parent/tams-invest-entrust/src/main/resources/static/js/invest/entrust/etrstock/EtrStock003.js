@@ -326,13 +326,15 @@
     function saveOrSubmit(operateType) {
         // 风险试算 start
         var s;
-        if (BaseRiskMathComm) {
-            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
-            if (!s && s != '') {
-                return;
-            }
-            if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())) {
-                return;
+        if(typeof(BaseRiskMathComm) != 'undefined') {
+            if (BaseRiskMathComm) {
+                s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+                if (!s && s != '') {
+                    return;
+                }
+                if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())) {
+                    return;
+                }
             }
         }
         // 风险试算 end

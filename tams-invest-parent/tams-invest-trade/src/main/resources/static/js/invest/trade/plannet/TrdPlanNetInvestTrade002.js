@@ -22,6 +22,7 @@ $(function() {
     	// 划款指令隐藏时，自动生成划款指令信息
     	generateOrders(function () {
 	        var s;
+            if(typeof(BaseRiskMathComm) != 'undefined') {
 	        if(BaseRiskMathComm&&$('#ps').val()!=ps_T06) {
 	            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
 	            if(!s && s != ''){
@@ -29,6 +30,7 @@ $(function() {
 	            }
 	            if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
 	                return;
+                    }
 	            }
 	        }
 	        if (window.BussTrdTransferOrder['bussTrdTransferOrder'].isCalcConditionChanged()) {
@@ -523,11 +525,13 @@ $(function() {
         //add by yujiaping 2020-11-23 ZGBS-13新建赎回交易，修改确认日期，预计到账日根据确认日期联动：预计到账日=确认日 end
         window.componentLoadCallback = function(isDone, pagePath, params){
             if(isDone){
+                if(typeof(BaseRiskMathComm) != 'undefined') {
                 var riskparam = getriskdata();
                 if (pageModel==PAGE_MODEL_NEW){
                     riskparam.data =null;
                 }
                 window.BaseRiskMathComm.getparam(riskparam);
+                }
                 ChannelAssetCommon.setChannelSelect($("#chlId"), $('#finprodId').val(), $("#entrustId").val(), function () {
                     window.BussTrdTransferOrder['bussTrdTransferOrder'].setStlCommandInput(function () {
                         var data = {};

@@ -19,13 +19,15 @@
      */
     function saveOrSubmit(operateType) {
         var s;
-        if(BaseRiskMathComm) {
-            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
-            if(!s && s != ''){
-                return;
-            }
-            if (window.BaseRiskMathComm.isCalcConditionChanged(getRiskData())){
-                return;
+        if(typeof(BaseRiskMathComm) != 'undefined') {
+            if (BaseRiskMathComm) {
+                s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+                if (!s && s != '') {
+                    return;
+                }
+                if (window.BaseRiskMathComm.isCalcConditionChanged(getRiskData())) {
+                    return;
+                }
             }
         }
         /**
@@ -169,11 +171,13 @@
     //添加风险试算验证
     window.componentLoadCallback = function(isDone, pagePath, params) {
         if (isDone) {
-            var riskParam = getRiskData();
-            if (pageModel==PAGE_MODEL_NEW){
-                riskParam.data =null;
+            if(typeof(BaseRiskMathComm) != 'undefined') {
+                var riskParam = getRiskData();
+                if (pageModel == PAGE_MODEL_NEW) {
+                    riskParam.data = null;
+                }
+                window.BaseRiskMathComm.getparam(riskParam);
             }
-            window.BaseRiskMathComm.getparam(riskParam);
         }
     }
     /**

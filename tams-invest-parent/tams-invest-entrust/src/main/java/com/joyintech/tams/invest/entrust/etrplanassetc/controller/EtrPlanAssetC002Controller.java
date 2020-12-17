@@ -29,6 +29,8 @@ import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.entrust.common.controller.EtrCommonController;
 import com.joyintech.tams.invest.entrust.etrplanassetc.dto.EtrPlanAssetCDto;
 import com.joyintech.tams.invest.entrust.etrplanassetc.service.EtrPlanAssetCService;
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -121,6 +123,13 @@ public class EtrPlanAssetC002Controller extends BaseController {
             model.addAttribute(GlobalConstant.ENTITY, entity);
         }
         model.addAttribute("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE")==null?"01":CacheUtil.getSysParam("IS_SHOW_TYPE"));
+        PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
+        pageElementConfigDto.setPageId("BaseRiskMathComm");
+        Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
+        pageElementConfigDto.setPageId(this.getPageId());
+        Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
+        isEleShow.putAll(map);
+        model.addAttribute("isEleShow", isEleShow);
         return super.init(model);
     }
     

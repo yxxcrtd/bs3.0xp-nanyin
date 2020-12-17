@@ -284,10 +284,10 @@
                     </div>
                 </div>
                 <!-- 风险试算 -->
-				<div id="baseRiskMathComm" class="page-component" th:data-path="@{/component/common/BaseRiskMathComm/init}" th:data-params="|{entity: '${riskTrialRetDto}',entityName:'riskTrialRetDto',workflowId:'${workflowId?: ''}',tradeId:'${tradeId}',tradeSource:'1'}|"></div>    
+				<div th:if="${isEleShow['TrdProjectInvestTrade003_BaseRiskMathComm']} ne 'N' and ${isEleShow['BaseRiskMathComm']} ne 'N'" id="baseRiskMathComm" class="page-component" th:data-path="@{/component/common/BaseRiskMathComm/init}" th:data-params="|{entity: '${riskTrialRetDto}',entityName:'riskTrialRetDto',workflowId:'${workflowId?: ''}',tradeId:'${tradeId}',tradeSource:'1'}|"></div>
             </div>
         <div class="row text-center" style="margin: 30px 0;">
-            <a th:id="|${pageId}_btn_risk|" class="layui-btn layui-btn-sm" data-th-text="#{TrdFundInvestTrade002.risk}">风险试算</a>
+            <a th:if="${isEleShow['TrdProjectInvestTrade003_btn_riskcal']} ne 'N' and ${isEleShow['BaseRiskMathComm_btn_riskcal']} ne 'N'" th:id="|${pageId}_btn_risk|" class="layui-btn layui-btn-sm" data-th-text="#{TrdFundInvestTrade002.risk}">风险试算</a>
             <a id="TrdProjectInvestTrade002_btn_save" class="layui-btn layui-btn-sm btn-save" data-th-text="#{SysCommon.save}">保存</a>
             <a id="TrdProjectInvestTrade002_btn_submit" class="layui-btn layui-btn-sm btn-submit" data-th-text="#{SysCommon.submit}">提交</a>
             <a id="TrdProjectInvestTrade002_btn_cancel" class="layui-btn layui-btn-sm btn-cancel" data-th-text="#{SysCommon.cancel}">取消</a>

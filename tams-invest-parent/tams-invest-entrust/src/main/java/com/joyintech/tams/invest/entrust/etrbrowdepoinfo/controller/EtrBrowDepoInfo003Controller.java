@@ -25,6 +25,8 @@ import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.CreditLinesDealCommon;
 import com.joyintech.tams.invest.entrust.etrbrowdepoinfo.dto.EtrBrowDepoInfoDto;
 import com.joyintech.tams.invest.entrust.etrbrowdepoinfo.service.EtrBrowDepoInfoService;
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.tools.util.ValidationUtil;
 import com.joyintech.tools.util.ValidationUtil.ErrorMessage;
 import com.joyintech.tools.util.ValidationUtil.ValidResult;
@@ -76,17 +78,24 @@ public class EtrBrowDepoInfo003Controller extends BaseController {
     public String init(Model model) {
         Date sysDate = DateUtil.platDateFromCache();
         model.addAttribute("sysDate", DateUtil.format(sysDate));
-        //如果是导入
-        String tempList = getParam("tempList");
-        EtrBrowDepoInfoDto dto = etrBrowDepoInfoService.getEntrustListData(tempList);
-        model.addAttribute(GlobalConstant.ENTITY, dto);
-        model.addAttribute("etrBrowDepoInfoDtoList", StringUtil.isEmptyList(
-                dto.getSelectedItem()) ? null : JsonUtils.object2Json(dto.getSelectedItem()));
-        model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_委托监控.getValue());
-        model.addAttribute("T01", DictCodeList.交易方向_买入.getValue());
-        model.addAttribute("T02", DictCodeList.交易方向_卖出.getValue());
-        model.addAttribute("fintype", DictCodeListExt1.金融产品类型_投管用_存款.getValue());
-        model.addAttribute("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE") == null ? "01" : CacheUtil.getSysParam("IS_SHOW_TYPE"));
+            //如果是导入
+    String tempList = getParam("tempList");
+    EtrBrowDepoInfoDto dto = etrBrowDepoInfoService.getEntrustListData(tempList);
+    model.addAttribute(GlobalConstant.ENTITY, dto);
+    model.addAttribute("etrBrowDepoInfoDtoList", StringUtil.isEmptyList(
+          dto.getSelectedItem()) ? null : JsonUtils.object2Json(dto.getSelectedItem()));
+    model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_委托监控.getValue());
+    model.addAttribute("T01",DictCodeList.交易方向_买入.getValue());
+    model.addAttribute("T02",DictCodeList.交易方向_卖出.getValue());
+    model.addAttribute("fintype", DictCodeListExt1.金融产品类型_投管用_存款.getValue());
+    model.addAttribute("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE")==null?"01":CacheUtil.getSysParam("IS_SHOW_TYPE"));
+        PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
+        pageElementConfigDto.setPageId("BaseRiskMathComm");
+        Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
+        pageElementConfigDto.setPageId(this.getPageId());
+        Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
+        isEleShow.putAll(map);
+        model.addAttribute("isEleShow", isEleShow);
         return super.init(model);
     }
 

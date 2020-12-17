@@ -17,11 +17,13 @@ var etrAmt = '';
 
     window.componentLoadCallback = function(isDone, pagePath, params){
         if(isDone){
+            if(typeof(BaseRiskMathComm) != 'undefined') {
             var riskparam = getriskdata();
             if (pageModel==PAGE_MODEL_NEW){
                 riskparam.data =null;
             }
             window.BaseRiskMathComm.getparam(riskparam);
+            }
             if(bussTrdAvailableCashQuery && bussTrdAvailableCashQuery!=''){
             	window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].setPosition(bussTrdAvailableCashQuery);
             }
@@ -110,6 +112,7 @@ var etrAmt = '';
     	// 划款指令隐藏时，自动生成划款指令信息
     	generateOrders(function () {
 	        var s;
+	        if(typeof(BaseRiskMathComm) != 'undefined') {
 	        if(BaseRiskMathComm) {
 	            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
 	            if(!s && s != ''){
@@ -118,6 +121,7 @@ var etrAmt = '';
 	            if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
 	                return;
 	            }
+	        }
 	        }
 	     // 检查生成划款指令参数是否发生变化
 	        if (window.BussTrdTransferOrder['bussTrdTransferOrder'].isCalcConditionChanged()) {

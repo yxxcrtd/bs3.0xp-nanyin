@@ -20,13 +20,15 @@
     function saveOrSubmit(operateType) {
         //----add by jjpei 20190718 风险试算----start------
         var s;
-        if(BaseRiskMathComm) {
-            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
-            if(!s && s != ''){
-                return;
-            }
-            if (window.BaseRiskMathComm.isCalcConditionChanged(getRiskData())){
-                return;
+        if(typeof(BaseRiskMathComm) != 'undefined') {
+            if (BaseRiskMathComm) {
+                s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+                if (!s && s != '') {
+                    return;
+                }
+                if (window.BaseRiskMathComm.isCalcConditionChanged(getRiskData())) {
+                    return;
+                }
             }
         }
         //----add by jjpei 20190718 风险试算----end------
@@ -91,11 +93,13 @@
     window.componentLoadCallback = function(isDone, pagePath, params) {
         if (isDone) {
             //----add by jjpei 20190718 风险试算----start------
-            var riskParam = getRiskData();
-            if (pageModel==PAGE_MODEL_NEW){
-                riskParam.data =null;
+            if(typeof(BaseRiskMathComm) != 'undefined') {
+                var riskParam = getRiskData();
+                if (pageModel == PAGE_MODEL_NEW) {
+                    riskParam.data = null;
+                }
+                window.BaseRiskMathComm.getparam(riskParam);
             }
-            window.BaseRiskMathComm.getparam(riskParam);
             //----add by jjpei 20190718 风险试算----end------
             init();
         }

@@ -10,6 +10,7 @@ var table;
     //---add by jjpei 20190718----end---获取风险试算画面要素与Label提示文本
     function saveOrSubmit(operateType) {
         var s;
+        if(typeof(BaseRiskMathComm) != 'undefined') {
         if(BaseRiskMathComm) {
             s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
             if(!s && s != ''){
@@ -17,6 +18,7 @@ var table;
             }
             if (window.BaseRiskMathComm.isCalcConditionChanged(getRiskData())){
                 return;
+                }
             }
         }
         
@@ -462,11 +464,13 @@ var table;
     
     window.componentLoadCallback = function(isDone, pagePath, params){
         if(isDone){
+            if(typeof(BaseRiskMathComm) != 'undefined') {
 		var riskParam = getRiskData();
 	            if (pageModel==PAGE_MODEL_NEW){
 	                riskParam.data =null;
 	            }
         window.BaseRiskMathComm.getparam(riskParam);
+            }
         	window.BussTrdTransferOrder['bussTrdTransferOrder'].setStlCommandInput(function () {
             	//全价总额不能为空
             	if (!$("#tradeAmt").val() || typeof $("#tradeAmt").val() == 'undefined'){

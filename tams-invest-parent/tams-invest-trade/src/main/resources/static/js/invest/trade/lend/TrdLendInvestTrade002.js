@@ -33,6 +33,7 @@ $(function() {
     	generateOrders(function () {
 	    	//---add by 裴家俊 2019/03/25-----start---
 	    	 var s;
+            if(typeof(BaseRiskMathComm) != 'undefined') {
 	         if(BaseRiskMathComm) {
 	             s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
 	             if(!s && s != ''){
@@ -40,6 +41,7 @@ $(function() {
 	             }
 	             if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
 	                 return;
+                    }
 	             }
 	         }
 	       //---add by 裴家俊 2019/03/25-----end---
@@ -298,11 +300,13 @@ $(function() {
         };
         window.componentLoadCallback = function(isDone, pagePath, params){
             if(isDone){
+                if(typeof(BaseRiskMathComm) != 'undefined') {
                 var riskparam = getriskdata();
                 if (pageModel==PAGE_MODEL_NEW){
                     riskparam.data =null;
                 }
                 window.BaseRiskMathComm.getparam(riskparam);
+                }
                 window.BussTrdTransferOrder['bussTrdTransferOrder'].setStlCommandInput(function () {
                     var finprodType2 = "";
                     if ($("#busiPs").val() == BACK_LEND_DIRECTION_01) {

@@ -31,6 +31,8 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeCSTPDto;
 import com.joyintech.tams.invest.trade.bond.validator.TrdBondInvestTradeDtoValidator;
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -212,6 +214,13 @@ public class TrdBondInvestTrade003Controller extends BaseController {
         //add by liuwenjuan 回款前扣除 20200326 start
         model.addAttribute("Collect_Type_01", DictCodeListExt2.收取方式_回款前扣除.getValue());
         //add by liuwenjuan 回款前扣除 20200326 end
+        PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
+        pageElementConfigDto.setPageId("BaseRiskMathComm");
+        Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
+        pageElementConfigDto.setPageId(this.getPageId());
+        Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
+        isEleShow.putAll(map);
+        model.addAttribute("isEleShow", isEleShow);
         if(workflowId!=null){
             return "/invest/trade/bond/TrdBondInvestTrade002";
         }else{

@@ -47,9 +47,15 @@ $(function () {
         return object;
     };
     function saveOrSubmit(operateType) {
-        if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata(PS_MC))){
-            return;
-        }
+        var s;
+        if(typeof(BaseRiskMathComm) != 'undefined') {
+    	if(BaseRiskMathComm) {
+    	if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata(PS_MC))){
+                return;
+                 }
+    	       }
+          }
+
         var object = $.serializeToObject('#submitForm',true);
         if(FileCommon) {
             object.uploadFileList = FileCommon.getUploadFileInfo();
@@ -74,11 +80,13 @@ $(function () {
     }
     window.componentLoadCallback = function(isDone, pagePath, params){
         if(isDone){
+            if(typeof(BaseRiskMathComm) != 'undefined') {
             var riskparam = getriskdata(PS_MC);
             if (pageModel==PAGE_MODEL_NEW){
                 riskparam.data =null;
             }
             window.BaseRiskMathComm.getparam(riskparam);
+            }
             window.BussTrdTransferOrder['bussTrdTransferOrder'].setStlCommandInput(function () {
                 if($('#tradeAmt').val()==''){
                     return Joyin.error("请输入实际支付金额！");
@@ -122,6 +130,7 @@ $(function () {
     $(function () {
         //初始化方法（也可以放在组件加载后）
         init();
+
         $('#TrdSecOverdueDuration003_btn_riskcal').click(function() {
             //window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata(PS_MC));
             $("#riskMathFlag").val("02");

@@ -69,6 +69,7 @@
     }
     function saveOrSubmit(operateType) {
         var s;
+        if(typeof(BaseRiskMathComm) != 'undefined') {
         if(BaseRiskMathComm) {
             s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
             if(!s && s != ''){
@@ -76,6 +77,7 @@
             }
             if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
                 return;
+                }
             }
         }
         // 检查计算元素是否发生变化
@@ -1115,11 +1117,13 @@
     };
     window.componentLoadCallback = function(isDone, pagePath, params){
         if(isDone){
+            if(typeof(BaseRiskMathComm) != 'undefined') {
             var riskparam = getriskdata();
             if (pageModel==PAGE_MODEL_NEW){
                 riskparam.data =null;
             }
             window.BaseRiskMathComm.getparam(riskparam);
+            }
             if (formTodoList) {
 //                window.BussTrdTransferOrder['bussTrdTransferOrder'].saveCalcCondition();
             }

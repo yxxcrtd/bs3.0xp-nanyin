@@ -35,6 +35,7 @@ $(function() {
     	// 划款指令隐藏时，自动生成划款指令信息
     	generateOrders(function () {
             var s;
+            if(typeof(BaseRiskMathComm) != 'undefined') {
             if(BaseRiskMathComm&&$('#ps').val()!=ps_T06) {
                 s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
                 if(!s && s != ''){
@@ -44,7 +45,7 @@ $(function() {
                     return;
                 }
             }
-
+            }
 	    	if (window.BussTrdTransferOrder['bussTrdTransferOrder'].isCalcConditionChanged()) {
 	            return;
 	        }
@@ -482,16 +483,16 @@ $(function() {
         window.componentLoadCallback = function(isDone, pagePath, params){
 
             if(isDone && window.BussTrdTransferOrder){
-
+                if(typeof(BaseRiskMathComm) != 'undefined') {
                 var riskparam = getriskdata();
                 if (pageModel==PAGE_MODEL_NEW){
                     riskparam.data =null;
                     window.BaseRiskMathComm.getparam(riskparam);
 
-                }
-                else {
+                    } else {
                     //window.BaseRiskMathComm.initBaseRiskMathCommPage(riskparam);
                     $("#riskMathFlag").val("02");
+                    }
                 }
                 $('#trdInvestPersonInfo_counterTrader').attr('required',true);
               //修改bug BSTOT-512 联系方式必填 add by wangcheng 20200115 

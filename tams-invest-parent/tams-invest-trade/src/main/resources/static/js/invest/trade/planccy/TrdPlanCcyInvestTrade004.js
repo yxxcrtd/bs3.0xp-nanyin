@@ -371,6 +371,7 @@ $(function() {
     
     function saveOrSubmit(operateType) {
         var s;
+		if(typeof(BaseRiskMathComm) != 'undefined') {
         if(BaseRiskMathComm) {
             s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
             if(!s && s != ''){
@@ -378,6 +379,7 @@ $(function() {
             }
             if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
                 return;
+				}
             }
         }
     	//校验组合分配列表
@@ -1148,16 +1150,16 @@ $(function() {
         window.componentLoadCallback = function(isDone, pagePath, params){
 
             if(isDone && window.BussTrdTransferOrder){
-
+				if(typeof(BaseRiskMathComm) != 'undefined') {
                 var riskparam = getriskdata();
                 if (pageModel==PAGE_MODEL_NEW){
                     riskparam.data =null;
                     window.BaseRiskMathComm.getparam(riskparam);
 
-                }
-                else {
+					} else {
                     //window.BaseRiskMathComm.initBaseRiskMathCommPage(riskparam);
 					$("#riskMathFlag").val("02")
+					}
                 }
                 $('#trdInvestPersonInfo_counterTrader').attr('required',true);
                 $('#trdInvestPersonInfo_contactInfo').attr('required',true);

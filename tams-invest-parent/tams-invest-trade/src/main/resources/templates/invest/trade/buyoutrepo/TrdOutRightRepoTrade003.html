@@ -593,11 +593,12 @@
 		                    </div>
 		                </div>
 						<!-- 风险试算 -->
-                		<div id="baseRiskMathComm" class="page-component" th:data-path="@{/component/common/BaseRiskMathComm/init}" th:data-params="|{entity: '${riskTrialRetDto}',workflowId:'${workflowId?: ''}',entityName:'riskTrialRetDto',tradeId:'${entity?.tradeId}'}|"></div>
+                		<div th:if="${isEleShow['TrdOutRightRepoTrade003_BaseRiskMathComm']} ne 'N' and ${isEleShow['BaseRiskMathComm']} ne 'N'" id="baseRiskMathComm" class="page-component" th:data-path="@{/component/common/BaseRiskMathComm/init}" th:data-params="|{entity: '${riskTrialRetDto}',workflowId:'${workflowId?: ''}',entityName:'riskTrialRetDto',tradeId:'${entity?.tradeId}'}|"></div>
                 		
 						<div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin: 50px;">
 							<div class="row text-center" style="margin: 20px 0;">
-								<a id="TrdOutRightRepoTrade003_btn_risk" class="layui-btn layui-btn-sm"
+								<a th:if="${isEleShow['TrdOutRightRepoTrade003_btn_riskcal']} ne 'N' and ${isEleShow['BaseRiskMathComm_btn_riskcal']} ne 'N'"
+								   id="TrdOutRightRepoTrade003_btn_risk" class="layui-btn layui-btn-sm"
 									th:text="#{TrdRepoTrade002.risk}">风险试算</a> <a
 									id="TrdOutRightRepoTrade003_btn_save"
 									class="layui-btn layui-btn-sm btn-save"

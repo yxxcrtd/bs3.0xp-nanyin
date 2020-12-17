@@ -19,6 +19,8 @@ import java.util.Map;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -171,6 +173,13 @@ public class EtrFund002Controller extends BaseController{
 
 
         model.addAttribute("ETR_CHECK_CASH_SWITCH",CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_CASH_SWITCH)==null?"01":CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_CASH_SWITCH));
+        PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
+        pageElementConfigDto.setPageId("BaseRiskMathComm");
+        Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
+        pageElementConfigDto.setPageId(this.getPageId());
+        Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
+        isEleShow.putAll(map);
+        model.addAttribute("isEleShow", isEleShow);
         return super.init(model);
     }
     

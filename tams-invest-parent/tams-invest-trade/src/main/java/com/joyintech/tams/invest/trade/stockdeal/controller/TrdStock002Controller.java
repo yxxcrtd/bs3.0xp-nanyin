@@ -28,6 +28,8 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeCSTPDto;
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -207,6 +209,13 @@ public class TrdStock002Controller extends BaseController {
         model.addAttribute("USE_STATUS_01", DictCodeListExt1.使用状态_启用.getValue());
         //----add by jjpei 20190718--------交易监控风险试算-----------end--------
  
+		PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
+		pageElementConfigDto.setPageId("BaseRiskMathComm");
+		Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
+		pageElementConfigDto.setPageId(this.getPageId());
+		Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
+		isEleShow.putAll(map);
+		model.addAttribute("isEleShow", isEleShow);
         return super.init(model);
     }
 

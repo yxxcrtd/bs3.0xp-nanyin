@@ -17,6 +17,8 @@ import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.period.trdsecoverdueduration.dto.TrdSecOverdueDuration002Dto;
 import com.joyintech.tams.invest.period.trdsecoverdueduration.dto.TrdSecOverdueDuration003Dto;
 import com.joyintech.tams.invest.period.trdsecoverdueduration.service.TrdSecOverdueDuration003Service;
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +93,13 @@ public class TrdSecOverdueDuration003Controller extends BaseController {
         model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_交易监控.getValue());
         model.addAttribute("ACCT_TYPE_A01", DictCodeListExt1.资金账户类型_产品托管户.getValue());
         model.addAttribute("ACCT_TYPE_A07", DictCodeListExt1.资金账户类型_券商资金账户.getValue());
+        PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();//风险试算开关
+        pageElementConfigDto.setPageId("BaseRiskMathComm");
+        Map<String, String> riskMap = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
+        pageElementConfigDto.setPageId(this.getPageId());
+        Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
+        isEleShow.putAll(riskMap);
+        model.addAttribute("isEleShow", isEleShow);
         return super.init(model);
     }
 

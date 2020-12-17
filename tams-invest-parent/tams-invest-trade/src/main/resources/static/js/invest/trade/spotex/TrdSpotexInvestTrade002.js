@@ -16,6 +16,7 @@ $(function() {
     	generateOrders(function () {
 	        //---add by jjpei 20190718----start--风险试算---
 	        var s;
+            if(typeof(BaseRiskMathComm) != 'undefined') {
 	        if(BaseRiskMathComm) {
 	            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
 	            if(!s && s != ''){
@@ -23,6 +24,7 @@ $(function() {
 	            }
 	            if (window.BaseRiskMathComm.isCalcConditionChanged(getRiskData())){
 	                return;
+                    }
 	            }
 	        }
 	        //---add by jjpei 20190718----end---风险试算----
@@ -340,6 +342,7 @@ $(function() {
         
         window.componentLoadCallback = function(isDone, pagePath, params){
             if(isDone){
+                if(typeof(BaseRiskMathComm) != 'undefined') {
                 //----add by jjpei 20190718 风险试算----start----
                 var riskParam = getRiskData();
                 if (pageModel==PAGE_MODEL_NEW){
@@ -347,6 +350,7 @@ $(function() {
                 }
                 window.BaseRiskMathComm.getparam(riskParam);
                 //----add by jjpei 20190718 风险试算----end----
+                }
                 if(window.BussTrdTransferOrder && window.BussTrdTransferOrder['bussTrdTransferOrder']) {
                     window.BussTrdTransferOrder['bussTrdTransferOrder'].setStlCommandInput(tableInitData, true);
                 }

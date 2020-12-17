@@ -15,6 +15,8 @@ import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -126,6 +128,13 @@ public class EtrLendSpecInfo002Controller extends BaseController {
         model.addAttribute("fintype_cc", DictCodeListExt1.金融产品类型_投管用_拆出.getValue());
         model.addAttribute("fintype_tccr", DictCodeListExt1.金融产品类型_投管用_特拆拆入.getValue());
         model.addAttribute("PINAN_ASSET_TYPE_F08",DictCodeList.平安资产类型_拆借.getValue());
+        PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
+        pageElementConfigDto.setPageId("BaseRiskMathComm");
+        Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
+        pageElementConfigDto.setPageId(this.getPageId());
+        Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
+        isEleShow.putAll(map);
+        model.addAttribute("isEleShow", isEleShow);
         return super.init(model);
     }
     
