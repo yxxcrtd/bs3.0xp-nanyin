@@ -34,7 +34,7 @@
    <select id="getBondCode" resultMap="bondCodeMap">
         SELECT
             A.FINPROD_ID id,
-            A.FINPROD_MARKET_ID text,
+            A.FINPROD_ABBR text,
             A.FINPROD_NAME,
             TO_CHAR(A.VDATE, 'yyyy-MM-dd') VDATE,
             TO_CHAR(A.MDATE, 'yyyy-MM-dd') MDATE,
