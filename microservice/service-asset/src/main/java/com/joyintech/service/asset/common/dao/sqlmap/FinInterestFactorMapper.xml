@@ -27,7 +27,7 @@
 			T6.LOAD_RATE*100 LOAD_RATE,
 			T5.COUPON_SPECIES,
 			T5.FINPROD_TYPE2,
-			case when T7.cal_Rate_Type is not null then T7.cal_Rate_Type
+			case when T6.cal_Rate_Type is not null then T6.cal_Rate_Type
 			when T5.p_Finprod_Id is not null then
 			(select m.cal_rate_type from FIN_PRODUCT_add m where m.finprod_id=t5.p_finprod_id)
 			when T2.RATE != T6.INVEST_RATE then '01'
@@ -51,7 +51,7 @@
 				AND T6.EFF_DATE = to_date ( #{vdate}, 'yyyy-mm-dd' )
 			</if>
 			LEFT JOIN FIN_PRODUCT T5 on T5.FINPROD_ID = T1.FINPROD_ID
-			LEFT JOIN FIN_PRODUCT_add T7 on T7.FINPROD_ID = T1.FINPROD_ID
+			LEFT JOIN FIN_PRODUCT_add T6 on T6.FINPROD_ID = T1.FINPROD_ID
 		<where>
 			<if test="finprodId != null and finprodId != ''">
 				AND T1.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
