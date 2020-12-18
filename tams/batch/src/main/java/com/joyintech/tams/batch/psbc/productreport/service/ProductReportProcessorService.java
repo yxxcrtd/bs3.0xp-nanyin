@@ -280,6 +280,7 @@ public class ProductReportProcessorService {
         // 返回结果
         RepProdMessageDto repProdMessageDto = repProdMessageDtoList.get(0);
         repProdMessageDto.setcDate((Date) param.get("bookDate"));
+        repProdMessageDto.setIsNew(DictCodeList.是否_是.getValue());
 
         return repProdMessageDto;
     }
