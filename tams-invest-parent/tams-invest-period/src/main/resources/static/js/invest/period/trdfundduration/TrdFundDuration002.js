@@ -63,7 +63,7 @@
         , {
             field : 'tradeAmt',
             width : "200",
-            edit : true,
+//            edit : false,
             title : 'IntDetailDuration.tradeAmt',
             type : 'money',
             sortable : false
@@ -732,7 +732,7 @@
                         finAssetIntInfos[i].registShare, 2,
                         JoyinMath.ROUND_HALF_UP);
                 finAssetIntInfos[i].tradeAmt = tradeAmt;
-                if (FUND_ASSET_TYPE_F01 == assetType) {
+                if (FUND_ASSET_TYPE_F01 == assetType && $('#bonusMode').val() == BONUS_MODE_02) {
                     finAssetIntInfos[i].qty = tradeAmt;
                 }
             }
