@@ -114,17 +114,8 @@ public class ProfitAndLossAccountingStep1Processor extends BaseProcessor<NeedOpe
         科目类型列表.add(DictCodeList.科目类型_损益类.getValue());
         searchDto.setSubjectTypeList(科目类型列表);
         // 参照共通【科目余额查询】方法，参照【详细设计-账务类共通方法设计.xlsx的【科目余额查询】sheet】
-        List<SubjectBalance> 损益类科目最新余额集合 =new ArrayList<SubjectBalance>();
-        损益类科目最新余额集合 = accountingCommonService.getSubjectLatestBalance(searchDto);
-
-        科目类型列表.clear();
-        科目类型列表.add(DictCodeList.科目类型_所有者权益类.getValue());
-        ArrayList<String> 科目性质列表 = new ArrayList<>();
-        科目性质列表.add(DictCodeBaseSubjectNatrue.其他综合收益.getValue());
-        searchDto.setBaseSubjectNatureList(科目性质列表);
-        List<SubjectBalance> 损益类科目最新余额集合temp = accountingCommonService.getSubjectLatestBalance(searchDto);
-        损益类科目最新余额集合.addAll(损益类科目最新余额集合temp);
-
+        List<SubjectBalance> 损益类科目最新余额集合 = accountingCommonService.getSubjectLatestBalance(
+            searchDto);
         // *结果集中原币余额为0的不做后续处理,结果集中删除
         损益类科目最新余额集合=损益类科目最新余额集合.stream().filter(
                 item -> !(ArithmeticUtil.equals(BigDecimal.ZERO, item.getBalance())
@@ -134,6 +125,7 @@ public class ProfitAndLossAccountingStep1Processor extends BaseProcessor<NeedOpe
         科目类型列表.clear();
         科目类型列表.add(DictCodeList.科目类型_损益类.getValue());
         科目类型列表.add(DictCodeList.科目类型_所有者权益类.getValue());
+        ArrayList<String> 科目性质列表 = new ArrayList<>();
         科目性质列表.clear();
         科目性质列表.add(DictCodeBaseSubjectNatrue.本期利润_已实现.getValue());
         科目性质列表.add(DictCodeBaseSubjectNatrue.本期利润_未实现.getValue());
@@ -148,7 +140,6 @@ public class ProfitAndLossAccountingStep1Processor extends BaseProcessor<NeedOpe
         // 1.3 公允价值变动损益的基础科目性质查询
         List<String> 公允价值变动损益基础科目性质列表 = accountingCommonService.getValSubjectNatureList(
             DictCodeListExt1.分组代码_公允价值变动损益对应查询科目.getValue());
-        公允价值变动损益基础科目性质列表.add(DictCodeBaseSubjectNatrue.其他综合收益.getValue());
 
         // 1.4 本期利润_已实现余额查询
         科目性质列表.clear();
