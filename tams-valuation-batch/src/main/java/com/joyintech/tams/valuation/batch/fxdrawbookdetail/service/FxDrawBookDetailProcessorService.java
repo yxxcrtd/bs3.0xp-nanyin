@@ -488,6 +488,11 @@ public class FxDrawBookDetailProcessorService {
             Basis basis = this.getBasis(dealBasis);
             //定义 变量.利息分配方式DTO	AllocationType
             AllocationType allocationType = this.getAllocationType(dealBasis);
+            //贴现零息债券计息基础先按照默认值A/365处理，项目有实际业务再确认是增加计息基础还是修改债券资料
+            if(DictCodeListExt1.金融产品类型_债券.getValue().equals(finprodType)
+                    && basis == null){
+                basis = Basis.A_365;
+            }
             // 对于非A/A的计息基础
             if(!Basis.A_A.equals(basis)) {
                 //定义 变量.计息基础算法DTOBasisIntCalculator	= CalculatorFactory.createBasisIntCalculator()
