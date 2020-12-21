@@ -10,14 +10,6 @@
  
 package com.joyintech.tams.invest.risk.rskauthoritymanage.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
@@ -30,11 +22,19 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.risk.rskauthoritymanage.dto.RskAuthorityManageDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 〈一句话功能简述〉
@@ -153,6 +153,7 @@ public class RskAuthorityManageService  extends CommonExportService<RskAuthority
             for (RskAuthorityManageDto e : rsklist) {
             	param.put("ASSET_TYPE", e.getAssetType());
             	param.put("ASSET_SEC_TYPE", e.getAssetSecType());
+                param.put("RISK_TYPE", DictCodeListExt2.配置类型_授权分类_校验用.getValue());
             	rsknum +=  restTemplate.postForObject(
             	            ServiceApplication.RISK_SERVICE_NAME + "/RskAuthorityManage/selectAssetTrade",
             	            param, Integer.class);
