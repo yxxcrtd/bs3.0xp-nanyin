@@ -218,7 +218,7 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
     		model_type = "01";
     	}
         //查询申报登记数据
-        List<PerProDeclareRegDto> list = perProDeclareReg001Mapper.selectPerProdListEx(DateUtil.format(batchTime),model_type);
+        List<PerProDeclareRegDto> list = perProDeclareReg001Mapper.selectPerProdListEx(DateUtil.format(batchTime),model_type,prodInfos);
         Map<String,PerProDeclareRegDto> regMap = new HashMap<String,PerProDeclareRegDto>();
         if(!CollectionUtils.isEmpty(list)){
             //查询申报已登记数据

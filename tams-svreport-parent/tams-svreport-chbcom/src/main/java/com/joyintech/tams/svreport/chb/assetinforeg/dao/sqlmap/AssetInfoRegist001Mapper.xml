@@ -4625,6 +4625,18 @@
 		<!-- left join chb_asset_info_sub assetinfosub
 		on assetinfosub.asset_code = assetinfo.asset_code
         and assetinfosub.send_status in ('02','03') -->
+
+		<if test="InstitutionCode != null and InstitutionCode != ''"  >
+			left join (SELECT  distinct
+			T.Asset_CODE,DA.INSTITUTION_CODE FROM CHB_INVEST_TRADE T
+			LEFT JOIN FIN_PRODUCT F ON t.PROD_ID=F.FINPROD_MARKET_ID
+			LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON f.finprod_id=dA.business_id
+			and dA.model_type = '02' and DA.DATA_TYPE='FINPROD04')tt
+			on  assetinfo.ASSET_CODE=tt.ASSET_CODE AND tt.INSTITUTION_CODE = #{InstitutionCode,jdbcType=VARCHAR}
+
+			LEFT JOIN FIN_PRODUCT FA ON assetinfo.ASSET_CODE=FA.FINPROD_MARKET_ID
+			left join DATA_AUTH_NOTIFY_INST d1 on  FA.finprod_id=d1.business_id and d1.model_type = '02'
+		</if>
 		where 1 =1 
 		<!-- 不过滤状态 -->
 		and assetinfo.status in ('E','D','M')/*有效状态*/
@@ -4657,6 +4669,12 @@
 	            #{assetCode,jdbcType=VARCHAR}
 	        </foreach>
 	    </if>
+		<if test ="InstitutionCode != null and InstitutionCode != '' ">
+			AND  (  (tt.INSTITUTION_CODE = #{InstitutionCode,jdbcType=VARCHAR})
+			or (  (FA.TRADE_MARKET IS NOT NULL )
+			or (FA.TRADE_MARKET IS NULL and  d1.BELONG_INSTITUTION_CODE=#{InstitutionCode,jdbcType=VARCHAR} ))
+			)
+		</if>
 		<!-- /*资产未登记*/
 		and not exists(
 			select 1

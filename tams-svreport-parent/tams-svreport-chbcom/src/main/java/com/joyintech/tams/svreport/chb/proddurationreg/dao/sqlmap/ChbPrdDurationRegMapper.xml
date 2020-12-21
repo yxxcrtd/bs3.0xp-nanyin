@@ -44,10 +44,13 @@
 		           AND DEAL.TRADE_TYPE != '01'
 		          <!--  AND DEAL.STATUS  = 'E' -->
 		           <if test="prodIdList!=null and prodIdList.size()!=0">
-			      	 	AND NVL(DEAL.FPROD_ID,DEAL.PROD_ID) in 
-				        <foreach item="accountid" collection="prodIdList" open="(" separator="," close=")"> 
-				          #{accountid}
-				       	</foreach>
+					   and NVL(DEAL.FPROD_ID,DEAL.PROD_ID) in
+					   <foreach collection="prodIdList" item="item" index="index" open="(" separator="," close=")">
+						   <if test="(index % 999) == 998">
+							   null) OR NVL(DEAL.FPROD_ID,DEAL.PROD_ID) in (
+						   </if>
+						   #{item}
+					   </foreach>
 			       </if>
 		        UNION ALL 
 		        <!--收益率 -->
@@ -73,10 +76,15 @@
 		               to_char(YIELD.CHANGE_DATE, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR})
 		          <!--  AND YIELD.STATUS  = 'E' -->
 		           <if test="prodIdList!=null and prodIdList.size()!=0">
-			      	 	AND NVL(YIELD.FPROD_ID,YIELD.PROD_ID) in 
-				        <foreach item="accountid" collection="prodIdList" open="(" separator="," close=")"> 
-				          #{accountid}
-				       	</foreach>
+
+					   AND NVL(YIELD.FPROD_ID,YIELD.PROD_ID) in
+					   <foreach collection="prodIdList" item="item" index="index" open="(" separator="," close=")">
+						   <if test="(index % 999) == 998">
+							   null) OR NVL(YIELD.FPROD_ID,YIELD.PROD_ID) in (
+						   </if>
+						   #{item}
+					   </foreach>
+
 			       </if>
 		           /*起息日当天的不报送*/
 		           AND NOT EXISTS (SELECT 1 FROM CHB_PRD_BASEINFO INFO WHERE INFO.VDATE = YIELD.CHANGE_DATE and NVL(YIELD.FPROD_ID,YIELD.PROD_ID) = info.prod_id)
@@ -105,10 +113,14 @@
 		          <!--  AND FEEINFO.STATUS  = 'E' -->
 		           AND FEEINFO.FEE_TYPE = '01'
 		           <if test="prodIdList!=null and prodIdList.size()!=0">
-			      	 	AND NVL(FEEINFO.FPROD_ID,FEEINFO.PROD_ID) in 
-				        <foreach item="accountid" collection="prodIdList" open="(" separator="," close=")"> 
-				          #{accountid}
-				       	</foreach>
+					   AND NVL(FEEINFO.FPROD_ID,FEEINFO.PROD_ID) in
+					   <foreach collection="prodIdList" item="item" index="index" open="(" separator="," close=")">
+						   <if test="(index % 999) == 998">
+							   null) OR NVL(FEEINFO.FPROD_ID,FEEINFO.PROD_ID) in (
+						   </if>
+						   #{item}
+					   </foreach>
+
 			       </if>
 		       ) TEMP
 		 INNER JOIN CHB_PRD_BASEINFO INFO
@@ -159,10 +171,13 @@
 			AND DEAL.TRADE_TYPE !='01'
 			<!-- AND DEAL.STATUS = 'E' -->
            <if test="prodIdList!=null and prodIdList.size()!=0">
-	      	 	AND NVL(DEAL.FPROD_ID,DEAL.PROD_ID) in 
-		        <foreach item="accountid" collection="prodIdList" open="(" separator="," close=")"> 
-		          #{accountid}
-		       	</foreach>
+			   AND NVL(DEAL.FPROD_ID,DEAL.PROD_ID) in
+			   <foreach collection="prodIdList" item="item" index="index" open="(" separator="," close=")">
+				   <if test="(index % 999) == 998">
+					   null) OR NVL(DEAL.FPROD_ID,DEAL.PROD_ID) in (
+				   </if>
+				   #{item}
+			   </foreach>
 	       </if>
 			UNION ALL
 			/**收益率**/
@@ -181,10 +196,14 @@
 			to_char(YIELD.CHANGE_DATE, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR})
 			<!-- AND YIELD.STATUS  = 'E' -->
             <if test="prodIdList!=null and prodIdList.size()!=0">
-	      	 	AND NVL(YIELD.FPROD_ID,YIELD.PROD_ID) in 
-		        <foreach item="accountid" collection="prodIdList" open="(" separator="," close=")"> 
-		          #{accountid}
-		       	</foreach>
+
+				AND NVL(YIELD.FPROD_ID,YIELD.PROD_ID) in
+				<foreach collection="prodIdList" item="item" index="index" open="(" separator="," close=")">
+					<if test="(index % 999) == 998">
+						null) OR NVL(YIELD.FPROD_ID,YIELD.PROD_ID) in (
+					</if>
+					#{item}
+				</foreach>
 	        </if>
 	        /*起息日当天的不报送*/
 		    AND NOT EXISTS (SELECT 1 FROM CHB_PRD_BASEINFO INFO WHERE INFO.VDATE = YIELD.CHANGE_DATE and NVL(YIELD.FPROD_ID,YIELD.PROD_ID) = info.prod_id)
@@ -206,10 +225,15 @@
 			<!-- AND FEEINFO.STATUS   = 'E' -->
 			AND FEEINFO.FEE_TYPE = '01'
             <if test="prodIdList!=null and prodIdList.size()!=0">
-	      	 	AND NVL(FEEINFO.FPROD_ID,FEEINFO.PROD_ID) in 
-		        <foreach item="accountid" collection="prodIdList" open="(" separator="," close=")"> 
-		          #{accountid}
-		       	</foreach>
+
+				AND NVL(FEEINFO.FPROD_ID,FEEINFO.PROD_ID) in
+				<foreach collection="prodIdList" item="item" index="index" open="(" separator="," close=")">
+					<if test="(index % 999) == 998">
+						null) OR NVL(FEEINFO.FPROD_ID,FEEINFO.PROD_ID) in (
+					</if>
+					#{item}
+				</foreach>
+
 	        </if>
 		
 		) TEMP

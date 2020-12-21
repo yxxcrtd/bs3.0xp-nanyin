@@ -43,7 +43,7 @@ public interface ChbBotAstPosCBMapper {
 	 * @return
 	 */
 	int queryGenerateListAndInsert(@Param("generateDate")String generateDate,@Param("ischbbtm")String ischbbtm,@Param("statusDate")Date statusDate,
-			@Param("chbSubmitDeadline")Date chbSubmitDeadline,@Param("submitDeadline")Date submitDeadline);
+			@Param("chbSubmitDeadline")Date chbSubmitDeadline,@Param("submitDeadline")Date submitDeadline,@Param("InstitutionCode")String InstitutionCode);
 
 	
 	/**
@@ -51,7 +51,7 @@ public interface ChbBotAstPosCBMapper {
 	 * @param generateDate
 	 * @return
 	 */
-	List<ChbBotAstPositionSub> queryUpdateOrDelList(@Param("generateDate")String generateDate,@Param("ischbbtm")String ischbbtm);
+	List<ChbBotAstPositionSub> queryUpdateOrDelList(@Param("generateDate")String generateDate,@Param("ischbbtm")String ischbbtm,@Param("InstitutionCode")String InstitutionCode);
 
 	/**
 	 * 查询已登记的数据

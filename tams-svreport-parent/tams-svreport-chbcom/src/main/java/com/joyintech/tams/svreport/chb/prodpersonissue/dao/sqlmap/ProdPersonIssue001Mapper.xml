@@ -783,10 +783,13 @@
 		and info.RAISE_VDATE is not null
 		and reginfo.REG_CODE is not null
 		<if test="prodInfos!=null and prodInfos.size()!=0">
-		    AND trim(info.prod_id) in 
-			<foreach item="prodid" collection="prodInfos" open="(" separator="," close=")"> 
-			  #{prodid,jdbcType=VARCHAR}
-			</foreach>
+          AND trim(info.prod_id) in
+          <foreach collection="prodInfos" item="item" index="index" open="(" separator="," close=")">
+            <if test="(index % 999) == 998">
+              null) OR trim(info.prod_id) in (
+            </if>
+            #{item}
+          </foreach>
 		</if>
 		<!-- 根据产品的更新时间和创建时间生成报表 -->
 		<if test="generateDate != null">

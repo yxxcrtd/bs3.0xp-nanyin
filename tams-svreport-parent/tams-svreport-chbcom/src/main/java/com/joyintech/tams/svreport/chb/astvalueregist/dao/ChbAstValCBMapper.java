@@ -39,7 +39,7 @@ public interface ChbAstValCBMapper {
 	List<ChbAstValueSub> queryGenerateList(@Param("generateDate")String generateDate);
 
 	int queryGenerateListAndInsert(@Param("generateDate")String generateDate,@Param("statusDate")Date statusDate,
-			@Param("chbSubmitDeadline")Date chbSubmitDeadline,@Param("submitDeadline")Date submitDeadline);
+			@Param("chbSubmitDeadline")Date chbSubmitDeadline,@Param("submitDeadline")Date submitDeadline,@Param("InstitutionCode")String InstitutionCode);
 
 	
 	
@@ -49,7 +49,7 @@ public interface ChbAstValCBMapper {
 	 * @param generateDate
 	 * @return
 	 */
-	List<ChbAstValueSub> queryUpdateOrDelList(@Param("generateDate")String generateDate);
+	List<ChbAstValueSub> queryUpdateOrDelList(@Param("generateDate")String generateDate,@Param("InstitutionCode")String InstitutionCode);
 	
 	/**
 	 * 查询出已登记的数据

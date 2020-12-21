@@ -520,6 +520,15 @@
 	      #{prodId}
 	   	</foreach>
 	</if> -->
+		<if test="prodInfos!=null and prodInfos.size()!=0">
+			and trim(baseinfo.PROD_INS_ID) in
+			<foreach collection="prodInfos" item="item" index="index" open="(" separator="," close=")">
+				<if test="(index % 999) == 998">
+					null) OR trim(baseinfo.PROD_INS_ID) in (
+				</if>
+				#{item}
+			</foreach>
+		</if>
     <!-- 根据产品的更新时间和创建时间生成报表 -->
     <if test="generateDate != null">
     and to_char(nvl(baseinfo.update_time,baseinfo.create_time),'yyyy-MM-dd' )=#{generateDate,jdbcType=VARCHAR}

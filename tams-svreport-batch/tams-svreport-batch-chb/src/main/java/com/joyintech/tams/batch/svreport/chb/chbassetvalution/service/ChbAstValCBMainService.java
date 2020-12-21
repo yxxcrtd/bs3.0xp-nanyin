@@ -25,8 +25,8 @@ public class ChbAstValCBMainService extends AutoSendCBBaseService{
 	@Autowired
 	private ChbAstValRegistBatchService chbAstValRegistBatchService;
 
-	public void createRegist(Date batchTime) throws BatchException {
-	    chbAstValRegistBatchService.createRegist(batchTime);
+	public void createRegist(Date batchTime,String InstitutionCode) throws BatchException {
+	    chbAstValRegistBatchService.createRegist(batchTime,InstitutionCode);
 	}
 
 }

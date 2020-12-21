@@ -45,17 +45,17 @@ public class ChbBotAstPosRegistBatchService  extends SvrCBBaseService{
     private ChbBotAstPositionSubMapper chbBotAstPositionSubMapper;
     
     
-	public void createRegist(Date batchTime){
+	public void createRegist(Date batchTime,String InstitutionCode){
         // 设置批处理bean
         setBatchBeanName(BatchBeanName.底层持仓信息登记报送);
 
         logInfoBatchStart();
 
-        createRegistAction(batchTime);
+        createRegistAction(batchTime,InstitutionCode);
 		logInfoBatchEnd();
 	}
 	
-	private void createRegistAction(Date batchTime){
+	private void createRegistAction(Date batchTime,String InstitutionCode){
 		List<Date> isUpdate = chbBotAstPosCBMapper.queryUpdateDate(DateUtil.format(batchTime));
 		if(CollectionUtils.isEmpty(isUpdate))
 			return;
@@ -80,8 +80,9 @@ public class ChbBotAstPosRegistBatchService  extends SvrCBBaseService{
 			Map<String,Object> para = new HashMap<String,Object>();
 			para.put("posDate", DateUtil.format(posDate));
 			para.put("sendStatus", "01");
+			para.put("InstitutionCode",InstitutionCode);
 			chbBotAstPosCBMapper.delete(para);
-			List<ChbBotAstPositionSub> updateOrDelList = chbBotAstPosCBMapper.queryUpdateOrDelList(DateUtil.format(posDate), isChbBtm);
+			List<ChbBotAstPositionSub> updateOrDelList = chbBotAstPosCBMapper.queryUpdateOrDelList(DateUtil.format(posDate), isChbBtm,InstitutionCode);
 			for (ChbBotAstPositionSub sub : updateOrDelList) {
 				sub.setRegistSeqno(IDGenerator.generate(36));
                 sub.setCreateUser(CommonUtil.getUserName());
@@ -95,7 +96,7 @@ public class ChbBotAstPosRegistBatchService  extends SvrCBBaseService{
 			}
 			
 			chbBotAstPosCBMapper.queryGenerateListAndInsert(DateUtil.format(posDate), isChbBtm, ToolsUtil.getCurrentTime(batchTime),
-					chbSubmitDeadline, submitDeadline);
+					chbSubmitDeadline, submitDeadline,InstitutionCode);
 		}
 	}
     
@@ -131,7 +132,7 @@ public class ChbBotAstPosRegistBatchService  extends SvrCBBaseService{
     @Override
     public void execute(Date executeDate, List<String> prodList, List<String> assetList,Map<String,List<String>> param) throws BusinessException {
         try {
-        	createRegist(executeDate);
+        	createRegist(executeDate,null);
         } catch (Exception e) {
             throw new BusinessException(e);
         }

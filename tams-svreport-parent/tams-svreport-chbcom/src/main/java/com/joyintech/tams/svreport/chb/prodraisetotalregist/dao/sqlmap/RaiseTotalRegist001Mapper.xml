@@ -792,17 +792,21 @@ FROM(
 	and sub.send_status in ('02','03')
 	where 1=1
 	<if test="prodIdList!=null and prodIdList.size()>0">
-		and (a.prod_id in
-		<foreach collection="prodIdList" item="dto" open="("
-			separator="," close=")">
-			#{dto,jdbcType=VARCHAR}
-		</foreach>
-			 OR a.Fprod_id in
-			 <foreach collection="prodIdList" item="dto" open="("
-				separator="," close=")">
-				#{dto,jdbcType=VARCHAR}
-			</foreach>
-		)
+        and (a.prod_id in
+        <foreach collection="prodIdList" item="item" index="index" open="(" separator="," close=")">
+            <if test="(index % 999) == 998">
+                null) OR a.prod_id in (
+            </if>
+            #{item}
+        </foreach>
+        OR a.Fprod_id in
+        <foreach collection="prodIdList" item="item" index="index" open="(" separator="," close=")">
+            <if test="(index % 999) == 998">
+                null) OR a.Fprod_id in (
+            </if>
+            #{item}
+        </foreach>
+        )
 	</if>
 </select>
 <delete id="deleteBatch"

@@ -282,7 +282,7 @@ public class SvrAssetBasisInterf extends BaseService{
 	/**
 	 * 根据资产基础指标生成资产估值信息
 	 */
-    public void genAssetValueInfo(Date date){
+    public void genAssetValueInfo(Date date,String InstitutionCode){
     	String isChlBtm = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
     	try (SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false)){
 			//批量插入mapper
@@ -290,9 +290,10 @@ public class SvrAssetBasisInterf extends BaseService{
 			// 先删后插
 			Map<String, Object> para = new HashMap<String, Object>();
 			para.put("valDate", DateUtil.format(date));
+			para.put("InstitutionCode", InstitutionCode);
 			chbAstValInterfMapper.deleteInfo(para);
 			// 处理估值表数据
-			List<ChbAstValue> infoList = chbAstValInterfMapper.queryAssetValueInfoList(DateUtil.format(date),SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE),isChlBtm);
+			List<ChbAstValue> infoList = chbAstValInterfMapper.queryAssetValueInfoList(DateUtil.format(date),SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE),isChlBtm,InstitutionCode);
 			int count = 0;
 			for (ChbAstValue info : infoList) {
 				info.setValId(IDGenerator.generate(36));
