@@ -2,6 +2,7 @@ package com.joyintech.tams.svreport.chb.monthreport.dto;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 描述:CHB_MONTH_PRD_POSITION表的实体类
@@ -144,8 +145,18 @@ public class ChbMonthPrdPosition {
      * 是否现金管理类
      */
     private String cashmanacate;
-    
-    
+
+
+    private List<String> prodids;
+
+    public List<String> getProdids() {
+        return prodids;
+    }
+
+    public void setProdids(List<String> prodids) {
+        this.prodids = prodids;
+    }
+
     //add by leipeng 20200606
     /**
      * 机构编号

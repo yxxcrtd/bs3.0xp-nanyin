@@ -4,6 +4,7 @@ import com.joyintech.tams.busicommon.productRating.dto.CommonProductRatingDto;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 描述:CHB_MONTH_ASSET_POSITION表的实体类
@@ -197,6 +198,18 @@ public class ChbMonthAssetPosition extends CommonProductRatingDto implements Clo
      * 商业银行优先股
      */
     private  String  bankSecPrefer;
+
+
+    private List<String> prodids;
+
+    public List<String> getProdids() {
+        return prodids;
+    }
+
+    public void setProdids(List<String> prodids) {
+        this.prodids = prodids;
+    }
+
     public String getOldAssetCode() {
 		return oldAssetCode;
 	}

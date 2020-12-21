@@ -101,7 +101,7 @@ public class ChbAstValRegistBatchService extends SvrCBBaseService {
 			 chbAstValCBMapper.queryUpdateOrDelList(DateUtil.format(posDate),InstitutionCode);
 			 for(ChbAstValueSub sub:updateOrDelList){
 				 sub.setRegistSeqno(IDGenerator.generate(36));
-				 sub.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
+//				 sub.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
 				 sub.setCreateUser(CommonUtil.getUserName());
 				 sub.setUpdateUser(CommonUtil.getUserName());
 				 //数据日期

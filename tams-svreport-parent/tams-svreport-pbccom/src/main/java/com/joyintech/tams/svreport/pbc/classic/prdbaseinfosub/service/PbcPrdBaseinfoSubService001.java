@@ -100,10 +100,9 @@ public class PbcPrdBaseinfoSubService001 extends CommonExportService<PbcPrdBasei
 	public Page<PbcPrdBaseinfoSub> searchPage(Map<String, Object> searchParam) {
 		deaSearchParam(searchParam);
 		//add by leipeng 20200628
-		if(CommonUtil.isBAmodel()){
+//		if(CommonUtil.isBAmodel()){
 			searchParam.put("model_type", "01");
-
-		}
+//		}
 		
 		int pagenum = StringUtil.integerValueOf(""+searchParam.get(GlobalConstant.PARAM_PAGE), 1);
         int length = StringUtil.integerValueOf(""+searchParam.get(GlobalConstant.PARAM_LENGTH), GlobalConstant.DEFAULT_PAGE_SIZE);

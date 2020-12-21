@@ -147,6 +147,10 @@ public class ChbBotAstPositionRegist001Service extends SvrCommonExportService<Ch
 				if(StringUtil.isNotEmpty(dto.getSubmitFeedbackStatus())){
 					dto.setSubmitFeedbackStatus(SvrDataUtil.getNameFromDataDict(DictCode.报送反馈状态,dto.getSubmitFeedbackStatus()));
 				}
+				//银行模式时,资产数据取当前机构的产品登记编码
+				if(!CommonUtil.isBAmodel()){
+					dto.setIssuePartyId(CommonUtil.selectBankCode());
+				}
 			}
 		}
 	}

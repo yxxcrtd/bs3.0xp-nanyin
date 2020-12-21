@@ -137,6 +137,8 @@ public class MonthReportAssetService {
 		dealpara.setPrincipalRatingDimension(principalRatingDimension);
         // 评级取值规则修改
         dealpara.setSysflag(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_SEC_RATING_FLAG));
+
+		dealpara.setProdids(report.getProdids());
         logger.info("查询今日待处理资产头寸开始：");
         List<ChbMonthAssetPosition> listAssetposition = new ArrayList<ChbMonthAssetPosition>();
 		// 获取是否中债子系统(01：是 02：否)
@@ -364,7 +366,7 @@ public class MonthReportAssetService {
         
 //        List<ChbMonthAssetPosition> botCashList=chbMonthAssetPositionMapper.selectBotCashList(lastday);
         //计划类净值型资产底层中剩余现金折算逻辑问题 update by leipeng 20200712
-        List<ChbMonthAssetPosition> botCashList=chbMonthAssetPositionMapper.selectBotCashListEx(lastday);
+        List<ChbMonthAssetPosition> botCashList=chbMonthAssetPositionMapper.selectBotCashListEx(lastday,report.getProdids());
         if(botCashList!=null&&!botCashList.isEmpty()){
         	for(ChbMonthAssetPosition bot:botCashList){
 //        		ChbMonthAssetPosition botcashPosition=new ChbMonthAssetPosition();
@@ -499,7 +501,7 @@ public class MonthReportAssetService {
         // 查询月度日期之间的资产头寸
         logger.info("查询本月月报资产头寸开始：");
         List<ChbMonthAssetPosition> assetMonthPositionList = chbMonthAssetPositionMapper.selectByMonthDate(DateUtil.
-        		format(firstday),DateUtil.format(lastday));
+        		format(firstday),DateUtil.format(lastday),report.getProdids());
         logger.info("查询本月月报资产头寸结束：");
         // 用于统计穿透前期末余额 穿透后期末余额,key=propertyCode
         Map<String,ChbMonthReportDetail> assetMonthReportDetailMap = new HashMap<String,ChbMonthReportDetail>();
@@ -851,11 +853,11 @@ public class MonthReportAssetService {
         }
         
        
-        
-        //汇总数据合计
-        sumDetail(assetMonthReportDetailMap);
-        //汇总数据入库
-        insertDetail(assetMonthReportDetailMap, report.getTermid(),null);
+        //多级法人改造。不能出汇总数据，会导致分支机构数据删除错误
+//        //汇总数据合计
+//        sumDetail(assetMonthReportDetailMap);
+//        //汇总数据入库
+//        insertDetail(assetMonthReportDetailMap, report.getTermid(),null);
         
         
         //机构数据合计以及入库
@@ -971,10 +973,8 @@ public class MonthReportAssetService {
 //            				ChbMonthReportPrdConstants.REPORT_TYPE_ASSET,delreport.getWbsreportuuid());
 //            	}
             	//由于多次执行插入操作..目前由汇总数据进行一次资产详情删除...分支数据不进行删除
-            	if(null==orgCode){
-            		chbMonthReportDetailMapper.deleteByTermId(termid,
-            				ChbMonthReportPrdConstants.REPORT_TYPE_ASSET,null);
-            	}
+				chbMonthReportDetailMapper.deleteByTermIdEx(termid,
+						ChbMonthReportPrdConstants.REPORT_TYPE_ASSET,orgCode);
             	
             			
             	chbMonthReportDetailMapper.insertBatch(assetMonthReportDetailList);

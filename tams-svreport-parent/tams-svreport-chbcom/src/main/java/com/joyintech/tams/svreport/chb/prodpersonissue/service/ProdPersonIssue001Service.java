@@ -103,9 +103,9 @@ public class ProdPersonIssue001Service extends SvrCommonExportService<ProdPerson
          // 实时跑批  未报送  在上游库查询产品修改日期
          // 查询数据
          //添加多法人查询逻辑
-         if(CommonUtil.isBAmodel()){
+//         if(CommonUtil.isBAmodel()){
         	 param.put("model_type", "01");
-         }
+//         }
          
          if (null != param.get(GlobalConstant.PARAM_PAGE)
         		 && null != param.get(GlobalConstant.PARAM_LENGTH)) {

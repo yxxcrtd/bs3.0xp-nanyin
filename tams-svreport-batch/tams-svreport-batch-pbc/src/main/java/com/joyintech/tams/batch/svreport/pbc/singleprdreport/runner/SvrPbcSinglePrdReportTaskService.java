@@ -68,6 +68,7 @@ public class SvrPbcSinglePrdReportTaskService extends BatchBaseService {
                 	}
                 }
             }
+
             pbcSinglePrdReportCBMainService.generateReport(ToolsUtil.getCurrentTime(batchExecuteInfo.getExecuteDate()),
                     prodList);
             result.setStatus(BatchStatus.COMPLETED);

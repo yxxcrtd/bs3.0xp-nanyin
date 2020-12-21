@@ -10,9 +10,11 @@
 
 package com.joyintech.tams.component.business.report.prod.impl;
 
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.base.BaseService;
@@ -266,5 +268,19 @@ public class BussRepFinProductInfoImplService extends BaseService<BussRepFinProd
                         + repFinprodInsId,
                         BussRepFinProductInfoDto.class);
 	}
+
+
+    /**
+     * 获取当前登录用户的机构编码
+     * @return
+     */
+    @Override
+    public String getIssuePartyId(){
+        String IssuePartyId = restTemplate.getForObject(
+                ServiceApplication.REPORT_SERVICE_NAME + "/RepFinProductInfo/getIssuePartyId?investCode="
+                        + (null!=LoginUserUtil.getInstCode()&&LoginUserUtil.getInstCode().size()>0?LoginUserUtil.getInstCode().get(0):""),
+                String.class);
+        return IssuePartyId;
+    }
 
 }

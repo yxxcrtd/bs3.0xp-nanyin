@@ -288,10 +288,12 @@
 			and info.ISSUING_STATUS='01'
 		<if test="prodList !=null  and prodList.size()!=0">
 			and info.prod_id in
-			<foreach collection="prodList" item="prodid" open="(" separator=","
-				close=")">
-				#{prodid}
-			</foreach>
+            <foreach collection="prodList" item="item" index="index" open="(" separator="," close=")">
+                <if test="(index % 999) == 998">
+                    null) OR info.prod_id in (
+                </if>
+                #{item}
+            </foreach>
 		</if>
 
 	</select>

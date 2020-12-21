@@ -45,7 +45,7 @@
 		FROM CHB_PRD_DEAL_SUB CPDS
 		LEFT JOIN CHB_PRD_BASEINFO CPB 
 		ON CPB.PROD_ID = CPDS.PROD_ID
-		AND CPB.STATUS = 'E'
+		AND CPB.STATUS IN ('E','M')
 	</sql>
 	<!-- 查询 产品存续期登记表数据-->
 	<select id="selectAllData" resultType="com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto">

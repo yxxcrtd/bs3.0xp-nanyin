@@ -4,6 +4,7 @@ package com.joyintech.tams.systemtools.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
 import com.joyintech.tams.systemtools.dto.SystemActorRoleDto;
@@ -40,6 +41,9 @@ public interface TamsBaseMapper {
      * @since 1.0
      */
     String selectBankCode(String orgCode);
+
+
+    List<ChbOrgRegistBankCode> selectBank(String orgCode);
     
     /**
      * 查询机构下的所有部门代码

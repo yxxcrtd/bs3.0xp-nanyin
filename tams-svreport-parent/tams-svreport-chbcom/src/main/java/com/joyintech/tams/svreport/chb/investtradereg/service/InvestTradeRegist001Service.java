@@ -112,7 +112,6 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
 		//add by leipeng 20200628
 		if(CommonUtil.isBAmodel()){
 			pageParam.put("model_type", "01");
-
 		}
 		
         if (pageParam.get(GlobalConstant.PARAM_PAGE) != null
@@ -538,6 +537,10 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
 			}
 			if(StringUtil.isNotEmpty(item.getRivalPartyType())) {
 				item.setRivalPartyType(item.getRivalPartyType()+" "+SvrDataUtil.getNameFromDataDict(DictCode.对手方类型,item.getRivalPartyType()));
+			}
+			//银行模式时,资产数据取当前机构的产品登记编码
+			if(!CommonUtil.isBAmodel()){
+				item.setRegistBankCode(CommonUtil.selectBankCode());
 			}
 		});
 	}    

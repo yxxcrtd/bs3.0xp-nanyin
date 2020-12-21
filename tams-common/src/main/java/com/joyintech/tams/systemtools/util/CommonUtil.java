@@ -21,6 +21,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -225,6 +226,21 @@ public class CommonUtil {
 		}
 		String bankCode = baseMapper.selectBankCode(userInfo.getOrgCode());
 		return bankCode;
+	}
+
+
+
+	public static ChbOrgRegistBankCode getUserBank() {
+		User userInfo = SecurityUtil.getLoginUser();
+		String OrgCode = null;
+		// if(userInfo.isAdmin()){
+		// return null;
+		// }
+		if (null!=userInfo&&StringUtil.isEmpty(userInfo.getOrgCode())) {
+			OrgCode = userInfo.getOrgCode();
+		}
+		List<ChbOrgRegistBankCode> orgCode = baseMapper.selectBank(OrgCode);
+		return orgCode.get(0);
 	}
 
 	/**

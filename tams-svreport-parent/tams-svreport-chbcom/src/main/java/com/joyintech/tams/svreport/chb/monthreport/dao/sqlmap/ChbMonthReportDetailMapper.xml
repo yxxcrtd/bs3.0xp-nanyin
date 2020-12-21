@@ -191,7 +191,22 @@
       PRODYIELD = #{prodyield,jdbcType=DECIMAL}
     where DETAILUUID = #{detailuuid,jdbcType=CHAR}
   </update>
-  
+    <delete id="deleteByTermIdEx" parameterType="java.lang.String" >
+        delete from CHB_MONTH_REPORT_DETAIL
+        where 1 =1
+        <if test="termid != null and termid != ''">
+            and termid = #{termid,jdbcType=VARCHAR}
+        </if>
+        <if test="reportType != null and reportType != ''">
+            and REPORTTYPE = #{reportType,jdbcType=VARCHAR}
+        </if>
+        <if test="orgCode != null and orgCode != '' and termid != null and termid != ''">
+            and exists (
+            select 1 from pbc_report t where termid = #{termid,jdbcType=VARCHAR}
+            and t.org_code = #{orgCode,jdbcType=VARCHAR}
+            )
+        </if>
+    </delete>
   
   <select id="selectByModel" parameterType="map" resultMap="BaseResultMap">
    	 	select 

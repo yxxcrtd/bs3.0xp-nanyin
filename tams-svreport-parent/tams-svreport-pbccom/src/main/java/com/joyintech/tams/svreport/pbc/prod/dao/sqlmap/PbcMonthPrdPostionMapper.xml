@@ -389,13 +389,15 @@
     <if test='reportEndDate != null'>
     and ENDDATE >= #{reportEndDate,jdbcType=DATE}
     </if>
-    <if test="prodList !=null and prodList.size()>0">
-        and PRODID in
-        <foreach collection="prodList" item="prodid" open="(" separator=","
-            close=")">
-            #{prodid,jdbcType=VARCHAR}
-        </foreach>
-    </if>
+      <if test="prodList !=null and prodList.size()>0">
+          and PRODID in
+          <foreach collection="prodList" item="item" index="index" open="(" separator="," close=")">
+              <if test="(index % 999) == 998">
+                  null) OR PRODID in (
+              </if>
+              #{item}
+          </foreach>
+      </if>
   </delete>
   
   <select id="selectByDate" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -419,6 +421,16 @@
 		      </if>
 	  	where to_char(b.ENDDATE,'yyyy-MM-dd') = #{bookDate,jdbcType=VARCHAR}
 	  	and info.profit_type = '03' ----过滤非保本产品
+          <if test="prodList !=null and prodList.size()>0">
+              and PRODID in
+              <foreach collection="prodList" item="prodid" index="index" open="(" separator=","
+                       close=")">
+                  <if test="(index % 999) == 998">
+                      null) OR PRODID in (
+                  </if>
+                  #{prodid,jdbcType=VARCHAR}
+              </foreach>
+          </if>
   </select>
   
   <select id="selectByDatePsbc" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -441,6 +453,16 @@
 	  	and info.profit_type = '03' ----过滤非保本产品
 	  	/*TISHKBS-620 根据现场返回的问题，此处查询过滤‘000000’*/
 	  	and (b.BUY_PLACE not in('210200','330200','350200','370200','440300','000000') or b.BUY_PLACE is null)
+      <if test="prodList !=null and prodList.size()>0">
+          and PRODID in
+          <foreach collection="prodList" item="prodid" index="index" open="(" separator=","
+                   close=")">
+              <if test="(index % 999) == 998">
+                  null) OR PRODID in (
+              </if>
+              #{prodid,jdbcType=VARCHAR}
+          </foreach>
+      </if>
   </select>
   
   <select id="getPInterfProCustomDealList" resultType="com.joyintech.tams.svreport.pbc.prod.dto.PInterfProCustomDealDto">
@@ -805,9 +827,12 @@
 	        AND info.profit_type = '03' -->
 			 <if test="prodList !=null and prodList.size()>0">
 		        AND INFO.PROD_ID IN
-		        <foreach collection="prodList" item="prodid" open="(" separator=","  close=")">
-		            #{prodid,jdbcType=VARCHAR}
-		        </foreach>
+                 <foreach collection="prodList" item="item" index="index" open="(" separator="," close=")">
+                     <if test="(index % 999) == 998">
+                         null) OR INFO.PROD_ID in (
+                     </if>
+                     #{item}
+                 </foreach>
 		    </if>
 		 AND INFO.VDATE <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
 		 /*历史到期产品不统计*/
@@ -1369,10 +1394,13 @@
       and   ( prdposition.PAYSTATUS  ='04'
       or   prdposition.PAYSTATUS is  null )
         /**筛选到期的产品   end */
-    <if test="prodList !=null">
-        <foreach collection="prodList" item="prodid" open="and prdposition.PRODID in ("
-            separator="," close=")">
-            #{prodid,jdbcType=VARCHAR}
+    <if test="prodList !=null and prodList.size()>0">
+        and prdposition.PRODID in
+        <foreach collection="prodList" item="item" index="index" open="(" separator="," close=")">
+            <if test="(index % 999) == 998">
+                null) OR prdposition.PRODID in (
+            </if>
+            #{item}
         </foreach>
     </if>
   </select>

@@ -200,11 +200,8 @@
 	 </if>
     where 1=1
     <if test="prodIdList != null and prodIdList.size()>0">
-                <foreach collection="prodIdList" item="item" index="index" open="and (cds.PROD_ID in(" separator="," close="))">
-					<if test="(index % 999) == 998">
-						null) OR cds.PROD_ID in (
-					</if>
-                	#{item,jdbcType=VARCHAR}
+                <foreach collection="prodIdList" item="item" open="and cds.PROD_ID in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
             <if test="prodInsIdList != null and prodInsIdList.size()>0">
@@ -218,27 +215,18 @@
 				)
             </if>
             <if test="sendStatusList != null and sendStatusList.size()>0">
-				<foreach collection="sendStatusList" item="item" index="index" open="and (cds.SEND_STATUS in(" separator="," close="))">
-					<if test="(index % 999) == 998">
-						null) OR cds.SEND_STATUS in (
-					</if>
-					#{item,jdbcType=VARCHAR}
+				<foreach collection="sendStatusList" item="item" open="and cds.SEND_STATUS in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
 				</foreach>
 			</if>
 			<if test="statusList != null and statusList.size()>0">
-				<foreach collection="statusList" item="item" index="index" open="and (cds.STATUS in(" separator="," close="))">
-					<if test="(index % 999) == 998">
-						null) OR cds.STATUS in (
-					</if>
-				  	#{item,jdbcType=VARCHAR}
+				<foreach collection="statusList" item="item" open="and cds.STATUS in(" separator="," close=")">
+				  #{item,jdbcType=VARCHAR}
 				</foreach>
 			</if>
             <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
-		 		<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" index="index" open=" AND (cds.SUBMIT_FEEDBACK_STATUS IN (" close="))" separator=",">
-					<if test="(index % 999) == 998">
-						null) OR cds.SUBMIT_FEEDBACK_STATUS in (
-					</if>
-					#{submitFeedbackStatus,jdbcType=VARCHAR}
+		 		<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND cds.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
+             		#{submitFeedbackStatus,jdbcType=VARCHAR}
             	</foreach>	
 		 	</if>
 			<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
@@ -284,11 +272,8 @@
     select * from CHB_PRD_DECLARE_SUB cds
     where 1=1
      <if test="list != null and list.size()>0">
-                <foreach collection="list" item="item" index="index" open="and (cds.REGIST_SEQNO in(" separator="," close="))">
-					<if test="(index % 999) == 998">
-						null) OR cds.REGIST_SEQNO in (
-					</if>
-                	#{item.registSeqno,jdbcType=VARCHAR}
+                <foreach collection="list" item="item" open="and cds.REGIST_SEQNO in(" separator="," close=")">
+                #{item.registSeqno,jdbcType=VARCHAR}
                 </foreach>
             </if>
       
@@ -447,7 +432,7 @@
       	PRD.REG_CODE ISSUE_PARTY_ID ,/*发行机构代码*/
      </if>
 	<if test="model_type == null">
-		baseinfo.ISSUE_PARTY_ID  ,/*发行机构代码*/
+		baseinfo.ISSUE_PARTY_ID ,/*发行机构代码*/
 	</if>
 	baseinfo.APPROVER_ID,/*产品审批人身份证号*/
 	baseinfo.APPROVER_NAME,/*产品审批人姓名*/
@@ -514,21 +499,15 @@
       </if>
 	
 	where 1 =1
-	<!-- <if test="prodInfos!=null and prodInfos.size()!=0">
-	 	AND trim(baseinfo.prod_id) in 
-	    <foreach item="prodId" collection="prodInfos" open="(" separator="," close=")"> 
-	      #{prodId}
-	   	</foreach>
-	</if> -->
-		<if test="prodInfos!=null and prodInfos.size()!=0">
-			and trim(baseinfo.PROD_INS_ID) in
-			<foreach collection="prodInfos" item="item" index="index" open="(" separator="," close=")">
-				<if test="(index % 999) == 998">
-					null) OR trim(baseinfo.PROD_INS_ID) in (
-				</if>
-				#{item}
-			</foreach>
-		</if>
+	<if test="prodInfos!=null and prodInfos.size()!=0">
+		AND trim(baseinfo.PROD_INS_ID) in
+		<foreach collection="prodInfos" item="item" index="index" open="(" separator="," close=")">
+			<if test="(index % 999) == 998">
+				null) OR trim(baseinfo.PROD_INS_ID) in (
+			</if>
+			#{item}
+		</foreach>
+	</if>
     <!-- 根据产品的更新时间和创建时间生成报表 -->
     <if test="generateDate != null">
     and to_char(nvl(baseinfo.update_time,baseinfo.create_time),'yyyy-MM-dd' )=#{generateDate,jdbcType=VARCHAR}
@@ -744,11 +723,8 @@
     <delete id="deleteByProdid" parameterType="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto">
 	   delete from CHB_PRD_DECLARE_SUB
 	   where SEND_STATUS = '01' /*删除未报送的*/
-	   <foreach collection="deleteList" item="item" index="index" open="and (PROD_ID in (" close="))" separator=",">
-		   <if test="(index % 999) == 998">
-			   null) OR PROD_ID in (
-		   </if>
-		   #{item.prodId,jdbcType=VARCHAR}
+	   <foreach collection="deleteList" item="item" index="index" open="and PROD_ID in (" close=")" separator=",">
+	   #{item.prodId,jdbcType=VARCHAR} 
 	   </foreach>
     </delete>
     
@@ -1027,11 +1003,8 @@
    <delete id="deleteRegistSeqnoList">
    delete from CHB_PRD_DECLARE_SUB 
    where 
-	<foreach collection="regList" item="item" index="index" open="REGIST_SEQNO in (" separator="," close=")">
-		<if test="(index % 999) == 998">
-			null) OR REGIST_SEQNO in (
-		</if>
-		#{item,jdbcType=VARCHAR}
+	<foreach collection="regList" item="item" open="REGIST_SEQNO in (" separator="," close=")">
+	#{item,jdbcType=VARCHAR}
 	</foreach>
    </delete>
    
@@ -1069,11 +1042,8 @@
     from CHB_PRD_DECLARE_SUB_HIS
     where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
   	<if test="regList !=null and regList.size()>0">
-          <foreach collection="regList" item="item" index="index" open="and (REGIST_SEQNO IN (" separator=","  close="))">
-			  <if test="(index % 999) == 998">
-				  null) OR REGIST_SEQNO in (
-			  </if>
-			  #{item,jdbcType=VARCHAR}
+          <foreach collection="regList" item="item" open="and REGIST_SEQNO IN (" separator=","  close=")">
+            #{item,jdbcType=VARCHAR}
           </foreach>
        </if>
    </insert>

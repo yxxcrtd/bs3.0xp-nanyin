@@ -233,10 +233,10 @@ public class PbcMonthAssetReportService  extends BaseService{
         //根据模式编码是否为空来确认是否需要获取机构编码
         if(StringUtil.equals(bankCode, "001")){
         	posProdList =
-        			pbcMonthPrdPostionMapper.selectByDatePsbc(DateUtil.getLastDayOfLayMonth(generateDate),modelType);
+        			pbcMonthPrdPostionMapper.selectByDatePsbc(DateUtil.getLastDayOfLayMonth(generateDate),modelType,prodList);
         }else{
         	posProdList =
-        			pbcMonthPrdPostionMapper.selectByDate(DateUtil.getLastDayOfLayMonth(generateDate),modelType);
+        			pbcMonthPrdPostionMapper.selectByDate(DateUtil.getLastDayOfLayMonth(generateDate),modelType,prodList);
         }
         
 //        if (!CollectionUtils.isEmpty(posAssetList)
@@ -7122,9 +7122,7 @@ public class PbcMonthAssetReportService  extends BaseService{
 
             for(ListIterator<PbcMonthAssetPositionDto> iterator=posAssetList.listIterator();iterator.hasNext();){
                 PbcMonthAssetPositionDto it=iterator.next();
-                //新疆农信：人行月报表3-3 资管产品资产负债剩余期限统计模板除实收本金栏目数据正确外，其他数据均不对 modify by hpp 2020-12-02 start
-                if(cprodListMap.containsKey(it.getProdid()) && cprodListMap.get(it.getProdid()).get(0).getAssetCode().equals(it.getAssetCode())){
-                //新疆农信：人行月报表3-3 资管产品资产负债剩余期限统计模板除实收本金栏目数据正确外，其他数据均不对 modify by hpp 2020-12-02 end
+                if(cprodListMap.containsKey(it.getProdid())){
                     //BigDecimal amt=it.getAmt();
                     iterator.remove();
                     for(PbcMonthAssetPositionDto single:cprodListMap.get(it.getProdid())){

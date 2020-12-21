@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.CacheUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -676,6 +677,12 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 			//部分赎回标识
 			if (StringUtil.isNotEmpty(item.getPartRedemFlag())){
 				item.setPartRedemFlag(item.getPartRedemFlag()+" "+SvrDataUtil.getNameFromDataDict(DictCode.是否_中债,item.getPartRedemFlag()));
+			}
+
+
+			//银行模式时,资产数据取当前机构的产品登记编码
+			if(!CommonUtil.isBAmodel()){
+				item.setIssuePartyId(CommonUtil.selectBankCode());
 			}
 			
 		});
