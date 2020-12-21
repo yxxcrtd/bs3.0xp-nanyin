@@ -127,12 +127,15 @@ public class TrdPlanNetInvestTradeValidator implements TradeCommonValidator {
                         errorList.add(new ValidMessage("shareAmt", this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdPlanNetInvestTrade003.tradeAmtSha"))));
                     }
                 }
-                if (tradeAmt != null && tradeAmt.compareTo(zero) == -1) {
-                    errorList.add(new ValidMessage("tradeAmt", this.getMessage("BUSS_COM_E_0004", this.getMessage("TrdFundInvestTrade002.tradeAmt"),"0")));
-                }
-                if (shareAmt != null && shareAmt.compareTo(zero) == -1) {
-                    errorList.add(new ValidMessage("shareAmt", this.getMessage("BUSS_COM_E_0004", this.getMessage("TrdFundInvestTrade002.tradeSha"),"0")));
-                }
+
+                //dto内已经有过校验，无需重复校验
+//                if (tradeAmt != null && tradeAmt.compareTo(zero) == -1) {
+//                    errorList.add(new ValidMessage("tradeAmt", this.getMessage("BUSS_COM_E_0004", this.getMessage("TrdFundInvestTrade002.tradeAmt"),"0")));
+//                }
+//                if (shareAmt != null && shareAmt.compareTo(zero) == -1) {
+//                    errorList.add(new ValidMessage("shareAmt", this.getMessage("BUSS_COM_E_0004", this.getMessage("TrdFundInvestTrade002.tradeSha"),"0")));
+//                }
+
                 if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
                     BigDecimal assetAvailablePosition = dto.getAssetAvailablePosition();
                     if (assetAvailablePosition != null && shareAmt != null
@@ -274,12 +277,14 @@ public class TrdPlanNetInvestTradeValidator implements TradeCommonValidator {
                 }
 
                 //解决点击提交提示语有重复的问题
+                //dto内已经有了校验，无需重复进行校验
 //                if (tradeAmt != null && tradeAmt.compareTo(zero) == -1) {
 //                    errorList.add(new ValidMessage("tradeAmt", this.getMessage("BUSS_COM_E_0004", this.getMessage("TrdFundInvestTrade002.tradeAmt"),"0")));
 //                }
 //                if (shareAmt != null && shareAmt.compareTo(zero) == -1) {
 //                    errorList.add(new ValidMessage("shareAmt", this.getMessage("BUSS_COM_E_0004", this.getMessage("TrdFundInvestTrade002.tradeSha"),"0")));
 //                }
+
                 if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
                     BigDecimal assetAvailablePosition = dto.getAssetAvailablePosition();
                     if (assetAvailablePosition != null && shareAmt != null
