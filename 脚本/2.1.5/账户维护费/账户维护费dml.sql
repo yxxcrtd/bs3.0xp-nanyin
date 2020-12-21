@@ -1,38 +1,38 @@
---Ë¥¶Êà∑Áª¥Êä§Ë¥π
---1-Ë¥πÁî®È¢ÑÊèêËÆæÁΩÆÁõ∏ÂÖ≥ËÑöÊú¨
-/*ËèúÂçïË°®Ôºö‰º∞ÂÄºÊ†∏ÁÆó-ÂèÇÊï∞ÁÆ°ÁêÜ-Ë¥πÁî®È¢ÑÊèêËÆæÁΩÆ*/
+--’ÀªßŒ¨ª§∑—
+--1-∑—”√‘§Ã·…Ë÷√œ‡πÿΩ≈±æ
+/*≤Àµ•±Ì£∫π¿÷µ∫ÀÀ„-≤Œ ˝π‹¿Ì-∑—”√‘§Ã·…Ë÷√*/
 delete from SYS_MENU where MENU_ID ='VALUATION_ACCOUNTING_001_001_900';
 Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('VALUATION_ACCOUNTING_001_001_900','PTL',null,'VALUATION_ACCOUNTING_001_001','FeeProvisionSetting001',99,'02','Ë¥πÁî®È¢ÑÊèêËÆæÁΩÆ','system',null,sysdate,'system',sysdate);
+values ('VALUATION_ACCOUNTING_001_001_900','PTL',null,'VALUATION_ACCOUNTING_001_001','FeeProvisionSetting001',99,'02','∑—”√‘§Ã·…Ë÷√','system',null,sysdate,'system',sysdate);
 
 
-/*ÁîªÈù¢Ë°®*/
+/*ª≠√Ê±Ì*/
 delete from SYS_PAGE where PAGE_ID in ('FeeProvisionSetting001','FeeProvisionSetting002');
 Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('FeeProvisionSetting001','PTL','/invest/portfolio/feeprovisionsetting/FeeProvisionSetting001','invest/portfolio/feeprovisionsetting/FeeProvisionSetting001','VALUATION_ACCOUNTING_001_001_900',null,null,'02','01','Ë¥πÁî®È¢ÑÊèêËÆæÁΩÆ','system',null,sysdate,'system',sysdate);
+values ('FeeProvisionSetting001','PTL','/invest/portfolio/feeprovisionsetting/FeeProvisionSetting001','invest/portfolio/feeprovisionsetting/FeeProvisionSetting001','VALUATION_ACCOUNTING_001_001_900',null,null,'02','01','∑—”√‘§Ã·…Ë÷√','system',null,sysdate,'system',sysdate);
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('FeeProvisionSetting002', 'PTL', '/invest/portfolio/feeprovisionsetting/FeeProvisionSetting002', 'invest/portfolio/feeprovisionsetting/FeeProvisionSetting002', 'VALUATION_ACCOUNTING_001_001_900', null, null, '02', '01', 'Ë¥πÁî®È¢ÑÊèêËÆæÁΩÆÊñ∞Âª∫', 'system', null, sysdate, 'system', sysdate);
+values ('FeeProvisionSetting002', 'PTL', '/invest/portfolio/feeprovisionsetting/FeeProvisionSetting002', 'invest/portfolio/feeprovisionsetting/FeeProvisionSetting002', 'VALUATION_ACCOUNTING_001_001_900', null, null, '02', '01', '∑—”√‘§Ã·…Ë÷√–¬Ω®', 'system', null, sysdate, 'system', sysdate);
 
 
-/*ÁîªÈù¢Ë¶ÅÁ¥†Ë°®*/
+/*ª≠√Ê“™Àÿ±Ì*/
 delete from SYS_PAGE_ELEMENT where PAGE_ID in ('FeeProvisionSetting001','FeeProvisionSetting002');
 Insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('FeeProvisionSetting001','FeeProvisionSetting001_btn_add','01','01',null,'Êñ∞Âª∫','system',null,sysdate,'system',sysdate);
+values ('FeeProvisionSetting001','FeeProvisionSetting001_btn_add','01','01',null,'–¬Ω®','system',null,sysdate,'system',sysdate);
 Insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('FeeProvisionSetting001','FeeProvisionSetting001_btn_export','01','01',null,'ÂØºÂá∫','system',null,sysdate,'system',sysdate);
+values ('FeeProvisionSetting001','FeeProvisionSetting001_btn_export','01','01',null,'µº≥ˆ','system',null,sysdate,'system',sysdate);
 Insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('FeeProvisionSetting001','FeeProvisionSetting001_btn_reset','01','01',null,'ÈáçÁΩÆ','system',null,sysdate,'system',sysdate);
+values ('FeeProvisionSetting001','FeeProvisionSetting001_btn_reset','01','01',null,'÷ÿ÷√','system',null,sysdate,'system',sysdate);
 Insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('FeeProvisionSetting001','FeeProvisionSetting001_btn_revoke','01','01',null,'Êí§ÈîÄ','system',null,sysdate,'system',sysdate);
+values ('FeeProvisionSetting001','FeeProvisionSetting001_btn_revoke','01','01',null,'≥∑œ˙','system',null,sysdate,'system',sysdate);
 Insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('FeeProvisionSetting001','FeeProvisionSetting001_btn_search','01','01',null,'Êü•ËØ¢','system',null,sysdate,'system',sysdate);
+values ('FeeProvisionSetting001','FeeProvisionSetting001_btn_search','01','01',null,'≤È—Ø','system',null,sysdate,'system',sysdate);
 Insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('FeeProvisionSetting002','FeeProvisionSetting002_btn_save','01','02',null,'‰øùÂ≠ò','system',null,sysdate,'system',sysdate);
+values ('FeeProvisionSetting002','FeeProvisionSetting002_btn_save','01','02',null,'±£¥Ê','system',null,sysdate,'system',sysdate);
 Insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('FeeProvisionSetting002','FeeProvisionSetting002_btn_submit','01','02',null,'Êèê‰∫§','system',null,sysdate,'system',sysdate);
+values ('FeeProvisionSetting002','FeeProvisionSetting002_btn_submit','01','02',null,'Ã·Ωª','system',null,sysdate,'system',sysdate);
 
 
-/*‰∏öÂä°ÊµÅÁ®ãÊ®°Êùø*/
+/*“µŒÒ¡˜≥Ãƒ£∞Â*/
 delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID = 'FeeProvisionSetting002';
 Insert into SYS_WFL_BUSINESS_MODULE (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
 values ('FeeProvisionSetting002','FeeProvisionSetting001_btn_revoke','oneApproval','system',null,sysdate,'system',sysdate);
@@ -54,56 +54,57 @@ values ('FeeProvisionSetting001', '999999', 'STATUS_VALID', '03', null, null, 's
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('FeeProvisionSetting001', '999999', 'STATUS_VALID', '04', null, null, 'system', null, sysdate, 'system', sysdate, null);
 
-update BOK_SUBJECT set subject_name = 'Ë¥¶Êà∑Áª¥Êä§Ë¥π' where subject_no = '66050101';
-update BOK_SUBJECT set subject_name = '‰∏≠ÂÄ∫Ë¥¶Êà∑Áª¥Êä§Ë¥π' where subject_no = '66050103';
-update BOK_SUBJECT set subject_name = '‰∏äÊ∏ÖË¥¶Êà∑Áª¥Êä§Ë¥π' where subject_no = '66050104';
+update BOK_SUBJECT set subject_name = '’ÀªßŒ¨ª§∑—' where subject_no = '66050101';
+update BOK_SUBJECT set subject_name = '÷–’Æ’ÀªßŒ¨ª§∑—' where subject_no = '66050103';
+update BOK_SUBJECT set subject_name = '…œ«Â’ÀªßŒ¨ª§∑—' where subject_no = '66050104';
 
 delete from sys_datadict_list 
 where DICT_CODE = 'FINPROD_TYPE_TG' 
 and ITEM_CODE = 'C20';
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('FINPROD_TYPE_TG', 'C20', 'Ë¥¶Êà∑Áª¥Êä§Ë¥π', 35, '0', 'system', null, sysdate, 'system', sysdate, null);
+values ('FINPROD_TYPE_TG', 'C20', '’ÀªßŒ¨ª§∑—', 35, '0', 'system', null, sysdate, 'system', sysdate, null);
 
 delete from sys_page_dictlist 
 where PAGE_ID = 'PtlCashFlowGapAnalysis001' 
 and DICT_ID = 'FINPROD_TYPE_TG' 
 and DICT_ITEM_VAL = 'C20';
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('PtlCashFlowGapAnalysis001', '999999', 'FINPROD_TYPE_TG', 'C20', 'Â∏êÊà∑Áª¥Êä§Ë¥π', null, 'admin', null, sysdate, 'admin', sysdate, null);
+values ('PtlCashFlowGapAnalysis001', '999999', 'FINPROD_TYPE_TG', 'C20', '’ ªßŒ¨ª§∑—', null, 'admin', null, sysdate, 'admin', sysdate, null);
 
 
 
 
 
---2-Ë¥πÁî®È¢ÑÊèêËÆæÁΩÆÁõ∏ÂÖ≥Êâπ
+--2-∑—”√‘§Ã·…Ë÷√œ‡πÿ≈˙
 
-/*ÊâπÂ§ÑÁêÜ‰ªªÂä°ÔºöË¥πÁî®È¢ÑÊèêÊØèÂ≠£Â∫¶ÂàùÊâπÂ§ÑÁêÜ*/
+/*≈˙¥¶¿Ì»ŒŒÒ£∫∑—”√‘§Ã·√øºæ∂»≥ı≈˙¥¶¿Ì*/
 delete from SYS_BATCH_TASK where TASK_ID = '37';
 Insert into SYS_BATCH_TASK (TASK_ID,SYSTEM_CODE,TASK_NAME,FTASK_ID,BEAN_NAME,TASK_PRI,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('37','INV','Ë¥πÁî®È¢ÑÊèêÊØèÂ≠£Â∫¶ÂàùÊâπÂ§ÑÁêÜ',null,'feeProvisionQuarterBeginTask',1,'system',null,sysdate,'system',sysdate);
+values ('37','INV','∑—”√‘§Ã·√øºæ∂»≥ı≈˙¥¶¿Ì',null,'feeProvisionQuarterBeginTask',1,'system',null,sysdate,'system',sysdate);
 
-/*‰∫§ÊòìÁ±ªÈáëËûç‰∫ßÂìÅÈôÑÂ±ûË°® Êñ∞Â¢û‚ÄúËØÅÂà∏Ë¥¶Êà∑‚ÄùÂ≠óÊÆµ*/
+/*Ωª“◊¿‡Ω»⁄≤˙∆∑∏Ω Ù±Ì –¬‘ˆ°∞÷§»Ø’Àªß°±◊÷∂Œ*/
 alter table fin_trade_product_add add SEC_ACCT_ID VARCHAR2(50 BYTE);
-COMMENT ON COLUMN fin_trade_product_add.SEC_ACCT_ID IS 'ËØÅÂà∏Ë¥¶Êà∑';
+COMMENT ON COLUMN fin_trade_product_add.SEC_ACCT_ID IS '÷§»Ø’Àªß';
 
 
 
 
---3-Ë¥πÁî®È¢ÑÊèêËÆ°ÊèêÁêÜË¥¢Â∏êÈÖçÁΩÆ
 
-/*‰ºöËÆ°Âú∫ÊôØ*/
+--3-∑—”√‘§Ã·º∆Ã·¿Ì≤∆’ ≈‰÷√
+
+/*ª·º∆≥°æ∞*/
 delete from BOK_TABLELIST where BOOKSET_ID = '00000000000000000002' and TABLE_ID = '8201';
 Insert into BOK_TABLELIST (BOOKSET_ID,TABLE_ID,TABLE_NAME,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000002','8201','Ë¥πÁî®È¢ÑÊèê-ÊØèÊó•ËÆ°Êèê',null,'admin','003',sysdate,'admin',sysdate);
-/*‰ºöËÆ°ÂÖÉÁ¥†*/
+values ('00000000000000000002','8201','∑—”√‘§Ã·-√ø»’º∆Ã·',null,'admin','003',sysdate,'admin',sysdate);
+/*ª·º∆‘™Àÿ*/
 delete from BOK_TABLEDICT where BOOKSET_ID = '00000000000000000002' and DICT_ID = '4663';
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_CODE,TABLE_ID,DICT_NAME,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000002','4663','YTFEEAMT','8201','ÊØèÊó•ËÆ°ÊèêÈáëÈ¢ù','N','YTFEEAMT','admin','003',sysdate,'admin',sysdate);
-/*Âú∫ÊôØÂàÜÊîØÈÖçÁΩÆ*/
+values ('00000000000000000002','4663','YTFEEAMT','8201','√ø»’º∆Ã·Ω∂Ó','N','YTFEEAMT','admin','003',sysdate,'admin',sysdate);
+/*≥°æ∞∑÷÷ß≈‰÷√*/
 delete from BOK_SCENECONFIG where SCENE_NODE_ID = '001381' and BOOKSET_ID = '00000000000000000002' and NODE_VALUE = '8201';
 Insert into BOK_SCENECONFIG (SCENE_NODE_ID,FSCENE_NODEID,BOOKSET_ID,NODE_ID,NODE_VALUE,"LEVEL",REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
 values ('001381','001','00000000000000000002','ACCOUNTEVENTS','8201',1,null,'admin','003',sysdate,'admin',sysdate);
-/*Âú∫ÊôØÁßëÁõÆÂÖ≥Á≥ª*/
+/*≥°æ∞ø∆ƒøπÿœµ*/
 delete from BOK_SCENESUBJECT where SCENE_NODE_ID = '001381' and BOOKSET_ID = '00000000000000000002';
 Insert into BOK_SCENESUBJECT (BOOKSET_ID,SCENE_NODE_ID,SUBJECT_NO,CD_FLAG,FORM_ELE,BOK_DETAIL_ID,ACCOUNT_NET,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
 values ('00000000000000000002','001381','66050101','D','4663','BOK_DETAIL_ID1',null,'admin','003',sysdate,'admin',sysdate);
@@ -111,17 +112,17 @@ Insert into BOK_SCENESUBJECT (BOOKSET_ID,SCENE_NODE_ID,SUBJECT_NO,CD_FLAG,FORM_E
 values ('00000000000000000002','001381','25010101','C','4663','BOK_DETAIL_ID1',null,'admin','003',sysdate,'admin',sysdate);
 
 
-/*ÊâπÂ§ÑÁêÜ‰ªªÂä°ÔºöË¥πÁî®È¢ÑÊèêÊØèÊó•ËÆ°Êèê-Ë¥¶Âä°ÊòéÁªÜÂ§ÑÁêÜ*/
+/*≈˙¥¶¿Ì»ŒŒÒ£∫∑—”√‘§Ã·√ø»’º∆Ã·-’ÀŒÒ√˜œ∏¥¶¿Ì*/
 delete from SYS_BATCH_TASK where TASK_ID = '36';
 Insert into SYS_BATCH_TASK (TASK_ID,SYSTEM_CODE,TASK_NAME,FTASK_ID,BEAN_NAME,TASK_PRI,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('36','VAL','Ë¥πÁî®È¢ÑÊèêÊØèÊó•ËÆ°Êèê-Ë¥¶Âä°ÊòéÁªÜÂ§ÑÁêÜ',null,'accountMaintFeeBookTask',80,'system',null,sysdate,'system',sysdate);
+values ('36','VAL','∑—”√‘§Ã·√ø»’º∆Ã·-’ÀŒÒ√˜œ∏¥¶¿Ì',null,'accountMaintFeeBookTask',80,'system',null,sysdate,'system',sysdate);
 
-/*ÊâπÂ§ÑÁêÜ‰ªªÂä°ÁªÑ‰ªªÂä°ÂÖ≥ËÅîÔºöÊï¥‰Ωì‰ªªÂä°Ë∞ÉÂ∫¶ÊâπÂ§ÑÁêÜ-Ë¥πÁî®È¢ÑÊèêÊØèÊó•ËÆ°Êèê-Ë¥¶Âä°ÊòéÁªÜÂ§ÑÁêÜ*/
+/*≈˙¥¶¿Ì»ŒŒÒ◊È»ŒŒÒπÿ¡™£∫’˚ÃÂ»ŒŒÒµ˜∂»≈˙¥¶¿Ì-∑—”√‘§Ã·√ø»’º∆Ã·-’ÀŒÒ√˜œ∏¥¶¿Ì*/
 delete from SYS_BATCH_JOB where BATCH_SEQ_NO = '6f8803b3aa6fbaffe050007f01003cad' and TASK_ID = '36';
 Insert into SYS_BATCH_JOB (BATCH_SEQ_NO,TASK_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
 values ('6f8803b3aa6fbaffe050007f01003cad','36','system',null,sysdate,'system',sysdate);
 
-/*ÊâπÂ§ÑÁêÜÂåπÈÖçÂÖ≥Á≥ªË°®ÔºöË¥πÁî®È¢ÑÊèêÊØèÊó•ËÆ°Êèê*/
+/*≈˙¥¶¿Ì∆•≈‰πÿœµ±Ì£∫∑—”√‘§Ã·√ø»’º∆Ã·*/
 delete from BOK_MATCH_RLAT where MATCH_TYPE = '01' and ACCT_STANDARD = 'ALL' and SOURCE = '36' and TARGET = '21';
 Insert into BOK_MATCH_RLAT (MATCH_TYPE,ACCT_STANDARD,SOURCE,TARGET,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
 values ('01','ALL','36','21','system',null,sysdate,'system',sysdate);
@@ -129,106 +130,107 @@ delete from BOK_MATCH_RLAT where MATCH_TYPE = '03' and ACCT_STANDARD = 'QY' and 
 Insert into BOK_MATCH_RLAT (MATCH_TYPE,ACCT_STANDARD,SOURCE,TARGET,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
 values ('03','QY','36','8201','system',null,sysdate,'system',sysdate);
 
-/*Ë¥¶Â•óÈÖçÁΩÆË°® - Ë¥πÁî®È¢ÑÊèêËÆ°ÊèêÊñπÂºè*/
+/*’ÀÃ◊≈‰÷√±Ì - ∑—”√‘§Ã·º∆Ã·∑Ω Ω*/
 delete from BOK_BOOKSET_EXT where BOOKSET_ID = '00000000000000000002' and PARAM_CODE = 'TOCAL_ACCR_TYPE';
 Insert into BOK_BOOKSET_EXT (BOOKSET_ID,PARAM_CODE,PARAM_VALUE,PARAM_NAME,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000002','TOCAL_ACCR_TYPE','02','Ë¥πÁî®È¢ÑÊèêËÆ°ÊèêÊñπÂºè','01ÔºöÂå∫Èó¥ÂÄíÂáèÔºå02ÔºöÊØèÊó•Êñ∞Â¢û','system',null,sysdate,'system',sysdate);
+values ('00000000000000000002','TOCAL_ACCR_TYPE','02','∑—”√‘§Ã·º∆Ã·∑Ω Ω','01£∫«¯º‰µπºı£¨02£∫√ø»’–¬‘ˆ','system',null,sysdate,'system',sysdate);
 
-/*Êï∞ÊçÆÂ≠óÂÖ∏-ÈáëËûç‰∫ßÂìÅÁ±ªÂûãÔºöÊñ∞Â¢ûË¥πÁî®È¢ÑÊèê*/
+/* ˝æ›◊÷µ‰-Ω»⁄≤˙∆∑¿‡–Õ£∫–¬‘ˆ∑—”√‘§Ã·*/
 delete from SYS_DATADICT_LIST where DICT_CODE = 'FINPROD_TYPE' and ITEM_CODE = 'C20';
 Insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE) 
-values ('FINPROD_TYPE','C20','Ë¥πÁî®È¢ÑÊèê',41,'0','system',null,sysdate,'system',sysdate,null);
+values ('FINPROD_TYPE','C20','∑—”√‘§Ã·',41,'0','system',null,sysdate,'system',sysdate,null);
 
-/*Êï∞ÊçÆÂ≠óÂÖ∏-‰ºöËÆ°Âú∫ÊôØ‰ª£Á†ÅÔºöË¥πÁî®È¢ÑÊèê*/
+/* ˝æ›◊÷µ‰-ª·º∆≥°æ∞¥˙¬Î£∫∑—”√‘§Ã·*/
 delete from SYS_DATADICT_LIST where DICT_CODE = 'TABLE_ID' and ITEM_CODE = '8201';
 Insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE) 
-values ('TABLE_ID','8201','Ë¥πÁî®È¢ÑÊèê',514,'0','system',null,sysdate,'system',sysdate,null);
+values ('TABLE_ID','8201','∑—”√‘§Ã·',514,'0','system',null,sysdate,'system',sysdate,null);
 
 
-/*Ë¥¶Â•óÊ®°Êùø-‰ºÅ‰∏ö('ÊôÆÈÄöÂàÜÂ±Ç') start*/
-/*‰ºöËÆ°Âú∫ÊôØ*/
+/*’ÀÃ◊ƒ£∞Â-∆Û“µ('∆’Õ®∑÷≤„') start*/
+/*ª·º∆≥°æ∞*/
 delete from BOK_TABLELIST where BOOKSET_ID = '00000000000000000003' and TABLE_ID = '8201';
 Insert into BOK_TABLELIST (BOOKSET_ID,TABLE_ID,TABLE_NAME,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000003','8201','Ë¥πÁî®È¢ÑÊèê-ÊØèÊó•ËÆ°Êèê',null,'admin','003',sysdate,'admin',sysdate);
-/*‰ºöËÆ°ÂÖÉÁ¥†*/
+values ('00000000000000000003','8201','∑—”√‘§Ã·-√ø»’º∆Ã·',null,'admin','003',sysdate,'admin',sysdate);
+/*ª·º∆‘™Àÿ*/
 delete from BOK_TABLEDICT where BOOKSET_ID = '00000000000000000003' and DICT_ID = '4663';
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_CODE,TABLE_ID,DICT_NAME,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000003','4663','YTFEEAMT','8201','ÊØèÊó•ËÆ°ÊèêÈáëÈ¢ù','N','YTFEEAMT','admin','003',sysdate,'admin',sysdate);
-/*Âú∫ÊôØÂàÜÊîØÈÖçÁΩÆ*/
+values ('00000000000000000003','4663','YTFEEAMT','8201','√ø»’º∆Ã·Ω∂Ó','N','YTFEEAMT','admin','003',sysdate,'admin',sysdate);
+/*≥°æ∞∑÷÷ß≈‰÷√*/
 delete from BOK_SCENECONFIG where SCENE_NODE_ID = '001381' and BOOKSET_ID = '00000000000000000003' and NODE_VALUE = '8201';
 Insert into BOK_SCENECONFIG (SCENE_NODE_ID,FSCENE_NODEID,BOOKSET_ID,NODE_ID,NODE_VALUE,"LEVEL",REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
 values ('001381','001','00000000000000000003','ACCOUNTEVENTS','8201',1,null,'admin','003',sysdate,'admin',sysdate);
-/*Âú∫ÊôØÁßëÁõÆÂÖ≥Á≥ª*/
+/*≥°æ∞ø∆ƒøπÿœµ*/
 delete from BOK_SCENESUBJECT where SCENE_NODE_ID = '001381' and BOOKSET_ID = '00000000000000000003';
 Insert into BOK_SCENESUBJECT (BOOKSET_ID,SCENE_NODE_ID,SUBJECT_NO,CD_FLAG,FORM_ELE,BOK_DETAIL_ID,ACCOUNT_NET,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
 values ('00000000000000000003','001381','66050101','D','4663','BOK_DETAIL_ID1',null,'admin','003',sysdate,'admin',sysdate);
 Insert into BOK_SCENESUBJECT (BOOKSET_ID,SCENE_NODE_ID,SUBJECT_NO,CD_FLAG,FORM_ELE,BOK_DETAIL_ID,ACCOUNT_NET,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
 values ('00000000000000000003','001381','25010101','C','4663','BOK_DETAIL_ID1',null,'admin','003',sysdate,'admin',sysdate);
 
-/*Ë¥¶Â•óÈÖçÁΩÆË°® - Ë¥πÁî®È¢ÑÊèêËÆ°ÊèêÊñπÂºè*/
+/*’ÀÃ◊≈‰÷√±Ì - ∑—”√‘§Ã·º∆Ã·∑Ω Ω*/
 delete from BOK_BOOKSET_EXT where BOOKSET_ID = '00000000000000000003' and PARAM_CODE = 'TOCAL_ACCR_TYPE';
 Insert into BOK_BOOKSET_EXT (BOOKSET_ID,PARAM_CODE,PARAM_VALUE,PARAM_NAME,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000003','TOCAL_ACCR_TYPE','02','Ë¥πÁî®È¢ÑÊèêËÆ°ÊèêÊñπÂºè','01ÔºöÂå∫Èó¥ÂÄíÂáèÔºå02ÔºöÊØèÊó•Êñ∞Â¢û','system',null,sysdate,'system',sysdate);
+values ('00000000000000000003','TOCAL_ACCR_TYPE','02','∑—”√‘§Ã·º∆Ã·∑Ω Ω','01£∫«¯º‰µπºı£¨02£∫√ø»’–¬‘ˆ','system',null,sysdate,'system',sysdate);
 
-/*Ë¥¶Â•óÊ®°Êùø-‰ºÅ‰∏ö('ÊôÆÈÄöÂàÜÂ±Ç') end*/
+/*’ÀÃ◊ƒ£∞Â-∆Û“µ('∆’Õ®∑÷≤„') end*/
 
-/*Ë¥¶Â•óÊ®°Êùø-‰ºÅ‰∏ö('Êî∂ÁõäÂàÜÂ±Ç') start*/
-/*‰ºöËÆ°Âú∫ÊôØ*/
+/*’ÀÃ◊ƒ£∞Â-∆Û“µ(' ’“Ê∑÷≤„') start*/
+/*ª·º∆≥°æ∞*/
 delete from BOK_TABLELIST where BOOKSET_ID = '00000000000000000004' and TABLE_ID = '8201';
 Insert into BOK_TABLELIST (BOOKSET_ID,TABLE_ID,TABLE_NAME,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000004','8201','Ë¥πÁî®È¢ÑÊèê-ÊØèÊó•ËÆ°Êèê',null,'admin','003',sysdate,'admin',sysdate);
-/*‰ºöËÆ°ÂÖÉÁ¥†*/
+values ('00000000000000000004','8201','∑—”√‘§Ã·-√ø»’º∆Ã·',null,'admin','003',sysdate,'admin',sysdate);
+/*ª·º∆‘™Àÿ*/
 delete from BOK_TABLEDICT where BOOKSET_ID = '00000000000000000004' and DICT_ID = '4663';
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_CODE,TABLE_ID,DICT_NAME,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000004','4663','YTFEEAMT','8201','ÊØèÊó•ËÆ°ÊèêÈáëÈ¢ù','N','YTFEEAMT','admin','003',sysdate,'admin',sysdate);
-/*Âú∫ÊôØÂàÜÊîØÈÖçÁΩÆ*/
+values ('00000000000000000004','4663','YTFEEAMT','8201','√ø»’º∆Ã·Ω∂Ó','N','YTFEEAMT','admin','003',sysdate,'admin',sysdate);
+/*≥°æ∞∑÷÷ß≈‰÷√*/
 delete from BOK_SCENECONFIG where SCENE_NODE_ID = '001381' and BOOKSET_ID = '00000000000000000004' and NODE_VALUE = '8201';
 Insert into BOK_SCENECONFIG (SCENE_NODE_ID,FSCENE_NODEID,BOOKSET_ID,NODE_ID,NODE_VALUE,"LEVEL",REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
 values ('001381','001','00000000000000000004','ACCOUNTEVENTS','8201',1,null,'admin','003',sysdate,'admin',sysdate);
-/*Âú∫ÊôØÁßëÁõÆÂÖ≥Á≥ª*/
+/*≥°æ∞ø∆ƒøπÿœµ*/
 delete from BOK_SCENESUBJECT where SCENE_NODE_ID = '001381' and BOOKSET_ID = '00000000000000000004';
 Insert into BOK_SCENESUBJECT (BOOKSET_ID,SCENE_NODE_ID,SUBJECT_NO,CD_FLAG,FORM_ELE,BOK_DETAIL_ID,ACCOUNT_NET,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
 values ('00000000000000000004','001381','66050101','D','4663','BOK_DETAIL_ID1',null,'admin','003',sysdate,'admin',sysdate);
 Insert into BOK_SCENESUBJECT (BOOKSET_ID,SCENE_NODE_ID,SUBJECT_NO,CD_FLAG,FORM_ELE,BOK_DETAIL_ID,ACCOUNT_NET,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
 values ('00000000000000000004','001381','25010101','C','4663','BOK_DETAIL_ID1',null,'admin','003',sysdate,'admin',sysdate);
 
-/*Ë¥¶Â•óÈÖçÁΩÆË°® - Ë¥πÁî®È¢ÑÊèêËÆ°ÊèêÊñπÂºè*/
+/*’ÀÃ◊≈‰÷√±Ì - ∑—”√‘§Ã·º∆Ã·∑Ω Ω*/
 delete from BOK_BOOKSET_EXT where BOOKSET_ID = '00000000000000000004' and PARAM_CODE = 'TOCAL_ACCR_TYPE';
 Insert into BOK_BOOKSET_EXT (BOOKSET_ID,PARAM_CODE,PARAM_VALUE,PARAM_NAME,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000004','TOCAL_ACCR_TYPE','02','Ë¥πÁî®È¢ÑÊèêËÆ°ÊèêÊñπÂºè','01ÔºöÂå∫Èó¥ÂÄíÂáèÔºå02ÔºöÊØèÊó•Êñ∞Â¢û','system',null,sysdate,'system',sysdate);
+values ('00000000000000000004','TOCAL_ACCR_TYPE','02','∑—”√‘§Ã·º∆Ã·∑Ω Ω','01£∫«¯º‰µπºı£¨02£∫√ø»’–¬‘ˆ','system',null,sysdate,'system',sysdate);
 
-/*Ë¥¶Â•óÊ®°Êùø-‰ºÅ‰∏ö('Êî∂ÁõäÂàÜÂ±Ç') end*/
+/*’ÀÃ◊ƒ£∞Â-∆Û“µ(' ’“Ê∑÷≤„') end*/
 
 
 
---4-Ë¥¶Êà∑Áª¥Êä§Ë¥πÊîØ‰ªòÁêÜË¥¢Â∏êÈÖçÁΩÆ
 
-/*‰ºöËÆ°Âú∫ÊôØ*/
+--4-’ÀªßŒ¨ª§∑—÷ß∏∂¿Ì≤∆’ ≈‰÷√
+
+/*ª·º∆≥°æ∞*/
 delete from BOK_TABLELIST where BOOKSET_ID = '00000000000000000002' and TABLE_ID = '1704';
 Insert into BOK_TABLELIST (BOOKSET_ID,TABLE_ID,TABLE_NAME,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000002','1704','Ë¥πÁî®ÊîØ‰ªò-‰∫§ÊòìÂú∫ÊâÄË¥πÁî®ÊîØ‰ªò',null,'admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000002','1704','∑—”√÷ß∏∂-Ωª“◊≥°À˘∑—”√÷ß∏∂',null,'admin','003',sysdate,'admin',sysdate);
 
-/*‰ºöËÆ°ÂÖÉÁ¥†*/
+/*ª·º∆‘™Àÿ*/
 delete from BOK_TABLEDICT where BOOKSET_ID = '00000000000000000002' and TABLE_ID = '1704';
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_NAME,DICT_CODE,TABLE_ID,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000002','4369','ÊòØÂê¶ÂæÖÊëä','IS_PREPAID','1704','P','IS_PREPAID','admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000002','4369',' «∑Ò¥˝ÃØ','IS_PREPAID','1704','P','IS_PREPAID','admin','003',sysdate,'admin',sysdate);
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_NAME,DICT_CODE,TABLE_ID,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000002','4023','ËµÑÈáëË¥¶Êà∑Á±ªÂûã','ACCT_TYPE','1704','P','ACCT_TYPE','admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000002','4023','◊ Ω’Àªß¿‡–Õ','ACCT_TYPE','1704','P','ACCT_TYPE','admin','003',sysdate,'admin',sysdate);
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_NAME,DICT_CODE,TABLE_ID,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000002','1060','ÁôªËÆ∞ÊâòÁÆ°Êú∫ÊûÑ','REGIST_ORG','1704','P','REGIST_ORG','admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000002','1060','µ«º«Õ–π‹ª˙ππ','REGIST_ORG','1704','P','REGIST_ORG','admin','003',sysdate,'admin',sysdate);
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_NAME,DICT_CODE,TABLE_ID,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000002','4652','Â∏ÅÁßç','CCY','1704','P','CCY','admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000002','4652','±“÷÷','CCY','1704','P','CCY','admin','003',sysdate,'admin',sysdate);
 
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_NAME,DICT_CODE,TABLE_ID,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000002','4664','È¢ÑÊèêÈáëÈ¢ù','YTAMT','1704','N','YTAMT','admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000002','4664','‘§Ã·Ω∂Ó','YTAMT','1704','N','YTAMT','admin','003',sysdate,'admin',sysdate);
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_NAME,DICT_CODE,TABLE_ID,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000002','4665','ÂÆû‰ªòÈáëÈ¢ù','SFAMT','1704','N','SFAMT','admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000002','4665',' µ∏∂Ω∂Ó','SFAMT','1704','N','SFAMT','admin','003',sysdate,'admin',sysdate);
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_NAME,DICT_CODE,TABLE_ID,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000002','4666','ËΩßÂ∑ÆÈáëÈ¢ùÔºàÂÄüÔºâ','NETAMT_D','1704','N','NETAMT_D','admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000002','4666','‘˛≤ÓΩ∂Ó£®ΩË£©','NETAMT_D','1704','N','NETAMT_D','admin','003',sysdate,'admin',sysdate);
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_NAME,DICT_CODE,TABLE_ID,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000002','4667','ËΩßÂ∑ÆÈáëÈ¢ùÔºàË¥∑Ôºâ','NETAMT_C','1704','N','NETAMT_C','admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000002','4667','‘˛≤ÓΩ∂Ó£®¥˚£©','NETAMT_C','1704','N','NETAMT_C','admin','003',sysdate,'admin',sysdate);
 
-/*Âú∫ÊôØÂàÜÊîØÈÖçÁΩÆ*/
+/*≥°æ∞∑÷÷ß≈‰÷√*/
 delete from BOK_SCENECONFIG where SCENE_NODE_ID like '001058%' and BOOKSET_ID = '00000000000000000002';
 Insert into BOK_SCENECONFIG (SCENE_NODE_ID,FSCENE_NODEID,BOOKSET_ID,NODE_ID,NODE_VALUE,"LEVEL",REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('001058','001','00000000000000000002','ACCOUNTEVENTS','1704',1,null,'admin','003',sysdate,'admin',sysdate);
 Insert into BOK_SCENECONFIG (SCENE_NODE_ID,FSCENE_NODEID,BOOKSET_ID,NODE_ID,NODE_VALUE,"LEVEL",REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('001058001','001058','00000000000000000002','4369','N',2,null,'admin','003',sysdate,'admin',sysdate);
@@ -243,7 +245,7 @@ Insert into BOK_SCENECONFIG (SCENE_NODE_ID,FSCENE_NODEID,BOOKSET_ID,NODE_ID,NODE
 Insert into BOK_SCENECONFIG (SCENE_NODE_ID,FSCENE_NODEID,BOOKSET_ID,NODE_ID,NODE_VALUE,"LEVEL",REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('001058001002003','001058001002','00000000000000000002','1060','02',4,null,'admin','003',sysdate,'admin',sysdate);
 
 
-/*Âú∫ÊôØÁßëÁõÆÂÖ≥Á≥ª*/
+/*≥°æ∞ø∆ƒøπÿœµ*/
 delete from BOK_SCENESUBJECT where SCENE_NODE_ID like '001058%' and BOOKSET_ID = '00000000000000000002';
 Insert into BOK_SCENESUBJECT (BOOKSET_ID,SCENE_NODE_ID,SUBJECT_NO,CD_FLAG,FORM_ELE,BOK_DETAIL_ID,ACCOUNT_NET,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('00000000000000000002','001058001001001','66050101','D','4666','BOK_DETAIL_ID1',null,'admin','003',sysdate,'admin',sysdate);
 Insert into BOK_SCENESUBJECT (BOOKSET_ID,SCENE_NODE_ID,SUBJECT_NO,CD_FLAG,FORM_ELE,BOK_DETAIL_ID,ACCOUNT_NET,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('00000000000000000002','001058001001001','66050101','C','4667','BOK_DETAIL_ID2',null,'admin','003',sysdate,'admin',sysdate);
@@ -276,40 +278,40 @@ Insert into BOK_SCENESUBJECT (BOOKSET_ID,SCENE_NODE_ID,SUBJECT_NO,CD_FLAG,FORM_E
 Insert into BOK_SCENESUBJECT (BOOKSET_ID,SCENE_NODE_ID,SUBJECT_NO,CD_FLAG,FORM_ELE,BOK_DETAIL_ID,ACCOUNT_NET,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('00000000000000000002','001058001002003','66050104','D','4666','BOK_DETAIL_ID1',null,'admin','003',sysdate,'admin',sysdate);
 
 
-/*Ë¥πÁî®Âú∫ÊôØÈÖçÁΩÆË°®-È¢ÑÊèêË¥πÁî®*/
+/*∑—”√≥°æ∞≈‰÷√±Ì-‘§Ã·∑—”√*/
 delete from BOK_FEE_TABLE_SET where FINPROD_TYPE = 'C11' and PS = 'C11' and FEE_TYPE_ID = 'B13';
 Insert into BOK_FEE_TABLE_SET (FINPROD_TYPE,PS,FEE_TYPE_ID,TABLE_ID,BASE_SUBJECT_NATURE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,MONEY_ELEMENT) 
 values ('C11','C11','B13','1704','YTFY','system',null,sysdate,'system',sysdate,null);
 
 
 
-/*Ë¥¶Â•óÊ®°Êùø-‰ºÅ‰∏ö('ÊôÆÈÄöÂàÜÂ±Ç') start*/
-/*‰ºöËÆ°Âú∫ÊôØ*/
+/*’ÀÃ◊ƒ£∞Â-∆Û“µ('∆’Õ®∑÷≤„') start*/
+/*ª·º∆≥°æ∞*/
 delete from BOK_TABLELIST where BOOKSET_ID = '00000000000000000003' and TABLE_ID = '1704';
 Insert into BOK_TABLELIST (BOOKSET_ID,TABLE_ID,TABLE_NAME,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000003','1704','Ë¥πÁî®ÊîØ‰ªò-‰∫§ÊòìÂú∫ÊâÄË¥πÁî®ÊîØ‰ªò',null,'admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000003','1704','∑—”√÷ß∏∂-Ωª“◊≥°À˘∑—”√÷ß∏∂',null,'admin','003',sysdate,'admin',sysdate);
 
-/*‰ºöËÆ°ÂÖÉÁ¥†*/
+/*ª·º∆‘™Àÿ*/
 delete from BOK_TABLEDICT where BOOKSET_ID = '00000000000000000003' and TABLE_ID = '1704';
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_NAME,DICT_CODE,TABLE_ID,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000003','4369','ÊòØÂê¶ÂæÖÊëä','IS_PREPAID','1704','P','IS_PREPAID','admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000003','4369',' «∑Ò¥˝ÃØ','IS_PREPAID','1704','P','IS_PREPAID','admin','003',sysdate,'admin',sysdate);
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_NAME,DICT_CODE,TABLE_ID,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000003','4023','ËµÑÈáëË¥¶Êà∑Á±ªÂûã','ACCT_TYPE','1704','P','ACCT_TYPE','admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000003','4023','◊ Ω’Àªß¿‡–Õ','ACCT_TYPE','1704','P','ACCT_TYPE','admin','003',sysdate,'admin',sysdate);
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_NAME,DICT_CODE,TABLE_ID,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000003','1060','ÁôªËÆ∞ÊâòÁÆ°Êú∫ÊûÑ','REGIST_ORG','1704','P','REGIST_ORG','admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000003','1060','µ«º«Õ–π‹ª˙ππ','REGIST_ORG','1704','P','REGIST_ORG','admin','003',sysdate,'admin',sysdate);
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_NAME,DICT_CODE,TABLE_ID,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000003','4652','Â∏ÅÁßç','CCY','1704','P','CCY','admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000003','4652','±“÷÷','CCY','1704','P','CCY','admin','003',sysdate,'admin',sysdate);
 
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_NAME,DICT_CODE,TABLE_ID,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000003','4664','È¢ÑÊèêÈáëÈ¢ù','YTAMT','1704','N','YTAMT','admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000003','4664','‘§Ã·Ω∂Ó','YTAMT','1704','N','YTAMT','admin','003',sysdate,'admin',sysdate);
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_NAME,DICT_CODE,TABLE_ID,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000003','4665','ÂÆû‰ªòÈáëÈ¢ù','SFAMT','1704','N','SFAMT','admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000003','4665',' µ∏∂Ω∂Ó','SFAMT','1704','N','SFAMT','admin','003',sysdate,'admin',sysdate);
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_NAME,DICT_CODE,TABLE_ID,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000003','4666','ËΩßÂ∑ÆÈáëÈ¢ùÔºàÂÄüÔºâ','NETAMT_D','1704','N','NETAMT_D','admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000003','4666','‘˛≤ÓΩ∂Ó£®ΩË£©','NETAMT_D','1704','N','NETAMT_D','admin','003',sysdate,'admin',sysdate);
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_NAME,DICT_CODE,TABLE_ID,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000003','4667','ËΩßÂ∑ÆÈáëÈ¢ùÔºàË¥∑Ôºâ','NETAMT_C','1704','N','NETAMT_C','admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000003','4667','‘˛≤ÓΩ∂Ó£®¥˚£©','NETAMT_C','1704','N','NETAMT_C','admin','003',sysdate,'admin',sysdate);
 
-/*Âú∫ÊôØÂàÜÊîØÈÖçÁΩÆ*/
+/*≥°æ∞∑÷÷ß≈‰÷√*/
 delete from BOK_SCENECONFIG where SCENE_NODE_ID like '001058%' and BOOKSET_ID = '00000000000000000003';
 Insert into BOK_SCENECONFIG (SCENE_NODE_ID,FSCENE_NODEID,BOOKSET_ID,NODE_ID,NODE_VALUE,"LEVEL",REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('001058','001','00000000000000000003','ACCOUNTEVENTS','1704',1,null,'admin','003',sysdate,'admin',sysdate);
 Insert into BOK_SCENECONFIG (SCENE_NODE_ID,FSCENE_NODEID,BOOKSET_ID,NODE_ID,NODE_VALUE,"LEVEL",REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('001058001','001058','00000000000000000003','4369','N',2,null,'admin','003',sysdate,'admin',sysdate);
@@ -324,7 +326,7 @@ Insert into BOK_SCENECONFIG (SCENE_NODE_ID,FSCENE_NODEID,BOOKSET_ID,NODE_ID,NODE
 Insert into BOK_SCENECONFIG (SCENE_NODE_ID,FSCENE_NODEID,BOOKSET_ID,NODE_ID,NODE_VALUE,"LEVEL",REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('001058001002003','001058001002','00000000000000000003','1060','02',4,null,'admin','003',sysdate,'admin',sysdate);
 
 
-/*Âú∫ÊôØÁßëÁõÆÂÖ≥Á≥ª*/
+/*≥°æ∞ø∆ƒøπÿœµ*/
 delete from BOK_SCENESUBJECT where SCENE_NODE_ID like '001058%' and BOOKSET_ID = '00000000000000000003';
 Insert into BOK_SCENESUBJECT (BOOKSET_ID,SCENE_NODE_ID,SUBJECT_NO,CD_FLAG,FORM_ELE,BOK_DETAIL_ID,ACCOUNT_NET,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('00000000000000000003','001058001001001','66050101','D','4666','BOK_DETAIL_ID1',null,'admin','003',sysdate,'admin',sysdate);
 Insert into BOK_SCENESUBJECT (BOOKSET_ID,SCENE_NODE_ID,SUBJECT_NO,CD_FLAG,FORM_ELE,BOK_DETAIL_ID,ACCOUNT_NET,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('00000000000000000003','001058001001001','66050101','C','4667','BOK_DETAIL_ID2',null,'admin','003',sysdate,'admin',sysdate);
@@ -355,37 +357,37 @@ Insert into BOK_SCENESUBJECT (BOOKSET_ID,SCENE_NODE_ID,SUBJECT_NO,CD_FLAG,FORM_E
 Insert into BOK_SCENESUBJECT (BOOKSET_ID,SCENE_NODE_ID,SUBJECT_NO,CD_FLAG,FORM_ELE,BOK_DETAIL_ID,ACCOUNT_NET,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('00000000000000000003','001058001002003','25010101','D','4664','BOK_DETAIL_ID1',null,'admin','003',sysdate,'admin',sysdate);
 Insert into BOK_SCENESUBJECT (BOOKSET_ID,SCENE_NODE_ID,SUBJECT_NO,CD_FLAG,FORM_ELE,BOK_DETAIL_ID,ACCOUNT_NET,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('00000000000000000003','001058001002003','66050104','C','4667','BOK_DETAIL_ID2',null,'admin','003',sysdate,'admin',sysdate);
 Insert into BOK_SCENESUBJECT (BOOKSET_ID,SCENE_NODE_ID,SUBJECT_NO,CD_FLAG,FORM_ELE,BOK_DETAIL_ID,ACCOUNT_NET,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('00000000000000000003','001058001002003','66050104','D','4666','BOK_DETAIL_ID1',null,'admin','003',sysdate,'admin',sysdate);
-/*Ë¥¶Â•óÊ®°Êùø-‰ºÅ‰∏ö('ÊôÆÈÄöÂàÜÂ±Ç') end*/
+/*’ÀÃ◊ƒ£∞Â-∆Û“µ('∆’Õ®∑÷≤„') end*/
 
 
 
-/*Ë¥¶Â•óÊ®°Êùø-‰ºÅ‰∏ö('Êî∂ÁõäÂàÜÂ±Ç') start*/
-/*‰ºöËÆ°Âú∫ÊôØ*/
+/*’ÀÃ◊ƒ£∞Â-∆Û“µ(' ’“Ê∑÷≤„') start*/
+/*ª·º∆≥°æ∞*/
 delete from BOK_TABLELIST where BOOKSET_ID = '00000000000000000004' and TABLE_ID = '1704';
 Insert into BOK_TABLELIST (BOOKSET_ID,TABLE_ID,TABLE_NAME,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000004','1704','Ë¥πÁî®ÊîØ‰ªò-‰∫§ÊòìÂú∫ÊâÄË¥πÁî®ÊîØ‰ªò',null,'admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000004','1704','∑—”√÷ß∏∂-Ωª“◊≥°À˘∑—”√÷ß∏∂',null,'admin','003',sysdate,'admin',sysdate);
 
-/*‰ºöËÆ°ÂÖÉÁ¥†*/
+/*ª·º∆‘™Àÿ*/
 delete from BOK_TABLEDICT where BOOKSET_ID = '00000000000000000004' and TABLE_ID = '1704';
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_NAME,DICT_CODE,TABLE_ID,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000004','4369','ÊòØÂê¶ÂæÖÊëä','IS_PREPAID','1704','P','IS_PREPAID','admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000004','4369',' «∑Ò¥˝ÃØ','IS_PREPAID','1704','P','IS_PREPAID','admin','003',sysdate,'admin',sysdate);
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_NAME,DICT_CODE,TABLE_ID,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000004','4023','ËµÑÈáëË¥¶Êà∑Á±ªÂûã','ACCT_TYPE','1704','P','ACCT_TYPE','admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000004','4023','◊ Ω’Àªß¿‡–Õ','ACCT_TYPE','1704','P','ACCT_TYPE','admin','003',sysdate,'admin',sysdate);
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_NAME,DICT_CODE,TABLE_ID,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000004','1060','ÁôªËÆ∞ÊâòÁÆ°Êú∫ÊûÑ','REGIST_ORG','1704','P','REGIST_ORG','admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000004','1060','µ«º«Õ–π‹ª˙ππ','REGIST_ORG','1704','P','REGIST_ORG','admin','003',sysdate,'admin',sysdate);
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_NAME,DICT_CODE,TABLE_ID,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000004','4652','Â∏ÅÁßç','CCY','1704','P','CCY','admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000004','4652','±“÷÷','CCY','1704','P','CCY','admin','003',sysdate,'admin',sysdate);
 
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_NAME,DICT_CODE,TABLE_ID,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000004','4664','È¢ÑÊèêÈáëÈ¢ù','YTAMT','1704','N','YTAMT','admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000004','4664','‘§Ã·Ω∂Ó','YTAMT','1704','N','YTAMT','admin','003',sysdate,'admin',sysdate);
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_NAME,DICT_CODE,TABLE_ID,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000004','4665','ÂÆû‰ªòÈáëÈ¢ù','SFAMT','1704','N','SFAMT','admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000004','4665',' µ∏∂Ω∂Ó','SFAMT','1704','N','SFAMT','admin','003',sysdate,'admin',sysdate);
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_NAME,DICT_CODE,TABLE_ID,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000004','4666','ËΩßÂ∑ÆÈáëÈ¢ùÔºàÂÄüÔºâ','NETAMT_D','1704','N','NETAMT_D','admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000004','4666','‘˛≤ÓΩ∂Ó£®ΩË£©','NETAMT_D','1704','N','NETAMT_D','admin','003',sysdate,'admin',sysdate);
 Insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID,DICT_NAME,DICT_CODE,TABLE_ID,DICT_TYPE,DICT_SOURCE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('00000000000000000004','4667','ËΩßÂ∑ÆÈáëÈ¢ùÔºàË¥∑Ôºâ','NETAMT_C','1704','N','NETAMT_C','admin','003',sysdate,'admin',sysdate);
+values ('00000000000000000004','4667','‘˛≤ÓΩ∂Ó£®¥˚£©','NETAMT_C','1704','N','NETAMT_C','admin','003',sysdate,'admin',sysdate);
 
-/*Âú∫ÊôØÂàÜÊîØÈÖçÁΩÆ*/
+/*≥°æ∞∑÷÷ß≈‰÷√*/
 delete from BOK_SCENECONFIG where SCENE_NODE_ID like '001058%' and BOOKSET_ID = '00000000000000000004';
 Insert into BOK_SCENECONFIG (SCENE_NODE_ID,FSCENE_NODEID,BOOKSET_ID,NODE_ID,NODE_VALUE,"LEVEL",REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('001058','001','00000000000000000004','ACCOUNTEVENTS','1704',1,null,'admin','003',sysdate,'admin',sysdate);
 Insert into BOK_SCENECONFIG (SCENE_NODE_ID,FSCENE_NODEID,BOOKSET_ID,NODE_ID,NODE_VALUE,"LEVEL",REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('001058001','001058','00000000000000000004','4369','N',2,null,'admin','003',sysdate,'admin',sysdate);
@@ -400,7 +402,7 @@ Insert into BOK_SCENECONFIG (SCENE_NODE_ID,FSCENE_NODEID,BOOKSET_ID,NODE_ID,NODE
 Insert into BOK_SCENECONFIG (SCENE_NODE_ID,FSCENE_NODEID,BOOKSET_ID,NODE_ID,NODE_VALUE,"LEVEL",REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('001058001002003','001058001002','00000000000000000004','1060','02',4,null,'admin','003',sysdate,'admin',sysdate);
 
 
-/*Âú∫ÊôØÁßë ÁõÆÂÖ≥Á≥ª*/
+/*≥°æ∞ø∆ ƒøπÿœµ*/
 delete from BOK_SCENESUBJECT where SCENE_NODE_ID like '001058%' and BOOKSET_ID = '00000000000000000004';
 Insert into BOK_SCENESUBJECT (BOOKSET_ID,SCENE_NODE_ID,SUBJECT_NO,CD_FLAG,FORM_ELE,BOK_DETAIL_ID,ACCOUNT_NET,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('00000000000000000004','001058001001001','66050101','D','4666','BOK_DETAIL_ID1',null,'admin','003',sysdate,'admin',sysdate);
 Insert into BOK_SCENESUBJECT (BOOKSET_ID,SCENE_NODE_ID,SUBJECT_NO,CD_FLAG,FORM_ELE,BOK_DETAIL_ID,ACCOUNT_NET,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('00000000000000000004','001058001001001','66050101','C','4667','BOK_DETAIL_ID2',null,'admin','003',sysdate,'admin',sysdate);
@@ -431,33 +433,33 @@ Insert into BOK_SCENESUBJECT (BOOKSET_ID,SCENE_NODE_ID,SUBJECT_NO,CD_FLAG,FORM_E
 Insert into BOK_SCENESUBJECT (BOOKSET_ID,SCENE_NODE_ID,SUBJECT_NO,CD_FLAG,FORM_ELE,BOK_DETAIL_ID,ACCOUNT_NET,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('00000000000000000004','001058001002003','25010101','D','4664','BOK_DETAIL_ID1',null,'admin','003',sysdate,'admin',sysdate);
 Insert into BOK_SCENESUBJECT (BOOKSET_ID,SCENE_NODE_ID,SUBJECT_NO,CD_FLAG,FORM_ELE,BOK_DETAIL_ID,ACCOUNT_NET,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('00000000000000000004','001058001002003','66050104','C','4667','BOK_DETAIL_ID2',null,'admin','003',sysdate,'admin',sysdate);
 Insert into BOK_SCENESUBJECT (BOOKSET_ID,SCENE_NODE_ID,SUBJECT_NO,CD_FLAG,FORM_ELE,BOK_DETAIL_ID,ACCOUNT_NET,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('00000000000000000004','001058001002003','66050104','D','4666','BOK_DETAIL_ID1',null,'admin','003',sysdate,'admin',sysdate);
-/*Ë¥¶Â•óÊ®°Êùø-‰ºÅ‰∏ö('Êî∂ÁõäÂàÜÂ±Ç') end*/
+/*’ÀÃ◊ƒ£∞Â-∆Û“µ(' ’“Ê∑÷≤„') end*/
 
 
 
 
---5-ÊäïËµÑÁ´ØË¥πÁî®ÊîØ‰ªòÁõ∏ÂÖ≥ËÑöÊú¨
---ÊäïËµÑÁ´ØË¥πÁî®ÊîØ‰ªò
+--5-Õ∂◊ ∂À∑—”√÷ß∏∂œ‡πÿΩ≈±æ
+--Õ∂◊ ∂À∑—”√÷ß∏∂
 
-/*ËèúÂçïË°®Ôºö‰º∞ÂÄºÊ†∏ÁÆó-ÂèÇÊï∞ÁÆ°ÁêÜ-Ë¥πÁî®È¢ÑÊèêËÆæÁΩÆ*/
+/*≤Àµ•±Ì£∫π¿÷µ∫ÀÀ„-≤Œ ˝π‹¿Ì-∑—”√‘§Ã·…Ë÷√*/
 delete from SYS_MENU where menu_id = 'PRODUCT_SIDE_001_010';
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('PRODUCT_SIDE_001_010', 'MST', null, 'PRODUCT_SIDE_001', 'InvestFeePay001', 8, '02', 'Ë¥¶Êà∑Áª¥Êä§Ë¥πÊîØ‰ªò', 'system', null, sysdate, 'system', sysdate);
+values ('PRODUCT_SIDE_001_010', 'MST', null, 'PRODUCT_SIDE_001', 'InvestFeePay001', 8, '02', '’ÀªßŒ¨ª§∑—÷ß∏∂', 'system', null, sysdate, 'system', sysdate);
 
 --update SYS_PAGE set menu_id='PTL_MANAGEMENT_001_003_003' where page_id='InvestFeePay001';
---update SYS_PAGE set remark='ÊäïËµÑË¥πÁî®ÊîØ‰ªò' where page_id='InvestFeePay001';
+--update SYS_PAGE set remark='Õ∂◊ ∑—”√÷ß∏∂' where page_id='InvestFeePay001';
 update SYS_PAGE set menu_id='PRODUCT_SIDE_001_010' where page_id='InvestFeePay001';
-update SYS_PAGE set remark='Ë¥¶Êà∑Áª¥Êä§Ë¥πÊîØ‰ªò' where page_id='InvestFeePay001';
+update SYS_PAGE set remark='’ÀªßŒ¨ª§∑—÷ß∏∂' where page_id='InvestFeePay001';
 
-/*Êï∞ÊçÆ Â≠óÂÖ∏*/
-delete from SYS_DATADICT_LIST where DICT_CODE = 'INVEST_FEE_TYPE' and ITEM_CODE = '08' and INSTITUTION_CODE is null;
+/* ˝æ› ◊÷µ‰*/
+delete from SYS_DATADICT_LIST where DICT_CODE = 'INVEST_FEE_TYPE'and ITEM_CODE = '08' and INSTITUTION_CODE is null;
 insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('INVEST_FEE_TYPE', '08', 'Ë¥¶Êà∑Áª¥Êä§Ë¥π', 8, '0', 'system', null, sysdate, 'system', sysdate, null);
-/*ÁîªÈù¢Ë°®*/
+values ('INVEST_FEE_TYPE', '08', '’ÀªßŒ¨ª§∑—', 8, '0', 'system', null, sysdate, 'system', sysdate, null);
+/*ª≠√Ê±Ì*/
 delete from sys_page where PAGE_ID = 'InvestFeePay004';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('InvestFeePay004', 'PTL', '/invest/portfolio/feepay/InvestFeePay004', 'invest/portfolio/feepay/InvestFeePay004', null, null, null, '02', '01', 'ÊäïËµÑÁ´ØË¥πÁî®ÊîØ‰ªòÁ°ÆËÆ§', 'system', null, sysdate, 'system', sysdate);
-/*‰∏öÂä°ÊµÅÁ®ãÊ®°Êùø*/
+values ('InvestFeePay004', 'PTL', '/invest/portfolio/feepay/InvestFeePay004', 'invest/portfolio/feepay/InvestFeePay004', null, null, null, '02', '01', 'Õ∂◊ ∂À∑—”√÷ß∏∂»∑»œ', 'system', null, sysdate, 'system', sysdate);
+/*“µŒÒ¡˜≥Ãƒ£∞Â*/
 delete from sys_wfl_business_module where PAGE_ID = 'InvestFeePay004' and ELEMENT_ID = 'InvestFeePay004_btn_save' and INSTITUTION_CODE = 'ALL';
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
 values ('InvestFeePay004', 'InvestFeePay004_btn_save', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
@@ -465,8 +467,9 @@ delete from sys_wfl_business_module where PAGE_ID = 'InvestFeePay004' and ELEMEN
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
 values ('InvestFeePay004', 'InvestFeePay004_btn_submit', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 
---Ë¥πÁî®È¢ÑÊèê
-/*Êï∞ÊçÆÂ≠óÂÖ∏*/
+--∑—”√‘§Ã·
+/* ˝æ›◊÷µ‰*/
 delete from sys_datadict_list where DICT_CODE = 'COMMON_BUSINESS_TYPE' and ITEM_CODE = 'C20' and INSTITUTION_CODE is null;
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('COMMON_BUSINESS_TYPE', 'C20', 'Ë¥πÁî®È¢ÑÊèê', 41, '0', 'system', null, sysdate, 'system', sysdate, null);
+values ('COMMON_BUSINESS_TYPE', 'C20', '∑—”√‘§Ã·', 41, '0', 'system', null, sysdate, 'system', sysdate, null);
+
