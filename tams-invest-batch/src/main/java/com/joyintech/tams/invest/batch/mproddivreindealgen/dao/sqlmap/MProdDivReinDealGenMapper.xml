@@ -130,9 +130,9 @@
 			FP.FINPROD_ID
 		FROM FIN_PRODUCT FP
 		<where>
-			<if test="list != null and list.size > 0">
+			<if test="productIdList != null and productIdList.size > 0">
 				AND (FP.finprod_id IN
-				<foreach collection="list" item="item" index="index" open="(" close="))" separator=",">
+				<foreach collection="productIdList" item="item" index="index" open="(" close="))" separator=",">
 					<if test="(index % 999) == 998">
 						null) OR FP.finprod_id in (
 					</if>
@@ -150,15 +150,19 @@
 				INNER JOIN	FIN_OPEN_RULE
 				ON	FIN_OPEN_RULE.cash_id = FIN_CASH_INFO.cash_id
 				<where>
-					<if test="list != null and list.size > 0">
+					<if test="productIdList != null and productIdList.size > 0">
 						AND (FIN_PRODUCT.finprod_id IN
-						<foreach collection="list" item="item" index="index" open="(" close="))" separator=",">
+						<foreach collection="productIdList" item="item" index="index" open="(" close="))" separator=",">
 							<if test="(index % 999) == 998">
 								null) OR FIN_PRODUCT.finprod_id in (
 							</if>
-							#{item}
+							#{item,jdbcType = VARCHAR}
 						</foreach>
 					</if>
+					AND CALENDAR_ID in
+					<foreach collection="calList" item="item" index="index" open="(" close=")" separator=",">
+						#{item,jdbcType = VARCHAR}
+					</foreach>
 					AND FIN_OPEN_RULE.OPEN_MODE ='02'
 					AND FP.FINPROD_ID = FIN_PRODUCT.finprod_id
 				</where>
@@ -166,9 +170,10 @@
 		</where>
 	</select>
 
-	<select id="getIsHoliday" resultType="java.lang.String">
+	<select id="getIsHoliday" resultType="java.util.Map">
 		select
-		to_char(CDATE, 'yyyy-MM-dd') as HOLIDATE
+		to_char(CDATE, 'yyyy-MM-dd') as "holiDate",
+		CALENDAR_ID as "calendarID"
 		from
 		MST_HOLIDAY
 		where
@@ -179,7 +184,6 @@
 		<if test="endDate != null">
 			and CDATE &lt;= #{endDate, jdbcType=DATE}
 		</if>
-		AND CALENDAR_ID = '01'    /*中国法定节假日*/
 	</select>
 	<!-- add by mashukai TISHKBS-1640  高频开放货币型产品跑批过滤节假日 end-->
 </mapper>

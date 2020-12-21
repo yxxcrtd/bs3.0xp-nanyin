@@ -68,7 +68,7 @@ public interface MProdDivReinDealGenMapper {
      * @see
      * @since 1.0
      */
-    List<String> selectProdList(List<String> productIdList);
+    List<String> selectProdList(Map<String,Object> serchMap);
 
     /**
      * 查询是否是中国法定节假日
@@ -76,7 +76,7 @@ public interface MProdDivReinDealGenMapper {
      * @param paraMap 参数
      * @return 节假日列表
      */
-    List<String> getIsHoliday(Map<String, Object> paraMap);
+    List<Map<String,String>> getIsHoliday(Map<String, Object> paraMap);
     // add by mashukai TISHKBS-1640  高频开放货币型产品跑批过滤节假日 end
 
 }
