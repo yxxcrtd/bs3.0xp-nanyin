@@ -1212,8 +1212,9 @@ public class AllTradeCommonUtil {
         resultDto.setCreateDept(deal.getCreateDept());
         resultDto.setUpdateUser(deal.getCreateUser());
         List<String> accountTypes = baseAssetCashPositionCommMapper.selectAccountType(交易对手的母组合, stl.getMyAcctNo());
+        String payType = null;
         if (StringUtil.isNotEmpty(deal.getChlId())) {
-            String payType = baseAssetCashPositionCommMapper.getPayType(deal.getChlId(), stl.getMyAcctNo());
+            payType = baseAssetCashPositionCommMapper.getPayType(deal.getChlId(), stl.getMyAcctNo());
             if (StringUtil.isNotEmpty(payType)) {
                 resultDto.setChlFinprodId(deal.getChlId());
             }
@@ -1225,6 +1226,10 @@ public class AllTradeCommonUtil {
                     && !DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket())
                     && !DictCodeList.交易平台_外汇交易中心.getValue().equals(deal.getTradePlat())
                     && accountTypes.contains(DictCodeListExt1.资金账户类型_产品托管户.getValue()))
+                || (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(deal.getFinprodType2())
+                && !DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket())
+                && !DictCodeList.交易平台_外汇交易中心.getValue().equals(deal.getTradePlat())
+                && StringUtil.isNotEmpty(payType))
                 || (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(deal.getFinprodType2())
                     && !DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket())
                     && DictCodeList.交易平台_外汇交易中心.getValue().equals(deal.getTradePlat()))
