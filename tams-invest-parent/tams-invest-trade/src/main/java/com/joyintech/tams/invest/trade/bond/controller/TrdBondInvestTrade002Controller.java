@@ -661,31 +661,31 @@ public class TrdBondInvestTrade002Controller extends BaseController {
             }
             // 行权方式check add by renping 20191020 end
             //外部交易对手买入，校验持仓+本金 < 融资金额或者发行金额
-            if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue()) &&
-                    StringUtil.equals(dto.getTrdInvestPersonInfo().getIsOutTrade(), "S")){
-                // 调用基础组件.【组合可用现金和实际现金查询更新组件.查询持仓(可用)】
-                Map<String, Object> paramMap = new HashMap<String, Object>();
-                paramMap.put("portfolioId", dto.getPortfolioId());
-                paramMap.put("tradeDate", DateUtil.format(dto.getTradeDate()));
-                paramMap.put("ccy", dto.getCcy());
-                paramMap.put("calendarId", dto.getCalendarId());
-                paramMap.put("chlId", dto.getChlId());
-                paramMap.put("finprodId", dto.getFinprodId());
-                //获得资产维度的持仓
-                Map<String, Object>  resultMap = bussTrdAvailableCashQueryService.getFinAvaPosition(paramMap);
-
-                BigDecimal position = new BigDecimal((String) resultMap.get("POSITION"));
-                //融资金额
-                BigDecimal issueAmt = new BigDecimal((String)resultMap.get("ISSUEAMT"));
-                position = ArithmeticUtil.doAdd(position, dto.getTradeAmt());
-                //资产 融资金额、发行金额
-                if (issueAmt.compareTo(position) < 0) {
-                    if (StringUtil.isNotBlank(confirmMsg)) {
-                        confirmMsg += changeLineMark;
-                    }
-                    confirmMsg += getMessage("TRD_C_0005");
-                }
-            }
+//            if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue()) &&
+//                    StringUtil.equals(dto.getTrdInvestPersonInfo().getIsOutTrade(), "S")){
+//                // 调用基础组件.【组合可用现金和实际现金查询更新组件.查询持仓(可用)】
+//                Map<String, Object> paramMap = new HashMap<String, Object>();
+//                paramMap.put("portfolioId", dto.getPortfolioId());
+//                paramMap.put("tradeDate", DateUtil.format(dto.getTradeDate()));
+//                paramMap.put("ccy", dto.getCcy());
+//                paramMap.put("calendarId", dto.getCalendarId());
+//                paramMap.put("chlId", dto.getChlId());
+//                paramMap.put("finprodId", dto.getFinprodId());
+//                //获得资产维度的持仓
+//                Map<String, Object>  resultMap = bussTrdAvailableCashQueryService.getFinAvaPosition(paramMap);
+//
+//                BigDecimal position = new BigDecimal((String) resultMap.get("POSITION"));
+//                //融资金额
+//                BigDecimal issueAmt = new BigDecimal((String)resultMap.get("ISSUEAMT"));
+//                position = ArithmeticUtil.doAdd(position, dto.getTradeAmt());
+//                //资产 融资金额、发行金额
+//                if (issueAmt.compareTo(position) < 0) {
+//                    if (StringUtil.isNotBlank(confirmMsg)) {
+//                        confirmMsg += changeLineMark;
+//                    }
+//                    confirmMsg += getMessage("TRD_C_0005");
+//                }
+//            }
 
             if (StringUtil.isNotBlank(confirmMsg)) {
                 ajaxResult = new AjaxResult();
