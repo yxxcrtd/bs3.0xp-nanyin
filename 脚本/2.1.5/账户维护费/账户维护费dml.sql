@@ -83,6 +83,7 @@ Insert into SYS_BATCH_TASK (TASK_ID,SYSTEM_CODE,TASK_NAME,FTASK_ID,BEAN_NAME,TAS
 values ('37','INV','费用预提每季度初批处理',null,'feeProvisionQuarterBeginTask',1,'system',null,sysdate,'system',sysdate);
 
 /*交易类金融产品附属表 新增“证券账户”字段*/
+alter table fin_trade_product_add drop column SEC_ACCT_ID;
 alter table fin_trade_product_add add SEC_ACCT_ID VARCHAR2(50 BYTE);
 COMMENT ON COLUMN fin_trade_product_add.SEC_ACCT_ID IS '证券账户';
 
