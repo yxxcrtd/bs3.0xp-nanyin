@@ -128,10 +128,19 @@ public class MProdDivReinDealGenTask extends BatchBaseService{
             String executeDateDtr = DateUtil.format(executeDate);
             dateMap.put("startDate",executeDate);
             dateMap.put("endDate",executeDate);
-            List<String> holiday = mProdDivReinDealGenMapper.getIsHoliday(dateMap);
-            if(holiday != null && holiday.contains(executeDateDtr)){
+            List<String> calList = new ArrayList<String>();
+            List<Map<String,String>> holiday = mProdDivReinDealGenMapper.getIsHoliday(dateMap);
+            for (Map<String,String> map : holiday){
+                if (StringUtil.equals(executeDateDtr,map.get("holiDate"))){
+                    calList.add(map.get("calendarID"));
+                }
+            }
+            if(calList != null && calList.size() > 0){
                 logger.info("系统参数控制货币型高频开放产品节假日不自动进行红利再投");
-                List<String> productIdList = mProdDivReinDealGenMapper.selectProdList(this.getProductIdList());
+                Map<String,Object> serchMap =new HashMap<String,Object>();
+                serchMap.put("productIdList",this.getProductIdList());
+                serchMap.put("calList",calList);
+                List<String> productIdList = mProdDivReinDealGenMapper.selectProdList(serchMap);
                 if (productIdList.size() < 1){
                     return null;
                 }else {
