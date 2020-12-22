@@ -197,6 +197,7 @@
         SELECT
             T1.CCY ccy,
             T1.CHL_ID chlId,
+        <if test="assetType == PINAN_ASSET_TYPE_F01 ">
             T2.ASSET_TYPE,
             T3.FINPROD_ID finprodId,
             T3.FINPROD_MARKET_ID finprodMarketId,
@@ -205,7 +206,6 @@
             DECODE(T2.ASSET_TYPE, #{PINAN_ASSET_TYPE_F01}, SUM(NVL(T1.ENTRUST_NUM * 100, 0) - NVL(T4.FINISHED_AMT * 100, 0)),
             #{PINAN_ASSET_TYPE_F10}, SUM(NVL(T1.ENTRUST_NUM * 100, 0) - NVL(T4.FINISHED_AMT * 100, 0)),
             SUM(NVL(T1.ENTRUST_AMT, T1.ENTRUST_NUM) - NVL(T4.FINISHED_AMT, 0))) unfinishedAmt,
-        <if test="assetType == PINAN_ASSET_TYPE_F01 ">
             T1.PS ps,
             T1.TRADE_PLAT tradePlat,
             T11.TYPE_6 type6,
@@ -311,7 +311,7 @@
         <if test="assetType == PINAN_ASSET_TYPE_F01 ">
             , T1.PS, T1.TRADE_PLAT, T2.SETTLE_SPREED, T11.TYPE_6, T11.TYPE_7
         </if>
-        <if test="ssetType == PINAN_ASSET_TYPE_F06">
+        <if test="assetType == PINAN_ASSET_TYPE_F06">
             , T1.PS, T11.TYPE_6, T1.CHL_ID, T10.FINPROD_ABBR
         </if>
         <if test="assetType == PINAN_ASSET_TYPE_F10 ">
