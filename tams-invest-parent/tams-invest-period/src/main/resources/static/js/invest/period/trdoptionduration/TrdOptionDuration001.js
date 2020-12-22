@@ -130,6 +130,10 @@
             Joyin.warn(JoyinUtil.getMessage('已生效数据不支持到期行权'));
             return;
         }
+        if(object.statusValidStr == '撤销' ){
+            Joyin.warn(JoyinUtil.getMessage('已撤销数据不能进行到期行权操作'));
+            return;
+        }
         if(object.mdateStr != object.sysDate ){
             Joyin.warn(JoyinUtil.getMessage('未到到期日'));
             return;
@@ -160,6 +164,12 @@
             Joyin.warn(JoyinUtil.getMessage('已生效数据不支持提前行权'));
             return;
         }
+
+        if(object.statusValidStr == '撤销' ){
+            Joyin.warn(JoyinUtil.getMessage('已撤销数据不能进行提前行权操作'));
+            return;
+        }
+
         if(object.exerciseTypeStr == '欧式' ){
             Joyin.warn(JoyinUtil.getMessage('行权方式 欧式 不支持提前行权'));
             return;
@@ -185,6 +195,10 @@
         }
         if(object.statusValidStr == '有效' ){
             Joyin.warn(JoyinUtil.getMessage('已生效数据不支持放弃行权'));
+            return;
+        }
+        if(object.statusValidStr == '撤销' ){
+            Joyin.warn(JoyinUtil.getMessage('已撤销数据不能进行放弃行权操作'));
             return;
         }
         if(object.optFeePayType == '02' ){
