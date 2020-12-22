@@ -215,7 +215,7 @@
                     resetTableData();
                     needInit = false;
                 }
-            } 
+            }
         },
         data : []
     }
@@ -288,7 +288,7 @@
     });
     /**
      * 定义数据表格
-     * 
+     *
      */
     var option = {
         searchOnInit : true,
@@ -619,7 +619,7 @@
                                 if (result.data) {
                                     finAssetIntInfoList = result.data;
                                     /* 计算 数量总数 */
-                                    sumRegistShare = 0;                                    
+                                    sumRegistShare = 0;
                                     for (var i = 0; i < finAssetIntInfoList.length; i++) {
                                         sumRegistShare = JoyinMath.doAdd(sumRegistShare, finAssetIntInfoList[i].registShare);
                                         /*面值*/
@@ -630,7 +630,7 @@
                                     var unitCprice = JoyinMath.doDiv(tradeAmt, sumRegistShare, 12, JoyinMath.ROUND_HALF_UP);
                                     $("#unitCprice").val(unitCprice);
                                     $("#unitCprice").trigger("blur");
-                                    
+
                                 }
                             });
         } else {
@@ -843,7 +843,7 @@
         if (assetType == FUND_ASSET_TYPE_F01 && bonusMode == BONUS_MODE_02) {
             // 权益登记日 除权日 权益登记日份额 单位分红净值不显示
 //            $('.currency').hide();
-            if(pageModel==PAGE_MODEL_NEW){
+            if(pageModel==PAGE_MODEL_NEW&&!isFromCheck){
                 $("#exRightsDate").val(sysDate).trigger("change");
                 $("#registDate").val(sysDate).trigger("change");
                 $("#exRightsDate").attr("disabled",true);
@@ -860,7 +860,7 @@
         else if(assetType == FUND_ASSET_TYPE_F01 && bonusMode == BONUS_MODE_01){
         	$('.currency').show();
             triValueChange('tradeAmt');
-            if(pageModel==PAGE_MODEL_NEW){
+            if(pageModel==PAGE_MODEL_NEW&&!isFromCheck){
                 $("#exRightsDate").val(sysDate).trigger("change");
                 $("#registDate").val(sysDate).trigger("change");
                 $("#exRightsDate").attr("disabled",true);
@@ -871,12 +871,16 @@
         	triValueChange('unitCprice');
             // 展示联动区域
             $('.currency').show();
-            if(pageModel==PAGE_MODEL_NEW){
+            if(pageModel==PAGE_MODEL_NEW&&!isFromCheck){
                 $("#exRightsDate").val('').trigger("change");
                 $("#registDate").val('').trigger("change");
-                 $("#exRightsDate").attr("disabled",false);
-                 $("#registDate").attr("disabled",false);
+                $("#exRightsDate").attr("disabled",false);
+                $("#registDate").attr("disabled",false);
             }
+        }
+        if(isFromCheck&&isFromCheck=='true'){
+            $("#exRightsDate").attr("disabled",true);
+            $("#registDate").attr("disabled",true);
         }
      // 判断分红类型
         if (bonusMode == BONUS_MODE_01) {

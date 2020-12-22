@@ -99,6 +99,8 @@ public class TrdFundDuration002Controller extends BaseController {
         model.addAttribute("BONUS_MODE_02", DictCodeList.分红方式_红利再投.getValue());
         model.addAttribute("BONUS_MODE_01", DictCodeList.分红方式_现金分红.getValue());
         String statusValid = (String)param.get("statusValid");
+        String isFromCheck = (String)param.get("isFromCheck");
+        model.addAttribute("isFromCheck",isFromCheck);
         TrdFundDuration001Dto dto = null;
 //        资金后台
         model.addAttribute("fromCheck", false);
