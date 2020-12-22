@@ -86,6 +86,8 @@ public class ProductReportProcessorService {
         param.put("startDate", DateUtil.getFirstDay(bookDate));
         // 月末
         param.put("endDate", bookDate);
+        // 下月初
+        param.put("nextMonthDate", DateUtil.addDay(bookDate,1));
         // 理财产品
         param.put("finprodType", DictCodeListExt1.金融产品类型_理财产品.getValue());
         // 入账日
