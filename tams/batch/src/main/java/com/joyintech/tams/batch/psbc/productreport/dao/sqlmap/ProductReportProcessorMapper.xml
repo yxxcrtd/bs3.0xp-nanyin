@@ -145,7 +145,7 @@
             cpb.PROFIT_TYPE profitType,
             cpb.TERMTYPE termtype,
             cpb.RISK_LEVEL riskLevel,
-            cpb.SALETARGET saleTarget,
+            <!--cpb.SALETARGET--> psp.INVESTOR_TYPE saleTarget,
             cpb.INVEST_ARAE investArae,
             cpb.OPERATE_MODE operateMode,
             cpb.CMMODE cmMode,
@@ -236,6 +236,7 @@
                 AND cpes.STATUS_DATE <![CDATA[>=]]> #{startDate,jdbcType=DATE}
         LEFT JOIN REP_PROD_DECLARE rpd ON rpd.REP_FINPROD_ID  = fp.FINPROD_ID
         LEFT JOIN SYS_INSTITUTION si ON si.INSTITUTION_CODE = cpb.ORG_CODE
+        left join PRD_SALE_PARAM psp on psp.FINPROD_ID = fp.FINPROD_ID
         WHERE
             fp.FINPROD_TYPE2 = #{finprodType,jdbcType=VARCHAR}
             AND fp.FINPROD_ID = #{bookSetId,jdbcType=VARCHAR}

@@ -141,9 +141,6 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
             //第一步 匹配底层资产映射表
             if(null!=botAssetMapList&&!botAssetMapList.isEmpty()){
                 for(RskValtblPrtBotassetMapDto entityRskValtblPrtBotassetMap:botAssetMapList){
-                    if(entity.getSubCode().startsWith("120404")){
-                        System.out.println(entity.getSubCode());
-                    }
                     if(StringUtil.equals(entity.getSubCode(), entityRskValtblPrtBotassetMap.getSubCode())){
                         isAddSubBotMap= false;
                         if(StringUtil.isNotEmpty(entityRskValtblPrtBotassetMap.getFinprodId())){
@@ -195,15 +192,18 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
             }
             // add by QuJianZhong 区分债券交易场所 20200501 end
             //第二部  匹配标的金融产品信息
-            if(flag&&null!=finProductList&&!finProductList.isEmpty()){
-                for(FinProduct entityFinProduct:finProductList){
-                 //匹配标的金融产品信息的交易场所add by lilan  20200528 
-                 String tradeMarket=entityFinProduct.getFinprodId().substring(entityFinProduct.getFinprodId().length() - 2);
-                 
-                    if((StringUtil.equals(entity.getSubName(), entityFinProduct.getFinprodName())
-                        ||StringUtil.equals(entity.getSubName(), entityFinProduct.getFinprodAbbr()))
-                        && StringUtil.equals(actMarketCode, tradeMarket)
-                        && entity.getSubCode().length() >8){/*非四级科目对应行，都不能有资产代码*/
+            if(flag&&null!=finProductList&&!finProductList.isEmpty()) {
+                for (FinProduct entityFinProduct : finProductList) {
+                    //匹配标的金融产品信息的交易场所add by lilan  20200528
+                    String tradeMarket = entityFinProduct.getFinprodId().substring(entityFinProduct.getFinprodId().length() - 2);
+
+                    if ((StringUtil.equals(entity.getSubName(), entityFinProduct.getFinprodName())
+                            || StringUtil.equals(entity.getSubName(), entityFinProduct.getFinprodAbbr()))
+                            && (StringUtil.equals(actMarketCode, tradeMarket) ||
+                            // add by jiangpeng on 20201221 非债券资产
+                            (StringUtil.isEmpty(actMarketCode)
+                                    && !DictCodeListExt1.金融产品类型_债券.getValue().equals(entityFinProduct.getFinprodType2())))
+                            && entity.getSubCode().length() > 8) {/*非四级科目对应行，都不能有资产代码*/
                         flag = false;
                         entity.setAssetSource(DictCodeListExt1.估值资产来源_系统内.getValue());
                         entity.setFinprodId(entityFinProduct.getFinprodId());
