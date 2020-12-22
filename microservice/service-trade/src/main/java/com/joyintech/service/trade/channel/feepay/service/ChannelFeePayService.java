@@ -145,4 +145,7 @@ public class ChannelFeePayService extends BaseService<ChannelFeePayDto> {
         }
         return channelFeePayMapper.findChannelFeePaied(param);
     }
+    public String getCollectType(Map<String, Object> map) {
+        return channelFeePayMapper.getCollectType(map);
+    }
 }

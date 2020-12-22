@@ -350,4 +350,10 @@ public class ChannelFeePay002Service extends BaseService<ChannelFeePay002Dto> im
         return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/ChannelFeePay/findChannelFeePaied", pageParam,
                 String.class);
     }
+
+	public String getCollectType(String finprodMarketId) {
+    	Map<String, Object> pageParam = new HashMap<>();
+    	pageParam.put("finprodMarketId", finprodMarketId);
+        return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/ChannelFeePay/getCollectType", pageParam, String.class);
+    }
 }
