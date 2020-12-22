@@ -1,0 +1,4 @@
+/*风险试算违规增加参数控制 add by jqq 20201222 start*/
+DELETE FROM SYS_PARA sp where sp.para_code ='IS_RISKMATH_SOFTCONTROL';
+INSERT INTO SYS_PARA (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES('RSK', 'IS_RISKMATH_SOFTCONTROL', '01', NULL, NULL, '风险试算是否软控(01:是 02:否)', 'system', NULL, sysdate, 'system', sysdate);
+/*风险试算违规增加参数控制 add by jqq 20201222 end*/
