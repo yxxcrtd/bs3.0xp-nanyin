@@ -629,6 +629,15 @@
                         }
                     }
                     table.reload({data:results});
+
+                    //如果风险试算是软控，存在违规的时候，在点击风险试算按钮的时候就给出提示 add by jqq 20201216 start
+                    if(IS_RISKMATH_SOFTCONTROL == '01'){
+                        if(forbidFlag){
+                            Joyin.alert("存在违规指标，请注意",3);
+                        }
+                    }
+                    //如果风险试算是软控，存在违规的时候，在点击风险试算按钮的时候就给出提示 add by jqq 20201216 end
+
                 }, true);
             },true);
         }else{
@@ -676,6 +685,13 @@
                     //把总结论也放在列表中隐藏以方便保存到库中
                     var cacheData = table.getRow(0, true);
                     cacheData.totalConclu = resultArr.body.rskStatus;
+                    //如果风险试算是软控，存在违规的时候，在点击风险试算按钮的时候就给出提示 add by jqq 20201216 start
+                    if(IS_RISKMATH_SOFTCONTROL == '01'){
+                        if(forbidFlag){
+                            Joyin.alert("存在违规指标，请注意",3);
+                        }
+                    }
+                    //如果风险试算是软控，存在违规的时候，在点击风险试算按钮的时候就给出提示 add by jqq 20201216 end
 
                 },true);
             },true);
@@ -747,7 +763,7 @@
             var counterType=findCounterType(paramConterId);
             var portfolioIdRisk = checkPortfolioIdRisk(portfolioName);
             if(counterType != 'N' && portfolioIdRisk != 'N'){
-                Joyin.alert(JoyinUtil.getMessage('ETR_X_013'),2);
+                Joyin.alert(JoyinUtil.getMessage('ETR_X_013'),3);
                 return ;
             }            
         }
@@ -757,6 +773,9 @@
 //                Joyin.alert(JoyinUtil.getLabel('BaseRiskMathComm.riskCheck')+mes,2);
 //                return;
 //            }else 
+            if(IS_RISKMATH_SOFTCONTROL == '01'){
+                return '';
+            }else{
             if($('#riskTrialSpan').html() == JoyinUtil.getLabel('BaseRiskMathComm.violation') && risk_math_switch=='Y'){
                 //判断是否符合分控场景
                 /*if(checkDiffSubmitScene()) {
@@ -776,6 +795,7 @@
                 return '';
             }else{
                 return '';
+                }
             }
         }
     }

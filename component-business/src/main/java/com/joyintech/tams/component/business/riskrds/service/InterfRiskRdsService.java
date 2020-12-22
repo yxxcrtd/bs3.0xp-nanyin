@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory; 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -203,11 +204,25 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                     return getAjaxResult(returnCli,returnCli.getHead().get(InterfUtil.stdrtninfo).toString(),MessageType.错误消息);
                 }else {
                     String statusRisk=StringUtil.isNotEmpty(returnCli.getBody())?StringUtil.isNotEmpty(returnCli.getBody().get("rskStatus"))?returnCli.getBody().get("rskStatus").toString():null:null;
-                    if(StringUtil.equals(statusRisk, BussinessDictCodeListRds.指标状态_禁止.getValue())){
-                        return getAjaxResult(returnCli,InterfUtil.FORBID_MES,MessageType.错误消息);
+
+                    //增加软控硬控开关 add by jqq 20201216 start
+                    String institutionCode = "";
+                    if(MultilevelDataAuthorityUtil.isEnabled()){
+                        institutionCode =  MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
                     }
+                    String isSoft = CacheUtil.getSpecialSysParam("IS_RISKMATH_SOFTCONTROL", institutionCode);
+                    if(StringUtil.equals(statusRisk, BussinessDictCodeListRds.指标状态_禁止.getValue())){
+                        if("02".equals(isSoft)){//硬控
+                            return getAjaxResult(returnCli,InterfUtil.FORBID_MES,MessageType.错误消息);
+                        }
+                        return null;
+                    }
+                    //增加软控硬控开关 add by jqq 20201216 end
+//                    if(StringUtil.equals(statusRisk, BussinessDictCodeListRds.指标状态_禁止.getValue())){
+//                        return getAjaxResult(returnCli,InterfUtil.FORBID_MES,MessageType.错误消息);
+//                    }
                 }
-            } 
+            }
         }
         return null;
     }

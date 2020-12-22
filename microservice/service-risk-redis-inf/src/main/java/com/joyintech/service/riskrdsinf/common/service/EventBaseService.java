@@ -15,6 +15,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
 
+import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.service.riskrdsinf.core.exception.InterfException;
 import com.joyintech.service.riskrdsinf.core.util.InfMapValUtil;
@@ -1944,9 +1945,25 @@ public abstract class EventBaseService<V> extends InfBaseService<V> {
         	});
         }*/
         if (CommonUtil.isType(rskStatus, BussinessDictCodeListRds.指标状态_禁止)) {
-            setRtnCode(response, InfDictCodeList.信息码_提示.getValue(), 3);
-            setRtnMsg(response, "风险指标违规");
-            return 1;
+
+            //增加软控硬控开关 add by jqq 20201216 start
+            String institutionCode = "";
+            if(MultilevelDataAuthorityUtil.isEnabled()){
+                institutionCode =  MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
+            }
+            String isSoft = CacheUtil.getSpecialSysParam("IS_RISKMATH_SOFTCONTROL", institutionCode);
+            if("02".equals(isSoft)){//硬控
+                setRtnCode(response, InfDictCodeList.信息码_提示.getValue(), 3);
+                setRtnMsg(response, "风险指标违规");
+                return 1;
+            }else{
+                return 0;
+            }
+            //增加软控硬控开关 add by jqq 20201216 end
+
+//            setRtnCode(response, InfDictCodeList.信息码_提示.getValue(), 3);
+//            setRtnMsg(response, "风险指标违规");
+//            return 1;
         }
         if (CommonUtil.isType(rskStatus, BussinessDictCodeListRds.指标状态_异常_除0)) {
             //----update by zxjjpei 20200320 暂处理为返回0 start----
