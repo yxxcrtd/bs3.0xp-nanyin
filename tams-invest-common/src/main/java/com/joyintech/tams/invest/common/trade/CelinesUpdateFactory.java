@@ -461,7 +461,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                   todocredit_amt =model.getTradeAmt() == null?BigDecimal.ZERO : model.getTradeAmt(); 
         }
         else if (StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_利率互换.getValue())){
-            todocredit_amt=model.getShareAmt();
+            todocredit_amt=model.getShareAmt() == null?BigDecimal.ZERO:model.getShareAmt();
         }
         /*else if(StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_存款.getValue())||StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue())||StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue())||StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())||StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
             todocredit_amt =model.getPrinAmt();//本金金额
@@ -472,7 +472,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
         }*/
         else{
             //待处理额度=参数.金融产品交易DTO.交易本金*rskDTO.风险权数
-            todocredit_amt=model.getPrinAmt();
+            todocredit_amt = model.getPrinAmt() == null? BigDecimal.ZERO : model.getPrinAmt();
         } 
         if(rskDTO != null && (rskDTO.getRiskWeight() != null)){
             todocredit_amt=todocredit_amt.multiply(rskDTO.getRiskWeight());
