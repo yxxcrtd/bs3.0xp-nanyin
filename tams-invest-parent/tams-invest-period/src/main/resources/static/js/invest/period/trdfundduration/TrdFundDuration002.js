@@ -56,7 +56,7 @@
             width : "200",
             // edit : true,
             title : 'IntDetailDuration.unitCprice',
-            type : 'money', digit: 4,
+            type : 'money', digit: 8,
             sortable : false
         }
         // 分红金额
