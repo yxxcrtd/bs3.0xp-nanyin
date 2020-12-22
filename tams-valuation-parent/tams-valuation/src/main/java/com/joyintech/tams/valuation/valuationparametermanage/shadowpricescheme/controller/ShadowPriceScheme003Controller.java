@@ -219,17 +219,35 @@ public class ShadowPriceScheme003Controller extends BaseController {
             List<ShadowPriceScheme002Dto> list = ShadowPriceScheme002Service.checkShadowPriceDetial(
                 params);
             if (CollectionUtils.isNotEmpty(list)) {
-                msg = "影子定价明细表中已存在" + "["
-                      + SysDataUtil.getNameFromDataDict(DictCode.证券品种, dto.getSecType()) + "]_["
-                      + SysDataUtil.getNameFromDataDict(DictCode.估值交易市场, dto.getTradeMarket())
-                      + "]_[";
+                if(OPERATE_TYPE_SUBMIT.equals(operateType)){
+                    msg = "影子定价明细表中已存在" + "["
+                            + SysDataUtil.getNameFromDataDict(DictCode.证券品种, dto.getSecType()) + "]_["
+                            + SysDataUtil.getNameFromDataDict(DictCode.估值交易市场, dto.getTradeMarket())
+                            + "]_[";
 
-                if (StringUtil.isNotEmpty(dto.getSecDetailType())) {
-                    msg += SysDataUtil.getNameFromDataDict(DictCode.债券类型, dto.getSecDetailType())
-                           + "]_[";
+                    if (StringUtil.isNotEmpty(dto.getSecDetailType())) {
+                        msg += SysDataUtil.getNameFromDataDict(DictCode.债券类型, dto.getSecDetailType())
+                                + "]_[";
+                    }
+                    msg += dto.getVdate() + "]的数据，请确保数据唯一性!";
+                    return new AjaxResult(msg, MessageType.错误消息);
+                }else if(OPERATE_TYPE_SAVE.equals(operateType)){
+                    for (ShadowPriceScheme002Dto dtos : list){
+                        if(StringUtil.isNotEmpty(dto.getSchemeDetailId()) && !StringUtil.equals(dtos.getSchemeDetailId(),dto.getSchemeDetailId())){
+                            msg = "影子定价明细表中已存在" + "["
+                                    + SysDataUtil.getNameFromDataDict(DictCode.证券品种, dto.getSecType()) + "]_["
+                                    + SysDataUtil.getNameFromDataDict(DictCode.估值交易市场, dto.getTradeMarket())
+                                    + "]_[";
+
+                            if (StringUtil.isNotEmpty(dto.getSecDetailType())) {
+                                msg += SysDataUtil.getNameFromDataDict(DictCode.债券类型, dto.getSecDetailType())
+                                        + "]_[";
+                            }
+                            msg += dto.getVdate() + "]的数据，请确保数据唯一性!";
+                            return new AjaxResult(msg, MessageType.错误消息);
+                        }
+                    }
                 }
-                msg += dto.getVdate() + "]的数据，请确保数据唯一性!";
-                return new AjaxResult(msg, MessageType.错误消息);
             }
             // 修改验证
             if (OPERATE_TYPE_SAVE.equals(dto.getOperateType()) && !bindingResult.hasErrors()) {

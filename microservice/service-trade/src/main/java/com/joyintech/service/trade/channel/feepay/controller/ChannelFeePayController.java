@@ -78,5 +78,9 @@ public class ChannelFeePayController {
     public String findChannelFeePaied(@RequestBody Map<String, Object> param) {
         return channelFeePayService.findChannelFeePaied(param);
     }
+    @PostMapping("getCollectType")
+    public String getCollectType(@RequestBody Map<String, Object> map) {
+        return channelFeePayService.getCollectType(map);
+    }
 
 }

@@ -78,6 +78,17 @@ $(function() {
         var dataPtl = $("#portfolioId").find("option:selected").data("data");
         var chlId = dataChl.object ? dataChl.object || '' : '';
         var ptlId = dataPtl.id ? dataPtl.id || '' : '';
+        var finprodMarketId = $("#finprodMarketId").val();
+      //add by yujiaping 2020-12-22 TISHKBS-1617 【合作资产费用支付管理】所选合作资产费用收取方式设置为“回款前扣除”，计提结束日清空、置灰，不可填start
+        Joyin.ajax(basePath + "invest/trade/channel/feepay/ChannelFeePay002/getCollectType", {finprodMarketId : finprodMarketId},
+                function(result){
+                    if (result == '01') {
+                    	$('#mdate').val('').trigger('change').attr('disabled',true);                      
+                    }else{
+                    	$('#mdate').attr('disabled',false);   
+                    }
+                });
+        //add by yujiaping 2020-12-22 TISHKBS-1617 【合作资产费用支付管理】所选合作资产费用收取方式设置为“回款前扣除”，计提结束日清空、置灰，不可填end
         if ($("#finprodMarketId").val() && $("#mdate").val() && $("#portfolioId").val()) {
             $("#vdate").val('');
             $("#settleDate").val($("#mdate").val());
@@ -95,7 +106,7 @@ $(function() {
                         $("#tradeAmt").val(result.tradeAmt).trigger('blur');
                         $("#ccy").val(result.ccy).trigger('change');
                     }
-                });
+                });            
         }
     }
     /**

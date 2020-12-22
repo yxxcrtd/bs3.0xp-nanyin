@@ -60,7 +60,7 @@ public class ChannelFeePay002Dto extends ChannelFeePayDto implements ProcessEnti
         return DateUtil.format(super.getMdate());
     }
 
-    @NotEmpty(fieldName = "计提结束日")
+   // @NotEmpty(fieldName = "计提结束日")
     public Date getMdate() {
         return super.getMdate();
     }
