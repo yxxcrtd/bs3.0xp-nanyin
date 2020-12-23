@@ -442,7 +442,20 @@
 		to_date(f_issue_oef_startdateinst, 'yyyy-mm-dd') fIssueOefStartdateinst,
 		to_date(f_issue_oef_dnddateinst, 'yyyy-mm-dd') fIssueOefDnddateinst,
 		pconfirmspeed,
-		sconfirmspeed
+		sconfirmspeed,
+		JYSJJLX trmFundType,
+		JYSJJJC trmFundAbbr,
+		SGSHDM  purRedId,
+		SGSHJC  purRedAbbr,
+		DBSGJEXX purStartLow,
+		DBSHJEXX redStartLow,
+		ZXSGSHDW etfMinPrunit,
+		ETFLX etfType,
+		FUND_COMPANY_NAME fundCompanyName,
+		ISSUER_SCALE_TYPE issuerScaleType,
+		ISSUER_TECHNOLOGY_TYPE issuerTechnologyType,
+		ISSUER_ECONOMIC_TYPE issuerEconomicType
+
 	FROM INTERF_CMFUNDDESCRIP
 	where F_INFO_CODE = #{fInfoWindcode}
 	</select>

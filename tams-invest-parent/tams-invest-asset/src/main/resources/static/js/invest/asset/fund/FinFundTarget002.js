@@ -3,6 +3,8 @@
  * 基金类标的信息新建
  */
 (function() {
+
+    var windflag = false;
 	/**
      * 画星星
      */
@@ -167,6 +169,7 @@
     	star();
     };
     var getInterfFundDto = function(){
+    windflag = false;
     	if ($('#finprodMarketId').prop('disabled')) {
     		return;
 		}
@@ -194,6 +197,8 @@
                             if (result.data[0]) {
                                 Joyin.error(result.data[0].message);
                             } else {
+
+                            windflag = true;
                                 //$('#submitForm')[0].reset();
                                 //清除重置下拉框
                                 $('#type9').val(null).trigger('change');
@@ -259,6 +264,10 @@
                     //data-url 赋值要特殊处理
                     element.textSelect('setValue', value);
                 }else {
+                    if(id=='trmFundType'){
+                         console.log('trmFundType  trmFundType');
+                         $('#tempTrmFundType').val(value);
+                    }
                     element.val(value).trigger('change');
                 }
                 
@@ -323,6 +332,13 @@
     var secondTypeChange = function(){
         var fundType = $('#fundType').val();
         var secondType = $('#secondType').val();
+
+
+        if(windflag){
+          $('#trmFundType').val( $('#tempTrmFundType').val());
+          //$('#etfType').val( $('#tempEtfType').val()).trigger('change');
+
+        }
         //交易所基金类型 交易所基金类型_ETF|TRM_FUND_TYPE_01
         var trmFundType = $("#trmFundType").val();
         // 交易所基金类型是否是ETF
@@ -405,16 +421,16 @@
     var tradeMarketChange = function(){
         AssetCommon.setTradeMarketId($('#tradeMarket').val());
         if($('#tradeMarket').val() == '09'){
-            $('#trmFundType').val('').trigger('change');
-            $('#trmFundType').prop('disabled',true);
+            $('#trmFundType').val('');
+            $('#trmFundType').prop('disabled',true).trigger('change');
             $('#trmFundAbbr').val('');
-            $('#trmFundAbbr').prop('disabled',true);
+            $('#trmFundAbbr').prop('disabled',true).trigger('change');
         }else{
-            $('#trmFundType').prop('disabled',false);
-            $('#trmFundAbbr').prop('disabled',false);
+            $('#trmFundType').prop('disabled',false).trigger('change');
+            $('#trmFundAbbr').prop('disabled',false).trigger('change');
         }
         secondTypeChange();
-        trmFundTypeChange();
+       // trmFundTypeChange();
     }
     //控件加载完成后
     window.componentLoadCallback = function(isDone, pagePath, params){

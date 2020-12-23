@@ -1072,6 +1072,17 @@ public class CommonAutoCouponService extends BaseService{
                     }
                 }
                 /**--是否按日复利 modify by shenchen 2019-04-11--*/
+
+
+                finProductAdd.setTrmFundAbbr(infChinamutualfunddescription.getTrmFundAbbr());
+                finProductAdd.setTrmFundType(infChinamutualfunddescription.getTrmFundType());
+                finProductAdd.setPurRedId(infChinamutualfunddescription.getPurRedId());
+                finProductAdd.setPurRedAbbr(infChinamutualfunddescription.getPurRedAbbr());
+                finProductAdd.setPurStartLow(infChinamutualfunddescription.getPurStartLow());
+                finProductAdd.setRedStartLow(infChinamutualfunddescription.getRedStartLow());
+                finProductAdd.setEtfType(infChinamutualfunddescription.getEtfType());
+                finProductAdd.setEtfMinPrunit(infChinamutualfunddescription.getEtfMinPrunit());
+
                 baseFinProductBaseInfoDto.setFinProductAdd(finProductAdd);
                 //new金融产品分类
                 FinProductType finProductType = new FinProductType();
@@ -1203,6 +1214,12 @@ public class CommonAutoCouponService extends BaseService{
                 }
                 repAssetDept.setRepTradeMarket(infChinamutualfunddescription.getMarket2());//交易流通场所
                 repAssetDept.setIsRepTarget(DictCodeList.是否_否.getValue());//默认否
+
+                repfund.setRepFundCompName(infChinamutualfunddescription.getFundCompanyName()); // 基金公司名称
+                repfund.setRepPartyType1(infChinamutualfunddescription.getIssuerScaleType());//机构类型按规模分
+                repfund.setRepPartyType2(infChinamutualfunddescription.getIssuerEconomicType());//机构类型按经济类型分
+                repfund.setRepPartyType3(infChinamutualfunddescription.getIssuerTechnologyType());//机构类型按技术领域分
+
                 baseFinProductBaseInfoDto.setRepAssetDept(repAssetDept);//存中债报送界面资产负债类别
                 baseFinProductBaseInfoDto.setRepfund(repfund);
                 /**--增加基金报送信息 add by shenchen 2019-04-11 end--*/
