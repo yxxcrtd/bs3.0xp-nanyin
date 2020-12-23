@@ -215,7 +215,6 @@
         <if test="assetType == PINAN_ASSET_TYPE_F06">
             T1.PS ps,
             T11.TYPE_6 type6,
-            T1.CHL_ID chlId,
             T10.FINPROD_ABBR chlName
         </if>
         <if test="assetType == PINAN_ASSET_TYPE_F10 ">
@@ -312,7 +311,7 @@
             , T1.PS, T1.TRADE_PLAT, T2.SETTLE_SPREED, T11.TYPE_6, T11.TYPE_7
         </if>
         <if test="assetType == PINAN_ASSET_TYPE_F06">
-            , T1.PS, T11.TYPE_6, T1.CHL_ID, T10.FINPROD_ABBR
+            , T1.PS, T11.TYPE_6,  T10.FINPROD_ABBR
         </if>
         <if test="assetType == PINAN_ASSET_TYPE_F10 ">
             , T1.PS, T2.TERM_DAYS, T2.SETTLE_SPREED

@@ -642,8 +642,14 @@
 	    sub.CUR_ASSETDET_TYPE curAssetdetType,
 	    sub.DEALDATE dealdate,
 	    sub.TRADE_COUNTER tradeCounter,
-	    sub.UNIT_PRICE_FULL unitPriceFull,
-	    sub.UNIT_PRICE_NET unitPriceNet,
+	    <!-- modify by mashukai TISHKBS-1702 非货币基金单位成交价格应为空值 start-->
+        case when deal.INVEST_VARIETY = '14' and sub.CUR_ASSET_TYPE = '09'
+            then null
+        else sub.UNIT_PRICE_FULL end unitPriceFull,
+        case when deal.INVEST_VARIETY = '14' and sub.CUR_ASSET_TYPE = '09'
+            then null
+        else sub.UNIT_PRICE_NET end unitPriceNet,
+    <!-- modify by mashukai TISHKBS-1702 非货币基金单位成交价格应为空值 end-->
 	    sub.END_RATE endRate,
 	    sub.CONTRACT_CODE contractCode,
 	    sub.REMARK remark,
@@ -769,7 +775,16 @@
   select 
   	sub.REGIST_SEQNO, sub.TRADE_CODE, sub.PROD_ID, sub.REGIST_BANK_CODE, 
     sub.ASSET_CODE, sub.CCY, sub.CNY_AMT, sub.AMT, sub.NUM, sub.CUR_ASSET_TYPE, sub.CUR_ASSETDET_TYPE, sub.DEALDATE, 
-    sub.TRADE_COUNTER, sub.UNIT_PRICE_FULL, sub.UNIT_PRICE_NET, sub.END_RATE, sub.CONTRACT_CODE, sub.REMARK, 
+    sub.TRADE_COUNTER,
+    <!-- modify by mashukai TISHKBS-1702 非货币基金单位成交价格应为空值 start-->
+    case when deal.INVEST_VARIETY = '14' and sub.CUR_ASSET_TYPE = '09'
+    then null
+    else sub.UNIT_PRICE_FULL end UNIT_PRICE_FULL,
+    case when deal.INVEST_VARIETY = '14' and sub.CUR_ASSET_TYPE = '09'
+    then null
+    else sub.UNIT_PRICE_NET end UNIT_PRICE_NET,
+    <!-- modify by mashukai TISHKBS-1702 非货币基金单位成交价格应为空值 end-->
+    sub.END_RATE, sub.CONTRACT_CODE, sub.REMARK,
     sub.CHL_CPCT_ID, sub.TRADE_TYPE, sub.CHL_AGRT_NAME, sub.FEE_ID, sub.FEE_NAME, sub.FEE_TYPE, sub.FEE_SECTYPE, sub.STATUS, 
     sub.ORG_CODE, sub.DEPT_CODE, sub.CREATE_USER, sub.CREATE_TIME, sub.UPDATE_USER, sub.UPDATE_TIME, sub.CHB_SUBMIT_DEADLINE, 
     sub.SUBMIT_DEADLINE, sub.SEND_STATUS, sub.SUBMIT_FEEDBACK_STATUS, sub.STATUS_DATE, sub.SUBMIT_TIME, sub.DELETE_RES, 

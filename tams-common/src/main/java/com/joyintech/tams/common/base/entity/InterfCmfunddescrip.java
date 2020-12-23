@@ -724,4 +724,165 @@ public class InterfCmfunddescrip extends InterfCmfunddescripKey {
     }
 
     // add by jiangpeng on 20200721 公募基金标的 接口 end
+
+
+    /**
+     * 发行机构类型（按规模划分）
+     */
+    private String issuerScaleType;
+
+    /**
+     * 发行机构类型（按技术领域划分）
+     */
+    private String issuerTechnologyType;
+
+    /**
+     * 发行机构类型（按经济领域划分）
+     */
+    private String issuerEconomicType;
+
+    /**
+     * 交易所基金简称
+     */
+    private String trmFundAbbr;
+
+    /**
+     * 交易所基金类型
+     */
+    private String trmFundType;
+
+    /**
+     * 申购赎回代码
+     */
+    private String purRedId;
+
+    /**
+     * 申购赎回简称
+     */
+    private String purRedAbbr;
+
+    /**
+     * 单笔申购金额下限
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal purStartLow;
+
+    /**
+     * 单笔赎回份额下限
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal redStartLow;
+
+    /**
+     * ETF类型
+     */
+    private String etfType;
+
+    /**
+     * ETF最小申购赎回单位
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal etfMinPrunit;
+
+    /**
+     * 基金公司名称
+     */
+    private String fundCompanyName;
+
+
+    public String getIssuerScaleType() {
+        return issuerScaleType;
+    }
+
+    public void setIssuerScaleType(String issuerScaleType) {
+        this.issuerScaleType = issuerScaleType;
+    }
+
+    public String getIssuerTechnologyType() {
+        return issuerTechnologyType;
+    }
+
+    public void setIssuerTechnologyType(String issuerTechnologyType) {
+        this.issuerTechnologyType = issuerTechnologyType;
+    }
+
+    public String getIssuerEconomicType() {
+        return issuerEconomicType;
+    }
+
+    public void setIssuerEconomicType(String issuerEconomicType) {
+        this.issuerEconomicType = issuerEconomicType;
+    }
+
+    public String getTrmFundAbbr() {
+        return trmFundAbbr;
+    }
+
+    public void setTrmFundAbbr(String trmFundAbbr) {
+        this.trmFundAbbr = trmFundAbbr;
+    }
+
+    public String getTrmFundType() {
+        return trmFundType;
+    }
+
+    public void setTrmFundType(String trmFundType) {
+        this.trmFundType = trmFundType;
+    }
+
+    public String getPurRedId() {
+        return purRedId;
+    }
+
+    public void setPurRedId(String purRedId) {
+        this.purRedId = purRedId;
+    }
+
+    public String getPurRedAbbr() {
+        return purRedAbbr;
+    }
+
+    public void setPurRedAbbr(String purRedAbbr) {
+        this.purRedAbbr = purRedAbbr;
+    }
+
+    public BigDecimal getPurStartLow() {
+        return purStartLow;
+    }
+
+    public void setPurStartLow(BigDecimal purStartLow) {
+        this.purStartLow = purStartLow;
+    }
+
+    public BigDecimal getRedStartLow() {
+        return redStartLow;
+    }
+
+    public void setRedStartLow(BigDecimal redStartLow) {
+        this.redStartLow = redStartLow;
+    }
+
+    public String getEtfType() {
+        return etfType;
+    }
+
+    public void setEtfType(String etfType) {
+        this.etfType = etfType;
+    }
+
+    public BigDecimal getEtfMinPrunit() {
+        return etfMinPrunit;
+    }
+
+    public void setEtfMinPrunit(BigDecimal etfMinPrunit) {
+        this.etfMinPrunit = etfMinPrunit;
+    }
+
+    public String getFundCompanyName() {
+        return fundCompanyName;
+    }
+
+    public void setFundCompanyName(String fundCompanyName) {
+        this.fundCompanyName = fundCompanyName;
+    }
 }
