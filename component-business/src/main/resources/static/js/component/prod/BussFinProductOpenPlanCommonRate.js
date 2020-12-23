@@ -101,6 +101,7 @@
 	
 	var checkInputParam = function (){
 		initFlag = true;
+		$('#isClick').val("true");
 		Joyin.ajaxJson(JoyinUtil.getRealPath('component/prod/BussFinProductOpenPlanCommonRate/checkInputParam'), getSearchParams(), function(result){
 			if (result.data){
 				Joyin.confirm(result.data, function(){
@@ -207,7 +208,7 @@
 		return param;
 	}
 	var checkInputParamRed = function (){
-
+		$('#isClickRed').val("true");
 		initFlag = true;
 		Joyin.ajaxJson(JoyinUtil.getRealPath('component/prod/BussFinProductOpenPlanCommonRate/checkInputParam'), getSearchParamsRed(), function(result){
 			if (result.data){
@@ -1210,7 +1211,8 @@
 		chkClosePlan:chkClosePlan,
 		chkPayPlan:chkPayPlan,
 		chkRedOpenPlan:chkRedOpenPlan,
-		getOpenModeValue:getOpenModeValue
+		getOpenModeValue:getOpenModeValue,
+		getElementById:getElementById
 	}
 	//判断页面是否加载完成
 	var isLoaded = function() {
