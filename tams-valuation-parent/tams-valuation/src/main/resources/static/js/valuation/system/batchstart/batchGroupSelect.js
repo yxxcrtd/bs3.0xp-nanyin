@@ -18,7 +18,7 @@
 
     //首次进入页面flag 。判断checkrow时有问题、LAY_CHECKED为null导致selectedProdIds会被删数据
         // 但是取消选中时 是对的。导致
-        var firstFlag = true;
+        var firstFlag = false;
 
     if (batchGroupType === '0') {
         table = $("#jobDataTable").joyintable({
@@ -30,19 +30,20 @@
                 }
             },
             height: 380,
-            click:function(ele, row) {
-                groupSelectRow(ele, row);
-            },
             check:function(ele, row){
-                groupSelectRow(ele, row);
+                if(!firstFlag){
+                	process(this,'seqNo','batchName');
+                }
             },
             done:function(data){
+            	firstFlag = true;
                 $.each(data, function (i, v) {
                     if ($.inArray(v.seqNo, selectedTaskIds) != -1) {
-                        table.checkRow(v.LAY_TABLE_INDEX)
+                        table.checkRow(v.LAY_TABLE_INDEX);
                     }
-                })
+                });
                 firstFlag = false;
+                setToPage();
             },
             cols: [
                 {
@@ -64,19 +65,20 @@
                 }
             },
             height: 380,
-            click:function(ele, row) {
-                selectRow(ele, row);
-            },
             check:function(ele, row){
-                selectRow(ele, row);
+                if(!firstFlag){
+                	process(this,'taskId','taskName');
+                }
             },
             done:function(data){
+            	firstFlag = true;
                 $.each(data, function (i, v) {
                     if ($.inArray(v.taskId, selectedTaskIds) != -1) {
-                        table.checkRow(v.LAY_TABLE_INDEX)
+                        table.checkRow(v.LAY_TABLE_INDEX);
                     }
-                })
+                });
                 firstFlag = false;
+                setToPage();
             },
             cols: [
                 {field: 'taskName', title: '批处理名'}
@@ -87,21 +89,39 @@
         });
     }
 
-    var groupSelectRow = function (ele, row) {
-        if (row.LAY_CHECKED) {
-            if ($.inArray(row.seqNo, selectedTaskIds) === -1) {
-                selectedTaskIds.push(row.seqNo);
-                selectedTaskNames.push(row.batchName);
-            }
-        } else {
-            if(!firstFlag){
-                if ($.inArray(row.seqNo, selectedTaskIds) != -1) {
-                    selectedTaskIds.splice($.inArray(row.seqNo, selectedTaskIds), 1);
-                    selectedTaskNames.splice($.inArray(row.batchName, selectedTaskNames), 1);
-                }
-            }
-        }
-        setToPage();
+    var process = function(object,idKey,nameKey){
+    	//获取整个tableDiv
+    	var div = $(object);
+    	while(div.length>0&&!div.hasClass("layui-table-box")){
+    		div = div.parent();
+    	}
+    	//获取数据table
+    	if(div.length>0){
+    		var dataTable = div.find("div.layui-table-main").find("tbody");
+    		var checkTable = div.find("div.layui-table-fixed").find("div.layui-table-body").find("tbody");
+    		//获取table
+    		checkTable.find("tr").each(function(){
+    			var index = $(this).data("index");
+    			var row = dataTable.find("tr[data-index='"+index+"']");
+    			var id = row.find("td[data-field='"+idKey+"']").attr("title");
+    			var name = row.find("td[data-field='"+nameKey+"']").attr("title");
+    			//获取选项框
+    			var input = $(this).find("input[type='checkbox']")[0];
+    			if(input.checked){
+    				if($.inArray(id, selectedTaskIds) === -1){
+    					selectedTaskIds.push(id);
+    	    			selectedTaskNames.push(name);
+    				}
+    			}
+    			else{
+    				if($.inArray(id, selectedTaskIds) != -1){
+    					selectedTaskIds.splice($.inArray(id, selectedTaskIds), 1);
+    	                selectedTaskNames.splice($.inArray(name, selectedTaskNames), 1);
+    				}
+    			}
+    		});
+    	}
+    	setToPage();
     }
 
     var setToPage = function () {
@@ -110,23 +130,6 @@
         $("#selectedBatchTask").text(name.length > 200 ? name.substr(0, 200) + "..." : name);
         var title = selectedTaskNames.join("\r\n");
         $("#selectedBatchTask").attr("title", title);
-    }
-
-    var selectRow = function (ele, row) {
-        if (row.LAY_CHECKED) {
-            if ($.inArray(row.taskId, selectedTaskIds) === -1) {
-                selectedTaskIds.push(row.taskId);
-                selectedTaskNames.push(row.taskName);
-            }
-        } else {
-            if(!firstFlag){
-                if ($.inArray(row.taskId, selectedTaskIds) != -1) {
-                    selectedTaskIds.splice($.inArray(row.taskId, selectedTaskIds), 1);
-                    selectedTaskNames.splice($.inArray(row.taskName, selectedTaskNames), 1);
-                }
-            }
-        }
-        setToPage();
     }
 
     var openBatchGroupDetail = function (seqNo, pageModel) {
