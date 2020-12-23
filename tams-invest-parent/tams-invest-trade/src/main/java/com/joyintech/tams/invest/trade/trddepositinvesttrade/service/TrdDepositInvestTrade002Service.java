@@ -811,7 +811,7 @@ public class TrdDepositInvestTrade002Service extends CommonExportService<TrdDepo
         // TODO Auto-generated method stub
         TrdDepositInvestTrade001Dto dto = new TrdDepositInvestTrade001Dto();
         FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
-        if (type.toString().equals("DELETE")) {
+        if (type.toString().equals("REVOKE")) {
             List<BaseTradeProductDealDto> baseTradeProductDealDto = restTemplate.getForList(
                 ServiceApplication.TRADE_SERVICE_NAME + "/TrdDepositInvestTrade001/getFinDto?tradeId=" + entity.getTradeId(),
                 BaseTradeProductDealDto.class);
