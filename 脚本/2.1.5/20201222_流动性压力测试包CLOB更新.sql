@@ -1048,7 +1048,7 @@ CREATE OR REPLACE PACKAGE BODY    PKG_FLOW_STRESS_TEST_CLOB IS
                                          sse1.analysis_mdate,
                                          sse1.base_date
                                     from (select *
-                                            from table(FUNC_STRESS_ELEMENT_PIPELINE(in_test_id, in_object_ids, 0)) bo
+                                            from table(FUNC_STRESS_ELEMENT_PIPELINE(in_test_id, in_object_ids, 0,v_object_count)) bo
                                            where rowno = 1) sse1
                                   ) result1
 
