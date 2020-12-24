@@ -1,5 +1,8 @@
 package com.joyintech.tams.report.system.proregistcodemanage.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,21 +10,23 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage002Dto;
-import com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage002Dto;
 import com.joyintech.tams.report.system.proregistcodemanage.service.ProRegistCodeManage001Service;
 import com.joyintech.tams.report.system.proregistcodemanage.service.ProRegistCodeManage003Service;
+import com.joyintech.tams.report.system.proregistcodemanage.service.ProRegistCodeManageMService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -37,6 +42,8 @@ public class ProRegistCodeManage003Controller extends BaseController {
      */
 	@Autowired
     private ProRegistCodeManage003Service proRegistCodeManage003Service;
+	 @Autowired
+	private ProRegistCodeManageMService proRegistCodeManageMService;
     
     /**
      * 新建页面初始化
@@ -101,6 +108,12 @@ public class ProRegistCodeManage003Controller extends BaseController {
     }
     
     @ResponseBody
+    @RequestMapping("selectInfo")
+    public ProRegistCodeManage002Dto selectInfo(String prodId) {
+        return proRegistCodeManage003Service.selectInfo(prodId);
+    }
+    
+    @ResponseBody
     @RequestMapping("selectId")
     public AjaxResult selectId() {
         AjaxResult ar = new AjaxResult();
@@ -115,4 +128,14 @@ public class ProRegistCodeManage003Controller extends BaseController {
         ar.setData(proRegistCodeManage003Service.selectCode(RequestUtil.getPageParam()));
         return ar;
     }
+    
+    /**
+     * 产品下拉框
+     * @return 产品代码和名称列表
+     */
+    @RequestMapping(value = "getProdInfo", method = RequestMethod.GET)
+    @ResponseBody
+    public List<SuggestDto> getProdInfo(String param) {
+        return proRegistCodeManageMService.getProdInfo(param);
+    } 
 }

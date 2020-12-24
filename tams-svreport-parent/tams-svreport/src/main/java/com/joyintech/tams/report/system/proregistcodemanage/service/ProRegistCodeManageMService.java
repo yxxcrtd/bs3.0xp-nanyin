@@ -203,7 +203,20 @@ public class ProRegistCodeManageMService extends BaseService<ProRegistCodeManage
 	       		param,
 	       		ExcelValidDto.class);
 	}
-	
+	 /**
+     * 产品登记编码新建产品代码下拉框
+     * @return 产品代码和名称列表
+     */
+	public List<SuggestDto> getProdInfo(String param) {
+		if(param==null||"".equals(param)){
+			return new ArrayList<SuggestDto>();
+		}		
+		Map<String,Object> paramMap = new HashMap<String,Object>();
+		paramMap.put("prodid", param);		
+    	return restTemplate.postForList(
+	       		SvrServiceApplication.COMMON_SERVICE_NAME + "/ProRegistCodeManage/getProdInfo", paramMap,
+	       		SuggestDto.class);
+    } 
 	
 	
 }

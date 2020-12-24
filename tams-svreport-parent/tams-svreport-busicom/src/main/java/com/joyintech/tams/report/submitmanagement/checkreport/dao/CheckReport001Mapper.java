@@ -43,6 +43,15 @@ public interface CheckReport001Mapper {
      * @since 1.0
      */
     List<SuggestDto> queryPrdNameList(String prodId);
+    /**
+     * 产品登记编码新建产品代码
+     * 
+     * @param pageParam 参数
+     * @return 结果list
+     * @see
+     * @since 1.0
+     */
+    List<SuggestDto> getProdInfo(String prodId);
     
     /**
      * 查询所有产品代码

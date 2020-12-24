@@ -26,24 +26,25 @@
                                                data-th-placeholder="#{SysCommon.placeholder}"
                                                data-th-value="${entity?.batchSeq}" style="display: none" />
                                     </div> -->
-                                    <div class="form-inline-wrap">
-                                        <label class="layui-form-label form-label-wrap"
-												data-th-text="#{FinProductBuild002.finprodMarketId}">产品代码</label>
-                                        <div class="layui-input-inline input-inline">
-                                            <input type="text" class="layui-input form-input" id="prodId"
-                                                name="prodId" placeholder="请输入内容"
-                                                data-th-placeholder="#{SysCommon.placeholder}" required="required"
-                                                data-th-value="${entity?.prodId}" maxlength="60">
-                                        </div>
-                                    </div>
+                                     <div class="form-inline-wrap">
+                                       <label class="layui-form-label form-label-wrap"
+                                       data-th-text="#{FinProductBuild002.finprodMarketId}">产品代码</label>
+                                     <div class="layui-input-inline input-inline">
+                                   <input id="prodId" name="prodId" class="layui-input form-input input-lenovoselect" 
+                                              data-th-data-parentids="orgCode" data-th-data-code="prdCode" placeholder="请输入"
+                                              data-th-data-url="@{/svreport/system/proregistcodemanage/ProRegistCodeManage003/getProdInfo}"
+                                              data-idfield="code" data-keyfield="code"  data-th-value="${entity?.prodId}" 
+                                               data-effectivefieldsalias='{"code":"产品代码","shortName":"产品名称"}' required="required">
+                                       </div>
+                                       </div>
                                     
                                     <div class="form-inline-wrap">
                                         <label class="layui-form-label form-label-wrap"
 												data-th-text="#{FinProductBuild002.finprodName}">产品名称</label>
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" class="layui-input form-input" id="prodName"
-                                                name="prodName" placeholder="请输入内容"
-                                                data-th-placeholder="#{SysCommon.placeholder}" required="required"
+                                                name="prodName" placeholder="请输入内容" disabled
+                                                data-th-placeholder="#{SysCommon.placeholder}" 
                                                 data-th-value="${entity?.prodName}" maxlength="60">
                                         </div>
                                     </div>                                                                        
@@ -63,36 +64,23 @@
 							              <label class="layui-form-label form-label-wrap"
 								                     data-th-text="#{BussRepFinProductInfo.repOperateMode}">产品运作模式</label>
 							               <div class="layui-input-inline input-inline">
-								       <select th:id="operateMode"
-									   th:name="operateMode"
-									   class="layui-input form-input input-select"
-									   data-th-data-result="${SVR_OPERATEMODE_DECLARE}"
-									   placeholder="请输入内容"
-									   data-th-initValue="${entity?.operateMode}"
-									  data-th-placeholder="#{SysCommon.placeholder}" required
-							     	</select>
-							    </div>
-						     </div>
-                                    <div class="form-inline-wrap">
-                                        <label class="layui-form-label form-lable">机构代码</label>
-                                        <div class="layui-input-inline input-inline">
-                                            <input type="text" class="layui-input form-input" id="orgCode"
-                                                name="orgCode" placeholder="请输入内容"
-                                                data-th-placeholder="#{SysCommon.placeholder}" required="required"
-                                                data-th-initValue="${entity?.orgCode}" maxlength="60" disabled = "disabled" style="display: none">
+                                            <input type="text" class="layui-input form-input" id="operateMode"
+                                                name="operateMode" placeholder="请输入内容" disabled
+                                                data-th-placeholder="#{SysCommon.placeholder}" 
+                                                data-th-value="${entity?.operateMode}" maxlength="60">
                                         </div>
-                                    </div>   
-                                </div>                              
+						     </div>                                    
+                            </div>                              
                                 <div class="layui-form-item">
                                        <div class="form-inline-wrap">
 											<label class="layui-form-label form-label-wrap"
 												data-th-text="#{FinProductBuild002.vdate}">起息日</label>
 											<div class="layui-input-inline input-inline">
 												<input type="text" name="vdate"
-													id="vdate" readonly="readonly" 
+													id="vdate"  disabled
 													class="layui-input form-input input-dateSelect"
 													data-th-value='${#dates.format(entity?.vdate,"yyyy-MM-dd")}'
-													required>
+													>
 											</div>
 										</div>
                                     
@@ -101,10 +89,10 @@
 												data-th-text="#{FinProductBuild002.mdate}">到期日</label>
 											<div class="layui-input-inline input-inline">
 												<input type="text" name="mdate"
-													id="mdate" readonly="readonly" 
+													id="mdate"  disabled
 													class="layui-input form-input input-dateSelect"
 													data-th-value='${#dates.format(entity?.mdate,"yyyy-MM-dd")}'
-													required>
+													>
 											</div>
 										</div>                        
                                 </div>

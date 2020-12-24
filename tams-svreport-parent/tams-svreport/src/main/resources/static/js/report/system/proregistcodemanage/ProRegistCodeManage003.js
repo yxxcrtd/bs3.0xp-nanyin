@@ -10,20 +10,46 @@
         } 
         
         var prodId =function(){
+        	$('#prodName').val('');
+         	$('#operateMode').val('');
+         	$('#vdate').val('');
+         	$('#mdate').val('');        	
         	var prodId = $('#prodId').val();
         	if(prodId){
         		Joyin.ajax(basePath + "svreport/system/proregistcodemanage/ProRegistCodeManage003/selectId",{prodId:prodId},
         				function(result){
         			if(result.data){
-        				Joyin.error(JoyinUtil.getMessage("产品代码已存在，请重新输入。"));
+        				Joyin.error(JoyinUtil.getMessage("该产品已存在产品登记编码，请重新输入。"));
         				$('#prodId').val('');
+        				$('#prodName').val('');
+        	         	$('#operateMode').val('');
+        	         	$('#vdate').val('');
+        	         	$('#mdate').val('');
         				return;
+        			}else{
+        				Joyin.ajax(basePath + "svreport/system/proregistcodemanage/ProRegistCodeManage003/selectInfo",{prodId:prodId},
+                				function(result){
+                			if(result){        				
+                				$('#prodName').val(result.prodName);
+                				if(result.operateMode == '01'){
+                					$('#operateMode').val("封闭式净值型");       					
+                				}else if(result.operateMode == '02'){
+                					$('#operateMode').val("封闭式非净值型");
+                				}else if(result.operateMode == '03'){
+                					$('#operateMode').val("开放式净值型");
+                				}else if(result.operateMode == '04'){
+                					$('#operateMode').val("开放式非净值型");
+                				}
+                 		    	$('#vdate').val(result.vdate);
+                 		    	$('#mdate').val(result.mdate);       		    	    		    	
+                			}
+                	});
         			}
-        	});
+        	    });        	
         	}
         }
         
-        var regCode = function(){
+        /*var regCode = function(){
         	var regCode = $('#regCode').val();
         	if(regCode){
     			Joyin.ajax(basePath + "svreport/system/proregistcodemanage/ProRegistCodeManage003/selectCode",{prodId:prodId,regCode:regCode},
@@ -35,7 +61,7 @@
             		}
     			});
     		}
-        }
+        }*/
 
         /**
          * 保存或提交
@@ -47,11 +73,11 @@
         	var mDate = $('#mdate').val();
         	var prodId = $('#prodId').val();
         	var regCode = $('#regCode').val();
-        	if (vDate && mDate && mDate <= vDate){		
+        	/*if (vDate && mDate && mDate <= vDate){		
 				Joyin.error(JoyinUtil.getMessage("到期日必须大于起息日。"));
 				$('#mdate').val('');
-			}
-        	else{				
+			}*/
+        				
             var object = $.serializeToObject('#informationForm');
             object.operateType = operateType;
             object.pageModel = pageModel;
@@ -65,7 +91,6 @@
                     }
                 });
             });
-        }
    }
     
         $(function() {
@@ -79,9 +104,9 @@
             $('#prodId').change(function(){
             	prodId();
     		});
-            $('#regCode').change(function(){
+            /*$('#regCode').change(function(){
             	regCode();
-    		});
+    		});*/
             
         });    
 }());

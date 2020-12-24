@@ -1,63 +1,20 @@
 package com.joyintech.tams.report.system.proregistcodemanage.service;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.regex.Pattern;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.xml.sax.SAXException;
-
-import com.joyintech.tams.report.common.util.SysDataUtil;
-import com.joyintech.tams.report.framework.thread.JoyinThreadPoolExecutor;
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.ajax.MessageType;
-import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.ChbPrdresistCodeMapper;
-import com.joyintech.tams.common.base.entity.ChbFileReadMonitorInfo;
-import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
 import com.joyintech.tams.common.base.entity.ChbPrdresistCode;
-import com.joyintech.tams.common.base.entity.ChbPrdresistCodeKey;
-import com.joyintech.tams.report.common.TxtParseUtil;
-import com.joyintech.tams.report.common.XmlParseUtil;
-import com.joyintech.tams.report.common.dto.ExcelValidDto;
-import com.joyintech.tams.report.common.util.ExcelUtil;
-import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.report.submitmaintenance.investorsholdinfo.service.InvestorsHoldInfo001Service;
 import com.joyintech.tams.report.system.proregistcodemanage.dao.ProRegistCodeManage001Mapper;
-import com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage001Dto;
 import com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage002Dto;
-import com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage001Dto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
-import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 
@@ -104,7 +61,15 @@ public class ProRegistCodeManage003Service extends CommonExportService<ProRegist
     	    record.setRegCode(entity.getRegCode());    	    
     	    record.setVdate(entity.getVdate());
     	    record.setMdate(entity.getMdate());
-    	    record.setOperateMode(entity.getOperateMode());
+    	    if(StringUtil.equals(entity.getOperateMode(), "封闭式净值型")) {   	    	
+    	    	record.setOperateMode("01");
+    	    }else if(StringUtil.equals(entity.getOperateMode(), "封闭式非净值型")) {
+    	    	record.setOperateMode("02");
+    	    }else if(StringUtil.equals(entity.getOperateMode(), "开放式净值型")) {
+    	    	record.setOperateMode("03");
+    	    }else if(StringUtil.equals(entity.getOperateMode(), "开放式非净值型")) {
+    	    	record.setOperateMode("04");
+    	    }
     	    record.setOrgCode(CommonUtil.getOrgCode());
         	record.setDeptCode(CommonUtil.getDeptCode());
     		if (StringUtil.equals(entity.getOperateType(), "NEW")) {
@@ -119,14 +84,17 @@ public class ProRegistCodeManage003Service extends CommonExportService<ProRegist
     		}
     		
     }
-    
-    @SuppressWarnings("unchecked")
-	public Map<String,Object> selectId(Map<String, Object> pageParam) {
-        return proRegistCodeManage001Mapper.selectId(pageParam);
+  
+    public ProRegistCodeManage002Dto selectInfo(String prodId) {
+        return proRegistCodeManage001Mapper.selectInfo(prodId);
     }
     
     @SuppressWarnings("unchecked")
-   	public Map<String,Object> selectCode(Map<String, Object> pageParam) {
+   	public Map<String,Object> selectId(Map<String, Object> pageParam) {
+           return proRegistCodeManage001Mapper.selectId(pageParam);
+       }
+    
+    public Map<String,Object> selectCode(Map<String, Object> pageParam) {
            return proRegistCodeManage001Mapper.selectCode(pageParam);
        }
     

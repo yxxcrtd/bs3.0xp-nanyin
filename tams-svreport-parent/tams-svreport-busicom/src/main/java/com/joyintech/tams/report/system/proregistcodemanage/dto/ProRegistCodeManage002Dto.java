@@ -1,28 +1,15 @@
 package com.joyintech.tams.report.system.proregistcodemanage.dto;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.json.CustomDateDeserialize;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.framework.validation.annotation.Amount;
-import com.joyintech.framework.validation.annotation.Email;
-import com.joyintech.framework.validation.annotation.IDCard;
 import com.joyintech.framework.validation.annotation.NotEmpty;
-import com.joyintech.framework.validation.annotation.OfficePhone;
-import com.joyintech.framework.validation.annotation.Rate;
-import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.base.annotate.DictFormat;
-import com.joyintech.tams.systemtools.util.SysDatadictUtil;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
@@ -80,7 +67,7 @@ public class ProRegistCodeManage002Dto extends BaseEntity implements ProcessEnti
     /**
      * 产品名称
      */
-    @NotEmpty(fieldName="FinProductBuild002.finprodName",groups = {ValidateGroupEdit.class})
+   // @NotEmpty(fieldName="FinProductBuild002.finprodName",groups = {ValidateGroupEdit.class})
     private String prodName;
 
     /**
@@ -93,13 +80,13 @@ public class ProRegistCodeManage002Dto extends BaseEntity implements ProcessEnti
     /**
      * 起息日
      */
-    @NotEmpty(fieldName="FinProductBuild002.vdate",groups = {ValidateGroupEdit.class})
+    //@NotEmpty(fieldName="FinProductBuild002.vdate",groups = {ValidateGroupEdit.class})
     private Date vdate;
 
     /**
      * 到期日
      */
-    @NotEmpty(fieldName="FinProductBuild002.mdate",groups = {ValidateGroupEdit.class})
+    //@NotEmpty(fieldName="FinProductBuild002.mdate",groups = {ValidateGroupEdit.class})
     private Date mdate;
 
    /**
@@ -124,7 +111,7 @@ public class ProRegistCodeManage002Dto extends BaseEntity implements ProcessEnti
      * 产品运作模式
      */
     @DictFormat(DictCode.产品运作模式)
-    @NotEmpty(fieldName="BussRepFinProductInfo.repOperateMode",groups = {ValidateGroupEdit.class})
+    //@NotEmpty(fieldName="BussRepFinProductInfo.repOperateMode",groups = {ValidateGroupEdit.class})
     private String operateMode;
 
     /**
