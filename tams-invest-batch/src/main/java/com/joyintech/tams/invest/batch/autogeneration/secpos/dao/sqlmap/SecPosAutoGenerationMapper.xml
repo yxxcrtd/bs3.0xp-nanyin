@@ -69,7 +69,7 @@
         t.RATE rate,t.COST_RATE costRate,t.BPYIELD bpyield,t.M_DURATION mduration,t.MDURATION mDuration,t.M_CONVEXITY mConvexity,t.EX_INFO exInfo,t.EX_NEXT_DATE exNextDate,
         t.LAST_EX_PERIOD lastExPeriod,t.M_GRADE_RESULT mGradeResult,t.M_GRADE_ORG mGradeOrg,t.B_GRADE_RESULT bGradeResult,t.B_GRADE_ORG bGradeOrg,t.M_GRADE_RESULT_IN mGradeResultIn,
         t.B_GRADE_RESULT_IN bGradeResultIn,t.IS_CITY_BOND isCityBond,t.CITY_BOND_LEV cityBondLev,t.C_SHARES cShares,t.S_SHARES sShares,t.TRADE_MARKET tradeMarket,t.IS_SUS isSus,t.IS_RIGHT isRight,
-        t.EXE_DATE exDate,t.M_GRADE_ORG_IN mGradeOrgIn,t.B_GRADE_ORG_IN bGradeOrgIn,t.totalAmt bshareScale,t.portfolio_type profitType,t.CREATE_USER createUser ,t.CREATE_DEPT createDept,t.CREATE_TIME createTime,t.UPDATE_USER updateUser,
+        t.EXE_DATE exDate,t.M_GRADE_ORG_IN mGradeOrgIn,t.B_GRADE_ORG_IN bGradeOrgIn,t.totalAmt bshareScale,t.PROFIT_TYPE profitType,t.CREATE_USER createUser ,t.CREATE_DEPT createDept,t.CREATE_TIME createTime,t.UPDATE_USER updateUser,
         t.UPDATE_TIME updateTime,t.GRADEORGID gradeOrgId,t.oType gradeType,t.INNEROUTER inOrOut,t.GRADERESULT gradeResult,t.output_value_3 riskAssetType1,t.output_value_4 riskAssetType2,
         t.is_deposit_bank isBank, t.industry1 industry1,t.natureOrg natureOrg,t.bpvalue dv01,t.FLOAT_INGPL_ADD_PRICE floatIngplAddPrice,t.FLOAT_INGPL_ADD floatIngplAdd
         from  ( select distinct TEMP.portfolio_id, <!--组合代码-->
@@ -212,7 +212,7 @@
         ''  M_GRADE_ORG_IN, <!--主体评级机构（内部） 计算-->
         ''  B_GRADE_ORG_IN, <!--债项评级机构(内部) 计算-->
         TEMP.totalAmt, <!--资产规模-->
-        pp.portfolio_type, <!-- 收益类型-->
+        pp.PROFIT_TYPE, <!-- 收益类型-->
         'system'CREATE_USER,  <!--创建人-->
         '' CREATE_DEPT,  <!--创建部门-->
         sysdate CREATE_TIME, <!--创建时间-->
@@ -383,7 +383,7 @@
         t.RATE rate,t.COST_RATE costRate,t.BPYIELD bpyield,t.M_DURATION mduration,t.MDURATION mDuration,t.M_CONVEXITY mConvexity,t.EX_INFO exInfo,t.EX_NEXT_DATE exNextDate,
         t.LAST_EX_PERIOD lastExPeriod,t.M_GRADE_RESULT mGradeResult,t.M_GRADE_ORG mGradeOrg,t.B_GRADE_RESULT bGradeResult,t.B_GRADE_ORG bGradeOrg,t.M_GRADE_RESULT_IN mGradeResultIn,
         t.B_GRADE_RESULT_IN bGradeResultIn,t.IS_CITY_BOND isCityBond,t.CITY_BOND_LEV cityBondLev,t.C_SHARES cShares,t.S_SHARES sShares,t.TRADE_MARKET tradeMarket,t.IS_SUS isSus,t.IS_RIGHT isRight,
-        t.EXE_DATE exDate,t.M_GRADE_ORG_IN mGradeOrgIn,t.B_GRADE_ORG_IN bGradeOrgIn,t.totalAmt bshareScale,t.portfolio_type profitType,t.CREATE_USER createUser ,t.CREATE_DEPT createDept,t.CREATE_TIME createTime,t.UPDATE_USER updateUser,
+        t.EXE_DATE exDate,t.M_GRADE_ORG_IN mGradeOrgIn,t.B_GRADE_ORG_IN bGradeOrgIn,t.totalAmt bshareScale,t.PROFIT_TYPE profitType,t.CREATE_USER createUser ,t.CREATE_DEPT createDept,t.CREATE_TIME createTime,t.UPDATE_USER updateUser,
         t.UPDATE_TIME updateTime,t.GRADEORGID gradeOrgId,t.oType gradeType,t.INNEROUTER inOrOut,t.GRADERESULT gradeResult,t.output_value_3 riskAssetType1,t.output_value_4 riskAssetType2,
         t.is_deposit_bank isBank, t.industry1 industry1,t.natureOrg natureOrg,t.bpvalue dv01,t.FLOAT_INGPL_ADD_PRICE floatIngplAddPrice,t.FLOAT_INGPL_ADD floatIngplAdd
         from  ( select distinct TEMP.portfolio_id, <!--组合代码-->
@@ -526,7 +526,7 @@
         ''  M_GRADE_ORG_IN, <!--主体评级机构（内部） 计算-->
         ''  B_GRADE_ORG_IN, <!--债项评级机构(内部) 计算-->
         TEMP.totalAmt, <!--资产规模-->
-        pp.portfolio_type, <!-- 收益类型-->
+        pp.PROFIT_TYPE, <!-- 收益类型-->
         'system'CREATE_USER,  <!--创建人-->
         '' CREATE_DEPT,  <!--创建部门-->
         sysdate CREATE_TIME, <!--创建时间-->
@@ -806,7 +806,7 @@
 		        t.M_GRADE_ORG_IN mGradeOrgIn,
 		        t.B_GRADE_ORG_IN bGradeOrgIn,
 		        t.totalAmt bshareScale,
-		        t.portfolio_type profitType,
+		        t.PROFIT_TYPE profitType,
 		        t.CREATE_USER createUser,
 		        t.CREATE_DEPT createDept,
 		        t.CREATE_TIME createTime,
@@ -962,7 +962,7 @@
 		                        ''  M_GRADE_ORG_IN, <!--主体评级机构（内部） 计算-->
 		                        ''  B_GRADE_ORG_IN, <!--债项评级机构(内部) 计算-->
 		                        TEMP.totalAmt, <!--资产规模-->
-		                        pp.portfolio_type, <!-- 收益类型-->
+		                        pp.PROFIT_TYPE, <!-- 收益类型-->
 		                        'system'CREATE_USER,  <!--创建人-->
 		                        '' CREATE_DEPT,  <!--创建部门-->
 		                        sysdate CREATE_TIME, <!--创建时间-->
