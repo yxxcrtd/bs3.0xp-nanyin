@@ -26,6 +26,7 @@ import com.joyintech.tams.component.business.common.dto.InterfPayhsrcsecinfoDto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.asset.dto.AssetCommonInfoDto;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.calculator.AdjustedTradeDayCal;
@@ -1082,6 +1083,36 @@ public class CommonAutoCouponService extends BaseService{
                 finProductAdd.setRedStartLow(infChinamutualfunddescription.getRedStartLow());
                 finProductAdd.setEtfType(infChinamutualfunddescription.getEtfType());
                 finProductAdd.setEtfMinPrunit(infChinamutualfunddescription.getEtfMinPrunit());
+
+                // ETF类型：如果实际项目中提供的该字段枚举值不是这样，则需要修改代码
+                if (StringUtil.equals("ETF", infChinamutualfunddescription.getTrmFundType())) {
+                    // wind提供的枚举值：货币市场型基金、被动指数型基金、被动指数型债券基金、国际(QDII)被动指数型股票基金、商品型基金
+                    // 我们系统的枚举值：货币ETF、债券ETF、黄金ETF、单市场ETF、跨市场ETF、跨境ETF
+                    if (StringUtil.equals("货币市场型基金", infChinamutualfunddescription.getEtfType())) {
+                        // wind货币市场型基金对应系统货币ETF
+                        finProductAdd.setEtfType(DictCodeListExt2.ETF类型_货币ETF.getValue());
+                    } else if (StringUtil.equals("被动指数型债券基金", infChinamutualfunddescription.getEtfType())) {
+                        // wind被动指数型债券基金对应系统债券ETF
+                        finProductAdd.setEtfType(DictCodeListExt2.ETF类型_债券ETF.getValue());
+                    } else if (StringUtil.equals("商品型基金", infChinamutualfunddescription.getEtfType())) {
+                        // wind商品型基金对应系统黄金ETF
+                        finProductAdd.setEtfType(DictCodeListExt2.ETF类型_黄金ETF.getValue());
+                    } else if (StringUtil.equals("03", infChinamutualfunddescription.getfInfoType2())) {
+                        // 根据wind数据分析，股票基金，eft类型包含了被动指数型基金、被动指数型股票基金
+                        if (StringUtil.equals("被动指数型基金", infChinamutualfunddescription.getEtfType())) {
+                            // 暂时先将被动指数型基金对应到单市场ETF，国际(QDII)被动指数型股票基金对应到跨境ETF
+                            finProductAdd.setEtfType(DictCodeListExt2.ETF类型_单市场ETF.getValue());
+                        } else if (StringUtil.equals("国际(QDII)被动指数型股票基金", infChinamutualfunddescription.getEtfType())) {
+                            finProductAdd.setEtfType(DictCodeListExt2.ETF类型_跨境ETF.getValue());
+                        } else {
+                            finProductAdd.setEtfType(DictCodeListExt2.ETF类型_跨市场ETF.getValue());
+                        }
+                    }else{
+                        finProductAdd.setEtfType(DictCodeListExt2.ETF类型_单市场ETF.getValue());
+                    }
+
+                }
+
 
                 baseFinProductBaseInfoDto.setFinProductAdd(finProductAdd);
                 //new金融产品分类

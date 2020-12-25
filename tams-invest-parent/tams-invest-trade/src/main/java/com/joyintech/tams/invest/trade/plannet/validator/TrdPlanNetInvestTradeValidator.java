@@ -369,6 +369,22 @@ public class TrdPlanNetInvestTradeValidator implements TradeCommonValidator {
                                     param.get("portfolioId") + "  " + getMessage("TrdPlanNetInvestTrade002.tradeAmt"),
                                     getMessage("TrdFundInvestTrade002.accAvailableCash"))));
                 }
+                
+                //同时验证卖出方是否有足够的持仓
+                PtlSecPositionFlowDto ptlSecPositionFlowDto = new PtlSecPositionFlowDto();
+                ptlSecPositionFlowDto.setCdate(dto.getTradeDate());
+                ptlSecPositionFlowDto.setPortfolioId(dto.getPortfolioId());
+                ptlSecPositionFlowDto.setSecAcctId(dto.getChlId());
+                ptlSecPositionFlowDto.setFinprodId(dto.getFinprodId());
+                BigDecimal assetPosition = trdPlanNetInvestTrade002Service.getPtlSecPosition(ptlSecPositionFlowDto);
+                if (StringUtil.isNotEmpty(dto.getShareAmt())) {
+                    if (assetPosition.compareTo(dto.getShareAmt()) == -1) {
+                        errorList.add(new ValidMessage("",
+                                getMessage("BUSS_COM_E_0003",
+                                        ptlSecPositionFlowDto.getPortfolioId() + "  " + getMessage("TrdPlanNetInvestTrade001.shareAmt"),
+                                        getMessage("TrdFundInvestTrade002.assetAvailablePosition"))));
+                    }
+                }
 
 //                if (dto.getShareAmt() != null) {
 //                    //同时验证卖出方是否有足够的持仓

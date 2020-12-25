@@ -213,6 +213,13 @@
             NVL2(T2.SETTLE_SPREED, CONCAT('0',T2.SETTLE_SPREED+1), NULL) settleSpeed
         </if>
         <if test="assetType == PINAN_ASSET_TYPE_F06">
+            T3.FINPROD_ID finprodId,
+            T3.FINPROD_MARKET_ID finprodMarketId,
+            T3.FINPROD_ABBR finprodName,
+            SUM(NVL(T1.ENTRUST_AMT, 0)) entrustAmt,
+            DECODE(T2.ASSET_TYPE, #{PINAN_ASSET_TYPE_F01}, SUM(NVL(T1.ENTRUST_NUM * 100, 0) - NVL(T4.FINISHED_AMT * 100, 0)),
+            #{PINAN_ASSET_TYPE_F10}, SUM(NVL(T1.ENTRUST_NUM * 100, 0) - NVL(T4.FINISHED_AMT * 100, 0)),
+            SUM(NVL(T1.ENTRUST_AMT, T1.ENTRUST_NUM) - NVL(T4.FINISHED_AMT, 0))) unfinishedAmt,
             T1.PS ps,
             T11.TYPE_6 type6,
             T10.FINPROD_ABBR chlName

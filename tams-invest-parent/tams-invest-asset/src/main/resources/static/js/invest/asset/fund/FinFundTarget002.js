@@ -3,8 +3,6 @@
  * 基金类标的信息新建
  */
 (function() {
-
-    var windflag = false;
 	/**
      * 画星星
      */
@@ -119,7 +117,7 @@
             })
         })
     }
-    
+
     var init = function(){
         //资产代码拆分
         var finprodMarketId =  $('#finprodMarketId').val();
@@ -169,7 +167,6 @@
     	star();
     };
     var getInterfFundDto = function(){
-    windflag = false;
     	if ($('#finprodMarketId').prop('disabled')) {
     		return;
 		}
@@ -197,8 +194,6 @@
                             if (result.data[0]) {
                                 Joyin.error(result.data[0].message);
                             } else {
-
-                            windflag = true;
                                 //$('#submitForm')[0].reset();
                                 //清除重置下拉框
                                 $('#type9').val(null).trigger('change');
@@ -216,6 +211,7 @@
                                 });
                                 //基金二级类型重新赋值
                                 $('#secondType').textSelect('setValue', result.data.secondType);
+                                $('#tradeMarket').textSelect('setValue', result.data.tradeMarket);
                             }
                         }
                     });
@@ -228,7 +224,7 @@
 		}
 	};
 
-    var setData = function(id, value ,pageId) {        
+    var setData = function(id, value ,pageId) {
         if (id == 'bussFinIntPayDto') {
             $.each(value, function(id, value) {
                 setData(id, value , 'bussFinIntPayDto');
@@ -264,13 +260,9 @@
                     //data-url 赋值要特殊处理
                     element.textSelect('setValue', value);
                 }else {
-                    if(id=='trmFundType'){
-                         console.log('trmFundType  trmFundType');
-                         $('#tempTrmFundType').val(value);
-                    }
                     element.val(value).trigger('change');
                 }
-                
+
             }else if(element.hasClass('input-checkbox')){
                 //单选按钮特殊处理
                 element.val(value).trigger('change');
@@ -332,13 +324,6 @@
     var secondTypeChange = function(){
         var fundType = $('#fundType').val();
         var secondType = $('#secondType').val();
-
-
-        if(windflag){
-          $('#trmFundType').val( $('#tempTrmFundType').val());
-          //$('#etfType').val( $('#tempEtfType').val()).trigger('change');
-
-        }
         //交易所基金类型 交易所基金类型_ETF|TRM_FUND_TYPE_01
         var trmFundType = $("#trmFundType").val();
         // 交易所基金类型是否是ETF
@@ -421,16 +406,16 @@
     var tradeMarketChange = function(){
         AssetCommon.setTradeMarketId($('#tradeMarket').val());
         if($('#tradeMarket').val() == '09'){
-            $('#trmFundType').val('');
-            $('#trmFundType').prop('disabled',true).trigger('change');
+            $('#trmFundType').val('').trigger('change');
+            $('#trmFundType').prop('disabled',true);
             $('#trmFundAbbr').val('');
-            $('#trmFundAbbr').prop('disabled',true).trigger('change');
+            $('#trmFundAbbr').prop('disabled',true);
         }else{
-            $('#trmFundType').prop('disabled',false).trigger('change');
-            $('#trmFundAbbr').prop('disabled',false).trigger('change');
+            $('#trmFundType').prop('disabled',false);
+            $('#trmFundAbbr').prop('disabled',false);
         }
         secondTypeChange();
-       // trmFundTypeChange();
+        trmFundTypeChange();
     }
     //控件加载完成后
     window.componentLoadCallback = function(isDone, pagePath, params){
