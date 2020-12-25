@@ -17,6 +17,7 @@ import java.util.*;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.asset.interfaceDto.S001AssetTypeEntity;
 import com.joyintech.tams.invest.asset.interfaceDto.S007Dto;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
@@ -321,24 +322,26 @@ public class FinFundTargetService extends CommonExportService<FinFundTargetDto> 
         fundTargetDto.setPurRedAbbr(baseInfoDto.getFinProductAdd().getPurRedAbbr());
         fundTargetDto.setPurStartLow(baseInfoDto.getFinProductAdd().getPurStartLow());
         fundTargetDto.setRedStartLow(baseInfoDto.getFinProductAdd().getRedStartLow());
-        //fundTargetDto.setEtfType(baseInfoDto.getFinProductAdd().getEtfType());
+        fundTargetDto.setEtfType(baseInfoDto.getFinProductAdd().getEtfType());
         //fundTargetDto.setEtfType("01");
 //        String etfTypeTmp = baseInfoDto.getFinProductAdd().getEtfType();
 //        if(StringUtils.equals(etfTypeTmp,"单市场ETF")){
-//            fundTargetDto.setTrmFundType("01");
+//            fundTargetDto.setEtfType("01");
 //        }else if(StringUtils.equals(etfTypeTmp,"跨市场ETF")){
-//            fundTargetDto.setTrmFundType("02");
+//            fundTargetDto.setEtfType("02");
 //        }else if(StringUtils.equals(etfTypeTmp,"跨境ETF")){
-//            fundTargetDto.setTrmFundType("03");
+//            fundTargetDto.setEtfType("03");
 //        }else if(StringUtils.equals(etfTypeTmp,"债券ETF")){
-//            fundTargetDto.setTrmFundType("04");
+//            fundTargetDto.setEtfType("04");
 //        }else if(StringUtils.equals(etfTypeTmp,"黄金ETF")){
-//            fundTargetDto.setTrmFundType("05");
+//            fundTargetDto.setEtfType("05");
 //        }else if(StringUtils.equals(etfTypeTmp,"货币ETF")){
-//            fundTargetDto.setTrmFundType("06");
+//            fundTargetDto.setEtfType("06");
 //        }else{
-//            fundTargetDto.setTrmFundType("");
+//            fundTargetDto.setEtfType("01");
 //        }
+
+
 
         fundTargetDto.setEtfMinPrunit(baseInfoDto.getFinProductAdd().getEtfMinPrunit());
 
