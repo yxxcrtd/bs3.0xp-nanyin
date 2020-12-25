@@ -38,6 +38,7 @@
 		m.EFF_DATE effDate,
 		m.FEE_MAXI feeMaxi,
 		m.FEE_MINI feeMini,
+		m.TRADE_MARKET_MODE tradeMarketMode,
 		case when m.CHARGE_TYPE = '01' then m.feeRate * 100 else m.feeRate end as feeRate
 		FROM (
 		select
@@ -45,7 +46,7 @@
 		T1.FEE_TYPE ,
 		T1.REGIST_ORG ,
 		T1.TRADE_TYPE ,
-
+		T1.TRADE_MARKET_MODE,
 		T1.CHARGE_TYPE ,
 		T1.CHARGE_BASIS ,
 		T1.EFF_DATE ,
@@ -70,7 +71,8 @@
 		T2.CHARGE_VALUE,
 		T2.CHARGE_RATE ,
 		T2.FEE_MAXI ,
-		T2.FEE_MINI
+		T2.FEE_MINI,
+		T1.TRADE_MARKET_MODE
 		) m,
 		(
 		SELECT
@@ -127,6 +129,7 @@
 	 -->
 	<select id="getEntity" resultType="com.joyintech.service.basicdata.mstbanktranfeemanage.dto.MstBankTranFeeManageDto">
 		SELECT
+		m.TRADE_MARKET_MODE tradeMarketMode,
 		m.BATCH_SEQ batchSeq,
 		m.REGIST_ORG registOrg,
 		t3.ps ps,
@@ -144,7 +147,7 @@
 		FROM
 		(
 		select
-
+		T1.TRADE_MARKET_MODE,
 		T1.FEE_TYPE ,
 		T1.REGIST_ORG ,
 		T1.TRADE_TYPE ,
@@ -162,6 +165,7 @@
 		WHERE
 		T1.TRADE_MARKET=#{TRADE_PLACE_01,jdbcType=VARCHAR}
 		GROUP BY
+		T1.TRADE_MARKET_MODE,
 		T1.BATCH_SEQ,
 		T1.EFF_DATE,
 		T1.FEE_TYPE ,
@@ -312,6 +316,7 @@
 		<!-- 根据创建时间排序 （降序） -->
 		order by pm.create_time desc
 	</select>
+
 	<!-- add by wangguoxian 20190718 start -->
 	<select id="selExistCnt" resultType = "java.lang.Integer">
 		SELECT
@@ -338,6 +343,9 @@
 		</if>
 		<if test="registOrg != null and registOrg !=''">
 			and m.REGIST_ORG = #{registOrg}
+		</if>
+		<if test="tradeMarketMode != null and tradeMarketMode !=''">
+			and m.TRADE_MARKET_MODE = #{tradeMarketMode}
 		</if>
 	</select>
 	<!-- add by wangguoxian 20190718 end -->

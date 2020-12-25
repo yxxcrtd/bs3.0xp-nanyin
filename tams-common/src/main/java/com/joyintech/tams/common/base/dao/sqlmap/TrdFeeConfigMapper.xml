@@ -45,10 +45,12 @@
         from TRD_FEE_CONFIG
         where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
     </select>
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
         delete from TRD_FEE_CONFIG
         where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
     </delete>
+    <!--TODO 添加映射-->
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.TrdFeeConfig" >
         insert into TRD_FEE_CONFIG (SEQ_NO, TRADE_MARKET, FEE_TYPE, 
             REGIST_ORG, TRADE_TYPE, PS, 
@@ -56,14 +58,14 @@
             CHARGE_BASIS, IS_GRADE, EFF_DATE, 
             BATCH_SEQ, CREATE_USER, CREATE_DEPT, 
             CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
-            IS_PAY_WITH_TRADE)
+            IS_PAY_WITH_TRADE,TRADE_MARKET_MODE)
         values (#{seqNo,jdbcType=VARCHAR}, #{tradeMarket,jdbcType=VARCHAR}, #{feeType,jdbcType=VARCHAR}, 
             #{registOrg,jdbcType=VARCHAR}, #{tradeType,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR}, 
             #{termType,jdbcType=VARCHAR}, #{secAcctId,jdbcType=VARCHAR}, #{chargeType,jdbcType=VARCHAR}, 
             #{chargeBasis,jdbcType=VARCHAR}, #{isGrade,jdbcType=VARCHAR}, #{effDate,jdbcType=DATE}, 
             #{batchSeq,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
             #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-            #{isPayWithTrade,jdbcType=VARCHAR})
+            #{isPayWithTrade,jdbcType=VARCHAR},#{tradeMarketMode,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdFeeConfig" >
         insert into TRD_FEE_CONFIG

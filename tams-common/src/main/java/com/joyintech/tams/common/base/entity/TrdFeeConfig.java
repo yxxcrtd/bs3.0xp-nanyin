@@ -3,6 +3,9 @@ package com.joyintech.tams.common.base.entity;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.CustomDateDeserialize;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
+
 import java.util.Date;
 
 public class TrdFeeConfig extends BaseEntity {
@@ -10,6 +13,17 @@ public class TrdFeeConfig extends BaseEntity {
      * 流水号
      */
     private String seqNo;
+
+    private String tradeMarketMode;
+
+
+    public String getTradeMarketMode() {
+        return tradeMarketMode;
+    }
+
+    public void setTradeMarketMode(String tradeMarketMode) {
+        this.tradeMarketMode = tradeMarketMode;
+    }
 
     /**
      * 交易场所

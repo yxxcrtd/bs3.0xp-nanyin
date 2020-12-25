@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import org.springframework.stereotype.Service;
@@ -103,6 +105,9 @@ public class MstBankTranFeeManageService extends CommonExportService<MstBankTran
         Page<MstBankTranFeeManageDto> result = restTemplate.postForPage(ServiceApplication.BASICDATA_SERVICE_NAME + "/MstBankTranFeeManage/selectForPage", parameters, MstBankTranFeeManageDto.class);
         List<MstBankTranFeeManageDto> dtoList = result.getRoot();
         for (MstBankTranFeeManageDto dto:dtoList){
+            if (StringUtil.isNotEmpty(dto.getTradeMarketMode())){
+                dto.setTradeMarketModeStr(SysDataUtil.getNameFromDataDict(DictCode.交易市场, dto.getTradeMarketMode()));
+            }
             if (StringUtil.equals(dto.getChargeType(), BussinessDictCodeList.计费类型_固定费率.getValue())){
                 dto.setFeeRate(ArithmeticUtil.round(new BigDecimal(dto.getFeeRate()),8,RoundingMode.HALF_UP).toString()+"%");
             }else {

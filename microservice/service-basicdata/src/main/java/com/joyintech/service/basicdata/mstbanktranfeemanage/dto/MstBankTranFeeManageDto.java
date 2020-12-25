@@ -76,6 +76,11 @@ public class MstBankTranFeeManageDto extends TrdFeeConfig{
     private String operateType;
 
     /**
+     * 交易市场
+     */
+    private String tradeMarketMode;
+
+    /**
      * 选择数据
      */
     private List<MstBankTranFeeManageDto> selectedItem;
@@ -93,7 +98,15 @@ public class MstBankTranFeeManageDto extends TrdFeeConfig{
      * 流程中做pk1存json串
      */
     private String allData;
-    
+
+    public String getTradeMarketMode() {
+        return tradeMarketMode;
+    }
+
+    public void setTradeMarketMode(String tradeMarketMode) {
+        this.tradeMarketMode = tradeMarketMode == null ? null : tradeMarketMode.trim();
+    }
+
     public String getAllData() {
         return allData;
     }
