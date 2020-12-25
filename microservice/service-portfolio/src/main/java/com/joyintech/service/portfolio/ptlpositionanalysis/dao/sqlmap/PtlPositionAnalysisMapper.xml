@@ -19,7 +19,9 @@
                     (<!-- round -->((nvl(A.marketValue, 0) + nvl(A.tdyIntincexp, 0)) / B.typeMarketValue<!-- , 4 -->) - nvl(F.yearAmtRation, 0)) * 100 END yearAmtRation,
                     C.ystAmtRation ystAmtRationTemp,
                     D.monthAmtRation monthAmtRationExTemp,
-                    F.yearAmtRation yearAmtRationTemp
+                    F.yearAmtRation yearAmtRationTemp,
+                    C.marketValue ystMarketValue,
+                    C.tdyIntincexp ystTdyIntincexp
                     from (
                                   select  pp.VDATE  AS vdate,psv.CDATE as cdate,psv.PORTFOLIO_ID as portfolioId,pp.PORTFOLIO_NAME as portfolioName,
                            		   case when fpt.TYPE_8 = 'F08' AND fpt.TYPE_7 = '01' then -1*psv.DSC_COST_AMT
@@ -98,6 +100,7 @@
                 ) B on A.portfolioId=B.portfolioId and A.cdate=B.cdate and B.typeMarketValue!=0
                 left join(
                            select AA.cdate,AA.portfolioId,AA.finprodType2,AA.finprodId,round((nvl(AA.marketValue, 0) + nvl(AA.tdyIntincexp, 0)) / BB.typeMarketValue, 4) as ystAmtRation
+                            , AA.marketValue as marketValue, AA.tdyIntincexp as tdyIntincexp, BB.typeMarketValue as typeMarketValue
                            from(
                                   select psv.CDATE as cdate,
                                          psv.PORTFOLIO_ID as portfolioId,
@@ -389,28 +392,101 @@
                 )F on A.portfolioId=F.portfolioId and A.finprodType2=F.finprodType2 AND A.finprodId=F.finprodId
                 union all
                 SELECT
+                S.cdate cdate,
+                S.portfolioId portfolioId,
+                S.portfolioName portfolioName,
+                #{cash} finprodType2,#{cash} type5, NULL finprodMarketId,NULL finprodAbbr,
+                S.marketValue marketValue,
+                S.dscCostAmt dscCostAmt,
+                null shareAmt,
+                NULL tdyIntincexp,
+                NULL tdyAmtRation,
+                NULL ystAmtRation,
+                NULL monthAmtRation,
+                NULL yearAmtRation,
+                NULL ystAmtRationTemp,
+                NULL monthAmtRationExTemp,
+                NULL yearAmtRationTemp,
+                SS.marketValue ystMarketValue,
+                NULL ystTdyIntincexp
+                FROM(
+                        SELECT
+                        psv.cdate cdate,
+                        psv.portfolio_Id portfolioId,
+                        pp.portfolio_Name portfolioName,
+                        #{cash} finprodType2,#{cash} type5, NULL finprodMarketId,NULL finprodAbbr,
+                        pcp.amount marketValue,
+                        pcp.amount dscCostAmt,
+                        null shareAmt,
+                        NULL tdyIntincexp,
+                        NULL tdyAmtRation,
+                        NULL ystAmtRation,
+                        NULL monthAmtRation,
+                        NULL yearAmtRation,
+                        NULL ystAmtRationTemp,
+                        NULL monthAmtRationExTemp,
+                        NULL yearAmtRationTemp,
+                        NULL ystMarketValue,
+                        NULL ystTdyIntincexp
+                        FROM PTL_SEC_VALUTION psv
+                        LEFT JOIN FIN_PRODUCT_ADD ON FIN_PRODUCT_ADD.FINPROD_ID = psv.FINPROD_ID
+                        LEFT JOIN PTL_PORTFOLIO pp ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
+                        LEFT JOIN PTL_CASH_POSITION pcp ON psv.PORTFOLIO_ID = pcp.PORTFOLIO_ID and psv.cdate = pcp.cdate
+                        left JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID and fpt.TYPE_8 is not null
+                        WHERE
+                        TO_CHAR (psv.CDATE, 'yyyy-mm-dd') = #{searchDate}
+                        and pcp.portfolio_Id is not NULL
+                        <if test="portfolioIdList != null and portfolioIdList.size()>0">
+                            AND pcp.PORTFOLIO_ID IN
+                            <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+                                #{item}
+                            </foreach>
+                        </if>
+                        <if test="assetTypeList != null and assetTypeList.size()>0">
+                            AND fpt.TYPE_8 IN
+                            <foreach collection="assetTypeList" item="item" separator="," open="(" close =")">
+                                #{item}
+                            </foreach>
+                        </if>
+                        <!--  add by wangyang1 【吉林银行】 增加 产品经理  2019年9月29日 start -->
+                        <if test=" prodManager !=null and prodManager.size()>0 " >
+                            AND FIN_PRODUCT_ADD.PROD_MANAGER IN
+                            <foreach collection="prodManager" item="item" open="(" close=")" separator=",">
+                                #{item}
+                            </foreach>
+                        </if>
+                        <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
+                        GROUP BY
+                        psv.cdate,psv.portfolio_Id,pp.portfolio_Name,pcp.amount
+                ) S
+                LEFT JOIN (
+                    SELECT
                     psv.cdate cdate,
                     psv.portfolio_Id portfolioId,
-                    pp.portfolio_Name portfolioName,
-                    #{cash} finprodType2,#{cash} type5, NULL finprodMarketId,NULL finprodAbbr,
                     pcp.amount marketValue,
-                    pcp.amount dscCostAmt,
-                    null shareAmt,
-                    NULL tdyIntincexp,
-                    NULL tdyAmtRation,
-                    NULL ystAmtRation,
-                    NULL monthAmtRation,
-                    NULL yearAmtRation,
-                    NULL ystAmtRationTemp,
-                    NULL monthAmtRationExTemp,
-                    NULL yearAmtRationTemp
+                    pcp.amount dscCostAmt
                     FROM PTL_SEC_VALUTION psv
                     LEFT JOIN FIN_PRODUCT_ADD ON FIN_PRODUCT_ADD.FINPROD_ID = psv.FINPROD_ID
                     LEFT JOIN PTL_PORTFOLIO pp ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
                     LEFT JOIN PTL_CASH_POSITION pcp ON psv.PORTFOLIO_ID = pcp.PORTFOLIO_ID and psv.cdate = pcp.cdate
                     left JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID and fpt.TYPE_8 is not null
-                WHERE
-                    TO_CHAR (psv.CDATE, 'yyyy-mm-dd') = #{searchDate}
+                    inner join (
+                    select PORTFOLIO_ID portfolioId,max(CDATE) as maxCdate
+                    from PTL_SEC_VALUTION
+                    where 1=1
+                    <if test="portfolioIdList != null and portfolioIdList.size()>0">
+                        AND PORTFOLIO_ID IN
+                        <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+                            #{item}
+                        </foreach>
+                    </if>
+                    <if test="searchDate != null and searchDate != ''">
+                        and to_char(CDATE,'yyyy-mm-dd') &lt; #{searchDate}
+                    </if>
+                    group by PORTFOLIO_ID
+                    )E on E.portfolioId=psv.PORTFOLIO_ID
+                    WHERE
+                        psv.CDATE=E.maxCdate
                     and pcp.portfolio_Id is not NULL
                     <if test="portfolioIdList != null and portfolioIdList.size()>0">
                         AND pcp.PORTFOLIO_ID IN
@@ -425,15 +501,16 @@
                         </foreach>
                     </if>
                     <!--  add by wangyang1 【吉林银行】 增加 产品经理  2019年9月29日 start -->
-				   <if test=" prodManager !=null and prodManager.size()>0 " >
-						AND FIN_PRODUCT_ADD.PROD_MANAGER IN
-						<foreach collection="prodManager" item="item" open="(" close=")" separator=",">
-							#{item}
-						</foreach>
-					</if>
-					<!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
-                GROUP BY
-                    psv.cdate,psv.portfolio_Id,pp.portfolio_Name,pcp.amount
+                    <if test=" prodManager !=null and prodManager.size()>0 " >
+                        AND FIN_PRODUCT_ADD.PROD_MANAGER IN
+                        <foreach collection="prodManager" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                    <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
+                    GROUP BY
+                    psv.cdate,psv.portfolio_Id,pcp.amount
+                ) SS ON S.portfolioId = SS.portfolioId
           )
 	</sql>
 	
@@ -453,7 +530,9 @@
                             ((nvl(A.marketValue,0)+nvl(A.tdyIntincexp,0))/B.typeMarketValue-nvl(F.yearAmtRation,0))*100 end yearAmtRation,
         C.ystAmtRation ystAmtRationTemp,
         D.monthAmtRation monthAmtRationExTemp,
-        F.yearAmtRation yearAmtRationTemp
+        F.yearAmtRation yearAmtRationTemp,
+        C.marketValue ystMarketValue,
+        C.tdyIntincexp ystTdyIntincexp
                     from (
                            select pp.VDATE  AS vdate,psv.CDATE as cdate,psv.PORTFOLIO_ID as portfolioId,pp.PORTFOLIO_NAME as portfolioName,
                         CASE
@@ -570,6 +649,7 @@
                   /*and A.finprodType2=B.finprodType2*/
                 left join(
                            select AA.cdate,AA.portfolioId,AA.finprodType2,(nvl(AA.marketValue,0)+nvl(AA.tdyIntincexp,0))/BB.typeMarketValue as ystAmtRation
+                            , AA.marketValue as marketValue, AA.tdyIntincexp as tdyIntincexp, BB.typeMarketValue as typeMarketValue
                            from(
                                   select psv.CDATE as cdate,
                                          psv.PORTFOLIO_ID as portfolioId,
@@ -931,6 +1011,127 @@
                             /*and AA.finprodType2=BB.finprodType2*/
                           where BB.typeMarketValue!=0
                 )F on A.portfolioId=F.portfolioId and A.finprodType2=F.finprodType2
+        union all
+            SELECT
+            S.cdate cdate,
+            S.portfolioId portfolioId,
+            S.portfolioName portfolioName,
+            #{cash} finprodType2,#{cash} type5, NULL finprodMarketId,NULL finprodAbbr,
+            S.marketValue marketValue,
+            S.dscCostAmt dscCostAmt,
+            null shareAmt,
+            NULL tdyIntincexp,
+            NULL tdyAmtRation,
+            NULL ystAmtRation,
+            NULL monthAmtRation,
+            NULL yearAmtRation,
+            NULL ystAmtRationTemp,
+            NULL monthAmtRationExTemp,
+            NULL yearAmtRationTemp,
+            SS.marketValue ystMarketValue,
+            NULL ystTdyIntincexp
+            FROM(
+            SELECT
+            psv.cdate cdate,
+            psv.portfolio_Id portfolioId,
+            pp.portfolio_Name portfolioName,
+            #{cash} finprodType2,#{cash} type5, NULL finprodMarketId,NULL finprodAbbr,
+            pcp.amount marketValue,
+            pcp.amount dscCostAmt,
+            null shareAmt,
+            NULL tdyIntincexp,
+            NULL tdyAmtRation,
+            NULL ystAmtRation,
+            NULL monthAmtRation,
+            NULL yearAmtRation,
+            NULL ystAmtRationTemp,
+            NULL monthAmtRationExTemp,
+            NULL yearAmtRationTemp,
+            NULL ystMarketValue,
+            NULL ystTdyIntincexp
+            FROM PTL_SEC_PIERCE_VALUTION psv
+            LEFT JOIN FIN_PRODUCT_ADD ON FIN_PRODUCT_ADD.FINPROD_ID = psv.FINPROD_ID
+            LEFT JOIN PTL_PORTFOLIO pp ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
+            LEFT JOIN PTL_CASH_POSITION pcp ON psv.PORTFOLIO_ID = pcp.PORTFOLIO_ID and psv.cdate = pcp.cdate
+            left JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID and fpt.TYPE_8 is not null
+            WHERE
+            TO_CHAR (psv.CDATE, 'yyyy-mm-dd') = #{searchDate}
+            and pcp.portfolio_Id is not NULL
+            <if test="portfolioIdList != null and portfolioIdList.size()>0">
+                AND pcp.PORTFOLIO_ID IN
+                <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="assetTypeList != null and assetTypeList.size()>0">
+                AND fpt.TYPE_8 IN
+                <foreach collection="assetTypeList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+            </if>
+            <!--  add by wangyang1 【吉林银行】 增加 产品经理  2019年9月29日 start -->
+            <if test=" prodManager !=null and prodManager.size()>0 " >
+                AND FIN_PRODUCT_ADD.PROD_MANAGER IN
+                <foreach collection="prodManager" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
+            GROUP BY
+            psv.cdate,psv.portfolio_Id,pp.portfolio_Name,pcp.amount
+            ) S
+            LEFT JOIN (
+            SELECT
+            psv.cdate cdate,
+            psv.portfolio_Id portfolioId,
+            pcp.amount marketValue,
+            pcp.amount dscCostAmt
+            FROM PTL_SEC_PIERCE_VALUTION psv
+            LEFT JOIN FIN_PRODUCT_ADD ON FIN_PRODUCT_ADD.FINPROD_ID = psv.FINPROD_ID
+            LEFT JOIN PTL_PORTFOLIO pp ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
+            LEFT JOIN PTL_CASH_POSITION pcp ON psv.PORTFOLIO_ID = pcp.PORTFOLIO_ID and psv.cdate = pcp.cdate
+            left JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID and fpt.TYPE_8 is not null
+            inner join (
+            select PORTFOLIO_ID portfolioId,max(CDATE) as maxCdate
+            from PTL_SEC_PIERCE_VALUTION
+            where 1=1
+            <if test="portfolioIdList != null and portfolioIdList.size()>0">
+                AND PORTFOLIO_ID IN
+                <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="searchDate != null and searchDate != ''">
+                and to_char(CDATE,'yyyy-mm-dd') &lt; #{searchDate}
+            </if>
+            group by PORTFOLIO_ID
+            )E on E.portfolioId=psv.PORTFOLIO_ID
+            WHERE
+            psv.CDATE=E.maxCdate
+            and pcp.portfolio_Id is not NULL
+            <if test="portfolioIdList != null and portfolioIdList.size()>0">
+                AND pcp.PORTFOLIO_ID IN
+                <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="assetTypeList != null and assetTypeList.size()>0">
+                AND fpt.TYPE_8 IN
+                <foreach collection="assetTypeList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+            </if>
+            <!--  add by wangyang1 【吉林银行】 增加 产品经理  2019年9月29日 start -->
+            <if test=" prodManager !=null and prodManager.size()>0 " >
+                AND FIN_PRODUCT_ADD.PROD_MANAGER IN
+                <foreach collection="prodManager" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
+            GROUP BY
+            psv.cdate,psv.portfolio_Id,pcp.amount
+            ) SS ON S.portfolioId = SS.portfolioId
           )
 	</sql>
 
@@ -960,7 +1161,9 @@
                 assetHold1.belongInstitutionCode belongInstitutionCodeNew,
                 SUM(assetHold1.ystAmtRationTemp) ystAmtRationTemp,
                 SUM(assetHold1.monthAmtRationExTemp) monthAmtRationExTemp,
-                SUM(assetHold1.yearAmtRationTemp) yearAmtRationTemp
+                SUM(assetHold1.yearAmtRationTemp) yearAmtRationTemp,
+                SUM(assetHold1.ystMarketValue)  ystMarketValue,
+                SUM(assetHold1.ystTdyIntincexp)  ystTdyIntincexp
          from (
             SELECT
             assetHold.*,
@@ -996,7 +1199,9 @@
               assetHold1.portfolioName otherPortfolioName,
               round(SUM(assetHold1.ystAmtRationTemp),2) ystAmtRationTemp,
               round(SUM(assetHold1.monthAmtRationExTemp),2) monthAmtRationExTemp,
-              round(SUM(assetHold1.yearAmtRationTemp),2) yearAmtRationTemp
+              round(SUM(assetHold1.yearAmtRationTemp),2) yearAmtRationTemp,
+              SUM(assetHold1.ystMarketValue)  ystMarketValue,
+              SUM(assetHold1.ystTdyIntincexp)  ystTdyIntincexp
          from (
          SELECT
          assetHold.*
@@ -1034,7 +1239,9 @@
               assetHold1.portfolioName otherPortfolioName,
              round(SUM(assetHold1.ystAmtRationTemp),2) ystAmtRationTemp,
              round(SUM(assetHold1.monthAmtRationExTemp),2) monthAmtRationExTemp,
-             round(SUM(assetHold1.yearAmtRationTemp),2) yearAmtRationTemp
+             round(SUM(assetHold1.yearAmtRationTemp),2) yearAmtRationTemp,
+             SUM(assetHold1.ystMarketValue)  ystMarketValue,
+             SUM(assetHold1.ystTdyIntincexp)  ystTdyIntincexp
          from (
          SELECT
          assetHold.*

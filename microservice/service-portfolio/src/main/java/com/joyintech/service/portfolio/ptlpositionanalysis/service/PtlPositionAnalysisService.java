@@ -101,6 +101,7 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
     }
     private void countSumAndCalPercent(List<PtlPositionAnalysis001Dto> resultList) {
         BigDecimal sum = BigDecimal.ZERO;
+        BigDecimal ystSum = BigDecimal.ZERO;
         if(!StringUtil.isEmptyList(resultList)){
             for (PtlPositionAnalysis001Dto temp : resultList) {
                 if(temp.getMarketValue()!=null){
@@ -108,6 +109,12 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
                 }
                 if(temp.getTdyIntincexp()!=null){
                     sum = sum.add(temp.getTdyIntincexp());
+                }
+                if(temp.getYstMarketValue()!=null){
+                    ystSum = ystSum.add(temp.getYstMarketValue());
+                }
+                if(temp.getYstTdyIntincexp()!=null){
+                    ystSum = ystSum.add(temp.getYstTdyIntincexp());
                 }
             }
             //总额不能为0
@@ -120,10 +127,23 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
                     if(temp.getTdyIntincexp()!=null){
                         marketAndTdyIntince = marketAndTdyIntince.add(temp.getTdyIntincexp());
                     }
+                    BigDecimal ystMarketAndTdyIntince = BigDecimal.ZERO;
+                    if(temp.getYstMarketValue()!=null){
+                        ystMarketAndTdyIntince = ystMarketAndTdyIntince.add(temp.getYstMarketValue());
+                    }
+                    if(temp.getYstTdyIntincexp()!=null){
+                        ystMarketAndTdyIntince = ystMarketAndTdyIntince.add(temp.getYstTdyIntincexp());
+                    }
                     temp.setTdyAmtRation(ArithmeticUtil.round(marketAndTdyIntince.multiply(new BigDecimal(100)).divide(sum,6, BigDecimal.ROUND_HALF_UP),2
                             , RoundingMode.HALF_UP));
-                    //较上一日变化
-                    temp.setYstAmtRation(ArithmeticUtil.round(ArithmeticUtil.doSub(temp.getTdyAmtRation(),temp.getYstAmtRationTemp()),2,RoundingMode.HALF_UP));
+                    if(BigDecimal.ZERO.compareTo(ystSum)!=0){
+                        //较上一日变化
+                        temp.setYstAmtRation(ArithmeticUtil.round(ArithmeticUtil.doSub(temp.getTdyAmtRation(),ArithmeticUtil.round(ystMarketAndTdyIntince.multiply(new BigDecimal(100)).divide(ystSum,6, BigDecimal.ROUND_HALF_UP),2
+                                , RoundingMode.HALF_UP)),2,RoundingMode.HALF_UP));
+                    }else{
+                        //较上一日变化
+                        temp.setYstAmtRation(ArithmeticUtil.round(temp.getTdyAmtRation(),2,RoundingMode.HALF_UP));
+                    }
                     //较本月初变化
                     temp.setMonthAmtRation(ArithmeticUtil.round(ArithmeticUtil.doSub(temp.getTdyAmtRation(),temp.getMonthAmtRationTemp()),2,RoundingMode.HALF_UP));
                     //较本年初变化
