@@ -27,6 +27,7 @@ import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDt
 import com.joyintech.tams.invest.common.dto.product.addreduce.ReduceInfoDto;
 import com.joyintech.tams.invest.common.service.MapperDelegateService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
+import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.BussTrdPositionDto;
 import com.joyintech.tams.invest.common.trade.service.TradeProductDealCommService;
@@ -94,6 +95,9 @@ public class FinProductExpire002Service extends BaseService<FinProductExpire002D
     
     @Autowired
     private TrdAsynHandleStatusMapper trdAsynHandleStatusMapper;
+
+    @Autowired
+    private BaseAssetCashPositionCommMapper baseAssetCashPositionCommMapper;
 
     /**
      * {@inheritDoc} ---丁俊峰放开注释
@@ -1597,5 +1601,34 @@ public class FinProductExpire002Service extends BaseService<FinProductExpire002D
         param.put("isCancelN", DictCodeList.是否_否.getValue());
         return restTemplate.postForObject(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductExpire/isExpireTradeByFinprodId",
             param, Integer.class);
+    }
+
+    /**
+     * 流程退回处理
+     *
+     * @param entity 画面参数
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @Override
+    public void doBack(FinProductExpire002Dto entity) {
+        String totaltradeId =entity.getFinProductExpireTrdDto().getTrdFinProductDealTotal().getTotleTradeId();
+        List<PtlSecPositionFlow> flows = baseAssetCashPositionCommMapper.selectAllPosition(totaltradeId);
+        if (!flows.isEmpty()) {
+            baseAssetCashPositionCommMapper.deletePositionByTradeId(totaltradeId);
+        }
+
+        List<String> orderIds = baseAssetCashPositionCommMapper.selectOrderIdsByTradeId(totaltradeId);
+        if (orderIds.isEmpty()) {
+            orderIds = baseAssetCashPositionCommMapper.selectOrderIdsByPTotalTradeId(totaltradeId);
+        }
+        if (!orderIds.isEmpty()) {
+            List<PtlCashPositionFlow> cashFlows = baseAssetCashPositionCommMapper.selectAllCashPosition(orderIds);
+            if (!cashFlows.isEmpty()) {
+                baseAssetCashPositionCommMapper.deleteCashPositionByOrderIds(orderIds);
+            }
+        }
+
     }
 }
