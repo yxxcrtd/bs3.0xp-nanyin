@@ -248,6 +248,17 @@ public class SVReportGlobalConstant {
     public static final String SVR_IS_CHL_BTM = "SVR_IS_CHL_BTM";
 
     /**
+     * 余额计算时单位净值是否要保留5位小数），01：是，02：否
+     */
+    public static final String SVR_QDBK_IS_PRECISION = "SVR_QDBK_IS_PRECISION";
+
+    /**
+     * 募集兑付是否统计红利再投），01：是，02：否
+     */
+    public static final String SVR_RAC_HAS_BOUNS = "SVR_RAC_HAS_BOUNS";
+
+
+    /**
      * 发行机构名称add by weiyuqiang 
      */
     public static final String SVR_ISSUE_PARTY_NAME = "SVR_ISSUE_PARTY_NAME";

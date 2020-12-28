@@ -81,7 +81,9 @@ public interface PbcMonthPrdPostionMapper {
                      @Param("exchangeSource") String exchangeSource,
                      @Param("days") Integer days,
                      @Param("dividendReinvestmentFlag") String dividendReinvestmentFlag,
-                     @Param("jsbankStr")String jsbankStr);
+                     @Param("jsbankStr")String jsbankStr,
+                     @Param("hasbouns")String hasbouns,
+                     @Param("isPre")String isPre);
 
     /**
      * [邮储个性化]生成人行报表头寸,wangyang1 added on 2019-8-26

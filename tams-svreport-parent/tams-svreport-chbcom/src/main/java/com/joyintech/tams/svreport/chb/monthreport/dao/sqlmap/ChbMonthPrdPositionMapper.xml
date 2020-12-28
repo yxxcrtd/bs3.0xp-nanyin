@@ -410,13 +410,17 @@
 	    ,info.OPERATE_MODE
 	    ,info.OPENTYPEP
         ,info.CASH_MANA_CATE
-      	,case when info.SHORT_TERM is null
-        then null
-        when info.SHORT_TERM>184
-        then '02'
-        else
-        '01'
-      	end openduration
+      ,info.CASH_MANA_CATE
+        /***封闭期在半年以上的定期开放式产品：改成按照期限品种统计； leipeng 20201226***/
+      ,          case when info.operate_mode = ('03') and info.termtype in ('06,08,09')
+                      then '02' else
+                      case when info.SHORT_TERM is null
+                      then null
+                      when info.SHORT_TERM>184
+                      then '02'
+                      else
+                      '01' end
+                      end openduration
 	    ,info.PROFIT_TYPE
 	    ,decode(info.EXC_FIN_SECTOR,'01','04',info.SALETARGET) saletarget
 	    ,info.CON_PRD_TRAGET

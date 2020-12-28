@@ -567,28 +567,48 @@
 		                buy_place,
 		                SUM(
 		                    CASE
-		                        WHEN dl.trade_type IN('01', '02', '14') THEN /*05红利再投的交易金额与人行确认不需统计*/
+                                WHEN dl.trade_type IN('01', '02', '14'
+                                  <if test="hasbouns != null and hasbouns =='01'">
+                                  /***根据参数判断是否添加红利再投**/
+                                  ,'05'
+                                  </if>>
+                                ) THEN
 		                            dl.trade_prince
 		                        ELSE 0 
 		                    END
 		                ) dirtyamtsum,
 		                 SUM(
 		                    CASE
-		                        WHEN dl.trade_type IN('03', '04', '15', '16', '17') THEN /*加上 04收益分配，05红利再投的交易金额与人行确认不需统计*/
+		                        WHEN dl.trade_type IN('03', '04', '15', '16', '17'
+                                      <if test="hasbouns != null and hasbouns =='01'">
+                                          /***根据参数判断是否添加红利再投**/
+                                          ,'05'
+                                      </if>>
+		                        ) THEN /*加上 04收益分配，05红利再投的交易金额与人行确认不需统计*/
 		                            dl.trade_prince
 		                        ELSE 0
 		                    END
 		                ) redamt,
 		                SUM(
 		                    CASE
-		                        WHEN dl.trade_type IN('01', '02', '05','14') THEN
+		                        WHEN dl.trade_type IN('01', '02', '05','14'
+                                  <if test="hasbouns != null and hasbouns =='01'">
+                                      /***根据参数判断是否添加红利再投**/
+                                      ,'05'
+                                  </if>>
+		                        ) THEN
 		                            dl.trade_qty
 		                        ELSE 0 
 		                    END
 		                ) raiseqty,
 		                SUM(
 		                    CASE
-		                        WHEN dl.trade_type IN('03', '15','16', '17') THEN
+		                        WHEN dl.trade_type IN('03', '15','16', '17'
+                                      <if test="hasbouns != null and hasbouns =='01'">
+                                          /***根据参数判断是否添加红利再投**/
+                                          ,'05'
+                                      </if>>
+		                        ) THEN
 		                            dl.trade_qty
 		                        ELSE 0
 		                    END
@@ -865,7 +885,8 @@
 	    /*若币种取值与产品基本信息表，取前三位*/
 	    nvl(deal.ccy, DECODE(baseinfo.RAISE_CCY, NULL, NULL, SUBSTR(baseinfo.RAISE_CCY, 1, 3))) ccy,/*币种*/
     	deal.customer_type2 customertype2,/*客户二级类型*/
-        deal.endqtysum*DECODE(#{jsbankStr,jdbcType=VARCHAR},'01',TRUNC(deal.prod_value,5),'02',ROUND(deal.prod_value,5))*nvl(rate.yeid,1) ENDAMTSUM_OTH,/*期末余额*/
+        deal.endqtysum*DECODE(#{isPre,jdbcType=VARCHAR},'02',deal.prod_value,
+            DECODE(#{jsbankStr,jdbcType=VARCHAR},'01',TRUNC(deal.prod_value,5),'02',ROUND(deal.prod_value,5)))*nvl(rate.yeid,1) ENDAMTSUM_OTH,/*期末余额*/
 	    deal.dirtyamtsum       dirtyamtsum,/*募集金额*/
 	    deal.redamt            redamt,/*兑付金额*/
 	    deal.raiseqty       raiseqty,/*当期募集份额*/

@@ -134,6 +134,20 @@ public class ChbPrdPosition {
     private BigDecimal custamt;// 兑付客户总金额
     private BigDecimal custqty;// 兑付客户总份额
     private BigDecimal raiseamt;//    实际募集金额
+
+    /**
+     * 起息日
+     */
+    private Date vDate;
+
+    public Date getvDate() {
+        return vDate;
+    }
+
+    public void setvDate(Date vDate) {
+        this.vDate = vDate;
+    }
+
     /**
      * 生成日
      * @return CDATE 生成日

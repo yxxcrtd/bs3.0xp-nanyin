@@ -337,7 +337,8 @@ public class ProdPosition001Service  extends SvrCBBaseService{
 	            }
 	            if (DictCodeListExt2.产品存续期登记交易类型_募集期认购.getValue().equals(chbPrdDeal.getTradeType())||
 	                DictCodeListExt2.产品存续期登记交易类型_存续期申购.getValue().equals(chbPrdDeal.getTradeType())) {
-	                pos.setRaiseamt(pos.getRaiseamt().add(prinamt));
+//	                pos.setRaiseamt(pos.getRaiseamt().add(prinamt));
+					//产品头寸修改,原逻辑废除 leipeng 20201226
 	            } else if(DictCodeListExt2.产品存续期登记交易类型_存续期赎回.getValue().equals(chbPrdDeal.getTradeType())){
 	                pos.setCustamt(pos.getCustamt().add(prinamt));
 	                pos.setCustqty(pos.getCustqty().add(qty));
@@ -365,7 +366,11 @@ public class ProdPosition001Service  extends SvrCBBaseService{
         	ChbPrdPosition tdyPosition=positionMap.get(key).get(0);
         	if(tdyPosition.getTdaddQty()==null){
         		tdyPosition.setTdaddQty(BigDecimal.ZERO);
-    		}
+			}else{
+				//key.实际募集 = (key.昨日实际募集 * (生成日-起息日) + 新增份额 ) / (生成日-起息日+1))
+				BigDecimal raiseamt = tdyPosition.getRaiseamt().multiply(new BigDecimal(DateUtil.getBetweenDayNumber(tdyPosition.getCdate(),tdyPosition.getvDate()))).add(tdyPosition.getTdaddQty())
+				tdyPosition.setRaiseamt(raiseamt.divide(new BigDecimal(DateUtil.getBetweenDayNumber(tdyPosition.getCdate(),tdyPosition.getvDate())).add(BigDecimal.ONE),BigDecimal.ROUND_HALF_UP));
+			}
     		if(tdyPosition.getTdaddAmt()==null){
     			tdyPosition.setTdaddAmt(BigDecimal.ZERO);
     		}
