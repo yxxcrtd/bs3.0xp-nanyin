@@ -494,7 +494,9 @@
             		$('#secondType').val('').trigger('change');
             		$('#secondType').attr("required",false);
             		$('#bussFinIntPayDto_div').show();
-            		$('#isCompoundInt').attr("disabled",true).trigger('change');
+            		//ZGBS-146 草稿箱回显时按日复利置灰 根据init方法中处理逻辑修改 start
+            		$('#isCompoundInt').attr("disabled",false).trigger('change');
+            		//ZGBS-146 草稿箱回显时按日复利置灰 根据init方法中处理逻辑修改 end
             	}else{
             		$('#secondType').attr("disabled",false);
             		$('#bussFinIntPayDto_div').hide();
