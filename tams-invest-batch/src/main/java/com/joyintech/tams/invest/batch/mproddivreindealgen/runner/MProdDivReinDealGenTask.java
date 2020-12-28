@@ -19,6 +19,7 @@ import com.joyintech.tams.invest.batch.mproddivreindealgen.dao.MProdDivReinDealG
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dao.DateCalcMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -142,7 +143,9 @@ public class MProdDivReinDealGenTask extends BatchBaseService{
                 serchMap.put("calList",calList);
                 List<String> productIdList = mProdDivReinDealGenMapper.selectProdList(serchMap);
                 if (productIdList.size() < 1){
-                    return null;
+                    JobExecution result = new JobExecution(1l);
+                    result.setStatus(BatchStatus.COMPLETED);
+                    return result;
                 }else {
                     this.setProductIdList(productIdList);
                 }
