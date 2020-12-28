@@ -368,7 +368,7 @@ public class ProdPosition001Service  extends SvrCBBaseService{
         		tdyPosition.setTdaddQty(BigDecimal.ZERO);
 			}else{
 				//key.实际募集 = (key.昨日实际募集 * (生成日-起息日) + 新增份额 ) / (生成日-起息日+1))
-				BigDecimal raiseamt = tdyPosition.getRaiseamt().multiply(new BigDecimal(DateUtil.getBetweenDayNumber(tdyPosition.getCdate(),tdyPosition.getvDate()))).add(tdyPosition.getTdaddQty())
+				BigDecimal raiseamt = tdyPosition.getRaiseamt().multiply(new BigDecimal(DateUtil.getBetweenDayNumber(tdyPosition.getCdate(),tdyPosition.getvDate()))).add(tdyPosition.getTdaddQty());
 				tdyPosition.setRaiseamt(raiseamt.divide(new BigDecimal(DateUtil.getBetweenDayNumber(tdyPosition.getCdate(),tdyPosition.getvDate())).add(BigDecimal.ONE),BigDecimal.ROUND_HALF_UP));
 			}
     		if(tdyPosition.getTdaddAmt()==null){

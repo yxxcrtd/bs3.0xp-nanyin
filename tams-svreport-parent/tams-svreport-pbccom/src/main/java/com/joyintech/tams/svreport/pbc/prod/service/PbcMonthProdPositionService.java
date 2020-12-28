@@ -122,7 +122,7 @@ public class PbcMonthProdPositionService  extends BaseService{
         // 计算兑付状态到期日需要修正的
         Integer days = 0;
         String daysStr = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_PAY_STATUS);
-        String dividendReinvestmentFlag = SvrDataUtil.getSysParam(SVReportGlobalConstant.DIVIDEND_REINVESTMENT_FLAG);
+		String dividendReinvestmentFlag = SvrDataUtil.getSysParam(SVReportGlobalConstant.DIVIDEND_REINVESTMENT_FLAG);
         if (StringUtil.isNotEmpty(daysStr)) {
         	days = Integer.parseInt(daysStr);
         }
@@ -136,8 +136,8 @@ public class PbcMonthProdPositionService  extends BaseService{
 		if(CommonUtil.isBAmodel()){
 			modelType = DictCodeList.权限模式_联社模式.getValue();
 		}
-		String dividendReinvestmentFlag = SvrDataUtil.getSysParam(SVReportGlobalConstant.DIVIDEND_REINVESTMENT_FLAG);
-		
+		String jsbankStr = SvrDataUtil.getSysParam(SVReportGlobalConstant.DIVIDEND_REINVESTMENT_FLAG);
+
         if(StringUtil.equals(bankCode, "001")){
            pbcMonthPrdPostionMapper.genPsbcPosition(reportStartDate,reportEndDate, batchDate,prodList,exchangeSource, dividendReinvestmentFlag,jsbankStr);
         }else{
