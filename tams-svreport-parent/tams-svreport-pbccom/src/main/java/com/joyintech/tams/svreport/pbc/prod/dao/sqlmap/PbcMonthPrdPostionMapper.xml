@@ -604,10 +604,6 @@
 		                SUM(
 		                    CASE
 		                        WHEN dl.trade_type IN('03', '15','16', '17'
-                                      <if test="hasbouns != null and hasbouns =='01'">
-                                          /***根据参数判断是否添加红利再投**/
-                                          ,'05'
-                                      </if>
 		                        ) THEN
 		                            dl.trade_qty
 		                        ELSE 0
