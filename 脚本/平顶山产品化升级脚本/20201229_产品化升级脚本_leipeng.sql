@@ -9,4 +9,4 @@ values ('SVR', 'SVR_RAC_HAS_BOUNS', '01', '01', '01', '（募集兑付是否统�
 /**时点报送维护页面**/
 DELETE FROM SYS_PAGE WHERE PAGE_ID = 'RegTimePoints002';
 insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('RegTimePoints002', 'SVR', '/svreport/system/regtimepoints/RegTimePoints002', 'svreport/system/regtimepoints/RegTimePoints002', null, null, null, '02', '01', '汇率行情信息新建', 'system', null, sysdate, 'system', sysdate);
+values ('RegTimePoints002', 'SVR', '/svreport/system/regtimepoints/RegTimePoints002', 'report/system/regtimepoints/RegTimePoints002', null, null, null, '02', '02', '监管报送维护表', 'system', null, sysdate, 'system', sysdate);
