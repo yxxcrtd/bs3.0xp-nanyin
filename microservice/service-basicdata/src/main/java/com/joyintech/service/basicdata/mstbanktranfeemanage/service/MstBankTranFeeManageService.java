@@ -148,6 +148,8 @@ public class MstBankTranFeeManageService extends BaseService<MstBankTranFeeManag
             //存入批次号
             trdFeeConfig.setBatchSeq(dto.getBatchSeq());
             //多级法人改造  modify caojin 2020/7/6  start
+            //trdFeeConfig添加交易市场数据
+            trdFeeConfig.setTradeMarketMode(dto.getTradeMarketMode());
             //交易场所设置为银行间
             trdFeeConfig.setTradeMarket(BussinessDictCodeList.交易场所_银行间.getValue());
             trdFeeConfig.setSeqNo(IDGenerator.generate());
@@ -224,7 +226,7 @@ public class MstBankTranFeeManageService extends BaseService<MstBankTranFeeManag
         List<MstBankTranFeeManageDto> list = mstBankTranFeeManageMapper.getBusinessData(parameter);
         return list;
     }
-    
+
     // add by wangguoxian 银行间费用设置 20190718 start
     /**
      * 

@@ -511,4 +511,11 @@ public interface FinProductCommonMapper {
      * @since 1.0
      */
     List<MstValIrs> getFundMarketPriceForOtc(Map<String, Object> map);
+
+    /**
+     * 查询跑批日当天还本付息交易
+     * @param map
+     * @return
+     */
+    Map<String, Object> selectHBFXData(Map<String, Object> map);
 }

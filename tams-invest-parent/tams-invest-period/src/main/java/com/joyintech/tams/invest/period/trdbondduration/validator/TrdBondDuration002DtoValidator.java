@@ -40,7 +40,7 @@ public class TrdBondDuration002DtoValidator implements PeriodCommonValidator {
         TrdBondDuration002ProcessDto dto = (TrdBondDuration002ProcessDto)value;
         if (!BussinessConstant.REVOKE.equals(dto.getOperateType())) {
             errorList.addAll(bussTrdTransferOrderService.check(dto.getBussTrdTransferOrder()));
-            if (dto.getTradeDate().compareTo(dto.getmDate()) < 0) {
+            if (dto.getTradeDate().compareTo(dto.getmDate()) < 0 && (DictCodeListExt1.交易场所_银行间.getValue().equals(dto.getTradeMarket()))) {
                 errorList.add(new ValidMessage(getMessage("FIN_ASSET_E_0022")));
             }
             // 删除 存在付息截止日比当前数据的付息截止日小的待处理数据 的check

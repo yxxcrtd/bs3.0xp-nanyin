@@ -58,6 +58,17 @@ SELECT DISTINCT PTL.CDATE         CDATE,
   	<!--PTLACCT.ACCT_TYPE IN (#{TGZH},#{JYSZJZH})-->
 	  PTL.HODING_TYPE = #{POSITION_TYPE_03}
 	  AND FP.P_FINPROD_ID IS NULL
+	  <!--修复TISHKBS-1688bug,判断组合还是否挂有该账户 by jingqiongqiong 20201224 start-->
+	  AND EXISTS
+	  (
+	  SELECT
+	  1
+	  FROM
+	  PTL_CAPACCT_INFO tpsp
+	  WHERE
+	  tpsp.PORTFOLIO_ID = PTL.PORTFOLIO_ID
+	  AND tpsp.ACCT_NO= PTL.ACCT_ID )
+	  <!--修复TISHKBS-1688bug,判断组合还是否挂有该账户 by jingqiongqiong 20201224 end-->
 	  <if test="portfolioIdList != null and portfolioIdList.size()>0">
       and (PP.PORTFOLIO_ID in <foreach collection="portfolioIdList" separator="," open="(" close=")" index="index" item="item">#{item}</foreach>)
     </if>

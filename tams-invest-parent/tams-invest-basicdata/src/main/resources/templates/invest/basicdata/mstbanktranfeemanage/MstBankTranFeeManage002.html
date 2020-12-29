@@ -53,6 +53,7 @@
                                              </select>
                                         </div>
                                     </div>
+
                                     <div class="form-inline-wrap">
                                         <label class="layui-form-label form-lable"
                                                data-th-text="#{MstBankTranFeeManage001.tradeType}">交易品种</label>
@@ -68,6 +69,21 @@
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
+
+                                    <div class="form-inline-wrap">
+                                        <label class="layui-form-label form-lable"
+                                               data-th-text="#{MstBankTranFeeManage001.tradeMarketMode}">交易市场</label>
+                                        <div class="layui-input-inline input-inline">
+                                            <select type="text" id="tradeMarketMode" name="tradeMarketMode"
+                                                    class="layui-input form-input input-select"
+                                                    data-th-data-result='${SHARES_TRADE_MARKET}'
+                                                    placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                                    formatoption="true" required="required"
+                                                    data-th-initvalue="${entity?.tradeMarketMode}">
+                                            </select>
+                                        </div>
+                                    </div>
+
                                     <div class="form-inline-wrap">
                                         <label class="layui-form-label form-lable"
                                                data-th-text="#{MstBankTranFeeManage001.ps}">交易方向</label>
@@ -80,11 +96,15 @@
                                             </select>
                                         </div>
                                     </div>
+
+                                </div>
+
+                                <div class="layui-form-item">
                                     <div class="form-inline-wrap">
                                         <label class="layui-form-label form-lable"
                                                data-th-text="#{MstBankTranFeeManage002.termType}">期限品种</label>
                                         <div class="layui-input-inline input-inline">
-                                            <select type="text" id="termType" name="termType" 
+                                            <select type="text" id="termType" name="termType"
                                                     class="layui-input form-input input-select" placeholder="请输入内容"
                                                     data-th-initValue="${entity?.termType}" showAll="true"
                                                     data-th-data-result="${TERM_TYPE_REBACK}" multiple
@@ -97,13 +117,14 @@
                                                data-th-text="#{MstBankTranFeeManage001.chargeType}">计费类型</label>
                                         <div class="layui-input-inline input-inline">
                                             <select type="text" id="chargeType" name="chargeType" required="required"
-                                                   class="layui-input form-input input-select"
-                                                   data-th-data-result='${CHARGE_KIND}'
-                                                   data-th-initValue='${entity?.chargeType}'>
+                                                    class="layui-input form-input input-select"
+                                                    data-th-data-result='${CHARGE_KIND}'
+                                                    data-th-initValue='${entity?.chargeType}'>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
+
                                 <!-- modified by wangguoxian 20190718 start -->
                                 <div class="layui-form-item">
                                     <div class="form-inline-wrap">

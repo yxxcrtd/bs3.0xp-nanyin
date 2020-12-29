@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.constant.*;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -440,10 +441,34 @@ public class SecDealPreprocessingBookService {
         // 变量.买卖价差 = 交易明细.交易本金 - 变量.冲减成本
         carMmjc = ArithmeticUtil.subtract(varPrinAmt, carCjcb);
         carMmjc = ArithmeticUtil.subtract(carMmjc, varYjlx);
-
-        // 交易金额 <-交易明细.交易金额
-        accountAmountMap.put(BookConstant.DEALAMT,
-            ArithmeticUtil.round(varDealAmt, NumberEnum.MONEY));
+        //修复交易所债券还本到期交易支持提前收款 by jqq 20201217 start
+        if((DictCodeListExt1.估值交易市场_上交所.getValue().equals(dealNow.getTradeMarket())
+                || DictCodeListExt1.估值交易市场_深交所.getValue().equals(dealNow.getTradeMarket()))){
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("prodId", dealNow.getProdId());
+            map.put("finprodId", dealNow.getFinprodId());
+            map.put("mdate", acctEntity.getBookDate());
+            map.put("ps", DictCodeList.交易方向_还本到账.getValue());
+            Map<String, Object> mapDeal=finProductCommonService.selectHBFXData(map);
+            if(StringUtil.isNotEmpty(mapDeal)
+                    && ((Date)mapDeal.get("TRADEDATE")).compareTo(((Date)mapDeal.get("MDATE")))<0){
+                // 交易金额 <- 交易明细.交易金额
+                accountAmountMap.put(BookConstant.DEALAMT_C,
+                        ArithmeticUtil.round(varDealAmt, NumberEnum.MONEY));
+                // 账务明细代码1->交易类账务处理结果.账务明细代码
+                accountSceneMap.put(BookConstant.BOK_DETAIL_ID2,
+                        bookCommonLogic.getValBokDetailId(dealNow.getFinprodId(), dealNow.getBokDetailId(), dealNow.getFinprodType(),dealNow.getCcy()));
+            }else{
+                // 交易金额 <- 交易明细.交易金额
+                accountAmountMap.put(BookConstant.DEALAMT,
+                        ArithmeticUtil.round(varDealAmt, NumberEnum.MONEY));
+            }
+        }else{
+            // 交易金额 <-交易明细.交易金额
+            accountAmountMap.put(BookConstant.DEALAMT,
+                    ArithmeticUtil.round(varDealAmt, NumberEnum.MONEY));
+        }
+        //修复交易所债券还本到期交易支持提前收款 by jqq 20201217 end
 
         // 成本金额 <-变量.冲减成本
         accountAmountMap.put(BookConstant.FACEVALUE,
@@ -492,11 +517,36 @@ public class SecDealPreprocessingBookService {
 //        accountAmountMap.put(BookConstant.DEALAMT + BookConstant.BCCYAMT, ArithmeticUtil.doSub(accountAmountMap.get(BookConstant.DEALAMT + BookConstant.BCCYAMT),
 //        		accountAmountMap.get(BookConstant.FACEVALUE + BookConstant.BCCYAMT),accountAmountMap.get(BookConstant.INTAMT + BookConstant.BCCYAMT)));
         //定义 变量.买卖价差_本位币
-        //	变量.买卖价差_本位币	= 交易金额_本位币 - 面值_本位币 - 应收利息_本位币
-        BigDecimal varMmjcBccy = ArithmeticUtil.doSub(
-                accountAmountMap.get(BookConstant.DEALAMT + BookConstant.BCCYAMT),
-                accountAmountMap.get(BookConstant.FACEVALUE + BookConstant.BCCYAMT),
-                accountAmountMap.get(BookConstant.INTAMT + BookConstant.BCCYAMT));
+        BigDecimal varMmjcBccy = BigDecimal.ZERO;
+        if((DictCodeListExt1.估值交易市场_上交所.getValue().equals(dealNow.getTradeMarket())
+                || DictCodeListExt1.估值交易市场_深交所.getValue().equals(dealNow.getTradeMarket()))){
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("prodId", dealNow.getProdId());
+            map.put("finprodId", dealNow.getFinprodId());
+            map.put("mdate", acctEntity.getBookDate());
+            map.put("ps", DictCodeList.交易方向_还本到账.getValue());
+            Map<String, Object> mapDeal=finProductCommonService.selectHBFXData(map);
+            if(StringUtil.isNotEmpty(mapDeal)
+                    && ((Date)mapDeal.get("TRADEDATE")).compareTo(((Date)mapDeal.get("MDATE")))<0){
+                //	变量.买卖价差_本位币	= 交易金额_本位币 - 面值_本位币 - 应收利息_本位币
+                varMmjcBccy = ArithmeticUtil.doSub(
+                        accountAmountMap.get(BookConstant.DEALAMT_C + BookConstant.BCCYAMT),
+                        accountAmountMap.get(BookConstant.FACEVALUE + BookConstant.BCCYAMT),
+                        accountAmountMap.get(BookConstant.INTAMT + BookConstant.BCCYAMT));
+            }else{
+                //	变量.买卖价差_本位币	= 交易金额_本位币 - 面值_本位币 - 应收利息_本位币
+                varMmjcBccy = ArithmeticUtil.doSub(
+                        accountAmountMap.get(BookConstant.DEALAMT + BookConstant.BCCYAMT),
+                        accountAmountMap.get(BookConstant.FACEVALUE + BookConstant.BCCYAMT),
+                        accountAmountMap.get(BookConstant.INTAMT + BookConstant.BCCYAMT));
+            }
+        }else {
+            //	变量.买卖价差_本位币	= 交易金额_本位币 - 面值_本位币 - 应收利息_本位币
+            varMmjcBccy = ArithmeticUtil.doSub(
+                    accountAmountMap.get(BookConstant.DEALAMT + BookConstant.BCCYAMT),
+                    accountAmountMap.get(BookConstant.FACEVALUE + BookConstant.BCCYAMT),
+                    accountAmountMap.get(BookConstant.INTAMT + BookConstant.BCCYAMT));
+        }
         //if（买卖价差_本位币>= 0）
         if(varMmjcBccy.compareTo(BigDecimal.ZERO) >= 0) {
             //买卖价差（贷）_本位币  <- 变量.买卖价差_本位币
@@ -715,11 +765,45 @@ public class SecDealPreprocessingBookService {
             varInterestAccBal = ArithmeticUtil.divide(varInterestAccBal, dealNow.getParValue(),
                 NumberEnum.HIGH_PREC_NUM.getCode());
         }
-
-        // accountAmountMap设置
-        // 应计利息
-        accountAmountMap.put(BookConstant.INTAMT,
-            ArithmeticUtil.round(varInterestAccBal, NumberEnum.MONEY));
+        //修复交易所债券还本到期交易支持提前收款 by jqq 20201217 start
+        if((DictCodeListExt1.估值交易市场_上交所.getValue().equals(dealNow.getTradeMarket())
+                        || DictCodeListExt1.估值交易市场_深交所.getValue().equals(dealNow.getTradeMarket()))){
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("prodId", dealNow.getProdId());
+            map.put("finprodId", dealNow.getFinprodId());
+            map.put("mdate", acctEntity.getBookDate());
+            map.put("ps", DictCodeList.交易方向_收息到账.getValue());
+            Map<String, Object> mapDeal=finProductCommonService.selectHBFXData(map);
+            if(StringUtil.isNotEmpty(mapDeal)
+                    && ((Date)mapDeal.get("TRADEDATE")).compareTo(((Date)mapDeal.get("MDATE")))<0){
+                accountAmountMap.put(BookConstant.DEALAMT_D,
+                        ArithmeticUtil.round((BigDecimal) mapDeal.get("TRADEAMT"), NumberEnum.MONEY));
+                accountAmountMap.put(BookConstant.INTAMT_C,
+                        ArithmeticUtil.round(varInterestAccBal, NumberEnum.MONEY));
+                BigDecimal varTradeAmt = ArithmeticUtil.subtract((BigDecimal) mapDeal.get("TRADEAMT"),
+                        ArithmeticUtil.round(varInterestAccBal, NumberEnum.MONEY));
+                if (varTradeAmt.compareTo(BigDecimal.ZERO) >= 0) {
+                    // 利息差额(贷) <-交易明细.全价总额 - 变量.应计利息
+                    accountAmountMap.put(BookConstant.NETAMT_C,
+                            ArithmeticUtil.round(varTradeAmt, NumberEnum.MONEY));
+                }else{
+                    // 利息差额(借) <- 交易明细.全价总额 - 变量.应计利息 * -1
+                    accountAmountMap.put(BookConstant.NETAMT_D, ArithmeticUtil.round(
+                            ArithmeticUtil.multiply(varTradeAmt, new BigDecimal(-1)), NumberEnum.MONEY));
+                }
+                // 账务明细代码1->交易类账务处理结果.账务明细代码
+                accountSceneMap.put(BookConstant.BOK_DETAIL_ID2,
+                        bookCommonLogic.getValBokDetailId(dealNow.getFinprodId(), dealNow.getBokDetailId(), dealNow.getFinprodType(),dealNow.getCcy()));
+            }else{
+                accountAmountMap.put(BookConstant.INTAMT,
+                        ArithmeticUtil.round(varInterestAccBal, NumberEnum.MONEY));
+            }
+        }else{
+            // accountAmountMap设置
+            // 应计利息
+            accountAmountMap.put(BookConstant.INTAMT,
+                    ArithmeticUtil.round(varInterestAccBal, NumberEnum.MONEY));
+        }
         /**add by taoran 20200109 start**/
         // 	应计利息_本位币	<- 应计利息 * 变量.汇率
         accountAmountMap.put(BookConstant.INTAMT + BookConstant.BCCYAMT, ArithmeticUtil.multiply(
@@ -1192,10 +1276,34 @@ public class SecDealPreprocessingBookService {
         // 变量.买卖价差 = 交易明细.交易本金 - （变量.冲减成本+变量.冲减溢折价）
         varMmjc = ArithmeticUtil.subtract(varPrinAmt,
             ArithmeticUtil.doAdd(varCjcb, varCjyzj));
-
-        // 交易金额 <- 交易明细.交易金额
-        accountAmountMap.put(BookConstant.DEALAMT,
-            ArithmeticUtil.round(varDealAmt, NumberEnum.MONEY));
+        //修复交易所债券还本到期交易支持提前收款 by jqq 20201217 start
+        if((DictCodeListExt1.估值交易市场_上交所.getValue().equals(dealNow.getTradeMarket())
+                || DictCodeListExt1.估值交易市场_深交所.getValue().equals(dealNow.getTradeMarket()))){
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("prodId", dealNow.getProdId());
+            map.put("finprodId", dealNow.getFinprodId());
+            map.put("mdate", acctEntity.getBookDate());
+            map.put("ps", DictCodeList.交易方向_还本到账.getValue());
+            Map<String, Object> mapDeal=finProductCommonService.selectHBFXData(map);
+            if(StringUtil.isNotEmpty(mapDeal)
+                    && ((Date)mapDeal.get("TRADEDATE")).compareTo(((Date)mapDeal.get("MDATE")))<0){
+                // 交易金额 <- 交易明细.交易金额
+                accountAmountMap.put(BookConstant.DEALAMT_C,
+                        ArithmeticUtil.round(varDealAmt, NumberEnum.MONEY));
+                // 账务明细代码1->交易类账务处理结果.账务明细代码
+                accountSceneMap.put(BookConstant.BOK_DETAIL_ID2,
+                        bookCommonLogic.getValBokDetailId(dealNow.getFinprodId(), dealNow.getBokDetailId(), dealNow.getFinprodType(),dealNow.getCcy()));
+            }else{
+                // 交易金额 <- 交易明细.交易金额
+                accountAmountMap.put(BookConstant.DEALAMT,
+                        ArithmeticUtil.round(varDealAmt, NumberEnum.MONEY));
+            }
+        }else{
+            // 交易金额 <- 交易明细.交易金额
+            accountAmountMap.put(BookConstant.DEALAMT,
+                    ArithmeticUtil.round(varDealAmt, NumberEnum.MONEY));
+        }
+        //修复交易所债券还本到期交易支持提前收款 by jqq 20201217 end
         // 面值 <-变量.冲减成本
         accountAmountMap.put(BookConstant.FACEVALUE,
             ArithmeticUtil.round(varCjcb, NumberEnum.MONEY));
@@ -1235,14 +1343,45 @@ public class SecDealPreprocessingBookService {
         BigDecimal varMmjcBccy = BigDecimal.ZERO;
         // 变量.冲减溢折价 >= 0
         if (varCjyzj.compareTo(BigDecimal.ZERO) >= 0) {
-        	//	变量.买卖价差_本位币	= 交易金额_本位币 - 面值_本位币 - 剩余溢折价(贷)_本位币
-        	varMmjcBccy = ArithmeticUtil.doSub(accountAmountMap.get(BookConstant.DEALAMT + BookConstant.BCCYAMT), 
-        			accountAmountMap.get(BookConstant.FACEVALUE + BookConstant.BCCYAMT), accountAmountMap.get(BookConstant.DSCINC_C + BookConstant.BCCYAMT));
+            if((DictCodeListExt1.估值交易市场_上交所.getValue().equals(dealNow.getTradeMarket())
+                    || DictCodeListExt1.估值交易市场_深交所.getValue().equals(dealNow.getTradeMarket()))){
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("prodId", dealNow.getProdId());
+                map.put("finprodId", dealNow.getFinprodId());
+                map.put("mdate", acctEntity.getBookDate());
+                map.put("ps", DictCodeList.交易方向_还本到账.getValue());
+                Map<String, Object> mapDeal=finProductCommonService.selectHBFXData(map);
+                if(StringUtil.isNotEmpty(mapDeal)
+                        && ((Date)mapDeal.get("TRADEDATE")).compareTo(((Date)mapDeal.get("MDATE")))<0){
+                    //	变量.买卖价差_本位币	= 交易金额_本位币 - 面值_本位币 - 剩余溢折价(贷)_本位币
+                    varMmjcBccy = ArithmeticUtil.doSub(accountAmountMap.get(BookConstant.DEALAMT_C + BookConstant.BCCYAMT),
+                            accountAmountMap.get(BookConstant.FACEVALUE + BookConstant.BCCYAMT), accountAmountMap.get(BookConstant.DSCINC_C + BookConstant.BCCYAMT));
+                }else{
+                    //	变量.买卖价差_本位币	= 交易金额_本位币 - 面值_本位币 - 剩余溢折价(贷)_本位币
+                    varMmjcBccy = ArithmeticUtil.doSub(accountAmountMap.get(BookConstant.DEALAMT + BookConstant.BCCYAMT),
+                            accountAmountMap.get(BookConstant.FACEVALUE + BookConstant.BCCYAMT), accountAmountMap.get(BookConstant.DSCINC_C + BookConstant.BCCYAMT));
+                }
+            }else{
+                //	变量.买卖价差_本位币	= 交易金额_本位币 - 面值_本位币 - 剩余溢折价(贷)_本位币
+                varMmjcBccy = ArithmeticUtil.doSub(accountAmountMap.get(BookConstant.DEALAMT + BookConstant.BCCYAMT),
+                        accountAmountMap.get(BookConstant.FACEVALUE + BookConstant.BCCYAMT), accountAmountMap.get(BookConstant.DSCINC_C + BookConstant.BCCYAMT));
+            }
+            //修复交易所债券还本到期交易支持提前收款 by jqq 20201217 end
         }
         else {
-        	//变量.买卖价差_本位币  =	交易金额_本位币 - 面值_本位币 + 剩余溢折价(借)_本位币
-        	varMmjcBccy = ArithmeticUtil.doAdd(ArithmeticUtil.doSub(accountAmountMap.get(BookConstant.DEALAMT + BookConstant.BCCYAMT), 
-        			accountAmountMap.get(BookConstant.FACEVALUE + BookConstant.BCCYAMT)), accountAmountMap.get(BookConstant.DSCINC_D + BookConstant.BCCYAMT));
+            //修复交易所债券还本到期交易支持提前收款 by jqq 20201217 start
+            if(dealNow.getTradeDate().compareTo(dealNow.getMdate()) < 0 &&
+                    (DictCodeListExt1.估值交易市场_上交所.getValue().equals(dealNow.getTradeMarket())
+                            || DictCodeListExt1.估值交易市场_深交所.getValue().equals(dealNow.getTradeMarket()))){
+                //变量.买卖价差_本位币  =	交易金额_本位币 - 面值_本位币 + 剩余溢折价(借)_本位币
+                varMmjcBccy = ArithmeticUtil.doAdd(ArithmeticUtil.doSub(accountAmountMap.get(BookConstant.DEALAMT_C + BookConstant.BCCYAMT),
+                        accountAmountMap.get(BookConstant.FACEVALUE + BookConstant.BCCYAMT)), accountAmountMap.get(BookConstant.DSCINC_D + BookConstant.BCCYAMT));
+            }else {
+                //变量.买卖价差_本位币  =	交易金额_本位币 - 面值_本位币 + 剩余溢折价(借)_本位币
+                varMmjcBccy = ArithmeticUtil.doAdd(ArithmeticUtil.doSub(accountAmountMap.get(BookConstant.DEALAMT + BookConstant.BCCYAMT),
+                        accountAmountMap.get(BookConstant.FACEVALUE + BookConstant.BCCYAMT)), accountAmountMap.get(BookConstant.DSCINC_D + BookConstant.BCCYAMT));
+            }
+            //修复交易所债券还本到期交易支持提前收款 by jqq 20201217 end
         }
         if(varMmjcBccy.compareTo(BigDecimal.ZERO) > 0) {
         	//买卖价差（贷）_本位币  <- 变量.买卖价差_本位币							
@@ -1572,10 +1711,33 @@ public class SecDealPreprocessingBookService {
         }
         // 变量.买卖价差    = 交易明细.交易本金 - （变量.冲减成本+变量.冲减溢折价）                           
         varMmjc = ArithmeticUtil.doSub(varPrinAmt, varCjcb, varCjyzj);
-
-        // 交易金额 <- 交易明细.交易金额
-        accountAmountMap.put(BookConstant.DEALAMT,
-            ArithmeticUtil.round(varDealAmt, NumberEnum.MONEY));
+        //修复交易所债券还本到期交易支持提前收款 by jqq 20201217 start
+        if((DictCodeListExt1.估值交易市场_上交所.getValue().equals(dealNow.getTradeMarket())
+                || DictCodeListExt1.估值交易市场_深交所.getValue().equals(dealNow.getTradeMarket()))){
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("prodId", dealNow.getProdId());
+            map.put("finprodId", dealNow.getFinprodId());
+            map.put("mdate", acctEntity.getBookDate());
+            map.put("ps", DictCodeList.交易方向_还本到账.getValue());
+            Map<String, Object> mapDeal=finProductCommonService.selectHBFXData(map);
+            if(StringUtil.isNotEmpty(mapDeal)
+                    && ((Date)mapDeal.get("TRADEDATE")).compareTo(((Date)mapDeal.get("MDATE")))<0){
+                // 交易金额 <- 交易明细.交易金额
+                accountAmountMap.put(BookConstant.DEALAMT_C,
+                        ArithmeticUtil.round(varDealAmt, NumberEnum.MONEY));
+                // 账务明细代码1->交易类账务处理结果.账务明细代码
+                accountSceneMap.put(BookConstant.BOK_DETAIL_ID2,
+                        bookCommonLogic.getValBokDetailId(dealNow.getFinprodId(), dealNow.getBokDetailId(), dealNow.getFinprodType(),dealNow.getCcy()));
+            }else{
+                // 交易金额 <- 交易明细.交易金额
+                accountAmountMap.put(BookConstant.DEALAMT,
+                        ArithmeticUtil.round(varDealAmt, NumberEnum.MONEY));
+            }
+        }else{
+            // 交易金额 <- 交易明细.交易金额
+            accountAmountMap.put(BookConstant.DEALAMT,
+                    ArithmeticUtil.round(varDealAmt, NumberEnum.MONEY));
+        }
         // 面值 <-变量.冲减成本
         accountAmountMap.put(BookConstant.FACEVALUE,
             ArithmeticUtil.round(varCjcb, NumberEnum.MONEY));
@@ -1633,9 +1795,29 @@ public class SecDealPreprocessingBookService {
         BigDecimal varMmjcBccy = BigDecimal.ZERO;
         // 变量.冲减溢折价 >= 0
         if (varCjyzj.compareTo(BigDecimal.ZERO) >= 0) {
-        	//	变量.买卖价差_本位币	= 交易金额_本位币 - 面值_本位币 - 剩余溢折价(贷)_本位币
-        	varMmjcBccy = ArithmeticUtil.doSub(accountAmountMap.get(BookConstant.DEALAMT + BookConstant.BCCYAMT), 
-        			accountAmountMap.get(BookConstant.FACEVALUE + BookConstant.BCCYAMT), accountAmountMap.get(BookConstant.DSCINC_C + BookConstant.BCCYAMT));
+            if((DictCodeListExt1.估值交易市场_上交所.getValue().equals(dealNow.getTradeMarket())
+                    || DictCodeListExt1.估值交易市场_深交所.getValue().equals(dealNow.getTradeMarket()))){
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("prodId", dealNow.getProdId());
+                map.put("finprodId", dealNow.getFinprodId());
+                map.put("mdate", acctEntity.getBookDate());
+                map.put("ps", DictCodeList.交易方向_还本到账.getValue());
+                Map<String, Object> mapDeal=finProductCommonService.selectHBFXData(map);
+                if(StringUtil.isNotEmpty(mapDeal)
+                        && ((Date)mapDeal.get("TRADEDATE")).compareTo(((Date)mapDeal.get("MDATE")))<0){
+                    //	变量.买卖价差_本位币	= 交易金额_本位币 - 面值_本位币 - 剩余溢折价(贷)_本位币
+                    varMmjcBccy = ArithmeticUtil.doSub(accountAmountMap.get(BookConstant.DEALAMT_C + BookConstant.BCCYAMT),
+                            accountAmountMap.get(BookConstant.FACEVALUE + BookConstant.BCCYAMT), accountAmountMap.get(BookConstant.DSCINC_C + BookConstant.BCCYAMT));
+                }else{
+                    //	变量.买卖价差_本位币	= 交易金额_本位币 - 面值_本位币 - 剩余溢折价(贷)_本位币
+                    varMmjcBccy = ArithmeticUtil.doSub(accountAmountMap.get(BookConstant.DEALAMT + BookConstant.BCCYAMT),
+                            accountAmountMap.get(BookConstant.FACEVALUE + BookConstant.BCCYAMT), accountAmountMap.get(BookConstant.DSCINC_C + BookConstant.BCCYAMT));
+                }
+            }else{
+                //	变量.买卖价差_本位币	= 交易金额_本位币 - 面值_本位币 - 剩余溢折价(贷)_本位币
+                varMmjcBccy = ArithmeticUtil.doSub(accountAmountMap.get(BookConstant.DEALAMT + BookConstant.BCCYAMT),
+                        accountAmountMap.get(BookConstant.FACEVALUE + BookConstant.BCCYAMT), accountAmountMap.get(BookConstant.DSCINC_C + BookConstant.BCCYAMT));
+            }
         }
         else {
         	//变量.买卖价差_本位币  =	交易金额_本位币 - 面值_本位币 + 剩余溢折价(借)_本位币

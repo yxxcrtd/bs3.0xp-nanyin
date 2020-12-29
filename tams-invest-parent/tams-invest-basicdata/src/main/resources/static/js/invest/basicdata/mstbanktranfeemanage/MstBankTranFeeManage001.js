@@ -30,13 +30,14 @@ $(function() {
                     JoyinUtil.getRealPath("invest/basicdata/mstbanktranfeemanage/MstBankTranFeeManage002/init"),
                     "98%", "95%",data,function(){table.reload();});
         },
-        
+
         cols:[
              {field:'batchSeq',visible: false}
             ,{field:'feeTypeStr',width:'20%',sortField:'feeType',title: 'MstBankTranFeeManage001.feeType'}//费用类型
             ,{field:'registOrgStr',width:'20%',sortField:'registOrg', title: 'MstBankTranFeeManage001.registOrg'}//登记托管机构
             ,{field:'tradeTypeStr',width:'20%',sortField:'tradeType', title: 'MstBankTranFeeManage001.tradeType'}//交易品种
-            ,{field:'psStr',width:'20%', sortable:false,title: 'MstBankTranFeeManage001.ps'}//交易方向           
+            ,{field:'tradeMarketModeStr',width:'20%',sortable:false, title: 'MstBankTranFeeManage001.tradeMarketMode'}//交易市场
+            ,{field:'psStr',width:'20%', sortable:false,title: 'MstBankTranFeeManage001.ps'}//交易方向
             ,{field:'chargeTypeStr',width:'20%',sortField:'chargeType', title: 'MstBankTranFeeManage001.chargeType'}//计费类型
             ,{field:'chargeBasisStr',width:'20%',sortField:'chargeBasis', title: 'MstBankTranFeeManage001.chargeBasis'}//计费基础
             ,{field:'feeRate',width:'20%', title: 'MstBankTranFeeManage001.feeRate'}//费用值/费率值

@@ -720,10 +720,20 @@ public class SecDealAccountsService {
         // 交易金额 <- 交易明细.交易金额
         accountAmountMap.put(BookConstant.DEALAMT,
             ArithmeticUtil.round(dealNow.getTradeAmt(), NumberEnum.MONEY));
-
-        // 交易本金 <- 交易明细.全价总额
-        accountAmountMap.put(BookConstant.RECEITAMT,
-            ArithmeticUtil.round(dealNow.getFpriceAmt(), NumberEnum.MONEY));
+        //修复交易所债券还本到期交易支持提前收款 by jqq 20201217 start
+        if(dealNow.getTradeDate().compareTo(dealNow.getMdate()) < 0 &&
+                (DictCodeListExt1.估值交易市场_上交所.getValue().equals(dealNow.getTradeMarket())
+                        || DictCodeListExt1.估值交易市场_深交所.getValue().equals(dealNow.getTradeMarket()))){
+            accountAmountMap.put(BookConstant.DEALAMT_C,
+                    ArithmeticUtil.round(dealNow.getFpriceAmt(), NumberEnum.MONEY));
+            accountSceneMap.put(BookConstant.BOK_DETAIL_ID2,
+                    bookCommonLogic.getValBokDetailId(dealNow.getFinprodId(), dealNow.getBokDetailId(), dealNow.getFinprodType(),dealNow.getCcy()));
+        }else{
+            // 交易本金 <- 交易明细.全价总额
+            accountAmountMap.put(BookConstant.RECEITAMT,
+                    ArithmeticUtil.round(dealNow.getFpriceAmt(), NumberEnum.MONEY));
+        }
+        //修复交易所债券还本到期交易支持提前收款 by jqq 20201217 end
         // 因为与记账金额元素map的key及数量一致，故采用循环
         for (String keyNow : accountAmountMap.keySet()) {
             accountCurrencyMap.put(keyNow, dealNow.getCcy());// value值塞入当前交易币种
@@ -761,12 +771,24 @@ public class SecDealAccountsService {
         accountAmountMap.putAll(accountAmountBCCYAMTMap);
         //accountAmountMap再次设置如下：
         //交易金额_本位币 <-	交易本金_本位币 + 实付通道费_本位币
-        BigDecimal 交易金额本位币 = ArithmeticUtil.doAdd(
-                accountAmountBCCYAMTMap.get(BookConstant.RECEITAMT + BookConstant.BCCYAMT),//交易本金_本位币
-                accountAmountBCCYAMTMap.get(BookConstant.CHLAMT + BookConstant.BCCYAMT)//实付通道费_本位币
-        );
-        accountAmountMap.put(BookConstant.DEALAMT + BookConstant.BCCYAMT,
-                ArithmeticUtil.round(交易金额本位币, NumberEnum.MONEY));
+        //修复交易所债券还本到期交易支持提前收款 by jqq 20201217 start
+        if(dealNow.getTradeDate().compareTo(dealNow.getMdate()) < 0 &&
+                (DictCodeListExt1.估值交易市场_上交所.getValue().equals(dealNow.getTradeMarket())
+                        || DictCodeListExt1.估值交易市场_深交所.getValue().equals(dealNow.getTradeMarket()))){
+            BigDecimal 交易金额本位币 = ArithmeticUtil.doAdd(
+                    accountAmountBCCYAMTMap.get(BookConstant.DEALAMT_C + BookConstant.BCCYAMT),//交易本金_本位币
+                    accountAmountBCCYAMTMap.get(BookConstant.CHLAMT + BookConstant.BCCYAMT)//实付通道费_本位币
+            );
+            accountAmountMap.put(BookConstant.DEALAMT_C + BookConstant.BCCYAMT,
+                    ArithmeticUtil.round(交易金额本位币, NumberEnum.MONEY));
+        }else{
+            BigDecimal 交易金额本位币 = ArithmeticUtil.doAdd(
+                    accountAmountBCCYAMTMap.get(BookConstant.RECEITAMT + BookConstant.BCCYAMT),//交易本金_本位币
+                    accountAmountBCCYAMTMap.get(BookConstant.CHLAMT + BookConstant.BCCYAMT)//实付通道费_本位币
+            );
+            accountAmountMap.put(BookConstant.DEALAMT + BookConstant.BCCYAMT,
+                    ArithmeticUtil.round(交易金额本位币, NumberEnum.MONEY));
+        }
         accountCurrencyMap.put(BookConstant.DEALAMT + BookConstant.BCCYAMT, standardCcyNow);// value值塞入当前交易币种
         /** modify by yanya on 20200102 增加本位币处理 end**/
 
@@ -900,6 +922,7 @@ public class SecDealAccountsService {
         accountAmountMap.put(BookConstant.DEALAMT,
             ArithmeticUtil.round(dealNow.getTradeAmt(), NumberEnum.MONEY));
 
+
         // 定义 变量.应计利息 = 0
         BigDecimal varInterestAccBal = BigDecimal.ZERO;
         // 交易明细.是否结清 = "否"
@@ -956,9 +979,21 @@ public class SecDealAccountsService {
         BigDecimal varTradeAmt = ArithmeticUtil.subtract(dealNow.getFpriceAmt(),
             varInterestAccBal);
         if (varTradeAmt.compareTo(BigDecimal.ZERO) >= 0) {
-            // 利息差额(贷) <-交易明细.全价总额 - 变量.应计利息
-            accountAmountMap.put(BookConstant.NETAMT_C,
-                ArithmeticUtil.round(varTradeAmt, NumberEnum.MONEY));
+            //修复交易所债券还本到期交易支持提前收款 by jqq 20201217 start
+            if(dealNow.getTradeDate().compareTo(dealNow.getMdate()) < 0 &&
+                    (DictCodeListExt1.估值交易市场_上交所.getValue().equals(dealNow.getTradeMarket())
+                            || DictCodeListExt1.估值交易市场_深交所.getValue().equals(dealNow.getTradeMarket()))){
+                // 利息差额(贷) <-交易明细.全价总额 - 变量.应计利息
+                accountAmountMap.put(BookConstant.DEALAMT_C,
+                        ArithmeticUtil.round(varTradeAmt, NumberEnum.MONEY));
+                accountSceneMap.put(BookConstant.BOK_DETAIL_ID2,
+                        bookCommonLogic.getValBokDetailId(dealNow.getFinprodId(), dealNow.getBokDetailId(), dealNow.getFinprodType(),dealNow.getCcy()));
+            }else{
+                // 利息差额(贷) <-交易明细.全价总额 - 变量.应计利息
+                accountAmountMap.put(BookConstant.NETAMT_C,
+                        ArithmeticUtil.round(varTradeAmt, NumberEnum.MONEY));
+            }
+            //修复交易所债券还本到期交易支持提前收款 by jqq 20201217 end
         }
         else {
             // 利息差额(借) <- 交易明细.全价总额 - 变量.应计利息 * -1
@@ -1016,10 +1051,21 @@ public class SecDealAccountsService {
                 accountAmountBCCYAMTMap.get(BookConstant.INTAMT + BookConstant.BCCYAMT));//应计利息_本位币
         //if（变量.买卖价差_本位币>= 0）
         if(利息差额本位币.compareTo(BigDecimal.ZERO) >= 0) {
-            //利息差额（借）_本位币	<-	变量.利息差额_本位币
-            accountAmountMap.put(BookConstant.NETAMT_C + BookConstant.BCCYAMT,
-                    ArithmeticUtil.round(利息差额本位币, NumberEnum.MONEY));
-            accountCurrencyMap.put(BookConstant.NETAMT_C + BookConstant.BCCYAMT, standardCcyNow);// value值塞入当前交易币种
+            //修复交易所债券还本到期交易支持提前收款 by jqq 20201217 start
+            if(dealNow.getTradeDate().compareTo(dealNow.getMdate()) < 0 &&
+                    (DictCodeListExt1.估值交易市场_上交所.getValue().equals(dealNow.getTradeMarket())
+                            || DictCodeListExt1.估值交易市场_深交所.getValue().equals(dealNow.getTradeMarket()))){
+                //利息差额（借）_本位币	<-	变量.利息差额_本位币
+                accountAmountMap.put(BookConstant.DEALAMT_C + BookConstant.BCCYAMT,
+                        ArithmeticUtil.round(利息差额本位币, NumberEnum.MONEY));
+                accountCurrencyMap.put(BookConstant.DEALAMT_C + BookConstant.BCCYAMT, standardCcyNow);// value值塞入当前交易币种
+            }else{
+                //利息差额（借）_本位币	<-	变量.利息差额_本位币
+                accountAmountMap.put(BookConstant.NETAMT_C + BookConstant.BCCYAMT,
+                        ArithmeticUtil.round(利息差额本位币, NumberEnum.MONEY));
+                accountCurrencyMap.put(BookConstant.NETAMT_C + BookConstant.BCCYAMT, standardCcyNow);// value值塞入当前交易币种
+            }
+            //修复交易所债券还本到期交易支持提前收款 by jqq 20201217 end
         }
         else {
             //利息差额（贷）_本位币	<-	变量.利息差额_本位币*-1

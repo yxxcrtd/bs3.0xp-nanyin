@@ -148,6 +148,14 @@ public class TrdBondDuration002Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({ValidateGroupEdit.class}) TrdBondDuration002ProcessDto dto,
                             BindingResult result) {
+        if(result.getErrorCount() == 0) {
+            //如果是交易所债券，则不提示
+            if(dto.getTradeDate().compareTo(dto.getmDate()) < 0 && !(DictCodeListExt1.交易场所_银行间.getValue().equals(dto.getTradeMarket()))){
+                AjaxResult ar = new AjaxResult();
+                ar.setData("请确认本次付息截止日前不会再发生买卖或还本交易，请确认是否继续？");
+                return ar;
+            }
+        }
         return commonCheck(result, dto.getOperateType());
     }
 

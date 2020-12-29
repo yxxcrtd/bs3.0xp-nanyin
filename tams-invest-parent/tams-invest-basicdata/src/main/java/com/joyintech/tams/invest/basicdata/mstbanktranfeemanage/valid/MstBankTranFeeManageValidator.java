@@ -19,6 +19,7 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.basicdata.mstbanktranfeemanage.dto.MstBankTranFeeManageDto;
 import com.joyintech.tams.invest.basicdata.mstbanktranfeemanage.service.MstBankTranFeeManageService;
@@ -67,6 +68,12 @@ public class MstBankTranFeeManageValidator implements BeanValidator {
                 }
             }
         } else {
+            // 当交易品种为债券时，交易市场必填
+            if(StringUtil.equals(dto.getTradeType(),BussinessDictCodeList.平安资产类型_债券.getValue())
+                    && StringUtil.isEmpty(dto.getTradeMarketMode())){
+                resultList.add(new ValidMessage(
+                        this.getMessage("FW_E_0006", getMessage("MstBankTranFeeManage001.tradeMarketMode"))));
+            }
             // 当交易品种为回购时，期限品种必填
             if (StringUtil.equals(dto.getTradeType(), BussinessDictCodeList.平安资产类型_回购.getValue())
                     && StringUtil.isEmpty(dto.getTermType())) {
@@ -158,12 +165,16 @@ public class MstBankTranFeeManageValidator implements BeanValidator {
                             }
                         }
                     } else {
+                        //当为债券时，增加交易市场校验
+                        param.put("tradeMarketMode",dto.getTradeMarketMode());
                         int count = mstBankTranFeeManageService.selExistCnt(param);
                         if (count > 0) {
                             String psStr = getPsStr(ps);
                             resultList.add(new ValidMessage(
-                                    getMessage("MST_INFO_E_0006", SysDataUtil.getNameFromDataDict(
-                                            BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, effDateStr)));
+                                    getMessage("MST_INFO_E_0009", SysDataUtil.getNameFromDataDict(
+                                            BussinessDictCode.平安资产类型, dto.getTradeType()),
+                                            SysDataUtil.getNameFromDataDict(DictCode.交易市场, dto.getTradeMarketMode()),
+                                            psStr, effDateStr)));
                         }
 
                     }
