@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 import com.joyintech.tams.common.svreport.datacheck.dto.CheckRule;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface CheckRuleMapper {
     int deleteByPrimaryKey(String checkruleid);
 

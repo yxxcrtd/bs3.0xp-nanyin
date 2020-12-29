@@ -35,7 +35,10 @@ public enum  ChbInterfConfig {
 	
 	产品费用头寸接口("CHB_PRDFEE_BASIS_DATA"),
 	
-	产品分红交易接口("CHB_PRD_BONUS_DEAL");
+	产品分红交易接口("CHB_PRD_BONUS_DEAL"),
+	
+	产品汇总交易接口("CHB_PRD_DEAL_TOTAL")
+	;
 	
 	
     /**

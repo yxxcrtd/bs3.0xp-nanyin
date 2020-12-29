@@ -263,4 +263,12 @@
 		 TEMP.STATUS, TEMP.UPDATE_USER, TEMP.CREATE_USER, TEMP.UPDATE_TIME, TEMP.CREATE_TIME, 
     	TEMP.WORKFLOW_ID, TEMP.ORG_CODE, TEMP.DEPT_CODE, TEMP.CREATE_DEPT)
 	</insert>
+	<!-- start  中债一二期添加         add  by  dongxiangyang  20201013 -->
+  <delete id="deleteByPrimaryKeyType" parameterType="java.util.Map" >
+    delete from CHB_INTERF_ERRODATA
+    where DATAID = #{dataid,jdbcType=VARCHAR}
+    and  INTERF_TYPE=#{tableName,jdbcType=VARCHAR}
+  </delete>	
+  	<!-- end  中债一二期添加      add  by  dongxiangyang  20201013 -->
+	
 </mapper>
