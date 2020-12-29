@@ -7,6 +7,12 @@ package com.joyintech.tams.report.system.regtimepoints.service;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.common.base.dao.ChbRegTimePointsMapper;
+import com.joyintech.tams.common.base.entity.ChbRegTimePoints;
+import com.joyintech.tams.constant.DictCode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.base.BaseService;
@@ -29,6 +35,9 @@ import com.joyintech.tams.report.system.regtimepoints.dto.RegTimePoints001Dto;
 @Service
 public class RegTimePointsMService extends BaseService<RegTimePoints001Dto> {
 
+    @Autowired
+    private ChbRegTimePointsMapper chbRegTimePointsMapper;
+
     /**
      * 查询按钮
      * @return 查询结果list
@@ -40,6 +49,17 @@ public class RegTimePointsMService extends BaseService<RegTimePoints001Dto> {
           		SvrServiceApplication.COMMON_SERVICE_NAME + "/RegTimePoints/findPage",paramMap,
           		RegTimePoints001Dto.class);
         return pageList;
+    }
+
+
+    public ChbRegTimePoints selectByPrimaryKey(String seqno){
+        ChbRegTimePoints points = chbRegTimePointsMapper.selectByPrimaryKey(seqno);
+
+        if(null!=points&&StringUtil.isNotEmpty(points.getTypeDetail())){
+            points.setTypeDetail(SysDataUtil.getNameFromDataDict(DictCode.细分类别, points.getTypeDetail()));
+        }
+
+        return points;
     }
     
     /**
