@@ -192,10 +192,18 @@ public class ChbPrdDeal extends BaseEntity implements Cloneable{
     private BigDecimal redCost;
     
     private BigDecimal redprofit;
-    
-    
 
-    /**  
+    private Date vDate;
+
+    public Date getvDate() {
+        return vDate;
+    }
+
+    public void setvDate(Date vDate) {
+        this.vDate = vDate;
+    }
+
+    /**
 	 * @Description TODO  
 	 * @Author      高健  
 	 * @Date        2019年8月20日 下午5:25:47  

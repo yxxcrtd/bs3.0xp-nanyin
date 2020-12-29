@@ -138,4 +138,15 @@
         and data_type = #{dataType}
     </select>
 
+    <select id="selectBank" parameterType="java.lang.String" resultType="com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode">
+        select
+        CORB.*,SI.INSTITUTION_NAME belongInstitutionName
+        from CHB_ORG_REGIST_BANK_CODE corb
+        LEFT JOIN SYS_INSTITUTION SI ON CORB.ORG_CODE = SI.INSTITUTION_CODE
+        where 1=1
+        <if test="orgCode != null and orgCode != ''">
+            and corb.ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+        </if>
+    </select>
+
 </mapper>

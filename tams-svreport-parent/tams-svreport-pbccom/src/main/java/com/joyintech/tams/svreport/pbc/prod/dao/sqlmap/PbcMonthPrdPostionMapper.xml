@@ -571,7 +571,7 @@
                                   <if test="hasbouns != null and hasbouns =='01'">
                                   /***根据参数判断是否添加红利再投**/
                                   ,'05'
-                                  </if>>
+                                  </if>
                                 ) THEN
 		                            dl.trade_prince
 		                        ELSE 0 
@@ -583,7 +583,7 @@
                                       <if test="hasbouns != null and hasbouns =='01'">
                                           /***根据参数判断是否添加红利再投**/
                                           ,'05'
-                                      </if>>
+                                      </if>
 		                        ) THEN /*加上 04收益分配，05红利再投的交易金额与人行确认不需统计*/
 		                            dl.trade_prince
 		                        ELSE 0
@@ -595,7 +595,7 @@
                                   <if test="hasbouns != null and hasbouns =='01'">
                                       /***根据参数判断是否添加红利再投**/
                                       ,'05'
-                                  </if>>
+                                  </if>
 		                        ) THEN
 		                            dl.trade_qty
 		                        ELSE 0 
@@ -607,7 +607,7 @@
                                       <if test="hasbouns != null and hasbouns =='01'">
                                           /***根据参数判断是否添加红利再投**/
                                           ,'05'
-                                      </if>>
+                                      </if>
 		                        ) THEN
 		                            dl.trade_qty
 		                        ELSE 0

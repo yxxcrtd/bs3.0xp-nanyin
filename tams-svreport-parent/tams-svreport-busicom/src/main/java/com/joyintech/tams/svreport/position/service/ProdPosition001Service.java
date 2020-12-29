@@ -369,7 +369,7 @@ public class ProdPosition001Service  extends SvrCBBaseService{
 			}else{
 				//key.实际募集 = (key.昨日实际募集 * (生成日-起息日) + 新增份额 ) / (生成日-起息日+1))
 				BigDecimal raiseamt = tdyPosition.getRaiseamt().multiply(new BigDecimal(DateUtil.getBetweenDayNumber(tdyPosition.getCdate(),tdyPosition.getvDate()))).add(tdyPosition.getTdaddQty());
-				tdyPosition.setRaiseamt(raiseamt.divide(new BigDecimal(DateUtil.getBetweenDayNumber(tdyPosition.getCdate(),tdyPosition.getvDate())).add(BigDecimal.ONE),BigDecimal.ROUND_HALF_UP));
+				tdyPosition.setRaiseamt(raiseamt.divide(new BigDecimal(DateUtil.getBetweenDayNumber(tdyPosition.getvDate(),tdyPosition.getCdate())).add(BigDecimal.ONE),BigDecimal.ROUND_HALF_UP));
 			}
     		if(tdyPosition.getTdaddAmt()==null){
     			tdyPosition.setTdaddAmt(BigDecimal.ZERO);
@@ -520,6 +520,8 @@ public class ProdPosition001Service  extends SvrCBBaseService{
 		model.setCreateUser(CommonUtil.getUserName());
 		model.setBuyplace(purDeal.getBuyPlace());
 		model.setCustomerType2(purDeal.getCustomerType2());
+
+		model.setvDate(purDeal.getvDate());
 		if("02".equals(dealDimension)){
 			model.setCustCounts(purDeal.getCustCounts());
 		}else{

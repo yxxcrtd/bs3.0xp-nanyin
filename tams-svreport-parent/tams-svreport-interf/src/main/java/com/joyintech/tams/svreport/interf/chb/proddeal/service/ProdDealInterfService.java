@@ -178,6 +178,7 @@ public class ProdDealInterfService extends BaseService{
 					    	deal.setFinprodId(newFinprodId);
 						}
 					}
+
 					Map<String, String> map = new HashMap<>();
 					BeanMap beanMap = BeanMap.create(deal);
 					for (Object key : beanMap.keySet()) {

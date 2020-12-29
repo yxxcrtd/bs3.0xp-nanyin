@@ -202,7 +202,6 @@
 		FROM CHB_PRD_POSITION POS
 		/*****产品头寸添加起息日查询   leipeng 20201226**/
 	  LEFT JOIN CHB_PRD_BASEINFO B ON POS.PROD_ID=B.PROD_ID
-	  LEFT J
 		WHERE 1 = 1
 		AND POS.CDATE = #{cdate,jdbcType = DATE}
 		<if test="prodIdList!=null and prodIdList.size()!=0">

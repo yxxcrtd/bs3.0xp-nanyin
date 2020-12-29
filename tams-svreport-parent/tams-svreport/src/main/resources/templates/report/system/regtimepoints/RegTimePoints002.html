@@ -1,0 +1,73 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
+<head>
+    <meta charset="utf-8">
+    <title data-th-text="#{RegTimePoints002}">监管报送时点维护</title>
+    <link rel="stylesheet" type="text/css" data-th-href="@{/css/report/report.css}">
+</head>
+
+<body>
+<div layout:fragment="content">
+    <form class="layui-form joyin-form-wrap" id="submitForm">
+        <input hidden type="text" id="bankCode" data-th-value="${entity?.bankCode}" style="display:none;">
+        <div class="layui-form-item">
+            <div id="editOrNew" class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">原识别标识</label>
+                <div class="layui-input-inline input-inline">
+                    <input disabled type="text" id="orgIndentifyMark" name="orgIndentifyMark" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.orgIndentifyMark}" >
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">投资者名称</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="holderName" name="holderName" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.holderName}"  required>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">投资者所属银行代码</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="theBankCode" name="theBankCode" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.theBankCode}" >
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">投资者所属银行代码</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="theBankCode" name="theBankCode" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.theBankCode}" >
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">投资者所属银行代码</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="theBankCode" name="theBankCode" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.theBankCode}" >
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md11" style="margin:50px;">
+            <div class="text-center"> <a id="RegTimePoints002_btn_save" class="layui-btn layui-btn-sm btn-save" data-th-text="#{SysCommon.submit}">提交</a> <a id="RegTimePoints002_btn_cancel" class="layui-btn layui-btn-sm btn-cancel" data-th-text="#{SysCommon.cancel}">取消</a> </div>
+        </div>
+    </form>
+</div>
+<div layout:fragment="script">
+    <script data-th-inline="javascript" type="text/javascript">
+        /* var CNY="${CNY}"; */
+        /* var entity = '${entity}'; */
+        var indentifyMarkDefault = /*[[${entity?.indentifyMark}]]*/'';
+        var orgIndentifyMarkDefault = /*[[${entity?.orgIndentifyMark}]]*/'';
+        var isSubmit = /*[[${isSubmit}]]*/'';
+        var no = /*[[${no}]]*/'';
+    </script>
+    <script data-th-src="@{/js/report/jquery.validate.js}" type="text/javascript"></script>
+    <script data-th-src="@{/js/report/joyinvalid.js}" type="text/javascript"></script>
+    <script data-th-src="@{/js/report/report-common.js}" type="text/javascript"></script>
+    <script data-th-src="@{/js/report/system/regtimepoints/RegTimePoints002.js}" type="text/javascript"></script>
+</div>
+</body>
+</html>

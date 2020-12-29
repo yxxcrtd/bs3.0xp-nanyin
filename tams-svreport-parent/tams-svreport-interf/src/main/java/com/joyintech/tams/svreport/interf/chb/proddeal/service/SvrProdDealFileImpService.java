@@ -279,6 +279,9 @@ public class SvrProdDealFileImpService extends FileImpService {
 							CommonUtil.getUserName());
 
 					single.setRedemptionFee(BigDecimal.ZERO);
+
+					single.setIssuePartyId(CommonUtil.getUserBank().getRegistBankCode());
+
 					listNE.add(single);
 					//认购数据需要更新要素表存续状态为01 存续，到期数据需要更新02 终止
 					if(DictCodeListExt2.产品存续期登记交易类型_募集期认购.getValue().equals(single.getTradeType())

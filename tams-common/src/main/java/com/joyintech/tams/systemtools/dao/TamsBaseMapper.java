@@ -4,6 +4,7 @@ package com.joyintech.tams.systemtools.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
 import com.joyintech.tams.systemtools.dto.SystemActorRoleDto;
@@ -99,4 +100,5 @@ public interface TamsBaseMapper {
 
     String getCreateInstByID(@Param("businessId") String businessId,@Param("dataType") String dataType);
 
+    List<ChbOrgRegistBankCode> selectBank(String orgCode);
 }
