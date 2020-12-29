@@ -467,6 +467,7 @@
      */
     $(function() {
     	init();
+    	var draftInit = isDraft;
     	//修改和审批被驳回时，保存按钮隐藏
     	if(pageModel === PAGE_MODEL_EDIT){
     		$('#FinFundTarget002_btn_save').hide();
@@ -495,7 +496,14 @@
             		$('#secondType').attr("required",false);
             		$('#bussFinIntPayDto_div').show();
             		//ZGBS-146 草稿箱回显时按日复利置灰 根据init方法中处理逻辑修改 start
-            		$('#isCompoundInt').attr("disabled",false).trigger('change');
+            		if(draftInit){
+            			var target = $("#bussFinIntPayDto_payCycle").val();
+            			$('#isCompoundInt').attr("disabled",!(target=="02")).trigger('change');
+            		}
+            		else{
+            			//按照之前代码回滚
+            			$('#isCompoundInt').attr("disabled",true).trigger('change');
+            		}
             		//ZGBS-146 草稿箱回显时按日复利置灰 根据init方法中处理逻辑修改 end
             	}else{
             		$('#secondType').attr("disabled",false);
@@ -557,4 +565,5 @@
     $('#graFundType').change(function () {
         graFundTypeChange();
     }).trigger('change');
+    draftInit = false;
 }());
