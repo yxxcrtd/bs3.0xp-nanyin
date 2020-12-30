@@ -538,5 +538,20 @@ public class SVReportGlobalConstant {
     /**
      * 中债投资者明细信息是否直连 01是 02 否*/
     public static final String SVR_IS_SEND_EQUDET = "IS_SEND_EQUDET";
+    
+    /**
+     * 产品汇总信息是否从投资者交易表中汇总 01 是   02 否
+     */
+    public static final String SVR_IS_FROM_PRD_DEAL = "SVR_IS_FROM_PRD_DEAL";
+    
+    /**
+     * 是否走产品汇总交易那套逻辑
+     */
+    public static final String SVR_IS_TOATL_YES_NO = "SVR_IS_TOATL_YES_NO";
 
+    /**
+     * 募集登记客户数是否走投资者明细中取(01:是  02:否)
+     */
+    public static final String SVR_IS_EQUDET_CONUT = "SVR_IS_EQUDET_CONUT";
+    
 }

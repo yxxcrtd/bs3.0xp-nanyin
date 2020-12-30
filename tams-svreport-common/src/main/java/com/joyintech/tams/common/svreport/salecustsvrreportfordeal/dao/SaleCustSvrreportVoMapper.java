@@ -11,4 +11,8 @@ import java.util.List;
 public interface SaleCustSvrreportVoMapper {
 
     List<SaleCustSvrreportVo> getSaleCustSvrreportOfFx(@Param("batchTime") Date batchTime);
+    
+    int deleteSaleCustSvrreportOfFx(@Param("batchTime") Date batchTime);
+    
+    int insertSaleCustSvrreportHis(@Param("batchTime") Date batchTime);
 }

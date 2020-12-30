@@ -14,11 +14,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -60,7 +56,11 @@ public class BaseCheckLib {
 	  public static final String PATTERN_COMMON="^[\\u0020-\\u0026-\\u0028-\\u002F-\\u003A-\\u003F\\u0040\\u005B-\\u005F\\u0060\\u007B\\u007D\\u007E\\u0030-\\u0039-\\u0041-\\u005A-\\u0061-\\u007A]{0,}$";
 	  public static final String PATTERN_NOCHINESE="^[\\u0020-\\u0026-\\u0028-\\u007B-\\u007D-\\u007E-\\u2000-\\u2040-\\u2160-\\u216B-\\u3000-\\u301F-\\uFF00-\\uFF65-\\uFFE0-\\uFFEF]{0,}$";
 	  public static final String PATTERN_NOSYMBOL="(((\\d+%)|(\\d+%-\\d+%)):[\\u4e00-\\u9fef-\\u3400-\\u4db5-\\u20000-\\u2a6d6-\\u2a700-\\u2b734-\\u2b740-\\u2b81d-\\u2b820-\\u2cea1-\\u2ceb0-\\u2ebe0-\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0020-\\u0026-\\u0028-\\u007B-\\u007D-\\u007E-\\u2000-\\u2040-\\u2160-\\u216B-\\u3000-\\u301F-\\uFF00-\\uFF65-\\uFFE0-\\uFFEF&&[^\\u0025\\u003A-\\u003B\\u002D]]+;)*(((\\d+%)|(\\d+%-\\d+%)):[\\u4e00-\\u9fef-\\u3400-\\u4db5-\\u20000-\\u2a6d6-\\u2a700-\\u2b734-\\u2b740-\\u2b81d-\\u2b820-\\u2cea1-\\u2ceb0-\\u2ebe0-\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0020-\\u0026-\\u0028-\\u007B-\\u007D-\\u007E-\\u2000-\\u2040-\\u2160-\\u216B-\\u3000-\\u301F-\\uFF00-\\uFF65-\\uFFE0-\\uFFEF&&[^\\u0025\\u003A-\\u003B\\u002D]]+)";
-	  
+		public static final String FIXED_PATTERN ="^([\\s]*[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{00020000}-\\x{0002a6d6}\\x{0002a700}-\\x{0002b734}\\x{0002b740}-\\x{0002b81d}\\x{0002b820}-\\x{0002cea1}\\x{0002ceb0}-\\x{0002ebe0}\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0021-\\u0026\\u0028-\\u007B\\u007D\\u007E\\u2000-\\u2040\\u2160-\\u216B\\u3000-\\u301F\\uFF00-\\uFF65\\uFFE0-\\uFFEF]{1,}[\\s]*)+$";
+	 
+	  	  
+public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{00020000}-\\x{0002a6d6}\\x{0002a700}-\\x{0002b734}\\x{0002b740}-\\x{0002b81d}\\x{0002b820}-\\x{0002cea1}\\x{0002ceb0}-\\x{0002ebe0}\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0021-\\u0026\\u0028-\\u007B\\u007D\\u007E\\u2000-\\u2040\\u2160-\\u216B\\u3000-\\u301F\\uFF00-\\uFF65\\uFFE0-\\uFFEF]{0,}$";
+	  public static final String NEW_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{00020000}-\\x{0002a6d6}\\x{0002a700}-\\x{0002b734}\\x{0002b740}-\\x{0002b81d}\\x{0002b820}-\\x{0002cea1}\\x{0002ceb0}-\\x{0002ebe0}\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0021-\\u0026\\u0028-\\u007B\\u007D\\u007E\\u2000-\\u2040\\u2160-\\u216B\\u3000-\\u301F\\uFF00-\\uFF65\\uFFE0-\\uFFEF-\\u0020\\u0020]{0,}$"; 
 	  public static void main(String[] args) {
 //        String s = "12.345.6";
 //        System.out.println(isNumeric(s));
@@ -164,29 +164,34 @@ public class BaseCheckLib {
         return (srcValue.length() < length);
     }
 
-    /**
-	 * 根据指定的规则，判断数据字符长度是否超过指定的长度 ，默认GBK编码
-	 * @param data 被检查的数据
-	 * @param rule 检查规则实体
-	 * @return
-	 * @see
-	 * @since 1.0
-	 */
-	public static boolean lessThanCharLength(Map<String, String> data, CheckElement rule){
-		String srcValue = data.get(rule.getSrcproperty());
-	    if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
-	        return true;
-	    if ( StringUtils.isEmpty(srcValue) )
-	        return false;
-	    int length = Integer.parseInt(rule.getObjvalue());
-	    try {
+        /**
+     * 根据指定的规则，判断数据字符长度是否超过指定的长度 ，默认GBK编码
+     * @param data 被检查的数据
+     * @param rule 检查规则实体
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public static boolean lessThanCharLength(Map<String, String> data, CheckElement rule){
+    	String srcValue = data.get(rule.getSrcproperty());
+        if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
+            return true;
+        //add by wm condition表中无nullable字段，并且当字段比较为0时，返回true start
+        if(StringUtils.isEmpty(srcValue)  && StringUtil.isEmpty(rule.getNullable()) && StringUtil.equals("0", rule.getObjvalue()) )
+        	return true;
+        //add by wm condition表中无nullable字段，并且当字段比较为0时，返回true end
+        if ( StringUtils.isEmpty(srcValue) )
+            return false;
+        int length = Integer.parseInt(rule.getObjvalue());
+        try {
 			byte[] b_gbk = srcValue.getBytes("GBK");
 			return (b_gbk.length < length);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return false;
 		}
-	}
+    }
+
     /**
      * 根据指定的规则，判断数据指定的值与目标值大小 
      * @param data 被检查的数据
@@ -200,10 +205,18 @@ public class BaseCheckLib {
         String srcValue = data.get(rule.getSrcproperty());
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
-        if ( StringUtils.isEmpty(srcValue) )
-            return false;        
+
         String objValue = rule.getObjvalue();
         String compareTo = rule.getCompareto();
+        // add by zhangliang 20201023 判断符号如果是!=的场合 start
+        // 此处判断是为了处理condition里比较值是空的场合，对于！=也是成立的
+        if (StringUtil.equals(compareTo, "!=") && StringUtils.isEmpty(srcValue)){
+            return true;
+        }
+        // add by zhangliang 20201023 判断符号如果是!=的场合 end
+
+        if ( StringUtils.isEmpty(srcValue) )
+            return false;        
         switch (compareTo) {
             case ">":
                 r = (srcValue.compareTo(objValue) > 0);
@@ -242,12 +255,19 @@ public class BaseCheckLib {
         String srcValue = data.get(rule.getSrcproperty());
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
+
+        String compareTo = rule.getCompareto();
+        // add by zhangliang 20201023 判断符号如果是!=的场合 start
+        // 此处判断是为了处理condition里比较值是空的场合，对于！=也是成立的
+        if (StringUtil.equals(compareTo, "!=") && StringUtils.isEmpty(srcValue)){
+            return true;
+        }
+        // add by zhangliang 20201023 判断符号如果是!=的场合 end
         if ( StringUtils.isEmpty(srcValue) )
             return false;        
         String objValue = data.get(rule.getObjvalue());
         if ( objValue==null ) objValue="";
-        
-        String compareTo = rule.getCompareto();
+
         switch (compareTo) {
             case ">":
                 r = (srcValue.compareTo(objValue) > 0);
@@ -286,11 +306,19 @@ public class BaseCheckLib {
         String srcValue = data.get(rule.getSrcproperty());
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
+
+        String compareTo = rule.getCompareto();
+        // add by zhangliang 20201023 判断符号如果是!=的场合 start
+        // 此处判断是为了处理condition里比较值是空的场合，对于！=也是成立的
+        if (StringUtil.equals(compareTo, "!=") && StringUtils.isEmpty(srcValue)){
+            return true;
+        }
+        // add by zhangliang 20201023 判断符号如果是!=的场合 end
+
         if ( StringUtils.isEmpty(srcValue) )
             return false;        
         String objValue = rule.getObjvalue();
-        String compareTo = rule.getCompareto();
-        
+
         if (  !isNumeric(srcValue)  || !isNumeric(objValue) ) {
             return false;
         }
@@ -336,12 +364,20 @@ public class BaseCheckLib {
         String srcValue = data.get(rule.getSrcproperty());
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
+
+        String compareTo = rule.getCompareto();
+        // add by zhangliang 20201023 判断符号如果是!=的场合 start
+        // 此处判断是为了处理condition里比较值是空的场合，对于！=也是成立的
+        if (StringUtil.equals(compareTo, "!=") && StringUtils.isEmpty(srcValue)){
+            return true;
+        }
+        // add by zhangliang 20201023 判断符号如果是!=的场合 end
+
         if ( StringUtils.isEmpty(srcValue) )
             return false;        
         String objValue = data.get(rule.getObjvalue());
         if ( objValue==null ) objValue="";
-        String compareTo = rule.getCompareto();
-        
+
         if (  !isNumeric(srcValue)  || !isNumeric(objValue) ) {
             return false;
         }
@@ -390,7 +426,7 @@ public class BaseCheckLib {
             return false;
         // add by zhangmingming 数据字典增加多选情况 20191224 start
         if(StringUtils.equals(rule.getCompareto(),"<")){
-        	 List<String> srcValueList = Arrays.asList(srcValue.split(";"));
+        	 List<String> srcValueList = Arrays.asList(srcValue.split(","));
             // 可以多选 但是不能重复
             if(srcValueList.size() != new HashSet<String>(srcValueList).size()){
                 return false;
@@ -768,16 +804,15 @@ public class BaseCheckLib {
             //"^[-+]?[1-9]{5}[.][0-9]{2}$";
             String format = "";
             if ( decbit>0 && StringUtil.contains(srcValue, GlobalConstant.POINT)) 
-                format = "^([-+]?[0-9]{1,"+(allbit-decbit)+"})?[.][0-9]{1,"+decbit+"}$";
+                format = "^([-+])?([0-9]{1,"+(allbit-decbit)+"})?[.][0-9]{1,"+decbit+"}$";
             else
-                format = "^([-+]?[0-9]{1,"+(allbit-decbit)+"})?[.]?[0-9]{1,"+decbit+"}$";
+                format = "^([-+])?([0-9]{1,"+(allbit-decbit)+"})$";
             
             return srcValue.matches(format);
         } else {
             return isNumeric(srcValue);
         }
     }
-    
     /**
      * 根据指定的规则，判断日期数据是否是指定的格式 
      * ※严格判断是否符合日期格式
@@ -830,6 +865,14 @@ public class BaseCheckLib {
         String compareto = rule.getCompareto();
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
+
+        // add by zhangliang 20201023 判断符号如果是!=的场合 start
+        // 此处判断是为了处理condition里比较值是空的场合，对于！=也是成立的
+        if (StringUtil.equals(compareto, "!=") && StringUtils.isEmpty(srcValue)){
+            return true;
+        }
+        // add by zhangliang 20201023 判断符号如果是!=的场合 end
+
         if ( StringUtils.isEmpty(srcValue) )
             return false;
         String objValue = rule.getObjvalue();
@@ -847,4 +890,196 @@ public class BaseCheckLib {
 
         return false;
     }
+    
+    /**
+     * 求数组中最大的值
+     * @param data  被检查的数据
+     * @param rule  检查规则实体
+     * @return
+     */
+    public static boolean inArrayMax(Map<String, String> data, CheckElement rule){
+    	//传入进来的数据值 
+    	String srcValue = data.get(rule.getSrcproperty());
+         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
+             return true;
+         if ( StringUtils.isEmpty(srcValue) )
+             return false;   
+         //给的固定值
+         String objValue = rule.getObjvalue();
+         List<String> srcValueList = Arrays.asList(srcValue.split(","));
+         String max= Collections.max(srcValueList);
+         if(StringUtil.equals(max, objValue)){
+        	 return true;
+         }
+    	 return  false;
+    }
+    
+
+    /**
+     * 求数组中最小的值是否等于固定值
+     * @param data  被检查的数据
+     * @param rule  检查规则实体
+     * @return
+     */
+    public static boolean inArrayMin(Map<String, String> data, CheckElement rule){
+    	//传入进来的数据值 
+    	String srcValue = data.get(rule.getSrcproperty());
+         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
+             return true;
+         if ( StringUtils.isEmpty(srcValue) )
+             return false;   
+         //给的固定值
+         String objValue = rule.getObjvalue();
+         List<String> srcValueList = Arrays.asList(srcValue.split(","));
+         String min= Collections.min(srcValueList);
+         if(StringUtil.equals(min, objValue)){
+        	 return true;
+         }
+    	 return  false;
+    }
+
+    /**
+     * 根据指定的规则，判断指定的值是否在数据字典枚举类型范围内
+     * @param data 被检查的数据
+     * @param rule 检查规则实体
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public static boolean inDatadictMulti(Map<String, String> data, CheckElement rule) {
+        String srcValue = data.get(rule.getSrcproperty());
+        if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
+            return true;
+        if ( StringUtils.isEmpty(srcValue) )
+            return false;
+        if(StringUtils.equals(rule.getCompareto(),"<")){
+            List<String> srcValueList = Arrays.asList(srcValue.split(","));
+            // 可以多选 但是不能重复
+            if(srcValueList.size() != new HashSet<String>(srcValueList).size()){
+                return false;
+            }
+
+            int flag = 0;
+            Set<String> objValueSet = new HashSet<>(Arrays.asList(rule.getObjvalue().split(",")));
+            for (String objValue : objValueSet){
+                DataDict dto = CacheUtil.getDictCode(objValue);
+                if (null != dto) {
+                    List<? extends DataDictItem> items = dto.getItems();
+                    for (DataDictItem item : items) {
+                        for (String value : srcValueList) {
+                            if (value.equals(item.getItemCode()))  flag++;
+                        }
+
+                        if(flag == srcValueList.size())  return true;
+                    }
+
+                    if(flag == srcValueList.size())  return true;
+                }
+            }
+
+            if(flag == srcValueList.size())  return true;
+
+            return false;
+        }else {
+            List<String> objValueList = Arrays.asList(rule.getObjvalue().split(","));
+
+            for (String objValue : objValueList){
+                DataDict dto = CacheUtil.getDictCode(objValue);
+                if (null != dto) {
+                    List<? extends DataDictItem> items = dto.getItems();
+                    for (DataDictItem item : items) {
+                        if (srcValue.equals(item.getItemCode()))
+                            return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+    }
+    
+	//addBy zhangjinyang  start 20201023
+    /**
+     * 判断姓名长度是否为2位或三位，是则不通过（姓名为汉字时才判断）
+     * @param data 被检查的数据
+     * @param rule 
+     * @return boolean
+     */
+    public  static boolean checkNameLength(Map<String,String> data, CheckElement rule) {
+    	String srcValue = data.get(rule.getSrcproperty());
+        if ( StringUtils.isEmpty(srcValue) ) {
+            return true;
+        }else {
+        	char[] c=srcValue.toCharArray();
+        	int count=0;
+        	for(int i=0;i<c.length;i++) {
+	        	Character.UnicodeBlock ub = Character.UnicodeBlock.of(c[i]);
+	            if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS
+	                    || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS
+	                    || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A
+	                    || ub == Character.UnicodeBlock.GENERAL_PUNCTUATION
+	                    || ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
+	                    || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS) {//判断是否为汉字
+	            		count++;
+	            	}
+        	}
+        	if(count==c.length) {
+	        	if(srcValue.length()==Integer.parseInt(rule.getObjvalue())) {
+	        		return false;
+	        	}else {
+	        		return true;	
+	        	}
+        	}else {
+        		return true;
+        	}
+        	 
+        }
+    }
+    
+    /**
+     * 判断业务确认日是否大于当前日期，大于则不通过
+     * @param data 被检查的数据
+     * @param rule 
+     * @return boolean
+     */
+    public  static boolean checkConfigDate(Map<String,String> data, CheckElement rule) {
+        String srcValue = data.get(rule.getSrcproperty());
+        if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() ) {  
+            return true;
+        }
+        if ( StringUtils.isEmpty(srcValue) ) {
+        	return true;
+        }                   
+        String objValue = rule.getObjvalue();
+        Date date=new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat(objValue);
+        try {
+            sdf.setLenient(false);
+            Date date1=sdf.parse(srcValue);
+            if(date1.compareTo(date)>0) {
+            	return false;
+            }else {
+            	return true;
+            }
+        } catch (ParseException e) {
+            //e.printStackTrace();
+        	return true;
+        }
+    }
+    /**
+     * 判断是否全部为空格是则不通过
+     * @param data 被检查的数据
+     * @param rule 
+     * @return boolean
+     */
+    public  static boolean checkIsALLSpace(Map<String,String> data, CheckElement rule) {
+    	String srcValue = data.get(rule.getSrcproperty());
+        if ( StringUtils.isEmpty(srcValue) ) {
+            return true;
+        }else {
+        	return srcValue.matches(FIXED_PATTERN);
+        }
+    }
+  //addBy zhangjinyang  end 20201023
 }

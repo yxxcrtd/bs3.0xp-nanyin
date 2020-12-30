@@ -25,10 +25,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -41,13 +41,14 @@ import org.xml.sax.SAXException;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.ChbFileReadMonitorInfoMapper;
 import com.joyintech.tams.common.base.entity.ChbFileReadMonitorInfo;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.common.svreport.datacheck.dao.ChbInterfErrodataMapper;
 import com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodataWithBLOBs;
 import com.joyintech.tams.common.svreport.datacheck.dto.CheckRule;
@@ -435,65 +436,153 @@ public abstract class FileImpService extends InterfService{
      * @Param bussinessKey 业务主键用于关联错误信息
      * @return 返回待处理数据
      */
-    public List<Map<String, String>> checkData(List<Map<String,String>> infoList,String fireName,
+    public List<Map<String, String>> checkData(boolean deleteFlag, List<Map<String,String>> infoList,String fireName,
             String interfType,String dataType,String bussinessKey,String... checkEuplicatedKeys ){
+        /**start 新增删除逻辑  add  by  dongxiangyang 20201017    */
+        //根据业务主键和类型进行删除
+        List<String>  listMap=infoList.stream().map(map -> {
+            if(StringUtil.isEmpty(bussinessKey) || StringUtil.isEmpty(map.get(bussinessKey))) {
+                StringBuffer keyVFinal = new StringBuffer();
+                for(String key: checkEuplicatedKeys){
+                    keyVFinal.append(map.get(key));
+                    keyVFinal.append("|");
+                }
+                return keyVFinal.toString();
+            }
+            return map.get(bussinessKey);
+        }).collect(Collectors.toList());
+        deletAllErroData(listMap, interfType);
+        /**end 新增删除逻辑  add  by  dongxiangyang 20201017    */
         List<Map<String, String>> listDupError = DataCheckService.checkDuplicatedData(infoList, checkEuplicatedKeys);
         List<CheckRule> listRules = dataCheckService.queryCheckRules(dataType);
-        List<Map<String, String>> listError = DataCheckService.checkDataList(infoList,listRules);
+        List<Map<String, String>> listError = DataCheckService.checkDataList(infoList,listRules, deleteFlag);
         // 将重复项入库
-        if (CollectionUtils.isNotEmpty(listDupError)){
-            listError.addAll(listDupError);
+        if (deleteFlag && CollectionUtils.isNotEmpty(listError)){
+            listDupError.addAll(listError);
         }
         ChbInterfErrodataWithBLOBs data=null;
-        StringBuffer bf=null;
+//        StringBuffer bf=null;
         List<ChbInterfErrodataWithBLOBs> erroList=new ArrayList<ChbInterfErrodataWithBLOBs>();
-        for(Map<String, String> erro:listError){
-            data=new ChbInterfErrodataWithBLOBs();
-            if(erro.get(bussinessKey) == null || "".equals(erro.get(bussinessKey))){
-            	//若根据业务主键找不到值，则根据checkEuplicatedKeys联合主键来进行手工md5加密，并赋值
-            	StringBuffer keyVFinal = new StringBuffer();
-            	for(String key: checkEuplicatedKeys){
-            		keyVFinal.append(erro.get(key));
-            	}
-            	String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
-            	data.setDataid(md5Key);
-            }else{
-            	//若根据业务主键获取到值，则直接赋值
-            	data.setDataid(erro.get(bussinessKey));
+        for(Map<String, String> erro:listDupError){
+//            data=new ChbInterfErrodataWithBLOBs();
+//            String dataId = null;
+//            if(erro.get(bussinessKey) == null || "".equals(erro.get(bussinessKey))){
+//                //若根据业务主键找不到值，则根据checkEuplicatedKeys联合主键来进行手工md5加密，并赋值
+//                StringBuffer keyVFinal = new StringBuffer();
+//                for(String key: checkEuplicatedKeys){
+//                    keyVFinal.append(erro.get(key));
+//                    keyVFinal.append("|");
+//                }
+////                String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
+//                dataId = keyVFinal.toString();
+//            }else{
+//                //若根据业务主键获取到值，则直接赋值
+//                dataId = erro.get(bussinessKey);
+//            }
+//            data.setDatauuid(IDGenerator.generate(36));
+////            data.setDataid(erro.get(bussinessKey));
+//            // 根据检查的数据类型设置错误信息的interfType
+//            data.setInterfType(dataType);
+//            data.setFireName(fireName);
+////            bf=new StringBuffer();
+//            String msg=erro.get("ERRMSG");
+////            for(String key:erro.keySet()){
+////                if(key==null){
+////                    continue;
+////                }
+////                if("ERRMSG".equals(key)){
+////                    msg=erro.get(key);
+////                }else{
+////                    bf.append(key+":"+erro.get(key)+",");
+////                    
+////                }
+////            }
+//            erro.remove("ERRMSG");
+//            data.setOrgData(JsonUtils.object2Json(erro));
+//            data.setErrMsg(msg);
+//            data.setStatus("E");
+//            data.setCreateUser("system");
+//            data.setUpdateUser("system");
+//            data.setCreateTime(new Date());
+//            data.setUpdateTime(new Date());
+            data = createChbInterfErrdata(fireName, interfType, erro, bussinessKey, checkEuplicatedKeys);
+            if(data != null) {
+                erroList.add(data);
             }
-            data.setDatauuid(IDGenerator.generate(36));
-//            data.setDataid(erro.get(bussinessKey));
-            // 根据检查的数据类型设置错误信息的interfType
-            data.setInterfType(dataType);
-            data.setFireName(fireName);
-            bf=new StringBuffer();
-            String msg="";
-            for(String key:erro.keySet()){
-            	if(key==null){
-            		continue;
-            	}
-                if("ERRMSG".equals(key)){
-                    msg=erro.get(key);
-                }else{
-                    bf.append(key+":"+erro.get(key)+",");
-                    
-                }
-            }
-            data.setOrgData(bf.toString());
-            data.setErrMsg(msg);
-            data.setStatus("E");
-            data.setCreateUser("system");
-            data.setUpdateUser("system");
-            data.setCreateTime(new Date());
-            data.setUpdateTime(new Date());
-            erroList.add(data);
         }
         if(!erroList.isEmpty()){
-        	insertErroData(erroList);
+            insertErroData(erroList);
         }
 //        chbInterfErrodataMapper.deleteByPrimaryKey(data.getDataid());
 //        chbInterfErrodataMapper.insert(data);
         return listError;
+    }
+
+    /**
+     * 根据错误消息创建需要入库的Dto
+     * 
+     * @param tableName 检查的表名
+     * @param map 数据
+     * @param dataId 业务主键
+     * @return 需要入库的Dto
+     */
+    public ChbInterfErrodataWithBLOBs createChbInterfErrdata(String fireName,
+            String interfType, Map<String, String> map,
+            String bussinessKey, String... checkEuplicatedKeys) {
+        String msg = map.get("ERRMSG");
+        if (StringUtil.isEmpty(msg)) {
+            return null;
+        }
+        String dataId = null;
+        if(StringUtil.isEmpty(bussinessKey) || StringUtil.isEmpty(map.get(bussinessKey))){
+            //若根据业务主键找不到值，则根据checkEuplicatedKeys联合主键来进行赋值
+            StringBuffer keyVFinal = new StringBuffer();
+            for(String key: checkEuplicatedKeys){
+                keyVFinal.append(map.get(key));
+                keyVFinal.append("|");
+            }
+            dataId = keyVFinal.toString();
+        }
+        else {
+            dataId = map.get(bussinessKey);
+        }
+        // 拼装错误信息
+        ChbInterfErrodataWithBLOBs errodata = new ChbInterfErrodataWithBLOBs();
+        // 主键uuid
+        errodata.setDatauuid(IDGenerator.generate(36));
+        // 文件名
+        errodata.setFireName(fireName);
+        // 业务主键
+        errodata.setDataid(dataId);
+        // 接口类型
+        errodata.setInterfType(interfType);
+        // 拼接错误字段信息
+        map.remove("ERRMSG");
+        errodata.setOrgData(JsonUtils.object2Json(map));
+        // 错误提示信息
+        errodata.setErrMsg(msg);
+        // 数据状态
+        errodata.setStatus("E");
+        errodata.setCreateUser("system");
+        errodata.setUpdateUser("system");
+        errodata.setCreateTime(new Date());
+        errodata.setUpdateTime(new Date());
+        return errodata;
+    }
+    
+    /**
+     * 数据校验
+     * @param infoList 解析的数据list
+     * @param fireName 文件名称
+     * @param interfType 接口类型
+     * @param dataType 检查数据类型
+     * @param checkEuplicatedKeys 重复性检查的keys
+     * @Param bussinessKey 业务主键用于关联错误信息
+     * @return 返回待处理数据
+     */
+    public List<Map<String, String>> checkData(List<Map<String,String>> infoList,String fireName,
+            String interfType,String dataType,String bussinessKey,String... checkEuplicatedKeys ){
+        return checkData(true, infoList, fireName, interfType, dataType, bussinessKey, checkEuplicatedKeys);
     }
     /**
      * 功能:数据入库
@@ -533,29 +622,36 @@ public abstract class FileImpService extends InterfService{
             // 清理缓存，防止溢出
             session.clearCache();
         }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
         finally {
             session.close();
         }
         logger.debug("错误信息数据插入结束--------------" + new Date());
     }
+
     public void insertErroData(List<ChbInterfErrodataWithBLOBs> erroList) {
         SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
         try {
             int count = 0;
             logger.debug("错误信息数据插入开始--------------" + new Date());
             ChbInterfErrodataMapper batchMapper = session.getMapper(ChbInterfErrodataMapper.class);
+            /**start 新增删除逻辑  delete  by  dongxiangyang 20201017    */
 //            int batchCount = reportInsertLongCount==0?50:reportInsertLongCount;//每批commit的个数
 //            int batchLastIndex = batchCount;//每批最后一个的下标
-            for(ChbInterfErrodataWithBLOBs single: erroList){
-            	batchMapper.deleteByPrimaryKey(single.getDataid());
-            	 count ++;
-                 // 每20次提交
-                 if (count % 20 == 0) {
-                     session.commit();
-                     // 清理缓存，防止溢出
-                     session.clearCache();
-                 }
-            }
+//            for(ChbInterfErrodataWithBLOBs single: erroList){
+//            	batchMapper.deleteByPrimaryKey(single.getDataid());
+//            	 count ++;
+//                 // 每20次提交
+//                 if (count % 20 == 0) {
+//                     session.commit();
+//                     // 清理缓存，防止溢出
+//                     session.clearCache();
+//                 }
+//            }
+            /**end 新增删除逻辑  delete  by  dongxiangyang 20201017    */
             for(ChbInterfErrodataWithBLOBs single: erroList){
             	batchMapper.insert(single);
                 count ++;
@@ -570,11 +666,94 @@ public abstract class FileImpService extends InterfService{
             // 清理缓存，防止溢出
             session.clearCache();
         }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
         finally {
             session.close();
         }
         logger.debug("错误信息数据插入结束--------------" + new Date());
     }
+
+    /**start 新增删除逻辑  add  by  dongxiangyang 20201017    */
+    private void deletAllErroData(List<String> erroList,String tableName) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            int count = 0;
+            logger.debug("错误信息数据删除开始--------------" + new Date());
+            ChbInterfErrodataMapper batchMapper = session.getMapper(ChbInterfErrodataMapper.class);
+            for(String single: erroList){
+            	Map<String,String> map  =new  HashMap<String,String>();
+            	map.put("tableName", tableName);
+            	map.put("dataid", single);
+            	batchMapper.deleteByPrimaryKeyType(map);
+            	 count ++;
+                 // 每20次提交
+                 if (count % 20 == 0) {
+                     session.commit();
+                     // 清理缓存，防止溢出
+                     session.clearCache();
+                 }
+            }
+            session.commit();
+            // 清理缓存，防止溢出
+            session.clearCache();
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+        logger.debug("错误信息数据删除结束--------------" + new Date());
+    }
+    /**end 新增删除逻辑  add  by  dongxiangyang 20201017    */
+//
+//    protected void insertErroDataCodeCheck(List<ChbInterfErrodataWithBLOBs> erroList,String tableName) {
+//        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+//        try {
+//            int count = 0;
+//            logger.debug("错误信息数据插入开始--------------" + new Date());
+//            ChbInterfErrodataMapper batchMapper = session.getMapper(ChbInterfErrodataMapper.class);
+//            /**start 新增删除逻辑  delete  by  dongxiangyang 20201017    */
+////            int batchCount = reportInsertLongCount==0?50:reportInsertLongCount;//每批commit的个数
+////            int batchLastIndex = batchCount;//每批最后一个的下标
+////            for(ChbInterfErrodataWithBLOBs single: erroList){
+////                batchMapper.deleteByPrimaryKeyType(tableName,single.getDataid());
+////                 count ++;
+////                 // 每20次提交
+////                 if (count % 20 == 0) {
+////                     session.commit();
+////                     // 清理缓存，防止溢出
+////                     session.clearCache();
+////                 }
+////            }
+//            /**end 新增删除逻辑  delete  by  dongxiangyang 20201017    */
+//            for(ChbInterfErrodataWithBLOBs single: erroList){
+//                batchMapper.insert(single);
+//                count ++;
+//                // 每20次提交
+//                if (count % 20 == 0) {
+//                    session.commit();
+//                    // 清理缓存，防止溢出
+//                    session.clearCache();
+//                }
+//            }
+//            session.commit();
+//            // 清理缓存，防止溢出
+//            session.clearCache();
+//        }
+//        catch (Exception e) {
+//            session.rollback();
+//            logger.error("SQL执行异常：", e);
+//        }
+//        finally {
+//            session.close();
+//        }
+//        logger.debug("错误信息数据插入结束--------------" + new Date());
+//    }
     /**
      * 将文件入库
      * @param saveFlag:F－全量，I－增量
