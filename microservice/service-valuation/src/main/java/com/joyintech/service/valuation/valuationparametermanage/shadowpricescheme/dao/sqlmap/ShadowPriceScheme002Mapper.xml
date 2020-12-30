@@ -158,8 +158,8 @@
         <if test="secDetailType != null and secDetailType !='' ">
               and  b.SEC_DETAIL_TYPE = #{secDetailType}
         </if>
-        <if test="secDetailType = null or secDetailType !='' ">
-            and  b.SEC_DETAIL_TYPE is null
+        <if test="secDetailType == null or secDetailType =='' ">
+              and  b.SEC_DETAIL_TYPE is null
         </if>
               and  b.VDATE =to_date(#{vdate}, 'yyyy-MM-dd')
     </select>

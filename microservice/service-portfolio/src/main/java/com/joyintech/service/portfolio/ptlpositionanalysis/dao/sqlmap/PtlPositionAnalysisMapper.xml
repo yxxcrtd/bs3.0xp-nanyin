@@ -1915,7 +1915,7 @@
             and atd.pinan_asset_type= #{type}
         </if>
         <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
-            AND DATAINST.INSTITUTION_CODE IN
+            AND dani.INSTITUTION_CODE IN
             <foreach collection="resourcesTreeInstCodeList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
