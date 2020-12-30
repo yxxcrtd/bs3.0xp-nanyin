@@ -1,18 +1,17 @@
-package com.joyintech.tams.svreport.chb.datacheck.beforeinsert.service;
+package com.joyintech.tams.common.svreport.datacheck.beforeinsert.service;
 
 import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.FileImpService;
-import com.joyintech.tams.common.InterfFile;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.ChbBotAstPositionSub;
 import com.joyintech.tams.common.base.entity.ChbPrdDeclareSub;
 import com.joyintech.tams.common.base.entity.ChbPrdIssueSub;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dao.CommonCodeCheckMapper;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.common.svreport.datacheck.dao.ChbInterfErrodataMapper;
 import com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodataWithBLOBs;
 import com.joyintech.tams.common.svreport.datacheck.dto.CheckElement;
 import com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib;
@@ -20,8 +19,11 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
-import com.joyintech.tams.svreport.chb.datacheck.beforeinsert.dao.CommonCodeCheckMapper;
-import com.joyintech.tams.svreport.chb.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,17 +38,29 @@ import java.util.regex.Pattern;
  *
  */
 @Service
-public class CommonCodeCheckBatchService  extends FileImpService {
+public class CommonCodeCheckBatchService {
 	
 	@Autowired
-	private  CommonCodeCheckMapper comminCodeCheckMapper;
+	private CommonCodeCheckMapper comminCodeCheckMapper;
+
+    /**
+     * mybatis的sqlsession管理核心
+     */
+    @Autowired
+    private SqlSessionTemplate template;
+
+    /**
+     * 日志
+     */
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	/**
 	 * 产品募集总量登记的入库前的代码检查
 	 * @param  list 被检查的数据
 	 * @param  tableInfo  检查的表名
+     * @param  fileName 导入的文件名
 	 */
-	public void codeCheckCommon(List<Map<String, String>> list,ChbCheckTableInfo tableInfo){
+	public void codeCheckCommon(List<Map<String, String>> list, ChbCheckTableInfo tableInfo, String fileName){
 		//错误信息集合
 		List<ChbInterfErrodataWithBLOBs> erroList=new ArrayList<ChbInterfErrodataWithBLOBs>();
         Map<String, List<String>> prodRegistCodeMap = new HashMap<>();
@@ -64,9 +78,11 @@ public class CommonCodeCheckBatchService  extends FileImpService {
                 checkEmployeeSubInfo(map);
                 break;
             case 资产要素登记表:
+            case 资产要素登记表INFO:
                 checkAssetSubInfo(map);
                 break;
             case 个人发行登记表:
+            case 个人发行登记表INFO:
                 checkPrdoIssue(map, prodRegistCodeList);
                 break;
             case 募集总量登记:
@@ -87,6 +103,7 @@ public class CommonCodeCheckBatchService  extends FileImpService {
                 checkProdDeal(map, list);
                 break;
             case 个人产品申报登记:
+            case 个人产品申报登记INFO:
                 checkPrdoDeclare(map,list);
                 break;
             case 终止登记:
@@ -96,8 +113,8 @@ public class CommonCodeCheckBatchService  extends FileImpService {
                 break;
             }
 			//如果代码错误校验有错误信息
-			ChbInterfErrodataWithBLOBs errodata = createChbInterfErrdata(tableInfo.getTableName(), tableInfo.getTableName(), map,
-			        tableInfo.getBussinessKey(), tableInfo.getCheckEuplicatedKeys());
+			ChbInterfErrodataWithBLOBs errodata = createChbInterfErrdata(StringUtil.isNotEmpty(fileName) ? fileName : tableInfo.getTableName(),
+                    tableInfo.getTableName(), map,tableInfo.getBussinessKey(), tableInfo.getCheckEuplicatedKeys());
 			if(errodata != null) {
 			    erroList.add(errodata);
 			    list.remove(i);
@@ -1387,17 +1404,6 @@ public class CommonCodeCheckBatchService  extends FileImpService {
         dataMap.put("ERRMSG", errMsg);
 
     }
-    @Override
-    public String saveData(List<Map<String, String>> listData, String saveFlag, String dateSource) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public String importDB(List<Map<String, String>> listData, InterfFile interfFile) {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
     public static boolean isBigDecimal(String str){
         if(str==null || str.trim().length() == 0){
@@ -1421,5 +1427,86 @@ public class CommonCodeCheckBatchService  extends FileImpService {
 //      }
         return Pattern.matches("^-?[0-9]+.?[0-9]*$", str);
     }
-	
+
+    public void insertErroData(List<ChbInterfErrodataWithBLOBs> erroList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            int count = 0;
+            logger.debug("错误信息数据插入开始--------------" + new Date());
+            ChbInterfErrodataMapper batchMapper = session.getMapper(ChbInterfErrodataMapper.class);
+            for(ChbInterfErrodataWithBLOBs single: erroList){
+                batchMapper.insert(single);
+                count ++;
+                // 每20次提交
+                if (count % 20 == 0) {
+                    session.commit();
+                    // 清理缓存，防止溢出
+                    session.clearCache();
+                }
+            }
+            session.commit();
+            // 清理缓存，防止溢出
+            session.clearCache();
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+        logger.debug("错误信息数据插入结束--------------" + new Date());
+    }
+
+    /**
+     * 根据错误消息创建需要入库的Dto
+     *
+     * @param tableName 检查的表名
+     * @param map 数据
+     * @param dataId 业务主键
+     * @return 需要入库的Dto
+     */
+    public ChbInterfErrodataWithBLOBs createChbInterfErrdata(String fireName,
+                                                             String interfType, Map<String, String> map,
+                                                             String bussinessKey, String... checkEuplicatedKeys) {
+        String msg = map.get("ERRMSG");
+        if (StringUtil.isEmpty(msg)) {
+            return null;
+        }
+        String dataId = null;
+        if(StringUtil.isEmpty(bussinessKey) || StringUtil.isEmpty(map.get(bussinessKey))){
+            //若根据业务主键找不到值，则根据checkEuplicatedKeys联合主键来进行赋值
+            StringBuffer keyVFinal = new StringBuffer();
+            for(String key: checkEuplicatedKeys){
+                keyVFinal.append(map.get(key));
+                keyVFinal.append("|");
+            }
+            dataId = keyVFinal.toString();
+        }
+        else {
+            dataId = map.get(bussinessKey);
+        }
+        // 拼装错误信息
+        ChbInterfErrodataWithBLOBs errodata = new ChbInterfErrodataWithBLOBs();
+        // 主键uuid
+        errodata.setDatauuid(IDGenerator.generate(36));
+        // 文件名
+        errodata.setFireName(fireName);
+        // 业务主键
+        errodata.setDataid(dataId);
+        // 接口类型
+        errodata.setInterfType(interfType);
+        // 拼接错误字段信息
+        map.remove("ERRMSG");
+        errodata.setOrgData(JsonUtils.object2Json(map));
+        // 错误提示信息
+        errodata.setErrMsg(msg);
+        // 数据状态
+        errodata.setStatus("E");
+        errodata.setCreateUser("system");
+        errodata.setUpdateUser("system");
+        errodata.setCreateTime(new Date());
+        errodata.setUpdateTime(new Date());
+        return errodata;
+    }
 }

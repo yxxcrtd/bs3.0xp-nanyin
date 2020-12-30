@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.joyintech.tams.svreport.chb.datacheck.beforeinsert.dao.CommonCodeCheckMapper" >
+<mapper namespace="com.joyintech.tams.common.svreport.datacheck.beforeinsert.dao.CommonCodeCheckMapper" >
      <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbPrdDeclareSub" >
         <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
         <result column="PROD_INS_ID" property="prodInsId" jdbcType="VARCHAR" />

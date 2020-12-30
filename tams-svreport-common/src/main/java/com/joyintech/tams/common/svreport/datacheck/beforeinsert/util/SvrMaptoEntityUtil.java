@@ -1,4 +1,4 @@
-package com.joyintech.tams.svreport.chb.datacheck.beforeinsert.util;
+package com.joyintech.tams.common.svreport.datacheck.beforeinsert.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;

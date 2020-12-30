@@ -1,4 +1,4 @@
-package com.joyintech.tams.svreport.chb.datacheck.beforeinsert.dao;
+package com.joyintech.tams.common.svreport.datacheck.beforeinsert.dao;
 
 import java.util.List;
 import java.util.Map;

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.joyintech.tams.svreport.chb.datacheck.beforeinsert.dto;
+package com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto;
 
 /**
  * 中债校验用的表名
@@ -19,7 +19,11 @@ public enum ChbCheckTableInfo {
     个人产品申报登记("CHB_PRD_DECLARE_SUB", true, "PROD_INS_ID", new String[] {"PROD_INS_ID"}),
     产品存续登记表("CHB_PRD_DEAL_SUB", true, null, new String[] {"PROD_ID", "MDATE"}),
     底层资产持仓信息登记表("CHB_BOT_AST_POS_SUB", true, null, new String[] {"POS_DATE", "ASSET_CODE", "PLAN_ASSET_ID"}),
-    终止登记("CHB_PRD_END_SUB", true, "PROD_ID", new String[] {"PROD_ID"});
+    终止登记("CHB_PRD_END_SUB", true, "PROD_ID", new String[] {"PROD_ID"}),
+
+    资产要素登记表INFO("CHB_ASSET_INFO", true, "ASSET_CODE", new String[] {"ASSET_CODE"}),
+    个人发行登记表INFO("CHB_PRD_BASEINFO", true, "PROD_ID", new String[] {"PROD_ID"}),
+    个人产品申报登记INFO("CHB_PRD_DECLARE", true, "PROD_INS_ID", new String[] {"PROD_INS_ID"});
     /**
      * 表名
      */
