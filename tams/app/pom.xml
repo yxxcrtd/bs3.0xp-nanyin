@@ -144,11 +144,6 @@
 		</dependency>
 		<dependency>
 			<groupId>com.joyintech</groupId>
-			<artifactId>jurt</artifactId>
-			<version>3.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.joyintech</groupId>
 			<artifactId>ridl</artifactId>
 			<version>3.0.1</version>
 		</dependency>
