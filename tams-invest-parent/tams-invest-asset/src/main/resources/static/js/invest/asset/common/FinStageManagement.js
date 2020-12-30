@@ -194,6 +194,13 @@ $(function() {
             Joyin.error(JoyinUtil.getMessage("COMMON_E_0057",JoyinUtil.getLabel("FinStageManagement.title")));
             return;
         }
+
+        if(selArr){
+            $.each(selArr,function(index,obj){
+                obj.finprodMarketId = finprodMarketId;
+            });
+         }
+
         var object = {selectedItem: selArr,finprodId:finprodId,finprodMarketId:finprodMarketId,finprodName:finprodName,calendarId:calendarId, operateType:operateType,ccy: $("#ccy").val()};
                 finalSubmit(object);
            /* Joyin.ajaxJson(basePath + 'invest/asset/common/FinStageManagement/isTransInAssetCheck', object, function(result) {
