@@ -1,10 +1,12 @@
 package com.joyintech.service.basicdata.mstcommissionset.dto;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.tams.common.base.entity.TrdFeeConfig;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.tams.common.base.entity.TrdFeeConfigDetail;
 
 /**
  * 佣金设置验证
@@ -21,6 +23,8 @@ public class MstCommissionSetDto extends TrdFeeConfig {
     private static final long serialVersionUID = 1L;
 
     private String secAcctName;
+
+    private List<TrdFeeConfigDetail> trdFeeConfigDetailList;
 
     /**
      * 计费值
@@ -45,8 +49,28 @@ public class MstCommissionSetDto extends TrdFeeConfig {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal chargeRate;
-    
-	public String getSecAcctName() {
+
+    private String windtypeone;
+
+    private String windtypetwo;
+
+    public String getWindtypeone() {
+        return windtypeone;
+    }
+
+    public void setWindtypeone(String windtypeone) {
+        this.windtypeone = windtypeone;
+    }
+
+    public String getWindtypetwo() {
+        return windtypetwo;
+    }
+
+    public void setWindtypetwo(String windtypetwo) {
+        this.windtypetwo = windtypetwo;
+    }
+
+    public String getSecAcctName() {
 		return secAcctName;
 	}
 
@@ -108,6 +132,14 @@ public class MstCommissionSetDto extends TrdFeeConfig {
      */
     public BigDecimal getChargeRate() {
         return chargeRate;
+    }
+
+    public List<TrdFeeConfigDetail> getTrdFeeConfigDetailList() {
+        return trdFeeConfigDetailList;
+    }
+
+    public void setTrdFeeConfigDetailList(List<TrdFeeConfigDetail> trdFeeConfigDetailList) {
+        this.trdFeeConfigDetailList = trdFeeConfigDetailList;
     }
 
     /**

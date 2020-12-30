@@ -15,6 +15,7 @@ import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.base.entity.TrdFeeConfigDetail;
 import com.joyintech.tams.invest.basicdata.mstcommissionset.validator.MstCommissionSetValidator;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
@@ -98,6 +99,42 @@ public class MstCommissionSetDto extends TrdFeeConfig implements ProcessEntity {
      * 流程中做pk1存json串
      */
     private String allData;
+
+    private String windtypeone;
+
+    private String windtypetwo;
+
+    public String getWindtypeone() {
+        return windtypeone;
+    }
+
+    public void setWindtypeone(String windtypeone) {
+        this.windtypeone = windtypeone;
+    }
+
+    public String getWindtypetwo() {
+        return windtypetwo;
+    }
+
+    public void setWindtypetwo(String windtypetwo) {
+        this.windtypetwo = windtypetwo;
+    }
+
+    private List<TrdFeeConfigDetail> trdFeeConfigDetailList;
+
+    public List<TrdFeeConfigDetail> getTrdFeeConfigDetailList() {
+        return trdFeeConfigDetailList;
+    }
+
+    public void setTrdFeeConfigDetailList(List<TrdFeeConfigDetail> trdFeeConfigDetailList) {
+        this.trdFeeConfigDetailList = trdFeeConfigDetailList;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+
 
     public String getPageId() {
         return pageId;
@@ -360,5 +397,27 @@ public class MstCommissionSetDto extends TrdFeeConfig implements ProcessEntity {
 
     public void setFeeRate(String feeRate) {
         this.feeRate = feeRate;
+    }
+
+    public String getIsGradeStr() {
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.是否, this.getIsGrade());
+    }
+    public String getWindtypeoneStr() {
+        if(this.getWindtypeone()==null||this.getWindtypeone()=="")return null;
+        String[] windtypeoneArray = this.getWindtypeone().split(",");
+        String obj="";
+        for(String windtypeone:windtypeoneArray){
+            obj = obj+SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone)+",";
+        }
+        return obj.substring(0,obj.length()-1);
+    }
+    public String getWindtypetwoStr() {
+        if(this.getWindtypetwo()==null||this.getWindtypetwo()=="")return null;
+        String[] windtypetwoArray = this.getWindtypetwo().split(",");
+        String obj="";
+        for(String windtypetwo:windtypetwoArray){
+            obj = obj+SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo)+",";
+        }
+        return obj.substring(0,obj.length()-1);
     }
 }

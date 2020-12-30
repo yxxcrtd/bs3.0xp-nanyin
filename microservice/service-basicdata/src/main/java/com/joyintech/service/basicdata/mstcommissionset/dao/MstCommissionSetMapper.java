@@ -3,6 +3,7 @@ package com.joyintech.service.basicdata.mstcommissionset.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.TrdFeeConfigDetail;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -36,7 +37,7 @@ public interface MstCommissionSetMapper {
     
     int searchRepeatBySecPs(Map<String, Object> map);
     
-    List<String> searchRepeatBySecPs1(Map<String, Object> map);
+    List<MstCommissionSetDto> searchRepeatBySecPs1(Map<String, Object> map);
     
     String getSecRegistOrg(String secAcctId);
     /**
@@ -49,4 +50,6 @@ public interface MstCommissionSetMapper {
      * @return int
      */ 
     int deleteDtlByBatchSeq(String batchSeq);
+
+    List<TrdFeeConfigDetail> findTable(Map<String, Object> param);
 }

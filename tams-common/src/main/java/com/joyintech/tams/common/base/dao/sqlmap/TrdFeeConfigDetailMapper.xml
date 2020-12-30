@@ -44,12 +44,12 @@
         insert into TRD_FEE_CONFIG_DETAIL (SEQ_NO, CONFIG_SEQ_NO, IS_MLTI, 
             CHARGE_VALUE, FEE_MAXI, FEE_MINI, 
             CHARGE_RATE, CREATE_USER, CREATE_DEPT, 
-            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME,GRADE_AMOUNT,IS_CLUDE_STARTAMT
             )
         values (#{seqNo,jdbcType=VARCHAR}, #{configSeqNo,jdbcType=VARCHAR}, #{isMlti,jdbcType=VARCHAR}, 
             #{chargeValue,jdbcType=DECIMAL}, #{feeMaxi,jdbcType=DECIMAL}, #{feeMini,jdbcType=DECIMAL}, 
             #{chargeRate,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
-            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},#{gradeAmount,jdbcType=DECIMAL},#{isCludeStartamt,jdbcType=VARCHAR}
             )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdFeeConfigDetail" >

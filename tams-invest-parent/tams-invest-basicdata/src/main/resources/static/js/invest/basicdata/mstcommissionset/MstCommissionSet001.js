@@ -88,16 +88,31 @@
                             sortable : false,
                             width : 150
                         }, {
+                            field : 'windtypeoneStr',
+                            title : '资产分类一',
+                            sortable : false,
+                            width : 150
+                        },{
+                            field : 'windtypetwoStr',
+                            title : '资产分类二',
+                            sortable : false,
+                            width : 150
+                        },{
                             field : 'chargeTypeStr',
                             title : 'MstCommissionSet001.chargeType',
                             sortField : 'chargeType',
                             width : 150
-                        }, {
+                        },{
                             field : 'chargeBasisStr',
                             title : 'MstCommissionSet001.chargeBasis',
                             sortField : 'chargeBasis',
                             width : 150
-                        }, {
+                        },{
+                            field : 'isGradeStr',
+                            title : '费用是否分档',
+                            sortable : false,
+                            width : 150
+                        },{
                             field : 'feeRate',
                             title : 'MstCommissionSet001.chargeRate',
                             sortable : false,
