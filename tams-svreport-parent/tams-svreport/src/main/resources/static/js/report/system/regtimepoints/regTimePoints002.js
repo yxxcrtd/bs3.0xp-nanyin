@@ -6,12 +6,12 @@ $(function() {
 
         var object = $.serializeToObject('#submitForm',true);
 
-        if(submitPointBond&&(submitPointBond>23||submitPointBond<0)){
+        if(submitPointBond&&!(submitPointBond<24&&submitPointBond>=0)){
             Joyin.alert("行内报送时点要求不能为空,且必须为0-23之间的数字",2);
             return;
         }
 
-        if(submitPointBank&&(submitPointBank>23||submitPointBank<0)){
+        if(submitPointBank&&!(submitPointBank<24&&submitPointBank>=0)){
             Joyin.alert("监管报送时点要求不能为空,且必须为0-23之间的数字",2);
             return;
         }
