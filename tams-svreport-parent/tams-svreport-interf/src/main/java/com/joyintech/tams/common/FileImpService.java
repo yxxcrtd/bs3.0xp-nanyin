@@ -418,8 +418,8 @@ public abstract class FileImpService extends InterfService{
 					}
             	}
             }
-            
-            map.put("dataList", infoList);
+
+            map.put("dataList",  this.copyDataList(infoList));
             map.put("remoteDir", remoteDir);
             
 //        }
