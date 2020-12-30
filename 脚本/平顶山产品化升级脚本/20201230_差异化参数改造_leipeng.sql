@@ -4,310 +4,310 @@ alter table CHB_PRD_POSITION modify (RAISEAMT NUMBER(34,8));
 
 TRUNCATE TABLE SYS_MENU;
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_004_001002', 'REP', null, 'REPORT_004_001', 'DebtSubmitInfo001', 2, null, '中债报送信息反馈', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_004_001002', 'REP', null, 'REPORT_004_001', 'DebtSubmitInfo001', 2, null, '中债报送信息反馈', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_004_001006', 'REP', null, 'REPORT_004_001', 'AutBatchProResultQuery001', 6, null, '自动报送批处理结果查询', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_004_001006', 'REP', null, 'REPORT_004_001', 'AutBatchProResultQuery001', 6, null, '自动报送批处理结果查询', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('RISK_MANAGEMENT_001_005_007', 'MST', null, 'RISK_MANAGEMENT_001', 'RskValTableQuery001', 7, '02', '估值表查询', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('RISK_MANAGEMENT_001_005_007', 'MST', null, 'RISK_MANAGEMENT_001', 'RskValTableQuery001', 7, '02', '估值表查询', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_001_005_006', 'REP', null, 'REPORT_001_005', 'dataCheckRule', 6, '02', '数据检查规则配置表', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_001_005_006', 'REP', null, 'REPORT_001_005', 'dataCheckRule', 6, '02', '数据检查规则配置表', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_001_005_007', 'REP', null, 'REPORT_001_005', 'dataCheckCondition', 7, '02', '数据检查规则配置条件表', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_001_005_007', 'REP', null, 'REPORT_001_005', 'dataCheckCondition', 7, '02', '数据检查规则配置条件表', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_001_004_001', 'REP', null, 'REPORT_001_004', 'assetsBasisData', 1, '02', '资产指标信息', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_001_004_001', 'REP', null, 'REPORT_001_004', 'assetsBasisData', 1, '02', '资产指标信息', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_001_004_005', 'REP', null, 'REPORT_001_004', 'bokBalance', 5, '02', '科目余额数据', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_001_004_005', 'REP', null, 'REPORT_001_004', 'bokBalance', 5, '02', '科目余额数据', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001', 'SYS', 'icon-system', null, null, 99, '02', '系统管理', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SYSTEM_001', 'SYS', 'icon-system', null, null, 99, '02', '系统管理', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001_001', 'SYS', null, 'SYSTEM_001', 'SysInstitution001', 1, '02', '机构管理', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SYSTEM_001_001', 'SYS', null, 'SYSTEM_001', 'SysInstitution001', 1, '02', '机构管理', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001_002', 'SYS', null, 'SYSTEM_001', 'SysDepartment001', 2, '02', '部门管理', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SYSTEM_001_002', 'SYS', null, 'SYSTEM_001', 'SysDepartment001', 2, '02', '部门管理', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001_003', 'SYS', null, 'SYSTEM_001', 'SysUser001', 3, '02', '用户管理', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SYSTEM_001_003', 'SYS', null, 'SYSTEM_001', 'SysUser001', 3, '02', '用户管理', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001_004', 'SYS', null, 'SYSTEM_001', 'SysActorRole001', 4, '02', '角色权限管理', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SYSTEM_001_004', 'SYS', null, 'SYSTEM_001', 'SysActorRole001', 4, '02', '角色权限管理', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001_005', 'SYS', null, 'SYSTEM_001', 'SysActorAssign001', 5, '02', '角色分配', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SYSTEM_001_005', 'SYS', null, 'SYSTEM_001', 'SysActorAssign001', 5, '02', '角色分配', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001_008', 'SYS', null, 'SYSTEM_001', null, 7, '02', '日志管理', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SYSTEM_001_008', 'SYS', null, 'SYSTEM_001', null, 7, '02', '日志管理', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001_008_001', 'SYS', null, 'SYSTEM_001_008', 'SysActionLog001', 1, '02', '行为日志', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SYSTEM_001_008_001', 'SYS', null, 'SYSTEM_001_008', 'SysActionLog001', 1, '02', '行为日志', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001_008_002', 'SYS', null, 'SYSTEM_001_008', 'SysBatchLog001', 2, '02', '批处理日志', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SYSTEM_001_008_002', 'SYS', null, 'SYSTEM_001_008', 'SysBatchLog001', 2, '02', '批处理日志', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001_008_003', 'SYS', null, 'SYSTEM_001_008', 'SysDataProcessMark001', 3, '02', '历史数据日志', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SYSTEM_001_008_003', 'SYS', null, 'SYSTEM_001_008', 'SysDataProcessMark001', 3, '02', '历史数据日志', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001_008_005', 'SYS', null, 'SYSTEM_001_008', 'WorkflowMonitor001', 5, '02', '流程监控', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SYSTEM_001_008_005', 'SYS', null, 'SYSTEM_001_008', 'WorkflowMonitor001', 5, '02', '流程监控', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001_006', 'SYS', null, 'SYSTEM_001', null, 8, '02', '投组批处理', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SYSTEM_001_006', 'SYS', null, 'SYSTEM_001', null, 8, '02', '投组批处理', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001_006_001', 'SYS', null, 'SYSTEM_001_006', 'SysBatchProcess001', 1, '02', '批处理配置', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SYSTEM_001_006_001', 'SYS', null, 'SYSTEM_001_006', 'SysBatchProcess001', 1, '02', '批处理配置', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001_006_002', 'SYS', null, 'SYSTEM_001_006', 'SysBatchStart001', 2, '02', '批处理启动', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SYSTEM_001_006_002', 'SYS', null, 'SYSTEM_001_006', 'SysBatchStart001', 2, '02', '批处理启动', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001_006_003', 'SYS', null, 'SYSTEM_001_006', 'SysBatchMonitor001', 3, '02', '批处理监控', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SYSTEM_001_006_003', 'SYS', null, 'SYSTEM_001_006', 'SysBatchMonitor001', 3, '02', '批处理监控', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001_006_004', 'SYS', null, 'SYSTEM_001_006', 'SystemBatchQuartzConfig001', 4, '02', '定时任务管理', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SYSTEM_001_006_004', 'SYS', null, 'SYSTEM_001_006', 'SystemBatchQuartzConfig001', 4, '02', '定时任务管理', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001_006_005', 'SYS', null, 'SYSTEM_001_006', 'Workflow001', 5, '02', '工作流配置', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SYSTEM_001_006_005', 'SYS', null, 'SYSTEM_001_006', 'Workflow001', 5, '02', '工作流配置', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001_006_006', 'SYS', null, 'SYSTEM_001_006', 'SysDate001', 6, '02', '平台日调整', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SYSTEM_001_006_006', 'SYS', null, 'SYSTEM_001_006', 'SysDate001', 6, '02', '平台日调整', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001_006_007', 'SYS', null, 'SYSTEM_001_006', 'SysDataDict001', 7, '02', '数据字典管理', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SYSTEM_001_006_007', 'SYS', null, 'SYSTEM_001_006', 'SysDataDict001', 7, '02', '数据字典管理', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001_006_008', 'SYS', null, 'SYSTEM_001_006', 'SysParaSet001', 8, '02', '系统参数管理', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SYSTEM_001_006_008', 'SYS', null, 'SYSTEM_001_006', 'SysParaSet001', 8, '02', '系统参数管理', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001_006_009', 'REP', null, 'SYSTEM_001_006', 'SysInstRegBankCode001', 9, '02', '机构登记银行代码管理', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SYSTEM_001_006_009', 'REP', null, 'SYSTEM_001_006', 'SysInstRegBankCode001', 9, '02', '机构登记银行代码管理', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_003', 'SVR', 'icon-reportregister', null, null, 3, null, '报送信息登记', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SVR_003', 'SVR', 'icon-reportregister', null, null, 3, null, '报送信息登记', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_003_004', 'SVR', null, 'SVR_003', null, 4, null, '产品端相关登记', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SVR_003_004', 'SVR', null, 'SVR_003', null, 4, null, '产品端相关登记', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_003_004_002', 'SVR', null, 'SVR_003_004', 'SvrProdPersonIssue001', 2, null, '产品发行登记', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SVR_003_004_002', 'SVR', null, 'SVR_003_004', 'SvrProdPersonIssue001', 2, null, '产品发行登记', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_003_004_004', 'SVR', null, 'SVR_003_004', 'SvrProdDurationReg001', 4, null, '产品存续期登记', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SVR_003_004_004', 'SVR', null, 'SVR_003_004', 'SvrProdDurationReg001', 4, null, '产品存续期登记', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_003_004_005', 'SVR', null, 'SVR_003_004', 'SvrRaiseTotalRegist001', 3, null, '产品募集总量登记', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SVR_003_004_005', 'SVR', null, 'SVR_003_004', 'SvrRaiseTotalRegist001', 3, null, '产品募集总量登记', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_003_004_006', 'SVR', null, 'SVR_003_004', 'SvrPerProDeclareReg001', 1, null, '产品申报登记', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SVR_003_004_006', 'SVR', null, 'SVR_003_004', 'SvrPerProDeclareReg001', 1, null, '产品申报登记', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_003_004_007', 'SVR', null, 'SVR_003_004', 'SvrProdTerminationRegist001', 5, null, '产品终止登记', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SVR_003_004_007', 'SVR', null, 'SVR_003_004', 'SvrProdTerminationRegist001', 5, null, '产品终止登记', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_003_005', 'SVR', null, 'SVR_003', null, 5, null, '资产端相关登记', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SVR_003_005', 'SVR', null, 'SVR_003', null, 5, null, '资产端相关登记', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_003_005_001', 'SVR', null, 'SVR_003_005', 'SvrAssetInfoRegist001', 1, null, '资产要素登记', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SVR_003_005_001', 'SVR', null, 'SVR_003_005', 'SvrAssetInfoRegist001', 1, null, '资产要素登记', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_003_005_002', 'SVR', null, 'SVR_003_005', 'SvrChbAstValueRegist001', 3, null, '资产估值信息登记', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SVR_003_005_002', 'SVR', null, 'SVR_003_005', 'SvrChbAstValueRegist001', 3, null, '资产估值信息登记', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_003_005_003', 'SVR', null, 'SVR_003_005', 'SvrChbBotAstPositionRegist001', 4, null, '底层资产持仓登记', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SVR_003_005_003', 'SVR', null, 'SVR_003_005', 'SvrChbBotAstPositionRegist001', 4, null, '底层资产持仓登记', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_003_005_004', 'SVR', null, 'SVR_003_005', 'SvrInvestTradeRegist001', 2, null, '资产交易登记', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SVR_003_005_004', 'SVR', null, 'SVR_003_005', 'SvrInvestTradeRegist001', 2, null, '资产交易登记', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_003_006', 'SVR', null, 'SVR_003', null, 6, null, '月报相关登记', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SVR_003_006', 'SVR', null, 'SVR_003', null, 6, null, '月报相关登记', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_003_006_001', 'SVR', null, 'SVR_003_006', 'SvrMonthReport001', 1, null, '银行月度报表登记', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SVR_003_006_001', 'SVR', null, 'SVR_003_006', 'SvrMonthReport001', 1, null, '银行月度报表登记', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_001', 'REP', 'icon-busmainten', null, null, 1, null, '数据管理', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_001', 'REP', 'icon-busmainten', null, null, 1, null, '数据管理', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_003_006_003', 'SVR', null, 'SVR_003_006', 'SvrG06MonthReport001', 3, null, 'G06理财业务月度统计表', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SVR_003_006_003', 'SVR', null, 'SVR_003_006', 'SvrG06MonthReport001', 3, null, 'G06理财业务月度统计表', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_002', 'REP', 'icon-reportcheck', null, null, 2, null, '数据检查', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_002', 'REP', 'icon-reportcheck', null, null, 2, null, '数据检查', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_004', 'REP', 'icon-reportmanage', null, null, 4, null, '报送管理', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_004', 'REP', 'icon-reportmanage', null, null, 4, null, '报送管理', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_003_006_002', 'SVR', null, 'SVR_003_006', 'PbcMonthReport001', 2, null, '人行月度报表登记', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SVR_003_006_002', 'SVR', null, 'SVR_003_006', 'PbcMonthReport001', 2, null, '人行月度报表登记', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_004_001008', 'REP', null, 'REPORT_004_001', 'PbcReportFileManage001', 8, null, '人行报送文件管理', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_004_001008', 'REP', null, 'REPORT_004_001', 'PbcReportFileManage001', 8, null, '人行报送文件管理', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_004_001009', 'REP', null, 'REPORT_004_001', 'ManuallyGeneratingPbcData001', 9, null, '手工生成人行数据文件', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_004_001009', 'REP', null, 'REPORT_004_001', 'ManuallyGeneratingPbcData001', 9, null, '手工生成人行数据文件', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_003_007', 'SVR', null, 'SVR_003', null, 99, null, '人行报送信息登记', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SVR_003_007', 'SVR', null, 'SVR_003', null, 99, null, '人行报送信息登记', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_003_007_008', 'SVR', null, 'SVR_003_007', 'PbcPrdAccountSub', 1, null, '资产池基本信息', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SVR_003_007_008', 'SVR', null, 'SVR_003_007', 'PbcPrdAccountSub', 1, null, '资产池基本信息', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_003_007_002', 'SVR', null, 'SVR_003_007', 'PbcPrdBaseinfoSub', 2, null, '产品基本信息', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SVR_003_007_002', 'SVR', null, 'SVR_003_007', 'PbcPrdBaseinfoSub', 2, null, '产品基本信息', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_003_007_003', 'SVR', null, 'SVR_003_007', 'PbcPrdInitRaiseSub', 3, null, '产品起始募集信息', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SVR_003_007_003', 'SVR', null, 'SVR_003_007', 'PbcPrdInitRaiseSub', 3, null, '产品起始募集信息', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_003_007_004', 'SVR', null, 'SVR_003_007', 'PbcPrdCashRaiseSub', 4, null, '产品资金募集信息', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SVR_003_007_004', 'SVR', null, 'SVR_003_007', 'PbcPrdCashRaiseSub', 4, null, '产品资金募集信息', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_003_007_005', 'SVR', null, 'SVR_003_007', 'PbcPrdAccountEndSub', 5, null, '资产池终止信息', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SVR_003_007_005', 'SVR', null, 'SVR_003_007', 'PbcPrdAccountEndSub', 5, null, '资产池终止信息', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_003_007_006', 'SVR', null, 'SVR_003_007', 'PbcPrdBaseinfoEndSub', 6, null, '产品终止信息', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SVR_003_007_006', 'SVR', null, 'SVR_003_007', 'PbcPrdBaseinfoEndSub', 6, null, '产品终止信息', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_003_007_007', 'SVR', null, 'SVR_003_007', 'PbcPrdAssetDebtSub', 7, null, '资产负债信息', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SVR_003_007_007', 'SVR', null, 'SVR_003_007', 'PbcPrdAssetDebtSub', 7, null, '资产负债信息', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_004_001003', 'REP', null, 'REPORT_004_001', 'RegTimePoints001', 3, null, '监管报送时点管理', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_004_001003', 'REP', null, 'REPORT_004_001', 'RegTimePoints001', 3, null, '监管报送时点管理', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_004_001007', 'REP', null, 'REPORT_004_001', 'ReportUpInterfMonitor001', 7, null, '上游接口文件读取处理监控', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_004_001007', 'REP', null, 'REPORT_004_001', 'ReportUpInterfMonitor001', 7, null, '上游接口文件读取处理监控', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BASICDATA_MANAGEMENT_001_002_018', 'MST', null, 'BASICDATA_MANAGEMENT_001_002', 'MstExchangeQuotationInfo001', 18, '02', '汇率行情信息', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('BASICDATA_MANAGEMENT_001_002_018', 'MST', null, 'BASICDATA_MANAGEMENT_001_002', 'MstExchangeQuotationInfo001', 18, '02', '汇率行情信息', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('RISK_MANAGEMENT_001_005_001', 'MST', null, 'RISK_MANAGEMENT_001', 'RskValStructure001', 1, '02', '估值表指标结构映射', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('RISK_MANAGEMENT_001_005_001', 'MST', null, 'RISK_MANAGEMENT_001', 'RskValStructure001', 1, '02', '估值表指标结构映射', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('RISK_MANAGEMENT_001_005_002', 'MST', null, 'RISK_MANAGEMENT_001', 'RskValAssetCode001', 2, '02', '估值表资产科目映射', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('RISK_MANAGEMENT_001_005_002', 'MST', null, 'RISK_MANAGEMENT_001', 'RskValAssetCode001', 2, '02', '估值表资产科目映射', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('RISK_MANAGEMENT_001_005_003', 'MST', null, 'RISK_MANAGEMENT_001', 'RskValSumname001', 3, '02', '估值表汇总科目映射', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('RISK_MANAGEMENT_001_005_003', 'MST', null, 'RISK_MANAGEMENT_001', 'RskValSumname001', 3, '02', '估值表汇总科目映射', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('RISK_MANAGEMENT_001_005_004', 'MST', null, 'RISK_MANAGEMENT_001', 'RskValRelateImport001', 4, '02', '估值表关联导入映射', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('RISK_MANAGEMENT_001_005_004', 'MST', null, 'RISK_MANAGEMENT_001', 'RskValRelateImport001', 4, '02', '估值表关联导入映射', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001_012_001', 'SYS', null, 'SYSTEM_001_012', 'CustomerReportConfig001', 1, '02', '报表规则定义管理', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SYSTEM_001_012_001', 'SYS', null, 'SYSTEM_001_012', 'CustomerReportConfig001', 1, '02', '报表规则定义管理', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001_012_002', 'SYS', null, 'SYSTEM_001_012', 'CustomerReportPanel001', 2, '02', '报表面板定义管理', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SYSTEM_001_012_002', 'SYS', null, 'SYSTEM_001_012', 'CustomerReportPanel001', 2, '02', '报表面板定义管理', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001_012_003', 'SYS', null, 'SYSTEM_001_012', 'CustomerReportShow001', 3, '02', '报表查询展示', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('SYSTEM_001_012_003', 'SYS', null, 'SYSTEM_001_012', 'CustomerReportShow001', 3, '02', '报表查询展示', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('RISK_MANAGEMENT_001_005_005', 'MST', null, 'RISK_MANAGEMENT_001', 'RskValTableImport001', 5, '02', '估值表导入', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('RISK_MANAGEMENT_001_005_005', 'MST', null, 'RISK_MANAGEMENT_001', 'RskValTableImport001', 5, '02', '估值表导入', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001_012_999_001', 'TAMS', null, 'SYSTEM_001_012_999', 'MyReportCustom001', 1, '02', '查询产品信息', 'wangyan', '2222222', '30-DEC-20 09.23.27.000000 AM', 'wangyan', '30-DEC-20 09.23.27.000000 AM');
+values ('SYSTEM_001_012_999_001', 'TAMS', null, 'SYSTEM_001_012_999', 'MyReportCustom001', 1, '02', '查询产品信息', 'wangyan', '2222222', SysDate, 'wangyan', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('RISK_MANAGEMENT_001_005_006', 'MST', null, 'RISK_MANAGEMENT_001', 'RskValtblPrtBotasset001', 6, '02', '估值表底层资产映射', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('RISK_MANAGEMENT_001_005_006', 'MST', null, 'RISK_MANAGEMENT_001', 'RskValtblPrtBotasset001', 6, '02', '估值表底层资产映射', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_001_002', 'REP', null, 'REPORT_001', null, 2, null, '产品端信息', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_001_002', 'REP', null, 'REPORT_001', null, 2, null, '产品端信息', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_001_003', 'REP', null, 'REPORT_001', null, 3, null, '投资端信息', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_001_003', 'REP', null, 'REPORT_001', null, 3, null, '投资端信息', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_001_004', 'REP', null, 'REPORT_001', null, 4, null, '指标信息', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_001_004', 'REP', null, 'REPORT_001', null, 4, null, '指标信息', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_001_005', 'REP', null, 'REPORT_001', null, 5, null, '参数信息', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_001_005', 'REP', null, 'REPORT_001', null, 5, null, '参数信息', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_001_005_008', 'REP', null, 'REPORT_001_005', 'SvrOperationalInfo001', 8, null, '业务数据维护', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_001_005_008', 'REP', null, 'REPORT_001_005', 'SvrOperationalInfo001', 8, null, '业务数据维护', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_001_004_007', 'REP', null, 'REPORT_001_004', 'monthFee', 7, '02', '月报费用头寸', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_001_004_007', 'REP', null, 'REPORT_001_004', 'monthFee', 7, '02', '月报费用头寸', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_001_004_006', 'REP', null, 'REPORT_001_004', 'monthAsset', 6, '02', '月报资产头寸', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_001_004_006', 'REP', null, 'REPORT_001_004', 'monthAsset', 6, '02', '月报资产头寸', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_001_004_008', 'REP', null, 'REPORT_001_004', 'monthPrd ', 8, '02', '月报产品头寸', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_001_004_008', 'REP', null, 'REPORT_001_004', 'monthPrd ', 8, '02', '月报产品头寸', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_001_005_005', 'REP', null, 'REPORT_001_005', 'monthReport ', 5, '02', '银行月度报表模板', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_001_005_005', 'REP', null, 'REPORT_001_005', 'monthReport ', 5, '02', '银行月度报表模板', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_001_004_010', 'REP', null, 'REPORT_001_004', 'prdPosition ', 10, '02', '产品每日头寸', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_001_004_010', 'REP', null, 'REPORT_001_004', 'prdPosition ', 10, '02', '产品每日头寸', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_001_004_009', 'REP', null, 'REPORT_001_004', 'pbcMonthAsset ', 9, '02', '人行资产头寸', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_001_004_009', 'REP', null, 'REPORT_001_004', 'pbcMonthAsset ', 9, '02', '人行资产头寸', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_001_005_003', 'REP', null, 'REPORT_001_005', 'typeMapping ', 3, '02', '类型映射表', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_001_005_003', 'REP', null, 'REPORT_001_005', 'typeMapping ', 3, '02', '类型映射表', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_001_004_004', 'REP', null, 'REPORT_001_004', 'assetPositiong ', 4, '02', '资产每日头寸', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_001_004_004', 'REP', null, 'REPORT_001_004', 'assetPositiong ', 4, '02', '资产每日头寸', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_001_002_001', 'REP', null, 'REPORT_001_002', 'ProRegistCodeManage001', 1, '02', '产品登记编码', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_001_002_001', 'REP', null, 'REPORT_001_002', 'ProRegistCodeManage001', 1, '02', '产品登记编码', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_001_002_007', 'REP', null, 'REPORT_001_002', 'ProPeoplebankcodeManagement001', 3, null, '人行产品资产池代码', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_001_002_007', 'REP', null, 'REPORT_001_002', 'ProPeoplebankcodeManagement001', 3, null, '人行产品资产池代码', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_001_003_006', 'REP', null, 'REPORT_001_003', 'PbcCapAssetInfo001', 6, null, '资金信托代码', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_001_003_006', 'REP', null, 'REPORT_001_003', 'PbcCapAssetInfo001', 6, null, '资金信托代码', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_001_005_001', 'REP', null, 'REPORT_001_005', 'SvrMstMarketCalendarInfo001', 1, null, '日历信息', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_001_005_001', 'REP', null, 'REPORT_001_005', 'SvrMstMarketCalendarInfo001', 1, null, '日历信息', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_001_005_002', 'REP', null, 'REPORT_001_005', 'SvrMstExchangeQuotationInfo001', 2, null, '汇率信息', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_001_005_002', 'REP', null, 'REPORT_001_005', 'SvrMstExchangeQuotationInfo001', 2, null, '汇率信息', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_005_001_001', 'REP', null, 'REPORT_005_001', 'ProdShareCount001', 1, null, '产品份额统计', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_005_001_001', 'REP', null, 'REPORT_005_001', 'ProdShareCount001', 1, null, '产品份额统计', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_005', 'REP', 'icon-queryanalysis', null, null, 5, null, '查询分析', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_005', 'REP', 'icon-queryanalysis', null, null, 5, null, '查询分析', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_005_001_002', 'SVR', null, 'REPORT_005_001', 'SvrEquityShareCheck001', 2, null, '投资者份额检查', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_005_001_002', 'SVR', null, 'REPORT_005_001', 'SvrEquityShareCheck001', 2, null, '投资者份额检查', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_005_001_003', 'SVR', null, 'REPORT_005_001', 'SvrProShareCheck001', 3, null, '产品份额检查', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_005_001_003', 'SVR', null, 'REPORT_005_001', 'SvrProShareCheck001', 3, null, '产品份额检查', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_001_003_005', 'REP', null, 'REPORT_001_003', 'loanplan', 5, '02', '贷款明细信息', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_001_003_005', 'REP', null, 'REPORT_001_003', 'loanplan', 5, '02', '贷款明细信息', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_005_001_004', 'SVR', null, 'REPORT_005_001', 'ProductBalanceCheck001', 3, null, '产品余额核对', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_005_001_004', 'SVR', null, 'REPORT_005_001', 'ProductBalanceCheck001', 3, null, '产品余额核对', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_002_001001', 'REP', null, 'REPORT_002_001', 'CheckReport001', 4, null, '报送前检查', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_002_001001', 'REP', null, 'REPORT_002_001', 'CheckReport001', 4, null, '报送前检查', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_002_001002', 'REP', null, 'REPORT_002_001', 'DelayVerification001', 2, null, '延时报送检查', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_002_001002', 'REP', null, 'REPORT_002_001', 'DelayVerification001', 2, null, '延时报送检查', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_002_001003', 'SVR', null, 'REPORT_002_001', 'SvrInvestorsQualityCheck001', 5, null, '投资者质量核查', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_002_001003', 'SVR', null, 'REPORT_002_001', 'SvrInvestorsQualityCheck001', 5, null, '投资者质量核查', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_002_001005', 'SVR', null, 'REPORT_002_001', 'SvrTotalCheck001', 3, null, '总体核查', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_002_001005', 'SVR', null, 'REPORT_002_001', 'SvrTotalCheck001', 3, null, '总体核查', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_002_001004', 'SVR', null, 'REPORT_002_001', 'ErrorMessage001', 1, null, '数据接入检查', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_002_001004', 'SVR', null, 'REPORT_002_001', 'ErrorMessage001', 1, null, '数据接入检查', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_002_001', 'REP', null, 'REPORT_002', null, 1, null, '数据检查相关', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_002_001', 'REP', null, 'REPORT_002', null, 1, null, '数据检查相关', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_004_001', 'REP', null, 'REPORT_004', null, 4, null, '报送管理', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_004_001', 'REP', null, 'REPORT_004', null, 4, null, '报送管理', 'system', null, SysDate, 'system', SysDate);
 
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_005_001', 'REP', null, 'REPORT_005', null, 5, null, '查询分析相关', 'system', null, '30-DEC-20 09.23.27.000000 AM', 'system', '30-DEC-20 09.23.27.000000 AM');
+values ('REPORT_005_001', 'REP', null, 'REPORT_005', null, 5, null, '查询分析相关', 'system', null, SysDate, 'system', SysDate);
 
 
 DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'UPINTERF_FILE_TYPE' AND ITEM_CODE = '31';
