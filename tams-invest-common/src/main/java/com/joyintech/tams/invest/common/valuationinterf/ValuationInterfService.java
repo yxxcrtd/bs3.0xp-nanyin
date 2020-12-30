@@ -145,6 +145,9 @@ public class ValuationInterfService {
                     logger.info("调用组合对应【估值产品其他信息初始化】接口处理开始-----------------------");
                     resultObject = this.prodOtherInfoInitToVal(inputDto);
                     logger.info("调用组合对应【估值产品其他信息初始化】接口处理结束-----------------------");
+                    if (StringUtil.equals(resultObject.getResultCode(),ResultCode.FAILURE.getCode()) ){
+                        return resultObject;
+                    }
                 }
                 
                 String finprodId = this.selectFinprodIdByPortfolioId(inputDto.getPtlPortfolio().getPortfolioId());
