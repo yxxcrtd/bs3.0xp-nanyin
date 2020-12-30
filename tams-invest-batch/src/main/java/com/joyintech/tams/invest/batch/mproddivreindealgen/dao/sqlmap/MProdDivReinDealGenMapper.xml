@@ -58,8 +58,11 @@
 		 WHERE 
 			FIN_PRODUCT.profit_type = #{PROFIT_TYPE_03}
 			<if test="productIdList != null and productIdList.size > 0">
-				AND FIN_PRODUCT.finprod_id IN
-				<foreach collection="productIdList" item="item" open="(" close=")" separator=",">
+				AND (FIN_PRODUCT.finprod_id IN
+				<foreach collection="productIdList" item="item" index="index" open="(" close="))" separator=",">
+					<if test="(index % 999) == 998">
+						null) OR FIN_PRODUCT.finprod_id in (
+					</if>
 					#{item}
 				</foreach>
 			</if>
@@ -112,8 +115,11 @@
     PRD_VAL_PARAM.DEAL_LOSS_MODE = #{LOSS_HANDLE_MODE_01} AND BOK_POSITION_PRD.tdy_unpaid_intincexp <![CDATA[<]]> 0
     ))
 	<if test="productIdList != null and productIdList.size > 0">
-		AND FIN_PRODUCT.finprod_id IN
-		<foreach collection="productIdList" item="item" open="(" close=")" separator=",">
+		AND (FIN_PRODUCT.finprod_id IN
+		<foreach collection="productIdList" item="item" index="index" open="(" close="))" separator=",">
+			<if test="(index % 999) == 998">
+				null) OR FIN_PRODUCT.finprod_id in (
+			</if>
 			#{item}
 		</foreach>
 	</if>
@@ -159,8 +165,11 @@
 							#{item,jdbcType = VARCHAR}
 						</foreach>
 					</if>
-					AND CALENDAR_ID in
-					<foreach collection="calList" item="item" index="index" open="(" close=")" separator=",">
+					AND (CALENDAR_ID in
+					<foreach collection="calList" item="item" index="index" open="(" close="))" separator=",">
+						<if test="(index % 999) == 998">
+							null) OR CALENDAR_ID in (
+						</if>
 						#{item,jdbcType = VARCHAR}
 					</foreach>
 					AND FIN_OPEN_RULE.OPEN_MODE ='02'

@@ -699,8 +699,11 @@
         where t.finprod_id=#{finprodId}
 
         <if test="portfolioIdList != null and portfolioIdList.size()>0">
-            AND tpda.PORTFOLIO_ID IN
-            <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+            AND (tpda.PORTFOLIO_ID IN
+            <foreach collection="portfolioIdList" item="item" index="index" separator="," open="(" close ="))">
+                <if test="(index % 999) == 998">
+                    null) OR tpda.PORTFOLIO_ID in (
+                </if>
                 #{item}
             </foreach>
         </if>

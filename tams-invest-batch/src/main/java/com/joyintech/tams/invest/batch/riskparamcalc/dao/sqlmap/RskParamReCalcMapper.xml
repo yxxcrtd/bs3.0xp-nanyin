@@ -9,8 +9,11 @@
         where EVENT_ID IN (SELECT EVENT_ID from RSK_OCCUPY_INFO 
             where EVENT_DATE >= #{sysDate} 
         <if test="prodIdList != null and prodIdList.size() > 0">
-            and PROD_ID IN
-            <foreach collection="prodIdList" item="item" separator="," open="(" close=")">
+            and (PROD_ID IN
+            <foreach collection="prodIdList" item="item" index="index" separator="," open="(" close="))">
+                <if test="(index % 999) == 998">
+                    null) OR PROD_ID in (
+                </if>
                 #{item}
             </foreach> 
         </if>
@@ -21,8 +24,11 @@
         delete from RSK_INDICATOR_PARA_CALCDETAIL
         <where>
 	        <if test="infoList != null and infoList.size() > 0">
-	            OR (SUP_DATE||TRADE_ID||CREATE_USER) IN
-	            <foreach collection="infoList" item="item" separator="," open="(" close=")">
+	            AND ((SUP_DATE||TRADE_ID||CREATE_USER) IN
+	            <foreach collection="infoList" item="item" index="index" separator="," open="(" close="))">
+                    <if test="(index % 999) == 998">
+                        null) OR (SUP_DATE||TRADE_ID||CREATE_USER) in (
+                    </if>
 	               #{item.supDate} || #{item.tradeId} || #{item.createUser}
 	            </foreach>
 	        </if>
@@ -35,8 +41,11 @@
             SUP_DATE = to_date(#{supDate},'YYYY-MM-DD') 
             and CREATE_USER = #{createUser}
 	        <if test="tradeIds != null and tradeIds.size() > 0">
-	            AND TRADE_ID IN
-	            <foreach collection="tradeIds" item="item" separator="," open="(" close=")">
+	            AND (TRADE_ID IN
+	            <foreach collection="tradeIds" item="item" index="index" separator="," open="(" close="))">
+                    <if test="(index % 999) == 998">
+                        null) OR TRADE_ID in (
+                    </if>
 	                #{item} 
 	            </foreach>
 	        </if>
