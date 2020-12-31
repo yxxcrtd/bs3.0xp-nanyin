@@ -367,7 +367,7 @@
         <if test="assetType == PINAN_ASSET_TYPE_F03 or assetType == PINAN_ASSET_TYPE_F05 ">
             T1.PS ps,
             T11.TYPE_6 type6,
-            T1.CHL_ID chlId,
+            <!--T1.CHL_ID chlId,-->
             T10.FINPROD_ABBR chlName,
         </if>
         <if test="assetType == PINAN_ASSET_TYPE_F04 or assetType == PINAN_ASSET_TYPE_F09">
