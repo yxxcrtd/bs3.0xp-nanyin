@@ -33,6 +33,16 @@ public class ValAssetBook006Dto extends BaseEntity implements ProcessEntity {
 
     private String objParamValue;
 
+    private String booksetTypeCode;
+
+    public String getBooksetTypeCode() {
+        return booksetTypeCode;
+    }
+
+    public void setBooksetTypeCode(String booksetTypeCode) {
+        this.booksetTypeCode = booksetTypeCode;
+    }
+
     public String getObjParamValue() {
         return objParamValue;
     }
