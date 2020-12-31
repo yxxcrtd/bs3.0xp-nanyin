@@ -1,5 +1,7 @@
 package com.joyintech.tams.common.base.entity;
 
+import java.util.Date;
+
 public class BokDetailId extends BokDetailIdKey {
     /**
      * 业务明细代码，存金融产品代码、现金流代码（费用）或者资金账户
@@ -45,6 +47,16 @@ public class BokDetailId extends BokDetailIdKey {
      * 币种
      */
     private String ccy;
+    
+    /**
+     * 起息日
+     */
+    private Date vdate;
+    
+    /**
+     * 到期日
+     */
+    private Date mdate;
 
     /**
      * 取得 业务明细代码，存金融产品代码、现金流代码（费用）或者资金账户
@@ -189,4 +201,20 @@ public class BokDetailId extends BokDetailIdKey {
     public void setCcy(String ccy) {
         this.ccy = ccy == null ? null : ccy.trim();
     }
+
+	public Date getVdate() {
+		return vdate;
+	}
+
+	public void setVdate(Date vdate) {
+		this.vdate = vdate;
+	}
+
+	public Date getMdate() {
+		return mdate;
+	}
+
+	public void setMdate(Date mdate) {
+		this.mdate = mdate;
+	}
 }

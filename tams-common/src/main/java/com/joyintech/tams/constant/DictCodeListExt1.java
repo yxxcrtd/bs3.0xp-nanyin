@@ -1810,6 +1810,8 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 	持有目的_投机(DictCode.持有目的,"03","投机"),
 	持有目的_其他(DictCode.持有目的,"99","其他"),
 	//持有目的 20200409 end
+	
+	金融产品类型_预提费用(DictCode.金融产品类型,"C20","预提费用"),
    ;
     /**
      * 对应于数据字典code

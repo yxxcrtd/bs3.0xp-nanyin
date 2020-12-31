@@ -163,6 +163,45 @@ public class InvestFeePayDto extends BaseEntity {
      */
     private String institutionCode;
 
+    /**
+     * 登记托管机构
+     */
+    private String regTrustOrg;
+
+    /**
+     * 计提开始日
+     */
+    private Date startDate;
+
+    /**
+     * 计提结束日
+     */
+    private Date endDate;
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getRegTrustOrg() {
+        return regTrustOrg;
+    }
+
+    public void setRegTrustOrg(String regTrustOrg) {
+        this.regTrustOrg = regTrustOrg;
+    }
+
     public String getFeeType1() {
         return feeType1;
     }

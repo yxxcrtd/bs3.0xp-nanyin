@@ -794,6 +794,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     报表生成配置表_理财产品信息表(
             DictCode.报表生成配置表,"REP_PROD_MESSAGE","理财产品信息表"
     ),
+   投资端费用品种类型_账户维护费(DictCode.投资端费用品种类型, "08", "账户维护费"),
     ;
 
     /**

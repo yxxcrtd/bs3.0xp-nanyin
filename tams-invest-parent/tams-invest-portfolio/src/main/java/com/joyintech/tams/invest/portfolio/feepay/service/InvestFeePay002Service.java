@@ -25,6 +25,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
@@ -304,7 +305,7 @@ public class InvestFeePay002Service extends BaseService<InvestFeePay002Dto> impl
         trdFinProductDealTotal.setTgBusiType("142");
         trdFinProductDealTotal.setFinprodType(entity.getFeeType());
         trdFinProductDealTotal.setFinprodType2(entity.getFeeType());
-        trdFinProductDealTotal.setMdate(entity.getPayDate());
+//        trdFinProductDealTotal.setMdate(entity.getPayDate());
         trdFinProductDealTotal.setTgBusiType("142");
         //二级法人改造 sjj add 20200628 start
         if(MultilevelDataAuthorityUtil.isEnabled()){
@@ -537,6 +538,9 @@ public class InvestFeePay002Service extends BaseService<InvestFeePay002Dto> impl
                 }
                 inputDto.setProdFinprodType(DictCodeListExt1.金融产品类型_理财产品.getValue());
                 inputDto.setTrdProductDeal(tradeDto);
+                if(StringUtil.equals(entity.getFeeType(), DictCodeListExt3.投资端费用品种类型_账户维护费.getValue())){
+                	tradeDto.setFeeType(entity.getFeeType());
+                }
                 AllTradeCommonUtil.handleAfterTradeComplete(inputDto);
                 
                 // 调用投管接口 add by cxq 20190227 start
@@ -565,6 +569,12 @@ public class InvestFeePay002Service extends BaseService<InvestFeePay002Dto> impl
         trdAsynHandleStatus.setTrdTableType("01");		// 交易表类型(01：金融产品交易汇总表，02：金融产品交易表)
         trdAsynHandleStatus.setHandleStatus("01");		//01	待处理
         trdAsynHandleStatusMapper.insertSelective(trdAsynHandleStatus);
+
+        if (!(StringUtil.isNotEmpty(entity.getConfirmFlag()) && StringUtil.equals(entity.getConfirmFlag(), "confirm")) ) {
+            //流程生效更新
+        	restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/InvestFeePay/updateTrdAccountmfConfigDto",
+                    entity, String.class);
+        }
 
     }
 
@@ -808,6 +818,13 @@ public class InvestFeePay002Service extends BaseService<InvestFeePay002Dto> impl
         trdAsynHandleStatus.setTrdTableType("01");		// 交易表类型(01：金融产品交易汇总表，02：金融产品交易表)
         trdAsynHandleStatus.setHandleStatus("01");		//01	待处理
         trdAsynHandleStatusMapper.insertSelective(trdAsynHandleStatus);
+
+        if (!(StringUtil.isNotEmpty(entity.getConfirmFlag()) && StringUtil.equals(entity.getConfirmFlag(), "confirm")) ) {
+            //流程生效更新
+        	restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/InvestFeePay/updateTrdAccountmfConfigDto",
+                    entity, String.class);
+        }
+
     }
 
     /**
@@ -845,6 +862,21 @@ public class InvestFeePay002Service extends BaseService<InvestFeePay002Dto> impl
     }
 
     /**
+     * 查询费用上次计提结束日
+     *
+     * @param secAcctId 证券账户
+     * @param feeType 费用类型
+     * @return 上次计提结束日
+     * @see
+     * @since 1.0
+     */
+    public String queryStartDate(String secAcctId) {
+        return restTemplate.getForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/InvestFeePay/queryStartDate?secAcctId="
+                        + secAcctId ,
+                String.class);
+    }
+
+    /**
      * 查询费用待支付费用
      *
      * @param secAcctId 证券账户
@@ -869,9 +901,9 @@ public class InvestFeePay002Service extends BaseService<InvestFeePay002Dto> impl
      * @param cdate
      * @return
      */
-    public BigDecimal queryPayTradeAmt(String secAcctId, String org, String cdate, String feeType) {
+    public BigDecimal queryPayTradeAmt(String secAcctId, String org, String cdate, String startDate, String feeType,String confirmFlag) {
         return restTemplate.getForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/InvestFeePay/queryPayTradeAmt?secAcctId="
-                                         + secAcctId + "&org=" + org + "&cdate=" + cdate + "&feeType=" + feeType,
+                                         + secAcctId + "&org=" + org + "&cdate=" + cdate + "&startDate=" + startDate + "&feeType=" + feeType+ "&confirmFlag=" + confirmFlag,
             BigDecimal.class);
     }
 
@@ -930,7 +962,7 @@ public class InvestFeePay002Service extends BaseService<InvestFeePay002Dto> impl
     public List<InvestFeePay003Dto> queryPayFeeInfoList(Map<String, Object> map) {
         List<InvestFeePay003Dto> prdList = restTemplate.getForList(
             ServiceApplication.PORTFOLIO_SERVICE_NAME + "/InvestFeePay/queryPayFeeInfoList?secAcctId="
-                                     + map.get("secAcctId") + "&org=" + map.get("org") + "&cdate=" + map.get("calcEndDate") + "&feeType=" + map.get("feeType"),
+                                     + map.get("secAcctId") + "&org=" + map.get("org") + "&cdate=" + map.get("calcEndDate")+"&startDate=" + map.get("calcStartDate") + "&feeType=" + map.get("feeType") + "&confirmFlag=" + map.get("confirmFlag"),
                                      InvestFeePay003Dto.class);
         return prdList;
     }
@@ -964,13 +996,13 @@ public class InvestFeePay002Service extends BaseService<InvestFeePay002Dto> impl
      * @since 1.0
      */
     public List<InvestFeePay003Dto> queryFeePositionDetail(String secAcctId, String ptlId, String calcStartDate, String calcEndDate,
-                                                               String feeType) {
+                                                               String feeType,String confirmFlag,String tradeId) {
         // 根据费用品种对应到交易费用明细表的费用类型
         List<InvestFeePay003Dto> positionDetailList = restTemplate.getForList(
             ServiceApplication.PORTFOLIO_SERVICE_NAME + "/InvestFeePay/queryFeePositionDetail?feeType=" + feeType
                                                                              + "&startDate=" + calcStartDate + "&enddate="
                                                                              + calcEndDate + "&secAcctId=" + secAcctId
-                                                                             + "&ptlId=" + ptlId,
+                                                                             + "&ptlId=" + ptlId+ "&confirmFlag=" + confirmFlag + "&tradeId=" + tradeId,
                                                                              InvestFeePay003Dto.class);
 
         if (StringUtil.isNotEmpty(positionDetailList)) {
@@ -1061,13 +1093,14 @@ public class InvestFeePay002Service extends BaseService<InvestFeePay002Dto> impl
         trdProductDeal.setCreateUser(entity.getCreateUser());
         trdProductDeal.setCreateDept(entity.getCreateDept());
         trdProductDeal.setWorkflowId(entity.getWorkflowId());
-        trdProductDeal.setMdate(entity.getPayDate());
+//        trdProductDeal.setMdate(entity.getPayDate());
         trdProductDeal.setIsClean(DictCodeList.是否_是.getValue());
         // 金融产品交易附属表Entity
         TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
         trdProductDealAdd.setTradeId(trdProductDeal.getTradeId());
         trdProductDealAdd.setPortfolioId(ptlId);
-        trdProductDealAdd.setGenType(DictCodeListExt1.生成方式_画面录入.getValue());
+        trdProductDealAdd.setGenType(StringUtil.isNotEmpty(entity.getConfirmFlag()) && StringUtil.equals(entity.getConfirmFlag(), "confirm") ?
+                DictCodeListExt1.生成方式_批处理生成.getValue() : DictCodeListExt1.生成方式_画面录入.getValue());
         trdProductDealAdd.setUpdateUser(entity.getUpdateUser());
         trdProductDealAdd.setCreateUser(entity.getCreateUser());
         trdProductDealAdd.setCreateDept(entity.getCreateDept());
@@ -1251,7 +1284,7 @@ public class InvestFeePay002Service extends BaseService<InvestFeePay002Dto> impl
          // 一体化对应etliu end
         }
         else if (StringUtil.equals(feeType, DictCodeList.费用品种类型_账户维护费.getValue())) {
-            return DictCodeListExt1.金融产品类型_交易费用.getValue();
+            return DictCodeListExt1.金融产品类型_预提费用.getValue();
         }
         else if (StringUtil.equals(feeType, DictCodeList.费用品种类型_增值附加税费.getValue())) {
          // 一体化对应etliu start

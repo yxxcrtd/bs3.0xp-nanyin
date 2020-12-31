@@ -177,17 +177,17 @@ public class InvestFeePay002Controller extends BaseController {
                     finProductFeePay002Dto.setEndDate(trdFinProductDealTotal.getMdate());
                     finProductFeePay002Dto.setPayDate(trdFinProductDealTotal.getSettleDate());
                     finProductFeePay002Dto.setActPayAmt(trdFinProductDealTotal.getTradeAmt());
-                    finProductFeePay002Dto.setRegTrustOrg(trdFinProductDealTotal.getSecManageAcctId());
+                    finProductFeePay002Dto.setRegTrustOrg(investFeePay002Service.querySecAcctOrg(finProductFeePay001Dto.getSecAcctId()));
                     
-                    if (!StringUtil.equals(finProductFeePay001Dto.getFeeType(),
-                        DictCodeList.费用品种类型_账户维护费.getValue())) {
+//                    if (!StringUtil.equals(finProductFeePay001Dto.getFeeType(),
+//                        DictCodeList.费用品种类型_账户维护费.getValue())) {
                         // 查询费用待支付费用
                         finProductFeePay002Dto.setPayAmt(new BigDecimal(this.getParam("feeAmt")));
                         // 实付 - 理论
                         finProductFeePay002Dto.setAdjustAmt(
                             ArithmeticUtil.subtract(finProductFeePay002Dto.getActPayAmt(),
                                 finProductFeePay002Dto.getPayAmt()));
-                    }
+//                    }
                     finProductFeePay002Dto.setBussTrdTransferOrder(investFeePay002Service.selectPayOrders(trdFinProductDealTotal.getTotleTradeId()));
                     finProductFeePay002Dto.setRemark(trdFinProductDealTotal.getRemark());
                 }
@@ -214,6 +214,10 @@ public class InvestFeePay002Controller extends BaseController {
                         finProductFeePay002Dto.setAdjustAmt(
                             ArithmeticUtil.subtract(finProductFeePay002Dto.getActPayAmt(),
                                 finProductFeePay002Dto.getPayAmt()));
+                    } else {
+                        finProductFeePay002Dto.setPayAmt(finProductFeePay001Dto.getFeeAmt());
+                        finProductFeePay002Dto.setAdjustAmt(ArithmeticUtil.subtract(finProductFeePay002Dto.getActPayAmt(),
+                                finProductFeePay002Dto.getPayAmt()));
                     }
                     finProductFeePay002Dto.setBussTrdTransferOrder(investFeePay002Service.selectPayOrders(trdFinProductDealTotal.getTotleTradeId()));
                     finProductFeePay002Dto.setRemark(trdFinProductDealTotal.getRemark());
@@ -233,9 +237,12 @@ public class InvestFeePay002Controller extends BaseController {
                 Date positionEndDate = DateUtil.parse(this.getParam("positionEndDateStr"));
                 Date payDate =  DateUtil.parse(this.getParam("payDateStr"));
                 String ccy = this.getParam("ccy");
-                String feeType = this.getParam("feeType");
+                String feeType = this.getParam("feeType1");
                 String finprodMarketId = this.getParam("finprodMarketId");
                 String basis = this.getParam("basis");
+                String feeAmt = this.getParam("feeAmt");
+                String actPayAmt = this.getParam("actPayAmt") == null ? this.getParam("feeAmt") : this.getParam("actPayAmt");
+                String org = investFeePay002Service.querySecAcctOrg(secAcctId);
                 finProductFeePay002Dto.setSecAcctId(secAcctId);
                 finProductFeePay002Dto.setFeeType(feeType);
                 finProductFeePay002Dto.setBasis(basis);
@@ -245,6 +252,10 @@ public class InvestFeePay002Controller extends BaseController {
                 finProductFeePay002Dto.setFinprodMarketId(finprodMarketId);
                 finProductFeePay002Dto.setFeeName(feeName);
                 finProductFeePay002Dto.setCcy(ccy);
+                finProductFeePay002Dto.setPayAmt(new BigDecimal(feeAmt));
+                finProductFeePay002Dto.setActPayAmt(new BigDecimal(actPayAmt));
+                finProductFeePay002Dto.setAdjustAmt(new BigDecimal(actPayAmt).subtract(new BigDecimal(feeAmt)));
+                finProductFeePay002Dto.setRegTrustOrg(org);
             }
             finProductFeePay002Dto.setConfirmFlag(confirmFlag);
             model.addAttribute(GlobalConstant.ENTITY, finProductFeePay002Dto);
@@ -292,6 +303,20 @@ public class InvestFeePay002Controller extends BaseController {
     @RequestMapping("queryLastPayDate")
     public String queryLastPayDate(String secAcctId, String feeType, String operateType) {
         return investFeePay002Service.queryLastPayDate(secAcctId, feeType, operateType);
+    }
+
+    /**
+     * 账户维护费 查询费用上次计提结束日
+     * @param secAcctId 证券账户
+     * @param feeType 费用类型
+     * @return 上次计提结束日
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("queryStartDate")
+    public String queryStartDate(String secAcctId) {
+        return investFeePay002Service.queryStartDate(secAcctId);
     }
 
     /**
@@ -355,8 +380,8 @@ public class InvestFeePay002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("queryPayTradeAmt")
-    public BigDecimal queryPayTradeAmt(String secAcctId, String org, String feeType, String cdate) {
-        return investFeePay002Service.queryPayTradeAmt(secAcctId, org, cdate, feeType);
+    public BigDecimal queryPayTradeAmt(String secAcctId, String org, String feeType, String cdate, String startDate, String confirmFlag) {
+        return investFeePay002Service.queryPayTradeAmt(secAcctId, org, cdate, startDate, feeType, confirmFlag);
     }
     
     /**

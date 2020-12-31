@@ -452,6 +452,15 @@ public class InvestFeePay002Dto extends BaseEntity implements ProcessEntity {
     }
 
     /**
+     * 获取 endDate
+     *
+     * @return endDate.
+     */
+    public String getPayDateStr() {
+        return DateUtil.format(payDate);
+    }
+
+    /**
      * 获取 feeInfoList
      * 
      * @return feeInfoList.
@@ -585,7 +594,7 @@ public class InvestFeePay002Dto extends BaseEntity implements ProcessEntity {
      * @return feeName.
      */
     @NotEmpty(fieldName = "FinProductFeePay002.feeName")
-    @PrimaryKey(Field.PK_2)
+    @PrimaryKey(Field.PK_3)
     public String getFeeName() {
         return feeName;
     }
