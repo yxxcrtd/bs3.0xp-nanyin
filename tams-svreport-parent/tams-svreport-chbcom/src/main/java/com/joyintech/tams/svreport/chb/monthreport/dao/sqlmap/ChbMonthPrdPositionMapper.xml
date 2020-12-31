@@ -508,18 +508,18 @@
 	/*产品交易简单统计表：按产品，币种，投资者类型分组，根据交易类型将相关金额进行汇总*/
 	,dm as (
 	select dd.prodid,dd.ccy,dd.ord_identified,prodtype
-	,sum(
-	    case when dd.TRADE_TYPE in('01','02','05') then amount 
-	    else 0 
-	    end ) dirtysum /*募集金额*/
-	,sum(
-	    case when dd.TRADE_TYPE in('01','02','05') then tradeQty 
-	    else 0 
-	    end ) dirtysumqty /*募集金额-份额*/
-	,sum(
-	    case when dd.TRADE_TYPE in('01','02','05') then amount 
-	    when dd.TRADE_TYPE in('03','16','17') then 0-amount 
-	    else 0 
+      ,sum(
+      case when dd.TRADE_TYPE in('01','02','05','14') then amount
+      else 0
+      end ) dirtysum /*募集金额*/
+      ,sum(
+      case when dd.TRADE_TYPE in('01','02','05','14') then tradeQty
+      else 0
+      end ) dirtysumqty /*募集金额-份额*/
+      ,sum(
+      case when dd.TRADE_TYPE in('01','02','05','14') then amount
+      when dd.TRADE_TYPE in('03','16','15','17') then 0-amount
+      else 0
 	    end ) cleansum /*净募集金额*/
 	from dd
 	where 1=1
@@ -655,18 +655,18 @@
 	             AND (tdy.ord_identified = yst.ord_identified or (tdy.ord_identified is null and yst.ord_identified is null))
 	    ),
 	    pm2 as(
-	    	select 
-	    	dd.prodid prodid,
-	    	dd.ccy ccy,
-	    	dd.ord_identified ord_identified,
-			sum(case when dd.TRADE_TYPE in('03','16','17') then amount 
-	    	else 0 
-	    	end ) amt,
-			sum(case when dd.TRADE_TYPE in('03','16','17') then tradeQty 
-	    	else 0 
-	    	end ) qty
-			from  dd
-			where 1=1
+              select
+              dd.prodid prodid,
+              dd.ccy ccy,
+              dd.ord_identified ord_identified,
+              sum(case when dd.TRADE_TYPE in('03','15','16','17') then amount
+              else 0
+              end ) amt,
+              sum(case when dd.TRADE_TYPE in('03','15','16','17') then tradeQty
+              else 0
+              end ) qty
+              from  dd
+              where 1=1
 		group by dd.prodid,dd.ccy,dd.ord_identified
 	    )
      

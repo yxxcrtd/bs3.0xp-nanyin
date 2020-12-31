@@ -485,8 +485,8 @@ public class SvrProdDealFileImpService extends FileImpService {
 				ibdt.setTradeCost(new BigDecimal(map.get("prinamt")));
 				ibdt.setIntAmt(BigDecimal.ZERO);
 				keyVFinal.append(ibdt.getTradeType());
-		    	String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
-		    	ibdt.setTradeId(md5Key);
+				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
+				ibdt.setTradeId(md5Key);
 				deals.add(ibdt);
 			} catch (CloneNotSupportedException e) {
 				logger.error(e.getMessage(), e);
@@ -502,8 +502,8 @@ public class SvrProdDealFileImpService extends FileImpService {
 				ibdt.setTradeCost(new BigDecimal(map.get("sgAmt")));
 				ibdt.setIntAmt(BigDecimal.ZERO);
 				keyVFinal.append(ibdt.getTradeType());
-		    	String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
-		    	ibdt.setTradeId(md5Key);
+				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
+				ibdt.setTradeId(md5Key);
 				deals.add(ibdt);
 			} catch (CloneNotSupportedException e) {
 				logger.error(e.getMessage(), e);
@@ -519,8 +519,8 @@ public class SvrProdDealFileImpService extends FileImpService {
 				ibdt.setIntAmt(new BigDecimal(map.get("shAmt")).subtract(new BigDecimal(map.get("shPrincipal"))));
 				ibdt.setTradeCost(new BigDecimal(map.get("shPrincipal")));
 				keyVFinal.append(ibdt.getTradeType());
-		    	String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
-		    	ibdt.setTradeId(md5Key);
+				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
+				ibdt.setTradeId(md5Key);
 				deals.add(ibdt);
 			} catch (CloneNotSupportedException e) {
 				logger.error(e.getMessage(), e);
@@ -536,8 +536,8 @@ public class SvrProdDealFileImpService extends FileImpService {
 				ibdt.setIntAmt(new BigDecimal(map.get("expireAmt")).subtract(new BigDecimal(map.get("expireAmtPrincipal"))));
 				ibdt.setTradeCost(new BigDecimal(map.get("expireAmtPrincipal")));
 				keyVFinal.append(ibdt.getTradeType());
-		    	String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
-		    	ibdt.setTradeId(md5Key);
+				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
+				ibdt.setTradeId(md5Key);
 				deals.add(ibdt);
 			} catch (CloneNotSupportedException e) {
 				logger.error(e.getMessage(), e);
@@ -553,8 +553,8 @@ public class SvrProdDealFileImpService extends FileImpService {
 				ibdt.setTradeQty(new BigDecimal(map.get("rebonusAmtQty")));
 				ibdt.setTradeCost(new BigDecimal(map.get("rebonusAmt")));
 				keyVFinal.append(ibdt.getTradeType());
-		    	String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
-		    	ibdt.setTradeId(md5Key);
+				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
+				ibdt.setTradeId(md5Key);
 				deals.add(ibdt);
 			} catch (CloneNotSupportedException e) {
 				logger.error(e.getMessage(), e);
@@ -570,8 +570,8 @@ public class SvrProdDealFileImpService extends FileImpService {
 				ibdt.setTradeQty(BigDecimal.ZERO);
 				ibdt.setTradeCost(BigDecimal.ZERO);
 				keyVFinal.append(ibdt.getTradeType());
-		    	String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
-		    	ibdt.setTradeId(md5Key);
+				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
+				ibdt.setTradeId(md5Key);
 				deals.add(ibdt);
 			} catch (CloneNotSupportedException e) {
 				logger.error(e.getMessage(), e);
@@ -585,11 +585,11 @@ public class SvrProdDealFileImpService extends FileImpService {
 				ibdt.setTradeType("14");
 				ibdt.setTradeCost(new BigDecimal(map.get("qtyAddAmt")));
 				ibdt.setTradeQty(new BigDecimal(map.get("qtyAdd")));
-				ibdt.setTradePrince(BigDecimal.ZERO);
+				ibdt.setTradePrince(new BigDecimal(map.get("qtyAddAmt")));
 				ibdt.setIntAmt(BigDecimal.ZERO);
 				keyVFinal.append(ibdt.getTradeType());
-		    	String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
-		    	ibdt.setTradeId(md5Key);
+				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
+				ibdt.setTradeId(md5Key);
 				deals.add(ibdt);
 			} catch (CloneNotSupportedException e) {
 				logger.error(e.getMessage(), e);
@@ -603,11 +603,11 @@ public class SvrProdDealFileImpService extends FileImpService {
 				ibdt.setTradeType("15");
 				ibdt.setTradeCost(new BigDecimal(map.get("qtyMinusPrincipal")));
 				ibdt.setTradeQty(new BigDecimal(map.get("qtyMinus")));
-				ibdt.setTradePrince(BigDecimal.ZERO);
+				ibdt.setTradePrince(new BigDecimal(map.get("qtyMinusPrincipal")));
 				ibdt.setIntAmt(BigDecimal.ZERO);
 				keyVFinal.append(ibdt.getTradeType());
-		    	String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
-		    	ibdt.setTradeId(md5Key);
+				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
+				ibdt.setTradeId(md5Key);
 				deals.add(ibdt);
 			} catch (CloneNotSupportedException e) {
 				logger.error(e.getMessage(), e);

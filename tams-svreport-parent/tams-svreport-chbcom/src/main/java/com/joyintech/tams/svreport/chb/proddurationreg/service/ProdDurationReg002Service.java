@@ -500,14 +500,14 @@ public class ProdDurationReg002Service {
 	            //折算人民币初始净值
 	            result.setCnyOrlValue(ChbCcyConvertUtil.changeCnyMoney(result.getValueCcy(), result.getOriginalValue(),
 		                model.getOpenEnd(), rateMap));
-	            //折算人民币净值
-	            result.setCnyPrdValue(ChbCcyConvertUtil.changeCnyMoney(result.getValueCcy(), result.getPrdValue(),
-						model.getOpenEnd(), rateMap));
-	            // 产品累计净值
-	            result.setTotalValue((null == result.getTotalValue()?BigDecimal.ONE:result.getTotalValue()));
-	            // 累计人民币净值
-	            result.setCnyTalValue(ChbCcyConvertUtil.changeCnyMoney(result.getValueCcy(), result.getTotalValue(),
-						model.getOpenEnd(), rateMap));
+				//折算人民币净值
+				result.setCnyPrdValue(ChbCcyConvertUtil.changeCnyMoney(result.getValueCcy(), result.getPrdValue(),
+						model.getOpenEnd(), rateMap).setScale(5, RoundingMode.HALF_UP));
+				// 产品累计净值
+				result.setTotalValue((null == result.getTotalValue()?BigDecimal.ONE:result.getTotalValue()));
+				// 累计人民币净值
+				result.setCnyTalValue(ChbCcyConvertUtil.changeCnyMoney(result.getValueCcy(), result.getTotalValue(),
+						model.getOpenEnd(), rateMap).setScale(5, RoundingMode.HALF_UP));
 		         
 	        }
 	        
@@ -639,15 +639,17 @@ public class ProdDurationReg002Service {
             	String value = ccyMap.get(chbPrdDeal.getCcy());
             	purAmt = new BigDecimal(value.split(",")[0]);
             	redAmt = new BigDecimal(value.split(",")[1]);
-            	intAmt = new BigDecimal(value.split(",")[2]);	
-                if (DictCodeListExt2.产品存续期登记交易类型_存续期申购.getValue().equals(chbPrdDeal.getTradeType())) {
-                	
-            		purAmt = purAmt.add(ChbCcyConvertUtil.changeCnyMoney(chbPrdDeal.getCcy(),
-                    				chbPrdDeal.getTradePrince(), model.getOpenEnd(), rateMap));
-                }
-                else if (DictCodeListExt2.产品存续期登记交易类型_存续期赎回.getValue().equals(chbPrdDeal.getTradeType())
-                        || DictCodeListExt2.产品存续期登记交易类型_提前赎回.getValue().equals(chbPrdDeal.getTradeType())
-                        || DictCodeListExt2.产品存续期登记交易类型_到期兑付.getValue().equals(chbPrdDeal.getTradeType())) {
+            	intAmt = new BigDecimal(value.split(",")[2]);
+				if (DictCodeListExt2.产品存续期登记交易类型_存续期申购.getValue().equals(chbPrdDeal.getTradeType())
+						||DictCodeListExt2.产品存续期登记交易类型_份额增强.getValue().equals(chbPrdDeal.getTradeType())) {
+
+					purAmt = purAmt.add(ChbCcyConvertUtil.changeCnyMoney(chbPrdDeal.getCcy(),
+							chbPrdDeal.getTradePrince(), model.getOpenEnd(), rateMap));
+				}
+				else if (DictCodeListExt2.产品存续期登记交易类型_存续期赎回.getValue().equals(chbPrdDeal.getTradeType())
+						|| DictCodeListExt2.产品存续期登记交易类型_提前赎回.getValue().equals(chbPrdDeal.getTradeType())
+						|| DictCodeListExt2.产品存续期登记交易类型_到期兑付.getValue().equals(chbPrdDeal.getTradeType())
+						||DictCodeListExt2.产品存续期登记交易类型_份额减弱.getValue().equals(chbPrdDeal.getTradeType())) {
             	    if (DictCodeListExt2.产品运作模式_开放式非净值型.getValue().equals(model.getOperateMode())
             	            || DictCodeListExt2.产品运作模式_封闭式非净值型.getValue().equals(model.getOperateMode())) {
             	    	
@@ -723,14 +725,16 @@ public class ProdDurationReg002Service {
             	
             }else{
             	String value = "";
-            	if (DictCodeListExt2.产品存续期登记交易类型_存续期申购.getValue().equals(chbPrdDeal.getTradeType())) {
-            		
-            		purAmt = ChbCcyConvertUtil.changeCnyMoney(chbPrdDeal.getCcy(),
-            	    				chbPrdDeal.getTradePrince(), model.getOpenEnd(), rateMap);
-               }
-               else if (DictCodeListExt2.产品存续期登记交易类型_存续期赎回.getValue().equals(chbPrdDeal.getTradeType())
-                        || DictCodeListExt2.产品存续期登记交易类型_提前赎回.getValue().equals(chbPrdDeal.getTradeType())
-                        || DictCodeListExt2.产品存续期登记交易类型_到期兑付.getValue().equals(chbPrdDeal.getTradeType())) {
+				if (DictCodeListExt2.产品存续期登记交易类型_存续期申购.getValue().equals(chbPrdDeal.getTradeType())
+						||DictCodeListExt2.产品存续期登记交易类型_份额增强.getValue().equals(chbPrdDeal.getTradeType())) {
+
+					purAmt = ChbCcyConvertUtil.changeCnyMoney(chbPrdDeal.getCcy(),
+							chbPrdDeal.getTradePrince(), model.getOpenEnd(), rateMap);
+				}
+				else if (DictCodeListExt2.产品存续期登记交易类型_存续期赎回.getValue().equals(chbPrdDeal.getTradeType())
+						|| DictCodeListExt2.产品存续期登记交易类型_提前赎回.getValue().equals(chbPrdDeal.getTradeType())
+						|| DictCodeListExt2.产品存续期登记交易类型_到期兑付.getValue().equals(chbPrdDeal.getTradeType())
+						||DictCodeListExt2.产品存续期登记交易类型_份额减弱.getValue().equals(chbPrdDeal.getTradeType())) {
             	   if (DictCodeListExt2.产品运作模式_开放式非净值型.getValue().equals(model.getOperateMode())
            	            || DictCodeListExt2.产品运作模式_封闭式非净值型.getValue().equals(model.getOperateMode())) {
             		   
@@ -818,9 +822,10 @@ public class ProdDurationReg002Service {
 	            	String value = ccyMap.get(chbPrdDeal.getInterestCcy());
 	            	purAmt = new BigDecimal(value.split(",")[0]);
 	            	redAmt = new BigDecimal(value.split(",")[1]);
-	            	if (DictCodeListExt2.产品存续期登记交易类型_存续期赎回.getValue().equals(chbPrdDeal.getTradeType())
-	            		|| DictCodeListExt2.产品存续期登记交易类型_提前赎回.getValue().equals(chbPrdDeal.getTradeType())
-	                    || DictCodeListExt2.产品存续期登记交易类型_到期兑付.getValue().equals(chbPrdDeal.getTradeType())){
+					if (DictCodeListExt2.产品存续期登记交易类型_存续期赎回.getValue().equals(chbPrdDeal.getTradeType())
+							|| DictCodeListExt2.产品存续期登记交易类型_提前赎回.getValue().equals(chbPrdDeal.getTradeType())
+							|| DictCodeListExt2.产品存续期登记交易类型_到期兑付.getValue().equals(chbPrdDeal.getTradeType())
+							||DictCodeListExt2.产品存续期登记交易类型_份额减弱.getValue().equals(chbPrdDeal.getTradeType())){
 	            		if (DictCodeListExt2.产品运作模式_开放式非净值型.getValue().equals(model.getOperateMode())
 		           	            || DictCodeListExt2.产品运作模式_封闭式非净值型.getValue().equals(model.getOperateMode())) {
 		            		redAmt = redAmt.add(null == chbPrdDeal.getIntAmt()?BigDecimal.ZERO:

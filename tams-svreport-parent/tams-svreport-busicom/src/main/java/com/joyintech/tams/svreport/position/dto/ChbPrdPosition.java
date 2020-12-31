@@ -135,6 +135,9 @@ public class ChbPrdPosition {
     private BigDecimal custqty;// 兑付客户总份额
     private BigDecimal raiseamt;//    实际募集金额
 
+
+    private String isEndDay;//是否到期交易
+
     /**
      * 起息日
      */
@@ -146,6 +149,14 @@ public class ChbPrdPosition {
 
     public void setvDate(Date vDate) {
         this.vDate = vDate;
+    }
+
+    public String getIsEndDay() {
+        return isEndDay;
+    }
+
+    public void setIsEndDay(String isEndDay) {
+        this.isEndDay = isEndDay;
     }
 
     /**

@@ -117,7 +117,8 @@
 			DEAL.INDENTIFY_MARK indentifyMark,
 			DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) settdateDate,
 			DEAL.CCY ccy,
-			SUM(NVL(decode(DEAL.TRADE_TYPE,'14',0,'15',0,DEAL.TRADE_PRINCE),0)) tradePrince,
+		  /*SUM(NVL(decode(DEAL.TRADE_TYPE,'14',0,'15',0,DEAL.TRADE_PRINCE),0)) tradePrince,*/
+		  SUM(NVL(DEAL.TRADE_PRINCE,0)) tradePrince,
 			SUM(NVL(DEAL.TRADE_QTY,0))  tradeQty,
 			SUM(NVL(DEAL.INT_AMT,0))  intAmt,
 			INFO.PRODTYPE prodType,

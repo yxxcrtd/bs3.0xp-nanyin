@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCodeList;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.ResultContext;
@@ -315,6 +316,7 @@ public class ProdPosition001Service  extends SvrCBBaseService{
     			valuePosition.setTotalIntamt(valuePosition.getTotalIntamt().add(fxDeal.getIntAmt()));
     		}
     	}
+
     	//更新新增字段字段
     	// 查询交易信息
         List<ChbPrdDeal> dealList = chbPrdPositionMapper.selectPrdDeal(bookDate,prodIdList);
@@ -351,6 +353,8 @@ public class ProdPosition001Service  extends SvrCBBaseService{
 	            } else if (DictCodeListExt2.产品存续期登记交易类型_到期兑付.getValue().equals(chbPrdDeal.getTradeType()) ){
 	                pos.setCustamt(pos.getCustamt().add(prinamt));
 	                pos.setCustqty(pos.getCustqty().add(qty));
+	                //添加是到期交易的标识
+	                pos.setIsEndDay(DictCodeList.是否_是.getValue());
 	            }
 	            //提前赎回，在数据接口已按存续期赎回接入，此处代码继续保留
 	            else if (DictCodeListExt2.产品存续期登记交易类型_提前赎回.getValue().equals(chbPrdDeal.getTradeType()) ){  
@@ -366,11 +370,8 @@ public class ProdPosition001Service  extends SvrCBBaseService{
         	ChbPrdPosition tdyPosition=positionMap.get(key).get(0);
         	if(tdyPosition.getTdaddQty()==null){
         		tdyPosition.setTdaddQty(BigDecimal.ZERO);
-			}else{
-				//key.实际募集 = (key.昨日实际募集 * (生成日-起息日) + 新增份额 ) / (生成日-起息日+1))
-				BigDecimal raiseamt = tdyPosition.getRaiseamt().multiply(new BigDecimal(DateUtil.getBetweenDayNumber(tdyPosition.getvDate(),tdyPosition.getCdate()))).add(tdyPosition.getTdaddQty());
-				tdyPosition.setRaiseamt(raiseamt.divide(new BigDecimal(DateUtil.getBetweenDayNumber(tdyPosition.getvDate(),tdyPosition.getCdate())).add(BigDecimal.ONE),BigDecimal.ROUND_HALF_UP));
 			}
+
     		if(tdyPosition.getTdaddAmt()==null){
     			tdyPosition.setTdaddAmt(BigDecimal.ZERO);
     		}
@@ -380,6 +381,13 @@ public class ProdPosition001Service  extends SvrCBBaseService{
     		if(tdyPosition.getTdaddIntamt()==null){
     			tdyPosition.setTdaddIntamt(BigDecimal.ZERO);
     		}
+			//20201230  leipeng 如果不是到期交易.则每日进行计算.如果是到期交易.则保持昨日数据
+    		if(StringUtil.isEmpty(tdyPosition.getIsEndDay())){
+				//key.实际募集 = (key.昨日实际募集 * (生成日-起息日) + 累计份额 ) / (生成日-起息日+1))
+				BigDecimal raiseamt = tdyPosition.getRaiseamt().multiply(new BigDecimal(DateUtil.getBetweenDayNumber(tdyPosition.getvDate(),tdyPosition.getCdate()))).add(tdyPosition.getBalanceQty());
+				tdyPosition.setRaiseamt(raiseamt.divide(new BigDecimal(DateUtil.getBetweenDayNumber(tdyPosition.getvDate(),tdyPosition.getCdate())).add(BigDecimal.ONE),8,BigDecimal.ROUND_HALF_UP));
+			}
+
         	totalList.add(tdyPosition);
         }
 		if(!StringUtil.isEmptyList(totalList)){
