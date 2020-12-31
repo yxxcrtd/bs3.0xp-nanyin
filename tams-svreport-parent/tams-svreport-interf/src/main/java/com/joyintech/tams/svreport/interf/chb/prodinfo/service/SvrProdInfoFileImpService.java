@@ -14,6 +14,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -577,9 +578,10 @@ public class SvrProdInfoFileImpService extends FileImpService {
 	public String importDB(List<Map<String, String>> listData, InterfFile interfFile) {
 //		List<Map<String, String>> listA = 
 		String result="success";
-		checkData(listData, interfFile.getFilename(),
-		InterfDefine.产品基本信息接口数据.getCode(), InterfDefine.产品基本信息接口数据.getCode(),
-		BUSINESSKEY_CHB_PRD_BASEINFO, BUSINESSKEY_CHB_PRD_BASEINFO);
+		checkDataCodeCheck(listData, interfFile.getFilename(), ChbCheckTableInfo.个人发行登记表INFO);
+//		checkData(listData, interfFile.getFilename(),
+//		InterfDefine.产品基本信息接口数据.getCode(), InterfDefine.产品基本信息接口数据.getCode(),
+//		BUSINESSKEY_CHB_PRD_BASEINFO, BUSINESSKEY_CHB_PRD_BASEINFO);
 //		listData.addAll(listA);
 		ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(InterfDefine.产品基本信息接口数据.getCode());
         if (interfConfig == null){

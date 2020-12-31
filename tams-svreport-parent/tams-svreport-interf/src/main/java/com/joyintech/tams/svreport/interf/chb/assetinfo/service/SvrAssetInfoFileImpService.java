@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -191,8 +192,9 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
     public String importDB(List<Map<String, String>> assetInfoList,InterfFile interfFile) {
         // 数据检查
         // 添加待处理的数据
-        checkData(assetInfoList, interfFile.getFilename()
-                , InterfDefine.资产要素信息接口数据.getCode(), InterfDefine.资产要素信息接口数据.getCode(),BUSSINESSKEY, DUPLICATIED_LIST);
+        checkDataCodeCheck(assetInfoList, interfFile.getFilename(), ChbCheckTableInfo.资产要素登记表INFO);
+//        checkData(assetInfoList, interfFile.getFilename()
+//                , InterfDefine.资产要素信息接口数据.getCode(), InterfDefine.资产要素信息接口数据.getCode(),BUSSINESSKEY, DUPLICATIED_LIST);
         // 待入库为空则直接返回
         if (CollectionUtils.isEmpty(assetInfoList)){
             return "success";

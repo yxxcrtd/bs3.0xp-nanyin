@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -277,9 +278,10 @@ public class ChbProdDeclareFileImpService extends FileImpService{
 		
 		// 解析成功，对数据list进行处理
 		if (!CollectionUtils.isEmpty(dataList)) {
-//			List<Map<String, String>>  listA = 
-			checkData(dataList, file.getFilename(), InterfDefine.产品申报信息接口数据.getCode(),
-							InterfDefine.产品申报信息接口数据.getCode(),null, DUPLICATIED_LIST);
+//			List<Map<String, String>>  listA =
+			checkDataCodeCheck(dataList, file.getFilename(), ChbCheckTableInfo.个人产品申报登记INFO);
+//			checkData(dataList, file.getFilename(), InterfDefine.产品申报信息接口数据.getCode(),
+//							InterfDefine.产品申报信息接口数据.getCode(),null, DUPLICATIED_LIST);
 //			dataList.addAll(listA);
 			if(CollectionUtils.isEmpty(dataList)){
 				return rs;

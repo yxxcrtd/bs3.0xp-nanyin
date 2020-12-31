@@ -29,6 +29,8 @@ import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -90,6 +92,9 @@ public abstract class FileImpService extends InterfService{
 
     @Autowired
     private DataCheckService dataCheckService;
+
+    @Autowired
+    private CommonCodeCheckBatchService commonCodeCheckBatchService;
     
     /**
      * mybatis的sqlsession管理核心
@@ -584,6 +589,23 @@ public abstract class FileImpService extends InterfService{
             String interfType,String dataType,String bussinessKey,String... checkEuplicatedKeys ){
         return checkData(true, infoList, fireName, interfType, dataType, bussinessKey, checkEuplicatedKeys);
     }
+
+    /**
+     * 数据校验
+     * @param infoList 解析的数据list
+     * @param fireName 文件名称
+     * @param checkTableInfo 接口类型
+     * @return 返回待处理数据
+     */
+    public List<Map<String, String>> checkDataCodeCheck(List<Map<String,String>> infoList, String fireName, ChbCheckTableInfo checkTableInfo){
+        // 配置脚本校验
+        checkData(false, infoList, fireName, checkTableInfo.getTableName(), checkTableInfo.getTableName(), checkTableInfo.getBussinessKey(), checkTableInfo.getCheckEuplicatedKeys());
+        // 代码校验
+        commonCodeCheckBatchService.codeCheckCommon(infoList, checkTableInfo, fireName);
+
+        return infoList;
+    }
+
     /**
      * 功能:数据入库
      * @since 1.7.0
