@@ -161,4 +161,7 @@ public interface EtrFundMapper {
      * @since 1.0
      */
     String selectManeger(@Param("issuer") String issuer);
+
+
+    List<String> findSameNameCounterId(Map<String, Object> map);
 }

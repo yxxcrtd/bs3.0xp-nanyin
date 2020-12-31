@@ -43,6 +43,7 @@
 				nvl(bvtd.MARKET_VALUE,0) prdTotAssetVal,
 				nvl(bvtd.MARKET_VALUE,0)-nvl(bvtd1.MARKET_VALUE,0) prdAssetVal
 				<!-- modfiy by dongjun on 20190429 净值下发增加字段 end -->
+				,pvp.unitvalue_dec unitvaluedec,pvp.unitvalue_mode unitvaluemode
 			  from BOK_VALBAL_TABLE_STATUS a
 <!-- 			  left join fin_product fpd
 			    on a.finprod_id = fpd.finprod_id -->
@@ -62,6 +63,7 @@
 				left join BOK_VALBAL_TABLE_STATUS_ADD b
 	            on a.finprod_id = b.finprod_id and a.val_date = b.val_date
 	            <!-- add by hechuan 2019-10-9 end -->
+				left join PRD_VAL_PARAM pvp on a.finprod_id =pvp.finprod_id
 			  where 1=1
 			  	and bok.ACCT_SUBJECT_TYPE != #{acctSubjectType} /** 过滤通道 */
 			    <!--邮储实收反应，净值下发只对估值表进行下发，余额表不要下发，再此加一个过滤 -->

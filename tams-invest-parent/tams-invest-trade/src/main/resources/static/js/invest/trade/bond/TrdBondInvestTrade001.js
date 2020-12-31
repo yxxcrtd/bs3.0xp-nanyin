@@ -274,6 +274,7 @@
             checkObj.tradeDate = selArr[0].tradeDate;
             checkObj.operateType = "revoke";
             checkObj.finprodName = selArr[0].finprodName;
+            checkObj.entrustId = selArr[0].entrustId;
             Joyin.ajaxJson(basePath + 'invest/trade/bond/TrdBondInvestTrade001/checkRevoke', checkObj, function(result) {
                 var resdata = result.data;
                 Joyin.prompt(JoyinUtil.getLabel("pingan.common.revokeReason"), 0, function (result) {

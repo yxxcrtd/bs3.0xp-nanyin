@@ -10,18 +10,8 @@
  
 package com.joyintech.tams.invest.entrust.etrplanassetr.dto;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
-import javax.validation.Valid;
-
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.framework.annotation.PageId;
-import com.joyintech.workflow.engine.annotation.PrimaryKey;
-import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.Amount;
@@ -30,11 +20,20 @@ import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.component.business.trade.dto.BussEtrInvestPersonInfoDto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.entrust.etrplanassetr.validator.EtrPlanAssetRValidator;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
+import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+
+import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 
@@ -61,6 +60,12 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
     private String chlIdName;
 
     /**
+     * 组合T+1日可用现金，用于APP计划类利率型指令的显示
+     */
+    private String appProAvailableCash2;
+
+
+    /**
      * 交易对手名称
      */
     private String counterIdName;
@@ -79,6 +84,20 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
      * 序号
      */
     private String indexId;
+
+    /**
+     * 同存款资产本金（授信用）
+     */
+    private BigDecimal prinAmt;
+
+    /**
+     * 后台取为平台日（授信用）
+     */
+    private Date tradeDate;
+    
+    private String inputValue1;
+    private String inputValue2;
+    private String inputValue3;
 
     public String getIndexId() {
         return indexId;
@@ -181,6 +200,21 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
      * 四级分类
      */
     private String assetType11;
+
+
+    /**
+     * 利率审批编号
+     */
+    private String rateApprovalCode;
+
+    public String getRateApprovalCode() {
+        return rateApprovalCode;
+    }
+
+    public void setRateApprovalCode(String rateApprovalCode) {
+        this.rateApprovalCode = rateApprovalCode;
+    }
+
     /**
      * 获取 assetType10
      * @return assetType10.
@@ -675,4 +709,53 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
     public BigDecimal getEntrustNum(){
         return super.getEntrustNum();
     }
+
+	public BigDecimal getPrinAmt() {
+		return prinAmt;
+	}
+
+	public void setPrinAmt(BigDecimal prinAmt) {
+		this.prinAmt = prinAmt;
+	}
+
+	public Date getTradeDate() {
+		return tradeDate;
+	}
+
+	public void setTradeDate(Date tradeDate) {
+		this.tradeDate = tradeDate;
+	}
+
+
+    public String getAppProAvailableCash2() {
+        return appProAvailableCash2;
+    }
+
+    public void setAppProAvailableCash2(String appProAvailableCash2) {
+        this.appProAvailableCash2 = appProAvailableCash2;
+    }
+
+	public String getInputValue1() {
+		return inputValue1;
+	}
+
+	public void setInputValue1(String inputValue1) {
+		this.inputValue1 = inputValue1;
+	}
+
+	public String getInputValue2() {
+		return inputValue2;
+	}
+
+	public void setInputValue2(String inputValue2) {
+		this.inputValue2 = inputValue2;
+	}
+
+	public String getInputValue3() {
+		return inputValue3;
+	}
+
+	public void setInputValue3(String inputValue3) {
+		this.inputValue3 = inputValue3;
+	}
 }

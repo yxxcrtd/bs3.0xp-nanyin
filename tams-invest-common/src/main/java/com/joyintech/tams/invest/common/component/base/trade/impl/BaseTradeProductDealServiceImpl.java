@@ -263,6 +263,9 @@ public class BaseTradeProductDealServiceImpl implements BaseTradeProductDealServ
                 AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
                 inputDto.setProdid(baseTradeProductDeal.get(0).getTrdProductDealAdd().getPortfolioId());
                 inputDto.setProdFinprodType(DictCodeListExt1.金融产品类型_投资组合.getValue());
+                // 交易model增加划款指令start
+                baseTradeProductDeal.get(0).getTrdProductDeal().setEntrustId(baseTradeProductDeal.get(0).getTrdProductDealAdd().getEntrustId());
+                // 交易model增加划款指令end
                 inputDto.setTrdProductDeal(baseTradeProductDeal.get(0).getTrdProductDeal());
                 // 通道相关接口增加 qiangchengxi start
                 inputDto.setTrdProductDealAdd(baseTradeProductDeal.get(0).getTrdProductDealAdd());

@@ -22,4 +22,14 @@
 		</if>
 		)
 	</update>
+	<update id="updateDistributeStatus">
+		UPDATE ETR_DISTRIBUTE
+		SET REC_STATUS = '06'
+		WHERE
+		ENTRUST_ID IN ( SELECT ENTRUST_ID FROM ETR_ENTRUST WHERE ENTRUST_STATUS IN ( '01', '02', '03', '05' )
+		<if test="sysDate != null and sysDate != ''">
+			<![CDATA[AND MDATE <= TO_DATE(#{sysDate},'YYYY-MM-DD')]]>
+		</if>
+		)
+	</update>
 </mapper>

@@ -537,7 +537,7 @@
             	<div class="pro-module-wrapper step" title="评级信息">
 					<!-- 评级信息 -->
 					<div class="page-component"
-						th:data-path="@{/component/bond/BusiFinBondRatingInfo/init}"
+						th:data-path="@{/component/project/BusiFinProjectRatingInfo/init}"
 						th:data-params="|{entityName:'busiFinBondRatingInfoDto',finprodId:'${entity?.finprodId?:''}',workflowId:'${workflowId?:''}', pageId:'${pageId}'}|"></div>
 				</div>
 				<div class="pro-module-wrapper step" title="其他信息"  style="margin-bottom: 30px">
@@ -709,6 +709,7 @@
 			var SVR_PERIOD_REPAYMENT_FLAG_02 = /*[[${SVR_PERIOD_REPAYMENT_FLAG_02}]]*/'02';
 			var SVR_PERIOD_REPAYMENT_FLAG_99 = /*[[${SVR_PERIOD_REPAYMENT_FLAG_99}]]*/'99';
 			var isQuickInput = /*[[${isQuickInput}]]*/'';
+			var objBuyOutRate = /*[[${entity?.buyOutRate}]]*/'';
             </script>
         <script data-th-src="@{/js/component/asset/BussAssetFiveType.js}" type="text/javascript"></script>
 		<script data-th-src="@{/js/invest/asset/project/FinProjectTargetAsset002.js}"

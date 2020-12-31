@@ -412,6 +412,7 @@ function getColumns() {
 	$("#columnType").empty();
 	$("#resultColumn").empty();
 	$("#selectedColumns").empty();
+	selectedColumns = [];
 	if (typeof (tableId) == "undefined" || tableId == null || tableId == "") {
 		$("#columnType").empty();
 		$("#resultColumn").empty();
@@ -575,6 +576,8 @@ function showSelectColumns() {
 		}
 		for (var i = 0; i < curColumns.length; i ++) {
 			var	curColumn = curColumns[i];
+			if(selectedColumns.length%3==0){
+			 	$("#selectedColumns").append("<div class=\"layui-form-item\"" + "</div>") ;}
 			$.ajax({
 				url : basePath + "common/infomanagement/SvrOperationalInfo001/queryColumnNameByCondition",
 				async : false,
@@ -586,7 +589,6 @@ function showSelectColumns() {
 					curColumnName = result;
 				}
 			});
-
 			$.ajax({
 				url : basePath + "common/infomanagement/SvrOperationalInfo001/queryColumnTypeByCondition",
 				async : false,
@@ -673,7 +675,9 @@ function showSelectColumns() {
 						});
 					}
 				}
-			});
+			}
+
+			);
 		}
 		selectedColumns = columnIds;
 		// 设置接口类型查询框默认值

@@ -7,6 +7,8 @@ package com.joyintech.tams.invest.asset.common.service;
 
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.export.ExportParam;
+import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
@@ -34,6 +36,8 @@ import com.joyintech.tams.invest.common.calculator.RepayScheduleCal;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.redisinit.dto.ImplCond;
+import com.joyintech.tams.invest.common.redisinit.service.RiskRedisInitService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -78,6 +82,9 @@ public class FinStageManagementService extends CommonExportService<FinStageManag
 
     @Autowired
     private BussParticipantInfoService bussParticipantInfoService;
+
+    @Autowired
+    private RiskRedisInitService<ImplCond> redisWriter;
 
     /**
      * 共通Mapper的通用代理方案
@@ -147,6 +154,22 @@ public class FinStageManagementService extends CommonExportService<FinStageManag
                 insertDataAuthTypeInst(item.getFinProduct().getFinprodId(), searchOrgCodeList, editOrgCodeList,DictCodeList.共通业务类型_计划类资产_利率型_信息.getValue());
              }
         });
+
+        // 修改完期次后 统一一起更新redis 防止线程启动过多。
+        //TISHKBS-1669
+        //【计划类利率型标的】修改期次信息，当期次信息较多时导致应用假死
+
+        //String [] assetIds = new String[entity.getFinPlanProfitAssetList().size()];
+        List<String> assetList = new ArrayList<>();
+        entity.getFinPlanProfitAssetList().forEach(item->{ assetList.add(item.getFinProduct().getFinprodId()); });
+
+
+        ImplCond cond = new ImplCond();
+        cond.setDel(false);
+        cond.setPlateDate(DateUtil.parse(DateUtil.getSysDate()));
+        String[] array =  assetList.toArray(new String[assetList.size()]);
+        cond.setAssetIdArray(array);
+        redisWriter.dealAssetData(cond);
     }
 
     private FinStageManagementDto encapFinStageManagementDto(FinStageManagementDto dto) {
@@ -181,13 +204,13 @@ public class FinStageManagementService extends CommonExportService<FinStageManag
                 finProduct.setpFinprodId(dto.getFinprodId());
                 finProduct.setFinprodMarketId(dto.getFinprodMarketId() + "_" + entity.getPeriod());
                 finProduct.setCalendarId(dto.getCalendarId());
-                if (StringUtil.isNotEmpty(entity.getFinprodId())) {
-                    finProduct.setFinprodId(entity.getFinprodId());
-                }
-                else {
+//                if (StringUtil.isNotEmpty(entity.getFinprodId())) {
+//                    finProduct.setFinprodId(entity.getFinprodId());
+//                }
+//                else {
                     finProduct.setFinprodId(commonBusinessService.getFinProdId(finProduct.getFinprodMarketId(),
                         DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue(), null));
-                }
+//                }
                 finProduct.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
                 finProduct.setProfitType(DictCodeList.收益类型_收益型.getValue());
                 finProduct.setVdate(entity.getVdate());
@@ -203,7 +226,11 @@ public class FinStageManagementService extends CommonExportService<FinStageManag
                 finProduct.setTermDays(DateUtil.getBetweenDayNumber(entity.getVdate(),entity.getMdate()));
                 finProduct.setManager(finProductEntry.getManager());
                 finProduct.setCapiIncomeFeature(finProductEntry.getCapiIncomeFeature());
-                //add  by  zhagnnian 20190911 end
+                //add  by  zhagnnian 20190911
+
+                //TISHKBS-1669 增加标志  用于后面不更新redis
+                finProduct.setModelType("99");
+
                 finPlanProfitAssetDto.setFinProduct(finProduct);
                 // 标的附属
                 FinProductAdd finProductAdd = new FinProductAdd();

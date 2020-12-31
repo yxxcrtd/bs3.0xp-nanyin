@@ -81,4 +81,6 @@ public interface EntrustCommonPersonSelectMapper {
      * @since 1.0
      */
     String getRealName(@Param("userName") String userName);
+
+    List<String> findSameNameCounterId(Map<String, Object> map);
 }

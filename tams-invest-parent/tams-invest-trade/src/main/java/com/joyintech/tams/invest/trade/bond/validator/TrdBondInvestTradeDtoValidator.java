@@ -19,6 +19,7 @@ import java.util.Map;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.joyintech.calculation.util.ArithmeticUtil;
@@ -69,6 +70,8 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
     @Autowired(required = false)
     private BaseEtrInvestInfoService baseEtrInvestInfoService;
 
+    @Value("${flag:false}")
+    private boolean flag;
     /**
      * {@inheritDoc}
      */
@@ -76,6 +79,10 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
     public List<ValidMessage> bussValid(Object value) {
         TrdBondInvestTradeDto inputDto = (TrdBondInvestTradeDto)value;
         List<ValidMessage> errorList = new ArrayList<>();
+        
+        if(flag) {
+        	return errorList;
+        }
 
         // 交易所债一级市场时，交易平台非必填 add by renping 20191105 start
         if (!((StringUtil.equals(inputDto.getTradeMarket(),
@@ -425,10 +432,27 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
 
         //add by msk TISHKBS-1038 新增一次性划款通道交易前是否划款判断 start
         if(!"".equals(inputDto.getChlId())&&inputDto.getChlId()!=null){
-            Integer count = trdBondInvestTrade002Service.selectchlTrade(inputDto.getChlId());
-            if(count <= 0){
-                ValidMessage validMessage = new ValidMessage(getMessage("通过一次性通道投资请先进行划款！",getMessage("invest.channelId")));
-                errorList.add(validMessage);
+            Integer count;
+            Map<String,Object> sMap= new HashMap<String ,Object>();
+
+            if(StringUtil.equals(inputDto.getPs(), DictCodeList.交易方向_买入.getValue())){
+                sMap.put("chlId",inputDto.getChlId());
+                sMap.put("finprodId",inputDto.getPortfolioId());
+                count = trdBondInvestTrade002Service.selectchlTrade(sMap);
+                if(count <= 0){
+                    ValidMessage validMessage = new ValidMessage(getMessage("通过一次性通道投资请先进行划款！",getMessage("invest.channelId")));
+                    errorList.add(validMessage);
+                }
+
+            }else if(StringUtil.equals(inputDto.getTrdInvestPersonInfo().getIsOutTrade(), DictCodeList.是否_否.getValue()) &&
+                        (StringUtil.equals(inputDto.getPs(), DictCodeList.交易方向_卖出.getValue()) || StringUtil.equals(inputDto.getPs(), DictCodeList.交易方向_行权_回售.getValue()))){
+                sMap.put("chlId",inputDto.getChlId());
+                sMap.put("counterId",inputDto.getCounterId());
+                count = trdBondInvestTrade002Service.selectchlTrade(sMap);
+                if(count <= 0){
+                    ValidMessage validMessage = new ValidMessage(getMessage("交易对手通过一次性通道投资请先进行划款！",getMessage("invest.channelId"),getMessage("invest.counterId")));
+                    errorList.add(validMessage);
+                }
             }
         }
         //add by msk TISHKBS-1038 新增一次性划款通道交易前是否划款判断 end
@@ -449,7 +473,7 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
             param.put("portfolioId", inputDto.getTrdInvestPersonInfo().getCounterId());
             param.put("zhilingtype", inputDto.getZhilingtype());   
             param.put("search", inputDto.getSecManageAcctId());            ;
-           if (StringUtil.isEmptyList(trdBondInvestTrade002Service.getSecManageAcctId(param))){
+           if (StringUtil.isEmpty(inputDto.getChlId()) && StringUtil.isEmptyList(trdBondInvestTrade002Service.getSecManageAcctId(param))){
                ValidMessage validMessage = new ValidMessage("trdInvestPersonInfo.counterId", "卖出交易的内部交易对手证券托管户不存在:" + inputDto.getSecManageAcctId());
                errorList.add(validMessage);
            }

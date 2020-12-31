@@ -112,6 +112,16 @@ public class ValNetValueConfirm004Dto extends BaseEntity implements ProcessEntit
      * 产品类型
      */
     private String  profitTypeCode;
+
+	/**
+	 * 产品单位净值位数处理方式
+	 */
+	private BigDecimal unitvaluedec;
+
+	/**
+	 * 产品净资产
+	 */
+	private String unitvaluemode;
     
     
     /**
@@ -321,5 +331,20 @@ public class ValNetValueConfirm004Dto extends BaseEntity implements ProcessEntit
 	public void setProfitTypeCode(String profitTypeCode) {
 		this.profitTypeCode = profitTypeCode;
 	}
-    
+
+	public BigDecimal getUnitvaluedec() {
+		return unitvaluedec;
+	}
+
+	public void setUnitvaluedec(BigDecimal unitvaluedec) {
+		this.unitvaluedec = unitvaluedec;
+	}
+
+	public String getUnitvaluemode() {
+		return unitvaluemode;
+	}
+
+	public void setUnitvaluemode(String unitvaluemode) {
+		this.unitvaluemode = unitvaluemode;
+	}
 }

@@ -1346,20 +1346,20 @@ public class CalculationCommonService {
                     if (bokVo.getHappenDate().compareTo(redVo.getHappenDate()) <= 0) {
                         // 费前情况
                         if (ValDictCodeList.费前费后区分_费前.getValue().equals(feeBefOrAft)) {
-                            // 变量.红利再投周期万份收益列表[i] = 变量.红利再投周期万份收益列表[i]+资产负债信息[j].万份收益_费前/10000)
+                            // update by caiqun 20201205 TISHKBS-1658
+                            // 变量.红利再投周期万份收益列表[i] = 变量.红利再投周期万份收益列表[i]+资产负债信息[j].万份收益_费前)
                             // 即（累加红利再投周期万份收益列表当前塞入值:红利再投周期万份收益 = 红利再投周期万份收益 +
-                            // 资产负债信息.万份收益_费前/10000）
+                            // 资产负债信息.万份收益_费前）
                             bonusRstCycTenThdProfitNow = ArithmeticUtil.doAdd(
-                                bonusRstCycTenThdProfitNow, ArithmeticUtil.divide(
-                                    bokVo.getpYieldBef(), new BigDecimal(10000)));
+                                bonusRstCycTenThdProfitNow, bokVo.getpYieldBef());
                         } // 其他情况
                         else {
-                            // 变量.红利再投周期万份收益列表[i] = 变量.红利再投周期万份收益列表[i]+资产负债信息[j].万份收益_费后/10000)
+                            // update by caiqun 20201205 TISHKBS-1658
+                            // 变量.红利再投周期万份收益列表[i] = 变量.红利再投周期万份收益列表[i]+资产负债信息[j].万份收益_费后)
                             // 即（累加红利再投周期万份收益列表当前塞入值:红利再投周期万份收益 = 红利再投周期万份收益 +
-                            // 资产负债信息.万份收益_费后/10000）
+                            // 资产负债信息.万份收益_费后）
                             bonusRstCycTenThdProfitNow = ArithmeticUtil.doAdd(
-                                bonusRstCycTenThdProfitNow,
-                                ArithmeticUtil.divide(bokVo.getpYield(), new BigDecimal(10000)));
+                                bonusRstCycTenThdProfitNow,bokVo.getpYield());
                         }
                     }
                 }
@@ -1372,16 +1372,20 @@ public class CalculationCommonService {
             for (BokStatBokPosition bokVo : bokStatBokPositionList) {
                 // 费前情况
                 if (ValDictCodeList.费前费后区分_费前.getValue().equals(feeBefOrAft)) {
-                    // 变量.红利再投周期万份收益列表[i] = 变量.红利再投周期万份收益列表[i]+资产负债信息[j].万份收益_费前/10000)
-                    // 即（累加红利再投周期万份收益列表当前塞入值:红利再投周期万份收益 = 红利再投周期万份收益 + 资产负债信息.万份收益_费前/10000）
+                    // update by caiqun 20201205 TISHKBS-1658
+                    // 变量.红利再投周期万份收益列表[i] = 变量.红利再投周期万份收益列表[i]+资产负债信息[j].万份收益_费前)
+                    // 即（累加红利再投周期万份收益列表当前塞入值:红利再投周期万份收益 = 红利再投周期万份收益 + 资产负债信息.万份收益_费前）
                     bonusRstCycTenThdProfitNow = ArithmeticUtil.doAdd(bonusRstCycTenThdProfitNow,
-                        ArithmeticUtil.divide(bokVo.getpYieldBef(), new BigDecimal(10000)));
+                            bokVo.getpYieldBef());
+
+
                 } // 其他情况
                 else {
-                    // 变量.红利再投周期万份收益列表[i] = 变量.红利再投周期万份收益列表[i]+资产负债信息[j].万份收益_费后/10000)
-                    // 即（累加红利再投周期万份收益列表当前塞入值:红利再投周期万份收益 = 红利再投周期万份收益 + 资产负债信息.万份收益_费后/10000）
+                    // update by caiqun 20201205 TISHKBS-1658
+                    // 变量.红利再投周期万份收益列表[i] = 变量.红利再投周期万份收益列表[i]+资产负债信息[j].万份收益_费后)
+                    // 即（累加红利再投周期万份收益列表当前塞入值:红利再投周期万份收益 = 红利再投周期万份收益 + 资产负债信息.万份收益_费后）
                     bonusRstCycTenThdProfitNow = ArithmeticUtil.doAdd(bonusRstCycTenThdProfitNow,
-                        ArithmeticUtil.divide(bokVo.getpYield(), new BigDecimal(10000)));
+                            bokVo.getpYield());
                 }
             }
             // 变量.红利再投周期万份收益列表 塞入该值
@@ -1418,13 +1422,12 @@ public class CalculationCommonService {
                 BigDecimal dayNum = ArithmeticUtil.doAdd(new BigDecimal(betweenDay),
                     BigDecimal.ONE);
 
-                // 变量.周期年化收益率 = （变量.周期万份收益-1）*10000 /(参数.周期结束日 - 参数.周期开始日+1)* 参数.计算基础 /10000
+                // update by caiqun 20201205  TISHKBS-1658
+                // 变量.周期年化收益率 = （变量.周期万份收益-1） /(参数.周期结束日 - 参数.周期开始日+1)* 参数.计算基础 /10000
                 cycYearRate = ArithmeticUtil.multiply(
-                    ArithmeticUtil.doSub(cycTenThousandProfit, BigDecimal.ONE), // [（变量.周期万份收益-1）]
-                    ArithmeticUtil.divide(new BigDecimal(10000), dayNum), // [10000 /(参数.周期结束日 -
-                                                                          // 参数.周期开始日+1)]
-                    ArithmeticUtil.divide(new BigDecimal(BasisDays), new BigDecimal(10000))// [参数.计算基础
-                                                                                           // /10000]
+                        // [（变量.周期万份收益-1）(参数.周期结束日 - 参数.周期开始日+1)]
+                        ArithmeticUtil.divide(ArithmeticUtil.doSub(cycTenThousandProfit, BigDecimal.ONE), dayNum),
+                        ArithmeticUtil.divide(new BigDecimal(BasisDays), new BigDecimal(10000))// [参数.计算基础/10000]
                 );
             }
 
@@ -2733,5 +2736,21 @@ public class CalculationCommonService {
             return ArithmeticUtil.multiply(scale, roundingMode, values);
         }
         return null;
+    }
+
+
+    public boolean isTradeDealAccount2(String booksetId,Date tradeDate,List<String> pslist) {
+
+        boolean flag = false;
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("BOOKSET_ID", booksetId);
+        map.put("TRADE_DATE", tradeDate);
+        map.put("pslist", pslist);
+        map.put("tradeStatus","01");
+        int count = calculationCommonMapper.tradeDealAccountCount(map);
+        if(count>0){
+            flag = true;
+        }
+        return flag;
     }
 }

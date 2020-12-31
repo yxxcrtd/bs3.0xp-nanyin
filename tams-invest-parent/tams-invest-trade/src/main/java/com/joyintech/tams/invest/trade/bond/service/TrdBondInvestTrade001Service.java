@@ -11,8 +11,10 @@
 package com.joyintech.tams.invest.trade.bond.service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SuggestDto;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.constant.GlobalConstant;
@@ -67,5 +69,18 @@ public class TrdBondInvestTrade001Service extends CommonExportService<TrdBondInv
     @Override
     public Page<TrdBondInvestTradeDto> selectPageData(Map<String, Object> selectParam) {
         return findPage(selectParam);
+    }
+
+    /**
+     * 获取交易代码
+     * @param map 请求参数
+     * @return 联想文本框实体类
+     * @see
+     * @since 1.0
+     */
+    public List<SuggestDto> getEntrustIdByType(Map<String,Object> map){
+        return restTemplate.postForList(
+                ServiceApplication.COMMON_SERVICE_NAME + "/CommonSelect/getEntrustId", map,
+                SuggestDto.class);
     }
 }

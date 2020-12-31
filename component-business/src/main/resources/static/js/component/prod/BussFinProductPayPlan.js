@@ -442,11 +442,13 @@
 
         if (selectedValueProfitType && selectedValueProfitType === PROFIT_TYPE_02) {
             getElementById('div').show();
-            if (pageModel === PAGE_MODEL_NEW){
+            //modify by mashukai 20201116 	BS-2024 草稿箱付息规则反显值错误问题 start
+			if (pageModel === PAGE_MODEL_NEW && !isDraft){
             	// 付息规则默认到期
                 getElementById('payCycle').attr('initValue', INTPAY_PERIOD_01).val(INTPAY_PERIOD_01).trigger('change');
                 getElementById('payTdayRule').attr('initValue', TDAY_RULE_02).val(TDAY_RULE_02).trigger('change');
             }
+			//modify by mashukai 20201116 	BS-2024 草稿箱付息规则反显值错误问题 end
         } else {
             getElementById('div').hide();
         }

@@ -362,4 +362,9 @@ public class EtrFundController {
     public String selectManeger(String issuer){
         return etrFundService.selectManeger(issuer);
     }
+
+    @PostMapping("/findSameNameCounterId")
+    public List<String> findSameNameCounterId(@RequestBody Map<String, Object> map) {
+        return etrFundService.findSameNameCounterId(map);
+    }
 }

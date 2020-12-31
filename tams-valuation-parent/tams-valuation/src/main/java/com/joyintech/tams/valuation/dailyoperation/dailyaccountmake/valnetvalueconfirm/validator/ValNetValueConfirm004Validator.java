@@ -48,9 +48,9 @@ public class ValNetValueConfirm004Validator implements BeanValidator {
         		BigDecimal num = new BigDecimal("10000"); 
         		if(StringUtil.equals(dto.getProfitTypeCode(), "03")){//货币型
         			BigDecimal assetValueEdit = dto.getAssetValueEdit().multiply(num);
-        			result = assetValueEdit.divide(dto.getCapiTal(),4,BigDecimal.ROUND_HALF_UP);
+        			result = assetValueEdit.divide(dto.getCapiTal(),dto.getUnitvaluedec().intValue(),BigDecimal.ROUND_HALF_UP);
         		}else{
-        			result = dto.getAssetValueEdit().divide(dto.getCapiTal(),4,BigDecimal.ROUND_HALF_UP);
+        			result = dto.getAssetValueEdit().divide(dto.getCapiTal(),dto.getUnitvaluedec().intValue(),BigDecimal.ROUND_HALF_UP);
         		}
         		//update by hechuan 2019-11-5 end
         		if(!result.equals(dto.getNetUnitValueEdit())){

@@ -196,6 +196,20 @@ var cols = [
         for(var index in object.selectedItem){
             var item = object.selectedItem[index];
             var temp = JSON.parse(JSON.stringify(object));
+            
+            // 指令授信 start
+            temp.inputValue1 = 'F04';
+            temp.finprodType2 = 'F17';
+            temp.tradeAmt = item.entrustNum;
+            temp.prinAmt = item.entrustNum;
+            if(item.entrustAmt) {
+            	temp.tradeAmt =item.entrustAmt;
+            	temp.prinAmt =item.entrustAmt;
+            }
+            temp.tradeDate = item.vdate;
+            temp.counterId = item.counterId;
+            // 指令授信 end
+            
             temp.vdate = item.vdate;
             temp.mdate = item.mdate;
             temp.portfolioId = item.portfolioId;

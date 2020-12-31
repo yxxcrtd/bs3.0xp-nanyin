@@ -539,9 +539,9 @@ public class TrdBondInvestTradeController {
      * @see
      * @since 1.0
      */
-    @RequestMapping("selectchlTrade/{chlId}")
-    public int selectchlTrade(@PathVariable("chlId") String chlId){
-        return trdBondInvestTradeService.selectchlTrade(chlId);
+    @RequestMapping("selectchlTrade")
+    public int selectchlTrade(@RequestBody Map<String,Object> map){
+        return trdBondInvestTradeService.selectchlTrade(map);
     }
     /* add by msk 新增查询通道划款交易 20201111 end */
 }

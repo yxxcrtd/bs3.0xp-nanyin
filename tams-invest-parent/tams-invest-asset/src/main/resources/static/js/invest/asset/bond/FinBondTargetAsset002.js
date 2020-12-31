@@ -151,7 +151,7 @@ $(function() {
     var finalSava = function(object,operateType,result){
             Joyin.ajaxJson(basePath + 'invest/asset/common/isHoliday', {mdate:object.mdate,calendarId:object.calendarId}, function(isHoliday){
                 if(isHoliday){
-                    Joyin.confirm("到日期为节假日，是否确认提交", function() {
+                    Joyin.confirm("到期日为节假日，是否确认提交", function() {
                         if (operateType === 'save') {
                             WorkFlow.doSaveList(basePath + 'invest/asset/bond/FinBondTargetAsset002/save',
                                 object, "FinBondTargetAsset002_btn_save");
@@ -488,6 +488,7 @@ $(function() {
 				}
                 conPriceChange();
     			  layui.form.render();
+
    		 });
 		} else {
 			Joyin.error(JoyinUtil.getMessage('BUSS_COM_E_0038',JoyinUtil.getLabel('FinBondTargetAsset002.finprodId')));
@@ -495,7 +496,9 @@ $(function() {
     }
     var issuerChange = function(){
         var customerId = $('#issuer').val();
-        AssetCommon.getRepInfoByIssuer(customerId);
+        if(customerId){
+            AssetCommon.getRepInfoByIssuer(customerId);
+        }
     }
     window.componentLoadCallback = function(isDone, pagePath, params){
         if(isDone){

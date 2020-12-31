@@ -91,7 +91,9 @@
             ,{field:'firstAnapleroticCycleBegDate', visible : false}//首次回补周期开始日
             ,{field:'firstAnapleroticDateStr', title: 'BussFinProductAnapleroticInfo.firstAnapleroticDate', visible : true, type:'date'}//首次回补日
             ,{field:'anapleroticEndDateStr', title: 'FinProductAnapleroticInfo.anapleroticEndDate', visible : true, type:'date'}//回补结束日
-            ,{field:'firstAnapleroticCycleBegDateStr', title: 'FinProductAnapleroticInfo.firstAnapleroticCycleEndDate', visible : true , type:'date'}//首次回补周期开始日
+           //modify by yujiaping 2020-11-25 ZGBUGTWO-18 产品信息管理-净值化产品 新建-业绩回补（净值型）回补信息列表start
+            ,{field:'firstAnapleroticCycleBegDateStr', title: 'BussFinProductAnapleroticInfo.firstAnapleroticCycleStartDate', visible : true , type:'date'}//首次回补周期开始日
+            //modify by yujiaping 2020-11-25 ZGBUGTWO-18 产品信息管理-净值化产品 新建-业绩回补（净值型）回补信息列表end
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: buttons,width:130}
             ,{field:'finProductAnapleroticInfoDto', visible : false}//model
             ,{field:'rateType', visible : false}
@@ -239,6 +241,13 @@
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0057", JoyinUtil.getLabel("FinProductBuild002.calendarId")));
                 return;
             }
+
+            if(operationType==='02' && null == openMode ){
+                // 开放情况下  开放模式
+                Joyin.error(JoyinUtil.getMessage("COMMON_E_0057", JoyinUtil.getLabel("FinProductOpenRule.openMode")));
+                return;
+            }
+
             var anapleroticInfoList = bussFinProductAnapleroticInfoTable.getAllRows();
             if($('#' + dealModeElement).val() != anapleroticDealMode11 && anapleroticInfoList && anapleroticInfoList.length>0){
                 Joyin.error(JoyinUtil.getMessage("REPORT_COMMON_E_0028", "回补信息"));

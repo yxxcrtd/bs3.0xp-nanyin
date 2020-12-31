@@ -7,8 +7,10 @@ package com.joyintech.tams.component.business.trade.impl;
 
 import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.component.business.trade.BussEtrInvestPersonInfoService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -19,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -62,10 +65,33 @@ public class BussEtrInvestPersonInfoImplService implements BussEtrInvestPersonIn
                 && (StringUtil.equals((String)param.get("finprodType2"), DictCodeListExt1.金融产品类型_投管用_基金.getValue()))) {
                 List<String> counterIdList = new ArrayList<>();
                 if (StringUtil.equals((String)param.get("tradeMarket"), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
-                    counterIdList.add(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
+                    if (MultilevelDataAuthorityUtil.isEnabled()){
+                        Map<String, Object> param1 = new HashMap<>();
+                        param1.put("counterId",BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
+                        List<String> counterIds = restTemplate.postForObject(
+                                ServiceApplication.ENTRUST_SERVICE_NAME + "/common/EntrustCommonPersonSelect/findSameNameCounterId", param1,
+                                List.class);
+                        counterIdList.addAll(counterIds);
+
+                    }else {
+                        counterIdList.add(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
+                    }
+
                 }
                 else if (StringUtil.equals((String)param.get("tradeMarket"), DictCodeListExt1.交易场所_深圳证券交易所.getValue())) {
-                    counterIdList.add(BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
+
+                    if (MultilevelDataAuthorityUtil.isEnabled()){
+
+                        Map<String, Object> param1 = new HashMap<>();
+                        param1.put("counterId",BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
+                        List<String> counterIds = restTemplate.postForObject(
+                                ServiceApplication.ENTRUST_SERVICE_NAME + "/common/EntrustCommonPersonSelect/findSameNameCounterId", param1,
+                                List.class);
+                        counterIdList.addAll(counterIds);
+
+                    }else {
+                        counterIdList.add(BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
+                    }
                 }
                 param.put("counterIdList", counterIdList);
             }

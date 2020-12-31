@@ -440,6 +440,15 @@
         </set>
         where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
     </update>
+    <update id="updateByPrimaryKeySelective1" parameterType="com.joyintech.tams.common.base.entity.EtrEntrust" >
+        update ETR_DISTRIBUTE
+        <set >
+            <if test="entrustStatus != null" >
+                REC_STATUS = #{entrustStatus,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+    </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.EtrEntrust" >
         update ETR_ENTRUST
         set PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},

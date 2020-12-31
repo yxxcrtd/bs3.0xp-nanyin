@@ -110,7 +110,7 @@
             }
             // if(JoyinMath.doAdd($('#tradeAmt').val()*10000,0,2)!=number){
             if(JoyinMath.doAdd($('#tradeAmt').val(),0,2)!=number){
-                Joyin.warn("组合分配劵面总额和金额信息券面总额不一致！");
+                Joyin.error("组合分配劵面总额和金额信息券面总额不一致！");
                 return;
             }
         }
@@ -131,7 +131,7 @@
                 }
             }
             if(JoyinMath.doAdd($('#fpriceAmt').val(),0,2)!=number){
-                Joyin.warn("组合分配全价总额和金额信息全价总额不一致！");
+                Joyin.error("组合分配全价总额和金额信息全价总额不一致！");
                 return;
             }
         }
@@ -225,7 +225,9 @@
             var currentCalcParam = getCalcParam();
             for ( var key in currentCalcParam) {
                 //---update by jjpei 20190731---排除riskMathFlag----
-                if (key == 'selectValue'||key=='riskMathFlag') {
+                if (key == 'selectValue'||key=='riskMathFlag'||key=='counterId'||key=='secAcctId'
+                	||key=='acctNo'||key=='acctName'||key=='acctBankDep'||key=='acctBankDepoPayno'
+                		||key=='secAcctName'||key=='registOrg'||key=='counterTrader') {
                     continue;
                 }
                 //---update by jjpei 20190731---排除riskMathFlag----

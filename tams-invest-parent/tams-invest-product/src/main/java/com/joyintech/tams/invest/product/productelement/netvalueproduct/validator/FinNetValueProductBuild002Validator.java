@@ -533,6 +533,26 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                 	validList.add(new ValidMessage(this.getMessage("FIN_PROD_E_0135")));
                 }
             }
+            
+            //add by yujiaping 2020-11-18 TISHKBS-734“分档"产品，浮动管理费增加计提结束日不能大于产品到期日的校验 start
+            if (!StringUtil.isEmptyList(entity.getBussFinProductFloatFeeDto().getBussFinProductFloatFeeInfoDtoList())) {
+            	 for(BussFinProductFloatFeeDto bussFinProductFloatFeeDto : 
+                     entity.getBussFinProductFloatFeeDto().getBussFinProductFloatFeeInfoDtoList()) {
+                if(StringUtil.isNotEmpty(bussFinProductFloatFeeDto.getFeeId())
+                    && (StringUtil.equals(DictCodeList.处理模式_分档.getValue(), entity.getDealMode())) ){                 
+                    if (StringUtil.isNotEmpty(
+                    		bussFinProductFloatFeeDto.geteAccrDate())) {
+                        if (StringUtil.isNotEmpty(entity.getMdate()) && DateUtil.compareDate(
+                        		bussFinProductFloatFeeDto.geteAccrDate(),
+                            entity.getMdate()) > 0) {
+                            validList.add(new ValidMessage("浮动管理费的计提结束日不能大于到期日。"));
+                        }
+                    }
+                }
+            }
+          }//add by yujiaping 2020-11-18 TISHKBS-734“分档”产品，浮动管理费增加计提结束日不能大于产品到期日的校验 end
+            
+            
             if(!StringUtil.isEmptyList(entity.getBussFinProductFloatFeeDto().getBussFinProductFloatFeeInfoDtoList())
                 && (StringUtil.equals(DictCodeList.处理模式_分档周期型.getValue(), entity.getDealMode())||
                 StringUtil.equals(DictCodeList.处理模式_分档.getValue(), entity.getDealMode()))){
@@ -617,10 +637,10 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                             
                         }
                         //add by wm 增加分档产品针对分层设置了浮动管理费没有设置相应的业绩基准校验start 2019-08-09
-                        if(idMarkLayer||bussBenchMarkLayeredMap.get(bussFinProductFloatFeeDto.getProdStyle())==null){
+                       /* if(idMarkLayer||bussBenchMarkLayeredMap.get(bussFinProductFloatFeeDto.getProdStyle())==null){
                         	validList.add(new ValidMessage(
                                     this.getMessage("FIN_PROD_E_0132",bussFinProductFloatFeeDto.getProdStyle())));
-                        }
+                        }*/
                         //add by wm 增加分档产品针对分层设置了浮动管理费没有设置相应的业绩基准校验end 2019-08-09
                     }
                 }
@@ -680,6 +700,14 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                 }
             }
             List<FinOpenPlan> finOpenPlanList = entity.getBussFinProductOpenPlanDto().getFinOpenPlanList();
+     //add by yujiaping 2020-12-2  ZGBS-50 非高频开放的产品提交时，如无开放计划限制提交，给出提醒：非高频开放的产品，开放计划不能为空start
+            if(!StringUtil.equals(entity.getBussFinProductOpenPlanDto().getOpenMode(), DictCodeList.开放模式_高频开放.getValue())){
+            	if(StringUtil.isEmptyList(finOpenPlanList)) {
+            		validList.add(new ValidMessage("bussFinProductOpenPlanDto.finOpenPlanList",
+                            this.getMessage("非高频开放的产品，开放计划不能为空。")));
+            	}
+            }
+    //add by yujiaping 2020-12-2  ZGBS-50 非高频开放的产品提交时，如无开放计划限制提交，给出提醒：非高频开放的产品，开放计划不能为空end
             if (!StringUtil.isEmptyList(finOpenPlanList)
                 && StringUtil.isNotEmpty(entity.getVdate())) {
                 for (FinOpenPlan finOpenPlan : finOpenPlanList) { 

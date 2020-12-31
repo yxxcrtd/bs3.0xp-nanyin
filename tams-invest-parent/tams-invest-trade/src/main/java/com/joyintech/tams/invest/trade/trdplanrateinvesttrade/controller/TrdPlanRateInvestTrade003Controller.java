@@ -254,6 +254,11 @@ public class TrdPlanRateInvestTrade003Controller extends BaseController{
         //add by lizhi 是否限制划款指令开关 2020年2月26日  start
         model.addAttribute("GEN_PAY_ORDERS_AUTO",CacheUtil.getSysParam(BussinessConstant.GEN_PAY_ORDERS_AUTO));
         //add by lizhi 是否限制划款指令开关 2020年2月26日  end
+      //add by yujiaping 2020-12-16 TISHKBS-1259 计划利率型交易新建时，清算速度默认T+0，并且不可修改start
+        TrdPlanRateInvestTradeDto entity = new TrdPlanRateInvestTradeDto();
+        entity.setMySettleSpeed(DictCodeList.清算速度_T_0.getValue());
+        model.addAttribute("entity", entity);
+        //add by yujiaping 2020-12-16 TISHKBS-1259 计划利率型交易新建时，清算速度默认T+0，并且不可修改end
         return super.init(model);
     }
     /**

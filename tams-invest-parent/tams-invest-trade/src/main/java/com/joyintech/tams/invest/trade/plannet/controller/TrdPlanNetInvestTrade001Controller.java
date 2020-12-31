@@ -14,6 +14,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -28,6 +29,7 @@ import com.joyintech.tams.component.business.settle.BussSettleOrderCommService;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
@@ -50,10 +52,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 计划类（净值型）投资交易查询
@@ -187,6 +186,17 @@ public class TrdPlanNetInvestTrade001Controller extends BaseController {
                 }
             }
             // 确认提醒 TISHKBS-1113【组合资金账户头寸查询】内转交易撤销提醒 add by hpp 2020-09-17 end
+        }else if (StringUtil.equals(dto.getOperateType(), "confirm") && result.getErrorCount() == 0) {// 确认时校验 add by yangwenjun 20201124
+            WflValidInputParameter parameter = new WflValidInputParameter();
+            parameter.setPageId("TrdPlanNetInvestTrade003");
+            parameter.setBusinessDataPk3(dto.getTradeId());
+            if (mstWorkflowCommonService.isInWflProcess(parameter)) {
+                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+                errorList.add(new ValidMessage(this.getMessage("BUSS_COM_E_0041")));
+                AjaxResult ar = new AjaxResult();
+                ar.setErrorList(errorList);
+                return ar;
+            }
         }
         
         return commonCheck(result, dto.getOperateType());
@@ -329,5 +339,22 @@ public class TrdPlanNetInvestTrade001Controller extends BaseController {
     	param.put("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE"));
         return trdPlanNetInvestTrade001Service.export(this.getPageId(),
         		param);
+    }
+
+    /**
+     * 获取委托代码
+     * @return 联想文本框实体类集合
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("getEntrustIdByType")
+    public List<SuggestDto> getEntrustIdByType() {
+        String entrustId = getParam("param");
+        Map<String, Object> map = new HashMap<>();
+        map.put("param", entrustId);
+        map.put("finProdType", Arrays.asList(DictCodeListExt1.金融产品类型_计划类资产.getValue()));
+        map.put("ENTRUST_STATUS_LIST", Arrays.asList(DictCodeList.委托状态_已接收.getValue(),
+                DictCodeList.委托状态_已完成.getValue(), DictCodeList.委托状态_已关闭.getValue()));
+        return trdPlanNetInvestTrade001Service.getEntrustIdByType(map);
     }
 }

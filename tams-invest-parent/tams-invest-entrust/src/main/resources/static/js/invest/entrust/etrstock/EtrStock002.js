@@ -49,6 +49,20 @@
         if ($('#select2-finprodMarketId-container').attr('title')){
             object.finprodName = $('#select2-finprodMarketId-container').attr('title');
         }
+        
+        // 指令授信 start
+        object.finprodType2 = 'F10';
+        object.inputValue1 = 'F17';
+        object.tradeDate = $('#vdate').val();
+        object.counterId = $('#etrInvestPersonInfo_counterId').val();
+    	object.tradeAmt =JoyinMath.doMul($('#price').val(),$('#entrustNum').val());
+    	object.prinAmt =JoyinMath.doMul($('#price').val(),$('#entrustNum').val());
+        if($('#entrustAmt').val()) {
+        	object.tradeAmt = $('#entrustAmt').val();
+        	object.prinAmt = $('#entrustAmt').val();
+        }
+        // 指令授信 end  
+        
         // 投资管理人BussEtrInvestPersonInfo
         object.etrInvestPersonInfo.invManagerId = $('#etrInvestPersonInfo_invManagerId').val();
         //操作类型

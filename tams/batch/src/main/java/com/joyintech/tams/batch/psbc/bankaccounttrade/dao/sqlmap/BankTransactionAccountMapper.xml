@@ -68,7 +68,10 @@
 	<delete id="deleteBokVouchDetail">
 	   delete from BOK_VOUCH_DETAIL bvd 
        where bvd.vouch_num in 
-       <foreach collection="vouchNum" item="item" open="(" separator="," close=")">
+       <foreach collection="vouchNum" item="item" index="index" open="(" separator="," close=")">
+		   <if test="(index % 999) == 998">
+			   null) OR bvd.vouch_num in (
+		   </if>
            #{item}
        </foreach>
 	</delete>
@@ -76,7 +79,10 @@
 	<delete id="deleteBokVouchMain">
 	   delete from BOK_VOUCH_MAIN bvm
 	   where bvm.vouch_num in 
-	   <foreach collection="vouchNum" item="item" open="(" separator="," close=")">
+	   <foreach collection="vouchNum" item="item" index="index" open="(" separator="," close=")">
+		   <if test="(index % 999) == 998">
+			   null) OR bvm.vouch_num in (
+		   </if>
 	       #{item}
 	   </foreach>
 	</delete>

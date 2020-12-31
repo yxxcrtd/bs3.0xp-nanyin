@@ -10,11 +10,16 @@
  
 package com.joyintech.tams.invest.batch.mproddivreindealgen.runner;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.invest.batch.mproddivreindealgen.dao.MProdDivReinDealGenMapper;
+import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dao.DateCalcMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -99,6 +104,10 @@ public class MProdDivReinDealGenTask extends BatchBaseService{
     @Autowired
     private MProdDivReinDealGenWriter step2Writer;
 
+    //add by mashukai TISHKBS-1640  高频开放货币型产品跑批过滤节假日 start
+    @Autowired
+    private MProdDivReinDealGenMapper mProdDivReinDealGenMapper;
+    //add by mashukai TISHKBS-1640  高频开放货币型产品跑批过滤节假日 end
     /**
      * {@inheritDoc}
      */
@@ -112,6 +121,37 @@ public class MProdDivReinDealGenTask extends BatchBaseService{
             logger.info("无启动参数，批处理退出。");
             return null;
         }
+
+        //add by mashukai TISHKBS-1640  高频开放货币型产品跑批过滤节假日 start
+        if (StringUtil.equals(CacheUtil.getSysParam("HOLIDAY_IS_DIVIDEND"),"N") ){
+            Map<String ,Object> dateMap = new HashMap<String ,Object>();
+            Date executeDate = batchExecuteInfo.getExecuteDate();
+            String executeDateDtr = DateUtil.format(executeDate);
+            dateMap.put("startDate",executeDate);
+            dateMap.put("endDate",executeDate);
+            List<String> calList = new ArrayList<String>();
+            List<Map<String,String>> holiday = mProdDivReinDealGenMapper.getIsHoliday(dateMap);
+            for (Map<String,String> map : holiday){
+                if (StringUtil.equals(executeDateDtr,map.get("holiDate"))){
+                    calList.add(map.get("calendarID"));
+                }
+            }
+            if(calList != null && calList.size() > 0){
+                logger.info("系统参数控制货币型高频开放产品节假日不自动进行红利再投");
+                Map<String,Object> serchMap =new HashMap<String,Object>();
+                serchMap.put("productIdList",this.getProductIdList());
+                serchMap.put("calList",calList);
+                List<String> productIdList = mProdDivReinDealGenMapper.selectProdList(serchMap);
+                if (productIdList.size() < 1){
+                    JobExecution result = new JobExecution(1l);
+                    result.setStatus(BatchStatus.COMPLETED);
+                    return result;
+                }else {
+                    this.setProductIdList(productIdList);
+                }
+            }
+        }
+        //add by mashukai TISHKBS-1640  高频开放货币型产品跑批过滤节假日 end
 
         // 设置此task的序列任务公用的params参数
         Map<String, Object> params = new HashMap<>();

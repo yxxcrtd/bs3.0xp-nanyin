@@ -1,0 +1,13 @@
+--批处理任务
+delete from SYS_BATCH_TASK where TASK_ID = '3052';
+
+INSERT INTO SYS_BATCH_TASK
+(TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES('3052', 'SVR', '理财报表生成批处理', NULL, 'productReportTask', 3270, 'system', NULL, sysdate, 'system', sysdate);
+
+--批处理任务组任务关联
+delete from SYS_BATCH_JOB where TASK_ID = '3052';
+
+INSERT INTO SYS_BATCH_JOB
+(BATCH_SEQ_NO, TASK_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES('rep', '3052', 'system', NULL, sysdate, 'system', sysdate);

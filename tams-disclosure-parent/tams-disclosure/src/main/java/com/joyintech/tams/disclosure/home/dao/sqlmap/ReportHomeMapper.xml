@@ -24,52 +24,79 @@
 		   	FROM
 		   	(select count(ces1.SUBMIT_STATUS) as delaynum from CHB_EQU_SUB  ces1 WHERE ces1.CHB_SUBMIT_DEADLINE &lt;= to_date(#{searchDateYesterday,jdbcType=VARCHAR}, 'yyyy-MM-dd HH24:mi:ss') and  ces1.SUBMIT_STATUS=#{NO_SUBMIT}
 		   	 <if test="createDeptList != null and createDeptList.size>0">
-				<foreach collection="createDeptList" item = "item" open="and ces1.CREATE_DEPT in(" separator="," close=")">
-				#{item,jdbcType=VARCHAR}
+				<foreach collection="createDeptList" item = "item" index="index" open="and (ces1.CREATE_DEPT in(" separator="," close="))">
+					<if test="(index % 999) == 998">
+						null) OR ces1.CREATE_DEPT in (
+					</if>
+					#{item,jdbcType=VARCHAR}
 				</foreach>
 			</if>
 			<if test="orgCodeList != null and orgCodeList.size>0">
-                <foreach collection="orgCodeList" item = "item" open=" and ces1.ORG_CODE in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
+                <foreach collection="orgCodeList" item = "item" index="index" open=" and (ces1.ORG_CODE in(" separator="," close="))">
+					<if test="(index % 999) == 998">
+						null) OR ces1.ORG_CODE in (
+					</if>
+                	#{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
             <if test="deptCodeList != null and deptCodeList.size>0">
-                <foreach collection="deptCodeList" item = "item" open=" and ces1.DEPT_CODE in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
+                <foreach collection="deptCodeList" item = "item" index="index" open=" and (ces1.DEPT_CODE in(" separator="," close="))">
+					<if test="(index % 999) == 998">
+						null) OR ces1.DEPT_CODE in (
+					</if>
+               	 	#{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
 		   	 ) delayData ,
 			(select count(ces2.SUBMIT_STATUS) as delayingnum , min(ces2.SUBMIT_DEADLINE) as mindate, max(ces2.CHB_SUBMIT_DEADLINE) as maxdate from CHB_EQU_SUB  ces2 WHERE ces2.CHB_SUBMIT_DEADLINE &gt; to_date(#{searchDateYesterday,jdbcType=VARCHAR}, 'yyyy-MM-dd HH24:mi:ss') and ces2.SUBMIT_DEADLINE &lt;= to_date(#{searchDate,jdbcType=VARCHAR}, 'yyyy-MM-dd HH24:mi:ss') and ces2.SUBMIT_STATUS=#{NO_SUBMIT} 
 			<if test="createDeptList != null and createDeptList.size>0">
-				<foreach collection="createDeptList" item = "item" open="and ces2.CREATE_DEPT in(" separator="," close=")">
-				#{item,jdbcType=VARCHAR}
+				<foreach collection="createDeptList" item = "item" index="index" open="and (ces2.CREATE_DEPT in(" separator="," close="))">
+					<if test="(index % 999) == 998">
+						null) OR ces2.CREATE_DEPT in (
+					</if>
+					#{item,jdbcType=VARCHAR}
 				</foreach>
 			</if>
             <if test="orgCodeList != null and orgCodeList.size>0">
-                <foreach collection="orgCodeList" item = "item" open=" and ces2.ORG_CODE in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
+                <foreach collection="orgCodeList" item = "item" index="index" open=" and (ces2.ORG_CODE in(" separator="," close="))">
+					<if test="(index % 999) == 998">
+						null) OR ces2.ORG_CODE in (
+					</if>
+                	#{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
             <if test="deptCodeList != null and deptCodeList.size>0">
-                <foreach collection="deptCodeList" item = "item" open=" and ces2.DEPT_CODE in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
+                <foreach collection="deptCodeList" item = "item" index="index" open=" and (ces2.DEPT_CODE in(" separator="," close="))">
+					<if test="(index % 999) == 998">
+						null) OR ces2.DEPT_CODE in (
+					</if>
+                	#{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
 			) delayingData,
 			(select count(ces3.SUBMIT_STATUS) as sendnum from CHB_EQU_SUB  ces3 WHERE ces3.CHB_SUBMIT_DEADLINE &gt; to_date(#{searchDate,jdbcType=VARCHAR}, 'yyyy-MM-dd HH24:mi:ss') and ces3.SUBMIT_STATUS=#{NO_SUBMIT}  
 			<if test="createDeptList != null and createDeptList.size>0">
-				<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
-				#{item,jdbcType=VARCHAR}
+				<foreach collection="createDeptList" item = "item" index="index" open="and (ces3.CREATE_DEPT in(" separator="," close="))">
+					<if test="(index % 999) == 998">
+						null) OR ces3.CREATE_DEPT in (
+					</if>
+					#{item,jdbcType=VARCHAR}
 				</foreach>
 			</if>
             <if test="orgCodeList != null and orgCodeList.size>0">
-                <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
+                <foreach collection="orgCodeList" item = "item" index="index" open=" and (ces3.ORG_CODE in(" separator="," close="))">
+					<if test="(index % 999) == 998">
+						null) OR ces3.ORG_CODE in (
+					</if>
+                	#{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
             <if test="deptCodeList != null and deptCodeList.size>0">
-                <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
+                <foreach collection="deptCodeList" item = "item" index="index" open=" and (ces3.DEPT_CODE in(" separator="," close="))">
+					<if test="(index % 999) == 998">
+						null) OR ces3.DEPT_CODE in (
+					</if>
+                	#{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
 			) sendData
@@ -84,52 +111,79 @@
 		   	FROM
 		   	(select count(ciis1.SEND_STATUS) as delaynum from CHB_INVESTHOLD_INFO_SUB  ciis1 WHERE ciis1.CHB_SUBMIT_DEADLINE &lt;= to_date(#{searchDateYesterday,jdbcType=VARCHAR}, 'yyyy-MM-dd HH24:mi:ss') and  ciis1.SEND_STATUS=#{NO_SUBMIT} 
 		   	<if test="createDeptList != null and createDeptList.size>0">
-				<foreach collection="createDeptList" item = "item" open="and ciis1.CREATE_DEPT in(" separator="," close=")">
-				#{item,jdbcType=VARCHAR}
+				<foreach collection="createDeptList" item = "item" index="index" open="and (ciis1.CREATE_DEPT in(" separator="," close="))">
+					<if test="(index % 999) == 998">
+						null) OR ciis1.CREATE_DEPT in (
+					</if>
+					#{item,jdbcType=VARCHAR}
 				</foreach>
 			</if>
 			<if test="orgCodeList != null and orgCodeList.size>0">
-                <foreach collection="orgCodeList" item = "item" open=" and ciis1.ORG_CODE in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
+                <foreach collection="orgCodeList" item = "item" index="index" open=" and (ciis1.ORG_CODE in(" separator="," close="))">
+					<if test="(index % 999) == 998">
+						null) OR ciis1.ORG_CODE in (
+					</if>
+                	#{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
             <if test="deptCodeList != null and deptCodeList.size>0">
-                <foreach collection="deptCodeList" item = "item" open=" and ciis1.DEPT_CODE in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
+                <foreach collection="deptCodeList" item = "item" index="index" open=" and (ciis1.DEPT_CODE in(" separator="," close="))">
+					<if test="(index % 999) == 998">
+						null) OR ciis1.DEPT_CODE in (
+					</if>
+                	#{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
 		   	) delayData ,
 			(select count(ciis2.SEND_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.CHB_SUBMIT_DEADLINE) as maxdate from CHB_INVESTHOLD_INFO_SUB  ciis2 WHERE ciis2.CHB_SUBMIT_DEADLINE &gt; to_date(#{searchDateYesterday,jdbcType=VARCHAR}, 'yyyy-MM-dd HH24:mi:ss') and ciis2.SUBMIT_DEADLINE &lt;= to_date(#{searchDate,jdbcType=VARCHAR}, 'yyyy-MM-dd HH24:mi:ss') and ciis2.SEND_STATUS=#{NO_SUBMIT}
 			<if test="createDeptList != null and createDeptList.size>0">
-				<foreach collection="createDeptList" item = "item" open="and ciis2.CREATE_DEPT in(" separator="," close=")">
-				#{item,jdbcType=VARCHAR}
+				<foreach collection="createDeptList" item = "item" index="index" open="and (ciis2.CREATE_DEPT in(" separator="," close="))">
+					<if test="(index % 999) == 998">
+						null) OR ciis2.CREATE_DEPT in (
+					</if>
+					#{item,jdbcType=VARCHAR}
 				</foreach>
 			</if>
             <if test="orgCodeList != null and orgCodeList.size>0">
-                <foreach collection="orgCodeList" item = "item" open=" and ciis2.ORG_CODE in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
+                <foreach collection="orgCodeList" item = "item" index="index" open=" and (ciis2.ORG_CODE in(" separator="," close="))">
+					<if test="(index % 999) == 998">
+						null) OR ciis2.ORG_CODE in (
+					</if>
+                	#{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
             <if test="deptCodeList != null and deptCodeList.size>0">
-                <foreach collection="deptCodeList" item = "item" open=" and ciis2.DEPT_CODE in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
+                <foreach collection="deptCodeList" item = "item" index="index" open=" and (ciis2.DEPT_CODE in(" separator="," close="))">
+					<if test="(index % 999) == 998">
+						null) OR ciis2.DEPT_CODE in (
+					</if>
+                	#{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
 			 ) delayingData,
 			(select count(ciis3.SEND_STATUS) as sendnum from CHB_INVESTHOLD_INFO_SUB  ciis3 WHERE ciis3.SUBMIT_DEADLINE &gt; to_date(#{searchDate,jdbcType=VARCHAR}, 'yyyy-MM-dd HH24:mi:ss') and ciis3.SEND_STATUS=#{NO_SUBMIT} 
 			<if test="createDeptList != null and createDeptList.size>0">
-				<foreach collection="createDeptList" item = "item" open="and ciis3.CREATE_DEPT in(" separator="," close=")">
-				#{item,jdbcType=VARCHAR}
+				<foreach collection="createDeptList" item = "item" index="index" open="and (ciis3.CREATE_DEPT in(" separator="," close="))">
+					<if test="(index % 999) == 998">
+						null) OR ciis3.CREATE_DEPT in (
+					</if>
+					#{item,jdbcType=VARCHAR}
 				</foreach>
 			</if>
             <if test="orgCodeList != null and orgCodeList.size>0">
-                <foreach collection="orgCodeList" item = "item" open=" and ciis3.ORG_CODE in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
+                <foreach collection="orgCodeList" item = "item" index="index" open=" and (ciis3.ORG_CODE in(" separator="," close="))">
+					<if test="(index % 999) == 998">
+						null) OR ciis3.ORG_CODE in (
+					</if>
+                	#{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
             <if test="deptCodeList != null and deptCodeList.size>0">
-                <foreach collection="deptCodeList" item = "item" open=" and ciis3.DEPT_CODE in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
+                <foreach collection="deptCodeList" item = "item" index="index" open=" and (ciis3.DEPT_CODE in(" separator="," close="))">
+					<if test="(index % 999) == 998">
+						null) OR ciis3.DEPT_CODE in (
+					</if>
+                	#{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
 			) sendData
@@ -159,17 +213,26 @@
 				CHB_EQU_HOLD ceh
 			WHERE ceh.STATUS='A'
 			<if test="createDeptList != null and createDeptList.size>0">
-			<foreach collection="createDeptList" item = "item" open="and ceh.CREATE_DEPT in(" separator="," close=")">
+			<foreach collection="createDeptList" item = "item" index="index" open="and (ceh.CREATE_DEPT in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR ceh.CREATE_DEPT in (
+				</if>
 				#{item,jdbcType=VARCHAR}
 			</foreach>
 			</if>
 			<if test="orgCodeList != null and orgCodeList.size>0">
-            <foreach collection="orgCodeList" item = "item" open=" and ceh.ORG_CODE in(" separator="," close=")">
+            <foreach collection="orgCodeList" item = "item" index="index" open=" and (ceh.ORG_CODE in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR ceh.ORG_CODE in (
+				</if>
                 #{item,jdbcType=VARCHAR}
             </foreach>
             </if>
             <if test="deptCodeList != null and deptCodeList.size>0">
-            <foreach collection="deptCodeList" item = "item" open=" and ceh.DEPT_CODE in(" separator="," close=")">
+            <foreach collection="deptCodeList" item = "item" index="index" open=" and (ceh.DEPT_CODE in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR ceh.DEPT_CODE in (
+				</if>
                 #{item,jdbcType=VARCHAR}
             </foreach>
             </if>
@@ -181,17 +244,26 @@
 				CHB_EQUDET ce
 			WHERE ce.STATUS='A'
 			<if test="createDeptList != null and createDeptList.size>0">
-			<foreach collection="createDeptList" item = "item" open="and ce.CREATE_DEPT in(" separator="," close=")">
+			<foreach collection="createDeptList" item = "item" index="index" open="and (ce.CREATE_DEPT in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR ce.CREATE_DEPT in (
+				</if>
 				#{item,jdbcType=VARCHAR}
 			</foreach>
 			</if>
             <if test="orgCodeList != null and orgCodeList.size>0">
-            <foreach collection="orgCodeList" item = "item" open=" and ce.ORG_CODE in(" separator="," close=")">
+            <foreach collection="orgCodeList" item = "item" index="index" open=" and (ce.ORG_CODE in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR ce.ORG_CODE in (
+				</if>
                 #{item,jdbcType=VARCHAR}
             </foreach>
             </if>
             <if test="deptCodeList != null and deptCodeList.size>0">
-            <foreach collection="deptCodeList" item = "item" open=" and ce.DEPT_CODE in(" separator="," close=")">
+            <foreach collection="deptCodeList" item = "item" index="index" open=" and (ce.DEPT_CODE in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR ce.DEPT_CODE in (
+				</if>
                 #{item,jdbcType=VARCHAR}
             </foreach>
             </if>
@@ -206,17 +278,26 @@
 			WHERE (cpc.REG_CODE is NULL or cpc.REG_CODE = '')
 			<!-- modify by wm 合DB2版本代码  2018-07-23 end--> 
 			<if test="createDeptList != null and createDeptList.size>0">
-			<foreach collection="createDeptList" item = "item" open="and cpc.CREATE_DEPT in(" separator="," close=")">
+			<foreach collection="createDeptList" item = "item" index="index" open="and (cpc.CREATE_DEPT in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR cpc.CREATE_DEPT in (
+				</if>
 				#{item,jdbcType=VARCHAR}
 			</foreach>
 			</if>
             <if test="orgCodeList != null and orgCodeList.size>0">
-            <foreach collection="orgCodeList" item = "item" open=" and cpc.ORG_CODE in(" separator="," close=")">
+            <foreach collection="orgCodeList" item = "item" index="index" open=" and (cpc.ORG_CODE in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR cpc.ORG_CODE in (
+				</if>
                 #{item,jdbcType=VARCHAR}
             </foreach>
             </if>
             <if test="deptCodeList != null and deptCodeList.size>0">
-            <foreach collection="deptCodeList" item = "item" open=" and cpc.DEPT_CODE in(" separator="," close=")">
+            <foreach collection="deptCodeList" item = "item" index="index" open=" and (cpc.DEPT_CODE in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR cpc.DEPT_CODE in (
+				</if>
                 #{item,jdbcType=VARCHAR}
             </foreach>
             </if>
@@ -228,17 +309,26 @@
 				CHB_INVESTHOLD_INFO cii
 			WHERE cii.STATUS='A'
 			<if test="createDeptList != null and createDeptList.size>0">
-			<foreach collection="createDeptList" item = "item" open="and cii.CREATE_DEPT in(" separator="," close=")">
+			<foreach collection="createDeptList" item = "item" index="index" open="and (cii.CREATE_DEPT in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR cii.CREATE_DEPT in (
+				</if>
 				#{item,jdbcType=VARCHAR}
 			</foreach>
 			</if>
             <if test="orgCodeList != null and orgCodeList.size>0">
-            <foreach collection="orgCodeList" item = "item" open=" and cii.ORG_CODE in(" separator="," close=")">
+            <foreach collection="orgCodeList" item = "item" index="index" open=" and (cii.ORG_CODE in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR cii.ORG_CODE in (
+				</if>
                 #{item,jdbcType=VARCHAR}
             </foreach>
             </if>
             <if test="deptCodeList != null and deptCodeList.size>0">
-            <foreach collection="deptCodeList" item = "item" open=" and cii.DEPT_CODE in(" separator="," close=")">
+            <foreach collection="deptCodeList" item = "item" index="index" open=" and (cii.DEPT_CODE in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR cii.DEPT_CODE in (
+				</if>
                 #{item,jdbcType=VARCHAR}
             </foreach>
             </if>
@@ -256,17 +346,26 @@
 				CHB_EQU_SUB ces
 			WHERE ces.STATUS='03' and ces.SUBMIT_STATUS='01'
 			<if test="createDeptList != null and createDeptList.size>0">
-			<foreach collection="createDeptList" item = "item" open="and ces.CREATE_DEPT in(" separator="," close=")">
+			<foreach collection="createDeptList" item = "item" index="index" open="and (ces.CREATE_DEPT in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR ces.CREATE_DEPT in (
+				</if>
 				#{item,jdbcType=VARCHAR}
 			</foreach>
 			</if>
             <if test="orgCodeList != null and orgCodeList.size>0">
-            <foreach collection="orgCodeList" item = "item" open=" and ces.ORG_CODE in(" separator="," close=")">
+            <foreach collection="orgCodeList" item = "item" index="index" open=" and (ces.ORG_CODE in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR ces.ORG_CODE in (
+				</if>
                 #{item,jdbcType=VARCHAR}
             </foreach>
             </if>
             <if test="deptCodeList != null and deptCodeList.size>0">
-            <foreach collection="deptCodeList" item = "item" open=" and ces.DEPT_CODE in(" separator="," close=")">
+            <foreach collection="deptCodeList" item = "item" index="index" open=" and (ces.DEPT_CODE in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR ces.DEPT_CODE in (
+				</if>
                 #{item,jdbcType=VARCHAR}
             </foreach>
             </if>
@@ -279,17 +378,26 @@
 				CHB_INVESTHOLD_INFO_SUB ciis
 			WHERE ciis.STATUS='03' and ciis.SEND_STATUS='01'
 			<if test="createDeptList != null and createDeptList.size>0">
-			<foreach collection="createDeptList" item = "item" open="and ciis.CREATE_DEPT in(" separator="," close=")">
+			<foreach collection="createDeptList" item = "item" index="index" open="and (ciis.CREATE_DEPT in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR ciis.CREATE_DEPT in (
+				</if>
 				#{item,jdbcType=VARCHAR}
 			</foreach>
 			</if>
             <if test="orgCodeList != null and orgCodeList.size>0">
-            <foreach collection="orgCodeList" item = "item" open=" and ciis.ORG_CODE in(" separator="," close=")">
+            <foreach collection="orgCodeList" item = "item" index="index" open=" and (ciis.ORG_CODE in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR ciis.ORG_CODE in (
+				</if>
                 #{item,jdbcType=VARCHAR}
             </foreach>
             </if>
             <if test="deptCodeList != null and deptCodeList.size>0">
-            <foreach collection="deptCodeList" item = "item" open=" and ciis.DEPT_CODE in(" separator="," close=")">
+            <foreach collection="deptCodeList" item = "item" index="index" open=" and (ciis.DEPT_CODE in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR ciis.DEPT_CODE in (
+				</if>
                 #{item,jdbcType=VARCHAR}
             </foreach>
             </if>

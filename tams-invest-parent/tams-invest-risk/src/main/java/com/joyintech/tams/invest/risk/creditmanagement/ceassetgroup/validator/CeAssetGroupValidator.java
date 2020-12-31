@@ -1,12 +1,5 @@
 package com.joyintech.tams.invest.risk.creditmanagement.ceassetgroup.validator;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -18,6 +11,12 @@ import com.joyintech.tams.invest.risk.creditmanagement.ceassetgroup.dto.CreditLi
 import com.joyintech.tams.invest.risk.creditmanagement.ceassetgroup.service.CeAssetGroup002Service;
 import com.joyintech.tams.invest.risk.creditmanagement.ceorg.service.CeOrg002Service;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 资产系列授信验证
@@ -48,22 +47,22 @@ public class CeAssetGroupValidator implements BeanValidator{
                         getMessage("BUSS_COM_E_0003", getMessage("CeAssetGroup002.vdate"),getMessage("CeAssetGroup002.mdate"))));
                 }
             }
-        	if(StringUtil.isNotEmpty(dto.getCustomerId())&&StringUtil.isNotEmpty(dto.getVdate())&&StringUtil.isNotEmpty(dto.getMdate())){
-	            int vcount= ceOrg002Service.searchRepeatByVmDate(dto.getSeqno(),dto.getCustomerId(), dto.getVdate());
-	            if(vcount>0){
-	            	resultList.add(new ValidMessage("vdate", getMessage("RSK_W_0039",getMessage("CeAssetGroup002.vdate"))));
-	            }
-	            int mcount= ceOrg002Service.searchRepeatByVmDate(dto.getSeqno(),dto.getCustomerId(),  dto.getMdate());
-	            if(mcount>0){
-	            	resultList.add(new ValidMessage("mdate", getMessage("RSK_W_0039",getMessage("CeAssetGroup002.mdate"))));
-	            }
-	            if(vcount<=0&&mcount<=0){
-		            int mscount= ceOrg002Service.searchRepeatByVmDateArea(dto.getSeqno(),dto.getCustomerId(),dto.getVdate(),  dto.getMdate());
-		            if(mscount>0){
-		            	resultList.add(new ValidMessage("", getMessage("RSK_W_0039",getMessage("CeOrg002.vmdate"))));
-		            }
-	            }
-        	}
+//        	if(StringUtil.isNotEmpty(dto.getCustomerId())&&StringUtil.isNotEmpty(dto.getVdate())&&StringUtil.isNotEmpty(dto.getMdate())){
+//	            int vcount= ceOrg002Service.searchRepeatByVmDate(dto.getSeqno(),dto.getCustomerId(), dto.getVdate());
+//	            if(vcount>0){
+//	            	resultList.add(new ValidMessage("vdate", getMessage("RSK_W_0039",getMessage("CeAssetGroup002.vdate"))));
+//	            }
+//	            int mcount= ceOrg002Service.searchRepeatByVmDate(dto.getSeqno(),dto.getCustomerId(),  dto.getMdate());
+//	            if(mcount>0){
+//	            	resultList.add(new ValidMessage("mdate", getMessage("RSK_W_0039",getMessage("CeAssetGroup002.mdate"))));
+//	            }
+//	            if(vcount<=0&&mcount<=0){
+//		            int mscount= ceOrg002Service.searchRepeatByVmDateArea(dto.getSeqno(),dto.getCustomerId(),dto.getVdate(),  dto.getMdate());
+//		            if(mscount>0){
+//		            	resultList.add(new ValidMessage("", getMessage("RSK_W_0039",getMessage("CeOrg002.vmdate"))));
+//		            }
+//	            }
+//        	}
         	if(StringUtil.isNotEmpty(dto.getPflsh())){
         		int count= ceOrg002Service.searchRepeatByPflsh(dto.getPflsh(),dto.getSeqno(),"");
  	            if(count>0){

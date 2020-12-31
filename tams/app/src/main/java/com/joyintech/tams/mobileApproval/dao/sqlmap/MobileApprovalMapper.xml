@@ -96,7 +96,8 @@
     </select>
     
     <select id="getMyWorkflowId" resultType="com.joyintech.tams.mobileApproval.dto.ReturnTodoDto">
-        select 
+       select distinct result.workflowId,result.pageId
+       from  (select
         	n.seq_no workflowId,
         	l.page_id pageId,
         	n.update_time updateDate
@@ -111,7 +112,7 @@
       		and nvl(l.next_user,' ') not like '%,${userId}'
       		and nvl(l.next_user,' ') not like '%,${userId},%'
         </if>
-         order by n.create_time desc
+         order by n.create_time desc) result
     </select>
 
     <select id="queryCandidateUser" resultType="com.joyintech.tams.mobileApproval.dto.WflNextReviewerDto">

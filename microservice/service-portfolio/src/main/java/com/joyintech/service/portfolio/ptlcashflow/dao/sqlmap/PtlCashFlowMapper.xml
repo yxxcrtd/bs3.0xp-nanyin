@@ -432,7 +432,8 @@
 	     	distinct
 	     	FINPROD_ID AS object,
 	     	FINPROD_MARKET_ID AS id,
-	     	FINPROD_ABBR AS text
+	     	FINPROD_ABBR AS text,
+			 FINPROD_TYPE2
 	     FROM FIN_PRODUCT
 	     <where>
 	     	<if test="finprodType2 == null or finprodType2 == ''">

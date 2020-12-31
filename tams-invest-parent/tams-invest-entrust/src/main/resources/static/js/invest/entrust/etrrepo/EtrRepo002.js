@@ -46,6 +46,86 @@
         var object = {tradeDirection:['ps','EtrRepo002.ps'],portfolioCode:['portfolioId','EtrRepo002.portfolioId'],tradeAmount:['entrustAmt','EtrRepo002.entrustAmt'],assetType:['assetType1','EtrRepo002.assetType1'],data:obj}
         return object;
     }
+
+
+    /**
+     * 回购期限
+     */
+    var repoTermChangeAction = function(){
+        var repoterm = $('#repoTerm').val();
+        var re = /^[0-9]*$/;
+        if(repoterm && re.test(repoterm)){
+            var vdate = $('#vdate').val();
+            if(vdate){
+                //回购期限联动期限品种
+                $('#termType').val(getTermType(vdate,repoterm)).trigger('change');
+            }
+        }else{
+            $('#termType').val("").trigger('change');
+        }
+    };
+
+    /**
+     * 获取期限品种  date(yyyy-MM-dd),repoterm
+     */
+    function getTermType(date,repoterm) {
+        if(repoterm&&repoterm<=21){
+            //期限品种小于21天
+            if(repoterm==1){
+                return R001;
+            }
+            if(repoterm>1&&repoterm<=7){
+                return R007;
+            }
+            if(repoterm>7&&repoterm<=14){
+                return R014;
+            }
+            if(repoterm>14&&repoterm<=21){
+                return R021;
+            }
+        }
+        var day=0;
+        //date为空时  返回0
+        if(date&&repoterm){
+            //获取日期
+            date =DateUtil.parse(date);
+            //获取之后月00天 即本月最后一天
+            day= new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+1,0).getDate();
+            if(repoterm<=day){
+                return R1M;
+            }
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+2,0).getDate();
+            if(repoterm<=day){
+                return R2M;
+            }
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+3,0).getDate();
+            if(repoterm<=day){
+                return R3M;
+            }
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+4,0).getDate();
+            if(repoterm<=day){
+                return R4M;
+            }
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+5,0).getDate();
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+6,0).getDate();
+            if(repoterm<=day){
+                return R6M;
+            }
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+7,0).getDate();
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+8,0).getDate();
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+9,0).getDate();
+            if(repoterm<=day){
+                return R9M;
+            }
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+10,0).getDate();
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+11,0).getDate();
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+12,0).getDate();
+            if(repoterm<=day){
+                return R1Y;
+            }
+        }
+        return null;
+    }
     /**
      * 保存或提交
      * 
@@ -72,6 +152,23 @@
          * 获取列表参数
          */
         var object = $.serializeToObject('#searchForm');
+        
+        // 指令授信 start
+        object.inputValue1 = 'F07';
+        object.tradeAmt = object.entrustAmt;
+        object.prinAmt = object.entrustAmt;
+        object.tradeDate = $('#vdate').val();
+        object.counterId = object.etrInvestPersonInfo.counterId;
+        object.branch = '0';
+        object.repoType = $('#assetType1').val();
+//        object.remark = object.repoType;
+        if(object.ps == '03'){
+        	object.finprodType2 = 'F02';
+        }else{
+        	object.finprodType2 = 'F03';
+        }
+        // 指令授信 end
+        
         object.etrInvestPersonInfo.invManagerId = $('#etrInvestPersonInfo_invManagerId').val();
         object.operateType = operateType;
 		object.assetType1 = $('#assetType1').val();
@@ -383,6 +480,13 @@
             }
         });
 
+        // 回购期限
+        $('#repoTerm').on('change',function(){
+            if($('#tradeMarket').val() == tradeP01 || ($('#tradeMarket').val() == tradeP02  && $("#assetType1").val() == repoTypeH01)){
+                repoTermChangeAction();
+            }
+        });
+
         $('#tradeMarket').on("change", function (e, isInit) {
             var tradeMarket = $('#tradeMarket').val();
             var assetType1 = $('#assetType1').val();
@@ -415,7 +519,7 @@
                     $('#settleSpreed').val(speed0).attr('disabled',false).trigger('change');
                 }
                 $('#termType_div').show();
-                $('#assetType1').val(repoTypeH01).attr('disabled',true).change();               
+                $('#assetType1').val(repoTypeH04).attr('disabled',true).change();               
                 if (pageModel == PAGE_MODEL_NEW) {
                     $("#chlId").val('').trigger("change").prop("disabled", false);
                 }
@@ -436,7 +540,9 @@
                 tradeP01: tradeP01,
                 repoType: $('#assetType1').val(),
                 repoTypeH02: repoTypeH02,
-                repoTypeH01: repoTypeH01});
+                repoTypeH01: repoTypeH01,
+                repoTypeH04: repoTypeH04
+                });
             
             if ($('#assetType1').val() == repoTypeH02) {
             	$("#repoTerm").val("").prop("disabled", true);
@@ -462,9 +568,37 @@
             var tradeMarket = $('#tradeMarket').val();
             if(tradeMarket == tradeP01){
                 $('#calendarId').textSelect('setValue','03');
+                //add by yujiaping 2020-11-26 BS-1144 交易市场选择“银行间”，回购类型为“质押式回购”start
+                if(pageModel!=PAGE_MODEL_REFERENCE){
+            		$("#assetType1").textSelect('setValue', repoTypeH04);
+                    $('#assetType1').attr('disabled',false);
+                    var $repoType = $('#assetType1');
+                    if($("#tradeMarket").val() == tradeP01){
+                        $repoType.updateChosenArr({
+                            item: [repoTypeH04],
+                            chosen: repoTypeH04,
+                            disabled: false
+                        });
+                    }
+            	}
+                //add by yujiaping 2020-11-26 BS-1144 交易市场选择“银行间”，回购类型为“质押式回购”end
             }
             if(tradeMarket == tradeP02){
                 $('#calendarId').textSelect('setValue','04');
+                //上交所:回购类型去掉质押式回购  add by yujiaping 2020-11-26 start
+                if(pageModel!=PAGE_MODEL_REFERENCE){
+            		$("#assetType1").textSelect('setValue', repoTypeH02);
+                    $('#assetType1').attr('disabled',false);
+                    var $repoType = $('#assetType1');
+                    if($("#tradeMarket").val() == tradeP02){
+                        $repoType.updateChosenArr({
+                            item: [repoTypeH02,repoTypeH01],
+                            chosen: repoTypeH02,
+                            disabled: false
+                        });
+                    }
+            	}
+                //上交所:回购类型去掉质押式回购  add by yujiaping 2020-11-26 end
             }
             if(tradeMarket == tradeP03){
                 $('#calendarId').textSelect('setValue','05');
@@ -476,7 +610,9 @@
                                     //深圳证券交易所:回购类型为质押式竞价回购  add by start
                                     if($("#tradeMarket").val() == tradeP03){
                                         $repoType.updateChosenArr({
-                                            item: [repoTypeH02],
+                                        	//BS-1144深圳证券交易所:回购类型放开质押式协议回购  add by yujiaping 2020-11-26 start
+                                            item: [repoTypeH02,repoTypeH01],
+                                            //BS-1144深圳证券交易所:回购类型放开质押式协议回购  add by yujiaping 2020-11-26 end
                                             chosen: repoTypeH02,
                                             disabled: false
                                         });
@@ -484,11 +620,11 @@
                                     //深圳证券交易所:回购类型为质押式竞价回购  add by end
                             	}
             }
-            if (tradeMarket == tradeP01){
+           /* if (tradeMarket == tradeP01){
                 $('#assetType1Div').hide();
             } else {
                 $('#assetType1Div').show();
-            }
+            }*/
         });
         //bug:YUCHUBS-429 guyunfei 2019/08/31 end--
         
@@ -554,7 +690,9 @@
                 tradeP01: tradeP01,
                 repoType: assetType1,
                 repoTypeH02: repoTypeH02,
-                repoTypeH01: repoTypeH01});
+                repoTypeH01: repoTypeH01,
+                repoTypeH04: repoTypeH04
+                });
            
             if (assetType1 == repoTypeH02) {
             	$("#repoTerm").val("").prop("disabled", true);
@@ -626,6 +764,13 @@
         
         $('#termType').change(function(){
             var termType = $('#termType').val();
+
+            if(termType == R001 || termType == R007 || termType == R014 || termType == R021 ||
+            						termType == R1M || termType == R2M || termType == R3M ||
+            						termType == R4M || termType == R6M || termType == R9M ||termType == R1Y ){
+            					return;
+            }
+
             if(termType == GC001){
                 $('#repoTerm').val(1).attr('disabled',true).change();
                 $('#mdateAdd').attr('disabled',true);
@@ -653,19 +798,21 @@
             }else if(termType == GC182){
                 $('#repoTerm').val(182).attr('disabled',true).change();
                 $('#mdateAdd').attr('disabled',true);
-            }else if(termType == R001){
-                $('#repoTerm').val(1).attr('disabled',true).change();
-                $('#mdateAdd').attr('disabled',true);
-            }else if(termType == R007){
-                $('#repoTerm').val(7).attr('disabled',true).change();
-                $('#mdateAdd').attr('disabled',true);
-            }else if(termType == R014){
-                $('#repoTerm').val(14).attr('disabled',true).change();
-                $('#mdateAdd').attr('disabled',true);
-            }else if(termType == R021){
-                $('#repoTerm').val(21).attr('disabled',true).change();
-                $('#mdateAdd').attr('disabled',true);
-            }else if(termType == RC001){
+            }
+//            else if(termType == R001){
+//                $('#repoTerm').val(1).attr('disabled',true).change();
+//                $('#mdateAdd').attr('disabled',true);
+//            }else if(termType == R007){
+//                $('#repoTerm').val(7).attr('disabled',true).change();
+//                $('#mdateAdd').attr('disabled',true);
+//            }else if(termType == R014){
+//                $('#repoTerm').val(14).attr('disabled',true).change();
+//                $('#mdateAdd').attr('disabled',true);
+//            }else if(termType == R021){
+//                $('#repoTerm').val(21).attr('disabled',true).change();
+//                $('#mdateAdd').attr('disabled',true);
+//            }
+            else if(termType == RC001){
                 $('#repoTerm').val(1).attr('disabled',true).change();
                 $('#mdateAdd').attr('disabled',true);
             }else if(termType == RC003){
@@ -701,22 +848,24 @@
             }else if(termType == R_182){
                 $('#repoTerm').val(182).attr('disabled',true).change();
                 $('#mdateAdd').attr('disabled',true);
-            }else if(termType == R1M){
-                $('#repoTerm').val(30).attr('disabled',true).change();
-                $('#mdateAdd').attr('disabled',true);
-            }else if(termType == R2M){
-                $('#repoTerm').val(60).attr('disabled',true).change();
-                $('#mdateAdd').attr('disabled',true);
-            }else if(termType == R3M){
-                $('#repoTerm').val(90).attr('disabled',true).change();
-                $('#mdateAdd').attr('disabled',true);
-            }else if(termType == R4M){
-                $('#repoTerm').val(120).attr('disabled',true).change();
-                $('#mdateAdd').attr('disabled',true);
-            }else if(termType == R6M){
-                $('#repoTerm').val(180).attr('disabled',true).change();
-                $('#mdateAdd').attr('disabled',true);
-            }else{
+            }
+//            else if(termType == R1M){
+//                $('#repoTerm').val(30).attr('disabled',true).change();
+//                $('#mdateAdd').attr('disabled',true);
+//            }else if(termType == R2M){
+//                $('#repoTerm').val(60).attr('disabled',true).change();
+//                $('#mdateAdd').attr('disabled',true);
+//            }else if(termType == R3M){
+//                $('#repoTerm').val(90).attr('disabled',true).change();
+//                $('#mdateAdd').attr('disabled',true);
+//            }else if(termType == R4M){
+//                $('#repoTerm').val(120).attr('disabled',true).change();
+//                $('#mdateAdd').attr('disabled',true);
+//            }else if(termType == R6M){
+//                $('#repoTerm').val(180).attr('disabled',true).change();
+//                $('#mdateAdd').attr('disabled',true);
+//            }
+            else{
                 $('#mdateAdd').attr('disabled',false);
                 $('#repoTerm').attr('disabled',false);
             }

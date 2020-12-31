@@ -148,6 +148,17 @@
         var objects = object.bussCombDistribtList;   
         for ( var index in objects) {
            var temp = objects[index];
+           // 指令授信 start
+           temp.finprodType2 = 'F17';
+           temp.inputValue1 = 'F09';
+           temp.tradeAmt = temp.entrustNum;
+           temp.prinAmt = temp.entrustNum;
+           if(temp.entrustAmt) {
+        	   temp.tradeAmt =temp.entrustAmt;
+        	   temp.prinAmt =temp.entrustAmt;
+           }
+           temp.tradeDate = temp.vdate;
+           // 指令授信 end
             temp.operateType = operateType;
             temp.pageModel = pageModel;
             if (operateType === 'save') {

@@ -5177,7 +5177,7 @@ public class SecDealAccountsService {
         - 	(成本金额_本位币 + 印花税_本位币 + 经手费_本位币 + 证管费_本位币 + 结算费_本位币 + 佣金_本位币 + 交易手续费_本位币
                 + 结算手续费_本位币 + 变量.公允价值变动(贷)_本位币 + 变量.利息差额(贷)_本位币 + 利息金额_本位币) **/
         BigDecimal 买卖价差本位币1 = ArithmeticUtil.doAdd(
-                accountAmountBCCYAMTMap.get(BookConstant.DEALAMT),//交易金额_本位币
+                accountAmountBCCYAMTMap.get(BookConstant.DEALAMT + BookConstant.BCCYAMT),//交易金额_本位币
                 //冲减公允价值变动借本位币,//冲减公允价值变动（借)_本位币
                 accountAmountBCCYAMTMap.get(BookConstant.CHLAMT + BookConstant.BCCYAMT),//实付通道费_本位币
                 accountAmountBCCYAMTMap.get(BookConstant.SETTLEMENTFEE_OUT + BookConstant.BCCYAMT),//结算手续费支出_本位币

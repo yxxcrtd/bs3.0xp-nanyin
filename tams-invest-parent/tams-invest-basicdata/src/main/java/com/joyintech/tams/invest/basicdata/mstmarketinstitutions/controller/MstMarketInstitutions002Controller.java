@@ -114,8 +114,12 @@ public class MstMarketInstitutions002Controller extends BaseController{
         this.setSelectOptionToModel(model,DictCode.发行机构类型_按经济类型划分 );
         //发行机构类型_按技术领域划分
         this.setSelectOptionToModel(model,DictCode.发行机构类型_按技术领域划分 );
-        //发行机构类型_按规模划分
-        this.setSelectOptionToModel(model,DictCode.发行机构类型_按规模划分 );
+        // 20200819 机构类型（规模）参数取值 市场机构机构类型（规模） wangwei start
+//        //发行机构类型_按规模划分
+//        this.setSelectOptionToModel(model,DictCode.发行机构类型_按规模划分 );
+        // 市场机构机构类型(规模)
+        this.setSelectOptionToModel(model,DictCode.市场机构机构类型 );
+        // 20200819 机构类型（规模）参数取值 市场机构机构类型（规模） wangwei end
         //授信策略
         this.setSelectOptionToModel(model,DictCode.授信策略 );
         //表格数据字典

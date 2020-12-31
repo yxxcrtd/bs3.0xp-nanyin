@@ -673,4 +673,13 @@ public class TrdRepoTradeService extends BaseService<TrdRepoTradeDto> {
     public List<TrdMatchInfo> selectPreTradeId(Map<String, Object> params) {
         return trdRepoTradeMapper.selectPreTradeId(params);
     }
+
+    /**
+     * add by yangwenjun 20201123 根据业务编号查询合作资产
+     * @param tradeId
+     * @return
+     */
+    public String getChlId(String tradeId) {
+        return trdRepoTradeMapper.getChlId(tradeId);
+    }
 }

@@ -11,8 +11,10 @@
 package com.joyintech.tams.invest.trade.forwex.service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SuggestDto;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.constant.GlobalConstant;
@@ -86,5 +88,17 @@ public class TrdForwexInvestTrade001Service extends CommonExportService<TrdForwe
     @Override
     public Page<TrdForwexInvestTradeDto> selectPageData(Map<String, Object> selectParam) {
         return findPage(selectParam);
+    }
+
+    /**
+     * 获取委托代码
+     * @param map 请求参数
+     * @return 联想文本框实体类
+     * @since 1.0
+     */
+    public List<SuggestDto> getEntrustIdByType(Map<String,Object> map){
+        return restTemplate.postForList(
+                ServiceApplication.COMMON_SERVICE_NAME + "/CommonSelect/getEntrustId", map,
+                SuggestDto.class);
     }
 }

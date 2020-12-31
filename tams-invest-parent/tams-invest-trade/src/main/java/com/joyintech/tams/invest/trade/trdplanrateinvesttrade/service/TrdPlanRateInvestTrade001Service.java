@@ -10,8 +10,10 @@
  
 package com.joyintech.tams.invest.trade.trdplanrateinvesttrade.service;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SuggestDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,5 +83,16 @@ public class TrdPlanRateInvestTrade001Service extends CommonExportService<TrdPla
         // TODO Auto-generated method stub
         
     }
-    
+
+    /**
+     * 获取委托代码
+     * @param map 请求参数
+     * @return 联想文本框实体类
+     * @since 1.0
+     */
+    public List<SuggestDto> getEntrustIdByType(Map<String,Object> map){
+        return restTemplate.postForList(
+                ServiceApplication.COMMON_SERVICE_NAME + "/CommonSelect/getEntrustId", map,
+                SuggestDto.class);
+    }
 }

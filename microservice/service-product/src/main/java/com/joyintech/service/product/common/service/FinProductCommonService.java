@@ -533,6 +533,13 @@ public class FinProductCommonService extends BaseService {
         //当更新时，更新组合的募集方式 add by wangwei5 start 2020-03-20
         this.updateRaiseType(finProductCommonInfoDto);
         //当更新时，更新组合的募集方式 add by wangwei5 end 2020-03-20
+        //更新组合估值小数位
+        if(finProductCommonInfoDto.getBussFinProductValuationDto() != null){
+            PtlValParam ptlValParam =new PtlValParam();
+            BeanUtil.copyProperties(ptlValParam, finProductCommonInfoDto.getBussFinProductValuationDto());
+            ptlValParam.setFinprodId(finProductCommonInfoDto.getPtlId());
+            ptlValParamMapper.updateByPrimaryKeySelective(ptlValParam);
+        }
     }
     
     /**

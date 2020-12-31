@@ -7,7 +7,7 @@
 	var profitTypeElement1 = $('#' + getElementById('profitTypeElement').val());
 	// 快速录入标志
 	var quickFlag = false;
-	
+
 	// 预览按钮在产品模板新建时不显示
 	//增加ignore 属性
 	var buttons = [{ text: '&#xe614;',ignore:true, clas: 'preview', title: '预览' }, { text: '&#xe640;',ignore:true, clas: 'delt', title: '删除' }];
@@ -49,6 +49,13 @@
     	if($('#FinProductBuild002_quickFlag') && $('#FinProductBuild002_quickFlag').val() === 'N'){
     		data.ptlId = $('#' + getElementById('ptlIdElement').val()).val();
     	}
+
+		//add by mashukai 20201120  BS-1994 草稿箱反显时费用列表有时反显没有值问题 start
+		if(isDraft && (workflowId==null || workflowId=="")){
+			debugger;
+			workflowId = $('#productFeeInfoDto_workflowId').val();
+		}
+		//add by mashukai 20201120  BS-1994 草稿箱反显时费用列表有时反显没有值问题 end
     	data.workflowId = workflowId;
         data.finprodId = finprodFeeFinprodIdCommon;
         data.entityName = feeInfoEntityName;

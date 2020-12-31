@@ -55,11 +55,14 @@
         if(object.bussRepFundInfoDto != null){
         	object.bussRepFundInfoDto.finprodType2 = finprodType2;
         }
-        if(object.finprodMarketId==null || object.finprodMarketId=='' || object.finprodMarketId==undefined){
-            Joyin.error("资产代码必填,不能为空");
-            return false;
+        //modify by mashukai 20201117 BS-2006 公募基金草稿箱提交时校验资产代码问题
+        if(!draftoption){
+            if((object.finprodMarketId==null || object.finprodMarketId=='' || object.finprodMarketId==undefined)){
+                Joyin.error("资产代码必填,不能为空");
+                return false;
+            }
         }
-
+        //modify by mashukai 20201117 BS-2006公募基金草稿箱提交时校验资产代码问题
 		if (object.tradeMarketId != null) {
 			object.finprodMarketId = object.finprodMarketId + object.tradeMarketId;
 		}else {
@@ -114,7 +117,7 @@
             })
         })
     }
-    
+
     var init = function(){
         //资产代码拆分
         var finprodMarketId =  $('#finprodMarketId').val();
@@ -208,6 +211,7 @@
                                 });
                                 //基金二级类型重新赋值
                                 $('#secondType').textSelect('setValue', result.data.secondType);
+                                $('#tradeMarket').textSelect('setValue', result.data.tradeMarket);
                             }
                         }
                     });
@@ -220,7 +224,7 @@
 		}
 	};
 
-    var setData = function(id, value ,pageId) {        
+    var setData = function(id, value ,pageId) {
         if (id == 'bussFinIntPayDto') {
             $.each(value, function(id, value) {
                 setData(id, value , 'bussFinIntPayDto');
@@ -258,7 +262,7 @@
                 }else {
                     element.val(value).trigger('change');
                 }
-                
+
             }else if(element.hasClass('input-checkbox')){
                 //单选按钮特殊处理
                 element.val(value).trigger('change');
@@ -463,6 +467,7 @@
      */
     $(function() {
     	init();
+    	var draftInit = isDraft;
     	//修改和审批被驳回时，保存按钮隐藏
     	if(pageModel === PAGE_MODEL_EDIT){
     		$('#FinFundTarget002_btn_save').hide();
@@ -490,7 +495,16 @@
             		$('#secondType').val('').trigger('change');
             		$('#secondType').attr("required",false);
             		$('#bussFinIntPayDto_div').show();
-            		$('#isCompoundInt').attr("disabled",true).trigger('change');
+            		//ZGBS-146 草稿箱回显时按日复利置灰 根据init方法中处理逻辑修改 start
+            		if(draftInit){
+            			var target = $("#bussFinIntPayDto_payCycle").val();
+            			$('#isCompoundInt').attr("disabled",!(target=="02")).trigger('change');
+            		}
+            		else{
+            			//按照之前代码回滚
+            			$('#isCompoundInt').attr("disabled",true).trigger('change');
+            		}
+            		//ZGBS-146 草稿箱回显时按日复利置灰 根据init方法中处理逻辑修改 end
             	}else{
             		$('#secondType').attr("disabled",false);
             		$('#bussFinIntPayDto_div').hide();
@@ -551,4 +565,5 @@
     $('#graFundType').change(function () {
         graFundTypeChange();
     }).trigger('change');
+    draftInit = false;
 }());

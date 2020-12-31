@@ -182,6 +182,8 @@ public class FinProductFeePayService extends BaseService<FinProductFeePayDto> {
         map.put("feeType04", DictCodeList.费用品种类型_浮动差额中收.getValue());
         map.put("profitType02", DictCodeList.收益类型_收益型.getValue());
         map.put("yes", DictCodeList.是否_是.getValue());
+        map.put("feeType12", DictCodeList.费用品种类型_浮动管理费.getValue());
+
         return finProductFeePayMapper.queryFeeInfoListEx(map);
     }
     // /**
@@ -836,7 +838,6 @@ public class FinProductFeePayService extends BaseService<FinProductFeePayDto> {
      * 	查询组合起息日
      * 
      * @param ptlId 组合代码
-     * @param feeId 费用Id
      * @return 上次计提结束日
      */
     public String queryVdate(String ptlId) {
@@ -846,5 +847,10 @@ public class FinProductFeePayService extends BaseService<FinProductFeePayDto> {
               lastPayDate = DateUtil.format(ptlPortfolio.getVdate());
             }
         return lastPayDate;
+    }
+
+    public int checkHasAfterTrade(Map<String, Object> map) {
+
+        return finProductFeePayMapper.checkHasAfterTrade(map);
     }
 }

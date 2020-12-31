@@ -70,6 +70,7 @@ $(function () {
         treeShowName: 'typeName',
         lazyload:true,
         searchOnInit: false,
+        tiernum:5,
         cols: cols
         ,done: function() {
     }
@@ -99,6 +100,7 @@ $(function () {
                 treeUpId: 'parentInfo',
                 treeShowName: 'portfolioId',
                 lazyload:true,
+                tiernum:5,
                 searchOnInit: false,
                 cols: cols
                 ,done: function() {
@@ -123,6 +125,7 @@ $(function () {
                 treeUpId: 'parentInfo',
                 treeShowName: 'typeName',
                 lazyload:true,
+                tiernum:5,
                 searchOnInit: false,
                 cols: cols
                 ,done: function() {

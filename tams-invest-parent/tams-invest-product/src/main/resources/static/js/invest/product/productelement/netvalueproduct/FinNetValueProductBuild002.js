@@ -1,5 +1,4 @@
 (function(){
-	
 	/**
 	 * 初始化方法
 	 */
@@ -11,7 +10,14 @@
         }
         //投资周期 默认不显示
         if(pageModel == PAGE_MODEL_NEW){
-    	    FinProductCommon.getElementById('investmentCycle').attr('checked',false).val("").parent().parent().hide();
+        	//BS-2036 期限选择单一固定期限，投资周期未反显 start
+        	if(isDraft){
+        		FinProductCommon.getElementById('investmentCycle').attr('checked',false).parent().parent().hide();
+        	}
+        	else{
+        		FinProductCommon.getElementById('investmentCycle').attr('checked',false).val("").parent().parent().hide();
+        	}
+        	//BS-2036 期限选择单一固定期限，投资周期未反显 end
         }
         //通过系统参数来判断产品与申报信息是否合并
         if(productIsMerger === YES){
@@ -812,13 +818,50 @@
             }*/
 			var operationType2 =  $('#FinNetValueProductBuild002_operationType').val();
 			var termDays2 =  $('#FinNetValueProductBuild002_termDays').val();
+			if(BussFinProductOpenPlan.getElementById('sameFLag').next().find("em").text()==="否"){
+				 if( $('#isClick').val() == 'false' || $('#isClickRed').val() == 'false'  &&  quickInput == true ){
+				    	Joyin.confirm(JoyinUtil.getMessage('未重新生成开放计划，是否继续操作?'),function(){
+				    		if(operationType2 == "01" && termDays2 <90){
+								Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
+									onSaveOrSubmitAction('save');
+				                },null);
+							}else{
+								onSaveOrSubmitAction('save');
+							}
+		                },null);
+				    }
+				    else{	
+					if(operationType2 == "01" && termDays2 <90){
+						Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
+							onSaveOrSubmitAction('save');
+		                },null);
+					}else{
+						onSaveOrSubmitAction('save');
+					}
+				    }
+			}
+			else{
+		    if($('#isClick').val() == 'false' &&  quickInput == true ){
+		    	Joyin.confirm(JoyinUtil.getMessage('未重新生成开放计划，是否继续操作?'),function(){
+		    		if(operationType2 == "01" && termDays2 <90){
+						Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
+							onSaveOrSubmitAction('save');
+		                },null);
+					}else{
+						onSaveOrSubmitAction('save');
+					}
+               },null);
+		    }
+		    else{	
 			if(operationType2 == "01" && termDays2 <90){
 				Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
 					onSaveOrSubmitAction('save');
-                },null);
+               },null);
 			}else{
 				onSaveOrSubmitAction('save');
 			}
+		    }
+		}
 		});
 		
 		$('#FinNetValueProductBuild002_dealMode').change(function() {
@@ -826,8 +869,14 @@
 //            	$('#FinNetValueProductBuild002_period').val('').trigger('change').prop('disabled', false);
 //            	$('#FinNetValueProductBuild002_investDays').val('').trigger('change').prop('disabled', false);
             	$('#FinNetValueProductBuild002_operationType').val("02").prop("disabled",true).trigger("change");
-        	    FinProductCommon.getElementById('investmentCycle').val("").parent().parent().show();
-        	    FinProductCommon.getElementById('period').val("").parent().parent().show();
+        	    //FinProductCommon.getElementById('investmentCycle').val("").parent().parent().show();
+        	    //FinProductCommon.getElementById('period').val("").parent().parent().show();
+            	//BS-2036 草稿箱功能，产品处理模式选择周期，期限任意选择一个存为草稿，打开该草稿时显示是空 start
+            	FinProductCommon.getElementById('period').parent().parent().show();
+            	FinProductCommon.getElementById('investmentCycle').parent().parent().show();
+            	FinProductCommon.getElementById('period').trigger("change");
+            	FinProductCommon.getElementById('investmentCycle').trigger("change");
+            	//BS-2036 草稿箱功能，产品处理模式选择周期，期限任意选择一个存为草稿，打开该草稿时显示是空 end
             } 
             else {
 //            	$('#FinNetValueProductBuild002_period').val('').trigger('change').prop('disabled', true);
@@ -861,7 +910,42 @@
 				return;
 			}*/
 			var operationType2 =  $('#FinNetValueProductBuild002_operationType').val();
-			var termDays2 =  $('#FinNetValueProductBuild002_termDays').val();
+			var termDays2 =  $('#FinNetValueProductBuild002_termDays').val();			
+			if(BussFinProductOpenPlan.getElementById('sameFLag').next().find("em").text()==="否" ){
+				 if( $('#isClick').val() == 'false' || $('#isClickRed').val() == 'false'  &&  quickInput == true ){
+				    	Joyin.confirm(JoyinUtil.getMessage('未重新生成开放计划，是否继续操作?'),function(){
+				    		if(!draftoption && operationType2 == "01" && termDays2 <90){
+								Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
+									onSaveOrSubmitAction('submit');
+				                },null);
+							}else{
+								onSaveOrSubmitAction('submit');
+							}
+		                },null);
+				    }
+				    else{	
+					if(!draftoption && operationType2 == "01" && termDays2 <90){
+						Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
+							onSaveOrSubmitAction('submit');
+		                },null);
+					}else{
+						onSaveOrSubmitAction('submit');
+					}
+				    }
+			}
+			else{
+		    if($('#isClick').val() == 'false' &&  quickInput == true ){
+		    	Joyin.confirm(JoyinUtil.getMessage('未重新生成开放计划，是否继续操作?'),function(){
+		    		if(!draftoption && operationType2 == "01" && termDays2 <90){
+						Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
+							onSaveOrSubmitAction('submit');
+		                },null);
+					}else{
+						onSaveOrSubmitAction('submit');
+					}
+                },null);
+		    }
+		    else{	
 			if(!draftoption && operationType2 == "01" && termDays2 <90){
 				Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
 					onSaveOrSubmitAction('submit');
@@ -869,6 +953,8 @@
 			}else{
 				onSaveOrSubmitAction('submit');
 			}
+		    }
+		}
 			
 		});
 		//update zhangweiqi 增加目标客户类型一级分类和二级分类对于中债的目标客户类型的联动事件  begin
@@ -899,13 +985,18 @@
 		//add by yejiejie 2109-3-8 end
 		
 		//给了收益标识默认值，要执行其上面的联动
-		if(pageModel === PAGE_MODEL_NEW ) {
+		// BS-2036 草稿箱反显，期限选择多固定期限，是否续投选择为是未正确显示 start
+		if(pageModel === PAGE_MODEL_NEW) {
+	    // BS-2036 草稿箱反显，期限选择多固定期限，是否续投选择为是未正确显示 end
+			if(isDraft){
+				$("#draftInit").val("Y");
+			}
 			FinProductCommon.profitTypeSelect();
+			$("#draftInit").val("");
 		}
 		//唤醒change事件
 		$("#FinNetValueProductBuild002_period").trigger('change');
 	});
-
 }());
 
 //add by wangyang1 [吉林个性化] 2019年9月26日 start 
@@ -924,6 +1015,20 @@ function setFinprodAbbr() {
 //START 引用组件时  未添加此方法  导致js报错
 // modify by wj 20200426 TISHKBS-270  净值型分档产品，在产品分层信息中添加产品款型，添加到第二个的时候，选择目标客户类型出现界面错乱
 var tarCustomerTypeChange = function(){
-	
+	var LayeredTableInfo = BussFinProductLayered.getAllRows();
+	if($("#bussFinProductSaleParamDto_investorType").val()=='04'){
+		$("#bussFinProductSaleParamDto_sameOrg").removeAttr("disabled");
+	}
+	else{
+		for(var i in LayeredTableInfo){
+			if(LayeredTableInfo[i].tarCustomerType && LayeredTableInfo[i].tarCustomerType.indexOf("04") != -1){
+				$("#bussFinProductSaleParamDto_sameOrg").removeAttr("disabled");
+				break;
+			}
+			else{
+				$("#bussFinProductSaleParamDto_sameOrg").attr("disabled","disabled");
+			}
+		}
+	}
 }
 //END 引用组件时  未添加此方法  导致js报错

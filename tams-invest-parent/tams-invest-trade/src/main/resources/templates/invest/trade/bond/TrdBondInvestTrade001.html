@@ -21,7 +21,7 @@
                             <input type="text" id="entrustId" name="entrustId"
                                 class="layui-input form-input input-lenovoselect" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}"
-                                data-th-data-url="@{/business/common/CommonSelect/getEntrustId}" data-idfield="code"
+                                data-th-data-url="@{/invest/trade/bond/TrdBondInvestTrade001/getEntrustIdByType}" data-idfield="code"
                                 data-keyfield="name"
                                 data-th-data-effectivefieldsalias='|{"code":"#{TrdBondInvestTrade001.entrustId}","shortName":"#{TrdBondInvestTrade001.entrustId}"}|'
                                 data-th-value="${entity?.entrustId}">

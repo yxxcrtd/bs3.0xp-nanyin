@@ -700,6 +700,12 @@ public enum ValDictCodeList implements BaseDictCodeList {
         ValDictCode.账套配置表参数项, "TAX_ASSET_TYPE_DKYWSR_FS", "证券类型计税方式_贷款业务收入_发生"
     ),
     /**
+     * 账套配置表参数项_还本是否冲减摊销
+     */
+    账套配置表参数项_还本是否冲减摊销(
+        ValDictCode.账套配置表参数项, "REDAMOFLAG", "还本是否冲减摊销"
+    ),
+    /**
      * 计税计提基准_发生额
      */
     计税计提基准_发生额(ValDictCode.计税计提基准, "01", "发生额"),

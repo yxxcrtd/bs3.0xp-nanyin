@@ -136,4 +136,96 @@
 		) WHERE ROWNUM = 1
 	</select>
     <!-- 资产类型改为授权类型 add by renping 2019-08-19  end -->
+    
+    <!-- 根据entrustId查询指令详情(用于授信) -->
+    <select id="selectByEntrustId" resultType="map">
+         select
+             T1.ENTRUST_ID             "entrustId",
+             T1.PORTFOLIO_ID            "portfolioId",
+             T1.REMARK                "remark",
+             T1.ENTRUST_DATE         "entrustDate",
+             T1.VDATE                "vdate",
+             T1.MDATE                "mdate",
+             T1.CCY                    "ccy",
+             T1.PS                    "ps",
+             T1.PRICE                "price",
+             decode(T1.FINPROD_TYPE2,'F01',
+             NVL(T1.ENTRUST_NUM, 0) - NVL(T6.DEALAMT, 0),
+             NVL(T1.ENTRUST_AMT, 0) - NVL(T6.DEALAMT, 0)) "entrustAmt",
+             T1.FINPROD_TYPE2           "finprodType2",
+             T2.VDATE                "dateStart",
+             T2.MDATE                "dateEnd",
+             T2.TERM_DAYS            "termDays",
+             T3.FINPROD_ID            "finprodId",
+              T5.Type_9                  "assetType1",
+              T5.Type_10                 "assetType10",
+              T5.Type_11                   "assetType11",
+             T3.FINPROD_MARKET_ID    "finprodMarketId",
+             T3.FINPROD_NAME            "finprodName",
+             T1.INV_MANAGER_ID        "invManagerId",
+             T4.TRADER                "trader",
+             T1.COUNTER_ID            "counterId",
+             T1.COUNTER_TRADER        "counterTrader",
+             T1.CONTACT_INFO            "contactInfo",
+             T1.CHL_ID                 "chlId",
+             T2.IS_AGREEMENT_END       "isAgreementEnd"
+             <!--T2.CREDIT_SOURCE         "creditSource",-->
+             <!--T2.RATE_APPROVAL_CODE    "rateApprovalCode"-->
+         from
+             ETR_ENTRUST T1
+             LEFT JOIN ETR_ENTRUST_ADD T2 ON T1.ENTRUST_ID = T2.ENTRUST_ID
+             LEFT JOIN ETR_DISTRIBUTE T4 ON T1.ENTRUST_ID = T4.ENTRUST_ID
+             LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID
+             LEFT JOIN FIN_PRODUCT_TYPE T5  ON T3.FINPROD_ID = T5.FINPROD_ID
+             LEFT JOIN (
+             select SUM(decode(DEAL.FINPROD_TYPE2,'F01',
+             DEAL.SHARE_AMT,
+             DEAL.PRIN_AMT)) AS DEALAMT,
+             DEAL.ENTRUST_ID
+             FROM (
+             select TPD.FINPROD_TYPE2,TPD.SHARE_AMT,TPD.PRIN_AMT,TPDA.ENTRUST_ID FROM TRD_PRODUCT_DEAL TPD LEFT JOIN TRD_PRODUCT_DEAL_ADD TPDA ON TPD.TRADE_ID = TPDA.TRADE_ID
+             WHERE TPD.TRADE_STATUS = '01'
+             AND TPD.IS_CANCEL = 'N'
+             AND TPDA.ENTRUST_ID IS NOT NULL
+             union all
+             select WTPD.FINPROD_TYPE2,WTPD.SHARE_AMT,WTPD.PRIN_AMT,WTPDA.ENTRUST_ID from WFL_TRD_PRODUCT_DEAL WTPD LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD WTPDA ON WTPD.TRADE_ID = WTPDA.TRADE_ID
+             WHERE WTPD.TRADE_STATUS = '01'
+             AND WTPD.IS_CANCEL = 'N'
+             AND WTPDA.ENTRUST_ID IS NOT NULL
+             AND WTPDA.WORKFLOW_STATUS ='01'
+             AND WTPD.WORKFLOW_STATUS ='01'
+             )DEAL
+             GROUP BY ENTRUST_ID  
+             )T6 ON T1.ENTRUST_ID = T6.ENTRUST_ID
+         WHERE
+         T1.ENTRUST_ID = #{entrustId}
+    </select>
+    
+    <!-- 根据entrustId查询指令详情(用于授信) -->
+    <select id="selectCustomer" resultType="java.lang.String">
+       SELECT
+		decode(T2.Type_8,
+			'${fzq}',T1.ISSUER,
+			'${fck}',T1.ISSUER,
+			'${fxml}',T1.FINANCIER,
+			 T1.MANAGER)
+		FROM FIN_PRODUCT T1
+		INNER JOIN FIN_PRODUCT_TYPE T2 ON T1.FINPROD_ID = T2.FINPROD_ID
+		WHERE T1.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </select>
+    
+    <select id="selectUserByPortfolioId" resultType="java.lang.String">
+       SELECT USER_ID
+       	FROM PTL_PORTFOLIO_AUTHORITY
+		WHERE PORTFOLIO_ID =#{portfolioId,jdbcType=VARCHAR}
+    </select>
+    
+    <select id="selectAcctNo" resultType="java.lang.String">
+       SELECT ACCT_NO
+		FROM PTL_CAPACCT_INFO 
+		WHERE PORTFOLIO_ID =#{portfolioId,jdbcType=VARCHAR}
+		AND CCY = #{ccy,jdbcType=VARCHAR}
+		AND ACCT_TYPE =#{acctType,jdbcType=VARCHAR}
+    </select>
+    
 </mapper>

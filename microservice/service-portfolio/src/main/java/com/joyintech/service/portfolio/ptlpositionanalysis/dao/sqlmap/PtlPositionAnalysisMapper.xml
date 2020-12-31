@@ -19,7 +19,9 @@
                     (<!-- round -->((nvl(A.marketValue, 0) + nvl(A.tdyIntincexp, 0)) / B.typeMarketValue<!-- , 4 -->) - nvl(F.yearAmtRation, 0)) * 100 END yearAmtRation,
                     C.ystAmtRation ystAmtRationTemp,
                     D.monthAmtRation monthAmtRationExTemp,
-                    F.yearAmtRation yearAmtRationTemp
+                    F.yearAmtRation yearAmtRationTemp,
+                    C.marketValue ystMarketValue,
+                    C.tdyIntincexp ystTdyIntincexp
                     from (
                                   select  pp.VDATE  AS vdate,psv.CDATE as cdate,psv.PORTFOLIO_ID as portfolioId,pp.PORTFOLIO_NAME as portfolioName,
                            		   case when fpt.TYPE_8 = 'F08' AND fpt.TYPE_7 = '01' then -1*psv.DSC_COST_AMT
@@ -98,6 +100,7 @@
                 ) B on A.portfolioId=B.portfolioId and A.cdate=B.cdate and B.typeMarketValue!=0
                 left join(
                            select AA.cdate,AA.portfolioId,AA.finprodType2,AA.finprodId,round((nvl(AA.marketValue, 0) + nvl(AA.tdyIntincexp, 0)) / BB.typeMarketValue, 4) as ystAmtRation
+                            , AA.marketValue as marketValue, AA.tdyIntincexp as tdyIntincexp, BB.typeMarketValue as typeMarketValue
                            from(
                                   select psv.CDATE as cdate,
                                          psv.PORTFOLIO_ID as portfolioId,
@@ -389,28 +392,101 @@
                 )F on A.portfolioId=F.portfolioId and A.finprodType2=F.finprodType2 AND A.finprodId=F.finprodId
                 union all
                 SELECT
+                S.cdate cdate,
+                S.portfolioId portfolioId,
+                S.portfolioName portfolioName,
+                #{cash} finprodType2,#{cash} type5, NULL finprodMarketId,NULL finprodAbbr,
+                S.marketValue marketValue,
+                S.dscCostAmt dscCostAmt,
+                null shareAmt,
+                NULL tdyIntincexp,
+                NULL tdyAmtRation,
+                NULL ystAmtRation,
+                NULL monthAmtRation,
+                NULL yearAmtRation,
+                NULL ystAmtRationTemp,
+                NULL monthAmtRationExTemp,
+                NULL yearAmtRationTemp,
+                SS.marketValue ystMarketValue,
+                NULL ystTdyIntincexp
+                FROM(
+                        SELECT
+                        psv.cdate cdate,
+                        psv.portfolio_Id portfolioId,
+                        pp.portfolio_Name portfolioName,
+                        #{cash} finprodType2,#{cash} type5, NULL finprodMarketId,NULL finprodAbbr,
+                        pcp.amount marketValue,
+                        pcp.amount dscCostAmt,
+                        null shareAmt,
+                        NULL tdyIntincexp,
+                        NULL tdyAmtRation,
+                        NULL ystAmtRation,
+                        NULL monthAmtRation,
+                        NULL yearAmtRation,
+                        NULL ystAmtRationTemp,
+                        NULL monthAmtRationExTemp,
+                        NULL yearAmtRationTemp,
+                        NULL ystMarketValue,
+                        NULL ystTdyIntincexp
+                        FROM PTL_SEC_VALUTION psv
+                        LEFT JOIN FIN_PRODUCT_ADD ON FIN_PRODUCT_ADD.FINPROD_ID = psv.FINPROD_ID
+                        LEFT JOIN PTL_PORTFOLIO pp ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
+                        LEFT JOIN PTL_CASH_POSITION pcp ON psv.PORTFOLIO_ID = pcp.PORTFOLIO_ID and psv.cdate = pcp.cdate
+                        left JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID and fpt.TYPE_8 is not null
+                        WHERE
+                        TO_CHAR (psv.CDATE, 'yyyy-mm-dd') = #{searchDate}
+                        and pcp.portfolio_Id is not NULL
+                        <if test="portfolioIdList != null and portfolioIdList.size()>0">
+                            AND pcp.PORTFOLIO_ID IN
+                            <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+                                #{item}
+                            </foreach>
+                        </if>
+                        <if test="assetTypeList != null and assetTypeList.size()>0">
+                            AND fpt.TYPE_8 IN
+                            <foreach collection="assetTypeList" item="item" separator="," open="(" close =")">
+                                #{item}
+                            </foreach>
+                        </if>
+                        <!--  add by wangyang1 【吉林银行】 增加 产品经理  2019年9月29日 start -->
+                        <if test=" prodManager !=null and prodManager.size()>0 " >
+                            AND FIN_PRODUCT_ADD.PROD_MANAGER IN
+                            <foreach collection="prodManager" item="item" open="(" close=")" separator=",">
+                                #{item}
+                            </foreach>
+                        </if>
+                        <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
+                        GROUP BY
+                        psv.cdate,psv.portfolio_Id,pp.portfolio_Name,pcp.amount
+                ) S
+                LEFT JOIN (
+                    SELECT
                     psv.cdate cdate,
                     psv.portfolio_Id portfolioId,
-                    pp.portfolio_Name portfolioName,
-                    #{cash} finprodType2,#{cash} type5, NULL finprodMarketId,NULL finprodAbbr,
                     pcp.amount marketValue,
-                    pcp.amount dscCostAmt,
-                    null shareAmt,
-                    NULL tdyIntincexp,
-                    NULL tdyAmtRation,
-                    NULL ystAmtRation,
-                    NULL monthAmtRation,
-                    NULL yearAmtRation,
-                    NULL ystAmtRationTemp,
-                    NULL monthAmtRationExTemp,
-                    NULL yearAmtRationTemp
+                    pcp.amount dscCostAmt
                     FROM PTL_SEC_VALUTION psv
                     LEFT JOIN FIN_PRODUCT_ADD ON FIN_PRODUCT_ADD.FINPROD_ID = psv.FINPROD_ID
                     LEFT JOIN PTL_PORTFOLIO pp ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
                     LEFT JOIN PTL_CASH_POSITION pcp ON psv.PORTFOLIO_ID = pcp.PORTFOLIO_ID and psv.cdate = pcp.cdate
                     left JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID and fpt.TYPE_8 is not null
-                WHERE
-                    TO_CHAR (psv.CDATE, 'yyyy-mm-dd') = #{searchDate}
+                    inner join (
+                    select PORTFOLIO_ID portfolioId,max(CDATE) as maxCdate
+                    from PTL_SEC_VALUTION
+                    where 1=1
+                    <if test="portfolioIdList != null and portfolioIdList.size()>0">
+                        AND PORTFOLIO_ID IN
+                        <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+                            #{item}
+                        </foreach>
+                    </if>
+                    <if test="searchDate != null and searchDate != ''">
+                        and to_char(CDATE,'yyyy-mm-dd') &lt; #{searchDate}
+                    </if>
+                    group by PORTFOLIO_ID
+                    )E on E.portfolioId=psv.PORTFOLIO_ID
+                    WHERE
+                        psv.CDATE=E.maxCdate
                     and pcp.portfolio_Id is not NULL
                     <if test="portfolioIdList != null and portfolioIdList.size()>0">
                         AND pcp.PORTFOLIO_ID IN
@@ -425,15 +501,16 @@
                         </foreach>
                     </if>
                     <!--  add by wangyang1 【吉林银行】 增加 产品经理  2019年9月29日 start -->
-				   <if test=" prodManager !=null and prodManager.size()>0 " >
-						AND FIN_PRODUCT_ADD.PROD_MANAGER IN
-						<foreach collection="prodManager" item="item" open="(" close=")" separator=",">
-							#{item}
-						</foreach>
-					</if>
-					<!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
-                GROUP BY
-                    psv.cdate,psv.portfolio_Id,pp.portfolio_Name,pcp.amount
+                    <if test=" prodManager !=null and prodManager.size()>0 " >
+                        AND FIN_PRODUCT_ADD.PROD_MANAGER IN
+                        <foreach collection="prodManager" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                    <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
+                    GROUP BY
+                    psv.cdate,psv.portfolio_Id,pcp.amount
+                ) SS ON S.portfolioId = SS.portfolioId
           )
 	</sql>
 	
@@ -453,7 +530,9 @@
                             ((nvl(A.marketValue,0)+nvl(A.tdyIntincexp,0))/B.typeMarketValue-nvl(F.yearAmtRation,0))*100 end yearAmtRation,
         C.ystAmtRation ystAmtRationTemp,
         D.monthAmtRation monthAmtRationExTemp,
-        F.yearAmtRation yearAmtRationTemp
+        F.yearAmtRation yearAmtRationTemp,
+        C.marketValue ystMarketValue,
+        C.tdyIntincexp ystTdyIntincexp
                     from (
                            select pp.VDATE  AS vdate,psv.CDATE as cdate,psv.PORTFOLIO_ID as portfolioId,pp.PORTFOLIO_NAME as portfolioName,
                         CASE
@@ -570,6 +649,7 @@
                   /*and A.finprodType2=B.finprodType2*/
                 left join(
                            select AA.cdate,AA.portfolioId,AA.finprodType2,(nvl(AA.marketValue,0)+nvl(AA.tdyIntincexp,0))/BB.typeMarketValue as ystAmtRation
+                            , AA.marketValue as marketValue, AA.tdyIntincexp as tdyIntincexp, BB.typeMarketValue as typeMarketValue
                            from(
                                   select psv.CDATE as cdate,
                                          psv.PORTFOLIO_ID as portfolioId,
@@ -931,6 +1011,127 @@
                             /*and AA.finprodType2=BB.finprodType2*/
                           where BB.typeMarketValue!=0
                 )F on A.portfolioId=F.portfolioId and A.finprodType2=F.finprodType2
+        union all
+            SELECT
+            S.cdate cdate,
+            S.portfolioId portfolioId,
+            S.portfolioName portfolioName,
+            #{cash} finprodType2,#{cash} type5, NULL finprodMarketId,NULL finprodAbbr,
+            S.marketValue marketValue,
+            S.dscCostAmt dscCostAmt,
+            null shareAmt,
+            NULL tdyIntincexp,
+            NULL tdyAmtRation,
+            NULL ystAmtRation,
+            NULL monthAmtRation,
+            NULL yearAmtRation,
+            NULL ystAmtRationTemp,
+            NULL monthAmtRationExTemp,
+            NULL yearAmtRationTemp,
+            SS.marketValue ystMarketValue,
+            NULL ystTdyIntincexp
+            FROM(
+            SELECT
+            psv.cdate cdate,
+            psv.portfolio_Id portfolioId,
+            pp.portfolio_Name portfolioName,
+            #{cash} finprodType2,#{cash} type5, NULL finprodMarketId,NULL finprodAbbr,
+            pcp.amount marketValue,
+            pcp.amount dscCostAmt,
+            null shareAmt,
+            NULL tdyIntincexp,
+            NULL tdyAmtRation,
+            NULL ystAmtRation,
+            NULL monthAmtRation,
+            NULL yearAmtRation,
+            NULL ystAmtRationTemp,
+            NULL monthAmtRationExTemp,
+            NULL yearAmtRationTemp,
+            NULL ystMarketValue,
+            NULL ystTdyIntincexp
+            FROM PTL_SEC_PIERCE_VALUTION psv
+            LEFT JOIN FIN_PRODUCT_ADD ON FIN_PRODUCT_ADD.FINPROD_ID = psv.FINPROD_ID
+            LEFT JOIN PTL_PORTFOLIO pp ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
+            LEFT JOIN PTL_CASH_POSITION pcp ON psv.PORTFOLIO_ID = pcp.PORTFOLIO_ID and psv.cdate = pcp.cdate
+            left JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID and fpt.TYPE_8 is not null
+            WHERE
+            TO_CHAR (psv.CDATE, 'yyyy-mm-dd') = #{searchDate}
+            and pcp.portfolio_Id is not NULL
+            <if test="portfolioIdList != null and portfolioIdList.size()>0">
+                AND pcp.PORTFOLIO_ID IN
+                <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="assetTypeList != null and assetTypeList.size()>0">
+                AND fpt.TYPE_8 IN
+                <foreach collection="assetTypeList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+            </if>
+            <!--  add by wangyang1 【吉林银行】 增加 产品经理  2019年9月29日 start -->
+            <if test=" prodManager !=null and prodManager.size()>0 " >
+                AND FIN_PRODUCT_ADD.PROD_MANAGER IN
+                <foreach collection="prodManager" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
+            GROUP BY
+            psv.cdate,psv.portfolio_Id,pp.portfolio_Name,pcp.amount
+            ) S
+            LEFT JOIN (
+            SELECT
+            psv.cdate cdate,
+            psv.portfolio_Id portfolioId,
+            pcp.amount marketValue,
+            pcp.amount dscCostAmt
+            FROM PTL_SEC_PIERCE_VALUTION psv
+            LEFT JOIN FIN_PRODUCT_ADD ON FIN_PRODUCT_ADD.FINPROD_ID = psv.FINPROD_ID
+            LEFT JOIN PTL_PORTFOLIO pp ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
+            LEFT JOIN PTL_CASH_POSITION pcp ON psv.PORTFOLIO_ID = pcp.PORTFOLIO_ID and psv.cdate = pcp.cdate
+            left JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID and fpt.TYPE_8 is not null
+            inner join (
+            select PORTFOLIO_ID portfolioId,max(CDATE) as maxCdate
+            from PTL_SEC_PIERCE_VALUTION
+            where 1=1
+            <if test="portfolioIdList != null and portfolioIdList.size()>0">
+                AND PORTFOLIO_ID IN
+                <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="searchDate != null and searchDate != ''">
+                and to_char(CDATE,'yyyy-mm-dd') &lt; #{searchDate}
+            </if>
+            group by PORTFOLIO_ID
+            )E on E.portfolioId=psv.PORTFOLIO_ID
+            WHERE
+            psv.CDATE=E.maxCdate
+            and pcp.portfolio_Id is not NULL
+            <if test="portfolioIdList != null and portfolioIdList.size()>0">
+                AND pcp.PORTFOLIO_ID IN
+                <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="assetTypeList != null and assetTypeList.size()>0">
+                AND fpt.TYPE_8 IN
+                <foreach collection="assetTypeList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+            </if>
+            <!--  add by wangyang1 【吉林银行】 增加 产品经理  2019年9月29日 start -->
+            <if test=" prodManager !=null and prodManager.size()>0 " >
+                AND FIN_PRODUCT_ADD.PROD_MANAGER IN
+                <foreach collection="prodManager" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
+            GROUP BY
+            psv.cdate,psv.portfolio_Id,pcp.amount
+            ) SS ON S.portfolioId = SS.portfolioId
           )
 	</sql>
 
@@ -960,7 +1161,9 @@
                 assetHold1.belongInstitutionCode belongInstitutionCodeNew,
                 SUM(assetHold1.ystAmtRationTemp) ystAmtRationTemp,
                 SUM(assetHold1.monthAmtRationExTemp) monthAmtRationExTemp,
-                SUM(assetHold1.yearAmtRationTemp) yearAmtRationTemp
+                SUM(assetHold1.yearAmtRationTemp) yearAmtRationTemp,
+                SUM(assetHold1.ystMarketValue)  ystMarketValue,
+                SUM(assetHold1.ystTdyIntincexp)  ystTdyIntincexp
          from (
             SELECT
             assetHold.*,
@@ -996,7 +1199,9 @@
               assetHold1.portfolioName otherPortfolioName,
               round(SUM(assetHold1.ystAmtRationTemp),2) ystAmtRationTemp,
               round(SUM(assetHold1.monthAmtRationExTemp),2) monthAmtRationExTemp,
-              round(SUM(assetHold1.yearAmtRationTemp),2) yearAmtRationTemp
+              round(SUM(assetHold1.yearAmtRationTemp),2) yearAmtRationTemp,
+              SUM(assetHold1.ystMarketValue)  ystMarketValue,
+              SUM(assetHold1.ystTdyIntincexp)  ystTdyIntincexp
          from (
          SELECT
          assetHold.*
@@ -1034,7 +1239,9 @@
               assetHold1.portfolioName otherPortfolioName,
              round(SUM(assetHold1.ystAmtRationTemp),2) ystAmtRationTemp,
              round(SUM(assetHold1.monthAmtRationExTemp),2) monthAmtRationExTemp,
-             round(SUM(assetHold1.yearAmtRationTemp),2) yearAmtRationTemp
+             round(SUM(assetHold1.yearAmtRationTemp),2) yearAmtRationTemp,
+             SUM(assetHold1.ystMarketValue)  ystMarketValue,
+             SUM(assetHold1.ystTdyIntincexp)  ystTdyIntincexp
          from (
          SELECT
          assetHold.*
@@ -1512,7 +1719,7 @@
 
     <!-- 根据groupby 条件获取对象下的分类-->
     <select   id="getFinpordType" resultType="com.joyintech.service.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis003Dto">
-        select portfolioId,
+        select a.*,b.posCost as posCost,b.posValue as posValue,b.tdyIntincexp tdyIntincexp  from (select portfolioId,
         pinanAssetType,
         customAssetTypeTwo,
         customAssetTypeThree,
@@ -1583,11 +1790,252 @@
             </foreach>
         </if>
         and atd.pinan_asset_type is not NULL) t
-        where t.row_number = 1
+        where t.row_number = 1)a
+        left join ( select
+        <if test="displayType != null and displayType != '' and displayType=='01'">
+            lx.portfolioId,
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='01'">
+                lx.pinanAssetType,
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='02'">
+                lx.customAssetTypeTwo,
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='03'">
+                lx.customAssetTypeThree,
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='04'">
+                lx.customAssetTypeFour,
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='05'">
+                lx.customAssetTypeFive,
+            </if>
+        </if>
+        <if test="displayType != null and displayType != '' and displayType=='02'">
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='01'">
+                lx.pinanAssetType,
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='02'">
+                lx.customAssetTypeTwo,
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='03'">
+                lx.customAssetTypeThree,
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='04'">
+                lx.customAssetTypeFour,
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='05'">
+                lx.customAssetTypeFive,
+            </if>
+        </if>
+        sum(lx.posCost)as posCost,sum(lx.posValue) posValue,sum(lx.tdyIntincexp) tdyIntincexp
+        from (select FTP.FINPROD_TYPE2,
+        <if test="displayType != null and displayType != '' and displayType=='01'">
+            atd.portfolio_id as portfolioId,
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='01'">
+                atd.pinan_asset_type as pinanAssetType,
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='02'">
+                atd.custom_asset_type_two as customAssetTypeTwo,
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='03'">
+                atd.custom_asset_type_three as customAssetTypeThree,
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='04'">
+                atd.custom_asset_type_four  as customAssetTypeFour,
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='05'">
+                atd.custom_asset_type_five as customAssetTypeFive,
+            </if>
+        </if>
+        <if test="displayType != null and displayType != '' and displayType=='02'">
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='01'">
+                atd.pinan_asset_type as pinanAssetType,
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='02'">
+                atd.custom_asset_type_two as customAssetTypeTwo,
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='03'">
+                atd.custom_asset_type_three as customAssetTypeThree,
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='04'">
+                atd.custom_asset_type_four  as customAssetTypeFour,
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='05'">
+                atd.custom_asset_type_five as customAssetTypeFive,
+            </if>
+        </if>
+
+        sum(atd.pos_amount) as posAmount,
+        sum(atd.pos_cost) as posCost,
+        CASE
+        WHEN (FTP.FINPROD_TYPE2 = 'F02' OR
+        FTP.FINPROD_TYPE2 = 'F25' OR
+        FTP.FINPROD_TYPE2 = 'F04') THEN
+        SUM(atd.pos_value) * -1
+        ELSE
+        SUM(atd.pos_value)
+        end posValue,
+        CASE
+        WHEN (FTP.FINPROD_TYPE2 = 'F02' OR
+        FTP.FINPROD_TYPE2 = 'F25' OR
+        FTP.FINPROD_TYPE2 = 'F04') THEN
+        SUM(atd.tdy_intincexp) * -1
+        ELSE
+        SUM(atd.tdy_intincexp)
+        end tdyIntincexp
+        from ASSET_TARGET_DB atd
+        LEFT JOIN FIN_TRADE_PRODUCT FTP
+        ON atd.FINPROD_ID = FTP.FINPROD_ID
+        AND FTP.BRANCH = '0'
+        <!-- 多级法人改造 add by hxy 20200629 start-->
+        <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+            inner join data_auth_notify_inst dani
+            on dani.BUSINESS_ID =atd.PORTFOLIO_ID
+            and dani.data_type='PTL01'
+            and dani.model_type = '02'
+            and dani.institution_code
+            <foreach collection="resourcesTreeInstCodeList" item="item" separator=","
+                     open="in ("  close=")">
+                #{item}
+            </foreach>
+
+        </if>
+        <!-- 多级法人改造 add by hxy 20200629 end-->
+        WHERE 1 = 1
+        and to_char(atd.CDATE,'yyyy-mm-dd') = #{searchDate}
+
+        <if test="pass != null and pass != ''">
+            and atd.IS_PERNE= #{pass}
+        </if>
+        <if test="portfolioId != null and portfolioId != ''">
+            and atd.portfolio_id= #{portfolioId}
+        </if>
+
+        <if test="type != null and type != ''">
+            and atd.pinan_asset_type= #{type}
+        </if>
+        <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+            AND dani.INSTITUTION_CODE IN
+            <foreach collection="resourcesTreeInstCodeList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        and atd.pinan_asset_type is not NULL
+
+        group by  FTP.FINPROD_TYPE2,
+        <if test="displayType != null and displayType != '' and displayType=='01'">
+            atd.portfolio_id,
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='01'">
+                atd.pinan_asset_type
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='02'">
+                atd.custom_asset_type_two
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='03'">
+                atd.custom_asset_type_three
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='04'">
+                atd.custom_asset_type_four
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='05'">
+                atd.custom_asset_type_five
+            </if>
+        </if>
+        <if test="displayType != null and displayType != '' and displayType=='02'">
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='01'">
+                atd.pinan_asset_type
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='02'">
+                atd.custom_asset_type_two
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='03'">
+                atd.custom_asset_type_three
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='04'">
+                atd.custom_asset_type_four
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='05'">
+                atd.custom_asset_type_five
+            </if>
+        </if>
+        )lx
+        <if test="displayType != null and displayType != '' and displayType=='01'">
+            group by  lx.portfolioId,
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='01'">
+                lx.pinanAssetType
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='02'">
+                lx.customAssetTypeTwo
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='03'">
+                lx.customAssetTypeThree
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='04'">
+                lx.customAssetTypeFour
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='05'">
+                lx.customAssetTypeFive
+            </if>
+        </if>
+        <if test="displayType != null and displayType != '' and displayType=='02'">
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='01'">
+                group by  lx.pinanAssetType
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='02'">
+                group by  lx.customAssetTypeTwo
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='03'">
+                group by  lx.customAssetTypeThree
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='04'">
+                group by lx.customAssetTypeFour
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='05'">
+                group by  lx.customAssetTypeFive
+            </if>
+        </if>
+        ) b
+        on 1=1
+        <if test="displayType != null and displayType != '' and displayType=='01'">
+            and a.portfolioId=b.portfolioId
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='01'">
+                and   a.pinanAssetType=b.pinanAssetType
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='02'">
+                and a.customAssetTypeTwo=b.customAssetTypeTwo
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='03'">
+                and a.customAssetTypeThree=b.customAssetTypeThree
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='04'">
+                and  a.customAssetTypeFour=b.customAssetTypeFour
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='05'">
+                and  a.customAssetTypeFive=b.customAssetTypeFive
+            </if>
+        </if>
+
+        <if test="displayType != null and displayType != '' and displayType=='02'">
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='01'">
+                and   a.pinanAssetType=b.pinanAssetType
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='02'">
+                and a.customAssetTypeTwo=b.customAssetTypeTwo
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='03'">
+                and a.customAssetTypeThree=b.customAssetTypeThree
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='04'">
+                and  a.customAssetTypeFour=b.customAssetTypeFour
+            </if>
+            <if test="searchCondition != null and searchCondition != '' and searchCondition=='05'">
+                and  a.customAssetTypeFive=b.customAssetTypeFive
+            </if>
+        </if>
     </select>
     <select   id="secReportPage" resultType="com.joyintech.service.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis003Dto">
         <if test="parentId == null or parentId == '' or parentId=='root'.toString() and displayType=='01'">
-            select
+            select a.*,b.posCost as posCost,b.posValue as posValue,b.tdyIntincexp tdyIntincexp from (select
             <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
                 belongInstitutionCode belongInstitutionNameNew,
             </if>
@@ -1658,7 +2106,87 @@
                 and atd.IS_PERNE= #{pass} and atd.pinan_asset_type is not NULL
             </if>
             ) t
-            where t.row_number=1
+            where t.row_number=1)a
+            left join (
+            select lx.portfolioId,sum(lx.posCost)as posCost,sum(lx.posValue) posValue,sum(lx.tdyIntincexp) tdyIntincexp
+            from (select atd.portfolio_id as portfolioId,
+            sum(atd.pos_amount) as posAmount,
+            sum(atd.pos_cost) as posCost,
+            CASE
+            WHEN (FTP.FINPROD_TYPE2 = 'F02' OR
+            FTP.FINPROD_TYPE2 = 'F25' OR
+            FTP.FINPROD_TYPE2 = 'F04') THEN
+            SUM(atd.pos_value) * -1
+            ELSE
+            SUM(atd.pos_value)
+            end posValue,
+            CASE
+            WHEN (FTP.FINPROD_TYPE2 = 'F02' OR
+            FTP.FINPROD_TYPE2 = 'F25' OR
+            FTP.FINPROD_TYPE2 = 'F04') THEN
+            SUM(atd.tdy_intincexp) * -1
+            ELSE
+            SUM(atd.tdy_intincexp)
+            end tdyIntincexp
+            from ASSET_TARGET_DB atd
+            LEFT JOIN FIN_TRADE_PRODUCT FTP
+            ON atd.FINPROD_ID = FTP.FINPROD_ID
+            AND FTP.BRANCH = '0'
+            <!-- 多级法人改造 add by hxy 20200629 start-->
+            <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+                inner join data_auth_notify_inst dani
+                on dani.BUSINESS_ID =atd.PORTFOLIO_ID
+                and dani.data_type='PTL01'
+                and dani.model_type = '02'
+                and dani.institution_code
+                <foreach collection="resourcesTreeInstCodeList" item="item" separator=","
+                         open="in ("  close=")">
+                    #{item}
+                </foreach>
+
+            </if>
+            where 1=1
+            <if test="portfolioIdList != null and portfolioIdList.size()>0">
+                AND atd.PORTFOLIO_ID IN
+                <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="searchDate != null and searchDate != ''">
+                and to_char(atd.CDATE,'yyyy-mm-dd') = #{searchDate}
+            </if>
+            <if test="profitTypeList != null and profitTypeList.size()>0">
+                AND atd.PROFIT_TYPE IN
+                <foreach collection="profitTypeList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test=" prodManagerList !=null and prodManagerList.size()>0 " >
+
+                and atd.portfolio_id in (select  PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where  user_id in
+
+                <foreach collection="prodManagerList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+                )
+
+
+            </if>
+            <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
+                AND atd.FINPROD_MARKET_ID IN
+                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="pass != null and pass != ''">
+                and atd.IS_PERNE= #{pass} and atd.pinan_asset_type is not NULL
+            </if>
+
+            group by  FTP.FINPROD_TYPE2,atd.portfolio_id)lx
+            group by lx.portfolioId
+            ) b
+            on a.portfolioId=b.portfolioId
 
         </if>
 
@@ -1861,6 +2389,7 @@
 
 
         <if test="parentId == null or parentId == '' or parentId=='root'.toString() and displayType=='02'">
+            select a.*,b.posCost as posCost,b.posValue as posValue,b.tdyIntincexp tdyIntincexp from (
             <!--多级法人改造 add by jingqiongqiong 20200615-->
             select
             <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
@@ -1932,7 +2461,86 @@
                 and atd.IS_PERNE= #{pass} and atd.pinan_asset_type is not NULL
             </if>
             ) t
-            where t.row_number=1
+            where t.row_number=1)a
+            left join ( select lx.pinanAssetType,sum(lx.posCost)as posCost,sum(lx.posValue) posValue,sum(lx.tdyIntincexp) tdyIntincexp
+            from (select FTP.FINPROD_TYPE2,
+            atd.pinan_asset_type as pinanAssetType,
+            sum(atd.pos_amount) as posAmount,
+            sum(atd.pos_cost) as posCost,
+            CASE
+            WHEN (FTP.FINPROD_TYPE2 = 'F02' OR
+            FTP.FINPROD_TYPE2 = 'F25' OR
+            FTP.FINPROD_TYPE2 = 'F04') THEN
+            SUM(atd.pos_value) * -1
+            ELSE
+            SUM(atd.pos_value)
+            end posValue,
+            CASE
+            WHEN (FTP.FINPROD_TYPE2 = 'F02' OR
+            FTP.FINPROD_TYPE2 = 'F25' OR
+            FTP.FINPROD_TYPE2 = 'F04') THEN
+            SUM(atd.tdy_intincexp) * -1
+            ELSE
+            SUM(atd.tdy_intincexp)
+            end tdyIntincexp
+            from ASSET_TARGET_DB atd
+            LEFT JOIN FIN_TRADE_PRODUCT FTP
+            ON atd.FINPROD_ID = FTP.FINPROD_ID
+            AND FTP.BRANCH = '0'
+            <!-- 多级法人改造 add by hxy 20200629 start-->
+            <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+                inner join data_auth_notify_inst dani
+                on dani.BUSINESS_ID =atd.PORTFOLIO_ID
+                and dani.data_type='PTL01'
+                and dani.model_type = '02'
+                and dani.institution_code
+                <foreach collection="resourcesTreeInstCodeList" item="item" separator=","
+                         open="in ("  close=")">
+                    #{item}
+                </foreach>
+
+            </if>
+            <!-- 多级法人改造 add by hxy 20200629 end-->
+            WHERE 1 = 1
+            <if test="portfolioIdList != null and portfolioIdList.size()>0">
+                AND atd.PORTFOLIO_ID IN
+                <foreach collection="portfolioIdList" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="searchDate != null and searchDate != ''">
+                and to_char(atd.CDATE,'yyyy-mm-dd') = #{searchDate}
+            </if>
+            <if test="profitTypeList != null and profitTypeList.size()>0">
+                AND atd.PROFIT_TYPE IN
+                <foreach collection="profitTypeList" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test=" prodManagerList !=null and prodManagerList.size()>0 " >
+
+                and atd.portfolio_id in (select  PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where  user_id in
+
+                <foreach collection="prodManagerList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+                )
+
+            </if>
+            <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
+                AND atd.FINPROD_MARKET_ID IN
+                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="pass != null and pass != ''">
+                and atd.IS_PERNE= #{pass} and atd.pinan_asset_type is not NULL
+            </if>
+            group by  FTP.FINPROD_TYPE2,atd.pinan_asset_type)lx
+            group by lx.pinanAssetType
+            ) b
+            on a.pinanAssetType=b.pinanAssetType
 
         </if>
 

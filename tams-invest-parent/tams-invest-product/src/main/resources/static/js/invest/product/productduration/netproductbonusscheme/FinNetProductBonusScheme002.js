@@ -39,7 +39,7 @@
     var finprodMarketIdChange = function() {
         var finprodMarketId = $("#finprodMarketId").val();
         var str = $('#finprodMarketId').select2('data')[0].object.split(',');
-    	if(str != null && str.length==8){
+    	if(str != null && str.length==9){
     		//$('#finprodAbbr').val(str[0]);
     		//$('#finprodName').val(str[1]);
     		$('#finprodId').val(str[2]);
@@ -48,11 +48,18 @@
             $('#finccy').textSelect('setValue', str[5]); // 币种
             $('#dealMode').val(str[6]);
             $('#portfolioId').val(str[7]);
+            $('#operationType').val(str[8]);
             var delDate = $('#delDate').val();
           //权益登记日
             if (delDate) {
+            	// add by yujiaping 2020-11-20 TISHKBS-809净值型产品分红方案管理，封闭式产品的除权日、权益登记日校验start 
+            	if($('#operationType').val() == '01'){
+            		  $('#regDate').val(delDate).trigger("change");
+            	}else{
+            	//add by yujiaping 2020-11-20 TISHKBS-809净值型产品分红方案管理，封闭式产品的除权日、权益登记日校验end 
                 var regDate = Date.ofDate(delDate).DateAdd('d', JoyinMath.doMinus($("#purSpeed").val(),1)).format('yyyy-MM-dd');
                 $('#regDate').val(regDate).trigger("change");
+                }
             }
     	}
     	if($('#dealMode').val() == '11'){
@@ -182,8 +189,10 @@
                         //获取参考日净值和参考日份额
                         Joyin.ajax(getTdyUnitValueAndTdyShareAmt, object1, function (data) {
                             if (data) {
+                                $('#tdyUnitValue').attr("data-textrange", parseInt($('#unitvalueDec').val())).trigger('change');
                                 if(pageModel != PAGE_MODEL_REFERENCE){
-                                    $('#tdyUnitValue').val(data.tdyUnitValue);
+                                    $('#tdyUnitValue').val(data.tdyUnitValue).trigger('change');
+                                    $('#tdyUnitValue').trigger('blur');
                                 }
                                 $('#tdyShareAmt').val(data.tdyShareAmt);
                                 //获得分红净资产
@@ -211,11 +220,18 @@
             $('#bonusDate').val('');
         }
         else {
+        	//权益登记日联动
+        	//add by yujiaping 2020-11-20 TISHKBS-809净值型产品分红方案管理，封闭式产品的除权日、权益登记日校验start
+        	if($('#operationType').val() == '01'){
+      		  $('#regDate').val(delDate).trigger("change");
+      	    }else{
+      	    //add by yujiaping 2020-11-20 TISHKBS-809净值型产品分红方案管理，封闭式产品的除权日、权益登记日校验end
             if(purSpeed) {
                 //权益登记日联动
                 var regDate = Date.ofDate(delDate).DateAdd('d',JoyinMath.doMinus(purSpeed,1) ).format('yyyy-MM-dd');
                 $('#regDate').val(regDate).trigger("change");
             }
+      	   }
             vluRefDateChange();
             //红利下发日
             if(inintNumber >= 0 ){
@@ -331,9 +347,12 @@
         var vluRefDate = $("#vluRefDate").val();
         var finprodId = $("#finprodId").val();
         var tdyAssetAmt = $('#tdyAssetAmt').val();//分红前净资产
+
+        $("#netvalue").attr("data-textrange", parseInt(unitvalueDec));
+
         if(bonuScalcFlag == bonuScalcFlagUnit && tdyUnitValue && unitBonusVlu && unitvalueDec){
             $("#netvalue").val(JoyinMath.doMinus(Number(tdyUnitValue),Number(unitBonusVlu),parseInt(unitvalueDec)));
-            
+
         }
         if(vluRefDate && finprodId && bonuScalcFlag != bonuScalcFlagUnit && unitvalueDec && tdyShareAmt && totalAmt && tdyAssetAmt){
             var minus = JoyinMath.doMinus(Number(tdyAssetAmt),Number(totalAmt),parseInt(unitvalueDec))

@@ -1,5 +1,6 @@
 package com.joyintech.tams.common.base.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
@@ -26,4 +27,6 @@ public interface PtlPortfolioMapper {
 	int updateRaiseType(Map<String,Object> param);
 	
 	String selectportfolioId(@Param("finprodId") String finprodId);
+
+	List<Map<String,Object>> getRiskInfoByPortfolioId(Map<String,Object> param);
 }

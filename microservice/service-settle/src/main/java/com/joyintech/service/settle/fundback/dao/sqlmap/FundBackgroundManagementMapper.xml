@@ -150,8 +150,46 @@
     <select id="findPage" resultType="com.joyintech.tams.invest.common.dto.settle.fundback.FundBackgroundManagementDto">
         WITH WFL_ORDERS AS (SELECT * FROM WFL_STL_PAY_ORDERS T5 WHERE T5.ORDER_ID = (
         SELECT MAX(T52.ORDER_ID) FROM WFL_STL_PAY_ORDERS T52 WHERE T5.TRADE_ID = T52.TRADE_ID)),
-        PAY_ORDERS AS (SELECT * FROM STL_PAY_ORDERS T5 WHERE T5.ORDER_ID = (
-        SELECT MAX(T52.ORDER_ID) FROM STL_PAY_ORDERS T52 WHERE T5.TRADE_ID = T52.TRADE_ID))
+        <!-- modify by mashukai 20201203 TISHKBS-1209 start -->
+        PAY_ORDERS1 AS
+        (
+            SELECT T5.*
+            FROM
+            STL_PAY_ORDERS T5
+            WHERE T5.ORDER_ID = (
+                SELECT MAX(T52.ORDER_ID) ORDER_ID
+                FROM STL_PAY_ORDERS T52
+                WHERE T5.TRADE_ID = T52.TRADE_ID
+                AND NOT EXISTS
+                    (
+                    SELECT SPO.ORDER_ID ORDER_ID
+                    FROM STL_PAY_ORDERS SPO
+                    LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TFPDT
+                    ON TFPDT.TOTLE_TRADE_ID = SPO.TRADE_ID
+                    LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL PTFPDT
+                    ON PTFPDT.TOTLE_TRADE_ID  = TFPDT.TOTLE_TRADE_ID
+                    WHERE PTFPDT.PA_BUSS_TYPE = '08'
+                    AND T52.ORDER_ID = SPO.ORDER_ID
+                    )
+            )
+        ),
+        PAY_ORDERS2 AS
+        (
+            SELECT SPO.*
+            FROM STL_PAY_ORDERS SPO
+            LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TFPDT
+            ON TFPDT.TOTLE_TRADE_ID = SPO.TRADE_ID
+            LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL PTFPDT
+            ON PTFPDT.TOTLE_TRADE_ID  = TFPDT.TOTLE_TRADE_ID
+            WHERE PTFPDT.PA_BUSS_TYPE = '08'
+        ),
+        PAY_ORDERS AS
+        (
+            SELECT * FROM PAY_ORDERS1
+            UNION ALL
+            SELECT * FROM PAY_ORDERS2
+        )
+        <!-- modify by mashukai 20201203 TISHKBS-1209 end -->
         /*1、 查询产品端交易（产品成立、产品到期、中间付息、产品强减、费用支付， 拆借到期）*/
         <if test="statusValid == null or statusValid.isEmpty() or statusValid == TRADE_FLOW_STATUS01">
             SELECT
@@ -160,13 +198,17 @@
             T4.PA_BUSS_TYPE,/*金融产品交易汇总扩展业务流程.平安业务类型 业务类型*/
             T5.ORDER_STATUS operateType,/*划款指令业务流程.指令状态 操作类型*/
             T5.PAY_TYPE,/*划款指令业务流程.划款类型 划款类型*/
-            T1.PORTFOLIO_ID,/*金融产品交易汇总业务流程.投资组合代码 组合代码*/
+            <!-- modify by mashukai 20201203 TISHKBS-1209 start -->
+            T5.PORTFOLIO_ID,/*金融产品交易汇总业务流程.投资组合代码 组合代码*/
+            <!-- modify by mashukai 20201203 TISHKBS-1209 end -->
             T3.PORTFOLIO_NAME,/*组合.组合名称 组合名称*/
             T1.FINPROD_ID,
             T2.FINPROD_MARKET_ID,/*金融产品交易汇总业务流程.理财产品代码 产品/资产代码*/
             NVL(T2.FINPROD_ABBR, T2.FINPROD_NAME) finProdMarketName,
             TO_CHAR(T5.SETTLE_DATE,'yyyy-MM-dd') cashDate,/*划款指令业务流程.结算日期 现金流日期*/
-            T1.TRADE_AMT cashAmt,/*金融产品交易汇总业务流程.交易金额 划款金额*/
+            <!-- modify by mashukai 20201203 TISHKBS-1209 start -->
+            T5.SETTLE_AMT cashAmt,/*金融产品交易汇总业务流程.交易金额 划款金额*/
+            <!-- modify by mashukai 20201203 TISHKBS-1209 end -->
             T1.WORKFLOW_ID,/*划款指令业务流程.工作流代码 工作流代码*/
             T6.WORKFLOW_ID WflWorkflowId,
             T6.CRT_USER manager,
@@ -184,11 +226,14 @@
             '03' sendStatus
             /**add by taoran 20200317 发送状态*/
             FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL T1
+            <!-- modify by mashukai 20201203 TISHKBS-1209 start -->
             LEFT JOIN WFL_TRD_FIN_PRODUCT_DEAL_TOTAL TT ON T1.P_TOTLE_TRADE_ID = TT.TOTLE_TRADE_ID
-            LEFT JOIN FIN_PRODUCT T2 ON T1.FINPROD_ID = T2.FINPROD_ID
-            LEFT JOIN PTL_PORTFOLIO T3 ON T1.PORTFOLIO_ID = T3.PORTFOLIO_ID
             LEFT JOIN WFL_PA_TRD_FIN_DEAL_TOTAL T4 ON T1.TOTLE_TRADE_ID = T4.TOTLE_TRADE_ID
             LEFT JOIN WFL_ORDERS T5 ON T1.TOTLE_TRADE_ID = T5.TRADE_ID
+            LEFT JOIN FIN_PRODUCT_ADD T10 ON T10.PORTFOLIO_ID = T5.PORTFOLIO_ID
+            LEFT JOIN FIN_PRODUCT T2 ON T10.FINPROD_ID = T2.FINPROD_ID
+            LEFT JOIN PTL_PORTFOLIO T3 ON T5.PORTFOLIO_ID = T3.PORTFOLIO_ID
+            <!-- modify by mashukai 20201203 TISHKBS-1209 end -->
             left join SYS_WFL_BUSINESS_LIST T6 ON
             <!-- 有效数据对应有效流程 -->
             ((T1.TOTLE_TRADE_ID = T6.TRADE_ID) and t6.action_type in (#{new}, 'modify'))
@@ -204,7 +249,7 @@
             LEFT JOIN STL_CAPACCT_INFO T8 ON T5.MY_ACCT_NO=T8.ACCT_NO
             LEFT JOIN STL_CAPACCT_INFO T9 ON T5.COUNTER_ACCT_NO=T9.ACCT_NO
             <where>
-                (T4.PA_BUSS_TYPE IN (#{PA_BUSINESS_TYPE01}, #{PA_BUSINESS_TYPE02}, #{PA_BUSINESS_TYPE03},
+                (T4.PA_BUSS_TYPE IN (#{PA_BUSINESS_TYPE09},#{PA_BUSINESS_TYPE01}, #{PA_BUSINESS_TYPE02}, #{PA_BUSINESS_TYPE03},
                 #{PA_BUSINESS_TYPE04},#{PA_BUSINESS_TYPE05},#{PA_BUSINESS_TYPE117}, #{PA_BUSINESS_TYPE06},
                 #{PA_BUSINESS_TYPE137},
                 #{PA_BUSINESS_TYPE138},#{PA_BUSINESS_TYPE17},#{PA_BUSINESS_TYPE33},
@@ -309,13 +354,17 @@
             T4.PA_BUSS_TYPE,/*金融产品交易汇总扩展.平安业务类型 业务类型*/
             T5.ORDER_STATUS operateType,/*划款指令.指令状态 操作类型*/
             T5.PAY_TYPE,/*划款指令.划款类型 划款类型*/
-            T1.PORTFOLIO_ID,/*金融产品交易汇总.投资组合代码 组合代码*/
+            <!-- modify by mashukai 20201203 TISHKBS-1209 start -->
+            T5.PORTFOLIO_ID,/*金融产品交易汇总.投资组合代码 组合代码*/
+            <!-- modify by mashukai 20201203 TISHKBS-1209 end -->
             T3.PORTFOLIO_NAME,/*组合.组合名称 组合名称*/
             T1.FINPROD_ID,
             T2.FINPROD_MARKET_ID,/*金融产品交易汇总.理财产品代码 产品/资产代码*/
             NVL(T2.FINPROD_ABBR, T2.FINPROD_NAME) finProdMarketName,
             TO_CHAR(T5.SETTLE_DATE,'yyyy-MM-dd') cashDate,/*划款指令.结算日期 现金流日期*/
-            T1.TRADE_AMT cashAmt,/*金融产品交易汇总.交易金额 划款金额*/
+            <!-- modify by mashukai 20201203 TISHKBS-1209 start -->
+            T5.SETTLE_AMT cashAmt,/*金融产品交易汇总.交易金额 划款金额*/
+            <!-- modify by mashukai 20201203 TISHKBS-1209 end -->
             NULL WORKFLOW_ID
             ,T6.WORKFLOW_ID WflWorkflowId,
             T6.CRT_USER manager,
@@ -332,11 +381,14 @@
             /**add by taoran 20200317 发送状态*/
             T5.SEND_STATUS sendStatus
             /**add by taoran 20200317 发送状态*/
+            <!-- modify by mashukai 20201203 TISHKBS-1209 start -->
             FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
-            LEFT JOIN FIN_PRODUCT T2 ON T1.FINPROD_ID = T2.FINPROD_ID
-            LEFT JOIN PTL_PORTFOLIO T3 ON T1.PORTFOLIO_ID = T3.PORTFOLIO_ID
             LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL T4 ON T1.TOTLE_TRADE_ID = T4.TOTLE_TRADE_ID
             LEFT JOIN PAY_ORDERS T5 ON T1.TOTLE_TRADE_ID = T5.TRADE_ID
+            LEFT JOIN PTL_PORTFOLIO T3 ON T5.PORTFOLIO_ID = T3.PORTFOLIO_ID
+            LEFT JOIN FIN_PRODUCT_ADD T10 ON T10.PORTFOLIO_ID = T5.PORTFOLIO_ID
+            LEFT JOIN FIN_PRODUCT T2 ON T10.FINPROD_ID = T2.FINPROD_ID
+            <!-- modify by mashukai 20201203 TISHKBS-1209 end -->
             left join SYS_WFL_BUSINESS_LIST T6 ON T1.TOTLE_TRADE_ID = T6.TRADE_ID AND T6.action_type in (#{new}, 'modify')  AND T6.BUSINESS_TYPE NOT IN ('126','38','V19','V20')
             LEFT JOIN STL_CAPACCT_INFO T8 ON T5.MY_ACCT_NO=T8.ACCT_NO
             LEFT JOIN STL_CAPACCT_INFO T9 ON T5.COUNTER_ACCT_NO=T9.ACCT_NO

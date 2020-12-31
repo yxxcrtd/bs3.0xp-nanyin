@@ -217,7 +217,7 @@ public class AutoPeriodBondCommonService {
                     baseTradeInfoDto.setBaseTrade(baseTrade);
                     // 单笔还本带息生成收息交易
                     if (cashIds.size() == 1 && StringUtil.isNotEmpty(finAssetIntInfo.getIntAmt())
-                        && finAssetIntInfo.getIntAmt().compareTo(BigDecimal.ZERO) > 0) {
+                        && finAssetIntInfo.getIntAmt().compareTo(BigDecimal.ZERO) >= 0) {
                         TrdProductDeal deal2 = 生成交易2(entity, baseTradeInfoDto, cashIds, DictCodeList.交易方向_收息.getValue(),
                             finAssetIntInfo, i, baseTradeInfoDto.getTrdFinProductDealTotal().getTotleTradeId());
                       //update zhangweiqi 通道费修改 2019-10-15 begin

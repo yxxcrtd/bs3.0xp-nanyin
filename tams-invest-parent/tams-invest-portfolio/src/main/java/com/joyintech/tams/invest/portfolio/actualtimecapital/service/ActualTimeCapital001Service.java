@@ -55,7 +55,7 @@ public class ActualTimeCapital001Service extends CommonExportService<ActualTimeC
             map.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA, portfolioId));
         }
         String acctNo = (String) map.get("acctNo");
-        if (StringUtil.isNotEmpty(portfolioId)) {
+        if (StringUtil.isNotEmpty(acctNo)) {
             map.put("acctNoList", StringUtil.splitToList(GlobalConstant.COMMA, acctNo));
         }
         // add by caiqun 工单YHZGCPB20200806001实时资金头寸里不能同时查询多个产品的现金 20200813 end

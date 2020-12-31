@@ -49,6 +49,7 @@ public class EntrustStatusService {
             params.put("sysDate", sysDate);
             List<String> entrustIdList = entrustStatusMapper.selectEntrustIds(params);
             entrustIdList.forEach(s -> baseEtrCashPositionCommService.entrustCloseExecute(s));
+            entrustStatusMapper.updateDistributeStatus(params);//add by yangwenjun 20201211 更新委托指令分发表中的接收状态
             entrustStatusMapper.updateEntrustStatus(params);
         }
     }

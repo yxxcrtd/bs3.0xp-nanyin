@@ -369,7 +369,8 @@
 		  	else max(type10) end as assetType2,
 		  --产品指标
           round(sum(case indId when '10016' then value else '' end),2) openAmount,
-          round(sum(case indId when '10017' then value else '' end),2) currentPrice,
+          <!-- round(sum(case indId when '10017' then value else '' end),2) currentPrice, -->
+          decode(substr(round(sum(case indId when '10017' then value else '' end),2),1,1),'.','0'||round(sum(case indId when '10017' then value else '' end),2),round(sum(case indId when '10017' then value else '' end),2)) currentPrice,
           round(sum(case indId when '10018' then value else '' end),2) marketCap,
           round(sum(case indId when '10019' then value else '' end),4) allAssetsRate,
           round(sum(case indId when '10020' then value else '' end),4) netAssetsRate,

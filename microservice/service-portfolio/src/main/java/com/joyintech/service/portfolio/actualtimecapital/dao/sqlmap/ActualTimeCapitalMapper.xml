@@ -86,13 +86,13 @@
 				              on t1.portfolio_id = t.portfolio_id
 				           INNER JOIN STL_CAPACCT_INFO t2
 				              on t2.acct_no = t1.acct_no 
-				           where
+				           where 1=1
 								<!-- update by caiqun  工单YHZGCPB20200806001实时资金头寸里不能同时查询多个产品的现金 20200813 end -->
 								<!-- t.portfolio_id = #{portfolioId,jdbcType=VARCHAR}		-->
 								<if test="portfolioIdList != null and portfolioIdList.size() >0">
-									<foreach collection="portfolioIdList" index="index" item="prot" open="(" separator="," close=")" >
+									<foreach collection="portfolioIdList" index="index" item="prot" separator=",">
 										<if test="(index % 998) == 0">
-											t.portfolio_id in (
+											and t.portfolio_id in (
 										</if>
 										#{prot,jdbcType=VARCHAR}
 									</foreach>)
@@ -205,13 +205,13 @@
 		    on t1.portfolio_id = t.portfolio_id
 		 INNER JOIN STL_CAPACCT_INFO t2
 		    on t2.acct_no = t1.acct_no
-	    WHERE
+	    WHERE 1=1
 		<!-- update by caiqun  工单YHZGCPB20200806001实时资金头寸里不能同时查询多个产品的现金 20200813 end -->
 		<!--t.portfolio_id = #{portfolioId,jdbcType = VARCHAR}-->
 		<if test="portfolioIdList != null and portfolioIdList.size() >0">
-			<foreach collection="portfolioIdList" index="index" item="prot" open="(" separator="," close=")" >
+			<foreach collection="portfolioIdList" index="index" item="prot"  separator=","  >
 				<if test="(index % 998) == 0">
-					t.portfolio_id in (
+					and t.portfolio_id in (
 				</if>
 				#{prot,jdbcType=VARCHAR}
 			</foreach>)

@@ -149,8 +149,8 @@ $(function(){
                     for(var select in object.selectedItem){
                         object.selectedItem[select].cancelRemark = result;
                     }
-//                    WorkFlow.doRevokeList(basePath + 'invest/trade/trddepositinvesttrade/TrdDepositInvestTrade001/delete', object, "TrdDepositInvestTrade001_btn_delete", "TrdDepositInvestTrade002");//删除
-                    WorkFlow.doDeleteList(basePath + 'invest/trade/trddepositinvesttrade/TrdDepositInvestTrade001/delete', object, "TrdDepositInvestTrade001_btn_revoke", "TrdDepositInvestTrade002");//删除
+                    WorkFlow.doRevokeList(basePath + 'invest/trade/trddepositinvesttrade/TrdDepositInvestTrade001/delete', object, "TrdDepositInvestTrade001_btn_delete", "TrdDepositInvestTrade002");//删除
+//                    WorkFlow.doDeleteList(basePath + 'invest/trade/trddepositinvesttrade/TrdDepositInvestTrade001/delete', object, "TrdDepositInvestTrade001_btn_revoke", "TrdDepositInvestTrade002");//删除
                     });
                 });
             });

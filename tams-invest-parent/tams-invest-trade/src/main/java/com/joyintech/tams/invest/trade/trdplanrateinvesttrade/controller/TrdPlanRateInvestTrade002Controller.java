@@ -28,6 +28,7 @@ import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.trade.dao.TrdCommonBaseMapper;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -120,6 +121,9 @@ public class TrdPlanRateInvestTrade002Controller extends BaseController{
 
     @Autowired
     private TrdCommonController trdCommonController;
+    
+    @Value("${flag:false}")
+    private boolean flag;
     
     /**
      * 初始化方法
@@ -219,11 +223,20 @@ public class TrdPlanRateInvestTrade002Controller extends BaseController{
             model.addAttribute("trdInvestPersonInfo002Dto", JsonUtils.object2Json(entity.getTrdInvestPersonInfo002Dto()));
             model.addAttribute("tradeId", entrustId);
             model.addAttribute("entity", entity);
+        }else if(StringUtil.equals(this.getParam("pageModel"), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
+
+            //add by yujiaping 2020-12-16 TISHKBS-1259 计划利率型交易新建时，清算速度默认T+0，并且不可修改start
+            TrdPlanRateInvestTradeDto entity = new TrdPlanRateInvestTradeDto();
+            entity.setMySettleSpeed(DictCodeList.清算速度_T_0.getValue());
+            model.addAttribute("entity", entity);
+            //add by yujiaping 2020-12-16 TISHKBS-1259 计划利率型交易新建时，清算速度默认T+0，并且不可修改end
+
         }
         model.addAttribute("YES_OR_NO_N",DictCodeList.是否_否.getValue());
         //add by lizhi 是否限制划款指令开关 2020年2月26日  start
         model.addAttribute("GEN_PAY_ORDERS_AUTO",CacheUtil.getSysParam(BussinessConstant.GEN_PAY_ORDERS_AUTO));
         //add by lizhi 是否限制划款指令开关 2020年2月26日  end
+
         return super.init(model);
     }
     /**
@@ -387,6 +400,38 @@ public class TrdPlanRateInvestTrade002Controller extends BaseController{
             return new AjaxResult(br);
         }
         
+        if (flag) {
+            BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter(); 
+            if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())){
+             // 一体化对应etliu end
+                bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_净值型资产申购);
+                if(StringUtil.equals(DictCodeList.计划类资产一级分类_券商资产管理计划, dto.getFinprodType())){
+                    bussinessCodeParameter.setType1(DictCodeList.业务编号一级分类_券商资产管理计划);
+                }else if(StringUtil.equals(DictCodeList.计划类资产一级分类_信托产品, dto.getFinprodType())){
+                    bussinessCodeParameter.setType1(DictCodeList.业务编号一级分类_信托产品);
+                }else{
+                    bussinessCodeParameter.setType1(DictCodeList.业务编号一级分类_保险资产管理计划);
+                }
+            }else if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())){
+                bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_净值型资产赎回);
+                if(StringUtil.equals(DictCodeList.计划类资产一级分类_券商资产管理计划, dto.getFinprodType())){
+                    bussinessCodeParameter.setType1(DictCodeList.业务编号一级分类_券商资产管理计划);
+                }else if(StringUtil.equals(DictCodeList.计划类资产一级分类_信托产品, dto.getFinprodType())){
+                    bussinessCodeParameter.setType1(DictCodeList.业务编号一级分类_信托产品);
+                }else{
+                    bussinessCodeParameter.setType1(DictCodeList.业务编号一级分类_保险资产管理计划);
+                }
+            }
+            if(baseGetBusinessId != null){
+                String tradId = baseGetBusinessId.buildBussinessCode(bussinessCodeParameter) != null ? baseGetBusinessId.buildBussinessCode(bussinessCodeParameter) : IDGenerator.generate(); 
+                dto.setTotleTradeId(tradId);
+            }
+            String  tradeId=trdPlanRateInvestTrade002Service.getTradeId(dto.getPs(),dto.getFinprodType());//获取买入卖出交易的交易编号
+            dto.setTradeId(tradeId);
+            dto.setCounterId(dto.getTrdInvestPersonInfo002Dto().getCounterId());
+        	trdPlanRateInvestTrade002Service.save(dto);
+        	return new AjaxResult("成功");
+		}
         
         
         ProcessParameter<TrdPlanRateInvestTradeDto> processParameter = new ProcessParameter<TrdPlanRateInvestTradeDto>();

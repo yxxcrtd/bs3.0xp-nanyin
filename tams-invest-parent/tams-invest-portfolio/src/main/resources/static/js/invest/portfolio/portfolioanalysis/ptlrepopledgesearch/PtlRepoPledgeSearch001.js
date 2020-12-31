@@ -55,22 +55,22 @@ $(function() {
         },
         cols:[
             {field:'counterId',width:150,title: 'PtlRepoPledgeSearch001.counterId'}
-            ,{field:'finprodType2Name',width:150,title: 'PtlRepoPledgeSearch001.finprodType2'}
-            ,{field:'type4Abbr',width:150,title: 'PtlRepoPledgeSearch001.type4'}
-            ,{field:'type5Abbr',width:150,title: 'PtlRepoPledgeSearch001.type5'}
-            ,{field:'finprodMarketId',width:150,title: 'PtlRepoPledgeSearch001.finprodMarketId'}
+            ,{field:'finprodType2Name',width:150,title: 'PtlRepoPledgeSearch001.finprodType2',sortField:'finprod_type2'}
+            ,{field:'type4Abbr',width:150,title: 'PtlRepoPledgeSearch001.type4',sortField:'type_4'}
+            ,{field:'type5Abbr',width:150,title: 'PtlRepoPledgeSearch001.type5',sortField:'type_5'}
+            ,{field:'finprodMarketId',width:150,title: 'PtlRepoPledgeSearch001.finprodMarketId',sortField:'FINPROD_MARKET_ID'}
             ,{field:'finprodAbbr',width:150,title: 'PtlRepoPledgeSearch001.finprodAbbr'}
             ,{field:'companyNature',width:150,title: 'PtlRepoPledgeSearch001.companyNature'}
             ,{field:'isSecBond',width:150,title: 'PtlRepoPledgeSearch001.isSecBond'}
-            ,{field:'pledgeAmt',width:150,type:'money',title: 'PtlRepoPledgeSearch001.pledgeAmt'}
+            ,{field:'pledgeAmt',width:150,type:'money',title: 'PtlRepoPledgeSearch001.pledgeAmt',sortField:'PLEDGE_AMT'}
             ,{field:'intRate',width:150,type:'number',title: 'PtlRepoPledgeSearch001.intRate'}
             ,{field:'term',width:150,title: 'PtlRepoPledgeSearch001.term'}
             ,{field:'vdate',width:150,title: 'PtlRepoPledgeSearch001.vdate',type:'date'}
             ,{field:'mdate',width:150,title: 'PtlRepoPledgeSearch001.mdate',type:'date'}
             ,{field:'pledgeRatio',width:150,type:'number',title: 'PtlRepoPledgeSearch001.pledgeRatio'}
             ,{field:'pledgeFaceValue',width:150,type:'money',title: 'PtlRepoPledgeSearch001.pledgeFaceValue'}
-            ,{field:'gradeResult',width:150,title: 'PtlRepoPledgeSearch001.gradeResult'}
-            ,{field:'registOrgAbbr',width:150,title: 'PtlRepoPledgeSearch001.registOrg'}
+            ,{field:'gradeResult',width:150,title: 'PtlRepoPledgeSearch001.gradeResult',sortField:'GRADE_RESULT'}
+            ,{field:'registOrgAbbr',width:150,title: 'PtlRepoPledgeSearch001.registOrg',sortField:'REGIST_ORG'}
         ]
     });
 

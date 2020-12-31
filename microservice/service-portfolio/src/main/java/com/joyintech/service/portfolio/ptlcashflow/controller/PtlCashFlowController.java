@@ -131,7 +131,7 @@ public class PtlCashFlowController {
         param.put("validStatus_02", DictCodeListExt1.交易流程状态_有效.getValue());
         param.put("validStatus_01", DictCodeListExt1.交易流程状态_流程中.getValue());
         param.put("validStatus_03", DictCodeListExt1.交易流程状态_撤销.getValue());
-        param.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_存款.getValue());
+//        param.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_存款.getValue());
         param.put("pingTypeBuy", DictCodeListExt1.平安业务类型_存款类资产买入.getValue());
         param.put("pingTypeSale", DictCodeListExt1.平安业务类型_存款类资产卖出.getValue());
         param.put("tradeFlowStatus", DictCodeListExt1.交易流程状态_流程中.getValue());

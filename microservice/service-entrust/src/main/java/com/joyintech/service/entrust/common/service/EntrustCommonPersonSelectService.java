@@ -46,6 +46,7 @@ import com.joyintech.service.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * 投资委托人员信息下拉框查询
@@ -196,5 +197,9 @@ public class EntrustCommonPersonSelectService extends BaseService<ITableRow> {
             dto.setInvManagerId(realName);
         }
         return dtoList;
+    }
+
+    public List<String> findSameNameCounterId(Map<String, Object> map) {
+        return entrustCommonPersonSelectMapper.findSameNameCounterId(map);
     }
 }

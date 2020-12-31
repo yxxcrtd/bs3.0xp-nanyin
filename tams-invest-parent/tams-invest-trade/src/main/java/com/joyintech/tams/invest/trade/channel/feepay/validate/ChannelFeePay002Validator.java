@@ -46,6 +46,13 @@ public class ChannelFeePay002Validator implements CommonValidator {
         if (dto.getBussTrdTransferOrder() == null || dto.getBussTrdTransferOrder().isEmpty()) {
             resultList.add(new ValidMessage("请生成划款指令。"));
         }
+        //若所选合作资产的费用设置为 与回款无关，计提结束日必填
+        String collectType = channelFeePay002Service.getCollectType(dto.getFinprodMarketId());
+        if(StringUtil.equals(collectType, "02")) {
+        	 if (!StringUtil.isNotEmpty(dto.getMdate())) {
+        		 resultList.add(new ValidMessage("请输入计提结束日。"));
+        	 }
+        }
         return resultList;
     }
 }

@@ -1031,7 +1031,8 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                         && !accountTypes.contains(DictCodeListExt1.资金账户类型_券商资金账户.getValue()) && StringUtil.isEmpty(chlId))
                     || ((DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(deal.getFinprodType2()))
                         && DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket())
-                        && DictCodeList.回购类型_质押式协议回购.getValue().equals(assetType2)
+                        && (DictCodeList.回购类型_质押式协议回购.getValue().equals(assetType2)
+                                ||DictCodeList.回购类型_质押式回购.getValue().equals(assetType2))
                         && DictCodeList.交易方向_买入.getValue().equals(deal.getPs()))
                     || ((DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(deal.getFinprodType2()))
                         /* && !DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket()) */
@@ -1143,7 +1144,7 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                          && DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue().equals(deal.getFinprodType2()))
 
             ) {
-                resultDto.setCdate(deal.getTradeDate());
+                resultDto.setCdate(deal.getSettleDate());
                 resultDto.setAmount(ArithmeticUtil.multiply(stlPayOrder.getSettleAmt(), new BigDecimal(-1)));
                 resultDto.setSplitType(DictCodeListExt3.拆分标识_已拆分.getValue());
                 result.add(resultDto);

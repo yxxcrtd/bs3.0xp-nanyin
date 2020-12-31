@@ -188,9 +188,9 @@ public class PtlManagementInfo001Validator implements BeanValidator{
             }*/
             //账户信息不能重复
             //update by leipeng 现状：产品要素界面挂资金账户，不同的账户类型挂了同一个资金账户，组合审批时，提示资金账户重复                                    期望：如果不同的账户类型挂了同一个资金账户，在建产品要素的时候提示资金账户重复，不要在组合审批的时候提示
-//            if(set.size() < dto.getFundAccountInfoDto().size()){
-//                errorList.add(new ValidMessage("fundAccountInfoDto",getMessage("BUSS_COM_E_0006",getMessage("PtlManagementInfo001.funInfo"))));
-//            }
+            if(set.size() < dto.getFundAccountInfoDto().size()){
+                errorList.add(new ValidMessage("fundAccountInfoDto",getMessage("BUSS_COM_E_0006",getMessage("PtlManagementInfo001.funInfo"),getMessage("FundAccountInfo.acctNo"))));
+            }
             //必须存在托管账户
             if(!hasSecManageAcct){
                 errorList.add(new ValidMessage(getMessage("PtlManagementInfo001.selectAcct")));

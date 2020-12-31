@@ -13,6 +13,9 @@
         <input id="ccy" th:value="${ccy}" hidden>
         <div style="margin: 5px;" id="FinStageManagement_btn_submit_div" >
             <a id="FinStageManagement_btn_submit" class="layui-btn layui-btn-sm btn-submit" data-th-text="#{SysCommon.submit}">提交</a>
+            <!--add by mashukai 20201119 	TISHKBS-1376 计划类利率型资产期次没办法导出，没有一个界面可以导出期次信息的起息日，到期日，及期次的利率 start	 -->
+            <a id="FinStageManagement_btn_export" class="layui-btn layui-btn-sm btn-export" data-th-text="#{SysCommon.export}">导出</a>
+            <!--add by mashukai 20201119 	TISHKBS-1376 计划类利率型资产期次没办法导出，没有一个界面可以导出期次信息的起息日，到期日，及期次的利率 start	 -->
         </div>
         <div>
             <table class="layui-table" id="dataTable"></table>

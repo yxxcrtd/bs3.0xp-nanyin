@@ -12,6 +12,7 @@ import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -140,6 +141,10 @@ public class TrdFundInvestTrade003Controller extends BaseController {
         model.addAttribute("YES_OR_NO_N", DictCodeList.是否_否.getValue());
         model.addAttribute("FINPROD_TYPE_F06", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
         model.addAttribute("collectType_01", DictCodeListExt2.收取方式_回款前扣除.getValue());
+
+        model.addAttribute("TRADESTATU03","");
+        model.addAttribute("PTRADEID","");
+
         TrdFundInvestTradeConfirmDto dto = new TrdFundInvestTradeConfirmDto();
         String tradeId = this.getParam("tradeId");
         String status = this.getParam("validStatus");
@@ -205,6 +210,12 @@ public class TrdFundInvestTrade003Controller extends BaseController {
             else {
                 dto = trdFundInvestTrade003Service.getTrdFundDto(RequestUtil.getPageParam());
                 // dto.setFeeAmtPay(ArithmeticUtil.subtract(dto.getFeeAmtPay(), dto.getChannelAmt()));
+                if(StringUtils.equals(status,DictCodeListExt1.交易状态_撤销.getValue())){
+                    // 如果为撤销
+                    model.addAttribute("TRADESTATU03",DictCodeListExt1.交易状态_撤销.getValue());
+                    model.addAttribute("PTRADEID",dto.getpTradeId());
+                }
+
                 Map<String, Object> param = new HashMap<>();
                 param.put("finprodId", dto.getFinprodId());
                 Map<String, Object> result = trdFundInvestTrade003Service.getPurSpeed(param);
@@ -271,6 +282,9 @@ public class TrdFundInvestTrade003Controller extends BaseController {
                 }
                 else if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
                     dto.setPs(DictCodeList.交易方向_赎回确认.getValue());
+                    if (StringUtil.equals(pageModel, GlobalConstant.DETAIL_PAGE_MODEL_NEW) && !StringUtil.isNotEmpty(dto.getTradeAmt())){
+                        dto.setTradeAmt(ArithmeticUtil.multiply(dto.getUnitCprice(),dto.getShareAmt()));
+                    }
                     dto.setPrinAmt(dto.getTradeAmt());
                 }
                 else if (StringUtil.equals(dto.getPs(), DictCodeListExt2.交易方向_转换申请.getValue())) {
@@ -283,11 +297,14 @@ public class TrdFundInvestTrade003Controller extends BaseController {
                     dto.setPageModel(GlobalConstant.DETAIL_PAGE_MODEL_REFERENCE);
                     model.addAttribute("single", 1);
                     dto.setbTradeId(dto.getTradeId());
+                    dto.setPrinAmt(dto.getTradeAmt());
                 }
                 if (!StringUtil.isNotEmpty(dto.getbTradeId())) {
                     dto.setbTradeId(dto.getTradeId());
                 }
-
+                if (DictCodeList.交易方向_赎回确认.getValue().equals(dto.getPs())) {
+                    dto.setPrinAmt(dto.getTradeAmt());
+                }
                 model.addAttribute("tradeId", dto.getTradeId());
                 model.addAttribute("entity_trdInvestPersonInfo", JsonUtils.object2Json(dto.getTrdInvestPersonInfo()));
                 model.addAttribute("businessId", dto.getTradeId());
@@ -301,6 +318,12 @@ public class TrdFundInvestTrade003Controller extends BaseController {
             }
             if (DictCodeListExt2.交易方向_转换赎回确认.getValue().equals(dto.getPs())) {
                 dto.setPs(DictCodeListExt2.交易方向_转换确认.getValue());
+            }
+            if (DictCodeList.交易方向_赎回确认.getValue().equals(dto.getPs())) {
+                if (!StringUtil.isNotEmpty(dto.getTradeAmt())){
+                    dto.setTradeAmt(ArithmeticUtil.multiply(dto.getUnitCprice(),dto.getShareAmt()));
+                }
+                dto.setPrinAmt(dto.getTradeAmt());
             }
             TrdInvestPersonInfo002Dto tipiDto = dto.getTrdInvestPersonInfo();
             model.addAttribute("entity_trdInvestPersonInfo", JsonUtils.object2Json(tipiDto));

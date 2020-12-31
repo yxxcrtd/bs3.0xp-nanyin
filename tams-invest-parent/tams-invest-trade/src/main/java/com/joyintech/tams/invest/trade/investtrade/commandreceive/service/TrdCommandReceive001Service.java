@@ -10,19 +10,28 @@
 
 package com.joyintech.tams.invest.trade.investtrade.commandreceive.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.export.ExportParam;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
-import com.joyintech.system.base.dao.SysParaMapper;
-import com.joyintech.system.base.entity.SysPara;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
+import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
+import com.joyintech.tams.component.business.common.service.CommonBusinessService;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
+import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
+import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
 import com.joyintech.tams.invest.trade.cstp.service.CstpSelect001Service;
+import com.joyintech.tams.invest.trade.investtrade.commandreceive.dto.TrdCommandReceive001Dto;
 import com.joyintech.tams.valuation.common.interf.val.dao.ValSysParaMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -30,22 +39,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.joyintech.calculation.util.ArithmeticUtil;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.export.CommonExportService;
-import com.joyintech.framework.export.ExportParam;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.invest.common.constant.ServiceApplication;
-import com.joyintech.tams.invest.trade.common.dto.EtrInvestInfoDto;
-import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
-import com.joyintech.tams.invest.trade.investtrade.commandreceive.dto.TrdCommandReceive001Dto;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 指令接收service
@@ -66,6 +64,12 @@ public class TrdCommandReceive001Service extends CommonExportService<TrdCommandR
 	private TradeCommonService tradeCommonService;
     @Autowired
     private CstpSelect001Service cstpSelect001Service;
+    
+    /**
+    *
+    */
+   @Autowired
+   private CommonBusinessService commonBusinessService;
 	/**
      * 查询 <功能详细描述>
      * 
@@ -462,8 +466,41 @@ public class TrdCommandReceive001Service extends CommonExportService<TrdCommandR
 	 * 退回委托
 	 */
 	public List<ValidMessage> returnEntrust(Map<String,Object> param){
-		return restTemplate.postForList(
+        List<ValidMessage> msg = restTemplate.postForList(
 	            ServiceApplication.TRADE_SERVICE_NAME + "/TrdCommandReceive001/refuseEntrust", param,ValidMessage.class);
+		//处理投资指令授信 20200529 start
+		if (StringUtil.isEmptyList(msg)) {
+			for(String entrustId : (List<String>)param.get("entrustIds")) {
+				Map<String, Object> map = commonBusinessService.selectByEntrustId(entrustId);
+		        AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
+		        inputDto.setProdid((String)map.get("portfolioId"));
+		        inputDto.setProdFinprodType(DictCodeListExt1.金融产品类型_投资组合.getValue());
+		        TrdProductDeal trdProductDeal = (TrdProductDeal) BeanUtil.mapToObject(map,TrdProductDeal.class);
+		        trdProductDeal.setpTradeId((String)map.get("entrustId"));
+		        trdProductDeal.setCounterId((String)map.get("counterId"));
+		        trdProductDeal.setTradeAmt((BigDecimal)map.get("entrustAmt"));
+	            trdProductDeal.setShareAmt((BigDecimal)map.get("entrustAmt"));
+		        trdProductDeal.setFinprodId((String)map.get("finprodId"));
+		        trdProductDeal.setTradeDate((Date)map.get("entrustDate"));
+		        
+		        trdProductDeal.setFinprodType2((String)map.get("finprodType2"));
+		        trdProductDeal.setPrinAmt((BigDecimal)map.get("entrustAmt")); 
+		        trdProductDeal.setPs((String)map.get("ps"));
+		        trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
+		        inputDto.setTrdProductDeal(trdProductDeal);
+		        TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
+		        trdProductDealAdd.setTradeId(trdProductDeal.getrTradeId());
+		        trdProductDealAdd.setPortfolioId((String)map.get("portfolioId"));
+//		        trdProductDealAdd.setCreditSource((String)map.get("creditSource"));
+
+		        inputDto.setTrdProductDealAdd(trdProductDealAdd);
+
+		        AllTradeCommonUtil.do投资指令授信(inputDto);
+			}
+		}
+		
+        //处理投资指令授信 20200529 end
+        return msg;
 	}
 	
 	/**
@@ -612,7 +649,7 @@ public class TrdCommandReceive001Service extends CommonExportService<TrdCommandR
 				else{
 						BigDecimal entrustNum = tradeCommonService.getEntrustAmtByEntrustId(dto.getEntrustId());
 						BigDecimal wflPrinAmt = tradeCommonService.getWflPrinAmt(dto.getEntrustId(), dto.getFinprodType2(), null);
-						if(entrustNum.compareTo(wflPrinAmt) != 1) {
+						if(entrustNum!=null&&entrustNum.compareTo(wflPrinAmt) != 1) {
 							ValidMessage validMessage = new ValidMessage("当前交易流程交易额度与已完成额度之和已等于委托额度");
 							list.add(validMessage);
 						}

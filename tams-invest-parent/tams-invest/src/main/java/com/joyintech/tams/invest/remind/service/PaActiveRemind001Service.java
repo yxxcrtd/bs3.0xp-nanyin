@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.remind.service;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
@@ -360,6 +362,7 @@ public class PaActiveRemind001Service extends BaseService<PaActiveRemind001Dto> 
         resultMap.putAll(this.searchCountR3S15(param));
         resultMap.putAll(this.searchCountR3S13(param));
         resultMap.putAll(this.searchCountR3S16(param));
+        param.put("quaryDateStr",DateUtil.format((Date)param.get("quaryDate")));
         resultMap.putAll(paActiveRemind001Mapper.searchCountR3(param));
         return resultMap;
     }

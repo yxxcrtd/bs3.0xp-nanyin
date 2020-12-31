@@ -173,4 +173,16 @@ public class TrdFxswapInvestTrade001Service extends CommonExportService<TrdFxswa
         // TODO Auto-generated method stub
 
     }
+
+    /**
+     * 获取委托代码
+     * @param map 请求参数
+     * @return 联想文本框实体类
+     * @since 1.0
+     */
+    public List<SuggestDto> getEntrustIdByType(Map<String,Object> map){
+        return restTemplate.postForList(
+                ServiceApplication.COMMON_SERVICE_NAME + "/CommonSelect/getEntrustId", map,
+                SuggestDto.class);
+    }
 }

@@ -327,8 +327,9 @@
 		LEFT JOIN FIN_PRODUCT fp ON fp.FINPROD_ID = tpd.FINPROD_ID
 		LEFT JOIN PTL_TRADE PT ON tpd.TRADE_ID = PT.BUSI_NO
 		LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
-		WHERE PP.INVEST_YESORNO = 'Y'
-		  AND tpd.TRADE_ID = #{tradId}
+		<!--WHERE PP.INVEST_YESORNO = 'Y'-->
+		  <!--AND tpd.TRADE_ID = #{tradId}-->
+		WHERE tpd.TRADE_ID = #{tradId}<!--modify by yangwenjun 20201201 ZGBS-41-->
 	</select>
 
 	<select id="getPurSpeed" resultType="java.util.Map">

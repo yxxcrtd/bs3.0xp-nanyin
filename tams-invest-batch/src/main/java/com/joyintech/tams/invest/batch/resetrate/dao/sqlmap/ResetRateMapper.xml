@@ -67,7 +67,13 @@ WHERE
 	AND <![CDATA[T4.VDATE < TO_DATE(#{sysDate},'YYYY-MM-DD')]]>
 	AND <![CDATA[T4.MDATE > TO_DATE(#{sysDate},'YYYY-MM-DD')]]>
 	<if test="productIdList != null and !productIdList.isEmpty()">
-	AND T1.FINPROD_ID in (<foreach collection="productIdList" item="item" separator=",">#{item}</foreach>)
+	AND T1.FINPROD_ID in
+		<foreach collection="productIdList" item="item" index="index" separator="," open="(" close="))">
+			<if test="(index % 999) == 998">
+				null) OR T1.FINPROD_ID in (
+			</if>
+			#{item}
+		</foreach>
 	</if>
 	<!--zhangnian add 20191022 利率重置批处理修改 start -->
 	UNION ALL

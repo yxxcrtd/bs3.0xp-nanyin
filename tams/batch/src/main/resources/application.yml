@@ -215,7 +215,7 @@ application:
       svrcomService: http://127.0.0.1:8080/tams
       pbcService: http://127.0.0.1:8080/tams
       investInterfService: http://127.0.0.1:8080/tams
-      tamsServer: http://127.0.0.1:8080
+      tamsServer: http://127.0.0.1:8080/tams
 #base数据库配置
 base:
   datasource:

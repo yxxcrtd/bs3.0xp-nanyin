@@ -134,7 +134,8 @@ public class PreTrdRepoTrade001Service extends CommonExportService<PreTrdRepoTra
      */
     @Override
     public Page<PreTrdRepoTrade002Dto> selectPageData(Map<String, Object> selectParam) {
-        Page<PreTrdRepoTrade002Dto> pageList = new Page<>();
+    	//modify by yujiaping 2020-12-10 BS-1409【 质押式回购交易预录入】未选择点击导出应导出全部，选中点击导出，只导出选中数据start
+        /*Page<PreTrdRepoTrade002Dto> pageList = new Page<>();
         List<PreTrdRepoTrade002Dto> resultList = new ArrayList<>();
         List<PreTrdRepoTrade002Dto> list = JSON.parseArray(String.valueOf(selectParam.get("preTrdRepoTrade002DtoList")),PreTrdRepoTrade002Dto.class);
         list.forEach(item ->{
@@ -146,6 +147,8 @@ public class PreTrdRepoTrade001Service extends CommonExportService<PreTrdRepoTra
         });
         pageList.setRoot(resultList);
         pageList.setRecords(resultList.size());
-        return pageList;
+        return pageList;*/
+    	return selectForPage(selectParam);
+    	//modify by yujiaping 2020-12-10 BS-1409【 质押式回购交易预录入】未选择点击导出应导出全部，选中点击导出，只导出选中数据end
     }
 }

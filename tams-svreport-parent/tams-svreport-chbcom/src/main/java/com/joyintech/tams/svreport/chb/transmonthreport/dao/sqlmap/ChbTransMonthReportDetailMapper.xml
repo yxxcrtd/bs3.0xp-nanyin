@@ -90,18 +90,32 @@
 	 and chbprd.profit_type='03' 
   </select>
   <select id="selectAssetList" resultType="com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthAssetPosition" parameterType="com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthAssetPosition" >
+   with temp as(
+      select
+      max(Fep.EXERCISE_DATE ) eDate,
+      Fp.Finprod_Id
+      from FIN_EXERCISE_PLAN FEP
+      left join FIN_PRODUCT FP on Fp.Finprod_Id = Fep.Finprod_Id
+      where Fp.Is_Right = 'Y'
+      and Fep.EXERCISE_DATE &lt;= #{enddate,jdbcType=DATE}
+      group by Fp.Finprod_Id
+    )
    select  fp.profit_type as prodtype, chbasset.rating as rating,
     chbasset.assettype2 as assettype2,
     decode(chbasset.assettype2,'2617',chbinfo.is_govern_fund,chbasset.is_govern_fund1)  isgovernfund1,
     chbinfo.bank_sec_capital bankseccapital, 
     chbinfo.bank_sec_perpetual banksecperpetual,chbinfo.bank_sec_prefer banksecprefer,
     repbond.rep_sec_nature as repsecnature,
+    <!-- add by mashukai 查询结果增加发行方式和产品代码 start-->
+    chbinfo.Issue_Mode issueMode,/*发行方式,01公开发行,02非公开发行*/
+    chbasset.prod_id prodId,/*产品代码*/
+    <!-- add by mashukai 查询结果增加发行方式 end-->
     case when  chbasset.assettype2 in ('1201','1202','1203','1204','1205','1206','1207','1208','1209','1210','1299')  
                then nvl(chbasset.assetvalue_a,0)
         else coalesce(chbasset.assetvalue_b,chbasset.assetvalue_a,0) 
     end as assetvalueB,
     case when chbasset.assettype2 in ('1001','1106','2401','1303','2403','2402','2499','1401','1402','1403','1404','1405','1406','1499') then 1
-      else nvl((nvl(exeplan.mdate,nvl(asset.mdate,deal.mdate)) -  #{enddate,jdbcType=DATE}),0) end as remainterm,fp.finprod_id as finprodId
+      else nvl((decode(TPE.eDate,null,nvl(exeplan.mdate,nvl(asset.mdate,deal.mdate)),TPE.eDate) -  #{enddate,jdbcType=DATE}),0) end as remainterm,fp.finprod_id as finprodId
     from chb_month_asset_position chbasset
     left join fin_product fp
     on 'F16_'||chbasset.prod_id=fp.finprod_id
@@ -118,7 +132,9 @@
    left join (select distinct p.finprod_id as prodid,min(p.exercise_date) as mdate  
    from   fin_exercise_plan p  where p.finprod_type='F01'    and p.exercise_date>#{enddate,jdbcType=DATE}
    group by p.finprod_id ) exeplan
-   on asset.finprod_id=exeplan.prodid and asset.is_sus='Y'  
+   on asset.finprod_id=exeplan.prodid and asset.is_sus='Y'
+   left join temp TPE
+    on TPE.Finprod_Id = asset.finprod_id
 	 	 <!-- 多级法人改造 add by hxy 20200616 -->
      <if test="institutionlist != null and !institutionlist.isEmpty()  ">
                    inner join data_auth_notify_inst dani 
@@ -137,14 +153,27 @@
     and d.profit_flag='03' and chbasset.assettype2 not in ('1701','1702','1703','1704','1705','1706')  
   </select>
     <select id="selectAssetListBottom" resultType="com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthAssetPosition" >
+    with temp as(
+        select
+        max(Fep.EXERCISE_DATE ) eDate,
+        Fp.Finprod_Id
+        from FIN_EXERCISE_PLAN FEP
+        left join FIN_PRODUCT FP on Fp.Finprod_Id = Fep.Finprod_Id
+        where Fp.Is_Right = 'Y'
+        and Fep.EXERCISE_DATE &lt;= #{enddate,jdbcType=DATE}
+        group by Fp.Finprod_Id
+    )
     select tt.prodtype,tt.assettype2,
            sum(case when tt.totalnum = null or tt.totalnum=0 then 0
                     else tt.accuqty/tt.totalnum*tt.posnum
-               end) as assetvalueB,tt.remainterm
+               end) as assetvalueB,tt.remainterm,tt.issueMode,tt.prodId
 	from (
 	select   distinct fp.profit_type as prodtype,t2.asset_type2 as assettype2,
 	nvl(T1.TOTAL_NUM,0) as totalnum,nvl(T4.ACCUQTY,0) as accuqty,nvl(T1.POS_AMT,0) as posnum,t1.pos_id,
-	nvl((nvl(exeplan.mdate,nvl(asset.mdate,deal.mdate)) - #{enddate,jdbcType=DATE}),0) as remainterm
+        nvl((decode(TPE.eDate,nvl(exeplan.mdate,nvl(asset.mdate,deal.mdate)),TPE.eDate) - #{enddate,jdbcType=DATE}),0) as remainterm
+	<!-- add by mashukai 20201020 查询结果新增产品代码和开放模式 start-->
+	,asset.ISSUE_TYPE as issueMode,t4.prod_id prodId
+    <!-- add by mashukai 20201020 查询结果新增产品代码和开放模式 end-->
 	from chb_bot_ast_pos t1
 	inner join chb_asset_info t2 on t1.plan_asset_id=t2.asset_code
 	inner join chb_asset_info t3 on t1.asset_code=t3.asset_code
@@ -162,7 +191,9 @@
    left join (select distinct p.finprod_id as prodid,min(p.exercise_date) as mdate  
    from   fin_exercise_plan p  where p.finprod_type='F01'  and p.exercise_date>#{enddate,jdbcType=DATE}
     group by p.finprod_id ) exeplan
-   on asset.finprod_id=exeplan.prodid and asset.is_sus='Y'  
+   on asset.finprod_id=exeplan.prodid and asset.is_sus='Y'
+    left join temp TPE
+    on TPE.Finprod_Id = asset.finprod_id
 	 <!-- 多级法人改造 add by hxy 20200616 -->
      <if test="institutionlist != null and !institutionlist.isEmpty()  ">
                    inner join data_auth_notify_inst dani 
@@ -182,7 +213,7 @@
 	and t4.cdate =  #{enddate,jdbcType=DATE}
 	and t1.pos_date = #{enddate,jdbcType=DATE}
 	)tt
-	group by tt.prodtype,tt.assettype2,tt.remainterm
+	group by tt.prodtype,tt.assettype2,tt.remainterm,tt.issueMode,tt.prodId
     </select>
     <!-- 下拉查询所属下属机构（模糊查询） -->
 	<select id="getChbTransOrg" resultType="com.joyintech.framework.select.SelectOptionDto" >

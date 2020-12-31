@@ -29,6 +29,15 @@
          * 获取列表参数
          */
         var object = $.serializeToObject('#searchForm', true);
+        
+        // 指令授信 start
+        object.inputValue1 = 'F05';
+        object.counterId = object.bussEtrInvestPersonInfoDto.counterId;
+        object.tradeAmt = object.entrustAmt;
+        object.prinAmt = object.entrustAmt;
+        object.tradeDate = $('#vdate').val();
+        // 指令授信 end
+        
         if ($('#select2-finprodMarketId-container').attr('title')){
             object.finprodName = $('#select2-finprodMarketId-container').attr('title');
         }
@@ -73,18 +82,19 @@
         if ($("#getChannelId").val() !=null && $("#getChannelId").val() !='') {
 			object.chlId = $('#getChannelId').val();
 		}
-
-        Joyin.ajaxJson(basePath + 'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/checkAuthorization', object, function(result2) {
-	        Joyin.ajaxJson(basePath + 'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/check',object,
-	          function(result) {
-	              Joyin.confirm(result.data,function() {
-	                   if (operateType === 'save') {
-	                       WorkFlow.doSaveList(basePath+'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/save',object,"EtrBrowDepoInfo002_btn_save");
-	                   } else {
-	                       WorkFlow.doSubmitList(basePath+'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/save',object,"EtrBrowDepoInfo002_btn_submit");
-	                   }
-	               });
-	           });
+        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
+	        Joyin.ajaxJson(basePath + 'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/checkAuthorization', object, function(result2) {
+		        Joyin.ajaxJson(basePath + 'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/check',object,
+		          function(result) {
+		              Joyin.confirm(result.data,function() {
+		                   if (operateType === 'save') {
+		                       WorkFlow.doSaveList(basePath+'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/save',object,"EtrBrowDepoInfo002_btn_save");
+		                   } else {
+		                       WorkFlow.doSubmitList(basePath+'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/save',object,"EtrBrowDepoInfo002_btn_submit");
+		                   }
+		               });
+		           });
+	        });
         });
     }
 

@@ -326,7 +326,7 @@
         	if(applyType =='prod' && $("#bussFinProductOpenPlanDto_openMode",parent.document).val() =='02'){
                 getElementById('firstAnapleroticCycleStrDateDiv').hide();
             }
-            return;
+            //return;
         }
         var operationType = $('#FinNetValueProductBuild002_operationType',parent.document).val();
         if(operationType == '01'){
@@ -344,6 +344,7 @@
             getElementById('anapleroticEndDate').val(getElementById('firstAnapleroticDate').val()).prop('disabled', true);
             getElementById('firstAnapleroticCycleBegDate').val(Date.ofDate($("#FinNetValueProductBuild002_vdate",parent.document).val()).DateAdd("d", -1).format('yyyy-MM-dd'));
         }else if(operationType == '02'){
+            getElementById('anapleroticEndDate').prop('disabled', false);
         // 开放
             if(applyType =='prod' && $("#bussFinProductOpenPlanDto_openMode",parent.document).val() =='02'){
             //高频开放
@@ -551,11 +552,7 @@
                     getElementById('anapleroticBasic').val(result.anapleroticBasic).trigger("blur").trigger('change');
 //                      getElementById('astVluDateType').val(result.astVluDateType).trigger("blur").trigger('change');
 //                      getElementById('anapleroticFrequency').val(result.anapleroticFrequency).trigger("blur").trigger('change');
-                    getElementById('firstAnapleroticDate').val(new Date(result.firstAnapleroticDate).format('yyyy-MM-dd')).trigger("blur").trigger('change');
-//                      getElementById('cycleTdayRule').val(result.cycleTdayRule).trigger("blur").trigger('change');
-                    getElementById('firstAnapleroticCycleEndDate').val(new Date(result.firstAnapleroticCycleEndDate).format('yyyy-MM-dd')).trigger("blur").trigger('change');
-                    getElementById('firstAnapleroticCycleBegDate').val(new Date(result.firstAnapleroticCycleBegDate).format('yyyy-MM-dd')).trigger('change');
-                    getElementById('anapleroticEndDate').val(new Date(result.anapleroticEndDate).format('yyyy-MM-dd')).trigger('change');
+
 //                      if(result.anapleroticFrequency&&result.cycleTdayRule){
 ////                    	  loadTable();
 //                    	  getElementById('anapleroticPlanInfo').show();
@@ -567,6 +564,12 @@
                     getElementById('operationType').val(result.operationType).trigger('change');
                     getElementById('dealMode').val(result.dealMode).trigger('change');
                     getElementById('openMode').val(result.openMode).trigger('change');
+
+                    getElementById('firstAnapleroticDate').val(new Date(result.firstAnapleroticDate).format('yyyy-MM-dd')).trigger("blur").trigger('change');
+//                      getElementById('cycleTdayRule').val(result.cycleTdayRule).trigger("blur").trigger('change');
+                    getElementById('firstAnapleroticCycleEndDate').val(new Date(result.firstAnapleroticCycleEndDate).format('yyyy-MM-dd')).trigger("blur").trigger('change');
+                    getElementById('firstAnapleroticCycleBegDate').val(new Date(result.firstAnapleroticCycleBegDate).format('yyyy-MM-dd')).trigger('change');
+                    getElementById('anapleroticEndDate').val(new Date(result.anapleroticEndDate).format('yyyy-MM-dd')).trigger('change');
 
                      // 开放  高频开放
                     if(result.operationType == '02' && result.openMode == '02' ){
@@ -626,7 +629,22 @@
     var firstAnapleroticDateChangeAction = function(){
         // 处理 模式 为 普通 /普通分档  封闭式产品 则 修改首次回补日后，回补计提结束日与之相同 切不可修改
         if( (dealMode == '01' || dealMode == '11') && $('#operationType').val() == '01' ){
-            getElementById('anapleroticEndDate').val(getElementById('firstAnapleroticDate').val()).prop('disabled', true);
+            var tempdate = getElementById('firstAnapleroticDate').val();
+           var tempmdate =  getElementById('mdate').val();
+           if( tempdate && tempmdate ){
+               if (Date.ofDate(tempdate).format('yyyy-MM-dd') == Date.ofDate(tempmdate).DateAdd("d", -1).format('yyyy-MM-dd')
+                  ||   Date.ofDate(tempdate).format('yyyy-MM-dd') == Date.ofDate(tempmdate).format('yyyy-MM-dd')  ){
+
+                  getElementById('anapleroticEndDate').val(getElementById('firstAnapleroticDate').val()).prop('disabled', true);
+               }else{
+                    getElementById('firstAnapleroticDate').val(Date.ofDate(tempmdate).DateAdd("d", -1).format('yyyy-MM-dd'));
+                    Joyin.error("封闭式产品首次回补日仅允许修改为到期日或者到期日减1！");
+               }
+           }
+
+
+        }else{
+             getElementById('anapleroticEndDate').prop('disabled', false);
         }
     }
 //    var isListChange=function(){

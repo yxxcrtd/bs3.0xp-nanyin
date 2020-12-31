@@ -20,10 +20,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
@@ -104,4 +106,13 @@ public class FlowRiskStressTestView001Controller extends BaseController{
 
         return service.fuzzySelectScene(paramMap);
     }
+    
+    @ResponseBody
+    @RequestMapping("restart")
+    public AjaxResult restart(@RequestBody Map<String,Object> map) {
+    	String testId = (String)map.get("testId");
+    	service.restart(testId);
+    	return new AjaxResult();
+    }
+    
 }

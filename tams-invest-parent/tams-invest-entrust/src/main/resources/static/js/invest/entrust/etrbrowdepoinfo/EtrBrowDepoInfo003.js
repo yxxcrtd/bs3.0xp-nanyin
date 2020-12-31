@@ -117,6 +117,14 @@
         var objects = object.selectedItem;
         for (var index in objects) {
             var temp = objects[index];
+            
+            // 指令授信start
+            temp.inputValue1 = 'F05';
+            temp.tradeAmt = temp.entrustAmt;
+            temp.prinAmt = temp.entrustAmt;
+            temp.tradeDate = temp.vdate;
+            // 指令授信end
+            
             if (operateType === 'save') {
                 temp.elementId = 'EtrBrowDepoInfo002_btn_save';
             } else {

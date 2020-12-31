@@ -175,7 +175,7 @@ public class TrdPlanRateInvestTradeController {
      * @since 1.0
      */
     @PostMapping("getLastVDate")
-    FinCashPlan getLastVDate(@RequestBody Map<String,Object> map){
+    public FinCashPlan getLastVDate(@RequestBody Map<String,Object> map){
         return trdPlanRateInvestTradeService.getLastVDate(map);
     }
     /**
@@ -186,12 +186,12 @@ public class TrdPlanRateInvestTradeController {
      * @since 1.0
      */
     @PostMapping("getFinCashCalcRule")
-    List<FinCashCalcRuleDto> getFinCashCalcRule(@RequestBody Map<String,Object> map){
+    public List<FinCashCalcRuleDto> getFinCashCalcRule(@RequestBody Map<String,Object> map){
         return trdPlanRateInvestTradeService.getFinCashCalcRule(map);
     }
 
     @PostMapping("getFinCashPayRule")
-    FinCashPayRule getFinCashPayRule(@RequestBody Map<String,Object> map){
+    public FinCashPayRule getFinCashPayRule(@RequestBody Map<String,Object> map){
         return trdPlanRateInvestTradeService.getFinCashPayRule(map);
     }
 

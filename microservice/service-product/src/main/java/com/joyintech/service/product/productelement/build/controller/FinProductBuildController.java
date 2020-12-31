@@ -221,7 +221,7 @@ public class FinProductBuildController {
     }
     
     @RequestMapping("getTermType")
-    public List<FinProductBuild001Dto> getTermType(Map<String, Object> map){
+    public List<FinProductBuild001Dto> getTermType(@RequestBody Map<String, Object> map){
         return finProductBuildService.getTermType(map);
     }
     @RequestMapping("getTermType02")

@@ -436,6 +436,20 @@
         var objects = object.selectedItem;
         for (var index in objects) {
             var temp = objects[index];
+            
+            // 指令授信 start
+            temp.finprodType2 = 'F06';
+            temp.inputValue1 = 'F02';
+            temp.tradeDate = temp.vdate;
+            temp.counterId = temp.counterId;
+            temp.tradeAmt = temp.entrustNum;
+            temp.prinAmt = temp.entrustNum;
+            if(temp.entrustAmt) {
+            	temp.tradeAmt =temp.entrustAmt;
+            	temp.prinAmt =temp.entrustAmt;
+            }
+            // 指令授信 end
+            
             temp.operateType = operateType;
             temp.pageModel = pageModel;
             if (operateType === 'submit') {
@@ -476,8 +490,56 @@
          */
         $('#EtrFund003_btn_riskcal').click(function () {
             //window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
-            $("#riskMathFlag").val("02");
+            $("#riskMathFlag").val("02").trigger('change');
         });
     })
+
+    var getriskdatas = function () {
+        var mun=null;
+        // var object = $.serializeToObject('#searchForm');
+        // var bussCombDistribtList=null;
+        // if(object!=null&&object!=""&&object.bussCombDistribtList!=null&&object.bussCombDistribtList!=""){
+        //     bussCombDistribtList=object.bussCombDistribtList;
+        // }
+
+        //校验数据  校验表格
+        var tableData = table.getAllRows();
+        if (tableData.length == 0) {
+            Joyin.alert("委托列表至少有一条数据！", 2);
+            return false;
+        }
+
+        var list=[];
+        for(var i in tableData){
+            var item = tableData[i];
+            var tradeAmount = null;
+            if(item.ps == 'T06'){
+                tradeAmount = item.entrustNum;
+            }else{
+                tradeAmount = item.entrustAmt;
+            }
+
+            var obj = {
+                tradeDirection: item.ps,
+                timePoint: MY_SUP_TIME_TYPE_02,
+                valDate: sysDate,
+                portfolioCode: item.portfolioId,
+                tradeAmount: tradeAmount,
+                assetType: fintype,
+                assetSecType: item.assetType1,//$('#assetType1').val(),
+                isEnabled: '01',
+                assetCode: item.finprodId //$('#finprodIdhid').val()
+            }
+            list[i]=obj;
+        }
+        var object = {
+            tradeDirection: ['ps', 'EtrInvestBondInfo002.ps'],
+            portfolioCode: ['portfolioId', 'EtrInvestBondInfo002.portfolioId'],
+            tradeAmount: ['entrustNum', 'EtrInvestBondInfo002.entrustAmt'],
+            assetType: ['assetType1', 'EtrInvestBondInfo002.bondType'],
+            data: list
+        }
+        return object;
+    };
 
 }());

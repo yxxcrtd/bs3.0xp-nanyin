@@ -239,7 +239,7 @@
 											</div>
 										</div>
 		<!-- 增加推荐方与推荐费率 delete by renping 20191014 end -->
-										<div class=" form-inline-wrap">
+										<div class=" form-inline-wrap layui-hide">
 											<label class="layui-form-label form-label-wrap"
 												data-th-text="#{FinPlanProfitAsset002.assetSourceUnit}">资产来源条线</label>
 											<div class="layui-input-inline input-inline">
@@ -510,7 +510,7 @@
 													data-th-data-result='${ACCOUNT_SPEED}' formatoption="true"
 													required="required" allowClear="true" placeholder="请输入内容"
 													data-th-placeholder="#{SysCommon.placeholder}"
-													data-th-initValue='*{entity?.transMode}'>
+													data-th-initValue='*{entity?.transMode}' disabled>
 												</select>
 											</div>
 										</div>

@@ -14,16 +14,28 @@ $(function() {
 
     function saveOrSubmit(operateType) {
         var intSettType = $('#intSettType').val();
-        if(intSettType == INT_SETT_TYPE_02 && GEN_PAY_ORDERS_AUTO == '01') {
-            window.BussTrdTransferOrder['bussTrdTransferOrder'].generateOrders(function () {
-                realSaveOrSubmit(operateType);
-            });
+        //add by yujiaping 2020-12-5 BS-1562【存款类存续期】同一资产同一计息结束日只能做一次活期存放结息start
+        var mdateProd = $('#mdateProd').val();
+        var finprodMarketId = $('#finprodMarketId').val();
+        	Joyin.ajax(basePath + "invest/period/trddepoduration/TrdDepoDuration002/getTradeId",{finprodMarketId:finprodMarketId,mdateProd:mdateProd},
+        			function(result){
+        		if(result.data.RESULT != 0){
+        			Joyin.error(JoyinUtil.getMessage("资产在同一个计息结束日不可以重复做活期存放结息!"));
+        			return;
+        		}else{
+        			 if(intSettType == INT_SETT_TYPE_02 && GEN_PAY_ORDERS_AUTO == '01') {
+        		            window.BussTrdTransferOrder['bussTrdTransferOrder'].generateOrders(function () {
+        		                realSaveOrSubmit(operateType);
+        		            });
+        		        }
+        		        else {
+        		            realSaveOrSubmit(operateType);
+        		        }
+        		}
+        	});
+        	//add by yujiaping 2020-12-5 BS-1562【存款类存续期】同一资产同一计息结束日只能做一次活期存放结息end
         }
-        else {
-            realSaveOrSubmit(operateType);
-        }
-    }
-
+    
     function realSaveOrSubmit(operateType) {
         var intSettType = $('#intSettType').val();
         if(intSettType == INT_SETT_TYPE_02){
@@ -180,6 +192,8 @@ $(function() {
         }
     }
     $(function() {
+    	$("#intAmtTheory_div").hide();
+    	$("#vdate_div").hide();
         //资产代码的联动
         $('#finprodMarketId').change(function(){
             var finprodMarketId = $('#finprodMarketId').val();
@@ -239,7 +253,9 @@ $(function() {
             var portfolioId = $('#portfolioId').val();
             //需求变更 存款存续期提前支取不要 托管账户 yjm start 20190918
             if(portfolioId || portfolioId !=''){
-                Joyin.ajax(basePath + "invest/period/trddepoduration/TrdDepoDuration002/portfolioIdLink",{portfolioId:portfolioId},
+                // Joyin.ajax(basePath + "invest/period/trddepoduration/TrdDepoDuration002/portfolioIdLink",{portfolioId:portfolioId},
+                // modify by jiangpeng on 20201215 ZGBS-69
+                Joyin.ajax(basePath + "invest/period/trddepoduration/TrdDepoDuration004/getPortfolioName",{portfolioId:portfolioId},
                         function(result){
                     if(result.data){
                         triValueChange('portfolioName',result.data.PORTFOLIONAME);

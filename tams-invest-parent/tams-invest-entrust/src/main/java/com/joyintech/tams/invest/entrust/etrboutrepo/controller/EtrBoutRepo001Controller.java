@@ -10,18 +10,6 @@
  
 package com.joyintech.tams.invest.entrust.etrboutrepo.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
@@ -32,6 +20,17 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.entrust.etrboutrepo.dto.EtrBoutRepoDto;
 import com.joyintech.tams.invest.entrust.etrboutrepo.service.EtrBoutRepoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 /**
  * 〈一句话功能简述〉
@@ -126,7 +125,7 @@ public class EtrBoutRepo001Controller extends BaseController {
         List<EtrBoutRepoDto> dtolist = dto.getSelectedItem();
         if(dtolist != null && dtolist.size()>0){
             for(EtrBoutRepoDto entity : dtolist){
-                etrBoutRepoService.closeDelegate(entity.getEntrustId(), entity.getCloseWay());
+                etrBoutRepoService.closeDelegate(entity.getEntrustId(), entity.getCloseWay(), entity.getEntrustStatus());
             }
             return new AjaxResult(this.getMessage("ETR_X_003"));
         }

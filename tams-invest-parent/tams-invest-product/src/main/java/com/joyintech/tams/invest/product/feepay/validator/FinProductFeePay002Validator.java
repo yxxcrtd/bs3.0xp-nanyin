@@ -147,7 +147,7 @@ public class FinProductFeePay002Validator implements BeanValidator {
         	if (StringUtil.equals(finProductFeePay002Dto.getFeeType(),
                     DictCodeList.费用品种类型_结算服务费.getValue())
                     || StringUtil.equals(finProductFeePay002Dto.getFeeType(),
-                        DictCodeListExt1.一次性费用类型_账户维护费.getValue())) {
+                    		DictCodeList.费用品种类型_账户维护费.getValue())) {
             	// 一体化对应etliu end
                 if (StringUtil.isEmpty(finProductFeePay002Dto.getRegTrustOrg())) {
                     validList.add(
@@ -155,7 +155,7 @@ public class FinProductFeePay002Validator implements BeanValidator {
                             this.getMessage("FinProductFeePay002.regTrustOrg"))));
                 }
                 
-            	if (!StringUtil.equals(finProductFeePay002Dto.getFeeType(),
+            	/*if (!StringUtil.equals(finProductFeePay002Dto.getFeeType(),
                         DictCodeList.费用品种类型_结算服务费.getValue())) {
                 	// 一体化对应etliu end
                     if (!StringUtil.isNotEmpty(finProductFeePay002Dto.getPayAmt())) {
@@ -166,7 +166,7 @@ public class FinProductFeePay002Validator implements BeanValidator {
                         validList.add(new ValidMessage("adjustAmt", this.getMessage(
                             "BUSS_COM_E_0038", this.getMessage("FinProductFeePay002.adjustAmt"))));
                     }
-                }
+                }*/
             }
             if (!StringUtil.isNotEmpty(finProductFeePay002Dto.getActPayAmt())) {
                 validList.add(new ValidMessage("actPayAmt", this.getMessage("BUSS_COM_E_0038",

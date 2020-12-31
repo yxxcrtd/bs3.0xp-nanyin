@@ -5,7 +5,12 @@
 	var getElementByRedId = function(id) {
 		return $('#' + bussFinProductOpenPlanRedDto + '_' + id);
 	};
-	
+
+	// add by mashukai 20201116 BS-1993,BS-1996 开放计划，赎回计划反显值不对 start
+	if(isDraft && sameFlag1=='N'&& $('#FinNetValueProductBuild002_dealMode').val() != '10'){
+		$("#red_div").show();
+	}
+	// add by mashukai 20201116 BS-1993,BS-1996 开放计划，赎回计划反显值不对 end
 	/**
 	 * 初始化加载tableFlag 
 	 */
@@ -20,13 +25,17 @@
 	var mdate3=null;
 	
 	var getSearchParams = function(){
-		
 		var param = {};
 		param.initFlag = initFlag;
 		param.profitType = $("#"+profitType).val();
 		if (!initFlag){
 			param.finprodId = openPlanFinprodId;
-			param.workflowId = workflowId;
+			if(workflowId==null||workflowId==undefined){
+				param.workflowId = $("#workflowIdBackUp").val();
+			}
+			else{
+				param.workflowId = workflowId;
+			}
 			//为净值型产品修改
 			if(getElementById('openType').val()&&getElementById('openType').val()!='03'){
 				param.openType = getElementById('openType').val();
@@ -92,6 +101,7 @@
 	
 	var checkInputParam = function (){
 		initFlag = true;
+		$('#isClick').val("true");
 		Joyin.ajaxJson(JoyinUtil.getRealPath('component/prod/BussFinProductOpenPlanCommonRate/checkInputParam'), getSearchParams(), function(result){
 			if (result.data){
 				Joyin.confirm(result.data, function(){
@@ -137,7 +147,12 @@
 		param.profitType = $("#"+profitType).val();
 		if (!initFlag){
 			param.finprodId = openPlanFinprodId;
-			param.workflowId = workflowId;
+			if(workflowId==null||workflowId==undefined){
+				param.workflowId = $("#workflowIdBackUp").val();
+			}
+			else{
+				param.workflowId = workflowId;
+			}
 			param.entityName = bussFinProductOpenPlanDto;
 			param.openType="02";
 		}else{
@@ -193,7 +208,7 @@
 		return param;
 	}
 	var checkInputParamRed = function (){
-
+		$('#isClickRed').val("true");
 		initFlag = true;
 		Joyin.ajaxJson(JoyinUtil.getRealPath('component/prod/BussFinProductOpenPlanCommonRate/checkInputParam'), getSearchParamsRed(), function(result){
 			if (result.data){
@@ -769,7 +784,9 @@
     		}else if(data.length>1){
     			$("#red_div").show();
 				getElementById('openType').val('01');
-				getElementById('sameFLag').prop("checked",false);
+                if(getElementById('sameFLag').next().find("em").text()==="是"){
+				    getElementById('sameFLag').next().trigger("click");
+			    }
 				layui.form.render('checkbox');
     			for(var i=0;i<data.length;i++){
     				if(data[i].openType=="01")FinProductCommon.initPageDataAction(bussFinProductOpenPlanDto, data[i]);
@@ -805,10 +822,14 @@
     	FinProductCommon.initPageDataAction('bussFinProductOpenPlanDto', bussFinProductOpenPlanDto);
     	
     	if(bussFinProductOpenPlanDto.openType === '03') {
-    		getElementById('sameFLag').prop("checked",true);
+            if(getElementById('sameFLag').next().find("em").text()==="否"){
+				getElementById('sameFLag').next().trigger("click");
+			}
     	}
     	else {
-    		getElementById('sameFLag').prop("checked",false);
+            if(getElementById('sameFLag').next().find("em").text()==="是"){
+				getElementById('sameFLag').next().trigger("click");
+			}
     	}
 	}
 	
@@ -1190,7 +1211,8 @@
 		chkClosePlan:chkClosePlan,
 		chkPayPlan:chkPayPlan,
 		chkRedOpenPlan:chkRedOpenPlan,
-		getOpenModeValue:getOpenModeValue
+		getOpenModeValue:getOpenModeValue,
+		getElementById:getElementById
 	}
 	//判断页面是否加载完成
 	var isLoaded = function() {
@@ -1206,7 +1228,12 @@
         	else{
             	$('#FinNetValueProductBuild002_period').trigger('change').prop('disabled', false);
         	}
+        	//BS-2042  草稿箱功能，净值型产品产品处理模式为单一固定期限，选择开放模式为高频开放，使用草稿时，出现了赎回计划（错误）） start
 			getElementById('openType').val('01');
+			if(getElementById('sameFLag').next().find("em").text()==="是"){
+				getElementById('sameFLag').next().trigger("click");
+			}
+			//BS-2042  草稿箱功能，净值型产品产品处理模式为单一固定期限，选择开放模式为高频开放，使用草稿时，出现了赎回计划（错误）） end
         } 
         else {
         	$('#div1').show();
@@ -1217,6 +1244,12 @@
         	else{
             	$('#FinNetValueProductBuild002_period').trigger('change').prop('disabled', false);
         	}
+        	//BS-2042  草稿箱功能，净值型产品产品处理模式为单一固定期限，选择开放模式为高频开放，使用草稿时，出现了赎回计划（错误）） start
+			getElementById('openType').val('03');
+			if(getElementById('sameFLag').next().find("em").text()==="否"){
+				getElementById('sameFLag').next().trigger("click");
+			}
+			//BS-2042  草稿箱功能，净值型产品产品处理模式为单一固定期限，选择开放模式为高频开放，使用草稿时，出现了赎回计划（错误）） end
         }
     }
 	var profitTypeChangeEx = function () {
@@ -1267,25 +1300,31 @@
 			if(tableRed.table)
 			tableRed.clear();
 		}*/
-	   if(getElementById('sameFLag').next().find("em").text()==="是"){
+	   //周期型产品不属于申赎同频，也不存在赎回计划
+	   if(getElementById('sameFLag').next().find("em").text()==="是"||$('#FinNetValueProductBuild002_dealMode').val() === '10'){
 			$("#red_div").hide();
-			getElementById('openType').val('03');
-			getElementByRedId("openMode").val('');
-			getElementByRedId("openDays").val('');
-			getElementByRedId("openCycle").val('');
-			getElementByRedId("calcMethod").val('');
-			getElementByRedId("firstOpenDate").val('');
-			getElementByRedId("cpriceRule").val('');
-			getElementByRedId("tradedayRule").val('');
-			getElementByRedId("redSpeed").val('');
 			if(tableRed.table)
 			tableRed.clear();
-			getElementById('sameFLag').prop("checked",true).trigger("change");;
+            if($('#FinNetValueProductBuild002_dealMode').val() != '10'){
+    			getElementById('openType').val('03');
+    			getElementByRedId("openMode").val('');
+    			getElementByRedId("openDays").val('');
+    			getElementByRedId("openCycle").val('');
+    			getElementByRedId("calcMethod").val('');
+    			getElementByRedId("firstOpenDate").val('');
+    			getElementByRedId("cpriceRule").val('');
+    			getElementByRedId("tradedayRule").val('');
+    			getElementByRedId("redSpeed").val('');
+                if(getElementById('sameFLag').next().find("em").text()==="否"){
+    				getElementById('sameFLag').next().trigger("click");
+    			}
+            }
 		}else{
 			$("#red_div").show();
 			getElementById('openType').val('01');
-			if(getElementById('sameFLag').next().find("em").text()==="否")
-			getElementById('sameFLag').prop("checked",false).trigger("change");
+            if(getElementById('sameFLag').next().find("em").text()==="是"){
+				getElementById('sameFLag').next().trigger("click");
+			}
 			
 		}
 		if(pageModel != PAGE_MODEL_NEW ){
@@ -1309,7 +1348,11 @@
 	 */
 	var openDaysTypeChange =  function(){
 	    if(getElementById('openDaysType').val() === OPEN_DAYS_TYPE_01){
-	        getElementById('openDays').trigger('change').prop('disabled', false);
+	    	//BS-2045 高频开放开放天数置灰  start
+	    	if(getElementById('openMode').val()!= OPENMODE_02){
+	    		getElementById('openDays').trigger('change').prop('disabled', false);
+	    	}
+	    	//BS-2045 高频开放开放天数置灰  end
 	    } else if(getElementById('openDaysType').val() === OPEN_DAYS_TYPE_02){
 	        getElementById('openDays').val('').prop('disabled', true);
 	        getElementById('calcRule').val('').trigger('change');
@@ -1320,7 +1363,11 @@
 	 */
 	var openDaysTypeRedChange =  function(){
 	    if(getElementByRedId('openDaysType').val() === OPEN_DAYS_TYPE_01){
-	        getElementByRedId('openDays').trigger('change').prop('disabled', false);
+	    	//BS-2045 高频开放开放天数置灰  start
+	    	if(getElementByRedId('openMode').val()!= OPENMODE_02){
+	    		getElementByRedId('openDays').trigger('change').prop('disabled', false);
+	    	}
+	    	//BS-2045 高频开放开放天数置灰  end
         } else if(getElementByRedId('openDaysType').val() === OPEN_DAYS_TYPE_02){
             getElementByRedId('openDays').val('').prop('disabled', true);
             getElementByRedId('calcRule').val('').trigger('change');

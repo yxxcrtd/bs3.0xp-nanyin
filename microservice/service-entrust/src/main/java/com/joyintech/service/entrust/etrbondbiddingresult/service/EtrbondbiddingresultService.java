@@ -92,4 +92,8 @@ public class EtrbondbiddingresultService extends BaseService<Etrbondbiddingresul
         }
         etrbondbiddingresultMapper.updateTradeId(map);
     }
+
+	public void deleteTradeId(Map<String, Object> map) {
+		etrbondbiddingresultMapper.deleteTradeId(map);
+	}
 }

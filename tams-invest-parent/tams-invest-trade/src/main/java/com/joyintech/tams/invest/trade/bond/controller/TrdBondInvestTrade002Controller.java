@@ -28,6 +28,7 @@ import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -113,6 +114,9 @@ public class TrdBondInvestTrade002Controller extends BaseController {
     @Autowired
     private TrdCommonController trdCommonController;
 
+    @Value("${flag:false}")
+    private boolean flag;
+    
     @Override
     public String init(Model model) {
         setSelectOptions(model);
@@ -657,31 +661,31 @@ public class TrdBondInvestTrade002Controller extends BaseController {
             }
             // 行权方式check add by renping 20191020 end
             //外部交易对手买入，校验持仓+本金 < 融资金额或者发行金额
-            if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue()) &&
-                    StringUtil.equals(dto.getTrdInvestPersonInfo().getIsOutTrade(), "S")){
-                // 调用基础组件.【组合可用现金和实际现金查询更新组件.查询持仓(可用)】
-                Map<String, Object> paramMap = new HashMap<String, Object>();
-                paramMap.put("portfolioId", dto.getPortfolioId());
-                paramMap.put("tradeDate", DateUtil.format(dto.getTradeDate()));
-                paramMap.put("ccy", dto.getCcy());
-                paramMap.put("calendarId", dto.getCalendarId());
-                paramMap.put("chlId", dto.getChlId());
-                paramMap.put("finprodId", dto.getFinprodId());
-                //获得资产维度的持仓
-                Map<String, Object>  resultMap = bussTrdAvailableCashQueryService.getFinAvaPosition(paramMap);
-
-                BigDecimal position = new BigDecimal((String) resultMap.get("POSITION"));
-                //融资金额
-                BigDecimal issueAmt = new BigDecimal((String)resultMap.get("ISSUEAMT"));
-                position = ArithmeticUtil.doAdd(position, dto.getTradeAmt());
-                //资产 融资金额、发行金额
-                if (issueAmt.compareTo(position) < 0) {
-                    if (StringUtil.isNotBlank(confirmMsg)) {
-                        confirmMsg += changeLineMark;
-                    }
-                    confirmMsg += getMessage("TRD_C_0005");
-                }
-            }
+//            if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue()) &&
+//                    StringUtil.equals(dto.getTrdInvestPersonInfo().getIsOutTrade(), "S")){
+//                // 调用基础组件.【组合可用现金和实际现金查询更新组件.查询持仓(可用)】
+//                Map<String, Object> paramMap = new HashMap<String, Object>();
+//                paramMap.put("portfolioId", dto.getPortfolioId());
+//                paramMap.put("tradeDate", DateUtil.format(dto.getTradeDate()));
+//                paramMap.put("ccy", dto.getCcy());
+//                paramMap.put("calendarId", dto.getCalendarId());
+//                paramMap.put("chlId", dto.getChlId());
+//                paramMap.put("finprodId", dto.getFinprodId());
+//                //获得资产维度的持仓
+//                Map<String, Object>  resultMap = bussTrdAvailableCashQueryService.getFinAvaPosition(paramMap);
+//
+//                BigDecimal position = new BigDecimal((String) resultMap.get("POSITION"));
+//                //融资金额
+//                BigDecimal issueAmt = new BigDecimal((String)resultMap.get("ISSUEAMT"));
+//                position = ArithmeticUtil.doAdd(position, dto.getTradeAmt());
+//                //资产 融资金额、发行金额
+//                if (issueAmt.compareTo(position) < 0) {
+//                    if (StringUtil.isNotBlank(confirmMsg)) {
+//                        confirmMsg += changeLineMark;
+//                    }
+//                    confirmMsg += getMessage("TRD_C_0005");
+//                }
+//            }
 
             if (StringUtil.isNotBlank(confirmMsg)) {
                 ajaxResult = new AjaxResult();
@@ -707,7 +711,17 @@ public class TrdBondInvestTrade002Controller extends BaseController {
     @ResponseBody
     AjaxResult save(@RequestBody TrdBondInvestTradeDto dto)
         throws Exception {
-        
+    	if(flag) {
+			if (baseGetBusinessId != null) {
+                BussinessCodeParameter codeParameter = getBussinessCodeParameter(dto.getPs());
+                dto.setTotleTradeId(baseGetBusinessId.buildBussinessCode(codeParameter));
+			}
+			else {
+				dto.setTotleTradeId(IDGenerator.generate());
+			}
+    		trdBondInvestTrade002Service.fastSave(dto);
+    		return new AjaxResult("成功");
+    	}
     	List<TrdBondInvestTradeDto> dtoList = new ArrayList<>();
     	List<BussTrdTransfenpeiDto> fenpeiList = dto.getBussTrdTransfenpeiDto();
     	List<BussTrdTransferOrderDto> orderList = dto.getBussTrdTransferOrder();

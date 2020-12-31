@@ -646,6 +646,14 @@ $(function() {
                 $('#finprodId').attr('disabled',false);
             }
         });
+        //add by yujiaping 2020-11-23 ZGBS-13新建赎回交易，修改确认日期，预计到账日根据确认日期联动：预计到账日=确认日 start
+        $('#purCfmDate').change(function(){
+        	var purCfmDate = $('#purCfmDate').val();
+        	if(purCfmDate){       		
+        		$('#expectedArrivalDate').val(purCfmDate).trigger('change');
+        	}
+        });
+        //add by yujiaping 2020-11-23 ZGBS-13新建赎回交易，修改确认日期，预计到账日根据确认日期联动：预计到账日=确认日 end
         window.componentLoadCallback = function(isDone, pagePath, params){
             if(isDone){
             	var riskparam = getriskdata();

@@ -1,6 +1,7 @@
 package com.joyintech.tams.invest.product.productduration.netproductbonusscheme.service;
 
 import com.joyintech.framework.base.intf.DataDictItem;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
@@ -30,6 +31,7 @@ import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDt
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.service.TradeProductDealCommService;
+import com.joyintech.tams.invest.product.productduration.netproductbonusscheme.dto.ActualTimeCapital001Dto;
 import com.joyintech.tams.invest.product.productduration.netproductbonusscheme.dto.FinNetProductBonusDealDto;
 import com.joyintech.tams.invest.product.productduration.netproductbonusscheme.dto.FinNetProductBonusSchemeDto;
 import com.joyintech.tams.invest.product.productduration.netproductduration.dto.FinNetProductDurationLayerDto;
@@ -1130,5 +1132,31 @@ public class FinNetProductBonusSchemeService extends CommonExportService<FinNetP
         return restTemplate.postForList(ServiceApplication.PRODUCT_SERVICE_NAME
                 + "/FinNetProductBonusScheme/findCycleDataTableInfo",map,
                 FinNetProductBonusSchemeDto.class);
+    }
+    /**
+     * 查询资金账户信息
+     *
+     * @param map 画面参数
+     * @return 调用微服务
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    public List<ActualTimeCapital001Dto> selectCapital(Map<String, Object> map){
+        // add by caiqun  工单YHZGCPB20200806001实时资金头寸里不能同时查询多个产品的现金 20200813 start
+        String portfolioId = (String) map.get("portfolioId");
+        if (StringUtil.isNotEmpty(portfolioId)) {
+            map.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA, portfolioId));
+        }
+        String acctNo = (String) map.get("acctNo");
+        if (StringUtil.isNotEmpty(portfolioId)) {
+            map.put("acctNoList", StringUtil.splitToList(GlobalConstant.COMMA, acctNo));
+        }
+        // add by caiqun 工单YHZGCPB20200806001实时资金头寸里不能同时查询多个产品的现金 20200813 end
+        Page<ActualTimeCapital001Dto> page = restTemplate.postForPage(
+                ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ActualTimeCapital/findPage",
+                map, ActualTimeCapital001Dto.class);
+        List<ActualTimeCapital001Dto> list =  page.getRoot();
+        return list;
     }
 }

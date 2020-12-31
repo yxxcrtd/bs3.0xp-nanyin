@@ -112,8 +112,11 @@
         LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_ID = SDQ.SECCODE
         WHERE 1=1
         <if test="portfolioIdList != null and portfolioIdList.size() > 0">
-            AND SDQ.portfolioId IN
-            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+            AND (SDQ.portfolioId IN
+            <foreach collection="portfolioIdList" item="item" index="index" open="(" close="))" separator=",">
+                <if test="(index % 999) == 998">
+                    null) OR SDQ.portfolioId in (
+                </if>
                 #{item}
             </foreach>
         </if>

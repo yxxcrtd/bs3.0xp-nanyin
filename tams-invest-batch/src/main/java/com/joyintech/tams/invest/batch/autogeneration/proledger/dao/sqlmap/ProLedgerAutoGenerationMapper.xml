@@ -5,9 +5,20 @@
         delete from PRD_STANDING_BOOK where CDATE = to_date(#{batchDate,jdbcType=DATE}, 'yyyy-MM-dd')
 		<if test="productIdList != null and productIdList.size > 0">
 			and (FINPROD_ID in
-			(<foreach collection="productIdList" item="item" separator=",">#{item}</foreach>)
+			<foreach collection="productIdList" item="item" index="index" open="(" separator="," close=")">
+				<if test="(index % 999) == 998">
+					null) OR FINPROD_ID in (
+				</if>
+				#{item}
+			</foreach>
 			OR FINPROD_ID in
-			(<foreach collection="productIdList" item="item" separator=",">concat('F16_',#{item})</foreach>))
+			<foreach collection="productIdList" item="item" index="index" open="(" separator="," close=")">
+				<if test="(index % 999) == 998">
+					null) OR FINPROD_ID in (
+				</if>
+				concat('F16_',#{item})
+			</foreach>
+			)
 		</if>
     </delete>
 
@@ -529,9 +540,19 @@
         WHERE T1.FINPROD_TYPE2 = 'F16' AND T1.LIQUIDATION_DATE &gt;= to_date(#{batchDate,jdbcType=DATE}, 'yyyy-MM-dd')
 		<if test="productIdList != null and productIdList.size > 0">
 			AND (T1.FINPROD_ID IN
-			(<foreach collection="productIdList" item="item" separator=",">#{item}</foreach>)
+			<foreach collection="productIdList" item="item" separator="," open="(" index="index" close=")">
+				<if test="(index % 999) == 998">
+					null) OR T1.FINPROD_ID in (
+				</if>
+				#{item}
+			</foreach>
 			OR T2.PORTFOLIO_ID IN
-			(<foreach collection="productIdList" item="item" separator=",">#{item}</foreach>))
+			<foreach collection="productIdList" item="item" separator="," open="(" index="index" close=")">
+				<if test="(index % 999) == 998">
+					null) OR T2.PORTFOLIO_ID in (
+				</if>
+				#{item}
+			</foreach>
 		</if>
 		)
     </sql>
@@ -874,11 +895,27 @@
 			SUM(bpp.tdy_prin_amt * bpp.tdy_yield) / SUM(bpp.tdy_prin_amt) * 100 
 		</if>
 		<if test="dealMode!=null and (dealMode !=dealModeFD and dealMode !=dealModeZQX)">
-			bpp.tdy_yield
+			bpp.tdy_yield * 100
 		</if>
 		from bok_position_prd bpp 
-		where bpp.cdate = #{queryDate}
-		and bpp.finprod_id= #{finprodId}
+		where <!-- bpp.cdate = #{queryDate}
+		and bpp.finprod_id= #{finprodId} -->
+		<!-- TISHKBS-1628  CLONE - 【预上线】产品台账输出列没有取到预期收益率的值(收益型分层产品到期日后无数据且跑批报错)  modify by hpp 2020-11-27 start -->
+		<if test="dealMode!=null and (dealMode ==dealModeFD or dealMode ==dealModeZQX)">
+			bpp.cdate = (
+			SELECT MAX(bpp2.cdate)
+			FROM bok_position_prd bpp2
+			LEFT JOIN fin_product fp ON bpp2.finprod_id = fp.finprod_id AND fp.finprod_type2 = 'F24'
+			WHERE bpp2.BRANCH = 0 AND bpp2.FINPROD_ID like #{finprodId} || '_%'
+			AND bpp2.cdate <![CDATA[<=]]> #{queryDate} AND bpp2.cdate <![CDATA[<=]]> fp.mdate-1
+			)
+			and bpp.finprod_id like #{finprodId} || '_%'
+		</if>
+		<if test="dealMode!=null and (dealMode !=dealModeFD and dealMode !=dealModeZQX)">
+			bpp.cdate = ( SELECT MAX(cdate) FROM bok_position_prd WHERE FINPROD_ID=#{finprodId} AND cdate <![CDATA[<=]]> #{queryDate} AND BRANCH = 0)
+			and bpp.finprod_id= #{finprodId}
+		</if>
+		<!-- TISHKBS-1628  CLONE - 【预上线】产品台账输出列没有取到预期收益率的值(收益型分层产品到期日后无数据且跑批报错)  modify by hpp 2020-11-27 end -->
 	</select>
 	
 	<select id="getLastFinBaseRuleInfo"

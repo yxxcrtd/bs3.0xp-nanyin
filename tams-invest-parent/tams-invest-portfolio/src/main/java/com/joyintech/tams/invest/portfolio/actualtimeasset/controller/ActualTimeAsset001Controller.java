@@ -75,12 +75,12 @@ public class ActualTimeAsset001Controller extends BaseController {
         List<SelectOptionDto> temp = null;
         //组合代码
         Object portfolioId = map.get("portfolioId");
-        if(StringUtil.isNotEmpty(portfolioId)) {
-            temp = actualTimeAsset001Service.getSecAcct(map);
-        }
-        else {
-            temp = new ArrayList<SelectOptionDto>();
-        }
+//        if(StringUtil.isNotEmpty(portfolioId)) {
+        temp = actualTimeAsset001Service.getSecAcct(map);
+//        }
+//        else {
+//            temp = new ArrayList<SelectOptionDto>();
+//        }
         return temp;
     }
 

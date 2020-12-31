@@ -139,9 +139,14 @@ public class TrdPlanNetDurationDealEntity extends BaseService<TrdPlanNetDuration
                 }
             }
         }
-        else if (type == OperationType.REVOKE) {
-            restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdFundDuration/doRevoke", entity,
+    	else if (type == OperationType.REVOKE) {
+    		//ZGBS-99 待办事项-交易方向】计划类净值型现金分红的除权登记撤销，在待办事项中无交易方向 start
+    		TrdPlanNetDuration001Dto dto = new TrdPlanNetDuration001Dto();
+    		BeanUtil.copyPropertiesIgnoreNull(dto, entity);
+    		dto.setTotleTradeId(dto.getTotleTradeId().substring(0, dto.getTotleTradeId().length()-1));
+            restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdFundDuration/doRevoke", dto,
                 String.class);
+            //ZGBS-99 待办事项-交易方向】计划类净值型现金分红的除权登记撤销，在待办事项中无交易方向 end
         }
     }
     public void execute交易共通(TrdPlanNetDuration001Dto entity, DictCodeListExt1 交易流程状态, boolean 是否不需要执行实时持仓共通) {

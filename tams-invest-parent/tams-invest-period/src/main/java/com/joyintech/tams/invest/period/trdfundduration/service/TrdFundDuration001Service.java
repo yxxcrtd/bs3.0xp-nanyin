@@ -168,7 +168,16 @@ implements BaseProcessService<TrdFundDuration001Dto>{
      */
     @Override
     public void doDelete(String workflowId) {
-    	baseTradeProductDealCommServiceImpl.delete(workflowId);
+        TrdFundDuration001Dto entity = this.getBussinessEntityByWorkflowId(workflowId);
+        baseTradeProductDealCommServiceImpl.delete(workflowId);
+        if(StringUtil.equals(entity.getBonusMode(),DictCodeList.分红方式_现金分红.getValue())
+                && StringUtil.equals(entity.getBaseTotalTradeInfoDto().getTrdFinProductDealTotal().getTradeStatus(),DictCodeListExt1.交易状态_初始.getValue())){
+            entity.setWorkflowId(null);
+            entity.setType(StringUtil.equals(entity.getAssetType(), DictCodeList.基金类资产类型_非货币基金.getValue())?"03":"06");
+            getWorkFlowPatameter(entity);
+//            entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
+            dealEntityService.saveDataWhenStartWorkflow(entity, OperationType.NEW, DictCodeListExt1.交易流程状态_流程中.getValue(), true);
+        }
     }
     /**
      * 工作流完成

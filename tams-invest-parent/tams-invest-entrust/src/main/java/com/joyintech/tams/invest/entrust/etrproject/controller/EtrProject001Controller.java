@@ -165,7 +165,7 @@ public class EtrProject001Controller extends BaseController {
         List<EtrProjectDto> dtolist = dto.getSelectedItem();
         if(dtolist != null && dtolist.size()>0){
             for(EtrProjectDto entity : dtolist){
-                etrProjectService.closeDelegate(entity.getEntrustId(), entity.getCloseWay());
+                etrProjectService.closeDelegate(entity.getEntrustId(), entity.getCloseWay(), entity.getEntrustStatus());
             }
             return new AjaxResult(this.getMessage("ETR_X_003"));
         }

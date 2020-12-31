@@ -348,6 +348,20 @@ public class TrdProductDeal extends BaseEntity {
      * 收付方向
      */
     private String psPayment;
+
+    /**
+     * 委托代码
+     */
+    private String entrustId;
+
+    public String getEntrustId() {
+        return entrustId;
+    }
+
+    public void setEntrustId(String entrustId) {
+        this.entrustId = entrustId;
+    }
+
     /**
      * add by xr
      * 组合代码

@@ -365,18 +365,18 @@ public class PtlManagementInfo001Controller extends BaseService<PtlManagementInf
 
     
     @PostMapping("getInstitu")
-    public List<NodeDto> getInstitu(){
-        return ptlManagementInfo001Service.getInstitu();
+    public List<NodeDto> getInstitu(@RequestBody Map<String,Object> map){
+        return ptlManagementInfo001Service.getInstitu(map);
     }
     
     @PostMapping("getDep")
-    public List<NodeDto> getDep(){
-        return ptlManagementInfo001Service.getDep();
+    public List<NodeDto> getDep(@RequestBody Map<String,Object> map){
+        return ptlManagementInfo001Service.getDep(map);
     }
     
     @PostMapping("getUser")
-    public List<NodeDto> getUser(){
-        return ptlManagementInfo001Service.getUser();
+    public List<NodeDto> getUser(@RequestBody Map<String,Object> map){
+        return ptlManagementInfo001Service.getUser(map);
 	}
     @Transactional
     @DTXTransaction

@@ -28,21 +28,28 @@
 	<!-- 删除表【REP_PROD_INDEX】数据 -->
 	<delete id="deleteTableDate" parameterType="java.util.Map">
 		DELETE FROM REP_PROD_INDEX A
-		WHERE (A.PROD_ID IN
-		(select  BUSI_ID from  BOK_ACCT_LAYERING_INFO  WHERE   BOOKSET_ID IN 
-		<foreach item="item" index="index" collection="bookSetList"
-			open="(" separator="," close=")">
-			#{item}
-		</foreach>
-		)
-		or  A.PROD_ID IN
+		WHERE 1=1
+		AND (EXISTS  (SELECT 1 FROM
+		(select  BUSI_ID from  BOK_ACCT_LAYERING_INFO  WHERE   BOOKSET_ID IN
+			<foreach item="item" index="index" collection="bookSetList" separator="," open="("
+				 	close=")">
+				<if test="(index % 999) == 998">
+					null) OR BOOKSET_ID in (
+				</if>
+				#{item}
+			</foreach>
+			) B where A.PROD_ID = B.BUSI_ID)
+		OR EXISTS (select 1 from
 		( select  FINPROD_MARKET_ID from  FIN_PRODUCT  where  finprod_id  in
-		<foreach item="item" index="index" collection="bookSetList"
-			open="(" separator="," close=")">
+		<foreach item="item" index="index" collection="bookSetList" separator="," open="("
+				 close=")">
+			<if test="(index % 1000) == 999">
+				null) OR finprod_id in (
+			</if>
 			#{item}
 		</foreach>
-		)
-		)
+		) C where A.PROD_ID = C.FINPROD_MARKET_ID
+		))
 		AND A.VALUE_DATE = #{booksetdate,jdbcType=DATE}
 	</delete>
 

@@ -633,4 +633,18 @@ public class SysCoreController {
         return sysCoreService.getAssetFiveType(param);
     }
     // 资产五级分类联动检索 add by renping 2019-07-11 start
+
+
+    /**
+     * 资产是否存在行权交易
+     *
+     * @param finprodId 金融产品代码
+     * @return 交易笔数
+     * @see
+     * @since 1.0
+     */
+    @GetMapping("isBondExerciseAsset")
+    public int isBondExerciseAsset(String finprodId) {
+        return sysCoreService.isBondExerciseAsset(finprodId);
+    }
 }

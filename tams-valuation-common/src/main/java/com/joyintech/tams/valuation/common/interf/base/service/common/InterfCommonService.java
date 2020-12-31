@@ -5624,7 +5624,12 @@ public class InterfCommonService {
     	String booksetIdSon=channelProdDeal.getProdId()+"_"+channelProdDeal.getChlId();
     	//变量.金融产品代码
     	String finprodId=booksetIdSon;
-
+//add by yangwenjun 20201201 ZGBS-42 start
+        String objProdId=channelProdDeal.getProdId();
+    	if(channelProdDeal.getProdId().contains("_")){
+    	     objProdId=channelProdDeal.getProdId().substring(channelProdDeal.getProdId().indexOf("_")+1);
+        }
+//add by yangwenjun 20201201 ZGBS-42 end
     	//定义 变量.是否子组合 = false;
     	boolean isSubarray = false;
     	
@@ -5905,7 +5910,7 @@ public class InterfCommonService {
     	//账套代码
     	bokBookset.setBooksetId(booksetIdSon);
     	//账套名称
-    	bokBookset.setBooksetName(targetFinProduct.getFinprodAbbr());
+    	bokBookset.setBooksetName(targetFinProduct.getFinprodAbbr()+"("+objProdId+")");
     	//账套类别
     	bokBookset.setBooksetType(valBooksetInfoDto.getBooksetType());
     	//核算方式
@@ -5927,7 +5932,7 @@ public class InterfCommonService {
     	//特殊核算模型
     	bokBookset.setBokSpecMode(valBooksetInfoDto.getBokSpecMode());
     	//账套全称
-    	bokBookset.setBooksetFullname(targetFinProduct.getFinprodName());
+    	bokBookset.setBooksetFullname(targetFinProduct.getFinprodName()+"("+objProdId+")");
     	
     	//几许产品信息初始化   add by zhangquan
     	jJPortfolio = new JJPortfolio();

@@ -641,6 +641,20 @@
         </if>
     </where>
     </select>
+
+    <!--组合代码联动 add by jiangpeng on 20201215 ZGBS-69 -->
+    <select id="getPortfolioName" resultType="java.util.Map">
+        select
+            pp.PORTFOLIO_ID portfolioId,
+            pp.PORTFOLIO_NAME portfolioName
+        from PTL_PORTFOLIO pp
+        <where>
+            <if test="portfolioId != null and portfolioId !=''">
+                pp.PORTFOLIO_ID = #{portfolioId}
+            </if>
+        </where>
+    </select>
+
     <select id="calResiPrincipal" resultType="java.util.Map">
     select
     psp.AMOUNT resiPrincipal
@@ -1419,4 +1433,26 @@
         </where>
     </select>
     <!--add by liupengfei for 多级法人改造 E-->
+    
+     <!-- add by yujiaping 2020-12-5 BS-1562【存款类存续期】同一资产同一计息结束日只能做一次活期存放结息start -->
+     <select id="getTradeId" resultType="java.util.Map">
+     select count(*)  as result 
+      from
+       (select 
+        trd.TRADE_ID tradeId
+        from 
+        FIN_PRODUCT pr
+        left join TRD_PRODUCT_DEAL trd on trd.FINPROD_ID = pr.FINPROD_ID
+        and trd.FINPROD_TYPE = 'F07' and trd.FINPROD_TYPE2 = 'F07'         
+        and trd.MDATE = to_date(#{mdateProd},'yyyy-MM-dd')
+        and (trd.PS = 'T12' or trd.PS = 'T22') and trd.IS_CANCEL = 'N' and trd.TRADE_STATUS = '01'
+        <where>       
+         pr.FINPROD_MARKET_ID = #{finprodMarketId}
+        </where>
+        ) 
+        <where>  
+         tradeId != 'null'
+         </where>
+    </select>
+      <!-- add by yujiaping 2020-12-5 BS-1562【存款类存续期】同一资产同一计息结束日只能做一次活期存放结息end -->
 </mapper>

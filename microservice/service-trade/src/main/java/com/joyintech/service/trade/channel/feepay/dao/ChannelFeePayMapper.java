@@ -54,4 +54,6 @@ public interface ChannelFeePayMapper {
     String findChannelFeePaied(Map<String, Object> param);
 
     List<PtlTrade> findPtlTrades(String tradeId);
+    
+    String getCollectType(Map<String, Object> map);
 }

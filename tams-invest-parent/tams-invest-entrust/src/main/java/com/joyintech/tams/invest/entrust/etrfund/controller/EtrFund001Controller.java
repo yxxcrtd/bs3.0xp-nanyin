@@ -187,7 +187,7 @@ public class EtrFund001Controller extends BaseController{
         List<ValidMessage> errorList = new ArrayList<ValidMessage>();
         List<EtrFundDto> list = dto.getSelectedItem();
         for(EtrFundDto etrFundDto:list){
-            if(eteFundService.closeDelegate(etrFundDto.getEntrustId(), etrFundDto.getCloseWay())){
+            if(eteFundService.closeDelegate(etrFundDto.getEntrustId(), etrFundDto.getCloseWay(), etrFundDto.getEntrustStatus())){
                 ajaxResult.setMessage(this.getMessage("ETR_X_003"));
             }else{
                 errorList.add(new ValidMessage(getMessage("组合代码:"+etrFundDto.getPortfolioId())+"委托关闭失败"));

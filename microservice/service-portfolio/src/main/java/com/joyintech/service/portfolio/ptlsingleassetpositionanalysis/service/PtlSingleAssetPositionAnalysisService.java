@@ -119,7 +119,8 @@ public class PtlSingleAssetPositionAnalysisService extends BaseService<PtlSingle
         list.add(DictCodeListExt1.金融产品类型_投管用_自定义现金流.getValue());
         list.add(DictCodeListExt1.金融产品类型_投管用_特拆拆入.getValue());
         list.add(DictCodeListExt1.金融产品类型_投管用_母资管计划.getValue());
-        list.add(DictCodeListExt1.金融产品类型_投管用_通道.getValue());
+        /*modify by yujiaping 2020-11-24 ZGBUGTWO-244【单一资产持仓分析】改为不可以查询到通道的信息*/
+        // list.add(DictCodeListExt1.金融产品类型_投管用_通道.getValue());
         map.put("FINTYPE_F02_LIST",list);
         // 多级法人改造 add by jingqiongqiong 20200615
         if(MultilevelDataAuthorityUtil.isEnabled()) {

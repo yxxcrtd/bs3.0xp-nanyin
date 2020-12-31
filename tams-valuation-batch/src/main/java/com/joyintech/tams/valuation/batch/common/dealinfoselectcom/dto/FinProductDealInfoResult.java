@@ -78,6 +78,11 @@ public class FinProductDealInfoResult extends NeedOperateEntity {
     private String acctStandard;
 
     /**
+     * 摊销额小于剩余摊销时是否只摊销到0
+     */
+    private String amorizeRule;
+
+    /**
      * 交易基本信息列表
      */
     private List<FinProductDealInfoComDTO> listFinProductDealInfoComDTO = new ArrayList<FinProductDealInfoComDTO>();
@@ -280,4 +285,11 @@ public class FinProductDealInfoResult extends NeedOperateEntity {
         this.listFinProductDealInfoComDTO = listFinProductDealInfoComDTO;
     }
 
+    public String getAmorizeRule() {
+        return amorizeRule;
+    }
+
+    public void setAmorizeRule(String amorizeRule) {
+        this.amorizeRule = amorizeRule;
+    }
 }

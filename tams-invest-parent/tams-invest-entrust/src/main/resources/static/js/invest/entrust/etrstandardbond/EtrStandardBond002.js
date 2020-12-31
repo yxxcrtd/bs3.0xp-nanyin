@@ -153,20 +153,45 @@
     var joyinProcess = function () {
         var avaSelectedRows = avaPledgeBondTBL.getAllCheckedRows();
         var pledgeAllRows = pledgeBondTbl.getAllRows();
-        if (avaSelectedRows != null && avaSelectedRows.length > 0) {
-            // 若添加的质押券不只一个，且登记托管机构不全相同，则保存质押券时提示质押券登记托管机构不同，不允许保存；
-            // 如果 选择的待质押劵 和质押劵列表中债券托管机构不一致 则 提示债券托管机构不一致，不能添加！
-            var isDuplicated = false;
-            var mergeArray = new Array();
-            mergeArray = _.concat(mergeArray, avaSelectedRows);
-            mergeArray = _.concat(mergeArray, pledgeAllRows);
-            if (checkIsDifferent(mergeArray)) {
-                Joyin.error(JoyinUtil.getMessage("TRD_E_0010"));
-                return false;
+        var isStoreHouse ;
+        var params;
+        Joyin.ajaxJson(basePath + 'invest/entrust/etrstandardbond/EtrStandardBond001/selectPageData', params, function (result) {
+            if(result&&!result.data){
+                  isStoreHouse = result;
             }
-            // 如果 选择的待质押劵在质押劵列表中存在  则 提示 是否覆盖  质押劵列表中债券
-            var isConfirm = false;
-            var confirmMessageArray = new Array();
+        },false);
+        var istrue = false;
+        if(avaSelectedRows != null && avaSelectedRows.length > 0&&isStoreHouse != null && isStoreHouse.root.length > 0){
+                    var isStoreHouseList = isStoreHouse.root;
+                    for (var i = avaSelectedRows.length - 1; i >= 0; i--) {
+                        for (var j in isStoreHouseList) {
+                            if (isStoreHouseList[j].portfolioId == avaSelectedRows[i].portfolioId
+                                && isStoreHouseList[j].tradePlace == avaSelectedRows[i].tradePlace
+                                && isStoreHouseList[j].secAcctId == avaSelectedRows[i].secAcctId
+                                && isStoreHouseList[j].finprodMarketId == avaSelectedRows[i].finprodMarketId
+                              ) {
+                                    istrue = true;
+                            }
+                        }
+                    }
+
+         }
+         if(istrue){
+               Joyin.confirm("所选的质押券包含有已入库的质押券，是否继续添加？", function () {
+                           if (avaSelectedRows != null && avaSelectedRows.length > 0) {
+                                          // 若添加的质押券不只一个，且登记托管机构不全相同，则保存质押券时提示质押券登记托管机构不同，不允许保存；
+                                          // 如果 选择的待质押劵 和质押劵列表中债券托管机构不一致 则 提示债券托管机构不一致，不能添加！
+                                          var isDuplicated = false;
+                                          var mergeArray = new Array();
+                                          mergeArray = _.concat(mergeArray, avaSelectedRows);
+                                          mergeArray = _.concat(mergeArray, pledgeAllRows);
+                                          if (checkIsDifferent(mergeArray)) {
+                                              Joyin.error(JoyinUtil.getMessage("TRD_E_0010"));
+                                              return false;
+                                          }
+                                          // 如果 选择的待质押劵在质押劵列表中存在  则 提示 是否覆盖  质押劵列表中债券
+                                          var isConfirm = false;
+                                          var confirmMessageArray = new Array();
 
             // 倒序删除，正序会存在问题
             for (var i = avaSelectedRows.length - 1; i >= 0; i--) {
@@ -203,9 +228,68 @@
                 for (var i = avaSelectedRows.length - 1; i >= 0; i--) {
                 	avaPledgeBondTBL.removeRow(avaSelectedRows[i]);
                     pledgeBondTbl.addRow(avaSelectedRows[i]);
-                }
-            }
-        }
+                                              }
+                                          }
+                                      }
+
+
+                    });
+
+            }else{
+                if (avaSelectedRows != null && avaSelectedRows.length > 0) {
+                      // 若添加的质押券不只一个，且登记托管机构不全相同，则保存质押券时提示质押券登记托管机构不同，不允许保存；
+                      // 如果 选择的待质押劵 和质押劵列表中债券托管机构不一致 则 提示债券托管机构不一致，不能添加！
+                      var isDuplicated = false;
+                      var mergeArray = new Array();
+                      mergeArray = _.concat(mergeArray, avaSelectedRows);
+                      mergeArray = _.concat(mergeArray, pledgeAllRows);
+                      if (checkIsDifferent(mergeArray)) {
+                          Joyin.error(JoyinUtil.getMessage("TRD_E_0010"));
+                          return false;
+                      }
+                      // 如果 选择的待质押劵在质押劵列表中存在  则 提示 是否覆盖  质押劵列表中债券
+                      var isConfirm = false;
+                      var confirmMessageArray = new Array();
+
+                      // 倒序删除，正序会存在问题
+                      for (var i = avaSelectedRows.length - 1; i >= 0; i--) {
+                          for (var j in pledgeAllRows) {
+                              if (pledgeAllRows[j].portfolioId == avaSelectedRows[i].portfolioId
+                                  && pledgeAllRows[j].tradePlace == avaSelectedRows[i].tradePlace
+                                  && pledgeAllRows[j].secAcctId == avaSelectedRows[i].secAcctId
+                                  && pledgeAllRows[j].finprodMarketId == avaSelectedRows[i].finprodMarketId) {
+                                  isConfirm = true;
+                                  confirmMessageArray.push(avaSelectedRows[i].finprodMarketId);
+                                  break;
+                              }
+                          }
+                      }
+                      if (isConfirm) {
+                          Joyin.confirm(JoyinUtil.getMessage("TRD_C_0003", confirmMessageArray.join("，")), function () {
+                              // 倒序删除，正序会存在问题
+                              for (var i = avaSelectedRows.length - 1; i >= 0; i--) {
+                                  for (var j in pledgeAllRows) {
+                                      // 覆盖质押券列表中重复记录
+                                      if (pledgeAllRows[j].portfolioId == avaSelectedRows[i].portfolioId
+                                          && pledgeAllRows[j].tradePlace == avaSelectedRows[i].tradePlace
+                                          && pledgeAllRows[j].secAcctId == avaSelectedRows[i].secAcctId
+                                          && pledgeAllRows[j].finprodMarketId == avaSelectedRows[i].finprodMarketId) {
+                                          pledgeBondTbl.removeRow(pledgeAllRows[j]);
+                                      }
+                                  }
+                                  avaPledgeBondTBL.removeRow(avaSelectedRows[i]);
+                                  pledgeBondTbl.addRow(avaSelectedRows[i]);
+                              }
+                          });
+                      } else {
+                          // 倒序删除，正序会存在问题
+                          for (var i = avaSelectedRows.length - 1; i >= 0; i--) {
+                            avaPledgeBondTBL.removeRow(avaSelectedRows[i]);
+                              pledgeBondTbl.addRow(avaSelectedRows[i]);
+                          }
+                      }
+                  }
+          }
     };
 
     /**

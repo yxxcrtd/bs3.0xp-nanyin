@@ -10,19 +10,10 @@
  
 package com.joyintech.tams.invest.entrust.etrrepo.dto;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
-import javax.validation.Valid;
-
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.Amount;
 import com.joyintech.framework.validation.annotation.NotEmpty;
@@ -30,15 +21,21 @@ import com.joyintech.framework.validation.annotation.Rate;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.component.business.trade.dto.BussEtrInvestPersonInfoDto;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.entrust.etrrepo.validator.EtrRepoValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+
+import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 回购投资委托画面dto
@@ -187,10 +184,42 @@ public class EtrRepoDto extends EtrEntrust implements ProcessEntity {
     private BigDecimal minAmt;
 
     /**
+     * 误差值 20200525 add
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal errorNumber;
+
+    /**
+     * 资产本金（授信用）
+     */
+    private BigDecimal prinAmt;
+
+    /**
+     * 后台取为平台日（授信用）
+     */
+    private Date tradeDate;
+
+    /**
      * 可使用标准券额度,用于APP质押式回购指令显示
      */
     private  String assetAvailablePosition1;
+    /**
+     * 首次竞价,用于APP质押式回购指令显示
+     */
 
+    private String firstprice;
+
+    /**
+     * 首次竞价2,用于APP质押式回购指令显示
+     */
+
+    private String firstprice2;
+
+
+
+    private String inputValue1;
+    private String inputValue2;
+    private String inputValue3;
 
     public String getAssetAvailablePosition1() {
         return assetAvailablePosition1;
@@ -200,8 +229,15 @@ public class EtrRepoDto extends EtrEntrust implements ProcessEntity {
         this.assetAvailablePosition1 = assetAvailablePosition1;
     }
 
+    public BigDecimal getErrorNumber() {
+		return errorNumber;
+	}
 
-    /**
+	public void setErrorNumber(BigDecimal errorNumber) {
+		this.errorNumber = errorNumber;
+	}
+
+	/**
      * 取得 最低成交金额
      * 
      * @return 最低成交金额
@@ -788,5 +824,62 @@ public class EtrRepoDto extends EtrEntrust implements ProcessEntity {
     @NotEmpty(fieldName = "EtrRepo002.priceModel", groups = {ValidateGroupEdit.class})
     public String getPriceModel() {
         return super.getPriceModel();
+    }
+
+	public BigDecimal getPrinAmt() {
+		return prinAmt;
+	}
+
+	public void setPrinAmt(BigDecimal prinAmt) {
+		this.prinAmt = prinAmt;
+	}
+
+	public Date getTradeDate() {
+		return tradeDate;
+	}
+
+	public void setTradeDate(Date tradeDate) {
+		this.tradeDate = tradeDate;
+	}
+
+	public String getInputValue1() {
+		return inputValue1;
+	}
+
+	public void setInputValue1(String inputValue1) {
+		this.inputValue1 = inputValue1;
+	}
+
+	public String getInputValue2() {
+		return inputValue2;
+	}
+
+	public void setInputValue2(String inputValue2) {
+		this.inputValue2 = inputValue2;
+	}
+
+	public String getInputValue3() {
+		return inputValue3;
+	}
+
+	public void setInputValue3(String inputValue3) {
+		this.inputValue3 = inputValue3;
+	}
+
+
+    public String getFirstprice() {
+        return firstprice;
+    }
+
+    public void setFirstprice(String firstprice) {
+        this.firstprice = firstprice;
+    }
+
+    public String getFirstprice2() {
+        return firstprice2;
+    }
+
+    public void setFirstprice2(String firstprice2) {
+        this.firstprice2 = firstprice2;
     }
 }

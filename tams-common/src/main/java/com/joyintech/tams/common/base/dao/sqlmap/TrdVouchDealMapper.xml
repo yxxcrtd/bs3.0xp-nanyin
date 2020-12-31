@@ -21,13 +21,14 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="FINPROD_TYPE" property="finprodType" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         TRADE_ID TRADE_ID, BOOKSET_ID BOOKSET_ID, RECORD_TYPE RECORD_TYPE, BOOK_DATE BOOK_DATE, 
         OFFSET_FLAG OFFSET_FLAG, BUSI_ID BUSI_ID, BUSI_DETAIL_TYPE BUSI_DETAIL_TYPE, BRANCH BRANCH, 
         BUSI_TYPE BUSI_TYPE, BOOK_ID BOOK_ID, BOOK_TYPE BOOK_TYPE, BOOK_REMARK BOOK_REMARK, 
         P_TRADE_ID P_TRADE_ID, INV_AIM INV_AIM, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
-        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME ,FINPROD_TYPE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -56,14 +57,14 @@
             BOOK_ID, BOOK_TYPE, BOOK_REMARK, 
             P_TRADE_ID, INV_AIM, CREATE_USER, 
             CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME,ACCOUNT_ORDER)
+            UPDATE_TIME,ACCOUNT_ORDER,FINPROD_TYPE)
         values (#{tradeId,jdbcType=VARCHAR}, #{booksetId,jdbcType=VARCHAR}, #{recordType,jdbcType=VARCHAR}, 
             #{bookDate,jdbcType=DATE}, #{offsetFlag,jdbcType=VARCHAR}, #{busiId,jdbcType=VARCHAR}, 
             #{busiDetailType,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, #{busiType,jdbcType=VARCHAR}, 
             #{bookId,jdbcType=VARCHAR}, #{bookType,jdbcType=VARCHAR}, #{bookRemark,jdbcType=VARCHAR}, 
             #{pTradeId,jdbcType=VARCHAR}, #{invAim,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
             #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP},#{accountOrder,jdbcType=VARCHAR})
+            #{updateTime,jdbcType=TIMESTAMP},#{accountOrder,jdbcType=VARCHAR},#{finprodType,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdVouchDeal" >
         insert into TRD_VOUCH_DEAL
@@ -125,6 +126,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
+            <if test="finprodType != null" >
+                FINPROD_TYPE,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="tradeId != null" >
@@ -184,15 +188,18 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="finprodType != null" >
+                #{finprodType,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TrdVouchDeal" >
         insert into TRD_VOUCH_DEAL(TRADE_ID, BOOKSET_ID, RECORD_TYPE, BOOK_DATE, OFFSET_FLAG, 
         BUSI_ID, BUSI_DETAIL_TYPE, BRANCH, BUSI_TYPE, BOOK_ID, BOOK_TYPE, BOOK_REMARK, P_TRADE_ID, 
-        INV_AIM, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        INV_AIM, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME,FINPROD_TYPE)
         select TRADE_ID, BOOKSET_ID, RECORD_TYPE, BOOK_DATE, OFFSET_FLAG, 
             BUSI_ID, BUSI_DETAIL_TYPE, BRANCH, BUSI_TYPE, BOOK_ID, BOOK_TYPE, BOOK_REMARK, P_TRADE_ID, 
-            INV_AIM, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            INV_AIM, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,FINPROD_TYPE
              from TRD_VOUCH_DEAL
              where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </insert>
@@ -244,6 +251,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="VARCHAR != null" >
+                FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            </if>
         </set>
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </update>
@@ -263,7 +273,8 @@
             P_TRADE_ID = #{pTradeId,jdbcType=VARCHAR},
             INV_AIM = #{invAim,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </update>
 </mapper>

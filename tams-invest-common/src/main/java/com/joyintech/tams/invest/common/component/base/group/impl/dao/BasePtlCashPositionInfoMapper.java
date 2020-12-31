@@ -82,4 +82,13 @@ public interface BasePtlCashPositionInfoMapper {
     int updatePosition(Map<String, Object> params);
 
     int deletePtlCashPositionFlow(PtlCashPositionFlowDto positionQueryDto);
+
+    /**
+     * 查询在途、实际现金
+     *
+     * @param positionQueryDto
+     * @return java.math.BigDecimal
+     * @date 2018/9/30
+     */
+    BigDecimal selectCashPositionNew(PtlCashPositionFlowDto positionQueryDto);
 }

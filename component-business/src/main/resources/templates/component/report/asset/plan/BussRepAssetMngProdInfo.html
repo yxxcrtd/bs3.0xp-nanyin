@@ -44,7 +44,7 @@
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap" data-th-utext="#{BussRepAssetMngProdInfo.repRegistCode}" style="line-height: normal!important;">资管计划登<br>记编码</label>
                     <div class="layui-input-inline input-inline">
-                        <input type="text" th:id="|${entityName}_repRegistCode|" th:name="|${entityName}.repRegistCode|" th:value="${entity?.repRegistCode}" class="layui-input form-input" maxlength="300" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"/>
+                        <input type="text" th:id="|${entityName}_repRegistCode|" data-th-maxlength="85" th:name="|${entityName}.repRegistCode|" th:value="${entity?.repRegistCode}" class="layui-input form-input" maxlength="300" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"/>
                     </div>
                 </div>
                 <div class="form-inline-wrap">
@@ -249,7 +249,7 @@
                     <label class="layui-form-label form-label-wrap" data-th-utext="#{BussRepAssetMngProdInfo.remark}" style="width: 12%;">备注</label>
                     <div class="layui-input-inline input-inline" style="width: 86%!important">
                         <input th:id="|${entityName}_repRemark|" th:name="|${entityName}.repRemark|" 
-                                 data-th-text="${entity?.repRemark}" th:value="${entity?.repRemark}" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" ></input>
+                               th:value="${entity?.repRemark}" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" ></input>
                     </div>
                 </div>
             </div>

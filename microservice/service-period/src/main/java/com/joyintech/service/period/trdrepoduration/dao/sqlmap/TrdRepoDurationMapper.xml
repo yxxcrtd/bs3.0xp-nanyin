@@ -96,7 +96,10 @@
               T4.FINPROD_ID,
               T1.PORTFOLIO_ID,
               T2.PORTFOLIO_NAME,
-              decode(ptpd.trade_market,#{TRADE_PLACE_01},null,T5.TYPE_6) type_6,
+             <!--  BS-1144银行间:回购类型为质押式回购  modify by yujiaping 2020-11-25 start -->
+             <!--  decode(ptpd.trade_market,#{TRADE_PLACE_01},null,T5.TYPE_6) type_6, -->
+             T5.TYPE_6 type_6,
+            <!--  BS-1144银行间:回购类型为质押式回购  modify by yujiaping 2020-11-25 end -->
             <!-- 通道交易 新增 强成西 2019/03/26 start -->
               T1.CHL_ID chlId,
             <!-- 通道交易 新增 强成西 2019/03/26 end -->
@@ -138,9 +141,9 @@
             </if>
             <!-- 子组合交易时，选择母组合代码，查询不到流程中数据 modify by renping 20191028 end -->
             <include refid="where_sql" />
-            <if test="type6 != null and !type6.isEmpty()">
+           <!--  <if test="type6 != null and !type6.isEmpty()">
                 and ptpd.trade_market !=#{TRADE_PLACE_01}
-            </if>
+            </if> -->
             ORDER BY T1.TRADE_DATE DESC
             )
         </if>
@@ -160,7 +163,10 @@
                 T4.FINPROD_ID,
                 SUBT2.PORTFOLIO_ID,
                 SUBT2.PORTFOLIO_NAME,
-                decode(T1.trade_market,#{TRADE_PLACE_01},null,T5.TYPE_6) type_6,
+                <!--  BS-1144银行间:回购类型为质押式回购  modify by yujiaping 2020-11-25 start -->
+             <!--  decode(ptpd.trade_market,#{TRADE_PLACE_01},null,T5.TYPE_6) type_6, -->
+                T5.TYPE_6 type_6,
+            <!--  BS-1144银行间:回购类型为质押式回购  modify by yujiaping 2020-11-25 end -->
             <!-- 通道交易 新增 强成西 2019/03/26 start -->
                 T1.CHL_ID chlId,
             <!-- 通道交易 新增 强成西 2019/03/26 end -->
@@ -248,9 +254,9 @@
 	        </if>
 	        <!-- 批处理用，查所选产品对应组合的待处理数据 add by renping 20200110 end -->
             <include refid="where_sql" />
-            <if test="type6 != null and !type6.isEmpty()">
+            <!-- <if test="type6 != null and !type6.isEmpty()">
                 and T1.trade_market !=#{TRADE_PLACE_01}
-            </if>
+            </if> -->
             ORDER BY T1.TRADE_DATE DESC
             )
         </if>
@@ -273,7 +279,10 @@
                   T4.FINPROD_ID,
                   PP.PORTFOLIO_ID,
                   PP.PORTFOLIO_NAME,
-                  decode(ptpd.trade_market,#{TRADE_PLACE_01},null,T5.TYPE_6) type_6,
+                 <!--  BS-1144银行间:回购类型为质押式回购  modify by yujiaping 2020-11-25 start -->
+             <!--  decode(ptpd.trade_market,#{TRADE_PLACE_01},null,T5.TYPE_6) type_6, -->
+                  T5.TYPE_6 type_6,
+            <!--  BS-1144银行间:回购类型为质押式回购  modify by yujiaping 2020-11-25 end -->
             <!-- 通道交易 新增 强成西 2019/03/26 start -->
                   T1.CHL_ID chlId,
             <!-- 通道交易 新增 强成西 2019/03/26 end -->
@@ -314,9 +323,9 @@
                 )
             </if>
                 <include refid="where_sql" />
-                <if test="type6 != null and !type6.isEmpty()">
+                <!-- <if test="type6 != null and !type6.isEmpty()">
                     and ptpd.trade_market !=#{TRADE_PLACE_01}
-                </if>
+                </if> -->
                 ORDER BY T1.TRADE_DATE DESC
             )
         </if>
@@ -339,7 +348,10 @@
               T4.FINPROD_ID,
               PP.PORTFOLIO_ID,
               PP.PORTFOLIO_NAME,
-              decode(ptpd.trade_market,#{TRADE_PLACE_01},null,T5.TYPE_6) type_6,
+            <!--  BS-1144银行间:回购类型为质押式回购  modify by yujiaping 2020-11-25 start -->
+             <!--  decode(ptpd.trade_market,#{TRADE_PLACE_01},null,T5.TYPE_6) type_6, -->
+             T5.TYPE_6 type_6,
+            <!--  BS-1144银行间:回购类型为质押式回购  modify by yujiaping 2020-11-25 end -->
             <!-- 通道交易 新增 强成西 2019/03/26 start -->
               T1.CHL_ID chlId,
             <!-- 通道交易 新增 强成西 2019/03/26 end -->
@@ -378,9 +390,9 @@
                 )
             </if>
             <include refid="where_sql" />
-            <if test="type6 != null and !type6.isEmpty()">
+            <!-- <if test="type6 != null and !type6.isEmpty()">
                 and ptpd.trade_market !=#{TRADE_PLACE_01}
-            </if>
+            </if> -->
             ORDER BY T1.TRADE_DATE DESC
             )
         </if>

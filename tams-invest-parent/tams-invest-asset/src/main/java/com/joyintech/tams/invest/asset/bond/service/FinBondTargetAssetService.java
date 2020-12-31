@@ -611,6 +611,10 @@ implements BaseProcessService<FinBondTargetAssetDto>{
         //附属表
         if (StringUtil.isNotEmpty(baseInfoDto.getFinProductAdd())) {
             bondTargetDto.setIsAutoUpdate(baseInfoDto.getFinProductAdd().getIsAutoUpdate());
+            // 20200819 债券快录添加是否城投债以及城投债级别 wangwei start
+            bondTargetDto.setCityBondLev(baseInfoDto.getFinProductAdd().getCityBondLev());
+            bondTargetDto.setIsCityBond(baseInfoDto.getFinProductAdd().getIsCityBond());
+            // 20200819 债券快录添加是否城投债以及城投债级别 wangwei end
         }
         //
         BaseFinProductBaseInfoDto baseInfoDto2 = new BaseFinProductBaseInfoDto();

@@ -591,12 +591,12 @@
 	<select id="getTraderAuthList" resultType="com.joyintech.service.trade.investtrade.commanddispatcher.dto.TrdCommandDispatcher001Dto">
 	select  a.user_id userName,c.real_name realName,
 	<!-- WM_CONCAT(DISTINCT d.asset_type)  finprodType2 -->
-	regexp_replace(LISTAGG( d.asset_type, ',') WITHIN GROUP (order by (d.asset_type)) ,'([^,]+)(,\1)*(,|$)','\1\3') finprodType2
+	regexp_replace(LISTAGG( d.asset_type, ',') WITHIN GROUP (order by (d.asset_type)) ,'([^,]+)(,\1)*(,|$)','\1\3') finprodType2,c.DEPT_CODE deptCode
 	from sys_user_role a
 	inner join sys_role b on a.role_id = b.role_id
 	inner join  sys_user  c on a.user_id=c.user_name
 	left join AUTO_DISPENSE_RIGHT d on a.user_id=d.user_id
-	where b.role_pos = '06' group by a.user_id,c.real_name
+	where b.role_pos = '06' group by a.user_id,c.real_name,c.DEPT_CODE
 
 	</select>
 

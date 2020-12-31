@@ -252,7 +252,7 @@ public class TrdRepoTrade001Dto extends TrdProductDeal implements ProcessEntity 
      */
     public String getRepoTypeText() {
 
-        if (StringUtil.isNotEmpty(this.getRepoType()) &&! this.getTradeMarket().equals(DictCodeListExt1.交易场所_银行间.getCodeName())) {
+        if (StringUtil.isNotEmpty(this.getRepoType()) /*&&! this.getTradeMarket().equals(DictCodeListExt1.交易场所_银行间.getCodeName())*/) {
             repoTypeText = SysDataUtil.getNameFromDataDict(DictCode.回购类型, this.getRepoType());
         }
 

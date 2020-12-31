@@ -65,4 +65,8 @@ public class RiskSelectService extends BaseService{
     public PtlPortfolio getPtlPortfolioInfo(Map<String,Object> map){
         return ptlPortfolioMapper.selectByPrimaryKey(map.get("ptlId").toString());
     }
+
+    public List<Map<String,Object>> getRiskInfoByPortfolioId(Map<String,Object> map){
+        return ptlPortfolioMapper.getRiskInfoByPortfolioId(map);
+    }
 }

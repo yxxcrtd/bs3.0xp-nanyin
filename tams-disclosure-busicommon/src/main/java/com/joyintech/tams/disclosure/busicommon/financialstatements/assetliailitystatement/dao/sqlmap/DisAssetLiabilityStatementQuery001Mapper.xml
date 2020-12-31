@@ -69,13 +69,19 @@ from
 		    on bb.BOOKSET_ID = bbs.BOOKSET_ID /**账套表**/
 		  inner join  BOK_SUBJECT bs
 		    on bs.subject_no = bb.subject_no and bs.bookset_id = bbs.BOOKSET_ID_TMPL
-		 where bb.bookset_id in
-		   <foreach collection="accountList" item="item" open="(" separator="," close=")">
+		 where (bb.bookset_id in
+		   <foreach collection="accountList" item="item" index="index" open="(" separator="," close="))">
+			   <if test="(index % 999) == 998">
+				   null) OR bb.bookset_id in (
+			   </if>
 		      #{item.code}
 		   </foreach>
 		   and bb.balance_date = #{balanceDate}
-	       and bb.subject_no in 
-		   <foreach collection="subjectNoList" item="item" open="(" separator="," close=")">
+	       and (bb.subject_no in
+		   <foreach collection="subjectNoList" item="item" index="index" open="(" separator="," close="))">
+			   <if test="(index % 999) == 998">
+				   null) OR bb.subject_no in (
+			   </if>
 		      #{item}
 		   </foreach>
     </select>

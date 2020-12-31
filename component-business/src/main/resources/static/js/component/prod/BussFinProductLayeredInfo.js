@@ -79,6 +79,9 @@
 				         },
 				         done : function(table, allData){
 				             tableDataChange();
+				             //BS-2035 草稿箱，开放分档产品，其中一个分档目标客户类型为同业，选择一个同业机构保存为草稿并打开使用，同业机构错被置灰不可编辑 start
+				             tarCustomerTypeChange();
+				             //BS-2035 草稿箱，开放分档产品，其中一个分档目标客户类型为同业，选择一个同业机构保存为草稿并打开使用，同业机构错被置灰不可编辑 end
 				         }
 					});
 

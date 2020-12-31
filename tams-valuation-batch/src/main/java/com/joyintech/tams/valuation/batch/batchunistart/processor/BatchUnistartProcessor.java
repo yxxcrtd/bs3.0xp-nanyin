@@ -73,7 +73,8 @@ public class BatchUnistartProcessor extends BaseProcessor<NeedOperateEntity, Bat
                 && DictCodeList.是否_否.getValue().equals(this.getBatchExecuteDetail().getOtherParam1())) {
                 continue;
             }
-            List<SysBatchJob> jobList = batchUnistartCommonService.selectBatchJob(entity.getBatchgrpSeqNo());
+            /* 统一批处理 监控页面 名称显示优化 shengqiqiang start */
+/*            List<SysBatchJob> jobList = batchUnistartCommonService.selectBatchJob(entity.getBatchgrpSeqNo());
             if (CollectionUtils.isEmpty(jobList)) {
                 entity.setSystemCode("999");
             }
@@ -81,7 +82,29 @@ public class BatchUnistartProcessor extends BaseProcessor<NeedOperateEntity, Bat
                 String systemCode = batchUnistartCommonService.getBatchTaskList(
                     jobList.get(0).getTaskId()).getSystemCode();
                 entity.setSystemCode(systemCode);
+            }*/
+
+            if(entity.getBatchgrpSeqNo().equals("inv1")){
+                entity.setSystemCode("INV");
+            }else if (entity.getBatchgrpSeqNo().equals("inv2")){
+                entity.setSystemCode("INV");
+            }else if (entity.getBatchgrpSeqNo().equals("inv3")){
+                entity.setSystemCode("INV");
+            }else if (entity.getBatchgrpSeqNo().equals("val")){
+                entity.setSystemCode("VAL");
+            }else if (entity.getBatchgrpSeqNo().equals("dateChange")){
+                entity.setSystemCode("INV");
+            }else if (entity.getBatchgrpSeqNo().equals("rep")){
+                entity.setSystemCode("SVR");
+            }else if (entity.getBatchgrpSeqNo().equals("dis1")){
+                entity.setSystemCode("DIS");
+            }else if (entity.getBatchgrpSeqNo().equals("dis2")){
+                entity.setSystemCode("DIS");
+            }else  {
+                entity.setSystemCode("999");
             }
+
+            /* 统一批处理 监控页面 名称显示优化 shengqiqiang end */
             grpConfigs.add(entity);
         }
         BatchUnistartDto dto = new BatchUnistartDto();

@@ -167,7 +167,12 @@ public class TrdDepoDurationController {
         throws Exception {
         return trdDepoDurationService.getPortfolioId(page, length, param);
     }
-
+    //add by yujiaping 2020-12-5 BS-1562【存款类存续期】同一资产同一计息结束日只能做一次活期存放结息start
+    @PostMapping("getTradeId")
+    public Map<String, Object> getTradeId(@RequestBody Map<String, Object> map) {
+        return trdDepoDurationService.getTradeId(map);
+    }
+    //add by yujiaping 2020-12-5 BS-1562【存款类存续期】同一资产同一计息结束日只能做一次活期存放结息end
     /**
      * 市场代码联动 <功能详细描述>
      *
@@ -192,6 +197,19 @@ public class TrdDepoDurationController {
     @PostMapping("portfolioIdLink")
     public Map<String, Object> portfolioIdLink(@RequestBody Map<String, Object> map) {
         return trdDepoDurationService.portfolioIdLink(map);
+    }
+
+    /**
+     * 组合代码联动 add by jiangpeng on 20201215 ZGBS-69
+     *
+     * @param map 参数
+     * @return 联动的详情数据
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("getPortfolioName")
+    public Map<String, Object> getPortfolioName(@RequestBody Map<String, Object> map) {
+        return trdDepoDurationService.getPortfolioName(map);
     }
 
     /**
@@ -229,7 +247,7 @@ public class TrdDepoDurationController {
      * @since 1.0
      */
     @PostMapping("findDealByTotalId")
-    List<TrdProductDeal> findDealByTotalId(@RequestBody String busiCode) {
+    public List<TrdProductDeal> findDealByTotalId(@RequestBody String busiCode) {
         return trdDepoDurationService.findDealByTotalId(busiCode);
     }
     /**
@@ -242,7 +260,7 @@ public class TrdDepoDurationController {
      * @since 1.0
      */
     @PostMapping("getBusiCode/{page}/{length}")
-    Page<SelectOptionDto> getBusiCode(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
+    public Page<SelectOptionDto> getBusiCode(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
                                       @PathVariable("length") int length){
         return trdDepoDurationService.getBusiCode(page, length, param);
     }

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SelectOptionDto;
@@ -66,7 +67,17 @@ public interface FlowRiskStressTestMapper {
      * @see
      * @since 1.0
      */
-    void stressTestLoad(Map<String,Object> param);
+    void stressTestLoad(Map<String,Object> param);    
+    /**
+     * 调存储过程  Clob版
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @see
+     * @since 1.0
+     */
+    void stressTestLoadClob(Map<String,Object> param);
+    
+    
     /**
      * 情景下拉框
      * <一句话功能简述>
@@ -121,4 +132,6 @@ public interface FlowRiskStressTestMapper {
     List<TreeNode<FlowRskSupervisionIndicatorDto>> getAllPortfolioByProfit(@Param(value = "indId") String indId,@Param(value = "portfLevel") String portfLevel,@Param(value = "portfName") List<String> portfName,@Param(value = "profitType") String profitType,@Param(value = "issueMode") String issueMode,@Param(value = "raiseType") String raiseType,@Param(value = "investType") String investType,@Param("portfolioType") String portfolioType);
     List<TreeNode<FlowRskSupervisionIndicatorDto>> getAllPortfolioByOther(@Param(value = "fields") String fields,@Param(value = "portfLevel") String portfLevel,@Param(value = "indId") String indId,@Param(value = "portfName") List<String> portfName,@Param(value = "profitType") String profitType,@Param(value = "issueMode") String issueMode,@Param(value = "raiseType") String raiseType,@Param(value = "investType") String investType,@Param("portfolioType") String portfolioType);
 
+    @Update("update STT_STRESS_TEST set EXE_STATUS = #{status, jdbcType=VARCHAR} where test_id = #{testId, jdbcType=VARCHAR}")
+    int updateStressStatus(Map<String,Object> map);
 }

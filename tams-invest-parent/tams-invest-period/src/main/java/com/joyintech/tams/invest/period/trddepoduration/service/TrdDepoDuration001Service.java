@@ -229,6 +229,13 @@ implements BaseProcessService<TrdDepoDuration001Dto>{
     public int countCashMatch(String busiCode) {
         return restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdDepoDuration/countCashMatch", busiCode, Integer.class);
     }
+    
+    //add by yujiaping 2020-12-5 BS-1562【存款类存续期】同一资产同一计息结束日只能做一次活期存放结息start
+    @SuppressWarnings("unchecked")
+	public Map<String,Object> getTradeId(Map<String, Object> pageParam) {
+        return restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdDepoDuration/getTradeId", pageParam, Map.class);
+    }
+    //add by yujiaping 2020-12-5 BS-1562【存款类存续期】同一资产同一计息结束日只能做一次活期存放结息end
 
     /**
      * 资产代码联动查询
@@ -261,6 +268,18 @@ implements BaseProcessService<TrdDepoDuration001Dto>{
     public Map<String,Object> portfolioIdLink(Map<String, Object> pageParam) {
         pageParam.put("ACCT_TYPE_A01", DictCodeListExt1.资金账户类型_产品托管户.getValue());
         return restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdDepoDuration/portfolioIdLink", pageParam, Map.class);
+    }
+
+    /**
+     * 组合代码联动查询
+     * add by jiangpeng on 20201215 ZGBS-69
+     * @param pageParam 画面的条件
+     * @return 画面查询结果
+     * @since 1.0
+     */
+    @SuppressWarnings("unchecked")
+    public Map<String,Object> getPortfolioName(Map<String, Object> pageParam) {
+        return restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdDepoDuration/getPortfolioName", pageParam, Map.class);
     }
 
     /**

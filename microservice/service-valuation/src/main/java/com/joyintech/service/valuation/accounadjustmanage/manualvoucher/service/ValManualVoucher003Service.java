@@ -435,8 +435,8 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
             List<SuggestDto> ListPub =  valManualVoucher003Mapper.getFinProductPub(null, booksetId);
             finproduct.addAll(ListPub);
             //非公用资产
-            List<SuggestDto> ListPrivate =  valManualVoucher003Mapper.getFinProduct(null, booksetId);
-            finproduct.addAll(ListPrivate);
+//            List<SuggestDto> ListPrivate =  valManualVoucher003Mapper.getFinProduct(null, booksetId);
+//            finproduct.addAll(ListPrivate);
             //多级法人改造 add by hxy end 20200618
             if (CollectionUtils.isNotEmpty(finproduct)) {
                 productList.addAll(finproduct);
@@ -451,8 +451,8 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
             List<SuggestDto> ListtradePub = valManualVoucher003Mapper.getFinTradeProductPub(null,booksetId);
             fintradproduct.addAll(ListtradePub);
             //非公用资产
-            List<SuggestDto> ListtradePrivate = valManualVoucher003Mapper.getFinTradeProduct(null,booksetId);
-            fintradproduct.addAll(ListtradePrivate);
+//            List<SuggestDto> ListtradePrivate = valManualVoucher003Mapper.getFinTradeProduct(null,booksetId);
+//            fintradproduct.addAll(ListtradePrivate);
             //多级法人改造 add by hxy end 20200618
             
             if (CollectionUtils.isNotEmpty(fintradproduct)) {
@@ -706,6 +706,7 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
         for (ValManualVoucher003AddDto item : dto.getListAddDto()) {
             item.setInvAim(invAim);
         }
+        deal.setFinprodType(dto.getFinprodType());
         // 登录
         trdVouchDealMapper.insert(deal);
         return deal;

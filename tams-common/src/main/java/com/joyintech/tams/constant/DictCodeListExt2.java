@@ -1637,6 +1637,7 @@ public enum DictCodeListExt2 implements BaseDictCodeList {
     配置类型_投管分类(DictCode.配置类型, "TG_TYPE", "投管分类"),
     配置类型_风险分类(DictCode.配置类型, "RISK_TYPE", "风险分类"),
     配置类型_授权分类(DictCode.配置类型, "RISK_TYPE1", "授权分类"),
+    配置类型_授权分类_校验用(DictCode.配置类型, "AUTHORIZE_TYPE1", "授权分类"),
     配置类型_产品存续期风险分类(DictCode.配置类型, "PED_RISK_TYPE", "授权分类"),
     
     // add by renping 2019-07-26 end

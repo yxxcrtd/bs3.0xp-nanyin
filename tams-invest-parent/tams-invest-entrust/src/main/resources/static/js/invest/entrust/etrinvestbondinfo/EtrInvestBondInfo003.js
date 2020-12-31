@@ -206,6 +206,14 @@
         for(var index in object.bussCombDistribtList){
         	var item = object.bussCombDistribtList[index];
         	var temp = JSON.parse(JSON.stringify(object));
+        	// 指令授信 start
+            temp.inputValue1 = 'F01';
+            temp.finprodType2 = 'F01';
+            temp.tradeAmt = item.entrustNum;
+            temp.prinAmt = item.entrustNum;
+            temp.tradeDate = temp.vdate;
+            temp.counterId = temp.counterIdName;
+            // 指令授信 end
         	temp.portfolioId = item.portfolioId;
         	temp.entrustNum = item.entrustNum;
         	temp.invAim = item.invAim;

@@ -1,4 +1,4 @@
-$(function() {
+(function() {
     /**
      * 获取查询参数
      */
@@ -29,7 +29,7 @@ $(function() {
                 JoyinUtil.getRealPath("invest/trade/primarybiddingmanage/PrimaryBiddingManage002/init"),
                 "99%", "99%", data);
         },
-        searchOnInit: true,
+        // searchOnInit: true,
         cols:[
             {field:'bidId',  title: 'PrimaryBiddingManage001.bidid',width:150,sortable:true}
             ,{field:'validStatus',title:'PrimaryBiddingManage001.validStatus',width:150,sortable:false,visible: false}
@@ -72,7 +72,7 @@ $(function() {
                 JoyinUtil.getRealPath("invest/trade/primarybiddingmanage/PrimaryBiddingManage002/init"),
                 "99%", "99%", data);
         },
-        searchOnInit: true,
+        // searchOnInit: true,
         cols:[
             {field:'bidId',  title: 'PrimaryBiddingManage001.bidid',width:150,sortable:true}
             ,{field:'validStatus',title:'PrimaryBiddingManage001.validStatus',width:150,sortable:false,visible: false}

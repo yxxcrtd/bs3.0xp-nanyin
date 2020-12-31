@@ -14,7 +14,7 @@ $(function () {
 	               {field:'bdHappenAmt', title: '本币借方金额', edit: true, align: 'right', editOption:{type: 'money', pattern: '#.00'}},
 	               {field:'bcHappenAmt', title: '本币贷方金额', edit: true, align: 'right', editOption:{type: 'money', pattern: '#.00'}},
 	               {field:'happenNumber', title: '数量', edit: true, align: 'right', editOption:{type: 'money', pattern: '#.0000'}},
-	               {field:'branch', title: '分支序号', edit:true, editOption:{type: 'textbox'}},
+	               {field:'branch', title: '分支序号', edit:true, editOption:{type: 'number'}},
 	               {field:'acctCode', title: '账户代码', edit:true, editOption:{type: 'textbox'}},
 //	               {field:'branch', title: '分支序号', edit: true, visible:true, editOption:{id:'branch', type:'select', url: JoyinUtil.getRealPath('/valuation/accounadjustmanage/manualvoucher/ValManualVoucher003/getBranch'), parentIds: 'booksetId,finprodType,finprodId,subjectNo', showField: 'id'}},
 //	               {field:'acctCode', title: '账户代码', edit: true, visible:true, editOption:{id:'acctCode', type:'select', url: JoyinUtil.getRealPath('/valuation/accounadjustmanage/manualvoucher/ValManualVoucher003/getAcctId'), parentIds: 'booksetId', showField: 'id'}},

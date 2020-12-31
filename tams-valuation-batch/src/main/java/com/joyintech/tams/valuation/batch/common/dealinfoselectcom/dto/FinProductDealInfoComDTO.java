@@ -344,6 +344,10 @@ public class FinProductDealInfoComDTO {
     private String psPayment;
 
     /**
+     * 摊销额小于剩余摊销时是否只摊销到0
+     */
+    private String amorizeRule;
+    /**
      * 取得 交易市场，一级市场、二级市场
      * @return 交易市场，一级市场、二级市场
      */
@@ -1501,5 +1505,13 @@ public class FinProductDealInfoComDTO {
      */
     public void setPsPayment(String psPayment) {
         this.psPayment = psPayment;
+    }
+
+    public String getAmorizeRule() {
+        return amorizeRule;
+    }
+
+    public void setAmorizeRule(String amorizeRule) {
+        this.amorizeRule = amorizeRule;
     }
 }

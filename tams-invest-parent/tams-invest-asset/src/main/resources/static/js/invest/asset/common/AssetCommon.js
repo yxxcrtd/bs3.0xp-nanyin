@@ -132,17 +132,29 @@ $(function(){
                 Joyin.ajax(JoyinUtil.getRealPath('/invest/asset/common/getRepInfoByIssuer'), {customerId : obj}, function(result){
                     //update by gejiaao 20200320
                     if (result.partyType1 == '01' || result.partyType1 == '02' || result.partyType1 == '03'){
-                        $('#bussFinBondRepInfoDto_repPartyType1').val(result.partyType1).trigger('change');
+                        $('#bussFinBondRepInfoDto_repPartyType1').val('01').trigger('change');
                         $('#bussFinBondRepInfoDto_repInstitSize').val(result.partyType1).trigger('change');
                     }else if(result.partyType1 == '04'){
                         $('#bussFinBondRepInfoDto_repPartyType1').val('02').trigger('change');
                     }else{
-                        $('#bussFinBondRepInfoDto_repPartyType1').val(result.partyType1).trigger('change');
+                        // 20200819 市场机构的机构类型（规模）映射中债报送的发行机构类型（按规模划分）修正 wangwei start
+                        // $('#bussFinBondRepInfoDto_repPartyType1').val(result.partyType1).trigger('change');
+                        $('#bussFinBondRepInfoDto_repPartyType1').val("99").trigger('change');
+                        // 20200819 机构类型（规模）参数取值 市场机构机构类型（规模） wangwei end
                     }
                     $('#bussFinBondRepInfoDto_repPartyType2').val(result.partyType2).trigger('change');
                     $('#bussFinBondRepInfoDto_repPartyType3').val(result.partyType3).trigger('change');
-                    $('#bussFinBondRepInfoDto_repIndustry').val(result.industry).trigger('change');
-                    $('#bussFinBondRepInfoDto_repIndustryLevel2').val(result.industry2).trigger('change');
+                    // 20200819 发行人联动处理优化：若市场机构未接入该信息，则从快录的信息中获取 wangwei start
+                    // $('#bussFinBondRepInfoDto_repIndustry').val(result.industry).trigger('change');
+                    // $('#bussFinBondRepInfoDto_repIndustryLevel2').val(result.industry2).trigger('change');
+                    // wind提供的机构信息存在所属行业为空的情况，该场合快录时取快录的机构所属行业信息
+                    if (result.industry) {
+                        $('#bussFinBondRepInfoDto_repIndustry').val(result.industry).trigger('change');
+                    }
+                    if (result.industry2) {
+                        $('#bussFinBondRepInfoDto_repIndustryLevel2').val(result.industry2).trigger('change');
+                    }
+                    // 20200819 发行人联动处理优化：若市场机构未接入该信息，则从快录的信息中获取 wangwei end
                 });
             },
             

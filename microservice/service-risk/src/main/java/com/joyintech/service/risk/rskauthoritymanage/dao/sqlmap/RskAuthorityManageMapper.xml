@@ -261,7 +261,7 @@
 		order by pm.create_time desc 
 	    </select>
 	    
-	    <select id="selectAssetTrade" resultType="java.lang.Integer">
+	    <select id="selectAssetTrade" resultType="java.lang.String">
 			SELECT
 		  		WTPDA.PORTFOLIO_ID portfolioId
 		  	FROM
@@ -271,7 +271,7 @@
 		  	ON WTPD.TRADE_ID = WTPDA.TRADE_ID
 		  	WHERE  
 		  		WTPD.FINPROD_TYPE2 IN (select distinct t.input_value_1 from fin_product_type_config  t
-								where config_type like 'RISK_TYPE1'
+								where config_type = #{RISK_TYPE,jdbcType=VARCHAR}
 								<if test="ASSET_TYPE != null and ASSET_TYPE != ''">
 								and output_value_1 = #{ASSET_TYPE,jdbcType=VARCHAR}
 								</if>

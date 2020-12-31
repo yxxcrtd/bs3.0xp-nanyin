@@ -271,7 +271,7 @@
         SELECT p.prod_id,p.prod_name FROM chb_prd_baseinfo p
         where p.status in ('E','M')
         and p.fprod_id is null
-        and p.ISSUING_STATUS != '03'
+       <!--  and p.ISSUING_STATUS != '03' -->
         <if test="search != null and search !='' ">
         AND P.PROD_ID LIKE concat(concat('%', #{search}),'%')
         </if>

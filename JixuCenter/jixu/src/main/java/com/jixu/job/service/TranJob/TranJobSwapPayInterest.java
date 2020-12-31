@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.jixu.common.type.TransTypes;
+import com.joyintech.framework.util.StringUtil;
 import org.springframework.stereotype.Service;
 import com.jixu.common.exception.JNLException;
 import com.jixu.common.func.GLACCT;
@@ -88,7 +90,9 @@ public class TranJobSwapPayInterest extends TranJobBasic {
 			if(tranbasic.isSetAllIntatmatFlag() && cashobj.getDbcr().equals(DBCR.DEBIT)
 				|| tranbasic.isSetAllIntatmatFlag2() && cashobj.getDbcr().equals(DBCR.CREDIT)){
 				//判断多空双方分别是否需要结清利息
-				cjje=ysyflx*tranbasic.getAmount()/ysyfunit;	//冲减金额
+				if(!(cashobj.getTranType() == TransTypes.SWAP_Pay_Interest)){
+					cjje=ysyflx*tranbasic.getAmount()/ysyfunit;	//冲减金额
+				}
 			}
 			double gcje=RoundUtil.roundMoney2Dec(cashobj.getCash()-cjje);
 			double gcjeFunc=RoundUtil.roundMoney2Dec(gcje*cashobj.getAsofdayRate());

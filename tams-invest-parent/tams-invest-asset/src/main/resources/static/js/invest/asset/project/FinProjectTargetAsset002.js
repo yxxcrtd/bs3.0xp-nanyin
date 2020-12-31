@@ -141,8 +141,8 @@ $(function() {
         }*/
         //评级信息
         object.busiFinBondRatingInfoDto = {};
-        if(BusiFinBondRatingInfo){
-            object.busiFinBondRatingInfoDto.mstBondCreditRatingList = BusiFinBondRatingInfo.getAllRows();  
+        if(BusiFinProjectRatingInfo){
+            object.busiFinBondRatingInfoDto.mstBondCreditRatingList = BusiFinProjectRatingInfo.getAllRows();
         }
         Joyin.ajaxJson(basePath + 'invest/asset/project/FinProjectTargetAsset002/check', object, function(
                     result) {
@@ -645,6 +645,9 @@ $(function() {
 	        });
             byBasis();
         }
+        if(objBuyOutRate!=null&&objBuyOutRate!=''){
+            $('#buyOutRate').val(objBuyOutRate).trigger('change');
+        }
     }
     var init = function(){
     	if($('#type6').val()==ASSET_TYPE_PROJECT_01
@@ -764,6 +767,7 @@ $(function() {
             $('#type6').attr('disabled',true).trigger('change');
             $('#finprodMarketId').attr('disabled', true).trigger('change');
             $('.btn-save').hide();
+            $('#buyOutRate').attr('disabled',true).trigger('change');
         }
         // 绑定按钮事件
         $('#FinProjectTargetAsset002_btn_save').click(function() {

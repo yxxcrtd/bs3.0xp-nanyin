@@ -1829,7 +1829,7 @@
 		and (t.eff_date, t.cash_id) in
 		(select max(eff_date), cash_id
 		from FIN_CASH_CALC_RULE
-		where eff_date <![CDATA[<=]]> to_date(#{searchDate,jdbcType=VARCHAR},'yyyy-mm-dd')
+		where eff_date <![CDATA[<=]]> to_date(#{queryDate,jdbcType=VARCHAR},'yyyy-mm-dd')
 		group by cash_id)
 		group by NVL(PRO.P_FINPROD_ID, pro.finprod_id)
 
@@ -1846,7 +1846,7 @@
 		and (t.eff_date, t.finprod_id) in
 		(select max(eff_date), finprod_id
 		from FIN_CASH_CALC_RULE
-		where eff_date  <![CDATA[<=]]> to_date(#{searchDate,jdbcType=VARCHAR},'yyyy-mm-dd')
+		where eff_date  <![CDATA[<=]]> to_date(#{queryDate,jdbcType=VARCHAR},'yyyy-mm-dd')
 		group by finprod_id)
 		group by NVL(PRO.P_FINPROD_ID, pro.finprod_id)
 		) YJ2/*业绩比较基准*/
@@ -1861,7 +1861,12 @@
         left join BOK_VAL_TABLE_DATA bvtd4 on bvtd4.BOOKSET_ID = FIN_PRODUCT.FINPROD_ID and bvtd4.VAL_DATE = fop.cycleDateStr and bvtd4.SUBJECT_NO = '产品资产净值：'
 				
 		where
-		PRD_STANDING_BOOK.CDATE = to_date(#{queryDate},'yyyy-MM-dd')
+		<!-- TISHKBS-1598【产品台账】“产品存续状态”查询失效，产品到日期后查询不到 add by hpp 2020-11-12 start -->
+		<!-- PRD_STANDING_BOOK.CDATE = to_date(#{queryDate},'yyyy-MM-dd') -->
+		((FIN_PRODUCT.LIQUIDATION_DATE >= TO_DATE(#{queryDate},'yyyy-MM-dd') and prd_standing_book.cdate = TO_DATE(#{queryDate},'yyyy-MM-dd'))
+		or (FIN_PRODUCT.LIQUIDATION_DATE &lt; TO_DATE(#{queryDate},'yyyy-MM-dd') and prd_standing_book.cdate = FIN_PRODUCT.LIQUIDATION_DATE))
+		<!-- TISHKBS-1598【产品台账】“产品存续状态”查询失效，产品到日期后查询不到 add by hpp 2020-11-12 end -->
+
 		and FIN_PRODUCT.FINPROD_TYPE2 = #{finprodTypeProd}
 		and FIN_PRODUCT.P_FINPROD_ID IS NULL
 		and PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
@@ -2137,7 +2142,7 @@
        when '02' then YJ.yield
        else  YJ2.rate end rateRepYield,
        -->
-		PRD_STANDING_BOOK.RATE rateRepYieldStr,
+		nvl(PRD_STANDING_BOOK.RATE,FIN_RATE_INFO.RATE * 100) rateRepYieldStr,
 		(case when
 		PRD_SALE_PARAM.FIRST_SALE_VDATE &lt;= to_date(#{queryDate}, 'yyyy-MM-dd') and FIN_PRODUCT.VDATE
 		&gt;to_date(#{queryDate}, 'yyyy-MM-dd') then '新发'
@@ -2441,7 +2446,7 @@
 		and (t.eff_date, t.cash_id) in
 		(select max(eff_date), cash_id
 		from FIN_CASH_CALC_RULE
-		where eff_date <![CDATA[<=]]> to_date(#{searchDate,jdbcType=VARCHAR},'yyyy-mm-dd')
+		where eff_date <![CDATA[<=]]> to_date(#{queryDate,jdbcType=VARCHAR},'yyyy-mm-dd')
 		group by cash_id)
 		group by NVL(PRO.P_FINPROD_ID, pro.finprod_id)
 
@@ -2458,7 +2463,7 @@
 		and (t.eff_date, t.finprod_id) in
 		(select max(eff_date), finprod_id
 		from FIN_CASH_CALC_RULE
-		where eff_date  <![CDATA[<=]]> to_date(#{searchDate,jdbcType=VARCHAR},'yyyy-mm-dd')
+		where eff_date  <![CDATA[<=]]> to_date(#{queryDate,jdbcType=VARCHAR},'yyyy-mm-dd')
 		group by finprod_id)
 		group by NVL(PRO.P_FINPROD_ID, pro.finprod_id)
 		) YJ2/*业绩比较基准*/
@@ -2470,7 +2475,12 @@
 		left join BOK_VAL_TABLE_DATA bvtd1 on bvtd1.BOOKSET_ID = FIN_PRODUCT.FINPROD_MARKET_ID and bvtd1.VAL_DATE = fop.cycleDateStr and bvtd1.SUBJECT_NO = '资产类合计：'
 		left join BOK_VAL_TABLE_DATA bvtd2 on bvtd2.BOOKSET_ID = FIN_PRODUCT.FINPROD_MARKET_ID and bvtd2.VAL_DATE = fop.cycleDateStr and bvtd2.SUBJECT_NO = '负债类合计：'
 		where
-		PRD_STANDING_BOOK.CDATE = to_date(#{queryDate},'yyyy-MM-dd')
+		<!-- TISHKBS-1598【产品台账】“产品存续状态”查询失效，产品到日期后查询不到 add by hpp 2020-11-12 start -->
+		<!-- PRD_STANDING_BOOK.CDATE = to_date(#{queryDate},'yyyy-MM-dd') -->
+		((FIN_PRODUCT.LIQUIDATION_DATE >= TO_DATE(#{queryDate},'yyyy-MM-dd') and prd_standing_book.cdate = TO_DATE(#{queryDate},'yyyy-MM-dd'))
+		or (FIN_PRODUCT.LIQUIDATION_DATE &lt; TO_DATE(#{queryDate},'yyyy-MM-dd') and prd_standing_book.cdate = FIN_PRODUCT.LIQUIDATION_DATE))
+		<!-- TISHKBS-1598【产品台账】“产品存续状态”查询失效，产品到日期后查询不到 add by hpp 2020-11-12 end -->
+
 		and FIN_PRODUCT.FINPROD_TYPE2 = #{finprodTypeProd}
 		and FIN_PRODUCT.P_FINPROD_ID IS NULL
 		and PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}

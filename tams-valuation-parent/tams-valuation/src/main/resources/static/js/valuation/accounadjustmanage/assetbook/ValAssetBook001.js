@@ -207,12 +207,52 @@ $(function() {
                 });
             }
         };
-    
+    /**
+     * 账套参数修改
+     */
+    var modification = function(){
+        if(table!=null && table!=''){
+            var selArr = table.getAllCheckedRows();
+            //判断是否选中元素
+            if( selArr != null &&  selArr.length > 0 ){
+                if (selArr.length != 1){
+                    Joyin.error(JoyinUtil.getMessage("COMMON_E_0058"));
+                    return;
+                }
+                var data = selArr[0];
+//                if(data.booksetTypeCode&&data.booksetTypeCode!='02'){
+//                    Joyin.error(JoyinUtil.getMessage("只能修改“账套类别”为“理财账套”的参数！"));
+//                    return;
+//                }
+                Joyin.ajaxJson(basePath + 'valuation/accounadjustmanage/assetbook/ValAssetBook006/check', {booksetId:data.booksetId}, function(result1) {
+                    if(data.booksetTypeCode=='02'&&data.startDate && data.startDate <= sysDate){
+                        Joyin.warn(JoyinUtil.getMessage("该产品已经起息，不支持修改，只能查看！"));
+                        data.modifyFlag=false;
+                    }
+                    Joyin.dialog(JoyinUtil.getLabel("账套参数修改"),
+                        JoyinUtil.getRealPath("valuation/accounadjustmanage/assetbook/ValAssetBook006/init"),
+                        "99%", "95%",{modifyFlag : data.modifyFlag, booksetId : data.booksetId},function(){table.reload();}
+                    );
+                });
+            }else{
+                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                return;
+            }
+        }else{
+            Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+            return;
+        }
+    }
     /**
      * 页面加载完后执行
      */
     $(function(){
     	tableBind();// 账套事件绑定
+
+    	$('#ValAssetBook001_btn_modification').click(function() {
+            //账套参数修改
+            modification();
+        });
     });
 
 });

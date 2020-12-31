@@ -141,7 +141,10 @@ public class MstMarketInstitutionsDto extends MstCustomerInfoAddWithBLOBs implem
      */
     @NotEmpty(fieldName = "MstMarketInstitutions002.partyType1", groups = {ValidateGroupEdit.class})
     public String getPartyType1Str(){
-        return SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, super.getPartyType1());
+        // 20200819 机构类型（规模）参数取值 市场机构机构类型（规模） wangwei start
+//        return SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, super.getPartyType1());
+        return SysDataUtil.getNameFromDataDict(DictCode.市场机构机构类型, super.getPartyType1());
+        // 20200819 机构类型（规模）参数取值 市场机构机构类型（规模） wangwei end
     }
     
     /**

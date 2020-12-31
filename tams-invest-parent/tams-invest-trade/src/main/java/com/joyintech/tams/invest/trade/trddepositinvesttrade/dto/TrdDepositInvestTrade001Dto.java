@@ -496,7 +496,7 @@ public class TrdDepositInvestTrade001Dto extends WflTrdProductDeal implements Pr
      * {@inheritDoc}
      */
     @Override
-    @NotEmpty(fieldName="TrdDepositInvestTrade002.intAmt",groups = {ValidateGroupEdit.class})
+    //@NotEmpty(fieldName="TrdDepositInvestTrade002.intAmt",groups = {ValidateGroupEdit.class})
     @Length(fieldName="TrdDepositInvestTrade002.intAmt",max=16 ,groups = {ValidateGroupEdit.class,
         ValidateGroupDelete.class})
     public BigDecimal getIntAmt(){

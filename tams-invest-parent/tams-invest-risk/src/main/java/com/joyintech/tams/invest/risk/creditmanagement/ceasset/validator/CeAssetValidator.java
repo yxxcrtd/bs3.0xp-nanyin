@@ -1,13 +1,5 @@
 package com.joyintech.tams.invest.risk.creditmanagement.ceasset.validator;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -21,6 +13,13 @@ import com.joyintech.tams.invest.risk.creditmanagement.ceasset.dto.CreditLinesAs
 import com.joyintech.tams.invest.risk.creditmanagement.ceasset.service.CeAsset002Service;
 import com.joyintech.tams.invest.risk.creditmanagement.ceorg.service.CeOrg002Service;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 资产授信验证
@@ -63,22 +62,22 @@ public class CeAssetValidator implements BeanValidator{
                         getMessage("BUSS_COM_E_0003", getMessage("CeAsset002.vdate"),getMessage("CeAsset002.mdate"))));
                 }
             }
-        	if(StringUtil.isNotEmpty(dto.getCustomerId())&&StringUtil.isNotEmpty(dto.getVdate())&&StringUtil.isNotEmpty(dto.getMdate())){
-	            int vcount= ceOrg002Service.searchRepeatByVmDate(dto.getSeqno(),dto.getCustomerId(), dto.getVdate());
-	            if(vcount>0){
-	            	resultList.add(new ValidMessage("vdate", getMessage("RSK_W_0039",getMessage("CeAsset002.vdate"))));
-	            }
-	            int mcount= ceOrg002Service.searchRepeatByVmDate(dto.getSeqno(),dto.getCustomerId(),  dto.getMdate());
-	            if(mcount>0){
-	            	resultList.add(new ValidMessage("mdate", getMessage("RSK_W_0039",getMessage("CeAsset002.mdate"))));
-	            }
-	            if(vcount<=0&&mcount<=0){
-		            int mscount= ceOrg002Service.searchRepeatByVmDateArea(dto.getSeqno(),dto.getCustomerId(),dto.getVdate(),  dto.getMdate());
-		            if(mscount>0){
-		            	resultList.add(new ValidMessage("", getMessage("RSK_W_0039",getMessage("CeOrg002.vmdate"))));
-		            }
-	            }
-        	}
+//        	if(StringUtil.isNotEmpty(dto.getCustomerId())&&StringUtil.isNotEmpty(dto.getVdate())&&StringUtil.isNotEmpty(dto.getMdate())){
+//	            int vcount= ceOrg002Service.searchRepeatByVmDate(dto.getSeqno(),dto.getCustomerId(), dto.getVdate());
+//	            if(vcount>0){
+//	            	resultList.add(new ValidMessage("vdate", getMessage("RSK_W_0039",getMessage("CeAsset002.vdate"))));
+//	            }
+//	            int mcount= ceOrg002Service.searchRepeatByVmDate(dto.getSeqno(),dto.getCustomerId(),  dto.getMdate());
+//	            if(mcount>0){
+//	            	resultList.add(new ValidMessage("mdate", getMessage("RSK_W_0039",getMessage("CeAsset002.mdate"))));
+//	            }
+//	            if(vcount<=0&&mcount<=0){
+//		            int mscount= ceOrg002Service.searchRepeatByVmDateArea(dto.getSeqno(),dto.getCustomerId(),dto.getVdate(),  dto.getMdate());
+//		            if(mscount>0){
+//		            	resultList.add(new ValidMessage("", getMessage("RSK_W_0039",getMessage("CeOrg002.vmdate"))));
+//		            }
+//	            }
+//        	}
         	//modify by gaopeng 20191018 start错误提示信息修改
         	if("01".equals(CacheUtil.getSysParam(BussinessConstant.CEMODEL))){
 	        	if(StringUtil.isNotEmpty(dto.getCustomerId())){

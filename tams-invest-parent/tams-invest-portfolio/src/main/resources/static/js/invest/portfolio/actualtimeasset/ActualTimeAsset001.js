@@ -7,8 +7,12 @@ $(function() {
     	if($('#finprodId').val() && $('#finprodId').val() != ''){
     		val = $('#finprodId').select2('data')[0].object ;
     	}
+    	var portfolioId='';
+    	if($('#portfolioId').val()){
+    	    portfolioId=$('#portfolioId').val();
+    	}
         return {
-        	portfolioId: $('#portfolioId').val(),//组合代码
+        	portfolioId : portfolioId,//组合代码
         	cdate : $('#cdate').val(),//日期
         	secManageAcctId: $('#secManageAcctId').val(),//证券账户
         	type8:$('#type8').val(),//资产类型
@@ -70,9 +74,9 @@ $(function() {
         // 绑定查询按钮
         $('#ActualTimeAsset001_btn_search').click(function() {
         	var strError = '';
-            if(!$('#portfolioId').val()){
-                strError = "请输入"+JoyinUtil.getLabel("ActualTimeAsset001.portfolioId")+"<br>";
-            }
+//            if(!$('#portfolioId').val()){
+//                strError = "请输入"+JoyinUtil.getLabel("ActualTimeAsset001.portfolioId")+"<br>";
+//            }
             if(!$('#cdate').val()){
                 strError = strError + "请输入"+JoyinUtil.getLabel("ActualTimeAsset001.cdate");
             }

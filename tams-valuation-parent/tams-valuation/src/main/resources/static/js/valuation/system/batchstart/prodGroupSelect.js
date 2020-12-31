@@ -12,7 +12,7 @@
 
     //首次进入页面flag 。判断checkrow时有问题、LAY_CHECKED为null导致selectedProdIds会被删数据
     // 但是取消选中时 是对的。导致
-    var firstFlag = true;
+    var firstFlag = false;
     if (prodGroupType === '0') {
         table = $("#prdGroupDataTable").joyintable({
             ajax: {
@@ -23,19 +23,20 @@
                 }
             },
             height: 380,
-            click:function(ele, row) {
-                groupSelectRow(ele, row);
-            },
             check:function(ele, row){
-                groupSelectRow(ele, row);
+                if(!firstFlag){
+                	process(this,'seqNo','groupName');
+                }
             },
             done:function(data){
+            	firstFlag = true;
                 $.each(data, function (i, v) {
                     if ($.inArray(v.seqNo, selectedProdIds) != -1) {
                         table.checkRow(v.LAY_TABLE_INDEX)
                     }
                 })
                 firstFlag = false;
+                setToPage();
             },
             cols: [
                 {
@@ -57,19 +58,20 @@
                 }
             },
             height: 380,
-            click:function(ele, row) {
-                selectRow(ele, row);
-            },
             check:function(ele, row){
-                selectRow(ele, row);
+            	if(!firstFlag){
+            		process(this,'prodId','prodName');
+            	}
             },
             done:function(data){
+            	firstFlag = true;
                 $.each(data, function (i, v) {
                     if ($.inArray(v.prodId, selectedProdIds) != -1) {
                         table.checkRow(v.LAY_TABLE_INDEX)
                     }
                 })
                 firstFlag = false;
+                setToPage();
             },
             cols: [
                 {field: 'prodId', width: '40%', title: '产品代码'}
@@ -82,21 +84,39 @@
     var selectedProdNames = parent.window['prod']?parent.window['prod'].selectedProdNames:[];
 
 
-    var groupSelectRow = function (ele, row) {
-        if (row.LAY_CHECKED) {
-            if ($.inArray(row.seqNo, selectedProdIds) === -1) {
-                selectedProdIds.push(row.seqNo);
-                selectedProdNames.push(row.groupName);
-            }
-        } else {
-            if(!firstFlag){
-                if ($.inArray(row.seqNo, selectedProdIds) != -1) {
-                    selectedProdIds.splice($.inArray(row.seqNo, selectedProdIds), 1);
-                    selectedProdNames.splice($.inArray(row.groupName, selectedProdNames), 1);
-                }
-            }
-        }
-        setToPage();
+    var process = function(object,idKey,nameKey){
+    	//获取整个tableDiv
+    	var div = $(object);
+    	while(div.length>0&&!div.hasClass("layui-table-box")){
+    		div = div.parent();
+    	}
+    	//获取数据table
+    	if(div.length>0){
+    		var dataTable = div.find("div.layui-table-main").find("tbody");
+    		var checkTable = div.find("div.layui-table-fixed").find("div.layui-table-body").find("tbody");
+    		//获取table
+    		checkTable.find("tr").each(function(){
+    			var index = $(this).data("index");
+    			var row = dataTable.find("tr[data-index='"+index+"']");
+    			var id = row.find("td[data-field='"+idKey+"']").attr("title");
+    			var name = row.find("td[data-field='"+nameKey+"']").attr("title");
+    			//获取选项框
+    			var input = $(this).find("input[type='checkbox']")[0];
+    			if(input.checked){
+    				if($.inArray(id, selectedProdIds) === -1){
+    	    			selectedProdIds.push(id);
+    	    			selectedProdNames.push(name);
+    				}
+    			}
+    			else{
+    				if($.inArray(id, selectedProdIds) != -1){
+    	                selectedProdIds.splice($.inArray(id, selectedProdIds), 1);
+    	                selectedProdNames.splice($.inArray(name, selectedProdNames), 1);
+    				}
+    			}
+    		});
+    	}
+    	setToPage();
     }
 
     var setToPage = function () {

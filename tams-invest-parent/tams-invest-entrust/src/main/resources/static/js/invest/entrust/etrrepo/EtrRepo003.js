@@ -179,6 +179,23 @@
         var objects = object.selectedItem;
         for (var index in objects) {
             var temp = objects[index];
+            
+            // 指令授信 start
+            temp.inputValue1 = 'F07';
+            temp.tradeAmt = temp.entrustAmt;
+            temp.prinAmt = temp.entrustAmt;
+            temp.tradeDate = temp.vdate;
+            temp.counterId = temp.counterId;
+            temp.repoType = temp.busAssetType1;
+            temp.assetType1 = temp.busAssetType1;
+            temp.remark = temp.repoType;
+            if(temp.ps == '03'){
+            	temp.finprodType2 = 'F02';
+            }else{
+            	temp.finprodType2 = 'F03';
+            }
+            // 指令授信 end
+            
             temp.operateType = operateType;
             temp.pageModel = pageModel;
             if(!temp.assetType1){

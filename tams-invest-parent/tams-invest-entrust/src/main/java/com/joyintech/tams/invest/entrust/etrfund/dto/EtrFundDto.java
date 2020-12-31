@@ -10,17 +10,9 @@
  
 package com.joyintech.tams.invest.entrust.etrfund.dto;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
-import javax.validation.Valid;
-
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.framework.annotation.PageId;
-import com.joyintech.workflow.engine.annotation.PrimaryKey;
-import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
+import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
@@ -30,11 +22,19 @@ import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.system.base.entity.SysUploadFileInfo;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.component.business.trade.dto.BussEtrInvestPersonInfoDto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.entrust.etrfund.validator.EtrFundValidator;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
+import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+
+import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 基金委托Dto
@@ -166,15 +166,27 @@ public class EtrFundDto extends EtrEntrust implements ProcessEntity{
      * 通道可用现金
      */
     private BigDecimal chlIdCash;
-
-
+    
+    /**
+     * 资产本金（授信用）
+     */
+    private BigDecimal prinAmt;
+    
+    /**
+     * 后台取为平台日（授信用）
+     */
+    private Date tradeDate;
+    
     /**
      * 组合T+1可用现金,用于质押式回购指令还是买断式回购指令
      */
-
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal appProAvailableCash1;
-
-
+    
+    private String inputValue1;
+    private String inputValue2;
+    private String inputValue3;
+    
     /**
      *
      * 获取交易对手名称
@@ -928,12 +940,41 @@ public class EtrFundDto extends EtrEntrust implements ProcessEntity{
     public void setImportFlow(boolean importFlow) {
         this.importFlow = importFlow;
     }
-
-    public BigDecimal getAppProAvailableCash1() {
-        return appProAvailableCash1;
-    }
-    public void setAppProAvailableCash1(BigDecimal appProAvailableCash1) {
-        this.appProAvailableCash1 = appProAvailableCash1;
-    }
-
+	public BigDecimal getAppProAvailableCash1() {
+		return appProAvailableCash1;
+	}
+	public void setAppProAvailableCash1(BigDecimal appProAvailableCash1) {
+		this.appProAvailableCash1 = appProAvailableCash1;
+	}
+	public BigDecimal getPrinAmt() {
+		return prinAmt;
+	}
+	public void setPrinAmt(BigDecimal prinAmt) {
+		this.prinAmt = prinAmt;
+	}
+	public Date getTradeDate() {
+		return tradeDate;
+	}
+	public void setTradeDate(Date tradeDate) {
+		this.tradeDate = tradeDate;
+	}
+	public String getInputValue1() {
+		return inputValue1;
+	}
+	public void setInputValue1(String inputValue1) {
+		this.inputValue1 = inputValue1;
+	}
+	public String getInputValue2() {
+		return inputValue2;
+	}
+	public void setInputValue2(String inputValue2) {
+		this.inputValue2 = inputValue2;
+	}
+	public String getInputValue3() {
+		return inputValue3;
+	}
+	public void setInputValue3(String inputValue3) {
+		this.inputValue3 = inputValue3;
+	}
+	
 }

@@ -52,4 +52,9 @@ public class TamsStartupConfiguration extends StartupConfiguration {
         List<PageElementConfigDto> allElementConfig = pageElementConfigService.getAllElementConfig();
         CacheUtil.putAppCache(PageElementUtil.PAGE_ELEMENT_CACHE_KEY, allElementConfig);
     }
+
+    @Override
+    public void run() {
+        logger.info("TAMS服务不重新加载缓存1111");
+    }
 }

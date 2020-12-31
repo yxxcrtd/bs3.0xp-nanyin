@@ -142,8 +142,8 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
             				/**add by wujie on 20200213 start**/
             				+ "F07,T26,P,INTAMT,03|"	
             				/**add by wujie on 20200213 end**/
-            				+ "F03,T02,P,INTAMT,03|"
-            				+ "F03,T07,P,INTAMT,03","ORI"},
+                            + "F03,T07,P,INTAMT,04|"
+            				+ "F03,T02,P,INTAMT,03","ORI"},
             {"收到其他与经营活动有关的现金","经营活动现金流入小计",
             					"F09,T02,P,TRADEAMT|"
             					+ "F09,T23,P,PRINAMT|"
@@ -154,7 +154,8 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
             					/**add by wujie on 20200213 start**/
             					+ "F21,T26,P,TRADEAMT,01|"
             					/**add by wujie on 20200213 start**/
-            					+ "SGPZ,D","ORI"},
+            					+ "SGPZ,D|"
+                                + "F20,T09,P,TRADEAMT,15","ORI"},
             {"经营活动现金流入小计"},
 
             /**modify by wujie on 20190105 start remark:显示正值负值标识由GT 改为 LT
@@ -206,6 +207,7 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
             						/**add by wujie on 20200213 start**/		
             						+ "F21,T25,P,TRADEAMT,01|"
             						/**add by wujie on 20200213 end**/
+                                    + "C11,C11,P,TRADEAMT,18|"
             						+ "SGPZ,C","ORI"},
             {"经营活动现金流出小计"},
             {"经营活动产生的现金流量净额"},
@@ -221,6 +223,7 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
                     "投资活动现金流入小计",
                     "F01,T23,P,TRADEAMT,02|"+
                             "F01,T02,P,PRINAMT,02|"+
+                            "F01,T02,N,FEE_AMT_PAY,02|"+
                     		/**modify by wujie on 20200213 start
                             "F01,T31,P,TRADEAMT|"+
                             "F01,T34,P,PRINAMT|"+
@@ -844,6 +847,9 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
                     if ("SELLTRADEAMT".equals(amtFlag)) {
                         // 卖出端交易金额
                         retValue = retValue.add(dto.getSellTradeAmt().multiply(direction));
+                    }
+                    if ("FEE_AMT_PAY".equals(amtFlag)) {
+                        retValue = retValue.add(dto.getFeeamtpay().multiply(direction));
                     }
                 }
             }

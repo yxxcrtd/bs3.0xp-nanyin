@@ -387,6 +387,17 @@
       <!--to_char(MDATE, 'yyyy-mm-dd hh:mm:ss') MDATE, -->
       <!--INTERESTFREQUENCY INTERESTFREQUENCY, 支付频率-->
       ,CITY_INVEST_SEC_WIND cityInvestSecWind
+      <!-- 20200819 龙江银行修改-查询债券接口信息表增加查询字段 wangwei start -->
+		,GUARANTOR
+		,GUARTYPE
+		,RESETTYPE
+		,OBSERVEBEFDAY
+		,OBSERVEBEFUNIT
+		,CITY_INVEST_SEC_PROVINCES CITYINVESTSECPROVINCES
+		,CITY_INVEST_SEC_CITIES CITYINVESTSECCITIES
+		,CITY_INVEST_SEC_COUNTY CITYINVESTSECCOUNTY
+		,ISSUER_INSTITUTIONS_SECOND ISSUERINSTITUTIONSSECOND
+	  <!-- 20200819 龙江银行修改-查询债券接口信息表增加查询字段 wangwei end -->
 	FROM
 		INTERF_PAYHSRCSECINFO
 		where SECID = #{secid}
@@ -431,7 +442,20 @@
 		to_date(f_issue_oef_startdateinst, 'yyyy-mm-dd') fIssueOefStartdateinst,
 		to_date(f_issue_oef_dnddateinst, 'yyyy-mm-dd') fIssueOefDnddateinst,
 		pconfirmspeed,
-		sconfirmspeed
+		sconfirmspeed,
+		JYSJJLX trmFundType,
+		JYSJJJC trmFundAbbr,
+		SGSHDM  purRedId,
+		SGSHJC  purRedAbbr,
+		DBSGJEXX purStartLow,
+		DBSHJEXX redStartLow,
+		ZXSGSHDW etfMinPrunit,
+		ETFLX etfType,
+		FUND_COMPANY_NAME fundCompanyName,
+		ISSUER_SCALE_TYPE issuerScaleType,
+		ISSUER_TECHNOLOGY_TYPE issuerTechnologyType,
+		ISSUER_ECONOMIC_TYPE issuerEconomicType
+
 	FROM INTERF_CMFUNDDESCRIP
 	where F_INFO_CODE = #{fInfoWindcode}
 	</select>
@@ -878,4 +902,24 @@ SELECT F.FINPROD_NAME,
 		order by pm.create_time desc
 	</select>
 	<!--判断交易是否通过正常流程新建的 yjm end 20191016-->
+
+	<!--判断债券资产是否存在行权交易 zxp end 20201125-->
+	<select id = "isBondExerciseAsset" resultType="java.lang.Integer">
+		SELECT
+		SUM (num)
+		FROM(
+		SELECT COUNT(TRADE_ID) num
+		FROM TRD_PRODUCT_DEAL
+		WHERE FINPROD_ID = #{finprodId}
+		AND TRADE_STATUS = '01' AND (IS_CANCEL='N' or IS_CANCEL IS NULL)
+		AND PS IN ('T03','T39')
+		UNION ALL
+		SELECT COUNT(TRADE_ID) num
+		FROM WFL_TRD_PRODUCT_DEAL
+		WHERE FINPROD_ID = #{finprodId}
+		AND PS IN ('T03','T39')
+		)
+		<!--判断债券资产是否存在行权交易 zxp end 20201125-->
+	</select>
+
 </mapper>

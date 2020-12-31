@@ -26,7 +26,9 @@ import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -134,6 +136,9 @@ public class TrdDepositInvestTrade002Controller extends BaseController {
  	
  	@Autowired
     private TrdCommonController trdCommonController;
+ 	
+    @Value("${flag:false}")
+    private boolean flag;
     /**
      * 初始化方法
      * {@inheritDoc}
@@ -154,7 +159,9 @@ public class TrdDepositInvestTrade002Controller extends BaseController {
         model.addAttribute("IS_CAL_LOADRATE", CacheUtil.getSysParam(BussinessConstant.IS_CAL_LOADRATE));
         
         model.addAttribute("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE")==null?"01":CacheUtil.getSysParam("IS_SHOW_TYPE"));
-        
+        model.addAttribute("TRADESTATU03","");
+        model.addAttribute("PTRADEID","");
+
         TrdInvestPersonInfo002Dto dto = new TrdInvestPersonInfo002Dto();
         model.addAttribute("TrdInvestPersonInfo002Dto", JsonUtils.object2Json(dto));
         BussTrdTransferOrderDto bussTrdTransferOrderDto = new BussTrdTransferOrderDto();
@@ -212,6 +219,13 @@ public class TrdDepositInvestTrade002Controller extends BaseController {
                 }
                 finprodId = trdProductDeal.getFinprodId();
                 TrdDepositInvestTrade001Dto entity = trdDepositInvestTrade002Service.getFinInfo(finprodId);
+
+                if(trdProductDeal!=null && StringUtils.equals(trdProductDeal.getTradeStatus(),DictCodeListExt1.交易状态_撤销.getValue())){
+                    // 如果为撤销
+                    model.addAttribute("TRADESTATU03",DictCodeListExt1.交易状态_撤销.getValue());
+                    model.addAttribute("PTRADEID",trdProductDeal.getpTradeId());
+                }
+
                 entity.setPrinAmt(trdProductDeal.getPrinAmt());
                 entity.setTradeDate(trdProductDeal.getTradeDate());
                 entity.setIntAmt(trdProductDeal.getIntAmt());
@@ -611,11 +625,25 @@ public class TrdDepositInvestTrade002Controller extends BaseController {
     public AjaxResult save(@RequestBody @Validated({
         ValidateGroupEdit.class}) TrdDepositInvestTrade001Dto dto, BindingResult br)
         throws Exception {
+    	if(flag) {
+            BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter(); 
+            bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_存款录入);
+            if(DictCodeList.存款类资产类型_同业借款.getValue().equals(dto.getFinprodType())){
+                bussinessCodeParameter.setType1(DictCodeList.业务编号一级分类_同业借款);
+            }else{
+                bussinessCodeParameter.setType1(DictCodeList.业务编号一级分类_存放同业);
+            }
+            dto.setTradeId((baseGetBusinessId != null && baseGetBusinessId.buildBussinessCode(bussinessCodeParameter) != null)? baseGetBusinessId.buildBussinessCode(bussinessCodeParameter):IDGenerator.generate().substring(0, 30));
+            if(dto.getTradeId().length()>31){
+                dto.setTradeId(dto.getTradeId().substring(0,29));
+            }
+            trdDepositInvestTrade002Service.fastSave(dto);
+            return new AjaxResult("成功");
+    	}
+    	
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
-        
-        
         
         ProcessParameter<TrdDepositInvestTrade001Dto> processParameter = new ProcessParameter<TrdDepositInvestTrade001Dto>();
         WorkFlowParameter<TrdDepositInvestTrade001Dto> params = new WorkFlowParameter<TrdDepositInvestTrade001Dto>();

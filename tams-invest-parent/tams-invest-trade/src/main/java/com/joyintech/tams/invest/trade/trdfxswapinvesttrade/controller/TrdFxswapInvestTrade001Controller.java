@@ -11,9 +11,12 @@
 package com.joyintech.tams.invest.trade.trdfxswapinvesttrade.controller;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -183,5 +186,22 @@ public class TrdFxswapInvestTrade001Controller extends BaseController {
             dto.getSelectedItem().toArray(
                 new TrdFxswapInvestTrade001Dto[dto.getSelectedItem().size()]));
         return new AjaxResult(msg);
+    }
+
+    /**
+     * 获取委托代码
+     * @return 联想文本框实体类集合
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("getEntrustIdByType")
+    public List<SuggestDto> getEntrustIdByType() {
+        String entrustId = getParam("param");
+        Map<String, Object> map = new HashMap<>();
+        map.put("param", entrustId);
+        map.put("finProdType", Arrays.asList(DictCodeListExt1.金融产品类型_掉期.getValue()));
+        map.put("ENTRUST_STATUS_LIST", Arrays.asList(DictCodeList.委托状态_已接收.getValue(),
+                DictCodeList.委托状态_已完成.getValue(), DictCodeList.委托状态_已关闭.getValue()));
+        return trdFxswapInvestTrade001Service.getEntrustIdByType(map);
     }
 }

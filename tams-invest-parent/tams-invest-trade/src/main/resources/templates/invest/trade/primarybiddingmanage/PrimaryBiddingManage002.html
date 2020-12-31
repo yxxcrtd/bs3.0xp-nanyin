@@ -9,8 +9,6 @@
 <div layout:fragment="content">
     <div>
         <form class="layui-form joyin-form-wrap pro-module-form" id="informationForm">
-        	<input type="hidden" id="bidId" name="bidId" th:value="${entity?.bidId}" />
-        	<input type="hidden" id="tenderconfirmstatus" name="tenderconfirmstatus" th:value="${entity?.tenderconfirmstatus}" />
         	<input type="hidden" id="tenderconfirmstatus" name="tenderconfirmstatus" th:value="${entity?.tenderconfirmstatus}" />
             <div class="pro-module-wrapper pro-module-base">
                 <div class="pro-module-wrap">
@@ -86,30 +84,30 @@
                                 </div>
                             </div>
 
-                            <div class="layui-form-item">
-                                <div class="form-inline-wrap">
-                                    <label class="layui-form-label form-label-wrap"
-                                           data-th-text="#{PrimaryBiddingManage002.bidAdjustAmt}">投标量调整额</label>
-                                    <div class="layui-input-inline input-inline">
-                                        <input type="text" id="bidAdjustAmt" name="bidAdjustAmt"
-                                               class="layui-input form-input" placeholder="请输入内容"
-                                               th:placeholder="#{SysCommon.placeholder}"
-                                               th:value="${entity?.bidAdjustAmt}">
-                                    </div>
-                                </div>
-                                <div class="form-inline-wrap">
-                                    <label class="layui-form-label form-label-wrap"
-                                           data-th-text="#{PrimaryBiddingManage002.adjustStrategy}">调整策略</label>
-                                    <div class="layui-input-inline input-inline">
-                                        <select id="adjustStrategy" name="adjustStrategy" data-th-initValue="${entity?.adjustStrategy}"
-                                                class="layui-input form-input input-select" placeholder="请输入内容"
-                                                data-th-placeholder="#{SysCommon.placeholder}"
-                                                data-th-data-result="${ADJUST_STRATEGY}">
-                                        </select>
-                                    </div>
-                                </div>
-                                <a class="layui-btn layui-btn-sm" id="allocation">分配</a>
-                            </div>
+                            <!--<div class="layui-form-item">-->
+                                <!--<div class="form-inline-wrap">-->
+                                    <!--<label class="layui-form-label form-label-wrap"-->
+                                           <!--data-th-text="#{PrimaryBiddingManage002.bidAdjustAmt}">投标量调整额</label>-->
+                                    <!--<div class="layui-input-inline input-inline">-->
+                                        <!--<input type="text" id="bidAdjustAmt" name="bidAdjustAmt"-->
+                                               <!--class="layui-input form-input" placeholder="请输入内容"-->
+                                               <!--th:placeholder="#{SysCommon.placeholder}"-->
+                                               <!--th:value="${entity?.bidAdjustAmt}">-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<div class="form-inline-wrap">-->
+                                    <!--<label class="layui-form-label form-label-wrap"-->
+                                           <!--data-th-text="#{PrimaryBiddingManage002.adjustStrategy}">调整策略</label>-->
+                                    <!--<div class="layui-input-inline input-inline">-->
+                                        <!--<select id="adjustStrategy" name="adjustStrategy" data-th-initValue="${entity?.adjustStrategy}"-->
+                                                <!--class="layui-input form-input input-select" placeholder="请输入内容"-->
+                                                <!--data-th-placeholder="#{SysCommon.placeholder}"-->
+                                                <!--data-th-data-result="${ADJUST_STRATEGY}">-->
+                                        <!--</select>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<a class="layui-btn layui-btn-sm" id="allocation">分配</a>-->
+                            <!--</div>-->
                         </div>
                     </div>
                 </div>
@@ -164,8 +162,8 @@
                     <a id="PrimaryBiddingManage002_btn_cancel" class="layui-btn layui-btn-sm  btn-cancel" data-th-text="#{SysCommon.cancel}">取消</a>
                 </div>
             </div>
-    </div>
     </form>
+    </div>
 </div>
 </div>
 <div layout:fragment="script">

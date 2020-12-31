@@ -323,4 +323,14 @@ public class TrdRepoTradeController {
     public List<TrdMatchInfo> selectPreTradeId(@RequestBody Map<String, Object> paramPre) {
         return trdRepoTradeService.selectPreTradeId(paramPre);
     }
+
+    /**
+     * add by yangwenjun 20201123 根据业务编号查询合作资产
+     * @param tradeId
+     * @return
+     */
+    @RequestMapping("getChlId")
+    public String getChlId(@RequestBody String tradeId) {
+        return trdRepoTradeService.getChlId(tradeId);
+    }
 }

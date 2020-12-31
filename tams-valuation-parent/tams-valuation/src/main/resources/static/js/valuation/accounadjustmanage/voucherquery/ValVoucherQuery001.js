@@ -21,6 +21,7 @@ $(function () {
             happenDateBegin: $("#happenDate").startDate(),
             happenDateEnd: $("#happenDate").endDate(),
             pTradeId : $("#pTradeId").val(),
+            subjectNo: $('#subjectNo').val(),
             isShowfl : $("#isShowfl").next().hasClass('layui-form-onswitch') ? 'yes' : 'no'
         }
     };

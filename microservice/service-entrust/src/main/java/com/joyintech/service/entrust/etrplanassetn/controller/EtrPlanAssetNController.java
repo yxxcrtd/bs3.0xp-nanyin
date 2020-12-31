@@ -115,7 +115,7 @@ public class EtrPlanAssetNController  {
      */
     @PostMapping("getentrustIdAdd/{page}/{length}")
     @ResponseBody
-    Page<SelectOptionDto> getentrustIdAdd(@RequestBody Map<String, Object> map, @PathVariable("page") int page, @PathVariable("length") int length){
+    public Page<SelectOptionDto> getentrustIdAdd(@RequestBody Map<String, Object> map, @PathVariable("page") int page, @PathVariable("length") int length){
         Page<SelectOptionDto> temp = etrPlanAssetNService.getentrustIdAdd(page,length,map);
         return temp;
     }

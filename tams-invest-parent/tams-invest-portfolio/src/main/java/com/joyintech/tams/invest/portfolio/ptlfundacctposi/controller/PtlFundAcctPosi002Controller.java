@@ -10,9 +10,16 @@
  
 package com.joyintech.tams.invest.portfolio.ptlfundacctposi.controller;
 
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectDto;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.invest.portfolio.ptlfundacctposi.dto.PtlFundAcctPosiDto;
+import com.joyintech.tams.invest.portfolio.ptlfundacctposi.service.PtlFundAcctPosiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,15 +27,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.tams.invest.portfolio.ptlfundacctposi.dto.PtlFundAcctPosiDto;
-import com.joyintech.tams.invest.portfolio.ptlfundacctposi.service.PtlFundAcctPosiService;
-
-import java.math.BigDecimal;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -58,10 +58,30 @@ public class PtlFundAcctPosi002Controller extends BaseController{
         model.addAttribute("ACCT_ID", getParam("acctId"));
         model.addAttribute("CCY", getParam("ccy"));
         model.addAttribute("CDATE", getParam("cdate"));
-        super.setSelectOptionToModel(model, DictCode.金融产品类型_投管用, DictCode.交易方向);
+        List<SelectOptionDto> psList = makeAllFloatRate();
+        model.addAttribute("PS", JsonUtils.objectArray2Json(psList.toArray()));
+//        super.setSelectOptionToModel(model, DictCode.金融产品类型_投管用, DictCode.交易方向);
         return super.init(model);
     }
-	
+
+    private List<SelectOptionDto> makeAllFloatRate() {
+        List<SelectOptionDto> listFloatRate = new ArrayList<SelectOptionDto>();
+
+        SelectDto selectDto1 = this.getSelectDataFromDataDic(DictCode.交易方向, null);
+        for (SelectOptionDto dto : selectDto1.getOptions()) {
+            listFloatRate.add(dto);
+        }
+        SelectDto selectDto2 = this.getSelectDataFromDataDic(DictCode.回购拆借方向, null);
+        for (SelectOptionDto dto : selectDto2.getOptions()) {
+            listFloatRate.add(dto);
+        }
+        SelectDto selectDto3 = this.getSelectDataFromDataDic(DictCode.互换方式, null);
+        for (SelectOptionDto dto : selectDto3.getOptions()) {
+            listFloatRate.add(dto);
+        }
+        return listFloatRate;
+    }
+
     /**
      * 
      * 页面查询，表格分页

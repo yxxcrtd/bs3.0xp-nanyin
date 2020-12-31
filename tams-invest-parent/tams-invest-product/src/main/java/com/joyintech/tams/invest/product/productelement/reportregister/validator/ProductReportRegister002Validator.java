@@ -21,6 +21,8 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.calculator.RepCheckUtil;
 import com.joyintech.tams.invest.product.productelement.reportregister.dto.ProductReportRegister002Dto;
 import com.joyintech.tams.invest.product.productelement.reportregister.service.ProductReportRegister002Service;
+import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
+import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
 
 /**
  * 产品收集删除修改验证
@@ -35,6 +37,11 @@ public class ProductReportRegister002Validator implements BeanValidator {
 
 	@Autowired
 	private ProductReportRegister002Service productReportRegister002Service;
+	  /**
+     * 工作流CommonServic
+     */
+    @Autowired
+    private MstWorkflowCommonService mstWorkflowCommonService;
 
 	@Override
 	public List<ValidMessage> valid(Object value) {
@@ -173,6 +180,15 @@ public class ProductReportRegister002Validator implements BeanValidator {
 							this.getMessage("ProductReportRegister001.repFinprodInsId.repeat")));
 				}
 			}
+			
+			 //add by yujiaping 2020-11-26 ZGBS-22 增加流程中的校验  行内识别码唯一 start
+            WflValidInputParameter inputParam = new WflValidInputParameter();
+            inputParam.setPageId("ProductReportRegister002");
+            inputParam.setBusinessDataPk1("F16_"+entity.getRepFinprodInsId());
+            if(mstWorkflowCommonService.isInWflProcess(inputParam)){
+            	validList.add(new ValidMessage("行内识别码已存在流程中，不可重复。"));
+            }
+            //add by yujiaping 2020-11-26 ZGBS-22 增加流程中的校验  行内识别码唯一 end
 		}
 		// 画面.募集开始日>画面.募集结束日
         if (StringUtil.isNotEmpty(entity.getRepRaisePstrdate())
@@ -396,6 +412,11 @@ public class ProductReportRegister002Validator implements BeanValidator {
 			validList.add(new ValidMessage("excFinSector",
 					getMessage("BUSS_COM_E_0038", getMessage("BussRepFinProductInfo.excFinSector"))));
 		}
+		//是否现金管理类 产品运作模式开放式必填
+        if (!StringUtil.isNotEmpty(entity.getRepIsCashManage()) 
+        		&& (StringUtil.equals(entity.getRepOperateMode(), "03") || StringUtil.equals(entity.getRepOperateMode(),"04") )) {
+            validList.add(new ValidMessage("请输入是否现金管理类"));
+        }
 		return validList;
 	}
 

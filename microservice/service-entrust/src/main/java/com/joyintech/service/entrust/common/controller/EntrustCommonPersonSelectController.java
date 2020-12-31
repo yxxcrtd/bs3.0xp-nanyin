@@ -17,6 +17,7 @@ import com.joyintech.service.entrust.common.service.EntrustCommonPersonSelectSer
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.FinProduct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -89,5 +90,10 @@ public class EntrustCommonPersonSelectController {
     @ResponseBody
     public Map<String, Object> getUser(String userName){
         return entrustCommonPersonSelectService.getUser(userName);
+    }
+
+    @PostMapping("/findSameNameCounterId")
+    public List<String> findSameNameCounterId(@RequestBody Map<String, Object> map) {
+        return entrustCommonPersonSelectService.findSameNameCounterId(map);
     }
 }

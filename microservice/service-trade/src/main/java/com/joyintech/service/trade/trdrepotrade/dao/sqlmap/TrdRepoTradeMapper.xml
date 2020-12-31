@@ -113,7 +113,7 @@
                     </if>
                     AND wptpd.PA_BUSS_TYPE IN (#{PINAN_BUSINESS_TYPE_19}, #{PINAN_BUSINESS_TYPE_20})
 		             <if test="repoType != null and repoType != ''">
-		                AND wtpdo.REPO_TYPE = #{repoType} and wtpd.trade_market !=#{TRADE_PLACE_01}
+		                AND wtpdo.REPO_TYPE = #{repoType} <!-- and wtpd.trade_market !=#{TRADE_PLACE_01} -->
 		            </if>
 		            <if test="ps != null and ps != ''">
 		                and wptpd.BACK_LEND_DIRECTION = #{ps}
@@ -190,7 +190,7 @@
                     </if>
                     AND ptpd.PA_BUSS_TYPE IN (#{PINAN_BUSINESS_TYPE_19}, #{PINAN_BUSINESS_TYPE_20})
                       <if test="repoType != null and repoType != ''">
-                        AND fpt.TYPE_6 = #{repoType} and tpd.trade_market !=#{TRADE_PLACE_01}
+                        AND fpt.TYPE_6 = #{repoType} <!-- and tpd.trade_market !=#{TRADE_PLACE_01} -->
                     </if>
                     <if test="ps != null and ps != ''">
                         and ptpd.BACK_LEND_DIRECTION = #{ps}
@@ -281,7 +281,7 @@
                     </if>
                     AND ptpd.PA_BUSS_TYPE IN (#{PINAN_BUSINESS_TYPE_19}, #{PINAN_BUSINESS_TYPE_20})
                       <if test="repoType != null and repoType != ''">
-                        AND fpt.TYPE_6 = #{repoType} and tpd.trade_market !=#{TRADE_PLACE_01}
+                        AND fpt.TYPE_6 = #{repoType} <!-- and tpd.trade_market !=#{TRADE_PLACE_01} -->
                     </if>
                     <if test="ps != null and ps != ''">
                         and ptpd.BACK_LEND_DIRECTION = #{ps}
@@ -752,5 +752,10 @@
     where
     CSTP_TRADE_ID = #{CSTP_TRADE_ID} and 
     PRE_TRADE_ID is not null
+    </select>
+
+    <!--add by yangwenjun 20201123 根据业务编号查询合作资产-->
+    <select id="getChlId" resultType="java.lang.String">
+        select CHL_ID from TRD_PRODUCT_DEAL where TRADE_ID = #{tradeId}
     </select>
 </mapper>

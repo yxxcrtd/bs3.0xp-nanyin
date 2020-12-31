@@ -19,6 +19,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.BookLatestInfoDto;
+import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalance;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalanceSearchDto;
 import com.joyintech.tams.valuation.batch.common.accounting.service.AccountingCommonService;
 import com.joyintech.tams.valuation.batch.common.accountingmethod.entity.AccountDriver;
@@ -88,7 +89,7 @@ public class VatDrawProcessorBService {
     /**
      * 定义 明细数据小数位数 = 10
      */
-    private int decimalDigits = 2;
+    private int decimalDigits = 14;
 
     /**
      * 定义 明细数据位数处理方式 = 四舍五入
@@ -680,6 +681,22 @@ public class VatDrawProcessorBService {
         // 4.1 查询发生日当天最新的凭证:
         List<BookLatestInfoDto> listBookLatestInfo = accountingCommonService.getBookLatestInfo(
             booksetId, bookDate, null, null, null, null, happenDate, null, null, null);
+        // add by xiongran 20201120 TISHKBS-1610 start
+        List<BookLatestInfoDto> listBookLatestInfo2=new ArrayList<BookLatestInfoDto>();
+        if(StringUtil.isNotEmpty(cfConfigs.get("SH_DEAL_ORDER"))&&StringUtil.equals(cfConfigs.get("SH_DEAL_ORDER"),"02")){
+            Iterator<BookLatestInfoDto> it = listBookLatestInfo.iterator();
+            while (it.hasNext()){
+                BookLatestInfoDto dto=it.next();
+                if((dto.getBusiId().contains("SH")||dto.getBusiId().contains("SZ"))&&
+                        (dto.getTableId().equals("1316")||dto.getTableId().equals("1325"))
+                ){
+                    it.remove();
+                    listBookLatestInfo2.add(dto);
+                }
+            }
+        }
+		// add by xiongran 20201120 TISHKBS-1610 end
+
         Collections.sort(listBookLatestInfo, new Comparator<BookLatestInfoDto>() {
 
             @Override
@@ -688,6 +705,19 @@ public class VatDrawProcessorBService {
             }
         });
 
+		// add by xiongran 20201120 TISHKBS-1610 start
+        if(StringUtil.isNotEmpty(cfConfigs.get("SH_DEAL_ORDER"))&&StringUtil.equals(cfConfigs.get("SH_DEAL_ORDER"),"02")) {
+
+            Collections.sort(listBookLatestInfo2, new Comparator<BookLatestInfoDto>() {
+
+                @Override
+                public int compare(BookLatestInfoDto o1, BookLatestInfoDto o2) {
+                    return o1.getBookOrder().compareTo(o2.getBookOrder());
+                }
+            });
+            listBookLatestInfo.addAll(listBookLatestInfo2);
+        }
+		// add by xiongran 20201120 TISHKBS-1610 end
         // 4.2 根据上述查询结果,账务明细代码排重后取税则
         List<String> listBokDetailId = new ArrayList<String>();
         for (
@@ -1909,7 +1939,32 @@ public class VatDrawProcessorBService {
                 }
                 
                 // KeyEnum.REMARK.getCode() = "增值税确认_确认利息收入税_直接投资时"
-                
+                //若跑批日 = 产品到期日，则预估利息收入取科目余额
+                if(acctEntity.getHappenDate().equals(acctEntity.getEndDate())){
+                    // 获取科目余额 -【调用共通方法：科目余额汇总查询】
+                    SubjectBalanceSearchDto searchDto = new SubjectBalanceSearchDto();
+                    // 账套代码
+                    searchDto.setBooksetId(acctEntity.getBooksetId());
+                    // 定义当前基础科目性质
+                    List<String> baseSubjectNature = new ArrayList<>();
+                    baseSubjectNature.add(DictCodeBaseSubjectNatrue.预估利息收入税.getValue());
+                    // 基础科目性质
+                    searchDto.setBaseSubjectNatureList(baseSubjectNature);
+                    // 发生日
+                    searchDto.setHappenDate(acctEntity.getHappenDate());
+                    // 入账日
+                    searchDto.setBookDate(acctEntity.getBookDate());
+                    // 账务明细代码
+                    searchDto.setBokDetailId(acctEntity.getBokDetailId());
+                    List<SubjectBalance> subjectBalanceList = accountingCommonService.getSubjectBalanceExpectDirection(searchDto, DictCodeList.借贷方向_贷.getValue());
+
+                    // 获取科目余额
+                    BigDecimal kmye = BigDecimal.ZERO;
+                    if (subjectBalanceList != null && subjectBalanceList.size() > 0) {
+                        kmye = subjectBalanceList.get(0).getBalance();
+                    }
+                    carryAmt1 = kmye;
+                }
                 // 对应KEY
                 if (DictCodeListExt1.金融产品类型_通道.getValue().equals(acctEntity.getFinprodType())) {
                 	accountAmountMap.put(BookConstant.CHL_PI_ANT, carryAmt1);
@@ -1926,11 +1981,11 @@ public class VatDrawProcessorBService {
                 // 金额元素.差额 = 应交结转金额 - 暂估结转金额
                 BigDecimal cha = ArithmeticUtil.subtract(carryAmt1, carryAmt2, scale, null);
                 if (BigDecimal.ZERO.compareTo(cha) < 0) {
-                    accountAmountMap.put(BookConstant.NETAMT_C, cha);
+                    accountAmountMap.put(BookConstant.NETAMT_C+"_60119901", cha);
                     accountAmountMap.put(BookConstant.NETAMT_C+BookConstant.BCCYAMT, cha);
                 }
                 else {
-                	accountAmountMap.put(BookConstant.NETAMT_D, cha.negate());
+                	accountAmountMap.put(BookConstant.NETAMT_D+"_60119901", cha.negate());
                 	accountAmountMap.put(BookConstant.NETAMT_D+BookConstant.BCCYAMT, cha.negate());
                 }
             }
@@ -2564,6 +2619,13 @@ public class VatDrawProcessorBService {
                 // 增值税额余额 = 增值税额余额 + 变量.发生额 - 金额元素.暂估结转金额（即+暂估结转金额） + 手工凭证对应项目
                 tdyBalanceSum.setTaxAmt(ArithmeticUtil.doAdd(scale, roundingMode, tdyBalanceSum.getTaxAmt(), happenAmt, maAmt));
             }
+            //产品到期、预估利息收入的增值税余额清空
+            if(acctEntity.getHappenDate().equals(acctEntity.getEndDate())){
+                if (vatType.equals(DictCodeList.增值税类型_利息收入.getValue())
+                        &&DictCodeList.增值税_确认类型_预估计税.getValue().equals(tdyBalanceSum.getTaxPType())){
+                    tdyBalanceSum.setTaxAmt(BigDecimal.ZERO);
+                }
+            }
             // 入账共通处理
             vatDrawCommonService.resultCommonHandle(accountAmountMap, tableId, remark, acctEntity,
                 returnResult, DictCodeList.冲正标识_正常交易.getValue());
@@ -2806,6 +2868,13 @@ public class VatDrawProcessorBService {
             tdyBalanceSum.setIncomeAmtAll(ArithmeticUtil.doAdd(tdyBalanceSum.getIncomeAmtAll(), maIncomeAmt));
             // 增值税额余额 = 增值税额余额 + 手工凭证对应项目
             tdyBalanceSum.setTaxAmt(ArithmeticUtil.doAdd(tdyBalanceSum.getTaxAmt(), maAmt));
+            //产品到期、预估利息收入的增值税余额清空
+            if(acctEntity.getHappenDate().equals(acctEntity.getEndDate())){
+                if (vatType.equals(DictCodeList.增值税类型_利息收入.getValue())
+                        &&DictCodeList.增值税_确认类型_预估计税.getValue().equals(tdyBalanceSum.getTaxPType())){
+                    tdyBalanceSum.setTaxAmt(BigDecimal.ZERO);
+                }
+            }
             // 增值税汇总入集合
             listTdyBalanceSum.add(tdyBalanceSum);
         }
@@ -3409,7 +3478,7 @@ public class VatDrawProcessorBService {
             BigDecimal tdyTaxAmt = vatDrawCommonService.taxCalculate(amtDto.getFsjcIncomeDurAmt(),
                 TAX_RATE_DEF, scale, roundingMode, cfConfigs.get(TAX_CALC_FORMULA));
             // 变量.发生额 = 变量.今日税余额 - 增值税额余额
-            happenAmt = ArithmeticUtil.subtract(tdyTaxAmt, tdyBalanceSum.getTaxAmt());
+            happenAmt = ArithmeticUtil.subtract(tdyTaxAmt, tdyBalanceSum.getTaxAmtSum());
         }
 //        // 定义计税发生额汇总 = 计税发生额汇总
 //        BigDecimal taxAmtSum = tdyBalanceSum.getTaxAmtSum().add(amtDto.getMaqrjcAmt());
@@ -3564,7 +3633,9 @@ public class VatDrawProcessorBService {
             BigDecimal tdyTaxAmt = vatDrawCommonService.taxCalculate(amtDto.getYgjcIncomeDurAmt(),
                 TAX_RATE_DEF, scale, roundingMode, cfConfigs.get(TAX_CALC_FORMULA));
             // 变量.发生额 = 变量.今日税余额 - 增值税额余额
-            happenAmt = ArithmeticUtil.subtract(tdyTaxAmt, tdyBalanceSum.getTaxAmt());
+            //update by xr for TISHKBS-1463 start
+            happenAmt = ArithmeticUtil.subtract(tdyTaxAmt, tdyBalanceSum.getTaxAmtSum());
+            //update by xr for TISHKBS-1463 end
         }
 //        // 定义计税发生额汇总 = 昨日.计税发生额汇总
 //        BigDecimal taxAmtSum = tdyBalanceSum.getTaxAmtSum().add(amtDto.getMaygjcAmt());

@@ -247,4 +247,14 @@ public interface SysCoreMapper {
 	 * @return
 	 */
 	int isProcessData(WflValidInputParameter parameter);
+
+	/**
+	 * 债券资产是否存在行权交易
+	 *
+	 * @param finprodId 金融产品代码
+	 * @return 交易笔数
+	 * @see
+	 * @since 1.0
+	 */
+	int isBondExerciseAsset(String finprodId);
 }

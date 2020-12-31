@@ -10,12 +10,12 @@
 
 package com.joyintech.tams.invest.common.trade.dto;
 
+import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
+
 import java.util.Date;
 import java.util.List;
-
-import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 
 /**
  * 所有交易都要调用的共通Util用参数dto
@@ -120,6 +120,11 @@ public class AllTradeCommonInputDto extends BaseEntity {
      * 画面id（反向交易调接口用）
      */
     private String pageId;
+    
+    /**
+     * 交易类型 从指令做交易：E,非从指令做的交易为T
+     */
+    private String dealType;
 
     /**
      * 获取 pageId
@@ -480,4 +485,13 @@ public class AllTradeCommonInputDto extends BaseEntity {
     public void setIsNotAutoGenerateReverseDeal(String isNotAutoGenerateReverseDeal) {
         this.isNotAutoGenerateReverseDeal = isNotAutoGenerateReverseDeal;
     }
+
+	public String getDealType() {
+		return dealType;
+	}
+
+	public void setDealType(String dealType) {
+		this.dealType = dealType;
+	}
+    
 }

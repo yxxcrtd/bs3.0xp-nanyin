@@ -584,4 +584,13 @@ public class TrdRepoTrade004Service extends BaseService<TrdRepoTrade004Dto> impl
                         + workflowId,
                 null, String.class);
     }
+
+    /**
+     * add by yangwenjun 20201123 根据业务编号查询合作资产
+     * @param tradeId
+     * @return
+     */
+    public String getChlId(String tradeId) {
+        return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdRepoTrade/getChlId", tradeId, String.class);
+    }
 }

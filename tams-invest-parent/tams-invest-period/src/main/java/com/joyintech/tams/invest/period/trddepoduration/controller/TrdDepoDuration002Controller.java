@@ -127,6 +127,15 @@ public class TrdDepoDuration002Controller extends BaseController{
         }
         return super.init(model);
     }
+    //add by yujiaping 2020-12-5 BS-1562【存款类存续期】同一资产同一计息结束日只能做一次活期存放结息start
+    @ResponseBody
+    @RequestMapping("getTradeId")
+    public AjaxResult getTradeId() {
+        AjaxResult ar = new AjaxResult();
+        ar.setData(trdDepoDuration001Service.getTradeId(RequestUtil.getPageParam()));
+        return ar;
+    }
+    //add by yujiaping 2020-12-5 BS-1562【存款类存续期】同一资产同一计息结束日只能做一次活期存放结息end
     /**
      * 资产代码联动处理
      *

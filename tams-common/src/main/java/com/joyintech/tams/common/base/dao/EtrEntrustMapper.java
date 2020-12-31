@@ -1,11 +1,10 @@
 package com.joyintech.tams.common.base.dao;
 
 import com.joyintech.tams.common.base.entity.EtrEntrust;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EtrEntrustMapper {
@@ -24,4 +23,6 @@ public interface EtrEntrustMapper {
     int updateByPrimaryKeySelective(EtrEntrust record);
 
     int updateByPrimaryKey(EtrEntrust record);
+
+    int updateByPrimaryKeySelective1(EtrEntrust etrEntrust);
 }

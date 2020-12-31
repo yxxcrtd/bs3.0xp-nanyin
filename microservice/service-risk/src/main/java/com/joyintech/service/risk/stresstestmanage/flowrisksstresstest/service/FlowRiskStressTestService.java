@@ -357,7 +357,47 @@ public class FlowRiskStressTestService extends BaseService<FlowRiskStressTest001
      */
     public void stressTestLoad(Map<String,Object> param){
         DynamicDataSourceHolder.putDataSource(DataSourceType.STRESSTEST);
-        flowRiskStressTestMapper.stressTestLoad(param);
+        //初始化执行状态，兼容重复执行 start
+		Map<String,Object> map = new HashMap<>();
+		map.put("status", DictCodeListRsk.压力测试_执行状态_执行中.getValue());
+		map.put("testId", param.get("in_test_id"));
+		flowRiskStressTestMapper.updateStressStatus(map);
+		//初始化执行状态，兼容重复执行 end
+        String inObjectIds = (String) param.get("in_object_ids");
+        //oracle11 varchar缓冲区上限4000，存储过程中有拼接，预留100
+        if(inObjectIds.length()>3900) {
+        	int vObjectCount = 1;
+        	int index = 0;
+        	while(true) {
+        		index = inObjectIds.indexOf(",",index);
+        		if(index==-1) {
+        			break;
+        		}
+        		else {
+        			index++;
+        			vObjectCount++;
+        		}
+        	}
+        	param.put("v_object_count", vObjectCount);
+        	try {
+        		flowRiskStressTestMapper.stressTestLoadClob(param);
+        	}
+        	catch(Exception e) {
+        		map.put("status", DictCodeListRsk.压力测试_执行状态_异常.getValue());
+        		flowRiskStressTestMapper.updateStressStatus(map);
+        		throw e;
+        	}
+        }
+        else {
+        	try {
+            	flowRiskStressTestMapper.stressTestLoad(param);
+        	}
+        	catch(Exception e) {
+        		map.put("status", DictCodeListRsk.压力测试_执行状态_异常.getValue());
+        		flowRiskStressTestMapper.updateStressStatus(map);
+        		throw e;
+        	}
+        }
         DynamicDataSourceHolder.clearDataSource();
     }
     

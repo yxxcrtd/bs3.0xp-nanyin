@@ -1189,37 +1189,40 @@ public class InvestPeriodCommonService {
      * @param trdProductDeal
      */
     private void checkChlId(TrdProductDeal trdProductDeal,WflTrdProductDeal wflTrdProductDeal){
-    	 if(trdProductDeal!=null){
-    		 if((StringUtil.equals(trdProductDeal.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue())
-    				 ||StringUtil.equals(trdProductDeal.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue()))
-    				 &&(StringUtil.equals(trdProductDeal.getBusiType(), DictCodeList.共通业务类型_项目类资产存续期.getValue())
-	 	     			||StringUtil.equals(trdProductDeal.getBusiType(), DictCodeList.共通业务类型_计划类资产_利率型_存续期.getValue())
-	 	     			||StringUtil.equals(trdProductDeal.getBusiType(), DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue())
-	 	     			||StringUtil.equals(trdProductDeal.getBusiType(), DictCodeList.共通业务类型_项目类资产交易.getValue())
-	 	     			||StringUtil.equals(trdProductDeal.getBusiType(), DictCodeList.业务类型_逾期交易.getValue()))){
-				 trdProductDeal.setChlId(null); 
-	         }else if(StringUtil.equals(trdProductDeal.getFinprodType2(),  DictCodeListExt1.金融产品类型_投管用_存款.getValue())){
-	         	//01 借款利率 不需要处理通道信息,  否则置空
-	         	if(!StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.IS_CAL_LOADRATE), "01")){
-	         		trdProductDeal.setChlId(null);
-	         	}
-	         }
-    	 }else if (wflTrdProductDeal!=null){
-    		 if((StringUtil.equals(wflTrdProductDeal.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue())
-    				 ||StringUtil.equals(wflTrdProductDeal.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue()))
-    				 &&(StringUtil.equals(wflTrdProductDeal.getBusiType(), DictCodeList.共通业务类型_项目类资产存续期.getValue())
-	 	     			||StringUtil.equals(wflTrdProductDeal.getBusiType(), DictCodeList.共通业务类型_计划类资产_利率型_存续期.getValue())
-	 	     			||StringUtil.equals(wflTrdProductDeal.getBusiType(), DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue())
-	 	     			||StringUtil.equals(wflTrdProductDeal.getBusiType(), DictCodeList.共通业务类型_项目类资产交易.getValue())
-	 	     			||StringUtil.equals(wflTrdProductDeal.getBusiType(), DictCodeList.业务类型_逾期交易.getValue()))){
- 				wflTrdProductDeal.setChlId(null); 
- 	         }else if(StringUtil.equals(wflTrdProductDeal.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_存款.getValue())){
- 	         	//01 借款利率 不需要处理通道信息,  否则置空
- 	         	if(!StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.IS_CAL_LOADRATE), "01")){
- 	         		wflTrdProductDeal.setChlId(null);
- 	         	}
- 	         }
-    	 }
+        //modify by mashukai TISHKBS-1664 当计划类项目类资产通道投资模式开关为02时，通道代码不置位空 20201208 start
+        if(trdProductDeal!=null){
+            if((StringUtil.equals(trdProductDeal.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue())
+                    ||StringUtil.equals(trdProductDeal.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue()))
+                    &&(StringUtil.equals(trdProductDeal.getBusiType(), DictCodeList.共通业务类型_项目类资产存续期.getValue())
+                    ||StringUtil.equals(trdProductDeal.getBusiType(), DictCodeList.共通业务类型_计划类资产_利率型_存续期.getValue())
+                    ||StringUtil.equals(trdProductDeal.getBusiType(), DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue())
+                    ||StringUtil.equals(trdProductDeal.getBusiType(), DictCodeList.共通业务类型_项目类资产交易.getValue())
+                    ||StringUtil.equals(trdProductDeal.getBusiType(), DictCodeList.业务类型_逾期交易.getValue()))
+                    && "01".equals(CacheUtil.getSysParam("CHL_MODEL_TYPE"))){
+                trdProductDeal.setChlId(null);
+            }else if(StringUtil.equals(trdProductDeal.getFinprodType2(),  DictCodeListExt1.金融产品类型_投管用_存款.getValue())){
+                //01 借款利率 不需要处理通道信息,  否则置空
+                if(!StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.IS_CAL_LOADRATE), "01")){
+                    trdProductDeal.setChlId(null);
+                }
+            }
+        }else if (wflTrdProductDeal!=null){
+            if((StringUtil.equals(wflTrdProductDeal.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue())
+                    ||StringUtil.equals(wflTrdProductDeal.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue()))
+                    &&(StringUtil.equals(wflTrdProductDeal.getBusiType(), DictCodeList.共通业务类型_项目类资产存续期.getValue())
+                    ||StringUtil.equals(wflTrdProductDeal.getBusiType(), DictCodeList.共通业务类型_计划类资产_利率型_存续期.getValue())
+                    ||StringUtil.equals(wflTrdProductDeal.getBusiType(), DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue())
+                    ||StringUtil.equals(wflTrdProductDeal.getBusiType(), DictCodeList.共通业务类型_项目类资产交易.getValue())
+                    ||StringUtil.equals(wflTrdProductDeal.getBusiType(), DictCodeList.业务类型_逾期交易.getValue()))
+                    && "01".equals(CacheUtil.getSysParam("CHL_MODEL_TYPE"))){
+                wflTrdProductDeal.setChlId(null);
+            }else if(StringUtil.equals(wflTrdProductDeal.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_存款.getValue())){
+                //01 借款利率 不需要处理通道信息,  否则置空
+                if(!StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.IS_CAL_LOADRATE), "01")){
+                    wflTrdProductDeal.setChlId(null);
+                }
+            }
+        }
+        //modify by mashukai TISHKBS-1664 当计划类项目类资产通道投资模式开关为02时，通道代码不置位空 20201208 end
     }
-
 }

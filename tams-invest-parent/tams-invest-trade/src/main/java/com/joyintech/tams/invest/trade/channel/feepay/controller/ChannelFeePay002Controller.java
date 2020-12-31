@@ -132,6 +132,12 @@ public class ChannelFeePay002Controller extends BaseController {
 
         return commonCheck(result, dto.getOperateType());
     }
+    
+    @ResponseBody
+    @RequestMapping("getCollectType")
+    public String getCollectType(String finprodMarketId) {      
+    	 return channelFeePay002Service.getCollectType(finprodMarketId);       
+    }
 
     /**
      * 保存

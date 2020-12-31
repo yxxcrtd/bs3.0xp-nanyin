@@ -36,14 +36,20 @@
 		         where 1 = 1
 <!-- 		           AND T0.ACCT_SUBJECT_TYPE = #{finprodType} -->
 		          <if test="prodIds != null and prodIds.length > 0">
-			  			AND T0.BOOKSET_ID in 
-			  		<foreach collection="prodIds" item="prdId" open="( " close=" )" separator=",">
+			  			AND (T0.BOOKSET_ID in
+			  		<foreach collection="prodIds" item="prdId" index="index" open="( " close=" ))" separator=",">
+						<if test="(index % 999) == 998">
+							null) OR T0.BOOKSET_ID in (
+						</if>
 			        	#{prdId} 
 					</foreach>
 			      </if>
 			      <if test="prodTypes != null and prodTypes.length > 0">
-			  		AND T0.ACCT_MODE in 
-			  		<foreach collection="prodTypes" item="prodType" open="( " close=" )" separator=",">
+			  		AND (T0.ACCT_MODE in
+			  		<foreach collection="prodTypes" item="prodType" index="index" open="( " close=" ))" separator=",">
+						<if test="(index % 999) == 998">
+							null) OR T0.ACCT_MODE in (
+						</if>
 			        	#{prodType} 
 					</foreach>
 			      </if>
@@ -54,9 +60,12 @@
 						and t2.val_date <![CDATA[<=]]> #{valDateEnd,jdbcType=DATE} 
 				 </if>
 				 <if test="buildStatuses != null and buildStatuses.length > 0">
-			  			AND NVL(T2.BUILD_STATUS, '0') in 
-			  		<foreach collection="buildStatuses" item="buildStatus" open="( " close=" )" separator=",">
-			        		#{buildStatus} 
+			  			AND (NVL(T2.BUILD_STATUS, '0') in
+			  		<foreach collection="buildStatuses" item="buildStatus" index="index" open="( " close=" ))" separator=",">
+						<if test="(index % 999) == 998">
+							null) OR NVL(T2.BUILD_STATUS, '0') in (
+						</if>
+						#{buildStatus}
 					</foreach>
 			      </if>
 		           order by t2.VAL_DATE desc

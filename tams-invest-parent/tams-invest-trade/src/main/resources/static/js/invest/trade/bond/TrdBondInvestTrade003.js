@@ -1822,7 +1822,7 @@ var table;
                 }
             }
 
-            $('#trdInvestPersonInfo_counterId').on("change",function(){
+          /*  $('#trdInvestPersonInfo_counterId').on("change",function(){
                 var counterId = $('#trdInvestPersonInfo_counterId');
                 if (counterId.select2('data') && counterId.select2('data')[0]){
                     var 交易对手 = counterId.select2('data')[0].object;
@@ -1837,7 +1837,7 @@ var table;
                         }
                     }
                 }
-            });
+            });*/
             // 触发画面联动处理
             // $("#tradeMarket").trigger("change");
             // $("#tradeMarketMode").trigger("change", true);
@@ -1907,6 +1907,10 @@ var table;
         var entrustId = $("#entrustId").val();
         var bondFirstSign = $("#bondFirstSign").val();
         var distribution = $('#TrdBondInvestTrade003_distribution').val();
+        if(distribution==null||distribution==''){
+            Joyin.error("请选择分配方式！");
+            return;
+        }
         var ps = $('#ps').val();
         if(entrustId){
             Joyin.ajaxSync(basePath + 'invest/trade/bond/TrdBondInvestTrade003/getEntrustInfos2', {'entrustId':entrustId,'distribution':distribution,'ps':ps,'bondFirstSign':bondFirstSign},function (data) {

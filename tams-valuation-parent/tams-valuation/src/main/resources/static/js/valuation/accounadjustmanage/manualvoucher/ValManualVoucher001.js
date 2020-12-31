@@ -58,7 +58,7 @@ $(function () {
            //{field:'bccyFmt', title: '记账币种', sortField:"bCcy",width:140},
            {field:'bCcy', title: '记账币种',width:140},          
            {field:'bHappenAmt', type:"money", title: '本币金额',width:200},           
-           {field:'tableIdFmt', title: '业务类别', sortField:"tableId", width:250},
+           {field:'tableIdFmt', title: '业务类型', sortField:"tableId", width:250},
            {field:'busiId', title: '资产/负债代码',width:320},
            {field:'busiName', title: '资产/负债名称',width:180},
            {field:'tradeId',title: '业务编号',width:200},
@@ -70,10 +70,30 @@ $(function () {
            {field:'createUser', title: '制作人',width:120},
            {field:'booksetDate', title: '账套日期',visible:false,width:100},
 //           {fixed : 'right', title : '操作', align : 'center',type : 'action', buttons : [ 'edit' ] }
+            {field:'operation', title: 'SysCommon.operation', width:120, type:'action', fixed: 'right',
+	        	render:function (data, type, row, meta){
+	        		var buttons = "";
+	        		if(purviewElements.indexOf('_manual')!=-1){
+                        buttons += '<i class="iconfont icon-copy manual" title="复制"></i>';
+	        		}
+	        		return buttons;
+	        	}
+	        }
 		],
 //		loadonce:true
 	});
-	
+
+	/**
+     * 绑定事件：一般资产估值 - 复制
+     */
+    table.bind('click', '.manual', function(data, index) {
+    debugger;
+        Joyin.dialog(JoyinUtil.getLabel("复制手工凭证（ "+ "<span style='color:red'> * </span>" + "必填）"),
+                   basePath + "valuation/accounadjustmanage/manualvoucher/ValManualVoucher003/init",
+                   "95%", "90%", {pageModel:PAGE_MODEL_NEW,tradeId:data.tradeId, operateType: "copy"},function(){
+                       table.reload();
+           });
+   });
 	/**
      * 绑定编辑事件
      */

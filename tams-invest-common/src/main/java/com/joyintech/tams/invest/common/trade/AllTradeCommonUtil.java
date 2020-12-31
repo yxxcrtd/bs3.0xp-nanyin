@@ -5,22 +5,9 @@
 
 package com.joyintech.tams.invest.common.trade;
 
-import static com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService.getSeqNo;
-
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.util.*;
-
+import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.jdbc.datasource.DynamicDataSourceHolder;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
-import org.apache.commons.collections4.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
@@ -42,9 +29,9 @@ import com.joyintech.tams.invest.common.dto.common.InvestInterfCommDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
+import com.joyintech.tams.invest.common.risk.service.RiskCreditListCommonValidatorService;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
 import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
-import com.joyintech.tams.invest.common.trade.dao.CreditLinesDealsMapper;
 import com.joyintech.tams.invest.common.trade.dao.TrdCommonBaseMapper;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
@@ -57,6 +44,18 @@ import com.joyintech.tams.valuation.api.service.ValInterfCommonServiceApi;
 import com.joyintech.tams.valuation.common.interf.base.dto.ChannelFeeInfo;
 import com.joyintech.tams.valuation.common.interf.base.dto.ChannelProdDeal;
 import com.joyintech.tams.valuation.common.interf.howmany.dto.TrdProductDealDto;
+import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.util.*;
+
+import static com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService.getSeqNo;
 
 /**
  * 所有交易都要调用的共通Util
@@ -269,7 +268,7 @@ public class AllTradeCommonUtil {
                     // 20200204 魏鹏：增加通道(一次性划款)内部转仓交易时通道划款的处理 设计变更 start
                     // IF 数据字典：是否.是 eq 输入.接口数据.是否转仓交易 AND 数据字典：划款方式.一次性划款 eq 变量.通道标的扩展信息Dto.划款方式
                     // update by caiqun 20200903 TISHKBS-1038一次性划款的通道，未做通道资金划拨，债券买入交易（通过该通道投资）审批通过后，入账信息表（BOK_DEAL_ACCOUNTING）表无数据
-                    if(DictCodeList.是否_是.getValue().equals(inputDto.getIsSwapTransaction()) &&
+                 /*   if(DictCodeList.是否_是.getValue().equals(inputDto.getIsSwapTransaction()) &&
                             DictCodeListExt2.划款方式_一次性划款.getValue().equals(payType.getPayType())){
                         // 调用接口【理财产品借通道投资交易】
                         // 2.4 产品买卖通道交易，调用接口【理财产品借通道投资交易】
@@ -281,7 +280,7 @@ public class AllTradeCommonUtil {
                         channelProdDeal.setIsSwapTransaction(inputDto.getIsSwapTransaction());
                         // 调用共通设计->【详细设计-投管接口共通方法设计.xlsx】->理财产品借通道投资交易SHEET
                         valInterfCommonServiceApi.getChannelProdDeal(channelProdDeal);
-                    }
+                    }*/
                     // 20200204 魏鹏：增加通道(一次性划款)内部转仓交易时通道划款的处理 设计变更 end
                     
                     // 调用接口【通道投资资产交易拆分】
@@ -493,7 +492,54 @@ public class AllTradeCommonUtil {
                       || DictCodeListExt2.交易方向_新股中签.getValue().equals(inputDto.getTrdProductDeal().getPs())
                       || DictCodeListExt2.交易方向_配股.getValue().equals(inputDto.getTrdProductDeal().getPs())
                       || DictCodeListExt2.交易方向_增发.getValue().equals(inputDto.getTrdProductDeal().getPs())))) {
+          	// 增加是否从指令接入交易的标识 start
+          	if(inputDto.getTrdProductDeal() != null && StringUtil.isNotEmpty(inputDto.getTrdProductDeal().getEntrustId())) {
+          		inputDto.setDealType("E");
+          	}else {
+          		inputDto.setDealType("T");
+          	}
                 ceLinesUpdate.isNeedOccupyCre(inputDto, true, true, false);
+            }
+        }
+    }
+	
+	/**
+     * <b>方法：</b>do投资指令授信<br>
+     * <b>描述：</b>投资指令授信管理共通方法<br>
+     * <b>作者：</b>zhuruqing<br>
+     * <b>时间：</b>2020/5/21 14:17<br>
+     * <b>参数：</b>[AllTradeCommonInputDto]<br>
+     * <b>返回值：</b>void<br>
+     */
+    public static void do投资指令授信(AllTradeCommonInputDto inputDto){
+        // 调用授信共通
+        CeLinesUpdate ceLinesUpdate = SpringContextUtil.getBean(CeLinesUpdate.class);
+        inputDto.setDealType("Z");
+        if(ceLinesUpdate != null){
+        	if (DictCodeListExt1.交易状态_撤销.getValue().equals(inputDto.getTrdProductDeal().getTradeStatus())){
+        		RiskCreditListCommonValidatorService riskCreditListCommonValidatorService = SpringContextUtil.getBean(RiskCreditListCommonValidatorService.class);
+        		//删除授信占用
+                if (null != inputDto.getTrdProductDeal() && StringUtil.isNotEmpty(inputDto.getTrdProductDeal().getpTradeId())){
+//                    /*温州个性化，当授信来源不为外部时才进行授信管理 start*/
+//                    if(!DictCodeListExt3.授信来源_外部.getValue().equals(inputDto.getTrdProductDealAdd().getCreditSource())){
+                    	riskCreditListCommonValidatorService.deleteCredit(inputDto.getTrdProductDeal().getpTradeId());
+//                    }
+//                    /*温州个性化，当授信来源为内部时才进行授信管理 end*/
+                }
+        	}
+        	else if (!(DictCodeListExt1.交易状态_初始.getValue().equals(inputDto.getTrdProductDeal().getTradeStatus())
+                    && (DictCodeList.交易方向_买入.getValue().equals(inputDto.getTrdProductDeal().getPs())
+                    || DictCodeListExt2.交易方向_认购.getValue().equals(inputDto.getTrdProductDeal().getPs())
+                    || DictCodeList.交易方向_申购.getValue().equals(inputDto.getTrdProductDeal().getPs())
+                    || DictCodeListExt2.交易方向_新股中签.getValue().equals(inputDto.getTrdProductDeal().getPs())
+                    || DictCodeListExt2.交易方向_配股.getValue().equals(inputDto.getTrdProductDeal().getPs())
+                    || DictCodeListExt2.交易方向_增发.getValue().equals(inputDto.getTrdProductDeal().getPs())))) {
+//                /*温州个性化，当授信来源不为外部时才进行授信管理 start*/
+//                if(!DictCodeListExt3.授信来源_外部.getValue().equals(inputDto.getTrdProductDealAdd().getCreditSource())){
+                    inputDto.getTrdProductDeal().setEntrustId(inputDto.getTrdProductDealAdd().getEntrustId());
+                    ceLinesUpdate.isNeedOccupyCre(inputDto, true, true, false);
+//                }
+//                /*温州个性化，当授信来源为内部时才进行授信管理 end*/
             }
         }
     }
@@ -622,6 +668,13 @@ public class AllTradeCommonUtil {
     }
 
     public static void handleBeforeTradeComplete(AllTradeCommonInputDto inputDto, Boolean isdeleteflag) {
+    	// 增加是否从指令接入交易的标识 start
+    	if(inputDto.getTrdProductDeal() != null && StringUtil.isNotEmpty(inputDto.getTrdProductDeal().getEntrustId())) {
+    		inputDto.setDealType("E");
+    	}else {
+    		inputDto.setDealType("T");
+    	}
+    	// 增加是否从指令接入交易的标识 end
         // 调用授信共通
         CeLinesUpdate ceLinesUpdate = SpringContextUtil.getBean(CeLinesUpdate.class);
         if (ceLinesUpdate != null) {
@@ -1159,8 +1212,9 @@ public class AllTradeCommonUtil {
         resultDto.setCreateDept(deal.getCreateDept());
         resultDto.setUpdateUser(deal.getCreateUser());
         List<String> accountTypes = baseAssetCashPositionCommMapper.selectAccountType(交易对手的母组合, stl.getMyAcctNo());
+        String payType = null;
         if (StringUtil.isNotEmpty(deal.getChlId())) {
-            String payType = baseAssetCashPositionCommMapper.getPayType(deal.getChlId(), stl.getMyAcctNo());
+            payType = baseAssetCashPositionCommMapper.getPayType(deal.getChlId(), stl.getMyAcctNo());
             if (StringUtil.isNotEmpty(payType)) {
                 resultDto.setChlFinprodId(deal.getChlId());
             }
@@ -1172,6 +1226,10 @@ public class AllTradeCommonUtil {
                     && !DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket())
                     && !DictCodeList.交易平台_外汇交易中心.getValue().equals(deal.getTradePlat())
                     && accountTypes.contains(DictCodeListExt1.资金账户类型_产品托管户.getValue()))
+                || (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(deal.getFinprodType2())
+                && !DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket())
+                && !DictCodeList.交易平台_外汇交易中心.getValue().equals(deal.getTradePlat())
+                && StringUtil.isNotEmpty(payType))
                 || (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(deal.getFinprodType2())
                     && !DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket())
                     && DictCodeList.交易平台_外汇交易中心.getValue().equals(deal.getTradePlat()))

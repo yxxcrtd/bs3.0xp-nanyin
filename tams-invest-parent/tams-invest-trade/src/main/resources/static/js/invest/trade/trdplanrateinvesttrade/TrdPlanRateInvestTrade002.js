@@ -54,7 +54,7 @@ var etrAmt = '';
             $('#trdInvestPersonInfo002Dto_counterId').on("change",function(){
             	checkChannelFee();
             	intAmtCalcu(true);
-                var counterId = $('#trdInvestPersonInfo002Dto_counterId');
+        /*        var counterId = $('#trdInvestPersonInfo002Dto_counterId');
                 if (counterId.select2('data') && counterId.select2('data')[0]) {
                     var 交易对手 = counterId.select2('data')[0].object;
                     // 【债券投资委托】交易对手选择内部交易对手时，清算速度为T+0不可改
@@ -67,7 +67,7 @@ var etrAmt = '';
                             $('#settleSpeed').prop("disabled", false).trigger("change");
                         }
                     }
-                }
+                }*/
             });
             if($('#finprodMarketId').val()){
                 $('#finprodMarketId').trigger('change');

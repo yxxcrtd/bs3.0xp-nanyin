@@ -88,4 +88,18 @@
             and CCY = #{ccy,jdbcType=VARCHAR}
         </if>
     </sql>
+
+    <select id="selectCashPositionNew" resultType="java.math.BigDecimal" >
+        select
+        SUM(AMOUNT)
+        from PTL_CASH_POSITION_FLOW
+        where CDATE &lt;= #{cdate,jdbcType=DATE}
+        <include refid="whereSql"/>
+        <if test="acctType != null and !acctType.isEmpty() and needAcctType">
+            and ACCT_ID in (
+            SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID = #{portfolioId}
+            <foreach collection="acctType" open=" and ACCT_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
+            )
+        </if>
+    </select>
 </mapper>

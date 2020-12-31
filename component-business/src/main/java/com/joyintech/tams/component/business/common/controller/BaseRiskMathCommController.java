@@ -37,6 +37,8 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -75,6 +77,11 @@ public class BaseRiskMathCommController extends BaseController {
     private FinProductAddMapper finProductAddMapper;
 
     private static String workflowId_JL;
+
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(getClass());
     
     /**
      * 占用、释放授信额度共通处理 类
@@ -510,4 +517,27 @@ public class BaseRiskMathCommController extends BaseController {
         return "2";
     }
     // add by caojin 吉林银行风险试算-流程控制显示 end
+
+    // add by jiangpeng ZGBUGTWO-257 未配置风险指标的行社不应提示请进行风险试算 20201214 start
+    /**
+     * 按组合代码检查是否配置风险指标
+     * @param portfolioId 组合代码
+     * @return 结果
+     */
+    @ResponseBody
+    @RequestMapping("isSetRiskByPortfolioId")
+    public AjaxResult isSetRiskByPortfolioId(@RequestBody String portfolioId) {
+        portfolioId = portfolioId.replaceAll("\"","");
+        AjaxResult result = new AjaxResult();
+        Map<String, Object> data = new HashMap<>();
+        if (StringUtil.isEmpty(portfolioId)) {
+            logger.debug("组合代码为空,可能为 BaseRiskMathComm.js中 portfolioId 取值错误,默认取id为'portfolioId'的控件的值,该业务html页面 组合代码 控件id可能不同");
+            data.put("flag", "Y");
+        } else {
+            data.put("flag", basRiskMathCommService.isSetRiskByPortfolioId(portfolioId));
+        }
+        result.setData(data);
+        return result;
+    }
+    // add by jiangpeng ZGBUGTWO-257 未配置风险指标的行社不应提示请进行风险试算 20201214 end
 }

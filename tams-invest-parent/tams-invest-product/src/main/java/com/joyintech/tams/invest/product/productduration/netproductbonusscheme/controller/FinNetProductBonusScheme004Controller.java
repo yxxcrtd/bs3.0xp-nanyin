@@ -17,7 +17,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
+import com.joyintech.tams.invest.product.productduration.netproductbonusscheme.dto.ActualTimeCapital001Dto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -235,6 +239,21 @@ public class FinNetProductBonusScheme004Controller extends BaseController {
         if(result.getAllErrors().isEmpty() && 
             (dto.getOperateType() != null && !StringUtil.equals("", dto.getOperateType()))) {
             List<JoyinMessage> joyinMessages = new ArrayList<>();
+            // add by qk 20201112 JSUAT-236净值型产品现金分红交易，在红利下发的时候，如果托管户中资金不足，不报提示 start
+            JoyinMessage ms = new JoyinMessage("资金账户的现金余额不足!", MessageType.确认消息);
+            Map<String, Object> map = new HashMap<>();
+            map.put("cdate", DateUtil.format(dto.getActBonusDate(),"yyyy-MM-dd"));
+            map.put("portfolioId",dto.getPortfolioId());
+            map.put("acctNo",dto.getBussTrdTransferOrder().stream().map(BussTrdTransferOrderDto::getPayAcctNo).collect(Collectors.joining()));
+            List<ActualTimeCapital001Dto> list = finNetProductBonusSchemeService.selectCapital(map);
+            for(ActualTimeCapital001Dto capitalDto : list){
+                if(capitalDto == null || capitalDto.getCashBalance().subtract(dto.getBonusCashAmt()).compareTo(BigDecimal.ZERO) < 0) {
+                    joyinMessages.add(ms);
+                    break;
+                }
+            }
+            // add by qk 20201112 JSUAT-236净值型产品现金分红交易，在红利下发的时候，如果托管户中资金不足，不报提示 end
+
             AjaxResult wr = commonCheck(result, dto.getOperateType());
             wr.setJoyinMessages(joyinMessages);
             return wr;

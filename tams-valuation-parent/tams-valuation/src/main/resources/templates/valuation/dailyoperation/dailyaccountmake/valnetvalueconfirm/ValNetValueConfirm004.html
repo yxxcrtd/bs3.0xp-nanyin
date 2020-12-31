@@ -9,6 +9,8 @@
         <form class="layui-form" id="submitForm">
         	<input type="text" id="valBalFlagCode" name="valBalFlagCode" data-th-value='${entity?.valBalFlagCode}' hidden>
         	<input type="text" id="profitTypeCode" name="profitTypeCode" data-th-value='${entity?.profitTypeCode}' hidden>
+            <input type="text" id="unitvaluedec" name="unitvaluedec" data-th-value='${entity?.unitvaluedec}' hidden>
+            <input type="text" id="unitvaluemode" name="unitvaluemode" data-th-value='${entity?.unitvaluemode}' hidden>
             <div class="layui-form-item">
                 <div class="layui-inline layui-col-md6">
                     <label class="layui-form-label form-lable">产品代码</label>
@@ -22,8 +24,8 @@
                     <label class="layui-form-label form-lable" id="netUnitValueLabel">单位净值</label>
                     <div class="layui-input-inline input-inline">
                         <input type="text" id="netUnitValue" name="netUnitValue"
-                           data-textrange="4" readonly
-                            class="layui-input form-input text-number" maxlength='6' data-th-value="${entity?.netUnitValue}" >
+                               data-th-data-textrange="${entity?.unitvaluedec}" readonly
+                            class="layui-input form-input text-number" maxlength='10' data-th-value="${entity?.netUnitValue}" >
                     </div>
                 </div>
             </div>
@@ -50,8 +52,8 @@
                     <label class="layui-form-label form-lable" id="netUnitValueEditLabel">修改后单位净值</label>
                     <div class="layui-input-inline input-inline">
                         <input type="text" id="netUnitValueEdit" name="netUnitValueEdit"
-                           data-textrange="4" data-th-required="true" data-th-placeholder="#{SysCommon.placeholder}"
-                            class="layui-input form-input text-number" maxlength='6' data-th-value="${entity?.netUnitValueEdit}">
+                           data-th-data-textrange="${entity?.unitvaluedec}" data-th-required="true" data-th-placeholder="#{SysCommon.placeholder}"
+                            class="layui-input form-input text-number" maxlength='10' data-th-value="${entity?.netUnitValueEdit}">
                     </div>
                 </div>
                 <div class="layui-inline layui-col-md6">

@@ -6,11 +6,10 @@
             <Cell order="2" name="业务编号">busiNo</Cell>
             <Cell order="3" name="支付日">settleDate</Cell>
             <Cell order="4" name="账号户名">acctName</Cell>
-            <Cell order="5" name="活期账号">busiAcctNo</Cell>
-            <Cell order="6" name="上次收息日">vdate</Cell>
-            <Cell order="7" name="本次收息日">mdate</Cell>
-            <Cell order="8" name="收息金额">tradeAmt</Cell>
-            <Cell order="9" name="币种">ccyStr</Cell>
+            <Cell order="5" name="账号">busiAcctNo</Cell>
+            <Cell order="6" name="本次收息日">mdate</Cell>
+            <Cell order="7" name="收息金额">tradeAmt</Cell>
+            <Cell order="8" name="币种">ccyStr</Cell>
         </Row>
     </Worksheet>
 </Workbook>

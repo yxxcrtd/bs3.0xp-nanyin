@@ -14,8 +14,11 @@
         from FX_IMIX_BOND_INFO
         where 1=1
         <if test="secidList != null and secidList.size() > 0">
-            AND secid IN
-            <foreach collection="secidList" item="item" open="(" close=")" separator=",">
+            AND (secid IN
+            <foreach collection="secidList" item="item" index="index" open="(" close="))" separator=",">
+                <if test="(index % 999) == 998">
+                    null) OR secid in (
+                </if>
                 #{item}
             </foreach>
         </if>

@@ -17,6 +17,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.portfolio.feepay.validator.InvestFeePay001Validator;
@@ -228,7 +229,7 @@ public class InvestFeePay001Dto extends BaseEntity implements ProcessEntity {
         this.effectStatus = effectStatus;
     }
 
-    @PrimaryKey(Field.PK_1)
+    //@PrimaryKey(Field.PK_1)
     public String getPtlId() {
         return ptlId;
     }
@@ -273,7 +274,7 @@ public class InvestFeePay001Dto extends BaseEntity implements ProcessEntity {
         this.saleDepartment = saleDepartment;
     }
 
-    @PrimaryKey(Field.PK_2)
+    //@PrimaryKey(Field.PK_2)
     public String getFeeId() {
         return feeId;
     }
@@ -299,6 +300,8 @@ public class InvestFeePay001Dto extends BaseEntity implements ProcessEntity {
      * 获取 feeType
      * @return feeType.
      */
+    @NotEmpty(fieldName = "FinProductFeePay002.feeType")
+    @PrimaryKey(Field.PK_1)
     public String getFeeType() {
         return feeType;
     }
@@ -464,6 +467,7 @@ public class InvestFeePay001Dto extends BaseEntity implements ProcessEntity {
      * 获取 tradeId
      * @return tradeId.
      */
+    @PrimaryKey(Field.PK_2)
     public String getTradeId() {
         return tradeId;
     }

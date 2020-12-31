@@ -58,8 +58,25 @@ public interface MProdDivReinDealGenMapper {
      * @return
      */
     int deletePtlSecPositionFlow(Map<String,Object> paramMap);
-    
 
-   
+    // add by mashukai TISHKBS-1640  高频开放货币型产品跑批过滤节假日 start
+    /**
+     * 查询非货币型高频开放产品
+     * <功能详细描述>
+     * @param productIdList
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<String> selectProdList(Map<String,Object> serchMap);
+
+    /**
+     * 查询是否是中国法定节假日
+     *
+     * @param paraMap 参数
+     * @return 节假日列表
+     */
+    List<Map<String,String>> getIsHoliday(Map<String, Object> paraMap);
+    // add by mashukai TISHKBS-1640  高频开放货币型产品跑批过滤节假日 end
 
 }

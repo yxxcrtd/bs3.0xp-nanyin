@@ -32,6 +32,7 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.InvestInterfCommDto;
 import com.joyintech.tams.invest.common.risk.service.RiskCreditListCommonValidatorService;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
@@ -478,7 +479,7 @@ public class TrdDepositInvestTrade002Service extends CommonExportService<TrdDepo
             list.add(stlPayOrdersDto);
             dto.setStlPayOrdersList(list);
         }
-        if (dto.getOperateType().equals("delete")) {
+        if (dto.getOperateType().equals("revoke")) {
             FinProductTradeDto finProductTradeDto = dto.getFinProductTradeDto();
             List<BaseTradeProductDealDto> baseDto = finProductTradeDto.getBaseTradeProductDealDtos();
             for (BaseTradeProductDealDto baDto : baseDto) {
@@ -750,14 +751,14 @@ public class TrdDepositInvestTrade002Service extends CommonExportService<TrdDepo
         		beforeWorkFlow(entity);
         	}
         }
-        else if (type.toString().equals("DELETE")) {
+        else if (type.toString().equals("REVOKE")) {
             List<BaseTradeProductDealDto> baseTradeProductDealDto = restTemplate.getForList(
                 ServiceApplication.TRADE_SERVICE_NAME + "/TrdDepositInvestTrade001/getFinDto?tradeId=" + entity.getTradeId(),
                 BaseTradeProductDealDto.class);
             FinProductTradeDto dto = new FinProductTradeDto();
             entity.setFinProductTradeDto(dto);
             entity.getFinProductTradeDto().setBaseTradeProductDealDtos(baseTradeProductDealDto);
-            entity.setOperateType("delete");
+            entity.setOperateType("revoke");
             beforeWorkFlow(entity);
         }
     }
@@ -810,7 +811,7 @@ public class TrdDepositInvestTrade002Service extends CommonExportService<TrdDepo
         // TODO Auto-generated method stub
         TrdDepositInvestTrade001Dto dto = new TrdDepositInvestTrade001Dto();
         FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
-        if (type.toString().equals("DELETE")) {
+        if (type.toString().equals("REVOKE")) {
             List<BaseTradeProductDealDto> baseTradeProductDealDto = restTemplate.getForList(
                 ServiceApplication.TRADE_SERVICE_NAME + "/TrdDepositInvestTrade001/getFinDto?tradeId=" + entity.getTradeId(),
                 BaseTradeProductDealDto.class);
@@ -1482,5 +1483,46 @@ public class TrdDepositInvestTrade002Service extends CommonExportService<TrdDepo
     public Integer checkIsCleanById(TrdDepositInvestTrade001Dto dto){
         return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdDepositInvestTrade001/checkIsCleanById",
                 dto, Integer.class);
+    }
+    
+    public void fastSave(TrdDepositInvestTrade001Dto dto) {
+    	//设置划款指令
+        if(dto.getBussTrdTransferOrder() != null && dto.getBussTrdTransferOrder().size() > 0 && dto.getBussTrdTransferOrder().get(0) != null && !dto.getBussTrdTransferOrder().get(0).toString().isEmpty()){
+            dto.setBussTrdTransferOrder(bussTrdTransferOrderService.save(dto.getBussTrdTransferOrder()));
+            StlPayOrdersDto stlPayOrdersDto = new StlPayOrdersDto();
+            BeanUtil.copyPropertiesIgnoreNull(stlPayOrdersDto, dto.getBussTrdTransferOrder().get(0));
+            List<StlPayOrdersDto> list = new ArrayList<StlPayOrdersDto>();
+            String orderId = "";
+    		if (baseGetBusinessId != null) {
+    			BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
+    			bussinessCodeParameter.setSeqNo("9998");
+    			orderId = baseGetBusinessId.buildBussinessCode(bussinessCodeParameter);
+    		} else {
+    			orderId = IDGenerator.generate();
+    		}
+    		stlPayOrdersDto.setOrderId(orderId);
+            list.add(stlPayOrdersDto);
+            dto.setStlPayOrdersList(list);
+        }
+        
+        //数据处理
+        dto.setActPortfolioId(dto.getPortfolioId());
+        dto.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(dto.getPortfolioId()));
+        TrdDepositInvestTrade001Dto entity = this.setEntity(dto);
+        entity.getFinProductTradeDto().setWorkflowStatus(DictCodeListExt1.交易流程状态_有效.getValue());
+        
+        for(BaseTradeProductDealDto baseTradeProductDealDto:entity.getFinProductTradeDto().getBaseTradeProductDealDtos()) {
+        	trdProductDealMapper.insert(baseTradeProductDealDto.getTrdProductDeal());
+        	trdProductDealAddMapper.insert(baseTradeProductDealDto.getTrdProductDealAdd());
+            if(baseTradeProductDealDto.getStlPayOrdersList() != null){
+                for(StlPayOrders stlPayOrders:baseTradeProductDealDto.getStlPayOrdersList()){
+                    stlPayOrdersMapper.insert(stlPayOrders);
+                }
+            }
+            if (entity.getPtlTrade() != null && !entity.getPtlTrade().isEmpty()) {
+            	entity.getPtlTrade().forEach(ptlTrade -> ptlTradeMapper.insert(ptlTrade));
+            }
+            paTrdProductDealMapper.insert(entity.getPaTrdProductDeal());
+        }
     }
 }

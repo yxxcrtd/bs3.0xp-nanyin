@@ -46,6 +46,7 @@
             <if test="counterAcctNo != null and !counterAcctNo.isEmpty()">
 	            AND T3.ACCT_NO like concat(concat('%',#{counterAcctNo}),'%')
 	        </if>
+            and T1.Order_Status!='02'
         </where>
     </select>
 

@@ -143,6 +143,20 @@ public class TrdDepoDuration004Controller extends BaseController {
         return ar;
     }
     /**
+     * 组合代码联动处理
+     *  add by jiangpeng on 20201215 ZGBS-69
+     * @return 联动结果
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("getPortfolioName")
+    public AjaxResult getPortfolioName() {
+        AjaxResult ar = new AjaxResult();
+        ar.setData(trdDepoDuration001Service.getPortfolioName(RequestUtil.getPageParam()));
+        return ar;
+    }
+    /**
      * 剩余本金联动处理
      *
      * @return 联动结果

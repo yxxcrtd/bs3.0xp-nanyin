@@ -501,7 +501,7 @@ $(function() {
                 	Joyin.error("该计提日已支付费用");
                 }
                 else{
-                	$('#FinProductFeePay002_positionEndDate').val(endDate).trigger('change');
+                	$('#FinProductFeePay002_positionEndDate').val(endDate);
                 }
         })
 	}

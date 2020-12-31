@@ -107,8 +107,11 @@ public class ValVoucherQuery001SearchDto {
      * 制作人
      */
     private String createUser;
-    
-    
+
+    /**
+     * 科目号
+     */
+    private String subjectNo;
 
     public String getBooksetType2() {
 		return booksetType2;
@@ -415,6 +418,12 @@ public class ValVoucherQuery001SearchDto {
     public void setUserId(String userId) {
         this.userId = userId;
     }
-    
-    
+
+    public String getSubjectNo() {
+        return subjectNo;
+    }
+
+    public void setSubjectNo(String subjectNo) {
+        this.subjectNo = subjectNo;
+    }
 }

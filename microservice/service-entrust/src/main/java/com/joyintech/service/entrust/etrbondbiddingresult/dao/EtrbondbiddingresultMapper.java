@@ -2,8 +2,6 @@ package com.joyintech.service.entrust.etrbondbiddingresult.dao;
 
 import com.joyintech.service.entrust.etrbondbiddingresult.dto.EtrbondbiddingresultDto;
 import com.joyintech.service.entrust.etrfund.dao.EtrFundMapper;
-import com.joyintech.service.entrust.etrfund.dto.EtrFundDto;
-import com.joyintech.tams.common.base.entity.BidOrderBidPrice;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import org.springframework.stereotype.Repository;
 
@@ -40,4 +38,6 @@ public interface EtrbondbiddingresultMapper {
 	List<FinProduct> findFinProductByOFinprodId(Map<String,Object> map);
 
 	int updateTradeId(Map<String,Object> map);
+
+	int deleteTradeId(Map<String,Object> map);
 }

@@ -15,6 +15,7 @@
         var 平安业务类型_存款类资产买入 = /*[[${PA_BUSINESS_TYPE12}]]*/'';
         var 平安业务类型_项目类资产买入 = /*[[${PA_BUSINESS_TYPE17}]]*/'';
         var 平安业务类型_计划类资产净值型_申购申请 = /*[[${PA_BUSINESS_TYPE29}]]*/'';
+        var 平安业务类型_计划类资产_净值型_卖出 = /*[[${PA_BUSINESS_TYPE200}]]*/'';
         var 平安业务类型_计划类资产_利率型_申购 = /*[[${PA_BUSINESS_TYPE33}]]*/'';
         var 平安业务类型_货币基金申购申请 = /*[[${PA_BUSINESS_TYPE21}]]*/'';
         var 平安业务类型_非货币基金申购申请 = /*[[${PA_BUSINESS_TYPE25}]]*/'';
@@ -256,7 +257,7 @@
                 url = 存款交易URL;
             } else if (paBussType == 平安业务类型_项目类资产买入) {
                 url = 项目类交易URL;
-            } else if (paBussType == 平安业务类型_计划类资产净值型_申购申请) {
+            } else if (paBussType == 平安业务类型_计划类资产净值型_申购申请|| paBussType == 平安业务类型_计划类资产_净值型_卖出) {
                 url = 计划类资产净值型交易URL;
             } else if (paBussType == 平安业务类型_计划类资产_利率型_申购) {
                 url = 计划类资产利率型交易URL;

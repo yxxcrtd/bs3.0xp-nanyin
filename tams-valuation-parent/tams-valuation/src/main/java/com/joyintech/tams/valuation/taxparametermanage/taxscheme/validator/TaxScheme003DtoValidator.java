@@ -13,6 +13,8 @@ package com.joyintech.tams.valuation.taxparametermanage.taxscheme.validator;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +65,13 @@ public class TaxScheme003DtoValidator implements BeanValidator {
             validParam1.setPageId(processMark1.getPageId());
 
             validParam1.setBusinessDataPk1(dto.getSeqNo());
+
+            //若应税标识为简易计税，判断有没有填写应税税率
+            if(StringUtil.equals(dto.getTaxableSign(),"03") && null==dto.getTaxRate()){
+                errorList.add(new ValidMessage("taxRate","应税税率不能为空!"));
+                return errorList;
+            }
+
             if (mstWorkflowCommonService.isInWflProcess(validParam1)) {
                 // 流程存在情况
                 errorList.add(new ValidMessage(getMessage("COMMON_E_0021", "标识", dto.getSeqNo())));
@@ -86,7 +95,7 @@ public class TaxScheme003DtoValidator implements BeanValidator {
                     // 流程存在情况
                     errorList.add(new ValidMessage(getMessage("COMMON_E_0021", "标识", "资产分类+本金收益特征+收入类型+生效日组成唯一性数据")));
                     return errorList;
-                } 
+                }
             }
         }
         catch (Exception e) {

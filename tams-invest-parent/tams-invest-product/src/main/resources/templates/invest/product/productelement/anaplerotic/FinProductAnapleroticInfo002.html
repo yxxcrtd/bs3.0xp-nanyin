@@ -200,7 +200,7 @@
 								<label class="layui-form-label form-label-wrap"
 									   style="width: 11.9% !important;"
 									   th:text="|#{BussBenchMarkInfo.indexId}=|">浮动利率(%)=</label>
-								<div class="layui-input-inline input-inline rate-inline-wrap rate-inline-wrapper"
+								<div class="layui-input-inline input-inline rate-inline-wrap2 rate-inline-wrapper"
 									 style="width: 85% !important;">
 									<select th:id="indexId"
 											th:name="indexId"
@@ -283,7 +283,7 @@
 								<label class="layui-form-label form-label-wrap" th:text="#{FinProductAnapleroticInfo.anapleroticEndDate}">回补计提结束日</label>
 								<div class="layui-input-inline input-inline">
 									<input th:id="anapleroticEndDate"
-										   th:name="anapleroticEndDate"
+										   th:name="anapleroticEndDate" disabled = "disabled"
 										   class="layui-input form-input input-dateSelect" placeholder="请选择时间"
 										   th:placeholder="#{SysCommon.placeholder}"
 										   th:value='${#dates.format(entity?.anapleroticEndDate,"yyyy-MM-dd")}'
