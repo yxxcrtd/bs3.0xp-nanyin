@@ -1,0 +1,4 @@
+--add by yangwenjun 20201210 投资交易-指令分发-权限分发配置增加数据机构隔离 start
+delete from DATA_AUTH_MAPPER_CONFIG where SQL_ID='com.joyintech.service.trade.investtrade.commanddispatcher.dao.TrdCommandDispatcher001Mapper.getTraderAuthList';
+INSERT INTO DATA_AUTH_MAPPER_CONFIG (SQL_ID, FILTER_TYPE, IS_NEST, JOIN_COLUMN_NAME, FILTER_SQL, SYSTEM_CODE, PAGE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADD_COLUMN, ADD_COLUMN_NAME, DATA_TYPE) VALUES ('com.joyintech.service.trade.investtrade.commanddispatcher.dao.TrdCommandDispatcher001Mapper.getTraderAuthList', '2', '01', null, 'SELECT * FROM ( %s ) su INNER JOIN Sys_Department sd ON su.deptCode = sd.dept_code WHERE sd.INSTITUTION_CODE IN %s', 'TRD', 'TrdCommandDispatcher001', 'admin', null, sysdate, 'admin',sysdate, null, null, null);
+--add by yangwenjun 20201210 投资交易-指令分发-权限分发配置增加数据机构隔离 end
