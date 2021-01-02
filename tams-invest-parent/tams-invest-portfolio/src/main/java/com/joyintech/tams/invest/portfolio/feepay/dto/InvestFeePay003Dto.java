@@ -15,6 +15,7 @@ import java.util.Date;
 
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.Amount;
 import com.joyintech.framework.validation.annotation.NotEmpty;
@@ -450,7 +451,9 @@ public class InvestFeePay003Dto extends BaseEntity {
     
     
     public String getTradeTypeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.金融产品类型_投管用, this.getTradeType());
+        return StringUtil.isEmpty(SysDataUtil.getNameFromDataDict(DictCode.金融产品类型_投管用, this.getTradeType())) ?
+                SysDataUtil.getNameFromDataDict(DictCode.金融产品类型, this.getTradeType()) :
+                SysDataUtil.getNameFromDataDict(DictCode.金融产品类型_投管用, this.getTradeType());
     }
     
     

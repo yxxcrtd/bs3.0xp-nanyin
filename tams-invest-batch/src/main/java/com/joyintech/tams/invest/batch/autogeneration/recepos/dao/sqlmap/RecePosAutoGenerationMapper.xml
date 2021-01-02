@@ -4,12 +4,37 @@
 
     <sql id="portfolio_id_in_sql">
         PORTFOLIO_ID in (select PORTFOLIO_ID from FIN_PRODUCT_ADD where FIN_PRODUCT_ADD.FINPROD_ID in
-        (<foreach collection="productIdList" item="item" separator=",">#{item}</foreach>))
+        <foreach collection="productIdList" item="item" separator="," open="(" index="index" close=")">
+            <if test="(index % 999) == 998">
+                null) OR FIN_PRODUCT_ADD.FINPROD_ID in (
+            </if>
+            #{item}
+        </foreach>
+        )
         OR PORTFOLIO_ID in (select PP.PORTFOLIO_ID from FIN_PRODUCT_ADD FPA INNER JOIN PTL_PORTFOLIO PP
         ON FPA.PORTFOLIO_ID = PP.PARENT_PORTFOLIO_ID where FPA.FINPROD_ID in
-            (<foreach collection="productIdList" item="item" separator=",">#{item}</foreach>))
-        OR PORTFOLIO_ID in (<foreach collection="productIdList" item="item" separator=",">#{item}</foreach>)
-        OR PORTFOLIO_ID in (SELECT PORTFOLIO_ID FROM PTL_PORTFOLIO WHERE PARENT_PORTFOLIO_ID in (<foreach collection="productIdList" item="item" separator=",">#{item}</foreach>))
+            <foreach collection="productIdList" item="item" separator="," open="(" index="index" close=")">
+                <if test="(index % 999) == 998">
+                    null) OR FPA.FINPROD_ID in (
+                </if>
+                #{item}
+            </foreach>
+        )
+        OR PORTFOLIO_ID in
+            <foreach collection="productIdList" item="item" separator="," open="(" index="index" close=")">
+                <if test="(index % 999) == 998">
+                    null) OR PORTFOLIO_ID in (
+                </if>
+                #{item}
+            </foreach>
+        OR PORTFOLIO_ID in (SELECT PORTFOLIO_ID FROM PTL_PORTFOLIO WHERE PARENT_PORTFOLIO_ID in
+            <foreach collection="productIdList" item="item" separator="," open="(" index="index" close=")">
+                <if test="(index % 999) == 998">
+                    null) OR PARENT_PORTFOLIO_ID in (
+                </if>
+                #{item}
+            </foreach>
+        )
     </sql>
 
     <delete id="deleteTodayRecePosData">

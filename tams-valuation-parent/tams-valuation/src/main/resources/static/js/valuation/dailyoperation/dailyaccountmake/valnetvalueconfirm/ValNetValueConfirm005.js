@@ -108,7 +108,10 @@
         for(var i = 0; i < data.length; i++){
             xArr.push(dateToString(data[i].vDate));
             yieldTermArr.push(data[i].yieldTerm);
-            intRateArr.push(data[i].intRate);
+            //TISHKBS-1444  净值确认下发-净值趋势图中显示年化收益率模块的业绩比较基准值保留4位小数 start
+            var intRate = data[i].intRate;
+            intRateArr.push(returnFloat(intRate));
+            //TISHKBS-1444  净值确认下发-净值趋势图中显示年化收益率模块的业绩比较基准值保留4位小数 end
         }
         return {
             title : '年化收益率' ,
@@ -132,6 +135,26 @@
         var option=getOption(echart2(data));
         myChart2.setOption(option);
     }
+    //TISHKBS-1444  净值确认下发-净值趋势图中显示年化收益率模块的业绩比较基准值保留4位小数 start
+    function returnFloat(value){
+    	 var value=Math.round(parseFloat(value)*10000)/10000;
+    	 var xsd=value.toString().split(".");
+    	 if(xsd.length==1){
+    	 value=value.toString()+".0000";
+    	 return value;
+    	 }
+    	 if(xsd.length>1){
+    	 if(xsd[1].length<2){
+    	 value=value.toString()+"000";
+    	 }else if(xsd[1].length<3){
+    	 value=value.toString()+"00";
+    	 }else if(xsd[1].length<4){
+         value=value.toString()+"0";	 
+    	 }
+    	 return value;
+    	 }
+    	}
+    //TISHKBS-1444  净值确认下发-净值趋势图中显示年化收益率模块的业绩比较基准值保留4位小数 end
 
     $('#repRaisePdate').change(function () {
         var endDate=$('#repRaisePdate').endDate();

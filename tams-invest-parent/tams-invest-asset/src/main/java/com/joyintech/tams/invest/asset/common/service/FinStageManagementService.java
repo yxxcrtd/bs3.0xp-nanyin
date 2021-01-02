@@ -204,13 +204,13 @@ public class FinStageManagementService extends CommonExportService<FinStageManag
                 finProduct.setpFinprodId(dto.getFinprodId());
                 finProduct.setFinprodMarketId(dto.getFinprodMarketId() + "_" + entity.getPeriod());
                 finProduct.setCalendarId(dto.getCalendarId());
-                if (StringUtil.isNotEmpty(entity.getFinprodId())) {
-                    finProduct.setFinprodId(entity.getFinprodId());
-                }
-                else {
+//                if (StringUtil.isNotEmpty(entity.getFinprodId())) {
+//                    finProduct.setFinprodId(entity.getFinprodId());
+//                }
+//                else {
                     finProduct.setFinprodId(commonBusinessService.getFinProdId(finProduct.getFinprodMarketId(),
                         DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue(), null));
-                }
+//                }
                 finProduct.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
                 finProduct.setProfitType(DictCodeList.收益类型_收益型.getValue());
                 finProduct.setVdate(entity.getVdate());

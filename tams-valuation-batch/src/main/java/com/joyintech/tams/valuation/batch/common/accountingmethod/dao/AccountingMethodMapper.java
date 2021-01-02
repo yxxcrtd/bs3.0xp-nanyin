@@ -121,6 +121,13 @@ public interface AccountingMethodMapper {
     BokDetailId selectBokDetailId(@Param("booksetId") String booksetId,
     		                             @Param("busiId") String busiId, 
     		                             @Param("busiDetailType") String busiDetailType);
+    
+    /**
+     * 根据账套代码、交易日期、业务明细类型查询账务明细代码
+     */
+    BokDetailId selectBokDetailIdYT(@Param("booksetId") String booksetId,
+                                    @Param("tradeDate") String tradeDate,
+                                    @Param("busiDetailType") String busiDetailType);
 										 
     /**
      * 获取帐套信息
@@ -147,4 +154,13 @@ public interface AccountingMethodMapper {
      * @since 1.0
      */
     List<String> getBatchExcuteProdList(Map<String, Object> params);
+    
+    /**
+     * 查询金融交易表
+     * @param params 参数
+     * @return PaTrdProductDeal
+     * @see
+     * @since 1.0
+     */
+    PaTrdProductDeal getPaTrdProductDeal(Map<String, Object> params);
 }

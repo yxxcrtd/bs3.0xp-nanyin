@@ -978,6 +978,12 @@ public class SecAbsCalBookService {
             else {
                 varLxtz = varSpilledPriceAccBal.negate();
             }
+//          if(参数.摊销额小于剩余摊销时是否只摊销到0 = Y && ABS(变量.利息调整) >= ABS(变量.溢折价科目余额) )
+//                  变量.利息调整 =变量.溢折价科目余额*-1
+            if(StringUtil.equals(acctEntity.getListDrawBaseInfoSelectComDTO().get(0).getAmorizeRule(),DictCodeList.是否_是.getValue())
+                    && varLxtz.abs().compareTo(varSpilledPriceAccBal.abs()) >= 0){
+                varLxtz = varSpilledPriceAccBal.negate();
+            }
             // 变量.投资收益 = 变量.利息调整 + 3.1 处理的应计利息
             varTzsy = ArithmeticUtil.doAdd(varLxtz, intAmt);
             // 变量.利息调整 > 0

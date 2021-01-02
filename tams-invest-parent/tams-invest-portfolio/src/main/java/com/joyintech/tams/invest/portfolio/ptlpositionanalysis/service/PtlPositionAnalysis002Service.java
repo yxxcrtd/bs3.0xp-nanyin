@@ -111,6 +111,10 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                             typeName.setParentInfo("root");
                             typeName.setChildInfo(v.get(0).getPinanAssetType());
                             typeName.setHasChildren("01");
+                            typeName.setPosCost(v.get(0).getPosCost());
+                            typeName.setPosValue(v.get(0).getPosValue());
+                            typeName.setTdyIntincexp(v.get(0).getTdyIntincexp());
+
                             pageList.add(typeName);
                         });
                     }
@@ -128,6 +132,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                             portfolioName.setChildInfo(v.get(0).getPortfolioId());
                             portfolioName.setHasChildren("02");
                             portfolioName.setBelongInstitutionNameNew(StringUtils.isNotEmpty(v.get(0).getBelongInstitutionNameNew()) ? String.valueOf(CacheUtil.getAppCacheInstitutionCodeName(v.get(0).getBelongInstitutionNameNew())) : v.get(0).getBelongInstitutionNameNew());
+                            portfolioName.setPosCost(v.get(0).getPosCost());
+                            portfolioName.setPosValue(v.get(0).getPosValue());
+                            portfolioName.setTdyIntincexp(v.get(0).getTdyIntincexp());
                             pageList.add(portfolioName);
 
                             // 拼接一级分类[根据组合代码查询对应下面的所有一级分类名称]
@@ -140,6 +147,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                     oneType.setParentInfo(v.get(0).getPortfolioId());
                                     oneType.setChildInfo(entity.getPortfolioId() + entity.getPinanAssetType());
                                     oneType.setHasChildren("01");
+                                    oneType.setPosCost(entity.getPosCost());
+                                    oneType.setPosValue(entity.getPosValue());
+                                    oneType.setTdyIntincexp(entity.getTdyIntincexp());
                                     pageList.add(oneType);
                                 }
                             }
@@ -166,10 +176,15 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                             typeName.setParentInfo("root");
                             typeName.setChildInfo(v.get(0).getPinanAssetType());
                             typeName.setHasChildren("02");
+                            typeName.setPosCost(v.get(0).getPosCost());
+                            typeName.setPosValue(v.get(0).getPosValue());
+                            typeName.setTdyIntincexp(v.get(0).getTdyIntincexp());
                             pageList.add(typeName);
 
                             // 二级分类
                             List<PtlPositionAnalysis003Dto> finpordTypeList = getFinpordType("", searchDate, "02", displayType, v.get(0).getPinanAssetType(), pass);
+                            //根据parent查询出下一行的汇总额
+                           // List<PtlPositionAnalysis003Dto> selectSumByParentpList = selectSumByParentp("", searchDate, "02", displayType, v.get(0).getPinanAssetType(), pass);
                             if (!StringUtil.isEmptyList(finpordTypeList) && finpordTypeList.size() > 0) {
                                 for (PtlPositionAnalysis003Dto entity : finpordTypeList) {
                                     PtlPositionAnalysis003Dto twoType = new PtlPositionAnalysis003Dto();
@@ -178,6 +193,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                     twoType.setParentInfo(entity.getPinanAssetType());
                                     twoType.setChildInfo(entity.getPinanAssetType() + entity.getCustomAssetTypeTwo());
                                     twoType.setHasChildren("01");
+                                    twoType.setPosCost(entity.getPosCost());
+                                    twoType.setPosValue(entity.getPosValue());
+                                    twoType.setTdyIntincexp(entity.getTdyIntincexp());
                                     pageList.add(twoType);
                                 }
                             }
@@ -197,6 +215,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                             portfolioName.setChildInfo(v.get(0).getPortfolioId());
                             portfolioName.setHasChildren("02");
                             portfolioName.setBelongInstitutionNameNew(StringUtils.isNotEmpty(v.get(0).getBelongInstitutionNameNew()) ? String.valueOf(CacheUtil.getAppCacheInstitutionCodeName(v.get(0).getBelongInstitutionNameNew())) : v.get(0).getBelongInstitutionNameNew());
+                            portfolioName.setPosCost(v.get(0).getPosCost());
+                            portfolioName.setPosValue(v.get(0).getPosValue());
+                            portfolioName.setTdyIntincexp(v.get(0).getTdyIntincexp());
                             pageList.add(portfolioName);
 
                             // 拼接一级分类[根据组合代码查询对应下面的所有一级分类名称]
@@ -209,6 +230,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                     oneType.setParentInfo(entity.getPortfolioId());
                                     oneType.setChildInfo(entity.getPortfolioId() + entity.getPinanAssetType());
                                     oneType.setHasChildren("02");
+                                    oneType.setPosCost(entity.getPosCost());
+                                    oneType.setPosValue(entity.getPosValue());
+                                    oneType.setTdyIntincexp(entity.getTdyIntincexp());
                                     pageList.add(oneType);
                                     //二级分类
                                     List<PtlPositionAnalysis003Dto> twoList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "02", displayType, entity.getPinanAssetType(), pass);
@@ -220,6 +244,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                             twoType.setParentInfo(twoEntity.getPortfolioId() + twoEntity.getPinanAssetType());
                                             twoType.setChildInfo(twoEntity.getPortfolioId() + twoEntity.getPinanAssetType() + twoEntity.getCustomAssetTypeTwo());
                                             twoType.setHasChildren("01");
+                                            twoType.setPosCost(twoEntity.getPosCost());
+                                            twoType.setPosValue(twoEntity.getPosValue());
+                                            twoType.setTdyIntincexp(twoEntity.getTdyIntincexp());
                                             pageList.add(twoType);
                                         }
                                     }
@@ -249,6 +276,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                             typeName.setParentInfo("root");
                             typeName.setChildInfo(v.get(0).getPinanAssetType());
                             typeName.setHasChildren("02");
+                            typeName.setPosCost(v.get(0).getPosCost());
+                            typeName.setPosValue(v.get(0).getPosValue());
+                            typeName.setTdyIntincexp(v.get(0).getTdyIntincexp());
                             pageList.add(typeName);
 
                             // 二级分类
@@ -263,6 +293,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                     twoType.setParentInfo(entity.getPinanAssetType());
                                     twoType.setChildInfo(entity.getPinanAssetType() + entity.getCustomAssetTypeTwo());
                                     twoType.setHasChildren("02");
+                                    twoType.setPosCost(entity.getPosCost());
+                                    twoType.setPosValue(entity.getPosValue());
+                                    twoType.setTdyIntincexp(entity.getTdyIntincexp());
                                     pageList.add(twoType);
                                     //三级分类
                                     List<PtlPositionAnalysis003Dto> typeThreeList = getFinpordType("", searchDate, "03", displayType, v.get(0).getPinanAssetType(), pass);
@@ -276,6 +309,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                             threeType.setParentInfo(threeEntity.getPinanAssetType() + threeEntity.getCustomAssetTypeTwo());
                                             threeType.setChildInfo(threeEntity.getPinanAssetType() + threeEntity.getCustomAssetTypeTwo() + threeEntity.getCustomAssetTypeThree());
                                             threeType.setHasChildren("01");
+                                            threeType.setPosCost(threeEntity.getPosCost());
+                                            threeType.setPosValue(threeEntity.getPosValue());
+                                            threeType.setTdyIntincexp(threeEntity.getTdyIntincexp());
                                             pageList.add(threeType);
                                         }
                                     }
@@ -302,6 +338,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                             portfolioName.setChildInfo(v.get(0).getPortfolioId());
                             portfolioName.setHasChildren("02");
                             portfolioName.setBelongInstitutionNameNew(StringUtils.isNotEmpty(v.get(0).getBelongInstitutionNameNew()) ? String.valueOf(CacheUtil.getAppCacheInstitutionCodeName(v.get(0).getBelongInstitutionNameNew())) : v.get(0).getBelongInstitutionNameNew());
+                            portfolioName.setPosCost(v.get(0).getPosCost());
+                            portfolioName.setPosValue(v.get(0).getPosValue());
+                            portfolioName.setTdyIntincexp(v.get(0).getTdyIntincexp());
                             pageList.add(portfolioName);
                             //拼接一级分类[根据组合代码查询对应下面的所有一级分类名称]
                             List<PtlPositionAnalysis003Dto> finpordTypeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "01", displayType, "", pass);
@@ -315,6 +354,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                     oneType.setParentInfo(v.get(0).getPortfolioId());
                                     oneType.setChildInfo(entity.getPortfolioId() + entity.getPinanAssetType());
                                     oneType.setHasChildren("02");
+                                    oneType.setPosCost(entity.getPosCost());
+                                    oneType.setPosValue(entity.getPosValue());
+                                    oneType.setTdyIntincexp(entity.getTdyIntincexp());
                                     pageList.add(oneType);
                                     //二级分类
                                     List<PtlPositionAnalysis003Dto> typeTwoList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "02", displayType, entity.getPinanAssetType(), pass);
@@ -328,6 +370,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                             twoType.setParentInfo(v.get(0).getPortfolioId() + twoEntity.getPinanAssetType());
                                             twoType.setChildInfo(v.get(0).getPortfolioId() + twoEntity.getPinanAssetType() + twoEntity.getCustomAssetTypeTwo());
                                             twoType.setHasChildren("02");
+                                            twoType.setPosCost(twoEntity.getPosCost());
+                                            twoType.setPosValue(twoEntity.getPosValue());
+                                            twoType.setTdyIntincexp(twoEntity.getTdyIntincexp());
                                             pageList.add(twoType);
                                             //三级分类
                                             List<PtlPositionAnalysis003Dto> typeThreeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "03", displayType, twoEntity.getPinanAssetType(), pass);
@@ -341,6 +386,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                                     threeType.setParentInfo(v.get(0).getPortfolioId() + threeEntity.getPinanAssetType() + threeEntity.getCustomAssetTypeTwo());
                                                     threeType.setChildInfo(v.get(0).getPortfolioId() + threeEntity.getPinanAssetType() + threeEntity.getCustomAssetTypeTwo() + threeEntity.getCustomAssetTypeThree());
                                                     threeType.setHasChildren("01");
+                                                    threeType.setPosCost(threeEntity.getPosCost());
+                                                    threeType.setPosValue(threeEntity.getPosValue());
+                                                    threeType.setTdyIntincexp(threeEntity.getTdyIntincexp());
                                                     pageList.add(threeType);
                                                 }
                                             }
@@ -385,6 +433,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                             typeName.setParentInfo("root");
                             typeName.setChildInfo(v.get(0).getPinanAssetType());
                             typeName.setHasChildren("02");
+                            typeName.setPosCost(v.get(0).getPosCost());
+                            typeName.setPosValue(v.get(0).getPosValue());
+                            typeName.setTdyIntincexp(v.get(0).getTdyIntincexp());
                             pageList.add(typeName);
                             //二级分类
                             List<PtlPositionAnalysis003Dto> finpordTypeList = getFinpordType("", searchDate, "02", displayType, v.get(0).getPinanAssetType(), pass);
@@ -398,6 +449,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                     twoType.setParentInfo(entity.getPinanAssetType());
                                     twoType.setChildInfo(entity.getPinanAssetType() + entity.getCustomAssetTypeTwo());
                                     twoType.setHasChildren("02");
+                                    twoType.setPosCost(entity.getPosCost());
+                                    twoType.setPosValue(entity.getPosValue());
+                                    twoType.setTdyIntincexp(entity.getTdyIntincexp());
                                     pageList.add(twoType);
                                     //三级分类
                                     List<PtlPositionAnalysis003Dto> typeThreeList = getFinpordType("", searchDate, "03", displayType, v.get(0).getPinanAssetType(), pass);
@@ -411,6 +465,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                             threeType.setParentInfo(threeEntity.getPinanAssetType() + threeEntity.getCustomAssetTypeTwo());
                                             threeType.setChildInfo(threeEntity.getPinanAssetType() + threeEntity.getCustomAssetTypeTwo() + threeEntity.getCustomAssetTypeThree());
                                             threeType.setHasChildren("02");
+                                            threeType.setPosCost(threeEntity.getPosCost());
+                                            threeType.setPosValue(threeEntity.getPosValue());
+                                            threeType.setTdyIntincexp(threeEntity.getTdyIntincexp());
                                             pageList.add(threeType);
 
                                             //四级分类
@@ -425,6 +482,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                                     fourType.setParentInfo(fourEntity.getPinanAssetType() + fourEntity.getCustomAssetTypeTwo() + fourEntity.getCustomAssetTypeThree());
                                                     fourType.setChildInfo(fourEntity.getPinanAssetType() + fourEntity.getCustomAssetTypeTwo() + fourEntity.getCustomAssetTypeThree() + fourEntity.getCustomAssetTypeFour());
                                                     fourType.setHasChildren("01");
+                                                    fourType.setPosCost(fourEntity.getPosCost());
+                                                    fourType.setPosValue(fourEntity.getPosValue());
+                                                    fourType.setTdyIntincexp(fourEntity.getTdyIntincexp());
                                                     pageList.add(fourType);
 
                                                 }
@@ -454,6 +514,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                             portfolioName.setChildInfo(v.get(0).getPortfolioId());
                             portfolioName.setHasChildren("02");
                             portfolioName.setBelongInstitutionNameNew(StringUtils.isNotEmpty(v.get(0).getBelongInstitutionNameNew()) ? String.valueOf(CacheUtil.getAppCacheInstitutionCodeName(v.get(0).getBelongInstitutionNameNew())) : v.get(0).getBelongInstitutionNameNew());
+                            portfolioName.setPosCost(v.get(0).getPosCost());
+                            portfolioName.setPosValue(v.get(0).getPosValue());
+                            portfolioName.setTdyIntincexp(v.get(0).getTdyIntincexp());
                             pageList.add(portfolioName);
                             //拼接一级分类[根据组合代码查询对应下面的所有一级分类名称]
                             List<PtlPositionAnalysis003Dto> finpordTypeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "01", displayType, "", pass);
@@ -467,6 +530,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                     oneType.setParentInfo(v.get(0).getPortfolioId());
                                     oneType.setChildInfo(entity.getPortfolioId() + entity.getPinanAssetType());
                                     oneType.setHasChildren("02");
+                                    oneType.setPosCost(entity.getPosCost());
+                                    oneType.setPosValue(entity.getPosValue());
+                                    oneType.setTdyIntincexp(entity.getTdyIntincexp());
                                     pageList.add(oneType);
                                     //二级分类
                                     List<PtlPositionAnalysis003Dto> typeTwoList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "02", displayType, entity.getPinanAssetType(), pass);
@@ -480,6 +546,10 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                             twoType.setParentInfo(v.get(0).getPortfolioId() + twoEntity.getPinanAssetType());
                                             twoType.setChildInfo(v.get(0).getPortfolioId() + twoEntity.getPinanAssetType() + twoEntity.getCustomAssetTypeTwo());
                                             twoType.setHasChildren("02");
+
+                                            twoType.setPosCost(twoEntity.getPosCost());
+                                            twoType.setPosValue(twoEntity.getPosValue());
+                                            twoType.setTdyIntincexp(twoEntity.getTdyIntincexp());
                                             pageList.add(twoType);
                                             //三级分类
                                             List<PtlPositionAnalysis003Dto> typeThreeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "03", displayType, twoEntity.getPinanAssetType(), pass);
@@ -493,6 +563,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                                     threeType.setParentInfo(v.get(0).getPortfolioId() + threeEntity.getPinanAssetType() + threeEntity.getCustomAssetTypeTwo());
                                                     threeType.setChildInfo(v.get(0).getPortfolioId() + threeEntity.getPinanAssetType() + threeEntity.getCustomAssetTypeTwo() + threeEntity.getCustomAssetTypeThree());
                                                     threeType.setHasChildren("02");
+                                                    threeType.setPosCost(threeEntity.getPosCost());
+                                                    threeType.setPosValue(threeEntity.getPosValue());
+                                                    threeType.setTdyIntincexp(threeEntity.getTdyIntincexp());
                                                     pageList.add(threeType);
 
                                                     //四级分类
@@ -507,6 +580,10 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                                             fourType.setParentInfo(v.get(0).getPortfolioId() + fourEntity.getPinanAssetType() + fourEntity.getCustomAssetTypeTwo() + fourEntity.getCustomAssetTypeThree());
                                                             fourType.setChildInfo(v.get(0).getPortfolioId() + fourEntity.getPinanAssetType() + fourEntity.getCustomAssetTypeTwo() + fourEntity.getCustomAssetTypeThree() + fourEntity.getCustomAssetTypeFour());
                                                             fourType.setHasChildren("01");
+
+                                                            fourType.setPosCost(fourEntity.getPosCost());
+                                                            fourType.setPosValue(fourEntity.getPosValue());
+                                                            fourType.setTdyIntincexp(fourEntity.getTdyIntincexp());
                                                             pageList.add(fourType);
 
                                                         }
@@ -554,6 +631,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                             typeName.setParentInfo("root");
                             typeName.setChildInfo(v.get(0).getPinanAssetType());
                             typeName.setHasChildren("02");
+                            typeName.setPosCost(v.get(0).getPosCost());
+                            typeName.setPosValue(v.get(0).getPosValue());
+                            typeName.setTdyIntincexp(v.get(0).getTdyIntincexp());
                             pageList.add(typeName);
                             //二级分类
                             List<PtlPositionAnalysis003Dto> finpordTypeList = getFinpordType("", searchDate, "02", displayType, v.get(0).getPinanAssetType(), pass);
@@ -567,6 +647,10 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                     twoType.setParentInfo(entity.getPinanAssetType());
                                     twoType.setChildInfo(entity.getPinanAssetType() + entity.getCustomAssetTypeTwo());
                                     twoType.setHasChildren("02");
+                                    twoType.setPosCost(entity.getPosCost());
+                                    twoType.setPosValue(entity.getPosValue());
+                                    twoType.setTdyIntincexp(entity.getTdyIntincexp());
+
                                     pageList.add(twoType);
                                     //三级分类
                                     List<PtlPositionAnalysis003Dto> typeThreeList = getFinpordType("", searchDate, "03", displayType, v.get(0).getPinanAssetType(), pass);
@@ -580,6 +664,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                             threeType.setParentInfo(threeEntity.getPinanAssetType() + threeEntity.getCustomAssetTypeTwo());
                                             threeType.setChildInfo(threeEntity.getPinanAssetType() + threeEntity.getCustomAssetTypeTwo() + threeEntity.getCustomAssetTypeThree());
                                             threeType.setHasChildren("02");
+                                            threeType.setPosCost(threeEntity.getPosCost());
+                                            threeType.setPosValue(threeEntity.getPosValue());
+                                            threeType.setTdyIntincexp(threeEntity.getTdyIntincexp());
                                             pageList.add(threeType);
                                             //四级分类
                                             List<PtlPositionAnalysis003Dto> fourTypeList = getFinpordType("", searchDate, "04", displayType, v.get(0).getPinanAssetType(), pass);
@@ -593,6 +680,10 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                                     fourType.setParentInfo(fourEntity.getPinanAssetType() + fourEntity.getCustomAssetTypeTwo() + fourEntity.getCustomAssetTypeThree());
                                                     fourType.setChildInfo(fourEntity.getPinanAssetType() + fourEntity.getCustomAssetTypeTwo() + fourEntity.getCustomAssetTypeThree() + fourEntity.getCustomAssetTypeFour());
                                                     fourType.setHasChildren("02");
+
+                                                    fourType.setPosCost(fourEntity.getPosCost());
+                                                    fourType.setPosValue(fourEntity.getPosValue());
+                                                    fourType.setTdyIntincexp(fourEntity.getTdyIntincexp());
                                                     pageList.add(fourType);
 
                                                     //五级分类
@@ -608,6 +699,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                                             fiveType.setParentInfo(fiveEntity.getPinanAssetType() + fiveEntity.getCustomAssetTypeTwo() + fiveEntity.getCustomAssetTypeThree() + fiveEntity.getCustomAssetTypeFour());
                                                             fiveType.setChildInfo(fiveEntity.getPinanAssetType() + fiveEntity.getCustomAssetTypeTwo() + fiveEntity.getCustomAssetTypeThree() + fiveEntity.getCustomAssetTypeFour() + fiveEntity.getCustomAssetTypeFive());
                                                             fiveType.setHasChildren("01");
+                                                            fiveType.setPosCost(fiveEntity.getPosCost());
+                                                            fiveType.setPosValue(fiveEntity.getPosValue());
+                                                            fiveType.setTdyIntincexp(fiveEntity.getTdyIntincexp());
                                                             pageList.add(fiveType);
                                                         }
                                                     }
@@ -638,6 +732,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                             portfolioName.setChildInfo(v.get(0).getPortfolioId());
                             portfolioName.setHasChildren("02");
                             portfolioName.setBelongInstitutionNameNew(StringUtils.isNotEmpty(v.get(0).getBelongInstitutionNameNew()) ? String.valueOf(CacheUtil.getAppCacheInstitutionCodeName(v.get(0).getBelongInstitutionNameNew())) : v.get(0).getBelongInstitutionNameNew());
+                            portfolioName.setPosCost(v.get(0).getPosCost());
+                            portfolioName.setPosValue(v.get(0).getPosValue());
+                            portfolioName.setTdyIntincexp(v.get(0).getTdyIntincexp());
                             pageList.add(portfolioName);
                             //拼接一级分类[根据组合代码查询对应下面的所有一级分类名称]
                             List<PtlPositionAnalysis003Dto> finpordTypeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "01", displayType, "", pass);
@@ -651,6 +748,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                     oneType.setParentInfo(v.get(0).getPortfolioId());
                                     oneType.setChildInfo(entity.getPortfolioId() + entity.getPinanAssetType());
                                     oneType.setHasChildren("02");
+                                    oneType.setPosCost(entity.getPosCost());
+                                    oneType.setPosValue(entity.getPosValue());
+                                    oneType.setTdyIntincexp(entity.getTdyIntincexp());
                                     pageList.add(oneType);
                                     //二级分类
                                     List<PtlPositionAnalysis003Dto> typeTwoList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "02", displayType, entity.getPinanAssetType(), pass);
@@ -664,6 +764,10 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                             twoType.setParentInfo(v.get(0).getPortfolioId() + twoEntity.getPinanAssetType());
                                             twoType.setChildInfo(v.get(0).getPortfolioId() + twoEntity.getPinanAssetType() + twoEntity.getCustomAssetTypeTwo());
                                             twoType.setHasChildren("02");
+
+                                            twoType.setPosCost(twoEntity.getPosCost());
+                                            twoType.setPosValue(twoEntity.getPosValue());
+                                            twoType.setTdyIntincexp(twoEntity.getTdyIntincexp());
                                             pageList.add(twoType);
                                             //三级分类
                                             List<PtlPositionAnalysis003Dto> typeThreeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "03", displayType, twoEntity.getPinanAssetType(), pass);
@@ -677,6 +781,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                                     threeType.setParentInfo(v.get(0).getPortfolioId() + threeEntity.getPinanAssetType() + threeEntity.getCustomAssetTypeTwo());
                                                     threeType.setChildInfo(v.get(0).getPortfolioId() + threeEntity.getPinanAssetType() + threeEntity.getCustomAssetTypeTwo() + threeEntity.getCustomAssetTypeThree());
                                                     threeType.setHasChildren("02");
+                                                    threeType.setPosCost(threeEntity.getPosCost());
+                                                    threeType.setPosValue(threeEntity.getPosValue());
+                                                    threeType.setTdyIntincexp(threeEntity.getTdyIntincexp());
                                                     pageList.add(threeType);
 
                                                     //四级分类
@@ -691,6 +798,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                                             fourType.setParentInfo(v.get(0).getPortfolioId() + fourEntity.getPinanAssetType() + fourEntity.getCustomAssetTypeTwo() + fourEntity.getCustomAssetTypeThree());
                                                             fourType.setChildInfo(v.get(0).getPortfolioId() + fourEntity.getPinanAssetType() + fourEntity.getCustomAssetTypeTwo() + fourEntity.getCustomAssetTypeThree() + fourEntity.getCustomAssetTypeFour());
                                                             fourType.setHasChildren("02");
+                                                            fourType.setPosCost(fourEntity.getPosCost());
+                                                            fourType.setPosValue(fourEntity.getPosValue());
+                                                            fourType.setTdyIntincexp(fourEntity.getTdyIntincexp());
                                                             pageList.add(fourType);
                                                             //五级分类
 
@@ -705,6 +815,10 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                                                     fiveType.setParentInfo(v.get(0).getPortfolioId() + fiveEntity.getPinanAssetType() + fiveEntity.getCustomAssetTypeTwo() + fiveEntity.getCustomAssetTypeThree() + fiveEntity.getCustomAssetTypeFour());
                                                                     fiveType.setChildInfo(v.get(0).getPortfolioId() + fiveEntity.getPinanAssetType() + fiveEntity.getCustomAssetTypeTwo() + fiveEntity.getCustomAssetTypeThree() + fiveEntity.getCustomAssetTypeFour() + fiveEntity.getCustomAssetTypeFive());
                                                                     fiveType.setHasChildren("02");
+
+                                                                    fiveType.setPosCost(fiveEntity.getPosCost());
+                                                                    fiveType.setPosValue(fiveEntity.getPosValue());
+                                                                    fiveType.setTdyIntincexp(fiveEntity.getTdyIntincexp());
                                                                     pageList.add(fiveType);
                                                                 }
                                                             }

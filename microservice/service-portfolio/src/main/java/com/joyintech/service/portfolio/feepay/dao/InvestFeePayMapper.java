@@ -5,16 +5,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.valuation.common.batch.finproduct.entity.SubjectBalance;
+import com.joyintech.tams.valuation.common.batch.finproduct.entity.SubjectBalanceSearchDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import com.joyintech.tams.common.base.entity.BokPositionPrdfee;
-import com.joyintech.tams.common.base.entity.PrdLayerParam;
-import com.joyintech.tams.common.base.entity.PtlFeePosition;
-import com.joyintech.tams.common.base.entity.PtlTrade;
-import com.joyintech.tams.common.base.entity.StlPayOrders;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
+
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.portfolio.feepay.dto.InvestFeePayDto;
@@ -67,6 +64,22 @@ public interface InvestFeePayMapper {
      * @return 上次计提结束日
      */
     String queryLastPayDate(Map<String, Object> map);
+
+    /**
+     * 查询上次计提结束日
+     *
+     * @param map 参数
+     * @return 上次计提结束日
+     */
+    String queryStartDate(Map<String, Object> map);
+
+    /**
+     * 查询上次计提结束日
+     *
+     * @param map 参数
+     * @return 上次计提结束日
+     */
+    String queryConfigStartDate(Map<String, Object> map);
 
     /**
      * 查询不规则费用待支付费用
@@ -265,6 +278,25 @@ public interface InvestFeePayMapper {
     int selectInFlowDataCount(@Param("tradeId") String tradeId);
 
     /**
+     * 根据条件查询已生效数据条数
+     *
+     * @param paramMap 参数
+     * @return 已撤销数据条数
+     * @see
+     * @since 1.0
+     */
+    int selectEffectDataCount(Map<String, Object> paramMap);
+
+    /**
+     * 根据条件查询已生效数据条数
+     *
+     * @param paramMap 参数
+     * @return 已撤销数据条数
+     * @see
+     * @since 1.0
+     */
+    int selectInFlowDataCountByMap(Map<String, Object> paramMap);
+    /**
      * 根据交易编号查询已撤销数据条数
      *
      * @param paramMap 参数
@@ -303,4 +335,65 @@ public interface InvestFeePayMapper {
      * @since 1.0
      */
     InvestFeePayDto queryByPtlId(Map<String, Object> map);
+    List<InvestFeePayFeeDetailDto> selectDetail(Map<String, Object> map);
+
+    /**
+     * 根据平台日 获取需要生成预提交易类标的的配置信息
+     * @param batchDate
+     * @return
+     */
+    List<TrdAccountmfConfigDto> selectTACInfoByDate(String batchDate);
+
+    /**
+     * 根据条件查询账务明细代码
+     * @param map
+     * @return
+     */
+    List<BokDetailId> selectFinDetail(Map<String, Object> map);
+    
+    /**
+     * 根据条件查询账务明细代码
+     * @param map
+     * @return
+     */
+    List<BokDetailId> selectFinDetail2(Map<String, Object> map);
+
+    /**
+     * 根据条件查询账务明细代码
+     * @param map
+     * @return
+     */
+    List<BokDetailId> queryBokDetail(Map<String, Object> map);
+
+    /**
+     * 科目余额查询-当前最新余额查询
+     *
+     * @param searchDto 参数Dto
+     * @return 当前表科目余额结果集
+     * @see
+     * @since 1.0
+     */
+    List<SubjectBalance> queryCurrentLatestBalance(SubjectBalanceSearchDto searchDto);
+
+    /**
+     * 更新
+     * @param dto
+     * @return
+     */
+    int updateTrdAccountmfConfigDto(TrdAccountmfConfigDto dto);
+
+    /**
+     * 查询数据的录入方式
+     * @param tradeId
+     * @return
+     */
+    String inputDataType(String tradeId);
+
+    /**
+     * 查询流程中数据的录入方式
+     * @param tradeId
+     * @return
+     */
+    String inputWflDataType(String tradeId);
+
 }

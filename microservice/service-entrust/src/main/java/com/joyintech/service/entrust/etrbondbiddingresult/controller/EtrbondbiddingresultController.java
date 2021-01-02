@@ -1,17 +1,16 @@
 package com.joyintech.service.entrust.etrbondbiddingresult.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.service.entrust.etrbondbiddingresult.dto.EtrbondbiddingresultDto;
 import com.joyintech.service.entrust.etrbondbiddingresult.service.EtrbondbiddingresultService;
 import com.joyintech.tams.common.base.entity.FinProduct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController("etrbondbiddingresultCtl_dtx")
 @RequestMapping("/Etrbondbiddingresult")
@@ -22,7 +21,7 @@ public class EtrbondbiddingresultController {
 
     /**
      * 使用给定的acctName检索分页数据。返回类型是Service的泛型。 <功能详细描述>
-     * 
+     *
      * @param pageParam int
      * @param page int
      * @param length int
@@ -40,7 +39,7 @@ public class EtrbondbiddingresultController {
 
     /**
      * 通过原金融产品代码查询产品信息
-     * 
+     *
      * @param map
      * @return
      */
@@ -51,7 +50,7 @@ public class EtrbondbiddingresultController {
 
     /**
      * 修改交易ID通过委托ID和中标标位
-     * 
+     *
      * @param map
      * @return
      */
@@ -60,5 +59,12 @@ public class EtrbondbiddingresultController {
     @PostMapping("/updateTradeId")
     public void updateTradeId(@RequestBody Map<String, Object> map) {
         etrbondbiddingresultService.updateTradeId(map);
+    }
+
+    @Transactional
+    @DTXTransaction
+    @PostMapping("/deleteTradeId")
+    public void deleteTradeId(@RequestBody Map<String, Object> map) {
+        etrbondbiddingresultService.deleteTradeId(map);
     }
 }

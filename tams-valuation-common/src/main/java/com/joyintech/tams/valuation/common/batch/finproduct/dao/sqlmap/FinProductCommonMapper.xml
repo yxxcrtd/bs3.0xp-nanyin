@@ -836,6 +836,9 @@
     		FINPROD_TYPE != #{finprodType}
     		AND VAL_DATE &lt;= #{queryDate}
             AND VALUATION != 0 AND VALUATION IS NOT NULL
+			<!--修复 ZGBS-117 公募基金-非货币基金，重新跑批，公允价值有误BUG 20201230 start-->
+			AND PUBLISH_DATE &lt;= #{queryDate}
+			<!--修复 ZGBS-117 公募基金-非货币基金，重新跑批，公允价值有误BUG 20201230 end-->
 		ORDER BY
             VAL_DATE DESC
 	</select>

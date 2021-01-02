@@ -190,9 +190,9 @@
 			<if test="portfolioId != null and !portfolioId.isEmpty()">
 				AND A.PORTFOLIO_ID = #{portfolioId}
 			</if>
-			<if test="REGIST_ORG != null and !REGIST_ORG.isEmpty()">
+			<!-- <if test="REGIST_ORG != null and !REGIST_ORG.isEmpty()">
 				AND B.REGIST_ORG = #{REGIST_ORG}
-			</if>
+			</if> -->
 			<if test="ccy != null and !ccy.isEmpty()">
 				AND C.CCY = #{ccy}
 			</if>

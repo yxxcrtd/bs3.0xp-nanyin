@@ -12,7 +12,10 @@
             REP_BATCH_CONFIG
         <where>
         <if test="list != null and list.size() > 0">
-            <foreach collection="list" item="item" open=" REP_CODE IN (" close=")" separator=",">
+            <foreach collection="list" item="item" index="index" open=" REP_CODE IN (" close=")" separator=",">
+                <if test="(index % 999) == 998">
+                    null) OR REP_CODE in (
+                </if>
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
@@ -75,7 +78,7 @@
             fp.FINPROD_ID finprodId,
             A.PROD_REGIST_CODE prodRegistCode,
             fp.FINPROD_ABBR finprodAbbr,
-            A.ISSUE_PARTY_ID issuePartyId,
+            rpd.REP_ISSUE_PARTY_ID issuePartyId,
             si.INSTITUTION_NAME issuePartyName,
             A.CCY_PURCHASE ccyPurchase,
             A.PURCHASE_QTY repSumApplyShare,
@@ -120,10 +123,11 @@
                     ROW_NUMBER () OVER (PARTITION BY cpds.PROD_ID ORDER BY cpds.STATUS_DATE DESC) NUM
                 FROM
                     CHB_PRD_DEAL_SUB cpds
-                WHERE cpds.STATUS_DATE <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+                WHERE cpds.STATUS_DATE <![CDATA[<]]> #{nextMonthDate,jdbcType=DATE}
                   AND cpds.STATUS_DATE <![CDATA[>=]]> #{startDate,jdbcType=DATE}) A ON A.PROD_ID = REPLACE(fp.FINPROD_ID,'F16_','') AND A.NUM = 1
         LEFT JOIN BOK_POSITION_PRD B on B.CDATE = A.STATUS_DATE AND B.FINPROD_ID = fp.FINPROD_ID
-        LEFT JOIN CHB_ORG_REGIST_BANK_CODE corbc ON corbc.REGIST_BANK_CODE = A.ISSUE_PARTY_ID
+        LEFT JOIN REP_PROD_DECLARE rpd ON rpd.REP_FINPROD_ID  = fp.FINPROD_ID
+        LEFT JOIN CHB_ORG_REGIST_BANK_CODE corbc ON corbc.REGIST_BANK_CODE = rpd.REP_ISSUE_PARTY_ID
         LEFT JOIN SYS_INSTITUTION si ON si.INSTITUTION_CODE = corbc.ORG_CODE
         WHERE fp.FINPROD_ID = #{bookSetId,jdbcType=VARCHAR}
             AND fp.FINPROD_TYPE2 =#{finprodType,jdbcType=VARCHAR}
@@ -139,13 +143,13 @@
             cpb.PROD_INS_ID prodInsId,
             fp.FINPROD_ABBR finprodAbbr,
             cpb.PROD_BRAND prodBrand,
-            cpb.ISSUE_PARTY_ID issuePartyId,
+            rpd.REP_ISSUE_PARTY_ID issuePartyId,
             si.INSTITUTION_NAME issuePartyName,
             cpb.PROD_STAGE prodStage,
             cpb.PROFIT_TYPE profitType,
             cpb.TERMTYPE termtype,
             cpb.RISK_LEVEL riskLevel,
-            cpb.SALETARGET saleTarget,
+            <!--cpb.SALETARGET--> psp.INVESTOR_TYPE saleTarget,
             cpb.INVEST_ARAE investArae,
             cpb.OPERATE_MODE operateMode,
             cpb.CMMODE cmMode,
@@ -232,10 +236,12 @@
         LEFT JOIN REP_PROD_ISSUE rpi ON rpi.REP_FINPROD_ID = fp.FINPROD_ID
         LEFT JOIN CHB_PRD_RAISETOT_SUB cprs ON	cprs.PROD_ID = REPLACE(fp.FINPROD_ID,'F16_','')
         LEFT JOIN CHB_PRD_END_SUB cpes ON	cpes.PROD_ID = REPLACE(fp.FINPROD_ID,'F16_','')
-                AND cpes.STATUS_DATE <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+                AND cpes.STATUS_DATE <![CDATA[<]]> #{nextMonthDate,jdbcType=DATE}
                 AND cpes.STATUS_DATE <![CDATA[>=]]> #{startDate,jdbcType=DATE}
         LEFT JOIN REP_PROD_DECLARE rpd ON rpd.REP_FINPROD_ID  = fp.FINPROD_ID
-        LEFT JOIN SYS_INSTITUTION si ON si.INSTITUTION_CODE = cpb.ORG_CODE
+        LEFT JOIN CHB_ORG_REGIST_BANK_CODE corbc ON corbc.REGIST_BANK_CODE = rpd.REP_ISSUE_PARTY_ID
+        LEFT JOIN SYS_INSTITUTION si ON si.INSTITUTION_CODE = corbc.ORG_CODE
+        left join PRD_SALE_PARAM psp on psp.FINPROD_ID = fp.FINPROD_ID
         WHERE
             fp.FINPROD_TYPE2 = #{finprodType,jdbcType=VARCHAR}
             AND fp.FINPROD_ID = #{bookSetId,jdbcType=VARCHAR}

@@ -667,4 +667,28 @@ public class PtlPositionAnalysis001Dto extends BaseDto implements GridRowDto {
     public void setYearAmtRationTemp(BigDecimal yearAmtRationTemp) {
         this.yearAmtRationTemp = yearAmtRationTemp;
     }
+    /**
+     * 市值(较上一日)
+     */
+    private BigDecimal ystMarketValue;
+    /**
+     * 应计利息(较上一日)
+     */
+    private BigDecimal ystTdyIntincexp;
+
+    public BigDecimal getYstMarketValue() {
+        return ystMarketValue;
+    }
+
+    public void setYstMarketValue(BigDecimal ystMarketValue) {
+        this.ystMarketValue = ystMarketValue;
+    }
+
+    public BigDecimal getYstTdyIntincexp() {
+        return ystTdyIntincexp;
+    }
+
+    public void setYstTdyIntincexp(BigDecimal ystTdyIntincexp) {
+        this.ystTdyIntincexp = ystTdyIntincexp;
+    }
 }

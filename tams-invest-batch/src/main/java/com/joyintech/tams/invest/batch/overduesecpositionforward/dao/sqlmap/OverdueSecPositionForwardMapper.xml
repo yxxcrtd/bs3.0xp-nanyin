@@ -16,7 +16,10 @@
         CDATE = #{PLATE_DATE,jdbcType=DATE}
         and INPUT_TYPE = #{INPUT_TYPE_PCLSC}
         <if test="productIdList != null and productIdList.size()>0">
-            <foreach collection="productIdList" open="and PORTFOLIO_ID in(" separator="," item="item" close=")">
+            <foreach collection="productIdList" open="and (PORTFOLIO_ID in(" index="index" separator="," item="item" close="))">
+                <if test="(index % 999) == 998">
+                    null) OR PORTFOLIO_ID in (
+                </if>
                 #{item}
             </foreach>
         </if>
@@ -36,7 +39,10 @@
         CDATE = #{PLATE_DATE,jdbcType=DATE}
         and CREATE_USER = #{TASK_ID}
         <if test="productIdList != null and productIdList.size()>0">
-            <foreach collection="productIdList" open="and PORTFOLIO_ID in(" separator="," item="item" close=")">
+            <foreach collection="productIdList" index="index" open="and (PORTFOLIO_ID in(" separator="," item="item" close="))">
+                <if test="(index % 999) == 998">
+                    null) OR PORTFOLIO_ID in (
+                </if>
                 #{item}
             </foreach>
         </if>
@@ -56,7 +62,10 @@
         CDATE = #{PLATE_DATE,jdbcType=DATE}
         and CREATE_USER = #{TASK_ID}
         <if test="productIdList != null and productIdList.size()>0">
-            <foreach collection="productIdList" open="and PORTFOLIO_ID in(" separator="," item="item" close=")">
+            <foreach collection="productIdList" index="index" open="and (PORTFOLIO_ID in(" separator="," item="item" close="))">
+                <if test="(index % 999) == 998">
+                    null) OR PORTFOLIO_ID in (
+                </if>
                 #{item}
             </foreach>
         </if>
@@ -273,7 +282,10 @@
         <!--( fcp.MDATE = #{PRE_PLATE_DATE} OR fcpmid.MDATE = #{PRE_PLATE_DATE})--><!--(此条件20191223被注释)-->
         (greatest(fcp.MDATE,fcp.PAY_DATE) = #{PRE_PLATE_DATE} OR greatest(fcpmid.MDATE,fcpmid.PAY_DATE) = #{PRE_PLATE_DATE})
         <if test="productIdList != null and productIdList.size()>0">
-            <foreach collection="productIdList" open="and ptlHold.PORTFOLIO_ID in(" separator="," item="item" close=")">
+            <foreach collection="productIdList" index="index" open="and (ptlHold.PORTFOLIO_ID in(" separator="," item="item" close="))">
+                <if test="(index % 999) == 998">
+                    null) OR ptlHold.PORTFOLIO_ID in (
+                </if>
                 #{item}
             </foreach>
         </if>

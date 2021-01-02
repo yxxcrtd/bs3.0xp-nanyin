@@ -53,6 +53,8 @@ public class InvestFeePay003Controller extends BaseController {
         model.addAttribute("calcStartDate", this.getParam("calcStartDate"));
         model.addAttribute("calcEndDate", this.getParam("calcEndDate"));
         model.addAttribute("feeType", this.getParam("feeType"));
+        model.addAttribute("confirmFlag", this.getParam("confirmFlag"));
+        model.addAttribute("tradeId", this.getParam("tradeId"));
         return super.init(model);
     }
     
@@ -69,8 +71,8 @@ public class InvestFeePay003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("queryFeePositionDetail")
-    public List<InvestFeePay003Dto> queryFeePositionDetail(String secAcctId, String ptlId, String calcStartDate, String calcEndDate, String feeType){
-    	List<InvestFeePay003Dto> payList = investFeePay002Service.queryFeePositionDetail(secAcctId, ptlId, calcStartDate, calcEndDate, feeType);
+    public List<InvestFeePay003Dto> queryFeePositionDetail(String secAcctId, String ptlId, String calcStartDate, String calcEndDate, String feeType,String confirmFlag,String tradeId){
+    	List<InvestFeePay003Dto> payList = investFeePay002Service.queryFeePositionDetail(secAcctId, ptlId, calcStartDate, calcEndDate, feeType,confirmFlag,tradeId);
     	return payList;
     }
 }

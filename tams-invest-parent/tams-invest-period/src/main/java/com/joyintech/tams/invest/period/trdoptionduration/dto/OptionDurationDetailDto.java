@@ -165,10 +165,6 @@ public class OptionDurationDetailDto extends TrdFinProductDealTotal implements P
      */
     private Date cDate;
     /**
-     * 到期日
-     */
-    private Date mDate;
-    /**
      * 数量
      */
     private BigDecimal amount;
@@ -397,14 +393,6 @@ public class OptionDurationDetailDto extends TrdFinProductDealTotal implements P
 
     public void setcDate(Date cDate) {
         this.cDate = cDate;
-    }
-
-    public Date getmDate() {
-        return mDate;
-    }
-
-    public void setmDate(Date mDate) {
-        this.mDate = mDate;
     }
 
     public BigDecimal getAmount() {
@@ -638,23 +626,5 @@ public class OptionDurationDetailDto extends TrdFinProductDealTotal implements P
      */
     public void setCDate(Date cDate) {
         this.cDate = cDate;
-    }
-
-    /**
-     * 获取 到期日
-     *
-     * @return mDate 到期日
-     */
-    public Date getMDate() {
-        return this.mDate;
-    }
-
-    /**
-     * 设置 到期日
-     *
-     * @param mDate 到期日
-     */
-    public void setMDate(Date mDate) {
-        this.mDate = mDate;
     }
 }

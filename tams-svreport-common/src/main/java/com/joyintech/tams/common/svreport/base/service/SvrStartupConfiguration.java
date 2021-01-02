@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -33,7 +35,8 @@ import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
  */
 @Component
 public class SvrStartupConfiguration extends StartupConfiguration{
-    
+    private final Logger logger = LoggerFactory.getLogger(SvrStartupConfiguration.class);
+
     public final static String CACHEKEY="SVR_TYPEMAPPING"; 
     
     @Autowired
@@ -53,5 +56,10 @@ public class SvrStartupConfiguration extends StartupConfiguration{
 //        }
         CacheUtil.putAppCache(CACHEKEY, typeMap);
         
+    }
+
+    @Override
+    public void run() {
+        logger.info("TAMSSVR服务不重新加载缓存222222");
     }
 }

@@ -157,4 +157,16 @@
         <include refid="com.joyintech.tams.common.base.dao.StlPayOrdersMapper.Sql_All_Data" />
         WHERE TRADE_ID = #{totalTradeId}
     </select>
+    
+    <select id="getCollectType" resultType="string">
+        select 
+        fpa.COLLECT_TYPE collectType
+        from 
+        FIN_PRODUCT fp
+        left join FIN_PRODUCT_ADD fpa on fpa.FINPROD_ID = fp.FINPROD_ID
+        <where>       
+         fp.FINPROD_MARKET_ID = #{finprodMarketId}
+         and fp.FINPROD_TYPE = 'F26' and fp.FINPROD_TYPE2 = 'F28' 
+        </where>
+    </select>
 </mapper>

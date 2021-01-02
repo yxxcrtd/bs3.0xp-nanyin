@@ -5,9 +5,20 @@
         delete from PRD_STANDING_BOOK where CDATE = to_date(#{batchDate,jdbcType=DATE}, 'yyyy-MM-dd')
 		<if test="productIdList != null and productIdList.size > 0">
 			and (FINPROD_ID in
-			(<foreach collection="productIdList" item="item" separator=",">#{item}</foreach>)
+			<foreach collection="productIdList" item="item" index="index" open="(" separator="," close=")">
+				<if test="(index % 999) == 998">
+					null) OR FINPROD_ID in (
+				</if>
+				#{item}
+			</foreach>
 			OR FINPROD_ID in
-			(<foreach collection="productIdList" item="item" separator=",">concat('F16_',#{item})</foreach>))
+			<foreach collection="productIdList" item="item" index="index" open="(" separator="," close=")">
+				<if test="(index % 999) == 998">
+					null) OR FINPROD_ID in (
+				</if>
+				concat('F16_',#{item})
+			</foreach>
+			)
 		</if>
     </delete>
 
@@ -529,9 +540,19 @@
         WHERE T1.FINPROD_TYPE2 = 'F16' AND T1.LIQUIDATION_DATE &gt;= to_date(#{batchDate,jdbcType=DATE}, 'yyyy-MM-dd')
 		<if test="productIdList != null and productIdList.size > 0">
 			AND (T1.FINPROD_ID IN
-			(<foreach collection="productIdList" item="item" separator=",">#{item}</foreach>)
+			<foreach collection="productIdList" item="item" separator="," open="(" index="index" close=")">
+				<if test="(index % 999) == 998">
+					null) OR T1.FINPROD_ID in (
+				</if>
+				#{item}
+			</foreach>
 			OR T2.PORTFOLIO_ID IN
-			(<foreach collection="productIdList" item="item" separator=",">#{item}</foreach>))
+			<foreach collection="productIdList" item="item" separator="," open="(" index="index" close=")">
+				<if test="(index % 999) == 998">
+					null) OR T2.PORTFOLIO_ID in (
+				</if>
+				#{item}
+			</foreach>
 		</if>
 		)
     </sql>

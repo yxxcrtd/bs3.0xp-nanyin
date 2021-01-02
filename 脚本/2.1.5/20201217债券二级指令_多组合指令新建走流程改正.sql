@@ -1,0 +1,6 @@
+--add by yangwenjun 20201216 债券二级指令_多组合指令新建走流程改正 start
+delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID='EtrInvestBondInfo002' and ELEMENT_ID='EtrInvestBondInfo003_btn_submit';
+delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID='EtrInvestBondInfo003' and ELEMENT_ID='EtrInvestBondInfo003_btn_submit';
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('EtrInvestBondInfo002', 'EtrInvestBondInfo003_btn_submit', 'oneApproval', 'system', '0001', TIMESTAMP '2019-08-15 00:00:00', 'system', TIMESTAMP '2019-08-15 00:00:00', 'ALL', '02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('EtrInvestBondInfo003', 'EtrInvestBondInfo003_btn_submit', 'oneApproval', 'system', '0001', TIMESTAMP '2019-08-15 00:00:00', 'system', TIMESTAMP '2019-08-15 00:00:00', 'ALL', '02');
+--add by yangwenjun 20201216 债券二级指令_多组合指令新建走流程改正 end

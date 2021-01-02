@@ -107,7 +107,7 @@ public class ValAssetBook006Controller extends BaseController {
     public AjaxResult check(@RequestBody @Validated({
             ValidateGroupDelete.class}) ValAssetBook006Dto dto, BindingResult result) {
         if (result.getErrorCount() == 0) {
-            if("02".equals(CacheUtil.getSysParam("AUTHORITY_TYPE"))&&!"01".equals(CommonUtil.getInsitutionTypeByUserName(LoginUserUtil.getUserName()))){
+            if("02".equals(CacheUtil.getSysParam("AUTHORITY_TYPE"))&&!"01".equals(CommonUtil.getInsitutionTypeByUserName(LoginUserUtil.getUserName()))&&"01".equals(dto.getBooksetTypeCode())){
                 return new AjaxResult("仅省级机构能修改账套模板！", MessageType.错误消息);
             }
             WflValidInputParameter parameter = new WflValidInputParameter();

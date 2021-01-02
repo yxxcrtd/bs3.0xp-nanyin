@@ -767,6 +767,7 @@ $(function() {
             $('#type6').attr('disabled',true).trigger('change');
             $('#finprodMarketId').attr('disabled', true).trigger('change');
             $('.btn-save').hide();
+            $('#buyOutRate').attr('disabled',true).trigger('change');
         }
         // 绑定按钮事件
         $('#FinProjectTargetAsset002_btn_save').click(function() {

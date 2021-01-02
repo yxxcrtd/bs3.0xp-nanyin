@@ -464,11 +464,11 @@ public class FinProductBuild002Service extends BaseService<FinProductBuild002Dto
 //                    entity.getBussRepFinProductInfoDto().setRepRaisePenddate(entity.getFirstSaleVdate());
                     //发行机构代码
                     // update by shengqiqiang 产品新建时登记银行代码从 机构登记银行代码管理 功能接入  2020.12.8 start
-                    if(CommonUtil.isBAmodel()){
-                        entity.getBussRepFinProductInfoDto().setRepIssuePartyId(CommonUtil.getInstitutionCodeByLoginUser_ms());
-                    } else {
-                        entity.getBussRepFinProductInfoDto().setRepIssuePartyId(CommonUtil.selectBankCode());
-                    }
+//                    if(CommonUtil.isBAmodel()){
+//                        entity.getBussRepFinProductInfoDto().setRepIssuePartyId(CommonUtil.getInstitutionCodeByLoginUser_ms());
+//                    } else {
+                    entity.getBussRepFinProductInfoDto().setRepIssuePartyId(CommonUtil.selectBankCode());
+//                    }
                     //entity.getBussRepFinProductInfoDto().setRepIssuePartyId(CacheUtil.getSysParam("SVR_ISSUE_PARTY_ID"));
                     // update by shengqiqiang 产品新建时登记银行代码从 机构登记银行代码管理 功能接入  2020.12.8 end
                     

@@ -303,7 +303,7 @@
 	</select>
     <select id = "getTdyUnitValueAndTdyShareAmt" resultType="com.joyintech.service.product.productduration.netproductbonusscheme.dto.FinNetProductBonusSchemeDto">
 		SELECT
-		 Round(TDY_UNIT_VALUE,4) TDY_UNIT_VALUE,
+		TDY_UNIT_VALUE TDY_UNIT_VALUE,
 		TDY_SHARE_AMT,
 		TDY_ASSET_AMT
 		FROM

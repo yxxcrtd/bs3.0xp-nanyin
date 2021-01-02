@@ -83,6 +83,11 @@ public class DrawBaseInfoSelectComResult extends NeedOperateEntity {
     private String baseSubjectNature;
 
     /**
+     * 摊销额小于剩余摊销时是否只摊销到0
+     */
+    private String amorizeRule;
+
+    /**
      * 取得 账套代码
      * 
      * @return 账套代码
@@ -272,5 +277,13 @@ public class DrawBaseInfoSelectComResult extends NeedOperateEntity {
      */
     public void setBaseSubjectNature(String baseSubjectNature) {
         this.baseSubjectNature = baseSubjectNature;
+    }
+
+    public String getAmorizeRule() {
+        return amorizeRule;
+    }
+
+    public void setAmorizeRule(String amorizeRule) {
+        this.amorizeRule = amorizeRule;
     }
 }

@@ -127,12 +127,15 @@ public class TrdPlanNetInvestTradeValidator implements TradeCommonValidator {
                         errorList.add(new ValidMessage("shareAmt", this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdPlanNetInvestTrade003.tradeAmtSha"))));
                     }
                 }
-                if (tradeAmt != null && tradeAmt.compareTo(zero) == -1) {
-                    errorList.add(new ValidMessage("tradeAmt", this.getMessage("BUSS_COM_E_0004", this.getMessage("TrdFundInvestTrade002.tradeAmt"),"0")));
-                }
-                if (shareAmt != null && shareAmt.compareTo(zero) == -1) {
-                    errorList.add(new ValidMessage("shareAmt", this.getMessage("BUSS_COM_E_0004", this.getMessage("TrdFundInvestTrade002.tradeSha"),"0")));
-                }
+
+                //dto内已经有过校验，无需重复校验
+//                if (tradeAmt != null && tradeAmt.compareTo(zero) == -1) {
+//                    errorList.add(new ValidMessage("tradeAmt", this.getMessage("BUSS_COM_E_0004", this.getMessage("TrdFundInvestTrade002.tradeAmt"),"0")));
+//                }
+//                if (shareAmt != null && shareAmt.compareTo(zero) == -1) {
+//                    errorList.add(new ValidMessage("shareAmt", this.getMessage("BUSS_COM_E_0004", this.getMessage("TrdFundInvestTrade002.tradeSha"),"0")));
+//                }
+
                 if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
                     BigDecimal assetAvailablePosition = dto.getAssetAvailablePosition();
                     if (assetAvailablePosition != null && shareAmt != null
@@ -272,12 +275,16 @@ public class TrdPlanNetInvestTradeValidator implements TradeCommonValidator {
                         errorList.add(new ValidMessage("shareAmt", this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdPlanNetInvestTrade003.tradeAmtSha"))));
                     }
                 }
-                if (tradeAmt != null && tradeAmt.compareTo(zero) == -1) {
-                    errorList.add(new ValidMessage("tradeAmt", this.getMessage("BUSS_COM_E_0004", this.getMessage("TrdFundInvestTrade002.tradeAmt"), "0")));
-                }
-                if (shareAmt != null && shareAmt.compareTo(zero) == -1) {
-                    errorList.add(new ValidMessage("shareAmt", this.getMessage("BUSS_COM_E_0004", this.getMessage("TrdFundInvestTrade002.tradeSha"), "0")));
-                }
+
+                //解决点击提交提示语有重复的问题
+                //dto内已经有了校验，无需重复进行校验
+//                if (tradeAmt != null && tradeAmt.compareTo(zero) == -1) {
+//                    errorList.add(new ValidMessage("tradeAmt", this.getMessage("BUSS_COM_E_0004", this.getMessage("TrdFundInvestTrade002.tradeAmt"),"0")));
+//                }
+//                if (shareAmt != null && shareAmt.compareTo(zero) == -1) {
+//                    errorList.add(new ValidMessage("shareAmt", this.getMessage("BUSS_COM_E_0004", this.getMessage("TrdFundInvestTrade002.tradeSha"),"0")));
+//                }
+
                 if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
                     BigDecimal assetAvailablePosition = dto.getAssetAvailablePosition();
                     if (assetAvailablePosition != null && shareAmt != null
@@ -361,6 +368,22 @@ public class TrdPlanNetInvestTradeValidator implements TradeCommonValidator {
                             getMessage("BUSS_COM_E_0003",
                                     param.get("portfolioId") + "  " + getMessage("TrdPlanNetInvestTrade002.tradeAmt"),
                                     getMessage("TrdFundInvestTrade002.accAvailableCash"))));
+                }
+                
+                //同时验证卖出方是否有足够的持仓
+                PtlSecPositionFlowDto ptlSecPositionFlowDto = new PtlSecPositionFlowDto();
+                ptlSecPositionFlowDto.setCdate(dto.getTradeDate());
+                ptlSecPositionFlowDto.setPortfolioId(dto.getPortfolioId());
+                ptlSecPositionFlowDto.setSecAcctId(dto.getChlId());
+                ptlSecPositionFlowDto.setFinprodId(dto.getFinprodId());
+                BigDecimal assetPosition = trdPlanNetInvestTrade002Service.getPtlSecPosition(ptlSecPositionFlowDto);
+                if (StringUtil.isNotEmpty(dto.getShareAmt())) {
+                    if (assetPosition.compareTo(dto.getShareAmt()) == -1) {
+                        errorList.add(new ValidMessage("",
+                                getMessage("BUSS_COM_E_0003",
+                                        ptlSecPositionFlowDto.getPortfolioId() + "  " + getMessage("TrdPlanNetInvestTrade001.shareAmt"),
+                                        getMessage("TrdFundInvestTrade002.assetAvailablePosition"))));
+                    }
                 }
 
 //                if (dto.getShareAmt() != null) {

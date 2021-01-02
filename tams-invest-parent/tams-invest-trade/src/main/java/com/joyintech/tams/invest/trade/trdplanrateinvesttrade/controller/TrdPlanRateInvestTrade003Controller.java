@@ -263,6 +263,12 @@ public class TrdPlanRateInvestTrade003Controller extends BaseController{
         Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
         isEleShow.putAll(map);
         model.addAttribute("isEleShow", isEleShow);
+        
+        //add by yujiaping 2020-12-16 TISHKBS-1259 计划利率型交易新建时，清算速度默认T+0，并且不可修改start
+        TrdPlanRateInvestTradeDto entity = new TrdPlanRateInvestTradeDto();
+        entity.setMySettleSpeed(DictCodeList.清算速度_T_0.getValue());
+        model.addAttribute("entity", entity);
+        //add by yujiaping 2020-12-16 TISHKBS-1259 计划利率型交易新建时，清算速度默认T+0，并且不可修改end
         return super.init(model);
     }
     /**

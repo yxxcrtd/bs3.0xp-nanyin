@@ -147,9 +147,13 @@ select a.prodType,a.VDATE,a.MDATE,a.PAY_DATE,a.PAY_STATUS,a.finprodId from(
                 WHEN BOK_POSITION_PRDFEE.FINPROD_ID IS NOT NULL AND (BOK_POSITION_PRDFEE.TDY_UNPAID_INTINCEXP IS NULL OR BOK_POSITION_PRDFEE.TDY_UNPAID_INTINCEXP= 0)
                 THEN '无需支付'       
                 ELSE '未支付' end PAY_STATUS,
-                <!-- wangyang1 产品二级法人改造 start -->
-                FIN_CASH_PLAN.FINPROD_ID  finprodId
+                <!-- modify by yujiaping 20201219 ZGBS-125 净值分档产品的有付费规则的费用，在付费计划调整中，查不到付费计划 start --> 
+                <!-- wangyang1 产品二级法人改造 start -->   
+                CASE WHEN SUBSTR (FIN_CASH_PLAN.FINPROD_ID, 1, INSTR (FIN_CASH_PLAN.FINPROD_ID, '_', 1, 2) - 1) IS NOT NULL
+                THEN SUBSTR (FIN_CASH_PLAN.FINPROD_ID, 1, INSTR (FIN_CASH_PLAN.FINPROD_ID, '_', 1, 2) - 1)             
+                ELSE  FIN_CASH_PLAN.FINPROD_ID   end finprodId        
                 <!-- wangyang1 产品二级法人改造 end -->
+               <!-- modify by yujiaping 20201219 ZGBS-125 净值分档产品的有付费规则的费用，在付费计划调整中，查不到付费计划 end --> 
 		from																									
 				FIN_CASH_PLAN
 		INNER JOIN FIN_CASH_INFO  

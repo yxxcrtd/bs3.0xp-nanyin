@@ -64,7 +64,7 @@ public class TrdOptionDuration003Controller extends BaseController {
                 entity.setFqxqDate(iPlatformDate.getSysDate());
             }
             //update zhangweiqi 2020-02-12 流程中显示原编号end
-            entity.setmDate(DateUtil.parse(entity.getMdateStr()));
+            entity.setMdate(DateUtil.parse(entity.getMdateStr()));
             model.addAttribute("totleTradeId", entity.getTotleTradeId());
         }
         else {//查看和编辑页面

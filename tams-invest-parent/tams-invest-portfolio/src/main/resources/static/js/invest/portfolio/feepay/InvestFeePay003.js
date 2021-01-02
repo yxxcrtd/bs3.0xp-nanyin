@@ -12,7 +12,7 @@
             url: JoyinUtil.getRealPath('/invest/portfolio/feepay/InvestFeePay003/queryFeePositionDetail'),
             type: 'POST',
             data: function() {
-                return {secAcctId : secAcctId, ptlId : ptlId, calcStartDate : calcStartDate, calcEndDate : calcEndDate, feeType: feeType};
+                return {secAcctId : secAcctId, ptlId : ptlId, calcStartDate : calcStartDate, calcEndDate : calcEndDate, feeType: feeType, confirmFlag: confirmFlag, tradeId: tradeId};
             }
         },
         searchOnInit: true,
@@ -27,7 +27,7 @@
             ,{field :'psStr',width:150,title : 'InvestFeePay003.table.tradePs',sortable:false, width: 150}
             ,{field :'assetCode',width:150,title : 'InvestFeePay003.table.trustCode',sortable:false, width: 150}
             ,{field :'assetName',width:150,title : 'InvestFeePay003.table.trustName',sortable:false, width: 150}
-            ,{field :'tradeAmt',width:150,title : 'InvestFeePay003.table.tradeAmt',sortable:false, type:'number', width: 150}
+            ,{field :'tradeAmt',width:150,title : 'InvestFeePay003.table.tradeAmt',sortable:false, type:'number', width: 150, visible:false}
             ,{field :'tradeDate',width:150,title : 'InvestFeePay003.table.tradeDate',sortable:false, type:'date', width: 150}
             ,{field :'feeTypeStr',width:150,title : 'InvestFeePay003.table.feeType',sortable:false, width: 150}
             ,{field :'payAmt',width:150,title : 'InvestFeePay003.table.payAmt',sortable:false, type:'number', width: 150}

@@ -36,7 +36,6 @@ import com.joyintech.tams.common.base.dao.RepProdDeclareMapper;
 import com.joyintech.tams.common.base.dao.RepProdIssueMapper;
 import com.joyintech.tams.common.base.entity.FinCashPlan;
 import com.joyintech.tams.common.base.entity.FinOpenPlan;
-import com.joyintech.tams.common.base.entity.FinOpenRule;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.FinProductAdd;
 import com.joyintech.tams.common.base.entity.PrdMdateAdjust;
@@ -331,6 +330,15 @@ public class FinMdateAdjustment002Service extends BaseService<FinMdateAdjustment
         	// 登录产品到期日调整信息
             prdMdateAdjustMapper.updateByPrimaryKeySelective(entity);
         }
+        
+        // 更新账户维护费计提结束日 qz begin
+        Map<String,Object> feeMap = new HashMap<>();
+        feeMap.put("booksetId", entity.getFinprodId());
+        feeMap.put("mDate", DateUtil.format(DateUtil.addDay(entity.getMdate(), -1)));
+        restTemplate.postForObject(
+				ServiceApplication.PORTFOLIO_SERVICE_NAME + "/FeeProvisionSetting/updateRecord", feeMap,
+				Integer.class);
+        // 更新账户维护费计提结束日 qz end
 
         // 4.2 到期日调整后，自动更新产品信息：产品到期日、产品期限（天）、期限品种。
         // 更新项目：

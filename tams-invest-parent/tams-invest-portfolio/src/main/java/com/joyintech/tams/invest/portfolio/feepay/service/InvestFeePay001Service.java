@@ -125,4 +125,18 @@ public class InvestFeePay001Service extends CommonExportService<InvestFeePay001D
             + "/InvestFeePay/isAlreadyRevoked?tradeId=" + tradeId,
             Boolean.class);
     }
+    
+    /**
+     * 根据交易编号查询该交易是否已被撤销
+     *
+     * @param tradeId 交易编号
+     * @return 该交易是否已被撤销
+     * @see
+     * @since 1.0
+     */
+    public String inputDataType(String tradeId) {
+        return restTemplate.getForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME
+                        + "/InvestFeePay/inputDataType?tradeId=" + tradeId,
+                String.class);
+    }
 }

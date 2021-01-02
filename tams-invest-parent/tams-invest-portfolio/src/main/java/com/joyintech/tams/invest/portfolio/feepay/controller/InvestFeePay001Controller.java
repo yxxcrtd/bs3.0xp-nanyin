@@ -10,12 +10,13 @@
 
 package com.joyintech.tams.invest.portfolio.feepay.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+
 import javax.validation.Valid;
-import com.joyintech.tams.constant.DictCodeListExt1;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,21 +26,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.ExportUtil;
+import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.common.base.dao.MstFeeinfoMapper;
 import com.joyintech.tams.common.base.dao.TrdFinProductDealTotalMapper;
 import com.joyintech.tams.common.base.entity.MstFeeinfo;
@@ -47,6 +49,7 @@ import com.joyintech.tams.common.base.entity.TrdFinProductDealTotal;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.portfolio.feepay.dto.InvestFeePay001Dto;
 import com.joyintech.tams.invest.portfolio.feepay.dto.InvestFeePay002Dto;
 import com.joyintech.tams.invest.portfolio.feepay.service.InvestFeePay001Service;
@@ -100,19 +103,19 @@ public class InvestFeePay001Controller extends BaseController {
         /*费用类型 guyunfei 20190923 end*/
         model.addAttribute("statusUndo", DictCodeListExt1.有效状态_流程中.getValue());
         
-//        setSelectOptionToModel(model, DictCode.有效状态);
-        SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.有效状态, null);
-        List<SelectOptionDto> options = selectDto.getOptions();
-        List<SelectOptionDto> optionsNew = new ArrayList<SelectOptionDto>();
-        for (SelectOptionDto dto : options) {
-            if (StringUtil.equals(DictCodeListExt1.有效状态_有效.getValue(), dto.getId())
-                || StringUtil.equals(DictCodeListExt1.有效状态_撤销.getValue(), dto.getId())
-                || StringUtil.equals(DictCodeListExt1.有效状态_流程中.getValue(), dto.getId())) {
-                optionsNew.add(dto);
-            }
-        }
-        model.addAttribute(DictCode.有效状态.getValue(),
-            JsonUtils.objectArray2Json(optionsNew.toArray()));
+        setSelectOptionToModel(model, DictCode.有效状态);
+//        SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.有效状态, null);
+//        List<SelectOptionDto> options = selectDto.getOptions();
+//        List<SelectOptionDto> optionsNew = new ArrayList<SelectOptionDto>();
+//        for (SelectOptionDto dto : options) {
+//            if (StringUtil.equals(DictCodeListExt1.有效状态_有效.getValue(), dto.getId())
+//                || StringUtil.equals(DictCodeListExt1.有效状态_撤销.getValue(), dto.getId())
+//                || StringUtil.equals(DictCodeListExt1.有效状态_流程中.getValue(), dto.getId())) {
+//                optionsNew.add(dto);
+//            }
+//        }
+//        model.addAttribute(DictCode.有效状态.getValue(),
+//            JsonUtils.objectArray2Json(optionsNew.toArray()));
         
         Map<String, Object> map = RequestUtil.getPageParam();
         if(StringUtil.isNotEmpty(map.get("remType"))) {
@@ -335,12 +338,31 @@ public class InvestFeePay001Controller extends BaseController {
      * @since 1.0
      */
     @ResponseBody
-    @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
+    @RequestMapping(ACTION_EXPORT)
+    /*public ResponseEntity<byte[]> export()
         throws Exception {
         return investFeePay001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
-    }
+    }*/
+    public ResponseEntity<byte[]> export()
+			throws Exception {
+		 String datas = this.getParam("datas");
+		 List<InvestFeePay001Dto> param1; 
+		 if (datas == null) {
+			 return investFeePay001Service.export(this.getPageId(),RequestUtil.getPageParam());
+		 }
+		 param1 = JsonUtils.json2List(datas, InvestFeePay001Dto.class);
+		 File outFile =  investFeePay001Service.makeFile(
+	                "/com/joyintech/tams/invest/portfolio/feepay/conf/export_conf.xml",
+	                param1);
+	            return ExportUtil.export(
+	                this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+	                                     + DateUtil.format(DateUtil.platDateFromCache())
+	                                     + SystemGlobalConstant.CLOSE_PARENTHESIS
+	                                     + SystemGlobalConstant.POINT
+	                                     + FileNameUtil.getFileExtName(outFile),
+	                outFile, true);
+	    }
 
     /**
      * 根据费用代码查询费用基本信息

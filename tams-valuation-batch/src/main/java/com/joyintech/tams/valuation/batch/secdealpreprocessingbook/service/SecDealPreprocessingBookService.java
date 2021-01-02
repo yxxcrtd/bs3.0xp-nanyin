@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.util.DateUtil;
+import com.google.common.collect.Lists;
 import com.joyintech.tams.constant.*;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1231,12 +1232,18 @@ public class SecDealPreprocessingBookService {
                 }
             }
         }
+        //设计变更 增加参数：还本是否冲减摊销，济宁银行个性化
         // 定义 变量.冲减溢折价 = 变量.结转日溢折价科目余额 * 交易明细.交易成本/（变量.成本科目数量*交易明细.单位面值）
-        BigDecimal varCjyzj = ArithmeticUtil.multiply(varZjrYzjye, dealNow.getPrinAmt());
-        varCjyzj = ArithmeticUtil.divide(varCjyzj, param.getVarCostSubjectNum(),
-            NumberEnum.HIGH_PREC_NUM.getCode());
-        varCjyzj = ArithmeticUtil.divide(varCjyzj, dealNow.getParValue(),
-            NumberEnum.MONEY.getCode());
+        BigDecimal varCjyzj = BigDecimal.ZERO;
+        Map<String, Object>  booksetExt = accountingCommonService.getValBokBooksetExtForMap(acctEntity.getBooksetId(),
+                Lists.newArrayList(new String[] {ValDictCodeList.账套配置表参数项_还本是否冲减摊销.getValue()}));
+        if(StringUtil.equals(booksetExt.get(ValDictCodeList.账套配置表参数项_还本是否冲减摊销.getValue()), DictCodeList.是否_是.getValue())){
+            varCjyzj = ArithmeticUtil.multiply(varZjrYzjye, dealNow.getPrinAmt());
+            varCjyzj = ArithmeticUtil.divide(varCjyzj, param.getVarCostSubjectNum(),
+                    NumberEnum.HIGH_PREC_NUM.getCode());
+            varCjyzj = ArithmeticUtil.divide(varCjyzj, dealNow.getParValue(),
+                    NumberEnum.MONEY.getCode());
+        }
         // 定义 变量.冲减成本 = 0
         BigDecimal varCjcb = BigDecimal.ZERO;
         // 定义 变量.冲减数量 = 0
@@ -1259,12 +1266,14 @@ public class SecDealPreprocessingBookService {
 
         }
         else {
-            // 变量.冲减溢折价 = 变量.结转日溢折价科目余额 * 交易明细.交易成本/（变量.成本科目数量*交易明细.单位面值）
-            varCjyzj = ArithmeticUtil.multiply(varZjrYzjye, varPrinAmt);
-            varCjyzj = ArithmeticUtil.divide(varCjyzj, varZjrCbsl,
-                NumberEnum.HIGH_PREC_NUM.getCode());
-            varCjyzj = ArithmeticUtil.divide(varCjyzj, dealNow.getParValue(),
-                NumberEnum.MONEY.getCode());
+            if(StringUtil.equals(booksetExt.get(ValDictCodeList.账套配置表参数项_还本是否冲减摊销.getValue()), DictCodeList.是否_是.getValue())){
+                // 变量.冲减溢折价 = 变量.结转日溢折价科目余额 * 交易明细.交易成本/（变量.成本科目数量*交易明细.单位面值）
+                varCjyzj = ArithmeticUtil.multiply(varZjrYzjye, varPrinAmt);
+                varCjyzj = ArithmeticUtil.divide(varCjyzj, varZjrCbsl,
+                        NumberEnum.HIGH_PREC_NUM.getCode());
+                varCjyzj = ArithmeticUtil.divide(varCjyzj, dealNow.getParValue(),
+                        NumberEnum.MONEY.getCode());
+            }
             // 变量.冲减成本 = 变量.结转日成本科目余额 * 交易明细.交易成本/（变量.成本科目数量*交易明细.单位面值）
             varCjcb = ArithmeticUtil.multiply(varZjrCbye, varPrinAmt);
             varCjcb = ArithmeticUtil.divide(varCjcb, varZjrCbsl,
@@ -1691,11 +1700,15 @@ public class SecDealPreprocessingBookService {
         }
         else {
             // 变量.冲减溢折价 = 变量.结转日溢折价科目余额 * 变量.交易成本/（变量.结转日成本科目数量*交易明细.单位面值）
-            varCjyzj = ArithmeticUtil.multiply(varZjrYzjye, varPrinAmt);
-            varCjyzj = ArithmeticUtil.divide(varCjyzj, varZjrCbsl,
-                NumberEnum.HIGH_PREC_NUM.getCode());
-            varCjyzj = ArithmeticUtil.divide(varCjyzj, dealNow.getParValue(),
-                NumberEnum.MONEY.getCode());
+            Map<String, Object>  booksetExt = accountingCommonService.getValBokBooksetExtForMap(acctEntity.getBooksetId(),
+                    Lists.newArrayList(new String[] {ValDictCodeList.账套配置表参数项_还本是否冲减摊销.getValue()}));
+          if(StringUtil.equals(booksetExt.get(ValDictCodeList.账套配置表参数项_还本是否冲减摊销.getValue()), DictCodeList.是否_是.getValue())){
+              varCjyzj = ArithmeticUtil.multiply(varZjrYzjye, varPrinAmt);
+              varCjyzj = ArithmeticUtil.divide(varCjyzj, varZjrCbsl,
+                      NumberEnum.HIGH_PREC_NUM.getCode());
+              varCjyzj = ArithmeticUtil.divide(varCjyzj, dealNow.getParValue(),
+                      NumberEnum.MONEY.getCode());
+           }
             // 变量.冲减成本 = 变量.结转日成本科目余额 * 变量.交易成本/（变量.结转日成本科目数量*交易明细.单位面值）
             varCjcb = ArithmeticUtil.multiply(varZjrCbye, varPrinAmt);
             varCjcb = ArithmeticUtil.divide(varCjcb, varZjrCbsl,

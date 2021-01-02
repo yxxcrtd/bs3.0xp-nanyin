@@ -522,6 +522,8 @@
             else tpd.R_TRADE_ID end tradeId,
 			tpd2.ps
 		from TRD_PRODUCT_DEAL tpd /*卖出交易表*/
+        INNER JOIN trd_fin_product_deal_total tfpdt
+        ON tpd.totle_trade_id = tfpdt.totle_trade_id
 		left join PTL_PORTFOLIO pp on pp.PORTFOLIO_ID = tpd.COUNTER_ID
 		left join TRD_PRODUCT_DEAL tpd2 on tpd2.TRADE_ID = tpd.R_TRADE_ID /*买入交易表*/
 		LEFT JOIN FIN_PRODUCT fp ON tpd.FINPROD_ID = fp.FINPROD_ID
@@ -539,6 +541,8 @@
             else tpd.TRADE_ID end tradeId,
 			tpd.ps
 		from TRD_PRODUCT_DEAL tpd /*买入交易表*/
+        INNER JOIN trd_fin_product_deal_total tfpdt
+        ON tpd.totle_trade_id = tfpdt.totle_trade_id
 		left join PTL_PORTFOLIO pp on pp.PORTFOLIO_ID = tpd.COUNTER_ID
 		left join TRD_PRODUCT_DEAL tpd2 on tpd2.TRADE_ID = tpd.R_TRADE_ID /*卖出交易表*/
 		LEFT JOIN FIN_PRODUCT fp ON tpd.FINPROD_ID = fp.FINPROD_ID

@@ -372,6 +372,7 @@ public enum DictCodeListTableId implements BaseDictCodeList {
     //2020-02-17 add by 严亚 会计场景代码_存放同业_红利再投
     会计场景代码_存放同业_红利再投(DictCode.会计场景代码,"1112","存放同业_红利再投"),
     
+    会计场景代码_费用预提(DictCode.会计场景代码,"8201","费用预提"),
     ;
     /**
      * 对应于数据字典code

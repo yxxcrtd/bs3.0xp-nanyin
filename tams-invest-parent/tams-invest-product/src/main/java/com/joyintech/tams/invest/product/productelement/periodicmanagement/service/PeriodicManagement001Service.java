@@ -76,11 +76,18 @@ public class PeriodicManagement001Service extends CommonExportService<PeriodicMa
 		    FinBaseRuleInfo finBaseRuleInfo产品披露 = periodicManagement002Service.queryFinBaseRuleInfo(dto, DictCodeListExt1.业绩基准类型_产品披露.getValue());
             FinBaseRuleInfo finBaseRuleInfo浮动管理费 = periodicManagement002Service.queryFinBaseRuleInfo(dto, DictCodeListExt1.业绩基准类型_浮动管理费.getValue());
             if (StringUtil.isNotEmpty(finBaseRuleInfo产品披露)) {
-                BeanUtil.copyPropertiesIgnoreNull(bussBenchMarkInfoDto, finBaseRuleInfo产品披露);  
+                BeanUtil.copyPropertiesIgnoreNull(bussBenchMarkInfoDto, finBaseRuleInfo产品披露);
+
+                //添加产品披露的利率类型
+				dto.setRateType(finBaseRuleInfo产品披露.getRateType());
             }
             if (StringUtil.isNotEmpty(finBaseRuleInfo浮动管理费)) {
                BeanUtil.copyPropertiesIgnoreNull(bussFinProductFloatFeeDto, finBaseRuleInfo浮动管理费);
-               dto.setRateType(finBaseRuleInfo浮动管理费.getRateType());
+
+               //增加一层校验，如果此时产品披露已经有利率类型的话就不用再进行覆盖添加了
+               if(StringUtil.isEmpty(dto.getRateType())){
+				   dto.setRateType(finBaseRuleInfo浮动管理费.getRateType());
+			   }
             }
             dto.setBussBenchMarkInfoDto(bussBenchMarkInfoDto);
             dto.setBussFinProductFloatFeeDto(bussFinProductFloatFeeDto);

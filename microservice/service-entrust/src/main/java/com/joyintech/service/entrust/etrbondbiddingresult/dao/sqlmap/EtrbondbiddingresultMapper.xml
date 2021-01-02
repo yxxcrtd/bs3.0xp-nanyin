@@ -234,4 +234,9 @@
 		update BID_ORDER_BID_PRICE  set TRADE_ID = #{tradeId,jdbcType = VARCHAR}
 		where ENTRUST_ID= #{entrustId,jdbcType=VARCHAR} and WIN_PRICE = #{winPrice,jdbcType=DECIMAL}
 	</update>
+
+	<update id="deleteTradeId" parameterType="java.util.Map">
+		update BID_ORDER_BID_PRICE  set TRADE_ID = null
+		where ENTRUST_ID= #{entrustId,jdbcType=VARCHAR} and TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+	</update>
 </mapper>

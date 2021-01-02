@@ -51,6 +51,7 @@ import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
 import com.joyintech.tams.valuation.common.service.BookAccountCommonService;
 import com.joyintech.tams.common.base.entity.BokDetailId;
 import com.joyintech.tams.common.base.entity.BokFeeTableSet;
+import com.joyintech.tams.common.base.entity.PaTrdProductDeal;
 import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
 
 /**
@@ -130,7 +131,8 @@ public class InvestFeePayProcessorService {
 		// 交易明细 ： 交易类账务处理结果.交易明细列表
 		for (FinProductDealInfoComDTO item : listFinProductDealInfoComDTONow) {
 
-			if (DictCodeListExt1.金融产品类型_交易费用.getValue().equals(item.getFinprodType())) {
+			if (DictCodeListExt1.金融产品类型_交易费用.getValue().equals(item.getFinprodType())
+					|| DictCodeListExt1.金融产品类型_预提费用.getValue().equals(item.getFinprodType())) {
 				getDealFee(returnResult, item, listFeeTableSet, acctEntity, batchExecuteInfo);
 			} else {
 				// 其他处理
@@ -229,7 +231,8 @@ public class InvestFeePayProcessorService {
 //		}
 		for (BokFeeTableSet feeTableSet : listFeeTableSet) {
 			// 结算手续费去重复
-			if (DictCodeListExt1.金融产品类型_交易费用.getValue().equals(feeTableSet.getFinprodType())
+			if ((DictCodeListExt1.金融产品类型_交易费用.getValue().equals(feeTableSet.getFinprodType())
+					|| DictCodeListExt1.金融产品类型_预提费用.getValue().equals(feeTableSet.getFinprodType()))
 					&& item.getPs().equals(feeTableSet.getPs())
 					&& feeList.contains(feeTableSet.getFeeTypeId())) {
 				String key = feeTableSet.getFinprodType() + feeTableSet.getPs() + feeTableSet.getTableId();
@@ -666,6 +669,50 @@ public class InvestFeePayProcessorService {
 						} else {
 							// 金额元素.应付费用 变量.交易各种费用.结算手续费
 							accountAmountMap.put(BookConstant.SETTLEMENTFEE, dealTypesFeeDto.getSettlementFee());
+						}
+					}else if (DictCodeBaseSubjectNatrue.预提费用.getValue().equals(fee.getBaseSubjectNature())
+							&& !StringUtils.isEmpty(bokDetailId)) {
+//						// 变量.交易各种费用.账户维护费
+//				        accountSceneMap.put(BookConstant.BOK_DETAIL_COMMISSION, dealTypesFeeDto.getCommissionCode());
+						if (DictCodeList.是否_是.getValue().equals(item.getIsClean())) {
+							// 取账务明细代码，下面直接用该账务明细代码即可
+//							BokDetailId bdiDto = bookCommonLogic.selectBokdetailIdYT(item.getProdId(), 
+//			            			DateUtil.format(item.getTradeDate(), "yyyy-MM-dd"), DictCodeListExt1.金融产品类型_预提费用.getValue());
+//							bokDetailId = bdiDto.getBokDetailId();
+							SubjectBalanceSearchDto searchDto = setSubjectBalanceSearchDto(item, fee, bokDetailId);
+//							// 调用共通方法：科目余额汇总查询
+//							Map<String, BigDecimal> map = accountingCommonService.getSubjectBalanceCollection(searchDto,
+//									DictCodeList.余额方向_贷方.getValue(),null);
+//							// 科目余额
+//							BigDecimal subjectBalance = map.get(item.getCcy());
+//							// 金额元素.预提金额<--返回值.科目余额
+							
+							// 跨季度支付的原因改为从交易表获取理论支付金额
+							Map<String, Object> paMap = new HashMap<>();
+							paMap.put("tradeId", item.getTradeId());
+							PaTrdProductDeal paTrdProductDeal = bookCommonLogic.getPaTrdProductDeal(paMap);
+							BigDecimal theoryAmt = paTrdProductDeal.getTheoryAmt();
+							accountAmountMap.put(BookConstant.YTAMT, theoryAmt);
+							// 金额元素.实付金额
+							accountAmountMap.put(BookConstant.SFAMT, item.getTradeAmt());
+							// if 变量.交易各种费用.账户维护费 - 金额元素.应付费用 >0
+							BigDecimal v1 = item.getTradeAmt() == null ? BigDecimal.ZERO : item.getTradeAmt();
+							BigDecimal v2 = theoryAmt == null ? BigDecimal.ZERO : theoryAmt;
+
+							if (v1.compareTo(v2) < 0) {
+								// 金额元素.账户维护费调整_贷 = -1*(变量.交易各种费用.账户维护费 - 金额元素.应付费用)
+								accountAmountMap.put(BookConstant.NETAMT_C,
+										ArithmeticUtil.multiply(new BigDecimal("-1"), ArithmeticUtil.subtract(v1, v2)));
+							} else if (v1.compareTo(v2) > 0) {
+								// 金额元素.佣金费用调整_借 = 变量.交易各种费用.账户维护费 - 金额元素.应付费用
+								accountAmountMap.put(BookConstant.NETAMT_D, ArithmeticUtil.subtract(v1, v2));
+							}
+						} else {
+							// 金额元素.预提金额
+							accountAmountMap.put(BookConstant.YTAMT, item.getTradeAmt());
+							// 金额元素.实付金额
+							accountAmountMap.put(BookConstant.SFAMT, item.getTradeAmt());
+						
 						}
 					} else {
 						// 金额元素.交易金额 = 交易明细.交易金额

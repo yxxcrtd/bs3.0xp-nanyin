@@ -691,6 +691,7 @@ public class ValItemValueGenUtil {
                 && !StringUtil.equals(DictCodeListExt1.现金流二级类型_外包服务费.getValue(), finprodType2)
                 && !StringUtil.equals(DictCodeListExt1.一次性费用类型_佣金.getValue(), finprodType2)
                 && !StringUtil.equals(DictCodeListExt1.金融产品类型_交易费用.getValue(), finprodType2)
+                && !StringUtil.equals(DictCodeListExt1.金融产品类型_预提费用.getValue(), finprodType2)
                 ) {
                 return finProduct.getFinprodType();
             }

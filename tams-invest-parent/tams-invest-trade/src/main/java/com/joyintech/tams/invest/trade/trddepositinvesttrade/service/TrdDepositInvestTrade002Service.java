@@ -479,7 +479,7 @@ public class TrdDepositInvestTrade002Service extends CommonExportService<TrdDepo
             list.add(stlPayOrdersDto);
             dto.setStlPayOrdersList(list);
         }
-        if (dto.getOperateType().equals("delete")) {
+        if (dto.getOperateType().equals("revoke")) {
             FinProductTradeDto finProductTradeDto = dto.getFinProductTradeDto();
             List<BaseTradeProductDealDto> baseDto = finProductTradeDto.getBaseTradeProductDealDtos();
             for (BaseTradeProductDealDto baDto : baseDto) {
@@ -751,14 +751,14 @@ public class TrdDepositInvestTrade002Service extends CommonExportService<TrdDepo
         		beforeWorkFlow(entity);
         	}
         }
-        else if (type.toString().equals("DELETE")) {
+        else if (type.toString().equals("REVOKE")) {
             List<BaseTradeProductDealDto> baseTradeProductDealDto = restTemplate.getForList(
                 ServiceApplication.TRADE_SERVICE_NAME + "/TrdDepositInvestTrade001/getFinDto?tradeId=" + entity.getTradeId(),
                 BaseTradeProductDealDto.class);
             FinProductTradeDto dto = new FinProductTradeDto();
             entity.setFinProductTradeDto(dto);
             entity.getFinProductTradeDto().setBaseTradeProductDealDtos(baseTradeProductDealDto);
-            entity.setOperateType("delete");
+            entity.setOperateType("revoke");
             beforeWorkFlow(entity);
         }
     }
@@ -811,7 +811,7 @@ public class TrdDepositInvestTrade002Service extends CommonExportService<TrdDepo
         // TODO Auto-generated method stub
         TrdDepositInvestTrade001Dto dto = new TrdDepositInvestTrade001Dto();
         FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
-        if (type.toString().equals("DELETE")) {
+        if (type.toString().equals("REVOKE")) {
             List<BaseTradeProductDealDto> baseTradeProductDealDto = restTemplate.getForList(
                 ServiceApplication.TRADE_SERVICE_NAME + "/TrdDepositInvestTrade001/getFinDto?tradeId=" + entity.getTradeId(),
                 BaseTradeProductDealDto.class);

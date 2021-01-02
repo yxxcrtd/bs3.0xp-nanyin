@@ -10,14 +10,17 @@
  
 package com.joyintech.tams.invest.risk.stresstestmanage.flowrisksstresstestview.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
+import com.joyintech.tams.common.base.dao.SttTestObjMapper;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.risk.stresstestmanage.flowrisksstresstestview.dto.FlowRiskStressTestView001Dto;
 import com.joyintech.tams.invest.risk.stresstestmanage.riskfactor.dto.RiskFactor001Dto;
@@ -35,6 +38,9 @@ import com.joyintech.framework.select.SelectOptionDto;
 public class FlowRiskStressTestView001Service  extends CommonExportService<FlowRiskStressTestView001Dto>
      {
    
+	@Autowired
+	private SttTestObjMapper sttTestObjMapper;
+	
 	public FlowRiskStressTestView001Dto initPage(@RequestBody Map<String, Object> param) {
 		List<FlowRiskStressTestView001Dto> i = restTemplate.postForList(
 				ServiceApplication.RISK_SERVICE_NAME + "/FlowRiskStressTestView001/initPage", param,
@@ -83,5 +89,20 @@ public class FlowRiskStressTestView001Service  extends CommonExportService<FlowR
         return restTemplate.postForList(
             ServiceApplication.RISK_SERVICE_NAME + "/FlowRiskStressTestView001/fuzzySelectScene", 
             param, SelectOptionDto.class);
+    }
+    
+    public void restart(String testId) {
+	     Map<String,Object> param = new HashMap<>();
+	     param.put("in_test_id", testId);//测试代码
+	     //获取产品组
+	     List<String> objectIds = sttTestObjMapper.getObjectIds(testId);
+	     if(objectIds.size()==0) {
+	    	 return ;
+	     }
+	     param.put("in_object_ids",String.join(",",objectIds));	     
+	     restTemplate.postForObject(
+            ServiceApplication.RISK_SERVICE_NAME +
+               "/FlowRiskStressTest001/stressTestLoad", param,
+               Integer.class);
     }
 }

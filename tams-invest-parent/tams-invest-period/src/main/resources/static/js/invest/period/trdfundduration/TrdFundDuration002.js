@@ -63,7 +63,7 @@
         , {
             field : 'tradeAmt',
             width : "200",
-            edit : true,
+//            edit : false,
             title : 'IntDetailDuration.tradeAmt',
             type : 'money',
             sortable : false
@@ -215,7 +215,7 @@
                     resetTableData();
                     needInit = false;
                 }
-            } 
+            }
         },
         data : []
     }
@@ -288,7 +288,7 @@
     });
     /**
      * 定义数据表格
-     * 
+     *
      */
     var option = {
         searchOnInit : true,
@@ -619,7 +619,7 @@
                                 if (result.data) {
                                     finAssetIntInfoList = result.data;
                                     /* 计算 数量总数 */
-                                    sumRegistShare = 0;                                    
+                                    sumRegistShare = 0;
                                     for (var i = 0; i < finAssetIntInfoList.length; i++) {
                                         sumRegistShare = JoyinMath.doAdd(sumRegistShare, finAssetIntInfoList[i].registShare);
                                         /*面值*/
@@ -630,7 +630,7 @@
                                     var unitCprice = JoyinMath.doDiv(tradeAmt, sumRegistShare, 12, JoyinMath.ROUND_HALF_UP);
                                     $("#unitCprice").val(unitCprice);
                                     $("#unitCprice").trigger("blur");
-                                    
+
                                 }
                             });
         } else {
@@ -731,19 +731,21 @@
                 var tradeAmt = JoyinMath.doMul(unitCprice,
                         finAssetIntInfos[i].registShare, 2,
                         JoyinMath.ROUND_HALF_UP);
-                finAssetIntInfos[i].tradeAmt = tradeAmt;
-                if (FUND_ASSET_TYPE_F01 == assetType) {
+//                finAssetIntInfos[i].tradeAmt = tradeAmt;
+                if (FUND_ASSET_TYPE_F01 == assetType && $('#bonusMode').val() == BONUS_MODE_02) {
                     finAssetIntInfos[i].qty = tradeAmt;
                 }
             }
         }
-        repoInfoTable.clear(function() {
-            var unitCprice = $("#unitCprice").val();
-            $.each(finAssetIntInfos, function(i, v) {
-                v.unitCprice = unitCprice;
-                repoInfoTable.addRow(v);
+        if(repoInfoTable.table){
+            repoInfoTable.clear(function() {
+                var unitCprice = $("#unitCprice").val();
+                $.each(finAssetIntInfos, function(i, v) {
+                    v.unitCprice = unitCprice;
+                    repoInfoTable.addRow(v);
+                });
             });
-        });
+        }
     }
 
     function saveOrSubmit(operateType) {
@@ -841,32 +843,44 @@
         if (assetType == FUND_ASSET_TYPE_F01 && bonusMode == BONUS_MODE_02) {
             // 权益登记日 除权日 权益登记日份额 单位分红净值不显示
 //            $('.currency').hide();
-            $("#exRightsDate").val(sysDate).trigger("change");
-            $("#registDate").val(sysDate).trigger("change");
-            $("#exRightsDate").attr("disabled",true);
-            $("#registDate").attr("disabled",true);
+            if(pageModel==PAGE_MODEL_NEW&&!isFromCheck){
+                $("#exRightsDate").val(sysDate).trigger("change");
+                $("#registDate").val(sysDate).trigger("change");
+                $("#exRightsDate").attr("disabled",true);
+                $("#registDate").attr("disabled",true);
+            }
 //            $('#unitCprice').attr("disabled","true");
 //        	triValueChange('unitCprice',1);
             triValueChange('unitCprice');
-//            triValueChange('exRightsDate');
+            if(pageModel!=PAGE_MODEL_NEW){
+                triValueChange('exRightsDate');
+            }
         }
         // 资产类型为非货币
         else if(assetType == FUND_ASSET_TYPE_F01 && bonusMode == BONUS_MODE_01){
         	$('.currency').show();
             triValueChange('tradeAmt');
-            $("#exRightsDate").val(sysDate).trigger("change");
-            $("#registDate").val(sysDate).trigger("change");
-            $("#exRightsDate").attr("disabled",true);
-            $("#registDate").attr("disabled",true);
+            if(pageModel==PAGE_MODEL_NEW&&!isFromCheck){
+                $("#exRightsDate").val(sysDate).trigger("change");
+                $("#registDate").val(sysDate).trigger("change");
+                $("#exRightsDate").attr("disabled",true);
+                $("#registDate").attr("disabled",true);
+            }
         }
         else if(assetType == FUND_ASSET_TYPE_F02){
         	triValueChange('unitCprice');
             // 展示联动区域
             $('.currency').show();
-//            $("#exRightsDate").val('').trigger("change");
-//            $("#registDate").val('').trigger("change");
-             $("#exRightsDate").attr("disabled",false);
-             $("#registDate").attr("disabled",false);
+            if(pageModel==PAGE_MODEL_NEW&&!isFromCheck){
+                $("#exRightsDate").val('').trigger("change");
+                $("#registDate").val('').trigger("change");
+                $("#exRightsDate").attr("disabled",false);
+                $("#registDate").attr("disabled",false);
+            }
+        }
+        if(isFromCheck&&isFromCheck=='true'){
+            $("#exRightsDate").attr("disabled",true);
+            $("#registDate").attr("disabled",true);
         }
      // 判断分红类型
         if (bonusMode == BONUS_MODE_01) {
@@ -882,9 +896,9 @@
     var init = function() {
         // 资产类型
 //        assetTypeChagne();
-        if(pageModel != PAGE_MODEL_REFERENCE){
+//        if(pageModel != PAGE_MODEL_REFERENCE){
     	    bonusModeChange();
-    	}
+//    	}
         var assetType = $("#assetType").val();
         if(assetType == FUND_ASSET_TYPE_F01){
             $(".unitCprice").hide();
