@@ -298,4 +298,40 @@
 		</foreach>
 		;end;
 	</update>
+	
+	<select id="selectCode" resultType="java.util.Map">
+        select 
+        cpc.REG_CODE regCode
+        from 
+        CHB_PRDRESIST_CODE cpc      
+        <where>        	
+        	<if test="regCode != null  and regCode !='' " >
+                 cpc.REG_CODE = #{regCode,jdbcType=VARCHAR}
+            </if>
+            <if test="prodId != null  and prodId !='' " >
+                and cpc.PRODID != #{prodId,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+    <select id="selectInfo" resultType="com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage002Dto">
+        select 
+		FIN_PRODUCT.FINPROD_NAME prodName,
+		chb_prd_declare_info.OPERATE_MODE operateMode,
+		FIN_PRODUCT.VDATE vdate,
+		FIN_PRODUCT.MDATE mdate
+		from FIN_PRODUCT
+		left join chb_prd_declare_info  on chb_prd_declare_info.PROD_INS_ID = FIN_PRODUCT.FINPROD_MARKET_ID
+       where FIN_PRODUCT.FINPROD_MARKET_ID = #{prodId}
+       and FIN_PRODUCT.FINPROD_TYPE = 'F16' and FIN_PRODUCT.FINPROD_TYPE2 = 'F16'
+    </select>
+    
+    <select id="selectId" resultType="java.util.Map">
+        select 
+        cpc.PRODID prodId      
+        from 
+        CHB_PRDRESIST_CODE cpc      
+         <where>       
+         cpc.PRODID = #{prodId}
+        </where>
+    </select>
 </mapper>

@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -254,7 +256,15 @@ public class TrdPlanRateInvestTrade003Controller extends BaseController{
         //add by lizhi 是否限制划款指令开关 2020年2月26日  start
         model.addAttribute("GEN_PAY_ORDERS_AUTO",CacheUtil.getSysParam(BussinessConstant.GEN_PAY_ORDERS_AUTO));
         //add by lizhi 是否限制划款指令开关 2020年2月26日  end
-      //add by yujiaping 2020-12-16 TISHKBS-1259 计划利率型交易新建时，清算速度默认T+0，并且不可修改start
+        PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
+        pageElementConfigDto.setPageId("BaseRiskMathComm");
+        Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
+        pageElementConfigDto.setPageId(this.getPageId());
+        Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
+        isEleShow.putAll(map);
+        model.addAttribute("isEleShow", isEleShow);
+        
+        //add by yujiaping 2020-12-16 TISHKBS-1259 计划利率型交易新建时，清算速度默认T+0，并且不可修改start
         TrdPlanRateInvestTradeDto entity = new TrdPlanRateInvestTradeDto();
         entity.setMySettleSpeed(DictCodeList.清算速度_T_0.getValue());
         model.addAttribute("entity", entity);

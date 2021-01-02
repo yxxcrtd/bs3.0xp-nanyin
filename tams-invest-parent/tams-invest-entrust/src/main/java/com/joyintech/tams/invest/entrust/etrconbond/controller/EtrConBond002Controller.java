@@ -23,6 +23,8 @@ import com.joyintech.tams.invest.entrust.etrbondfirstlbidding.service.EtrBondFir
 import com.joyintech.tams.invest.entrust.etrconbond.dto.EtrConBondDto;
 import com.joyintech.tams.invest.entrust.etrconbond.service.EtrConBondService;
 import com.joyintech.tams.invest.entrust.etrconbond.validator.EtrConBondDtoValidator;
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -95,6 +97,13 @@ public class EtrConBond002Controller extends BaseController {
         model.addAttribute("fintype", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         model.addAttribute("etrPs", DictCodeList.交易方向_申购.getValue());
         model.addAttribute("INV_AIM_default", DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue());
+        PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
+        pageElementConfigDto.setPageId("BaseRiskMathComm");
+        Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
+        pageElementConfigDto.setPageId(this.getPageId());
+        Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
+        isEleShow.putAll(map);
+        model.addAttribute("isEleShow", isEleShow);
         return super.init(model);
     }
 

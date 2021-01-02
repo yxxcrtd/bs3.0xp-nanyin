@@ -3,6 +3,8 @@ package com.joyintech.tams.invest.entrust.etrbondtostock.controller;
 import java.util.Date;
 import java.util.Map;
 
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -129,6 +131,13 @@ public class EtrBondToStock002Controller extends BaseController{
         model.addAttribute("PA_TYPE_ZZG",DictCodeListExt3.平安业务类型_债转股.getValue());
         model.addAttribute("fintype", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         model.addAttribute("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE")==null?"01":CacheUtil.getSysParam("IS_SHOW_TYPE"));     
+        PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
+        pageElementConfigDto.setPageId("BaseRiskMathComm");
+        Map<String, String> maps = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
+        pageElementConfigDto.setPageId(this.getPageId());
+        Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
+        isEleShow.putAll(maps);
+        model.addAttribute("isEleShow", isEleShow);
         return super.init(model);
     }
     

@@ -75,17 +75,20 @@ public class MstBankTranFeeManage002Controller extends BaseController {
     /**
      * 初始化的查询条件
      */
-    private static final IDictCode[] DICT_CODES = new BussinessDictCode[] {BussinessDictCode.费用类型,
-        BussinessDictCode.平安资产类型, BussinessDictCode.登记托管机构,BussinessDictCode.期限品种,
-        BussinessDictCode.计费类型,BussinessDictCode.计费基数
-    };
+//    private static final IDictCode[] DICT_CODES = new BussinessDictCode[] {BussinessDictCode.费用类型,
+//        BussinessDictCode.平安资产类型, BussinessDictCode.登记托管机构,BussinessDictCode.期限品种,
+//        BussinessDictCode.计费类型,BussinessDictCode.计费基数
+//    };
     /**
      * 入口
      */
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {
-        setSelectOptionToModel(model, DICT_CODES);
+        setSelectOptionToModel(model,new BussinessDictCode[] {BussinessDictCode.费用类型,
+                BussinessDictCode.平安资产类型, BussinessDictCode.登记托管机构,BussinessDictCode.期限品种,
+                BussinessDictCode.计费类型,BussinessDictCode.计费基数, BussinessDictCode.交易市场
+        });
         List<SelectOptionDto> psList = makeAllPs();
         model.addAttribute("PS", JsonUtils.objectArray2Json(psList.toArray()));
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
@@ -108,6 +111,7 @@ public class MstBankTranFeeManage002Controller extends BaseController {
             dto.setChargeType(BussinessDictCodeList.计费类型_固定金额.getValue());
             model.addAttribute("entity", dto);
         }
+
         model.addAttribute("PINAN_ASSET_TYPE_F01", BussinessDictCodeList.平安资产类型_债券.getValue());
         model.addAttribute("PINAN_ASSET_TYPE_F07", BussinessDictCodeList.平安资产类型_回购.getValue());
         model.addAttribute("PINAN_ASSET_TYPE_F10", BussinessDictCodeList.平安资产类型_买断式回购.getValue());

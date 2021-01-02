@@ -344,11 +344,13 @@
 
         window.componentLoadCallback = function (isDone, pagePath, params) {
             if (isDone) {
+                if(typeof(BaseRiskMathComm) != 'undefined') {
                 var riskparam = getriskdata();
                 if (pageModel==PAGE_MODEL_NEW){
                     riskparam.data =null;
                 }
                 window.BaseRiskMathComm.getparam(riskparam);
+                }
 //                ChannelAssetCommon.setChannelSelect($('#chlId'), finprodId, $('#entrustId').val(), function () {
                     psChange(true);
                     init();
@@ -789,7 +791,7 @@
 	            if(checkFeiPeiAmt()){
 	            	return;
 	            }
-	            
+                if(typeof(BaseRiskMathComm) != 'undefined') {
 	            if(BaseRiskMathComm) {
 	                s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
 	                if(!s && s != ''){
@@ -797,6 +799,7 @@
 	                }
 	                if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
 	                    return;
+                        }
 	                }
 	            }
 	            // 检查生成划款指令参数是否发生变化

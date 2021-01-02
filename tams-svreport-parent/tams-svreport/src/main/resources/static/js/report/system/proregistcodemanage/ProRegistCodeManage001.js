@@ -137,9 +137,20 @@
             return;
         }
     }
+    /**
+     * 新建
+     */
+    function showDialog() {
+        var data={"operateType":"add"};
+        Joyin.dialog('产品登记编码新建',basePath+'svreport/system/proregistcodemanage/ProRegistCodeManage003/init', '98%', '95%',data,function(){table.reload();});
+    }
     
     $(function() {
         init();
+        //新建按钮点击事件
+        $('#ProRegistCodeManage001_btn_add').click(function() {
+            showDialog();
+        });
         // 查询按钮点击事件
         $('#ProRegistCodeManage001_btn_search').click(function() {
             if($('#searchForm').joyinvalid()) {

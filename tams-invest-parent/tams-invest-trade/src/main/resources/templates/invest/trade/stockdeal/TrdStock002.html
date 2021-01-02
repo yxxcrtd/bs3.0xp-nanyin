@@ -462,13 +462,13 @@
 							</div>
 						</div>
 						<!-- 风险试算 -->
-						<div id="baseRiskMathComm" class="page-component"
+						<div th:if="${isEleShow['TrdStock002_BaseRiskMathComm']} ne 'N' and ${isEleShow['BaseRiskMathComm']} ne 'N'"  id="baseRiskMathComm" class="page-component"
 							th:data-path="@{/component/common/BaseRiskMathComm/init}"
 							th:data-params="|{entity: '${riskTrialRetDto}',workflowId:'${workflowId?: ''}',entityName:'riskTrialRetDto',tradeId:'${tradeId}',tradeSource:'1'}|"></div>
 			</form>
 			<div class="layui-form-item">
 				<div class="row text-center" style="margin: 20px 0;">
-					<a th:id="|${pageId}_btn_risk|" class="layui-btn layui-btn-sm"
+					<a th:if="${isEleShow['TrdStock002_btn_riskcal']} ne 'N' and ${isEleShow['BaseRiskMathComm_btn_riskcal']} ne 'N'" th:id="|${pageId}_btn_risk|" class="layui-btn layui-btn-sm"
 						data-th-text="#{TrdStock002.risk}">风险试算</a> <a
 						th:id="|${pageId}_btn_save|"
 						class="layui-btn layui-btn-sm btn-save"

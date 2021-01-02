@@ -14,6 +14,9 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.base.intf.IDictCode;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
@@ -124,6 +127,11 @@ public class BaseRiskMathCommController extends BaseController {
         model.addAttribute("SUP_TIME_TYPE_03", DictCodeListExt1.监督时分_事后监控);
         //model.addAttribute("risk_math_switch", CacheUtil.getSysParam("risk_math_switch"));
         model.addAttribute("risk_math_switch", CacheUtil.getSysParam("pageRedisFlag"));
+        String institutionCode = "";
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+            institutionCode =  MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
+        }
+        model.addAttribute("IS_RISKMATH_SOFTCONTROL", CacheUtil.getSpecialSysParam("IS_RISKMATH_SOFTCONTROL", institutionCode));
         Map<String, Object> map = RequestUtil.getPageParam();
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         // add by caojin 吉林银行风险试算-流程控制显示 2019/09/23 start

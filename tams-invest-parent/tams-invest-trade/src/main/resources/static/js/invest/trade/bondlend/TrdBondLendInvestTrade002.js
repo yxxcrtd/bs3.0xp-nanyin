@@ -44,6 +44,7 @@ var table;
      */
     function saveOrSubmit(operateType) {
         var s;
+        if(typeof(BaseRiskMathComm) != 'undefined') {
        if(BaseRiskMathComm) {
             s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
             if(!s && s != ''){
@@ -51,6 +52,7 @@ var table;
             }
             if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
                 return;
+                }
             }
         }
         var object = $.serializeToObject('#submitForm', true);
@@ -608,12 +610,13 @@ var table;
     };
     window.componentLoadCallback = function(isDone, pagePath, params){
         if(isDone){
+            if(typeof(BaseRiskMathComm) != 'undefined') {
             var riskparam = getriskdata();
             if (pageModel==PAGE_MODEL_NEW){
                 riskparam.data =null;
             }
             window.BaseRiskMathComm.getparam(riskparam);
-
+            }
             window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].showPosition(true);//只展示持仓
 
             if(entrustId != ''){

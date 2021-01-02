@@ -33,6 +33,8 @@ import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTradeCSTPDto;
 import com.joyintech.tams.invest.trade.trdrepotrade.service.TrdRepoTrade002Service;
 
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -312,6 +314,13 @@ public class TrdOutRightRepoTrade003Controller extends BaseController {
         model.addAttribute("GEN_PAY_ORDERS_AUTO",CacheUtil.getSysParam(BussinessConstant.GEN_PAY_ORDERS_AUTO));
         //add by lizhi 是否限制划款指令开关 2020年2月26日  end
 		String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
+		PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
+		pageElementConfigDto.setPageId("BaseRiskMathComm");
+		Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
+		pageElementConfigDto.setPageId(this.getPageId());
+		Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
+		isEleShow.putAll(map);
+		model.addAttribute("isEleShow", isEleShow);
 		if(workflowId!=null){
             return "invest/trade/buyoutrepo/TrdOutRightRepoTrade002";
         }else{

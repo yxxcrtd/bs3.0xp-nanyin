@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.trade.irs.controller;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
@@ -21,6 +22,8 @@ import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeDto;
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -162,6 +165,13 @@ public class TrdIRSTrade002Controller extends BaseController{
                 JsonUtils.object2Json(dto.getBussTrdTransferOrder().get(0)));
         }
         model.addAttribute("PINAN_ASSET_TYPE_F16",DictCodeListExt2.平安资产类型_利率互换.getValue());
+        PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
+        pageElementConfigDto.setPageId("BaseRiskMathComm");
+        Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
+        pageElementConfigDto.setPageId(this.getPageId());
+        Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
+        isEleShow.putAll(map);
+        model.addAttribute("isEleShow", isEleShow);
         return super.init(model);
     }
 	

@@ -10,6 +10,8 @@
 
 package com.joyintech.tams.invest.entrust.etrfund.controller;
 
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
@@ -108,6 +110,13 @@ public class EtrFund003Controller extends BaseController {
         model.addAttribute("T02", DictCodeList.交易方向_卖出.getValue());
         model.addAttribute("T52", DictCodeListExt2.交易方向_认购.getValue());
         model.addAttribute("fintype", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
+        PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
+        pageElementConfigDto.setPageId("BaseRiskMathComm");
+        Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
+        pageElementConfigDto.setPageId(this.getPageId());
+        Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
+        isEleShow.putAll(map);
+        model.addAttribute("isEleShow", isEleShow);
         return super.init(model);
     }
 

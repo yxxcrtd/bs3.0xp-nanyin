@@ -15,6 +15,7 @@ $(function() {
     	// 划款指令隐藏时，自动生成划款指令信息
     	generateOrders(function () {
 	    	 var s;
+             if(typeof(BaseRiskMathComm) != 'undefined') {
 	         if(BaseRiskMathComm) {
 	             s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
 	             if(!s && s != ''){
@@ -22,6 +23,7 @@ $(function() {
 	             }
 	             if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
 	                 return;
+                     }
 	             }
 	         }
 	        // 检查生成划款指令参数是否发生变化
@@ -331,11 +333,13 @@ $(function() {
 
         window.componentLoadCallback = function(isDone, pagePath, params){
             if(isDone){
+                if(typeof(BaseRiskMathComm) != 'undefined') {
                 var riskparam = getriskdata();
                 if (pageModel==PAGE_MODEL_NEW){
                     riskparam.data =null;
                 }
                 window.BaseRiskMathComm.getparam(riskparam);
+                }
                 window.BussTrdTransferOrder['bussTrdTransferOrder'].setStlCommandInput(function () {
                     if (!$("#optFee").val()) {
                         Joyin.error(JoyinUtil.getMessage('BUSS_COM_E_0038',JoyinUtil.getLabel("TrdOptionTrade002.optFee")));

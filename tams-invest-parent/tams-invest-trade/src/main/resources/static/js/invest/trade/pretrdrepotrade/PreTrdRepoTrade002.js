@@ -31,6 +31,7 @@
 
     function saveOrSubmit(operateType) {
         var s;
+        if(typeof(BaseRiskMathComm) != 'undefined') {
         if(BaseRiskMathComm) {
             s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
             if(!s && s != ''){
@@ -38,6 +39,7 @@
             }
             if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
                 return;
+                }
             }
         }
         var object = $.serializeToObject('#submitForm', true);

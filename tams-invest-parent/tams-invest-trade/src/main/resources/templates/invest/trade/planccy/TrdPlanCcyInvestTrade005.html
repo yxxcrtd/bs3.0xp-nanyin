@@ -373,9 +373,10 @@
                 </div>
                 <!-- add by zhangpuyu 2019/10/30 end -->
                 <!-- 风险试算 -->
-				<div id="baseRiskMathComm" class="page-component" th:data-path="@{/component/common/BaseRiskMathComm/init}" th:data-params="|{entity: '${riskTrialRetDto}',entityName:'riskTrialRetDto',tradeId:'${tradeId}'}|"></div>
+				<div th:if="${isEleShow['TrdPlanCcyInvestTrade005_BaseRiskMathComm']} ne 'N' and ${isEleShow['BaseRiskMathComm']} ne 'N'" id="baseRiskMathComm" class="page-component" th:data-path="@{/component/common/BaseRiskMathComm/init}" th:data-params="|{entity: '${riskTrialRetDto}',entityName:'riskTrialRetDto',tradeId:'${tradeId}'}|"></div>
                 <div class="row text-center">
-                    <a th:id="|${pageId}_btn_risk|" class="layui-btn layui-btn-sm"
+                    <a th:if="${isEleShow['TrdPlanCcyInvestTrade005_btn_riskcal']} ne 'N' and ${isEleShow['BaseRiskMathComm_btn_riskcal']} ne 'N'"
+                       th:id="|${pageId}_btn_risk|" class="layui-btn layui-btn-sm"
                         data-th-text="#{TrdPlanCcyInvestTrade003.risk}">风险试算</a>
                     <a th:id="|${pageId}_btn_save|" class="layui-btn layui-btn-sm btn-save"
                         data-th-text="#{SysCommon.save}">保存</a>

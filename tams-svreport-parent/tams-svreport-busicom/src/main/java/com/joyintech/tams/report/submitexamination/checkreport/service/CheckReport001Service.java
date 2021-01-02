@@ -63,6 +63,19 @@ public class CheckReport001Service extends BaseService<CheckReport001Dto> {
     		return checkReport001Mapper.queryPrdNameListOld(prodId);
     	}
     }
+    
+    /**
+     * 产品登记编码新建产品代码
+     * 
+     * @param pageParam 参数
+     * @return 结果list
+     * @see
+     * @since 1.0
+     */
+    public List<SuggestDto> getProdInfo(Map<String,Object> paramMap) {
+    	String prodId=paramMap.get("prodid")==null?null:paramMap.get("prodid").toString();    
+    		return checkReport001Mapper.getProdInfo(prodId);    	
+    }
 
     /**
      * 查询产品名称

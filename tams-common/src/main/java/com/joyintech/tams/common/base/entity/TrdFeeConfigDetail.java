@@ -45,6 +45,26 @@ public class TrdFeeConfigDetail extends BaseEntity {
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal chargeRate;
 
+    private String isCludeStartamt;
+
+    private BigDecimal gradeAmount;
+
+    public String getIsCludeStartamt() {
+        return isCludeStartamt;
+    }
+
+    public void setIsCludeStartamt(String isCludeStartamt) {
+        this.isCludeStartamt = isCludeStartamt;
+    }
+
+    public BigDecimal getGradeAmount() {
+        return gradeAmount;
+    }
+
+    public void setGradeAmount(BigDecimal gradeAmount) {
+        this.gradeAmount = gradeAmount;
+    }
+
     /**
      * 取得 流水号
      * @return 流水号

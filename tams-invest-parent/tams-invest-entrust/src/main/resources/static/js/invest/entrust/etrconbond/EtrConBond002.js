@@ -120,15 +120,17 @@
     function saveOrSubmit(operateType) {
     	//风险试算 start
     	 var s;
-    	 if(BaseRiskMathComm) {
-             s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
-             if(!s && s != ''){
-                 return;
-             }
-             if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
-                 return;
-             }
-         }
+    	 if(typeof(BaseRiskMathComm) != 'undefined') {
+			 if(BaseRiskMathComm) {
+		         s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+		         if(!s && s != ''){
+		             return;
+		         }
+		         if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
+		             return;
+		         }
+		     }
+    	 }
     	//风险试算 end
         /**
          * 获取列表参数
@@ -168,12 +170,14 @@
     
     window.componentLoadCallback = function(isDone, pagePath, params){
         if (isDone) {
+            if(typeof(BaseRiskMathComm) != 'undefined') {
             var riskparam = getriskdata();
             if (typeof riskparam != 'undefined') {
                 if (pageModel==PAGE_MODEL_NEW){
                     riskparam.data =null;
                 }
                 window.BaseRiskMathComm.getparam(riskparam);
+                }
             }
         }
     	$('#etrInvestPersonInfo_trader').attr('multiple',false);

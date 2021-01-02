@@ -18,6 +18,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.util.CacheUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -118,12 +122,28 @@ public class Rsk200Service  extends Rsk003Service {
 				// add by zhangrui1 end
 				// 如果失败，或者异常。弹堆
 				if (BussinessDictCodeListRds.指标状态_禁止.getValue().equals(rsp.getBodyField(RSKSTATUS))) {
-					rollbackStackToRedis();
-					// add by zhangrui1 start
-					response.setBodyField(RSKSTATUS, rsp.getBodyField(RSKSTATUS));
-					doException(response, res.getBodyField(EVENT_ID) + "交易超限，所有交易回滚", null);
-					// add by zhangrui1 end
-					break;
+
+					//增加软控硬控开关 add by jqq 20201216 start
+					String institutionCode = "";
+					if(MultilevelDataAuthorityUtil.isEnabled()){
+						institutionCode =  MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
+					}
+					String isSoft = CacheUtil.getSpecialSysParam("IS_RISKMATH_SOFTCONTROL", institutionCode);
+					if("02".equals(isSoft)){//硬控
+						rollbackStackToRedis();
+						// add by zhangrui1 start
+						response.setBodyField(RSKSTATUS, rsp.getBodyField(RSKSTATUS));
+						doException(response, res.getBodyField(EVENT_ID) + "交易超限，所有交易回滚", null);
+						// add by zhangrui1 end
+						break;
+					}
+
+//					rollbackStackToRedis();
+//					// add by zhangrui1 start
+//					response.setBodyField(RSKSTATUS, rsp.getBodyField(RSKSTATUS));
+//					doException(response, res.getBodyField(EVENT_ID) + "交易超限，所有交易回滚", null);
+//					// add by zhangrui1 end
+//					break;
 				} else {
 					// 暂存
 					stack.push(res);

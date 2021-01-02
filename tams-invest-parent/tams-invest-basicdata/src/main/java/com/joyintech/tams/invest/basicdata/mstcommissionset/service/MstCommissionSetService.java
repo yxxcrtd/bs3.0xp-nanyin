@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.tams.common.base.entity.TrdFeeConfigDetail;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import org.apache.poi.ss.usermodel.Cell;
@@ -90,10 +91,12 @@ public class MstCommissionSetService extends CommonExportService<MstCommissionSe
                 map, MstCommissionSetDto.class);
         List<MstCommissionSetDto> dtoList = page.getRoot();
         for (MstCommissionSetDto dto : dtoList){
-            if (StringUtil.equals(dto.getChargeType(), BussinessDictCodeList.计费类型_固定费率.getValue())){
-                dto.setFeeRate(ArithmeticUtil.round(dto.getChargeValue(),8, RoundingMode.HALF_UP).toString()+"‰");
-            }else {
-                dto.setFeeRate(ArithmeticUtil.round(dto.getChargeValue(),2,RoundingMode.HALF_UP).toString()+"元");
+            if(!"Y".equals(dto.getIsGrade())){
+                if (StringUtil.equals(dto.getChargeType(), BussinessDictCodeList.计费类型_固定费率.getValue())){
+                    dto.setFeeRate(ArithmeticUtil.round(dto.getChargeValue(),8, RoundingMode.HALF_UP).toString()+"‰");
+                }else {
+                    dto.setFeeRate(ArithmeticUtil.round(dto.getChargeValue(),2,RoundingMode.HALF_UP).toString()+"元");
+                }
             }
         }
         return page;
@@ -216,4 +219,18 @@ public class MstCommissionSetService extends CommonExportService<MstCommissionSe
                 Integer.class);
     }
 
+    public List<TrdFeeConfigDetail> findTable(Map<String, Object> parameters) {
+//        List<TrdFeeConfigDetail> page = restTemplate.postForList(ServiceApplication.BASICDATA_SERVICE_NAME + "/MstCommissionSet/findTable", parameters, TrdFeeConfigDetail.class);
+        List<TrdFeeConfigDetail> list = restTemplate.postForList(ServiceApplication.BASICDATA_SERVICE_NAME + "/MstCommissionSet/findTable", parameters, TrdFeeConfigDetail.class);
+        for(TrdFeeConfigDetail trdFeeConfigDetailDto:list){
+            if(StringUtil.isNotEmpty(trdFeeConfigDetailDto.getChargeRate())){
+                trdFeeConfigDetailDto.setChargeRate(trdFeeConfigDetailDto.getChargeRate().multiply(new BigDecimal("1000")));
+            }
+            if(StringUtil.isNotEmpty(trdFeeConfigDetailDto.getGradeAmount())){
+                trdFeeConfigDetailDto.setGradeAmount(trdFeeConfigDetailDto.getGradeAmount().divide(new BigDecimal("10000")));
+            }
+
+        }
+        return list;
+    }
 }

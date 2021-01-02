@@ -15,6 +15,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -124,6 +126,13 @@ public class EtrForwex002Controller extends BaseController{
         model.addAttribute("USE_STATUS_01", DictCodeListExt1.使用状态_启用.getValue());
         //----add by jjpei 20190718--------委托监控风险试算-----------end--------
         model.addAttribute("PINAN_ASSET_TYPE_F14",DictCodeListExt2.平安资产类型_外汇远期.getValue());
+        PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
+        pageElementConfigDto.setPageId("BaseRiskMathComm");
+        Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
+        pageElementConfigDto.setPageId(this.getPageId());
+        Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
+        isEleShow.putAll(map);
+        model.addAttribute("isEleShow", isEleShow);
         return super.init(model);
     }
 	  

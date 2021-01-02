@@ -43,6 +43,8 @@ import com.joyintech.tams.invest.trade.bondlend.dto.TrdBondLendInvestTradeDto;
 import com.joyintech.tams.invest.trade.bondlend.service.TrdBondLendInvestTrade002Service;
 import com.joyintech.tams.invest.trade.common.controller.TrdCommonController;
 import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -174,6 +176,13 @@ public class TrdBondLendInvestTrade002Controller extends BaseController {
         }
         model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_交易监控.getValue());
         model.addAttribute("PINAN_ASSET_TYPE_F12",DictCodeListExt2.平安资产类型_债券借贷.getValue());
+        PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
+        pageElementConfigDto.setPageId("BaseRiskMathComm");
+        Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
+        pageElementConfigDto.setPageId(this.getPageId());
+        Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
+        isEleShow.putAll(map);
+        model.addAttribute("isEleShow", isEleShow);
         return super.init(model);
     }
 

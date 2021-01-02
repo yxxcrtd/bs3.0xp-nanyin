@@ -25,6 +25,8 @@ import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.CreditLinesDealCommon;
 import com.joyintech.tams.invest.entrust.etrlendspecinfo.dto.EtrLendSpecInfoDto;
 import com.joyintech.tams.invest.entrust.etrlendspecinfo.service.EtrLendSpecInfoService;
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.tools.util.ValidationUtil;
 import com.joyintech.tools.util.ValidationUtil.ErrorMessage;
 import com.joyintech.tools.util.ValidationUtil.ValidResult;
@@ -90,6 +92,13 @@ public class EtrLendSpecInfo003Controller extends BaseController {
     model.addAttribute("fintype_cr", DictCodeListExt1.金融产品类型_投管用_拆入.getValue());
     model.addAttribute("fintype_cc", DictCodeListExt1.金融产品类型_投管用_拆出.getValue());
     model.addAttribute("fintype_tccr", DictCodeListExt1.金融产品类型_投管用_特拆拆入.getValue());
+    PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
+    pageElementConfigDto.setPageId("BaseRiskMathComm");
+    Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
+    pageElementConfigDto.setPageId(this.getPageId());
+    Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
+    isEleShow.putAll(map);
+    model.addAttribute("isEleShow", isEleShow);
     return super.init(model);
     }
     

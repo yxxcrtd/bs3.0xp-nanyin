@@ -213,4 +213,21 @@
 	</foreach>
 	</if>
 	</delete>
+	 
+     <!--  产品登记编码新建查询产品代码 -->  
+	<select id="getProdInfo" parameterType="java.lang.String"
+		resultType="com.joyintech.framework.select.SuggestDto">
+		SELECT DISTINCT
+		A.FINPROD_MARKET_ID as code,
+		A.FINPROD_NAME as name,
+		A.FINPROD_NAME as
+		shortName
+		FROM FIN_PRODUCT A
+		<where>
+			A.FINPROD_MARKET_ID like concat(concat('%',#{prodId,
+			jdbcType=VARCHAR}),'%')
+			and A.FINPROD_TYPE = 'F16' and A.FINPROD_TYPE2 = 'F16'
+		</where>
+		order by A.FINPROD_MARKET_ID
+	</select>
 </mapper>

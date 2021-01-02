@@ -29,7 +29,7 @@ import com.joyintech.service.basicdata.mstcommissionset.dto.MstCommissionSetDto;
  * @since 1.0
  */
 @Service("backMstCommissionSetService")
-public class MstCommissionSetService extends BaseService<MstCommissionSetDto>{
+public class MstCommissionSetService extends BaseService{
     /**
      * 定义mapper
      */
@@ -94,7 +94,21 @@ public class MstCommissionSetService extends BaseService<MstCommissionSetDto>{
     }
     
     public int searchRepeatBySecPs1(Map<String, Object> map) {
-    	List<String> list =  mstCommissionSetMapper.searchRepeatBySecPs1(map);
+    	List<MstCommissionSetDto> list =  mstCommissionSetMapper.searchRepeatBySecPs1(map);
+    	if(!StringUtil.isNotBlank((String)map.get("windtypeone"))){
+			for(int i=0;i<list.size();i++){
+				if(StringUtil.isNotBlank(list.get(i).getWindtypeone())){
+					list.remove(i--);
+				}
+			}
+		}
+		if(!StringUtil.isNotBlank((String)map.get("windtypetwo"))){
+			for(int i=0;i<list.size();i++){
+				if(StringUtil.isNotBlank(list.get(i).getWindtypetwo())){
+					list.remove(i--);
+				}
+			}
+		}
     	if(list == null)
     		return 0;
     	return list.size();
@@ -132,9 +146,24 @@ public class MstCommissionSetService extends BaseService<MstCommissionSetDto>{
 		mstComDto.setSecAcctId(secIdDto);
 		mstComDto.setPs(psDto);
 	   	trdFeeConfigMapper.insert(mstComDto);
+	   	if("Y".equals(entity.getIsGrade())){
+	   		for(TrdFeeConfigDetail dto:entity.getTrdFeeConfigDetailList()){
+				TrdFeeConfigDetail trdFeeConfigDetailDto=new TrdFeeConfigDetail();
+				BeanUtil.copyPropertiesIgnoreNull(trdFeeConfigDetailDto, dto);
+				trdFeeConfigDetailDto.setSeqNo(IDGenerator.generate());
+				trdFeeConfigDetailDto.setConfigSeqNo(mstComDto.getSeqNo());
+				if (StringUtil.isNotEmpty(trdFeeConfigDetailDto.getChargeRate())) {
+					trdFeeConfigDetailDto.setChargeRate(trdFeeConfigDetailDto.getChargeRate().divide(new BigDecimal(1000)));
+				}
+				trdFeeConfigDetailDto.setGradeAmount(trdFeeConfigDetailDto.getGradeAmount().multiply(new BigDecimal(10000)));
+				trdFeeConfigDetailMapper.insert(trdFeeConfigDetailDto);
+			}
+	   		return;
+		}
 	   	TrdFeeConfigDetail trdDetailDto=new TrdFeeConfigDetail();
 	   	BeanUtil.copyPropertiesIgnoreNull(trdDetailDto, mstComDto);
 	   	trdDetailDto.setConfigSeqNo(mstComDto.getSeqNo());
+	    trdDetailDto.setSeqNo(IDGenerator.generate());
 	   	if (StringUtil.isNotEmpty(trdDetailDto.getChargeRate())) {
 	   	    trdDetailDto.setChargeRate(trdDetailDto.getChargeRate().divide(new BigDecimal(1000)));
 	   	}
@@ -163,5 +192,10 @@ public class MstCommissionSetService extends BaseService<MstCommissionSetDto>{
         i += mstCommissionSetMapper.deleteByBatchSeq(dto.getBatchSeq());
     	return i;
     }
-    
+
+
+	public List<TrdFeeConfigDetail> findTable(Map<String, Object> param) {
+//		Page<TrdFeeConfigDetail> resutList= super.queryForPage(page, length, () -> mstCommissionSetMapper.findTable(param));
+		return mstCommissionSetMapper.findTable(param);
+	}
 }

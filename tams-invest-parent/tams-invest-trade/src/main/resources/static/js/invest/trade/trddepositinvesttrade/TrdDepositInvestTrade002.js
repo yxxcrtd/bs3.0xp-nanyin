@@ -14,11 +14,13 @@
 
     window.componentLoadCallback = function(isDone, pagePath, params){
         if(isDone){
+            if(typeof(BaseRiskMathComm) != 'undefined') {
             var riskparam = getriskdata();
             if (pageModel==PAGE_MODEL_NEW){
                 riskparam.data =null;
             }
             window.BaseRiskMathComm.getparam(riskparam);
+            }
             if(window.BussTrdTransferOrder && window.BussTrdTransferOrder['bussTrdTransferOrder']) {
                 window.BussTrdTransferOrder['bussTrdTransferOrder'].setStlCommandInput(function () {
                     getEntity();
@@ -86,6 +88,7 @@
     	// 划款指令隐藏时，自动生成划款指令信息
     	generateOrders(function () {
 	        var s;
+            if(typeof(BaseRiskMathComm) != 'undefined') {
 	        if(BaseRiskMathComm) {
 	            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
 	            if(!s && s != ''){
@@ -93,6 +96,7 @@
 	            }
 	            if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
 	                return;
+                    }
 	            }
 	        }
 	        // 检查生成划款指令参数是否发生变化
@@ -176,7 +180,7 @@
 	                        message = JoyinUtil.getMessage("BUSS_COM_E_0039",JoyinUtil.getLabel("TrdDepositInvestTrade002.dealdate"));
 	                    }
 	                }
-	                message = s+message;
+	                // message = s+message;  风险试算按钮隐藏引起
 	                if (message.length > 9 && result.data) {
 	                    message += result.data;
 	                }else if (result.data && result.data == JoyinUtil.getMessage("TRD_C_0005")) {

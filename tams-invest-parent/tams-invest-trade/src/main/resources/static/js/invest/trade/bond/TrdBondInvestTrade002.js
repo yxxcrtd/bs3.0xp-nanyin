@@ -38,6 +38,7 @@ var table;
 	        }
 	
 	        var s;
+            if(typeof(BaseRiskMathComm) != 'undefined') {
 	        if(BaseRiskMathComm) {
 	            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
 	            if(!s && s != ''){
@@ -47,7 +48,7 @@ var table;
 	                return;
 	            }
 	        }
-	
+            }
 	        // 检查计算元素是否发生变化
 	        if (checkCalcParam()) {
 	            //---update by jjpei 20190731---信息显示有误
@@ -1492,11 +1493,13 @@ var table;
     
     window.componentLoadCallback = function(isDone, pagePath, params){
         if(isDone){
+        	if(typeof(BaseRiskMathComm) != 'undefined') {
             var riskparam = getriskdata();
             if (pageModel==PAGE_MODEL_NEW){
                 riskparam.data =null;
             }
             window.BaseRiskMathComm.getparam(riskparam);
+        	}
             window.BussTrdTransferOrder['bussTrdTransferOrder'].setStlCommandInput(function () {
             	//全价总额不能为空
             	if (!$("#fpriceAmt").val() || typeof $("#fpriceAmt").val() == 'undefined'){

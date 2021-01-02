@@ -26,31 +26,36 @@
 			m.FEE_MINI as feeMini,
 			case when m.CHARGE_TYPE='01' then m.CHARGE_RATE * 1000 else m.CHARGE_VALUE end as chargeValue,
 			m.CHARGE_RATE as chargeRate,
-			m.IS_PAY_WITH_TRADE as isPayWithTrade
+			m.IS_PAY_WITH_TRADE as isPayWithTrade,m.WINDTYPEONE windtypeone,m.WINDTYPETWO windtypetwo,m.IS_GRADE isGrade
 		FROM (
-			select  BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE,CHARGE_BASIS,T1.FEE_MAXI,t1.FEE_MINI,T1.CHARGE_VALUE,t1.CHARGE_RATE ,t.IS_PAY_WITH_TRADE from TRD_FEE_CONFIG t
-			inner join TRD_FEE_CONFIG_DETAIL t1 on t.SEQ_NO=t1.CONFIG_SEQ_NO 
-			where t.FEE_TYPE  IN('B02','B05')  GROUP BY t.BATCH_SEQ,TRADE_MARKET ,
-			FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE,CHARGE_BASIS,T1.FEE_MAXI,t1.FEE_MINI,T1.CHARGE_VALUE,t1.CHARGE_RATE,t.IS_PAY_WITH_TRADE
+			select  distinct BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE,CHARGE_BASIS,
+				CASE when t.IS_GRADE='Y' then null else T1.CHARGE_VALUE end as CHARGE_VALUE,
+				CASE when t.IS_GRADE='Y' then null else T1.FEE_MAXI end as FEE_MAXI,
+				CASE when t.IS_GRADE='Y' then null else t1.FEE_MINI end as FEE_MINI,
+				case when t.IS_GRADE='Y' then null else t1.CHARGE_RATE end as CHARGE_RATE,
+				t.IS_PAY_WITH_TRADE,t.WINDTYPEONE,t.WINDTYPETWO,t.IS_GRADE from TRD_FEE_CONFIG t
+			inner join TRD_FEE_CONFIG_DETAIL t1 on t.SEQ_NO=t1.CONFIG_SEQ_NO
+			where t.FEE_TYPE  IN('B02','B05','B01','B07')  GROUP BY t.BATCH_SEQ,TRADE_MARKET ,
+			FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE,CHARGE_BASIS,T1.FEE_MAXI,t1.FEE_MINI,T1.CHARGE_VALUE,t1.CHARGE_RATE,t.IS_PAY_WITH_TRADE,t.WINDTYPEONE,t.WINDTYPETWO,t.IS_GRADE
 			) m 
 			INNER JOIN (
 			select n.BATCH_SEQ,
 			<!-- wm_concat(DISTINCT n.sec_acct_id)as secAcctId  -->
 			regexp_replace(LISTAGG( n.sec_acct_id, ',') WITHIN GROUP (order by (n.sec_acct_id)) ,'([^,]+)(,\1)*(,|$)','\1\3') secAcctId ,
 			wm_concat(DISTINCT n1.sec_acct_name)as secAcctName from TRD_FEE_CONFIG n
-			left join STL_SEC_ACCT_INFO n1 on n.SEC_ACCT_ID=n1.SEC_ACCT_ID where n.FEE_TYPE  IN('B02','B05') GROUP BY n.BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE
+			left join STL_SEC_ACCT_INFO n1 on n.SEC_ACCT_ID=n1.SEC_ACCT_ID where n.FEE_TYPE  IN('B02','B05','B01','B07') GROUP BY n.BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE
 			) t1 on m.BATCH_SEQ=t1.BATCH_SEQ
 			INNER JOIN (
 			select BATCH_SEQ,
 			<!-- wm_concat(DISTINCT ps) as ps -->
 			regexp_replace(LISTAGG( ps, ',') WITHIN GROUP (order by (ps)) ,'([^,]+)(,\1)*(,|$)','\1\3') ps 
-			from TRD_FEE_CONFIG where FEE_TYPE  IN('B02','B05') GROUP BY BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE
+			from TRD_FEE_CONFIG where FEE_TYPE  IN('B02','B05','B01','B07') GROUP BY BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE
 			) t2 on m.BATCH_SEQ=t2.BATCH_SEQ
 			INNER JOIN (
 			select BATCH_SEQ,
 			<!-- wm_concat(DISTINCT TERM_TYPE) as termType  -->
 			regexp_replace(LISTAGG( TERM_TYPE, ',') WITHIN GROUP (order by (TERM_TYPE)) ,'([^,]+)(,\1)*(,|$)','\1\3') termType 
-			from TRD_FEE_CONFIG where FEE_TYPE  IN('B02','B05') GROUP BY BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE
+			from TRD_FEE_CONFIG where FEE_TYPE  IN('B02','B05','B01','B07') GROUP BY BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE
 			) t3 on m.BATCH_SEQ=t3.BATCH_SEQ
 			
 		<where>
@@ -80,31 +85,36 @@
 		m.FEE_MINI as feeMini,
 		m.CHARGE_VALUE as chargeValue,
 		m.CHARGE_RATE * 1000 as chargeRate,
-		m.IS_PAY_WITH_TRADE as isPayWithTrade
+		m.IS_PAY_WITH_TRADE as isPayWithTrade,m.WINDTYPEONE windtypeone,m.WINDTYPETWO windtypetwo,m.IS_GRADE isGrade,m.TRADE_MARKET_MODE tradeMarketMode
 	 FROM (
-			select  BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE,CHARGE_BASIS,T1.FEE_MAXI,t1.FEE_MINI,T1.CHARGE_VALUE,t1.CHARGE_RATE,t.IS_PAY_WITH_TRADE from TRD_FEE_CONFIG t
+			select distinct BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE,CHARGE_BASIS,
+		 		CASE when t.IS_GRADE='Y' then null else T1.CHARGE_VALUE end as CHARGE_VALUE,
+		 		CASE when t.IS_GRADE='Y' then null else T1.FEE_MAXI end as FEE_MAXI,
+		 		CASE when t.IS_GRADE='Y' then null else t1.FEE_MINI end as FEE_MINI,
+		 		case when t.IS_GRADE='Y' then null else t1.CHARGE_RATE end as CHARGE_RATE,
+		 	t.IS_PAY_WITH_TRADE,t.WINDTYPEONE,t.WINDTYPETWO,t.IS_GRADE,t.TRADE_MARKET_MODE from TRD_FEE_CONFIG t
 			inner join TRD_FEE_CONFIG_DETAIL t1 on t.SEQ_NO=t1.CONFIG_SEQ_NO 
-			where t.FEE_TYPE  IN('B02','B05')  GROUP BY t.BATCH_SEQ,TRADE_MARKET ,
-			FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE,CHARGE_BASIS,T1.FEE_MAXI,t1.FEE_MINI,T1.CHARGE_VALUE,t1.CHARGE_RATE,t.IS_PAY_WITH_TRADE
+			where t.FEE_TYPE  IN('B02','B05','B01','B07')  GROUP BY t.BATCH_SEQ,TRADE_MARKET ,
+			FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE,CHARGE_BASIS,T1.FEE_MAXI,t1.FEE_MINI,T1.CHARGE_VALUE,t1.CHARGE_RATE,t.IS_PAY_WITH_TRADE,t.WINDTYPEONE,t.WINDTYPETWO,t.IS_GRADE,t.TRADE_MARKET_MODE
 			) m 
 			INNER JOIN (
 			select n.BATCH_SEQ,
 			<!-- wm_concat(DISTINCT n.sec_acct_id)as secAcctId  -->
 			regexp_replace(LISTAGG( n.sec_acct_id, ',') WITHIN GROUP (order by (n.sec_acct_id)) ,'([^,]+)(,\1)*(,|$)','\1\3') secAcctId 
 			from TRD_FEE_CONFIG n
-			where n.FEE_TYPE  IN('B02','B05') GROUP BY n.BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE
+			where n.FEE_TYPE  IN('B02','B05','B01','B07') GROUP BY n.BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE
 			) t1 on m.BATCH_SEQ=t1.BATCH_SEQ
 			INNER JOIN (
 			select BATCH_SEQ,
 			<!-- wm_concat(DISTINCT ps) as ps -->
 			regexp_replace(LISTAGG( ps, ',') WITHIN GROUP (order by (ps)) ,'([^,]+)(,\1)*(,|$)','\1\3') ps 
-			from TRD_FEE_CONFIG where FEE_TYPE  IN('B02','B05') GROUP BY BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE
+			from TRD_FEE_CONFIG where FEE_TYPE  IN('B02','B05','B01','B07') GROUP BY BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE
 			) t2 on m.BATCH_SEQ=t2.BATCH_SEQ
 			INNER JOIN (
 			select BATCH_SEQ,
 			<!-- wm_concat(DISTINCT TERM_TYPE) as termType  -->
 			regexp_replace(LISTAGG( TERM_TYPE, ',') WITHIN GROUP (order by (TERM_TYPE)) ,'([^,]+)(,\1)*(,|$)','\1\3') termType
-			from TRD_FEE_CONFIG where FEE_TYPE  IN('B02','B05') GROUP BY BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE
+			from TRD_FEE_CONFIG where FEE_TYPE  IN('B02','B05','B01','B07') GROUP BY BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE
 			) t3 on m.BATCH_SEQ=t3.BATCH_SEQ
         where m.BATCH_SEQ = #{batchSeq,jdbcType=VARCHAR}
     </select>
@@ -142,15 +152,18 @@
 		</if>
 	</select>
 	
-	<select id="searchRepeatBySecPs1" parameterType="Map" resultType="java.lang.String">
+	<select id="searchRepeatBySecPs1" parameterType="Map" resultType="com.joyintech.service.basicdata.mstcommissionset.dto.MstCommissionSetDto">
 		SELECT
-		    BATCH_SEQ batchSeq
+		    BATCH_SEQ batchSeq,
+			WINDTYPEONE windtypeone,
+			WINDTYPETWO windtypetwo
 		 FROM TRD_FEE_CONFIG m
 		 where 
 		 m.ps = #{ps,jdbcType=VARCHAR}
 		 and m.TRADE_TYPE = #{tradeType,jdbcType=VARCHAR}
 		 and m.FEE_TYPE = #{feeType,jdbcType=VARCHAR}
 		 and m.EFF_DATE = to_date(#{effDate,jdbcType=VARCHAR},'yyyy-mm-dd HH24:mi:ss')
+		 and m.TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR}
 		 <if test="secAcctId != null and secAcctId != '' and secAcctId != 'null'">
 		 and m.SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
 		 </if>
@@ -160,8 +173,14 @@
 		<if test="termType != null and termType != ''">
 			and m.TERM_TYPE = #{termType,jdbcType=VARCHAR}
 		</if>
-		<if test="tradeMarket != null and tradeMarket != ''">
-			and m.TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR}
+		<if test="tradeMarketMode != null and tradeMarketMode != ''">
+			and m.TRADE_MARKET_MODE = #{tradeMarketMode,jdbcType=VARCHAR}
+		</if>
+		<if test="windtypeone != null and windtypeone != ''">
+			and m.WINDTYPEONE like CONCAT（'%',CONCAT(#{windtypeone,jdbcType=VARCHAR},'%'))
+		</if>
+		<if test="windtypetwo != null and windtypetwo != ''">
+			and m.WINDTYPETWO like CONCAT（'%',CONCAT(#{windtypetwo,jdbcType=VARCHAR},'%'))
 		</if>
 	</select>
 	
@@ -179,4 +198,19 @@
 	<delete id="deleteDtlByBatchSeq" parameterType="java.lang.String">
 		delete from TRD_FEE_CONFIG_DETAIL where CONFIG_SEQ_NO in (select SEQ_NO from TRD_FEE_CONFIG where BATCH_SEQ=#{batchSeq,jdbcType=VARCHAR})
 	</delete>
+
+	<select id="findTable" resultType="com.joyintech.tams.common.base.entity.TrdFeeConfigDetail">
+		SELECT
+		tfcd.SEQ_NO seqNo,
+		tfcd.CHARGE_VALUE chargeValue,
+		tfcd.FEE_MAXI feeMaxi,
+		tfcd.FEE_MINI feeMini,
+		tfcd.CHARGE_RATE chargeRate,
+		tfcd.CONFIG_SEQ_NO configSeqNo,
+		tfcd.GRADE_AMOUNT gradeAmount,
+		tfcd.IS_CLUDE_STARTAMT isCludeStartamt
+		FROM TRD_FEE_CONFIG_DETAIL tfcd
+		join (select * from TRD_FEE_CONFIG where BATCH_SEQ=#{batchSeq,jdbcType=VARCHAR} and rownum=1) tfc on tfcd.CONFIG_SEQ_NO=tfc.SEQ_NO
+		order by tfcd.GRADE_AMOUNT
+	</select>
 </mapper>

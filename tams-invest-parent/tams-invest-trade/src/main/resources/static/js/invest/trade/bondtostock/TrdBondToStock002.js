@@ -150,11 +150,13 @@
     };
     window.componentLoadCallback = function(isDone, pagePath, params){
         if(isDone){
+            if(typeof(BaseRiskMathComm) != 'undefined') {
             var riskparam = getriskdata();
             if (pageModel==PAGE_MODEL_NEW){
                 riskparam.data =null;
             }
             window.BaseRiskMathComm.getparam(riskparam);
+            }
             window.BussTrdTransferOrder['bussTrdTransferOrder'].setStlCommandInput(function () {
                 if($('#tradeAmt').val()==''){
                     return Joyin.error("请输入零股折算金额！");
@@ -203,6 +205,7 @@
     	generateOrders(function () {
 	        //---add by 裴家俊 2019/03/25-----start---
 	        var s;
+            if(typeof(BaseRiskMathComm) != 'undefined') {
 	        if(BaseRiskMathComm) {
 	            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
 	            if(!s && s != ''){
@@ -210,6 +213,7 @@
 	            }
 	            if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
 	                return;
+                    }
 	            }
 	        }
 	        var object = $.serializeToObject('#submitForm', true);

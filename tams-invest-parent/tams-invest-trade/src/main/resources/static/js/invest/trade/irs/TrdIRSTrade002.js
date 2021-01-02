@@ -43,6 +43,7 @@
 	
 	window.componentLoadCallback = function(isDone, pagePath, params){
         if(isDone){
+            if(typeof(BaseRiskMathComm) != 'undefined') {
             //----add by jjpei 20190718 风险试算----start----
             var riskParam = getRiskData();
             if (pageModel==PAGE_MODEL_NEW){
@@ -50,13 +51,14 @@
             }
             window.BaseRiskMathComm.getparam(riskParam);
             //----add by jjpei 20190718 风险试算----end----
-
+            }
         }
     };
     
     
 	function saveOrSubmit(operateType) {
       var s;
+      if(typeof(BaseRiskMathComm) != 'undefined') {
       if(BaseRiskMathComm) {
           s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
           if(!s && s != ''){
@@ -64,6 +66,7 @@
           }
           if (window.BaseRiskMathComm.isCalcConditionChanged(getRiskData())){
               return;
+                }
           }
       }
       // 检查生成划款指令参数是否发生变化

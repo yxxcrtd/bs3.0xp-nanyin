@@ -25,6 +25,7 @@ import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.basicdata.mstbanktranfeemanage.valid.MstBankTranFeeManageValidator;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
@@ -107,6 +108,35 @@ public class MstBankTranFeeManageDto extends TrdFeeConfig implements ProcessEnti
      * 画面Id - 工作流参数
      */
     private String pageId;
+
+    /**
+     * 交易市场
+     */
+    private String tradeMarketMode;
+
+    public String getTradeMarketMode() {
+        return tradeMarketMode;
+    }
+    /**
+     * 设置 交易市场，一级市场、二级市场
+     * @param tradeMarketMode 交易市场，一级市场、二级市场
+     */
+    public void setTradeMarketMode(String tradeMarketMode) {
+        this.tradeMarketMode = tradeMarketMode == null ? null : tradeMarketMode.trim();
+    }
+
+    /**
+     * 交易市场Str
+     */
+    private String tradeMarketModeStr;
+
+    public String getTradeMarketModeStr() {
+        return tradeMarketModeStr;
+    }
+
+    public void setTradeMarketModeStr(String tradeMarketModeStr) {
+        this.tradeMarketModeStr = tradeMarketModeStr;
+    }
 
     /**
      * 流程中做pk1存json串

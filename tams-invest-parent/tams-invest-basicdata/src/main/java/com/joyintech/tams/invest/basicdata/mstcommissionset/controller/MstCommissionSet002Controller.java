@@ -15,7 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.tams.common.base.entity.TrdFeeConfigDetail;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +101,7 @@ public class MstCommissionSet002Controller extends BaseController {
                 this.getParam("batchSeq"));
             model.addAttribute(GlobalConstant.ENTITY, dto);
         }
+        this.setSelectOptionToModel(model,new IDictCode[]{BussinessDictCode.交易市场,BussinessDictCode.WIND一级分类_含债券一级分类等,BussinessDictCode.WIND二级分类_含债券二级分类等});
         this.setSelectOptionToModel(model, DICT_CODES);
         List<SelectOptionDto> listFloatRate = new ArrayList<SelectOptionDto>();
         SelectDto selectDto1 = this.getSelectDataFromDataDic(BussinessDictCode.交易方向, null);
@@ -112,6 +117,8 @@ public class MstCommissionSet002Controller extends BaseController {
         model.addAttribute("PS", JsonUtils.objectArray2Json(listFloatRate.toArray()));
         model.addAttribute("FEE_TYPE_B02", BussinessDictCodeList.费用类型_印花税.getValue());
         model.addAttribute("FEE_TYPE_B05", BussinessDictCodeList.费用类型_佣金.getValue());
+        model.addAttribute("FEE_TYPE_B01", BussinessDictCodeList.费用类型_经手费.getValue());
+        model.addAttribute("FEE_TYPE_B07", BussinessDictCodeList.费用类型_结算费.getValue());
         model.addAttribute("PINAN_ASSET_TYPE_F01", BussinessDictCodeList.平安资产类型_债券.getValue());
         model.addAttribute("PINAN_ASSET_TYPE_F11", BussinessDictCodeList.平安资产类型_股票.getValue());
         // 场内基金改造 add by renping 20191117 start
@@ -200,5 +207,25 @@ public class MstCommissionSet002Controller extends BaseController {
         processParameter.setWorkFlowParameter(params);
         String msg = mstCommissionSetService.start(processParameter, dto);
         return new AjaxResult(msg);
+    }
+
+
+    @ResponseBody
+    @RequestMapping("findTable")
+        public Page<TrdFeeConfigDetail> findTable() throws Exception {
+        List<TrdFeeConfigDetail> list=new ArrayList<>();
+//        Page<TrdFeeConfigDetail> page = mstCommissionSetService.findTable(RequestUtil.getParameters(getRequest()));
+        Map<String,Object> map=RequestUtil.getParameters(getRequest());
+        String workflowId=(String)map.get("workflowId");
+        if(workflowId!=null && workflowId!=""){
+            MstCommissionSetDto dto = mstCommissionSetService.getBussinessEntityByWorkflowId(workflowId);
+            list = dto.getTrdFeeConfigDetailList();
+        }else if(map.get("batchSeq")!=null && map.get("batchSeq")!=""){
+            list = mstCommissionSetService.findTable(map);
+        }
+
+        Page<TrdFeeConfigDetail> page = new Page<>();
+        page.setRoot(list);
+        return page;
     }
 }

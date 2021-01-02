@@ -598,15 +598,16 @@
         	
         	// 刷新托管户剩余现金、组合T日可用现金、组合T+1日可用现金
         	psChangeAction();
-            var riskparam = getriskdata();
 
         	var checkparam = getcheckdata();
+			if(typeof(BaseRiskMathComm) != 'undefined') {
+				var riskparam = getriskdata();
             if (pageModel==PAGE_MODEL_NEW){
             	checkparam =null;
                 riskparam.data =null;
                 window.BaseRiskMathComm.getparam(riskparam);
+				} else {
             }
-            else {
                 //window.BaseRiskMathComm.initBaseRiskMathCommPage(riskparam);
             }
             window.CalculateFieldCheckComm.getparam(checkparam);
@@ -681,6 +682,7 @@
     	// 划款指令隐藏时，自动生成划款指令信息
     	generateOrders(function () {
     		var s;
+			if(typeof(BaseRiskMathComm) != 'undefined') {
 			if(BaseRiskMathComm) {
 				s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
 				if(!s && s != ''){
@@ -688,6 +690,7 @@
 				}
 				if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
 					return;
+					}
 				}
 			}
 			// 检查计算参数是否发生变化

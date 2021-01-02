@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
 import com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage001Dto;
+import com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage002Dto;
 
 /**
  * 产品登记编码管理mapper文件
@@ -121,4 +122,10 @@ public interface ProRegistCodeManage001Mapper {
     List<ChbPrdBaseinfo> getProdinfoByInsId(Map<String, Object> param);
     
     int updateOperateModeByProdId(@Param("list")List<ProRegistCodeManage001Dto>list);
+    
+    ProRegistCodeManage002Dto selectInfo(String prodId);
+    
+    Map<String, Object> selectId(Map<String, Object> map);
+    
+    Map<String, Object> selectCode(Map<String, Object> map);
 }

@@ -35,13 +35,15 @@
      */
     function saveOrSubmit(operateType) {
         var s;
-        if(BaseRiskMathComm) {
-            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
-            if(!s && s != ''){
-                return;
-            }
-            if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
-                return;
+        if(typeof(BaseRiskMathComm) != 'undefined') {
+            if (BaseRiskMathComm) {
+                s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+                if (!s && s != '') {
+                    return;
+                }
+                if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())) {
+                    return;
+                }
             }
         }
         var tradeMarket = $("#tradeMarket").val();
@@ -399,12 +401,14 @@
     //添加风险试算验证
     window.componentLoadCallback = function(isDone, pagePath, params) {
         if (isDone) {
-            var riskparam = getriskdata();
-            if (typeof riskparam != 'undefined') {
-                if (pageModel==PAGE_MODEL_NEW){
-                    riskparam.data =null;
+            if(typeof(BaseRiskMathComm) != 'undefined') {
+                var riskparam = getriskdata();
+                if (typeof riskparam != 'undefined') {
+                    if (pageModel == PAGE_MODEL_NEW) {
+                        riskparam.data = null;
+                    }
+                    window.BaseRiskMathComm.getparam(riskparam);
                 }
-                window.BaseRiskMathComm.getparam(riskparam);
             }
             $("#bussEtrInvestPersonInfoDto_counterId").change(function(){
                 getPrice();

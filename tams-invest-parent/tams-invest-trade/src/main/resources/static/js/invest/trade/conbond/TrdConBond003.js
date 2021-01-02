@@ -11,6 +11,7 @@ var table;
     }
     function saveOrSubmit(operateType) {
         var s;
+        if(typeof(BaseRiskMathComm) != 'undefined') {
         if(BaseRiskMathComm) {
             s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
             if(!s && s != ''){
@@ -20,7 +21,7 @@ var table;
                 return;
             }
         }
-
+        }
         // 检查生成划款指令参数是否发生变化
         if (window.BussTrdTransferOrder['bussTrdTransferOrder'].isCalcConditionChanged()) {
             return;
@@ -264,11 +265,13 @@ var table;
     
     window.componentLoadCallback = function(isDone, pagePath, params){
         if(isDone){
+            if(typeof(BaseRiskMathComm) != 'undefined') {
             var riskparam = getriskdata();
             if (pageModel==PAGE_MODEL_NEW){
                 riskparam.data =null;
             }
             window.BaseRiskMathComm.getparam(riskparam);
+            }
             window.BussTrdTransferOrder['bussTrdTransferOrder'].setStlCommandInput(function () {
                 var selectData = $('#finprodId').select2('data')[0].object;
                 if (!selectData) {

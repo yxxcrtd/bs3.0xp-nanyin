@@ -32,6 +32,8 @@ import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCash
 import com.joyintech.tams.invest.entrust.common.controller.EtrCommonController;
 import com.joyintech.tams.invest.entrust.etrstock.dto.EtrStockDto;
 import com.joyintech.tams.invest.entrust.etrstock.service.EtrStockService;
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -138,6 +140,13 @@ public class EtrStock002Controller extends BaseController {
             // 为交易方式赋默认值by赵东东 2019.9.4 end
             model.addAttribute(GlobalConstant.ENTITY, entity);
         }
+        PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
+        pageElementConfigDto.setPageId("BaseRiskMathComm");
+        Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
+        pageElementConfigDto.setPageId(this.getPageId());
+        Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
+        isEleShow.putAll(map);
+        model.addAttribute("isEleShow", isEleShow);
         return super.init(model);
     }
 

@@ -1439,4 +1439,27 @@ AND	fin.BRANCH = 0
 		   AND VAL_DATE <![CDATA[<=]]> #{happenDate}
 		ORDER BY VAL_DATE DESC
 	</select>
+	<select id="selectHBFXData"
+			resultType="java.util.Map"
+			parameterType="java.util.Map">
+		select
+			SUM(tpd.TRADE_AMT) tradeAmt,
+			tpd.TRADE_DATE tradeDate,
+			tpd.MDATE mdate
+		from TRD_PRODUCT_DEAL tpd
+		left join trd_fin_product_deal_total tfpd on tfpd.TOTLE_TRADE_ID=tpd.TOTLE_TRADE_ID
+		LEFT JOIN FIN_PRODUCT fp on fp.FINPROD_MARKET_ID=tfpd.PORTFOLIO_ID
+		LEFT JOIN FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=tpd.FINPROD_ID
+		where 1=1
+		and tpd.FINPROD_ID=#{finprodId}
+		and decode(fp.profit_type, '02', fp.FINPROD_MARKET_ID, fp.FINPROD_ID) = #{prodId}
+		and tpd.FINPROD_TYPE2 ='F01'
+		and tpd.MDATE=#{mdate}
+		and tpd.IS_CANCEL='N'
+		and tpd.TRADE_STATUS='01'
+		<if test="ps != null and ps !='' ">
+			and tpd.PS= #{ps}
+		</if>
+		GROUP by tpd.TRADE_DATE,tpd.MDATE
+	</select>
 </mapper>

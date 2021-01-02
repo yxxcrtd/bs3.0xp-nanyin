@@ -107,6 +107,7 @@
         debugger;
         var s;
         var maxTradeamt = 0;
+        if(typeof(BaseRiskMathComm) != 'undefined') {
         if(BaseRiskMathComm) {
             s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
             if(!s && s != ''){
@@ -114,6 +115,7 @@
             }
             if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
                 return;
+                }
             }
         }
         var isTrue = window.BussTrdTransferOrder['bussTrdTransferOrder'].isCalcConditionChanged();
@@ -1173,9 +1175,12 @@
 
     window.componentLoadCallback = function (isDone, pagePath, params) {
         if (isDone) {
+            if(typeof(BaseRiskMathComm) != 'undefined') {
             var riskparam = getriskdata();
             if (riskparam!=null&&pageModel==PAGE_MODEL_NEW){
                 riskparam.data =null;
+                }
+                window.BaseRiskMathComm.getparam(riskparam);
             }
             var result=null;
             window.BaseRiskMathComm.getparam(riskparam);

@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dao.TermStructureOfBusinessAndCostBenefitMapper">
+
+<select id="selectClosedProductBalance"
+	resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
+	parameterType="map">
+  	<![CDATA[
+	select a.days termType,nvl(a.amt,0) sessionendBalance from(
+	select days,sum(ENDAMTSUM_OTH) amt from(
+	select case 
+	when fp.MDATE-CP.ENDDATE=1 then '01'
+	when fp.MDATE-CP.ENDDATE>1 and fp.MDATE-CP.ENDDATE<=92 then '02'
+	when fp.MDATE-CP.ENDDATE>92 and fp.MDATE-CP.ENDDATE<=184 then '03'
+	when fp.MDATE-CP.ENDDATE>184 and fp.MDATE-CP.ENDDATE<=366 then '04'
+	when fp.MDATE-CP.ENDDATE>366 and fp.MDATE-CP.ENDDATE<=1096 then '05'
+	when fp.MDATE-CP.ENDDATE>1096 and fp.MDATE-CP.ENDDATE<=1826 then '06'
+	when fp.MDATE-CP.ENDDATE>1826 then '07'
+	end days, cp.ENDAMTSUM_OTH from CHB_MONTH_PRD_POSITION cp
+	left join FIN_PRODUCT fp on fp.FINPROD_MARKET_ID=CP.PRODID
+	where  fp.OPERATION_TYPE='01'
+	and CP.ENDDATE=#{endDate,jdbcType=DATE} and fp.MDATE-CP.ENDDATE>0)
+	group by days)a
+	
+	order by a.days
+	]]>
+</select>
+<select id="selectOpenProductBalance"
+	resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
+	parameterType="map">
+    	<![CDATA[
+		with plannum as(select finprod_id,count(1) plancounts from 
+	          FIN_OPEN_PLAN
+	          group by finprod_id),
+	   planv as (select finprod_id,min(OPEN_DATE_STR) minopenstart
+	    from FIN_OPEN_PLAN 
+	    where OPEN_DATE_STR>#{endDate,jdbcType=DATE}
+	    group by finprod_id)
+		 ,enddays as(
+		  select CASE
+		          WHEN nvl(plannum.plancounts,0) = 0 THEN 1 /*开放计划条数为0，表示高频开放*/
+		          ELSE greatest(nvl(planv.minopenstart,ffp.mdate)- #{endDate,jdbcType=DATE}, 0)
+		          END days ,FINPROD_MARKET_ID
+		          from 
+		FIN_PRODUCT ffp
+		left join plannum on plannum.finprod_id=ffp.finprod_id
+		left join planv on planv.finprod_id=ffp.finprod_id
+		where OPERATION_TYPE='02' and ffp.P_FINPROD_ID is null
+		)
+		select a.days termType,nvl(a.amt,0) sessionendBalance from(
+		select days,sum(ENDAMTSUM_OTH) amt from(
+		select case 
+		when enddays.days<=1 then '01'
+		when enddays.days>1 and enddays.days<=92 then '02'
+		when enddays.days>92 and enddays.days<=184 then '03'
+		when enddays.days>184 and enddays.days<=366 then '04'
+		when enddays.days>366 and enddays.days<=1096 then '05'
+		when enddays.days>1096 and enddays.days<=1826 then '06'
+		when enddays.days>1826 then '07'
+		end days, cp.ENDAMTSUM_OTH from CHB_MONTH_PRD_POSITION cp
+		inner join enddays  on enddays.FINPROD_MARKET_ID=CP.PRODID
+		where  
+		 CP.ENDDATE=#{endDate,jdbcType=DATE})
+		group by days)a
+		order by a.days
+]]>
+</select>
+<select id="selectRProductAvgRate"
+	resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
+	parameterType="map">
+	<![CDATA[
+	with  rate as(
+	SELECT RUL.FINPROD_ID,rul.yield
+	FROM FIN_CASH_CALC_RULE rul
+	left JOIN FIN_PRODUCT info
+	on info.FINPROD_ID=rul.FINPROD_ID
+	LEFT JOIN FIN_CASH_INFO B
+	ON rul.CASH_ID = B.CASH_ID
+	WHERE info.FINPROD_TYPE2 in ('F16','F24')
+	AND info.PROFIT_TYPE = '02'
+	and B.CASH_TYPE_1 = '02'
+	AND rul.BRANCH=0
+	and rul.eff_date=(select max(eff_date) from FIN_CASH_CALC_RULE fc1 where fc1.FINPROD_ID= RUL.FINPROD_ID
+	and fc1.eff_date<=#{endDate,jdbcType=DATE})
+	)
+	,pos as(
+	select bpp.cdate,bpp.FINPROD_ID,bpp.TDY_SHARE_AMT from BOK_POSITION_PRD bpp
+	left join FIN_PRODUCT_ADD fpa on BPP.FINPROD_ID=FPA.FINPROD_ID
+	left join FIN_PRODUCT fp on fp.FINPROD_ID=bpp.FINPROD_ID
+	left join rate on rate.FINPROD_ID=bpp.FINPROD_ID
+	where fpa.PROFIT_FLAG='03' 
+	and PROFIT_TYPE = '02'
+	and rate.FINPROD_ID is not null
+	and BPP.CDATE=#{endDate,jdbcType=DATE}
+	),
+	plannum as(select finprod_id,count(1) plancounts from 
+	          FIN_OPEN_PLAN
+	          group by finprod_id) ,
+	   planv as (select finprod_id,min(OPEN_DATE_STR) minopenstart
+	    from FIN_OPEN_PLAN 
+	    where OPEN_DATE_STR>#{endDate,jdbcType=DATE}
+	    group by finprod_id)
+	    
+	 ,enddays as(
+	  select 
+	      case when ffp.OPERATION_TYPE='01'/*01封闭式，02开放式*/
+	        then greatest(ffp.mdate-#{endDate,jdbcType=DATE},0)
+	        else
+	          CASE
+	          WHEN nvl(plannum.plancounts,0) = 0 THEN 1 /*开放计划条数为0，表示高频开放*/
+	          ELSE greatest(nvl(planv.minopenstart,ffp.mdate)- #{endDate,jdbcType=DATE}, 0)
+	          END 
+	          end days ,ffp.finprod_id
+	          from 
+	FIN_PRODUCT ffp
+	left join plannum on plannum.finprod_id=ffp.finprod_id
+	left join planv on planv.finprod_id=ffp.finprod_id
+	 
+	)
+	,psi as(
+	select 
+	case 
+	when enddays.days<=1 then '01'
+	when enddays.days>1 and enddays.days<=92 then '02'
+	when enddays.days>92 and enddays.days<=184 then '03'
+	when enddays.days>184 and enddays.days<=366 then '04'
+	when enddays.days>366 and enddays.days<=1096 then '05'
+	when enddays.days>1096 and enddays.days<=1826 then '06'
+	when enddays.days>1826 then '07'
+	end days,pos.TDY_SHARE_AMT* nvl(rate.YIELD,0) amt
+	from  pos
+	left join rate on RATE.FINPROD_ID=POS.FINPROD_ID
+	left join enddays  on enddays.FINPROD_ID=pos.FINPROD_ID
+	)
+	,psiav as(
+	SELECT days,sum(nvl(amt,0)) amt 
+	from psi group by days)
+	,psit as(
+	select 
+	case 
+	when enddays.days<=1 then '01'
+	when enddays.days>1 and enddays.days<=92 then '02'
+	when enddays.days>92 and enddays.days<=184 then '03'
+	when enddays.days>184 and enddays.days<=366 then '04'
+	when enddays.days>366 and enddays.days<=1096 then '05'
+	when enddays.days>1096 and enddays.days<=1826 then '06'
+	when enddays.days>1826 then '07'
+	end days,pos.TDY_SHARE_AMT amtp
+	from  pos
+	left join enddays  on enddays.FINPROD_ID=pos.FINPROD_ID
+	)
+	,psiavt as(
+	SELECT days,sum(nvl(amtp,0)) amt 
+	from psit group by days)
+	
+	select psiav.days termType,psiavt.amt shareamt,psiav.amt syamt,psiav.amt/psiavt.amt sessionendYield
+	from psiav
+	left join psiavt on psiav.days=psiavt.days
+	where psiavt.amt !=0
+	union all
+	select psiav.days termType,psiavt.amt shareamt,psiav.amt syamt,0 sessionendYield
+	from psiav
+	left join psiavt on psiav.days=psiavt.days
+	where psiavt.amt =0
+	]]>
+</select>
+<select id="selectNProductAvgRate"
+	resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
+	parameterType="map">
+	<![CDATA[
+	with pic as(
+	SELECT INT_RATE_ID,
+	    int_rate_type,
+	    int_rate
+	  FROM
+	    (SELECT row_number() over
+	    (partition BY brating.INT_RATE_ID, brating.int_rate_type 
+	      order by EFF_DATE DESC ) my_rank ,            
+	      brating.INT_RATE_ID ,
+	      brating.int_rate_type,
+	      brating.int_rate
+	    FROM MST_INT_RATE_INFO brating 
+	    where EFF_DATE<=#{endDate,jdbcType=DATE}
+	    )
+	  WHERE my_rank=1
+	),
+	rate as(
+	select 
+	fbr.FINPROD_ID,
+	case
+	      when rate_type='01'
+	      then fbr.rate
+	      else nvl(fbr.coefficient,0)*nvl(pic.int_rate,0)+nvl(fbr.spread_rate,0) end yield
+	from FIN_BASE_RULE_INFO fbr
+	left join FIN_PRODUCT fp on fbr.FINPROD_ID=fp.FINPROD_ID
+	left join pic on fbr.index_id=PIC.INT_RATE_ID
+	and fbr.index_source=PIC.INT_RATE_TYPE
+	where FP.PROFIT_TYPE !='02'
+	and fbr.BASE_RULE_TYPE='02'
+	and fbr.eff_date =(select max(fb.eff_date) from FIN_BASE_RULE_INFO fb where fb.FINPROD_ID=fbr.FINPROD_ID and fb.BASE_RULE_TYPE='02'
+	and fb.eff_date<=#{endDate,jdbcType=DATE})
+	)
+	,pos as(
+	select bpp.cdate,bpp.FINPROD_ID,bpp.TDY_SHARE_AMT from BOK_POSITION_PRD bpp
+	left join FIN_PRODUCT_ADD fpa on BPP.FINPROD_ID=FPA.FINPROD_ID
+	left join FIN_PRODUCT fp on fp.FINPROD_ID=bpp.FINPROD_ID
+	left join rate on rate.FINPROD_ID=bpp.FINPROD_ID
+	where fpa.PROFIT_FLAG='03' 
+	and PROFIT_TYPE != '02'
+	and rate.FINPROD_ID is not null
+	and BPP.CDATE=#{endDate,jdbcType=DATE}
+	)
+	,plannum as(select finprod_id,count(1) plancounts from 
+	          FIN_OPEN_PLAN
+	          group by finprod_id) ,
+	   planv as (select finprod_id,min(OPEN_DATE_STR) minopenstart
+	    from FIN_OPEN_PLAN 
+	    where OPEN_DATE_STR>#{endDate,jdbcType=DATE}
+	    group by finprod_id)
+	    
+	 ,enddays as(
+	  select 
+	      case when ffp.OPERATION_TYPE='01'/*01封闭式，02开放式*/
+	        then greatest(ffp.mdate-#{endDate,jdbcType=DATE},0)
+	        else
+	          CASE
+	          WHEN nvl(plannum.plancounts,0) = 0 THEN 1 /*开放计划条数为0，表示高频开放*/
+	          ELSE greatest(nvl(planv.minopenstart,ffp.mdate)- #{endDate,jdbcType=DATE}, 0)
+	          END 
+	          end days ,ffp.finprod_id
+	          from 
+	FIN_PRODUCT ffp
+	left join plannum on plannum.finprod_id=ffp.finprod_id
+	left join planv on planv.finprod_id=ffp.finprod_id
+	 
+	)
+	,psi as(
+	select 
+	case 
+	when enddays.days<=1 then '01'
+	when enddays.days>1 and enddays.days<=92 then '02'
+	when enddays.days>92 and enddays.days<=184 then '03'
+	when enddays.days>184 and enddays.days<=366 then '04'
+	when enddays.days>366 and enddays.days<=1096 then '05'
+	when enddays.days>1096 and enddays.days<=1826 then '06'
+	when enddays.days>1826 then '07'
+	end days,pos.TDY_SHARE_AMT* nvl(RATE.YIELD,0) amt
+	from  pos
+	left join rate on RATE.FINPROD_ID=POS.FINPROD_ID
+	left join enddays  on enddays.FINPROD_ID=pos.FINPROD_ID
+	)
+	,psiav as(
+	SELECT days,sum(nvl(amt,0)) amt 
+	from psi group by days)
+	,psit as(
+	select 
+	case 
+	when enddays.days<=1 then '01'
+	when enddays.days>1 and enddays.days<=92 then '02'
+	when enddays.days>92 and enddays.days<=184 then '03'
+	when enddays.days>184 and enddays.days<=366 then '04'
+	when enddays.days>366 and enddays.days<=1096 then '05'
+	when enddays.days>1096 and enddays.days<=1826 then '06'
+	when enddays.days>1826 then '07'
+	end days,pos.TDY_SHARE_AMT amtp
+	from  pos
+	left join enddays  on enddays.FINPROD_ID=pos.FINPROD_ID
+	)
+	,psiavt as(
+	SELECT days,sum(nvl(amtp,0)) amt 
+	from psit group by days)
+	
+	select psiav.days termType,psiavt.amt shareamt,psiav.amt syamt,psiav.amt/psiavt.amt sessionendYield
+	from psiav
+	left join psiavt on psiav.days=psiavt.days
+	where psiavt.amt !=0
+	union all
+	select psiav.days termType,psiavt.amt shareamt,psiav.amt syamt,0 sessionendYield
+	from psiav
+	left join psiavt on psiav.days=psiavt.days
+	where psiavt.amt =0
+	]]>
+</select>
+<select id="selectAssetBalance"
+	resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
+	parameterType="map">
+  	<![CDATA[
+	select A.DAYS termType,A.AMT sessionendBalance from(
+		select t.days,sum(t.amt) amt from(
+		    select nvl(CAP.ASSETVALUE_A,0) amt,
+		    case 
+		    when BAD.END_DAYS is null
+		    then '01' 
+		    when BAD.END_DAYS <=1
+		    then '01' 
+		    when BAD.END_DAYS>1 and BAD.END_DAYS<=92 then '02'
+		    when BAD.END_DAYS>92 and BAD.END_DAYS<=184 then '03'
+		    when BAD.END_DAYS>184 and BAD.END_DAYS<=366 then '04'
+		    when BAD.END_DAYS>366 and BAD.END_DAYS<=1096 then '05'
+		    when BAD.END_DAYS>1096 and BAD.END_DAYS<=1826 then '06'
+		    when BAD.END_DAYS>1826 then '07'
+		    end days
+		    from 
+		    CHB_MONTH_ASSET_POSITION cap
+		    left join (
+		    select DISTINCT FINPROD_MARKET_ID,END_DAYS
+		    from BUSI_REPORT_BASIS_ASSET_DATA
+		    where cdate=#{endDate,jdbcType=DATE}) bad
+		    on CAP.ASSET_CODE=BAD.FINPROD_MARKET_ID
+		    where CAP.ASSET_CODE !='REMAININGCASH'
+		    and CAP.ENDDATE=#{endDate,jdbcType=DATE}
+		    and cap.ASSETTYPE2 not in ('1901','1902')
+			) t
+			GROUP by t.DAYS
+		) a
+		
+	ORDER by A.DAYS
+	]]>
+</select>
+<select id="selectNSAssetBalance"
+	resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
+	parameterType="map">
+  	<![CDATA[
+	select A.DAYS termType,A.AMT sessionendBalance from(
+		select t.days,sum(t.amt) amt from(
+		    select nvl(CAP.ASSETVALUE_A,0) amt,
+		    case 
+		    when BAD.END_DAYS is null
+		    then '01' 
+		    when BAD.END_DAYS <=1
+		    then '01' 
+		    when BAD.END_DAYS>1 and BAD.END_DAYS<=92 then '02'
+		    when BAD.END_DAYS>92 and BAD.END_DAYS<=184 then '03'
+		    when BAD.END_DAYS>184 and BAD.END_DAYS<=366 then '04'
+		    when BAD.END_DAYS>366 and BAD.END_DAYS<=1096 then '05'
+		    when BAD.END_DAYS>1096 and BAD.END_DAYS<=1826 then '06'
+		    when BAD.END_DAYS>1826 then '07'
+		    end days
+		    from 
+		    CHB_MONTH_ASSET_POSITION cap
+		    left join (
+		    select DISTINCT FINPROD_MARKET_ID,END_DAYS
+		    from BUSI_REPORT_BASIS_ASSET_DATA
+		    where cdate=#{endDate,jdbcType=DATE}) bad
+		    on CAP.ASSET_CODE=BAD.FINPROD_MARKET_ID
+		    left join FIN_PRODUCT fp on fp.FINPROD_MARKET_ID=CAP.ASSET_CODE
+		    left join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=fp.FINPROD_ID
+		    where CAP.ASSET_CODE !='REMAININGCASH'
+		    and CAP.ENDDATE=#{endDate,jdbcType=DATE}
+		    and CAP.ASSETTYPE IN ('04','05','14')
+		    and CAP.ASSETTYPE2 not in ('2101','1399','1599','2299','1901','1902')
+		    and fpt.TYPE_11 not in ('057','075','076')
+			) t
+			GROUP by t.DAYS
+		) a
+	ORDER by A.DAYS
+	]]>
+</select>
+<select id="selectIncurDebtsBalance" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
+	parameterType="map">
+	SELECT CAP.ASSETTYPE2 termType,
+	  SUM(cap.ASSETVALUE_A) sessionendBalance
+	FROM CHB_MONTH_ASSET_POSITION cap
+	WHERE CAP.ENDDATE  =#{endDate,jdbcType=DATE}
+	AND CAP.ASSETTYPE2 ='1901'
+	 group by CAP.ASSETTYPE2
+	UNION ALL
+	SELECT CAP.ASSETTYPE2 termType,
+	SUM(cap.ASSETVALUE_A) sessionendBalance
+	FROM CHB_MONTH_ASSET_POSITION cap
+	WHERE CAP.ENDDATE  =#{endDate,jdbcType=DATE}
+	AND CAP.ASSETTYPE2 ='1902'
+	 group by CAP.ASSETTYPE2
+</select>
+<select id="selectIncurDebtsRate" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
+	parameterType="map">
+with cj as(
+		select cap.ASSETTYPE2, sum(SHARE_AMT*YIELD) amt
+		from BUSI_REPORT_BASIS_ASSET_DATA BAD
+    left join (select DISTINCT ASSETTYPE2,asset_code from CHB_MONTH_ASSET_POSITION
+    where ENDDATE  =#{endDate,jdbcType=DATE}
+    AND ASSETTYPE2 in ('1901','1902')
+    ) cap
+    on BAD.FINPROD_MARKET_ID=cap.asset_code
+		where BAD.cdate=#{endDate,jdbcType=DATE}
+    and cap.asset_code is not null
+    group by cap.ASSETTYPE2
+		),
+		bj as(
+    select cap.ASSETTYPE2,sum(SHARE_AMT) amt
+		from BUSI_REPORT_BASIS_ASSET_DATA BAD
+    left join (select DISTINCT ASSETTYPE2,asset_code from CHB_MONTH_ASSET_POSITION
+    where ENDDATE  =#{endDate,jdbcType=DATE}
+    AND ASSETTYPE2 in ('1901','1902')
+    ) cap
+    on BAD.FINPROD_MARKET_ID=cap.asset_code
+		where BAD.cdate=#{endDate,jdbcType=DATE}
+    and cap.asset_code is not null
+    group by cap.ASSETTYPE2
+		)			
+		select bj.ASSETTYPE2 termType,cj.amt/bj.amt sessionendYield
+		from bj left join cj on bj.ASSETTYPE2= cj.ASSETTYPE2
+		where bj.amt !=0
+		union all
+		select bj.ASSETTYPE2 termType,0 sessionendYield
+		from bj left join cj on bj.ASSETTYPE2= cj.ASSETTYPE2
+		where bj.amt =0
+		
+		
+</select>
+<select id="selectAssetRate"
+	resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
+	parameterType="map">
+  	<![CDATA[
+		with cj as(
+		select SHARE_AMT*YIELD amt,
+		case 
+				    when BAD.END_DAYS is null
+				    then '01' 
+				    when BAD.END_DAYS <=1
+				    then '01' 
+				    when BAD.END_DAYS>1 and BAD.END_DAYS<=92 then '02'
+				    when BAD.END_DAYS>92 and BAD.END_DAYS<=184 then '03'
+				    when BAD.END_DAYS>184 and BAD.END_DAYS<=366 then '04'
+				    when BAD.END_DAYS>366 and BAD.END_DAYS<=1096 then '05'
+				    when BAD.END_DAYS>1096 and BAD.END_DAYS<=1826 then '06'
+				    when BAD.END_DAYS>1826 then '07'
+				    end days
+		from BUSI_REPORT_BASIS_ASSET_DATA BAD
+		where BAD.cdate=#{endDate,jdbcType=DATE}
+		and BAD.FINPROD_TYPE2 not in ('F02','F04','F08')
+		),
+		bj as(
+		select SHARE_AMT amt,
+		case 
+				    when BAD.END_DAYS is null
+				    then '01' 
+				    when BAD.END_DAYS <=1
+				    then '01' 
+				    when BAD.END_DAYS>1 and BAD.END_DAYS<=92 then '02'
+				    when BAD.END_DAYS>92 and BAD.END_DAYS<=184 then '03'
+				    when BAD.END_DAYS>184 and BAD.END_DAYS<=366 then '04'
+				    when BAD.END_DAYS>366 and BAD.END_DAYS<=1096 then '05'
+				    when BAD.END_DAYS>1096 and BAD.END_DAYS<=1826 then '06'
+				    when BAD.END_DAYS>1826 then '07'
+				    end days
+		from BUSI_REPORT_BASIS_ASSET_DATA BAD
+		where BAD.cdate=#{endDate,jdbcType=DATE}
+		and BAD.FINPROD_TYPE2 not in ('F02','F04','F08')
+		),
+		scj as(
+		select days,sum(amt) amt
+		from cj 
+		GROUP by days),
+		sbj as(
+		select days,sum(amt) amt
+		from bj 
+		GROUP by days)
+		
+		select scj.days termType,scj.amt/sbj.amt sessionendYield
+		from scj
+		left join sbj on scj.days=sbj.days
+		where sbj.amt !=0
+		union all
+		select scj.days termType,0 sessionendYield
+		from scj
+		left join sbj on scj.days=sbj.days
+		where sbj.amt =0
+	]]>
+</select>
+<select id="selectNSAssetRate"
+	resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
+	parameterType="map">
+  	<![CDATA[
+		with cj as(
+		select SHARE_AMT*YIELD amt,
+		case 
+				    when BAD.END_DAYS is null
+				    then '01' 
+				    when BAD.END_DAYS <=1
+				    then '01' 
+				    when BAD.END_DAYS>1 and BAD.END_DAYS<=92 then '02'
+				    when BAD.END_DAYS>92 and BAD.END_DAYS<=184 then '03'
+				    when BAD.END_DAYS>184 and BAD.END_DAYS<=366 then '04'
+				    when BAD.END_DAYS>366 and BAD.END_DAYS<=1096 then '05'
+				    when BAD.END_DAYS>1096 and BAD.END_DAYS<=1826 then '06'
+				    when BAD.END_DAYS>1826 then '07'
+				    end days
+		from BUSI_REPORT_BASIS_ASSET_DATA BAD
+		left join FIN_PRODUCT fp on fp.FINPROD_MARKET_ID=BAD.FINPROD_MARKET_ID
+	    left join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=fp.FINPROD_ID
+		where BAD.cdate=#{endDate,jdbcType=DATE}
+		and fpt.TYPE_11 not in ('057','075','076')
+		and BAD.FINPROD_TYPE2 not in ('F02','F04','F08')
+		),
+		bj as(
+		select SHARE_AMT amt,
+		case 
+				    when BAD.END_DAYS is null
+				    then '01' 
+				    when BAD.END_DAYS <=1
+				    then '01' 
+				    when BAD.END_DAYS>1 and BAD.END_DAYS<=92 then '02'
+				    when BAD.END_DAYS>92 and BAD.END_DAYS<=184 then '03'
+				    when BAD.END_DAYS>184 and BAD.END_DAYS<=366 then '04'
+				    when BAD.END_DAYS>366 and BAD.END_DAYS<=1096 then '05'
+				    when BAD.END_DAYS>1096 and BAD.END_DAYS<=1826 then '06'
+				    when BAD.END_DAYS>1826 then '07'
+				    end days
+		from BUSI_REPORT_BASIS_ASSET_DATA BAD
+		left join FIN_PRODUCT fp on fp.FINPROD_MARKET_ID=BAD.FINPROD_MARKET_ID
+	    left join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=fp.FINPROD_ID
+		where BAD.cdate=#{endDate,jdbcType=DATE}
+		and fpt.TYPE_11 not in ('057','075','076')
+		and BAD.FINPROD_TYPE2 not in ('F02','F04','F08')
+		),
+		scj as(
+		select days,sum(amt) amt
+		from cj 
+		GROUP by days),
+		sbj as(
+		select days,sum(amt) amt
+		from bj 
+		GROUP by days)
+		select scj.days termType,scj.amt/sbj.amt sessionendYield
+		from scj
+		left join sbj on scj.days=sbj.days
+		where sbj.amt !=0
+		union all
+		select scj.days termType,0 sessionendYield
+		from scj
+		left join sbj on scj.days=sbj.days
+		where sbj.amt =0
+	]]>
+</select>
+</mapper>

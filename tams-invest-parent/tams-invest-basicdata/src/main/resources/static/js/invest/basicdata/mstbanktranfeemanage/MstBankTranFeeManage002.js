@@ -95,6 +95,8 @@
         mstDto.tradeType = object.tradeType;
         mstDto.effDate = object.effDate;
         mstDto.isMlti = object.isMlti;
+        //添加交易市场
+        mstDto.tradeMarketMode = object.tradeMarketMode;
         if ($("#workflowId").val() != null && $("#workflowId").val() != '') {
             mstDto.workflowId = $("#workflowId").val();
         }
@@ -153,6 +155,8 @@
         mstDto.registOrg = object.registOrg;
         mstDto.batchSeq = object.batchSeq;
         mstDto.tradeType = object.tradeType;
+        //添加交易市场
+        mstDto.tradeMarketMode = object.tradeMarketMode;
         mstDto.ps = v1;
         if ($("#workflowId").val() != null && $("#workflowId").val() != '') {
             mstDto.workflowId = $("#workflowId").val();
@@ -174,6 +178,11 @@
             // 当交易品种为债券时
             $('#termType').val('');
             $('#termType').attr("disabled", true);
+
+            //交易市场解除置灰
+            $('#tradeMarketMode').attr("disabled", false);
+            $('#tradeMarketMode').attr("required", true).trigger('change');
+
             // 是否多券种置灰
             $('#isMlti').prop("checked",false).prop("disabled", true).trigger('change');
             $('#isMlti').next().find("em").text('否');
@@ -183,6 +192,11 @@
         } else {
             $('#termType').attr("disabled", false);
             $('#termType').attr("required", true).trigger('change');
+
+            //交易市场置灰
+            $('#tradeMarketMode').val('');
+            $('#tradeMarketMode').attr("disabled", true);
+            $('#tradeMarketMode').attr("required", false).trigger('change');
 
             if(tradeType == PINAN_ASSET_TYPE_F07 ){
                 if($('#chargeType').val()&&$('#chargeType').val()==CHARGE_KIND_01){

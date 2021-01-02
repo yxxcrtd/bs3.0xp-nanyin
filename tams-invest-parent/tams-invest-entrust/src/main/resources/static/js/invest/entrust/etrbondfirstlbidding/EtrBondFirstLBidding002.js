@@ -198,6 +198,7 @@
     function saveOrSubmit(operateType) {
     	//风险试算 start
     	 var s;
+        if(typeof(BaseRiskMathComm) != 'undefined') {
     	 if(BaseRiskMathComm) {
              s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
              if(!s && s != ''){
@@ -205,6 +206,7 @@
              }
              if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
                  return;
+                }
              }
          }
     	//风险试算 end

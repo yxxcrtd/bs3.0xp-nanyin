@@ -121,6 +121,7 @@
     	generateOrders(function () {
 	        var s;        
 	        var maxTradeamt = 0;
+            if(typeof(BaseRiskMathComm) != 'undefined') {
 	    	if(BaseRiskMathComm) {
 	            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
 	            if(!s && s != ''){
@@ -130,7 +131,7 @@
 	                return;
 	            }
 	        }
-	         
+            }
 	        // 检查生成划款指令参数是否发生变化
 	        if (window.BussTrdTransferOrder['bussTrdTransferOrder'].isCalcConditionChanged()) {
 	            return;

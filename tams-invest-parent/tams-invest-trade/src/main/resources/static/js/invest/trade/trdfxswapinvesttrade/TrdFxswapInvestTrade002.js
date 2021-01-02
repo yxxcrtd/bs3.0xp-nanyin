@@ -15,11 +15,13 @@ $(function(){
     window.componentLoadCallback = function(isDone, pagePath, params){
         if(isDone){
             //----add by jjpei 20190718 风险试算----start----
+            if(typeof(BaseRiskMathComm) != 'undefined') {
             var riskParam = getRiskData();
             if (pageModel==PAGE_MODEL_NEW){
                 riskParam.data =null;
             }
             window.BaseRiskMathComm.getparam(riskParam);
+            }
             //----add by jjpei 20190718 风险试算----end----
             if(window.BussTrdTransferOrder && window.BussTrdTransferOrder['bussTrdTransferOrder']) {
                 window.BussTrdTransferOrder['bussTrdTransferOrder'].setStlCommandInput(function () {
@@ -128,6 +130,7 @@ $(function(){
     	// 划款指令隐藏时，自动生成划款指令信息
     	generateOrders(function () {
 	       var s;
+            if(typeof(BaseRiskMathComm) != 'undefined') {
 	       if(BaseRiskMathComm) {
 	           s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
 	           if(!s && s != ''){
@@ -135,6 +138,7 @@ $(function(){
 	           }
 	           if (window.BaseRiskMathComm.isCalcConditionChanged(getRiskData())){
 	               return;
+                    }
 	           }
 	       }
 	        // 检查生成划款指令参数是否发生变化

@@ -52,6 +52,15 @@ public class ProRegistCodeManageController{
     }
     
     /**
+     * 产品登记编码新建产品代码下拉框
+     * @return 产品代码和名称列表
+     */
+    @PostMapping("getProdInfo")
+    public List<SuggestDto> getProdInfo(@RequestBody  Map<String,Object> paramMap) {
+        return checkReport001Service.getProdInfo(paramMap);
+    }
+    
+    /**
      * 产品登记编码下拉框
      * @return 产品名称列表
      */

@@ -1650,4 +1650,12 @@ public class FinProductCommonService {
         }
         return dto;
     }
+    /**
+     * 查询跑批日当天还本付息交易
+     * @param map
+     * @return
+     */
+    public Map<String, Object> selectHBFXData(Map<String, Object> map) {
+        return finProductCommonMapper.selectHBFXData(map);
+    }
 }
