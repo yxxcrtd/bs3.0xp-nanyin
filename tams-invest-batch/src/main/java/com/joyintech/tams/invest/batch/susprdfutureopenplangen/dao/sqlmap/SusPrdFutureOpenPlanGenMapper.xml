@@ -63,10 +63,11 @@
 						B.FINPROD_TYPE = #{cashFinprodType}																					
 						AND B.CASH_TYPE_2 = #{cashType1}										
 						AND B.BRANCH = 0																					
-						AND C.open_date_str = to_date(#{sysDate},'yyyy-MM-dd')																			
-					) T																						
+					) T
 				WHERE 																							
-					T.RN = 1																						
+					T.RN = 1
+					AND T.OPEN_VDATE between TRUNC(to_date(#{sysDate},'yyyy-MM-dd'),'mm')
+		            and trunc(add_months(to_date(#{sysDate},'yyyy-MM-dd'),1),'mm')-1
 				) E																							
 				ON A.FINPROD_ID = E.FINPROD_ID																							
 			INNER JOIN FIN_PRODUCT_ADD D																								
@@ -79,8 +80,8 @@
 			ON A.FINPROD_ID = G.FINPROD_ID																						
 		WHERE 																									
 			A.FINPROD_TYPE2 = #{finprodType}																
-			AND A.P_FINPROD_ID IS NULL																								
-			AND A.IS_SUS = #{isSus}																								
+			AND A.P_FINPROD_ID IS NULL
+			AND A.IS_SUS = #{isSus}
 			AND A.OPERATION_TYPE = #{operationType}																								
 	</select>
 

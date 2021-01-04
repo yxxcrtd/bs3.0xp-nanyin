@@ -1389,13 +1389,16 @@
 	    }
 	}
 	var calcRuleChange = function(){
+	//debugger;
 	    if(getElementById('openDaysType').val() === OPEN_DAYS_TYPE_02 && getElementById('calcRule').val() === CALC_METHOD_02){
 	        Joyin.error(JoyinUtil.getMessage("FIN_PROD_E_0126"));
 	        getElementById('calcRule').val('');
 	        return;
 	    }
 	    if(getElementById('calcRule').val() === CALC_METHOD_01){
-	        getElementById('tradedayRule').val(TDAY_RULE_02).trigger('change').prop('disabled', true);
+	        if(pageModel != PAGE_MODEL_REFERENCE){
+	            getElementById('tradedayRule').val(TDAY_RULE_02).trigger('change').prop('disabled', true);
+	        }
         } else {
         	//TISHKBS-1393 start
 //        	getElementById('tradedayRule').val(TDAY_RULE_02).trigger('change').prop('disabled', false);
