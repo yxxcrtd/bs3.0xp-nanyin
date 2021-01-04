@@ -262,12 +262,12 @@ public class FinStageManagementService extends CommonExportService<FinStageManag
                 FinCashInfo finCashInfoInterest = assetCommonService.encapFinCashInfo(finProduct,
                     DictCodeListExt1.金融产品类型_理财产品.getValue(), DictCodeListExt1.现金流一级类型_利息.getValue(),
                     DictCodeListExt1.现金流二级类型_利息.getValue(), branch, null);
-                if (StringUtil.isNotEmpty(entity.getIntCashId())) {
-                    finCashInfoInterest.setCashId(entity.getIntCashId());
-                }
-                if (StringUtil.isNotEmpty(entity.getPriCashId())) {
-                    finCashInfoPrincipal.setCashId(entity.getPriCashId());
-                }
+//                if (StringUtil.isNotEmpty(entity.getIntCashId())) {
+//                    finCashInfoInterest.setCashId(entity.getIntCashId());
+//                }
+//                if (StringUtil.isNotEmpty(entity.getPriCashId())) {
+//                    finCashInfoPrincipal.setCashId(entity.getPriCashId());
+//                }
                 // ----add by 裴家俊--2019/03/29-------start----
                 finCashInfoPrincipal.setCcy(StringUtil.isNotEmpty(
                     finProductEntry) ? StringUtil.isNotEmpty(finProductEntry.getCcy()) ? finProductEntry.getCcy() : null : null);
