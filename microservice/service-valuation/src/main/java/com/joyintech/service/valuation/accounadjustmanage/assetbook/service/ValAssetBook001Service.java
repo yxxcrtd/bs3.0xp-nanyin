@@ -429,4 +429,13 @@ public class ValAssetBook001Service extends CommonExportService<ValAssetbook001D
         return super.queryForPageForSelectReturn(page,length,()->mapper.getBooksetIdForSelect(param));
     }
 
+    /**
+     * 账套代码
+     * @param
+     * @return
+     */
+    public List<SuggestDto> findProductGrp(Map<String, Object> param) {
+        param.put("userId", LoginUserUtil.getUserName());
+        return mapper.findProductGrp(param);
+    }
 }

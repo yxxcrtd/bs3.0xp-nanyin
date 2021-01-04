@@ -392,4 +392,19 @@ public class ValAssetBook001Controller extends BaseController {
     @PathVariable("page") int page, @PathVariable("length") int length) {
         return valAssetBook001Service.getBooksetIdNew(page,length,pageParam);
     }
+
+    /**
+     * 根据配置产品组查询对应的产品
+     *
+     * @return 产品代码
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("/findProductGrp")
+    public List<SuggestDto> findProductGrp(@RequestBody Map<String, Object> params)
+            throws Exception {
+        String param =(String) params.get("param");
+        return valAssetBook001Service.findProductGrp(params);
+    }
 }
