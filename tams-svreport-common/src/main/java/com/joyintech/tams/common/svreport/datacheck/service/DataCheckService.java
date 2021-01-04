@@ -21,6 +21,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import com.joyintech.framework.util.StringUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
@@ -28,7 +29,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.github.pagehelper.util.StringUtil;
 import com.joyintech.tams.common.svreport.datacheck.dao.CheckConditionMapper;
 import com.joyintech.tams.common.svreport.datacheck.dao.CheckRuleMapper;
 import com.joyintech.tams.common.svreport.datacheck.dto.CheckCondition;
@@ -121,13 +121,17 @@ public class DataCheckService {
                     sbCon.append("条件:");
                     for (CheckCondition c : listConditions) {
                         conCheck = conCheck && checkCondition(x, c, mapMethod);
-                        sbCon.append(c.getRemark()+";");
+                        if (StringUtil.isNotEmpty(c.getRemark()) && !StringUtil.equals(c.getRemark(), "null")){
+                            sbCon.append(c.getRemark()+";");
+                        }
                         if (conCheck == false) { // 条件不满足，不做数据检查
                             break;
                         }
                     }
                     if (conCheck == true) { // 条件满足，做数据检查
-                        sbCon.append("-->");
+                        if (!StringUtil.equals(sbCon.toString(), "条件:")){
+                            sbCon.append("-->");
+                        }
                         boolean b= checkData(x, r, mapMethod);
                         if (b == false) {
                             sb.append(sbCon.toString()+r.getRemark() + "[" + r.getSrcproperty() + "="+x.get(r.getSrcproperty())+"];");
