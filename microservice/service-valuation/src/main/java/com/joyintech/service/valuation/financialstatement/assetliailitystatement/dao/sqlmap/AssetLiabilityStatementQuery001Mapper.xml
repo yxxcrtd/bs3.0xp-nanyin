@@ -83,9 +83,12 @@
 					#{item}
 				</foreach>
 			</if>
-			<!-- <foreach collection="accountList" item="item" open="(" separator="," close=")">
-			   #{item.code}
-			</foreach> -->
+		  <if test="accountList !=null and accountList.size() > 0 ">
+			  AND  bb.BOOKSET_ID in
+				<foreach collection="accountList" item="item" open="(" separator="," close=")">
+					 #{item.code}
+				</foreach>
+		  </if>
 		   and bb.balance_date = #{balanceDate}
 	       and bb.subject_no in 
 		   <foreach collection="subjectNoList" item="item" open="(" separator="," close=")">

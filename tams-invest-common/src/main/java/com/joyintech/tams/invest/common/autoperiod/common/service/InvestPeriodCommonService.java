@@ -1011,7 +1011,7 @@ public class InvestPeriodCommonService {
         repTrade.setRepUnitPriceNet(deal.getUnitCprice());
         repTrade.setRepUnitPriceFull(deal.getUnitFprice());
         repTrade.setRepTradeComponent(institutionName);
-        if (DictCodeList.交易方向_到期.getValue().equals(deal.getStatus())) {
+        if (DictCodeList.交易方向_到期.getValue().equals(deal.getStatus()) || DictCodeList.交易方向_还本.getValue().equals(deal.getStatus())) {
             repTrade.setRepOccurMoney(deal.getTradeAmt());
             repTrade.setRepMoneyCny(ArithmeticUtil.multiply(deal.getTradeAmt(), 最低收盘价F));
             repTrade.setRepMoneyFlowType(DictCodeListExt2.资金流动类型_资产卖出或到期.getValue());

@@ -16,20 +16,20 @@ values ('FeeProvisionSetting002', 'PTL', '/invest/portfolio/feeprovisionsetting/
 
 /*画面要素表*/
 delete from SYS_PAGE_ELEMENT where PAGE_ID in ('FeeProvisionSetting001','FeeProvisionSetting002');
-Insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('FeeProvisionSetting001','FeeProvisionSetting001_btn_add','01','01',null,'新建','system',null,sysdate,'system',sysdate);
-Insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('FeeProvisionSetting001','FeeProvisionSetting001_btn_export','01','01',null,'导出','system',null,sysdate,'system',sysdate);
-Insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('FeeProvisionSetting001','FeeProvisionSetting001_btn_reset','01','01',null,'重置','system',null,sysdate,'system',sysdate);
-Insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('FeeProvisionSetting001','FeeProvisionSetting001_btn_revoke','01','01',null,'撤销','system',null,sysdate,'system',sysdate);
-Insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('FeeProvisionSetting001','FeeProvisionSetting001_btn_search','01','01',null,'查询','system',null,sysdate,'system',sysdate);
-Insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('FeeProvisionSetting002','FeeProvisionSetting002_btn_save','01','02',null,'保存','system',null,sysdate,'system',sysdate);
-Insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
-values ('FeeProvisionSetting002','FeeProvisionSetting002_btn_submit','01','02',null,'提交','system',null,sysdate,'system',sysdate);
+Insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG) 
+values ('FeeProvisionSetting001','FeeProvisionSetting001_btn_add','01','01',null,'新建','system',null,sysdate,'system',sysdate,'COM');
+Insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG) 
+values ('FeeProvisionSetting001','FeeProvisionSetting001_btn_export','01','01',null,'导出','system',null,sysdate,'system',sysdate,'COM');
+Insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG) 
+values ('FeeProvisionSetting001','FeeProvisionSetting001_btn_reset','01','01',null,'重置','system',null,sysdate,'system',sysdate,'COM');
+Insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG) 
+values ('FeeProvisionSetting001','FeeProvisionSetting001_btn_revoke','01','01',null,'撤销','system',null,sysdate,'system',sysdate,'COM');
+Insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG) 
+values ('FeeProvisionSetting001','FeeProvisionSetting001_btn_search','01','01',null,'查询','system',null,sysdate,'system',sysdate,'COM');
+Insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG) 
+values ('FeeProvisionSetting002','FeeProvisionSetting002_btn_save','01','02',null,'保存','system',null,sysdate,'system',sysdate,'COM');
+Insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG) 
+values ('FeeProvisionSetting002','FeeProvisionSetting002_btn_submit','01','02',null,'提交','system',null,sysdate,'system',sysdate,'COM');
 
 
 /*业务流程模板*/

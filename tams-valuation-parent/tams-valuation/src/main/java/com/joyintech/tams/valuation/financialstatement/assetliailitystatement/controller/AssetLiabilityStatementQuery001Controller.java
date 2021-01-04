@@ -225,7 +225,8 @@ public class AssetLiabilityStatementQuery001Controller extends BaseController {
     		dtoList = service.findAssetsStatement(dto);
     	} else {
     		// 报表维度为全账套
-    		dto.setAccountList(valAssetBook001Service.getBooksetId2(paraMap));
+//    		dto.setAccountList(valAssetBook001Service.getBooksetId2(paraMap));
+            dto.setAccountList(valAssetBook001Service.findProductGrp(paraMap));
     		dtoList = service.findAssetsStatementAll(dto);
     	}
 
@@ -269,7 +270,8 @@ public class AssetLiabilityStatementQuery001Controller extends BaseController {
     		dtoList = service.findLiabilityInterestStatement(dto);
     	} else {
     		// 报表维度为全账套
-    		dto.setAccountList(valAssetBook001Service.getBooksetId2(paraMap));
+//    		dto.setAccountList(valAssetBook001Service.getBooksetId2(paraMap));
+            dto.setAccountList(valAssetBook001Service.findProductGrp(paraMap));
     		dtoList = service.findLiabilityInterestStatementAll(dto);
     	}
     	if(CollectionUtils.isNotEmpty(dtoList)) {

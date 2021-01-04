@@ -333,4 +333,21 @@
         	</if>
         order by bookset_type,BOOKSET_ID
     </select>
+
+	<select id="findProductGrp" resultType="com.joyintech.framework.select.SuggestDto">
+		SELECT PRODUCT_ID code,
+		PRODUCT_NAME name,
+		PRODUCT_NAME shortName,
+		PRODUCT_ID hidCode
+		FROM SYS_BATCH_GRP_PRDLINK
+		<where>
+			GROUP_SEQ in
+			<foreach collection="booksetGroup.split(',')" item="item" index= "index" open="(" close=")" separator="," >
+				<if test="(index % 998) == 0">
+					null) or GROUP_SEQ in (
+				</if>
+				#{item}
+			</foreach>
+		</where>
+	</select>
 </mapper>

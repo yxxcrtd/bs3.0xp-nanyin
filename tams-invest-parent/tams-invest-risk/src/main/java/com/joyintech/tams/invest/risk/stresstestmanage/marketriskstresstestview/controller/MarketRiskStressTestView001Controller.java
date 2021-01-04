@@ -17,15 +17,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.risk.stresstestmanage.marketriskstresstestview.dto.MarketRiskStressTestView001Dto;
 import com.joyintech.tams.invest.risk.stresstestmanage.marketriskstresstestview.service.MarketRiskStressTestView001Service;
@@ -84,5 +87,15 @@ public class MarketRiskStressTestView001Controller extends BaseController{
         throws Exception {
 
         return marketRiskStressTestView001Service.selectTestListMap(param);
+    }
+    
+    @ResponseBody
+    @RequestMapping("restart")
+    public AjaxResult restart(@RequestBody Map<String,Object> map) {
+    	String testId = (String)map.get("testId");
+    	if(StringUtil.isNotEmpty(testId)) {
+    		marketRiskStressTestView001Service.restart(testId);
+    	}
+    	return new AjaxResult();
     }
 }

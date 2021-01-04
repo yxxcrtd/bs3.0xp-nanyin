@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.risk.stresstestmanage.marketriskstresstestview.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -68,5 +69,14 @@ public class MarketRiskStressTestView001Service  extends CommonExportService<Mar
         // TODO Auto-generated method stub
         Page<MarketRiskStressTestView001Dto> sss=selectAll(selectParam);
           return selectAll(selectParam);
+    }
+    
+    public void restart(String testId) {
+	     Map<String,Object> param = new HashMap<>();
+	     param.put("in_test_id", testId);
+         restTemplate.postForObject(
+                 ServiceApplication.RISK_SERVICE_NAME +
+                    "/MarketRiskStressTest001/stressTestLoad", param,
+                    Integer.class);
     }
 }

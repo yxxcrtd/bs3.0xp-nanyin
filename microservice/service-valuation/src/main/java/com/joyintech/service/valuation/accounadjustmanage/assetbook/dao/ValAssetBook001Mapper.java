@@ -156,5 +156,12 @@ public interface ValAssetBook001Mapper {
      * @return
      */
     List<SelectOptionDto> findBooksetId1(Map<String, Object> map);
+
+    /**
+     * 账套代码
+     * @param pageParam
+     * @return
+     */
+    List<SuggestDto> findProductGrp(Map<String, Object> pageParam);
     
 }

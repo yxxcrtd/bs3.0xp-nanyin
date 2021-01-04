@@ -359,4 +359,16 @@ public class ValAssetBook001Service extends CommonExportService<ValAssetbook001D
                 pageParam, SelectOptionDto.class);
     }
 
+    /**
+     * 根据配置产品组查询对应的产品
+     *
+     * @param
+     * @return 产品代码
+     * @see
+     * @since 1.0
+     */
+    public List<SuggestDto> findProductGrp(Map<String, Object> params) {
+
+        return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME+"/ValAssetBook001/findProductGrp", params, SuggestDto.class);
+    }
 }

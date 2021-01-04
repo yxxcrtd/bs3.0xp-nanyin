@@ -237,6 +237,8 @@ public class MarketRiskStressTestService extends BaseService<FlowRiskStressTest0
      */
     public void stressTestLoad(Map<String,Object> param){
         DynamicDataSourceHolder.putDataSource(DataSourceType.STRESSTEST);
+        //重置执行状态
+        param.put("exeStatus", DictCodeListRsk.压力测试_执行状态_执行中.getValue());
         marketRiskStressTestMapper.stressTestLoad(param);
         DynamicDataSourceHolder.clearDataSource();
     }
