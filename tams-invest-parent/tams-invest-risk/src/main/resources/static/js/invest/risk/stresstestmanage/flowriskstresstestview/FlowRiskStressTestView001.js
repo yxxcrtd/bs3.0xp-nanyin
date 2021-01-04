@@ -217,7 +217,6 @@ $(function() {
             	Joyin.alert("后台已执行！请在压力测试概览中查看！",1,function(){
             		table.load();
             	});
-            	//layer.msg(result.message); 
             });
 		});
 	});

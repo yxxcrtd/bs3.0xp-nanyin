@@ -14,6 +14,7 @@ package com.joyintech.service.risk.stresstestmanage.marketrisksstresstest.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SelectOptionDto;
@@ -107,4 +108,12 @@ public interface MarketRiskStressTestMapper {
      * @since 1.0
      */
     int countFacType(Map<String,Object> param);
+    
+    /**
+     * 更新执行状态
+     * @param param
+     * @return
+     */
+    @Update("update STT_STRESS_TEST set exe_status =  #{exeStatus,jdbcType=TIMESTAMP} where test_id = #{in_test_id,jdbcType=VARCHAR}")
+    int updateStatus(Map<String,Object> param);
 }
