@@ -140,13 +140,13 @@
         /**
          * 新建
          */
-        $('#EtrSecLend_btn_add').click(function () {
+        $('#EtrSecLend001_btn_add').click(function () {
             showDialog();
         });
         /**
          * 关闭委托
          */
-        $('#EtrSecLend_btn_close').click(function () {
+        $('#EtrSecLend001_btn_close').click(function () {
             if (table){
                 var selArr = table.getAllCheckedRows();
             }
@@ -168,7 +168,7 @@
         /**
          * 撤销
          */
-        $('#EtrSecLend_btn_revoke').click(function() {
+        $('#EtrSecLend001_btn_revoke').click(function() {
             if (table != null && table != '') {
                 var selArr = table.getAllCheckedRows();
             }
