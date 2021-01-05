@@ -43,9 +43,9 @@
             }
         },
         cols: [
-            { title: "资产代码", field:'assetCode',width:180},
+            { title: "行内资产/负债编码", field:'assetCode',width:180},
             { title: "资产名称", field:'assetName'},
-            { title: "人行资金信托代码", field:'pobcassetid'},
+            { title: "*人行资金信托代码", field:'pobcassetid'},
             { title: "资产起息日",type : 'date',field:'planSdate',width:200},
             { title: "资产到期日",type : 'date',field:'planEdate',width:200},
             // { title: "隐藏列代码类型", field:'codeType',visible:false,width:10},
