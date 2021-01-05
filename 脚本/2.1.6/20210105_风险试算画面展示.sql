@@ -1,0 +1,1 @@
+update PAGE_ELEMENT_CONFIG set IS_SHOW = 'Y' where SEQ_NO in ('82','81') and PAGE_ID = 'BaseRiskMathComm';
