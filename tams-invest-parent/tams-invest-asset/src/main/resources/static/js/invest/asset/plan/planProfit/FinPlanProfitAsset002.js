@@ -187,6 +187,9 @@ var QueryFunc=function(){
         object.bussRepOutInvestAgrInfo.repAssetType = repAssetType;
         //add by  zhangnian 20191021 end
         Joyin.ajaxJson(basePath + 'invest/asset/plan/planProfit/FinPlanProfitAsset002/check', object, function(result) {
+            if (result.errorList.length > 0){
+                return;
+            }
             if(object.parentPlan == 'Y'){
                 Joyin.ajaxJson(basePath + 'invest/asset/common/isHoliday', {
                     mdate: object.mdate,
@@ -239,6 +242,7 @@ var QueryFunc=function(){
     });
     /* 增加快捷录入 add by zhuyongkang 2019/10/12 start*/
     var finalSubmit = function(object,operateType){
+        debugger;
         if(operateType === 'save') {
             WorkFlow.doSaveList(basePath + 'invest/asset/plan/planProfit/FinPlanProfitAsset002/save', object, "FinPlanProfitAsset002_btn_save");
         }

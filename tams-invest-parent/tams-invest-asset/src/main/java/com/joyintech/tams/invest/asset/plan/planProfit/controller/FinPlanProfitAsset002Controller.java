@@ -14,6 +14,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -326,7 +328,15 @@ public class FinPlanProfitAsset002Controller extends BaseController{
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
             ValidateGroupEdit.class}) FinPlanProfitAssetDto dto, BindingResult result) {
-        return commonCheck(result, dto.getOperateType());
+        AjaxResult checkResult = commonCheck(result, dto.getOperateType());
+        if (StringUtil.equals(dto.getParentPlan(), DictCodeList.是否_否.getValue())) {
+            if (null == dto.getBuyOutRate()) {
+                checkResult.getErrorList().add(new ValidMessage("buyOutRate",
+                        getMessage("COMMON_E_0057", getMessage("FinPlanProfitAsset002.buyOutRate"))));
+                checkResult.setMessageType(MessageType.错误消息);
+            }
+        }
+        return checkResult;
     }
 
     /**
