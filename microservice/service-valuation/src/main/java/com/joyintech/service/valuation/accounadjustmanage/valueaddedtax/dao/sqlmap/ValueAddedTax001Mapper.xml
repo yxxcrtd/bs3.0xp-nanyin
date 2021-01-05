@@ -198,7 +198,8 @@
 	  
 	  AND FCI.CASH_TYPE_2 IN (#{cashType2})
 	  WHERE BB.ACCT_SUBJECT_TYPE in ('F16','F18')
- 	  <![CDATA[and BB.END_DATE > #{declareStart,jdbcType=DATE}]]> 
+		and fpt.ISSUE_STATUS = #{issueStatus}
+ 	  <![CDATA[and BB.END_DATE > #{declareStart,jdbcType=DATE}]]>
 	</select>
 	
 	

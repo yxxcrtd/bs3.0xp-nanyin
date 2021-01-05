@@ -693,6 +693,7 @@ public class ValueAddedTax001Service extends CommonExportService<ValueAddedTax00
         Map<String,Object> map = getDelcareBeginEndDate(year,declarDate);
         Date startDate = (Date)map.get("startDate");
         params.put("declareStart", startDate);
+        params.put("issueStatus", DictCodeListExt1.发行状态_发行成功.getValue());
         List<BooksetInfoDto> list = valueAddedTax001Mapper.checkPriceTaxSparation(params);
         for(BooksetInfoDto dto:list){
             //账套结束日
@@ -738,6 +739,7 @@ public class ValueAddedTax001Service extends CommonExportService<ValueAddedTax00
         paraDto.setDeclareStart(startDate);
         //完成价税分离
         List<BooksetInfoDto> listD = new ArrayList<BooksetInfoDto>();
+        params.put("issueStatus", DictCodeListExt1.发行状态_发行成功.getValue());
         List<BooksetInfoDto> list = valueAddedTax001Mapper.checkPriceTaxSparation(params);
         List<String> booksetList = new ArrayList<String>();
         for(BooksetInfoDto dto:list){
