@@ -1584,7 +1584,157 @@
             </foreach>
         </if>
         group by psv.CDATE
-        )B on A.cdate=B.cdate and B.typeMarketValue!=0)tt where   (tt.marketValue!=0 and tt.marketValue is not null )  or (tt.dscCostAmt !=0 and tt.dscCostAmt is not null )
+        )B on A.cdate=B.cdate and B.typeMarketValue!=0
+
+        union all
+        SELECT
+        ass.finprodType2,
+        sum(ass.marketValue) as marketValue,
+        sum(ass.dscCostAmt) as dscCostAmt,
+        NULL amtRation,
+        NULL tdyIntincexp
+        from
+        (
+        SELECT
+        assetHold.*
+        FROM (
+
+        SELECT
+        S.cdate cdate,
+        S.portfolioId portfolioId,
+        S.portfolioName portfolioName,
+        #{cash} finprodType2,#{cash} type5, NULL finprodMarketId,NULL finprodAbbr,
+        S.marketValue marketValue,
+        S.dscCostAmt dscCostAmt,
+        null shareAmt,
+        NULL tdyIntincexp,
+        NULL tdyAmtRation,
+        NULL ystAmtRation,
+        NULL monthAmtRation,
+        NULL yearAmtRation,
+        NULL ystAmtRationTemp,
+        NULL monthAmtRationExTemp,
+        NULL yearAmtRationTemp,
+        SS.marketValue ystMarketValue,
+        NULL ystTdyIntincexp
+        FROM(
+        SELECT
+        psv.cdate cdate,
+        psv.portfolio_Id portfolioId,
+        pp.portfolio_Name portfolioName,
+        #{cash} finprodType2,#{cash} type5, NULL finprodMarketId,NULL finprodAbbr,
+        pcp.amount marketValue,
+        pcp.amount dscCostAmt,
+        null shareAmt,
+        NULL tdyIntincexp,
+        NULL tdyAmtRation,
+        NULL ystAmtRation,
+        NULL monthAmtRation,
+        NULL yearAmtRation,
+        NULL ystAmtRationTemp,
+        NULL monthAmtRationExTemp,
+        NULL yearAmtRationTemp,
+        NULL ystMarketValue,
+        NULL ystTdyIntincexp
+        FROM PTL_SEC_PIERCE_VALUTION psv
+        LEFT JOIN FIN_PRODUCT_ADD ON FIN_PRODUCT_ADD.FINPROD_ID = psv.FINPROD_ID
+        LEFT JOIN PTL_PORTFOLIO pp ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
+        LEFT JOIN PTL_CASH_POSITION pcp ON psv.PORTFOLIO_ID = pcp.PORTFOLIO_ID and psv.cdate = pcp.cdate
+        left JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID and fpt.TYPE_8 is not null
+        WHERE
+        TO_CHAR (psv.CDATE, 'yyyy-mm-dd') = #{searchDate}
+        and pcp.portfolio_Id is not NULL
+        <if test="portfolioIdList != null and portfolioIdList.size()>0">
+            AND pcp.PORTFOLIO_ID IN
+            <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="assetTypeList != null and assetTypeList.size()>0">
+            AND fpt.TYPE_8 IN
+            <foreach collection="assetTypeList" item="item" separator="," open="(" close =")">
+                #{item}
+            </foreach>
+        </if>
+        <!--  add by wangyang1 【吉林银行】 增加 产品经理  2019年9月29日 start -->
+        <if test=" prodManager !=null and prodManager.size()>0 " >
+            AND FIN_PRODUCT_ADD.PROD_MANAGER IN
+            <foreach collection="prodManager" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
+        GROUP BY
+        psv.cdate,psv.portfolio_Id,pp.portfolio_Name,pcp.amount
+        ) S
+        LEFT JOIN (
+        SELECT
+        psv.cdate cdate,
+        psv.portfolio_Id portfolioId,
+        pcp.amount marketValue,
+        pcp.amount dscCostAmt
+        FROM PTL_SEC_PIERCE_VALUTION psv
+        LEFT JOIN FIN_PRODUCT_ADD ON FIN_PRODUCT_ADD.FINPROD_ID = psv.FINPROD_ID
+        LEFT JOIN PTL_PORTFOLIO pp ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
+        LEFT JOIN PTL_CASH_POSITION pcp ON psv.PORTFOLIO_ID = pcp.PORTFOLIO_ID and psv.cdate = pcp.cdate
+        left JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID and fpt.TYPE_8 is not null
+        inner join (
+        select PORTFOLIO_ID portfolioId,max(CDATE) as maxCdate
+        from PTL_SEC_PIERCE_VALUTION
+        where 1=1
+        <if test="portfolioIdList != null and portfolioIdList.size()>0">
+            AND PORTFOLIO_ID IN
+            <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="searchDate != null and searchDate != ''">
+            and to_char(CDATE,'yyyy-mm-dd') &lt; #{searchDate}
+        </if>
+        group by PORTFOLIO_ID
+        )E on E.portfolioId=psv.PORTFOLIO_ID
+        WHERE
+        psv.CDATE=E.maxCdate
+        and pcp.portfolio_Id is not NULL
+        <if test="portfolioIdList != null and portfolioIdList.size()>0">
+            AND pcp.PORTFOLIO_ID IN
+            <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="assetTypeList != null and assetTypeList.size()>0">
+            AND fpt.TYPE_8 IN
+            <foreach collection="assetTypeList" item="item" separator="," open="(" close =")">
+                #{item}
+            </foreach>
+        </if>
+        <!--  add by wangyang1 【吉林银行】 增加 产品经理  2019年9月29日 start -->
+        <if test=" prodManager !=null and prodManager.size()>0 " >
+            AND FIN_PRODUCT_ADD.PROD_MANAGER IN
+            <foreach collection="prodManager" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
+        GROUP BY
+        psv.cdate,psv.portfolio_Id,pcp.amount
+        ) SS ON S.portfolioId = SS.portfolioId
+        )assetHold
+        LEFT JOIN DATA_AUTH_NOTIFY_INST DATAINST ON assetHold.portfolioId = DATAINST.BUSINESS_ID AND DATAINST.DATA_TYPE='PTL01' AND DATAINST.MODEL_TYPE = '02'
+        WHERE 1=1
+        <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+            AND DATAINST.INSTITUTION_CODE IN
+            <foreach collection="resourcesTreeInstCodeList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        ) ass
+        where
+        ass.finprodType2 = #{cash}
+        group by
+        ass.finprodType2
+        )tt where   (tt.marketValue!=0 and tt.marketValue is not null )  or (tt.dscCostAmt !=0 and tt.dscCostAmt is not null )
+
     </select>
 	<select id="getPortFolioInfo" resultType="com.joyintech.framework.select.SelectOptionDto">
 		SELECT PORTFOLIO_ID id, PORTFOLIO_NAME text
