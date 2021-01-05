@@ -148,7 +148,7 @@ public class DataCheckService {
             }  //循环规则－结束
             if ( legal==false ) {
                 x.put("ERRMSG", sb.toString());
-                // x.put("ERRMSG_ROW",String.valueOf(i));
+                x.put("ERRMSG_ROW",String.valueOf(i));
                 listError.add(x);
                 if(removeFlag) {
                     it.remove();
