@@ -408,7 +408,7 @@
         	EE.INV_AIM			  invAim,
 		    EE.CCY                ccy,
 		    EEA.COR_CCY           corCcy,
-		    EEA.DEAL_CUR_ACCT     dealAcct,
+		    decode(EEA.IS_DIF_SQU,'Y',EEA.CNY_ACCT,EEA.DEAL_CUR_ACCT)     dealAcct,
 		    EEA.COR_CUR_ACCT      corAcct,
 		    EE.COUNTER_ID,
 		    EE.COUNTER_TRADER,
