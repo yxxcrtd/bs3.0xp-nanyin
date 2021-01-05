@@ -3,11 +3,7 @@ package com.joyintech.tams.svreport.chb.proddurationreg.service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -174,10 +170,36 @@ public class ProdDurationReg002Service {
 		if (StringUtil.isEmpty(openProdMdateConf)) {
 			openProdMdateConf = "01";
 		}
+		Map<String, Object> pageParam =new HashMap<>();
+		pageParam.put("batchDate",sdf.format(batchDate));
+		pageParam.put("prodIdList",prodIdList);
+		pageParam.put("openProdMdateConf",openProdMdateConf);
+		//季末最后一个自然日期
+		pageParam.put("thisSeasonEnd",thisSeasonEnd(batchDate));
+		//变动类型-变动类型_净值变动
+		pageParam.put("changeType01",DictCodeListExt2.变动类型_净值变动.getValue());
+		//变动类型-变动类型_收益率变动
+		pageParam.put("changeType02",DictCodeListExt2.变动类型_收益率变动.getValue());
+		//产品运作模式=产品运作模式_开放式净值型
+		pageParam.put("opratemode03",DictCodeListExt2.产品运作模式_开放式净值型.getValue());
+		//产品类型
+		pageParam.put("prodtypen",DictCodeListExt2.产品类型_中债_净值型产品.getValue());
 		//开放式产品
-        List<ChbPrdDurationDeal> openList = chbPrdDurationRegMapper.getOpenProdIdsByDealSub(sdf.format(batchDate),prodIdList, openProdMdateConf);
-        //封闭式产品
-        List<ChbPrdDurationDeal> clolist = chbPrdDurationRegMapper.getProdIdsByDealSub(sdf.format(batchDate),prodIdList);
+        List<ChbPrdDurationDeal> openList = chbPrdDurationRegMapper.getOpenProdIdsByDealSub(pageParam);
+
+		Map<String, Object> pageParamCol =new HashMap<>();
+		pageParamCol.put("batchDate",sdf.format(batchDate));
+		pageParamCol.put("prodIdList",prodIdList);
+		//变动类型-变动类型_净值变动
+		pageParamCol.put("changeType01",DictCodeListExt2.变动类型_净值变动.getValue());
+		//变动类型-变动类型_收益率变动
+		pageParamCol.put("changeType02",DictCodeListExt2.变动类型_收益率变动.getValue());
+		//产品运作模式=产品运作模式_封闭式净值型
+		pageParamCol.put("opratemode01",DictCodeListExt2.产品运作模式_封闭式净值型.getValue());
+		//产品类型
+		pageParamCol.put("prodtypen",DictCodeListExt2.产品类型_中债_净值型产品.getValue());
+		//封闭式产品
+        List<ChbPrdDurationDeal> clolist = chbPrdDurationRegMapper.getProdIdsByDealSub(pageParamCol);
         //产品Id集合
         List<ChbPrdDurationDeal> list = new ArrayList<ChbPrdDurationDeal>();
         // 将查询出的开放式与封闭式产品整合
@@ -216,9 +238,13 @@ public class ProdDurationReg002Service {
         		single.getOpenStart();
         		List<String> prdoList=new ArrayList<String>();
         		prdoList.add(single.getProdId());
-        		List<ChbPrdDurationDeal> singleopenList = chbPrdDurationRegMapper.getOpenProdIdsByDealSub(sdf.format(single.getOpenStart()),prdoList, openProdMdateConf);
+				pageParam.put("batchDate",sdf.format(single.getOpenStart()));
+				pageParam.put("prodIdList",prdoList);
+        		List<ChbPrdDurationDeal> singleopenList = chbPrdDurationRegMapper.getOpenProdIdsByDealSub(pageParam);
 		        //封闭式产品
-		        List<ChbPrdDurationDeal> singleclolist = chbPrdDurationRegMapper.getProdIdsByDealSub(sdf.format(single.getOpenStart()),prdoList);
+				pageParamCol.put("batchDate",sdf.format(single.getOpenStart()));
+				pageParamCol.put("prodIdList",prdoList);
+		        List<ChbPrdDurationDeal> singleclolist = chbPrdDurationRegMapper.getProdIdsByDealSub(pageParamCol);
 		      if(!StringUtil.isEmptyList(singleopenList)){
 		    	  if(singleopenList.size()>1){
 		    		  single.setStatus("M");  
@@ -973,5 +999,30 @@ public class ProdDurationReg002Service {
 			listArr.add(sub);
 		}
 		return listArr;
+	}
+	/**
+	 109      * 功能：得到当前季度季末 格式为：xxxx-yy-zz (eg: 2007-12-31)<br>
+	 110      * @return String
+	 111      * @author pure
+	 112      */
+	public static String thisSeasonEnd(Date  date) {
+		String dateString = "";
+		Calendar localTime=Calendar.getInstance();
+		localTime.setTime(date);
+		int   x = localTime.get(Calendar.YEAR);
+		int  y = localTime.get(Calendar.MONTH) + 1;
+		if (y >= 1 && y <= 3) {
+			dateString = x + "-" + "03" + "-" + "31";
+		}
+		if (y >= 4 && y <= 6) {
+			dateString = x + "-" + "06" + "-" + "30";
+		}
+		if (y >= 7 && y <= 9) {
+			dateString = x + "-" + "09" + "-" + "30";
+		}
+		if (y >= 10 && y <= 12) {
+			dateString = x + "-" + "12" + "-" + "31";
+		}
+		return dateString;
 	}
 }
