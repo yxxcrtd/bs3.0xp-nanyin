@@ -168,15 +168,17 @@
 
     function saveOrSubmit(operateType) {
     	var s;
-        if(BaseRiskMathComm) {
-            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
-            if(!s && s != ''){
-                return;
+    	if(typeof(BaseRiskMathComm) != 'undefined') {
+            if(BaseRiskMathComm) {
+                s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+                if(!s && s != ''){
+                    return;
+                }
+                if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdatas())){
+                    return;
+                }
             }
-            if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdatas())){
-                return;
-            }
-        }
+    	}
         var object = $.serializeToObject('#searchForm');
         if ($('#select2-finprodId-container').attr('title')){
             object.finprodName = $('#select2-finprodId-container').attr('title');
