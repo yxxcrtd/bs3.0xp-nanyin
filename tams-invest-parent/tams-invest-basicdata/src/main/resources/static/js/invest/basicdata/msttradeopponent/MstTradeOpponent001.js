@@ -32,9 +32,9 @@ $(function() {
          * 定义表头
          */  
         cols:[
-             {field:'counterTypeStr',width:'20%', title: 'MstTradeOpponent001.counterType',sortField:'counterType'}
-            ,{field:'counterId',width:'20%',  title: 'MstTradeOpponent001.counterId'}
-            ,{field:'counterName',width:'20%',  title: 'MstTradeOpponent001.counterName'}
+             {field:'counterTypeStr',width:'25%', title: 'MstTradeOpponent001.counterType',sortField:'counterType'}
+            ,{field:'counterId',width:'25%',  title: 'MstTradeOpponent001.counterId'}
+            ,{field:'counterName',  title: 'MstTradeOpponent001.counterName'}
             // ,{field:'managerId',width:'20%',  title: 'MstTradeOpponent001.managerId'}
             // ,{field:'trusteeId',width:'20%',  title: 'MstTradeOpponent001.trusteeId'}
             // ,{field:'type1Str',width:'20%',  title: 'MstTradeOpponent001.type1',sortField:'type1'}

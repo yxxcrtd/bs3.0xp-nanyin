@@ -31,7 +31,7 @@ $(function() {
        
         cols:[
              {field:'relaeseDate',width:200,  title: 'MstInterestRateQuotationInfo001.relaeseDate',type:'date'}
-            ,{field:'intRateName',width:200,  title: 'MstInterestRateQuotationInfo001.intRateName', sortField:'intRateId'}
+            ,{field:'intRateName',title: 'MstInterestRateQuotationInfo001.intRateName', sortField:'intRateId'}
             ,{field:'ccyName',width:200,  title: 'MstInterestRateQuotationInfo001.ccy', sortField:'ccy'}
             ,{field:'intRate',width:200,  title: 'MstInterestRateQuotationInfo001.intRate',type:'number'}
             ,{field:'effDate',width:200, title: 'MstInterestRateQuotationInfo001.effDate',type:'date'}

@@ -68,7 +68,7 @@ $(function() {
 			title : '基金代码'
 		}, {
 			field : 'fundName',
-			width : 120,
+			//width : 120,
 			title : '基金名称'
 		}, {
 			field : 'fundTypeFmt',
