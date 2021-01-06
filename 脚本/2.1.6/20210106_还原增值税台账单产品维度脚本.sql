@@ -1,0 +1,2 @@
+--还原增值税台账单产品维度脚本
+DELETE FROM SYS_PAGE_DICTLIST WHERE PAGE_ID='ValueAddedTaxQuery001' AND DICT_ID='SUM_DIMEN';
