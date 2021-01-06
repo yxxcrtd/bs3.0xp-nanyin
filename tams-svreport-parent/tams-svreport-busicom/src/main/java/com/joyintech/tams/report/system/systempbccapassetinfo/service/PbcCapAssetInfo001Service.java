@@ -300,7 +300,7 @@ public class PbcCapAssetInfo001Service extends CommonExportService<PbcCapAssetIn
                                           String deptCode) {
         if (!StringUtil.isEmptyList(dataList)) {
             List<String> headList = new ArrayList<String>();
-            headList.add("资产代码*");
+            headList.add("行内资产/负债编码*");
             headList.add("资产名称");
             headList.add("资金信托代码*");
             List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
