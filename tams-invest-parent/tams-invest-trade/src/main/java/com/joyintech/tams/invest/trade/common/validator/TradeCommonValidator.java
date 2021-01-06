@@ -174,7 +174,7 @@ public interface TradeCommonValidator extends BeanValidator {
                     if (pageService != null
                             && (StringUtil.equals("submit", inputDto.getOperateType())
                             || StringUtil.equals("save", inputDto.getOperateType()))) {
-                        pageService.setDealData(inputDto);
+                        pageService.setDealDataForValid(inputDto);
 
                         trdProductDeal = new TrdProductDeal();
                         BeanUtil.copyPropertiesIgnoreNull(trdProductDeal, inputDto);

@@ -527,6 +527,16 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
         }
     }
 
+    /**
+     * 风险校验（硬控）按照交易金额计算
+     * @param dto
+     */
+    public void setDealDataForValid(TrdBondInvestTradeDto dto) {
+    	BigDecimal tradeAmt = dto.getTradeAmt();
+    	setDealData(dto);
+    	dto.setTradeAmt(tradeAmt);
+    }
+    
     private List<TrdTradeFeeDetail> 生成交易费用明细数据(List<TrdTradeFeeTotal> 汇总交易费用信息, TrdProductDeal 交易数据, BigDecimal 占比,
                                                List<TrdTradeFeeDetail> 已生成费用) {
         if (汇总交易费用信息 == null || 汇总交易费用信息.isEmpty()) {
