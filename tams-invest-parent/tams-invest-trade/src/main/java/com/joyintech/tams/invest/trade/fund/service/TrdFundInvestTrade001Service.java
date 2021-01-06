@@ -20,6 +20,7 @@ import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.PaTrdProductDeal;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.settle.BussSettleOrderCommService;
@@ -339,6 +340,15 @@ public class TrdFundInvestTrade001Service extends CommonExportService<TrdFundInv
                     finProductTrade.setActPortfolioId(entity.getActPortfolioId());
                 });
             }
+            // 插入组合交易表
+            for(BaseTradeProductDealDto btpddto : dtoList){
+                if(btpddto.getPtlTrade() != null && !btpddto.getPtlTrade().isEmpty()){
+                    btpddto.getPtlTrade().get(0).setBusiNo(btpddto.getPtlTrade().get(0).getBusiNo() + "R");
+
+                    baseTradeProductDealCommService.insertPtlTrade(btpddto.getPtlTrade().get(0));
+                }
+            }
+
             baseTradeProductDealCommService.execute(finProductTradeDto);
             if (StringUtil.isNotEmpty(entity.getActPortfolioId()) && !entity.getActPortfolioId().equals(entity.getPortfolioId())) {
                 finProductTradeDto.getBaseTradeProductDealDtos().forEach(

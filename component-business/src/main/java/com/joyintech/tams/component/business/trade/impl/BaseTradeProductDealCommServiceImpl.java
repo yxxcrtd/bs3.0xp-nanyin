@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.*;
 
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.settle.BussSettleOrderCommService;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
@@ -20,34 +22,6 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
-import com.joyintech.tams.common.base.dao.EtrFinishStatusMapper;
-import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
-import com.joyintech.tams.common.base.dao.InterfOpicsTradRepoMapper;
-import com.joyintech.tams.common.base.dao.InterfTradSecdealMapper;
-import com.joyintech.tams.common.base.dao.TrdProductDealAddPreMapper;
-import com.joyintech.tams.common.base.dao.TrdProductDealPreMapper;
-import com.joyintech.tams.common.base.dao.TrdTradeFeeDetailMapper;
-import com.joyintech.tams.common.base.dao.WflPaTrdFinDealTotalMapper;
-import com.joyintech.tams.common.base.dao.WflPaTrdProductDealMapper;
-import com.joyintech.tams.common.base.dao.WflStlPayOrdersMapper;
-import com.joyintech.tams.common.base.dao.WflTrdFinProductDealTotalMapper;
-import com.joyintech.tams.common.base.dao.WflTrdProductDealAddMapper;
-import com.joyintech.tams.common.base.dao.WflTrdProductDealMapper;
-import com.joyintech.tams.common.base.dao.WflTrdProductDealOthMapper;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.EtrFinishStatus;
-import com.joyintech.tams.common.base.entity.EtrFinishStatusKey;
-import com.joyintech.tams.common.base.entity.FinTradeProduct;
-import com.joyintech.tams.common.base.entity.FinTradeProductKey;
-import com.joyintech.tams.common.base.entity.InterfOpicsTradRepo;
-import com.joyintech.tams.common.base.entity.InterfTradSecdeal;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.TrdProductDealAddPre;
-import com.joyintech.tams.common.base.entity.TrdProductDealPre;
-import com.joyintech.tams.common.base.entity.TrdProductDealPreKey;
-import com.joyintech.tams.common.base.entity.WflStlPayOrders;
-import com.joyintech.tams.common.base.entity.WflTrdProductDealAdd;
 import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -157,6 +131,9 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
      */
     @Autowired(required = false)
     private BussTrdTransferOrderService bussTrdTransferOrderService;
+
+    @Autowired
+    private PtlTradeMapper ptlTradeMapper;
 
     private static final List<String> 认购确认_申购确认_赎回确认_除权登记_红利再投 = Arrays.asList(
             DictCodeList.交易方向_认购确认.getValue(), DictCodeList.交易方向_申购确认.getValue(),
@@ -778,4 +755,9 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
         return new CommonResult(CommonResult.SUCCED, "处理完成");
     }
 
+    @Override
+    public Integer insertPtlTrade(PtlTrade ptlTrade) {
+        // 1.插入组合交易表
+        return ptlTradeMapper.insert(ptlTrade);
+    }
 }

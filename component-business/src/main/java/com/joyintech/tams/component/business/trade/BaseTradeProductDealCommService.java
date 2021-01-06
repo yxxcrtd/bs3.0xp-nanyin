@@ -1,7 +1,10 @@
 package com.joyintech.tams.component.business.trade;
 
+import com.joyintech.tams.common.base.entity.PtlTrade;
 import com.joyintech.tams.invest.common.CommonResult;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
+
+import java.util.ArrayList;
 
 /**
  * 提供金融产品交易共通业务逻辑处理
@@ -49,4 +52,12 @@ public interface BaseTradeProductDealCommService {
      * @date: 2018/9/29
      */
     Boolean insertPosition(FinProductTradeDto finProductTradeDto);
+
+    /**
+     * @description: 共通方法 写入组合交易表
+     * @param:
+     * @return: void
+     * @date:
+     */
+    Integer insertPtlTrade(PtlTrade ptlTrade);
 }
