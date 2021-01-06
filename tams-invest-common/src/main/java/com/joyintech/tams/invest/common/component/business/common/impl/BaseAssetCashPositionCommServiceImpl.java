@@ -175,7 +175,7 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
             }
             return result;
         }
-        //add by yujiaping 2021-1-6 解决ZGBS-139 卖出交易提交后（流程中），没有占用资产可用持仓 start
+        //add by yujiaping 2021-1-6 解决ZGBS-139 计划类净值型卖出交易提交后（流程中），没有占用资产可用持仓 start
         else if ((DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                 && (DictCodeList.收益类型_净值型.getValue().equals(profitType)))             
               && DictCodeList.交易方向_卖出.getValue().equals(deal.getPs())) {
@@ -183,7 +183,7 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
          resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
          result.add(resultDto);
      }
-        //add by yujiaping  2021-1-6 解决ZGBS-139 卖出交易提交后（流程中），没有占用资产可用持仓 end
+        //add by yujiaping  2021-1-6 解决ZGBS-139 计划类净值型卖出交易提交后（流程中），没有占用资产可用持仓 end
         /*
          * 1 输入金融产品交易Entity.金融产品类型（投管分类）= 数据字典缓存.金融产品类型（投管分类).债券 and 金融产品交易Entity.交易场所 ！= 数据字典缓存.交易场所.银行间 and 金融产品交易Entity.交易方向 in （“卖出”,“行权”,“到期”））
          *
