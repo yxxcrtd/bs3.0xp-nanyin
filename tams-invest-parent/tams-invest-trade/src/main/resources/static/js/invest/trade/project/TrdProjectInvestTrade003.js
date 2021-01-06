@@ -306,8 +306,6 @@
                 intAmtCalcu();
                 getCommissionAmt();
                 $('#TrdProjectInvestTrade003_btn_autoAllocation').prop('disabled',false).removeClass('layui-btn-disabled');
-            }else{
-                $('#TrdProjectInvestTrade003_btn_autoAllocation').prop('disabled',true).addClass('layui-btn-disabled');
             }
         }
 
@@ -1326,11 +1324,14 @@
             });
             //分配方式
             $('#TrdProjectInvestTrade003_btn_autoAllocation').click(function () {
-            	if($('#prinAmt').val()){
-            		extractedZiDongFenPei();
-            	}else{
-            		Joyin.error('请输入本金金额！');
-                    return true;
+
+                if( !$('#TrdProjectInvestTrade003_btn_autoAllocation').hasClass('layui-btn-disabled') ){
+                    if($('#prinAmt').val()){
+                        extractedZiDongFenPei();
+                    }else{
+                        Joyin.error('请输入本金金额！');
+                        return true;
+                    }
             	}
             });
             //风险试算
