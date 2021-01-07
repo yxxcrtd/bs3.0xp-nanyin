@@ -105,21 +105,15 @@ public class BaseTradeFeeCommServiceImpl implements BaseTradeFeeCommService {
     				searchDto.setType7(null);
 					feeDetailList=baseTradeFeeCommMapper.selectFeeConfig(searchDto);
 					for(int j=0;j<feeDetailList.size();j++){
-						if(StringUtil.isNotEmpty(feeDetailList.get(j).getWindtypetwo())){
-							feeDetailList.remove(j--);
-						}
+						if(StringUtil.isNotEmpty(feeDetailList.get(j).getWindtypetwo()))feeDetailList.remove(j--);
 					}
 					if(feeDetailList.size()<=0){
 						searchDto.setType6(null);
 						feeDetailList=baseTradeFeeCommMapper.selectFeeConfig(searchDto);
 						for(int k=0;k<feeDetailList.size();k++){
-							if(StringUtil.isNotEmpty(feeDetailList.get(k).getWindtypeone())){
-								feeDetailList.remove(k--);
-							}
+							if(StringUtil.isNotEmpty(feeDetailList.get(k).getWindtypeone()))feeDetailList.remove(k--);
 						}
-						if(feeDetailList.size()<=0){
-							continue;
-						}
+						if(feeDetailList.size()<=0)continue;
 					}
     			}
     			retFeeDetailDto=feeDetailList.get(0);
