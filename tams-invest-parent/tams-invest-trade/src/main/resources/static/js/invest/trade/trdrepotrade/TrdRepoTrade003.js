@@ -1295,16 +1295,18 @@
             
             //分配方式
             $('#bussRepoSecPtl_btn_autoAllocation').click(function () {
-                if (!$("#prinAmt").val() || $("#prinAmt").val()*1 <= 0) {
-                    Joyin.error("本金金额必须大于0")
-                    return;
+                if( !$('#bussRepoSecPtl_btn_autoAllocation').hasClass('layui-btn-disabled') ){
+                    if (!$("#prinAmt").val() || $("#prinAmt").val()*1 <= 0) {
+                        Joyin.error("本金金额必须大于0")
+                        return;
+                    }
+                    if($("#entrustId").val()){
+                        extractedZiDongFenPei2();
+                    }else{
+                        extractedZiDongFenPei();
+                    }
+                    window.BussRepoSecPtl["bussRepoSecPtl"].pleBondTotalVal();
                 }
-                if($("#entrustId").val()){
-                    extractedZiDongFenPei2();
-                }else{
-                    extractedZiDongFenPei();
-                }
-                window.BussRepoSecPtl["bussRepoSecPtl"].pleBondTotalVal();
             });
             if($("#entrustId").val()){
                 if(window.BussTrdTransferOrder['bussTrdTransferOrder'].bussTrdTransferOrderTable){
