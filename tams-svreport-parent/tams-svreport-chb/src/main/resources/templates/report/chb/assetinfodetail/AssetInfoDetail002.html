@@ -141,7 +141,7 @@
 				</div>
 
 			<div class="pro-module">
-				<div class="pro-module-item pro-item-wrap">
+				<div class="svrBussFinBondRepInfo_div">
 					<div class="page-component"
 						 th:data-path="@{/chb/assetinfodetail/asset/SvrBussFinBondRepInfo/init}"
 						 th:data-params="|{type6Element: 'type6',entityName: 'bussRepDepositInfoDto',finprodId:'${entity?.assetCode}',workflowId:'${workflowId}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
@@ -185,8 +185,9 @@
 		var isCalLoadrate = /*[[${isCalLoadrate}]]*/'01';  //是否以借款利率计提
 		var isQuickInput = /*[[${isQuickInput}]]*/'';
 	</script>
+	<script data-th-src="@{/js/component/common/util.js}" type="text/javascript"></script>
 	<script data-th-src="@{/js/component/asset/BussAssetFiveType.js}" type="text/javascript"></script>
-	<script data-th-src="@{/js/report/chb/assetinfodetail/AssetInfoDetail001.js}"
+	<script data-th-src="@{/js/report/chb/assetinfodetail/AssetInfoDetail002.js}"
 			type="text/javascript"></script>
 	<script data-th-src="@{/js/invest/asset/common/AssetCommon.js}" type="text/javascript"></script>
 </div>
