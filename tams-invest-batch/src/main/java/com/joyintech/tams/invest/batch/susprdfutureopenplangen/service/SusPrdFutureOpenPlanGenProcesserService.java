@@ -71,10 +71,10 @@ public class SusPrdFutureOpenPlanGenProcesserService extends BaseService {
 			bussFinProductOpenPlanDto.setWorkdayOfMonth(susprdfutureopenplangendto.getDayValue());
 		}
 		if (DictCodeListExt1.日期类型_第几周周几.getValue().equals(susprdfutureopenplangendto.getDayType())) {
-			bussFinProductOpenPlanDto.setWeekOfMonth(susprdfutureopenplangendto.getDayValue().split(":")[0]);
+			bussFinProductOpenPlanDto.setWeekOfMonth(susprdfutureopenplangendto.getDayValue().split(";")[0]);
 		}
 		if (DictCodeListExt1.日期类型_第几周周几.getValue().equals(susprdfutureopenplangendto.getDayType())) {
-			bussFinProductOpenPlanDto.setWorkdayOfWeek(susprdfutureopenplangendto.getDayValue().split(":")[1]);
+			bussFinProductOpenPlanDto.setWorkdayOfWeek(susprdfutureopenplangendto.getDayValue().split(";")[1]);
 		}
 		bussFinProductOpenPlanDto.setTradedayRule(susprdfutureopenplangendto.getTradedayRule());
 		bussFinProductOpenPlanDto.setFirstOpenDate(susprdfutureopenplangendto.getFirstOpenDate());
