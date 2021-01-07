@@ -175,8 +175,8 @@
                                     <label class="layui-form-label form-label-wrap"
                                            data-th-text="#{FinNetProductBonusScheme003.tdyUnitValue}">参考日净值</label>
                                     <div class="layui-input-inline input-inline">
-                                        <input type="text" data-fixtype="2" unit="1" data-th-data-textrange="4"
-                                               class="layui-input form-input text-number" required="required"
+                                        <input type="text"
+                                               class="layui-input form-input" required="required"
                                                id="tdyUnitValue" name="tdyUnitValue" disabled data-th-value="${entity?.tdyUnitValue}"/>
                                         <span class="input-right-show">元</span>
                                     </div>
@@ -232,7 +232,7 @@
                                            data-th-text="#{FinNetProductBonusScheme003.netvalue}">分红后单位净值</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="netvalue" name="netvalue"  data-th-value="${entity?.netvalue}"
-                                               class="layui-input form-input text-number" placeholder="请输入内容"  data-textrange="4"
+                                               class="layui-input form-input" placeholder="请输入内容"
                                                data-th-placeholder="#{SysCommon.placeholder}" disabled>
                                     </div>
                                 </div>

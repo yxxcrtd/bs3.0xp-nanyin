@@ -412,6 +412,29 @@
     };
     //初始化
     var init = function () {
+        if(pageModel != PAGE_MODEL_REFERENCE){
+            if ($('#unitvalueDec').val() != null && $('#unitvalueDec').val() != ''
+                && $('#tdyUnitValue').val() != '' && $('#tdyUnitValue').val() != ''
+                && $('#netvalue').val() != '' && $('#netvalue').val() != ''){
+                $('#tdyUnitValue').attr("data-textrange", parseInt($('#unitvalueDec').val())).trigger('change');
+                $('#netvalue').attr("data-textrange", parseInt($('#unitvalueDec').val())).trigger('change');
+                $('#tdyUnitValue').val(parseFloat($('#tdyUnitValue').val()).toFixed(parseInt($('#unitvalueDec').val()))).trigger("change");
+                $('#netvalue').val(parseFloat($('#netvalue').val()).toFixed(parseInt($('#unitvalueDec').val()))).trigger("change");
+            }
+        }else {
+            var obj = $('#finprodMarketId').select2('data')[0].object;
+            if(obj){
+                var str = obj.split(',');
+                if(str != null){
+                    $('#unitvalueDec').val(str[3]);
+                }
+            }
+            $('#tdyUnitValue').attr("data-textrange", parseInt($('#unitvalueDec').val())).trigger('change');
+            $('#netvalue').attr("data-textrange", parseInt($('#unitvalueDec').val())).trigger('change');
+            $('#tdyUnitValue').val(parseFloat($('#tdyUnitValue').val()).toFixed(parseInt($('#unitvalueDec').val()))).trigger("change");
+            $('#netvalue').val(parseFloat($('#netvalue').val()).toFixed(parseInt($('#unitvalueDec').val()))).trigger("change");
+        }
+
         if(pageModel == PAGE_MODEL_NEW){
             delDateChange();
         }
@@ -447,9 +470,7 @@
                 }
             });
         }
-    	
         bonuScalcFlagChange(true);
-        
     }
 
     //判断是提交或是保存
@@ -516,7 +537,6 @@
         $('#totalAmt').change(function() {
             netvalueChange();
         });
-        
         
         $('#isNetMormalize').change(function() {
             isNetMormalizeChange();

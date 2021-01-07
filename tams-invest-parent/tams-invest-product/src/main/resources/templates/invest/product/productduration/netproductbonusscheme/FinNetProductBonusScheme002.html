@@ -30,7 +30,7 @@
                             <div class="layui-form-item">
                             	<input type="text" id="portfolioId" name="portfolioId" class="layui-input form-input" data-th-value="${entity?.portfolioId}" style = "display: none">
                                 <input type="text" id="finprodId" name="finprodId" class="layui-input form-input" data-th-value="${entity?.finprodId}" style = "display: none">
-                                <input type="text" id="unitvalueDec" name="unitvalueDec" class="layui-input form-input"  style = "display: none">
+                                <input type="text" id="unitvalueDec" name="unitvalueDec" class="layui-input form-input" data-th-value="${entity?.unitvalueDec}" style = "display: none">
                                 <input type="text" id="purSpeed" name="purSpeed" class="layui-input form-input"  style = "display: none">
                                 <input type="text" id="tdyAssetAmt" name="tdyAssetAmt" class="layui-input form-input"  style = "display: none">
                                 <input type="text" name="dealType" value="bonusScheRegister" class="layui-input form-input"  style = "display: none">
@@ -186,7 +186,7 @@
                                     <label class="layui-form-label form-label-wrap"
                                            data-th-text="#{FinNetProductBonusScheme002.tdyUnitValue}">参考日净值</label>
                                     <div class="layui-input-inline input-inline">
-                                        <input type="text" data-fixtype="2" unit="1" data-th-data-textrange="4"
+                                        <input type="text" data-fixtype="2" unit="1" data-th-data-textrange="${entity?.unitvalueDec} == null ? 4 : ${entity?.unitvalueDec}"
                                                class="layui-input form-input text-number" required="required"
                                                id="tdyUnitValue" name="tdyUnitValue" disabled data-th-value="${entity?.tdyUnitValue}"/>
                                     </div>
@@ -242,7 +242,7 @@
                                            data-th-text="#{FinNetProductBonusScheme002.netvalue}">分红后单位净值</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="netvalue" name="netvalue" data-th-value="${entity?.netvalue}"
-                                        	   data-textrange="4"
+                                               data-th-data-textrange="${entity?.unitvalueDec} == null ? 4 : ${entity?.unitvalueDec}"
                                                class="layui-input form-input text-number" placeholder="请输入内容"
                                                data-th-placeholder="#{SysCommon.placeholder}">
                                     </div>
