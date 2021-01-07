@@ -39,6 +39,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.service.asset.common.dao.AssetCommonMapper;
 import com.joyintech.service.asset.common.service.AssetCommonService;
 import com.joyintech.service.asset.common.service.BusiFinBondRatingInfoService;
 import com.joyintech.service.asset.common.service.FinInterestFactorService;
@@ -86,6 +87,9 @@ public class FinTenderBondTargetAssetService extends BaseService<FinTenderBondTa
     private AssetCommonService assetCommonService;
     @Autowired(required=false)
     private PaFinProductMapper paFinProductMapper;
+    
+    @Autowired 
+    private AssetCommonMapper assetCommonMapper;
     
     /**
      * 分页
@@ -250,8 +254,12 @@ public class FinTenderBondTargetAssetService extends BaseService<FinTenderBondTa
          */
         CreditLines creditLines = new CreditLines();
         creditLines.setCustomerId(entity.getFinprodId());
-        creditLines.setSeqno(entity.getSeqno());
-        creditLines.setCreditMstId(entity.getCreditMstId());
+        List<Map> credMsg = assetCommonMapper.getMstIdByFinproId(entity.getFinprodId());
+        if(credMsg.size()>0) {
+        	Map<String,String> credMsgMap = (Map<String,String>) credMsg.get(0);
+        	creditLines.setCreditMstId(credMsgMap.get("CREDIT_MST_ID"));
+        	creditLines.setSeqno(credMsgMap.get("SEQNO"));
+        }
         assetCommonService.updateCredit(creditLines);
     }
     

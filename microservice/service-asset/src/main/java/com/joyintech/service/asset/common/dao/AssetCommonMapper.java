@@ -19,6 +19,7 @@ import com.joyintech.tams.common.base.entity.FinProductTypeConfig;
 import com.joyintech.tams.common.base.entity.MstCustomerInfoAdd;
 import com.joyintech.tams.invest.common.asset.dto.AssetCommonInfoDto;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -181,4 +182,7 @@ public interface AssetCommonMapper {
     //多级法人改造 add by jingqiongqiong 20200615
 
     List<SelectOptionDto> getSysDictCode(Map<String, Object> param);
+    
+    @Select("select credit_mst_id,seqno from CREDIT_LINES where  CUSTOMER_ID = #{finprodId,jdbcType=VARCHAR}")
+    List<Map> getMstIdByFinproId(String finprodId);
 }

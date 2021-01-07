@@ -18,6 +18,7 @@ import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.EncryptUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.service.asset.common.dao.AssetCommonMapper;
 import com.joyintech.service.asset.common.service.AssetCommonService;
 import com.joyintech.service.asset.fund.dao.FinFundTargetMapper;
 import com.joyintech.service.asset.fund.dto.BussFinIntPayDto;
@@ -93,6 +94,7 @@ public class FinFundTargetService extends BaseService<FinFundTargetDto> {
 
     @Autowired
     private RepAssetOtherMapper repAssetOtherMapper;
+    
     /* add by zhangpuyu 2019/10/24 start */
     /**
      * 投后信息
@@ -100,6 +102,10 @@ public class FinFundTargetService extends BaseService<FinFundTargetDto> {
     @Autowired
     private FinPostInvestInfoMapper finPostInvestInfoMapper;
     /* add by zhangpuyu 2019/10/24 start */
+    
+    @Autowired
+    private AssetCommonMapper assetCommonMapper;
+    
     /**
      * <一句话功能简述>
      * <功能详细描述>
@@ -311,8 +317,12 @@ public class FinFundTargetService extends BaseService<FinFundTargetDto> {
          */
         CreditLines creditLines = new CreditLines();
         creditLines.setCustomerId(dto.getFinprodId());
-        creditLines.setSeqno(dto.getSeqno());
-        creditLines.setCreditMstId(dto.getCreditMstId());
+        List<Map> credMsg = assetCommonMapper.getMstIdByFinproId(dto.getFinprodId());
+        if(credMsg.size()>0) {
+        	Map<String,String> credMsgMap = (Map<String,String>) credMsg.get(0);
+        	creditLines.setCreditMstId(credMsgMap.get("CREDIT_MST_ID"));
+        	creditLines.setSeqno(credMsgMap.get("SEQNO"));
+        }
         assetCommonService.updateCredit(creditLines);
         /* add by zhangpuyu 2019/10/24 start */
         //投后信息

@@ -17,6 +17,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.service.asset.common.dao.AssetCommonMapper;
 import com.joyintech.service.asset.common.service.AssetCommonService;
 import com.joyintech.service.asset.plan.planNet.dao.FinPlanNetAssetMapper;
 import com.joyintech.service.asset.plan.planNet.dto.BussRepAssetMngProdInfo;
@@ -106,6 +107,10 @@ public class FinPlanNetAssetService extends BaseService<FinPlanNetAssetDto> {
   //标的共通service
     @Autowired(required=false)
     private AssetCommonService assetCommonService;
+    
+    @Autowired
+    private AssetCommonMapper assetCommonMapper;
+    
     /**
      * 基础 --附件
      *//*
@@ -461,8 +466,12 @@ public class FinPlanNetAssetService extends BaseService<FinPlanNetAssetDto> {
          */
         CreditLines creditLines = new CreditLines();
         creditLines.setCustomerId(dto.getFinprodId());
-        creditLines.setSeqno(dto.getSeqno());
-        creditLines.setCreditMstId(dto.getCreditMstId());
+        List<Map> credMsg = assetCommonMapper.getMstIdByFinproId(dto.getFinprodId());
+        if(credMsg.size()>0) {
+        	Map<String,String> credMsgMap = (Map<String,String>) credMsg.get(0);
+        	creditLines.setCreditMstId(credMsgMap.get("CREDIT_MST_ID"));
+        	creditLines.setSeqno(credMsgMap.get("SEQNO"));
+        }
         assetCommonService.updateCredit(creditLines);
     }
 

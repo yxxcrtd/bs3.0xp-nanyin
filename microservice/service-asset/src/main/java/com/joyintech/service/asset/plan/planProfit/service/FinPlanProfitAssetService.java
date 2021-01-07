@@ -17,6 +17,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.service.asset.common.dao.AssetCommonMapper;
 import com.joyintech.service.asset.common.service.AssetCommonService;
 import com.joyintech.service.asset.plan.planProfit.dao.FinPlanProfitAssetMapper;
 import com.joyintech.service.asset.plan.planProfit.dto.FinPlanProfitAssetDto;
@@ -120,6 +121,9 @@ public class FinPlanProfitAssetService extends BaseService<FinPlanProfitAssetDto
 
     @Autowired
     private FinProductMapper finProductMapper;
+    
+    @Autowired
+    private AssetCommonMapper assetCommonMapper;
     
     /**
      * 资产代码的联想文本框事件
@@ -465,8 +469,12 @@ public class FinPlanProfitAssetService extends BaseService<FinPlanProfitAssetDto
          */
         CreditLines creditLines = new CreditLines();
         creditLines.setCustomerId(dto.getFinprodId());
-        creditLines.setSeqno(dto.getSeqno());
-        creditLines.setCreditMstId(dto.getCreditMstId());
+        List<Map> credMsg = assetCommonMapper.getMstIdByFinproId(dto.getFinprodId());
+        if(credMsg.size()>0) {
+        	Map<String,String> credMsgMap = (Map<String,String>) credMsg.get(0);
+        	creditLines.setCreditMstId(credMsgMap.get("CREDIT_MST_ID"));
+        	creditLines.setSeqno(credMsgMap.get("SEQNO"));
+        }
         assetCommonService.updateCredit(creditLines);
         /**
          * 存在子计划，则修改期次管理 add by hxy 2020.03.28 

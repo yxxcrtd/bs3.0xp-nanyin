@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.service.asset.common.dao.AssetCommonMapper;
 import com.joyintech.service.asset.common.dao.BussPaFinProductBuyoutRateMapper;
 import com.joyintech.tams.common.base.dao.FinPostInvestInfoMapper;
 import com.joyintech.tams.common.base.dao.PaFinProductBuyoutRateMapper;
@@ -129,6 +130,9 @@ public class FinDepositTargetService extends BaseService<FinDepositTargetDto>{
     @Autowired
     private BussPaFinProductBuyoutRateMapper bussPaFinProductBuyoutRateMapper;
     
+    @Autowired 
+    private AssetCommonMapper assetCommonMapper;
+    
     /**
      * 分页
      * @param pageParam
@@ -239,8 +243,12 @@ public class FinDepositTargetService extends BaseService<FinDepositTargetDto>{
          */
         CreditLines creditLines = new CreditLines();
         creditLines.setCustomerId(entity.getFinprodId());
-        creditLines.setSeqno(entity.getSeqno());
-        creditLines.setCreditMstId(entity.getCreditMstId());
+        List<Map> credMsg = assetCommonMapper.getMstIdByFinproId(entity.getFinprodId());
+        if(credMsg.size()>0) {
+        	Map<String,String> credMsgMap = (Map<String,String>) credMsg.get(0);
+        	creditLines.setCreditMstId(credMsgMap.get("CREDIT_MST_ID"));
+        	creditLines.setSeqno(credMsgMap.get("SEQNO"));
+        }
         assetCommonService.updateCredit(creditLines);
         //投后信息
         if(null!=entity.getBussPostInvestInfoDto()){

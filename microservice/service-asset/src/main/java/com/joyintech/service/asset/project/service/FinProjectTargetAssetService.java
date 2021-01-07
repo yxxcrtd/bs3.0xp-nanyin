@@ -13,6 +13,7 @@ package com.joyintech.service.asset.project.service;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.service.asset.common.dao.AssetCommonMapper;
 import com.joyintech.service.asset.common.dao.BussFinProductCreditMapper;
 import com.joyintech.service.asset.common.dao.BussPaFinProductBuyoutRateMapper;
 import com.joyintech.service.asset.common.dao.BussReduceShareInfoMapper;
@@ -206,6 +207,9 @@ public class FinProjectTargetAssetService extends BaseService<FinProjectTargetAs
 
     @Autowired
     private BasePtlRecePositionService basePtlRecePositionService;
+    
+    @Autowired
+    private AssetCommonMapper assetCommonMapper;
     /**
      * 查询
      * <功能详细描述>
@@ -572,8 +576,12 @@ public class FinProjectTargetAssetService extends BaseService<FinProjectTargetAs
          */
         CreditLines creditLines = new CreditLines();
         creditLines.setCustomerId(entity.getFinprodId());
-        creditLines.setSeqno(entity.getSeqno());
-        creditLines.setCreditMstId(entity.getCreditMstId());
+        List<Map> credMsg = assetCommonMapper.getMstIdByFinproId(entity.getFinprodId());
+        if(credMsg.size()>0) {
+        	Map<String,String> credMsgMap = (Map<String,String>)credMsg.get(0);
+        	creditLines.setCreditMstId(credMsgMap.get("CREDIT_MST_ID"));
+        	creditLines.setSeqno(credMsgMap.get("SEQNO"));
+        }
         assetCommonService.updateCredit(creditLines);
         /**
          * 评级数据修改
