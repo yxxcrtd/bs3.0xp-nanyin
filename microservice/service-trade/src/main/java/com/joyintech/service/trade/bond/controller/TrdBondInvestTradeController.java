@@ -15,7 +15,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.tams.invest.common.dto.period.trdfundduration.TrdFundDurationCommonDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -544,4 +547,11 @@ public class TrdBondInvestTradeController {
         return trdBondInvestTradeService.selectchlTrade(map);
     }
     /* add by msk 新增查询通道划款交易 20201111 end */
+
+    @Transactional
+    @DTXTransaction
+    @PostMapping("getType7")
+    public String getType7(@RequestBody TrdBondInvestTradeDto dto) {
+        return trdBondInvestTradeService.getType7(dto);
+    }
 }

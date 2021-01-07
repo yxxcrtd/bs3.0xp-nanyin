@@ -100,12 +100,52 @@ public class BaseTradeFeeCommServiceImpl implements BaseTradeFeeCommService {
     			searchDto.setFeeType(feeType);
     			searchDto.setRegistOrg(null);
     			List<MstCommissionSetDto> feeDetailList=baseTradeFeeCommMapper.selectFeeConfig(searchDto);
-    			
+				MstCommissionSetDto retFeeDetailDto=new MstCommissionSetDto();
     			if(feeDetailList.size()<=0){
-    				continue;
+    				searchDto.setType7(null);
+					feeDetailList=baseTradeFeeCommMapper.selectFeeConfig(searchDto);
+					for(int j=0;j<feeDetailList.size();j++){
+						if(StringUtil.isNotEmpty(feeDetailList.get(j).getWindtypetwo())){
+							feeDetailList.remove(j--);
+						}
+					}
+					if(feeDetailList.size()<=0){
+						searchDto.setType6(null);
+						feeDetailList=baseTradeFeeCommMapper.selectFeeConfig(searchDto);
+						for(int k=0;k<feeDetailList.size();k++){
+							if(StringUtil.isNotEmpty(feeDetailList.get(k).getWindtypeone())){
+								feeDetailList.remove(k--);
+							}
+						}
+						if(feeDetailList.size()<=0){
+							continue;
+						}
+					}
     			}
-    			MstCommissionSetDto retFeeDetailDto=feeDetailList.get(0);
-    			
+    			retFeeDetailDto=feeDetailList.get(0);
+				if("Y".equals(retFeeDetailDto.getIsGrade())){
+					BigDecimal obj=inputDto.getFpriceAmt();
+					for(int i=0;i<feeDetailList.size();i++){
+						if("N".equals(feeDetailList.get(i).getIsGrade())||!retFeeDetailDto.getEffDate().equals(feeDetailList.get(i).getEffDate()))feeDetailList.remove(i--);
+					}
+					if(feeDetailList.size()!=1){
+						for(int i=0;i<feeDetailList.size();i++){
+							retFeeDetailDto=feeDetailList.get(i);
+							if(i+1<feeDetailList.size()){
+								if(obj.compareTo(new BigDecimal(feeDetailList.get(i).getGradeAmount()))==0&&"N".equals(feeDetailList.get(i).getIsCludeStartamt())){
+									retFeeDetailDto=feeDetailList.get(i-1);
+									break;
+								}else if(obj.compareTo(new BigDecimal(feeDetailList.get(i+1).getGradeAmount()))==0&&"Y".equals(feeDetailList.get(i+1).getIsCludeStartamt())){
+									retFeeDetailDto=feeDetailList.get(i+1);
+									break;
+								}else if(obj.compareTo(new BigDecimal(feeDetailList.get(i).getGradeAmount()))>0&&obj.compareTo(new BigDecimal(feeDetailList.get(i+1).getGradeAmount()))<0){
+									retFeeDetailDto=feeDetailList.get(i);
+									break;
+								}
+							}
+						}
+					}
+				}
     			//调用费用计算
     			TrdTradeFeeDetail feeCofigDetail=feeMathMethod(feeType,retFeeDetailDto,inputDto);
 //    			feeCofigDetail.setIsPayWithTrade(BussinessDictCodeList.是否_是.getValue());

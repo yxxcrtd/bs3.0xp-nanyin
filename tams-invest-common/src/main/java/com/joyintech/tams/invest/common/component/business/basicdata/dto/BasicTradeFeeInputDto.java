@@ -37,6 +37,19 @@ public class BasicTradeFeeInputDto extends TrdProductDeal{
 	 */
 	private String type6;
 
+	/**
+	 * 投管二级分类
+	 */
+	private String type7;
+
+	public String getType7() {
+		return type7;
+	}
+
+	public void setType7(String type7) {
+		this.type7 = type7;
+	}
+
 	public List<String> getFeeTypeList() {
 		return feeTypeList;
 	}
