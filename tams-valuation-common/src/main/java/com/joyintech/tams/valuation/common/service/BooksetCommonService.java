@@ -41,7 +41,6 @@ import com.joyintech.tams.valuation.common.dao.BooksetComMapper;
  * @see BooksetCommonService
  * @since 1.0
  */
-@Primary
 @Service
 public class BooksetCommonService extends BaseService<Product> implements ProductService {
 

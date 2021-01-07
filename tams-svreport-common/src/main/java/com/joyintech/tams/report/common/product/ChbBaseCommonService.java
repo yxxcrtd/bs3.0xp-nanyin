@@ -17,6 +17,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +39,7 @@ import com.joyintech.tams.report.common.dao.ChbBaseCommonMapper;
  * @see ChbBaseCommonService
  * @since 1.0
  */
+@Primary
 @Service
 public class ChbBaseCommonService extends BaseService<Product> implements ProductService {
 
