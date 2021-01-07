@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：中信银行资管系统
  */
- 
+
 package com.joyintech.tams.svreport.chb.assetinfodetail.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author jiangsucheng
  * @version 1.0 2018年11月6日
  * @see ReportPageManage002Controller
- * @since 1.0
+ * @since 1.0BussFinBondRepInfo
  */
 @PageId("AssetInfoDetail002")
 @Controller
@@ -47,7 +47,7 @@ public class AssetInfoDetail002Controller extends BaseController {
      */
     @Autowired
     private AssetInfoDetailMService assetInfoDetailMService;
-    
+
     /**
      * 日志
      */
@@ -72,7 +72,7 @@ public class AssetInfoDetail002Controller extends BaseController {
             ValidateGroupEdit.class}) ChbAssetInfo dto, BindingResult result) {
         return commonCheck(result, null);
     }
-    @ResponseBody   
+    @ResponseBody
     @RequestMapping(value = PAGE_SAVE, method = RequestMethod.POST)
     public AjaxResult doAdd(@RequestBody ChbAssetInfo param) throws Exception {
         return new AjaxResult("保存成功");

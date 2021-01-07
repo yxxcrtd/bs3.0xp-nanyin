@@ -27,6 +27,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dao.AssetInfoDetailMapper;
+import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.assetinforeg.dao.AssetInfoRegist001Mapper;
 import com.joyintech.tams.svreport.chb.assetinforeg.dao.ChbAssetInfoSubHisMapper;
 import com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto;
@@ -54,7 +55,7 @@ import java.util.stream.Collectors;
  */
 @Service(value="svrAssetInfoDetailService")
 @Transactional(rollbackFor = Exception.class)
-public class AssetInfoDetail001Service extends CommonExportService<ChbAssetInfo> {
+public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDetailDto> {
 
 	/**
 	 * 资产要素登记mapper
@@ -75,8 +76,8 @@ public class AssetInfoDetail001Service extends CommonExportService<ChbAssetInfo>
 	 * @see
 	 * @since 1.6.0
 	 */
-	public Page<ChbAssetInfo> searchForPage(Map<String, Object> pageParam) {
-        Page<ChbAssetInfo> page;
+	public Page<AssetInfoDetailDto> searchForPage(Map<String, Object> pageParam) {
+        Page<AssetInfoDetailDto> page;
         //资产资产编号
 		String assetCode = (String)pageParam.get("assetCode");
 		if(StringUtil.isNotEmpty(assetCode)){

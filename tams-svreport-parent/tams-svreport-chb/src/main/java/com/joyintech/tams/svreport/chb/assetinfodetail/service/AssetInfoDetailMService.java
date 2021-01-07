@@ -6,6 +6,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dao.AssetInfoDetailMapper;
+import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ import java.util.Map;
  * @since 1.0
  */
 @Service
-public class AssetInfoDetailMService extends BaseService<ChbAssetInfo>{
+public class AssetInfoDetailMService extends BaseService<AssetInfoDetailDto>{
 
 	@Autowired
 	private AssetInfoDetailMapper assetInfoDetailMapper;
@@ -34,7 +35,7 @@ public class AssetInfoDetailMService extends BaseService<ChbAssetInfo>{
     * @see
     * @since 1.0
     */
-	public Page<ChbAssetInfo> searchForPage(Map<String, Object> param) {
+	public Page<AssetInfoDetailDto> searchForPage(Map<String, Object> param) {
 		
 		//获取当前登录用户的机构编码
 		param.put("orgCode", CommonUtil.getTreeInstCode());

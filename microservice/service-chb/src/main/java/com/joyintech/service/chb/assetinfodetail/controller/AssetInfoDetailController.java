@@ -3,6 +3,7 @@ package com.joyintech.service.chb.assetinfodetail.controller;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
+import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.service.AssetInfoDetail001Service;
 import com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto;
 import com.joyintech.tams.svreport.chb.assetinforeg.service.AssetInfoRegist001Service;
@@ -48,7 +49,7 @@ public class AssetInfoDetailController {
     * @since 1.0
     */
     @PostMapping("findPage/{page}/{length}")
-	public Page<ChbAssetInfo> searchForPage(@RequestBody Map<String, Object> param) {
+	public Page<AssetInfoDetailDto> searchForPage(@RequestBody Map<String, Object> param) {
 		return assetInfoDetail001Service.searchForPage(param);
 	}
 

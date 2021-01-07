@@ -1,0 +1,94 @@
+package com.joyintech.tams.svreport.chb.assetinfodetail.dto;
+
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.export.paginator.domain.ITableRow;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.framework.validation.annotation.ValidLogic;
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.base.entity.ChbAssetInfo;
+import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.report.common.base.annotate.BusinessKey;
+import com.joyintech.tams.report.common.base.annotate.DictFormat;
+import com.joyintech.tams.report.common.base.annotate.TableName;
+import com.joyintech.tams.report.interf.common.constant.DateUtil;
+import com.joyintech.workflow.engine.dto.ProcessEntity;
+
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.Date;
+
+/**
+ * 描述:CHB_ASSET_INFO_SUB表的实体类,用于前台分类展示
+ * DateUtil
+ * @version
+ * @author: Administrator
+ * @创建时间: 2019-01-21
+ */
+@TableName("CHB_ASSET_INFO")
+@PageId("AssetInfoRegist002")
+//@ValidLogic(targetClass = FinDepositTargetValidator.class, groups = { ValidateGroupEdit.class,
+//		ValidateGroupDelete.class })
+public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,ProcessEntity {
+
+
+	private  String dataStatus;
+
+	public String getDataStatus() {
+		return dataStatus;
+	}
+
+	public void setDataStatus(String dataStatus) {
+		this.dataStatus = dataStatus;
+	}
+
+	public String getDataStausSty() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getDataStatus());
+	}
+
+	/**
+	 * 资产负债类别
+	 * @return
+	 */
+	public String getAssetTypeStr() {
+
+		return SysDataUtil.getNameFromDataDict(DictCode.资产_负债类别, this.getAssetType());
+	}
+	/**
+	 * 资产_负债二级类别
+	 * @return
+	 */
+	public String getAssetType2Str() {
+
+		return SysDataUtil.getNameFromDataDict(DictCode.资产_负债二级类别, this.getAssetType2());
+	}
+	/**
+	 * 资产一级类型
+	 * @return
+	 */
+	public String getOrgAssetType1Str() {
+		return SysDataUtil.getNameFromDataDict(DictCode.金融产品类型_投管用, this.getOrgAssetType1());
+	}
+	/**
+	 * 资产二级类型
+	 * @return
+	 */
+	public String getOrgAssetType2Str() {
+		return SysDataUtil.getNameFromDataDict(DictCode.WIND一级分类_含债券一级分类等, this.getOrgAssetType2());
+	}
+
+
+	/**
+	 * 资产二级类型
+	 * @return
+	 */
+	public String getStatusStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.WIND一级分类_含债券一级分类等, this.getOrgAssetType2());
+	}
+
+
+}

@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.chb.assetinfodetail.dao;
 
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
+import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -28,6 +29,6 @@ public interface AssetInfoDetailMapper {
 	int insertBatchPsbc(@Param("insertList") List<ChbAssetInfo> insertList);
 
 
-	List<ChbAssetInfo> selectChbInfoByParam (Map<String,Object> params);
+	List<AssetInfoDetailDto> selectChbInfoByParam (Map<String,Object> params);
     
 }

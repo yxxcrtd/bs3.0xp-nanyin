@@ -10,8 +10,6 @@
 
 package com.joyintech.tams.svreport.chb.assetinfodetail.controller;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
@@ -19,23 +17,16 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
-import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.service.AssetInfoDetailMService;
-import com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto;
-import com.joyintech.tams.svreport.chb.assetinforeg.service.AssetInfoRegist001Service;
-import com.joyintech.tams.svreport.chb.assetinforeg.service.AssetInfoRegistMService;
-import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -89,23 +80,24 @@ public class AssetInfoDetail001Controller extends BaseController {
 			model.addAttribute("isMain", "01");
 		}
 		super.setSelectOptionToModel(model, DictCode.金融产品类型_投管用,DictCode.资产_负债类别
-				,DictCode.WIND一级分类_含债券中债, DictCode.资产_负债二级类别,DictCode.WIND二级分类_含债券二级分类等, DictCode.报送反馈状态);
+				,DictCode.WIND一级分类_含债券中债, DictCode.资产_负债二级类别,DictCode.WIND二级分类_含债券二级分类等, DictCode.处理状态);
 		return super.init(model);
 	}
-	
-    /**
-    *
-    * 业务画面查询事件
-    * <功能详细描述>
-    * @return
-    * @see
-    * @since 1.0
-    */
-    @ResponseBody
-    @RequestMapping(SVReportGlobalConstant.SEARCH_PAGE)
-	public Page<ChbAssetInfo> search() {
-		Map<String, Object> param = RequestUtil.getPageParam();
-		return assetInfoDetailMService.searchForPage(param);
+
+
+	/**
+	 *
+	 * 业务画面查询事件
+	 * <功能详细描述>
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@ResponseBody
+	@RequestMapping("searchPage")
+	public Page<AssetInfoDetailDto> searchPage() {
+		Page<AssetInfoDetailDto> assetList = assetInfoDetailMService.searchForPage(RequestUtil.getPageParam());
+		return assetList;
 	}
 
     /**

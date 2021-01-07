@@ -1127,7 +1127,6 @@ public class ChbAssetInfo extends BaseEntity {
     public String getAssetType2() {
         return assetType2;
     }
-
     /**
      * 资产/负债二级类别 参考数据字典:ASSET_TYPE_SECOND_LEVEL
      * @param assetType2 资产/负债二级类别 参考数据字典:ASSET_TYPE_SECOND_LEVEL
@@ -3048,6 +3047,7 @@ public class ChbAssetInfo extends BaseEntity {
         return inAssetType;
     }
 
+
     /**
      * 行内资产类别 01 场内股票质押回购/02 场外股票质押融资/03 融资租赁/99 其他
      * @param inAssetType 行内资产类别 01 场内股票质押回购/02 场外股票质押融资/03 融资租赁/99 其他
@@ -3489,6 +3489,8 @@ public class ChbAssetInfo extends BaseEntity {
     public String getOrgAssetType2() {
         return orgAssetType2;
     }
+
+
 
     public void setOrgAssetType2(String orgAssetType2) {
         this.orgAssetType2 = orgAssetType2;

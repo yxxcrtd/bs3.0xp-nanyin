@@ -3,7 +3,7 @@
 <mapper
     namespace="com.joyintech.tams.svreport.chb.assetinfodetail.dao.AssetInfoDetailMapper">
     <resultMap id="BaseResultMap"
-        type="com.joyintech.tams.common.base.entity.ChbAssetInfo">
+        type="com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto">
         <id column="ASSET_UUID" property="assetUuid" jdbcType="CHAR" />
         <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
         <result column="ASSET_TYPE" property="assetType" jdbcType="VARCHAR" />
@@ -262,7 +262,9 @@
     <result column="BANK_SEC_CAPITAL" property="bankSecCapital" jdbcType="VARCHAR" />
     <result column="BANK_SEC_PERPETUAL" property="bankSecPerpetual" jdbcType="VARCHAR" />
     <result column="BANK_SEC_PREFER" property="bankSecPrefer" jdbcType="VARCHAR" />
-              
+
+        <result column="dataStatus" property="dataStatus" jdbcType="VARCHAR" />
+
     </resultMap>
     <resultMap id="PsbcBaseResultMap"
         type="com.joyintech.tams.common.base.entity.ChbAssetInfo">
@@ -1978,7 +1980,7 @@
         ;end;
     </update>
 
-    <select id="selectChbInfoByParam" resultType="string" >
+    <select id="selectChbInfoByParam"  resultMap="BaseResultMap">
         SELECT * FROM (
         SELECT '01' dataStatus ,i.* FROM chb_asset_info i
         WHERE 1=1
