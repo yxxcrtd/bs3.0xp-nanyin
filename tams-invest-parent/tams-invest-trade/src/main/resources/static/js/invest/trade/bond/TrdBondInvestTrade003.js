@@ -2908,7 +2908,7 @@ var table;
 
 			              var returnVal = {};
 			        	   var params={};
-        				   table.renderRow(data.LAY_TABLE_INDEX,  {"investaim": $("#invAim").val()});
+//        				   table.renderRow(data.LAY_TABLE_INDEX,  {"investaim": $("#invAim").val()});
         				   //买入
 			        	   if("portfolioId"==field && "T01"==$("#ps").val()){
                                if(value){
@@ -3088,6 +3088,9 @@ var table;
                                    table.renderRow(data.LAY_TABLE_INDEX, {"tradeAmtAndFee": JoyinMath.doAdd(numberTwo, 0, 2)});
                                }
                            }
+			           },
+			           addclick:function(row){
+                            row.investaim =  $("#invAim").val();
 			           }
 				});
 			}

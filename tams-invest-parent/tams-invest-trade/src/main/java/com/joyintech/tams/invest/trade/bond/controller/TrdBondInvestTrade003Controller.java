@@ -523,7 +523,7 @@ public class TrdBondInvestTrade003Controller extends BaseController {
                     tempDto.setIntAmt(fenpei.getIntAmt());//应计利息总额
                     tempDto.setEntrustId(fenpei.getEntrustId());//设置委托代码
                     tempDto.setOwnTradeAmt(fenpei.getTradeAmt());
-
+                    tempDto.setInvAim(fenpei.getInvestaim());
                     if (baseGetBusinessId != null) {
                         BussinessCodeParameter codeParameter = new BussinessCodeParameter();
                         if (StringUtil.equals(DictCodeList.交易方向_买入.getValue(), tempDto.getPs())) {
