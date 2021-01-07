@@ -748,11 +748,15 @@ public class BussFinProductOpenPlanImplService extends BaseService<BussFinProduc
 		Calendar c = Calendar.getInstance();
 		// 设置日期
 		c.setTime(date);
+		if(c.getTime().getDay()>=dayOfWeek) {
+			weekOfMonth = weekOfMonth+1;
+			c.set(Calendar.WEEK_OF_MONTH, weekOfMonth);
+		}
 		// 设置月初日期
 		c.set(Calendar.DAY_OF_MONTH, 1);
 		Date dateTemp = c.getTime();
 		c.set(Calendar.WEEK_OF_MONTH, weekOfMonth);
-		c.set(Calendar.DAY_OF_WEEK, 1 + dayOfWeek);
+		c.set(Calendar.DAY_OF_WEEK, 1 + dayOfWeek);		
 		if (dateTemp.compareTo(c.getTime()) > 0) {
 			return null;
 		}

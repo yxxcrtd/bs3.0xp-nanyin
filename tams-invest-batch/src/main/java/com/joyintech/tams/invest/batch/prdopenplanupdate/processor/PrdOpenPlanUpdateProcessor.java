@@ -41,8 +41,7 @@ public class PrdOpenPlanUpdateProcessor extends BaseProcessor<NeedOperateEntity,
 	@Override
 	public FinOpenPlanDto process(NeedOperateEntity item) throws Exception {
 		// 获取reader方法的返回值
-		PrdOpenPlanUpdateDto prdOpenPlanUpdateDto = (PrdOpenPlanUpdateDto) item;
-		
+		PrdOpenPlanUpdateDto prdOpenPlanUpdateDto = (PrdOpenPlanUpdateDto) item;	
 		FinOpenPlanDto finOpenPlanDto = new FinOpenPlanDto();
 		if(StringUtil.equals("开放计划", prdOpenPlanUpdateDto.getPlanType())){
 			// 公共方法生成的List<开放计划>
