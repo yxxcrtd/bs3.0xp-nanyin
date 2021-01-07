@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="AssetInfoRegist.xlsx" name="资产要素登记">
+	<Worksheet dataStart="2" javaBean="com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto">
+		<Row>
+			<Cell order="1" name="行内资产/负债编码">assetCode</Cell>
+			<Cell order="2" name="发行机构代码">issuePartyId</Cell>
+			<Cell order="3" name="资产/负债类别">assetType2</Cell>
+			<Cell order="4" name="交易流通场所">tradeMarket</Cell>
+			<Cell order="5" name="币种">ccy</Cell>
+			<Cell order="6" name="资金存入银行">bankName</Cell>
+			<Cell order="7" name="存款金额">amt01</Cell>
+			<Cell order="8" name="起息日">vdate01</Cell>
+			<Cell order="9" name="到期日">mdate01</Cell>
+			<Cell order="10" name="年利率(%)">assetYield01</Cell>
+			<Cell order="11" name="计息基础">basisName01</Cell>
+			<Cell order="12" name="存款类型">depoType</Cell>
+			<Cell order="13" name="结构性存款挂钩标的类别">targetType</Cell>
+            <Cell order="14" name="结构性存款挂钩标的">target</Cell>
+			<Cell order="15" name="代码">assetId03</Cell>
+			<Cell order="16" name="名称">assetName03</Cell>
+			<Cell order="17" name="具体类别">chbSectypeName</Cell>
+			<Cell order="18" name="发行方式">issueModeName</Cell>
+			<Cell order="19" name="主体评级">secMainGradeName</Cell>
+			<Cell order="20" name="发行机构类型（按规模划分）">partyType1Name</Cell>
+			<Cell order="21" name="发行机构类型（按技术领域划分）">partyType3Name</Cell>
+			<Cell order="22" name="发行机构类型（按经济类型划分）">partyType2Name</Cell>
+			<Cell order="23" name="发行机构所属行业">industryName03</Cell>
+			<Cell order="24" name="登记托管机构">registOrgName</Cell>
+			<Cell order="25" name="登记托管机构说明">registorgComment</Cell>
+			<Cell order="26" name="起息日">vdate02</Cell>
+			<Cell order="27" name="到期日">mdate02</Cell>
+
+		</Row>
+	</Worksheet>
+</Workbook>
