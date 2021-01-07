@@ -1384,7 +1384,7 @@
                             table.renderRow(i, {"tradeAmt": secTotalPrin2});
                             secTotalPrin2= secTotalPrin2 - secTotalPrin2;
                         }else if(secTotalPrin2-0!=table.getAllRows()[i].tradeAmt-0){
-                            Joyin.error("组合分配交易总额和金额信息交易总额不一致");
+                            Joyin.error("组合分配券面总额和金额信息券面总额不一致");
                         }
                         if(table.getAllRows()[i].tradeAmt-0>0){
                             var fIntAmtTotle2 = JoyinMath.doMinus(fIntAmt,fIntAmtTotle,2);
@@ -1667,7 +1667,7 @@
         // 计算按钮
         $('#TrdOutRightRepoTrade002_btn_calculate').click(function () {
         	calcClickAction2();
-//        	extractedJiSuan();
+        	extractedJiSuan();
         });
         
         // 首次全价=首次净价+首次应计利息；
@@ -1770,18 +1770,20 @@
 		
 		//分配方式
         $('#TrdOutRightRepoTrade003_btn_autoAllocation').click(function () {
-            var ccy=$("#TrdOutRightRepoTrade002_ccy").val();
-            if(ccy==null||ccy==''||ccy==undefined){
-                       Joyin.error("请选择币种信息");
-                       return;
-            }
+             if( !$('#TrdOutRightRepoTrade003_btn_autoAllocation').hasClass('layui-btn-disabled') ){
+                var ccy=$("#TrdOutRightRepoTrade002_ccy").val();
+                if(ccy==null||ccy==''||ccy==undefined){
+                           Joyin.error("请选择币种信息");
+                           return;
+                }
 
-            var entrustId = $('#TrdOutRightRepoTrade002_entrustId').val();
-            if(entrustId){
-                distribution003(false);
-            }else{
-                extractedJiSuan();
-            }
+                var entrustId = $('#TrdOutRightRepoTrade002_entrustId').val();
+                if(entrustId){
+                    distribution003(false);
+                }else{
+                    extractedJiSuan();
+                }
+             }
         });
 
 		/**
