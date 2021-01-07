@@ -2634,6 +2634,9 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             inputDto.setPrinAmt(dto.getPrinAmt());// 券面总额
             inputDto.setIsGrade("1");
             inputDto.setType6(dto.getType6());// 资产四级分类
+            String type7 = restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getType7",dto, String.class);
+            inputDto.setType7(type7);
+            inputDto.setTradeMarketMode(dto.getTradeMarketMode());
             if (StringUtil.equals(BussinessDictCodeList.交易场所_银行间.getValue(), dto.getTradeMarket())) {
                 // 登记托管机构用证券托管户的登记托管机构
                 String registOrg = restTemplate.getForObject(

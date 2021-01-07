@@ -51,8 +51,8 @@
             }
         },
         cols:[{field:'seqNo',visible:false},
+             {field:'gradeAmount', title: '分档起点金额（万元）', edit:true,sortable:false,width : 170,type:'money'},
              {field:'isCludeStartamt',title:'是否包含起点金额', edit:true, editOption:{type:'select', result: YES_OR_NO},sortable:false,width : 170},
-             {field:'gradeAmount', title: '分档金额（万元）', edit:true,sortable:false,type : 'money',width : 170},
         	 {field:'chargeValue', title: '费用值', edit:true,sortable:false,type : 'money',width : 170},
         	 {field:'chargeRate',title:'费率（‰）', edit:true,sortable:false,type : 'number',width : 170},
         	 {field:'feeMaxi', title: '最大值', edit:true,sortable:false,type : 'money',width : 170},
@@ -62,37 +62,33 @@
         searchOnInit:true,
         addbtn:true,
         checkbox:false,
+        rowno:true,
         page:false,
-        editCell:function(value, data, field, cell, column){
-            if(field=='gradeAmount'){
-                var allData=table.getAllRows();
-                if(value!=0){
-                    var flag=false;
-                    for(k=0;k<allData.length;k++){
-                        if(allData[k].gradeAmount==0)flag=true;
-                    }
-                    if(!flag){
-                        Joyin.error("请先输入一条分档金额（万元）为0的信息！");
-                        table.removeRow(data);
-                        return;
-                    }
-                }
+        addclick: function(row) {
+            var list = table.getAllRows();
+            if(list.length == 1){
+                row.gradeAmount='0';
+                row.isCludeStartamt='Y';
             }
         },
         beforeEditCell:function(preVal, field, rowData){
             if($('#chargeType').val()=='01'){
                 if(field=='chargeValue')return false;
-            }
-            if($('#chargeType').val()=='02'){
+            }else if($('#chargeType').val()=='02'){
                 if(field=='chargeRate')return false;
                 if(field=='feeMaxi')return false;
                 if(field=='feeMini')return false;
+            }
+            if(rowData.LAY_TABLE_INDEX==0){
+                if(field=='gradeAmount'||field=='isCludeStartamt')return false;
             }
             return true;
         }
     });
     table.bind('click', '.delt', function(data, index) {
+        if(index!=0){
             table.removeRow(data);
+        }
     });
 
     /**
@@ -104,6 +100,12 @@
         /**
          * 获取列表参数
          */
+         if($("#windtypeone").val()==null){
+            if($("#windtypetwo").val()!=null){
+                Joyin.error(JoyinUtil.getMessage("不能单独输入资产分类二，请先输入资产分类一。"));
+                return;
+            }
+         }
         var object = $.serializeToObject('#informationForm');
         object.trdFeeConfigDetailList = table.getAllRows();
         object.windtypeone=$("#windtypeone").val()?$("#windtypeone").val().join():'';
@@ -201,6 +203,9 @@
     var feeTypeChange = function () {
         if($("#feeType").val() == FEE_TYPE_B01||$("#feeType").val() == FEE_TYPE_B07){
             $("#secAcctId").val('').prop('disabled',true).prop("required",false).trigger('change');
+            $("#chargeType").prop('disabled',false).trigger('change');
+            $("#tradeType").prop('disabled',false).trigger('change');
+            $("#termType").prop('disabled',false).trigger('change');
         }else if($("#feeType").val() == FEE_TYPE_B02){
             $("#secAcctId").val('').prop('disabled',true).prop("required",false).trigger('change');
             $("#tradeType").val(PINAN_ASSET_TYPE_F11).prop('disabled',true).trigger('change');
@@ -335,9 +340,13 @@
             displayStar();
             if($(this).val() == PINAN_ASSET_TYPE_F01){
                 $("#tradeMarketMode_div").show().trigger('change');
+                $("#windtypeone").prop('disabled',false).trigger('change');
+                $("#windtypetwo").prop('disabled',false).trigger('change');
             }else{
                 $("#tradeMarketMode_div").hide().trigger('change');
                 $("#tradeMarketMode").val('').trigger('change');
+                $("#windtypeone").val('').prop('disabled',true).trigger('change');
+                $("#windtypetwo").val('').prop('disabled',true).trigger('change');
             }
         });
         // modified by wangguoxian 20190717 end
@@ -358,10 +367,15 @@
                 $('#grade_div2').hide().trigger('change');
                 $('#grade_div1').show().trigger('change');
             }
-//            table.reload()
         });
         $("#tradeType").trigger("change");
         $("#isGrade").trigger('change');
+        feeTypeChange();
+        $("#chargeType").trigger('change');
+        if(($("#workflowId").val()!=null&&$("#workflowId").val()!='')||pageModel!=PAGE_MODEL_NEW){
+            $("#windtypetwo").val(windtypetwo).trigger("change");
+            $("#chargeBasis").val(chargeBasis).trigger("change");
+        }
     });
 }());
 

@@ -1,6 +1,7 @@
 package com.joyintech.service.basicdata.mstcommissionset.service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -141,22 +142,62 @@ public class MstCommissionSetService extends BaseService{
    private void insertTable(MstCommissionSetDto entity,String termDto,String secIdDto,String psDto){
 	   MstCommissionSetDto mstComDto=new MstCommissionSetDto();
 		BeanUtil.copyPropertiesIgnoreNull(mstComDto, entity);
-		mstComDto.setSeqNo(IDGenerator.generate());
+//		mstComDto.setSeqNo(IDGenerator.generate());
 		mstComDto.setTermType(termDto);
 		mstComDto.setSecAcctId(secIdDto);
 		mstComDto.setPs(psDto);
-	   	trdFeeConfigMapper.insert(mstComDto);
+		List<String> seqNoList = new ArrayList<>();
+		if(StringUtil.isNotEmpty(entity.getWindtypeone())){
+			for(String windtypeone:entity.getWindtypeone().split(",")){
+				mstComDto.setWindtypeone(windtypeone);
+				List<String> list=trdFeeConfigMapper.findWindtypetwo(windtypeone);
+				if(StringUtil.isNotEmpty(entity.getWindtypetwo())&&list.size()>0){
+					Boolean flag=false;
+					for(String windtypetwo:entity.getWindtypetwo().split(",")){
+						if(list.contains(windtypetwo)){
+							mstComDto.setWindtypetwo(windtypetwo);
+							flag=true;
+                            String seqNo=IDGenerator.generate();
+                            seqNoList.add(seqNo);
+                            mstComDto.setSeqNo(seqNo);
+							trdFeeConfigMapper.insert(mstComDto);
+						}
+					}
+					if(!flag){
+                        String seqNo=IDGenerator.generate();
+                        seqNoList.add(seqNo);
+                        mstComDto.setSeqNo(seqNo);
+						trdFeeConfigMapper.insert(mstComDto);
+					}
+				}else{
+					mstComDto.setWindtypetwo(null);
+                    String seqNo=IDGenerator.generate();
+                    seqNoList.add(seqNo);
+                    mstComDto.setSeqNo(seqNo);
+					trdFeeConfigMapper.insert(mstComDto);
+				}
+			}
+		}else{
+            String seqNo=IDGenerator.generate();
+            seqNoList.add(seqNo);
+            mstComDto.setSeqNo(seqNo);
+			trdFeeConfigMapper.insert(mstComDto);
+		}
 	   	if("Y".equals(entity.getIsGrade())){
 	   		for(TrdFeeConfigDetail dto:entity.getTrdFeeConfigDetailList()){
 				TrdFeeConfigDetail trdFeeConfigDetailDto=new TrdFeeConfigDetail();
 				BeanUtil.copyPropertiesIgnoreNull(trdFeeConfigDetailDto, dto);
-				trdFeeConfigDetailDto.setSeqNo(IDGenerator.generate());
-				trdFeeConfigDetailDto.setConfigSeqNo(mstComDto.getSeqNo());
+//				trdFeeConfigDetailDto.setSeqNo(IDGenerator.generate());
+//				trdFeeConfigDetailDto.setConfigSeqNo(mstComDto.getSeqNo());
 				if (StringUtil.isNotEmpty(trdFeeConfigDetailDto.getChargeRate())) {
 					trdFeeConfigDetailDto.setChargeRate(trdFeeConfigDetailDto.getChargeRate().divide(new BigDecimal(1000)));
 				}
 				trdFeeConfigDetailDto.setGradeAmount(trdFeeConfigDetailDto.getGradeAmount().multiply(new BigDecimal(10000)));
-				trdFeeConfigDetailMapper.insert(trdFeeConfigDetailDto);
+				for(String seqNo:seqNoList){
+                    trdFeeConfigDetailDto.setSeqNo(IDGenerator.generate());
+                    trdFeeConfigDetailDto.setConfigSeqNo(seqNo);
+                    trdFeeConfigDetailMapper.insert(trdFeeConfigDetailDto);
+                }
 			}
 	   		return;
 		}
@@ -167,7 +208,11 @@ public class MstCommissionSetService extends BaseService{
 	   	if (StringUtil.isNotEmpty(trdDetailDto.getChargeRate())) {
 	   	    trdDetailDto.setChargeRate(trdDetailDto.getChargeRate().divide(new BigDecimal(1000)));
 	   	}
-	   	trdFeeConfigDetailMapper.insert(trdDetailDto);
+       for(String seqNo:seqNoList){
+           trdDetailDto.setSeqNo(IDGenerator.generate());
+           trdDetailDto.setConfigSeqNo(seqNo);
+           trdFeeConfigDetailMapper.insert(trdDetailDto);
+       }
    }
     /**
      * 更新

@@ -17,6 +17,8 @@
 			t1.secAcctName,
 			t2.ps AS ps,
 			t3.termType AS termType,
+			t4.windtypeone as windtypeone,
+			t5.windtypetwo as windtypetwo,
 			m.FEE_TYPE AS feeType,
 			m.TRADE_TYPE AS tradeType,
 			m.CHARGE_TYPE AS chargeType,
@@ -26,17 +28,17 @@
 			m.FEE_MINI as feeMini,
 			case when m.CHARGE_TYPE='01' then m.CHARGE_RATE * 1000 else m.CHARGE_VALUE end as chargeValue,
 			m.CHARGE_RATE as chargeRate,
-			m.IS_PAY_WITH_TRADE as isPayWithTrade,m.WINDTYPEONE windtypeone,m.WINDTYPETWO windtypetwo,m.IS_GRADE isGrade
+			m.IS_PAY_WITH_TRADE as isPayWithTrade,m.IS_GRADE isGrade
 		FROM (
 			select  distinct BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE,CHARGE_BASIS,
 				CASE when t.IS_GRADE='Y' then null else T1.CHARGE_VALUE end as CHARGE_VALUE,
 				CASE when t.IS_GRADE='Y' then null else T1.FEE_MAXI end as FEE_MAXI,
 				CASE when t.IS_GRADE='Y' then null else t1.FEE_MINI end as FEE_MINI,
 				case when t.IS_GRADE='Y' then null else t1.CHARGE_RATE end as CHARGE_RATE,
-				t.IS_PAY_WITH_TRADE,t.WINDTYPEONE,t.WINDTYPETWO,t.IS_GRADE from TRD_FEE_CONFIG t
+				t.IS_PAY_WITH_TRADE,t.IS_GRADE from TRD_FEE_CONFIG t
 			inner join TRD_FEE_CONFIG_DETAIL t1 on t.SEQ_NO=t1.CONFIG_SEQ_NO
 			where t.FEE_TYPE  IN('B02','B05','B01','B07')  GROUP BY t.BATCH_SEQ,TRADE_MARKET ,
-			FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE,CHARGE_BASIS,T1.FEE_MAXI,t1.FEE_MINI,T1.CHARGE_VALUE,t1.CHARGE_RATE,t.IS_PAY_WITH_TRADE,t.WINDTYPEONE,t.WINDTYPETWO,t.IS_GRADE
+			FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE,CHARGE_BASIS,T1.FEE_MAXI,t1.FEE_MINI,T1.CHARGE_VALUE,t1.CHARGE_RATE,t.IS_PAY_WITH_TRADE,t.IS_GRADE
 			) m 
 			INNER JOIN (
 			select n.BATCH_SEQ,
@@ -57,6 +59,16 @@
 			regexp_replace(LISTAGG( TERM_TYPE, ',') WITHIN GROUP (order by (TERM_TYPE)) ,'([^,]+)(,\1)*(,|$)','\1\3') termType 
 			from TRD_FEE_CONFIG where FEE_TYPE  IN('B02','B05','B01','B07') GROUP BY BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE
 			) t3 on m.BATCH_SEQ=t3.BATCH_SEQ
+			INNER JOIN (
+			select BATCH_SEQ,
+			regexp_replace(LISTAGG( WINDTYPEONE, ',') WITHIN GROUP (order by (WINDTYPEONE)) ,'([^,]+)(,\1)*(,|$)','\1\3') windtypeone
+			from TRD_FEE_CONFIG where FEE_TYPE  IN('B02','B05','B01','B07') GROUP BY BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE
+			) t4 on m.BATCH_SEQ=t4.BATCH_SEQ
+			INNER JOIN (
+			select BATCH_SEQ,
+			regexp_replace(LISTAGG( WINDTYPETWO, ',') WITHIN GROUP (order by (WINDTYPETWO)) ,'([^,]+)(,\1)*(,|$)','\1\3') windtypetwo
+			from TRD_FEE_CONFIG where FEE_TYPE  IN('B02','B05','B01','B07') GROUP BY BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE
+			) t5 on m.BATCH_SEQ=t5.BATCH_SEQ
 			
 		<where>
 			<if test="feeType != null and feeType != ''">
@@ -76,6 +88,8 @@
 		t1.secAcctId,
 		t2.ps AS ps,
 		t3.termType AS termType,
+	    t4.windtypeone as windtypeone,
+	    t5.windtypetwo as windtypetwo,
 		m.FEE_TYPE AS feeType,
 		m.TRADE_TYPE AS tradeType,
 		m.CHARGE_TYPE AS chargeType,
@@ -85,17 +99,17 @@
 		m.FEE_MINI as feeMini,
 		m.CHARGE_VALUE as chargeValue,
 		m.CHARGE_RATE * 1000 as chargeRate,
-		m.IS_PAY_WITH_TRADE as isPayWithTrade,m.WINDTYPEONE windtypeone,m.WINDTYPETWO windtypetwo,m.IS_GRADE isGrade,m.TRADE_MARKET_MODE tradeMarketMode
+		m.IS_PAY_WITH_TRADE as isPayWithTrade,m.IS_GRADE isGrade,m.TRADE_MARKET_MODE tradeMarketMode
 	 FROM (
 			select distinct BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE,CHARGE_BASIS,
 		 		CASE when t.IS_GRADE='Y' then null else T1.CHARGE_VALUE end as CHARGE_VALUE,
 		 		CASE when t.IS_GRADE='Y' then null else T1.FEE_MAXI end as FEE_MAXI,
 		 		CASE when t.IS_GRADE='Y' then null else t1.FEE_MINI end as FEE_MINI,
 		 		case when t.IS_GRADE='Y' then null else t1.CHARGE_RATE end as CHARGE_RATE,
-		 	t.IS_PAY_WITH_TRADE,t.WINDTYPEONE,t.WINDTYPETWO,t.IS_GRADE,t.TRADE_MARKET_MODE from TRD_FEE_CONFIG t
+		 	t.IS_PAY_WITH_TRADE,t.IS_GRADE,t.TRADE_MARKET_MODE from TRD_FEE_CONFIG t
 			inner join TRD_FEE_CONFIG_DETAIL t1 on t.SEQ_NO=t1.CONFIG_SEQ_NO 
 			where t.FEE_TYPE  IN('B02','B05','B01','B07')  GROUP BY t.BATCH_SEQ,TRADE_MARKET ,
-			FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE,CHARGE_BASIS,T1.FEE_MAXI,t1.FEE_MINI,T1.CHARGE_VALUE,t1.CHARGE_RATE,t.IS_PAY_WITH_TRADE,t.WINDTYPEONE,t.WINDTYPETWO,t.IS_GRADE,t.TRADE_MARKET_MODE
+			FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE,CHARGE_BASIS,T1.FEE_MAXI,t1.FEE_MINI,T1.CHARGE_VALUE,t1.CHARGE_RATE,t.IS_PAY_WITH_TRADE,t.IS_GRADE,t.TRADE_MARKET_MODE
 			) m 
 			INNER JOIN (
 			select n.BATCH_SEQ,
@@ -116,6 +130,16 @@
 			regexp_replace(LISTAGG( TERM_TYPE, ',') WITHIN GROUP (order by (TERM_TYPE)) ,'([^,]+)(,\1)*(,|$)','\1\3') termType
 			from TRD_FEE_CONFIG where FEE_TYPE  IN('B02','B05','B01','B07') GROUP BY BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE
 			) t3 on m.BATCH_SEQ=t3.BATCH_SEQ
+			 INNER JOIN (
+			 select BATCH_SEQ,
+			 regexp_replace(LISTAGG( WINDTYPEONE, ',') WITHIN GROUP (order by (WINDTYPEONE)) ,'([^,]+)(,\1)*(,|$)','\1\3') windtypeone
+			 from TRD_FEE_CONFIG where FEE_TYPE  IN('B02','B05','B01','B07') GROUP BY BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE
+			 ) t4 on m.BATCH_SEQ=t4.BATCH_SEQ
+			 INNER JOIN (
+			 select BATCH_SEQ,
+			 regexp_replace(LISTAGG( WINDTYPETWO, ',') WITHIN GROUP (order by (WINDTYPETWO)) ,'([^,]+)(,\1)*(,|$)','\1\3') windtypetwo
+			 from TRD_FEE_CONFIG where FEE_TYPE  IN('B02','B05','B01','B07') GROUP BY BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE
+			 ) t5 on m.BATCH_SEQ=t5.BATCH_SEQ
         where m.BATCH_SEQ = #{batchSeq,jdbcType=VARCHAR}
     </select>
     
@@ -177,10 +201,10 @@
 			and m.TRADE_MARKET_MODE = #{tradeMarketMode,jdbcType=VARCHAR}
 		</if>
 		<if test="windtypeone != null and windtypeone != ''">
-			and m.WINDTYPEONE like CONCAT（'%',CONCAT(#{windtypeone,jdbcType=VARCHAR},'%'))
+			and m.WINDTYPEONE = #{windtypeone,jdbcType=VARCHAR}
 		</if>
 		<if test="windtypetwo != null and windtypetwo != ''">
-			and m.WINDTYPETWO like CONCAT（'%',CONCAT(#{windtypetwo,jdbcType=VARCHAR},'%'))
+			and m.WINDTYPETWO = #{windtypetwo,jdbcType=VARCHAR}
 		</if>
 	</select>
 	

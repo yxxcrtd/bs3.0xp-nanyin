@@ -1288,4 +1288,13 @@
       )t
     </select>
     <!--add by mashukai 20201111 新增查询通道划款交易 TISHKBS-1038 end -->
+
+    <select id="getType7" parameterType="com.joyintech.service.trade.bond.dto.TrdBondInvestTradeDto" resultType="java.lang.String">
+        select OUTPUT_VALUE_2
+        from FIN_PRODUCT_TYPE_CONFIG
+        where CONFIG_TYPE = 'TG_TYPE'
+        and INPUT_VALUE_2=#{type9}
+        and INPUT_VALUE_3=#{type10}
+        and INPUT_VALUE_4=#{type11}
+    </select>
 </mapper>

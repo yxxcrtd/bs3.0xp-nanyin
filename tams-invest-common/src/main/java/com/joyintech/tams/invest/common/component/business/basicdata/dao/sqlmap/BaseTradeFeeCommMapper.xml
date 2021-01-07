@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.invest.common.component.business.basicdata.dao.BaseTradeFeeCommMapper">
     <select id="selectFeeConfig" parameterType="com.joyintech.tams.invest.common.component.business.basicdata.dto.BasicTradeFeeInputDto" resultType="com.joyintech.tams.invest.common.component.business.basicdata.dto.MstCommissionSetDto">
-        SELECT m.*,n.CHARGE_VALUE,n.CHARGE_RATE,n.FEE_MAXI,n.FEE_MINI
+        SELECT m.*,n.CHARGE_VALUE,n.CHARGE_RATE,n.FEE_MAXI,n.FEE_MINI,n.GRADE_AMOUNT,n.IS_CLUDE_STARTAMT
         FROM TRD_FEE_CONFIG m
         inner join TRD_FEE_CONFIG_DETAIL n on m.SEQ_NO=n.CONFIG_SEQ_NO
        <where>
@@ -12,6 +12,15 @@
 			<if test="tradeMarket != null and tradeMarket != '' ">
 			 and m.TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR}
 			</if>
+		   	<if test="tradeMarketMode != null and tradeMarketMode != '' ">
+			 and m.TRADE_MARKET_MODE = #{tradeMarketMode,jdbcType=VARCHAR}
+		    </if>
+		   	<if test="type6 != null and type6 != '' ">
+			   and m.WINDTYPEONE = #{type6,jdbcType=VARCHAR}
+		   	</if>
+		   	<if test="type7 != null and type7 != '' ">
+			   and m.WINDTYPETWO = #{type7,jdbcType=VARCHAR}
+		   	</if>
 	        <if test="feeType != null and feeType!= '' ">
 	         and m.FEE_TYPE = #{feeType,jdbcType=VARCHAR}
         	</if>
@@ -67,7 +76,7 @@
 			 ))))
 			</if>
        </where>
-       order by m.EFF_DATE desc
+       order by m.EFF_DATE desc,n.GRADE_AMOUNT asc
     </select>
 
 </mapper>

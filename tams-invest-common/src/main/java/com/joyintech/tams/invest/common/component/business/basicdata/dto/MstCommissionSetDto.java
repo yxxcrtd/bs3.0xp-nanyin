@@ -40,6 +40,46 @@ public class MstCommissionSetDto extends TrdFeeConfig {
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal feeMini;
 
+    private String windtypeone;
+
+    private String windtypetwo;
+
+    private String gradeAmount;
+
+    private String isCludeStartamt;
+
+    public String getGradeAmount() {
+        return gradeAmount;
+    }
+
+    public void setGradeAmount(String gradeAmount) {
+        this.gradeAmount = gradeAmount;
+    }
+
+    public String getIsCludeStartamt() {
+        return isCludeStartamt;
+    }
+
+    public void setIsCludeStartamt(String isCludeStartamt) {
+        this.isCludeStartamt = isCludeStartamt;
+    }
+
+    public String getWindtypeone() {
+        return windtypeone;
+    }
+
+    public void setWindtypeone(String windtypeone) {
+        this.windtypeone = windtypeone;
+    }
+
+    public String getWindtypetwo() {
+        return windtypetwo;
+    }
+
+    public void setWindtypetwo(String windtypetwo) {
+        this.windtypetwo = windtypetwo;
+    }
+
     /**
      * 计费比率
      */
