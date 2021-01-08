@@ -15,6 +15,7 @@ import com.joyintech.framework.base.intf.IDictCode;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.BussAssetInfoService;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.bond.dto.SvrBussFinBondRepInfoDto;
+import com.joyintech.tams.svreport.chb.assetinfodetail.asset.placement.dto.SvrBussRepPlacementInfoDto;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -67,6 +68,11 @@ public class SvrBussFinBondRepInfoImplService extends BaseService<SvrBussFinBond
      */
     @Override
     public SvrBussFinBondRepInfoDto getInfoByIssuer(Map<String, Object> pageParam) {
+        return null;
+    }
+
+    @Override
+    public SvrBussRepPlacementInfoDto getplanceInfoByIssuer(Map<String, Object> pageParam) {
         return null;
     }
 }

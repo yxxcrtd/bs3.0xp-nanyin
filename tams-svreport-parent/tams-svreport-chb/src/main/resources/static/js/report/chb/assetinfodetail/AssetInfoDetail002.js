@@ -43,10 +43,14 @@ var QueryFunc=function(){
      */
     var showReportInfo = function(){
         var repAssetType = $('#assetType2').val();
-        $(".svrBussFinBondRepInfo_div").show();
         if (repAssetType=="1701"||repAssetType=="1702"||repAssetType=="1703"||repAssetType=="1704"
             ||repAssetType=="1705"||repAssetType=="1706") {
             $(".svrBussFinBondRepInfo_div").show();
+            $(".svrBussRepPlacementInfo_div").hide();
+        }else if((repAssetType=="1101"||repAssetType=="1102"||repAssetType=="1103"||repAssetType=="1104"
+            ||repAssetType=="1105")){
+            $(".svrBussFinBondRepInfo_div").hide();
+            $(".svrBussRepPlacementInfo_div").show();
         }
         star();
         layui.form.render();
@@ -74,8 +78,7 @@ var QueryFunc=function(){
     $(function() {
 
         $(".svrBussFinBondRepInfo_div").hide();
-
-
+        $(".svrBussRepPlacementInfo_div").hide();
         init();
         //负债类别change事件
         $('#assetType2').change(function(){

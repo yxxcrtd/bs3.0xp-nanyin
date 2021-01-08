@@ -70,7 +70,7 @@ public class SvrBussFinBondRepInfoController extends BaseController implements B
         model.addAttribute("FINPROD_TYPE_TG_F18",DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
         model.addAttribute("YES", DictCodeList.是否_中债_是.getValue());
         model.addAttribute("SVR_PARTY_TYPE1_01", DictCodeListExt3.发行机构类型_按规模划分_中小微企业.getValue());
-        return "component/report/asset/bond/BussFinBondRepInfo";
+        return "report/chb/assetinfodetail/asset/bond/SvrBussFinBondRepInfo";
     }
 
     @Override
