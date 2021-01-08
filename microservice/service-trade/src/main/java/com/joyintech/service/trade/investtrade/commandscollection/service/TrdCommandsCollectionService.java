@@ -82,9 +82,9 @@ public class TrdCommandsCollectionService extends BaseService<TrdCommandsCollect
      * @since 1.0
      */
 	public List<TrdCommandsCollection002Dto> selectEntrustList(Map<String, Object> param) {
-		List<TrdCommandsCollection002Dto> entrustList = new ArrayList<>(); 
+		List<TrdCommandsCollection002Dto> entrustList = new ArrayList<>();
 		String assetType = param.get("assetType").toString();
-    	if("01".equals(assetType) || "06".equals(assetType) || "10".equals(assetType) ) {
+    	if("F01".equals(assetType) || "F06".equals(assetType) || "F10".equals(assetType) ) {
     		entrustList = trdCommandsCollectionMapper.selectEntrustCommonList(param);
     	}else {
     		entrustList = trdCommandsCollectionMapper.selectEntrustList(param);
@@ -124,5 +124,5 @@ public class TrdCommandsCollectionService extends BaseService<TrdCommandsCollect
 		}
 		return list;
 	}
-	
+
 }

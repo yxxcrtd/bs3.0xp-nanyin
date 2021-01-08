@@ -1728,7 +1728,7 @@ $(function() {
             ,{field:'invAimStr', width:'10%', title: 'TrdBondInvestTrade002.invAim',sortable:false}
             ,{field:'priceModelStr',  width:'10%', title: 'TrdCommandsCollection002.priceMode',sortable:false}
             ,{field:'price', width:'10%', title: 'TrdBondInvestTrade001.unitCprice', type: 'number', digit: 4, sortable:false}
-            ,{field:'fpriceAmt', width:'10%', title: '全价', type: 'number',sortable:false}
+            ,{field:'fpriceAmt', width:'10%', title: '全价', type: 'number', digit: 4 ,sortable:false}
             ,{field:'matureYield', width:'10%', title: 'TrdBondInvestTrade002.yield', type: 'number', digit: 4, sortable:false}
             ,{field:'entrustAmt', width: 200, title: 'TrdBondToStock001.entrustAmt', type: 'number', sortable:false}
             ,{field:'finishedAmt', width: 200, title: 'TrdCommandsCollection002.finishedAmtF01', type: 'number', sortable:false}
