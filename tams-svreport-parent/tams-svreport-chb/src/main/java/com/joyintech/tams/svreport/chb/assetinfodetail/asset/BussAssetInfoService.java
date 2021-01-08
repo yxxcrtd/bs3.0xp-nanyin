@@ -12,6 +12,7 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.asset;
 
 import com.joyintech.framework.base.intf.IDictCode;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.bond.dto.SvrBussFinBondRepInfoDto;
+import com.joyintech.tams.svreport.chb.assetinfodetail.asset.financiall.dto.SvrBussRepFinanciallInfoDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.placement.dto.SvrBussRepPlacementInfoDto;
 
 import java.util.Map;
@@ -58,4 +59,6 @@ public interface BussAssetInfoService{
     SvrBussFinBondRepInfoDto getInfoByIssuer(Map<String, Object> pageParam);
 
     SvrBussRepPlacementInfoDto getplanceInfoByIssuer(Map<String, Object> pageParam);
+
+    SvrBussRepFinanciallInfoDto getFinanciallInfoByIssuer(Map<String, Object> pageParam);
 }
