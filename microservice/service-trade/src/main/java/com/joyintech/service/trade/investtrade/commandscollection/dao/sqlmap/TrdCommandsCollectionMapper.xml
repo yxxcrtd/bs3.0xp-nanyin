@@ -338,7 +338,6 @@
             T1.TRADE_MARKET tradeMarket,
         </if>
         <if test="assetType == 'Con1'">
-            T1.CHL_ID chlId,
             T17.FINPROD_ABBR chlName,
             T2.PURCH_MODLE purchModle,
             T2.PURCH_TYPE purchType,
@@ -346,7 +345,6 @@
             T8.SEC_ACCT_NAME secAcctName,
         </if>
         <if test="assetType == 'Con2'">
-            T1.CHL_ID chlId,
             T17.FINPROD_ABBR chlName,
             T2.SEC_ACCT_ID secAcctId,
             T8.SEC_ACCT_NAME secAcctName,
@@ -358,7 +356,6 @@
         </if>
         <if test="assetType == PINAN_ASSET_TYPE_F02 ">
             T1.PS ps,
-            T1.CHL_ID chlId,
             T17.FINPROD_ABBR chlName,
             T2.SEC_ACCT_ID secAcctId,
             T11.TYPE_6 type6,
@@ -391,7 +388,6 @@
         </if>
         <if test="assetType == PINAN_ASSET_TYPE_F11 ">
             T1.PS ps,
-            T1.CHL_ID chlId,
             T17.FINPROD_ABBR chlName,
             T7.BOARD board,
             T2.SEC_ACCT_ID secAcctId,
