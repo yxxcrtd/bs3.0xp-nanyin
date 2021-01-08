@@ -528,7 +528,9 @@
 	var calcMethodChange = function (){
 		var selectedValue = getElementById('calcMethod').val();
 		if (selectedValue){
-			if (selectedValue == CALC_RULE_01){
+			//if (selectedValue == CALC_RULE_01){
+			// CALC_RULE_01 这个值不知道为啥被置为null了。CALC_RULE_03仍然是对的。没找到原因 暂时这么修复
+			if (selectedValue == '01'){
 				getElementById('firstOpenDate').val('').prop('disabled', true);
 			}
 			else if (selectedValue == CALC_RULE_03 && parentPageId!='FinOpenPlanMaintenance002'){
