@@ -13,6 +13,7 @@ import java.util.Map;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListTableId;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.valuation.common.constants.*;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -41,11 +42,7 @@ import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetFinProd
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetPerfRewardAccrsche;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetPerfRewardRule;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetSearchDto;
-import com.joyintech.tams.valuation.common.constants.BookConstant;
-import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
-import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
 import com.joyintech.calculation.config.NumberEnum;
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
@@ -829,6 +826,28 @@ public class BookClawbackService {
         position.setBooksetId(booksetId);
         // 分层代码
         position.setLayeringId(layeringId);// modify by dongjun on 20190115
+        // 定义账套参数查询参数项list
+        List<String> paramCodeList = new ArrayList<String>();
+        paramCodeList.add(ValDictCodeList.账套配置表参数项_浮动管理费_期初累计净值小数位数.getValue());
+        paramCodeList.add(ValDictCodeList.账套配置表参数项_浮动管理费_期初累计净值尾数处理方式.getValue());
+        paramCodeList.add(ValDictCodeList.账套配置表参数项_浮动管理费_期初单位净值小数位数.getValue());
+        paramCodeList.add(ValDictCodeList.账套配置表参数项_浮动管理费_期初单位净值尾数处理方式.getValue());
+        paramCodeList.add(ValDictCodeList.账套配置表参数项_浮动管理费_期末累计净值小数位数.getValue());
+        paramCodeList.add(ValDictCodeList.账套配置表参数项_浮动管理费_期末累计净值尾数处理方式.getValue());
+        paramCodeList.add(ValDictCodeList.账套配置表参数项_浮动管理费_周期年化收益率小数位数.getValue());
+        paramCodeList.add(ValDictCodeList.账套配置表参数项_浮动管理费_周期年化收益率位数处理方式.getValue());
+        Map<String, Object> getValBokBooksetExtMap = accountingCommonService.getValBokBooksetExtForMap(
+                booksetId, paramCodeList);
+        // 小数位以及处理方式
+        String floatEndtotalNetDigits = (String) getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_浮动管理费_期末累计净值小数位数.getValue());
+        String floatEndtotalNetType = (String) getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_浮动管理费_期末累计净值尾数处理方式.getValue());
+        String floatStarttotalNetDigits = (String) getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_浮动管理费_期初累计净值小数位数.getValue());
+        String floatStarttotalNetType = (String) getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_浮动管理费_期初累计净值尾数处理方式.getValue());
+        String floatStarttotalUnitnetDigits = (String) getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_浮动管理费_期初单位净值小数位数.getValue());
+        String floatStarttotalUnitnetType = (String) getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_浮动管理费_期初单位净值尾数处理方式.getValue());
+        String floatCyclyearYieldDigits = (String) getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_浮动管理费_周期年化收益率小数位数.getValue());
+        String floatCyclyearYieldType = (String) getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_浮动管理费_周期年化收益率位数处理方式.getValue());
+
         // 上次计提日 < 变量：资产起息日
         if (DateUtil.compareDate(lastAccrualDate, zcVdate) < 0) {
             // 期初的累计净值,默认为1
@@ -844,7 +863,9 @@ public class BookClawbackService {
                 BokStatBokPosition valStatBokPosition = valStatBokPositionList.get(0);
                 期初的累计净值 = ArithmeticUtil.doAdd(valStatBokPosition.getNetUnitValue(),
                     valStatBokPosition.getTotBounsNet());
+                期初的累计净值 = accountingCommonService.filterByDecTypeAndDigits(期初的累计净值,floatStarttotalNetType,floatStarttotalNetDigits);
                 期初的单位净值 = valStatBokPosition.getNetUnitValue();
+                期初的单位净值 = accountingCommonService.filterByDecTypeAndDigits(期初的单位净值,floatStarttotalUnitnetType,floatStarttotalUnitnetDigits);
             }
         }
         // 查询日开始
@@ -863,6 +884,7 @@ public class BookClawbackService {
             //                valStatBokPositionForNowOnce.getTotBounsNet());
             期末的累计净值 = ArithmeticUtil.doAdd(ArithmeticUtil.divide(cycEndBokStatBokPosition.getNetAssetValue(),
                 valStatBokPositionForNowOnce.getCapital()), valStatBokPositionForNowOnce.getTotBounsNet());
+            期末的累计净值 = accountingCommonService.filterByDecTypeAndDigits(期末的累计净值,floatEndtotalNetType,floatEndtotalNetDigits);
         }
 
         // 年化收益率 = （期末的累计净值-期初的累计净值）/ 期初的单位净值 * 计息基础 / 区间天数
@@ -870,6 +892,7 @@ public class BookClawbackService {
             ArithmeticUtil.multiply(
                 ArithmeticUtil.divide(ArithmeticUtil.doSub(期末的累计净值, 期初的累计净值), 期初的单位净值), feeBasic),
             new BigDecimal(days));
+        年化收益率 = accountingCommonService.filterByDecTypeAndDigits(年化收益率,floatCyclyearYieldType,floatCyclyearYieldDigits);
 
         return 年化收益率;
     }
