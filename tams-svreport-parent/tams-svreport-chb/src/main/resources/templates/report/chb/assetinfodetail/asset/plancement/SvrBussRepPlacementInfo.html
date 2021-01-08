@@ -17,12 +17,12 @@
 			<div class="layui-form-item">
 						<div class=" form-inline-wrap">
 							<label class="layui-form-label form-label-wrap"
-								   data-th-text="#{svrBussRepPlacementInfo.finprodMarketId}">行内资产/负债编码</label>
+								   data-th-text="#{SvrBussRepPlacementInfo.assetCode}">行内资产/负债编码</label>
 							<div class="layui-input-inline input-inline">
 								<input type="text" id="finprodMarketId"
 									   name="finprodMarketId" class="layui-input form-input"
 									   maxlength="18"
-									   data-th-value="${entity?.finprodMarketId}">
+									   data-th-value="${entity?.assetCode}">
 								<!-- 增加快捷录入功能 by 赵东东 2019.10.12 start -->
 								<a id="FinPlanNetAsset002_btn_quickInput" class="layui-btn layui-btn-sm form-input-text">快录</a>
 								<!-- 增加快捷录入功能 by 赵东东 2019.10.12 end -->
@@ -30,7 +30,7 @@
 				</div>
 				<div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
 					<label class="layui-form-label form-lable"
-						   data-th-text="#{svrBussRepPlacementInfo.vDate}">起息日</label>
+						   data-th-text="#{SvrBussRepPlacementInfo.vDate}">起息日</label>
 					<div class="layui-input-inline input-inline">
 						<input id="vdate" name="vdate"
 							   class="layui-input form-input input-dateRangeSelect"
@@ -40,7 +40,7 @@
 				</div>
 				<div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
 					<label class="layui-form-label form-lable"
-						   data-th-text="#{svrBussRepPlacementInfo.mDate}">到期日</label>
+						   data-th-text="#{SvrBussRepPlacementInfo.mDate}">到期日</label>
 					<div class="layui-input-inline input-inline">
 						<input id="mdate" name="mdate"
 							   class="layui-input form-input input-dateRangeSelect"
@@ -51,13 +51,13 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="form-inline-wrap">
-					<label class="layui-form-label form-label-wrap" data-th-utext="#{svrBussRepPlacementInfo.issuePartyId}" style="line-height: normal!important;">发行机构代码</label>
+					<label class="layui-form-label form-label-wrap" data-th-utext="#{SvrBussRepPlacementInfo.issuePartyId}" style="line-height: normal!important;">发行机构代码</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" th:id="|${entityName}_repPartyCode|" th:name="|${entityName}.repPartyCode|" th:value="${entity?.repPartyCode}" class="layui-input form-input" maxlength="32" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required/>
 					</div>
 				</div>
 				<div class="form-inline-wrap">
-					<label class="layui-form-label form-label-wrap" data-th-utext="#{svrBussRepPlacementInfo.repTradeMarket}" style="line-height: normal!important;">交易流通场所</label>
+					<label class="layui-form-label form-label-wrap" data-th-utext="#{SvrBussRepPlacementInfo.repTradeMarket}" style="line-height: normal!important;">交易流通场所</label>
 					<div class="layui-input-inline input-inline">
 						<select th:id="|${entityName}_repTradeMarket|" th:name="|${entityName}.repTradeMarket|" data-th-data-result="${TRADE_MARKET}" th:initValue="${entity?.repTradeMarket}" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required>
 						</select>
@@ -65,11 +65,11 @@
 				</div>
 				<div class=" form-inline-wrap">
 					<label class="layui-form-label form-label-wrap"
-						   data-th-text="#{svrBussRepPlacementInfo.ccy}">币种</label>
+						   data-th-text="#{SvrBussRepPlacementInfo.ccy}">币种</label>
 					<div class="layui-input-inline input-inline">
 						<select type="text" id="ccy" name="ccy"
 								class="layui-input form-input input-select"
-								data-th-data-result='${CCY}' formatoption="true"
+								data-th-data-result='${CURRENCY_CHB}' formatoption="true"
 								required="required" allowClear="true" placeholder="请输入内容"
 								data-th-placeholder="#{SysCommon.placeholder}"
 								data-th-initValue='*{entity?.ccy?:CCY_default}'>
@@ -79,21 +79,20 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="form-inline-wrap">
-					<label class="layui-form-label form-label-wrap" data-th-utext="#{svrBussRepPlacementInfo.rivalParty}">对手方</label>
+					<label class="layui-form-label form-label-wrap" data-th-utext="#{SvrBussRepPlacementInfo.rivalParty}">对手方</label>
 					<div class="layui-input-inline input-inline">
-						<select th:id="|${entityName}_repCapiInvest|" th:name="|${entityName}.repCapiInvest|" data-th-data-result="${SVR_TRU_ACT_TYPE}" th:initValue="${entity?.repCapiInvest}" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required>
-						</select>
+						<input type="text" th:id="|${entityName}_rivalParty|" th:name="|${entityName}.rivalParty|" th:value="${entity?.rivalParty}" class="layui-input form-input" maxlength="32" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required/>
 					</div>
 				</div>
 				<div class="form-inline-wrap">
-					<label class="layui-form-label form-label-wrap" data-th-utext="#{svrBussRepPlacementInfo.rivalPartyType}">对手方类型</label>
+					<label class="layui-form-label form-label-wrap" data-th-utext="#{SvrBussRepPlacementInfo.rivalPartyType}">对手方类型</label>
 					<div class="layui-input-inline input-inline">
-						<select th:id="|${entityName}_repCapiInvest|" th:name="|${entityName}.repCapiInvest|" data-th-data-result="${SVR_TRU_ACT_TYPE}" th:initValue="${entity?.repCapiInvest}" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required>
+						<select th:id="|${entityName}_repCapiInvest|" th:name="|${entityName}.repCapiInvest|" data-th-data-result="${COUNTER_TYPE}" th:initValue="${entity?.repCapiInvest}" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required>
 						</select>
 					</div>
 				</div>
 				<div class="form-inline-wrap" th:id="|${entityName}_rate_div|">
-					<label class="layui-form-label form-label-wrap" data-th-text="#{svrBussRepPlacementInfo.assetYield}">年利率</label>
+					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepPlacementInfo.assetYield}">年利率</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" th:id="|${entityName}_rate|" th:name="|${entityName}.rate|"   th:value="${entity?.rate}"  required
 							   class="layui-input form-input text-number" data-textrange="4"/>
@@ -103,7 +102,7 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="form-inline-wrap" th:id="|${entityName}_basis_div|">
-					<label class="layui-form-label form-label-wrap" data-th-text="#{svrBussRepPlacementInfo.basis}" >计息基础</label>
+					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepPlacementInfo.basis}" >计息基础</label>
 					<div class="layui-input-inline input-inline">
 						<select th:id="|${entityName}_basis|" th:name="|${entityName}.basis|" th:initValue="${entity?.basis?:BASIS_INIT}"
 								class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required data-th-data-result="${SVR_BASIS}">
@@ -111,15 +110,15 @@
 					</div>
 				</div>
 				<div class="form-inline-wrap">
-					<label class="layui-form-label form-label-wrap" data-th-utext="#{svrBussRepPlacementInfo.targetType1}">回购标的类别</label>
+					<label class="layui-form-label form-label-wrap" data-th-utext="#{SvrBussRepPlacementInfo.targetType1}">回购标的类别</label>
 					<div class="layui-input-inline input-inline">
-						<select th:id="|${entityName}_repCapiInvest|" th:name="|${entityName}.repCapiInvest|" data-th-data-result="${SVR_TARGET_TYPE2}" th:initValue="${entity?.repCapiInvest}" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required>
+						<select th:id="|${entityName}_repCapiInvest|" th:name="|${entityName}.repCapiInvest|" data-th-data-result="${BONDREP_TYPE}" th:initValue="${entity?.repCapiInvest}" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required>
 						</select>
 					</div>
 				</div>
 				<div class=" form-inline-wrap">
 					<label class="layui-form-label form-label-wrap"
-						   data-th-text="#{svrBussRepPlacementInfo.targetAmt}">回购类标的金额</label>
+						   data-th-text="#{SvrBussRepPlacementInfo.targetAmt}">回购类标的金额</label>
 					<div class="layui-input-inline input-inline">
 						<!--add by mashukai FIX BUG TISHKBS-1465发行金额设为必填 20201110 start -->
 						<input type="text" data-fixtype="2" unit="1"
@@ -134,7 +133,7 @@
 			</div>
             <div class="layui-form-item">
                 <div class="form-inline-wrap" style="width: 100% !important;">
-					<label class="layui-form-label form-label-wrap" data-th-utext="#{svrBussRepPlacementInfo.remark}" style="width: 12%;">备注</label>
+					<label class="layui-form-label form-label-wrap" data-th-utext="#{SvrBussRepPlacementInfo.remark}" style="width: 12%;">备注</label>
 					<div class="layui-input-inline input-inline" style="width: 86% !important;">
 						<input th:id="|${entityName}_repRemark|" th:name="|${entityName}.repRemark|" placeholder="请输入内容" class="layui-input form-input"data-th-placeholder="#{SysCommon.placeholder}" data-th-text="${entity?.repRemark}" maxlength="128" style="width: 100%!important;">
 						</input>

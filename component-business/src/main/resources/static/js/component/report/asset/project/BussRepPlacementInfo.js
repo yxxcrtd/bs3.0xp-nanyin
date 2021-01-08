@@ -52,6 +52,13 @@
                 });
     		}
     		else{
+//    			getElementById("repPartyType3").val('').trigger("change");
+//                getElementById("repPartyType2").val('').trigger("change");
+//                if(getElementById("repPartyType1").val()==null||getElementById("repPartyType1").val()==""){
+//                    getElementById("repPartyType1").val('').trigger("change");
+//                }
+//                getElementById("repIndustry").val('').trigger("change");
+//                getElementById("repIndustryLevel2").val('').trigger("change");
     		}
     	});
         getElementById('repPartyType1').change(function(){
@@ -62,5 +69,16 @@
                 getElementById('repInstitSize_div').hide();
             }
         });
+        /*getElementById('repAssetType').change(function(){
+            if(getElementById('finprodType2').val() == FINPROD_TYPE_TG_F18){
+                if(getElementById('repAssetType').val()) {
+                    getElementById('content_one_div').nextAll().show();
+                    getElementById('repAssetType_div').nextAll().show();
+                }else{
+                    getElementById('content_one_div').nextAll().hide();
+                    getElementById('repAssetType_div').nextAll().hide();
+                }
+            }
+        });*/
     })
 }());

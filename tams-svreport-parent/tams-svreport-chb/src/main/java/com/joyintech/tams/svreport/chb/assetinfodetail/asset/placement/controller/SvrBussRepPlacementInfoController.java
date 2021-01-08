@@ -53,6 +53,11 @@ public class SvrBussRepPlacementInfoController extends BaseController implements
     public String init(Model model) {
         setSelectOptionToModel(model, bussAssetInfoService.getInitDictCode());
         setSelectOptionToModel(model, DictCode.债券性质);
+        setSelectOptionToModel(model, DictCode.币种_中债);
+        setSelectOptionToModel(model, DictCode.交易对手类型);
+        setSelectOptionToModel(model, DictCode.计息基础_中债);
+        setSelectOptionToModel(model, DictCode.回购标的类型);
+
         // 设置画面初始值
 //        setEntity(model);
         // 画面参数设置
@@ -70,6 +75,8 @@ public class SvrBussRepPlacementInfoController extends BaseController implements
         model.addAttribute("FINPROD_TYPE_TG_F18",DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
         model.addAttribute("YES", DictCodeList.是否_中债_是.getValue());
         model.addAttribute("SVR_PARTY_TYPE1_01", DictCodeListExt3.发行机构类型_按规模划分_中小微企业.getValue());
+        //币种
+        model.addAttribute("CCY", DictCodeListExt3.发行机构类型_按规模划分_中小微企业.getValue());
         return "report/chb/assetinfodetail/asset/plancement/SvrBussRepPlacementInfo";
     }
 
