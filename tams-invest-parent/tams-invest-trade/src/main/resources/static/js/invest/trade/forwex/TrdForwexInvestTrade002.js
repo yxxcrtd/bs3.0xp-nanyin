@@ -2,7 +2,7 @@
  * 外汇远期投资交易
  */
 (function(){
-
+	var dealAcct = $("#dealAcct").val();
 	var initFlag = true;
 	var quotPre = 0;
 	var entity = '';
@@ -44,13 +44,18 @@
         }
         // 差额清算账户联动 add by renping 20191031 start
 		if($('#deliveryType').val()!=SETTMODE_DIF_SETT){
-			$("#dealAcct").val("");
-			$("#corAcct").val("");
-			$("#dealAcctDiv").attr("style","display:none;");
-			$("#corAcctDiv").attr("style","display:none;");
+			//清算模式变化时保存页面初始化时加载的本方账户值
+			if ($("#dealAcct").val() != null && $("#dealAcct").val() != ''){
+				dealAcct = $("#dealAcct").val();
+			}
+			$("#dealAcct").val("").trigger("change");
+			$("#corAcct").val("").trigger("change");
+			$("#dealAcctDiv").hide();
+			$("#corAcctDiv").hide();
 		} else {
-			$("#dealAcctDiv").attr("style","display:display;");
-			$("#corAcctDiv").attr("style","display:display;");
+			$("#dealAcctDiv").show();
+			$("#corAcctDiv").show();
+			$("#dealAcct").val(dealAcct).trigger("change");
 		}
         // 差额清算账户联动 add by renping 20191031 end
     }
