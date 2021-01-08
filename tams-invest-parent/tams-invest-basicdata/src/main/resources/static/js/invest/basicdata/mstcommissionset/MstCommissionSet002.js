@@ -371,10 +371,12 @@
         $("#tradeType").trigger("change");
         $("#isGrade").trigger('change');
         feeTypeChange();
-        $("#chargeType").trigger('change');
+//        $("#chargeType").trigger('change');
         if(($("#workflowId").val()!=null&&$("#workflowId").val()!='')||pageModel!=PAGE_MODEL_NEW){
             $("#windtypetwo").val(windtypetwo).trigger("change");
             $("#chargeBasis").val(chargeBasis).trigger("change");
+            $("#feeMaxi").val(feeMaxi).trigger("change");
+            $("#feeMini").val(feeMini).trigger("change");
         }
     });
 }());
