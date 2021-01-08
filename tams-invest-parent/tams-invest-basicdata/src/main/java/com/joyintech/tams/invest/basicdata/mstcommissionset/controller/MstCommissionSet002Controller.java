@@ -93,7 +93,9 @@ public class MstCommissionSet002Controller extends BaseController {
                 workflowId);
             model.addAttribute("pageModel", dto.getPageModel());
             model.addAttribute(GlobalConstant.ENTITY, dto);
-            model.addAttribute("windtypetwo", dto.getWindtypetwo().split(","));
+            if(StringUtil.isNotEmpty(dto.getWindtypetwo())){
+                model.addAttribute("windtypetwo", dto.getWindtypetwo().split(","));
+            }
         }
         else if (WorkFlowUtil.isNotFromToDoList()
                  && StringUtil.isNotEmpty(this.getParam("batchSeq"))) {
@@ -101,7 +103,9 @@ public class MstCommissionSet002Controller extends BaseController {
             MstCommissionSetDto dto = mstCommissionSetService.getBussinessEntityBySeqNo(
                 this.getParam("batchSeq"));
             model.addAttribute(GlobalConstant.ENTITY, dto);
-            model.addAttribute("windtypetwo", dto.getWindtypetwo().split(","));
+            if(StringUtil.isNotEmpty(dto.getWindtypetwo())){
+                model.addAttribute("windtypetwo", dto.getWindtypetwo().split(","));
+            }
         }
         this.setSelectOptionToModel(model,new IDictCode[]{BussinessDictCode.交易市场,BussinessDictCode.WIND一级分类_含债券一级分类等,BussinessDictCode.WIND二级分类_含债券二级分类等});
         this.setSelectOptionToModel(model, DICT_CODES);
