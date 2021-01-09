@@ -586,8 +586,8 @@ public class PbcMonthAssetPositionService  extends BaseService{
 //            if(PbcAssetPositionConstants.BS_ASSETTYPE1_F02.equals(singel.getAssetType1())){
 //                days=0;
             /* add by  dongxiangyang  人行资产头寸改造 20210105  start*/
-            if(PbcAssetPositionConstants.BS_ASSETTYPE1_F02.equals(singel.getAssetType1())&&
-            DateUtil.compareDate(singel.getMdate(),openJdate)==0){
+            if(DateUtil.compareDate(singel.getMdate(),openJdate)==0||PbcAssetPositionConstants.BS_ASSETTYPE1_F02.equals(singel.getAssetType1())
+            ){
                 days=1; //开放式基金  统计为一个月以下
             /* add by  dongxiangyang  人行资产头寸改造 20210105  end*/
             }else if (singel.getMdate() == null){
