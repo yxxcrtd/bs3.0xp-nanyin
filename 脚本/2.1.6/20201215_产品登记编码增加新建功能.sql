@@ -10,10 +10,10 @@ VALUES ('ProRegistCodeManage001', 'ProRegistCodeManage001_btn_add', '01', '01', 
 --工作流
 DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID='ProRegistCodeManage003' AND ELEMENT_ID='ProRegistCodeManage003_btn_save';
 INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
-VALUES ('ProRegistCodeManage003', 'ProRegistCodeManage003_btn_save', 'oneApproval', 'system', null,sysdate, 'system', sysdate, 'ALL', '02');
+VALUES ('ProRegistCodeManage003', 'ProRegistCodeManage003_btn_save', 'noneApproval', 'system', null,sysdate, 'system', sysdate, 'ALL', '02');
 DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID='ProRegistCodeManage003' AND ELEMENT_ID='ProRegistCodeManage003_btn_submit';
 INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
-VALUES ('ProRegistCodeManage003', 'ProRegistCodeManage003_btn_submit', 'oneApproval', 'system', null,sysdate, 'system', sysdate, 'ALL', '02');
+VALUES ('ProRegistCodeManage003', 'ProRegistCodeManage003_btn_submit', 'noneApproval', 'system', null,sysdate, 'system', sysdate, 'ALL', '02');
 --草稿箱模式非对象画面表
 DELETE FROM SYS_TRASH_NOT_TARGET_PAGE WHERE SEQ_NO = 'A6986B98373534A7E0538C5AA8C081D0'AND PAGE_ID = 'ProRegistCodeManage003';
 INSERT INTO SYS_TRASH_NOT_TARGET_PAGE (SEQ_NO,PAGE_ID)
