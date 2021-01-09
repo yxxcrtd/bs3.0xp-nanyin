@@ -13,9 +13,12 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.controller;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.service.AssetInfoDetailMService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +58,16 @@ public class AssetInfoDetail002Controller extends BaseController {
     @Override
     public String init(Model model){
         super.setSelectOptionToModel(model, DictCode.金融产品类型_投管用,DictCode.资产_负债类别
-                ,DictCode.WIND一级分类_含债券中债, DictCode.资产_负债二级类别,DictCode.WIND二级分类_含债券二级分类等, DictCode.报送反馈状态);
+                ,DictCode.WIND一级分类_含债券中债, DictCode.资产_负债二级类别,DictCode.WIND二级分类_含债券二级分类等, DictCode.报送反馈状态,
+                DictCode.交易流通场所_中债,DictCode.币种_中债);
+
+        String assetUuid = this.getParam("assetUuid");
+        //资产编号不为空则为修改.
+        if(StringUtil.isNotEmpty(assetUuid)){
+            AssetInfoDetailDto  dto = assetInfoDetailMService.getAssetInfoDetail(assetUuid);
+            model.addAttribute(GlobalConstant.ENTITY, dto);
+        }
+
         return super.init(model);
     }
     /**
@@ -69,12 +81,13 @@ public class AssetInfoDetail002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
-            ValidateGroupEdit.class}) ChbAssetInfo dto, BindingResult result) {
-        return commonCheck(result, null);
+            ValidateGroupEdit.class}) AssetInfoDetailDto dto, BindingResult result) {
+        return commonCheck(result, "save");
     }
     @ResponseBody
     @RequestMapping(value = PAGE_SAVE, method = RequestMethod.POST)
-    public AjaxResult doAdd(@RequestBody ChbAssetInfo param) throws Exception {
+    public AjaxResult doAdd(@RequestBody AssetInfoDetailDto dto) throws Exception {
+        assetInfoDetailMService.doSave(dto);
         return new AjaxResult("保存成功");
     }
 

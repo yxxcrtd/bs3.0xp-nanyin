@@ -6,6 +6,7 @@ import java.util.Date;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
 
 /**
  * 描述:CHB_ASSET_INFO表的实体类
@@ -17,6 +18,7 @@ public class ChbAssetInfo extends BaseEntity {
     /**
      * 资产要素uuid（为修改删除使用）
      */
+    @PrimaryKey(PrimaryKey.Field.PK_1)
     private String assetUuid;
 
     /**

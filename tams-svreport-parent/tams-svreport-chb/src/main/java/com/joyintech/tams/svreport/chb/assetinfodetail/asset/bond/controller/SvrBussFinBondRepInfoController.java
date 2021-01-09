@@ -75,18 +75,16 @@ public class SvrBussFinBondRepInfoController extends BaseController implements B
 
     @Override
     public void setEntity(Model model){
-        String finprodId = this.getParam("finprodId");
-        String workFlowId = this.getParam("workflowId");
-        String entityName = StringUtil.defaultString(this.getParam("entityName"), bussAssetInfoService.getDeftultEntity());
-      //不来自于代办
-        if(WorkFlowUtil.isNotFromToDoList()&& StringUtil.isNotEmpty(finprodId)) {
-            //根据主键获取业务实体-中债报送基本信息
-            SvrBussFinBondRepInfoDto bussFinBondRepInfoDto = bussAssetInfoService.getBussFinBondRepInfoByProductId(finprodId);
-            if(null!=bussFinBondRepInfoDto){
-                model.addAttribute("AssetTypeInit", bussFinBondRepInfoDto.getRepAssetType()); 
-            }
-            model.addAttribute(GlobalConstant.ENTITY, bussFinBondRepInfoDto);
-        }
+//        String finprodId = this.getParam("");
+//            //不来自于代办
+//        if(StringUtil.isNotEmpty(finprodId)) {
+//            //根据主键获取业务实体-中债报送基本信息
+//            SvrBussFinBondRepInfoDto bussFinBondRepInfoDto = bussAssetInfoService.getBussFinBondRepInfoByProductId(finprodId);
+//            if(null!=bussFinBondRepInfoDto){
+//                model.addAttribute("AssetTypeInit", bussFinBondRepInfoDto.getRepAssetType());
+//            }
+//            model.addAttribute(GlobalConstant.ENTITY, bussFinBondRepInfoDto);
+//        }
     }
     
     private String createChbAssetType(){

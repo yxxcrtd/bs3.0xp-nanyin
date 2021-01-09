@@ -2,12 +2,16 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.service;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dao.AssetInfoDetailMapper;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
+import com.joyintech.tams.svreport.loaninfomanagement.dto.OperationalLoanInfo001Dto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.apache.fop.util.LogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +46,19 @@ public class AssetInfoDetailMService extends BaseService<AssetInfoDetailDto>{
 		return queryForPage(AssetInfoDetailMapper.class,"selectChbInfoByParam",param);
 	}
 
+
+	/**
+	 *
+	 * 业务画面查询事件
+	 * <功能详细描述>
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	public AssetInfoDetailDto getAssetInfoDetail(String  Assetuuid) {
+		return assetInfoDetailMapper.getAssetInfoDetail(Assetuuid);
+	}
+
      
     
     /**
@@ -53,4 +70,14 @@ public class AssetInfoDetailMService extends BaseService<AssetInfoDetailDto>{
         		SvrServiceApplication.CHB_SERVICE_NAME + "/AssetInfoDetail/queryAssetCodeList",map,
         		SelectOptionDto.class);
     }
+
+	public void doSave(AssetInfoDetailDto dto){
+
+    	dto.setCreateUser(LoginUserUtil.getUserName());
+		dto.setUpdateUser(LoginUserUtil.getUserName());
+		dto.setStatus(DictCodeList.数据状态_修改.getValue());
+
+		restTemplate.postForObject(
+				SvrServiceApplication.CHB_SERVICE_NAME + "/AssetInfoDetail/doSave", dto, Integer.class);
+	}
 }

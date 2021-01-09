@@ -24,37 +24,82 @@ var QueryFunc=function(){
         };
 
         // 非查看模式
-        if (typeof pageModel !== 'undefined'
-                && (pageModel === PAGE_MODEL_EDIT || pageModel === PAGE_MODEL_NEW)) {
-            $('.must').each(function() {
-                $(this).remove();
-            })
-            $('*[required]').each(function() {
-                var $el = $(this);
-                var $target = _findPrevLabel($el, 3);
-                if ($target.find('> .must').length === 0) {
-                    $target.append($('<i class="must">*</i>'));
-                }
-            });
-        }
+        $('.must').each(function() {
+            $(this).remove();
+        })
+        $('*[required]').each(function() {
+            var $el = $(this);
+            var $target = _findPrevLabel($el, 3);
+            if ($target.find('> .must').length === 0) {
+                $target.append($('<i class="must">*</i>'));
+            }
+        });
     }
     /**
      * 中债报送show/hide
      */
     var showReportInfo = function(){
         var repAssetType = $('#assetType2').val();
+        //隐藏所有中债报送信息
+        $(".businessDeptClass").hide();
+
         if (repAssetType=="1701"||repAssetType=="1702"||repAssetType=="1703"||repAssetType=="1704"
             ||repAssetType=="1705"||repAssetType=="1706") {
-            $(".svrBussFinBondRepInfo_div").show();
-            $(".svrBussRepPlacementInfo_div").hide();
+            $("#svrBussFinBondRepInfo_div").show();
         }else if((repAssetType=="1101"||repAssetType=="1102"||repAssetType=="1103"||repAssetType=="1104"
             ||repAssetType=="1105")){
-            $(".svrBussFinBondRepInfo_div").hide();
-            $(".svrBussRepPlacementInfo_div").show();
+            $("#svrBussRepPlacementInfo_div").show();
         }
         star();
         layui.form.render();
     }
+
+
+    function saveOrSubmit(operateType) {
+
+        var object = $.serializeToObject('#submitForm', true);
+        object.operateType = operateType;
+        object.pageModel = pageModel;
+
+        Joyin.ajaxJson(basePath + 'chb/assetinfodetail/AssetInfoDetail002/check',object,function(result){
+            if(result){
+                Joyin.ajaxJson(basePath + 'chb/assetinfodetail/AssetInfoDetail002/save',object,function(result){
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                });
+            }
+        })
+    }
+
+    /**
+     * 最终提交
+     */
+    var finalSava = function(object,operateType,result){
+        Joyin.ajaxJson(basePath + 'invest/asset/common/isHoliday', {mdate:object.mdate,calendarId:object.calendarId}, function(isHoliday){
+            if(isHoliday){
+                Joyin.confirm("到日期为节假日，是否确认提交", function() {
+                    if (operateType === 'save') {
+                        WorkFlow.doSaveList(basePath + 'invest/asset/bond/FinBondTargetAsset002/save',
+                            object, "FinBondTargetAsset002_btn_save");
+                    } else {
+                        WorkFlow.doSubmitList(basePath + 'invest/asset/bond/FinBondTargetAsset002/save',
+                            object, "FinBondTargetAsset002_btn_submit");
+                    }
+                })
+            }else{
+                Joyin.confirm(result.data, function() {
+                    if (operateType === 'save') {
+                        WorkFlow.doSaveList(basePath + 'invest/asset/bond/FinBondTargetAsset002/save',
+                            object, "FinBondTargetAsset002_btn_save");
+                    } else {
+                        WorkFlow.doSubmitList(basePath + 'invest/asset/bond/FinBondTargetAsset002/save',
+                            object, "FinBondTargetAsset002_btn_submit");
+                    }
+                })
+            }
+        });
+    }
+
 
 
     //控件加载完成后
@@ -69,7 +114,7 @@ var QueryFunc=function(){
     //     }
     // }
     var init = function(){
-
+        showReportInfo();
     }
     /**
      * 画面加载完成
@@ -77,10 +122,11 @@ var QueryFunc=function(){
      */
     $(function() {
 
-        $(".svrBussFinBondRepInfo_div").hide();
-        $(".svrBussRepPlacementInfo_div").hide();
         init();
-        //负债类别change事件
+        $('#AssetInfoDetail002_btn_submit').click(function() {
+            saveOrSubmit('submit');
+        });
+
         $('#assetType2').change(function(){
             showReportInfo();
         });

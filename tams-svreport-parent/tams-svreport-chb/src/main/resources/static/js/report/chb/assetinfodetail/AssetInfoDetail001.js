@@ -43,7 +43,7 @@
 			{ title: "到期日",width:100,sortField:'mdate', field: 'mdate', type: 'date'},
 			{ title: '资产/负债类别', field:'assetTypeStr', width:150,sortField:'assetType'},
 			{ title: '资产/负债二级类别', field:'assetType2Str', width:150,sortField:'assetType2'},
-			// { field:'action', title: '操作' , type:'action',buttons: ['edit', 'delt'] , width:150}
+			{ field:'action', title: '操作' , type:'action',buttons: ['edit', 'delt'] , width:150}
 		]
 	});
 
@@ -56,16 +56,16 @@
 		Joyin.dialog(JoyinUtil.getLabel("资产基本信息修改"),
 			basePath + "chb/assetinfodetail/AssetInfoDetail002/init",
 			"95%", "90%", {pageModel:"edit",
-				seqno:data.seqno},function(){table.reload();});
+				assetUuid:data.assetUuid},function(){table.reload();});
 		// });
 	});
 	/**
 	 * 绑定删除事件
 	 */
 	table.bind('click', '.delt', function(data, index) {
-		var object = {seqno:data.seqno, operateType:"edit"};
+		var object = {assetUuid:data.assetUuid, operateType:"edit"};
 		Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-			Joyin.ajax(basePath +'chb/assetinfodetail/AssetInfoDetail001/delete',{seqno:data.seqno}, function(result){
+			Joyin.ajax(basePath +'chb/assetinfodetail/AssetInfoDetail001/delete',{assetUuid:data.assetUuid}, function(result){
 				table.reload();
 			});
 		});

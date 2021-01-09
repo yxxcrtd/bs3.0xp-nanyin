@@ -1,12 +1,8 @@
 package com.joyintech.service.chb.assetinfodetail.controller;
 
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.service.AssetInfoDetail001Service;
-import com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto;
-import com.joyintech.tams.svreport.chb.assetinforeg.service.AssetInfoRegist001Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,6 +47,16 @@ public class AssetInfoDetailController {
 	public Page<AssetInfoDetailDto> searchForPage(@RequestBody Map<String, Object> param) {
 		return assetInfoDetail001Service.searchForPage(param);
 	}
+
+	/**
+	 * 数据维护
+	 * @return
+	 */
+	@PostMapping("doSave")
+	public Integer doSave(@RequestBody AssetInfoDetailDto dto) {
+		return assetInfoDetail001Service.doSave(dto);
+	}
+
 
 
 }

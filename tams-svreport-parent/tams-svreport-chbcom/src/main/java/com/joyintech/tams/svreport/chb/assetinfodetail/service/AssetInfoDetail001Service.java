@@ -114,4 +114,15 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
 	}
 
 
+	public Integer doSave(AssetInfoDetailDto dto){
+		int  flag = 0;
+		List<ChbAssetInfo> assetInfo = new ArrayList<>();
+		if(StringUtil.isNotEmpty(dto)){
+			assetInfo.add(dto);
+			flag = assetInfoDetailMapper.mergeInfoListEx(assetInfo);
+		}
+		return flag;
+	}
+
+
 }
