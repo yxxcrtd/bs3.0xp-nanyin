@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.batch.susprdfutureopenplangen.relyingonresources.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -490,7 +491,7 @@ public class BussFinProductOpenPlanImplService extends BaseService<BussFinProduc
 					// 当上述调整后日期 >= 临时变量.区间结束日时
 					// 循环结束
 					break;
-				} else {
+				} else {					
 					// 临时变量.投资周期开始日列表.add(上述调整后日期）
 					investStartDateList.add(investStartDate);
 				}
@@ -697,11 +698,28 @@ public class BussFinProductOpenPlanImplService extends BaseService<BussFinProduc
 			// 开放周期开始日
 			resultDto.setOpenDateStr(openCycleStartDate);
 			// 开放周期结束日
-			resultDto.setOpenDateEnd(openCycleEndDat);
-			// 投资周期开始日
-			resultDto.setOpenVdate(investStartDateList.get(i));
+			resultDto.setOpenDateEnd(openCycleEndDat);			
+			
+			//modify by yujiaping 2020-1-9 ZGBSS-45 解决节假日更新开放计划批，当营业日准则为不调整时，开放确认日未根据节假日顺延start
+				Date openVdate = investStartDateList.get(i);	
+				Date openMdate = investEndDateList.get(i);	
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                String vdateString = simpleDateFormat.format(openVdate);
+                String mdateString = simpleDateFormat.format(openMdate);
+                boolean isHoliday = dateCalService.isDealCalendarHoliday(vdateString, inputDto.getTradCalender()); 
+                boolean isHolidaym = dateCalService.isDealCalendarHoliday(mdateString, inputDto.getTradCalender()); 
+                if(isHoliday) {
+                openVdate = dateCalService.calculationTradingDay(openVdate, 1, dealCalendarHolidayList, "1");                   
+               }  
+                if(isHolidaym) {
+                	openMdate = dateCalService.calculationTradingDay(openMdate, 1, dealCalendarHolidayList, "1");                   
+                   }  
+             // 投资周期开始日
+		    resultDto.setOpenVdate(openVdate);	
 			// 投资周期到期日
-			resultDto.setOpenMdate(investEndDateList.get(i));
+			resultDto.setOpenMdate(openMdate);			
+			//modify by yujiaping 2020-1-9 ZGBSS-45 解决节假日更新开放计划批，当营业日准则为不调整时，开放确认日未根据节假日顺延end
+			
 			// 净值日
 			resultDto.setOpenNdate(this.getOpenNdate(inputDto.getCpriceRule(), resultDto.getOpenDateEnd(),
 					resultDto.getOpenVdate(), dealCalendarHolidayList));
