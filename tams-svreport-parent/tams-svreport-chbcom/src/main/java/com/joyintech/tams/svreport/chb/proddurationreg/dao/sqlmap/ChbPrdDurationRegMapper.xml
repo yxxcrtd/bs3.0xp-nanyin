@@ -82,9 +82,9 @@
 			       </if>
 		     and ( YIELD.CHANG_TYPE=#{changeType02,jdbcType = VARCHAR}
              or (YIELD.CHANG_TYPE=#{changeType01,jdbcType = VARCHAR} and (
-             (to_char(OPEN1.OPEN_END,'yyyy-MM-dd')=to_char(YIELD.UPDATE_TIME,'yyyy-MM-dd') and cinfo.OPERATE_MODE=#{opratemode03,jdbcType = VARCHAR})
+             (to_char(OPEN1.OPEN_END,'yyyy-MM-dd')=to_char(YIELD.CHANGE_DATE,'yyyy-MM-dd') and cinfo.OPERATE_MODE=#{opratemode03,jdbcType = VARCHAR})
              or  (to_char(YIELD.CHANGE_DATE,'yyyy-MM-dd')=#{thisSeasonEnd,jdbcType = VARCHAR} and cinfo.OPERATE_MODE=#{opratemode03,jdbcType = VARCHAR})
-             or  (OPEN1.OPEN_END is null  and exists (select 1  from MST_HOLIDAY where cdate=YIELD.CHANGE_DATE and calendar_id = '01' and is_holiday = '0')
+             or  (not exists (select 1 from CHB_PRD_OPENSCH  where prod_id=NVL(YIELD.FPROD_ID,YIELD.PROD_ID))  and exists (select 1  from MST_HOLIDAY where cdate=YIELD.CHANGE_DATE and calendar_id = '01' and is_holiday = '0')
              and  cinfo.OPERATE_MODE=#{opratemode03,jdbcType = VARCHAR})
              or   cinfo.PRODTYPE=#{prodtypen,jdbcType = VARCHAR} and cinfo.VDATE=YIELD.CHANGE_DATE
 		)))
