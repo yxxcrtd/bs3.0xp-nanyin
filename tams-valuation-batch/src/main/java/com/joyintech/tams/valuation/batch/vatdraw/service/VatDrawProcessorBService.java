@@ -687,11 +687,13 @@ public class VatDrawProcessorBService {
             Iterator<BookLatestInfoDto> it = listBookLatestInfo.iterator();
             while (it.hasNext()){
                 BookLatestInfoDto dto=it.next();
-                if((dto.getBusiId().contains("SH")||dto.getBusiId().contains("SZ"))&&
-                        (dto.getTableId().equals("1316")||dto.getTableId().equals("1325"))
-                ){
-                    it.remove();
-                    listBookLatestInfo2.add(dto);
+                if(StringUtil.isNotEmpty(dto.getBusiId())){
+                    if((dto.getBusiId().contains("SH")||dto.getBusiId().contains("SZ"))&&
+                            (dto.getTableId().equals("1316")||dto.getTableId().equals("1325"))
+                    ){
+                        it.remove();
+                        listBookLatestInfo2.add(dto);
+                    }
                 }
             }
         }
