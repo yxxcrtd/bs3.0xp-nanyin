@@ -48,19 +48,28 @@ var QueryFunc=function(){
             $(".svrBussFinBondRepInfo_div").show();
             $(".svrBussRepPlacementInfo_div").hide();
             $(".svrBussRepFinanciallInfo_div").hide();
+            $(".svrBussRepQDIIdemolitionInfo_div").hide();
 
         }else if((repAssetType=="1101"||repAssetType=="1102"||repAssetType=="1103"||repAssetType=="1104"
             ||repAssetType=="1105")){
             $(".svrBussFinBondRepInfo_div").hide();
             $(".svrBussRepPlacementInfo_div").show();
             $(".svrBussRepFinanciallInfo_div").hide();
+            $(".svrBussRepQDIIdemolitionInfo_div").hide();
 
         }else if((repAssetType=="1201"||repAssetType=="1202"||repAssetType=="1203"||repAssetType=="1204"
             ||repAssetType=="1205")){
             $(".svrBussRepFinanciallInfo_div").show();
             $(".svrBussFinBondRepInfo_div").hide();
             $(".svrBussRepPlacementInfo_div").hide();
-
+            $(".svrBussRepQDIIdemolitionInfo_div").hide();
+        }
+        else if((repAssetType=="1301"||repAssetType=="1302"||repAssetType=="1303"||repAssetType=="1304"
+            ||repAssetType=="1305")){
+            $(".svrBussRepQDIIdemolitionInfo_div").show();
+            $(".svrBussFinBondRepInfo_div").hide();
+            $(".svrBussRepPlacementInfo_div").hide();
+            $(".svrBussRepFinanciallInfo_div").hide();
         }
         star();
         layui.form.render();
@@ -90,6 +99,7 @@ var QueryFunc=function(){
         $(".svrBussFinBondRepInfo_div").hide();
         $(".svrBussRepPlacementInfo_div").hide();
         $(".svrBussRepFinanciallInfo_div").hide();
+        $(".svrBussRepQDIIdemolitionInfo_div").hide();
         init();
         //负债类别change事件
         $('#assetType2').change(function(){

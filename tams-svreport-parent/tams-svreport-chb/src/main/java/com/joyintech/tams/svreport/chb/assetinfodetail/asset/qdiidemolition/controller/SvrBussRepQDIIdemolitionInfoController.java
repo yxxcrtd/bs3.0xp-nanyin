@@ -22,6 +22,7 @@ import com.joyintech.tams.constant.*;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.BussAssetInfoController;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.BussAssetInfoService;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.placement.dto.SvrBussRepPlacementInfoDto;
+import com.joyintech.tams.svreport.chb.assetinfodetail.asset.qdiidemolition.dto.SvrBussRepQDIIdemolitionInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,6 +57,9 @@ public class SvrBussRepQDIIdemolitionInfoController extends BaseController imple
         setSelectOptionToModel(model, DictCode.交易对手类型);
         setSelectOptionToModel(model, DictCode.计息基础_中债);
         setSelectOptionToModel(model, DictCode.回购标的类型);
+        setSelectOptionToModel(model, DictCode.所属国家或地区);
+
+
 
         // 设置画面初始值
 //        setEntity(model);
@@ -76,7 +80,7 @@ public class SvrBussRepQDIIdemolitionInfoController extends BaseController imple
         model.addAttribute("SVR_PARTY_TYPE1_01", DictCodeListExt3.发行机构类型_按规模划分_中小微企业.getValue());
         //币种
         model.addAttribute("CCY", DictCodeListExt3.发行机构类型_按规模划分_中小微企业.getValue());
-        return "report/chb/assetinfodetail/asset/plancement/SvrBussRepPlacementInfo";
+        return "report/chb/assetinfodetail/asset/qdiidemolition/SvrBussRepQDIIdemolitionInfo";
     }
 
 
@@ -110,7 +114,7 @@ public class SvrBussRepQDIIdemolitionInfoController extends BaseController imple
     }
     @ResponseBody
     @RequestMapping("getInfoByIssuer")
-    public SvrBussRepPlacementInfoDto getplanceInfoByIssuer(@RequestBody Map<String, Object> param){
-        return bussAssetInfoService.getplanceInfoByIssuer(param);
+    public SvrBussRepQDIIdemolitionInfoDto getQDIIdemolitionInfoByIssuer(@RequestBody Map<String, Object> param){
+        return bussAssetInfoService.getQDIIdemolitionInfoByIssuer(param);
     }
 }

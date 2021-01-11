@@ -14,6 +14,7 @@ import com.joyintech.framework.base.intf.IDictCode;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.bond.dto.SvrBussFinBondRepInfoDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.financiall.dto.SvrBussRepFinanciallInfoDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.placement.dto.SvrBussRepPlacementInfoDto;
+import com.joyintech.tams.svreport.chb.assetinfodetail.asset.qdiidemolition.dto.SvrBussRepQDIIdemolitionInfoDto;
 
 import java.util.Map;
 
@@ -61,4 +62,6 @@ public interface BussAssetInfoService{
     SvrBussRepPlacementInfoDto getplanceInfoByIssuer(Map<String, Object> pageParam);
 
     SvrBussRepFinanciallInfoDto getFinanciallInfoByIssuer(Map<String, Object> pageParam);
+
+    SvrBussRepQDIIdemolitionInfoDto getQDIIdemolitionInfoByIssuer(Map<String, Object> pageParam);
 }
