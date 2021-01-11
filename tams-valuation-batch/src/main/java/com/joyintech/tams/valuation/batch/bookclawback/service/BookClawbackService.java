@@ -2,17 +2,10 @@ package com.joyintech.tams.valuation.batch.bookclawback.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListTableId;
-import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.*;
+import com.joyintech.tams.valuation.batch.tafloatfeeaccounts.entity.TaFloadFeeAccountsDto;
 import com.joyintech.tams.valuation.common.constants.*;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +35,6 @@ import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetFinProd
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetPerfRewardAccrsche;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetPerfRewardRule;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetSearchDto;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.calculation.config.NumberEnum;
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
@@ -205,6 +197,10 @@ public class BookClawbackService {
         // 定义变量：产品起息日 = 标的信息.起息日
         Date prdVdate = targetFinProduct.getVdate();
 
+        // 获取上次和本次计提日
+        Date lastAccrualDate = null;// 上次计提日
+        Date accrualDate = null;// 本次计提日
+
         // 理论处理flag
         boolean theoryFlag = true;
         // update by wangcheng 20191108 计提频率getAccrCycle() 改为 计提类型getAccrType()
@@ -212,6 +208,8 @@ public class BookClawbackService {
             clawbackDateStart = happenDate;
             clawbackDateEnd = happenDate;
             preNetDate = DateUtil.addDay(happenDate, -1);
+            accrualDate = happenDate;
+            lastAccrualDate = DateUtil.addDay(accrualDate, -1);// 上次计提日 = 本次计提日 - 1
         }
         else if (targetPerfRewardAccrscheList == null || targetPerfRewardAccrscheList.size() == 0) {
             // 当日无需计提
@@ -222,6 +220,9 @@ public class BookClawbackService {
             clawbackDateStart = DateUtil.addDay(targetPerfRewardAccrsche.getAccrStrDate(), 1);
             clawbackDateEnd = targetPerfRewardAccrsche.getAccrDate();
             preNetDate = targetPerfRewardAccrsche.getAccrStrDate();
+
+            accrualDate = happenDate;
+            lastAccrualDate = targetPerfRewardAccrsche.getAccrStrDate();
         }
 
         if (clawbackDateEnd != null && DateUtil.compareDate(clawbackDateEnd, happenDate) != 0) {
@@ -316,6 +317,7 @@ public class BookClawbackService {
             List<String> paramCodeList = new ArrayList<String>();
             paramCodeList.add(ValDictCodeList.账套配置表参数项_万份收益小数位尾数处理.getValue());
             paramCodeList.add(ValDictCodeList.账套配置表参数项_万份收益小数位位数.getValue());
+            paramCodeList.add(ValDictCodeList.账套配置表参数项_区间内浮动管理费计提方式.getValue());
             Map<String, Object> getValBokBooksetExtMap = accountingCommonService.getValBokBooksetExtForMap(
                 acctEntity.getBooksetId(), paramCodeList);
 
@@ -331,12 +333,62 @@ public class BookClawbackService {
             cycEndBokStatBokPosition.setpYield(
                 accountingCommonService.filterByDecTypeAndDigits(pYield, pyeildDecType, pyeildDecDigits));
 
+            //计提方式
+            Object prdIntAccTypeObj =  (String)getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_区间内浮动管理费计提方式.getValue());
+
             // 4.R值计算
             // 基础科目性质
             List<String> 基础科目性质 = new ArrayList<>();
             基础科目性质.add(DictCodeBaseSubjectNatrue.应付利润.getValue());
             // 变量.回补区间年化收益率
             BigDecimal 回补区间年化收益率 = BigDecimal.ZERO;
+
+            BigDecimal 昨日区间浮动管理费余额 = BigDecimal.ZERO;
+            //IF [账套参数.区间内浮动管理费计提方式 = 区间内每日倒减计提] AND [本次计提日 > 上次计提日 +1]
+            if(prdIntAccTypeObj != null && DictCodeListExt3.区间内浮动管理费计提方式_区间内每日倒减计提.getValue().equals(prdIntAccTypeObj.toString())
+                    && DateUtil.compareDate(accrualDate, DateUtil.addDay(lastAccrualDate,1)) > 0) {
+                /**
+                 调用 SHEET 查询账务明细当前表发生额 方法查询浮动管理费区间余额
+                 参数名
+                 开始日期					上次计提日+1
+                 结束日期					本次计提日-1
+                 账套代码					DTO.账套代码
+                 场景代码					null
+                 基础科目性质					应付超额管理费
+                 入账日					DTO.入账日
+                 借贷方向					贷方
+                 优先级					本次批处理优先级
+                 返回结果
+                 List<账务明细当前表> **/
+                Map<String, Object> param = new HashMap<>();
+                param.put("booksetId", booksetId);//DTO.账套代码
+                param.put("startHappenDate", DateUtil.addDay(lastAccrualDate,1));//上次计提日+1
+                param.put("endHappenDate", DateUtil.addDay(accrualDate,-1));//本次计提日-1
+                param.put("bookDate", bookDate);//入账日
+                param.put("cdFlag", DictCodeList.余额方向_贷方.getValue());//贷方
+                param.put("taskId", taskPri);//本次批处理优先级
+                param.put("baseSubjectNatureList", Arrays.asList(DictCodeBaseSubjectNatrue.应付超额管理费.getValue()));//应付超额管理费
+                List<TaFloadFeeAccountsDto> taFloadFeeAccountsList = bookClawbackMapper.selectBokBookdetailCurrent(param);
+                //LOOP 查询结果List<账务明细当前表>，调用账务类共通.余额方向处理_余额加发生额
+                if(!StringUtil.isEmptyList(taFloadFeeAccountsList)){
+                    //变量.实际余额方向 = 贷方
+                    String actCdFlag = DictCodeList.余额方向_贷方.getValue();
+                    //变量.实际余额 = 0
+                    BigDecimal actBalance = BigDecimal.ZERO;
+                    for(TaFloadFeeAccountsDto item : taFloadFeeAccountsList) {
+                        //调用账务类共通.余额方向处理_余额加发生额
+                        Map<String, Object> balanceDealMap = accountingCommonService.balanceDirectDealAccrualAddBalance(DictCodeList.余额方向_贷方.getValue(),
+                                actCdFlag, actBalance, BigDecimal.ZERO, item.getCdFlag(), item.getoHappenAmt(),
+                                BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
+                        //变量.实际余额方向 = 返回结果.余额方向
+                        actCdFlag = (String)balanceDealMap.get("balDirect");
+                        //变量.实际余额 = 返回结果.科目余额
+                        actBalance = (BigDecimal)balanceDealMap.get("balance");
+                    }
+                    昨日区间浮动管理费余额 = actBalance;
+                    昨日区间浮动管理费余额 = ArithmeticUtil.round(昨日区间浮动管理费余额, NumberEnum.MONEY);
+                }
+            }
             // DTO.核算类型=“货币型”
             if (StringUtil.equals(acctEntity.getAcctMode(), DictCodeList.收益类型_货币型.getValue())) {
                 // 周期内发生的红利再投查询
@@ -357,7 +409,8 @@ public class BookClawbackService {
             }
             else if (StringUtil.equals(acctEntity.getAcctMode(), DictCodeList.收益类型_净值型.getValue())) {
                 回补区间年化收益率 = this.getNhsyl(clawbackDateEnd, preNetDate, acctEntity.getFinprodId(),
-                        calcBasisDecimal, accrDays, bookDate, booksetId, prdVdate, acctEntity.getLayeringId(), cycEndBokStatBokPosition);
+                        calcBasisDecimal, accrDays, bookDate, booksetId, prdVdate, acctEntity.getLayeringId(),
+                        cycEndBokStatBokPosition,昨日区间浮动管理费余额);
             }
 
             // 回补利率计算
@@ -809,7 +862,7 @@ public class BookClawbackService {
      */
     public BigDecimal getNhsyl(Date accrualDate, Date lastAccrualDate, String finprodid, BigDecimal feeBasic, Long days,
                                Date bookDate, String booksetId, Date zcVdate, String layeringId,
-                               BokStatBokPosition cycEndBokStatBokPosition) {
+                               BokStatBokPosition cycEndBokStatBokPosition,BigDecimal 区间内的浮动管理费计提合计) {
 
         BigDecimal 年化收益率 = BigDecimal.ZERO;
         BigDecimal 期初的单位净值 = BigDecimal.ONE;
@@ -882,7 +935,8 @@ public class BookClawbackService {
             // 期末的累计净值 = 本次计提日帐套资产负债信息.费前单位净值 + 本次计提日帐套资产负债信息.累计分红净值
 //            期末的累计净值 = ArithmeticUtil.doAdd(valStatBokPositionForNowOnce.getNetUnitValueBef(),
             //                valStatBokPositionForNowOnce.getTotBounsNet());
-            期末的累计净值 = ArithmeticUtil.doAdd(ArithmeticUtil.divide(cycEndBokStatBokPosition.getNetAssetValue(),
+            期末的累计净值 = cycEndBokStatBokPosition.getNetAssetValueBef().add(区间内的浮动管理费计提合计);
+            期末的累计净值 = ArithmeticUtil.doAdd(ArithmeticUtil.divide(期末的累计净值,
                 valStatBokPositionForNowOnce.getCapital()), valStatBokPositionForNowOnce.getTotBounsNet());
             期末的累计净值 = accountingCommonService.filterByDecTypeAndDigits(期末的累计净值,floatEndtotalNetType,floatEndtotalNetDigits);
         }

@@ -169,7 +169,7 @@
 <!-- 	     	and tdsi.declare_type = #{declareType} -->
 <!-- 	    </if> -->
 		<if test="signFlag != null and signFlag != ''">
-	     	and tdsi.sign_flag = #{signFlag}
+	     	and tdsi.sign_flag in (#{signFlag},#{signFlag2})
 	    </if>
 	</select>
 	

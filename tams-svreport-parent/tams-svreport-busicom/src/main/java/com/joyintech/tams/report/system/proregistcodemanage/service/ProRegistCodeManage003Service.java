@@ -1,20 +1,32 @@
 package com.joyintech.tams.report.system.proregistcodemanage.service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.ChbPrdresistCodeMapper;
 import com.joyintech.tams.common.base.entity.ChbPrdresistCode;
+import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.report.submitmaintenance.investorsholdinfo.service.InvestorsHoldInfo001Service;
 import com.joyintech.tams.report.system.proregistcodemanage.dao.ProRegistCodeManage001Mapper;
+import com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage001Dto;
 import com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage002Dto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 
@@ -75,7 +87,20 @@ public class ProRegistCodeManage003Service extends CommonExportService<ProRegist
     		if (StringUtil.equals(entity.getOperateType(), "NEW")) {
     			record.setCreateUser(SecurityUtil.getLoginUser().getUserName());
     			record.setCreateTime(new Date());
-    			chbPrdresistCodeMapper.insertSelective(record);
+    			//
+    			 record.setFlag("2");
+    			 record.setReg_code(record.getRegCode());
+    			 //产品要素维护管理中产品代码不存在 存在则更新数据              
+                ChbPrdresistCode dto = chbPrdresistCodeMapper.selectByPrimaryKey(record);
+                if (dto != null){
+                    chbPrdresistCodeMapper.updateByPrimaryKeySelective(record);
+                }
+                else{
+                    //不存在插入新数据
+                    chbPrdresistCodeMapper.insertSelective(record);
+                }
+    			//
+    			
             }
     		else if(StringUtil.equals(entity.getOperateType(), "MODIFY")) {
     			record.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
@@ -97,5 +122,29 @@ public class ProRegistCodeManage003Service extends CommonExportService<ProRegist
     public Map<String,Object> selectCode(Map<String, Object> pageParam) {
            return proRegistCodeManage001Mapper.selectCode(pageParam);
        }
+    
+    
+    public AjaxResult checkInsertData(String prodId,String regCode ) {
+    	AjaxResult webResult = new AjaxResult();    
+    	ChbPrdresistCode record = new ChbPrdresistCode();
+    	record.setProdid(prodId);
+    	record.setFlag("2");
+		record.setReg_code(regCode);
+		ChbPrdresistCode dto = chbPrdresistCodeMapper.selectByPrimaryKey(record);
+		if(dto != null) {			
+                    webResult.setMessage(
+                        "产品登记编码已维护，请确认是否覆盖？",
+                        MessageType.确认消息);
+                }
+               /* else {
+                    // 防止在进行导入前check时进行了两次的弹框
+                    webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+                }*/            
+           /* else{
+             // 防止在进行导入前check时进行了两次的弹框
+             webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+            }*/
+        return webResult;
+    }
     
 }
