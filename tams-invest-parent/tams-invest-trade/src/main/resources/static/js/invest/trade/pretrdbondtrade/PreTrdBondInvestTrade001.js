@@ -42,7 +42,7 @@
                     "99%", "99%", data);
         },
         cols:[
-            {field:'validStatusText',sortField:'VALID_STATUS', width:100, title: 'PreTrdBondInvestTrade001.validStatus'}
+            {field:'validStatusText',sortField:'validStatus', width:100, title: 'PreTrdBondInvestTrade001.validStatus'}
             ,{field:'tradeDateText', sortField:'TRADE_DATE',width:100, title: 'PreTrdBondInvestTrade001.tradeDate', type: 'date'}
             ,{field:'counterId', sortField:'COUNTER_ID',width:200, title: 'PreTrdBondInvestTrade001.counterId'}
             ,{field:'counterTrader',sortField:'COUNTER_TRADER', width:140, title: 'PreTrdBondInvestTrade001.counterTrader'}
