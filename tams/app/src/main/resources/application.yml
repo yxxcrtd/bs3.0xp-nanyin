@@ -15,7 +15,7 @@ spring:
   thymeleaf:
     cache: false
   profiles:
-    active: allinone8
+    active: allinone
   application:
     name: tams-server
     dfstype: 2
@@ -24,8 +24,8 @@ spring:
     driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls
+    username: zgtams0810
+    password: zgtams0810
     maxTotal: 10
     maxIdle: 10
     minIdle: 5
@@ -252,6 +252,8 @@ application:
 #      investInterfService: http://TamsMicroservice
 #      adapterService: http://TamsMicroservice
 
+#交易压力测试性能优化开关
+flag: false
 
 ---
 spring:
@@ -271,36 +273,36 @@ spring:
 #    redissonEnabled: false
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls
+    username: zgtams0810
+    password: zgtams0810
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName: zgtams0702ls
-  sqldirpassword: zgtams0702ls
+  sqldiruserName: zgtams0810
+  sqldirpassword: zgtams0810
 shiro:
   ssoEnable: true
   allowUrl: /service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
 base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls
+    username: zgtams0810
+    password: zgtams0810
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls
+    username: zgtams0810
+    password: zgtams0810
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls
+    username: zgtams0810
+    password: zgtams0810
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls
+    username: zgtams0810
+    password: zgtams0810
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -317,9 +319,6 @@ xinping:
 tx-lcn:
   client:
     managerAddress: 192.168.90.219:8070
-#清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
-url:
-  batch: http://localhost:8084/main/about/refreshCache
 ---
 spring:
   profiles: dtx
@@ -396,529 +395,3 @@ workflow:
 url:
   batch: http://localhost:8084/main/about/refreshCache
 
-
-
-
-
----
-spring:
-  profiles: allinone1
-  thymeleaf:
-    cache: false
-  redis:
-    database: 1
-    password: joyin!234
-    host: 192.168.90.198
-    port: 6379
-    timeout: 20000
-#  redis:
-#    cluster:
-#      nodes: 192.168.70.212:7001,192.168.70.212:7002,192.168.70.212:7003,192.168.70.212:7004,192.168.70.212:7005,192.168.70.212:7006
-#  redislock:
-#    redissonEnabled: false
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.161:1521/orcl
-    username: zgtams2131_v0731
-    password: zgtams2131_v0731
-    reportSqlldrDatabaseName: 192.168.90.161:1521/orcl
-application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.161:1521/orcl
-  sqldiruserName: zgtams2131_v0731
-  sqldirpassword: zgtams2131_v0731
-shiro:
-  ssoEnable: true
-  allowUrl: /service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
-base:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.161:1521/orcl
-    username: zgtams2131_v0731
-    password: zgtams2131_v0731
-interf:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.161:1521/orcl
-    username: zgtams2131_v0731
-    password: zgtams2131_v0731
-stresstest:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.161:1521/orcl
-    username: zgtams2131_v0731
-    password: zgtams2131_v0731
-wind:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.161:1521/orcl
-    username: zgtams2131_v0731
-    password: zgtams2131_v0731
-log:
-  path: /home/tams/logs/tams
-  level: debug
-eureka:
-  client:
-    enabled: false
-jixu:
-  user:
-    type: 2
-xinping:
-  properties:
-    urlIP: 127.0.0.1
-    urlPort: 9191
-tx-lcn:
-  client:
-    managerAddress: 192.168.90.219:8070
-    
-    
----
-spring:
-  profiles: allinone2
-  thymeleaf:
-    cache: false
-  redis:
-    database: 1
-    password: joyin!234
-    host: 192.168.90.198
-    port: 6379
-    timeout: 20000
-#  redis:
-#    cluster:
-#      nodes: 192.168.70.212:7001,192.168.70.212:7002,192.168.70.212:7003,192.168.70.212:7004,192.168.70.212:7005,192.168.70.212:7006
-#  redislock:
-#    redissonEnabled: false
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.70.194:1521/orcl
-    username: zgtams2131_v0731
-    password: zgtams2131_v0731
-    reportSqlldrDatabaseName: 192.168.70.194:1521/orcl
-application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.70.194:1521/orcl
-  sqldiruserName: zgtams2131_v0731
-  sqldirpassword: zgtams2131_v0731
-shiro:
-  ssoEnable: true
-  allowUrl: /service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
-base:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.70.194:1521/orcl
-    username: zgtams2131_v0731
-    password: zgtams2131_v0731
-interf:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.70.194:1521/orcl
-    username: zgtams2131_v0731
-    password: zgtams2131_v0731
-stresstest:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.70.194:1521/orcl
-    username: zgtams2131_v0731
-    password: zgtams2131_v0731
-wind:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.70.194:1521/orcl
-    username: zgtams2131_v0731
-    password: zgtams2131_v0731
-log:
-  path: /home/tams/logs/tams
-  level: debug
-eureka:
-  client:
-    enabled: false
-jixu:
-  user:
-    type: 2
-xinping:
-  properties:
-    urlIP: 127.0.0.1
-    urlPort: 9191
-tx-lcn:
-  client:
-    managerAddress: 192.168.90.219:8070
-    
-    
----
-spring:
-  profiles: allinone3
-  thymeleaf:
-    cache: false
-  redis:
-    database: 1
-    password: joyin!234
-    host: 192.168.90.198
-    port: 6379
-    timeout: 20000
-#  redis:
-#    cluster:
-#      nodes: 192.168.70.212:7001,192.168.70.212:7002,192.168.70.212:7003,192.168.70.212:7004,192.168.70.212:7005,192.168.70.212:7006
-#  redislock:
-#    redissonEnabled: false
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.70.194:1521/orcl
-    username: zgtams2131_v07311
-    password: zgtams2131_v07311
-    reportSqlldrDatabaseName: 192.168.70.194:1521/orcl
-application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.70.194:1521/orcl
-  sqldiruserName: zgtams2131_v07311
-  sqldirpassword: zgtams2131_v07311
-shiro:
-  ssoEnable: true
-  allowUrl: /service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
-base:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.70.194:1521/orcl
-    username: zgtams2131_v07311
-    password: zgtams2131_v07311
-interf:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.70.194:1521/orcl
-    username: zgtams2131_v07311
-    password: zgtams2131_v07311
-stresstest:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.70.194:1521/orcl
-    username: zgtams2131_v07311
-    password: zgtams2131_v07311
-wind:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.70.194:1521/orcl
-    username: zgtams2131_v07311
-    password: zgtams2131_v07311
-log:
-  path: /home/tams/logs/tams
-  level: debug
-eureka:
-  client:
-    enabled: false
-jixu:
-  user:
-    type: 2
-xinping:
-  properties:
-    urlIP: 127.0.0.1
-    urlPort: 9191
-tx-lcn:
-  client:
-    managerAddress: 192.168.90.219:8070
-    
----
-spring:
-  profiles: allinone4
-  thymeleaf:
-    cache: false
-  redis:
-    database: 0
-    host: 127.0.0.1
-    port: 6379
-    timeout: 20000
-#  redis:
-#    cluster:
-#      nodes: 192.168.70.212:7001,192.168.70.212:7002,192.168.70.212:7003,192.168.70.212:7004,192.168.70.212:7005,192.168.70.212:7006
-#  redislock:
-#    redissonEnabled: false
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
-application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName: zgtams0810
-  sqldirpassword: zgtams0810
-shiro:
-  ssoEnable: true
-  allowUrl: /service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
-base:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810
-interf:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810
-stresstest:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810
-wind:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810
-log:
-  path: /home/tams/logs/tams
-  level: debug
-eureka:
-  client:
-    enabled: false
-jixu:
-  user:
-    type: 2
-xinping:
-  properties:
-    urlIP: 127.0.0.1
-    urlPort: 9191
-tx-lcn:
-  client:
-    managerAddress: 192.168.90.219:8070
-    
-    
----
-spring:
-  profiles: allinone5
-  thymeleaf:
-    cache: false
-  redis:
-    database: 0
-    host: 127.0.0.1
-    port: 6379
-    timeout: 20000
-#  redis:
-#    cluster:
-#      nodes: 192.168.70.212:7001,192.168.70.212:7002,192.168.70.212:7003,192.168.70.212:7004,192.168.70.212:7005,192.168.70.212:7006
-#  redislock:
-#    redissonEnabled: false
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username:  zgtams214_v1203
-    password:  zgtams214_v1203
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
-application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName:  zgtams214_v1203
-  sqldirpassword:  zgtams214_v1203
-shiro:
-  ssoEnable: true
-  allowUrl: /service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
-base:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username:  zgtams214_v1203
-    password:  zgtams214_v1203
-interf:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username:  zgtams214_v1203
-    password:  zgtams214_v1203
-stresstest:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username:  zgtams214_v1203
-    password:  zgtams214_v1203
-wind:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username:  zgtams214_v1203
-    password:  zgtams214_v1203
-log:
-  path: /home/tams/logs/tams
-  level: debug
-eureka:
-  client:
-    enabled: false
-jixu:
-  user:
-    type: 2
-xinping:
-  properties:
-    urlIP: 127.0.0.1
-    urlPort: 9191
-tx-lcn:
-  client:
-    managerAddress: 192.168.90.219:8070
-    
-    
----
-spring:
-  profiles: allinone6
-  thymeleaf:
-    cache: false
-  redis:
-    database: 1
-    password: joyin!234
-    host: 192.168.90.198
-    port: 6379
-    timeout: 20000
-#  redis:
-#    cluster:
-#      nodes: 192.168.70.212:7001,192.168.70.212:7002,192.168.70.212:7003,192.168.70.212:7004,192.168.70.212:7005,192.168.70.212:7006
-#  redislock:
-#    redissonEnabled: false
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username:  tisly
-    password:  tisly
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
-application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName:  tisly
-  sqldirpassword:  tisly
-shiro:
-  ssoEnable: true
-  allowUrl: /service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
-base:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username:  tisly
-    password:  tisly
-interf:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username:  tisly
-    password:  tisly
-stresstest:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username:  tisly
-    password:  tisly
-wind:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username:  tisly
-    password:  tisly
-log:
-  path: /home/tams/logs/tams
-  level: debug
-eureka:
-  client:
-    enabled: false
-jixu:
-  user:
-    type: 2
-xinping:
-  properties:
-    urlIP: 127.0.0.1
-    urlPort: 9191
-tx-lcn:
-  client:
-    managerAddress: 192.168.90.219:8070
-    
-    
----
-spring:
-  profiles: allinone7
-  thymeleaf:
-    cache: false
-  redis:
-    database: 1
-    password: joyin!234
-    host: 192.168.90.198
-    port: 6379
-    timeout: 20000
-#  redis:
-#    cluster:
-#      nodes: 192.168.70.212:7001,192.168.70.212:7002,192.168.70.212:7003,192.168.70.212:7004,192.168.70.212:7005,192.168.70.212:7006
-#  redislock:
-#    redissonEnabled: false
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.206:1521/orcl
-    username:  zgtams213_yc0724
-    password:  zgtams213_yc0724
-    reportSqlldrDatabaseName: 192.168.90.206:1521/orcl
-application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.206:1521/orcl
-  sqldiruserName:  zgtams213_yc0724
-  sqldirpassword:  zgtams213_yc0724
-shiro:
-  ssoEnable: true
-  allowUrl: /service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
-base:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.206:1521/orcl
-    username:  zgtams213_yc0724
-    password:  zgtams213_yc0724
-interf:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.206:1521/orcl
-    username:  zgtams213_yc0724
-    password:  zgtams213_yc0724
-stresstest:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.206:1521/orcl
-    username:  zgtams213_yc0724
-    password:  zgtams213_yc0724
-wind:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.206:1521/orcl
-    username:  zgtams213_yc0724
-    password:  zgtams213_yc0724
-log:
-  path: /home/tams/logs/tams
-  level: debug
-eureka:
-  client:
-    enabled: false
-jixu:
-  user:
-    type: 2
-xinping:
-  properties:
-    urlIP: 127.0.0.1
-    urlPort: 9191
-tx-lcn:
-  client:
-    managerAddress: 192.168.90.219:8070
-    
-    
----
-spring:
-  profiles: allinone8
-  thymeleaf:
-    cache: false
-  redis:
-    database: 0
-    host: 127.0.0.1
-    port: 6379
-    timeout: 20000
-#  redis:
-#    cluster:
-#      nodes: 192.168.70.212:7001,192.168.70.212:7002,192.168.70.212:7003,192.168.70.212:7004,192.168.70.212:7005,192.168.70.212:7006
-#  redislock:
-#    redissonEnabled: false
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username:  zgtams1214ls
-    password:  zgtams1214ls
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
-application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName:  zgtams1214ls
-  sqldirpassword:  zgtams1214ls
-shiro:
-  ssoEnable: true
-  allowUrl: /service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
-base:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username:  zgtams1214ls
-    password:  zgtams1214ls
-interf:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username:  zgtams1214ls
-    password:  zgtams1214ls
-stresstest:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username:  zgtams1214ls
-    password:  zgtams1214ls
-wind:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username:  zgtams1214ls
-    password:  zgtams1214ls
-log:
-  path: /home/tams/logs/tams
-  level: debug
-eureka:
-  client:
-    enabled: false
-jixu:
-  user:
-    type: 2
-xinping:
-  properties:
-    urlIP: 127.0.0.1
-    urlPort: 9191
-tx-lcn:
-  client:
-    managerAddress: 192.168.90.219:8070
