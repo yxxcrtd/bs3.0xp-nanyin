@@ -1214,7 +1214,7 @@
                         dealinfo.tradeDate = $("#tradeDate").val();
                         dealinfo.ps = PS_T01;
                         dealinfo.ccy = $("#ccy").val();
-                        dealinfo.tradeAmt =  BussRepoSecDto[i].prinAmt; // TODO 多组合有通道费
+                        dealinfo.tradeAmt =  BussRepoSecDto[i].tradeAmt !=null? BussRepoSecDto[i].tradeAmt: BussRepoSecDto[i].prinAmt; // TODO 多组合有通道费
                         dealinfo.portfolioId = BussRepoSecDto[i].portfolioId;
                         dealinfo.counterId = $("#trdInvestPersonInfo_counterId").val();
                         dealinfo.tradeMarket = $("#tradeMarket").val();
