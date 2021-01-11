@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.asset.plan.planProfit.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -328,15 +329,23 @@ public class FinPlanProfitAsset002Controller extends BaseController{
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
             ValidateGroupEdit.class}) FinPlanProfitAssetDto dto, BindingResult result) {
-        AjaxResult checkResult = commonCheck(result, dto.getOperateType());
+        if (result != null && result.hasErrors()) {
+            return new AjaxResult(result);
+        }
+
         if (StringUtil.equals(dto.getParentPlan(), DictCodeList.是否_否.getValue())) {
             if (null == dto.getBuyOutRate()) {
-                checkResult.getErrorList().add(new ValidMessage("buyOutRate",
-                        getMessage("COMMON_E_0057", getMessage("FinPlanProfitAsset002.buyOutRate"))));
-                checkResult.setMessageType(MessageType.错误消息);
+                AjaxResult res= new AjaxResult();
+                List<ValidMessage> errorList = new ArrayList<>();
+                ValidMessage validMessage = new ValidMessage("buyOutRate",
+                        getMessage("COMMON_E_0057", getMessage("FinPlanProfitAsset002.buyOutRate")));
+                errorList.add(validMessage);
+                res.setErrorList(errorList);
+                res.setMessageType(MessageType.错误消息);
+                return res;
             }
         }
-        return checkResult;
+        return commonCheck(result, dto.getOperateType());
     }
 
     /**
