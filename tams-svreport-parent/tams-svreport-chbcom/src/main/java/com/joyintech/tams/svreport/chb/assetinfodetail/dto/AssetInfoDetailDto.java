@@ -16,9 +16,11 @@ import com.joyintech.tams.report.common.base.annotate.BusinessKey;
 import com.joyintech.tams.report.common.base.annotate.DictFormat;
 import com.joyintech.tams.report.common.base.annotate.TableName;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
+import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussFinBondRepInfoDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.validator.AssetInfoDetailValidator;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -38,6 +40,17 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 
 
 	private  String dataStatus;
+
+	@Valid
+	private SvrBussFinBondRepInfoDto svrBussFinBondRepInfoDto;
+
+	public SvrBussFinBondRepInfoDto getSvrBussFinBondRepInfoDto() {
+		return svrBussFinBondRepInfoDto;
+	}
+
+	public void setSvrBussFinBondRepInfoDto(SvrBussFinBondRepInfoDto svrBussFinBondRepInfoDto) {
+		this.svrBussFinBondRepInfoDto = svrBussFinBondRepInfoDto;
+	}
 
 	public String getDataStatus() {
 		return dataStatus;

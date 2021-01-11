@@ -101,17 +101,4 @@ public class SvrBussRepPlacementInfoController extends BaseController implements
     public void setEntity(Model model) {
 
     }
-
-    /**
-     * 重写pageId {@inheritDoc}
-     */
-    @Override
-    public String getPageId() {
-        return this.getParam(GlobalConstant.PAGE_ID);
-    }
-    @ResponseBody
-    @RequestMapping("getInfoByIssuer")
-    public SvrBussRepPlacementInfoDto getplanceInfoByIssuer(@RequestBody Map<String, Object> param){
-        return bussAssetInfoService.getplanceInfoByIssuer(param);
-    }
 }

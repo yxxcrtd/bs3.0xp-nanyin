@@ -33,6 +33,7 @@ import com.joyintech.tams.svreport.chb.assetinforeg.dao.ChbAssetInfoSubHisMapper
 import com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto;
 import com.joyintech.tams.svreport.chb.assetinforeg.dto.ChbAssetInfoSubHisDto;
 import com.joyintech.tams.svreport.chb.investtrade.dao.MstCounterPartyDtoMapper;
+import com.joyintech.tams.svreport.interf.chb.assetinfo.dao.ChbAssetInfoInterfMapper;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -62,6 +63,7 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
 	 */
 	@Autowired
 	private AssetInfoDetailMapper assetInfoDetailMapper;
+
 
 
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -113,7 +115,11 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
         return page;
 	}
 
-
+	/**
+	 * 数据赋值 marge模式
+	 * @param dto
+	 * @return
+	 */
 	public Integer doSave(AssetInfoDetailDto dto){
 		int  flag = 0;
 		List<ChbAssetInfo> assetInfo = new ArrayList<>();
@@ -122,6 +128,24 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
 			flag = assetInfoDetailMapper.mergeInfoListEx(assetInfo);
 		}
 		return flag;
+	}
+
+	/**
+	 * 根据uuid获取资产信息
+	 * @param UUid
+	 * @return
+	 */
+	public AssetInfoDetailDto getAssetInfoByUUid(String UUid){
+		return assetInfoDetailMapper.getAssetInfoDetail(UUid);
+	}
+
+	/**
+	 * 根据uuid获取资产信息
+	 * @param UUid
+	 * @return
+	 */
+	public ChbAssetInfo getChbAssetInfoByUUid(String UUid){
+		return assetInfoDetailMapper.getChbAssetInfoByUUid(UUid);
 	}
 
 

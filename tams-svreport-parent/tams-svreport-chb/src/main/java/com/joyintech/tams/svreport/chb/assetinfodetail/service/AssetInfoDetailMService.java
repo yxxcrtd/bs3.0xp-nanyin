@@ -7,6 +7,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
+import com.joyintech.tams.svreport.chb.assetinfodetail.asset.BussAssetInfoService;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dao.AssetInfoDetailMapper;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.loaninfomanagement.dto.OperationalLoanInfo001Dto;
@@ -31,6 +32,9 @@ public class AssetInfoDetailMService extends BaseService<AssetInfoDetailDto>{
 
 	@Autowired
 	private AssetInfoDetailMapper assetInfoDetailMapper;
+
+	@Autowired
+	private BussAssetInfoService assetInfoService;
     /**
     *
     * 业务画面查询事件
@@ -72,12 +76,13 @@ public class AssetInfoDetailMService extends BaseService<AssetInfoDetailDto>{
     }
 
 	public void doSave(AssetInfoDetailDto dto){
+		AssetInfoDetailDto infoDto = new AssetInfoDetailDto();
+		infoDto = assetInfoService.setEntity(dto);
 
-    	dto.setCreateUser(LoginUserUtil.getUserName());
-		dto.setUpdateUser(LoginUserUtil.getUserName());
-		dto.setStatus(DictCodeList.数据状态_修改.getValue());
-
+		infoDto.setCreateUser(LoginUserUtil.getUserName());
+		infoDto.setUpdateUser(LoginUserUtil.getUserName());
+		infoDto.setStatus(DictCodeList.数据状态_修改.getValue());
 		restTemplate.postForObject(
-				SvrServiceApplication.CHB_SERVICE_NAME + "/AssetInfoDetail/doSave", dto, Integer.class);
+				SvrServiceApplication.CHB_SERVICE_NAME + "/AssetInfoDetail/doSave", infoDto, Integer.class);
 	}
 }

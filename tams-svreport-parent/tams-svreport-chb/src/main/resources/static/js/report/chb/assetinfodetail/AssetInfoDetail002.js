@@ -49,7 +49,14 @@ var QueryFunc=function(){
         }else if((repAssetType=="1101"||repAssetType=="1102"||repAssetType=="1103"||repAssetType=="1104"
             ||repAssetType=="1105")){
             $("#svrBussRepPlacementInfo_div").show();
+        }else if((repAssetType=="1101"||repAssetType=="1110"||repAssetType=="1109"||repAssetType=="1102"
+            ||repAssetType=="1111"||repAssetType=="1112"||repAssetType=="1113"||repAssetType=="1114"
+            ||repAssetType=="1115"||repAssetType=="1116"||repAssetType=="1117"||repAssetType=="2101"
+            ||repAssetType=="2501"||repAssetType=="2502"||repAssetType=="1111"||repAssetType=="1111")){
+            $("#svrBussFinBondRepInfo_div").show();
         }
+
+
         star();
         layui.form.render();
     }

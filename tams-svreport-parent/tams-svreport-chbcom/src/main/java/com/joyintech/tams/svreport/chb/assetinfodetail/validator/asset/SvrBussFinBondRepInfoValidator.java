@@ -8,7 +8,7 @@
  * 系统名称：理财资管管理系统V2.0
  */
  
-package com.joyintech.tams.svreport.chb.assetinfodetail.asset.bond.validator;
+package com.joyintech.tams.svreport.chb.assetinfodetail.validator.asset;
 
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
@@ -16,7 +16,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.svreport.chb.assetinfodetail.asset.bond.dto.SvrBussFinBondRepInfoDto;
+import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussFinBondRepInfoDto;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -38,17 +38,12 @@ public class SvrBussFinBondRepInfoValidator implements BeanValidator{
         SvrBussFinBondRepInfoDto dto = (SvrBussFinBondRepInfoDto)value;
         List<ValidMessage> resultList = new ArrayList<ValidMessage>();
         String  finprodType2  = dto.getFinprodType2();
-        String  type6 = dto.getType6();
         //债券类资产、项目类资产
-        if((StringUtil.equals(finprodType2, DictCodeListExt1.金融产品类型_投管用_债券.getValue())
-        &&!StringUtil.equals(dto.getRepAssetType(), DictCodeListExt2.资产_负债二级类别_股权.getValue())
-        &&!StringUtil.equals(dto.getRepAssetType(), DictCodeListExt2.资产_负债二级类别_股票_一级市场.getValue()))
-            ||(StringUtil.equals(finprodType2, DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue())
-                &&StringUtil.equals(dto.getRepAssetType(), DictCodeListExt2.资产_负债二级类别_理财直接融资工具.getValue()))){
-			if (StringUtil.isEmpty(dto.getRepAssetType())) {
-				resultList.add(new ValidMessage("repAssetType",
-						getMessage("COMMON_E_0057", getMessage("BussFinBondRepInfo.repAssetType"))));
-			}
+        if(StringUtil.isNotEmpty(dto)){
+//			if (StringUtil.isEmpty(dto.getRepAssetType())) {
+//				resultList.add(new ValidMessage("repAssetType",
+//						getMessage("COMMON_E_0057", getMessage("BussFinBondRepInfo.repAssetType"))));
+//			}
 			if(StringUtil.isNotEmpty(dto.getRepAssetType())){
 				 if(StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_商业性金融债.getValue())
 			                ||StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_企业债券.getValue())
@@ -103,18 +98,12 @@ public class SvrBussFinBondRepInfoValidator implements BeanValidator{
                                 getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repRemark"))));
                     }
                 }
-            }
-        }
-        if(StringUtil.equals(finprodType2, DictCodeListExt1.金融产品类型_投管用_债券.getValue())
-                &&!StringUtil.equals(dto.getRepAssetType(), DictCodeListExt2.资产_负债二级类别_股权.getValue())
-                &&!StringUtil.equals(dto.getRepAssetType(), DictCodeListExt2.资产_负债二级类别_股票_一级市场.getValue()))
-        {
-        	if(null!=dto.getRepBankSecPerpetual() && StringUtil.equals(dto.getRepBankSecPerpetual(), DictCodeList.是否_中债_是.getValue()) &&StringUtil.isEmpty(dto.getRepSecNature())){
-        		
+
+                if(null!=dto.getRepBankSecPerpetual() && StringUtil.equals(dto.getRepBankSecPerpetual(), DictCodeList.是否_中债_是.getValue()) &&StringUtil.isEmpty(dto.getRepSecNature())){
                     resultList.add(new ValidMessage("repSecNature",
                             getMessage("COMMON_E_0057", getMessage("BussFinBondRepInfo.repSecNature"))));
-                
-        	}
+                }
+            }
         }
         return resultList;
     }

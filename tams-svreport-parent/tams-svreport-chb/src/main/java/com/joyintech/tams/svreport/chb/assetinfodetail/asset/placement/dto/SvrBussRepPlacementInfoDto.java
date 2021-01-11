@@ -14,7 +14,7 @@ import com.joyintech.framework.validation.annotation.Length;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.RepAssetBond;
-import com.joyintech.tams.svreport.chb.assetinfodetail.asset.bond.validator.SvrBussFinBondRepInfoValidator;
+import com.joyintech.tams.svreport.chb.assetinfodetail.validator.asset.SvrBussFinBondRepInfoValidator;
 
 /**
  *  债券类中债报送DTO

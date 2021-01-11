@@ -32,6 +32,7 @@ public interface AssetInfoDetailMapper {
 	List<AssetInfoDetailDto> selectChbInfoByParam (Map<String,Object> params);
 
 	AssetInfoDetailDto getAssetInfoDetail (@Param("Assetuuid") String Assetuuid);
+	ChbAssetInfo getChbAssetInfoByUUid (@Param("Assetuuid") String Assetuuid);
 
 	int mergeInfoListEx(@Param("newDataList")List<ChbAssetInfo> insertList);
 }

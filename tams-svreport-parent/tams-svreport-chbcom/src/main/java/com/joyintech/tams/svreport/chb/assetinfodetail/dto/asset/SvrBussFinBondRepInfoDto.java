@@ -8,13 +8,13 @@
  * 系统名称：理财资管管理系统V2.0
  */
  
-package com.joyintech.tams.svreport.chb.assetinfodetail.asset.bond.dto;
+package com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset;
 
 import com.joyintech.framework.validation.annotation.Length;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.RepAssetBond;
-import com.joyintech.tams.svreport.chb.assetinfodetail.asset.bond.validator.SvrBussFinBondRepInfoValidator;
+import com.joyintech.tams.svreport.chb.assetinfodetail.validator.asset.SvrBussFinBondRepInfoValidator;
 
 /**
  *  债券类中债报送DTO
@@ -61,6 +61,18 @@ public class SvrBussFinBondRepInfoDto extends RepAssetBond{
      * 公共PPP
      */
     private String repPppflag;
+
+    /**
+     * 主体评级
+     */
+    private String repPartyGrade;
+
+    public String getRepPartyGrade() {
+        return repPartyGrade;
+    }
+    public void setRepPartyGrade(String repPartyGrade) {
+        this.repPartyGrade = repPartyGrade;
+    }
 
     /**
      * 是否小微企业信贷资产流转和收益权转让

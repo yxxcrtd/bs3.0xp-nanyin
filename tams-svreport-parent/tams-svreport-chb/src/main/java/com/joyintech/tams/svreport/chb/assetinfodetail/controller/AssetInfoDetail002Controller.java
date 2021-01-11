@@ -67,7 +67,6 @@ public class AssetInfoDetail002Controller extends BaseController {
             AssetInfoDetailDto  dto = assetInfoDetailMService.getAssetInfoDetail(assetUuid);
             model.addAttribute(GlobalConstant.ENTITY, dto);
         }
-
         return super.init(model);
     }
     /**

@@ -12,13 +12,17 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.asset.bond.impl;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.intf.IDictCode;
+import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.BussAssetInfoService;
-import com.joyintech.tams.svreport.chb.assetinfodetail.asset.bond.dto.SvrBussFinBondRepInfoDto;
-import com.joyintech.tams.svreport.chb.assetinfodetail.asset.placement.dto.SvrBussRepPlacementInfoDto;
+import com.joyintech.tams.svreport.chb.assetinfodetail.asset.DtoChangeUtil;
+import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
+import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussFinBondRepInfoDto;
+import com.joyintech.tams.svreport.chb.assetinfodetail.service.AssetInfoDetail001Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 /**
  * 〈一句话功能简述〉
@@ -31,14 +35,14 @@ import java.util.Map;
 @Service("SvrBussFinBondRepInfoImplService")
 public class SvrBussFinBondRepInfoImplService extends BaseService<SvrBussFinBondRepInfoDto> implements BussAssetInfoService {
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
     @Override
     public String getDeftultEntity() {
-        return "bussFinBondRepInfoDto";
+        return "SvrBussFinBondRepInfoDto";
     }
+    @Autowired
+    private AssetInfoDetail001Service assetInfoDetail001Service;
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public IDictCode[] getInitDictCode() {
         return new DictCode[] {DictCode.资产_负债二级类别,DictCode.具体类别,
@@ -47,32 +51,33 @@ public class SvrBussFinBondRepInfoImplService extends BaseService<SvrBussFinBond
             DictCode.登记托管机构_中债,DictCode.交易流通场所,DictCode.人行机构规模,DictCode.受让形式};
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public SvrBussFinBondRepInfoDto getBussFinBondRepInfoDto(SvrBussFinBondRepInfoDto dto) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+    public AssetInfoDetailDto setEntity(AssetInfoDetailDto info) {
+        SvrBussFinBondRepInfoDto assetBond = info.getSvrBussFinBondRepInfoDto();
+//        info.setChbSectype(assetBond.getRepSectype());
+//        info.setIssueMode(assetBond.getRepIssueMode());
+//        info.setPartyGrade(assetBond.getRepPartyGrade());
+//        info.setPartyType1(assetBond.getRepPartyType1());
+//        info.setPartyType2(assetBond.getRepPartyType2());
+//        info.setPartyType3(assetBond.getRepPartyType3());
+//        info.setIndustry(assetBond.getRepIndustry());
+//        info.setIndustryLevel2(assetBond.getRepIndustryLevel2());
+//        info.setRegistOrg(assetBond.getRepRegistOrg());
+//        info.setRegistorgComment(assetBond.getRepRegistorgComment());
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public SvrBussFinBondRepInfoDto getBussFinBondRepInfoByProductId(String finprodId) {
-        return null;
-    }
-    /**
-     * 根据发行人查询发行机构类型、发行机构所属行业
-     */
-    @Override
-    public SvrBussFinBondRepInfoDto getInfoByIssuer(Map<String, Object> pageParam) {
-        return null;
+        DtoChangeUtil.SetChbToRep(assetBond,info,DtoChangeUtil.target,true);
+        return info;
     }
 
     @Override
-    public SvrBussRepPlacementInfoDto getplanceInfoByIssuer(Map<String, Object> pageParam) {
-        return null;
+    public Object getEntity(String assetUUid) {
+        SvrBussFinBondRepInfoDto assetBond = new SvrBussFinBondRepInfoDto();
+        //注意转换为ChbAssetInfo  否则反射不到
+        ChbAssetInfo dto =assetInfoDetail001Service.getChbAssetInfoByUUid(assetUUid);
+        //实体类转换方法
+        DtoChangeUtil.SetChbToRep(dto,assetBond,DtoChangeUtil.target,false);
+        return assetBond;
     }
+
+
 }

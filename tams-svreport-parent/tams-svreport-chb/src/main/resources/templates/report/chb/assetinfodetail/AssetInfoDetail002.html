@@ -169,13 +169,13 @@
 				<div class="businessDeptClass" id="svrBussFinBondRepInfo_div">
 					<div class="page-component"
 						 th:data-path="@{/chb/assetinfodetail/asset/SvrBussFinBondRepInfo/init}"
-						 th:data-params="|{type6Element: 'type6',entityName: 'bussRepDepositInfoDto',finprodId:'${entity?.assetCode}',workflowId:'${workflowId}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
+						 th:data-params="|{entityName: 'svrBussFinBondRepInfoDto',assetUuid:'${entity?.assetUuid}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
 					</div>
 				</div>
 				<div class="businessDeptClass" id="svrBussRepPlacementInfo_div">
 					<div class="page-component"
 						 th:data-path="@{/chb/assetinfodetail/asset/plancement/SvrBussRepPlacementInfo/init}"
-						 th:data-params="|{type6Element: 'type6',entityName: 'bussRepDepositInfoDto',finprodId:'${entity?.assetCode}',workflowId:'${workflowId}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
+						 th:data-params="|{entityName: 'svrBussRepPlacementInfoDto',assetUuid:'${entity?.assetCode}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
 					</div>
 				</div>
 			</div>
