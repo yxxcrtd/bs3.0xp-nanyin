@@ -63,9 +63,27 @@
             var object = $.serializeToObject('#informationForm');
             object.operateType = operateType;
             object.pageModel = pageModel;
-            Joyin.ajax(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/checkInsertData', {prodId:prodId,regCode:regCode}, function(result) {
+            if(regCode && regCode.length != 14 && regCode.length != 15){
+        		Joyin.error(JoyinUtil.getMessage("产品登记编码只能是14位或15位字符，请重新输入。"));
+        		$('#regCode').val('');
+        		return;
+        	}
+            if(regCode){
+            	 Joyin.ajax(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/checkInsertData', {prodId:prodId,regCode:regCode}, function(result) {
+                     Joyin.ajaxJson(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/check', object, function(result) {
+                         Joyin.confirm(result.data, function() {                	
+                             if(operateType === 'save') {                    	
+                                 WorkFlow.doSaveList(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/save', object, "ProRegistCodeManage003_btn_save");               
+                             }
+                             else {                   	
+                                 WorkFlow.doSubmitList(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/save', object, "ProRegistCodeManage003_btn_submit");
+                             	}
+                         });
+                     });
+                   });
+            }else{          
             Joyin.ajaxJson(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/check', object, function(result) {
-                Joyin.confirm(result.data, function() {
+                Joyin.confirm(result.data, function() {                	
                     if(operateType === 'save') {                    	
                         WorkFlow.doSaveList(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/save', object, "ProRegistCodeManage003_btn_save");               
                     }
@@ -74,7 +92,7 @@
                     	}
                 });
             });
-          });
+        }
    }
     
         $(function() {
