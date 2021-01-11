@@ -77,6 +77,8 @@ public class AssetInfoDetailMService extends BaseService<AssetInfoDetailDto>{
 
 	public void doSave(AssetInfoDetailDto dto){
 		AssetInfoDetailDto infoDto = new AssetInfoDetailDto();
+
+		//分别调用各自的setEntity方法
 		infoDto = assetInfoService.setEntity(dto);
 
 		infoDto.setCreateUser(LoginUserUtil.getUserName());
