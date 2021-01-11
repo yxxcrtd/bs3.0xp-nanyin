@@ -15,18 +15,7 @@
          	$('#vdate').val('');
          	$('#mdate').val('');        	
         	var prodId = $('#prodId').val();
-        	if(prodId){
-        		Joyin.ajax(basePath + "svreport/system/proregistcodemanage/ProRegistCodeManage003/selectId",{prodId:prodId},
-        				function(result){
-        			if(result.data){
-        				Joyin.error(JoyinUtil.getMessage("该产品已存在产品登记编码，请重新输入。"));
-        				$('#prodId').val('');
-        				$('#prodName').val('');
-        	         	$('#operateMode').val('');
-        	         	$('#vdate').val('');
-        	         	$('#mdate').val('');
-        				return;
-        			}else{
+        	if(prodId){        		
         				Joyin.ajax(basePath + "svreport/system/proregistcodemanage/ProRegistCodeManage003/selectInfo",{prodId:prodId},
                 				function(result){
                 			if(result){        				
@@ -43,9 +32,7 @@
                  		    	$('#vdate').val(result.vdate);
                  		    	$('#mdate').val(result.mdate);       		    	    		    	
                 			}
-                	});
-        			}
-        	    });        	
+                	});      	        	
         	}
         }
         
@@ -72,25 +59,22 @@
         	var vDate = $('#vdate').val();
         	var mDate = $('#mdate').val();
         	var prodId = $('#prodId').val();
-        	var regCode = $('#regCode').val();
-        	/*if (vDate && mDate && mDate <= vDate){		
-				Joyin.error(JoyinUtil.getMessage("到期日必须大于起息日。"));
-				$('#mdate').val('');
-			}*/
-        				
+        	var regCode = $('#regCode').val();			
             var object = $.serializeToObject('#informationForm');
             object.operateType = operateType;
             object.pageModel = pageModel;
+            Joyin.ajax(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/checkInsertData', {prodId:prodId,regCode:regCode}, function(result) {
             Joyin.ajaxJson(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/check', object, function(result) {
                 Joyin.confirm(result.data, function() {
-                    if(operateType === 'save') {
-                        WorkFlow.doSaveList(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/save', object, "ProRegistCodeManage003_btn_save");
+                    if(operateType === 'save') {                    	
+                        WorkFlow.doSaveList(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/save', object, "ProRegistCodeManage003_btn_save");               
                     }
-                    else {
+                    else {                   	
                         WorkFlow.doSubmitList(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/save', object, "ProRegistCodeManage003_btn_submit");
-                    }
+                    	}
                 });
             });
+          });
    }
     
         $(function() {
