@@ -17,6 +17,7 @@ create table CHB_ASSET_INFO_ERRODATA
 (
   datauuid    CHAR(36) not null,
   asset_code             VARCHAR2(500),
+  asset_name             VARCHAR2(500),
   asset_type             VARCHAR2(500),
   asset_type2            VARCHAR2(500),
   vdate                  VARCHAR2(500),
@@ -46,6 +47,8 @@ comment on column CHB_ASSET_INFO_ERRODATA.datauuid
   is 'uuid主键';
 comment on column CHB_ASSET_INFO_ERRODATA.asset_code
   is '行内资产负债编码';
+comment on column CHB_ASSET_INFO_ERRODATA.asset_name
+  is '资产名称';
 comment on column CHB_ASSET_INFO_ERRODATA.asset_type
   is '资产类型';
 comment on column CHB_ASSET_INFO_ERRODATA.asset_type2
