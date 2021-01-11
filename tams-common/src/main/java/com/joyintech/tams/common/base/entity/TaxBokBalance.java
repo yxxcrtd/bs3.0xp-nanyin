@@ -811,4 +811,53 @@ public class TaxBokBalance extends BaseEntity {
     public void setTdyBalCalcTaxAmtB(BigDecimal tdyBalCalcTaxAmtB) {
         this.tdyBalCalcTaxAmtB = tdyBalCalcTaxAmtB;
     }
+
+
+    /**
+     * add by xiongr 预估  TISHKBS-1198 start
+     * 预估计税余额=昨日余额+今日发生-当日结转
+     * 非价差入税，且是预估计税有结转时，预估计税需计提时需包含结转的部分
+     * 含税销售额本币合计_含结转
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal incomeAmtAllBHjz;
+
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal BalCalcTaxAmtBHjz;
+
+
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal tdyBalCalcTaxAmtBHjz;
+
+
+    public BigDecimal getIncomeAmtAllBHjz() {
+        return incomeAmtAllBHjz;
+    }
+
+    public void setIncomeAmtAllBHjz(BigDecimal incomeAmtAllBHjz) {
+        this.incomeAmtAllBHjz = incomeAmtAllBHjz;
+    }
+
+    public void setBalCalcTaxAmtBHjz(BigDecimal balCalcTaxAmtBHjz) {
+        BalCalcTaxAmtBHjz = balCalcTaxAmtBHjz;
+    }
+
+    public BigDecimal getBalCalcTaxAmtBHjz() {
+        return BalCalcTaxAmtBHjz;
+    }
+
+    public BigDecimal getTdyBalCalcTaxAmtBHjz() {
+        return tdyBalCalcTaxAmtBHjz;
+    }
+
+    public void setTdyBalCalcTaxAmtBHjz(BigDecimal tdyBalCalcTaxAmtBHjz) {
+        this.tdyBalCalcTaxAmtBHjz = tdyBalCalcTaxAmtBHjz;
+    }
+
+    /**
+     * add by xiongr 预估 TISHKBS-1198 end
+     * 预估计税余额=昨日余额+今日发生-当日结转
+     * 非价差入税，且是预估计税有结转时，预估计税需计提时需包含结转的部分
+     * 含税销售额本币合计_含结转
+     */
 }
