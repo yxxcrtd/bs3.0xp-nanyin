@@ -24,6 +24,7 @@
 								<div class="form-inline-wrap">
 									<label class="layui-form-label form-label-wrap" >资产代码</label>
 									<div class="layui-input-inline input-inline">
+
 										<input type="text" name="assetCode" id="assetCode" required
 											   style=" width: 100%!important; display: inline-block;"
 											   data-th-value="${entity?.assetCode}" maxlength="18"
@@ -32,19 +33,24 @@
 									</div>
 								</div>
 								<div class="form-inline-wrap">
+
 									<label class="layui-form-label form-label-wrap ">资产名称</label>
 									<div class="layui-input-inline input-inline">
 										<input type="text" name="assetName"
+
 											   data-th-value="${entity?.assetName}" required
 											   class="layui-input form-input" placeholder="请输入内容"
+
 											   data-th-placeholder="#{SysCommon.placeholder}" >
 									</div>
 								</div>
 								<div class="form-inline-wrap">
 									<label class="layui-form-label form-label-wrap">起息日</label>
 									<div class="layui-input-inline input-inline">
+
 										<input type="text" id="vdate" name="vdate" required
 											   data-th-value='${#dates.format(entity?.vdate,"yyyy-MM-dd")}'
+
 											   class="layui-input form-input input-dateSelect" />
 									</div>
 								</div>
@@ -52,19 +58,23 @@
 							</div>
 							<div class="layui-form-item">
 								<div class="form-inline-wrap" id="mdate_div">
+
 									<label class="layui-form-label form-label-wrap ">到期日</label>
 									<div class="layui-input-inline input-inline">
+
 										<input type="text" id="mdate" name="mdate" required
 											   data-th-value='${#dates.format(entity?.mdate,"yyyy-MM-dd")}'
 											   class="layui-input form-input input-dateSelect" />
 									</div>
 								</div>
 								<div class="form-inline-wrap" >
+
 									<label class="layui-form-label form-label-wrap ">资产一级分类</label>
 									<div class="layui-input-inline input-inline">
 										<select  id="orgAssetType1" name="orgAssetType1"
 												 data-th-initValue="${entity?.orgAssetType1}"
 												 class="layui-input form-input input-select"
+
 												 data-th-data-result="${FINPROD_TYPE_TG}" required
 										></select>
 									</div>
@@ -114,6 +124,7 @@
 							</div>
 							<div class="layui-form-item">
 
+
 								<!--<div class="form-inline-wrap" >
 									<label class="layui-form-label form-label-wrap">资产负债类别</label>
 									<div class="layui-input-inline input-inline">
@@ -123,6 +134,7 @@
 												 data-th-data-result="${SVR_ASSETDEBT_TYPE}"
 										></select>
 									</div>
+
 								</div>-->
 								<div class="form-inline-wrap" >
 									<label class="layui-form-label form-label-wrap">资产负债二级类别</label>
@@ -130,6 +142,7 @@
 										<select  id="assetType2" name="assetType2"
 												 data-th-initValue="${entity?.assetType2}"
 												 class="layui-input form-input input-select"
+
 												 data-th-data-result="${SVR_ASSET_TYPE_SECOND_LEVEL}" required
 										></select>
 									</div>
@@ -155,31 +168,44 @@
 									</div>
 								</div>
 							</div>
-
-							<div class="layui-form-item">
-
-
-
-							</div>
 						</div>
 					</div>
 				</div>
 
 			<div class="pro-module">
+
 				<div class="businessDeptClass" id="svrBussFinBondRepInfo_div">
 					<div class="page-component"
 						 th:data-path="@{/chb/assetinfodetail/asset/SvrBussFinBondRepInfo/init}"
+
 						 th:data-params="|{entityName: 'svrBussFinBondRepInfoDto',assetUuid:'${entity?.assetUuid}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
 					</div>
 				</div>
+
 				<div class="businessDeptClass" id="svrBussRepPlacementInfo_div">
 					<div class="page-component"
 						 th:data-path="@{/chb/assetinfodetail/asset/plancement/SvrBussRepPlacementInfo/init}"
-						 th:data-params="|{entityName: 'svrBussRepPlacementInfoDto',assetUuid:'${entity?.assetCode}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
+						 th:data-params="|{entityName: 'svrBussRepPlacementInfoDto',assetUuid:'${entity?.assetCode}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">					</div>
+				</div>
+			</div>
+			<div class="pro-module">
+				<div class="businessDeptClass" id="svrBussRepFinanciallInfo_div">
+					<div class="page-component"
+						 th:data-path="@{/chb/assetinfodetail/asset/financiall/SvrBussRepFinanciallInfo/init}"
+						 th:data-params="|{entityName: 'svrBussRepFinanciallInfoDto',assetUuid:'${entity?.assetCode}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
+
 					</div>
 				</div>
 			</div>
+			<div class="pro-module">
+				<div class="businessDeptClass" id="svrBussRepQDIIdemolitionInfo_div">
+					<div class="page-component"
+						 th:data-path="@{/chb/assetinfodetail/asset/qdiidemolition/SvrBussRepQDIIdemolitionInfo/init}"
+						 th:data-params="|{entityName: 'svrBussRepFinanciallInfoDto',assetUuid:'${entity?.assetCode}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
 
+					</div>
+				</div>
+			</div>
 
 
 				<div class="row text-center stepbar"><a

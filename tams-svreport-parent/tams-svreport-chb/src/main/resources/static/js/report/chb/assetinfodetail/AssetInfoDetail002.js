@@ -46,6 +46,9 @@ var QueryFunc=function(){
         if (repAssetType=="1701"||repAssetType=="1702"||repAssetType=="1703"||repAssetType=="1704"
             ||repAssetType=="1705"||repAssetType=="1706") {
             $("#svrBussFinBondRepInfo_div").show();
+            $(".svrBussRepFinanciallInfo_div").hide();
+            $(".svrBussRepQDIIdemolitionInfo_div").hide();
+
         }else if((repAssetType=="1101"||repAssetType=="1102"||repAssetType=="1103"||repAssetType=="1104"
             ||repAssetType=="1105")){
             $("#svrBussRepPlacementInfo_div").show();
@@ -54,10 +57,24 @@ var QueryFunc=function(){
             ||repAssetType=="1115"||repAssetType=="1116"||repAssetType=="1117"||repAssetType=="2101"
             ||repAssetType=="2501"||repAssetType=="2502"||repAssetType=="1111"||repAssetType=="1111")){
             $("#svrBussFinBondRepInfo_div").show();
+            $(".svrBussRepFinanciallInfo_div").hide();
+            $(".svrBussRepQDIIdemolitionInfo_div").hide();
+
+        }else if((repAssetType=="1201"||repAssetType=="1202"||repAssetType=="1203"||repAssetType=="1204"
+            ||repAssetType=="1205")){
+            $(".svrBussRepFinanciallInfo_div").show();
+            $(".svrBussFinBondRepInfo_div").hide();
+            $(".svrBussRepPlacementInfo_div").hide();
+            $(".svrBussRepQDIIdemolitionInfo_div").hide();
         }
-
-
-        star();
+        else if((repAssetType=="1301"||repAssetType=="1302"||repAssetType=="1303"||repAssetType=="1304"
+            ||repAssetType=="1305")){
+            $(".svrBussRepQDIIdemolitionInfo_div").show();
+            $(".svrBussFinBondRepInfo_div").hide();
+            $(".svrBussRepPlacementInfo_div").hide();
+            $(".svrBussRepFinanciallInfo_div").hide();
+        }       
+		 star();
         layui.form.render();
     }
 
@@ -129,6 +146,8 @@ var QueryFunc=function(){
      */
     $(function() {
 
+        //隐藏所有中债报送信息
+        $(".businessDeptClass").hide();
         init();
         $('#AssetInfoDetail002_btn_submit').click(function() {
             saveOrSubmit('submit');

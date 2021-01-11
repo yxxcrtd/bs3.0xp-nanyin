@@ -11,9 +11,7 @@
 package com.joyintech.tams.svreport.chb.assetinfodetail.asset;
 
 import com.joyintech.framework.base.intf.IDictCode;
-import com.joyintech.tams.common.base.entity.RepAssetBond;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
-import org.apache.poi.ss.formula.functions.T;
 
 /**
  *  债券中债报送
@@ -40,5 +38,4 @@ public interface BussAssetInfoService{
 
 
     Object getEntity(String assetUUid);
-
 }

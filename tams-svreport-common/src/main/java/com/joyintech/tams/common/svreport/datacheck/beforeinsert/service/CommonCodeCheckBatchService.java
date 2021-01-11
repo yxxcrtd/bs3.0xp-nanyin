@@ -362,7 +362,7 @@ public class CommonCodeCheckBatchService {
             errMsg +="发行机构代码必须与银行代码相同[ISSUE_PARTY_ID="+issuePartyId+"];";
         }}
         // 产品登记编码报文内不可重复。
-        if (prodRegistCodeList.contains(prodRegistCode)){
+        if (StringUtil.isNotEmpty(prodRegistCode) && prodRegistCodeList.contains(prodRegistCode)){
             errMsg +="产品登记编码报文内不可重复[PROD_REGIST_CODE="+prodRegistCode+"];";
         }
         else{
@@ -740,7 +740,7 @@ public class CommonCodeCheckBatchService {
         String raiseVdate = dataMap.get("RAISE_VDATE");
 
         // 产品登记编码报文内不可重复。
-        if (prodRegistCodeList.contains(prodRegistCode)){
+        if (StringUtil.isNotEmpty(prodRegistCode) && prodRegistCodeList.contains(prodRegistCode)){
             errMsg +="产品登记编码报文内不可重复[PROD_REGIST_CODE="+prodRegistCode+"];";
         }
         else{
@@ -1080,7 +1080,7 @@ public class CommonCodeCheckBatchService {
 
         //投资资产种类及比例要素的判断
         //投资资产种类及比例要素
-        String   invTypeRat=dataMap.get("INV_TYPE_RAT");
+        String   invTypeRat=dataMap.get("FUND_INVEST_ASSET");
         boolean  flag=true;
         String  regex="^(100|[1-9]?\\d(\\.\\d\\d?)?)%$|0$";
         if(StringUtil.isNotEmpty(invTypeRat)){
@@ -1120,7 +1120,7 @@ public class CommonCodeCheckBatchService {
             }
         }
         if(!flag){
-            errMsgBuilder.append("投资资产种类及比例要素格式不对。正确的格式：数字%：文字；数字%-数字%：文字（其中，百分号、冒号、分号、连字号均应为英文标点，文字和数字部分均不得含有英文百分号、冒号、分号、连字号）。其中，数字格式为n..（5，2），且需大于等于0、小于等于100。[INV_TYPE_RAT="+dataMap.get("INV_TYPE_RAT")+"];");
+            errMsgBuilder.append("投资资产种类及比例要素格式不对。正确的格式：数字%：文字；数字%-数字%：文字（其中，百分号、冒号、分号、连字号均应为英文标点，文字和数字部分均不得含有英文百分号、冒号、分号、连字号）。其中，数字格式为n..（5，2），且需大于等于0、小于等于100。[FUND_INVEST_ASSET="+dataMap.get("FUND_INVEST_ASSET")+"];");
         }
 
         dataMap.put("ERRMSG", errMsgBuilder.toString());
@@ -1359,7 +1359,7 @@ public class CommonCodeCheckBatchService {
         //本机构其他产品费用
         String  otherFeeIn=dataMap.get("OTHER_FEE_IN");
         // 产品登记编码报文内不可重复。
-        if(prodRegistCodeList.contains(prodRegistCode)){
+        if(StringUtil.isNotEmpty(prodRegistCode) && prodRegistCodeList.contains(prodRegistCode)){
             errMsg +="产品登记编码报文内不可重复[PROD_REGIST_CODE="+prodRegistCode+"];";
         }else{
             prodRegistCodeList.add(prodRegistCode);
