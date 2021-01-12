@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.invest.common.component.base.entrust.dto.BaseEtrFinishAmtDto;
 import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1155,6 +1156,51 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
     		
     	}
     	return dto;
+    }
+
+
+    /**
+     * 查询委托信息
+     *
+     * @param entrustId 委托编号
+     * @return 委托信息
+     * @see
+     * @since 1.0
+     */
+    public TrdConBondDto getRealEntrustInfo(String entrustId) {
+        BaseEtrInvestInfoDto baseDto=baseEtrInvestInfoService.queryActiveMandate(entrustId);
+        TrdConBondDto dto = new TrdConBondDto();
+        if(baseDto!=null){
+
+            BaseEtrFinishAmtDto etrFinishAmtDto = baseEtrInvestInfoService.selectEtrFinishAmtDtoByPrimaryKey(entrustId);
+
+            if(etrFinishAmtDto!=null && etrFinishAmtDto.getSumFinishAmt()!=null&& BigDecimal.ZERO.compareTo(etrFinishAmtDto.getSumFinishAmt())<0  ){
+                dto.setTradeAmt(ArithmeticUtil.multiply(ArithmeticUtil.subtract(baseDto.getEtrEntrust().getEntrustNum(),  etrFinishAmtDto.getSumFinishAmt()),new BigDecimal(100)));
+            }else {
+                dto.setTradeAmt(ArithmeticUtil.multiply(baseDto.getEtrEntrust().getEntrustNum(), new BigDecimal(100)));//申购券面总额
+            }
+            dto.setPortfolioId(baseDto.getEtrEntrust().getPortfolioId());//组合代码
+            dto.setPurchDate(baseDto.getEtrEntrust().getEntrustDate());//申购日期
+            dto.setPurchType(baseDto.getEtrEntrustAdd().getPurchType());//申购类型
+            dto.setPurchModle(baseDto.getEtrEntrustAdd().getPurchModle());//申购方式
+            dto.setInvAim(baseDto.getEtrEntrust().getInvAim());//投资目的
+            dto.setFinprodId(baseDto.getEtrEntrust().getFinprodId());//资产代码
+            dto.setSecManageAcctId(baseDto.getEtrEntrustAdd().getSecAcctId());//证券账户
+            dto.setChlId(baseDto.getEtrEntrust().getChlId());//通道
+            dto.setTradeMarket(baseDto.getEtrEntrust().getTradeMarket());//交易场所
+//    		dto.setTrdInvestPersonInfo();
+            TrdInvestPersonInfo002Dto trdInvestPersonInfo = new TrdInvestPersonInfo002Dto();
+            trdInvestPersonInfo.setContactInfo(baseDto.getEtrEntrust().getContactInfo());
+            trdInvestPersonInfo.setCounterId(baseDto.getEtrEntrust().getCounterId());//交易对手
+            trdInvestPersonInfo.setCounterTrader(baseDto.getEtrEntrust().getCounterTrader());
+//    		trdInvestPersonInfo.setTrader(baseDto.getEtrDistributeList().get);
+            if (baseDto.getEtrDistributeList() != null && baseDto.getEtrDistributeList().size() > 0) {
+                trdInvestPersonInfo.setTrader(baseDto.getEtrDistributeList().get(0).getTrader());
+            }
+            dto.setTrdInvestPersonInfo(trdInvestPersonInfo);
+
+        }
+        return dto;
     }
 
 

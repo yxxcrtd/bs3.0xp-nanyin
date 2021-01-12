@@ -849,4 +849,9 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         }
         return false;
     }
+
+    @Override
+    public BaseEtrFinishAmtDto selectEtrFinishAmtDtoByPrimaryKey(String entrustId) {
+        return etrInvestInfoMapper.selectEtrFinishAmtDtoByPrimaryKey(entrustId);
+    }
 }
