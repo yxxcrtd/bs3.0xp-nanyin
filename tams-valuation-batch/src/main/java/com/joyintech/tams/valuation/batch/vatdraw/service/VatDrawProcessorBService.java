@@ -934,6 +934,12 @@ public class VatDrawProcessorBService {
                     taxBokDetail.setBalAmt(taxBokDetail.getTaxAmt());
                     // 当日税额本币_计提 = 账务明细（当前表）M.本位币发生额
                     taxBokDetail.setTaxAmtB(infoDto.getbHappenAmt());
+                    // if (发生科目借贷方向 != 账务明细（当前表）.借贷方向)
+                    if (!configDto.getCdFlag().equals(infoDto.getCdFlag())) {
+                        // 当日计税发生额 = -1 * 增值税金额
+                        taxBokDetail.setTaxAmtB(
+                                ArithmeticUtil.multiply(new BigDecimal(-1), infoDto.getbHappenAmt()));
+                    }
                     // 发生含税销售额本币 = 含税收入计算共通(当日计税发生额本币 , 税率, 币种折算小数位数,币种折算位数处理方式)
                     taxBokDetail.setHappenAmtB(
                         allIncomeCalculate(taxBokDetail.getTaxAmtB(), taxRate, CURR_CONV_DEC_DIGITS,
