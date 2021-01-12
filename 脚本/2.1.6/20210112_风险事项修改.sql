@@ -65,3 +65,6 @@ INSERT INTO RSK_EVENT_ITEM_RULE (EVENT_CODE, ITEM_CODE, GROUP_ID, ITEM_ANO_NAME,
 INSERT INTO RSK_EVENT_ITEM_RULE (EVENT_CODE, ITEM_CODE, GROUP_ID, ITEM_ANO_NAME, ITEM_VALUE, MATCH_TYPE, OFFSET_VAL, OFFSET_TYPE, OFFSET_UNIT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('EVENT_ID_GZZYYXHPJHZCXJRZXQGZ_04', 'windType2', '7ae81674c03e4d238020ecfbe9de87ee', null, '01', '=', null, null, null, 'admin', null, TIMESTAMP '2021-01-12 10:33:44', 'admin', TIMESTAMP '2021-01-12 10:40:00');
 --ZGBSS-37
 update RSK_ISUP_INDICATOR set TIME_POINT = '01,02,03' where ind_name ='每只现金管理类产品投资于同一机构发行的债券及其作为原始权益人的资产支持证券的比例合计不得超过该产品资产净值的10%';
+--ZGBSS-38 补充
+update RSK_EVENT_ITEM_RULE set match_type = '=' where EVENT_CODE ='EVENT_ID_JGZQGZHJ_04' and item_code ='windType1' and match_type = '<>';
+update RSK_EVENT_ITEM_RULE set item_value = 'B01,B03,B05,B17' where EVENT_CODE ='EVENT_ID_JGZQGZHJ_04' and item_code ='windType1' and match_type = 'NO';
