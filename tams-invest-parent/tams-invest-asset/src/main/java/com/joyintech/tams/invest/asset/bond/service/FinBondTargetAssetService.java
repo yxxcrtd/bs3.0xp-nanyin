@@ -276,6 +276,11 @@ implements BaseProcessService<FinBondTargetAssetDto>{
 			}
         }
 
+        //add by mashukai 20201124 JNZGEQUAT-57 wind利率调整数据未接到问题 start
+        if(entity.getFinCashCalcRuleList().size() > 0){
+            entity.getBaseFinProductBaseInfoList().get(0).setFinCashCalcRuleList(entity.getFinCashCalcRuleList());
+        }
+        //add by mashukai 20201124 JNZGEQUAT-57 wind利率调整数据未接到问题 end
         restTemplate.postForObject(
             ServiceApplication.ASSET_SERVICE_NAME + "/FinBondTargetAsset/" + action, entity,
             Integer.class);

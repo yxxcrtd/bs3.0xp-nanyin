@@ -104,6 +104,16 @@ public class TrdConBondDtoValidator implements TradeCommonValidator {
             		errorList.add(validMessage);
             	}
             }
+
+            // 校验交易金额 不能大于 委托金额。
+            TrdConBondDto entrustInfo = trdConBond002Service.getRealEntrustInfo(inputDto.getEntrustId());
+            if(entrustInfo!=null && entrustInfo.getTradeAmt()!=null){
+                if( entrustInfo.getTradeAmt().compareTo(inputDto.getTradeAmt()) < 0){
+                    ValidMessage validMessage = new ValidMessage(getMessage("TRD_E_0022"));
+                    errorList.add(validMessage);
+                }
+            }
+
         }
 
         //证券托管户 与通道二选一

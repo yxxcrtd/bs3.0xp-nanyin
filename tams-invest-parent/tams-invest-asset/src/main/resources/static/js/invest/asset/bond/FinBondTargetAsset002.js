@@ -425,6 +425,9 @@ $(function() {
 	    }
     //从接口获取债券信息
     var finCashCalcRuleList = [];//加券利息
+    //add by mashukai 20201124 JNZGEQUAT-57 行权计划理论行权日不对问题 start
+    var baseFinProductBaseInfoList = [];
+    //add by mashukai 20201124 JNZGEQUAT-57 行权计划理论行权日不对问题 end
     var getInterfBondInfo = function(){
         isAutoCoupon = true;
     	var finprodMarketId =  $('#finprodMarketId').val();
@@ -441,7 +444,22 @@ $(function() {
     			if (result.data[0]) {
     				Joyin.error(result.data[0].message);
 				} else {
-                    finCashCalcRuleList = result.data.finCashCalcRuleList;
+                    //add by mashukai 20201124 JNZGEQUAT-57 wind利率调整数据未接到问题 start
+                    baseFinProductBaseInfoList = result.data.baseFinProductBaseInfoList;
+                    if(baseFinProductBaseInfoList != null && baseFinProductBaseInfoList[0].finExercisePlanList != null){
+                        for(var i = 0 ;i< baseFinProductBaseInfoList[0].finExercisePlanList.length ;i++){
+                            var finCashPlanList = result.data.baseFinProductBaseInfoList[0].finCashPlanList;
+                            for(var j = 0;j<finCashPlanList.length;j++){
+                                if(finCashPlanList[j].rangeYield != null && finCashPlanList[j].mdate != finCashPlanList[j].payDate &&
+                                        finCashPlanList[j].mdate != baseFinProductBaseInfoList[0].finExercisePlanList[i].exerciseDate &&
+                                            finCashPlanList[j].payDate == baseFinProductBaseInfoList[0].finExercisePlanList[i].actExerciseDate){
+                                    baseFinProductBaseInfoList[0].finExercisePlanList[i].exerciseDate = finCashPlanList[j].mdate;
+                                }
+                            }
+                        }
+                        finCashCalcRuleList = baseFinProductBaseInfoList[0].finCashCalcRuleList;
+                    }
+                    //add by mashukai 20201124 JNZGEQUAT-57 wind利率调整数据未接到问题 end
                     //组件赋值 先清后赋
                     $.each(Joyin.curfromData['FinBondTargetAsset002'],function(id, value){
                         resetForm(id, value.odata, '');
@@ -452,6 +470,14 @@ $(function() {
                     $.each(result.data, function(id, value) {
                         setData(id, value, '');
                     });
+
+                    //add by mashukai 20201124 JNZGEQUAT-57 行权计划理论行权日不对问题 start
+                    $('#busiFinExercisePlanTable').data('joyintable').reload({
+                        data : baseFinProductBaseInfoList[0].finExercisePlanList,
+                        url : null
+                    });
+                    //add by mashukai 20201124 JNZGEQUAT-57 行权计划理论行权日不对问题 end
+
                     //评级信息
                     $.each(result.data.baseFinProductBaseInfoList[0], function(id, value) {
                     	if (id ==='mstBondCreditRatingList') {
@@ -484,6 +510,9 @@ $(function() {
 	                        $('#isCityBond').next().find("em").text('否');
 	                    }
 	                    isCityBondChange();
+                    }
+                    if(result.data.registOrg != "99" ){
+                        $('#bussFinBondRepInfoDto_repRegistorgComment').val('');
                     }
 				}
                 conPriceChange();

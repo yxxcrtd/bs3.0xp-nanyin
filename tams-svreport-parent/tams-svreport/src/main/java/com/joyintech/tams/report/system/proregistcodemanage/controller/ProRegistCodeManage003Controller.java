@@ -138,4 +138,11 @@ public class ProRegistCodeManage003Controller extends BaseController {
     public List<SuggestDto> getProdInfo(String param) {
         return proRegistCodeManageMService.getProdInfo(param);
     } 
+    
+    
+    @ResponseBody
+    @RequestMapping("checkInsertData")
+    public AjaxResult checkInsertData(String prodId,String regCode)  {
+        return proRegistCodeManage003Service.checkInsertData(prodId,regCode);
+    }
 }

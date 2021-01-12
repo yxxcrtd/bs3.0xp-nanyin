@@ -12,7 +12,7 @@
             <Cell order="8"  name="净价(元)">unitCprice</Cell>
             <Cell order="9"  name="到期收益率(%)">yield</Cell>
             <Cell order="10" name="行权收益率(%)">exerYield</Cell>
-            <Cell order="11" name="全面总额(万元)">shareAmt</Cell>
+            <Cell order="11" name="券面总额(万元)">shareAmt</Cell>
             <Cell order="12" name="清算速度">settleSpeedText</Cell>
             <Cell order="13" name="结算方式">deliveryType</Cell>
             <Cell order="14" name="清算类型">clearType</Cell>

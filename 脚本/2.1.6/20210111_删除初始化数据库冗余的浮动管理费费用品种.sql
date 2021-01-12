@@ -1,0 +1,1 @@
+delete from MST_FEEINFO WHERE  FEE_ID = 'FYPZ000000000846' and FEE_NAME = '浮动管理费';

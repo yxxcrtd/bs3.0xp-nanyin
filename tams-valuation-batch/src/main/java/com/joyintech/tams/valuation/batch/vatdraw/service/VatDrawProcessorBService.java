@@ -339,6 +339,9 @@ public class VatDrawProcessorBService {
             item.setBookDate(acctEntity.getBookDate());
             item.setBookOrder(max_tdy_bookOrder);
 
+            //ADD BY XR  预估计税结转问题 TISHKBS-1198 start
+            item.setIncomeAmtAllBHjz(item.getIncomeAmtAllB());
+            //ADD BY XR  预估计税结转问题 TISHKBS-1198 end
 
             // 存入 增值税明细余额Map
             taxBokBalanceMap.put(keyDto, item);
@@ -687,11 +690,13 @@ public class VatDrawProcessorBService {
             Iterator<BookLatestInfoDto> it = listBookLatestInfo.iterator();
             while (it.hasNext()){
                 BookLatestInfoDto dto=it.next();
-                if((dto.getBusiId().contains("SH")||dto.getBusiId().contains("SZ"))&&
-                        (dto.getTableId().equals("1316")||dto.getTableId().equals("1325"))
-                ){
-                    it.remove();
-                    listBookLatestInfo2.add(dto);
+                if(StringUtil.isNotEmpty(dto.getBusiId())){
+                    if((dto.getBusiId().contains("SH")||dto.getBusiId().contains("SZ"))&&
+                            (dto.getTableId().equals("1316")||dto.getTableId().equals("1325"))
+                    ){
+                        it.remove();
+                        listBookLatestInfo2.add(dto);
+                    }
                 }
             }
         }
@@ -929,6 +934,12 @@ public class VatDrawProcessorBService {
                     taxBokDetail.setBalAmt(taxBokDetail.getTaxAmt());
                     // 当日税额本币_计提 = 账务明细（当前表）M.本位币发生额
                     taxBokDetail.setTaxAmtB(infoDto.getbHappenAmt());
+                    // if (发生科目借贷方向 != 账务明细（当前表）.借贷方向)
+                    if (!configDto.getCdFlag().equals(infoDto.getCdFlag())) {
+                        // 当日计税发生额 = -1 * 增值税金额
+                        taxBokDetail.setTaxAmtB(
+                                ArithmeticUtil.multiply(new BigDecimal(-1), infoDto.getbHappenAmt()));
+                    }
                     // 发生含税销售额本币 = 含税收入计算共通(当日计税发生额本币 , 税率, 币种折算小数位数,币种折算位数处理方式)
                     taxBokDetail.setHappenAmtB(
                         allIncomeCalculate(taxBokDetail.getTaxAmtB(), taxRate, CURR_CONV_DEC_DIGITS,
@@ -2286,6 +2297,10 @@ public class VatDrawProcessorBService {
         BigDecimal IncomeHappenAmt = BigDecimal.ZERO;
         // 定义 变量.发生额
         BigDecimal happenAmt = BigDecimal.ZERO;
+        //ADD BY XR  预估计税结转问题 TISHKBS-1198 start
+        //此参数放在前置 方便后续使用
+        BigDecimal happenAmtBHjz = BigDecimal.ZERO;
+        //ADD BY XR  预估计税结转问题 TISHKBS-1198 end
         // 预估结转金额
 //        BigDecimal carryAmt = BigDecimal.ZERO;
         // 初始化定义 - 存放该笔记账的相关金额要素 map定义
@@ -2359,7 +2374,15 @@ public class VatDrawProcessorBService {
                     // if 账套参数.证券类型计税方式_贷款业务收入_预估 = 单资产
                     if (ValDictCodeList.证券类型计税方式_单资产.getValue().equals(TAX_ASSET_TYPE_DKYWSR_YG)) {
                         // 变量.发生额 = 当日增值税额本币_余额计算
-                        happenAmt = amtDto.getYglxTdyBalCalcTaxAmt();
+                        // del by xr for 预估计税结转问题 TISHKBS-1198 start
+                        // happenAmt = amtDto.getYglxTdyBalCalcTaxAmt();
+                        // del by xr for 预估计税结转问题 TISHKBS-1198 end
+                        //ADD BY XR  预估计税结转问题 TISHKBS-1198 start
+
+                        happenAmt = amtDto.getYglxTdyBalCalcTaxAmtHjz();
+
+                        happenAmtBHjz= amtDto.getYglxTdyBalCalcTaxAmt();
+                       // ADD BY XR  预估计税结转问题 TISHKBS-1198 end
                         // 变量.发生额 = 变量.发生额 + 金额元素.暂估结转金额
 //                        happenAmt = ArithmeticUtil.doSub(happenAmt, carryAmt);
                     }
@@ -2505,7 +2528,17 @@ public class VatDrawProcessorBService {
                     // if 账套参数.证券类型计税方式_贷款业务收入_预估 = 单资产
                     if (ValDictCodeList.证券类型计税方式_单资产.getValue().equals(TAX_ASSET_TYPE_DKYWSR_YG)) {
                         // 变量.发生额 = 当日增值税额本币_余额计算
-                        happenAmt = amtDto.getYghlTdyBalCalcTaxAmt();
+                        // del by xr for 预估计税结转问题 TISHKBS-1198 start
+                        // happenAmt = amtDto.getYghlTdyBalCalcTaxAmt();
+                        // del by xr for 预估计税结转问题 TISHKBS-1198 end
+
+
+                        //ADD BY XR  预估计税结转问题 TISHKBS-1198 start
+                        happenAmt =  amtDto.getYghlTdyBalCalcTaxAmtHjz();
+
+                        happenAmtBHjz =  amtDto.getYghlTdyBalCalcTaxAmt();
+
+                        //ADD BY XR  预估计税结转问题 TISHKBS-1198 end
                         // 变量.发生额 = 变量.发生额 + 金额元素.暂估结转金额
 //                        happenAmt = ArithmeticUtil.doSub(happenAmt, carryAmt);
                     }
@@ -2608,7 +2641,9 @@ public class VatDrawProcessorBService {
                 maAmt = amtDto.getMayghlAmt();
             }
 
-            // 发生额
+         /*
+           del by xr for TISHKBS-1198 start
+           // 发生额
             tdyBalanceSum.setHappenAmt(
                 ArithmeticUtil.doAdd(scale, roundingMode, tdyBalanceSum.getHappenAmt(), happenAmt));
             if (ValDictCodeList.计税计提基准_发生额.getValue().equals(TAX_ACCR_BASE_TYPE_DKYWSR_YG)) {
@@ -2618,14 +2653,50 @@ public class VatDrawProcessorBService {
             } else {
                 // 增值税额余额 = 增值税额余额 + 变量.发生额 - 金额元素.暂估结转金额（即+暂估结转金额） + 手工凭证对应项目
                 tdyBalanceSum.setTaxAmt(ArithmeticUtil.doAdd(scale, roundingMode, tdyBalanceSum.getTaxAmt(), happenAmt, maAmt));
+            }*
+            **
+            *  del by xr for TISHKBS-1198 end
+            */
+
+            //add by  xr for TISHKBS-1198 start
+            // 计提基准为余额时，预估计税的应为无需扣减结转部分的预估计税流水,但附加税的发生额度应为预估计税扣减结转的部分
+            if(vatType.equals(DictCodeList.增值税类型_红利收入.getValue())&&
+                    ValDictCodeList.计税计提基准_余额.getValue().equals(TAX_ACCR_BASE_TYPE_DKYWSR_YG) &&
+                    ValDictCodeList.证券类型计税方式_单资产.getValue().equals(TAX_ASSET_TYPE_DKYWSR_YG)
+            ){
+                // 发生额
+                tdyBalanceSum.setHappenAmt(
+                        ArithmeticUtil.doAdd(scale, roundingMode, tdyBalanceSum.getHappenAmt(), amtDto.getYghlTdyBalCalcTaxAmt()));
+
+            }else if(vatType.equals(DictCodeList.增值税类型_利息收入.getValue())&&
+                    ValDictCodeList.计税计提基准_余额.getValue().equals(TAX_ACCR_BASE_TYPE_DKYWSR_YG) &&
+                    ValDictCodeList.证券类型计税方式_单资产.getValue().equals(TAX_ASSET_TYPE_DKYWSR_YG)){
+                // 发生额
+                tdyBalanceSum.setHappenAmt(
+                        ArithmeticUtil.doAdd(scale, roundingMode, tdyBalanceSum.getHappenAmt(), amtDto.getYglxTdyBalCalcTaxAmt()));
+            }else{
+                // 发生额
+                tdyBalanceSum.setHappenAmt(
+                        ArithmeticUtil.doAdd(scale, roundingMode, tdyBalanceSum.getHappenAmt(), happenAmt));
             }
-            //产品到期、预估利息收入的增值税余额清空
-            if(acctEntity.getHappenDate().equals(acctEntity.getEndDate())){
-                if (vatType.equals(DictCodeList.增值税类型_利息收入.getValue())
-                        &&DictCodeList.增值税_确认类型_预估计税.getValue().equals(tdyBalanceSum.getTaxPType())){
-                    tdyBalanceSum.setTaxAmt(BigDecimal.ZERO);
+            // 计提基准为余额时，预估计税的应为无需扣减结转部分的预估计税流水,但附加税的发生额度应为预估计税扣减结转的部分 end
+
+            if (ValDictCodeList.计税计提基准_发生额.getValue().equals(TAX_ACCR_BASE_TYPE_DKYWSR_YG)) {
+                // 增值税额余额 = 增值税额余额 + 变量.发生额 - 金额元素.暂估结转金额（即+暂估结转金额） + 手工凭证对应项目
+                tdyBalanceSum.setTaxAmt(ArithmeticUtil.doAdd(scale, roundingMode, tdyBalanceSum.getTaxAmt(),
+                        happenAmt, maAmt, carryAmt));
+            } else {
+
+                if(ValDictCodeList.证券类型计税方式_单资产.getValue().equals(TAX_ASSET_TYPE_DKYWSR_YG)){
+                    // 增值税额余额 = 增值税额余额 + 变量.发生额_不含结转部分 - 金额元素.暂估结转金额（即+暂估结转金额） + 手工凭证对应项目
+                    tdyBalanceSum.setTaxAmt(ArithmeticUtil.doAdd(scale, roundingMode, tdyBalanceSum.getTaxAmt(), happenAmtBHjz, maAmt));
+                }else{
+                    // 增值税额余额 = 增值税额余额 + 变量.发生额 - 金额元素.暂估结转金额（即+暂估结转金额） + 手工凭证对应项目
+                    tdyBalanceSum.setTaxAmt(ArithmeticUtil.doAdd(scale, roundingMode, tdyBalanceSum.getTaxAmt(), happenAmt, maAmt));
                 }
             }
+            //add by  xr for TISHKBS-1198 end
+
             // 入账共通处理
             vatDrawCommonService.resultCommonHandle(accountAmountMap, tableId, remark, acctEntity,
                 returnResult, DictCodeList.冲正标识_正常交易.getValue());
@@ -3966,6 +4037,18 @@ public class VatDrawProcessorBService {
             // 含税销售额本币合计 = 含税销售额本币合计 + 增值税账务明细.发生含税销售额本币
             taxBalanceDto.setIncomeAmtAllB(
                 ArithmeticUtil.doAdd(taxBalanceDto.getIncomeAmtAllB(), detail.getHappenAmtB()));
+
+            //add by xr for TISHKBS-1198 start
+            // 预估计税余额=昨日余额+今日发生-当日结转
+            if (!DictCodeList.增值税类型_价差收入.getValue().equals(taxBalanceDto.getVatType())&&DictCodeList.增值税_确认类型_预估计税.getValue().equals(taxBalanceDto.getTaxPType())) {
+                taxBalanceDto.setIncomeAmtAllBHjz(
+                        ArithmeticUtil.doAdd(taxBalanceDto.getIncomeAmtAllBHjz(), ArithmeticUtil.subtract(detail.getHappenAmtB(),detail.getIncomeCarryAmtB())));
+            }else{
+                // 含税销售额本币合计 = 含税销售额本币合计 + 增值税账务明细.发生含税销售额本币
+                taxBalanceDto.setIncomeAmtAllBHjz(
+                        ArithmeticUtil.doAdd(taxBalanceDto.getIncomeAmtAllBHjz(), detail.getHappenAmtB()));
+            }
+            //add by xr for TISHKBS-1198 end
             // 当日含税销售额本币合计 = 当日含税销售额本币合计 + 增值税账务明细.发生含税销售额本币
             taxBalanceDto.setIncomeHappenAmtB(ArithmeticUtil.doAdd(taxBalanceDto.getIncomeHappenAmtB(), detail.getHappenAmtB()));
             // 当日税额本币合计_结转 = 当日税额本币合计_结转 + 增值税账务明细.当日税额本币_结转
@@ -3984,6 +4067,15 @@ public class VatDrawProcessorBService {
             taxBalanceDto.setBalCalcTaxAmtB(
                 vatDrawCommonService.taxCalculate(taxBalanceDto.getIncomeAmtAllB(), detail.getTaxRate(), scale,
                     roundingMode, cfConfigs.get(TAX_CALC_FORMULA)));
+
+            //add by xr  for TISHKBS-1198 start
+            // 增值税额_余额计算含结转 = 增值税计算共通(含税销售额合计 , 税率, 明细数据小数位数,明细数据位数处理方式)
+            taxBalanceDto.setBalCalcTaxAmtBHjz(
+                    vatDrawCommonService.taxCalculate(taxBalanceDto.getIncomeAmtAllBHjz(), detail.getTaxRate(), scale,
+                            roundingMode, cfConfigs.get(TAX_CALC_FORMULA)));
+
+            //add by xr  for TISHKBS-1198 end
+
             // 当期含税销售额合计 = 当日含税销售额本币合计 + 增值税账务明细.发生含税销售额
             taxBalanceDto.setIncomeDurAmt(ArithmeticUtil.doAdd(taxBalanceDto.getIncomeDurAmt(), detail.getHappenAmt()));
             // 当期含税销售额本币合计 = 当日含税销售额本币合计 + 增值税账务明细.发生含税销售额本币
@@ -4016,6 +4108,11 @@ public class VatDrawProcessorBService {
                 // 当日增值税额本币_余额计算 = 增值税额本币_余额计算 - 昨日余额.增值税额本币_B余额计算
                 taxBalanceDto.setTdyBalCalcTaxAmtB(
                     ArithmeticUtil.subtract(taxBalanceDto.getBalCalcTaxAmtB(), ystBalance.getBalCalcTaxAmtB()));
+                //add by xr  for TISHKBS-1198 start
+                // 当日增值税额本币_余额计算 = 增值税额本币_余额计算 - 昨日余额.增值税额本币_B余额计算
+                taxBalanceDto.setTdyBalCalcTaxAmtBHjz(
+                        ArithmeticUtil.subtract(taxBalanceDto.getBalCalcTaxAmtBHjz(), ystBalance.getBalCalcTaxAmtB()));
+                //add by xr  for TISHKBS-1198 end
             }
             else {
                 // 当日增值税额_余额计算 = 当期增值税额_余额计算 - 昨日余额.当期增值税额_余额计算

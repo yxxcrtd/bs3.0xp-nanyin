@@ -1286,7 +1286,7 @@ public class FinProductFeePay002Service extends BaseService<FinProductFeePay002D
 
                             BigDecimal.class);
                         dto.setUnclearAmt(unclearAmt);
-                        dto.setCalcStartDate(finProductFeePay003Dto.getCalcStartDate());
+//                        dto.setCalcStartDate(finProductFeePay003Dto.getCalcStartDate());
                     }
                 }
 

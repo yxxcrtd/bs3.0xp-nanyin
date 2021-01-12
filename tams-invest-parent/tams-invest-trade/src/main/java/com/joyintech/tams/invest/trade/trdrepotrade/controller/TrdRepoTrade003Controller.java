@@ -762,6 +762,8 @@ public class TrdRepoTrade003Controller extends BaseController {
             dto.setRebackIntAmt(dto.getPledgeBondList().get(i).getRebackIntAmt());
             dto.setMdateSettleAmt(dto.getPledgeBondList().get(i).getMdateSettleAmt());
             dto.setTradeAmt(dto.getPledgeBondList().get(i).getTradeAmt());
+            dto.setTradeAmtAndFee(dto.getPledgeBondList().get(i).getTradeAmt());
+
             dto.setProcedureAmt(dto.getPledgeBondList().get(i).getTranFeeAmt());
             dto.setSettleAmt(dto.getPledgeBondList().get(i).getSettlementFee());
             dto.setCommissionAmt(dto.getPledgeBondList().get(i).getCommission());

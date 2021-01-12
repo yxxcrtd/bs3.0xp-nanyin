@@ -593,8 +593,10 @@ public class TaFloadFeeAccountsService {
             BigDecimal basicRate = BigDecimal.ZERO;
             if (!StringUtil.isEmpty(targetPerfRewardRuleDetail.getBasicRate())
                 && mapIntRateInfo != null && mapIntRateInfo.size() > 0) {
-                basicRate = mapIntRateInfo.get(
-                    targetPerfRewardRuleDetail.getBasicRate()).getIntRate();
+                if (StringUtil.isNotEmpty(mapIntRateInfo.get(targetPerfRewardRuleDetail.getBasicRate()))){
+                    basicRate = mapIntRateInfo.get(
+                            targetPerfRewardRuleDetail.getBasicRate()).getIntRate();
+                }
             }
             // 业绩比较基准 = 基准利率 * 调整系数 + 利差
             BigDecimal 业绩比较基准 = ArithmeticUtil.doAdd(

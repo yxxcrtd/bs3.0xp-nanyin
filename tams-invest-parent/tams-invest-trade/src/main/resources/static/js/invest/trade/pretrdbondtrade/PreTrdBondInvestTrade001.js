@@ -42,9 +42,9 @@
                     "99%", "99%", data);
         },
         cols:[
-            {field:'validStatusText',sortField:'VALID_STATUS', width:100, title: 'PreTrdBondInvestTrade001.validStatus'}
-            ,{field:'tradeDateText', sortField:'TRADE_DATE',width:100, title: 'PreTrdBondInvestTrade001.tradeDate', type: 'date'}
-            ,{field:'counterId', sortField:'COUNTER_ID',width:200, title: 'PreTrdBondInvestTrade001.counterId'}
+            {field:'validStatusText',sortField:'validStatus', width:100, title: 'PreTrdBondInvestTrade001.validStatus'}
+            ,{field:'tradeDateText', sortField:'tradeDate',width:100, title: 'PreTrdBondInvestTrade001.tradeDate', type: 'date'}
+            ,{field:'counterId', sortField:'counterId',width:200, title: 'PreTrdBondInvestTrade001.counterId'}
             ,{field:'counterTrader',sortField:'COUNTER_TRADER', width:140, title: 'PreTrdBondInvestTrade001.counterTrader'}
             ,{field:'ps', sortField:'PS',width:100, title: 'PreTrdBondInvestTrade001.ps'}
             ,{field:'finprodId',sortField:'FINPROD_MARKET_ID', width:140, title: 'PreTrdBondInvestTrade001.finprodId',
@@ -53,23 +53,23 @@
                 // }
             }
             ,{field:'finprodName', sortField:'FINPROD_NAME',width:180, title: 'PreTrdBondInvestTrade001.finprodName'}
-            ,{field:'unitCprice',sortField:'',width:100, title:'PreTrdBondInvestTrade001.unitCprice', type: 'money'}
-            ,{field:'yield',sortField:'', width:150, title: 'PreTrdBondInvestTrade001.yield', type: 'money'}
-            ,{field:'exerYield',sortField:'', width:150, title: 'PreTrdBondInvestTrade001.exerYield', type: 'money'}
-            ,{field:'shareAmt',sortField:'', width:150, title: 'PreTrdBondInvestTrade001.tradeAmt', type: 'money'}
-            ,{field:'settleSpeedText', sortField:'SETTLE_SPREED',width:180, title: 'PreTrdBondInvestTrade001.settleSpreed'}
-            ,{field:'deliveryType', sortField:'SETT_MODE',width:180, title: 'PreTrdBondInvestTrade001.settMode'}
-            ,{field:'clearType', sortField:'',width:180, title: 'PreTrdBondInvestTrade001.clearType'}
-            ,{field:'effTimeText', sortField:'',width:180, title: 'PreTrdBondInvestTrade001.effTime'}
-            ,{field:'remark', sortField:'',width:300, title: 'PreTrdBondInvestTrade001.text'}
-            ,{field:'acctBankDep', sortField:'',width:200, title: 'PreTrdBondInvestTrade001.accountBankName'}
-            ,{field:'acctName', sortField:'',width:200, title: 'PreTrdBondInvestTrade001.accountName'}
-            ,{field:'acctNo', sortField:'',width:200, title: 'PreTrdBondInvestTrade001.accountNo'}
-            ,{field:'acctBankDepoPayno', sortField:'',width:200, title: 'PreTrdBondInvestTrade001.paySysNo'}
-            ,{field:'secAcctName', sortField:'',width:200, title: 'PreTrdBondInvestTrade001.secAcctName'}
-            ,{field:'registOrg', sortField:'REGIST_ORG_NAME',width:200, title: 'PreTrdBondInvestTrade001.registOrgName'}
-            ,{field:'secAcctId', sortField:'',width:200, title: 'PreTrdBondInvestTrade001.secAcctNo'}
-            ,{field:'unitInt', sortField:'',width:100, title: 'PreTrdBondInvestTrade001.unitInt', type: 'money',digit:6}
+            ,{field:'unitCprice',sortField:'unitCprice',width:100, title:'PreTrdBondInvestTrade001.unitCprice', type: 'money'}
+            ,{field:'yield',sortField:'yield', width:150, title: 'PreTrdBondInvestTrade001.yield', type: 'money'}
+            ,{field:'exerYield',sortField:'exerYield', width:150, title: 'PreTrdBondInvestTrade001.exerYield', type: 'money'}
+            ,{field:'shareAmt',sortField:'shareAmt', width:150, title: 'PreTrdBondInvestTrade001.tradeAmt', type: 'money'}
+            ,{field:'settleSpeedText', sortField:'settleSpeedText',width:180, title: 'PreTrdBondInvestTrade001.settleSpreed'}
+            ,{field:'deliveryType', sortField:'deliveryType',width:180, title: 'PreTrdBondInvestTrade001.settMode'}
+            ,{field:'clearType', sortField:'clearType',width:180, title: 'PreTrdBondInvestTrade001.clearType'}
+            ,{field:'effTimeText', sortField:'effTimeText',width:180, title: 'PreTrdBondInvestTrade001.effTime'}
+            ,{field:'remark', sortField:'remark',width:300, title: 'PreTrdBondInvestTrade001.text'}
+            ,{field:'acctBankDep', sortField:'acctBankDep',width:200, title: 'PreTrdBondInvestTrade001.accountBankName'}
+            ,{field:'acctName', sortField:'acctNo',width:200, title: 'PreTrdBondInvestTrade001.accountName'}
+            ,{field:'acctNo', sortField:'acctNo',width:200, title: 'PreTrdBondInvestTrade001.accountNo'}
+            ,{field:'acctBankDepoPayno', sortField:'acctBankDepoPayno',width:200, title: 'PreTrdBondInvestTrade001.paySysNo'}
+            ,{field:'secAcctName', sortField:'secAcctId',width:200, title: 'PreTrdBondInvestTrade001.secAcctName'}
+            ,{field:'registOrg', sortField:'registOrg',width:200, title: 'PreTrdBondInvestTrade001.registOrgName'}
+            ,{field:'secAcctId', sortField:'secAcctId',width:200, title: 'PreTrdBondInvestTrade001.secAcctNo'}
+            ,{field:'unitInt', sortField:'unitInt',width:100, title: 'PreTrdBondInvestTrade001.unitInt', type: 'money',digit:6}
             ,{field:'ccy', sortField:'CCY',width:100, title: 'PreTrdBondInvestTrade001.ccy'}
         	,{field:'totleTradeId', visible: false}
         	,{field:'workflowId', visible: false}

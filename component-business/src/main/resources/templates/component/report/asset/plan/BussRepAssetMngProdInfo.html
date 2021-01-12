@@ -36,7 +36,7 @@
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap" data-th-utext="#{BussRepAssetMngProdInfo.repPartyCode}" style="line-height: normal!important;">资管计划发起<br>人机构编码</label>
                     <div class="layui-input-inline input-inline">
-                        <input type="text" th:id="|${entityName}_repPartyCode|" th:name="|${entityName}.repPartyCode|" th:value="${entity?.repPartyCode}" class="layui-input form-input" maxlength="32" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required/>
+                        <input type="text" th:id="|${entityName}_repPartyCode|" th:name="|${entityName}.repPartyCode|" th:value="${entity?.repPartyCode}" class="layui-input form-input" onKeyUp="value=value.replace(/[^\a-\z\A-\Z0-9]/g,'')" maxlength="32" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required/>
                     </div>
                 </div>
             </div>

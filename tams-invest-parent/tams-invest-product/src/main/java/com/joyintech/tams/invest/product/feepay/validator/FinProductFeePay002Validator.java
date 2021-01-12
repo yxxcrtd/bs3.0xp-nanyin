@@ -16,7 +16,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.dao.WflTrdFinProductDealTotalMapper;
+import com.joyintech.tams.common.base.dao.WflTrdProductDealMapper;
 import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.WflTrdFinProductDealTotal;
+import com.joyintech.tams.common.base.entity.WflTrdFinProductDealTotalKey;
+import com.joyintech.tams.common.base.entity.WflTrdProductDeal;
 import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
@@ -81,7 +86,8 @@ public class FinProductFeePay002Validator implements BeanValidator {
         inputParameter.setBusinessDataPk1(finProductFeePay002Dto.getPtlId());
         inputParameter.setBusinessDataPk2(finProductFeePay002Dto.getFeeId());
         inputParameter.setPageId("FinProductFeePay002");
-        if (null != mstWorkflowCommonService &&
+
+        if (null != mstWorkflowCommonService && !StringUtil.isNotEmpty(finProductFeePay002Dto.getTradeId() ) &&
                 mstWorkflowCommonService.isInWflProcess(inputParameter)) {
             validList.add(new ValidMessage(this.getMessage("COMMON_E_0012", finProductFeePay002Dto.getFinprodId()+":"+finProductFeePay002Dto.getFeeName())));
         }

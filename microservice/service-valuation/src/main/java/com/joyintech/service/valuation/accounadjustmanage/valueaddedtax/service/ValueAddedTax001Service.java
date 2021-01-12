@@ -460,6 +460,7 @@ public class ValueAddedTax001Service extends CommonExportService<ValueAddedTax00
         map.put("declareDate",declareDate);
         if(statDimen.equals("02")){//保本
            map.put("signFlag", DictCodeListExt1.收益标识_保本浮动收益型.getValue());
+           map.put("signFlag2", DictCodeListExt1.收益标识_保证收益型.getValue());
         }else if(statDimen.equals("03")){//非保本
             map.put("signFlag", DictCodeListExt1.收益标识_非保本浮动收益型.getValue());
         }

@@ -50,26 +50,6 @@ public class MstCommissionSetDto extends TrdFeeConfig {
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal chargeRate;
 
-    private String windtypeone;
-
-    private String windtypetwo;
-
-    public String getWindtypeone() {
-        return windtypeone;
-    }
-
-    public void setWindtypeone(String windtypeone) {
-        this.windtypeone = windtypeone;
-    }
-
-    public String getWindtypetwo() {
-        return windtypetwo;
-    }
-
-    public void setWindtypetwo(String windtypetwo) {
-        this.windtypetwo = windtypetwo;
-    }
-
     public String getSecAcctName() {
 		return secAcctName;
 	}
