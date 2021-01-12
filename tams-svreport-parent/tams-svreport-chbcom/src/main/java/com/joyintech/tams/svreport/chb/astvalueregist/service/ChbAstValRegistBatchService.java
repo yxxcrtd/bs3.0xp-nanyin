@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.constant.BatchBeanName;
 import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
 import com.joyintech.tams.svreport.chb.astvalueregist.dao.ChbAstValCBMapper;
+import com.joyintech.tams.svreport.chb.datacheck.beforeinsert.service.ChbCommonCheckService;
 import com.joyintech.tams.svreport.interf.chb.assetbasis.service.SvrAssetBasisInterf;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 
@@ -42,6 +45,12 @@ public class ChbAstValRegistBatchService extends SvrCBBaseService {
 	
 	@Autowired
 	private SvrAssetBasisInterf svrAssetBasisInterf;
+
+    /**
+     * 入库前校验用Service
+     */
+    @Autowired
+    private ChbCommonCheckService chbCommonCheckService;
 	
 
 	public void createRegist(Date batchTime){
@@ -98,8 +107,13 @@ public class ChbAstValRegistBatchService extends SvrCBBaseService {
 			// 数据状态为“修改、删除”，报送状态为“未报送”的登记
 			 List<ChbAstValueSub> updateOrDelList =
 			 chbAstValCBMapper.queryUpdateOrDelList(DateUtil.format(posDate));
+			 // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
+			 updateOrDelList = chbCommonCheckService.checkData(updateOrDelList, ChbCheckTableInfo.资产估值信息登记表);
+	         // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
 			 for(ChbAstValueSub sub:updateOrDelList){
 				 sub.setRegistSeqno(IDGenerator.generate(36));
+				 // 报送流水号
+				 sub.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
 				 sub.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
 				 sub.setCreateUser(CommonUtil.getUserName());
 				 sub.setUpdateUser(CommonUtil.getUserName());
@@ -113,8 +127,18 @@ public class ChbAstValRegistBatchService extends SvrCBBaseService {
 
 			
 			//生成数据状态为“新建”，报送状态为“未报送”的登记
-			chbAstValCBMapper.queryGenerateListAndInsert(DateUtil.format(posDate), batchTime, chbSubmitDeadline,
-					submitDeadline);
+	        // modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
+			List<ChbAstValueSub> insertDataList = chbAstValCBMapper.queryInsertGenerateList(DateUtil.format(posDate), batchTime, chbSubmitDeadline,
+                    submitDeadline);
+	        insertDataList = chbCommonCheckService.checkData(insertDataList, ChbCheckTableInfo.资产估值信息登记表);
+//			chbAstValCBMapper.queryGenerateListAndInsert(DateUtil.format(posDate), batchTime, chbSubmitDeadline,
+//					submitDeadline);
+            for(ChbAstValueSub sub : insertDataList) {
+				// 报送流水号
+				sub.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+                chbAstValCBMapper.insertSub(sub);
+            }
+	        // modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
 		}
 	}
 

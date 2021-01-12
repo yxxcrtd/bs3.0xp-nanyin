@@ -45,7 +45,8 @@
      <result column="YIELD_REMARK" property="yieldRemark" jdbcType="VARCHAR" />
       <result column="BUSI_ACCT_NO" property="busiAcctNo" jdbcType="VARCHAR" />
       <result column="ACCT_NAME" property="acctName" jdbcType="VARCHAR" />
- 
+     <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+
    </resultMap>
   <sql id="Base_Column_List" >
     REGIST_SEQNO, PROD_REGIST_CODE, PROD_ID, RAISE_VDATE, RAISE_ENDDATE, PRD_VDATE, PRD_MDATE, 
@@ -60,6 +61,7 @@
 			sub.REGIST_SEQNO REGISTSEQNO ,
 			reginfo.REG_CODE PRODREGISTCODE ,
 			sub.PROD_ID PRODID ,
+			cpb.PROD_NAME  PRODNAME,
 			sub.RAISE_VDATE RAISEVDATE ,
 			sub.RAISE_ENDDATE RAISEENDDATE ,
 			sub.PRD_VDATE PRDVDATE ,
@@ -97,10 +99,12 @@
 			sub.YIELD_HIGH YIELDHIGH,
 			sub.YIELD_REMARK YIELDREMARK,
 			sub.BUSI_ACCT_NO BUSIACCTNO,
-			sub.ACCT_NAME ACCTNAME
+			sub.ACCT_NAME ACCTNAME,
+			sub.SUMIT_SEQ sumitSeq
 			from CHB_PRD_ISSUE_SUB sub
 		    left join chb_prdresist_code reginfo
 		    on sub.prod_id = reginfo.prodid
+		    left  join  chb_prd_baseinfo  cpb  on cpb.PROD_ID=sub.prod_id
    </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -528,60 +532,7 @@
 	<select id="queryForProdPersonIssuePage" parameterType="map"
 	resultType="com.joyintech.tams.svreport.chb.prodpersonissue.dto.ProdPersonIssue001Dto">
 		select a.* from
-		(
-
-		select
-			sub.REGIST_SEQNO REGISTSEQNO ,
-			reginfo.REG_CODE PRODREGISTCODE ,
-			sub.PROD_ID PRODID ,
-			sub.RAISE_VDATE RAISEVDATE ,
-			sub.RAISE_ENDDATE RAISEENDDATE ,
-			sub.PRD_VDATE PRDVDATE ,
-			sub.PRD_MDATE PRDMDATE ,
-			sub.IS_CONSTRACTE ISCONSTRACTE ,
-			sub.GRADE_TYPE GRADETYPE ,
-			sub.EXP_MIN_YIELD EXPMINYIELD ,
-			sub.EXP_MAX_YIELD EXPMAXYIELD ,
-			sub.EXP_AVG_YIELD EXPAVGYIELD ,
-			sub.YIELD_COMMENT YIELDCOMMENT ,
-			sub.OPEN_MODE OPENMODE ,
-			sub.OPEN_CIRCLE OPENCIRCLE ,
-			sub.OPEN_CIRCLE_DAYS OPENCIRCLEDAYS ,
-			sub.RULE_COMMENT RULECOMMENT ,
-			sub.FIRST_OPEN_DAY FIRSTOPENDAY ,
-			sub.HOLIDAY_ON_FLAG HOLIDAYONFLAG ,
-			sub.AVG_OPEN_COUNT AVGOPENCOUNT ,
-			sub.OPEN_BUSS OPENBUSS ,
-			sub.OPEN_BUSS_REMARK OPENBUSSREMARK ,
-			sub.WORKFLOW_ID WORKFLOWID ,
-			sub.SUBMIT_FEEDBACK_STATUS SUBMITFEEDBACKSTATUS ,
-			sub.SEND_STATUS SENDSTATUS ,
-			sub.STATUS_DATE STATUSDATE ,
-			sub.STATUS STATUS ,
-			sub.ORG_CODE ORGCODE ,
-			sub.CREATE_TIME CREATETIME ,
-			sub.UPDATE_USER UPDATEUSER ,
-			sub.UPDATE_TIME UPDATETIME ,
-			sub.SUBMIT_TIME SUBMITTIME ,
-			sub.CHB_SUBMIT_DEADLINE CHBSUBMITDEADLINE ,
-			sub.SUBMIT_DEADLINE SUBMITDEADLINE ,
-			
-			<if test="model_type != null">
-				b.reg_code ISSUEPARTYID, /*发行机构代码*/
-			  </if>
-			  <if test="model_type == null">
-		    	sub.ISSUE_PARTY_ID ISSUEPARTYID,
-			  </if>
-			
-			sub.MANAGE_TYPE MANAGETYPE,
-			sub.YIELD_LOW YIELDLOW,
-			sub.YIELD_HIGH YIELDHIGH,
-			sub.YIELD_REMARK YIELDREMARK,
-			sub.BUSI_ACCT_NO BUSIACCTNO,
-			sub.ACCT_NAME ACCTNAME
-			from CHB_PRD_ISSUE_SUB sub
-		    left join chb_prdresist_code reginfo on sub.prod_id = reginfo.prodid
-		    left join CHB_PRD_BASEINFO B ON b.prod_id=sub.prod_id
+		(<include refid="baseInfo"/>
 		<where>
 		 <if test="statusList != null and statusList.size() > 0">
             	<foreach collection="statusList" item="status" open=" AND sub.STATUS IN (" close=")" separator=",">
@@ -656,44 +607,51 @@
 		<include refid="Base_Column_List" />
 		from CHB_PRD_ISSUE_SUB sub -->
 		select
-			sub.REGIST_SEQNO REGIST_SEQNO ,
-			reginfo.REG_CODE PROD_REGIST_CODE ,
-			sub.PROD_ID PROD_ID ,
-			sub.RAISE_VDATE RAISE_VDATE ,
-			sub.RAISE_ENDDATE RAISE_ENDDATE ,
-			sub.PRD_VDATE PRD_VDATE ,
-			sub.PRD_MDATE PRD_MDATE ,
-			sub.IS_CONSTRACTE IS_CONSTRACTE ,
-			sub.GRADE_TYPE GRADE_TYPE ,
-			sub.EXP_MIN_YIELD EXP_MIN_YIELD ,
-			sub.EXP_MAX_YIELD EXP_MAX_YIELD ,
-			sub.EXP_AVG_YIELD EXP_AVG_YIELD ,
-			sub.YIELD_COMMENT YIELD_COMMENT ,
-			sub.OPEN_MODE OPEN_MODE ,
-			sub.OPEN_CIRCLE OPEN_CIRCLE ,
-			sub.OPEN_CIRCLE_DAYS OPEN_CIRCLE_DAYS ,
-			sub.RULE_COMMENT RULE_COMMENT ,
-			sub.FIRST_OPEN_DAY FIRST_OPEN_DAY ,
-			sub.HOLIDAY_ON_FLAG HOLIDAY_ON_FLAG ,
-			sub.AVG_OPEN_COUNT AVG_OPEN_COUNT ,
-			sub.OPEN_BUSS OPEN_BUSS ,
-			sub.OPEN_BUSS_REMARK OPEN_BUSS_REMARK ,
-			sub.WORKFLOW_ID WORKFLOW_ID ,
-			sub.SUBMIT_FEEDBACK_STATUS SUBMIT_FEEDBACK_STATUS ,
-			sub.SEND_STATUS SEND_STATUS ,
-			sub.STATUS_DATE STATUS_DATE ,
-			sub.STATUS STATUS ,
-			sub.ORG_CODE ORG_CODE ,
-			sub.CREATE_TIME CREATE_TIME ,
-			sub.UPDATE_USER UPDATE_USER ,
-			sub.UPDATE_TIME UPDATE_TIME ,
-			sub.SUBMIT_TIME SUBMIT_TIME ,
-			sub.CHB_SUBMIT_DEADLINE CHB_SUBMIT_DEADLINE ,
-			sub.SUBMIT_DEADLINE SUBMIT_DEADLINE ,
-			sub.ISSUE_PARTY_ID ISSUE_PARTY_ID
+            sub.REGIST_SEQNO,
+            sub.PROD_REGIST_CODE,
+            sub.PROD_ID,
+            sub.RAISE_VDATE,
+            sub.RAISE_ENDDATE,
+            sub.PRD_VDATE,
+            sub.PRD_MDATE,
+            sub.IS_CONSTRACTE,
+            sub.GRADE_TYPE,
+            sub.YIELD_COMMENT,
+            sub.OPEN_MODE,
+            sub.OPEN_CIRCLE,
+            sub.OPEN_CIRCLE_DAYS,
+            sub.RULE_COMMENT,
+            sub.FIRST_OPEN_DAY,
+            sub.HOLIDAY_ON_FLAG,
+            sub.AVG_OPEN_COUNT,
+            sub.OPEN_BUSS,
+            sub.OPEN_BUSS_REMARK,
+            sub.WORKFLOW_ID,
+            sub.SUBMIT_FEEDBACK_STATUS,
+            sub.SEND_STATUS,
+            sub.STATUS_DATE,
+            sub.STATUS,
+            sub.ORG_CODE,
+            sub.CREATE_USER,
+            sub.CREATE_DEPT,
+            sub.CREATE_TIME,
+            sub.UPDATE_USER,
+            sub.UPDATE_TIME,
+            sub.SUBMIT_TIME,
+            sub.CHB_SUBMIT_DEADLINE,
+            sub.SUBMIT_DEADLINE,
+            sub.ISSUE_PARTY_ID,
+            sub.SUMIT_SEQ,
+            sub.EXP_MIN_YIELD,
+            sub.EXP_MAX_YIELD,
+            sub.EXP_AVG_YIELD,
+            sub.MANAGE_TYPE,
+            sub.YIELD_LOW,
+            sub.YIELD_HIGH,
+            sub.YIELD_REMARK,
+            sub.BUSI_ACCT_NO,
+            sub.ACCT_NAME
 			from CHB_PRD_ISSUE_SUB sub
-		    left join chb_prdresist_code reginfo
-		    on sub.prod_id = reginfo.prodid
 		<where>
 		   	<if test="registList!=null and registList.size()!=0">
 			   	<foreach collection="registList" item="items" 
@@ -805,7 +763,7 @@
     
     <!-- 批量 插入登记表-->
     <insert id="insertSub" parameterType="com.joyintech.tams.svreport.chb.prodpersonissue.dto.ProdPersonIssue001Dto">
-        insert into CHB_PRD_ISSUE_SUB (REGIST_SEQNO, PROD_REGIST_CODE, PROD_ID, 
+        insert into CHB_PRD_ISSUE_SUB (SUMIT_SEQ,REGIST_SEQNO, PROD_REGIST_CODE, PROD_ID, 
 	        RAISE_VDATE, RAISE_ENDDATE, PRD_VDATE, 
 	        PRD_MDATE, IS_CONSTRACTE, GRADE_TYPE, 
 	        EXP_MIN_YIELD, EXP_MAX_YIELD, EXP_AVG_YIELD, 
@@ -820,7 +778,7 @@
 	        ISSUE_PARTY_ID
 	        ,MANAGE_TYPE,YIELD_LOW,YIELD_HIGH,YIELD_REMARK,BUSI_ACCT_NO,ACCT_NAME
         )
-		values(
+		values(#{sumitSeq,jdbcType=VARCHAR},
 		   #{registSeqno,jdbcType=VARCHAR}, #{prodRegistCode,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, 
 		   #{raiseVdate,jdbcType=TIMESTAMP}, #{raiseEnddate,jdbcType=TIMESTAMP}, #{prdVdate,jdbcType=TIMESTAMP}, 
 		   #{prdMdate,jdbcType=TIMESTAMP}, #{isConstracte,jdbcType=VARCHAR}, #{gradeType,jdbcType=VARCHAR}, 
@@ -864,7 +822,15 @@
 		  sub.AVG_OPEN_COUNT,/*平均开放次数（年化）*/
 		  sub.OPEN_BUSS,/*开放期业务*/
 		  sub.OPEN_BUSS_REMARK,/*开放期业务说明 */
-		  sub.status
+		  sub.status,
+		  <!-- add by dubaojun 2020-11-05 五月升级字段比较 start -->
+		  sub.MANAGE_TYPE,
+		  sub.YIELD_LOW,
+		  sub.YIELD_HIGH,
+		  sub.YIELD_REMARK,
+		  sub.BUSI_ACCT_NO,
+		  sub.ACCT_NAME
+		  <!-- add by dubaojun 2020-11-05 五月升级字段比较 end -->
 		FROM CHB_PRD_ISSUE_SUB sub
 		LEFT JOIN chb_prdresist_code regsub
 		ON sub.prod_id = regsub.prodid
@@ -899,7 +865,9 @@
       ORG_CODE, CREATE_USER, CREATE_DEPT, 
       CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
       SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
-      ISSUE_PARTY_ID, SUMIT_SEQ
+      ISSUE_PARTY_ID, SUMIT_SEQ,
+       MANAGE_TYPE, YIELD_LOW, YIELD_HIGH, YIELD_REMARK, 
+      BUSI_ACCT_NO, ACCT_NAME
       )
       select
       REGIST_SEQNO, PROD_REGIST_CODE, PROD_ID, 
@@ -914,7 +882,9 @@
       ORG_CODE, CREATE_USER, CREATE_DEPT, 
       sysdate, UPDATE_USER, sysdate, 
       SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
-      ISSUE_PARTY_ID, SUMIT_SEQ
+      ISSUE_PARTY_ID, SUMIT_SEQ,
+      MANAGE_TYPE, YIELD_LOW, YIELD_HIGH, YIELD_REMARK, 
+      BUSI_ACCT_NO, ACCT_NAME
     from CHB_PRD_ISSUE_SUB_HIS
     where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
   	<if test="regList !=null and regList.size()>0">

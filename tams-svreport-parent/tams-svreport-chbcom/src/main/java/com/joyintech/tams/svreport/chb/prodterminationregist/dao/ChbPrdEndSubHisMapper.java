@@ -6,7 +6,9 @@ import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.svreport.chb.prodterminationregist.dto.ChbPrdEndSubHis;
 import com.joyintech.tams.svreport.chb.prodterminationregist.dto.ProdTerminationRegist001Dto;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbPrdEndSubHisMapper {
     int deleteByPrimaryKey(String registSeqno);
 

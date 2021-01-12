@@ -37,6 +37,8 @@
     <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
     <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
     <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+    <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+    <result column="PROD_REGIST_CODE" property="prodRegistCode" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     REGIST_SEQNO, PROD_ID, MDATE, ISSUE_PARTY_ID, PROFIT, CUSTOM_PROFIT, CUSTOM_PROFIT_ORI, 
@@ -44,7 +46,7 @@
     MAN_FEE_IN, COU_FEE_IN, OTHER_FEE_IN, CUST_FEE_OUT, MAN_FEE_OUT, COU_FEE_OUT, ADV_FEE_OUT, 
     OTHER_FEE_OUT, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, STATUS, CREATE_USER, 
     CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, 
-    SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE
+    SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE, SUMIT_SEQ, PROD_REGIST_CODE
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -68,7 +70,7 @@
       STATUS, CREATE_USER, CREATE_DEPT, 
       CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
       SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
-      ORG_CODE, DEPT_CODE)
+      ORG_CODE, DEPT_CODE, SUMIT_SEQ, PROD_REGIST_CODE)
     values (#{registSeqno,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{mdate,jdbcType=TIMESTAMP}, 
       #{issuePartyId,jdbcType=VARCHAR}, #{profit,jdbcType=DECIMAL}, #{customProfit,jdbcType=DECIMAL}, 
       #{customProfitOri,jdbcType=DECIMAL}, #{customAmtOri,jdbcType=DECIMAL}, #{customAmt,jdbcType=DECIMAL}, 
@@ -80,7 +82,7 @@
       #{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{submitTime,jdbcType=TIMESTAMP}, #{chbSubmitDeadline,jdbcType=TIMESTAMP}, #{submitDeadline,jdbcType=TIMESTAMP}, 
-      #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR})
+      #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, #{sumitSeq,jdbcType=VARCHAR}, #{prodRegistCode,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.prodterminationregist.dto.ChbPrdEndSubHis" >
     insert into CHB_PRD_END_SUB_HIS
@@ -190,6 +192,12 @@
       <if test="deptCode != null" >
         DEPT_CODE,
       </if>
+      <if test="sumitSeq != null" >
+        SUMIT_SEQ,
+      </if>
+      <if test="prodRegistCode != null" >
+        PROD_REGIST_CODE,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="registSeqno != null" >
@@ -296,6 +304,12 @@
       </if>
       <if test="deptCode != null" >
         #{deptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sumitSeq != null" >
+        #{sumitSeq,jdbcType=VARCHAR},
+      </if>
+      <if test="prodRegistCode != null" >
+        #{prodRegistCode,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -404,6 +418,12 @@
       <if test="deptCode != null" >
         DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
       </if>
+      <if test="sumitSeq != null" >
+        SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+      </if>
+      <if test="prodRegistCode != null" >
+        PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR},
+      </if>
     </set>
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
   </update>
@@ -442,7 +462,9 @@
       CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=TIMESTAMP},
       SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
       ORG_CODE = #{orgCode,jdbcType=VARCHAR},
-      DEPT_CODE = #{deptCode,jdbcType=VARCHAR}
+      DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+      SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+      PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR}
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
   </update>
   
@@ -459,7 +481,7 @@
       STATUS, CREATE_USER, CREATE_DEPT, 
       CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
       SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
-      ORG_CODE, DEPT_CODE
+      ORG_CODE, DEPT_CODE, SUMIT_SEQ, PROD_REGIST_CODE
       )
       select
       REGIST_SEQNO, PROD_ID, MDATE, 
@@ -473,7 +495,7 @@
       STATUS, CREATE_USER, CREATE_DEPT, 
       sysdate, UPDATE_USER, sysdate, 
       SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
-      ORG_CODE, DEPT_CODE
+      ORG_CODE, DEPT_CODE, SUMIT_SEQ, PROD_REGIST_CODE
     from CHB_PRD_END_SUB
     where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
   	<if test="regList !=null and regList.size()>0">

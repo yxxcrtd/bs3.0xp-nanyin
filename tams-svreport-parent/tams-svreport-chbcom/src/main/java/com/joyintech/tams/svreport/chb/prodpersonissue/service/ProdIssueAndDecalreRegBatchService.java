@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -35,6 +37,7 @@ import com.joyintech.tams.report.common.constant.BatchBeanName;
 import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
 import com.joyintech.tams.report.common.util.DeadlineUtil;
 import com.joyintech.tams.report.interf.common.constant.InterfMappingConstants;
+import com.joyintech.tams.svreport.chb.datacheck.beforeinsert.service.ChbCommonCheckService;
 import com.joyintech.tams.svreport.chb.perprodeclarereg.dao.PerProDeclareReg001Mapper;
 import com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto;
 import com.joyintech.tams.svreport.chb.prodpersonissue.dao.ProdPersonIssue001Mapper;
@@ -74,6 +77,11 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
     @Autowired
     private SvrDBUtil svrDBUtil;
 
+	/**
+     * 入库前校验用Service
+     */
+    @Autowired
+    private ChbCommonCheckService chbCommonCheckService;
     
     public void generateIssueData(Date batchTime,List<String> prodIds,boolean isSynchronizeTask){
 		setBatchBeanName(BatchBeanName.产品发行申报登记报送);
@@ -130,7 +138,9 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
         	sub.setYieldComment(null);
         	// 产品发行申报登记报送 批处理:不再生成的5个字段 zhangyf 20200309 end
         	
-        	sub.setRegistSeqno(IDGenerator.generate(36));
+            sub.setRegistSeqno(IDGenerator.generate(36));
+            // 报送流水号
+            sub.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
             sub.setCreateUser(CommonUtil.getUserName());
             sub.setUpdateUser(CommonUtil.getUserName());
             sub.setCreateDept(CommonUtil.getDeptCode());
@@ -200,6 +210,9 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
         
         
         // 删除、插入发行登记
+        // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
+        issueInsertDataList = chbCommonCheckService.checkData(issueInsertDataList, ChbCheckTableInfo.个人发行登记表);
+        // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
         dealResultIssueCommitSingle(issueDeleteDataList,issueInsertDataList);
     }
     
@@ -261,21 +274,21 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
                 }
             }
             //已报送(生成修改未报送、删除未报送)
-            if (regMap.get(single.getProdId()) != null) {
+            if (regMap.get(single.getProdInsId()) != null) {
                 // 读系统参数
                 if("Y".equals(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_SUBMIT_ONCHANGE))){
                 	//删除未报送的数据
                     subDeleteDataList.add(single);
                     //根据基础表数据状态判断生成登记数据状态
                     if(DictCodeListExt1.维护数据状态_删除.getValue().equals(single.getStatus())){
-                    	if(DictCodeListExt2.报送数据状态_删除.getValue().equals(regMap.get(single.getProdId()).getStatus())){
+                    	if(DictCodeListExt2.报送数据状态_删除.getValue().equals(regMap.get(single.getProdInsId()).getStatus())){
                     		continue;
                     	}
                         single.setStatus(DictCodeListExt2.报送数据状态_删除.getValue());
                     }else{
-                    	if(DictCodeListExt2.报送数据状态_删除.getValue().equals(regMap.get(single.getProdId()).getStatus())){
+                    	if(DictCodeListExt2.报送数据状态_删除.getValue().equals(regMap.get(single.getProdInsId()).getStatus())){
                     		single.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
-                    	}else if(compareRegData(regMap.get(single.getProdId()),single)){// 判断要素表数据有没有修改
+                    	}else if(compareRegData(regMap.get(single.getProdInsId()),single)){// 判断要素表数据有没有修改
                             continue;
                         }else{
                             single.setStatus(DictCodeListExt2.报送数据状态_修改.getValue());
@@ -299,6 +312,8 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
             
             //登记序列
             single.setRegistSeqno(IDGenerator.generate(36));
+           // 报送流水号
+           single.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
             //报送状态
             single.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
             //数据日期
@@ -345,7 +360,9 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
         	   PerProDeclareRegDto.setIssuePartyId(data.get(PerProDeclareRegDto.getProdId()));
            }
    		}
-
+		// add by dubaojun 2020-10-14 入库前需要进行数据检验，检验错误的数据不入库 start
+       subInsertDataList = chbCommonCheckService.checkData(subInsertDataList, ChbCheckTableInfo.个人产品申报登记);
+       // add by dubaojun 2020-10-14 入库前需要进行数据检验，检验错误的数据不入库 end
        // 删除、插入发行登记
        dealResultSubCommitSingle(subDeleteDataList,subInsertDataList);
     }
@@ -516,6 +533,20 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
         gendto.setOpenBuss(dto.getOpenBuss());
         //开放期业务说明
         gendto.setOpenBussRemark(dto.getOpenBussRemark());
+        // add by dubaojun 2020-11-05 五月升级字段比较 start
+        // 管理方式
+        gendto.setManageType(dto.getManageType());
+        // 业绩比较基准下限
+        gendto.setYieldLow(dto.getYieldLow());
+        // 业绩比较基准上限
+        gendto.setYieldHigh(dto.getYieldHigh());
+        // 业绩比较基准说明
+        gendto.setYieldRemark(dto.getYieldRemark());
+        // 资金托管账号
+        gendto.setBusiAcctNo(dto.getBusiAcctNo());
+        // 资金托管账户
+        gendto.setAcctName(dto.getAcctName());
+        // add by dubaojun 2020-11-05 五月升级字段比较 end
         return gendto;
     }
     

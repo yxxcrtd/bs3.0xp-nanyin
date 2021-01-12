@@ -231,6 +231,16 @@ public class ChbInvestTradeSubHisDto {
     private BigDecimal num;
 
     /**
+     * 报送流水号
+     */
+    private String sumitSeq;
+
+    /**
+     * 产品登记编码
+     */
+    private String prodRegistCode;
+
+    /**
      * 履历序号
      * @return HIS_NO 履历序号
      */
@@ -932,5 +942,41 @@ public class ChbInvestTradeSubHisDto {
      */
     public void setNum(BigDecimal num) {
         this.num = num;
+    }
+
+    /**
+     * 获取 报送流水号
+     * 
+     * @return 报送流水号
+     */
+    public String getSumitSeq() {
+        return sumitSeq;
+    }
+
+    /**
+     * 设置 报送流水号
+     * 
+     * @param sumitSeq 报送流水号
+     */
+    public void setSumitSeq(String sumitSeq) {
+        this.sumitSeq = sumitSeq == null ? null : sumitSeq.trim();
+    }
+
+    /**
+     * 获取 产品登记编码
+     * 
+     * @return 产品登记编码
+     */
+    public String getProdRegistCode() {
+        return prodRegistCode;
+    }
+
+    /**
+     * 设置 产品登记编码
+     * 
+     * @param prodRegistCode 产品登记编码
+     */
+    public void setProdRegistCode(String prodRegistCode) {
+        this.prodRegistCode = prodRegistCode == null ? null : prodRegistCode.trim();
     }
 }

@@ -31,6 +31,8 @@ public class ProdForTerminationDto {
      * 产品登记编码
      */
     private String regCode;
+    
+    private String prodRegistCode;
     /**
      * 登记银行代码
      */
@@ -191,6 +193,12 @@ public class ProdForTerminationDto {
 	}
 	public void setDealList(List<ChbPrdDeal> dealList) {
 		this.dealList = dealList;
+	}
+	public String getProdRegistCode() {
+		return prodRegistCode;
+	}
+	public void setProdRegistCode(String prodRegistCode) {
+		this.prodRegistCode = prodRegistCode;
 	}
     
 }

@@ -24,6 +24,8 @@ public class ChbBotAstPositionRegist001Dto extends ChbBotAstPositionSub implemen
 	 */
 	private static final long serialVersionUID = 8746779395701736198L;
 	
+	private String registSeqno ;
+	
 	 /**
      * 反馈状态
      */
@@ -49,6 +51,14 @@ public class ChbBotAstPositionRegist001Dto extends ChbBotAstPositionSub implemen
     private Object assetCode;
     
     
+	public String getRegistSeqno() {
+		return registSeqno;
+	}
+
+	public void setRegistSeqno(String registSeqno) {
+		this.registSeqno = registSeqno;
+	}
+
 	public Date getPosDate() {
 		return posDate;
 	}

@@ -195,6 +195,7 @@
 		<result column="SEC_CREDIT_GRADE_TYPE" property="secCreditGradeType" jdbcType="VARCHAR" />
     	<result column="CAP_USE_INDU_LEVEL2" property="capUseInduLevel2" jdbcType="TIMESTAMP" />
         <result column="ISSUE_PARTY_NAME" property="issuePartyName" jdbcType="VARCHAR" />
+    	<result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
 	</resultMap>
     <resultMap id="BaseResultMapForBatch"
         type="com.joyintech.tams.svreport.chb.assetinforeg.dto.ChbAssetInfoSub001Dto">
@@ -389,6 +390,7 @@
         <result column="SEC_CREDIT_GRADE_TYPE" property="secCreditGradeType" jdbcType="VARCHAR" />
         <result column="CAP_USE_INDU_LEVEL2" property="capUseInduLevel2" jdbcType="TIMESTAMP" />
         <result column="ISSUE_PARTY_NAME" property="issuePartyName" jdbcType="VARCHAR" />
+    	<result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
     </resultMap>
 	
 	<resultMap id="BaseResultMapHis" type="com.joyintech.tams.svreport.chb.assetinforeg.dto.ChbAssetInfoSubHisDto" >
@@ -543,6 +545,7 @@
     <result column="DELETE_RES" property="deleteRes" jdbcType="VARCHAR" />
     <result column="CAP_USE_INDU_LEVEL2" property="capUseInduLevel2" jdbcType="VARCHAR" />
     <result column="ISSUE_PARTY_NAME" property="issuePartyName" jdbcType="VARCHAR" />
+   	<result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
   </resultMap>
     <sql id="Base_Column_List_His" >
     REGIST_SEQNO HIS_NO, ASSET_CODE, ASSET_TYPE, ASSET_TYPE2, CCY, TRADE_MARKET, VDATE, MDATE, ASSET_YIELD, 
@@ -567,7 +570,7 @@
     REMARK, IS_UNDER_ASSET, IS_GOVERN_FUND, GOVERN_INVEST_FUND, FUND_ENPE_NAME, TRUSTEE, 
     SUBMIT_DEADLINE, CHB_SUBMIT_DEADLINE, SUBMIT_TIME, STATUS_DATE, STATUS, CREATE_USER, 
     CREATE_TIME, UPDATE_USER, UPDATE_TIME, ORG_CODE, DEPT_CODE, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, 
-    CREATE_DEPT, DATA_SOURCE, DELETE_RES, CAP_USE_INDU_LEVEL2, ISSUE_PARTY_NAME
+    CREATE_DEPT, DATA_SOURCE, DELETE_RES, CAP_USE_INDU_LEVEL2, ISSUE_PARTY_NAME, SUMIT_SEQ
     </sql>
 	
 	<sql id="Base_Column_List">
@@ -631,7 +634,7 @@
 		CREATE_TIME,
 		UPDATE_USER, UPDATE_TIME, ORG_CODE, DEPT_CODE, SEND_STATUS,
 		SUBMIT_FEEDBACK_STATUS,
-		CREATE_DEPT, DATA_SOURCE, DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME
+		CREATE_DEPT, DATA_SOURCE, DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME, SUMIT_SEQ
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
 		parameterType="java.lang.String">
@@ -710,7 +713,7 @@
 		UPDATE_TIME, ORG_CODE, DEPT_CODE,
 		SEND_STATUS, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
 		DATA_SOURCE,
-		DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME)
+		DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME, SUMIT_SEQ)
 		<foreach collection="insertList" item="item" index="index" separator="union all " >
 		select
 		#{item.registSeqno,jdbcType=CHAR},
@@ -828,6 +831,7 @@
 		#{item.deleteRes,jdbcType=VARCHAR},
 		#{item.secCreditGradeType,jdbcType=VARCHAR},
 		#{item.capUseInduLevel2,jdbcType=VARCHAR},
+        #{item.sumitSeq,jdbcType=VARCHAR},
         #{item.issuePartyName,jdbcType=VARCHAR}
 		from sysibm.SYSDUMMY1
 		</foreach>

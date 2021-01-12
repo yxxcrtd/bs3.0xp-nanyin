@@ -193,7 +193,8 @@
 		cds.IS_FREE_REDEM isFreeRedem,
 		cds.CASH_MANA_CATE cashManaCate,
 		cds.YIELD yield,
-		cds.INVEST_FEE_RATE investFeeRate
+		cds.INVEST_FEE_RATE investFeeRate,
+		cds.SUMIT_SEQ sumitSeq
      from CHB_PRD_DECLARE_SUB cds 
      <if test="model_type != null">
 		left join CHB_PRD_BASEINFO info on info.PROD_ID=cds.prod_id
@@ -278,6 +279,11 @@
 			 <if test="theSendStatus != null and theSendStatus != ''">
 				and cds.SEND_STATUS = #{sendStatus}
 			</if>
+		   <if test="keyList != null and keyList.size() > 0">
+			   <foreach collection="keyList" item="items" open="and cds.REGIST_SEQNO in (" separator="," close=")">
+				   #{items,jdbcType=VARCHAR}
+			   </foreach>
+		   </if>
    </select>
    
    <select id="selcteDataByList" resultMap="PerProDeclareRegDtoRM" parameterType="java.util.List">
@@ -347,7 +353,8 @@
 	<update id="updateFileNo" parameterType="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto">
 	    update CHB_PRD_DECLARE_SUB 
 	    set FILE_NO=#{fileNo},
-	    FILE_NUM=#{fileNum} 
+	    FILE_NUM=#{fileNum},
+	    NINE_FILE = #{nineFile}
 	    where REGIST_SEQNO=#{registSeqno}
 	</update>
 
@@ -745,7 +752,7 @@
     
     <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto">
         INSERT INTO CHB_PRD_DECLARE_SUB
-	    (
+	    (SUMIT_SEQ,
 	    REGIST_SEQNO,
 	    PROD_ID ,
 	    PROD_NAME,
@@ -836,7 +843,7 @@
 	    YIELD,
 	    INVEST_FEE_RATE
 	    )
-	    values(
+	    values(#{sumitSeq,jdbcType=VARCHAR},
 	    #{registSeqno,jdbcType=VARCHAR},
 	    #{prodId,jdbcType=VARCHAR} ,
         #{prodName,jdbcType=VARCHAR},
@@ -1040,7 +1047,7 @@
     PRE_APP_DATE, SEND_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
     UPDATE_USER, UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_TIME, ORG_CODE, 
     FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE, RAISE_TYPE, IVSTORIENTATION, EXC_FIN_SECTOR, 
-    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE
+    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE, SUMIT_SEQ
       )
       select 
     REGIST_SEQNO, PROD_ID, PROD_NAME, PROD_INS_ID, PROD_BRAND, PROD_STAGE, ISSUE_PARTY_ID, 
@@ -1056,7 +1063,7 @@
     PRE_APP_DATE, SEND_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, sysdate,
     UPDATE_USER, sysdate, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_TIME, ORG_CODE, 
     FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE, RAISE_TYPE, IVSTORIENTATION, EXC_FIN_SECTOR, 
-    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE
+    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE, SUMIT_SEQ
     from CHB_PRD_DECLARE_SUB_HIS
     where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
   	<if test="regList !=null and regList.size()>0">
@@ -1083,4 +1090,12 @@
       PROD_ID = #{item.prodId,jdbcType=VARCHAR}
       </foreach>
    </select>
+
+	<select id="queryProdInsIdList" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select distinct PROD_INS_ID id, PROD_NAME text
+		from CHB_PRD_DECLARE_INFO
+		<if test="search != null and search !='' ">
+			WHERE PROD_INS_ID LIKE concat(concat('%', #{search}),'%')
+		</if>
+	</select>
 </mapper>

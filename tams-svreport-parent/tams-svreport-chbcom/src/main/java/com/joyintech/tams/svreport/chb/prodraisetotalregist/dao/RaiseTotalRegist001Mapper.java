@@ -25,6 +25,16 @@ public interface RaiseTotalRegist001Mapper {
     int updateByPrimaryKeySelective(RaiseTotalRegist001Dto record);
 
     int updateByPrimaryKey(RaiseTotalRegist001Dto record);
+    
+	/**
+	 * 功能:根据产品登记编码删除产品发行登记
+	 * @since 1.6.0
+	 * @version 1.6.0
+	 * @author：weiyuqiang 2019年3月23日
+	 * @param subList 
+	 * void
+	 */
+    void deleteByProdRegCode(@Param("deleteList")List<RaiseTotalRegist001Dto> subList);
     /**
      * 查询所有的待处理数据
      * <功能详细描述>
@@ -125,4 +135,10 @@ public interface RaiseTotalRegist001Mapper {
 	List<RaiseTotalRegist001Dto> queryListByKeys(@Param("list")List<String> checkKeys);
 
 	List<RaiseTotalRegist001Dto> getAllInterfRaiseSum();
+	/**
+	 * 从投资者明细获取个人、法人等客户数
+	 * @param prodId
+	 * @return
+	 */
+	List<RaiseTotalRegist001Dto>   getEquCount(@Param("prodId")String prodId);
 }

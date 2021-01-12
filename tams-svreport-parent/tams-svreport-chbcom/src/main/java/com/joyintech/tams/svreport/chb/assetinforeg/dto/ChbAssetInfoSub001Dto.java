@@ -736,6 +736,11 @@ public class ChbAssetInfoSub001Dto {
     private String sendStatus;
 
     /**
+     * 报送流水号
+     */
+    private String sumitSeq;
+
+    /**
      * 报送反馈状态
      */
     private String submitFeedbackStatus;
@@ -3266,7 +3271,15 @@ public class ChbAssetInfoSub001Dto {
         this.sendStatus = sendStatus == null ? null : sendStatus.trim();
     }
 
-    /**
+    public String getSumitSeq() {
+		return sumitSeq;
+	}
+
+	public void setSumitSeq(String sumitSeq) {
+		this.sumitSeq = sumitSeq;
+	}
+
+	/**
      * 报送反馈状态
      * @return SUBMIT_FEEDBACK_STATUS 报送反馈状态
      */

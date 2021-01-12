@@ -53,6 +53,8 @@
     <result column="REF_TRADESEQNO" property="refTradeseqno" jdbcType="VARCHAR" />
     <result column="PRODTYPE" property="prodType" jdbcType="VARCHAR" />
     <result column="DEALTYPE" jdbcType="VARCHAR" property="dealtype" />
+    <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+    <result column="PROD_REGIST_CODE" property="prodRegistCode" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="BaseResultMapHis" type="com.joyintech.tams.svreport.chb.investtradereg.dto.ChbInvestTradeSubHisDto" >
     <id column="HIS_NO" property="hisNo" jdbcType="CHAR" />
@@ -99,6 +101,8 @@
     <result column="CNY_AMT" property="cnyAmt" jdbcType="DECIMAL" />
     <result column="AMT" property="amt" jdbcType="DECIMAL" />
     <result column="NUM" property="num" jdbcType="DECIMAL" />
+    <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+    <result column="PROD_REGIST_CODE" property="prodRegistCode" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     REGIST_SEQNO, TRADE_CODE, PROD_ID, REGIST_BANK_CODE, 
@@ -107,7 +111,7 @@
     CHL_CPCT_ID, TRADE_TYPE, CHL_AGRT_NAME, FEE_ID, FEE_NAME, FEE_TYPE, FEE_SECTYPE, STATUS, 
     ORG_CODE, DEPT_CODE, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, CHB_SUBMIT_DEADLINE, 
     SUBMIT_DEADLINE, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, SUBMIT_TIME, DELETE_RES, 
-    DATA_SOURCE, CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO
+    DATA_SOURCE, CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO, SUMIT_SEQ, PROD_REGIST_CODE
   </sql>
   <sql id="Base_Column_List_His" >
     REGIST_SEQNO HIS_NO, TRADE_CODE, PROD_ID, REGIST_BANK_CODE, ASSET_CODE, CCY, CUR_ASSET_TYPE, CUR_ASSETDET_TYPE, 
@@ -116,7 +120,7 @@
     STATUS, ORG_CODE, DEPT_CODE, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
     CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, 
     SUBMIT_TIME, DELETE_RES, DATA_SOURCE, CREATE_DEPT, DEAL_REGIST_DATE, IS_ASSET_SUB, 
-    REF_TRADESEQNO, CNY_AMT, AMT, NUM
+    REF_TRADESEQNO, CNY_AMT, AMT, NUM, SUMIT_SEQ, PROD_REGIST_CODE
   </sql>
 	
 	<insert id="insertBatch" parameterType="com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto">
@@ -133,7 +137,7 @@
       UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
       SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, 
       SUBMIT_TIME, DELETE_RES, DATA_SOURCE, 
-      CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO)
+      CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO, SUMIT_SEQ, PROD_REGIST_CODE)
 		<foreach collection="insertList" item="item" index="index" separator="union all" >
 		select
 		  #{item.registSeqno,jdbcType=CHAR}, #{item.tradeCode,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.registBankCode,jdbcType=VARCHAR}, 
@@ -149,7 +153,8 @@
 	      #{item.updateTime,jdbcType=TIMESTAMP}, #{item.chbSubmitDeadline,jdbcType=TIMESTAMP}, #{item.submitDeadline,jdbcType=TIMESTAMP}, 
 	      #{item.sendStatus,jdbcType=VARCHAR}, #{item.submitFeedbackStatus,jdbcType=VARCHAR}, #{item.statusDate,jdbcType=TIMESTAMP}, 
 	      #{item.submitTime,jdbcType=TIMESTAMP}, #{item.deleteRes,jdbcType=VARCHAR}, #{item.dataSource,jdbcType=VARCHAR}, 
-	      #{item.createDept,jdbcType=VARCHAR},#{item.dealRegistDate,jdbcType=TIMESTAMP},#{item.isAssetSub,jdbcType=VARCHAR},#{item.refTradeseqno,jdbcType=VARCHAR}
+	      #{item.createDept,jdbcType=VARCHAR},#{item.dealRegistDate,jdbcType=TIMESTAMP},#{item.isAssetSub,jdbcType=VARCHAR},#{item.refTradeseqno,jdbcType=VARCHAR},
+      	  #{item.sumitSeq,jdbcType=VARCHAR}, #{item.prodRegistCode,jdbcType=VARCHAR}
 	      from sysibm.SYSDUMMY1
 		</foreach>
 	</insert>

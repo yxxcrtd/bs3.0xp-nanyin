@@ -6,7 +6,9 @@ import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.svreport.chb.perprodeclarereg.dto.ChbPrdDeclareSubHis;
 import com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbPrdDeclareSubHisMapper {
     int deleteByPrimaryKey(String registSeqno);
 

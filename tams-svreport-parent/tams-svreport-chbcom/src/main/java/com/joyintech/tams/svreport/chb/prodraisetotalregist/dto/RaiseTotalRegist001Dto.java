@@ -27,7 +27,8 @@ public class RaiseTotalRegist001Dto extends BaseEntity implements ITableRow {
 	 */
 	private String issuingStatus;
 	
-	private String prodRegCode;
+	private String prodRegCode;	
+	private String prodRegistCode;
     /**
      * 登记序列
      */
@@ -94,7 +95,10 @@ public class RaiseTotalRegist001Dto extends BaseEntity implements ITableRow {
      * 备注
      */
     private String remark;
-
+    /**
+     * 报送流水号
+     */
+    private String sumitSeq;
     /**
      * 报送状态
      */
@@ -190,7 +194,12 @@ public class RaiseTotalRegist001Dto extends BaseEntity implements ITableRow {
     //募集总量未登记序列
     private String unRegseq;
 	private List<ChbPrdPosition> poslist;
-    
+	//客户类型
+	private  String equType;
+    //客户数
+	private Integer  equCount;
+	
+	
     public String getRegseq() {
 		return regseq;
 	}
@@ -776,5 +785,36 @@ public class RaiseTotalRegist001Dto extends BaseEntity implements ITableRow {
 	public void setIssuingStatus(String issuingStatus) {
 		this.issuingStatus = issuingStatus;
 	}
+
+	public String getProdRegistCode() {
+		return prodRegistCode;
+	}
+
+	public void setProdRegistCode(String prodRegistCode) {
+		this.prodRegistCode = prodRegistCode;
+	}
+
+	public String getSumitSeq() {
+		return sumitSeq;
+	}
+
+	public void setSumitSeq(String sumitSeq) {
+		this.sumitSeq = sumitSeq;
+	}
 	
+    public String getEquType() {
+		return equType;
+	}
+
+	public void setEquType(String equType) {
+		this.equType = equType;
+	}
+
+	public Integer getEquCount() {
+		return equCount;
+	}
+
+	public void setEquCount(Integer equCount) {
+		this.equCount = equCount;
+	}
 }

@@ -85,6 +85,8 @@ public interface ChbAstValueRegist001Mapper {
 	List<String> selectRegistSeqnoListEx(@Param("list")List<ChbAstValueRegist001Dto> chbBotAstPositionRegistList, @Param("flag")String string,@Param("orgCode")String orgCode);
 	
 	void deleteRegistSeqnoList(@Param("regList")List<String> list);
+	
+	void deleteByAssetCodeList(@Param("assetCodeList")List<ChbAstValueRegist001Dto> assetCodeList);
 
 	void insertSeletForSub(@Param("regList")List<String> list);
 }

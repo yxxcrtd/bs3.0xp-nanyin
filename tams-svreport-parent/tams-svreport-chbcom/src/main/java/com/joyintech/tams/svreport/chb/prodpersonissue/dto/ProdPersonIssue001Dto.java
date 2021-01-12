@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.chb.prodpersonissue.dto;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Date;
 
 import com.csii.dc.client.util.StringUtil;
@@ -17,6 +18,8 @@ import com.joyintech.tams.report.common.base.annotate.TableName;
 
 @TableName("CHB_PRD_ISSUE_SUB")
 public class  ProdPersonIssue001Dto extends BaseEntity implements ITableRow{
+	private DecimalFormat df5 = new DecimalFormat("0.00000");
+	private DecimalFormat df2 = new DecimalFormat("0.00");
 	
 	private static final long serialVersionUID = 8664492633593217854L;
 	
@@ -136,6 +139,8 @@ public class  ProdPersonIssue001Dto extends BaseEntity implements ITableRow{
      */
     private BigDecimal avgOpenCount;
 
+    
+    private  String  avgOpenCountStr;
     /**
      * 	开放期业务																		
      */
@@ -241,12 +246,15 @@ public class  ProdPersonIssue001Dto extends BaseEntity implements ITableRow{
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal yieldLow;
 
+    private  String  yieldLowStr;
+
     /**
      * 业绩比较基准上限
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal yieldHigh;
 
+    private  String  yieldHighStr;
     /**
      * 业绩比较基准说明
      */
@@ -1124,6 +1132,16 @@ public class  ProdPersonIssue001Dto extends BaseEntity implements ITableRow{
 
 	public void setAcctName(String acctName) {
 		this.acctName = acctName;
+	}
+
+	public String getAvgOpenCountStr() {
+		return avgOpenCount==null?"":df2.format(avgOpenCount);
+	}
+	public String getYieldLowStr() {
+		return yieldLow==null?"":df5.format(yieldLow);
+	}
+	public String getYieldHighStr() {
+		return yieldHigh==null?"":df5.format(yieldHigh);
 	}
 
 }

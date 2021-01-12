@@ -15,7 +15,9 @@ import com.joyintech.tams.common.base.entity.ChbPrdPeriodYield;
 import com.joyintech.tams.svreport.chb.proddurationreg.dto.ChbPrdDurationDeal;
 import com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto;
 import com.joyintech.tams.svreport.position.dto.ChbPrdPosition;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbPrdDurationRegMapper {
 	
 	/**
@@ -81,6 +83,8 @@ public interface ChbPrdDurationRegMapper {
 	int insertBatch(@Param("resultList") List<ChbPrdDealSub> resultList);
 
 	int deleteBatch(@Param("resultList") List<ChbPrdDealSub> resultList);
+	
+	int deleteBatchByprodId(@Param("resultList") List<ChbPrdDealSub> resultList);
 
 	int updateBatch(@Param("resultList") List<ChbPrdDealSub> resultList);
 

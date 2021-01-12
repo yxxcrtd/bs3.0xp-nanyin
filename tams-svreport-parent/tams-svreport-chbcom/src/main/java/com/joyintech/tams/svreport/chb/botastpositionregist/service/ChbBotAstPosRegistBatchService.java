@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.constant.BatchBeanName;
 import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
 import com.joyintech.tams.svreport.chb.botastpositionregist.dao.ChbBotAstPosCBMapper;
+import com.joyintech.tams.svreport.chb.datacheck.beforeinsert.service.ChbCommonCheckService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 
 /**
@@ -43,6 +46,12 @@ public class ChbBotAstPosRegistBatchService  extends SvrCBBaseService{
     
     @Autowired
     private ChbBotAstPositionSubMapper chbBotAstPositionSubMapper;
+
+    /**
+     * 入库前校验用Service
+     */
+    @Autowired
+    private ChbCommonCheckService chbCommonCheckService;
     
     
 	public void createRegist(Date batchTime){
@@ -82,8 +91,13 @@ public class ChbBotAstPosRegistBatchService  extends SvrCBBaseService{
 			para.put("sendStatus", "01");
 			chbBotAstPosCBMapper.delete(para);
 			List<ChbBotAstPositionSub> updateOrDelList = chbBotAstPosCBMapper.queryUpdateOrDelList(DateUtil.format(posDate), isChbBtm);
+            // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
+            updateOrDelList = chbCommonCheckService.checkData(updateOrDelList, ChbCheckTableInfo.底层资产持仓信息登记表);
+            // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
 			for (ChbBotAstPositionSub sub : updateOrDelList) {
 				sub.setRegistSeqno(IDGenerator.generate(36));
+				// 报送流水号
+				sub.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
                 sub.setCreateUser(CommonUtil.getUserName());
                 sub.setUpdateUser(CommonUtil.getUserName());
 				// 数据日期
@@ -93,9 +107,22 @@ public class ChbBotAstPosRegistBatchService  extends SvrCBBaseService{
 				sub.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
 				chbBotAstPositionSubMapper.insert(sub);
 			}
+
+            
+            //生成数据状态为“新建”，报送状态为“未报送”的登记
+            // modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
+            List<ChbBotAstPositionSub> insertDataList = chbBotAstPosCBMapper.queryInsertGenerateList(DateUtil.format(posDate), isChbBtm, ToolsUtil.getCurrentTime(batchTime),
+                    chbSubmitDeadline, submitDeadline);
+            insertDataList = chbCommonCheckService.checkData(insertDataList, ChbCheckTableInfo.底层资产持仓信息登记表);
+//            chbBotAstPosCBMapper.queryGenerateListAndInsert(DateUtil.format(posDate), isChbBtm, ToolsUtil.getCurrentTime(batchTime),
+//                    chbSubmitDeadline, submitDeadline);
+            for(ChbBotAstPositionSub sub : insertDataList) {
+				// 报送流水号
+				sub.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+                chbBotAstPositionSubMapper.insert(sub);
+            }
+            // modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
 			
-			chbBotAstPosCBMapper.queryGenerateListAndInsert(DateUtil.format(posDate), isChbBtm, ToolsUtil.getCurrentTime(batchTime),
-					chbSubmitDeadline, submitDeadline);
 		}
 	}
     

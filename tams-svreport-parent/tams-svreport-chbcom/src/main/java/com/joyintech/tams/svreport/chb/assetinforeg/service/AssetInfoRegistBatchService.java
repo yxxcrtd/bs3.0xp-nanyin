@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -35,6 +37,7 @@ import com.joyintech.tams.report.common.constant.BatchBeanName;
 import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
 import com.joyintech.tams.svreport.chb.assetinforeg.dao.AssetInfoRegist001Mapper;
 import com.joyintech.tams.svreport.chb.assetinforeg.dto.ChbAssetInfoSub001Dto;
+import com.joyintech.tams.svreport.chb.datacheck.beforeinsert.service.ChbCommonCheckService;
 import com.joyintech.tams.svreport.chb.investtrade.dao.MstCounterPartyDtoMapper;
 import com.joyintech.tams.svreport.chb.investtrade.dto.MstCounterPartyDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -77,6 +80,12 @@ public class AssetInfoRegistBatchService extends SvrCBBaseService {
      */
     @Value("${application.reportSelectOrDeleteCount}")
     private int reportSelectOrDeleteCount;
+
+    /**
+     * 入库前校验用Service
+     */
+    @Autowired
+    private ChbCommonCheckService chbCommonCheckService;
 	
 
     /**
@@ -88,7 +97,6 @@ public class AssetInfoRegistBatchService extends SvrCBBaseService {
      * @param prodList 产品代码
      * @param assetCodeList 资产代码
      * void
-     * @throws BatchException 
      */
 	public void autoRegistAssetInfo(Date executeDate,List<String> prodList,List<String> assetCodeList){
 		// 设置批处理bean
@@ -164,6 +172,8 @@ public class AssetInfoRegistBatchService extends SvrCBBaseService {
 	            
 				// 登记编码
 				dto.setRegistSeqno(IDGenerator.generate(36));
+                // 报送流水号
+                dto.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
 				// 数据日期
 				dto.setStatusDate(executeDate);
 				// 机构代码
@@ -223,6 +233,9 @@ public class AssetInfoRegistBatchService extends SvrCBBaseService {
                                 equals(assetCodeRegMap.get(dto.getAssetCode()).getStatus())){
                             dto.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
                             deleteDataList.add(dto);
+                        } else if (!compareAssetInfoReg(dto,assetCodeRegMap.get(dto.getAssetCode()))){
+                            dto.setStatus(DictCodeListExt2.报送数据状态_修改.getValue());
+                            deleteDataList.add(dto);
                         } else{
                             deleteDataList.add(dto);
                             continue;
@@ -244,6 +257,9 @@ public class AssetInfoRegistBatchService extends SvrCBBaseService {
                 insertDataList.add(dto);
 			}
 		}
+		// add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
+		insertDataList = chbCommonCheckService.checkData(insertDataList, ChbCheckTableInfo.资产要素登记表);
+		// add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
 		// 数据入库
 		insertDB(deleteDataList,insertDataList);
 		// 记录批处理结束
@@ -255,7 +271,8 @@ public class AssetInfoRegistBatchService extends SvrCBBaseService {
 	 * @since 1.6.0
 	 * @version 1.6.0
 	 * @author：weiyuqiang 2019年3月7日
-	 * @param assetList 
+	 * @param deleteDataList
+     * @param insertDataList
 	 * void
 	 */
 	private void insertDB(List<ChbAssetInfoSub001Dto> deleteDataList,List<ChbAssetInfoSub001Dto> insertDataList){
@@ -340,7 +357,11 @@ public class AssetInfoRegistBatchService extends SvrCBBaseService {
         if (assetInfoCompare == null || assetInfoToCompare == null){
             return false;
         } else {
-            return JSON.toJSONString(assetInfoCompare).equals(JSON.toJSONString(assetInfoToCompare));
+            String info = JSON.toJSONString(assetInfoCompare);
+            String sub = JSON.toJSONString(assetInfoToCompare);
+            logger.info("CHB_ASSET_INFO对应数据为：" + info);
+            logger.info("CHB_ASSET_INFO_SUB对应数据为：" + sub);
+            return info.equals(sub);
         }
     }
     
@@ -383,6 +404,12 @@ public class AssetInfoRegistBatchService extends SvrCBBaseService {
         result.setOrgCode(null);
         result.setDeptCode(null);
         result.setSendStatus(null);
+        // add by dubaojun 2020-10-31 字段对比时删除该字段 start
+        result.setSumitSeq(null);
+        // add by dubaojun 2020-10-31 字段对比时删除该字段 end
+        // add by zhangliang 行业一级分类不需要报中债  不需要记录都sub表 也不需要比较  start
+        result.setIndustryShares(null);
+        // add by zhangliang 行业一级分类不需要报中债  不需要记录都sub表 也不需要比较  end
         result.setSubmitFeedbackStatus(null);
         result.setCreateDept(null);
         result.setDataSource(null);

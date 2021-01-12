@@ -1,9 +1,11 @@
 package com.joyintech.tams.svreport.chb.astvalueregist.dto;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.report.common.base.annotate.BusinessKey;
 import com.joyintech.tams.report.common.base.annotate.DictFormat;
 import com.joyintech.tams.report.common.base.annotate.TableName;
 import com.joyintech.tams.common.base.entity.ChbAstValueSub;
@@ -25,6 +27,18 @@ public class ChbAstValueRegist001Dto extends ChbAstValueSub implements ITableRow
      */
     @DictFormat(DictCode.报送反馈状态)
     private String submitFeedbackStatus;
+    
+    /**
+     * 行内资产/负债编码
+     */
+    @BusinessKey("ASSET_CODE")
+    private String assetCode;
+    
+    /**
+     * 估值日期
+     */
+    @BusinessKey("VAL_DATE")
+    private Date valDate;
 
 	public String getSubmitFeedbackStatus() {
 		return submitFeedbackStatus;
@@ -56,6 +70,22 @@ public class ChbAstValueRegist001Dto extends ChbAstValueSub implements ITableRow
 	
 	public String getUnitValTotal4Scale(){
 		return this.getUnitValTotal().setScale(4, BigDecimal.ROUND_HALF_UP).toString();
+	}
+
+	public String getAssetCode() {
+		return assetCode;
+	}
+
+	public void setAssetCode(String assetCode) {
+		this.assetCode = assetCode;
+	}
+
+	public Date getValDate() {
+		return valDate;
+	}
+
+	public void setValDate(Date valDate) {
+		this.valDate = valDate;
 	}
 	
 }

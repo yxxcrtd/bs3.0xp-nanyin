@@ -179,7 +179,7 @@ public class AssetInfoRegist001Dto extends BaseEntity implements ITableRow {
 	/**
 	 * 发行机构主体信用评级
 	 */
-	@DictFormat(DictCode.资产评级)
+	// @DictFormat(DictCode.资产评级)
 	private String partyGrade;
 
 	/**
@@ -267,7 +267,7 @@ public class AssetInfoRegist001Dto extends BaseEntity implements ITableRow {
 	/**
 	 * 债券信用评级
 	 */
-	@DictFormat(DictCode.资产评级)
+	//@DictFormat(DictCode.资产评级)
 	private String secCreditGradeType;
 	
 	/**
@@ -1721,6 +1721,11 @@ public class AssetInfoRegist001Dto extends BaseEntity implements ITableRow {
 	 * 报送日期
 	 */
 	private Date submitTime;
+
+    /**
+     * 报送流水号
+     */
+    private String sumitSeq;
 
 	/**
 	 * 数据日期
@@ -5188,6 +5193,14 @@ public class AssetInfoRegist001Dto extends BaseEntity implements ITableRow {
 	 */
 	public void setSubmitTime(Date submitTime) {
 		this.submitTime = submitTime;
+	}
+
+	public String getSumitSeq() {
+		return sumitSeq;
+	}
+
+	public void setSumitSeq(String sumitSeq) {
+		this.sumitSeq = sumitSeq;
 	}
 
 	/**

@@ -656,6 +656,21 @@
     </foreach>
     ;end;
   </delete> -->
+<delete id="deleteBatchByprodId" parameterType="java.util.List">
+	   begin
+      <foreach collection="resultList" item="item" index="index" separator=";">
+       delete from CHB_PRD_DEAL_SUB
+       where 1 = 1
+        <if test="item.prodId != null" >
+         and PROD_ID = #{item.prodId,jdbcType=VARCHAR} 
+       </if>
+       <if test="item.vdate != null" >
+         and MDATE = #{item.mdate,jdbcType=DATE}
+       </if>
+       and send_status='01'
+      </foreach>
+     ;end;
+    </delete>
   <select id="isLevProd" resultType="java.lang.Integer">
     SELECT 
       COUNT(1)
@@ -714,4 +729,5 @@
 	AND  settdate_DATE=#{payDate, jdbcType = DATE}
 	GROUP BY NVL(FPROD_ID,PROD_ID),trade_type
   </select>
+  
 </mapper>

@@ -25,8 +25,8 @@
 			  and VAL2.UNIT_VAL_TOTAL = VAL.UNIT_VAL_TOTAL
 			  )	
 	</select>
-	
-		<insert id="queryGenerateListAndInsert" parameterType="map">
+	<!-- modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start -->
+		<!-- <insert id="queryGenerateListAndInsert" parameterType="map">
 		insert into CHB_AST_VAL_SUB 
 		  (REGIST_SEQNO,ISSUE_PARTY_ID,ASSET_CODE,VAL_DATE,UNIT_VAL_NET,UNIT_VAL_TOTAL,REMARK,
 		  STATUS,SEND_STATUS,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE, ORG_CODE,
@@ -66,7 +66,45 @@
 			  and VAL2.UNIT_VAL_NET =  VAL.UNIT_VAL_NET
 			  and VAL2.UNIT_VAL_TOTAL = VAL.UNIT_VAL_TOTAL
 			  )	
-	</insert>
+	</insert> -->
+	<select id="queryInsertGenerateList" parameterType="map" resultMap="com.joyintech.tams.common.base.dao.ChbAstValueSubMapper.BaseResultMap">
+		SELECT
+			f_guid() REGIST_SEQNO,
+		    VAL.ISSUE_PARTY_ID  as ISSUE_PARTY_ID,
+		    NVL(ASSETINFO.ASSET_CODE_OLD,ASSETINFO.ASSET_CODE) as ASSET_CODE,
+		    VAL.VAL_DATE as VAL_DATE,
+		    VAL.UNIT_VAL_NET as UNIT_VAL_NET,
+		    VAL.UNIT_VAL_TOTAL as UNIT_VAL_TOTAL, 
+		    VAL.REMARK as REMARK,
+		    '01'  STATUS,
+		    '01' SEND_STATUS,
+		    #{chbSubmitDeadline,jdbcType=TIMESTAMP} CHB_SUBMIT_DEADLINE,
+		    #{submitDeadline,jdbcType=TIMESTAMP} SUBMIT_DEADLINE,
+		    VAL.ORG_CODE ORG_CODE,
+		    VAL.DEPT_CODE DEPT_CODE,
+		    'system' CREATE_USER,
+		    sysdate CREATE_TIME,
+		    'system' UPDATE_USER,
+		    sysdate UPDATE_TIME,
+		    #{statusDate,jdbcType=TIMESTAMP} STATUS_DATE
+		FROM CHB_AST_VAL VAL
+		LEFT JOIN CHB_ASSET_INFO ASSETINFO
+		ON ASSETINFO.ASSET_CODE = VAL.ASSET_CODE
+		WHERE to_char(VAL.VAL_DATE,'yyyy-MM-dd') = #{generateDate,jdbcType=VARCHAR}
+		and not exists  (select 1 from CHB_AST_VAL_SUB SUB 
+			where SUB.VAL_DATE = VAL.VAL_DATE
+			  and SUB.ASSET_CODE = VAL.ASSET_CODE 
+			  and SUB.SEND_STATUS in ('02','03')
+			  )
+		<!-- modify by zhangliang 20201222 中债规则变更，相同的数据也生成数据 -->
+		<!-- and not exists  (select 1 from CHB_AST_VAL VAL2
+			where VAL2.VAL_DATE = VAL.VAL_DATE-1
+			  and VAL2.ASSET_CODE = VAL.ASSET_CODE 
+			  and VAL2.UNIT_VAL_NET =  VAL.UNIT_VAL_NET
+			  and VAL2.UNIT_VAL_TOTAL = VAL.UNIT_VAL_TOTAL
+			  ) -->
+	</select>
+	<!-- modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end -->
 	<select id="queryUpdateOrDelList" resultType="com.joyintech.tams.common.base.entity.ChbAstValueSub">
 	    SELECT
 	    	sub.REGIST_SEQNO as registSeqno,
@@ -86,7 +124,32 @@
 		and val.status in ('M','E')
 		WHERE to_char(sub.VAL_DATE,'yyyy-MM-dd') = #{generateDate,jdbcType=VARCHAR}
 		  and SUB.SEND_STATUS in ('02','03')
-		  and( SUB.STATUS ='03' or (val.UNIT_VAL_NET &lt;&gt; SUB.UNIT_VAL_NET or val.UNIT_VAL_TOTAL &lt;&gt; SUB.UNIT_VAL_TOTAL))
+		  <!-- add by zhangliang 20201112 删除的数据不应该生成修改未报送  start-->
+		  <!-- and( SUB.STATUS ='03' or (val.UNIT_VAL_NET &lt;&gt; SUB.UNIT_VAL_NET or val.UNIT_VAL_TOTAL &lt;&gt; SUB.UNIT_VAL_TOTAL)) -->
+		  and SUB.STATUS in ('01','02')
+		  and (val.UNIT_VAL_NET &lt;&gt; SUB.UNIT_VAL_NET or val.UNIT_VAL_TOTAL &lt;&gt; SUB.UNIT_VAL_TOTAL)
+		UNION ALL
+		SELECT
+	    	sub.REGIST_SEQNO as registSeqno,
+		    VAL.ISSUE_PARTY_ID  as issuePartyId,
+		    NVL(ASSETINFO.ASSET_CODE,ASSETINFO.ASSET_CODE_OLD) as assetCode,
+		    VAL.VAL_DATE as valDate,
+		    VAL.UNIT_VAL_NET as unitValNet,
+		    VAL.UNIT_VAL_TOTAL as unitValTotal,
+		    VAL.REMARK as remark,
+		    '01'  status/*新建状态*/
+		FROM CHB_AST_VAL_SUB sub
+		left join CHB_ASSET_INFO ASSETINFO
+		ON ASSETINFO.ASSET_CODE = SUB.ASSET_CODE
+		left join CHB_AST_VAL val
+		on val.VAL_DATE = sub.VAL_DATE
+		and  val.ASSET_CODE = sub.ASSET_CODE
+		and val.status in ('M','E')
+		WHERE to_char(sub.VAL_DATE,'yyyy-MM-dd') = #{generateDate,jdbcType=VARCHAR}
+		  and SUB.SEND_STATUS in ('02','03')
+		  and SUB.STATUS ='03'
+		<!-- add by zhangliang 20201112 删除的数据不应该生成修改未报送  end-->
+
 	    union all
 	    SELECT
 	        sub.REGIST_SEQNO as registSeqno,

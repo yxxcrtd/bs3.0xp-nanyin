@@ -35,13 +35,15 @@
     <result column="SALETARGET" jdbcType="VARCHAR" property="saletarget" />
     <result column="RAISE_ENDDATE" jdbcType="TIMESTAMP" property="raiseEnddate" />
     <result column="ISSUING_STATUS" jdbcType="VARCHAR" property="issuingStatus" />
+    <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+    <result column="PROD_REGIST_CODE" property="prodRegistCode" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List">
     REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL, 
     SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT, RAISE_QTY, IS_CONSIGN, CONSIGN_AMT, 
     REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, 
     CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
-    ORG_CODE, DEPT_CODE
+    ORG_CODE, DEPT_CODE, SUMIT_SEQ, PROD_REGIST_CODE
   </sql>
   
   <insert id="insertBatch" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
@@ -53,7 +55,7 @@
       STATUS_DATE, STATUS, CREATE_USER, 
       CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
       UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, 
-      SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE
+      SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE, SUMIT_SEQ, PROD_REGIST_CODE
       )
       <foreach collection="insertList" item="item" index="index" separator="union all" >
       select
@@ -65,7 +67,8 @@
       #{item.statusDate,jdbcType=TIMESTAMP}, #{item.status,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR}, 
       #{item.createDept,jdbcType=VARCHAR}, sysdate, #{item.updateUser,jdbcType=VARCHAR}, 
       sysdate, #{item.submitTime,jdbcType=TIMESTAMP}, #{item.chbSubmitDeadline,jdbcType=TIMESTAMP}, 
-      #{item.submitDeadline,jdbcType=TIMESTAMP}, #{item.orgCode,jdbcType=VARCHAR}, #{item.deptCode,jdbcType=VARCHAR}
+      #{item.submitDeadline,jdbcType=TIMESTAMP}, #{item.orgCode,jdbcType=VARCHAR}, #{item.deptCode,jdbcType=VARCHAR},
+      #{item.sumitSeq,jdbcType=VARCHAR}, #{item.prodRegistCode,jdbcType=VARCHAR}
       from SYSIBM.SYSDUMMY1
       </foreach>
   </insert>
