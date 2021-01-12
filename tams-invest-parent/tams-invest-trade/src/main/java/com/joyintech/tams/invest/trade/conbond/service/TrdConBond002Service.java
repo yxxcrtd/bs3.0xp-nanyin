@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -833,8 +834,21 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
             if(StringUtil.isNotEmpty(entity.getEntrustId())){
                 baseTradeProductDealDto.setEntrustId(entity.getEntrustId());
              // 调用投资委托组件的更新委托状态接口，将委托状态设置为“已完成”
-                etrInvestInfoServiceImpl.updateDelegateStatus(entity.getEntrustId(),
-                    DictCodeList.委托状态_已完成.getValue());
+
+//                etrInvestInfoServiceImpl.updateDelegateStatus(entity.getEntrustId(),
+//                    DictCodeList.委托状态_已完成.getValue());
+
+                List<EtrFinishStatusDto> baseEtrInvestInfoDtos = new ArrayList<>();
+                EtrFinishStatusDto etrInvestInfoDto = new EtrFinishStatusDto();
+                etrInvestInfoDto.setEntrustId(baseTradeProductDealDto.getTrdProductDealAdd().getEntrustId());
+                etrInvestInfoDto.setTradeId(baseTradeProductDealDto.getTrdProductDealAdd().getTradeId());
+                etrInvestInfoDto.setFinishDate(baseTradeProductDealDto.getTrdProductDeal().getTradeDate());
+                etrInvestInfoDto.setFinishAmt(baseTradeProductDealDto.getTrdProductDeal().getShareAmt());
+                etrInvestInfoDto.setTrader(baseTradeProductDealDto.getTrdProductDeal().getTrader());
+                baseEtrInvestInfoDtos.add(etrInvestInfoDto);
+
+                etrInvestInfoServiceImpl.completeDelegate(baseEtrInvestInfoDtos);
+
             }
             if(StringUtil.isNotEmpty(entity.getTrdProductDeal())){
             	// 调用业务组件.【金融产品交易共通.交易产品接口】, insert
@@ -1351,7 +1365,7 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
     /**
      * 为调用授信 风险组装信息entity
      *
-     * @param entity
+     * @param dto
      * @return
      */
     public TrdFinProductDealTotal getTrdFinProductDealTotal(TrdConBondDto dto) {
