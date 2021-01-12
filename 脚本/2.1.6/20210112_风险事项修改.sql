@@ -1,6 +1,6 @@
 --ZGBSS-41
-update RSK_EVENT_ITEM_RULE set item_code ='C1,C2,C3,T98' where event_code = 'EVENT_ID_CPZZC_03' and item_code = 'ps';
-update RSK_EVENT_ITEM_RULE set item_code = 'C4,C6,C9,C11,C12,C17,C20,T99'  where event_code = 'EVENT_ID_CPZZC_04' and item_code = 'ps' and item_value like '%C4%';
+update RSK_EVENT_ITEM_RULE set item_value ='C1,C2,C3,T98' where event_code = 'EVENT_ID_CPZZC_03' and item_code = 'ps';
+update RSK_EVENT_ITEM_RULE set item_value = 'C4,C6,C9,C11,C12,C17,C20,T99'  where event_code = 'EVENT_ID_CPZZC_04' and item_code = 'ps' and item_value like '%C4%';
 update RSK_EVENT_ITEM_RULE set item_value ='T07,T08,T09,T11,T38,T54,T56,T39,T98,C1,C2,C3,T24'  where event_code = 'EVENT_ID_XJGM_03' and item_code = 'ps' and item_value like '%C9%';
 --ZGBSS-56
 update RSK_EVENT_ITEM_RULE set item_value = 'C4,C6,C17' where event_code = 'EVENT_ID_CPJZCJZ_04' and  item_code = 'ps';
@@ -68,3 +68,19 @@ update RSK_ISUP_INDICATOR set TIME_POINT = '01,02,03' where ind_name ='Ã¿Ö»ÏÖ½ð¹
 --ZGBSS-38 ²¹³ä
 update RSK_EVENT_ITEM_RULE set match_type = '=' where EVENT_CODE ='EVENT_ID_JGZQGZHJ_04' and item_code ='windType1' and match_type = '<>';
 update RSK_EVENT_ITEM_RULE set item_value = 'B01,B03,B05,B17' where EVENT_CODE ='EVENT_ID_JGZQGZHJ_04' and item_code ='windType1' and match_type = 'NO';
+--ZGBSS-87 
+update RSK_EVENT_ITEM_RULE set item_value = '00,01,02'where  EVENT_CODE ='EVENT_ID_TZYSYZTXYPJDYAAAJGHJ_04'  and item_code= 'bodyGradeType';
+update RSK_EVENT_ITEM_RULE set item_value = '00,01,02'where  EVENT_CODE ='EVENT_ID_TZYSYZTXYPJDYAAAJGHJ_05'  and item_code= 'bodyGradeType';
+update RSK_EVENT_ITEM_RULE set item_value = '00,01,02'where  EVENT_CODE ='EVENT_ID_TZYSYZTXYPJDYAAAJGHJ_06'  and item_code= 'bodyGradeType';
+update RSK_EVENT_ITEM_RULE set item_value = '00,01,02'where  EVENT_CODE ='EVENT_ID_TZYSYZTXYPJDYAAAJGHJ_07'  and item_code= 'bodyGradeType';
+update RSK_EVENT_ITEM_RULE set item_value = '00,01,02'where  EVENT_CODE ='EVENT_ID_TZYSYZTXYPJDYAAAJGHJ_08'  and item_code= 'bodyGradeType';
+update RSK_EVENT_ITEM_RULE set item_value = '00,01,02'where  EVENT_CODE ='EVENT_ID_DYZTPJDYAAAJGJRGJGZ_04'  and item_code= 'bodyGradeType';
+update RSK_EVENT_ITEM_RULE set item_value = '00,01,02'where  EVENT_CODE ='EVENT_ID_DYZTPJDYAAAJGJRGJGZ_05'  and item_code= 'bodyGradeType';
+update RSK_EVENT_ITEM_RULE set item_value = '00,01,02'where  EVENT_CODE ='EVENT_ID_DYZTPJDYAAAJGJRGJGZ_06'  and item_code= 'bodyGradeType';
+update RSK_EVENT_ITEM_RULE set item_value = '00,01,02'where  EVENT_CODE ='EVENT_ID_DYZTPJDYAAAJGJRGJGZ_07'  and item_code= 'bodyGradeType';
+update RSK_EVENT_ITEM_RULE set item_value = '00,01,02'where  EVENT_CODE ='EVENT_ID_DYZTPJDYAAAJGJRGJGZ_08'  and item_code= 'bodyGradeType';
+update RSK_EVENT_ITEM_RULE set item_value = '00,01,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31'where  EVENT_CODE ='EVENT_ID_ZTPJAAAYHCKGZ_04'  and item_code= 'bodyGradeType';
+update RSK_EVENT_ITEM_RULE set item_value = '00,01,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31'where  EVENT_CODE ='EVENT_ID_ZTPJAAAYHCKGZ_05'  and item_code= 'bodyGradeType';
+update RSK_EVENT_ITEM_RULE set item_value = '00,01,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31'where  EVENT_CODE ='EVENT_ID_ZTPJAAAYHCKGZ_06'  and item_code= 'bodyGradeType';
+update RSK_EVENT_ITEM_RULE set item_value = '00,01,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31'where  EVENT_CODE ='EVENT_ID_ZTPJAAAYHCKGZ_07'  and item_code= 'bodyGradeType';
+update RSK_EVENT_ITEM_RULE set item_value = '00,01,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31'where  EVENT_CODE ='EVENT_ID_ZTPJAAAYHCKGZ_08'  and item_code= 'bodyGradeType';
