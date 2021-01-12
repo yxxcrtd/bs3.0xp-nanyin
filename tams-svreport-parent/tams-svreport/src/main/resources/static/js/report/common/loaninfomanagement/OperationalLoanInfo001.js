@@ -1,10 +1,9 @@
-	var colList = [
-	               {rowspan: 2, type:'checkbox'}];
+	var colList = [];
 	// 已选择字段列表
 	var selectedColumns = [];
 	//数据源表触发事件
 	function getColumns() {
-		var tableId = $('#interfType').val();
+		var tableId = $('#baseTableName').val();
 		$("#columnType").empty();
 		$("#resultColumn").empty();
 		$("#selectedColumns").empty();
@@ -17,13 +16,11 @@
 			type : 'POST',
 			traditional : true,
 			data : {
-				tableId : $('#interfType').val(),
+				tableId : $('#baseTableName').val(),
+				isSingleEdit : '01',
 			},
 			success : function(result) {
-				var resultData=eval("(" + result + ")");
-	        	//headerNum=resultData["headerNum"];
-	        	//tableName=resultData["tableName"];
-	            var jsonObj = JSON.parse(resultData["data"]);
+				var jsonObj = eval("(" + result + ")");
 				cols[0] = {
 					type : 'checkbox',
 					fixed : 'left'
@@ -33,7 +30,7 @@
 					cols[i] = {
 						field : key,
 						title : jsonObj[key],
-						width : 150
+						width : 250
 					};
 					i++;
 					var curData = {"id": key, "text": jsonObj[key]};
@@ -145,6 +142,7 @@
 		var defaultDate = '';
 		// 当前操作字段名称
 		var curColumnName;
+		var id;
 		// 新增选项
 		if (columnIds.length > selectedColumns.length) {
 			for (var i = 0; i < columnIds.length; i ++) {
@@ -175,28 +173,67 @@
 				},
 				success : function(result) {
 					$("#selectedColumns").show();
+					if(i%3 ==0){
+						var div = document.createElement("div");
+						div.class ="layui-form-item";
+						div.className = "layui-form-item";
+						div.id = "div" + i;
+						id = "div" + i;
+						$("#selectedColumns").append(div);
+					}
 					if (result == 'T') {
-						$("#selectedColumns")
-						.append(
+						$("#selectedColumns").children("#"+id)
+							.append(
 								"<div class=\"layui-inline layui-col-md4\" id=\""
-										+ tableId
-										+ "-"
-										+ curColumn
-										+	"\">"
-										+ " <label class=\"layui-form-label form-lable\">"
-										+ curColumnName
-										+ "</label><div class=\"layui-input-inline input-inline\">"
-										+ "<input id=\""
-										+ tableId
-										+ "-"
-										+ curColumn
-										+ "-T"
-										+ "\" class=\"layui-input form-input input-lenovoselect\" >"
-										+ "</div>");
+								+ tableId
+								+ "-"
+								+ curColumn
+								+	"\">"
+								+ " <label class=\"layui-form-label form-lable\">"
+								+ curColumnName
+								+ "</label><div class=\"layui-input-inline input-inline\">"
+								+ "<input id=\""
+								+ tableId
+								+ "-"
+								+ curColumn
+								+ "-T"
+								+ "\" placeholder=\"请输入\""
+								+ "\" class=\"layui-input form-input input-lenovoselect\" >"
+								+ "</div></div>");
 					} else if (result == 'S') {
 						var colunmInofList = queryColumnInfoList(
-								tableId, curColumn);
-						var content = "<div class=\"layui-inline layui-col-md4\" id=\"" 
+							tableId, curColumn);
+						var content = "<div class=\"layui-inline layui-col-md4\" id=\""
+							+ tableId
+							+ "-"
+							+ curColumn
+							+	"\">"
+							+ "<label class=\"layui-form-label form-lable\">"
+							+ curColumnName
+							+ "</label>"
+							+ "<div class=\"layui-input-inline input-inline\">"
+							+ "<select type=\"text\" id=\""
+							+ tableId
+							+ "-"
+							+ curColumn
+							+ "-S"
+							+ "\" name=\"columnType\""
+							+ "\" placeholder=\"请选择\""
+							+ " class=\"layui-input form-input input-select\" "
+							+ "allowClear=\"true\" multiple=\"multiple\">"
+						for ( var key in colunmInofList) {
+							content += "<option value='" + key
+								+ "'>" + colunmInofList[key]
+								+ "</option>"
+						}
+						content += "</select></div></div>"
+						$("#selectedColumns").children("#"+id).append(content);
+						$("#selectedColumns").children("#"+id).find('select')
+							.textSelect();
+					} else if (result == 'D') {
+						$("#selectedColumns").children("#"+id)
+							.append(
+								"<div class=\"layui-inline layui-col-md4\" id=\""
 								+ tableId
 								+ "-"
 								+ curColumn
@@ -204,52 +241,22 @@
 								+ "<label class=\"layui-form-label form-lable\">"
 								+ curColumnName
 								+ "</label>"
-								+ "<div class=\"layui-input-inline input-inline\">"
-								+ "<select type=\"text\" id=\""
+								+ "<div class=\"layui-input-inline input-inline\" id=\"test1\">"
+								+ "<input type=\"text\"  name=\"timeControl\"  "
+								+ "class=\"layui-input form-input input-dateRangeSelect\" id=\""
 								+ tableId
 								+ "-"
 								+ curColumn
-								+ "-S"
-								+ "\" name=\"columnType\""
-								+ " class=\"layui-input form-input input-select\" "
-								+ "allowClear=\"true\" multiple=\"multiple\">"
-						for ( var key in colunmInofList) {
-							content += "<option value='" + key
-									+ "'>" + colunmInofList[key]
-									+ "</option>"
-						}
-						content += "</select></div></div>"
-						$("#selectedColumns").append(content);
-						$("#selectedColumns").find('select')
-								.textSelect();
-					} else if (result == 'D') {
-						$("#selectedColumns")
-						.append(
-								"<div class=\"layui-inline layui-col-md4\" id=\"" 
-										+ tableId
-										+ "-"
-										+ curColumn
-										+	"\">"
-										+ "<label class=\"layui-form-label form-lable\">"
-										+ curColumnName
-										+ "</label>"
-										+ "<div class=\"layui-input-inline input-inline\" id=\"test1\">"
-										+ "<input type=\"text\"  name=\"timeControl\"  "
-										+ "class=\"layui-input form-input input-dateRangeSelect\" id=\""
-										+ tableId
-										+ "-"
-										+ curColumn
-										+ "-D"
-										+ "\" placeholder=\"请选择日期区间\" />"
-										+ "</div>"
-										+ "<div class=\"time-icon\"><i class=\"iconfont icon-date\"></i></div></div>");
-				var laydate = layui.laydate;
-				laydate.render({
-					elem : $("#" + tableId + "-"
-							+ curColumn + "-D")[0],
-					range : true,
-					value:defaultDate // 设置默认值
-				});
+								+ "-D"
+								+ "\" placeholder=\"请选择日期区间\" />"
+								+ "<div class=\"time-icon\"><i class=\"iconfont icon-date\"></i></div></div></div>");
+						var laydate = layui.laydate;
+						laydate.render({
+							elem : $("#" + tableId + "-"
+								+ curColumn + "-D")[0],
+							range : true,
+							value:defaultDate // 设置默认值
+						});
 					}
 				}
 			});
@@ -446,11 +453,13 @@
 			var selectedData = checkStatus.data;
 			var jasonData = JSON.stringify(selectedData);
 			var tableId = $('#baseTableName').val();
+			var tableName = $('#baseTableName').val();
 			var columnIds = getColumnParams();
 			var param = {};
 			param.tableId = tableId;
 			param.columnIds = columnIds;
 			param.jasonData = jasonData;
+			param.tableName = tableName;
 			if (typeof (tableId) == "undefined" || tableId == null
 					|| tableId == "") {
 				layer.alert('请选择数据源表', {
@@ -466,13 +475,13 @@
 		// 导入按钮点击事件
 		$('#OperationalLoanInfo001_btn_import').click(function() {
 			Joyin.confirm(JoyinUtil.getMessage('CHB_ISIMPORT'), function() {
-				Joyin.uploadFile({	
+				Joyin.uploadFile(/*{	
 					hideTpl : true
-			       }, function(fileName) {
+			       },*/ function(fileName) {
 					Joyin.ajax(basePath + 'common/loaninfomanagement/OperationalLoanInfo001/checkConfirmMsgForImportData', {fileName : fileName}, function(result) {
 						if (result.length == 0) {
 							Joyin.ajax(basePath + 'common/loaninfomanagement/OperationalLoanInfo001/importFile', {fileName : fileName}, function(result){
-								//Joyin.ajax(basePath + 'common/infomanagement/SvrOperationalInfo001/linkSvrReport', {fileName : fileName});
+								Joyin.ajax(basePath + 'common/infomanagement/SvrOperationalInfo001/linkSvrReport', {fileName : fileName});
 							});
 						} 
 					});
@@ -480,6 +489,55 @@
 					table.reload();
 				});
 			});
+		});
+		
+		//删除按钮点击事件
+		$('#OperationalLoanInfo001_btn_delete').click(function(){
+			var table = layui.table;
+			// 选中行数据
+			var checkStatus = table.checkStatus('dataTable');
+			var selectedData = checkStatus.data;
+			var jasonData = JSON.stringify(selectedData);
+			var tableId = $('#baseTableName').val();
+			var columnIds = getColumnParams();
+			var param = {};
+			param.tableId = tableId;
+			param.columnIds = columnIds;
+			param.jasonData = jasonData;
+			if(selectedData.length == 0 || !selectedData){
+				Joyin.error("请勾选一条数据删除！");
+			}else{
+				/*Joyin.confirm("请确认是否要删除选中记录？",function(){
+					Joyin.ajax(basePath + "common/infomanagement/SvrOperationalInfo001/deleteData", param, function() {
+						table.reload();
+					});
+				});*/
+				Joyin.confirm("确认删除选定数据？", function() {
+					Joyin.ajax(basePath+'common/infomanagement/SvrOperationalInfo001/deleteData', {
+						jasonData : jasonData,
+						tableId : tableId
+					}, function(result) {
+						if (result > 0) {
+							layer.alert('成功删除' + result + '条数据', {
+								icon : 1,
+								skin : 'layer-ext-moon'
+							});
+							showTables();
+							Joyin.ajax(basePath+'common/infomanagement/SvrOperationalInfo001/linkSvrReportAfterDelete', {
+								jasonData : jasonData,
+								tableId : tableId
+							}, function(result) {
+
+							});
+						} else {
+							layer.alert('没有删除数据', {
+								icon : 2,
+								skin : 'layer-ext-moon'
+							});
+						}
+					});
+				});
+			}
 		});
 
 	});	

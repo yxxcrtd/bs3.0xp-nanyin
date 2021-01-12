@@ -794,6 +794,9 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     报表生成配置表_理财产品信息表(
             DictCode.报表生成配置表,"REP_PROD_MESSAGE","理财产品信息表"
     ),
+    //add by wm 数据来源数据字典新增“手工录入”值 20200603 start
+    数据来源_手工维护(DictCode.数据来源, "MN" , "手工维护" ),
+    //add by wm 数据来源数据字典新增“手工录入”值 20200603 end
     ;
 
     /**

@@ -59,6 +59,16 @@ $(function(){
             paramObj= getPageParams();
         }
         else{
+        	//add by wm 针对特殊字符处理  jason 识别“'”字符时转换会有问题，将企转换为“&apos;” start
+        	for(var i=0;i<selectedItem.length;i++){
+        		if(selectedItem[i].orgData&&selectedItem[i].orgData.indexOf("'") != -1){
+        			selectedItem[i].orgData = selectedItem[i].orgData.replace(new RegExp("'", 'gm'),"&apos;");
+    			}
+        		if(selectedItem[i].errMsg&&selectedItem[i].errMsg.indexOf("'") != -1){
+        			selectedItem[i].errMsg = selectedItem[i].errMsg.replace(new RegExp("'", 'gm'),"&apos;");
+    			}
+        	}
+			//add by wm 针对特殊字符处理  jason 识别“'”字符时转换会有问题，将企转换为“&apos;” end
             paramObj.keyList = JSON.stringify(selectedItem);
         }
         Joyin.exportExcel('export', paramObj);

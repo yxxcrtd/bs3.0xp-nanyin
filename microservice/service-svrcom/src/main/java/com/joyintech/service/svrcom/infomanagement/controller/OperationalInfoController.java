@@ -32,7 +32,7 @@ import com.joyintech.tams.svreport.infomanagement.service.OperationalInfo004Serv
  * @see OperationalInfoController
  * @since 1.0
  */
-@RestController
+@RestController("backOperationalInfoController")
 @RequestMapping("/OperationalInfo")
 public class OperationalInfoController {
 

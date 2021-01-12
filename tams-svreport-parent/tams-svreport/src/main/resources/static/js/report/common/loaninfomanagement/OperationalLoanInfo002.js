@@ -42,43 +42,43 @@
         object.pageModel = pageModel;
         //check一下比例         start
         if(assetType  === 'P06'){
-       	 var eachProportion=object.eachProportion;
-            var assetsInvest=object.assetsInvest;
-            if(eachProportion !== null){
-            var arr=eachProportion.split(':');
-            var assetarr=assetsInvest.split(';');
-            //此时应该包含比例符号
-            if(assetarr.length>1){
-            	if(eachProportion.indexOf(':')<0){
-            		//则格式不正确
-              	  Joyin.alert("各比例字段格式不正确或比例之和不等于100！",7);
-      			   return;        	
-            	}
-            }
-            //各比例输入个数跟基础资产投向分类选择的不一致，请确认！
-            if(arr.length !==assetarr.length){
-            	 Joyin.alert("各比例输入个数跟基础资产投向分类选择的不一致，请确认！",7);
-    			   return;  
-            }
-            	//判断是否为数字
-            	for(var i=0;i<arr.length;i++){
-            		if(isNaN(arr[i])){
-            			Joyin.alert("各比例字段格式不正确或比例之和不等于100！!",7);
-            			 return;
-            		}
-            	}
-            	var  sum=0;
-            	for(var i=0;i<arr.length;i++){
-            		sum=Number(arr[i])+Number(sum);
-            	}
-            	if(sum !== 100){
-            		 Joyin.alert("各比例字段格式不正确或比例之和不等于100！",7);
-            		 return;
-            	}
-            
-            }
-       }
-      
+        	 var eachProportion=object.eachProportion;
+             var assetsInvest=object.assetsInvest;
+             if(eachProportion !== null){
+             var arr=eachProportion.split(':');
+             var assetarr=assetsInvest.split(';');
+             //此时应该包含比例符号
+             if(assetarr.length>1){
+             	if(eachProportion.indexOf(':')<0){
+             		//则格式不正确
+               	  Joyin.alert("各比例字段格式不正确或比例之和不等于100！",7);
+       			   return;        	
+             	}
+             }
+             //各比例输入个数跟基础资产投向分类选择的不一致，请确认！
+             if(arr.length !==assetarr.length){
+             	 Joyin.alert("各比例输入个数跟基础资产投向分类选择的不一致，请确认！",7);
+     			   return;  
+             }
+             	//判断是否为数字
+             	for(var i=0;i<arr.length;i++){
+             		if(isNaN(arr[i])){
+             			Joyin.alert("各比例字段格式不正确或比例之和不等于100！!",7);
+             			 return;
+             		}
+             	}
+             	var  sum=0;
+             	for(var i=0;i<arr.length;i++){
+             		sum=Number(arr[i])+Number(sum);
+             	}
+             	if(sum !== 100){
+             		 Joyin.alert("各比例字段格式不正确或比例之和不等于100！",7);
+             		 return;
+             	}
+             
+             }
+        }
+       
         //check一下比例         end
         Joyin.ajaxJson("check",object,function(result){
             if(result){
@@ -183,7 +183,7 @@
         }else{
         	$('#enterpriseScale').prop('disabled',false);
         }
-
+    	
     	// 当资产类别 =“除回购和拆借外贷款”时，
     	// 1、借款人类型为“1-住户”时，行业信息联动带出“1-境内个人”，且置灰不允许修改；实际上，行业信息未联动带出且没有置灰。
     	// 2、借款人类型为“6-境外”时，行业信息联动带出“2-非居民”，且置灰不允许修改；实际上，行业信息未联动带出且没有置灰。

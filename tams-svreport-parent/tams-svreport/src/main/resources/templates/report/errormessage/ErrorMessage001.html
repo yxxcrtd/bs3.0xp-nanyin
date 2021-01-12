@@ -29,8 +29,12 @@
       <div class="layui-inline layui-col-md4">
         <label class="layui-form-label form-lable">接口类型</label>
         <div class="layui-input-inline input-inline">
-        <select id="interfType" name="interfType" data-th-data-url='@{/chb/errormessage/ErrorMessage001/getInterfType}' data-th-data-formatoption=true class="input-select" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" multiple="multiple">
+        <!-- modify by dubaojun 2020-11-03 错误数据页面接口类型取值修改为数据字典 start -->
+        <!-- <select id="interfType" name="interfType" data-th-data-url='@{/chb/errormessage/ErrorMessage001/getInterfType}' data-th-data-formatoption=true class="input-select" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" multiple="multiple">
+        </select> -->
+        <select id="interfType" name="interfType" data-th-data-result='${SVR_CHECK_INTERF_TYPE}' data-th-data-formatoption=true class="input-select" data-th-initvalue="${interfType}"  placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" multiple="multiple">
         </select>
+        <!-- modify by dubaojun 2020-11-03 错误数据页面接口类型取值修改为数据字典 end -->
         </div>
       </div>
       </div>
@@ -55,13 +59,14 @@
 </div>
 <div layout:fragment="script">
   <script data-th-inline="javascript" type="text/javascript">
-    var isFromMain = /*[[${isFromMain}]]*/;
+    var isFromMain = /*[[${isFromMain}]]*/'';
     var searchDataStart=/*[[${searchDataStart}]]*/'';
 	var searchDataEnd=/*[[${searchDataEnd}]]*/'';
-    var title01 = /*[[${title01}]]*/;
-    var title02 = /*[[${title02}]]*/;
-    var repCode01 = /*[[${repCode01}]]*/;
-    var repCode02 = /*[[${repCode02}]]*/;
+    var title01 = /*[[${title01}]]*/'';
+    var title02 = /*[[${title02}]]*/'';
+    var repCode01 = /*[[${repCode01}]]*/'';
+    var repCode02 = /*[[${repCode02}]]*/'';
+    var interfTypeStr ='';
   </script> 
   <script data-th-src="@{/js/report/jquery.validate.js}" type="text/javascript"></script>
   <script data-th-src="@{/js/report/joyinvalid.js}" type="text/javascript"></script>

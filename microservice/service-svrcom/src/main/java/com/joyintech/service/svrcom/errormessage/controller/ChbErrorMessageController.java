@@ -33,7 +33,7 @@ import com.joyintech.tams.report.errormessage.service.ErrorMessage001Service;
  * @see ChbErrorMessageController
  * @since 1.0
  */
-@RestController
+@RestController("backChbErrorMessageController")
 @RequestMapping("/CheckErrorMessage")
 public class ChbErrorMessageController{
 

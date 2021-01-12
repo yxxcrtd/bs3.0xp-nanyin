@@ -3,20 +3,20 @@ var assetColList1 = [ //资产要素标题栏
 	{align: 'center', title: '公共信息（必填）', colspan: 5},
 	{align: 'center', title: '本行/他行存款||大额存单', colspan: 9},
 	{align: 'center', title: '债券类资产/理财直接融资工具/同业存单', colspan: 11},
-	{align: 'center', title: '拆放同业及买入返售/同业拆入及卖出回购', colspan: 8},
-	{align: 'center', title: '非标准化债权类资产/信贷资产流转项目', colspan: 66},
+	{align: 'center', title: '拆放同业及买入返售/同业拆入及卖出回购', colspan: 7},
+	{align: 'center', title: '非标准化债权类资产/新增可投资资产', colspan: 36},
 	{align: 'center', title: '票据类/信用证类资产', colspan: 12},
-	{align: 'center', title: '权益类资产', colspan: 11},
-	{align: 'center', title: '金融衍生品', colspan: 4},
+	{align: 'center', title: '权益类资产', colspan: 9},
+	{align: 'center', title: '金融衍生品', colspan: 3},
 	{align: 'center', title: 'QDII债券资产', colspan: 14},
 	{align: 'center', title: 'QDII拆出/逆回购资产', colspan: 6},
 	{align: 'center', title: 'QDII股票/基金类资产', colspan: 5},
 	{align: 'center', title: 'QDII结构性票据类资产', colspan: 17},
-	{align: 'center', title: '资产管理产品', colspan: 24},
+	{align: 'center', title: '资产管理产品', colspan: 23},
 	{align: 'center', title: '贵金属/商品', colspan: 5},
 	{align: 'center', title: '非标准化债权类/权益类/代客境外理财投资QDII/新增可投资资产', colspan: 23},
 	{align: 'center', title: '另类资产', colspan: 6},
-	{align: 'center', title: '公募基金/私募基金', colspan: 15},
+	{align: 'center', title: '公募基金/私募基金', colspan: 14},
 	{align: 'center', title: '委外投资——协议方式', colspan: 20},
 	{align: 'center', title: '其他（负债）类资产', colspan: 5},
 	// 附加
@@ -37,7 +37,7 @@ var assetColList2 = [
 	{field: 'MDATE01', align: 'center', title: '*到期日', width: 150},
 	{field: 'ASSET_YIELD01', align: 'center', title: '*年利率%', width: 150},
 	{field: 'BASIS01', align: 'center', title: '*计息基础', width: 150},
-    {field: 'DEPO_TYPE01', align: 'center', title: '存款类型', width: 150},
+	{field: 'IS_STRUCT01', align: 'center', title: '*是否为结构性存款', width: 150},
 	{field: 'TARGET_TYPE01', align: 'center', title: '结构性存款挂钩标的类别', width: 150},
 	{field: 'TARGET01', align: 'center', title: '结构性存款挂钩标的', width: 150},
 	// 债券类资产/理财直接融资工具/同业存单
@@ -56,78 +56,47 @@ var assetColList2 = [
 	{field: 'VDATE02', align: 'center', title: '*起息日', width: 150},
 	{field: 'MDATE02', align: 'center', title: '*到期日', width: 150},
 	{field: 'RIVAL_PARTY02', align: 'center', title: '*对手方', width: 150},
-    {field: 'RIVAL_PARTY_TYPE02', align: 'center', title: '对手方类型', width: 150},
 	{field: 'ASSET_YIELD02', align: 'center', title: '*年利率%', width: 150},
 	{field: 'BASIS02', align: 'center', title: '*计息基础', width: 150},
 	{field: 'TARGET_TYPE102', align: 'center', title: '回购标的类别', width: 150},
 	{field: 'TARGET_AMT02', align: 'center', title: '回购标的金额', width: 150},
-	// 非标准化债权类资产/信贷资产流转项目
+	// 非标准化债权类资产/新增可投资资产
 	{field: 'PROFIT_TYPE04', align: 'center', title: '收/受益权类型', width: 150},
-  	{field: 'IS_RESALE04', align: 'center', title: '*是否属于买入返售', width: 150},
-  	{field: 'ASSET_NAME04', align: 'center', title: '*名称', width: 150},
-    {field: 'AMT04', align: 'center', title: '*金额', width: 150},
-    {field: 'PRIN_BASEAMT04', align: 'center', title: '*份额面值', width: 150},
-  	{field: 'VDATE04', align: 'center', title: '*起息日', width: 150},
-    {field: 'MDATE04', align: 'center', title: '*到息日', width: 150},
-    {field: 'FMDATE04', align: 'center', title: '*法定到息日', width: 150},
-  	{field: 'RATE_FLAG04', align: 'center', title: '*是否有预期收益率', width: 150},
-    {field: 'ASSET_YIELD04', align: 'center', title: '项目收益率(利率)%', width: 150},
-    {field: 'COUPON_SPECIES04', align: 'center', title: '计息类型', width: 150},
-    {field: 'INTEREST_RULE_FLAG04', align: 'center', title: "规则付息标识",width:150},
-    {field: 'INTPAY_CYCLE04', align: 'center', title: '*付息频率（个月/次）', width: 150},
-    {field: 'INTPAY_RULE04', align: 'center', title: '*利息分布方式', width: 150},
-  	{field: 'REPAY_CMT04', align: 'center', title: '*还本付息情况说明', width: 150},
-  	{field: 'BASIS04', align: 'center', title: '*计息基础', width: 150},
-    {field: 'BASIS_TYPE04', align: 'center', title: '基准利率种类', width: 150},
-    {field: 'FLOAT_FACTOR_FLAG04', align: 'center', title: '是否有浮动因子', width: 150},
-  	{field: 'FLOAT_FACTOR04', align: 'center', title: '浮动因子（%）', width: 150},
-    {field: 'SPREAD_RATE04', align: 'center', title: '利差(BP)', width: 150},
-    { title: "结构档次",width:150,field: 'STRUCT_GRADE04', align: 'center'},
-    { title: "还本方式",width:150, field: 'REPAYMENT_TYPE04', align: 'center'},
-    { title: "分期还本条款标识",width:150, field: 'PERIOD_REPAYMENT_FLAG04', align: 'center'},
-    { title: "基础资产类型",width:150, field: 'BASIC_ASSET_TYPE04', align: 'center'},
-    { title: "超额收益分配比例%",width:150, field: 'EXCESS_PROFIT_RATE04', align: 'center'},
-  	{field: 'FINANCIE04', align: 'center', title: '*融资人', width: 150},
-  	{field: 'FCR_GRADE_IN04', align: 'center', title: '*融资人内部信用评级', width: 150},
-  	{field: 'FCR_GRADE_OUT04', align: 'center', title: '*外部评级机构名称及对融资人评级结果', width: 150},
-  	{field: 'FINANCIER_TYPE104', align: 'center', title: '*融资人类型（按规模划分）', width: 150},
-  	{field: 'FINANCIER_TYPE204', align: 'center', title: '*融资人类型（按技术领域划分）', width: 150},
-  	{field: 'FINANCIER_TYPE304', align: 'center', title: '*融资人类型（按经济类型划分）', width: 150},
-  	{field: 'FINANCE_PROJ04', align: 'center', title: '*融资项目', width: 150},
-  	{field: 'INDUSTRY_LEVEL2_TYPE04', align: 'center', title: '*融资人所属行业', width: 150},
-  	{field: 'INDUSTRY_FLAG04', align: 'center', title: '*项目是否属于重点监控行业和领域', width: 150},
-  	{field: 'MONIT_TYPE04', align: 'center', title: '重点监控行业和领域类别', width: 150},
-  	{field: 'MON_TYPE_COMM04', align: 'center', title: '重点监控行业和领域类别说明', width: 150},
-  	{field: 'GUA_TYPE04', align: 'center', title: '担保方式', width: 150},
-    {field: 'GUA_TYPE_REMARK04', align: 'center', title: '担保情况说明', width: 150},
-    { title: "抵质押物类型",width:150,field: 'PLEDGE_TYPE04', align: 'center'},
-    { title: "抵质押物价值（元）",width:150, field: 'PLEDGE_VALUE04', align: 'center'},
-    { title: "担保性质",width:150,field: 'NATURE_GUARANTEE04', align: 'center'},
-    { title: "担保人与融资人关系",width:150, field: 'RELATION_FINAN04', align: 'center'},
-  	{field: 'FINANCIER_GRADE04', align: 'center', title: '*融资人主体评级', width: 150},
-  	{field: 'IN_GRADE04', align: 'center', title: '*资产内部评级', width: 150},
-    {field: 'OUT_GRADE04', align: 'center', title: '*资产外部评级', width: 150},
-    { title: "含权类型",width:150,field: 'CONTAIN_TYPE04', align: 'center'},
-    { title: "行权方式",width:150,field: 'EXERCISE_TYPE04', align: 'center'},
-    { title: "固定行权日",width:150,field: 'EXERCISE_DATE04', align: 'center'},
-    { title: "首次行权日期",width:150, field: 'FIRST_EXERCISE_DATE04', align: 'center'},
-    { title: "行权周期",width:150, field: 'EXERCISE_PERIOD04', align: 'center'},
-    { title: "行权价格",width:150, field: 'EXERCISE_PRICE04', align: 'center'},
-    { title: "永续条款类型",width:150, field: 'PERPETUAL_CLAUSE_TYPE04', align: 'center'},
-    { title: "利息递延条款类型",width:150, field: 'DEFERRED_INTEREST_TYPE04', align: 'center'},
-    { title: "递延利息是否计息",width:150, field: 'DEFERRED_INTEREST_INT04', align: 'center'},
-    { title: "首次重定价日期",width:150, field: 'FIRST_REPRCE_DATE04', align: 'center'},
-    { title: "重定价周期",width:150, field: 'REPRCE_CYCLE04', align: 'center'},
-    { title: "部分赎回标识",width:150,field: 'PART_REDEM_FLAG04', align: 'center'},
-    { title: "部分赎回比例%",width:200,field: 'PART_REDEM_RATE04', align: 'center'},
-  	{field: 'CHOSE04', align: 'center', title: '*选择权', width: 150},
-  	{field: 'CONDITION_CMM04', align: 'center', title: '*行权条件说明', width: 150},
-    {field: 'FIN_AREA04', align: 'center', title: '*融资人所属地区', width: 150},
-    { title: "增信机构代码",width:150, align: 'center', field: 'CREDIT_ORG_CODE04'},
-    { title: "增信机构名称",width:150, align: 'center', field: 'CREDIT_ORG_NAME04'},
-  	{field: 'FIN_ORG_CODE04', align: 'center', title: '*融资人组织机构（社会信用）代码', width: 150},
-  	{field: 'TOTAL_FEE_RATE04', align: 'center', title: '*融资总费率%', width: 150},
-  	{field: 'PRO_INDUSTRY_LEVEL204', align: 'center', title: '*融资项目所属行业', width: 150},
+	{field: 'IS_RESALE04', align: 'center', title: '*是否属于买入返售', width: 150},
+	{field: 'ASSET_NAME04', align: 'center', title: '*名称', width: 150},
+	{field: 'AMT04', align: 'center', title: '*金额', width: 150},
+	{field: 'VDATE04', align: 'center', title: '*起息日', width: 150},
+	{field: 'MDATE04', align: 'center', title: '*到息日', width: 150},
+	{field: 'RATE_FLAG04', align: 'center', title: '*是否有预期收益率', width: 150},
+	{field: 'ASSET_YIELD04', align: 'center', title: '项目收益率(利率)%', width: 150},
+	{field: 'INTPAY_CYCLE04', align: 'center', title: '*付息频率（个月/次）', width: 150},
+	{field: 'REPAY_CMT04', align: 'center', title: '*还本付息情况说明', width: 150},
+	{field: 'BASIS04', align: 'center', title: '*计息基础', width: 150},
+	{field: 'BASIS_TYPE04', align: 'center', title: '基准利率种类', width: 150},
+	{field: 'FLOAT_FACTOR04', align: 'center', title: '浮动因子（%）', width: 150},
+	{field: 'SPREAD_RATE04', align: 'center', title: '利差(BP)', width: 150},
+	{field: 'FINANCIE04', align: 'center', title: '*融资人', width: 150},
+	{field: 'FCR_GRADE_IN04', align: 'center', title: '*融资人内部信用评级', width: 150},
+	{field: 'FCR_GRADE_OUT04', align: 'center', title: '*外部评级机构名称及对融资人评级结果', width: 150},
+	{field: 'FINANCIER_TYPE104', align: 'center', title: '*融资人类型（按规模划分）', width: 150},
+	{field: 'FINANCIER_TYPE204', align: 'center', title: '*融资人类型（按技术领域划分）', width: 150},
+	{field: 'FINANCIER_TYPE304', align: 'center', title: '*融资人类型（按经济类型划分）', width: 150},
+	{field: 'FINANCE_PROJ04', align: 'center', title: '*融资项目', width: 150},
+	{field: 'INDUSTRY_LEVEL2_TYPE04', align: 'center', title: '*融资人所属行业', width: 150},
+	{field: 'INDUSTRY_FLAG04', align: 'center', title: '*项目是否属于重点监控行业和领域', width: 150},
+	{field: 'MONIT_TYPE04', align: 'center', title: '重点监控行业和领域类别', width: 150},
+	{field: 'MON_TYPE_COMM04', align: 'center', title: '重点监控行业和领域类别说明', width: 150},
+	{field: 'GUA_TYPE04', align: 'center', title: '担保方式', width: 150},
+	{field: 'GUA_TYPE_REMARK04', align: 'center', title: '担保情况说明', width: 150},
+	{field: 'FINANCIER_GRADE04', align: 'center', title: '*融资人主体评级', width: 150},
+	{field: 'IN_GRADE04', align: 'center', title: '*资产内部评级', width: 150},
+	{field: 'OUT_GRADE04', align: 'center', title: '*资产外部评级', width: 150},
+	{field: 'CHOSE04', align: 'center', title: '*选择权', width: 150},
+	{field: 'CONDITION_CMM04', align: 'center', title: '*行权条件说明', width: 150},
+	{field: 'FIN_AREA04', align: 'center', title: '*融资人所属地区', width: 150},
+	{field: 'FIN_ORG_CODE04', align: 'center', title: '*融资人组织机构（社会信用）代码', width: 150},
+	{field: 'TOTAL_FEE_RATE04', align: 'center', title: '*融资总费率%', width: 150},
+	{field: 'PRO_INDUSTRY_LEVEL204', align: 'center', title: '*融资项目所属行业', width: 150},
 	// 票据类/信用证类资产
 	{field: 'IS_RIGHT05', align: 'center', title: '*是否为收/受益权', width: 150},
 	{field: 'IS_RESALE05', align: 'center', title: '*是否属于买入返售', width: 150},
@@ -147,17 +116,14 @@ var assetColList2 = [
 	{field: 'SHARES_TYPE06', align: 'center', title: '股票类型', width: 150},
 	{field: 'INDUSTRY_SHARES206', align: 'center', title: '*行业', width: 150},
 	{field: 'INVEST_STAGE06', align: 'center', title: '投资阶段', width: 150},
-    { title: "股权退出安排",width:150, align: 'center', field: 'EQUITY_QUIT06'},
 	{field: 'SHARES_TYPE106', align: 'center', title: '*企业类型（按规模划分）', width: 150},
 	{field: 'SHARES_TYPE306', align: 'center', title: '*企业类型（按技术领域划分）', width: 150},
 	{field: 'SHARES_TYPE206', align: 'center', title: '*企业类型（按经济类型划分）', width: 150},
 	{field: 'IS_PLEDGE06', align: 'center', title: '*是否为质押融资', width: 150},
-	{ title: "是否为债转股",width:150,align: 'center', field: 'DEPT_EQUITY06'},
 	// 金融衍生品
 	{field: 'ASSET_NAME07', align: 'center', title: '*名称', width: 150},
 	{field: 'NOM_CAPI07', align: 'center', title: '*名义本金', width: 150},
 	{field: 'TARGET_TYPE307', align: 'center', title: '*标的类别', width: 150},
-    {field: 'HOLD_PURPOSE07', align: 'center', title: '*持有目的', width: 150},
 	// QDII债券资产
 	{field: 'COUNTRY_AREA08', align: 'center', title: '*所属国家或地区', width: 150},
 	{field: 'ASSET_NAME08', align: 'center', title: '*债券名称', width: 150},
@@ -206,7 +172,6 @@ var assetColList2 = [
 	{field: 'TRADE_FEE11', align: 'center', title: '*交易费', width: 150},
 	// 资产管理产品
 	{field: 'ASSET_NAME12', align: 'center', title: '*资管计划名称', width: 150},
-    {title: "是否由金融资产投资公司发行",width:250,align: 'center', field: 'FINANCIAL_COMISSUE12'},
 	{field: 'PARTY_CODE12', align: 'center', title: '*资管计划发起人机构编码', width: 150},
 	{field: 'CHECK_CODE12', align: 'center', title: '资管计划登记编码', width: 150},
 	{field: 'MANAGER_ID12', align: 'center', title: '*管理人', width: 150},
@@ -269,7 +234,6 @@ var assetColList2 = [
 	// 公募基金/私募基金
 	{field: 'ASSET_ID15', align: 'center', title: '*基金代码', width: 150},
 	{field: 'ASSET_NAME15', align: 'center', title: '*基金名称', width: 150},
-    {title: "是否由金融资产投资公司发行",width:250,align: 'center', field: 'FINANCIAL_COMISSUE15'},
 	{field: 'INDUSTRY_SHARES215', align: 'center', title: '*行业', width: 150},
 	{field: 'REGIST_ORG115', align: 'center', title: '*登记备案机构', width: 150},
 	{field: 'IS_GOVERN_FUND15', align: 'center', title: '是否属于政府投资基金', width: 150},
@@ -313,8 +277,6 @@ var assetColList2 = [
 ];
 
 var colList = [];
-var headerNum='0';
-var tableName='';
 // 已选择字段列表
 var selectedColumns = [];
 //数据源表触发事件
@@ -335,10 +297,7 @@ function getColumns() {
 			tableId : $('#baseTableName').val(),
 		},
 		success : function(result) {
-			var resultData=eval("(" + result + ")");
-        	headerNum=resultData["headerNum"];
-        	tableName=resultData["tableName"];
-            var jsonObj = JSON.parse(resultData["data"]);
+			var jsonObj = eval("(" + result + ")");
 			cols[0] = {
 				type : 'checkbox',
 				fixed : 'left'
@@ -364,7 +323,7 @@ function getColumns() {
 				data: resultData,
 				allowClear:true,
 			});
-			if (headerNum == "2") {
+				if (tableId == "CHB_ASSET_INFO" || tableId == "CHB_ASSET_INFO_TMP") {
 //							assetColList2.push(cols);
 				layui.use([ 'table' ], function() {
 					var table = layui.table;
@@ -708,31 +667,31 @@ function showTables() {
 	var tableId = $('#baseTableName').val();
 	var columnId = getColumnParams();
 
-	// 资产要素表特殊处理
-	if (headerNum == "2") {
-		layui.use(
-			[ 'table' ],
-			function() {
-				var table = layui.table;
-				table
-					.render({
-						elem : '#dataTable',
-						type : 'POST',
-						where : {
-							tableId : $('#baseTableName').val(),
-							columnIds : columnId
-						},
-						url : basePath
-							+ "common/infomanagement/SvrOperationalInfo001/findPage",
-						page : true,
-						limits: [20,100,200,300,400,500,600,700,800,900],
-						limit: 20,
-						height : 'full-' + divheight,
-						cols : [assetColList1,
-							assetColList2]
-					});
-			});
-		return;
+		// 资产要素表特殊处理
+		if (tableId == "CHB_ASSET_INFO" || tableId == "CHB_ASSET_INFO_TMP") {
+			layui.use(
+				[ 'table' ],
+				function() {
+					var table = layui.table;
+					table
+						.render({
+							elem : '#dataTable',
+							type : 'POST',
+							where : {
+								tableId : $('#baseTableName').val(),
+								columnIds : columnId
+							},
+							url : basePath
+								+ "common/infomanagement/SvrOperationalInfo001/findPage",
+							page : true,
+							limits: [20,100,200,300,400,500,600,700,800,900],
+							limit: 20,
+							height : 'full-' + divheight,
+							cols : [assetColList1,
+								assetColList2]
+						});
+				});
+			return;
 
 	}
 	layui.use([ 'table' ], function() {
@@ -804,9 +763,7 @@ $(function() {
 		var tableId = $('#baseTableName').val();
 		var columnIds = getColumnParams();
 		var param = {};
-		param.headerNum=headerNum;
 		param.tableId = tableId;
-		param.tableName = tableName;
 		param.columnIds = columnIds;
 		param.jasonData = jasonData;
 		if (typeof (tableId) == "undefined" || tableId == null
@@ -864,7 +821,7 @@ $(function() {
 					// var message = result.message;
 					if (result.length == 0) {
 						Joyin.ajax(basePath + 'common/loaninfomanagement/OperationalLoanInfo001/importFile', {fileName : fileName}, function(result){
-							//Joyin.ajax(basePath + 'common/infomanagement/SvrOperationalInfo001/linkSvrReport', {fileName : fileName});
+							Joyin.ajax(basePath + 'common/infomanagement/SvrOperationalInfo001/linkSvrReport', {fileName : fileName});
 						});
 					}
 				});
