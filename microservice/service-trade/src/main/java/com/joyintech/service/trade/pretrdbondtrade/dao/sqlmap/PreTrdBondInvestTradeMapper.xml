@@ -69,7 +69,7 @@
             DISTINCT
             A.FINPROD_ID id,
             <!--下拉框值为代码+简称 modified by lishuping 20191017 start-->
-            A.FINPROD_ID text,
+            A.FINPROD_ABBR text,
             <!--下拉框值为代码+简称 modified by lishuping 20191017 end-->
             A.FINPROD_ID,
             A.FINPROD_NAME,

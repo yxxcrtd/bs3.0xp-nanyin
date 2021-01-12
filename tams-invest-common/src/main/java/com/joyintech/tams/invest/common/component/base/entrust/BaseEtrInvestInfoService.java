@@ -187,4 +187,6 @@ public interface BaseEtrInvestInfoService {
     boolean cancelCompleteDelegate(String entrustId,String tradeId);
 
     boolean updateBackReason(String entrustId,String reason);
+
+    BaseEtrFinishAmtDto  selectEtrFinishAmtDtoByPrimaryKey(String entrustId);
 }

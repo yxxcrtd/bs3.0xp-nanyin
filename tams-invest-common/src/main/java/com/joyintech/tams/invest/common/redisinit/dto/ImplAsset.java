@@ -226,6 +226,9 @@ public class ImplAsset extends FinProduct implements IAssetInfo {
 
     @Override
     public String getBodyGradeType() {
+    	if(bodyGradeType==null) {
+    		return "00";
+    	}
         return bodyGradeType;
     }
 
