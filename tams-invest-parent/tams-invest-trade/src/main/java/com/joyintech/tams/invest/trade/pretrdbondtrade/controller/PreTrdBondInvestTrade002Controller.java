@@ -132,7 +132,8 @@ public class PreTrdBondInvestTrade002Controller extends BaseController {
                 dto.setSettleSpeedText(DictCodeList.清算速度_T_1.getValue());
             }
 
-            
+            String eff  = StringUtil.isNotEmpty(dto.getEff_time()) ? dto.getEff_time().substring(11,16):"";
+            dto.setEff_time(eff);
 
             //构建人员信息
             trdInvestPersonInfoDto = new TrdInvestPersonInfoDto();
