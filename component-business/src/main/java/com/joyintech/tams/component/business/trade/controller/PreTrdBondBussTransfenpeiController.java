@@ -69,6 +69,9 @@ public class PreTrdBondBussTransfenpeiController extends BaseController {
                 // 已质押券信息一览
                 model.addAttribute("entity", entity);
             }
+
+            model.addAttribute("entrustId", entrustId);
+
         }
         model.addAttribute("pageFrom", getParam("pageFrom"));
         model.addAttribute("statusValid", getParam("statusValid"));
