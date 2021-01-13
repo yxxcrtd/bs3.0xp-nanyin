@@ -450,6 +450,9 @@ public class SecDealPreprocessingBookService {
             map.put("finprodId", dealNow.getFinprodId());
             map.put("mdate", acctEntity.getBookDate());
             map.put("ps", DictCodeList.交易方向_还本到账.getValue());
+            map.put("secManageAcctId", dealNow.getSecManageAcctId());
+            map.put("chlId", dealNow.getChlId());
+            map.put("invAim", dealNow.getInvAim());
             Map<String, Object> mapDeal=finProductCommonService.selectHBFXData(map);
             if(StringUtil.isNotEmpty(mapDeal)
                     && ((Date)mapDeal.get("TRADEDATE")).compareTo(((Date)mapDeal.get("MDATE")))<0){
@@ -526,6 +529,9 @@ public class SecDealPreprocessingBookService {
             map.put("finprodId", dealNow.getFinprodId());
             map.put("mdate", acctEntity.getBookDate());
             map.put("ps", DictCodeList.交易方向_还本到账.getValue());
+            map.put("secManageAcctId", dealNow.getSecManageAcctId());
+            map.put("chlId", dealNow.getChlId());
+            map.put("invAim", dealNow.getInvAim());
             Map<String, Object> mapDeal=finProductCommonService.selectHBFXData(map);
             if(StringUtil.isNotEmpty(mapDeal)
                     && ((Date)mapDeal.get("TRADEDATE")).compareTo(((Date)mapDeal.get("MDATE")))<0){
@@ -774,6 +780,9 @@ public class SecDealPreprocessingBookService {
             map.put("finprodId", dealNow.getFinprodId());
             map.put("mdate", acctEntity.getBookDate());
             map.put("ps", DictCodeList.交易方向_收息到账.getValue());
+            map.put("secManageAcctId", dealNow.getSecManageAcctId());
+            map.put("chlId", dealNow.getChlId());
+            map.put("invAim", dealNow.getInvAim());
             Map<String, Object> mapDeal=finProductCommonService.selectHBFXData(map);
             if(StringUtil.isNotEmpty(mapDeal)
                     && ((Date)mapDeal.get("TRADEDATE")).compareTo(((Date)mapDeal.get("MDATE")))<0){
@@ -1293,6 +1302,9 @@ public class SecDealPreprocessingBookService {
             map.put("finprodId", dealNow.getFinprodId());
             map.put("mdate", acctEntity.getBookDate());
             map.put("ps", DictCodeList.交易方向_还本到账.getValue());
+            map.put("secManageAcctId", dealNow.getSecManageAcctId());
+            map.put("chlId", dealNow.getChlId());
+            map.put("invAim", dealNow.getInvAim());
             Map<String, Object> mapDeal=finProductCommonService.selectHBFXData(map);
             if(StringUtil.isNotEmpty(mapDeal)
                     && ((Date)mapDeal.get("TRADEDATE")).compareTo(((Date)mapDeal.get("MDATE")))<0){
@@ -1359,6 +1371,9 @@ public class SecDealPreprocessingBookService {
                 map.put("finprodId", dealNow.getFinprodId());
                 map.put("mdate", acctEntity.getBookDate());
                 map.put("ps", DictCodeList.交易方向_还本到账.getValue());
+                map.put("secManageAcctId", dealNow.getSecManageAcctId());
+                map.put("chlId", dealNow.getChlId());
+                map.put("invAim", dealNow.getInvAim());
                 Map<String, Object> mapDeal=finProductCommonService.selectHBFXData(map);
                 if(StringUtil.isNotEmpty(mapDeal)
                         && ((Date)mapDeal.get("TRADEDATE")).compareTo(((Date)mapDeal.get("MDATE")))<0){
@@ -1732,6 +1747,9 @@ public class SecDealPreprocessingBookService {
             map.put("finprodId", dealNow.getFinprodId());
             map.put("mdate", acctEntity.getBookDate());
             map.put("ps", DictCodeList.交易方向_还本到账.getValue());
+            map.put("secManageAcctId", dealNow.getSecManageAcctId());
+            map.put("chlId", dealNow.getChlId());
+            map.put("invAim", dealNow.getInvAim());
             Map<String, Object> mapDeal=finProductCommonService.selectHBFXData(map);
             if(StringUtil.isNotEmpty(mapDeal)
                     && ((Date)mapDeal.get("TRADEDATE")).compareTo(((Date)mapDeal.get("MDATE")))<0){
@@ -1815,6 +1833,9 @@ public class SecDealPreprocessingBookService {
                 map.put("finprodId", dealNow.getFinprodId());
                 map.put("mdate", acctEntity.getBookDate());
                 map.put("ps", DictCodeList.交易方向_还本到账.getValue());
+                map.put("secManageAcctId", dealNow.getSecManageAcctId());
+                map.put("chlId", dealNow.getChlId());
+                map.put("invAim", dealNow.getInvAim());
                 Map<String, Object> mapDeal=finProductCommonService.selectHBFXData(map);
                 if(StringUtil.isNotEmpty(mapDeal)
                         && ((Date)mapDeal.get("TRADEDATE")).compareTo(((Date)mapDeal.get("MDATE")))<0){
