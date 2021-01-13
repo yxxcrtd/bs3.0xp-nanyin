@@ -85,29 +85,43 @@ public class IndicatorCalcService {
             // 参与计算的参数值
             Map<String, Object> param = valMap.get(ptlCode);
             for (String ind : indList) {
-                // 添加线程
-                threadPoolTaskExecutor.execute(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        try {
-                            // 指标信息
-                            calc(indMap.get(ind), isOld, param, ptlCode, assetCode);
-                        }
-                        catch (Exception e) {
-                        	StringBuilder builder = new StringBuilder();
-                        	param.entrySet().forEach(item->builder.append(item.getKey()).append(GlobalConstant.COLON).append(item.getValue()).append(GlobalConstant.COMMA));
-                    		String logStr = builder.toString();
-                    		logger.info("指标参数详细【{}】", logStr);
-                            logger.error("指标计算异常,指标代码：{}", ind);
-                        }
-                        finally {
-                            // 线程计数
-                            countDown.countDown();
-                        }
+                if (isOld){
+                    try {
+                        // 指标信息
+                        calc(indMap.get(ind), isOld, param, ptlCode, assetCode);
+                    } catch (Exception e) {
+                        StringBuilder builder = new StringBuilder();
+                        param.entrySet().forEach(itemss -> builder.append(itemss.getKey()).append(GlobalConstant.COLON).append(itemss.getValue()).append(GlobalConstant.COMMA));
+                        String logStr = builder.toString();
+                        logger.info("指标参数详细【{}】", logStr);
+                        logger.error("指标计算异常,指标代码：{}", ind);
+                    } finally {
+                        // 线程计数
+                        countDown.countDown();
                     }
+                }else {
+                    // 添加线程
+                    threadPoolTaskExecutor.execute(new Runnable() {
 
-                });
+                        @Override
+                        public void run() {
+                            try {
+                                // 指标信息
+                                calc(indMap.get(ind), isOld, param, ptlCode, assetCode);
+                            } catch (Exception e) {
+                                StringBuilder builder = new StringBuilder();
+                                param.entrySet().forEach(item -> builder.append(item.getKey()).append(GlobalConstant.COLON).append(item.getValue()).append(GlobalConstant.COMMA));
+                                String logStr = builder.toString();
+                                logger.info("指标参数详细【{}】", logStr);
+                                logger.error("指标计算异常,指标代码：{}", ind);
+                            } finally {
+                                // 线程计数
+                                countDown.countDown();
+                            }
+                        }
+
+                    });
+                }
             }
         }
         try {
