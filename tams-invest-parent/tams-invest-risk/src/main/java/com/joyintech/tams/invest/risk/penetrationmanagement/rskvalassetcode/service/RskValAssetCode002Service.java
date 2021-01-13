@@ -10,9 +10,13 @@
  
 package com.joyintech.tams.invest.risk.penetrationmanagement.rskvalassetcode.service;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.tams.common.base.entity.RskValtblAssetSubMap;
@@ -76,6 +80,24 @@ public class RskValAssetCode002Service extends BaseService<RskValtblAssetSubMapD
      * @since 1.0
      */
     public void insert(RskValtblAssetSubMapDto dto) {
+        // 二级法人权限处理
+        if(MultilevelDataAuthorityUtil.isEnabled()) {
+            //创建机构代码
+            String createInst =   MultilevelDataAuthorityUtil.getService().queryOrganizationCode(dto.getCreateUser());
+            dto.setCreateInst(createInst);
+
+            // 有查询权限的机构代码
+            List<String> searchOrgCodeList = null;
+            // 有编辑权限的机构代码
+            List<String> editOrgCodeList = null;
+            // 新建或修改时重新设置二级法人权限，删除时则清空
+            //获取所有父级机构。  拥有查看权限
+            searchOrgCodeList = CommonUtil.getParentInstitution(createInst);
+            // 仅资产的创建机构（当前登录用户所在机构）有编辑权限
+            editOrgCodeList = Arrays.asList(dto.getCreateInst());
+            // 记录二级法人权限
+            insertDataAuthTypeInst(dto.getId(), searchOrgCodeList, editOrgCodeList, DictCodeList.共通业务类型_估值表资产科目映射.getValue());
+        }
         restTemplate.postForObject(
            ServiceApplication.RISK_SERVICE_NAME +"/RskValAssetCode/saveAssetCode",
            dto,Integer.class);
