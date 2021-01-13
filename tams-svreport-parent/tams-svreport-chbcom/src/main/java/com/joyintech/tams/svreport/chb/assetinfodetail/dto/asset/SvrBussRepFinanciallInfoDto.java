@@ -34,10 +34,6 @@ public class SvrBussRepFinanciallInfoDto extends RepAssetBond{
      */
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 名称
-     */
-    private  String  assetName;
 
     /**
      * 名义本金
@@ -59,13 +55,6 @@ public class SvrBussRepFinanciallInfoDto extends RepAssetBond{
      */
     private  String  remark;
 
-    public String getAssetName() {
-        return assetName;
-    }
-
-    public void setAssetName(String assetName) {
-        this.assetName = assetName;
-    }
 
     public BigDecimal getNomCapi() {
         return nomCapi;
