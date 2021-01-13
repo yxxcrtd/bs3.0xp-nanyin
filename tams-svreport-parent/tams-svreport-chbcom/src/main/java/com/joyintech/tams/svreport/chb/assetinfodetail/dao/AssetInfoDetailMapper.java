@@ -1,5 +1,7 @@
 package com.joyintech.tams.svreport.chb.assetinfodetail.dao;
 
+import com.joyintech.system.base.dao.SysDatadictListLinkMapper;
+import com.joyintech.system.base.entity.SysDatadictListLink;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import org.apache.ibatis.annotations.Param;
@@ -35,4 +37,7 @@ public interface AssetInfoDetailMapper {
 	ChbAssetInfo getChbAssetInfoByUUid (@Param("Assetuuid") String Assetuuid);
 
 	int mergeInfoListEx(@Param("newDataList")List<ChbAssetInfo> insertList);
+
+
+	List<SysDatadictListLink> getDataListLinkData(Map<String,Object> params);
 }

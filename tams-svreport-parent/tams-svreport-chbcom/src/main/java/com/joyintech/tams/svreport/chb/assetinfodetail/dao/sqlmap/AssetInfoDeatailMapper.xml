@@ -2055,9 +2055,22 @@
 
 
     <select id="getAssetInfoDetail"  resultMap="BaseResultMap">
-          SELECT * FROM CHB_ASSET_INFO
+          SELECT '01' dataStatus,a.*
+          FROM CHB_ASSET_INFO a
           where ASSET_UUID = #{Assetuuid}
     </select>
+
+    <select id="getDataListLinkData"  resultType="com.joyintech.system.base.entity.SysDatadictListLink">
+          SELECT * FROM SYS_DATADICT_LIST_LINK
+          WHERE 1=1
+        <if test="linkDictCode != null and linkDictCode!=''">
+            and LINKED_DICT_CODE = #{linkDictCode}
+        </if>
+        <if test="linkItemCode != null and linkItemCode!=''">
+            and LINKED_ITEM_CODE = #{linkItemCode}
+        </if>
+    </select>
+
 
     <select id="getChbAssetInfoByUUid"  resultMap="ChbBaseResultMap">
           SELECT * FROM CHB_ASSET_INFO

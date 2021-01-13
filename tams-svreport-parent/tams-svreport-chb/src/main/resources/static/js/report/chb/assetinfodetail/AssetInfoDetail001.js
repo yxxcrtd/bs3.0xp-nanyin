@@ -34,7 +34,7 @@
 		rowno:false,
 		cols:[
 			{ field: 'assetUuid',width:0,sortField:'',visible:false},
-			{ title: "反馈状态", field: 'statusStr',width:100 ,sortField:'status'},
+			{ title: "反馈状态", field: 'dataStatusStr',width:100 ,sortField:'dataStatus'},
 			{ title: "资产代码", field: 'assetCode',width:100 ,sortField:'assetCode'},
 			{ title: "资产名称", field: 'assetName',width:100 ,sortField:'assetName'},
 			{ title: "资产一级类型",field:'orgAssetType1Str', width:150,sortField:'orgAssetType1'},
@@ -56,14 +56,14 @@
 		Joyin.dialog(JoyinUtil.getLabel("资产基本信息修改"),
 			basePath + "chb/assetinfodetail/AssetInfoDetail002/init",
 			"95%", "90%", {pageModel:"edit",
-				assetUuid:data.assetUuid},function(){table.reload();});
+				assetUuid:data.assetUuid,dataStatus:data.dataStatus},function(){table.reload();});
 		// });
 	});
 	/**
 	 * 绑定删除事件
 	 */
 	table.bind('click', '.delt', function(data, index) {
-		var object = {assetUuid:data.assetUuid, operateType:"edit"};
+		var object = {assetUuid:data.assetUuid,dataStatus:data.dataStatus, operateType:"edit"};
 		Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
 			Joyin.ajax(basePath +'chb/assetinfodetail/AssetInfoDetail001/delete',{assetUuid:data.assetUuid}, function(result){
 				table.reload();

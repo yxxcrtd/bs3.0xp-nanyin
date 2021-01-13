@@ -97,6 +97,7 @@ public class SvrDataUtil {
             // 从缓存中获取所有数据字典
             Map<String, DataDict> dataDictMap = CacheUtil.getAllDictCode();
             String code = dictCode.getValue();
+
             if (null != dataDictMap) {
             	DataDict dto = dataDictMap.get(code);
 

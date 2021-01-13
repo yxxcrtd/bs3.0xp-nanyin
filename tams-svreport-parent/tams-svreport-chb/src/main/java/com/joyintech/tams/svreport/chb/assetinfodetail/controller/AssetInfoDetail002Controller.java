@@ -62,9 +62,11 @@ public class AssetInfoDetail002Controller extends BaseController {
                 DictCode.交易流通场所_中债,DictCode.币种_中债);
 
         String assetUuid = this.getParam("assetUuid");
+        String dataStatus = this.getParam("dataStatus");
+
         //资产编号不为空则为修改.
-        if(StringUtil.isNotEmpty(assetUuid)){
-            AssetInfoDetailDto  dto = assetInfoDetailMService.getAssetInfoDetail(assetUuid);
+        if(StringUtil.isNotEmpty(assetUuid)&&StringUtil.isNotEmpty(dataStatus)){
+            AssetInfoDetailDto  dto = assetInfoDetailMService.getAssetInfoDetail(assetUuid,dataStatus);
             model.addAttribute(GlobalConstant.ENTITY, dto);
         }
         return super.init(model);

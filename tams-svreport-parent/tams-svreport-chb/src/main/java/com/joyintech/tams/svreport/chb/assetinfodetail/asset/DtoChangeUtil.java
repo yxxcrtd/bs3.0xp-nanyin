@@ -62,7 +62,7 @@ public class DtoChangeUtil {
                     menthdName = field.getName().toLowerCase();
                 }
                 //判断是否有相同的字段,不取序列化字段.避免报错
-                if (null != chbNameMap.get(menthdName)&&!menthdName.equals("isSerialVersionUID")) {
+                if (null != chbNameMap.get(menthdName)&&menthdName.indexOf("isSerialVersionUID")<0) {
                     //接收实体类
                     PropertyDescriptor pd = new PropertyDescriptor(field.getName(),
                             obj.getClass());

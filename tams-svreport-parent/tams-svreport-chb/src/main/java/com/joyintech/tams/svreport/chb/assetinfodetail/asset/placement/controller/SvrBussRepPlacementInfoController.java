@@ -13,25 +13,18 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.asset.placement.controll
 
 import com.joyintech.framework.annotation.SubPageId;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.*;
-import com.joyintech.tams.svreport.chb.assetinfodetail.asset.BussAssetInfoController;
-import com.joyintech.tams.svreport.chb.assetinfodetail.asset.BussAssetInfoService;
-import com.joyintech.tams.svreport.chb.assetinfodetail.asset.placement.dto.SvrBussRepPlacementInfoDto;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import com.joyintech.tams.svreport.chb.assetinfodetail.asset.depo.impl.SvrBussRepDepositInfoImplService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 债券类--中债报送
@@ -44,10 +37,10 @@ import java.util.Map;
 @Controller
 @RequestMapping("/chb/assetinfodetail/asset/plancement/SvrBussRepPlacementInfo")
 @SubPageId("SvrBussRepPlacementInfo")
-public class SvrBussRepPlacementInfoController extends BaseController implements BussAssetInfoController  {
+public class SvrBussRepPlacementInfoController extends BaseController {
 
     @Autowired
-    private BussAssetInfoService bussAssetInfoService;
+    private SvrBussRepDepositInfoImplService bussAssetInfoService;
 
     @Override
     public String init(Model model) {
@@ -61,7 +54,7 @@ public class SvrBussRepPlacementInfoController extends BaseController implements
         // 设置画面初始值
 //        setEntity(model);
         // 画面参数设置
-        model.addAttribute("entityName", StringUtil.defaultString(this.getParam("entityName"), bussAssetInfoService.getDeftultEntity()));
+//        model.addAttribute("entityName", StringUtil.defaultString(this.getParam("entityName"), bussAssetInfoService.getDeftultEntity()));
         model.addAttribute("INT_ASSET_TYPE", this.getParam("int_asset_type"));
         model.addAttribute("issuerElement", this.getParam("issuerElement"));
         model.addAttribute("PARTY_TYPE2_01",DictCodeListExt2.发行机构类型_按经济类型划分_国有企业.getValue());
@@ -97,8 +90,4 @@ public class SvrBussRepPlacementInfoController extends BaseController implements
         return null;
     }
 
-    @Override
-    public void setEntity(Model model) {
-
-    }
 }

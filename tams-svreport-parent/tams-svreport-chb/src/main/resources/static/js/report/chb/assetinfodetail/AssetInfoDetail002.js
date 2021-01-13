@@ -45,9 +45,7 @@ var QueryFunc=function(){
 
         if (repAssetType=="1701"||repAssetType=="1702"||repAssetType=="1703"||repAssetType=="1704"
             ||repAssetType=="1705"||repAssetType=="1706") {
-            $("#svrBussFinBondRepInfo_div").show();
-            $(".svrBussRepFinanciallInfo_div").hide();
-            $(".svrBussRepQDIIdemolitionInfo_div").hide();
+            // $("#svrBussFinBondRepInfo_div").show();
 
         }else if((repAssetType=="1101"||repAssetType=="1102"||repAssetType=="1103"||repAssetType=="1104"
             ||repAssetType=="1105")){
@@ -57,24 +55,22 @@ var QueryFunc=function(){
             ||repAssetType=="1115"||repAssetType=="1116"||repAssetType=="1117"||repAssetType=="2101"
             ||repAssetType=="2501"||repAssetType=="2502"||repAssetType=="1111"||repAssetType=="1111")){
             $("#svrBussFinBondRepInfo_div").show();
-            $(".svrBussRepFinanciallInfo_div").hide();
-            $(".svrBussRepQDIIdemolitionInfo_div").hide();
 
         }else if((repAssetType=="1201"||repAssetType=="1202"||repAssetType=="1203"||repAssetType=="1204"
             ||repAssetType=="1205")){
             $(".svrBussRepFinanciallInfo_div").show();
-            $(".svrBussFinBondRepInfo_div").hide();
-            $(".svrBussRepPlacementInfo_div").hide();
-            $(".svrBussRepQDIIdemolitionInfo_div").hide();
         }
         else if((repAssetType=="1301"||repAssetType=="1302"||repAssetType=="1303"||repAssetType=="1304"
             ||repAssetType=="1305")){
             $(".svrBussRepQDIIdemolitionInfo_div").show();
-            $(".svrBussFinBondRepInfo_div").hide();
-            $(".svrBussRepPlacementInfo_div").hide();
-            $(".svrBussRepFinanciallInfo_div").hide();
-        }       
-		 star();
+        }
+        else if((repAssetType=="1108"||repAssetType=="1902"||repAssetType=="1901"||repAssetType=="1107")){
+            $(".SvrBussRepDlRepoInfoDto_div").show();
+        }
+        else if((repAssetType=="1002"||repAssetType=="1003"||repAssetType=="1004"||repAssetType=="1005")){
+            $(".SvrBussRepDepositInfoDto_div").show();
+        }
+        star();
         layui.form.render();
     }
 

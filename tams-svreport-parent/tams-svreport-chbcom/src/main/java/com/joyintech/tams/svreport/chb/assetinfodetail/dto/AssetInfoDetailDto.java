@@ -17,6 +17,8 @@ import com.joyintech.tams.report.common.base.annotate.DictFormat;
 import com.joyintech.tams.report.common.base.annotate.TableName;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussFinBondRepInfoDto;
+import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepDepositInfoDto;
+import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepDlRepoInfoDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.validator.AssetInfoDetailValidator;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
@@ -44,6 +46,12 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 	@Valid
 	private SvrBussFinBondRepInfoDto svrBussFinBondRepInfoDto;
 
+	@Valid
+	private SvrBussRepDepositInfoDto svrBussRepDepositInfoDto;
+
+	@Valid
+	private SvrBussRepDlRepoInfoDto svrBussRepDlRepoInfoDto;
+
 	public SvrBussFinBondRepInfoDto getSvrBussFinBondRepInfoDto() {
 		return svrBussFinBondRepInfoDto;
 	}
@@ -60,8 +68,25 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 		this.dataStatus = dataStatus;
 	}
 
-	public String getDataStausSty() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getDataStatus());
+	public String getDataStatusStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.分配状态, this.getDataStatus());
+	}
+
+
+	public SvrBussRepDepositInfoDto getSvrBussRepDepositInfoDto() {
+		return svrBussRepDepositInfoDto;
+	}
+
+	public void setSvrBussRepDepositInfoDto(SvrBussRepDepositInfoDto svrBussRepDepositInfoDto) {
+		this.svrBussRepDepositInfoDto = svrBussRepDepositInfoDto;
+	}
+
+	public SvrBussRepDlRepoInfoDto getSvrBussRepDlRepoInfoDto() {
+		return svrBussRepDlRepoInfoDto;
+	}
+
+	public void setSvrBussRepDlRepoInfoDto(SvrBussRepDlRepoInfoDto svrBussRepDlRepoInfoDto) {
+		this.svrBussRepDlRepoInfoDto = svrBussRepDlRepoInfoDto;
 	}
 
 	/**

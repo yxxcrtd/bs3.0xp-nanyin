@@ -12,6 +12,9 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.asset;
 
 import com.joyintech.framework.base.intf.IDictCode;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
+import org.springframework.ui.Model;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *  债券中债报送
@@ -22,20 +25,40 @@ import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
  * @since 1.0
  */
 public interface BussAssetInfoService{
-    
+
+
     /**
-     * 默认entity名称
+     * 工厂模式根据二级资产编号获取类名
+     * @param type2
+     * @return
      */
-    String getDeftultEntity();
+    boolean getBussinessCode(String type2);
 
     /**
      * 默认entity名称获取画面初始化需要的数据字典
      */
+    void setModelAttribute(Model model, HttpServletRequest req);
+
+    /**
+     * 当前页面所需数据字典
+     * @return
+     */
     IDictCode[] getInitDictCode();
 
+    /**
+     * 赋值方法
+     * @param model 界面model实体
+     * @param assetUuid  资产编号
+     * @param assetType2  资产二级类型
+     * @param dataStatus   数据状态(用于区分ERROR数据还是INFO数据)
+     */
+    void setEntity(Model model,String assetUuid,String assetType2,String dataStatus);
 
+
+    /**
+     * 保存时数据转换方法
+     * @param info  界面传入实体类
+     * @return
+     */
     AssetInfoDetailDto setEntity(AssetInfoDetailDto info);
-
-
-    Object getEntity(String assetUUid);
 }

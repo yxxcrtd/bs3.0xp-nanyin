@@ -139,14 +139,4 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
 		return assetInfoDetailMapper.getAssetInfoDetail(UUid);
 	}
 
-	/**
-	 * 根据uuid获取资产信息
-	 * @param UUid
-	 * @return
-	 */
-	public ChbAssetInfo getChbAssetInfoByUUid(String UUid){
-		return assetInfoDetailMapper.getChbAssetInfoByUUid(UUid);
-	}
-
-
 }
