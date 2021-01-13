@@ -69,6 +69,7 @@ public class TaxScheme003DtoValidator implements BeanValidator {
             //若应税标识为简易计税，判断有没有填写应税税率
             if(StringUtil.equals(dto.getTaxableSign(),"03") && null==dto.getTaxRate()){
                 errorList.add(new ValidMessage("taxRate","应税税率不能为空!"));
+
                 return errorList;
             }
 
