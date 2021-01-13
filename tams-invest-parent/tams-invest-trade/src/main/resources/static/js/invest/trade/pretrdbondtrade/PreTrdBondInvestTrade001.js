@@ -45,14 +45,14 @@
             {field:'validStatusText',sortField:'validStatus', width:100, title: 'PreTrdBondInvestTrade001.validStatus'}
             ,{field:'tradeDateText', sortField:'tradeDate',width:100, title: 'PreTrdBondInvestTrade001.tradeDate', type: 'date'}
             ,{field:'counterId', sortField:'counterId',width:200, title: 'PreTrdBondInvestTrade001.counterId'}
-            ,{field:'counterTrader',sortField:'COUNTER_TRADER', width:140, title: 'PreTrdBondInvestTrade001.counterTrader'}
+            ,{field:'counterTrader',sortField:'counterTrader', width:140, title: 'PreTrdBondInvestTrade001.counterTrader'}
             ,{field:'ps', sortField:'PS',width:100, title: 'PreTrdBondInvestTrade001.ps'}
-            ,{field:'finprodId',sortField:'FINPROD_MARKET_ID', width:140, title: 'PreTrdBondInvestTrade001.finprodId',
+            ,{field:'finprodId',sortField:'finprodId', width:140, title: 'PreTrdBondInvestTrade001.finprodId',
                 // render : function(data, type, row, meta) {
                 //     return "<a class='finprodId-link' style='cursor: pointer;'>" + row.finprodId + "</a>";
                 // }
             }
-            ,{field:'finprodName', sortField:'FINPROD_NAME',width:180, title: 'PreTrdBondInvestTrade001.finprodName'}
+            ,{field:'finprodName', sortField:'finprodName',width:180, title: 'PreTrdBondInvestTrade001.finprodName'}
             ,{field:'unitCprice',sortField:'unitCprice',width:100, title:'PreTrdBondInvestTrade001.unitCprice', type: 'money'}
             ,{field:'yield',sortField:'yield', width:150, title: 'PreTrdBondInvestTrade001.yield', type: 'money'}
             ,{field:'exerYield',sortField:'exerYield', width:150, title: 'PreTrdBondInvestTrade001.exerYield', type: 'money'}

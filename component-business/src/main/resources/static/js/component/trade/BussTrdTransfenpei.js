@@ -48,6 +48,13 @@ var table;
               this.bind('click', '.delt', function(data, index) {
                   table.deleteRow(index);
               });
+
+              if( !( $('#bussTrdTransfenpeidto_entrustId') && $('#bussTrdTransfenpeidto_entrustId').val() ) ){
+                // 自动分配失效  分配方式失效
+                $('#bussTransfenpei_distribution').attr('disabled',true);
+                $('#bussTransfenpei_btn_autoAllocation').addClass('layui-btn-disabled');
+              }
+
           },
           beforeEditCell:function(value, field, data){
               var entrustId = $("#entrustId").val();
@@ -119,11 +126,11 @@ var table;
                     $("#sec_portfolioId").val(portfolioIdList.join(","))
                 }
                // add by xingxiaokang 20200310 start ZGBUG-123无委托时，自动分配按钮置灰
-               if (j>0) {
-            	   $('#bussTransfenpei_btn_autoAllocation').parent().show();
-               }else{
-            	   $('#bussTransfenpei_btn_autoAllocation').parent().hide();
-               }
+//               if (j>0) {
+//            	   $('#bussTransfenpei_btn_autoAllocation').parent().show();
+//               }else{
+//            	   $('#bussTransfenpei_btn_autoAllocation').parent().hide();
+//               }
                // add by xingxiaokang 20200310 end
            }
 	});
