@@ -251,6 +251,17 @@ public class TrdPlanRateInvestTrade003Controller extends BaseController{
              model.addAttribute("entity", entity);
              model.addAttribute("tradeId", entrustId);
              model.addAttribute("entrustId", entrustId);
+        }else if(StringUtil.equals(this.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
+
+            //modify by mashukai 20210113 ZGBSS-175 计划类利率型多组合交易新建页面交易方向没有带出来 start
+            //Map<String, Object> modelMap = model.asMap();
+            //add by yujiaping 2020-12-16 TISHKBS-1259 计划利率型交易新建时，清算速度默认T+0，并且不可修改start
+            TrdPlanRateInvestTradeDto entity = new TrdPlanRateInvestTradeDto();
+            //modify by mashukai 20210113 ZGBSS-175 计划类利率型多组合交易新建页面交易方向没有带出来 end
+            entity.setMySettleSpeed(DictCodeList.清算速度_T_0.getValue());
+            model.addAttribute("entity", entity);
+            //add by yujiaping 2020-12-16 TISHKBS-1259 计划利率型交易新建时，清算速度默认T+0，并且不可修改end
+
         }
         model.addAttribute("YES_OR_NO_N",DictCodeList.是否_否.getValue());
         //add by lizhi 是否限制划款指令开关 2020年2月26日  start
@@ -263,14 +274,7 @@ public class TrdPlanRateInvestTrade003Controller extends BaseController{
         Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
         isEleShow.putAll(map);
         model.addAttribute("isEleShow", isEleShow);
-        //modify by mashukai 20210113 ZGBSS-175 计划类利率型多组合交易新建页面交易方向没有带出来 start
-        Map<String, Object> modelMap = model.asMap();
-        //add by yujiaping 2020-12-16 TISHKBS-1259 计划利率型交易新建时，清算速度默认T+0，并且不可修改start
-        TrdPlanRateInvestTradeDto entity = (TrdPlanRateInvestTradeDto) modelMap.get("entity");
-        //modify by mashukai 20210113 ZGBSS-175 计划类利率型多组合交易新建页面交易方向没有带出来 end
-        entity.setMySettleSpeed(DictCodeList.清算速度_T_0.getValue());
-        model.addAttribute("entity", entity);
-        //add by yujiaping 2020-12-16 TISHKBS-1259 计划利率型交易新建时，清算速度默认T+0，并且不可修改end
+
         return super.init(model);
     }
     /**

@@ -1131,6 +1131,8 @@ var etrAmt = '';
             psChange();
 
             $('#TrdPlanRateInvestTrade003_distribution').attr('disabled', false);
+            $('#TrdPlanRateInvestTrade003_btn_autoAllocation').removeClass('layui-btn-disabled');
+
             $("#finprodName").attr('disabled', true);
             $("#finprodMarketId").attr('disabled', true);
             $("#ps").attr('disabled', true).trigger("change");
@@ -1159,6 +1161,9 @@ var etrAmt = '';
                     $('.delt').remove();
                 }, 1000)
             }, 1500);
+        }else{
+            $('#TrdPlanRateInvestTrade003_distribution').attr('disabled', true);
+            $('#TrdPlanRateInvestTrade003_btn_autoAllocation').addClass('layui-btn-disabled');
         }
     }
 
