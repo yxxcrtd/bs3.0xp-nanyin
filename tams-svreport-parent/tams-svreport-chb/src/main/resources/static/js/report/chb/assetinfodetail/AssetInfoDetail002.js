@@ -52,6 +52,11 @@ var QueryFunc=function(){
         else if((repAssetType=="1107"||repAssetType=="1108"||repAssetType=="1901"||repAssetType=="1902")){
             $("#svrBussRepPlacementInfo_div").show();
         }
+        //新增金融衍生品
+        else if((repAssetType=="1401"||repAssetType=="1402"||repAssetType=="1403"||repAssetType=="1404"
+            ||repAssetType=="1405"||repAssetType=="1406"||repAssetType=="1409")){
+            $("#svrBussRepFinanciallInfo_div").show();
+        }
         else if((repAssetType=="1101"||repAssetType=="1110"||repAssetType=="1109"||repAssetType=="1102"
             ||repAssetType=="1111"||repAssetType=="1112"||repAssetType=="1113"||repAssetType=="1114"
             ||repAssetType=="1115"||repAssetType=="1116"||repAssetType=="1117"||repAssetType=="2101"
