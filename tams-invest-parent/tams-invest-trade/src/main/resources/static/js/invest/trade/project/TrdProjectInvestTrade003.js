@@ -547,6 +547,11 @@
             if (!isInit) {
                 table.clear();
             }
+            // add by mashukai 20210113 ZGBSS-183 start
+            if (!$("#entrustId").val()){
+                table.clear();    
+            }
+            // add by mashukai 20210113 ZGBSS-183 end
             var ps = $('#ps').val();
             if (ps == T01) {//买入
             	$('#channelFee_div').hide();
@@ -560,8 +565,16 @@
             		table.showColumns([{field:'channelFee',visible: false}]);
             	}
             	 //modify by hxy 20200325 end
-
+                //add by mashukai 20210113 ZGBSS-178 项目类资产多组合交易新建：买入交易时不应展示资产可用持仓字段，卖出交易时不应展示组合可用现金字段 start
+                table.showColumns([{field:'assetsavailablepositions',visible: false}]);
+                table.showColumns([{field:'bussTrdAvailableCashQueryavalibleCash',visible: true}]);
+                table.showColumns([{field:'bussTrdAvailableCashQueryavalibleCash1',visible: true}]);
             } else if(ps == T02){//卖出
+                table.showColumns([{field:'assetsavailablepositions',visible: true}]);
+                table.showColumns([{field:'bussTrdAvailableCashQueryavalibleCash',visible: false}]);
+                table.showColumns([{field:'bussTrdAvailableCashQueryavalibleCash1',visible: false}]);
+               //add by mashukai 20210113 ZGBSS-178 项目类资产多组合交易新建：买入交易时不应展示资产可用持仓字段，卖出交易时不应展示组合可用现金字段 end
+                
 //            	if($('#chlId').val()){
 //            		$('#channelFee_div').show();
 //            		table.showColumns([{field:'channelFee',visible: true}]);
@@ -580,6 +593,11 @@
         
         function finprodMarketIdChange() {
             var optionData = $('#finprodMarketId').find('option:selected').data('data');
+            // add by mashukai 20210113 ZGBSS-183 start
+            if (!$("#entrustId").val()){
+                table.clear();
+            }
+            // add by mashukai 20210113 ZGBSS-183 end
             if (optionData && optionData.object) {
                 finprodId = optionData.object ? optionData.object.finprodId || '' : ''
             	$('#finprodId').val(finprodId);
