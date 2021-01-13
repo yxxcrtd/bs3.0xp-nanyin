@@ -222,17 +222,19 @@ public class TrdPlanRateInvestTrade002Controller extends BaseController{
             if(StringUtil.isNotBlank(entity.getRemark())&&StringUtil.contains(entity.getRemark(),"退回原因")){
                 entity.setRemark("");
             }
+            entity.setMySettleSpeed(DictCodeList.清算速度_T_0.getValue());
             model.addAttribute("trdInvestPersonInfo002Dto", JsonUtils.object2Json(entity.getTrdInvestPersonInfo002Dto()));
             model.addAttribute("tradeId", entrustId);
             model.addAttribute("entity", entity);
+        }else if(StringUtil.equals(this.getParam("pageModel"), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
+
+            //add by yujiaping 2020-12-16 TISHKBS-1259 计划利率型交易新建时，清算速度默认T+0，并且不可修改start
+            TrdPlanRateInvestTradeDto entity = new TrdPlanRateInvestTradeDto();
+            entity.setMySettleSpeed(DictCodeList.清算速度_T_0.getValue());
+            model.addAttribute("entity", entity);
+            //add by yujiaping 2020-12-16 TISHKBS-1259 计划利率型交易新建时，清算速度默认T+0，并且不可修改end
+
         }
-        Map<String, Object> modelMap = model.asMap();
-        //add by yujiaping 2020-12-16 TISHKBS-1259 计划利率型交易新建时，清算速度默认T+0，并且不可修改start
-        TrdPlanRateInvestTradeDto entity = (TrdPlanRateInvestTradeDto) modelMap.get("entity");
-        entity.setMySettleSpeed(DictCodeList.清算速度_T_0.getValue());
-        model.addAttribute("entity", entity);
-        //add by yujiaping 2020-12-16 TISHKBS-1259 计划利率型交易新建时，清算速度默认T+0，并且不可修改end
-        
         model.addAttribute("YES_OR_NO_N",DictCodeList.是否_否.getValue());
         //add by lizhi 是否限制划款指令开关 2020年2月26日  start
         model.addAttribute("GEN_PAY_ORDERS_AUTO",CacheUtil.getSysParam(BussinessConstant.GEN_PAY_ORDERS_AUTO));
