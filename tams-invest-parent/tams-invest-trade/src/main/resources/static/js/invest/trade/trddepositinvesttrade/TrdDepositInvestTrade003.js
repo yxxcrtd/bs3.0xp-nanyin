@@ -110,6 +110,26 @@
         }
         
     }
+    
+    /**
+     *校验本金金额是否大于资产可融资金额
+     */
+    var checkIssueAmt = function(){
+        //新增校验本金是否超过资产融资金额
+        var checkData = $.serializeToObject('#basicInfoForm',true);
+        var isOver = false;
+        checkData.finprodId = finprodId;
+        if (checkData.ps == 'T01' && checkData.finprodId != null && checkData.ccy != null && checkData.tradeDate != null){
+            ajaxJsonSync(basePath + 'invest/trade/trddepositinvesttrade/TrdDepositInvestTrade003/getIssueAmt', checkData, function(resultc) {
+                if(resultc.data != null && resultc.data != ''){
+                    if(resultc.data <= checkData.prinAmt){
+                        isOver = true;
+                    }
+                }
+            });
+        }
+        return isOver;
+    }
         
     /**
      * 保存或提交
@@ -117,6 +137,12 @@
      * @returns
      */
     function saveOrSubmit(operateType) {
+        var isOver = checkIssueAmt();
+        if (isOver){
+            Joyin.error("资产融资金额不足！");
+            return;
+        }
+        
     	// 划款指令隐藏时，自动生成划款指令信息
     	generateOrders(function () {
 	        var s;        

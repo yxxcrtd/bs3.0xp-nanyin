@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.component.business.trade.BussTrdAvailableCashQueryService;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.apache.commons.codec.binary.StringUtils;
@@ -130,6 +131,9 @@ public class TrdDepositInvestTrade003Controller extends BaseController {
     
     @Autowired(required = false)
     private InterfRiskRdsService<InterfRiskRdsDto> interfRiskRdsService;
+
+    @Autowired(required = false)
+    private BussTrdAvailableCashQueryService bussTrdAvailableCashQueryService;
     
     /**
      * 初始化方法
@@ -723,5 +727,33 @@ public class TrdDepositInvestTrade003Controller extends BaseController {
         processParameter.setWorkFlowParameter(params);
         String msg = trdDepositInvestTrade002Service.start(processParameter, dtoList.toArray(new TrdDepositInvestTrade001Dto[]{}));
         return new AjaxResult(msg);
+    }
+
+    /**
+     * 查询剩余融资金额
+     * @return AjaxResult
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("getIssueAmt")
+    public AjaxResult getIssueAmt(@RequestBody Map<String,Object> map){
+        // 调用基础组件.【组合可用现金和实际现金查询更新组件.查询持仓(可用)】
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("tradeDate", (String) map.get("tradeDate"));
+        paramMap.put("ccy", (String)map.get("ccy"));
+        //  paramMap.put("calendarId", dto.getCalendarId());
+        paramMap.put("finprodId", (String) map.get("finprodId"));
+        //获得资产维度的持仓
+        Map<String, Object>  resultMap = bussTrdAvailableCashQueryService.getFinAvaPosition(paramMap);
+
+        //融资金额
+        BigDecimal issueAmt = new BigDecimal((String)resultMap.get("ISSUEAMT"));
+        //已融资金额
+        BigDecimal position = new BigDecimal((String) resultMap.get("POSITION"));
+        AjaxResult result = new AjaxResult();
+        BigDecimal resultAmt = issueAmt.subtract(position);
+        result.setData(resultAmt);
+        return  result;
     }
 }
