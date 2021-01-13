@@ -57,6 +57,10 @@ var QueryFunc=function(){
             ||repAssetType=="1405"||repAssetType=="1406"||repAssetType=="1409")){
             $("#svrBussRepFinanciallInfo_div").show();
         }
+        //QDII拆出/逆回购资产
+        else if((repAssetType=="1504"||repAssetType=="1506")){
+            $("#svrBussRepQDIIdemolitionInfo_div").show();
+        }
         else if((repAssetType=="1101"||repAssetType=="1110"||repAssetType=="1109"||repAssetType=="1102"
             ||repAssetType=="1111"||repAssetType=="1112"||repAssetType=="1113"||repAssetType=="1114"
             ||repAssetType=="1115"||repAssetType=="1116"||repAssetType=="1117"||repAssetType=="2101"

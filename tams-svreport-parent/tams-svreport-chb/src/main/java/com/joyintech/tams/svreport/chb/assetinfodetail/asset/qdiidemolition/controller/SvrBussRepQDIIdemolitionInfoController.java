@@ -20,6 +20,7 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.depo.impl.SvrBussRepDepositInfoImplService;
+import com.joyintech.tams.svreport.chb.assetinfodetail.asset.qdiidemolition.impl.SvrBussRepQDIIdemolitionInfoImplService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,66 +42,22 @@ import java.util.List;
 public class SvrBussRepQDIIdemolitionInfoController extends BaseController {
 
     @Autowired
-    private SvrBussRepDepositInfoImplService bussAssetInfoService;
+    private SvrBussRepQDIIdemolitionInfoImplService bussAssetInfoService;
 
     @Override
     public String init(Model model) {
+        //赋值界面数据字典
         setSelectOptionToModel(model, bussAssetInfoService.getInitDictCode());
-        setSelectOptionToModel(model, DictCode.债券性质);
-        setSelectOptionToModel(model, DictCode.币种_中债);
-        setSelectOptionToModel(model, DictCode.交易对手类型);
-        setSelectOptionToModel(model, DictCode.计息基础_中债);
-        setSelectOptionToModel(model, DictCode.回购标的类型);
-        setSelectOptionToModel(model, DictCode.所属国家或地区);
-
-
-
-        // 设置画面初始值
-//        setEntity(model);
-        // 画面参数设置
-//        model.addAttribute("entityName", StringUtil.defaultString(this.getParam("entityName"), bussAssetInfoService.getDeftultEntity()));
-        model.addAttribute("INT_ASSET_TYPE", this.getParam("int_asset_type"));
-        model.addAttribute("issuerElement", this.getParam("issuerElement"));
-        model.addAttribute("PARTY_TYPE2_01",DictCodeListExt2.发行机构类型_按经济类型划分_国有企业.getValue());
-        model.addAttribute("PARTY_TYPE2_02",DictCodeListExt2.发行机构类型_按经济类型划分_集体企业.getValue());
-        model.addAttribute("PARTY_TYPE2_03", DictCodeListExt2.发行机构类型_按经济类型划分_私营企业.getValue());
-        model.addAttribute("PARTY_TYPE2_99",DictCodeListExt2.发行机构类型_按经济类型划分_其他.getValue());
-        //项目类资产中债报送专用
-        if(StringUtil.equals(this.getParam("int_asset_type"), DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue())){
-            model.addAttribute("SVR_ASSET_TYPE_SECOND_LEVEL", createChbAssetType());
-        }
-        model.addAttribute("FINPROD_TYPE_TG_F18",DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
-        model.addAttribute("YES", DictCodeList.是否_中债_是.getValue());
-        model.addAttribute("SVR_PARTY_TYPE1_01", DictCodeListExt3.发行机构类型_按规模划分_中小微企业.getValue());
-        //币种
-        model.addAttribute("CCY", DictCodeListExt3.发行机构类型_按规模划分_中小微企业.getValue());
+        //赋值界面参数及实体类
+        bussAssetInfoService.setModelAttribute(model,this.getRequest());
         return "report/chb/assetinfodetail/asset/qdiidemolition/SvrBussRepQDIIdemolitionInfo";
     }
 
 
     
-    private String createChbAssetType(){
-        SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.资产_负债二级类别, null);
-        if (selectDto != null && !StringUtil.isEmptyList(selectDto.getOptions())) {
-            List<SelectOptionDto> options = selectDto.getOptions();
-            for (int index = options.size() - 1; index >= 0; index-- ) {
-                SelectOptionDto option = options.get(index);
-                if(!StringUtil.equals(option.getId(), DictCodeListExt2.资产_负债二级类别_理财直接融资工具.getValue())){
-                    options.remove(option);
-                }
-            }
-            return JsonUtils.objectArray2Json(options.toArray());
-        }
-        return null;
-    }
 
 
-    /**
-     * 重写pageId {@inheritDoc}
-     */
-    @Override
-    public String getPageId() {
-        return this.getParam(GlobalConstant.PAGE_ID);
-    }
+
+
 
 }

@@ -15,73 +15,8 @@
         <h3 class="pro-module-title"><span class="title-des">QDII拆出/逆回购资产</span>（<span class="star-sign">*</span>必填）<i class="iconfont icon-arrow-down pro-down-icon"></i></h3>
         <div class="pro-module-item">
 			<div class="layui-form-item">
-						<div class=" form-inline-wrap">
-							<label class="layui-form-label form-label-wrap"
-								   data-th-text="#{BussRepQDIIdemolitionInfo.assetCode}">行内资产/负债编码</label>
-							<div class="layui-input-inline input-inline">
-								<input type="text" id="finprodMarketId"
-									   name="finprodMarketId" class="layui-input form-input"
-									   maxlength="18"
-									   data-th-value="${entity?.assetCode}">
-								<!-- 增加快捷录入功能 by 赵东东 2019.10.12 start -->
-								<!--
-                                                                <a id="FinPlanNetAsset002_btn_quickInput" class="layui-btn layui-btn-sm form-input-text">快录</a>
-                                -->
-								<!-- 增加快捷录入功能 by 赵东东 2019.10.12 end -->
-							</div>
-				</div>
-				<div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-					<label class="layui-form-label form-lable"
-						   data-th-text="#{BussRepQDIIdemolitionInfo.vDate}">起息日</label>
-					<div class="layui-input-inline input-inline">
-						<input id="vdate" name="vdate"
-							   class="layui-input form-input input-dateRangeSelect"
-							   placeholder="请选择时间区间"
-							   data-th-placeholder="#{SysCommon.placeholder}">
-					</div>
-				</div>
-				<div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-					<label class="layui-form-label form-lable"
-						   data-th-text="#{BussRepQDIIdemolitionInfo.mDate}">到期日</label>
-					<div class="layui-input-inline input-inline">
-						<input id="mdate" name="mdate"
-							   class="layui-input form-input input-dateRangeSelect"
-							   placeholder="请选择时间区间"
-							   data-th-placeholder="#{SysCommon.placeholder}">
-					</div>
-				</div>
-			</div>
-			<div class="layui-form-item">
 				<div class="form-inline-wrap">
-					<label class="layui-form-label form-label-wrap" data-th-utext="#{BussRepQDIIdemolitionInfo.issuePartyId}" style="line-height: normal!important;">发行机构代码</label>
-					<div class="layui-input-inline input-inline">
-						<input type="text" th:id="|${entityName}_repPartyCode|" th:name="|${entityName}.repPartyCode|" th:value="${entity?.repPartyCode}" class="layui-input form-input" maxlength="32" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required/>
-					</div>
-				</div>
-				<div class="form-inline-wrap">
-					<label class="layui-form-label form-label-wrap" data-th-utext="#{BussRepQDIIdemolitionInfo.repTradeMarket}" style="line-height: normal!important;">交易流通场所</label>
-					<div class="layui-input-inline input-inline">
-						<select th:id="|${entityName}_repTradeMarket|" th:name="|${entityName}.repTradeMarket|" data-th-data-result="${TRADE_MARKET}" th:initValue="${entity?.repTradeMarket}" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required>
-						</select>
-					</div>
-				</div>
-				<div class=" form-inline-wrap">
-					<label class="layui-form-label form-label-wrap"
-						   data-th-text="#{BussRepQDIIdemolitionInfo.ccy}">币种</label>
-					<div class="layui-input-inline input-inline">
-						<select type="text" id="ccy" name="ccy"
-								class="layui-input form-input input-select"
-								data-th-data-result='${CURRENCY_CHB}' formatoption="true"
-								required="required" allowClear="true" placeholder="请输入内容"
-								data-th-placeholder="#{SysCommon.placeholder}"
-								data-th-initValue='*{entity?.ccy?:CCY_default}'>
-						</select>
-					</div>
-				</div>
-			</div>
-			<div class="layui-form-item">
-				<div class="form-inline-wrap">
-					<label class="layui-form-label form-label-wrap" data-th-utext="#{BussRepQDIIdemolitionInfo.countryAreaName}">所属国家或地区</label>
+					<label class="layui-form-label form-label-wrap" data-th-utext="#{BussRepQDIIdemolitionInfo.countryArea}">所属国家或地区</label>
 					<div class="layui-input-inline input-inline">
 						<select th:id="|${entityName}_repCapiInvest|" th:name="|${entityName}.repCapiInvest|" data-th-data-result="${SVR_COUNTRY_AREA}" th:initValue="${entity?.repCapiInvest}" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required>
 						</select>
