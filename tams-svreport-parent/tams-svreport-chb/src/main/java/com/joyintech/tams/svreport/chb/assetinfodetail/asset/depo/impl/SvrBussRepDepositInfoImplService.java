@@ -81,8 +81,8 @@ public class SvrBussRepDepositInfoImplService extends BaseService<SvrBussRepDepo
 
     @Override
     public IDictCode[] getInitDictCode() {
-        return new DictCode[] {DictCode.标的类别,DictCode.资产_负债二级类别,
-                DictCode.是否_中债,DictCode.交易流通场所,DictCode.存款类型};
+        return new DictCode[] {
+                DictCode.计息基础_中债,DictCode.回购标的类型,DictCode.交易对手类型};
     }
 
     @Override
