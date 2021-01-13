@@ -14,8 +14,8 @@
               }//组合代码
              ,{field:'prinAmt',width:100,  title: 'TrdInvestFenPeiInfo.prinAmt', edit:true, sortable:false,type:'number', digit:2} //本金金额
              ,{field:'cpriceAmt',width:100,  title: 'TrdInvestFenPeiInfo.cpriceAmt',sortable:false,type:'number', digit:2} //净价总额
-             ,{field:'intAmt',width:100, title: 'TrdInvestFenPeiInfo.intAmt',sortable:false,type:'number', digit:2} //应计利息总额
-             ,{field:'channelFee',width:100, title: function(){return JoyinUtil.getLabel("invest.channelId")+JoyinUtil.getLabel("TrdInvestFenPeiInfo.channelFee");}(),sortable:false,type:'number', digit:2, visible:false} //通道费
+             ,{field:'intAmt',width:100, title: 'TrdInvestFenPeiInfo.intAmt',sortable:false,type:'number', digit:2} //应计利息总额            
+             ,{field:'channelFee',width:100, title: function(){return JoyinUtil.getLabel("invest.channelId")+JoyinUtil.getLabel("TrdDepoDuration002.channelFee");}(),sortable:false,type:'number', digit:2, visible:false} //通道费
              ,{field:'tradeAmt',width:100, title: 'TrdInvestFenPeiInfo.tradeAmt2',sortable:false,type:'number', digit:2} //实付金额
              ,{field:'commissionAmt',width:100, title: 'TrdInvestFenPeiInfo.commissionAmt2',sortable:false,type:'number', digit:2} //手续费
              /*,{field:'channelFee', width:100, title: '通道费',edit:false,sortable: false,visible: true,type:'number', digit:2}*/
