@@ -158,7 +158,7 @@
 		       total.WORKFLOW_ID workflowId,
 		       null matchStatus,
 		       to_char(total.trade_date, 'yyyy-MM-dd') tradeDateText,
-				otal.trade_date tradeDate,
+				total.trade_date tradeDate,
 		       mcp.counter_name counterId,
 		       total.counter_trader counterTrader,
 		       decode(total.ps,'T01','买入','T02','卖出') ps,

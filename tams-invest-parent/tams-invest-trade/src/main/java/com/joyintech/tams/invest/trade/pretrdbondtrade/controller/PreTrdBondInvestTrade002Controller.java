@@ -108,7 +108,7 @@ public class PreTrdBondInvestTrade002Controller extends BaseController {
         
         String isCstp = this.getParam("isCstp");
         if (StringUtil.equals(workflowStatus, DictCodeListExt1.交易流程状态_流程中.getValue())
-                || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(workflowId)&&!StringUtil.equals(workflowId,"undefined"))) {
+                || ( StringUtil.isNotBlank(workflowId)&&!StringUtil.equals(workflowId,"undefined"))) {
             dto = preTrdBondInvestTrade002Service.getBussinessEntityByWorkflowId(
                     workflowId);
             trdInvestPersonInfoDto = new TrdInvestPersonInfoDto();
