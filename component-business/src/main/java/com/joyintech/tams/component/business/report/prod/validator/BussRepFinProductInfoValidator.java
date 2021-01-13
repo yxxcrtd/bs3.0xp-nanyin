@@ -776,7 +776,13 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
             resultList.add(new ValidMessage("repIsConstracte","请输入是否为结构化(分级)产品"));
         }
 
-
+        if (StringUtil.isNotEmpty(dto.getRepYieldComment())){
+            Pattern p = Pattern.compile("[\uFF01]|[\uFF0C-\uFF0E]|[\uFF1A-\uFF1B]|[\uFF1F]|[\uFF08-\uFF09]|[\u3001-\u3002]|[\u3010-\u3011]|[\u201C-\u201D]|[\u2013-\u2014]|[\u2018-\u2019]|[\u2026]|[\u3008-\u300F]|[\u3014-\u3015]");
+            Matcher m = p.matcher(String.valueOf(dto.getRepYieldComment()));
+            if(m.find()){
+                resultList.add(new ValidMessage("repYieldComment","业绩比较基准说明不得含有中文标点"));
+            }
+        }
         return resultList;
     }
 }
