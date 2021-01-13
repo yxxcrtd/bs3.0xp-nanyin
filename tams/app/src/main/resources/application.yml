@@ -260,52 +260,46 @@ spring:
   profiles: allinone
   thymeleaf:
     cache: false
-  redis:
-    database: 1
-    password: joyin!234
-    host: 192.168.90.198
-    port: 6379
-    timeout: 20000
 #  redis:
 #    cluster:
 #      nodes: 192.168.70.212:7001,192.168.70.212:7002,192.168.70.212:7003,192.168.70.212:7004,192.168.70.212:7005,192.168.70.212:7006
 #  redislock:
 #    redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.90.76:1521/orcl
+    username: zgtams1225yh
+    password: zgtams1225yh
+    reportSqlldrDatabaseName: 192.168.90.76:1521/orcl
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName: zgtams0810
-  sqldirpassword: zgtams0810
+  sqldirurl: jdbc:oracle:thin:@//192.168.90.76:1521/orcl
+  sqldiruserName: zgtams1225yh
+  sqldirpassword: zgtams1225yh
 shiro:
   ssoEnable: true
   allowUrl: /service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810
+    url: jdbc:oracle:thin:@//192.168.90.76:1521/orcl
+    username: zgtams1225yh
+    password: zgtams1225yh
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810
+    url: jdbc:oracle:thin:@//192.168.90.76:1521/orcl
+    username: zgtams1225yh
+    password: zgtams1225yh
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810
+    url: jdbc:oracle:thin:@//192.168.90.76:1521/orcl
+    username: zgtams1225yh
+    password: zgtams1225yh
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810
+    url: jdbc:oracle:thin:@//192.168.90.76:1521/orcl
+    username: zgtams1225yh
+    password: zgtams1225yh
 log:
   path: /home/tams/logs/tams
-  level: debug
+  level: info
 eureka:
   client:
     enabled: false
