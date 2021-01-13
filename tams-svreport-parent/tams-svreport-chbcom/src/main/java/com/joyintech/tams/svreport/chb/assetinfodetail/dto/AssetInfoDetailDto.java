@@ -19,6 +19,7 @@ import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussFinBondRepInfoDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepDepositInfoDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepDlRepoInfoDto;
+import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepPlacementInfoDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.validator.AssetInfoDetailValidator;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
@@ -51,6 +52,11 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 
 	@Valid
 	private SvrBussRepDlRepoInfoDto svrBussRepDlRepoInfoDto;
+
+	@Valid
+	private SvrBussRepPlacementInfoDto svrBussRepPlacementInfoDto;
+
+
 
 	public SvrBussFinBondRepInfoDto getSvrBussFinBondRepInfoDto() {
 		return svrBussFinBondRepInfoDto;
@@ -130,4 +136,11 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 	}
 
 
+	public SvrBussRepPlacementInfoDto getSvrBussRepPlacementInfoDto() {
+		return svrBussRepPlacementInfoDto;
+	}
+
+	public void setSvrBussRepPlacementInfoDto(SvrBussRepPlacementInfoDto svrBussRepPlacementInfoDto) {
+		this.svrBussRepPlacementInfoDto = svrBussRepPlacementInfoDto;
+	}
 }
