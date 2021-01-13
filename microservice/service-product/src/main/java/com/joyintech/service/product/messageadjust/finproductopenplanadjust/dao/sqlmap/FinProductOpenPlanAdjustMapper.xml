@@ -3,7 +3,8 @@
 <mapper namespace="com.joyintech.service.product.messageadjust.finproductopenplanadjust.dao.FinProductOpenPlanAdjustMapper">
 	<resultMap type="com.joyintech.service.product.messageadjust.finproductopenplanadjust.dto.FinProductOpenPlanAdjustDto" id="BaseResultMap">
 		 <id column="OPEN_DATE_END" property="openDateEnd" jdbcType="DATE" />
-		 <result column="FINPROD_ABBR" property="finprodAbbr" jdbcType="VARCHAR" />
+		<result column="FINPROD_ABBR" property="finprodAbbr" jdbcType="VARCHAR" />
+		<result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
 		<result column="FINPROD_MARKET_ID" property="finprodMarketId" jdbcType="VARCHAR" />
 		<result column="OPEN_DATE_STR" property="openDateStr" jdbcType="DATE" />
         <result column="OPEN_VDATE" property="openVdate" jdbcType="DATE" />
@@ -46,7 +47,8 @@
 		select	distinct	
 				row_number() over(order by FIN_PRODUCT.FINPROD_MARKET_ID) NUM,																																
 				FIN_PRODUCT.FINPROD_MARKET_ID,																										
-				FIN_PRODUCT.FINPROD_ABBR,																									
+				FIN_PRODUCT.FINPROD_ABBR,
+		        FIN_PRODUCT.PROFIT_TYPE,
 				FIN_OPEN_PLAN.OPEN_DATE_STR,																										
 				FIN_OPEN_PLAN.OPEN_DATE_END,																									
 				FIN_OPEN_PLAN.OPEN_VDATE,																											
