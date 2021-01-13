@@ -244,8 +244,8 @@ public class TrdPlanRateInvestTrade003Controller extends BaseController{
  				    list.add(bussTrdTransfenpeiDto);
              	}
  			}
-             entity.setBussTrdTransfenpeiDto(list); 
-             
+             entity.setBussTrdTransfenpeiDto(list);
+             entity.setMySettleSpeed(DictCodeList.清算速度_T_0.getValue());
              model.addAttribute("BussTrdTransfenpeiDto", list);
              model.addAttribute("finprodId", finprodId);
              model.addAttribute("entity", entity);
@@ -253,11 +253,8 @@ public class TrdPlanRateInvestTrade003Controller extends BaseController{
              model.addAttribute("entrustId", entrustId);
         }else if(StringUtil.equals(this.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
 
-            //modify by mashukai 20210113 ZGBSS-175 计划类利率型多组合交易新建页面交易方向没有带出来 start
-            //Map<String, Object> modelMap = model.asMap();
             //add by yujiaping 2020-12-16 TISHKBS-1259 计划利率型交易新建时，清算速度默认T+0，并且不可修改start
             TrdPlanRateInvestTradeDto entity = new TrdPlanRateInvestTradeDto();
-            //modify by mashukai 20210113 ZGBSS-175 计划类利率型多组合交易新建页面交易方向没有带出来 end
             entity.setMySettleSpeed(DictCodeList.清算速度_T_0.getValue());
             model.addAttribute("entity", entity);
             //add by yujiaping 2020-12-16 TISHKBS-1259 计划利率型交易新建时，清算速度默认T+0，并且不可修改end
