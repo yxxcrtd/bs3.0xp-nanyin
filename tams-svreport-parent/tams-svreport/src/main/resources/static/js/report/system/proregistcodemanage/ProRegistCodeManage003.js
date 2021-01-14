@@ -29,8 +29,8 @@
                 				}else if(result.operateMode == '04'){
                 					$('#operateMode').val("开放式非净值型");
                 				}
-                 		    	$('#vdate').val(result.vdate);
-                 		    	$('#mdate').val(result.mdate);       		    	    		    	
+                 		    	$('#vdate').val(result.vdateStr).trigger('change');
+                 		    	$('#mdate').val(result.mdateStr).trgger('change');       		    	    		    	
                 			}
                 	});      	        	
         	}
