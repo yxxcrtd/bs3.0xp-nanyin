@@ -1227,7 +1227,15 @@ $(function() {
      */
     $(function() {
         //初始化画面
-        init(); 
+        init();
+
+		//非查看模式存在委托代码时组合分配按钮不置灰
+		debugger;
+		if($('#entrustId').val() && typeof pageModel !== 'undefined'
+			&& (pageModel === PAGE_MODEL_EDIT || pageModel === PAGE_MODEL_NEW)){
+			$('#TrdPlanCcyInvestTrade004_btn_autoAllocation').prop('disabled',false).removeClass('layui-btn-disabled');
+		}
+        
         // 绑定按钮事件
         $('#TrdPlanCcyInvestTrade004_btn_save').click(function() {
             saveOrSubmit('save');
