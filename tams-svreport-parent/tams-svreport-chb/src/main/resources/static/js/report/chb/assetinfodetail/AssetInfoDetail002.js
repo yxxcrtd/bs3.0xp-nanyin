@@ -61,13 +61,9 @@ var QueryFunc=function(){
         else if((repAssetType=="1504"||repAssetType=="1506")){
             $("#svrBussRepQDIIdemolitionInfo_div").show();
         }
-        //QDII结构性票据
-        else if((repAssetType=="1503")){
-            $("#svrBussRepQDIIStructureInfo_div").show();
-        }
-        //贵金属/商品
-        else if((repAssetType=="1601"||repAssetType=="1602"||repAssetType=="1699")){
-            $("#svrBussRepNobleMetalInfo_div").show();
+        //其他负债类资产
+        else if((repAssetType=="2000")){
+            $("#svrBussRepOtherInfo_div").show();
         }
         else if((repAssetType=="1101"||repAssetType=="1110"||repAssetType=="1109"||repAssetType=="1102"
             ||repAssetType=="1111"||repAssetType=="1112"||repAssetType=="1113"||repAssetType=="1114"
