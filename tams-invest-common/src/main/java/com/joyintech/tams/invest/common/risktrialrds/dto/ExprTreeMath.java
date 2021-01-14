@@ -191,7 +191,7 @@ public class ExprTreeMath {
     	return returnMapList;
     }
     /**
-     * 输入加减乘除表达式字符串，返回计算结果
+     * 输入加减乘除表达式字符串，返回计算结果 
      * @param expression 表达式字符串
      * @return 返回计算结果
      * @throws Exception 
@@ -200,6 +200,11 @@ public class ExprTreeMath {
         Stack<String> optStack = new Stack<>(); // 运算符栈
         Stack<BigDecimal> numStack = new Stack<>(); // 数值栈，数值以BigDecimal存储计算
         StringBuilder curNumBuilder = new StringBuilder(16); // 当前正在读取中的数值字符
+        //ZGBSS-211 信用等级在AA+以下的债券 参数会触发计算 start
+        if(expression.indexOf("||")!=-1) {
+        	return expression;
+        }
+        //ZGBSS-211 信用等级在AA+以下的债券 参数会触发计算 end
         if(! patternOp.matcher(expression).find()) {
         	  if(! patternOpUnit.matcher(expression).find()) {
         		  return expression;
