@@ -65,6 +65,14 @@ var QueryFunc=function(){
         else if((repAssetType=="2000")){
             $("#svrBussRepOtherInfo_div").show();
         }
+        //另类资产
+        else if((repAssetType=="2301"||repAssetType=="2302"||repAssetType=="2303"||repAssetType=="2304"
+            ||repAssetType=="2305"||repAssetType=="1603")){
+            $("#svrBussRepOthKindInfo_div").show();
+        }
+
+
+
         else if((repAssetType=="1101"||repAssetType=="1110"||repAssetType=="1109"||repAssetType=="1102"
             ||repAssetType=="1111"||repAssetType=="1112"||repAssetType=="1113"||repAssetType=="1114"
             ||repAssetType=="1115"||repAssetType=="1116"||repAssetType=="1117"||repAssetType=="2101"

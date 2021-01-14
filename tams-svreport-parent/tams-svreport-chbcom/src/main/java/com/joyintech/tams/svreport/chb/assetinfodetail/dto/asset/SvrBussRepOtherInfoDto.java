@@ -39,12 +39,23 @@ public class SvrBussRepOtherInfoDto extends RepAssetBond {
      */
     private BigDecimal assetYield;
 
+    /**
+     * 备注
+     */
+    private String  remark;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
 
 
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     public BigDecimal getTermDate() {
         return termDate;
