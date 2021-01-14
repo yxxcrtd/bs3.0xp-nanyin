@@ -924,10 +924,10 @@ $(function() {
                 $('#tradeAmt_div').hide();
                 $('#tradeAmt').val('');
                 // 非查看模式
-                if (typeof pageModel !== 'undefined'
-                        && (pageModel === PAGE_MODEL_EDIT || pageModel === PAGE_MODEL_NEW)) {
-                	$('#settleSpreed').val(settlet1).change();
-                }
+                // if (typeof pageModel !== 'undefined'
+                //         && (pageModel === PAGE_MODEL_EDIT || pageModel === PAGE_MODEL_NEW)) {
+                // 	$('#settleSpreed').val(settlet1).change();
+                // }
                 $('#confirmDate').hide();
                 $('#trdDate').show();
                 $('#settleSpreed_div').show();
