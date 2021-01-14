@@ -29,9 +29,13 @@ public class TrdFeeConfig extends BaseEntity {
      * 交易场所
      */
     private String tradeMarket;
-
+    /**
+     * 资产分类一
+     */
     private String windtypeone;
-
+    /**
+     * 资产分类二
+     */
     private String windtypetwo;
 
     public String getWindtypeone() {

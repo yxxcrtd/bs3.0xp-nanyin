@@ -4658,9 +4658,9 @@ public class PbcMonthAssetReportService  extends BaseService{
                     // 910000   农、林、牧、渔业
                 	case PbcMonthReportConstants.SVR_INDUSTRY_DOOR_CODE_A:
                 		setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_910000_NLMYY, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                     	setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_900000_CHGHCJWDKYEZJ, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                 		
 //                		setCompanyDetailValue(pos, line910000, rateMap, source, companySize,false);
 //                        setCompanyDetailValue(pos, line900000, rateMap, source, companySize,false);
@@ -4668,27 +4668,27 @@ public class PbcMonthAssetReportService  extends BaseService{
                     // 920000   采矿业
                 	case PbcMonthReportConstants.SVR_INDUSTRY_DOOR_CODE_B:
                 		setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_920000_CKY, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                     	setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_900000_CHGHCJWDKYEZJ, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
 //                		setCompanyDetailValue(pos, line920000, rateMap, source, companySize,false);
 //                        setCompanyDetailValue(pos, line900000, rateMap, source, companySize,false);
                         break;
                     // 930000   制造业
                 	case PbcMonthReportConstants.SVR_INDUSTRY_DOOR_CODE_C:
                 		setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_930000_ZZY, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                     	setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_900000_CHGHCJWDKYEZJ, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
 //                		setCompanyDetailValue(pos, line930000, rateMap, source, companySize,false);
 //                        setCompanyDetailValue(pos, line900000, rateMap, source, companySize,false);
                         break;
                      // 940000   电力、热力、燃气及水生产和供应业
                 	case PbcMonthReportConstants.SVR_INDUSTRY_DOOR_CODE_D:
                 		setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_940000_DLRLRQJSSCHGYY, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                     	setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_900000_CHGHCJWDKYEZJ, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                 		
 //                		setCompanyDetailValue(pos, line940000, rateMap, source, companySize,false);
 //                        setCompanyDetailValue(pos, line900000, rateMap, source, companySize,false);
@@ -4696,18 +4696,18 @@ public class PbcMonthAssetReportService  extends BaseService{
                      // 950000   建筑业
                 	case PbcMonthReportConstants.SVR_INDUSTRY_DOOR_CODE_E:
                 		setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_950000_JZY, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                     	setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_900000_CHGHCJWDKYEZJ, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
 //                		setCompanyDetailValue(pos, line950000, rateMap, source, companySize,false);
 //                        setCompanyDetailValue(pos, line900000, rateMap, source, companySize,false);
                         break;
                      // 960000   批发和零售业
                 	case PbcMonthReportConstants.SVR_INDUSTRY_DOOR_CODE_F:
                 		setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_960000_PFHLSY, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                     	setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_900000_CHGHCJWDKYEZJ, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                 		
 //                		setCompanyDetailValue(pos, line960000, rateMap, source, companySize,false);
 //                        setCompanyDetailValue(pos, line900000, rateMap, source, companySize,false);
@@ -4715,54 +4715,54 @@ public class PbcMonthAssetReportService  extends BaseService{
                      // 970000   交通运输、仓储和邮政业
                 	case PbcMonthReportConstants.SVR_INDUSTRY_DOOR_CODE_G:
                 		setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_970000_JTYSCCHYZY, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                     	setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_900000_CHGHCJWDKYEZJ, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
 //                		setCompanyDetailValue(pos, line970000, rateMap, source, companySize,false);
 //                        setCompanyDetailValue(pos, line900000, rateMap, source, companySize,false);
                         break;
                      // 980000   住宿和餐饮业
                 	case PbcMonthReportConstants.SVR_INDUSTRY_DOOR_CODE_H:
                 		setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_980000_ZSHCYY, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                     	setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_900000_CHGHCJWDKYEZJ, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
 //                		setCompanyDetailValue(pos, line980000, rateMap, source, companySize,false);
 //                        setCompanyDetailValue(pos, line900000, rateMap, source, companySize,false);
                         break;
                      // 990000   信息传输、软件和信息技术服务业
                 	case PbcMonthReportConstants.SVR_INDUSTRY_DOOR_CODE_I:
                 		setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_990000_XXCSRJHXXJSFWY, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                     	setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_900000_CHGHCJWDKYEZJ, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
 //                		setCompanyDetailValue(pos, line990000, rateMap, source, companySize,false);
 //                        setCompanyDetailValue(pos, line900000, rateMap, source, companySize,false);
                         break;
                      // 9a0000   金融业
                 	case PbcMonthReportConstants.SVR_INDUSTRY_DOOR_CODE_J:
                 		setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_9a0000_JRY, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                     	setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_900000_CHGHCJWDKYEZJ, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
 //                		setCompanyDetailValue(pos, line9a0000, rateMap, source, companySize,false);
 //                        setCompanyDetailValue(pos, line900000, rateMap, source, companySize,false);
                         break;
                      // 9b0000   房地产业
                 	case PbcMonthReportConstants.SVR_INDUSTRY_DOOR_CODE_K:
                 		setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_9b0000_FDCY, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                     	setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_900000_CHGHCJWDKYEZJ, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
 //                		setCompanyDetailValue(pos, line9b0000, rateMap, source, companySize,false);
 //                        setCompanyDetailValue(pos, line900000, rateMap, source, companySize,false);
                         break;
                      // 9c0000   租赁和商务服务业
                 	case PbcMonthReportConstants.SVR_INDUSTRY_DOOR_CODE_L:
                 		setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_9c0000_ZLHSWFWY, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                     	setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_900000_CHGHCJWDKYEZJ, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                 		
 //                		setCompanyDetailValue(pos, line9c0000, rateMap, source, companySize,false);
 //                        setCompanyDetailValue(pos, line900000, rateMap, source, companySize,false);
@@ -4770,9 +4770,9 @@ public class PbcMonthAssetReportService  extends BaseService{
                      // 9d0000   科学研究和技术服务业
                 	case PbcMonthReportConstants.SVR_INDUSTRY_DOOR_CODE_M:
                 		setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_9d0000_KXYJHJSFWY, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                     	setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_900000_CHGHCJWDKYEZJ, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                 		
 //                		setCompanyDetailValue(pos, line9d0000, rateMap, source, companySize,false);
 //                        setCompanyDetailValue(pos, line900000, rateMap, source, companySize,false);
@@ -4780,9 +4780,9 @@ public class PbcMonthAssetReportService  extends BaseService{
                      // 9e0000   水利、环境和公共设施管理业
                 	case PbcMonthReportConstants.SVR_INDUSTRY_DOOR_CODE_N:
                 		setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_9e0000_SLHJHGGSSGLY, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                     	setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_900000_CHGHCJWDKYEZJ, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                 		
 //                		setCompanyDetailValue(pos, line9e0000, rateMap, source, companySize,false);
 //                        setCompanyDetailValue(pos, line900000, rateMap, source, companySize,false);
@@ -4790,9 +4790,9 @@ public class PbcMonthAssetReportService  extends BaseService{
                      // 9f0000   居民服务、修理和其他服务业
                 	case PbcMonthReportConstants.SVR_INDUSTRY_DOOR_CODE_O:
                 		setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_9f0000_JMFWXLHQTFWY, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                     	setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_900000_CHGHCJWDKYEZJ, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                 		
 //                		setCompanyDetailValue(pos, line9f0000, rateMap, source, companySize,false);
 //                        setCompanyDetailValue(pos, line900000, rateMap, source, companySize,false);
@@ -4800,9 +4800,9 @@ public class PbcMonthAssetReportService  extends BaseService{
                      // 9g0000   教育
                 	case PbcMonthReportConstants.SVR_INDUSTRY_DOOR_CODE_P:
                 		setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_9g0000_JY, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                     	setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_900000_CHGHCJWDKYEZJ, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                 		
 //                		setCompanyDetailValue(pos, line9g0000, rateMap, source, companySize,false);
 //                        setCompanyDetailValue(pos, line900000, rateMap, source, companySize,false);
@@ -4810,9 +4810,9 @@ public class PbcMonthAssetReportService  extends BaseService{
                      // 9h0000   卫生和社会工作
                 	case PbcMonthReportConstants.SVR_INDUSTRY_DOOR_CODE_Q:
                 		setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_9h0000_WSHSHGZ, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                     	setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_900000_CHGHCJWDKYEZJ, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                 		
 //                		setCompanyDetailValue(pos, line9h0000, rateMap, source, companySize,false);
 //                        setCompanyDetailValue(pos, line900000, rateMap, source, companySize,false);
@@ -4820,9 +4820,9 @@ public class PbcMonthAssetReportService  extends BaseService{
                      // 9i0000   文化、体育和娱乐业
                 	case PbcMonthReportConstants.SVR_INDUSTRY_DOOR_CODE_R:
                 		setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_9i0000_WHTYHYLY, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                     	setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_900000_CHGHCJWDKYEZJ, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                 		
 //                		setCompanyDetailValue(pos, line9i0000, rateMap, source, companySize,false);
 //                        setCompanyDetailValue(pos, line900000, rateMap, source, companySize,false);
@@ -4830,9 +4830,9 @@ public class PbcMonthAssetReportService  extends BaseService{
                      // 9j0000   公共管理、社会保障和社会组织
                 	case PbcMonthReportConstants.SVR_INDUSTRY_DOOR_CODE_S:
                 		setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_9j0000_GGGLSHBZHSHZZ, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                     	setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_900000_CHGHCJWDKYEZJ, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                 		
 //                		setCompanyDetailValue(pos, line9j0000, rateMap, source, companySize,false);
 //                        setCompanyDetailValue(pos, line900000, rateMap, source, companySize,false);
@@ -4840,9 +4840,9 @@ public class PbcMonthAssetReportService  extends BaseService{
                      // 9k0000   国际组织
                 	case PbcMonthReportConstants.SVR_INDUSTRY_DOOR_CODE_T:
                 		setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_9k0000_GJZZ, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                     	setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_900000_CHGHCJWDKYEZJ, 
-                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, null, null);
+                    			PbcReportType.PBC_REPORT_2_2,rateMap, source, companySize, null);
                 		
 //                		setCompanyDetailValue(pos, line9k0000, rateMap, source, companySize,false);
 //                      setCompanyDetailValue(pos, line900000, rateMap, source, companySize,false);

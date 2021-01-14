@@ -15,12 +15,6 @@
 		   	<if test="tradeMarketMode != null and tradeMarketMode != '' ">
 			 and m.TRADE_MARKET_MODE = #{tradeMarketMode,jdbcType=VARCHAR}
 		    </if>
-		   	<if test="type6 != null and type6 != '' ">
-			   and m.WINDTYPEONE = #{type6,jdbcType=VARCHAR}
-		   	</if>
-		   	<if test="type7 != null and type7 != '' ">
-			   and m.WINDTYPETWO = #{type7,jdbcType=VARCHAR}
-		   	</if>
 	        <if test="feeType != null and feeType!= '' ">
 	         and m.FEE_TYPE = #{feeType,jdbcType=VARCHAR}
         	</if>
@@ -76,7 +70,7 @@
 			 ))))
 			</if>
        </where>
-       order by m.EFF_DATE desc,n.GRADE_AMOUNT asc
+       order by m.EFF_DATE desc,m.WINDTYPEONE asc,m.WINDTYPETWO asc,n.GRADE_AMOUNT asc
     </select>
 
 </mapper>

@@ -1460,6 +1460,15 @@ AND	fin.BRANCH = 0
 		<if test="ps != null and ps !='' ">
 			and tpd.PS= #{ps}
 		</if>
+		<if test="secManageAcctId != null and secManageAcctId !='' ">
+			and tpd.sec_manage_acct_id = #{secManageAcctId}
+		</if>
+		<if test="chlId != null and chlId !='' ">
+			and tpd.chl_id = #{chlId}
+		</if>
+		<if test="invAim != null and invAim !='' ">
+			and tpd.inv_aim = #{invAim}
+		</if>
 		GROUP by tpd.TRADE_DATE,tpd.MDATE
 	</select>
 </mapper>
