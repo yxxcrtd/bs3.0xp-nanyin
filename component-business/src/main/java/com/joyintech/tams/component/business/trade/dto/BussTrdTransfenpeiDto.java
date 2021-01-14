@@ -106,6 +106,8 @@ public class BussTrdTransfenpeiDto {
     public BigDecimal procedureAmt;
     //结算费
     public  BigDecimal settleAmt;
+    //经手费
+    public BigDecimal exchangeAmt;
     //佣金
     public BigDecimal commissionAmt;
 	//交易金额
@@ -300,6 +302,14 @@ public class BussTrdTransfenpeiDto {
 
 	public void setCommissionAmt(BigDecimal commissionAmt) {
 		this.commissionAmt = commissionAmt;
+	}
+
+	public BigDecimal getExchangeAmt() {
+		return exchangeAmt;
+	}
+
+	public void setExchangeAmt(BigDecimal exchangeAmt) {
+		this.exchangeAmt = exchangeAmt;
 	}
 
 	public BigDecimal getTradeAmtAndFee() {

@@ -97,6 +97,12 @@ public class BaseTradeFeeCommServiceImpl implements BaseTradeFeeCommService {
     			//调用交易费用组件.费用配置查询
     			BasicTradeFeeInputDto searchDto=new BasicTradeFeeInputDto();
     			BeanUtil.copyPropertiesIgnoreNull(searchDto, inputDto);
+				//如果查询的是结算费或经手费，置SEC_ACCT_ID为空
+
+				if(StringUtil.equals(feeType,BussinessDictCodeList.费用类型_结算费.getValue())||
+						StringUtil.equals(feeType,BussinessDictCodeList.费用类型_经手费.getValue())){
+					searchDto.setSecAcctId(null);
+				}
     			searchDto.setFeeType(feeType);
     			searchDto.setRegistOrg(null);
     			//查询出所有符合条件的费用规则（按照生效日逆序，资产分类一、资产分类二升序排序）

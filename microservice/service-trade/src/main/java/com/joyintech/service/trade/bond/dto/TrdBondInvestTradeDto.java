@@ -175,7 +175,20 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal {
      * 结算费
      */
     private BigDecimal settleAmt;
-    
+
+    /**
+     * 经手费
+     */
+    private BigDecimal exchangeAmt;
+
+    public BigDecimal getExchangeAmt() {
+        return exchangeAmt;
+    }
+
+    public void setExchangeAmt(BigDecimal exchangeAmt) {
+        this.exchangeAmt = exchangeAmt;
+    }
+
     /**
      * 交易手续费
      */

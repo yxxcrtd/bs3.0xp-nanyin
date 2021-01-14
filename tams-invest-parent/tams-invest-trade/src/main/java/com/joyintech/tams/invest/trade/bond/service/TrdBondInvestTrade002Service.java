@@ -52,6 +52,7 @@ import com.joyintech.tams.invest.common.component.base.trade.BaseTradeProductDea
 import com.joyintech.tams.invest.common.component.business.basicdata.BaseTradeFeeCommService;
 import com.joyintech.tams.invest.common.component.business.basicdata.dto.BasicTradeFeeInputDto;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
@@ -1312,7 +1313,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 trdTradeFeeDetail -> trdTradeFeeDetailMapper.insertSelective(trdTradeFeeDetail));
 
             entity.getPtlTrade().forEach(trdTradeFeeDetail -> ptlTradeMapper.insertSelective(trdTradeFeeDetail));
-
+            //改造保存结算费经手费
             entity.getTrdTradeFeeTotals().forEach(trdTradeFeeDetail -> trdTradeFeeTotalMapper.insertSelective(trdTradeFeeDetail));
 
             this.deleteBussFlowData(entity.getWorkflowId());
@@ -1643,6 +1644,25 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
     private List<TrdTradeFeeTotal> getTrdTradeFeeDetails(TrdBondInvestTradeDto entity) {
         List<TrdTradeFeeTotal> ttfdList = new ArrayList<>();
+
+        //构筑结算费经手费保存到数据库的实体
+        if (entity.getSettleAmt() != null){
+            TrdTradeFeeTotal ttfd = new TrdTradeFeeTotal();
+            ttfd.setTotleTradeId(entity.getTotleTradeId());
+            ttfd.setFeeType(BussinessDictCodeList.费用类型_结算费.getValue());
+            ttfd.setIsPayWithTrade(entity.getIsPayWithTrade());
+            ttfd.setFeeAmt(entity.getSettleAmt());
+            ttfdList.add(ttfd);
+        }
+        if (entity.getExchangeAmt() != null){
+            TrdTradeFeeTotal ttfd = new TrdTradeFeeTotal();
+            ttfd.setTotleTradeId(entity.getTotleTradeId());
+            ttfd.setFeeType(BussinessDictCodeList.费用类型_经手费.getValue());
+            ttfd.setIsPayWithTrade(entity.getIsPayWithTrade());
+            ttfd.setFeeAmt(entity.getExchangeAmt());
+            ttfdList.add(ttfd);
+        }
+
         if (StringUtil.equals(entity.getTradeMarket(), BussinessDictCodeList.交易场所_银行间.getValue())) {
             if (entity.getProcedureAmt() != null) {
                 TrdTradeFeeTotal ttfd = new TrdTradeFeeTotal();
@@ -1673,6 +1693,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 ttfd.setFeeAmt(entity.getCommissionAmt());
                 ttfdList.add(ttfd);
             }
+
             // add by wangpeng 费用设置 20180818 start
             if (entity.getStampDutyAmt() != null) {
                 TrdTradeFeeTotal ttfd = new TrdTradeFeeTotal();
@@ -2616,7 +2637,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
         catch (Exception e) {
             e.printStackTrace();
         }
-
+        //增加结算费经手费的回显数据
         if (dto.getYield() != null) {
             dto.setYield(ArithmeticUtil.multiply(dto.getYield(), new BigDecimal(100)));
         }
@@ -2670,6 +2691,21 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 && StringUtils.isNotBlank(dto.getSecManageAcctId())) {
                 inputDto.setSecAcctId(dto.getSecManageAcctId());// 画面.证券账户
                 inputDto.setFeeTypeList(Arrays.asList(BussinessDictCodeList.费用类型_佣金.getValue()));
+                // 如果是二级市场或者二级交易，增加结算费经手费查询
+                if(StringUtil.equals(BussinessDictCodeList.交易市场_二级市场.getValue(), dto.getTradeMarketMode())
+                ||StringUtil.equals(BussinessDictCodeList.缴款方式_二级交易.getValue(),dto.getPayType())){
+                    inputDto.setFeeTypeList(Arrays.asList(BussinessDictCodeList.费用类型_佣金.getValue(),
+                            BussinessDictCodeList.费用类型_结算费.getValue(),
+                            BussinessDictCodeList.费用类型_经手费.getValue()));
+                }
+                //一级分销，根据一级市场规则计算
+                if(StringUtil.equals(BussinessDictCodeList.缴款方式_一级分销.getValue(),dto.getPayType())){
+                    inputDto.setTradeMarketMode(BussinessDictCodeList.交易市场_一级市场.getValue());
+                }
+                //二级交易，根据二级市场规则计算
+                if(StringUtil.equals(BussinessDictCodeList.缴款方式_二级交易.getValue(),dto.getPayType())){
+                    inputDto.setTradeMarketMode(BussinessDictCodeList.交易市场_二级市场.getValue());
+                }
                 List<TrdTradeFeeDetail> tradeFeeList = baseTradeFeeCommService.bourseFeeDeal(inputDto);
                 if (StringUtil.equals(inputDto.getType6(), DictCodeList.WIND一级分类_含债券一级分类等_优先股.getValue())) {
                     inputDto.setFeeTypeList(Arrays.asList(BussinessDictCodeList.费用类型_印花税.getValue()));
@@ -2677,6 +2713,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                     List<TrdTradeFeeDetail> tradeFeeListBO2 = baseTradeFeeCommService.bourseFeeDeal(inputDto);
                     tradeFeeList.addAll(tradeFeeListBO2);
                 }
+                
                 if (dto.getTradeFeeList() == null) {
                     dto.setTradeFeeList(tradeFeeList);
                 }

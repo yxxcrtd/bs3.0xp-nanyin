@@ -284,8 +284,19 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
      * 风险试算实体类
      */
     private List<RiskTrialRetDto> riskTrialRetDto;
-    
-  //---add by 裴家俊 2019/03/28---start---------
+    /**
+     * 经手费
+     */
+    private BigDecimal exchangeAmt;
+
+    public BigDecimal getExchangeAmt() {
+        return exchangeAmt;
+    }
+
+    public void setExchangeAmt(BigDecimal exchangeAmt) {
+        this.exchangeAmt = exchangeAmt;
+    }
+    //---add by 裴家俊 2019/03/28---start---------
     /**
      * 结算费
      */

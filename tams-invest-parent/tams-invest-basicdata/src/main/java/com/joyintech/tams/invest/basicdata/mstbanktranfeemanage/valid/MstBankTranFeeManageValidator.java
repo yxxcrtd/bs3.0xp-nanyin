@@ -72,7 +72,7 @@ public class MstBankTranFeeManageValidator implements BeanValidator {
             if(StringUtil.equals(dto.getTradeType(),BussinessDictCodeList.平安资产类型_债券.getValue())
                     && StringUtil.isEmpty(dto.getTradeMarketMode())){
                 resultList.add(new ValidMessage(
-                        this.getMessage("FW_E_0006", getMessage("MstBankTranFeeManage001.tradeMarketMode"))));
+                        "tradeMarketMode",this.getMessage("FW_E_0006", getMessage("MstBankTranFeeManage001.tradeMarketMode"))));
             }
             // 当交易品种为回购时，期限品种必填
             if (StringUtil.equals(dto.getTradeType(), BussinessDictCodeList.平安资产类型_回购.getValue())
