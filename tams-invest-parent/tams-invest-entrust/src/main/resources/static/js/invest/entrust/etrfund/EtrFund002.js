@@ -570,6 +570,7 @@
             }
             if($("#tradeMarket").val()==TRADE_PLACE_03){
                 $('#bussEtrInvestPersonInfoDto_counterId').textSelect('setValue',JYDSJYS000000001);
+
             }
             if($("#tradeMarket").val()==TRADE_PLACE_04){
                 $('#bussEtrInvestPersonInfoDto_counterId').textSelect('setValue',JYDSJYS000000002);
@@ -592,6 +593,7 @@
                 }
             }
             if($("#tradeMarket").val()==TRADE_PLACE_03){
+
                 $('#bussEtrInvestPersonInfoDto_counterId').textSelect('setValue',JYDSJYS000000001);
             }
             if($("#tradeMarket").val()==TRADE_PLACE_04){
@@ -608,13 +610,20 @@
         		        if ($('#finprodMarketId').select2('data')[0].object) {
         		        	$('#bussEtrInvestPersonInfoDto_counterId').textSelect('setValue', result.id);
         		            $("#bussEtrInvestPersonInfoDto_counterId").attr("disabled",true);
-        		        }
-                	}else{
-                		$('#bussEtrInvestPersonInfoDto_counterId').textSelect('setValue', "");
-    		            $("#bussEtrInvestPersonInfoDto_counterId").attr("disabled",false);
+        		        }else{
+                            $('#bussEtrInvestPersonInfoDto_counterId').textSelect('setValue', "");
+                            $("#bussEtrInvestPersonInfoDto_counterId").attr("disabled",false);
+    		            }
                 	}
                 });
             }
+        }
+
+        if( ($("#tradeMarket").val()==TRADE_PLACE_03 || $("#tradeMarket").val()==TRADE_PLACE_04 )
+        && ( $("#ps").val()==T02 || $("#ps").val()==T01 )){
+            $("#bussEtrInvestPersonInfoDto_counterId").attr("disabled",true).trigger('change');
+        }else{
+            $("#bussEtrInvestPersonInfoDto_counterId").attr("disabled",false).trigger('change');
         }
     }
     

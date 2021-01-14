@@ -286,6 +286,11 @@ $(function() {
         	object.maxTradeamt = maxTradeamt;
         }
         object.inputValue1 = 'F04';
+        //add by mashukai 20210114 ZGBSS-215 start
+        for (var i in object.bussTrdTransfenpeiDto){
+            object.bussTrdTransfenpeiDto[i].assetsavailablepositions = object.bussTrdTransfenpeiDto[i].assetAvailablePosition;
+        }
+        //add by mashukai 20210114 ZGBSS-215 end
         Joyin.ajaxJson(basePath + 'invest/trade/plannet/TrdPlanNetInvestTrade004/check', object, function(result) {
         	Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/check', object, function(result1) {
 	            Joyin.confirm(result.data, function() {
