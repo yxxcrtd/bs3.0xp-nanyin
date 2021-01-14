@@ -13,6 +13,7 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.asset.noblemetal.control
 
 import com.joyintech.framework.annotation.SubPageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.tams.svreport.chb.assetinfodetail.asset.noblemetal.impl.SvrBussRepNobleMetalInfoImplService;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.qdiidemolition.impl.SvrBussRepQDIIdemolitionInfoImplService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,7 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class SvrBussRepNobleMetalInfoController extends BaseController {
 
     @Autowired
-    private SvrBussRepQDIIdemolitionInfoImplService bussAssetInfoService;
+    private SvrBussRepNobleMetalInfoImplService bussAssetInfoService;
 
     @Override
     public String init(Model model) {

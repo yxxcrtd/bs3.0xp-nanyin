@@ -19,6 +19,7 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.depo.impl.SvrBussRepDepositInfoImplService;
+import com.joyintech.tams.svreport.chb.assetinfodetail.asset.financiall.impl.SvrBussRepFinanciallInfoImplService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,7 +41,7 @@ import java.util.List;
 public class SvrBussRepFinanciallInfoController extends BaseController{
 
     @Autowired
-    private SvrBussRepDepositInfoImplService bussAssetInfoService;
+    private SvrBussRepFinanciallInfoImplService bussAssetInfoService;
 
     @Override
     public String init(Model model) {
