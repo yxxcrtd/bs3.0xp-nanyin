@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
@@ -290,11 +291,65 @@ public class TrdPlanNetInvestTrade004Controller extends BaseController {
             }
     	}*/
         AjaxResult ar = commonCheck(result, dto.getOperateType());
-        if (dto.getPrinAmt() != null && dto.getProAvailableCash() != null) {
-            if (dto.getPrinAmt().compareTo(dto.getProAvailableCash()) == 1) {
-                ar.setData("交易金额大于组合可用金额（可透支）," + ar.getData());
+        //modify by mashukai 20210114 ZGBSS-215 start
+        Boolean amtFlag = false;
+        List<BussTrdTransfenpeiDto> fenpei = dto.getBussTrdTransfenpeiDto();
+        for (BussTrdTransfenpeiDto fenpeiDto : fenpei) {
+            if (StringUtil.equals(dto.getPs(),DictCodeList.交易方向_申购.getValue())){
+                if (fenpeiDto.getTradeAmt() != null && fenpeiDto.getBussTrdAvailableCashQueryavalibleCash() != null &&
+                        fenpeiDto.getTradeAmt().compareTo(fenpeiDto.getBussTrdAvailableCashQueryavalibleCash()) == 1){
+                    ar.setData("交易金额大于组合可用金额（可透支）," + ar.getData());
+                    amtFlag = true;
+                    break;
+                } 
+            }else if(StringUtil.equals(dto.getPs(),DictCodeList.交易方向_赎回.getValue())){
+                if (fenpeiDto.getShareAmt() != null && fenpeiDto.getAssetsavailablepositions() != null &&
+                        fenpeiDto.getShareAmt().compareTo(fenpeiDto.getAssetsavailablepositions()) == 1){
+                    return new AjaxResult("交易份额不能大于资产可用持仓！",MessageType.错误消息);
+                }
             }
+             
         }
+        if (!amtFlag){
+            //按照组合代码分组
+            Map<String, List<BussTrdTransfenpeiDto>> groupBylist = dto.getBussTrdTransfenpeiDto().stream().collect(Collectors.groupingBy(BussTrdTransfenpeiDto::getPortfolioId));
+            if (groupBylist.size() > 0) {
+                // map遍历
+                if (StringUtil.equals(dto.getPs(),DictCodeList.交易方向_申购.getValue())){
+                    groupBylist.forEach((k, v) -> {
+                        BigDecimal tAmt = BigDecimal.ZERO;
+                        BigDecimal aAmt = BigDecimal.ZERO;
+                        for (BussTrdTransfenpeiDto fenpeiDto : v) {
+                            if (fenpeiDto.getTradeAmt() != null && fenpeiDto.getBussTrdAvailableCashQueryavalibleCash() != null){
+                                aAmt = fenpeiDto.getBussTrdAvailableCashQueryavalibleCash();
+                                tAmt = aAmt.add(fenpeiDto.getTradeAmt());
+                            }
+                        }
+                        if (tAmt.compareTo(aAmt) == 1){
+                            ar.setData("组合" + v.get(0).getPortfolioId() + "交易金额大于组合可用金额（可透支）," + ar.getData());
+                        }
+                    }); 
+                }else if (StringUtil.equals(dto.getPs(),DictCodeList.交易方向_赎回.getValue())){
+                    for (String port : groupBylist.keySet()){
+                        List<BussTrdTransfenpeiDto> checkList = groupBylist.get(port);
+                        if (checkList.size()>0){
+                            BigDecimal tShare = BigDecimal.ZERO;
+                            BigDecimal cShare = BigDecimal.ZERO;
+                            for (BussTrdTransfenpeiDto fenpeiDto :checkList){
+                                if (fenpeiDto.getAssetsavailablepositions() != null && fenpeiDto.getShareAmt() != null){
+                                    tShare = tShare.add(fenpeiDto.getShareAmt());
+                                    cShare = fenpeiDto.getAssetsavailablepositions();
+                                }
+                            }
+                            if (tShare.compareTo(cShare) == 1) {
+                                return new AjaxResult("交易份额不能大于资产可用持仓！",MessageType.错误消息);
+                            }
+                        }
+                    } 
+                }
+            } 
+        }
+        //modify by mashukai 20210114 ZGBSS-215 end    
 //        if (StringUtil.isNotEmpty(dto.getCalendarId()) && dto.getTradeDate() != null) {
 //            boolean flg = dateCalService.isDealCalendarHoliday(dto.getTradeDate(),
 //                dto.getCalendarId());
