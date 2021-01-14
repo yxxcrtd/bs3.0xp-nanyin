@@ -457,7 +457,7 @@ public class SecDealPreprocessingBookService {
             if(StringUtil.isNotEmpty(mapDeal)
                     && ((Date)mapDeal.get("TRADEDATE")).compareTo(((Date)mapDeal.get("MDATE")))<0){
                 // 交易金额 <- 交易明细.交易金额
-                accountAmountMap.put(BookConstant.DEALAMT_C,
+                accountAmountMap.put(BookConstant.DEALAMT_D,
                         ArithmeticUtil.round(varDealAmt, NumberEnum.MONEY));
                 // 账务明细代码1->交易类账务处理结果.账务明细代码
                 accountSceneMap.put(BookConstant.BOK_DETAIL_ID2,
@@ -537,7 +537,7 @@ public class SecDealPreprocessingBookService {
                     && ((Date)mapDeal.get("TRADEDATE")).compareTo(((Date)mapDeal.get("MDATE")))<0){
                 //	变量.买卖价差_本位币	= 交易金额_本位币 - 面值_本位币 - 应收利息_本位币
                 varMmjcBccy = ArithmeticUtil.doSub(
-                        accountAmountMap.get(BookConstant.DEALAMT_C + BookConstant.BCCYAMT),
+                        accountAmountMap.get(BookConstant.DEALAMT_D + BookConstant.BCCYAMT),
                         accountAmountMap.get(BookConstant.FACEVALUE + BookConstant.BCCYAMT),
                         accountAmountMap.get(BookConstant.INTAMT + BookConstant.BCCYAMT));
             }else{
@@ -1309,7 +1309,7 @@ public class SecDealPreprocessingBookService {
             if(StringUtil.isNotEmpty(mapDeal)
                     && ((Date)mapDeal.get("TRADEDATE")).compareTo(((Date)mapDeal.get("MDATE")))<0){
                 // 交易金额 <- 交易明细.交易金额
-                accountAmountMap.put(BookConstant.DEALAMT_C,
+                accountAmountMap.put(BookConstant.DEALAMT_D,
                         ArithmeticUtil.round(varDealAmt, NumberEnum.MONEY));
                 // 账务明细代码1->交易类账务处理结果.账务明细代码
                 accountSceneMap.put(BookConstant.BOK_DETAIL_ID2,
@@ -1378,7 +1378,7 @@ public class SecDealPreprocessingBookService {
                 if(StringUtil.isNotEmpty(mapDeal)
                         && ((Date)mapDeal.get("TRADEDATE")).compareTo(((Date)mapDeal.get("MDATE")))<0){
                     //	变量.买卖价差_本位币	= 交易金额_本位币 - 面值_本位币 - 剩余溢折价(贷)_本位币
-                    varMmjcBccy = ArithmeticUtil.doSub(accountAmountMap.get(BookConstant.DEALAMT_C + BookConstant.BCCYAMT),
+                    varMmjcBccy = ArithmeticUtil.doSub(accountAmountMap.get(BookConstant.DEALAMT_D + BookConstant.BCCYAMT),
                             accountAmountMap.get(BookConstant.FACEVALUE + BookConstant.BCCYAMT), accountAmountMap.get(BookConstant.DSCINC_C + BookConstant.BCCYAMT));
                 }else{
                     //	变量.买卖价差_本位币	= 交易金额_本位币 - 面值_本位币 - 剩余溢折价(贷)_本位币
@@ -1754,7 +1754,7 @@ public class SecDealPreprocessingBookService {
             if(StringUtil.isNotEmpty(mapDeal)
                     && ((Date)mapDeal.get("TRADEDATE")).compareTo(((Date)mapDeal.get("MDATE")))<0){
                 // 交易金额 <- 交易明细.交易金额
-                accountAmountMap.put(BookConstant.DEALAMT_C,
+                accountAmountMap.put(BookConstant.DEALAMT_D,
                         ArithmeticUtil.round(varDealAmt, NumberEnum.MONEY));
                 // 账务明细代码1->交易类账务处理结果.账务明细代码
                 accountSceneMap.put(BookConstant.BOK_DETAIL_ID2,
@@ -1840,7 +1840,7 @@ public class SecDealPreprocessingBookService {
                 if(StringUtil.isNotEmpty(mapDeal)
                         && ((Date)mapDeal.get("TRADEDATE")).compareTo(((Date)mapDeal.get("MDATE")))<0){
                     //	变量.买卖价差_本位币	= 交易金额_本位币 - 面值_本位币 - 剩余溢折价(贷)_本位币
-                    varMmjcBccy = ArithmeticUtil.doSub(accountAmountMap.get(BookConstant.DEALAMT_C + BookConstant.BCCYAMT),
+                    varMmjcBccy = ArithmeticUtil.doSub(accountAmountMap.get(BookConstant.DEALAMT_D + BookConstant.BCCYAMT),
                             accountAmountMap.get(BookConstant.FACEVALUE + BookConstant.BCCYAMT), accountAmountMap.get(BookConstant.DSCINC_C + BookConstant.BCCYAMT));
                 }else{
                     //	变量.买卖价差_本位币	= 交易金额_本位币 - 面值_本位币 - 剩余溢折价(贷)_本位币
