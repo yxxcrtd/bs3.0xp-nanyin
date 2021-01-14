@@ -69,7 +69,28 @@
         		return;
         	}
             if(regCode){
-            	 Joyin.ajax(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/checkInsertData', {prodId:prodId,regCode:regCode}, function(result) {
+            	Joyin.ajax(basePath + "svreport/system/proregistcodemanage/ProRegistCodeManage003/selectCode",{regCode:regCode},
+            			function(result){
+            		if(result.data){
+            			Joyin.error(JoyinUtil.getMessage(regCode+"该产品登记编码已存在，请重新输入。"));
+            			$('#regCode').val('');
+            			return;
+            		}else{
+            			Joyin.ajax(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/checkInsertData', {prodId:prodId,regCode:regCode}, function(result) {
+                            Joyin.ajaxJson(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/check', object, function(result) {
+                                Joyin.confirm(result.data, function() {                	
+                                    if(operateType === 'save') {                    	
+                                        WorkFlow.doSaveList(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/save', object, "ProRegistCodeManage003_btn_save");               
+                                    }
+                                    else {                   	
+                                        WorkFlow.doSubmitList(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/save', object, "ProRegistCodeManage003_btn_submit");
+                                    	}
+                                });
+                            });
+                          });
+            		}
+    			});           	
+            	/* Joyin.ajax(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/checkInsertData', {prodId:prodId,regCode:regCode}, function(result) {
                      Joyin.ajaxJson(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/check', object, function(result) {
                          Joyin.confirm(result.data, function() {                	
                              if(operateType === 'save') {                    	
@@ -80,7 +101,7 @@
                              	}
                          });
                      });
-                   });
+                   });*/
             }else{          
             Joyin.ajaxJson(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/check', object, function(result) {
                 Joyin.confirm(result.data, function() {                	
