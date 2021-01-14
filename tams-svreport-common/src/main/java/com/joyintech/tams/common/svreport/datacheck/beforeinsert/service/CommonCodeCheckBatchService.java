@@ -4,6 +4,8 @@ import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.dao.ChbAssetInfoErrodataMapper;
+import com.joyintech.tams.common.base.entity.ChbAssetInfoErrodataWithBLOBs;
 import com.joyintech.tams.common.base.entity.ChbBotAstPositionSub;
 import com.joyintech.tams.common.base.entity.ChbPrdDeclareSub;
 import com.joyintech.tams.common.base.entity.ChbPrdIssueSub;
@@ -30,6 +32,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 /**
@@ -63,6 +66,9 @@ public class CommonCodeCheckBatchService {
 	public void codeCheckCommon(List<Map<String, String>> list, ChbCheckTableInfo tableInfo, String fileName){
 		//错误信息集合
 		List<ChbInterfErrodataWithBLOBs> erroList=new ArrayList<ChbInterfErrodataWithBLOBs>();
+        // 资产要素错误信息集合
+        List<ChbAssetInfoErrodataWithBLOBs> chbAssetInfoErrorList = new ArrayList<ChbAssetInfoErrodataWithBLOBs>();
+
         Map<String, List<String>> prodRegistCodeMap = new HashMap<>();
 
         List<Map<String, String>> newDataList = new ArrayList<>(list);
@@ -115,16 +121,29 @@ public class CommonCodeCheckBatchService {
 			//如果代码错误校验有错误信息
 			ChbInterfErrodataWithBLOBs errodata = createChbInterfErrdata(StringUtil.isNotEmpty(fileName) ? fileName : tableInfo.getTableName(),
                     tableInfo.getTableName(), map,tableInfo.getBussinessKey(), tableInfo.getCheckEuplicatedKeys());
+
 			if(errodata != null) {
 			    erroList.add(errodata);
 			    list.remove(i);
 			}
+
+            if (StringUtil.equals(tableInfo.getTableName(), ChbCheckTableInfo.资产要素登记表INFO.getTableName())){
+                // 记录资产要素错误信息表
+                ChbAssetInfoErrodataWithBLOBs chbAssetInfoErrodata = createChbAssetInfoInterfErrdata(map);
+                if(chbAssetInfoErrodata != null) {
+                    chbAssetInfoErrorList.add(chbAssetInfoErrodata);
+                }
+            }
 		}
 
 		//错误信息入库
-		if(!erroList.isEmpty()){
+		if(!erroList.isEmpty() && !StringUtil.equals(CacheUtil.getSysParam("INSERT_ERRDATA_MODE"), "02")){
 			insertErroData(erroList);
 		}
+		// 资产要素错误信息入库
+        if(!chbAssetInfoErrorList.isEmpty() && StringUtil.equals(CacheUtil.getSysParam("INSERT_ERRDATA_MODE"), "02")){
+            insertChbAssetInfoErroData(chbAssetInfoErrorList);
+        }
 	}
 
 	/**
@@ -1428,7 +1447,7 @@ public class CommonCodeCheckBatchService {
         return Pattern.matches("^-?[0-9]+.?[0-9]*$", str);
     }
 
-    public void insertErroData(List<ChbInterfErrodataWithBLOBs> erroList) {
+    private void insertErroData(List<ChbInterfErrodataWithBLOBs> erroList) {
         SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
         try {
             int count = 0;
@@ -1456,6 +1475,40 @@ public class CommonCodeCheckBatchService {
             session.close();
         }
         logger.debug("错误信息数据插入结束--------------" + new Date());
+    }
+
+    /**
+     * 批量插入资产要素错误信息表
+     * @param erroList 错误信息表
+     */
+    public void insertChbAssetInfoErroData(List<ChbAssetInfoErrodataWithBLOBs> erroList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            int count = 0;
+            logger.debug("资产要素登记错误信息数据插入开始--------------" + new Date());
+            ChbAssetInfoErrodataMapper batchMapper = session.getMapper(ChbAssetInfoErrodataMapper.class);
+            for(ChbAssetInfoErrodataWithBLOBs single: erroList){
+                batchMapper.insert(single);
+                count ++;
+                // 每20次提交
+                if (count % 20 == 0) {
+                    session.commit();
+                    // 清理缓存，防止溢出
+                    session.clearCache();
+                }
+            }
+            session.commit();
+            // 清理缓存，防止溢出
+            session.clearCache();
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+        logger.debug("资产要素登记错误信息数据插入结束--------------" + new Date());
     }
 
     /**
@@ -1497,8 +1550,9 @@ public class CommonCodeCheckBatchService {
         // 接口类型
         errodata.setInterfType(interfType);
         // 拼接错误字段信息
-        map.remove("ERRMSG");
-        errodata.setOrgData(JsonUtils.object2Json(map));
+        Map<String, String> newMap = new HashMap<>(map);
+        newMap.remove("ERRMSG");
+        errodata.setOrgData(JsonUtils.object2Json(newMap));
         // 错误提示信息
         errodata.setErrMsg(msg);
         // 数据状态
@@ -1508,5 +1562,56 @@ public class CommonCodeCheckBatchService {
         errodata.setCreateTime(new Date());
         errodata.setUpdateTime(new Date());
         return errodata;
+    }
+
+    /**
+     * 根据错误消息创建需要入库的Dto
+     *
+     * @param map 数据
+     * @return 需要入库的Dto
+     */
+    public ChbAssetInfoErrodataWithBLOBs createChbAssetInfoInterfErrdata(Map<String, String> map) {
+        String msg = map.get("ERRMSG");
+        if (StringUtil.isEmpty(msg)) {
+            return null;
+        }
+        // 拼装错误信息
+        ChbAssetInfoErrodataWithBLOBs chbAssetInfoErrodata = new ChbAssetInfoErrodataWithBLOBs();
+        // 主键uuid
+        chbAssetInfoErrodata.setDatauuid(IDGenerator.generate(36));
+        // 行内资产负债编码
+        chbAssetInfoErrodata.setAssetCode(map.get("ASSET_CODE"));
+        // 资产类型
+        chbAssetInfoErrodata.setAssetType(map.get("ASSET_TYPE"));
+        // 资产/负债二级类别
+        chbAssetInfoErrodata.setAssetType2(map.get("ASSET_TYPE2"));
+        // 起息日
+        chbAssetInfoErrodata.setVdate(map.get("VDATE"));
+        // 到期日
+        chbAssetInfoErrodata.setMdate(map.get("MDATE"));
+        // 上游资产一级分类
+        chbAssetInfoErrodata.setOrgAssetType1(map.get("ORG_ASSET_TYPE1"));
+        // 上游资产二级分类
+        chbAssetInfoErrodata.setOrgAssetType2(map.get("ORG_ASSET_TYPE2"));
+        // 上游资产三级分类
+        chbAssetInfoErrodata.setOrgAssetType3(map.get("ORG_ASSET_TYPE3"));
+        // 上游资产四级分类
+        chbAssetInfoErrodata.setOrgAssetType4(map.get("ORG_ASSET_TYPE4"));
+        // 上游资产五级分类
+        chbAssetInfoErrodata.setOrgAssetType5(map.get("ORG_ASSET_TYPE5"));
+        // 拼接错误字段信息
+        Map<String, String> newMap = new HashMap<>(map);
+        newMap.remove("ERRMSG");
+        chbAssetInfoErrodata.setOrgData(JsonUtils.object2Json(newMap));
+        // 错误提示信息
+        chbAssetInfoErrodata.setErrMsg(msg);
+        // 数据状态
+        chbAssetInfoErrodata.setStatus("E");
+        chbAssetInfoErrodata.setCreateUser("system");
+        chbAssetInfoErrodata.setUpdateUser("system");
+        chbAssetInfoErrodata.setCreateTime(new Date());
+        chbAssetInfoErrodata.setUpdateTime(new Date());
+
+        return chbAssetInfoErrodata;
     }
 }
