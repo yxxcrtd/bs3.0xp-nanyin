@@ -12,32 +12,31 @@ insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT
 values ('AssetInfoDetail002', 'SVR', '/chb/assetinfodetail/AssetInfoDetail002', 'report/chb/assetinfodetail/AssetInfoDetail002', null, null, null, '02', '02', '资产基本信息维护详情', 'system', null, sysdate, 'system', sysdate);
 
 
-/***创建资产基本信息临时表**/
+-- Create table
 create table CHB_ASSET_INFO_ERRODATA
 (
-  datauuid    CHAR(36) not null,
-  asset_code             VARCHAR2(500),
-  asset_name             VARCHAR2(500),
-  asset_type             VARCHAR2(500),
-  asset_type2            VARCHAR2(500),
-  vdate                  VARCHAR2(500),
-  mdate                  VARCHAR2(500),
-  org_asset_type1        VARCHAR2(500),
-  org_asset_type2        VARCHAR2(500),
-  org_asset_type3        VARCHAR2(500),
-  org_asset_type4        VARCHAR2(500),
-  org_asset_type5        VARCHAR2(500),
-  org_data    CLOB,
-  err_msg     CLOB,
-  status      VARCHAR2(10),
-  update_user VARCHAR2(20),
-  create_user VARCHAR2(32),
-  update_time TIMESTAMP(6),
-  create_time TIMESTAMP(6),
-  workflow_id VARCHAR2(20),
-  org_code    VARCHAR2(20),
-  dept_code   VARCHAR2(32),
-  create_dept VARCHAR2(32)
+  datauuid        CHAR(36) not null,
+  asset_code      VARCHAR2(500),
+  asset_type      VARCHAR2(500),
+  asset_type2     VARCHAR2(500),
+  vdate           VARCHAR2(500),
+  mdate           VARCHAR2(500),
+  org_asset_type1 VARCHAR2(500),
+  org_asset_type2 VARCHAR2(500),
+  org_asset_type3 VARCHAR2(500),
+  org_asset_type4 VARCHAR2(500),
+  org_asset_type5 VARCHAR2(500),
+  org_data        CLOB,
+  err_msg         CLOB,
+  status          VARCHAR2(10),
+  update_user     VARCHAR2(20),
+  create_user     VARCHAR2(32),
+  update_time     TIMESTAMP(6),
+  create_time     TIMESTAMP(6),
+  workflow_id     VARCHAR2(20),
+  org_code        VARCHAR2(20),
+  dept_code       VARCHAR2(32),
+  create_dept     VARCHAR2(32)
 );
 -- Add comments to the table 
 comment on table CHB_ASSET_INFO_ERRODATA
@@ -47,26 +46,24 @@ comment on column CHB_ASSET_INFO_ERRODATA.datauuid
   is 'uuid主键';
 comment on column CHB_ASSET_INFO_ERRODATA.asset_code
   is '行内资产负债编码';
-comment on column CHB_ASSET_INFO_ERRODATA.asset_name
-  is '资产名称';
 comment on column CHB_ASSET_INFO_ERRODATA.asset_type
   is '资产类型';
 comment on column CHB_ASSET_INFO_ERRODATA.asset_type2
   is '资产/负债二级类别 参考数据字典:ASSET_TYPE_SECOND_LEVEL';
 comment on column CHB_ASSET_INFO_ERRODATA.vdate
-is '起息日';
+  is '起息日';
 comment on column CHB_ASSET_INFO_ERRODATA.mdate
-is '到期日';
+  is '到期日';
 comment on column CHB_ASSET_INFO_ERRODATA.org_asset_type1
-is '上游资产一级分类';
+  is '上游资产一级分类';
 comment on column CHB_ASSET_INFO_ERRODATA.org_asset_type2
-is '上游资产二级分类';
+  is '上游资产二级分类';
 comment on column CHB_ASSET_INFO_ERRODATA.org_asset_type3
-is '上游资产三级分类';
+  is '上游资产三级分类';
 comment on column CHB_ASSET_INFO_ERRODATA.org_asset_type4
-is '上游资产四级分类';
+  is '上游资产四级分类';
 comment on column CHB_ASSET_INFO_ERRODATA.org_asset_type5
-is '上游资产五级分类';
+  is '上游资产五级分类';
 comment on column CHB_ASSET_INFO_ERRODATA.org_data
   is '原始数据';
 comment on column CHB_ASSET_INFO_ERRODATA.err_msg
@@ -89,3 +86,6 @@ comment on column CHB_ASSET_INFO_ERRODATA.dept_code
   is '部门代码';
 comment on column CHB_ASSET_INFO_ERRODATA.create_dept
   is '创建部门';
+
+alter table CHB_ASSET_INFO_ERRODATA
+  add constraint CHB_ASSET_INFO_ERRODATA_PK primary key (DATAUUID);

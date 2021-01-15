@@ -18,14 +18,13 @@ import com.joyintech.tams.svreport.chb.assetinfodetail.validator.asset.SvrBussFi
 import java.math.BigDecimal;
 
 /**
- *  QDII拆出/逆回购资产
+ *  资产基本信息_QDII结构性票据类信息
  * 〈功能详细描述〉
  * @author zhangnian
  * @version 1.0 2018年10月23日
  * @see SvrBussRepQDIIStructureInfoDto
  * @since 1.0
  */
-@ValidLogic(targetClass = SvrBussFinBondRepInfoValidator.class , groups = {ValidateGroupEdit.class})
 public class SvrBussRepQDIIStructureInfoDto extends RepAssetBond{
 
     /**

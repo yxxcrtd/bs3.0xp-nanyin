@@ -19,14 +19,13 @@ import com.joyintech.tams.svreport.chb.assetinfodetail.validator.asset.SvrBussFi
 import java.math.BigDecimal;
 
 /**
- *  债券类中债报送DTO
+ *  资产基本信息_金融衍生品类信息 DTO
  * 〈功能详细描述〉
- * @author zhangnian
- * @version 1.0 2018年10月23日
+ * @author
+ * @version 1.0
  * @see SvrBussRepFinanciallInfoDto
  * @since 1.0
  */
-@ValidLogic(targetClass = SvrBussFinBondRepInfoValidator.class , groups = {ValidateGroupEdit.class})
 public class SvrBussRepFinanciallInfoDto extends RepAssetBond{
 
     /**

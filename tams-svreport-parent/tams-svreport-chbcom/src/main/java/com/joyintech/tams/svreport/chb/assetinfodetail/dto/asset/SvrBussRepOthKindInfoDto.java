@@ -4,7 +4,7 @@ import com.joyintech.tams.common.base.entity.RepAssetBond;
 
 import java.math.BigDecimal;
 
-/**
+/**资产基本信息_另类资产类信息
  * @author wang
  * @create 2021-01-13 16:42
  */

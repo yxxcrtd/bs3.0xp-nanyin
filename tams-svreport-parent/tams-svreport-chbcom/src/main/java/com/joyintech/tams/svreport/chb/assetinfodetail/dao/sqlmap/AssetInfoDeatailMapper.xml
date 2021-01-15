@@ -2083,7 +2083,7 @@
     <select id="getAssetInfoDetail"  resultMap="BaseResultMap">
           SELECT '01' dataStatus,a.*
           FROM CHB_ASSET_INFO a
-          where ASSET_UUID = #{Assetuuid}
+          where ASSET_UUID = #{Assetuuid,jdbcType=VARCHAR}
     </select>
 
     <select id="getDataListLinkData"  resultType="com.joyintech.system.base.entity.SysDatadictListLink">
