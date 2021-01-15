@@ -24,8 +24,8 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-utext="#{SvrBussRepOthKindInfo.countryArea}">所属国家或地区</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_repCapiInvest|" th:name="|${entityName}.repCapiInvest|"
-                                data-th-data-result="${SVR_COUNTRY_AREA}" th:initValue="${entity?.repCapiInvest}"
+                        <select th:id="|${entityName}_countryArea|" th:name="|${entityName}.countryArea|"
+                                data-th-data-result="${SVR_COUNTRY_AREA}" th:initValue="${entity?.countryArea}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" required>
                         </select>
@@ -36,9 +36,9 @@
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepOthKindInfo.assetValue}">资产价值</label>
                     <div class="layui-input-inline input-inline">
-                        <input type="text" th:id="|${entityName}_repNum|" th:name="|${entityName}.repNum|"
+                        <input type="text" th:id="|${entityName}_assetValue|" th:name="|${entityName}.assetValue|"
                                required="required"
-                               th:value="${entity?.repNum}" data-textrange="0" maxlength="6"
+                               th:value="${entity?.assetValue}" data-textrange="0" maxlength="6"
                                class="layui-input form-input text-number"/>
                     </div>
                 </div>
@@ -48,8 +48,8 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-text="#{SvrBussRepOthKindInfo.assetYield}">资产收益率%</label>
                     <div class="layui-input-inline input-inline">
-                        <input type="text" th:id="|${entityName}_repDiscRate|" th:name="|${entityName}.repDiscRate|"
-                               th:value="${entity?.repDiscRate}"
+                        <input type="text" th:id="|${entityName}_assetYield|" th:name="|${entityName}.assetYield|"
+                               th:value="${entity?.assetYield}"
                                class="layui-input form-input text-number" required="required"/>
                         <span class="input-right-show">%</span>
                     </div>
@@ -63,9 +63,9 @@
                         <label class="layui-form-label form-label-wrap"
                                data-th-utext="#{SvrBussRepOthKindInfo.remark}" style="width: 12%;">备注</label>
                         <div class="layui-input-inline input-inline" style="width: 86% !important;">
-                            <input th:id="|${entityName}_repRemark|" th:name="|${entityName}.repRemark|"
+                            <input th:id="|${entityName}_remark|" th:name="|${entityName}.remark|"
                                    placeholder="请输入内容" class="layui-input form-input"
-                                   data-th-placeholder="#{SysCommon.placeholder}" data-th-text="${entity?.repRemark}"
+                                   data-th-placeholder="#{SysCommon.placeholder}" data-th-text="${entity?.remark}"
                                    maxlength="128" style="width: 100%!important;">
                             </input>
                         </div>
