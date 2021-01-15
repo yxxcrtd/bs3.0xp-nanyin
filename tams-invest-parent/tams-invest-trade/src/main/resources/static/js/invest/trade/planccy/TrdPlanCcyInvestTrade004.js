@@ -257,7 +257,7 @@ $(function() {
 				obj.isEnabled = '01';
 			}else{
 				if(Number(bussTrdTransfenpeiDto[i].tradeAmt) == Number(0)){
-					continue;
+					// continue;
 	        	}
 				obj.tradeAmount = bussTrdTransfenpeiDto[i].tradeAmt;
 			}
