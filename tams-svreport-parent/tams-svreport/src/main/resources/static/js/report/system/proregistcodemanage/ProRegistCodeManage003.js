@@ -72,8 +72,7 @@
             	Joyin.ajax(basePath + "svreport/system/proregistcodemanage/ProRegistCodeManage003/selectCode",{regCode:regCode},
             			function(result){
             		if(result.data){
-            			Joyin.error(JoyinUtil.getMessage(regCode+"该产品登记编码已存在，请重新输入。"));
-            			$('#regCode').val('');
+            			Joyin.error(JoyinUtil.getMessage("不同的产品代码不能对应同一产品登记编码。"));            			
             			return;
             		}else{
             			Joyin.ajax(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/checkInsertData', {prodId:prodId,regCode:regCode}, function(result) {
