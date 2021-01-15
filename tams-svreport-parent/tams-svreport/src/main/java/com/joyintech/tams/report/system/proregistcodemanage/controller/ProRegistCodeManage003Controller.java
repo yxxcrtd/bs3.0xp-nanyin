@@ -98,7 +98,7 @@ public class ProRegistCodeManage003Controller extends BaseController {
         params.setPageId(this.getPageId());
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item -> item.getProdId());
-        params.setBusinessType("产品登记编码管理");
+        params.setBusinessType(DictCodeList.共通业务类型_产品登记编码管理.getValue());
 
         // 设置流程业务说明, entity即传入的dto
         params.setComment(entity -> "产品代码" + "(" + entity.getProdId()+")"+"-"+"产品登记编码"+"("+entity.getRegCode()+")");
