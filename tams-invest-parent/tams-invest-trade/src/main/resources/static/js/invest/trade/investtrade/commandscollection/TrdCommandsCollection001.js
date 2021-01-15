@@ -22,14 +22,14 @@ $(function() {
             
             assetTypeFormer = assetType;
         }
-        if(assetType == PINAN_ASSET_TYPE_F01 || assetType == PINAN_ASSET_TYPE_F02
-                || assetType == PINAN_ASSET_TYPE_F07 || assetType == PINAN_ASSET_TYPE_F11
-                || assetType == 'Con1'){
-            $('#TrdCommandsCollection001_btn_reset').show();
-        }
-        else{
-            $('#TrdCommandsCollection001_btn_reset').hide();
-        }
+        // if(assetType == PINAN_ASSET_TYPE_F01 || assetType == PINAN_ASSET_TYPE_F02
+        //         || assetType == PINAN_ASSET_TYPE_F07 || assetType == PINAN_ASSET_TYPE_F11
+        //         || assetType == 'Con1'){
+        //     $('#TrdCommandsCollection001_btn_reset').show();
+        // }
+        // else{
+        //     $('#TrdCommandsCollection001_btn_reset').hide();
+        // }
 
         if(assetType == PINAN_ASSET_TYPE_F07){
             $('#pledgeList_div').show();
@@ -1572,6 +1572,7 @@ $(function() {
      * 下拉框选项初始化
      * */
     var init = function(){
+        $('#TrdCommandsCollection001_btn_reset').hide();
         var PS_SELECTIONS = JSON.parse(PS);
         var TRADE_PLACE_SELECTIONS = JSON.parse(VALUATION_TRADE_MARKET);
         var DEAL_MODE_SELECTIONS = JSON.parse(DEAL_MODE);
@@ -1728,7 +1729,7 @@ $(function() {
             ,{field:'invAimStr', width:'10%', title: 'TrdBondInvestTrade002.invAim',sortable:false}
             ,{field:'priceModelStr',  width:'10%', title: 'TrdCommandsCollection002.priceMode',sortable:false}
             ,{field:'price', width:'10%', title: 'TrdBondInvestTrade001.unitCprice', type: 'number', digit: 4, sortable:false}
-            ,{field:'fpriceAmt', width:'10%', title: '全价', type: 'number',sortable:false}
+            ,{field:'fpriceAmt', width:'10%', title: '全价', type: 'number', digit: 4 ,sortable:false}
             ,{field:'matureYield', width:'10%', title: 'TrdBondInvestTrade002.yield', type: 'number', digit: 4, sortable:false}
             ,{field:'entrustAmt', width: 200, title: 'TrdBondToStock001.entrustAmt', type: 'number', sortable:false}
             ,{field:'finishedAmt', width: 200, title: 'TrdCommandsCollection002.finishedAmtF01', type: 'number', sortable:false}
@@ -2345,6 +2346,13 @@ $(function() {
          */
         $('#TrdCommandsCollection001_btn_export').click(function () {
             exportExcel();
+        });
+
+        /**
+         * 重置事件
+         */
+        $('#TrdCommandsCollection001_btn_clickReset').click(function () {
+            $('#TrdCommandsCollection001_btn_reset').trigger("click");
         });
         
         /**

@@ -110,6 +110,11 @@ public class TrdFundInvestTradeDto extends TrdProductDeal {
     private String fTradeId;
 
     /**
+     * TOTLE_TRADE_ID
+     */
+    private String totleTradeId;
+
+    /**
      * 金融产品交易扩展
      */
     private List<PaTrdProductDeal> paTrdProductDeals;
@@ -1188,5 +1193,23 @@ public class TrdFundInvestTradeDto extends TrdProductDeal {
      */
     public void setChangeInShareAmt(BigDecimal changeInShareAmt) {
         this.changeInShareAmt = changeInShareAmt;
+    }
+
+    /**
+     * 获取 totleTradeId
+     *
+     * @return totleTradeId.
+     */
+    public String getTotleTradeId() {
+        return totleTradeId;
+    }
+
+    /**
+     * 设置 totleTradeId
+     *
+     * @param totleTradeId totleTradeId
+     */
+    public void setTotleTradeId(String totleTradeId) {
+        this.totleTradeId = totleTradeId;
     }
 }

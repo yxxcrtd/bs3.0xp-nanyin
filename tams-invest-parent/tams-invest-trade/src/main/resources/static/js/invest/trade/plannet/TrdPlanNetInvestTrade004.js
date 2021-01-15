@@ -286,6 +286,11 @@ $(function() {
         	object.maxTradeamt = maxTradeamt;
         }
         object.inputValue1 = 'F04';
+        //add by mashukai 20210114 ZGBSS-215 start
+        for (var i in object.bussTrdTransfenpeiDto){
+            object.bussTrdTransfenpeiDto[i].assetsavailablepositions = object.bussTrdTransfenpeiDto[i].assetAvailablePosition;
+        }
+        //add by mashukai 20210114 ZGBSS-215 end
         Joyin.ajaxJson(basePath + 'invest/trade/plannet/TrdPlanNetInvestTrade004/check', object, function(result) {
         	Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/check', object, function(result1) {
 	            Joyin.confirm(result.data, function() {
@@ -642,10 +647,12 @@ $(function() {
                 $('#portfolioId').attr('disabled',true);
                 $('#ps').attr('disabled',true);
                 $('#finprodId').attr('disabled',true);
+                $('#TrdPlanNetInvestTrade004_btn_autoAllocation').removeClass('layui-btn-disabled');
             }else{
                 $('#portfolioId').attr('disabled',false);
                 $('#ps').attr('disabled',false);
                 $('#finprodId').attr('disabled',false);
+                $('#TrdPlanNetInvestTrade004_btn_autoAllocation').addClass('layui-btn-disabled');
             }
         });
         //add by yujiaping 2020-11-23 ZGBS-13新建赎回交易，修改确认日期，预计到账日根据确认日期联动：预计到账日=确认日 start
@@ -1159,13 +1166,15 @@ $(function() {
         });
         // 自动分配
         $('#TrdPlanNetInvestTrade004_btn_autoAllocation').click(function () {
-        	var ps = $('#ps').val();
-        	if(ps == ps_T04 || ps==ps_mr){
-        		extractedZiDongFenPei();
-     		    shareAmtDistribution();
-        	}else{
-        		extractedZiDongFenPei2();
-        		tradeAmtDistribution();
+            if( !$('#TrdPlanNetInvestTrade004_btn_autoAllocation').hasClass('layui-btn-disabled') ){
+                var ps = $('#ps').val();
+                if(ps == ps_T04 || ps==ps_mr){
+                    extractedZiDongFenPei();
+                    shareAmtDistribution();
+                }else{
+                    extractedZiDongFenPei2();
+                    tradeAmtDistribution();
+                }
         	}
         });
         // 风险试算

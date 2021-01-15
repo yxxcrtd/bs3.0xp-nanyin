@@ -29,6 +29,30 @@ public class TrdFeeConfig extends BaseEntity {
      * 交易场所
      */
     private String tradeMarket;
+    /**
+     * 资产分类一
+     */
+    private String windtypeone;
+    /**
+     * 资产分类二
+     */
+    private String windtypetwo;
+
+    public String getWindtypeone() {
+        return windtypeone;
+    }
+
+    public void setWindtypeone(String windtypeone) {
+        this.windtypeone = windtypeone;
+    }
+
+    public String getWindtypetwo() {
+        return windtypetwo;
+    }
+
+    public void setWindtypetwo(String windtypetwo) {
+        this.windtypetwo = windtypetwo;
+    }
 
     /**
      * 费用类型

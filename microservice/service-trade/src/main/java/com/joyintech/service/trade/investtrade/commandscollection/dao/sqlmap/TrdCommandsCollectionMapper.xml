@@ -338,7 +338,6 @@
             T1.TRADE_MARKET tradeMarket,
         </if>
         <if test="assetType == 'Con1'">
-            T1.CHL_ID chlId,
             T17.FINPROD_ABBR chlName,
             T2.PURCH_MODLE purchModle,
             T2.PURCH_TYPE purchType,
@@ -346,7 +345,6 @@
             T8.SEC_ACCT_NAME secAcctName,
         </if>
         <if test="assetType == 'Con2'">
-            T1.CHL_ID chlId,
             T17.FINPROD_ABBR chlName,
             T2.SEC_ACCT_ID secAcctId,
             T8.SEC_ACCT_NAME secAcctName,
@@ -358,7 +356,6 @@
         </if>
         <if test="assetType == PINAN_ASSET_TYPE_F02 ">
             T1.PS ps,
-            T1.CHL_ID chlId,
             T17.FINPROD_ABBR chlName,
             T2.SEC_ACCT_ID secAcctId,
             T11.TYPE_6 type6,
@@ -391,7 +388,6 @@
         </if>
         <if test="assetType == PINAN_ASSET_TYPE_F11 ">
             T1.PS ps,
-            T1.CHL_ID chlId,
             T17.FINPROD_ABBR chlName,
             T7.BOARD board,
             T2.SEC_ACCT_ID secAcctId,
@@ -594,9 +590,11 @@
         </if>
         <if test="assetType == PINAN_ASSET_TYPE_F01 ">
             T1.INV_AIM invAim, T1.PRICE price, T2.MATURE_YIELD * 100 matureYield,
+            T2.EXER_YIELD * 100 exerYield,T2.SETTLE_SPREED settleSpreed,T7.FINPROD_ID finprodId,
+            T7.VDATE finvdate,T1.TRADE_MARKET_MODE,
         </if>
         <if test="assetType == PINAN_ASSET_TYPE_F01 or assetType == PINAN_ASSET_TYPE_F10 ">
-            T1.PRICE_MODEL priceModel,　
+            T1.PRICE_MODEL priceModel,
             T1.PS ps,
         </if>
         <if test="assetType == PINAN_ASSET_TYPE_F10">
@@ -620,6 +618,10 @@
         LEFT JOIN (SELECT ENTRUST_ID,SUM(FINISH_AMT) AS FINISHED_AMT FROM ETR_FINISH_STATUS GROUP BY ENTRUST_ID) T3 ON T1.ENTRUST_ID = T3.ENTRUST_ID
         LEFT JOIN ETR_DISTRIBUTE T5 ON T1.ENTRUST_ID = T5.ENTRUST_ID
         LEFT JOIN STL_SEC_ACCT_INFO T6 ON T6.SEC_ACCT_ID = T2.SEC_ACCT_ID
+        <if test="assetType == PINAN_ASSET_TYPE_F01 ">
+            LEFT JOIN FIN_PRODUCT T7 ON T1.FINPROD_ID = T7.FINPROD_ID
+        </if>
+
         <where>
             T5.TRADER = #{user}
             AND T1.ENTRUST_STATUS = #{entrustStatus} 
@@ -686,8 +688,8 @@
     <select id="selectEntrustList" resultType="com.joyintech.service.trade.investtrade.commandscollection.dto.TrdCommandsCollection002Dto">
         SELECT 
             T1.ENTRUST_ID entrustId, 
-            T1.VDATE vdate, 
-            T1.MDATE mdate, 
+            T1.VDATE vdate,
+            T1.MDATE mdate,
             T1.PORTFOLIO_ID portfolioId,/* add by songyawei */
 <!--         
 		<if test="assetType != PINAN_ASSET_TYPE_F02 ">
@@ -695,7 +697,7 @@
         </if>
  -->        
  		<if test="assetType == PINAN_ASSET_TYPE_F17 or assetType == 'Con1' or assetType == 'Con2'">
-            T1.INV_AIM invAim, 
+            T1.INV_AIM invAim,
         </if>
         <if test="assetType == PINAN_ASSET_TYPE_F07 or assetType == PINAN_ASSET_TYPE_F11">
             T1.PRICE_MODEL priceModel,　

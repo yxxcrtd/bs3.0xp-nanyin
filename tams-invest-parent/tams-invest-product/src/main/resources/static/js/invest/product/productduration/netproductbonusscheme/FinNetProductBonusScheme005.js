@@ -3,12 +3,26 @@
  */
 (function() {    
 
-
-
     //初始化
     var init = function () {
-    	debugger;
-        
+		var obj = $('#finprodMarketId').select2('data')[0].object;
+		if(obj){
+			var str = obj.split(',');
+			if(str != null){
+				$('#unitvalueDec').val(str[3]);
+			}
+		}
+		if(pageModel != PAGE_MODEL_REFERENCE){
+			if ($('#unitvalueDec').val() != null && $('#unitvalueDec').val() != ''
+				&& $('#tdyUnitValue').val() != '' && $('#tdyUnitValue').val() != ''){
+				$('#tdyUnitValue').attr("data-textrange", parseInt($('#unitvalueDec').val())).trigger('change');
+				$('#tdyUnitValue').val(parseFloat($('#tdyUnitValue').val()).toFixed(parseInt($('#unitvalueDec').val()))).trigger("change");
+			}
+		}else {
+			$('#tdyUnitValue').attr("data-textrange", parseInt($('#unitvalueDec').val())).trigger('change');
+			$('#tdyUnitValue').val(parseFloat($('#tdyUnitValue').val()).toFixed(parseInt($('#unitvalueDec').val()))).trigger("change");
+		}
+
         if(pageModel == PAGE_MODEL_NEW){
         	//确认日默认除权日+1天
         	var delDate = $('#delDate').val();

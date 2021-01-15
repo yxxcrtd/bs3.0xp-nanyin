@@ -97,15 +97,53 @@ public class BaseTradeFeeCommServiceImpl implements BaseTradeFeeCommService {
     			//调用交易费用组件.费用配置查询
     			BasicTradeFeeInputDto searchDto=new BasicTradeFeeInputDto();
     			BeanUtil.copyPropertiesIgnoreNull(searchDto, inputDto);
+				//如果查询的是结算费或经手费，置SEC_ACCT_ID为空
+
+				if(StringUtil.equals(feeType,BussinessDictCodeList.费用类型_结算费.getValue())||
+						StringUtil.equals(feeType,BussinessDictCodeList.费用类型_经手费.getValue())){
+					searchDto.setSecAcctId(null);
+				}
     			searchDto.setFeeType(feeType);
     			searchDto.setRegistOrg(null);
+    			//查询出所有符合条件的费用规则（按照生效日逆序，资产分类一、资产分类二升序排序）
     			List<MstCommissionSetDto> feeDetailList=baseTradeFeeCommMapper.selectFeeConfig(searchDto);
-    			
-    			if(feeDetailList.size()<=0){
-    				continue;
-    			}
-    			MstCommissionSetDto retFeeDetailDto=feeDetailList.get(0);
-    			
+				MstCommissionSetDto retFeeDetailDto=new MstCommissionSetDto();
+				//当前交易的全价总额
+				BigDecimal fpriceAmt=inputDto.getFpriceAmt();
+				//遍历所有查询出的费用规则，找到最合适的一个费用规则
+				for(MstCommissionSetDto dto:feeDetailList){
+					/**判断是否能找到一个种类（若不分档，该种类只有一条费用规则，若分档，该种类有大于1条费用规则）的符合要求的费用规则
+					 * 实现条件：该债券信息中资产分类一等于费用规则的资产分类一并且该债券信息中资产分类二等于费用规则的资产分类二
+					 * 			或者债券信息中资产分类一等于费用规则的资产分类一并且费用规则的资产分类二为空
+					 * 			或者费用规则的资产分类一为空并且费用规则的资产分类二为空
+					 */
+					if(inputDto.getType6().equals(dto.getWindtypeone())&&inputDto.getType7().equals(dto.getWindtypetwo())
+							||inputDto.getType6().equals(dto.getWindtypeone())&&StringUtil.isEmpty(dto.getWindtypetwo())
+							||StringUtil.isEmpty(dto.getWindtypeone())&&StringUtil.isEmpty(dto.getWindtypetwo())){
+						/**满足条件，一定存在一条该种类下的费用规则满足要求
+						 * 判断循环是否进入了下一个种类并且是否已经找到了满足条件的费用规则，若满足，跳出循环
+						 * 实现条件：费用规则的费用规则中是否分档为“否”并且暂存的规则是否分档为“是”
+						 * 			或者费用规则的资产分类二为空并且暂存的规则资产分类二不为空
+						 * 			或者费用规则的资产分类一为空并且暂存的规则资产分类一不为空
+						 */
+						if(("Y".equals(retFeeDetailDto.getIsGrade())&&"N".equals(dto.getIsGrade()))
+								||(StringUtil.isNotEmpty(retFeeDetailDto.getWindtypetwo())&&StringUtil.isEmpty(dto.getWindtypetwo()))
+								||(StringUtil.isNotEmpty(retFeeDetailDto.getWindtypeone())&&StringUtil.isEmpty(dto.getWindtypeone())))
+							break;
+						//判断该种类下的该费用规则是否分档
+						if("Y".equals(dto.getIsGrade())){
+							//若分档，判断该债券交易的（全价总额是否大于分档金额）或者（全价总额是否等于分档金额并且是否包含分档金额是否为“是”），若满足，暂时赋值该规则
+							if(fpriceAmt.compareTo(new BigDecimal(dto.getGradeAmount()))>0
+									||fpriceAmt.compareTo(new BigDecimal(dto.getGradeAmount()))==0&&"Y".equals(dto.getIsCludeStartamt()))
+								retFeeDetailDto=dto;
+						}else{
+							//若不分档，赋值取到符合要求的费用规则，跳出循环
+							retFeeDetailDto=dto;
+							break;
+						}
+					}
+				}
+				if(StringUtil.isEmpty(retFeeDetailDto.getBatchSeq()))continue;
     			//调用费用计算
     			TrdTradeFeeDetail feeCofigDetail=feeMathMethod(feeType,retFeeDetailDto,inputDto);
 //    			feeCofigDetail.setIsPayWithTrade(BussinessDictCodeList.是否_是.getValue());

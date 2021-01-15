@@ -46,6 +46,13 @@
         where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
     </select>
 
+    <select id="findWindtypetwo" resultType="java.lang.String">
+        select ITEM_CODE from SYS_DATADICT_LIST_LINK
+        where DICT_CODE = 'WINDTYPETWO'
+        and LINKED_DICT_CODE = 'WINDTYPEONE'
+        and LINKED_ITEM_CODE like concat('%',concat(#{windtypeone,jdbcType=CHAR},'%'))
+    </select>
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
         delete from TRD_FEE_CONFIG
         where SEQ_NO = #{seqNo,jdbcType=VARCHAR}

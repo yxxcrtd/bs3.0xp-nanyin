@@ -106,6 +106,12 @@
         if($('#tradeAmt').val()){
             var number = 0;
             for(var i=0;i<table.getAllRows().length;i++){
+
+                if(table.getAllRows()[i].tradeAmt==null || table.getAllRows()[i].tradeAmt== 0){
+                    Joyin.error("组合分配劵面总额不能为空或者0！");
+                    return;
+                }
+
                 if(table.getAllRows()[i].tradeAmt){
                     number =  JoyinMath.doAdd(number,table.getAllRows()[i].tradeAmt,2);
                 }

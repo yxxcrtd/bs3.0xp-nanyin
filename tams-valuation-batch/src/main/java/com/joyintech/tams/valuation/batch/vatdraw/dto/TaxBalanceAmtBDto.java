@@ -587,6 +587,13 @@ public class TaxBalanceAmtBDto {
                         // round(sum(增值税账务明细余额.当日增值税额本币_余额计算),2) 当日增值税额本币_余额计算
                         amtDto.setYglxTdyBalCalcTaxAmt(ArithmeticUtil.doAdd(item.getTdyBalCalcTaxAmtB(),
                             amtDto.getYglxTdyBalCalcTaxAmt()));
+
+                        //add by xr for TISHKBS-1198 start
+                        // round(sum(增值税账务明细余额.当日增值税额本币_余额计算),2) 当日增值税额本币_余额计算_含结转
+                        amtDto.setYglxTdyBalCalcTaxAmtHjz(ArithmeticUtil.doAdd(item.getTdyBalCalcTaxAmtBHjz(),
+                                amtDto.getYglxTdyBalCalcTaxAmtHjz()));
+                        //add by xr for TISHKBS-1198 end
+
                         // round(增值税资产余额.含税销售额本币合计,2) 含税销售额余额
                         amtDto.setYglxIncomeAmtAll(ArithmeticUtil.doAdd(item.getIncomeAmtAllB(),
                             amtDto.getYglxIncomeAmtAll()));
@@ -1805,4 +1812,37 @@ public class TaxBalanceAmtBDto {
     public void setMaFsjcIncomeAmtAll(BigDecimal maFsjcIncomeAmtAll) {
         this.maFsjcIncomeAmtAll = maFsjcIncomeAmtAll;
     }
+
+
+
+    /**
+     * add by xr start
+     * 预估利息_当日增值税额本币_余额计算_含结转
+     */
+    private BigDecimal yglxTdyBalCalcTaxAmtHjz = BigDecimal.ZERO;
+
+    public BigDecimal getYglxTdyBalCalcTaxAmtHjz() {
+        return yglxTdyBalCalcTaxAmtHjz;
+    }
+
+    public void setYglxTdyBalCalcTaxAmtHjz(BigDecimal yglxTdyBalCalcTaxAmtHjz) {
+        this.yglxTdyBalCalcTaxAmtHjz = yglxTdyBalCalcTaxAmtHjz;
+    }
+    /**
+     * 预估红利_当日增值税额本币_余额计算_含结转
+     */
+    private BigDecimal yghlTdyBalCalcTaxAmtHjz = BigDecimal.ZERO;
+
+    public BigDecimal getYghlTdyBalCalcTaxAmtHjz() {
+        return yghlTdyBalCalcTaxAmtHjz;
+    }
+
+    public void setYghlTdyBalCalcTaxAmtHjz(BigDecimal yghlTdyBalCalcTaxAmtHjz) {
+        this.yghlTdyBalCalcTaxAmtHjz = yghlTdyBalCalcTaxAmtHjz;
+    }
+
+    /**
+     * add by xr end
+     * 预估利息_当日增值税额本币_余额计算_含结转
+     */
 }

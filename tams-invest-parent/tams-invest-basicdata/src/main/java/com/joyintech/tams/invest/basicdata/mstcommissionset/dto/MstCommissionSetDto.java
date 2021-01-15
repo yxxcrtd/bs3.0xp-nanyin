@@ -100,26 +100,6 @@ public class MstCommissionSetDto extends TrdFeeConfig implements ProcessEntity {
      */
     private String allData;
 
-    private String windtypeone;
-
-    private String windtypetwo;
-
-    public String getWindtypeone() {
-        return windtypeone;
-    }
-
-    public void setWindtypeone(String windtypeone) {
-        this.windtypeone = windtypeone;
-    }
-
-    public String getWindtypetwo() {
-        return windtypetwo;
-    }
-
-    public void setWindtypetwo(String windtypetwo) {
-        this.windtypetwo = windtypetwo;
-    }
-
     private List<TrdFeeConfigDetail> trdFeeConfigDetailList;
 
     public List<TrdFeeConfigDetail> getTrdFeeConfigDetailList() {

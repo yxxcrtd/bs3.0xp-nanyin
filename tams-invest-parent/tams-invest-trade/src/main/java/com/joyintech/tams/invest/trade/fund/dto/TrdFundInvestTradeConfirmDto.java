@@ -26,6 +26,7 @@ import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.trade.fund.validator.TrdFundInvestTradeConfirmValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
 
 /**
  * 基金投资交易画面端dto 〈功能详细描述〉
@@ -1257,5 +1258,18 @@ public class TrdFundInvestTradeConfirmDto extends TrdProductDeal implements Proc
 
     public void setPurCfmDate(Date purCfmDate) {
         this.purCfmDate = purCfmDate;
+    }
+
+    /**
+     * 组合分配
+     */
+    private List<BussTrdTransfenpeiDto> bussTrdTransfenpeiDto;
+
+    public List<BussTrdTransfenpeiDto> getBussTrdTransfenpeiDto() {
+        return bussTrdTransfenpeiDto;
+    }
+
+    public void setBussTrdTransfenpeiDto(List<BussTrdTransfenpeiDto> bussTrdTransfenpeiDto) {
+        this.bussTrdTransfenpeiDto = bussTrdTransfenpeiDto;
     }
 }

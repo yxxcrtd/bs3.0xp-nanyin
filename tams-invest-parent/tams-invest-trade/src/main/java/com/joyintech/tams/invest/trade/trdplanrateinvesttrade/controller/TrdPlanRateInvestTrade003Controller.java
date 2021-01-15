@@ -244,13 +244,21 @@ public class TrdPlanRateInvestTrade003Controller extends BaseController{
  				    list.add(bussTrdTransfenpeiDto);
              	}
  			}
-             entity.setBussTrdTransfenpeiDto(list); 
-             
+             entity.setBussTrdTransfenpeiDto(list);
+             entity.setMySettleSpeed(DictCodeList.清算速度_T_0.getValue());
              model.addAttribute("BussTrdTransfenpeiDto", list);
              model.addAttribute("finprodId", finprodId);
              model.addAttribute("entity", entity);
              model.addAttribute("tradeId", entrustId);
              model.addAttribute("entrustId", entrustId);
+        }else if(StringUtil.equals(this.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
+
+            //add by yujiaping 2020-12-16 TISHKBS-1259 计划利率型交易新建时，清算速度默认T+0，并且不可修改start
+            TrdPlanRateInvestTradeDto entity = new TrdPlanRateInvestTradeDto();
+            entity.setMySettleSpeed(DictCodeList.清算速度_T_0.getValue());
+            model.addAttribute("entity", entity);
+            //add by yujiaping 2020-12-16 TISHKBS-1259 计划利率型交易新建时，清算速度默认T+0，并且不可修改end
+
         }
         model.addAttribute("YES_OR_NO_N",DictCodeList.是否_否.getValue());
         //add by lizhi 是否限制划款指令开关 2020年2月26日  start
@@ -263,12 +271,7 @@ public class TrdPlanRateInvestTrade003Controller extends BaseController{
         Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
         isEleShow.putAll(map);
         model.addAttribute("isEleShow", isEleShow);
-        
-        //add by yujiaping 2020-12-16 TISHKBS-1259 计划利率型交易新建时，清算速度默认T+0，并且不可修改start
-        TrdPlanRateInvestTradeDto entity = new TrdPlanRateInvestTradeDto();
-        entity.setMySettleSpeed(DictCodeList.清算速度_T_0.getValue());
-        model.addAttribute("entity", entity);
-        //add by yujiaping 2020-12-16 TISHKBS-1259 计划利率型交易新建时，清算速度默认T+0，并且不可修改end
+
         return super.init(model);
     }
     /**

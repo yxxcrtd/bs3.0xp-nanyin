@@ -1,5 +1,4 @@
 var table;
-
 (function () {
     var entrustNum; // 委托时的券面总额
     var entrustPrice; // 委托时的净价
@@ -7,6 +6,8 @@ var table;
     var entrustExerYield; // 委托时的行权收益率
     var commissionAmt=0;// 佣金
     var fTradeIdFromCstp = fTradeId;
+    var settleAmt=0; //结算费
+    var exchangeAmt=0; //经手费
    //初始计算要素内容
     var saveCalcParam;
     // add by wangguoxian 费用设置 20190807 start
@@ -88,6 +89,9 @@ var table;
 	        if(FileCommon) {
 	            object.uploadFileList = FileCommon.getUploadFileInfo();
 	        }
+	        object.settleAmt=$("#settleAmt").val();
+	        object.exchangeAmt=$("#exchangeAmt").val();
+	        object.commissionAmt=$("#commissionAmt").val();
 	        object.preTradeId = preTradeId;
 	        object.fTradeId = fTradeId;
 	        object.entrustNum = entrustNum; // 委托时的券面总额
@@ -286,9 +290,9 @@ var table;
 			obj.callback($this);
 		return $this;
 	}
-    
+
     /**
-     * 交易平台联动
+     * 交易平台联动，增加输入框事件
      */
     $('#tradeMarket,#tradeMarketMode').on("change", function (e, isInit) {
         var tradeMarket = $('#tradeMarket').val();
@@ -301,6 +305,15 @@ var table;
             switch (key) {
             	//如果是交易场所+交易市场 == 银行间+一级市场，就可以选择01和99
             	case TRADE_PLACE_01 + SHARES_TRADE_MARKET_01:
+            	    $("#settleAmtDiv").hide().trigger("change");
+            	    $("#exchangeAmtDiv").hide().trigger("change");
+            	    $("#settleAmt").val('').trigger("change");
+            	    $("#exchangeAmt").val('').trigger("change");
+            	    $("#commissionAmt").val('').trigger("change");
+            	    $("#tradeAmtAndFee").val('').trigger("change");
+            	    $("#fpriceAmt").val('').trigger("change");
+
+                    //$("#exchangeFeesAmtDiv").hide();
                     $tradePlat.updateChosenArr({
                         item: [SHARES_TRADE_PLATFORM_01,SHARES_TRADE_PLATFORM_99],
                         chosen: SHARES_TRADE_PLATFORM_01,
@@ -309,6 +322,14 @@ var table;
                     break;
                 case TRADE_PLACE_01 + SHARES_TRADE_MARKET_02:
                 	//如果是交易场所+交易市场 == 银行间+二级市场，只能选择01且置灰
+                	$("#settleAmtDiv").hide();
+                	$("#exchangeAmtDiv").hide();
+                	$("#settleAmt").val('').trigger("change");
+                    $("#exchangeAmt").val('').trigger("change");
+                    $("#commissionAmt").val('').trigger("change");
+                    $("#tradeAmtAndFee").val('').trigger("change");
+                    $("#fpriceAmt").val('').trigger("change");
+                    //$("#exchangeFeesAmtDiv").hide();
                     $tradePlat.updateChosenArr({
                         item: [SHARES_TRADE_PLATFORM_01],
                         chosen: SHARES_TRADE_PLATFORM_01,
@@ -317,12 +338,29 @@ var table;
                     break;
                 case TRADE_PLACE_02+SHARES_TRADE_MARKET_01:
                     //如果是交易场所+交易市场 == 上海证券交易所+一级市场;
+                    $("#settleAmtDiv").hide();
+                    $("#exchangeAmtDiv").hide();
+                    $("#settleAmt").val('').trigger("change");
+                    $("#exchangeAmt").val('').trigger("change");
+                    $("#commissionAmt").val('').trigger("change");
+                    $("#tradeAmtAndFee").val('').trigger("change");
+                    $("#fpriceAmt").val('').trigger("change");
+                    //$("#exchangeFeesAmtDiv").hide();
                     $tradePlat.updateChosenArr({
                         disabled: true
                     });
                     break;
                 case TRADE_PLACE_02+SHARES_TRADE_MARKET_02:
-                    //如果是交易场所+交易市场 == 上海证券交易所+二级市场;
+                    //如果是交易场所+交易市场 == 上海证券交易所+二级市场; 显示经手费和结算费
+                    //文本框事件
+                    $("#settleAmtDiv").show();
+                    $("#exchangeAmtDiv").show();
+                    $("#settleAmt").val('').trigger("change");
+                    $("#exchangeAmt").val('').trigger("change");
+                    $("#commissionAmt").val('').trigger("change");
+                    $("#tradeAmtAndFee").val('').trigger("change");
+                    $("#fpriceAmt").val('').trigger("change");
+                    //$("#exchangeFeesAmtDiv").show();
                     $tradePlat.updateChosenArr({
                         item: ['02','03','04'],
                         chosen: tradePlat,
@@ -331,12 +369,28 @@ var table;
                     break;
                 case TRADE_PLACE_03+SHARES_TRADE_MARKET_01:
                     //如果是交易场所+交易市场 == 深圳证券交易所+一级市场;
+                    $("#settleAmtDiv").hide();
+                    $("#exchangeAmtDiv").hide();
+                    $("#settleAmt").val('').trigger("change");
+                    $("#exchangeAmt").val('').trigger("change");
+                    $("#commissionAmt").val('').trigger("change");
+                    $("#tradeAmtAndFee").val('').trigger("change");
+                    $("#fpriceAmt").val('').trigger("change");
+                    //$("#exchangeFeesAmtDiv").hide();
                     $tradePlat.updateChosenArr({
                         disabled: true
                     });
                     break;
                 case TRADE_PLACE_03+SHARES_TRADE_MARKET_02:
                     //如果是交易场所+交易市场 == 深圳证券交易所+二级市场;
+                    $("#settleAmtDiv").show();
+                    $("#exchangeAmtDiv").show();
+                    $("#settleAmt").val('').trigger("change");
+                    $("#exchangeAmt").val('').trigger("change");
+                    $("#commissionAmt").val('').trigger("change");
+                    $("#tradeAmtAndFee").val('').trigger("change");
+                    $("#fpriceAmt").val('').trigger("change");
+                    //$("#exchangeFeesAmtDiv").show();
                     $tradePlat.updateChosenArr({
                         item: ['02','05'],
                         chosen: tradePlat,
@@ -344,6 +398,14 @@ var table;
                     });
                     break;
                 default:
+                    $("#settleAmtDiv").hide();
+                    $("#exchangeAmtDiv").hide();
+                    $("#settleAmt").val('').trigger("change");
+                    $("#exchangeAmt").val('').trigger("change");
+                    $("#commissionAmt").val('').trigger("change");
+                    $("#tradeAmtAndFee").val('').trigger("change");
+                    $("#fpriceAmt").val('').trigger("change");
+                    //$("#exchangeFeesAmtDiv").hide();
                     if (isInit || pageModel == PAGE_MODEL_REFERENCE || pageModel ==PAGE_MODEL_EDIT) {
                         break;
                     }
@@ -427,6 +489,9 @@ var table;
      */
     $("#ps").on("change", function () {
         var ps = $("#ps").val();
+        //交易方向发生变化，重新计算所有数据
+        changeTradeAmtAndFee();
+
         // 一体化对应etliu start
 //        if (ps == PS_T02 || ps == PS_T03) {
         $("#assetIntegrateSaleAvailablePosition_div").hide();
@@ -906,9 +971,19 @@ var table;
         changeTradeAmtAndFee();
     });
 
+    $("#settleAmt").on("change", function () {
+        changeTradeAmtAndFee();
+    });
+
+    $("#exchangeAmt").on("change", function () {
+        changeTradeAmtAndFee();
+    });
+    //更改计算规则
     var changeTradeAmtAndFee = function() {
-        if ($("#ps").val() == PS_T01) {
-            if($("#fpriceAmt").val()){
+        //在重新计算前将值置空，否则会重复进行计算
+        $("#tradeAmtAndFee").val('0');
+        if ($("#ps").val() == PS_T01) { //买入方向
+            if($("#fpriceAmt").val()){  //判断全价金额有没有填写
                 $("#tradeAmtAndFee").val(JoyinMath.doAdd($("#fpriceAmt").val(), 0, 2)).trigger('blur');
             }
             /*if($("#procedureAmt").val()){
@@ -920,15 +995,25 @@ var table;
             if (stampDutyIsPayWithTrade == YES_OR_NO_Y) {
                 $("#tradeAmtAndFee").val(JoyinMath.doAdd($("#tradeAmtAndFee").val(), $("#stampDutyAmt").val(), 2)).trigger('blur');
             }
-             if (isPayWithTrade == YES_OR_NO_Y) {
+             if (isPayWithTrade == YES_OR_NO_Y) { //随交易支付
                  $("#tradeAmtAndFee").val(JoyinMath.doAdd($("#tradeAmtAndFee").val(), $("#commissionAmt").val(), 2)).trigger('blur');
+                //若结算费不为空
+                if($("#settleAmt").val()){
+                    $("#tradeAmtAndFee").val(JoyinMath.doAdd($("#tradeAmtAndFee").val(), $("#settleAmt").val(), 2)).trigger('blur');
+                }
+                //若经手费不为空
+                if($("#exchangeAmt").val()){
+                    $("#tradeAmtAndFee").val(JoyinMath.doAdd($("#tradeAmtAndFee").val(), $("#exchangeAmt").val(), 2)).trigger('blur');
+                }
              }
              //内转买入 减去通道费
              if ($("#trdInvestPersonInfo_counterId").val()&&$("#trdInvestPersonInfo_counterId").select2('data')[0].object=='N') {
             	 $("#tradeAmtAndFee").val(JoyinMath.doMinus($("#tradeAmtAndFee").val(), $("#channelFee").val(), 2)).trigger('blur');
              }
+
+
         }
-        else {
+        else { //卖出方向
             if($("#fpriceAmt").val()){
                 $("#tradeAmtAndFee").val(JoyinMath.doAdd($("#fpriceAmt").val(), 0, 2)).trigger('blur');
             }
@@ -941,6 +1026,14 @@ var table;
             // $("#tradeAmtAndFee").val(JoyinMath.doMinus($("#fpriceAmt").val(), $("#channelFee").val(), 2)).trigger('blur');
             if (isPayWithTrade == YES_OR_NO_Y) {
                 $("#tradeAmtAndFee").val(JoyinMath.doMinus($("#tradeAmtAndFee").val(), $("#commissionAmt").val(), 2)).trigger('blur');
+                //若结算费不为空
+                if($("#settleAmt").val()){
+                    $("#tradeAmtAndFee").val(JoyinMath.doMinus($("#tradeAmtAndFee").val(), $("#settleAmt").val(), 2)).trigger('blur');
+                }
+                //若经手费不为空
+                if($("#exchangeAmt").val()){
+                    $("#tradeAmtAndFee").val(JoyinMath.doMinus($("#tradeAmtAndFee").val(), $("#exchangeAmt").val(), 2)).trigger('blur');
+                }
             }
              if (stampDutyIsPayWithTrade == YES_OR_NO_Y) {
                  $("#tradeAmtAndFee").val(JoyinMath.doMinus($("#tradeAmtAndFee").val(), $("#stampDutyAmt").val(), 2)).trigger('blur');
@@ -981,7 +1074,51 @@ var table;
         });
     });
     // 一体化对应etliu end
-    
+
+    //缴款方式切换的事件
+    $("#payType").on("change", function() {
+        //修改费用清零条件
+        if($("#tradeMarketMode").val()=="01"){
+            //一级缴款,所有费用为0
+            if($("#payType").val()=="02"){
+                $("#commissionAmtDiv").hide();
+                $("#settleAmtDiv").hide();
+                $("#exchangeAmtDiv").hide();
+                ClearNum();
+            }
+
+            if($("#tradeMarket").val()!="01"){
+                //二级交易，若为交易所债券，显示佣金，经手费和结算费
+                if($("#payType").val()=="03"){
+                    $("#commissionAmtDiv").show();
+                    $("#settleAmtDiv").show();
+                    $("#exchangeAmtDiv").show();
+                    ClearNum();
+                }else if($("#payType").val()=="02"){
+                    $("#commissionAmtDiv").hide();
+                    $("#settleAmtDiv").hide();
+                    $("#exchangeAmtDiv").hide();
+                    ClearNum();
+                }
+                //一级分销，若是交易所，显示佣金
+                if($("#payType").val()=="01"){
+                    $("#commissionAmtDiv").show();
+                    ClearNum();
+                }
+            }
+
+        }
+    });
+
+    function ClearNum(){
+        $("#commissionAmt").val('').trigger("blur");
+        $("#settleAmt").val('').trigger("blur");
+        $("#exchangeAmt").val('').trigger("blur");
+        $("#stampDutyAmt").val('').trigger("blur");
+        $("#procedureAmt").val('').trigger("blur");
+        changeTradeAmtAndFee();
+    }
+
     /**
      * 数值项目change后记录至隐藏值
      */
@@ -1074,6 +1211,10 @@ var table;
         var paramObj = $.serializeToObject('#submitForm', true);
         paramObj.calculateField = $("[name=calculateField]:checked").val();
         paramObj.calculateField = calculateField;
+//        paramObj.settleAmt=$("#settleAmt").val();
+//        paramObj.exchangeAmt=$("#exchangeAmt").val();
+//        paramObj.commissionAmt=$("#commissionAmt").val();
+
         paramObj.tradeAmt = $("#tradeAmt").val();
         paramObj.unitCprice = $("#unitCprice").val();
         paramObj.unitInt = $("#unitInt").val();
@@ -1135,6 +1276,7 @@ var table;
         paramObj.commissionAmt = null;
         paramObj.channelFee = null;
         paramObj.tradeAmtAndFee = null;
+        paramObj.exchangeAmt = null;
         // add by wangguoxian 费用设置 20190808 end
         return paramObj;
     }
@@ -1144,7 +1286,6 @@ var table;
      */
     $('#TrdBondInvestTrade002_btn_calculate').click(function() {
         var paramObj = getCalcParam();
-
         Joyin.ajaxJson(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/calculateData'), paramObj, function (result) {
             if (result && result.data) {
                 var data = result.data;
@@ -1237,6 +1378,8 @@ var table;
                     var cntP = 0;
                     // 结算费条数
                     var cntS = 0;
+                    // 经手费条数
+                    var cntM = 0;
                     // 佣金条数
                     var cntC = 0;
                  // 印花税条数
@@ -1289,6 +1432,7 @@ var table;
                             }
                             changeTradeAmtAndFee();
                         }
+
                         if(v.feeType==FEE_TYPE_06&&v.feeAmt){
                             cntP++;
                             $("#procedureAmt").val(v.feeAmt).trigger("blur");
@@ -1298,6 +1442,17 @@ var table;
                             cntS++;
                             $("#settleAmt").val(v.feeAmt).trigger("blur");
                         }
+
+                        //加入结算费经手费
+                        if(v.feeType==FEE_TYPE_07&&v.feeAmt){
+                            cntS++;
+                            $("#settleAmt").val(v.feeAmt).trigger("blur");
+                        }
+                        if(v.feeType==FEE_TYPE_01&&v.feeAmt){
+                            cntM++;
+                            $("#exchangeAmt").val(v.feeAmt).trigger("blur");
+                        }
+
                         /*if(v.feeType==FEE_TYPE_04&&v.feeAmt){
                             $("#transferAmt").val(v.feeAmt).trigger("blur");
                         }*/
@@ -1307,7 +1462,12 @@ var table;
                         $("#procedureAmt").val("").trigger("blur");
                     }
                     if(cntS == 0){
+                        //结算费置空
                         $("#settleAmt").val("").trigger("blur");
+                    }
+                    if(cntM == 0){
+                        //经手费置空
+                        $("#exchangeAmt").val("").trigger("blur");
                     }
                     if(cntC == 0){
                         $("#commissionAmt").val("").trigger("blur");
@@ -1317,6 +1477,7 @@ var table;
                 }
                 }
                 else{
+                    $("#exchangeAmt").val("").trigger("blur");
                     $("#commissionAmt").val("").trigger("change").trigger("blur");
                     $("#stampDutyAmt").val("").trigger("change").trigger("blur");
                     $("#procedureAmt").val("").trigger("blur");
@@ -1325,7 +1486,17 @@ var table;
                     $("#commissionAmtRate").val("").trigger("blur");
                     $("#transferAmt").val("").trigger("blur");
                 }
-                
+
+
+                //一级缴款,所有费用为0
+                if($("#payType").val()=="02"){
+                    $("#commissionAmt").val('').trigger("blur");
+                    $("#settleAmt").val('').trigger("blur");
+                    $("#exchangeAmt").val('').trigger("blur");
+                    $("#stampDutyAmt").val('').trigger("blur");
+                    $("#procedureAmt").val('').trigger("blur");
+                }
+
                 counterIdChangeFee();
                 // 将甲类户对应的交易手续费、结算费、佣金设置为不可编辑
                 // controllFeeItem();
@@ -1425,6 +1596,7 @@ var table;
                     } else {
                         checkAndAssign("#unitCprice", etrEntrust.price, true); // 净价
                     }
+
                     checkAndAssign("#calendarId", etrEntrust.calendarId); // 交易日历
                     
                     entrustNum = etrEntrust.entrustNum;
@@ -1471,8 +1643,44 @@ var table;
                     $('#calculateField_unitCprice').attr("disabled", false);
                     $('#calculateField_fpriceAmt').attr("disabled", false);
                 }
+
             },false);
          }
+         //延时加载，根据交易市场和缴款方式，初始化页面
+         setTimeout( function(){
+            if($("#tradeMarketMode").val()=="01"){
+                //一级缴款,所有费用为0
+                if($("#payType").val()=="02"){
+                    $("#commissionAmtDiv").hide();
+                    $("#settleAmtDiv").hide();
+                    $("#exchangeAmtDiv").hide();
+                    ClearNum();
+                }
+
+                if($("#tradeMarket").val()!="01"){
+                //二级交易，若为交易所债券，显示佣金，经手费和结算费
+                    if($("#payType").val()=="03"){
+                        $("#commissionAmtDiv").show();
+                        $("#settleAmtDiv").show();
+                        $("#exchangeAmtDiv").show();
+                        ClearNum();
+                    }else if ($("#payType").val()=="02"){
+                        $("#commissionAmtDiv").hide();
+                        $("#settleAmtDiv").hide();
+                        $("#exchangeAmtDiv").hide();
+                        ClearNum();
+                    }
+                    //一级分销，若是交易所，显示佣金
+                    if($("#payType").val()=="01"){
+                        $("#commissionAmtDiv").show();
+                        ClearNum();
+                    }
+                }
+
+            }
+
+         },1500);
+
          //延迟加载，最后给托管账户赋值
          setTimeout( function () {
              $('#secManageAcctId').textSelect('setValue', secManageAcctId);
@@ -1487,7 +1695,6 @@ var table;
         // if($('#tradeMarket').val()=='01'){
         //     $('#tradeAmtAndFeeForm').val('').hide();
         // }
-        
 
     };
     
@@ -1694,11 +1901,13 @@ var table;
                 if (交易对手 == 'N') {
                         $('#procedureAmt').val('').prop("disabled", true).trigger("change");
                         $('#settleAmt').val('').prop("disabled", true).trigger("change");
+                        $('#exchangeAmt').val('').prop("disabled", true).trigger("change");
                         $('#commissionAmt').val('').prop("disabled", true).trigger("change");
                         $('#stampDutyAmt').val('').prop("disabled", true).trigger("change");
                 } else {
                 	$('#procedureAmt').prop("disabled", false).trigger("change");
                     $('#settleAmt').prop("disabled", false).trigger("change");
+                    $('#exchangeAmt').prop("disabled", false).trigger("change");
                     $('#commissionAmt').prop("disabled", false).trigger("change");
                     $('#stampDutyAmt').prop("disabled", false).trigger("change");
                 }
@@ -1775,6 +1984,7 @@ var table;
         if (tradeMarket&&ccy) {
             if(ccy==CCY_CNY){
                 $("#feeDiv").show();
+                $("#feeAmtDiv").show();
                 if (tradeMarket == TRADE_PLACE_01) {
                     // 选择【银行间】时，
                     // 1)交易平台默认为银行间且不可修改；
@@ -1788,10 +1998,15 @@ var table;
                     //----add by 裴家俊  2019/03/28-----
                     $("#procedureAmtDiv").show();
                     $("#procedureAmtRateDiv").show();
-                    $("#settleAmtDiv").show();
+                    $("#settleAmtDiv").hide();
+                    $("#exchangeAmtDiv").hide();
+                    $("#settleAmt").val('').trigger("change");
+                    $("#exchangeAmt").val('').trigger("change");
+
                     $("#commissionAmtDiv").hide();
                     $("#stampDutyAmtDiv").hide();
                     $("#commissionAmtRateDiv").hide();
+
 //                $("#tradeAmtAndFeeDiv").hide();
                 } else if (tradeMarket == TRADE_PLACE_02 || tradeMarket == TRADE_PLACE_03) {
                     // 选择【上海证券交易所】或【深圳证券交易所】时，
@@ -1807,7 +2022,13 @@ var table;
                     //----add by 裴家俊  2019/03/28-----
                     $("#procedureAmtDiv").hide();
                     $("#procedureAmtRateDiv").hide();
-                    $("#settleAmtDiv").hide();
+
+                    //若为二级市场，则显示
+                    if($('#tradeMarketMode').val()==SHARES_TRADE_MARKET_02){
+                        $("#settleAmtDiv").show();
+                        $("#exchangeAmtDiv").show();
+                    }
+
                     $("#commissionAmtDiv").show();
                     $("#commissionAmtRateDiv").show();
                     if($("#type6").val()&&$("#type6").val()==WINDTYPEONE_B17){
@@ -1839,6 +2060,10 @@ var table;
                     $("#procedureAmtDiv").show();
                     $("#procedureAmtRateDiv").show();
                     $("#settleAmtDiv").show();
+                    $("#exchangeAmtDiv").show();
+                    $("#settleAmt").val('').trigger("change");
+                    $("#exchangeAmt").val('').trigger("change");
+
                     $("#commissionAmtDiv").hide();
                     $("#commissionAmtRateDiv").hide();
                     $("#stampDutyAmtDiv").hide();
@@ -1846,6 +2071,7 @@ var table;
                 }
             }else{
                 $("#feeDiv").hide();
+                $("#feeAmtDiv").show();
             }
         }
     }

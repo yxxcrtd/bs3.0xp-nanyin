@@ -1,6 +1,7 @@
 package com.joyintech.service.basicdata.mstcommissionset.service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -141,22 +142,75 @@ public class MstCommissionSetService extends BaseService{
    private void insertTable(MstCommissionSetDto entity,String termDto,String secIdDto,String psDto){
 	   MstCommissionSetDto mstComDto=new MstCommissionSetDto();
 		BeanUtil.copyPropertiesIgnoreNull(mstComDto, entity);
-		mstComDto.setSeqNo(IDGenerator.generate());
+//		mstComDto.setSeqNo(IDGenerator.generate());
 		mstComDto.setTermType(termDto);
 		mstComDto.setSecAcctId(secIdDto);
 		mstComDto.setPs(psDto);
-	   	trdFeeConfigMapper.insert(mstComDto);
+		List<String> seqNoList = new ArrayList<>();
+		//判断页面资产分类一是否为空
+		if(StringUtil.isNotEmpty(entity.getWindtypeone())){
+			//当资产分类一不为空的时候，循环遍历，资产分类一文本框中每一种分类会生成一组数据
+			for(String windtypeone:entity.getWindtypeone().split(",")){
+				//把资产分类一放到插入库的参数中（此时，资产分类一固定为其中一种）
+				mstComDto.setWindtypeone(windtypeone);
+				//查询出此时的资产分类一对应的所有的资产分类二
+				List<String> list=trdFeeConfigMapper.findWindtypetwo(windtypeone);
+				//判断页面资产分类二是否为空、此时的资产分类一对应的资产分类二是否为空（就是list是否为空）
+				if(StringUtil.isNotEmpty(entity.getWindtypetwo())&&list.size()>0){
+					//设置标记，记录此时的资产分类一，是否插入库过资产分类二有值的记录
+					Boolean flag=false;
+					//循环遍历页面资产分类二
+					for(String windtypetwo:entity.getWindtypetwo().split(",")){
+						//判断此时资产分类一对应的所有的资产分类二中是否包含页面资产分类二中的种类
+						if(list.contains(windtypetwo)){
+							//包含时，会插入一条该资产分类一条件下资产分类二不为空的数据，此时需要把标记赋值为真
+							mstComDto.setWindtypetwo(windtypetwo);
+							flag=true;
+                            String seqNo=IDGenerator.generate();
+                            seqNoList.add(seqNo);
+                            mstComDto.setSeqNo(seqNo);
+							trdFeeConfigMapper.insert(mstComDto);
+						}
+					}
+					//判断标记
+					if(!flag){
+						//当为假时，此时代表，资产分类二不为空，但是此时没有插入库过该资产分类一条件下资产分类二不为空的数据，此时要插入库一条该资产分类一条件下资产分类二为空的数据
+                        String seqNo=IDGenerator.generate();
+                        seqNoList.add(seqNo);
+                        mstComDto.setSeqNo(seqNo);
+						trdFeeConfigMapper.insert(mstComDto);
+					}
+				}else{
+					//当页面资产分类二为空、或者此时的资产分类一对应的所有资产分类二为空的时候
+					mstComDto.setWindtypetwo(null);
+                    String seqNo=IDGenerator.generate();
+                    seqNoList.add(seqNo);
+                    mstComDto.setSeqNo(seqNo);
+					trdFeeConfigMapper.insert(mstComDto);
+				}
+			}
+		}else{
+			//当资产分类一为空的时候，插库（此时资产分类一和资产分类二均为空）
+            String seqNo=IDGenerator.generate();
+            seqNoList.add(seqNo);
+            mstComDto.setSeqNo(seqNo);
+			trdFeeConfigMapper.insert(mstComDto);
+		}
 	   	if("Y".equals(entity.getIsGrade())){
 	   		for(TrdFeeConfigDetail dto:entity.getTrdFeeConfigDetailList()){
 				TrdFeeConfigDetail trdFeeConfigDetailDto=new TrdFeeConfigDetail();
 				BeanUtil.copyPropertiesIgnoreNull(trdFeeConfigDetailDto, dto);
-				trdFeeConfigDetailDto.setSeqNo(IDGenerator.generate());
-				trdFeeConfigDetailDto.setConfigSeqNo(mstComDto.getSeqNo());
+//				trdFeeConfigDetailDto.setSeqNo(IDGenerator.generate());
+//				trdFeeConfigDetailDto.setConfigSeqNo(mstComDto.getSeqNo());
 				if (StringUtil.isNotEmpty(trdFeeConfigDetailDto.getChargeRate())) {
 					trdFeeConfigDetailDto.setChargeRate(trdFeeConfigDetailDto.getChargeRate().divide(new BigDecimal(1000)));
 				}
 				trdFeeConfigDetailDto.setGradeAmount(trdFeeConfigDetailDto.getGradeAmount().multiply(new BigDecimal(10000)));
-				trdFeeConfigDetailMapper.insert(trdFeeConfigDetailDto);
+				for(String seqNo:seqNoList){
+                    trdFeeConfigDetailDto.setSeqNo(IDGenerator.generate());
+                    trdFeeConfigDetailDto.setConfigSeqNo(seqNo);
+                    trdFeeConfigDetailMapper.insert(trdFeeConfigDetailDto);
+                }
 			}
 	   		return;
 		}
@@ -167,7 +221,11 @@ public class MstCommissionSetService extends BaseService{
 	   	if (StringUtil.isNotEmpty(trdDetailDto.getChargeRate())) {
 	   	    trdDetailDto.setChargeRate(trdDetailDto.getChargeRate().divide(new BigDecimal(1000)));
 	   	}
-	   	trdFeeConfigDetailMapper.insert(trdDetailDto);
+       for(String seqNo:seqNoList){
+           trdDetailDto.setSeqNo(IDGenerator.generate());
+           trdDetailDto.setConfigSeqNo(seqNo);
+           trdFeeConfigDetailMapper.insert(trdDetailDto);
+       }
    }
     /**
      * 更新

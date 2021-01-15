@@ -122,7 +122,13 @@ jixu:
 shiro:
   sessionId: JSESSIONID
   casClientName: tams
-  allowUrl: /service/**, /api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
+  allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
+    /common/trdcommonbase/insertTradeInfo,/TrdFxswapInvestTrade001/doComplete,/TrdBondInvestTrade/**,/BussRepoSec/**,/common/trdcommonbase/selectParam/COM/is_auto_generate_negate_deal,/CstpAutoSelect/**,
+    /TrdBondDuration/findAllData,/TrdDepoDuration/selectAllData,/TrdRepoDuration/selectAllData,/TrdProjectDuration/selectAllData,
+    /TrdRepoDuration/findEffectiveData,/TrdProjectDuration/findEffectiveData,/TrdPlanInterestDuration/findEffectiveData,
+    /TrdDepoDuration/findEffectiveData,/TrdPlanInterestDuration/selectAllData,/TrdLendDuration/getEntityByMap,
+    /TrdLendDuration/selectAllDataList,/TrdBondDuration/findEffectiveData,/TrdExchangeDuration/findAllData,
+    /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**, /api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
 
 specialsyspara:
   parakey: AUTHORIZE_LIMIT||PRICE_CAL_TYPE||portfolio_handle_userid||settle_acct_name||settle_acct_no||prod_tru_acct_no||prod_tru_acct_name||lending_acct_no||lending_acct_name
@@ -282,7 +288,13 @@ application:
   sqldirpassword: zgtams0810
 shiro:
   ssoEnable: true
-  allowUrl: /service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
+  allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
+    /common/trdcommonbase/insertTradeInfo,/TrdFxswapInvestTrade001/doComplete,/TrdBondInvestTrade/**,/BussRepoSec/**,/common/trdcommonbase/selectParam/COM/is_auto_generate_negate_deal,/CstpAutoSelect/**,
+    /TrdBondDuration/findAllData,/TrdDepoDuration/selectAllData,/TrdRepoDuration/selectAllData,/TrdProjectDuration/selectAllData,
+    /TrdRepoDuration/findEffectiveData,/TrdProjectDuration/findEffectiveData,/TrdPlanInterestDuration/findEffectiveData,
+    /TrdDepoDuration/findEffectiveData,/TrdPlanInterestDuration/selectAllData,/TrdLendDuration/getEntityByMap,
+    /TrdLendDuration/selectAllDataList,/TrdBondDuration/findEffectiveData,/TrdExchangeDuration/findAllData,
+    /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
 base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl

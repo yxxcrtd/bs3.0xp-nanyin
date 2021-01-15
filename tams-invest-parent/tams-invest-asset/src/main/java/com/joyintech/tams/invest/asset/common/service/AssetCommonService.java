@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.asset.common.service;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
@@ -58,6 +59,8 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 
+import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.workflow.engine.constant.OperationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -1278,6 +1281,27 @@ public class AssetCommonService extends BaseService{
 	    		mstCounterParty.setCreateTime(new Date());
 	    		mstCounterParty.setUpdateTime(new Date());
 	    		mstCounterPartyMapper.insertSelective(mstCounterParty);
+
+
+                // 二级法人权限处理
+                if(MultilevelDataAuthorityUtil.isEnabled()) {
+                    //创建机构代码
+                    String createInst =   MultilevelDataAuthorityUtil.getService().queryOrganizationCode(mstCounterParty.getCreateUser());
+                    mstCounterParty.setCreateInst(createInst);
+                    // 有查询权限的机构代码
+                    List<String> searchOrgCodeList = null;
+                    // 有编辑权限的机构代码
+                    List<String> editOrgCodeList = null;
+                    // 新建或修改时重新设置二级法人权限，删除时则清空
+                        //获取所有父级机构。  拥有查看权限
+                        searchOrgCodeList = CommonUtil.getParentInstitution(createInst);
+                        // 仅资产的创建机构（当前登录用户所在机构）有编辑权限
+                        editOrgCodeList = Arrays.asList(mstCounterParty.getCreateInst());
+
+                    // 记录二级法人权限
+                    insertDataAuthTypeInst(mstCounterParty.getCounterId(), searchOrgCodeList, editOrgCodeList,DictCodeList.共通业务类型_交易对手管理.getValue());
+                }
+
 			}
         }
     }

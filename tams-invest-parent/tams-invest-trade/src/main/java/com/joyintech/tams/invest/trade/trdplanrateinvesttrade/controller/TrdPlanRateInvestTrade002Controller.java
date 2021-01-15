@@ -222,6 +222,7 @@ public class TrdPlanRateInvestTrade002Controller extends BaseController{
             if(StringUtil.isNotBlank(entity.getRemark())&&StringUtil.contains(entity.getRemark(),"退回原因")){
                 entity.setRemark("");
             }
+            entity.setMySettleSpeed(DictCodeList.清算速度_T_0.getValue());
             model.addAttribute("trdInvestPersonInfo002Dto", JsonUtils.object2Json(entity.getTrdInvestPersonInfo002Dto()));
             model.addAttribute("tradeId", entrustId);
             model.addAttribute("entity", entity);

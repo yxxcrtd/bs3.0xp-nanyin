@@ -11,9 +11,12 @@
 package com.joyintech.tams.invest.trade.investtrade.commandscollection.dto;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
@@ -107,6 +110,195 @@ public class TrdCommandsCollection002Dto extends EtrEntrust{
      * 附件信息
      */
     private List<UploadFile> files;
+
+    /**
+     * 行权收益率
+     */
+    private BigDecimal exerYield;
+
+    /**
+     * 交割日期
+     */
+    private Date settleDate;
+
+    /**
+     * 清算速度
+     */
+    private String settleSpreed;
+
+    /**
+     * 资产起息日
+     */
+    private Date finvdate;
+
+    /**
+     * 利息总额
+     */
+    private BigDecimal intAmt;
+
+    /**
+     * 单位利息
+     */
+    private BigDecimal unitInt;
+
+    /**
+     * 计算标志
+     */
+    private String calflag;
+
+    /**
+     * 单位全价
+     */
+    private BigDecimal unitFprice;
+
+    /**
+     * 全价总额
+     */
+    private BigDecimal fpriceAmt;
+
+    /**
+     * 获取 exerYield
+     * @return exerYield
+     */
+    public BigDecimal getExerYield() {
+        return exerYield;
+    }
+
+    /**
+     * 设置 exerYield
+     * @param exerYield
+     */
+    public void setExerYield(BigDecimal exerYield) {
+        this.exerYield = exerYield;
+    }
+
+    /**
+     * 获取 settleDate
+     * @return settleDate
+     */
+    public Date getSettleDate() {
+        return settleDate;
+    }
+
+    /**
+     * 设置 settleDate
+     * @param settleDate
+     */
+    public void setSettleDate(Date settleDate) {
+        this.settleDate = settleDate;
+    }
+
+    /**
+     * 获取 settleSpreed
+     * @return settleSpreed
+     */
+    public String getSettleSpreed() {
+        return settleSpreed;
+    }
+
+    /**
+     * 设置 settleSpreed
+     * @param settleSpreed
+     */
+    public void setSettleSpreed(String settleSpreed) {
+        this.settleSpreed = settleSpreed;
+    }
+
+    /**
+     * 获取 finvdate
+     * @return finvdate
+     */
+    public Date getFinvdate() {
+        return finvdate;
+    }
+
+    /**
+     * 设置 finvdate
+     * @param finvdate
+     */
+    public void setFinvdate(Date finvdate) {
+        this.finvdate = finvdate;
+    }
+
+    /**
+     * 获取 intAmt
+     * @return intAmt
+     */
+    public BigDecimal getIntAmt() {
+        return intAmt;
+    }
+
+    /**
+     * 设置 intAmt
+     * @param intAmt
+     */
+    public void setIntAmt(BigDecimal intAmt) {
+        this.intAmt = intAmt;
+    }
+
+    /**
+     * 获取 unitInt
+     * @return unitInt
+     */
+    public BigDecimal getUnitInt() {
+        return unitInt;
+    }
+
+    /**
+     * 设置 unitInt
+     * @param unitInt
+     */
+    public void setUnitInt(BigDecimal unitInt) {
+        this.unitInt = unitInt;
+    }
+
+    /**
+     * 获取 calflag
+     * @return calflag
+     */
+    public String getCalflag() {
+        return calflag;
+    }
+
+    /**
+     * 设置 calflag
+     * @param calflag
+     */
+    public void setCalflag(String calflag) {
+        this.calflag = calflag;
+    }
+
+    /**
+     * 获取 unitFprice
+     * @return unitFprice
+     */
+    public BigDecimal getUnitFprice() {
+        return unitFprice;
+    }
+
+    /**
+     * 设置 unitFprice
+     * @param unitFprice
+     */
+    public void setUnitFprice(BigDecimal unitFprice) {
+        this.unitFprice = unitFprice;
+    }
+
+    /**
+     * 获取 fpriceAmt
+     * @return fpriceAmt
+     */
+    public BigDecimal getFpriceAmt() {
+        return fpriceAmt;
+    }
+
+    /**
+     * 设置 fpriceAmt
+     * @param fpriceAmt
+     */
+    public void setFpriceAmt(BigDecimal fpriceAmt) {
+        this.fpriceAmt = fpriceAmt;
+    }
 
     /**
      * 获取 matureYield

@@ -162,7 +162,7 @@
                              <div class="form-inline-wrap">
                	    	         <label class="layui-form-label form-lable" >有效时间</label>
                	    	            <div class="layui-input-inline input-inline">
-                                        <input required type="text" class="layui-input form-input" id="eff_time" name="eff_time">
+                                        <input required type="time" format="HH:mm" class="layui-input form-input" id="eff_time" name="eff_time" data-th-Value="${entity?.eff_time}?:'19:30'">
                                      </div>
                	               </div>
                	               
@@ -494,12 +494,12 @@
         var laydate = layui.laydate;
 
         //时间选择器
-        laydate.render({
-            elem: '#eff_time'
-            ,value: '19:30'
-            ,type: 'time'
-            ,format: 'HH:mm'
-        });
+<!--        laydate.render({-->
+<!--            elem: '#eff_time'-->
+<!--            ,value: '19:30'-->
+<!--            ,type: 'time'-->
+<!--            ,format: 'HH:mm'-->
+<!--        });-->
         
     </script>
     <script data-th-src="@{/js/component/common/TradeCommon.js}" type="text/javascript"></script>

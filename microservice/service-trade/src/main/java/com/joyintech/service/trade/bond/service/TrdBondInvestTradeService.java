@@ -554,7 +554,7 @@ public class TrdBondInvestTradeService extends BaseService {
             if (trdTradeFeeTotal != null) {
                 resultDto.setProcedureAmt(trdTradeFeeTotal.getFeeAmt());
             }
-            
+
             // 结算费
             trdTradeFeeTotalKey.setFeeType(BussinessDictCodeList.费用类型_结算手续费.getValue());
             trdTradeFeeTotal = trdTradeFeeTotalMapper.selectByPrimaryKey(trdTradeFeeTotalKey);
@@ -571,6 +571,23 @@ public class TrdBondInvestTradeService extends BaseService {
                 resultDto.setIsPayWithTrade(trdTradeFeeTotal.getIsPayWithTrade());
                 // add by wangguoxian 费用设置 20180808 end
             }
+
+            //结算费
+            trdTradeFeeTotalKey.setFeeType(BussinessDictCodeList.费用类型_结算费.getValue());
+            trdTradeFeeTotal = trdTradeFeeTotalMapper.selectByPrimaryKey(trdTradeFeeTotalKey);
+            if (trdTradeFeeTotal != null){
+                resultDto.setSettleAmt(trdTradeFeeTotal.getFeeAmt());
+                resultDto.setIsPayWithTrade(trdTradeFeeTotal.getIsPayWithTrade());
+            }
+
+            //经手费
+            trdTradeFeeTotalKey.setFeeType(BussinessDictCodeList.费用类型_经手费.getValue());
+            trdTradeFeeTotal = trdTradeFeeTotalMapper.selectByPrimaryKey(trdTradeFeeTotalKey);
+            if (trdTradeFeeTotal != null){
+                resultDto.setExchangeAmt(trdTradeFeeTotal.getFeeAmt());
+                resultDto.setIsPayWithTrade(trdTradeFeeTotal.getIsPayWithTrade());
+            }
+
          // 印花税
             trdTradeFeeTotalKey.setFeeType(BussinessDictCodeList.费用类型_印花税.getValue());
             trdTradeFeeTotal = trdTradeFeeTotalMapper.selectByPrimaryKey(trdTradeFeeTotalKey);
@@ -969,5 +986,9 @@ public class TrdBondInvestTradeService extends BaseService {
     public int selectchlTrade(Map<String,Object> map) {
         return trdBondInvestTradeMapper.selectchlTrade(map);
     }
+
     /* add by msk 新增查询通道划款交易 TISHKBS-1038 20201111 end */
+    public String getType7(TrdBondInvestTradeDto dto) {
+        return trdBondInvestTradeMapper.getType7(dto);
+    }
 }

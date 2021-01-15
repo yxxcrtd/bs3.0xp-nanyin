@@ -5,6 +5,7 @@ import java.util.Date;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.CustomDateDeserialize;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
@@ -336,6 +337,13 @@ public class ProRegistCodeManage002Dto extends BaseEntity implements ProcessEnti
 	public void setDeclareUuid(String declareUuid) {
 		this.declareUuid = declareUuid;
 	}
-    
+	
+	public String getMdateStr(){
+        return DateUtil.format(this.getMdate());
+    }
+	
+	public String getVdateStr(){
+        return DateUtil.format(this.getVdate());
+    }
     
 }

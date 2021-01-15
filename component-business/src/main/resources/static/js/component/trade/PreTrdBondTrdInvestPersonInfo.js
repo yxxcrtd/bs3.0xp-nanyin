@@ -144,6 +144,18 @@
         resetInvestType1(dicode);
         resetInvestType2(dicode);
     });
+
+    //
+
+    $("#counterTrader").bind('keyup blur',function(){
+
+        var reg= new RegExp(/["']/g);
+        var ctvalue =$("#counterTrader").val();
+        if(reg.test(ctvalue)){
+            $("#counterTrader").val(ctvalue.replace(reg,''));
+        }
+    });
+
     //托管账号详细
     function resetInvestType1(dicode){
         Joyin.ajax(JoyinUtil.getRealPath('/invest/trade/pretrdrepotrade/PreTrdRepoTrade001/getSecAcctDto/'), {ourdepositaccountnumber: dicode},function (result) {

@@ -234,6 +234,8 @@ public class TrdBondInvestTrade002Controller extends BaseController {
         model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_交易监控.getValue());
         //--------add by 裴家俊 2019/03/28------start--------
         model.addAttribute("FEE_TYPE_05", BussinessDictCodeList.费用类型_佣金.getValue());
+        model.addAttribute("FEE_TYPE_07", BussinessDictCodeList.费用类型_结算费.getValue());
+        model.addAttribute("FEE_TYPE_01", BussinessDictCodeList.费用类型_经手费.getValue());
         model.addAttribute("FEE_TYPE_02", BussinessDictCodeList.费用类型_印花税.getValue());
         model.addAttribute("FEE_TYPE_06", BussinessDictCodeList.费用类型_交易手续费.getValue());
         model.addAttribute("FEE_TYPE_JSSXF", BussinessDictCodeList.费用类型_结算手续费.getValue());

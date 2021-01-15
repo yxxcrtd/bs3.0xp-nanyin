@@ -69,7 +69,7 @@
             DISTINCT
             A.FINPROD_ID id,
             <!--下拉框值为代码+简称 modified by lishuping 20191017 start-->
-            A.FINPROD_ID text,
+            A.FINPROD_ABBR text,
             <!--下拉框值为代码+简称 modified by lishuping 20191017 end-->
             A.FINPROD_ID,
             A.FINPROD_NAME,
@@ -158,6 +158,7 @@
 		       total.WORKFLOW_ID workflowId,
 		       null matchStatus,
 		       to_char(total.trade_date, 'yyyy-MM-dd') tradeDateText,
+				total.trade_date tradeDate,
 		       mcp.counter_name counterId,
 		       total.counter_trader counterTrader,
 		       decode(total.ps,'T01','买入','T02','卖出') ps,
@@ -253,6 +254,7 @@
 		   null workflowId,
 		   decode(total.trade_status,'03',null,decode(TRD_MATCH_INFO.SEQNO,null,'待匹配','已匹配')) matchStatus,
 		   to_char(total.trade_date, 'yyyy-MM-dd') tradeDateText,
+			total.trade_date tradeDate,
 		   mcp.counter_name counterId,
 		   total.counter_trader counterTrader,
 		   decode(total.ps,'T01','买入','T02','卖出') ps,

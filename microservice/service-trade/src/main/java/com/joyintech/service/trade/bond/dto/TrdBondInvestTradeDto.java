@@ -69,6 +69,45 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal {
     private String windtypeone;
 
     /**
+     * 资产二级类型
+     */
+    private String type9;
+
+    /**
+     * 资产三级类型
+     */
+    private String type10;
+
+    /**
+     * 资产四级类型
+     */
+    private String type11;
+
+    public String getType9() {
+        return type9;
+    }
+
+    public void setType9(String type9) {
+        this.type9 = type9;
+    }
+
+    public String getType10() {
+        return type10;
+    }
+
+    public void setType10(String type10) {
+        this.type10 = type10;
+    }
+
+    public String getType11() {
+        return type11;
+    }
+
+    public void setType11(String type11) {
+        this.type11 = type11;
+    }
+
+    /**
      * 操作类型
      */
     private String operateType;
@@ -136,7 +175,20 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal {
      * 结算费
      */
     private BigDecimal settleAmt;
-    
+
+    /**
+     * 经手费
+     */
+    private BigDecimal exchangeAmt;
+
+    public BigDecimal getExchangeAmt() {
+        return exchangeAmt;
+    }
+
+    public void setExchangeAmt(BigDecimal exchangeAmt) {
+        this.exchangeAmt = exchangeAmt;
+    }
+
     /**
      * 交易手续费
      */

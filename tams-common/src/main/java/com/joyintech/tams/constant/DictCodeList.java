@@ -150,6 +150,9 @@ public enum DictCodeList implements BaseDictCodeList {
 	共通业务类型_产品要素设计(DictCode.共通业务类型,"REQ04","产品要素设计"),
 	共通业务类型_新发产品风险等级评定(DictCode.共通业务类型,"REQ06","新发产品风险等级评定"),
 	共通业务类型_新研发产品模拟试算(DictCode.共通业务类型,"MNSX01","新研发产品模拟试算"),
+	// add by yujiaping 20210115 start
+	共通业务类型_产品登记编码管理(DictCode.共通业务类型,"PRORC01","产品登记编码管理"),
+	// add by yujiaping 20210115 end
 	收益类型_净值型(DictCode.收益类型,"01","净值型"),
 	收益类型_收益型(DictCode.收益类型,"02","预期收益型"),
 	收益类型_货币型(DictCode.收益类型,"03","货币型"),

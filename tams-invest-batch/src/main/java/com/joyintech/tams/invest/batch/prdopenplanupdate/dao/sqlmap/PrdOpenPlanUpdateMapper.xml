@@ -129,13 +129,14 @@
 		from FIN_CASH_INFO
 		where FINPROD_ID = #{FINPROD_ID,jdbcType=VARCHAR} 
 			and CASH_TYPE_2 = #{CASH_TYPE_2,jdbcType=VARCHAR}
+			and BRANCH = 0
     </select>
 	
 	<select id="findOtherNeedDateByProdid" parameterType="string" resultType="com.joyintech.tams.invest.batch.prdopenplanupdate.dto.AccrDateNeedOtherDto">
-		select t1.cash_id as cashId,t.vdate,t.mdate,
+		select  DISTINCT t1.cash_id as cashId,t.vdate,t.mdate,
 			t2.F_ACCR_DATE as provisionfirstday,t2.E_ACCR_DATE as eAccrDate 
 		from FIN_PRODUCT t
-		left join FIN_CASH_INFO t1 on t1.finprod_id=t.finprod_id and t1.CASH_TYPE_2='C04'
+		left join FIN_CASH_INFO t1 on t1.finprod_id=t.finprod_id and t1.CASH_TYPE_2='C04' and t1.BRANCH = 0
 		left join FIN_FLOAT_COUNTING_RULE t2 on t2.cash_id=t1.cash_id
 		where t.finprod_id=#{finprodId}
 	</select>

@@ -410,10 +410,17 @@ public class CommonAutoCouponService extends BaseService{
                     finProductTypeConfig.setInputValue4(interfPayhsrcsecinfo.getIssecbond());
                 }
                 //同业存单的时候五级是否他行
-                if(StringUtil.equals(interfPayhsrcsecinfo.getSectype(),
-                        DictCodeList.WIND一级分类_含债券一级分类等_同业存单.getValue() )){
+//                if(StringUtil.equals(interfPayhsrcsecinfo.getSectype(),
+//                        DictCodeList.WIND一级分类_含债券一级分类等_同业存单.getValue() )){
+//                    finProductTypeConfig.setInputValue4(DictCodeList.是否_是.getValue());
+//                }
+                //判断是否是本行存单，若是则显示本行，否则显示他行
+                if (StringUtil.equals(interfPayhsrcsecinfo.getAssetClass(),"2501")){
+                    finProductTypeConfig.setInputValue4(DictCodeList.是否_否.getValue());
+                }else {
                     finProductTypeConfig.setInputValue4(DictCodeList.是否_是.getValue());
                 }
+
                 finProductTypeConfig = restTemplate.postForObject(ServiceApplication.ASSET_SERVICE_NAME + "/AssetCommon/getAssetThreeType",
                         finProductTypeConfig, FinProductTypeConfig.class);
                 finProductType.setType9(finProductTypeConfig.getInputValue2());//取债券资料表系统债券类型

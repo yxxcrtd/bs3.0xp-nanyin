@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+import com.joyintech.service.trade.common.service.TrdAvailableCashQueryService;
+import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -237,6 +240,9 @@ public class TrdFundInvestTradeService extends BaseService<TrdFundInvestTradeDto
     @Autowired
     private IPlatformDate platformDateImpl;
     // 场内基金改造 add by renping 20191117 end
+
+    @Autowired(required = false)
+    private TrdAvailableCashQueryService trdAvailableCashQueryService;
     /**
      * 分页查询
      * 
@@ -361,6 +367,9 @@ public class TrdFundInvestTradeService extends BaseService<TrdFundInvestTradeDto
             if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回到账.getValue())) {
                 Map<String, Object> param = new HashMap<>();
                 param.put("tradeId", entity.getbTradeId());
+                if(entity.getTotleTradeId() != null && entity.getTotleTradeId().length() > 31){
+                    param.put("totleTradeId", entity.getTotleTradeId().substring(0,32));//针对多组合赎回到账   通道交易
+                }
                 Map<String, Object> map = selectAccountTrdId(param);
                 if (map == null) {
                     map = selectAccountTrdIdinwfl(entity.getbTradeId());
@@ -804,6 +813,9 @@ public class TrdFundInvestTradeService extends BaseService<TrdFundInvestTradeDto
                 if (accountId == null) {
                     Map<String, Object> param = new HashMap<>();
                     param.put("tradeId", Tid);
+                    if(entity.getTotleTradeId() != null && entity.getTotleTradeId().length() > 31){
+                        param.put("totleTradeId", entity.getTotleTradeId().substring(0,32));//针对多组合赎回到账   通道交易
+                    }
                     accountId = selectAccountTrdId(param);
                 }
                 if (accountId != null) {
@@ -1592,6 +1604,107 @@ public class TrdFundInvestTradeService extends BaseService<TrdFundInvestTradeDto
             wflPaTrdProductDealMapper.deleteByPrimaryKey(paKey);
         }
         return DictCodeList.是否_是.getValue();
+    }
+
+    /**
+     * 确认页面组合分配列表查询
+     *
+     * @param param 参数
+     * @return 处理状态
+     * @see
+     * @since 1.0
+     */
+    public List<BussTrdTransfenpeiDto> selectTrdTransfenpeiList(Map<String, Object> param) {
+
+        param.put("FEE_TYPE_C", DictCodeListExt1.一次性费用类型_佣金.getValue());
+        param.put("FEE_TYPE_B18", DictCodeListExt1.一次性费用类型_认购费.getValue());
+        param.put("FEE_TYPE_B15", DictCodeListExt1.一次性费用类型_赎回费.getValue());
+        param.put("FEE_TYPE_B14", DictCodeListExt1.一次性费用类型_申购费.getValue());
+        param.put("PS_T01", DictCodeList.交易方向_买入.getValue());
+        param.put("PS_T02", DictCodeList.交易方向_卖出.getValue());
+        List<BussTrdTransfenpeiDto> dtoList = trdFundInvestTradeMapper.selectTrdTransfenpeiList(param);
+        String ps = (String)param.get("ps");
+        BigDecimal unitCprice = new BigDecimal((String)param.get("unitCprice"));
+        for(BussTrdTransfenpeiDto feipeiDto : dtoList){
+            PtlCashPositionFlowDto dto = new PtlCashPositionFlowDto();
+            Date vdate = DateUtil.parse((String)param.get("vdate"));
+            dto.setCdate(vdate);
+            List<String> acctTypeList = new ArrayList<>();
+            acctTypeList.add(DictCodeListExt1.资金账户类型_产品托管户.getValue());
+            dto.setAcctType(acctTypeList);
+            dto.setPortfolioId(feipeiDto.getPortfolioId());
+            dto.setCcy((String)param.get("ccy"));
+            BigDecimal cashT3 = basePtlCashPositionInfoService.queryUsableCashPosition(dto);
+            feipeiDto.setTgSurpluscash(cashT3);//托管户剩余现金
+
+            acctTypeList.add(DictCodeListExt1.资金账户类型_券商资金账户.getValue());
+            BigDecimal cashT = basePtlCashPositionInfoService.queryUsableCashPosition(dto);
+            feipeiDto.setBussTrdAvailableCashQueryavalibleCash(cashT);//组合T日可用现金
+
+            if (StringUtil.isNotEmpty(param.get("calId"))) {
+                PtlCashPositionFlowDto dto2 = new PtlCashPositionFlowDto();
+                Date vdate1 = DateUtil.parse((String)param.get("vdate1"));
+                dto2.setCdate(vdate1);
+                dto2.setAcctType(acctTypeList);
+                dto2.setPortfolioId(feipeiDto.getPortfolioId());
+                dto2.setCcy((String)param.get("ccy"));
+                BigDecimal cashT1 = basePtlCashPositionInfoService.queryUsableCashPosition(dto2);
+                feipeiDto.setBussTrdAvailableCashQueryavalibleCash1(cashT1);//组合T+1日可用现金
+            }
+
+            // 通道交易 新增 强成西 2019/03/26 start
+            if (StringUtil.isNotEmpty(param.get("chlId"))) {
+                dto.setNeedAcctType(false);
+                dto.setChlFinprodId((String)param.get("chlId"));
+                dto.setAcctType(null);
+                feipeiDto.setChannelAvailableCash(basePtlCashPositionInfoService.queryUsableCashPosition(dto));//通道可用现金
+            }
+            // 通道交易 新增 强成西 2019/03/26 end
+
+            // 场内基金改造 add by renping 20191117 start
+            if (StringUtil.isNotEmpty(param.get("secAcctId"))) {
+                BigDecimal cashS = BigDecimal.ZERO;
+                // 查询账户可用现金
+                StlSecAcctInfo secAcct = stlSecAcctInfoMapper.selectByPrimaryKey((String)param.get("secAcctId"));
+                if (secAcct != null && StringUtil.isNotEmpty(secAcct.getTrdAcctId())) {
+                    dto.setAcctType(null);
+                    dto.setAcctId(secAcct.getTrdAcctId());
+                    cashS = basePtlCashPositionInfoService.queryUsableCashPosition(dto);
+                }
+                feipeiDto.setTradeMarketAccAvailableCash(cashS);//交易所资金账户可用现金
+            }
+            // 场内基金改造 add by renping 20191117 end
+            if(StringUtil.equals(ps, DictCodeList.交易方向_申购确认.getValue())){
+                feipeiDto.setShareAmt(com.joyintech.framework.util.ArithmeticUtil.divide(feipeiDto.getTradeAmt(), unitCprice, 2));
+            }else if(StringUtil.equals(ps, DictCodeList.交易方向_赎回确认.getValue())){
+                feipeiDto.setTradeAmt(com.joyintech.framework.util.ArithmeticUtil.multiply(feipeiDto.getShareAmt(), unitCprice));
+            }
+
+            //组合可用现金
+            PtlSecPositionFlowDto flowDto = new PtlSecPositionFlowDto();
+            BigDecimal assetAvailablePosition = BigDecimal.ZERO;
+            if (basePtlSecPositionInfoService != null) {
+                flowDto.setPortfolioId(feipeiDto.getPortfolioId());
+                flowDto.setFinprodId((String)param.get("finprodId"));
+                flowDto.setHodingType(DictCodeList.持仓类型_可用.getValue());
+                flowDto.setCdate(DateUtil.parse((String)param.get("vdate")));
+                if(StringUtil.isNotEmpty(param.get("secAcctId"))){
+                    flowDto.setSecAcctId((String)param.get("secAcctId"));
+                }else{
+                    flowDto.setSecAcctId((String)param.get("chlId"));
+                }
+                if (StringUtil.isNotEmpty(param.get("finprodId"))) {
+                    assetAvailablePosition =  basePtlSecPositionInfoService.queryUsableSecPosition(flowDto);
+                }
+            }
+            feipeiDto.setAssetsavailablepositions(assetAvailablePosition);
+
+            if (!StringUtil.isNotEmpty(feipeiDto.getbTradeId())) {
+                feipeiDto.setbTradeId(feipeiDto.getTradeId());
+            }
+        }
+
+        return dtoList;
     }
 
 }

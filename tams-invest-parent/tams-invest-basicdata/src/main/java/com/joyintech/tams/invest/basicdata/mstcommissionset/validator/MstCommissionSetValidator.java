@@ -136,7 +136,7 @@ public class MstCommissionSetValidator implements BeanValidator {
                             flag3=false;
                         }
                         if(!StringUtil.isNotEmpty(TrdFeeConfigDetailDto.getGradeAmount())&&flag4){
-                            resultList.add(new ValidMessage(getMessage("分档信息中分档金额（万元）不能为空")));
+                            resultList.add(new ValidMessage(getMessage("分档信息中分档起点金额（万元）不能为空")));
                             flag4=false;
                         }
                         if("01".equals(dto.getChargeType())&&!StringUtil.isNotEmpty(TrdFeeConfigDetailDto.getChargeRate())&&flag1){

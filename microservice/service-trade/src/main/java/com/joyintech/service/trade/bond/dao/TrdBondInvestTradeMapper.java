@@ -303,4 +303,6 @@ public interface TrdBondInvestTradeMapper {
      */
     int selectchlTrade(Map<String,Object> map);
     /* add by msk 新增查询通道划款交易 20201111 TISHKBS-1038 end */
+
+    String getType7(TrdBondInvestTradeDto dto);
 }

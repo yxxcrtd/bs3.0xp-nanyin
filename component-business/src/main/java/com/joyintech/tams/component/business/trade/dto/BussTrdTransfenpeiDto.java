@@ -106,6 +106,8 @@ public class BussTrdTransfenpeiDto {
     public BigDecimal procedureAmt;
     //结算费
     public  BigDecimal settleAmt;
+    //经手费
+    public BigDecimal exchangeAmt;
     //佣金
     public BigDecimal commissionAmt;
 	//交易金额
@@ -300,6 +302,14 @@ public class BussTrdTransfenpeiDto {
 
 	public void setCommissionAmt(BigDecimal commissionAmt) {
 		this.commissionAmt = commissionAmt;
+	}
+
+	public BigDecimal getExchangeAmt() {
+		return exchangeAmt;
+	}
+
+	public void setExchangeAmt(BigDecimal exchangeAmt) {
+		this.exchangeAmt = exchangeAmt;
 	}
 
 	public BigDecimal getTradeAmtAndFee() {
@@ -571,5 +581,54 @@ public class BussTrdTransfenpeiDto {
 	public void setFeeAmtPay(BigDecimal feeAmtPay) {
 		this.feeAmtPay = feeAmtPay;
 	}
-	
+
+
+	/**
+	 * 交易所资金账户可用现金
+	 */
+	private BigDecimal tradeMarketAccAvailableCash;
+
+	public BigDecimal getTradeMarketAccAvailableCash() {
+		return tradeMarketAccAvailableCash;
+	}
+
+	public void setTradeMarketAccAvailableCash(BigDecimal tradeMarketAccAvailableCash) {
+		this.tradeMarketAccAvailableCash = tradeMarketAccAvailableCash;
+	}
+
+	/**
+	 * tradeAmtHid赎回确认时存：初始本金金额，认申购确认时存：本金-随交易支付的费用
+	 */
+	private BigDecimal tradeAmtHid;
+
+	/**
+	 * tradeAmtHid2存初始本金金额，不会修改，认申购确认用
+	 */
+	private BigDecimal tradeAmtHid2;
+
+	public BigDecimal getTradeAmtHid() {
+		return tradeAmtHid;
+	}
+
+	public void setTradeAmtHid(BigDecimal tradeAmtHid) {
+		this.tradeAmtHid = tradeAmtHid;
+	}
+
+	public BigDecimal getTradeAmtHid2() {
+		return tradeAmtHid2;
+	}
+
+	public void setTradeAmtHid2(BigDecimal tradeAmtHid2) {
+		this.tradeAmtHid2 = tradeAmtHid2;
+	}
+
+	private String bTradeId;
+
+	public String getbTradeId() {
+		return bTradeId;
+	}
+
+	public void setbTradeId(String bTradeId) {
+		this.bTradeId = bTradeId;
+	}
 }

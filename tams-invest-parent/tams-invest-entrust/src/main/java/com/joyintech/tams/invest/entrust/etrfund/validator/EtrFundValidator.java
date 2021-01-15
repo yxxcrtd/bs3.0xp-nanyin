@@ -232,6 +232,12 @@ public class EtrFundValidator implements EtrCommonValidator {
                     }
                 }
             }
+
+            //TISHKBS-688 【UAT】投资交易-公募基金指令，提交校验问题 add by lizh 20200711 start
+            if(StringUtil.isEmpty(etrFundDto.getFinprodMarketId())){
+                errorList.add(new ValidMessage("finprodMarketId", getMessage("ETR_X_012", getMessage("EtrFund001.finprodId"))));
+            }
+            //TISHKBS-688 【UAT】投资交易-公募基金指令，提交校验问题 add by lizh 20200711 end
         }
         if(StringUtil.equals(etrFundDto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)){
             BigDecimal entrustAmt = etrFundDto.getEntrustAmt();
@@ -399,11 +405,7 @@ public class EtrFundValidator implements EtrCommonValidator {
         && StringUtil.isEmpty(etrFundDto.getAssetType11())){
             errorList.add(new ValidMessage("assetType11", getMessage("ETR_X_012", getMessage("EtrInvestBondInfo001.type11"))));
         }
-        //TISHKBS-688 【UAT】投资交易-公募基金指令，提交校验问题 add by lizh 20200711 start
-        if(StringUtil.isEmpty(etrFundDto.getFinprodMarketId())){
-    		errorList.add(new ValidMessage("finprodMarketId", getMessage("ETR_X_012", getMessage("EtrFund001.finprodId"))));
-    	}
-        //TISHKBS-688 【UAT】投资交易-公募基金指令，提交校验问题 add by lizh 20200711 end
+
         return errorList;
     }
 

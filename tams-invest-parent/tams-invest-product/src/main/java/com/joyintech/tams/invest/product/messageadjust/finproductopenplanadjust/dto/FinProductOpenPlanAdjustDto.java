@@ -109,4 +109,15 @@ public class FinProductOpenPlanAdjustDto extends FinOpenPlan implements ProcessE
 	public void setNum(String num) {
 		this.num = num;
 	}
+
+    //收益类型
+    private String profitType;
+
+    public String getProfitType() {
+        return profitType;
+    }
+
+    public void setProfitType(String profitType) {
+        this.profitType = profitType;
+    }
 }

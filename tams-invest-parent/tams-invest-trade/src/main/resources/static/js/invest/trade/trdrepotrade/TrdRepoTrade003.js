@@ -1214,7 +1214,7 @@
                         dealinfo.tradeDate = $("#tradeDate").val();
                         dealinfo.ps = PS_T01;
                         dealinfo.ccy = $("#ccy").val();
-                        dealinfo.tradeAmt =  BussRepoSecDto[i].prinAmt; // TODO 多组合有通道费
+                        dealinfo.tradeAmt =  BussRepoSecDto[i].tradeAmt !=null? BussRepoSecDto[i].tradeAmt: BussRepoSecDto[i].prinAmt; // TODO 多组合有通道费
                         dealinfo.portfolioId = BussRepoSecDto[i].portfolioId;
                         dealinfo.counterId = $("#trdInvestPersonInfo_counterId").val();
                         dealinfo.tradeMarket = $("#tradeMarket").val();
@@ -2002,7 +2002,15 @@
                 if($('#repoType').val()!="H02"){
                     $('#Ps04Repo').show();
                 }
-                window.BussRepoSecPtl["bussRepoSecPtl"].pledgeBondTotalTbl.showColumns([{field:'addPledgeInfo',visible: false}]);
+
+                if( ($('#tradeMarket').val() == "01" && $('#repoType').val()=="H04")
+                    || (  $('#tradeMarket').val() == "03" && $('#repoType').val()=="H01" )
+                    || (  $('#tradeMarket').val() == "04" && $('#repoType').val()=="H01" ) ){
+                     window.BussRepoSecPtl["bussRepoSecPtl"].pledgeBondTotalTbl.showColumns([{field:'addPledgeInfo',visible: true}]);
+                }else{
+                     window.BussRepoSecPtl["bussRepoSecPtl"].pledgeBondTotalTbl.showColumns([{field:'addPledgeInfo',visible: false}]);
+                }
+
                 $('.laytable-cell-5-0-15').remove();
                 $('.laytable-cell-4-0-13').remove();
                 

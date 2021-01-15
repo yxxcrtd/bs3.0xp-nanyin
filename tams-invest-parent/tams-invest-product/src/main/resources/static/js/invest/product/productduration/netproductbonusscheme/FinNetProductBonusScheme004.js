@@ -124,7 +124,29 @@
     
     //初始化
     var init = function () {
-    	
+        var obj = $('#finprodMarketId').select2('data')[0].object;
+        if(obj){
+            var str = obj.split(',');
+            if(str != null){
+                $('#unitvalueDec').val(str[3]);
+            }
+        }
+        if(pageModel != PAGE_MODEL_REFERENCE){
+            if ($('#unitvalueDec').val() != null && $('#unitvalueDec').val() != ''
+                && $('#tdyUnitValue').val() != '' && $('#tdyUnitValue').val() != ''
+                && $('#netvalue').val() != '' && $('#netvalue').val() != ''){
+                $('#tdyUnitValue').attr("data-textrange", parseInt($('#unitvalueDec').val())).trigger('change');
+                $('#netvalue').attr("data-textrange", parseInt($('#unitvalueDec').val())).trigger('change');
+                $('#tdyUnitValue').val(parseFloat($('#tdyUnitValue').val()).toFixed(parseInt($('#unitvalueDec').val()))).trigger("change");
+                $('#netvalue').val(parseFloat($('#netvalue').val()).toFixed(parseInt($('#unitvalueDec').val()))).trigger("change");
+            }
+        }else {
+            $('#tdyUnitValue').attr("data-textrange", parseInt($('#unitvalueDec').val())).trigger('change');
+            $('#netvalue').attr("data-textrange", parseInt($('#unitvalueDec').val())).trigger('change');
+            $('#tdyUnitValue').val(parseFloat($('#tdyUnitValue').val()).toFixed(parseInt($('#unitvalueDec').val()))).trigger("change");
+            $('#netvalue').val(parseFloat($('#netvalue').val()).toFixed(parseInt($('#unitvalueDec').val()))).trigger("change");
+        }
+
         bonuScalcFlagChange(true);
         
         if(pageModel == PAGE_MODEL_NEW){

@@ -89,9 +89,15 @@ public class FinProductOpenPlanAdjustService extends CommonExportService<FinProd
 //            pageParam.put("scheduleTypeList", StringUtil.splitToList(GlobalConstant.COMMA,scheduleType));
 //        }
         pageParam.put("openPlanType03", "03");
-        return restTemplate.postForPage(
+        Page<FinProductOpenPlanAdjustDto>  page = restTemplate.postForPage(
             ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductOpenPlanAdjust/selectForPage", pageParam,
-            FinProductOpenPlanAdjustDto.class); 
+            FinProductOpenPlanAdjustDto.class);
+        for (FinProductOpenPlanAdjustDto dto:page.getRoot()){
+            if (StringUtil.equals(dto.getProfitType(),DictCodeList.收益类型_货币型.getValue())){
+                dto.setOpenNdate(null);
+            }
+        }
+        return page;
     }
 
     /**

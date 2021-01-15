@@ -13,6 +13,7 @@
       <!-- 推荐方 新增 zhuyongkang 20191023 start -->
       <result column="ASSET_RECOMMAND_ORG"       property="assetRecommandOrg"       jdbcType="VARCHAR" />
       <!-- 推荐方 新增 zhuyongkang 20191023 start -->
+      <result column="TOTLE_TRADE_ID"       property="totleTradeId"       jdbcType="VARCHAR" />
     </resultMap>
 
     <resultMap id="trdFundInvestTradeFullResultMap" type="com.joyintech.service.trade.fund.dto.TrdFundInvestTradeDto"
@@ -42,6 +43,7 @@
         <!--添加确认日 add by lishuping 20191018 end-->
         <!-- 推荐方 新增 zhuyongkang 20191023 start -->
         <result column="ASSET_RECOMMAND_ORG"       property="assetRecommandOrg"       jdbcType="VARCHAR" />
+        <result column="TOTLE_TRADE_ID"       property="totleTradeId"       jdbcType="VARCHAR" />
         <!-- 推荐方 新增 zhuyongkang 20191023 start -->
         <association property="trdInvestPersonInfo" javaType="com.joyintech.service.trade.bond.dto.TrdInvestPersonInfoDto">
             <result column="TRADER"             property="trader"           jdbcType="VARCHAR" />
@@ -73,6 +75,7 @@
                     <!-- 推荐方 新增 zhuyongkang 20191023 start -->
                         ,tpda.ASSET_RECOMMAND_ORG
                     <!-- 推荐方 新增 zhuyongkang 20191023 start -->
+                    ,T1.TOTLE_TRADE_ID
                     FROM
                         (SELECT * FROM WFL_TRD_PRODUCT_DEAL
                          MINUS
@@ -93,6 +96,7 @@
                     T1.PS, T1.TRADE_MARKET, T1.TRADE_PLAT, T1.TRADE_MARKET_MODE,T1.TRADE_AMT, T1.PRIN_AMT,T1.SHARE_AMT, T1.CCY, T1.TRADE_DATE, T1.SETTLE_DATE,
                     T1.REMARK, null WORKFLOW_ID, null WORKFLOW_STATUS,T1.B_TRADE_ID,T2.ENTRUST_ID,pp.PORTFOLIO_ID,pp.PARENT_PORTFOLIO_ID,pp.PORTFOLIO_NAME
                     ,T2.ASSET_RECOMMAND_ORG
+                    ,T1.TOTLE_TRADE_ID
                     FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL T1
                     LEFT JOIN WFL_TRD_DEAL_TOTAL_ADD T2 on T1.TOTLE_TRADE_ID = T2.TOTLE_TRADE_ID
                     LEFT JOIN PTL_PORTFOLIO PP ON T1.PORTFOLIO_ID = PP.PORTFOLIO_ID
@@ -111,6 +115,7 @@
                     <!-- 推荐方 新增 zhuyongkang 20191023 start -->
                     ,tpda.ASSET_RECOMMAND_ORG
                     <!-- 推荐方 新增 zhuyongkang 20191023 start -->
+                    ,T1.TOTLE_TRADE_ID
                     FROM
                         TRD_PRODUCT_DEAL T1
                     left join TRD_PRODUCT_DEAL_ADD tpda on T1.TRADE_ID=tpda.TRADE_ID
@@ -133,6 +138,7 @@
                     T1.PS, T1.TRADE_MARKET, T1.TRADE_PLAT, T1.TRADE_MARKET_MODE,T1.TRADE_AMT, T1.PRIN_AMT,T1.SHARE_AMT, T1.CCY, T1.TRADE_DATE, T1.SETTLE_DATE,
                     T1.REMARK, null WORKFLOW_ID, null WORKFLOW_STATUS,T1.B_TRADE_ID,T2.ENTRUST_ID,pp.PORTFOLIO_ID,pp.PARENT_PORTFOLIO_ID,pp.PORTFOLIO_NAME
                     ,T2.ASSET_RECOMMAND_ORG
+                    ,T1.TOTLE_TRADE_ID
                     FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
                     LEFT JOIN TRD_DEAL_TOTAL_ADD T2 on T1.TOTLE_TRADE_ID = T2.TOTLE_TRADE_ID
                     LEFT JOIN PTL_PORTFOLIO PP ON T1.PORTFOLIO_ID = PP.PORTFOLIO_ID
@@ -151,6 +157,7 @@
                     <!-- 推荐方 新增 zhuyongkang 20191023 start -->
                     ,tpda.ASSET_RECOMMAND_ORG
                     <!-- 推荐方 新增 zhuyongkang 20191023 start -->
+                    ,T1.TOTLE_TRADE_ID
                     FROM
                         TRD_PRODUCT_DEAL T1
                     left join TRD_PRODUCT_DEAL_ADD tpda on T1.TRADE_ID=tpda.TRADE_ID
@@ -171,6 +178,7 @@
                     T1.PS, T1.TRADE_MARKET, T1.TRADE_PLAT, T1.TRADE_MARKET_MODE,T1.TRADE_AMT, T1.PRIN_AMT,T1.SHARE_AMT, T1.CCY, T1.TRADE_DATE, T1.SETTLE_DATE,
                     T1.REMARK, null WORKFLOW_ID, null WORKFLOW_STATUS,T1.B_TRADE_ID,T2.ENTRUST_ID,pp.PORTFOLIO_ID,pp.PARENT_PORTFOLIO_ID,pp.PORTFOLIO_NAME
                     ,T2.ASSET_RECOMMAND_ORG
+                    ,T1.TOTLE_TRADE_ID
                     FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
                     LEFT JOIN TRD_DEAL_TOTAL_ADD T2 on T1.TOTLE_TRADE_ID = T2.TOTLE_TRADE_ID
                     LEFT JOIN PTL_PORTFOLIO PP ON T1.PORTFOLIO_ID = PP.PORTFOLIO_ID
@@ -510,6 +518,7 @@
             <!-- 推荐方 新增 zhuyongkang 20191023 start -->
                 ,tpda.ASSET_RECOMMAND_ORG
             <!-- 推荐方 新增 zhuyongkang 20191023 end -->
+            ,tpd.TOTLE_TRADE_ID
             FROM TRD_PRODUCT_DEAL tpd
             LEFT JOIN TRD_PRODUCT_DEAL_ADD tpda
               ON tpda.TRADE_ID = tpd.TRADE_ID
@@ -587,6 +596,7 @@
                 FEECHL.FEE_AMT channelAmt,
                 tpd.F_TRADE_ID
                 ,tpda.ASSET_RECOMMAND_ORG
+                ,'' TOTLE_TRADE_ID
             FROM TRD_FIN_PRODUCT_DEAL_TOTAL tpd
             LEFT JOIN TRD_DEAL_TOTAL_ADD tpda ON tpda.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
             LEFT JOIN FIN_PRODUCT fp ON fp.FINPROD_ID = tpd.FINPROD_ID
@@ -882,7 +892,9 @@
             WFL_TRD_PRODUCT_DEAL
         <where>
             B_TRADE_ID = #{tradId}
-            AND TOTLE_TRADE_ID IS NULL <!-- 过滤掉估值的拆分交易 -->
+            /*modify by caojin 基金多组合交易存TOTLE_TRADE_ID，注释掉 20200810  start   */
+            /*AND TOTLE_TRADE_ID IS NULL*/ <!-- 过滤掉估值的拆分交易 -->
+            /*modify by caojin 基金多组合交易存TOTLE_TRADE_ID，注释掉 20200810  end   */
         </where>
     </select>
     
@@ -894,7 +906,13 @@
             TRD_PRODUCT_DEAL
         <where>
             B_TRADE_ID = #{tradeId}
-            AND TOTLE_TRADE_ID IS NULL <!-- 过滤掉估值的拆分交易 -->
+            /*modify by caojin 此处查询取得是赎回到账的TRADE_ID，基金多组合赎回到账   非通道交易在TRD_PRODUCT_DEAL不存TOTLE_TRADE_ID，
+               通道交易存TOTLE_TRADE_ID，且存的是多组合赎回交易的TOTLE_TRADE_ID 20200814  start   */
+            AND (TOTLE_TRADE_ID IS NULL <!-- 过滤掉估值的拆分交易 -->
+            <if test="totleTradeId != null and totleTradeId !='' ">
+                or TOTLE_TRADE_ID = #{totleTradeId}
+            </if>)
+            /*modify by caojin  20200814  end   */
             <if test="N != null and N !='' ">
             AND IS_CANCEL = #{N}
             </if>
@@ -1112,5 +1130,59 @@
         <include refid="com.joyintech.tams.common.base.dao.WflStlPayOrdersMapper.Base_Column_List" />
         from WFL_STL_PAY_ORDERS
         where TRADE_ID = #{tradId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectTrdTransfenpeiList" resultType="com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto">
+        select
+        tpd.TRADE_ID tradeId,
+        tpda.ENTRUST_ID   entrustId,
+        nvl(pt.PORTFOLIO_ID, tpda.PORTFOLIO_ID) portfolioId,
+        DET_PS_FEE.FEE_AMT feeAmtPay,
+        case when tpd.PS=#{PS_T01}
+        then tpd.PRIN_AMT
+        when tpd.PS=#{PS_T02}
+        then tpd.PRIN_AMT
+        else  tpd.TRADE_AMT
+        end  as tradeAmt,
+        tpd.SHARE_AMT shareAmt,
+        tpd.PRIN_AMT prinAmt,
+
+        DET_C.FEE_AMT commissionAmt,
+        det.fee_amt channelFee
+
+        ,tpd.PRIN_AMT tradeAmtHid
+        ,tpd.PRIN_AMT tradeAmtHid2
+        from TRD_PRODUCT_DEAL tpd
+        left join TRD_PRODUCT_DEAL_ADD tpda
+        on tpda.TRADE_ID = tpd.TRADE_ID
+        <!-- 子组合交易时，关联组合交易表找子组合代码  add by renping 20200223 start -->
+        left join ptl_trade pt
+        on pt.BUSI_NO = tpd.TRADE_ID and pt.PORTFOLIO_ID != tpda.PORTFOLIO_ID
+        <!-- 子组合交易时，关联组合交易表找子组合代码  add by renping 20200223 end -->
+        LEFT JOIN TRD_TRADE_FEE_DETAIL DET_PS_FEE
+        ON DET_PS_FEE.TRADE_ID = tpd.TRADE_ID
+        and DET_PS_FEE.FEE_TYPE IN (#{FEE_TYPE_B18}, #{FEE_TYPE_B15}, #{FEE_TYPE_B14})
+        LEFT JOIN TRD_TRADE_FEE_DETAIL DET_C
+        ON DET_C.TRADE_ID = tpd.TRADE_ID
+        and DET_C.FEE_TYPE=#{FEE_TYPE_C}
+        left join Trd_Trade_Fee_Detail det
+        ON det.TRADE_ID = tpd.TRADE_ID
+        and det.fee_type='B09'
+        LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
+        where tpd.TOTLE_TRADE_ID = #{totleTradeId}
+        /*and PP.INVEST_YESORNO = 'Y'*/
+        AND tpd.IS_CANCEL  = 'N'
+        AND tpd.TRADE_STATUS='01'
+        and not exists
+           (select 1 from TRD_PRODUCT_DEAL A
+            where 1=1
+                and A.B_TRADE_ID = tpd.TRADE_ID
+                and A.IS_CANCEL != 'Y'
+                and A.TRADE_STATUS='01')
+        and not exists
+            ( select 1 from WFL_TRD_PRODUCT_DEAL B
+                where
+                B.B_TRADE_ID = tpd.TRADE_ID)
+        order by tpd.create_time
     </select>
 </mapper>

@@ -40,6 +40,26 @@ public class MstCommissionSetDto extends TrdFeeConfig {
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal feeMini;
 
+    private String gradeAmount;
+
+    private String isCludeStartamt;
+
+    public String getGradeAmount() {
+        return gradeAmount;
+    }
+
+    public void setGradeAmount(String gradeAmount) {
+        this.gradeAmount = gradeAmount;
+    }
+
+    public String getIsCludeStartamt() {
+        return isCludeStartamt;
+    }
+
+    public void setIsCludeStartamt(String isCludeStartamt) {
+        this.isCludeStartamt = isCludeStartamt;
+    }
+
     /**
      * 计费比率
      */

@@ -69,6 +69,7 @@ public class TaxScheme003DtoValidator implements BeanValidator {
             //若应税标识为简易计税，判断有没有填写应税税率
             if(StringUtil.equals(dto.getTaxableSign(),"03") && null==dto.getTaxRate()){
                 errorList.add(new ValidMessage("taxRate","应税税率不能为空!"));
+
                 return errorList;
             }
 
@@ -78,23 +79,27 @@ public class TaxScheme003DtoValidator implements BeanValidator {
                 return errorList;
             }
 
-            if (!StringUtils.startsWith(dto.getOperateType(), "delete")) { // 非删除时
-                // 判断当前流程是否存在：业务主键
-                // 唯一性验证：资产分类+本金收益特征+收入类型+生效日组成唯一性数据(同方案下)
-                WflValidInputParameter validParam2 = new WflValidInputParameter();
-                ProcessMark processMark2 = WorkflowContext.getProcessMarkService().getParameterByAnnotation(dto);
-                validParam2.setWorkflowId(dto.getWorkflowId());
-                validParam2.setPageId(processMark2.getPageId());
+            //当四个必填项都填写完毕后才从工作流中查询，否则直接返回
+            if (StringUtil.isNotEmpty(dto.getAssetClassify()) && StringUtil.isNotEmpty(dto.getIncomeType())
+            && StringUtil.isNotEmpty(dto.getTaxableSign()) && StringUtil.isNotEmpty(dto.getEffDate())){
+                if (!StringUtils.startsWith(dto.getOperateType(), "delete")) { // 非删除时
+                    // 判断当前流程是否存在：业务主键
+                    // 唯一性验证：资产分类+本金收益特征+收入类型+生效日组成唯一性数据(同方案下)
+                    WflValidInputParameter validParam2 = new WflValidInputParameter();
+                    ProcessMark processMark2 = WorkflowContext.getProcessMarkService().getParameterByAnnotation(dto);
+                    validParam2.setWorkflowId(dto.getWorkflowId());
+                    validParam2.setPageId(processMark2.getPageId());
 
-                validParam2.setBusinessDataPk2(dto.getSchId());
-                validParam2.setBusinessDataPk3(dto.getAssetClassify());
-                validParam2.setBusinessDataPk4(dto.getCapiIncomeFeature());
-                validParam2.setBusinessDataPk5(dto.getIncomeType());
-                validParam2.setBusinessDataPk6(dto.getEffDate());
-                if (mstWorkflowCommonService.isInWflProcess(validParam2)) {
-                    // 流程存在情况
-                    errorList.add(new ValidMessage(getMessage("COMMON_E_0021", "标识", "资产分类+本金收益特征+收入类型+生效日组成唯一性数据")));
-                    return errorList;
+                    validParam2.setBusinessDataPk2(dto.getSchId());
+                    validParam2.setBusinessDataPk3(dto.getAssetClassify());
+                    validParam2.setBusinessDataPk4(dto.getCapiIncomeFeature());
+                    validParam2.setBusinessDataPk5(dto.getIncomeType());
+                    validParam2.setBusinessDataPk6(dto.getEffDate());
+                    if (mstWorkflowCommonService.isInWflProcess(validParam2)) {
+                        // 流程存在情况
+                        errorList.add(new ValidMessage(getMessage("COMMON_E_0021", "标识", "资产分类+本金收益特征+收入类型+生效日组成唯一性数据")));
+                        return errorList;
+                    }
                 }
             }
         }

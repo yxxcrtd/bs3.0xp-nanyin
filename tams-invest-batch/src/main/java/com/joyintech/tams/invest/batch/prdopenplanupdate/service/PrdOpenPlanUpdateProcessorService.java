@@ -65,10 +65,10 @@ public class PrdOpenPlanUpdateProcessorService extends BaseService{
 			bussFinProductOpenPlanDto.setWorkdayOfMonth(popuDto.getDayValue());
 		}
 		if (DictCodeListExt1.日期类型_第几周周几.getValue().equals(popuDto.getDayType())) {
-			bussFinProductOpenPlanDto.setWeekOfMonth(popuDto.getDayValue().split(":")[0]);
+			bussFinProductOpenPlanDto.setWeekOfMonth(popuDto.getDayValue().split(";")[0]);
 		}
 		if (DictCodeListExt1.日期类型_第几周周几.getValue().equals(popuDto.getDayType())) {
-			bussFinProductOpenPlanDto.setWorkdayOfWeek(popuDto.getDayValue().split(":")[1]);
+			bussFinProductOpenPlanDto.setWorkdayOfWeek(popuDto.getDayValue().split(";")[1]);
 		}
 		bussFinProductOpenPlanDto.setTradedayRule(popuDto.getTradedayRule());
 		bussFinProductOpenPlanDto.setFirstOpenDate(popuDto.getFirstOpenDate());
