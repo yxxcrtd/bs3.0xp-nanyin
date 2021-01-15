@@ -47,7 +47,7 @@ public class SvrBussRepQDIIStructureInfoController extends BaseController {
         setSelectOptionToModel(model, new DictCode[] {DictCode.所属国家或地区});
 
         //2、当入参assetType2资产/负债二级类别 为【QDII拆出/逆回购资产】进行以下处理
-        if (assetInfoDetailMService.getDataListLink().get(DictCodeListExt2.资产_负债类别_拆放同业_买入返售_资产_同业拆入_卖出回购_负债.getValue()).contains(assetType)){
+        if (assetInfoDetailMService.getDataListLink().get(DictCodeListExt2.资产_负债类别_QDII结构性票据类资产.getValue()).contains(assetType)){
             //调用service
             bussAssetInfoService.setModle(uuid, dataStatus, model);
         }
