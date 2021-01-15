@@ -37,6 +37,7 @@ import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.trade.fund.validator.TrdFundInvestTradeValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
 
 /**
  * 基金投资交易画面端dto 〈功能详细描述〉
@@ -1338,5 +1339,15 @@ public class TrdFundInvestTradeDto extends TrdProductDeal implements ProcessEnti
 
     public void setProAvailableCash1(String proAvailableCash1) {
         this.proAvailableCash1 = proAvailableCash1;
+    }
+	
+	private List<BussTrdTransfenpeiDto> bussTrdTransfenpeiDto;
+	
+    public List<BussTrdTransfenpeiDto> getBussTrdTransfenpeiDto() {
+        return bussTrdTransfenpeiDto;
+    }
+
+    public void setBussTrdTransfenpeiDto(List<BussTrdTransfenpeiDto> bussTrdTransfenpeiDto) {
+        this.bussTrdTransfenpeiDto = bussTrdTransfenpeiDto;
     }
 }

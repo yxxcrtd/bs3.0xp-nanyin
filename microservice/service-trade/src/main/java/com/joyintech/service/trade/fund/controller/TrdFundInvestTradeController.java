@@ -34,6 +34,7 @@ import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
+import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
 
 /**
  * 基金投资交易微服务端controller
@@ -439,5 +440,15 @@ public class TrdFundInvestTradeController {
     @PostMapping("/insertPortfolioInfo")
     public String insertPortfolioInfo(@RequestBody TrdFundInvestTradeDto entity) {
         return trdFundInvestTradeService.do赎回确认到账生成(entity);
+    }
+
+    /**
+     * 确认页面组合分配列表查询
+     * @param param
+     * @return
+     */
+    @RequestMapping("selectTrdTransfenpeiList")
+    public List<BussTrdTransfenpeiDto> selectTrdTransfenpeiList(@RequestBody Map<String, Object> param) {
+        return trdFundInvestTradeService.selectTrdTransfenpeiList(param);
     }
 }

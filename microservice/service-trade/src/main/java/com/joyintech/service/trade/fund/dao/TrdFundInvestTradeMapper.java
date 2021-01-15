@@ -22,6 +22,7 @@ import com.joyintech.service.trade.fund.dto.TrdFundInvestTradeDto;
 import com.joyintech.service.trade.fund.dto.WorkFlowDto;
 import com.joyintech.tams.common.base.entity.WflStlPayOrders;
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
+import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
 
 /**
  * 基金投资交易mapper
@@ -374,4 +375,14 @@ public interface TrdFundInvestTradeMapper {
      * @since 1.0
      */
     List<WflStlPayOrders> selectOrdersByTradeId(@Param("tradeId") String tradeId);
+
+    /**
+     * 取得业务流程表中指令的数据(接口用)
+     *
+     * @param tradeId 参数
+     * @return 到账交易的指令数据
+     * @see
+     * @since 1.0
+     */
+    List<BussTrdTransfenpeiDto> selectTrdTransfenpeiList(Map<String, Object> param);
 }

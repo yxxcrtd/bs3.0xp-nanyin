@@ -1,0 +1,30 @@
+/*基金投资多组合交易新建 */
+delete from sys_page where PAGE_ID = 'TrdFundInvestTrade004';
+Insert into sys_page (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+values ('TrdFundInvestTrade004','TRD','/invest/trade/fund/TrdFundInvestTrade004','invest/trade/fund/TrdFundInvestTrade004',null,null,null,'02','01','基金投资多组合交易新建','system',null,sysdate,'system',sysdate);
+
+delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID = 'TrdFundInvestTrade004';
+Insert into SYS_WFL_BUSINESS_MODULE (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG) values ('TrdFundInvestTrade004','TrdFundInvestTrade002_btn_save','noneApproval','system',null,to_timestamp('20-2月 -20 08.39.14.000000000 下午','DD-MON-RR HH.MI.SSXFF AM'),'system',to_timestamp('20-2月 -20 08.39.14.000000000 下午','DD-MON-RR HH.MI.SSXFF AM'),'ALL','02');
+Insert into SYS_WFL_BUSINESS_MODULE (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG) values ('TrdFundInvestTrade004','TrdFundInvestTrade002_btn_submit','noneApproval','system',null,to_timestamp('20-2月 -20 08.39.14.000000000 下午','DD-MON-RR HH.MI.SSXFF AM'),'system',to_timestamp('20-2月 -20 08.39.14.000000000 下午','DD-MON-RR HH.MI.SSXFF AM'),'ALL','02');
+Insert into SYS_WFL_BUSINESS_MODULE (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG) values ('TrdFundInvestTrade004','TrdPlanNetInvestTrade004_btn_revoke','noneApproval','system',null,to_timestamp('20-2月 -20 08.39.14.000000000 下午','DD-MON-RR HH.MI.SSXFF AM'),'zj',to_timestamp('20-2月 -20 08.39.14.000000000 下午','DD-MON-RR HH.MI.SSXFF AM'),'ALL','02');
+
+delete from SYS_PAGE_DICTLIST where PAGE_ID = 'TrdFundInvestTrade004';
+Insert into SYS_PAGE_DICTLIST (PAGE_ID,SUB_PAGE_ID,DICT_ID,DICT_ITEM_VAL,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE) values ('TrdFundInvestTrade004','999999','PS','T01',null,null,'admin',null,to_timestamp('06-3月 -19 12.00.00.000000000 上午','DD-MON-RR HH.MI.SSXFF AM'),'admin',to_timestamp('06-3月 -19 12.00.00.000000000 上午','DD-MON-RR HH.MI.SSXFF AM'),null);
+Insert into SYS_PAGE_DICTLIST (PAGE_ID,SUB_PAGE_ID,DICT_ID,DICT_ITEM_VAL,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE) values ('TrdFundInvestTrade004','999999','PS','T02',null,null,'admin',null,to_timestamp('06-3月 -19 12.00.00.000000000 上午','DD-MON-RR HH.MI.SSXFF AM'),'admin',to_timestamp('06-3月 -19 12.00.00.000000000 上午','DD-MON-RR HH.MI.SSXFF AM'),null);
+Insert into SYS_PAGE_DICTLIST (PAGE_ID,SUB_PAGE_ID,DICT_ID,DICT_ITEM_VAL,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE) values ('TrdFundInvestTrade004','999999','PS','T04',null,null,'admin',null,to_timestamp('06-3月 -19 12.00.00.000000000 上午','DD-MON-RR HH.MI.SSXFF AM'),'admin',to_timestamp('06-3月 -19 12.00.00.000000000 上午','DD-MON-RR HH.MI.SSXFF AM'),null);
+Insert into SYS_PAGE_DICTLIST (PAGE_ID,SUB_PAGE_ID,DICT_ID,DICT_ITEM_VAL,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE) values ('TrdFundInvestTrade004','999999','PS','T06',null,null,'admin',null,to_timestamp('06-3月 -19 12.00.00.000000000 上午','DD-MON-RR HH.MI.SSXFF AM'),'admin',to_timestamp('06-3月 -19 12.00.00.000000000 上午','DD-MON-RR HH.MI.SSXFF AM'),null);
+
+/*基金投资多组合交易确认 */
+delete from sys_page where PAGE_ID = 'TrdFundInvestTrade005';
+Insert into sys_page (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+values ('TrdFundInvestTrade005','TRD','/invest/trade/fund/TrdFundInvestTrade005','invest/trade/fund/TrdFundInvestTrade005',null,null,null,'02','01','基金投资多组合交易确认','system',null,sysdate,'system',sysdate);
+
+delete  from SYS_WFL_BUSINESS_MODULE where PAGE_ID like 'TrdFundInvestTrade005';
+Insert into SYS_WFL_BUSINESS_MODULE (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG) values ('TrdFundInvestTrade005','TrdFundInvestTrade003_btn_save','noneApproval','system',null,to_timestamp('20-2月 -20 08.39.14.000000000 下午','DD-MON-RR HH.MI.SSXFF AM'),'system',to_timestamp('20-2月 -20 08.39.14.000000000 下午','DD-MON-RR HH.MI.SSXFF AM'),'ALL','02');
+Insert into SYS_WFL_BUSINESS_MODULE (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG) values ('TrdFundInvestTrade005','TrdFundInvestTrade003_btn_submit','noneApproval','system',null,to_timestamp('20-2月 -20 08.39.14.000000000 下午','DD-MON-RR HH.MI.SSXFF AM'),'system',to_timestamp('20-2月 -20 08.39.14.000000000 下午','DD-MON-RR HH.MI.SSXFF AM'),'ALL','02');
+Insert into SYS_WFL_BUSINESS_MODULE (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG) values ('TrdFundInvestTrade005','TrdPlanNetInvestTrade005_btn_revoke','noneApproval','system',null,to_timestamp('20-2月 -20 08.39.14.000000000 下午','DD-MON-RR HH.MI.SSXFF AM'),'zj',to_timestamp('20-2月 -20 08.39.14.000000000 下午','DD-MON-RR HH.MI.SSXFF AM'),'ALL','02');
+
+/*草稿箱不显示 */
+delete from SYS_TRASH_NOT_TARGET_PAGE where SEQ_NO in('A743A6424BE00E1BE0538C5AA8C0FED7','A710C5C7F6101EE0E0538C5AA8C01E37');
+Insert into SYS_TRASH_NOT_TARGET_PAGE (SEQ_NO,PAGE_ID) values ('A743A6424BE00E1BE0538C5AA8C0FED7','TrdFundInvestTrade004');
+Insert into SYS_TRASH_NOT_TARGET_PAGE (SEQ_NO,PAGE_ID) values ('A710C5C7F6101EE0E0538C5AA8C01E37','TrdFundInvestTrade005');

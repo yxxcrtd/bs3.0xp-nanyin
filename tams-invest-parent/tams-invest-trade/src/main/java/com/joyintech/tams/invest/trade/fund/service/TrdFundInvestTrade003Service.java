@@ -16,6 +16,7 @@ import java.util.Map;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.workflow.engine.WorkflowContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1077,5 +1078,18 @@ public class TrdFundInvestTrade003Service extends BaseService<TrdFundInvestTrade
             return null;
         }
         // return null;
+    }
+
+    public List<BussTrdTransfenpeiDto> selectTrdTransfenpeiList(Map<String, Object> pageParam) {
+        Date vdate = DateUtil.parse((String)pageParam.get("vdate"));
+        String calId = (String)pageParam.get("calId");
+        if (StringUtil.isNotEmpty(calId)) {
+            List<String> holidayList = dateCalService.getDealCalendarHoliday(DateUtil.parse(DateUtil.format(vdate)),
+                    DateUtil.addDay(DateUtil.parse(DateUtil.format(vdate)), 15), calId);
+            Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(DateUtil.format(vdate)), 1, holidayList, "1");
+            pageParam.put("vdate1", DateUtil.format(tradeDay));
+        }
+        return simpleRestTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME + "/TrdFundInvestTrade/selectTrdTransfenpeiList",
+                pageParam,BussTrdTransfenpeiDto.class);
     }
 }

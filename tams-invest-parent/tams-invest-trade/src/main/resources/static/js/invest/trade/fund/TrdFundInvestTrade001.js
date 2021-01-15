@@ -150,9 +150,15 @@
         data.operateType = "confirm";
         data.pageModel= PAGE_MODEL_NEW;
         Joyin.ajaxJson(basePath + 'invest/trade/fund/TrdFundInvestTrade001/check', data, function(result1) {
-            Joyin.dialog(JoyinUtil.getLabel("TrdFundInvestTrade003.confirm"),
+            if((data.ps == 'T04' || data.ps == 'T06') && data.totleTradeId){
+                Joyin.dialog(JoyinUtil.getLabel("TrdFundInvestTrade004.confirm"),
+                    basePath + "invest/trade/fund/TrdFundInvestTrade005/init",
+                    "98%", "90%", data,function(){table.reload();});
+            } else {
+                Joyin.dialog(JoyinUtil.getLabel("TrdFundInvestTrade003.confirm"),
                     basePath + "invest/trade/fund/TrdFundInvestTrade003/init",
                     "98%", "90%", data,function(){table.reload();});
+            }
         });
     });
     /**
@@ -232,6 +238,11 @@
                     });
                 });
             }
+        });
+        $('#TrdFundInvestTrade001_btn_dzhadd').click(function() {
+            Joyin.dialog(JoyinUtil.getLabel("TrdFundInvestTrade004"),
+                basePath + "invest/trade/fund/TrdFundInvestTrade004/init",
+                "98%", "90%", {pageModel:PAGE_MODEL_NEW});
         });
         //是否展示资产四五级分类
         if(IS_SHOW_TYPE == '01'){

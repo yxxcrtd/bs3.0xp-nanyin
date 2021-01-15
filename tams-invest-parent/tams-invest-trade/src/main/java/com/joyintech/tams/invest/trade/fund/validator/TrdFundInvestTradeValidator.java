@@ -28,6 +28,7 @@ import com.joyintech.tams.invest.trade.fund.dto.TrdFundInvestTradeDto;
 import com.joyintech.tams.invest.trade.fund.service.TrdFundInvestTrade001Service;
 import com.joyintech.tams.invest.trade.fund.service.TrdFundInvestTrade002Service;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -439,11 +440,23 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
                         this.getMessage("BUSS_COM_E_0004", this.getMessage("TrdFundInvestTrade002.tradeSha"), "0")));
                 }
                 if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
-                    BigDecimal assetAvailablePosition = dto.getAssetAvailablePosition();
-                    if (assetAvailablePosition != null && shareAmt != null && shareAmt.compareTo(assetAvailablePosition) == 1) {
-                        errorList.add(new ValidMessage("shareAmt",
-                            this.getMessage("BUSS_COM_E_0003", this.getMessage("TrdFundInvestTrade002.tradeSha"),
-                                this.getMessage("TrdFundInvestTrade002.assetAvailablePosition"))));
+                    if(dto.getPortfolioId().equals("dzh")){
+                        for(BussTrdTransfenpeiDto feipeiDto : dto.getBussTrdTransfenpeiDto()){
+                            BigDecimal assetAvailablePosition = feipeiDto.getAssetsavailablepositions();
+                            BigDecimal feipeishareAmt = feipeiDto.getShareAmt();
+                            if (assetAvailablePosition != null && feipeishareAmt != null && feipeishareAmt.compareTo(assetAvailablePosition) == 1) {
+                                errorList.add(new ValidMessage("shareAmt",
+                                        this.getMessage("BUSS_COM_E_0003", this.getMessage("TrdFundInvestTrade002.tradeSha"),
+                                                this.getMessage("TrdFundInvestTrade002.assetAvailablePosition"))));
+                            }
+                        }
+                    }else{
+                        BigDecimal assetAvailablePosition = dto.getAssetAvailablePosition();
+                        if (assetAvailablePosition != null && shareAmt != null && shareAmt.compareTo(assetAvailablePosition) == 1) {
+                            errorList.add(new ValidMessage("shareAmt",
+                                    this.getMessage("BUSS_COM_E_0003", this.getMessage("TrdFundInvestTrade002.tradeSha"),
+                                            this.getMessage("TrdFundInvestTrade002.assetAvailablePosition"))));
+                        }
                     }
                 }
                 // 场内基金改造 modify by renping 20191117 start
@@ -521,20 +534,40 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
                 // 同时验证卖出方是否有足够的持仓
                 if (StringUtil.isNotEmpty(dto.getPortfolioId()) && dto.getTradeDate() != null
                     && StringUtil.isNotEmpty(dto.getFinprodId())) {
-                    PtlSecPositionFlowDto ptlSecPositionFlowDto = new PtlSecPositionFlowDto();
-                    ptlSecPositionFlowDto.setCdate(dto.getTradeDate());
-                    ptlSecPositionFlowDto.setPortfolioId(dto.getPortfolioId());
-                    // 场内基金改造 modify by renping 20191117 start
-                    ptlSecPositionFlowDto.setSecAcctId(
-                        StringUtil.isEmpty(dto.getSecManageAcctId()) ? dto.getChlId() : dto.getSecManageAcctId());
-                    // 场内基金改造 modify by renping 20191117 start
-                    ptlSecPositionFlowDto.setFinprodId(dto.getFinprodId());
-                    BigDecimal assetPosition = trdFundInvestTrade002Service.getPtlSecPosition(ptlSecPositionFlowDto);
-                    if (StringUtil.isNotEmpty(dto.getShareAmt()) && assetPosition.compareTo(dto.getShareAmt()) == -1) {
-                        errorList.add(new ValidMessage("",
-                            getMessage("BUSS_COM_E_0003",
-                                ptlSecPositionFlowDto.getPortfolioId() + "  " + getMessage("TrdFundInvestTrade002.tradeSha"),
-                                getMessage("TrdFundInvestTrade002.assetAvailablePosition"))));
+                    if(dto.getPortfolioId().equals("dzh")){
+                        for(BussTrdTransfenpeiDto feipeiDto : dto.getBussTrdTransfenpeiDto()){
+                            PtlSecPositionFlowDto ptlSecPositionFlowDto = new PtlSecPositionFlowDto();
+                            ptlSecPositionFlowDto.setCdate(dto.getTradeDate());
+                            ptlSecPositionFlowDto.setPortfolioId(feipeiDto.getPortfolioId());
+                            // 场内基金改造 modify by renping 20191117 start
+                            ptlSecPositionFlowDto.setSecAcctId(
+                                    StringUtil.isEmpty(dto.getSecManageAcctId()) ? dto.getChlId() : dto.getSecManageAcctId());
+                            // 场内基金改造 modify by renping 20191117 start
+                            ptlSecPositionFlowDto.setFinprodId(dto.getFinprodId());
+                            BigDecimal assetPosition = trdFundInvestTrade002Service.getPtlSecPosition(ptlSecPositionFlowDto);
+                            if (StringUtil.isNotEmpty(feipeiDto.getShareAmt()) && assetPosition.compareTo(feipeiDto.getShareAmt()) == -1) {
+                                errorList.add(new ValidMessage("",
+                                        getMessage("BUSS_COM_E_0003",
+                                                ptlSecPositionFlowDto.getPortfolioId() + "  " + getMessage("TrdFundInvestTrade002.tradeSha"),
+                                                getMessage("TrdFundInvestTrade002.assetAvailablePosition"))));
+                            }
+                        }
+                    }else {
+                        PtlSecPositionFlowDto ptlSecPositionFlowDto = new PtlSecPositionFlowDto();
+                        ptlSecPositionFlowDto.setCdate(dto.getTradeDate());
+                        ptlSecPositionFlowDto.setPortfolioId(dto.getPortfolioId());
+                        // 场内基金改造 modify by renping 20191117 start
+                        ptlSecPositionFlowDto.setSecAcctId(
+                                StringUtil.isEmpty(dto.getSecManageAcctId()) ? dto.getChlId() : dto.getSecManageAcctId());
+                        // 场内基金改造 modify by renping 20191117 start
+                        ptlSecPositionFlowDto.setFinprodId(dto.getFinprodId());
+                        BigDecimal assetPosition = trdFundInvestTrade002Service.getPtlSecPosition(ptlSecPositionFlowDto);
+                        if (StringUtil.isNotEmpty(dto.getShareAmt()) && assetPosition.compareTo(dto.getShareAmt()) == -1) {
+                            errorList.add(new ValidMessage("",
+                                    getMessage("BUSS_COM_E_0003",
+                                            ptlSecPositionFlowDto.getPortfolioId() + "  " + getMessage("TrdFundInvestTrade002.tradeSha"),
+                                            getMessage("TrdFundInvestTrade002.assetAvailablePosition"))));
+                        }
                     }
                 }
             }
