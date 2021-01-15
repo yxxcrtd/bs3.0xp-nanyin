@@ -30,12 +30,12 @@
 //            mdate : $('#ProRegistCodeManage001_mdate').val()
             //登记编码是否为空
             isNotNull : $("#ProRegistCodeManage001_isNotNull").prop("checked"),
-            raisevdateStart : $('#raise_vdate').startDate(),
-            raisevdateEnd : $('#raise_vdate').endDate(),
+           // raisevdateStart : $('#raise_vdate').startDate(),
+           // raisevdateEnd : $('#raise_vdate').endDate(),
             
             orgCode : orgCode,
             //发送状态
-            sendStatus : $('#ProRegistCodeManage001_sendStatus').val()
+            //sendStatus : $('#ProRegistCodeManage001_sendStatus').val()
         };
     };
     var table = $('#ProRegistCodeManage001_proRegistCodeManage').joyintable({
