@@ -28,8 +28,6 @@ public class RechbAassetInfoUtilService {
     @Autowired
     private AssetInfoDetailMapper assetInfoDetailMapper;
 
-    @Autowired
-    private RechbAassetInfoMapper rechbAassetInfoMapper;
 
     /**
      * 根据uuid和flag查询对应的资产要素实体类
@@ -42,9 +40,11 @@ public class RechbAassetInfoUtilService {
         //当 入参【模式】为01的况下 查询CHB_ASSET_INFO_ERRODATA
         if(StringUtil.equals("01",flag)){
             //根据UUID 查询数据库对应记录
-            List<ChbAssetInfoErrodataWithBLOBs>  listChbAssetInfoErrordata=rechbAassetInfoMapper.getChbAssetInfoErrorDataByUUid(assetUUid);
+            List<ChbAssetInfoErrodataWithBLOBs>  listChbAssetInfoErrordata=assetInfoDetailMapper.getChbAssetInfoErrorDataByUUid(assetUUid);
             //调用共通方法，获取资产要素
-            ErrdataConvertUtil.errdataAssetInfoConvert(infoDto,listChbAssetInfoErrordata.get(0));
+            if(listChbAssetInfoErrordata!=null&&listChbAssetInfoErrordata.size()>0){
+                ErrdataConvertUtil.errdataAssetInfoConvert(infoDto,listChbAssetInfoErrordata.get(0));
+            }
         }
         //当 入参【模式】为02的况下
         else if(StringUtil.equals("02",flag)){

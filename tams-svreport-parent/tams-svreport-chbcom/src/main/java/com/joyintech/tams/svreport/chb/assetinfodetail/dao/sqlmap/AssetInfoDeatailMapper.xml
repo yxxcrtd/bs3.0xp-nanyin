@@ -531,6 +531,32 @@
         <result column="dataStatus" property="dataStatus" jdbcType="VARCHAR" />
 
     </resultMap>
+
+
+    <resultMap id="BaseResultMapBLOB" type="com.joyintech.tams.common.base.entity.ChbAssetInfoErrodataWithBLOBs" >
+        <result column="DATAUUID" property="datauuid" jdbcType="CHAR" />
+        <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE" property="assetType" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE2" property="assetType2" jdbcType="VARCHAR" />
+        <result column="VDATE" property="vdate" jdbcType="VARCHAR" />
+        <result column="MDATE" property="mdate" jdbcType="VARCHAR" />
+        <result column="ORG_ASSET_TYPE1" property="orgAssetType1" jdbcType="VARCHAR" />
+        <result column="ORG_ASSET_TYPE2" property="orgAssetType2" jdbcType="VARCHAR" />
+        <result column="ORG_ASSET_TYPE3" property="orgAssetType3" jdbcType="VARCHAR" />
+        <result column="ORG_ASSET_TYPE4" property="orgAssetType4" jdbcType="VARCHAR" />
+        <result column="ORG_ASSET_TYPE5" property="orgAssetType5" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="ORG_DATA" property="orgData" jdbcType="VARCHAR" />
+        <result column="ERR_MSG" property="errMsg" jdbcType="VARCHAR" />
+    </resultMap>
     <sql id="Base_Column_List">
         ASSET_UUID, ASSET_CODE, ASSET_TYPE, ASSET_TYPE2, CCY, TRADE_MARKET, VDATE, MDATE,
         DISCOUNT_YIELD, ASSET_YIELD, BASIS, AMT, BANK_NAME, IS_STRUCT,
@@ -2793,5 +2819,10 @@
         TEMP.BANK_SEC_PERPETUAL
         )
     </insert>
+
+    <select id="getChbAssetInfoErrorDataByUUid"  resultMap="BaseResultMapBLOB" >
+select  * from CHB_ASSET_INFO_ERRODATA
+where  DATAUUID=#{assetUUid}
+</select>
 
 </mapper>

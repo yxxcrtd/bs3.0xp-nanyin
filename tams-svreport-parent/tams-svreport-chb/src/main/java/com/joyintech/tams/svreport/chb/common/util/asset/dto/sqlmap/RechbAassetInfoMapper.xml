@@ -27,8 +27,8 @@
         <result column="ERR_MSG" property="errMsg" jdbcType="VARCHAR" />
     </resultMap>
 
-<select id="getChbAssetInfoErrorDataByUUid"  resultMap="BaseResultMap" parameterType="java.lang.String">
+<select id="getChbAssetInfoErrorDataByUUid"  resultMap="BaseResultMap" >
 select  * from CHB_ASSET_INFO_ERRODATA
-where  DATAUUID=#{assetUUid,jdbcType="VARCHAR"}
+where  DATAUUID=#{assetUUid}
 </select>
 </mapper>
