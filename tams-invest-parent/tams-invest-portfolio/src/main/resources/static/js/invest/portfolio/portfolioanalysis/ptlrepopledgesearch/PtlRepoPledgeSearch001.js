@@ -69,6 +69,12 @@ $(function() {
             ,{field:'mdate',width:150,title: 'PtlRepoPledgeSearch001.mdate',type:'date'}
             ,{field:'pledgeRatio',width:150,type:'number',title: 'PtlRepoPledgeSearch001.pledgeRatio'}
             ,{field:'pledgeFaceValue',width:150,type:'money',title: 'PtlRepoPledgeSearch001.pledgeFaceValue'}
+            
+            ,{field:'prinAmt',width:150,type:'money',title: 'PtlRepoPledgeSearch001.prinAmt'}
+            ,{field:'canpledgeAmt',width:150,type:'money',title: 'PtlRepoPledgeSearch001.canpledgeAmt'}
+            ,{field:'usedPledgeAmt',width:150,type:'money',title: 'PtlRepoPledgeSearch001.usedPledgeAmt'}
+            ,{field:'remainAmt',width:150,type:'money',title: 'PtlRepoPledgeSearch001.remainAmt'}
+            
             ,{field:'gradeResult',width:150,title: 'PtlRepoPledgeSearch001.gradeResult',sortField:'GRADE_RESULT'}
             ,{field:'registOrgAbbr',width:150,title: 'PtlRepoPledgeSearch001.registOrg',sortField:'REGIST_ORG'}
         ]
