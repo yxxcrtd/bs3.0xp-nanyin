@@ -1,24 +1,29 @@
 package com.joyintech.tams.svreport.chb.assetinfodetail.service;
 
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.system.base.entity.SysDatadictListLink;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
+import com.joyintech.tams.svreport.chb.assetinfodetail.asset.DtoChangeUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.factoryserver.AssetInfoFactoryService;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dao.AssetInfoDetailMapper;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
+import com.joyintech.tams.svreport.chb.assetinfodetail.util.ServerMenu;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
 import java.util.*;
 
 /**
@@ -32,18 +37,15 @@ import java.util.*;
 @Service
 public class AssetInfoDetailMService extends BaseService<AssetInfoDetailDto>{
 
+	protected static final Logger logger = LoggerFactory.getLogger(AssetInfoDetailMService.class);
+
 	@Autowired
 	private AssetInfoDetailMapper assetInfoDetailMapper;
 
 	@Autowired
 	private AssetInfoFactoryService asetInfoFactoryService;
 
-
 	static Map<String,Set<String>> map = null;
-
-
-
-
 	/**
 	 *
 	 * 业务画面查询事件
@@ -92,24 +94,21 @@ public class AssetInfoDetailMService extends BaseService<AssetInfoDetailDto>{
 	}
 
 	public void doSave(AssetInfoDetailDto dto) throws Exception {
-		AssetInfoDetailDto infoDto = new AssetInfoDetailDto();
 		//分别调用各自的setEntity方法
-		infoDto = asetInfoFactoryService.getAssetInfo(dto.getAssetType2()).setEntity(dto);
-
-		infoDto.setCreateUser(LoginUserUtil.getUserName());
-		infoDto.setUpdateUser(LoginUserUtil.getUserName());
-		infoDto.setStatus(DictCodeList.数据状态_修改.getValue());
-		infoDto.setIssuePartyId(CommonUtil.selectBankCode());
+		this.getDtoByPageMessgae(dto);
+		//赋值相关数据
+		dto.setCreateUser(LoginUserUtil.getUserName());
+		dto.setUpdateUser(LoginUserUtil.getUserName());
+		dto.setStatus(DictCodeList.数据状态_修改.getValue());
+		dto.setIssuePartyId(CommonUtil.selectBankCode());
 		restTemplate.postForObject(
-				SvrServiceApplication.CHB_SERVICE_NAME + "/AssetInfoDetail/doSave", infoDto, Integer.class);
+				SvrServiceApplication.CHB_SERVICE_NAME + "/AssetInfoDetail/doSave", dto, Integer.class);
 	}
 
 
 
 	/**
 	 * 获取资产及二级类型的关系
-	 * @param flag
-	 * @param itemCode
 	 * @return
 	 */
 	public Map<String, Set<String>> getDataListLink(){
@@ -131,4 +130,37 @@ public class AssetInfoDetailMService extends BaseService<AssetInfoDetailDto>{
 		}
 		return map;
 	}
+
+	/**
+	 * 共同数据塞入方法
+	 * @param dto 获取资产类型数据
+	 * @return
+	 */
+	public AssetInfoDetailDto getDtoByPageMessgae(AssetInfoDetailDto dto)  {
+		try {
+			//遍历资产类型数据
+			for (ServerMenu menu : ServerMenu.getAllAsset()) {
+				//判断数据字典中是否有当前资产类型的实体类
+				if (getDataListLink().get(menu.getAssetType()).contains(dto.getAssetType2())) {
+					//获取实体类中对应名称的资产方法
+					PropertyDescriptor pd = new PropertyDescriptor(menu.getServerId(),
+							dto.getClass());
+					Method getMethod =pd.getReadMethod();
+					//获取对应的实体类字段
+					Object obj1 = getMethod.invoke(dto);
+					//执行数据转换方法
+					DtoChangeUtil.SetChbToRep(obj1, dto, menu.getFlagStr(), true);
+					//资产类型赋值
+					dto.setAssetType(menu.getAssetType());
+				}
+			}
+			return dto;
+		}catch (Exception e){
+			logger.info("实体转换错误,请检查数据类型",e);
+		}finally {
+			return null;
+		}
+	}
+
+
 }

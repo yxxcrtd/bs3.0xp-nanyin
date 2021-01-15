@@ -44,16 +44,12 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 
 	private  String dataStatus;
 
-	@Valid
 	private SvrBussFinBondRepInfoDto svrBussFinBondRepInfoDto;
 
-	@Valid
 	private SvrBussRepDepositInfoDto svrBussRepDepositInfoDto;
 
-	@Valid
 	private SvrBussRepDlRepoInfoDto svrBussRepDlRepoInfoDto;
 
-	@Valid
 	private SvrBussRepPlacementInfoDto svrBussRepPlacementInfoDto;
 
 
