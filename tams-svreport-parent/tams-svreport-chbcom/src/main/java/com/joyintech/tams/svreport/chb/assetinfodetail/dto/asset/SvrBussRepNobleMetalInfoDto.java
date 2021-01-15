@@ -18,10 +18,10 @@ import com.joyintech.tams.svreport.chb.assetinfodetail.validator.asset.SvrBussFi
 import java.math.BigDecimal;
 
 /**
- *  QDII拆出/逆回购资产
+ *  资产基本信息_贵金属商品类信息
  * 〈功能详细描述〉
- * @author zhangnian
- * @version 1.0 2018年10月23日
+ * @author
+ * @version 1.0
  * @see SvrBussRepNobleMetalInfoDto
  * @since 1.0
  */
