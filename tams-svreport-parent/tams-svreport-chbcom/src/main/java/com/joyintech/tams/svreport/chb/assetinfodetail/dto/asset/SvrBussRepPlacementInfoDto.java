@@ -20,14 +20,13 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- *  债券类中债报送DTO
+ *  资产基本信息_同业拆放拆入类信息DTO
  * 〈功能详细描述〉
- * @author zhangnian
- * @version 1.0 2018年10月23日
+ * @author
+ * @version 1.0
  * @see SvrBussRepPlacementInfoDto
  * @since 1.0
  */
-@ValidLogic(targetClass = SvrBussFinBondRepInfoValidator.class , groups = {ValidateGroupEdit.class})
 public class SvrBussRepPlacementInfoDto extends RepAssetBond{
 
     /**

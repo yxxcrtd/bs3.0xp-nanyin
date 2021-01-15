@@ -26,6 +26,7 @@ import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepDepos
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepDlRepoInfoDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.service.AssetInfoDetail001Service;
 import com.joyintech.tams.svreport.chb.assetinfodetail.service.AssetInfoDetailMService;
+import com.joyintech.tams.svreport.chb.common.util.asset.RechbAassetInfoUtilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -33,63 +34,40 @@ import org.springframework.ui.Model;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * 存款类资产中债报送
- * @author zhangnian
- * @version 1.0 2018年9月17日
+ * 本行/他行存款||大额存单  中债报送
+ * @author
+ * @version 1.0 2021年1月15日
  * @see SvrBussRepDepositInfoImplService
  * @since 1.0
  */
 @Service
-public class SvrBussRepDepositInfoImplService extends BaseService<SvrBussRepDepositInfoDto> implements BussAssetInfoService {
+public class SvrBussRepDepositInfoImplService extends BaseService<SvrBussRepDepositInfoDto>  {
 
     @Autowired
     private AssetInfoDetailMService assetInfoDetailMService;
 
-    @Override
-    public boolean getBussinessCode(String type2) {
-        if(assetInfoDetailMService.getDataListLink().get(
-                DictCodeListExt2.资产_负债类别_本行_他行存款_大额存单.getValue()).contains(type2)){
-            return true;
-        }
-        return false;
-    }
+    @Autowired
+    private RechbAassetInfoUtilService rechbAassetInfoUtilService;
 
-    @Override
-    public void setModelAttribute(Model model, HttpServletRequest req) {
-        model.addAttribute("entityName", req.getParameter("entityName"));
-        // 画面参数设置
-        model.addAttribute("SVR_DEPO_TYPE_06", DictCodeListExt1.存款类型_结构性存款.getValue());
-        model.addAttribute("SVR_ASSET_TYPE_SECOND_LEVEL_1002", DictCodeListExt2.资产_负债二级类别_本行存款.getValue());
-        model.addAttribute("SVR_ASSET_TYPE_SECOND_LEVEL_1003", DictCodeListExt2.资产_负债二级类别_他行存款.getValue());
 
-        //赋值属性
-        setEntity(model,req.getParameter("assetUuid"),req.getParameter("assetType"),req.getParameter("dataStatus"));
-    }
-    @Override
-    public void setEntity(Model model,String assetUuid,String assetType,String  dataStatus){
-        SvrBussRepDepositInfoDto dto = null;
-        if(StringUtil.isNotEmpty(assetUuid)&&this.getBussinessCode(assetType)){
-            dto = new SvrBussRepDepositInfoDto();
-            //注意转换为ChbAssetInfo  否则反射不到
-            ChbAssetInfo chbDto =assetInfoDetailMService.getChbAssetInfoByUUid(assetUuid);
+    /**
+     *Service 主类方法
+     * @param assetUUid
+     * @param dataStatus
+     * @param model
+     */
+    public void  setModle(String  assetUUid,String dataStatus,Model model){
+        //2、入参【UUID】不为空的情况下，进入以下处理：   //调用共通处理【画面展示数据处理共通】
+        ChbAssetInfo  chbAssetInfo=rechbAassetInfoUtilService.BackChbAssetInfoMethod(dataStatus,assetUUid);
+
+        //3、以【2】取得的实体类为基础，进行子组件页面DTO组装
+        SvrBussRepDepositInfoDto dto=new    SvrBussRepDepositInfoDto();
+        if(chbAssetInfo!=null){
             //实体类转换方法
-            DtoChangeUtil.SetChbToRep(chbDto,dto,DtoChangeUtil.target,false);
+            DtoChangeUtil.SetChbToRep(chbAssetInfo,dto,DtoChangeUtil.target,false);
         }
+        //4、model.addAttribute(GlobalConstant.ENTITY, 子组件DTO（资产_负债类别_本行_他行存款_大额存单）);
         model.addAttribute(GlobalConstant.ENTITY, dto);
+
     }
-
-
-    @Override
-    public IDictCode[] getInitDictCode() {
-        return new DictCode[] {
-                DictCode.计息基础_中债,DictCode.回购标的类型,DictCode.交易对手类型};
-    }
-
-    @Override
-    public AssetInfoDetailDto setEntity(AssetInfoDetailDto info) {
-        SvrBussFinBondRepInfoDto assetBond = info.getSvrBussFinBondRepInfoDto();
-        DtoChangeUtil.SetChbToRep(assetBond,info,DtoChangeUtil.target,true);
-        return info;
-    }
-
 }

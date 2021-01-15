@@ -7,7 +7,7 @@ import com.joyintech.tams.svreport.chb.assetinfodetail.validator.asset.SvrBussFi
 
 import java.math.BigDecimal;
 
-/**
+/**资产基本信息_其它资产类信息 dto
  * @author wang
  * @create 2021-01-13 16:42
  */

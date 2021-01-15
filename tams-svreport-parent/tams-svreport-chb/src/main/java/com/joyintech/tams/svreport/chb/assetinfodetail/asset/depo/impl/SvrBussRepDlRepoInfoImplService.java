@@ -25,6 +25,7 @@ import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussFinBondR
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepDepositInfoDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepDlRepoInfoDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.service.AssetInfoDetailMService;
+import com.joyintech.tams.svreport.chb.common.util.asset.RechbAassetInfoUtilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -32,72 +33,42 @@ import org.springframework.ui.Model;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * 拆放同业及买入返售报送信息
+ * 本行/他行存款||大额存单
  * 〈功能详细描述〉
- * @author zhangnian
- * @version 1.0 2018年11月5日
+ * @author
+ * @version 1.0 2021年01月15日
  * @see SvrBussRepDlRepoInfoImplService
  * @since 1.0
  */
 @Service
-public class SvrBussRepDlRepoInfoImplService extends BaseService<SvrBussRepDlRepoInfoDto> implements BussAssetInfoService {
+public class SvrBussRepDlRepoInfoImplService extends BaseService<SvrBussRepDlRepoInfoDto> {
 
 
     @Autowired
     private AssetInfoDetailMService assetInfoDetailMService;
 
+    @Autowired
+    private RechbAassetInfoUtilService rechbAassetInfoUtilService;
 
-    @Override
-    public boolean getBussinessCode(String type2) {
-        if(assetInfoDetailMService.getDataListLink().get(
-                DictCodeListExt2.资产_负债类别_拆放同业_买入返售_资产_同业拆入_卖出回购_负债.getValue()).contains(type2)){
-            return true;
-        }
-        return false;
-    }
 
-    @Override
-    public void setModelAttribute(Model model, HttpServletRequest req) {
-        model.addAttribute("entityName", req.getParameter("entityName"));
-        model.addAttribute("type6_01", DictCodeList.存款类资产类型_同业借款.getValue());
-        model.addAttribute("type6_02",DictCodeList.存款类资产类型_存放同业.getValue());
-        model.addAttribute("YES", DictCodeList.是否_中债_是.getValue());
-        //中债报送关联上级页面数据字典
-        if (StringUtil.isNotEmpty(req.getParameter("svr_asset_type_second_level"))){
-            model.addAttribute("SVR_ASSET_TYPE_SECOND_LEVEL",req.getParameter("svr_asset_type_second_level"));
-        }
-        model.addAttribute("ASSET_TYPE_SECOND_LEVEL_INIT", DictCodeListExt2.资产_负债二级类别_拆放同业.getValue());
-        // 设置画面初始值
-        //赋值属性
-        setEntity(model,req.getParameter("assetUuid"),req.getParameter("assetType"),req.getParameter("dataStatus"));
-    }
-    @Override
-    public void setEntity(Model model,String assetUuid,String assetType,String  dataStatus){
+    /**
+     *Service 主类方法
+     * @param assetUUid
+     * @param dataStatus
+     * @param model
+     */
+    public void  setModle(String  assetUUid,String dataStatus,Model model){
+        //2、入参【UUID】不为空的情况下，进入以下处理：   //调用共通处理【画面展示数据处理共通】
+        ChbAssetInfo  chbAssetInfo=rechbAassetInfoUtilService.BackChbAssetInfoMethod(dataStatus,assetUUid);
 
-        SvrBussRepDlRepoInfoDto dto = null;
-        if(StringUtil.isNotEmpty(assetUuid)&&this.getBussinessCode(assetType)){
-            dto = new SvrBussRepDlRepoInfoDto();
-            //注意转换为ChbAssetInfo  否则反射不到
-            ChbAssetInfo chbDto =assetInfoDetailMService.getChbAssetInfoByUUid(assetUuid);
+        //3、以【2】取得的实体类为基础，进行子组件页面DTO组装
+        SvrBussRepDlRepoInfoDto dto=new    SvrBussRepDlRepoInfoDto();
+        if(chbAssetInfo!=null){
             //实体类转换方法
-            DtoChangeUtil.SetChbToRep(chbDto,dto,DtoChangeUtil.target,false);
+            DtoChangeUtil.SetChbToRep(chbAssetInfo,dto,DtoChangeUtil.target,false);
         }
+        //4、model.addAttribute(GlobalConstant.ENTITY, 子组件DTO（资产_负债类别_本行_他行存款_大额存单）);
         model.addAttribute(GlobalConstant.ENTITY, dto);
+
     }
-
-    @Override
-    public IDictCode[] getInitDictCode() {
-        return new DictCode[] {DictCode.资产_负债二级类别,DictCode.交易流通场所};
-    }
-
-    @Override
-    public AssetInfoDetailDto setEntity(AssetInfoDetailDto info) {
-        SvrBussFinBondRepInfoDto assetBond = info.getSvrBussFinBondRepInfoDto();
-        DtoChangeUtil.SetChbToRep(assetBond,info,DtoChangeUtil.target,true);
-        //赋值资产类型
-        info.setAssetType(DictCodeListExt2.资产_负债类别_拆放同业_买入返售_资产_同业拆入_卖出回购_负债.getValue());
-        return info;
-    }
-
-
 }
