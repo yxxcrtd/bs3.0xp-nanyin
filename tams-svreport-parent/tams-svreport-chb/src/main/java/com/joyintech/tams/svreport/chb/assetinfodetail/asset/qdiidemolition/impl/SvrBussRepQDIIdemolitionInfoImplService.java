@@ -4,7 +4,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.DtoChangeUtil;
-import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepPlacementInfoDto;
+import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepQDIIdemolitionInfoDto;
 import com.joyintech.tams.svreport.chb.common.util.asset.RechbAassetInfoUtilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import org.springframework.ui.Model;
  * @since 1.0
  */
 @Service
-public class SvrBussRepQDIIdemolitionInfoImplService extends BaseService<SvrBussRepPlacementInfoDto>{
+public class SvrBussRepQDIIdemolitionInfoImplService extends BaseService<SvrBussRepQDIIdemolitionInfoDto>{
 
     @Autowired
     private RechbAassetInfoUtilService rechbAassetInfoUtilService;
@@ -35,7 +35,7 @@ public class SvrBussRepQDIIdemolitionInfoImplService extends BaseService<SvrBuss
         ChbAssetInfo  chbAssetInfo=rechbAassetInfoUtilService.BackChbAssetInfoMethod(dataStatus,assetUUid);
 
         //3、以【2】取得的实体类为基础，进行子组件页面DTO组装
-        SvrBussRepPlacementInfoDto dto = new SvrBussRepPlacementInfoDto();
+        SvrBussRepQDIIdemolitionInfoDto dto = new SvrBussRepQDIIdemolitionInfoDto();
 
         if (chbAssetInfo!=null){
             //实体类转换方法
