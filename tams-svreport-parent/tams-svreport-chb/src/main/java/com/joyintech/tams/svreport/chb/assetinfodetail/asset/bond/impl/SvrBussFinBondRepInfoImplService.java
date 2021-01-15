@@ -21,6 +21,7 @@ import com.joyintech.tams.svreport.chb.assetinfodetail.asset.DtoChangeUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussFinBondRepInfoDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.service.AssetInfoDetailMService;
+import com.joyintech.tams.svreport.chb.common.util.asset.RechbAassetInfoUtilService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,69 +32,41 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * 〈一句话功能简述〉
- * 〈功能详细描述〉
- * @author zhangnian
- * @version 1.0 2018年10月23日
+ * 债券类资产/理财直接融资工具/同业存单 Service
+ * @author
+ * @version 1.0 2021年01月14日
  * @see SvrBussFinBondRepInfoImplService
  * @since 1.0
  */
 @Service("SvrBussFinBondRepInfoImplService")
-public class SvrBussFinBondRepInfoImplService extends BaseService<SvrBussFinBondRepInfoDto> implements BussAssetInfoService {
+public class SvrBussFinBondRepInfoImplService extends BaseService<SvrBussFinBondRepInfoDto>  {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
+
     @Autowired
-    private AssetInfoDetailMService assetInfoDetailMService;
+    private RechbAassetInfoUtilService rechbAassetInfoUtilService;
 
-    @Override
-    public boolean getBussinessCode(String type2) {
-        if(assetInfoDetailMService.getDataListLink().get(DictCodeListExt2.资产_负债类别_债券类资产_理财直接融资工具_同业存单.getValue()).contains(type2)){
-            return true;
-        }
-        return false;
-    }
+    /**
+     *Service 主类方法
+     * @param assetUUid
+     * @param dataStatus
+     * @param model
+     */
+    public void  setModle(String  assetUUid,String dataStatus,Model model){
+        //2、入参【UUID】不为空的情况下，进入以下处理：   //调用共通处理【画面展示数据处理共通】
+        ChbAssetInfo  chbAssetInfo=rechbAassetInfoUtilService.BackChbAssetInfoMethod(dataStatus,assetUUid);
 
-    @Override
-    public void setModelAttribute(Model model, HttpServletRequest req) {
-        // 画面参数设置
-        model.addAttribute("entityName", req.getParameter("entityName"));
-        model.addAttribute("PARTY_TYPE2_01",DictCodeListExt2.发行机构类型_按经济类型划分_国有企业.getValue());
-        model.addAttribute("PARTY_TYPE2_02",DictCodeListExt2.发行机构类型_按经济类型划分_集体企业.getValue());
-        model.addAttribute("PARTY_TYPE2_03", DictCodeListExt2.发行机构类型_按经济类型划分_私营企业.getValue());
-        model.addAttribute("PARTY_TYPE2_99",DictCodeListExt2.发行机构类型_按经济类型划分_其他.getValue());
-
-        model.addAttribute("FINPROD_TYPE_TG_F18", DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
-        model.addAttribute("YES", DictCodeList.是否_中债_是.getValue());
-        model.addAttribute("SVR_PARTY_TYPE1_01", DictCodeListExt3.发行机构类型_按规模划分_中小微企业.getValue());
-        //赋值属性
-        setEntity(model,req.getParameter("assetUuid"),req.getParameter("assetType"),req.getParameter("dataStatus"));
-    }
-    @Override
-    public void setEntity(Model model,String assetUuid,String assetType,String dataStatus){
-        SvrBussFinBondRepInfoDto dto = null;
-        if(StringUtil.isNotEmpty(assetUuid)&&this.getBussinessCode(assetType)){
-            dto = new SvrBussFinBondRepInfoDto();
-            //注意转换为ChbAssetInfo  否则反射不到
-            ChbAssetInfo chbDto =assetInfoDetailMService.getChbAssetInfoByUUid(assetUuid);
+       //3、以【2】取得的实体类为基础，进行子组件页面DTO组装
+        SvrBussFinBondRepInfoDto dto=new    SvrBussFinBondRepInfoDto();
+        if(chbAssetInfo!=null){
             //实体类转换方法
-            DtoChangeUtil.SetChbToRep(chbDto,dto,DtoChangeUtil.target,false);
+            DtoChangeUtil.SetChbToRep(chbAssetInfo,dto,DtoChangeUtil.target,false);
         }
+       //4、model.addAttribute(GlobalConstant.ENTITY, 子组件DTO（债券类资产/理财直接融资工具/同业存单）);
         model.addAttribute(GlobalConstant.ENTITY, dto);
-    }
-    @Override
-    public IDictCode[] getInitDictCode() {
-        return new DictCode[] {DictCode.资产_负债二级类别,DictCode.具体类别,
-                DictCode.发行机构类型_按技术领域划分,DictCode.发行机构类型_按规模划分,DictCode.发行机构类型_按经济类型划分,
-                DictCode.机构所属行业一级分类,DictCode.机构所属行业二级分类,
-                DictCode.登记托管机构_中债,DictCode.交易流通场所,DictCode.人行机构规模,DictCode.受让形式,DictCode.债券性质};
+
     }
 
-    @Override
-    public AssetInfoDetailDto setEntity(AssetInfoDetailDto info) {
-        SvrBussFinBondRepInfoDto assetBond = info.getSvrBussFinBondRepInfoDto();
-        DtoChangeUtil.SetChbToRep(assetBond,info,DtoChangeUtil.target,true);
-        info.setAssetType(DictCodeListExt2.资产_负债类别_债券类资产_理财直接融资工具_同业存单.getValue());
-        return info;
-    }
 
 }
