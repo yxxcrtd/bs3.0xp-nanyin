@@ -14,11 +14,16 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.asset.othKind.impl;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.intf.IDictCode;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.BussAssetInfoService;
+import com.joyintech.tams.svreport.chb.assetinfodetail.asset.DtoChangeUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepOthKindInfoDto;
+import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepOtherInfoDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.service.AssetInfoDetailMService;
+import com.joyintech.tams.svreport.chb.common.util.asset.RechbAassetInfoUtilService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,39 +35,39 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * 〈一句话功能简述〉
  * 〈功能详细描述〉
- * @author zhangnian
- * @version 1.0 2018年10月23日
+ * @author wangqi
+ * @version 1.0 2021年01月15日
  * @see SvrBussRepOthKindInfoImplService
  * @since 1.0
  */
 @Service("SvrBussRepOthKindInfoImplService")
-public class SvrBussRepOthKindInfoImplService extends BaseService<SvrBussRepOthKindInfoDto> implements BussAssetInfoService {
+public class SvrBussRepOthKindInfoImplService extends BaseService<SvrBussRepOthKindInfoDto>{
+
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
 
-    @Override
-    public boolean getBussinessCode(String type2) {
-        return false;
-    }
+    @Autowired
+    private RechbAassetInfoUtilService rechbAassetInfoUtilService;
 
-    @Override
-    public void setModelAttribute(Model model, HttpServletRequest req) {
+    /**
+     *Service 主类方法
+     * @param assetUUid
+     * @param dataStatus
+     * @param model
+     */
+    public void  setModle(String  assetUUid,String dataStatus,Model model){
+        //2、入参【UUID】不为空的情况下，进入以下处理：   //调用共通处理【画面展示数据处理共通】
+        ChbAssetInfo chbAssetInfo=rechbAassetInfoUtilService.BackChbAssetInfoMethod(dataStatus,assetUUid);
 
-    }
+        //3、以【2】取得的实体类为基础，进行子组件页面DTO组装
+        SvrBussRepOthKindInfoDto dto=new SvrBussRepOthKindInfoDto();
+        if(chbAssetInfo!=null){
+            //实体类转换方法
+            DtoChangeUtil.SetChbToRep(chbAssetInfo,dto,DtoChangeUtil.target,false);
+        }
+        //4、model.addAttribute(GlobalConstant.ENTITY, 子组件DTO（债券类资产/理财直接融资工具/同业存单）);
+        model.addAttribute(GlobalConstant.ENTITY, dto);
 
-    @Override
-    public IDictCode[] getInitDictCode() {
-        return new DictCode[] {DictCode.所属国家或地区};
-    }
-
-    @Override
-    public void setEntity(Model model, String assetUuid, String assetType2, String dataStatus) {
-
-    }
-
-    @Override
-    public AssetInfoDetailDto setEntity(AssetInfoDetailDto info) {
-        return null;
     }
 }
