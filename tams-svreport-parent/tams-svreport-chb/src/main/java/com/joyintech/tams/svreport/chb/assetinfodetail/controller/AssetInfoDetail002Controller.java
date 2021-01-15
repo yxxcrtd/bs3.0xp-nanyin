@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.svreport.chb.assetinfodetail.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
@@ -59,12 +60,15 @@ public class AssetInfoDetail002Controller extends BaseController {
     public String init(Model model){
         super.setSelectOptionToModel(model, DictCode.金融产品类型_投管用,DictCode.资产_负债类别
                 ,DictCode.WIND一级分类_含债券中债, DictCode.资产_负债二级类别,DictCode.WIND二级分类_含债券二级分类等, DictCode.报送反馈状态,
-                DictCode.交易流通场所_中债,DictCode.币种_中债);
+                DictCode.交易流通场所_中债,DictCode.币种_中债,DictCode.行内资产二级分类);
 
         String assetUuid = this.getParam("assetUuid");
         String dataStatus = this.getParam("dataStatus");
 
         //资产编号不为空则为修改.
+
+        String jsonObject= JSONObject.toJSONString(assetInfoDetailMService.getDataListLink());
+        model.addAttribute("AssetTypeListLink", jsonObject);
         if(StringUtil.isNotEmpty(assetUuid)&&StringUtil.isNotEmpty(dataStatus)){
             AssetInfoDetailDto  dto = assetInfoDetailMService.getAssetInfoDetail(assetUuid,dataStatus);
             model.addAttribute(GlobalConstant.ENTITY, dto);

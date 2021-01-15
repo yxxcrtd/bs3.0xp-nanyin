@@ -42,56 +42,49 @@ var QueryFunc=function(){
         var repAssetType = $('#assetType2').val();
         //隐藏所有中债报送信息
         $(".businessDeptClass").hide();
-
-
-        if (repAssetType=="1701"||repAssetType=="1702"||repAssetType=="1703"||repAssetType=="1704"
-            ||repAssetType=="1705"||repAssetType=="1706") {
-            // $("#svrBussFinBondRepInfo_div").show();
-
-        }//新增页面拆房同业买入返售资产
-        else if((repAssetType=="1107"||repAssetType=="1108"||repAssetType=="1901"||repAssetType=="1902")){
+        var obj = JSON.parse(AssetTypeListLink) ;
+        if(obj["01"].indexOf(repAssetType)>0){
+            //本行/他行存款||大额存单
+        }else if(obj["02"].indexOf(repAssetType)>0){
+            //拆放同业/买入返售（资产）||同业拆入/卖出回购（负债）
             $("#svrBussRepPlacementInfo_div").show();
-        }
-        //新增金融衍生品
-        else if((repAssetType=="1401"||repAssetType=="1402"||repAssetType=="1403"||repAssetType=="1404"
-            ||repAssetType=="1405"||repAssetType=="1406"||repAssetType=="1409")){
-            $("#svrBussRepFinanciallInfo_div").show();
-        }
-        //QDII拆出/逆回购资产
-        else if((repAssetType=="1504"||repAssetType=="1506")){
-            $("#svrBussRepQDIIdemolitionInfo_div").show();
-        }
-        //其他负债类资产
-        else if((repAssetType=="2000")){
-            $("#svrBussRepOtherInfo_div").show();
-        }
-        //另类资产
-        else if((repAssetType=="2301"||repAssetType=="2302"||repAssetType=="2303"||repAssetType=="2304"
-            ||repAssetType=="2305"||repAssetType=="1603")){
-            $("#svrBussRepOthKindInfo_div").show();
-        }
-
-
-
-        else if((repAssetType=="1101"||repAssetType=="1110"||repAssetType=="1109"||repAssetType=="1102"
-            ||repAssetType=="1111"||repAssetType=="1112"||repAssetType=="1113"||repAssetType=="1114"
-            ||repAssetType=="1115"||repAssetType=="1116"||repAssetType=="1117"||repAssetType=="2101"
-            ||repAssetType=="2501"||repAssetType=="2502"||repAssetType=="1111"||repAssetType=="1111")){
+        }else if(obj["03"].indexOf(repAssetType)>0){
+            //债券类资产/理财直接融资工具/同业存单
             $("#svrBussFinBondRepInfo_div").show();
-
-        }else if((repAssetType=="1201"||repAssetType=="1202"||repAssetType=="1203"||repAssetType=="1204"
-            ||repAssetType=="1205")){
-            $(".svrBussRepFinanciallInfo_div").show();
-        }
-        else if((repAssetType=="1301"||repAssetType=="1302"||repAssetType=="1303"||repAssetType=="1304"
-            ||repAssetType=="1305")){
-            $(".svrBussRepQDIIdemolitionInfo_div").show();
-        }
-        else if((repAssetType=="1108"||repAssetType=="1902"||repAssetType=="1901"||repAssetType=="1107")){
-            $(".SvrBussRepDlRepoInfoDto_div").show();
-        }
-        else if((repAssetType=="1002"||repAssetType=="1003"||repAssetType=="1004"||repAssetType=="1005")){
-            $(".SvrBussRepDepositInfoDto_div").show();
+        }else if(obj["04"].indexOf(repAssetType)>0){
+            //非标准化债权类资产/信贷资产流转项目
+        }else if(obj["05"].indexOf(repAssetType)>0){
+            //票据类资产/信用证类资产
+        }else if(obj["06"].indexOf(repAssetType)>0){
+            //权益类资产
+        }else if(obj["07"].indexOf(repAssetType)>0){
+            //金融衍生品
+            $("#svrBussRepFinanciallInfo_div").show();
+        }else if(obj["08"].indexOf(repAssetType)>0){
+            //QDII债券资产
+        }else if(obj["09"].indexOf(repAssetType)>0){
+            //QDII拆出/逆回购资产
+            $("#svrBussRepQDIIdemolitionInfo_div").show();
+        }else if(obj["10"].indexOf(repAssetType)>0){
+            //QDII股票/基金类资产
+        }else if(obj["11"].indexOf(repAssetType)>0){
+            //QDII结构性票据类资产
+        }else if(obj["12"].indexOf(repAssetType)>0){
+            //资产管理产品
+        }else if(obj["13"].indexOf(repAssetType)>0){
+            //商品类资产
+        }else if(obj["14"].indexOf(repAssetType)>0){
+            //各类资产的其他项
+        }else if(obj["16"].indexOf(repAssetType)>0){
+            //委外投资——协议方式
+        }else if(obj["17"].indexOf(repAssetType)>0){
+            //其他（负债）类资产
+            $("#svrBussRepOtherInfo_div").show();
+        }else if(obj["18"].indexOf(repAssetType)>0){
+            //另类资产
+            $("#svrBussRepOthKindInfo_div").show();
+        }else if(obj["L01"].indexOf(repAssetType)>0){
+            //公募基金/私募基金
         }
         star();
         layui.form.render();
