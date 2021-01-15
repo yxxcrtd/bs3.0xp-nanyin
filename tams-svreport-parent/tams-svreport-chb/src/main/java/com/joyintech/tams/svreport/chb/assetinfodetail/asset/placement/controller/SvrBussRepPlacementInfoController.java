@@ -13,12 +13,7 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.asset.placement.controll
 
 import com.joyintech.framework.annotation.SubPageId;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.select.SelectDto;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.constant.*;
-import com.joyintech.tams.svreport.chb.assetinfodetail.asset.depo.impl.SvrBussRepDepositInfoImplService;
+import com.joyintech.tams.svreport.chb.assetinfodetail.asset.placement.impl.SvrBussRepPlacementInfoImplService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,7 +35,7 @@ import java.util.List;
 public class SvrBussRepPlacementInfoController extends BaseController {
 
     @Autowired
-    private SvrBussRepDepositInfoImplService bussAssetInfoService;
+    private SvrBussRepPlacementInfoImplService bussAssetInfoService;
 
     @Override
     public String init(Model model) {
