@@ -25,13 +25,13 @@ import org.springframework.ui.Model;
 
 /**
  * 〈一句话功能简述〉
- * 权益类资产 Service
+ * 公募基金/私募基金 Service
  * @author
  * @version 1.0 2021年01月14日
  * @see SvrBussRepFundInfoImplService
  * @since 1.0
  */
-@Service("SvrBussRepEquityInfoImplService")
+@Service("SvrBussRepFundInfoImplService")
 public class SvrBussRepFundInfoImplService extends BaseService<SvrBussRepFundInfoDto>  {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
