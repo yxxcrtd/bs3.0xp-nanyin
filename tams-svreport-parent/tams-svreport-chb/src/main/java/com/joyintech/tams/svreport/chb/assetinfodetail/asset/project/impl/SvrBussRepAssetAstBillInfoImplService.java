@@ -32,7 +32,7 @@ import org.springframework.ui.Model;
  * @since 1.0
  */
 @Service("SvrBussRepAssetAstBillInfoImplService")
-public class SvrBussRepAssetAstBillInfoImplService extends BaseService<SvrBussFinBondRepInfoDto>  {
+public class SvrBussRepAssetAstBillInfoImplService extends BaseService<SvrBussRepAssetAstBillInfoDto>  {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
