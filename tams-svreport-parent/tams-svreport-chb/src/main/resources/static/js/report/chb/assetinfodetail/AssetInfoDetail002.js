@@ -45,6 +45,7 @@ var QueryFunc=function(){
         var obj = JSON.parse(AssetTypeListLink) ;
         if(obj["01"].indexOf(repAssetType)>0){
             //本行/他行存款||大额存单
+            $("#SvrBussRepDepositInfoDto_div").show();
         }else if(obj["02"].indexOf(repAssetType)>=0){
             //拆放同业/买入返售（资产）||同业拆入/卖出回购（负债）
             $("#svrBussRepPlacementInfo_div").show();
@@ -53,8 +54,10 @@ var QueryFunc=function(){
             $("#svrBussFinBondRepInfo_div").show();
         }else if(obj["04"].indexOf(repAssetType)>=0){
             //非标准化债权类资产/信贷资产流转项目
+            $("#svrBussRepAssetCreditNonstdInfo_div").show();
         }else if(obj["05"].indexOf(repAssetType)>=0){
             //票据类资产/信用证类资产
+            $("#svrBussRepAssetAstBillInfo_div").show();
         }else if(obj["06"].indexOf(repAssetType)>=0){
             //权益类资产
         }else if(obj["07"].indexOf(repAssetType)>=0){
