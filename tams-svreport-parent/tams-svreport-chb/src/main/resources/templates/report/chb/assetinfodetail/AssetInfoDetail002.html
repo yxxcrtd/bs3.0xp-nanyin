@@ -296,7 +296,16 @@
 					</div>
 				</div>
 			</div>
+			<!--公募基金/私募基金-->
+			<div class="pro-module">
+				<div class="businessDeptClass" id="svrBussRepFundInfo_div">
+					<div class="page-component"
+						 th:data-path="@{/chb/assetinfodetail/asset/fund/SvrBussRepFundInfo/init}"
+						 th:data-params="|{entityName: 'SvrBussRepFundInfoDto',assetUuid:'${entity?.assetUuid}',dataStatus:'${entity?.dataStatus}',assetType:'${entity?.assetType2}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
 
+					</div>
+				</div>
+			</div>
 
 				<div class="row text-center stepbar"><a
 						id="AssetInfoDetail002_btn_submit"

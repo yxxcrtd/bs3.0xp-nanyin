@@ -91,6 +91,7 @@ var QueryFunc=function(){
             $("#svrBussRepOthKindInfo_div").show();
         }else if(obj["L01"].indexOf(repAssetType)>=0){
             //公募基金/私募基金
+            $("#svrBussRepFundInfo_div").show();
         }
         star();
         layui.form.render();
