@@ -81,8 +81,10 @@ var QueryFunc=function(){
             $("#svrBussRepNobleMetalInfo_div").show();
         }else if(obj["14"].indexOf(repAssetType)>=0){
             //各类资产的其他项
+            $("#svrBussRepOtherInvestTargetInfo_div").show();
         }else if(obj["16"].indexOf(repAssetType)>=0){
             //委外投资——协议方式
+            $("#svrBussRepOutInvestAgrInfo_div").show();
         }else if(obj["17"].indexOf(repAssetType)>=0){
             //其他（负债）类资产
             $("#svrBussRepOtherInfo_div").show();

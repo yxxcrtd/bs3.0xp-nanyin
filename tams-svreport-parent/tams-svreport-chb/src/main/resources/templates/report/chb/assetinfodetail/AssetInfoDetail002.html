@@ -306,7 +306,28 @@
 					</div>
 				</div>
 			</div>
+			<!--各类资产其他项-->
+			<div class="pro-module">
+				<div class="businessDeptClass" id="svrBussRepOtherInvestTargetInfo_div">
+					<div class="page-component"
+						 th:data-path="@{/chb/assetinfodetail/asset/fund/SvrBussRepOtherInvestTargetInfo/init}"
+						 th:data-params="|{entityName: 'SvrBussRepOtherInvestTargetInfoDto',assetUuid:'${entity?.assetUuid}',dataStatus:'${entity?.dataStatus}',assetType:'${entity?.assetType2}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
 
+					</div>
+				</div>
+			</div>
+			<!--委外投资——协议方式--
+			<div class="pro-module">
+				<div class="businessDeptClass" id="svrBussRepOutInvestAgrInfo_div">
+					<div class="page-component"
+						 th:data-path="@{/chb/assetinfodetail/asset/trust/SvrBussRepOutInvestAgrInfo/init}"
+						 th:data-params="|{entityName: 'SvrBussRepOutInvestAgrInfoDto',assetUuid:'${entity?.assetUuid}',dataStatus:'${entity?.dataStatus}',assetType:'${entity?.assetType2}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
+
+					</div>
+				</div>
+			</div>
+
+			>
 				<div class="row text-center stepbar"><a
 						id="AssetInfoDetail002_btn_submit"
 						class="layui-btn layui-btn-sm btn-submit"
