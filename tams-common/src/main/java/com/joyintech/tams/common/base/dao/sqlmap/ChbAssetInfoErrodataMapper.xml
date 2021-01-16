@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.common.base.dao.ChbAssetInfoErrodataMapper" >
     <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbAssetInfoErrodata" >
-        <result column="DATAUUID" property="datauuid" jdbcType="CHAR" />
+        <id column="DATAUUID" property="datauuid" jdbcType="CHAR" />
         <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
         <result column="ASSET_TYPE" property="assetType" jdbcType="VARCHAR" />
         <result column="ASSET_TYPE2" property="assetType2" jdbcType="VARCHAR" />
@@ -27,9 +27,44 @@
         <result column="ORG_DATA" property="orgData" jdbcType="CLOB" />
         <result column="ERR_MSG" property="errMsg" jdbcType="CLOB" />
     </resultMap>
+    <sql id="Base_Column_List" >
+        DATAUUID DATAUUID, ASSET_CODE ASSET_CODE, ASSET_TYPE ASSET_TYPE, ASSET_TYPE2 ASSET_TYPE2, 
+        VDATE VDATE, MDATE MDATE, ORG_ASSET_TYPE1 ORG_ASSET_TYPE1, ORG_ASSET_TYPE2 ORG_ASSET_TYPE2, 
+        ORG_ASSET_TYPE3 ORG_ASSET_TYPE3, ORG_ASSET_TYPE4 ORG_ASSET_TYPE4, ORG_ASSET_TYPE5 ORG_ASSET_TYPE5, 
+        STATUS STATUS, UPDATE_USER UPDATE_USER, CREATE_USER CREATE_USER, UPDATE_TIME UPDATE_TIME, 
+        CREATE_TIME CREATE_TIME, WORKFLOW_ID WORKFLOW_ID, ORG_CODE ORG_CODE, DEPT_CODE DEPT_CODE, 
+        CREATE_DEPT CREATE_DEPT
+    </sql>
     <sql id="Blob_Column_List" >
         ORG_DATA, ERR_MSG
     </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbAssetInfoErrodataMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.ChbAssetInfoErrodataMapper.Blob_Column_List" />
+        from CHB_ASSET_INFO_ERRODATA
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbAssetInfoErrodataMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.ChbAssetInfoErrodataMapper.Blob_Column_List" />
+        from CHB_ASSET_INFO_ERRODATA
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbAssetInfoErrodataMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.ChbAssetInfoErrodataMapper.Blob_Column_List" />
+        from CHB_ASSET_INFO_ERRODATA
+        where DATAUUID = #{datauuid,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_ASSET_INFO_ERRODATA
+        where DATAUUID = #{datauuid,jdbcType=CHAR}
+    </delete>
     <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
         delete from CHB_ASSET_INFO_ERRODATA
         where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
@@ -296,6 +331,108 @@
             ORG_ASSET_TYPE5, #{status,jdbcType=VARCHAR} STATUS, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, CREATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_TIME, #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, 
             ORG_CODE, DEPT_CODE, CREATE_DEPT, ORG_DATA, ERR_MSG
              from CHB_ASSET_INFO_ERRODATA
-             where STATUS = 'E'
+             where STATUS = 'E' and DATAUUID = #{datauuid,jdbcType=CHAR}
     </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfoErrodataWithBLOBs" >
+        update CHB_ASSET_INFO_ERRODATA
+        <set >
+            <if test="assetCode != null" >
+                ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType != null" >
+                ASSET_TYPE = #{assetType,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType2 != null" >
+                ASSET_TYPE2 = #{assetType2,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=VARCHAR},
+            </if>
+            <if test="mdate != null" >
+                MDATE = #{mdate,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAssetType1 != null" >
+                ORG_ASSET_TYPE1 = #{orgAssetType1,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAssetType2 != null" >
+                ORG_ASSET_TYPE2 = #{orgAssetType2,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAssetType3 != null" >
+                ORG_ASSET_TYPE3 = #{orgAssetType3,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAssetType4 != null" >
+                ORG_ASSET_TYPE4 = #{orgAssetType4,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAssetType5 != null" >
+                ORG_ASSET_TYPE5 = #{orgAssetType5,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="orgData != null" >
+                ORG_DATA = #{orgData,jdbcType=CLOB},
+            </if>
+            <if test="errMsg != null" >
+                ERR_MSG = #{errMsg,jdbcType=CLOB},
+            </if>
+        </set>
+        where DATAUUID = #{datauuid,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfoErrodataWithBLOBs" >
+        update CHB_ASSET_INFO_ERRODATA
+        set ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
+            ASSET_TYPE = #{assetType,jdbcType=VARCHAR},
+            ASSET_TYPE2 = #{assetType2,jdbcType=VARCHAR},
+            VDATE = #{vdate,jdbcType=VARCHAR},
+            MDATE = #{mdate,jdbcType=VARCHAR},
+            ORG_ASSET_TYPE1 = #{orgAssetType1,jdbcType=VARCHAR},
+            ORG_ASSET_TYPE2 = #{orgAssetType2,jdbcType=VARCHAR},
+            ORG_ASSET_TYPE3 = #{orgAssetType3,jdbcType=VARCHAR},
+            ORG_ASSET_TYPE4 = #{orgAssetType4,jdbcType=VARCHAR},
+            ORG_ASSET_TYPE5 = #{orgAssetType5,jdbcType=VARCHAR},
+            STATUS = #{status,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            ORG_DATA = #{orgData,jdbcType=CLOB},
+            ERR_MSG = #{errMsg,jdbcType=CLOB}
+        where DATAUUID = #{datauuid,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfoErrodata" >
+        update CHB_ASSET_INFO_ERRODATA
+        set ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
+            ASSET_TYPE = #{assetType,jdbcType=VARCHAR},
+            ASSET_TYPE2 = #{assetType2,jdbcType=VARCHAR},
+            VDATE = #{vdate,jdbcType=VARCHAR},
+            MDATE = #{mdate,jdbcType=VARCHAR},
+            ORG_ASSET_TYPE1 = #{orgAssetType1,jdbcType=VARCHAR},
+            ORG_ASSET_TYPE2 = #{orgAssetType2,jdbcType=VARCHAR},
+            ORG_ASSET_TYPE3 = #{orgAssetType3,jdbcType=VARCHAR},
+            ORG_ASSET_TYPE4 = #{orgAssetType4,jdbcType=VARCHAR},
+            ORG_ASSET_TYPE5 = #{orgAssetType5,jdbcType=VARCHAR},
+            STATUS = #{status,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+        where DATAUUID = #{datauuid,jdbcType=CHAR}
+    </update>
 </mapper>

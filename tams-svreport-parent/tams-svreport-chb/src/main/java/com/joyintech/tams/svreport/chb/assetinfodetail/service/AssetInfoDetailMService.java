@@ -8,10 +8,8 @@ import com.joyintech.system.base.entity.SysDatadictListLink;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.DtoChangeUtil;
-import com.joyintech.tams.svreport.chb.assetinfodetail.asset.factoryserver.AssetInfoFactoryService;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dao.AssetInfoDetailMapper;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.util.ServerMenu;
@@ -21,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -41,9 +38,6 @@ public class AssetInfoDetailMService extends BaseService<AssetInfoDetailDto>{
 
 	@Autowired
 	private AssetInfoDetailMapper assetInfoDetailMapper;
-
-	@Autowired
-	private AssetInfoFactoryService asetInfoFactoryService;
 
 	static Map<String,Set<String>> map = null;
 	/**
@@ -103,6 +97,8 @@ public class AssetInfoDetailMService extends BaseService<AssetInfoDetailDto>{
 		dto.setIssuePartyId(CommonUtil.selectBankCode());
 		restTemplate.postForObject(
 				SvrServiceApplication.CHB_SERVICE_NAME + "/AssetInfoDetail/doSave", dto, Integer.class);
+
+
 	}
 
 
