@@ -2044,39 +2044,135 @@
 
     <select id="selectChbInfoByParam"  resultMap="BaseResultMap">
         SELECT * FROM (
-        SELECT '01' dataStatus ,i.* FROM chb_asset_info i
+        SELECT '01' dataStatus ,
+        i.ASSET_UUID,
+        i.asset_name,
+        i.asset_code,
+        i.asset_type,
+        i.asset_type2,
+        i.org_asset_type1,
+        i.org_asset_type2,
+        i.org_asset_type3,
+        to_char(i.vdate,'yyyy-MM-dd') vDateStr,
+        to_char(i.mdate,'yyyy-MM-dd') mDateStr
+        FROM chb_asset_info i
         WHERE 1=1
-        and status in ('E','M')
+        and i.status in ('E','M')
                 <if test="assetCodes != null and assetCodes.length>0">
                     <foreach collection="assetCodes" item="item" open=" and ASSET_CODE in(" separator="," close=")">
                         #{item}
                     </foreach>
                 </if>
                 <if test="assetTypes != null and assetTypes.length>0">
-                    <foreach collection="assetTypes" item="item" open=" and asset_type IN in(" separator="," close=")">
+                    <foreach collection="assetTypes" item="item" open=" and asset_type in(" separator="," close=")">
                         #{item}
                     </foreach>
                 </if>
                 <if test="assetType2s != null and assetType2s.length>0">
-                    <foreach collection="assetType2s" item="item" open=" and asset_type2 IN in(" separator="," close=")">
+                    <foreach collection="assetType2s" item="item" open=" and asset_type2 in(" separator="," close=")">
                         #{item}
                     </foreach>
                 </if>
                 <if test="orgAssetType1s != null and orgAssetType1s.length>0">
-                    <foreach collection="orgAssetType1s" item="item" open=" and org_asset_type1 IN in(" separator="," close=")">
+                    <foreach collection="orgAssetType1s" item="item" open=" and org_asset_type1 in(" separator="," close=")">
                         #{item}
                     </foreach>
                 </if>
                 <if test="orgAssetType2s != null and orgAssetType2s.length>0">
-                    <foreach collection="orgAssetType2s" item="item" open=" and org_asset_type2 IN in(" separator="," close=")">
+                    <foreach collection="orgAssetType2s" item="item" open=" and org_asset_type2 in(" separator="," close=")">
                         #{item}
                     </foreach>
                 </if>
+
+           UNION ALL
+                SELECT '02' dataStatus,
+                    e.DATAUUID ASSET_UUID,
+                    e.asset_name,
+                    e.asset_code,
+                    e.asset_type,
+                    e.asset_type2,
+                    e.org_asset_type1,
+                    e.org_asset_type2,
+                    e.org_asset_type3,
+                    e.vdate  vDateStr,
+                    e.mdate mDateStr
+                FROM CHB_ASSET_INFO_ERRODATA e
+                WHERE 1=1
+                and e.status in ('E','M')
+                <if test="assetCodes != null and assetCodes.length>0">
+                    <foreach collection="assetCodes" item="item" open=" and e.ASSET_CODE in(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="assetTypes != null and assetTypes.length>0">
+                    <foreach collection="assetTypes" item="item" open=" and e.asset_type in(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="assetType2s != null and assetType2s.length>0">
+                    <foreach collection="assetType2s" item="item" open=" and e.asset_type2 in(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="orgAssetType1s != null and orgAssetType1s.length>0">
+                    <foreach collection="orgAssetType1s" item="item" open=" and e.org_asset_type1 in(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="orgAssetType2s != null and orgAssetType2s.length>0">
+                    <foreach collection="orgAssetType2s" item="item" open=" and e.org_asset_type2 in(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+
             ) a
             where 1=1
                 <if test="dataStatus != null and dataStatus!=''">
                     and dataStatus = #{dataStatus}
                 </if>
+    </select>
+
+
+    <!-- 获取资产代码下拉菜单-->
+    <select id="selectAssetCodeList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT DISTINCT
+        ASSET_CODE id,
+        ASSET_NAME text
+        from (
+        SELECT
+        ASSET_CODE,ASSET_NAME
+        FROM CHB_ASSET_INFO ASSETINFO
+        <where>
+            <if test="search != null and search != ''">
+                and ASSETINFO.ASSET_CODE like concat(concat('%', #{search}),'%') or ASSETINFO.ASSET_NAME like concat(concat('%', #{search}),'%')
+            </if>
+            <if test="orgCodeList !=null and orgCodeList.size()>0">
+                <!-- 机构代码不为空时 -->
+                <foreach collection="orgCodeList" item="orgCode" open="and A.ORG_CODE in (" close=")" separator=",">
+                    #{orgCode,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+
+        union all
+
+        SELECT
+        ASSET_CODE,ASSET_NAME
+        FROM CHB_ASSET_INFO_ERRODATA data
+        <where>
+            <if test="search != null and search != ''">
+                and data.ASSET_CODE like concat(concat('%', #{search}),'%') or data.ASSET_NAME like concat(concat('%', #{search}),'%')
+            </if>
+            <if test="orgCodeList !=null and orgCodeList.size()>0">
+                <!-- 机构代码不为空时 -->
+                <foreach collection="orgCodeList" item="orgCode" open="and data.ORG_CODE in (" close=")" separator=",">
+                    #{orgCode,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        )
+        ORDER BY ASSET_CODE
+
     </select>
 
 
