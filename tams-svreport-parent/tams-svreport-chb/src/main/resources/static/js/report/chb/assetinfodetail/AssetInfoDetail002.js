@@ -42,8 +42,8 @@ var QueryFunc=function(){
         var repAssetType = $('#assetType2').val();
         //隐藏所有中债报送信息
         $(".businessDeptClass").hide();
-        var i=obj["17"].indexOf(repAssetType);
-        if(obj["01"].indexOf(repAssetType)>=0){
+        var obj = JSON.parse(AssetTypeListLink) ;
+        if(obj["01"].indexOf(repAssetType)>0){
             //本行/他行存款||大额存单
         }else if(obj["02"].indexOf(repAssetType)>=0){
             //拆放同业/买入返售（资产）||同业拆入/卖出回购（负债）
@@ -69,10 +69,12 @@ var QueryFunc=function(){
             //QDII股票/基金类资产
         }else if(obj["11"].indexOf(repAssetType)>=0){
             //QDII结构性票据类资产
+            $("#svrBussRepQDIIStructureInfo_div").show();
         }else if(obj["12"].indexOf(repAssetType)>=0){
             //资产管理产品
         }else if(obj["13"].indexOf(repAssetType)>=0){
             //商品类资产
+            $("#svrBussRepNobleMetalInfo_div").show();
         }else if(obj["14"].indexOf(repAssetType)>=0){
             //各类资产的其他项
         }else if(obj["16"].indexOf(repAssetType)>=0){
