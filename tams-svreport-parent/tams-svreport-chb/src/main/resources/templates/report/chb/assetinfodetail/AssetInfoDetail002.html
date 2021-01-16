@@ -256,7 +256,7 @@
 					</div>
 				</div>
 			</div>
-
+             <!--贵金属/商品-->
 			<div class="pro-module">
 				<div class="businessDeptClass" id="svrBussRepNobleMetalInfo_div">
 					<div class="page-component"
@@ -266,11 +266,68 @@
 					</div>
 				</div>
 			</div>
+            <!--非标准化债权类资产/新增可投资资产-->
+			<div class="pro-module">
+				<div class="businessDeptClass" id="svrBussRepAssetCreditNonstdInfo_div">
+					<div class="page-component"
+						 th:data-path="@{/chb/assetinfodetail/asset/project/SvrBussRepAssetCreditNonstdInfo/init}"
+						 th:data-params="|{entityName: 'SvrBussRepAssetCreditNonstdInfoDto',assetUuid:'${entity?.assetUuid}',dataStatus:'${entity?.dataStatus}',assetType:'${entity?.assetType2}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
 
+					</div>
+				</div>
+			</div>
+			<!--票据类资产/信用证类资产-->
+			<div class="pro-module">
+				<div class="businessDeptClass" id="svrBussRepAssetAstBillInfo_div">
+					<div class="page-component"
+						 th:data-path="@{/chb/assetinfodetail/asset/project/SvrBussRepAssetAstBillInfo/init}"
+						 th:data-params="|{entityName: 'SvrBussRepAssetAstBillInfoDto',assetUuid:'${entity?.assetUuid}',dataStatus:'${entity?.dataStatus}',assetType:'${entity?.assetType2}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
 
+					</div>
+				</div>
+			</div>
+			<!--权益类资产-->
+			<div class="pro-module">
+				<div class="businessDeptClass" id="svrBussRepEquityInfo_div">
+					<div class="page-component"
+						 th:data-path="@{/chb/assetinfodetail/asset/project/SvrBussRepEquityInfo/init}"
+						 th:data-params="|{entityName: 'SvrBussRepEquityInfoDto',assetUuid:'${entity?.assetUuid}',dataStatus:'${entity?.dataStatus}',assetType:'${entity?.assetType2}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
 
+					</div>
+				</div>
+			</div>
+			<!--公募基金/私募基金-->
+			<div class="pro-module">
+				<div class="businessDeptClass" id="svrBussRepFundInfo_div">
+					<div class="page-component"
+						 th:data-path="@{/chb/assetinfodetail/asset/fund/SvrBussRepFundInfo/init}"
+						 th:data-params="|{entityName: 'SvrBussRepFundInfoDto',assetUuid:'${entity?.assetUuid}',dataStatus:'${entity?.dataStatus}',assetType:'${entity?.assetType2}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
 
+					</div>
+				</div>
+			</div>
+			<!--各类资产其他项-->
+			<div class="pro-module">
+				<div class="businessDeptClass" id="svrBussRepOtherInvestTargetInfo_div">
+					<div class="page-component"
+						 th:data-path="@{/chb/assetinfodetail/asset/fund/SvrBussRepOtherInvestTargetInfo/init}"
+						 th:data-params="|{entityName: 'SvrBussRepOtherInvestTargetInfoDto',assetUuid:'${entity?.assetUuid}',dataStatus:'${entity?.dataStatus}',assetType:'${entity?.assetType2}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
 
+					</div>
+				</div>
+			</div>
+			<!--委外投资——协议方式--
+			<div class="pro-module">
+				<div class="businessDeptClass" id="svrBussRepOutInvestAgrInfo_div">
+					<div class="page-component"
+						 th:data-path="@{/chb/assetinfodetail/asset/trust/SvrBussRepOutInvestAgrInfo/init}"
+						 th:data-params="|{entityName: 'SvrBussRepOutInvestAgrInfoDto',assetUuid:'${entity?.assetUuid}',dataStatus:'${entity?.dataStatus}',assetType:'${entity?.assetType2}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
+
+					</div>
+				</div>
+			</div>
+
+			>
 				<div class="row text-center stepbar"><a
 						id="AssetInfoDetail002_btn_submit"
 						class="layui-btn layui-btn-sm btn-submit"
