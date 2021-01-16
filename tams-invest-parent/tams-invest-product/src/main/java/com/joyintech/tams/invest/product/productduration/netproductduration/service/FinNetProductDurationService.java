@@ -1224,9 +1224,9 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
                             entity.getRedPurFeeHd() == null ? BigDecimal.ZERO : entity.getRedPurFeeHd().add(
                                 entity.getRedFee() == null ? BigDecimal.ZERO : entity.getRedFee()));
                         trdProductDeal.setFeeAmtPay(entity.getRedFeeLc());
-                        trdProductDeal.setFeeAmt(entity.getRedPurFeeHd() == null ? BigDecimal.ZERO : entity.getRedPurFeeHd().add(
-                            entity.getRedFee() == null ? BigDecimal.ZERO : entity.getRedFee()).add(
-                                entity.getRedFeeLc() == null ? BigDecimal.ZERO : entity.getRedFeeLc()));
+						trdProductDeal.setFeeAmt(entity.getRedPurFeeHd() == null ? BigDecimal.ZERO .add(dto.getRedFee() == null ? BigDecimal.ZERO : dto.getRedFee()): entity.getRedPurFeeHd().add(
+								entity.getRedFee() == null ? BigDecimal.ZERO : entity.getRedFee()).add(
+								entity.getRedFeeLc() == null ? BigDecimal.ZERO : entity.getRedFeeLc()));
                         trdProductDeal.setTradeAmt(entity.getRedTotalNetValue());
                         trdProductDeal.setRemark(entity.getRedRemark());
                         //add by chengzhong for 净值型产品缺少净值日 2019-11-12 start
@@ -1344,8 +1344,8 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
                     trdProductDeal.setShareAmt(dto.getRedDealNum());
                     trdProductDeal.setPrinAmt(dto.getRedDealAmt());
                     trdProductDeal.setFpriceAmt(dto.getRedDealAmt());
-                    trdProductDeal.setFeeAmtUnpay(dto.getRedPurFeeHd() == null ? BigDecimal.ZERO : dto.getRedPurFeeHd().add(
-                        dto.getRedFee() == null ? BigDecimal.ZERO : dto.getRedFee()));
+					trdProductDeal.setFeeAmtUnpay(dto.getRedPurFeeHd() == null ? BigDecimal.ZERO.add(dto.getRedFee() == null ? BigDecimal.ZERO : dto.getRedFee()) : dto.getRedPurFeeHd().add(
+							dto.getRedFee() == null ? BigDecimal.ZERO : dto.getRedFee()));
                     trdProductDeal.setFeeAmtPay(dto.getRedFeeLc());
                     trdProductDeal.setFeeAmt(dto.getRedPurFeeHd() == null ? BigDecimal.ZERO : dto.getRedPurFeeHd().add(
                         dto.getRedFee() == null ? BigDecimal.ZERO : dto.getRedFee()).add(
@@ -2779,8 +2779,9 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
                 trdFinProductDealTotal.setShareAmt(dto.getRedDealNum());
                 trdFinProductDealTotal.setPrinAmt(dto.getRedDealAmt());
                 trdFinProductDealTotal.setFpriceAmt(dto.getRedDealAmt());
-                trdFinProductDealTotal.setFeeAmtUnpay(dto.getRedPurFeeHd() == null ? BigDecimal.ZERO : dto.getRedPurFeeHd().add(
-                    dto.getRedFee() == null ? BigDecimal.ZERO : dto.getRedFee()));
+				trdFinProductDealTotal.setFeeAmtUnpay(dto.getRedPurFeeHd() == null ? BigDecimal.ZERO.add(
+						dto.getRedFee() == null ? BigDecimal.ZERO : dto.getRedFee()) : dto.getRedPurFeeHd().add(
+						dto.getRedFee() == null ? BigDecimal.ZERO : dto.getRedFee()));
                 trdFinProductDealTotal.setFeeAmtPay(dto.getRedFeeLc());
                 trdFinProductDealTotal.setFeeAmt(dto.getRedPurFeeHd() == null ? BigDecimal.ZERO : dto.getRedPurFeeHd().add(
                     dto.getRedFee() == null ? BigDecimal.ZERO : dto.getRedFee()).add(
@@ -2856,9 +2857,10 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
                 trdFinProductDealTotal.setPrinAmt(dto.getRedPrinAmt03());
                 trdFinProductDealTotal.setIntAmt(dto.getRedProfit03());
                 trdFinProductDealTotal.setFpriceAmt(dto.getRedDealAmt03());
-                trdFinProductDealTotal.setFeeAmtUnpay(
-                    dto.getRedPurFeeHd03() == null ? BigDecimal.ZERO : dto.getRedPurFeeHd03().add(
-                        dto.getRedFee03() == null ? BigDecimal.ZERO : dto.getRedFee03()));
+				trdFinProductDealTotal.setFeeAmtUnpay(
+						dto.getRedPurFeeHd03() == null ? BigDecimal.ZERO.add(
+								dto.getRedFee03() == null ? BigDecimal.ZERO : dto.getRedFee03()) : dto.getRedPurFeeHd03().add(
+								dto.getRedFee03() == null ? BigDecimal.ZERO : dto.getRedFee03()));
                 trdFinProductDealTotal.setFeeAmtPay(dto.getRedFeeLc03());
                 trdFinProductDealTotal.setFeeAmt(dto.getRedPurFeeHd03() == null ? BigDecimal.ZERO : dto.getRedPurFeeHd03().add(
                     dto.getRedFee03() == null ? BigDecimal.ZERO : dto.getRedFee03()).add(
