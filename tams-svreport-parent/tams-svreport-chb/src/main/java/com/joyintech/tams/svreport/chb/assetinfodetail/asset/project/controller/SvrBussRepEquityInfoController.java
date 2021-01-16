@@ -57,7 +57,7 @@ public class SvrBussRepEquityInfoController extends BaseController{
         }
 
         //3、返回 子组件对应的页面
-        return "report/chb/assetinfodetail/asset/project/SvrBussRepAssetCreditNonstInfo";
+        return "report/chb/assetinfodetail/asset/project/SvrBussRepEquityInfo";
     }
 
 }
