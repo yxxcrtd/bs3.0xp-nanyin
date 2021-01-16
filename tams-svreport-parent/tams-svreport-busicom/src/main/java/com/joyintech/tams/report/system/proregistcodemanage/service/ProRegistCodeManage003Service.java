@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -144,6 +145,16 @@ public class ProRegistCodeManage003Service extends CommonExportService<ProRegist
              // 防止在进行导入前check时进行了两次的弹框
              webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
             }*/
+        return webResult;
+    }
+    
+    public AjaxResult checkInsertData1(String regCode ) {
+    	AjaxResult webResult = new AjaxResult();    
+    	if(!Pattern.compile("^[0-9a-zA-Z]{6}[0-9]{2}[ABC]?[0-9]{6}$").matcher(regCode).matches()){
+    		 webResult.setMessage(
+                     "产品登记编码格式不符合规范，请确认是否继续操作？",
+                     MessageType.确认消息);
+        }            
         return webResult;
     }
     

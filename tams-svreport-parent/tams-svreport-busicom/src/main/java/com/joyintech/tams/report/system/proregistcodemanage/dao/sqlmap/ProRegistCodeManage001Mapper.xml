@@ -305,7 +305,7 @@
         from 
         CHB_PRDRESIST_CODE cpc      
         <where>        	
-        	<if test="regCode != null  and regCode !='' " >
+        	<if test="regCode != null" >
                  cpc.REG_CODE = #{regCode,jdbcType=VARCHAR}
             </if>
             <if test="prodId != null  and prodId !='' " >

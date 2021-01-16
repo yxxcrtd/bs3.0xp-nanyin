@@ -1,0 +1,1 @@
+alter table CHB_PRDRESIST_CODE modify  REG_CODE VARCHAR2(600);
