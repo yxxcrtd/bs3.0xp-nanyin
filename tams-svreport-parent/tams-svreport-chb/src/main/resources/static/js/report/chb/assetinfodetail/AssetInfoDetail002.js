@@ -60,6 +60,7 @@ var QueryFunc=function(){
             $("#svrBussRepAssetAstBillInfo_div").show();
         }else if(obj["06"].indexOf(repAssetType)>=0){
             //权益类资产
+            $("#svrBussRepEquityInfo_div").show();
         }else if(obj["07"].indexOf(repAssetType)>=0){
             //金融衍生品
             $("#svrBussRepFinanciallInfo_div").show();
