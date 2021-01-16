@@ -209,506 +209,85 @@ public class SvrBussRepAssetMngProdInfoDto extends BaseEntity {
      * 是否由金融资产投资公司发行
      */
     private String repFinancialComissue;
-    
-    public String getRepFinancialComissue() {
-		return repFinancialComissue;
-	}
-	public void setRepFinancialComissue(String repFinancialComissue) {
-		this.repFinancialComissue = repFinancialComissue;
-	}
 
-    /**
-     * 获取 repTradeMarket
-     *
-     * @return repTradeMarket
-     */
-    @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repTradeMarket",groups={ValidateGroupEdit.class})
     public String getRepTradeMarket() {
-        if (needValid) {
-            return repTradeMarket;
-        } else {
-            return "xxx";
-        }
+        return repTradeMarket;
     }
 
-    /**
-     * 设置 repTradeMarket
-     *
-     * @param repTradeMarket repTradeMarket
-     */
     public void setRepTradeMarket(String repTradeMarket) {
         this.repTradeMarket = repTradeMarket;
     }
 
-    /**
-     * 获取 repAssetType
-     *
-     * @return repAssetType
-     */
     public String getRepAssetType() {
-        if (needValid) {
-            return repAssetType;
-        } else {
-            return "xxx";
-        }
+        return repAssetType;
     }
 
-    /**
-     * 设置 repAssetType
-     *
-     * @param repAssetType repAssetType
-     */
     public void setRepAssetType(String repAssetType) {
         this.repAssetType = repAssetType;
     }
 
-    /**
-     * 获取 repPartyCode
-     *
-     * @return repPartyCode
-     */
-    @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repPartyCode",groups={ValidateGroupEdit.class})
     public String getRepPartyCode() {
-        if (needValid) {
-            return repPartyCode;
-        } else {
-            return BussinessConstant.REPORT_INFORMATION;
-        }
+        return repPartyCode;
     }
 
-    /**
-     * 设置 repPartyCode
-     *
-     * @param repPartyCode repPartyCode
-     */
     public void setRepPartyCode(String repPartyCode) {
         this.repPartyCode = repPartyCode;
     }
 
-    /**
-     * 获取 repRegistCode
-     *
-     * @return repRegistCode
-     */
     public String getRepRegistCode() {
         return repRegistCode;
     }
 
-    /**
-     * 设置 repRegistCode
-     *
-     * @param repRegistCode repRegistCode
-     */
     public void setRepRegistCode(String repRegistCode) {
         this.repRegistCode = repRegistCode;
     }
 
-    /**
-     * 获取 repCapiInvest
-     *
-     * @return repCapiInvest
-     */
-    @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repCapiInvest",groups={ValidateGroupEdit.class})
     public String getRepCapiInvest() {
-        if (needValid) {
-            return repCapiInvest;
-        } else {
-            return BussinessConstant.REPORT_INFORMATION;
-        }
+        return repCapiInvest;
     }
 
-    /**
-     * 设置 repCapiInvest
-     *
-     * @param repCapiInvest repCapiInvest
-     */
     public void setRepCapiInvest(String repCapiInvest) {
         this.repCapiInvest = repCapiInvest;
     }
 
-    /**
-     * 获取 repCapUseWay
-     *
-     * @return repCapUseWay
-     */
-    @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repCapUseWay",groups={ValidateGroupEdit.class})
     public String getRepCapUseWay() {
-        if (needValid) {
-            return repCapUseWay;
-        } else {
-            return BussinessConstant.REPORT_INFORMATION;
-        }
+        return repCapUseWay;
     }
 
-    /**
-     * 设置 repCapUseWay
-     *
-     * @param repCapUseWay repCapUseWay
-     */
     public void setRepCapUseWay(String repCapUseWay) {
         this.repCapUseWay = repCapUseWay;
     }
 
-    /**
-     * 获取 repCapUseIndu
-     *
-     * @return repCapUseIndu
-     */
-    @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repCapUseInduLevel2",groups={ValidateGroupEdit.class})
     public String getRepCapUseIndu() {
-        if (needValid) {
-            return repCapUseIndu;
-        } else {
-            return BussinessConstant.REPORT_INFORMATION;
-        }
+        return repCapUseIndu;
     }
 
-    /**
-     * 设置 repCapUseIndu
-     *
-     * @param repCapUseIndu repCapUseIndu
-     */
     public void setRepCapUseIndu(String repCapUseIndu) {
         this.repCapUseIndu = repCapUseIndu;
     }
 
-    /**
-     * 获取 repCapUseInduLevel2
-     *
-     * @return repCapUseInduLevel2
-     */
-    @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repCapUseIndu",groups={ValidateGroupEdit.class})
     public String getRepCapUseInduLevel2() {
-        if (needValid) {
-            return repCapUseInduLevel2;
-        } else {
-            return BussinessConstant.REPORT_INFORMATION;
-        }
+        return repCapUseInduLevel2;
     }
 
-    /**
-     * 设置 repCapUseInduLevel2
-     *
-     * @param repCapUseInduLevel2 repCapUseInduLevel2
-     */
     public void setRepCapUseInduLevel2(String repCapUseInduLevel2) {
         this.repCapUseInduLevel2 = repCapUseInduLevel2;
     }
 
-    /**
-     * 获取 repPlanProp
-     *
-     * @return repPlanProp
-     */
-    @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repPlanProp",groups={ValidateGroupEdit.class})
     public String getRepPlanProp() {
-        if (needValid) {
-            return repPlanProp;
-        } else {
-            return BussinessConstant.REPORT_INFORMATION;
-        }
+        return repPlanProp;
     }
 
-    /**
-     * 设置 repPlanProp
-     *
-     * @param repPlanProp repPlanProp
-     */
     public void setRepPlanProp(String repPlanProp) {
         this.repPlanProp = repPlanProp;
     }
 
-    /**
-     * 获取 repYieldFlag
-     *
-     * @return repYieldFlag
-     */
-    @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repYieldFlag",groups={ValidateGroupEdit.class})
     public String getRepYieldFlag() {
-        if (needValid) {
-            return repYieldFlag;
-        } else {
-            return BussinessConstant.REPORT_INFORMATION;
-        }
+        return repYieldFlag;
     }
 
-    /**
-     * 设置 repYieldFlag
-     *
-     * @param repYieldFlag repYieldFlag
-     */
     public void setRepYieldFlag(String repYieldFlag) {
         this.repYieldFlag = repYieldFlag;
-    }
-
-    /**
-     * 获取 repMaxRate
-     *
-     * @return repMaxRate
-     */
-    @Amount(fieldName = "BussRepAssetMngProdInfo.repMaxRate", maxIntBit = 3, maxDecBit = 8,groups={ValidateGroupEdit.class})
-    public BigDecimal getRepMaxRate() {
-        return repMaxRate;
-    }
-
-    /**
-     * 设置 repMaxRate
-     *
-     * @param repMaxRate repMaxRate
-     */
-    public void setRepMaxRate(BigDecimal repMaxRate) {
-        this.repMaxRate = repMaxRate;
-    }
-
-    /**
-     * 获取 repMinRate
-     *
-     * @return repMinRate
-     */
-    @Amount(fieldName = "BussRepAssetMngProdInfo.repMinRate", maxIntBit = 3, maxDecBit = 8,groups={ValidateGroupEdit.class})
-    public BigDecimal getRepMinRate() {
-        return repMinRate;
-    }
-
-    /**
-     * 设置 repMinRate
-     *
-     * @param repMinRate repMinRate
-     */
-    public void setRepMinRate(BigDecimal repMinRate) {
-        this.repMinRate = repMinRate;
-    }
-
-    /**
-     * 获取 repBuyStruct
-     *
-     * @return repBuyStruct
-     */
-    @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repBuyStruct",groups={ValidateGroupEdit.class})
-    public String getRepBuyStruct() {
-        if (needValid) {
-            return repBuyStruct;
-        } else {
-            return BussinessConstant.REPORT_INFORMATION;
-        }
-    }
-
-    /**
-     * 设置 repBuyStruct
-     *
-     * @param repBuyStruct repBuyStruct
-     */
-    public void setRepBuyStruct(String repBuyStruct) {
-        this.repBuyStruct = repBuyStruct;
-    }
-
-    /**
-     * 获取 repManageType
-     *
-     * @return repManageType
-     */
-    @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repManageType",groups={ValidateGroupEdit.class})
-    public String getRepManageType() {
-        if (needValid) {
-            return repManageType;
-        } else {
-            return BussinessConstant.REPORT_INFORMATION;
-        }
-    }
-
-    /**
-     * 设置 repManageType
-     *
-     * @param repManageType repManageType
-     */
-    public void setRepManageType(String repManageType) {
-        this.repManageType = repManageType;
-    }
-
-    /**
-     * 获取 repIsCtrlBottom
-     *
-     * @return repIsCtrlBottom
-     */
-    @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repIsCtrlBottom",groups={ValidateGroupEdit.class})
-    public String getRepIsCtrlBottom() {
-        if (needValid) {
-            return repIsCtrlBottom;
-        } else {
-            return BussinessConstant.REPORT_INFORMATION;
-        }
-    }
-
-    /**
-     * 设置 repIsCtrlBottom
-     *
-     * @param repIsCtrlBottom repIsCtrlBottom
-     */
-    public void setRepIsCtrlBottom(String repIsCtrlBottom) {
-        this.repIsCtrlBottom = repIsCtrlBottom;
-    }
-
-    /**
-     * 获取 repMgrFeeRate
-     *
-     * @return repMgrFeeRate
-     */
-    @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repMgrFeeRate",groups={ValidateGroupEdit.class})
-    @Amount(fieldName = "BussRepAssetMngProdInfo.repMgrFeeRate", maxIntBit = 3, maxDecBit = 8,groups={ValidateGroupEdit.class})
-    public BigDecimal getRepMgrFeeRate() {
-        if (needValid) {
-            return repMgrFeeRate;
-        } else {
-            return BigDecimal.ZERO;
-        }
-    }
-
-    /**
-     * 设置 repMgrFeeRate
-     *
-     * @param repMgrFeeRate repMgrFeeRate
-     */
-    public void setRepMgrFeeRate(BigDecimal repMgrFeeRate) {
-        this.repMgrFeeRate = repMgrFeeRate;
-    }
-
-    /**
-     * 获取 repTruFeeRate
-     *
-     * @return repTruFeeRate
-     */
-    @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repTruFeeRate",groups={ValidateGroupEdit.class})
-    @Amount(fieldName = "BussRepAssetMngProdInfo.repTruFeeRate", maxIntBit = 3, maxDecBit = 8,groups={ValidateGroupEdit.class})
-    public BigDecimal getRepTruFeeRate() {
-        if (needValid) {
-            return repTruFeeRate;
-        } else {
-            return BigDecimal.ZERO;
-        }
-    }
-
-    /**
-     * 设置 repTruFeeRate
-     *
-     * @param repTruFeeRate repTruFeeRate
-     */
-    public void setRepTruFeeRate(BigDecimal repTruFeeRate) {
-        this.repTruFeeRate = repTruFeeRate;
-    }
-
-    /**
-     * 获取 repTradeFeeRate
-     *
-     * @return repTradeFeeRate
-     */
-    @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repTradeFeeRate",groups={ValidateGroupEdit.class})
-    @Amount(fieldName = "BussRepAssetMngProdInfo.repTradeFeeRate", maxIntBit = 3, maxDecBit = 8,groups={ValidateGroupEdit.class})
-    public BigDecimal getRepTradeFeeRate() {
-        if (needValid) {
-            return repTradeFeeRate;
-        } else {
-            return BigDecimal.ZERO;
-        }
-
-    }
-
-    /**
-     * 设置 repTradeFeeRate
-     *
-     * @param repTradeFeeRate repTradeFeeRate
-     */
-    public void setRepTradeFeeRate(BigDecimal repTradeFeeRate) {
-        this.repTradeFeeRate = repTradeFeeRate;
-    }
-
-    /**
-     * 获取 repAgencyFeeRate
-     *
-     * @return repAgencyFeeRate
-     */
-    @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repAgencyFeeRate",groups={ValidateGroupEdit.class})
-    @Amount(fieldName = "BussRepAssetMngProdInfo.repAgencyFeeRate", maxIntBit = 3, maxDecBit = 8,groups={ValidateGroupEdit.class})
-    public BigDecimal getRepAgencyFeeRate() {
-        if (needValid) {
-            return repAgencyFeeRate;
-        } else {
-            return BigDecimal.ZERO;
-        }
-    }
-
-    /**
-     * 设置 repAgencyFeeRate
-     *
-     * @param repAgencyFeeRate repAgencyFeeRate
-     */
-    public void setRepAgencyFeeRate(BigDecimal repAgencyFeeRate) {
-        this.repAgencyFeeRate = repAgencyFeeRate;
-    }
-
-    /**
-     * 获取 repOtherFeeRate
-     *
-     * @return repOtherFeeRate
-     */
-    @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repOtherFeeRate",groups={ValidateGroupEdit.class})
-    @Amount(fieldName = "BussRepAssetMngProdInfo.repOtherFeeRate", maxIntBit = 3, maxDecBit = 8,groups={ValidateGroupEdit.class})
-    public BigDecimal getRepOtherFeeRate() {
-        if (needValid) {
-            return repOtherFeeRate;
-        } else {
-            return BigDecimal.ZERO;
-        }
-    }
-
-    /**
-     * 设置 repOtherFeeRate
-     *
-     * @param repOtherFeeRate repOtherFeeRate
-     */
-    public void setRepOtherFeeRate(BigDecimal repOtherFeeRate) {
-        this.repOtherFeeRate = repOtherFeeRate;
-    }
-
-    /**
-     * 获取 repAmt
-     *
-     * @return repAmt
-     */
-    @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repAmt",groups={ValidateGroupEdit.class})
-    @Amount(fieldName = "BussRepAssetMngProdInfo.repAmt", maxIntBit = 13, maxDecBit = 2,groups={ValidateGroupEdit.class})
-    public BigDecimal getRepAmt() {
-        if (needValid) {
-            return repAmt;
-        } else {
-            return BigDecimal.ZERO;
-        }
-    }
-
-    /**
-     * 设置 repAmt
-     *
-     * @param repAmt repAmt
-     */
-    public void setRepAmt(BigDecimal repAmt) {
-        this.repAmt = repAmt;
-    }
-
-    /**
-     * 获取 remark
-     *
-     * @return remark
-     */
-    public String getRepRemark() {
-        return repRemark;
-    }
-
-    /**
-     * 设置 remark
-     *
-     * @param repRemark repRemark
-     */
-    public void setRepRemark(String repRemark) {
-        this.repRemark = repRemark;
     }
 
     public String getRepPrivatefundFlag() {
@@ -741,5 +320,109 @@ public class SvrBussRepAssetMngProdInfoDto extends BaseEntity {
 
     public void setRepBondtostockFlag(String repBondtostockFlag) {
         this.repBondtostockFlag = repBondtostockFlag;
+    }
+
+    public BigDecimal getRepMaxRate() {
+        return repMaxRate;
+    }
+
+    public void setRepMaxRate(BigDecimal repMaxRate) {
+        this.repMaxRate = repMaxRate;
+    }
+
+    public BigDecimal getRepMinRate() {
+        return repMinRate;
+    }
+
+    public void setRepMinRate(BigDecimal repMinRate) {
+        this.repMinRate = repMinRate;
+    }
+
+    public String getRepBuyStruct() {
+        return repBuyStruct;
+    }
+
+    public void setRepBuyStruct(String repBuyStruct) {
+        this.repBuyStruct = repBuyStruct;
+    }
+
+    public String getRepManageType() {
+        return repManageType;
+    }
+
+    public void setRepManageType(String repManageType) {
+        this.repManageType = repManageType;
+    }
+
+    public String getRepIsCtrlBottom() {
+        return repIsCtrlBottom;
+    }
+
+    public void setRepIsCtrlBottom(String repIsCtrlBottom) {
+        this.repIsCtrlBottom = repIsCtrlBottom;
+    }
+
+    public BigDecimal getRepMgrFeeRate() {
+        return repMgrFeeRate;
+    }
+
+    public void setRepMgrFeeRate(BigDecimal repMgrFeeRate) {
+        this.repMgrFeeRate = repMgrFeeRate;
+    }
+
+    public BigDecimal getRepTruFeeRate() {
+        return repTruFeeRate;
+    }
+
+    public void setRepTruFeeRate(BigDecimal repTruFeeRate) {
+        this.repTruFeeRate = repTruFeeRate;
+    }
+
+    public BigDecimal getRepTradeFeeRate() {
+        return repTradeFeeRate;
+    }
+
+    public void setRepTradeFeeRate(BigDecimal repTradeFeeRate) {
+        this.repTradeFeeRate = repTradeFeeRate;
+    }
+
+    public BigDecimal getRepAgencyFeeRate() {
+        return repAgencyFeeRate;
+    }
+
+    public void setRepAgencyFeeRate(BigDecimal repAgencyFeeRate) {
+        this.repAgencyFeeRate = repAgencyFeeRate;
+    }
+
+    public BigDecimal getRepOtherFeeRate() {
+        return repOtherFeeRate;
+    }
+
+    public void setRepOtherFeeRate(BigDecimal repOtherFeeRate) {
+        this.repOtherFeeRate = repOtherFeeRate;
+    }
+
+    public BigDecimal getRepAmt() {
+        return repAmt;
+    }
+
+    public void setRepAmt(BigDecimal repAmt) {
+        this.repAmt = repAmt;
+    }
+
+    public String getRepRemark() {
+        return repRemark;
+    }
+
+    public void setRepRemark(String repRemark) {
+        this.repRemark = repRemark;
+    }
+
+    public String getRepFinancialComissue() {
+        return repFinancialComissue;
+    }
+
+    public void setRepFinancialComissue(String repFinancialComissue) {
+        this.repFinancialComissue = repFinancialComissue;
     }
 }
