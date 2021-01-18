@@ -1878,6 +1878,7 @@ public enum DictCodeListExt2 implements BaseDictCodeList {
      * 检查结果_检查不通过
      */
     投资者份额检查结果_无偏差(DictCode.投资者份额检查结果,"02","无偏差"),
+    报表名称_从业人员信息登记(DictCode.报表名称,"30","从业人员信息登记"),
 ;
     /**
      * 对应于数据字典code
