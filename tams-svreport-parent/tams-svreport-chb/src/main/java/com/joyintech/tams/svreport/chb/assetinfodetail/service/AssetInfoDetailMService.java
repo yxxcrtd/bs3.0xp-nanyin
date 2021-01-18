@@ -1,9 +1,11 @@
 package com.joyintech.tams.svreport.chb.assetinfodetail.service;
 
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.system.base.entity.SysDatadictListLink;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.constant.DictCode;
@@ -52,7 +54,17 @@ public class AssetInfoDetailMService extends BaseService<AssetInfoDetailDto>{
 
 		//获取当前登录用户的机构编码
 		param.put("orgCode", CommonUtil.getTreeInstCode());
-		return queryForPage(AssetInfoDetailMapper.class,"selectChbInfoByParam",param);
+
+		param.put("assetCodes", StringUtil.isNotEmpty(param.get("assetCode"))?(param.get("assetCode").toString().split(",")):null);
+		param.put("assetTypes", StringUtil.isNotEmpty(param.get("assetType"))?(param.get("assetType").toString().split(",")):null);
+		param.put("assetType2s", StringUtil.isNotEmpty(param.get("assetType2"))?(param.get("assetType2").toString().split(",")):null);
+		param.put("orgAssetType1s", StringUtil.isNotEmpty(param.get("orgAssetType1"))?(param.get("orgAssetType1").toString().split(",")):null);
+		param.put("orgAssetType2s", StringUtil.isNotEmpty(param.get("orgAssetType2"))?(param.get("orgAssetType2").toString().split(",")):null);
+
+
+
+		return super.queryForPage(Integer.valueOf((String) param.get("page")), Integer.valueOf((String) param.get("length")),
+				() -> assetInfoDetailMapper.selectChbInfoByParam(param));
 	}
 
 	/**
@@ -82,9 +94,16 @@ public class AssetInfoDetailMService extends BaseService<AssetInfoDetailDto>{
 	 * @return 产品名称列表
 	 */
 	public List<SelectOptionDto> queryAssetCodeList(Map<String, Object> map) {
-		return restTemplate.postForList(
-				SvrServiceApplication.CHB_SERVICE_NAME + "/AssetInfoDetail/queryAssetCodeList",map,
-				SelectOptionDto.class);
+		String orgCode = (String)map.get("orgCode");
+		List<String> orgCodeList = StringUtil.splitToList(GlobalConstant.COMMA, orgCode);
+		if (StringUtil.isBlank(orgCode)) {
+			orgCodeList = CommonUtil.getOrgCodeListForSearch();
+		}
+		map.put("orgCodeList", orgCodeList);
+		List<SelectOptionDto> dtoList = new ArrayList<SelectOptionDto>();
+		//在所选的机构list不为空或者是用户为管理员时
+		dtoList = assetInfoDetailMapper.selectAssetCodeList(map);
+		return dtoList;
 	}
 
 	public void doSave(AssetInfoDetailDto dto) throws Exception {

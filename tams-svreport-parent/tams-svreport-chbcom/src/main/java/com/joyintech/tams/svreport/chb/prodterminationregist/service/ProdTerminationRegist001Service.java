@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.util.SvrMaptoEntityUtil;
+import com.joyintech.tams.svreport.chb.datacheck.beforesub.service.BeforeSubCheck;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,6 +101,16 @@ public class ProdTerminationRegist001Service extends SvrCommonExportService<Prod
     private ChbCheckRuleoutMapper chbCheckRuleoutMapper;
     @Autowired
     private BeforeSubErrorCheck beforeSubErrorCheck;
+
+	/**
+	 * 预警校验
+	 */
+	@Autowired
+    private BeforeSubCheck beforeSubCheck;
+
+	@Autowired
+	private SvrMaptoEntityUtil svrMaptoEntityUtil;
+	private String tableName = "CHB_PRD_END_SUB";
     
 	/**
 	 * @Description 产品终止登记查询
@@ -524,7 +536,7 @@ public class ProdTerminationRegist001Service extends SvrCommonExportService<Prod
 		// 检查登记表中小于今天所有未报送的数据
 		if(CollectionUtils.isNotEmpty(checkKeys)){
 			// 调用检查方法
-			resultlist.addAll(check());
+			resultlist.addAll(check(null));
 			checkmap = resultlist.stream().collect(Collectors.toMap(CheckReport001Dto::getRefseqno,(p)->p,(key1,key2)->key1));
 			for(String key : checkKeys){
 				if(checkmap.get(key)!=null){
@@ -554,17 +566,25 @@ public class ProdTerminationRegist001Service extends SvrCommonExportService<Prod
 	* @author: 王冠/wangguan
 	* @date: 2019年6月25日 上午11:03:20 
 	*/
-	private List<CheckReport001Dto> check(){
+	public List<CheckReport001Dto> check(Date batchDate){
 		// 数据日期为系统时间
 		Date checkdate = DateUtil.parse(DateUtil.getSysDate());
+		// 供跑批使用
+		if (StringUtil.isNotEmpty(batchDate)){
+			checkdate = batchDate;
+		}
 		// 删除今天所有已检查的数据
 		checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_产品终止登记.getValue(),checkdate);
 		//增加例外情况过滤
         List<ChbCheckRuleout> listPrdEndRuleout=chbCheckRuleoutMapper.selectDataByCheckTypeAndReprotCode(CheckConfConstants.CHB_CHECK_TYPE_B, CheckConfConstants.CHB_PRD_END_SUB);
         Map<String, List<ChbCheckRuleout>> mapPrdEndRuleout = listPrdEndRuleout.stream().collect(
                  JoyinCollectors.groupingBy(x -> x.getProdId()));
-        //检查数据
+
+		//报送前强制的错误检查
         List<CheckReport001Dto> resultList = beforeSubErrorCheck.checkProdEndReg(checkdate,null,mapPrdEndRuleout);
+		//警告逻辑检查
+		resultList.addAll(beforeSubCheck.checkProdEndReg(checkdate,mapPrdEndRuleout));
+
         //报错检查异常数据
         int batchCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));// 每批commit的个数
 		int batchLastIndex = batchCount;// 每批最后一个的下标

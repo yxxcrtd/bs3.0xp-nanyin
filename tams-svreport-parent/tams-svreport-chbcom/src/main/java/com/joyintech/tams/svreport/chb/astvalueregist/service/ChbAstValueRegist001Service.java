@@ -12,13 +12,18 @@ package com.joyintech.tams.svreport.chb.astvalueregist.service;
 
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.common.svreport.chb.constant.CheckConfConstants;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.datacheck.dao.ChbCheckRuleoutMapper;
+import com.joyintech.tams.common.svreport.datacheck.dto.ChbCheckRuleout;
+import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001Mapper;
+import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
+import com.joyintech.tams.svreport.chb.datacheck.beforesub.service.BeforeSubErrorCheck;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,8 +102,16 @@ public class ChbAstValueRegist001Service extends SvrCommonExportService<ChbAstVa
      */
     @SuppressWarnings("unused")
     private static final String IS_SUCESS_INVESTORS_CHECK = "01";
+	@Autowired
+	private BeforeSubErrorCheck beforeSubErrorCheck;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
+
+	@Autowired
+	private CheckReport001Mapper checkReport001Mapper;
+
+	@Autowired
+	private ChbCheckRuleoutMapper chbCheckRuleoutMapper;
 
 	/**
 	 * 查询页面数据
@@ -736,5 +749,45 @@ public class ChbAstValueRegist001Service extends SvrCommonExportService<ChbAstVa
 			listArr.add(sub);
 		}
 		return listArr;
+	}
+	/**
+	 * @Description 检查登记表中小于今天所有未报送的数据
+	 * @return
+	 * @return List<CheckReport001Dto>
+	 * @version 1.7 2019年6月24日
+	 */
+	public List<CheckReport001Dto> check(Date batchDate){
+		Date checkdate = DateUtil.parse(DateUtil.getSysDate());
+		// 供跑批使用
+		if (StringUtil.isNotEmpty(batchDate)){
+			checkdate = batchDate;
+		}
+		// 数据日期为系统时间
+		// 删除今天所有已检查的数据
+		checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_资产估值信息登记.getValue(),checkdate);
+		//增加例外情况过滤
+		List<ChbCheckRuleout> listRuleout=chbCheckRuleoutMapper.selectDataByCheckTypeAndReprotCode(CheckConfConstants.CHB_CHECK_TYPE_B, CheckConfConstants.CHB_AST_VAL_SUB);
+		Map<String, List<ChbCheckRuleout>> mapRuleout = listRuleout.stream().collect(
+				JoyinCollectors.groupingBy(x -> x.getAssetCode()));
+
+		//检查数据
+		//报送前强制的错误检查
+		List<CheckReport001Dto> resultList = beforeSubErrorCheck.checkAstValueSub(checkdate,mapRuleout);
+
+		//报错检查异常数据
+		int batchCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));// 每批commit的个数
+		int batchLastIndex = batchCount;// 每批最后一个的下标
+		for (int index = 0; index < resultList.size();) {
+			if (batchLastIndex > resultList.size() - 1) {
+				batchLastIndex = resultList.size();
+				checkReport001Mapper.batchInsert(resultList.subList(index, batchLastIndex));
+				break;// 数据删除完毕,退出循环
+			} else {
+				checkReport001Mapper.batchInsert(resultList.subList(index, batchLastIndex));
+				index = batchLastIndex;// 设置下一批下标
+				batchLastIndex = index + batchCount;
+			}
+		}
+		return resultList;
 	}
 }

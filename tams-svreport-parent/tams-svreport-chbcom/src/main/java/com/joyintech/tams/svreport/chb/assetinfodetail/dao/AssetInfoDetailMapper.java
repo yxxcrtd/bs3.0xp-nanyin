@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.chb.assetinfodetail.dao;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.system.base.dao.SysDatadictListLinkMapper;
 import com.joyintech.system.base.entity.SysDatadictListLink;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
@@ -43,5 +44,8 @@ public interface AssetInfoDetailMapper {
 	List<SysDatadictListLink> getDataListLinkData(Map<String,Object> params);
 
 	List<ChbAssetInfoErrodataWithBLOBs> getChbAssetInfoErrorDataByUUid(@Param("assetUUid")String  assetUUid);
+
+
+	List<SelectOptionDto> selectAssetCodeList(Map<String, Object> pageParam);
 
 }
