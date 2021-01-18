@@ -109,6 +109,7 @@ var QueryFunc=function(){
         }else if(obj["02"].indexOf(repAssetType)>=0){
             //拆放同业/买入返售（资产）||同业拆入/卖出回购（负债）
             if(repAssetType=='1108'||repAssetType=='1902'){
+                $("#svrBussRepPlacementInfoDto_targetType1").attr("disabled",false);
                 $("#svrBussRepPlacementInfoDto_targetType1").val('01').trigger("change");
             }else if(repAssetType=='1107'||repAssetType=='1901'){
                 $("#svrBussRepPlacementInfoDto_targetType1").val('').trigger("change");
@@ -228,9 +229,12 @@ var QueryFunc=function(){
         });
 
         $('#assetType2').change(function(){
+            //清除所有子页面div内容
+
             showReportInfo();
             //assetType2联动子页面的内容
             changeReport();
+
         });
     });
 }());
