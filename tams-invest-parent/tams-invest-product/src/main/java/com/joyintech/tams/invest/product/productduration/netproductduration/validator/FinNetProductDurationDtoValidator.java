@@ -676,12 +676,14 @@ public class FinNetProductDurationDtoValidator implements BeanValidator{
             	if(dto.getAddReduceDealNum()==null&&dto.getAddReduceDealAmt()==null){
                     errorList.add(new ValidMessage("交易金额与交易份额不能同时为空！"));
             	}
-            	if(dto.getAddReduceDealNum()!=null && dto.getAddReduceDealNum().compareTo(BigDecimal.ZERO)<0){
-            		errorList.add(new ValidMessage("addReduceDealNum","交易份额不能小于0！"));
+            	//ZGBSS-49 按需求 强增强减交易金额与交易份额至少填写一个，且填写数值必须大于0 20210118 start
+            	if(dto.getAddReduceDealNum()!=null && dto.getAddReduceDealNum().compareTo(BigDecimal.ZERO)<=0){
+            		errorList.add(new ValidMessage("addReduceDealNum","交易份额必须大于0！"));
             	}
-            	if(dto.getAddReduceDealAmt()!=null && dto.getAddReduceDealAmt().compareTo(BigDecimal.ZERO)<0){
-            		errorList.add(new ValidMessage("addReduceDealAmt","交易金额不能小于0！"));
+            	if(dto.getAddReduceDealAmt()!=null && dto.getAddReduceDealAmt().compareTo(BigDecimal.ZERO)<=0){
+            		errorList.add(new ValidMessage("addReduceDealAmt","交易金额必须大于0！"));
             	}
+            	//ZGBSS-49 按需求 强增强减交易金额与交易份额至少填写一个，且填写数值必须大于0 20210118 end
 //            	//强增强减 交易金额、交易份额校验
 //            	if(dto.getAddReduceDealNum()==null || dto.getAddReduceDealNum().compareTo(BigDecimal.ZERO)<0){
 //                    errorList.add(new ValidMessage("addReduceDealNum",getMessage("FIN_PROD_E_0091","交易份额")));

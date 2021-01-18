@@ -1138,9 +1138,14 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                         || StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_份额强减.getValue())) {
 
                     infRiskRdsDto.setEventDate(DateUtil.format(new Date((long)dataMap.get("addReduceConfirmDate"))));
-                    infRiskRdsDto.setAmount(new BigDecimal((String)dataMap.get("addReduceDealAmt")));
-                    infRiskRdsDto.setTradeNum(new BigDecimal((String)dataMap.get("addReduceDealNum")));
-
+                    //ZGBSS-49【待办事项】：审批份额强增流程报错 20210118 start
+                    if(dataMap.get("addReduceDealAmt") != null) {                    	
+                    	infRiskRdsDto.setAmount(new BigDecimal((String)dataMap.get("addReduceDealAmt")));
+                    }
+                    if(dataMap.get("addReduceDealNum") != null) {                    	
+                    	infRiskRdsDto.setTradeNum(new BigDecimal((String)dataMap.get("addReduceDealNum")));
+                    }
+                    //ZGBSS-49【待办事项】：审批份额强增流程报错 20210118 end
                 }
                 else if (StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_提前终止.getValue())) {
 
