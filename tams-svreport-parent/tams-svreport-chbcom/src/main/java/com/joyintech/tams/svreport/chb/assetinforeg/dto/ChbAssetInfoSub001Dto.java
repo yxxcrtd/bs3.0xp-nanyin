@@ -783,12 +783,12 @@ public class ChbAssetInfoSub001Dto {
 	/**
 	 * 份额面值
 	*/
-	private BigDecimal prinBaseAmt;
+	private BigDecimal prinBaseamt;
 	
 	/**
 	 * 法定到期日
 	*/
-	private Date fmDate;
+	private Date fmdate;
 	
 	/**
 	 * 计息类型
@@ -3390,20 +3390,20 @@ public class ChbAssetInfoSub001Dto {
 		this.rivalPartyType = rivalPartyType;
 	}
 
-	public BigDecimal getPrinBaseAmt() {
-		return prinBaseAmt;
+	public BigDecimal getPrinBaseamt() {
+		return prinBaseamt;
 	}
 
-	public void setPrinBaseAmt(BigDecimal prinBaseAmt) {
-		this.prinBaseAmt = prinBaseAmt;
+	public void setPrinBaseamt(BigDecimal prinBaseamt) {
+		this.prinBaseamt = prinBaseamt;
 	}
 
-	public Date getFmDate() {
-		return fmDate;
+	public Date getFmdate() {
+		return fmdate;
 	}
 
-	public void setFmDate(Date fmDate) {
-		this.fmDate = fmDate;
+	public void setFmdate(Date fmdate) {
+		this.fmdate = fmdate;
 	}
 
 	public String getCouponSpecies() {

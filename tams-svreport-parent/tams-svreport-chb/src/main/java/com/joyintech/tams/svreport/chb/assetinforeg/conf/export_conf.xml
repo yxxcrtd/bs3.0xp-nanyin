@@ -39,10 +39,10 @@
 			<Cell order="35" name="是否属于买入返售">isResaleName04</Cell>
 			<Cell order="36" name="名称">assetName04</Cell>
 			<Cell order="37" name="金额">amt04</Cell>
-			<Cell order="38" name="份额面值">prinBaseAmt04</Cell>
+			<Cell order="38" name="份额面值">prinBaseamt04</Cell>
 			<Cell order="39" name="起息日">vdate04</Cell>
 			<Cell order="40" name="到期日">mdate04</Cell>
-			<Cell order="41" name="法定到期日">fmDateStr</Cell>
+			<Cell order="41" name="法定到期日">fmdateStr</Cell>
 			<Cell order="42" name="是否有预期收益率">rateFlagName04</Cell>
 			<Cell order="43" name="项目收益率（利率）%">assetYield04</Cell>
 			<Cell order="44" name="计息类型">couponSpecies</Cell>

@@ -61,13 +61,15 @@ $(function() {
               { title: "反馈状态", field: 'submitFeedbackStatus',width:100 ,sortField:'submitFeedbackStatus'},
               { title: "产品代码", field: 'prodId',width:100 ,sortField:'prodId'},
               { title: "产品名称", field: 'prodName',width:100 ,sortField:'prodName'},
-              {title: '产品登记编码', field:'prodRegCode', width:150,sortField:'prodRegCode'},
+              // modify by dubaojun 2020-10-30 产品登记编码导出为空，字段设置有误问题修复 start
+              {title: '产品登记编码', field:'prodRegistCode', width:100,sortField:'prodRegistCode'},
+              // modify by dubaojun 2020-10-30 产品登记编码导出为空，字段设置有误问题修复 end
               {title: "发行机构代码",field:'registBankCode', width:150,sortField:'registBankCode'},
-              {title: '行内交易编码', field:'tradeCode', width:150,sortField:'tradeCode'},
-              {title: '行内资产负债编码', field:'assetCode', width:200,sortField:'assetCode'},
+              {title: '行内交易编码', field:'tradeCode', width:100,sortField:'tradeCode'},
+              {title: '行内资产负债编码', field:'assetCode', width:100,sortField:'assetCode'},
               {title: '币种', field:'ccy', width:100,sortField:'ccy'},
-              {title: '发生金额', field:'amt', width:150, digit:2,type:'money',sortField:'amt'},
-              {title: '折算人民币金额（元）', field:'cnyAmt', digit:2, type:'money',width:200,sortField:'cnyAmt'},
+              {title: '发生金额', field:'amt', width:100, digit:2,type:'money',sortField:'amt'},
+              {title: '折算人民币金额（元）', field:'cnyAmt', digit:2, type:'money',width:100,sortField:'cnyAmt'},
               {title: '数量',field:'num', digit:5, type:'number',width:150,sortField:'num'},
               {title: '资产计量方式',field:'assetMethod',width:150,sortField:'assetMethod'},
               {title: '资金流动类型',field:'curAssetType', width:150,sortField:'curAssetType'},
@@ -77,7 +79,7 @@ $(function() {
               {title: '交易对手方类型',field:'rivalPartyType',width:150,sortField:'rivalPartyType'},
               {title: '单位成交价格（全价）',field:'unitPriceFull', digit:4,type:'money',width:200,sortField:'unitPriceFull'},
               {title: '单位成交价格（净价）',field:'unitPriceNet', digit:4,type:'money',width:200,sortField:'unitPriceNet'},
-              {title: '到期收益率%',field:'endRate',type:'number', digit:5,width:200,sortField:'endRate'},
+              {title: '到期收益率(%)',field:'endRate',type:'number', digit:5,width:200,sortField:'endRate'},
               {title: '成交编号/合同号',field:'contractCode', width:200,sortField:'contractCode'},
               {title: '备注',field:'remark', width:200,sortField:'remark'}
           ]

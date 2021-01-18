@@ -530,7 +530,7 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
 			if (item.getEndRate() != null){
 				DecimalFormat df = new DecimalFormat("0.00000");
 				// 到期收益率硬性展示5位小数
-				item.setEndRate(item.getEndRate().multiply(new BigDecimal(100)));
+//				item.setEndRate(item.getEndRate().multiply(new BigDecimal(100)));
 				item.setEndRateString(df.format(item.getEndRate()));
 			}
 			if(StringUtil.isNotEmpty(item.getAssetMethod())) {

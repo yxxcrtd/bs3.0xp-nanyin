@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -193,4 +194,14 @@ public class PerProDeclareReg001Controller extends BaseController{
 	}
 	
 	
+	/**
+	 *  查询行内标识码
+	 * @param param 入参
+	 * @return 行内标识码列表
+	 */
+	@ResponseBody
+	@RequestMapping("queryProdInsIdList")
+	public List<SelectOptionDto> queryProdInsIdList(){
+		return perProDeclareRegMService.queryProdInsIdList(RequestUtil.getPageParam());
+	}
 }

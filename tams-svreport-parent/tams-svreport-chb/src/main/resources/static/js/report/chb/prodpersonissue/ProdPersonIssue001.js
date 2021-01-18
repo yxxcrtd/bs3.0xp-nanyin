@@ -110,6 +110,7 @@ $(function(){
             { title: "反馈状态", field: 'submitFeedbackStatus',width:100, sortField:'submitFeedbackStatus' },
             { title: "产品登记编码", field: 'prodRegCode',width:200, sortField:'prodRegistCode'},
             { title: "理财产品代码", field: 'prodId' ,width:200, sortField:'prodId'},
+            { title: "产品名称", field: 'prodName' ,width:200, sortField:'prodName'},
             { title: "发行机构代码", field: 'issuePartyId' ,width:200, sortField:'issuePartyId'},
             { title: "募集起始日期", field: 'raiseVdate',type: 'date',width:200, sortField:'raiseVdate' },
             { title: "募集结束日期",field:'raiseEnddate',type: 'date',width:200, sortField:'raiseEnddate'},

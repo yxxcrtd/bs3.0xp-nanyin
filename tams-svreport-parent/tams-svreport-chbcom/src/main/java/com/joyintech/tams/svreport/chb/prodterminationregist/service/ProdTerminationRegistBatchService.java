@@ -365,9 +365,9 @@ public class ProdTerminationRegistBatchService extends SvrDataStatusUtil {
                 if(DictCodeList.计息基础_A_360.getValue().equals(arg0.getBasic())){
                     basic = new BigDecimal(360);
                 }
-                cusYearYield = result.getCustomProfit().multiply(basic)
+                cusYearYield = result.getCustomProfit().multiply(basic).multiply(new BigDecimal(100))
                         .divide(raiseAmt.multiply(
-                                new BigDecimal(DateUtil.getBetweenDayNumber(arg0.getVdate(),endDate))), 7,
+                                new BigDecimal(DateUtil.getBetweenDayNumber(arg0.getVdate(),endDate))), 5,
                                 BigDecimal.ROUND_HALF_UP);
             }
             result.setCusYearYield(cusYearYield);
@@ -377,9 +377,9 @@ public class ProdTerminationRegistBatchService extends SvrDataStatusUtil {
             BigDecimal prdYearYield = BigDecimal.ZERO;
             BigDecimal allProfit = result.getCustomProfit().add(result.getProfit());
             if (allProfit.compareTo(BigDecimal.ZERO) != 0) {
-                prdYearYield = result.getCustomProfit().add(result.getProfit()).multiply(basic)
+                prdYearYield = result.getCustomProfit().add(result.getProfit()).multiply(basic).multiply(new BigDecimal(100))
                         .divide(raiseAmt.multiply(
-                                new BigDecimal(DateUtil.getBetweenDayNumber(arg0.getVdate(),endDate))), 7,
+                                new BigDecimal(DateUtil.getBetweenDayNumber(arg0.getVdate(),endDate))), 5,
                                 BigDecimal.ROUND_HALF_UP);
             }
             result.setPrdYearYield(prdYearYield);

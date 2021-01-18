@@ -683,4 +683,13 @@ public AjaxResult uploadFile(Map<String, Object> map) throws ZipException, IOExc
 		}
 		return resultList;
 	}
+	
+	/**
+	 *  查询行内标识码
+	 * @param map 入参
+	 * @return 行内标识码列表
+	 */
+	public List<SelectOptionDto> queryProdInsIdList(Map<String,Object> map){
+		return perProDeclareReg001Mapper.queryProdInsIdList(map);
+	}
 }

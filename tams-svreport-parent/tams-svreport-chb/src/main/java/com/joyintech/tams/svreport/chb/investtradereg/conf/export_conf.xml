@@ -2,7 +2,9 @@
 <Workbook filePath="InvestTradeRegist001.xls" name="投资交易登记">
 	<Worksheet javaBean="com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto">
 		<Row>
-			<Cell order="1" name="产品登记编码">prodRegCode</Cell><!-- 产品登记编码 -->
+			<!-- modify by dubaojun 2020-10-30 产品登记编码导出为空，字段设置有误问题修复 start -->
+			<Cell order="1" name="产品登记编码">prodRegistCode</Cell><!-- 产品登记编码 -->
+			<!-- modify by dubaojun 2020-10-30 产品登记编码导出为空，字段设置有误问题修复 end -->
 			<Cell order="2" name="发行机构代码">registBankCode</Cell><!-- 发行机构代码 -->
 			<Cell order="3" name="行内资产/负债编码">assetCode</Cell><!-- 行内资产/负债编码-->
 			<Cell order="4" name="行内交易编码">tradeCode</Cell><!-- 行内交易编码 -->

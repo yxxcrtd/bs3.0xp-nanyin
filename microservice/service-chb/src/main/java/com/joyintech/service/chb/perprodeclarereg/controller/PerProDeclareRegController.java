@@ -4,6 +4,7 @@ package com.joyintech.service.chb.perprodeclarereg.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -78,5 +79,14 @@ public class PerProDeclareRegController{
 	@PostMapping("selectAllData")
 	public List<PerProDeclareRegDto> selectAllData(@RequestBody Map<String, Object> map){
 		return perProDeclareReg001Service.selectAllData(map);
+	}
+	/**
+	 *  查询行内标识码
+	 * @param map 入参
+	 * @return 行内标识码列表
+	 */
+	@PostMapping("queryProdInsIdList")
+	public List<SelectOptionDto> queryProdInsIdList(@RequestBody Map<String,Object> map){
+		return perProDeclareReg001Service.queryProdInsIdList(map);
 	}
 }
