@@ -320,8 +320,13 @@
     //获取组合可用持仓
     function getAssetAvailablePosition(){
         if(($("#portfolioId").val() != '' && $("#portfolioId").val() != null) && ($("#ccy").val() != '' && $("#ccy").val() != null)
-                && ($("#finprodMarketId").val() != '' && $("#finprodMarketId").val() != null)){
-            var data = {portfolioId:$('#portfolioId').val(),ccy:$('#ccy').val(),finprodId:$('#finprodMarketId').select2('data')[0].object.finprodId, secAcctId: $("#entrustTongdao").val()}
+                && ($("#finprodMarketId").val() != '' && $("#finprodMarketId").val() != null)
+                && ($("#secAcctId").val() != '' && $("#secAcctId").val() != null)){
+            var secAcctId = $("#secAcctId").val();
+                if (!secAcctId) {
+                    secAcctId = $("#entrustTongdao").val();
+            }
+            var data = {portfolioId:$('#portfolioId').val(),ccy:$('#ccy').val(),finprodId:$('#finprodMarketId').select2('data')[0].object.finprodId, secAcctId: secAcctId}
             Joyin.ajaxJson(basePath + 'invest/entrust/etrfund/EtrFund002/getAssetAvailablePosition',data,
                     function(result) {
                 $('#assetAvailablePosition').val(result).trigger('blur');
@@ -708,7 +713,7 @@
     
     $('#secAcctId').on('change',function(){
         if ($("#secAcctId").val()) {
-            $("#entrustTongdao").val('').prop("disabled", true);
+            $("#entrustTongdao").val('').prop("disabled", true).trigger("change");
         }else {
             $("#entrustTongdao").prop("disabled", false);
         }
