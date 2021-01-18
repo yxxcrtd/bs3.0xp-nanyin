@@ -99,7 +99,7 @@ var QueryFunc=function(){
         layui.form.render();
     }
     /**
-     * 中债报送show/hide
+     * 主画面嵌子页面的联动
      */
     var changeReport = function(){
         var repAssetType = $('#assetType2').val();
@@ -110,6 +110,11 @@ var QueryFunc=function(){
             //拆放同业/买入返售（资产）||同业拆入/卖出回购（负债）
             if(repAssetType=='1108'||repAssetType=='1902'){
                 $("#svrBussRepPlacementInfoDto_targetType1").val('01').trigger("change");
+            }else if(repAssetType=='1107'||repAssetType=='1901'){
+                $("#svrBussRepPlacementInfoDto_targetType1").val('').trigger("change");
+                $("#svrBussRepPlacementInfoDto_targetType1").attr("disabled",true);
+                // getElementById('repMaxRate').prop('required', false);
+                // getElementById('repMinRate').prop('required', false).trigger('change');
             }
         }else if(obj["03"].indexOf(repAssetType)>=0){
             //债券类资产/理财直接融资工具/同业存单
