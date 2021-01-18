@@ -56,6 +56,7 @@
     <select id="selectDeal" resultMap="trdFundInvestTradeResultMap">
         SELECT
             tpd.*,
+            tpd.portfolio_id orderPortfolioId,
             fp.FINPROD_MARKET_ID,
             fp.FINPROD_ABBR,
             fpt.TYPE_6,
