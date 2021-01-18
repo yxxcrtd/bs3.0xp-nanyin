@@ -74,6 +74,11 @@ public class ChbAssetInfoErrodata extends BaseEntity {
     private String deptCode;
 
     /**
+     * 资产名称
+     */
+    private String assetName;
+
+    /**
      * 取得 uuid主键
      * @return uuid主键
      */
@@ -295,5 +300,21 @@ public class ChbAssetInfoErrodata extends BaseEntity {
      */
     public void setDeptCode(String deptCode) {
         this.deptCode = deptCode == null ? null : deptCode.trim();
+    }
+
+    /**
+     * 取得 资产名称
+     * @return 资产名称
+     */
+    public String getAssetName() {
+        return assetName;
+    }
+
+    /**
+     * 设置 资产名称
+     * @param assetName 资产名称
+     */
+    public void setAssetName(String assetName) {
+        this.assetName = assetName == null ? null : assetName.trim();
     }
 }

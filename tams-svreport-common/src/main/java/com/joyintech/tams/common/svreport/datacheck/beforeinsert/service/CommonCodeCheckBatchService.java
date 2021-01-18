@@ -1585,6 +1585,8 @@ public class CommonCodeCheckBatchService {
         chbAssetInfoErrodata.setDatauuid(IDGenerator.generate(36));
         // 行内资产负债编码
         chbAssetInfoErrodata.setAssetCode(map.get("ASSET_CODE"));
+        // 资产名称
+        chbAssetInfoErrodata.setAssetName(map.get("ASSET_NAME"));
         // 资产类型
         chbAssetInfoErrodata.setAssetType(map.get("ASSET_TYPE"));
         // 资产/负债二级类别
