@@ -69,9 +69,8 @@ public class SvrBussRepAssetCreditNonstdInfoController extends BaseController{
               //调用service
             bussAssetInfoService.setModle(uuid, dataStatus, model);
         }
-
         //3、返回 子组件对应的页面
-        return "report/chb/assetinfodetail/asset/project/SvrBussRepAssetCreditNonstInfo";
+        return "report/chb/assetinfodetail/asset/project/SvrBussRepAssetCreditNonstdInfo";
     }
 
 }

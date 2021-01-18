@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
  * @since 1.0
  */
 @Controller
-@RequestMapping("/chb/assetinfodetail/asset/project/SvrBussRepFundInfo")
+@RequestMapping("/chb/assetinfodetail/asset/fund/SvrBussRepFundInfo")
 @SubPageId("SvrBussRepFundInfo")
 public class SvrBussRepFundInfoController extends BaseController{
 
@@ -61,7 +61,7 @@ public class SvrBussRepFundInfoController extends BaseController{
         }
 
         //3、返回 子组件对应的页面
-        return "report/chb/assetinfodetail/asset/project/SvrBussRepFundInfo";
+        return "report/chb/assetinfodetail/asset/fund/SvrBussRepFundInfo";
     }
 
 }
