@@ -16,7 +16,7 @@ SELECT
 	else decode(''TRADE_STATUS'',''01'',-1*trade_amt,trade_amt)
 	end O_MARKET_VALUE
 FROM WFL_TRD_PRODUCT_DEAL  tpd inner join WFL_TRD_PRODUCT_DEAL_ADD  tpda on tpd.trade_id= tpda.trade_id
-where  tpd.finprod_id like ''F07_%'' and tpda.PORTFOLIO_ID=${portfolioCode} and tpd.trade_date = date''${valDate}''';
+where  tpd.finprod_id like ''F07_%'' and tpda.PORTFOLIO_ID=${portfolioCode} and tpd.trade_date = date''${valDate}'')';
 begin
 	update rsk_isup_indicator_para_dtl set content = sql03 where para_code = 'YGDQXYHCKGZ' and para_granularity='04';
 end;
