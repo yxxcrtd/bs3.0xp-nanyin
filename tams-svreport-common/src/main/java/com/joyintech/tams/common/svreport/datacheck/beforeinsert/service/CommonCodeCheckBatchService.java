@@ -141,11 +141,12 @@ public class CommonCodeCheckBatchService {
 		}
 
 		//错误信息入库
-		if(!erroList.isEmpty() && !StringUtil.equals(CacheUtil.getSysParam("INSERT_ERRDATA_MODE"), "02")){
+		if(!erroList.isEmpty() && !StringUtil.equals(tableInfo.getTableName(), ChbCheckTableInfo.资产要素登记表INFO.getTableName())){
 			insertErroData(erroList);
 		}
 		// 资产要素错误信息入库
         if(!chbAssetInfoErrorList.isEmpty() && StringUtil.equals(CacheUtil.getSysParam("INSERT_ERRDATA_MODE"), "02")){
+            deleteAssetInfoErrorDataByAssetCode(chbAssetInfoErrorList);
             insertChbAssetInfoErroData(chbAssetInfoErrorList);
         }
 	}
@@ -1485,7 +1486,7 @@ public class CommonCodeCheckBatchService {
      * 批量插入资产要素错误信息表
      * @param erroList 错误信息表
      */
-    public void insertChbAssetInfoErroData(List<ChbAssetInfoErrodataWithBLOBs> erroList) {
+    private void insertChbAssetInfoErroData(List<ChbAssetInfoErrodataWithBLOBs> erroList) {
         SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
         try {
             int count = 0;
@@ -1513,6 +1514,42 @@ public class CommonCodeCheckBatchService {
             session.close();
         }
         logger.debug("资产要素登记错误信息数据插入结束--------------" + new Date());
+    }
+
+    /**
+     * 批量插入资产要素错误信息表
+     * @param erroList 错误信息表
+     */
+    private void deleteAssetInfoErrorDataByAssetCode(List<ChbAssetInfoErrodataWithBLOBs> erroList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            int count = 0;
+            logger.debug("资产要素登记错误信息数据删除开始--------------" + new Date());
+            CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
+            for(ChbAssetInfoErrodataWithBLOBs single: erroList){
+                if (StringUtil.isNotEmpty(single.getAssetCode())){
+                    batchMapper.deleteAssetInfoErrorDataByAssetCode(single.getAssetCode());
+                    count ++;
+                }
+                // 每20次提交
+                if (count % 20 == 0) {
+                    session.commit();
+                    // 清理缓存，防止溢出
+                    session.clearCache();
+                }
+            }
+            session.commit();
+            // 清理缓存，防止溢出
+            session.clearCache();
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+        logger.debug("资产要素登记错误信息数据删除结束--------------" + new Date());
     }
 
     /**

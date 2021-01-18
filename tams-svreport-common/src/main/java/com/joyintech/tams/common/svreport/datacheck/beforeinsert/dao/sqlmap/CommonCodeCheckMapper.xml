@@ -207,4 +207,8 @@
 		where EMPLOYEE_TYPE||'|'||IDENTIFY_NUMBER = #{key}
 		and SEND_STATUS IN ('02','03')
 	</select>
+
+    <delete id="deleteAssetInfoErrorDataByAssetCode">
+        delete from CHB_ASSET_INFO_ERRODATA where ASSET_CODE = #{assetCode}
+    </delete>
 </mapper>
