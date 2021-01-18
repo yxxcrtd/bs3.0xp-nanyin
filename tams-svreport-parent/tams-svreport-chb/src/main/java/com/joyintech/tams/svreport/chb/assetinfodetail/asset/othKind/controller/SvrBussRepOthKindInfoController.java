@@ -67,6 +67,6 @@ public class SvrBussRepOthKindInfoController extends BaseController {
         }
 
         //3、返回 子组件对应的页面
-        return "report/chb/assetinfodetail/asset/othKind/SvrBussRepothKindInfo";
+        return "report/chb/assetinfodetail/asset/othKind/SvrBussRepOthKindInfo";
     }
 }
