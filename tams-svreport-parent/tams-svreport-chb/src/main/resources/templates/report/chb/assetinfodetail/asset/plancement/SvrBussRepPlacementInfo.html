@@ -38,10 +38,10 @@
 				</div>
 			</div>
 			<div class="layui-form-item">
-				<div class="form-inline-wrap" th:id="|${entityName}_basis|">
+				<div class="form-inline-wrap">
 					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepPlacementInfo.basis}" >计息基础</label>
 					<div class="layui-input-inline input-inline">
-						<select th:id="|${entityName}_basis|" th:name="|${entityName}.basis|" th:initValue="${entity?.basis?:BASIS_INIT}"
+						<select th:id="|${entityName}_basis|" th:name="|${entityName}.basis|" th:initValue="${entity?.basis}"
 								class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required data-th-data-result="${SVR_BASIS}">
 						</select>
 					</div>
