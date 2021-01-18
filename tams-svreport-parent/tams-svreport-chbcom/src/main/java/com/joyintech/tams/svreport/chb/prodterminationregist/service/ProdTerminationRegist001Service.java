@@ -148,12 +148,6 @@ public class ProdTerminationRegist001Service extends SvrCommonExportService<Prod
 					dto.setProdRegCode(dto.getOrgCode());
 				}
 				dto.setProdRegCode(dto.getRegCode());
-				if(dto.getCusYearYield() != null){
-					dto.setCusYearYield(dto.getCusYearYield().multiply(new BigDecimal(100)).setScale(5, BigDecimal.ROUND_HALF_UP));
-				}
-				if(dto.getPrdYearYield() != null){
-					dto.setPrdYearYield(dto.getPrdYearYield().multiply(new BigDecimal(100)).setScale(5, BigDecimal.ROUND_HALF_UP));
-				}
 			}
 		}
 	}

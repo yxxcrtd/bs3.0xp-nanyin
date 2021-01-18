@@ -118,6 +118,10 @@ public class CommonCodeCheckBatchService {
             default:
                 break;
             }
+            // add by zhangliang 20210112 没有错误信息时删除key，防止后面错误判断
+            if (map.containsKey("ERRMSG") && StringUtil.isEmpty(map.get("ERRMSG"))){
+                map.remove("ERRMSG");
+            }
 			//如果代码错误校验有错误信息
 			ChbInterfErrodataWithBLOBs errodata = createChbInterfErrdata(StringUtil.isNotEmpty(fileName) ? fileName : tableInfo.getTableName(),
                     tableInfo.getTableName(), map,tableInfo.getBussinessKey(), tableInfo.getCheckEuplicatedKeys());

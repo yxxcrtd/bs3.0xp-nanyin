@@ -311,7 +311,9 @@ public class SvrProdInfoFileImpService extends FileImpService {
 		info.setRaiseEnddate(DateUtil.parse(map.get("RAISE_ENDDATE")));// 募集结束日期
 		info.setTemplateName(map.get("TEMPLATE_NAME"));// 模板名称
 		info.setProdBrand(map.get("PROD_BRAND"));// 产品品牌
-		info.setProdStage(new BigDecimal(map.get("PROD_STAGE")));// 产品期次
+		if (StringUtil.isNotEmpty(map.get("PROD_STAGE"))) {
+			info.setProdStage(new BigDecimal(map.get("PROD_STAGE")));// 产品期次
+		}
 		info.setDesignerName(map.get("DESIGNER_NAME"));// 产品设计人姓名
 		info.setDesignerId(map.get("DESIGNER_ID"));// 产品设计人身份证号
 		info.setApproverName(map.get("APPROVER_NAME"));// 产品审批人姓名
@@ -357,10 +359,14 @@ public class SvrProdInfoFileImpService extends FileImpService {
 //		info.setHighYield(new BigDecimal(map.get("HIGH_YIELD")));
 //		info.setLowYield(new BigDecimal(map.get("LOW_YIELD")));
 		info.setSaleArea(map.get("SALE_AREA"));
-		info.setSaleAmtStr(new BigDecimal(map.get("SALE_AMT_STR")));
+		if (StringUtil.isNotEmpty(map.get("SALE_AMT_STR"))) {
+			info.setSaleAmtStr(new BigDecimal(map.get("SALE_AMT_STR")));
+		}
 		info.setCashPrinCcy(map.get("CASH_PRIN_CCY"));
 		info.setCashProfCcy(map.get("CASH_PROF_CCY"));
-		info.setRaiseAmtPlan(new BigDecimal(map.get("RAISE_AMT_PLAN")));
+		if (StringUtil.isNotEmpty(map.get("RAISE_AMT_PLAN"))) {
+			info.setRaiseAmtPlan(new BigDecimal(map.get("RAISE_AMT_PLAN")));
+		}
 		if (map.get("SALE_FEE_RATE") != null && !"".equals(map.get("SALE_FEE_RATE"))) {
 			info.setSaleFeeRate(new BigDecimal(map.get("SALE_FEE_RATE")));
 		}

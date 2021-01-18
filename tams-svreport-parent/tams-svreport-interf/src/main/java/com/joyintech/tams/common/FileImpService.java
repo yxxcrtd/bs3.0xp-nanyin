@@ -959,12 +959,7 @@ public abstract class FileImpService extends InterfService{
         	for( Map<String, String> map : src){
         		Map<String,String> cmap= new HashMap<String,String>();
         		for(String key :map.keySet()){
-                    // modify by zhangliang 20201230 平顶山上游通过适配器接入的数据业务字段如果为空存的是空格，需要特殊处理
                     cmap.put(key, map.get(key));
-                    // 半角空格和全角空格
-                    if (StringUtil.equals(map.get(key), " ") || StringUtil.equals(map.get(key), "　")){
-                        cmap.put(key, "");
-                    }
         		}
         		dest.add(cmap);
         	}

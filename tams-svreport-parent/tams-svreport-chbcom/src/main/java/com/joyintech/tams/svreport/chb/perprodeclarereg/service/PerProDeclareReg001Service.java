@@ -6,6 +6,7 @@ import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
@@ -682,5 +683,14 @@ public AjaxResult uploadFile(Map<String, Object> map) throws ZipException, IOExc
 			}
 		}
 		return resultList;
+	}
+	
+	/**
+	 *  查询行内标识码
+	 * @param map 入参
+	 * @return 行内标识码列表
+	 */
+	public List<SelectOptionDto> queryProdInsIdList(Map<String,Object> map){
+		return perProDeclareReg001Mapper.queryProdInsIdList(map);
 	}
 }

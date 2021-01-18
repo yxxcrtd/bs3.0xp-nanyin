@@ -73,7 +73,9 @@ public class ErrorMessage001Controller extends BaseController{
 			model.addAttribute("searchDataEnd", map.get("searchDataEnd"));
 			model.addAttribute("isFromMain", "01");
 		}
-	    super.setSelectOptionToModel(model,	DictCode.维护数据状态);
+		// modify by dubaojun 2020-11-03 错误数据页面接口类型取值修改为数据字典 start
+		super.setSelectOptionToModel(model,	DictCode.维护数据状态, DictCode.校验接口类型);
+		// modify by dubaojun 2020-11-03 错误数据页面接口类型取值修改为数据字典 end
 		return super.init(model);
 	}
 	
@@ -118,7 +120,7 @@ public class ErrorMessage001Controller extends BaseController{
        File outFile = errorMessageService.makeFile(
            "/com/joyintech/tams/svreport/errormessage/conf/export_conf.xml", dtoList);
        return ExportUtil.export(
-               this.getMessage(this.getPageId()) + GlobalConstant.OPEN_PARENTHESIS
+               "数据接入检查" + GlobalConstant.OPEN_PARENTHESIS
                                     + DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS
                                     + GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
                outFile, true);

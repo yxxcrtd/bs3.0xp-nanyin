@@ -105,7 +105,7 @@ $(function() {
 				{ title: "存款金额",width:100,sortField:'amt', field: 'amt', digit:2, type: 'money'},
 				{ title: "起息日",width:100,sortField:'vdate', field: 'vdate', type: 'date'},
 				{ title: "到期日",width:100,sortField:'mdate', field: 'mdate', type: 'date'},
-				{ title: "年利率(%) ",width:100,sortField:'assetYield', field: 'assetYield', type: 'number', digit:5},
+				{ title: "年利率(%)",width:100,sortField:'assetYield', field: 'assetYield', type: 'number', digit:5},
 				{ title: "计息基础",width:100,sortField:'basis', field: 'basis'},
 				{ title: "存款类型",width:100,sortField:'depoType', field: 'depoType'},
 //				{ title: "是否为结构性存款",width:150,sortField:'isStruct', field: 'isStruct'},
@@ -144,7 +144,7 @@ $(function() {
 	            { title: "到期日",width:100,sortField:'mdate', field: 'mdate', type: 'date'},
 	            { title: "对手方",width:100,sortField:'rivalParty', field: 'rivalParty'},
 	            { title: "对手方类型",width:150,sortField:'rivalPartyType', field: 'rivalPartyType'},
-	            { title: "年利率(%) ",width:100,sortField:'assetYield', field: 'assetYield', type: 'number', digit:5},
+	            { title: "年利率(%)",width:100,sortField:'assetYield', field: 'assetYield', type: 'number', digit:5},
 	            { title: "计息基础",width:100,sortField:'basis', field: 'basis'},
 	            { title: "回购标的类别",width:150,sortField:'targetType1', field: 'targetType1'},
 	            { title: "回购标的金额",width:150,sortField:'targetAmt', field: 'targetAmt', type: 'money', digit:2},
@@ -222,15 +222,17 @@ $(function() {
                 { title: "名称",width:100,sortField:'assetName', field: 'assetName'},
 //                { title: "存款金额",width:100,sortField:'', field: 'amt', type: 'money' ,digit:2},
                 { title: "金额",width:100,sortField:'amt', field: 'amt', type: 'money' ,digit:2},
-                { title: "份额面值",width:100,sortField:'prinBaseAmt', field: 'prinBaseAmt', type: 'money' ,digit:4},
+                { title: "份额面值",width:100,sortField:'prinBaseamt', field: 'prinBaseamt', type: 'money' ,digit:4},
                 { title: "收/受益权类型",width:150,sortField:'profitType', field: 'profitType'},
                 { title: "是否属于买入返售",width:150,sortField:'isResale', field: 'isResale'},
                 { title: "起息日",width:100,sortField:'vdate', field: 'vdate', type: 'date'},
                 { title: "到期日",width:100,sortField:'mdate', field: 'mdate', type: 'date'},
-                { title: "法定到期日",width:100,sortField:'fmDate', field: 'fmDate', type: 'date'},
-                { title: "项目期限(天）",width:150,sortField:'termDate', field: 'termDate'},
+                { title: "法定到期日",width:100,sortField:'fmdate', field: 'fmdate', type: 'date'},
+                //delete by wm 删除中债不报送字段 start 20201031 
+//                { title: "项目期限(天）",width:150,sortField:'termDate', field: 'termDate',digit:0},
+                //delete by wm 删除中债不报送字段 end 20201031 
                 { title: "是否有预期收益率",width:150,sortField:'rateFlag', field: 'rateFlag'},
-                { title: "项目收益率（利率）(%) ",width:150,sortField:'assetYield', field: 'assetYield',type: 'number' ,digit:5},
+                { title: "项目收益率（利率）(%)",width:150,sortField:'assetYield', field: 'assetYield',type: 'number' ,digit:5},
                 { title: "计息类型",width:150,sortField:'couponSpecies', field: 'couponSpecies'},
                 { title: "规则付息标识",width:150,sortField:'interestRuleFlag', field: 'interestRuleFlag'},
                 { title: "付息频率（个月/次）",width:150,sortField:'intpayCycle', field: 'intpayCycle'},
@@ -239,13 +241,13 @@ $(function() {
 				{ title: "计息基础",width:100,sortField:'basis', field: 'basis'},
                 { title: "基准利率种类",width:150,sortField:'basisType', field: 'basisType'},
                 { title: "是否有浮动因子",width:150,sortField:'floatFactorFlag', field: 'floatFactorFlag'},
-                { title: "浮动因子(%) ",width:150,sortField:'floatFactor', field: 'floatFactor',type: 'number' ,digit:5},
+                { title: "浮动因子(%)",width:150,sortField:'floatFactor', field: 'floatFactor',type: 'number' ,digit:5},
                 { title: "利差（BP）",width:150,sortField:'spreadRate', field: 'spreadRate',type: 'number' ,digit:5},
                 { title: "结构档次",width:150,sortField:'structGrade', field: 'structGrade'},
                 { title: "还本方式",width:150,sortField:'repaymentType', field: 'repaymentType'},
                 { title: "分期还本条款标识",width:150,sortField:'periodRepaymentFlag', field: 'periodRepaymentFlag'},
                 { title: "基础资产类型",width:150,sortField:'basicAssetType', field: 'basicAssetType'},
-                { title: "超额收益分配比例%",width:150,sortField:'excessProfitRate', field: 'excessProfitRate',type: 'number' ,digit:5},
+                { title: "超额收益分配比例(%)",width:150,sortField:'excessProfitRate', field: 'excessProfitRate',type: 'number' ,digit:5},
                 { title: "融资人",width:150,sortField:'financie', field: 'financie'},
                 { title: "融资人内部信用评级",width:150,sortField:'fcrGradeIn', field: 'fcrGradeIn'},
                 { title: "外部评级机构名称及对融资人评级结果",width:150,sortField:'fcrGradeOut', field: 'fcrGradeOut'},
@@ -285,7 +287,7 @@ $(function() {
                 { title: "首次重定价日期",width:150,sortField:'firstReprceDate', field: 'firstReprceDate',type: 'date'},
                 { title: "重定价周期",width:150,sortField:'reprceCycle', field: 'reprceCycle',type: 'number'},
                 { title: "部分赎回标识",width:150,sortField:'partRedemFlag', field: 'partRedemFlag'},
-                { title: "部分赎回比例%",width:200,sortField:'partRedemRate', field: 'partRedemRate',type: 'number' ,digit:5},
+                { title: "部分赎回比例(%)",width:200,sortField:'partRedemRate', field: 'partRedemRate',type: 'number' ,digit:5},
                 
                 { title: "选择权",width:150,sortField:'chose', field: 'chose'},
                 { title: "行权条件说明",width:150,sortField:'conditionCmm', field: 'conditionCmm'},
@@ -294,7 +296,7 @@ $(function() {
                 { title: "增信机构名称",width:150,sortField:'creditOrgName', field: 'creditOrgName'},
                 
                 { title: "融资人所属地区",width:150,sortField:'finArea', field: 'finArea'},
-                { title: "融资总费率(%) ",width:150,sortField:'totalFeeRate', field: 'totalFeeRate',type: 'number' ,digit:5},
+                { title: "融资总费率(%)",width:150,sortField:'totalFeeRate', field: 'totalFeeRate',type: 'number' ,digit:5},
                 { title: "融资人组织机构（社会信用）代码",width:150,sortField:'finOrgCode', field: 'finOrgCode'},
 			    { title: "备注",width:150,sortField:'remark', field: 'remark'},
 				]
@@ -335,9 +337,11 @@ $(function() {
                 { title: "最短剩余期限（天）",width:150,sortField:'minRemainTerm', field: 'minRemainTerm'},
                 { title: "起息日",width:100,sortField:'vdate', field: 'vdate', type: 'date'},
                 { title: "到期日",width:100,sortField:'mdate', field: 'mdate', type: 'date'},
-                { title: "贴现利率(%) ",width:150,sortField:'assetYield', field: 'assetYield', type: 'number',digit:5},
-                { title: "行业一级分类",width:150,sortField:'industryShares', field: 'industryShares'},
-                { title: "行业二级分类",width:150,sortField:'industryShares2', field: 'industryShares2'},
+                { title: "贴现利率(%)",width:150,sortField:'assetYield', field: 'assetYield', type: 'number',digit:5},
+                //modify by wm 行业分类展示列修改  对应bug号 ZZOTZL-352 start
+                //{ title: "行业一级分类",width:150,sortField:'industryShares', field: 'industryShares'},
+                { title: "行业分类",width:150,sortField:'industryShares2', field: 'industryShares2'},
+                //modify by wm 行业分类展示列修改  对应bug号 ZZOTZL-352 end
 			    { title: "备注",width:150,sortField:'remark', field: 'remark'},
 				]
 	});
@@ -370,8 +374,10 @@ $(function() {
                 { title: "股票代码",width:100,sortField:'assetId', field: 'assetId'},
                 { title: "股票/企业名称",width:150,sortField:'assetName', field: 'assetName'},
                 { title: "股票类型",width:100,sortField:'sharesType', field: 'sharesType'},
-                { title: "行业一级分类",width:150,sortField:'industryShares', field: 'industryShares'},
-                { title: "行业二级分类",width:150,sortField:'industryShares2', field: 'industryShares2'},
+                //modify by wm 行业分类展示列修改  对应bug号 ZZOTZL-352 start
+                //{ title: "行业一级分类",width:150,sortField:'industryShares', field: 'industryShares'},
+                { title: "行业分类",width:150,sortField:'industryShares2', field: 'industryShares2'},
+                //modify by wm 行业分类展示列修改  对应bug号 ZZOTZL-352 end
                 { title: "投资阶段",width:150,sortField:'investStage', field: 'investStage'},
                 
                 { title: "股权退出安排",width:150,sortField:'equityQuit', field: 'equityQuit',type: 'date'},
@@ -458,7 +464,7 @@ $(function() {
 	            { title: "期限(月）",width:100,sortField:'termMonth', field: 'termMonth'},
 				{ title: "发行机构主体信用评级",width:100,sortField:'partyGrade', field: 'partyGrade'},
 				{ title: "债券信用评级",width:100,sortField:'secCreditGradeType', field: 'secCreditGradeType'},
-                { title: "票面利率(%) ",width:150,sortField:'assetYield', field: 'assetYield',type: 'number',digit:5},
+                { title: "票面利率(%)",width:150,sortField:'assetYield', field: 'assetYield',type: 'number',digit:5},
                 { title: "付息频率（个月/次）",width:150,sortField:'intpayCycle', field: 'intpayCycle'},
                 { title: "担保情况说明",width:150,sortField:'guaTypeRemark', field: 'guaTypeRemark'},
                 { title: "是否含权等特殊条款情况说明",width:150,sortField:'specialCmt', field: 'specialCmt'},
@@ -495,7 +501,7 @@ $(function() {
                 { title: "起息日",width:100,sortField:'vdate', field: 'vdate', type: 'date'},
                 { title: "到期日",width:100,sortField:'mdate', field: 'mdate', type: 'date'},
 	            { title: "对手方",width:100,sortField:'rivalParty', field: 'rivalParty'},
-				{ title: "年利率(%) ",width:100,sortField:'assetYield', field: 'assetYield',type: 'number',digit:2},
+				{ title: "年利率(%)",width:100,sortField:'assetYield', field: 'assetYield',type: 'number',digit:5},
 				{ title: "计息基础",width:100,sortField:'basis', field: 'basis'},
 			    { title: "备注",width:150,sortField:'remark', field: 'remark'},
 				]
@@ -530,8 +536,10 @@ $(function() {
 			    { title: "股票/基金代码",width:100,sortField:'assetId', field: 'assetId'},
 			    { title: "股票/基金名称",width:100,sortField:'assetName', field: 'assetName'},
 				{ title: "发行机构",width:150 , field: 'issuePartyName',sortField:'issuePartyName'},
-                { title: "行业一级分类",width:150,sortField:'industryShares', field: 'industryShares'},
-                { title: "行业二级分类",width:150,sortField:'industryShares2', field: 'industryShares2'},
+				//modify by wm 行业分类展示列修改  对应bug号 ZZOTZL-352 start
+                //{ title: "行业一级分类",width:150,sortField:'industryShares', field: 'industryShares'},
+                { title: "行业分类",width:150,sortField:'industryShares2', field: 'industryShares2'},
+                //modify by wm 行业分类展示列修改  对应bug号 ZZOTZL-352 end
 			    { title: "备注",width:150,sortField:'remark', field: 'remark'},
 				]
 	});
@@ -565,16 +573,16 @@ $(function() {
                 { title: "合约名称",width:100,sortField:'contractName', field: 'contractName'},
                 { title: "起息日",width:100,sortField:'vdate', field: 'vdate', type: 'date'},
                 { title: "到期日",width:100,sortField:'mdate', field: 'mdate', type: 'date'},
-                { title: "票面利率(%) ",width:150,sortField:'assetYield', field: 'assetYield',type: 'number',digit:5},
+                { title: "票面利率(%)",width:150,sortField:'assetYield', field: 'assetYield',type: 'number',digit:5},
                 { title: "付息频率（个月/次）",width:150,sortField:'intpayCycle', field: 'intpayCycle'},
-			    { title: "固定收益部分所占比例(%) ",width:100,sortField:'incomeRatio', field: 'incomeRatio',type: 'number',digit:5},
-			    { title: "衍生金融工具所占比例(%) ",width:100,sortField:'derInstrRatio', field: 'derInstrRatio',type: 'number',digit:5},
+			    { title: "固定收益部分所占比例(%)",width:100,sortField:'incomeRatio', field: 'incomeRatio',type: 'number',digit:5},
+			    { title: "衍生金融工具所占比例(%)",width:100,sortField:'derInstrRatio', field: 'derInstrRatio',type: 'number',digit:5},
 				{ title: "衍生金融工具具体投资方式",width:150 , field: 'derInstrInvType',sortField:'derInstrInvType'},
                 { title: "衍生金融工具挂钩标的资产",width:150,sortField:'derInstrTarget', field: 'derInstrTarget'},
                 { title: "利息结算方式",width:150,sortField:'acctMode', field: 'acctMode'},
                 { title: "含权情况说明",width:150,sortField:'specialCmt1', field: 'specialCmt1'},
-                { title: "结构化票据最高收益率(%) ",width:150,sortField:'maxYield', field: 'maxYield',type: 'number',digit:5},
-                { title: "结构化票据最低收益率(%) ",width:150,sortField:'minYield', field: 'minYield',type: 'number',digit:5},
+                { title: "结构化票据最高收益率(%)",width:150,sortField:'maxYield', field: 'maxYield',type: 'number',digit:5},
+                { title: "结构化票据最低收益率(%)",width:150,sortField:'minYield', field: 'minYield',type: 'number',digit:5},
                 { title: "挂钩标的资产基准价格",width:150,sortField:'basicPrice', field: 'basicPrice', type: 'money'},
                 { title: "挂钩标的资产登记日价格",width:150,sortField:'regDatePrice', field: 'regDatePrice', type: 'money'},
                 { title: "交易费",width:150,sortField:'tradeFee', field: 'tradeFee', type: 'money'},
@@ -623,16 +631,16 @@ $(function() {
                 { title: "资管计划终止日期",width:150,sortField:'planEdate', field: 'planEdate', type: 'date'},
                 { title: "资管计划属性",width:150,sortField:'proProperty', field: 'proProperty'},
                 { title: "是否有预期收益率",width:150,sortField:'rateFlag', field: 'rateFlag'},
-                { title: "预期最高收益率(%) ",width:150,sortField:'maxRate', field: 'maxRate',type: 'number',digit:5},
-                { title: "预期最低收益率(%) ",width:150,sortField:'minRate', field: 'minRate'},
+                { title: "预期最高收益率(%)",width:150,sortField:'maxRate', field: 'maxRate',type: 'number',digit:5},
+                { title: "预期最低收益率(%)",width:150,sortField:'minRate', field: 'minRate'},
                 { title: "购买结构",width:150,sortField:'buyStruct', field: 'buyStruct'},
                 { title: "管理方式",width:150,sortField:'manageType', field: 'manageType'},
                 /*{ title: "是否掌控计划底层资产详情",width:150,sortField:'isCtrlBottom', field: 'isCtrlBottom'},*/
-                { title: "管理费率(%) ",width:150,sortField:'mgrFeeRate', field: 'mgrFeeRate',type: 'number',digit:5},
-                { title: "托管费率(%) ",width:150,sortField:'truFeeRate', field: 'truFeeRate',type: 'number',digit:5},
-                { title: "交易相关合计费率(%) ",width:150,sortField:'tradeFeeRate', field: 'tradeFeeRate',type: 'number',digit:5},
-                { title: "中介服务机构合计费率(%) ",width:150,sortField:'agencyFeeRate', field: 'agencyFeeRate',type: 'number',digit:5},
-                { title: "其他合计费率(%) ",width:150,sortField:'otherFeeRate', field: 'otherFeeRate',type: 'number',digit:5},
+                { title: "管理费率(%)",width:150,sortField:'mgrFeeRate', field: 'mgrFeeRate',type: 'number',digit:5},
+                { title: "托管费率(%)",width:150,sortField:'truFeeRate', field: 'truFeeRate',type: 'number',digit:5},
+                { title: "交易相关合计费率(%)",width:150,sortField:'tradeFeeRate', field: 'tradeFeeRate',type: 'number',digit:5},
+                { title: "中介服务机构合计费率(%)",width:150,sortField:'agencyFeeRate', field: 'agencyFeeRate',type: 'number',digit:5},
+                { title: "其他合计费率(%)",width:150,sortField:'otherFeeRate', field: 'otherFeeRate',type: 'number',digit:5},
 			    { title: "备注",width:150,sortField:'remark', field: 'remark'},
 				]
 	});
@@ -664,9 +672,9 @@ $(function() {
 				{ title: "币种",width:100 , field: 'ccy',sortField:'ccy'},
                 { title: "所属国家或地区",width:150,sortField:'countryArea', field: 'countryArea'},
 			    { title: "名称",width:100,sortField:'assetName', field: 'assetName'},
-                { title: "期限(天）",width:150,sortField:'termDate', field: 'termDate'},
+                { title: "期限(天）",width:150,sortField:'termDate', field: 'termDate',digit:0},
                 { title: "资产价值",width:150,sortField:'assetValue', field: 'assetValue', type: 'money'},
-                { title: "资产收益率（利率）(%) ",width:150,sortField:'assetYield', field: 'assetYield',type: 'number',digit:5},
+                { title: "资产收益率（利率）(%)",width:150,sortField:'assetYield', field: 'assetYield',type: 'number',digit:5},
 			    { title: "备注",width:150,sortField:'remark', field: 'remark'},
 				]
 	});
@@ -701,7 +709,7 @@ $(function() {
 				{ title: "起息日",width:100,sortField:'vdate', field: 'vdate', type: 'date'},
 				{ title: "到期日",width:100,sortField:'mdate', field: 'mdate', type: 'date'},
                 { title: "资产价值",width:150,sortField:'assetValue', field: 'assetValue', type: 'money'},
-                { title: "资产收益率（利率）(%) ",width:150,sortField:'assetYield', field: 'assetYield',type: 'number',digit: 5},
+                { title: "资产收益率（利率）(%)",width:150,sortField:'assetYield', field: 'assetYield',type: 'number',digit: 5},
 			    { title: "备注",width:150,sortField:'remark', field: 'remark'},
 				]
 	});
@@ -735,9 +743,10 @@ $(function() {
 			    { title: "基金名称",width:100,sortField:'assetName', field: 'assetName'},
 			    
 			    { title: "是否由金融资产投资公司发行",width:200,sortField:'financialComissue', field: 'financialComissue'},
-			    
-                { title: "行业一级分类",width:150,sortField:'industryShares', field: 'industryShares'},
-                { title: "行业二级分类",width:150,sortField:'industryShares2', field: 'industryShares2'},
+			    //modify by wm 行业分类展示列修改  对应bug号 ZZOTZL-352 start
+                //{ title: "行业一级分类",width:150,sortField:'industryShares', field: 'industryShares'},
+                { title: "行业分类",width:150,sortField:'industryShares2', field: 'industryShares2'},
+                //modify by wm 行业分类展示列修改  对应bug号 ZZOTZL-352 end
 			    { title: "登记备案机构",width:200,sortField:'registOrg1', field: 'registOrg1'},
                 { title: "是否属于政府投资基金",width:150,sortField:'isGovernFund', field: 'isGovernFund'},
 			    { title: "政府投资基金投向",width:100,sortField:'governInvestFund', field: 'governInvestFund'},
@@ -791,13 +800,13 @@ $(function() {
                 { title: "投资运作终止日期",width:150,sortField:'planEdate', field: 'planEdate', type: 'date'},
                 { title: "委外投资属性",width:150,sortField:'proProperty', field: 'proProperty1'},
                 { title: "是否有预期收益率",width:150,sortField:'rateFlag', field: 'rateFlag'},
-                { title: "预期最高收益率(%) ",width:150,sortField:'maxRate', field: 'maxRate', type: 'number',digit :5},
-                { title: "预期最低收益率(%) ",width:150,sortField:'minRate', field: 'minRate', type: 'number',digit :5},
-                { title: "管理费率(%) ",width:150,sortField:'mgrFeeRate', field: 'mgrFeeRate', type: 'number',digit :5},
-                { title: "托管费率(%) ",width:150,sortField:'truFeeRate', field: 'truFeeRate', type: 'number',digit :5},
-                { title: "交易相关合计费率(%) ",width:150,sortField:'tradeFeeRate', field: 'tradeFeeRate', type: 'number',digit :5},
-                { title: "中介服务机构合计费率(%) ",width:150,sortField:'agencyFeeRate', field: 'agencyFeeRate', type: 'number',digit :5},
-                { title: "其他合计费率(%) ",width:150,sortField:'otherFeeRate', field: 'otherFeeRate', type: 'number',digit :5},
+                { title: "预期最高收益率(%)",width:150,sortField:'maxRate', field: 'maxRate', type: 'number',digit :5},
+                { title: "预期最低收益率(%)",width:150,sortField:'minRate', field: 'minRate', type: 'number',digit :5},
+                { title: "管理费率(%)",width:150,sortField:'mgrFeeRate', field: 'mgrFeeRate', type: 'number',digit :5},
+                { title: "托管费率(%)",width:150,sortField:'truFeeRate', field: 'truFeeRate', type: 'number',digit :5},
+                { title: "交易相关合计费率(%)",width:150,sortField:'tradeFeeRate', field: 'tradeFeeRate', type: 'number',digit :5},
+                { title: "中介服务机构合计费率(%)",width:150,sortField:'agencyFeeRate', field: 'agencyFeeRate', type: 'number',digit :5},
+                { title: "其他合计费率(%)",width:150,sortField:'otherFeeRate', field: 'otherFeeRate', type: 'number',digit :5},
 			    { title: "备注",width:150,sortField:'remark', field: 'remark'},
 				]
 	});
@@ -829,9 +838,9 @@ $(function() {
 				{ title: "币种",width:100 , field: 'ccy',sortField:'ccy'},
                 { title: "所属国家或地区",width:150,sortField:'countryArea', field: 'countryArea'},
 			    { title: "名称",width:100,sortField:'assetName', field: 'assetName'},
-                { title: "期限(天）",width:150,sortField:'termDate', field: 'termDate'},
+                { title: "期限(天）",width:150,sortField:'termDate', field: 'termDate',digit:0},
                 { title: "负债规模",width:150,sortField:'debtScale', field: 'debtScale'},
-                { title: "利率(%) ",width:150,sortField:'assetYield', field: 'assetYield', type: 'number',digit :5},
+                { title: "利率(%)",width:150,sortField:'assetYield', field: 'assetYield', type: 'number',digit :5},
 			    { title: "备注",width:150,sortField:'remark', field: 'remark'},
 				]
 	});
@@ -864,12 +873,12 @@ $(function() {
 			    { title: "名称",width:100,sortField:'assetName', field: 'assetName'},
                 { title: "行内资产类别",width:150,sortField:'inAssetType', field: 'inAssetType'},
                 { title: "行内资产类别说明",width:150,sortField:'inAssetTypeCmm', field: 'inAssetTypeCmm'},
-				{ title: "金额",width:100,sortField:'assetValue', field: 'assetValue', type: 'money'},
+				{ title: "金额",width:100,sortField:'amt', field: 'amt', type: 'money'},
 				{ title: "起息日",width:100,sortField:'vdate', field: 'vdate', type: 'date'},
 				{ title: "到期日",width:100,sortField:'mdate', field: 'mdate', type: 'date'},
                 { title: "所属国家或地区",width:150,sortField:'countryArea', field: 'countryArea'},
                 { title: "是否有预期收益率",width:150,sortField:'rateFlag', field: 'rateFlag'},
-                { title: "项目收益率（利率）(%) ",width:150,sortField:'assetYield', field: 'assetYield', type: 'number',digit :5},
+                { title: "项目收益率（利率）(%)",width:150,sortField:'assetYield', field: 'assetYield', type: 'number',digit :5},
                 { title: "付息频率（个月/次）",width:150,sortField:'intpayCycle', field: 'intpayCycle'},
                 { title: "融资人",width:150,sortField:'financie', field: 'financie'},
                 { title: "融资人组织机构（社会信用）代码",width:150,sortField:'finOrgCode', field: 'finOrgCode'},
@@ -886,6 +895,15 @@ $(function() {
                 { title: "重点监控行业和领域类别",width:150,sortField:'monitType', field: 'monitType'},
                 { title: "重点监控行业和领域类别说明",width:150,sortField:'monTypeComm', field: 'monTypeComm'},
                 { title: "对应资产外部评级",width:150,sortField:'outGrade', field: 'outGrade'},
+                
+                { title: "担保方式",width:150,sortField:'guaType', field: 'guaType'},
+                { title: "担保情况说明",width:150,sortField:'guaTypeRemark', field: 'guaTypeRemark'},
+                { title: "抵质押物类型",width:150,sortField:'pledgeType', field: 'pledgeType'},
+                { title: "抵质押物价值（元）",width:150,sortField:'pledgeValue', field: 'pledgeValue', type: 'number',digit :2},
+                { title: "担保性质",width:150,sortField:'natureGuarantee', field: 'natureGuarantee'},
+                { title: "担保人与融资人关系",width:150,sortField:'relationFinan', field: 'relationFinan'},
+                { title: "是否为债转股",width:150,sortField:'deptEquity', field: 'deptEquity'},
+                
 			    { title: "备注",width:150,sortField:'remark', field: 'remark'},
 				]
 	});

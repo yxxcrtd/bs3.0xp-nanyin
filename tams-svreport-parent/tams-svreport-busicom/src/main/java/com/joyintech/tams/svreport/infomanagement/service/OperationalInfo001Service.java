@@ -35,6 +35,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.base.intf.DataDict;
+import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.dao.TamsBaseMapper;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
@@ -471,7 +473,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 				String resultDictCode = resultMap.get(str);
 				if (StringUtil.isNotEmpty(resultDictCode) && null != newMap.get(str) ) {
 					String dateObj = newMap.get(str).toString();
-					String value = queryValueByDictAndKey(resultDictCode, dateObj);
+					String value = queryValueByDictAndKeyCache(resultDictCode, dateObj);
 					newMap.put(str, value);
 				}
 				//Bigdecimal 转换为string 解决当数据过长被前台截取问题修复 start 20201026
@@ -929,7 +931,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 						String resultDictCode = resultMap.get(str);
 						if (StringUtil.isNotEmpty(resultDictCode) && null != newMap.get(str) ) {
 							String dateObj = newMap.get(str).toString();
-							String value = queryValueByDictAndKey(resultDictCode, dateObj);
+							String value = queryValueByDictAndKeyCache(resultDictCode, dateObj);
 							newMap.put(str, value);
 						}
 					}
@@ -1057,7 +1059,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 					String resultDictCode = resultMap.get(str);
 					if (StringUtil.isNotEmpty(resultDictCode) && null != map.get(str) ) {
 						String dateObj = map.get(str).toString();
-						String value = queryValueByDictAndKey(resultDictCode, dateObj);
+						String value = queryValueByDictAndKeyCache(resultDictCode, dateObj);
 						map.put(str, value);
 					}
 					/**添加日期格式的字段处理  ZZOTZL-114  add  by  dongxiangyang  start 20201021*/
@@ -1274,7 +1276,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
     						String resultDictCode = resultMap.get(str);
     						if (StringUtil.isNotEmpty(resultDictCode) && null != newMap.get(str) ) {
     							String dateObj = newMap.get(str).toString();
-    							String value = queryValueByDictAndKey(resultDictCode, dateObj);
+    							String value = queryValueByDictAndKeyCache(resultDictCode, dateObj);
     							newMap.put(str, value);
     						}
     					}
@@ -1285,7 +1287,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
         					String resultDictCode = resultMap.get(str);
         					if (StringUtil.isNotEmpty(resultDictCode) && StringUtil.isNotEmpty(map.get(str)) ) {
         						String dateObj = map.get(str).toString();
-        						String value = queryValueByDictAndKey(resultDictCode, dateObj);
+        						String value = queryValueByDictAndKeyCache(resultDictCode, dateObj);
         						map.put(str, value);
         					}
         				}
@@ -1303,7 +1305,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
     					String resultDictCode = resultMap.get(str);
     					if (StringUtil.isNotEmpty(resultDictCode) && StringUtil.isNotEmpty(map.get(str)) ) {
     						String dateObj = map.get(str).toString();
-    						String value = queryValueByDictAndKey(resultDictCode, dateObj);
+    						String value = queryValueByDictAndKeyCache(resultDictCode, dateObj);
     						map.put(str, value);
     					}
     				}
@@ -3067,6 +3069,46 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
     	} 
     	return formatDateStr;
     }
+
+	/**
+	 * @Title: queryValueByDictAndKeyCache
+	 * @Description: (根据数据字典code和key值获取value)
+	 * @param @param dictCode 数据字典code
+	 * @param @param key key值
+	 * @param @return    参数 value值
+	 * @return String    返回类型
+	 */
+	private String queryValueByDictAndKeyCache(String dictCode, String dataObj) {
+		String value = dataObj;
+		if(StringUtil.isNotEmpty(dictCode)&&!value.contains(StringUtil.SPACE)){
+			DataDict dataDict = CacheUtil.getDictCode(dictCode);
+			if(value.contains(GlobalConstant.COMMA)) {
+				List<String> targetTypeList = StringUtil.splitToList(GlobalConstant.COMMA, value);
+				if (!StringUtil.isEmptyList(targetTypeList)){
+					List<String> targetTypeNameList = new ArrayList<String>();
+					for(String targetType : targetTypeList) {
+						List<DataDictItem> dictItemList = dataDict.getItems().stream().filter(item -> {
+							return StringUtil.equals(StringUtil.trim(targetType), item.getItemCode());
+						}).collect(Collectors.toList());
+						if (!StringUtil.isEmptyList(dictItemList)){
+							targetTypeNameList.add(targetType + " " + dictItemList.get(0).getItemValue());
+						}
+					}
+					value = StringUtil.joinString(targetTypeNameList, GlobalConstant.COMMA);
+				}
+			}else {
+				if (dataDict != null && !StringUtil.isEmptyList(dataDict.getItems())){
+					List<DataDictItem> dictItemList = dataDict.getItems().stream().filter(item -> {
+						return StringUtil.equals(StringUtil.trim(dataObj), item.getItemCode());
+					}).collect(Collectors.toList());
+					if (!StringUtil.isEmptyList(dictItemList)){
+						value = dataObj + " " + dictItemList.get(0).getItemValue();
+					}
+				}
+			}
+		}
+		return value;
+	}
     
     /**
     * @Title: queryValueByDictAndKey

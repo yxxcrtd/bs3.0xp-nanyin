@@ -238,6 +238,7 @@ public class  ProdPersonIssue001Dto extends BaseEntity implements ITableRow{
 	/**
      * 管理方式
      */
+    @DictFormat(DictCode.管理方式_发行登记)
     private String manageType;
 
     /**
