@@ -712,6 +712,8 @@
 	    ,sub.ASSET_METHOD assetMethod
 	    ,sub.RIVAL_PARTY_TYPE rivalPartyType
 	    ,sub.SUMIT_SEQ sumitSeq
+        ,sub.ASSET_METHOD assetMethodNum
+        ,sub.RIVAL_PARTY_TYPE rivalPartyTypeNum
     from CHB_INVEST_TRADE_SUB sub
     left join CHB_PRD_BASEINFO info
     on sub.prod_id = info.prod_id
