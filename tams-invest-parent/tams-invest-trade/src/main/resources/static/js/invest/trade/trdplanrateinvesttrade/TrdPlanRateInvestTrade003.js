@@ -353,7 +353,8 @@ var etrAmt = '';
 	                                message = JoyinUtil.getMessage("TRD_C_0002");
 	                                flag1 = false;
 	                            }
-	                        } else if (object.ps == PS_T02 && object.prinAmt && object.Assetsavailablepositions && Number(object.prinAmt) > Number(object.Assetsavailablepositions)) {
+	                        //} else if (object.ps == PS_T02 && object.prinAmt && object.Assetsavailablepositions && Number(object.prinAmt) > Number(object.Assetsavailablepositions)) {
+	                        } else if (object.ps == PS_T02 && object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].prinAmt && object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].Assetsavailablepositions && Number(object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].prinAmt) > Number(object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].Assetsavailablepositions)) {
 	                            Joyin.warn("资产可用持仓必须大于本金金额。");
 	                            return;
 	                        }
