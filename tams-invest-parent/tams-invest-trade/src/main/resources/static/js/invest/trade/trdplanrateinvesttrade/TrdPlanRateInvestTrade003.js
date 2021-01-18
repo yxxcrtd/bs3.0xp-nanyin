@@ -773,6 +773,13 @@ var etrAmt = '';
 //        }else{
 //            window.BussTrdAvailableCashQuery && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].showPosition(true);
 //        }
+        if(ps == PS_T01){
+
+            table.showColumns([{field: 'Assetsavailablepositions', visible: false},{field: 'bussTrdAvailableCashQueryavalibleCash', visible: true},{field: 'bussTrdAvailableCashQueryavalibleCash1', visible: true}]);
+        }else if(ps == PS_T02){
+            table.showColumns([{field: 'Assetsavailablepositions', visible: true},{field: 'bussTrdAvailableCashQueryavalibleCash', visible: false},{field: 'bussTrdAvailableCashQueryavalibleCash1', visible: false}]);
+        }
+
 //        if(ps !== '01'){
 //            $('#Buy').css('display','none');
 //            // <!-- 通道交易 新增 强成西 2019/03/26 start -->
