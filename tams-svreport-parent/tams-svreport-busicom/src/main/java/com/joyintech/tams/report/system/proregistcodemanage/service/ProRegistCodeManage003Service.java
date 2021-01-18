@@ -21,6 +21,8 @@ import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.ChbPrdresistCodeMapper;
 import com.joyintech.tams.common.base.entity.ChbPrdresistCode;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.report.submitmaintenance.investorsholdinfo.service.InvestorsHoldInfo001Service;
 import com.joyintech.tams.report.system.proregistcodemanage.dao.ProRegistCodeManage001Mapper;
@@ -112,7 +114,12 @@ public class ProRegistCodeManage003Service extends CommonExportService<ProRegist
     }
   
     public ProRegistCodeManage002Dto selectInfo(String prodId) {
-        return proRegistCodeManage001Mapper.selectInfo(prodId);
+    	String svrSystemType=SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_PRDRESIST_CODE);
+    	if(svrSystemType!=null&&svrSystemType.equals("01")){
+    		return proRegistCodeManage001Mapper.selectInfo(prodId);
+		}else{
+			return proRegistCodeManage001Mapper.selectInfoN(prodId);
+		}
     }
     
     @SuppressWarnings("unchecked")

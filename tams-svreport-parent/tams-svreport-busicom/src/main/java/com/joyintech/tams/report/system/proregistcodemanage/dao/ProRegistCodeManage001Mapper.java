@@ -124,6 +124,7 @@ public interface ProRegistCodeManage001Mapper {
     int updateOperateModeByProdId(@Param("list")List<ProRegistCodeManage001Dto>list);
     
     ProRegistCodeManage002Dto selectInfo(String prodId);
+    ProRegistCodeManage002Dto selectInfoN(String prodId);
     
     Map<String, Object> selectId(Map<String, Object> map);
     
