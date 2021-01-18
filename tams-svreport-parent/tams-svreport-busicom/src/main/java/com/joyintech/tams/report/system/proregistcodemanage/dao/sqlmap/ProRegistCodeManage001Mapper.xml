@@ -315,6 +315,18 @@
     </select>
     <select id="selectInfo" resultType="com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage002Dto">
         select 
+		chb_prd_baseinfo.PROD_NAME prodName,
+		chb_prd_baseinfo.OPERATE_MODE operateMode,
+		chb_prd_baseinfo.VDATE vdate,
+		chb_prd_baseinfo.MDATE mdate
+		from chb_prd_baseinfo
+		left join FIN_PRODUCT on FIN_PRODUCT.FINPROD_MARKET_ID = chb_prd_baseinfo.PROD_ID
+        where chb_prd_baseinfo.PROD_ID = #{prodId}
+        and FIN_PRODUCT.FINPROD_TYPE = 'F16' and FIN_PRODUCT.FINPROD_TYPE2 = 'F16'
+    </select>
+    
+    <select id="selectInfoN" resultType="com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage002Dto">
+        select 
 		FIN_PRODUCT.FINPROD_NAME prodName,
 		REP_PROD_DECLARE.REP_OPERATE_MODE operateMode,
 		FIN_PRODUCT.VDATE vdate,
