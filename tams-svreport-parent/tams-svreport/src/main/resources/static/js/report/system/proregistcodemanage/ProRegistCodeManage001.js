@@ -47,17 +47,17 @@
             }
         },
         cols: [
-            { title: "产品代码", field:'prodId',width:180},
-            { title: "产品名称", field:'prodName'},
-            { title: "产品登记编码", field:'regCode',width:200},
-            { title: "机构代码", field:'orgCode', visible:false},
-            { title: "起息日", field:'vdate', width:180},
-            { title: "到期日", field:'mdate', width:180},
-            { title: "产品运作模式", field:'operateMode', width:220},
-            { title: "募集开始日", field:'raiseVdate', width:180,visible: isSvr},
-            { title: "募集起始日期（从）", field:'raisePstrDate', width:180,visible: isSvr},
-            { title: "募集起始日期（到）", field:'raisePendDate', width:180,visible: isSvr},
-            { title: "发送状态", field:'sendStatusStr', width:180, visible: isSendStatusTableShow === YES,
+            { title: "产品代码", field:'prodId',width:'10%'},
+            { title: "产品名称", field:'prodName',width:'10%'},
+            { title: "产品登记编码", field:'regCode',width:'10%'},
+            { title: "机构代码", field:'orgCode', visible:false,width:'10%'},
+            { title: "起息日", field:'vdate',width:'8%'},
+            { title: "到期日", field:'mdate',width:'8%'},
+            { title: "产品运作模式", field:'operateMode',width:'10%'},
+            { title: "募集开始日", field:'raiseVdate', visible: isSvr,width:'8%'},
+            { title: "募集起始日期（从）", field:'raisePstrDate', visible: isSvr,width:'10%'},
+            { title: "募集起始日期（到）", field:'raisePendDate', visible: isSvr,width:'10%'},
+            { title: "发送状态", field:'sendStatusStr',  visible: isSendStatusTableShow === YES,
                 render : function(data, type, row, meta) {
                     //alert(isSendStatusTableLinkShow+'*'+row.sendStatusStr+'*');
                     if (isSendStatusTableLinkShow === 'N') {
