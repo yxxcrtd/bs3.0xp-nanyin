@@ -1,0 +1,184 @@
+declare
+	sql01 clob:='SELECT SUM(RVALUE) as RVALUE,RKEY,RKEYCN FROM(
+SELECT
+    SUM(NVL(VAL.TDY_FLOAT_INGPL,0)+NVL(VAL.DSC_COST_AMT,0)+NVL(VAL.TDY_INTINCEXP,0)) RVALUE, PRD.ISSUER RKEY, CST.CUSTOMER_NAME RKEYCN
+FROM PTL_SEC_VALUTION VAL
+INNER JOIN FIN_PRODUCT PRD ON VAL.FINPROD_ID = PRD.FINPROD_ID AND PRD.FINPROD_TYPE2 = ''F01''
+INNER JOIN FIN_PRODUCT_TYPE TYP ON TYP.FINPROD_ID = PRD.FINPROD_ID AND (TYP.TYPE_6 NOT IN (''B01'',''B03'',''B17'',''B05'')
+OR (TYP.TYPE_6 = ''B05'' AND TYP.TYPE_7 != ''01'')) AND TYP.TYPE_8 = ''F01''
+LEFT JOIN MST_CUSTOMER_INFO CST ON CST.CUSTOMER_ID = PRD.ISSUER
+WHERE VAL.CDATE = date''${valDate}''-1  AND VAL.PORTFOLIO_ID IN ${portfolioCode}
+GROUP BY PRD.ISSUER,CST.CUSTOMER_NAME
+
+union all
+select 
+	case trd.ps
+		when ''T01'' then decode(trd.TRADE_STATUS,''03'',-1*trd.TRADE_AMT,trd.TRADE_AMT)
+		else decode(trd.TRADE_STATUS,''03'',trd.TRADE_AMT,-1*trd.TRADE_AMT)
+	end as TRADE_AMT,PRD.ISSUER RKEY,CST.CUSTOMER_NAME RKEYCN
+from TRD_PRODUCT_DEAL trd
+inner join TRD_PRODUCT_DEAL_ADD trda on trd.trade_id = trda.trade_id
+INNER JOIN FIN_PRODUCT PRD ON trd.FINPROD_ID = PRD.FINPROD_ID AND PRD.FINPROD_TYPE2 = ''F01''
+INNER JOIN FIN_PRODUCT_TYPE TYP ON TYP.FINPROD_ID = PRD.FINPROD_ID AND (TYP.TYPE_6 NOT IN (''B01'',''B03'',''B17'',''B05'')
+OR (TYP.TYPE_6 = ''B05'' AND TYP.TYPE_7 != ''01'')) AND TYP.TYPE_8 = ''F01''
+LEFT JOIN MST_CUSTOMER_INFO CST ON CST.CUSTOMER_ID = PRD.ISSUER
+WHERE trd.trade_date = date''${valDate}'' and trda.PORTFOLIO_ID IN ${portfolioCode}
+and trd.ps in (''T01'',''T02'',''T03'',''T07'',''T08'',''T09'',''T39'',''T54'')
+
+union all
+select 
+	case trd.ps
+		when ''T01'' then decode(trd.TRADE_STATUS,''03'',-1*trd.TRADE_AMT,trd.TRADE_AMT)
+		else decode(trd.TRADE_STATUS,''03'',trd.TRADE_AMT,-1*trd.TRADE_AMT)
+	end as TRADE_AMT,PRD.ISSUER RKEY,CST.CUSTOMER_NAME RKEYCN
+from WFL_TRD_PRODUCT_DEAL trd
+inner join WFL_TRD_PRODUCT_DEAL_ADD trda on trd.trade_id = trda.trade_id
+INNER JOIN FIN_PRODUCT PRD ON trd.FINPROD_ID = PRD.FINPROD_ID AND PRD.FINPROD_TYPE2 = ''F01''
+INNER JOIN FIN_PRODUCT_TYPE TYP ON TYP.FINPROD_ID = PRD.FINPROD_ID AND (TYP.TYPE_6 NOT IN (''B01'',''B03'',''B17'',''B05'')
+OR (TYP.TYPE_6 = ''B05'' AND TYP.TYPE_7 != ''01'')) AND TYP.TYPE_8 = ''F01''
+LEFT JOIN MST_CUSTOMER_INFO CST ON CST.CUSTOMER_ID = PRD.ISSUER
+WHERE trd.trade_date = date''${valDate}'' and trda.PORTFOLIO_ID IN ${portfolioCode}
+and trd.ps in (''T01'',''T02'',''T03'',''T07'',''T08'',''T09'',''T39'',''T54'')
+)GROUP BY RKEY,RKEYCN';
+	sql02 clob:='SELECT SUM(RVALUE) AS RVALUE FROM (
+SELECT
+    SUM(NVL(VAL.TDY_FLOAT_INGPL,0)+NVL(VAL.DSC_COST_AMT,0)+NVL(VAL.TDY_INTINCEXP,0)) RVALUE
+FROM PTL_SEC_VALUTION VAL
+INNER JOIN FIN_PRODUCT PRD ON VAL.FINPROD_ID = PRD.FINPROD_ID
+INNER JOIN FIN_PRODUCT_TYPE TYP ON TYP.FINPROD_ID = PRD.FINPROD_ID AND TYP.TYPE_8 IN (''F01'', ''F05'')
+INNER JOIN (
+  select mbcr.O_CODE,max(mbcr.GRADE_RESULT) GRADE_RESULT from MST_BOND_CREDIT_RATING mbcr WHERE mbcr.o_type = ''01''
+  AND mbcr.GRADE_RESULT NOT IN (''01'',''02'') GROUP BY mbcr.O_CODE
+) D ON  D.O_CODE = PRD.finprod_market_id
+WHERE VAL.CDATE = date''${valDate}''-1   AND VAL.PORTFOLIO_ID IN ${portfolioCode}
+
+union all
+select case trd.ps when ''T01'' then decode(trd.TRADE_STATUS,''03'',-1*TRADE_AMT,TRADE_AMT)
+else decode(trd.TRADE_STATUS,''03'',TRADE_AMT,-1*TRADE_AMT) end as RVALUE
+FROM TRD_PRODUCT_DEAL trd
+inner join TRD_PRODUCT_DEAL_ADD trda on trd.trade_id = trda.trade_id
+INNER JOIN FIN_PRODUCT PRD ON trd.FINPROD_ID = PRD.FINPROD_ID
+INNER JOIN FIN_PRODUCT_TYPE TYP ON TYP.FINPROD_ID = PRD.FINPROD_ID AND TYP.TYPE_8 IN (''F01'', ''F05'')
+INNER JOIN (
+  select mbcr.O_CODE,max(mbcr.GRADE_RESULT) GRADE_RESULT from MST_BOND_CREDIT_RATING mbcr WHERE mbcr.o_type = ''01''
+  AND mbcr.GRADE_RESULT NOT IN (''01'',''02'') GROUP BY mbcr.O_CODE
+) D ON  D.O_CODE = PRD.finprod_market_id
+where trd.trade_date = date''${valDate}'' and trda.PORTFOLIO_ID IN ${portfolioCode}
+and trd.ps in (''T01'',''T02'',''T03'',''T07'',''T08'',''T09'',''T11'',''T38'',''T54'',''T39'')
+
+union all
+select case trd.ps when ''T01'' then decode(trd.TRADE_STATUS,''03'',-1*TRADE_AMT,TRADE_AMT)
+else decode(trd.TRADE_STATUS,''03'',TRADE_AMT,-1*TRADE_AMT) end as RVALUE
+FROM WFL_TRD_PRODUCT_DEAL trd
+inner join WFL_TRD_PRODUCT_DEAL_ADD trda on trd.trade_id = trda.trade_id
+INNER JOIN FIN_PRODUCT PRD ON trd.FINPROD_ID = PRD.FINPROD_ID
+INNER JOIN FIN_PRODUCT_TYPE TYP ON TYP.FINPROD_ID = PRD.FINPROD_ID AND TYP.TYPE_8 IN (''F01'', ''F05'')
+INNER JOIN (
+  select mbcr.O_CODE,max(mbcr.GRADE_RESULT) GRADE_RESULT from MST_BOND_CREDIT_RATING mbcr WHERE mbcr.o_type = ''01''
+  AND mbcr.GRADE_RESULT NOT IN (''01'',''02'') GROUP BY mbcr.O_CODE
+) D ON  D.O_CODE = PRD.finprod_market_id
+where trd.trade_date = date''${valDate}'' and trda.PORTFOLIO_ID IN ${portfolioCode}
+and trd.ps in (''T01'',''T02'',''T03'',''T07'',''T08'',''T09'',''T11'',''T38'',''T54'',''T39''))';
+	sql03 clob:='SELECT SUM(RVALUE) AS RVALUE,RKEY,RKEYCN FROM (
+SELECT
+    SUM(NVL(VAL.TDY_FLOAT_INGPL,0)+NVL(VAL.DSC_COST_AMT,0)+NVL(VAL.TDY_INTINCEXP,0)) RVALUE, PRD.ISSUER RKEY, CST.CUSTOMER_NAME RKEYCN
+FROM PTL_SEC_VALUTION VAL
+INNER JOIN FIN_PRODUCT PRD ON VAL.FINPROD_ID = PRD.FINPROD_ID
+INNER JOIN FIN_PRODUCT_TYPE TYP ON TYP.FINPROD_ID = PRD.FINPROD_ID AND TYP.TYPE_8 IN (''F01'', ''F05'')
+INNER JOIN (
+  select mbcr.O_CODE,max(mbcr.GRADE_RESULT) GRADE_RESULT from MST_BOND_CREDIT_RATING mbcr WHERE mbcr.o_type = ''01''
+  AND mbcr.GRADE_RESULT NOT IN (''01'',''02'') GROUP BY mbcr.O_CODE
+) D ON  D.O_CODE = PRD.finprod_market_id
+LEFT JOIN MST_CUSTOMER_INFO CST ON PRD.ISSUER = CST.CUSTOMER_ID
+WHERE VAL.CDATE = date''${valDate}''-1 AND VAL.PORTFOLIO_ID IN ${portfolioCode}
+GROUP BY PRD.ISSUER,CST.CUSTOMER_NAME
+
+union all
+select case trd.ps when ''T01'' then decode(trd.TRADE_STATUS,''03'',-1*TRADE_AMT,TRADE_AMT)
+else decode(trd.TRADE_STATUS,''03'',TRADE_AMT,-1*TRADE_AMT) end as RVALUE, 
+PRD.ISSUER RKEY, CST.CUSTOMER_NAME RKEYCN
+FROM TRD_PRODUCT_DEAL trd
+inner join TRD_PRODUCT_DEAL_ADD trda on trd.trade_id = trda.trade_id
+INNER JOIN FIN_PRODUCT PRD ON trd.FINPROD_ID = PRD.FINPROD_ID
+INNER JOIN FIN_PRODUCT_TYPE TYP ON TYP.FINPROD_ID = PRD.FINPROD_ID AND TYP.TYPE_8 IN (''F01'', ''F05'')
+INNER JOIN (
+  select mbcr.O_CODE,max(mbcr.GRADE_RESULT) GRADE_RESULT from MST_BOND_CREDIT_RATING mbcr WHERE mbcr.o_type = ''01''
+  AND mbcr.GRADE_RESULT NOT IN (''01'',''02'') GROUP BY mbcr.O_CODE
+) D ON  D.O_CODE = PRD.finprod_market_id
+LEFT JOIN MST_CUSTOMER_INFO CST ON PRD.ISSUER = CST.CUSTOMER_ID
+where trd.trade_date = date''${valDate}'' and trda.PORTFOLIO_ID IN ${portfolioCode}
+and trd.ps in (''T01'',''T02'',''T03'',''T07'',''T08'',''T09'',''T38'',''T54'',''T39'')
+
+union all
+select case trd.ps when ''T01'' then decode(trd.TRADE_STATUS,''03'',-1*TRADE_AMT,TRADE_AMT)
+else decode(trd.TRADE_STATUS,''03'',TRADE_AMT,-1*TRADE_AMT) end as RVALUE, 
+PRD.ISSUER RKEY, CST.CUSTOMER_NAME RKEYCN
+FROM WFL_TRD_PRODUCT_DEAL trd
+inner join WFL_TRD_PRODUCT_DEAL_ADD trda on trd.trade_id = trda.trade_id
+INNER JOIN FIN_PRODUCT PRD ON trd.FINPROD_ID = PRD.FINPROD_ID
+INNER JOIN FIN_PRODUCT_TYPE TYP ON TYP.FINPROD_ID = PRD.FINPROD_ID AND TYP.TYPE_8 IN (''F01'', ''F05'')
+INNER JOIN (
+  select mbcr.O_CODE,max(mbcr.GRADE_RESULT) GRADE_RESULT from MST_BOND_CREDIT_RATING mbcr WHERE mbcr.o_type = ''01''
+  AND mbcr.GRADE_RESULT NOT IN (''01'',''02'') GROUP BY mbcr.O_CODE
+) D ON  D.O_CODE = PRD.finprod_market_id
+LEFT JOIN MST_CUSTOMER_INFO CST ON PRD.ISSUER = CST.CUSTOMER_ID
+where trd.trade_date = date''${valDate}'' and trda.PORTFOLIO_ID IN ${portfolioCode}
+and trd.ps in (''T01'',''T02'',''T03'',''T07'',''T08'',''T09'',''T38'',''T54'',''T39'')
+)GROUP BY RKEY,RKEYCN';
+	sql04 clob:='SELECT SUM(RVALUE) AS RVALUE,RKEY FROM(
+SELECT
+    SUM(NVL(VAL.TDY_FLOAT_INGPL,0)+NVL(VAL.DSC_COST_AMT,0)+NVL(VAL.TDY_INTINCEXP,0)) RVALUE, PRD.ISSUER RKEY
+FROM PTL_SEC_VALUTION VAL
+INNER JOIN FIN_PRODUCT PRD ON VAL.FINPROD_ID = PRD.FINPROD_ID
+INNER JOIN FIN_PRODUCT_TYPE TYP ON TYP.FINPROD_ID = VAL.FINPROD_ID
+AND (TYP.TYPE_8 = ''F05'' OR (TYP.TYPE_8 = ''F01'' AND TYP.TYPE_6 = ''B04''))
+INNER JOIN (
+  select mbcr.O_CODE,max(mbcr.GRADE_RESULT) GRADE_RESULT from MST_BOND_CREDIT_RATING mbcr WHERE mbcr.o_type = ''01''
+  AND mbcr.GRADE_RESULT = ''02'' GROUP BY mbcr.O_CODE
+) D ON  D.O_CODE = PRD.finprod_market_id
+WHERE VAL.CDATE = date''${valDate}''-1 AND VAL.PORTFOLIO_ID IN ${portfolioCode}
+GROUP BY PRD.ISSUER
+
+union all
+select case trd.ps when ''T01'' then decode(trd.TRADE_STATUS,''03'',-1*TRADE_AMT,TRADE_AMT)
+else decode(trd.TRADE_STATUS,''03'',TRADE_AMT,-1*TRADE_AMT) end as RVALUE,PRD.ISSUER RKEY
+FROM TRD_PRODUCT_DEAL trd
+inner join TRD_PRODUCT_DEAL_ADD trda on trd.trade_id = trda.trade_id
+INNER JOIN FIN_PRODUCT PRD ON trd.FINPROD_ID = PRD.FINPROD_ID
+INNER JOIN FIN_PRODUCT_TYPE TYP ON TYP.FINPROD_ID = trd.FINPROD_ID
+AND (TYP.TYPE_8 = ''F05'' OR (TYP.TYPE_8 = ''F01'' AND TYP.TYPE_6 = ''B04''))
+INNER JOIN (
+  select mbcr.O_CODE,max(mbcr.GRADE_RESULT) GRADE_RESULT from MST_BOND_CREDIT_RATING mbcr WHERE mbcr.o_type = ''01''
+  AND mbcr.GRADE_RESULT = ''02'' GROUP BY mbcr.O_CODE
+) D ON  D.O_CODE = PRD.finprod_market_id
+where trd.trade_date = date''${valDate}'' and trda.PORTFOLIO_ID IN ${portfolioCode}
+and trd.ps in (''T01'',''T02'',''T03'',''T07'',''T08'',''T09'',''T39'',''T54'')
+
+union all
+select case trd.ps when ''T01'' then decode(trd.TRADE_STATUS,''03'',-1*TRADE_AMT,TRADE_AMT)
+else decode(trd.TRADE_STATUS,''03'',TRADE_AMT,-1*TRADE_AMT) end as RVALUE,PRD.ISSUER RKEY
+FROM WFL_TRD_PRODUCT_DEAL trd
+inner join WFL_TRD_PRODUCT_DEAL_ADD trda on trd.trade_id = trda.trade_id
+INNER JOIN FIN_PRODUCT PRD ON trd.FINPROD_ID = PRD.FINPROD_ID
+INNER JOIN FIN_PRODUCT_TYPE TYP ON TYP.FINPROD_ID = trd.FINPROD_ID
+AND (TYP.TYPE_8 = ''F05'' OR (TYP.TYPE_8 = ''F01'' AND TYP.TYPE_6 = ''B04''))
+INNER JOIN (
+  select mbcr.O_CODE,max(mbcr.GRADE_RESULT) GRADE_RESULT from MST_BOND_CREDIT_RATING mbcr WHERE mbcr.o_type = ''01''
+  AND mbcr.GRADE_RESULT = ''02'' GROUP BY mbcr.O_CODE
+) D ON  D.O_CODE = PRD.finprod_market_id
+where trd.trade_date = date''${valDate}'' and trda.PORTFOLIO_ID IN ${portfolioCode}
+and trd.ps in (''T01'',''T02'',''T03'',''T07'',''T08'',''T09'',''T39'',''T54'')
+)GROUP BY RKEY';
+begin
+	--同一机构发行的债券及其作为原始权益人的资产支持证券估值合计
+	update rsk_isup_indicator_para_dtl set content = sql01 where para_code = 'TYJGFXDZQJQZWYSQYRDZCZCZQGZHJ' and para_granularity='04'; 
+	--主体信用评级低于AAA的机构发行的金融工具估值
+	update rsk_isup_indicator_para_dtl set content = sql02 where para_code = 'TZYSYZTXYPJDYAAAJGHJ' and para_granularity='04';
+	--单一主体信用评级低于AAA的机构发行的金融工具估值
+	update rsk_isup_indicator_para_dtl set content = sql03 where para_code = 'TZYDYZTXYPJDYAAAJGHJ' and para_granularity='04'; 
+	--主体信用评级为AAA的同一商业银行的银行存款、同业存单估值
+	update rsk_isup_indicator_para_dtl set content = sql04 where para_code = 'TZYZTXYPJDYAAATYSYYH' and para_granularity='04'; 
+	--现金管理类产品应当投资于期限在1年以内的银行存款债券回购中央银行票据同业存单
+	update rsk_isup_indicator_para set  is_up_redis = 'N' where para_code ='XJGLLCPYDTZYQJXZNYNDYXHCKZXQ';
+end;
+/
