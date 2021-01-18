@@ -62,7 +62,7 @@ public class CprodBalanceFileImpService extends AbstractFileImpService {
         for (InterfFile interfFile : fileLists) {
             Map<String, Object> parseResult;
             try {
-            	interfFile.setInterfType(DictCodeListExt2.上游接口文件类型_资管计划底层资产持仓信息.getValue());
+            	interfFile.setInterfType(DictCodeListExt2.上游接口文件类型_周期型产品余额.getValue());
                 interfFile.setFileType(interfConfig.getContentSrc());
                 parseResult = svrCprodBalanceFileImpService.parseFile(interfFile);
                 String parseFailResult = (String) parseResult.get("remoteDir");

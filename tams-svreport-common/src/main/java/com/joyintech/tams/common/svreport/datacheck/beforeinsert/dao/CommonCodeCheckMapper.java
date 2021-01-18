@@ -84,4 +84,6 @@ public interface CommonCodeCheckMapper {
 	 * @return
 	 */
 	int findEmployeeSub(@Param("key") String key);
+
+	int deleteAssetInfoErrorDataByAssetCode(@Param("assetCode") String assetCode);
 }

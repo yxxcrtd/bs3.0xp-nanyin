@@ -481,13 +481,13 @@ public class PbcPrdCashRaiseSubService001 extends CommonExportService<PbcProdRai
 	    	param.put("status", dto.getValue().getStatus());			/*数据状态*/
 	    	param.put("statusDate", dto.getValue().getStatusDate());
 	    	param.put("operateModeK",DictCodeListExt3.人行产品运作模式_开放式净值型.getValue());
-	    	
+
 	    	String pbcProdId=dto.getValue().getPbcProdId();
 	    	String pbcProdIdShow=dto.getValue().getPbcProdIdShow();
 	    	//模板名
 	    	String name=dto.getValue().getPbcCode();
 	    	if(StringUtils.isEmpty(name)){
-	    		name = pbcProdId;
+	    		name = pbcProdId+"("+DateUtil.format(dto.getValue().getRaisingDate(),"yyyyMMdd")+")";
 	    	}
 	    	String operateMode = "";
 	    	List<String> operateModeList = pbcProdRaiseSubMapper.selectOperateMode(pbcProdIdShow);
