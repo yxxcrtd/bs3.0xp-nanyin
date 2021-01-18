@@ -1,0 +1,66 @@
+/*
+ * 文件名：InvestorsHoldInfoRegistAutoSendCBMainService.java
+ * 版权：Copyright 2016-2017 JoyinTech. Co. Ltd. All Rights Reserved.
+ * 描述：理财资管业务监管报送平台
+ * 修改人：zuoyinyi
+ * 修改时间：2018年5月14日
+ * 修改内容：新建
+ * 系统名称：理财资管业务监管报送平台
+ */
+
+package com.joyintech.tams.svreport.chbsd.assetvalsub.service;
+
+import com.joyintech.component.svrreport.chb.dto.ChbAstValueSubDto;
+import com.joyintech.component.svrreport.chb.service.MsgSendService;
+import com.joyintech.tams.batch.report.autosendcb.common.service.AutoSendCBBaseService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * 资产估值信息登记自动报送 业务service - 按批次
+ * @since 1.0.0
+ * @version 1.0.0
+ * @作者：lingxq
+ * @see SdAssetValRegBatchServiceOneService
+ */
+@Service
+public class SdAssetValRegBatchServiceOneService extends AutoSendCBBaseService{
+
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(getClass());
+	
+	@Autowired
+	private MsgSendService msgSendServiceImpl;
+
+
+   /**
+    * 单批次处理数据
+    * @param handleIndex
+    * @param dataCountPerTime
+    * @param msgRstList
+    * @param sendResult
+    * @return
+    * @throws Exception 
+    */
+    public boolean handleDataPerTime(int handleIndex, 
+    		                         int dataCountPerTime,List<ChbAstValueSubDto> msgRstList,
+    		                         List<ChbAstValueSubDto> sendResult) throws Exception {
+        logger.info("【资产估值信息登记】直连报送处理开始，批次：" + handleIndex + "  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        boolean hasData = true;
+        try {
+        	msgSendServiceImpl.sendChbAstValueSubMsgs(msgRstList);
+       	    sendResult.addAll(msgRstList);
+        } catch (Exception e) {
+	        logger.error("【资产估值信息登记】直连报送处理异常，批次：" + handleIndex + e.getMessage());
+	        throw e;
+		}
+        logger.info("【资产估值信息登记】直连报送处理结束，批次：" + handleIndex + "  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        return hasData;
+    }
+}

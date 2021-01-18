@@ -12,14 +12,20 @@ package com.joyintech.tams.svreport.chb.assetinforeg.service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.common.svreport.chb.constant.CheckConfConstants;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.datacheck.dao.ChbCheckRuleoutMapper;
+import com.joyintech.tams.common.svreport.datacheck.dto.ChbCheckRuleout;
+import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001Mapper;
+import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
+import com.joyintech.tams.svreport.chb.datacheck.beforesub.service.BeforeSubCheck;
+import com.joyintech.tams.svreport.chb.datacheck.beforesub.service.BeforeSubErrorCheck;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -84,6 +90,14 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
      *  */
     @Autowired
     private ChbAssetSubStatusMapper assetSubStatusMapper;
+	@Autowired
+    private CheckReport001Mapper checkReport001Mapper;
+    @Autowired
+    private ChbCheckRuleoutMapper chbCheckRuleoutMapper;
+    @Autowired
+    private BeforeSubErrorCheck beforeSubErrorCheck;
+    @Autowired
+    private BeforeSubCheck beforeSubCheck;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
     
@@ -187,6 +201,7 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
             
         }
         dealDataList(page.getRoot(), false);
+        dealDataListExt(page.getRoot(), false);
         return page;
 	}
 
@@ -200,7 +215,7 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 	 * @see
 	 * @since 1.0
 	 */
-	private void dealDataList(List<AssetInfoRegist001Dto> list, boolean isExport) {
+	public void dealDataList(List<AssetInfoRegist001Dto> list, boolean isExport) {
 		list.forEach(item -> {
 			// 此处处理查询后结果的枚举值对应关系
 			if (item.getAssetYield() != null){
@@ -290,8 +305,6 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
             		}
             	}
             }
-			
-			
             if (item.getAssetType() != null && isExport){
                 // 用于双击对比
     			item.setAssetTypeName(SvrDataUtil.getNameFromDataDict(DictCode.资产_负债类别,item.getAssetTpye()));
@@ -323,6 +336,7 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 						}
 						String targetTypeName = StringUtil.joinString(targetTypeNameList, GlobalConstant.COMMA);
 						item.setTargetType(targetTypeName);
+						item.setTargetTypeName(targetTypeName);
 					}
 				}else {
 					item.setTargetTypeName(item.getTargetType()+" "+SvrDataUtil.getNameFromDataDict(DictCode.标的类别,item.getTargetType()));
@@ -355,9 +369,12 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 				item.setSecCreditGradeName(item.getSecCreditGrade()+" "+SvrDataUtil.getNameFromDataDict(DictCode.资产评级,item.getSecCreditGrade()));
 				item.setSecCreditGrade(item.getSecCreditGradeName());
 			}
+//			if (StringUtil.isNotEmpty(item.getSecCreditGradeType())){
+//				item.setSecCreditGradeTypeName(item.getSecCreditGradeType()+" "+SvrDataUtil.getNameFromDataDict(DictCode.资产评级,item.getSecCreditGradeType()));
+//				item.setSecCreditGradeType(item.getSecCreditGradeTypeName());
+//			}
 			if (StringUtil.isNotEmpty(item.getSecCreditGradeType())){
-				item.setSecCreditGradeTypeName(item.getSecCreditGradeType()+" "+SvrDataUtil.getNameFromDataDict(DictCode.资产评级,item.getSecCreditGradeType()));
-				item.setSecCreditGradeType(item.getSecCreditGradeTypeName());
+				item.setSecCreditGradeTypeName(item.getSecCreditGradeType());
 			}
 			if (StringUtil.isNotEmpty(item.getPartyType1())){
 				item.setPartyType1Name(item.getPartyType1()+" "+SvrDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分,item.getPartyType1()));
@@ -497,8 +514,21 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 				item.setIsPledge(item.getIsPledgeName());
 			}
 			if (StringUtil.isNotEmpty(item.getTargetType3())){
-				item.setTargetType3Name(item.getTargetType3()+" "+SvrDataUtil.getNameFromDataDict(DictCode.标的类别,item.getTargetType3()));
-				item.setTargetType3(item.getTargetType3Name());
+				if(item.getTargetType3().contains(GlobalConstant.COMMA)) {
+					List<String> targetTypeList = StringUtil.splitToList(GlobalConstant.COMMA, item.getTargetType3());
+					if (!StringUtil.isEmptyList(targetTypeList)){
+						List<String> targetTypeNameList = new ArrayList<String>();
+						for(String targetType : targetTypeList) {
+							targetTypeNameList.add(targetType+" "+SvrDataUtil.getNameFromDataDict(DictCode.标的类别,targetType));
+						}
+						String targetTypeName = StringUtil.joinString(targetTypeNameList, GlobalConstant.COMMA);
+						item.setTargetType3(targetTypeName);
+						item.setTargetType3Name(targetTypeName);
+					}
+				}else {
+					item.setTargetType3Name(item.getTargetType3()+" "+SvrDataUtil.getNameFromDataDict(DictCode.标的类别,item.getTargetType3()));
+					item.setTargetType3(item.getTargetType3Name());
+				}
 			}
 			if (StringUtil.isNotEmpty(item.getCountryArea())){
 				item.setCountryAreaName(item.getCountryArea()+" "+SvrDataUtil.getNameFromDataDict(DictCode.所属国家或地区,item.getCountryArea()));
@@ -510,9 +540,12 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 //			if (StringUtil.isNotEmpty(item.getFcrGradeIn())){
 //				item.setFcrGradeIn(SvrDataUtil.getCodeFromDataDictByName(DictCode.资产评级,item.getFcrGradeIn())+" "+item.getFcrGradeIn());
 //			}
+//			if (StringUtil.isNotEmpty(item.getPartyGrade())){
+//				item.setPartyGradeName(item.getPartyGrade()+" "+SvrDataUtil.getNameFromDataDict(DictCode.资产评级,item.getPartyGrade()));
+//				item.setPartyGrade(item.getPartyGrade());
+//			}
 			if (StringUtil.isNotEmpty(item.getPartyGrade())){
-				item.setPartyGradeName(item.getPartyGrade()+" "+SvrDataUtil.getNameFromDataDict(DictCode.资产评级,item.getPartyGrade()));
-				item.setPartyGrade(item.getPartyGrade());
+				item.setPartyGradeName(item.getPartyGrade());
 			}
 //			item.setPartyGradeName(SvrDataUtil.getNameFromDataDict(SVReportDictCode.资产评级,item.getPartyGrade()));
 			if (StringUtil.isNotEmpty(item.getTruActType())){
@@ -575,110 +608,102 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
                 item.setCapUseInduName(item.getCapUseInduLevel2Name());
                 item.setCapUseIndu(item.getCapUseInduLevel2Name());
 			}
-			if (StringUtil.isNotEmpty(item.getInterestRuleFlag())){
-				item.setInterestRuleFlag(item.getInterestRuleFlag()+" "+SvrDataUtil.getNameFromDataDict(DictCode.是否_中债,item.getInterestRuleFlag()));
-			}
-			if (StringUtil.isNotEmpty(item.getFloatFactorFlag())){
-				item.setFloatFactorFlag(item.getFloatFactorFlag()+" "+SvrDataUtil.getNameFromDataDict(DictCode.是否_中债,item.getFloatFactorFlag()));
-			}
-			/*持有目的*/
-			if(StringUtil.isNotEmpty(item.getHoldPurpose())){
-				item.setHoldPurpose(item.getHoldPurpose()+" "+SvrDataUtil.getNameFromDataDict(DictCode.持有目的,item.getHoldPurpose()));
-		    }
-			/*存款类型*/
-			if(StringUtil.isNotEmpty(item.getDepoType())){
+		});
+	}
+	
+	/**
+	 * 中债五月份升级增加的相关字典字段
+	 * @param list
+	 * @param flag
+	 */
+	public void dealDataListExt(List<AssetInfoRegist001Dto> list,boolean flag){
+		list.forEach(item -> {
+			//存款类型
+			if(StringUtil.isNotEmpty(item.getDepoType())) {
 				item.setDepoType(item.getDepoType()+" "+SvrDataUtil.getNameFromDataDict(DictCode.存款类型,item.getDepoType()));
 			}
-			/*是否由金融资产投资公司发行*/
-			if(StringUtil.isNotEmpty(item.getFinancialComissue())){
-				item.setFinancialComissue(item.getFinancialComissue()+" "+SvrDataUtil.getNameFromDataDict(DictCode.是否_中债,item.getFinancialComissue()));
-			}
-			/*对手方类型*/
-			if(StringUtil.isNotEmpty(item.getRivalPartyType())){
-				item.setRivalPartyType(item.getRivalPartyType()+" "+SvrDataUtil.getNameFromDataDict(DictCode.对手方类型,item.getRivalPartyType()));
-            }
-			/*是否为债转股*/
-			if(StringUtil.isNotEmpty(item.getDeptEquity())){
-				item.setDeptEquity(item.getDeptEquity()+" "+SvrDataUtil.getNameFromDataDict(DictCode.是否_中债,item.getDeptEquity()));
-			}
-			//份额面值
-			if (item.getPrinBaseAmt() != null){
-				item.setPrinBaseAmt(item.getPrinBaseAmt().setScale(4, BigDecimal.ROUND_HALF_UP));
-			}
 			//计息类型
-			if (StringUtil.isNotEmpty(item.getCouponSpecies())){
+			if(StringUtil.isNotEmpty(item.getCouponSpecies())) {
 				item.setCouponSpecies(item.getCouponSpecies()+" "+SvrDataUtil.getNameFromDataDict(DictCode.计息类型,item.getCouponSpecies()));
 			}
+			//规则付息标识
+			if(StringUtil.isNotEmpty(item.getInterestRuleFlag())) {
+				item.setInterestRuleFlag(item.getInterestRuleFlag()+" "+SvrDataUtil.getNameFromDataDict(DictCode.是或否,item.getInterestRuleFlag()));
+			}
 			//利息分布方式
-			if (StringUtil.isNotEmpty(item.getIntpayRule())){
+			if(StringUtil.isNotEmpty(item.getIntpayRule())) {
 				item.setIntpayRule(item.getIntpayRule()+" "+SvrDataUtil.getNameFromDataDict(DictCode.利息分布方式,item.getIntpayRule()));
 			}
-			//结构档次 
-			if (StringUtil.isNotEmpty(item.getStructGrade())){
+			//对手方类型
+			if(StringUtil.isNotEmpty(item.getRivalPartyType())) {
+				item.setRivalPartyType(item.getRivalPartyType()+" "+SvrDataUtil.getNameFromDataDict(DictCode.对手方类型,item.getRivalPartyType()));
+			}
+			//是否有浮动因子
+			if(StringUtil.isNotEmpty(item.getFloatFactorFlag())) {
+				item.setFloatFactorFlag(item.getFloatFactorFlag()+" "+SvrDataUtil.getNameFromDataDict(DictCode.是或否,item.getFloatFactorFlag()));
+			}
+			//结构档次
+			if(StringUtil.isNotEmpty(item.getStructGrade())) {
 				item.setStructGrade(item.getStructGrade()+" "+SvrDataUtil.getNameFromDataDict(DictCode.结构档次,item.getStructGrade()));
 			}
 			//还本方式
-			if (StringUtil.isNotEmpty(item.getRepaymentType())){
+			if(StringUtil.isNotEmpty(item.getRepaymentType())) {
 				item.setRepaymentType(item.getRepaymentType()+" "+SvrDataUtil.getNameFromDataDict(DictCode.还本方式,item.getRepaymentType()));
 			}
-			//分期还本条款标识 
-			if (StringUtil.isNotEmpty(item.getPeriodRepaymentFlag())){
+			//分期还本条款标识
+			if(StringUtil.isNotEmpty(item.getPeriodRepaymentFlag())) {
 				item.setPeriodRepaymentFlag(item.getPeriodRepaymentFlag()+" "+SvrDataUtil.getNameFromDataDict(DictCode.分期还本条款标识,item.getPeriodRepaymentFlag()));
 			}
-			//超额收益分配比例 
-			if (item.getExcessProfitRate() != null){
-				item.setExcessProfitRate(item.getExcessProfitRate().setScale(5, BigDecimal.ROUND_HALF_UP));
-			}
-			//抵押物品类型 
-			if (StringUtil.isNotEmpty(item.getPledgeType())){
+			//抵质押物类型
+			if(StringUtil.isNotEmpty(item.getPledgeType())) {
 				item.setPledgeType(item.getPledgeType()+" "+SvrDataUtil.getNameFromDataDict(DictCode.抵质押物类型,item.getPledgeType()));
 			}
-			//抵质押物价值（元） 
-			if (item.getPledgeValue() != null){
-				item.setPledgeValue(item.getPledgeValue().setScale(2, BigDecimal.ROUND_HALF_UP));
-			}
-			//担保性质 
-			if (StringUtil.isNotEmpty(item.getNatureGuarantee())){
+			//担保性质
+			if(StringUtil.isNotEmpty(item.getNatureGuarantee())) {
 				item.setNatureGuarantee(item.getNatureGuarantee()+" "+SvrDataUtil.getNameFromDataDict(DictCode.担保性质,item.getNatureGuarantee()));
 			}
-			//担保人与融资人关系 
-			if (StringUtil.isNotEmpty(item.getRelationFinan())){
+			//担保人与融资人关系
+			if(StringUtil.isNotEmpty(item.getRelationFinan())) {
 				item.setRelationFinan(item.getRelationFinan()+" "+SvrDataUtil.getNameFromDataDict(DictCode.担保人与融资人关系,item.getRelationFinan()));
 			}
 			//含权类型
-			if (StringUtil.isNotEmpty(item.getContainType())){
+			if(StringUtil.isNotEmpty(item.getContainType())) {
 				item.setContainType(item.getContainType()+" "+SvrDataUtil.getNameFromDataDict(DictCode.含权类型,item.getContainType()));
 			}
-			//行权方式 
-			if (StringUtil.isNotEmpty(item.getExerciseType())){
+			//行权方式
+			if(StringUtil.isNotEmpty(item.getExerciseType())) {
 				item.setExerciseType(item.getExerciseType()+" "+SvrDataUtil.getNameFromDataDict(DictCode.资产行权方式,item.getExerciseType()));
 			}
-			//行权价格 
-			if (item.getExercisePrice() != null){
-				item.setExercisePrice(item.getExercisePrice().setScale(4, BigDecimal.ROUND_HALF_UP));
-			}
-			//永续条款类型 
-			if (StringUtil.isNotEmpty(item.getPerpetualClauseType())){
+			//永续条款类型
+			if(StringUtil.isNotEmpty(item.getPerpetualClauseType())) {
 				item.setPerpetualClauseType(item.getPerpetualClauseType()+" "+SvrDataUtil.getNameFromDataDict(DictCode.永续条款类型,item.getPerpetualClauseType()));
 			}
-			//利息递延条款类型 
-			if (StringUtil.isNotEmpty(item.getDeferredInterestType())){
+			//利息递延条款类型
+			if(StringUtil.isNotEmpty(item.getDeferredInterestType())) {
 				item.setDeferredInterestType(item.getDeferredInterestType()+" "+SvrDataUtil.getNameFromDataDict(DictCode.利息递延条款类型,item.getDeferredInterestType()));
 			}
-			//递延利息是否计息 
-			if (StringUtil.isNotEmpty(item.getDeferredInterestInt())){
-				item.setDeferredInterestInt(item.getDeferredInterestInt()+" "+SvrDataUtil.getNameFromDataDict(DictCode.是否_中债,item.getDeferredInterestInt()));
-			}
-			//部分赎回比例 
-			if (item.getPartRedemRate() != null){
-				item.setPartRedemRate(item.getPartRedemRate().setScale(5, BigDecimal.ROUND_HALF_UP));
+			//递延利息是否计息
+			if(StringUtil.isNotEmpty(item.getDeferredInterestInt())) {
+				item.setDeferredInterestInt(item.getDeferredInterestInt()+" "+SvrDataUtil.getNameFromDataDict(DictCode.是或否,item.getDeferredInterestInt()));
 			}
 			//部分赎回标识
-			if (StringUtil.isNotEmpty(item.getPartRedemFlag())){
-				item.setPartRedemFlag(item.getPartRedemFlag()+" "+SvrDataUtil.getNameFromDataDict(DictCode.是否_中债,item.getPartRedemFlag()));
+			if(StringUtil.isNotEmpty(item.getPartRedemFlag())) {
+				item.setPartRedemFlag(item.getPartRedemFlag()+" "+SvrDataUtil.getNameFromDataDict(DictCode.是或否,item.getPartRedemFlag()));
 			}
-			
+			//是否为债转股
+			if(StringUtil.isNotEmpty(item.getDeptEquity())) {
+				item.setDeptEquity(item.getDeptEquity()+" "+SvrDataUtil.getNameFromDataDict(DictCode.是或否,item.getDeptEquity()));
+			}
+			//持有目的
+			if(StringUtil.isNotEmpty(item.getHoldPurpose())) {
+				item.setHoldPurpose(item.getHoldPurpose()+" "+SvrDataUtil.getNameFromDataDict(DictCode.持有目的,item.getHoldPurpose()));
+			}
+			//是否由金融资产投资公司发行
+			if(StringUtil.isNotEmpty(item.getFinancialComissue())) {
+				item.setFinancialComissue(item.getFinancialComissue()+" "+SvrDataUtil.getNameFromDataDict(DictCode.是或否,item.getFinancialComissue()));
+			}
 		});
+		
 	}
 
     /**
@@ -894,6 +919,8 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
     protected void beforeCreateExcel(List<AssetInfoRegist001Dto> contents) {
         // 格式化数据字典值
     	dealDataList(contents, false);
+    	//增加中债五月份升级字段
+    	dealDataListExt(contents, false);
     }
 
     /**
@@ -1550,5 +1577,46 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
                 logger.debug("资产要素信息登记履历表删除数据：删除结束----------");
             }
         }
+    }
+    /**
+     * @Description 检查登记表中小于今天所有未报送的数据
+     * @return
+     * @return List<CheckReport001Dto>
+     * @version 1.7 2019年6月24日
+     */
+    public List<CheckReport001Dto> check(Date executeDate){
+        // 数据日期为系统时间
+        Date checkdate = DateUtil.parse(DateUtil.getSysDate());
+		// 供跑批使用
+		if (StringUtil.isNotEmpty(executeDate)){
+			checkdate = executeDate;
+		}
+        // 删除今天所有已检查的数据
+        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_资产要素信息登记.getValue(),checkdate);
+        //增加例外情况过滤
+        List<ChbCheckRuleout> listInvestTradeRuleout=chbCheckRuleoutMapper.selectDataByCheckTypeAndReprotCode(CheckConfConstants.CHB_CHECK_TYPE_B, CheckConfConstants.CHB_INVEST_TRADE_SUB);
+        Map<String, List<ChbCheckRuleout>> mapInvestTradeRuleout = listInvestTradeRuleout.stream().collect(
+                 JoyinCollectors.groupingBy(x -> x.getProdId()));
+        //检查数据
+        List<CheckReport001Dto> resultList = new ArrayList<CheckReport001Dto>();
+        //报送前强制的错误检查
+        resultList.addAll(beforeSubErrorCheck.checkAssetInfoReg(checkdate,null,mapInvestTradeRuleout));
+        //警告逻辑检查
+        //resultList.addAll(beforeSubCheck.checkInvestReg(checkdate,mapInvestTradeRuleout));
+        //报错检查异常数据
+        int batchCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));// 每批commit的个数
+        int batchLastIndex = batchCount;// 每批最后一个的下标
+        for (int index = 0; index < resultList.size();) {
+            if (batchLastIndex > resultList.size() - 1) {
+                batchLastIndex = resultList.size();
+                checkReport001Mapper.batchInsert(resultList.subList(index, batchLastIndex));
+                break;// 数据删除完毕,退出循环
+            } else {
+                checkReport001Mapper.batchInsert(resultList.subList(index, batchLastIndex));
+                index = batchLastIndex;// 设置下一批下标
+                batchLastIndex = index + batchCount;
+            }
+        }
+        return resultList;
     }
 }
