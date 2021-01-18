@@ -552,4 +552,13 @@
 		delete from FIN_FLOAT_ACCRUAL_SCHE
 		where CASH_ID = #{cashId,jdbcType=VARCHAR}
 	</delete>
+	
+	<!-- ZGBSS-42 非首次新建浮动管理费报价时 生效日选择开放计划开放开始日+1天作为生效日 add by yujiaping 20210118 start -->
+	<select id="checkeffDate" resultType="java.lang.Integer" parameterType="java.lang.String">                
+           select COUNT(1) 
+           from FIN_OPEN_PLAN           
+           where FIN_OPEN_PLAN.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+           and FIN_OPEN_PLAN.OPEN_DATE_STR = TO_DATE(#{dateStr,jdbcType=VARCHAR},'YYYY-MM-DD')-1 
+    </select>
+    <!-- ZGBSS-42 非首次新建浮动管理费报价时 生效日选择开放计划开放开始日+1天作为生效日 add by yujiaping 20210118 end -->
 </mapper>

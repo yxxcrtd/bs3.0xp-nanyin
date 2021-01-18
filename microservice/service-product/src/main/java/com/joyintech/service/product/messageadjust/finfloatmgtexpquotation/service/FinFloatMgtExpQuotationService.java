@@ -1224,4 +1224,17 @@ public class FinFloatMgtExpQuotationService extends BaseService<FinFloatMgtExpQu
     public BussBenchMarkInfoDto selectBussBenchMarkInfo(Map<String,Object> param){
         return finFloatMgtExpQuotationMapper.selectBussBenchMarkInfo(param);
     }
+    
+    //ZGBSS-42 非首次新建浮动管理费报价时 生效日选择开放计划开放开始日+1天作为生效日 add by yujiaping 20210118 start
+    public boolean checkeffDate(Map<String,Object> param) {
+        if (StringUtil.isEmpty((String)param.get("dateStr")) || StringUtil.isEmpty((String)param.get("finprodId"))) {
+            return false;
+        }
+        int dataCount = finFloatMgtExpQuotationMapper.checkeffDate(param);
+        if (dataCount > 0) {
+            return true;
+        }
+        return false;
+    }
+    //ZGBSS-42 非首次新建浮动管理费报价时 生效日选择开放计划开放开始日+1天作为生效日 add by yujiaping 20210118 end
 }

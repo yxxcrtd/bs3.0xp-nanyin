@@ -698,4 +698,15 @@ public class FinFloatMgtExpQuotation001Service extends CommonExportService<FinFl
                 BussBenchMarkInfoDto.class);
         
     }
+    
+    //ZGBSS-42 非首次新建浮动管理费报价时 生效日选择开放计划开放开始日+1天作为生效日 add by yujiaping 20210118 start
+    public boolean checkeffDate(String dateStr, String finprodId) {
+    	Map<String,Object> param=new HashMap<String,Object>();
+    	param.put("finprodId", finprodId);
+    	param.put("dateStr", dateStr);
+    	return restTemplate.postForObject(
+                ServiceApplication.PRODUCT_SERVICE_NAME + "/FinFloatMgtExpQuotation/checkeffDate", param,
+                boolean.class);
+    }
+    //ZGBSS-42 非首次新建浮动管理费报价时 生效日选择开放计划开放开始日+1天作为生效日 add by yujiaping 20210118 end
 }

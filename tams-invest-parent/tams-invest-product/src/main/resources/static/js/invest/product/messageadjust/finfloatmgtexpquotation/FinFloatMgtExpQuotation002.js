@@ -20,7 +20,8 @@
 	 */
 	function saveOrSubmit(operateType) {
 		var wfl_operType = $("#wfl_operType").val();
-		
+		var workflowId = $('#workflowId').val();
+		var finprodId = $('#finprodId').val() ;
 		var selectedItem1 = table.getAllRows();
     	/*if(selectedItem1 == null || selectedItem1.length == 0){
     		Joyin.error(JoyinUtil.getMessage("业绩基准表不能为空！"));
@@ -81,47 +82,128 @@
             	Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/checkIsHoliday', object, function(result) {
                     if(result == true){
                     	Joyin.confirm(JoyinUtil.getMessage("BUSS_COM_E_0039",JoyinUtil.getLabel("FinFloatMgtExpQuotation002.fAccrDate")+object.fAccrDate), function() {
-                        	Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/check', object, function(result) {
-                                Joyin.confirm(result.data, function() {
-                                    if(operateType === 'save') {
+                    		//ZGBSS-42 非首次新建浮动管理费报价时 生效日选择开放计划开放开始日+1天作为生效日 add by yujiaping 20210118 start
+                            Joyin.ajax('/invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/getFeeinfos', {finprodId:finprodId,workflowId:workflowId}, function(result) {
+                            	if(result != ""){
+                            		Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/checkeffDate', object, function(result) {
+                            			if(result == false){
+                            				Joyin.error(JoyinUtil.getMessage("浮动管理费计提为算尾不算头，请选择开放计划开放开始日+1天作为生效日！"));
+                            	            return;
+                            			}else{
+                            				Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/check', object, function(result) {
+                                                Joyin.confirm(result.data, function() {
+                            				if(operateType === 'save') {
+                                                WorkFlow.doSaveList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_save");
+                                            }
+                                            else {
+                                                WorkFlow.doSubmitList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_submit");
+                                            }
+                                           });                                          
+                            			 });
+                            			}
+                            		 });
+                            	}else{
+                            		if(operateType === 'save') {
                                         WorkFlow.doSaveList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_save");
                                     }
                                     else {
                                         WorkFlow.doSubmitList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_submit");
                                     }
-                                });
-                                return;
+                            	}
+                            	return;
                             });
+                                /*if(operateType === 'save') {
+                                    WorkFlow.doSaveList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_save");
+                                }
+                                else {
+                                    WorkFlow.doSubmitList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_submit");
+                                }*/
+                                //ZGBSS-42 非首次新建浮动管理费报价时 生效日选择开放计划开放开始日+1天作为生效日 add by yujiaping 20210118 end
                     	},
                         function(){
                         	return false;
                         })
                     }
-                    else{
-                    	Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/check', object, function(result) {
-                            Joyin.confirm(result.data, function() {
-                                if(operateType === 'save') {
+                    else{                    	
+                            	//ZGBSS-42 非首次新建浮动管理费报价时 生效日选择开放计划开放开始日+1天作为生效日 add by yujiaping 20210118 start
+                                Joyin.ajax('/invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/getFeeinfos', {finprodId:finprodId,workflowId:workflowId}, function(result) {
+                                	if(result != ""){
+                                		Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/checkeffDate', object, function(result) {
+                                			if(result == false){
+                                				Joyin.error(JoyinUtil.getMessage("浮动管理费计提为算尾不算头，请选择开放计划开放开始日+1天作为生效日！"));
+                                	            return;
+                                			}else{
+                                				Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/check', object, function(result) {
+                                                    Joyin.confirm(result.data, function() {
+                                				if(operateType === 'save') {
+                                                    WorkFlow.doSaveList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_save");
+                                                }
+                                                else {
+                                                    WorkFlow.doSubmitList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_submit");
+                                                }
+                                               });
+                                			 });
+                                			}
+                                		 });
+                                	}else{
+                                		if(operateType === 'save') {
+                                            WorkFlow.doSaveList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_save");
+                                        }
+                                        else {
+                                            WorkFlow.doSubmitList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_submit");
+                                        }
+                                	}
+                                });
+                                    /*if(operateType === 'save') {
+                                        WorkFlow.doSaveList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_save");
+                                    }
+                                    else {
+                                        WorkFlow.doSubmitList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_submit");
+                                    }*/
+                                    //ZGBSS-42 非首次新建浮动管理费报价时 生效日选择开放计划开放开始日+1天作为生效日 add by yujiaping 20210118 end
+                        
+                    }
+                })
+            }
+            else{
+            	//ZGBSS-42 非首次新建浮动管理费报价时 生效日选择开放计划开放开始日+1天作为生效日 add by yujiaping 20210118 start
+                Joyin.ajax('/invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/getFeeinfos', {finprodId:finprodId,workflowId:workflowId}, function(result) {
+                	if(result != ""){
+                		Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/checkeffDate', object, function(result) {
+                			if(result == false){
+                				Joyin.error(JoyinUtil.getMessage("浮动管理费计提为算尾不算头，请选择开放计划开放开始日+1天作为生效日！"));
+                	            return;
+                			}else{
+                				Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/check', object, function(result) {
+                                    Joyin.confirm(result.data, function() {
+                				if(operateType === 'save') {
                                     WorkFlow.doSaveList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_save");
                                 }
                                 else {
                                     WorkFlow.doSubmitList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_submit");
                                 }
-                            });
-                        });
-                    }
-                })
-            }
-            else{
-            	Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/check', object, function(result) {
-                    Joyin.confirm(result.data, function() {
-                        if(operateType === 'save') {
+                               });
+                			 });
+                			}
+                		 });
+                	}else{
+                		if(operateType === 'save') {
                             WorkFlow.doSaveList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_save");
                         }
                         else {
                             WorkFlow.doSubmitList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_submit");
                         }
-                    });
+                	}
                 });
+                    /*if(operateType === 'save') {
+                        WorkFlow.doSaveList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_save");
+                    }
+                    else {
+                        WorkFlow.doSubmitList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_submit");
+                    }*/
+                    //ZGBSS-42 非首次新建浮动管理费报价时 生效日选择开放计划开放开始日+1天作为生效日 add by yujiaping 20210118 end
+                   
+                
             }
         }
         else if(pageModel == PAGE_MODEL_EDIT && (wfl_operType == null || wfl_operType == 'NEW') && !$("#fAccrDate").is(":disabled")){
@@ -308,6 +390,20 @@
         $("#endTdayRule").val(result.endTdayRule).trigger("change");
         $("#payTdayRule").val(result.payTdayRule).trigger("change");
     }
+    
+    //ZGBSS-42 浮动管理费报价调整控制部分字段不能修改 add by yujiaping 20210116 start
+    function changeDisabled1(status){
+    	$("#feeName").attr("disabled",status);    	
+    	$("#basicBill").attr("disabled",status);
+    	$("#basic").attr("disabled",status);
+    	$("#fAccrDate").attr("disabled",status);        
+        $("#eAccrDate").attr("disabled",status);       
+        $("#payCycle").attr("disabled",status);
+        $("#firstPayDate").attr("disabled",status);
+        $("#endTdayRule").attr("disabled",status);
+        $("#payTdayRule").attr("disabled",status);       
+    }
+    //ZGBSS-42 浮动管理费报价调整控制部分字段不能修改 add by yujiaping 20210116 end
     //文本框编辑状态
     function changeDisabled(status){
     	//$("#feeName").attr("disabled",status);
@@ -490,6 +586,7 @@
 			if(null == result.feeId || ''==result.feeId){//无浮动管理费
 				if(pageModel == PAGE_MODEL_NEW){
 					changeInput('');//让页面字段置空
+					changeDisabled1(false);
 				}
 //				changeDisabled(true);//不让页面字段置灰
     			cashId='';
@@ -498,6 +595,9 @@
 				cashId=result.cashId;
 				if (pageModel==PAGE_MODEL_NEW) {
 				changeInput(result);//给页面字段赋值
+				//ZGBSS-42 浮动管理费报价调整控制部分字段不能修改 add by yujiaping 20210116 start
+				changeDisabled1(true);//非首次新建浮动管理费报价时，计提信息、支付信息带出首次信息，置灰不可改
+				//ZGBSS-42 浮动管理费报价调整控制部分字段不能修改 add by yujiaping 20210116 end
 					 }
 //				changeDisabled(false);//让页面字段置灰，不可修改，只能修改超额收益分层。
 				loadTable();

@@ -410,4 +410,13 @@ public class FinFloatMgtExpQuotation002Controller extends BaseController {
         BussBenchMarkInfoDto bussBenchMarkInfoDto = finFloatMgtExpQuotation001Service.selectBussBenchMarkInfo(finprodId, effDate);
         return bussBenchMarkInfoDto;
     }
+    //ZGBSS-42 非首次新建浮动管理费报价时 生效日选择开放计划开放开始日+1天作为生效日 add by yujiaping 20210118 start
+    @ResponseBody
+    @RequestMapping("/checkeffDate")
+    public boolean checkeffDate(@RequestBody FinFloatMgtExpQuotation001Dto dto){
+    	String dateStr = DateUtil.format(dto.getEffDate());
+        boolean flag = finFloatMgtExpQuotation001Service.checkeffDate(dateStr, dto.getFinprodId());
+        return flag;
+    }
+    //ZGBSS-42 非首次新建浮动管理费报价时 生效日选择开放计划开放开始日+1天作为生效日 add by yujiaping 20210118 end
 }

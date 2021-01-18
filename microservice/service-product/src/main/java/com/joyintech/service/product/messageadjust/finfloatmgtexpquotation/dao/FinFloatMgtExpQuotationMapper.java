@@ -212,4 +212,8 @@ public interface FinFloatMgtExpQuotationMapper {
    int deleteCashPlanByCashId(@Param("cashId")String cashId);
 
    int deleteFloatAccrByPrimaryKey(FinFloatAccrualScheKey key);
+   
+   //ZGBSS-42 非首次新建浮动管理费报价时 生效日选择开放计划开放开始日+1天作为生效日 add by yujiaping 20210118 start
+   int checkeffDate(Map<String,Object> param);
+   //ZGBSS-42 非首次新建浮动管理费报价时 生效日选择开放计划开放开始日+1天作为生效日 add by yujiaping 20210118 end
 }
