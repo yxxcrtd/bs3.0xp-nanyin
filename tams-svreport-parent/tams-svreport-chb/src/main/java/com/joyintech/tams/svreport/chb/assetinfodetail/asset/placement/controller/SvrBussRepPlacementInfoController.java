@@ -2,6 +2,7 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.asset.placement.controll
 
 import com.joyintech.framework.annotation.SubPageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.placement.impl.SvrBussRepPlacementInfoImplService;
@@ -52,6 +53,7 @@ public class SvrBussRepPlacementInfoController extends BaseController {
             //调用service
             bussAssetInfoService.setModle(uuid, dataStatus, model);
         }
+        model.addAttribute("entityName",this.getParam("entityName"));
 
         //3、返回 子组件对应的页面
         return "report/chb/assetinfodetail/asset/plancement/SvrBussRepPlacementInfo";
