@@ -62,8 +62,8 @@ public class ValNetValueConfirm005Contoller extends BaseController {
 	public List<ValNetValueConfirm005Dto> getInfo(@RequestBody Map<String,Object> param){
 		List<ValNetValueConfirm005Dto> list=valNetValueConfirm005Service.getInfo(param);
 
-//		list.add(valNetValueConfirm005Service.getInfo1(param));
-//		list.add(valNetValueConfirm005Service.getInfo(param));
+		list.addAll(valNetValueConfirm005Service.getInfo1(param));
+		list.addAll(valNetValueConfirm005Service.getInfo(param));
 		return list;
 	}
 }

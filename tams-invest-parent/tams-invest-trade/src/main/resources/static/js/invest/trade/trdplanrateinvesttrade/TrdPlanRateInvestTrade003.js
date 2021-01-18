@@ -336,15 +336,16 @@ var etrAmt = '';
 	                for (var bussTrdTransfenpeiOrder in object.bussTrdTransfenpeiDto) {
 	                    if ((object.bussTrdTransferOrder[bussTrdTransferOrder].portfolioId == object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].portfolioId) &&
 	                        (JoyinMath.doAdd(object.bussTrdTransferOrder[bussTrdTransferOrder].settleAmt, 0, 2) == JoyinMath.doAdd(object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].tradeAmt, 0, 2))) {
-	                        object.prinAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].prinAmt;
-	                        object.intAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].intAmt;
-	                        object.channelFee = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].channelFee;
-	                        object.tradeAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].tradeAmt;
-	                        object.bussTrdAvailableCashQueryavalibleCash = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].bussTrdAvailableCashQueryavalibleCash;
-	                        object.bussTrdAvailableCashQueryavalibleCash1 = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].bussTrdAvailableCashQueryavalibleCash1;
-	                        object.channelAvailableCash = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].channelAvailableCash;
-	                        object.Assetsavailablepositions = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].Assetsavailablepositions;
-	                        if (object.ps === PS_T01 && object.prinAmt && object.bussTrdAvailableCashQueryavalibleCash && Number(object.prinAmt) > (object.chlId && object.payType == '02' ? Number(object.channelAvailableCash) : Number(object.bussTrdAvailableCashQueryavalibleCash))) {
+//	                        object.prinAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].prinAmt;
+//	                        object.intAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].intAmt;
+//	                        object.channelFee = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].channelFee;
+//	                        object.tradeAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].tradeAmt;
+//	                        object.bussTrdAvailableCashQueryavalibleCash = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].bussTrdAvailableCashQueryavalibleCash;
+//	                        object.bussTrdAvailableCashQueryavalibleCash1 = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].bussTrdAvailableCashQueryavalibleCash1;
+//	                        object.channelAvailableCash = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].channelAvailableCash;
+//	                        object.Assetsavailablepositions = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].Assetsavailablepositions;
+	                     //   if (object.ps === PS_T01 && object.prinAmt && object.bussTrdAvailableCashQueryavalibleCash && Number(object.prinAmt) > (object.chlId && object.payType == '02' ? Number(object.channelAvailableCash) : Number(object.bussTrdAvailableCashQueryavalibleCash))) {
+	                        if (object.ps === PS_T01 && object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].prinAmt && object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].bussTrdAvailableCashQueryavalibleCash && Number(object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].prinAmt) > (object.chlId && object.payType == '02' ? Number(object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].channelAvailableCash) : Number(object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].bussTrdAvailableCashQueryavalibleCash))) {
 	                            if (object.chlId && object.payType == '02') {
 	                                message = JoyinUtil.getMessage("TRD_C_0004");
 	                                flag1 = false;
@@ -772,6 +773,13 @@ var etrAmt = '';
 //        }else{
 //            window.BussTrdAvailableCashQuery && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].showPosition(true);
 //        }
+        if(ps == PS_T01){
+
+            table.showColumns([{field: 'Assetsavailablepositions', visible: false},{field: 'bussTrdAvailableCashQueryavalibleCash', visible: true},{field: 'bussTrdAvailableCashQueryavalibleCash1', visible: true}]);
+        }else if(ps == PS_T02){
+            table.showColumns([{field: 'Assetsavailablepositions', visible: true},{field: 'bussTrdAvailableCashQueryavalibleCash', visible: false},{field: 'bussTrdAvailableCashQueryavalibleCash1', visible: false}]);
+        }
+
 //        if(ps !== '01'){
 //            $('#Buy').css('display','none');
 //            // <!-- 通道交易 新增 强成西 2019/03/26 start -->

@@ -132,9 +132,9 @@ SELECT
 from WFL_TRD_PRODUCT_DEAL trd
 inner join prod on trd.finprod_id = prod.finprod_id
 inner join WFL_TRD_PRODUCT_DEAL_ADD trda on trd.trade_id = trda.trade_id
-where trd.trade_date = date''${valDate}''  and trda.portfolio_id IN ${portfolioCode})
+where trd.trade_date = date''${valDate}''  and trda.portfolio_id IN ${portfolioCode}
 and trd.ps in (''T01'',''T02'',''T03'',''T04'',''T07'',''T08'',''T09'',''T11'',
-  ''T19'',''T20'',''T21'',''T38'',''T39'',''T52'',''T54'',''T22'',''T23'')
+  ''T19'',''T20'',''T21'',''T38'',''T39'',''T52'',''T54'',''T22'',''T23''))
 ';
 	sql05 clob:='--五个交易日到期的非国债央票政策金融债资产
 with prod as(
