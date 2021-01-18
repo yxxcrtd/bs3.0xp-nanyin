@@ -37,8 +37,15 @@ $(function() {
       	   if("shareAmt"==field && $('#ps').val()==ps_mr){
       		   return false;
       	   }
-      	   if("tradeAmt"==field && $('#ps').val()==ps_T06){
-      		   return false;
+      	   if( $('#ps').val()==ps_T06){
+      	       if( $('#shareAmt').prop("disabled") && "shareAmt"==field ){
+      	            return false;
+      	       }
+
+      	       if( $('#tradeAmt').prop("disabled") && "tradeAmt"==field ){
+                    return false;
+               }
+
       	   }
       	   if("tradeAmt"==field && $('#ps').val()==ps_mc){
       		   return false;
@@ -183,7 +190,8 @@ $(function() {
     				Joyin.error('组合分配列表第'+(i+1)+'行交易金额不能为空！');
                     return true;
     			}
-    			if((ps_T06 ==$('#ps').val() || ps_mc ==$('#ps').val()) && !table.getAllRows()[i].shareAmt){
+    			if( ps_mc ==$('#ps').val() && !table.getAllRows()[i].shareAmt){
+    			//if((ps_T06 ==$('#ps').val() || ps_mc ==$('#ps').val()) && !table.getAllRows()[i].shareAmt){
     				Joyin.error('组合分配列表第'+(i+1)+'行交易份额不能为空！');
                     return true;
     			}
