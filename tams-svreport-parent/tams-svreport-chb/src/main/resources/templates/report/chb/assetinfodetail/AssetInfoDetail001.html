@@ -28,10 +28,13 @@
 				<div class="layui-inline layui-col-md4">
 					<label class="layui-form-label form-lable">资产代码</label>
 					<div class="layui-input-inline input-inline">
-						<input id="assetCode" name="assetCode" type="text"
-							   class="layui-input form-input input-lenovoselect" maxlength="30"
-							   data-rules="code;maxlength:30" placeholder="请输入关键词"
-							   data-th-placeholder="#{SysCommon.placeholder}" multiple="true">
+						<select id="assetCode" class="input-select"
+								data-th-data-url='@{/chb/assetinfodetail/AssetInfoDetail001/getAssetCode}'
+								initvalue="" placeholder="请选择"
+								data-th-placeholder="#{SysCommon.selectplaceholder}"
+								allowClear="true" multiple="multiple">
+						</select>
+
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md4">
@@ -49,7 +52,7 @@
 					<label class="layui-form-label form-lable" >资产二级分类</label>
 					<div class="layui-input-inline input-inline">
 						<select id="orgAssetType2" class="layui-input form-input input-select"
-								data-th-data-result='${CUSTOM_ASSET_TYPE_TWO}' placeholder="请选择"
+								data-th-data-result='${WINDTYPETWO}' placeholder="请选择"
 								data-th-initvalue="${orgAssetType2}"
 								data-th-placeholder="#{SysCommon.selectplaceholder}"
 								allowClear="true" multiple="true">
@@ -90,7 +93,7 @@
 									data-th-data-result='${DISPOSE_STATUS}' placeholder="请选择"
 									data-th-initvalue="${dataStatus}"
 									data-th-placeholder="#{SysCommon.selectplaceholder}"
-									allowClear="true" multiple="false">
+									allowClear="true">
 							</select>
 						</div>
 					</div>

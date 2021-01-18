@@ -6,7 +6,9 @@ import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.svreport.chb.astvalueregist.dto.ChbAstValSubHis;
 import com.joyintech.tams.svreport.chb.astvalueregist.dto.ChbAstValueRegist001Dto;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbAstValSubHisMapper {
     int deleteByPrimaryKey(String registSeqno);
 

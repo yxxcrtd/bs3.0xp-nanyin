@@ -44,6 +44,18 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 
 	private  String dataStatus;
 
+	private String vDateStr;
+
+	private String mDateStr;
+
+	public String getvDateStr() {
+		return vDateStr;
+	}
+
+	public void setvDateStr(String vDateStr) {
+		this.vDateStr = vDateStr;
+	}
+
 	private SvrBussFinBondRepInfoDto svrBussFinBondRepInfoDto;
 
 	private SvrBussRepDepositInfoDto svrBussRepDepositInfoDto;
@@ -71,7 +83,7 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 	}
 
 	public String getDataStatusStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.分配状态, this.getDataStatus());
+		return SysDataUtil.getNameFromDataDict(DictCode.处理状态, this.getDataStatus());
 	}
 
 

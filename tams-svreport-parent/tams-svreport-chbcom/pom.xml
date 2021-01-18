@@ -12,6 +12,11 @@
   		<artifactId>tams-svreport-busicom</artifactId>
   		<version>${project.version}</version>
   	</dependency>
+    <dependency>
+        <groupId>com.joyintech.component</groupId>
+        <artifactId>msg-generate-1.0.0</artifactId>
+        <version>1.0.0</version>
+    </dependency>
   </dependencies>
   <build>
    <plugins>

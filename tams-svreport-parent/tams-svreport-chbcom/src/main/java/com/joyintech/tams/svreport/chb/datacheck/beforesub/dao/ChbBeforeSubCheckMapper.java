@@ -4,7 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 import com.joyintech.tams.svreport.chb.datacheck.beforesub.dto.ChbBeforeSubCheckDto;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbBeforeSubCheckMapper {
     
     /**

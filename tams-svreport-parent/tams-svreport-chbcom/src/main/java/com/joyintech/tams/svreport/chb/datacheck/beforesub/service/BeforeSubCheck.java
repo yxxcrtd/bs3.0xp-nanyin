@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,7 +126,10 @@ public class BeforeSubCheck extends SvrCBBaseService{
         resultList.addAll(beforeSubErrorCheck.checkProdIssueReg(checkdate,null,mapPrdIssueRuleout));
         resultList.addAll(beforeSubErrorCheck.checkProdEndReg(checkdate,null,mapPrdEndRuleout));
         resultList.addAll(beforeSubErrorCheck.checkInvestTradeReg(checkdate,null,mapInvestTradeRuleout));
-        
+        /**start  中债一二期报送前检查强制校验检查  add  by ***  20201010 */
+        //产品申报登记
+        resultList.addAll(beforeSubErrorCheck.checkProdDeclareSub(checkdate,null,mapInvestTradeRuleout));
+        /**end  中债一二期报送前检查强制校验检查  add  by ***  20201010 */
         //警告逻辑检查
         resultList.addAll(checkProdEndReg(checkdate,mapPrdEndRuleout));
         resultList.addAll(checkProdRaiseTotalReg(checkdate,mapTotalRaiseRuleout));
@@ -216,8 +220,8 @@ public class BeforeSubCheck extends SvrCBBaseService{
 //                resultList.add(chbReportCheck);
 //            }
             
-            if ( m.getCustyield().subtract(m.getProdyield()).abs().compareTo(BigDecimal.valueOf(0.01))<0
-                ||m.getCustyield().subtract(m.getProdyield()).abs().compareTo(BigDecimal.valueOf(0.08))>0) {
+            if ( m.getCustyield().subtract(m.getProdyield()).abs().compareTo(BigDecimal.valueOf(1))<0
+                ||m.getCustyield().subtract(m.getProdyield()).abs().compareTo(BigDecimal.valueOf(8))>0) {
             	warnInfo=warnInfo+"客户实际年化收益率和产品实际年化收益率偏差过大[1%-8%]!";
 //                chbReportCheck.setWarnInfo("客户实际年化收益率和产品实际年化收益率偏差过大[1%-8%]!");
 //                resultList.add(chbReportCheck);
@@ -230,6 +234,8 @@ public class BeforeSubCheck extends SvrCBBaseService{
 //                resultList.add(chbReportCheck);
 //            }
 
+            // 产品自动持仓金额=募集份额+投资交易发生金额之和（注意交易方向）
+            // 封闭式产品的兑付客户总金额（元）=兑付客户份额+兑付客户总收益
             if ( m.getDiffrate2().abs().compareTo( BigDecimal.valueOf(0.01))>0 ) {
             	warnInfo=warnInfo+"产品的【银行实际实现收入（元）+兑付客户总金额（元）】与产品自动持仓金额的偏差不在[1%]之内!";
 //                chbReportCheck.setWarnInfo("产品的【银行实际实现收入（元）+兑付客户总金额（元）】与产品自动持仓金额的偏差过大[1%]!");
@@ -316,16 +322,16 @@ public class BeforeSubCheck extends SvrCBBaseService{
             chbReportCheck.setRefseqno(m.getRegistseqno());
             chbReportCheck.setRepCode(DictCodeListExt2.报表名称_资产交易信息登记.getValue());
             chbReportCheck.setRepName(DictCodeListExt2.报表名称_资产交易信息登记.getCodeName());
-            chbReportCheck.setValidKey("产品代码:"+m.getProdid()+"  资产代码:"+m.getAssetcode());
+            chbReportCheck.setValidKey("产品代码:"+m.getProdid() + (StringUtil.isNotEmpty(m.getAssetcode()) ? (" 资产代码:"+ m.getAssetcode()): ""));
             chbReportCheck.setCheckResult(SysDataUtil.getCodeFromDataDictByName(
                 DictCode.检查结果, DictCodeListExt2.检查结果_存在预警信息项.getCodeName()));
             chbReportCheck.setDataTime(checkdate);
             String warnInfo="";
-            if ( m.getRegcounts()<=0 ) {//不合格
-            	warnInfo=warnInfo+"对应的资产未登记!";
-//                chbReportCheck.setWarnInfo("对应的资产未报送!");
-//                resultList.add(chbReportCheck);
-            }               
+//            if ( m.getRegcounts()<=0 ) {//不合格
+//            	warnInfo=warnInfo+"对应的资产未登记!";
+////                chbReportCheck.setWarnInfo("对应的资产未报送!");
+////                resultList.add(chbReportCheck);
+//            }
             
             if ( m.getHoldqty().compareTo(BigDecimal.ZERO)<0 ) {
             	warnInfo=warnInfo+"存在持仓为负!";
@@ -333,7 +339,7 @@ public class BeforeSubCheck extends SvrCBBaseService{
 //                resultList.add(chbReportCheck);
             }
             
-            if ( m.getMaxprice().compareTo(m.getMinprice().multiply(new BigDecimal(9)))>0 ) {
+            if (m.getMaxprice().compareTo(BigDecimal.ZERO) !=0 && m.getMinprice().compareTo(BigDecimal.ZERO) !=0 && m.getMaxprice().compareTo(m.getMinprice().multiply(new BigDecimal(9)))>0 ) {
             	warnInfo=warnInfo+"同一个产品和同一个资产不同的交易，最高交易单价高于9倍最低交易单价!";
 //                chbReportCheck.setWarnInfo("同一个产品和同一个资产不同的交易，最高交易单价高于9倍最低交易单价!");
 //                resultList.add(chbReportCheck);
@@ -379,11 +385,11 @@ public class BeforeSubCheck extends SvrCBBaseService{
                 DictCode.检查结果, DictCodeListExt2.检查结果_存在预警信息项.getCodeName()));
             chbReportCheck.setDataTime(checkdate);
             String warnInfo="";
-            if ( m.getRegcounts()<=0 ) {//不合格
-            	warnInfo=warnInfo+"对应的资产未报送!";
-//                chbReportCheck.setWarnInfo("对应的资产未报送!");
-//                resultList.add(chbReportCheck);
-            }               
+//            if ( m.getRegcounts()<=0 ) {//不合格
+//            	warnInfo=warnInfo+"对应的资产未报送!";
+////                chbReportCheck.setWarnInfo("对应的资产未报送!");
+////                resultList.add(chbReportCheck);
+//            }
             
             if ( m.getDiffrate1().compareTo( BigDecimal.valueOf(0.5))<0
                 || m.getDiffrate1().compareTo(BigDecimal.valueOf(2))>0 ) {

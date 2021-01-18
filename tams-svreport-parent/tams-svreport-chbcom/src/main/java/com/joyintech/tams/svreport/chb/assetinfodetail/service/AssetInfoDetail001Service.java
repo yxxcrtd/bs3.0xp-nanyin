@@ -18,11 +18,13 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.ChbAssetInfoErrodataMapper;
 import com.joyintech.tams.common.base.dao.ChbAssetSubStatusMapper;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.common.base.entity.ChbAssetSubStatus;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
@@ -63,6 +65,9 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
 	 */
 	@Autowired
 	private AssetInfoDetailMapper assetInfoDetailMapper;
+
+	@Autowired
+	private ChbAssetInfoErrodataMapper chbAssetInfoErrodataMapper;
 
 
 
@@ -123,10 +128,18 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
 	public Integer doSave(AssetInfoDetailDto dto){
 		int  flag = 0;
 		List<ChbAssetInfo> assetInfo = new ArrayList<>();
+		//数据保存.使用marge模式.避免出现老数据仍然出现的问题
 		if(StringUtil.isNotEmpty(dto)){
 			assetInfo.add(dto);
 			flag = assetInfoDetailMapper.mergeInfoListEx(assetInfo);
 		}
+		/**
+		 * 如果是待处理数据,则将错误信息表里面的数据删除
+		 */
+		if(DictCodeList.处理状态_未处理.equals(dto.getDataStatus())){
+			chbAssetInfoErrodataMapper.deleteByWorkflowId(dto.getAssetId());
+		}
+
 		return flag;
 	}
 

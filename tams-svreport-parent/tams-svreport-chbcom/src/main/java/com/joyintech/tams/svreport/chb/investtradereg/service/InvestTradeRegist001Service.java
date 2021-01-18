@@ -512,7 +512,7 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
 	 * @see
 	 * @since 1.0
 	 */
-	private void dealDataList(List<InvestTradeRegist001Dto> list, boolean isExport) {
+	public void dealDataList(List<InvestTradeRegist001Dto> list, boolean isExport) {
 		list.forEach(item -> {
             item.setStatusName(SvrDataUtil.getNameFromDataDict(DictCode.报送数据状态,item.getStatus()));
 //            item.setStatus(item.getStatusName());
@@ -758,7 +758,7 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
         // 检查登记表中小于今天所有未报送的数据
         if(CollectionUtils.isNotEmpty(checkKeys)){
             // 调用检查方法
-            resultlist.addAll(check());
+            resultlist.addAll(check(null));
             // 同一资产同一产品汇总一条
             Map<String,String> showInMap = new HashMap<String,String>();
             checkmap = resultlist.stream().collect(Collectors.toMap(CheckReport001Dto::getUniqueKey,(p)->p,(key1,key2)->key1));
@@ -796,9 +796,13 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
      * @return List<CheckReport001Dto>
      * @version 1.7 2019年6月24日
      */
-    private List<CheckReport001Dto> check(){
+    public List<CheckReport001Dto> check(Date batchDate){
         // 数据日期为系统时间
         Date checkdate = DateUtil.parse(DateUtil.getSysDate());
+		// 供跑批使用
+		if (StringUtil.isNotEmpty(batchDate)){
+			checkdate = batchDate;
+		}
         // 删除今天所有已检查的数据
         checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_资产交易信息登记.getValue(),checkdate);
         //增加例外情况过滤

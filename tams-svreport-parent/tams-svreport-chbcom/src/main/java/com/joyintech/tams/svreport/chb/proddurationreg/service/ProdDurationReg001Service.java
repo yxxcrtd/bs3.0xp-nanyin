@@ -517,7 +517,7 @@ public class ProdDurationReg001Service extends SvrCommonExportService<ProdDurati
         // 调用检查方法
 		Map<String,CheckReport001Dto> checkmap = new HashMap<String,CheckReport001Dto>();
 			if(CollectionUtils.isNotEmpty(checkKeys)){
-				List<CheckReport001Dto> resultlist = check();
+				List<CheckReport001Dto> resultlist = check(null);
 				checkmap = resultlist.stream().collect(Collectors.toMap(CheckReport001Dto::getRefseqno,(p)->p,(key1,key2)->key1));
 				for(String key : checkKeys){
 					if(checkmap.get(key)!=null){
@@ -545,9 +545,13 @@ public class ProdDurationReg001Service extends SvrCommonExportService<ProdDurati
 	 * @return List<CheckReport001Dto>
 	 * @version 1.7 2019年6月24日
 	 */
-	private List<CheckReport001Dto> check(){
+	public List<CheckReport001Dto> check(Date batchDate){
 		// 数据日期为系统时间
 		Date checkdate = DateUtil.parse(DateUtil.getSysDate());
+		// 供跑批使用
+		if (StringUtil.isNotEmpty(batchDate)){
+			checkdate = batchDate;
+		}
 		// 删除今天所有已检查的数据
 		checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_产品存续期登记.getValue(),checkdate);
 		//增加例外情况过滤
