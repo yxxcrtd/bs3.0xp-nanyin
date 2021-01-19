@@ -411,7 +411,7 @@ public class TrdPlanNetInvestTrade004Controller extends BaseController {
 				}
 			}else if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue()) 
 					|| StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())){
-				if(!(fenpeiList.get(i).getShareAmt().compareTo(BigDecimal.ZERO) == 1)){
+				if( fenpeiList.get(i).getShareAmt()!=null && !(fenpeiList.get(i).getShareAmt().compareTo(BigDecimal.ZERO) == 1)){
 					continue;
 				}
 			}
