@@ -65,7 +65,8 @@ public class AssetInfoDetail002Controller extends BaseController {
     public String init(Model model){
         super.setSelectOptionToModel(model, DictCode.金融产品类型_投管用,DictCode.资产_负债类别
                 ,DictCode.WIND一级分类_含债券中债, DictCode.资产_负债二级类别,DictCode.WIND二级分类_含债券二级分类等, DictCode.报送反馈状态,
-                DictCode.交易流通场所_中债,DictCode.币种_中债,DictCode.行内资产二级分类);
+                DictCode.交易流通场所_中债,DictCode.币种_中债,DictCode.行内资产二级分类,DictCode.行内资产三级分类,
+                DictCode.行内资产四级分类, DictCode.行内资产五级分类);
 
         String assetUuid = this.getParam("assetUuid");
         String dataStatus = this.getParam("dataStatus");
