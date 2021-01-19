@@ -377,7 +377,7 @@
 				return getSearchParams();
 			},
 		},
-		cols : [ colList ],
+		cols : colList.length != 0 ? [ colList ] : null,
 		page : true
 	});
 
