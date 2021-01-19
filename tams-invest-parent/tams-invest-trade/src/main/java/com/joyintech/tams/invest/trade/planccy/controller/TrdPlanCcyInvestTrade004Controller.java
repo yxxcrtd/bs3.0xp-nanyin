@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.component.business.trade.BussTrdAvailableCashQueryService;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.apache.commons.codec.binary.StringUtils;
@@ -100,6 +101,9 @@ public class TrdPlanCcyInvestTrade004Controller extends BaseController {
 
     @Autowired
     private TrdPlanCcyInvestTrade003Service trdPlanCcyInvestTrade003Service;
+
+    @Autowired(required = false)
+    private BussTrdAvailableCashQueryService bussTrdAvailableCashQueryService;
 
     /**
      * 日期相关
@@ -312,6 +316,29 @@ public class TrdPlanCcyInvestTrade004Controller extends BaseController {
                 ar.setData("交易日期为节假日," + (String)ar.getData());
             }
         }
+
+        if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue()) ){
+            // 调用基础组件.【组合可用现金和实际现金查询更新组件.查询持仓(可用)】
+            Map<String, Object> paramMap = new HashMap<String, Object>();
+            //      paramMap.put("portfolioId", dto.getPortfolioId());
+            paramMap.put("tradeDate", DateUtil.format(dto.getTradeDate()));
+            paramMap.put("ccy", dto.getCcy());
+            //paramMap.put("calendarId", dto.getCalendarId());
+            paramMap.put("chlId", dto.getChlId());
+            paramMap.put("finprodId", dto.getFinprodId());
+            //获得资产维度的持仓
+            Map<String, Object>  resultMap = bussTrdAvailableCashQueryService.getFinAvaPosition(paramMap);
+
+            BigDecimal position = new BigDecimal((String) resultMap.get("POSITION"));
+            //融资金额
+            BigDecimal issueAmt = new BigDecimal((String)resultMap.get("ISSUEAMT"));
+            position = com.joyintech.framework.util.ArithmeticUtil.doAdd(position, dto.getTradeAmt());
+            //资产 融资金额、发行金额
+            if (issueAmt.compareTo(position) < 0) {
+                ar.setData(getMessage("TRD_C_0005"));
+            }
+        }
+
         return ar;
     }
 
