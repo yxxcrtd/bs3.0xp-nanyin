@@ -123,6 +123,7 @@ var QueryFunc=function(){
                 $("#svrBussRepPlacementInfoDto_targetType1").val('').trigger("change");
                 $("#svrBussRepPlacementInfoDto_targetType1").attr("disabled",true);
                 $("#issueAmt").attr("disabled",true);
+                $("#issueAmt").val('');
             }
         }else if(obj["03"].indexOf(repAssetType)>=0){
             //债券类资产/理财直接融资工具/同业存单
@@ -134,6 +135,11 @@ var QueryFunc=function(){
             //权益类资产
         }else if(obj["07"].indexOf(repAssetType)>=0){
             //金融衍生品
+            if(repAssetType!='1403'){
+                $("#svrBussRepFinanciallInfoDto_holdPurpose").val('99').trigger("change");
+            }else{
+                $("#svrBussRepFinanciallInfoDto_holdPurpose").val('').trigger("change");
+            }
         }else if(obj["08"].indexOf(repAssetType)>=0){
             //QDII债券资产
         }else if(obj["09"].indexOf(repAssetType)>=0){

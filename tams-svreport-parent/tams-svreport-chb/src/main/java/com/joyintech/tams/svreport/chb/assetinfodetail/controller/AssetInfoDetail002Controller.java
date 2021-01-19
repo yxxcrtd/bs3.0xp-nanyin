@@ -18,6 +18,8 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.service.AssetInfoDetailMService;
@@ -67,13 +69,18 @@ public class AssetInfoDetail002Controller extends BaseController {
 
         String assetUuid = this.getParam("assetUuid");
         String dataStatus = this.getParam("dataStatus");
+        String issuepartyid= SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID);
 
         //资产编号不为空则为修改.
 
         String jsonObject= JSONObject.toJSONString(assetInfoDetailMService.getDataListLink());
         model.addAttribute("AssetTypeListLink", jsonObject);
+        AssetInfoDetailDto  enty=new   AssetInfoDetailDto();
+        enty.setIssuePartyId(issuepartyid);
+        model.addAttribute(GlobalConstant.ENTITY, enty);
         if(StringUtil.isNotEmpty(assetUuid)&&StringUtil.isNotEmpty(dataStatus)){
             AssetInfoDetailDto  dto = assetInfoDetailMService.getAssetInfoDetail(assetUuid,dataStatus);
+            dto.setIssuePartyId(issuepartyid);
             model.addAttribute(GlobalConstant.ENTITY, dto);
         }
         return super.init(model);
