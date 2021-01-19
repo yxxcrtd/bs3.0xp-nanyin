@@ -166,6 +166,7 @@
 		<if test="portfolioId != null and portfolioId != ''">
 			AND T1.PTL_ID = #{portfolioId,jdbcType=VARCHAR}
 		</if>
+		order by sub_code desc
 	</select>
 
 	<!-- 获取组合某日实收资本 -->

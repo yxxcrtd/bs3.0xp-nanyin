@@ -12,16 +12,12 @@ package com.joyintech.tams.invest.batch.valrift.service;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -136,6 +132,14 @@ public class ValRiftService {
     private List<PtlSecPierceValutionDto> calValIndex(List<PtlSecPierceValutionDto> result){
     	List<PtlSecPierceValutionDto> resultRep = new ArrayList<PtlSecPierceValutionDto>();
         Map<String,PtlSecPierceValutionDto> mapAsset = new HashMap<String,PtlSecPierceValutionDto>();
+        Collections.sort(result, new Comparator<PtlSecPierceValutionDto>() {
+            @Override
+            public int compare(PtlSecPierceValutionDto o1, PtlSecPierceValutionDto o2) {
+                return (StringUtil.isEmpty(o1.getSubCode()) ? "":o1.getSubCode()).compareTo(
+                        (StringUtil.isEmpty(o2.getSubCode())  ? "":o2.getSubCode())
+                );
+            }
+        });
         for(PtlSecPierceValutionDto bean : result){
             if(StringUtil.isNotEmpty(bean.getFinprodId())){
                     if(mapAsset.containsKey(bean.getFinprodId())){
@@ -175,6 +179,7 @@ public class ValRiftService {
 
                                 if(StringUtil.startsWith(bean.getSubCode(),"1204")
                                 || StringUtil.startsWith(bean.getSubCode(),"1203") //基金
+                                        || StringUtil.isEmpty(bean.getSubCode()) //直投
                                 ){
                                     bean.setTdyIntincexp(ArithmeticUtil.doAdd(ArithmeticUtil.multiply(ptlSecPierceValutionDto.getTdyIntincexp(),ptlSecPierceValutionDto.getPositionRatio()),
                                             ArithmeticUtil.multiply(bean.getTdyIntincexp(),bean.getPositionRatio())));
