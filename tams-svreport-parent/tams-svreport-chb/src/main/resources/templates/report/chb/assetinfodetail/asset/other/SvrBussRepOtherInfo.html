@@ -24,7 +24,6 @@
                     <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepOtherInfo.termDate}">期限(天)</label>
                     <div class="layui-input-inline input-inline">
                         <input type="text" th:id="|${entityName}_termDate|" th:name="|${entityName}.termDate|"
-                               required="required"
                                th:value="${entity?.termDate}" data-textrange="0" maxlength="6"
                                class="layui-input form-input text-number"/>
                     </div>
@@ -67,7 +66,7 @@
                     <div class="layui-input-inline input-inline">
                         <input type="text" th:id="|${entityName}_assetYield|" th:name="|${entityName}.assetYield|"
                                th:value="${entity?.assetYield}"
-                               class="layui-input form-input text-number" required="required"/>
+                               class="layui-input form-input text-number" />
                         <span class="input-right-show">%</span>
                     </div>
                 </div>
