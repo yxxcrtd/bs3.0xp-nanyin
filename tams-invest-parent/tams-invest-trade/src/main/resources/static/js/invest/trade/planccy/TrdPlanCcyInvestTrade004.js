@@ -429,13 +429,57 @@ $(function() {
         	}
         	object.maxTradeamt = maxTradeamt;
         }
+
+
+        //可用持仓效验
+        var flag1 = true;
+        var message = "";
+        if (object.bussTrdTransferOrder.length) {
+            for (var bussTrdTransferOrder in object.bussTrdTransferOrder) {
+                for (var bussTrdTransfenpeiOrder in object.bussTrdTransfenpeiDto) {
+                    if ((object.bussTrdTransferOrder[bussTrdTransferOrder].portfolioId == object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].portfolioId) &&
+                        (JoyinMath.doAdd(object.bussTrdTransferOrder[bussTrdTransferOrder].settleAmt, 0, 2) == JoyinMath.doAdd(object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].tradeAmt, 0, 2))) {
+//	                        object.prinAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].prinAmt;
+//	                        object.intAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].intAmt;
+//	                        object.channelFee = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].channelFee;
+//	                        object.tradeAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].tradeAmt;
+//	                        object.bussTrdAvailableCashQueryavalibleCash = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].bussTrdAvailableCashQueryavalibleCash;
+//	                        object.bussTrdAvailableCashQueryavalibleCash1 = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].bussTrdAvailableCashQueryavalibleCash1;
+//	                        object.channelAvailableCash = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].channelAvailableCash;
+//	                        object.Assetsavailablepositions = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].Assetsavailablepositions;
+                     //   if (object.ps === PS_T01 && object.prinAmt && object.bussTrdAvailableCashQueryavalibleCash && Number(object.prinAmt) > (object.chlId && object.payType == '02' ? Number(object.channelAvailableCash) : Number(object.bussTrdAvailableCashQueryavalibleCash))) {
+                        if ( (object.ps === 'T01' || object.ps === 'T04' ) && object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].tradeAmt && object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].bussTrdAvailableCashQueryavalibleCash && Number(object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].tradeAmt) >  Number(object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].bussTrdAvailableCashQueryavalibleCash) ) {
+                                message = JoyinUtil.getMessage("TRD_C_0002");
+                                flag1 = false;
+                        //} else if (object.ps == PS_T02 && object.prinAmt && object.Assetsavailablepositions && Number(object.prinAmt) > Number(object.Assetsavailablepositions)) {
+                        } else if (object.ps == 'T02' && object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].tradeAmt && object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].Assetsavailablepositions && Number(object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].tradeAmt) > Number(object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].Assetsavailablepositions)) {
+                            Joyin.warn("资产可用持仓必须大于本金金额。");
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        if (flag1) {
+            message = JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil.getLabel("SysCommon.save"));
+            if (operateType === 'submit') {
+                message = JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil.getLabel("SysCommon.submit"));
+            }
+        }
+
+
         object.inputValue1 = 'F09';
         Joyin.ajaxJson(basePath + 'invest/trade/planccy/TrdPlanCcyInvestTrade004/check', object, function(result) {
         	//授信检查使用
         	object.prinAmt = object.tradeAmt;
         	Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/check', object, function(result1) {
         		delete object.prinAmt;
-	            Joyin.confirm(result.data, function() {
+
+        		if (result.data && message != result.data) {
+                    message += result.data;
+                }
+
+	            Joyin.confirm(message, function() {
 	                if(operateType === 'save') {
 	                    WorkFlow.doSaveList(basePath + 'invest/trade/planccy/TrdPlanCcyInvestTrade004/save', object, "TrdPlanCcyInvestTrade002_btn_save",function(result){
 	
