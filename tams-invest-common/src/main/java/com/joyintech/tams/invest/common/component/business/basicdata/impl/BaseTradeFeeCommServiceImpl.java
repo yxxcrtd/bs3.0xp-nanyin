@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.joyintech.tams.invest.common.CommonUtil;
+import org.jasypt.commons.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -117,8 +119,10 @@ public class BaseTradeFeeCommServiceImpl implements BaseTradeFeeCommService {
 					 * 			或者债券信息中资产分类一等于费用规则的资产分类一并且费用规则的资产分类二为空
 					 * 			或者费用规则的资产分类一为空并且费用规则的资产分类二为空
 					 */
-					if(inputDto.getType6().equals(dto.getWindtypeone())&&inputDto.getType7().equals(dto.getWindtypetwo())
-							||inputDto.getType6().equals(dto.getWindtypeone())&&StringUtil.isEmpty(dto.getWindtypetwo())
+					if((CommonUtils.isNotEmpty(inputDto.getType6()) && inputDto.getType6().equals(dto.getWindtypeone())) &&
+							(CommonUtils.isNotEmpty(inputDto.getType7()) && inputDto.getType7().equals(dto.getWindtypetwo()))
+							||(CommonUtils.isNotEmpty(inputDto.getType6()) && inputDto.getType6().equals(dto.getWindtypeone()) &&
+							StringUtil.isEmpty(dto.getWindtypetwo()))
 							||StringUtil.isEmpty(dto.getWindtypeone())&&StringUtil.isEmpty(dto.getWindtypetwo())){
 						/**满足条件，一定存在一条该种类下的费用规则满足要求
 						 * 判断循环是否进入了下一个种类并且是否已经找到了满足条件的费用规则，若满足，跳出循环
