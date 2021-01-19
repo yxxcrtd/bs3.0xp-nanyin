@@ -1154,7 +1154,7 @@ $(function() {
         	}
         	if($("#settleSpreed_div").is(":hidden")){
         		var num = 0;
-        		$('#expectedArrivalDate').val(DateUtil.parse(tradeDate).DateAdd('d', num).Format('yyyy-MM-dd')).trigger('change');
+        		$('#expectedArrivalDate').val(DateUtil.parse(tradeDate).Format('yyyy-MM-dd')).prop("disabled",false).trigger('change');
         	}
         });
         
