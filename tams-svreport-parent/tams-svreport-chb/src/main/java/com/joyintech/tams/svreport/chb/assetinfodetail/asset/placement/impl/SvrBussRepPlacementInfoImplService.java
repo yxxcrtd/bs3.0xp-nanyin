@@ -9,6 +9,10 @@ import com.joyintech.tams.svreport.chb.common.util.asset.RechbAassetInfoUtilServ
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.math.BigDecimal;
+import java.util.Map;
 
 /**
  * 〈一句话功能简述〉
@@ -46,5 +50,16 @@ public class SvrBussRepPlacementInfoImplService extends BaseService<SvrBussRepPl
         model.addAttribute(GlobalConstant.ENTITY, dto);
     }
 
+    public SvrBussRepPlacementInfoDto getInfoByIssuer(@RequestBody Map<String, Object> param){
+        SvrBussRepPlacementInfoDto  dto=new  SvrBussRepPlacementInfoDto();
+        return dto;
+    }
+
+    /**
+     * 回购交易的交易本金金额
+     */
+    public BigDecimal  getValue(String uuid){
+        return  new BigDecimal(100);
+    }
 
 }

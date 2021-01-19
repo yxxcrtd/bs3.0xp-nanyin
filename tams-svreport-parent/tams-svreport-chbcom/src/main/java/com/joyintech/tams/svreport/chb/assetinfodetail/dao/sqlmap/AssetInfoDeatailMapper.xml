@@ -2920,5 +2920,8 @@
 select  * from CHB_ASSET_INFO_ERRODATA
 where  DATAUUID=#{assetUUid}
 </select>
+<select id="getTargetAmt" resultType="java.math.BigDecimal" parameterType="java.lang.String">
+    select  100 from dual
+</select>
 
 </mapper>

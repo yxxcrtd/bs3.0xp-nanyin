@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -177,5 +178,11 @@ public class AssetInfoDetailMService extends BaseService<AssetInfoDetailDto>{
 		}
 	}
 
-
+	/**
+	 * 查询回购交易的金额
+	 */
+   public BigDecimal  getTargetAmt(Map<String, Object> map){
+   	String  assetUUid=(String)map.get("assetuuid");
+     return assetInfoDetailMapper.getTargetAmt(assetUUid);
+   }
 }

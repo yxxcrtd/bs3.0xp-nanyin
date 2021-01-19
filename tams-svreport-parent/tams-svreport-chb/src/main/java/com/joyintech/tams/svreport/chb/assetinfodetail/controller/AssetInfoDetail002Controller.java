@@ -33,6 +33,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
+import java.util.Map;
+
 /**
  * 〈一句话功能简述〉
  * 〈功能详细描述〉
@@ -95,5 +98,9 @@ public class AssetInfoDetail002Controller extends BaseController {
         assetInfoDetailMService.doSave(dto);
         return new AjaxResult("保存成功");
     }
-
+    @ResponseBody
+    @RequestMapping("getValue")
+    public BigDecimal getValue(@RequestBody Map<String, Object> param) {
+        return assetInfoDetailMService.getTargetAmt(param);
+    }
 }
