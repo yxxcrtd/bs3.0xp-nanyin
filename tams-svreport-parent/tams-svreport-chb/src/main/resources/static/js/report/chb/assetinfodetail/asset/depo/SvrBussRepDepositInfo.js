@@ -29,14 +29,14 @@
         }
     }
 
-    $(function(){
-    	//本行存款、他行存款change事件
-        getElementById('repAssetType').change(function(){
-            byRepAssetType();
-        });
-        //是否为结构性存款change事件
-        getElementById('repDepoType').change(function(){
-            byRepDepoType();
-        });
-    });
+    // $(function(){
+    // 	//本行存款、他行存款change事件
+    //     getElementById('repAssetType').change(function(){
+    //         byRepAssetType();
+    //     });
+    //     //是否为结构性存款change事件
+    //     getElementById('repDepoType').change(function(){
+    //         byRepDepoType();
+    //     });
+    // });
 }());
