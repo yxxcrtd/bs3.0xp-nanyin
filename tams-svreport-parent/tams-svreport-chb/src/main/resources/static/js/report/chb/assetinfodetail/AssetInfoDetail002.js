@@ -110,12 +110,19 @@ var QueryFunc=function(){
             //拆放同业/买入返售（资产）||同业拆入/卖出回购（负债）
             if(repAssetType=='1108'||repAssetType=='1902'){
                 $("#svrBussRepPlacementInfoDto_targetType1").attr("disabled",false);
+                $("#issueAmt").attr("disabled",false);
                 $("#svrBussRepPlacementInfoDto_targetType1").val('01').trigger("change");
+                var parms={assetuuid:$("#assetUuid").val()}
+                Joyin.ajaxJson(
+                    basePath + "chb/assetinfodetail/AssetInfoDetail002/getValue",parms,
+                    function(result) {
+                        $("#issueAmt").val(result);
+                    }
+                );
             }else if(repAssetType=='1107'||repAssetType=='1901'){
                 $("#svrBussRepPlacementInfoDto_targetType1").val('').trigger("change");
                 $("#svrBussRepPlacementInfoDto_targetType1").attr("disabled",true);
-                // getElementById('repMaxRate').prop('required', false);
-                // getElementById('repMinRate').prop('required', false).trigger('change');
+                $("#issueAmt").attr("disabled",true);
             }
         }else if(obj["03"].indexOf(repAssetType)>=0){
             //债券类资产/理财直接融资工具/同业存单
@@ -229,8 +236,6 @@ var QueryFunc=function(){
         });
 
         $('#assetType2').change(function(){
-            //清除所有子页面div内容
-
             showReportInfo();
             //assetType2联动子页面的内容
             changeReport();

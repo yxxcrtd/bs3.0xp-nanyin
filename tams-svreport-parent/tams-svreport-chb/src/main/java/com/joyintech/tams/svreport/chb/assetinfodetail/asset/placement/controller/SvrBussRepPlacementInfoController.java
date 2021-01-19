@@ -6,13 +6,19 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.placement.impl.SvrBussRepPlacementInfoImplService;
+import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepPlacementInfoDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.service.AssetInfoDetailMService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.util.Map;
 
 /**
  * 拆放同业/买入返售（资产）||同业拆入/卖出回购（负债）--中债报送
@@ -43,7 +49,7 @@ public class SvrBussRepPlacementInfoController extends BaseController {
         String dataStatus = requestPargram.getParameter("dataStatus");
         //资产二级类别
         String assetType = requestPargram.getParameter("assetType");
-
+        BigDecimal value=BigDecimal.ZERO;
         //1.赋值界面数据字典
         setSelectOptionToModel(model, new DictCode[] {DictCode.币种_中债,DictCode.交易流通场所,DictCode.交易对手类型,
                 DictCode.计息基础_中债,DictCode.回购标的类型});
@@ -52,13 +58,19 @@ public class SvrBussRepPlacementInfoController extends BaseController {
         if(assetInfoDetailMService.getDataListLink().get(DictCodeListExt2.资产_负债类别_拆放同业_买入返售_资产_同业拆入_卖出回购_负债.getValue()).contains(assetType)){
             //调用service
             bussAssetInfoService.setModle(uuid, dataStatus, model);
+            value=bussAssetInfoService.getValue(uuid);
         }
         model.addAttribute("entityName",this.getParam("entityName"));
+        model.addAttribute("value",value);
 
         //3、返回 子组件对应的页面
         return "report/chb/assetinfodetail/asset/plancement/SvrBussRepPlacementInfo";
     }
 
-
+    @ResponseBody
+    @RequestMapping(value="getInfoByIssuer",method = RequestMethod.POST)
+    public SvrBussRepPlacementInfoDto getInfoByIssuer(@RequestBody Map<String, Object> param){
+        return bussAssetInfoService.getInfoByIssuer(param);
+    }
 
 }

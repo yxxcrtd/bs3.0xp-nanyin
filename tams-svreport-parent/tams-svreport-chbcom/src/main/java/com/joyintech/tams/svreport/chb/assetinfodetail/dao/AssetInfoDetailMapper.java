@@ -9,6 +9,7 @@ import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -47,5 +48,7 @@ public interface AssetInfoDetailMapper {
 
 
 	List<SelectOptionDto> selectAssetCodeList(Map<String, Object> pageParam);
+
+	BigDecimal  getTargetAmt(String  assetUUid);
 
 }

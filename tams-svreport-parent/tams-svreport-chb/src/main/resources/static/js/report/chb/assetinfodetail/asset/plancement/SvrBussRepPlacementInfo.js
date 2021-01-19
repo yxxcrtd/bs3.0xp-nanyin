@@ -81,11 +81,22 @@
             }
         });*/
 
-        $("#svrBussRepPlacementInfoDto_basis").change(function(){
-            if($("#svrBussRepPlacementInfoDto_basis").val()=='01'){
-                $("#svrBussRepPlacementInfoDto_targetType1").val('01').trigger("change");
-            }else{
-            }
-        });
+        // $("#svrBussRepPlacementInfoDto_basis").change(function(){
+        //     if($("#svrBussRepPlacementInfoDto_basis").val()=='01'){
+        //         $("#svrBussRepPlacementInfoDto_targetType1").val('01').trigger("change");
+        //     }else{
+        //     }
+        // });
+        // $('#assetType2').change(function(){
+        //    //清空当前所有属性的值
+        //     $('#' + svrBussRepPlacementInfoDto + '_' + rivalParty).val('');
+        //     $('#' + svrBussRepPlacementInfoDto + '_' + rivalPartyType).val('').trigger("change");
+        //     $('#' + svrBussRepPlacementInfoDto + '_' + assetYield).val('');
+        //     $('#' + svrBussRepPlacementInfoDto + '_' + basis).val('');
+        //     $('#' + svrBussRepPlacementInfoDto + '_' + targetType1).trigger("change");
+        //     $('#' + svrBussRepPlacementInfoDto + '_' + targetAmt).val('');
+        //     $('#' + svrBussRepPlacementInfoDto + '_' + remark).val('');
+        // });
+
     })
 }());
