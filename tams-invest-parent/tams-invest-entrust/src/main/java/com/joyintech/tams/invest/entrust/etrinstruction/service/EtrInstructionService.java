@@ -76,7 +76,7 @@ public class EtrInstructionService  extends CommonExportService<EtrInstructionDt
                 editOrgCodeList = Arrays.asList(entity.getCreateInst());
             } 
             // 记录二级法人权限
-            insertDataAuthTypeInst(entity.getFinprodId(), searchOrgCodeList, editOrgCodeList,DictCodeListExt3.共通业务类型_立项指令.getValue());
+            insertDataAuthTypeInst(entity.getFinprodMarketId(), searchOrgCodeList, editOrgCodeList,DictCodeListExt3.共通业务类型_立项指令.getValue());
         }
     }
 
