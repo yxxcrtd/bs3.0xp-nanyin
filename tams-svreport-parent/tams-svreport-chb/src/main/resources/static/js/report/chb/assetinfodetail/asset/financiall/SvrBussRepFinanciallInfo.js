@@ -35,7 +35,17 @@
                 }
             });
         }
-
+        var  initFinanciall= function(){
+            var assetTvalue2=$('#assetType2').val();
+            if(assetTvalue2!='1403'){
+                $("#svrBussRepFinanciallInfoDto_holdPurpose").val('99').trigger("change");
+            }else{
+                $("#svrBussRepFinanciallInfoDto_holdPurpose").val('').trigger("change");
+            }
+        }
         starFinaciall();
+        initFinanciall();
+
+
     })
 }());
