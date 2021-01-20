@@ -116,7 +116,7 @@
                             field : 'feeRate',
                             title : 'MstCommissionSet001.chargeRate',
                             sortable : false,
-                            width : 150
+                            width : 185
                         }, {
                             field : 'feeMaxi',
                             title : 'MstCommissionSet002.feeMaxi',
