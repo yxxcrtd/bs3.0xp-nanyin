@@ -13,6 +13,34 @@
         getElementById('project_other_div').show();
     }
     $(function() {
+
+
+        var starplace = function() {
+            // 加红星星
+            // 查找label
+            var _findPrevLabel = function(element, level) {
+                var $el = element.prev();
+                if (!$el.is('label') && level > 0) {
+                    $el = $el.find('label');
+                    if ($el.length === 0) {
+                        return _findPrevLabel(element.parent(), level - 1);
+                    }
+                }
+                return $el;
+            };
+
+            // 非查看模式
+            // $('.must').each(function() {
+            //     $(this).remove();
+            // })
+            $('*[required]').each(function() {
+                var $el = $(this);
+                var $target = _findPrevLabel($el, 3);
+                if ($target.find('> .must').length === 0) {
+                    $target.append($('<i class="must">*</i>'));
+                }
+            });
+        }
 //         $("#"+issuerElement).change(function() {
 //             if($('#'+issuerElement).val() != null && $('#'+issuerElement).val() != ''){
 //                 var params = {'issuer': $('#'+issuerElement).val()};
@@ -88,15 +116,25 @@
         //     }
         // });
         // $('#assetType2').change(function(){
-        //    //清空当前所有属性的值
-        //     $('#' + svrBussRepPlacementInfoDto + '_' + rivalParty).val('');
-        //     $('#' + svrBussRepPlacementInfoDto + '_' + rivalPartyType).val('').trigger("change");
-        //     $('#' + svrBussRepPlacementInfoDto + '_' + assetYield).val('');
-        //     $('#' + svrBussRepPlacementInfoDto + '_' + basis).val('');
-        //     $('#' + svrBussRepPlacementInfoDto + '_' + targetType1).trigger("change");
-        //     $('#' + svrBussRepPlacementInfoDto + '_' + targetAmt).val('');
-        //     $('#' + svrBussRepPlacementInfoDto + '_' + remark).val('');
+        //     alert("进来了")
+        //     star();
+        //     layui.form.render();
         // });
-
+        var initplace = function(){
+            var assetTvalue=$('#assetType2').val();
+            alert(assetTvalue)
+            if(assetTvalue=='1108'||assetTvalue=='1902'){
+                $("#svrBussRepPlacementInfoDto_targetType1").attr("disabled",false);
+                $("#issueAmt").attr("disabled",false);
+                $("#svrBussRepPlacementInfoDto_targetType1").val('01').trigger("change");
+            }else if(assetTvalue=='1107'||assetTvalue=='1901'){
+                $("#svrBussRepPlacementInfoDto_targetType1").val('').trigger("change");
+                $("#svrBussRepPlacementInfoDto_targetType1").attr("disabled",true);
+                $("#issueAmt").attr("disabled",true);
+                $("#issueAmt").val('');
+            }
+        }
+        initplace();
+        starplace();
     })
 }());
