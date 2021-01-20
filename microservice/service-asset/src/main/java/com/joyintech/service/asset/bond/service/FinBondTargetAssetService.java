@@ -249,8 +249,8 @@ public class FinBondTargetAssetService extends BaseService<FinBondTargetAssetDto
             assetCommonService.insertCredit(creditLines);
         }
         //转债信息
-        if(StringUtil.equals(entity.getType4(),DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue())
-                ||StringUtil.equals(entity.getType4(),DictCodeList.WIND一级分类_含债券一级分类等_可交换债.getValue())){
+        if((StringUtil.equals(entity.getType4(),DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue())
+                ||StringUtil.equals(entity.getType4(),DictCodeList.WIND一级分类_含债券一级分类等_可交换债.getValue()))&&!StringUtil.isEmpty(entity.getConFinprodMarketId())){
             finProductConvertibleMapper.insert(entity.getFinProductConvertible());
         }
         /* add by zhangpuyu 2019/10/24 start */
@@ -383,7 +383,9 @@ public class FinBondTargetAssetService extends BaseService<FinBondTargetAssetDto
         if(StringUtil.equals(entity.getType4(),DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue())
                 ||StringUtil.equals(entity.getType4(),DictCodeList.WIND一级分类_含债券一级分类等_可交换债.getValue())){
             finProductConvertibleMapper.deleteByPrimaryKey(entity.getFinprodId());
-            finProductConvertibleMapper.insert(entity.getFinProductConvertible());
+            if(StringUtil.isNotEmpty(entity.getConFinprodMarketId())){
+                finProductConvertibleMapper.insert(entity.getFinProductConvertible());
+            }
         }
         /* add by zhangpuyu 2019/10/24 start */
         //投后信息

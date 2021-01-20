@@ -258,10 +258,10 @@
                 AND fpt.TYPE_7 =#{secondType}
             </if>
             <!-- 场内基金改造 add by renping 20191117 start -->
-            AND (tpd.VALID_STATUS NOT IN (#{VALID_STATUS_02}, #{VALID_STATUS_03}) 
-                 OR tpd.PS NOT IN (#{PS24},#{PST19},#{PST05})
-                 OR T3.TRM_FUND_TYPE IS NULL OR T3.TRM_FUND_TYPE != #{TRM_FUND_TYPE05})
-            <!-- 场内基金改造 add by renping 20191117 end -->
+            <!-- AND (tpd.VALID_STATUS NOT IN (#{VALID_STATUS_02}, #{VALID_STATUS_03})
+                  OR tpd.PS NOT IN (#{PS24},#{PST19},#{PST05})
+                  OR T3.TRM_FUND_TYPE IS NULL OR T3.TRM_FUND_TYPE != #{TRM_FUND_TYPE05})-->
+             <!-- 场内基金改造 add by renping 20191117 end -->
         </where>
         ORDER BY tpd.TRADE_DATE DESC
     </select>

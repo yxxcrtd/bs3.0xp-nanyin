@@ -93,9 +93,9 @@ public class MstCommissionSetService extends CommonExportService<MstCommissionSe
         for (MstCommissionSetDto dto : dtoList){
             if(!"Y".equals(dto.getIsGrade())){
                 if (StringUtil.equals(dto.getChargeType(), BussinessDictCodeList.计费类型_固定费率.getValue())){
-                    dto.setFeeRate(ArithmeticUtil.round(dto.getChargeValue(),8, RoundingMode.HALF_UP).toString()+"‰");
+                    dto.setFeeRate(ArithmeticUtil.round(dto.getChargeValue(),8, RoundingMode.HALF_UP).toString());
                 }else {
-                    dto.setFeeRate(ArithmeticUtil.round(dto.getChargeValue(),2,RoundingMode.HALF_UP).toString()+"元");
+                    dto.setFeeRate(ArithmeticUtil.round(dto.getChargeValue(),2,RoundingMode.HALF_UP).toString());
                 }
             }
         }

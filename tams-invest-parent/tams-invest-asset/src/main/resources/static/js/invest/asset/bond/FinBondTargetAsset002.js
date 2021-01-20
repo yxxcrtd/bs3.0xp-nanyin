@@ -184,7 +184,52 @@ $(function() {
             $('#busiFinExercisePlanDto_div').hide();
         }
     }
-    
+
+//    add by zoujiamin 20210120 TISHKBS-1799  start
+        /**
+         * 资产四级分类change事件
+         */
+    var type11Change = function(){
+         console.log("值",$('#type11').val())
+         console.log("conFinprodMarketId值",$('#conFinprodMarketId').val())
+         if($('#type11').val()=='013'||$('#type11').val()=='011') {
+            if($('#conFinprodMarketId').val() == ''){
+                console.log("四级分类是可转债且没有转债代码")
+                $('#conFinprodMarketId').prop('required', false);
+                $('#conShareId').prop('required', false).trigger('change');
+                $('#conVdate').prop('required', false).trigger('change');
+                $('#conPrice').prop('required', false).trigger('change');
+                $('#conPrent').prop('required', false).trigger('change');
+                $('#resalePrice').prop('required', false).trigger('change');
+                $('#redeemPrice').prop('required', false).trigger('change');
+            } else {
+                console.log("四级分类是可转债且有转债代码")
+                $('#conFinprodMarketId').prop('required', true);
+                $('#conShareId').prop('required', true).trigger('change');
+                $('#conVdate').prop('required', true).trigger('change');
+                $('#conPrice').prop('required', true).trigger('change');
+                $('#conPrent').prop('required', true).trigger('change');
+                $('#resalePrice').prop('required', true).trigger('change');
+                $('#redeemPrice').prop('required', true).trigger('change');
+            }
+         } else{
+            console.log("四级分类不是可转债")
+            $('#conFinprodMarketId').prop('required', true);
+            $('#conShareId').prop('required', true).trigger('change');
+            $('#conVdate').prop('required', true).trigger('change');
+            $('#conPrice').prop('required', true).trigger('change');
+            $('#conPrent').prop('required', true).trigger('change');
+            $('#resalePrice').prop('required', true).trigger('change');
+            $('#redeemPrice').prop('required', true).trigger('change');
+         }
+         star()
+    }
+
+//    add by zoujiamin 20210120 TISHKBS-1799  end
+
+
+
+
     /**
      * 计息要素画面显示/隐藏
      */
@@ -593,6 +638,9 @@ $(function() {
     	}
         isCityBondChange();
     	star();
+    	//    add by zoujiamin 20210120 TISHKBS-1799  start
+    	type11Change();
+    	//    add by zoujiamin 20210120 TISHKBS-1799  end
     }
 
     var isCityBondChange = function(){
@@ -685,6 +733,7 @@ $(function() {
 
     $(function() {
     	init();
+    	console.log("hahah")
         //修改  资产代码置灰
         if(pageModel!=PAGE_MODEL_NEW){
             $("#finprodMarketId").attr('disabled',true);
@@ -705,6 +754,9 @@ $(function() {
 		// 	AssetCommon.setTradeMarketId($('#tradeMarket').val());
 		// });
         $('#issuer').change(issuerChange);
+
+        $('#type11').change(type11Change);
+
         $('#tradeMarket').change(function(){
 			AssetCommon.setTradeMarketId($('#tradeMarket').val());
 		});
@@ -774,6 +826,41 @@ $(function() {
                 $('#conFinprodId').val("");
                 $('#conFinprodName').textSelect('setValue', "");
             }
+
+//    add by zoujiamin 20210120 TISHKBS-1799  start
+            if($('#type11').val()=='013'||$('#type11').val()=='011') {
+                        if($('#conFinprodMarketId').val() == ''){
+                            console.log("四级分类是可转债且没有转债代码")
+                            $('#conFinprodName').textSelect('setValue', "");
+                            $('#conFinprodMarketId').prop('required', false);
+                            $('#conShareId').prop('required', false).trigger('change');
+                            $('#conVdate').prop('required', false).trigger('change');
+                            $('#conPrice').prop('required', false).trigger('change');
+                            $('#conPrent').prop('required', false).trigger('change');
+                            $('#resalePrice').prop('required', false).trigger('change');
+                            $('#redeemPrice').prop('required', false).trigger('change');
+                        } else {
+                            console.log("四级分类是可转债且有转债代码")
+                            $('#conFinprodMarketId').prop('required', true);
+                            $('#conShareId').prop('required', true).trigger('change');
+                            $('#conVdate').prop('required', true).trigger('change');
+                            $('#conPrice').prop('required', true).trigger('change');
+                            $('#conPrent').prop('required', true).trigger('change');
+                            $('#resalePrice').prop('required', true).trigger('change');
+                            $('#redeemPrice').prop('required', true).trigger('change');
+                        }
+                     } else{
+                        console.log("四级分类不是可转债")
+                        $('#conFinprodMarketId').prop('required', true);
+                        $('#conShareId').prop('required', true).trigger('change');
+                        $('#conVdate').prop('required', true).trigger('change');
+                        $('#conPrice').prop('required', true).trigger('change');
+                        $('#conPrent').prop('required', true).trigger('change');
+                        $('#resalePrice').prop('required', true).trigger('change');
+                        $('#redeemPrice').prop('required', true).trigger('change');
+                     }
+            star()
+//    add by zoujiamin 20210120 TISHKBS-1799  end
         })
         //转股价格
         $('#conPrice').change(function () {
