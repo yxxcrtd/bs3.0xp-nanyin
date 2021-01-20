@@ -29,14 +29,72 @@
         }
     }
 
-    // $(function(){
-    // 	//本行存款、他行存款change事件
-    //     getElementById('repAssetType').change(function(){
-    //         byRepAssetType();
-    //     });
-    //     //是否为结构性存款change事件
-    //     getElementById('repDepoType').change(function(){
-    //         byRepDepoType();
-    //     });
-    // });
+    $(function(){
+    	//本行存款、他行存款change事件
+        // getElementById('repAssetType').change(function(){
+        //     byRepAssetType();
+        // });
+        // //是否为结构性存款change事件
+        // getElementById('repDepoType').change(function(){
+        //     byRepDepoType();
+        // });
+        var starDeposit = function() {
+            // 加红星星
+            // 查找label
+            var _findPrevLabel = function(element, level) {
+                var $el = element.prev();
+                if (!$el.is('label') && level > 0) {
+                    $el = $el.find('label');
+                    if ($el.length === 0) {
+                        return _findPrevLabel(element.parent(), level - 1);
+                    }
+                }
+                return $el;
+            };
+
+            // 非查看模式
+            // $('.must').each(function() {
+            //     $(this).remove();
+            // })
+            $('*[required]').each(function() {
+                var $el = $(this);
+                var $target = _findPrevLabel($el, 3);
+                if ($target.find('> .must').length === 0) {
+                    $target.append($('<i class="must">*</i>'));
+                }
+            });
+        }
+
+        //编辑按钮新进的时候，初始化星星和联动关系
+        var  initRepDeposit= function(){
+            var assetValuePosit=$('#assetType2').val();
+            if(assetValuePosit=='1004'||assetValuePosit=='1005'){
+                //存款类型置灰不可修改
+                $("#SvrBussRepDepositInfoDto_repDepoType").val('').attr("disabled",true);
+            }else{
+                $("#SvrBussRepDepositInfoDto_repDepoType").attr("disabled",false);
+            }
+            if(assetValuePosit=='1002'||assetValuePosit=='1004'){
+               //资金存入银行置灰不可修改
+                $("#SvrBussRepDepositInfoDto_bankName").val('').attr("disabled",true);
+            }else{
+                $("#SvrBussRepDepositInfoDto_bankName").attr("disabled",false);
+            }
+        }
+        starDeposit();
+        initRepDeposit();
+
+        //存款类型联动
+        $("#SvrBussRepDepositInfoDto_repDepoType").change(function(){
+         var  depoType=$("#SvrBussRepDepositInfoDto_repDepoType").val();
+         if(depoType!='06'){
+             //结构性存款挂钩标的类别/结构性存款挂钩标。该字段清空，且置灰不可修改
+             $("#SvrBussRepDepositInfoDto_repTargetType").val('').attr("disabled",true);
+             $("#SvrBussRepDepositInfoDto_repTarget").val('').attr("disabled",true);
+         }else{
+             $("#SvrBussRepDepositInfoDto_repTargetType").attr("disabled",false);
+             $("#SvrBussRepDepositInfoDto_repTarget").attr("disabled",false);
+         }
+        });
+    });
 }());

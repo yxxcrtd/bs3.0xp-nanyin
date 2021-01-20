@@ -108,6 +108,18 @@ var QueryFunc=function(){
         var obj = JSON.parse(AssetTypeListLink) ;
         if(obj["01"].indexOf(repAssetType)>=0){
             //本行/他行存款||大额存单
+            if(repAssetType=='1004'||repAssetType=='1005'){
+                //存款类型置灰不可修改
+                $("#SvrBussRepDepositInfoDto_repDepoType").val('').attr("disabled",true);
+            }else{
+                $("#SvrBussRepDepositInfoDto_repDepoType").attr("disabled",false);
+            }
+            if(repAssetType=='1002'||repAssetType=='1004'){
+                //资金存入银行置灰不可修改
+                $("#SvrBussRepDepositInfoDto_bankName").val('').attr("disabled",true);
+            }else{
+                $("#SvrBussRepDepositInfoDto_bankName").attr("disabled",false);
+            }
         }else if(obj["02"].indexOf(repAssetType)>=0){
             //拆放同业/买入返售（资产）||同业拆入/卖出回购（负债）
             if(repAssetType=='1108'||repAssetType=='1902'){

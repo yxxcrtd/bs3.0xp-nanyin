@@ -62,6 +62,7 @@ public class SvrBussRepDepositInfoController extends BaseController{
             //调用service
             bussAssetInfoService.setModle(uuid, dataStatus, model);
         }
+        model.addAttribute("entityName",this.getParam("entityName"));
         return "report/chb/assetinfodetail/asset/depo/SvrBussRepDepositInfo";
     }
 

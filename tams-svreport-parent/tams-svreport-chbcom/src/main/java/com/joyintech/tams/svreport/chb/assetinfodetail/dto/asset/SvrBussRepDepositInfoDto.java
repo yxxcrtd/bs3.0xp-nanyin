@@ -17,6 +17,7 @@ import com.joyintech.tams.common.base.entity.RepAssetBankDeposit;
 import com.joyintech.tams.common.base.entity.RepAssetDept;
 import com.joyintech.tams.svreport.chb.assetinfodetail.validator.asset.SvrBussRepDepositInfoValidator;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -52,6 +53,59 @@ public class SvrBussRepDepositInfoDto extends RepAssetBankDeposit{
      */
     private String repCcy;
 
+
+    /**
+     * 新加字段资金存入银行
+     */
+    private  String  bankName;
+
+    /**
+     * 新加字段存款金额
+     */
+    private BigDecimal  amt;
+
+    /**
+     * 新加字段年利率
+     */
+    private BigDecimal assetYield;
+
+    /**
+     * 新加字段计息基础
+     */
+    private String basis;
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+
+    public BigDecimal getAmt() {
+        return amt;
+    }
+
+    public void setAmt(BigDecimal amt) {
+        this.amt = amt;
+    }
+
+    public BigDecimal getAssetYield() {
+        return assetYield;
+    }
+
+    public void setAssetYield(BigDecimal assetYield) {
+        this.assetYield = assetYield;
+    }
+
+    public String getBasis() {
+        return basis;
+    }
+
+    public void setBasis(String basis) {
+        this.basis = basis;
+    }
+
     /**
      * 资产负债报送信息entity
      */
@@ -63,6 +117,10 @@ public class SvrBussRepDepositInfoDto extends RepAssetBankDeposit{
      * 存款资产报送信息entity
      */
     private RepAssetBankDeposit repAssetBankDeposit;
+
+
+
+
     /**
      * 获取 repAssetType
      * @return repAssetType.
