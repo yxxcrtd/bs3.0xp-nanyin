@@ -44,6 +44,7 @@
 			{ title: "到期日",width:100,sortField:'mDateStr', field: 'mDateStr'},
 			{ title: '资产/负债类别', field:'assetTypeStr', width:180,sortField:'assetType'},
 			{ title: '资产/负债二级类别', field:'assetType2Str', width:130,sortField:'assetType2'},
+			{ title: '错误信息', field:'errMsg', width:130,sortField:'errMsg'},
 			{ field:'action', title: '操作' , type:'action',buttons: ['edit', 'delt'] , width:100}
 		]
 	});
@@ -66,7 +67,7 @@
 	table.bind('click', '.delt', function(data, index) {
 		var object = {assetUuid:data.assetUuid,dataStatus:data.dataStatus, operateType:"edit"};
 		Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-			Joyin.ajax(basePath +'chb/assetinfodetail/AssetInfoDetail001/delete',{assetUuid:data.assetUuid}, function(result){
+			Joyin.ajax(basePath +'chb/assetinfodetail/AssetInfoDetail001/delete',object, function(result){
 				table.reload();
 			});
 		});
@@ -105,23 +106,17 @@
 		 * flag:0 全部导出，选中导出
 		 */
 		var exportExcel = function(flag) {
-			if(flag == 0){
-				var param = getPageParams();
-				Joyin.exportExcel("export",param);
-			}else{
-				var param = {};
-				var expArr=table.getAllCheckedRows();
-				var keyList = [];
-				$.each(expArr, function(i, row) {
-					keyList.push(row.assetUuid);
-				});
-				if(expArr.length > 1){
-					param.keyList = keyList.join(',');
-				}else{
-					param.keyList = keyList;
-				}
-				Joyin.exportExcel("export",param);
+
+			var selectedItem = table.getAllCheckedRows();
+			var paramObj={};
+			if(selectedItem.length==0){
+				paramObj= getSearchParams();
 			}
+			else{
+				//add by wm 针对特殊字符处理  jason 识别“'”字符时转换会有问题，将企转换为“&apos;” end
+				paramObj.keyList = JSON.stringify(selectedItem);
+			}
+			Joyin.exportExcel('export', paramObj);
 		};
 	});
 }());

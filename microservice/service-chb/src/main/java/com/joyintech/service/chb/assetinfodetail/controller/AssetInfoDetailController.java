@@ -57,6 +57,13 @@ public class AssetInfoDetailController {
 		return assetInfoDetail001Service.doSave(dto);
 	}
 
-
+	/**
+	 * 数据维护
+	 * @return
+	 */
+	@PostMapping("doDelete")
+	public Integer doDelete(@RequestBody AssetInfoDetailDto dto) {
+		return assetInfoDetail001Service.doDelete(dto);
+	}
 
 }

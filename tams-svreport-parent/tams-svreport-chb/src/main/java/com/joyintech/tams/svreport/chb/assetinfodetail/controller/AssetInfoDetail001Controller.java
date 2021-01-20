@@ -10,14 +10,16 @@
 
 package com.joyintech.tams.svreport.chb.assetinfodetail.controller;
 
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.report.errormessage.dto.ErrorMessage001;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.service.AssetInfoDetailMService;
 import org.slf4j.Logger;
@@ -26,9 +28,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.File;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -79,8 +84,8 @@ public class AssetInfoDetail001Controller extends BaseController {
 			model.addAttribute("searchDataEnd", map.get("searchDataEnd"));
 			model.addAttribute("isMain", "01");
 		}
-		super.setSelectOptionToModel(model, DictCode.金融产品类型_投管用,DictCode.资产_负债类别
-				,DictCode.WIND一级分类_含债券中债, DictCode.资产_负债二级类别,DictCode.WIND二级分类_含债券二级分类等, DictCode.处理状态);
+		super.setSelectOptionToModel(model, DictCode.中债对应上游资产一级类型,DictCode.资产_负债类别
+				,DictCode.中债对应上游资产二级类型, DictCode.资产_负债二级类别,DictCode.WIND二级分类_含债券二级分类等, DictCode.处理状态);
 		return super.init(model);
 	}
 
@@ -100,6 +105,22 @@ public class AssetInfoDetail001Controller extends BaseController {
 		return assetList;
 	}
 
+
+	@ResponseBody
+	@RequestMapping("delete")
+	public AjaxResult doDelete(String assetUuid,String dataStatus) {
+		AjaxResult result = new AjaxResult(this.getMessage("REPORT_COMMON_I_0007"));
+		AssetInfoDetailDto dto = new AssetInfoDetailDto();
+		dto.setAssetUuid(assetUuid);
+		dto.setDataStatus(dataStatus);
+		try{
+				assetInfoDetailMService.doDelete(dto);
+		}catch(Exception e){
+			logger.info("删除数据错误",e);
+		}
+		return result;
+	}
+
     /**
      * 导出文件
      *
@@ -110,27 +131,16 @@ public class AssetInfoDetail001Controller extends BaseController {
     @SuppressWarnings("unchecked")
 	@RequestMapping(value = ACTION_EXPORT)
     public ResponseEntity<byte[]> export() {
-        Map<String, Object> pageParam = RequestUtil.getPageParam();
-//      Map<String, String> cacheValue = CacheUtil.getAppCache(GlobalConstant.SYS_PARA_KEY, Map.class);
-//      cacheValue.put(GlobalConstant.EXPORT_EXCEL_TYPE, DictCodeList.是否_中债_是.getValue());
-//      CacheUtil.putAppCache(GlobalConstant.SYS_PARA_KEY, cacheValue);
-//      if(pageParam.containsKey("keyList")){
-//	 		List<AssetInfoRegist001Dto>  dataList=assetInfoRegistMService.searchForExport(pageParam);
-//	 		  File outFile = assetInfoRegist001Service.makeFile(
-//	 	             "/com/joyintech/tams/svreport/chb/assetinforeg/conf/export_conf.xml", dataList);
-//	 	         return ExportUtil.export(
-//	 	             this.getMessage(this.getPageId()) + GlobalConstant.OPEN_PARENTHESIS
-//	 	                                  + DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS
-//	 	                                  + GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
-//	 	             outFile, true);
-//	 	}
-        if (pageParam.containsKey("expKeys")||pageParam.get("assetTypes")!=null){
-        	pageParam.put("export_method_flg", "exportSelect");
-        } else {
-        	pageParam.put("export_method_flg", "export");
-        }
-//        return assetInfoDetailMService.export(this.getPageId(), pageParam);
-		return null;
+
+		List<AssetInfoDetailDto> dtoList = assetInfoDetailMService.setDataList(RequestUtil.getParameters(getRequest()));
+		File outFile = assetInfoDetailMService.makeFile(
+				"/com/joyintech/tams/svreport/chb/assetinfodetail/conf/export_conf.xml", dtoList);
+		return ExportUtil.export(
+				"资产基本信息" + GlobalConstant.OPEN_PARENTHESIS
+						+ DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS
+						+ GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
+				outFile, true);
+
     }
     
 

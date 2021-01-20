@@ -48,12 +48,30 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 
 	private String mDateStr;
 
+	private String  errMsg;
+
+	public String getErrMsg() {
+		return errMsg;
+	}
+
+	public void setErrMsg(String errMsg) {
+		this.errMsg = errMsg;
+	}
+
 	public String getvDateStr() {
 		return vDateStr;
 	}
 
 	public void setvDateStr(String vDateStr) {
 		this.vDateStr = vDateStr;
+	}
+
+	public String getmDateStr() {
+		return mDateStr;
+	}
+
+	public void setmDateStr(String mDateStr) {
+		this.mDateStr = mDateStr;
 	}
 
 	private SvrBussFinBondRepInfoDto svrBussFinBondRepInfoDto;
@@ -124,14 +142,14 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 	 * @return
 	 */
 	public String getOrgAssetType1Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.金融产品类型_投管用, this.getOrgAssetType1());
+		return SysDataUtil.getNameFromDataDict(DictCode.中债对应上游资产一级类型, this.getOrgAssetType1());
 	}
 	/**
 	 * 资产二级类型
 	 * @return
 	 */
 	public String getOrgAssetType2Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.WIND一级分类_含债券一级分类等, this.getOrgAssetType2());
+		return SysDataUtil.getNameFromDataDict(DictCode.中债对应上游资产二级类型, this.getOrgAssetType2());
 	}
 
 

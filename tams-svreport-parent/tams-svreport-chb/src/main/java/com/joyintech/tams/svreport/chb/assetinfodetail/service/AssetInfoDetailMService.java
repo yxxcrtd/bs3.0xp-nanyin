@@ -1,16 +1,20 @@
 package com.joyintech.tams.svreport.chb.assetinfodetail.service;
 
-import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.system.base.entity.SysDatadictListLink;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
+import com.joyintech.tams.report.errormessage.dto.ErrorMessage001;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.DtoChangeUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dao.AssetInfoDetailMapper;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
@@ -22,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.beans.PropertyDescriptor;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.*;
@@ -35,7 +40,7 @@ import java.util.*;
  * @since 1.0
  */
 @Service
-public class AssetInfoDetailMService extends BaseService<AssetInfoDetailDto>{
+public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetailDto> {
 
 	protected static final Logger logger = LoggerFactory.getLogger(AssetInfoDetailMService.class);
 
@@ -62,9 +67,7 @@ public class AssetInfoDetailMService extends BaseService<AssetInfoDetailDto>{
 		param.put("orgAssetType1s", StringUtil.isNotEmpty(param.get("orgAssetType1"))?(param.get("orgAssetType1").toString().split(",")):null);
 		param.put("orgAssetType2s", StringUtil.isNotEmpty(param.get("orgAssetType2"))?(param.get("orgAssetType2").toString().split(",")):null);
 
-
-
-		return super.queryForPage(Integer.valueOf((String) param.get("page")), Integer.valueOf((String) param.get("length")),
+		return queryForPage(Integer.valueOf((String) param.get("page")), Integer.valueOf((String) param.get("length")),
 				() -> assetInfoDetailMapper.selectChbInfoByParam(param));
 	}
 
@@ -117,6 +120,15 @@ public class AssetInfoDetailMService extends BaseService<AssetInfoDetailDto>{
 		dto.setIssuePartyId(CommonUtil.selectBankCode());
 		restTemplate.postForObject(
 				SvrServiceApplication.CHB_SERVICE_NAME + "/AssetInfoDetail/doSave", dto, Integer.class);
+
+
+	}
+
+
+	public void doDelete(AssetInfoDetailDto dto) throws Exception {
+
+		restTemplate.postForObject(
+				SvrServiceApplication.CHB_SERVICE_NAME + "/AssetInfoDetail/doDelete", dto, Integer.class);
 
 
 	}
@@ -185,4 +197,44 @@ public class AssetInfoDetailMService extends BaseService<AssetInfoDetailDto>{
    	String  assetUUid=(String)map.get("assetuuid");
      return assetInfoDetailMapper.getTargetAmt(assetUUid);
    }
+
+	/**
+	 * 设置导出文件参数
+	 */
+	@Override
+	protected void buildExportParam(ExportParam exportParam) {
+		exportParam.config(
+				"/com/joyintech/tams/svreport/chb/assetinfodetail/conf/export_conf.xml")
+				.dataSource(DataSourceType.MASERT);
+	}
+	/**
+	 * 查询要导出的数据
+	 */
+	@Override
+	public Page<AssetInfoDetailDto> selectPageData(Map<String, Object> param) {
+		return searchForPage(param);
+	}
+
+	public List<AssetInfoDetailDto> setDataList(Map<String, Object> param) {
+		List<AssetInfoDetailDto> resultList = new ArrayList<>();
+		String keyList = (String) param.get("keyList");
+		if (StringUtil.isNotEmpty(keyList)) {
+			try {
+				resultList = JsonUtils.json2List(keyList, AssetInfoDetailDto.class);
+			} catch (IOException e) {
+				logger.error(e.getMessage(), e);
+				return null;
+			}
+		} else {
+			param.put("orgCode", CommonUtil.getTreeInstCode());
+			param.put("assetCodes", StringUtil.isNotEmpty(param.get("assetCode"))?(param.get("assetCode").toString().split(",")):null);
+			param.put("assetTypes", StringUtil.isNotEmpty(param.get("assetType"))?(param.get("assetType").toString().split(",")):null);
+			param.put("assetType2s", StringUtil.isNotEmpty(param.get("assetType2"))?(param.get("assetType2").toString().split(",")):null);
+			param.put("orgAssetType1s", StringUtil.isNotEmpty(param.get("orgAssetType1"))?(param.get("orgAssetType1").toString().split(",")):null);
+			param.put("orgAssetType2s", StringUtil.isNotEmpty(param.get("orgAssetType2"))?(param.get("orgAssetType2").toString().split(",")):null);
+
+			resultList = assetInfoDetailMapper.selectChbInfoByParam(param);
+		}
+		return resultList;
+	}
 }

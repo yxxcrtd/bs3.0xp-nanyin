@@ -51,4 +51,10 @@ public interface AssetInfoDetailMapper {
 
 	BigDecimal  getTargetAmt(String  assetUUid);
 
+
+	int deleteError(String assetUUid);
+
+	int updateChbAssetType(String assetUUid);
+
+
 }

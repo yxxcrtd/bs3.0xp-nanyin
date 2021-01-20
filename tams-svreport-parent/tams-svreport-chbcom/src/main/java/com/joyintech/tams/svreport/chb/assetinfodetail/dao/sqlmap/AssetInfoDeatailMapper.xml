@@ -264,6 +264,8 @@
     <result column="BANK_SEC_PREFER" property="bankSecPrefer" jdbcType="VARCHAR" />
 
         <result column="dataStatus" property="dataStatus" jdbcType="VARCHAR" />
+        <result column="ERRMSG" property="errMsg" jdbcType="VARCHAR" />
+
 
     </resultMap>
 
@@ -2043,7 +2045,9 @@
     </update>
 
     <select id="selectChbInfoByParam"  resultMap="BaseResultMap">
-        SELECT * FROM (
+
+        SELECT *
+        FROM (
         SELECT '01' dataStatus ,
         i.ASSET_UUID,
         i.asset_name,
@@ -2054,82 +2058,90 @@
         i.org_asset_type2,
         i.org_asset_type3,
         to_char(i.vdate,'yyyy-MM-dd') vDateStr,
-        to_char(i.mdate,'yyyy-MM-dd') mDateStr
+        to_char(i.mdate,'yyyy-MM-dd') mDateStr,
+        null   ERRMSG
         FROM chb_asset_info i
         WHERE 1=1
         and i.status in ('E','M')
-                <if test="assetCodes != null and assetCodes.length>0">
-                    <foreach collection="assetCodes" item="item" open=" and ASSET_CODE in(" separator="," close=")">
-                        #{item}
-                    </foreach>
-                </if>
-                <if test="assetTypes != null and assetTypes.length>0">
-                    <foreach collection="assetTypes" item="item" open=" and asset_type in(" separator="," close=")">
-                        #{item}
-                    </foreach>
-                </if>
-                <if test="assetType2s != null and assetType2s.length>0">
-                    <foreach collection="assetType2s" item="item" open=" and asset_type2 in(" separator="," close=")">
-                        #{item}
-                    </foreach>
-                </if>
-                <if test="orgAssetType1s != null and orgAssetType1s.length>0">
-                    <foreach collection="orgAssetType1s" item="item" open=" and org_asset_type1 in(" separator="," close=")">
-                        #{item}
-                    </foreach>
-                </if>
-                <if test="orgAssetType2s != null and orgAssetType2s.length>0">
-                    <foreach collection="orgAssetType2s" item="item" open=" and org_asset_type2 in(" separator="," close=")">
-                        #{item}
-                    </foreach>
-                </if>
+        <if test="assetCodes != null and assetCodes.length>0">
+            <foreach collection="assetCodes" item="item" open=" and ASSET_CODE in(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="assetTypes != null and assetTypes.length>0">
+            <foreach collection="assetTypes" item="item" open=" and asset_type in(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="assetType2s != null and assetType2s.length>0">
+            <foreach collection="assetType2s" item="item" open=" and asset_type2 in(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="orgAssetType1s != null and orgAssetType1s.length>0">
+            <foreach collection="orgAssetType1s" item="item" open=" and org_asset_type1 in(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="orgAssetType2s != null and orgAssetType2s.length>0">
+            <foreach collection="orgAssetType2s" item="item" open=" and org_asset_type2 in(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="dataStatus != null and dataStatus!='' and !dataStatus.equals('01')">
+            and 1=2
+        </if>
 
-           UNION ALL
-                SELECT '02' dataStatus,
-                    e.DATAUUID ASSET_UUID,
-                    e.asset_name,
-                    e.asset_code,
-                    e.asset_type,
-                    e.asset_type2,
-                    e.org_asset_type1,
-                    e.org_asset_type2,
-                    e.org_asset_type3,
-                    e.vdate  vDateStr,
-                    e.mdate mDateStr
-                FROM CHB_ASSET_INFO_ERRODATA e
-                WHERE 1=1
-                and e.status in ('E','M')
-                <if test="assetCodes != null and assetCodes.length>0">
-                    <foreach collection="assetCodes" item="item" open=" and e.ASSET_CODE in(" separator="," close=")">
-                        #{item}
-                    </foreach>
-                </if>
-                <if test="assetTypes != null and assetTypes.length>0">
-                    <foreach collection="assetTypes" item="item" open=" and e.asset_type in(" separator="," close=")">
-                        #{item}
-                    </foreach>
-                </if>
-                <if test="assetType2s != null and assetType2s.length>0">
-                    <foreach collection="assetType2s" item="item" open=" and e.asset_type2 in(" separator="," close=")">
-                        #{item}
-                    </foreach>
-                </if>
-                <if test="orgAssetType1s != null and orgAssetType1s.length>0">
-                    <foreach collection="orgAssetType1s" item="item" open=" and e.org_asset_type1 in(" separator="," close=")">
-                        #{item}
-                    </foreach>
-                </if>
-                <if test="orgAssetType2s != null and orgAssetType2s.length>0">
-                    <foreach collection="orgAssetType2s" item="item" open=" and e.org_asset_type2 in(" separator="," close=")">
-                        #{item}
-                    </foreach>
-                </if>
+        and not exists (
+            SELECT 1 FROM CHB_ASSET_INFO_ERRODATA IE WHERE IE.asset_code = i.asset_code
+        )
 
-            ) a
-            where 1=1
-                <if test="dataStatus != null and dataStatus!=''">
-                    and dataStatus = #{dataStatus}
-                </if>
+        UNION ALL
+        SELECT '02' dataStatus,
+        e.DATAUUID ASSET_UUID,
+        e.asset_name,
+        e.asset_code,
+        e.asset_type,
+        e.asset_type2,
+        e.org_asset_type1,
+        e.org_asset_type2,
+        e.org_asset_type3,
+        e.vdate  vDateStr,
+        e.mdate mDateStr,
+        E.ERR_MSG
+        FROM CHB_ASSET_INFO_ERRODATA e
+        WHERE 1=1
+        and e.status in ('E','M')
+        <if test="assetCodes != null and assetCodes.length>0">
+            <foreach collection="assetCodes" item="item" open=" and e.ASSET_CODE in(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="assetTypes != null and assetTypes.length>0">
+            <foreach collection="assetTypes" item="item" open=" and e.asset_type in(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="assetType2s != null and assetType2s.length>0">
+            <foreach collection="assetType2s" item="item" open=" and e.asset_type2 in(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="orgAssetType1s != null and orgAssetType1s.length>0">
+            <foreach collection="orgAssetType1s" item="item" open=" and e.org_asset_type1 in(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="orgAssetType2s != null and orgAssetType2s.length>0">
+            <foreach collection="orgAssetType2s" item="item" open=" and e.org_asset_type2 in(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="dataStatus != null and dataStatus!='' and !dataStatus.equals('02')">
+            and 1=2
+        </if>
+        ) ORDER BY dataStatus DESC
+
     </select>
 
 
@@ -2923,5 +2935,19 @@ where  DATAUUID=#{assetUUid}
 <select id="getTargetAmt" resultType="java.math.BigDecimal" parameterType="java.lang.String">
     select  100 from dual
 </select>
+
+
+    <delete id="deleteError">
+        DELETE CHB_ASSET_INFO_ERRODATA WHERE trim(DATAUUID) = #{assetUUid}
+    </delete>
+
+    <update id="updateChbAssetType">
+            update CHB_ASSET_INFO
+            set status = 'D'
+            WHERE ASSET_UUID = #{assetUUid}
+    </update>
+
+
+
 
 </mapper>
