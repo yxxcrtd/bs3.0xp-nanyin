@@ -207,519 +207,520 @@ public class MstCommissionSetValidator implements BeanValidator {
                 String effDateStr = DateUtil.format(dto.getEffDate(),"yyyy-MM-dd HH:mm:ss");
                 param.put("effDate", effDateStr);
                 param.put("tradeMarket",dto.getTradeMarket());
-                for (String ps : dto.getPs().split(",")) {
-                    param.put("ps",ps);
-                    String psStr = getPsStr(ps);
-                    if (StringUtil.isNotBlank(dto.getSecAcctId())) {
-                        for (String secAcctId : dto.getSecAcctId().split(",")) {
-                            param.put("secAcctId",secAcctId);
-                            StlSecAcctInfo stlSecAcctInfo = stlSecAcctInfoMapper.selectByPrimaryKey(secAcctId);
-                            String secAcctName = stlSecAcctInfo.getSecAcctName();
-                            if(StringUtil.isNotBlank(dto.getTermType())){
-                                for(String termType : dto.getTermType().split(",")){
-                                    //add by 张年  20190827  start
-                                    param.put("termType",termType);
-                                    //add by 张年  20190827  end
-                                    // 判断交易费用规则是否重复
-                                    if(StringUtil.isNotBlank(dto.getTradeMarketMode())){
-                                        param.put("tradeMarketMode",dto.getTradeMarketMode());
-                                        if(StringUtil.isNotBlank(dto.getWindtypeone())){
-                                            for(String windtypeone : dto.getWindtypeone().split(",")){
-                                                param.put("windtypeone",windtypeone);
-                                                if(StringUtil.isNotBlank(dto.getWindtypetwo())){
-                                                    for(String windtypetwo : dto.getWindtypetwo().split(",")){
-                                                        param.put("windtypetwo",windtypetwo);
+                if(!"edit".equals(dto.getOperateType())) {
+                    for (String ps : dto.getPs().split(",")) {
+                        param.put("ps", ps);
+                        String psStr = getPsStr(ps);
+                        if (StringUtil.isNotBlank(dto.getSecAcctId())) {
+                            for (String secAcctId : dto.getSecAcctId().split(",")) {
+                                param.put("secAcctId", secAcctId);
+                                StlSecAcctInfo stlSecAcctInfo = stlSecAcctInfoMapper.selectByPrimaryKey(secAcctId);
+                                String secAcctName = stlSecAcctInfo.getSecAcctName();
+                                if (StringUtil.isNotBlank(dto.getTermType())) {
+                                    for (String termType : dto.getTermType().split(",")) {
+                                        //add by 张年  20190827  start
+                                        param.put("termType", termType);
+                                        //add by 张年  20190827  end
+                                        // 判断交易费用规则是否重复
+                                        if (StringUtil.isNotBlank(dto.getTradeMarketMode())) {
+                                            param.put("tradeMarketMode", dto.getTradeMarketMode());
+                                            if (StringUtil.isNotBlank(dto.getWindtypeone())) {
+                                                for (String windtypeone : dto.getWindtypeone().split(",")) {
+                                                    param.put("windtypeone", windtypeone);
+                                                    if (StringUtil.isNotBlank(dto.getWindtypetwo())) {
+                                                        for (String windtypetwo : dto.getWindtypetwo().split(",")) {
+                                                            param.put("windtypetwo", windtypetwo);
+                                                            int count = mstCommissionSetService.searchRepeatBySecPs(param);
+                                                            if (count > 0) {
+                                                                resultList.add(new ValidMessage(getMessage("MST_INFO_E_0010",
+                                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
+                                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
+                                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
+                                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                        DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
+                                                            }
+                                                        }
+                                                    } else {
                                                         int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                         if (count > 0) {
                                                             resultList.add(new ValidMessage(getMessage("MST_INFO_E_0010",
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),secAcctName,
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,termType,
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场,dto.getTradeMarketMode()),
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等,windtypeone),
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等,windtypetwo),
-                                                                    DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
+                                                                    "null",
+                                                                    DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                         }
                                                     }
-                                                }else{
+                                                }
+                                            } else {
+                                                if (StringUtil.isNotBlank(dto.getWindtypetwo())) {
+                                                    for (String windtypetwo : dto.getWindtypetwo().split(",")) {
+                                                        param.put("windtypetwo", windtypetwo);
+                                                        int count = mstCommissionSetService.searchRepeatBySecPs(param);
+                                                        if (count > 0) {
+                                                            resultList.add(new ValidMessage(getMessage("MST_INFO_E_0010",
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
+                                                                    "null",
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                    DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
+                                                        }
+                                                    }
+                                                } else {
                                                     int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                     if (count > 0) {
                                                         resultList.add(new ValidMessage(getMessage("MST_INFO_E_0010",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),secAcctName,
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,termType,
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场,dto.getTradeMarketMode()),
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等,windtypeone),
-                                                                "null",
-                                                                DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
+                                                                "null", "null",
+                                                                DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                     }
                                                 }
                                             }
-                                        }else{
-                                            if(StringUtil.isNotBlank(dto.getWindtypetwo())){
-                                                for(String windtypetwo : dto.getWindtypetwo().split(",")){
-                                                    param.put("windtypetwo",windtypetwo);
-                                                    int count = mstCommissionSetService.searchRepeatBySecPs(param);
-                                                    if (count > 0) {
-                                                        resultList.add(new ValidMessage(getMessage("MST_INFO_E_0010",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),secAcctName,
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,termType,
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场,dto.getTradeMarketMode()),
-                                                                "null",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等,windtypetwo),
-                                                                DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
-                                                    }
-                                                }
-                                            }else{
-                                                int count = mstCommissionSetService.searchRepeatBySecPs(param);
-                                                if (count > 0) {
-                                                    resultList.add(new ValidMessage(getMessage("MST_INFO_E_0010",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),secAcctName,
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,termType,
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场,dto.getTradeMarketMode()),
-                                                            "null","null",
-                                                            DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
-                                                }
-                                            }
-                                        }
-                                    }else{
-                                        if(StringUtil.isNotBlank(dto.getWindtypeone())){
-                                            for(String windtypeone : dto.getWindtypeone().split(",")){
-                                                param.put("windtypeone",windtypeone);
-                                                if(StringUtil.isNotBlank(dto.getWindtypetwo())){
-                                                    for(String windtypetwo : dto.getWindtypetwo().split(",")){
-                                                        param.put("windtypetwo",windtypetwo);
+                                        } else {
+                                            if (StringUtil.isNotBlank(dto.getWindtypeone())) {
+                                                for (String windtypeone : dto.getWindtypeone().split(",")) {
+                                                    param.put("windtypeone", windtypeone);
+                                                    if (StringUtil.isNotBlank(dto.getWindtypetwo())) {
+                                                        for (String windtypetwo : dto.getWindtypetwo().split(",")) {
+                                                            param.put("windtypetwo", windtypetwo);
+                                                            int count = mstCommissionSetService.searchRepeatBySecPs(param);
+                                                            if (count > 0) {
+                                                                resultList.add(new ValidMessage(getMessage("MST_INFO_E_0011",
+                                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
+                                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
+                                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                        DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
+                                                            }
+                                                        }
+                                                    } else {
                                                         int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                         if (count > 0) {
                                                             resultList.add(new ValidMessage(getMessage("MST_INFO_E_0011",
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),secAcctName,
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,termType,
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等,windtypeone),
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等,windtypetwo),
-                                                                    DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
+                                                                    "null",
+                                                                    DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                         }
                                                     }
-                                                }else{
+                                                }
+                                            } else {
+                                                if (StringUtil.isNotBlank(dto.getWindtypetwo())) {
+                                                    for (String windtypetwo : dto.getWindtypetwo().split(",")) {
+                                                        param.put("windtypetwo", windtypetwo);
+                                                        int count = mstCommissionSetService.searchRepeatBySecPs(param);
+                                                        if (count > 0) {
+                                                            resultList.add(new ValidMessage(getMessage("MST_INFO_E_0011",
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
+                                                                    "null",
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                    DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
+                                                        }
+                                                    }
+                                                } else {
                                                     int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                     if (count > 0) {
                                                         resultList.add(new ValidMessage(getMessage("MST_INFO_E_0011",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),secAcctName,
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,termType,
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等,windtypeone),
-                                                                "null",
-                                                                DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
+                                                                "null", "null",
+                                                                DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                     }
-                                                }
-                                            }
-                                        }else{
-                                            if(StringUtil.isNotBlank(dto.getWindtypetwo())){
-                                                for(String windtypetwo : dto.getWindtypetwo().split(",")){
-                                                    param.put("windtypetwo",windtypetwo);
-                                                    int count = mstCommissionSetService.searchRepeatBySecPs(param);
-                                                    if (count > 0) {
-                                                        resultList.add(new ValidMessage(getMessage("MST_INFO_E_0011",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),secAcctName,
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,termType,
-                                                                "null",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等,windtypetwo),
-                                                                DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
-                                                    }
-                                                }
-                                            }else{
-                                                int count = mstCommissionSetService.searchRepeatBySecPs(param);
-                                                if (count > 0) {
-                                                    resultList.add(new ValidMessage(getMessage("MST_INFO_E_0011",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),secAcctName,
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,termType,
-                                                            "null","null",
-                                                            DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
                                                 }
                                             }
                                         }
                                     }
-                                }
-                            }else {
-                                if(StringUtil.isNotBlank(dto.getTradeMarketMode())){
-                                    param.put("tradeMarketMode",dto.getTradeMarketMode());
-                                    if(StringUtil.isNotBlank(dto.getWindtypeone())){
-                                        for(String windtypeone : dto.getWindtypeone().split(",")){
-                                            param.put("windtypeone",windtypeone);
-                                            if(StringUtil.isNotBlank(dto.getWindtypetwo())){
-                                                for(String windtypetwo : dto.getWindtypetwo().split(",")){
-                                                    param.put("windtypetwo",windtypetwo);
+                                } else {
+                                    if (StringUtil.isNotBlank(dto.getTradeMarketMode())) {
+                                        param.put("tradeMarketMode", dto.getTradeMarketMode());
+                                        if (StringUtil.isNotBlank(dto.getWindtypeone())) {
+                                            for (String windtypeone : dto.getWindtypeone().split(",")) {
+                                                param.put("windtypeone", windtypeone);
+                                                if (StringUtil.isNotBlank(dto.getWindtypetwo())) {
+                                                    for (String windtypetwo : dto.getWindtypetwo().split(",")) {
+                                                        param.put("windtypetwo", windtypetwo);
+                                                        int count = mstCommissionSetService.searchRepeatBySecPs(param);
+                                                        if (count > 0) {
+                                                            resultList.add(new ValidMessage(getMessage("MST_INFO_E_0012",
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                    DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
+                                                        }
+                                                    }
+                                                } else {
                                                     int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                     if (count > 0) {
                                                         resultList.add(new ValidMessage(getMessage("MST_INFO_E_0012",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),secAcctName,
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场,dto.getTradeMarketMode()),
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等,windtypeone),
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等,windtypetwo),
-                                                                DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
+                                                                "null",
+                                                                DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                     }
                                                 }
-                                            }else{
+                                            }
+                                        } else {
+                                            if (StringUtil.isNotBlank(dto.getWindtypetwo())) {
+                                                for (String windtypetwo : dto.getWindtypetwo().split(",")) {
+                                                    param.put("windtypetwo", windtypetwo);
+                                                    int count = mstCommissionSetService.searchRepeatBySecPs(param);
+                                                    if (count > 0) {
+                                                        resultList.add(new ValidMessage(getMessage("MST_INFO_E_0012",
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
+                                                                "null",
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
+                                                    }
+                                                }
+                                            } else {
                                                 int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                 if (count > 0) {
                                                     resultList.add(new ValidMessage(getMessage("MST_INFO_E_0012",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),secAcctName,
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场,dto.getTradeMarketMode()),
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等,windtypeone),
-                                                            "null",
-                                                            DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
+                                                            "null", "null",
+                                                            DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                 }
                                             }
                                         }
-                                    }else{
-                                        if(StringUtil.isNotBlank(dto.getWindtypetwo())){
-                                            for(String windtypetwo : dto.getWindtypetwo().split(",")){
-                                                param.put("windtypetwo",windtypetwo);
-                                                int count = mstCommissionSetService.searchRepeatBySecPs(param);
-                                                if (count > 0) {
-                                                    resultList.add(new ValidMessage(getMessage("MST_INFO_E_0012",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),secAcctName,
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场,dto.getTradeMarketMode()),
-                                                            "null",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等,windtypetwo),
-                                                            DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
-                                                }
-                                            }
-                                        }else{
-                                            int count = mstCommissionSetService.searchRepeatBySecPs(param);
-                                            if (count > 0) {
-                                                resultList.add(new ValidMessage(getMessage("MST_INFO_E_0012",
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),secAcctName,
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场,dto.getTradeMarketMode()),
-                                                        "null","null",
-                                                        DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
-                                            }
-                                        }
-                                    }
-                                }else{
-                                    if(StringUtil.isNotBlank(dto.getWindtypeone())){
-                                        for(String windtypeone : dto.getWindtypeone().split(",")){
-                                            param.put("windtypeone",windtypeone);
-                                            if(StringUtil.isNotBlank(dto.getWindtypetwo())){
-                                                for(String windtypetwo : dto.getWindtypetwo().split(",")){
-                                                    param.put("windtypetwo",windtypetwo);
+                                    } else {
+                                        if (StringUtil.isNotBlank(dto.getWindtypeone())) {
+                                            for (String windtypeone : dto.getWindtypeone().split(",")) {
+                                                param.put("windtypeone", windtypeone);
+                                                if (StringUtil.isNotBlank(dto.getWindtypetwo())) {
+                                                    for (String windtypetwo : dto.getWindtypetwo().split(",")) {
+                                                        param.put("windtypetwo", windtypetwo);
+                                                        int count = mstCommissionSetService.searchRepeatBySecPs(param);
+                                                        if (count > 0) {
+                                                            resultList.add(new ValidMessage(getMessage("MST_INFO_E_0013",
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                    DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
+                                                        }
+                                                    }
+                                                } else {
                                                     int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                     if (count > 0) {
                                                         resultList.add(new ValidMessage(getMessage("MST_INFO_E_0013",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),secAcctName,
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等,windtypeone),
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等,windtypetwo),
-                                                                DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
+                                                                "null",
+                                                                DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                     }
                                                 }
-                                            }else{
+                                            }
+                                        } else {
+                                            if (StringUtil.isNotBlank(dto.getWindtypetwo())) {
+                                                for (String windtypetwo : dto.getWindtypetwo().split(",")) {
+                                                    param.put("windtypetwo", windtypetwo);
+                                                    int count = mstCommissionSetService.searchRepeatBySecPs(param);
+                                                    if (count > 0) {
+                                                        resultList.add(new ValidMessage(getMessage("MST_INFO_E_0013",
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
+                                                                "null",
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
+                                                    }
+                                                }
+                                            } else {
                                                 int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                 if (count > 0) {
                                                     resultList.add(new ValidMessage(getMessage("MST_INFO_E_0013",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),secAcctName,
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等,windtypeone),
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
                                                             "null",
-                                                            DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
-                                                }
-                                            }
-                                        }
-                                    }else{
-                                        if(StringUtil.isNotBlank(dto.getWindtypetwo())){
-                                            for(String windtypetwo : dto.getWindtypetwo().split(",")){
-                                                param.put("windtypetwo",windtypetwo);
-                                                int count = mstCommissionSetService.searchRepeatBySecPs(param);
-                                                if (count > 0) {
-                                                    resultList.add(new ValidMessage(getMessage("MST_INFO_E_0013",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),secAcctName,
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,
                                                             "null",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等,windtypetwo),
-                                                            DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
+                                                            DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                 }
-                                            }
-                                        }else{
-                                            int count = mstCommissionSetService.searchRepeatBySecPs(param);
-                                            if (count > 0) {
-                                                resultList.add(new ValidMessage(getMessage("MST_INFO_E_0013",
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),secAcctName,
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,
-                                                        "null",
-                                                        "null",
-                                                        DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
                                             }
                                         }
                                     }
                                 }
                             }
-                        }
-                    }
-                    else {
-                        if(StringUtil.isNotBlank(dto.getTermType())){
-                            for(String termType : dto.getTermType().split(",")){
-                                //add by 张年  20190827  start
-                                param.put("termType",termType);
-                                //add by 张年  20190827  end
-                                // 判断交易费用规则是否重复
-                                if(StringUtil.isNotBlank(dto.getTradeMarketMode())){
-                                    param.put("tradeMarketMode",dto.getTradeMarketMode());
-                                    if(StringUtil.isNotBlank(dto.getWindtypeone())){
-                                        for(String windtypeone : dto.getWindtypeone().split(",")){
-                                            param.put("windtypeone",windtypeone);
-                                            if(StringUtil.isNotBlank(dto.getWindtypetwo())){
-                                                for(String windtypetwo : dto.getWindtypetwo().split(",")){
-                                                    param.put("windtypetwo",windtypetwo);
+                        } else {
+                            if (StringUtil.isNotBlank(dto.getTermType())) {
+                                for (String termType : dto.getTermType().split(",")) {
+                                    //add by 张年  20190827  start
+                                    param.put("termType", termType);
+                                    //add by 张年  20190827  end
+                                    // 判断交易费用规则是否重复
+                                    if (StringUtil.isNotBlank(dto.getTradeMarketMode())) {
+                                        param.put("tradeMarketMode", dto.getTradeMarketMode());
+                                        if (StringUtil.isNotBlank(dto.getWindtypeone())) {
+                                            for (String windtypeone : dto.getWindtypeone().split(",")) {
+                                                param.put("windtypeone", windtypeone);
+                                                if (StringUtil.isNotBlank(dto.getWindtypetwo())) {
+                                                    for (String windtypetwo : dto.getWindtypetwo().split(",")) {
+                                                        param.put("windtypetwo", windtypetwo);
+                                                        int count = mstCommissionSetService.searchRepeatBySecPs(param);
+                                                        if (count > 0) {
+                                                            resultList.add(new ValidMessage(getMessage("MST_INFO_E_0014",
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                    DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
+                                                        }
+                                                    }
+                                                } else {
                                                     int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                     if (count > 0) {
                                                         resultList.add(new ValidMessage(getMessage("MST_INFO_E_0014",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,termType,
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场,dto.getTradeMarketMode()),
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等,windtypeone),
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等,windtypetwo),
-                                                                DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
+                                                                "null",
+                                                                DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                     }
                                                 }
-                                            }else{
+                                            }
+                                        } else {
+                                            if (StringUtil.isNotBlank(dto.getWindtypetwo())) {
+                                                for (String windtypetwo : dto.getWindtypetwo().split(",")) {
+                                                    param.put("windtypetwo", windtypetwo);
+                                                    int count = mstCommissionSetService.searchRepeatBySecPs(param);
+                                                    if (count > 0) {
+                                                        resultList.add(new ValidMessage(getMessage("MST_INFO_E_0014",
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
+                                                                "null",
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
+                                                    }
+                                                }
+                                            } else {
                                                 int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                 if (count > 0) {
                                                     resultList.add(new ValidMessage(getMessage("MST_INFO_E_0014",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,termType,
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场,dto.getTradeMarketMode()),
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等,windtypeone),
-                                                            "null",
-                                                            DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
+                                                            "null", "null",
+                                                            DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                 }
                                             }
                                         }
-                                    }else{
-                                        if(StringUtil.isNotBlank(dto.getWindtypetwo())){
-                                            for(String windtypetwo : dto.getWindtypetwo().split(",")){
-                                                param.put("windtypetwo",windtypetwo);
-                                                int count = mstCommissionSetService.searchRepeatBySecPs(param);
-                                                if (count > 0) {
-                                                    resultList.add(new ValidMessage(getMessage("MST_INFO_E_0014",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,termType,
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场,dto.getTradeMarketMode()),
-                                                            "null",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等,windtypetwo),
-                                                            DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
-                                                }
-                                            }
-                                        }else{
-                                            int count = mstCommissionSetService.searchRepeatBySecPs(param);
-                                            if (count > 0) {
-                                                resultList.add(new ValidMessage(getMessage("MST_INFO_E_0014",
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,termType,
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场,dto.getTradeMarketMode()),
-                                                        "null","null",
-                                                        DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
-                                            }
-                                        }
-                                    }
-                                }else{
-                                    if(StringUtil.isNotBlank(dto.getWindtypeone())){
-                                        for(String windtypeone : dto.getWindtypeone().split(",")){
-                                            param.put("windtypeone",windtypeone);
-                                            if(StringUtil.isNotBlank(dto.getWindtypetwo())){
-                                                for(String windtypetwo : dto.getWindtypetwo().split(",")){
-                                                    param.put("windtypetwo",windtypetwo);
+                                    } else {
+                                        if (StringUtil.isNotBlank(dto.getWindtypeone())) {
+                                            for (String windtypeone : dto.getWindtypeone().split(",")) {
+                                                param.put("windtypeone", windtypeone);
+                                                if (StringUtil.isNotBlank(dto.getWindtypetwo())) {
+                                                    for (String windtypetwo : dto.getWindtypetwo().split(",")) {
+                                                        param.put("windtypetwo", windtypetwo);
+                                                        int count = mstCommissionSetService.searchRepeatBySecPs(param);
+                                                        if (count > 0) {
+                                                            resultList.add(new ValidMessage(getMessage("MST_INFO_E_0015",
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                    DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
+                                                        }
+                                                    }
+                                                } else {
                                                     int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                     if (count > 0) {
                                                         resultList.add(new ValidMessage(getMessage("MST_INFO_E_0015",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,termType,
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等,windtypeone),
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等,windtypetwo),
-                                                                DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
+                                                                "null",
+                                                                DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                     }
                                                 }
-                                            }else{
+                                            }
+                                        } else {
+                                            if (StringUtil.isNotBlank(dto.getWindtypetwo())) {
+                                                for (String windtypetwo : dto.getWindtypetwo().split(",")) {
+                                                    param.put("windtypetwo", windtypetwo);
+                                                    int count = mstCommissionSetService.searchRepeatBySecPs(param);
+                                                    if (count > 0) {
+                                                        resultList.add(new ValidMessage(getMessage("MST_INFO_E_0015",
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
+                                                                "null",
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
+                                                    }
+                                                }
+                                            } else {
                                                 int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                 if (count > 0) {
                                                     resultList.add(new ValidMessage(getMessage("MST_INFO_E_0015",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,termType,
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等,windtypeone),
-                                                            "null",
-                                                            DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
+                                                            "null", "null",
+                                                            DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                 }
-                                            }
-                                        }
-                                    }else{
-                                        if(StringUtil.isNotBlank(dto.getWindtypetwo())){
-                                            for(String windtypetwo : dto.getWindtypetwo().split(",")){
-                                                param.put("windtypetwo",windtypetwo);
-                                                int count = mstCommissionSetService.searchRepeatBySecPs(param);
-                                                if (count > 0) {
-                                                    resultList.add(new ValidMessage(getMessage("MST_INFO_E_0015",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,termType,
-                                                            "null",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等,windtypetwo),
-                                                            DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
-                                                }
-                                            }
-                                        }else{
-                                            int count = mstCommissionSetService.searchRepeatBySecPs(param);
-                                            if (count > 0) {
-                                                resultList.add(new ValidMessage(getMessage("MST_INFO_E_0015",
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,termType,
-                                                        "null","null",
-                                                        DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
                                             }
                                         }
                                     }
                                 }
-                            }
-                        }else {
-                            if(StringUtil.isNotBlank(dto.getTradeMarketMode())){
-                                param.put("tradeMarketMode",dto.getTradeMarketMode());
-                                if(StringUtil.isNotBlank(dto.getWindtypeone())){
-                                    for(String windtypeone : dto.getWindtypeone().split(",")){
-                                        param.put("windtypeone",windtypeone);
-                                        if(StringUtil.isNotBlank(dto.getWindtypetwo())){
-                                            for(String windtypetwo : dto.getWindtypetwo().split(",")){
-                                                param.put("windtypetwo",windtypetwo);
+                            } else {
+                                if (StringUtil.isNotBlank(dto.getTradeMarketMode())) {
+                                    param.put("tradeMarketMode", dto.getTradeMarketMode());
+                                    if (StringUtil.isNotBlank(dto.getWindtypeone())) {
+                                        for (String windtypeone : dto.getWindtypeone().split(",")) {
+                                            param.put("windtypeone", windtypeone);
+                                            if (StringUtil.isNotBlank(dto.getWindtypetwo())) {
+                                                for (String windtypetwo : dto.getWindtypetwo().split(",")) {
+                                                    param.put("windtypetwo", windtypetwo);
+                                                    int count = mstCommissionSetService.searchRepeatBySecPs(param);
+                                                    if (count > 0) {
+                                                        resultList.add(new ValidMessage(getMessage("MST_INFO_E_0016",
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
+                                                    }
+                                                }
+                                            } else {
                                                 int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                 if (count > 0) {
                                                     resultList.add(new ValidMessage(getMessage("MST_INFO_E_0016",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场,dto.getTradeMarketMode()),
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等,windtypeone),
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等,windtypetwo),
-                                                            DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
+                                                            "null",
+                                                            DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                 }
                                             }
-                                        }else{
+                                        }
+                                    } else {
+                                        if (StringUtil.isNotBlank(dto.getWindtypetwo())) {
+                                            for (String windtypetwo : dto.getWindtypetwo().split(",")) {
+                                                param.put("windtypetwo", windtypetwo);
+                                                int count = mstCommissionSetService.searchRepeatBySecPs(param);
+                                                if (count > 0) {
+                                                    resultList.add(new ValidMessage(getMessage("MST_INFO_E_0016",
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
+                                                            "null",
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                            DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
+                                                }
+                                            }
+                                        } else {
                                             int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                             if (count > 0) {
                                                 resultList.add(new ValidMessage(getMessage("MST_INFO_E_0016",
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场,dto.getTradeMarketMode()),
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等,windtypeone),
-                                                        "null",
-                                                        DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
+                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
+                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
+                                                        "null", "null",
+                                                        DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                             }
                                         }
                                     }
-                                }else{
-                                    if(StringUtil.isNotBlank(dto.getWindtypetwo())){
-                                        for(String windtypetwo : dto.getWindtypetwo().split(",")){
-                                            param.put("windtypetwo",windtypetwo);
-                                            int count = mstCommissionSetService.searchRepeatBySecPs(param);
-                                            if (count > 0) {
-                                                resultList.add(new ValidMessage(getMessage("MST_INFO_E_0016",
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场,dto.getTradeMarketMode()),
-                                                        "null",
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等,windtypetwo),
-                                                        DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
-                                            }
-                                        }
-                                    }else{
-                                        int count = mstCommissionSetService.searchRepeatBySecPs(param);
-                                        if (count > 0) {
-                                            resultList.add(new ValidMessage(getMessage("MST_INFO_E_0016",
-                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),
-                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,
-                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场,dto.getTradeMarketMode()),
-                                                    "null","null",
-                                                    DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
-                                        }
-                                    }
-                                }
-                            }else{
-                                if(StringUtil.isNotBlank(dto.getWindtypeone())){
-                                    for(String windtypeone : dto.getWindtypeone().split(",")){
-                                        param.put("windtypeone",windtypeone);
-                                        if(StringUtil.isNotBlank(dto.getWindtypetwo())){
-                                            for(String windtypetwo : dto.getWindtypetwo().split(",")){
-                                                param.put("windtypetwo",windtypetwo);
+                                } else {
+                                    if (StringUtil.isNotBlank(dto.getWindtypeone())) {
+                                        for (String windtypeone : dto.getWindtypeone().split(",")) {
+                                            param.put("windtypeone", windtypeone);
+                                            if (StringUtil.isNotBlank(dto.getWindtypetwo())) {
+                                                for (String windtypetwo : dto.getWindtypetwo().split(",")) {
+                                                    param.put("windtypetwo", windtypetwo);
+                                                    int count = mstCommissionSetService.searchRepeatBySecPs(param);
+                                                    if (count > 0) {
+                                                        resultList.add(new ValidMessage(getMessage("MST_INFO_E_0017",
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
+                                                    }
+                                                }
+                                            } else {
                                                 int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                 if (count > 0) {
                                                     resultList.add(new ValidMessage(getMessage("MST_INFO_E_0017",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等,windtypeone),
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等,windtypetwo),
-                                                            DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
+                                                            "null",
+                                                            DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                 }
                                             }
-                                        }else{
+                                        }
+                                    } else {
+                                        if (StringUtil.isNotBlank(dto.getWindtypetwo())) {
+                                            for (String windtypetwo : dto.getWindtypetwo().split(",")) {
+                                                param.put("windtypetwo", windtypetwo);
+                                                int count = mstCommissionSetService.searchRepeatBySecPs(param);
+                                                if (count > 0) {
+                                                    resultList.add(new ValidMessage(getMessage("MST_INFO_E_0017",
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
+                                                            "null",
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                            DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
+                                                }
+                                            }
+                                        } else {
                                             int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                             if (count > 0) {
                                                 resultList.add(new ValidMessage(getMessage("MST_INFO_E_0017",
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等,windtypeone),
-                                                        "null",
-                                                        DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
+                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
+                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
+                                                        "null", "null",
+                                                        DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                             }
-                                        }
-                                    }
-                                }else{
-                                    if(StringUtil.isNotBlank(dto.getWindtypetwo())){
-                                        for(String windtypetwo : dto.getWindtypetwo().split(",")){
-                                            param.put("windtypetwo",windtypetwo);
-                                            int count = mstCommissionSetService.searchRepeatBySecPs(param);
-                                            if (count > 0) {
-                                                resultList.add(new ValidMessage(getMessage("MST_INFO_E_0017",
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,
-                                                        "null",
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等,windtypetwo),
-                                                        DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
-                                            }
-                                        }
-                                    }else{
-                                        int count = mstCommissionSetService.searchRepeatBySecPs(param);
-                                        if (count > 0) {
-                                            resultList.add(new ValidMessage(getMessage("MST_INFO_E_0017",
-                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型,dto.getFeeType()),
-                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,dto.getTradeMarket()),
-                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型,dto.getTradeType()),psStr,
-                                                    "null","null",
-                                                    DateUtil.format(dto.getEffDate(),"yyyy-MM-dd"))));
                                         }
                                     }
                                 }
