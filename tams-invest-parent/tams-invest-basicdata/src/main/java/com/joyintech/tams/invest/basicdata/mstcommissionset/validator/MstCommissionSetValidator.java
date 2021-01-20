@@ -756,17 +756,17 @@ public class MstCommissionSetValidator implements BeanValidator {
                                         mstCommissionSetDto.setSecAcctId(data0List.get(0).getSecAcctId());
                                         mstCommissionSetDto.setTradeType(data0List.get(0).getTradeType());
                                         mstCommissionSetDto.setEffDate(data0List.get(0).getEffDate());
+                                        mstCommissionSetDto.setTradeMarketMode(data0List.get(0).getTradeMarketMode());
                                         mstCommissionSetDto.setPs(ps);
                                         mstCommissionSetDto.setWorkflowId(en.getWorkflowId());
                                         mstCommissionSetDto.setStatus(en.getStatus());
-//                                        if(StringUtil.isNotEmpty(data0List.get(0).getTermType())){
-//                                            String[] arrTerm = data0List.get(0).getTermType().split(",");
-//                                            for (String termType : arrTerm) {
-//                                                mstCommissionSetDto.setTermType(termType);
-//                                                data1List.add(mstCommissionSetDto);
-//                                            }
-//                                        }else{data1List.add(mstCommissionSetDto);}
-                                        data1List.add(mstCommissionSetDto);
+                                        if(StringUtil.isNotEmpty(data0List.get(0).getTermType())){
+                                            String[] arrTerm = data0List.get(0).getTermType().split(",");
+                                            for (String termType : arrTerm) {
+                                                mstCommissionSetDto.setTermType(termType);
+                                                data1List.add(mstCommissionSetDto);
+                                            }
+                                        }else{data1List.add(mstCommissionSetDto);}
                                     }
                                 }
                             } catch (Exception e) {
@@ -787,6 +787,7 @@ public class MstCommissionSetValidator implements BeanValidator {
                                     //如果交易品种相同，交易方向相同并且，工作流代码不相同(即不是同一工作流程中的的数据)
                                     for(MstCommissionSetDto data0 : data1List){
                                         if(StringUtil.equals(d.getTradeType(), data0.getTradeType())
+                                                && StringUtil.equals(d.getTradeMarketMode(), data0.getTradeMarketMode())
                                                 && StringUtil.equals(d.getPs(), data0.getPs())
                                                 && StringUtil.equals(d.getFeeType(), data0.getFeeType())
                                                 && StringUtil.equals(d.getTermType(), data0.getTermType())

@@ -155,6 +155,9 @@
         if(termType){
             mstDto.termType = termType.join(",");
         }
+        if($("#tradeMarketMode").val()){
+            mstDto.tradeMarketMode=$("#tradeMarketMode").val();
+        }
         allData.push(mstDto);
         object.selectedItem = selectedItem;
         // 将所有数据json化存入allData
@@ -191,6 +194,7 @@
         mstDto.batchSeq = object.batchSeq;
         mstDto.termType = object.termType;
         mstDto.tradeType = object.tradeType;
+        mstDto.tradeMarketMode = object.tradeMarketMode;
         mstDto.ps = v1;
         if ($("#workflowId").val() != null && $("#workflowId").val() != '') {
             mstDto.workflowId = $("#workflowId").val();
