@@ -75,4 +75,6 @@ public interface BaseAccountWriterMapper {
      * @since 1.0
      */
     void insertBokBookdetailCurrentExt(List<BokBookdetailCurrentExt> BokBookdetailCurrentExt);
+
+    int mergeValBokBussDetsub(List<BokBussDetsub> list);
 }

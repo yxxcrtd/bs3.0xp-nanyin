@@ -1,8 +1,13 @@
 package com.joyintech.tams.invest.basicdata.mstfeevarieties.service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
@@ -47,9 +52,31 @@ public class MstFeeVarietiesService extends CommonExportService<MstFeeVarietiesD
     @Override
     public void doComplete(MstFeeVarietiesDto entity, OperationType type) {
         entity.setOperateType(type.toString());
+
         restTemplate.postForObject(
             ServiceApplication.BASICDATA_SERVICE_NAME + "/MstFeeVarieties/doComplete",
             entity, Integer.class);
+
+        // 二级法人权限处理
+        if(MultilevelDataAuthorityUtil.isEnabled()) {
+            //创建机构代码
+            String createInst =   MultilevelDataAuthorityUtil.getService().queryOrganizationCode(entity.getCreateUser());
+            entity.setCreateInst(createInst);
+
+            // 有查询权限的机构代码
+            List<String> searchOrgCodeList = null;
+            // 有编辑权限的机构代码
+            List<String> editOrgCodeList = null;
+            // 新建或修改时重新设置二级法人权限，删除时则清空
+            if (!OperationType.DELETE.equals(type)) {
+                //获取所有父级机构。  拥有查看权限
+                searchOrgCodeList = CommonUtil.getParentInstitution(createInst);
+                // 仅资产的创建机构（当前登录用户所在机构）有编辑权限
+                editOrgCodeList = Arrays.asList(entity.getCreateInst());
+            }
+            // 记录二级法人权限
+            insertDataAuthTypeInst(entity.getFeeId(), searchOrgCodeList, editOrgCodeList, BussinessDictCodeList.共同业务类型_费用品种管理.getValue());
+        }
     }
 
     /**

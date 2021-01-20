@@ -55,8 +55,8 @@ $(function() {
 				p.removeAttribute('style');
 				
 				//暂不支持多选
-				var p = document.getElementById("tradePlace");
-				p.removeAttribute('multiple');
+				// var p = document.getElementById("tradePlace");
+				// p.removeAttribute('multiple');
 				
 				var p = document.getElementById("tradePlaceOld");
 				p.setAttribute('style','display:none');

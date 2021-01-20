@@ -664,7 +664,8 @@ public class BookAccountGenLogic {
         List<List<BokBussDetsub>> list = DataHandleUtil.splitList(bussDetsubs);
         for (List<BokBussDetsub> listInsert : list) {
             if (CollectionUtils.isNotEmpty(listInsert)) {
-                baseAccountWriterMapper.insertValBokBussDetsub(listInsert);
+//                baseAccountWriterMapper.insertValBokBussDetsub(listInsert);
+                baseAccountWriterMapper.mergeValBokBussDetsub(listInsert);
             }
         }
 //        List<BokBussDetsub> listInsert = new ArrayList<>();

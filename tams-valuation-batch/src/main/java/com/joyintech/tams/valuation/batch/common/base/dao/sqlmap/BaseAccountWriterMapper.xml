@@ -284,5 +284,52 @@
             #{item.updateTime,jdbcType=TIMESTAMP}
         </foreach>    
     </insert>
-    
+
+    <insert id="mergeValBokBussDetsub" parameterType="list">
+        MERGE INTO BOK_BUSS_DETSUB bbd using (
+        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+                 close="from dual)">
+            #{item.booksetId,jdbcType=VARCHAR} booksetId,
+            #{item.detailSubjectNo,jdbcType=VARCHAR} detailSubjectNo,
+            #{item.detailSubjectName,jdbcType=VARCHAR} detailSubjectName,
+            #{item.detailSubjectNoTail,jdbcType=VARCHAR} detailSubjectNoTail,
+            #{item.detailSubnameTail,jdbcType=VARCHAR} detailSubnameTail,
+            #{item.fsubjectId,jdbcType=VARCHAR} fsubjectId,
+            #{item.createUser,jdbcType=VARCHAR} createUser,
+            #{item.createDept,jdbcType=VARCHAR} createDept,
+            #{item.createTime,jdbcType=TIMESTAMP} createTime,
+            #{item.updateUser,jdbcType=VARCHAR} updateUser,
+            #{item.updateTime,jdbcType=TIMESTAMP} updateTime
+        </foreach>
+        ) datas on (bbd.BOOKSET_ID = datas.booksetId and bbd.DETAIL_SUBJECT_NO = datas.detailSubjectNo)
+        WHEN MATCHED THEN
+        UPDATE set bbd.UPDATE_TIME = SYSDATE
+        WHEN NOT MATCHED THEN
+        INSERT (
+        BOOKSET_ID,
+        DETAIL_SUBJECT_NO,
+        DETAIL_SUBJECT_NAME,
+        DETAIL_SUBJECT_NO_TAIL,
+        DETAIL_SUBNAME_TAIL,
+        FSUBJECT_ID,
+        CREATE_USER,
+        CREATE_DEPT,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME)
+        VALUES (
+        datas.booksetId,
+        datas.detailSubjectNo,
+        datas.detailSubjectName,
+        datas.detailSubjectNoTail,
+        datas.detailSubnameTail,
+        datas.fsubjectId,
+        datas.createUser,
+        datas.createDept,
+        datas.createTime,
+        datas.updateUser,
+        datas.updateTime
+        )
+    </insert>
+
 </mapper>
