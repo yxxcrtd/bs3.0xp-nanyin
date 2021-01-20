@@ -78,7 +78,18 @@ $(function() {
    
     
     var exportExcel = function(){       
-        Joyin.exportExcel('export',getSearchParams()) 
+        if (table != null && table != '') {
+            var selArr = table.getAllCheckedRows();
+            var datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length == 0) {
+            var paramObj = getSearchParams();
+            Joyin.exportExcel('export', paramObj);
+        } else {
+            Joyin.exportExcel('export', {
+                datas : datas
+            });
+        }
     };
     /**
      * 画面加载完成

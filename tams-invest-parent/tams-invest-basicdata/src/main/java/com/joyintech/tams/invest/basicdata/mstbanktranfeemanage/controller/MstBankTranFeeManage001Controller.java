@@ -10,6 +10,8 @@
  
 package com.joyintech.tams.invest.basicdata.mstbanktranfeemanage.controller;
 
+import com.joyintech.framework.util.*;
+import com.joyintech.system.constant.SystemGlobalConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,7 +26,6 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.invest.basicdata.mstbanktranfeemanage.dto.MstBankTranFeeManageDto;
 import com.joyintech.tams.invest.basicdata.mstbanktranfeemanage.service.MstBankTranFeeManageService;
@@ -32,6 +33,9 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * 银行间交易费用管理
@@ -131,8 +135,22 @@ public class MstBankTranFeeManage001Controller extends BaseController {
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
         throws Exception {
-        return mstBankTranFeeManageService.export(this.getPageId(),
-            RequestUtil.getParameters(getRequest()));
+        String datas = this.getParam("datas");
+        List<MstBankTranFeeManageDto> param1;
+        if (datas == null) {
+            return mstBankTranFeeManageService.export(this.getPageId(),RequestUtil.getPageParam());
+        }
+        param1 = JsonUtils.json2List(datas, MstBankTranFeeManageDto.class);
+        File outFile =  mstBankTranFeeManageService.makeFile(
+                "/com/joyintech/tams/invest/basicdata/mstbanktranfeemanage/conf/export_conf.xml",
+                param1);
+        return ExportUtil.export(
+                this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+                        + DateUtil.format(DateUtil.platDateFromCache())
+                        + SystemGlobalConstant.CLOSE_PARENTHESIS
+                        + SystemGlobalConstant.POINT
+                        + FileNameUtil.getFileExtName(outFile),
+                outFile, true);
 
     }
 }
