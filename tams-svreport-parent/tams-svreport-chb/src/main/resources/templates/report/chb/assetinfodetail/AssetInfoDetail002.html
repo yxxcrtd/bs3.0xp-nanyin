@@ -15,164 +15,175 @@
 				   data-th-value="${entity?.assetUuid}" hidden>
 			<input id="dataStatus" name="dataStatus"
 				   data-th-value="${entity?.dataStatus}" hidden>
-				<div class="pro-module-wrap">
-					<div class="pro-module">
-						<h3 class="pro-module-title">
-							<span class="title-des">基本信息</span>（<span class="star-sign">*</span>必填）<i
-								class="iconfont icon-arrow-down pro-down-icon"></i>
-						</h3>
-						<div class="pro-module-item pro-item-wrap">
-							<div class="layui-form-item">
-								<div class="form-inline-wrap">
-									<label class="layui-form-label form-label-wrap" >资产代码</label>
-									<div class="layui-input-inline input-inline">
+			<div class="pro-module-wrap">
+				<div class="pro-module">
+					<h3 class="pro-module-title">
+						<span class="title-des">基本信息</span>（<span class="star-sign">*</span>必填）<i
+							class="iconfont icon-arrow-down pro-down-icon"></i>
+					</h3>
+					<div class="pro-module-item pro-item-wrap">
+						<div class="layui-form-item">
+							<div class="form-inline-wrap">
+								<label class="layui-form-label form-label-wrap" >资产代码</label>
+								<div class="layui-input-inline input-inline">
 
-										<input type="text" name="assetCode" id="assetCode" required
-											   style=" width: 100%!important; display: inline-block;"
-											   data-th-value="${entity?.assetCode}" maxlength="18"
-											   class="layui-input form-input" placeholder="请输入内容"
-											   data-th-placeholder="#{SysCommon.placeholder}">
-									</div>
-								</div>
-								<div class="form-inline-wrap">
-
-									<label class="layui-form-label form-label-wrap ">资产名称</label>
-									<div class="layui-input-inline input-inline">
-										<input type="text" name="assetName"
-
-											   data-th-value="${entity?.assetName}" required
-											   class="layui-input form-input" placeholder="请输入内容"
-
-											   data-th-placeholder="#{SysCommon.placeholder}" >
-									</div>
-								</div>
-								<div class="form-inline-wrap">
-									<label class="layui-form-label form-label-wrap">起息日</label>
-									<div class="layui-input-inline input-inline">
-
-										<input type="text" id="vdate" name="vdate" required
-											   data-th-value='${#dates.format(entity?.vdate,"yyyy-MM-dd")}'
-
-											   class="layui-input form-input input-dateSelect" />
-									</div>
-								</div>
-
-							</div>
-							<div class="layui-form-item">
-								<div class="form-inline-wrap" id="mdate_div">
-
-									<label class="layui-form-label form-label-wrap ">到期日</label>
-									<div class="layui-input-inline input-inline">
-
-										<input type="text" id="mdate" name="mdate" required
-											   data-th-value='${#dates.format(entity?.mdate,"yyyy-MM-dd")}'
-											   class="layui-input form-input input-dateSelect" />
-									</div>
-								</div>
-								<div class="form-inline-wrap" >
-
-									<label class="layui-form-label form-label-wrap ">资产一级分类</label>
-									<div class="layui-input-inline input-inline">
-										<select  id="orgAssetType1" name="orgAssetType1"
-												 data-th-initValue="${entity?.orgAssetType1}"
-												 class="layui-input form-input input-select"
-
-												 data-th-data-result="${FINPROD_TYPE_TG}" required
-										></select>
-									</div>
-								</div>
-								<div class="form-inline-wrap" >
-									<label class="layui-form-label form-label-wrap">资产二级分类</label>
-									<div class="layui-input-inline input-inline">
-										<select  id="orgAssetType2" name="orgAssetType2"
-												 data-th-initValue="${entity?.orgAssetType2}"
-												 class="layui-input form-input input-select"
-												 data-th-data-result="${CUSTOM_ASSET_TYPE_TWO}"
-										></select>
-									</div>
+									<input type="text" name="assetCode" id="assetCode" required
+										   style=" width: 100%!important; display: inline-block;"
+										   data-th-value="${entity?.assetCode}" maxlength="18"
+										   class="layui-input form-input" placeholder="请输入内容"
+										   data-th-placeholder="#{SysCommon.placeholder}">
 								</div>
 							</div>
-							<div class="layui-form-item">
-								<div class="form-inline-wrap" >
-									<label class="layui-form-label form-label-wrap">资产三级分类</label>
-									<div class="layui-input-inline input-inline">
-										<select  id="orgAssetType3" name="orgAssetType3"
-												 data-th-initValue="${entity?.orgAssetType3}"
-												 class="layui-input form-input input-select"
-												 data-th-data-result="${CUSTOM_ASSET_TYPE_THREE}"
-										></select>
-									</div>
-								</div>
-								<div class="form-inline-wrap" >
-									<label class="layui-form-label form-label-wrap">资产四级分类</label>
-									<div class="layui-input-inline input-inline">
-										<select  id="orgAssetType4" name="orgAssetType4"
-												 data-th-initValue="${entity?.orgAssetType4}"
-												 class="layui-input form-input input-select"
-												 data-th-data-result="${CUSTOM_ASSET_TYPE_FOUR}"
-										></select>
-									</div>
-								</div>
-								<div class="form-inline-wrap" >
-									<label class="layui-form-label form-label-wrap">资产五级分类</label>
-									<div class="layui-input-inline input-inline">
-										<select  id="orgAssetType5" name="orgAssetType5"
-												 data-th-initValue="${entity?.orgAssetType5}"
-												 class="layui-input form-input input-select"
-												 data-th-data-result="${CUSTOM_ASSET_TYPE_FIVE}"
-										></select>
-									</div>
+							<div class="form-inline-wrap">
+
+								<label class="layui-form-label form-label-wrap ">资产名称</label>
+								<div class="layui-input-inline input-inline">
+									<input type="text" name="assetName"
+
+										   data-th-value="${entity?.assetName}" required
+										   class="layui-input form-input" placeholder="请输入内容"
+
+										   data-th-placeholder="#{SysCommon.placeholder}" >
 								</div>
 							</div>
-							<div class="layui-form-item">
+							<div class="form-inline-wrap">
+								<label class="layui-form-label form-label-wrap">起息日</label>
+								<div class="layui-input-inline input-inline">
 
+									<input type="text" id="vdate" name="vdate" required
+										   data-th-value='${#dates.format(entity?.vdate,"yyyy-MM-dd")}'
 
-								<!--<div class="form-inline-wrap" >
-									<label class="layui-form-label form-label-wrap">资产负债类别</label>
-									<div class="layui-input-inline input-inline">
-										<select  id="assetType" name="assetType"
-												 data-th-initValue="${entity?.assetType}"
-												 class="layui-input form-input input-select"
-												 data-th-data-result="${SVR_ASSETDEBT_TYPE}"
-										></select>
-									</div>
-
-								</div>-->
-								<div class="form-inline-wrap" >
-									<label class="layui-form-label form-label-wrap">资产负债二级类别</label>
-									<div class="layui-input-inline input-inline">
-										<select  id="assetType2" name="assetType2"
-												 data-th-initValue="${entity?.assetType2}"
-												 class="layui-input form-input input-select"
-
-												 data-th-data-result="${SVR_ASSET_TYPE_SECOND_LEVEL}" required
-										></select>
-									</div>
+										   class="layui-input form-input input-dateSelect" />
 								</div>
-								<div class="form-inline-wrap" >
-									<label class="layui-form-label form-label-wrap">币种</label>
-									<div class="layui-input-inline input-inline">
-										<select  id="ccy" name="ccy"
-												 data-th-initValue="${entity?.ccy}"
-												 class="layui-input form-input input-select"
-												 data-th-data-result="${CURRENCY_CHB}" required
-										></select>
-									</div>
+							</div>
+
+						</div>
+						<div class="layui-form-item">
+							<div class="form-inline-wrap" id="mdate_div">
+
+								<label class="layui-form-label form-label-wrap ">到期日</label>
+								<div class="layui-input-inline input-inline">
+
+									<input type="text" id="mdate" name="mdate" required
+										   data-th-value='${#dates.format(entity?.mdate,"yyyy-MM-dd")}'
+										   class="layui-input form-input input-dateSelect" />
 								</div>
-								<div class="form-inline-wrap" >
-									<label class="layui-form-label form-label-wrap">交易流通场所</label>
-									<div class="layui-input-inline input-inline">
-										<select  id="tradeMarket" name="tradeMarket"
-												 data-th-initValue="${entity?.tradeMarket}"
-												 class="layui-input form-input input-select"
-												 data-th-data-result="${SVR_TRADE_MARKET}" required
-										></select>
-									</div>
+							</div>
+							<div class="form-inline-wrap" >
+
+								<label class="layui-form-label form-label-wrap ">资产一级分类</label>
+								<div class="layui-input-inline input-inline">
+									<select  id="orgAssetType1" name="orgAssetType1"
+											 data-th-initValue="${entity?.orgAssetType1}"
+											 class="layui-input form-input input-select"
+
+											 data-th-data-result="${FINPROD_TYPE_TG}" required
+									></select>
+								</div>
+							</div>
+							<div class="form-inline-wrap" >
+								<label class="layui-form-label form-label-wrap">资产二级分类</label>
+								<div class="layui-input-inline input-inline">
+									<select  id="orgAssetType2" name="orgAssetType2"
+											 data-th-initValue="${entity?.orgAssetType2}"
+											 class="layui-input form-input input-select"
+											 data-th-data-result="${CUSTOM_ASSET_TYPE_TWO}"
+									></select>
+								</div>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<div class="form-inline-wrap" >
+								<label class="layui-form-label form-label-wrap">资产三级分类</label>
+								<div class="layui-input-inline input-inline">
+									<select  id="orgAssetType3" name="orgAssetType3"
+											 data-th-initValue="${entity?.orgAssetType3}"
+											 class="layui-input form-input input-select"
+											 data-th-data-result="${CUSTOM_ASSET_TYPE_THREE}"
+									></select>
+								</div>
+							</div>
+							<div class="form-inline-wrap" >
+								<label class="layui-form-label form-label-wrap">资产四级分类</label>
+								<div class="layui-input-inline input-inline">
+									<select  id="orgAssetType4" name="orgAssetType4"
+											 data-th-initValue="${entity?.orgAssetType4}"
+											 class="layui-input form-input input-select"
+											 data-th-data-result="${CUSTOM_ASSET_TYPE_FOUR}"
+									></select>
+								</div>
+							</div>
+							<div class="form-inline-wrap" >
+								<label class="layui-form-label form-label-wrap">资产五级分类</label>
+								<div class="layui-input-inline input-inline">
+									<select  id="orgAssetType5" name="orgAssetType5"
+											 data-th-initValue="${entity?.orgAssetType5}"
+											 class="layui-input form-input input-select"
+											 data-th-data-result="${CUSTOM_ASSET_TYPE_FIVE}"
+									></select>
+								</div>
+							</div>
+						</div>
+						<div class="layui-form-item">
+
+
+							<!--<div class="form-inline-wrap" >
+                                <label class="layui-form-label form-label-wrap">资产负债类别</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select  id="assetType" name="assetType"
+                                             data-th-initValue="${entity?.assetType}"
+                                             class="layui-input form-input input-select"
+                                             data-th-data-result="${SVR_ASSETDEBT_TYPE}"
+                                    ></select>
+                                </div>
+
+                            </div>-->
+							<div class="form-inline-wrap" >
+								<label class="layui-form-label form-label-wrap">币种</label>
+								<div class="layui-input-inline input-inline">
+									<select  id="ccy" name="ccy"
+											 data-th-initValue="${entity?.ccy}"
+											 class="layui-input form-input input-select"
+											 data-th-data-result="${CURRENCY_CHB}" required
+									></select>
+								</div>
+							</div>
+							<div class="form-inline-wrap" >
+								<label class="layui-form-label form-label-wrap">交易流通场所</label>
+								<div class="layui-input-inline input-inline">
+									<select  id="tradeMarket" name="tradeMarket"
+											 data-th-initValue="${entity?.tradeMarket}"
+											 class="layui-input form-input input-select"
+											 data-th-data-result="${SVR_TRADE_MARKET}" required
+									></select>
+								</div>
+							</div>
+							<div class="form-inline-wrap">
+								<label class="layui-form-label form-label-wrap ">发行机构代码</label>
+								<div class="layui-input-inline input-inline">
+									<input type="text" name="issuePartyId" disabled="true"
+										   data-th-value="${entity?.issuePartyId}" required
+										   class="layui-input form-input" placeholder="请输入内容"
+										   data-th-placeholder="#{SysCommon.placeholder}" >
+								</div>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<div class="form-inline-wrap" >
+								<label class="layui-form-label form-label-wrap">资产负债二级类别</label>
+								<div class="layui-input-inline input-inline">
+									<select  id="assetType2" name="assetType2"
+											 data-th-initValue="${entity?.assetType2}"
+											 class="layui-input form-input input-select"
+
+											 data-th-data-result="${SVR_ASSET_TYPE_SECOND_LEVEL}" required
+									></select>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
+			</div>
 
 			<div class="pro-module">
 
@@ -258,7 +269,7 @@
 					</div>
 				</div>
 			</div>
-             <!--贵金属/商品-->
+			<!--贵金属/商品-->
 			<div class="pro-module">
 				<div class="businessDeptClass" id="svrBussRepNobleMetalInfo_div">
 					<div class="page-component"
@@ -268,7 +279,7 @@
 					</div>
 				</div>
 			</div>
-            <!--非标准化债权类资产/新增可投资资产-->
+			<!--非标准化债权类资产/新增可投资资产-->
 			<div class="pro-module">
 				<div class="businessDeptClass" id="svrBussRepAssetCreditNonstdInfo_div">
 					<div class="page-component"
@@ -308,26 +319,6 @@
 					</div>
 				</div>
 			</div>
-			<!--QDII债券资产-->
-			<div class="pro-module">
-				<div class="businessDeptClass" id="svrBussQDIIBondRepInfo_div">
-					<div class="page-component"
-						 th:data-path="@{/chb/assetinfodetail/asset/qdiiBond/SvrBussQDIIBondRepInfo/init}"
-						 th:data-params="|{entityName: 'SvrBussRepQDIIBondInfoDto',assetUuid:'${entity?.assetUuid}',dataStatus:'${entity?.dataStatus}',assetType:'${entity?.assetType2}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
-
-					</div>
-				</div>
-			</div>
-			<!--QDII股票/基金类资产-->
-			<div class="pro-module">
-				<div class="businessDeptClass" id="svrBussQDIISharesInfo_div">
-					<div class="page-component"
-						 th:data-path="@{/chb/assetinfodetail/asset/qdiiShares/SvrBussQDIISharesInfo/init}"
-						 th:data-params="|{entityName: 'SvrBussQDIISharesInfoDto',assetUuid:'${entity?.assetUuid}',dataStatus:'${entity?.dataStatus}',assetType:'${entity?.assetType2}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
-
-					</div>
-				</div>
-			</div>
 			<!--各类资产其他项-->
 			<div class="pro-module">
 				<div class="businessDeptClass" id="svrBussRepOtherInvestTargetInfo_div">
@@ -348,7 +339,7 @@
 					</div>
 				</div>
 			</div>
-             <!--资产管理产品-->
+			<!--资产管理产品-->
 			<div class="pro-module">
 				<div class="businessDeptClass" id="svrBussRepAssetMngProdInfo_div">
 					<div class="page-component"
@@ -357,14 +348,34 @@
 					</div>
 				</div>
 			</div>
-				<div class="row text-center stepbar"><a
-						id="AssetInfoDetail002_btn_submit"
-						class="layui-btn layui-btn-sm btn-submit"
-						data-th-text="#{SysCommon.submit}">提交</a> <a
-						id="AssetInfoDetail002_btn_cancel"
-						class="layui-btn layui-btn-sm btn-cancel"
-						data-th-text="#{SysCommon.cancel}">取消</a>
+
+			<!--QDII债券资产-->
+			<div class="pro-module">
+				<div class="businessDeptClass" id="svrBussQDIIBondRepInfo_div">
+					<div class="page-component"
+						 th:data-path="@{/chb/assetinfodetail/asset/qdiiBond/SvrBussQDIIBondRepInfo/init}"
+						 th:data-params="|{entityName: 'SvrBussRepQDIIBondInfoDto',assetUuid:'${entity?.assetUuid}',dataStatus:'${entity?.dataStatus}',assetType:'${entity?.assetType2}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
+					</div>
 				</div>
+			</div>
+			<!--QDII股票/基金类资产-->
+			<div class="pro-module">
+				<div class="businessDeptClass" id="svrBussQDIISharesInfo_div">
+					<div class="page-component"
+						 th:data-path="@{/chb/assetinfodetail/asset/qdiiShares/SvrBussQDIISharesInfo/init}"
+						 th:data-params="|{entityName: 'SvrBussQDIISharesInfoDto',assetUuid:'${entity?.assetUuid}',dataStatus:'${entity?.dataStatus}',assetType:'${entity?.assetType2}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
+
+					</div>
+				</div>
+			</div>
+			<div class="row text-center stepbar"><a
+					id="AssetInfoDetail002_btn_submit"
+					class="layui-btn layui-btn-sm btn-submit"
+					data-th-text="#{SysCommon.submit}">提交</a> <a
+					id="AssetInfoDetail002_btn_cancel"
+					class="layui-btn layui-btn-sm btn-cancel"
+					data-th-text="#{SysCommon.cancel}">取消</a>
+			</div>
 		</form>
 	</div>
 </div>
