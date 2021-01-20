@@ -375,5 +375,8 @@
 		<if test="registOrg != null and registOrg !=''">
 			and m.REGIST_ORG = #{registOrg}
 		</if>
+		<if test="tradeMarketMode != null and tradeMarketMode !=''">
+			and m.TRADE_MARKET_MODE = #{tradeMarketMode}
+		</if>
 	</select>
 </mapper>
