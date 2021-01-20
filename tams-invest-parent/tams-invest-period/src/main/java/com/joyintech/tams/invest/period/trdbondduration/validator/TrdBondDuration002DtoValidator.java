@@ -4,6 +4,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.period.common.service.PeriodCommonService;
@@ -42,6 +43,14 @@ public class TrdBondDuration002DtoValidator implements PeriodCommonValidator {
             errorList.addAll(bussTrdTransferOrderService.check(dto.getBussTrdTransferOrder()));
             if (dto.getTradeDate().compareTo(dto.getmDate()) < 0 && (DictCodeListExt1.交易场所_银行间.getValue().equals(dto.getTradeMarket()))) {
                 errorList.add(new ValidMessage(getMessage("FIN_ASSET_E_0022")));
+            }
+            //交易所提前收息/还本，只支持全部结清
+            if (dto.getTradeDate().compareTo(dto.getmDate()) < 0
+                    && (DictCodeListExt1.交易场所_上海证券交易所.getValue().equals(dto.getTradeMarket())
+                          ||DictCodeListExt1.交易场所_深圳证券交易所.getValue().equals(dto.getTradeMarket()))) {
+                if(StringUtil.equals(dto.getIsClean(), DictCodeList.是否_否.getValue())){
+                    errorList.add(new ValidMessage(getMessage("交易所债券提前提前收息/还本不支持不结清!")));
+                }
             }
             // 删除 存在付息截止日比当前数据的付息截止日小的待处理数据 的check
 //            else {
