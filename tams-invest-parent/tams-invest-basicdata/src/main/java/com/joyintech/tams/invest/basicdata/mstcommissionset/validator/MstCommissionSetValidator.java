@@ -233,12 +233,12 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                             int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                             if (count > 0) {
                                                                 resultList.add(new ValidMessage(getMessage("MST_INFO_E_0010",
-                                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                        "",secAcctName,
                                                                         SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                                         SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
                                                                         SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
-                                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
-                                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone)+"(资产分类一)",
+                                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo)+"(资产分类二)",
                                                                         DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                             }
                                                         }
@@ -246,12 +246,12 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                         int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                         if (count > 0) {
                                                             resultList.add(new ValidMessage(getMessage("MST_INFO_E_0010",
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                    "", secAcctName,
                                                                     SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                                     SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
                                                                     SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
-                                                                    "null",
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone)+"(资产分类一)",
+                                                                    "",
                                                                     DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                         }
                                                     }
@@ -263,12 +263,12 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                         int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                         if (count > 0) {
                                                             resultList.add(new ValidMessage(getMessage("MST_INFO_E_0010",
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                    "", secAcctName,
                                                                     SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                                     SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
                                                                     SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
-                                                                    "null",
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                    "",
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo)+"(资产分类二)",
                                                                     DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                         }
                                                     }
@@ -276,11 +276,11 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                     int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                     if (count > 0) {
                                                         resultList.add(new ValidMessage(getMessage("MST_INFO_E_0010",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                "", secAcctName,
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
-                                                                "null", "null",
+                                                                "", "",
                                                                 DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                     }
                                                 }
@@ -295,11 +295,11 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                             int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                             if (count > 0) {
                                                                 resultList.add(new ValidMessage(getMessage("MST_INFO_E_0011",
-                                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                        "", secAcctName,
                                                                         SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                                         SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
-                                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
-                                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone)+"(资产分类一)",
+                                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo)+"(资产分类二)",
                                                                         DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                             }
                                                         }
@@ -307,11 +307,11 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                         int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                         if (count > 0) {
                                                             resultList.add(new ValidMessage(getMessage("MST_INFO_E_0011",
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                    "", secAcctName,
                                                                     SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                                     SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
-                                                                    "null",
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone)+"(资产分类一)",
+                                                                    "",
                                                                     DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                         }
                                                     }
@@ -323,11 +323,11 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                         int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                         if (count > 0) {
                                                             resultList.add(new ValidMessage(getMessage("MST_INFO_E_0011",
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                    "", secAcctName,
                                                                     SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                                     SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
-                                                                    "null",
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                    "",
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo)+"(资产分类二)",
                                                                     DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                         }
                                                     }
@@ -335,10 +335,10 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                     int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                     if (count > 0) {
                                                         resultList.add(new ValidMessage(getMessage("MST_INFO_E_0011",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                "", secAcctName,
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
-                                                                "null", "null",
+                                                                "", "",
                                                                 DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                     }
                                                 }
@@ -357,12 +357,12 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                         int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                         if (count > 0) {
                                                             resultList.add(new ValidMessage(getMessage("MST_INFO_E_0012",
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                    "", secAcctName,
                                                                     SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                                     SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
                                                                     SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone)+"(资产分类一)",
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo)+"(资产分类二)",
                                                                     DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                         }
                                                     }
@@ -370,12 +370,12 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                     int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                     if (count > 0) {
                                                         resultList.add(new ValidMessage(getMessage("MST_INFO_E_0012",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                "", secAcctName,
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
-                                                                "null",
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone)+"(资产分类一)",
+                                                                "",
                                                                 DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                     }
                                                 }
@@ -387,12 +387,12 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                     int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                     if (count > 0) {
                                                         resultList.add(new ValidMessage(getMessage("MST_INFO_E_0012",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                "", secAcctName,
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
-                                                                "null",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                "",
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo)+"(资产分类二)",
                                                                 DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                     }
                                                 }
@@ -400,11 +400,11 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                 int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                 if (count > 0) {
                                                     resultList.add(new ValidMessage(getMessage("MST_INFO_E_0012",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                            "", secAcctName,
                                                             SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                             SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
                                                             SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
-                                                            "null", "null",
+                                                            "", "",
                                                             DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                 }
                                             }
@@ -419,11 +419,11 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                         int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                         if (count > 0) {
                                                             resultList.add(new ValidMessage(getMessage("MST_INFO_E_0013",
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                    "", secAcctName,
                                                                     SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                                     SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone)+"(资产分类一)",
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo)+"(资产分类二)",
                                                                     DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                         }
                                                     }
@@ -431,11 +431,11 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                     int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                     if (count > 0) {
                                                         resultList.add(new ValidMessage(getMessage("MST_INFO_E_0013",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                "", secAcctName,
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
-                                                                "null",
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone)+"(资产分类一)",
+                                                                "",
                                                                 DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                     }
                                                 }
@@ -447,11 +447,11 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                     int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                     if (count > 0) {
                                                         resultList.add(new ValidMessage(getMessage("MST_INFO_E_0013",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                                "", secAcctName,
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
-                                                                "null",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                "",
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo)+"(资产分类二)",
                                                                 DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                     }
                                                 }
@@ -459,11 +459,10 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                 int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                 if (count > 0) {
                                                     resultList.add(new ValidMessage(getMessage("MST_INFO_E_0013",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()), secAcctName,
+                                                            "", secAcctName,
                                                             SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                             SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
-                                                            "null",
-                                                            "null",
+                                                            "", "",
                                                             DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                 }
                                             }
@@ -489,12 +488,12 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                         int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                         if (count > 0) {
                                                             resultList.add(new ValidMessage(getMessage("MST_INFO_E_0014",
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                                    "",
                                                                     SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                                     SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
                                                                     SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone)+"(资产分类一)",
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo)+"(资产分类二)",
                                                                     DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                         }
                                                     }
@@ -502,12 +501,12 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                     int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                     if (count > 0) {
                                                         resultList.add(new ValidMessage(getMessage("MST_INFO_E_0014",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                                "",
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
-                                                                "null",
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone)+"(资产分类一)",
+                                                                "",
                                                                 DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                     }
                                                 }
@@ -519,12 +518,12 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                     int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                     if (count > 0) {
                                                         resultList.add(new ValidMessage(getMessage("MST_INFO_E_0014",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                                "",
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
-                                                                "null",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                "",
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo)+"(资产分类二)",
                                                                 DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                     }
                                                 }
@@ -532,11 +531,11 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                 int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                 if (count > 0) {
                                                     resultList.add(new ValidMessage(getMessage("MST_INFO_E_0014",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                            "",
                                                             SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                             SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
                                                             SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
-                                                            "null", "null",
+                                                            "", "",
                                                             DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                 }
                                             }
@@ -551,11 +550,11 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                         int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                         if (count > 0) {
                                                             resultList.add(new ValidMessage(getMessage("MST_INFO_E_0015",
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                                    "",
                                                                     SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                                     SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
-                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone)+"(资产分类一)",
+                                                                    SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo)+"(资产分类二)",
                                                                     DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                         }
                                                     }
@@ -563,11 +562,11 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                     int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                     if (count > 0) {
                                                         resultList.add(new ValidMessage(getMessage("MST_INFO_E_0015",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                                "",
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
-                                                                "null",
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone)+"(资产分类一)",
+                                                                "",
                                                                 DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                     }
                                                 }
@@ -579,11 +578,11 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                     int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                     if (count > 0) {
                                                         resultList.add(new ValidMessage(getMessage("MST_INFO_E_0015",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                                "",
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
-                                                                "null",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                "",
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo)+"(资产分类二)",
                                                                 DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                     }
                                                 }
@@ -591,10 +590,10 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                 int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                 if (count > 0) {
                                                     resultList.add(new ValidMessage(getMessage("MST_INFO_E_0015",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                            "",
                                                             SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                             SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr, termType,
-                                                            "null", "null",
+                                                            "", "",
                                                             DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                 }
                                             }
@@ -613,12 +612,12 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                     int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                     if (count > 0) {
                                                         resultList.add(new ValidMessage(getMessage("MST_INFO_E_0016",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                                "",
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone)+"(资产分类一)",
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo)+"(资产分类二)",
                                                                 DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                     }
                                                 }
@@ -626,12 +625,12 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                 int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                 if (count > 0) {
                                                     resultList.add(new ValidMessage(getMessage("MST_INFO_E_0016",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                            "",
                                                             SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                             SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
                                                             SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
-                                                            "null",
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone)+"(资产分类一)",
+                                                            "",
                                                             DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                 }
                                             }
@@ -642,13 +641,12 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                 param.put("windtypetwo", windtypetwo);
                                                 int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                 if (count > 0) {
-                                                    resultList.add(new ValidMessage(getMessage("MST_INFO_E_0016",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                    resultList.add(new ValidMessage(getMessage("MST_INFO_E_0016", "",
                                                             SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                             SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
                                                             SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
-                                                            "null",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                            "",
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo)+"(资产分类二)",
                                                             DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                 }
                                             }
@@ -656,11 +654,11 @@ public class MstCommissionSetValidator implements BeanValidator {
                                             int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                             if (count > 0) {
                                                 resultList.add(new ValidMessage(getMessage("MST_INFO_E_0016",
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                        "",
                                                         SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                         SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
                                                         SysDataUtil.getNameFromDataDict(BussinessDictCode.交易市场, dto.getTradeMarketMode()),
-                                                        "null", "null",
+                                                        "", "",
                                                         DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                             }
                                         }
@@ -675,11 +673,11 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                     int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                     if (count > 0) {
                                                         resultList.add(new ValidMessage(getMessage("MST_INFO_E_0017",
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                                "",
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                                 SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
-                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone)+"(资产分类一)",
+                                                                SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo)+"(资产分类二)",
                                                                 DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                     }
                                                 }
@@ -687,11 +685,11 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                 int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                 if (count > 0) {
                                                     resultList.add(new ValidMessage(getMessage("MST_INFO_E_0017",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                            "",
                                                             SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                             SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone),
-                                                            "null",
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone)+"(资产分类一)",
+                                                            "",
                                                             DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                 }
                                             }
@@ -703,11 +701,11 @@ public class MstCommissionSetValidator implements BeanValidator {
                                                 int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                                 if (count > 0) {
                                                     resultList.add(new ValidMessage(getMessage("MST_INFO_E_0017",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                            "",
                                                             SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                             SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
-                                                            "null",
-                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo),
+                                                            "",
+                                                            SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo)+"(资产分类二)",
                                                             DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                                 }
                                             }
@@ -715,10 +713,10 @@ public class MstCommissionSetValidator implements BeanValidator {
                                             int count = mstCommissionSetService.searchRepeatBySecPs(param);
                                             if (count > 0) {
                                                 resultList.add(new ValidMessage(getMessage("MST_INFO_E_0017",
-                                                        SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, dto.getFeeType()),
+                                                        "",
                                                         SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, dto.getTradeMarket()),
                                                         SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, dto.getTradeType()), psStr,
-                                                        "null", "null",
+                                                        "", "",
                                                         DateUtil.format(dto.getEffDate(), "yyyy-MM-dd"))));
                                             }
                                         }
