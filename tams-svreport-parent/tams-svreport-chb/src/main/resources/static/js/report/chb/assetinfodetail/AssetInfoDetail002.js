@@ -66,11 +66,13 @@ var QueryFunc=function(){
             $("#svrBussRepFinanciallInfo_div").show();
         }else if(obj["08"].indexOf(repAssetType)>=0){
             //QDII债券资产
+            $("#svrBussQDIIBondRepInfo_div").show();
         }else if(obj["09"].indexOf(repAssetType)>=0){
             //QDII拆出/逆回购资产
             $("#svrBussRepQDIIdemolitionInfo_div").show();
         }else if(obj["10"].indexOf(repAssetType)>=0){
             //QDII股票/基金类资产
+            $("#svrBussQDIISharesInfo_div").show();
         }else if(obj["11"].indexOf(repAssetType)>=0){
             //QDII结构性票据类资产
             $("#svrBussRepQDIIStructureInfo_div").show();
