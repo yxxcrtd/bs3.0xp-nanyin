@@ -52,6 +52,11 @@ $(function () {
         object.fpriceAmt = object.prinAmt + Number(intAmt);
         object.finprodMarketId = $('#finprodId').val();
         object.finprodId = $('#finprodId').select2('data')[0].object.finprodId;
+        // add by xr 赎回到账，因无交易对手导致授权校验报错 Start
+        if (object.ps == ps_T24) {
+            object.counterId = $('#trdInvestPersonInfo_counterId').val();
+        }
+        // add by xr 赎回到账，因无交易对手导致授权校验报错 end
 //        if(object.ps == ps_T05){
 //            object.tradeAmt = $('#tradeAmtHid').val();
 //            object.fpriceAmt = $('#tradeAmt').val();
@@ -482,6 +487,13 @@ $(function () {
         $('#type6').on('change', function () {
             if (!$("#changeToFinprodMarketId").val()) {
                 var ps = $('#ps').val();
+                var trmFundType = $("#trmFundType").val()
+                if (pageModel == PAGE_MODEL_REFERENCE && trmFundType && trmFundType == '05'
+                    && (ps == ps_T05 || ps == ps_T19 || ps == ps_T24)) {
+                    $('#unitCprice').val('0.01').change().trigger('blur');
+                    return;
+                }
+
                 if ($('#type6').val() == type_01 && (ps == ps_T19 || ps == ps_T24)) {
                     $('#carryAmt_div').show();
                 } else {
@@ -562,7 +574,7 @@ $(function () {
             }
             else if (ps == ps_T05 || ps == ps_T18) {
                 var tradeAmtHid = $('#tradeAmtHid').val();
-                if (unitCprice != null && unitCprice != '' && unitCprice != 0 && pageModel != PAGE_MODEL_REFERENCE) { 
+                if (unitCprice != null && unitCprice != '' && unitCprice != 0) {
                     $('#shareAmt').val((Number(tradeAmt) - getPayWithTradeFee()) / unitCprice).trigger('blur');
                 }
             } else if ((ps == ps_T19)) {
@@ -629,7 +641,7 @@ $(function () {
             var ps = $('#ps').val();
             var unitCprice = $('#unitCprice').val();
             if (ps == ps_T05 || ps == ps_T18) {
-                if (unitCprice && tradeAmtHid && pageModel != PAGE_MODEL_REFERENCE) {
+                if (unitCprice && tradeAmtHid) {
                     $('#shareAmt').val(tradeAmtHid / unitCprice).trigger('blur');
                 }
             }
@@ -641,7 +653,7 @@ $(function () {
             var tradeAmt = $('#tradeAmt').val();
             var ps = $('#ps').val();
             var unitCprice = $('#unitCprice').val();
-            if (unitCprice && tradeAmt && pageModel != PAGE_MODEL_REFERENCE) {
+            if (unitCprice && tradeAmt) {
                 if ($("#ps").val() != ps_T19) {
                     $('#shareAmt').val((Number(tradeAmt) - getPayWithTradeFee()) / unitCprice).trigger('blur');
                 }
