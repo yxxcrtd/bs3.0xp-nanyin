@@ -1543,6 +1543,7 @@ $(function () {
                     $('#finprodId').attr('disabled', false);
                 }
                 $('#changeToFinprodMarketId').prop('disabled', true);
+                $('#TrdDepositInvestTrade003_btn_autoAllocation').removeClass('layui-btn-disabled');
             } else {
                 $('#portfolioId').attr('disabled', false);
                 $('#ps').attr('disabled', false);
