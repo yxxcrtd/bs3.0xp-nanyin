@@ -65,9 +65,12 @@ public class PaActiveRemind001Controller extends BaseController implements Activ
     @Override
     public String init(Model model) {
         Date sysDate = DateUtil.now();
+        /* 和index.html中平台日取值方式统一
         if(null != platformDate) {
             sysDate = platformDate.getSysDate();
         }
+        */
+        sysDate = DateUtil.platDateFromCache();
         model.addAttribute("sysDate",sysDate);
         Map<String, Object> param = new HashMap<>();
         param.put("quaryDate", sysDate);
