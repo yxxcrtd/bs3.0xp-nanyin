@@ -1569,27 +1569,28 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                     });
                 }
 
-                for (BussTrdTransferOrderDto dto : entity.getBussTrdTransferOrder()) {
-                    stlPayOrders = new StlPayOrders();
-                    BeanUtil.copyPropertiesIgnoreNull(stlPayOrders, dto);
-                    stlPayOrders.setOrderStatus(DictCodeListExt1.指令状态_新建.getValue());
-                    stlPayOrders.setTradeId(trdFinProductDealTotal1.getTotleTradeId());
-                    stlPayOrders.setWorkflowId(entity.getWorkflowId());
-                    // 生成的业务编号
-                    BussinessCodeParameter bussinessCodeParameter1 = new BussinessCodeParameter();
-                    bussinessCodeParameter1.setSeqNo("9998");
-                    String orderId = restTemplate.postForObject(ServiceApplication.COMMON_SERVICE_NAME + "/core/selectRule",
-                        bussinessCodeParameter1, String.class);
-                    stlPayOrders.setOrderId(StringUtil.isNotEmpty(orderId) ? orderId : IDGenerator.generate());
-
-                    // 划款信息（如有）中的付款方和收款方对调；
-                    String myAcctNo = stlPayOrders.getMyAcctNo();
-                    stlPayOrders.setMyAcctNo(stlPayOrders.getCounterAcctNo());
-                    stlPayOrders.setCounterAcctNo(myAcctNo);
-                    stlPayOrders.setPs(DictCodeListExt1.收支方向_支出.getValue().equals(
-                        stlPayOrders.getPs()) ? DictCodeListExt1.收支方向_收入.getValue() : DictCodeListExt1.收支方向_支出.getValue());
-                    stlPayOrdersMapper.insertSelective(stlPayOrders);
-                }
+//                for (BussTrdTransferOrderDto dto : entity.getBussTrdTransferOrder()) {
+//                    stlPayOrders = new StlPayOrders();
+//                    BeanUtil.copyPropertiesIgnoreNull(stlPayOrders, dto);
+//                    stlPayOrders.setPortfolioId(交易对手_子组合);
+//                    stlPayOrders.setOrderStatus(DictCodeListExt1.指令状态_新建.getValue());
+//                    stlPayOrders.setTradeId(trdFinProductDealTotal1.getTotleTradeId());
+//                    stlPayOrders.setWorkflowId(entity.getWorkflowId());
+//                    // 生成的业务编号
+//                    BussinessCodeParameter bussinessCodeParameter1 = new BussinessCodeParameter();
+//                    bussinessCodeParameter1.setSeqNo("9998");
+//                    String orderId = restTemplate.postForObject(ServiceApplication.COMMON_SERVICE_NAME + "/core/selectRule",
+//                        bussinessCodeParameter1, String.class);
+//                    stlPayOrders.setOrderId(StringUtil.isNotEmpty(orderId) ? orderId : IDGenerator.generate());
+//
+//                    // 划款信息（如有）中的付款方和收款方对调；
+//                    String myAcctNo = stlPayOrders.getMyAcctNo();
+//                    stlPayOrders.setMyAcctNo(stlPayOrders.getCounterAcctNo());
+//                    stlPayOrders.setCounterAcctNo(myAcctNo);
+//                    stlPayOrders.setPs(DictCodeListExt1.收支方向_支出.getValue().equals(
+//                        stlPayOrders.getPs()) ? DictCodeListExt1.收支方向_收入.getValue() : DictCodeListExt1.收支方向_支出.getValue());
+//                    stlPayOrdersMapper.insertSelective(stlPayOrders);
+//                }
                 if (!StringUtil.isEmptyList(entity.getUploadFileList())) {
                     for (UploadFile uploadFile : entity.getUploadFileList()) {
                         copyFileInfoByFileNo(uploadFile.getFileNo(), 反向交易编号);

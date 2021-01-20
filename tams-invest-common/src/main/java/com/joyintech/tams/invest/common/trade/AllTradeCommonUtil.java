@@ -959,9 +959,9 @@ public class AllTradeCommonUtil {
                         inputDto.setProdFinprodType(DictCodeListExt1.金融产品类型_投资组合.getValue());
                         inputDto.setProdVdate(new Date(deal.getSettleDate().getTime()));
                         inputDto.setTrdProductDeal(deal);
+                        inputDto.setStlPayOrders(stlPayOrders.get(0));
                         // 场内基金改造 add by renping 20191117 start
-                        if ((StringUtil.equals(deal.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())
-                              ||StringUtil.equals(deal.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue()))
+                        if (StringUtil.equals(deal.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())
                             && !StringUtil.isEmptyList(btpdd.getStlPayOrdersList())) {
                             inputDto.setStlPayOrders(btpdd.getStlPayOrdersList().get(0));
                         }
