@@ -530,7 +530,7 @@
             <include refid="com.joyintech.tams.invest.batch.autogeneration.proledger.dao.ProLedgerAutoGenerationMapper.finprod_id_in_sql" />
             )
         </if>	
-			)
+			))
 		 order by finprodId
 
     </select>
