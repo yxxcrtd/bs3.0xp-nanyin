@@ -101,7 +101,7 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 	}
 
 	public String getDataStatusStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.处理状态, this.getDataStatus());
+		return SysDataUtil.getNameFromDataDict(DictCode.中债_处理状态, this.getDataStatus());
 	}
 
 
@@ -158,7 +158,7 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 	 * @return
 	 */
 	public String getStatusStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.WIND一级分类_含债券一级分类等, this.getOrgAssetType2());
+		return SysDataUtil.getNameFromDataDict(DictCode.中债对应上游资产二级类型, this.getOrgAssetType2());
 	}
 
 

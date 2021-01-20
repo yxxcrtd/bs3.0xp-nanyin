@@ -4,6 +4,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.common.base.entity.ChbAssetInfoErrodata;
 import com.joyintech.tams.common.base.entity.ChbAssetInfoErrodataWithBLOBs;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dao.AssetInfoDetailMapper;
 import com.joyintech.tams.svreport.chb.common.util.ErrdataConvertUtil;
 import com.joyintech.tams.svreport.chb.common.util.asset.dto.RechbAassetInfoMapper;
@@ -38,7 +39,7 @@ public class RechbAassetInfoUtilService {
     public   ChbAssetInfo BackChbAssetInfoMethod(String  flag,String assetUUid){
         ChbAssetInfo  infoDto=new  ChbAssetInfo();
         //当 入参【模式】为01的况下 查询CHB_ASSET_INFO_ERRODATA
-        if(StringUtil.equals("02",flag)){
+        if(StringUtil.equals(DictCodeListExt3.中债_处理状态_待处理.getValue(),flag)){
             //根据UUID 查询数据库对应记录
             List<ChbAssetInfoErrodataWithBLOBs>  listChbAssetInfoErrordata=assetInfoDetailMapper.getChbAssetInfoErrorDataByUUid(assetUUid);
             //调用共通方法，获取资产要素
@@ -47,7 +48,7 @@ public class RechbAassetInfoUtilService {
             }
         }
         //当 入参【模式】为02的况下
-        else if(StringUtil.equals("01",flag)){
+        else if(StringUtil.equals(DictCodeListExt3.中债_处理状态_已处理.getValue(),flag)){
             infoDto=assetInfoDetailMapper.getChbAssetInfoByUUid(assetUUid);
         }
          return  infoDto;

@@ -12,6 +12,21 @@ insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT
 values ('AssetInfoDetail002', 'SVR', '/chb/assetinfodetail/AssetInfoDetail002', 'report/chb/assetinfodetail/AssetInfoDetail002', null, null, null, '02', '02', '资产基本信息维护详情', 'system', null, sysdate, 'system', sysdate);
 
 
+/***增加数据字典  待维护-已维护**/
+delete from SYS_DATADICT where DICT_CODE = 'DATA_STATUS';
+
+insert into SYS_DATADICT (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('DATA_STATUS', 'SVR', '处理状态', 'DATA_STATUS', '02', 'system', null,sysdate, 'system', sysdate);
+
+delete from SYS_DATADICT_LIST where DICT_CODE = 'DATA_STATUS';
+
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('DATA_STATUS', '01', '待处理', 1, '0', 'system', null,sysdate, 'system', sysdate, null);
+
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('DATA_STATUS', '02', '已处理', 2, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+
 -- Create table
 create table CHB_ASSET_INFO_ERRODATA
 (

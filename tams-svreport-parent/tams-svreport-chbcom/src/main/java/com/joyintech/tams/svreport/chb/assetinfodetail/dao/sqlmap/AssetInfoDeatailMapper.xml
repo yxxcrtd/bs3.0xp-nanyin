@@ -2048,7 +2048,7 @@
 
         SELECT *
         FROM (
-        SELECT '01' dataStatus ,
+        SELECT '02' dataStatus ,
         i.ASSET_UUID,
         i.asset_name,
         i.asset_code,
@@ -2088,8 +2088,12 @@
                 #{item}
             </foreach>
         </if>
-        <if test="dataStatus != null and dataStatus!='' and !dataStatus.equals('01')">
+        <if test="dataStatus != null and dataStatus!='' and !dataStatus.equals('02')">
             and 1=2
+        </if>
+
+        <if test="Assetuuid != null and Assetuuid!=''">
+           AND ASSET_UUID = #{Assetuuid,jdbcType=VARCHAR}
         </if>
 
         and not exists (
@@ -2097,7 +2101,7 @@
         )
 
         UNION ALL
-        SELECT '02' dataStatus,
+        SELECT '01' dataStatus,
         e.DATAUUID ASSET_UUID,
         e.asset_name,
         e.asset_code,
@@ -2137,8 +2141,11 @@
                 #{item}
             </foreach>
         </if>
-        <if test="dataStatus != null and dataStatus!='' and !dataStatus.equals('02')">
+        <if test="dataStatus != null and dataStatus!='' and !dataStatus.equals('01')">
             and 1=2
+        </if>
+        <if test="Assetuuid != null and Assetuuid!=''">
+            AND DATAUUID = #{Assetuuid,jdbcType=VARCHAR}
         </if>
         ) ORDER BY dataStatus DESC
 
@@ -2189,7 +2196,7 @@
 
 
     <select id="getAssetInfoDetail"  resultMap="BaseResultMap">
-          SELECT '01' dataStatus,a.*
+          SELECT '02' dataStatus,a.*
           FROM CHB_ASSET_INFO a
           where ASSET_UUID = #{Assetuuid,jdbcType=VARCHAR}
     </select>

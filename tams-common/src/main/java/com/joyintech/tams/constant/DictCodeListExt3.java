@@ -944,6 +944,11 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     宁波资产三级分类_债券借贷(DictCode.宁波资产三级分类,"NB_WINDTYPETWO","债券借贷"),
     宁波资产三级分类_信用违约互换(DictCode.宁波资产三级分类,"NB_WINDTYPETWO","信用违约互换"),
     宁波资产三级分类_保证金(DictCode.宁波资产三级分类,"NB_WINDTYPETWO","保证金"),
+
+
+
+    中债_处理状态_待处理(DictCode.中债_处理状态,"01","待处理"),
+    中债_处理状态_已处理(DictCode.中债_处理状态,"02","已处理"),
     ;
 
     /**

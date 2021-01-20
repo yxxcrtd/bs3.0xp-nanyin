@@ -136,7 +136,7 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
 		/**
 		 * 如果是待处理数据,则将错误信息表里面的数据删除
 		 */
-		if(DictCodeList.处理状态_未处理.getValue().equals(dto.getDataStatus())){
+		if(DictCodeListExt3.中债_处理状态_待处理.getValue().equals(dto.getDataStatus())){
 			chbAssetInfoErrodataMapper.deleteByPrimaryKey(dto.getAssetId());
 		}
 
@@ -151,13 +151,13 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
 		int  flag = 0;
 
 		/***如果是资产基本信息,则修改状态为D*/
-		if(DictCodeList.处理状态_已处理.getValue().equals(dto.getDataStatus())){
+		if(DictCodeListExt3.中债_处理状态_已处理.getValue().equals(dto.getDataStatus())){
 			assetInfoDetailMapper.updateChbAssetType(dto.getAssetUuid());
 		}
 		/**
 		 * 如果是待处理数据,则将错误信息表里面的数据删除
 		 */
-		if(DictCodeList.处理状态_未处理.getValue().equals(dto.getDataStatus())){
+		if(DictCodeListExt3.中债_处理状态_待处理.getValue().equals(dto.getDataStatus())){
 			assetInfoDetailMapper.deleteError(dto.getAssetUuid());
 		}
 

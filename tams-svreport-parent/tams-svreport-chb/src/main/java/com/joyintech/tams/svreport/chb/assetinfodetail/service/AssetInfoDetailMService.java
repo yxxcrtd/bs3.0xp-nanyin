@@ -7,6 +7,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.system.base.entity.SysDatadictListLink;
@@ -19,6 +20,7 @@ import com.joyintech.tams.svreport.chb.assetinfodetail.asset.DtoChangeUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dao.AssetInfoDetailMapper;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.util.ServerMenu;
+import com.joyintech.tams.svreport.chb.common.util.asset.RechbAassetInfoUtilService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +48,9 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 
 	@Autowired
 	private AssetInfoDetailMapper assetInfoDetailMapper;
+
+	@Autowired
+	private RechbAassetInfoUtilService rechbAassetInfoUtilService;
 
 	static Map<String,Set<String>> map = null;
 	/**
@@ -80,8 +85,13 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 	 * @since 1.0
 	 */
 	public AssetInfoDetailDto getAssetInfoDetail(String  Assetuuid,String dataStatus) {
-		//TODO  界面共同方法编写  error表和INFO表
-		return assetInfoDetailMapper.getAssetInfoDetail(Assetuuid);
+		//界面共同方法编写  error表和INFO表
+		AssetInfoDetailDto dto = new AssetInfoDetailDto();
+
+		BeanUtil.copyPropertiesIgnoreNull(dto, rechbAassetInfoUtilService.BackChbAssetInfoMethod(dataStatus,Assetuuid));
+		//共同方法无dataStatus数据,需要赋值
+		dto.setDataStatus(dataStatus);
+		return dto;
 	}
 
 	/**
