@@ -40,7 +40,7 @@ public class SvrBussRepOthKindInfoController extends BaseController {
 
 
     @Autowired
-    private SvrBussRepOtherInfoImplService bussAssetInfoService;
+    private SvrBussRepOthKindInfoImplService bussAssetInfoService;
 
     @Autowired
     private AssetInfoDetailMService assetInfoDetailMService;
