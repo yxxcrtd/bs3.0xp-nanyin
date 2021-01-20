@@ -1,0 +1,3 @@
+-- 估值表指标结构映射二级法人
+delete from DATA_AUTH_MAPPER_CONFIG where SQL_ID = 'com.joyintech.service.risk.penetrationmanagement.rskvalstructure.dao.RskValStructureMapper.getStructName';
+INSERT INTO DATA_AUTH_MAPPER_CONFIG (SQL_ID, FILTER_TYPE, IS_NEST, JOIN_COLUMN_NAME, FILTER_SQL, SYSTEM_CODE, PAGE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADD_COLUMN, ADD_COLUMN_NAME, DATA_TYPE) VALUES (''com.joyintech.service.risk.penetrationmanagement.rskvalstructure.dao.RskValStructureMapper.getStructName'', ''2'', ''02'', ''id'', null, ''RSK'', ''RskValStructure001'', ''admin'', null, TIMESTAMP ''2020-07-21 21:08:51'', ''wy'', TIMESTAMP ''2020-07-21 21:08:51'', null, null, ''RSK11'');
