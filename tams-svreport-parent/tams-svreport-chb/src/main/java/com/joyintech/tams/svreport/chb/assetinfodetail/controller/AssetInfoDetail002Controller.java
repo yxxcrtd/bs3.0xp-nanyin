@@ -76,12 +76,11 @@ public class AssetInfoDetail002Controller extends BaseController {
 
         String jsonObject= JSONObject.toJSONString(assetInfoDetailMService.getDataListLink());
         model.addAttribute("AssetTypeListLink", jsonObject);
-        AssetInfoDetailDto  enty=new   AssetInfoDetailDto();
-        enty.setIssuePartyId(issuepartyid);
-        model.addAttribute(GlobalConstant.ENTITY, enty);
+        AssetInfoDetailDto  dto=new   AssetInfoDetailDto();
+        dto.setIssuePartyId(issuepartyid);
+        model.addAttribute(GlobalConstant.ENTITY, dto);
         if(StringUtil.isNotEmpty(assetUuid)&&StringUtil.isNotEmpty(dataStatus)){
-            AssetInfoDetailDto  dto = assetInfoDetailMService.getAssetInfoDetail(assetUuid,dataStatus);
-            dto.setIssuePartyId(issuepartyid);
+              dto = assetInfoDetailMService.getAssetInfoDetail(assetUuid,dataStatus);
             model.addAttribute(GlobalConstant.ENTITY, dto);
         }
         return super.init(model);
