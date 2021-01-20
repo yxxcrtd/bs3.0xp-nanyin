@@ -792,4 +792,17 @@ public class InterfRiskRdsDto implements IRiskRds {
     public void setInstCode(String instCode) {
         this.instCode = instCode;
     } 
+    
+	/**
+     * 交易日历，资产不存在时作为资产日历
+     */
+    private String calendarCode;
+    
+    public String getCalendarCode() {
+		return calendarCode;
+	}
+
+	public void setCalendarCode(String calendarCode) {
+		this.calendarCode = calendarCode;
+	}
 }

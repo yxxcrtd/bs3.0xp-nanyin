@@ -118,6 +118,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         if(!StringUtil.isNotEmpty(interfRiskRdsDto)){
             return null;
         }
+        interfRiskRdsDto.setCalendarCode((String)dataMap.get("calendarId"));
         interfRiskRdsDto.setInfCode(v.getInfCode());
         interfRiskRdsDto.setEventType(v.getEventType());
         interfRiskRdsDto.setCcy(StringUtil.isNotEmpty(dataMap.get(InterfUtil.CCY))?dataMap.get(InterfUtil.CCY).toString():BussinessDictCodeListRds.币种_人民币_CNY.getValue());
