@@ -122,7 +122,6 @@
         // });
         var initplace = function(){
             var assetTvalue=$('#assetType2').val();
-            alert(assetTvalue)
             if(assetTvalue=='1108'||assetTvalue=='1902'){
                 $("#svrBussRepPlacementInfoDto_targetType1").attr("disabled",false);
                 $("#issueAmt").attr("disabled",false);
