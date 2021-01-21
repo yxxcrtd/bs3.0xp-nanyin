@@ -1663,7 +1663,9 @@ var table;
                         $("#commissionAmtDiv").show();
                         $("#settleAmtDiv").show();
                         $("#exchangeAmtDiv").show();
-                        ClearNum();
+                        if(!isTodoList&&pageModel!=PAGE_MODEL_REFERENCE){
+                            ClearNum();
+                        }
                     }else if ($("#payType").val()=="02"){
                         $("#commissionAmtDiv").hide();
                         $("#settleAmtDiv").hide();
@@ -1673,7 +1675,9 @@ var table;
                     //一级分销，若是交易所，显示佣金
                     if($("#payType").val()=="01"){
                         $("#commissionAmtDiv").show();
-                        ClearNum();
+                        if(!isTodoList&&pageModel!=PAGE_MODEL_REFERENCE){
+                            ClearNum();
+                        }
                     }
                 }
 
