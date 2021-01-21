@@ -10,7 +10,7 @@ with prod as(
 		select fp.FINPROD_ID,MH.CDATE
 		from FIN_TRADE_PRODUCT fp inner join MST_HOLIDAY mh 
         on nvl(fp.CALENDAR_ID,''01'') = mh.CALENDAR_ID  and fp.MDATE >= MH.CDATE and MH.IS_HOLIDAY = ''0''
-        where MH.CDATE >= date''${valDate}'' and fp.FINPROD_TYPE2 IN (''F03'', ''F05'')
+        where MH.CDATE > date''${valDate}'' and fp.FINPROD_TYPE2 IN (''F03'', ''F05'')
     )
 	group by FINPROD_ID
     having count(CDATE)>10
@@ -34,7 +34,7 @@ group by PORTFOLIO_ID';
 		select fp.FINPROD_ID,MH.CDATE
 		from FIN_TRADE_PRODUCT fp inner join MST_HOLIDAY mh 
         on nvl(fp.CALENDAR_ID,''01'') = mh.CALENDAR_ID  and fp.MDATE >= MH.CDATE and MH.IS_HOLIDAY = ''0''
-        where MH.CDATE >= date''${valDate}'' and fp.FINPROD_TYPE2 IN (''F03'', ''F05'')
+        where MH.CDATE > date''${valDate}'' and fp.FINPROD_TYPE2 IN (''F03'', ''F05'')
     )
 	group by FINPROD_ID
     having count(CDATE)>10
@@ -106,7 +106,7 @@ with prod as(
 		select fp.FINPROD_ID,MH.CDATE
 		from FIN_TRADE_PRODUCT fp inner join MST_HOLIDAY mh 
         on nvl(fp.CALENDAR_ID,''01'') = mh.CALENDAR_ID  and fp.MDATE >= MH.CDATE and MH.IS_HOLIDAY = ''0''
-        where MH.CDATE >= date''${valDate}'' and fp.FINPROD_TYPE2 IN (''F03'', ''F05'')
+        where MH.CDATE > date''${valDate}'' and fp.FINPROD_TYPE2 IN (''F03'', ''F05'')
     )
 	group by FINPROD_ID
     having count(CDATE)>10
