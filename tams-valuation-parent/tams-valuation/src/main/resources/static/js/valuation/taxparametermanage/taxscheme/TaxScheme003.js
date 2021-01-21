@@ -44,7 +44,15 @@ $(function () {
         }
 
     };
-    
+
+
+    $("#taxableSign").on("change", function () {
+        if($("#taxableSign").val() == '03'){
+            $('#span1').show();
+        }else{
+            $('#span1').hide();
+        }
+    })
 
 	
     $(function() {
