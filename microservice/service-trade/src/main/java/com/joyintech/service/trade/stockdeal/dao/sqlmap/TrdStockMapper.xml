@@ -412,7 +412,9 @@
 		STL_SEC_ACCT_INFO B
 		ON A.ACCT_NO = B.SEC_ACCT_ID
 		<where>
-			A.PORTFOLIO_ID = #{portfolioId}
+			<if test="portfolioId != null and portfolioId !='' ">
+				A.PORTFOLIO_ID = #{portfolioId}
+			</if>
 			<if test="search != null and search != ''">
 				AND
 				(
