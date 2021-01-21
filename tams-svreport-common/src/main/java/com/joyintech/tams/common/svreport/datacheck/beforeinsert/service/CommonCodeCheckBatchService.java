@@ -141,7 +141,7 @@ public class CommonCodeCheckBatchService {
 		}
 
 		//错误信息入库
-		if(!erroList.isEmpty() && !StringUtil.equals(tableInfo.getTableName(), ChbCheckTableInfo.资产要素登记表INFO.getTableName())){
+		if(!erroList.isEmpty() && StringUtil.equals(CacheUtil.getSysParam("INSERT_ERRDATA_MODE"), "01")){
 			insertErroData(erroList);
 		}
 		// 资产要素错误信息入库
