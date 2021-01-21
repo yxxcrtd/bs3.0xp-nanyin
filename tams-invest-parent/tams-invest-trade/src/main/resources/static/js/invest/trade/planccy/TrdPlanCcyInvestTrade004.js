@@ -439,24 +439,23 @@ $(function() {
                 for (var bussTrdTransfenpeiOrder in object.bussTrdTransfenpeiDto) {
                     if ((object.bussTrdTransferOrder[bussTrdTransferOrder].portfolioId == object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].portfolioId) &&
                         (JoyinMath.doAdd(object.bussTrdTransferOrder[bussTrdTransferOrder].settleAmt, 0, 2) == JoyinMath.doAdd(object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].tradeAmt, 0, 2))) {
-//	                        object.prinAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].prinAmt;
-//	                        object.intAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].intAmt;
-//	                        object.channelFee = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].channelFee;
-//	                        object.tradeAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].tradeAmt;
-//	                        object.bussTrdAvailableCashQueryavalibleCash = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].bussTrdAvailableCashQueryavalibleCash;
-//	                        object.bussTrdAvailableCashQueryavalibleCash1 = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].bussTrdAvailableCashQueryavalibleCash1;
-//	                        object.channelAvailableCash = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].channelAvailableCash;
-//	                        object.Assetsavailablepositions = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].Assetsavailablepositions;
-                     //   if (object.ps === PS_T01 && object.prinAmt && object.bussTrdAvailableCashQueryavalibleCash && Number(object.prinAmt) > (object.chlId && object.payType == '02' ? Number(object.channelAvailableCash) : Number(object.bussTrdAvailableCashQueryavalibleCash))) {
                         if ( (object.ps === 'T01' || object.ps === 'T04' ) && object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].tradeAmt && object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].bussTrdAvailableCashQueryavalibleCash && Number(object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].tradeAmt) >  Number(object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].bussTrdAvailableCashQueryavalibleCash) ) {
                                 message = JoyinUtil.getMessage("TRD_C_0002");
                                 flag1 = false;
-                        //} else if (object.ps == PS_T02 && object.prinAmt && object.Assetsavailablepositions && Number(object.prinAmt) > Number(object.Assetsavailablepositions)) {
-                        } else if (object.ps == 'T02' && object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].tradeAmt && object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].Assetsavailablepositions && Number(object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].tradeAmt) > Number(object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].Assetsavailablepositions)) {
-                            Joyin.warn("资产可用持仓必须大于本金金额。");
+                        } else if (object.ps == 'T02' && object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].shareAmt && object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].assetsavailablepositions && Number(object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].shareAmt) > Number(object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].assetsavailablepositions)) {
+                            Joyin.warn("资产可用持仓必须大于交易份额。");
                             return;
                         }
                     }
+                }
+            }
+        }
+        //赎回的时候没有划款指令，单独写
+        if(object.bussTrdTransfenpeiDto.length){
+            for (var bussTrdTransfenpeiOrder in object.bussTrdTransfenpeiDto) {
+                if (object.ps == 'T06' && object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].shareAmt && object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].assetsavailablepositions && Number(object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].shareAmt) > Number(object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].assetsavailablepositions)) {
+                    Joyin.warn("资产可用持仓必须大于交易份额。");
+                    return;
                 }
             }
         }
