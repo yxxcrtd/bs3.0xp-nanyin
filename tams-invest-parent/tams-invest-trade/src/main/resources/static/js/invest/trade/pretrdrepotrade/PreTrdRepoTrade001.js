@@ -160,7 +160,7 @@ $(function(){
                     }
                     selArr[0].revokeReason = result;
                     object.preTrdRepoTrade002DtoList = selArr;
-                    WorkFlow.doDeleteList(basePath + 'invest/trade/pretrdrepotrade/PreTrdRepoTrade001/doRevoke', object, "PreTrdRepoTrade001_btn_revoke", "PreTrdRepoTrade002");
+                    WorkFlow.doRevokeList(basePath + 'invest/trade/pretrdrepotrade/PreTrdRepoTrade001/doRevoke', object, "PreTrdRepoTrade001_btn_revoke", "PreTrdRepoTrade002");
                 });
             });
 
