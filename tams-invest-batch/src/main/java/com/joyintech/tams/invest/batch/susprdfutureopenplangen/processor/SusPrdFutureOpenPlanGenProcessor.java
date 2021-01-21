@@ -19,9 +19,12 @@ import org.springframework.stereotype.Service;
 import com.joyintech.batch.batchbase.baseclass.BaseProcessor;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.FinFloatAccrualSche;
 import com.joyintech.tams.common.base.entity.FinOpenPlan;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.FinOpenPlanDto;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto;
+import com.joyintech.tams.invest.batch.susprdfutureopenplangen.relyingonresources.service.BussFinProductAnapleroticPlanService;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.relyingonresources.service.BussFinProductOpenPlanService;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.service.SusPrdFutureOpenPlanGenProcesserService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
@@ -41,6 +44,9 @@ public class SusPrdFutureOpenPlanGenProcessor extends BaseProcessor<NeedOperateE
 
 	@Autowired
 	private SusPrdFutureOpenPlanGenProcesserService susPrdFutureOpenPlanGenProcesserService;
+	
+	@Autowired
+	private BussFinProductAnapleroticPlanService bussFinProductAnapleroticPlanService;
 
 	
 	@Override
@@ -50,7 +56,9 @@ public class SusPrdFutureOpenPlanGenProcessor extends BaseProcessor<NeedOperateE
 		
 		// 获取reader方法的返回值
 		SusPrdFutureOpenPlanGenDto susprdfutureopenplangendto = (SusPrdFutureOpenPlanGenDto) item;
-
+		FinOpenPlanDto finOpenPlanDto = new FinOpenPlanDto();
+		
+		if(StringUtil.equals("开放计划", susprdfutureopenplangendto.getPlanType())){
 		// 公共方法生成的List<开放计划>
 		List<FinOpenPlan> finOpenPlanList = bussfinproductopenplanService
 				.genOpenPlanList(susPrdFutureOpenPlanGenProcesserService.executeDto(susprdfutureopenplangendto, years));
@@ -58,9 +66,15 @@ public class SusPrdFutureOpenPlanGenProcessor extends BaseProcessor<NeedOperateE
 		// 更新后的开放计划
 		List<FinOpenPlan> newFinOpenPlanList = susPrdFutureOpenPlanGenProcesserService.executeList(finOpenPlanList,
 				susprdfutureopenplangendto);
-		
-		FinOpenPlanDto finOpenPlanDto = new FinOpenPlanDto();
 		finOpenPlanDto.setFinOpenPlanList(newFinOpenPlanList);
+		}
+		else if(StringUtil.equals("业绩回补计划", susprdfutureopenplangendto.getPlanType())) {
+			// 公共方法生成的List<业绩回补计划>
+			List<FinFloatAccrualSche> finAnapleroticPlanList = bussFinProductAnapleroticPlanService
+					.genAnapleroticPlanList(susPrdFutureOpenPlanGenProcesserService.executeAnapleroticDto(susprdfutureopenplangendto));
+		finOpenPlanDto.setFinAnapleroticPlanList(finAnapleroticPlanList);
+		}
+		
 		finOpenPlanDto.setSusPrdFutureOpenPlanGenDto(susprdfutureopenplangendto);
 		return finOpenPlanDto;
 	}

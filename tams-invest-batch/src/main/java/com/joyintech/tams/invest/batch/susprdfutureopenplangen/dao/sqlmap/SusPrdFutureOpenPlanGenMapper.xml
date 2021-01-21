@@ -3,7 +3,8 @@
 <mapper namespace="com.joyintech.tams.invest.batch.susprdfutureopenplangen.dao.SusPrdFutureOpenPlanGenMapper">
 
 	<select id="findSusPrdFutureOpenPlanGenList" parameterType="Map" resultType="com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto">
-		SELECT																									
+		SELECT	
+		    '开放计划' planType,																								
 			A.FINPROD_ID AS FINPROD_ID,																								
 			A.VDATE AS VDATE,																								
 			A.PROFIT_TYPE AS PROFIT_TYPE,																								
@@ -81,8 +82,102 @@
 		WHERE 																									
 			A.FINPROD_TYPE2 = #{finprodType}																
 			AND A.P_FINPROD_ID IS NULL
-			AND A.IS_SUS = #{isSus}
+			<!-- AND A.IS_SUS = #{isSus} -->
 			AND A.OPERATION_TYPE = #{operationType}																								
 	</select>
+	
+	<select id="findProductAnapleroticPlanList" parameterType="Map" resultType="com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto">
+		 select DISTINCT
+		       '业绩回补计划' planType,/*计划类型*/
+		       R.CAWLBACK_RULE  anapleroticRule,/*回补方式*/
+	           R.CAWLBACK_TYPE anapleroticType, /*回补形式*/
+	           R.Basis anapleroticBasic,/* 计费基数*/	           
+	           R.Eff_Date effDate,/* 生效日*/
+	           E.cash_id anapleroticId,/*回补id*/	          
+	           A.FINPROD_ID finprodId,/*产品代码*/
+		       A.CALENDAR_ID  calendarId,	/*交易日历*/
+    		   I.PROD_STYLE prodStyle,/* 适用款型*/   		      		    
+	           O.OPEN_CYCLE_UNIT anapleroticFrequency, /*回补规则*/
+	           O.TRADEDAY_RULE cycleTdayRule,/*营业日准则*/ 
+	           E.ACCR_STR_DATE firstAnapleroticDate, /* 首次回补日*/
+	           D.E_ACCR_DATE  eAccrDate, /* 回补计提结束日*/
+	           S.Accr_Str_Date firstAnapleroticCycleBegDate,/*首次回补周期结束日*/
+	           D.F_ACCR_END_DATE firstAnapleroticCycleEndDate,/* 首次回补周期结束日*/
+	           F.COEFFICIENT*100 anapleroticRatio /* 回补比例*/
+	           from fin_product A
+	            INNER JOIN(
+	                         SELECT 																							
+					         T.CASH_ID,					
+					         T.ACCR_STR_DATE,
+					         T.ACCR_END_DATE,					
+					         T.FINPROD_ID,
+					         T.RN																						
+				   FROM																							
+					(SELECT  																						
+						B.CASH_ID AS CASH_ID, 																																																					 																					
+						C.ACCR_STR_DATE AS ACCR_STR_DATE,
+						C.ACCR_END_DATE AS ACCR_END_DATE,	
+						B.FINPROD_ID AS FINPROD_ID,																				
+						RANK () OVER(PARTITION BY B.CASH_ID ORDER BY C.ACCR_END_DATE DESC) RN																					
+					     FROM 																						
+						FIN_CASH_INFO B																					
+					     INNER JOIN FIN_FLOAT_ACCRUAL_SCHE C																						
+						ON B.CASH_ID = C.CASH_ID																					
+					     WHERE 																						
+						B.FINPROD_TYPE = #{cashFinprodType}																					
+						AND B.CASH_TYPE_2 = #{cashType1}									
+						AND B.BRANCH = 0																					
+					) T
+				    WHERE 																							
+					T.RN = 1
+					AND T.ACCR_STR_DATE between TRUNC(to_date(#{sysDate},'yyyy-MM-dd'),'mm')
+		            and trunc(add_months(to_date(#{sysDate},'yyyy-MM-dd'),1),'mm')-1
+	            )E  ON A.FINPROD_ID = E.FINPROD_ID
+	        INNER JOIN  Fin_Float_Counting_Rule D ON D.CASH_ID = E.CASH_ID
+	        INNER JOIN  FIN_OPEN_PLAN P ON P.FINPROD_ID = A.FINPROD_ID
+	         INNER JOIN  FIN_OPEN_RULE O ON O.CASH_ID = P.CASH_ID
+	        INNER JOIN  Fin_Float_Calc_Rule_Detail F ON F.CASH_ID = E.CASH_ID
+	        LEFT JOIN   PRD_LAYER_PARAM  I ON  I.FINPROD_ID = E.FINPROD_ID	
+	        INNER JOIN  FIN_CLAWBACK_CALC_RULE R ON R.CASH_ID = E.CASH_ID
+	        LEFT JOIN (select sc.CASH_ID,min(sc.Accr_Str_Date) Accr_Str_Date from FIN_FLOAT_ACCRUAL_SCHE sc
+		    group by sc.CASH_ID) S ON S.CASH_ID = E.CASH_ID
+	        WHERE 																									
+		    A.FINPROD_TYPE = 'F16'																								
+	</select>
+	
+	<select id="findNdateOrEndDateByProdid" parameterType="string" resultType="java.util.Date">
+		select TT.listN from (
+		    select decode(t1.PROFIT_TYPE,'01',t.OPEN_NDATE,'03',t.OPEN_DATE_END) as listN 
+		    from FIN_OPEN_PLAN t 
+		    left join FIN_PRODUCT t1 on t1.FINPROD_ID=t.FINPROD_ID
+		    left join FIN_OPEN_RULE t2 on t2.CASH_ID=t.CASH_ID
+		    where t1.PROFIT_TYPE in('01','03')
+		        and t2.OPEN_MODE !='02' /*非高频开放*/
+		        and t.FINPROD_ID=#{finprodId}	
+		)TT
+		order by TT.listN
+	</select>
+	
+	<select id="selectfinCashInfo" resultType="java.lang.String">
+    	select CASH_ID
+		from FIN_CASH_INFO
+		where FINPROD_ID = #{FINPROD_ID,jdbcType=VARCHAR} 
+			and CASH_TYPE_2 = #{CASH_TYPE_2,jdbcType=VARCHAR}
+			and BRANCH = 0
+    </select>
+    
+    <select id="findOtherNeedDateByProdid" parameterType="string" resultType="com.joyintech.tams.invest.batch.prdopenplanupdate.dto.AccrDateNeedOtherDto">
+		select  DISTINCT t1.cash_id as cashId,t.vdate,t.mdate,
+			t2.F_ACCR_DATE as provisionfirstday,t2.E_ACCR_DATE as eAccrDate 
+		from FIN_PRODUCT t
+		left join FIN_CASH_INFO t1 on t1.finprod_id=t.finprod_id and t1.CASH_TYPE_2='C04' and t1.BRANCH = 0
+		left join FIN_FLOAT_COUNTING_RULE t2 on t2.cash_id=t1.cash_id
+		where t.finprod_id=#{finprodId}
+	</select>
+	
+	<delete id="deleteFloatAccrualScheByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinFloatAccrualScheKey" >
+        delete from FIN_FLOAT_ACCRUAL_SCHE
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+    </delete>
 
 </mapper>

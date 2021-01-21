@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.batch.susprdfutureopenplangen.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.batch.common.util.BatchConstant;
+import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.PrdOpenPlanUpdateDto;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dao.SusPrdFutureOpenPlanGenMapper;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto;
 
@@ -50,19 +52,32 @@ public class SusPrdFutureOpenPlanGenReaderService extends BaseService {
 		if (null == batchExecuteInfo) {
 			return null;
 		}
+		
+		List<SusPrdFutureOpenPlanGenDto> lists = new ArrayList<SusPrdFutureOpenPlanGenDto>();
+		//查询需要更新的开放计划
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("cashFinprodType", DictCodeListExt1.现金流业务类型_金融产品.getValue());
 		paramMap.put("cashType1", DictCodeListExt1.现金流二级类型_本金.getValue());
 		paramMap.put("sysDate", DateUtil.format(batchExecuteInfo.getExecuteDate()));
 		paramMap.put("issueStatus", DictCodeListExt1.发行状态_发行成功.getValue());
 		paramMap.put("finprodType", DictCodeListExt1.金融产品类型_理财产品.getValue());
-		paramMap.put("isSus", DictCodeList.是否_是.getValue());
+		//paramMap.put("isSus", DictCodeList.是否_是.getValue());
 		paramMap.put("operationType", DictCodeList.开放类型_开放式.getValue());
-
 		List<SusPrdFutureOpenPlanGenDto> susprdfutureopenplangendtoList = susprdfutureopenplangenMapper
 				.findSusPrdFutureOpenPlanGenList(paramMap);
-
-		return susprdfutureopenplangendtoList;
+		lists.addAll(susprdfutureopenplangendtoList);
+		
+		//查询需要更新的业绩回补计划
+		Map<String, Object> paramMapAnapleroticPlan = new HashMap<String, Object>();
+		paramMapAnapleroticPlan.put("cashFinprodType", DictCodeListExt1.现金流业务类型_金融产品.getValue());
+		paramMapAnapleroticPlan.put("cashType1", DictCodeListExt1.现金流二级类型_回补.getValue());
+		paramMapAnapleroticPlan.put("finprodType", DictCodeListExt1.金融产品类型_理财产品.getValue());
+		paramMapAnapleroticPlan.put("sysDate", DateUtil.format(batchExecuteInfo.getExecuteDate()));
+		List<SusPrdFutureOpenPlanGenDto> finProductAnapleroticPlanList = susprdfutureopenplangenMapper
+				.findProductAnapleroticPlanList(paramMapAnapleroticPlan);
+		lists.addAll(finProductAnapleroticPlanList);
+		
+		return lists;
 	}
 
 }

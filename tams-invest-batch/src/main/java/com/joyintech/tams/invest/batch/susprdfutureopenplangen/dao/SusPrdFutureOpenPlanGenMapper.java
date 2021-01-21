@@ -10,11 +10,14 @@
  
 package com.joyintech.tams.invest.batch.susprdfutureopenplangen.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import com.joyintech.tams.common.base.entity.FinFloatAccrualScheKey;
+import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.AccrDateNeedOtherDto;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto;
 
 /**
@@ -24,6 +27,29 @@ import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureO
  */
 @Repository
 public interface SusPrdFutureOpenPlanGenMapper {
-	
+	//查询需要更新的开放计划
 	List<SusPrdFutureOpenPlanGenDto> findSusPrdFutureOpenPlanGenList(Map<String,Object> paramMap);
+	//查询需要更新的业绩回补计划
+	List<SusPrdFutureOpenPlanGenDto> findProductAnapleroticPlanList(Map<String,Object> paramMap);
+	/**
+	 * 如果是净值型产品则取净值日，如果是货币产品，则取区间结束日
+	 */
+	List<Date> findNdateOrEndDateByProdid(String finprodId);
+	
+	/**
+	 * 查询浮动管理费的现金流代码
+	 * @param map
+	 * @return
+	 */
+	String selectfinCashInfo(Map<String,Object> map);
+	
+	/**
+	 * 根据产品代码查询其他计算浮动管理费计提计划的必须字段(业绩报酬计提规则表)
+	 */
+	AccrDateNeedOtherDto findOtherNeedDateByProdid(String finprodId);
+	/**
+	 * 根据cashid删除原浮动管理费计提计划 
+	 */
+	int deleteFloatAccrualScheByPrimaryKey(FinFloatAccrualScheKey finFloatAccrualScheKey);
+	
 }

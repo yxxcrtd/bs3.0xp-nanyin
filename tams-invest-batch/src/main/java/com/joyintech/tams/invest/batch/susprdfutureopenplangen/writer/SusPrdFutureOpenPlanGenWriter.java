@@ -12,7 +12,10 @@ package com.joyintech.tams.invest.batch.susprdfutureopenplangen.writer;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -21,10 +24,17 @@ import org.springframework.util.StringUtils;
 
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.FinFloatAccrualScheMapper;
 import com.joyintech.tams.common.base.dao.FinOpenPlanMapper;
+import com.joyintech.tams.common.base.entity.FinFloatAccrualSche;
+import com.joyintech.tams.common.base.entity.FinFloatAccrualScheKey;
 import com.joyintech.tams.common.base.entity.FinOpenPlan;
 import com.joyintech.tams.common.base.entity.FinOpenPlanKey;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.AccrDateNeedOtherDto;
+import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dao.SusPrdFutureOpenPlanGenMapper;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.FinOpenPlanDto;
 
 /**
@@ -39,18 +49,22 @@ public class SusPrdFutureOpenPlanGenWriter extends BaseWriter<NeedToWriteEntity>
 
 	@Autowired
 	private FinOpenPlanMapper finOpenPlanMapper;
+	
+	@Autowired
+	private FinFloatAccrualScheMapper finFloatAccrualScheMapper;
+	
+	@Autowired
+	private SusPrdFutureOpenPlanGenMapper susPrdFutureOpenPlanGenMapper;
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void write(List<? extends NeedToWriteEntity> items) throws Exception {
 
 		List<FinOpenPlanDto> finOpenPlanDtoList = (List<FinOpenPlanDto>) items;
-		
-		List sqls = new ArrayList();
+		List<String> prodidList=new ArrayList<String>();
 
-		if (!StringUtil.isEmptyList(finOpenPlanDtoList)) {
 			for (FinOpenPlanDto finOpenPlanDto : finOpenPlanDtoList) {
-
+				
 				if (!StringUtil.isEmptyList(finOpenPlanDto.getFinOpenPlanList())) {
 
 					for (FinOpenPlan finOpenPlan : finOpenPlanDto.getFinOpenPlanList()) {
@@ -62,26 +76,140 @@ public class SusPrdFutureOpenPlanGenWriter extends BaseWriter<NeedToWriteEntity>
 						key.setOpenDateEnd(finOpenPlan.getOpenDateEnd());
 						FinOpenPlan fop = finOpenPlanMapper.selectByPrimaryKey(key);
 						
-//						if(StringUtils.isEmpty(fop)) {
-//							finOpenPlanMapper.insert(finOpenPlan); // 如果为空再插入操作
-//						}
-//						CASH_ID, OPEN_TYPE, OPEN_DATE_END
-						
-						try {
-							finOpenPlanMapper.insert(finOpenPlan); // 如果为空再插入操作
-						} catch (Exception e) {
-							e.printStackTrace();
-						} finally {
-							String sql = "select * from FIN_OPEN_PLAN where CASH_ID = '" + finOpenPlan.getCashId() + "' and OPEN_TYPE = '" + finOpenPlan.getOpenType() + "' and OPEN_DATE_END = to_date('" + new SimpleDateFormat("yyyy-MM-dd").format(finOpenPlan.getOpenDateEnd()) + "','yyyy-MM-dd');";
-							sqls.add(sql);
+					   if(!StringUtil.isNotEmpty(fop)) {
+						finOpenPlanMapper.insert(finOpenPlan); // 如果为空再插入操作
+					   }
+					 //设置List存储唯一的产品代码
+						if(StringUtil.isNotEmpty(finOpenPlan.getFinprodId())){
+							if(!prodidList.contains(finOpenPlan.getFinprodId())){
+								prodidList.add(finOpenPlan.getFinprodId());
+							}
 						}
 						
+//						try {
+//							finOpenPlanMapper.insert(finOpenPlan); // 如果为空再插入操作
+//						} catch (Exception e) {
+//							e.printStackTrace();
+//						} finally {
+//							String sql = "select * from FIN_OPEN_PLAN where CASH_ID = '" + finOpenPlan.getCashId() + "' and OPEN_TYPE = '" + finOpenPlan.getOpenType() + "' and OPEN_DATE_END = to_date('" + new SimpleDateFormat("yyyy-MM-dd").format(finOpenPlan.getOpenDateEnd()) + "','yyyy-MM-dd');";
+//							sqls.add(sql);
+//						}
+						
 					}
+					
+					//生成最新的浮动管理费计提计划 
+					createFinFloatAccrualSche(prodidList);
+					
 				}
+				//更新业绩回补计划
+				if (!StringUtil.isEmptyList(finOpenPlanDto.getFinAnapleroticPlanList())) {
+					for (FinFloatAccrualSche finFloatAccrualSche : finOpenPlanDto.getFinAnapleroticPlanList()) {
+						// 查询无重复
+						FinFloatAccrualScheKey key = new FinFloatAccrualScheKey();
+						key.setCashId(finFloatAccrualSche.getCashId());
+						key.setAccrDate(finFloatAccrualSche.getAccrDate());
+						FinFloatAccrualSche fop = finFloatAccrualScheMapper.selectByPrimaryKey(key);
+						
+					   if(!StringUtil.isNotEmpty(fop)) {
+						   finFloatAccrualScheMapper.insert(finFloatAccrualSche); // 如果为空再插入操作
+					   }
+					}
 			}
 
 		}
-		System.out.println(sqls);
+		//System.out.println(sqls);
+	}
+	
+	/**
+	 * 根据开放计划生成浮动管理费计提计划 
+	 */
+	public void createFinFloatAccrualSche(List<String> finprodidList){
+		
+		if (!StringUtil.isEmptyList(finprodidList)) {
+			for (String finprodId : finprodidList) {
+				// 1.根据产品代码  查询到相应的开放计划净值日
+				List<Date> dateOpenPlanList = susPrdFutureOpenPlanGenMapper.findNdateOrEndDateByProdid(finprodId);
+				if(StringUtil.isEmptyList(dateOpenPlanList)){//过滤收益型产品
+					continue;
+				}
+				// 1.2 当净值型产品没有挂浮动管理费时，无需更新浮动管理费计划
+				Map<String,Object> map = new HashMap<String,Object>();
+		        map.put("FINPROD_ID", finprodId);
+		        map.put("CASH_TYPE_2", DictCodeListExt1.现金流二级类型_浮动管理费.getValue());
+		        //查询浮动管理费的现金流代码
+		        String cashId = susPrdFutureOpenPlanGenMapper.selectfinCashInfo(map);
+		        if(StringUtil.isEmpty(cashId)){
+		        	continue;
+		        }
+				// 2.将其他时间点也塞进dateOpenPlanList内
+				AccrDateNeedOtherDto accrDateNeedOtherDto = susPrdFutureOpenPlanGenMapper
+						.findOtherNeedDateByProdid(finprodId);
+				//3.根据浮动管理费的cashid删除产品原计提计划
+				FinFloatAccrualScheKey finFloatAccrualScheKey=new FinFloatAccrualScheKey();
+				finFloatAccrualScheKey.setCashId(accrDateNeedOtherDto.getCashId());
+				susPrdFutureOpenPlanGenMapper.deleteFloatAccrualScheByPrimaryKey(finFloatAccrualScheKey);
+				
+				if (StringUtil.isNotEmpty(accrDateNeedOtherDto)) {
+					addDateToList(dateOpenPlanList, accrDateNeedOtherDto.getVdate());
+					addDateToList(dateOpenPlanList, accrDateNeedOtherDto.getMdate());
+					addDateToList(dateOpenPlanList, accrDateNeedOtherDto.getProvisionFirstDay());
+					addDateToList(dateOpenPlanList, accrDateNeedOtherDto.geteAccrDate());
+				}
+				// 对dateOpenPlanList进行处理
+				Date startDate = dateOpenPlanList.get(0);
+				boolean flag = true;
+				for (Date endDate : dateOpenPlanList) {
+					if (startDate.compareTo(endDate) == 0) {
+						startDate = endDate;
+						continue;
+					}
+					if (endDate.compareTo(accrDateNeedOtherDto.getProvisionFirstDay()) < 0) {
+						startDate = endDate;
+						continue;
+					}
+					if (endDate.compareTo(accrDateNeedOtherDto.geteAccrDate()) > 0) {
+						startDate = endDate;
+						continue;
+					}
+					FinFloatAccrualSche finFloatAccrualScheFirst = new FinFloatAccrualSche();
+					finFloatAccrualScheFirst.setCashId(accrDateNeedOtherDto.getCashId());
+					finFloatAccrualScheFirst.setAccrDate(endDate);
+					finFloatAccrualScheFirst.setAccrStrDate(startDate);
+					if (flag) {
+						finFloatAccrualScheFirst.setAccrStrDate(DateUtil.addDay(startDate, -1));
+						flag = false;
+					}
+
+					finFloatAccrualScheFirst.setAccrEndDate(endDate);
+					finFloatAccrualScheFirst.setValDate(endDate);
+					finFloatAccrualScheFirst.setUpdateTime(new Date());
+					//插入更新的浮动管理费计提计划
+					finFloatAccrualScheMapper.insert(finFloatAccrualScheFirst);
+					startDate = endDate;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 按降序向列表添加日期
+	 * @param list
+	 * @param date
+	 */
+	private void  addDateToList(List<Date> list, Date date){
+	    if(date == null){
+	        return;
+	    }
+	    for(int i=0;i<list.size();i++){
+	        if(list.get(i).compareTo(date)==0){
+	            return;
+	        } 
+	        if(list.get(i).compareTo(date)>0){
+	            list.add(i,date);
+	            return;
+            }
+	    }
+	    list.add(date);
 	}
 
 }

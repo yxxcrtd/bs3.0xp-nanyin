@@ -375,5 +375,50 @@ public class DateCalService {
 			return DateUtil.format(DateUtil.addMonthDate(DateUtil.parse(date), months));
 		}
 	}
+	
+	
+	/**
+	 * 交易日推算向前调整
+	 *
+	 * @param beforeAdjustDate
+	 *            调整前日期
+	 * @param days
+	 *            调整天数
+	 * @param holidayList
+	 *            节假日列表
+	 * @param flag
+	 *            是否跨月 1：是、2：否
+	 * @return 调整后日期
+	 * @exception Exception
+	 *                异常
+	 */
+	public Date calculationTradingDay1(Date beforeAdjustDate, int days, List<String> holidayList, String flag) {
+		// 交易日计数
+		int dayCount = 0;
+		// 调整后非跨月日期
+		Date noCrossDate = null;
+		// 调整后日期
+		Date afterAdjustDate = beforeAdjustDate;
+
+		while (dayCount < days) {
+			// 中间参数.调整后日期 = 临时变量.调整后日期 + 1日
+			Date tempAfterAdjustDate = DateUtil.addDay(afterAdjustDate, 1);
+			while (holidayList.indexOf(DateUtil.format(tempAfterAdjustDate)) > -1) {
+				tempAfterAdjustDate = DateUtil.addDay(tempAfterAdjustDate, -1);
+			}
+
+			if (StringUtil.equals(DictCodeList.是否_否.getValue(), flag)
+					&& !StringUtil.equals(DateUtil.format(tempAfterAdjustDate, "yyyyMM"),
+							DateUtil.format(beforeAdjustDate, "yyyyMM"))) {
+				noCrossDate = afterAdjustDate;
+				return noCrossDate;
+			} else {
+				afterAdjustDate = tempAfterAdjustDate;
+				dayCount++;
+			}
+		}
+		return afterAdjustDate;
+	}
+
 
 }

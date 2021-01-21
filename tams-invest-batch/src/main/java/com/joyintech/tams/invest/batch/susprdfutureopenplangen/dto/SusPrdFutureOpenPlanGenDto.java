@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
@@ -8,15 +9,16 @@ import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
  * 2019年9月24日 开放现金流信息
  */
 public class SusPrdFutureOpenPlanGenDto extends NeedOperateEntity {
-
+	private String planType;//计划类型：开放计划、业绩回补计划
 	private String finprodId; // 金融产品代码
+	private String calendarId; // 交易日历
+	/*******************开放计划字段 start*********************/
 	private Date vdate; // 起息日
 	private String profitType; // 收益类型
 	private Date openMdate; // 到期日
 	private String cashId; // 现金流代码
 	private String openType; // 开放类型
 	private Date openVdate; // 开放计划开始日
-	private String calendarId; // 交易日历
 	private String purSpeed; // 申购确认速度
 	private String isCycle; // 是否周期型
 	private String closeDays; // 封闭期限
@@ -43,6 +45,25 @@ public class SusPrdFutureOpenPlanGenDto extends NeedOperateEntity {
      * 申购确认天数
      */
     private Integer purConfDays;
+    /*******************开放计划字段 end*********************/
+    
+    /*******************业绩回补计划字段 start*********************/
+    private String  anapleroticRule; //回补方式
+    private String  anapleroticType; //回补形式
+    private String  anapleroticBasic;//计费基数	           
+    private Date  effDate;// 生效日
+    private String  anapleroticId;//回补id          
+    private String  prodStyle;//适用款型   		      		    
+    private String  anapleroticFrequency; //回补规则
+    private String  cycleTdayRule;//营业日准则
+    private Date  firstAnapleroticDate; //首次回补日
+    private Date  firstAnapleroticCycleBegDate;//首次回补周期结束日
+    private Date  firstAnapleroticCycleEndDate;//首次回补周期结束日
+    private BigDecimal  anapleroticRatio; // 回补比例
+    private Date  eAccrDate;//回补计提结束日
+    
+    
+    /*******************业绩回补计划字段 end*********************/
     
 	public String getFinprodId() {
 		return finprodId;
@@ -229,6 +250,90 @@ public class SusPrdFutureOpenPlanGenDto extends NeedOperateEntity {
 	}
 	public void setPurConfDays(Integer purConfDays) {
 		this.purConfDays = purConfDays;
+	}
+	public String getAnapleroticRule() {
+		return anapleroticRule;
+	}
+	public void setAnapleroticRule(String anapleroticRule) {
+		this.anapleroticRule = anapleroticRule;
+	}
+	public String getAnapleroticType() {
+		return anapleroticType;
+	}
+	public void setAnapleroticType(String anapleroticType) {
+		this.anapleroticType = anapleroticType;
+	}
+	public String getAnapleroticBasic() {
+		return anapleroticBasic;
+	}
+	public void setAnapleroticBasic(String anapleroticBasic) {
+		this.anapleroticBasic = anapleroticBasic;
+	}
+	public Date getEffDate() {
+		return effDate;
+	}
+	public void setEffDate(Date effDate) {
+		this.effDate = effDate;
+	}
+	public String getAnapleroticId() {
+		return anapleroticId;
+	}
+	public void setAnapleroticId(String anapleroticId) {
+		this.anapleroticId = anapleroticId;
+	}
+	public String getProdStyle() {
+		return prodStyle;
+	}
+	public void setProdStyle(String prodStyle) {
+		this.prodStyle = prodStyle;
+	}
+	public String getAnapleroticFrequency() {
+		return anapleroticFrequency;
+	}
+	public void setAnapleroticFrequency(String anapleroticFrequency) {
+		this.anapleroticFrequency = anapleroticFrequency;
+	}
+	public String getCycleTdayRule() {
+		return cycleTdayRule;
+	}
+	public void setCycleTdayRule(String cycleTdayRule) {
+		this.cycleTdayRule = cycleTdayRule;
+	}
+	public Date getFirstAnapleroticDate() {
+		return firstAnapleroticDate;
+	}
+	public void setFirstAnapleroticDate(Date firstAnapleroticDate) {
+		this.firstAnapleroticDate = firstAnapleroticDate;
+	}
+	public Date getFirstAnapleroticCycleBegDate() {
+		return firstAnapleroticCycleBegDate;
+	}
+	public void setFirstAnapleroticCycleBegDate(Date firstAnapleroticCycleBegDate) {
+		this.firstAnapleroticCycleBegDate = firstAnapleroticCycleBegDate;
+	}
+	public Date getFirstAnapleroticCycleEndDate() {
+		return firstAnapleroticCycleEndDate;
+	}
+	public void setFirstAnapleroticCycleEndDate(Date firstAnapleroticCycleEndDate) {
+		this.firstAnapleroticCycleEndDate = firstAnapleroticCycleEndDate;
+	}
+	public BigDecimal getAnapleroticRatio() {
+		return anapleroticRatio;
+	}
+	public void setAnapleroticRatio(BigDecimal anapleroticRatio) {
+		this.anapleroticRatio = anapleroticRatio;
+	}
+	public String getPlanType() {
+		return planType;
+	}
+	public void setPlanType(String planType) {
+		this.planType = planType;
+	}
+	public Date geteAccrDate() {
+		return eAccrDate;
+	}
+	public void seteAccrDate(Date eAccrDate) {
+		this.eAccrDate = eAccrDate;
 	}
 	
 }

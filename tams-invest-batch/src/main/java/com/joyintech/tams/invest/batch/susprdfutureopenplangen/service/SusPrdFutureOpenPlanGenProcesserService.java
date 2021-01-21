@@ -27,7 +27,10 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.FinOpenPlan;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.PrdOpenPlanUpdateDto;
+import com.joyintech.tams.invest.batch.prdopenplanupdate.relyingonresources.dto.BussFinProductPayPlanDto;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto;
+import com.joyintech.tams.invest.batch.susprdfutureopenplangen.relyingonresources.dto.BussFinProductAnapleroticPlanDto;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.relyingonresources.dto.BussFinProductOpenPlanDto;
 import com.joyintech.tams.invest.common.CommonUtil;
 
@@ -115,6 +118,18 @@ public class SusPrdFutureOpenPlanGenProcesserService extends BaseService {
 
 		}
 		return newFinOpenPlanList;
+	}
+	
+	
+	/**
+	 * 生成业绩回补计划规则
+	 * @param popuDto
+	 * @return
+	 */
+	public BussFinProductAnapleroticPlanDto executeAnapleroticDto(SusPrdFutureOpenPlanGenDto popuDto){
+		BussFinProductAnapleroticPlanDto bussFinProductAnapleroticPlanDto = new BussFinProductAnapleroticPlanDto();
+		BeanUtil.copyPropertiesIgnoreNull(bussFinProductAnapleroticPlanDto, popuDto);
+		return bussFinProductAnapleroticPlanDto;
 	}
 	
 	/**
