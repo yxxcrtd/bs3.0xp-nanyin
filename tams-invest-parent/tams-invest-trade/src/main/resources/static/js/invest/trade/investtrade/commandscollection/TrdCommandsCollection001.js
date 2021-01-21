@@ -914,7 +914,7 @@ $(function() {
                                 entrustId: data.entrustId,
                                 finprodType2 : PINAN_ASSET_TYPE_F07
                             }, function (result) {
-                                Joyin.dialog(JoyinUtil.getLabel("TrdRepoTrade002"),
+                                Joyin.dialog(JoyinUtil.getLabel("TrdRepoTrade002.new"),
                                         basePath + "invest/trade/trdrepotrade/TrdRepoTrade002/init",
                                         "99%", "99%", data);
                     });
