@@ -160,7 +160,7 @@
                         result = '无';
                     }
                     checkObj.revokeReason = result;
-                    WorkFlow.doDeleteList(basePath + 'invest/trade/pretrdbondtrade/PreTrdBondInvestTrade001/doRevoke', checkObj, "PreTrdBondInvestTrade001_btn_revoke", "PreTrdBondInvestTrade002");
+                    WorkFlow.doRevokeList(basePath + 'invest/trade/pretrdbondtrade/PreTrdBondInvestTrade001/doRevoke', checkObj, "PreTrdBondInvestTrade001_btn_revoke", "PreTrdBondInvestTrade002");
                 });
             });
 //            
