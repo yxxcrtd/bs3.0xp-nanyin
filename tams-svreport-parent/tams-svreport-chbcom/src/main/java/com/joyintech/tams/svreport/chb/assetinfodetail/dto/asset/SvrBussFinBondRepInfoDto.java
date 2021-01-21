@@ -105,6 +105,46 @@ public class SvrBussFinBondRepInfoDto extends RepAssetBond{
     private String tradeMarket;
 
     /**
+     * 发行方式 01 公开发行/02 非公开发行
+     */
+    private String issueMode;
+
+    /**
+     * 债卷评级
+     */
+    private String secMainGrade;
+
+    /**
+     * 永续债属性
+     *
+     */
+   private  String  isPerpetual;
+
+    public String getIsPerpetual() {
+        return isPerpetual;
+    }
+
+    public void setIsPerpetual(String isPerpetual) {
+        this.isPerpetual = isPerpetual;
+    }
+
+    public String getIssueMode() {
+        return issueMode;
+    }
+
+    public void setIssueMode(String issueMode) {
+        this.issueMode = issueMode;
+    }
+
+    public String getSecMainGrade() {
+        return secMainGrade;
+    }
+
+    public void setSecMainGrade(String secMainGrade) {
+        this.secMainGrade = secMainGrade;
+    }
+
+    /**
      * 获取 repAssetType
      * @return repAssetType.
      */

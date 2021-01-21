@@ -87,8 +87,10 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 	public AssetInfoDetailDto getAssetInfoDetail(String  Assetuuid,String dataStatus) {
 		//界面共同方法编写  error表和INFO表
 		AssetInfoDetailDto dto = new AssetInfoDetailDto();
-
-		BeanUtil.copyPropertiesIgnoreNull(dto, rechbAassetInfoUtilService.BackChbAssetInfoMethod(dataStatus,Assetuuid));
+		ChbAssetInfo  cinfo=rechbAassetInfoUtilService.BackChbAssetInfoMethod(dataStatus,Assetuuid);
+		if(cinfo!=null){
+			BeanUtil.copyPropertiesIgnoreNull(dto, cinfo);
+		}
 		//共同方法无dataStatus数据,需要赋值
 		dto.setDataStatus(dataStatus);
 		return dto;
