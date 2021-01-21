@@ -11,8 +11,12 @@
 package com.joyintech.service.riskrdsinf.core.controller;
 
 import java.io.BufferedReader;
+import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +34,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.riskrdsinf.cache.InterfCacheUtil;
+import com.joyintech.service.riskrdsinf.common.dto.InterfRiskRdsDto;
 import com.joyintech.service.riskrdsinf.core.client.ClientData;
 import com.joyintech.service.riskrdsinf.core.constant.InfColumns;
 import com.joyintech.service.riskrdsinf.core.constant.InfList;
@@ -91,11 +96,37 @@ public class InfBaseController {
         }
     }*/
 
+    private void long2Date(Map<String,Object> map) {
+        for(Field field:InterfRiskRdsDto.class.getDeclaredFields()) {
+       	 if (field.getGenericType().toString().equals("class java.util.Date")) {
+       		 if(map.containsKey(field.getName())) {
+       			 Object object = map.get(field.getName());
+       			 String type =  object.getClass().toString();
+       			 if("Long".equals(type.substring(type.lastIndexOf(".")+1,type.length()))) {
+       				map.put(field.getName(), new Date((Long)object));
+       			 }
+       		 }
+       	 }
+       };
+    }
+    
     @ResponseBody
     @RequestMapping("execute")
     public Map<String, Object> execute(@RequestBody Map<String, Object> dataMap) {
         ClientData data = new ClientData();
         data.convert(dataMap);
+        //将时间戳转换为Date,类型信息来自于InterfRiskRdsDto
+        long2Date(data.getBody());
+        List<String> keyList = Arrays.asList("rskCalcList", "RSK_LIST");
+        for(String key:keyList) {
+            if(data.getBody().containsKey(key)) {
+            	List<Map> maps = (List<Map>)data.getBody().get(key);
+            	for(Map<String,Object> map:maps) {
+            		long2Date(map);
+            	}
+            }
+        }
+        //将时间戳转换为Date,类型信息来自于InterfRiskRdsDto
     	String resStr = JsonUtils.object2Json(data);
     	logger.info("请求报文:{}", resStr);
         // 1.1 若参数为空，则处理结束返回结果
