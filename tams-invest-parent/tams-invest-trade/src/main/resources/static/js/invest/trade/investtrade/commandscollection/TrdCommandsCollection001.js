@@ -1596,6 +1596,7 @@ $(function() {
         psF02Selections.push(PS_SELECTIONS[1].id);
         psF02Selections.push(PS_SELECTIONS[3].id);
         psF02Selections.push(PS_SELECTIONS[5].id);
+        psF02Selections.push(PS_SELECTIONS[85].id);
         psF04Selections.push(PS_SELECTIONS[0].id);
         psF04Selections.push(PS_SELECTIONS[1].id);
         psF04Selections.push(PS_SELECTIONS[3].id);
