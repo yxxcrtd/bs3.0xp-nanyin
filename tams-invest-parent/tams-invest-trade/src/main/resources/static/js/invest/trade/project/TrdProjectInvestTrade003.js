@@ -74,7 +74,7 @@
         				   table.renderRow(data.LAY_TABLE_INDEX, {'assetsavailablepositions': cashdata.position});
         			   });
         		   }else{
-        			   table.renderRow(data.LAY_TABLE_INDEX, {'assetsavailablepositions':' '}) 
+        			   table.renderRow(data.LAY_TABLE_INDEX, {'assetsavailablepositions':' '})
         		   }
         	   }
                
@@ -164,6 +164,7 @@
                                 if($('#chlId').val()){
                                     params.chlId = $('#chlId').val();
                                 }
+                                console.log('chlId:',$('#chlId').val())
                                 params.portfolioId=element.etrEntrust.portfolioId;
                                 params.calendarId=$('#calendarId').val();
                                 params.tradeDate=$('#tradeDate').val();
@@ -1324,7 +1325,11 @@
             $('#ps').change(psChange);
             $('#commissionAmt').change(commissionAmtChange);
             $('#channelFee').change(channelFeeDistribution);
-            $('#chlId').change(channelFeeDistribution);
+            $('#chlId').change(function(){
+                channelFeeDistribution;
+                table.clear();
+                table.addRow(getAllRowsForEntrustId());
+            });
             $('#tradeAmt').change(tradeAmtChange);
             $('#settleSpeed').change(settleSpeedChange);
             $('#finprodMarketId').change(finprodMarketIdChange);

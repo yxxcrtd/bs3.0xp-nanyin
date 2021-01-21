@@ -118,7 +118,6 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         if(!StringUtil.isNotEmpty(interfRiskRdsDto)){
             return null;
         }
-        interfRiskRdsDto.setCalendarCode((String)dataMap.get("calendarId"));
         interfRiskRdsDto.setInfCode(v.getInfCode());
         interfRiskRdsDto.setEventType(v.getEventType());
         interfRiskRdsDto.setCcy(StringUtil.isNotEmpty(dataMap.get(InterfUtil.CCY))?dataMap.get(InterfUtil.CCY).toString():BussinessDictCodeListRds.币种_人民币_CNY.getValue());
@@ -612,6 +611,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setAssetRate(StringUtil.isNotEmpty(dataMap.get("price"))?dataMap.get("price") instanceof BigDecimal ?ArithmeticUtil.divide((BigDecimal)dataMap.get("price"),new BigDecimal(100),4):ArithmeticUtil.divide(new BigDecimal(dataMap.get("price").toString()),new BigDecimal(100),4):null);
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
+            infRiskRdsDto.setCalendarCode((String)dataMap.get("calendarId"));
         }
         if(StringUtil.equals(finDto.getBusiPs(), DictCodeList.回购拆借方向_融入.getValue())||
                 StringUtil.equals(finDto.getBusiPs(), DictCodeList.回购拆借方向_融出.getValue())){
@@ -622,6 +622,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setAssetType2(finDto.getPs());
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
+            infRiskRdsDto.setCalendarCode((String)dataMap.get("calendarId"));
         }
         if(StringUtil.equals(DictCodeList.平安资产类型_买断式回购.getValue(),v.getAssetType())) {
             infRiskRdsDto.setAssetType2(finDto.getPs());
@@ -629,6 +630,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setAssetRate(StringUtil.isNotEmpty(dataMap.get("price"))?dataMap.get("price") instanceof BigDecimal ?ArithmeticUtil.divide((BigDecimal)dataMap.get("price"),new BigDecimal(100),4):ArithmeticUtil.divide(new BigDecimal(dataMap.get("price").toString()),new BigDecimal(100),4):null);
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
+            infRiskRdsDto.setCalendarCode((String)dataMap.get("calendarId"));
         }
         if(StringUtil.equals(DictCodeListExt2.平安资产类型_一级市场债.getValue(),v.getAssetType())) {
             infRiskRdsDto.setAmount(finDto.getEntrustNum());//债券为全价总额存款、
@@ -731,6 +733,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setPs(DictCodeList.交易方向_买入.getValue());
             infRiskRdsDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());
             infRiskRdsDto.setAssetType2(finDto.getPs());
+            infRiskRdsDto.setCalendarCode((String)dataMap.get("calendarId"));
         }
         if(StringUtil.equals(finDto.getPs(), DictCodeList.回购拆借方向_融入.getValue())||
                 StringUtil.equals(finDto.getPs(), DictCodeList.回购拆借方向_融出.getValue())){
@@ -740,6 +743,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setAssetType2(finDto.getPs());
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
+            infRiskRdsDto.setCalendarCode((String)dataMap.get("calendarId"));
         }
         if(StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue(),v.getFinType())||
                 StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue(),v.getFinType())||
@@ -754,6 +758,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setAssetRate(StringUtil.isNotEmpty(dataMap.get("repoRate"))?dataMap.get("repoRate") instanceof BigDecimal ?ArithmeticUtil.divide((BigDecimal)dataMap.get("repoRate"),new BigDecimal(100),4):ArithmeticUtil.divide(new BigDecimal(dataMap.get("repoRate").toString()),new BigDecimal(100),4):null);
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
+            infRiskRdsDto.setCalendarCode((String)dataMap.get("dealCalId"));
         }
         if(StringUtil.equals(DictCodeListExt2.平安资产类型_一级市场债.getValue(),v.getAssetType())) {
             infRiskRdsDto.setAmount(finDto.getFpriceAmt());//债券为全价总额存款
