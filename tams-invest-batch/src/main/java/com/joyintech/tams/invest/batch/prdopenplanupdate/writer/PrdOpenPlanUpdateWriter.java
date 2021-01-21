@@ -28,6 +28,11 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.batch.prdopenplanupdate.dao.PrdOpenPlanUpdateMapper;
 import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.AccrDateNeedOtherDto;
 import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.FinOpenPlanDto;
+import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.NewFinAnapleroticPlanDto;
+import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.NewFinCashPlanDto;
+import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.NewFinFloatPlanDto;
+import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.NewFinOpenPlanDto;
+import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.NewFinPayPlanDto;
 import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.PrdOpenPlanUpdateDto;
 
 /**
@@ -63,54 +68,35 @@ public class PrdOpenPlanUpdateWriter extends BaseWriter<NeedToWriteEntity>{
 		for (FinOpenPlanDto finOpenPlanDto : finOpenPlanDtoList) {
 			//更新开放计划
 			if (!StringUtil.isEmptyList(finOpenPlanDto.getFinOpenPlanList())) {
-				// 先删后插
-				PrdOpenPlanUpdateDto dto = finOpenPlanDto.getPrdOpenPlanUpdateDto();
-				FinOpenPlanKey fopKey = new FinOpenPlanKey();
-				fopKey.setCashId(dto.getCashId());
-				fopKey.setOpenType(dto.getOpenType());
-				fopKey.setOpenDateEnd(dto.getOpenDateEnd());
-				prdOpenPlanUpdateMapper.deleteOldOpenPlans(fopKey);
-				for (FinOpenPlan finOpenPlan : finOpenPlanDto.getFinOpenPlanList()) {
-					// 查询无重复
-					FinOpenPlanKey key = new FinOpenPlanKey();
-					key.setCashId(finOpenPlan.getCashId());
-					key.setOpenType(finOpenPlan.getOpenType());
-					key.setOpenDateEnd(finOpenPlan.getOpenDateEnd());
-					FinOpenPlan fop = finOpenPlanMapper.selectByPrimaryKey(key);
-					
-					if(!StringUtil.isNotEmpty(fop)) {
-						finOpenPlanMapper.insert(finOpenPlan); // 如果为空再插入操作
-					}
-					//设置List存储唯一的产品代码
-					if(StringUtil.isNotEmpty(finOpenPlan.getFinprodId())){
-						if(!prodidList.contains(finOpenPlan.getFinprodId())){
-							prodidList.add(finOpenPlan.getFinprodId());
-						}
-					}
+				for (NewFinOpenPlanDto finOpenPlan : finOpenPlanDto.getFinOpenPlanList()) {					
+					prdOpenPlanUpdateMapper.updateOpenPlanByPrimaryKey(finOpenPlan);						
 				}
-				
-				//生成最新的浮动管理费计提计划 
-				createFinFloatAccrualSche(prodidList);
+			}
+			//更新分红/付息计划
+			if (!StringUtil.isEmptyList(finOpenPlanDto.getFinCashPlanList())) {
+				for (NewFinCashPlanDto finCashPlan : finOpenPlanDto.getFinCashPlanList()) {					
+					prdOpenPlanUpdateMapper.updateCashPlanByPrimaryKey(finCashPlan);						
+				}
 			}
 			
-			//更新付息计划
-			if (!StringUtil.isEmptyList(finOpenPlanDto.getFinCashPlanList())) {
-				// 先删后插
-				PrdOpenPlanUpdateDto dto = finOpenPlanDto.getPrdOpenPlanUpdateDto();
-				FinCashPlanKey fcpKey = new FinCashPlanKey();
-				fcpKey.setCashId(dto.getCashId());
-				fcpKey.setMdate(dto.getPayFPMdate());
-				prdOpenPlanUpdateMapper.deleteOldPayPlans(fcpKey);
-				for (FinCashPlan finCashPlan : finOpenPlanDto.getFinCashPlanList()) {
-					// 查询无重复
-					FinCashPlanKey key = new FinCashPlanKey();
-					key.setCashId(finCashPlan.getCashId());
-					key.setMdate(finCashPlan.getMdate());
-					FinCashPlan fcp = finCashPlanMapper.selectByPrimaryKey(key);
-					
-					if(!StringUtil.isNotEmpty(fcp)) {
-						finCashPlanMapper.insert(finCashPlan); // 如果为空再插入操作
-					}
+			//更新付费计划
+			if (!StringUtil.isEmptyList(finOpenPlanDto.getFinPayPlanList())) {
+				for (NewFinPayPlanDto finPayPlan : finOpenPlanDto.getFinPayPlanList()) {					
+					prdOpenPlanUpdateMapper.updatePayPlanByPrimaryKey(finPayPlan);						
+				}
+			}
+			
+			//更新业绩报酬计提计划
+			if (!StringUtil.isEmptyList(finOpenPlanDto.getFinFloatPlanList())) {
+				for (NewFinFloatPlanDto finFloatPlan : finOpenPlanDto.getFinFloatPlanList()) {					
+					prdOpenPlanUpdateMapper.updateFloatPlanByPrimaryKey(finFloatPlan);						
+				}
+			}
+			
+			//更新回补计划
+			if (!StringUtil.isEmptyList(finOpenPlanDto.getFinAnapleroticPlanList())) {
+				for (NewFinAnapleroticPlanDto finAnapleroticPlan : finOpenPlanDto.getFinAnapleroticPlanList()) {					
+					prdOpenPlanUpdateMapper.updateAnapleroticPlanByPrimaryKey(finAnapleroticPlan);						
 				}
 			}
 			

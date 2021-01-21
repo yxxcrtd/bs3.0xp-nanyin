@@ -47,20 +47,32 @@ public class PrdOpenPlanUpdateReaderService extends BaseService{
 
 		//查询需要更新的开放计划
 		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put("cashFinprodType", DictCodeListExt1.现金流业务类型_金融产品.getValue());
-		paramMap.put("cashType1", DictCodeListExt1.现金流二级类型_本金.getValue());
+		//paramMap.put("cashFinprodType", DictCodeListExt1.现金流业务类型_金融产品.getValue());
+		//paramMap.put("cashType1", DictCodeListExt1.现金流二级类型_本金.getValue());
 		//DateUtil.format(platformDateService.getSysDate())
 		paramMap.put("sysDate", DateUtil.format(platformDateService.getSysDate()));
 		List<PrdOpenPlanUpdateDto> openPlanlists = prdOpenPlanUpdateMapper.queryOldOpenPlanList(paramMap);
 		lists.addAll(openPlanlists);
 		
-		//查询需要更新的付息计划
-		Map<String, Object> paramMapPay = new HashMap<String, Object>();
-		paramMapPay.put("cashType1", DictCodeListExt1.现金流一级类型_利息.getValue());
+		//查询需要更新的分红/付息计划
+		//Map<String, Object> paramMapPay = new HashMap<String, Object>();
+		//paramMapPay.put("cashType1", DictCodeListExt1.现金流一级类型_利息.getValue());
 		//DateUtil.format(platformDateService.getSysDate())
-		paramMapPay.put("sysDate", DateUtil.format(platformDateService.getSysDate()));
-		List<PrdOpenPlanUpdateDto> payPlanlists = prdOpenPlanUpdateMapper.queryOldPayPlanList(paramMapPay);
-		lists.addAll(payPlanlists);
+		//paramMapPay.put("sysDate", DateUtil.format(platformDateService.getSysDate()));
+		List<PrdOpenPlanUpdateDto> cashPlanLists = prdOpenPlanUpdateMapper.queryOldCashPlanList(paramMap);
+		lists.addAll(cashPlanLists);
+		
+		//查询需要更新的付费计划计划
+		List<PrdOpenPlanUpdateDto> payPlanLists = prdOpenPlanUpdateMapper.queryOldPayPlanList(paramMap);
+		lists.addAll(payPlanLists);
+		
+		//查询需要更新的业绩报酬计提计划计划
+		List<PrdOpenPlanUpdateDto> floatPlanLists = prdOpenPlanUpdateMapper.queryOldFloatPlanList(paramMap);
+		lists.addAll(floatPlanLists);
+		
+		//查询需要更新的回补计划计划
+		List<PrdOpenPlanUpdateDto> anapleroticPlanLists = prdOpenPlanUpdateMapper.queryOldAnapleroticPlanList(paramMap);
+		lists.addAll(anapleroticPlanLists);
 		
 		return lists;
 	}
