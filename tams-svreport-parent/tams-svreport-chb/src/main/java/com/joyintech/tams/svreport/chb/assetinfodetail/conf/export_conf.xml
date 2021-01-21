@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Workbook filePath="AssetInfoDetail.xlsx" name="资产要素维护">
-	<Worksheet dataStart="2" javaBean="com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto">
+	<Worksheet dataStart="1" javaBean="com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto">
 		<Row>
 			<Cell order="1" name="反馈状态">dataStatusStr</Cell>
 			<Cell order="2" name="资产代码">assetCode</Cell>
