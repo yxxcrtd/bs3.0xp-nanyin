@@ -2,6 +2,9 @@
 
 package com.joyintech.tams.invest.basicdata.mstcommissionset.controller;
 
+import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.util.*;
+import com.joyintech.system.constant.SystemGlobalConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,7 +20,6 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.invest.basicdata.mstcommissionset.dto.MstCommissionSetDto;
 import com.joyintech.tams.invest.basicdata.mstcommissionset.service.MstCommissionSetService;
@@ -26,6 +28,9 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * 佣金设置
@@ -126,13 +131,28 @@ public class MstCommissionSet001Controller extends BaseController {
      * @see
      * @since 1.0
      */
-
+    @ResponseBody
     @RequestMapping("export")
+//    public ResponseEntity<byte[]> export()
+//        throws Exception {
+//        return mstCommissionSetService.export(this.getPageId(),
+//            RequestUtil.getParameters(getRequest()));
+//
+//    }
     public ResponseEntity<byte[]> export()
-        throws Exception {
-        return mstCommissionSetService.export(this.getPageId(),
-            RequestUtil.getParameters(getRequest()));
-
+            throws Exception {
+        String datas = this.getParam("datas");
+        List<MstCommissionSetDto> param1;
+        if (datas == null) {
+            return mstCommissionSetService.export(this.getPageId(),RequestUtil.getPageParam());
+        }
+        param1 = JsonUtils.json2List(datas, MstCommissionSetDto.class);
+        File outFile =  mstCommissionSetService.makeFile("/com/joyintech/tams/invest/basicdata/mstcommissionset/conf/export_conf.xml", param1);
+        return ExportUtil.export(this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+                        + DateUtil.format(DateUtil.platDateFromCache())
+                        + SystemGlobalConstant.CLOSE_PARENTHESIS
+                        + SystemGlobalConstant.POINT
+                        + FileNameUtil.getFileExtName(outFile),
+                outFile, true);
     }
-
 }

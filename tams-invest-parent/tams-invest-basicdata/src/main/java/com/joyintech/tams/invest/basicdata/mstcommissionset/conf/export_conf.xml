@@ -8,13 +8,16 @@
             <Cell order="4" name="交易品种">tradeTypeStr</Cell>
             <Cell order="5" name="交易方向">psStr</Cell>
             <Cell order="6" name="期限品种">termTypeStr</Cell>
-            <Cell order="7" name="计费类型">chargeTypeStr</Cell>
-            <Cell order="8" name="计费基数">chargeBasisStr</Cell>
-            <Cell order="9" name="费用值/费率值‰">feeRate</Cell>
-            <Cell order="10" name="最大金额">feeMaxi</Cell>
-            <Cell order="11" name="最小金额">feeMini</Cell>
-            <Cell order="12" name="生效日">effDate</Cell>
-            <Cell order="13" name="是否随交易支付">isPayWithTradeStr</Cell>
+            <Cell order="7" name="资产分类一">windtypeoneStr</Cell>
+            <Cell order="8" name="资产分类二">windtypetwoStr</Cell>
+            <Cell order="9" name="计费类型">chargeTypeStr</Cell>
+            <Cell order="10" name="计费基数">chargeBasisStr</Cell>
+            <Cell order="11" name="费用是否分档">isGradeStr</Cell>
+            <Cell order="12" name="费用值（元）/费率值（‰）">feeRate</Cell>
+            <Cell order="13" name="最大金额">feeMaxi</Cell>
+            <Cell order="14" name="最小金额">feeMini</Cell>
+            <Cell order="15" name="生效日">effDate</Cell>
+            <Cell order="16" name="是否随交易支付">isPayWithTradeStr</Cell>
         </Row>
     </Worksheet>
 </Workbook>
