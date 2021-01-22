@@ -126,13 +126,13 @@ var QueryFunc=function(){
                 $("#svrBussRepPlacementInfoDto_targetType1").attr("disabled",false);
                 $("#issueAmt").attr("disabled",false);
                 $("#svrBussRepPlacementInfoDto_targetType1").val('01').trigger("change");
-                var parms={assetuuid:$("#assetUuid").val()}
-                Joyin.ajaxJson(
-                    basePath + "chb/assetinfodetail/AssetInfoDetail002/getValue",parms,
-                    function(result) {
-                        $("#issueAmt").val(result);
-                    }
-                );
+                // var parms={assetuuid:$("#assetUuid").val()}
+                // Joyin.ajaxJson(
+                //     basePath + "chb/assetinfodetail/AssetInfoDetail002/getValue",parms,
+                //     function(result) {
+                //         $("#issueAmt").val(result);
+                //     }
+                // );
             }else if(repAssetType=='1107'||repAssetType=='1901'){
                 $("#svrBussRepPlacementInfoDto_targetType1").val('').trigger("change");
                 $("#svrBussRepPlacementInfoDto_targetType1").attr("disabled",true);
@@ -141,10 +141,22 @@ var QueryFunc=function(){
             }
         }else if(obj["03"].indexOf(repAssetType)>=0){
             //债券类资产/理财直接融资工具/同业存单
+            if(repAssetType=='1112'){
+                $("#svrBussFinBondRepInfoDto_repSectype").remove();
+            }
         }else if(obj["04"].indexOf(repAssetType)>=0){
             //非标准化债权类资产/信贷资产流转项目
         }else if(obj["05"].indexOf(repAssetType)>=0){
             //票据类资产/信用证类资产
+            if(repAssetType=='1210'){
+                //类型默认05置灰不可修改
+                $("#SvrBussRepAssetAstBillInfoDto_notstandSecType").val('05').trigger("change");
+                $("#SvrBussRepAssetAstBillInfoDto_notstandSecType").attr("disabled",true);
+            }else{
+                $("#SvrBussRepAssetAstBillInfoDto_notstandSecType").val('').trigger("change");
+                $("#SvrBussRepAssetAstBillInfoDto_notstandSecType").attr("disabled",false);
+
+            }
         }else if(obj["06"].indexOf(repAssetType)>=0){
             //权益类资产
         }else if(obj["07"].indexOf(repAssetType)>=0){

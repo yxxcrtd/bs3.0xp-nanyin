@@ -24,9 +24,25 @@
             $('#bussRepAssetAstBillInfoDto_repAstBillType_div').hide();
         }
     }
+
+    var  initAstBill= function(){
+        var assetTvalue2=$('#assetType2').val();
+        if(repAssetType=='1210'){
+            //类型默认05置灰不可修改
+            $("#SvrBussRepAssetAstBillInfoDto_notstandSecType").val('05').trigger("change");
+            $("#SvrBussRepAssetAstBillInfoDto_notstandSecType").attr("disabled",true);
+        }else{
+            $("#SvrBussRepAssetAstBillInfoDto_notstandSecType").val('').trigger("change");
+            $("#SvrBussRepAssetAstBillInfoDto_notstandSecType").attr("disabled",false);
+
+        }
+    }
     $(function(){
+        initAstBill();
         //资产/负债类别change
         /*getElementById('repAssetType').change(repAssetTypeChange).trigger('change');*/
     });
+
+
     
 }());
