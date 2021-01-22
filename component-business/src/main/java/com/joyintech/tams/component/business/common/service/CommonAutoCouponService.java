@@ -12,10 +12,9 @@ package com.joyintech.tams.component.business.common.service;
 
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.dao.MstCustomerInfoAddMapper;
+import com.joyintech.tams.common.base.dao.MstCustomerInfoMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.asset.dto.FinPayInterestStdInfoDto;
 import com.joyintech.tams.component.business.common.constant.FundDateType;
@@ -23,6 +22,7 @@ import com.joyintech.tams.component.business.common.dto.AutoCouponDto;
 import com.joyintech.tams.component.business.common.dto.BaseFinProductBaseInfoDto;
 import com.joyintech.tams.component.business.common.dto.InfChinamutualfunddescriptionDto;
 import com.joyintech.tams.component.business.common.dto.InterfPayhsrcsecinfoDto;
+import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -34,6 +34,7 @@ import com.joyintech.tams.invest.common.calculator.AssetInterestCal;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.xmlrelation.XmlRelationInputParaDto;
 import com.joyintech.tams.invest.common.dto.xmlrelation.XmlRelationOutputDto;
 import com.joyintech.tams.invest.common.util.xmlrelation.XmlRelationUtil;
@@ -59,6 +60,14 @@ public class CommonAutoCouponService extends BaseService{
 
     @Autowired
     private CommonBusinessService commonBusinessService;
+
+    @Autowired
+    private BaseGetBusinessId bussGetBussinessIdService;
+
+    @Autowired
+    private MstCustomerInfoMapper mstCustomerInfoMapper;
+    @Autowired
+    private MstCustomerInfoAddMapper mstCustomerInfoAddMapper;
 
     /**
      * 付息计划，开放计划，利率重置，申购计划，赎回计划计算用和日期关联的Service
@@ -302,7 +311,7 @@ public class CommonAutoCouponService extends BaseService{
 //              finProduct.setTradeMarket(windCovCom(inputParaDto));
                 finProduct.setTradeMarket(interfPayhsrcsecinfo.getMarket());
                 /**--交易场所modify 2019-04-15 end--**/
-                finProduct.setIssuer(getIssuer(interfPayhsrcsecinfo.getIssuershort(), "IS_ISSUER"));
+                finProduct.setIssuer(getIssuer(interfPayhsrcsecinfo));
                 //2019年5月27日  交易日历
                 if (StringUtil.equals(DictCodeListExt1.交易场所_银行间.getValue(),interfPayhsrcsecinfo.getMarket())) {
                     finProduct.setCalendarId("03");//银行间
@@ -1316,6 +1325,49 @@ public class CommonAutoCouponService extends BaseService{
     private String getIssuer(String linkId1, String type){
         return restTemplate.getForObject(ServiceApplication.BASICDATA_SERVICE_NAME
                 + "/MstCustomerNature/getIssuer?linkId1="+linkId1 + "&type=" + type,String.class);
+    }
+
+    /**
+     * 根据外部代码1获取客户代码
+     * <功能详细描述>
+     * @param linkId1
+     * @param type 类型
+     * @return
+     * @see
+     * @since 1.0
+     */
+    private String getIssuer(InterfPayhsrcsecinfoDto interfPayhsrcsecinfo){
+        String customerId = restTemplate.getForObject(ServiceApplication.BASICDATA_SERVICE_NAME
+                + "/MstCustomerNature/getIssuer?linkId1="+interfPayhsrcsecinfo.getIssuershort() + "&type=" + "IS_ISSUER",String.class);
+        if (StringUtil.isNotEmpty(customerId)) {
+        }else{
+            BussinessCodeParameter param = new BussinessCodeParameter();
+            param.setCommonBusinessType(DictCodeList.共通业务类型_市场机构管理);
+            customerId = bussGetBussinessIdService != null ? bussGetBussinessIdService.buildBussinessCode(param) : IDGenerator.generate();
+
+            MstCustomerInfo mstCustomerInfo = new MstCustomerInfo();
+            MstCustomerInfoAddWithBLOBs mstCustomerInfoAdd = new MstCustomerInfoAddWithBLOBs();
+            mstCustomerInfo.setCustomerId(customerId);
+            mstCustomerInfo.setCustomerName(interfPayhsrcsecinfo.getIssuershort());
+            mstCustomerInfo.setIsIssuer("Y");
+            /* 发行人加券后客户类型默认：市场机构 add by liuwei 20201118 start */
+            mstCustomerInfo.setCustomerType("01");
+            /* 发行人加券后客户类型默认：市场机构 add by liuwei 20201118 end */
+
+            mstCustomerInfoAdd.setCustomerId(customerId);
+            //发行人所属行业一二级分类
+//            String industry = interfPayhsrcsecinfo.getIndustry();
+//            if (industry != null && industry.length() == 1) {
+//                industry = "0" + industry;
+//            }
+//            mstCustomerInfoAdd.setIndustry(industry);
+//            mstCustomerInfoAdd.setIndustry2(interfPayhsrcsecinfo.getChecktypecode());
+//            mstCustomerInfoAdd.setIsListedCompany(interfPayhsrcsecinfo.getIsListed());
+            //客户信息表插入数据
+            mstCustomerInfoMapper.insert(mstCustomerInfo);
+            mstCustomerInfoAddMapper.insert(mstCustomerInfoAdd);
+        }
+        return customerId;
     }
 
     /**

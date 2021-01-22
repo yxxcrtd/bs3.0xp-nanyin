@@ -681,12 +681,16 @@
 	                AND B.TYPE_4 = #{windtypeone}
 	            </if>
 	        </where>
-        <!-- 暂时注释交易自动加券-->
-        <!--union
+        union
           select interf.SECID  id,
           interf.secname text,
           fin.FINPROD_ID,
           interf.SECNAME FINPROD_NAME,
+          null,
+          null,
+          null,
+          null,
+          null,
           null,
           null,
           null,
@@ -723,7 +727,7 @@
             or
              interf.SECNAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
             )
-	   </if>-->
+	   </if>
     </select>
     <!-- 资产代码下拉框查询条件 -->
     <sql id="getFinprodIdWhere">

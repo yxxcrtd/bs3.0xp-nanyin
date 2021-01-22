@@ -1251,6 +1251,10 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
         //买入含权债时，自动创建交易对手 add by wangwei5 2020-03-23 Start
         if(operationType.equals(OperationType.NEW)){
         	//含权债标记
+            String str = entity.getFinprodId();
+            if (!StringUtil.equals(str.substring(0, 3), "F01")) {
+                entity.setFinprodId("F01_" + str);
+            }
         	DebtBaseInfo debtbaseinfo=trdFinProductDealTotalMapper.selectIsRight(entity.getFinprodId());
         	if(StringUtil.isNotEmpty(debtbaseinfo.getIsRight()) && StringUtil.isNotEmpty(entity.getPs())){
         		if("Y".equals(debtbaseinfo.getIsRight()) && "T01".equals(entity.getPs())){
@@ -2241,7 +2245,13 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
         PriceYieldOutParameter priceYieldOutParameter = null;
 
         Map<String, Object> tempParamMap = new HashMap<String, Object>();
-        tempParamMap.put("finprodId", dto.getFinprodId());
+        String str = dto.getFinprodId();
+        if (!StringUtil.equals(str.substring(0, 3), "F01")) {
+            str = "F01_" + str;
+            tempParamMap.put("finprodId", str);
+        } else if (StringUtil.equals(str.substring(0, 3), "F01")) {
+            tempParamMap.put("finprodId", dto.getFinprodId());
+        }
 
         // b.获取计息区间投资端利率报价信息（债券的利率重置信息）
         // List<BondsIntReset> bondsIntResetList = transactionBond001Mapper.getInvRateQuo(dto);
