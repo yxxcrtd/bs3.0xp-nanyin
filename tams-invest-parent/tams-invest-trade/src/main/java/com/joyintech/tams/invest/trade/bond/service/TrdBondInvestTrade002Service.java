@@ -2688,8 +2688,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
             }
             if ((StringUtil.equals(BussinessDictCodeList.交易场所_上海证券交易所.getValue(), dto.getTradeMarket())
-                 || StringUtil.equals(BussinessDictCodeList.交易场所_深圳证券交易所.getValue(), dto.getTradeMarket()))
-                && StringUtils.isNotBlank(dto.getSecManageAcctId())) {
+                 || StringUtil.equals(BussinessDictCodeList.交易场所_深圳证券交易所.getValue(), dto.getTradeMarket()))) {
                 inputDto.setSecAcctId(dto.getSecManageAcctId());// 画面.证券账户
                 inputDto.setFeeTypeList(Arrays.asList(BussinessDictCodeList.费用类型_佣金.getValue()));
                 // 如果是二级市场或者二级交易，增加结算费经手费查询

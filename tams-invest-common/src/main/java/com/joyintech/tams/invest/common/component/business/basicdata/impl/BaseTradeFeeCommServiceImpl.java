@@ -96,6 +96,7 @@ public class BaseTradeFeeCommServiceImpl implements BaseTradeFeeCommService {
          //add end
     	if(StringUtil.isNotEmpty(inputDto.getTradeMarket())&&上海_深圳.contains(inputDto.getTradeMarket())){
     		for(String feeType:inputDto.getFeeTypeList()){
+    			if(StringUtil.equals(feeType,BussinessDictCodeList.费用类型_佣金.getValue())&&StringUtil.isEmpty(inputDto.getSecAcctId()))continue;
     			//调用交易费用组件.费用配置查询
     			BasicTradeFeeInputDto searchDto=new BasicTradeFeeInputDto();
     			BeanUtil.copyPropertiesIgnoreNull(searchDto, inputDto);
