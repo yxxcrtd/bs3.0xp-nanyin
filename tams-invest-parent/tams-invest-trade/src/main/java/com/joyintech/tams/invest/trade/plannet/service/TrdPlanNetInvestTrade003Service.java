@@ -718,7 +718,7 @@ public class TrdPlanNetInvestTrade003Service extends BaseService<TrdPlanNetInves
                         , dto.getFinprodId()
                         // 资产类型改为授权类型 add by renping 2019-08-06  end
                         );*/
-      Map<String, Object> params = CommonBusinessService.setParams(dto.getCounterId(), dto.getPrinAmt(),LoginUserUtil.getUserName(),
+      Map<String, Object> params = CommonBusinessService.setParams(dto.getCounterId(), dto.getTradeAmt(),LoginUserUtil.getUserName(),
           DictCodeList.平安资产类型_计划类资产_净值型.getValue(), dto.getType6(), dto.getTradeMarket(), dto.getPs()
           , dto.getFinprodId() ,entity.getWorkflowId());
       params.put("riskTrialRetDto", dto.getRiskTrialRetDto());

@@ -277,23 +277,24 @@
         FIN_PRODUCT_TYPE T2
         ON T1.FINPROD_ID = T2.FINPROD_ID
 		<include refid="getfinprodIdForAddWhere"></include>
-		<!-- 暂时注释交易自动加券-->
-		<!--union
-SELECT interf.SECCODE id,
+		union
+SELECT interf.SECID id,
        interf.SECFULLNAME text,
        interf.SECFULLNAME,
        fin.finprod_id,
        null,
        interf.MARKET,
        null,
+	   null,
+	   null,
        null,
        null,
        null,
        null
   FROM INTERF_PAYHSRCSECINFO interf
   left join fin_product fin
-    on fin.finprod_market_id = interf.SECCODE
-    where interf.SECCODE not in
+    on fin.finprod_market_id = interf.SECID
+    where interf.SECID not in
     (select FINPROD_MARKET_ID from FIN_PRODUCT T1   <include refid="getfinprodIdForAddWhere"></include>)
     <if test="search != null and search!='' ">
 		  and 
@@ -301,7 +302,7 @@ SELECT interf.SECCODE id,
             or
            interf.SECNAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
             )
-	</if>-->  
+	</if>
 		 
 	</select>
 	<sql id="getfinprodIdForAddWhere">

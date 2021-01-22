@@ -478,6 +478,8 @@
                 if (!data.finprodId) {
                     //自动加券
                     data = AutoCoupon.autoBondTradeCoupon($('#finprodId').val());
+                    data.finvdate = data.vdate;
+                    data.finmdate = data.mdate;
                 }
                 // 不为空
                 $('#price').attr("required", false);
