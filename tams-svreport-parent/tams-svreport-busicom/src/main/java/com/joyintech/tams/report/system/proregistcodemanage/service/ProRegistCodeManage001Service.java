@@ -199,6 +199,9 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
             orgCodeList = CommonUtil.getOrgCodeListForSearch();
         }
         param.put("orgCodeList", orgCodeList);
+        //add by yujiaping 2021-01-22 ZGBSS-301 未选中时导出与查询结果不一致start
+        param.put("orgCodeList", LoginUserUtil.getTreeInstCode());
+        //add by yujiaping 2021-01-22 ZGBSS-301 未选中时导出与查询结果不一致end
         param.put("keys", StringUtil.splitToList(GlobalConstant.COMMA, keys));
         param.put("prodList", StringUtil.splitToList(GlobalConstant.COMMA, prodname));
         param.put("investorList", StringUtil.splitToList(GlobalConstant.COMMA, investor));
