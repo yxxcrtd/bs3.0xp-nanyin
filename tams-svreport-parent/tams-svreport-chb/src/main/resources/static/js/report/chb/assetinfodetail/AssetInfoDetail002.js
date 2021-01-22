@@ -78,6 +78,7 @@ var QueryFunc=function(){
             $("#svrBussRepQDIIStructureInfo_div").show();
         }else if(obj["12"].indexOf(repAssetType)>=0){
             //资产管理产品
+            $("#svrBussRepAssetMngProdInfo_div").show();
         }else if(obj["13"].indexOf(repAssetType)>=0){
             //商品类资产
             $("#svrBussRepNobleMetalInfo_div").show();

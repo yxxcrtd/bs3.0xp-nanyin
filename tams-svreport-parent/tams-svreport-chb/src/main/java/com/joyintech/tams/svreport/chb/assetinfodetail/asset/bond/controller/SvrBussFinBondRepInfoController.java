@@ -50,12 +50,13 @@ public class SvrBussFinBondRepInfoController extends BaseController{
                 DictCode.登记托管机构_中债,DictCode.交易流通场所,DictCode.人行机构规模,DictCode.受让形式,DictCode.债券性质,DictCode.发行方式,DictCode.主体评级_中债,DictCode.是否_中债}
          );
 
+
         //2、当入参assetType2资产/负债二级类别 为【01：债券类资产/理财直接融资工具/同业存单】进行以下处理
         if(assetInfoDetailMService.getDataListLink().get(DictCodeListExt2.资产_负债类别_债券类资产_理财直接融资工具_同业存单.getValue()).contains(assetType)){
               //调用service
             bussAssetInfoService.setModle(uuid, dataStatus, model);
         }
-
+        model.addAttribute("entityName",this.getParam("entityName"));
         //3、返回 子组件对应的页面
         return "report/chb/assetinfodetail/asset/bond/SvrBussFinBondRepInfo";
     }

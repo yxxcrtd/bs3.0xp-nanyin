@@ -120,6 +120,21 @@ public class SvrBussFinBondRepInfoDto extends RepAssetBond{
      */
    private  String  isPerpetual;
 
+    /**
+     * 二级资产负债类别
+     *
+     */
+   private   String  assetType2;
+
+
+    public String getAssetType2() {
+        return assetType2;
+    }
+
+    public void setAssetType2(String assetType2) {
+        this.assetType2 = assetType2;
+    }
+
     public String getIsPerpetual() {
         return isPerpetual;
     }

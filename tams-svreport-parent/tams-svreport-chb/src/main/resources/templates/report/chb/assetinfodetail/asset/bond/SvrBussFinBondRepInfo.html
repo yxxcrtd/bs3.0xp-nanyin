@@ -4,20 +4,38 @@
     <div th:id="|${entityName}_div|"  class="pro-module-wrap">
         <div class="pro-module">
             <h3 class="pro-module-title"><span class="title-des" data-th-text="#{BussFinBondRepInfo}">中债报送</span>（<span class="star-sign">*</span>必填）<i class="iconfont icon-arrow-down pro-down-icon"></i></h3>
-            <div class="pro-module-item">
-                <div class="layui-form-item" th:id="|${entityName}_content_one_div|">
+<!--            <div class="layui-form-item"  disabled="true">-->
+<!--            <div class="form-inline-wrap" >-->
+<!--                <label class="layui-form-label form-label-wrap">资产负债二级类别</label>-->
+<!--                <div class="layui-input-inline input-inline">-->
+<!--                    <select id="bondassetType2" name="bondassetType2"-->
+<!--                            th:initValue="*{entity?.assetType2}" required="required"-->
+<!--                            class="layui-input form-input input-select"-->
+<!--                            allowClear="true" placeholder="请选择"-->
+<!--                            data-th-placeholder="#{SysCommon.placeholder}"-->
+<!--                            data-th-data-result="${SVR_ASSET_TYPE_SECOND_LEVEL}"-->
+<!--                            formatoption=true data-th-childrenIds="'repSectype'"></select>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            </div>-->
+            <div class="layui-form-item" >
                     <div class="form-inline-wrap">
                         <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussFinBondRepInfo.repSectype}" >具体类别</label>
                         <div class="layui-input-inline input-inline">
-                            <select th:id="|${entityName}_repSectype|" th:name="|${entityName}.repSectype|" th:initValue="${entity?.repSectype}"
-                                    class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"  data-th-data-result="${SVR_ISSUE_MODE_FUND}">
-                            </select>
+                            <select id="repSectype" name="repSectype" parentIds="assetType2"
+                                    th:initValue="*{entity?.repSectype}" required="required"
+                                    class="layui-input form-input input-select"
+                                    allowClear="true" placeholder="请选择"
+                                    data-th-placeholder="#{SysCommon.placeholder}"
+                                    data-th-data-result="${SVR_SEC_DETAIL_TYPE}"
+                                    formatoption=true ></select>
+
                         </div>
                     </div>
                     <div class="form-inline-wrap">
                         <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussFinBondRepInfo.issueMode}" >发行方式</label>
                         <div class="layui-input-inline input-inline">
-                            <select th:id="|${entityName}_issueMode|" th:name="|${entityName}.issueMode|" th:initValue="${entity?.issueMode}"
+                            <select th:id="svrBussFinBondRepInfoDto_repSectype" th:name="|${entityName}.issueMode|" th:initValue="${entity?.issueMode}"
                                     class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"  data-th-data-result="${ISSUE_TYPE}" required>
                             </select>
                         </div>
@@ -61,7 +79,6 @@
                   
 
 
-                  <div class="layui-form-item">
 
                         <!-- <div class="form-inline-wrap">
                             <label class="layui-form-label form-label-wrap" data-th-text="#{BussFinBondRepInfo.repIndustryLevel2}" >发行机构所属行业二级分类</label>
@@ -173,6 +190,7 @@
                             </div>
                         </div>
            </div>
+        </div>
     </div>
     <script data-th-inline="javascript" type="text/javascript">
         var entityName_BussFinBondRepInfo = /*[[${entityName}]]*/'';
