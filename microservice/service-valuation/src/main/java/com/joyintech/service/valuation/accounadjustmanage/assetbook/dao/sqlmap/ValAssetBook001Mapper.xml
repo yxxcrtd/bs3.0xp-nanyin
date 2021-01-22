@@ -217,6 +217,7 @@
              </if>
        <!-- 多级法人改造 add by hxy end 20200616 --> 
 		where 1=1 --system_code = 'SYS'
+		AND IS_HANDWORK = '01'
 		<!-- where system_code = 'VAL' -->
 		<if test="search != null and !''.equals(search)">
 			AND grp.GROUP_NAME like '%' || #{search} || '%'

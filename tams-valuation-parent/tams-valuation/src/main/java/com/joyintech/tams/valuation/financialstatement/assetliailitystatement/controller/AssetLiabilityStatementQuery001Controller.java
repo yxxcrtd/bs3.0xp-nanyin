@@ -315,6 +315,9 @@ public class AssetLiabilityStatementQuery001Controller extends BaseController {
     @RequestMapping("getDateInfo")
     public AssetLiabilityStatementQuery001SearchDto getDateInfo()
         throws Exception {
-        return service.getDateInfo(RequestUtil.getPageParam());
+    	Map<String, Object> params = RequestUtil.getPageParam();
+    	params.put("booksetGroup", this.getParam("booksetGroup"));
+    	params.put("reportTermType", this.getParam("reportTermType"));
+        return service.getDateInfo(params);
     }
 }

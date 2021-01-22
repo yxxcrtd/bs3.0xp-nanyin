@@ -131,7 +131,10 @@
 		FROM SYS_BATCH_GRP_PRDLINK A
 		    LEFT JOIN bok_bookset_date B 
 		         ON A.PRODUCT_ID = B.BOOKSET_ID
-		WHERE A.GROUP_SEQ = #{booksetGroup}
+		WHERE A.GROUP_SEQ in
+		<foreach collection="booksetGroup.split(',')" item="item" open="(" separator="," close=")">
+					#{item}
+		</foreach>
     </select>
     
 </mapper>

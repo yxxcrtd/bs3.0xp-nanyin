@@ -274,7 +274,10 @@ public class ValProfitQuery001Controller extends BaseController {
     @RequestMapping("getDateInfo")
     public ValProfitQuery001Dto getDateInfo()
         throws Exception {
-        return valProfitQuery001Service.getDateInfo(RequestUtil.getPageParam());
+    	Map<String, Object> params = RequestUtil.getPageParam();
+    	params.put("booksetGroup", this.getParam("booksetGroup"));
+    	params.put("reportTermType", this.getParam("reportTermType"));
+        return valProfitQuery001Service.getDateInfo(params);
     }
     
 }

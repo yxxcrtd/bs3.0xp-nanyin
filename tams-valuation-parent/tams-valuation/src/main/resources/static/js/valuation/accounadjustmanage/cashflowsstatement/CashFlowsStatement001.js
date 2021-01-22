@@ -29,7 +29,13 @@ $(function() {
 	 * 获取查询参数
 	 */
 	var getPageParams = function() {
-		return $.serializeToObject('#searchForm');
+		 var param =  $.serializeToObject('#searchForm');
+	       if(param.booksetGroup){
+	   		param.booksetGroup = param.booksetGroup.join(",");
+	   	}else{
+	           param.booksetGroup = null;
+			}
+	       return param;
 	};
 	var table = $("#dataTable").joyintable({
 		ajax : {
@@ -179,7 +185,8 @@ $(function() {
         
         //  绑定联动：账套组-筛选条件-日期、期限
         $("#booksetGroup").change(function() {
-            var booksetGroup = $("#booksetGroup").val();
+        	var booksetGroupArray = $("#booksetGroup").val();
+            var booksetGroup = booksetGroupArray.toString();
             var reportTermType = $("#reportTermType").val();
             if(booksetGroup != "" && ['01','02','03','04','05'].indexOf(reportTermType) > -1){
                 Joyin.ajax(
@@ -208,7 +215,8 @@ $(function() {
 		$("#reportTermType").change(function(){
 		    
             var booksetId = $("#booksetId").val();
-            var booksetGroup = $("#booksetGroup").val();
+            var booksetGroupArray = $("#booksetGroup").val();
+            var booksetGroup = booksetGroupArray.toString();
             var reportTermType = $("#reportTermType").val();
             if(reportTermType != '' && (booksetId != '' || booksetGroup != '')){
                 Joyin.ajax(
