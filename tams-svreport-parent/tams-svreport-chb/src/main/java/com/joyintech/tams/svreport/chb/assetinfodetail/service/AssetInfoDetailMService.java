@@ -6,6 +6,7 @@ import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.JsonUtils;
@@ -22,6 +23,7 @@ import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.util.ServerMenu;
 import com.joyintech.tams.svreport.chb.common.util.asset.RechbAassetInfoUtilService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.apache.ibatis.annotations.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +53,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 
 	@Autowired
 	private RechbAassetInfoUtilService rechbAassetInfoUtilService;
+
 
 	static Map<String,Set<String>> map = null;
 	/**
@@ -209,6 +212,19 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
    	String  assetUUid=(String)map.get("assetuuid");
      return assetInfoDetailMapper.getTargetAmt(assetUUid);
    }
+
+	/**
+	 * 根据界面传入数据获取二级资产类型
+	 * @param resultMap
+	 * @return
+	 */
+	public List<SelectOptionDto> getAssetTye2(Map<String,Object> resultMap){
+		List<SelectOptionDto> resultOpt= assetInfoDetailMapper.getAssetTye2(resultMap);
+		return  resultOpt;
+	}
+
+
+
 
 	/**
 	 * 设置导出文件参数

@@ -15,6 +15,9 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.select.SelectDto;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
@@ -30,12 +33,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -63,10 +65,10 @@ public class AssetInfoDetail002Controller extends BaseController {
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Override
     public String init(Model model){
-        super.setSelectOptionToModel(model, DictCode.中债对应上游资产一级类型,DictCode.资产_负债类别
-                ,DictCode.中债对应上游资产二级类型, DictCode.资产_负债二级类别,DictCode.WIND二级分类_含债券二级分类等, DictCode.报送反馈状态,
-                DictCode.交易流通场所_中债,DictCode.币种_中债,DictCode.行内资产二级分类,DictCode.行内资产三级分类,
-                DictCode.行内资产四级分类, DictCode.行内资产五级分类);
+        super.setSelectOptionToModel(model, DictCode.资产_负债类别, DictCode.资产_负债二级类别, DictCode.报送反馈状态,
+                DictCode.交易流通场所_中债,DictCode.币种_中债,
+                DictCode.中债_上游资产一级分类, DictCode.中债_上游资产二级分类,DictCode.中债_上游资产三级分类,DictCode.中债_上游资产四级分类,
+                DictCode.中债_上游资产五级分类);
 
         String assetUuid = this.getParam("assetUuid");
         String dataStatus = this.getParam("dataStatus");
@@ -76,6 +78,7 @@ public class AssetInfoDetail002Controller extends BaseController {
 
         String jsonObject= JSONObject.toJSONString(assetInfoDetailMService.getDataListLink());
         model.addAttribute("AssetTypeListLink", jsonObject);
+
         AssetInfoDetailDto  dto=new   AssetInfoDetailDto();
         dto.setIssuePartyId(issuepartyid);
         model.addAttribute(GlobalConstant.ENTITY, dto);
@@ -109,5 +112,38 @@ public class AssetInfoDetail002Controller extends BaseController {
     @RequestMapping("getValue")
     public BigDecimal getValue(@RequestBody Map<String, Object> param) {
         return assetInfoDetailMService.getTargetAmt(param);
+    }
+
+    /**
+     * 根据界面选择获取二级资产类型
+     * @param param
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("getAssetType2")
+    public List<SelectOptionDto> getAssetType2(){
+        List<SelectOptionDto> list = new ArrayList<>();
+        Map<String, Object> params = RequestUtil.getPageParam();
+        //如果一级资产未选择.则直接使用系统的资产负债类别
+        if (StringUtil.isEmpty((String) params.get("orgAssetType1")) || "null".equals(params.get("orgAssetType1"))) {
+//            params.put("orgAssetType1", null);
+        }else{
+            if (StringUtil.isEmpty((String) params.get("orgAssetType2")) || "null".equals(params.get("orgAssetType2"))) {
+                params.put("orgAssetType2", null);
+            }
+            else if (StringUtil.isEmpty((String) params.get("orgAssetType3")) || "null".equals(params.get("orgAssetType3"))) {
+                params.put("orgAssetType3", null);
+            }else if (StringUtil.isEmpty((String) params.get("orgAssetType4")) || "null".equals(params.get("orgAssetType4"))) {
+                params.put("orgAssetType4", null);
+            }
+            list = assetInfoDetailMService.getAssetTye2(params);
+        }
+        if(StringUtil.isEmptyList(list)){
+            SelectDto selectDto1 = this.getSelectDataFromDataDic(DictCode.资产_负债二级类别, null);
+            for (SelectOptionDto dto : selectDto1.getOptions()) {
+                list.add(dto);
+            }
+        }
+        return list;
     }
 }

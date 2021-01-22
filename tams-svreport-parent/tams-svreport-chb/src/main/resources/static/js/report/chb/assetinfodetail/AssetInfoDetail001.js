@@ -57,7 +57,7 @@
 		data.pageModel="edit";
 		Joyin.dialog(JoyinUtil.getLabel("资产基本信息修改"),
 			basePath + "chb/assetinfodetail/AssetInfoDetail002/init",
-			"95%", "90%", {pageModel:"edit",
+			"95%", "90%", {pageModel:PAGE_MODEL_EDIT,
 				assetUuid:data.assetUuid,dataStatus:data.dataStatus},function(){table.reload();});
 		// });
 	});
@@ -82,7 +82,7 @@
 		$('#AssetInfoDetail001_btn_add').click(function(){
 			Joyin.dialog(JoyinUtil.getLabel("资产基本信息新增"),
 				basePath + "chb/assetinfodetail/AssetInfoDetail002/init",
-				"95%", "90%", {pageModel:"add",},
+				"95%", "90%", {pageModel:PAGE_MODEL_NEW,},
 				function(){table.reload();});
 		});
 

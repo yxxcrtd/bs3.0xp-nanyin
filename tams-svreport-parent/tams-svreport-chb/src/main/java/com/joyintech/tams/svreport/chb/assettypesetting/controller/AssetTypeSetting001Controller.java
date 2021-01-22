@@ -33,8 +33,8 @@ public class AssetTypeSetting001Controller extends BaseController {
      */
     @Override
     public String init(Model model) {
-        super.setSelectOptionToModel(model, DictCode.宁波资产一级分类,
-                DictCode.宁波资产二级分类,DictCode.宁波资产三级分类,DictCode.宁波业务类型);
+        super.setSelectOptionToModel(model, DictCode.中债_上游资产一级分类,
+                DictCode.中债_上游资产二级分类,DictCode.中债_上游资产三级分类,DictCode.中债_上游资产四级分类,DictCode.中债_上游资产五级分类);
         return super.init(model);
     }
 

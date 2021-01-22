@@ -35,8 +35,8 @@ public class AssetTypeSetting002Controller extends BaseController {
      */
     @Override
     public String init(Model model) {
-        super.setSelectOptionToModel(model, DictCode.宁波资产一级分类,DictCode.宁波资产二级分类,
-                DictCode.宁波资产三级分类,DictCode.宁波业务类型,DictCode.资产_负债类别,DictCode.资产_负债二级类别);
+        super.setSelectOptionToModel(model, DictCode.中债_上游资产一级分类,DictCode.中债_上游资产二级分类,
+                DictCode.中债_上游资产三级分类,DictCode.中债_上游资产四级分类,DictCode.资产_负债类别,DictCode.资产_负债二级类别);
         String pageModel = this.getParam("pageModel");
         String typeuuid = this.getParam("typeuuid");
         if (pageModel.equals(GlobalConstant.DETAIL_PAGE_MODEL_NEW)){

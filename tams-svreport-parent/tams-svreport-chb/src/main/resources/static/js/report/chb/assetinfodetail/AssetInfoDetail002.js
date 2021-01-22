@@ -261,6 +261,13 @@ var QueryFunc=function(){
      */
     $(function() {
 
+
+        if(pageModel!=PAGE_MODEL_NEW){
+            $("#assetCode").attr('disabled',true);
+        }
+
+
+
         //隐藏所有中债报送信息
         $(".businessDeptClass").hide();
         init();
