@@ -45,10 +45,8 @@ public class SvrBussRepAssetAstBillInfoController extends BaseController{
         String   assetType=requestPargram.getParameter("assetType");
 
         //1.赋值界面数据字典
-        setSelectOptionToModel(model,   new DictCode[] {DictCode.资产_负债二级类别,DictCode.交易流通场所,DictCode.收受益权类型,
-                DictCode.重点监控行业和领域类别,DictCode.担保方式,DictCode.资产评级,
-                DictCode.发行机构类型_按技术领域划分,DictCode.发行机构类型_按规模划分,DictCode.发行机构类型_按经济类型划分
-                ,DictCode.机构所属行业一级分类,DictCode.机构所属行业二级分类,DictCode.票据类信用证类资产类型}
+        setSelectOptionToModel(model,   new DictCode[] {DictCode.是否_中债,DictCode.票据类信用证类资产类型,
+                DictCode.机构所属行业一级分类,DictCode.机构所属行业二级分类}
          );
 
         //2、当入参assetType2资产/负债二级类别 为【票据类资产/信用证类资产】进行以下处理
