@@ -1,48 +1,51 @@
 /**
- * 非标资产(票据或信用)中债报送组件JS
+ * 债券类资产中债报送组件JS
  * @auth zhangnian
  */
 (function(){
-    
-    var getElementById = function(id) {
-        return $('#' + entityName_BussRepAssetAstBillInfo + '_' + id);
-    };
-    
-    var repAssetTypeChange = function(){
-        var repAssetType = getElementById('repAssetType').val();
-        if(repAssetType){
-            getElementById('content_one_div').nextAll().show();
-            getElementById('repAssetType_div').nextAll().show();
-        }else{
-            getElementById('content_one_div').nextAll().hide();
-            getElementById('repAssetType_div').nextAll().hide();
+
+
+    $(function() {
+        var starFinaciall = function() {
+            // 加红星星
+            // 查找label
+            var _findPrevLabel = function(element, level) {
+                var $el = element.prev();
+                if (!$el.is('label') && level > 0) {
+                    $el = $el.find('label');
+                    if ($el.length === 0) {
+                        return _findPrevLabel(element.parent(), level - 1);
+                    }
+                }
+                return $el;
+            };
+
+            // 非查看模式
+            // $('.must').each(function() {
+            //     $(this).remove();
+            // })
+            $('*[required]').each(function() {
+                var $el = $(this);
+                var $target = _findPrevLabel($el, 3);
+                if ($target.find('> .must').length === 0) {
+                    $target.append($('<i class="must">*</i>'));
+                }
+            });
         }
-        if(repAssetType==CHB_ASSET_TYPE_PROJECT_1201||repAssetType==CHB_ASSET_TYPE_PROJECT_1210){
-            $('#bussRepAssetAstBillInfoDto_repAstBillType_div').show();
-        }else{
-            getElementById('repAstBillType').val('').trigger('change');
-            $('#bussRepAssetAstBillInfoDto_repAstBillType_div').hide();
+        var  initBussRepAssetAstBill= function(){
+            var assetTvalueBill=$('#assetType2').val();
+            if(assetTvalueBill=='1210'){
+                //类型默认05置灰不可修改
+                $("#SvrBussRepAssetAstBillInfoDto_notstandSecType").val('05').trigger("change");
+                $("#SvrBussRepAssetAstBillInfoDto_notstandSecType").attr("disabled",true);
+            }else if(assetTvalueBill=='1201'){
+                $("#SvrBussRepAssetAstBillInfoDto_notstandSecType").val('').trigger("change");
+                $("#SvrBussRepAssetAstBillInfoDto_notstandSecType").attr("disabled",false);
+            }
         }
-    }
-
-    var  initAstBill= function(){
-        var assetTvalue2=$('#assetType2').val();
-        if(repAssetType=='1210'){
-            //类型默认05置灰不可修改
-            $("#SvrBussRepAssetAstBillInfoDto_notstandSecType").val('05').trigger("change");
-            $("#SvrBussRepAssetAstBillInfoDto_notstandSecType").attr("disabled",true);
-        }else{
-            $("#SvrBussRepAssetAstBillInfoDto_notstandSecType").val('').trigger("change");
-            $("#SvrBussRepAssetAstBillInfoDto_notstandSecType").attr("disabled",false);
-
-        }
-    }
-    $(function(){
-        initAstBill();
-        //资产/负债类别change
-        /*getElementById('repAssetType').change(repAssetTypeChange).trigger('change');*/
-    });
+        starFinaciall();
+         initBussRepAssetAstBill();
 
 
-    
+    })
 }());
