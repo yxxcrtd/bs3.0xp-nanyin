@@ -1450,6 +1450,32 @@ $(function() {
                 param.type6 = param.type6.join(",");
             }
             break;
+// add by zoujiamin ZGBSS-190  2021/1/22
+        case PINAN_ASSET_TYPE_F03:
+            if (param.type6) {
+                param.type6 = param.type6.join(",");
+            }
+            break;
+        case PINAN_ASSET_TYPE_F04:
+            if (param.type6) {
+                param.type6 = param.type6.join(",");
+            }
+            break;
+        case PINAN_ASSET_TYPE_F05:
+            if (param.type6) {
+                param.type6 = param.type6.join(",");
+            }
+            break;
+        case PINAN_ASSET_TYPE_F06:
+            if (param.type6) {
+                param.type6 = param.type6.join(",");
+            }
+            break;
+        case PINAN_ASSET_TYPE_F09:
+            if (param.type6) {
+                param.type6 = param.type6.join(",");
+            }
+            break;
         }
         return param;
     }
