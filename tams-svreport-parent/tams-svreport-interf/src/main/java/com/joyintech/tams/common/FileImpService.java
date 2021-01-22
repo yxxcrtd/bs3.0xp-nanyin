@@ -87,6 +87,50 @@ public abstract class FileImpService extends InterfService{
 //    private static final String[] XML_FILE_NAME = new String[] {"CHB_EQU_HOLD", "CHB_EQUDET","CHB_INVESTHOLD_INFO","MST_EXCHANGE_INFO", "MKT_HOLIDAY"
 //            ,"CHB_PRD_BASEINFO", "CHB_PRD_DEAL", "BTA_CLIENT_AREA_"};
 
+    /**
+     * 募集总量接口临时表名
+     */
+    protected  String  raisetotTableName="CHB_PRD_RAISETOT_SUB_TMP";
+    /**
+     * 申报接口临时表名
+     */
+    protected  String  issueTableName="CHB_PRD_ISSUE_SUB_TMP";
+    /**
+     * 交易接口临时表名
+     */
+    protected  String  botPosTableName="CHB_BOT_AST_POS_SUB_TMP";
+
+    /**
+     * 产品交易接口临时表名
+     */
+    protected String investTradeTableName = "CHB_INVEST_TRADE_SUB_TMP";
+
+    /**
+     * 资产估值信息接口临时表名
+     */
+    protected String astValInfoTableName = "CHB_AST_VAL_SUB_TMP";
+
+    /**
+     * 存续交易接口临时表名
+     */
+    protected String dealTableName = "CHB_PRD_DEAL_SUB_TMP";
+
+    /**
+     * 产品申报接口临时表名
+     */
+    protected String declareTableName = "CHB_PRD_DECLARE_SUB_TMP";
+
+
+    /**
+     * 产品终止登记接口临时表名
+     */
+    protected String prdendTableName = "CHB_PRD_END_SUB_TMP";
+
+    /**
+     * 资产负债接口临时表
+     */
+    protected String chbAsseTableName = "CHB_ASSET_INFO_TMP";
+
     @Autowired
     private ChbFileReadMonitorInfoMapper chbFileReadMonitorInfoMapper;
 
@@ -699,7 +743,7 @@ public abstract class FileImpService extends InterfService{
     }
 
     /**start 新增删除逻辑  add  by  dongxiangyang 20201017    */
-    private void deletAllErroData(List<String> erroList,String tableName) {
+    public void deletAllErroData(List<String> erroList,String tableName) {
         SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
         try {
             int count = 0;
@@ -776,6 +820,52 @@ public abstract class FileImpService extends InterfService{
 //        }
 //        logger.debug("错误信息数据插入结束--------------" + new Date());
 //    }
+
+    protected void insertErroDataCodeCheck(List<ChbInterfErrodataWithBLOBs> erroList,String tableName) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            int count = 0;
+            logger.debug("错误信息数据插入开始--------------" + new Date());
+            ChbInterfErrodataMapper batchMapper = session.getMapper(ChbInterfErrodataMapper.class);
+//            int batchCount = reportInsertLongCount==0?50:reportInsertLongCount;//每批commit的个数
+//            int batchLastIndex = batchCount;//每批最后一个的下标
+//            for(ChbInterfErrodataWithBLOBs single: erroList){
+//            	Map<String,String> map  =new  HashMap<String,String>();
+//            	map.put("tableName", tableName);
+//            	map.put("dataid", single.getDataid());
+//            	batchMapper.deleteByPrimaryKeyType(map);
+//            	 count ++;
+//                 // 每20次提交
+//                 if (count % 20 == 0) {
+//                     session.commit();
+//                     // 清理缓存，防止溢出
+//                     session.clearCache();
+//                 }
+//            }
+            for(ChbInterfErrodataWithBLOBs single: erroList){
+                batchMapper.insert(single);
+                count ++;
+                // 每20次提交
+                if (count % 20 == 0) {
+                    session.commit();
+                    // 清理缓存，防止溢出
+                    session.clearCache();
+                }
+            }
+            session.commit();
+            // 清理缓存，防止溢出
+            session.clearCache();
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+        logger.debug("错误信息数据插入结束--------------" + new Date());
+    }
+
     /**
      * 将文件入库
      * @param saveFlag:F－全量，I－增量
