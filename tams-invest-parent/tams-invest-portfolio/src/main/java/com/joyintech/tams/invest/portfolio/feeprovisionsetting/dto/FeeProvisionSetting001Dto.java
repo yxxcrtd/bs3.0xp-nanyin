@@ -80,6 +80,15 @@ public class FeeProvisionSetting001Dto extends TrdAccountmfConfigDto implements 
 	 */
 	private String positionEndDateStr;
 
+	/**
+	 * 实际到期日字符串
+	 */
+	private String actPositionEndDateStr;
+
+	public String getActPositionEndDateStr() {
+		return DateUtil.format(super.getActPositionEndDate());
+	}
+
 	public String getPositionStartDateStr() {
 		return DateUtil.format(super.getPositionStartDate()) ;
 	}

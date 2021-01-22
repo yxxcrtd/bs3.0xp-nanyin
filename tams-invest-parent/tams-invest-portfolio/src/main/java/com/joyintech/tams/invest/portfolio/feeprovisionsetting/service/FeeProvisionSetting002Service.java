@@ -19,6 +19,7 @@ import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -178,9 +179,13 @@ public class FeeProvisionSetting002Service extends BaseService<FeeProvisionSetti
 			message.add("明细数据每季度费用汇总金额 = 设置的每季度费用!");
 		}
 //        e.判断区间是否重复
+
 		if(isRepetition(dto)){
-			message.add("计提期间存在交叉，请重新修改!");
+			Date date = getRepetitionDate(dto);
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			message.add("该证券账户计提开始日小于等于实际到期日"+format.format(date)+"，每季费用金额"+dto.getFeeAmtTotal()+"元，可能存在重复付费");
 		}
+
 		if(CollectionUtils.isNotEmpty(message)){
 			List<ValidMessage> errorList = new ArrayList<>();
 			message.forEach(action->{
@@ -223,6 +228,14 @@ public class FeeProvisionSetting002Service extends BaseService<FeeProvisionSetti
 				ServiceApplication.PORTFOLIO_SERVICE_NAME + "/FeeProvisionSetting/selectCount", dto,
 				Integer.class);
 		return count > 0;
+	}
+
+	//获取重复的最大实际到期日
+	private Date getRepetitionDate(FeeProvisionSetting001Dto dto){
+		Date date = restTemplate.postForObject(
+				ServiceApplication.PORTFOLIO_SERVICE_NAME + "/FeeProvisionSetting/getRepetitionDate", dto,
+				Date.class);
+		return date;
 	}
 
 	public void updateData(FeeProvisionSetting001Dto entity){

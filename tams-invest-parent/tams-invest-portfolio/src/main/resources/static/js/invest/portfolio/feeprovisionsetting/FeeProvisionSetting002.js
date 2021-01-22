@@ -36,7 +36,12 @@ $(function() {
         addbtn: true,
         searchOnInit: true,
         cols:[
-            {field:'booksetId', width: 150, title: 'FeeProvisionSetting002.booksetId', edit:true,sortable:false, editOption:{type:'select',id:'booksetId',showField:'id',formatoption:true,url: JoyinUtil.getRealPath('/invest/portfolio/feeprovisionsetting/FeeProvisionSetting002/getBooksetId')}},
+            {field:'booksetId', width: 150, title: 'FeeProvisionSetting002.booksetId', edit:true,sortable:false, editOption:{type:'select',id:'booksetId',showField:'id',formatoption:true,
+                url: JoyinUtil.getRealPath('/invest/portfolio/feeprovisionsetting/FeeProvisionSetting002/getBooksetId'),postData: function(){
+                    return {
+                        positionStartDate: $("#FeeProvisionSetting002_positionStartDate").val()
+                    }
+                }}},
             {field:'feeAmtDetail', width: 100, title: 'FeeProvisionSetting002.feeAmtTotal', edit:true, type:'number', sortable:false,textrange:'2'},
             {field:'operation', width: 100, title: 'SysCommon.operation', type:'action', buttons: ['delt']}
         ]
@@ -51,6 +56,11 @@ $(function() {
      */
     table.bind('click', '.delt', function(data, index) {
         table.removeRow(data);
+    });
+
+    //计提结束日更改与实际到期日联动
+    $('#FeeProvisionSetting002_positionEndDate').change(function(){
+        $("#FeeProvisionSetting002_actPositionEndDate").val($("#FeeProvisionSetting002_positionEndDate").val());
     });
 
     /**

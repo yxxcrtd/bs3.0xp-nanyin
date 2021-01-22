@@ -160,6 +160,15 @@ public class FeeProvisionSettingService extends BaseService<FeeProvisionSettingD
 	public Integer selectCount(FeeProvisionSettingDto dto){
 		return feeProvisionSettingMapper.selectCount(dto);
 	}
+
+	/**
+	 * 查询重复区间的最大实际到期日
+	 * @param dto
+	 * @return
+	 */
+	public Date getRepetitionDate(FeeProvisionSettingDto dto){
+		return feeProvisionSettingMapper.selectRepetitionDate(dto);
+	}
 	
 	/**
 	 * 删除流程中的数据
