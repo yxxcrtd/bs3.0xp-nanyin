@@ -32,189 +32,182 @@ public class SvrBussRepAssetAstBillInfoDto extends RepAssetAstBill{
      * <意义，目的和功能，以及可能被用到的地方>
      */
     private static final long serialVersionUID = 1L;
-    
-    private String type6;
-    
-    private String type7;
-    
-    /**
-     * 资产/负债类别
-     */
-    private String repAssetType;
-    
-    /**
-     * 交易流通场所
-     */
-    private String repTradeMarket;
 
     /**
-     * 是否投向金融资产投资公司或其附属机构发行的私募股权投资基金
+     * 是否为收/受益权 01是/02否
      */
-    private String repPrivatefundFlag;
+    private String isRight;
 
     /**
-     * 公共PPP
+     * 是否属于买入返售 01是/02否
      */
-    private String repPppflag;
+    private String isResale;
 
     /**
-     * 是否小微企业信贷资产流转和收益权转让
+     * 非标准化债券类资产类型 01 商业承兑汇票/ 02 银行承兑汇票/ 03 其他票据/ 04 混合类票据/ 05 信用证
      */
-    private String repSmallcredit;
+    private String notstandSecType;
 
     /**
-     * 是否投向投向市场化债转股相关产品的部分
+     * 非标准化债券类资产数量
      */
-    private String repBondtostockFlag;
+    private Long notstandSecNum;
 
     /**
-     * 是否投向金融资产投资公司发行的私募资产管理产品
+     * 金额
      */
-    private String repPrivateprdFlag;
+    private BigDecimal amt;
 
-    
     /**
-     * 获取 repAssetType
-     * @return repAssetType.
+     * 加权剩余期限(天)
      */
-    public String getRepAssetType() {
-        return repAssetType;
-    }
+    private BigDecimal remainTerm;
 
-    
     /**
-     * 设置 repAssetType
-     * @param repAssetType repAssetType
+     * 最长剩余期限(天)
      */
-    public void setRepAssetType(String repAssetType) {
-        this.repAssetType = repAssetType;
-    }
+    private BigDecimal maxRemainTerm;
 
-    
     /**
-     * 获取 repTradeMarket
-     * @return repTradeMarket.
+     * 最短剩余期限(天)
      */
-    public String getRepTradeMarket() {
-        return repTradeMarket;
-    }
+    private BigDecimal minRemainTerm;
 
-    
     /**
-     * 设置 repTradeMarket
-     * @param repTradeMarket repTradeMarket
+     * 收益率/年利率
      */
-    public void setRepTradeMarket(String repTradeMarket) {
-        this.repTradeMarket = repTradeMarket;
-    }
+    private BigDecimal assetYield;
 
-
-    
     /**
-     * 获取 type6
-     * @return type6.
+     * 行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
      */
-    public String getType6() {
-        return type6;
-    }
+    private String industryShares;
 
-
-    
     /**
-     * 设置 type6
-     * @param type6 type6
+     * 行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
      */
-    public void setType6(String type6) {
-        this.type6 = type6;
-    }
+    private String industryShares2;
 
-
-    
     /**
-     * 获取 type7
-     * @return type7.
+     * 是否投向地方政府融资平台
      */
-    public String getType7() {
-        return type7;
-    }
-
-
-    
+    private String privateFlag;
     /**
-     * 设置 type7
-     * @param type7 type7
+     * 备注
      */
-    public void setType7(String type7) {
-        this.type7 = type7;
-    }
-    
-    //数量
-    @Length(fieldName = "BussRepAssetAstBillInfo.repNum", max = 6, groups = {ValidateGroupEdit.class})
-    public Integer getRepNum(){
-        return super.getRepNum();
-    }
-    
-    //最长剩余期限(天)
-    @Length(fieldName = "BussRepAssetAstBillInfo.repMaxRemainTerm", max = 5, groups = {ValidateGroupEdit.class})
-    public Integer getRepMaxRemainTerm(){
-        return super.getRepMaxRemainTerm();
-    }
-    
-    //最短剩余期限(天)
-    @Length(fieldName = "BussRepAssetAstBillInfo.repMinRemainTerm", max = 5, groups = {ValidateGroupEdit.class})
-    public Integer getRepMinRemainTerm(){
-        return super.getRepMinRemainTerm();
-    }
-    
-    //加权剩余期限(天)
-    @Amount(fieldName = "BussRepAssetAstBillInfo.repRemainTerm", maxIntBit = 5,maxDecBit = 2, groups = {ValidateGroupEdit.class})
-    public BigDecimal getRepRemainTerm(){
-        return super.getRepRemainTerm();
-    }
-    
-    //贴现利率
-    @Amount(fieldName = "BussRepAssetAstBillInfo.repDiscRate", maxIntBit = 3,maxDecBit = 5  , groups = {ValidateGroupEdit.class})
-    public BigDecimal getRepDiscRate(){
-        return super.getRepDiscRate();
+    private String remark;
+
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
-    public String getRepPrivatefundFlag() {
-        return repPrivatefundFlag;
+    public String getIsRight() {
+        return isRight;
     }
 
-    public void setRepPrivatefundFlag(String repPrivatefundFlag) {
-        this.repPrivatefundFlag = repPrivatefundFlag;
+    public void setIsRight(String isRight) {
+        this.isRight = isRight;
     }
 
-    public String getRepPppflag() {
-        return repPppflag;
+    public String getIsResale() {
+        return isResale;
     }
 
-    public void setRepPppflag(String repPppflag) {
-        this.repPppflag = repPppflag;
+    public void setIsResale(String isResale) {
+        this.isResale = isResale;
     }
 
-    public String getRepSmallcredit() {
-        return repSmallcredit;
+    public String getNotstandSecType() {
+        return notstandSecType;
     }
 
-    public void setRepSmallcredit(String repSmallcredit) {
-        this.repSmallcredit = repSmallcredit;
+    public void setNotstandSecType(String notstandSecType) {
+        this.notstandSecType = notstandSecType;
     }
 
-    public String getRepBondtostockFlag() {
-        return repBondtostockFlag;
+    public Long getNotstandSecNum() {
+        return notstandSecNum;
     }
 
-    public void setRepBondtostockFlag(String repBondtostockFlag) {
-        this.repBondtostockFlag = repBondtostockFlag;
+    public void setNotstandSecNum(Long notstandSecNum) {
+        this.notstandSecNum = notstandSecNum;
     }
 
-    public String getRepPrivateprdFlag() {
-        return repPrivateprdFlag;
+    public BigDecimal getAmt() {
+        return amt;
     }
 
-    public void setRepPrivateprdFlag(String repPrivateprdFlag) {
-        this.repPrivateprdFlag = repPrivateprdFlag;
+    public void setAmt(BigDecimal amt) {
+        this.amt = amt;
     }
+
+    public BigDecimal getRemainTerm() {
+        return remainTerm;
+    }
+
+    public void setRemainTerm(BigDecimal remainTerm) {
+        this.remainTerm = remainTerm;
+    }
+
+    public BigDecimal getMaxRemainTerm() {
+        return maxRemainTerm;
+    }
+
+    public void setMaxRemainTerm(BigDecimal maxRemainTerm) {
+        this.maxRemainTerm = maxRemainTerm;
+    }
+
+    public BigDecimal getMinRemainTerm() {
+        return minRemainTerm;
+    }
+
+    public void setMinRemainTerm(BigDecimal minRemainTerm) {
+        this.minRemainTerm = minRemainTerm;
+    }
+
+    public BigDecimal getAssetYield() {
+        return assetYield;
+    }
+
+    public void setAssetYield(BigDecimal assetYield) {
+        this.assetYield = assetYield;
+    }
+
+    public String getIndustryShares() {
+        return industryShares;
+    }
+
+    public void setIndustryShares(String industryShares) {
+        this.industryShares = industryShares;
+    }
+
+    public String getIndustryShares2() {
+        return industryShares2;
+    }
+
+    public void setIndustryShares2(String industryShares2) {
+        this.industryShares2 = industryShares2;
+    }
+
+    public String getPrivateFlag() {
+        return privateFlag;
+    }
+
+    public void setPrivateFlag(String privateFlag) {
+        this.privateFlag = privateFlag;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+
+
+
+
 }
