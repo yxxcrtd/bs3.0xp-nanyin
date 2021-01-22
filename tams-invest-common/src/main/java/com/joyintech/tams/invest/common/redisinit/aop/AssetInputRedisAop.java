@@ -94,6 +94,15 @@ public class AssetInputRedisAop {
                         redisRriter.dealAssetData(cond);
                         logger.info("===========资产进入redis结束=============");
                     }
+                    else {
+                    	logger.info("===========资产读取失败=============");
+                    	if(StringUtil.isNotEmpty(finProduct)) {
+                    		logger.info("===========资产id:"+finProduct.getFinprodId()+"=============");
+                    	}
+                    	else {
+                    		logger.info("===========资产:"+finProduct+"=============");
+                    	}
+                    }
                 }catch (Exception e){
                     //异常无需抛出，在内部处理掉
                     logger.error("资产进入redis异常",e);
