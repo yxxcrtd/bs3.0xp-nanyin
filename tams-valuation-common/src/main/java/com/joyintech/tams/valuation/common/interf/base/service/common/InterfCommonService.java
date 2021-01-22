@@ -250,6 +250,29 @@ public class InterfCommonService {
         isAreadyMap.put(DictCode.收益类型.getValue(), false);
         isAreadyMap.put(ValDictCodeList.账套配置表参数项_估值表模板.getValue(), false);
 
+        //获取系统参数：产品类型对应的结转频率值 add by hpp 2021-01-11 start
+        //损益科目结转频率-收益型
+        String CARRYOVER_CYCLE_SYX= CacheUtil.getSysParam("CARRYOVER_CYCLE_SYX");
+        //损益科目结转频率-净值型
+        String CARRYOVER_CYCLE_JZX= CacheUtil.getSysParam("CARRYOVER_CYCLE_JZX");
+        //损益科目结转频率-货币型
+        String CARRYOVER_CYCLE_HBX= CacheUtil.getSysParam("CARRYOVER_CYCLE_HBX");
+
+        //损益平准金结转频率-收益型
+        String PAL_CARRYOVER_CYCLE_SYX= CacheUtil.getSysParam("PAL_CARRYOVER_CYCLE_SYX");
+        //损益平准金结转频率-净值型
+        String PAL_CARRYOVER_CYCLE_JZX= CacheUtil.getSysParam("PAL_CARRYOVER_CYCLE_JZX");
+        //损益平准金结转频率-货币型
+        String PAL_CARRYOVER_CYCLE_HBX= CacheUtil.getSysParam("PAL_CARRYOVER_CYCLE_HBX");
+
+        //本期利润损益结转频率-收益型
+        String UP_CARRYOVER_CYCLE_SYX= CacheUtil.getSysParam("UP_CARRYOVER_CYCLE_SYX");
+        //本期利润损益结转频率-净值型
+        String UP_CARRYOVER_CYCLE_JZX= CacheUtil.getSysParam("UP_CARRYOVER_CYCLE_JZX");
+        //本期利润损益结转频率-货币型
+        String UP_CARRYOVER_CYCLE_HBX= CacheUtil.getSysParam("UP_CARRYOVER_CYCLE_HBX");
+        //获取系统参数：产品类型对应的结转频率值 add by hpp 2021-01-11 end
+
         List<BokBooksetExt> resValBokBooksetExt = new ArrayList<>();
         for (BokBooksetExt valBokBooksetExt : listValBokBooksetExt) {
             BokBooksetExt ext = new BokBooksetExt();
@@ -266,26 +289,30 @@ public class InterfCommonService {
             if (DictCodeList.收益类型_货币型.getValue().equals(profitType)) {
                 if (ValDictCodeList.账套配置表参数项_本期利润损益结转频率.getValue().equals(ext.getParamCode())) {
                     isAreadyMap.put(ValDictCodeList.账套配置表参数项_本期利润损益结转频率.getValue(), true);
-                    ext.setParamValue(DictCodeListExt1.损益结转频率_日.getValue());
+                    ext.setParamValue(UP_CARRYOVER_CYCLE_HBX);
                 }
                 if (ValDictCodeList.账套配置表参数项_损益平准金结转频率.getValue().equals(ext.getParamCode())) {
                     isAreadyMap.put(ValDictCodeList.账套配置表参数项_损益平准金结转频率.getValue(), true);
-                    ext.setParamValue(DictCodeListExt1.损益结转频率_日.getValue());
+                    ext.setParamValue(PAL_CARRYOVER_CYCLE_HBX);
+                }
+                if (ValDictCodeList.账套配置表参数项_损益结转频率.getValue().equals(ext.getParamCode())) {
+                    isAreadyMap.put(ValDictCodeList.账套配置表参数项_损益结转频率.getValue(), true);
+                    ext.setParamValue(CARRYOVER_CYCLE_HBX);
                 }
             }
             // 3. 净值型产品
             if (DictCodeList.收益类型_净值型.getValue().equals(profitType)) {
                 if (ValDictCodeList.账套配置表参数项_损益结转频率.getValue().equals(ext.getParamCode())) {
                     isAreadyMap.put(ValDictCodeList.账套配置表参数项_损益结转频率.getValue(), true);
-                    ext.setParamValue(DictCodeListExt1.损益结转频率_日.getValue());
+                    ext.setParamValue(CARRYOVER_CYCLE_JZX);
                 }
                 if (ValDictCodeList.账套配置表参数项_本期利润损益结转频率.getValue().equals(ext.getParamCode())) {
                     isAreadyMap.put(ValDictCodeList.账套配置表参数项_本期利润损益结转频率.getValue(), true);
-                    ext.setParamValue(DictCodeListExt1.损益结转频率_年.getValue());
+                    ext.setParamValue(UP_CARRYOVER_CYCLE_JZX);
                 }
                 if (ValDictCodeList.账套配置表参数项_损益平准金结转频率.getValue().equals(ext.getParamCode())) {
                     isAreadyMap.put(ValDictCodeList.账套配置表参数项_损益平准金结转频率.getValue(), true);
-                    ext.setParamValue(DictCodeListExt1.损益结转频率_月.getValue());
+                    ext.setParamValue(PAL_CARRYOVER_CYCLE_JZX);
                 }
             }
             // 4.收益类型
@@ -297,11 +324,15 @@ public class InterfCommonService {
             if (DictCodeList.收益类型_收益型.getValue().equals(profitType)) {
                 if (ValDictCodeList.账套配置表参数项_本期利润损益结转频率.getValue().equals(ext.getParamCode())) {
                     isAreadyMap.put(ValDictCodeList.账套配置表参数项_本期利润损益结转频率.getValue(), true);
-                    ext.setParamValue(DictCodeListExt1.损益结转频率_日.getValue());
+                    ext.setParamValue(UP_CARRYOVER_CYCLE_SYX);
                 }
                 if (ValDictCodeList.账套配置表参数项_损益平准金结转频率.getValue().equals(ext.getParamCode())) {
                     isAreadyMap.put(ValDictCodeList.账套配置表参数项_损益平准金结转频率.getValue(), true);
-                    ext.setParamValue(DictCodeListExt1.损益结转频率_日.getValue());
+                    ext.setParamValue(PAL_CARRYOVER_CYCLE_SYX);
+                }
+                if (ValDictCodeList.账套配置表参数项_损益结转频率.getValue().equals(ext.getParamCode())) {
+                    isAreadyMap.put(ValDictCodeList.账套配置表参数项_损益结转频率.getValue(), true);
+                    ext.setParamValue(CARRYOVER_CYCLE_SYX);
                 }
             }
       
@@ -340,17 +371,17 @@ public class InterfCommonService {
                 bokBooksetExt.setRemark("数据字典：损益结转频率");
                 // 1. 货币型产品
                 if (DictCodeList.收益类型_货币型.getValue().equals(profitType)) {
-                    bokBooksetExt.setParamValue(DictCodeListExt1.损益结转频率_日.getValue());
+                    bokBooksetExt.setParamValue(UP_CARRYOVER_CYCLE_HBX);
                     resValBokBooksetExt.add(bokBooksetExt);
                 }
                 // 2. 净值型产品
                 if (DictCodeList.收益类型_净值型.getValue().equals(profitType)) {
-                    bokBooksetExt.setParamValue(DictCodeListExt1.损益结转频率_年.getValue());
+                    bokBooksetExt.setParamValue(UP_CARRYOVER_CYCLE_JZX);
                     resValBokBooksetExt.add(bokBooksetExt);
                 }
                 // 3. 预期收益型产品 add by wujie on 20181008
                 if (DictCodeList.收益类型_收益型.getValue().equals(profitType)) {
-                    bokBooksetExt.setParamValue(DictCodeListExt1.损益结转频率_日.getValue());
+                    bokBooksetExt.setParamValue(UP_CARRYOVER_CYCLE_SYX);
                     resValBokBooksetExt.add(bokBooksetExt);
                 }
             }
@@ -362,17 +393,17 @@ public class InterfCommonService {
                 bokBooksetExt.setRemark("数据字典：损益结转频率");
                 // 1. 货币型产品
                 if (DictCodeList.收益类型_货币型.getValue().equals(profitType)) {
-                    bokBooksetExt.setParamValue(DictCodeListExt1.损益结转频率_日.getValue());
+                    bokBooksetExt.setParamValue(PAL_CARRYOVER_CYCLE_HBX);
                     resValBokBooksetExt.add(bokBooksetExt);
                 }
                 // 2. 净值型产品
                 if (DictCodeList.收益类型_净值型.getValue().equals(profitType)) {
-                    bokBooksetExt.setParamValue(DictCodeListExt1.损益结转频率_月.getValue());
+                    bokBooksetExt.setParamValue(PAL_CARRYOVER_CYCLE_JZX);
                     resValBokBooksetExt.add(bokBooksetExt);
                 }
                 // 3. 预期收益型产品 add by wujie on 20181008
                 if (DictCodeList.收益类型_收益型.getValue().equals(profitType)) {
-                    bokBooksetExt.setParamValue(DictCodeListExt1.损益结转频率_日.getValue());
+                    bokBooksetExt.setParamValue(PAL_CARRYOVER_CYCLE_SYX);
                     resValBokBooksetExt.add(bokBooksetExt);
                 }
             }
@@ -384,7 +415,17 @@ public class InterfCommonService {
                 bokBooksetExt.setRemark("数据字典：损益结转频率");
                 // 2. 净值型产品
                 if (DictCodeList.收益类型_净值型.getValue().equals(profitType)) {
-                    bokBooksetExt.setParamValue(DictCodeListExt1.损益结转频率_日.getValue());
+                    bokBooksetExt.setParamValue(CARRYOVER_CYCLE_JZX);
+                    resValBokBooksetExt.add(bokBooksetExt);
+                }
+                // 1. 货币型产品
+                if (DictCodeList.收益类型_货币型.getValue().equals(profitType)) {
+                    bokBooksetExt.setParamValue(CARRYOVER_CYCLE_HBX);
+                    resValBokBooksetExt.add(bokBooksetExt);
+                }
+                // 3. 预期收益型产品 add by wujie on 20181008
+                if (DictCodeList.收益类型_收益型.getValue().equals(profitType)) {
+                    bokBooksetExt.setParamValue(CARRYOVER_CYCLE_SYX);
                     resValBokBooksetExt.add(bokBooksetExt);
                 }
             }
@@ -5882,6 +5923,21 @@ public class InterfCommonService {
     		profitType.setParamValue(DictCodeList.收益类型_货币型.getValue());
     	}
     	bokBooksetExtMap.put(DictCode.收益类型.getValue(), profitType);
+
+    	if(bokBooksetExtMap.get(DictCode.收益类型.getValue()).equals(DictCodeList.收益类型_货币型.getValue())){//如果账套信息为货币型账套,账套设置按货币型产品设置配置 add by zxp
+            BokBooksetExt bjjzpl = bokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_本期利润损益结转频率.getValue());
+            bjjzpl.setParamValue(DictCodeListExt1.损益结转频率_日.getValue());
+            bokBooksetExtMap.put(ValDictCodeList.账套配置表参数项_本期利润损益结转频率.getValue(),bjjzpl );
+
+            BokBooksetExt syjzpl = bokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_损益结转频率.getValue());
+            syjzpl.setParamValue(DictCodeListExt1.损益结转频率_日.getValue());
+            bokBooksetExtMap.put(ValDictCodeList.账套配置表参数项_损益结转频率.getValue(),syjzpl );
+
+            BokBooksetExt sypzjjzpl = bokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_损益平准金结转频率.getValue());
+            sypzjjzpl.setParamValue(DictCodeListExt1.损益结转频率_日.getValue());
+            bokBooksetExtMap.put(ValDictCodeList.账套配置表参数项_损益平准金结转频率.getValue(),sypzjjzpl );
+
+        }//fixed JSUAT-495 BUG  add by zxp 如果账套信息为货币型账套,账套设置按货币型产品设置配置
     	
     	// 定义 变量.估值表模板配置 = 变量.账套配置Map.get(数据字典：账套配置表参数项.估值表模板)
      	BokBooksetExt valuationTemplate = bokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_估值表模板.getValue());   	
