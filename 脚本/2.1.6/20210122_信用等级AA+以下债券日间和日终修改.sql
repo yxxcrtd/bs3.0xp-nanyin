@@ -53,7 +53,7 @@ where finprod_type2 = ''F01''  and temp.RVALUE is null
 select total.RKEY,total.RVALUE
 from total inner join psp on total.RKEY = psp.finprod_id
 inner join fin_product_type fpt on fpt.finprod_id = psp.finprod_id
-where fpt.type8 in (''F01'',''F11'')';
+where fpt.type_8 in (''F01'',''F11'')';
 begin
 	update rsk_isup_indicator_para_dtl  set content = sql01 where para_code = 'XYDJZAAYXDZQ' and para_granularity = '04';
 	update rsk_isup_indicator_para_dtl  set content = sql01 where para_code = 'XYDJZAAYXDZQ' and para_granularity = '05';
