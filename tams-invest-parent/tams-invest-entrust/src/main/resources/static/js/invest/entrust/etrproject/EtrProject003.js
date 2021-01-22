@@ -156,16 +156,6 @@
         for(var index in object.dataTableList){
             var item = object.dataTableList[index];
             var temp = JSON.parse(JSON.stringify(object));
-            
-            // 指令授信 start
-            temp.finprodType2 = 'F18';
-            temp.inputValue1 = 'F06';
-            temp.counterId = item.counterId;
-            temp.tradeAmt = item.entrustAmt;
-            temp.prinAmt = item.entrustAmt;
-            temp.tradeDate = item.vdate;
-            // 指令授信 end
-            
             temp.vdate = item.vdate;
             temp.mdate = item.mdate;
             temp.portfolioId = item.portfolioId;

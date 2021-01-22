@@ -112,7 +112,14 @@ public interface FeeProvisionSettingMapper {
      * @return
      */
     public Integer selectCount(FeeProvisionSettingDto dto);
-    
+
+    /**
+     * 查询重复区间的时间
+     * @param dto
+     * @return
+     */
+    public Date selectRepetitionDate(FeeProvisionSettingDto dto);
+
     /**
      * 删除流程中的数据
      * @param seqNo

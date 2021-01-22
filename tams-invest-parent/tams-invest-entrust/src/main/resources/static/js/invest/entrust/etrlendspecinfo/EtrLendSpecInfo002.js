@@ -41,24 +41,6 @@
          * 获取列表参数
          */
         var object = $.serializeToObject('#searchForm');
-        
-        // 指令授信 start
-        object.inputValue1 = 'F08';
-        if(object.ps == '01'){
-        	if(object.assetType1 == 'L02'){
-        		object.finprodType2 = 'F25';
-        	}else{
-        		object.finprodType2 = 'F08';
-        	}
-        }else{
-        	object.finprodType2 = 'F09';
-        }
-        object.prinAmt = object.entrustAmt;
-        object.tradeAmt = object.entrustAmt;
-        object.tradeDate = sysDate;
-        object.counterId = object.etrInvestPersonInfo.counterId;
-        // 指令授信 end
-        
         object.etrInvestPersonInfo.invManagerId = $('#etrInvestPersonInfo_invManagerId').val();
         if(object.etrInvestPersonInfo.trader != null && object.etrInvestPersonInfo.trader != ''){
             object.etrInvestPersonInfo.trader = object.etrInvestPersonInfo.trader.join(",");

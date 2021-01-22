@@ -152,16 +152,6 @@
         var objects = object.selectedItem;
         for (var index in objects) {
             var temp = objects[index];
-            
-            // 指令授信 start
-            temp.inputValue1 = 'F01';
-            temp.finprodType2 = 'F01';
-            temp.tradeAmt = temp.entrustNum;
-            temp.prinAmt = temp.entrustNum;
-            temp.tradeDate = temp.vdate;
-            temp.counterId = temp.counterIdName;
-            // 指令授信 end
-            
             temp.operateType = operateType;
             temp.pageModel = pageModel;
             if (operateType === 'save') {

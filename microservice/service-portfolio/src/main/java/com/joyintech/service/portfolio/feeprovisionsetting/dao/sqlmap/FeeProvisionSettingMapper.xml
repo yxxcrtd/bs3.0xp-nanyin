@@ -70,7 +70,7 @@
             </if>
         </where>
     </select>
-    
+
     <insert id="insert" parameterType="com.joyintech.service.portfolio.feeprovisionsetting.dto.FeeProvisionSettingDto">
         insert into TRD_ACCOUNTMF_CONFIG (SEQ_NO,FEE_TYPE,SEC_ACCT_ID,REGIST_ORG,PAY_CYCLE,PAY_DATE,POSITION_START_DATE,POSITION_END_DATE,
         ACT_POSITION_END_DATE,FEE_AMT_TOTAL,DEAL_STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
@@ -115,6 +115,12 @@
             </if>
             <if test="PROFIT_TYPE != null and PROFIT_TYPE != ''">
                 AND B.PROFIT_TYPE = #{PROFIT_TYPE,jdbcType=VARCHAR}
+            </if>
+            <if test="positionStartDate != null and positionStartDate != ''">
+                AND (TO_DATE(#{positionStartDate,jdbcType=VARCHAR}, 'yyyy-MM-dd hh24-mi-ss') - B.VDATE ) >= 0
+            </if>
+            <if test="positionStartDate != null and positionStartDate != ''">
+                AND ( B.MDATE - TO_DATE(#{positionStartDate,jdbcType=VARCHAR}, 'yyyy-MM-dd hh24-mi-ss')) >= 0
             </if>
         </where>
     </select>
@@ -172,6 +178,24 @@
     <select id="selectCount" parameterType="com.joyintech.service.portfolio.feeprovisionsetting.dto.FeeProvisionSettingDto" resultType="java.lang.Integer">
         SELECT
         COUNT(1)
+        FROM
+        TRD_ACCOUNTMF_CONFIG
+        WHERE
+        SEC_ACCT_ID = #{secAcctId} and FEE_TYPE = #{feeType}
+        and (
+        (#{positionStartDate} &gt;= POSITION_START_DATE and #{positionStartDate} &lt;= ACT_POSITION_END_DATE) or
+        (#{positionEndDate} &gt;= POSITION_START_DATE and #{positionEndDate} &lt;= ACT_POSITION_END_DATE)
+        )
+        and DEAL_STATUS != '03'
+        <if test="seqNo != null and seqNo != ''">
+            AND SEQ_NO != #{seqNo}
+        </if>
+    </select>
+
+
+    <select id="selectRepetitionDate" parameterType="com.joyintech.service.portfolio.feeprovisionsetting.dto.FeeProvisionSettingDto" resultType="java.util.Date">
+        SELECT
+        Max(ACT_POSITION_END_DATE)
         FROM
         TRD_ACCOUNTMF_CONFIG
         WHERE

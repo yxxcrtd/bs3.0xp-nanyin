@@ -103,8 +103,6 @@ public interface TradeCommonValidator extends BeanValidator {
      */
     @Override
     default List<ValidMessage> valid(Object value) {
-    	// 新增字段判断是否从指令做的交易 
-    	String dealType = "";
         // 先执行各个画面的业务check
         List<ValidMessage> validMessageList = this.bussValid(value);
         //名单管理  isNameSoftControl true:软控  false:硬控
@@ -145,12 +143,7 @@ public interface TradeCommonValidator extends BeanValidator {
                 // 债券投资交易
                 if (value instanceof TrdBondInvestTradeDto) {
                     TrdBondInvestTradeDto inputDto = (TrdBondInvestTradeDto) value;
-                    // 新增字段判断是否从指令做的交易 start
-                    if(StringUtil.isEmpty(inputDto.getEntrustId())){
-                    	dealType = "T";
-                    }else {
-                    	dealType = "E";
-                    }
+
                     // 副总裁/总裁助理授权额度检查相关处理
                     counterId = inputDto.getCounterId();
 //                    prinAmt = inputDto.getFpriceAmt();
@@ -183,12 +176,7 @@ public interface TradeCommonValidator extends BeanValidator {
                 // 拆借投资交易
                 else if (value instanceof TrdLendInvestTradeDto) {
                     TrdLendInvestTradeDto inputDto = (TrdLendInvestTradeDto) value;
-                    // 新增字段判断是否从指令做的交易 start
-                    if(StringUtil.isEmpty(inputDto.getEntrustId())){
-                    	dealType = "T";
-                    }else {
-                    	dealType = "E";
-                    }
+
                     // 副总裁/总裁助理授权额度检查相关处理
                     counterId = inputDto.getCounterId();
                     prinAmt = inputDto.getFinTradeProduct().getPrin(); 
@@ -215,13 +203,7 @@ public interface TradeCommonValidator extends BeanValidator {
                 // 存款类资产投资交易
                 else if (value instanceof TrdDepositInvestTrade001Dto) {
                     TrdDepositInvestTrade001Dto inputDto = (TrdDepositInvestTrade001Dto) value;
-                    // 新增字段判断是否从指令做的交易 start
-                    if(StringUtil.isEmpty(inputDto.getEntrustId())){
-                    	dealType = "T";
-                    }else {
-                    	dealType = "E";
-                    }
-                    // 新增字段判断是否从指令做的交易 end
+
                     // 副总裁/总裁助理授权额度检查相关处理
                     counterId = inputDto.getCounterId();
 //                    prinAmt = inputDto.getPrinAmt();
@@ -252,13 +234,7 @@ public interface TradeCommonValidator extends BeanValidator {
                 // 基金类投资交易
                 else if (value instanceof TrdFundInvestTradeDto) {
                     TrdFundInvestTradeDto inputDto = (TrdFundInvestTradeDto) value;
-                    // 新增字段判断是否从指令做的交易 start
-                    if(StringUtil.isEmpty(inputDto.getEntrustId())){
-                    	dealType = "T";
-                    }else {
-                    	dealType = "E";
-                    }
-                    // 新增字段判断是否从指令做的交易 end
+
                     // 副总裁/总裁助理授权额度检查相关处理
                     counterId = inputDto.getCounterId();
                     prinAmt = inputDto.getTradeAmt(); 
@@ -293,13 +269,7 @@ public interface TradeCommonValidator extends BeanValidator {
                 // 计划类资产（净值型）交易
                 else if (value instanceof TrdPlanNetInvestTradeDto) {
                     TrdPlanNetInvestTradeDto inputDto = (TrdPlanNetInvestTradeDto) value;
-                    // 新增字段判断是否从指令做的交易 start
-                    if(StringUtil.isEmpty(inputDto.getEntrustId())){
-                    	dealType = "T";
-                    }else {
-                    	dealType = "E";
-                    }
-                    // 新增字段判断是否从指令做的交易 end
+
                     // 副总裁/总裁助理授权额度检查相关处理
                     counterId = inputDto.getCounterId();
                     // 修改交易金额获取值by赵东东 2019.9.4 start
@@ -342,13 +312,7 @@ public interface TradeCommonValidator extends BeanValidator {
                 // 计划类资产（利率型）交易
                 else if (value instanceof TrdPlanRateInvestTradeDto) {
                     TrdPlanRateInvestTradeDto inputDto = (TrdPlanRateInvestTradeDto) value;
-                    // 新增字段判断是否从指令做的交易 start
-                    if(StringUtil.isEmpty(inputDto.getEntrustId())){
-                    	dealType = "T";
-                    }else {
-                    	dealType = "E";
-                    }
-                    // 新增字段判断是否从指令做的交易 end
+
                     // 副总裁/总裁助理授权额度检查相关处理
                     counterId = inputDto.getCounterId();
 //                    prinAmt = inputDto.getPrinAmt();
@@ -378,13 +342,7 @@ public interface TradeCommonValidator extends BeanValidator {
                 // 回购资产交易
                 else if (value instanceof TrdRepoTrade002Dto) {
                     TrdRepoTrade002Dto inputDto = (TrdRepoTrade002Dto) value;
-                    // 新增字段判断是否从指令做的交易 start
-                    if(StringUtil.isEmpty(inputDto.getEntrustId())){
-                    	dealType = "T";
-                    }else {
-                    	dealType = "E";
-                    }
-                    // 新增字段判断是否从指令做的交易 end
+
                     // 副总裁/总裁助理授权额度检查相关处理
                     counterId = inputDto.getCounterId();
                     prinAmt = inputDto.getPrinAmt();
@@ -420,13 +378,7 @@ public interface TradeCommonValidator extends BeanValidator {
                 // 项目类资产交易
                 else if (value instanceof TrdProjectInvestTrade002Dto) {
                     TrdProjectInvestTrade002Dto inputDto = (TrdProjectInvestTrade002Dto) value;
-                    // 新增字段判断是否从指令做的交易 start
-                    if(StringUtil.isEmpty(inputDto.getEntrustId())){
-                    	dealType = "T";
-                    }else {
-                    	dealType = "E";
-                    }
-                    // 新增字段判断是否从指令做的交易 end
+
                     // 副总裁/总裁助理授权额度检查相关处理
                     counterId = inputDto.getCounterId();
 //                    prinAmt = inputDto.getPrinAmt();
@@ -461,13 +413,6 @@ public interface TradeCommonValidator extends BeanValidator {
                 //  计划类资产（货币型）交易
                 else if (value instanceof TrdPlanCcyInvestTradeDto) {
                     TrdPlanCcyInvestTradeDto inputDto = (TrdPlanCcyInvestTradeDto) value;
-                    // 新增字段判断是否从指令做的交易 start
-                    if(StringUtil.isEmpty(inputDto.getEntrustId())){
-                    	dealType = "T";
-                    }else {
-                    	dealType = "E";
-                    }
-                    // 新增字段判断是否从指令做的交易 end
                     portfolioId = inputDto.getPortfolioId();
                     chlId = inputDto.getChlId();
                     // 资产类型改为授权类型 add by renping 2019-08-06  start
@@ -508,13 +453,6 @@ public interface TradeCommonValidator extends BeanValidator {
                 //  买断式回购
                 else if (value instanceof TrdOutRightRepoTrade002Dto) {
                     TrdOutRightRepoTrade002Dto inputDto = (TrdOutRightRepoTrade002Dto) value;
-                    // 新增字段判断是否从指令做的交易 start
-                    if(StringUtil.isEmpty(inputDto.getEntrustId())){
-                    	dealType = "T";
-                    }else {
-                    	dealType = "E";
-                    }
-                    // 新增字段判断是否从指令做的交易 end
                     TrdOutRightRepoTrade002Service pageService = SpringContextUtil
                             .getBean(TrdOutRightRepoTrade002Service.class);
                     if (inputDto.getTrdOutRightRepoPersonInfo() != null) {
@@ -554,13 +492,6 @@ public interface TradeCommonValidator extends BeanValidator {
                 // 债券借贷
                 else if (value instanceof TrdBondLendInvestTradeDto) {
                     TrdBondLendInvestTradeDto inputDto = (TrdBondLendInvestTradeDto) value;
-                    // 新增字段判断是否从指令做的交易 start
-                    if(StringUtil.isEmpty(inputDto.getEntrustId())){
-                    	dealType = "T";
-                    }else {
-                    	dealType = "E";
-                    }
-                    // 新增字段判断是否从指令做的交易 end
                     TrdBondLendInvestTrade002Service pageService = SpringContextUtil.getBean(
                             TrdBondLendInvestTrade002Service.class);
                     String creFinprodId = inputDto.getFinprodId();
@@ -600,13 +531,6 @@ public interface TradeCommonValidator extends BeanValidator {
                 // 股票
                 else if (value instanceof TrdStockDto) {
                     TrdStockDto inputDto = (TrdStockDto) value;
-                    // 新增字段判断是否从指令做的交易 start
-                    if(StringUtil.isEmpty(inputDto.getEntrustId())){
-                    	dealType = "T";
-                    }else {
-                    	dealType = "E";
-                    }
-                    // 新增字段判断是否从指令做的交易 end
                     TrdStock002Service pageService = SpringContextUtil.getBean(
                             TrdStock002Service.class);
                     // 修改股票授权不check by 赵东东 2019.8.21 start
@@ -640,13 +564,6 @@ public interface TradeCommonValidator extends BeanValidator {
                 // 外汇即期
                 else if (value instanceof TrdSpotexInvestTradeDto) {
                     TrdSpotexInvestTradeDto inputDto = (TrdSpotexInvestTradeDto) value;
-                    // 新增字段判断是否从指令做的交易 start
-                    if(StringUtil.isEmpty(inputDto.getEntrustId())){
-                    	dealType = "T";
-                    }else {
-                    	dealType = "E";
-                    }
-                    // 新增字段判断是否从指令做的交易 end
                     TrdSpotexInvestTrade002Service pageService = SpringContextUtil.getBean(
                             TrdSpotexInvestTrade002Service.class);
                     counterId = inputDto.getCounterId();
@@ -684,13 +601,6 @@ public interface TradeCommonValidator extends BeanValidator {
                 // 外汇远期
                 else if (value instanceof TrdForwexInvestTradeDto) {
                     TrdForwexInvestTradeDto inputDto = (TrdForwexInvestTradeDto) value;
-                    // 新增字段判断是否从指令做的交易 start
-                    if(StringUtil.isEmpty(inputDto.getEntrustId())){
-                    	dealType = "T";
-                    }else {
-                    	dealType = "E";
-                    }
-                    // 新增字段判断是否从指令做的交易 end
                     TrdForwexInvestTrade002Service pageService = SpringContextUtil.getBean(
                             TrdForwexInvestTrade002Service.class);
                     counterId = inputDto.getCounterId();
@@ -728,13 +638,6 @@ public interface TradeCommonValidator extends BeanValidator {
                 // 外汇掉期
                 else if (value instanceof TrdFxswapInvestTrade001Dto) {
                     TrdFxswapInvestTrade001Dto inputDto = (TrdFxswapInvestTrade001Dto) value;
-                    // 新增字段判断是否从指令做的交易 start
-                    if(StringUtil.isEmpty(inputDto.getEntrustId())){
-                    	dealType = "T";
-                    }else {
-                    	dealType = "E";
-                    }
-                    // 新增字段判断是否从指令做的交易 end
                     TrdFxswapInvestTrade002Service pageService = SpringContextUtil
                             .getBean(TrdFxswapInvestTrade002Service.class);
                     counterId = inputDto.getCounterId();
@@ -772,13 +675,6 @@ public interface TradeCommonValidator extends BeanValidator {
                 // 利率互换
                 else if (value instanceof TrdIRSTradeDto) {
                     TrdIRSTradeDto inputDto = (TrdIRSTradeDto) value;
-                    // 新增字段判断是否从指令做的交易 start
-                    if(StringUtil.isEmpty(inputDto.getEntrustId())){
-                    	dealType = "T";
-                    }else {
-                    	dealType = "E";
-                    }
-                    // 新增字段判断是否从指令做的交易 end
                     TrdIRSTrade002Service pageService = SpringContextUtil
                             .getBean(TrdIRSTrade002Service.class);
                     portfolioId = inputDto.getPortfolioId();
@@ -802,13 +698,6 @@ public interface TradeCommonValidator extends BeanValidator {
                 // 可转债
                 else if (value instanceof TrdConBondDto) {
                     TrdConBondDto inputDto = (TrdConBondDto) value;
-                    // 新增字段判断是否从指令做的交易 start
-                    if(StringUtil.isEmpty(inputDto.getEntrustId())){
-                    	dealType = "T";
-                    }else {
-                    	dealType = "E";
-                    }
-                    // 新增字段判断是否从指令做的交易 end
                     TrdConBond002Service pageService = SpringContextUtil
                             .getBean(TrdConBond002Service.class);
                     portfolioId = inputDto.getPortfolioId();
@@ -837,13 +726,6 @@ public interface TradeCommonValidator extends BeanValidator {
                 // 债转股
                 else if (value instanceof TrdBondToStock001Dto) {
                     TrdBondToStock001Dto inputDto = (TrdBondToStock001Dto) value;
-                    // 新增字段判断是否从指令做的交易 start
-                    if(StringUtil.isEmpty(inputDto.getEntrustId())){
-                    	dealType = "T";
-                    }else {
-                    	dealType = "E";
-                    }
-                    // 新增字段判断是否从指令做的交易 end
                     TrdBondToStock002Service pageService = SpringContextUtil
                             .getBean(TrdBondToStock002Service.class);
                     portfolioId = inputDto.getPortfolioId();
@@ -976,7 +858,6 @@ public interface TradeCommonValidator extends BeanValidator {
                 	AllTradeCommonInputDto inputDto =new AllTradeCommonInputDto();
                 	inputDto.setTrdProductDeal(trdProductDeal);
                 	inputDto.setRepoType(repType);
-                	inputDto.setDealType(dealType);
                 	List<CreditLinesDealCommon> list = ceLinesUpdate.isNeedOccupyCre(inputDto, true,false,false);
                 	if(list !=null && list.size()>0){
                 		ValidMessage validMessage = new ValidMessage(list.get(0).getErrMessage());
@@ -989,7 +870,6 @@ public interface TradeCommonValidator extends BeanValidator {
                     AllTradeCommonInputDto inputDto =new AllTradeCommonInputDto();
                     inputDto.setTrdProductDeal(othTrdProductDeal);
                     inputDto.setRepoType(repType);
-                    inputDto.setDealType(dealType);
                     List<CreditLinesDealCommon> list = ceLinesUpdate.isNeedOccupyCre(inputDto, true,false,false);
                     if(list !=null && list.size()>0){
                         ValidMessage validMessage = new ValidMessage(list.get(0).getErrMessage());

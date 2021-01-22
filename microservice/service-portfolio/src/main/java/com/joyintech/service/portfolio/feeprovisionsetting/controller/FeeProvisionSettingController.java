@@ -46,8 +46,10 @@ public class FeeProvisionSettingController {
 													  @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
 		String positionStartDateStr = (String)param.get("positionStartDate");
 		String positionEndDateStr = (String)param.get("positionEndDate");
+		String actPositionEndDateStr = (String)param.get("actPositionEndDate");
 		param.put("positionStartDate", DateUtil.parse(positionStartDateStr));
 		param.put("positionEndDate", DateUtil.parse(positionEndDateStr));
+		param.put("actPositionEndDate",DateUtil.parse(actPositionEndDateStr));
 		return feeProvisionSettingService.selectForPage(page, length, param);
 	}
 
@@ -162,6 +164,7 @@ public class FeeProvisionSettingController {
 	 */
 	@PostMapping("/getBooksetId")
 	public List<SelectOptionDto> getBooksetId(@RequestBody Map<String,Object> map) {
+		if (StringUtil.isEmpty((CharSequence) map.get("positionStartDate"))) return null;
 		return feeProvisionSettingService.getBooksetId(map);
 	}
 
@@ -215,7 +218,12 @@ public class FeeProvisionSettingController {
 	public Integer selectCount(@RequestBody FeeProvisionSettingDto dto){
 		return feeProvisionSettingService.selectCount(dto);
 	}
-	
+
+	@PostMapping("/getRepetitionDate")
+	public Date getRepetitionDate(@RequestBody FeeProvisionSettingDto dto){
+		return feeProvisionSettingService.getRepetitionDate(dto);
+	}
+
 	/**
 	 * 作废删除流程中的数据
 	 * @param dto

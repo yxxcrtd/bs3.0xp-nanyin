@@ -173,7 +173,7 @@ public class EtrBrowDepoInfo001Controller extends BaseController {
         List<ValidMessage> errorList = new ArrayList<ValidMessage>();
         List<EtrBrowDepoInfoDto> list = dto.getSelectedItem();
         for(EtrBrowDepoInfoDto etrBrowDepoInfoDto:list){
-            if(etrBrowDepoInfoService.closeDelegate(etrBrowDepoInfoDto.getEntrustId(), etrBrowDepoInfoDto.getCloseWay(), etrBrowDepoInfoDto.getEntrustStatus())){
+            if(etrBrowDepoInfoService.closeDelegate(etrBrowDepoInfoDto.getEntrustId(), etrBrowDepoInfoDto.getCloseWay())){
                 ajaxResult.setMessage(this.getMessage("ETR_X_003"));
             }else{
                 errorList.add(new ValidMessage(getMessage("组合代码:"+etrBrowDepoInfoDto.getPortfolioId())+"委托关闭失败"));

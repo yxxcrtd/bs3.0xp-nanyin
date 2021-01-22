@@ -1,0 +1,1 @@
+update rsk_isup_indicator set SUP_FREQUENCY = 'DAYTIME,DAYEND' where ind_name = '银行存款、债券回购、中央银行票据、同业存单的期限在1年以内（含1年）';

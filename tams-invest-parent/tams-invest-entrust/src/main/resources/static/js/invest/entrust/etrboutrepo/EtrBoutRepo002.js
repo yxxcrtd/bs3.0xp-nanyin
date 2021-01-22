@@ -75,21 +75,6 @@
          * 获取列表参数
          */
         var object = $.serializeToObject('#searchForm');
-        // 指令授信 start
-        object.inputValue1 = 'F10';
-        object.tradeAmt = object.entrustAmt;
-        object.prinAmt = object.entrustAmt;
-        object.tradeDate = $('#vdate').val();
-        object.counterId = object.etrInvestPersonInfo.counterId;
-        object.branch = '0';
-        object.repoType = $('#assetType1').val();
-        object.remark = object.repoType;
-        if(object.ps == '03'){
-        	object.finprodType2 = 'F04';
-        }else{
-        	object.finprodType2 = 'F05';
-        }
-        // 指令授信 end
         object.etrInvestPersonInfo.invManagerId = $('#etrInvestPersonInfo_invManagerId').val();
         object.operateType = operateType;
         object.pageModel = pageModel;
@@ -111,19 +96,17 @@
         }
         object.inputValue1 = PINAN_ASSET_TYPE_F10;
         object.inputValue2 = $('#ps').val();
-        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
-	        Joyin.ajaxJson(basePath + 'invest/entrust/etrboutrepo/EtrBoutRepo002/checkAuthorization', object, function(result2) {
-		        Joyin.ajaxJson(basePath + 'invest/entrust/etrboutrepo/EtrBoutRepo002/check',object,
-		          function(result) {
-		              Joyin.confirm(result.data,function() {
-		                   if (operateType === 'save') {
-		                       WorkFlow.doSaveList(basePath+'invest/entrust/etrboutrepo/EtrBoutRepo002/save',object,"EtrBoutRepo002_btn_save");
-		                   } else {
-		                       WorkFlow.doSubmitList(basePath+'invest/entrust/etrboutrepo/EtrBoutRepo002/save',object,"EtrBoutRepo002_btn_submit");
-		                   }
-		               });
-		           });
-	        	});
+        Joyin.ajaxJson(basePath + 'invest/entrust/etrboutrepo/EtrBoutRepo002/checkAuthorization', object, function(result2) {
+	        Joyin.ajaxJson(basePath + 'invest/entrust/etrboutrepo/EtrBoutRepo002/check',object,
+	          function(result) {
+	              Joyin.confirm(result.data,function() {
+	                   if (operateType === 'save') {
+	                       WorkFlow.doSaveList(basePath+'invest/entrust/etrboutrepo/EtrBoutRepo002/save',object,"EtrBoutRepo002_btn_save");
+	                   } else {
+	                       WorkFlow.doSubmitList(basePath+'invest/entrust/etrboutrepo/EtrBoutRepo002/save',object,"EtrBoutRepo002_btn_submit");
+	                   }
+	               });
+	           });
         });
     }
   //查询组合可用现金
@@ -169,7 +152,7 @@
         }
         Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetn/EtrPlanAssetN002/getAssetAvailablePosition',data,
                 function(result) {
-            $('#assetAvailablePosition').val(result).trigger('blur');
+            $('#assetAvailablePosition').val(result).trigger('blur');;
         });
     }
     /**

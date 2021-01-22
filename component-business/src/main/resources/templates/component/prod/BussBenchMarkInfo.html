@@ -21,7 +21,7 @@ width: 33%!important;
                         <select th:id="|${entityName}_publishType|"
 							th:name="|${entityName}.publishType|"
 							class="layui-input form-input input-select"
-							data-th-initValue="${pageModel} eq ${pageModelNew} ? '02' : ${entity?.publishType}"
+							data-th-initValue="${entity}?${entity.publishType}:'02'"
 							data-th-data-result="${SVR_YES_OR_NO}" searchable="false"
 							placeholder="请输入内容"
 							data-th-placeholder="#{SysCommon.placeholder}">

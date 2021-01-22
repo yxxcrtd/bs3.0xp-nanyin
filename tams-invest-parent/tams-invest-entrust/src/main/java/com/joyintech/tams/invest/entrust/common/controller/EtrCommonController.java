@@ -12,15 +12,10 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import com.joyintech.tams.invest.common.risk.dto.RiskCreditListCommonDto;
-import com.joyintech.tams.invest.common.risk.service.RiskCreditListCommonValidatorService;
 import com.joyintech.tams.invest.common.risk.service.RiskNamListCommonValidatorService;
-import com.joyintech.tams.invest.common.trade.CeLinesUpdate;
-import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
-import com.joyintech.tams.invest.common.trade.dto.CreditLinesDealCommon;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etrbondtostock.dto.EtrBondToStockDto;
 import com.joyintech.tams.invest.entrust.etrbondtostock.service.EtrBondToStockService;
@@ -42,6 +37,7 @@ import com.joyintech.tams.invest.entrust.etrseclend.dto.EtrSecLendDto;
 import com.joyintech.tams.invest.entrust.etrstock.dto.EtrStockDto;
 import com.joyintech.tams.invest.entrust.etrwtfxswap.dto.EtrWtFxswapDto;
 import com.joyintech.tams.invest.entrust.etrwtspotex.dto.EtrWtSpotexDto;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,37 +60,32 @@ import java.util.Map;
 @Controller
 @RequestMapping("/invest/entrust/EtrCommonController")
 public class EtrCommonController extends BaseController {
-    
+
     /**
      * 日志
      */
     public static Logger logger = LoggerFactory.getLogger(EtrCommonController.class);
-    
+
     /**
      * 委托共通
      */
     @Autowired
     private EtrCommonService etrCommonService;
-    
-    @Autowired
-    private RiskNamListCommonValidatorService riskNamListCommonValidatorService;
-    
 
     @Autowired
-    private RiskCreditListCommonValidatorService riskCreditListCommonValidatorService;
-    
+    private RiskNamListCommonValidatorService riskNamListCommonValidatorService;
+
     @RequestMapping("getProAvailableCash")
     @ResponseBody
     public Map<String, Object> getProAvailableCash(@RequestBody Map<String, Object> param){
         return etrCommonService.getProAvailableCash(param);
     }
-    
+
 
     @RequestMapping("check")
     @ResponseBody
     public AjaxResult check(@RequestBody TrdProductDeal trdProductDeal) {
         AjaxResult wr = new AjaxResult();
-        RiskCreditListCommonDto riskCreditListCommonDto = new RiskCreditListCommonDto();
         //名单管理  isNameSoftControl true:软控  false:硬控
         boolean isNameSoftControl = Boolean.parseBoolean(CacheUtil.getSysParam("IS_NAME_SOFTCONTROL"));
         Map<String,Object> params = new HashMap<>();
@@ -117,12 +108,12 @@ public class EtrCommonController extends BaseController {
                     joyinMessages.add(ms);
                     wr.setJoyinMessages(joyinMessages);
                 }
-            } else if(!Boolean.parseBoolean(param.get("isAssetMatch").toString()) && Boolean.parseBoolean(param.get("isAssetWhiteList").toString())) { 
-                    JoyinMessage ms = new JoyinMessage("该资产不在白名单内，是否确认提交?", MessageType.确认消息);
-                    joyinMessages.add(ms);
-                    wr.setJoyinMessages(joyinMessages); 
+            } else if(!Boolean.parseBoolean(param.get("isAssetMatch").toString()) && Boolean.parseBoolean(param.get("isAssetWhiteList").toString())) {
+                JoyinMessage ms = new JoyinMessage("该资产不在白名单内，是否确认提交?", MessageType.确认消息);
+                joyinMessages.add(ms);
+                wr.setJoyinMessages(joyinMessages);
             }
-            if (!Boolean.parseBoolean(param.get("isOrgBlackMatch").toString())) {    
+            if (!Boolean.parseBoolean(param.get("isOrgBlackMatch").toString())) {
                 if (param.containsKey("listTypeOrg")) {
                     JoyinMessage ms = new JoyinMessage("资产所属机构（或交易对手）在黑名单内，是否确认提交?", MessageType.确认消息);
                     joyinMessages.add(ms);
@@ -134,58 +125,21 @@ public class EtrCommonController extends BaseController {
                 wr.setJoyinMessages(joyinMessages);
             }
         }
-        
 
-        //授信管理  isCreditSoftControl true:软控  false:硬控
-        boolean isCreditSoftControl = Boolean.parseBoolean(CacheUtil.getSysParam("IS_CREDIT_SOFTCONTROL"));
-        String status = "01";
-        if (!StringUtil.equals(BussinessDictCodeList.监控授信开关_关.getValue(), CacheUtil.getSysParam(BussinessConstant.ISCREDIT))
-                && isCreditSoftControl) {
-
-//            //温州个性化，只有授信来源不为外部的时候才进行授信校验 start
-//            if(!DictCodeListExt3.授信来源_外部.getValue().equals(trdProductDeal.getCreditSource())){
-        		if(trdProductDeal.getCounterId() == null) {
-        			trdProductDeal.setCounterId("");
-        		}
-        		// 债券一级市场指令不走授信
-        		if(trdProductDeal.getFinprodType2()!=null && !trdProductDeal.getFinprodType2().equals(DictCodeListExt2.金融产品类型_投管用_一级投标债券.getValue())) {
-                	CeLinesUpdate ceLinesUpdate = SpringContextUtil.getBean(CeLinesUpdate.class);
-                	AllTradeCommonInputDto inputDto =new AllTradeCommonInputDto();
-                	inputDto.setTrdProductDeal(trdProductDeal);
-                	// TODO 回购类型
-//                	inputDto.setRepoType(trdProductDeal.getRemark());
-                    inputDto.setRepoType(trdProductDeal.getInputValue2());
-                	List<CreditLinesDealCommon> list = ceLinesUpdate.isNeedOccupyCre(inputDto, true,false,false);
-                	if(list !=null && list.size()>0){
-                		if(list.get(0).getErrMessage() !=null && (getMessage("BUSS_COM_CRE_001").equals(list.get(0).getErrMessage()) 
-                				|| getMessage("BUSS_COM_CRE_002").equals(list.get(0).getErrMessage()))){
-                			list.get(0).setErrMessage(getMessage("BUSS_COM_CRE_004"));
-                		}
-                		JoyinMessage joyinMessage = new JoyinMessage(list.get(0).getErrMessage(), MessageType.确认消息);
-                		joyinMessages.add(joyinMessage);
-                	}
-                }
+//        //授权管理  isAuthorizationSoftcontrol true:软控  false:硬控
+//        boolean isAuthorizationSoftcontrol = Boolean.parseBoolean(CacheUtil.getSysParam("IS_AUTHORIZATION_SOFTCONTROL"));
+//
+//        if (isAuthorizationSoftcontrol) {
+//            boolean isRiskAuthorize = 授权是否匹配(trdProductDeal);
+//            if (StringUtil.isNotEmpty(isRiskAuthorize) && isRiskAuthorize) {
+//                JoyinMessage ms = new JoyinMessage("交易本金金额超过副总裁/总裁助理授权额度，是否确认提交!", MessageType.确认消息);
+//                joyinMessages.add(ms);
+//                wr.setJoyinMessages(joyinMessages);
 //            }
-//            //温州个性化，只有授信来源不为外部的时候才进行授信校验 end
-
-            riskCreditListCommonDto.setStatus(status);
-            wr.setJoyinMessages(joyinMessages);
-        }
-//        /*add wujiafeng 2020/07/07 增加OA利率校验 start*/
-//        //读取开关是否进行OA利率校验
-//        boolean isOARateCheck = Boolean.parseBoolean(CacheUtil.getSysParam("IS_OARATE_CHECK"));
-//        if(isOARateCheck){
-//        	String rateApprovalCode = trdProductDeal.getRateApprovalCode();
-//        	if(StringUtil.isNotEmpty(rateApprovalCode)){
-//        		//利率审批编码有值时需要到OA进行利率校验
-//        		List<ValidMessage> errorList = etrCommonService.checkOARate(trdProductDeal);
-//        	    wr.setErrorList(errorList);
-//          }
 //        }
-//        /*add wujiafeng 2020/07/07 增加OA利率校验 end*/
         return wr;
     }
-    
+
     /**
      * 验证方法
      *
@@ -377,7 +331,7 @@ public class EtrCommonController extends BaseController {
                 tradeMarket = inputDto.getTradeMarket();
                 trdProductDeal = new TrdProductDeal();
                 BeanUtil.copyPropertiesIgnoreNull(trdProductDeal, inputDto);
-                ps = inputDto.getPs(); 
+                ps = inputDto.getPs();
                 inputValue1 = DictCodeList.平安资产类型_买断式回购.getValue();
                 inputValue2 = ps;
             }
@@ -414,13 +368,13 @@ public class EtrCommonController extends BaseController {
                 trdProductDeal = new TrdProductDeal();
                 BeanUtil.copyPropertiesIgnoreNull(trdProductDeal, inputDto);
                 ps = inputDto.getPs();
-              // 将ps不等于T02的改成T01 赵东东 2019.8.26 start
+                // 将ps不等于T02的改成T01 赵东东 2019.8.26 start
                 if(!StringUtil.equals(ps, DictCodeList.交易方向_卖出.getValue())) {
                     // 将代码中的字符串改掉by赵东东 2019.8.26 start
                     ps= DictCodeList.交易方向_买入.getValue();
                     // 将代码中的字符串改掉by赵东东 2019.8.26 end
                 }
-             // 将ps不等于T02的改成T01 赵东东 2019.8.26 end
+                // 将ps不等于T02的改成T01 赵东东 2019.8.26 end
                 finprodId = inputDto.getFinprodId();
             }
             // 外汇即期
@@ -505,7 +459,7 @@ public class EtrCommonController extends BaseController {
                 ps = inputDto.getPs();
                 finprodId = inputDto.getFinprodId();
             }
-            
+
             // 可转债转股 add by gaopeng  20191123
             else if (value instanceof EtrBondToStockDto) {
                 EtrBondToStockDto inputDto = (EtrBondToStockDto)value;
@@ -521,13 +475,13 @@ public class EtrCommonController extends BaseController {
                 trdProductDeal.setFinprodId(inputDto.getShareFinprodId());
                 finprodId = inputDto.getShareFinprodId();
             }
-            
+
             // 授权额度检查（当本金金额高于副总裁/总裁助理相应资产的授权额度时，提示消息）
             if (prinAmt != null) {
                 CommonBusinessService commonBusinessService = SpringContextUtil.getBean(
-                    CommonBusinessService.class);
+                        CommonBusinessService.class);
                 Map<String, Object> params = CommonBusinessService.setParams(counterId, prinAmt, LoginUserUtil.getUserName(),
-                		平安资产类型, null, tradeMarket, ps,finprodId, null);
+                        平安资产类型, null, tradeMarket, ps,finprodId, null);
                 if (commonBusinessService != null && commonBusinessService.是否超过副总额额度_指令用(params)) {
                     JoyinMessage ms = new JoyinMessage("交易本金金额超过副总裁/总裁助理授权额度，是否确认提交!", MessageType.确认消息);
                     joyinMessages.add(ms);
@@ -544,5 +498,5 @@ public class EtrCommonController extends BaseController {
 
         return wr;
     }
-    
+
 }

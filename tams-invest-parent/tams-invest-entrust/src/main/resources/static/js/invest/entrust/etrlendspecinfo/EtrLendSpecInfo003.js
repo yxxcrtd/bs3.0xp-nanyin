@@ -156,24 +156,6 @@
         var objects = object.selectedItem;
         for (var index in objects) {
             var temp = objects[index];
-            
-            // 指令授信 start
-            temp.inputValue1 = 'F08';
-            if(temp.ps == '01'){
-            	if(temp.assetType1 == 'L02'){
-            		temp.finprodType2 = 'F25';
-            	}else{
-            		temp.finprodType2 = 'F08';
-            	}
-            }else{
-            	temp.finprodType2 = 'F09';
-            }
-            temp.prinAmt = temp.entrustAmt;
-            temp.tradeAmt = temp.entrustAmt;
-            temp.tradeDate = sysDate;
-            temp.counterId = temp.counterId;
-            // 指令授信 end
-            
             if (operateType === 'save') {
                 temp.elementId = 'EtrLendSpecInfo002_btn_save';
             } else {
