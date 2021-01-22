@@ -805,4 +805,17 @@ public class InterfRiskRdsDto implements IRiskRds {
 	public void setCalendarCode(String calendarCode) {
 		this.calendarCode = calendarCode;
 	}
+	
+	public BigDecimal getDeadline() {
+		return deadline;
+	}
+
+	public void setDeadline(BigDecimal deadline) {
+		this.deadline = deadline;
+	}
+	
+	/**
+	 * 设置期限变量，非标用此变量作为资产的存续时长
+	 */
+	private BigDecimal deadline;
 }
