@@ -160,6 +160,12 @@ var QueryFunc=function(){
             }
         }else if(obj["06"].indexOf(repAssetType)>=0){
             //权益类资产
+            if(repAssetType=='1305'||repAssetType=='1302'){
+                $("#SvrBussRepEquityInfoDto_equityQuit").val('').trigger("change");
+                $("#SvrBussRepEquityInfoDto_equityQuit").attr("disabled",true);
+            }else if(repAssetType=='1301'){
+                $("#SvrBussRepEquityInfoDto_equityQuit").attr("disabled",false);
+            }
         }else if(obj["07"].indexOf(repAssetType)>=0){
             //金融衍生品
             if(repAssetType!='1403'){
