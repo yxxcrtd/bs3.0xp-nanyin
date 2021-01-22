@@ -30,347 +30,189 @@ public class SvrBussRepEquityInfoDto extends RepAssetEquity{
      * <意义，目的和功能，以及可能被用到的地方>
      */
     private static final long serialVersionUID = 1L;
-    
-    private String type6;
-    
-    private String type7;
-
-    private String type8;
-
-    public String getType8() {
-        return type8;
-    }
-
-    public void setType8(String type8) {
-        this.type8 = type8;
-    }
+    /**
+     * 资产代码
+     */
+    private String assetId;
 
     /**
-     * 资产/负债类别
+     * 资产名称
      */
-    private String repAssetType;
-    
-    /**
-     * 交易流通场所
-     */
-    private String repTradeMarket;
+    private String assetName;
+
 
     /**
-     * 是否投向金融资产投资公司或其附属机构发行的私募股权投资基金
+     * 股票类型 01 普通股/02 优先股/99 其他
      */
-    private String repPrivatefundFlag;
+    private String sharesType;
+    /**
+     * 行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
+     */
+    private String industryShares;
 
     /**
-     * 公共PPP
+     * 行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
      */
-    private String repPppflag;
+    private String industryShares2;
 
     /**
-     * 是否小微企业信贷资产流转和收益权转让
+     * 投资阶段 01 种子期/ 02 起步期/ 03 扩张期/ 04 过渡期/ 05 重建期/ 06 已上市/ 99 其它
      */
-    private String repSmallcredit;
+    private String investStage;
 
     /**
-     * 是否投向投向市场化债转股相关产品的部分
+     * 股权退出安排
      */
-    private String repBondtostockFlag;
+    private Date equityQuit;
+
 
     /**
-     * 是否投向金融资产投资公司发行的私募资产管理产品
+     * 投资企业类型（按规模划分） 01 中小微企业/02 大型企业/99 其他
      */
-    private String repPrivateprdFlag;
+    private String sharesType1;
 
     /**
-     * 人行机构规模
+     * 投资企业类型（按经济类型划分）01 国有企业/02 集体企业/03 私营企业/99 其他
      */
-    private String repInstitSize;
+    private String sharesType2;
 
     /**
-     * 受让形式
+     * 投资企业类型（按技术领域划分）01 高新技术企业/99 其他
      */
-    private String repAssignee;
-    
+    private String sharesType3;
+
+    /**
+     * 是否为质押融资 01是/02否
+     */
+    private String isPledge;
+
     /**
      * 是否为债转股
      */
-    private String repDeptEquity;
-    
+    private String deptEquity;
+
     /**
      * 商业银行优先股
      */
-    private String repBankSecPrefer;
-    
+    private  String bankSecPrefer;
     /**
-     * 股权退出安排 REP_EQUITY_QUIT 中债新增字段 20200408 start
+     * 备注
      */
-    private Date repEquityQuit;
-    
-    public String getRepDeptEquity() {
-		return repDeptEquity;
-	}
+    private String remark;
 
-	public void setRepDeptEquity(String repDeptEquity) {
-		this.repDeptEquity = repDeptEquity;
-	}
-
-	public String getRepBankSecPrefer() {
-		return repBankSecPrefer;
-	}
-
-	public void setRepBankSecPrefer(String repBankSecPrefer) {
-		this.repBankSecPrefer = repBankSecPrefer;
-	}
-
-    /**
-     * 获取 repAssetType
-     * @return repAssetType.
-     */
-    public String getRepAssetType() {
-        return repAssetType;
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
-    
-    /**
-     * 设置 repAssetType
-     * @param repAssetType repAssetType
-     */
-    public void setRepAssetType(String repAssetType) {
-        this.repAssetType = repAssetType;
+    public String getAssetId() {
+        return assetId;
     }
 
-    
-    /**
-     * 获取 repTradeMarket
-     * @return repTradeMarket.
-     */
-    public String getRepTradeMarket() {
-        return repTradeMarket;
+    public void setAssetId(String assetId) {
+        this.assetId = assetId;
     }
 
-    
-    /**
-     * 设置 repTradeMarket
-     * @param repTradeMarket repTradeMarket
-     */
-    public void setRepTradeMarket(String repTradeMarket) {
-        this.repTradeMarket = repTradeMarket;
+    public String getAssetName() {
+        return assetName;
     }
 
-
-    
-    /**
-     * 获取 type6
-     * @return type6.
-     */
-    public String getType6() {
-        return type6;
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
     }
 
-
-    
-    /**
-     * 设置 type6
-     * @param type6 type6
-     */
-    public void setType6(String type6) {
-        this.type6 = type6;
+    public String getSharesType() {
+        return sharesType;
     }
 
-
-    
-    /**
-     * 获取 type7
-     * @return type7.
-     */
-    public String getType7() {
-        return type7;
+    public void setSharesType(String sharesType) {
+        this.sharesType = sharesType;
     }
 
-
-    
-    /**
-     * 设置 type7
-     * @param type7 type7
-     */
-    public void setType7(String type7) {
-        this.type7 = type7;
+    public String getIndustryShares() {
+        return industryShares;
     }
 
-    /**
-     * 重写父类这几个方法，让finStockInfo能够存值,必填项校验
-     * 作者：叶刚
-     * 时间：2019/7/23
-     */
-    private String repSharesId;
-    private String repPartyType1;
-    private String repPartyType2;
-    private String repPartyType3;
-    private String repRemark;
-    /**
-     * 股票类型
-     */
-    private String repSharesType;
-
-    /**
-     * 行业
-     */
-    private String repIndustry;
-
-    /**
-     * 行业二级分类
-     */
-    private String repIndustryLevel2;
-
-    @Override
-    public String getRepSharesId() {
-        return repSharesId;
+    public void setIndustryShares(String industryShares) {
+        this.industryShares = industryShares;
     }
 
-    @Override
-    public void setRepSharesId(String repSharesId) {
-        this.repSharesId = repSharesId;
+    public String getIndustryShares2() {
+        return industryShares2;
     }
 
-    @Override
-    public String getRepPartyType1() {
-        return repPartyType1;
+    public void setIndustryShares2(String industryShares2) {
+        this.industryShares2 = industryShares2;
     }
 
-    @Override
-    public void setRepPartyType1(String repPartyType1) {
-        this.repPartyType1 = repPartyType1;
+    public String getInvestStage() {
+        return investStage;
     }
 
-    @Override
-    public String getRepPartyType2() {
-        return repPartyType2;
+    public void setInvestStage(String investStage) {
+        this.investStage = investStage;
     }
 
-    @Override
-    public void setRepPartyType2(String repPartyType2) {
-        this.repPartyType2 = repPartyType2;
+    public Date getEquityQuit() {
+        return equityQuit;
     }
 
-    @Override
-    public String getRepPartyType3() {
-        return repPartyType3;
+    public void setEquityQuit(Date equityQuit) {
+        this.equityQuit = equityQuit;
     }
 
-    @Override
-    public void setRepPartyType3(String repPartyType3) {
-        this.repPartyType3 = repPartyType3;
+    public String getSharesType1() {
+        return sharesType1;
     }
 
-    @Override
-    public String getRepRemark() {
-        return repRemark;
+    public void setSharesType1(String sharesType1) {
+        this.sharesType1 = sharesType1;
     }
 
-    @Override
-    public void setRepRemark(String repRemark) {
-        this.repRemark = repRemark;
+    public String getSharesType2() {
+        return sharesType2;
     }
 
-    @Override
-    public String getRepSharesType() {
-        return repSharesType;
+    public void setSharesType2(String sharesType2) {
+        this.sharesType2 = sharesType2;
     }
 
-    @Override
-    public void setRepSharesType(String repSharesType) {
-        this.repSharesType = repSharesType;
+    public String getSharesType3() {
+        return sharesType3;
     }
 
-    @Override
-    public String getRepIndustry() {
-        return repIndustry;
+    public void setSharesType3(String sharesType3) {
+        this.sharesType3 = sharesType3;
     }
 
-    @Override
-    public void setRepIndustry(String repIndustry) {
-        this.repIndustry = repIndustry;
+    public String getIsPledge() {
+        return isPledge;
     }
 
-    @Override
-    public String getRepIndustryLevel2() {
-        return repIndustryLevel2;
+    public void setIsPledge(String isPledge) {
+        this.isPledge = isPledge;
     }
 
-    @Override
-    public void setRepIndustryLevel2(String repIndustryLevel2) {
-        this.repIndustryLevel2 = repIndustryLevel2;
-    }
-    /**
-     * 以上为股票标的（finStockInfo）页面check，获取值的重写父类方法
-     */
-
-    public String getRepPrivatefundFlag() {
-        return repPrivatefundFlag;
+    public String getDeptEquity() {
+        return deptEquity;
     }
 
-    public void setRepPrivatefundFlag(String repPrivatefundFlag) {
-        this.repPrivatefundFlag = repPrivatefundFlag;
+    public void setDeptEquity(String deptEquity) {
+        this.deptEquity = deptEquity;
     }
 
-    public String getRepPppflag() {
-        return repPppflag;
+    public String getBankSecPrefer() {
+        return bankSecPrefer;
     }
 
-    public void setRepPppflag(String repPppflag) {
-        this.repPppflag = repPppflag;
+    public void setBankSecPrefer(String bankSecPrefer) {
+        this.bankSecPrefer = bankSecPrefer;
     }
 
-    public String getRepSmallcredit() {
-        return repSmallcredit;
+    public String getRemark() {
+        return remark;
     }
 
-    public void setRepSmallcredit(String repSmallcredit) {
-        this.repSmallcredit = repSmallcredit;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
-
-    public String getRepBondtostockFlag() {
-        return repBondtostockFlag;
-    }
-
-    public void setRepBondtostockFlag(String repBondtostockFlag) {
-        this.repBondtostockFlag = repBondtostockFlag;
-    }
-
-    public String getRepPrivateprdFlag() {
-        return repPrivateprdFlag;
-    }
-
-    public void setRepPrivateprdFlag(String repPrivateprdFlag) {
-        this.repPrivateprdFlag = repPrivateprdFlag;
-    }
-
-    public String getRepInstitSize() {
-        return repInstitSize;
-    }
-
-    public void setRepInstitSize(String repInstitSize) {
-        this.repInstitSize = repInstitSize;
-    }
-
-    public String getRepAssignee() {
-        return repAssignee;
-    }
-
-    public void setRepAssignee(String repAssignee) {
-        this.repAssignee = repAssignee;
-    }
-
-	/**
-	 * @return the repEquityQuit
-	 */
-	public Date getRepEquityQuit() {
-		return repEquityQuit;
-	}
-
-	/**
-	 * @param repEquityQuit the repEquityQuit to set
-	 */
-	public void setRepEquityQuit(Date repEquityQuit) {
-		this.repEquityQuit = repEquityQuit;
-	}
 }

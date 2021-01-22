@@ -22,13 +22,13 @@
         $("#"+initentity+"_repInvestStage").attr("disabled",true).trigger('change');
         //修改股票标的界面是否为质押融资点不了 By 赵东东 start
         //$("#"+initentity+"_repIsPledge").attr("disabled",true).trigger('change');
-        
+
         //股票标的界面进入则显示 债转股，商业银行优先股 add by wj 20200408
         $("#"+initentity+"_repDeptEquity_div").show();
         $("#repDeptEquity").attr("required",true);
         $("#"+initentity+"_repBankSecPrefer_div").show();
         $("#repBankSecPrefer").attr("required",true);
-        
+
     } else {
         /*$("#div01").show();
         getElementById('content_one_div').nextAll().hide();
@@ -50,6 +50,7 @@
             }
         }
     })*/
+
     getElementById('repPartyType1').change(function(){
         if(getElementById('finprodType2').val() == FINPROD_TYPE_TG_F18
         ||getElementById('finprodType2').val() == FINPROD_TYPE_TG_F01){
