@@ -2122,7 +2122,7 @@ $(function() {
                                 ps:entrustList[0].ps
                           };
 
-                      label = 'TrdRepoTrade003';
+                      label = 'TrdRepoTrade003.new';
                       pagePath = basePath + "invest/trade/trdrepotrade/TrdRepoTrade003/init";
                       Joyin.dialog(JoyinUtil.getLabel(label),pagePath, "99%", "99%",param);
                   }
