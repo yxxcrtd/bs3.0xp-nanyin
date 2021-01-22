@@ -63,16 +63,6 @@
          * 获取列表参数
          */
         var object = $.serializeToObject('#searchForm');
-
-        // 指令授信 start
-        object.inputValue1 = 'F01';
-        object.finprodType2 = 'F01';
-        object.tradeAmt = object.entrustNum;
-        object.prinAmt = object.entrustNum;
-        object.tradeDate = $('#vdate').val();
-        object.counterId = $('#etrInvestPersonInfo_counterId').val();
-        // 指令授信 end
-
         if ($('#select2-finprodId-container').attr('title')){
             object.finprodName = $('#select2-finprodId-container').attr('title');
         }

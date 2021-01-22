@@ -111,9 +111,6 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
     @Autowired
     private BidCloseStatusMapper bidCloseStatusMapper;
 
-    @Autowired
-    private BaseEtrInvestInfoMapper baseEtrInvestInfoMapper;
-
     /**
      * 委托操作相关校验 <一句话功能简述> <功能详细描述>
      *
@@ -734,12 +731,6 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
                 if (委托额度 == null) {
                     委托额度 = etrEntrust.getEntrustNum();
                 }
-                if(etrEntrust!= null && DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(etrEntrust.getFinprodType2())) {
-                	委托额度 = etrEntrust.getEntrustNum();
-                    if (委托额度 == null) {
-                        委托额度 = etrEntrust.getEntrustAmt();
-                    }
-                }
 
                 BigDecimal 总交易完成度 = ArithmeticUtil.divide(etrFinishAmtDto.getSumFinishAmt(), 委托额度, 4);
                 总交易完成度 = ArithmeticUtil.multiply(总交易完成度, BigDecimal.valueOf(100));
@@ -834,9 +825,7 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
             EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entrustId);
             //退回备注不覆盖之前的备注 edit by xueying 20200725 start
             String remark=etrEntrust.getRemark();
-            if (remark != null) {
-                reason=remark+"\n"+"退回原因：" + reason;            	
-            }
+            reason=remark+"\n"+"退回原因：" + reason;
             // 更改委托状态
             etrEntrust.setRemark(reason);
             //退回备注不覆盖之前的备注 edit by xueying 20200725 end

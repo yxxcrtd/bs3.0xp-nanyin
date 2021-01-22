@@ -25,7 +25,7 @@
             T1.REMARK               remark,
             T1.PRICE_MODEL          priceModel,
             NVL(T5.FINISH_AMT,0)    finishAmt,
-            round(NVL(T5.FINISH_AMT,0)/NVL(T1.ENTRUST_NUM,T1.ENTRUST_AMT),2) transactioncom
+            round(NVL(T5.FINISH_AMT,0)/NVL(T1.ENTRUST_AMT,T1.ENTRUST_NUM),2) transactioncom
         FROM ETR_ENTRUST T1
         LEFT JOIN PTL_PORTFOLIO T2 ON
             T1.PORTFOLIO_ID = T2.PORTFOLIO_ID

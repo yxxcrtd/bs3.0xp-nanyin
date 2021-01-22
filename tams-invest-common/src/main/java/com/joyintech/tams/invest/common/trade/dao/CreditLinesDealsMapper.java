@@ -87,46 +87,9 @@ public interface CreditLinesDealsMapper {
 	String getFinprodIdByTradeId(@Param("tradeId") String tradeId);
 	
 	/**
-	 * <b>方法：</b>getEntrustAmtByEntrustId<br>
-	 * <b>描述：</b>根据委托代码查询委托交易的金额<br>
-	 * <b>作者：</b>zhuruqing<br>
-	 * <b>时间：</b>2020/5/23 15:23<br>
-	 * <b>参数：</b>entrustId<br>
-	 * <b>返回值：</b>BigDecimal<br>
-	 */
-    BigDecimal getEntrustAmtByEntrustId(@Param("entrustId")String entrustId);
-
-    /**
-     * <b>方法：</b>updateLinesByPrimaryKey<br>
-     * <b>描述：</b>更新授信主表<br>
-     * <b>作者：</b>zhuruqing<br>
-     * <b>时间：</b>2020/5/23 15:27<br>
-     * <b>参数：</b>CreditLines<br>
-     * <b>返回值：</b>int<br>
-     */
-	int updateLinesByPrimaryKey(CreditLines creditLines);
-
-	CreditLinesDeal getCeLinesInfo(Map<String,Object> map);
-	
-	/**
-	 * 指令生成交易生效时，扣减指令对应交易额度
-	 * 
-	 * @param creditLines
-	 * @return
-	 */
-	int updateLinesDealByPrimaryKey(CreditLinesDeal creditLinesDeal);
-	
-	/**
 	 * 根据前置交易标号查交易编号
 	 * @param bTradeId
 	 * @return
 	 */
 	List<String> selectTradeidByBTtradid(@Param("bTradeId") String bTradeId);
-	
-	/**
-	 * 根据交易编号查该笔交易指令编号
-	 * @param bTradeId
-	 * @return
-	 */
-	String selectEntrustIdByTradeid(@Param("tradeId") String tradeId);
 }

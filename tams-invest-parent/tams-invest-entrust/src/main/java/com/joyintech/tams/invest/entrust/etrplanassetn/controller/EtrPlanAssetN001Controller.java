@@ -166,7 +166,7 @@ public class EtrPlanAssetN001Controller extends BaseController{
         List<EtrPlanAssetNDto> dtolist = dto.getSelectedItem();
         if(dtolist != null && dtolist.size()>0){
             for(EtrPlanAssetNDto entity : dtolist){
-                etrPlanAssetNService.closeDelegate(entity.getEntrustId(), entity.getCloseWay(), entity.getEntrustStatus());
+                etrPlanAssetNService.closeDelegate(entity.getEntrustId(), entity.getCloseWay());
             }
             return new AjaxResult(this.getMessage("ETR_X_003"));
         }

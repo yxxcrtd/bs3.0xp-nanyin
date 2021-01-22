@@ -148,7 +148,7 @@ public class EtrStock001Controller extends BaseController {
         List<EtrStockDto> dtolist = dto.getSelectedItem();
         if(dtolist != null && dtolist.size()>0){
             for(EtrStockDto entity : dtolist){
-                etrStockService.closeDelegate(entity.getEntrustId(), entity.getCloseWay(), entity.getEntrustStatus());
+                etrStockService.closeDelegate(entity.getEntrustId(), entity.getCloseWay());
             }
             return new AjaxResult("关闭成功");
         }

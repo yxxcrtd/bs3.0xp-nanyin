@@ -20,7 +20,6 @@ import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
-import com.joyintech.tams.invest.common.risk.service.RiskCreditListCommonValidatorService;
 import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
@@ -342,9 +341,6 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
                 etrPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(DateUtil.platDateFromCache()));
                 etrPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setCdate(DateUtil.platDateFromCache()));
                 EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
-                //删除授信占用
-        		RiskCreditListCommonValidatorService riskCreditListCommonValidatorService = SpringContextUtil.getBean(RiskCreditListCommonValidatorService.class);
-            	riskCreditListCommonValidatorService.deleteCredit(entrustId);
             }
         }
         return new CommonResult(CommonResult.SUCCED, "处理完成");

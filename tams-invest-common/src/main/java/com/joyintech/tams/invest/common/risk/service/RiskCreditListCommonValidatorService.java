@@ -1,24 +1,39 @@
 package com.joyintech.tams.invest.common.risk.service;
-
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
-import com.joyintech.tams.common.base.dao.FinProductTypeMapper;
-import com.joyintech.tams.common.base.dao.TrdProductDealMapper;
-import com.joyintech.tams.common.base.dao.WflTrdProductDealMapper;
-import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.invest.common.trade.dao.CreditLinesDealsMapper;
-import com.joyintech.tams.invest.common.trade.dto.FinProductCredit;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+ 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.FinProductTypeMapper;
+import com.joyintech.tams.common.base.entity.CreditLines;
+import com.joyintech.tams.common.base.entity.CreditLinesDeal;
+import com.joyintech.tams.common.base.entity.FinProductType;
+import com.joyintech.tams.common.base.entity.FinProductTypeKey;
+import com.joyintech.tams.common.base.entity.RiskWeight;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
+import com.joyintech.tams.common.base.entity.WflTrdProductDealAdd;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.risk.dto.RiskCreditListCommonDto;
+import com.joyintech.tams.invest.common.risktrial.dto.CreditLinesDetail;
+import com.joyintech.tams.invest.common.trade.dao.CreditLinesDealsMapper;
+import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
+import com.joyintech.tams.invest.common.trade.dto.CreditLinesDealCommon;
+import com.joyintech.tams.invest.common.trade.dto.FinProductCredit;
 
 /**
  *  授信公共校验
@@ -45,18 +60,7 @@ public class RiskCreditListCommonValidatorService {
     
     private boolean flagarrisNeedOccupyCreCounter =false;
     
-    @Autowired
-    private TrdProductDealMapper trdProductDealMapper;
-    
-    @Autowired
-    private WflTrdProductDealMapper wflTrdProductDealMapper;
-    
-    /**
-     * 委托指令Mapper
-     */
-    @Autowired
-    private EtrEntrustMapper etrEntrustMapper;
-    
+//    @Deprecated
 //    public RiskCreditListCommonDto 授信是否匹配(TrdProductDeal model)
 //    { 
 //        RiskCreditListCommonDto dto = new RiskCreditListCommonDto();
@@ -641,83 +645,14 @@ public class RiskCreditListCommonValidatorService {
         List<CreditLinesDeal> creditLinesDeallist = creditLinesMapper.selectCreditDealByTradeId(tradeId);
         if (null != creditLinesDeallist && creditLinesDeallist.size() != 0){
             for (CreditLinesDeal creditLinesDeal : creditLinesDeallist) {
+                CreditLines creditLinesdto = creditLinesMapper.selectCeLinesInfoBySeqno(creditLinesDeal.getSeqno());
+                //更新额度管理中 已占用额度
+                if (null != creditLinesdto){
+                    creditLinesdto.setHapCreditAmt(creditLinesdto.getHapCreditAmt().subtract(creditLinesDeal.getTradeAmt()));
+                    creditLinesMapper.updateLinesByPrimaryKeySelective(creditLinesdto);
+                }
                 //删除授信额度关联交易
                 creditLinesMapper.deleteLinesDealByTradeid(creditLinesDeal.getSeqno(),tradeId);
-                String entrustId = creditLinesMapper.selectEntrustIdByTradeid(tradeId);
-            	CreditLinesDeal credit = null;
-            	if(entrustId != null) {
-                	Map<String,Object> map = new HashMap<>(); 
-                    map.put("seqno", creditLinesDeal.getSeqno());
-                    map.put("tradeid", entrustId);
-                    // 指令交易
-                    credit = creditLinesMapper.getCeLinesInfo(map);
-            	}
-                // 从指令做的交易切指令交易存在时，返回原指令交易明细额度。不修改总额度
-                if(StringUtil.isNotEmpty(entrustId) && credit != null){
-                	BigDecimal tradeAmt = creditLinesDeal.getTradeAmt();
-                	EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entrustId);
-                	
-                    //2.查询风险系数,资产类型
-                	RiskWeight rskDTO = new RiskWeight();
-                    Map<String, Object> params = new HashMap<>();
-                    
-                    if (StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())){
-                        params.put("type1", DictCodeListExt2.平安资产类型_股票.getValue());
-                        params.put("tradedate", creditLinesDeal.getTradeDate());
-                        rskDTO = creditLinesMapper.getRskByAssetType(params);
-                    }
-                	
-                	// 股票因价格原因可能需要修改总额度
-                	if(etrEntrust!= null && DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(etrEntrust.getFinprodType2())) {
-                     	BigDecimal entrustNum = etrEntrust.getEntrustNum();
-                        if (entrustNum == null) {
-                        }else {
-                        	TrdProductDeal trdProductDeal = trdProductDealMapper.selectByPrimaryKey(tradeId);
-                        	WflTrdProductDealKey wflTrdProductDealKey = new WflTrdProductDealKey();
-                        	wflTrdProductDealKey.setTradeId(tradeId);
-                        	wflTrdProductDealKey.setWorkflowStatus("01");
-                    		WflTrdProductDeal wflTrdProductDeal = wflTrdProductDealMapper.selectByPrimaryKey(wflTrdProductDealKey);
-
-                        	if (trdProductDeal != null || wflTrdProductDeal != null) {
-                        		if(trdProductDeal != null) {
-                                	tradeAmt =trdProductDeal.getShareAmt().multiply(etrEntrust.getPrice());
-                        		}
-                        		if(wflTrdProductDeal != null) {
-                                	tradeAmt =wflTrdProductDeal.getShareAmt().multiply(etrEntrust.getPrice());
-                        		}
-                                if(rskDTO != null && (rskDTO.getRiskWeight() != null)){
-                                	tradeAmt=tradeAmt.multiply(rskDTO.getRiskWeight());
-                                }
-                                CreditLines creditLinesdto = creditLinesMapper.selectCeLinesInfoBySeqno(creditLinesDeal.getSeqno());
-                                //更新额度管理中 已占用额度
-                                if (null != creditLinesdto){ 
-                                    creditLinesdto.setUpdateTime(new Date());
-                                    creditLinesdto.setUpdateUser(LoginUserUtil.getUserName());
-                                    creditLinesdto.setHapCreditAmt(creditLinesdto.getHapCreditAmt().subtract(creditLinesDeal.getTradeAmt()).add(tradeAmt));
-                                    creditLinesMapper.updateLinesByPrimaryKeySelective(creditLinesdto);
-                                }
-                        	}
-                        }
-                    }
-                	
-                    //3.更新原指令交易额度占用明细数据
-                    CreditLinesDeal creditLinesDealOld=new CreditLinesDeal();
-                    creditLinesDealOld.setTradeAmt(tradeAmt);
-                    creditLinesDealOld.setUpdateTime(new Date());
-                    creditLinesDealOld.setUpdateUser(LoginUserUtil.getUserName());
-                    creditLinesDealOld.setSeqno(credit.getSeqno());
-                    creditLinesDealOld.setTradeId(entrustId);
-                    creditLinesMapper.updateLinesDealByPrimaryKey(creditLinesDealOld);
-                }else {
-                    CreditLines creditLinesdto = creditLinesMapper.selectCeLinesInfoBySeqno(creditLinesDeal.getSeqno());
-                    //更新额度管理中 已占用额度
-                    if (null != creditLinesdto){
-                        creditLinesdto.setHapCreditAmt(creditLinesdto.getHapCreditAmt().subtract(creditLinesDeal.getTradeAmt()));
-                        creditLinesdto.setUpdateTime(new Date());
-                        creditLinesdto.setUpdateUser(LoginUserUtil.getUserName());
-                        creditLinesMapper.updateLinesByPrimaryKeySelective(creditLinesdto);
-                    }
-                }
             }
         }
     }

@@ -10,29 +10,31 @@
  
 package com.joyintech.tams.invest.entrust.etrbrowdepoinfo.dto;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
+import javax.validation.Valid;
+
+import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.framework.annotation.PageId;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
+import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.Amount;
 import com.joyintech.framework.validation.annotation.Length;
 import com.joyintech.framework.validation.annotation.NotEmpty;
+import com.joyintech.framework.validation.annotation.Rate;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.system.base.entity.SysUploadFileInfo;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.component.business.trade.dto.BussEtrInvestPersonInfoDto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.entrust.etrbrowdepoinfo.validator.EtrBrowDepoInfoValidator;
-import com.joyintech.workflow.engine.annotation.PrimaryKey;
-import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
-
-import javax.validation.Valid;
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
 
 /**
  * 存款委托DTO
@@ -57,16 +59,6 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
      */
     private BigDecimal iusseAmt;
     
-    /**
-     * 同存款资产本金（授信用）
-     */
-    private BigDecimal prinAmt;
-
-    /**
-     * 后台取为平台日（授信用）
-     */
-    private Date tradeDate;
-
     /**
      * 资产简称
      */
@@ -178,21 +170,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
      */
     private String isAgreementEnd;
 
-    /**
-     * 利率审批编号
-     */
-    private String rateApprovalCode;
-    private String inputValue1;
-    private String inputValue2;
-    private String inputValue3;
-    public String getRateApprovalCode() {
-        return rateApprovalCode;
-    }
-
-    public void setRateApprovalCode(String rateApprovalCode) {
-        this.rateApprovalCode = rateApprovalCode;
-    }
-
+    
 	public String getAssetType1() {
 		return assetType1;
 	}
@@ -790,45 +768,4 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
     public void setFinprodAbbr(String finprodAbbr) {
         this.finprodAbbr = finprodAbbr;
     }
-
-	public BigDecimal getPrinAmt() {
-		return prinAmt;
-	}
-
-	public void setPrinAmt(BigDecimal prinAmt) {
-		this.prinAmt = prinAmt;
-	}
-
-	public Date getTradeDate() {
-		return tradeDate;
-	}
-
-	public void setTradeDate(Date tradeDate) {
-		this.tradeDate = tradeDate;
-	}
-
-	public String getInputValue1() {
-		return inputValue1;
-	}
-
-	public void setInputValue1(String inputValue1) {
-		this.inputValue1 = inputValue1;
-	}
-
-	public String getInputValue2() {
-		return inputValue2;
-	}
-
-	public void setInputValue2(String inputValue2) {
-		this.inputValue2 = inputValue2;
-	}
-
-	public String getInputValue3() {
-		return inputValue3;
-	}
-
-	public void setInputValue3(String inputValue3) {
-		this.inputValue3 = inputValue3;
-	}
-
 }

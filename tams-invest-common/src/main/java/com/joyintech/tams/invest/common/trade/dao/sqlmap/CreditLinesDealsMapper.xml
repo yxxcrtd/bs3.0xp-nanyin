@@ -683,71 +683,10 @@
  		    (select FINPROD_ID from TRD_PRODUCT_DEAL 
  		    where TRADE_ID = #{tradeId})
     </select>
-    
-	<select id="getEntrustAmtByEntrustId" resultType="java.math.BigDecimal">
-		select ee.entrust_amt from etr_entrust ee where ee.entrust_id =#{entrustId,jdbcType=VARCHAR}
-	</select>
 
-	<update id="updateLinesByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.CreditLines" >
-		update CREDIT_LINES
-		<set >
-			<if test="hapCreditAmt != null" >
-				HAP_CREDIT_AMT = HAP_CREDIT_AMT + nvl(#{hapCreditAmt,jdbcType=DECIMAL},0),
-			</if>
-			<if test="updateUser != null" >
-				UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-			</if>
-			<if test="updateTime != null" >
-				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
-			</if>
-		</set>
-		WHERE SEQNO = #{seqno,jdbcType=VARCHAR}
-	</update>
-	
-	<update id="updateLinesDealByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.CreditLinesDeal" >
-		update CREDIT_LINES_DEAL
-		<set >
-			<if test="tradeAmt != null" >
-				TRADE_AMT = TRADE_AMT + nvl(#{tradeAmt,jdbcType=DECIMAL},0),
-			</if>
-			<if test="updateUser != null" >
-				UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-			</if>
-			<if test="updateTime != null" >
-				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
-			</if>
-		</set>
-		WHERE SEQNO = #{seqno,jdbcType=VARCHAR}
-		and  trade_id = #{tradeId}
-	</update>
-
-	<select id="getCeLinesInfo" resultType="com.joyintech.tams.common.base.entity.CreditLinesDeal">
-		select deal.seqno              as seqno,
-			   deal.trade_id           tradeId,
-			   deal.credit_occure_type as creditOccureType,
-			   deal.trade_amt          as tradeAmt,
-			   deal.trade_date         as tradeDate
-		  from credit_lines_deal deal
-		 where deal.seqno = #{seqno,jdbcType=VARCHAR}
-		   and deal.trade_id = #{tradeid,jdbcType=VARCHAR}
-	</select>
-	
-	<select id="selectTradeidByBTtradid" resultType="java.lang.String">
+    <select id="selectTradeidByBTtradid" resultType="java.lang.String">
 		select trade_id
 			from TRD_PRODUCT_DEAL  
  		    where b_trade_id = #{bTradeId}
     </select>
-    
-    <select id="selectEntrustIdByTradeid" resultType="java.lang.String">
-    	select * from (
-    		select ENTRUST_ID
-				from WFL_TRD_PRODUCT_DEAL_ADD  
-				where TRADE_ID = #{tradeId}
-			union all 		
-			select ENTRUST_ID
-				from TRD_PRODUCT_DEAL_ADD  
-				where TRADE_ID = #{tradeId}
-    	)where rownum = 1
-    </select>
-
 </mapper>
