@@ -224,7 +224,15 @@
 
         order by portfolioId, finprodId, prodId, cashDate
     </select>
-    
+
+    <select id="selectYield" resultType="java.math.BigDecimal">
+        SELECT UNIT_CPRICE from TRD_FIN_PRODUCT_DEAL_TOTAL
+        where FINPROD_ID = #{finprodid}
+        and TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_DATE = #{confirmDate}
+        <!--and  PS = #{ps}-->
+        and rownum = 1
+    </select>
+
     <select id="selectDetailData" resultType="com.joyintech.service.product.durdeal.dto.FinProductDurDealDto">
     	<!-- 收益型产品 -->
         select distinct

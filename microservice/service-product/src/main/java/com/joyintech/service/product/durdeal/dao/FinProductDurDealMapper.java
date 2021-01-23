@@ -10,6 +10,7 @@
 
 package com.joyintech.service.product.durdeal.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -179,4 +180,11 @@ public interface FinProductDurDealMapper {
      * @since 1.0
      */
     List<TrdProductDeal> selectTrdProductDealByTotalTradId(Map<String, Object> pageParam);
+
+    /**
+     * 查询交易净值
+     * @param pageParam
+     * @return
+     */
+    BigDecimal selectYield(Map<String, Object> pageParam);
 }

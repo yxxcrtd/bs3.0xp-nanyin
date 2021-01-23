@@ -469,7 +469,13 @@ public class FinProductDurDealService extends BaseService {
     					 }
 					}
     				resultDto.setYield(yieldTmp);
-    			}
+    			}else {
+    			    Map param = new HashMap();
+                    param.put("finprodid",resultDto.getFinprodId());
+                    param.put("ps",resultDto.getPs());
+                    param.put("confirmDate",resultDto.getConfirmDate());
+                    resultDto.setYield(finProductDurDealMapper.selectYield(param).toString());
+                }
     		}
     		else{
     			if (!StringUtil.isEmptyList(bokPositionPrdDataList)) {
