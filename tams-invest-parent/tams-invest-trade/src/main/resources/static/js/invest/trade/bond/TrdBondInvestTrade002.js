@@ -665,7 +665,12 @@ var table;
         var finprodIda;
         if(finprodId){
         var finprodtId = finprodId.split("_");
-        finprodId1 = finprodtId[1];
+        var data = $('#finprodId').select2('data')[0].object;
+        if (data && data.finprodId) {
+            finprodId1 = finprodtId[1];
+        }else{
+            finprodId1 = finprodId;
+        }
         finprodIdarr = finprodId1.split(".");
         finprodIda = finprodIdarr[0];
         }
