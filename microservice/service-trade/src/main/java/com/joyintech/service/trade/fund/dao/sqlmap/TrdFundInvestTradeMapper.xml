@@ -354,7 +354,7 @@
             AND TO_DATE(#{tradeDateVdate}, 'yyyy-MM-dd') >= T1.VDATE
         </if>
 
-       union
+       <!-- union
         select interf.F_INFO_CODE id,
        interf.F_INFO_CODE text,
        fin.FINPROD_ID,
@@ -374,7 +374,7 @@
          <include refid="getFinprodIdWhere"></include>)
       <if test="search != null and search != ''">
          and  F_INFO_CODE LIKE CONCAT('%', CONCAT(#{search}, '%'))
-      </if>
+      </if> -->
     </select>
     <!-- 资产代码下拉框查询条件 -->
     <sql id="getFinprodIdWhere">
