@@ -33,6 +33,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
+import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
 import com.joyintech.tams.common.base.entity.FinProductAdd;
 import com.joyintech.tams.component.business.riskrds.constant.InterfUtil;
 import com.joyintech.tams.component.business.riskrds.constant.PageFieldToInterfFactory;
@@ -86,6 +87,9 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
 
     @Autowired
     private FinProductAddMapper finProductAddMapper;
+    
+    @Autowired
+    private FinTradeProductMapper finTradeProductMapper;
     
     public ClientData sendRiskRdsDataCommon(Map<String, Object> dataMap,V v) throws Exception {  
         // add by zhangrui1 增加批量接口调用逻辑 start
@@ -903,6 +907,13 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             if(StringUtil.equals(DictCodeList.交易方向_到期续做.getValue(),finDto.getPs())){
                 infRiskRdsDto.setAmount(StringUtil.isNotEmpty(dataMap.get("tradeAmtex"))?dataMap.get("tradeAmtex") instanceof BigDecimal ?(BigDecimal)dataMap.get("tradeAmtex"):new BigDecimal(dataMap.get("tradeAmtex").toString()):finDto.getFpriceAmt());
             }
+            List<String> calendars =  finTradeProductMapper.getCalendarByFinprodId((String)dataMap.get("finprodId"));
+            if(calendars.size()>0) {
+            	infRiskRdsDto.setCalendarCode(calendars.get(0));
+            }
+            if(StringUtil.isNotEmpty(dataMap.get("mDate"))) {
+            	infRiskRdsDto.setMdate(DateUtil.parse((String)dataMap.get("mDate")));
+            }
         }
         if(StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_期权.getValue())) {
             infRiskRdsDto.setAssetType(DictCodeListExt3.平安资产类型_期权.getValue());
@@ -920,6 +931,13 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                     DictCodeList.回购拆借方向_融入.getValue():DictCodeList.回购拆借方向_融出.getValue());
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
+            List<String> calendars =  finTradeProductMapper.getCalendarByFinprodId((String)dataMap.get("finprodId"));
+            if(calendars.size()>0) {
+            	infRiskRdsDto.setCalendarCode(calendars.get(0));
+            }
+            if(StringUtil.isNotEmpty(dataMap.get("mdate"))) {
+            	infRiskRdsDto.setMdate((Date)dataMap.get("mdate"));
+            }
         }
         if(StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue())||
                 StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue())) {
@@ -928,6 +946,13 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setPs(DictCodeList.交易方向_到期.getValue());
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
+            List<String> calendars =  finTradeProductMapper.getCalendarByFinprodId((String)dataMap.get("finprodId"));
+            if(calendars.size()>0) {
+            	infRiskRdsDto.setCalendarCode(calendars.get(0));
+            }
+            if(StringUtil.isNotEmpty(dataMap.get("mDate"))) {
+            	infRiskRdsDto.setMdate(DateUtil.parse((String)dataMap.get("mDate")));
+            }
         }
         if(StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_利率互换.getValue(),finDto.getFinprodType2())) {
             if(StringUtil.equals(DictCodeList.交易方向_收取.getValue(),finDto.getPs())||StringUtil.equals(DictCodeList.交易方向_支付.getValue(),finDto.getPs())){
