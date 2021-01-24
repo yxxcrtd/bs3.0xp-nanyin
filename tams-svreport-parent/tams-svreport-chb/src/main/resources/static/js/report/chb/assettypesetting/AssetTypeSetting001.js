@@ -72,7 +72,7 @@
     tableA.bind('click', '.delt', function(data, index) {
         var object = {selectedItem: [data], operateType:"delete"};//请求参数
         Joyin.ajaxJson(basePath + 'chb/assettypesetting/AssetTypeSetting001/check', object, function(result) {//请求路径，请求参数回调函数
-            Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("是否删除[资产一级分类]及配置的所有对应中债资产类型")), function(){//删除事件的请求
+            Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("删除[资产一级分类]及配置的所有对应中债资产类型")), function(){//删除事件的请求
                 WorkFlow.doDeleteList(basePath + 'chb/assettypesetting/AssetTypeSetting001/delete', object,"AssetTypeSetting001_btn_delete", "AssetTypeSetting002", function(){
                     tableA.reload();//删除事件请求及回调函数
                 });
@@ -108,7 +108,7 @@
     tableB.bind('click', '.delt', function(data, index) {
         var object = {selectedItem: [data], operateType:"delete"};//请求参数
         Joyin.ajaxJson(basePath + 'chb/assettypesetting/AssetTypeSetting001/check', object, function(result) {//请求路径，请求参数回调函数
-            Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("是否删除[资产一级分类]下的[资产二级分类]配置")), function(){//删除事件的请求
+            Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("删除[资产一级分类]下的[资产二级分类]配置")), function(){//删除事件的请求
                 WorkFlow.doDeleteList(basePath + 'chb/assettypesetting/AssetTypeSetting001/doExDelete', object,"AssetTypeSetting001_btn_delete", "AssetTypeSetting002", function(){
                     tableB.reload();//删除事件请求及回调函数
                 });
