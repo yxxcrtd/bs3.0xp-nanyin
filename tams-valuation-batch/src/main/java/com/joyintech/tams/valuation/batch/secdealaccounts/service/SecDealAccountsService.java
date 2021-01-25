@@ -726,10 +726,6 @@ public class SecDealAccountsService {
                         || DictCodeListExt1.估值交易市场_深交所.getValue().equals(dealNow.getTradeMarket()))){
             accountAmountMap.put(BookConstant.DEALAMT_C,
                     ArithmeticUtil.round(dealNow.getFpriceAmt(), NumberEnum.MONEY));
-//            accountSceneMap.put(BookConstant.BOK_DETAIL_ID2,
-//                    bookCommonLogic.getValBokDetailId(dealNow.getFinprodId(), dealNow.getBokDetailId(), dealNow.getFinprodType(),dealNow.getCcy()));
-            accountSceneMap.put(BookConstant.BOK_DETAIL_ID2,
-                    bookCommonLogic.getValBokDetailId(dealNow.getMyAcctNo(), null, dealNow.getAcctType(),dealNow.getCcy()));
         }else{
             // 交易本金 <- 交易明细.全价总额
             accountAmountMap.put(BookConstant.RECEITAMT,
@@ -988,10 +984,6 @@ public class SecDealAccountsService {
                 // 利息差额(贷) <-交易明细.全价总额 - 变量.应计利息
                 accountAmountMap.put(BookConstant.DEALAMT_C,
                         ArithmeticUtil.round(varTradeAmt, NumberEnum.MONEY));
-//                accountSceneMap.put(BookConstant.BOK_DETAIL_ID2,
-//                        bookCommonLogic.getValBokDetailId(dealNow.getFinprodId(), dealNow.getBokDetailId(), dealNow.getFinprodType(),dealNow.getCcy()));
-                accountSceneMap.put(BookConstant.BOK_DETAIL_ID2,
-                        bookCommonLogic.getValBokDetailId(dealNow.getMyAcctNo(), null, dealNow.getAcctType(),dealNow.getCcy()));
             }else{
                 // 利息差额(贷) <-交易明细.全价总额 - 变量.应计利息
                 accountAmountMap.put(BookConstant.NETAMT_C,
