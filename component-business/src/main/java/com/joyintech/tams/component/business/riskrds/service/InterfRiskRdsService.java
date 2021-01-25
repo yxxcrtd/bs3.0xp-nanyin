@@ -11,11 +11,6 @@
 package com.joyintech.tams.component.business.riskrds.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import com.joyintech.framework.util.*;
 import org.slf4j.Logger;
@@ -848,6 +843,21 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             if(finDto.getPs().equals(DictCodeList.交易方向_行权_赎回.getValue())){
                 infRiskRdsDto.setEventId(StringUtil.isNotEmpty(dataMap.get("bizCode"))?dataMap.get("bizCode").toString()+ trimInfStr(infRiskRdsDto.getPortfolioCode())+trimInfStr(finDto.getInvAim()):finDto.getTotleTradeId()+ trimInfStr(infRiskRdsDto.getPortfolioCode())+trimInfStr(finDto.getInvAim()));
                 infRiskRdsDto.setAmount(StringUtil.isNotEmpty(dataMap.get("cPriceAmt"))?dataMap.get("cPriceAmt") instanceof BigDecimal ?(BigDecimal)dataMap.get("cPriceAmt"):new BigDecimal(dataMap.get("cPriceAmt").toString()):null);
+                if(StringUtil.isNotEmpty(dataMap.get("payDate"))) {
+                	if(dataMap.get("payDate") instanceof Date) {
+                		infRiskRdsDto.setEventDate(DateUtil.format((Date)dataMap.get("payDate")));
+                	}
+                	else {
+                		//时间戳
+                		String type = dataMap.get("payDate").getClass().toString();
+                		if("Long".equals(type.substring(type.lastIndexOf(".")+1,type.length()))) {
+                			infRiskRdsDto.setEventDate(DateUtil.format(new Date((long)dataMap.get("payDate"))));
+                		}
+                		else {
+                			infRiskRdsDto.setEventDate(dataMap.get("payDate").toString());
+                		}
+                	}
+                }
             }
         }
         if(StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_存款.getValue(),finDto.getFinprodType2())
@@ -1041,7 +1051,9 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
     private void repairSet(InterfRiskRdsDto dto, Map<String, Object> dataMap) {
         // 债券中间付息、还本、到期和相应的撤销，应该用实收本息总额
         if ((CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_债券)
-                || CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_存款)
+        		//ZGBSS-138 存款存续期 实收本息总额并未在fpriceAmt字段 start
+                //|| CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_存款)
+        		//ZGBSS-138 存款存续期 实收本息总额并未在fpriceAmt字段 end
                 || CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_计划类资产_利率型)
                 || CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_项目类资产))
                 && (CommonUtil.isType(dto.getPs(), DictCodeList.交易方向_还本)
