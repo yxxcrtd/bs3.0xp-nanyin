@@ -830,6 +830,10 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
             // 估值表余额表状态表 入库
             if (result.getBokValbalTableStatus() != null) {
+                // 估值表余额表生成日志表 入库
+                if (result.getBokValbalTableLog() != null) {
+                    bokValbalTableLogMapper.insert(result.getBokValbalTableLog());
+                }
                 //增加一个估值参数，通过参数控制是否修改状态 IS_CHANGE_STATUS_VALNETVALUECONFIRM
                 //净值确认下发重新跑批时是否修改确认状态、下发状态 Y:是 N 否
                 String isChangeStatusValNetValyeConfirm = CacheUtil.getSysParam("IS_CHANGE_STATUS_VALNETVALUECONFIRM");
@@ -843,17 +847,13 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
                     key.setValDate(result.getBokValbalTableStatus().getValDate());
                     BokValbalTableStatus bokValbalTableStatus = bokValbalTableStatusMapper.selectByPrimaryKey(key);
                     if(bokValbalTableStatus !=null){
-                        return;
+                        continue;
                     }else{
                         bokValbalTableStatusMapper.insert(result.getBokValbalTableStatus());
                     }
                 }else{
                     bokValbalTableStatusMapper.insert(result.getBokValbalTableStatus());
                 }
-            }
-            // 估值表余额表生成日志表 入库
-            if (result.getBokValbalTableLog() != null) {
-                bokValbalTableLogMapper.insert(result.getBokValbalTableLog());
             }
         }
     }

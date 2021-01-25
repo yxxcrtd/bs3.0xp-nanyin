@@ -113,7 +113,6 @@
         )
         AND A.VAL_DATE >= #{BOOKSET_DATE}
         and A.VAL_BAL_FLAG = #{FILE_TYPE}
-        and A.confirm_status is null
-        and A.notice_status is null
+        AND (A.confirm_status != 1 or A.confirm_status is null)
     </delete>
 </mapper>
