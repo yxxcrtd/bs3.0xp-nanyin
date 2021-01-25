@@ -312,6 +312,14 @@ var QueryFunc=function(){
                 $("#SvrBussRepFundInfoDto_isGovernFund").val('').trigger("change");
                 $("#SvrBussRepFundInfoDto_isGovernFund").attr("disabled",true);
             }
+            if(repAssetType=='1106'||repAssetType=='2401'||repAssetType=='2402'||
+                repAssetType=='1303'||repAssetType=='2403'||repAssetType=='2499'){
+                 //公募
+                $("#SvrBussRepFundInfoDto_financialComissue").val('').trigger("change");
+                $("#SvrBussRepFundInfoDto_financialComissue").attr("disabled",true);
+            }else{
+                $("#SvrBussRepFundInfoDto_financialComissue").attr("disabled",false);
+            }
         }
         star();
         layui.form.render();
