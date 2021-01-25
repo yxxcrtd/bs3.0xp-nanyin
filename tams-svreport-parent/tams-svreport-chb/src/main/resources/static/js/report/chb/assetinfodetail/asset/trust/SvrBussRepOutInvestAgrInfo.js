@@ -41,73 +41,73 @@
     /**
      * 是否有预期收益率改变时执行的方法
      */
-    function repContainExpectedYieldChang() {
-        var repContainExpectedYield = getElementById('repContainExpectedYield').val();
-        if(repContainExpectedYield==FLAG_YES){
-            getElementById('repMaxExpectedYield').prop('required', true);
-            getElementById('repMinExpectedYield').prop('required', true);
-            star();
-        }
-        layui.form.render();
-    }
+    // function repContainExpectedYieldChang() {
+    //     var repContainExpectedYield = getElementById('repContainExpectedYield').val();
+    //     if(repContainExpectedYield==FLAG_YES){
+    //         getElementById('repMaxExpectedYield').prop('required', true);
+    //         getElementById('repMinExpectedYield').prop('required', true);
+    //         star();
+    //     }
+    //     layui.form.render();
+    // }
 
     /**
      * 交易流通市场改成其他交易流通场所时执行的方法
      */
-    function repTradeMarketChang() {
-        var repTradeMarket = getElementById('repTradeMarket').val();
-        if(repTradeMarket && repTradeMarket == TRADE_MARKET_99){
-            getElementById('repRemark').prop('required', true);
-            star();
-        }
-        else {
-            getElementById('repRemark').prop('required', false);
-            star();
-        }
-        layui.form.render();
-    }
+    // function repTradeMarketChang() {
+    //     var repTradeMarket = getElementById('repTradeMarket').val();
+    //     if(repTradeMarket && repTradeMarket == TRADE_MARKET_99){
+    //         getElementById('repRemark').prop('required', true);
+    //         star();
+    //     }
+    //     else {
+    //         getElementById('repRemark').prop('required', false);
+    //         star();
+    //     }
+    //     layui.form.render();
+    // }
 
-    var init = function(){
-        repContainExpectedYieldChang();
-        repTradeMarketChang();
-    }
+    // var init = function(){
+    //     repContainExpectedYieldChang();
+    //     repTradeMarketChang();
+    // }
 
     /**
      * 是否有预期收益率改变时执行的方法
      */
-    var repYieldFlagChang = function() {
-        var repContainExpectedYield = getElementById("repContainExpectedYield")[0].checked;
-    	if(!repContainExpectedYield){
-            $("#"+entityName+"_repMaxExpectedYield").val("");
-            $("#"+entityName+"_repMinExpectedYield").val("");
-    		$("#"+entityName+"_repMaxExpectedYield").attr("disabled",true);
-    		$("#"+entityName+"_repMinExpectedYield").attr("disabled",true);
-    		getElementById('repMaxExpectedYield').prop('required', false);
-            getElementById('repMinExpectedYield').prop('required', false).trigger('change');
-    	}
-    	else{
-    		$("#"+entityName+"_repMaxExpectedYield").attr("disabled",false);
-    		$("#"+entityName+"_repMinExpectedYield").attr("disabled",false);
-    		getElementById('repMaxExpectedYield').prop('required', true);
-            getElementById('repMinExpectedYield').prop('required', true).trigger('change');
-    	}
-        star();
-        layui.form.render();
-    }
-    
-    $(function() {
-		$("#"+entityName+"_repMaxExpectedYield").attr("disabled",true);
-		$("#"+entityName+"_repMinExpectedYield").attr("disabled",true);
-    	layui.form.on('switch(repContainExpected)', function(data){
-        	repYieldFlagChang();
-		});
-        getElementById('repContainExpectedYield').on('change', function () {
-            repContainExpectedYieldChang();
-        });
-        getElementById('repTradeMarket').on('change', function () {
-            repTradeMarketChang();
-        });
-        repYieldFlagChang();
-    });
+    // var repYieldFlagChang = function() {
+    //     var repContainExpectedYield = getElementById("repContainExpectedYield")[0].checked;
+    // 	if(!repContainExpectedYield){
+    //         $("#"+entityName+"_repMaxExpectedYield").val("");
+    //         $("#"+entityName+"_repMinExpectedYield").val("");
+    // 		$("#"+entityName+"_repMaxExpectedYield").attr("disabled",true);
+    // 		$("#"+entityName+"_repMinExpectedYield").attr("disabled",true);
+    // 		getElementById('repMaxExpectedYield').prop('required', false);
+    //         getElementById('repMinExpectedYield').prop('required', false).trigger('change');
+    // 	}
+    // 	else{
+    // 		$("#"+entityName+"_repMaxExpectedYield").attr("disabled",false);
+    // 		$("#"+entityName+"_repMinExpectedYield").attr("disabled",false);
+    // 		getElementById('repMaxExpectedYield').prop('required', true);
+    //         getElementById('repMinExpectedYield').prop('required', true).trigger('change');
+    // 	}
+    //     star();
+    //     layui.form.render();
+    // }
+
+    // $(function() {
+	// 	$("#"+entityName+"_repMaxExpectedYield").attr("disabled",true);
+	// 	$("#"+entityName+"_repMinExpectedYield").attr("disabled",true);
+    // 	layui.form.on('switch(repContainExpected)', function(data){
+    //     	repYieldFlagChang();
+	// 	});
+    //     getElementById('repContainExpectedYield').on('change', function () {
+    //         repContainExpectedYieldChang();
+    //     });
+    //     getElementById('repTradeMarket').on('change', function () {
+    //         repTradeMarketChang();
+    //     });
+    //     repYieldFlagChang();
+    // });
 
 }());

@@ -16,104 +16,274 @@ import com.joyintech.tams.common.base.entity.RepAssetDept;
 import com.joyintech.tams.common.base.entity.RepAssetOther;
 import com.joyintech.tams.common.base.entity.RepTrustInvestMode;
 
+import java.math.BigDecimal;
+
 /**
  * 委外投资—协议方式中债报送信息组件Dto
  *
  * @author
  * @version 1.0
- * @see BussRepOutInvestAgrInfoDto
+ * @see SvrBussRepOutInvestAgrInfoDto
  * @since 1.0
  */
 public class SvrBussRepOutInvestAgrInfoDto extends RepAssetBond {
     /**
-     * 交易流通场所
+     * <意义，目的和功能，以及可能被用到的地方>
      */
-    private String repTradeMarket;
-    /**
-     * 二级资产类型
-     */
-    private String type6;
-    /**
-     * 资产负债报送信息entity
-     */
-    private RepAssetDept repAssetDept;
-    /**
-     * 委外投资—协议方式报送信息entity
-     */
-    private RepTrustInvestMode repTrustInvestMode;
-    // 中债资产其它要素entity by 赵东东 2019.10.10 start
-    /**
-     * 中债资产其它要素entity
-     */
-    private RepAssetOther repAssetOther;
-    /**
-     * 获取 repAssetOther
-     *
-     * @return repAssetOther
-     */
-    public RepAssetOther getRepAssetOther() {
-		return repAssetOther;
-	}
-    /**
-     * 设置 repAssetOther
-     *
-     * @param repAssetOther repAssetOther
-     */
-	public void setRepAssetOther(RepAssetOther repAssetOther) {
-		this.repAssetOther = repAssetOther;
-	}
-	// 中债资产其它要素entity by 赵东东 2019.10.10 end
-	/**
-     * 获取 type6
-     *
-     * @return type6
-     */
-    public String getType6() {
-        return type6;
-    }
+    private static final long serialVersionUID = 1L;
 
     /**
-     * 设置 type6
-     *
-     * @param type6 type6
+     * 资产代码
      */
-    public void setType6(String type6) {
-        this.type6 = type6;
-    }
+    private String assetId;
 
     /**
-     * 获取 repAssetDept
-     *
-     * @return repAssetDept
+     * 资产名称
      */
-    public RepAssetDept getRepAssetDept() {
-        return repAssetDept;
-    }
+    private String assetName;
+    /**
+     * 管理人
+     */
+    private String managerId;
 
     /**
-     * 设置 repAssetDept
-     *
-     * @param repAssetDept repAssetDept
+     * 托管人
      */
-    public void setRepAssetDept(RepAssetDept repAssetDept) {
-        this.repAssetDept = repAssetDept;
-    }
+    private String trusteeId;
+    /**
+     * 受托人
+     */
+    private String trustee;
+    /**
+     * 金额
+     */
+    private BigDecimal amt;
+    /**
+     * 资金实际投向 01 结构性投资类/02 货币市场工具类/03 债券类/04 股票类/05 股权类/06 另类投资类/07 混合类/08 非标准化债权类/09 银行存款类/10 理财直接融资工具类/11 新增可投资资产类/12 代客境外投资类/13 公募基金类/ 14 私募基金类/ 15 产业基金类 /16 衍生产品类 /17 商品类/18 同业存单类/19拆放同业及买入返售类
+     */
+    private String truActType;
 
     /**
-     * 获取 repTrustInvestMode
-     *
-     * @return repTrustInvestMode
+     * 资金运用方式
      */
-    public RepTrustInvestMode getRepTrustInvestMode() {
-        return repTrustInvestMode;
-    }
+    private String investType;
 
     /**
-     * 设置 repTrustInvestMode
-     *
-     * @param repTrustInvestMode repTrustInvestMode
+     * 资金运用行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
      */
-    public void setRepTrustInvestMode(RepTrustInvestMode repTrustInvestMode) {
-        this.repTrustInvestMode = repTrustInvestMode;
+    private String capUseIndu;
+    /**
+     * 资金运用行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
+     */
+    private String capUseInduLevel2;
+    /**
+     * 资管计划属性/委外投资属性 01 集合/02 单一/03 专项/04 定向/05 专户/99 其他
+     */
+    private String proProperty;
+
+    /**
+     * 最高预期收益率
+     */
+    private BigDecimal maxRate;
+
+    /**
+     * 最低预期收益率
+     */
+    private BigDecimal minRate;
+    /**
+     * 是否有预期收益率 01是/02否
+     */
+    private String rateFlag;
+    /**
+     * 管理费率
+     */
+    private BigDecimal mgrFeeRate;
+
+    /**
+     * 托管费率
+     */
+    private BigDecimal truFeeRate;
+
+    /**
+     * 交易相关合计费率
+     */
+    private BigDecimal tradeFeeRate;
+
+    /**
+     * 中介服务机构合计费率
+     */
+    private BigDecimal agencyFeeRate;
+
+    /**
+     * 其他合计费率
+     */
+    private BigDecimal otherFeeRate;
+    /**
+     * 备注
+     */
+    private String remark;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getAssetId() {
+        return assetId;
+    }
+
+    public void setAssetId(String assetId) {
+        this.assetId = assetId;
+    }
+
+    public String getAssetName() {
+        return assetName;
+    }
+
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
+    }
+
+    public String getManagerId() {
+        return managerId;
+    }
+
+    public void setManagerId(String managerId) {
+        this.managerId = managerId;
+    }
+
+    public String getTrusteeId() {
+        return trusteeId;
+    }
+
+    public void setTrusteeId(String trusteeId) {
+        this.trusteeId = trusteeId;
+    }
+
+    public String getTrustee() {
+        return trustee;
+    }
+
+    public void setTrustee(String trustee) {
+        this.trustee = trustee;
+    }
+
+    public BigDecimal getAmt() {
+        return amt;
+    }
+
+    public void setAmt(BigDecimal amt) {
+        this.amt = amt;
+    }
+
+    public String getTruActType() {
+        return truActType;
+    }
+
+    public void setTruActType(String truActType) {
+        this.truActType = truActType;
+    }
+
+    public String getInvestType() {
+        return investType;
+    }
+
+    public void setInvestType(String investType) {
+        this.investType = investType;
+    }
+
+    public String getCapUseIndu() {
+        return capUseIndu;
+    }
+
+    public void setCapUseIndu(String capUseIndu) {
+        this.capUseIndu = capUseIndu;
+    }
+
+    public String getCapUseInduLevel2() {
+        return capUseInduLevel2;
+    }
+
+    public void setCapUseInduLevel2(String capUseInduLevel2) {
+        this.capUseInduLevel2 = capUseInduLevel2;
+    }
+
+    public String getProProperty() {
+        return proProperty;
+    }
+
+    public void setProProperty(String proProperty) {
+        this.proProperty = proProperty;
+    }
+
+    public BigDecimal getMaxRate() {
+        return maxRate;
+    }
+
+    public void setMaxRate(BigDecimal maxRate) {
+        this.maxRate = maxRate;
+    }
+
+    public BigDecimal getMinRate() {
+        return minRate;
+    }
+
+    public void setMinRate(BigDecimal minRate) {
+        this.minRate = minRate;
+    }
+
+    public String getRateFlag() {
+        return rateFlag;
+    }
+
+    public void setRateFlag(String rateFlag) {
+        this.rateFlag = rateFlag;
+    }
+
+    public BigDecimal getMgrFeeRate() {
+        return mgrFeeRate;
+    }
+
+    public void setMgrFeeRate(BigDecimal mgrFeeRate) {
+        this.mgrFeeRate = mgrFeeRate;
+    }
+
+    public BigDecimal getTruFeeRate() {
+        return truFeeRate;
+    }
+
+    public void setTruFeeRate(BigDecimal truFeeRate) {
+        this.truFeeRate = truFeeRate;
+    }
+
+    public BigDecimal getTradeFeeRate() {
+        return tradeFeeRate;
+    }
+
+    public void setTradeFeeRate(BigDecimal tradeFeeRate) {
+        this.tradeFeeRate = tradeFeeRate;
+    }
+
+    public BigDecimal getAgencyFeeRate() {
+        return agencyFeeRate;
+    }
+
+    public void setAgencyFeeRate(BigDecimal agencyFeeRate) {
+        this.agencyFeeRate = agencyFeeRate;
+    }
+
+    public BigDecimal getOtherFeeRate() {
+        return otherFeeRate;
+    }
+
+    public void setOtherFeeRate(BigDecimal otherFeeRate) {
+        this.otherFeeRate = otherFeeRate;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }
