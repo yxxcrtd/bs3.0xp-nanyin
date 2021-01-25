@@ -2470,29 +2470,48 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
                 ptlSecPositionFlows.add(ptlSecPositionFlowDto);
             }
             else if (DictCodeList.交易方向_份额强增.getValue().equals(dto.getDealType())) {
-                if (dto.getAddReduceDealAmt03() != null) {
+            	//modify by yujiaping 20210125 ZGBSS-49 货币型产品审批份额强增流程报错 start
+                if (dto.getAddReduceDealAmt03() != null || dto.getAddReduceDealNum03() != null) {
                     ptlSecPositionFlowDto.setCdate(dto.getAddReduceConfirmDate03());
                     if (isRevoke) {
-                        ptlSecPositionFlowDto.setAmount(dto.getAddReduceDealNum03().negate());
+                    	if(dto.getAddReduceDealAmt03() != null && dto.getAddReduceDealNum03() == null) {
+                    		 ptlSecPositionFlowDto.setAmount(dto.getAddReduceDealAmt03().negate());
+                    	}else{
+                    		ptlSecPositionFlowDto.setAmount(dto.getAddReduceDealNum03().negate());                    		
+                    	}
                     }
                     else {
-                        ptlSecPositionFlowDto.setAmount(dto.getAddReduceDealNum03());
+                    	if(dto.getAddReduceDealAmt03() != null && dto.getAddReduceDealNum03() == null) {
+                    		ptlSecPositionFlowDto.setAmount(dto.getAddReduceDealAmt03());
+                    	}else{                    		
+                    		ptlSecPositionFlowDto.setAmount(dto.getAddReduceDealNum03());
+                    	}
                     }
                     ptlSecPositionFlows.add(ptlSecPositionFlowDto);
                 }
             }
             else if (DictCodeList.交易方向_份额强减.getValue().equals(dto.getDealType())) {
-                if (dto.getAddReduceDealAmt03() != null) {
+                if (dto.getAddReduceDealAmt03() != null || dto.getAddReduceDealNum03() != null) {
                     ptlSecPositionFlowDto.setCdate(dto.getAddReduceConfirmDate03());
                     if (isRevoke) {
-                        ptlSecPositionFlowDto.setAmount(dto.getAddReduceDealNum03());
+                    	if(dto.getAddReduceDealAmt03() != null && dto.getAddReduceDealNum03() == null) {
+                    		ptlSecPositionFlowDto.setAmount(dto.getAddReduceDealAmt03());
+                    	}else{                    		
+                    		ptlSecPositionFlowDto.setAmount(dto.getAddReduceDealNum03());
+                    	}
                     }
                     else {
-                        ptlSecPositionFlowDto.setAmount(dto.getAddReduceDealNum03().negate());
+                    	if(dto.getAddReduceDealAmt03() != null && dto.getAddReduceDealNum03() == null) {
+                   		 ptlSecPositionFlowDto.setAmount(dto.getAddReduceDealAmt03().negate());
+                   	}else{
+                   		ptlSecPositionFlowDto.setAmount(dto.getAddReduceDealNum03().negate());                    		
+                   	}
                     }
                     ptlSecPositionFlows.add(ptlSecPositionFlowDto);
                 }
             }
+            //modify by yujiaping 20210125 ZGBSS-49 货币型产品审批份额强增流程报错 start
+            
             //delete by wm 现金分红无需登组合持仓流水表 start 2019-12-27
 //            else if (DictCodeList.交易方向_产品现金分红.getValue().equals(dto.getDealType())) {
 //                ptlSecPositionFlowDto.setCdate(dto.getBonusCashBonusDate03());
