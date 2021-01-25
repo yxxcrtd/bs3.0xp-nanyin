@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.batch.susprdfutureopenplangen.processor;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +21,11 @@ import com.joyintech.batch.batchbase.baseclass.BaseProcessor;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.FinCashPlan;
 import com.joyintech.tams.common.base.entity.FinFloatAccrualSche;
 import com.joyintech.tams.common.base.entity.FinOpenPlan;
+import com.joyintech.tams.invest.batch.prdopenplanupdate.relyingonresources.service.BussFinProductPayPlanService;
+import com.joyintech.tams.invest.batch.prdopenplanupdate.service.PrdOpenPlanUpdateProcessorService;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.FinOpenPlanDto;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.relyingonresources.service.BussFinProductAnapleroticPlanService;
@@ -41,6 +45,10 @@ public class SusPrdFutureOpenPlanGenProcessor extends BaseProcessor<NeedOperateE
 
 	@Autowired
 	private BussFinProductOpenPlanService bussfinproductopenplanService;
+	
+	@Autowired(required = false)
+	@Qualifier("batchBussFinProductPayPlanImplService")
+	 private BussFinProductPayPlanService bussFinProductPayPlanService;
 
 	@Autowired
 	private SusPrdFutureOpenPlanGenProcesserService susPrdFutureOpenPlanGenProcesserService;
@@ -73,6 +81,16 @@ public class SusPrdFutureOpenPlanGenProcessor extends BaseProcessor<NeedOperateE
 			List<FinFloatAccrualSche> finAnapleroticPlanList = bussFinProductAnapleroticPlanService
 					.genAnapleroticPlanList(susPrdFutureOpenPlanGenProcesserService.executeAnapleroticDto(susprdfutureopenplangendto));
 		finOpenPlanDto.setFinAnapleroticPlanList(finAnapleroticPlanList);
+		}
+		else if(StringUtil.equals("付息计划", susprdfutureopenplangendto.getPlanType())){
+			// 公共方法生成的List<付息计划>
+			List<FinCashPlan> finCashPlanList = bussFinProductPayPlanService.getProductInterestPlanData(
+					susPrdFutureOpenPlanGenProcesserService.executePayDto(susprdfutureopenplangendto));
+			
+			// 更新后的付息计划
+			List<FinCashPlan> newFinCashPlanList = susPrdFutureOpenPlanGenProcesserService.executePayList(finCashPlanList,
+					susprdfutureopenplangendto);
+			finOpenPlanDto.setFinCashPlanList(newFinCashPlanList);
 		}
 		
 		finOpenPlanDto.setSusPrdFutureOpenPlanGenDto(susprdfutureopenplangendto);

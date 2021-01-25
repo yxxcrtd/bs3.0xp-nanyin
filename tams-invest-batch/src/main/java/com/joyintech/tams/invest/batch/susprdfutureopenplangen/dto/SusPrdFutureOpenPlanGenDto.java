@@ -9,14 +9,16 @@ import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
  * 2019年9月24日 开放现金流信息
  */
 public class SusPrdFutureOpenPlanGenDto extends NeedOperateEntity {
-	private String planType;//计划类型：开放计划、业绩回补计划
+	private String planType;//计划类型：开放计划、业绩回补计划、付息计划
 	private String finprodId; // 金融产品代码
 	private String calendarId; // 交易日历
-	/*******************开放计划字段 start*********************/
+	private String calcRule; // 推算规则
 	private Date vdate; // 起息日
+	private Date mdate;/*产品到期日*/
 	private String profitType; // 收益类型
-	private Date openMdate; // 到期日
 	private String cashId; // 现金流代码
+	/*******************开放计划字段 start*********************/
+	private Date openMdate; // 到期日
 	private String openType; // 开放类型
 	private Date openVdate; // 开放计划开始日
 	private String purSpeed; // 申购确认速度
@@ -34,7 +36,6 @@ public class SusPrdFutureOpenPlanGenDto extends NeedOperateEntity {
 	private Date firstOpenDate; // 首次开放日
 	private String tradedayRule; // 营业日准则
 	private String hdayOpenFlag; // 节假日是否开放
-	private String calcRule; // 推算规则
 	private String cpriceRule; // 净值日取值规则
 	private String createUser; // 创建人
 	private String createDept; // 创建部门
@@ -64,6 +65,20 @@ public class SusPrdFutureOpenPlanGenDto extends NeedOperateEntity {
     
     
     /*******************业绩回补计划字段 end*********************/
+    
+    /*******************付息计划字段 start*********************/
+    private Long cashNum; // 现金流序号，从1开始
+	private Date payVdate; // 付息计划区间开始日
+	private Date payMdate; // 付息区间到期日
+	private Date payFPMdate; // 付息计划首次结束日
+    private String payCycle;// 支付频率
+    private Long payCycleVal;// 支付频率值
+    private String payCycleUnit;// 付息周期单位
+    private String payTdayRule;// 支付日营业日准则
+    private String endTdayRule;// 截止日营业日准则
+    private Date firstPayDate;// 首次支付日    
+    private Date winupDate;// 清盘日
+	/*******************付息计划字段 end*********************/
     
 	public String getFinprodId() {
 		return finprodId;
@@ -334,6 +349,78 @@ public class SusPrdFutureOpenPlanGenDto extends NeedOperateEntity {
 	}
 	public void seteAccrDate(Date eAccrDate) {
 		this.eAccrDate = eAccrDate;
+	}
+	public Long getCashNum() {
+		return cashNum;
+	}
+	public void setCashNum(Long cashNum) {
+		this.cashNum = cashNum;
+	}
+	public Date getPayVdate() {
+		return payVdate;
+	}
+	public void setPayVdate(Date payVdate) {
+		this.payVdate = payVdate;
+	}
+	public Date getPayMdate() {
+		return payMdate;
+	}
+	public void setPayMdate(Date payMdate) {
+		this.payMdate = payMdate;
+	}
+	public Date getPayFPMdate() {
+		return payFPMdate;
+	}
+	public void setPayFPMdate(Date payFPMdate) {
+		this.payFPMdate = payFPMdate;
+	}
+	public String getPayCycle() {
+		return payCycle;
+	}
+	public void setPayCycle(String payCycle) {
+		this.payCycle = payCycle;
+	}
+	public Long getPayCycleVal() {
+		return payCycleVal;
+	}
+	public void setPayCycleVal(Long payCycleVal) {
+		this.payCycleVal = payCycleVal;
+	}
+	public String getPayCycleUnit() {
+		return payCycleUnit;
+	}
+	public void setPayCycleUnit(String payCycleUnit) {
+		this.payCycleUnit = payCycleUnit;
+	}
+	public String getPayTdayRule() {
+		return payTdayRule;
+	}
+	public void setPayTdayRule(String payTdayRule) {
+		this.payTdayRule = payTdayRule;
+	}
+	public String getEndTdayRule() {
+		return endTdayRule;
+	}
+	public void setEndTdayRule(String endTdayRule) {
+		this.endTdayRule = endTdayRule;
+	}
+	public Date getFirstPayDate() {
+		return firstPayDate;
+	}
+	public void setFirstPayDate(Date firstPayDate) {
+		this.firstPayDate = firstPayDate;
+	}
+	public Date getWinupDate() {
+		return winupDate;
+	}
+	public void setWinupDate(Date winupDate) {
+		this.winupDate = winupDate;
+	}
+	public Date getMdate() {
+		return mdate;
+	}
+	public void setMdate(Date mdate) {
+		this.mdate = mdate;
 	}
 	
 }

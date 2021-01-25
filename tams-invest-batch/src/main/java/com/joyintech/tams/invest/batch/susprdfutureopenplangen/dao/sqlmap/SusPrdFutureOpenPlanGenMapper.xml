@@ -6,7 +6,8 @@
 		SELECT	
 		    '开放计划' planType,																								
 			A.FINPROD_ID AS FINPROD_ID,																								
-			A.VDATE AS VDATE,																								
+			A.VDATE AS VDATE,	
+			A.MDATE AS mdate,/*产品到期日*/																							
 			A.PROFIT_TYPE AS PROFIT_TYPE,																								
 			E.OPEN_MDATE AS OPEN_MDATE,																								
 			E.CASH_ID AS CASH_ID,																								
@@ -95,6 +96,7 @@
 	           R.Eff_Date effDate,/* 生效日*/
 	           E.cash_id anapleroticId,/*回补id*/	          
 	           A.FINPROD_ID finprodId,/*产品代码*/
+	           A.MDATE AS mdate,/*产品到期日*/
 		       A.CALENDAR_ID  calendarId,	/*交易日历*/
     		   I.PROD_STYLE prodStyle,/* 适用款型*/   		      		    
 	           O.OPEN_CYCLE_UNIT anapleroticFrequency, /*回补规则*/
@@ -145,6 +147,64 @@
 		    A.FINPROD_TYPE = 'F16'																								
 	</select>
 	
+	<select id="findProductPayPlanList" parameterType="Map" resultType="com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto">
+		SELECT	
+		'付息计划' planType,/*计划类型*/
+		fp.FINPROD_ID AS finprodId,/*金融产品代码*/
+		fp.PROFIT_TYPE AS profitType,/*收益类型*/
+		fp.VDATE AS vdate,/*产品起息日*/
+		fp.MDATE AS mdate,/*产品到期日*/
+		fp.CALENDAR_ID AS calendarId, /*交易日历*/
+		E.CASH_ID AS cashId, /*现金流代码*/
+		E.VDATE payVdate,/*付息计划区间开始日*/
+		E.CASH_NUM cashNum,/*现金流序号*/
+		E.MDATE payFPMdate,/*付息计划首次结束日*/
+		nvl2(fcpr.PAY_CYCLE_VAL,'02',fcpr.PAY_CYCLE) payCycle,/*支付频率:01到期 02周期支付*/
+		fcpr.PAY_CYCLE_VAL payCycleVal,/*支付频率值*/
+		nvl2(fcpr.PAY_CYCLE_VAL,fcpr.PAY_CYCLE,null) payCycleUnit,/*付息周期单位*/
+		fcpr.PAY_TDAY_RULE payTdayRule,/*支付日营业日准则*/
+		fcpr.END_TDAY_RULE endTdayRule,/*截止日营业日准则*/
+		fcpr.FIRST_PAY_DATE firstPayDate,/*首次支付日*/
+		fcpr.CALC_RULE calcRule,/*推算方式*/
+		fp.LIQUIDATION_DATE winupDate/*清盘日*/
+		from FIN_PRODUCT fp																			
+		INNER JOIN																								
+				(SELECT 																							
+					T.CASH_ID,
+					T.CASH_NUM,
+					T.VDATE,
+					T.MDATE,
+					T.FINPROD_ID,
+					T.RN																						
+				FROM																							
+					(SELECT  																						
+						B.CASH_ID AS CASH_ID, 																					
+						C.CASH_NUM AS CASH_NUM,																				
+						C.VDATE AS VDATE, 																					
+						C.MDATE AS MDATE,	
+						C.FINPROD_ID AS FINPROD_ID,																				
+						RANK () OVER(PARTITION BY B.CASH_ID ORDER BY C.VDATE DESC) RN																					
+					FROM 																						
+						FIN_CASH_INFO B																					
+					INNER JOIN FIN_CASH_PLAN C																						
+						ON B.CASH_ID = C.CASH_ID																					
+					WHERE 																																											
+						B.CASH_TYPE_1 = #{cashType1}										
+						AND B.BRANCH = 0																					
+					) T
+				WHERE 																							
+					T.RN = 1
+					AND T.VDATE between TRUNC(to_date(#{sysDate},'yyyy-MM-dd'),'mm')
+		            and trunc(add_months(to_date(#{sysDate},'yyyy-MM-dd'),1),'mm')-1
+				) E																							
+				ON fp.FINPROD_ID = E.FINPROD_ID	
+				INNER JOIN FIN_CASH_PAY_RULE fcpr ON E.CASH_ID = fcpr.CASH_ID AND fp.VDATE = fcpr.EFF_DATE	
+				where
+				fp.FINPROD_TYPE2 = 'F16'
+		        AND fp.PROFIT_TYPE in ('02','03')
+		        AND fp.P_FINPROD_ID IS NULL																						
+	</select>
+	
 	<select id="findNdateOrEndDateByProdid" parameterType="string" resultType="java.util.Date">
 		select TT.listN from (
 		    select decode(t1.PROFIT_TYPE,'01',t.OPEN_NDATE,'03',t.OPEN_DATE_END) as listN 
@@ -179,5 +239,21 @@
         delete from FIN_FLOAT_ACCRUAL_SCHE
         where CASH_ID = #{cashId,jdbcType=VARCHAR}
     </delete>
+    
+    <select id="queryMaxDealMdate" parameterType="string" resultType="java.util.Date">
+		select t.mdate from (
+			SELECT
+			    decode(ps,'C7',mdate,'C9',trade_date) mdate,
+			    finprod_id,
+			    ROW_NUMBER() OVER(PARTITION BY finprod_id ORDER BY decode(ps,'C7',mdate,'C9',trade_date) DESC ) ro
+			FROM trd_fin_product_deal_total
+			WHERE ps in ('C7','C9')
+			    AND finprod_type2 = 'F16'
+			    AND trade_status = '01'
+			    AND (is_cancel = 'N' OR is_cancel IS NULL)
+			    and finprod_id = #{finprodId}
+		) t
+		where t.ro = 1
+	</select>
 
 </mapper>

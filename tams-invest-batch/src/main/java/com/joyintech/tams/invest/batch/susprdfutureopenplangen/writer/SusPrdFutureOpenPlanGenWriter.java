@@ -26,8 +26,11 @@ import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.FinCashPlanMapper;
 import com.joyintech.tams.common.base.dao.FinFloatAccrualScheMapper;
 import com.joyintech.tams.common.base.dao.FinOpenPlanMapper;
+import com.joyintech.tams.common.base.entity.FinCashPlan;
+import com.joyintech.tams.common.base.entity.FinCashPlanKey;
 import com.joyintech.tams.common.base.entity.FinFloatAccrualSche;
 import com.joyintech.tams.common.base.entity.FinFloatAccrualScheKey;
 import com.joyintech.tams.common.base.entity.FinOpenPlan;
@@ -49,6 +52,9 @@ public class SusPrdFutureOpenPlanGenWriter extends BaseWriter<NeedToWriteEntity>
 
 	@Autowired
 	private FinOpenPlanMapper finOpenPlanMapper;
+	
+	@Autowired
+  	private FinCashPlanMapper finCashPlanMapper;
 	
 	@Autowired
 	private FinFloatAccrualScheMapper finFloatAccrualScheMapper;
@@ -115,6 +121,20 @@ public class SusPrdFutureOpenPlanGenWriter extends BaseWriter<NeedToWriteEntity>
 					   }
 					}
 			}
+				//更新付息计划	
+				if (!StringUtil.isEmptyList(finOpenPlanDto.getFinCashPlanList())) {
+					for (FinCashPlan finCashPlan : finOpenPlanDto.getFinCashPlanList()) {
+						// 查询无重复
+						FinCashPlanKey key = new FinCashPlanKey();
+						key.setCashId(finCashPlan.getCashId());
+						key.setMdate(finCashPlan.getMdate());
+						FinCashPlan fcp = finCashPlanMapper.selectByPrimaryKey(key);
+						
+						if(!StringUtil.isNotEmpty(fcp)) {
+							finCashPlanMapper.insert(finCashPlan); // 如果为空再插入操作
+						}
+					}
+				}
 
 		}
 		//System.out.println(sqls);

@@ -68,15 +68,12 @@ public class BussFinProductOpenPlanImplService extends BaseService<BussFinProduc
 		int year = StringUtil.toInt(CacheUtil.getSysParam(BussinessConstant.MAX_AFTER_NOW_YEAR));
 		// 允许可生成最大区间结束日
 		Date endDateMax = DateUtil.addYear(inputDto.getVdate(), year);
-		if (endDate == null) {
-			// 实际到期日为空时，起息日+n年
-			inputDto.setMdate(endDateMax);
-		} else {
 			// 如果到期日大于允许可生成最大区间结束日 取允许可生成最大区间结束日
 			if (DateUtil.compareDate(endDate, endDateMax) > 0) {
 				inputDto.setMdate(endDateMax);
+			}else {
+				inputDto.setMdate(endDate);
 			}
-		}
 		// 开放计划区间生成
 		if (StringUtil.equals(DictCodeList.开放模式_定期开放.getValue(), inputDto.getOpenMode())
 				|| StringUtil.equals(DictCodeList.开放模式_周期开放.getValue(), inputDto.getOpenMode())) {
