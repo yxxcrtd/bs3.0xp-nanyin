@@ -21,7 +21,7 @@
                         <input type="text" th:id="|${entityName}_assetId|"
                                th:name="|${entityName}.assetId|" data-th-value="${entity?.assetId}"
                                class="layui-input form-input" placeholder="请输入内容"
-                               data-th-placeholder="#{SysCommon.placeholder}" required>
+                               data-th-placeholder="#{SysCommon.placeholder}" >
                     </div>
                 </div>
 
@@ -42,7 +42,7 @@
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_sharesType|" th:name="|${entityName}.sharesType|"
                                 th:initValue="${entity?.sharesType}" class="layui-input form-input input-select"
-                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required
+                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                 data-th-data-result="${SVR_SHARES_TYPE}">
                         </select>
                     </div>
@@ -84,7 +84,7 @@
                         <select th:id="|${entityName}_investStage|" th:name="|${entityName}.investStage|"
                                 th:initValue="${entity?.investStage}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
-                                data-th-placeholder="#{SysCommon.placeholder}" required
+                                data-th-placeholder="#{SysCommon.placeholder}"
                                 data-th-data-result="${SVR_INVEST_STAGE}">
                         </select>
                     </div>
@@ -100,7 +100,7 @@
                     <div class="layui-input-inline input-inline">
                         <input type="text" th:id="|${entityName}_equityQuit|" th:name="|${entityName}.equityQuit|"
                                data-th-value='${#dates.format(entity?.equityQuit,"yyyy-MM-dd")}'
-                               class="layui-input form-input input-dateSelect" required="required"/>
+                               class="layui-input form-input input-dateSelect" />
                     </div>
                 </div>
 
@@ -158,7 +158,7 @@
 
                 <!--<div class="layui-form-item"> -->
                 <!-- start  modify by wj  20200407 增加   是否债转股 是否银行优先股 -->
-                <div class="form-inline-wrap" th:id="|${entityName}_repDeptEquity_div|" style="display: none">
+                <div class="form-inline-wrap" >
                     <label class="layui-form-label form-label-wrap"
                            data-th-text="#{SvrBussRepEquityInfo.deptEquity}">是否为债转股(权益类资产)</label>
                     <div class="layui-input-inline input-inline">
@@ -169,21 +169,22 @@
                         </select>
                     </div>
                 </div>
-
             </div>
+            <div class="layui-form-item">
 
-
-            <div class="form-inline-wrap" th:id="|${entityName}_repBankSecPrefer_div|" style="display: none">
+            <div class="form-inline-wrap" >
                 <label class="layui-form-label form-label-wrap"
                        data-th-text="#{SvrBussRepEquityInfo.bankSecPrefer}">是否商业银行优先股</label>
                 <div class="layui-input-inline input-inline">
                     <select th:id="|${entityName}_bankSecPrefer|" th:name="|${entityName}.bankSecPrefer|"
                             th:initValue="${entity?.bankSecPrefer}" class="layui-input form-input input-select"
-                            placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required
+                            placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" 
                             data-th-data-result="${SVR_YES_OR_NO}">
                     </select>
                 </div>
             </div>
+            </div>
+
 
 
             <div class="layui-form-item">
