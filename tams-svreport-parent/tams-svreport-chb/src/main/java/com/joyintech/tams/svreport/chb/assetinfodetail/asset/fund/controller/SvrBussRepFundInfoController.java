@@ -46,10 +46,10 @@ public class SvrBussRepFundInfoController extends BaseController{
 
         //1.赋值界面数据字典
         setSelectOptionToModel(model,   new DictCode[] {DictCode.政府投资基金投向,
-                DictCode.是否_中债, DictCode.登记备案机构, DictCode.资产_负债二级类别,
-                DictCode.营业日准则,DictCode.机构所属行业一级分类,DictCode.机构所属行业二级分类
-                ,DictCode.发行机构类型_按规模划分,DictCode.发行机构类型_按经济类型划分,DictCode.发行机构类型_按技术领域划分
-                ,DictCode.投资阶段,DictCode.交易流通场所,DictCode.人行机构规模,DictCode.受让形式}
+                DictCode.是否_中债, DictCode.机构所属行业一级分类,DictCode.机构所属行业二级分类,
+                DictCode.登记备案机构, DictCode.政府投资基金投向,DictCode.投资阶段,
+                DictCode.发行机构类型_按规模划分,DictCode.发行机构类型_按经济类型划分,DictCode.发行机构类型_按技术领域划分
+                }
          );
 
         //2、当入参assetType2资产/负债二级类别 为【公募基金/私募基金】进行以下处理
