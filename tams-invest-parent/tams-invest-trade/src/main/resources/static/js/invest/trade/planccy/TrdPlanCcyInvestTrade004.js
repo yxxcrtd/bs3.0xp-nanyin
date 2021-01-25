@@ -235,33 +235,50 @@ $(function() {
             bussTrdTransfenpeiDto=object.bussTrdTransfenpeiDto;
         }
         var list=[];
-		for(var i in bussTrdTransfenpeiDto){
+        if (bussTrdTransfenpeiDto != null && object.bussTrdTransfenpeiDto.length > 0){
+			for(var i in bussTrdTransfenpeiDto){
+				var obj = {
+					timePoint: MY_SUP_TIME_TYPE_02,
+					tradeDirection: $('#ps').val(),
+					valDate: $('#tradeDate').val(),
+					portfolioCode: bussTrdTransfenpeiDto[i].portfolioId,
+					assetType: FINPROD_TYPE_F17,
+					assetCode: $('#finprodId').val(),
+					index: null,
+					mun: mun
+				};
+				if($('#type7').val() && $('#type7').val() != ''){
+					obj.assetSecType = $('#type7').val();
+				}
+				if (ps == ps_T06){
+					if(Number(bussTrdTransfenpeiDto[i].shareAmt) == Number(0)){
+						continue;
+					}
+					obj.tradeAmount = bussTrdTransfenpeiDto[i].shareAmt;
+					obj.isEnabled = '01';
+				}else{
+					if(Number(bussTrdTransfenpeiDto[i].tradeAmt) == Number(0)){
+						// continue;
+					}
+					obj.tradeAmount = bussTrdTransfenpeiDto[i].tradeAmt;
+				}
+				list[i]=obj;
+			}
+		}else {
 			var obj = {
 				timePoint: MY_SUP_TIME_TYPE_02,
 				tradeDirection: $('#ps').val(),
 				valDate: $('#tradeDate').val(),
-				portfolioCode: bussTrdTransfenpeiDto[i].portfolioId,
+				portfolioCode: null,
 				assetType: FINPROD_TYPE_F17,
 				assetCode: $('#finprodId').val(),
-                index: null,
-                mun: mun
+				index: null,
+				mun: mun
 			};
 			if($('#type7').val() && $('#type7').val() != ''){
-                obj.assetSecType = $('#type7').val();
-            }
-			if (ps == ps_T06){
-				if(Number(bussTrdTransfenpeiDto[i].shareAmt) == Number(0)){
-					continue;
-	        	}
-				obj.tradeAmount = bussTrdTransfenpeiDto[i].shareAmt;
-				obj.isEnabled = '01';
-			}else{
-				if(Number(bussTrdTransfenpeiDto[i].tradeAmt) == Number(0)){
-					// continue;
-	        	}
-				obj.tradeAmount = bussTrdTransfenpeiDto[i].tradeAmt;
+				obj.assetSecType = $('#type7').val();
 			}
-			list[i]=obj;
+			list[0]=obj;
 		}
 		if(list.length>1){
 			var object = {
