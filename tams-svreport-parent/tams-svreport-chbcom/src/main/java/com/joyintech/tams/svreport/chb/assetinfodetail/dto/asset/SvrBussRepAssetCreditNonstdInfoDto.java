@@ -211,7 +211,148 @@ public class SvrBussRepAssetCreditNonstdInfoDto extends RepAssetCreditNonstd{
     * 担保人与融资人关系  中债新增 20200403 end
     */
     private String repRelationFinan;
-    
+
+    /**
+     * 规则付息标识
+     */
+    private String   interestRuleFlag;
+
+    /**
+     * 计息基础
+     */
+    private  String basis;
+    /**
+     *金额
+     */
+    private  BigDecimal amt;
+
+
+    /**
+     *基准利率种类
+     */
+    private   String  basisType;
+
+    /**
+     *是否有浮动因子
+     */
+    private   String  floatFactorFlag;
+
+    /**
+     *浮动因子%
+     */
+    private   BigDecimal  floatFactor;
+
+    private BigDecimal assetYield;
+
+    /**
+     * 利差
+     */
+    private BigDecimal spreadRate;
+
+    /**
+     * 增信机构代码
+     */
+    private  String  creditOrgCode;
+
+    /**
+     * 增信机构名称
+     */
+    private  String  creditOrgName;
+
+    /**
+     * 融资总费率%
+     */
+    private BigDecimal  totalFeeRate;
+
+    public String getCreditOrgCode() {
+        return creditOrgCode;
+    }
+
+    public void setCreditOrgCode(String creditOrgCode) {
+        this.creditOrgCode = creditOrgCode;
+    }
+
+    public String getCreditOrgName() {
+        return creditOrgName;
+    }
+
+    public void setCreditOrgName(String creditOrgName) {
+        this.creditOrgName = creditOrgName;
+    }
+
+    public BigDecimal getTotalFeeRate() {
+        return totalFeeRate;
+    }
+
+    public void setTotalFeeRate(BigDecimal totalFeeRate) {
+        this.totalFeeRate = totalFeeRate;
+    }
+
+    public BigDecimal getSpreadRate() {
+        return spreadRate;
+    }
+
+    public void setSpreadRate(BigDecimal spreadRate) {
+        this.spreadRate = spreadRate;
+    }
+
+    public String getInterestRuleFlag() {
+        return interestRuleFlag;
+    }
+
+    public void setInterestRuleFlag(String interestRuleFlag) {
+        this.interestRuleFlag = interestRuleFlag;
+    }
+
+
+    public String getBasis() {
+        return basis;
+    }
+
+    public void setBasis(String basis) {
+        this.basis = basis;
+    }
+
+    public BigDecimal getAmt() {
+        return amt;
+    }
+
+    public void setAmt(BigDecimal amt) {
+        this.amt = amt;
+    }
+
+    public String getBasisType() {
+        return basisType;
+    }
+
+    public void setBasisType(String basisType) {
+        this.basisType = basisType;
+    }
+
+    public String getFloatFactorFlag() {
+        return floatFactorFlag;
+    }
+
+    public void setFloatFactorFlag(String floatFactorFlag) {
+        this.floatFactorFlag = floatFactorFlag;
+    }
+
+    public BigDecimal getFloatFactor() {
+        return floatFactor;
+    }
+
+    public void setFloatFactor(BigDecimal floatFactor) {
+        this.floatFactor = floatFactor;
+    }
+
+    public BigDecimal getAssetYield() {
+        return assetYield;
+    }
+
+    public void setAssetYield(BigDecimal assetYield) {
+        this.assetYield = assetYield;
+    }
+
     /**
      * 获取 repAssetType
      * @return repAssetType.
