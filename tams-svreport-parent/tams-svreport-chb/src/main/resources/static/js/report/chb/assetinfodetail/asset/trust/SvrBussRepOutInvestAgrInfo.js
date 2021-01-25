@@ -5,7 +5,7 @@
     /**
      * 添加必填标志
      */
-    var star = function() {
+    var starinvest = function() {
         // 加红星星
         // 查找label
         var _findPrevLabel = function(element, level) {
@@ -36,7 +36,7 @@
     }
 
     var getElementById = function(id) {
-        return $('#' + entityName + '_' + id);
+        return $('#' + entityName_SvrBussRepOutInvestAgrInfo + '_' + id);
     };
     /**
      * 是否有预期收益率改变时执行的方法
@@ -109,5 +109,38 @@
     //     });
     //     repYieldFlagChang();
     // });
+
+
+    $(function() {
+
+        /**
+         * 是否有预期收益率改变时执行的方法
+         */
+
+        var  investrateFlagChangeType=function(){
+            if(getElementById('rateFlag').val()=='02'){
+                //预期最高和最低收益率置灰不可修改
+                getElementById('maxRate').val('').trigger("change");
+                getElementById('maxRate').attr("disabled",true);
+
+                getElementById('minRate').val('').trigger("change");
+                getElementById('minRate').attr("disabled",true);
+            }else{
+                getElementById('maxRate').attr("disabled",false);
+                getElementById('minRate').attr("disabled",false);
+            }
+        };
+
+        investrateFlagChangeType();
+        starinvest();
+
+        //是否预期收益率change
+        getElementById('rateFlag').change(function(){
+
+            investrateFlagChangeType();
+        });
+
+    });
+
 
 }());

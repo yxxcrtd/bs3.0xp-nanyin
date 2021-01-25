@@ -70,10 +70,11 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-utext="#{SvrBussQDIISharesInfo.industryShares}">行业一级分类</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_industryShares|" th:name="|${entityName}.industryShares|"
+                        <select id="qdiiShareindustryShares" th:name="|${entityName}.industryShares|"
                                 data-th-data-result="${INSTITUTION_INDUSTRY_FIRST_LEVEL}"
                                 th:initValue="${entity?.industryShares}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
+                                childrenIds="qdiiShareindustryShares2"
                                 data-th-placeholder="#{SysCommon.placeholder}" required>
                         </select>
                     </div>
@@ -83,10 +84,11 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-utext="#{SvrBussQDIISharesInfo.industryShares2}">行业二级分类</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_industryShares2|" th:name="|${entityName}.industryShares2|"
+                        <select id="qdiiShareindustryShares2" th:name="|${entityName}.industryShares2|"
                                 data-th-data-result="${INSTITUTION_INDUSTRY_SECOND_LEVEL}"
                                 th:initValue="${entity?.industryShares2}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
+                                parentIds="qdiiShareindustryShares"
                                 data-th-placeholder="#{SysCommon.placeholder}" required>
                         </select>
                     </div>
