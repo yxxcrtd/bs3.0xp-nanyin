@@ -166,7 +166,7 @@ public class AssetTypeSetting001Dto extends BaseEntity {
      * @return
      */
     public String getAssetType1Str(){
-        return SysDataUtil.getNameFromDataDict(DictCode.宁波资产一级分类, this.getAssetType1());
+        return SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产一级分类, this.getAssetType1());
     }
 
     /**
@@ -174,7 +174,7 @@ public class AssetTypeSetting001Dto extends BaseEntity {
      * @return
      */
     public String getAssetType2Str(){
-        return SysDataUtil.getNameFromDataDict(DictCode.宁波资产二级分类, this.getAssetType2());
+        return SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产二级分类, this.getAssetType2());
     }
 
     /**
@@ -182,7 +182,7 @@ public class AssetTypeSetting001Dto extends BaseEntity {
      * @return
      */
     public String getAssetType3Str(){
-        return SysDataUtil.getNameFromDataDict(DictCode.宁波资产三级分类, this.getAssetType3());
+        return SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产三级分类, this.getAssetType3());
     }
 
     /**
@@ -190,7 +190,7 @@ public class AssetTypeSetting001Dto extends BaseEntity {
      * @return
      */
     public String getAssetBusiTypeStr(){
-        return SysDataUtil.getNameFromDataDict(DictCode.宁波业务类型, this.getAssetBusiType());
+        return SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产四级分类, this.getAssetBusiType());
     }
 
     /**

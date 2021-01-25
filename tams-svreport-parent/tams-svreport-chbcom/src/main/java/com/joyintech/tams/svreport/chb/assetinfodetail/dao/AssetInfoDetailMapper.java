@@ -51,6 +51,10 @@ public interface AssetInfoDetailMapper {
 
 	BigDecimal  getTargetAmt(String  assetUUid);
 
+	List<SelectOptionDto>  getAssetTye2(Map<String, Object> pageParam);
+
+
+
 
 	int deleteError(String assetUUid);
 

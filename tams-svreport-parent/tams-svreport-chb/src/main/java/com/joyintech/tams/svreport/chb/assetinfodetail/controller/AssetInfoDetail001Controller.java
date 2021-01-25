@@ -84,8 +84,9 @@ public class AssetInfoDetail001Controller extends BaseController {
 			model.addAttribute("searchDataEnd", map.get("searchDataEnd"));
 			model.addAttribute("isMain", "01");
 		}
-		super.setSelectOptionToModel(model, DictCode.中债对应上游资产一级类型,DictCode.资产_负债类别
-				,DictCode.中债对应上游资产二级类型, DictCode.资产_负债二级类别,DictCode.WIND二级分类_含债券二级分类等, DictCode.中债_处理状态);
+		super.setSelectOptionToModel(model,DictCode.资产_负债类别, DictCode.资产_负债二级类别
+				, DictCode.中债_上游资产一级分类, DictCode.中债_上游资产二级分类,DictCode.中债_上游资产三级分类,DictCode.中债_上游资产四级分类,
+				DictCode.中债_上游资产五级分类, DictCode.中债_处理状态);
 		return super.init(model);
 	}
 

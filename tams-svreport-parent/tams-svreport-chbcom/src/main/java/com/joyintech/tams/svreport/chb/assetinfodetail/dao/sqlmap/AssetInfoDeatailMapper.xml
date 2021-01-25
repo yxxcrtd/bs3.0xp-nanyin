@@ -2936,12 +2936,31 @@
     </insert>
 
     <select id="getChbAssetInfoErrorDataByUUid"  resultMap="BaseResultMapBLOB" >
-select  * from CHB_ASSET_INFO_ERRODATA
-where  DATAUUID=#{assetUUid}
-</select>
-<select id="getTargetAmt" resultType="java.math.BigDecimal" parameterType="java.lang.String">
-    select  100 from dual
-</select>
+        select  * from CHB_ASSET_INFO_ERRODATA
+        where  DATAUUID=#{assetUUid}
+    </select>
+    <select id="getTargetAmt" resultType="java.math.BigDecimal" parameterType="java.lang.String">
+        select  100 from dual
+    </select>
+
+    <select id="getAssetTye2" resultType="com.joyintech.framework.select.SelectOptionDto">
+
+        SELECT E.CHB_ASSET_TYPE2 id, l.ITEM_VALUE text
+            FROM CHB_ASSET_TYPE_MAPPING_EX E
+            left join CHB_ASSET_TYPE_MAPPING M ON E.MAPPING_UUID = M.TYPEUUID
+            LEFT JOIN SYS_DATADICT_LIST L ON L.DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND E.CHB_ASSET_TYPE2 = L.ITEM_CODE
+            WHERE
+                M.ASSET_TYPE1 = #{orgAssetType1}
+            <if test="orgAssetType2 != null and orgAssetType2!=''">
+                AND M.ASSET_TYPE2 =#{orgAssetType2}
+            </if>
+            <if test="orgAssetType3 != null and orgAssetType3!=''">
+                AND M.ASSET_TYPE3 =#{orgAssetType3}
+            </if>
+            <if test="orgAssetType4 != null and orgAssetType4!=''">
+                AND M.ASSET_BUSI_TYPE =#{orgAssetType4}
+            </if>
+    </select>
 
 
     <delete id="deleteError">

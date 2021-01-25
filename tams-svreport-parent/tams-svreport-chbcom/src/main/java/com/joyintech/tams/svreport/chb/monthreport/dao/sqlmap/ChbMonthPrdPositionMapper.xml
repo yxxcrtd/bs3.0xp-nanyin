@@ -10,7 +10,7 @@
     <result column="CCY" property="ccy" jdbcType="VARCHAR" />
     <result column="RAISEMODE" property="raisemode" jdbcType="VARCHAR" />
     <result column="IVSTORIENTATION" property="ivstorientation" jdbcType="VARCHAR" />
-    <result column="TERMTYPE" property="termtype" jdbcType="VARCHAR" />
+    <result column="bal" property="bal" jdbcType="VARCHAR" />
     <result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
     <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
     <result column="SALE_TARGET" property="saleTarget" jdbcType="VARCHAR" />
@@ -32,14 +32,14 @@
     <result column="INSTITUTION_CODE" property="institutionCode" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    POSUUID, PRODID, STARTDATE, ENDDATE, BOOKDATE, CCY, RAISEMODE, IVSTORIENTATION, TERMTYPE, 
+    POSUUID, PRODID, STARTDATE, ENDDATE, BOOKDATE, CCY, RAISEMODE, IVSTORIENTATION, bal, 
     OPERATE_MODE, PROFIT_TYPE, SALE_TARGET, CON_PRD_TRAGET, ORD_IDENTIFIED, DIRTYAMTSUM, 
     CLEANAMTSUM, REDEEMAMT, TERMINATIONAMT, ENDAMTSUM_OTH, CUSTOMERAMT, REDEEMINTAMT, 
     TERMINATIONINTAMT, CASHAMT, DURATIONFLAG, VDATE,OPENDURATION,CASH_MANA_CATE
   </sql>
   
   <sql id="Base_Column_List_inst" >
-    POSUUID, PRODID, STARTDATE, ENDDATE, BOOKDATE, CCY, RAISEMODE, IVSTORIENTATION, TERMTYPE, 
+    POSUUID, PRODID, STARTDATE, ENDDATE, BOOKDATE, CCY, RAISEMODE, IVSTORIENTATION, bal, 
     OPERATE_MODE, PROFIT_TYPE, SALE_TARGET, CON_PRD_TRAGET, ORD_IDENTIFIED, DIRTYAMTSUM, 
     CLEANAMTSUM, REDEEMAMT, TERMINATIONAMT, ENDAMTSUM_OTH, CUSTOMERAMT, REDEEMINTAMT, 
     TERMINATIONINTAMT, CASHAMT, DURATIONFLAG, VDATE,OPENDURATION,CASH_MANA_CATE, INSTITUTION_CODE
@@ -66,7 +66,7 @@
   <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition" >
     insert into CHB_MONTH_PRD_POSITION (POSUUID, PRODID, STARTDATE, 
       ENDDATE, BOOKDATE, CCY, 
-      RAISEMODE, IVSTORIENTATION, TERMTYPE, 
+      RAISEMODE, IVSTORIENTATION, bal, 
       OPERATE_MODE, PROFIT_TYPE, SALE_TARGET, 
       CON_PRD_TRAGET, ORD_IDENTIFIED, DIRTYAMTSUM, 
       CLEANAMTSUM, REDEEMAMT, TERMINATIONAMT, 
@@ -75,7 +75,7 @@
       VDATE)
     values (#{posuuid,jdbcType=CHAR}, #{prodid,jdbcType=VARCHAR}, #{startdate,jdbcType=TIMESTAMP}, 
       #{enddate,jdbcType=TIMESTAMP}, #{bookdate,jdbcType=TIMESTAMP}, #{ccy,jdbcType=VARCHAR}, 
-      #{raisemode,jdbcType=VARCHAR}, #{ivstorientation,jdbcType=VARCHAR}, #{termtype,jdbcType=VARCHAR}, 
+      #{raisemode,jdbcType=VARCHAR}, #{ivstorientation,jdbcType=VARCHAR}, #{bal,jdbcType=VARCHAR}, 
       #{operateMode,jdbcType=VARCHAR}, #{profitType,jdbcType=VARCHAR}, #{saleTarget,jdbcType=VARCHAR}, 
       #{conPrdTraget,jdbcType=VARCHAR}, #{ordIdentified,jdbcType=VARCHAR}, #{dirtyamtsum,jdbcType=DECIMAL}, 
       #{cleanamtsum,jdbcType=DECIMAL}, #{redeemamt,jdbcType=DECIMAL}, #{terminationamt,jdbcType=DECIMAL}, 
@@ -110,8 +110,8 @@
       <if test="ivstorientation != null" >
         IVSTORIENTATION,
       </if>
-      <if test="termtype != null" >
-        TERMTYPE,
+      <if test="bal != null" >
+        bal,
       </if>
       <if test="operateMode != null" >
         OPERATE_MODE,
@@ -187,8 +187,8 @@
       <if test="ivstorientation != null" >
         #{ivstorientation,jdbcType=VARCHAR},
       </if>
-      <if test="termtype != null" >
-        #{termtype,jdbcType=VARCHAR},
+      <if test="bal != null" >
+        #{bal,jdbcType=VARCHAR},
       </if>
       <if test="operateMode != null" >
         #{operateMode,jdbcType=VARCHAR},
@@ -264,8 +264,8 @@
       <if test="ivstorientation != null" >
         IVSTORIENTATION = #{ivstorientation,jdbcType=VARCHAR},
       </if>
-      <if test="termtype != null" >
-        TERMTYPE = #{termtype,jdbcType=VARCHAR},
+      <if test="bal != null" >
+        bal = #{bal,jdbcType=VARCHAR},
       </if>
       <if test="operateMode != null" >
         OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
@@ -327,7 +327,7 @@
       CCY = #{ccy,jdbcType=VARCHAR},
       RAISEMODE = #{raisemode,jdbcType=VARCHAR},
       IVSTORIENTATION = #{ivstorientation,jdbcType=VARCHAR},
-      TERMTYPE = #{termtype,jdbcType=VARCHAR},
+      bal = #{bal,jdbcType=VARCHAR},
       OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
       PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
       SALE_TARGET = #{saleTarget,jdbcType=VARCHAR},
@@ -369,7 +369,7 @@
 	    ,CCY
 	    ,RAISEMODE
 	    ,IVSTORIENTATION
-	    ,TERMTYPE
+	    ,bal
 	    ,OPERATE_MODE
 	    ,PROFIT_TYPE
 	    ,SALE_TARGET
@@ -406,12 +406,12 @@
 	    select nvl (info.fprod_id,info.prod_id) prodid
 	    ,info.RAISE_TYPE
 	    ,info.Ivstorientation
-	    ,info.TERMTYPE
+	    ,info.bal
 	    ,info.OPERATE_MODE
 	    ,info.OPENTYPEP
         ,info.CASH_MANA_CATE
         /***封闭期在半年以上的定期开放式产品：改成按照期限品种统计； leipeng 20201226***/
-      ,          case when info.operate_mode in ('03') and info.termtype in ('06','08','09')
+      ,          case when info.operate_mode in ('03') and info.bal in ('06','08','09')
                       then '02' else
                       (case when info.SHORT_TERM is null
                           then null
@@ -680,7 +680,7 @@
 	    ,deal.ccy
 	    ,DECODE(prod.RAISE_TYPE, '01', '01', '02', '02', null)
 	    ,prod.IVSTORIENTATION
-	    ,prod.TERMTYPE
+	    ,prod.bal
 	    ,prod.OPERATE_MODE
 	    ,prod.PROFIT_TYPE    
 	    ,prod.SALETARGET
@@ -764,7 +764,7 @@
             end )) ccy,
             DECODE(prod.raise_type, '01', '01', '02', '02', null),
             prod.ivstorientation,
-            prod.termtype,
+            prod.bal,
             prod.operate_mode,
             prod.profit_type,
             decode(prod.EXC_FIN_SECTOR,'01','04',prod.SALETARGET) saletarget,
