@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,10 +29,6 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.trade.bond.dao.TrdBondInvestTradeMapper;
 import com.joyintech.service.trade.bond.dto.SecCpriceInfoDto;
 import com.joyintech.service.trade.bond.dto.TrdBondInvestTradeCSTPDto;
@@ -383,7 +380,7 @@ public class TrdBondInvestTradeService extends BaseService {
     public Page<SelectOptionDto> getFinprodId(int page, int length, Map<String, Object> param) throws Exception {
         param.put("FINPROD_TYPE_TG", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
 //        List<SelectOptionDto> resultList = trdBondInvestTradeMapper.getFinprodId(param);
-
+        param.put("isautobond", CacheUtil.getSysParam("IS_AUTOBOND"));
         return this.queryForPage(page, length,
                 () -> trdBondInvestTradeMapper.getFinprodId(param));
 

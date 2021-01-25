@@ -4,7 +4,7 @@
  */
 (function () {
     var initFlag = true;
-
+    var isautobond = false;
     var getriskdata = function () {
         var obj = {
             tradeDirection: $('#ps').val(),
@@ -97,6 +97,9 @@
         	Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/checkAuthorization', object, function(result2) {
 	            Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/check', object,
 	                function (result) {
+                        if(isautobond == "true"){
+                            Joyin.alert("资产第一次接入系统，请确认并完善【债券标的】页面资产要素完整！");
+                        }
 	                    Joyin.confirm(result.data, function () {
 	                        if (operateType === 'save') {
 	                            WorkFlow.doSaveList(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/save', object, "EtrInvestBondInfo002_btn_save");
@@ -478,6 +481,7 @@
                 if (!data.finprodId) {
                     //自动加券
                     data = AutoCoupon.autoBondTradeCoupon($('#finprodId').val());
+                    isautobond = true;
                     data.finvdate = data.vdate;
                     data.finmdate = data.mdate;
                 }

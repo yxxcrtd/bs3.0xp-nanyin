@@ -10,6 +10,7 @@ var table;
     var exchangeAmt=0; //经手费
    //初始计算要素内容
     var saveCalcParam;
+    var isautobond = false;
     // add by wangguoxian 费用设置 20190807 start
     var isPayWithTrade = $("#isPayWithTrade").val()?$("#isPayWithTrade").val():YES_OR_NO_Y;//佣金是否随交易支付，默认为是
     $("#isPayWithTrade").val(isPayWithTrade);
@@ -113,6 +114,9 @@ var table;
 	            object.counterId = $('#trdInvestPersonInfo_counterId').select2('data')[0].id;
 	        }
 	        Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/check', object, function(result1) {
+                if(isautobond == "true"){
+                    Joyin.alert("资产第一次接入系统，请确认并完善【债券标的】页面资产要素完整！");
+                }
 	            //如果是多组合指令，循环入库
 	            if($("#zhilingtype").val()=="02"){
 
@@ -765,6 +769,7 @@ var table;
             } else {
 	        	//自动加券 yjm
 	        	var autoCoupon = AutoCoupon.autoBondTradeCoupon($('#finprodId').val());
+                isautobond = true;
 	            // 资产名称文本框根据资产代码选择自动显示对应名称;
 	            $("#finprodName").val(autoCoupon.finprodAbbr).trigger('change');
 	            // 同时带出资产相关信息，包括起息日，到期日，发行日，交易场所，币种，交易日历，计息基础等;

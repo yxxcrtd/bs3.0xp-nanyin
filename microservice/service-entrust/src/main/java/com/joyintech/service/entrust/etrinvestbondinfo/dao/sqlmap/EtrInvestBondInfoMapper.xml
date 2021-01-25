@@ -277,6 +277,7 @@
         FIN_PRODUCT_TYPE T2
         ON T1.FINPROD_ID = T2.FINPROD_ID
 		<include refid="getfinprodIdForAddWhere"></include>
+		<if test="isautobond != null and isautobond == 'true'">
 		union
 SELECT interf.SECID id,
        interf.SECFULLNAME text,
@@ -303,7 +304,7 @@ SELECT interf.SECID id,
            interf.SECNAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
             )
 	</if>
-		 
+		</if>
 	</select>
 	<sql id="getfinprodIdForAddWhere">
 	<where>

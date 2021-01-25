@@ -15,10 +15,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.common.dao.EntrustCommonPersonSelectMapper;
 import com.joyintech.service.entrust.common.service.EntrustCommonPersonSelectService;
@@ -204,6 +201,7 @@ public class EtrInvestBondInfoService extends BaseService<EtrInvestBondInfoDto> 
      */
     public Page<SelectOptionDto> getfinprodIdForAdd(int page, int length,Map<String, Object> param) {
         param.put("assestType", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        param.put("isautobond", CacheUtil.getSysParam("IS_AUTOBOND"));
         return this.queryForPageForSelectReturn(page, length,()->etrInvestBondInfoMapper.getfinprodIdForAdd(param));
     }
 

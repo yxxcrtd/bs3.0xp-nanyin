@@ -681,6 +681,7 @@
 	                AND B.TYPE_4 = #{windtypeone}
 	            </if>
 	        </where>
+        <if test="isautobond != null and isautobond == 'true'">
         union
           select interf.SECID  id,
           interf.secname text,
@@ -728,6 +729,7 @@
              interf.SECNAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
             )
 	   </if>
+        </if>
     </select>
     <!-- 资产代码下拉框查询条件 -->
     <sql id="getFinprodIdWhere">
