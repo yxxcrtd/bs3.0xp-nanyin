@@ -240,10 +240,11 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-text="#{SvrBussRepOtherInvestTargetInfo.proIndustry}">融资项目所属行业一级分类</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_proIndustry|" th:name="|${entityName}.proIndustry|"
+                        <select id="otherproIndustry" th:name="|${entityName}.proIndustry|"
                                 th:initValue="${entity?.proIndustry}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" required
+                                childrenIds="otherproIndustryLevel2"
                                 data-th-data-result="${INSTITUTION_INDUSTRY_FIRST_LEVEL}">
                         </select>
                     </div>
@@ -252,10 +253,11 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-text="#{SvrBussRepOtherInvestTargetInfo.proIndustryLevel2}">融资项目所属行业二级分类</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_proIndustryLevel2|" th:name="|${entityName}.proIndustryLevel2|"
+                        <select id="otherproIndustryLevel2" th:name="|${entityName}.proIndustryLevel2|"
                                 th:initValue="${entity?.proIndustryLevel2}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" required
+                                parentIds="otherproIndustry"
                                 data-th-data-result="${INSTITUTION_INDUSTRY_SECOND_LEVEL}">
                         </select>
                     </div>

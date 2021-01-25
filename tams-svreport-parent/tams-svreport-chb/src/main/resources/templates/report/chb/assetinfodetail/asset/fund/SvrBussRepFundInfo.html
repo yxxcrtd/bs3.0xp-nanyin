@@ -69,10 +69,11 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-utext="#{SvrBussRepFundInfo.industryShares}">行业一级分类</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_industryShares|" th:name="|${entityName}.industryShares|"
+                        <select id="fundndustryShares" th:name="|${entityName}.industryShares|"
                                 data-th-data-result="${INSTITUTION_INDUSTRY_FIRST_LEVEL}"
                                 th:initValue="${entity?.industryShares}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
+								childrenIds="fundindustryShares2"
                                 data-th-placeholder="#{SysCommon.placeholder}" required>
                         </select>
                     </div>
@@ -82,11 +83,12 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-utext="#{SvrBussRepFundInfo.industryShares2}">行业二级分类</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_industryShares2|" th:name="|${entityName}.industryShares2|"
+                        <select id="fundindustryShares2" th:name="|${entityName}.industryShares2|"
                                 data-th-data-result="${INSTITUTION_INDUSTRY_SECOND_LEVEL}"
                                 th:initValue="${entity?.industryShares2}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
-                                data-th-placeholder="#{SysCommon.placeholder}" required>
+								parentIds="fundndustryShares"
+								data-th-placeholder="#{SysCommon.placeholder}" required>
                         </select>
                     </div>
                 </div>
@@ -289,7 +291,7 @@
         var z_02 = /*[[${z_02}]]*/'02';//货币市场基金
         var fundTypeElement = /*[[${fundTypeElement}]]*/'fundType';
         var secondTypeElement = /*[[${secondTypeElement}]]*/'secondType';
-        var BussRepFundInfoentityName = /*[[${entityName}]]*/'';
+        var BussRepFundInfoentityName = [[${entityName}]];
         var repIsGovInvest = /*[[${entity?.repIsGovInvest}]]*/'';
         var CHB_FUND_ASSET_SECOND_TYPE_01 = /*[[${CHB_FUND_ASSET_SECOND_TYPE_01}]]*/'1106';
         var CHB_FUND_ASSET_SECOND_TYPE_02 = /*[[${CHB_FUND_ASSET_SECOND_TYPE_02}]]*/'2401';
