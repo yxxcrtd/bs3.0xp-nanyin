@@ -38,7 +38,7 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-text="#{SvrBussRepAssetAstBillInfo.notstandSecType}">类型</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="notstandSecType" th:name="notstandSecType"
+                        <select th:id="|${entityName}_notstandSecType|" th:name="|${entityName}.notstandSecType|"
                                 th:initValue="${entity?.notstandSecType}" class="layui-input form-input input-select"
                                 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required
                                 parentIds="assetType2"
