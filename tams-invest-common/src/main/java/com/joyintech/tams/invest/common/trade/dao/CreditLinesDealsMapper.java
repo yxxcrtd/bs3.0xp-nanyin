@@ -10,14 +10,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.trade.dto.FinProductCredit;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-
-import com.joyintech.tams.common.base.entity.CreditLines;
-import com.joyintech.tams.common.base.entity.CreditLinesDeal;
-import com.joyintech.tams.common.base.entity.RiskWeight;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
 
 /**
  * 业务共通组件.交易占用/释放授信共通组件的Mapper
@@ -92,4 +88,10 @@ public interface CreditLinesDealsMapper {
 	 * @return
 	 */
 	List<String> selectTradeidByBTtradid(@Param("bTradeId") String bTradeId);
+
+	List<CreditLinesPierce> getPierceListByTradeDate(@Param("tradeDate") String tradeDate);
+
+	int deleteLinesSecPositionBySeqno(@Param("seqno")String seqno);
+
+	int insertLinesSecPosition(CreditLinesSecPosition creditLinesSecPosition);
 }

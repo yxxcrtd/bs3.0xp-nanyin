@@ -2,8 +2,17 @@ package com.joyintech.tams.invest.risk.creditmanagement.ceorg.validator;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.tams.common.base.dao.CreditMstInfoMapper;
+import com.joyintech.tams.common.base.entity.CreditLines;
+import com.joyintech.tams.common.base.entity.CreditMstInfo;
+import com.joyintech.tams.invest.risk.creditmanagement.ceorg.dto.CreditMstInfoDto;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -86,6 +95,51 @@ public class CeOrgValidator implements BeanValidator{
 	                    new ValidMessage(this.getMessage("COMMON_E_0012",dto.getPflsh())));
 	            }
         	}
+			if(StringUtil.isNotEmpty(dto.getCreditAmt()) && !StringUtil.isEmptyList(dto.getCreditQuoteItem())){
+				BigDecimal creditAmt = BigDecimal.ZERO;
+				Map<String, Object> pageParam =new HashMap<>();
+				Page<CreditMstInfoDto> pag = ceOrg002Service.getTreeCeOrgQuote(pageParam);
+				Map<String,List<CreditMstInfoDto>> sssMap = pag.getRoot().stream().collect(JoyinCollectors.groupingBy(CreditMstInfoDto::getUpperCreditQuoteTypeCode));
+				Map<String,List<CreditMstInfoDto>>  mapmap = new HashMap<>();
+				Map<String,BigDecimal>  maptwo = new HashMap<>();
+				for (CreditLines item:dto.getCreditQuoteItem()){
+					for (CreditMstInfoDto dto1:sssMap.get("root")) {
+						if (dto1.getCreditMstId().equals(item.getCreditMstId())) {
+							creditAmt = ArithmeticUtil.doAdd(creditAmt, item.getCreditAmt());
+						}
+					}
+					for (CreditMstInfoDto dto1:pag.getRoot()){
+						if (dto1.getCreditMstId().equals(item.getCreditMstId())){
+							maptwo.put(dto1.getCreditMstId(),item.getCreditAmt());
+							mapmap.put(dto1.getCreditMstId(),sssMap.get(dto1.getCreditQuoteTypeCode()));
+						}
+					}
+				}
+				if (StringUtil.isNotEmpty(mapmap)){
+ 					for (String str: mapmap.keySet()){
+						List<CreditMstInfoDto> listlist = mapmap.get(str);
+						if (StringUtil.isEmptyList(listlist)){
+							continue;
+						}
+						BigDecimal creditAmtsum1 = BigDecimal.ZERO;
+						for (CreditLines item : dto.getCreditQuoteItem()) {
+						     for (CreditMstInfoDto dto2:listlist) {
+								if (dto2.getCreditMstId().equals(item.getCreditMstId())) {
+									creditAmtsum1 = ArithmeticUtil.doAdd(creditAmtsum1, item.getCreditAmt());
+								}
+							}
+						}
+						if (maptwo.get(str).compareTo(creditAmtsum1) < 0){
+							resultList.add(new ValidMessage("授信品种分项各明细额度不能大于分项额度"));
+						}
+					}
+				}
+
+				if (creditAmt.compareTo(dto.getCreditAmt()) > 0){
+					resultList.add(new ValidMessage("授信品种额度不能大于总额度"));
+				}
+			}
+
         }
         if(StringUtil.equals(dto.getOperateType(), "delete")) {
         	 if(CollectionUtils.isNotEmpty(dto.getSelectedItem())) {

@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,7 @@ public class CeMonitorReportService extends BaseService<CreditLinesDealDto> {
             String[] customerIdList = pageParam.get("customerId").toString().split(",");
             pageParam.put("customerIdList", Arrays.asList(customerIdList));
         }
+        pageParam.put("sysDate", DateUtil.getSysDate());
     	if(StringUtil.isNotEmpty(pageParam.get("parentId")) && !StringUtil.equals(pageParam.get("parentId"),"root")) {
             List<CreditLinesDealDto> resultList = ceMonitorReportMapper.selectOrgForPage(pageParam);
             Page<CreditLinesDealDto> pagelist = new Page<>();
@@ -62,6 +64,7 @@ public class CeMonitorReportService extends BaseService<CreditLinesDealDto> {
             String[] customerIdList = pageParam.get("customerId").toString().split(",");
             pageParam.put("customerIdList", Arrays.asList(customerIdList));
         }
+        pageParam.put("sysDate", DateUtil.getSysDate());
         return super.queryForPage(page, length, () -> ceMonitorReportMapper.selectAssetForPage(pageParam));
     }
     /**
@@ -78,6 +81,7 @@ public class CeMonitorReportService extends BaseService<CreditLinesDealDto> {
             String[] customerIdList = pageParam.get("customerId").toString().split(",");
             pageParam.put("customerIdList", Arrays.asList(customerIdList));
         }
+        pageParam.put("sysDate", DateUtil.getSysDate());
         return super.queryForPage(page, length, () -> ceMonitorReportMapper.selectAssetGroupForPage(pageParam));
     }
 }

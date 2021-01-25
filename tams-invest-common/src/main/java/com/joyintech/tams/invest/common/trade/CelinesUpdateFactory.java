@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -484,10 +487,16 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
         BigDecimal hapCreditAmt=BigDecimal.ZERO;
         //预占用额度
         BigDecimal prehapamt =BigDecimal.ZERO;
+        //预占用额度
+        BigDecimal pierceAmt =BigDecimal.ZERO;
         // 授信足够标识
         Boolean isEnoughCreditflag=true;
         List<String> seqnoList =this.seqnoList();
         List<CreditLinesDetail> listlist =new ArrayList<>();
+        List<CreditLinesPierce> pierceList =
+                creditLinesMapper.getPierceListByTradeDate(DateUtil.format(model.getTradeDate()));
+        Map<String,List<CreditLinesPierce>> pierceMap = pierceList.stream().collect(
+                JoyinCollectors.groupingBy(item->item.getCreditMstId()+":"+item.getCustomerId()));
         for(CreditLines creditLines:creLineslist){
             Map<String,Object> mapforprehapamt = new HashMap<>();
             mapforprehapamt.put("creditMstId",creditLines.getCreditMstId());
@@ -500,9 +509,14 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
             hapCreditAmt=creditLines.getHapCreditAmt().add(prehapamt==null?BigDecimal.ZERO:prehapamt);
             // 算上本次已占用额度=（已占用额度+待处理额度）>0?（已占用额度+待处理额度）:0
             hapCreditAmt = BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) < 0 ? hapCreditAmt.add(todocredit_amt):BigDecimal.ZERO;
+            //华商个性化 算上底层资产占用额度 2020年12月15日 start
+            if (StringUtil.isNotEmpty(pierceMap) && StringUtil.isNotEmpty(pierceMap.get(creditLines.getCreditMstId()+":"+creditLines.getCustomerId()))) {
+                pierceAmt =  pierceMap.get(creditLines.getCreditMstId()+":"+creditLines.getCustomerId()).get(0).getCreditAmt();
+            }
+            //华商个性化 算上底层资产占用额度 2020年12月15日 end
             //新增只有买入或申购时候额度监控 by nixiukuan 20191009
             //修复【二级法人-机构授信】当交易额度超过机构授信总额度之后，没有占用授信额度BUG by jqq start
-            if(hapCreditAmt.compareTo(creditLines.getCreditAmt())>0 && flagps1 && !isSave){
+            if(ArithmeticUtil.doAdd(hapCreditAmt,pierceAmt).compareTo(creditLines.getCreditAmt())>0 && flagps1 && !isSave){
                 //提示 授信额度不够,并且直接返回提示语，不再进行下次循环
                 isEnoughCreditflag=false;
                 common.setErrMessage(getMessage("BUSS_COM_CRE_002"));
@@ -510,9 +524,11 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                 return list;
             }
             //修复【二级法人-机构授信】当交易额度超过机构授信总额度之后，没有占用授信额度BUG by jqq end
-            if(!creditLines.getCreditMstId().equals(BussinessDictCodeList.授信配置代码_资产授信.getValue())&&!creditLines.getCreditMstId().equals(BussinessDictCodeList.授信配置代码_机构授信.getValue())&&!creditLines.getCreditMstId().equals(BussinessDictCodeList.授信配置代码_系列授信.getValue())) {
+            if(!creditLines.getCreditMstId().equals(BussinessDictCodeList.授信配置代码_资产授信.getValue())
+                &&!creditLines.getCreditMstId().equals(BussinessDictCodeList.授信配置代码_机构授信.getValue())
+                &&!creditLines.getCreditMstId().equals(BussinessDictCodeList.授信配置代码_系列授信.getValue())) {
                 //额度检验
-                listlist.add(this.checkOrgDetailAmt(seqnoList, creditLines, model, todocredit_amt));
+                listlist.add(this.checkOrgDetailAmt(seqnoList, creditLines, model, todocredit_amt,pierceAmt));
                 //期限检验
                 listlist.add(this.checkOrgDetailTerm(seqnoList, creditLines, model));
             }
@@ -584,6 +600,10 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                             creditLinesMapper.insertLinesDeal(creditLinesDeal);
                         }
                     }
+                    //
+                    if (pierceAmt !=null && pierceAmt.compareTo(BigDecimal.ZERO)>0){
+//                        setCreditLinesSecPosition(model,isSave,pierceAmt,creditLines);
+                    }
                 }else{
                     //2.1 存授信额度底层持仓关联表
                     CreditLinesDealCommon creditLinesDealCommon=new CreditLinesDealCommon();
@@ -598,6 +618,41 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
     }
 
     /**
+     * 授信额度底层持仓关联表
+     *
+     * @param model 交易
+     * @param isSave 是否保存
+     * @param pierceAmt 金额
+     * @param creditLines 授信信息
+     */
+    private void setCreditLinesSecPosition(TrdProductDeal model, boolean isSave, BigDecimal pierceAmt, CreditLines creditLines) {
+        CreditLinesSecPosition creditLinesSecPosition=new CreditLinesSecPosition();
+        //2.0 存额度占用明细表
+        creditLinesSecPosition.setSeqno(creditLines.getSeqno());
+        //占用类型（实际占用、预占用）
+        creditLinesSecPosition.setCreditOccureType("01");
+        creditLinesSecPosition.setTradeAmt(pierceAmt);
+        creditLinesSecPosition.setValDate(model.getTradeDate());
+        creditLinesSecPosition.setFinprodId(model.getFinprodId());
+        creditLinesSecPosition.setCreateDept(model.getCreateDept());
+        creditLinesSecPosition.setCreateTime(model.getCreateTime());
+        creditLinesSecPosition.setCreateUser(model.getCreateUser());
+        creditLinesSecPosition.setUpdateTime(model.getUpdateTime());
+        creditLinesSecPosition.setUpdateUser(model.getUpdateUser());
+        if(isSave && !DictCodeListExt1.交易状态_撤销.getValue().equals(model.getTradeStatus())){
+            if(null != model.getTradeStatus() && (DictCodeListExt1.交易状态_撤销.getValue().equals(model.getTradeStatus()))){
+                //删除原占用的
+                creditLinesMapper.deleteLinesSecPositionBySeqno(creditLines.getSeqno());
+            }
+            else
+            {
+//                creditLinesMapper.deleteLinesSecPositionBySeqno(creditLines.getSeqno());
+                creditLinesMapper.insertLinesSecPosition(creditLinesSecPosition);
+            }
+        }
+    }
+
+    /**
      * 检查分项授信额度是否通过
      *
      * @param seqnoList
@@ -606,7 +661,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
      * @param todocredit_amt 待处理额度
      * @return CreditLinesDetail 检验结果
      */
-    private CreditLinesDetail checkOrgDetailAmt(List<String> seqnoList, CreditLines creLinesmst, TrdProductDeal model, BigDecimal todocredit_amt) {
+    private CreditLinesDetail checkOrgDetailAmt(List<String> seqnoList, CreditLines creLinesmst, TrdProductDeal model, BigDecimal todocredit_amt,BigDecimal pierceAmt) {
 
         CreditLinesDetail creditLinesDetailamt =new CreditLinesDetail();
         //查询机构的品种授信
@@ -631,7 +686,9 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
 
         if(!seqnoList.isEmpty()&&seqnoList.contains(creLinesmst.getCreditMstId())){
             creditLinesDetailamt.setThistrans(todocredit_amt.divide(converttemp).toString());
-            if(creLinesmst.getCreditAmt().compareTo(creLinesmst.getHapCreditAmt().add(todocredit_amt).add(prehapamt== null?BigDecimal.ZERO:prehapamt))>=0){
+            if(creLinesmst.getCreditAmt().compareTo(
+                    creLinesmst.getHapCreditAmt().add(todocredit_amt).add(prehapamt== null?BigDecimal.ZERO:prehapamt)
+                    .add(pierceAmt== null?BigDecimal.ZERO:pierceAmt))>=0){
                 creditLinesDetailamt.setCheckresult("pass");
             }else{
                 creditLinesDetailamt.setCheckresult("nopass");

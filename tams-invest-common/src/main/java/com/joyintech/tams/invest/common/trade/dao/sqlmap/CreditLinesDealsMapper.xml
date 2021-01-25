@@ -688,5 +688,124 @@
 		select trade_id
 			from TRD_PRODUCT_DEAL  
  		    where b_trade_id = #{bTradeId}
-    </select>
+	</select>
+
+	<select id="getPierceListByTradeDate" resultType="com.joyintech.tams.common.base.entity.CreditLinesPierce">
+         SELECT
+            SEQNO             seqno,
+			CUSTOMER_ID       customerId,
+			CREDIT_MST_ID     creditMstId,
+			CDATE             cdate,
+			PLAN_ASSET_ID     planAssetId,
+			CCY               ccy,
+			CREDIT_AMT        creditAmt,
+			INSTITUTION_CODE  institutionCode
+         FROM (
+            SELECT * FROM (
+				SELECT
+				   SEQNO,
+				   CUSTOMER_ID,
+				   CREDIT_MST_ID,
+				   CDATE,
+				   PLAN_ASSET_ID,
+				   CCY,
+				   CREDIT_AMT,
+				   INSTITUTION_CODE,
+				   row_number() over (PARTITION BY c.CUSTOMER_ID,c.CREDIT_MST_ID ORDER BY c.CDATE ASC) as newResult
+				FROM CREDIT_LINES_PIERCE c
+				where to_date(#{tradeDate},'yyyy-MM-dd') >= c.CDATE
+				  and c.CREDIT_MST_ID is not null
+            ) c where c.newResult =1
+         )
+	</select>
+
+	<delete id="deleteLinesSecPositionBySeqno">
+		delete from CREDIT_LINES_SEC_POSITION where seqno = #{seqno}
+    </delete>
+
+	<insert id="insertLinesSecPosition" parameterType="com.joyintech.tams.common.base.entity.CreditLinesSecPosition" >
+		insert into CREDIT_LINES_SEC_POSITION
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="seqno != null" >
+				SEQNO,
+			</if>
+			<if test="valDate != null" >
+				VAL_DATE,
+			</if>
+			<if test="ptlId != null" >
+				PTL_ID,
+			</if>
+			<if test="subCode != null" >
+				SUB_CODE,
+			</if>
+			<if test="finprodId != null" >
+				FINPROD_ID,
+			</if>
+			<if test="creditOccureType != null" >
+				CREDIT_OCCURE_TYPE,
+			</if>
+			<if test="tradeAmt != null" >
+				TRADE_AMT,
+			</if>
+			<if test="assetPosition != null" >
+				ASSET_POSITION,
+			</if>
+			<if test="createUser != null" >
+				CREATE_USER,
+			</if>
+			<if test="createDept != null" >
+				CREATE_DEPT,
+			</if>
+			<if test="createTime != null" >
+				CREATE_TIME,
+			</if>
+			<if test="updateUser != null" >
+				UPDATE_USER,
+			</if>
+			<if test="updateTime != null" >
+				UPDATE_TIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="seqno != null" >
+				#{seqno,jdbcType=VARCHAR},
+			</if>
+			<if test="valDate != null" >
+				#{valDate,jdbcType=DATE},
+			</if>
+			<if test="ptlId != null" >
+				#{ptlId,jdbcType=VARCHAR},
+			</if>
+			<if test="subCode != null" >
+				#{subCode,jdbcType=VARCHAR},
+			</if>
+			<if test="finprodId != null" >
+				#{finprodId,jdbcType=VARCHAR},
+			</if>
+			<if test="creditOccureType != null" >
+				#{creditOccureType,jdbcType=VARCHAR},
+			</if>
+			<if test="tradeAmt != null" >
+				#{tradeAmt,jdbcType=DECIMAL},
+			</if>
+			<if test="assetPosition != null" >
+				#{assetPosition,jdbcType=DECIMAL},
+			</if>
+			<if test="createUser != null" >
+				#{createUser,jdbcType=VARCHAR},
+			</if>
+			<if test="createDept != null" >
+				#{createDept,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null" >
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateUser != null" >
+				#{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null" >
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
 </mapper>
