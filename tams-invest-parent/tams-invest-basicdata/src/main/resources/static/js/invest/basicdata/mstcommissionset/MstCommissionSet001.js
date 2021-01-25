@@ -128,22 +128,21 @@
                             sortField : 'feeMini',type:'money',
                             width : 150
                         },{
-                            field : 'isPayWithTradeStr',
-                            title : 'MstCommissionSet002.isPayWithTrade',
-                            sortField : 'isPayWithTrade',
-                            visible:false,
-                            width : 150
-                         }, {
                             field : 'effDate',
                             title : 'MstCommissionSet002.effDate',
                             sortField : 'effDate',
                             type : 'date'
-                        }, {
+                        },{
+                            field : 'isPayWithTradeStr',
+                            title : 'MstCommissionSet002.isPayWithTrade',
+                            sortField : 'isPayWithTrade',
+                            width : 150
+                        },{
                             field : 'action',
                             title : '操作',
                             type : 'action',
                             buttons : [ 'edit', 'delt' ]
-                        } ],
+                        }],
                     });
 
     var exportExcel = function() {
