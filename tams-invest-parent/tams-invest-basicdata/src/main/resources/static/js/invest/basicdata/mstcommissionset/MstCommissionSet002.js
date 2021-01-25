@@ -117,6 +117,9 @@
         }
         var ps = $('#ps').val();
         var termType = $('#termType').val();
+        var secAcctId = $('#secAcctId').val();
+        var windtypeone = $('#windtypeone').val();
+        var windtypetwo = $('#windtypetwo').val();
         object.secAcctId=$("#secAcctId").val()?$("#secAcctId").val().join(","):'';
         object.ps=$("#ps").val()?$("#ps").val().join(","):'';
         object.termType=$("#termType").val()?$("#termType").val().join(","):'';
@@ -127,13 +130,30 @@
         if (ps) {
             $.each(ps, function(i1, v1) {
                 if (!termType) {
-                    var mstDto = getDto(object, v1);
-                    selectedItem.push(mstDto);
+                    if(!secAcctId){
+                        var mstDto = getDto(object, v1);
+                        selectedItem.push(mstDto);
+                    }else{
+                        $.each(secAcctId, function(i2, v2) {
+                            var mstDto = getDto(object, v1);
+                            mstDto.secAcctId = v2;
+                            selectedItem.push(mstDto);
+                        })
+                    }
                 } else {
                     $.each(termType, function(i2, v2) {
-                        var mstDto = getDto(object, v1);
-                        mstDto.termType = v2
-                        selectedItem.push(mstDto);
+                        if(!secAcctId){
+                            var mstDto = getDto(object, v1);
+                            mstDto.termType = v2
+                            selectedItem.push(mstDto);
+                        }else{
+                            $.each(secAcctId, function(i3, v3) {
+                                var mstDto = getDto(object, v1);
+                                mstDto.termType = v2
+                                mstDto.secAcctId = v3;
+                                selectedItem.push(mstDto);
+                            })
+                        }
                     });
                 }
             })
@@ -146,6 +166,8 @@
         mstDto.tradeType = object.tradeType;
         mstDto.termType = object.termType;
         mstDto.effDate = object.effDate;
+        mstDto.windtypeone = object.windtypeone;
+        mstDto.windtypetwo = object.windtypetwo;
         if ($("#workflowId").val() != null && $("#workflowId").val() != '') {
             mstDto.workflowId = $("#workflowId").val();
         }
@@ -196,6 +218,8 @@
         mstDto.tradeType = object.tradeType;
         mstDto.tradeMarketMode = object.tradeMarketMode;
         mstDto.ps = v1;
+        mstDto.windtypeone = object.windtypeone;
+        mstDto.windtypetwo = object.windtypetwo;
         if ($("#workflowId").val() != null && $("#workflowId").val() != '') {
             mstDto.workflowId = $("#workflowId").val();
         }

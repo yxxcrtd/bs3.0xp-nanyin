@@ -2,16 +2,13 @@ package com.joyintech.tams.invest.basicdata.mstcommissionset.validator;
 
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.StlSecAcctInfoMapper;
+import com.joyintech.tams.common.base.dao.TrdFeeConfigMapper;
 import com.joyintech.tams.common.base.entity.StlSecAcctInfo;
 import com.joyintech.tams.common.base.entity.TrdFeeConfigDetail;
-import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.invest.basicdata.mstbanktranfeemanage.dto.MstBankTranFeeManageDto;
 import com.joyintech.tams.invest.basicdata.mstbanktranfeemanage.service.MstBankTranFeeManageService;
@@ -19,7 +16,6 @@ import com.joyintech.tams.invest.basicdata.mstcommissionset.dto.MstCommissionSet
 import com.joyintech.tams.invest.basicdata.mstcommissionset.service.MstCommissionSetService;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import com.joyintech.tams.invest.common.service.MapperDelegateService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -54,6 +50,8 @@ public class MstCommissionSetValidator implements BeanValidator {
     @Autowired
     private MstBankTranFeeManageService mstBankTranFeeManageService;
 
+    @Autowired
+    private TrdFeeConfigMapper trdFeeConfigMapper;
     /**
      * {@linkplain}
      */
@@ -729,42 +727,59 @@ public class MstCommissionSetValidator implements BeanValidator {
                 // modified by wangguoxian 交易所交易费用设置 20190718 end
                 //Add  by  张年  20190829  start
                 //获取页面数据集合
-                List<MstCommissionSetDto> list = dto.getSelectedItem();
+                List<MstCommissionSetDto> pageDataList = dto.getSelectedItem();
                 //判断新建或修改的数据跟流程表中是否冲突
                 WflValidInputParameter parameter = new WflValidInputParameter();
                 parameter.setPageId(dto.getPageId());
                 //直接调用银行间费用的get
-                List<MstBankTranFeeManageDto> workList = mstBankTranFeeManageService.getBusinessData(parameter);
-                List<MstCommissionSetDto> data1List = new ArrayList<MstCommissionSetDto>();
+                List<MstBankTranFeeManageDto> workFlowDataObjList = mstBankTranFeeManageService.getBusinessData(parameter);
+                List<MstCommissionSetDto> workFlowDataList = new ArrayList<MstCommissionSetDto>();
                 //update by 张年 20190830 start
-                if(workList != null && workList.size()>0 && list != null && list.size()>0 ) {
-                    for (MstBankTranFeeManageDto en : workList) {
-                        if (en.getAllData() != null && !StringUtil.equals(en.getAllData(), "")) {
+                if(workFlowDataObjList != null && workFlowDataObjList.size()>0 && pageDataList != null && pageDataList.size()>0 ) {
+                    for (MstBankTranFeeManageDto workFlowDataObj : workFlowDataObjList) {
+                        if (workFlowDataObj.getAllData() != null && !StringUtil.equals(workFlowDataObj.getAllData(), "")) {
                             try {
-                                List<MstCommissionSetDto> data0List = JsonUtils.json2List(en.getAllData(), MstCommissionSetDto.class);
+                                List<MstCommissionSetDto> allDataList = JsonUtils.json2List(workFlowDataObj.getAllData(), MstCommissionSetDto.class);
                                 //原先组装方法pk1过长
-                                if (null != data0List && !data0List.isEmpty()) {
+                                if (null != allDataList && !allDataList.isEmpty()) {
                                     //交易方向
-                                    String[] arrPs = data0List.get(0).getPs().split(",");
+                                    String[] arrPs = allDataList.get(0).getPs().split(",");
                                     //期限品种
                                     for (String ps : arrPs) {
                                         MstCommissionSetDto mstCommissionSetDto = new MstCommissionSetDto();
-                                        mstCommissionSetDto.setFeeType(data0List.get(0).getFeeType());
-                                        mstCommissionSetDto.setTermType(data0List.get(0).getTermType());
-                                        mstCommissionSetDto.setSecAcctId(data0List.get(0).getSecAcctId());
-                                        mstCommissionSetDto.setTradeType(data0List.get(0).getTradeType());
-                                        mstCommissionSetDto.setEffDate(data0List.get(0).getEffDate());
-                                        mstCommissionSetDto.setTradeMarketMode(data0List.get(0).getTradeMarketMode());
+                                        mstCommissionSetDto.setFeeType(allDataList.get(0).getFeeType());
+                                        mstCommissionSetDto.setTermType(allDataList.get(0).getTermType());
+                                        mstCommissionSetDto.setTradeType(allDataList.get(0).getTradeType());
+                                        mstCommissionSetDto.setEffDate(allDataList.get(0).getEffDate());
+                                        mstCommissionSetDto.setTradeMarketMode(allDataList.get(0).getTradeMarketMode());
+                                        mstCommissionSetDto.setWindtypeone(allDataList.get(0).getWindtypeone());
+                                        mstCommissionSetDto.setWindtypetwo(allDataList.get(0).getWindtypetwo());
                                         mstCommissionSetDto.setPs(ps);
-                                        mstCommissionSetDto.setWorkflowId(en.getWorkflowId());
-                                        mstCommissionSetDto.setStatus(en.getStatus());
-                                        if(StringUtil.isNotEmpty(data0List.get(0).getTermType())){
-                                            String[] arrTerm = data0List.get(0).getTermType().split(",");
+                                        mstCommissionSetDto.setWorkflowId(workFlowDataObj.getWorkflowId());
+                                        mstCommissionSetDto.setStatus(workFlowDataObj.getStatus());
+                                        if(StringUtil.isNotEmpty(allDataList.get(0).getTermType())){
+                                            String[] arrTerm = allDataList.get(0).getTermType().split(",");
                                             for (String termType : arrTerm) {
                                                 mstCommissionSetDto.setTermType(termType);
-                                                data1List.add(mstCommissionSetDto);
+                                                if(StringUtil.isNotEmpty(allDataList.get(0).getSecAcctId())){
+                                                    for (String secAcctId : allDataList.get(0).getSecAcctId().split(",")) {
+                                                        mstCommissionSetDto.setSecAcctId(secAcctId);
+                                                        workFlowDataList.add(mstCommissionSetDto);
+                                                    }
+                                                }else{
+                                                    workFlowDataList.add(mstCommissionSetDto);
+                                                }
                                             }
-                                        }else{data1List.add(mstCommissionSetDto);}
+                                        }else{
+                                            if(StringUtil.isNotEmpty(allDataList.get(0).getSecAcctId())){
+                                                for (String secAcctId : allDataList.get(0).getSecAcctId().split(",")) {
+                                                    mstCommissionSetDto.setSecAcctId(secAcctId);
+                                                    workFlowDataList.add(mstCommissionSetDto);
+                                                }
+                                            }else{
+                                                workFlowDataList.add(mstCommissionSetDto);
+                                            }
+                                        }
                                     }
                                 }
                             } catch (Exception e) {
@@ -772,48 +787,91 @@ public class MstCommissionSetValidator implements BeanValidator {
                             }
                         }
                     }
+                    if("F01".equals(dto.getTradeType())){
+                        pageDataList = sepWindtype(pageDataList);
+                        workFlowDataList = sepWindtype(workFlowDataList);
+                    }
                     //定义一个全局开关
                     boolean flag2 = false;
-                    for(MstCommissionSetDto d:list){
+                    for(MstCommissionSetDto pageData:pageDataList){
                         if(flag2){
                             break;
                         }
-                        for(MstBankTranFeeManageDto en:workList){
-                            if(en.getAllData() != null && !StringUtil.equals(en.getAllData(), "")){
-                                try {
-                                    List<MstBankTranFeeManageDto> data0List = JsonUtils.json2List(en.getAllData(), MstBankTranFeeManageDto.class);
-                                    //如果交易品种相同，交易方向相同并且，工作流代码不相同(即不是同一工作流程中的的数据)
-                                    for(MstCommissionSetDto data0 : data1List){
-                                        if(StringUtil.equals(d.getTradeType(), data0.getTradeType())
-                                                && StringUtil.equals(d.getTradeMarketMode(), data0.getTradeMarketMode())
-                                                && StringUtil.equals(d.getPs(), data0.getPs())
-                                                && StringUtil.equals(d.getFeeType(), data0.getFeeType())
-                                                && StringUtil.equals(d.getTermType(), data0.getTermType())
-                                                && StringUtil.equals(d.getSecAcctId(), data0.getSecAcctId())
-                                                && DateUtil.compareDate(d.getEffDate(),data0.getEffDate())==0
-                                                && !StringUtil.equals(en.getWorkflowId(), dto.getWorkflowId())
-                                                && !StringUtil.equals(data0.getStatus(),"U")){
-                                            flag2 = true;
-                                            break;
-                                        }
-                                    }
-                                }
-                                catch (Exception e) {
-                                    e.printStackTrace();
+                        try {
+                            //如果交易品种相同，交易方向相同并且，工作流代码不相同(即不是同一工作流程中的的数据)
+                            for(MstCommissionSetDto workFlowData : workFlowDataList){
+                                if(StringUtil.equals(pageData.getTradeType(), workFlowData.getTradeType())
+                                        && (StringUtil.equals(pageData.getTradeMarketMode(), workFlowData.getTradeMarketMode())||StringUtil.isEmpty(pageData.getTradeMarketMode())&&StringUtil.isEmpty(workFlowData.getTradeMarketMode()))
+                                        && StringUtil.equals(pageData.getPs(), workFlowData.getPs())
+                                        && StringUtil.equals(pageData.getFeeType(), workFlowData.getFeeType())
+                                        && StringUtil.equals(pageData.getTermType(), workFlowData.getTermType())
+                                        && StringUtil.equals(pageData.getSecAcctId(), workFlowData.getSecAcctId())
+                                        && DateUtil.compareDate(pageData.getEffDate(),workFlowData.getEffDate())==0
+                                        && StringUtil.equals(pageData.getWindtypeone(), workFlowData.getWindtypeone())
+                                        && StringUtil.equals(pageData.getWindtypetwo(), workFlowData.getWindtypetwo())
+                                        && !StringUtil.equals(workFlowData.getWorkflowId(), dto.getWorkflowId())
+                                        && !StringUtil.equals(workFlowData.getStatus(),"U")){
+                                    flag2 = true;
+                                    break;
                                 }
                             }
                         }
+                        catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                     if(flag2){
-                        resultList.add(new ValidMessage(this.getMessage("MST_INFO_E_0004",
-                                getMessage("MstBankTranFeeManage001.tradeType")+":"+dto.getTradeTypeStr(),
-                                getMessage("MstBankTranFeeManage001.ps"))));
+//                        resultList.add(new ValidMessage(this.getMessage("MST_INFO_E_0004",
+//                                getMessage("MstBankTranFeeManage001.tradeType")+":"+dto.getTradeTypeStr(),
+//                                getMessage("MstBankTranFeeManage001.ps"))));
+                        resultList.add(new ValidMessage("已存在重复的流程中数据！"));
                     }
                 }
                 //Add  by  张年  20190829  end
             }
         }
         return resultList;
+    }
+
+    private List<MstCommissionSetDto> sepWindtype(List<MstCommissionSetDto> list) {
+        if(list==null||list.size()<=0) return list;
+        List<MstCommissionSetDto> objList = new ArrayList<>();
+        for(MstCommissionSetDto dto:list){
+            if(StringUtil.isNotEmpty(dto.getWindtypeone())){
+                for(String windtypeone:dto.getWindtypeone().split(",")){
+                    dto.setWindtypeone(windtypeone);
+                    List<String> windtypetwoList=trdFeeConfigMapper.findWindtypetwo(windtypeone);
+                    if(StringUtil.isNotEmpty(dto.getWindtypetwo())&&windtypetwoList!=null&&windtypetwoList.size()>0){
+                        Boolean flag = false;
+                        for(String windtypetwo:dto.getWindtypetwo().split(",")){
+                            if(windtypetwoList.contains(windtypetwo)){
+                                MstCommissionSetDto entity = new MstCommissionSetDto();
+                                BeanUtil.copyPropertiesIgnoreNull(entity, dto);
+                                entity.setWindtypetwo(windtypetwo);
+                                objList.add(entity);
+                                flag = true;
+                            }
+                            if(!flag){
+                                MstCommissionSetDto entity = new MstCommissionSetDto();
+                                BeanUtil.copyPropertiesIgnoreNull(entity, dto);
+                                entity.setWindtypetwo(null);
+                                objList.add(entity);
+                            }
+                        }
+                    }else{
+                        MstCommissionSetDto entity = new MstCommissionSetDto();
+                        BeanUtil.copyPropertiesIgnoreNull(entity, dto);
+                        entity.setWindtypetwo(null);
+                        objList.add(entity);
+                    }
+                }
+            }else{
+                MstCommissionSetDto entity = new MstCommissionSetDto();
+                BeanUtil.copyPropertiesIgnoreNull(entity, dto);
+                objList.add(entity);
+            }
+        }
+        return objList;
     }
 
     // add by wangguoxian 20190718 start
