@@ -519,6 +519,12 @@
                                    AND mbviInner.VALUE_DATE &lt;= TO_DATE(#{plateDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
                                    AND mbviInner.VALUE_DATE > mbvi.VALUE_DATE
                                )
+               AND mbvi.VALUE_SOURCE IN
+               (SELECT BVSD.VALUATION_PRICE
+               FROM bok_VAL_SCHEME_DETAIL BVSD
+               LEFT JOIN FIN_PRODUCT FBN ON FBN.TRADE_MARKET = BVSD.TRADE_MARKET
+               WHERE FBN.FINPROD_MARKET_ID = fp.FINPROD_MARKET_ID
+               AND BVSD.VALUATION_PRICE IS NOT NULL AND BVSD.SCHEME_ID = 'SCHEME001')
    </select>
    
    <select id="selectBussRepoSecPtlSellRepo" resultType="com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto">
@@ -616,6 +622,12 @@
                                    AND mbviInner.VALUE_DATE &lt;= TO_DATE(#{plateDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
                                    AND mbviInner.VALUE_DATE > mbvi.VALUE_DATE
                                )
+               AND mbvi.VALUE_SOURCE IN
+               (SELECT BVSD.VALUATION_PRICE
+               FROM bok_VAL_SCHEME_DETAIL BVSD
+               LEFT JOIN FIN_PRODUCT FBN ON FBN.TRADE_MARKET = BVSD.TRADE_MARKET
+               WHERE FBN.FINPROD_MARKET_ID = fp.FINPROD_MARKET_ID
+               AND BVSD.VALUATION_PRICE IS NOT NULL AND BVSD.SCHEME_ID = 'SCHEME001')
    </select>
    
    <select id="selectBussRepoSecPtlAntiRepo" resultType="com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto">
