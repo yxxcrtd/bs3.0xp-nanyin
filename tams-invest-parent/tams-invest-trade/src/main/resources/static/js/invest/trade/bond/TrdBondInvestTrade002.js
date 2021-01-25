@@ -16,6 +16,8 @@ var table;
     // add by wangguoxian 费用设置 20190807 end
     // add by wangpeng 费用设置 20190817 start
     var stampDutyIsPayWithTrade = $("#stampDutyIsPayWithTrade").val()?$("#stampDutyIsPayWithTrade").val():YES_OR_NO_Y;//印花是否随交易支付，默认为是
+    var settleIsPayWithTrade = YES_OR_NO_Y;//结算费是否随交易支付，默认为是
+    var exchangeIsPayWithTrade = YES_OR_NO_Y;//经手费是否随交易支付，默认为是
     $("#stampDutyIsPayWithTrade").val(stampDutyIsPayWithTrade);
     // add by wangpeng 费用设置 20190817 end
     var getriskdata = function () {
@@ -1003,15 +1005,19 @@ var table;
 
              if (isPayWithTrade == YES_OR_NO_Y) { //随交易支付
                  $("#tradeAmtAndFee").val(JoyinMath.doAdd($("#tradeAmtAndFee").val(), $("#commissionAmt").val(), 2)).trigger('blur');
-                //若结算费不为空
-                if($("#settleAmt").val()){
-                    $("#tradeAmtAndFee").val(JoyinMath.doAdd($("#tradeAmtAndFee").val(), $("#settleAmt").val(), 2)).trigger('blur');
-                }
+             }
+             if(settleIsPayWithTrade == YES_OR_NO_Y){
+                 //若结算费不为空
+                 if($("#settleAmt").val()){
+                     $("#tradeAmtAndFee").val(JoyinMath.doAdd($("#tradeAmtAndFee").val(), $("#settleAmt").val(), 2)).trigger('blur');
+                 }
+             }
+            if(exchangeIsPayWithTrade == YES_OR_NO_Y) {
                 //若经手费不为空
-                if($("#exchangeAmt").val()){
+                if ($("#exchangeAmt").val()) {
                     $("#tradeAmtAndFee").val(JoyinMath.doAdd($("#tradeAmtAndFee").val(), $("#exchangeAmt").val(), 2)).trigger('blur');
                 }
-             }
+            }
              //内转买入 减去通道费
              if ($("#trdInvestPersonInfo_counterId").val()&&$("#trdInvestPersonInfo_counterId").select2('data')[0].object=='N') {
             	 $("#tradeAmtAndFee").val(JoyinMath.doMinus($("#tradeAmtAndFee").val(), $("#channelFee").val(), 2)).trigger('blur');
@@ -1454,10 +1460,12 @@ var table;
                         //加入结算费经手费
                         if(v.feeType==FEE_TYPE_07&&v.feeAmt){
                             cntS++;
+                            settleIsPayWithTrade = v.isPayWithTrade;
                             $("#settleAmt").val(v.feeAmt).trigger("blur");
                         }
                         if(v.feeType==FEE_TYPE_01&&v.feeAmt){
                             cntM++;
+                            exchangeIsPayWithTrade = v.isPayWithTrade;
                             $("#exchangeAmt").val(v.feeAmt).trigger("blur");
                         }
 
