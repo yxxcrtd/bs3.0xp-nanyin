@@ -89,7 +89,7 @@
     }
     //递延利息是否计息
     function byRepDeferredInterestType(){
-    	if (getElementById('repDeferredInterestType').val() == SVR_DEFERRED_INTEREST_TYPE_01) {
+    	if (getElementById('repDeferredInterestType').val() == '01') {
             //递延利息是否计息
             getElementById('repDeferredInterestInt').val('').attr('disabled', true).trigger('change');
         }else{
@@ -131,16 +131,6 @@
         }
     }
     
-    var repPartRedemFlag2 = function(){
-        
-        var repPartRedemFlag = getElementById('repPartRedemFlag')[0].checked;
-        if(repPartRedemFlag){
-            getElementById('repPartRedemRate').attr('disabled',false);
-        }else{
-            getElementById('repPartRedemRate').val('').trigger('change');
-            getElementById('repPartRedemRate').attr('disabled',true);
-        }
-    }
 
     var  repRateFlagChangeType=function(){
         var  repRateFlagval=getElementById('repRateFlag').val();
@@ -194,6 +184,15 @@
           getElementById('spreadRate').attr("disabled",false);
 
       }
+    }
+
+    var  repPartRedemFlagChangeType=function(){
+        if(getElementById('repPartRedemFlag').val()=='02'){
+            getElementById('repPartRedemRate').val('').trigger("change");
+            getElementById('repPartRedemRate').attr("disabled",true);
+        }else{
+            getElementById('repPartRedemRate').attr("disabled",false);
+        }
     }
 
     var  initAssetCreditNonstd=function(){
@@ -303,7 +302,7 @@
         byRepContainType();
         floatFactorFlagChangeType();
         getElementById('repFinancierType1').change(function(){
-            if(getElementById('repFinancierType1').val()==SVR_PARTY_TYPE1_01){
+            if(getElementById('repFinancierType1').val()=='01'){
                 getElementById('repInstitSize_div').show();
             }else{
                 getElementById('repInstitSize_div').val('').trigger("change");
@@ -339,9 +338,10 @@
         	byRepDeferredInterestType();
         });
         
-        //部分赎回标识 事件
-        layui.form.on('switch(repPartRedemFlag2)',function(){
-        	repPartRedemFlag2();
+
+         //部分赎回标识 事件
+        getElementById('repPartRedemFlag').change(function(){
+            repPartRedemFlagChangeType();
         });
         //是否有预期收益率
         getElementById('repRateFlag').change(function(){
