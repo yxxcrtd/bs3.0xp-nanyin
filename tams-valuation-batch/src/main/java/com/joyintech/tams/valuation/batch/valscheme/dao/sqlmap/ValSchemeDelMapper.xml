@@ -28,6 +28,6 @@
             AND FINPROD_ID = #{prodId}
         </if>
         AND VAL_DATE = #{bookDate}
-        AND (confirm_status != 1 or confirm_status is null)
+        and (confirm_status !=1 or confirm_status is null)
     </update>
 </mapper>
