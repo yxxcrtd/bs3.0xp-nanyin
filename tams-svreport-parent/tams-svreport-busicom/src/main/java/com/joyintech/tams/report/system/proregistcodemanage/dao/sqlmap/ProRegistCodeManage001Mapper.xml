@@ -112,16 +112,16 @@
 		 	</foreach>
 		 	</if>
 		 	<if test="vdateStart != null and vdateStart != ''" >
-	    	AND to_char(A.VDATE,'yyyy-MM-dd') <![CDATA[>=]]> #{vdateStart}
+	    	AND to_char(b.VDATE,'yyyy-MM-dd') <![CDATA[>=]]> #{vdateStart}
 	    	</if>
 	    	<if test="vdateEnd != null and vdateEnd != ''" >
-	    	AND to_char(A.VDATE,'yyyy-MM-dd') <![CDATA[<=]]> #{vdateEnd}
+	    	AND to_char(b.VDATE,'yyyy-MM-dd') <![CDATA[<=]]> #{vdateEnd}
 	    	</if>
 	    	<if test="mdateStart != null and mdateStart != ''" >
-	    	AND to_char(A.MDATE,'yyyy-MM-dd') <![CDATA[>=]]> #{mdateStart}
+	    	AND to_char(b.MDATE,'yyyy-MM-dd') <![CDATA[>=]]> #{mdateStart}
 	    	</if>
 	    	<if test="mdateEnd != null and mdateEnd != ''" >
-	    	AND to_char(A.MDATE,'yyyy-MM-dd') <![CDATA[<=]]> #{mdateEnd}
+	    	AND to_char(b.MDATE,'yyyy-MM-dd') <![CDATA[<=]]> #{mdateEnd}
 	    	</if>
 		 	<if test="regCodeList != null and regCodeList.size() > 0">
 		 	<foreach collection="regCodeList" item="regCode" open=" AND A.REG_CODE IN (" close=")" separator=",">
