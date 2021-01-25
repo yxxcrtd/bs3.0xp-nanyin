@@ -331,14 +331,16 @@ public class TrdRepoTrade002DtoValidator implements TradeCommonValidator {
             }
         }
         // add by 裴家俊 2019-05-23--end----
+        // modify by 马数凯 2021-01-25 ZGBSS-360 start
         // add by 张年 2019-08-25--start----
-        if ( StringUtil.equals(DictCodeList.回购拆借方向_正回购.getValue() , inputDto.getPs()) && DictCodeList.回购类型_质押式协议回购.getValue().equals(inputDto.getRepoType())
+        if ( StringUtil.equals(DictCodeList.回购拆借方向_正回购.getValue() , inputDto.getPs()) && (DictCodeList.回购类型_质押式协议回购.getValue().equals(inputDto.getRepoType()) || DictCodeList.回购类型_质押式回购.getValue().equals(inputDto.getRepoType()))
                 && inputDto.getBussRepoSec() != null) {
             if (StringUtil.isEmptyList(inputDto.getBussRepoSec().getPledgeBondList())) {
                 errorList.add(new ValidMessage("","请输入质押券信息！"));
             }
         }
         // add by 张年 2019-08-25--end----
+        // modify by 马数凯 2021-01-25 ZGBSS-360 end
         
         // add by wangpeng 2019-08-28--start----
         
