@@ -114,72 +114,137 @@ var table;
 	            object.counterId = $('#trdInvestPersonInfo_counterId').select2('data')[0].id;
 	        }
 	        Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/check', object, function(result1) {
-                if(isautobond == "true"){
-                    Joyin.alert("资产第一次接入系统，请确认并完善【债券标的】页面资产要素完整！");
-                }
-	            //如果是多组合指令，循环入库
-	            if($("#zhilingtype").val()=="02"){
+                if(isautobond == true){
+                    Joyin.alert("资产第一次接入系统，请确认并完善【债券标的】页面资产要素完整！",1,function () {
+                        //如果是多组合指令，循环入库
+                        if($("#zhilingtype").val()=="02"){
 
-	                if(object.bussTrdTransferOrder.length){
-	                    var flag = true;
-	                    var msg = "";
-	                    for(var bussTrdTransferOrder in object.bussTrdTransferOrder){
-	                        for(var bussTrdTransfenpeiOrder in object.bussTrdTransfenpeiDto){
-	                            if((object.bussTrdTransferOrder[bussTrdTransferOrder].portfolioId == object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].busiId)&&
-	                                (object.bussTrdTransferOrder[bussTrdTransferOrder].settleAmt== object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].fpriceAmt)){
+                            if(object.bussTrdTransferOrder.length){
+                                var flag = true;
+                                var msg = "";
+                                for(var bussTrdTransferOrder in object.bussTrdTransferOrder){
+                                    for(var bussTrdTransfenpeiOrder in object.bussTrdTransfenpeiDto){
+                                        if((object.bussTrdTransferOrder[bussTrdTransferOrder].portfolioId == object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].busiId)&&
+                                            (object.bussTrdTransferOrder[bussTrdTransferOrder].settleAmt== object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].fpriceAmt)){
 
-	                                object.portfolioId = object.bussTrdTransferOrder[bussTrdTransferOrder].portfolioId;
-	                                object.tradeAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].tradeAmt;
-	                                object.cpriceAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].cpriceAmt;
-	                                object.fpriceAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].fpriceAmt;
-	                                ajaxJsonSync(basePath + 'invest/trade/bond/TrdBondInvestTrade002/check', object, function(result) {
-	                                    if(result) {
-	                                        if(msg.indexOf(result.data) == -1){
-	                                            msg += result.data + "</br>";
-	                                        }
-	                                        if(result.statuCode !='200'){
-	                                            flag = false;
-	                                        }
-	                                    }
-	                                });
-	                            }
-	                        }
-	                    }
-	                    if(flag){
-	                        Joyin.confirm(msg, function() {
-	                        	object.riskCreditListCommonDto = result1.data;
-	                        	//授信占用额度
-//	                        	Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/delLinesDeal',result1.data,function(result2) {}); 
-	                            if(operateType === 'save') {
-	                                WorkFlow.doSaveList(basePath + 'invest/trade/bond/TrdBondInvestTrade002/save', object, "TrdBondInvestTrade002_btn_save");
-	                            }
-	                            else {
-	                                WorkFlow.doSubmitList(basePath + 'invest/trade/bond/TrdBondInvestTrade002/save', object, "TrdBondInvestTrade002_btn_submit");
-	                            }
-	                        });
-	                    }
-	                }else{
-	                    //验证划款指令必填
-	                    object.portfolioId=object.busiId;
-	                    Joyin.ajaxJson(basePath + 'invest/trade/bond/TrdBondInvestTrade002/check', object, function(result) {
+                                            object.portfolioId = object.bussTrdTransferOrder[bussTrdTransferOrder].portfolioId;
+                                            object.tradeAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].tradeAmt;
+                                            object.cpriceAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].cpriceAmt;
+                                            object.fpriceAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].fpriceAmt;
+                                            ajaxJsonSync(basePath + 'invest/trade/bond/TrdBondInvestTrade002/check', object, function(result) {
+                                                if(result) {
+                                                    if(msg.indexOf(result.data) == -1){
+                                                        msg += result.data + "</br>";
+                                                    }
+                                                    if(result.statuCode !='200'){
+                                                        flag = false;
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                                if(flag){
+                                    Joyin.confirm(msg, function() {
+                                        object.riskCreditListCommonDto = result1.data;
+                                        //授信占用额度
+//	                        	Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/delLinesDeal',result1.data,function(result2) {});
+                                        if(operateType === 'save') {
+                                            WorkFlow.doSaveList(basePath + 'invest/trade/bond/TrdBondInvestTrade002/save', object, "TrdBondInvestTrade002_btn_save");
+                                        }
+                                        else {
+                                            WorkFlow.doSubmitList(basePath + 'invest/trade/bond/TrdBondInvestTrade002/save', object, "TrdBondInvestTrade002_btn_submit");
+                                        }
+                                    });
+                                }
+                            }else{
+                                //验证划款指令必填
+                                object.portfolioId=object.busiId;
+                                Joyin.ajaxJson(basePath + 'invest/trade/bond/TrdBondInvestTrade002/check', object, function(result) {
 
-	                    },false);
-	                }
-	            }else{
-	                Joyin.ajaxJson(basePath + 'invest/trade/bond/TrdBondInvestTrade002/check', object, function(result) {
-	                	//授信占用额度
+                                },false);
+                            }
+                        }else{
+                            Joyin.ajaxJson(basePath + 'invest/trade/bond/TrdBondInvestTrade002/check', object, function(result) {
+                                //授信占用额度
 //	                	Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/delLinesDeal',result1.data,function(result2) {});
-	                	object.riskCreditListCommonDto = result1.data;
-	                	Joyin.confirm(result.data, function() {
-	                        if(operateType === 'save') {
-	                            WorkFlow.doSaveList(basePath + 'invest/trade/bond/TrdBondInvestTrade002/save', object, "TrdBondInvestTrade002_btn_save");
-	                        }
-	                        else {
-	                            WorkFlow.doSubmitList(basePath + 'invest/trade/bond/TrdBondInvestTrade002/save', object, "TrdBondInvestTrade002_btn_submit");
-	                        }
-	                    });
-	                },false);
-	            }
+                                object.riskCreditListCommonDto = result1.data;
+                                Joyin.confirm(result.data, function() {
+                                    if(operateType === 'save') {
+                                        WorkFlow.doSaveList(basePath + 'invest/trade/bond/TrdBondInvestTrade002/save', object, "TrdBondInvestTrade002_btn_save");
+                                    }
+                                    else {
+                                        WorkFlow.doSubmitList(basePath + 'invest/trade/bond/TrdBondInvestTrade002/save', object, "TrdBondInvestTrade002_btn_submit");
+                                    }
+                                });
+                            },false);
+                        }
+                    });
+                }else{
+                    //如果是多组合指令，循环入库
+                    if($("#zhilingtype").val()=="02"){
+
+                        if(object.bussTrdTransferOrder.length){
+                            var flag = true;
+                            var msg = "";
+                            for(var bussTrdTransferOrder in object.bussTrdTransferOrder){
+                                for(var bussTrdTransfenpeiOrder in object.bussTrdTransfenpeiDto){
+                                    if((object.bussTrdTransferOrder[bussTrdTransferOrder].portfolioId == object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].busiId)&&
+                                        (object.bussTrdTransferOrder[bussTrdTransferOrder].settleAmt== object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].fpriceAmt)){
+
+                                        object.portfolioId = object.bussTrdTransferOrder[bussTrdTransferOrder].portfolioId;
+                                        object.tradeAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].tradeAmt;
+                                        object.cpriceAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].cpriceAmt;
+                                        object.fpriceAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].fpriceAmt;
+                                        ajaxJsonSync(basePath + 'invest/trade/bond/TrdBondInvestTrade002/check', object, function(result) {
+                                            if(result) {
+                                                if(msg.indexOf(result.data) == -1){
+                                                    msg += result.data + "</br>";
+                                                }
+                                                if(result.statuCode !='200'){
+                                                    flag = false;
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                            if(flag){
+                                Joyin.confirm(msg, function() {
+                                    object.riskCreditListCommonDto = result1.data;
+                                    //授信占用额度
+//	                        	Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/delLinesDeal',result1.data,function(result2) {});
+                                    if(operateType === 'save') {
+                                        WorkFlow.doSaveList(basePath + 'invest/trade/bond/TrdBondInvestTrade002/save', object, "TrdBondInvestTrade002_btn_save");
+                                    }
+                                    else {
+                                        WorkFlow.doSubmitList(basePath + 'invest/trade/bond/TrdBondInvestTrade002/save', object, "TrdBondInvestTrade002_btn_submit");
+                                    }
+                                });
+                            }
+                        }else{
+                            //验证划款指令必填
+                            object.portfolioId=object.busiId;
+                            Joyin.ajaxJson(basePath + 'invest/trade/bond/TrdBondInvestTrade002/check', object, function(result) {
+
+                            },false);
+                        }
+                    }else{
+                        Joyin.ajaxJson(basePath + 'invest/trade/bond/TrdBondInvestTrade002/check', object, function(result) {
+                            //授信占用额度
+//	                	Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/delLinesDeal',result1.data,function(result2) {});
+                            object.riskCreditListCommonDto = result1.data;
+                            Joyin.confirm(result.data, function() {
+                                if(operateType === 'save') {
+                                    WorkFlow.doSaveList(basePath + 'invest/trade/bond/TrdBondInvestTrade002/save', object, "TrdBondInvestTrade002_btn_save");
+                                }
+                                else {
+                                    WorkFlow.doSubmitList(basePath + 'invest/trade/bond/TrdBondInvestTrade002/save', object, "TrdBondInvestTrade002_btn_submit");
+                                }
+                            });
+                        },false);
+                    }
+                }
 	        });
     	});
 	 };
