@@ -42,9 +42,20 @@
                 $("#SvrBussRepEquityInfoDto_equityQuit").attr("disabled",false);
             }
         }
+        var  sharesTypeChangeType= function(){
+             // 股票类型”选择“02 优先股”时必填，否则置灰不可填
+            if($("#SvrBussRepEquityInfoDto_sharesType").val()!='02'){
+                $("#SvrBussRepEquityInfoDto_bankSecPrefer").val('').attr("disabled",true).trigger("change");
+            }else{
+                $("#SvrBussRepEquityInfoDto_bankSecPrefer").attr("disabled",false)
+            }
+        }
+
         starFinaciall();
         initBussRepEquity();
-
+        $("#SvrBussRepEquityInfoDto_sharesType").change(function(){
+            sharesTypeChangeType();
+        });
 
     })
 }());
