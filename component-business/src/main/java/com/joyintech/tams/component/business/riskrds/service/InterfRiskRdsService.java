@@ -1050,11 +1050,13 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      */
     private void repairSet(InterfRiskRdsDto dto, Map<String, Object> dataMap) {
         // 债券中间付息、还本、到期和相应的撤销，应该用实收本息总额
-        if ((CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_债券)
-        		//ZGBSS-138 存款存续期 实收本息总额并未在fpriceAmt字段 start
-                //|| CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_存款)
-        		//ZGBSS-138 存款存续期 实收本息总额并未在fpriceAmt字段 end
-                || CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_计划类资产_利率型)
+        if ((	//ZGBSS-138 债券,存款存续期 实收本息总额并未在fpriceAmt字段 start
+        		/*
+        		CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_债券)
+                || CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_存款)||
+                */ 
+                //ZGBSS-138 债券,存款存续期 实收本息总额并未在fpriceAmt字段 end	
+                CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_计划类资产_利率型)
                 || CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_项目类资产))
                 && (CommonUtil.isType(dto.getPs(), DictCodeList.交易方向_还本)
                         || CommonUtil.isType(dto.getPs(), DictCodeList.交易方向_到期)
