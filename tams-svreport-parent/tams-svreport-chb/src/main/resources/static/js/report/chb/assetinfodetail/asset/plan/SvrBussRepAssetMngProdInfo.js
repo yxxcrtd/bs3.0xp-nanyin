@@ -5,7 +5,7 @@
 (function(){
 
     var getElementById = function(id) {
-        return $('#' + entityName + '_' + id);
+        return $('#' + BussRepAssetMngProdInfo_entityName + '_' + id);
     };
     if(getElementById('finprodType2').val() == FINPROD_TYPE_TG_F18){
         getElementById('repPrivateprdFlag_div').show();
@@ -41,8 +41,26 @@
                 }
             });
         }
+
+
+        /**
+         * 是否有预期收益率改变时执行的方法
+         */
+
+        var  rateFlagChangeType=function(){
+            if( getElementById('rateFlag').val()=='02'){
+                //预期最高和最低收益率置灰不可修改
+                getElementById('maxRate').val('').trigger("change");
+                getElementById('maxRate').attr("disabled",true);
+
+                getElementById('minRate').val('').trigger("change");
+                getElementById('minRate').attr("disabled",true);
+            }else{
+                getElementById('maxRate').attr("disabled",false);
+                getElementById('minRate').attr("disabled",false);
+            }
+        };
         var initAssetMng = function(){
-            alert("111");
             var assetTvalueAssetMng=$('#assetType2').val();
             //资产管理产品
             if(assetTvalueAssetMng=='1701'||assetTvalueAssetMng=='1703'||
@@ -55,5 +73,10 @@
         }
         initAssetMng();
         startAssetMng();
+
+        //是否预期收益率change
+        getElementById('rateFlag').change(function(){
+            rateFlagChangeType();
+        });
     })
 }());
