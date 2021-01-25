@@ -17,7 +17,7 @@
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_inAssetType|" th:name="|${entityName}.inAssetType|"
                                 th:initValue="${entity?.inAssetType}" class="layui-input form-input input-select"
-                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required
                                 data-th-data-result="${SVR_BANK_IN_ASSET_TYPE}">
                         </select>
                     </div>
@@ -31,7 +31,7 @@
                         <input type="text" th:id="|${entityName}_inAssetTypeCmm|"
                                th:name="|${entityName}.inAssetTypeCmm|"
                                data-th-value="${entity?.inAssetTypeCmm}" class="layui-input form-input"
-                               placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required>
+                               placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" >
                     </div>
                 </div>
 
@@ -41,7 +41,7 @@
                     <div class="layui-input-inline input-inline">
                         <input type="text" th:id="|${entityName}_assetValue|"
                                th:name="|${entityName}.assetValue|"
-                               required="required"
+
                                th:value="${entity?.assetValue}" data-textrange="0" maxlength="6"
                                class="layui-input form-input text-number"/>
                     </div>
@@ -80,7 +80,7 @@
                     <div class="layui-input-inline input-inline">
                         <input type="text" th:id="|${entityName}_assetYield|" th:name="|${entityName}.assetYield|"
                                th:value="${entity?.assetYield}"
-                               class="layui-input form-input text-number" required="required"/>
+                               class="layui-input form-input text-number" />
                         <span class="input-right-show">%</span>
                     </div>
                 </div>
@@ -136,7 +136,7 @@
                         <input type="text" th:id="|${entityName}_fcrGradeOut|"
                                th:name="|${entityName}.fcrGradeOut|"
                                data-th-value="${entity?.fcrGradeOut}" class="layui-input form-input"
-                               placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required>
+                               placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" >
                     </div>
                 </div>
 
@@ -283,7 +283,7 @@
                         <select th:id="|${entityName}_monitType|" th:name="|${entityName}.monitType|"
                                 th:initValue="${entity?.monitType}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
-                                data-th-placeholder="#{SysCommon.placeholder}" required
+                                data-th-placeholder="#{SysCommon.placeholder}"
                                 data-th-data-result="${SVR_MOINT_TYPE}">
                         </select>
                     </div>
@@ -323,7 +323,7 @@
                         <select th:id="|${entityName}_guaType|" th:name="|${entityName}.guaType|"
                                 th:initValue="${entity?.guaType}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
-                                data-th-placeholder="#{SysCommon.placeholder}" required
+                                data-th-placeholder="#{SysCommon.placeholder}"
                                 data-th-data-result="${SVR_GUA_TYPE}">
                         </select>
                     </div>
@@ -351,7 +351,7 @@
                         <select th:id="|${entityName}_pledgeType|" th:name="|${entityName}.pledgeType|"
                                 th:initValue="${entity?.pledgeType}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
-                                data-th-placeholder="#{SysCommon.placeholder}" required
+                                data-th-placeholder="#{SysCommon.placeholder}"
                                 data-th-data-result="${SVR_PLEDGE_TYPE}">
                         </select>
                     </div>
@@ -375,7 +375,7 @@
                         <select th:id="|${entityName}_natureGuarantee|" th:name="|${entityName}.natureGuarantee|"
                                 th:initValue="${entity?.natureGuarantee}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
-                                data-th-placeholder="#{SysCommon.placeholder}" required
+                                data-th-placeholder="#{SysCommon.placeholder}"
                                 data-th-data-result="${SVR_NATURE_GUARANTEE}">
                         </select>
                     </div>
@@ -392,7 +392,7 @@
                         <select th:id="|${entityName}_relationFinan|" th:name="|${entityName}.relationFinan|"
                                 th:initValue="${entity?.relationFinan}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
-                                data-th-placeholder="#{SysCommon.placeholder}" required
+                                data-th-placeholder="#{SysCommon.placeholder}"
                                 data-th-data-result="${SVR_RELATION_FINAN}">
                         </select>
                     </div>
