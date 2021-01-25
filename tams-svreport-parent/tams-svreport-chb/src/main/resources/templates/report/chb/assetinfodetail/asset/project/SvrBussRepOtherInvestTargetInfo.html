@@ -201,10 +201,11 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-text="#{SvrBussRepOtherInvestTargetInfo.industry1}">融资人所属行业一级分类</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_industry1|" th:name="|${entityName}.industry1|"
+                        <select id="otherindustry1" th:name="|${entityName}.industry1|"
                                 th:initValue="${entity?.industry1}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" required
+                                childrenIds="otherindustryLevel2Type"
                                 data-th-data-result="${INSTITUTION_INDUSTRY_FIRST_LEVEL}">
                         </select>
                     </div>
@@ -226,10 +227,11 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-text="#{SvrBussRepOtherInvestTargetInfo.industryLevel2Type}">融资人所属行业二级分类</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_industryLevel2Type|" th:name="|${entityName}.industryLevel2Type|"
+                        <select id="otherindustryLevel2Type" th:name="|${entityName}.industryLevel2Type|"
                                 th:initValue="${entity?.industryLevel2Type}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" required
+                                parentIds="otherindustry1"
                                 data-th-data-result="${INSTITUTION_INDUSTRY_SECOND_LEVEL}">
                         </select>
                     </div>
@@ -418,7 +420,7 @@
     </div>
 </div>
 <script data-th-inline="javascript" type="text/javascript">
-    var entityName_BussRepOtherInvestTargetInfo = /*[[${entityName}]]*/'';
+    var entityName_BussRepOtherInvestTargetInfo = [[${entityName}]];
     var SVR_PARTY_TYPE1_01 = /*[[${SVR_PARTY_TYPE1_01}]]*/'01';
 </script>
 <script data-th-src="@{/js/report/chb/assetinfodetail/asset/project/SvrBussRepOtherInvestTargetInfo.js}"
