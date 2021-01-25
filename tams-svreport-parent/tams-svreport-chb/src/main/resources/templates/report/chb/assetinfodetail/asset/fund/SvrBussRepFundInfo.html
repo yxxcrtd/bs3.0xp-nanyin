@@ -55,7 +55,7 @@
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_financialComissue|" th:name="|${entityName}.financialComissue|"
                                 th:initValue="${entity?.financialComissue}" class="layui-input form-input input-select"
-                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required
+                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                 data-th-data-result="${SVR_YES_OR_NO}">
                         </select>
                     </div>
@@ -119,7 +119,7 @@
                     <div class="layui-input-inline input-inline">
 						<select th:id="|${entityName}_isGovernFund|" th:name="|${entityName}.isGovernFund|"
 								th:initValue="${entity?.isGovernFund}" class="layui-input form-input input-select"
-								placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required
+								placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
 								data-th-data-result="${SVR_YES_OR_NO}">
 						</select>
                     </div>
@@ -135,7 +135,7 @@
                         <select th:id="|${entityName}_governInvestFund|"
                                 th:name="|${entityName}.governInvestFund|"
                                 th:initValue="${entity?.governInvestFund}"
-                                data-th-data-result="${SVR_GOV_INVEST_DIRECT}" required="required"
+                                data-th-data-result="${SVR_GOV_INVEST_DIRECT}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}">
                         </select>
@@ -204,7 +204,7 @@
 						<select th:id="|${entityName}_sharesType1|" th:name="|${entityName}.sharesType1|"
 								th:initValue="${entity?.sharesType1}"
 								class="layui-input form-input input-select" placeholder="请输入内容"
-								data-th-placeholder="#{SysCommon.placeholder}" required
+								data-th-placeholder="#{SysCommon.placeholder}"
 								data-th-data-result="${SVR_PARTY_TYPE1}">
 						</select>
 					</div>
@@ -217,7 +217,7 @@
 						<select th:id="|${entityName}_sharesType3|" th:name="|${entityName}.sharesType3|"
 								th:initValue="${entity?.sharesType3}"
 								class="layui-input form-input input-select" placeholder="请输入内容"
-								data-th-placeholder="#{SysCommon.placeholder}" required
+								data-th-placeholder="#{SysCommon.placeholder}"
 								data-th-data-result="${SVR_PARTY_TYPE3}">
 						</select>
 					</div>
@@ -229,7 +229,7 @@
 						<select th:id="|${entityName}_sharesType2|" th:name="|${entityName}.sharesType2|"
 								th:initValue="${entity?.sharesType2}"
 								class="layui-input form-input input-select" placeholder="请输入内容"
-								data-th-placeholder="#{SysCommon.placeholder}" required
+								data-th-placeholder="#{SysCommon.placeholder}"
 								data-th-data-result="${SVR_PARTY_TYPE2}">
 						</select>
 					</div>
@@ -256,7 +256,7 @@
 						<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepFundInfo.privatefundFlag}">投向金融资产投资公司或其附属机构发行的私募股权投资基金</label>
 						<div class="layui-input-inline input-inline">
 							<input type="text" th:id="|${entityName}_privatefundFlag|"
-								   th:name="|${entityName}.privatefundFlag|" required
+								   th:name="|${entityName}.privatefundFlag|"
 								   th:value="${entity?.privatefundFlag}"
 								   data-fixtype="2" class="layui-input form-input"/>
 						</div>
