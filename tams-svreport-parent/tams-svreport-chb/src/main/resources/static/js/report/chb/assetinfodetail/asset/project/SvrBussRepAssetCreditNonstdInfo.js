@@ -24,12 +24,12 @@
 
     //行权方式事件
     function byRepExerciseType() {
-        if (getElementById('repExerciseType').val() == SVR_EXERCISE_TYPE_02) {
+        if (getElementById('repExerciseType').val() == '02') {
             //固定行权日
             getElementById('repExerciseDate').attr('disabled', false).trigger('change');
             getElementById('repFirstExerciseDate').val('').attr('disabled', true).trigger('change');
             getElementById('repExercisePeriod').val('').attr('disabled', true).trigger('change');
-        } else if (getElementById('repExerciseType').val() == SVR_EXERCISE_TYPE_03) {
+        } else if (getElementById('repExerciseType').val() == '03') {
             //首次行权日
             getElementById('repFirstExerciseDate').attr('disabled', false).trigger('change');
             //行权周期
@@ -44,15 +44,48 @@
 
     //含权类型事件
     function byRepContainType() {
-        if (getElementById('repContainType').val() == SVR_CONTAIN_TYPE_01 || getElementById('repContainType').val() == SVR_CONTAIN_TYPE_04) {
-            //行权价格
-          //  getElementById('repExercisePrice').attr('disabled', false).trigger('change');
-            $("#repContainType").attr("required", true).trigger('change');
+        if(getElementById('repContainType').val()==''){
+            //行权方式
+            getElementById('repExerciseType').val('').attr('disabled', true).trigger('change');
         }else{
-          //  getElementById('repExercisePrice').val('').attr('disabled', true).trigger('change');
-            $("#repContainType").attr("required", false).trigger('change');
-
+            getElementById('repExerciseType').attr('disabled', false).trigger('change');
         }
+        if (getElementById('repContainType').val()=='02'||getElementById('repContainType').val()=='03'
+        ||getElementById('repContainType').val()=='05'||getElementById('repContainType').val()=='06'||
+            getElementById('repContainType').val()=='07'){
+        //行权价格
+            getElementById('_repExercisePrice').val('').attr('disabled', true).trigger('change');
+        }else{
+            getElementById('_repExercisePrice').attr('disabled', false).trigger('change');
+        }
+        // if(getElementById('repContainType').val()==''){
+        //     //行权方式
+        //     getElementById('repExerciseType').val('').attr('disabled', true).trigger('change');
+        // }else  if(getElementById('repContainType').val()=='01'||getElementById('repContainType').val()=='03'){
+        //     getElementById('repExerciseType').attr('disabled', false).trigger('change');
+        //     //固定行权日
+        //     getElementById('repExerciseDate').val('').attr('disabled', true).trigger('change');
+        //    //首次行权日期
+        //     getElementById('repFirstExerciseDate').val('').attr('disabled', true).trigger('change');
+        //     //行权周期
+        //     getElementById('repExercisePeriod').val('').attr('disabled', true).trigger('change');
+        // }else{
+        //     getElementById('repExerciseType').attr('disabled', false).trigger('change');
+        //     getElementById('repExerciseDate').attr('disabled', false).trigger('change');
+        //     //首次行权日期
+        //     etElementById('repFirstExerciseDate').attr('disabled', false).trigger('change');
+        //     //行权周期
+        //     getElementById('repExercisePeriod').attr('disabled', false).trigger('change');
+        // }
+        // if (getElementById('repContainType').val()=='02'||getElementById('repContainType').val()=='03'
+        // ||getElementById('repContainType').val()=='05'||getElementById('repContainType').val()=='06'||
+        //     getElementById('repContainType').val()=='07'){
+        // //行权价格
+        //     getElementById('_repExercisePrice').val('').attr('disabled', true).trigger('change');
+        // }else{
+        //     getElementById('_repExercisePrice').attr('disabled', false).trigger('change');
+        // }
+
     }
     //递延利息是否计息
     function byRepDeferredInterestType(){
@@ -65,7 +98,7 @@
     }
     //永续条款类型事件
     function byRepPerpetualClauseType() {
-        if (getElementById('repPerpetualClauseType').val() == SVR_PERPETUAL_CLAUSE_TYPE_01 || getElementById('repPerpetualClauseType').val() == SVR_PERPETUAL_CLAUSE_TYPE_02) {
+        if (getElementById('repPerpetualClauseType').val() == '01' || getElementById('repPerpetualClauseType').val() == '02') {
             //首次重定价日期
             getElementById('repFirstReprceDate').attr('disabled', false).trigger('change');
             //重定价周期
@@ -78,25 +111,23 @@
 
     //担保方式事件
     function byRepGuaType() {
-        if (getElementById('repGuaType').val() == SVR_GUA_TYPE_03 || getElementById('repGuaType').val() == SVR_GUA_TYPE_04) {
-            //抵质押物类型
-            getElementById('repPledgeType').attr('disabled', false).trigger('change');
-            //抵质押物价值（元）
-            getElementById('repPledgeValue').attr('disabled', false).trigger('change');
-            getElementById('repNatureGuarantee').val('').attr('disabled', true).trigger('change');
-            getElementById('repRelationFinan').val('').attr('disabled', true).trigger('change');
-        } else if (getElementById('repGuaType').val() == SVR_GUA_TYPE_01 || getElementById('repGuaType').val() == SVR_GUA_TYPE_02) {
-            //担保性质
-            getElementById('repNatureGuarantee').attr('disabled', false).trigger('change');
-            //担保人与融资人关系
-            getElementById('repRelationFinan').attr('disabled', false).trigger('change');
+        if(getElementById('repGuaType').val() == '01' || getElementById('repGuaType').val() == '02'||
+            getElementById('repGuaType').val() == '05' || getElementById('repGuaType').val() == '99'){
+             //抵质押物类型
             getElementById('repPledgeType').val('').attr('disabled', true).trigger('change');
             getElementById('repPledgeValue').val('').attr('disabled', true).trigger('change');
         }else{
-            getElementById('repPledgeType').val('').attr('disabled', true).trigger('change');
-            getElementById('repPledgeValue').val('').attr('disabled', true).trigger('change');
+            //抵质押物类型
+            getElementById('repPledgeType').attr('disabled', false).trigger('change');
+            getElementById('repPledgeValue').attr('disabled', false).trigger('change');
+        }
+        if(getElementById('repGuaType').val() == '03' || getElementById('repGuaType').val() == '04'||
+            getElementById('repGuaType').val() == '05' || getElementById('repGuaType').val() == '99'){
             getElementById('repNatureGuarantee').val('').attr('disabled', true).trigger('change');
             getElementById('repRelationFinan').val('').attr('disabled', true).trigger('change');
+        }else{
+            getElementById('repNatureGuarantee').attr('disabled', false).trigger('change');
+            getElementById('repRelationFinan').attr('disabled', false).trigger('change');
         }
     }
     
@@ -111,11 +142,51 @@
         }
     }
 
+    var  repRateFlagChangeType=function(){
+        var  repRateFlagval=getElementById('repRateFlag').val();
+        if(repRateFlagval=='02'){
+            getElementById('assetYield').val('').trigger("change");
+            getElementById('assetYield').attr('disabled',true);
+        }else{
+            getElementById('assetYield').attr('disabled',false);
+        }
+    }
+
+    var  repIndustryFlagChangeType=function(){
+        var  repIndustryFlagval=getElementById('repIndustryFlag').val();
+        if(repIndustryFlagval=='02'){
+            getElementById('repMonitType').val('').trigger("change");
+            getElementById('repMonitType').attr('disabled',true);
+
+            getElementById('repMonTypeComm').val('').trigger("change");
+            getElementById('repMonTypeComm').attr('disabled',true);
+        }else{
+            getElementById('repMonitType').attr('disabled',false);
+            getElementById('repMonTypeComm').attr('disabled',false);
+
+        }
+    }
+
+    var  repGuaTypeChangeType=function(){
+         var  repGuaTypeVal=getElementById('repGuaType').val();
+
+         if(repGuaTypeVal==''){
+             getElementById('repGuaTypeRemark').val('').trigger("change");
+             getElementById('repGuaTypeRemark').attr('disabled',true);
+         }else{
+             getElementById('repGuaTypeRemark').attr('disabled',false);
+         }
+
+
+    }
     $(function() {
-        layui.form.on('switch(repIndustryFlag2)',function(){
-            repIndustryFlagChange2();
-        });
-        repIndustryFlagChange2();
+        // layui.form.on('switch(repIndustryFlag2)',function(){
+        //     repIndustryFlagChange2();
+        // });
+        // repIndustryFlagChange2();
+
+        repGuaTypeChangeType();
+        byRepContainType();
         getElementById('repFinancierType1').change(function(){
             if(getElementById('repFinancierType1').val()==SVR_PARTY_TYPE1_01){
                 getElementById('repInstitSize_div').show();
@@ -157,6 +228,17 @@
         layui.form.on('switch(repPartRedemFlag2)',function(){
         	repPartRedemFlag2();
         });
-        
+        //是否有预期收益率
+        getElementById('repRateFlag').change(function(){
+            repRateFlagChangeType();
+        });
+        //项目是否属于重点监控行业和领域
+        getElementById('repIndustryFlag').change(function(){
+            repIndustryFlagChangeType();
+        });
+
+        getElementById('repGuaType').change(function(){
+            repGuaTypeChangeType();
+        });
     });
 }());
