@@ -77,6 +77,15 @@ public class SusPrdFutureOpenPlanGenReaderService extends BaseService {
 				.findProductAnapleroticPlanList(paramMapAnapleroticPlan);
 		lists.addAll(finProductAnapleroticPlanList);
 		
+		
+		//查询需要更新的付息计划
+		Map<String, Object> paramMapPayPlan = new HashMap<String, Object>();
+		paramMapPayPlan.put("cashType1", DictCodeListExt1.现金流一级类型_利息.getValue());
+		paramMapPayPlan.put("sysDate", DateUtil.format(batchExecuteInfo.getExecuteDate()));
+		List<SusPrdFutureOpenPlanGenDto> finProductPayPlanList = susprdfutureopenplangenMapper
+						.findProductPayPlanList(paramMapPayPlan);
+		lists.addAll(finProductPayPlanList);
+		
 		return lists;
 	}
 
