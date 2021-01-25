@@ -734,6 +734,16 @@
                                             th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.procedureAmt}" />
                                 </div>
                             </div>
+                            <!--增加结算服务费-->
+                            <div class="form-inline-wrap" id="settleServiceAmtDiv">
+                                <label class="layui-form-label form-label-wrap"
+                                       th:text="#{TrdBondInvestTrade002.settleServiceAmt}">结算服务费</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input  type="text" id="settleServiceAmt" name="settleServiceAmt"
+                                            class="layui-input form-input text-number" placeholder="请输入内容"
+                                            th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.settleServiceAmt}" />
+                                </div>
+                            </div>
 
                             <!-- <div class="form-inline-wrap" id="commissionAmtRateDiv">
                                 <label class="layui-form-label form-label-wrap"

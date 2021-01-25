@@ -555,11 +555,11 @@ public class TrdBondInvestTradeService extends BaseService {
                 resultDto.setProcedureAmt(trdTradeFeeTotal.getFeeAmt());
             }
 
-            // 结算费
+            // 结算费服务费
             trdTradeFeeTotalKey.setFeeType(BussinessDictCodeList.费用类型_结算手续费.getValue());
             trdTradeFeeTotal = trdTradeFeeTotalMapper.selectByPrimaryKey(trdTradeFeeTotalKey);
             if (trdTradeFeeTotal != null) {
-                resultDto.setSettleAmt(trdTradeFeeTotal.getFeeAmt());
+                resultDto.setSettleServiceAmt(trdTradeFeeTotal.getFeeAmt());
             }
             
             // 佣金

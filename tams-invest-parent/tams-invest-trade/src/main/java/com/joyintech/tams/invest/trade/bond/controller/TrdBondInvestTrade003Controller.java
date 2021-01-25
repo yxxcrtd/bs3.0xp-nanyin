@@ -518,6 +518,7 @@ public class TrdBondInvestTrade003Controller extends BaseController {
                     tempDto.setFpriceAmt(fenpei.getFpriceAmt());
                     tempDto.setBussTrdTransferOrder(tmpOrderList);
                     tempDto.setProcedureAmt(fenpei.getProcedureAmt());//手续费
+                    tempDto.setSettleServiceAmt(fenpei.getSettleServiceAmt());//结算服务费
                     tempDto.setSettleAmt(fenpei.getSettleAmt());//结算费
                     tempDto.setExchangeAmt(fenpei.getExchangeAmt());//经手费
                     tempDto.setCommissionAmt(fenpei.getCommissionAmt());//佣金

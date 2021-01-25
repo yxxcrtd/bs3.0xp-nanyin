@@ -466,7 +466,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
         // 自动生成反向交易 chenzhili start
         dto.setBusiType(DictCodeList.共通业务类型_债券类资产交易.getValue());
         // 自动生成反向交易 chenzhili end
-        // 金融产品类型（估值核算） TODO
+        // 金融产品类型（估值核算）
         // 分支序号
         String branch = CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE);
         Long branchLong = Long.parseLong(branch);
@@ -1677,14 +1677,22 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 ttfd.setFeeAmt(entity.getProcedureAmt());
                 ttfdList.add(ttfd);
             }
-            if (entity.getSettleAmt() != null) {
-                TrdTradeFeeTotal ttfdJs = new TrdTradeFeeTotal();
-                ttfdJs.setTotleTradeId(entity.getTotleTradeId());
-                ttfdJs.setFeeType(BussinessDictCodeList.费用类型_结算手续费.getValue());
-                ttfdJs.setIsPayWithTrade(BussinessDictCodeList.是否_否.getValue());
-                ttfdJs.setFeeAmt(entity.getSettleAmt());
-                ttfdList.add(ttfdJs);
+            if (entity.getSettleServiceAmt() != null){
+                TrdTradeFeeTotal ttfd = new TrdTradeFeeTotal();
+                ttfd.setTotleTradeId(entity.getTotleTradeId());
+                ttfd.setFeeType(BussinessDictCodeList.费用类型_结算手续费.getValue());
+                ttfd.setIsPayWithTrade(BussinessDictCodeList.是否_否.getValue());
+                ttfd.setFeeAmt(entity.getSettleServiceAmt());
+                ttfdList.add(ttfd);
             }
+//            if (entity.getSettleAmt() != null) {
+//                TrdTradeFeeTotal ttfdJs = new TrdTradeFeeTotal();
+//                ttfdJs.setTotleTradeId(entity.getTotleTradeId());
+//                ttfdJs.setFeeType(BussinessDictCodeList.费用类型_结算手续费.getValue());
+//                ttfdJs.setIsPayWithTrade(BussinessDictCodeList.是否_否.getValue());
+//                ttfdJs.setFeeAmt(entity.getSettleAmt());
+//                ttfdList.add(ttfdJs);
+//            }
         }
         else if (StringUtil.equals(entity.getTradeMarket(), BussinessDictCodeList.交易场所_上海证券交易所.getValue())
                  || StringUtil.equals(entity.getTradeMarket(), BussinessDictCodeList.交易场所_深圳证券交易所.getValue())) {
@@ -2648,7 +2656,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
         catch (Exception e) {
             e.printStackTrace();
         }
-        //增加结算费经手费的回显数据
+
         if (dto.getYield() != null) {
             dto.setYield(ArithmeticUtil.multiply(dto.getYield(), new BigDecimal(100)));
         }
@@ -2677,15 +2685,8 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                     String.class);
                 inputDto.setRegistOrg(registOrg);
                 // 债券一级市场无交易手续费，结算手续费仅上清所有。
-                if (StringUtil.equals(dto.getTradeMarketMode(), DictCodeListExt1.交易市场_一级市场.getValue())) {
-                    if (StringUtil.equals(registOrg, DictCodeList.登记托管机构_上海清算所.getValue())) {
-                        inputDto.setFeeTypeList(Arrays.asList(BussinessDictCodeList.费用类型_结算手续费.getValue()));
-                    }
-                }
-                else {
-                    inputDto.setFeeTypeList(
-                        Arrays.asList(BussinessDictCodeList.费用类型_交易手续费.getValue(), BussinessDictCodeList.费用类型_结算手续费.getValue()));
-                }
+                // 修改 --> 一级市场增加交易手续费，结算手续费无论中债和上清都有
+                inputDto.setFeeTypeList(Arrays.asList(BussinessDictCodeList.费用类型_交易手续费.getValue(), BussinessDictCodeList.费用类型_结算手续费.getValue()));
                 if (!StringUtil.isEmptyList(inputDto.getFeeTypeList())) {
                     List<TrdTradeFeeDetail> tradeFeeList = baseTradeFeeCommService.innerBankFeeDeal(inputDto);
                     if (dto.getTradeFeeList() == null) {

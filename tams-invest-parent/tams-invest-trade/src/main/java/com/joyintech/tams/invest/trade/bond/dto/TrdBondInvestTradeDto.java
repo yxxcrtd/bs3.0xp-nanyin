@@ -319,7 +319,20 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
      * 佣金
      */
     private BigDecimal commissionAmt;
-    
+
+    /**
+     * 结算服务费
+     */
+    private BigDecimal settleServiceAmt;
+
+    public BigDecimal getSettleServiceAmt() {
+        return settleServiceAmt;
+    }
+
+    public void setSettleServiceAmt(BigDecimal settleServiceAmt) {
+        this.settleServiceAmt = settleServiceAmt;
+    }
+
     /**
      * 印花税
      */

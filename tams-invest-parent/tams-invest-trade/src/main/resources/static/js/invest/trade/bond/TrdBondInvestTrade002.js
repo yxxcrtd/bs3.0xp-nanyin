@@ -1000,6 +1000,7 @@ var table;
             if (stampDutyIsPayWithTrade == YES_OR_NO_Y) {
                 $("#tradeAmtAndFee").val(JoyinMath.doAdd($("#tradeAmtAndFee").val(), $("#stampDutyAmt").val(), 2)).trigger('blur');
             }
+
              if (isPayWithTrade == YES_OR_NO_Y) { //随交易支付
                  $("#tradeAmtAndFee").val(JoyinMath.doAdd($("#tradeAmtAndFee").val(), $("#commissionAmt").val(), 2)).trigger('blur');
                 //若结算费不为空
@@ -1015,7 +1016,6 @@ var table;
              if ($("#trdInvestPersonInfo_counterId").val()&&$("#trdInvestPersonInfo_counterId").select2('data')[0].object=='N') {
             	 $("#tradeAmtAndFee").val(JoyinMath.doMinus($("#tradeAmtAndFee").val(), $("#channelFee").val(), 2)).trigger('blur');
              }
-
 
         }
         else { //卖出方向
@@ -1121,6 +1121,7 @@ var table;
         $("#exchangeAmt").val('').trigger("blur");
         $("#stampDutyAmt").val('').trigger("blur");
         $("#procedureAmt").val('').trigger("blur");
+        $("#settleServiceAmt").val('').trigger("blur");
         changeTradeAmtAndFee();
     }
 
@@ -1277,6 +1278,7 @@ var table;
         // add by wangguoxian 费用设置 20190808 start
         // 交易手续费，结算费，佣金，通道费，交易金额不再计入计算要素
         paramObj.procedureAmt = null;
+        paramObj.settleServiceAmt = null; //结算服务费
         paramObj.settleAmt = null;
         paramObj.commissionAmt = null;
         paramObj.channelFee = null;
@@ -1305,7 +1307,6 @@ var table;
                 $("#intAmt").val(data.intAmt).trigger("blur");
                 $("#integrateIntAmt").val(data.integrateIntAmt).trigger("blur");
                 $("#ownIntAmt").val(JoyinMath.doMinus(data.intAmt, data.integrateIntAmt, 2, JoyinMath.ROUND_HALF_UP)).trigger("blur");
-
                 if($("#zhilingtype").val()=="02"){
                 	for(var i=0;i<table.getAllRows().length;i++){
                 		if($("#unitFprice").val()){
@@ -1322,7 +1323,7 @@ var table;
                 		}else{
                 			table.renderRow(i, {"fpriceAmt": 0});
                 		}
-                		
+
                 		if($("#unitInt").val()){
                     		//应计利息总额
                     		var unitIntSum=Number(0);
@@ -1360,7 +1361,6 @@ var table;
                 }
                 $("#exerYield").val(data.exerYield).trigger("blur");
                 $("#yield").val(data.yield).trigger("blur");
-                
                 // 记录隐藏值
                 $("#unitCprice_calc").val(data.unitCprice);
                 $("#unitInt_calc").val(data.unitInt);
@@ -1381,6 +1381,8 @@ var table;
                 if(data.tradeFeeList&&data.tradeFeeList.length>0){
                     // 交易手续费条数
                     var cntP = 0;
+                    // 结算服务费条数
+                    var cntSS = 0;
                     // 结算费条数
                     var cntS = 0;
                     // 经手费条数
@@ -1443,9 +1445,10 @@ var table;
                             $("#procedureAmt").val(v.feeAmt).trigger("blur");
                             $("#procedureAmtRate").val(v.feeRate).trigger("blur");
                         }
-                        if(v.feeType==FEE_TYPE_JSSXF&&v.feeAmt){
-                            cntS++;
-                            $("#settleAmt").val(v.feeAmt).trigger("blur");
+
+                        if(v.feeType=='B08' && v.feeAmt){
+                            cntSS++;
+                            $("#settleServiceAmt").val(v.feeAmt).trigger("blur");
                         }
 
                         //加入结算费经手费
@@ -1465,6 +1468,9 @@ var table;
                     // 按照最新费用规则计算相关费用无结果则清空相关费用
                     if(cntP == 0){
                         $("#procedureAmt").val("").trigger("blur");
+                    }
+                    if(cntSS == 0){
+                        $("#settleServiceAmt").val("").trigger("blur");
                     }
                     if(cntS == 0){
                         //结算费置空
@@ -1486,12 +1492,12 @@ var table;
                     $("#commissionAmt").val("").trigger("change").trigger("blur");
                     $("#stampDutyAmt").val("").trigger("change").trigger("blur");
                     $("#procedureAmt").val("").trigger("blur");
+                    $("#settleServiceAmt").val("").trigger("blur");
                     $("#settleAmt").val("").trigger("blur");
                     $("#procedureAmtRate").val("").trigger("blur");
                     $("#commissionAmtRate").val("").trigger("blur");
                     $("#transferAmt").val("").trigger("blur");
                 }
-
 
                 //一级缴款,所有费用为0
                 if($("#payType").val()=="02"){
@@ -1500,6 +1506,7 @@ var table;
                     $("#exchangeAmt").val('').trigger("blur");
                     $("#stampDutyAmt").val('').trigger("blur");
                     $("#procedureAmt").val('').trigger("blur");
+                    $("#settleServiceAmt").val("").trigger("blur");
                 }
 
                 counterIdChangeFee();
@@ -1908,12 +1915,14 @@ var table;
                 var 交易对手 =  counterId.select2('data')[0].object;
                 // 【债券投资委托】交易对手选择内部交易对手时，清算速度为T+0不可改
                 if (交易对手 == 'N') {
+                        $("#settleServiceAmt").val("").prop("disabled", true).trigger("change");
                         $('#procedureAmt').val('').prop("disabled", true).trigger("change");
                         $('#settleAmt').val('').prop("disabled", true).trigger("change");
                         $('#exchangeAmt').val('').prop("disabled", true).trigger("change");
                         $('#commissionAmt').val('').prop("disabled", true).trigger("change");
                         $('#stampDutyAmt').val('').prop("disabled", true).trigger("change");
                 } else {
+                    $("#settleServiceAmt").prop("disabled", false).trigger("change");
                 	$('#procedureAmt').prop("disabled", false).trigger("change");
                     $('#settleAmt').prop("disabled", false).trigger("change");
                     $('#exchangeAmt').prop("disabled", false).trigger("change");
@@ -2005,6 +2014,7 @@ var table;
                     $("#fTradeId").associateInput();
 
                     //----add by 裴家俊  2019/03/28-----
+                    $("#settleServiceAmtDiv").show();
                     $("#procedureAmtDiv").show();
                     $("#procedureAmtRateDiv").show();
                     $("#settleAmtDiv").hide();
@@ -2029,6 +2039,7 @@ var table;
                     $("#fTradeId").val("").attr("disabled", false);
 
                     //----add by 裴家俊  2019/03/28-----
+                    $("#settleServiceAmtDiv").hide();
                     $("#procedureAmtDiv").hide();
                     $("#procedureAmtRateDiv").hide();
 
@@ -2066,6 +2077,7 @@ var table;
                     $("#fTradeId").val("").attr("disabled", true);
 
                     //----add by 裴家俊  2019/03/28-----
+                    $("#settleServiceAmtDiv").show();
                     $("#procedureAmtDiv").show();
                     $("#procedureAmtRateDiv").show();
                     $("#settleAmtDiv").show();
@@ -2792,8 +2804,8 @@ var table;
                             $("#procedureAmt").val(v.feeAmt).trigger("blur");
                             $("#procedureAmtRate").val(v.feeRate).trigger("blur");
                         }
-                        if(v.feeType==FEE_TYPE_JSSXF&&v.feeAmt){
-                            $("#settleAmt").val(v.feeAmt).trigger("blur");
+                        if(v.feeType == 'B08' && v.feeAmt){
+                            $("#settleServiceAmt").val(v.feeAmt).trigger("blur");
                         }
                         /*if(v.feeType==FEE_TYPE_04&&v.feeAmt){
                             $("#transferAmt").val(v.feeAmt).trigger("blur");
@@ -2804,6 +2816,7 @@ var table;
                     $("#commissionAmt").val("").trigger("change").trigger("blur");
                     $("#stampDutyAmt").val("").trigger("change").trigger("blur");
                     $("#procedureAmt").val("");
+                    $("#settleServiceAmt").val("");
                     $("#settleAmt").val("");
                     $("#procedureAmtRate").val("");
                     $("#commissionAmtRate").val("");

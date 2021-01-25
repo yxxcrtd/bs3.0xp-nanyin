@@ -104,6 +104,8 @@ public class BussTrdTransfenpeiDto {
     public BigDecimal tgSurpluscash;
     //手续费
     public BigDecimal procedureAmt;
+    //结算服务费
+	public BigDecimal settleServiceAmt;
     //结算费
     public  BigDecimal settleAmt;
     //经手费
@@ -230,8 +232,15 @@ public class BussTrdTransfenpeiDto {
         this.tgSurpluscash = tgSurpluscash;
     }
 
+	public BigDecimal getSettleServiceAmt() {
+		return settleServiceAmt;
+	}
 
-    public BigDecimal getBussTrdAvailableCashQueryavalibleCash() {
+	public void setSettleServiceAmt(BigDecimal settleServiceAmt) {
+		this.settleServiceAmt = settleServiceAmt;
+	}
+
+	public BigDecimal getBussTrdAvailableCashQueryavalibleCash() {
         return bussTrdAvailableCashQueryavalibleCash;
     }
 

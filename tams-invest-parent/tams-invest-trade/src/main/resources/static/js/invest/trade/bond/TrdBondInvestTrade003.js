@@ -4,6 +4,7 @@ var table;
     var returnValAll={
         isPayWithTrade:'Y',
         procedureAmt:0,
+        settleServiceAmt:0,
         settleAmt:0,
         commissionAmt:0,
         channelFee:0,
@@ -186,6 +187,19 @@ var table;
 			}
 		}
 		if(true){
+            var number = 0;
+            for(var i=0;i<table.getAllRows().length;i++){
+                var settleServiceAmt=table.getAllRows()[i].settleServiceAmt==" "?0:table.getAllRows()[i].settleServiceAmt;
+                if(settleServiceAmt){
+                    number =  JoyinMath.doAdd(number,settleServiceAmt,2);
+                }
+            }
+            if(JoyinMath.doAdd($('#settleServiceAmt').val()?$('#settleServiceAmt').val():0,0,2)!=number){
+                Joyin.warn("组合分配结算服务费和金额信息结算服务费不一致！");
+                return;
+            }
+        }
+		if(true){
 			var number = 0;
 			for(var i=0;i<table.getAllRows().length;i++){
 				var settleAmt=table.getAllRows()[i].settleAmt==" "?0:table.getAllRows()[i].settleAmt;
@@ -317,7 +331,7 @@ var table;
                     }
                     var currentDealObj = tableAllRowsJiSun[index][key];
                     var backupDealObj = data[key];
-                    if (typeof currentDealObj != "object" && key != "procedureAmt"&&key != "settleAmt" && key != "exchangeAmt"
+                    if (typeof currentDealObj != "object" && key != "procedureAmt" && key != "settleServiceAmt" &&key != "settleAmt" && key != "exchangeAmt"
                         && currentDealObj != backupDealObj) {
                         isChange = true;
                     }
@@ -975,6 +989,7 @@ var table;
         // add by wangguoxian 费用设置 20190808 start
         // 交易手续费，结算费，佣金，通道费，交易金额不再计入计算要素
         paramObj.procedureAmt = null;
+        paramObj.settleServiceAmt = null;
         paramObj.settleAmt = null;
         paramObj.commissionAmt = null;
         paramObj.channelFee = null;
@@ -1191,6 +1206,8 @@ var table;
                 if (data.tradeFeeList && data.tradeFeeList.length > 0) {
                     // 交易手续费条数
                     var cntP = 0;
+                    // 结算服务费条数
+                    var cntSS = 0;
                     // 结算费条数
                     var cntS = 0;
                     // 经手费条数
@@ -1256,9 +1273,9 @@ var table;
                             $("#procedureAmtRate").val(v.feeRate).trigger("blur");
                         }
                         if(v.feeType==FEE_TYPE_JSSXF&&v.feeAmt){
-                            cntS++;
-                            if($("#settleAmt").val() == ""){
-                            	$("#settleAmt").val(v.feeAmt).trigger("blur");
+                            cntSS++;
+                            if($("#settleServiceAmt").val() == ""){
+                            	$("#settleServiceAmt").val(v.feeAmt).trigger("blur");
                             }
                         }
                         //加入结算费经手费
@@ -1277,6 +1294,11 @@ var table;
                     if (cntP == 0) {
                         if (!$("#procedureAmt").val()) {
                             $("#procedureAmt").val("").trigger("blur").trigger("change");
+                        }
+                    }
+                    if (cntSS == 0) {
+                        if (!$("#settleServiceAmt").val()) {
+                            $("#settleServiceAmt").val("").trigger("blur").trigger("change");
                         }
                     }
                     if (cntS == 0) {
@@ -1308,6 +1330,9 @@ var table;
                     if (!$("#procedureAmt").val()) {
                         $("#procedureAmt").val("").trigger("change").trigger("blur");
                     }
+                    if (!$("#settleServiceAmt").val()) {
+                        $("#settleServiceAmt").val("").trigger("change").trigger("blur");
+                    }
                     if (!$("#settleAmt").val()) {
                         $("#settleAmt").val("").trigger("change").trigger("blur");
                     }
@@ -1335,6 +1360,7 @@ var table;
         var returnVal={
             isPayWithTrade:'Y',
             procedureAmt:0,
+            settleServiceAmt:0,
             settleAmt:0,
             exchangeAmt:0,
             commissionAmt:0,
@@ -1349,6 +1375,8 @@ var table;
                 if (result.data.tradeFeeList && result.data.tradeFeeList.length > 0) {
                     // 交易手续费条数
                     var cntP = 0;
+                    // 结算服务费条数
+                    var cntSS = 0;
                     // 结算费条数
                     var cntS = 0;
                     // 经手费条数
@@ -1375,10 +1403,10 @@ var table;
                             returnVal.procedureAmt = v.feeAmt;
                             table.renderRow(data.LAY_TABLE_INDEX, {"procedureAmt": isNaN(v.feeAmt)?0:v.feeAmt});
                         }
-                        if (v.feeType == FEE_TYPE_JSSXF && v.feeAmt) {//结算手续费
-                            cntS++;
-                            returnVal.settleAmt = v.feeAmt;
-                            table.renderRow(data.LAY_TABLE_INDEX, {"settleAmt": isNaN(v.feeAmt)?0:v.feeAmt});
+                        if (v.feeType == FEE_TYPE_JSSXF && v.feeAmt) {//结算服务费
+                            cntSS++;
+                            returnVal.settleServiceAmt = v.feeAmt;
+                            table.renderRow(data.LAY_TABLE_INDEX, {"settleServiceAmt": isNaN(v.feeAmt)?0:v.feeAmt});
                         }
                         //加入结算费经手费
                         if(v.feeType==FEE_TYPE_07&&v.feeAmt){
@@ -1403,6 +1431,18 @@ var table;
                             }
                         }
                         $('#procedureAmt').val(tranFeeAmtTotal);
+                    }
+
+                    if (cntSS == 0) {
+                        table.renderRow(data.LAY_TABLE_INDEX, {"settleServiceAmt": ''});
+                    }else{
+                        var settleServiceAmtTotal = 0;
+                        for (var i = 0; i < table.getAllRows().length; i++) {
+                            if( table.getAllRows()[i].settleServiceAmt){
+                                settleServiceAmtTotal =  JoyinMath.doAdd(tranFeeAmtTotal,table.getAllRows()[i].settleServiceAmt,2);
+                            }
+                        }
+                        $('#settleServiceAmt').val(settleServiceAmtTotal);
                     }
                     if(cntM == 0){
                         table.renderRow(data.LAY_TABLE_INDEX, {"exchangeAmt":''});
@@ -1450,6 +1490,7 @@ var table;
                     }
                 } else {
                     table.renderRow(data.LAY_TABLE_INDEX, {"procedureAmt": ''});
+                    table.renderRow(data.LAY_TABLE_INDEX, {"settleServiceAmt": ''});
                     table.renderRow(data.LAY_TABLE_INDEX, {"settleAmt":''});
                     table.renderRow(data.LAY_TABLE_INDEX, {"exchangeAmt":''});
                     table.renderRow(data.LAY_TABLE_INDEX, {"commissionAmt": ''});
@@ -2243,6 +2284,7 @@ var table;
         var cpriceAmt = $('#cpriceAmt').val()==""?0:$('#cpriceAmt').val();
         var tradeAmtAndFee = $('#tradeAmtAndFee').val()==""?0:$('#tradeAmtAndFee').val();
         var procedureAmt = $('#procedureAmt').val()==""?0:$('#procedureAmt').val();
+        var settleServiceAmt = $('#settleServiceAmt').val()==""?0:$('#settleServiceAmt').val();
         var settleAmt = $('#settleAmt').val()==""?0:$('#settleAmt').val();
         var exchangeAmt = $('#exchangeAmt').val()==""?0:$('#exchangeAmt').val();
         var commissionAmt = $('#commissionAmt').val()==""?0:$('#commissionAmt').val();
@@ -2257,6 +2299,7 @@ var table;
         var intAmtTotle = $('#intAmt').val()==""?0:$('#intAmt').val()-0;
         var cpriceAmtTotle = $('#cpriceAmt').val()==""?0:$('#cpriceAmt').val()-0;
         var procedureAmtTotle = $('#procedureAmt').val()==""?0:$('#procedureAmt').val()-0;
+        var settleServiceAmtTotle = $('#settleServiceAmt').val()==""?0:$('#settleServiceAmt').val()-0;
         var settleAmtTotle = $('#settleAmt').val()==""?0:$('#settleAmt').val()-0;
         var exchangeAmtTotle = $('#exchangeAmt').val()==""?0:$('#exchangeAmt').val()-0;
         var commissionAmtTotle = $('#commissionAmt').val()==""?0:$('#commissionAmt').val()-0;
@@ -2269,6 +2312,7 @@ var table;
             var cpriceAmt4 = JoyinMath.doMul(table.getAllRows()[i].tradeAmt==" "?0:table.getAllRows()[i].tradeAmt,cpriceAmt,2);
             var intAmt4 = JoyinMath.doMul(table.getAllRows()[i].tradeAmt==" "?0:table.getAllRows()[i].tradeAmt,intAmt,2);
             var procedureAmt4 = JoyinMath.doMul(table.getAllRows()[i].tradeAmt==" "?0:table.getAllRows()[i].tradeAmt,procedureAmt,2);
+            var settleServiceAmt4 = JoyinMath.doMul(table.getAllRows()[i].tradeAmt==" "?0:table.getAllRows()[i].tradeAmt,settleServiceAmt,2);
             var settleAmt4 = JoyinMath.doMul(table.getAllRows()[i].tradeAmt==" "?0:table.getAllRows()[i].tradeAmt,settleAmt,2);
             var exchangeAmt4 = JoyinMath.doMul(table.getAllRows()[i].tradeAmt==" "?0:table.getAllRows()[i].tradeAmt,exchangeAmt,2);
             var commissionAmt4 = JoyinMath.doMul(table.getAllRows()[i].tradeAmt==" "?0:table.getAllRows()[i].tradeAmt,commissionAmt,2);
@@ -2285,6 +2329,7 @@ var table;
                         var intAmt2 = JoyinMath.doDiv(intAmt4,secTotalPrin,2)-0;
                         var fpriceAmt2 = JoyinMath.doAdd(cpriceAmt2,intAmt2,2)-0;
                         var procedureAmt2 = JoyinMath.doDiv(procedureAmt4,secTotalPrin,2)-0;
+                        var settleServiceAmt2 = JoyinMath.doDiv(settleServiceAmt4,secTotalPrin,2)-0;
                         var settleAmt2 = JoyinMath.doDiv(settleAmt4,secTotalPrin,2)-0;
                         var exchangeAmt2 = JoyinMath.doDiv(exchangeAmt4,secTotalPrin,2)-0;
                         var commissionAmt2 = JoyinMath.doDiv(commissionAmt4,secTotalPrin,2)-0;
@@ -2296,6 +2341,7 @@ var table;
                         table.renderRow(i, {"intAmt": intAmt2});
                         table.renderRow(i, {"fpriceAmt": fpriceAmt2});
                         table.renderRow(i, {"procedureAmt": procedureAmt2});
+                        table.renderRow(i, {"settleServiceAmt": settleServiceAmt2});
                         table.renderRow(i, {"settleAmt": settleAmt2});
                         table.renderRow(i, {"exchangeAmt": exchangeAmt2});
                         table.renderRow(i, {"commissionAmt": commissionAmt2});
@@ -2313,6 +2359,7 @@ var table;
                         intAmtTotle = JoyinMath.doMinus(intAmtTotle,intAmt2,2);
                         cpriceAmtTotle = JoyinMath.doMinus(cpriceAmtTotle,cpriceAmt2,2);
                         procedureAmtTotle = JoyinMath.doMinus(procedureAmtTotle,procedureAmt2,2);
+                        settleServiceAmtTotle = JoyinMath.doMinus(settleServiceAmtTotle,settleServiceAmt2,2);
                         settleAmtTotle = JoyinMath.doMinus(settleAmtTotle,settleAmt2,2);
                         exchangeAmtTotle = JoyinMath.doMinus(exchangeAmtTotle,exchangeAmt2,2);
                         commissionAmtTotle = JoyinMath.doMinus(commissionAmtTotle,commissionAmt2,2);
@@ -2332,6 +2379,7 @@ var table;
                             table.renderRow(i, {"intAmt": intAmtTotle});
                             table.renderRow(i, {"fpriceAmt": JoyinMath.doAdd(cpriceAmtTotle,intAmtTotle,2)});
                             table.renderRow(i, {"procedureAmt": procedureAmtTotle});
+                            table.renderRow(i, {"settleServiceAmt": settleServiceAmtTotle});
                             table.renderRow(i, {"settleAmt": settleAmtTotle});
                             table.renderRow(i, {"exchangeAmt": exchangeAmtTotle});
                             table.renderRow(i, {"commissionAmt": commissionAmtTotle});
@@ -2354,6 +2402,7 @@ var table;
                                     var intAmtLast    = JoyinMath.doAdd(table.getAllRows()[j].intAmt==" "?0:table.getAllRows()[j].intAmt,intAmtTotle,2);
                                     var fpriceAmtLast = JoyinMath.doAdd(cpriceAmtLast,intAmtLast,2);
                                     var procedureAmtLast = JoyinMath.doAdd(table.getAllRows()[j].procedureAmt==" "?0:table.getAllRows()[j].procedureAmt,procedureAmtTotle,2);
+                                    var settleServiceAmtLast = JoyinMath.doAdd(table.getAllRows()[j].settleServiceAmt==" "?0:table.getAllRows()[j].settleServiceAmt,settleServiceAmtTotle,2);
                                     var settleAmtLast = JoyinMath.doAdd(table.getAllRows()[j].settleAmt==" "?0:table.getAllRows()[j].settleAmt,settleAmtTotle,2);
                                     var exchangeAmtLast = JoyinMath.doAdd(table.getAllRows()[j].exchangeAmt==" "?0:table.getAllRows()[j].exchangeAmt,exchangeAmtTotle,2);
                                     var commissionAmtLast = JoyinMath.doAdd(table.getAllRows()[j].commissionAmt==" "?0:table.getAllRows()[j].commissionAmt,commissionAmtTotle,2);
@@ -2363,6 +2412,7 @@ var table;
                                     table.renderRow(j, {"intAmt": intAmtLast});
                                     table.renderRow(j, {"fpriceAmt": fpriceAmtLast});
                                     table.renderRow(j, {"procedureAmt": procedureAmtLast});
+                                    table.renderRow(j, {"settleServiceAmt": settleServiceAmtLast});
                                     table.renderRow(j, {"settleAmt": settleAmtLast});
                                     table.renderRow(j, {"exchangeAmt": exchangeAmtLast});
                                     table.renderRow(j, {"commissionAmt": commissionAmtLast});
@@ -2383,6 +2433,7 @@ var table;
                                      table.renderRow(j, {"intAmt": zero});
                                      table.renderRow(j, {"fpriceAmt": zero});
                                      table.renderRow(j, {"procedureAmt": zero});
+                                     table.renderRow(j, {"settleServiceAmt": zero});
                                      table.renderRow(j, {"settleAmt": zero});
                                      table.renderRow(j, {"exchangeAmt": zero});
                                      table.renderRow(j, {"commissionAmt": zero});
@@ -2540,6 +2591,7 @@ var table;
                     table.showColumns([{field:'accAvailableCash',visible: false}]);
                     table.showColumns([{field:'commissionAmt',visible: false}]);
                     table.showColumns([{field:'procedureAmt',visible: true}]);
+                    table.showColumns([{field:'settleServiceAmt',visible: true}]);
                     table.showColumns([{field:'settleAmt',visible: false}]);
                     table.showColumns([{field:'exchangeAmt',visible: false}]);
                     table.showColumns([{field:'stampDutyAmt',visible: false}]);
@@ -2560,6 +2612,7 @@ var table;
 
                     //----add by 裴家俊  2019/03/28-----
                     $("#procedureAmtDiv").show();
+                    $("#settleServiceAmtDiv").show();
                     $("#procedureAmtRateDiv").show();
                     $("#settleAmtDiv").hide();
                     $("#exchangeAmtDiv").hide();
@@ -2568,9 +2621,11 @@ var table;
 //                $("#tradeAmtAndFeeDiv").hide();
                 } else if (tradeMarket == TRADE_PLACE_02 || tradeMarket == TRADE_PLACE_03) {
                     $('#procedureAmt').val('');
+                    $('#settleServiceAmt').val('');
                     $('#settleAmt').val('');
                     $('#exchangeAmt').val('');
                     table.showColumns([{field:'procedureAmt',visible: false}]);
+                    table.showColumns([{field:'settleServiceAmt',visible: false}]);
                     table.showColumns([{field:'accAvailableCash',visible: true}]);
                     table.showColumns([{field:'commissionAmt',visible: true}]);
                     table.showColumns([{field:'tradeAmtAndFee',visible: true}]);
@@ -2597,6 +2652,7 @@ var table;
                     //
                     //----add by 裴家俊  2019/03/28-----
                     $("#procedureAmtDiv").hide();
+                    $("#settleServiceAmtDiv").hide();
                     $("#procedureAmtRateDiv").hide();
                     $("#settleAmtDiv").hide();
                     $("#exchangeAmtDiv").hide();
@@ -2630,6 +2686,7 @@ var table;
 
                     //----add by 裴家俊  2019/03/28-----
                     $("#procedureAmtDiv").show();
+                    $("#settleServiceAmtDiv").show();
                     $("#procedureAmtRateDiv").show();
                     $("#settleAmtDiv").show();
                     $("#exchangeAmtDiv").show();
@@ -2852,6 +2909,65 @@ var table;
                 }
             }
     }
+    //交易手续费
+    function extractedProcedureAmt() {
+        var tradeAmtAll = $('#tradeAmt').val();
+            var all = 0;
+            for (var i = 0; i < table.getAllRows().length; i++) {
+                var tradeAmt = table.getAllRows()[i].tradeAmt;
+                var result = JoyinMath.doDiv(tradeAmt, tradeAmtAll, 2);
+                if ($('#procedureAmt').val()&&tradeAmt) {
+                    if(table.getAllRows().length>1){
+                        if (i != table.getAllRows().length - 1) {//非最后一列
+                            var procedureAmt =  JoyinMath.doMul(isNaN(tradeAmt)?0:tradeAmt,$('#procedureAmt').val(),2);
+                            procedureAmt = JoyinMath.doDiv(procedureAmt,tradeAmtAll,2);
+                            all = JoyinMath.doAdd(all, procedureAmt, 2);
+                            all = isNaN(all)?0:all;
+                            table.renderRow(i, {"procedureAmt": isNaN(procedureAmt)?0:procedureAmt});
+                        } else {
+                            table.renderRow(i, {"procedureAmt": JoyinMath.doMinus($('#procedureAmt').val(), all, 2)});
+                        }
+                    }else{
+                        var procedureAmt =  JoyinMath.doMul(isNaN(tradeAmt)?0:tradeAmt,$('#procedureAmt').val(),2);
+                        procedureAmt = JoyinMath.doDiv(procedureAmt,tradeAmtAll,2);
+                        all = JoyinMath.doAdd(all, procedureAmt, 2);
+                        all = isNaN(all)?0:all;
+                        table.renderRow(i, {"procedureAmt": isNaN(procedureAmt)?0:procedureAmt});
+                    }
+
+                }
+            }
+    }
+    //结算服务费
+    function extractedSettleServiceAmt() {
+        var tradeAmtAll = $('#tradeAmt').val();
+            var all = 0;
+            for (var i = 0; i < table.getAllRows().length; i++) {
+                var tradeAmt = table.getAllRows()[i].tradeAmt;
+                var result = JoyinMath.doDiv(tradeAmt, tradeAmtAll, 2);
+                if ($('#settleServiceAmt').val()&&tradeAmt) {
+                    if(table.getAllRows().length>1){
+                        if (i != table.getAllRows().length - 1) {//非最后一列
+                            var settleServiceAmt =  JoyinMath.doMul(isNaN(tradeAmt)?0:tradeAmt,$('#settleServiceAmt').val(),2);
+                            settleServiceAmt = JoyinMath.doDiv(settleServiceAmt,tradeAmtAll,2);
+                            all = JoyinMath.doAdd(all, settleServiceAmt, 2);
+                            all = isNaN(all)?0:all;
+                            table.renderRow(i, {"settleServiceAmt": isNaN(settleServiceAmt)?0:settleServiceAmt});
+                        } else {
+                            table.renderRow(i, {"settleServiceAmt": JoyinMath.doMinus($('#settleServiceAmt').val(), all, 2)});
+                        }
+                    }else{
+                        var settleServiceAmt =  JoyinMath.doMul(isNaN(tradeAmt)?0:tradeAmt,$('#settleServiceAmt').val(),2);
+                        settleServiceAmt = JoyinMath.doDiv(settleServiceAmt,tradeAmtAll,2);
+                        all = JoyinMath.doAdd(all, settleServiceAmt, 2);
+                        all = isNaN(all)?0:all;
+                        table.renderRow(i, {"settleServiceAmt": isNaN(settleServiceAmt)?0:settleServiceAmt});
+                    }
+
+                }
+            }
+    }
+
     //交易金额计算
     function extractedTradeAmtAndFee() {
         var tradeAmtAll = $('#tradeAmt').val();
@@ -2947,6 +3063,7 @@ var table;
     function extractedJiSuan(isTrue,returnVal) {
         var tradeAmtAl = $('#tradeAmt').val();
         var allprocedureAmt = 0;
+        var allsettleServiceAmt = 0;
         var allsettleAmt = 0;
         var allexchangeAmt = 0;
         var allcommissionAmt = 0;
@@ -3019,6 +3136,33 @@ var table;
                     table.renderRow(i, {"procedureAmt": isNaN(procedureAmt)?0:procedureAmt});
                 }
             }
+
+            if (returnVal&&returnVal.settleServiceAmt==0) {
+                if(table.getAllRows().length>1){
+                    if (i != table.getAllRows().length - 1) {//非最后一列
+                        if(IS_AVERAGE_DISTRIBUTION_OF_EXPENSES=='Y'){
+                            var settleServiceAmt  =  JoyinMath.doDiv($('#settleServiceAmt').val()==""?0:$('#settleServiceAmt').val(),table.getAllRows().length,2);
+                            allsettleServiceAmt = JoyinMath.doAdd(allsettleServiceAmt, settleServiceAmt, 2);
+                            table.renderRow(i, {"settleServiceAmt": isNaN(settleServiceAmt)?0:settleServiceAmt});
+                        }else{
+                            var settleServiceAmt  =  JoyinMath.doMul(tradeAmt,$('#settleServiceAmt').val()==""?0:$('#settleServiceAmt').val(),2);
+                            settleServiceAmt = JoyinMath.doDiv(settleServiceAmt,tradeAmtAl,2);
+                            allsettleServiceAmt = JoyinMath.doAdd(allsettleServiceAmt, settleServiceAmt, 2);
+                            table.renderRow(i, {"settleServiceAmt": isNaN(settleServiceAmt)?0:settleServiceAmt});
+                        }
+                    } else {
+                        var all=JoyinMath.doMinus($('#settleServiceAmt').val()==""?0:$('#settleServiceAmt').val(), allsettleServiceAmt, 2);
+                        all=isNaN(all)?0:all;
+                        table.renderRow(i, {"settleServiceAmt": all});
+                    }
+                }else{
+                    var settleServiceAmt  =  JoyinMath.doMul(tradeAmt,$('#settleServiceAmt').val()==""?0:$('#settleServiceAmt').val(),2);
+                    settleServiceAmt = JoyinMath.doDiv(settleServiceAmt,tradeAmtAl,2);
+                    allsettleServiceAmt = JoyinMath.doAdd(allsettleServiceAmt, settleServiceAmt, 2);
+                    table.renderRow(i, {"settleServiceAmt": isNaN(settleServiceAmt)?0:settleServiceAmt});
+                }
+            }
+
             if (returnVal&&returnVal.settleAmt==0) {
                 if(table.getAllRows().length>1){
                     if (i != table.getAllRows().length - 1) {//非最后一列
@@ -3094,6 +3238,7 @@ var table;
                     table.renderRow(i, {"commissionAmt": isNaN(commissionAmt)?0:commissionAmt});
                 }
             }
+
             if (returnVal&&returnVal.stampDutyAmt==0) {
                 if(table.getAllRows().length>1){
                     if (i != table.getAllRows().length - 1) {//非最后一列
@@ -3188,6 +3333,7 @@ var table;
 			               ,{field:'intAmt',width:100, title: 'TrdInvestFenPeiInfo.intAmt',sortable:false,type:'number', digit:2}
 			               ,{field:'fpriceAmt',width:100, title: 'TrdInvestFenPeiInfo.fpriceAmt',sortable:false,type:'number', digit:2}
                            ,{field:'procedureAmt',width:100, title: 'TrdInvestFenPeiInfo.procedureAmt',sortable:false,type:'number', edit:true,digit:2}
+                           ,{field:'settleServiceAmt',width:100, title: 'TrdInvestFenPeiInfo.settleServiceAmt',sortable:false,type:'number', edit:true,digit:2}
                            ,{field:'settleAmt',width:100, title: 'TrdInvestFenPeiInfo.settleAmt',sortable:false,type:'number', edit:true,digit:2}
                            ,{field:'exchangeAmt',width:100, title: 'TrdInvestFenPeiInfo.exchangeAmt',sortable:false,type:'number', edit:true,digit:2}
                            ,{field:'commissionAmt',width:100, title: 'TrdInvestFenPeiInfo.commissionAmt',sortable:false,type:'number',edit:true, digit:2}
@@ -3383,6 +3529,13 @@ var table;
                                if(value&&$('#tradeAmt').val()){
                                    extractedExchangeAmt();
                                }
+                               //当券面总额变化，手续费和服务费也相应变化
+                               if(value&&$('#tradeAmt').val()){
+                                   extractedProcedureAmt();
+                               }
+                               if(value&&$('#tradeAmt').val()){
+                                   extractedSettleServiceAmt();
+                               }
                                if(value&&$('#tradeAmt').val()){
                                    extractedFpriceAmt();
                                }
@@ -3395,7 +3548,7 @@ var table;
                                }
 			        	   }
 			        	   //费用改变的时候
-			        	   if(field=='procedureAmt'||field=='settleAmt'||field=='exchangeAmt'||field=='commissionAmt'||field=='stampDutyAmt'||field=='channelFee'){
+			        	   if(field=='procedureAmt'||field=='settleServiceAmt'||field=='settleAmt'||field=='exchangeAmt'||field=='commissionAmt'||field=='stampDutyAmt'||field=='channelFee'){
 			        	       var numberTwo = 0;
 
                                if (data.fpriceAmt) {
@@ -4044,6 +4197,7 @@ var table;
                     $("#commissionAmt").val("").trigger("change").trigger("blur");
                     $("#stampDutyAmt").val("").trigger("change").trigger("blur");
                     $("#procedureAmt").val("");
+                    $("#settleServiceAmt").val("");
                     $("#settleAmt").val("");
                     $("#exchangeAmt").val("");
                     $("#procedureAmtRate").val("");
