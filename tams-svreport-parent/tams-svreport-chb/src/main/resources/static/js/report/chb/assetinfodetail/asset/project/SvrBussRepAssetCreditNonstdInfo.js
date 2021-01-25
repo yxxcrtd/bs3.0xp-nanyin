@@ -180,6 +180,22 @@
 
     }
 
+    //是否有浮动因子
+    var  floatFactorFlagChangeType=function () {
+      if(getElementById('floatFactorFlag').val()=='02'){
+          getElementById('floatFactor').val('').trigger("change");
+          getElementById('floatFactor').attr("disabled",true);
+
+          getElementById('spreadRate').val('').trigger("change");
+          getElementById('spreadRate').attr("disabled",true);
+
+      }else{
+          getElementById('floatFactor').attr("disabled",false);
+          getElementById('spreadRate').attr("disabled",false);
+
+      }
+    }
+
     var  initAssetCreditNonstd=function(){
         var assetTvalueCreditNonstd=$('#assetType2').val();
         if(assetTvalueCreditNonstd=='2201'||assetTvalueCreditNonstd=='2202'){
@@ -285,6 +301,7 @@
 
         repGuaTypeChangeType();
         byRepContainType();
+        floatFactorFlagChangeType();
         getElementById('repFinancierType1').change(function(){
             if(getElementById('repFinancierType1').val()==SVR_PARTY_TYPE1_01){
                 getElementById('repInstitSize_div').show();
@@ -338,5 +355,11 @@
         getElementById('repGuaType').change(function(){
             repGuaTypeChangeType();
         });
+
+        getElementById('floatFactorFlag').change(function(){
+            floatFactorFlagChangeType();
+        });
+
+
     });
 }());

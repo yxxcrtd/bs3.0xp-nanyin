@@ -285,6 +285,13 @@ var QueryFunc=function(){
             //QDII结构性票据类资产
         }else if(obj["12"].indexOf(repAssetType)>=0){
             //资产管理产品
+            if(repAssetType=='1701'||repAssetType=='1703'||
+                repAssetType=='1704'||repAssetType=='1706'||repAssetType=='1702'){
+                $("#SvrBussRepAssetMngProdInfoDto_financialComissue").val('').trigger("change");
+                $("#SvrBussRepAssetMngProdInfoDto_financialComissue").attr("disabled",true);
+            }else{
+                $("#SvrBussRepAssetMngProdInfoDto_financialComissue").attr("disabled",false);
+            }
         }else if(obj["13"].indexOf(repAssetType)>=0){
             //商品类资产
         }else if(obj["14"].indexOf(repAssetType)>=0){

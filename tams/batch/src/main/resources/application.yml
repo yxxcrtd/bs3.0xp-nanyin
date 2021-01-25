@@ -173,22 +173,16 @@ eureka:
 spring:
   profiles: dtx
   #本地启动建议删除redis配置start
-  redis:
-    database: 1
-    password: joyin!234
-    host: 192.168.70.228
-    port: 6379
-    timeout: 20000
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810 
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
+    url: jdbc:oracle:thin:@192.168.90.76:1521/orcl
+    username: zgtams1225yh_bak
+    password: zgtams1225yh_bak
+    reportSqlldrDatabaseName: 192.168.90.76:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName: zgtams0810
-  sqldirpassword: zgtams0810
+  sqldirurl: jdbc:oracle:thin:@//192.168.90.76:1521/orcl
+  sqldiruserName: zgtams1225yh_bak
+  sqldirpassword: zgtams1225yh_bak
   loadbalance: false
   micorservice:
     contextPath:
@@ -219,15 +213,15 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810
+    url: jdbc:oracle:thin:@192.168.90.76:1521/orcl
+    username: zgtams1225yh_bak
+    password: zgtams1225yh_bak
 #interf数据源配置
 interf:  
    datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810
+    url: jdbc:oracle:thin:@192.168.90.76:1521/orcl
+    username: zgtams1225yh_bak
+    password: zgtams1225yh_bak
 #日志路径配置
 log:
   path: /home/tams/logs/batch
