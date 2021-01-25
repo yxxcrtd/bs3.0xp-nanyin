@@ -24,4 +24,3 @@ Insert into SYS_PARA (SYSTEM_CODE,PARA_CODE,PARAM_VALUE,DATA_TYPE,DATA_SCOPE,REM
 values ('SYS','UP_CARRYOVER_CYCLE_HBX','D',null,null,'本期利润损益结转频率-货币型','system',null,sysdate,'system',sysdate,null,'01');
 
 /*结转频率初始化:根据产品类型划分 add by hpp 2021-01-11 end*/
-commit;
