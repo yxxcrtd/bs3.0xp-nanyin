@@ -28,401 +28,317 @@ import java.math.BigDecimal;
  *
  * @author liuwei
  * @version 1.0 2018年9月18日
- * @see BussRepAssetMngProdInfo
+ * @see SvrBussRepAssetMngProdInfoDto
  * @since 1.0
  */
 public class SvrBussRepAssetMngProdInfoDto extends BaseEntity {
 
-    private boolean needValid = true;
-
     /**
-     * 获取 needValid
-     *
-     * @return needValid
+     * <意义，目的和功能，以及可能被用到的地方>
      */
-    public boolean isNeedValid() {
-        return needValid;
-    }
-
+    private static final long serialVersionUID = 1L;
     /**
-     * 设置 needValid
-     *
-     * @param needValid needValid
+     * 资产名称
      */
-    public void setNeedValid(boolean needValid) {
-        this.needValid = needValid;
-    }
-
-    /**
-     * 交易流通场所
-     */
-    private String repTradeMarket       ;
-    /**
-     * 二级资产类别
-     */
-    private String repAssetType         ;
-    /**
-     * 资管计划发起人机构编码
-     */
-    private String repPartyCode         ;
-    /**
-     * 资管计划登记编码
-     */
-    private String repRegistCode        ;
-    /**
-     * 资金实际投向
-     */
-    private String repCapiInvest        ;
-    /**
-     * 资金运用方式
-     */
-    private String repCapUseWay         ;
-    /**
-     * 资金运用行业
-     */
-    private String repCapUseIndu        ;
-    /**
-     * 资金运用行业二级分类
-     */
-    private String repCapUseInduLevel2  ;
-    /**
-     * 资管计划属性
-     */
-    private String repPlanProp          ;
-    /**
-     * 是否有预期收益率
-     */
-    private String repYieldFlag ;
-
-    /**
-     * 是否投向金融资产投资公司或其附属机构发行的私募股权投资基金
-     */
-    private String repPrivatefundFlag;
-
-    /**
-     * 公共PPP
-     */
-    private String repPppflag;
-
-    /**
-     * 是否小微企业信贷资产流转和收益权转让
-     */
-    private String repSmallcredit;
-
-    /**
-     * 是否投向投向市场化债转股相关产品的部分
-     */
-    private String repBondtostockFlag;
-
-
-    public boolean isRepYield(){return StringUtil.equals(DictCodeList.是否_是.getValue(),this.getRepYieldFlag());}
-/*新加字段 add by zhuyongkang 2019/10/08 start*/
-    /**
-     * 是否投向金融资产投资公司发行的私募资产管理产品
-     */
-    private String repPrivateprdFlag ;
-
-    //public boolean isRepPrivateprdFlag(){return StringUtil.equals(DictCodeList.是否_是.getValue(),this.getRepPrivateprdFlag());}
-
-    /**
-     * 获取 repPrivateprdFlag
-     *
-     * @return repPrivateprdFlag
-     */
-    public String getRepPrivateprdFlag() {
-        
-            return repPrivateprdFlag;
-        
-    }
-    /**
-     * 设置 repPrivateprdFlag
-     *
-     * @param repPrivateprdFlag repPrivateprdFlag
-     */
-    public void setRepPrivateprdFlag(String repPrivateprdFlag) {
-        this.repPrivateprdFlag = repPrivateprdFlag;
-    }
-    /*新加字段 add by zhuyongkang 2019/10/08 END*/
-    /**
-     * 预期最高收益率
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal repMaxRate		;
-    /**
-     * 预期最低收益率
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal repMinRate 		;
-    /**
-     * 购买结构
-     */
-
-    private String repBuyStruct 		;
-    /**
-     * 管理方式
-     */
-    private String repManageType 		;
-    /**
-     * 是否掌控计划底层资产详情
-     */
-
-    private String repIsCtrlBottom  	;
-
-    public boolean isRepIsCtrlBottomFlag(){return StringUtil.equals(DictCodeList.是否_是.getValue(),this.getRepIsCtrlBottom());}
-
-    /**
-     * 管理费率%
-     */
-    @JsonSerialize(using= BigDecimalSerializer.class)
-    private BigDecimal repMgrFeeRate 	;
-    /**
-     * 托管费率%
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal repTruFeeRate  	;
-    /**
-     * 交易相关合计费率%
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal repTradeFeeRate  ;
-    /**
-     * 中介服务机构合计费率%
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal repAgencyFeeRate ;
-    /**
-     * 其他合计费率%
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal repOtherFeeRate  ;
-    /**
-     * 金额
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal repAmt ;
-    /**
-     * 备注
-     */
-    private String repRemark ;
-    
+    private String assetName;
     /**
      * 是否由金融资产投资公司发行
      */
-    private String repFinancialComissue;
+    private String financialComissue;
 
-    public String getRepTradeMarket() {
-        return repTradeMarket;
+    /**
+     * 资管计划发起人机构编码
+     */
+    private String partyCode;
+
+    /**
+     * 资管计划登记编码
+     */
+    private String checkCode;
+
+    /**
+     * 管理人
+     */
+    private String managerId;
+
+    /**
+     * 托管人
+     */
+    private String trusteeId;
+    /**
+     * 金额
+     */
+    private BigDecimal amt;
+    /**
+     * 资金实际投向 01 结构性投资类/02 货币市场工具类/03 债券类/04 股票类/05 股权类/06 另类投资类/07 混合类/08 非标准化债权类/09 银行存款类/10 理财直接融资工具类/11 新增可投资资产类/12 代客境外投资类/13 公募基金类/ 14 私募基金类/ 15 产业基金类 /16 衍生产品类 /17 商品类/18 同业存单类/19拆放同业及买入返售类
+     */
+    private String truActType;
+
+    /**
+     * 资金运用方式
+     */
+    private String investType;
+
+    /**
+     * 资金运用行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
+     */
+    private String capUseIndu;
+    /**
+     * 资金运用行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
+     */
+    private String capUseInduLevel2;
+    /**
+     * 资管计划属性/委外投资属性 01 集合/02 单一/03 专项/04 定向/05 专户/99 其他
+     */
+    private String proProperty;
+    /**
+     * 是否有预期收益率 01是/02否
+     */
+    private String rateFlag;
+    /**
+     * 最高预期收益率
+     */
+    private BigDecimal maxRate;
+
+    /**
+     * 最低预期收益率
+     */
+    private BigDecimal minRate;
+    /**
+     * 购买结构 01 优先/02 劣后/03 整体
+     */
+    private String buyStruct;
+
+    /**
+     * 管理方式 01 主动（自主管理）/02被动（委托管理）/99其他
+     */
+    private String manageType;
+    /**
+     * 管理费率
+     */
+    private BigDecimal mgrFeeRate;
+
+    /**
+     * 托管费率
+     */
+    private BigDecimal truFeeRate;
+
+    /**
+     * 交易相关合计费率
+     */
+    private BigDecimal tradeFeeRate;
+
+    /**
+     * 中介服务机构合计费率
+     */
+    private BigDecimal agencyFeeRate;
+
+    /**
+     * 其他合计费率
+     */
+    private BigDecimal otherFeeRate;
+    /**
+     * 是否投向金融资产投资公司发行的私募资产管理产品
+     */
+    private String privateprdFlag;
+    /**
+     * 备注
+     */
+    private String remark;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
-    public void setRepTradeMarket(String repTradeMarket) {
-        this.repTradeMarket = repTradeMarket;
+    public String getAssetName() {
+        return assetName;
     }
 
-    public String getRepAssetType() {
-        return repAssetType;
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
     }
 
-    public void setRepAssetType(String repAssetType) {
-        this.repAssetType = repAssetType;
+    public String getFinancialComissue() {
+        return financialComissue;
     }
 
-    public String getRepPartyCode() {
-        return repPartyCode;
+    public void setFinancialComissue(String financialComissue) {
+        this.financialComissue = financialComissue;
     }
 
-    public void setRepPartyCode(String repPartyCode) {
-        this.repPartyCode = repPartyCode;
+    public String getPartyCode() {
+        return partyCode;
     }
 
-    public String getRepRegistCode() {
-        return repRegistCode;
+    public void setPartyCode(String partyCode) {
+        this.partyCode = partyCode;
     }
 
-    public void setRepRegistCode(String repRegistCode) {
-        this.repRegistCode = repRegistCode;
+    public String getCheckCode() {
+        return checkCode;
     }
 
-    public String getRepCapiInvest() {
-        return repCapiInvest;
+    public void setCheckCode(String checkCode) {
+        this.checkCode = checkCode;
     }
 
-    public void setRepCapiInvest(String repCapiInvest) {
-        this.repCapiInvest = repCapiInvest;
+    public String getManagerId() {
+        return managerId;
     }
 
-    public String getRepCapUseWay() {
-        return repCapUseWay;
+    public void setManagerId(String managerId) {
+        this.managerId = managerId;
     }
 
-    public void setRepCapUseWay(String repCapUseWay) {
-        this.repCapUseWay = repCapUseWay;
+    public String getTrusteeId() {
+        return trusteeId;
     }
 
-    public String getRepCapUseIndu() {
-        return repCapUseIndu;
+    public void setTrusteeId(String trusteeId) {
+        this.trusteeId = trusteeId;
     }
 
-    public void setRepCapUseIndu(String repCapUseIndu) {
-        this.repCapUseIndu = repCapUseIndu;
+    public BigDecimal getAmt() {
+        return amt;
     }
 
-    public String getRepCapUseInduLevel2() {
-        return repCapUseInduLevel2;
+    public void setAmt(BigDecimal amt) {
+        this.amt = amt;
     }
 
-    public void setRepCapUseInduLevel2(String repCapUseInduLevel2) {
-        this.repCapUseInduLevel2 = repCapUseInduLevel2;
+    public String getTruActType() {
+        return truActType;
     }
 
-    public String getRepPlanProp() {
-        return repPlanProp;
+    public void setTruActType(String truActType) {
+        this.truActType = truActType;
     }
 
-    public void setRepPlanProp(String repPlanProp) {
-        this.repPlanProp = repPlanProp;
+    public String getInvestType() {
+        return investType;
     }
 
-    public String getRepYieldFlag() {
-        return repYieldFlag;
+    public void setInvestType(String investType) {
+        this.investType = investType;
     }
 
-    public void setRepYieldFlag(String repYieldFlag) {
-        this.repYieldFlag = repYieldFlag;
+    public String getCapUseIndu() {
+        return capUseIndu;
     }
 
-    public String getRepPrivatefundFlag() {
-        return repPrivatefundFlag;
+    public void setCapUseIndu(String capUseIndu) {
+        this.capUseIndu = capUseIndu;
     }
 
-    public void setRepPrivatefundFlag(String repPrivatefundFlag) {
-        this.repPrivatefundFlag = repPrivatefundFlag;
+    public String getCapUseInduLevel2() {
+        return capUseInduLevel2;
     }
 
-    public String getRepPppflag() {
-        return repPppflag;
+    public void setCapUseInduLevel2(String capUseInduLevel2) {
+        this.capUseInduLevel2 = capUseInduLevel2;
     }
 
-    public void setRepPppflag(String repPppflag) {
-        this.repPppflag = repPppflag;
+    public String getProProperty() {
+        return proProperty;
     }
 
-    public String getRepSmallcredit() {
-        return repSmallcredit;
+    public void setProProperty(String proProperty) {
+        this.proProperty = proProperty;
     }
 
-    public void setRepSmallcredit(String repSmallcredit) {
-        this.repSmallcredit = repSmallcredit;
+    public String getRateFlag() {
+        return rateFlag;
     }
 
-    public String getRepBondtostockFlag() {
-        return repBondtostockFlag;
+    public void setRateFlag(String rateFlag) {
+        this.rateFlag = rateFlag;
     }
 
-    public void setRepBondtostockFlag(String repBondtostockFlag) {
-        this.repBondtostockFlag = repBondtostockFlag;
+    public BigDecimal getMaxRate() {
+        return maxRate;
     }
 
-    public BigDecimal getRepMaxRate() {
-        return repMaxRate;
+    public void setMaxRate(BigDecimal maxRate) {
+        this.maxRate = maxRate;
     }
 
-    public void setRepMaxRate(BigDecimal repMaxRate) {
-        this.repMaxRate = repMaxRate;
+    public BigDecimal getMinRate() {
+        return minRate;
     }
 
-    public BigDecimal getRepMinRate() {
-        return repMinRate;
+    public void setMinRate(BigDecimal minRate) {
+        this.minRate = minRate;
     }
 
-    public void setRepMinRate(BigDecimal repMinRate) {
-        this.repMinRate = repMinRate;
+    public String getBuyStruct() {
+        return buyStruct;
     }
 
-    public String getRepBuyStruct() {
-        return repBuyStruct;
+    public void setBuyStruct(String buyStruct) {
+        this.buyStruct = buyStruct;
     }
 
-    public void setRepBuyStruct(String repBuyStruct) {
-        this.repBuyStruct = repBuyStruct;
+    public String getManageType() {
+        return manageType;
     }
 
-    public String getRepManageType() {
-        return repManageType;
+    public void setManageType(String manageType) {
+        this.manageType = manageType;
     }
 
-    public void setRepManageType(String repManageType) {
-        this.repManageType = repManageType;
+    public BigDecimal getMgrFeeRate() {
+        return mgrFeeRate;
     }
 
-    public String getRepIsCtrlBottom() {
-        return repIsCtrlBottom;
+    public void setMgrFeeRate(BigDecimal mgrFeeRate) {
+        this.mgrFeeRate = mgrFeeRate;
     }
 
-    public void setRepIsCtrlBottom(String repIsCtrlBottom) {
-        this.repIsCtrlBottom = repIsCtrlBottom;
+    public BigDecimal getTruFeeRate() {
+        return truFeeRate;
     }
 
-    public BigDecimal getRepMgrFeeRate() {
-        return repMgrFeeRate;
+    public void setTruFeeRate(BigDecimal truFeeRate) {
+        this.truFeeRate = truFeeRate;
     }
 
-    public void setRepMgrFeeRate(BigDecimal repMgrFeeRate) {
-        this.repMgrFeeRate = repMgrFeeRate;
+    public BigDecimal getTradeFeeRate() {
+        return tradeFeeRate;
     }
 
-    public BigDecimal getRepTruFeeRate() {
-        return repTruFeeRate;
+    public void setTradeFeeRate(BigDecimal tradeFeeRate) {
+        this.tradeFeeRate = tradeFeeRate;
     }
 
-    public void setRepTruFeeRate(BigDecimal repTruFeeRate) {
-        this.repTruFeeRate = repTruFeeRate;
+    public BigDecimal getAgencyFeeRate() {
+        return agencyFeeRate;
     }
 
-    public BigDecimal getRepTradeFeeRate() {
-        return repTradeFeeRate;
+    public void setAgencyFeeRate(BigDecimal agencyFeeRate) {
+        this.agencyFeeRate = agencyFeeRate;
     }
 
-    public void setRepTradeFeeRate(BigDecimal repTradeFeeRate) {
-        this.repTradeFeeRate = repTradeFeeRate;
+    public BigDecimal getOtherFeeRate() {
+        return otherFeeRate;
     }
 
-    public BigDecimal getRepAgencyFeeRate() {
-        return repAgencyFeeRate;
+    public void setOtherFeeRate(BigDecimal otherFeeRate) {
+        this.otherFeeRate = otherFeeRate;
     }
 
-    public void setRepAgencyFeeRate(BigDecimal repAgencyFeeRate) {
-        this.repAgencyFeeRate = repAgencyFeeRate;
+    public String getPrivateprdFlag() {
+        return privateprdFlag;
     }
 
-    public BigDecimal getRepOtherFeeRate() {
-        return repOtherFeeRate;
+    public void setPrivateprdFlag(String privateprdFlag) {
+        this.privateprdFlag = privateprdFlag;
     }
 
-    public void setRepOtherFeeRate(BigDecimal repOtherFeeRate) {
-        this.repOtherFeeRate = repOtherFeeRate;
+    public String getRemark() {
+        return remark;
     }
 
-    public BigDecimal getRepAmt() {
-        return repAmt;
-    }
-
-    public void setRepAmt(BigDecimal repAmt) {
-        this.repAmt = repAmt;
-    }
-
-    public String getRepRemark() {
-        return repRemark;
-    }
-
-    public void setRepRemark(String repRemark) {
-        this.repRemark = repRemark;
-    }
-
-    public String getRepFinancialComissue() {
-        return repFinancialComissue;
-    }
-
-    public void setRepFinancialComissue(String repFinancialComissue) {
-        this.repFinancialComissue = repFinancialComissue;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

@@ -45,9 +45,10 @@ public class SvrBussRepAssetMngProdInfoController extends BaseController{
         String   assetType=requestPargram.getParameter("assetType");
 
         //1.赋值界面数据字典
-        setSelectOptionToModel(model,   new DictCode[] {DictCode.交易流通场所, DictCode.资金实际投向,
-                DictCode.机构所属行业一级分类,DictCode.机构所属行业二级分类,DictCode.资管计划属性,DictCode.是否_中债,
-                DictCode.购买结构,DictCode.管理方式,DictCode.资产_负债二级类别,DictCode.是否}
+        setSelectOptionToModel(model,   new DictCode[] {DictCode.是否_中债, DictCode.资金实际投向,
+                DictCode.机构所属行业一级分类,DictCode.机构所属行业二级分类,DictCode.资管计划属性,
+                DictCode.是否_中债,
+                DictCode.购买结构,DictCode.管理方式,DictCode.资产_负债二级类别}
          );
 
         //2、当入参assetType2资产/负债二级类别 为【资产管理产品】进行以下处理
