@@ -203,8 +203,14 @@
 		<if test="windtypeone != null and windtypeone != ''">
 			and m.WINDTYPEONE = #{windtypeone,jdbcType=VARCHAR}
 		</if>
+		<if test="windtypeone == null or windtypeone == ''">
+			and m.WINDTYPEONE is null
+		</if>
 		<if test="windtypetwo != null and windtypetwo != ''">
 			and m.WINDTYPETWO = #{windtypetwo,jdbcType=VARCHAR}
+		</if>
+		<if test="windtypetwo == null or windtypetwo == ''">
+			and m.WINDTYPETWO is null
 		</if>
 	</select>
 	

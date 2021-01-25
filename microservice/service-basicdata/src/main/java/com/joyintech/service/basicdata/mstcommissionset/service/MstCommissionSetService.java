@@ -96,20 +96,6 @@ public class MstCommissionSetService extends BaseService{
     
     public int searchRepeatBySecPs1(Map<String, Object> map) {
     	List<MstCommissionSetDto> list =  mstCommissionSetMapper.searchRepeatBySecPs1(map);
-    	if(!StringUtil.isNotBlank((String)map.get("windtypeone"))){
-			for(int i=0;i<list.size();i++){
-				if(StringUtil.isNotBlank(list.get(i).getWindtypeone())){
-					list.remove(i--);
-				}
-			}
-		}
-		if(!StringUtil.isNotBlank((String)map.get("windtypetwo"))){
-			for(int i=0;i<list.size();i++){
-				if(StringUtil.isNotBlank(list.get(i).getWindtypetwo())){
-					list.remove(i--);
-				}
-			}
-		}
     	if(list == null)
     		return 0;
     	return list.size();

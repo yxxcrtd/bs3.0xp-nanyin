@@ -168,6 +168,8 @@
         mstDto.effDate = object.effDate;
         mstDto.windtypeone = object.windtypeone;
         mstDto.windtypetwo = object.windtypetwo;
+        mstDto.tradeMarket = object.tradeMarket;
+        mstDto.tradeMarketMode = object.tradeMarketMode;
         if ($("#workflowId").val() != null && $("#workflowId").val() != '') {
             mstDto.workflowId = $("#workflowId").val();
         }
@@ -176,9 +178,6 @@
         }
         if(termType){
             mstDto.termType = termType.join(",");
-        }
-        if($("#tradeMarketMode").val()){
-            mstDto.tradeMarketMode=$("#tradeMarketMode").val();
         }
         allData.push(mstDto);
         object.selectedItem = selectedItem;
@@ -216,6 +215,7 @@
         mstDto.batchSeq = object.batchSeq;
         mstDto.termType = object.termType;
         mstDto.tradeType = object.tradeType;
+        mstDto.tradeMarket = object.tradeMarket;
         mstDto.tradeMarketMode = object.tradeMarketMode;
         mstDto.ps = v1;
         mstDto.windtypeone = object.windtypeone;
