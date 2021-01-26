@@ -306,6 +306,7 @@ public final class CommonUtil {
         else if (StringUtil.contains(unitInStr, BussinessDictCodeListRds.单位_日.getValue())) {
             unit = RiskUtil.convertValueToUnit(BussinessDictCodeListRds.单位_日.getValue());
         }
+        resVal = resVal.setScale(4,BigDecimal.ROUND_HALF_UP);
         return StringUtil.numberToString(resVal) + unit;
     }
     /**

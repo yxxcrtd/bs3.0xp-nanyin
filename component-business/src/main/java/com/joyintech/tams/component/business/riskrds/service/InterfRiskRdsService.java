@@ -709,6 +709,10 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             else if(StringUtil.equals(finDto.getPs(), DictCodeListExt3.交易方向_债转股.getValue())){
                 infRiskRdsDto.setAmount(finDto.getShareAmt());//可转债为申购券面总额
             }
+            if (StringUtil.isNotEmpty(dataMap.get("windtypeone"))
+                    && StringUtil.equals(dataMap.get("windtypeone").toString(), DictCodeList.WIND一级分类_含债券一级分类等_优先股.getValue())) {
+                infRiskRdsDto.setTradeNum(ArithmeticUtil.divide(finDto.getTradeAmt(),100,10));//可转债为申购券面总额
+            }
         }
         //存款类
         if(StringUtil.equals(DictCodeList.平安资产类型_存款.getValue(),v.getAssetType())){
@@ -838,7 +842,9 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         infRiskRdsDto.setIsApprNeedConfirm(DictCodeList.是否_否.getValue());
         if(StringUtil.equals(DictCodeList.平安资产类型_债券.getValue(),v.getAssetType())||StringUtil.equals(DictCodeList.平安资产类型_项目类资产.getValue(),v.getAssetType())) {
             infRiskRdsDto.setEventId(StringUtil.isNotEmpty(finDto.getBusiCode())?finDto.getBusiCode()+ trimInfStr(infRiskRdsDto.getPortfolioCode())+trimInfStr(finDto.getInvAim()):finDto.getTotleTradeId()+ trimInfStr(infRiskRdsDto.getPortfolioCode())+trimInfStr(finDto.getInvAim()));
-            infRiskRdsDto.setAmount(finDto.getFpriceAmt());//债券为全价总额存款、计划类利率型、项目类资产：本金金额（元）基金（申购）、
+            if(!StringUtil.equals(DictCodeList.平安资产类型_债券.getValue(),v.getAssetType())) {
+            	infRiskRdsDto.setAmount(finDto.getFpriceAmt());//债券为全价总额存款、计划类利率型、项目类资产：本金金额（元）基金（申购）、
+            }
             infRiskRdsDto.setDeliveryDate(finDto.getSettleDate());
             if(finDto.getPs().equals(DictCodeList.交易方向_行权_赎回.getValue())){
                 infRiskRdsDto.setEventId(StringUtil.isNotEmpty(dataMap.get("bizCode"))?dataMap.get("bizCode").toString()+ trimInfStr(infRiskRdsDto.getPortfolioCode())+trimInfStr(finDto.getInvAim()):finDto.getTotleTradeId()+ trimInfStr(infRiskRdsDto.getPortfolioCode())+trimInfStr(finDto.getInvAim()));
@@ -909,7 +915,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         }
         if(StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())||
                 StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
-            infRiskRdsDto.setAmount(finDto.getFpriceAmt());//回购、拆借：到期金额（元）
+            //infRiskRdsDto.setAmount(finDto.getFpriceAmt());//回购、拆借：到期金额（元）
             infRiskRdsDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());
             infRiskRdsDto.setAssetType2(StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())?DictCodeList.回购拆借方向_正回购.getValue():DictCodeList.回购拆借方向_逆回购.getValue());
             infRiskRdsDto.setAssetCode(null);
@@ -1227,10 +1233,15 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 }
                 else if (StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_份额强增.getValue())
                         || StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_份额强减.getValue())) {
-
                     infRiskRdsDto.setEventDate(DateUtil.format(new Date((long)dataMap.get("addReduceConfirmDate03"))));
-                    infRiskRdsDto.setAmount(new BigDecimal((String)dataMap.get("addReduceDealAmt03")));
-                    infRiskRdsDto.setTradeNum(new BigDecimal((String)dataMap.get("addReduceDealNum03")));
+                    //ZGBSS-49【待办事项】：货币型产品审批份额强增流程报错 20210126 start
+                    if(dataMap.get("addReduceDealAmt03") != null) {                    	
+                    	infRiskRdsDto.setAmount(new BigDecimal((String)dataMap.get("addReduceDealAmt03")));
+                    }
+                    if(dataMap.get("addReduceDealNum03") != null) {                    	
+                    	infRiskRdsDto.setTradeNum(new BigDecimal((String)dataMap.get("addReduceDealNum03")));
+                    }
+                    //ZGBSS-49【待办事项】：货币型产品审批份额强增流程报错 20210126 end
 
                 }
                 else if (StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_提前终止.getValue())) {

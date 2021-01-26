@@ -12,7 +12,7 @@ values ('COMMON_BUSINESS_TYPE', 'S10', '流程配置', 10, '0', 'system', null, 
 DELETE sys_page WHERE PAGE_ID in ( 'SysWflBusinessModule001','SysWflBusinessModule002');
 
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SysWflBusinessModule001', 'SYS', '/wflmoduleset/SysWflBusinessModule001', 'wflmoduleset/SysWflBusinessModule001', 'SYSTEM_001_006_010', null, null, '01', '02', '流程配置', 'system', null, sysdate, 'system', sysdate);
+values ('SysWflBusinessModule001', 'SYS', '/system/wflmoduleset/SysWflBusinessModule001', 'system/wflmoduleset/SysWflBusinessModule001', 'SYSTEM_001_006_010', null, null, '01', '02', '流程配置', 'system', null, sysdate, 'system', sysdate);
 
 
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)

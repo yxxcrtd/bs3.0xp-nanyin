@@ -10,27 +10,13 @@
         } 
         
         var prodId =function(){
-        	$('#prodName').val('');
-         	$('#operateMode').val('');
-         	$('#vdate').val('');
-         	$('#mdate').val('');        	
+        	$('#prodName').val('');        	       	
         	var prodId = $('#prodId').val();
         	if(prodId){        		
         				Joyin.ajax(basePath + "svreport/system/proregistcodemanage/ProRegistCodeManage003/selectInfo",{prodId:prodId},
                 				function(result){
                 			if(result){        				
-                				$('#prodName').val(result.prodName);
-                				if(result.operateMode == '01'){
-                					$('#operateMode').val("封闭式净值型");       					
-                				}else if(result.operateMode == '02'){
-                					$('#operateMode').val("封闭式非净值型");
-                				}else if(result.operateMode == '03'){
-                					$('#operateMode').val("开放式净值型");
-                				}else if(result.operateMode == '04'){
-                					$('#operateMode').val("开放式非净值型");
-                				}
-                 		    	$('#vdate').val(result.vdateStr).trigger('change');
-                 		    	$('#mdate').val(result.mdateStr).trgger('change');       		    	    		    	
+                				$('#prodName').val(result.prodName);                				                		    	      		    	    		    	
                 			}
                 	});      	        	
         	}
