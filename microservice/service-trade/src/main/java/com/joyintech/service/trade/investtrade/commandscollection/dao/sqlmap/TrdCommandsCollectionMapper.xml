@@ -649,6 +649,11 @@
             <if test="chlId != null and chlId !=''">
                 AND T1.CHL_ID = #{chlId}
             </if>
+            <!-- add by mashukai 20210126 ZGBSS-274 start -->
+            <if test="(chlId == null or chlId =='') and assetType == PINAN_ASSET_TYPE_F01">
+                AND T1.CHL_ID is null
+            </if>
+            <!-- add by mashukai 20210126 ZGBSS-274 end -->
             <if test="dealMode != null and dealMode !='' ">
                 AND T2.DEAL_MODE = #{dealMode}
             </if>
