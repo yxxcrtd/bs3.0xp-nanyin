@@ -1,0 +1,31 @@
+delete  from SYS_PARA  where  para_code='CHB_WARNING_CHECKRESULT_IS_SEND';
+INSERT
+INTO
+    SYS_PARA
+    (
+        SYSTEM_CODE,
+        PARA_CODE,
+        PARAM_VALUE,
+        DATA_TYPE,
+        DATA_SCOPE,
+        REMARK,
+        CREATE_USER,
+        CREATE_DEPT,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME
+    )
+    VALUES
+    (
+        'SVR',
+        'CHB_WARNING_CHECKRESULT_IS_SEND',
+        '01',
+        ' ',
+        NULL,
+        '中债一二期直连报送前检查预警信息是否发送接口',
+        'system',
+        NULL,
+        sysdate,
+        'system',
+        sysdate
+    );
