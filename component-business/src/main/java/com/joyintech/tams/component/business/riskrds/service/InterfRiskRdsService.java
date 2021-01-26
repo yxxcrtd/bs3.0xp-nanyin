@@ -1229,10 +1229,15 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 }
                 else if (StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_份额强增.getValue())
                         || StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_份额强减.getValue())) {
-
                     infRiskRdsDto.setEventDate(DateUtil.format(new Date((long)dataMap.get("addReduceConfirmDate03"))));
-                    infRiskRdsDto.setAmount(new BigDecimal((String)dataMap.get("addReduceDealAmt03")));
-                    infRiskRdsDto.setTradeNum(new BigDecimal((String)dataMap.get("addReduceDealNum03")));
+                    //ZGBSS-49【待办事项】：货币型产品审批份额强增流程报错 20210126 start
+                    if(dataMap.get("addReduceDealAmt03") != null) {                    	
+                    	infRiskRdsDto.setAmount(new BigDecimal((String)dataMap.get("addReduceDealAmt03")));
+                    }
+                    if(dataMap.get("addReduceDealNum03") != null) {                    	
+                    	infRiskRdsDto.setTradeNum(new BigDecimal((String)dataMap.get("addReduceDealNum03")));
+                    }
+                    //ZGBSS-49【待办事项】：货币型产品审批份额强增流程报错 20210126 end
 
                 }
                 else if (StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_提前终止.getValue())) {
