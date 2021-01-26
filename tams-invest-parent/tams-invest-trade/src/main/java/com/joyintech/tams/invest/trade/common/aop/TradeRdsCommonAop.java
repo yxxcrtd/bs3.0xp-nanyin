@@ -156,13 +156,21 @@ public class TradeRdsCommonAop {
         }
 		setEachAstType(mapTrd,joinPoint);
         String assetType=StringUtil.EMPTY;
-        if(StringUtil.isNotEmpty(mapTrd.get(InterfUtil.finprodId))){
+        //买断式回购中finprodId与资产大类不匹配
+        if(StringUtil.isNotEmpty(mapTrd.get("elementId"))&&mapTrd.get("elementId").toString().startsWith("TrdOutRightRepoTrade00")) {
+        	assetType = "F10";
+        }
+        else if(StringUtil.isNotEmpty(mapTrd.get(InterfUtil.finprodId))){
             Map<String, IAssetInfo> mapAsset = assetInfoSrc.getMapFromRedis(RedisKeyEnum.资产基本信息.key(), Arrays.asList(mapTrd.get(InterfUtil.finprodId).toString()));
             if(StringUtil.isNotEmpty(mapAsset)&&StringUtil.isNotEmpty(mapAsset.values())) {
                 for (IAssetInfo iAst : mapAsset.values()) {
                     assetType = StringUtil.isNotEmpty(iAst)?iAst.getAssetType():assetType;
                 }
             }
+        }
+        //质押式回购和拆借交易无标的，无法从标的中获取资产大类
+        else if(StringUtil.isNotEmpty(mapTrd.get("inputValue1"))) {
+        	assetType = mapTrd.get("inputValue1").toString();
         }
         InterfRiskRdsDto interfRiskRdsDto = new InterfRiskRdsDto();
         interfRiskRdsDto.setEventType(BussinessDictCodeListRds.事件类型_投资交易.getValue());
