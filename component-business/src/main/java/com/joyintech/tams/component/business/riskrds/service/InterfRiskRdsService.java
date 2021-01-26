@@ -838,7 +838,9 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         infRiskRdsDto.setIsApprNeedConfirm(DictCodeList.是否_否.getValue());
         if(StringUtil.equals(DictCodeList.平安资产类型_债券.getValue(),v.getAssetType())||StringUtil.equals(DictCodeList.平安资产类型_项目类资产.getValue(),v.getAssetType())) {
             infRiskRdsDto.setEventId(StringUtil.isNotEmpty(finDto.getBusiCode())?finDto.getBusiCode()+ trimInfStr(infRiskRdsDto.getPortfolioCode())+trimInfStr(finDto.getInvAim()):finDto.getTotleTradeId()+ trimInfStr(infRiskRdsDto.getPortfolioCode())+trimInfStr(finDto.getInvAim()));
-            infRiskRdsDto.setAmount(finDto.getFpriceAmt());//债券为全价总额存款、计划类利率型、项目类资产：本金金额（元）基金（申购）、
+            if(!StringUtil.equals(DictCodeList.平安资产类型_债券.getValue(),v.getAssetType())) {
+            	infRiskRdsDto.setAmount(finDto.getFpriceAmt());//债券为全价总额存款、计划类利率型、项目类资产：本金金额（元）基金（申购）、
+            }
             infRiskRdsDto.setDeliveryDate(finDto.getSettleDate());
             if(finDto.getPs().equals(DictCodeList.交易方向_行权_赎回.getValue())){
                 infRiskRdsDto.setEventId(StringUtil.isNotEmpty(dataMap.get("bizCode"))?dataMap.get("bizCode").toString()+ trimInfStr(infRiskRdsDto.getPortfolioCode())+trimInfStr(finDto.getInvAim()):finDto.getTotleTradeId()+ trimInfStr(infRiskRdsDto.getPortfolioCode())+trimInfStr(finDto.getInvAim()));
@@ -909,7 +911,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         }
         if(StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())||
                 StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
-            infRiskRdsDto.setAmount(finDto.getFpriceAmt());//回购、拆借：到期金额（元）
+            //infRiskRdsDto.setAmount(finDto.getFpriceAmt());//回购、拆借：到期金额（元）
             infRiskRdsDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());
             infRiskRdsDto.setAssetType2(StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())?DictCodeList.回购拆借方向_正回购.getValue():DictCodeList.回购拆借方向_逆回购.getValue());
             infRiskRdsDto.setAssetCode(null);
