@@ -18,6 +18,8 @@ import com.joyintech.tams.invest.trade.common.validator.TradeCommonValidator;
 import com.joyintech.tams.invest.trade.pretrdbondtrade.dto.PreTrdBondInvestTrade002Dto;
 import com.joyintech.tams.invest.trade.pretrdrepotrade.dto.PreTrdRepoTrade002Dto;
 
+import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
+import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,6 +41,9 @@ public class PreTrdBondInvestTrade002DtoValidator implements TradeCommonValidato
 	@Autowired
 	private BaseEtrInvestInfoService baseEtrInvestInfoService;
 
+	@Autowired
+	private MstWorkflowCommonService mstWorkflowCommonService;
+
 	/**
 	 *
 	 * @param value
@@ -49,45 +54,64 @@ public class PreTrdBondInvestTrade002DtoValidator implements TradeCommonValidato
 	public List<ValidMessage> bussValid(Object value) {
 		PreTrdBondInvestTrade002Dto inputDto = (PreTrdBondInvestTrade002Dto) value;
 		List<ValidMessage> errorList = new ArrayList<>();
-		// 委托场合时且交易方向为买入
-		if (StringUtil.equals(DictCodeList.交易方向_买入.getValue(), inputDto.getPs())
-				&& StringUtil.isNotEmpty(inputDto.getEntrustId())) {
-			com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto etrInvestInfoDto = baseEtrInvestInfoService
-					.queryActiveMandate(inputDto.getEntrustId());
-			if (!StringUtil.isNotEmpty(etrInvestInfoDto)) {
-				return errorList;
+
+		if (!StringUtil.equals(inputDto.getOperateType(), "revoke")) {
+			// 委托场合时且交易方向为买入
+			if (StringUtil.equals(DictCodeList.交易方向_买入.getValue(), inputDto.getPs())
+					&& StringUtil.isNotEmpty(inputDto.getEntrustId())) {
+				com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto etrInvestInfoDto = baseEtrInvestInfoService
+						.queryActiveMandate(inputDto.getEntrustId());
+				if (!StringUtil.isNotEmpty(etrInvestInfoDto)) {
+					return errorList;
+				}
+				// 净价超过委托时的净价;
+				if (inputDto.getUnitCprice() != null && etrInvestInfoDto.getEtrEntrust().getPrice() != null
+						&& inputDto.getUnitCprice().compareTo(etrInvestInfoDto.getEtrEntrust().getPrice()) > 0) {
+					ValidMessage validMessage = new ValidMessage("unitCprice",
+							getMessage("TRD_W_0007", getMessage("TrdBondInvestTrade002.unitCprice"),
+									getMessage("TrdBondInvestTrade002.unitCprice"),
+									getMessage("TrdLendInvestTrade002.morethan")));
+					errorList.add(validMessage);
+				}
+
+				// 到期收益率低于委托时的到期收益率;
+				if (inputDto.getYield() != null && etrInvestInfoDto.getEtrEntrustAdd().getMatureYield() != null
+						&& inputDto.getYield().compareTo(etrInvestInfoDto.getEtrEntrustAdd().getMatureYield()
+						.divide(new BigDecimal(100))) < 0) {
+					ValidMessage validMessage = new ValidMessage("yield",
+							getMessage("TRD_W_0007", getMessage("TrdBondInvestTrade002.yield"),
+									getMessage("TrdBondInvestTrade002.yield"),
+									getMessage("TrdLendInvestTrade002.lessthan")));
+					errorList.add(validMessage);
+				}
+
+				// 行权收益率低于委托时的行权收益率
+				if (inputDto.getExerYield() != null && etrInvestInfoDto.getEtrEntrustAdd().getExerYield() != null
+						&& inputDto.getExerYield().compareTo(etrInvestInfoDto.getEtrEntrustAdd().getExerYield()
+						.divide(new BigDecimal(100))) < 0) {
+					ValidMessage validMessage = new ValidMessage("exerYield",
+							getMessage("TRD_W_0007", getMessage("TrdBondInvestTrade002.exerYield"),
+									getMessage("TrdBondInvestTrade002.exerYield"),
+									getMessage("TrdLendInvestTrade002.lessthan")));
+					errorList.add(validMessage);
+				}
 			}
-			// 净价超过委托时的净价;
-			if (inputDto.getUnitCprice() != null && etrInvestInfoDto.getEtrEntrust().getPrice() != null
-					&& inputDto.getUnitCprice().compareTo(etrInvestInfoDto.getEtrEntrust().getPrice()) > 0) {
-				ValidMessage validMessage = new ValidMessage("unitCprice",
-						getMessage("TRD_W_0007", getMessage("TrdBondInvestTrade002.unitCprice"),
-								getMessage("TrdBondInvestTrade002.unitCprice"),
-								getMessage("TrdLendInvestTrade002.morethan")));
-				errorList.add(validMessage);
+		}else{
+			// 增加 撤销 分支
+
+			// 校验流程中的数据
+			// mstWorkflowCommonService.isInWflProcess(inputParam);
+
+			WflValidInputParameter parameter = new WflValidInputParameter();
+			parameter.setPageId("PreTrdBondInvestTrade002");
+			parameter.setBusinessDataPk1(inputDto.getTotleTradeId());
+
+			boolean isInWfl = mstWorkflowCommonService.isInWflProcess(parameter);
+			if (isInWfl){
+				//流程存在情况
+				errorList.add(new ValidMessage(getMessage("COMMON_E_0021","标识",inputDto.getTotleTradeId())));
 			}
 
-			// 到期收益率低于委托时的到期收益率;
-			if (inputDto.getYield() != null && etrInvestInfoDto.getEtrEntrustAdd().getMatureYield() != null
-					&& inputDto.getYield().compareTo(etrInvestInfoDto.getEtrEntrustAdd().getMatureYield()
-							.divide(new BigDecimal(100))) < 0) {
-				ValidMessage validMessage = new ValidMessage("yield",
-						getMessage("TRD_W_0007", getMessage("TrdBondInvestTrade002.yield"),
-								getMessage("TrdBondInvestTrade002.yield"),
-								getMessage("TrdLendInvestTrade002.lessthan")));
-				errorList.add(validMessage);
-			}
-
-			// 行权收益率低于委托时的行权收益率
-			if (inputDto.getExerYield() != null && etrInvestInfoDto.getEtrEntrustAdd().getExerYield() != null
-					&& inputDto.getExerYield().compareTo(etrInvestInfoDto.getEtrEntrustAdd().getExerYield()
-							.divide(new BigDecimal(100))) < 0) {
-				ValidMessage validMessage = new ValidMessage("exerYield",
-						getMessage("TRD_W_0007", getMessage("TrdBondInvestTrade002.exerYield"),
-								getMessage("TrdBondInvestTrade002.exerYield"),
-								getMessage("TrdLendInvestTrade002.lessthan")));
-				errorList.add(validMessage);
-			}
 		}
 		return errorList;
 	}

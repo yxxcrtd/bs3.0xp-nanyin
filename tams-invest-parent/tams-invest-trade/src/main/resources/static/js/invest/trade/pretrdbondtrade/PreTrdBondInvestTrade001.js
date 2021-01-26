@@ -149,7 +149,7 @@
                 return;
             }
             var checkObj = {};
-            checkObj.tradeId = selArr[0].tradeId;
+            checkObj.totleTradeId = selArr[0].totleTradeId;
             checkObj.systemFinprodId = selArr[0].systemFinprodId;
             checkObj.tradeDate = selArr[0].tradeDate;
             checkObj.operateType = "revoke";
