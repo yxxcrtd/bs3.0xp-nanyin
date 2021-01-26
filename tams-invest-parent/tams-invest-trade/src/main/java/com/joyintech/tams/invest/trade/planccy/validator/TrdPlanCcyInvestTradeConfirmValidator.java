@@ -120,7 +120,7 @@ public class TrdPlanCcyInvestTradeConfirmValidator implements BeanValidator {
                         errorList.add(new ValidMessage("shareAmt",this.getMessage("BUSS_COM_E_0003", this.getMessage("TrdFundInvestTrade002.tradeSha"),this.getMessage("TrdFundInvestTrade002.assetAvailablePosition"))));
                     }
                 }
-                if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回确认.getValue()) && StringUtil.isEmptyList(dto.getBussTrdTransferOrder())){
+                if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回确认.getValue())){
                     // 划款指令
                     if (bussTrdTransferOrderService != null) {
                         List<ValidMessage> list = bussTrdTransferOrderService.check(
