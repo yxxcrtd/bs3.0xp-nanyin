@@ -178,6 +178,10 @@ public class FeeProvisionSetting002Service extends BaseService<FeeProvisionSetti
 		if(!isEqualFeeAmt(dto)){
 			message.add("明细数据每季度费用汇总金额 = 设置的每季度费用!");
 		}
+		//费用不为4500，不允许提交
+		if(dto.getFeeAmtTotal().compareTo(new BigDecimal(4500)) != 0) {
+			message.add("每季度费用金额不为4500，不允许提交!");
+		}
 //        e.判断区间是否重复
 
 		if(isRepetition(dto)){
