@@ -265,6 +265,11 @@
         }else {
             $("#chlId").prop("disabled", false);
         }
+        //add by mashukai ZGBSS-239 证券账户更改时交易所资金账户可用现金没有带出来 start
+        if ($('#portfolioId').val() != null && $('#portfolioId').val() != ''){
+            getPtlCashPositionInfo();
+        }
+        //add by mashukai ZGBSS-239 证券账户更改时交易所资金账户可用现金没有带出来 end
     });
 
     $("#chlId").change(function(){
@@ -280,6 +285,11 @@
         if($('#secAcctId').val()){
             deleteSelect('secAcctId')
         }
+        //add by mashukai ZGBSS-239 修正清除产品代码时交易所资金账户可用现金不清零  start
+        if ($('#portfolioId').val() == null || $('#portfolioId').val() == ''){
+              $('#tradeMarketCash').val('').trigger("change");
+        }
+        //add by mashukai ZGBSS-239 修正清除产品代码时交易所资金账户可用现金不清零  end
     });
 
     var deleteSelect = function (id) {
