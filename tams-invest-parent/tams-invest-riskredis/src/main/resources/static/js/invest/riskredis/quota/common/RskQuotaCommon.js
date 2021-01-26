@@ -84,7 +84,7 @@
     		if(row.supStat == "ERROR"){
                   return '<span style="color: red">'+JoyinUtil.getLabel("RskSupervisionRiskAnalyze001.exceptionMessage")+'</span>';
              }
-    		wg = JoyinMath.doMul(parseFloat(new Number(wg)), 1, 6);
+    		wg = JoyinMath.doMul(parseFloat(new Number(wg)), 1, 10);
     		wg = Number(wg);
     		var detailJson = JSON.parse(row.foulCond);
     		var curunit=valueConvertUnit(detailJson.threshold_1.unit);

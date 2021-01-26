@@ -709,6 +709,10 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             else if(StringUtil.equals(finDto.getPs(), DictCodeListExt3.交易方向_债转股.getValue())){
                 infRiskRdsDto.setAmount(finDto.getShareAmt());//可转债为申购券面总额
             }
+            if (StringUtil.isNotEmpty(dataMap.get("windtypeone"))
+                    && StringUtil.equals(dataMap.get("windtypeone").toString(), DictCodeList.WIND一级分类_含债券一级分类等_优先股.getValue())) {
+                infRiskRdsDto.setTradeNum(ArithmeticUtil.divide(finDto.getTradeAmt(),100,10));//可转债为申购券面总额
+            }
         }
         //存款类
         if(StringUtil.equals(DictCodeList.平安资产类型_存款.getValue(),v.getAssetType())){
