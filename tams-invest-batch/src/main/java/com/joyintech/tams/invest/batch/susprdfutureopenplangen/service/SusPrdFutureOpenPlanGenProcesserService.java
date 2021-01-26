@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -24,11 +25,13 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.FinCashPlan;
 import com.joyintech.tams.common.base.entity.FinOpenPlan;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.PrdOpenPlanUpdateDto;
 import com.joyintech.tams.invest.batch.prdopenplanupdate.relyingonresources.dto.BussFinProductPayPlanDto;
+import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dao.SusPrdFutureOpenPlanGenMapper;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.relyingonresources.dto.BussFinProductAnapleroticPlanDto;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.relyingonresources.dto.BussFinProductOpenPlanDto;
@@ -44,6 +47,9 @@ import com.joyintech.tams.invest.common.CommonUtil;
 @Service
 @Scope("prototype")
 public class SusPrdFutureOpenPlanGenProcesserService extends BaseService {
+	
+	@Autowired
+	private SusPrdFutureOpenPlanGenMapper susPrdFutureOpenPlanGenMapper;
 
 	/**
 	 * 
@@ -56,7 +62,7 @@ public class SusPrdFutureOpenPlanGenProcesserService extends BaseService {
 		BussFinProductOpenPlanDto bussFinProductOpenPlanDto = new BussFinProductOpenPlanDto();
 		BeanUtil.copyPropertiesIgnoreNull(bussFinProductOpenPlanDto, susprdfutureopenplangendto);
 		bussFinProductOpenPlanDto.setVdate(susprdfutureopenplangendto.getOpenVdate());
-		bussFinProductOpenPlanDto.setMdate(DateUtil.addYear(susprdfutureopenplangendto.getOpenMdate(), years));
+		bussFinProductOpenPlanDto.setMdate(susprdfutureopenplangendto.getMdate());
 		bussFinProductOpenPlanDto.setOperationType(susprdfutureopenplangendto.getOpenMode());
 		bussFinProductOpenPlanDto.setTradCalender(susprdfutureopenplangendto.getCalendarId());
 		bussFinProductOpenPlanDto.setCalcMethod(susprdfutureopenplangendto.getCalcMethod());
@@ -130,6 +136,60 @@ public class SusPrdFutureOpenPlanGenProcesserService extends BaseService {
 		BussFinProductAnapleroticPlanDto bussFinProductAnapleroticPlanDto = new BussFinProductAnapleroticPlanDto();
 		BeanUtil.copyPropertiesIgnoreNull(bussFinProductAnapleroticPlanDto, popuDto);
 		return bussFinProductAnapleroticPlanDto;
+	}
+	
+	/**
+	 * 生成付息计划规则
+	 * @param popuDto
+	 * @return
+	 */
+	public BussFinProductPayPlanDto executePayDto(SusPrdFutureOpenPlanGenDto popuDto){
+		BussFinProductPayPlanDto bussFinProductPayPlanDto = new BussFinProductPayPlanDto();
+		BeanUtil.copyPropertiesIgnoreNull(bussFinProductPayPlanDto, popuDto);
+		
+		bussFinProductPayPlanDto.setVdate(popuDto.getPayVdate());
+		bussFinProductPayPlanDto.setMdate(popuDto.getMdate());
+
+		return bussFinProductPayPlanDto;
+	}
+	
+	/**
+	 * 处理更新后的付息计划
+	 * @param finCashPlanList
+	 * @param popuDto
+	 * @return
+	 * @throws Exception
+	 */
+	public List<FinCashPlan> executePayList(List<FinCashPlan> finCashPlanList, SusPrdFutureOpenPlanGenDto popuDto) throws Exception {
+		// 经过处理的List<付息计划>
+		List<FinCashPlan> newFinCashPlanList = new ArrayList<FinCashPlan>();
+
+		//根据产品代码查询已支付的付息计划的最大计提结束日
+		Date maxDealMdate = susPrdFutureOpenPlanGenMapper.queryMaxDealMdate(popuDto.getFinprodId());
+		for (int i = 0; i < finCashPlanList.size(); i++ ) {
+			FinCashPlan finCashPlan = finCashPlanList.get(i);
+			if (finCashPlan.getVdate().compareTo(popuDto.getPayVdate()) < 0 ){ // 前者小于后者
+				continue;
+			}else if(StringUtil.isNotEmpty(maxDealMdate) && maxDealMdate.compareTo(finCashPlan.getVdate()) > 0) { //已交易的计提结束日>计提开始日
+				popuDto.setCashNum(popuDto.getCashNum()+1);
+				popuDto.setPayFPMdate(DateUtil.addDay(popuDto.getPayFPMdate(), 1));
+				continue;
+			}else {
+                finCashPlan.setCashId(popuDto.getCashId());
+                finCashPlan.setCashNum(new Long(popuDto.getCashNum() + i));
+                finCashPlan.setCashType(DictCodeList.现金流类型_中间收息.getValue());
+                finCashPlan.setVdateUnadjust(finCashPlan.getVdate());
+                finCashPlan.setMdateUnadjust(finCashPlan.getMdate());
+                finCashPlan.setPayDateUnadjust(finCashPlan.getPayDate());
+                finCashPlan.setFinprodId(popuDto.getFinprodId());
+                finCashPlan.setFinprodType("F16");
+                finCashPlan.setFinprodType2("F16");
+                finCashPlan.setBranch(0L);
+				newFinCashPlanList.add(finCashPlan);
+			}
+
+		}
+		return newFinCashPlanList;
 	}
 	
 	/**

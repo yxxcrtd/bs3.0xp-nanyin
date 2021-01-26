@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <body>  
     <div th:id="|${entityName}_div|" class="pro-module-wrap">
+        <input id="isToDoList" name="isToDoList" data-th-value="${isToDoList}" hidden>
         <div class="pro-module">
             <h3 class="pro-module-title"><span class="title-des" data-th-text="#{BussSubscriptionInfo}">认购信息</span>（<span class="star-sign">*</span>必填）<i class="iconfont icon-arrow-down pro-down-icon"></i></h3>
             <div class="pro-module-item"> 

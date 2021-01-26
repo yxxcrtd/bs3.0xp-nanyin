@@ -105,6 +105,7 @@ public class TrdBondDuration002Controller extends BaseController {
                     entity.setTradeAmt(entity.getFpriceAmt());
                     model.addAttribute("deal", JsonUtils.object2Json(TrdBondDuration002Service.getTrdProductDeal(entity)));
                     model.addAttribute("needInit", true);
+                    entity.setTradeDate(DateUtil.format(DateUtil.platDateFromCache()));
                 }
                 else {
                     entity.setBussTrdTransferOrder(periodCommonService.selectPayOrders(entity.getBusiCode()));
@@ -115,7 +116,6 @@ public class TrdBondDuration002Controller extends BaseController {
         if (entity != null) {
             model.addAttribute("ps", change现金流类型To交易方向(entity.getCashType()));
             PeriodCommonService.setEntityBussOrderToModel(model, entity.getBussTrdTransferOrder());
-            entity.setTradeDate(DateUtil.format(DateUtil.platDateFromCache()));
         }
 //       2.0处理
 //        if (entity != null) {

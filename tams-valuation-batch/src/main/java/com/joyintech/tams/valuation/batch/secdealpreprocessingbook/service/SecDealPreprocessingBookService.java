@@ -459,9 +459,6 @@ public class SecDealPreprocessingBookService {
                 // 交易金额 <- 交易明细.交易金额
                 accountAmountMap.put(BookConstant.DEALAMT_D,
                         ArithmeticUtil.round(varDealAmt, NumberEnum.MONEY));
-                // 账务明细代码1->交易类账务处理结果.账务明细代码
-                accountSceneMap.put(BookConstant.BOK_DETAIL_ID2,
-                        bookCommonLogic.getValBokDetailId(dealNow.getFinprodId(), dealNow.getBokDetailId(), dealNow.getFinprodType(),dealNow.getCcy()));
             }else{
                 // 交易金额 <- 交易明细.交易金额
                 accountAmountMap.put(BookConstant.DEALAMT,
@@ -801,9 +798,6 @@ public class SecDealPreprocessingBookService {
                     accountAmountMap.put(BookConstant.NETAMT_D, ArithmeticUtil.round(
                             ArithmeticUtil.multiply(varTradeAmt, new BigDecimal(-1)), NumberEnum.MONEY));
                 }
-                // 账务明细代码1->交易类账务处理结果.账务明细代码
-                accountSceneMap.put(BookConstant.BOK_DETAIL_ID2,
-                        bookCommonLogic.getValBokDetailId(dealNow.getFinprodId(), dealNow.getBokDetailId(), dealNow.getFinprodType(),dealNow.getCcy()));
             }else{
                 accountAmountMap.put(BookConstant.INTAMT,
                         ArithmeticUtil.round(varInterestAccBal, NumberEnum.MONEY));
@@ -1311,9 +1305,6 @@ public class SecDealPreprocessingBookService {
                 // 交易金额 <- 交易明细.交易金额
                 accountAmountMap.put(BookConstant.DEALAMT_D,
                         ArithmeticUtil.round(varDealAmt, NumberEnum.MONEY));
-                // 账务明细代码1->交易类账务处理结果.账务明细代码
-                accountSceneMap.put(BookConstant.BOK_DETAIL_ID2,
-                        bookCommonLogic.getValBokDetailId(dealNow.getFinprodId(), dealNow.getBokDetailId(), dealNow.getFinprodType(),dealNow.getCcy()));
             }else{
                 // 交易金额 <- 交易明细.交易金额
                 accountAmountMap.put(BookConstant.DEALAMT,
@@ -1756,9 +1747,6 @@ public class SecDealPreprocessingBookService {
                 // 交易金额 <- 交易明细.交易金额
                 accountAmountMap.put(BookConstant.DEALAMT_D,
                         ArithmeticUtil.round(varDealAmt, NumberEnum.MONEY));
-                // 账务明细代码1->交易类账务处理结果.账务明细代码
-                accountSceneMap.put(BookConstant.BOK_DETAIL_ID2,
-                        bookCommonLogic.getValBokDetailId(dealNow.getFinprodId(), dealNow.getBokDetailId(), dealNow.getFinprodType(),dealNow.getCcy()));
             }else{
                 // 交易金额 <- 交易明细.交易金额
                 accountAmountMap.put(BookConstant.DEALAMT,

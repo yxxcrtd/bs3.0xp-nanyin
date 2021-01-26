@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.common.base.entity.FinFloatAccrualScheKey;
@@ -31,6 +32,8 @@ public interface SusPrdFutureOpenPlanGenMapper {
 	List<SusPrdFutureOpenPlanGenDto> findSusPrdFutureOpenPlanGenList(Map<String,Object> paramMap);
 	//查询需要更新的业绩回补计划
 	List<SusPrdFutureOpenPlanGenDto> findProductAnapleroticPlanList(Map<String,Object> paramMap);
+	//查询需要更新的付息计划
+	List<SusPrdFutureOpenPlanGenDto> findProductPayPlanList(Map<String,Object> paramMapPayPlan);
 	/**
 	 * 如果是净值型产品则取净值日，如果是货币产品，则取区间结束日
 	 */
@@ -51,5 +54,7 @@ public interface SusPrdFutureOpenPlanGenMapper {
 	 * 根据cashid删除原浮动管理费计提计划 
 	 */
 	int deleteFloatAccrualScheByPrimaryKey(FinFloatAccrualScheKey finFloatAccrualScheKey);
+	
+	Date queryMaxDealMdate(@Param("finprodId") String finprodId);
 	
 }

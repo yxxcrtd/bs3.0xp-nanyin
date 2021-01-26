@@ -49,6 +49,7 @@ public class BussSubscriptionInfoController extends BaseController{
         String entityName = StringUtil.defaultString(this.getParam("entityName"),
             BussSubscriptionInfoService.DEFAULT_ENTITY_NAME);
         model.addAttribute("entityName", entityName);
+        model.addAttribute("isToDoList", !WorkFlowUtil.isNotFromToDoList());
         return "component/project/BussSubscriptionInfo";
     }
     
@@ -64,8 +65,9 @@ public class BussSubscriptionInfoController extends BaseController{
     public List<FinSubscriptionInfo> initInfo() {
         List<FinSubscriptionInfo> finSubscriptionInfoList = new ArrayList<FinSubscriptionInfo>();
         String finprodId = this.getParam("finprodId");
+        String isToDoList = this.getParam("isToDoList");
         if(StringUtil.isNotEmpty(finprodId)){
-            if(!WorkFlowUtil.isNotFromToDoList()){
+            if(StringUtil.equals(isToDoList,"true")){
                 String workFlowId = this.getParam("workflowId");
                 String entityName = StringUtil.defaultString(this.getParam("entityName"),
                     BussSubscriptionInfoService.DEFAULT_ENTITY_NAME);

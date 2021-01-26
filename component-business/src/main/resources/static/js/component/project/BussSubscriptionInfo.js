@@ -52,6 +52,9 @@
         param.workflowId = $("#workflowId").val();
         param.entityName = entityName_BussSubscriptionInfo;
         param.pageModel = pageModel;
+        if ($("#isToDoList").val() != null && $("#isToDoList").val() != ''){
+            param.isToDoList = $("#isToDoList").val().toString();
+        }
         return param;
     }
     
