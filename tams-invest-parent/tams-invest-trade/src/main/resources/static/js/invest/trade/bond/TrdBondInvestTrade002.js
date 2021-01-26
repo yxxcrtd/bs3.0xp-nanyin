@@ -1184,6 +1184,8 @@ var table;
                 //一级分销，若是交易所，显示佣金
                 if($("#payType").val()=="01"){
                     $("#commissionAmtDiv").show();
+                    $("#settleAmtDiv").hide();
+                    $("#exchangeAmtDiv").hide();
                     ClearNum();
                 }
             }
