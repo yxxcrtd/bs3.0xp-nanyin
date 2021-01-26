@@ -22,8 +22,8 @@ import com.joyintech.tams.svreport.chb.employeeinforegist.service.EmployeeInfoRe
  * @see EmployeeInfoRegController
  * @since 1.0
  */
-@RestController("backEmployeeInfoRegController")
-@RequestMapping("/service/EmployeeInfoReg")
+@RestController
+@RequestMapping("/EmployeeInfoReg")
 public class EmployeeInfoRegController {
    
 	@Autowired

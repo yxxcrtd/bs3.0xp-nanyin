@@ -1,12 +1,18 @@
 package com.joyintech.tams.svreport.chb.prodpersonissue.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.component.svrreport.chb.dto.ChbPrdIssueSubDto;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.svreport.chbsd.prdissuesub.service.SdProdIssueBatchService;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,6 +63,13 @@ public class ProdPersonIssue001Controller extends BaseController {
     private ProdPersonIssue001Service prodPersonIssue001Service;
     @Autowired
     private ProdPersonIssueMService prodPersonIssueMService;
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(getClass());
+
+	@Autowired
+	private SdProdIssueBatchService sdProdIssueBatchService;
 	  /**
      * 初始化
      * {@inheritDoc}
@@ -168,8 +181,57 @@ public class ProdPersonIssue001Controller extends BaseController {
 	
 	@ResponseBody
     @RequestMapping("reportCheck")
-    public List<ExcelValidDto> reportCheck() {
+    public Map<String,Object> reportCheck() {
         return prodPersonIssueMService.reportCheck(RequestUtil.getPageParam());
     }
-	    
+
+	/**start  中债一二期直连代码  add  by  wangzehui  20201010*/
+
+	/**
+	 * 中债直连报送
+	 *
+	 * @param map
+	 *            传入需要报送的主键
+	 * @return 反馈信息
+	 * @see
+	 * @since 1.0
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/submitChb", method = RequestMethod.POST)
+	public AjaxResult doSubmit(@RequestBody Map<String, Object> param)  throws Exception{
+
+		List<ProdPersonIssue001Dto> list=new ArrayList<ProdPersonIssue001Dto>();
+		// 选择行数据时
+		if (param.containsKey("keyList")) {
+			String keyList = param.get("keyList").toString();
+			try {
+				list = JsonUtils.json2List(keyList,
+						ProdPersonIssue001Dto.class);
+			}
+			catch (IOException e) {
+				// e.printStackTrace();
+				logger.error(e.getMessage(), e);
+			}
+		}else{
+			Page<ProdPersonIssue001Dto> page = prodPersonIssueMService.searchForPage(RequestUtil.getPageParam());
+			if(page!=null&&page.getRoot()!=null&&page.getRoot().size()>0){
+				list = page.getRoot();
+			}
+			//查询数据
+		}
+
+		//报文拼接：2、进行数据结构转化，把[1]中取得的List，转化为报文拼接组件中调用方法的数据结构类
+		List<ChbPrdIssueSubDto> dataList = new ArrayList<ChbPrdIssueSubDto>();
+		for(ProdPersonIssue001Dto sdDto:list){
+			ChbPrdIssueSubDto target = new ChbPrdIssueSubDto();
+			BeanUtil.copyPropertiesIgnoreNull(target, sdDto);
+			dataList.add(target);
+		}
+
+		sdProdIssueBatchService.sendBatchCommon(dataList);
+
+		return new AjaxResult(this.getMessage("REPORT_COMMON_I_0018"));
+	}
+
+	/**end  中债一二期直连代码  add  by  wangzehui  2020100910*/
 }

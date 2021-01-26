@@ -26,6 +26,7 @@ import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.BaseMapper;
 import com.joyintech.tams.common.svreport.chb.constant.CheckConfConstants;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
@@ -108,6 +109,11 @@ public class ProdTerminationRegist001Service extends SvrCommonExportService<Prod
 	@Autowired
     private BeforeSubCheck beforeSubCheck;
 
+	/**
+	 * 中债基础数据mapper
+	 */
+	@Autowired
+	private BaseMapper baseMapper;
 	@Autowired
 	private SvrMaptoEntityUtil svrMaptoEntityUtil;
 	private String tableName = "CHB_PRD_END_SUB";
@@ -520,10 +526,12 @@ public class ProdTerminationRegist001Service extends SvrCommonExportService<Prod
 	* @author: 王冠/wangguan
 	* @date: 2019年6月25日 上午10:41:53 
 	*/
-	public List<ExcelValidDto> checkData(List<String> checkKeys){
+	public Map<String,Object> checkData(List<String> checkKeys){
 		Map<String,CheckReport001Dto> checkmap = new HashMap<String,CheckReport001Dto>();
 		Map<String,ProdTerminationRegist001Dto> endmap = new HashMap<String,ProdTerminationRegist001Dto>();
+		Map<String,Object> returnMap = new HashMap<>();
 		List<ProdTerminationRegist001Dto> endlist = prodTerminationRegist001Mapper.selectAllDataByKeyList(checkKeys);
+		dealResultlist(endlist);
 		endmap = endlist.stream().collect(Collectors.toMap(ProdTerminationRegist001Dto::getRegistSeqno,(p)->p,(key1,key2)->key1));
 		List<ExcelValidDto> result = new ArrayList<ExcelValidDto>();
 		List<CheckReport001Dto> resultlist  = new ArrayList<CheckReport001Dto>();
@@ -547,8 +555,10 @@ public class ProdTerminationRegist001Service extends SvrCommonExportService<Prod
 					result.add(exc);
 				}
 			}
+			returnMap.put("excelValidDtoList",result);
 		}
-		return result;
+		returnMap.put("resultList",endlist);
+		return returnMap;
 	}
 	
 	/**   

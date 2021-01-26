@@ -68,7 +68,7 @@
 					else if(type === 'number') {
 						var decimal = d.fixed || 2;
 						// 是否为百分比自动，自动乘以100
-						if(d.title.indexOf('(%) ') == -1
+						if(d.title.indexOf('(%)') == -1
 								&& d.title && d.title.indexOf('%') != -1) {
 							if(value) {
 								value = value * 100;

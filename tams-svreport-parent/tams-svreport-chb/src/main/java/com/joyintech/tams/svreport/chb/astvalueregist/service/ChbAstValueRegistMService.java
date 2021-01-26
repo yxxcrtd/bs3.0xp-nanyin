@@ -95,4 +95,12 @@ public class ChbAstValueRegistMService extends BaseService<ChbAstValueRegist001D
         		SvrServiceApplication.CHB_SERVICE_NAME + "/Institution/getInstitutionCode",param,
         		SuggestDto.class);
 	}
+
+	/**start  中债一二期直连代码  add  by  wangzehui  20201012*/
+	public Map<String,Object> submitBeforeCheck(Map<String, Object> param) {
+		return restTemplate.postForObject(
+				SvrServiceApplication.CHB_SERVICE_NAME + "/ChbAstValueRegist/submitBeforeCheck", param,
+				Map.class);
+	}
+	/**end  中债一二期直连代码  add  by  wangzehui  20201012*/
 }

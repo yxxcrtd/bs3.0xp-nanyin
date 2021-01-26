@@ -2,6 +2,7 @@ package com.joyintech.tams.svreport.chb.perprodeclarereg.service;
 
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.ExportParam;
@@ -12,6 +13,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.system.common.listener.UploadListener;
+import com.joyintech.tams.common.base.dao.BaseMapper;
 import com.joyintech.tams.common.svreport.chb.constant.CheckConfConstants;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
@@ -20,6 +22,7 @@ import com.joyintech.tams.common.svreport.datacheck.dto.ChbCheckRuleout;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
+import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.service.SvrCommonExportService;
 import com.joyintech.tams.report.common.util.DateCalcUtil;
 import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001Mapper;
@@ -27,6 +30,7 @@ import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001
 import com.joyintech.tams.svreport.chb.datacheck.beforesub.service.BeforeSubErrorCheck;
 import com.joyintech.tams.svreport.chb.perprodeclarereg.dao.ChbPrdDeclareSubHisMapper;
 import com.joyintech.tams.svreport.chb.perprodeclarereg.dao.PerProDeclareReg001Mapper;
+import com.joyintech.tams.svreport.chb.perprodeclarereg.dto.ChbPrdDeclareRegFileCode;
 import com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
@@ -46,6 +50,7 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -68,10 +73,20 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 
 	@Autowired
 	private ChbCheckRuleoutMapper chbCheckRuleoutMapper;
+	/**
+	 * 中债基础数据mapper
+	 */
+	@Autowired
+	private BaseMapper baseMapper;
+	 private Logger logger = LoggerFactory.getLogger(getClass());
 
-	private Logger logger = LoggerFactory.getLogger(getClass());
-
-	public Page<PerProDeclareRegDto> selectForPage(Map<String, Object> pageParam) {
+	/**
+	 *
+	 * @param pageParam
+	 * @param sendChbFlag 是否直连发送：直连发送数据字典不需要转成code value形式；手工报送则需要
+	 * @return
+	 */
+	public Page<PerProDeclareRegDto> selectForPage(Map<String, Object> pageParam, boolean sendChbFlag) {
 		dealSearchParam(pageParam);
 		pageParam.put("flag", "2");
 		//add by leipeng 20200628
@@ -85,11 +100,11 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 	        int legth = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_LENGTH).toString());
 			Page<PerProDeclareRegDto> page = queryForPage(
 					pagenum,legth,()->perProDeclareReg001Mapper.selectAllData(pageParam));
-			dealDataList(page.getRoot(), true);
+			dealDataList(page.getRoot(), sendChbFlag);
 			return page;
 		} else {
 			Page<PerProDeclareRegDto> page = queryForPage(PerProDeclareReg001Mapper.class,"selectAllData",pageParam);
-			dealDataList(page.getRoot(), true);
+			dealDataList(page.getRoot(), sendChbFlag);
 			return page;
 		}
 		
@@ -193,7 +208,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 			if(item.getInvestArae()!=null){
 				item.setInvestArae(item.getInvestArae().trim()+" "+SvrDataUtil.getNameFromDataDict(DictCode.资金投向地区, item.getInvestArae()));
 			}
-		    if(item.getInvestCountry()!=null && flag){
+		    if(item.getInvestCountry()!=null){
 		    	List<String> investCountrys=StringUtil.splitToList(GlobalConstant.COMMA, item.getInvestCountry());
 				item.setInvestCountry("");
 				for(String investCountry : investCountrys){
@@ -287,7 +302,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 				item.setSaleArea(item.getSaleArea().substring(1));
 			}
 			
-			if(item.getOutDepCtry()!=null && flag){
+			if(item.getOutDepCtry()!=null){
 				List<String> outDepCtrys=StringUtil.splitToList(GlobalConstant.COMMA, item.getOutDepCtry());
 				item.setOutDepCtry("");
 				for(String outDepCtry : outDepCtrys){
@@ -556,7 +571,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 		return "success";
  	}
 	
-public AjaxResult uploadFile(Map<String, Object> map) throws ZipException, IOException {
+	public AjaxResult uploadFile(Map<String, Object> map) throws ZipException, IOException {
  		
  		String srcName=(String) map.get("param[0][srcName]");
 		String fileNo=(String) map.get("param[0][fileNo]");
@@ -565,33 +580,122 @@ public AjaxResult uploadFile(Map<String, Object> map) throws ZipException, IOExc
 		String registSeqno=(String) map.get("registSeqno");
 		String prodId=(String) map.get("prodId");
 		File file=new File(targetFileSTR);
-		
+
+		// add by zhangliang 20201015 验证九大附件 start
+		// 1、校验各个文件夹是否有文档，根据“必填、选填”那一项校验；
+		// 2、校验各个文件大小，只要存在最大的文件超出20M就提示；
+		// 3、校验文件类型；
+		StringBuffer fileCheckMsg = new StringBuffer();
 		if(!fileProdId.equals(prodId)){
+			fileCheckMsg.append("文件名与所选产品代码不匹配！");
+			fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
+		}
+
+		int fileNum=0;
+		// 记录文件信息
+		Map<String, List<String>> fileExistsMap = new HashMap<>();
+
+		try (
+			ZipFile zipFile=new ZipFile(new File(targetFileSTR),Charset.forName("GBK"));
+		){
+			List<String> folderNoList = ChbPrdDeclareRegFileCode.genFolderNoList();
+
+
+			for (Enumeration<? extends ZipEntry> e = zipFile.entries(); e.hasMoreElements();){
+				ZipEntry entry=e.nextElement();
+				//    aaa.doc:表示文件
+				if (entry.getName().indexOf("/") < 0){
+					fileCheckMsg.append("包含不必要的文件或文件夹"+ entry.getName() + "！");
+					fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
+					continue;
+				}
+				//    09/bbb/aaa.doc:表示文件夹下存在文件夹
+				if (entry.getName().indexOf("/") != entry.getName().lastIndexOf("/")){
+					fileCheckMsg.append("包含不必要的文件或文件夹"+ entry.getName() + "！");
+					fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
+					continue;
+				}
+				//    09/:表示文件夹
+				String folderName = entry.getName().substring(0, entry.getName().indexOf("/"));
+				if (entry.getName().indexOf("/") + 1== entry.getName().length()){
+					if (!folderNoList.contains(folderName)){
+						fileCheckMsg.append("包含不必要的文件夹"+ folderName + "！");
+						fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
+					}
+					continue;
+				}
+				//    09/aaa.doc:表示文件夹下文件
+				if (entry.getName().indexOf("/") == entry.getName().lastIndexOf("/")){
+					ChbPrdDeclareRegFileCode chbPrdDeclareRegFileCode = ChbPrdDeclareRegFileCode.genInfoByFolderNo(folderName);
+					if (chbPrdDeclareRegFileCode != null && entry.getSize() > chbPrdDeclareRegFileCode.getFileSize() * 1024 * 1024){
+						fileCheckMsg.append("文件大小超过" + chbPrdDeclareRegFileCode.getFileSize() + "M（" + entry.getName() + "）。");
+						fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
+					}
+					String fileType = entry.getName().substring(entry.getName().lastIndexOf(".") + 1, entry.getName().length());
+					if (chbPrdDeclareRegFileCode != null && chbPrdDeclareRegFileCode.getFileType().indexOf(fileType) < 0){
+						fileCheckMsg.append(entry.getName() + "文件的扩展名不对。必须为以下的一种：" + chbPrdDeclareRegFileCode.getFileType() + "。" );
+						fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
+					}
+					if (fileExistsMap.containsKey(folderName)){
+						List<String> folderNameList = new ArrayList<>(fileExistsMap.get(folderName));
+						folderNameList.add(entry.getName().substring(folderName.length() + 1));
+						fileExistsMap.put(folderName, folderNameList);
+					}
+					else{
+						fileExistsMap.put(folderName, Arrays.asList(entry.getName().substring(folderName.length() + 1)));
+					}
+				}
+				// 统计文件个数
+				if(entry.getName().substring(entry.getName().lastIndexOf("/")+1).length()>0){
+					fileNum++;
+				}
+			}
+			for (String folderNo : folderNoList){
+				if (!fileExistsMap.containsKey(folderNo) || StringUtil.isEmptyList(fileExistsMap.get(folderNo))){
+					ChbPrdDeclareRegFileCode chbPrdDeclareRegFileCode = ChbPrdDeclareRegFileCode.genInfoByFolderNo(folderNo);
+					if (chbPrdDeclareRegFileCode.isNend()){
+						fileCheckMsg.append(chbPrdDeclareRegFileCode.getFolderName() + "不可为空。");
+						fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			throw e;
+		}
+
+		if (fileCheckMsg.length() > 0){
 			if(file.exists()){
 				file.delete();
 			}
 			uploadListener.remove(fileNo);
-			return new AjaxResult("文件名与所选产品Id不匹配，上传失败！");
-		}else {
-			int fileNum=0;
-			try (ZipFile zipFile=new ZipFile(new File(targetFileSTR),Charset.forName("GBK"));//或者ZipFile zipFile=new ZipFile(zipFile);
-					){				
-				for (Enumeration<? extends ZipEntry> e = zipFile.entries(); e.hasMoreElements();){
-				    ZipEntry entry=e.nextElement();
-				   if(entry.getName().substring(entry.getName().lastIndexOf("/")+1).length()>0){
-					   fileNum++;
-				   }
-				}
-			} catch (Exception e) {
-				throw e;
-			}
-			
-			PerProDeclareRegDto  perProDeclareRegDto=new PerProDeclareRegDto();
-			perProDeclareRegDto.setRegistSeqno(registSeqno);
-			perProDeclareRegDto.setFileNo(fileNo);
-			perProDeclareRegDto.setFileNum(new BigDecimal(fileNum));
-			perProDeclareReg001Mapper.updateFileNo(perProDeclareRegDto);
+
+			fileCheckMsg.append("上传失败！");
+			return new AjaxResult(fileCheckMsg.toString(), MessageType.错误消息);
 		}
+
+		StringBuffer fileSb = new StringBuffer();
+		for (String key : fileExistsMap.keySet()){
+			fileSb.append(key);
+			fileSb.append(GlobalConstant.COMMA);
+			List<String> fileInfoList = fileExistsMap.get(key);
+			for (String fileInfo : fileInfoList){
+				fileSb.append(fileInfo);
+				fileSb.append(GlobalConstant.COMMA);
+			}
+			fileSb = new StringBuffer(fileSb.substring(0, fileSb.length() - GlobalConstant.COMMA.length()));
+			fileSb.append(GlobalConstant.SEMICOLON);
+		}
+		fileSb = new StringBuffer(fileSb.substring(0, fileSb.length() - GlobalConstant.SEMICOLON.length()));
+		// add by zhangliang 20201015 验证九大附件 end
+
+		PerProDeclareRegDto  perProDeclareRegDto=new PerProDeclareRegDto();
+		perProDeclareRegDto.setRegistSeqno(registSeqno);
+		perProDeclareRegDto.setFileNo(fileNo);
+		perProDeclareRegDto.setFileNum(new BigDecimal(fileNum));
+		perProDeclareRegDto.setNineFile(fileSb.toString());
+		perProDeclareReg001Mapper.updateFileNo(perProDeclareRegDto);
+
 		return new AjaxResult("附件上传成功！");
  		
  	}
@@ -613,6 +717,7 @@ public AjaxResult uploadFile(Map<String, Object> map) throws ZipException, IOExc
 		perProDeclareRegDto.setRegistSeqno(registSeqno);
 		perProDeclareRegDto.setFileNo("");
 		perProDeclareRegDto.setFileNum(BigDecimal.ZERO);
+		perProDeclareRegDto.setNineFile("");
 		perProDeclareReg001Mapper.updateFileNo(perProDeclareRegDto);
 	}
 
@@ -644,6 +749,64 @@ public AjaxResult uploadFile(Map<String, Object> map) throws ZipException, IOExc
 		return msg;
 	}
 	
+	/**start  中债一二期报送直连  add by  wangzehui  20201012*/
+	public Map<String,Object> submitBeforeCheck(Map<String, Object> param){
+        List<ExcelValidDto> result=new ArrayList<ExcelValidDto>();
+ 		List<PerProDeclareRegDto> proDeclareList=new ArrayList<PerProDeclareRegDto>();
+		Map<String,Object> returnMap = new HashMap<>();
+// 	     // 选择行数据时
+//        if (param.containsKey("keyList")) {
+//            String keyList = param.get("keyList").toString();
+//            try {
+//                 proDeclareList = JsonUtils.json2List(keyList,
+//                		PerProDeclareRegDto.class);
+//            }
+//            catch (IOException e) {
+//                // e.printStackTrace();
+//                logger.error(e.getMessage(), e);
+//            }
+//        }else{
+			if(param.containsKey("checkKeys")){
+				param.put("keyList", StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("checkKeys")));
+			}
+			Page<PerProDeclareRegDto> page = selectForPage(param, false);
+			if(page!=null&&page.getRoot()!=null&&page.getRoot().size()>0){
+				proDeclareList = page.getRoot();
+			}
+        	//查询数据
+//        }
+		if (CollectionUtils.isEmpty(proDeclareList)) {
+			returnMap.put("excelValidDtoList", Arrays.asList(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "无报送数据", null)));
+			return returnMap;
+		}
+        //进行强制数据检查
+		Map<String, PerProDeclareRegDto> repmap = proDeclareList.stream().collect(Collectors.toMap(PerProDeclareRegDto::getRegistSeqno,(p)->p,(key1, key2)->key1));
+		// 检查登记表中小于今天所有未报送的数据
+		if(CollectionUtils.isNotEmpty(proDeclareList)){
+			// 调用检查方法
+			List<CheckReport001Dto> resultlist = check(null);
+			Map<String,CheckReport001Dto> checkmap = resultlist.stream().collect(Collectors.toMap(CheckReport001Dto::getRefseqno,(p)->p,(key1,key2)->key1));
+			for(PerProDeclareRegDto declareRegDto : proDeclareList){
+				if(checkmap.get(declareRegDto.getRegistSeqno())!=null){
+					ExcelValidDto exc=new ExcelValidDto();
+					exc.setCheckResult(checkmap.get(declareRegDto.getRegistSeqno()).getCheckResult());
+					exc.setErrorInfo(checkmap.get(declareRegDto.getRegistSeqno()).getErrorInfo());
+					exc.setWarnInfo(checkmap.get(declareRegDto.getRegistSeqno()).getWarnInfo());
+					exc.setValidKey(checkmap.get(declareRegDto.getRegistSeqno()).getValidKey());
+					result.add(exc);
+				}else{
+					ExcelValidDto exc=new ExcelValidDto();
+					exc.setValidKey("产品代码:"+repmap.get(declareRegDto.getRegistSeqno()).getProdId());
+					exc.setCheckResult("01");
+					result.add(exc);
+				}
+			}
+			returnMap.put("excelValidDtoList",result);
+		}
+		returnMap.put("resultList",proDeclareList);
+		return returnMap;
+	}
+
 	/**
 	 * @Description 检查登记表中小于今天所有未报送的数据
 	 * @return

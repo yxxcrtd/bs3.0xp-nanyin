@@ -54,10 +54,10 @@
             /**
              * 数据检查共通方法
              */
-            checkData:function(title, checkUrl, param, callback) {
+            checkData:function(title, checkUrl, param, callback, opertionType) {
                 window._checkUrl = checkUrl;
                 window._param = param;
-                this.dialog(title || '数据检查','/dataCheckResult/init','900px','520px',null,function(params) {
+                this.dialog(title || '数据检查','/dataCheckResult/init','900px','520px',{opertionType : opertionType},function(params) {
                     if (params && _.isArray(params)) {
                         callback.call(callback, params[0], params[1], params[2], params[3]);
                     }

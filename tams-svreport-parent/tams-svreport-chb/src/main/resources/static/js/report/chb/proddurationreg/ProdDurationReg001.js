@@ -49,28 +49,28 @@ $(function() {
               { title:'报送日期', field: 'submitTime', type: 'datetime', sortField:'submitTime'},
               { title:'报送截止日', field: 'chbSubmitDeadline', type:'datetime', sortField:'chbSubmitDeadline'},
               { title:'反馈状态', field: 'submitFeedbackStatus',width:100, sortField:'',sortField:'submitFeedbackStatus'},
-              {title: '理财产品代码',field:'prodId', width:200, sortField:'prodId'},
-              {title: '产品登记编码', field:'prodRegistCode', width:200, sortField:'prodRegistCode'},
-              {title: '发行机构代码', field:'issuePartyId', width:200, sortField:'issuePartyId'},
-              {title: '初始净值',field:'originalValue', type:'money', digit:5, width:150, sortField:'originalValue'},
-              {title: '产品净值',field:'prdValue', type:'money', digit:5, width:150, sortField:'prdValue'},
-              {title: '累计净值',field:'totalValue', type:'money', digit:5, width:150, sortField:'totalValue'},
+              {title: '理财产品代码',field:'prodId', width:100, sortField:'prodId'},
+              {title: '产品登记编码', field:'prodRegistCode', width:100, sortField:'prodRegistCode'},
+              {title: '发行机构代码', field:'issuePartyId', width:100, sortField:'issuePartyId'},
+              {title: '初始净值',field:'originalValue', type:'money', digit:5, width:50, sortField:'originalValue'},
+              {title: '产品净值',field:'prdValue', type:'money', digit:5, width:50, sortField:'prdValue'},
+              {title: '累计净值',field:'totalValue', type:'money', digit:5, width:50, sortField:'totalValue'},
               {title: '净值币种',field:'valueCcy', width:100, sortField:'valueCcy'},
-              {title: '折算人民币初始净值',field:'cnyOrlValue', type:'money', digit:5, width:200, sortField:'cnyOrlValue'},
-              {title: '折算人民币产品净值',field:'cnyPrdValue', type:'money', digit:5, width:200, sortField:'cnyPrdValue'},
-              {title: '折算人民币累计净值',field:'cnyTalValue', type:'money', digit:5, width:200, sortField:'cnyTalValue'}, 
-              {title: '每万份份额分红',field:'shareAmtWan', type:'money', digit:5, width:150, sortField:'shareAmtWan'},
-              {title: '每万份现金分红',field:'cashAmtWan', type:'money', digit:5, width:150, sortField:'cashAmtWan'},
-              {title: '实现收益率(%)',field:'reaYield', type:'number', digit:5, width:200, sortField:'reaYield'},
-              {title: '最新预期收益率(%)',field:'newExpYield', type:'number', digit:5, width:200, sortField:'newExpYield'},
-              {title: '银行实现收益(元)',field:'bankImpInt',type:'money', width:200, sortField:'bankImpInt'},
+              {title: '折算人民币初始净值',field:'cnyOrlValue', type:'money', digit:5, width:150, sortField:'cnyOrlValue'},
+              {title: '折算人民币产品净值',field:'cnyPrdValue', type:'money', digit:5, width:150, sortField:'cnyPrdValue'},
+              {title: '折算人民币累计净值',field:'cnyTalValue', type:'money', digit:5, width:150, sortField:'cnyTalValue'}, 
+              {title: '实现收益率(%)',field:'reaYield', type:'money', digit:5, width:150, sortField:'newExpYield'},
+              {title: '最新预期收益率(%)',field:'newExpYield', type:'money', digit:5, width:150, sortField:'reaYield'},
+              {title: '银行实现收益(元)',field:'bankImpInt',type:'money', width:150, sortField:'bankImpInt'},
               {title: '业务开始日', field:'vdate', type:'date',format:'yyyy-MM-dd', width:100, sortField:'vdate'},
               {title: '业务结束日', field:'mdate', type:'date', width:100, sortField:'mdate'},
               {title: '累计申购份额',field:'purchaseQty', type:'money', digit:5, width:150, sortField:'purchaseQty'},
               {title: '累计赎回份额',field:'redeemQty', type:'money', digit:5, width:150, sortField:'redeemQty'},
-              {title: '产品余额（元） ',field:'balanceAmt', type:'money', digit:2, width:200, sortField:'balanceAmt'},
+              {title: '每万份份额分红',field:'shareAmtWan', type:'money', digit:5, width:150, sortField:'shareAmtWan'},
+              {title: '每万份现金分红',field:'cashAmtWan', type:'money', digit:5, width:150, sortField:'cashAmtWan'},
+              {title: '产品余额（元） ',field:'balanceAmt', type:'money', digit:2, width:150, sortField:'balanceAmt'},
               {title: '产品份额',field:'prdQty', type:'money', digit:5, width:150, sortField:'prdQty'},
-              {title: '币种及申购兑付金额', field:'ccyPurchase', width:200, sortField:'ccyPurchase'},
+              {title: '币种及申购兑付金额', field:'ccyPurchase', width:100, sortField:'ccyPurchase'},
               {title: '备注',field:'remark', width:100, sortField:'remark'},
   //            {field: '主键',field:'registSeqno',visible:false, sortField:''},
               {field: 'sendStatus',visible:false, sortField:'sendStatus'}
@@ -189,54 +189,28 @@ $(function() {
           }
           
       };
-      //数据检查
-      $('#ProdDurationReg001_btn_submit').click(dateCheckMethod);
-      function dateCheckMethod(){
-          var checkArr=table.getAllCheckedRows();
-          if(checkArr.length === 0) {
-              var submitStatus = $('#submitStatus').val();
-              var status = $('#status').val();
-  //            if(submitStatus!='01'){
-              if (!(submitStatus && submitStatus.length == 1 && submitStatus[0] == '01')) {
-                  Joyin.error("只能对报送状态为未报送，数据状态为新建和修改的数据进行数据检查！");
-                  return;
-              }
-  //            else if(status && status.includes('03')){
-              else if(status && status.indexOf('03') > -1){
-                  Joyin.error("只能对数据状态为新建和修改的数据进行报送！");
-                  return;
-              }
-              var paramObj = getSearchParams()
-              if(!status){
-                  paramObj.status = '01,02'; 
-              }
-              Joyin.ajax('reportCheck',paramObj, function(result){
-                  window.checkResult = result;
-                  Joyin.checkData(dataTitle, checkUrl, getSearchParams());
-              })
-              return ;
-          }
-          var keyList = [];
-          for(var i=0;i<checkArr.length;i++){
-              //modify by wangmin 修改取数顺序 start 2018-07-12
-              keyList.push(checkArr[i].registSeqno );
-              //modify by wangmin 修改取数顺序 end 2018-07-12
-              if(checkArr[i].sendStatus !="01"){
-                  Joyin.error("数据检查只能检查未报送数据，请重新选择！");
-                  return;
-              }
-  //            else if(checkArr[i].status && checkArr[i].status.includes('03')){
-              else if(checkArr[i].status && checkArr[i].status.indexOf('03') > -1){
-                  Joyin.error("选择的报送数据中存在删除状态的数据，请重新选择！");
-                  return;
-              }
-          };
-          Joyin.ajax('reportCheck',{checkKeys:keyList.join(',')}, function(result){
-              window.checkResult = result;
-              Joyin.checkData(dataTitle, checkUrl, {checkKeys: keyList.join(',')});
-          })
-      
-      }
+
+    /*add by zhangliang 20201019 start*/
+    // 数据检查
+    $('#ProdDurationReg001_btn_submit').click(function(){
+        var paramObj = getSearchParams();
+        paramObj.opertionType = "checkData";
+        chbCommonCheck(table, paramObj, 'reportCheck', dataTitle, 'submitChb');
+    });
+    // 报送
+    $('#ProdDurationReg001_btn_submitChb').click(function(){
+        var paramObj = getSearchParams();
+        paramObj.opertionType = "submitChb";
+        chbCommonCheck(table, paramObj, 'reportCheck', dataTitle, 'submitChb');
+    });
+    // 重新报送
+    $('#ProdDurationReg001_btn_reSubmitChb').click(function(){
+        var paramObj = getSearchParams();
+        paramObj.opertionType = "reSubmitChb";
+        chbCommonCheck(table, paramObj, 'reportCheck', dataTitle, 'submitChb');
+    });
+    /*add by zhangliang 20201019 end*/
+
       /**
        * 确认导出之后的操作
        */

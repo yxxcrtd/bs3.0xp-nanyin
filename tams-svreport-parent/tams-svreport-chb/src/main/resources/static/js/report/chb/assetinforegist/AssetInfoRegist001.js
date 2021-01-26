@@ -1097,6 +1097,38 @@ $(function() {
         }
        
     });
+
+	/**start   中债一二期直连新加  add  by wangzehui  20201012  */
+	/**
+	 * 数据检查
+	 */
+	$("#AssetInfoRegist001_btn_checkData").click(function(){
+		var paramObj = getSearchParams();
+		paramObj.opertionType = "checkData";
+		paramObj.sendStatus = paramObj.submitStatus;
+		chbCommonCheck(getTable($('#assetType').val()), paramObj, 'submitBeforeCheck', dataTitle, 'submitChb');
+	});
+	/**
+	 * 报送
+	 */
+	$('#AssetInfoRegist001_btn_submit').click(function () {
+		var paramObj = getSearchParams();
+		paramObj.opertionType = "submitChb";
+		paramObj.sendStatus = paramObj.submitStatus;
+		chbCommonCheck(getTable($('#assetType').val()), paramObj, 'submitBeforeCheck', dataTitle, 'submitChb');
+	});
+	/**
+	 * 重新报送
+	 */
+	$('#AssetInfoRegist001_btn_reSubmit').click(function () {
+		var paramObj = getSearchParams();
+		paramObj.opertionType = "reSubmitChb";
+		paramObj.sendStatus = paramObj.submitStatus;
+		chbCommonCheck(getTable($('#assetType').val()), paramObj, 'submitBeforeCheck', dataTitle, 'submitChb');
+	});
+	/**end   中债一二期直连新加  add  by wangzehui  20201012  */
+
+
 	//判断字符是否为空的方法
 	function isEmpty(obj) {
 		if (typeof obj == "undefined" || obj == null || obj == "") {

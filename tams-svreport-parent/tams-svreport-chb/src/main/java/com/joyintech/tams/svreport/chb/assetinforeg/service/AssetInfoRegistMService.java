@@ -13,6 +13,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
+import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 
@@ -81,4 +82,18 @@ public class AssetInfoRegistMService  extends BaseService<AssetInfoRegist001Dto>
         		SvrServiceApplication.CHB_SERVICE_NAME + "/AssetInfoRegist/queryAssetCodeList",map,
         		SelectOptionDto.class);
     }
+    
+    public List<ExcelValidDto> reportCheck(Map<String, Object> pageParam) {
+        return restTemplate.postForList(
+                SvrServiceApplication.CHB_SERVICE_NAME + "/AssetInfoRegist/reportCheck", pageParam,
+                ExcelValidDto.class);
+    }
+
+	/**start  中债一二期直连代码  add  by  wangzehui  20201012*/
+	public Map<String,Object> submitBeforeCheck(Map<String, Object> param) {
+		return restTemplate.postForObject(
+				SvrServiceApplication.CHB_SERVICE_NAME + "/AssetInfoRegist/submitBeforeCheck", param,
+				Map.class);
+	}
+	/**end  中债一二期直连代码  add  by  wangzehui  20201012*/
 }

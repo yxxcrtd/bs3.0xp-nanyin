@@ -11,18 +11,33 @@
 package com.joyintech.tams.svreport.chb.astvalueregist.service;
 
 
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
-
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.export.ExportParam;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.BaseMapper;
+import com.joyintech.tams.common.base.entity.ChbAssetSubStatus;
 import com.joyintech.tams.common.svreport.chb.constant.CheckConfConstants;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.util.SvrMaptoEntityUtil;
 import com.joyintech.tams.common.svreport.datacheck.dao.ChbCheckRuleoutMapper;
 import com.joyintech.tams.common.svreport.datacheck.dto.ChbCheckRuleout;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import com.joyintech.tams.report.common.service.SvrCommonExportService;
 import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001Mapper;
 import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
+import com.joyintech.tams.svreport.chb.assetinforeg.dao.AssetInfoRegist001Mapper;
+import com.joyintech.tams.svreport.chb.astvalueregist.dao.ChbAstValSubHisMapper;
+import com.joyintech.tams.svreport.chb.astvalueregist.dao.ChbAstValueRegist001Mapper;
+import com.joyintech.tams.svreport.chb.astvalueregist.dto.ChbAstValueRegist001Dto;
 import com.joyintech.tams.svreport.chb.datacheck.beforesub.service.BeforeSubErrorCheck;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -32,25 +47,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.export.ExportParam;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.ChbAssetSubStatus;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.report.common.constant.SvrServiceApplication;
-import com.joyintech.tams.report.common.service.SvrCommonExportService;
-import com.joyintech.tams.svreport.chb.assetinforeg.dao.AssetInfoRegist001Mapper;
-import com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto;
-import com.joyintech.tams.svreport.chb.astvalueregist.dao.ChbAstValSubHisMapper;
-import com.joyintech.tams.svreport.chb.astvalueregist.dao.ChbAstValueRegist001Mapper;
-import com.joyintech.tams.svreport.chb.astvalueregist.dto.ChbAstValueRegist001Dto;
-import com.joyintech.tams.svreport.chb.botastpositionregist.dto.ChbBotAstPositionRegist001Dto;
-import com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto;
-import com.joyintech.tams.systemtools.util.CommonUtil;
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 资产估值信息登记service
@@ -104,6 +103,16 @@ public class ChbAstValueRegist001Service extends SvrCommonExportService<ChbAstVa
     private static final String IS_SUCESS_INVESTORS_CHECK = "01";
 	@Autowired
 	private BeforeSubErrorCheck beforeSubErrorCheck;
+
+	@Autowired
+	private SvrMaptoEntityUtil svrMaptoEntityUtil;
+	private String tableName = "CHB_AST_VAL_SUB";
+
+	/**
+	 * 中债基础数据mapper
+	 */
+	@Autowired
+	private BaseMapper baseMapper;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -750,6 +759,66 @@ public class ChbAstValueRegist001Service extends SvrCommonExportService<ChbAstVa
 		}
 		return listArr;
 	}
+
+	/**start    中债一二期报送直连  add by    wangzehui  20201012 */
+	public Map<String,Object> submitBeforeCheck(Map<String, Object> param) {
+		List<ExcelValidDto> result=new ArrayList<ExcelValidDto>();
+		List<ChbAstValueRegist001Dto> list=new ArrayList<>();
+		Map<String,Object> returnMap = new HashMap<>();
+		// 选择行数据时
+		if (param.containsKey("keyList")) {
+			String keyList = param.get("keyList").toString();
+			try {
+				list = JsonUtils.json2List(keyList,
+						ChbAstValueRegist001Dto.class);
+			}
+			catch (IOException e) {
+				// e.printStackTrace();
+				logger.error(e.getMessage(), e);
+			}
+		}else{
+			Page<ChbAstValueRegist001Dto> page = searchPage(param);
+			if(page!=null&&page.getRoot()!=null&&page.getRoot().size()>0){
+				list = page.getRoot();
+			}
+			//查询数据
+		}
+		if(CollectionUtils.isNotEmpty(list)){
+			List<CheckReport001Dto> resultlist  = check(null);
+			Map<String,CheckReport001Dto> checkmap = resultlist.stream().collect(Collectors.toMap(CheckReport001Dto::getRefseqno,(p)->p,(key1, key2)->key1));
+			int i=result.size();
+			for(ChbAstValueRegist001Dto chbAstValueRegist001Dto : list){
+				ExcelValidDto excelValidDto = new ExcelValidDto();
+				String validKey ="行内资产负债编码："+chbAstValueRegist001Dto.getAssetCode()+ GlobalConstant.COMMA
+						+"数据日期："+ DateUtil.format(chbAstValueRegist001Dto.getStatusDate())+ GlobalConstant.COMMA;
+				excelValidDto.setValidKey(validKey);
+				excelValidDto.setRowNum(String.valueOf(i));
+				excelValidDto.setDataTime(chbAstValueRegist001Dto.getUpdateTime());
+				excelValidDto.setIsLogicCheck(DictCodeList.是否_是.getValue());
+				excelValidDto.setOrgCode(chbAstValueRegist001Dto.getIssuePartyId());
+				excelValidDto.setCreateDept(chbAstValueRegist001Dto.getCreateDept());
+				excelValidDto.setCheckResult("02");
+				if(checkmap.get(chbAstValueRegist001Dto.getRegistSeqno())!=null){
+					excelValidDto.setCheckResult(checkmap.get(chbAstValueRegist001Dto.getRegistSeqno()).getCheckResult());
+					excelValidDto.setErrorInfo(checkmap.get(chbAstValueRegist001Dto.getRegistSeqno()).getErrorInfo());
+					excelValidDto.setWarnInfo(checkmap.get(chbAstValueRegist001Dto.getRegistSeqno()).getWarnInfo());
+					result.add(excelValidDto);
+				}else{
+					excelValidDto.setCheckResult("01");
+					result.add(excelValidDto);
+				}
+				i++;
+			}
+		}
+		else{
+			result.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "无报送数据", null));
+		}
+
+		returnMap.put("excelValidDtoList",result);
+		returnMap.put("resultList",list);
+		return  returnMap;
+	}
+
 	/**
 	 * @Description 检查登记表中小于今天所有未报送的数据
 	 * @return
@@ -790,4 +859,5 @@ public class ChbAstValueRegist001Service extends SvrCommonExportService<ChbAstVa
 		}
 		return resultList;
 	}
+	/**end    中债一二期报送直连  add by    wangzehui  20201012 */
 }

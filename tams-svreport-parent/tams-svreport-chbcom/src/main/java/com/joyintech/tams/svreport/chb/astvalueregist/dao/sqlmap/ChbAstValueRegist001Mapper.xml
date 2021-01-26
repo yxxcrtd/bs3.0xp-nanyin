@@ -73,13 +73,13 @@
              		#{submitFeedbackStatus,jdbcType=VARCHAR}
             	</foreach>	
 		 	</if>
-		 	<!-- modify by zhangliang 20201221 上面sendStatusList已经处理 -->
+		 	<!-- modify by zhangliang 20201221 上面sendStatusList、statusList已经处理 -->
 		 	<!--<if test="sendStatus != null  and sendStatus != ''">
 				and CAVS.SEND_STATUS = #{sendStatus,jdbcType=VARCHAR}
-			</if>-->
+			</if>
 			<if test="status != null  and status != ''">
 				and CAVS.STATUS = #{status,jdbcType=VARCHAR}
-			</if>
+			</if>-->
 			<if test="assetCodeLike != null and assetcodelike != ''">
 				and upper(CAVS.ASSET_CODE) like CONCAT(CONCAT('%',upper(#{assetCodeLike,jdbcType=VARCHAR})),'%')
 			</if>
@@ -190,12 +190,13 @@
              		#{submitFeedbackStatus,jdbcType=VARCHAR}
             	</foreach>	
 		 	</if>
-		 	<if test="sendStatus != null  and sendStatus != ''">
+			<!-- modify by zhangliang 20201221 上面sendStatusList、statusList已经处理 -->
+		 	<!--<if test="sendStatus != null  and sendStatus != ''">
 				and (CS.SEND_STATUS = #{sendStatus,jdbcType=VARCHAR} or cs.send_status is null)
 			</if>
 			<if test="status != null  and status != ''">
 				and CAVS.STATUS = #{status,jdbcType=VARCHAR}
-			</if>
+			</if>-->
 			<if test="assetCodeLike != null and assetcodelike != ''">
 				and upper(CAVS.ASSET_CODE) like CONCAT(CONCAT('%',upper(#{assetCodeLike,jdbcType=VARCHAR})),'%')
 			</if>
@@ -289,12 +290,13 @@
 	             		#{submitFeedbackStatus,jdbcType=VARCHAR}
 	            	</foreach>	
 			 	</if>
-			 	<if test="sendStatus != null  and sendStatus != ''">
+				<!-- modify by zhangliang 20201221 上面sendStatusList、statusList已经处理 -->
+			 	<!--<if test="sendStatus != null  and sendStatus != ''">
 					and (CS.SEND_STATUS = #{sendStatus,jdbcType=VARCHAR}  or cs.send_status is null)
 				</if>
 				<if test="status != null  and status != ''">
 					and CAVS.STATUS = #{status,jdbcType=VARCHAR}
-				</if>
+				</if>-->
 				<if test="assetCodeLike != null and assetcodelike != ''">
 					and upper(CAVS.ASSET_CODE) like CONCAT(CONCAT('%',upper(#{assetCodeLike,jdbcType=VARCHAR})),'%')
 				</if>

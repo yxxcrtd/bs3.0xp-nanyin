@@ -84,47 +84,7 @@ $(function() {
       $('#SvrProdTerminationRegist001_btn_chbexport').click(function() {
           exportExcel("0");
       });
-      //数据检查
-      $("#SvrProdTerminationRegist001_btn_checkData").click(function(){
-          var checkArr = table.getAllCheckedRows();
-          if(checkArr.length==0){
-              var submitStatus = $("#submitStatus").val();
-              var status = $("#status").val();
-              if (!(submitStatus && submitStatus.length == 1 && submitStatus[0] == '01')) {
-                  Joyin.error("只能对报送状态为未报送，数据状态为新建和修改的数据进行数据检查！");
-                  return;
-              }else if(status && status.indexOf('03') > -1){
-                  Joyin.error("只能对数据状态为新建和修改的数据进行报送！");
-                  return;
-              }
-              var paramObj = getSearchParams()
-              if(!status){
-                  paramObj.status = '01,02'; 
-              }
-              Joyin.ajax('reportCheck',paramObj, function(result){
-                  window.checkResult = result;
-                  Joyin.checkData(dataTitle, checkUrl, getSearchParams());
-              })
-              return;
-          }
-          var keyList = [];
-          for(var i=0;i<checkArr.length;i++){
-              keyList.push(checkArr[i].registSeqno);
-              if(checkArr[i].sendStatus !="01"){
-                  Joyin.error("数据检查只能检查未报送数据，请重新选择！");
-                  return;
-              }
-              else if(checkArr[i].status && checkArr[i].status.indexOf('03') > -1){
-                  Joyin.error("选择的报送数据中存在删除状态的数据，请重新选择！");
-                  return;
-              }
-          };
-          Joyin.ajax('reportCheck',{checkKeys:keyList.join(',')}, function(result){
-              window.checkResult = result;
-              Joyin.checkData(dataTitle, checkUrl, {checkKeys: keyList.join(',')});
-          })
-      });
-      
+
       //手工处理 
       $('#SvrProdTerminationRegist001_btn_manual').click(function() {
           var manArr=table.getAllCheckedRows();
@@ -298,64 +258,29 @@ $(function() {
                });
            });
       };
-      
-    //数据检查
-      function dateCheckMethod(){
-          var checkArr=table.getAllCheckedRows();
-          var param = {};
-          if(checkArr.length === 0) {
-              var sendStatus = $('#sendStatus').val();
-              var status = $('#status').val();
-  //            if(sendStatus!='01'){
-              if (!(sendStatus && sendStatus.length == 1 && sendStatus[0] == '01')) {
-                  Joyin.error("只能对报送状态为未报送，数据状态为新建和修改的数据进行数据检查！");
-                  return;
-              }
-  //            else if(status && status!='03'){
-  //            else if(status && status.includes('03')){
-              else if(status && status.indexOf('03') > -1){
-                  Joyin.error("只能对数据状态为新建和修改的数据进行数据检查！");
-                  return;
-              }
-              param = getSearchParams();
-              if(!status){
-                  param.status = '01,02'; 
-              }
-              param.isCheck = true;
-              Joyin.ajax('sendBeforeCheck',param, function(result){
-                  window.checkResult = result;
-                  Joyin.checkData('<h4 class="modal-title" id="myModalLabel">投资者持有信息数据检查 </h4>', 'sendBeforeCheck', getSearchParams());
-              })
-              return ;
-          }
-          var errorStatus;
-          $.each(checkArr,function(i,v){
-              if(v.sendStatusCode !="01"){
-                  Joyin.error("只能对报送状态为未报送的数据进行检查！");
-                  errorStatus = true;
-                  return;               
-              }
-  //            else if(v.statusCode && v.statusCode.includes('03')){
-              else if(v.statusCode && v.statusCode.indexOf('03') > -1){
-                  Joyin.error("只能对报送状态为未报送，数据状态为新建和修改的数据进行数据检查！");
-                  errorStatus = true;
-                  return;
-              }
-              v.sendStatus=v.sendStatusCode;
-              v.status=v.statusCode;
-              v.ccy=v.ccyCode;
-          });
-          if(errorStatus) return;
-          param.keyList = JSON.stringify(checkArr);
-          param.isCheck = true;
-          Joyin.ajax('sendBeforeCheck',param, function(result){
-              window.checkResult = result;
-              Joyin.checkData('<h4 class="modal-title" id="myModalLabel">投资者持有信息数据检查 </h4>', 'sendBeforeCheck', param);
-          })
-      
-      }
-      $('#SvrProdTerminationRegist001_btn_checkData1').click(dateCheckMethod);
-         // add by wangmin 20180827 end
+
+    /*add by zhangliang 20201019 start*/
+    // 数据检查
+    $('#SvrProdTerminationRegist001_btn_checkData').click(function(){
+        var paramObj = getSearchParams();
+        paramObj.opertionType = "checkData";
+        chbCommonCheck(table, paramObj, 'reportCheck', dataTitle, 'submitChb');
+    });
+    // 报送
+    $('#SvrProdTerminationRegist001_btn_submit').click(function(){
+        var paramObj = getSearchParams();
+        paramObj.opertionType = "submitChb";
+        chbCommonCheck(table, paramObj, 'reportCheck', dataTitle, 'submitChb');
+    });
+    // 重新发送
+    $('#SvrProdTerminationRegist001_btn_reSubmit').click(function(){
+        var paramObj = getSearchParams();
+        paramObj.opertionType = "reSubmitChb";
+        chbCommonCheck(table, paramObj, 'reportCheck', dataTitle, 'submitChb');
+    });
+    /*add by zhangliang 20201019 end*/
+
+      // add by wangmin 20180827 end
          
          function init(){
              if(isMain=='01'){

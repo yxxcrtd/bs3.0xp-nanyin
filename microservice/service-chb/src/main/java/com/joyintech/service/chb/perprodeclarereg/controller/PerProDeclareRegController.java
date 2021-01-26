@@ -39,7 +39,7 @@ public class PerProDeclareRegController{
     */
    @PostMapping("findPage/{page}/{length}")
    public Page<PerProDeclareRegDto> selectForPage(@RequestBody Map<String, Object> param) {
-       Page<PerProDeclareRegDto> page = perProDeclareReg001Service.selectForPage(param);
+       Page<PerProDeclareRegDto> page = perProDeclareReg001Service.selectForPage(param, true);
        return page;
    }
    
@@ -80,6 +80,20 @@ public class PerProDeclareRegController{
 	public List<PerProDeclareRegDto> selectAllData(@RequestBody Map<String, Object> map){
 		return perProDeclareReg001Service.selectAllData(map);
 	}
+	/**start  中债一二期报送直连  add by  dongxiangyang  20201010*/
+    /**
+     * 报送检查
+     * @return 检查结果
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("submitBeforeCheck")
+    public Map<String,Object> submitBeforeCheck(@RequestBody Map<String,Object> map) {
+        return perProDeclareReg001Service.submitBeforeCheck(map);
+    }
+    
+	/**end  中债一二期报送直连  add by  dongxiangyang  20201010*/
+
 	/**
 	 *  查询行内标识码
 	 * @param map 入参

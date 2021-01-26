@@ -19,6 +19,8 @@
 				id="InvestTradeRegist001_btn_chbexport"
 				class="layui-btn layui-btn-sm btn-export btn-default">导出中债Excel</a>
             <a id="InvestTradeRegist001_btn_exportDel" class="layui-btn layui-btn-sm btn-export btn-default">导出删除Excel</a>
+            <a id="InvestTradeRegist001_btn_submit" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-sent"></i>报送</a>
+            <a id="InvestTradeRegist001_btn_reSubmit" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-sent"></i>重新报送</a>
 		</div>
 		<div class="joyin-form-wrap joyin-filter-form condition-area" line="2">
 			<form class="layui-form" id="searchForm">
@@ -162,12 +164,13 @@
             var sendStatusT=/*[[${sendStatusT}]]*/'';
         	var validKey=/*[[${validKey}]]*/'';
         	var submitFeedbackStatus=/*[[${submitFeedbackStatus}]]*/'';
-            var dataTitle = '<h4 class="modal-title" id="myModalLabel">交易登记数据检查 </h4>';
+            var dataTitle = '<h4 class="modal-title" id="myModalLabel">资产交易登记数据检查 </h4>';
             var checkUrl = '/chb/submitmanagement/investtraderegist/InvestTradeRegist001/reportCheck';
         </script>
 		<script
 			data-th-src="@{/js/report/chb/investtraderegist/InvestTradeRegist001.js}"
 			type="text/javascript"></script>
+        <script data-th-src="@{/js/report/chb/datacheck/totalcheck/ChbCommonCheck.js}" type="text/javascript"></script>
 		<script data-th-src="@{/js/report/report-common.js}"
 			type="text/javascript"></script>
 	</div>

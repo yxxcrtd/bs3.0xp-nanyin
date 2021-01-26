@@ -85,4 +85,18 @@ public class ChbAstValueRegistController{
     public List<ChbAstValueRegist001Dto> queryExportListByKeys(@RequestBody List<ChbAstValueRegist001Dto> registList){
 		return chbAstValueRegist001Service.queryExportListByKeys(registList);
     }
+
+	/**start  中债一二期报送直连  add by  wangzehui  20201012*/
+	/**
+	 * 报送检查
+	 * @return 检查结果
+	 * @see
+	 * @since 1.0
+	 */
+	@PostMapping("submitBeforeCheck")
+	public Map<String,Object> submitBeforeCheck(@RequestBody Map<String,Object> map) {
+		return chbAstValueRegist001Service.submitBeforeCheck(map);
+	}
+
+	/**end  中债一二期报送直连  add by  wangzehui  20201012*/
 }

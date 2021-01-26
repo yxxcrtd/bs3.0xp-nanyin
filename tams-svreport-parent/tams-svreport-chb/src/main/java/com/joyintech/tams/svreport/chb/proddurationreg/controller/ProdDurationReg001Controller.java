@@ -1,11 +1,20 @@
 package com.joyintech.tams.svreport.chb.proddurationreg.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.component.svrreport.chb.dto.ChbPrdDealSubDto;
+import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.svreport.chbsd.proddealsub.service.SdProdDealBatchService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,6 +56,14 @@ public class ProdDurationReg001Controller extends BaseController {
 	private ProdDurationReg001Service prodDurationReg001Service;
 	@Autowired
 	private ProdDurationRegMService prodDurationRegMService;
+
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(getClass());
+
+	@Autowired
+	private SdProdDealBatchService sdProdDealBatchService;
 	/**
      * 页面初始化
      * {@inheritDoc}
@@ -143,7 +160,13 @@ public class ProdDurationReg001Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = "/cancelMannul", method = RequestMethod.POST)
 	public AjaxResult cancelMannul(@RequestBody Map<String, Object> map) {
-		prodDurationRegMService.cancelMannul(map);
+		String result = prodDurationRegMService.cancelMannul(map);
+		if("fail".equals(result)){
+			AjaxResult ajaxresult =  new AjaxResult("有未报送的数据", MessageType.错误消息);
+			ajaxresult.setStatuCode(HttpStatus.OK.value());
+			return ajaxresult;
+		}
+
 		return new AjaxResult(this.getMessage("REPORT_COMMON_I_0008"));
 	}
 	
@@ -169,7 +192,55 @@ public class ProdDurationReg001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("reportCheck")
-    public List<ExcelValidDto> reportCheck() {
+    public Map<String,Object> reportCheck() {
         return prodDurationRegMService.reportCheck(RequestUtil.getPageParam());
     }
+
+	/**start  中债一二期直连代码  add  by  wangzehui  20201010*/
+	/**
+	 * 中债直连报送
+	 *
+	 * @param map
+	 *            传入需要报送的主键
+	 * @return 反馈信息
+	 * @see
+	 * @since 1.0
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/submitChb", method = RequestMethod.POST)
+	public AjaxResult doSubmit(@RequestBody Map<String, Object> param) throws Exception {
+
+		List<ProdDurationReg001Dto> list=new ArrayList<ProdDurationReg001Dto>();
+		// 选择行数据时
+		if (param.containsKey("keyList")) {
+			String keyList = param.get("keyList").toString();
+			try {
+				list = JsonUtils.json2List(keyList,
+						ProdDurationReg001Dto.class);
+			}
+			catch (IOException e) {
+				// e.printStackTrace();
+				logger.error(e.getMessage(), e);
+			}
+		}else{
+			Page<ProdDurationReg001Dto> page = prodDurationRegMService.selectForPage(RequestUtil.getPageParam());
+			if(page!=null&&page.getRoot()!=null&&page.getRoot().size()>0){
+				list = page.getRoot();
+			}
+			//查询数据
+		}
+		//报文拼接：2、进行数据结构转化，把[1]中取得的List，转化为报文拼接组件中调用方法的数据结构类
+		List<ChbPrdDealSubDto> dataList = new ArrayList<ChbPrdDealSubDto>();
+		for(ProdDurationReg001Dto sdDto:list){
+			ChbPrdDealSubDto target = new ChbPrdDealSubDto();
+			BeanUtil.copyPropertiesIgnoreNull(target, sdDto);
+			dataList.add(target);
+		}
+
+		sdProdDealBatchService.sendBatchCommon(dataList);
+
+		return new AjaxResult(this.getMessage("REPORT_COMMON_I_0018"));
+	}
+
+	/**end  中债一二期直连代码  add  by  wangzehui  20201012*/
 }
