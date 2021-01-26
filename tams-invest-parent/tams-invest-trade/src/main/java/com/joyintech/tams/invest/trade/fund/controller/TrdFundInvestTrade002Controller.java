@@ -349,8 +349,11 @@ public class TrdFundInvestTrade002Controller extends BaseController {
          * this.getPageId()); if(StringUtil.isNotEmpty(str)){ AjaxResult res= new AjaxResult(); res.setMessage(str, MessageType.错误消息); return res; } }
          */
 
-        AjaxResult ar = commonCheck(result, dto.getOperateType());
+        AjaxResult ar = new AjaxResult();
         List<JoyinMessage> joyinMessages = new ArrayList<>();
+        if (!StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
+            ar = commonCheck(result, dto.getOperateType());
+        }
         ar.setJoyinMessages(joyinMessages);
         if (DictCodeList.交易方向_买入.getValue().equals(dto.getPs()) || DictCodeList.交易方向_申购.getValue().equals(dto.getPs())) {
             if (StringUtil.isNotEmpty(dto.getChlId()) && DictCodeListExt2.划款方式_一次性划款.getValue().equals(dto.getPayType())) {

@@ -366,7 +366,7 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
                 }
             }
         }
-        else if (StringUtil.equals(dto.getOperateType(), "submit")) {
+        else if (StringUtil.equals(dto.getOperateType(), "submit") && !StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
             if (StringUtil.isNotEmpty(entrustId) && tradeAmt != null) {
                 Map<String, Object> resultMap = trdFundInvestTrade002Service.selectEntrustAmt(param);
                 if (resultMap != null) {
