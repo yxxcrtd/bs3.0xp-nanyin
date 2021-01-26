@@ -1099,6 +1099,9 @@ $(function () {
             if (entrustId) {
                 $('#portfolioId').attr('disabled', true);
                 $('#ps').attr('disabled', true);
+                //add by 马数凯 20210126 ZGBSS-280 start
+                $('#chlId').attr('disabled', true);
+                //add by 马数凯 20210126 ZGBSS-280 end
                 var data = $('#finprodId').select2('data')[0].object;
                 if (data && data.finprodId) {
                     $('#finprodId').attr('disabled', true);
@@ -1110,6 +1113,9 @@ $(function () {
                 $('#portfolioId').attr('disabled', false);
                 $('#ps').attr('disabled', false);
                 $('#finprodId').attr('disabled', false);
+                //add by 马数凯 20210126 ZGBSS-280 start
+                $('#chlId').attr('disabled', false);
+                //add by 马数凯 20210126 ZGBSS-280 end
             }
         });
 
