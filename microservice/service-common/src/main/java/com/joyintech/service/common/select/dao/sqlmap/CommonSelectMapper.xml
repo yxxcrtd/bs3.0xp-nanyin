@@ -723,21 +723,23 @@
                 AND TT1.EXERCISE_DATE > T1.EXERCISE_DATE
             )
             <if test="initValue == null or initValue == ''">
-                AND NOT EXISTS (
-                    SELECT 1 FROM TRD_FIN_PRODUCT_DEAL_TOTAL TT WHERE TT.FINPROD_ID = A.FINPROD_ID
-                    AND TT.VDATE = T1.VDATE AND TT.MDATE = T1.MDATE AND TT.PS='T39'
-                    AND TT.IS_CANCEL='N' AND TT.TRADE_STATUS ='01'
-                <if test="chlId != null and chlId != ''">
-                and TT.CHL_ID=#{chlId}
+                <if test="finprodType != 'F01'">
+                    AND NOT EXISTS (
+                        SELECT 1 FROM TRD_FIN_PRODUCT_DEAL_TOTAL TT WHERE TT.FINPROD_ID = A.FINPROD_ID
+                        AND TT.VDATE = T1.VDATE AND TT.MDATE = T1.MDATE AND TT.PS='T39'
+                        AND TT.IS_CANCEL='N' AND TT.TRADE_STATUS ='01'
+                    <if test="chlId != null and chlId != ''">
+                    and TT.CHL_ID=#{chlId}
+                    </if>
+                    )
+                    AND NOT EXISTS (
+                        SELECT 1 FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL TT WHERE TT.FINPROD_ID = A.FINPROD_ID
+                        AND TT.VDATE = T1.VDATE AND TT.MDATE = T1.MDATE AND TT.PS='T39'
+                    <if test="workflowId != null and workflowId != ''">
+                        AND TT.WORKFLOW_ID != #{workflowId}
+                    </if>
+                    )
                 </if>
-                )
-                AND NOT EXISTS (
-                    SELECT 1 FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL TT WHERE TT.FINPROD_ID = A.FINPROD_ID
-                    AND TT.VDATE = T1.VDATE AND TT.MDATE = T1.MDATE AND TT.PS='T39'
-                <if test="workflowId != null and workflowId != ''">
-                    AND TT.WORKFLOW_ID != #{workflowId}
-                </if>
-                )
             </if>
         </if>
         <where>
