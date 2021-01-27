@@ -822,6 +822,14 @@ public class InterfRiskRdsDto implements IRiskRds {
 		this.tradeAmtReal = tradeAmtReal;
 	}
 
+	public Boolean getNotCalcAmount() {
+		return notCalcAmount;
+	}
+
+	public void setNotCalcAmount(Boolean notCalcAmount) {
+		this.notCalcAmount = notCalcAmount;
+	}
+
 	/**
 	 * 设置期限变量，非标用此变量作为资产的存续时长
 	 */
@@ -832,4 +840,6 @@ public class InterfRiskRdsDto implements IRiskRds {
 	 */
 	@JsonSerialize(using=BigDecimalSerializer.class)
 	private BigDecimal tradeAmtReal;
+	
+	private Boolean notCalcAmount;
 }
