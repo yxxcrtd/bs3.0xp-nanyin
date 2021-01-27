@@ -70,15 +70,15 @@
             var assetValuePosit=$('#assetType2').val();
             if(assetValuePosit=='1004'||assetValuePosit=='1005'){
                 //存款类型置灰不可修改
-                $("#SvrBussRepDepositInfoDto_repDepoType").val('').attr("disabled",true);
+                $("#svrBussRepDepositInfoDto_repDepoType").val('').attr("disabled",true);
             }else{
-                $("#SvrBussRepDepositInfoDto_repDepoType").attr("disabled",false);
+                $("#svrBussRepDepositInfoDto_repDepoType").attr("disabled",false);
             }
             if(assetValuePosit=='1002'||assetValuePosit=='1004'){
                //资金存入银行置灰不可修改
-                $("#SvrBussRepDepositInfoDto_bankName").val('').attr("disabled",true);
+                $("#svrBussRepDepositInfoDto_bankName").val('').attr("disabled",true);
             }else{
-                $("#SvrBussRepDepositInfoDto_bankName").attr("disabled",false);
+                $("#svrBussRepDepositInfoDto_bankName").attr("disabled",false);
             }
         }
         starDeposit();
@@ -89,11 +89,11 @@
          var  depoType=$("#SvrBussRepDepositInfoDto_repDepoType").val();
          if(depoType!='06'){
              //结构性存款挂钩标的类别/结构性存款挂钩标。该字段清空，且置灰不可修改
-             $("#SvrBussRepDepositInfoDto_repTargetType").val('').attr("disabled",true);
-             $("#SvrBussRepDepositInfoDto_repTarget").val('').attr("disabled",true);
+             $("#svrBussRepDepositInfoDto_repTargetType").val('').attr("disabled",true);
+             $("#svrBussRepDepositInfoDto_repTarget").val('').attr("disabled",true);
          }else{
-             $("#SvrBussRepDepositInfoDto_repTargetType").attr("disabled",false);
-             $("#SvrBussRepDepositInfoDto_repTarget").attr("disabled",false);
+             $("#svrBussRepDepositInfoDto_repTargetType").attr("disabled",false);
+             $("#svrBussRepDepositInfoDto_repTarget").attr("disabled",false);
          }
         });
     });

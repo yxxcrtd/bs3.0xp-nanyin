@@ -36,11 +36,11 @@
             var assetTvalueBill=$('#assetType2').val();
             if(assetTvalueBill=='1210'){
                 //类型默认05置灰不可修改
-                $("#SvrBussRepAssetAstBillInfoDto_notstandSecType").val('05').trigger("change");
-                $("#SvrBussRepAssetAstBillInfoDto_notstandSecType").attr("disabled",true);
+                $("#svrBussRepAssetAstBillInfoDto_notstandSecType").val('05').trigger("change");
+                $("#svrBussRepAssetAstBillInfoDto_notstandSecType").attr("disabled",true);
             }else if(assetTvalueBill=='1201'){
-                $("#SvrBussRepAssetAstBillInfoDto_notstandSecType").val('').trigger("change");
-                $("#SvrBussRepAssetAstBillInfoDto_notstandSecType").attr("disabled",false);
+                $("#svrBussRepAssetAstBillInfoDto_notstandSecType").val('').trigger("change");
+                $("#svrBussRepAssetAstBillInfoDto_notstandSecType").attr("disabled",false);
             }
         }
         starFinaciall();

@@ -22,7 +22,7 @@
 						<!--add by mashukai FIX BUG TISHKBS-1465发行金额设为必填 20201110 start -->
 						<input type="text" data-fixtype="2" unit="1"
 							   class="layui-input form-input text-money" id="issueAmt"
-							   name="issueAmt" data-th-value="${entity?.nomCapi}"
+							   th:name="|${entityName}.issueAmt|" data-th-value="${entity?.nomCapi}"
 							   data-moneymemory="" data-th-data-textrange="2"
 							   required="required">
 						<!--add by mashukai FIX BUG TISHKBS-1465发行金额设为必填 20201110 end -->

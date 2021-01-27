@@ -36,24 +36,24 @@
             var assetTvalueEquity=$('#assetType2').val();
             //权益类资产
             if(assetTvalueEquity=='1305'||assetTvalueEquity=='1302'){
-                $("#SvrBussRepEquityInfoDto_equityQuit").val('').trigger("change");
-                $("#SvrBussRepEquityInfoDto_equityQuit").attr("disabled",true);
+                $("#svrBussRepEquityInfoDto_equityQuit").val('').trigger("change");
+                $("#svrBussRepEquityInfoDto_equityQuit").attr("disabled",true);
             }else if(assetTvalueEquity=='1301'){
-                $("#SvrBussRepEquityInfoDto_equityQuit").attr("disabled",false);
+                $("#svrBussRepEquityInfoDto_equityQuit").attr("disabled",false);
             }
         }
         var  sharesTypeChangeType= function(){
              // 股票类型”选择“02 优先股”时必填，否则置灰不可填
-            if($("#SvrBussRepEquityInfoDto_sharesType").val()!='02'){
-                $("#SvrBussRepEquityInfoDto_bankSecPrefer").val('').attr("disabled",true).trigger("change");
+            if($("#svrBussRepEquityInfoDto_sharesType").val()!='02'){
+                $("#svrBussRepEquityInfoDto_bankSecPrefer").val('').attr("disabled",true).trigger("change");
             }else{
-                $("#SvrBussRepEquityInfoDto_bankSecPrefer").attr("disabled",false)
+                $("#svrBussRepEquityInfoDto_bankSecPrefer").attr("disabled",false)
             }
         }
 
         starFinaciall();
         initBussRepEquity();
-        $("#SvrBussRepEquityInfoDto_sharesType").change(function(){
+        $("#svrBussRepEquityInfoDto_sharesType").change(function(){
             sharesTypeChangeType();
         });
 

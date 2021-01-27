@@ -45,7 +45,7 @@ var QueryFunc=function(){
         var obj = JSON.parse(AssetTypeListLink) ;
         if(obj["01"].indexOf(repAssetType)>=0){
             //本行/他行存款||大额存单
-            $("#SvrBussRepDepositInfoDto_div").show();
+            $("#svrBussRepDepositInfoDto_div").show();
         }else if(obj["02"].indexOf(repAssetType)>=0){
             //拆放同业/买入返售（资产）||同业拆入/卖出回购（负债）
             $("#svrBussRepPlacementInfo_div").show();
@@ -111,15 +111,15 @@ var QueryFunc=function(){
             //本行/他行存款||大额存单
             if(repAssetType=='1004'||repAssetType=='1005'){
                 //存款类型置灰不可修改
-                $("#SvrBussRepDepositInfoDto_repDepoType").val('').attr("disabled",true);
+                $("#svrBussRepDepositInfoDto_repDepoType").val('').attr("disabled",true);
             }else{
-                $("#SvrBussRepDepositInfoDto_repDepoType").attr("disabled",false);
+                $("#svrBussRepDepositInfoDto_repDepoType").attr("disabled",false);
             }
             if(repAssetType=='1002'||repAssetType=='1004'){
                 //资金存入银行置灰不可修改
-                $("#SvrBussRepDepositInfoDto_bankName").val('').attr("disabled",true);
+                $("#svrBussRepDepositInfoDto_bankName").val('').attr("disabled",true);
             }else{
-                $("#SvrBussRepDepositInfoDto_bankName").attr("disabled",false);
+                $("#svrBussRepDepositInfoDto_bankName").attr("disabled",false);
             }
         }else if(obj["02"].indexOf(repAssetType)>=0){
             //拆放同业/买入返售（资产）||同业拆入/卖出回购（负债）
@@ -149,124 +149,124 @@ var QueryFunc=function(){
             //非标准化债权类资产/信贷资产流转项目
             if(repAssetType=='2201'||repAssetType=='2202'){
                 //份额面值置灰不可填
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repPrinBaseamt").val('').trigger("change");
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repPrinBaseamt").attr("disabled",true);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPrinBaseamt").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPrinBaseamt").attr("disabled",true);
                 //法定到期日置灰不可填
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repFmdate").val('').trigger("change");
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repFmdate").attr("disabled",true);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repFmdate").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repFmdate").attr("disabled",true);
                 //计息类型置灰不可填
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repCouponSpecies").val('').trigger("change");
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repCouponSpecies").attr("disabled",true);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repCouponSpecies").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repCouponSpecies").attr("disabled",true);
                 //规则付息标识
-                $("#SvrBussRepAssetCreditNonstdInfoDto_interestRuleFlag").val('').trigger("change");
-                $("#SvrBussRepAssetCreditNonstdInfoDto_interestRuleFlag").attr("disabled",true);
+                $("#svrBussRepAssetCreditNonstdInfoDto_interestRuleFlag").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_interestRuleFlag").attr("disabled",true);
                 //利息发布方式
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repIntpayRule").val('').trigger("change");
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repIntpayRule").attr("disabled",true);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repIntpayRule").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repIntpayRule").attr("disabled",true);
                 //还本付息情况
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repRepayCmt").val('').trigger("change");
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repRepayCmt").attr("disabled",true);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repRepayCmt").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repRepayCmt").attr("disabled",true);
                 //是否有浮动因子
-                $("#SvrBussRepAssetCreditNonstdInfoDto_floatFactorFlag").val('').trigger("change");
-                $("#SvrBussRepAssetCreditNonstdInfoDto_floatFactorFlag").attr("disabled",true);
+                $("#svrBussRepAssetCreditNonstdInfoDto_floatFactorFlag").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_floatFactorFlag").attr("disabled",true);
                 //结构档次
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repStructGrade").val('').trigger("change");
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repStructGrade").attr("disabled",true);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repStructGrade").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repStructGrade").attr("disabled",true);
                 //还本方式
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repRepaymentType").val('').trigger("change");
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repRepaymentType").attr("disabled",true);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repRepaymentType").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repRepaymentType").attr("disabled",true);
                 //分期还本条款标识
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").val('').trigger("change");
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").attr("disabled",true);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").attr("disabled",true);
                 //基础资产类型
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repBasicAssetType").val('').trigger("change");
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repBasicAssetType").attr("disabled",true);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repBasicAssetType").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repBasicAssetType").attr("disabled",true);
                 //超额收益分配比例%
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repExcessProfitRate").val('').trigger("change");
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repExcessProfitRate").attr("disabled",true);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repExcessProfitRate").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repExcessProfitRate").attr("disabled",true);
                 //含权类型
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repContainType").val('').trigger("change");
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repContainType").attr("disabled",true);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repContainType").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repContainType").attr("disabled",true);
 
                 //永续条款类型
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repPerpetualClauseType").val('').trigger("change");
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repPerpetualClauseType").attr("disabled",true);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPerpetualClauseType").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPerpetualClauseType").attr("disabled",true);
 
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repDeferredInterestType").val('').trigger("change");
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repDeferredInterestType").attr("disabled",true);
-
-
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repPartRedemFlag").val('').trigger("change");
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repPartRedemFlag").attr("disabled",true);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repDeferredInterestType").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repDeferredInterestType").attr("disabled",true);
 
 
-                $("#SvrBussRepAssetCreditNonstdInfoDto_creditOrgCode").val('').trigger("change");
-                $("#SvrBussRepAssetCreditNonstdInfoDto_creditOrgCode").attr("disabled",true);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPartRedemFlag").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPartRedemFlag").attr("disabled",true);
 
-                $("#SvrBussRepAssetCreditNonstdInfoDto_creditOrgName").val('').trigger("change");
-                $("#SvrBussRepAssetCreditNonstdInfoDto_creditOrgName").attr("disabled",true);
+
+                $("#svrBussRepAssetCreditNonstdInfoDto_creditOrgCode").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_creditOrgCode").attr("disabled",true);
+
+                $("#svrBussRepAssetCreditNonstdInfoDto_creditOrgName").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_creditOrgName").attr("disabled",true);
 
 
 
             }else{
 
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repPrinBaseamt").attr("disabled",false);
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repFmdate").attr("disabled",false);
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repCouponSpecies").attr("disabled",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPrinBaseamt").attr("disabled",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repFmdate").attr("disabled",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repCouponSpecies").attr("disabled",false);
                 //规则付息标识
-                $("#SvrBussRepAssetCreditNonstdInfoDto_interestRuleFlag").attr("disabled",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_interestRuleFlag").attr("disabled",false);
                 //利息发布方式
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repIntpayRule").attr("disabled",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repIntpayRule").attr("disabled",false);
                 //还本付息情况
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repRepayCmt").attr("disabled",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repRepayCmt").attr("disabled",false);
                 //是否有浮动因子
-                $("#SvrBussRepAssetCreditNonstdInfoDto_floatFactorFlag").attr("disabled",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_floatFactorFlag").attr("disabled",false);
                 //结构档次
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repStructGrade").attr("disabled",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repStructGrade").attr("disabled",false);
                 //还本方式
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repRepaymentType").attr("disabled",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repRepaymentType").attr("disabled",false);
                 //分期还本条款标识
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").attr("disabled",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").attr("disabled",false);
                 //基础资产类型
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repBasicAssetType").attr("disabled",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repBasicAssetType").attr("disabled",false);
                 //超额收益分配比例%
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repExcessProfitRate").attr("disabled",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repExcessProfitRate").attr("disabled",false);
                 //含权类型
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repContainType").attr("disabled",false);
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repPerpetualClauseType").attr("disabled",false);
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repDeferredInterestType").attr("disabled",false);
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repPartRedemFlag").attr("disabled",false);
-                $("#SvrBussRepAssetCreditNonstdInfoDto_creditOrgCode").attr("disabled",false);
-                $("#SvrBussRepAssetCreditNonstdInfoDto_creditOrgName").attr("disabled",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repContainType").attr("disabled",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPerpetualClauseType").attr("disabled",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repDeferredInterestType").attr("disabled",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPartRedemFlag").attr("disabled",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_creditOrgCode").attr("disabled",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_creditOrgName").attr("disabled",false);
 
             }
             if(repAssetType=='2201'||repAssetType=='2202'||repAssetType=='1202'||repAssetType=='1203'
-            ||repAssetType=='1204'||repAssetType=='1206'||repAssetType=='1207'||repAssetType=='1208'||
+                ||repAssetType=='1204'||repAssetType=='1206'||repAssetType=='1207'||repAssetType=='1208'||
                 repAssetType=='1209'){
                 //收/受益权类型，下拉框选择空白，且置灰不可修改
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repProfitType").val('').trigger("change");
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repProfitType").attr("disabled",true);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repProfitType").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repProfitType").attr("disabled",true);
             }else{
-                $("#SvrBussRepAssetCreditNonstdInfoDto_repProfitType").attr("disabled",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repProfitType").attr("disabled",false);
             }
 
         }else if(obj["05"].indexOf(repAssetType)>=0){
             //票据类资产/信用证类资产
             if(repAssetType=='1210'){
                 //类型默认05置灰不可修改
-                $("#SvrBussRepAssetAstBillInfoDto_notstandSecType").val('05').attr('disabled', true).trigger('change');
+                $("#svrBussRepAssetAstBillInfoDto_notstandSecType").val('05').attr('disabled', true).trigger('change');
             }else{
-                $("#SvrBussRepAssetAstBillInfoDto_notstandSecType").val('').trigger("change");
-                $("#SvrBussRepAssetAstBillInfoDto_notstandSecType").attr("disabled",false);
+                $("#svrBussRepAssetAstBillInfoDto_notstandSecType").val('').trigger("change");
+                $("#svrBussRepAssetAstBillInfoDto_notstandSecType").attr("disabled",false);
 
             }
         }else if(obj["06"].indexOf(repAssetType)>=0){
             //权益类资产
             if(repAssetType=='1305'||repAssetType=='1302'){
-                $("#SvrBussRepEquityInfoDto_equityQuit").val('').trigger("change");
-                $("#SvrBussRepEquityInfoDto_equityQuit").attr("disabled",true);
+                $("#svrBussRepEquityInfoDto_equityQuit").val('').trigger("change");
+                $("#svrBussRepEquityInfoDto_equityQuit").attr("disabled",true);
             }else if(repAssetType=='1301'){
-                $("#SvrBussRepEquityInfoDto_equityQuit").attr("disabled",false);
+                $("#svrBussRepEquityInfoDto_equityQuit").attr("disabled",false);
             }
         }else if(obj["07"].indexOf(repAssetType)>=0){
             //金融衍生品
@@ -287,10 +287,10 @@ var QueryFunc=function(){
             //资产管理产品
             if(repAssetType=='1701'||repAssetType=='1703'||
                 repAssetType=='1704'||repAssetType=='1706'||repAssetType=='1702'){
-                $("#SvrBussRepAssetMngProdInfoDto_financialComissue").val('').trigger("change");
-                $("#SvrBussRepAssetMngProdInfoDto_financialComissue").attr("disabled",true);
+                $("#svrBussRepAssetMngProdInfoDto_financialComissue").val('').trigger("change");
+                $("#svrBussRepAssetMngProdInfoDto_financialComissue").attr("disabled",true);
             }else{
-                $("#SvrBussRepAssetMngProdInfoDto_financialComissue").attr("disabled",false);
+                $("#svrBussRepAssetMngProdInfoDto_financialComissue").attr("disabled",false);
             }
         }else if(obj["13"].indexOf(repAssetType)>=0){
             //商品类资产
@@ -306,19 +306,19 @@ var QueryFunc=function(){
             //公募基金/私募基金
             if(repAssetType=='2607'||repAssetType=='2610'||repAssetType=='2613'||
                 repAssetType=='2611'||repAssetType=='2612'||repAssetType=='1617'){
-                $("#SvrBussRepFundInfoDto_isGovernFund").val('02').trigger("change");
-                $("#SvrBussRepFundInfoDto_isGovernFund").attr("disabled",false);
+                $("#svrBussRepFundInfoDto_isGovernFund").val('02').trigger("change");
+                $("#svrBussRepFundInfoDto_isGovernFund").attr("disabled",false);
             }else{
-                $("#SvrBussRepFundInfoDto_isGovernFund").val('').trigger("change");
-                $("#SvrBussRepFundInfoDto_isGovernFund").attr("disabled",true);
+                $("#svrBussRepFundInfoDto_isGovernFund").val('').trigger("change");
+                $("#svrBussRepFundInfoDto_isGovernFund").attr("disabled",true);
             }
             if(repAssetType=='1106'||repAssetType=='2401'||repAssetType=='2402'||
                 repAssetType=='1303'||repAssetType=='2403'||repAssetType=='2499'){
-                 //公募
-                $("#SvrBussRepFundInfoDto_financialComissue").val('').trigger("change");
-                $("#SvrBussRepFundInfoDto_financialComissue").attr("disabled",true);
+                //公募
+                $("#svrBussRepFundInfoDto_financialComissue").val('').trigger("change");
+                $("#svrBussRepFundInfoDto_financialComissue").attr("disabled",true);
             }else{
-                $("#SvrBussRepFundInfoDto_financialComissue").attr("disabled",false);
+                $("#svrBussRepFundInfoDto_financialComissue").attr("disabled",false);
             }
         }
         star();

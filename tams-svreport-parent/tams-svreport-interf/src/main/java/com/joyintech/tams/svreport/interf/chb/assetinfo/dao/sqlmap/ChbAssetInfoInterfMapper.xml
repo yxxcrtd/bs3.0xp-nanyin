@@ -11908,7 +11908,11 @@
 				#{item.financialComissue,jdbcType=VARCHAR} FINANCIAL_COMISSUE,
 				#{item.bankSecCapital,jdbcType=VARCHAR} BANK_SEC_CAPITAL,
 				#{item.bankSecPrefer,jdbcType=VARCHAR}  BANK_SEC_PREFER,
-				#{item.bankSecPerpetual,jdbcType=VARCHAR} BANK_SEC_PERPETUAL
+				#{item.bankSecPerpetual,jdbcType=VARCHAR} BANK_SEC_PERPETUAL,
+                #{item.bankSecKzzq,jdbcType=VARCHAR} BANK_SEC_KZZQ,
+                #{item.bankSecZxzq,jdbcType=VARCHAR} BANK_SEC_ZXZQ,
+                #{item.isunlisted,jdbcType=VARCHAR} ISUNLISTED,
+                #{item.isBzhpj,jdbcType=VARCHAR} IS_BZHPJ
                 from dual
             </foreach>
         ) TEMP
@@ -12117,7 +12121,11 @@
             CII.FINANCIAL_COMISSUE=TEMP.FINANCIAL_COMISSUE,
             CII.BANK_SEC_CAPITAL=TEMP.BANK_SEC_CAPITAL,
             CII.BANK_SEC_PREFER=TEMP.BANK_SEC_PREFER,
-            CII.BANK_SEC_PERPETUAL=TEMP.BANK_SEC_PERPETUAL
+            CII.BANK_SEC_PERPETUAL=TEMP.BANK_SEC_PERPETUAL,
+            CII.BANK_SEC_KZZQ=TEMP.BANK_SEC_KZZQ,
+            CII.BANK_SEC_ZXZQ=TEMP.BANK_SEC_ZXZQ,
+            CII.ISUNLISTED=TEMP.ISUNLISTED,
+            CII.IS_BZHPJ=TEMP.IS_BZHPJ
         <!-- 未匹配到这插入 -->
         WHEN NOT MATCHED THEN 
         INSERT (ASSET_UUID, ASSET_CODE, ASSET_TYPE,
@@ -12210,7 +12218,12 @@
         FINANCIAL_COMISSUE,
         BANK_SEC_CAPITAL,
         BANK_SEC_PREFER,
-        BANK_SEC_PERPETUAL)  
+        BANK_SEC_PERPETUAL,
+        BANK_SEC_KZZQ,
+        BANK_SEC_ZXZQ,
+        ISUNLISTED,
+        IS_BZHPJ
+        )
         values(
             TEMP.ASSET_UUID,
             TEMP.ASSET_CODE,
@@ -12412,7 +12425,11 @@
             TEMP.FINANCIAL_COMISSUE,
             TEMP.BANK_SEC_CAPITAL,
             TEMP.BANK_SEC_PREFER,
-            TEMP.BANK_SEC_PERPETUAL
+            TEMP.BANK_SEC_PERPETUAL,
+            TEMP.BANK_SEC_KZZQ,
+            TEMP.BANK_SEC_ZXZQ,
+            TEMP.ISUNLISTED,
+            TEMP.IS_BZHPJ
         )
     </insert>
     

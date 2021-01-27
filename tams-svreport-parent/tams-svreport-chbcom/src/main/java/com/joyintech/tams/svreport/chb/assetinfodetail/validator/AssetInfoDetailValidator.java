@@ -10,10 +10,12 @@
  
 package com.joyintech.tams.svreport.chb.assetinfodetail.validator;
 
+import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -31,6 +33,9 @@ import java.util.List;
 public class AssetInfoDetailValidator implements BeanValidator{
 
 
+    @Autowired
+    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+
     /**
      * {@inheritDoc}
      */
@@ -39,40 +44,45 @@ public class AssetInfoDetailValidator implements BeanValidator{
         AssetInfoDetailDto dto = (AssetInfoDetailDto)value;
         List<ValidMessage> resultList = new ArrayList<ValidMessage>();
 
-        if(StringUtil.isEmpty(dto.getAssetCode())){
-            resultList.add(new ValidMessage("",
-                    getMessage("COMMON_E_0057", getMessage("资产编号"))));
-        }
-        if(StringUtil.isEmpty(dto.getAssetName())){
-            resultList.add(new ValidMessage("",
-                    getMessage("COMMON_E_0057", getMessage("资产名称"))));
-        }
-        if(!StringUtil.isNotEmpty(dto.getVdate())){
-            resultList.add(new ValidMessage("",
-                    getMessage("COMMON_E_0057", getMessage("起息日"))));
-        }
-        if(!StringUtil.isNotEmpty(dto.getMdate())){
-            resultList.add(new ValidMessage("",
-                    getMessage("COMMON_E_0057", getMessage("到期日"))));
-        }
-        if(StringUtil.isEmpty(dto.getOrgAssetType1())){
-            resultList.add(new ValidMessage("",
-                    getMessage("COMMON_E_0057", getMessage("资产一级分类"))));
-        }
+//        if(StringUtil.isEmpty(dto.getAssetCode())){
+//            resultList.add(new ValidMessage("",
+//                    getMessage("COMMON_E_0057", getMessage("资产编号"))));
+//        }
+//        if(StringUtil.isEmpty(dto.getAssetName())){
+//            resultList.add(new ValidMessage("",
+//                    getMessage("COMMON_E_0057", getMessage("资产名称"))));
+//        }
+//        if(!StringUtil.isNotEmpty(dto.getVdate())){
+//            resultList.add(new ValidMessage("",
+//                    getMessage("COMMON_E_0057", getMessage("起息日"))));
+//        }
+//        if(!StringUtil.isNotEmpty(dto.getMdate())){
+//            resultList.add(new ValidMessage("",
+//                    getMessage("COMMON_E_0057", getMessage("到期日"))));
+//        }
+//        if(StringUtil.isEmpty(dto.getOrgAssetType1())){
+//            resultList.add(new ValidMessage("",
+//                    getMessage("COMMON_E_0057", getMessage("资产一级分类"))));
+//        }
+//
+//        if(StringUtil.isEmpty(dto.getAssetType2())){
+//            resultList.add(new ValidMessage("",
+//                    getMessage("COMMON_E_0057", getMessage("资产负债二级类别"))));
+//        }
+//
+//        if(StringUtil.isEmpty(dto.getCcy())){
+//            resultList.add(new ValidMessage("",
+//                    getMessage("COMMON_E_0057", getMessage("币种"))));
+//        }
+//        if(StringUtil.isEmpty(dto.getTradeMarket())){
+//            resultList.add(new ValidMessage("",
+//                    getMessage("COMMON_E_0057", getMessage("市场机构代码"))));
+//        }
 
-        if(StringUtil.isEmpty(dto.getAssetType2())){
-            resultList.add(new ValidMessage("",
-                    getMessage("COMMON_E_0057", getMessage("资产负债二级类别"))));
-        }
+        // add by zhangliang 20210126 中债check调用 start
+        resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getAssetType2(), ValidMessage.class);
+        // add by zhangliang 20210126 中债check调用 end
 
-        if(StringUtil.isEmpty(dto.getCcy())){
-            resultList.add(new ValidMessage("",
-                    getMessage("COMMON_E_0057", getMessage("币种"))));
-        }
-        if(StringUtil.isEmpty(dto.getTradeMarket())){
-            resultList.add(new ValidMessage("",
-                    getMessage("COMMON_E_0057", getMessage("市场机构代码"))));
-        }
          return resultList;
     }
 

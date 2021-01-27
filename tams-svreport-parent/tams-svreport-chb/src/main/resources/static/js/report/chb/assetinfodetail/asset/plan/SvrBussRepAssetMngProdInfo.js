@@ -65,10 +65,10 @@
             //资产管理产品
             if(assetTvalueAssetMng=='1701'||assetTvalueAssetMng=='1703'||
                 assetTvalueAssetMng=='1704'||assetTvalueAssetMng=='1706'||assetTvalueAssetMng=='1702'){
-                $("#SvrBussRepAssetMngProdInfoDto_financialComissue").val('').trigger("change");
-                $("#SvrBussRepAssetMngProdInfoDto_financialComissue").attr("disabled",true);
+                $("#svrBussRepAssetMngProdInfoDto_financialComissue").val('').trigger("change");
+                $("#svrBussRepAssetMngProdInfoDto_financialComissue").attr("disabled",true);
             }else{
-                $("#SvrBussRepAssetMngProdInfoDto_financialComissue").attr("disabled",false);
+                $("#svrBussRepAssetMngProdInfoDto_financialComissue").attr("disabled",false);
             }
         }
         initAssetMng();
