@@ -17,6 +17,7 @@ import java.util.List;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.TrdFinProductDealTotal;
@@ -40,7 +41,8 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
  * @since 1.0
  */
 @PageId("PreTrdBondInvestTrade002")
-@ValidLogic(targetClass = PreTrdBondInvestTrade002DtoValidator.class, groups = ValidateGroupEdit.class)
+@ValidLogic(targetClass = PreTrdBondInvestTrade002DtoValidator.class, groups = {ValidateGroupEdit.class,
+        ValidateGroupDelete.class})
 public class PreTrdBondInvestTrade002Dto extends TrdFinProductDealTotal implements ProcessEntity {
 
     /**

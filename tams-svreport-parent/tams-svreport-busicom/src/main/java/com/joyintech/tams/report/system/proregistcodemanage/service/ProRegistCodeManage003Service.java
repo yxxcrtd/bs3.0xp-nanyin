@@ -76,15 +76,15 @@ public class ProRegistCodeManage003Service extends CommonExportService<ProRegist
     	    record.setRegCode(entity.getRegCode());    	    
     	    record.setVdate(entity.getVdate());
     	    record.setMdate(entity.getMdate());
-    	    if(StringUtil.equals(entity.getOperateMode(), "封闭式净值型")) {   	    	
-    	    	record.setOperateMode("01");
+    	    record.setOperateMode(entity.getOperateMode());
+    	   /* if(StringUtil.equals(entity.getOperateMode(), "封闭式净值型")) {   	    	
     	    }else if(StringUtil.equals(entity.getOperateMode(), "封闭式非净值型")) {
     	    	record.setOperateMode("02");
     	    }else if(StringUtil.equals(entity.getOperateMode(), "开放式净值型")) {
     	    	record.setOperateMode("03");
     	    }else if(StringUtil.equals(entity.getOperateMode(), "开放式非净值型")) {
     	    	record.setOperateMode("04");
-    	    }
+    	    }*/
     	    record.setOrgCode(CommonUtil.getOrgCode());
         	record.setDeptCode(CommonUtil.getDeptCode());
     		if (StringUtil.equals(entity.getOperateType(), "NEW")) {

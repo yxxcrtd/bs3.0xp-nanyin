@@ -19,14 +19,14 @@
             //产品登记编码
             regCode : regCode,
             //起息日开始
-            vdateStart : $('#ProRegistCodeManage001_vdate').startDate(),
+          //  vdateStart : $('#ProRegistCodeManage001_vdate').startDate(),
             //起息日结束
-            vdateEnd : $('#ProRegistCodeManage001_vdate').endDate(),
+           // vdateEnd : $('#ProRegistCodeManage001_vdate').endDate(),
 //            vdate : $('#ProRegistCodeManage001_vdate').val(),
             //到期日开始
-            mdateStart : $('#ProRegistCodeManage001_mdate').startDate(),
+          //  mdateStart : $('#ProRegistCodeManage001_mdate').startDate(),
             //到期日结束
-            mdateEnd : $('#ProRegistCodeManage001_mdate').endDate(),
+          //  mdateEnd : $('#ProRegistCodeManage001_mdate').endDate(),
 //            mdate : $('#ProRegistCodeManage001_mdate').val()
             //登记编码是否为空
             isNotNull : $("#ProRegistCodeManage001_isNotNull").prop("checked"),
@@ -47,12 +47,12 @@
             }
         },
         cols: [
-            { title: "产品代码", field:'prodId',width:'10%'},
-            { title: "产品名称", field:'prodName',width:'10%'},
+            { title: "产品代码", field:'prodId',width:'12%'},
+            { title: "产品名称", field:'prodName',width:'15%'},
             { title: "产品登记编码", field:'regCode',width:'10%'},
-            { title: "机构代码", field:'orgCode', visible:false,width:'10%'},
-            { title: "起息日", field:'vdate',width:'8%'},
-            { title: "到期日", field:'mdate',width:'8%'},
+            { title: "机构代码", field:'orgCode', visible:false,width:'12%'},
+            { title: "起息日", field:'vdate',width:'8%', visible:false},
+            { title: "到期日", field:'mdate',width:'8%', visible:false},
             { title: "产品运作模式", field:'operateMode',width:'10%'},
             { title: "募集开始日", field:'raiseVdate', visible: isSvr,width:'8%'},
             { title: "募集起始日期（从）", field:'raisePstrDate', visible: isSvr,width:'10%'},

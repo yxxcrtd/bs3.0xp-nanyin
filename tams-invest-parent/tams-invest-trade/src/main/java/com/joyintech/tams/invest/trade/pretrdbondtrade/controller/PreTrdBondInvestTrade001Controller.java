@@ -12,11 +12,14 @@ package com.joyintech.tams.invest.trade.pretrdbondtrade.controller;
 
 import javax.validation.Valid;
 
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -149,14 +152,15 @@ public class PreTrdBondInvestTrade001Controller extends BaseController {
      */
     @RequestMapping("checkRevoke")
     @ResponseBody
-    public AjaxResult check(@Valid @RequestBody TrdBondInvestTradeRevokeDto inputDto,
+    public AjaxResult check(@Validated({ValidateGroupDelete.class}) @RequestBody PreTrdBondInvestTrade002Dto inputDto,
                             BindingResult result) {
+
         return commonCheck(result, inputDto.getOperateType());
     }
 
     /**
      * 撤销
-     * @param inputDto 画面输入参数dto
+     * @param dto 画面输入参数dto
      * @return 撤销结果
      * @throws Exception
      * @see

@@ -40,7 +40,7 @@
 												data-th-text="#{FinProductBuild002.finprodName}">产品名称</label>
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" class="layui-input form-input" id="prodName"
-                                                name="prodName" placeholder="请输入内容" disabled
+                                                name="prodName" placeholder="请输入内容" 
                                                 data-th-placeholder="#{SysCommon.placeholder}" 
                                                 data-th-value="${entity?.prodName}" maxlength="60">
                                         </div>
@@ -57,24 +57,38 @@
                                                 data-th-value="${entity?.regCode}" maxlength="60">
                                         </div>
                                     </div>   
-                                    <div class="form-inline-wrap">
+                                     <div class="form-inline-wrap">
 							              <label class="layui-form-label form-label-wrap"
 								                     data-th-text="#{BussRepFinProductInfo.repOperateMode}">产品运作模式</label>
 							               <div class="layui-input-inline input-inline">
-                                            <input type="text" class="layui-input form-input" id="operateMode"
-                                                name="operateMode" placeholder="请输入内容" disabled
+								       <select th:id="operateMode"
+									   th:name="operateMode"
+									   class="layui-input form-input input-select"
+									   data-th-data-result="${SVR_OPERATEMODE_DECLARE}"
+									   placeholder="请输入内容"
+									   data-th-initValue="${entity?.operateMode}"
+									  data-th-placeholder="#{SysCommon.placeholder}" 
+							     	</select>
+							    </div>                             
+                            </div>  
+                          </div>                            
+                                 <div class="layui-form-item">
+                                  <div class="form-inline-wrap">
+                                        <label class="layui-form-label form-label-wrap"
+												data-th-text="#{FinProductBuild002.finprodName}">产品名称</label>
+                                        <div class="layui-input-inline input-inline">
+                                            <input type="text" style="visibility:hidden;" class="layui-input form-input" id="prodName"
+                                                name="prodName" placeholder="请输入内容" 
                                                 data-th-placeholder="#{SysCommon.placeholder}" 
-                                                data-th-value="${entity?.operateMode}" maxlength="60">
+                                                data-th-value="${entity?.prodName}" maxlength="60">
                                         </div>
-						     </div>                                    
-                            </div>                              
-                                <div class="layui-form-item">
-                                       <div class="form-inline-wrap">
+                                    </div>  
+                                       <!-- <div class="form-inline-wrap">
 											<label class="layui-form-label form-label-wrap"
 												data-th-text="#{FinProductBuild002.vdate}">起息日</label>
 											<div class="layui-input-inline input-inline">
 												<input type="text" name="vdate"
-													id="vdate"  disabled
+													id="vdate" 
 													class="layui-input form-input input-dateSelect"
 													data-th-value='${#dates.format(entity?.vdate,"yyyy-MM-dd")}'
 													>
@@ -86,13 +100,13 @@
 												data-th-text="#{FinProductBuild002.mdate}">到期日</label>
 											<div class="layui-input-inline input-inline">
 												<input type="text" name="mdate"
-													id="mdate"  disabled
+													id="mdate"  
 													class="layui-input form-input input-dateSelect"
 													data-th-value='${#dates.format(entity?.mdate,"yyyy-MM-dd")}'
 													>
 											</div>
-										</div>                        
-                                </div>
+										</div>                 -->  
+                                </div> 
                                
                                                    
                 <div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin: 40px 0 30px 0;">
