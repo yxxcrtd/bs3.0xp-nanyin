@@ -89,7 +89,7 @@ public class VatDrawProcessorBService {
     /**
      * 定义 明细数据小数位数 = 10
      */
-    private int decimalDigits = 14;
+    private int decimalDigits = 2;
 
     /**
      * 定义 明细数据位数处理方式 = 四舍五入
@@ -1950,32 +1950,6 @@ public class VatDrawProcessorBService {
                 }
                 
                 // KeyEnum.REMARK.getCode() = "增值税确认_确认利息收入税_直接投资时"
-                //若跑批日 = 产品到期日，则预估利息收入取科目余额
-                if(acctEntity.getHappenDate().equals(acctEntity.getEndDate())){
-                    // 获取科目余额 -【调用共通方法：科目余额汇总查询】
-                    SubjectBalanceSearchDto searchDto = new SubjectBalanceSearchDto();
-                    // 账套代码
-                    searchDto.setBooksetId(acctEntity.getBooksetId());
-                    // 定义当前基础科目性质
-                    List<String> baseSubjectNature = new ArrayList<>();
-                    baseSubjectNature.add(DictCodeBaseSubjectNatrue.预估利息收入税.getValue());
-                    // 基础科目性质
-                    searchDto.setBaseSubjectNatureList(baseSubjectNature);
-                    // 发生日
-                    searchDto.setHappenDate(acctEntity.getHappenDate());
-                    // 入账日
-                    searchDto.setBookDate(acctEntity.getBookDate());
-                    // 账务明细代码
-                    searchDto.setBokDetailId(acctEntity.getBokDetailId());
-                    List<SubjectBalance> subjectBalanceList = accountingCommonService.getSubjectBalanceExpectDirection(searchDto, DictCodeList.借贷方向_贷.getValue());
-
-                    // 获取科目余额
-                    BigDecimal kmye = BigDecimal.ZERO;
-                    if (subjectBalanceList != null && subjectBalanceList.size() > 0) {
-                        kmye = subjectBalanceList.get(0).getBalance();
-                    }
-                    carryAmt1 = kmye;
-                }
                 // 对应KEY
                 if (DictCodeListExt1.金融产品类型_通道.getValue().equals(acctEntity.getFinprodType())) {
                 	accountAmountMap.put(BookConstant.CHL_PI_ANT, carryAmt1);
@@ -2939,13 +2913,6 @@ public class VatDrawProcessorBService {
             tdyBalanceSum.setIncomeAmtAll(ArithmeticUtil.doAdd(tdyBalanceSum.getIncomeAmtAll(), maIncomeAmt));
             // 增值税额余额 = 增值税额余额 + 手工凭证对应项目
             tdyBalanceSum.setTaxAmt(ArithmeticUtil.doAdd(tdyBalanceSum.getTaxAmt(), maAmt));
-            //产品到期、预估利息收入的增值税余额清空
-            if(acctEntity.getHappenDate().equals(acctEntity.getEndDate())){
-                if (vatType.equals(DictCodeList.增值税类型_利息收入.getValue())
-                        &&DictCodeList.增值税_确认类型_预估计税.getValue().equals(tdyBalanceSum.getTaxPType())){
-                    tdyBalanceSum.setTaxAmt(BigDecimal.ZERO);
-                }
-            }
             // 增值税汇总入集合
             listTdyBalanceSum.add(tdyBalanceSum);
         }
