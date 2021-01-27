@@ -25,9 +25,9 @@ public enum  ChbInterfConfig {
 	
 	产品要素信息接口("CHB_PRD_BASEINFO"),
 	
-	资产基础指标信息接口("CHB_ASSET_INDEX"),
+	资产基础指标信息接口("CHB_ASSETS_BASIS_DATA"),
 	
-	产品申报信息接口("CHB_PRD_DECLARE"),
+	产品申报信息接口("CHB_PRD_DECLARE_INFO"),
 	
 	周期型产品余额接口("CHB_CPROD_BALANCE"),
 	

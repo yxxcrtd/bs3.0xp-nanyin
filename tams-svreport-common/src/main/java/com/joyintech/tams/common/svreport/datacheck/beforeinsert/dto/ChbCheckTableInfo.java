@@ -3,6 +3,8 @@
  */
 package com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto;
 
+import com.joyintech.framework.util.StringUtil;
+
 /**
  * 中债校验用的表名
  * 
@@ -21,9 +23,38 @@ public enum ChbCheckTableInfo {
     底层资产持仓信息登记表("CHB_BOT_AST_POS_SUB", true, null, new String[] {"POS_DATE", "ASSET_CODE", "PLAN_ASSET_ID"}),
     终止登记("CHB_PRD_END_SUB", true, "PROD_ID", new String[] {"PROD_ID"}),
 
+    /*文件接入*/
     资产要素登记表INFO("CHB_ASSET_INFO", true, "ASSET_CODE", new String[] {"ASSET_CODE"}),
     个人发行登记表INFO("CHB_PRD_BASEINFO", true, "PROD_ID", new String[] {"PROD_ID"}),
-    个人产品申报登记INFO("CHB_PRD_DECLARE", true, "PROD_INS_ID", new String[] {"PROD_INS_ID"});
+    个人产品申报登记INFO("CHB_PRD_DECLARE_INFO", true, "PROD_INS_ID", new String[] {"PROD_INS_ID"}),
+    底层资产持仓信息登记INFO("CHB_BOT_AST_POS", true, null, new String[] {"POS_DATE","ASSET_CODE","PLAN_ASSET_ID"}),
+
+	/*杭州TMP*/
+    募集总量登记TMP("CHB_PRD_RAISETOT_SUB_TMP", true, "PROD_ID", new String[] {"PROD_REGIST_CODE"}),
+    个人发行登记TMP("CHB_PRD_ISSUE_SUB_TMP", true, "PROD_ID", new String[] {"PROD_ID"}),
+    底层资产持仓信息登记TMP("CHB_BOT_AST_POS_SUB_TMP", true, null, new String[] {"PLAN_ASSET_ID", "ASSET_CODE", "POS_DATE"}),
+    投资交易表登记TMP("CHB_INVEST_TRADE_SUB_TMP", true, "TRADE_CODE", new String[] {"PROD_ID", "TRADE_CODE", "ASSET_CODE", "CUR_ASSET_TYPE"}),
+    资产估值信息登记TMP("CHB_AST_VAL_SUB_TMP", true, "ASSET_CODE", new String[] {"ASSET_CODE"}),
+    产品存续登记TMP("CHB_PRD_DEAL_SUB_TMP", true, "PROD_ID", new String[] {"PROD_REGIST_CODE", "MDATE"}),
+    个人产品申报登记TMP("CHB_PRD_DECLARE_SUB_TMP", true, "PROD_INS_ID", new String[] {"PROD_INS_ID"}),
+    终止登记TMP("CHB_PRD_END_SUB_TMP", true, "PROD_ID", new String[] {"PROD_ID"}),
+    资产要素登记TMP("CHB_ASSET_INFO_TMP", true, "ASSET_CODE", new String[] {"ASSET_CODE"});
+
+    /**
+     * 根据tableName获取枚举对象
+     * @param tableName 表名
+     * @return 枚举对象
+     */
+    public static ChbCheckTableInfo genChbCheckTableInfo(String tableName){
+        ChbCheckTableInfo[] values = ChbCheckTableInfo.values();
+        for (ChbCheckTableInfo code : values) {
+            if (StringUtil.equals(tableName, code.getTableName())) {
+                return code;
+            }
+        }
+        return null;
+    }
+
     /**
      * 表名
      */

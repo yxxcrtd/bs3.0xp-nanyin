@@ -57,6 +57,72 @@ public class CommonCodeCheckBatchService {
      */
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * 登记的入库前的代码检查
+     * 只做校验，不做其他处理
+     * @param  list 被检查的数据
+     * @param  tableInfo  检查的表名
+     */
+    public void codeCheckCommonOnly(List<Map<String, String>> list, ChbCheckTableInfo tableInfo){
+
+        Set<String> prodRegistCodeList = new HashSet<>();
+
+        Map<String, List<String>> prodRegistCodeMap = new HashMap<>();
+
+        List<Map<String, String>> newDataList = new ArrayList<>(list);
+        //循环处理待check数据
+        for (int i = list.size() - 1; i >= 0; i--){
+            Map<String, String> map=list.get(i);
+            switch (tableInfo) {
+                case 从业人员登记表:
+                    checkEmployeeSubInfo(map);
+                    break;
+                case 资产要素登记表:
+                case 资产要素登记表INFO:
+                case 资产要素登记TMP:
+                    checkAssetSubInfo(map);
+                    break;
+                case 个人发行登记表:
+                case 个人发行登记表INFO:
+                case 个人发行登记TMP:
+                    checkPrdoIssue(map, prodRegistCodeList);
+                    break;
+                case 募集总量登记:
+                case 募集总量登记TMP:
+                    checkProdRaisetot(map, prodRegistCodeList);
+                    break;
+                case 底层资产持仓信息登记表:
+                case 底层资产持仓信息登记INFO:
+                case 底层资产持仓信息登记TMP:
+                    checkBotAstPos(map, newDataList);
+                    break;
+                case 投资交易表登记:
+                case 投资交易表登记TMP:
+                    checkInvestTradeInfo(map, prodRegistCodeMap);
+                    break;
+                case 资产估值信息登记表:
+                case 资产估值信息登记TMP:
+                    checkAstValInfo(map, list);
+                    break;
+                case 产品存续登记表:
+                case 产品存续登记TMP:
+                    checkProdDeal(map, list);
+                    break;
+                case 个人产品申报登记:
+                case 个人产品申报登记INFO:
+                case 个人产品申报登记TMP:
+                    checkPrdoDeclare(map,list);
+                    break;
+                case 终止登记:
+                case 终止登记TMP:
+                    checkProdEndSubTmp(map,prodRegistCodeList);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
 	/**
 	 * 产品募集总量登记的入库前的代码检查
 	 * @param  list 被检查的数据
@@ -69,67 +135,24 @@ public class CommonCodeCheckBatchService {
         // 资产要素错误信息集合
         List<ChbAssetInfoErrodataWithBLOBs> chbAssetInfoErrorList = new ArrayList<ChbAssetInfoErrodataWithBLOBs>();
 
-        Map<String, List<String>> prodRegistCodeMap = new HashMap<>();
+        codeCheckCommonOnly(list, tableInfo);
 
-        List<Map<String, String>> newDataList = new ArrayList<>(list);
+        for (int i = list.size() - 1; i >= 0; i--){
+            Map<String, String> map=list.get(i);
 
-        Set<String> prodRegistCodeList = new HashSet<>();
-		//循环处理待check数据
-		for (int i = list.size() - 1; i >= 0; i--){
-			Map<String, String> map=list.get(i);
-//            // 日志表dataid
-//            String dataId = map.get(dataid);
-			switch (tableInfo) {
-            case 从业人员登记表:
-                checkEmployeeSubInfo(map);
-                break;
-            case 资产要素登记表:
-            case 资产要素登记表INFO:
-                checkAssetSubInfo(map);
-                break;
-            case 个人发行登记表:
-            case 个人发行登记表INFO:
-                checkPrdoIssue(map, prodRegistCodeList);
-                break;
-            case 募集总量登记:
-                checkProdRaisetot(map, prodRegistCodeList);
-                break;
-            case 底层资产持仓信息登记表:
-                checkBotAstPos(map, newDataList);
-//                // 采用资管计划代码+持仓日期+资产代码的格式
-//                dataId = StringUtil.defaultString(map.get("PLAN_ASSET_ID"), "")+ StringUtil.defaultString(map.get("ASSET_CODE"), "") + StringUtil.defaultString(map.get("POS_DATE"), "") ;
-                break;
-            case 投资交易表登记:
-                checkInvestTradeInfo(map, prodRegistCodeMap);
-                break;
-            case 资产估值信息登记表:
-                checkAstValInfo(map, list);
-                break;
-            case 产品存续登记表:
-                checkProdDeal(map, list);
-                break;
-            case 个人产品申报登记:
-            case 个人产品申报登记INFO:
-                checkPrdoDeclare(map,list);
-                break;
-            case 终止登记:
-                checkProdEndSubTmp(map,prodRegistCodeList);
-                break;
-            default:
-                break;
-            }
             // add by zhangliang 20210112 没有错误信息时删除key，防止后面错误判断
             if (map.containsKey("ERRMSG") && StringUtil.isEmpty(map.get("ERRMSG"))){
                 map.remove("ERRMSG");
             }
-			//如果代码错误校验有错误信息
-			ChbInterfErrodataWithBLOBs errodata = createChbInterfErrdata(StringUtil.isNotEmpty(fileName) ? fileName : tableInfo.getTableName(),
+
+            //如果代码错误校验有错误信息
+            ChbInterfErrodataWithBLOBs errodata = createChbInterfErrdata(StringUtil.isNotEmpty(fileName) ? fileName : tableInfo.getTableName(),
                     tableInfo.getTableName(), map,tableInfo.getBussinessKey(), tableInfo.getCheckEuplicatedKeys());
 
-			if(errodata != null) {
-			    erroList.add(errodata);
-			    list.remove(i);
-			}
+            if(errodata != null) {
+                erroList.add(errodata);
+                list.remove(i);
+            }
 
             if (StringUtil.equals(tableInfo.getTableName(), ChbCheckTableInfo.资产要素登记表INFO.getTableName())){
                 // 记录资产要素错误信息表
@@ -138,7 +161,7 @@ public class CommonCodeCheckBatchService {
                     chbAssetInfoErrorList.add(chbAssetInfoErrodata);
                 }
             }
-		}
+        }
 
 		//错误信息入库
 		if(!erroList.isEmpty() && StringUtil.equals(CacheUtil.getSysParam("INSERT_ERRDATA_MODE"), "01")){

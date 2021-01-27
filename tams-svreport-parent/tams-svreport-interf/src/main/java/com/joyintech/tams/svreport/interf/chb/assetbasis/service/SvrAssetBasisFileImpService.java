@@ -169,7 +169,7 @@ public class SvrAssetBasisFileImpService extends FileImpService{
 			ImpTable table = new ImpTable(ASSETBASISDATATABLENAME_2);
 			table.setColumns(ImportGenerator.createImpTableColumns(ASSETBASISDATATABLENAME_2));
 			success = excuteAssetBasisDataByStep(assetList, type, tmpPath, table);
-			Collection<File> files = FileUtils.listFiles(new File(tmpPath+"/CHB_ASSET_INDEX/"), new String[] { "tmp" }, false);
+			Collection<File> files = FileUtils.listFiles(new File(tmpPath+"/CHB_ASSETS_BASIS_DATA/"), new String[] { "tmp" }, false);
 			List<String> content = new ArrayList<>(listData.size());
 			String result = "";
 			for (File f : files) {
@@ -195,7 +195,7 @@ public class SvrAssetBasisFileImpService extends FileImpService{
 				// db2数据库处理
 				if (CollectionUtils.isNotEmpty(content)) {
 					try {
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_ASSET_INDEX/", content,
+						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_ASSETS_BASIS_DATA/", content,
 								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
 								reportSqlldrDatabaseName);
 					} catch (IOException | InterruptedException e) {
@@ -208,7 +208,7 @@ public class SvrAssetBasisFileImpService extends FileImpService{
 				// oracle原逻辑
 				if (CollectionUtils.isNotEmpty(content)) {
 					try {
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_ASSET_INDEX/", content,
+						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_ASSETS_BASIS_DATA/", content,
 								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
 								reportSqlldrDatabaseName);
 					} catch (IOException | InterruptedException e) {
@@ -265,7 +265,7 @@ public class SvrAssetBasisFileImpService extends FileImpService{
 				// 插入资产基础指标数据
 				insertBasisData(ListData);
 			} else {
-				createDataFile(tmpPath + "/CHB_ASSET_INDEX/CHB_ASSET_INDEX", ListData, table.getColumns());
+				createDataFile(tmpPath + "/CHB_ASSETS_BASIS_DATA/CHB_ASSETS_BASIS_DATA", ListData, table.getColumns());
 			}
 		}
 		return CollectionUtils.isNotEmpty(ListData);

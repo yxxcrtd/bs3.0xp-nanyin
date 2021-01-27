@@ -9,40 +9,40 @@
  */
 package com.joyintech.tams.svreport.infomanagement.service;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.Reader;
-import java.math.BigDecimal;
-import java.sql.Clob;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.base.intf.DataDictItem;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.ExportUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.FilterInformationDetailMapper;
+import com.joyintech.tams.common.base.dao.FilterInformationMapper;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
+import com.joyintech.tams.common.svreport.datacheck.dto.CheckRule;
+import com.joyintech.tams.common.svreport.datacheck.service.DataCheckService;
+import com.joyintech.tams.constant.*;
+import com.joyintech.tams.report.common.dao.BaseInformationMapper;
+import com.joyintech.tams.report.common.dao.ChbInfoMgrResultConfigMapper;
+import com.joyintech.tams.report.common.dao.ChbMgrTableInfoMapper;
+import com.joyintech.tams.report.common.dao.ColumnTypeMapper;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import com.joyintech.tams.report.common.util.ReportGlobalConstant;
+import com.joyintech.tams.report.common.util.SysDataUtil;
+import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.systemtools.dao.TamsBaseMapper;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
-
-import org.apache.axis2.databinding.types.soapencoding.Array;
-import org.apache.poi.hssf.usermodel.HSSFCell;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -57,43 +57,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.export.CommonExportService;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.dao.FilterInformationDetailMapper;
-import com.joyintech.tams.common.base.dao.FilterInformationMapper;
-import com.joyintech.tams.common.base.entity.BaseInformationDto;
-import com.joyintech.tams.common.base.entity.ChbInfoMgrResultConfig;
-import com.joyintech.tams.common.base.entity.ChbMgrTableInfo;
-import com.joyintech.tams.common.base.entity.ColumnTypeDto;
-import com.joyintech.tams.common.base.entity.FilterInformationDetailDto;
-import com.joyintech.tams.common.base.entity.FilterInformationDto;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.tams.common.svreport.datacheck.dto.CheckRule;
-import com.joyintech.tams.common.svreport.datacheck.service.DataCheckService;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.report.common.dao.BaseInformationMapper;
-import com.joyintech.tams.report.common.dao.ChbInfoMgrResultConfigMapper;
-import com.joyintech.tams.report.common.dao.ChbMgrTableInfoMapper;
-import com.joyintech.tams.report.common.dao.ColumnTypeMapper;
-import com.joyintech.tams.report.common.util.ReportGlobalConstant;
-import com.joyintech.tams.report.common.util.SysDataUtil;
-import com.joyintech.tams.report.interf.common.constant.DateUtil;
-import com.joyintech.tams.systemtools.util.CommonUtil;
-import com.joyintech.tools.collectors.JoyinCollectors;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.Reader;
+import java.math.BigDecimal;
+import java.sql.Clob;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 
 
@@ -123,8 +99,8 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 	// 资产要素字段数据临界值（该字段为备注所在的索引值）
 	private static final Integer CAI_BASE_COUNT = 274;
 	
-//	@Autowired
-//	private   CommonCodeCheckBatchService   commonCodeCheckBatchService;
+	@Autowired
+	private CommonCodeCheckBatchService commonCodeCheckBatchService;
 
 	@Autowired
 	private BaseInformationMapper baseInformationMapper;
@@ -2193,13 +2169,21 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             	// 已配置规则检查
             	//List<CheckRule> listRules = dataCheckService.queryCheckRules(dataObject);
             	List<CheckRule> listRules = dataCheckService.queryCheckRulesByDataTypeAndColumns(dataObject, checkColumnList);
-                List<Map<String, String>> listError = DataCheckService.checkDataList(dataMapList,listRules);
+                DataCheckService.checkDataList(dataMapList,listRules, false);
+
+                // add by zhangliang 20210127 添加代码校验 start
+				commonCodeCheckBatchService.codeCheckCommonOnly(dataMapList, ChbCheckTableInfo.genChbCheckTableInfo(tableId));
+				// add by zhangliang 20210127 添加代码校验 end
 //                listError.forEach(errorMap -> {
 //                	errorLists.add(errorMap.get("ERRMSG"));
 //                });
                 // 文件中有不符合规则配置的数据
-            	if (listError.size() > 0) {
-            		for (Map<String, String> map : listError) {
+            	if (dataMapList.size() > 0) {
+            		for (Map<String, String> map : dataMapList) {
+            			if(StringUtil.isEmpty(map.get("ERRMSG"))){
+            				continue;
+						}
+
 //业务主键凭借  List<String> bisinessPkList
             			/**start    添加错误提示"标识码"字段     add by  dongxiangyang 20201026 */
             			String  vailkey=getBusinessKeyStr(bisinessPkList, map);
