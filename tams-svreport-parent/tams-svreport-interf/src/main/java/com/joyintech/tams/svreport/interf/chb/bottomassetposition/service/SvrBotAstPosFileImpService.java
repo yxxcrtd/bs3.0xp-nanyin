@@ -20,7 +20,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -494,9 +493,8 @@ public class SvrBotAstPosFileImpService extends FileImpService{
 		// 解析成功，对数据list进行处理
 		if (!CollectionUtils.isEmpty(dataList)) {
 //			List<Map<String, String>>  listA =
-			checkDataCodeCheck(dataList, file.getFilename(), ChbCheckTableInfo.底层资产持仓信息登记INFO);
-//			checkData(dataList, file.getFilename(), InterfDefine.资管计划底层资产持仓接口数据.getCode(),
-//							InterfDefine.资管计划底层资产持仓接口数据.getCode(),null, DUPLICATIED_LIST);
+			checkData(dataList, file.getFilename(), InterfDefine.资管计划底层资产持仓接口数据.getCode(),
+							InterfDefine.资管计划底层资产持仓接口数据.getCode(),null, DUPLICATIED_LIST);
 //			dataList.addAll(listA);
 			if(CollectionUtils.isEmpty(dataList)){
 				return rs;
