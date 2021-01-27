@@ -175,7 +175,7 @@
 			<Cell order="171" name="资管计划发起人机构编码">partyCode</Cell>
 			<Cell order="172" name="资管计划登记编码">checkCode</Cell>
 			<Cell order="173" name="管理人">managerId12</Cell>
-			<Cell order="174" name="托管人">trusteeId12</Cell>
+			<Cell order="174" name="托管人">tgr12</Cell><!--trusteeId12导出模板解析失败。。。-->
 			<Cell order="175" name="金额">amt12</Cell>
 			<Cell order="176" name="资金实际投向">truActTypeName12</Cell>
 			<Cell order="177" name="资金运用方式">investType12</Cell>

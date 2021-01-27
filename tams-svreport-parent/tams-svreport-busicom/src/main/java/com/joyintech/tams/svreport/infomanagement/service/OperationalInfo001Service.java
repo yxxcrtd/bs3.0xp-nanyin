@@ -582,6 +582,29 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 	}
 
 	/**
+	 * 查询多选框参数
+	 *
+	 * @param param 表名和字段名
+	 * @return 多选框参数
+	 */
+	public String queryColumnInfoListCache(Map<String, Object> param) {
+		String tableId = (String) param.get("tableId");
+		String columnId = (String) param.get("columnId");
+		Map<String, String> data = new HashMap<String, String>();
+		String dictCode = baseInformationMapper.queryDictCode(tableId, columnId);
+		if (StringUtil.isNotEmpty(dictCode)){
+			DataDict reportDataDict = CacheUtil.getDictCode(dictCode);
+			if (reportDataDict != null && !StringUtil.isEmptyList(reportDataDict.getItems())){
+				List<DataDictItem> dictItemList = (List<DataDictItem>) reportDataDict.getItems();
+				dictItemList.forEach(selectOptionDto -> {
+					data.put(selectOptionDto.getItemCode(), selectOptionDto.getItemValue());
+				});
+			}
+		}
+		return JSON.toJSONString(data);
+	}
+
+	/**
 	 * 获取字段信息
 	 * 
 	 * @param param 页面传入信息
@@ -1531,7 +1554,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 				// 此行所存入的数据字典枚举值
 				String dictCode = enumIndexMap.get(index);
 				// 需要存入枚举列表的值
-				String[] dictArr = getDictCodeList(dictCode);
+				String[] dictArr = getDictCodeListCache(dictCode);
 				if(dictArr==null) {
 					continue;
 				}
@@ -1676,7 +1699,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 					// 此行所存入的数据字典枚举值
 					String dictCode = enumIndexMap.get(index);
 					// 需要存入枚举列表的值
-					String[] dictArr = getDictCodeList(dictCode);
+					String[] dictArr = getDictCodeListCache(dictCode);
 					if(dictArr==null) {
 						continue;
 					}
@@ -3214,6 +3237,29 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
     		return null;
     	}
     }
+
+	/**
+	 * @Title: getDictCodeList
+	 * @Description: (根据数据字典名称获取所有枚举值列表)
+	 * @param @param dictCode 数据字典名称
+	 * @param @return    参数 枚举值列表
+	 * @return String[]    返回类型 字符串数组
+	 * @throws
+	 */
+	private String[] getDictCodeListCache(String dictCode) {
+		DataDict dataDict = CacheUtil.getDictCode(dictCode);
+		if (dataDict != null && !StringUtil.isEmptyList(dataDict.getItems())){
+			String[] dictCodeArr = new String[dataDict.getItems().size()];
+			int i = 0;
+			for (DataDictItem dataDictItem : dataDict.getItems()){
+				dictCodeArr[i] = dataDictItem.getItemCode() + " " + dataDictItem.getItemValue();
+				i++;
+			}
+			return dictCodeArr;
+		} else {
+			return null;
+		}
+	}
     
     /**
     * @Title: getSelectBoxRef

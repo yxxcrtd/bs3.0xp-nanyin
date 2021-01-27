@@ -145,7 +145,7 @@ public class OperationalInfoController {
      */
     @PostMapping("/queryColumnInfoList")
     public String queryColumnInfoList(@RequestBody Map<String, Object> param){
-        return operationalInfo001Service.queryColumnInfoList(param);
+        return operationalInfo001Service.queryColumnInfoListCache(param);
     }
 
     /**
