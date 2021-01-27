@@ -86,9 +86,9 @@ public class ProdTerminationRegistMService extends BaseService<ProdTerminationRe
 	* @date: 2019年6月25日 上午10:27:36 
 	*/
 	@PostMapping("reportCheck")
-	public List<ExcelValidDto> reportCheck(Map<String, Object> map) {
-		return restTemplate.postForList(
+	public Map<String,Object> reportCheck(Map<String, Object> map) {
+		return restTemplate.postForObject(
 	       		SvrServiceApplication.CHB_SERVICE_NAME + "/ProdTerminationRegist/reportCheck", map,
-	       		ExcelValidDto.class);
+				Map.class);
 	}
 }

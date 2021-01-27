@@ -241,126 +241,33 @@ $(function() {
               });
           });
       };
-      
-    //数据检查
-      function dateCheckMethod(){
-          var checkArr=table.getAllCheckedRows();
-          var param = {};
-          if(checkArr.length === 0) {
-              var sendStatus = $('#sendStatus').val();
-              var status = $('#status').val();
-              alert(status+sendStatus);
-              if (!(sendStatus && sendStatus.length == 1 && sendStatus[0] == '01')) {
-                  Joyin.error("只能对报送状态为未报送，数据状态为新建和修改的数据进行数据检查！");
-                  return;
-              }
-              else if(status && status.indexOf('03') > -1){
-                  Joyin.error("只能对数据状态为新建和修改的数据进行数据检查！");
-                  return;
-              }
-              param = getSearchParams();
-              if(!status){
-                  param.status = '01,02'; 
-              }
-              param.isCheck = true;
-              Joyin.ajax('sendBeforeCheck',param, function(result){
-                  window.checkResult = result;
-                  Joyin.checkData('<h4 class="modal-title" id="myModalLabel">投资者持有信息数据检查 </h4>', 'sendBeforeCheck', getSearchParams());
-              })
-              return ;
-          }
-          var errorStatus;
-          $.each(checkArr,function(i,v){
-              if(v.sendStatus !="01"){
-                  Joyin.error("只能对报送状态为未报送的数据进行检查！");
-                  errorStatus = true;
-                  return;               
-              }
-  //            else if(v.statusCode && v.statusCode.includes('03')){
-              else if(v.status && v.status.indexOf('03') > -1){
-                  Joyin.error("只能对报送状态为未报送，数据状态为新建和修改的数据进行数据检查！");
-                  errorStatus = true;
-                  return;
-              }
-          });
-          if(errorStatus) return;
-          param.keyList = JSON.stringify(checkArr);
-          param.isCheck = true;
-          Joyin.ajax('sendBeforeCheck',param, function(result){
-              window.checkResult = result;
-              Joyin.checkData('<h4 class="modal-title" id="myModalLabel">投资者持有信息数据检查 </h4>', 'sendBeforeCheck', param);
-          })
-      
-      }
-      $('#ChbAstValueRegist001_btn_checkData').click(dateCheckMethod);
-      
-      /**
-       * 报送
-       */
-      $('#ChbAstValueRegist001_btn_submit').click(function(){
-          var rows = table.getAllCheckedRows();
-          if(rows.length === 0) {
-              var sendStatus = $('#sendStatus').val();
-              var status = $('#status').val();
-  //            if(sendStatus!='01'){
-              if (!(sendStatus && sendStatus.length == 1 && sendStatus[0] == '01')) {
-                  Joyin.error("只能报送报送状态为未报送的数据");
-                  return;
-              }
-  //            else if(status!='01'){
-  //                Joyin.error("只能报送数据状态为新增的数据");
-  //                return;
-  //            }
-  //            else if(status && status.includes('03')){
-              else if(status && status.indexOf('03') > -1){
-                  Joyin.error("只能对数据状态为新建和修改的数据进行报送！");
-                  return;
-              }
-              Joyin.ajax('sendBeforeCheck',getSearchParams(), function(result) {
-                  if(!result || result.length ==0){
-                      Joyin.confirm("按照已选择当前查询条件报送,是否确认！",function(){
-                          layui.layer.open({type:3});
-                          Joyin.ajaxJson('submitChb', getSearchParams(), function() {
-                            table.load();
-                            layui.layer.closeAll();
-                          });
-                      });
-                  }
-                  else{
-                      window.checkResult = result;
-                      Joyin.checkData('<h4 class="modal-title" id="myModalLabel">投资者持有信息数据检查 </h4>', 'sendBeforeCheck', getSearchParams());
-                  }
-              });
-              return ;
-          }
-          for(var i=0;i<rows.length;i++){
-              if(rows[i].sendStatus !="01"){
-                  Joyin.error("只能报送报送状态为未报送的数据");
-                  return;
-              }
-              else if(rows[i].status && rows[i].status.indexOf('03') > -1){
-                  Joyin.error("只能对报送状态为未报送，数据状态为新建和修改的数据进行报送！");
-                  return;
-              }
-          }
-          var keyList = [];
-          Joyin.ajax('sendBeforeCheck', {keyList: JSON.stringify(rows)}, function(result) {
-              if(!result || result.length ==0){
-                  Joyin.confirm("请确认是否要报送选中记录？", function() {
-                      layui.layer.open({type:3});
-                      Joyin.ajaxJson('submitChb', {keyList: JSON.stringify(rows)}, function() {
-                          table.load();
-                          layui.layer.closeAll();
-                      });
-                  })
-              }
-              else{
-                  window.checkResult = result;
-                  Joyin.checkData('<h4 class="modal-title" id="myModalLabel">投资者持有信息数据检查 </h4>', 'sendBeforeCheck', {keyList: JSON.stringify(rows)});
-              }
-          });
-      });
-      
+
+    /**start   中债一二期直连新加  add  by wangzehui  20201012  */
+    // 数据检查
+    $('#ChbAstValueRegist001_btn_checkData').click(function(){
+        var paramObj = getSearchParams();
+        paramObj.opertionType = "checkData";
+        paramObj.sendStatus = paramObj.sendStatus;
+        chbCommonCheck(table, paramObj, 'submitBeforeCheck', dataTitle, 'submitChb');
+    });
+    /**
+     * 报送
+     */
+    $('#ChbAstValueRegist001_btn_submit').click(function () {
+        var paramObj = getSearchParams();
+        paramObj.opertionType = "submitChb";
+        chbCommonCheck(table, paramObj, 'submitBeforeCheck', dataTitle, 'submitChb');
+    });
+    /**
+     * 重新发送
+     */
+    $('#ChbAstValueRegist001_btn_reSubmit').click(function () {
+        var paramObj = getSearchParams();
+        paramObj.opertionType = "reSubmitChb";
+        chbCommonCheck(table, paramObj, 'submitBeforeCheck', dataTitle, 'submitChb');
+    });
+    /**end   中债一二期直连新加  add  by wangzehui  20201012  */
+
       /**
        * 手工处理
        */

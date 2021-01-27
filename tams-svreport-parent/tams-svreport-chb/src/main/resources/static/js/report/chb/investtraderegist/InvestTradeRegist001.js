@@ -260,51 +260,34 @@ $(function() {
          }
           
      });
-  
-     //数据检查
-     $('#InvestTradeRegist001_btn_checkData').click(dateCheckMethod);
-     function dateCheckMethod(){
-         var checkArr=table.getAllCheckedRows();
-         if(checkArr.length === 0) {
-             var sendStatus = $('#submitStatus').val();
-             var status = $('#status').val();
-             if (!(sendStatus && sendStatus.length == 1 && sendStatus[0] == '01')) {
-                 Joyin.error("只能对报送状态为未报送，数据状态为新建和修改的数据进行数据检查！");
-                 return;
-             }
-             else if(status && status.indexOf('03') > -1){
-                 Joyin.error("只能对数据状态为新建和修改的数据进行报送！");
-                 return;
-             }
-             var paramObj = getSearchParams()
-             if(!status){
-                 paramObj.status = '01,02'; 
-             }
-             Joyin.ajax('reportCheck',paramObj, function(result){
-                 window.checkResult = result;
-                 Joyin.checkData(dataTitle, checkUrl, getSearchParams());
-             })
-             return ;
-         }
-         var keyList = [];
-         for(var i=0;i<checkArr.length;i++){
-             keyList.push(checkArr[i].registSeqno);
-             if(checkArr[i].sendStatus !="01"){
-                 Joyin.error("数据检查只能检查未报送数据，请重新选择！");
-                 return;
-             }
-             else if(checkArr[i].status && checkArr[i].status.indexOf('03') > -1){
-                 Joyin.error("选择的报送数据中存在删除状态的数据，请重新选择！");
-                 return;
-             }
-         };
-         Joyin.ajax('reportCheck',{keyList: JSON.stringify(checkArr)}, function(result){
-             window.checkResult = result;
-             Joyin.checkData(dataTitle, checkUrl, {checkKeys: keyList.join(',')});
-         })
-     
-     }
-         
+
+    /**start   中债一二期直连新加  add  by wangzehui  20201012  */
+    /**
+     * 数据检查
+     */
+    $('#InvestTradeRegist001_btn_checkData').click(function(){
+        var paramObj = getSearchParams();
+        paramObj.opertionType = "checkData";
+        chbCommonCheck(table, paramObj, 'reportCheck', dataTitle, 'submitChb');
+    });
+    /**
+     * 报送
+     */
+    $('#InvestTradeRegist001_btn_submit').click(function () {
+        var paramObj = getSearchParams();
+        paramObj.opertionType = "submitChb";
+        chbCommonCheck(table, paramObj, 'reportCheck', dataTitle, 'submitChb');
+    });
+    /**
+     * 重新发送
+     */
+    $('#InvestTradeRegist001_btn_reSubmit').click(function () {
+        var paramObj = getSearchParams();
+        paramObj.opertionType = "reSubmitChb";
+        chbCommonCheck(table, paramObj, 'reportCheck', dataTitle, 'submitChb');
+    });
+    /**end   中债一二期直连新加  add  by wangzehui  20201012  */
+
      function init(){
   //			// 报送日期初始化
   //			$('#submitDate').val(searchDataStart + ' - ' + searchDataEnd);

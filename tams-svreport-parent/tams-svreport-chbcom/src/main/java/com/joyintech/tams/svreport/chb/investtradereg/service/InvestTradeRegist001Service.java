@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.util.SvrMaptoEntityUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -29,6 +30,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.BaseMapper;
 import com.joyintech.tams.common.svreport.chb.constant.CheckConfConstants;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
@@ -105,6 +107,15 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
     
     @Autowired
     private SqlSessionTemplate template;
+	@Autowired
+	private SvrMaptoEntityUtil svrMaptoEntityUtil;
+	private String tableName = "CHB_INVEST_TRADE_SUB";
+
+	/**
+	 * 中债基础数据mapper
+	 */
+	@Autowired
+	private BaseMapper baseMapper;
     
 	public Page<InvestTradeRegist001Dto> selectForPage(Map<String, Object> pageParam) {
 		dealSearchParam(pageParam);
@@ -746,10 +757,12 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
      * @return 
      * List<ExcelValidDto>
      */
-    public List<ExcelValidDto> checkData(List<InvestTradeRegist001Dto> checkKeys) {
+    public Map<String,Object> checkData(List<InvestTradeRegist001Dto> checkKeys) {
         Map<String,CheckReport001Dto> checkmap = new HashMap<String,CheckReport001Dto>();
         Map<String,InvestTradeRegist001Dto> repmap = new HashMap<String,InvestTradeRegist001Dto>();
+		Map<String,Object> returnMap = new HashMap<>();
         List<InvestTradeRegist001Dto> deallist = investTradeRegist001Mapper.selectDataListByRegList(checkKeys);
+		dealDataList(deallist,false);
         List<ExcelValidDto> result = new ArrayList<ExcelValidDto>();
 //        repmap = deallist.stream().collect(Collectors.toMap(InvestTradeRegist001Dto::getRegistSeqno,(p)->p,(key1,key2)->key1));
         repmap = deallist.stream().collect(Collectors.toMap(p->p.getProdId() + GlobalConstant.COMMA + p.getAssetCode(),(p)->p,(key1,key2)->key1));
@@ -781,13 +794,15 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
                 }else{
                     ExcelValidDto exc=new ExcelValidDto();
                     exc.setValidKey("产品代码:"+repmap.get(uniqueKey).getProdId()
-                            +"  资产代码:"+repmap.get(uniqueKey).getAssetCode());
+						+ (StringUtil.isNotEmpty(repmap.get(uniqueKey).getAssetCode()) ? (";资产代码:"+repmap.get(uniqueKey).getAssetCode()): ""));
                     exc.setCheckResult("01");
                     result.add(exc);
                 }
             }
-        }
-        return result;
+			returnMap.put("excelValidDtoList",result);
+		}
+		returnMap.put("resultList",deallist);
+		return returnMap;
     }
 
     /**

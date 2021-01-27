@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.asset.plan.planNet.validator;
 
+import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -32,10 +33,13 @@ public class FinPlanNetAssetValidator implements BeanValidator {
     @Autowired
     private CommonBusinessService commonBusinessService;
 
+    @Autowired
+    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+
     @Override
     public List<ValidMessage> valid(Object value) {
         FinPlanNetAssetDto dto = (FinPlanNetAssetDto) value;
-        ArrayList<ValidMessage> errorList = new ArrayList<>();
+        List<ValidMessage> errorList = new ArrayList<>();
         if(dto.getVdate()!=null && dto.getMdate()!=null && dto.getVdate().compareTo(dto.getMdate()) >= 0){
             errorList.add(new ValidMessage("vdate",getMessage("BUSS_COM_E_0035",getMessage("FinPlanNetAsset002.vDate"), 
                 getMessage("FinPlanNetAsset002.mDate"))));
@@ -112,6 +116,11 @@ public class FinPlanNetAssetValidator implements BeanValidator {
 //		}
 		// 增加法审编号和合同号的必填check by 赵东东 2019.10.14 end
 		//注释掉多余的check by 赵东东 2019.10.15 end
+
+        if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
+            errorList = chbDataCheckCommonUtil.chbCheckCommon(errorList, value, null, dto.getRepAssetType(), ValidMessage.class);
+        }
+
         return errorList;
     }
 }

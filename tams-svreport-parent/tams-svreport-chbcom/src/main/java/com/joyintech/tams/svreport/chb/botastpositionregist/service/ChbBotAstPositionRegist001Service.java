@@ -16,6 +16,7 @@ import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.BaseMapper;
 import com.joyintech.tams.common.svreport.chb.constant.CheckConfConstants;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
@@ -106,6 +107,12 @@ public class ChbBotAstPositionRegist001Service extends SvrCommonExportService<Ch
 
 	@Autowired
 	private BeforeSubErrorCheck beforeSubErrorCheck;
+
+	/**
+	 * 中债基础数据mapper
+	 */
+	@Autowired
+	private BaseMapper baseMapper;
 
 	/**
 	 * 查询页面数据
@@ -482,10 +489,12 @@ public class ChbBotAstPositionRegist001Service extends SvrCommonExportService<Ch
 		return keylist;
 	}
 	
-	public List<ExcelValidDto> checkData(List<String> checkKeys){
+	public Map<String,Object> checkData(List<String> checkKeys){
 		Map<String,CheckReport001Dto> checkmap = new HashMap<String,CheckReport001Dto>();
 		Map<String,ChbBotAstPositionRegist001Dto> repmap = new HashMap<String,ChbBotAstPositionRegist001Dto>();
+        Map<String,Object> returnMap = new HashMap<>();
 		List<ChbBotAstPositionRegist001Dto> issuelist = chbBotAstPositionRegist001Mapper.selectByRegistNo(checkKeys);
+		dealResultlist(issuelist);
 		repmap = issuelist.stream().collect(Collectors.toMap(ChbBotAstPositionRegist001Dto::getRegistSeqno,(p)->p,(key1,key2)->key1));
 		List<ExcelValidDto> result = new ArrayList<ExcelValidDto>();
 		// 查询检查表
@@ -511,8 +520,10 @@ public class ChbBotAstPositionRegist001Service extends SvrCommonExportService<Ch
 					result.add(exc);
 				}
 			}
+            returnMap.put("excelValidDtoList",result);
 		}
-		return result;
+        returnMap.put("resultList",issuelist);
+        return returnMap;
 	}
 	
 	

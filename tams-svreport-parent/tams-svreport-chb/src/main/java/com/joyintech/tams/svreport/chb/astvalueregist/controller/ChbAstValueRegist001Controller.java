@@ -10,11 +10,18 @@
  
 package com.joyintech.tams.svreport.chb.astvalueregist.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.component.svrreport.chb.dto.ChbAstValueSubDto;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.tams.svreport.chbsd.assetvalsub.service.SdAssetValRegBatchService;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,6 +74,12 @@ public class ChbAstValueRegist001Controller extends BaseController{
 	 */
 	@Autowired
 	private InstitutionService institutionService;
+
+	@SuppressWarnings("unused")
+	private Logger logger = LoggerFactory.getLogger(getClass());
+
+	@Autowired
+	private SdAssetValRegBatchService sdAssetValRegBatchService;
 	
     /**
 	 * {@inheritDoc}
@@ -187,6 +200,67 @@ public class ChbAstValueRegist001Controller extends BaseController{
 		}
 		return new AjaxResult(this.getMessage("REPORT_COMMON_I_0008"));
 	}
-	
+
+	/**start  中债一二期直连代码  add  by  wangzehui  20201012*/
+
+	/***
+	 * 报送按钮的检查
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("submitBeforeCheck")
+	public Map<String,Object> submitBeforeCheck() {
+		Map<String, Object> param = RequestUtil.getPageParam();
+		return  chbAstValueRegistMService.submitBeforeCheck(param);
+	}
+
+	/**
+	 * 中债直连报送
+	 *
+	 * @param map
+	 *            传入需要报送的主键
+	 * @return 反馈信息
+	 * @see
+	 * @since 1.0
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/submitChb", method = RequestMethod.POST)
+	public AjaxResult doSubmit(@RequestBody Map<String, Object> param)  throws Exception{
+
+		List<ChbAstValueRegist001Dto> list=new ArrayList<>();
+		// 选择行数据时
+		if (param.containsKey("keyList")) {
+			String keyList = param.get("keyList").toString();
+			try {
+				list = JsonUtils.json2List(keyList,
+						ChbAstValueRegist001Dto.class);
+			}
+			catch (IOException e) {
+				// e.printStackTrace();
+				logger.error(e.getMessage(), e);
+			}
+		}else{
+			Page<ChbAstValueRegist001Dto> page = chbAstValueRegistMService
+					.searchPage(RequestUtil.getPageParam());
+			if(page!=null&&page.getRoot()!=null&&page.getRoot().size()>0){
+				list = page.getRoot();
+			}
+			//查询数据
+		}
+
+		//报文拼接：2、进行数据结构转化，把[1]中取得的List，转化为报文拼接组件中调用方法的数据结构类
+		List<ChbAstValueSubDto> dataList = new ArrayList<ChbAstValueSubDto>();
+		for(ChbAstValueRegist001Dto sdDto:list){
+			ChbAstValueSubDto target = new ChbAstValueSubDto();
+			BeanUtil.copyPropertiesIgnoreNull(target, sdDto);
+			dataList.add(target);
+		}
+
+		sdAssetValRegBatchService.sendBatchCommon(dataList);
+
+		return new AjaxResult(this.getMessage("REPORT_COMMON_I_0018"));
+	}
+
+	/**end  中债一二期直连代码  add  by  wangzehui  2020100910*/
 
 }

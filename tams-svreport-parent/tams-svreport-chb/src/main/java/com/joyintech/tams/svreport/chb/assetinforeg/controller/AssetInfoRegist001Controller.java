@@ -11,10 +11,15 @@
 package com.joyintech.tams.svreport.chb.assetinforeg.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.component.svrreport.chb.dto.ChbAssetInfoDto;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.svreport.chbsd.assetinfosub.service.SdAssetiInfoRegBatchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +39,6 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.FileNameUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
@@ -71,6 +70,10 @@ public class AssetInfoRegist001Controller extends BaseController {
     
     @SuppressWarnings("unused")
 	private Logger logger = LoggerFactory.getLogger(getClass());
+
+
+	@Autowired
+	private SdAssetiInfoRegBatchService sdAssetiInfoRegBatchService;
     
 	/**
 	 * {@inheritDoc}
@@ -198,4 +201,65 @@ public class AssetInfoRegist001Controller extends BaseController {
     public List<SelectOptionDto> getRegCode() {
         return assetInfoRegistMService.queryAssetCodeList(RequestUtil.getPageParam());
     }
+
+	/**start  中债一二期直连代码  add  by  wangzehui  20201012*/
+
+	/***
+	 * 报送按钮的检查
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("submitBeforeCheck")
+	public Map<String,Object> submitBeforeCheck() {
+		Map<String, Object> param = RequestUtil.getPageParam();
+		return  assetInfoRegistMService.submitBeforeCheck(param);
+	}
+
+	/**
+	 * 中债直连报送
+	 *
+	 * @param map
+	 *            传入需要报送的主键
+	 * @return 反馈信息
+	 * @see
+	 * @since 1.0
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/submitChb", method = RequestMethod.POST)
+	public AjaxResult doSubmit(@RequestBody Map<String, Object> param) throws Exception {
+
+		List<AssetInfoRegist001Dto> list=new ArrayList<>();
+		// 选择行数据时
+		if (param.containsKey("keyList")) {
+			String keyList = param.get("keyList").toString();
+			try {
+				list = JsonUtils.json2List(keyList,
+						AssetInfoRegist001Dto.class);
+			}
+			catch (IOException e) {
+				// e.printStackTrace();
+				logger.error(e.getMessage(), e);
+			}
+		}else{
+			Page<AssetInfoRegist001Dto> page = assetInfoRegistMService.searchForPage(RequestUtil.getPageParam());
+			if(page!=null&&page.getRoot()!=null&&page.getRoot().size()>0){
+				list = page.getRoot();
+			}
+			//查询数据
+		}
+
+		//报文拼接：2、进行数据结构转化，把[1]中取得的List，转化为报文拼接组件中调用方法的数据结构类
+		List<ChbAssetInfoDto> dataList = new ArrayList<ChbAssetInfoDto>();
+		for(AssetInfoRegist001Dto sdDto:list){
+			ChbAssetInfoDto target = new ChbAssetInfoDto();
+			BeanUtil.copyPropertiesIgnoreNull(target, sdDto);
+			dataList.add(target);
+		}
+
+		sdAssetiInfoRegBatchService.sendBatchCommon(dataList);
+
+		return new AjaxResult(this.getMessage("REPORT_COMMON_I_0018"));
+	}
+
+	/**end  中债一二期直连代码  add  by  wangzehui  2020100910*/
 }

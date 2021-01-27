@@ -52,19 +52,40 @@
             ASSET_TYPE3,
             ASSET_BUSI_TYPE
          FROM CHB_ASSET_TYPE_MAPPING A
-         WHERE 1=1
-         <if test="assetType1 != null and assetType1 != ''">
-             AND A.ASSET_TYPE1 = #{assetType1,jdbcType=VARCHAR}
-         </if>
-         <if test="assetType2 != null and assetType2 != ''">
-             AND A.ASSET_TYPE2 = #{assetType2,jdbcType=VARCHAR}
-         </if>
-         <if test="assetType3 != null and assetType3 != ''">
-             AND A.ASSET_TYPE3 = #{assetType3,jdbcType=VARCHAR}
-         </if>
-         <if test="assetBusiType != null and assetBusiType != ''">
-             AND A.ASSET_BUSI_TYPE = #{assetBusiType,jdbcType=VARCHAR}
-         </if>
+         <where>
+            <choose>
+                <when test="assetType1 !=null and assetType1 != ''">
+                    AND A.ASSET_TYPE1 = #{assetType1,jdbcType=VARCHAR}
+                </when>
+                <otherwise>
+                    AND A.ASSET_TYPE1 IS NULL
+                </otherwise>
+            </choose>
+             <choose>
+                 <when test="assetType2 !=null and assetType2 != ''">
+                     AND A.ASSET_TYPE2 = #{assetType2,jdbcType=VARCHAR}
+                 </when>
+                 <otherwise>
+                     AND A.ASSET_TYPE2 IS NULL
+                 </otherwise>
+             </choose>
+             <choose>
+                 <when test="assetType3 !=null and assetType3 != ''">
+                     AND A.ASSET_TYPE3 = #{assetType3,jdbcType=VARCHAR}
+                 </when>
+                 <otherwise>
+                     AND A.ASSET_TYPE3 IS NULL
+                 </otherwise>
+             </choose>
+             <choose>
+                 <when test="assetBusiType !=null and assetBusiType != ''">
+                     AND A.ASSET_BUSI_TYPE = #{assetBusiType,jdbcType=VARCHAR}
+                 </when>
+                 <otherwise>
+                     AND A.ASSET_BUSI_TYPE IS NULL
+                 </otherwise>
+             </choose>
+         </where>
     </select>
 
     <select id="findExPage" parameterType="java.util.Map" resultType="com.joyintech.tams.svreport.chb.assettypesetting.dto.AssetTypeSetting001Dto">

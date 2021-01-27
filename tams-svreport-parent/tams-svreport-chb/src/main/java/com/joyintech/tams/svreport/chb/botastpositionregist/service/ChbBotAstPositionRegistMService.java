@@ -74,10 +74,10 @@ public class ChbBotAstPositionRegistMService extends BaseService<ChbBotAstPositi
         		String.class);
 	}
 	
-	public List<ExcelValidDto> reportCheck(Map<String, Object> map) {
-		return restTemplate.postForList(
+	public Map<String,Object> reportCheck(Map<String, Object> map) {
+		return restTemplate.postForObject(
 	       		SvrServiceApplication.CHB_SERVICE_NAME + "/ChbBotAstPositionRegist/reportCheck", map,
-	       		ExcelValidDto.class);
+	       		Map.class);
 	}
 	
 }

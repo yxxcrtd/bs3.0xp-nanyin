@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.*;
+import com.joyintech.system.base.dao.SysUploadFileInfoMapper;
+import com.joyintech.system.base.entity.SysUploadFileInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,16 +30,28 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.FileNameUtil;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.system.common.listener.UploadListener;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto;
 import com.joyintech.tams.svreport.chb.perprodeclarereg.service.PerProDeclareReg001Service;
 import com.joyintech.tams.svreport.chb.perprodeclarereg.service.PerProDeclareRegMService;
+import com.joyintech.tams.svreport.chbsd.prddeclaresub.service.SdProDeclareBatchService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import com.joyintech.component.svrreport.chb.dto.ChbPrdDeclareSubDto;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @PageId("SvrPerProDeclareReg001")
@@ -49,6 +64,12 @@ public class PerProDeclareReg001Controller extends BaseController{
 	@SuppressWarnings("unused")
     @Autowired
 	private UploadListener  uploadListener;
+
+	@Autowired
+	private SdProDeclareBatchService sdProDeclareBatchService;
+
+	@Autowired
+	private SysUploadFileInfoMapper sysUploadFileInfoMapper;
 	/**
 	 * 日志
 	 */
@@ -148,13 +169,13 @@ public class PerProDeclareReg001Controller extends BaseController{
 	}
 	@ResponseBody
 	@RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-	public AjaxResult uploadFile(@RequestParam Map<String, Object> map) {
+	public AjaxResult uploadFile(@RequestParam Map<String, Object> map) throws IOException {
 		AjaxResult res=new AjaxResult();
 		try {
             res =perProDeclareReg001Service.uploadFile(map);
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error(e.getMessage(),e);
-            return null;
+			throw e;
         }
 		return res;
 		
@@ -193,7 +214,78 @@ public class PerProDeclareReg001Controller extends BaseController{
 		
 	}
 	
-	
+	/**start  中债一二期直连代码  add  by  ***  20201009*/
+	/***
+	 * 报送按钮的检查
+	 * @return
+	 */
+    @ResponseBody
+    @RequestMapping("submitBeforeCheck")
+    public Map<String,Object> submitBeforeCheck() {
+    	 Map<String, Object> param = RequestUtil.getPageParam();
+    	 return  perProDeclareRegMService.submitBeforeCheck(param);
+    }
+
+    /**
+     * 中债直连报送
+     *
+     * @param map
+     *            传入需要报送的主键
+     * @return 反馈信息
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping(value = "/submitChb", method = RequestMethod.POST)
+    public AjaxResult doSubmit(@RequestBody Map<String, Object> param) throws Exception {
+
+		List<PerProDeclareRegDto> proDeclareList=new ArrayList<PerProDeclareRegDto>();
+		// 选择行数据时
+		if (param.containsKey("keyList")) {
+			String keyList = param.get("keyList").toString();
+			try {
+				proDeclareList = JsonUtils.json2List(keyList,
+						PerProDeclareRegDto.class);
+			}
+			catch (IOException e) {
+				// e.printStackTrace();
+				logger.error(e.getMessage(), e);
+			}
+		}else{
+			Page<PerProDeclareRegDto> page = perProDeclareReg001Service.selectForPage(RequestUtil.getPageParam(), false);
+			if(page!=null&&page.getRoot()!=null&&page.getRoot().size()>0){
+				proDeclareList = page.getRoot();
+			}
+			//查询数据
+		}
+
+		//报文拼接：2、进行数据结构转化，把[1]中取得的List，转化为报文拼接组件中调用方法的数据结构类
+		List<ChbPrdDeclareSubDto> dataList = new ArrayList<ChbPrdDeclareSubDto>();
+		for(PerProDeclareRegDto sdDto:proDeclareList){
+			ChbPrdDeclareSubDto target = new ChbPrdDeclareSubDto();
+			BeanUtil.copyPropertiesIgnoreNull(target, sdDto);
+
+			// add by zhangliang 20201016 产品申报登记发送接口需要把九大附件的路径传送进去 start
+			// 实际申报登记实际生产上每日数据量不大，此处暂不考虑性能影响
+			if (StringUtil.isNotEmpty(sdDto.getFileNo())){
+				SysUploadFileInfo sysUploadFileInfo = sysUploadFileInfoMapper.selectByPrimaryKey(sdDto.getFileNo());
+				if (sysUploadFileInfo != null){
+					target.setAttachFilePath(sysUploadFileInfo.getPath());
+				}
+			}
+			// add by zhangliang 20201016 产品申报登记发送接口需要把九大附件的路径传送进去 end
+			target.setProdStage(sdDto.getProdStage() != null ? sdDto.getProdStage().intValue() : null);
+
+			dataList.add(target);
+		}
+
+		sdProDeclareBatchService.sendBatchCommon(dataList);
+
+        return new AjaxResult(this.getMessage("REPORT_COMMON_I_0018"));
+    }
+
+	/**end  中债一二期直连代码  add  by  ***  20201009*/
+
 	/**
 	 *  查询行内标识码
 	 * @param param 入参

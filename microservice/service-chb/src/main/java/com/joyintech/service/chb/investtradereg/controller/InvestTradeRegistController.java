@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -114,7 +115,7 @@ public class InvestTradeRegistController{
      * @since 1.0
      */
     @PostMapping("reportCheck")
-    public List<ExcelValidDto> reportCheck(@RequestBody Map<String, Object> map) {
+    public Map<String,Object> reportCheck(@RequestBody Map<String, Object> map) {
         List<InvestTradeRegist001Dto> keyList = new ArrayList<InvestTradeRegist001Dto>();
         Map<String, Object> param = map;
         if (!param.containsKey("keyList")) {
@@ -131,7 +132,9 @@ public class InvestTradeRegistController{
         if (CollectionUtils.isEmpty(keyList)) {
             List<ExcelValidDto> checkResult = new ArrayList<ExcelValidDto>();
             checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "无报送数据", null));
-            return checkResult;
+            Map<String,Object> returnMap = new HashMap<>();
+            returnMap.put("excelValidDtoList",checkResult);
+            return returnMap;
         }
         return investTradeRegist001Service.checkData(keyList);
     }

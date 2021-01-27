@@ -1,6 +1,7 @@
 package com.joyintech.service.chb.botastpositionregist.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -99,7 +100,7 @@ public class ChbBotAstPositionRegistController{
      * @since 1.0
      */
 	@PostMapping("reportCheck")
-    public List<ExcelValidDto> reportCheck(@RequestBody Map<String,Object> map) {
+    public Map<String,Object> reportCheck(@RequestBody Map<String,Object> map) {
     	List<String> keyList = new ArrayList<String>();
         Map<String, Object> param = map;
         if(!param.containsKey("checkKeys")){
@@ -111,7 +112,9 @@ public class ChbBotAstPositionRegistController{
         if (CollectionUtils.isEmpty(keyList)) {
             List<ExcelValidDto> checkResult = new ArrayList<ExcelValidDto>();
             checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "无报送数据",null));
-            return checkResult;
+			Map<String,Object> returnMap = new HashMap<>();
+			returnMap.put("excelValidDtoList",checkResult);
+			return returnMap;
         }
         return chbBotAstPositionRegist001Service.checkData(keyList);
     }

@@ -15,6 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -86,6 +87,9 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
      */
     @Autowired
     private BussCommonMapperDelegateService bussCommonMapperDelegateService;
+
+    @Autowired
+    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
 
     /**
      * {@linkplain}
@@ -1393,6 +1397,9 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                  this.getMessage("BussFinProductSaleParam.sameOrg"))));
     	}
     	/**20200319 taoran add 同业机构报错后输入框描红*/
+
+        validList = chbDataCheckCommonUtil.chbCheckCommon(validList, entity, "FinNetValueProductBuild002", null, ValidMessage.class);
+
         return validList;
     }
 

@@ -1,10 +1,17 @@
 package com.joyintech.tams.svreport.chb.prodraisetotalregist.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.component.svrreport.chb.dto.ChbPrdRaisetotSubDto;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.svreport.chbsd.prdraisetotsub.service.SdProdRaisetotBatchService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +55,14 @@ public class RaiseTotalRegist001Controller extends BaseController{
 	private RaiseTotalRegist001Service raiseTotalRegist001Service;
 	@Autowired
 	private RaiseTotalRegistMService raiseTotalRegistMService;
+
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private SdProdRaisetotBatchService sdProdRaisetotBatchService;
 	/**
      * 初始化
      * {@inheritDoc}
@@ -145,7 +160,56 @@ public class RaiseTotalRegist001Controller extends BaseController{
     
     @ResponseBody
     @RequestMapping("reportCheck")
-    public List<ExcelValidDto> reportCheck() {
+    public Map<String,Object> reportCheck() {
         return raiseTotalRegistMService.reportCheck(RequestUtil.getPageParam());
     }
+
+    /**start  中债一二期直连代码  add  by  wangzehui  20201012*/
+    /**
+     * 中债直连报送
+     *
+     * @param map
+     *            传入需要报送的主键
+     * @return 反馈信息
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping(value = "/submitChb", method = RequestMethod.POST)
+    public AjaxResult doSubmit(@RequestBody Map<String, Object> param)  throws Exception{
+
+        List<RaiseTotalRegist001Dto> list=new ArrayList<RaiseTotalRegist001Dto>();
+        // 选择行数据时
+        if (param.containsKey("keyList")) {
+            String keyList = param.get("keyList").toString();
+            try {
+                list = JsonUtils.json2List(keyList,
+                        RaiseTotalRegist001Dto.class);
+            }
+            catch (IOException e) {
+                // e.printStackTrace();
+                logger.error(e.getMessage(), e);
+            }
+        }else{
+            Page<RaiseTotalRegist001Dto> page = raiseTotalRegistMService.selectForPage(RequestUtil.getPageParam());
+            if(page!=null&&page.getRoot()!=null&&page.getRoot().size()>0){
+                list = page.getRoot();
+            }
+            //查询数据
+        }
+
+        //报文拼接：2、进行数据结构转化，把[1]中取得的List，转化为报文拼接组件中调用方法的数据结构类
+        List<ChbPrdRaisetotSubDto> dataList = new ArrayList<ChbPrdRaisetotSubDto>();
+        for(RaiseTotalRegist001Dto sdDto:list){
+            ChbPrdRaisetotSubDto target = new ChbPrdRaisetotSubDto();
+            BeanUtil.copyPropertiesIgnoreNull(target, sdDto);
+            dataList.add(target);
+        }
+
+        sdProdRaisetotBatchService.sendBatchCommon(dataList);
+
+        return new AjaxResult(this.getMessage("REPORT_COMMON_I_0018"));
+    }
+
+    /**end  中债一二期直连代码  add  by  wangzehui  20201012*/
 }

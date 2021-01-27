@@ -232,7 +232,7 @@ public class SvrMstMarketInstitutionsMService extends CommonExportService<SvrMst
     }
 
 	public List<SvrMstMarketInstitutionsDto> selectForExport(Map<String, Object> param) {
-		return simpleRestTemplate.postForList(
+		return restTemplate.postForList(
 	            SvrServiceApplication.COMMON_SERVICE_NAME + "/SvrMstMarketInstitutions/selectForExport",
 	            param,SvrMstMarketInstitutionsDto.class);
 	}

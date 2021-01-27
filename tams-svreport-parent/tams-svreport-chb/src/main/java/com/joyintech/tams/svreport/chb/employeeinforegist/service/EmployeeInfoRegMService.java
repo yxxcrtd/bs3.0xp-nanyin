@@ -33,7 +33,7 @@ public class EmployeeInfoRegMService extends BaseService<EmployeeInfoReg001Dto> 
     * @since 1.0
     */
    public Page<EmployeeInfoReg001Dto> selectForPage(Map<String, Object> param) {
-       return simpleRestTemplate.postForPage(
+       return restTemplate.postForPage(
 	       		SvrServiceApplication.CHB_SERVICE_NAME + "/EmployeeInfoReg/findPage",param,
 	       		EmployeeInfoReg001Dto.class);
    }
@@ -48,7 +48,7 @@ public class EmployeeInfoRegMService extends BaseService<EmployeeInfoReg001Dto> 
 	 * @since 1.0
 	 */
 	public void updateSumStaus(Map<String, Object> map) {
-		simpleRestTemplate.postForObject(
+		restTemplate.postForObject(
 	       		SvrServiceApplication.CHB_SERVICE_NAME + "/EmployeeInfoReg/updateSumStaus",map,
 	       		Integer.class);
 	}
@@ -64,7 +64,7 @@ public class EmployeeInfoRegMService extends BaseService<EmployeeInfoReg001Dto> 
 	@ResponseBody
 	@PostMapping("cancelMannul")
 	public String cancelMannul(Map<String, Object> map) {
-		return	simpleRestTemplate.postForObject(
+		return	restTemplate.postForObject(
 	       		SvrServiceApplication.CHB_SERVICE_NAME + "/EmployeeInfoReg/cancelMannul",map,
 	       		String.class);
 	}
@@ -75,7 +75,7 @@ public class EmployeeInfoRegMService extends BaseService<EmployeeInfoReg001Dto> 
 	 * @return
 	 */
 	public List<EmployeeInfoReg001Dto> selectForExport(Map<String, Object> param) {
-	    return simpleRestTemplate.postForList(
+	    return restTemplate.postForList(
 		       		SvrServiceApplication.CHB_SERVICE_NAME + "/EmployeeInfoReg/selectForExport",param,
 		       		EmployeeInfoReg001Dto.class);
 	}
@@ -87,7 +87,7 @@ public class EmployeeInfoRegMService extends BaseService<EmployeeInfoReg001Dto> 
 	 */
     @SuppressWarnings("unchecked")
 	public Map<String,Object> checkData(Map<String, Object> param){
-    	return simpleRestTemplate.postForObject(
+    	return restTemplate.postForObject(
 	       		SvrServiceApplication.CHB_SERVICE_NAME + "/EmployeeInfoReg/checkData",param,
 	       		Map.class);
     }
