@@ -16,10 +16,7 @@ import com.joyintech.tams.report.common.base.annotate.BusinessKey;
 import com.joyintech.tams.report.common.base.annotate.DictFormat;
 import com.joyintech.tams.report.common.base.annotate.TableName;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
-import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussFinBondRepInfoDto;
-import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepDepositInfoDto;
-import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepDlRepoInfoDto;
-import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepPlacementInfoDto;
+import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.*;
 import com.joyintech.tams.svreport.chb.assetinfodetail.validator.AssetInfoDetailValidator;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
@@ -82,7 +79,156 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 
 	private SvrBussRepPlacementInfoDto svrBussRepPlacementInfoDto;
 
+	private  SvrBussQDIISharesInfoDto    svrBussQDIISharesInfoDto;
 
+	private SvrBussRepAssetAstBillInfoDto svrBussRepAssetAstBillInfoDto;
+
+	private SvrBussRepAssetCreditNonstdInfoDto svrBussRepAssetCreditNonstdInfoDto;
+
+    private  SvrBussRepAssetMngProdInfoDto  svrBussRepAssetMngProdInfoDto;
+
+    private  SvrBussRepEquityInfoDto   svrBussRepEquityInfoDto;
+
+	private  SvrBussRepFinanciallInfoDto   svrBussRepFinanciallInfoDto;
+
+	private  SvrBussRepFundInfoDto   svrBussRepFundInfoDto;
+
+	private  SvrBussRepNobleMetalInfoDto   svrBussRepNobleMetalInfoDto;
+
+	private  SvrBussRepOtherInfoDto   svrBussRepOtherInfoDto;
+
+	private  SvrBussRepOtherInvestTargetInfoDto   svrBussRepOtherInvestTargetInfoDto;
+
+	private  SvrBussRepOthKindInfoDto   svrBussRepOthKindInfoDto;
+
+	private  SvrBussRepOutInvestAgrInfoDto   svrBussRepOutInvestAgrInfoDto;
+
+	private  SvrBussRepQDIIBondInfoDto   svrBussRepQDIIBondInfoDto;
+
+	private  SvrBussRepQDIIdemolitionInfoDto   svrBussRepQDIIdemolitionInfoDto;
+
+	private  SvrBussRepQDIIStructureInfoDto   svrBussRepQDIIStructureInfoDto;
+
+
+	public SvrBussQDIISharesInfoDto getSvrBussQDIISharesInfoDto() {
+		return svrBussQDIISharesInfoDto;
+	}
+
+	public void setSvrBussQDIISharesInfoDto(SvrBussQDIISharesInfoDto svrBussQDIISharesInfoDto) {
+		this.svrBussQDIISharesInfoDto = svrBussQDIISharesInfoDto;
+	}
+
+	public SvrBussRepAssetAstBillInfoDto getSvrBussRepAssetAstBillInfoDto() {
+		return svrBussRepAssetAstBillInfoDto;
+	}
+
+	public void setSvrBussRepAssetAstBillInfoDto(SvrBussRepAssetAstBillInfoDto svrBussRepAssetAstBillInfoDto) {
+		this.svrBussRepAssetAstBillInfoDto = svrBussRepAssetAstBillInfoDto;
+	}
+
+	public SvrBussRepAssetCreditNonstdInfoDto getSvrBussRepAssetCreditNonstdInfoDto() {
+		return svrBussRepAssetCreditNonstdInfoDto;
+	}
+
+	public void setSvrBussRepAssetCreditNonstdInfoDto(SvrBussRepAssetCreditNonstdInfoDto svrBussRepAssetCreditNonstdInfoDto) {
+		this.svrBussRepAssetCreditNonstdInfoDto = svrBussRepAssetCreditNonstdInfoDto;
+	}
+
+	public SvrBussRepAssetMngProdInfoDto getSvrBussRepAssetMngProdInfoDto() {
+		return svrBussRepAssetMngProdInfoDto;
+	}
+
+	public void setSvrBussRepAssetMngProdInfoDto(SvrBussRepAssetMngProdInfoDto svrBussRepAssetMngProdInfoDto) {
+		this.svrBussRepAssetMngProdInfoDto = svrBussRepAssetMngProdInfoDto;
+	}
+
+	public SvrBussRepEquityInfoDto getSvrBussRepEquityInfoDto() {
+		return svrBussRepEquityInfoDto;
+	}
+
+	public void setSvrBussRepEquityInfoDto(SvrBussRepEquityInfoDto svrBussRepEquityInfoDto) {
+		this.svrBussRepEquityInfoDto = svrBussRepEquityInfoDto;
+	}
+
+	public SvrBussRepFinanciallInfoDto getSvrBussRepFinanciallInfoDto() {
+		return svrBussRepFinanciallInfoDto;
+	}
+
+	public void setSvrBussRepFinanciallInfoDto(SvrBussRepFinanciallInfoDto svrBussRepFinanciallInfoDto) {
+		this.svrBussRepFinanciallInfoDto = svrBussRepFinanciallInfoDto;
+	}
+
+	public SvrBussRepFundInfoDto getSvrBussRepFundInfoDto() {
+		return svrBussRepFundInfoDto;
+	}
+
+	public void setSvrBussRepFundInfoDto(SvrBussRepFundInfoDto svrBussRepFundInfoDto) {
+		this.svrBussRepFundInfoDto = svrBussRepFundInfoDto;
+	}
+
+	public SvrBussRepNobleMetalInfoDto getSvrBussRepNobleMetalInfoDto() {
+		return svrBussRepNobleMetalInfoDto;
+	}
+
+	public void setSvrBussRepNobleMetalInfoDto(SvrBussRepNobleMetalInfoDto svrBussRepNobleMetalInfoDto) {
+		this.svrBussRepNobleMetalInfoDto = svrBussRepNobleMetalInfoDto;
+	}
+
+	public SvrBussRepOtherInfoDto getSvrBussRepOtherInfoDto() {
+		return svrBussRepOtherInfoDto;
+	}
+
+	public void setSvrBussRepOtherInfoDto(SvrBussRepOtherInfoDto svrBussRepOtherInfoDto) {
+		this.svrBussRepOtherInfoDto = svrBussRepOtherInfoDto;
+	}
+
+	public SvrBussRepOtherInvestTargetInfoDto getSvrBussRepOtherInvestTargetInfoDto() {
+		return svrBussRepOtherInvestTargetInfoDto;
+	}
+
+	public void setSvrBussRepOtherInvestTargetInfoDto(SvrBussRepOtherInvestTargetInfoDto svrBussRepOtherInvestTargetInfoDto) {
+		this.svrBussRepOtherInvestTargetInfoDto = svrBussRepOtherInvestTargetInfoDto;
+	}
+
+	public SvrBussRepOthKindInfoDto getSvrBussRepOthKindInfoDto() {
+		return svrBussRepOthKindInfoDto;
+	}
+
+	public void setSvrBussRepOthKindInfoDto(SvrBussRepOthKindInfoDto svrBussRepOthKindInfoDto) {
+		this.svrBussRepOthKindInfoDto = svrBussRepOthKindInfoDto;
+	}
+
+	public SvrBussRepOutInvestAgrInfoDto getSvrBussRepOutInvestAgrInfoDto() {
+		return svrBussRepOutInvestAgrInfoDto;
+	}
+
+	public void setSvrBussRepOutInvestAgrInfoDto(SvrBussRepOutInvestAgrInfoDto svrBussRepOutInvestAgrInfoDto) {
+		this.svrBussRepOutInvestAgrInfoDto = svrBussRepOutInvestAgrInfoDto;
+	}
+
+	public SvrBussRepQDIIBondInfoDto getSvrBussRepQDIIBondInfoDto() {
+		return svrBussRepQDIIBondInfoDto;
+	}
+
+	public void setSvrBussRepQDIIBondInfoDto(SvrBussRepQDIIBondInfoDto svrBussRepQDIIBondInfoDto) {
+		this.svrBussRepQDIIBondInfoDto = svrBussRepQDIIBondInfoDto;
+	}
+
+	public SvrBussRepQDIIdemolitionInfoDto getSvrBussRepQDIIdemolitionInfoDto() {
+		return svrBussRepQDIIdemolitionInfoDto;
+	}
+
+	public void setSvrBussRepQDIIdemolitionInfoDto(SvrBussRepQDIIdemolitionInfoDto svrBussRepQDIIdemolitionInfoDto) {
+		this.svrBussRepQDIIdemolitionInfoDto = svrBussRepQDIIdemolitionInfoDto;
+	}
+
+	public SvrBussRepQDIIStructureInfoDto getSvrBussRepQDIIStructureInfoDto() {
+		return svrBussRepQDIIStructureInfoDto;
+	}
+
+	public void setSvrBussRepQDIIStructureInfoDto(SvrBussRepQDIIStructureInfoDto svrBussRepQDIIStructureInfoDto) {
+		this.svrBussRepQDIIStructureInfoDto = svrBussRepQDIIStructureInfoDto;
+	}
 
 	public SvrBussFinBondRepInfoDto getSvrBussFinBondRepInfoDto() {
 		return svrBussFinBondRepInfoDto;

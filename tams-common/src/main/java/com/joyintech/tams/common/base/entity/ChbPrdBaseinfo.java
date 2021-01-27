@@ -658,6 +658,46 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
     private String acctName;
 
     /**
+     * 是否母行划转产品
+     */
+    private String isTransfer;
+
+    /**
+     * 是否合规新产品
+     */
+    private String isFhxgcp;
+
+    /**
+     * 是否养老理财产品
+     */
+    private String isYllccp;
+
+
+    public String getIsTransfer() {
+        return isTransfer;
+    }
+
+    public void setIsTransfer(String isTransfer) {
+        this.isTransfer = isTransfer;
+    }
+
+    public String getIsFhxgcp() {
+        return isFhxgcp;
+    }
+
+    public void setIsFhxgcp(String isFhxgcp) {
+        this.isFhxgcp = isFhxgcp;
+    }
+
+    public String getIsYllccp() {
+        return isYllccp;
+    }
+
+    public void setIsYllccp(String isYllccp) {
+        this.isYllccp = isYllccp;
+    }
+
+    /**
      * 主键，自动生成
      * @return PRODUUID 主键，自动生成
      */
