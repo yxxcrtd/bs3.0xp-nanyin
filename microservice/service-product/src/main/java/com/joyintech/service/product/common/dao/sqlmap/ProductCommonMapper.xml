@@ -244,7 +244,8 @@
         select count(1) from TRD_PRODUCT_DEAL 
         where 
             (TRADE_ID = #{tradeId,jdbcType=VARCHAR}
-            or P_TRADE_ID = #{tradeId,jdbcType=VARCHAR})
+            or P_TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+            or TOTLE_TRADE_ID = #{tradeId,jdbcType=VARCHAR})
             and 
             (IS_CANCEL = #{YES_NO_YES,jdbcType=VARCHAR}
             or TRADE_STATUS = #{TRADE_STATUS_03,jdbcType=VARCHAR}
