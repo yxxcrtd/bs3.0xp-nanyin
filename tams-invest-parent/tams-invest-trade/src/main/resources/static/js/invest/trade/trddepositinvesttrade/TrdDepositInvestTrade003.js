@@ -1075,8 +1075,8 @@
     function getEntrustByEntrustId() {
 
         var entrustId = $("#entrustId").val();
-        if(entrustId){            
-
+        if(entrustId){
+            $('#TrdDepositInvestTrade003_btn_autoAllocation').prop('disabled',false).removeClass('layui-btn-disabled');
         	finChange();
             psChange();
             
