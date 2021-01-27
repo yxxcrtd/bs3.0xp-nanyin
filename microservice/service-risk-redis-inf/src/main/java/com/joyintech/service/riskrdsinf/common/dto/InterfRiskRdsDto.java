@@ -814,8 +814,22 @@ public class InterfRiskRdsDto implements IRiskRds {
 		this.deadline = deadline;
 	}
 	
+	public BigDecimal getTradeAmtReal() {
+		return tradeAmtReal;
+	}
+
+	public void setTradeAmtReal(BigDecimal tradeAmtReal) {
+		this.tradeAmtReal = tradeAmtReal;
+	}
+
 	/**
 	 * 设置期限变量，非标用此变量作为资产的存续时长
 	 */
 	private BigDecimal deadline;
+	
+	/**
+	 * 实付本息，区别于金额
+	 */
+	@JsonSerialize(using=BigDecimalSerializer.class)
+	private BigDecimal tradeAmtReal;
 }
