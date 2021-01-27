@@ -306,7 +306,9 @@
                 cpriceAmtDistribution(); 
                 intAmtCalcu();
                 getCommissionAmt();
-                // $('#TrdProjectInvestTrade003_btn_autoAllocation').prop('disabled',false).removeClass('layui-btn-disabled');
+                if($('#entrustId').val()){
+                    $('#TrdProjectInvestTrade003_btn_autoAllocation').prop('disabled',false).removeClass('layui-btn-disabled');
+                }
             }
         }
 
