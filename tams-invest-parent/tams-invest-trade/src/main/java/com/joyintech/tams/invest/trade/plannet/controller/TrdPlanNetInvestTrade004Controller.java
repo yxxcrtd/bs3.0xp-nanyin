@@ -322,7 +322,8 @@ public class TrdPlanNetInvestTrade004Controller extends BaseController {
                         for (BussTrdTransfenpeiDto fenpeiDto : v) {
                             if (fenpeiDto.getTradeAmt() != null && fenpeiDto.getBussTrdAvailableCashQueryavalibleCash() != null){
                                 aAmt = fenpeiDto.getBussTrdAvailableCashQueryavalibleCash();
-                                tAmt = aAmt.add(fenpeiDto.getTradeAmt());
+//                                tAmt = aAmt.add(fenpeiDto.getTradeAmt());
+                                tAmt = fenpeiDto.getTradeAmt();
                             }
                         }
                         if (tAmt.compareTo(aAmt) == 1){
