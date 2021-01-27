@@ -818,8 +818,9 @@
             }*/
 			var operationType2 =  $('#FinNetValueProductBuild002_operationType').val();
 			var termDays2 =  $('#FinNetValueProductBuild002_termDays').val();
+			var feeID = $("#bussFinProductFloatFeeDto_feeId").val();
 			if(BussFinProductOpenPlan.getElementById('sameFLag').next().find("em").text()==="否"){
-				 if( $('#isClick').val() == 'false' || $('#isClickRed').val() == 'false'  &&  quickInput == true ){
+				 if( $('#isClick').val() == 'false' || $('#isClickRed').val() == 'false'  &&  quickInput == true && operationType2!=ISSUE_MODE_01){
 				    	Joyin.confirm(JoyinUtil.getMessage('未重新生成开放计划，是否继续操作?'),function(){
 				    		if(operationType2 == "01" && termDays2 <90){
 								Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
@@ -841,7 +842,7 @@
 				    }
 			}
 			else{
-		    if($('#isClick').val() == 'false' &&  quickInput == true ){
+		    if($('#isClick').val() == 'false' &&  quickInput == true && operationType2!=ISSUE_MODE_01){
 		    	Joyin.confirm(JoyinUtil.getMessage('未重新生成开放计划，是否继续操作?'),function(){
 		    		if(operationType2 == "01" && termDays2 <90){
 						Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
@@ -912,7 +913,7 @@
 			var operationType2 =  $('#FinNetValueProductBuild002_operationType').val();
 			var termDays2 =  $('#FinNetValueProductBuild002_termDays').val();			
 			if(BussFinProductOpenPlan.getElementById('sameFLag').next().find("em").text()==="否" ){
-				 if( $('#isClick').val() == 'false' || $('#isClickRed').val() == 'false'  &&  quickInput == true ){
+				 if( $('#isClick').val() == 'false' || $('#isClickRed').val() == 'false'  &&  quickInput == true && operationType2!=ISSUE_MODE_01 ){
 				    	Joyin.confirm(JoyinUtil.getMessage('未重新生成开放计划，是否继续操作?'),function(){
 				    		if(!draftoption && operationType2 == "01" && termDays2 <90){
 								Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
@@ -934,7 +935,7 @@
 				    }
 			}
 			else{
-		    if($('#isClick').val() == 'false' &&  quickInput == true ){
+		    if($('#isClick').val() == 'false' &&  quickInput == true && operationType2!=ISSUE_MODE_01 ){
 		    	Joyin.confirm(JoyinUtil.getMessage('未重新生成开放计划，是否继续操作?'),function(){
 		    		if(!draftoption && operationType2 == "01" && termDays2 <90){
 						Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
