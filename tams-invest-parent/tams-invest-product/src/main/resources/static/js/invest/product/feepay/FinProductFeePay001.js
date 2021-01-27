@@ -250,7 +250,9 @@
                                     result = '无';
                                 }
                                     data.revokeReason = result;
-                                    WorkFlow.doRevokeList(basePath + 'invest/product/feepay/FinProductFeePay001/doRevoke', data, "FinProductFeePay001_btn_revoke", "FinProductFeePay002");
+                                    WorkFlow.doRevokeList(basePath + 'invest/product/feepay/FinProductFeePay001/doRevoke', data, "FinProductFeePay001_btn_revoke", "FinProductFeePay002",function(){
+										table.reload();//删除事件请求及回调函数
+									});
                                 });
                             });
                         }else{
@@ -260,7 +262,9 @@
                                     result = '无';
                                 }
                                 data.revokeReason = result;
-                                WorkFlow.doRevokeList(basePath + 'invest/product/feepay/FinProductFeePay001/doRevoke', data, "FinProductFeePay001_btn_revoke", "FinProductFeePay002");
+                                WorkFlow.doRevokeList(basePath + 'invest/product/feepay/FinProductFeePay001/doRevoke', data, "FinProductFeePay001_btn_revoke", "FinProductFeePay002",function(){
+									table.reload();//删除事件请求及回调函数
+								});
                             });
 
                         }
