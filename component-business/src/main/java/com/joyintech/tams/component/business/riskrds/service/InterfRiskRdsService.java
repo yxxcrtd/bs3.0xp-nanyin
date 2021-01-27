@@ -1207,6 +1207,10 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                     	infRiskRdsDto.setTradeNum(new BigDecimal((String)dataMap.get("addReduceDealNum")));
                     }
                     //ZGBSS-49【待办事项】：审批份额强增流程报错 20210118 end
+                    if(infRiskRdsDto.getAmount()==null) {
+                    	infRiskRdsDto.setAmount(BigDecimal.ZERO);
+                    	infRiskRdsDto.setNotCalcAmount(true);
+                    }
                 }
                 else if (StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_提前终止.getValue())) {
 
@@ -1246,7 +1250,10 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                     	infRiskRdsDto.setTradeNum(new BigDecimal((String)dataMap.get("addReduceDealNum03")));
                     }
                     //ZGBSS-49【待办事项】：货币型产品审批份额强增流程报错 20210126 end
-
+                    if(infRiskRdsDto.getAmount()==null) {
+                    	infRiskRdsDto.setAmount(BigDecimal.ZERO);
+                    	infRiskRdsDto.setNotCalcAmount(true);
+                    }
                 }
                 else if (StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_提前终止.getValue())) {
                     infRiskRdsDto.setEventDate(DateUtil.format(new Date((long)dataMap.get("expireConfirmDate03"))));

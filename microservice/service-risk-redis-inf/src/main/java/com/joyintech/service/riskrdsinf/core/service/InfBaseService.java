@@ -489,6 +489,11 @@ public abstract class InfBaseService<V> {
     			&& BigDecimal.ZERO.compareTo(new BigDecimal(trdNumObj.toString())) != 0) {
     		return;
     	}
+    	//是否需要跳过-对单次计算匹配
+    	if(request.get("notCalcAmount")!=null&&request.get("notCalcAmount")instanceof Boolean &&(Boolean)request.get("notCalcAmount")) {
+    		return ;
+    	}
+    	
     	String assetCode = (String) request.get("assetCode");
 		BigDecimal unitNet = consumer == null ? BigDecimal.ONE : consumer.handle();
 		if (unitNet == null) {
