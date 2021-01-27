@@ -86,4 +86,9 @@ public class FinProductAnapleroticController {
     public List<FinProductAnapleroticPlanDto> selectAnapleroticPlan(String anapleroticId){
     	return finProductAnapleroticService.selectAnapleroticPlan(anapleroticId);
     }
+    
+    @GetMapping("/selectAnapleroticPlanByFinprodId")
+    public List<FinProductAnapleroticPlanDto> selectAnapleroticPlanByFinprodId(String finprodId){
+        return finProductAnapleroticService.selectAnapleroticPlanByFinprodId(finprodId);
+    }
 }

@@ -1,0 +1,2 @@
+update RSK_ISUP_INDICATOR set sup_frequency = 'DAYTIME,DAYEND'  where  IND_NAME = '每只现金管理类产品投资组合的平均剩余存续期限不得超过240天';
+update RSK_ISUP_INDICATOR set sup_frequency = 'DAYTIME,DAYEND'  where  IND_NAME = '组合的平均剩余期限不得超过120天';

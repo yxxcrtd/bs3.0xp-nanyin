@@ -13,6 +13,13 @@ package com.joyintech.tams.invest.product.productelement.anaplerotic.controller;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
+
+import com.joyintech.framework.base.dto.Product;
+import com.joyintech.framework.base.service.ProductService;
+import com.joyintech.tams.common.base.entity.FinOpenPlan;
+import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.invest.product.common.service.ProductCommonService;
+import com.joyintech.tams.invest.product.messageadjust.maintenance.service.FinOpenPlanMaintenanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.base.entity.ProcessMark;
@@ -41,6 +49,9 @@ import com.joyintech.tams.invest.product.messageadjust.finfloatmgtexpquotation.s
 import com.joyintech.tams.invest.product.productelement.anaplerotic.dto.FinProductAnapleroticInfoDto;
 import com.joyintech.tams.invest.product.productelement.anaplerotic.dto.FinProductAnapleroticPlanDto;
 import com.joyintech.tams.invest.product.productelement.anaplerotic.service.FinProductAnapleroticInfo002Service;
+import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
+import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
+import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 
@@ -57,7 +68,11 @@ import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 @RequestMapping("/invest/product/productelement/anaplerotic/FinProductAnapleroticInfo002")
 public class FinProductAnapleroticInfo002Controller extends BaseController {
 
-    
+
+
+    @Autowired
+    private ProductCommonService productCommonService;
+
     @Autowired
     private FinProductAnapleroticInfo002Service finProductAnapleroticInfo002Service;
     /**
@@ -65,6 +80,9 @@ public class FinProductAnapleroticInfo002Controller extends BaseController {
      */
     @Autowired
     private FinFloatMgtExpQuotation001Service finFloatMgtExpQuotation001Service;
+    
+    @Autowired
+    private MstWorkflowCommonService mstWorkflowCommonService;
     
     /**
      * {@inheritDoc}
@@ -223,6 +241,10 @@ public class FinProductAnapleroticInfo002Controller extends BaseController {
 //        	}
 //            
 //        }
+        //判断产品的发行方式
+        FinProduct finProduct = productCommonService.queryFinProductByFinprodId(Dto.getFinprodId());
+        List<FinOpenPlan> openPlan = finProductAnapleroticInfo002Service.queryOpenPlanListByFinprodId(Dto.getFinprodId());
+
         if(StringUtil.equals(GlobalConstant.DETAIL_PAGE_MODEL_NEW, Dto.getPageModel())){
             String finprodidTmp = "";
             if(StringUtil.isNotEmpty(Dto.getProdStyle())){
@@ -232,9 +254,42 @@ public class FinProductAnapleroticInfo002Controller extends BaseController {
             	finprodidTmp = Dto.getFinprodId();
             }
             List<FinProductAnapleroticInfoDto> list =finProductAnapleroticInfo002Service.queryAnapleroticInfoByFinprodId(finprodidTmp);
-            if(!StringUtil.isEmptyList(list)){
+            if(!StringUtil.isEmptyList(list)&&StringUtil.equals(DictCodeList.开放类型_开放式.getValue(), finProduct.getOperationType())){
+                for(FinProductAnapleroticInfoDto finProductAnapleroticInfoDto:list){
+                    if(StringUtil.isNotEmpty(Dto.getEffDate())&&StringUtil.isNotEmpty(finProductAnapleroticInfoDto.getEffDate())&&(Dto.getEffDate().compareTo(finProductAnapleroticInfoDto.getEffDate())==0)){
+                        validList.add(new ValidMessage("effDate", this.getMessage("FIN_PROD_E_0233")));
+                    }
+                }
+            }else if(!StringUtil.isEmptyList(list)){
                 validList.add(new ValidMessage("finprodId", this.getMessage("FIN_PROD_E_0224")));
             }
+            if(!StringUtil.isEmptyList(openPlan)&&!StringUtil.isEmptyList(list)&&StringUtil.equals(DictCodeList.开放类型_开放式.getValue(), finProduct.getOperationType())){
+                Boolean isOpenPlanFirstDay = false;
+                List<FinProductAnapleroticPlanDto> anapleroticPlanList= finProductAnapleroticInfo002Service.selectAnapleroticPlanByFinprodId(Dto.getFinprodId());
+                for(FinProductAnapleroticPlanDto anapleroticPlan:anapleroticPlanList){
+                    if(DateUtil.addDay(anapleroticPlan.getAnapleroticCycleStartDate(),1).compareTo(Dto.getEffDate())==0){
+                        isOpenPlanFirstDay = true;
+                    }
+                }
+                if(!isOpenPlanFirstDay){
+                    validList.add(new ValidMessage("回补计提是算尾不算头，请选择区间开始日+1天作为生效日！"));
+                }
+            }
+        }
+        
+        if (!StringUtil.startsWith(Dto.getOperateType(), "delete")) { // 非删除时
+            // 唯一性校验：资产代码、生效日相同时，不可提交
+            WflValidInputParameter validParam = new WflValidInputParameter();
+            ProcessMark processMark = WorkflowContext.getProcessMarkService().getParameterByAnnotation(Dto);
+            validParam.setWorkflowId(Dto.getWorkflowId());
+            validParam.setPageId(processMark.getPageId());
+
+            validParam.setBusinessDataPk2(Dto.getEffDateStr());
+            validParam.setBusinessDataPk3(Dto.getFinprodId());
+            if (mstWorkflowCommonService.isInWflProcess(validParam)) {
+                // 流程存在情况
+                return new AjaxResult("该生效日已有流程中的数据！", MessageType.错误消息);
+            } 
         }
 
         if (!StringUtil.isEmptyList(validList)){

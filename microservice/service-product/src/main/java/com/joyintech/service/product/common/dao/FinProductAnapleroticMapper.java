@@ -21,6 +21,7 @@ import com.joyintech.service.product.common.dto.FinProductAnapleroticInfoDto;
 import com.joyintech.service.product.common.dto.FinProductAnapleroticPlanDto;
 import com.joyintech.service.product.common.dto.FinProductCommonInfoDto;
 import com.joyintech.tams.common.base.entity.FinBaseRuleInfo;
+import com.joyintech.tams.common.base.entity.FinFloatAccrualSche;
 import com.joyintech.tams.common.base.entity.FinFloatCalcRuleDetail;
 
 /**
@@ -124,4 +125,18 @@ public interface FinProductAnapleroticMapper {
 	 * @param info
 	 */
 	int deleteFinCashInfo(FinBaseRuleInfo info);
+	
+	/**
+	 * 
+	 * <插入回补计划>
+	 * <功能详细描述>
+	 * @param finFloatAccrualSche
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	int insertFinFloatAccrualSche(FinFloatAccrualSche finFloatAccrualSche);
+	
+	List<FinProductAnapleroticPlanDto> selectAnapleroticPlanByFinprodId(@Param("finprodId") String finprodId);
+	
 }

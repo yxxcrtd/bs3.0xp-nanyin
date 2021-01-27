@@ -89,7 +89,6 @@
 //    };
     // 业绩基准利率类型改变时触发的事件
     $('#rateType').change(function() {
-    debugger;
         if( $('#rateType').val() === '') {
             $('#rate').val('').trigger('change').prop('disabled', false);
             $('#indexId').val('').trigger('change').prop('disabled', false);
@@ -123,6 +122,7 @@
      * @returns
      */
     function saveOrSubmit(operateType) {
+        debugger;
         //增加 提交时首次回补日校验 add by wangcheng 20191101 start
         if($('#operationType').val()=='01'&& !$("#bussFinProductFloatFeeDto_provisionFirstDay",parent.document).val()){
             var firstAnapleroticDate = $('#firstAnapleroticDate').val();
@@ -269,7 +269,7 @@
         if (pageModel === PAGE_MODEL_EDIT && applyType !='prod'){
             getElementById('finprodId').trigger('change');
             getElementById('finprodId').prop('disabled', true);
-            getElementById('effDate').prop('disabled', true);
+//            getElementById('effDate').prop('disabled', true);
 //            getElementById('anapleroticFrequency').prop('disabled', true);
             getElementById('firstAnapleroticDate').prop('disabled', true);
             getElementById('cycleTdayRule').prop('disabled', true);
@@ -517,6 +517,11 @@
         Joyin.ajaxJson(basePath + 'invest/product/productelement/anaplerotic/FinProductAnapleroticInfo002/queryAnapAndProdInfo', {finprodId : input_finprodId,dealMode : dealMode} , function(result) {
             if (result){
                 if(result.isAnapleroticList == 'N'){
+        	    //不存在回补信息的，回补要素可编辑
+        	    getElementById('firstAnapleroticDate').prop('disabled', false);
+         	    getElementById('firstAnapleroticCycleEndDate').prop('disabled', false);
+         	    getElementById('firstAnapleroticCycleBegDate').prop('disabled', false);
+         	    getElementById('anapleroticEndDate').prop('disabled', false);
                     getElementById('mdate').val(new Date(result.mDate).format('yyyy-MM-dd')).trigger('change');
                     getElementById('effDate').val(result.effDateStr);
                     getElementById('finprodAbbr').val(result.finprodAbbr);
@@ -577,7 +582,11 @@
                     }else{
                         getElementById('firstAnapleroticCycleStrDateDiv').show();
                     }
-
+		    //存在回补信息的，回补要素不可编辑
+        	    getElementById('firstAnapleroticDate').prop('disabled', true);
+         	    getElementById('firstAnapleroticCycleEndDate').prop('disabled', true);
+         	    getElementById('firstAnapleroticCycleBegDate').prop('disabled', true);
+ 		    getElementById('anapleroticEndDate').prop('disabled', true);
                 }
                 getElementById('rateType').val(result.rateType).trigger("blur").trigger('change');
                 getElementById('rate').val(result.rate).trigger("blur").trigger('change');
@@ -590,6 +599,7 @@
         });
     };
     var finprodIdChange = function(){
+        debugger;
         var finprodId = $('#finprodId').val();
 //        if(null == finprodId || ''== finprodId) {
 //            return;
