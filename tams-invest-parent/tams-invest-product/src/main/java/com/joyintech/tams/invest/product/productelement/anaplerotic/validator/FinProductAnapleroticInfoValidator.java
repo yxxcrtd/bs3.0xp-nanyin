@@ -105,16 +105,16 @@ public class FinProductAnapleroticInfoValidator implements BeanValidator {
                         this.getMessage("FinProductAnapleroticInfo.anapleroticEndDate"))));
             }
             //首次回补日必须大于等于平台日
-            if(dto.getFirstAnapleroticDate() != null &&DateUtil.compareTo(dto.getFirstAnapleroticDate(),iPlatformDate.getSysDate())<0){
+            if(dto.getFirstAnapleroticDate() != null &&DateUtil.compareTo(dto.getFirstAnapleroticDate(),dto.getEffDate())<0){
                 validList.add(new ValidMessage("firstAnapleroticDate", this.getMessage("BUSS_COM_E_0004",
                         this.getMessage("FinProductAnapleroticInfo.firstAnapleroticDate"),
-                        "平台日")));
+                        this.getMessage("FinProductAnapleroticInfo.effDate"))));
             }
             //回补结束日必须大于等于平台日
-            if(dto.getAnapleroticEndDate() != null &&DateUtil.compareTo(dto.getAnapleroticEndDate(),iPlatformDate.getSysDate())<0){
+            if(dto.getAnapleroticEndDate() != null &&DateUtil.compareTo(dto.getAnapleroticEndDate(),dto.getEffDate())<0){
                 validList.add(new ValidMessage("anapleroticEndDate", this.getMessage("BUSS_COM_E_0004",
                         this.getMessage("FinProductAnapleroticInfo.anapleroticEndDate"),
-                        "平台日")));
+                        this.getMessage("FinProductAnapleroticInfo.effDate"))));
             }
             //回补结束日必须大于等于首次回补日
             if(dto.getFirstAnapleroticDate() != null &&dto.getAnapleroticEndDate() != null
@@ -133,19 +133,20 @@ public class FinProductAnapleroticInfoValidator implements BeanValidator {
 //                validList.add(new ValidMessage("astVluDateType", this.getMessage("BUSS_COM_E_0038",
 //                    this.getMessage("FinProductAnapleroticInfo.astVluDateType"))));
 //            }
-
+// add by 马数凯 合并吉林项目 bug号JLYHBG-85 start
             //首次回补日必须大于等于平台日期以及生效日
-            if(StringUtil.isEmpty(dto.getIsList())){
-                //产品端新建的时候不提示生效日
-                if(!"01".equals(dto.getApplyType())){
-                    if(DateUtil.compareTo(dto.getFirstAnapleroticDate(),dto.getEffDate())<0){
-                        validList.add(new ValidMessage("firstAnapleroticDate", this.getMessage("BUSS_COM_E_0004",
-                                this.getMessage("FinProductAnapleroticInfo.firstAnapleroticDate"),
-                                this.getMessage("FinProductAnapleroticInfo.effDate"))));
-                    }
-
-                }
-            }
+//            if(StringUtil.isEmpty(dto.getIsList())){
+//                //产品端新建的时候不提示生效日
+//                if(!"01".equals(dto.getApplyType())){
+//                    if(DateUtil.compareTo(dto.getFirstAnapleroticDate(),dto.getEffDate())<0){
+//                        validList.add(new ValidMessage("firstAnapleroticDate", this.getMessage("BUSS_COM_E_0004",
+//                                this.getMessage("FinProductAnapleroticInfo.firstAnapleroticDate"),
+//                                this.getMessage("FinProductAnapleroticInfo.effDate"))));
+//                    }
+//
+//                }
+//            }
+// add by 马数凯 合并吉林项目 bug号JLYHBG-85 end
             //分档产品时，适用款型必填
             if(StringUtil.equals(dto.getDealMode(), DictCodeList.处理模式_分档.getValue())&&StringUtil.isEmpty(dto.getProdStyle())){
                 validList.add(new ValidMessage("prodStyle", this.getMessage("BUSS_COM_E_0038",
@@ -285,7 +286,8 @@ public class FinProductAnapleroticInfoValidator implements BeanValidator {
             }
             if(DateUtil.compareTo(dto.getEffDate(),iPlatformDate.getSysDate())<0&&!StringUtil.equals(dto.getApplyType(), DictCodeList.关联范围_产品.getValue())){
                 if(StringUtil.equals("edit", dto.getOperateType()) ){
-                    validList.add(new ValidMessage("生效日小于平台日不允许修改"));
+                    // 合并自吉林项目 放开 生效日需小于平台日的校验
+//                    validList.add(new ValidMessage("生效日小于平台日不允许修改"));
                 }else{
                     validList.add(new ValidMessage("生效日小于平台日不允许删除"));
                 }

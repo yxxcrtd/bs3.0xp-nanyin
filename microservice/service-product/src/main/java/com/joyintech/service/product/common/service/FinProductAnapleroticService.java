@@ -146,7 +146,7 @@ public class FinProductAnapleroticService extends BaseService<FinProductAnaplero
     /**
      * 现金流id 生效日删除业绩回补信息
      * <功能详细描述>
-     * @param finprodId
+     * @param
      * @see
      * @since 1.0
      */
@@ -392,6 +392,39 @@ public class FinProductAnapleroticService extends BaseService<FinProductAnaplero
     			lists.get(0).getFinProductAnapleroticInfoDto().setIsList("01");
     			//lists.get(0).getFinProductAnapleroticInfoDto().setIsAnapleroticList("N");
     		}
+            try {
+                List<BussFinProductOpenPlanDto> list = finProductOpenPlanService.selectOpenPlanInfoByFinprodId(finprodId);
+                Date platDate = DateUtil.platDateFromCache();
+                if(list != null && list.size()>0){
+                    for (BussFinProductOpenPlanDto bussFinProductOpenPlanDto : list) {
+                        if(!StringUtil.equals(bussFinProductOpenPlanDto.getOpenMode(),DictCodeList.开放模式_高频开放.getValue())){
+                            List<FinOpenPlan> openPlan = finProductOpenPlanService.queryOpenPlanListByFinprodId(finprodId);
+                            List<FinProductAnapleroticPlanDto> finProductAnapleroticPlanDtoList=this.selectAnapleroticPlanByFinprodId(finprodId);
+                            if(finProductAnapleroticPlanDtoList!=null&&finProductAnapleroticPlanDtoList.size()>0) {
+                                for(FinProductAnapleroticPlanDto finProductAnapleroticPlanDto : finProductAnapleroticPlanDtoList){
+                                    if(platDate.compareTo(finProductAnapleroticPlanDto.getAnapleroticCycleStartDate())<0&&finProductAnapleroticPlanDto.getAnapleroticCycleStartDate().compareTo(lists.get(0).getFinProductAnapleroticInfoDto().getEffDate())>0){
+                                        lists.get(0).getFinProductAnapleroticInfoDto().setEffDate(DateUtil.addDay(finProductAnapleroticPlanDto.getAnapleroticCycleStartDate(),1));
+                                        break;
+                                    }
+                                }
+                            }else {
+                                if(openPlan != null && openPlan.size()>0){
+                                    for(FinOpenPlan finOpenPlan : openPlan){
+                                        if(platDate.compareTo(finOpenPlan.getOpenDateStrUn())<0&&finOpenPlan.getOpenDateStrUn().compareTo(lists.get(0).getFinProductAnapleroticInfoDto().getEffDate())>0){
+                                            lists.get(0).getFinProductAnapleroticInfoDto().setEffDate(finOpenPlan.getOpenDateStrUn());
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
     		return lists.get(0).getFinProductAnapleroticInfoDto();
     	}else{
     			FinProductCommonInfoDto prod = new FinProductCommonInfoDto();
@@ -659,7 +692,7 @@ public class FinProductAnapleroticService extends BaseService<FinProductAnaplero
                //现金流计提计划.调整前结束日 = 画面回补计划列表.回补周期结束日
                finCashAccrsche.setValDate(finProductAnapleroticPlanDto.getAnapleroticCycleEndDate());
                //插入数据
-               finFloatAccrualScheMapper.insert(finCashAccrsche);
+               finProductAnapleroticMapper.insertFinFloatAccrualSche(finCashAccrsche);
            }
        } 
        //业绩回补业绩基准插入
@@ -730,5 +763,9 @@ public class FinProductAnapleroticService extends BaseService<FinProductAnaplero
         param.put("baseRuleType03", DictCodeListExt1.业绩基准类型_业绩回补.getValue());
         param.put("dealMode11", DictCodeList.处理模式_分档.getValue());
         return  finProductAnapleroticMapper.queryAnapleroticInfoByIdForDetail(param);
+    }
+    
+    public List<FinProductAnapleroticPlanDto> selectAnapleroticPlanByFinprodId(String finprodId){
+        return finProductAnapleroticMapper.selectAnapleroticPlanByFinprodId(finprodId);
     }
 }

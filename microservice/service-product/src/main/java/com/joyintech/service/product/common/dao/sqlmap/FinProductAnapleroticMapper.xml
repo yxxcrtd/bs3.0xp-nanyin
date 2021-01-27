@@ -444,8 +444,8 @@
 		  and b.Is_Calc = #{isCalcY}
 		  and b.CASH_TYPE_1 = #{cashType1}
 		  and b.CASH_TYPE_2 = #{cashType2}
-		  <if test="effdate !=null and effdate !=''">
-		  	 and a.eff_date= to_date(#{effdate},'yyyy-mm-dd')
+		  <if test="effDate !=null and effDate !=''">
+		  	 and a.eff_date= to_date(#{effDate},'yyyy-mm-dd')
 		  </if>
 		  <if test="ptlId !=null and ptlId !=''">
 	      	and e.PORTFOLIO_ID = #{ptlId}		
@@ -470,4 +470,46 @@
 	    and BASE_RULE_TYPE = #{baseRuleType}
         and EFF_DATE = #{effDate,jdbcType=DATE}
     </delete>
+    
+    <insert id="insertFinFloatAccrualSche" parameterType="com.joyintech.tams.common.base.entity.FinFloatAccrualSche" >
+        insert into FIN_FLOAT_ACCRUAL_SCHE (CASH_ID, ACCR_DATE, ACCR_STR_DATE, 
+            ACCR_END_DATE, VAL_DATE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        select #{cashId,jdbcType=VARCHAR}, #{accrDate,jdbcType=DATE}, #{accrStrDate,jdbcType=DATE}, 
+            #{accrEndDate,jdbcType=DATE}, #{valDate,jdbcType=DATE}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP} 
+          from dual
+        where not exists (select 1 from FIN_FLOAT_ACCRUAL_SCHE
+           where CASH_ID = #{cashId, jdbcType = VARCHAR}
+             and ACCR_DATE = #{accrDate, jdbcType = DATE})
+    </insert>
+    
+    <select id="selectAnapleroticPlanByFinprodId" resultType="com.joyintech.service.product.common.dto.FinProductAnapleroticPlanDto"> 
+	   select A.CASH_ID cashId, A.ACCR_DATE anapleroticDate, A.ACCR_STR_DATE anapleroticCycleStartDate, A.ACCR_END_DATE anapleroticCycleEndDate, A.VAL_DATE valDate
+	     from fin_float_accrual_sche A
+	         inner join fin_cash_info C
+	        on A.cash_id = C.cash_id
+	     inner join fin_product B
+	        on (c.finprod_id = B.finprod_id or c.finprod_id = B.p_Finprod_Id)
+	    where  (B.finprod_id = #{finprodId,jdbcType = VARCHAR} or B.P_FINPROD_ID = #{finprodId,jdbcType = VARCHAR})
+	      and C.Cash_Type_1 = '06'
+	      and not exists (select 1
+	                    from (select finprod_id finprod_id, happen_date trade_date
+	                            from BOK_CLAWBACK_INFO_DETAIL
+	                            where bookset_id = #{finprodId,jdbcType = VARCHAR}
+	                          union all
+	                          select deal.finprod_id,total.trade_date
+	                            from trd_fin_product_deal_total total
+	                          left join TRD_PRODUCT_DEAL deal
+                        		on total.TOTLE_TRADE_ID = deal.TOTLE_TRADE_ID
+	                           where  total.finprod_id = #{finprodId,jdbcType = VARCHAR}
+	                             and (total.is_cancel = 'N' or total.is_cancel is null)
+	                             and total.trade_status = '01'
+	                             and total.ps = 'C16') D
+	                   where D.finprod_id = B.finprod_id
+	                     and D.trade_date = A.accr_date)
+	    order by ACCR_STR_DATE
+	</select>
 </mapper>

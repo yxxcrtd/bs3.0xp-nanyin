@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.FinOpenPlan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -568,5 +569,33 @@ public class FinProductAnapleroticInfo002Service extends BaseService<FinProductA
                         + "/FinProductBuild/getOpenMode?finprodId="
                         + finprodId,
                 String.class);
+    }
+	
+	/**
+     * 产品代码查询产品开放计划
+     * <功能详细描述>
+     * @param finprodId
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public List<FinOpenPlan> queryOpenPlanListByFinprodId(String finprodId){
+        return restTemplate.getForList(
+                ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductOpenPlan/queryOpenPlanListByFinprodId?finprodId="+finprodId,
+                FinOpenPlan.class);
+    }
+    
+    /**
+     * 
+     * <获得产品回补计划>
+     * <功能详细描述>
+     * @param anapleroticId
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public List<FinProductAnapleroticPlanDto> selectAnapleroticPlanByFinprodId(String finprodId){
+        return restTemplate.getForList(
+            ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductAnaplerotic/selectAnapleroticPlanByFinprodId?finprodId=" + finprodId, FinProductAnapleroticPlanDto.class);
     }
 }
