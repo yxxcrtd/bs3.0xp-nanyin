@@ -317,7 +317,7 @@ public class VatDrawProcessorBService {
             TaxBokBalance itemCp = new TaxBokBalance();
             
             // if 发生日 = 期初
-            if (cfConfigs.get(TAX_CARRYOVER_CYCLE) != null && CalendarUtil.isFirstDayByCircle(item.getHappenDate(),
+            if (cfConfigs.get(TAX_CARRYOVER_CYCLE) != null && CalendarUtil.isFirstDayByCircle(acctEntity.getHappenDate(),
                 cfConfigs.get(TAX_CARRYOVER_CYCLE))) {
                 // 当期含税销售额合计 = 增值税账务明细.发生含税销售额
                 item.setIncomeDurAmt(BigDecimal.ZERO);
