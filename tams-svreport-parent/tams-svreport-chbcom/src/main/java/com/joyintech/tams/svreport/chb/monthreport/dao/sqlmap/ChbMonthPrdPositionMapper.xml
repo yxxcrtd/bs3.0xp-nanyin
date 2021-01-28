@@ -455,7 +455,19 @@
 	    on nvl (info.fprod_id,info.prod_id)=val.prod_id
 	     left join pd on info.prod_id=pd.prod_id
 	    where info.FPROD_ID is null
-	    and  info.status in  ('E','M') and  info.ISSUING_STATUS in  ('01','02','03')
+	    and  info.vdate <![CDATA[<]]>  #{startdate,jdbcType=DATE}
+       /**历史到期产品不统计*/
+      AND NOT EXISTS (
+      SELECT
+      1
+      FROM
+      chb_prd_deal d
+      WHERE
+      d.trade_type = '16'
+      AND nvl(d.fprod_id, d.prod_id) = info.prod_id
+      AND D.SETTDATE_DATE <![CDATA[<=]]> #{enddate,jdbcType=DATE}
+      )
+      and  info.status in  ('E','M') and  info.ISSUING_STATUS in  ('01','02','03')
 	)
   	 ,rate as(
 	     SELECT
@@ -695,11 +707,11 @@
 	/*月报产品交易头寸表,汇总客户收益，期末余额 */
 	select 
 	    f_guid()
-	    ,deal.prodid
+	    ,prod.prodid
 	    ,#{startdate,jdbcType=DATE} startdate
 	    ,#{enddate,jdbcType=DATE} enddate
 	    ,#{statusDate,jdbcType=DATE} bookdate
-	    ,deal.ccy
+	    ,nvl(deal.ccy,prod.prod_value_ccy) ccy
 	    ,DECODE(prod.RAISE_TYPE, '01', '01', '02', '02', null)
 	    ,prod.IVSTORIENTATION
 	    ,prod.TERMTYPE
