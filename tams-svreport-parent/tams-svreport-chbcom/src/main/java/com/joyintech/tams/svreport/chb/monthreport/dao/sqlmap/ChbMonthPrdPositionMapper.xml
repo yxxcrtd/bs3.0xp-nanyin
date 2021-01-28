@@ -353,20 +353,21 @@
   </update>
   
   <select id="select" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition" >
-select
+       select
     pos.POSUUID, pos.PRODID, pos.STARTDATE, pos.ENDDATE, pos.BOOKDATE, pos.CCY, pos.RAISEMODE, pos.IVSTORIENTATION,
+    pos.TERMTYPE,
     pos.OPERATE_MODE, pos.PROFIT_TYPE, pos.SALE_TARGET, pos.CON_PRD_TRAGET, pos.ORD_IDENTIFIED, pos.DIRTYAMTSUM,
     pos.CLEANAMTSUM, pos.REDEEMAMT, pos.TERMINATIONAMT, pos.ENDAMTSUM_OTH, pos.CUSTOMERAMT, pos.REDEEMINTAMT,
     pos.TERMINATIONINTAMT, pos.CASHAMT, pos.DURATIONFLAG, pos.VDATE,pos.OPENDURATION,pos.CASH_MANA_CATE, di.INSTITUTION_CODE,
     pos.PAYAMTSUM,pos.CLOSETERMDAY,info.IS_TRANSFER,info.IS_FHXGCP,info.IS_YLLCCP
-    from CHB_MONTH_PRD_POSITION  pos
-     	left join (      select f.finprod_market_id,di.institution_code
+       from CHB_MONTH_PRD_POSITION pos
+      left join (      select f.finprod_market_id,di.institution_code
       from fin_product f
       left join DATA_AUTH_NOTIFY_INST di on f.finprod_id=di.business_id and di.model_type = '02' AND DI.DATA_TYPE= 'FINPROD04'
       WHERE f.p_finprod_id is null) di on di.finprod_market_id = pos.PRODID
-      left join  chb_prd_baseinfo  info on  info.prod_id=pos.PRODID
-    where startdate = #{startdate,jdbcType=DATE}
-    and enddate = #{enddate,jdbcType=DATE}
+     left join  chb_prd_baseinfo  info on  info.prod_id=pos.PRODID
+      where startdate = #{startdate,jdbcType=DATE}
+      and enddate = #{enddate,jdbcType=DATE}
   </select>
   
   <insert id="genPosition"  parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReport" >

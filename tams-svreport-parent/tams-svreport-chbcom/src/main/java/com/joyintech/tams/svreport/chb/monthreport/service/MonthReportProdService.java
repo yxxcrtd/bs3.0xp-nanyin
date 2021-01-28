@@ -390,6 +390,10 @@ public class MonthReportProdService {
 				pos.setCustomeramt(BigDecimal.ZERO);
 			if (pos.getEndamtsumOth() == null)
 				pos.setEndamtsumOth(BigDecimal.ZERO);
+			if (pos.getPayamtsum() == null)
+				pos.setPayamtsum(BigDecimal.ZERO);
+			if (pos.getClosetermday() == null)
+				pos.setClosetermday(BigDecimal.ZERO);
 			if (pos.getVdate() == null) {
 				logger.error("产品信息错误：起息日为空（" + pos.getProdid() + ")");
 				continue;
