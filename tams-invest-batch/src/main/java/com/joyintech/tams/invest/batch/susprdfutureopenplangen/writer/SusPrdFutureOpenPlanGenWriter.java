@@ -249,6 +249,17 @@ public class SusPrdFutureOpenPlanGenWriter extends BaseWriter<NeedToWriteEntity>
 					addDateToList(dateOpenPlanList, accrDateOtherDto.getAnapleroticEndDate());
 					addDateToList(dateOpenPlanList, accrDateOtherDto.getFirstAnapleroticCycleBegDate());
 				}
+				
+				if(accrDateOtherDto.getFirstAnapleroticCycleBegDate().compareTo(accrDateOtherDto.getFirstAnapleroticDate())<0) {
+					FinFloatAccrualSche finFloatAccrualScheFirst = new FinFloatAccrualSche();
+					finFloatAccrualScheFirst.setCashId(accrDateOtherDto.getCashId());
+					finFloatAccrualScheFirst.setAccrDate(accrDateOtherDto.getFirstAnapleroticDate());
+					finFloatAccrualScheFirst.setAccrStrDate(accrDateOtherDto.getFirstAnapleroticCycleBegDate());
+					finFloatAccrualScheFirst.setAccrEndDate(accrDateOtherDto.getFirstAnapleroticDate());
+					finFloatAccrualScheFirst.setValDate(accrDateOtherDto.getFirstAnapleroticDate());
+					finFloatAccrualScheFirst.setUpdateTime(new Date());
+					finFloatAccrualScheMapper.insert(finFloatAccrualScheFirst);
+				}
 				// 对dateOpenPlanList进行处理
 				Date startDate = dateOpenPlanList.get(0);
 				boolean flag = true;
