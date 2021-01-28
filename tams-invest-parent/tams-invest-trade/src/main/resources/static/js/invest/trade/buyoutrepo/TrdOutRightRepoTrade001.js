@@ -8,6 +8,12 @@
     	if(param.portfolioId){
     		param.portfolioId = param.portfolioId.join(",");
     	}
+    	if (param.chlFinprodId) {
+            param.chlFinprodId = param.chlFinprodId.join(",");
+        }
+        if (param.finprodId) {
+            param.finprodId = param.finprodId.join(",");
+        }
     	param.dealDateStart = $('#TrdOutRightRepoTrade001_dealDate').startDate();
     	param.dealDateEnd = $('#TrdOutRightRepoTrade001_dealDate').endDate();
         return param;
@@ -43,7 +49,8 @@
 			,{field:'portfolioName', title: 'TrdOutRightRepoTrade001.table.ptlName', width:200}
 			,{field:'finprodIdShow', title: 'TrdOutRightRepoTrade001.table.finprodMarketId', width:160}
 			,{field:'finprodNAME', title: 'TrdOutRightRepoTrade001.table.finprodName', visible: false}
-            ,{field:'finprodAbbr', title: 'TrdOutRightRepoTrade001.finprodAbbr', width:160}            
+            ,{field:'finprodAbbr', title: 'TrdOutRightRepoTrade001.finprodAbbr', width:160}
+            ,{field:'chlFinprodId', title: 'TrdOutRightRepoTrade001.chlFinprodId', width:160}
 			,{field:'tradeMarketStr', title: 'TrdOutRightRepoTrade001.table.dealPlace', width:150, sortField:'tradeMarket'}
 			,{field:'psStr', title: 'TrdOutRightRepoTrade001.table.ps', width:100, sortField:'ps'}
 			,{field:'tradeDate', title: 'TrdOutRightRepoTrade001.table.dealDate', width:100, type:'date'}

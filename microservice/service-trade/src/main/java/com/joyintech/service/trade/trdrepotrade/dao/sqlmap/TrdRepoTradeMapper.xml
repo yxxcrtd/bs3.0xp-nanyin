@@ -34,6 +34,7 @@
         <result column="FEE_AMT"                property="channelFee"     jdbcType="VARCHAR" />
         <result column="TRADE_AMT"              property="tradeAmtAndFee"     jdbcType="VARCHAR" />
         <result column="TYPE_6"                 property="repoType"       jdbcType="VARCHAR" />
+        <result column="CHL_ID"                 property="chlFinprodId"       jdbcType="VARCHAR" />
         <!-- 增加 add by nixukuan 20191119 start -->
         <result column="branch"           property="branch"     jdbcType="VARCHAR" />
         <result column="regist_org"              property="registOrg"       jdbcType="VARCHAR" />
@@ -55,6 +56,7 @@
                 SELECT
                     #{VALID_STATUS_01} validStatus,
                     wtpd.F_TRADE_ID fTradeId,
+                    fp1.FINPROD_NAME chlFinprodId,
                     wtpd.TRADE_ID tradeId,
 	                wtpda.ENTRUST_ID entrustId,
 	                pp.PORTFOLIO_ID portfolioId,
@@ -76,11 +78,13 @@
                           ON  wtpda.TRADE_ID = wtpd.TRADE_ID
                   LEFT JOIN   PTL_PORTFOLIO pp
                           ON  pp.PORTFOLIO_ID = wtpda.PORTFOLIO_ID
+                  LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = wtpd.CHL_ID
                   LEFT JOIN   WFL_TRD_PRODUCT_DEAL_OTH wtpdo
                           ON  wtpdo.TRADE_ID = wtpd.TRADE_ID
                   LEFT JOIN   WFL_PA_TRD_PRODUCT_DEAL wptpd
                           ON  wptpd.TRADE_ID = wtpd.TRADE_ID
-                 LEFT JOIN   sys_datadict_list dict ON wtpd.trade_market=dict.item_code and dict.dict_code='TRADE_PLACE'
+                  LEFT JOIN   sys_datadict_list dict ON wtpd.trade_market=dict.item_code and dict.dict_code='TRADE_PLACE'
+                  LEFT JOIN FIN_DEAL_PLEDGE fdp ON wtpd.TRADE_ID = fdp.finprod_id
                   WHERE pp.INVEST_YESORNO='Y'
                   AND  wtpd.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03})
                     <if test="loginUserName != null and loginUserName != ''">
@@ -107,6 +111,28 @@
                         </foreach>)
                         )
 
+                    </if>
+                    <if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+                        AND (wtpd.CHL_ID IN
+                        <foreach collection="chlFinprodIdList" item="item" index="index" open="("
+                                 close=")" separator=",">
+                            <if test="(index % 998) == 0">
+                                null) OR wtpd.CHL_ID in (
+                            </if>
+                            #{item}
+                        </foreach>
+                        )
+                    </if>
+                    <if test="finprodIdList != null and finprodIdList.size() > 0">
+                        AND (fdp.PLEDGE_FINPROD_ID IN
+                        <foreach collection="finprodIdList" item="item" index="index" open="("
+                                 close=")" separator=",">
+                            <if test="(index % 998) == 0">
+                                null) OR fdp.PLEDGE_FINPROD_ID in (
+                            </if>
+                            #{item}
+                        </foreach>
+                        )
                     </if>
                     <if test="entrustId != null and entrustId != ''">
                         AND wtpda.ENTRUST_ID like CONCAT(#{entrustId}, '%')
@@ -136,6 +162,7 @@
                 SELECT
                     #{VALID_STATUS_02} validStatus,
                     tpd.F_TRADE_ID fTradeId,
+                    fp1.FINPROD_NAME chlFinprodId,
                     tpd.TRADE_ID tradeId,
                     tpda.ENTRUST_ID entrustId,
                     pp.PORTFOLIO_ID portfolioId,
@@ -154,11 +181,13 @@
                 FROM TRD_PRODUCT_DEAL tpd
                   LEFT JOIN TRD_PRODUCT_DEAL_ADD tpda ON tpda.TRADE_ID = tpd.TRADE_ID
                   LEFT JOIN PTL_TRADE PT ON tpd.TRADE_ID = PT.BUSI_NO
+                  LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = tpd.CHL_ID
                   LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
                   LEFT JOIN FIN_PRODUCT_TYPE fpt ON  fpt.FINPROD_ID = tpd.TRADE_ID AND fpt.BRANCH = #{BRANCH_0}
                   LEFT JOIN FIN_TRADE_PRODUCT ftp ON  ftp.FINPROD_ID = tpd.TRADE_ID AND fpt.BRANCH = #{BRANCH_0}
                   LEFT JOIN PA_TRD_PRODUCT_DEAL ptpd ON ptpd.TRADE_ID = tpd.TRADE_ID
                   LEFT JOIN   sys_datadict_list dict ON tpd.trade_market=dict.item_code and dict.dict_code='TRADE_PLACE'
+                  LEFT JOIN FIN_DEAL_PLEDGE fdp ON tpd.TRADE_ID = fdp.finprod_id
                   where pp.INVEST_YESORNO='Y'
                      and  tpd.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03})
                     <if test="loginUserName != null and loginUserName != ''">
@@ -183,6 +212,28 @@
                             </if>
                             #{item}
                         </foreach>)
+                        )
+                    </if>
+                    <if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+                        AND (tpd.CHL_ID IN
+                        <foreach collection="chlFinprodIdList" item="item" index="index" open="("
+                                 close=")" separator=",">
+                            <if test="(index % 998) == 0">
+                                null) OR tpd.CHL_ID in (
+                            </if>
+                            #{item}
+                        </foreach>
+                        )
+                    </if>
+                    <if test="finprodIdList != null and finprodIdList.size() > 0">
+                        AND (fdp.PLEDGE_FINPROD_ID IN
+                        <foreach collection="finprodIdList" item="item" index="index" open="("
+                                 close=")" separator=",">
+                            <if test="(index % 998) == 0">
+                                null) OR fdp.PLEDGE_FINPROD_ID in (
+                            </if>
+                            #{item}
+                        </foreach>
                         )
                     </if>
                     <if test="entrustId != null and entrustId != ''">
@@ -213,6 +264,7 @@
                 SELECT
                     #{VALID_STATUS_03} validStatus,
                     tpd.F_TRADE_ID fTradeId,
+                    fp1.FINPROD_NAME chlFinprodId,
                     tpd.TRADE_ID tradeId,
                     tpda.ENTRUST_ID entrustId,
                     pp.PORTFOLIO_ID portfolioId,
@@ -248,7 +300,9 @@
 <!--                        AND fpt.BRANCH = #{BRANCH_0}-->
                 LEFT JOIN   PA_TRD_PRODUCT_DEAL ptpd
                         ON  ptpd.TRADE_ID = tpd.TRADE_ID
+                LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = tpd.CHL_ID
                 LEFT JOIN   sys_datadict_list dict ON tpd.trade_market=dict.item_code and dict.dict_code='TRADE_PLACE'
+                LEFT JOIN FIN_DEAL_PLEDGE fdp ON tpd.TRADE_ID = fdp.finprod_id
                 where pp.INVEST_YESORNO='Y'
                     and  tpd.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03})
                 <if test="loginUserName != null and loginUserName != ''">
@@ -276,6 +330,28 @@
                     )
                     )
                 </if>
+                    <if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+                        AND (tpd.CHL_ID IN
+                        <foreach collection="chlFinprodIdList" item="item" index="index" open="("
+                                 close=")" separator=",">
+                            <if test="(index % 998) == 0">
+                                null) OR tpd.CHL_ID in (
+                            </if>
+                            #{item}
+                        </foreach>
+                        )
+                    </if>
+                    <if test="finprodIdList != null and finprodIdList.size() > 0">
+                        AND (fdp.PLEDGE_FINPROD_ID IN
+                        <foreach collection="finprodIdList" item="item" index="index" open="("
+                                 close=")" separator=",">
+                            <if test="(index % 998) == 0">
+                                null) OR fdp.PLEDGE_FINPROD_ID in (
+                            </if>
+                            #{item}
+                        </foreach>
+                        )
+                    </if>
                     <if test="entrustId != null and entrustId != ''">
                         AND tpda.ENTRUST_ID like CONCAT(#{entrustId}, '%')
                     </if>

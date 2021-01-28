@@ -24,7 +24,7 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
  * @author: 强成西
  * @create: 2018-10-10 17:15
  **/
-@PageId("TrdProjectInvestTrade002")
+@PageId("TrdProjectInvestTrade001")
 @ValidLogic(targetClass = TrdProjectInvestTradeDeleteDtoValidator.class, groups = {ValidateGroupDelete.class})
 public class TrdProjectInvestTrade001Dto extends TrdProjectInvestTradeDto {
 

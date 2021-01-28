@@ -63,7 +63,25 @@ public class TrdRepoTrade001Service extends CommonExportService<TrdRepoTrade001D
             pageParam.put("portfolioIdList", new ArrayList<>());
         }
 
-        pageParam.put("BRANCH_0", CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE));
+        //多选下拉框处理（抵押品代码）
+		Object finprodIdObj = pageParam.get("finprodId");
+        if (finprodIdObj != null){
+        	pageParam.put("finprodIdList",
+					StringUtil.splitToList(GlobalConstant.COMMA,(String) finprodIdObj));
+		}else {
+        	pageParam.put("finprodIdList",new ArrayList<>());
+		}
+
+		//多选下拉框处理（合作资产）
+		Object chlFinprodIdObj = pageParam.get("chlFinprodId");
+		if (chlFinprodIdObj != null){
+			pageParam.put("chlFinprodIdList",
+					StringUtil.splitToList(GlobalConstant.COMMA,(String) chlFinprodIdObj));
+		}else {
+			pageParam.put("chlFinprodIdList",new ArrayList<>());
+		}
+
+		pageParam.put("BRANCH_0", CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE));
         pageParam.put("loginUserName", LoginUserUtil.getUserName());
 
         return restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME + "/TrdRepoTrade/selectForPage",

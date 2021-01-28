@@ -66,6 +66,19 @@ public class TrdRepoTrade001Dto extends TrdProductDeal implements ProcessEntity 
     private String repoTypeText;
 
     /**
+     * 合作资产
+     */
+    private String chlFinprodId;
+
+    public String getChlFinprodId() {
+        return chlFinprodId;
+    }
+
+    public void setChlFinprodId(String chlFinprodId) {
+        this.chlFinprodId = chlFinprodId;
+    }
+
+    /**
      * 期限品种
      */
     private String termTypeReback;

@@ -71,6 +71,7 @@
                         + '\')" class="pro-link"  style="cursor: pointer;">'+row.portfolioId+'</a>';
                 }}
             , {field: 'portfolioName', width:150, title: '组合名称', sortField:"PORTFOLIO_NAME"}
+            , {field: 'chlFinprodId', width:150, title: 'TrdProjectInvestTrade001.chlFinprodId', sortField:"chlFinprodId"}
             , {field: 'finprodMarketId', width:150, title: '资产代码', sortField:"FINPROD_MARKET_ID",
                 render : function(data, type, row, meta) {
                     if(row.finprodMarketId !=undefined){

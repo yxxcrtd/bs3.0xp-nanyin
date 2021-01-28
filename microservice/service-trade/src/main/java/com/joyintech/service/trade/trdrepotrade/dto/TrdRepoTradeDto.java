@@ -87,6 +87,19 @@ public class TrdRepoTradeDto extends TrdProductDeal {
     private String bondName;
 
     /**
+     * 合作资产
+     */
+    private String chlFinprodId;
+
+    public String getChlFinprodId() {
+        return chlFinprodId;
+    }
+
+    public void setChlFinprodId(String chlFinprodId) {
+        this.chlFinprodId = chlFinprodId;
+    }
+
+    /**
      * 获取 operateType
      *
      * @rturn operateType

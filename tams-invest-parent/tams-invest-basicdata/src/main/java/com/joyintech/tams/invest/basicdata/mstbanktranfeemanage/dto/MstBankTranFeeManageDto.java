@@ -49,6 +49,28 @@ public class MstBankTranFeeManageDto extends TrdFeeConfig implements ProcessEnti
      * <意义，目的和功能，以及可能被用到的地方>
      */
     private static final long serialVersionUID = 1L;
+
+    /**
+     * 有效状态
+     */
+    private String validStatus;
+
+    public String getValidStatus() {
+        return validStatus;
+    }
+
+    public void setValidStatus(String validStatus) {
+        this.validStatus = validStatus;
+    }
+
+    /**
+     * 有效状态转换
+     * @return
+     */
+    public String getValidStatusVal(){
+        return SysDataUtil.getNameFromDataDict(DictCode.交易流程状态, this.getValidStatus());
+    }
+
     /**
      * 费用上限
      */

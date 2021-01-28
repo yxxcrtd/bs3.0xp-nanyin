@@ -23,6 +23,7 @@
             ,endDays1Start: $('#endDays1Start').val()
             ,endDays1End: $('#endDays1End').val()
             ,fTradeId:fTradeId?fTradeId:$('#fTradeId').val()
+            ,chlFinprodId: $('#chlFinprodId').val()
             //添加登记托管机构、债券剩余期限 add by lishuping 20191010 end
         };
         
@@ -70,6 +71,7 @@
                 }
         	}
         	,{field:'finprodName', sortField:'FINPROD_NAME',width:140, title: 'TrdBondInvestTrade001.finprodName'}
+        	,{field:'chlFinprodId', sortField:'CHL_NAME',width:140, title: 'TrdBondInvestTrade001.chlFinprodId'}
         	,{field:'psText', sortField:'ps',width:100, title: 'TrdBondInvestTrade001.ps'}
         	,{field:'tradeMarketText', sortField:'',width:130, title: 'TrdBondInvestTrade001.tradeMarket'}
         	,{field:'tradeMarketModeText',sortField:'TRADE_MARKET', width:120, title: 'TrdBondInvestTrade001.tradeMarketMode'}

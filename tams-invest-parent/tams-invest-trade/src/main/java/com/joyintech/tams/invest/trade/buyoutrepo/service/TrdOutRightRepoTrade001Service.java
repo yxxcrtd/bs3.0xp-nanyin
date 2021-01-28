@@ -1,8 +1,10 @@
 package com.joyintech.tams.invest.trade.buyoutrepo.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.select.SuggestDto;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +34,25 @@ public class TrdOutRightRepoTrade001Service extends CommonExportService<TrdOutRi
         if (StringUtil.isNotEmpty(map.get("portfolioId"))) {
             map.put("portfolioId", StringUtil.splitToList(null, map.get("portfolioId").toString()));
         }
+
+        //多选下拉框处理（抵押品代码）
+        Object finprodIdObj = map.get("finprodId");
+        if (finprodIdObj != null){
+            map.put("finprodIdList",
+                    StringUtil.splitToList(GlobalConstant.COMMA,(String) finprodIdObj));
+        }else {
+            map.put("finprodIdList",new ArrayList<>());
+        }
+
+        //多选下拉框处理（合作资产）
+        Object chlFinprodIdObj = map.get("chlFinprodId");
+        if (chlFinprodIdObj != null){
+            map.put("chlFinprodIdList",
+                    StringUtil.splitToList(GlobalConstant.COMMA,(String) chlFinprodIdObj));
+        }else {
+            map.put("chlFinprodIdList",new ArrayList<>());
+        }
+
         map.put("userId", SecurityUtil.getLoginUser().getUserName());
         return restTemplate.postForPage(
             ServiceApplication.TRADE_SERVICE_NAME + "/TrdOutRightRepoTrade/queryForPage", map,

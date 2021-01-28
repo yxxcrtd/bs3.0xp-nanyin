@@ -69,6 +69,19 @@ public class WflTrdProductDeal extends WflTrdProductDealKey {
     private Date cpriceDate;
 
     /**
+     * 合作资产
+     */
+    private String chlFinprodId;
+
+    public String getChlFinprodId() {
+        return chlFinprodId;
+    }
+
+    public void setChlFinprodId(String chlFinprodId) {
+        this.chlFinprodId = chlFinprodId;
+    }
+
+    /**
      * 计提份额
      */
     private BigDecimal accrNum;

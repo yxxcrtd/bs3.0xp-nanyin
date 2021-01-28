@@ -33,6 +33,7 @@ $(function(){
             portfolioId:portfolioId,
             finprodType:$('#finprodType').val(),
             finprodId:$('#finprodId').val(),
+            chlFinprodId:$('#chlFinprodId').val(),
             ps:ps,
             status:$('#status').val(),
             tradeDateBegin:$('#tradeDate').startDate(),
@@ -68,6 +69,7 @@ $(function(){
                 return "<a  class='pro-link' style='cursor: pointer;'>"+row.portfolioId+"</a>";
             }}
             ,{field:'portfolioName', width:150, title: 'TrdDepositInvestTrade001.portfolioName'}
+            ,{field:'chlFinprodId', width:150, title: 'TrdDepositInvestTrade001.chlFinprodId'}
 //            ,{field:'portfolioId',visible:false}
             ,{field:'finprodMarketId', width:150, title: 'TrdDepositInvestTrade001.finprodId',render: function (data, type, row, meta) {
                 return "<a  class='pro-link-fin' style='cursor: pointer;'>"+row.finprodMarketId+"</a>";

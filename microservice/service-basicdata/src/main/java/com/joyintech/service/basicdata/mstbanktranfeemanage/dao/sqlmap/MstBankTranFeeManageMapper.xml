@@ -27,6 +27,7 @@
 	 -->
 	<select id="selectForPage" resultType="com.joyintech.service.basicdata.mstbanktranfeemanage.dto.MstBankTranFeeManageDto">
 		SELECT
+		'02' as validStatus,
 		m.BATCH_SEQ batchSeq,
 		m.REGIST_ORG registOrg,
 		t3.ps ps,
