@@ -31,7 +31,7 @@
   <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbCprodBalanceDto" >
     insert into CHB_CPROD_BALANCE (BAL_ID, PROD_ID, P_PROD_ID, 
       PERIOD_ID, VALUE_DATE, MDATE, 
-      BALANCE, CCY,CREATE_USER,CREATE_TIME,UPDATE_TIME,UPDATE_USER)
+      BALANCE, CCY,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
     values (#{balId,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{pProdId,jdbcType=VARCHAR}, 
       #{periodId,jdbcType=VARCHAR}, #{valueDate,jdbcType=TIMESTAMP}, #{mdate,jdbcType=TIMESTAMP}, 
       #{balance,jdbcType=DECIMAL}, #{ccy,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},

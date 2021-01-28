@@ -160,7 +160,7 @@ public class BokBalanceInterfService extends FileImpService{
         }
         // 数据检查
         checkData(listData, interfFile.getFilename(), InterfDefine.科目余额数据.getCode(),
-            InterfDefine.数据检查类型_科目余额.getCode(), null,
+            InterfDefine.科目余额数据.getCode(), null,
             new String[]{"BOOKSET_ID","SUBJECT_NO","BALANCE_DATE"});
         ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(
             InterfDefine.科目余额数据.getCode());
