@@ -61,7 +61,7 @@
         <module>../microservice/service-disclosure</module>
         <module>../microservice/service-document</module>
         <module>../microservice/service-entrust</module>
-<!--         <module>../microservice/service-interf</module> -->
+        <module>../microservice/service-interf</module>
         <module>../microservice/service-pbc</module>
         <module>../microservice/service-period</module>        
         <module>../microservice/service-portfolio</module>
@@ -74,6 +74,7 @@
         <module>../microservice/service-valuation</module>
         <module>../microservice/service-risk-redis</module>
     	<module>../microservice/service-risk-redis-inf</module>
+    	<module>../microservice/service-invest-interf</module>
 <!--         几许中心包 -->
         <module>../JixuCenter</module>
         
