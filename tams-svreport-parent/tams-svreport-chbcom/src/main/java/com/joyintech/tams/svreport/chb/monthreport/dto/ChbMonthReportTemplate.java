@@ -1,5 +1,7 @@
 package com.joyintech.tams.svreport.chb.monthreport.dto;
 
+import java.math.BigDecimal;
+
 /**
  * 描述:CHB_MONTH_REPORT_TEMPLATE表的实体类
  * @version
@@ -46,6 +48,8 @@ public class ChbMonthReportTemplate {
      * 状态
      */
     private String status;
+
+
 
     /**
      * null
