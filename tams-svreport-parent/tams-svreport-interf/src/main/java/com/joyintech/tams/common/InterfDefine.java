@@ -25,7 +25,7 @@ public enum InterfDefine {
     投资者交易信息接口数据("CHB_PRD_DEAL","投资者交易信息接口数据"),
     交易对手接口数据("CHB_COUNTER_PARTY","交易对手接口数据"),
     产品基本信息接口数据("CHB_PRD_BASEINFO","产品基本信息接口数据"),
-    产品申报信息接口数据("CHB_PRD_DECLARE","产品申报信息接口数据"),
+    产品申报信息接口数据("CHB_PRD_DECLARE_INFO","产品申报信息接口数据"),
     产品开放计划接口数据("CHB_PRD_OPENSCH","产品开放计划接口数据"),
     产品收益率净值接口数据("CHB_PRD_PERIODYIELD","产品收益率净值接口数据"),
     产品费用交易接口数据("CHB_PRD_FEE_DEAL","产品费用交易接口数据"),
@@ -38,9 +38,9 @@ public enum InterfDefine {
     产品资产调整数据("DIS_PRD_ADJUST","产品资产调整数据"),
     产品资产种类投资比例调整数据("DIS_ASSET_INVEST_RATE","产品资产种类投资比例调整数据"),
     产品基础指标数据("DIS_PRD_INDEX","产品基础指标数据"),
-    资产基础指标数据("CHB_ASSET_INDEX","资产基础指标数据"),
+    资产基础指标数据("CHB_ASSETS_BASIS_DATA","资产基础指标数据"),
     资产基础指标不穿透数据("CHB_ASSETS_BASIS_DATA_NOBTM","资产基础指标不穿透数据"),
-    科目余额数据("CHB_SUBJECT_BALANCE","科目余额数据"),
+    科目余额数据("BOK_BALANCE","科目余额数据"),
     关联机构信息("DIS_REL_ORG","关联机构信息"),
     基础日历信息数据("DIS_CALENDAR_INFO","基础日历信息数据"),
     日历管理信息数据("DIS_CALENDAR_MGR","日历管理信息数据"),
@@ -64,7 +64,8 @@ public enum InterfDefine {
     贷款明细信息接口数据("CHB_LOAN_DETAIL_INFO","贷款明细信息接口数据"),
     贷款明细原始合同信息接口("CHB_LOAN_DETAIL_CONTRACT","贷款明细原始合同信息接口"),
     产品费用头寸接口("CHB_PRDFEE_BASIS_DATA","产品费用头寸接口"),
-    产品分红交易接口数据("CHB_PRD_BONUS_DEAL","产品分红交易接口数据")
+    产品分红交易接口数据("CHB_PRD_BONUS_DEAL","产品分红交易接口数据"),
+    监管区域客户组别接口数据("SALE_CUST_SVRREPORT","监管区域客户组别接口数据")
     ;
     
     /*两个属性*/

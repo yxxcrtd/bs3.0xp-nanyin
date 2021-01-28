@@ -46,7 +46,7 @@ import com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoD
 public class ChbProdDeclareFileImpService extends FileImpService{
 
 	/**
-	 * CHB_PRD_DECLARE
+	 * CHB_PRD_DECLARE_INFO
 	 */
 	
 	 private static final String[] DUPLICATIED_LIST = {"PROD_INS_ID"};
@@ -105,7 +105,7 @@ public class ChbProdDeclareFileImpService extends FileImpService{
 				insertDataMerge(list);
 			} else {
 				
-				createDataFile(tmpPath + "/CHB_PRD_DECLARE/CHB_PRD_DECLARE", list, table.getColumns());
+				createDataFile(tmpPath + "/CHB_PRD_DECLARE_INFO/CHB_PRD_DECLARE_INFO", list, table.getColumns());
 			}
 		}
 		return CollectionUtils.isNotEmpty(list);

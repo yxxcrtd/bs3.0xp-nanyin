@@ -51,7 +51,7 @@
                         <div class="layui-input-inline input-inline">
                             <input type="text" data-fixtype="2" unit="1"
                                    class="layui-input form-input text-money" id="amt"
-                                   name="amt" data-th-value="${entity?.amt}"
+                                   th:name="|${entityName}.amt|" data-th-value="${entity?.amt}"
                                    data-moneymemory="" data-th-data-textrange="2"
                                    required="required">
                             <span class="input-right-show">元</span>

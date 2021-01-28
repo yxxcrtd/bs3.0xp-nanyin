@@ -9,40 +9,40 @@
  */
 package com.joyintech.tams.svreport.infomanagement.service;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.Reader;
-import java.math.BigDecimal;
-import java.sql.Clob;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.base.intf.DataDictItem;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.ExportUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.FilterInformationDetailMapper;
+import com.joyintech.tams.common.base.dao.FilterInformationMapper;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
+import com.joyintech.tams.common.svreport.datacheck.dto.CheckRule;
+import com.joyintech.tams.common.svreport.datacheck.service.DataCheckService;
+import com.joyintech.tams.constant.*;
+import com.joyintech.tams.report.common.dao.BaseInformationMapper;
+import com.joyintech.tams.report.common.dao.ChbInfoMgrResultConfigMapper;
+import com.joyintech.tams.report.common.dao.ChbMgrTableInfoMapper;
+import com.joyintech.tams.report.common.dao.ColumnTypeMapper;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import com.joyintech.tams.report.common.util.ReportGlobalConstant;
+import com.joyintech.tams.report.common.util.SysDataUtil;
+import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.systemtools.dao.TamsBaseMapper;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
-
-import org.apache.axis2.databinding.types.soapencoding.Array;
-import org.apache.poi.hssf.usermodel.HSSFCell;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -57,43 +57,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.export.CommonExportService;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.dao.FilterInformationDetailMapper;
-import com.joyintech.tams.common.base.dao.FilterInformationMapper;
-import com.joyintech.tams.common.base.entity.BaseInformationDto;
-import com.joyintech.tams.common.base.entity.ChbInfoMgrResultConfig;
-import com.joyintech.tams.common.base.entity.ChbMgrTableInfo;
-import com.joyintech.tams.common.base.entity.ColumnTypeDto;
-import com.joyintech.tams.common.base.entity.FilterInformationDetailDto;
-import com.joyintech.tams.common.base.entity.FilterInformationDto;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.tams.common.svreport.datacheck.dto.CheckRule;
-import com.joyintech.tams.common.svreport.datacheck.service.DataCheckService;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.report.common.dao.BaseInformationMapper;
-import com.joyintech.tams.report.common.dao.ChbInfoMgrResultConfigMapper;
-import com.joyintech.tams.report.common.dao.ChbMgrTableInfoMapper;
-import com.joyintech.tams.report.common.dao.ColumnTypeMapper;
-import com.joyintech.tams.report.common.util.ReportGlobalConstant;
-import com.joyintech.tams.report.common.util.SysDataUtil;
-import com.joyintech.tams.report.interf.common.constant.DateUtil;
-import com.joyintech.tams.systemtools.util.CommonUtil;
-import com.joyintech.tools.collectors.JoyinCollectors;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.Reader;
+import java.math.BigDecimal;
+import java.sql.Clob;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 
 
@@ -123,8 +99,8 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 	// 资产要素字段数据临界值（该字段为备注所在的索引值）
 	private static final Integer CAI_BASE_COUNT = 274;
 	
-//	@Autowired
-//	private   CommonCodeCheckBatchService   commonCodeCheckBatchService;
+	@Autowired
+	private CommonCodeCheckBatchService commonCodeCheckBatchService;
 
 	@Autowired
 	private BaseInformationMapper baseInformationMapper;
@@ -602,6 +578,29 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		selectOptionDtoList.forEach(selectOptionDto -> {
 			data.put(selectOptionDto.getId(), selectOptionDto.getText());
 		});
+		return JSON.toJSONString(data);
+	}
+
+	/**
+	 * 查询多选框参数
+	 *
+	 * @param param 表名和字段名
+	 * @return 多选框参数
+	 */
+	public String queryColumnInfoListCache(Map<String, Object> param) {
+		String tableId = (String) param.get("tableId");
+		String columnId = (String) param.get("columnId");
+		Map<String, String> data = new HashMap<String, String>();
+		String dictCode = baseInformationMapper.queryDictCode(tableId, columnId);
+		if (StringUtil.isNotEmpty(dictCode)){
+			DataDict reportDataDict = CacheUtil.getDictCode(dictCode);
+			if (reportDataDict != null && !StringUtil.isEmptyList(reportDataDict.getItems())){
+				List<DataDictItem> dictItemList = (List<DataDictItem>) reportDataDict.getItems();
+				dictItemList.forEach(selectOptionDto -> {
+					data.put(selectOptionDto.getItemCode(), selectOptionDto.getItemValue());
+				});
+			}
+		}
 		return JSON.toJSONString(data);
 	}
 
@@ -1555,7 +1554,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 				// 此行所存入的数据字典枚举值
 				String dictCode = enumIndexMap.get(index);
 				// 需要存入枚举列表的值
-				String[] dictArr = getDictCodeList(dictCode);
+				String[] dictArr = getDictCodeListCache(dictCode);
 				if(dictArr==null) {
 					continue;
 				}
@@ -1700,7 +1699,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 					// 此行所存入的数据字典枚举值
 					String dictCode = enumIndexMap.get(index);
 					// 需要存入枚举列表的值
-					String[] dictArr = getDictCodeList(dictCode);
+					String[] dictArr = getDictCodeListCache(dictCode);
 					if(dictArr==null) {
 						continue;
 					}
@@ -2193,13 +2192,21 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             	// 已配置规则检查
             	//List<CheckRule> listRules = dataCheckService.queryCheckRules(dataObject);
             	List<CheckRule> listRules = dataCheckService.queryCheckRulesByDataTypeAndColumns(dataObject, checkColumnList);
-                List<Map<String, String>> listError = DataCheckService.checkDataList(dataMapList,listRules);
+                DataCheckService.checkDataList(dataMapList,listRules, false);
+
+                // add by zhangliang 20210127 添加代码校验 start
+				commonCodeCheckBatchService.codeCheckCommonOnly(dataMapList, ChbCheckTableInfo.genChbCheckTableInfo(tableId));
+				// add by zhangliang 20210127 添加代码校验 end
 //                listError.forEach(errorMap -> {
 //                	errorLists.add(errorMap.get("ERRMSG"));
 //                });
                 // 文件中有不符合规则配置的数据
-            	if (listError.size() > 0) {
-            		for (Map<String, String> map : listError) {
+            	if (dataMapList.size() > 0) {
+            		for (Map<String, String> map : dataMapList) {
+            			if(StringUtil.isEmpty(map.get("ERRMSG"))){
+            				continue;
+						}
+
 //业务主键凭借  List<String> bisinessPkList
             			/**start    添加错误提示"标识码"字段     add by  dongxiangyang 20201026 */
             			String  vailkey=getBusinessKeyStr(bisinessPkList, map);
@@ -3230,6 +3237,29 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
     		return null;
     	}
     }
+
+	/**
+	 * @Title: getDictCodeList
+	 * @Description: (根据数据字典名称获取所有枚举值列表)
+	 * @param @param dictCode 数据字典名称
+	 * @param @return    参数 枚举值列表
+	 * @return String[]    返回类型 字符串数组
+	 * @throws
+	 */
+	private String[] getDictCodeListCache(String dictCode) {
+		DataDict dataDict = CacheUtil.getDictCode(dictCode);
+		if (dataDict != null && !StringUtil.isEmptyList(dataDict.getItems())){
+			String[] dictCodeArr = new String[dataDict.getItems().size()];
+			int i = 0;
+			for (DataDictItem dataDictItem : dataDict.getItems()){
+				dictCodeArr[i] = dataDictItem.getItemCode() + " " + dataDictItem.getItemValue();
+				i++;
+			}
+			return dictCodeArr;
+		} else {
+			return null;
+		}
+	}
     
     /**
     * @Title: getSelectBoxRef
