@@ -2502,7 +2502,11 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 AccurIntCalOutParameter accurIntCalOutParameter = calc.calculate(accurIntCalInParameter);
                 accurInt = ArithmeticUtil.round(accurIntCalOutParameter.getInterest(), SCALE, RoundingMode.HALF_UP);
             }
-
+            if (isJiaoYiSuo) {
+                if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue())){
+                    accurInt = BigDecimal.ZERO;
+                }
+            }
             // 单位应计利息
             if (dto.getUnitInt() == null) {
                 if (isJiaoYiSuo) {
