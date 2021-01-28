@@ -393,8 +393,8 @@ select
 	    ,CLEANAMTSUM
 	    ,ENDAMTSUM_OTH
 	    ,CUSTOMERAMT
-	    ,PAYAMTSUM
-	    ,CLOSETERMDAY
+	    ,PAYAMTSUM  /**本期兑付金额*/
+	    ,CLOSETERMDAY  /**封闭式产品期限*/
 	)
 	with 
 	/*产品存续状态*/
@@ -437,6 +437,9 @@ select
 	    ,info.CON_PRD_TRAGET
 	    ,pd.DURATIONFLAG
 	    ,info.vdate
+	    ,case when info.operate_mode in ('01','02')
+	    then info.mdate-info.vdate else null
+	    end  closetermday  /**新加字段封闭式产品期限*/
 	    ,nvl(val.prod_value,1) prod_value
       	,nvl(val.CCY,'CNY') prod_value_ccy
 	    from chb_prd_baseinfo info
@@ -451,6 +454,7 @@ select
 	    on nvl (info.fprod_id,info.prod_id)=val.prod_id
 	     left join pd on info.prod_id=pd.prod_id
 	    where info.FPROD_ID is null
+	    and  info.status in  ('E','M') and  info.ISSUING_STATUS in  ('01','02','03')
 	)
   	 ,rate as(
 	     SELECT
@@ -533,6 +537,11 @@ select
       when dd.TRADE_TYPE in('03','16','15','17') then 0-amount
       else 0
 	    end ) cleansum /*净募集金额*/
+	  ,sum(
+	  case when  dd.TRADE_TYPE in('03','04','05','15','16')
+	  then  amount else 0
+	  end  payamt
+      )  payamtsum   /**本期兑付金额*/
 	from dd
 	where 1=1
 	group by dd.prodid,dd.ccy,dd.ord_identified,prodtype
@@ -736,11 +745,12 @@ select
 	    ,di.intamt customeramt /*客户收益*/
         </if>
         /*add  新加2个字段   by  dongxiangyang  start*/
-
+        ,deal.payamtsum   /**本期兑付金额*/
+        ,prod.closetermday  /*封闭式产品期限*/
          /*add  新加2个字段   by  dongxiangyang  end*/
 
-      from dm deal
-    left join pi prod on deal.prodid=prod.prodid
+    from  pi prod
+    left join dm deal  on deal.prodid=prod.prodid
     left join pm on deal.prodid=pm.prodid and deal.ccy=pm.ccy 
     and  (deal.ord_identified=pm.ord_identified 
     or (deal.ord_identified is null and pm.ord_identified is null)
