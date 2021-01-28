@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.product.productduration.expire.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -122,6 +123,16 @@ public class FinProductExpire001Controller extends BaseController {
             model.addAttribute(DictCode.有效状态.getValue(), JsonUtils.objectArray2Json(options.toArray()));
            }
         }
+
+        Map<String, Object> map = RequestUtil.getPageParam();
+        if(StringUtil.isNotEmpty(map.get("remType"))) {
+            model.addAttribute("finprodId", (String)map.get("finprodId"));
+
+            model.addAttribute("remType", map.get("remType"));
+//            String quaryDate = (String)map.get("mdate");
+//            model.addAttribute("quaryDate", quaryDate+" - "+ DateUtil.addDay(quaryDate, Integer.parseInt((String)map.get("days"))));
+        }
+
         return super.init(model);
     }
 

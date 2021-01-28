@@ -71,6 +71,59 @@ $(function() {
         }
     }
 
+    function dealRemindR1(url, lable,prodId, finprodId,oneAttr, remType, days, feeId, menuId, table,mdate,orgId,orgName,ddate){
+            if(flag == true){
+
+                var urlPara = "";
+
+                if (remType == 'R1S5' && oneAttr == '02') {
+                    urlPara = "?finprodId=" + prodId + "&feeId=" + feeId + "&remType=" + remType + "&days=" + days
+                        + "&quaryDate=" + $('#quaryDate').val() + "&pageModel=" + PAGE_MODEL_NEW + "&mdate=" + mdate
+                        + "&orgId=" + orgId + "&orgName=" + orgName;
+                }else{
+                    urlPara = "?finprodId=" + finprodId + "&feeId=" + feeId + "&remType=" + remType + "&days=" + days
+                                            + "&quaryDate=" + $('#quaryDate').val() + "&pageModel=" + PAGE_MODEL_NEW + "&mdate=" + mdate
+                                            + "&orgId=" + orgId + "&orgName=" + orgName;
+                }
+
+                var urls = "/invest";
+                if (remType == 'R1S3') {
+                    if(oneAttr == '02'){
+                        urls += url+urlPara;
+                    }else if(oneAttr == '03'){
+                        urls += '/product/productduration/netproductDuration/FinNetProductDuration/init'+urlPara;
+                        lable = 'FinNetProductDuration';
+                    }
+                }else if(remType == 'R1S5'){
+                    if(oneAttr == '02'){
+                        urls += url+urlPara;
+                    }else{
+                        // 净值型 或 收益型
+                        urls += '/product/productduration/netproductDuration/FinNetProductDuration/init'+urlPara;
+                        lable = 'FinNetProductDuration';
+                    }
+                }else{
+
+                        urls += url+urlPara;
+                }
+
+
+                // 新窗口打开
+                var newTab = {
+                    pageId: lable,
+                    title: JoyinUtil.getLabel(lable),
+                    url:urls,
+                    id: menuId,
+                    icon: ''
+                };
+                top.tab.tabDelete(newTab.id);
+                top.tab.tabAdd(newTab);
+
+            }else{
+                Joyin.alert(JoyinUtil.getMessage("FIN_E_0003"));
+            }
+        }
+
     /**
      * 关闭按钮点击事件
      */
@@ -182,6 +235,10 @@ $(function() {
                 },
                 {
                     field : 'objType',
+                    visible : false
+                },
+                {
+                    field : 'oneAttr',
                     visible : false
                 },
                 {
@@ -565,7 +622,11 @@ $(function() {
      * 处理按钮绑定事件
      */
     tableR1.bind('click','#PaActiveRemind002_btnDeal_action', function(row) {
-        dealRemind(row.url, row.lable, row.prodId, row.remType, row.days, row.feeId, row.menuId, tableR1,row.mdateStr,row.orgId,row.orgName);
+        if(row.remType == 'R1S6'){
+            dealRemind(row.url, row.lable, row.prodId, row.remType, row.days, row.feeId, row.menuId, tableR1,row.mdateStr,row.orgId,row.orgName);
+        }else{
+            dealRemindR1(row.url, row.lable,row.prodId, row.finprodId, row.oneAttr,row.remType, row.days, row.feeId, row.menuId, tableR1,row.mdateStr,row.orgId,row.orgName);
+        }
     });
 
     /**

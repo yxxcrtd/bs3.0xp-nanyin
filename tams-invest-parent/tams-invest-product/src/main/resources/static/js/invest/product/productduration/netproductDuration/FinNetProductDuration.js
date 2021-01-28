@@ -3098,6 +3098,9 @@ $(function() {
         	alert(6);
         	addReduceCycleDataInit();
         });*/
+         if( remType =='R1S3' || remType =='R1S5' ){
+                finprodMarketIdChange();
+         };
         //20191205 bug修复，红利再投撤销审批页面多撤销按钮
         if(workflowId != null && workflowId != ''){
         	$("#FinNetProductDuration_btn_revoke").hide();

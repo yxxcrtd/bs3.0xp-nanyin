@@ -12,10 +12,11 @@ package com.joyintech.tams.invest.product.payint.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
-import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.component.business.settle.BussSettleOrderCommService;
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
@@ -37,9 +38,6 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.constant.DictCode;
@@ -104,6 +102,16 @@ public class FinProductPayInt001Controller extends BaseController {
         model.addAttribute("PAGE_DATA_STATUS_01", DictCodeListExt1.画面数据状态_待处理.getValue());
         model.addAttribute("PAGE_DATA_STATUS_YX", DictCodeListExt1.画面数据状态_有效.getValue());
         model.addAttribute("PAGE_DATA_STATUS_06", DictCodeListExt1.画面数据状态_撤销.getValue());
+
+        Map<String, Object> map = RequestUtil.getPageParam();
+        if(StringUtil.isNotEmpty(map.get("remType"))) {
+            model.addAttribute("finprodId", (String)map.get("finprodId"));
+
+            model.addAttribute("remType", map.get("remType"));
+//            String quaryDate = (String)map.get("mdate");
+//            model.addAttribute("quaryDate", quaryDate+" - "+ DateUtil.addDay(quaryDate, Integer.parseInt((String)map.get("days"))));
+        }
+
         return super.init(model);
     }
 
