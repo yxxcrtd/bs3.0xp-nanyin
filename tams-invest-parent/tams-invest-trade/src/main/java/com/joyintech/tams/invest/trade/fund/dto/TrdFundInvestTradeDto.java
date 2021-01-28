@@ -1053,7 +1053,7 @@ public class TrdFundInvestTradeDto extends TrdProductDeal implements ProcessEnti
     }
 
     @Override
-    @Amount(fieldName = "TrdFundInvestTrade002.tradeAmt", groups = {ValidateGroupEdit.class})
+//    @Amount(fieldName = "TrdFundInvestTrade002.tradeAmt", groups = {ValidateGroupEdit.class})
     public BigDecimal getTradeAmt() {
         return super.getTradeAmt();
     }

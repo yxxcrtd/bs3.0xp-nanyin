@@ -642,6 +642,12 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
                 }
             }
         }
+
+        if (!StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
+            if (StringUtil.isNotEmpty(dto.getTradeAmt())) {
+                errorList.add(new ValidMessage("tradeAmt", getMessage("交易金额不能小于0")));
+            }
+        }
         //add by msk TISHKBS-1038 新增一次性划款通道交易前是否划款判断 end
         return errorList;
     }

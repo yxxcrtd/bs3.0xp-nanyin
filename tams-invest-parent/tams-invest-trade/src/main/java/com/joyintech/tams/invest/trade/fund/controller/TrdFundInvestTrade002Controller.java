@@ -124,7 +124,8 @@ public class TrdFundInvestTrade002Controller extends BaseController {
      */
     @Autowired(required = false)
     private IPlatformDate iPlatformDate;
-    
+
+    private BigDecimal proavailablecash;
     /**
      * 界面初始化
      */
@@ -162,7 +163,7 @@ public class TrdFundInvestTrade002Controller extends BaseController {
         model.addAttribute("FINPROD_TYPE_F06", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
         
         model.addAttribute("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE")==null?"01":CacheUtil.getSysParam("IS_SHOW_TYPE"));
-
+        proavailablecash =StringUtil.isNotEmpty(this.getParam("proavailablecash"))? new BigDecimal(this.getParam("proavailablecash")):BigDecimal.ZERO;
         TrdFundInvestTradeDto dto = new TrdFundInvestTradeDto();
         String tradeId = this.getParam("tradeId");
         String status = this.getParam("validStatus");
@@ -241,7 +242,7 @@ public class TrdFundInvestTrade002Controller extends BaseController {
                         dto.setPs(eedto.getPs());
                         dto.setPrinAmt(eedto.getEntrustAmt());
                         dto.setTradeAmt(eedto.getEntrustAmt());
-                        dto.setShareAmt(eedto.getEntrustNum());
+                        dto.setShareAmt(proavailablecash.compareTo(BigDecimal.ZERO) != 0? proavailablecash:eedto.getEntrustNum());
                         dto.setFinprodMarketId(entrustDto.getFinprodMarketId());
                         dto.setUnitCprice(eedto.getPrice());
                         dto.setrFinprodId(entrustDto.getEtrEntrustAdd().getrFinprodId());
@@ -349,11 +350,8 @@ public class TrdFundInvestTrade002Controller extends BaseController {
          * this.getPageId()); if(StringUtil.isNotEmpty(str)){ AjaxResult res= new AjaxResult(); res.setMessage(str, MessageType.错误消息); return res; } }
          */
 
-        AjaxResult ar = new AjaxResult();
+        AjaxResult ar = commonCheck(result, dto.getOperateType());
         List<JoyinMessage> joyinMessages = new ArrayList<>();
-        if (!StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
-            ar = commonCheck(result, dto.getOperateType());
-        }
         ar.setJoyinMessages(joyinMessages);
         if (DictCodeList.交易方向_买入.getValue().equals(dto.getPs()) || DictCodeList.交易方向_申购.getValue().equals(dto.getPs())) {
             if (StringUtil.isNotEmpty(dto.getChlId()) && DictCodeListExt2.划款方式_一次性划款.getValue().equals(dto.getPayType())) {
@@ -399,6 +397,13 @@ public class TrdFundInvestTrade002Controller extends BaseController {
                      }
                  }
            }
+        }
+
+        if (DictCodeList.交易方向_赎回.getValue().equals(dto.getPs()) && StringUtil.isNotEmpty(proavailablecash) &&
+                proavailablecash.compareTo(BigDecimal.ZERO) != 0) {
+            if(dto.getShareAmt().compareTo(proavailablecash) == 1){
+                ar.setMessage("基金赎回份额不能大于基金可交易额度份额", MessageType.错误消息);
+            }
         }
         return ar;
     }
