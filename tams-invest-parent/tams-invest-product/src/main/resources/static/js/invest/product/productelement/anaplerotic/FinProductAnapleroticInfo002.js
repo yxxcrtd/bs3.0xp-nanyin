@@ -248,7 +248,7 @@
         //影藏回补比例
         getElementById('anapleroticRatio_div').hide();
         //如果是产品新建界面  产品信息隐藏
-        if(applyType =='prod'){
+        if(applyType =='prod' && pageModel == PAGE_MODEL_NEW){
             getElementById('finprodInfoDiv').hide();
 //         if($("#bussFinProductOpenPlanDto_openMode",parent.document).val() =='02'){
 //       		 getElementById('anapleroticPlanInfo').hide();
@@ -257,6 +257,12 @@
 //       	 }
             operationTypeChange();
         }
+        //add by yujiaping 20210128 ZGBSS-444 产品新建或查看页面，修改和预览按照新建的回补信息展示，不重新计算首次回补日、回补计提结束日和首次回补周期开始日start        
+        else if(applyType =='prod' && pageModel != PAGE_MODEL_NEW){
+        	getElementById('finprodInfoDiv').hide();
+        	getElementById('anapleroticEndDate').prop('disabled', false);
+        }
+        //add by yujiaping 20210128 ZGBSS-444 产品新建或查看页面，修改和预览按照新建的回补信息展示，不重新计算首次回补日、回补计提结束日和首次回补周期开始日end        
         else{
             prodStyleSelectInit();
             if(!firstAnapleroticCycleBegDate&&pageModel != PAGE_MODEL_NEW){
