@@ -16,8 +16,8 @@ public class FinOpenPlanDto extends NeedToWriteEntity {
 	private SusPrdFutureOpenPlanGenDto susPrdFutureOpenPlanGenDto; // 开放现金流信息
 	private List<FinOpenPlan> finOpenPlanList;//开放计划
 	private List<FinCashPlan> finCashPlanList;//付息计划
-	private List<FinFloatAccrualSche> finAnapleroticPlanList;//业绩回补计划
-	
+	/*private List<FinFloatAccrualSche> finAnapleroticPlanList;//业绩回补计划
+*/	
 	public List<FinOpenPlan> getFinOpenPlanList() {
 		return finOpenPlanList;
 	}
@@ -34,13 +34,13 @@ public class FinOpenPlanDto extends NeedToWriteEntity {
 		this.susPrdFutureOpenPlanGenDto = susPrdFutureOpenPlanGenDto;
 	}
 
-	public List<FinFloatAccrualSche> getFinAnapleroticPlanList() {
+	/*public List<FinFloatAccrualSche> getFinAnapleroticPlanList() {
 		return finAnapleroticPlanList;
 	}
 
 	public void setFinAnapleroticPlanList(List<FinFloatAccrualSche> finAnapleroticPlanList) {
 		this.finAnapleroticPlanList = finAnapleroticPlanList;
-	}
+	}*/
 
 	public List<FinCashPlan> getFinCashPlanList() {
 		return finCashPlanList;

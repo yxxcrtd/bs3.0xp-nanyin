@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.common.base.entity.FinFloatAccrualScheKey;
 import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.AccrDateNeedOtherDto;
+import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.AccrDateOtherDto;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto;
 
 /**
@@ -30,8 +31,8 @@ import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureO
 public interface SusPrdFutureOpenPlanGenMapper {
 	//查询需要更新的开放计划
 	List<SusPrdFutureOpenPlanGenDto> findSusPrdFutureOpenPlanGenList(Map<String,Object> paramMap);
-	//查询需要更新的业绩回补计划
-	List<SusPrdFutureOpenPlanGenDto> findProductAnapleroticPlanList(Map<String,Object> paramMap);
+	/*//查询需要更新的业绩回补计划
+	List<SusPrdFutureOpenPlanGenDto> findProductAnapleroticPlanList(Map<String,Object> paramMap);*/
 	//查询需要更新的付息计划
 	List<SusPrdFutureOpenPlanGenDto> findProductPayPlanList(Map<String,Object> paramMapPayPlan);
 	/**
@@ -47,9 +48,20 @@ public interface SusPrdFutureOpenPlanGenMapper {
 	String selectfinCashInfo(Map<String,Object> map);
 	
 	/**
+	 * 查询回补的现金流代码
+	 * @param map
+	 * @return
+	 */
+	String selectfinAnapleroticInfo(Map<String,Object> map);
+	
+	/**
 	 * 根据产品代码查询其他计算浮动管理费计提计划的必须字段(业绩报酬计提规则表)
 	 */
 	AccrDateNeedOtherDto findOtherNeedDateByProdid(String finprodId);
+	/**
+	 * 根据产品代码查询其他计算回补计划的必须字段(业绩报酬计提规则表)
+	 */
+	AccrDateOtherDto findOtherNeedDate(String finprodId);
 	/**
 	 * 根据cashid删除原浮动管理费计提计划 
 	 */

@@ -87,7 +87,7 @@
 			AND A.OPERATION_TYPE = #{operationType}																								
 	</select>
 	
-	<select id="findProductAnapleroticPlanList" parameterType="Map" resultType="com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto">
+<!-- 	<select id="findProductAnapleroticPlanList" parameterType="Map" resultType="com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto">
 		 select DISTINCT
 		       '业绩回补计划' planType,/*计划类型*/
 		       R.CAWLBACK_RULE  anapleroticRule,/*回补方式*/
@@ -145,7 +145,7 @@
 		    group by sc.CASH_ID) S ON S.CASH_ID = E.CASH_ID
 	        WHERE 																									
 		    A.FINPROD_TYPE = 'F16'																								
-	</select>
+	</select> -->
 	
 	<select id="findProductPayPlanList" parameterType="Map" resultType="com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto">
 		SELECT	
@@ -226,12 +226,31 @@
 			and BRANCH = 0
     </select>
     
+     <select id="selectfinAnapleroticInfo" resultType="java.lang.String">
+    	select CASH_ID
+		from FIN_CASH_INFO
+		where FINPROD_ID = #{FINPROD_ID,jdbcType=VARCHAR} 
+			and CASH_TYPE_2 = 'C11'
+			and BRANCH = 0
+    </select>
+    
     <select id="findOtherNeedDateByProdid" parameterType="string" resultType="com.joyintech.tams.invest.batch.prdopenplanupdate.dto.AccrDateNeedOtherDto">
 		select  DISTINCT t1.cash_id as cashId,t.vdate,t.mdate,
 			t2.F_ACCR_DATE as provisionfirstday,t2.E_ACCR_DATE as eAccrDate 
 		from FIN_PRODUCT t
 		left join FIN_CASH_INFO t1 on t1.finprod_id=t.finprod_id and t1.CASH_TYPE_2='C04' and t1.BRANCH = 0
 		left join FIN_FLOAT_COUNTING_RULE t2 on t2.cash_id=t1.cash_id
+		where t.finprod_id=#{finprodId}
+	</select>
+	
+	<select id="findOtherNeedDate" parameterType="string" resultType="com.joyintech.tams.invest.batch.prdopenplanupdate.dto.AccrDateOtherDto">
+		select  DISTINCT t1.cash_id as cashId,t.vdate,t.mdate,
+			t2.F_ACCR_DATE as firstAnapleroticDate,t2.E_ACCR_DATE as anapleroticEndDate,
+			d.Accr_Str_Date firstAnapleroticCycleBegDate 
+		from FIN_PRODUCT t
+		left join FIN_CASH_INFO t1 on t1.finprod_id=t.finprod_id and t1.CASH_TYPE_2='C11' and t1.BRANCH = 0
+		left join FIN_FLOAT_COUNTING_RULE t2 on t2.cash_id=t1.cash_id
+		left join (select sc.CASH_ID,min(sc.Accr_Str_Date) Accr_Str_Date from FIN_FLOAT_ACCRUAL_SCHE sc group by sc.CASH_ID) d on t1.cash_id = d.cash_id
 		where t.finprod_id=#{finprodId}
 	</select>
 	
