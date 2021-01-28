@@ -3,6 +3,8 @@ package com.joyintech.tams.invest.portfolio.actualtimeasset.service;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.StringUtil;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
@@ -31,6 +33,12 @@ public class ActualTimeAsset001Service extends CommonExportService<ActualTimeAss
      * @since 1.0
      */
     public List<SelectOptionDto> getSecAcct(Map<String,Object> map) {
+        //组合代码
+        Object portfolioId = map.get("portfolioId");
+        if (portfolioId != null) {
+            map.put("portfolioIdList",
+                    StringUtil.splitToList(GlobalConstant.COMMA, (String)portfolioId));
+        }
         return restTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME
                         + "/ActualTimeAsset/getSecAcct" , map,
                 SelectOptionDto.class);
@@ -60,6 +68,17 @@ public class ActualTimeAsset001Service extends CommonExportService<ActualTimeAss
      * @since 1.0
      */
     public Page<ActualTimeAssetDto> selectForPage(Map<String, Object> map){
+        //组合代码
+        Object portfolioId = map.get("portfolioId");
+        Object secManageAcctId = map.get("secManageAcctId");
+        if (portfolioId != null) {
+            map.put("portfolioIdList",
+                    StringUtil.splitToList(GlobalConstant.COMMA, (String)portfolioId));
+        }
+        if (secManageAcctId != null) {
+            map.put("secManageAcctIdList",
+                    StringUtil.splitToList(GlobalConstant.COMMA, (String)secManageAcctId));
+        }
         Page<ActualTimeAssetDto> page = restTemplate.postForPage(
                 ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ActualTimeAsset/findPage",
                 map, ActualTimeAssetDto.class);

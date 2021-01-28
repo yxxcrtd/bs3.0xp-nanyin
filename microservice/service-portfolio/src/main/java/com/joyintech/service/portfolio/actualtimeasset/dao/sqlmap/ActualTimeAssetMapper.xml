@@ -151,8 +151,10 @@
 						         		and chnl.finprod_type2 = #{finprodType2,jdbcType=VARCHAR}
 						         	</if>
 						     where 1=1
-								 <if test="portfolioId != null and portfolioId != ''">
-									and t.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
+								 <if test="portfolioIdList != null and portfolioIdList.size > 0">
+									 <foreach collection="portfolioIdList" open="and t.portfolio_id in (" item="item" separator="," close=")">
+										#{item,jdbcType=VARCHAR}
+									 </foreach>
 								 </if>
 						       	 <if test="type8 != null and type8 !=''">
 						         	and t5.type_8 = #{type8,jdbcType=VARCHAR}
@@ -160,9 +162,11 @@
 						         <if test="finprodId != null and finprodId !=''">
 						         	and t2.finprod_id = #{finprodId,jdbcType=VARCHAR}
 						         </if>
-						         <if test="secManageAcctId != null and secManageAcctId !=''">
-						         	and t2.sec_manage_acct_id = #{secManageAcctId,jdbcType=VARCHAR}
-						         </if>
+								 <if test="secManageAcctIdList != null and secManageAcctIdList.size > 0">
+									 <foreach collection="secManageAcctIdList" open="and t2.sec_manage_acct_id in (" item="item" separator="," close=")">
+										#{item,jdbcType=VARCHAR}
+									 </foreach>
+								 </if>
 						         <if test="type8List != null and type8List.size > 0">
 						         	<foreach collection="type8List" open="and t5.type_8 not in (" item="type8Item" separator="," close=")">
 										#{type8Item,jdbcType=VARCHAR}
@@ -255,18 +259,22 @@
 						         		and chnl.finprod_type2 = #{finprodType2,jdbcType=VARCHAR}
 						         	</if>
 					         where 1=1
-                                <if test="portfolioId != null and portfolioId != ''">
-                                    and t.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
-                                </if>
+								 <if test="portfolioIdList != null and portfolioIdList.size > 0">
+									 <foreach collection="portfolioIdList" open="and t.portfolio_id in (" item="item" separator="," close=")">
+										 #{item,jdbcType=VARCHAR}
+									 </foreach>
+								 </if>
 						       	 <if test="type8 != null and type8 !=''">
 						         	and t5.type_8 = #{type8,jdbcType=VARCHAR}
 						         </if>
 						         <if test="finprodId != null and finprodId !=''">
 						         	and t2.finprod_id = #{finprodId,jdbcType=VARCHAR}
 						         </if>
-						         <if test="secManageAcctId != null and secManageAcctId !=''">
-						         	and t2.sec_manage_acct_id = #{secManageAcctId,jdbcType=VARCHAR}
-						         </if>
+								 <if test="secManageAcctIdList != null and secManageAcctIdList.size > 0">
+								 	 <foreach collection="secManageAcctIdList" open="and t2.sec_manage_acct_id in (" item="item" separator="," close=")">
+								 		 #{item,jdbcType=VARCHAR}
+								 	 </foreach>
+								 </if>
 						         <if test="type8List != null and type8List.size > 0">
 						         	<foreach collection="type8List" open="and t5.type_8 in (" item="type8Item" separator="," close=")">
 										#{type8Item,jdbcType=VARCHAR}
@@ -369,18 +377,22 @@
 							         		and chnl.finprod_type2 = #{finprodType2,jdbcType=VARCHAR}
 							         	</if>
 						         where 1=1
-                                    <if test="portfolioId != null and portfolioId != ''">
-                                        and t.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
-                                    </if>
+									 <if test="portfolioIdList != null and portfolioIdList.size > 0">
+										 <foreach collection="portfolioIdList" open="and t.portfolio_id in (" item="item" separator="," close=")">
+											 #{item,jdbcType=VARCHAR}
+										 </foreach>
+									 </if>
 							       	 <if test="type8 != null and type8 !=''">
 							         	and t5.type_8 = #{type8,jdbcType=VARCHAR}
 							         </if>
 							         <if test="finprodId != null and finprodId !=''">
 							         	and t2.finprod_id = #{finprodId,jdbcType=VARCHAR}
 							         </if>
-							         <if test="secManageAcctId != null and secManageAcctId !=''">
-							         	and t2.sec_manage_acct_id = #{secManageAcctId,jdbcType=VARCHAR}
-							         </if>
+									 <if test="secManageAcctIdList != null and secManageAcctIdList.size > 0">
+										 <foreach collection="secManageAcctIdList" open="and t2.sec_manage_acct_id in (" item="item" separator="," close=")">
+											 #{item,jdbcType=VARCHAR}
+										 </foreach>
+									 </if>
 					       	union all
 						       select t.portfolio_id as portfolioId,
 						             t.portfolio_name as portfolioName,
@@ -419,18 +431,22 @@
 							         		and chnl.finprod_type2 = #{finprodType2,jdbcType=VARCHAR}
 							         	</if>
 						         where 1=1
-                                    <if test="portfolioId != null and portfolioId != ''">
-                                        and t.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
-                                    </if>
+									 <if test="portfolioIdList != null and portfolioIdList.size > 0">
+										 <foreach collection="portfolioIdList" open="and t.portfolio_id in (" item="item" separator="," close=")">
+											 #{item,jdbcType=VARCHAR}
+										 </foreach>
+									 </if>
 							       	 <if test="type8 != null and type8 !=''">
 							         	and t5.type_8 = #{type8,jdbcType=VARCHAR}
 							         </if>
 							         <if test="finprodId != null and finprodId !=''">
 							         	and t2.finprod_id = #{finprodId,jdbcType=VARCHAR}
 							         </if>
-							         <if test="secManageAcctId != null and secManageAcctId !=''">
-							         	and t2.sec_manage_acct_id = #{secManageAcctId,jdbcType=VARCHAR}
-							         </if>
+									 <if test="secManageAcctIdList != null and secManageAcctIdList.size > 0">
+										 <foreach collection="secManageAcctIdList" open="and t2.sec_manage_acct_id in (" item="item" separator="," close=")">
+											 #{item,jdbcType=VARCHAR}
+										 </foreach>
+									 </if>
 
 						   ) rrq
 						   	group by
@@ -476,9 +492,11 @@
 	    INNER JOIN PTL_SEC_ACCT t1 on t1.portfolio_id = t.portfolio_id
 	    INNER JOIN STL_SEC_ACCT_INFO t2 on t2.sec_acct_id = t1.acct_no
 	    WHERE 1=1
-        <if test="portfolioId != null and portfolioId != ''">
-            and t.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
-        </if>
+		<if test="portfolioIdList != null and portfolioIdList.size > 0">
+			<foreach collection="portfolioIdList" open="and t.portfolio_id in (" item="item" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
 	</select>
 
 	<!-- 资产代码 -->

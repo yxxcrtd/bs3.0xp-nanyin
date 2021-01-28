@@ -3,18 +3,23 @@ $(function() {
      * 获取查询参数
      */
     var getSearchParams = function() {
+        var object = $.serializeToObject('#searchForm');
     	var val = '';
     	if($('#finprodId').val() && $('#finprodId').val() != ''){
     		val = $('#finprodId').select2('data')[0].object ;
     	}
-    	var portfolioId='';
-    	if($('#portfolioId').val()){
-    	    portfolioId=$('#portfolioId').val();
-    	}
+        var secManageAcctId = object.secManageAcctId;
+        if(null != secManageAcctId && "" != secManageAcctId){
+            secManageAcctId=object.secManageAcctId.join(',');
+        }
+        var portfolioId = object.portfolioId;
+        if(null != portfolioId && "" != portfolioId){
+            portfolioId=object.portfolioId.join(',');
+        }
         return {
         	portfolioId : portfolioId,//组合代码
         	cdate : $('#cdate').val(),//日期
-        	secManageAcctId: $('#secManageAcctId').val(),//证券账户
+        	secManageAcctId: secManageAcctId,//证券账户
         	type8:$('#type8').val(),//资产类型
         	finprodId:val//资产代码
         }
