@@ -9,14 +9,9 @@ import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.common.base.entity.FinCashPlanKey;
 import com.joyintech.tams.common.base.entity.FinFloatAccrualScheKey;
-import com.joyintech.tams.common.base.entity.FinOpenPlan;
 import com.joyintech.tams.common.base.entity.FinOpenPlanKey;
 import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.AccrDateNeedOtherDto;
-import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.NewFinAnapleroticPlanDto;
-import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.NewFinCashPlanDto;
-import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.NewFinFloatPlanDto;
-import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.NewFinOpenPlanDto;
-import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.NewFinPayPlanDto;
+import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.AccrDateOtherDto;
 import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.PrdOpenPlanUpdateDto;
 
 /**
@@ -41,53 +36,19 @@ public interface PrdOpenPlanUpdateMapper {
 	 */
 	int updateSysParam(String year);
 	
+	//****************更新产品开放计划相关方法 start**********************/
 	/**
 	 * 查询开放计划开始日大于平台日的需要更新的开放计划
 	 * @param paramMap
 	 * @return
 	 */
 	List<PrdOpenPlanUpdateDto> queryOldOpenPlanList(Map<String,Object> paramMap);
-	
 	/**
-	 * 查询分红/付息计划调整后的计算开始日 大于平台日的需要更新的分红/付息计划
-	 * @param paramMap
+	 * 删除更新前的开放计划
+	 * @param dto
 	 * @return
 	 */
-	List<PrdOpenPlanUpdateDto> queryOldCashPlanList(Map<String,Object> paramMap);
-	
-	/**
-	 * 查询付费计划付费开始日大于平台日的需要更新的付费计划
-	 * @param paramMap
-	 * @return
-	 */
-	List<PrdOpenPlanUpdateDto> queryOldPayPlanList(Map<String,Object> paramMap);
-	
-	/**
-	 * 查询业绩报酬计提计划区间开始日大于平台日的需要更新的业绩报酬计提计划
-	 * @param paramMap
-	 * @return
-	 */
-	List<PrdOpenPlanUpdateDto> queryOldFloatPlanList(Map<String,Object> paramMap);
-	
-	/**
-	 * 查询回补计划区间开始日大于平台日的需要更新的回补计划
-	 * @param paramMap
-	 * @return
-	 */
-	List<PrdOpenPlanUpdateDto> queryOldAnapleroticPlanList(Map<String,Object> paramMap);
-	
-	
-	 int updateOpenPlanByPrimaryKey(NewFinOpenPlanDto record);
-	 
-	 int updateCashPlanByPrimaryKey(NewFinCashPlanDto record);
-	 
-	 int updatePayPlanByPrimaryKey(NewFinPayPlanDto record);
-	 
-	 int updateFloatPlanByPrimaryKey(NewFinFloatPlanDto record);
-	 
-	 int updateAnapleroticPlanByPrimaryKey(NewFinAnapleroticPlanDto record);
-	 
-	 
+	int deleteOldOpenPlans(FinOpenPlanKey dto);
 	
 	/**
 	 * 如果是净值型产品则取净值日，如果是货币产品，则取区间结束日
@@ -98,6 +59,10 @@ public interface PrdOpenPlanUpdateMapper {
 	 */
 	AccrDateNeedOtherDto findOtherNeedDateByProdid(String finprodId);
 	/**
+	 * 根据产品代码查询其他计算回补计划的必须字段(业绩报酬计提规则表)
+	 */
+	AccrDateOtherDto findOtherNeedDate(String finprodId);
+	/**
 	 * 根据cashid删除原浮动管理费计提计划 
 	 */
 	int deleteFloatAccrualScheByPrimaryKey(FinFloatAccrualScheKey finFloatAccrualScheKey);
@@ -107,12 +72,41 @@ public interface PrdOpenPlanUpdateMapper {
 	 * @return
 	 */
 	String selectfinCashInfo(Map<String,Object> map);
+	
+	
 	/**
-	 * 删除更新前的付息计划
+	 * 查询回补的现金流代码
+	 * @param map
+	 * @return
+	 */
+	String selectfinAnapleroticInfo(Map<String,Object> map);
+	
+	//****************更新产品开放计划相关方法 end**********************/
+	
+	//****************更新产品付息/分红计划相关方法 start**********************/
+	/**
+	 * 查询付息/分红计划调整后的计算开始日 大于平台日的需要更新的计划
+	 * @param paramMap
+	 * @return
+	 */
+	List<PrdOpenPlanUpdateDto> queryOldPayPlanList(Map<String,Object> paramMap);
+	/**
+	 * 删除更新前的付息/分红计划
 	 * @param dto
 	 * @return
 	 */
 	int deleteOldPayPlans(FinCashPlanKey key);
 	
 	Date queryMaxDealMdate(@Param("finprodId") String finprodId);
+	//****************更新产品付息/分红计划相关方法 end**********************/
+	
+	//****************更新产品付费计划相关方法 start**********************/
+	/**
+	 * 查询付费计划调整后的计算开始日 大于平台日的需要更新的计划
+	 * @param paramMap
+	 * @return
+	 */
+	List<PrdOpenPlanUpdateDto> queryOldFeePlanList(Map<String,Object> paramMap);
+	//****************更新产品付费计划相关方法 start**********************/
+	
 }

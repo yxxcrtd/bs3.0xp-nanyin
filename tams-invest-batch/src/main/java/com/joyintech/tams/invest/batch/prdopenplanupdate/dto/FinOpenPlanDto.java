@@ -13,21 +13,17 @@ public class FinOpenPlanDto extends NeedToWriteEntity {
 
 	private PrdOpenPlanUpdateDto prdOpenPlanUpdateDto; // 开放现金流信息
 	//开放计划
-	private List<NewFinOpenPlanDto> finOpenPlanList;
-	//分红/付息计划
-	private List<NewFinCashPlanDto> finCashPlanList;
-	//付费计划计划
-	private List<NewFinPayPlanDto> finPayPlanList;
-	//业绩报酬计提计划
-	private List<NewFinFloatPlanDto> finFloatPlanList;
-	//回补计划
-	private List<NewFinAnapleroticPlanDto> finAnapleroticPlanList;
-
-	public List<NewFinOpenPlanDto> getFinOpenPlanList() {
+	private List<FinOpenPlan> finOpenPlanList;
+	//付息/分红计划
+	private List<FinCashPlan> finCashPlanList;
+	//付费计划
+	private List<FinCashPlan> finFeePlanList;
+	
+	public List<FinOpenPlan> getFinOpenPlanList() {
 		return finOpenPlanList;
 	}
 
-	public void setFinOpenPlanList(List<NewFinOpenPlanDto> finOpenPlanList) {
+	public void setFinOpenPlanList(List<FinOpenPlan> finOpenPlanList) {
 		this.finOpenPlanList = finOpenPlanList;
 	}
 
@@ -39,36 +35,20 @@ public class FinOpenPlanDto extends NeedToWriteEntity {
 		this.prdOpenPlanUpdateDto = prdOpenPlanUpdateDto;
 	}
 
-	public List<NewFinCashPlanDto> getFinCashPlanList() {
+	public List<FinCashPlan> getFinCashPlanList() {
 		return finCashPlanList;
 	}
 
-	public void setFinCashPlanList(List<NewFinCashPlanDto> finCashPlanList) {
+	public void setFinCashPlanList(List<FinCashPlan> finCashPlanList) {
 		this.finCashPlanList = finCashPlanList;
 	}
-	
-	public List<NewFinPayPlanDto> getFinPayPlanList() {
-		return finPayPlanList;
+
+	public List<FinCashPlan> getFinFeePlanList() {
+		return finFeePlanList;
 	}
 
-	public void setFinPayPlanList(List<NewFinPayPlanDto> finPayPlanList) {
-		this.finPayPlanList = finPayPlanList;
-	}
-	
-	public List<NewFinFloatPlanDto> getFinFloatPlanList() {
-		return finFloatPlanList;
-	}
-
-	public void setFinFloatPlanList(List<NewFinFloatPlanDto> finFloatPlanList) {
-		this.finFloatPlanList = finFloatPlanList;
-	}
-	
-	public List<NewFinAnapleroticPlanDto> getFinAnapleroticPlanList() {
-		return finAnapleroticPlanList;
-	}
-
-	public void setFinAnapleroticPlanList(List<NewFinAnapleroticPlanDto> finAnapleroticPlanList) {
-		this.finAnapleroticPlanList = finAnapleroticPlanList;
+	public void setFinFeePlanList(List<FinCashPlan> finFeePlanList) {
+		this.finFeePlanList = finFeePlanList;
 	}
 
 }
