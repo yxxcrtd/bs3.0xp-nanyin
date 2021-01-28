@@ -397,5 +397,10 @@ public class ChbMonthReportDetail {
         prodyield=BigDecimal.ZERO;
         prodSet = new TreeSet<String>();
         durationProdSet  = new TreeSet<String>();
+        prodpayamount=BigDecimal.ZERO;
+        xgdurationprodcounts=0;
+        xgbalance=BigDecimal.ZERO;
+        xgbottombalance=BigDecimal.ZERO;
+        xgdurationprodcountsSet = new TreeSet<String>();
     }
 }
