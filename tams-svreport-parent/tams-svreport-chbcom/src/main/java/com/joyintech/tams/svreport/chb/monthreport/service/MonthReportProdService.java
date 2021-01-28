@@ -725,11 +725,12 @@ public class MonthReportProdService {
 					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.KFSFJZX);
 				}
 
-				if (ProdConstants.OPERATEMODE_FBSJZX.equals(pos.getOperateMode())
-						|| ProdConstants.OPERATEMODE_FBSFJZX.equals(pos.getOperateMode())) { // 封闭式
+				if ((ProdConstants.OPERATEMODE_FBSJZX.equals(pos.getOperateMode())
+						|| ProdConstants.OPERATEMODE_FBSFJZX.equals(pos.getOperateMode()))
+			         	&&pos.getClosetermday()!=null) { // 封闭式
 					/**add  4.1 封闭式产品 ，重写各分支判断逻辑：    by  dongxiangyang  start*/
 					// 第13行 4.1.1 3个月（含）以内
-					if(StringUtil.equals("03",pos.getProfitType())
+					if(StringUtil.equals(DictCodeList.产品收益标识_非保本浮动收益.getValue(),pos.getProfitType())
 							&&pos.getClosetermday().compareTo(new BigDecimal(90))<0){
 
 						buildAmt(pos, flag, result, ChbMonthReportPrdConstants.FBSSGYYN);
