@@ -1,19 +1,14 @@
 package com.joyintech.tams.common.base.entity;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.framework.json.CustomDateDeserialize;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
+import java.math.BigDecimal;
+import java.util.Date;
 
-/**
- * 描述:CHB_ASSET_INFO表的实体类
- * @version
- * @author:  Administrator
- * @创建时间: 2019-02-16
- */
 public class ChbAssetInfo extends BaseEntity {
     /**
      * 资产要素uuid（为修改删除使用）
@@ -27,7 +22,7 @@ public class ChbAssetInfo extends BaseEntity {
     private String assetCode;
 
     /**
-     * 资产/负债类别 01本行/他行存款||大额存单 02拆放同业/买入返售（资产）||同业拆入/卖出回购（负债） 03债券类资产/理财直接融资工具/同业存单 04非标准化债权类资产/信贷资产流转项目 05	票据类资产/信用证类资产 06权益类资产 07金融衍生品 08QDII债券资产 09QDII拆出/逆回购资产 10QDII股票/基金类资产 11QDII结构性票据类资产 12资产管理产品 13商品类资产 14各类资产的其他项 15公募基金 16委外投资——协议方式 17其他（负债）类资产 18另类资产 19私募基金
+     * 资产类型
      */
     private String assetType;
 
@@ -59,11 +54,13 @@ public class ChbAssetInfo extends BaseEntity {
     /**
      * 贴现利率
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal discountYield;
 
     /**
      * 收益率/年利率
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal assetYield;
 
     /**
@@ -74,6 +71,7 @@ public class ChbAssetInfo extends BaseEntity {
     /**
      * 金额
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal amt;
 
     /**
@@ -120,11 +118,6 @@ public class ChbAssetInfo extends BaseEntity {
      * 发行机构主体信用评级
      */
     private String partyGrade;
-    
-    /**
-     * 人行机构规模     01 中型企业/02 大型企业/03 小型企业/04 微型企业/99 其他
-     */
-    private String institSize;
 
     /**
      * 发行机构类型（按规模划分） 01 中小微企业/02 大型企业/99 其他
@@ -174,6 +167,7 @@ public class ChbAssetInfo extends BaseEntity {
     /**
      * 回购标的金额
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal targetAmt;
 
     /**
@@ -194,6 +188,7 @@ public class ChbAssetInfo extends BaseEntity {
     /**
      * 期限（天）
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal termDate;
 
     /**
@@ -219,11 +214,13 @@ public class ChbAssetInfo extends BaseEntity {
     /**
      * 浮动因子
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal floatFactor;
 
     /**
      * 利差
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal spreadRate;
 
     /**
@@ -344,6 +341,7 @@ public class ChbAssetInfo extends BaseEntity {
     /**
      * 融资总费率
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal totalFeeRate;
 
     /**
@@ -364,16 +362,19 @@ public class ChbAssetInfo extends BaseEntity {
     /**
      * 加权剩余期限(天)
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal remainTerm;
 
     /**
      * 最长剩余期限(天)
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal maxRemainTerm;
 
     /**
      * 最短剩余期限(天)
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal minRemainTerm;
 
     /**
@@ -419,6 +420,7 @@ public class ChbAssetInfo extends BaseEntity {
     /**
      * 名义本金
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal nomCapi;
 
     /**
@@ -434,6 +436,7 @@ public class ChbAssetInfo extends BaseEntity {
     /**
      * 期限（月）
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal termMonth;
 
     /**
@@ -454,11 +457,13 @@ public class ChbAssetInfo extends BaseEntity {
     /**
      * 固定收益部分所占比例
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal incomeRatio;
 
     /**
      * 衍生金融工具所占比例
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal derInstrRatio;
 
     /**
@@ -484,21 +489,25 @@ public class ChbAssetInfo extends BaseEntity {
     /**
      * 结构性票据最高收益率
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal maxYield;
 
     /**
      * 结构性票据最低收益率
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal minYield;
 
     /**
      * 挂钩标的资产基准价格
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal basicPrice;
 
     /**
      * 挂钩标的资产登记日价格
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal regDatePrice;
 
     /**
@@ -559,16 +568,19 @@ public class ChbAssetInfo extends BaseEntity {
     /**
      * 最高预期收益率
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal maxRate;
 
     /**
      * 最低预期收益率
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal minRate;
 
     /**
      * 负债规模
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal debtScale;
 
     /**
@@ -589,31 +601,37 @@ public class ChbAssetInfo extends BaseEntity {
     /**
      * 管理费率
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal mgrFeeRate;
 
     /**
      * 托管费率
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal truFeeRate;
 
     /**
      * 交易相关合计费率
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal tradeFeeRate;
 
     /**
      * 中介服务机构合计费率
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal agencyFeeRate;
 
     /**
      * 其他合计费率
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal otherFeeRate;
 
     /**
      * 资产价值
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal assetValue;
 
     /**
@@ -677,31 +695,6 @@ public class ChbAssetInfo extends BaseEntity {
     private String trustee;
 
     /**
-     * 数据状态  D	删除 A	待处理 E	有效
-     */
-    private String status;
-
-    /**
-     * 创建人
-     */
-    private String createUser;
-
-    /**
-     * 创建人
-     */
-    private Date createTime;
-
-    /**
-     * 更新人
-     */
-    private String updateUser;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
-
-    /**
      * 部门代码
      */
     private String deptCode;
@@ -725,10 +718,6 @@ public class ChbAssetInfo extends BaseEntity {
      * 是否投向金融资产投资公司发行的私募资产管理产品
      */
     private String privateprdFlag;
-    /**
-     * 是否投向地方政府融资平台
-     */
-    private String privateFlag;
 
     /**
      * 是否投向“市场化债转股相关产品的部分”
@@ -761,22 +750,22 @@ public class ChbAssetInfo extends BaseEntity {
     private String secCreditGradeType;
 
     /**
-     * null
+     * 债券主体评级
      */
     private String secMainGrade;
-    
+
     /**
-     * 境内外（01 境内、02 境外）
+     * 境内外
      */
     private String blnArea;
-    
+
     /**
-     * 融资人所属行业一级分类(人行)
+     * 融资人所属行业一级分类
      */
     private String industryPbc;
-    
+
     /**
-     * 客户主体类型
+     * 客户主体类型,数据字典:SVR_CUSTOMER_PRIN_TYPE
      */
     private String customerObjType;
 
@@ -794,24 +783,77 @@ public class ChbAssetInfo extends BaseEntity {
      * 上游资产三级分类
      */
     private String orgAssetType3;
-    
+
+    /**
+     * 发行人/融资人所属地区
+     */
+    private String buyPlace;
+
+    /**
+     * 历史资产代码，数据移植时刷入
+     */
+    private String assetCodeOld;
+
+    /**
+     * 二级资产细分类:资产/负债二级类别=2201 信贷资产流转项目时必填，枚举值：01 小微企业信贷资产流转和收益权转让/02 信贷资产收益权转让
+     */
+    private String assetType3;
+
+    /**
+     * 人行资产一级分类
+     */
+    private String pbcAssetType1;
+
+    /**
+     * 人行资产二级分类
+     */
+    private String pbcAssetType2;
+
+    /**
+     * 人行资产三级分类
+     */
+    private String pbcAssetType3;
+
     /**
      * 上游资产四级分类
      */
     private String orgAssetType4;
-    
+
     /**
      * 上游资产五级分类
      */
     private String orgAssetType5;
-    
-    private String orgAssetTypeEx;
-    
-    private String isFinLicence;
-    
-    private String assetCodeOld;
-    
-    
+
+    /**
+     * 是否投向地方政府融资平台
+     */
+    private String privateFlag;
+
+    /**
+     * 人行机构规模
+     */
+    private String institSize;
+
+    /**
+     * 交易所基金类型
+     */
+    private String trmFundType;
+
+    /**
+     * 商业银行二级资本债
+     */
+    private String bankSecCapital;
+
+    /**
+     * 商业银行优先股
+     */
+    private String bankSecPrefer;
+
+    /**
+     * 商业银行永续债
+     */
+    private String bankSecPerpetual;
+
     /**
      * 存款类型
      */
@@ -997,24 +1039,10 @@ public class ChbAssetInfo extends BaseEntity {
      */
     private String financialComissue;
 
-    
-	/**
-	 * 商业银行二级资本债
-	 */
-	private  String  bankSecCapital;
-	
-	
-	/**
-	 * 商业银行永续债
-	 */
-	private  String bankSecPerpetual;
-	
-	
-	/**
-	 * 商业银行优先股
-	 */
-	private  String bankSecPrefer;
-
+    /**
+     * null
+     */
+    private String isChl;
 
     /**
      * 是否商业银行可转债
@@ -1027,7 +1055,7 @@ public class ChbAssetInfo extends BaseEntity {
     private String bankSecZxzq;
 
     /**
-     * 是否未上市企业-政府出资产业投资基金
+     * 是否政府出资产业投资基金
      */
     private String isunlisted;
 
@@ -1036,107 +1064,56 @@ public class ChbAssetInfo extends BaseEntity {
      */
     private String isBzhpj;
 
-
-    public String getBankSecKzzq() {
-        return bankSecKzzq;
-    }
-
-    public void setBankSecKzzq(String bankSecKzzq) {
-        this.bankSecKzzq = bankSecKzzq;
-    }
-
-    public String getBankSecZxzq() {
-        return bankSecZxzq;
-    }
-
-    public void setBankSecZxzq(String bankSecZxzq) {
-        this.bankSecZxzq = bankSecZxzq;
-    }
-
-    public String getIsunlisted() {
-        return isunlisted;
-    }
-
-    public void setIsunlisted(String isunlisted) {
-        this.isunlisted = isunlisted;
-    }
-
-    public String getIsBzhpj() {
-        return isBzhpj;
-    }
-
-    public void setIsBzhpj(String isBzhpj) {
-        this.isBzhpj = isBzhpj;
-    }
+    /**
+     * 发行人代码
+     */
+    private String chbIssuerId;
 
     /**
-	 * @Description TODO  
-	 * @Author      高健  
-	 * @Date        2019年9月3日 下午7:34:18  
-	 * @return isFinLicence  
-	 */
-	
-	public String getIsFinLicence() {
-		return isFinLicence;
-	}
+     * 管理人代码
+     */
+    private String chbManagerId;
 
-	/**  
-	 * @Description TODO  
-	 * @Author      高健  
-	 * @Date        2019年9月3日 下午7:34:18  
-	 * @param isFinLicence isFinLicence  
-	 */
-	
-	public void setIsFinLicence(String isFinLicence) {
-		this.isFinLicence = isFinLicence;
-	}
-	
-	/**
-     * 交易所基金类型
+    /**
+     * 融资人代码
      */
-    private String trmFundType;
-    
-    public String getTrmFundType() {
-		return trmFundType;
-	}
+    private String chbFinancierId;
 
-	public void setTrmFundType(String trmFundType) {
-		this.trmFundType = trmFundType;
-	}
-	/**
-     * 发行人/融资人所属地区
-     */
-    private String buyPlace;
-    
     /**
-     * 资产二级分类细分类
+     * 是否永续债
      */
-    private String assetType3;
-    
+    private String perpetualFlag;
+
     /**
-     * 人行资产分类一级类型
+     * 是否含权债
      */
-    private String pbcAssetType1;
-    
+    private String optionFlag;
+
     /**
-     * 人行资产分类二级类型
+     * 是否资产四级分类为“北金所债权”
      */
-    private String pbcAssetType2;
-    
+    private String isBjszq;
+
     /**
-     * 人行资产分类三级类型
+     * 永续债属性（债性/股性）
      */
-    private String pbcAssetType3;
+    private String isPerpetual;
+
     /**
-     * 资产要素uuid（为修改删除使用）
-     * @return ASSET_UUID 资产要素uuid（为修改删除使用）
+     * 是否非标转标资产
+     */
+    private String isFbzb;
+
+    /**
+     * 取得 资产要素uuid（为修改删除使用）
+     * @return 资产要素uuid（为修改删除使用）
      */
     public String getAssetUuid() {
         return assetUuid;
     }
 
     /**
-     * 资产要素uuid（为修改删除使用）
+     * 设置 资产要素uuid（为修改删除使用）
      * @param assetUuid 资产要素uuid（为修改删除使用）
      */
     public void setAssetUuid(String assetUuid) {
@@ -1144,15 +1121,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 行内资产负债编码
-     * @return ASSET_CODE 行内资产负债编码
+     * 取得 行内资产负债编码
+     * @return 行内资产负债编码
      */
     public String getAssetCode() {
         return assetCode;
     }
 
     /**
-     * 行内资产负债编码
+     * 设置 行内资产负债编码
      * @param assetCode 行内资产负债编码
      */
     public void setAssetCode(String assetCode) {
@@ -1160,31 +1137,31 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 资产/负债类别 01本行/他行存款||大额存单 02拆放同业/买入返售（资产）||同业拆入/卖出回购（负债） 03债券类资产/理财直接融资工具/同业存单 04非标准化债权类资产/信贷资产流转项目 05	票据类资产/信用证类资产 06权益类资产 07金融衍生品 08QDII债券资产 09QDII拆出/逆回购资产 10QDII股票/基金类资产 11QDII结构性票据类资产 12资产管理产品 13商品类资产 14各类资产的其他项 15公募基金 16委外投资——协议方式 17其他（负债）类资产 18另类资产 19私募基金
-     * @return ASSET_TYPE 资产/负债类别 01本行/他行存款||大额存单 02拆放同业/买入返售（资产）||同业拆入/卖出回购（负债） 03债券类资产/理财直接融资工具/同业存单 04非标准化债权类资产/信贷资产流转项目 05	票据类资产/信用证类资产 06权益类资产 07金融衍生品 08QDII债券资产 09QDII拆出/逆回购资产 10QDII股票/基金类资产 11QDII结构性票据类资产 12资产管理产品 13商品类资产 14各类资产的其他项 15公募基金 16委外投资——协议方式 17其他（负债）类资产 18另类资产 19私募基金
+     * 取得 资产类型
+     * @return 资产类型
      */
     public String getAssetType() {
         return assetType;
     }
 
     /**
-     * 资产/负债类别 01本行/他行存款||大额存单 02拆放同业/买入返售（资产）||同业拆入/卖出回购（负债） 03债券类资产/理财直接融资工具/同业存单 04非标准化债权类资产/信贷资产流转项目 05	票据类资产/信用证类资产 06权益类资产 07金融衍生品 08QDII债券资产 09QDII拆出/逆回购资产 10QDII股票/基金类资产 11QDII结构性票据类资产 12资产管理产品 13商品类资产 14各类资产的其他项 15公募基金 16委外投资——协议方式 17其他（负债）类资产 18另类资产 19私募基金
-     * @param assetType 资产/负债类别 01本行/他行存款||大额存单 02拆放同业/买入返售（资产）||同业拆入/卖出回购（负债） 03债券类资产/理财直接融资工具/同业存单 04非标准化债权类资产/信贷资产流转项目 05	票据类资产/信用证类资产 06权益类资产 07金融衍生品 08QDII债券资产 09QDII拆出/逆回购资产 10QDII股票/基金类资产 11QDII结构性票据类资产 12资产管理产品 13商品类资产 14各类资产的其他项 15公募基金 16委外投资——协议方式 17其他（负债）类资产 18另类资产 19私募基金
+     * 设置 资产类型
+     * @param assetType 资产类型
      */
     public void setAssetType(String assetType) {
         this.assetType = assetType == null ? null : assetType.trim();
     }
 
     /**
-     * 资产/负债二级类别 参考数据字典:ASSET_TYPE_SECOND_LEVEL
-     * @return ASSET_TYPE2 资产/负债二级类别 参考数据字典:ASSET_TYPE_SECOND_LEVEL
+     * 取得 资产/负债二级类别 参考数据字典:ASSET_TYPE_SECOND_LEVEL
+     * @return 资产/负债二级类别 参考数据字典:ASSET_TYPE_SECOND_LEVEL
      */
     public String getAssetType2() {
         return assetType2;
     }
 
     /**
-     * 资产/负债二级类别 参考数据字典:ASSET_TYPE_SECOND_LEVEL
+     * 设置 资产/负债二级类别 参考数据字典:ASSET_TYPE_SECOND_LEVEL
      * @param assetType2 资产/负债二级类别 参考数据字典:ASSET_TYPE_SECOND_LEVEL
      */
     public void setAssetType2(String assetType2) {
@@ -1192,15 +1169,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 币种 参考数据字典：CURRENCY_CHB
-     * @return CCY 币种 参考数据字典：CURRENCY_CHB
+     * 取得 币种 参考数据字典：CURRENCY_CHB
+     * @return 币种 参考数据字典：CURRENCY_CHB
      */
     public String getCcy() {
         return ccy;
     }
 
     /**
-     * 币种 参考数据字典：CURRENCY_CHB
+     * 设置 币种 参考数据字典：CURRENCY_CHB
      * @param ccy 币种 参考数据字典：CURRENCY_CHB
      */
     public void setCcy(String ccy) {
@@ -1208,15 +1185,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 交易流通场所 01 银行间债券市场/02 商业银行柜台市场/03 上海证券交易所/04 深圳证券交易所/05 全国中小企业股份转让系统/06 上海期货交易所/07 郑州商品交易所/08 大连商品交易所/09 中国金融期货交易所/10 上海黄金交易所/11 区域性产权/资产交易市场/12 区域性商品交易所/13 区域性贵金属交易所/14 艺术品市场/15 基金市场/16 信托市场/17全国银行间同业拆借市场 /18 上海票据交易所/99 其他交易流通场所
-     * @return TRADE_MARKET 交易流通场所 01 银行间债券市场/02 商业银行柜台市场/03 上海证券交易所/04 深圳证券交易所/05 全国中小企业股份转让系统/06 上海期货交易所/07 郑州商品交易所/08 大连商品交易所/09 中国金融期货交易所/10 上海黄金交易所/11 区域性产权/资产交易市场/12 区域性商品交易所/13 区域性贵金属交易所/14 艺术品市场/15 基金市场/16 信托市场/17全国银行间同业拆借市场 /18 上海票据交易所/99 其他交易流通场所
+     * 取得 交易流通场所 01 银行间债券市场/02 商业银行柜台市场/03 上海证券交易所/04 深圳证券交易所/05 全国中小企业股份转让系统/06 上海期货交易所/07 郑州商品交易所/08 大连商品交易所/09 中国金融期货交易所/10 上海黄金交易所/11 区域性产权/资产交易市场/12 区域性商品交易所/13 区域性贵金属交易所/14 艺术品市场/15 基金市场/16 信托市场/17全国银行间同业拆借市场 /18 上海票据交易所/99 其他交易流通场所
+     * @return 交易流通场所 01 银行间债券市场/02 商业银行柜台市场/03 上海证券交易所/04 深圳证券交易所/05 全国中小企业股份转让系统/06 上海期货交易所/07 郑州商品交易所/08 大连商品交易所/09 中国金融期货交易所/10 上海黄金交易所/11 区域性产权/资产交易市场/12 区域性商品交易所/13 区域性贵金属交易所/14 艺术品市场/15 基金市场/16 信托市场/17全国银行间同业拆借市场 /18 上海票据交易所/99 其他交易流通场所
      */
     public String getTradeMarket() {
         return tradeMarket;
     }
 
     /**
-     * 交易流通场所 01 银行间债券市场/02 商业银行柜台市场/03 上海证券交易所/04 深圳证券交易所/05 全国中小企业股份转让系统/06 上海期货交易所/07 郑州商品交易所/08 大连商品交易所/09 中国金融期货交易所/10 上海黄金交易所/11 区域性产权/资产交易市场/12 区域性商品交易所/13 区域性贵金属交易所/14 艺术品市场/15 基金市场/16 信托市场/17全国银行间同业拆借市场 /18 上海票据交易所/99 其他交易流通场所
+     * 设置 交易流通场所 01 银行间债券市场/02 商业银行柜台市场/03 上海证券交易所/04 深圳证券交易所/05 全国中小企业股份转让系统/06 上海期货交易所/07 郑州商品交易所/08 大连商品交易所/09 中国金融期货交易所/10 上海黄金交易所/11 区域性产权/资产交易市场/12 区域性商品交易所/13 区域性贵金属交易所/14 艺术品市场/15 基金市场/16 信托市场/17全国银行间同业拆借市场 /18 上海票据交易所/99 其他交易流通场所
      * @param tradeMarket 交易流通场所 01 银行间债券市场/02 商业银行柜台市场/03 上海证券交易所/04 深圳证券交易所/05 全国中小企业股份转让系统/06 上海期货交易所/07 郑州商品交易所/08 大连商品交易所/09 中国金融期货交易所/10 上海黄金交易所/11 区域性产权/资产交易市场/12 区域性商品交易所/13 区域性贵金属交易所/14 艺术品市场/15 基金市场/16 信托市场/17全国银行间同业拆借市场 /18 上海票据交易所/99 其他交易流通场所
      */
     public void setTradeMarket(String tradeMarket) {
@@ -1224,47 +1201,49 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 起息日
-     * @return VDATE 起息日
+     * 取得 起息日
+     * @return 起息日
      */
     public Date getVdate() {
         return vdate;
     }
 
     /**
-     * 起息日
+     * 设置 起息日
      * @param vdate 起息日
      */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
     public void setVdate(Date vdate) {
         this.vdate = vdate;
     }
 
     /**
-     * 到期日
-     * @return MDATE 到期日
+     * 取得 到期日
+     * @return 到期日
      */
     public Date getMdate() {
         return mdate;
     }
 
     /**
-     * 到期日
+     * 设置 到期日
      * @param mdate 到期日
      */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
     public void setMdate(Date mdate) {
         this.mdate = mdate;
     }
 
     /**
-     * 贴现利率
-     * @return DISCOUNT_YIELD 贴现利率
+     * 取得 贴现利率
+     * @return 贴现利率
      */
     public BigDecimal getDiscountYield() {
         return discountYield;
     }
 
     /**
-     * 贴现利率
+     * 设置 贴现利率
      * @param discountYield 贴现利率
      */
     public void setDiscountYield(BigDecimal discountYield) {
@@ -1272,15 +1251,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 收益率/年利率
-     * @return ASSET_YIELD 收益率/年利率
+     * 取得 收益率/年利率
+     * @return 收益率/年利率
      */
     public BigDecimal getAssetYield() {
         return assetYield;
     }
 
     /**
-     * 收益率/年利率
+     * 设置 收益率/年利率
      * @param assetYield 收益率/年利率
      */
     public void setAssetYield(BigDecimal assetYield) {
@@ -1288,15 +1267,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 计息基础 01 ACT/366；02 ACT/360；03 ACT/365；04 ACT/ACT；05 30/360
-     * @return BASIS 计息基础 01 ACT/366；02 ACT/360；03 ACT/365；04 ACT/ACT；05 30/360
+     * 取得 计息基础 01 ACT/366；02 ACT/360；03 ACT/365；04 ACT/ACT；05 30/360
+     * @return 计息基础 01 ACT/366；02 ACT/360；03 ACT/365；04 ACT/ACT；05 30/360
      */
     public String getBasis() {
         return basis;
     }
 
     /**
-     * 计息基础 01 ACT/366；02 ACT/360；03 ACT/365；04 ACT/ACT；05 30/360
+     * 设置 计息基础 01 ACT/366；02 ACT/360；03 ACT/365；04 ACT/ACT；05 30/360
      * @param basis 计息基础 01 ACT/366；02 ACT/360；03 ACT/365；04 ACT/ACT；05 30/360
      */
     public void setBasis(String basis) {
@@ -1304,15 +1283,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 金额
-     * @return AMT 金额
+     * 取得 金额
+     * @return 金额
      */
     public BigDecimal getAmt() {
         return amt;
     }
 
     /**
-     * 金额
+     * 设置 金额
      * @param amt 金额
      */
     public void setAmt(BigDecimal amt) {
@@ -1320,15 +1299,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 资金存入银行
-     * @return BANK_NAME 资金存入银行
+     * 取得 资金存入银行
+     * @return 资金存入银行
      */
     public String getBankName() {
         return bankName;
     }
 
     /**
-     * 资金存入银行
+     * 设置 资金存入银行
      * @param bankName 资金存入银行
      */
     public void setBankName(String bankName) {
@@ -1336,15 +1315,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 是否为结构性存款 01是/02否
-     * @return IS_STRUCT 是否为结构性存款 01是/02否
+     * 取得 是否为结构性存款 01是/02否
+     * @return 是否为结构性存款 01是/02否
      */
     public String getIsStruct() {
         return isStruct;
     }
 
     /**
-     * 是否为结构性存款 01是/02否
+     * 设置 是否为结构性存款 01是/02否
      * @param isStruct 是否为结构性存款 01是/02否
      */
     public void setIsStruct(String isStruct) {
@@ -1352,15 +1331,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 结构性存款挂钩标的类别 01 利率/02 汇率/03 股票/04 农产品/05 大宗商品/06 贵金属/07 债券/08 指数 /09 基金/10 另类资产/11 期货/12 期权/13 远期/14 互换/15 复合金融衍生品/99 其他
-     * @return TARGET_TYPE 结构性存款挂钩标的类别 01 利率/02 汇率/03 股票/04 农产品/05 大宗商品/06 贵金属/07 债券/08 指数 /09 基金/10 另类资产/11 期货/12 期权/13 远期/14 互换/15 复合金融衍生品/99 其他
+     * 取得 结构性存款挂钩标的类别 01 利率/02 汇率/03 股票/04 农产品/05 大宗商品/06 贵金属/07 债券/08 指数 /09 基金/10 另类资产/11 期货/12 期权/13 远期/14 互换/15 复合金融衍生品/99 其他
+     * @return 结构性存款挂钩标的类别 01 利率/02 汇率/03 股票/04 农产品/05 大宗商品/06 贵金属/07 债券/08 指数 /09 基金/10 另类资产/11 期货/12 期权/13 远期/14 互换/15 复合金融衍生品/99 其他
      */
     public String getTargetType() {
         return targetType;
     }
 
     /**
-     * 结构性存款挂钩标的类别 01 利率/02 汇率/03 股票/04 农产品/05 大宗商品/06 贵金属/07 债券/08 指数 /09 基金/10 另类资产/11 期货/12 期权/13 远期/14 互换/15 复合金融衍生品/99 其他
+     * 设置 结构性存款挂钩标的类别 01 利率/02 汇率/03 股票/04 农产品/05 大宗商品/06 贵金属/07 债券/08 指数 /09 基金/10 另类资产/11 期货/12 期权/13 远期/14 互换/15 复合金融衍生品/99 其他
      * @param targetType 结构性存款挂钩标的类别 01 利率/02 汇率/03 股票/04 农产品/05 大宗商品/06 贵金属/07 债券/08 指数 /09 基金/10 另类资产/11 期货/12 期权/13 远期/14 互换/15 复合金融衍生品/99 其他
      */
     public void setTargetType(String targetType) {
@@ -1368,15 +1347,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 结构性存款挂钩标的
-     * @return TARGET 结构性存款挂钩标的
+     * 取得 结构性存款挂钩标的
+     * @return 结构性存款挂钩标的
      */
     public String getTarget() {
         return target;
     }
 
     /**
-     * 结构性存款挂钩标的
+     * 设置 结构性存款挂钩标的
      * @param target 结构性存款挂钩标的
      */
     public void setTarget(String target) {
@@ -1384,15 +1363,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 资产代码
-     * @return ASSET_ID 资产代码
+     * 取得 资产代码
+     * @return 资产代码
      */
     public String getAssetId() {
         return assetId;
     }
 
     /**
-     * 资产代码
+     * 设置 资产代码
      * @param assetId 资产代码
      */
     public void setAssetId(String assetId) {
@@ -1400,15 +1379,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 资产名称
-     * @return ASSET_NAME 资产名称
+     * 取得 资产名称
+     * @return 资产名称
      */
     public String getAssetName() {
         return assetName;
     }
 
     /**
-     * 资产名称
+     * 设置 资产名称
      * @param assetName 资产名称
      */
     public void setAssetName(String assetName) {
@@ -1416,15 +1395,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 具体类别01 商业银行普通债/ 02 商业银行次级债/ 03 商业银行混合资本债/ 04 商业银行二级资本工具/ 05 证券公司金融债/ 06 证券公司短期融资券/ 07 保险公司金融债/ 08 财务公司金融债/ 09 融资租赁公司金融债/ 10 资产管理公司金融债/ 11 集合企业债/ 12 项目收益债券/ 13 可转换公司债券/ 14 可交换公司债券/ 15 分离交易的可转换公司债券/ 16 短期融资券（CP）/ 17 超短期融资券（SCP）/ 18 中期票据（MTN）/ 19 项目收益票据（PRN）/ 20 中小企业集合票据（SMECN）/ 21非公开定向债务融资工具/ 22 信贷资产支持证券/ 23 资产支持专项计划/ 24 非金融企业资产支持票据（ABN）/ 25 国际金融机构债券/ 26 外国政府债券/ 27 外国金融机构债券/ 28 外国公司债券/ 99 其他债券
-     * @return CHB_SECTYPE 具体类别01 商业银行普通债/ 02 商业银行次级债/ 03 商业银行混合资本债/ 04 商业银行二级资本工具/ 05 证券公司金融债/ 06 证券公司短期融资券/ 07 保险公司金融债/ 08 财务公司金融债/ 09 融资租赁公司金融债/ 10 资产管理公司金融债/ 11 集合企业债/ 12 项目收益债券/ 13 可转换公司债券/ 14 可交换公司债券/ 15 分离交易的可转换公司债券/ 16 短期融资券（CP）/ 17 超短期融资券（SCP）/ 18 中期票据（MTN）/ 19 项目收益票据（PRN）/ 20 中小企业集合票据（SMECN）/ 21非公开定向债务融资工具/ 22 信贷资产支持证券/ 23 资产支持专项计划/ 24 非金融企业资产支持票据（ABN）/ 25 国际金融机构债券/ 26 外国政府债券/ 27 外国金融机构债券/ 28 外国公司债券/ 99 其他债券
+     * 取得 具体类别01 商业银行普通债/ 02 商业银行次级债/ 03 商业银行混合资本债/ 04 商业银行二级资本工具/ 05 证券公司金融债/ 06 证券公司短期融资券/ 07 保险公司金融债/ 08 财务公司金融债/ 09 融资租赁公司金融债/ 10 资产管理公司金融债/ 11 集合企业债/ 12 项目收益债券/ 13 可转换公司债券/ 14 可交换公司债券/ 15 分离交易的可转换公司债券/ 16 短期融资券（CP）/ 17 超短期融资券（SCP）/ 18 中期票据（MTN）/ 19 项目收益票据（PRN）/ 20 中小企业集合票据（SMECN）/ 21非公开定向债务融资工具/ 22 信贷资产支持证券/ 23 资产支持专项计划/ 24 非金融企业资产支持票据（ABN）/ 25 国际金融机构债券/ 26 外国政府债券/ 27 外国金融机构债券/ 28 外国公司债券/ 99 其他债券
+     * @return 具体类别01 商业银行普通债/ 02 商业银行次级债/ 03 商业银行混合资本债/ 04 商业银行二级资本工具/ 05 证券公司金融债/ 06 证券公司短期融资券/ 07 保险公司金融债/ 08 财务公司金融债/ 09 融资租赁公司金融债/ 10 资产管理公司金融债/ 11 集合企业债/ 12 项目收益债券/ 13 可转换公司债券/ 14 可交换公司债券/ 15 分离交易的可转换公司债券/ 16 短期融资券（CP）/ 17 超短期融资券（SCP）/ 18 中期票据（MTN）/ 19 项目收益票据（PRN）/ 20 中小企业集合票据（SMECN）/ 21非公开定向债务融资工具/ 22 信贷资产支持证券/ 23 资产支持专项计划/ 24 非金融企业资产支持票据（ABN）/ 25 国际金融机构债券/ 26 外国政府债券/ 27 外国金融机构债券/ 28 外国公司债券/ 99 其他债券
      */
     public String getChbSectype() {
         return chbSectype;
     }
 
     /**
-     * 具体类别01 商业银行普通债/ 02 商业银行次级债/ 03 商业银行混合资本债/ 04 商业银行二级资本工具/ 05 证券公司金融债/ 06 证券公司短期融资券/ 07 保险公司金融债/ 08 财务公司金融债/ 09 融资租赁公司金融债/ 10 资产管理公司金融债/ 11 集合企业债/ 12 项目收益债券/ 13 可转换公司债券/ 14 可交换公司债券/ 15 分离交易的可转换公司债券/ 16 短期融资券（CP）/ 17 超短期融资券（SCP）/ 18 中期票据（MTN）/ 19 项目收益票据（PRN）/ 20 中小企业集合票据（SMECN）/ 21非公开定向债务融资工具/ 22 信贷资产支持证券/ 23 资产支持专项计划/ 24 非金融企业资产支持票据（ABN）/ 25 国际金融机构债券/ 26 外国政府债券/ 27 外国金融机构债券/ 28 外国公司债券/ 99 其他债券
+     * 设置 具体类别01 商业银行普通债/ 02 商业银行次级债/ 03 商业银行混合资本债/ 04 商业银行二级资本工具/ 05 证券公司金融债/ 06 证券公司短期融资券/ 07 保险公司金融债/ 08 财务公司金融债/ 09 融资租赁公司金融债/ 10 资产管理公司金融债/ 11 集合企业债/ 12 项目收益债券/ 13 可转换公司债券/ 14 可交换公司债券/ 15 分离交易的可转换公司债券/ 16 短期融资券（CP）/ 17 超短期融资券（SCP）/ 18 中期票据（MTN）/ 19 项目收益票据（PRN）/ 20 中小企业集合票据（SMECN）/ 21非公开定向债务融资工具/ 22 信贷资产支持证券/ 23 资产支持专项计划/ 24 非金融企业资产支持票据（ABN）/ 25 国际金融机构债券/ 26 外国政府债券/ 27 外国金融机构债券/ 28 外国公司债券/ 99 其他债券
      * @param chbSectype 具体类别01 商业银行普通债/ 02 商业银行次级债/ 03 商业银行混合资本债/ 04 商业银行二级资本工具/ 05 证券公司金融债/ 06 证券公司短期融资券/ 07 保险公司金融债/ 08 财务公司金融债/ 09 融资租赁公司金融债/ 10 资产管理公司金融债/ 11 集合企业债/ 12 项目收益债券/ 13 可转换公司债券/ 14 可交换公司债券/ 15 分离交易的可转换公司债券/ 16 短期融资券（CP）/ 17 超短期融资券（SCP）/ 18 中期票据（MTN）/ 19 项目收益票据（PRN）/ 20 中小企业集合票据（SMECN）/ 21非公开定向债务融资工具/ 22 信贷资产支持证券/ 23 资产支持专项计划/ 24 非金融企业资产支持票据（ABN）/ 25 国际金融机构债券/ 26 外国政府债券/ 27 外国金融机构债券/ 28 外国公司债券/ 99 其他债券
      */
     public void setChbSectype(String chbSectype) {
@@ -1432,15 +1411,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 发行方式 01 公开发行/02 非公开发行
-     * @return ISSUE_MODE 发行方式 01 公开发行/02 非公开发行
+     * 取得 发行方式 01 公开发行/02 非公开发行
+     * @return 发行方式 01 公开发行/02 非公开发行
      */
     public String getIssueMode() {
         return issueMode;
     }
 
     /**
-     * 发行方式 01 公开发行/02 非公开发行
+     * 设置 发行方式 01 公开发行/02 非公开发行
      * @param issueMode 发行方式 01 公开发行/02 非公开发行
      */
     public void setIssueMode(String issueMode) {
@@ -1448,15 +1427,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 发行机构主体信用评级
-     * @return PARTY_GRADE 发行机构主体信用评级
+     * 取得 发行机构主体信用评级
+     * @return 发行机构主体信用评级
      */
     public String getPartyGrade() {
         return partyGrade;
     }
 
     /**
-     * 发行机构主体信用评级
+     * 设置 发行机构主体信用评级
      * @param partyGrade 发行机构主体信用评级
      */
     public void setPartyGrade(String partyGrade) {
@@ -1464,15 +1443,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 发行机构类型（按规模划分） 01 中小微企业/02 大型企业/99 其他
-     * @return PARTY_TYPE1 发行机构类型（按规模划分） 01 中小微企业/02 大型企业/99 其他
+     * 取得 发行机构类型（按规模划分） 01 中小微企业/02 大型企业/99 其他
+     * @return 发行机构类型（按规模划分） 01 中小微企业/02 大型企业/99 其他
      */
     public String getPartyType1() {
         return partyType1;
     }
 
     /**
-     * 发行机构类型（按规模划分） 01 中小微企业/02 大型企业/99 其他
+     * 设置 发行机构类型（按规模划分） 01 中小微企业/02 大型企业/99 其他
      * @param partyType1 发行机构类型（按规模划分） 01 中小微企业/02 大型企业/99 其他
      */
     public void setPartyType1(String partyType1) {
@@ -1480,15 +1459,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 发行机构类型（按技术领域划分）01 高新技术企业/99 其他
-     * @return PARTY_TYPE3 发行机构类型（按技术领域划分）01 高新技术企业/99 其他
+     * 取得 发行机构类型（按技术领域划分）01 高新技术企业/99 其他
+     * @return 发行机构类型（按技术领域划分）01 高新技术企业/99 其他
      */
     public String getPartyType3() {
         return partyType3;
     }
 
     /**
-     * 发行机构类型（按技术领域划分）01 高新技术企业/99 其他
+     * 设置 发行机构类型（按技术领域划分）01 高新技术企业/99 其他
      * @param partyType3 发行机构类型（按技术领域划分）01 高新技术企业/99 其他
      */
     public void setPartyType3(String partyType3) {
@@ -1496,15 +1475,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 发行机构类型（按经济类型划分）01 国有企业/02 集体企业/03 私营企业/99 其他
-     * @return PARTY_TYPE2 发行机构类型（按经济类型划分）01 国有企业/02 集体企业/03 私营企业/99 其他
+     * 取得 发行机构类型（按经济类型划分）01 国有企业/02 集体企业/03 私营企业/99 其他
+     * @return 发行机构类型（按经济类型划分）01 国有企业/02 集体企业/03 私营企业/99 其他
      */
     public String getPartyType2() {
         return partyType2;
     }
 
     /**
-     * 发行机构类型（按经济类型划分）01 国有企业/02 集体企业/03 私营企业/99 其他
+     * 设置 发行机构类型（按经济类型划分）01 国有企业/02 集体企业/03 私营企业/99 其他
      * @param partyType2 发行机构类型（按经济类型划分）01 国有企业/02 集体企业/03 私营企业/99 其他
      */
     public void setPartyType2(String partyType2) {
@@ -1512,15 +1491,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 发行机构所属行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
-     * @return INDUSTRY 发行机构所属行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
+     * 取得 发行机构所属行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
+     * @return 发行机构所属行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
      */
     public String getIndustry() {
         return industry;
     }
 
     /**
-     * 发行机构所属行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
+     * 设置 发行机构所属行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
      * @param industry 发行机构所属行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
      */
     public void setIndustry(String industry) {
@@ -1528,15 +1507,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 发行机构所属行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
-     * @return INDUSTRY_LEVEL2 发行机构所属行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
+     * 取得 发行机构所属行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
+     * @return 发行机构所属行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
      */
     public String getIndustryLevel2() {
         return industryLevel2;
     }
 
     /**
-     * 发行机构所属行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
+     * 设置 发行机构所属行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
      * @param industryLevel2 发行机构所属行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
      */
     public void setIndustryLevel2(String industryLevel2) {
@@ -1544,15 +1523,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 登记托管机构 01 中央国债登记结算有限责任公司/ 02 上海清算所/03 中国证券登记结算有限责任公司/99 其他
-     * @return REGIST_ORG 登记托管机构 01 中央国债登记结算有限责任公司/ 02 上海清算所/03 中国证券登记结算有限责任公司/99 其他
+     * 取得 登记托管机构 01 中央国债登记结算有限责任公司/ 02 上海清算所/03 中国证券登记结算有限责任公司/99 其他
+     * @return 登记托管机构 01 中央国债登记结算有限责任公司/ 02 上海清算所/03 中国证券登记结算有限责任公司/99 其他
      */
     public String getRegistOrg() {
         return registOrg;
     }
 
     /**
-     * 登记托管机构 01 中央国债登记结算有限责任公司/ 02 上海清算所/03 中国证券登记结算有限责任公司/99 其他
+     * 设置 登记托管机构 01 中央国债登记结算有限责任公司/ 02 上海清算所/03 中国证券登记结算有限责任公司/99 其他
      * @param registOrg 登记托管机构 01 中央国债登记结算有限责任公司/ 02 上海清算所/03 中国证券登记结算有限责任公司/99 其他
      */
     public void setRegistOrg(String registOrg) {
@@ -1560,15 +1539,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 登记托管机构说明
-     * @return REGISTORG_COMMENT 登记托管机构说明
+     * 取得 登记托管机构说明
+     * @return 登记托管机构说明
      */
     public String getRegistorgComment() {
         return registorgComment;
     }
 
     /**
-     * 登记托管机构说明
+     * 设置 登记托管机构说明
      * @param registorgComment 登记托管机构说明
      */
     public void setRegistorgComment(String registorgComment) {
@@ -1576,15 +1555,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 对手方
-     * @return RIVAL_PARTY 对手方
+     * 取得 对手方
+     * @return 对手方
      */
     public String getRivalParty() {
         return rivalParty;
     }
 
     /**
-     * 对手方
+     * 设置 对手方
      * @param rivalParty 对手方
      */
     public void setRivalParty(String rivalParty) {
@@ -1592,15 +1571,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 回购标的类别 01 债券/ 02 股票/03 基金类产品/99 其他
-     * @return TARGET_TYPE1 回购标的类别 01 债券/ 02 股票/03 基金类产品/99 其他
+     * 取得 回购标的类别 01 债券/ 02 股票/03 基金类产品/99 其他
+     * @return 回购标的类别 01 债券/ 02 股票/03 基金类产品/99 其他
      */
     public String getTargetType1() {
         return targetType1;
     }
 
     /**
-     * 回购标的类别 01 债券/ 02 股票/03 基金类产品/99 其他
+     * 设置 回购标的类别 01 债券/ 02 股票/03 基金类产品/99 其他
      * @param targetType1 回购标的类别 01 债券/ 02 股票/03 基金类产品/99 其他
      */
     public void setTargetType1(String targetType1) {
@@ -1608,15 +1587,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 回购标的金额
-     * @return TARGET_AMT 回购标的金额
+     * 取得 回购标的金额
+     * @return 回购标的金额
      */
     public BigDecimal getTargetAmt() {
         return targetAmt;
     }
 
     /**
-     * 回购标的金额
+     * 设置 回购标的金额
      * @param targetAmt 回购标的金额
      */
     public void setTargetAmt(BigDecimal targetAmt) {
@@ -1624,15 +1603,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 所属国家或地区 参考数据字典：COUNTRY_AREA
-     * @return COUNTRY_AREA 所属国家或地区 参考数据字典：COUNTRY_AREA
+     * 取得 所属国家或地区 参考数据字典：COUNTRY_AREA
+     * @return 所属国家或地区 参考数据字典：COUNTRY_AREA
      */
     public String getCountryArea() {
         return countryArea;
     }
 
     /**
-     * 所属国家或地区 参考数据字典：COUNTRY_AREA
+     * 设置 所属国家或地区 参考数据字典：COUNTRY_AREA
      * @param countryArea 所属国家或地区 参考数据字典：COUNTRY_AREA
      */
     public void setCountryArea(String countryArea) {
@@ -1640,15 +1619,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 收/受益权类型 01 信托贷款/ 02 信贷资产转让/ 03 委托债权/ 04 应收账款/ 05 带回购条款的股权性融资/06 私募债权/ 07 融资融券/ 08 证券公司收益凭证/ 09 委托贷款/ 99 其他
-     * @return PROFIT_TYPE 收/受益权类型 01 信托贷款/ 02 信贷资产转让/ 03 委托债权/ 04 应收账款/ 05 带回购条款的股权性融资/06 私募债权/ 07 融资融券/ 08 证券公司收益凭证/ 09 委托贷款/ 99 其他
+     * 取得 收/受益权类型 01 信托贷款/ 02 信贷资产转让/ 03 委托债权/ 04 应收账款/ 05 带回购条款的股权性融资/06 私募债权/ 07 融资融券/ 08 证券公司收益凭证/ 09 委托贷款/ 99 其他
+     * @return 收/受益权类型 01 信托贷款/ 02 信贷资产转让/ 03 委托债权/ 04 应收账款/ 05 带回购条款的股权性融资/06 私募债权/ 07 融资融券/ 08 证券公司收益凭证/ 09 委托贷款/ 99 其他
      */
     public String getProfitType() {
         return profitType;
     }
 
     /**
-     * 收/受益权类型 01 信托贷款/ 02 信贷资产转让/ 03 委托债权/ 04 应收账款/ 05 带回购条款的股权性融资/06 私募债权/ 07 融资融券/ 08 证券公司收益凭证/ 09 委托贷款/ 99 其他
+     * 设置 收/受益权类型 01 信托贷款/ 02 信贷资产转让/ 03 委托债权/ 04 应收账款/ 05 带回购条款的股权性融资/06 私募债权/ 07 融资融券/ 08 证券公司收益凭证/ 09 委托贷款/ 99 其他
      * @param profitType 收/受益权类型 01 信托贷款/ 02 信贷资产转让/ 03 委托债权/ 04 应收账款/ 05 带回购条款的股权性融资/06 私募债权/ 07 融资融券/ 08 证券公司收益凭证/ 09 委托贷款/ 99 其他
      */
     public void setProfitType(String profitType) {
@@ -1656,15 +1635,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 是否属于买入返售 01是/02否
-     * @return IS_RESALE 是否属于买入返售 01是/02否
+     * 取得 是否属于买入返售 01是/02否
+     * @return 是否属于买入返售 01是/02否
      */
     public String getIsResale() {
         return isResale;
     }
 
     /**
-     * 是否属于买入返售 01是/02否
+     * 设置 是否属于买入返售 01是/02否
      * @param isResale 是否属于买入返售 01是/02否
      */
     public void setIsResale(String isResale) {
@@ -1672,15 +1651,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 期限（天）
-     * @return TERM_DATE 期限（天）
+     * 取得 期限（天）
+     * @return 期限（天）
      */
     public BigDecimal getTermDate() {
         return termDate;
     }
 
     /**
-     * 期限（天）
+     * 设置 期限（天）
      * @param termDate 期限（天）
      */
     public void setTermDate(BigDecimal termDate) {
@@ -1688,15 +1667,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 是否有预期收益率 01是/02否
-     * @return RATE_FLAG 是否有预期收益率 01是/02否
+     * 取得 是否有预期收益率 01是/02否
+     * @return 是否有预期收益率 01是/02否
      */
     public String getRateFlag() {
         return rateFlag;
     }
 
     /**
-     * 是否有预期收益率 01是/02否
+     * 设置 是否有预期收益率 01是/02否
      * @param rateFlag 是否有预期收益率 01是/02否
      */
     public void setRateFlag(String rateFlag) {
@@ -1704,15 +1683,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 付息频率（个月/次）
-     * @return INTPAY_CYCLE 付息频率（个月/次）
+     * 取得 付息频率（个月/次）
+     * @return 付息频率（个月/次）
      */
     public Long getIntpayCycle() {
         return intpayCycle;
     }
 
     /**
-     * 付息频率（个月/次）
+     * 设置 付息频率（个月/次）
      * @param intpayCycle 付息频率（个月/次）
      */
     public void setIntpayCycle(Long intpayCycle) {
@@ -1720,15 +1699,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 还本付息说明
-     * @return REPAY_CMT 还本付息说明
+     * 取得 还本付息说明
+     * @return 还本付息说明
      */
     public String getRepayCmt() {
         return repayCmt;
     }
 
     /**
-     * 还本付息说明
+     * 设置 还本付息说明
      * @param repayCmt 还本付息说明
      */
     public void setRepayCmt(String repayCmt) {
@@ -1736,15 +1715,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 基准利率种类 参考数据字典：BASIS_TYPE
-     * @return BASIS_TYPE 基准利率种类 参考数据字典：BASIS_TYPE
+     * 取得 基准利率种类 参考数据字典：BASIS_TYPE
+     * @return 基准利率种类 参考数据字典：BASIS_TYPE
      */
     public String getBasisType() {
         return basisType;
     }
 
     /**
-     * 基准利率种类 参考数据字典：BASIS_TYPE
+     * 设置 基准利率种类 参考数据字典：BASIS_TYPE
      * @param basisType 基准利率种类 参考数据字典：BASIS_TYPE
      */
     public void setBasisType(String basisType) {
@@ -1752,15 +1731,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 浮动因子
-     * @return FLOAT_FACTOR 浮动因子
+     * 取得 浮动因子
+     * @return 浮动因子
      */
     public BigDecimal getFloatFactor() {
         return floatFactor;
     }
 
     /**
-     * 浮动因子
+     * 设置 浮动因子
      * @param floatFactor 浮动因子
      */
     public void setFloatFactor(BigDecimal floatFactor) {
@@ -1768,15 +1747,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 利差
-     * @return SPREAD_RATE 利差
+     * 取得 利差
+     * @return 利差
      */
     public BigDecimal getSpreadRate() {
         return spreadRate;
     }
 
     /**
-     * 利差
+     * 设置 利差
      * @param spreadRate 利差
      */
     public void setSpreadRate(BigDecimal spreadRate) {
@@ -1784,15 +1763,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 融资人
-     * @return FINANCIE 融资人
+     * 取得 融资人
+     * @return 融资人
      */
     public String getFinancie() {
         return financie;
     }
 
     /**
-     * 融资人
+     * 设置 融资人
      * @param financie 融资人
      */
     public void setFinancie(String financie) {
@@ -1800,15 +1779,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 融资人组织机构代码
-     * @return FIN_ORG_CODE 融资人组织机构代码
+     * 取得 融资人组织机构代码
+     * @return 融资人组织机构代码
      */
     public String getFinOrgCode() {
         return finOrgCode;
     }
 
     /**
-     * 融资人组织机构代码
+     * 设置 融资人组织机构代码
      * @param finOrgCode 融资人组织机构代码
      */
     public void setFinOrgCode(String finOrgCode) {
@@ -1816,15 +1795,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 融资人内部信用评级
-     * @return FCR_GRADE_IN 融资人内部信用评级
+     * 取得 融资人内部信用评级
+     * @return 融资人内部信用评级
      */
     public String getFcrGradeIn() {
         return fcrGradeIn;
     }
 
     /**
-     * 融资人内部信用评级
+     * 设置 融资人内部信用评级
      * @param fcrGradeIn 融资人内部信用评级
      */
     public void setFcrGradeIn(String fcrGradeIn) {
@@ -1832,15 +1811,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 外部评级机构名称及融资人评级结果
-     * @return FCR_GRADE_OUT 外部评级机构名称及融资人评级结果
+     * 取得 外部评级机构名称及融资人评级结果
+     * @return 外部评级机构名称及融资人评级结果
      */
     public String getFcrGradeOut() {
         return fcrGradeOut;
     }
 
     /**
-     * 外部评级机构名称及融资人评级结果
+     * 设置 外部评级机构名称及融资人评级结果
      * @param fcrGradeOut 外部评级机构名称及融资人评级结果
      */
     public void setFcrGradeOut(String fcrGradeOut) {
@@ -1848,15 +1827,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 融资人类型（按规模划分） 01 中小微企业/02 大型企业/99 其他
-     * @return FINANCIER_TYPE1 融资人类型（按规模划分） 01 中小微企业/02 大型企业/99 其他
+     * 取得 融资人类型（按规模划分） 01 中小微企业/02 大型企业/99 其他
+     * @return 融资人类型（按规模划分） 01 中小微企业/02 大型企业/99 其他
      */
     public String getFinancierType1() {
         return financierType1;
     }
 
     /**
-     * 融资人类型（按规模划分） 01 中小微企业/02 大型企业/99 其他
+     * 设置 融资人类型（按规模划分） 01 中小微企业/02 大型企业/99 其他
      * @param financierType1 融资人类型（按规模划分） 01 中小微企业/02 大型企业/99 其他
      */
     public void setFinancierType1(String financierType1) {
@@ -1864,15 +1843,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 融资人类型（按技术领域划分）01 高新技术企业/99 其他
-     * @return FINANCIER_TYPE2 融资人类型（按技术领域划分）01 高新技术企业/99 其他
+     * 取得 融资人类型（按技术领域划分）01 高新技术企业/99 其他
+     * @return 融资人类型（按技术领域划分）01 高新技术企业/99 其他
      */
     public String getFinancierType2() {
         return financierType2;
     }
 
     /**
-     * 融资人类型（按技术领域划分）01 高新技术企业/99 其他
+     * 设置 融资人类型（按技术领域划分）01 高新技术企业/99 其他
      * @param financierType2 融资人类型（按技术领域划分）01 高新技术企业/99 其他
      */
     public void setFinancierType2(String financierType2) {
@@ -1880,15 +1859,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 融资人类型（按经济类型划分）01 国有企业/02 集体企业/03 私营企业/99 其他
-     * @return FINANCIER_TYPE3 融资人类型（按经济类型划分）01 国有企业/02 集体企业/03 私营企业/99 其他
+     * 取得 融资人类型（按经济类型划分）01 国有企业/02 集体企业/03 私营企业/99 其他
+     * @return 融资人类型（按经济类型划分）01 国有企业/02 集体企业/03 私营企业/99 其他
      */
     public String getFinancierType3() {
         return financierType3;
     }
 
     /**
-     * 融资人类型（按经济类型划分）01 国有企业/02 集体企业/03 私营企业/99 其他
+     * 设置 融资人类型（按经济类型划分）01 国有企业/02 集体企业/03 私营企业/99 其他
      * @param financierType3 融资人类型（按经济类型划分）01 国有企业/02 集体企业/03 私营企业/99 其他
      */
     public void setFinancierType3(String financierType3) {
@@ -1896,15 +1875,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 融资项目
-     * @return FINANCE_PROJ 融资项目
+     * 取得 融资项目
+     * @return 融资项目
      */
     public String getFinanceProj() {
         return financeProj;
     }
 
     /**
-     * 融资项目
+     * 设置 融资项目
      * @param financeProj 融资项目
      */
     public void setFinanceProj(String financeProj) {
@@ -1912,15 +1891,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 融资人所属行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
-     * @return INDUSTRY1 融资人所属行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
+     * 取得 融资人所属行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
+     * @return 融资人所属行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
      */
     public String getIndustry1() {
         return industry1;
     }
 
     /**
-     * 融资人所属行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
+     * 设置 融资人所属行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
      * @param industry1 融资人所属行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
      */
     public void setIndustry1(String industry1) {
@@ -1928,15 +1907,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 融资人所属行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
-     * @return INDUSTRY_LEVEL2_TYPE 融资人所属行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
+     * 取得 融资人所属行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
+     * @return 融资人所属行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
      */
     public String getIndustryLevel2Type() {
         return industryLevel2Type;
     }
 
     /**
-     * 融资人所属行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
+     * 设置 融资人所属行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
      * @param industryLevel2Type 融资人所属行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
      */
     public void setIndustryLevel2Type(String industryLevel2Type) {
@@ -1944,15 +1923,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 融资项目所属行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
-     * @return PRO_INDUSTRY 融资项目所属行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
+     * 取得 融资项目所属行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
+     * @return 融资项目所属行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
      */
     public String getProIndustry() {
         return proIndustry;
     }
 
     /**
-     * 融资项目所属行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
+     * 设置 融资项目所属行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
      * @param proIndustry 融资项目所属行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
      */
     public void setProIndustry(String proIndustry) {
@@ -1960,15 +1939,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 融资项目所属行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
-     * @return PRO_INDUSTRY_LEVEL2 融资项目所属行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
+     * 取得 融资项目所属行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
+     * @return 融资项目所属行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
      */
     public String getProIndustryLevel2() {
         return proIndustryLevel2;
     }
 
     /**
-     * 融资项目所属行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
+     * 设置 融资项目所属行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
      * @param proIndustryLevel2 融资项目所属行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
      */
     public void setProIndustryLevel2(String proIndustryLevel2) {
@@ -1976,15 +1955,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 项目是否属于重点监控行业和领域 01 是/ 02 否
-     * @return INDUSTRY_FLAG 项目是否属于重点监控行业和领域 01 是/ 02 否
+     * 取得 项目是否属于重点监控行业和领域 01 是/ 02 否
+     * @return 项目是否属于重点监控行业和领域 01 是/ 02 否
      */
     public String getIndustryFlag() {
         return industryFlag;
     }
 
     /**
-     * 项目是否属于重点监控行业和领域 01 是/ 02 否
+     * 设置 项目是否属于重点监控行业和领域 01 是/ 02 否
      * @param industryFlag 项目是否属于重点监控行业和领域 01 是/ 02 否
      */
     public void setIndustryFlag(String industryFlag) {
@@ -1992,15 +1971,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 重点监控行业和领域类别 01 房地产(保障房除外)/ 02 地方政府融资平台/ 03 “铁公基”行业/ 04 “两高一剩”行业/ 99 其他
-     * @return MONIT_TYPE 重点监控行业和领域类别 01 房地产(保障房除外)/ 02 地方政府融资平台/ 03 “铁公基”行业/ 04 “两高一剩”行业/ 99 其他
+     * 取得 重点监控行业和领域类别 01 房地产(保障房除外)/ 02 地方政府融资平台/ 03 “铁公基”行业/ 04 “两高一剩”行业/ 99 其他
+     * @return 重点监控行业和领域类别 01 房地产(保障房除外)/ 02 地方政府融资平台/ 03 “铁公基”行业/ 04 “两高一剩”行业/ 99 其他
      */
     public String getMonitType() {
         return monitType;
     }
 
     /**
-     * 重点监控行业和领域类别 01 房地产(保障房除外)/ 02 地方政府融资平台/ 03 “铁公基”行业/ 04 “两高一剩”行业/ 99 其他
+     * 设置 重点监控行业和领域类别 01 房地产(保障房除外)/ 02 地方政府融资平台/ 03 “铁公基”行业/ 04 “两高一剩”行业/ 99 其他
      * @param monitType 重点监控行业和领域类别 01 房地产(保障房除外)/ 02 地方政府融资平台/ 03 “铁公基”行业/ 04 “两高一剩”行业/ 99 其他
      */
     public void setMonitType(String monitType) {
@@ -2008,15 +1987,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 重点监控行业和领域类别说明
-     * @return MON_TYPE_COMM 重点监控行业和领域类别说明
+     * 取得 重点监控行业和领域类别说明
+     * @return 重点监控行业和领域类别说明
      */
     public String getMonTypeComm() {
         return monTypeComm;
     }
 
     /**
-     * 重点监控行业和领域类别说明
+     * 设置 重点监控行业和领域类别说明
      * @param monTypeComm 重点监控行业和领域类别说明
      */
     public void setMonTypeComm(String monTypeComm) {
@@ -2024,15 +2003,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 担保方式  01 信用担保/ 02 第三方保证/ 03 抵押/ 04 质押/ 05 信用增级/ 99 其他
-     * @return GUA_TYPE 担保方式  01 信用担保/ 02 第三方保证/ 03 抵押/ 04 质押/ 05 信用增级/ 99 其他
+     * 取得 担保方式  01 信用担保/ 02 第三方保证/ 03 抵押/ 04 质押/ 05 信用增级/ 99 其他
+     * @return 担保方式  01 信用担保/ 02 第三方保证/ 03 抵押/ 04 质押/ 05 信用增级/ 99 其他
      */
     public String getGuaType() {
         return guaType;
     }
 
     /**
-     * 担保方式  01 信用担保/ 02 第三方保证/ 03 抵押/ 04 质押/ 05 信用增级/ 99 其他
+     * 设置 担保方式  01 信用担保/ 02 第三方保证/ 03 抵押/ 04 质押/ 05 信用增级/ 99 其他
      * @param guaType 担保方式  01 信用担保/ 02 第三方保证/ 03 抵押/ 04 质押/ 05 信用增级/ 99 其他
      */
     public void setGuaType(String guaType) {
@@ -2040,15 +2019,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 担保方式说明
-     * @return GUA_TYPE_REMARK 担保方式说明
+     * 取得 担保方式说明
+     * @return 担保方式说明
      */
     public String getGuaTypeRemark() {
         return guaTypeRemark;
     }
 
     /**
-     * 担保方式说明
+     * 设置 担保方式说明
      * @param guaTypeRemark 担保方式说明
      */
     public void setGuaTypeRemark(String guaTypeRemark) {
@@ -2056,15 +2035,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 融资人主体评级
-     * @return FINANCIER_GRADE 融资人主体评级
+     * 取得 融资人主体评级
+     * @return 融资人主体评级
      */
     public String getFinancierGrade() {
         return financierGrade;
     }
 
     /**
-     * 融资人主体评级
+     * 设置 融资人主体评级
      * @param financierGrade 融资人主体评级
      */
     public void setFinancierGrade(String financierGrade) {
@@ -2072,15 +2051,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 资产内部评级
-     * @return IN_GRADE 资产内部评级
+     * 取得 资产内部评级
+     * @return 资产内部评级
      */
     public String getInGrade() {
         return inGrade;
     }
 
     /**
-     * 资产内部评级
+     * 设置 资产内部评级
      * @param inGrade 资产内部评级
      */
     public void setInGrade(String inGrade) {
@@ -2088,15 +2067,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 资产外部评级
-     * @return OUT_GRADE 资产外部评级
+     * 取得 资产外部评级
+     * @return 资产外部评级
      */
     public String getOutGrade() {
         return outGrade;
     }
 
     /**
-     * 资产外部评级
+     * 设置 资产外部评级
      * @param outGrade 资产外部评级
      */
     public void setOutGrade(String outGrade) {
@@ -2104,15 +2083,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 选择权
-     * @return CHOSE 选择权
+     * 取得 选择权
+     * @return 选择权
      */
     public String getChose() {
         return chose;
     }
 
     /**
-     * 选择权
+     * 设置 选择权
      * @param chose 选择权
      */
     public void setChose(String chose) {
@@ -2120,15 +2099,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 行权条件说明
-     * @return CONDITION_CMM 行权条件说明
+     * 取得 行权条件说明
+     * @return 行权条件说明
      */
     public String getConditionCmm() {
         return conditionCmm;
     }
 
     /**
-     * 行权条件说明
+     * 设置 行权条件说明
      * @param conditionCmm 行权条件说明
      */
     public void setConditionCmm(String conditionCmm) {
@@ -2136,15 +2115,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 融资人所属地区  参考数据字典：COUNTRY_AREA
-     * @return FIN_AREA 融资人所属地区  参考数据字典：COUNTRY_AREA
+     * 取得 融资人所属地区  参考数据字典：COUNTRY_AREA
+     * @return 融资人所属地区  参考数据字典：COUNTRY_AREA
      */
     public String getFinArea() {
         return finArea;
     }
 
     /**
-     * 融资人所属地区  参考数据字典：COUNTRY_AREA
+     * 设置 融资人所属地区  参考数据字典：COUNTRY_AREA
      * @param finArea 融资人所属地区  参考数据字典：COUNTRY_AREA
      */
     public void setFinArea(String finArea) {
@@ -2152,15 +2131,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 融资总费率
-     * @return TOTAL_FEE_RATE 融资总费率
+     * 取得 融资总费率
+     * @return 融资总费率
      */
     public BigDecimal getTotalFeeRate() {
         return totalFeeRate;
     }
 
     /**
-     * 融资总费率
+     * 设置 融资总费率
      * @param totalFeeRate 融资总费率
      */
     public void setTotalFeeRate(BigDecimal totalFeeRate) {
@@ -2168,15 +2147,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 是否为收/受益权 01是/02否
-     * @return IS_RIGHT 是否为收/受益权 01是/02否
+     * 取得 是否为收/受益权 01是/02否
+     * @return 是否为收/受益权 01是/02否
      */
     public String getIsRight() {
         return isRight;
     }
 
     /**
-     * 是否为收/受益权 01是/02否
+     * 设置 是否为收/受益权 01是/02否
      * @param isRight 是否为收/受益权 01是/02否
      */
     public void setIsRight(String isRight) {
@@ -2184,15 +2163,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 非标准化债券类资产类型 01 商业承兑汇票/ 02 银行承兑汇票/ 03 其他票据/ 04 混合类票据/ 05 信用证
-     * @return NOTSTAND_SEC_TYPE 非标准化债券类资产类型 01 商业承兑汇票/ 02 银行承兑汇票/ 03 其他票据/ 04 混合类票据/ 05 信用证
+     * 取得 非标准化债券类资产类型 01 商业承兑汇票/ 02 银行承兑汇票/ 03 其他票据/ 04 混合类票据/ 05 信用证
+     * @return 非标准化债券类资产类型 01 商业承兑汇票/ 02 银行承兑汇票/ 03 其他票据/ 04 混合类票据/ 05 信用证
      */
     public String getNotstandSecType() {
         return notstandSecType;
     }
 
     /**
-     * 非标准化债券类资产类型 01 商业承兑汇票/ 02 银行承兑汇票/ 03 其他票据/ 04 混合类票据/ 05 信用证
+     * 设置 非标准化债券类资产类型 01 商业承兑汇票/ 02 银行承兑汇票/ 03 其他票据/ 04 混合类票据/ 05 信用证
      * @param notstandSecType 非标准化债券类资产类型 01 商业承兑汇票/ 02 银行承兑汇票/ 03 其他票据/ 04 混合类票据/ 05 信用证
      */
     public void setNotstandSecType(String notstandSecType) {
@@ -2200,15 +2179,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 非标准化债券类资产数量
-     * @return NOTSTAND_SEC_NUM 非标准化债券类资产数量
+     * 取得 非标准化债券类资产数量
+     * @return 非标准化债券类资产数量
      */
     public Long getNotstandSecNum() {
         return notstandSecNum;
     }
 
     /**
-     * 非标准化债券类资产数量
+     * 设置 非标准化债券类资产数量
      * @param notstandSecNum 非标准化债券类资产数量
      */
     public void setNotstandSecNum(Long notstandSecNum) {
@@ -2216,15 +2195,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 加权剩余期限(天)
-     * @return REMAIN_TERM 加权剩余期限(天)
+     * 取得 加权剩余期限(天)
+     * @return 加权剩余期限(天)
      */
     public BigDecimal getRemainTerm() {
         return remainTerm;
     }
 
     /**
-     * 加权剩余期限(天)
+     * 设置 加权剩余期限(天)
      * @param remainTerm 加权剩余期限(天)
      */
     public void setRemainTerm(BigDecimal remainTerm) {
@@ -2232,15 +2211,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 最长剩余期限(天)
-     * @return MAX_REMAIN_TERM 最长剩余期限(天)
+     * 取得 最长剩余期限(天)
+     * @return 最长剩余期限(天)
      */
     public BigDecimal getMaxRemainTerm() {
         return maxRemainTerm;
     }
 
     /**
-     * 最长剩余期限(天)
+     * 设置 最长剩余期限(天)
      * @param maxRemainTerm 最长剩余期限(天)
      */
     public void setMaxRemainTerm(BigDecimal maxRemainTerm) {
@@ -2248,15 +2227,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 最短剩余期限(天)
-     * @return MIN_REMAIN_TERM 最短剩余期限(天)
+     * 取得 最短剩余期限(天)
+     * @return 最短剩余期限(天)
      */
     public BigDecimal getMinRemainTerm() {
         return minRemainTerm;
     }
 
     /**
-     * 最短剩余期限(天)
+     * 设置 最短剩余期限(天)
      * @param minRemainTerm 最短剩余期限(天)
      */
     public void setMinRemainTerm(BigDecimal minRemainTerm) {
@@ -2264,15 +2243,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 股票类型 01 普通股/02 优先股/99 其他
-     * @return SHARES_TYPE 股票类型 01 普通股/02 优先股/99 其他
+     * 取得 股票类型 01 普通股/02 优先股/99 其他
+     * @return 股票类型 01 普通股/02 优先股/99 其他
      */
     public String getSharesType() {
         return sharesType;
     }
 
     /**
-     * 股票类型 01 普通股/02 优先股/99 其他
+     * 设置 股票类型 01 普通股/02 优先股/99 其他
      * @param sharesType 股票类型 01 普通股/02 优先股/99 其他
      */
     public void setSharesType(String sharesType) {
@@ -2280,15 +2259,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
-     * @return INDUSTRY_SHARES 行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
+     * 取得 行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
+     * @return 行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
      */
     public String getIndustryShares() {
         return industryShares;
     }
 
     /**
-     * 行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
+     * 设置 行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
      * @param industryShares 行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
      */
     public void setIndustryShares(String industryShares) {
@@ -2296,15 +2275,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
-     * @return INDUSTRY_SHARES2 行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
+     * 取得 行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
+     * @return 行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
      */
     public String getIndustryShares2() {
         return industryShares2;
     }
 
     /**
-     * 行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
+     * 设置 行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
      * @param industryShares2 行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
      */
     public void setIndustryShares2(String industryShares2) {
@@ -2312,15 +2291,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 投资阶段 01 种子期/ 02 起步期/ 03 扩张期/ 04 过渡期/ 05 重建期/ 06 已上市/ 99 其它
-     * @return INVEST_STAGE 投资阶段 01 种子期/ 02 起步期/ 03 扩张期/ 04 过渡期/ 05 重建期/ 06 已上市/ 99 其它
+     * 取得 投资阶段 01 种子期/ 02 起步期/ 03 扩张期/ 04 过渡期/ 05 重建期/ 06 已上市/ 99 其它
+     * @return 投资阶段 01 种子期/ 02 起步期/ 03 扩张期/ 04 过渡期/ 05 重建期/ 06 已上市/ 99 其它
      */
     public String getInvestStage() {
         return investStage;
     }
 
     /**
-     * 投资阶段 01 种子期/ 02 起步期/ 03 扩张期/ 04 过渡期/ 05 重建期/ 06 已上市/ 99 其它
+     * 设置 投资阶段 01 种子期/ 02 起步期/ 03 扩张期/ 04 过渡期/ 05 重建期/ 06 已上市/ 99 其它
      * @param investStage 投资阶段 01 种子期/ 02 起步期/ 03 扩张期/ 04 过渡期/ 05 重建期/ 06 已上市/ 99 其它
      */
     public void setInvestStage(String investStage) {
@@ -2328,15 +2307,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 投资企业类型（按规模划分） 01 中小微企业/02 大型企业/99 其他
-     * @return SHARES_TYPE1 投资企业类型（按规模划分） 01 中小微企业/02 大型企业/99 其他
+     * 取得 投资企业类型（按规模划分） 01 中小微企业/02 大型企业/99 其他
+     * @return 投资企业类型（按规模划分） 01 中小微企业/02 大型企业/99 其他
      */
     public String getSharesType1() {
         return sharesType1;
     }
 
     /**
-     * 投资企业类型（按规模划分） 01 中小微企业/02 大型企业/99 其他
+     * 设置 投资企业类型（按规模划分） 01 中小微企业/02 大型企业/99 其他
      * @param sharesType1 投资企业类型（按规模划分） 01 中小微企业/02 大型企业/99 其他
      */
     public void setSharesType1(String sharesType1) {
@@ -2344,15 +2323,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 投资企业类型（按经济类型划分）01 国有企业/02 集体企业/03 私营企业/99 其他
-     * @return SHARES_TYPE2 投资企业类型（按经济类型划分）01 国有企业/02 集体企业/03 私营企业/99 其他
+     * 取得 投资企业类型（按经济类型划分）01 国有企业/02 集体企业/03 私营企业/99 其他
+     * @return 投资企业类型（按经济类型划分）01 国有企业/02 集体企业/03 私营企业/99 其他
      */
     public String getSharesType2() {
         return sharesType2;
     }
 
     /**
-     * 投资企业类型（按经济类型划分）01 国有企业/02 集体企业/03 私营企业/99 其他
+     * 设置 投资企业类型（按经济类型划分）01 国有企业/02 集体企业/03 私营企业/99 其他
      * @param sharesType2 投资企业类型（按经济类型划分）01 国有企业/02 集体企业/03 私营企业/99 其他
      */
     public void setSharesType2(String sharesType2) {
@@ -2360,15 +2339,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 投资企业类型（按技术领域划分）01 高新技术企业/99 其他
-     * @return SHARES_TYPE3 投资企业类型（按技术领域划分）01 高新技术企业/99 其他
+     * 取得 投资企业类型（按技术领域划分）01 高新技术企业/99 其他
+     * @return 投资企业类型（按技术领域划分）01 高新技术企业/99 其他
      */
     public String getSharesType3() {
         return sharesType3;
     }
 
     /**
-     * 投资企业类型（按技术领域划分）01 高新技术企业/99 其他
+     * 设置 投资企业类型（按技术领域划分）01 高新技术企业/99 其他
      * @param sharesType3 投资企业类型（按技术领域划分）01 高新技术企业/99 其他
      */
     public void setSharesType3(String sharesType3) {
@@ -2376,15 +2355,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 是否为质押融资 01是/02否
-     * @return IS_PLEDGE 是否为质押融资 01是/02否
+     * 取得 是否为质押融资 01是/02否
+     * @return 是否为质押融资 01是/02否
      */
     public String getIsPledge() {
         return isPledge;
     }
 
     /**
-     * 是否为质押融资 01是/02否
+     * 设置 是否为质押融资 01是/02否
      * @param isPledge 是否为质押融资 01是/02否
      */
     public void setIsPledge(String isPledge) {
@@ -2392,15 +2371,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 名义本金
-     * @return NOM_CAPI 名义本金
+     * 取得 名义本金
+     * @return 名义本金
      */
     public BigDecimal getNomCapi() {
         return nomCapi;
     }
 
     /**
-     * 名义本金
+     * 设置 名义本金
      * @param nomCapi 名义本金
      */
     public void setNomCapi(BigDecimal nomCapi) {
@@ -2408,15 +2387,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 标的类别 01 利率/02 汇率/03 股票/04 农产品/05 大宗商品/06 贵金属/07 债券/08 指数 /09 基金/10 另类资产/11 期货/12 期权/13 远期/14 互换/15 复合金融衍生品/99 其他
-     * @return TARGET_TYPE3 标的类别 01 利率/02 汇率/03 股票/04 农产品/05 大宗商品/06 贵金属/07 债券/08 指数 /09 基金/10 另类资产/11 期货/12 期权/13 远期/14 互换/15 复合金融衍生品/99 其他
+     * 取得 标的类别 01 利率/02 汇率/03 股票/04 农产品/05 大宗商品/06 贵金属/07 债券/08 指数 /09 基金/10 另类资产/11 期货/12 期权/13 远期/14 互换/15 复合金融衍生品/99 其他
+     * @return 标的类别 01 利率/02 汇率/03 股票/04 农产品/05 大宗商品/06 贵金属/07 债券/08 指数 /09 基金/10 另类资产/11 期货/12 期权/13 远期/14 互换/15 复合金融衍生品/99 其他
      */
     public String getTargetType3() {
         return targetType3;
     }
 
     /**
-     * 标的类别 01 利率/02 汇率/03 股票/04 农产品/05 大宗商品/06 贵金属/07 债券/08 指数 /09 基金/10 另类资产/11 期货/12 期权/13 远期/14 互换/15 复合金融衍生品/99 其他
+     * 设置 标的类别 01 利率/02 汇率/03 股票/04 农产品/05 大宗商品/06 贵金属/07 债券/08 指数 /09 基金/10 另类资产/11 期货/12 期权/13 远期/14 互换/15 复合金融衍生品/99 其他
      * @param targetType3 标的类别 01 利率/02 汇率/03 股票/04 农产品/05 大宗商品/06 贵金属/07 债券/08 指数 /09 基金/10 另类资产/11 期货/12 期权/13 远期/14 互换/15 复合金融衍生品/99 其他
      */
     public void setTargetType3(String targetType3) {
@@ -2424,15 +2403,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 发行机构代码
-     * @return ISSUE_PARTY_ID 发行机构代码
+     * 取得 发行机构代码
+     * @return 发行机构代码
      */
     public String getIssuePartyId() {
         return issuePartyId;
     }
 
     /**
-     * 发行机构代码
+     * 设置 发行机构代码
      * @param issuePartyId 发行机构代码
      */
     public void setIssuePartyId(String issuePartyId) {
@@ -2440,15 +2419,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 期限（月）
-     * @return TERM_MONTH 期限（月）
+     * 取得 期限（月）
+     * @return 期限（月）
      */
     public BigDecimal getTermMonth() {
         return termMonth;
     }
 
     /**
-     * 期限（月）
+     * 设置 期限（月）
      * @param termMonth 期限（月）
      */
     public void setTermMonth(BigDecimal termMonth) {
@@ -2456,15 +2435,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 担保情况说明
-     * @return GUARANTEE_CMT 担保情况说明
+     * 取得 担保情况说明
+     * @return 担保情况说明
      */
     public String getGuaranteeCmt() {
         return guaranteeCmt;
     }
 
     /**
-     * 担保情况说明
+     * 设置 担保情况说明
      * @param guaranteeCmt 担保情况说明
      */
     public void setGuaranteeCmt(String guaranteeCmt) {
@@ -2472,15 +2451,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 是否含权等特条款情况说明
-     * @return SPECIAL_CMT 是否含权等特条款情况说明
+     * 取得 是否含权等特条款情况说明
+     * @return 是否含权等特条款情况说明
      */
     public String getSpecialCmt() {
         return specialCmt;
     }
 
     /**
-     * 是否含权等特条款情况说明
+     * 设置 是否含权等特条款情况说明
      * @param specialCmt 是否含权等特条款情况说明
      */
     public void setSpecialCmt(String specialCmt) {
@@ -2488,15 +2467,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 合约名称
-     * @return CONTRACT_NAME 合约名称
+     * 取得 合约名称
+     * @return 合约名称
      */
     public String getContractName() {
         return contractName;
     }
 
     /**
-     * 合约名称
+     * 设置 合约名称
      * @param contractName 合约名称
      */
     public void setContractName(String contractName) {
@@ -2504,15 +2483,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 固定收益部分所占比例
-     * @return INCOME_RATIO 固定收益部分所占比例
+     * 取得 固定收益部分所占比例
+     * @return 固定收益部分所占比例
      */
     public BigDecimal getIncomeRatio() {
         return incomeRatio;
     }
 
     /**
-     * 固定收益部分所占比例
+     * 设置 固定收益部分所占比例
      * @param incomeRatio 固定收益部分所占比例
      */
     public void setIncomeRatio(BigDecimal incomeRatio) {
@@ -2520,15 +2499,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 衍生金融工具所占比例
-     * @return DER_INSTR_RATIO 衍生金融工具所占比例
+     * 取得 衍生金融工具所占比例
+     * @return 衍生金融工具所占比例
      */
     public BigDecimal getDerInstrRatio() {
         return derInstrRatio;
     }
 
     /**
-     * 衍生金融工具所占比例
+     * 设置 衍生金融工具所占比例
      * @param derInstrRatio 衍生金融工具所占比例
      */
     public void setDerInstrRatio(BigDecimal derInstrRatio) {
@@ -2536,15 +2515,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 衍生金融工具具体投资方式
-     * @return DER_INSTR_INV_TYPE 衍生金融工具具体投资方式
+     * 取得 衍生金融工具具体投资方式
+     * @return 衍生金融工具具体投资方式
      */
     public String getDerInstrInvType() {
         return derInstrInvType;
     }
 
     /**
-     * 衍生金融工具具体投资方式
+     * 设置 衍生金融工具具体投资方式
      * @param derInstrInvType 衍生金融工具具体投资方式
      */
     public void setDerInstrInvType(String derInstrInvType) {
@@ -2552,15 +2531,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 衍生金融工具挂钩标的资产
-     * @return DER_INSTR_TARGET 衍生金融工具挂钩标的资产
+     * 取得 衍生金融工具挂钩标的资产
+     * @return 衍生金融工具挂钩标的资产
      */
     public String getDerInstrTarget() {
         return derInstrTarget;
     }
 
     /**
-     * 衍生金融工具挂钩标的资产
+     * 设置 衍生金融工具挂钩标的资产
      * @param derInstrTarget 衍生金融工具挂钩标的资产
      */
     public void setDerInstrTarget(String derInstrTarget) {
@@ -2568,15 +2547,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 利息结算方式
-     * @return ACCT_MODE 利息结算方式
+     * 取得 利息结算方式
+     * @return 利息结算方式
      */
     public String getAcctMode() {
         return acctMode;
     }
 
     /**
-     * 利息结算方式
+     * 设置 利息结算方式
      * @param acctMode 利息结算方式
      */
     public void setAcctMode(String acctMode) {
@@ -2584,15 +2563,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 含权情况说明
-     * @return SPECIAL_CMT1 含权情况说明
+     * 取得 含权情况说明
+     * @return 含权情况说明
      */
     public String getSpecialCmt1() {
         return specialCmt1;
     }
 
     /**
-     * 含权情况说明
+     * 设置 含权情况说明
      * @param specialCmt1 含权情况说明
      */
     public void setSpecialCmt1(String specialCmt1) {
@@ -2600,15 +2579,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 结构性票据最高收益率
-     * @return MAX_YIELD 结构性票据最高收益率
+     * 取得 结构性票据最高收益率
+     * @return 结构性票据最高收益率
      */
     public BigDecimal getMaxYield() {
         return maxYield;
     }
 
     /**
-     * 结构性票据最高收益率
+     * 设置 结构性票据最高收益率
      * @param maxYield 结构性票据最高收益率
      */
     public void setMaxYield(BigDecimal maxYield) {
@@ -2616,15 +2595,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 结构性票据最低收益率
-     * @return MIN_YIELD 结构性票据最低收益率
+     * 取得 结构性票据最低收益率
+     * @return 结构性票据最低收益率
      */
     public BigDecimal getMinYield() {
         return minYield;
     }
 
     /**
-     * 结构性票据最低收益率
+     * 设置 结构性票据最低收益率
      * @param minYield 结构性票据最低收益率
      */
     public void setMinYield(BigDecimal minYield) {
@@ -2632,15 +2611,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 挂钩标的资产基准价格
-     * @return BASIC_PRICE 挂钩标的资产基准价格
+     * 取得 挂钩标的资产基准价格
+     * @return 挂钩标的资产基准价格
      */
     public BigDecimal getBasicPrice() {
         return basicPrice;
     }
 
     /**
-     * 挂钩标的资产基准价格
+     * 设置 挂钩标的资产基准价格
      * @param basicPrice 挂钩标的资产基准价格
      */
     public void setBasicPrice(BigDecimal basicPrice) {
@@ -2648,15 +2627,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 挂钩标的资产登记日价格
-     * @return REG_DATE_PRICE 挂钩标的资产登记日价格
+     * 取得 挂钩标的资产登记日价格
+     * @return 挂钩标的资产登记日价格
      */
     public BigDecimal getRegDatePrice() {
         return regDatePrice;
     }
 
     /**
-     * 挂钩标的资产登记日价格
+     * 设置 挂钩标的资产登记日价格
      * @param regDatePrice 挂钩标的资产登记日价格
      */
     public void setRegDatePrice(BigDecimal regDatePrice) {
@@ -2664,15 +2643,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 交易费
-     * @return TRADE_FEE 交易费
+     * 取得 交易费
+     * @return 交易费
      */
     public String getTradeFee() {
         return tradeFee;
     }
 
     /**
-     * 交易费
+     * 设置 交易费
      * @param tradeFee 交易费
      */
     public void setTradeFee(String tradeFee) {
@@ -2680,15 +2659,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 资管计划发起人机构编码
-     * @return PARTY_CODE 资管计划发起人机构编码
+     * 取得 资管计划发起人机构编码
+     * @return 资管计划发起人机构编码
      */
     public String getPartyCode() {
         return partyCode;
     }
 
     /**
-     * 资管计划发起人机构编码
+     * 设置 资管计划发起人机构编码
      * @param partyCode 资管计划发起人机构编码
      */
     public void setPartyCode(String partyCode) {
@@ -2696,15 +2675,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 资管计划登记编码
-     * @return CHECK_CODE 资管计划登记编码
+     * 取得 资管计划登记编码
+     * @return 资管计划登记编码
      */
     public String getCheckCode() {
         return checkCode;
     }
 
     /**
-     * 资管计划登记编码
+     * 设置 资管计划登记编码
      * @param checkCode 资管计划登记编码
      */
     public void setCheckCode(String checkCode) {
@@ -2712,15 +2691,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 管理人
-     * @return MANAGER_ID 管理人
+     * 取得 管理人
+     * @return 管理人
      */
     public String getManagerId() {
         return managerId;
     }
 
     /**
-     * 管理人
+     * 设置 管理人
      * @param managerId 管理人
      */
     public void setManagerId(String managerId) {
@@ -2728,15 +2707,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 托管人
-     * @return TRUSTEE_ID 托管人
+     * 取得 托管人
+     * @return 托管人
      */
     public String getTrusteeId() {
         return trusteeId;
     }
 
     /**
-     * 托管人
+     * 设置 托管人
      * @param trusteeId 托管人
      */
     public void setTrusteeId(String trusteeId) {
@@ -2744,15 +2723,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 资金实际投向 01 结构性投资类/02 货币市场工具类/03 债券类/04 股票类/05 股权类/06 另类投资类/07 混合类/08 非标准化债权类/09 银行存款类/10 理财直接融资工具类/11 新增可投资资产类/12 代客境外投资类/13 公募基金类/ 14 私募基金类/ 15 产业基金类 /16 衍生产品类 /17 商品类/18 同业存单类/19拆放同业及买入返售类
-     * @return TRU_ACT_TYPE 资金实际投向 01 结构性投资类/02 货币市场工具类/03 债券类/04 股票类/05 股权类/06 另类投资类/07 混合类/08 非标准化债权类/09 银行存款类/10 理财直接融资工具类/11 新增可投资资产类/12 代客境外投资类/13 公募基金类/ 14 私募基金类/ 15 产业基金类 /16 衍生产品类 /17 商品类/18 同业存单类/19拆放同业及买入返售类
+     * 取得 资金实际投向 01 结构性投资类/02 货币市场工具类/03 债券类/04 股票类/05 股权类/06 另类投资类/07 混合类/08 非标准化债权类/09 银行存款类/10 理财直接融资工具类/11 新增可投资资产类/12 代客境外投资类/13 公募基金类/ 14 私募基金类/ 15 产业基金类 /16 衍生产品类 /17 商品类/18 同业存单类/19拆放同业及买入返售类
+     * @return 资金实际投向 01 结构性投资类/02 货币市场工具类/03 债券类/04 股票类/05 股权类/06 另类投资类/07 混合类/08 非标准化债权类/09 银行存款类/10 理财直接融资工具类/11 新增可投资资产类/12 代客境外投资类/13 公募基金类/ 14 私募基金类/ 15 产业基金类 /16 衍生产品类 /17 商品类/18 同业存单类/19拆放同业及买入返售类
      */
     public String getTruActType() {
         return truActType;
     }
 
     /**
-     * 资金实际投向 01 结构性投资类/02 货币市场工具类/03 债券类/04 股票类/05 股权类/06 另类投资类/07 混合类/08 非标准化债权类/09 银行存款类/10 理财直接融资工具类/11 新增可投资资产类/12 代客境外投资类/13 公募基金类/ 14 私募基金类/ 15 产业基金类 /16 衍生产品类 /17 商品类/18 同业存单类/19拆放同业及买入返售类
+     * 设置 资金实际投向 01 结构性投资类/02 货币市场工具类/03 债券类/04 股票类/05 股权类/06 另类投资类/07 混合类/08 非标准化债权类/09 银行存款类/10 理财直接融资工具类/11 新增可投资资产类/12 代客境外投资类/13 公募基金类/ 14 私募基金类/ 15 产业基金类 /16 衍生产品类 /17 商品类/18 同业存单类/19拆放同业及买入返售类
      * @param truActType 资金实际投向 01 结构性投资类/02 货币市场工具类/03 债券类/04 股票类/05 股权类/06 另类投资类/07 混合类/08 非标准化债权类/09 银行存款类/10 理财直接融资工具类/11 新增可投资资产类/12 代客境外投资类/13 公募基金类/ 14 私募基金类/ 15 产业基金类 /16 衍生产品类 /17 商品类/18 同业存单类/19拆放同业及买入返售类
      */
     public void setTruActType(String truActType) {
@@ -2760,15 +2739,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 资金运用方式
-     * @return INVEST_TYPE 资金运用方式
+     * 取得 资金运用方式
+     * @return 资金运用方式
      */
     public String getInvestType() {
         return investType;
     }
 
     /**
-     * 资金运用方式
+     * 设置 资金运用方式
      * @param investType 资金运用方式
      */
     public void setInvestType(String investType) {
@@ -2776,15 +2755,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 资金运用行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
-     * @return CAP_USE_INDU 资金运用行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
+     * 取得 资金运用行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
+     * @return 资金运用行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
      */
     public String getCapUseIndu() {
         return capUseIndu;
     }
 
     /**
-     * 资金运用行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
+     * 设置 资金运用行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
      * @param capUseIndu 资金运用行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL
      */
     public void setCapUseIndu(String capUseIndu) {
@@ -2792,47 +2771,49 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 资管计划成立日期
-     * @return PLAN_SDATE 资管计划成立日期
+     * 取得 资管计划成立日期
+     * @return 资管计划成立日期
      */
     public Date getPlanSdate() {
         return planSdate;
     }
 
     /**
-     * 资管计划成立日期
+     * 设置 资管计划成立日期
      * @param planSdate 资管计划成立日期
      */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
     public void setPlanSdate(Date planSdate) {
         this.planSdate = planSdate;
     }
 
     /**
-     * 资管计划终止日期
-     * @return PLAN_EDATE 资管计划终止日期
+     * 取得 资管计划终止日期
+     * @return 资管计划终止日期
      */
     public Date getPlanEdate() {
         return planEdate;
     }
 
     /**
-     * 资管计划终止日期
+     * 设置 资管计划终止日期
      * @param planEdate 资管计划终止日期
      */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
     public void setPlanEdate(Date planEdate) {
         this.planEdate = planEdate;
     }
 
     /**
-     * 资管计划属性/委外投资属性 01 集合/02 单一/03 专项/04 定向/05 专户/99 其他
-     * @return PRO_PROPERTY 资管计划属性/委外投资属性 01 集合/02 单一/03 专项/04 定向/05 专户/99 其他
+     * 取得 资管计划属性/委外投资属性 01 集合/02 单一/03 专项/04 定向/05 专户/99 其他
+     * @return 资管计划属性/委外投资属性 01 集合/02 单一/03 专项/04 定向/05 专户/99 其他
      */
     public String getProProperty() {
         return proProperty;
     }
 
     /**
-     * 资管计划属性/委外投资属性 01 集合/02 单一/03 专项/04 定向/05 专户/99 其他
+     * 设置 资管计划属性/委外投资属性 01 集合/02 单一/03 专项/04 定向/05 专户/99 其他
      * @param proProperty 资管计划属性/委外投资属性 01 集合/02 单一/03 专项/04 定向/05 专户/99 其他
      */
     public void setProProperty(String proProperty) {
@@ -2840,15 +2821,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 最高预期收益率
-     * @return MAX_RATE 最高预期收益率
+     * 取得 最高预期收益率
+     * @return 最高预期收益率
      */
     public BigDecimal getMaxRate() {
         return maxRate;
     }
 
     /**
-     * 最高预期收益率
+     * 设置 最高预期收益率
      * @param maxRate 最高预期收益率
      */
     public void setMaxRate(BigDecimal maxRate) {
@@ -2856,15 +2837,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 最低预期收益率
-     * @return MIN_RATE 最低预期收益率
+     * 取得 最低预期收益率
+     * @return 最低预期收益率
      */
     public BigDecimal getMinRate() {
         return minRate;
     }
 
     /**
-     * 最低预期收益率
+     * 设置 最低预期收益率
      * @param minRate 最低预期收益率
      */
     public void setMinRate(BigDecimal minRate) {
@@ -2872,15 +2853,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 负债规模
-     * @return DEBT_SCALE 负债规模
+     * 取得 负债规模
+     * @return 负债规模
      */
     public BigDecimal getDebtScale() {
         return debtScale;
     }
 
     /**
-     * 负债规模
+     * 设置 负债规模
      * @param debtScale 负债规模
      */
     public void setDebtScale(BigDecimal debtScale) {
@@ -2888,15 +2869,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 购买结构 01 优先/02 劣后/03 整体
-     * @return BUY_STRUCT 购买结构 01 优先/02 劣后/03 整体
+     * 取得 购买结构 01 优先/02 劣后/03 整体
+     * @return 购买结构 01 优先/02 劣后/03 整体
      */
     public String getBuyStruct() {
         return buyStruct;
     }
 
     /**
-     * 购买结构 01 优先/02 劣后/03 整体
+     * 设置 购买结构 01 优先/02 劣后/03 整体
      * @param buyStruct 购买结构 01 优先/02 劣后/03 整体
      */
     public void setBuyStruct(String buyStruct) {
@@ -2904,15 +2885,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 管理方式 01 主动（自主管理）/02被动（委托管理）/99其他
-     * @return MANAGE_TYPE 管理方式 01 主动（自主管理）/02被动（委托管理）/99其他
+     * 取得 管理方式 01 主动（自主管理）/02被动（委托管理）/99其他
+     * @return 管理方式 01 主动（自主管理）/02被动（委托管理）/99其他
      */
     public String getManageType() {
         return manageType;
     }
 
     /**
-     * 管理方式 01 主动（自主管理）/02被动（委托管理）/99其他
+     * 设置 管理方式 01 主动（自主管理）/02被动（委托管理）/99其他
      * @param manageType 管理方式 01 主动（自主管理）/02被动（委托管理）/99其他
      */
     public void setManageType(String manageType) {
@@ -2920,15 +2901,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 是否掌控计划底层资产详情 01 是/ 02 否
-     * @return IS_CTRL_BOTTOM 是否掌控计划底层资产详情 01 是/ 02 否
+     * 取得 是否掌控计划底层资产详情 01 是/ 02 否
+     * @return 是否掌控计划底层资产详情 01 是/ 02 否
      */
     public String getIsCtrlBottom() {
         return isCtrlBottom;
     }
 
     /**
-     * 是否掌控计划底层资产详情 01 是/ 02 否
+     * 设置 是否掌控计划底层资产详情 01 是/ 02 否
      * @param isCtrlBottom 是否掌控计划底层资产详情 01 是/ 02 否
      */
     public void setIsCtrlBottom(String isCtrlBottom) {
@@ -2936,15 +2917,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 管理费率
-     * @return MGR_FEE_RATE 管理费率
+     * 取得 管理费率
+     * @return 管理费率
      */
     public BigDecimal getMgrFeeRate() {
         return mgrFeeRate;
     }
 
     /**
-     * 管理费率
+     * 设置 管理费率
      * @param mgrFeeRate 管理费率
      */
     public void setMgrFeeRate(BigDecimal mgrFeeRate) {
@@ -2952,15 +2933,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 托管费率
-     * @return TRU_FEE_RATE 托管费率
+     * 取得 托管费率
+     * @return 托管费率
      */
     public BigDecimal getTruFeeRate() {
         return truFeeRate;
     }
 
     /**
-     * 托管费率
+     * 设置 托管费率
      * @param truFeeRate 托管费率
      */
     public void setTruFeeRate(BigDecimal truFeeRate) {
@@ -2968,15 +2949,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 交易相关合计费率
-     * @return TRADE_FEE_RATE 交易相关合计费率
+     * 取得 交易相关合计费率
+     * @return 交易相关合计费率
      */
     public BigDecimal getTradeFeeRate() {
         return tradeFeeRate;
     }
 
     /**
-     * 交易相关合计费率
+     * 设置 交易相关合计费率
      * @param tradeFeeRate 交易相关合计费率
      */
     public void setTradeFeeRate(BigDecimal tradeFeeRate) {
@@ -2984,15 +2965,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 中介服务机构合计费率
-     * @return AGENCY_FEE_RATE 中介服务机构合计费率
+     * 取得 中介服务机构合计费率
+     * @return 中介服务机构合计费率
      */
     public BigDecimal getAgencyFeeRate() {
         return agencyFeeRate;
     }
 
     /**
-     * 中介服务机构合计费率
+     * 设置 中介服务机构合计费率
      * @param agencyFeeRate 中介服务机构合计费率
      */
     public void setAgencyFeeRate(BigDecimal agencyFeeRate) {
@@ -3000,15 +2981,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 其他合计费率
-     * @return OTHER_FEE_RATE 其他合计费率
+     * 取得 其他合计费率
+     * @return 其他合计费率
      */
     public BigDecimal getOtherFeeRate() {
         return otherFeeRate;
     }
 
     /**
-     * 其他合计费率
+     * 设置 其他合计费率
      * @param otherFeeRate 其他合计费率
      */
     public void setOtherFeeRate(BigDecimal otherFeeRate) {
@@ -3016,15 +2997,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 资产价值
-     * @return ASSET_VALUE 资产价值
+     * 取得 资产价值
+     * @return 资产价值
      */
     public BigDecimal getAssetValue() {
         return assetValue;
     }
 
     /**
-     * 资产价值
+     * 设置 资产价值
      * @param assetValue 资产价值
      */
     public void setAssetValue(BigDecimal assetValue) {
@@ -3032,15 +3013,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 登记备案机构 01 中央国债登记结算有限责任公司/ 02 上海清算所 / 03 中国证券登记结算有限责任公司 / 04 中国证券投资基金业协会 /99 其他
-     * @return REGIST_ORG1 登记备案机构 01 中央国债登记结算有限责任公司/ 02 上海清算所 / 03 中国证券登记结算有限责任公司 / 04 中国证券投资基金业协会 /99 其他
+     * 取得 登记备案机构 01 中央国债登记结算有限责任公司/ 02 上海清算所 / 03 中国证券登记结算有限责任公司 / 04 中国证券投资基金业协会 /99 其他
+     * @return 登记备案机构 01 中央国债登记结算有限责任公司/ 02 上海清算所 / 03 中国证券登记结算有限责任公司 / 04 中国证券投资基金业协会 /99 其他
      */
     public String getRegistOrg1() {
         return registOrg1;
     }
 
     /**
-     * 登记备案机构 01 中央国债登记结算有限责任公司/ 02 上海清算所 / 03 中国证券登记结算有限责任公司 / 04 中国证券投资基金业协会 /99 其他
+     * 设置 登记备案机构 01 中央国债登记结算有限责任公司/ 02 上海清算所 / 03 中国证券登记结算有限责任公司 / 04 中国证券投资基金业协会 /99 其他
      * @param registOrg1 登记备案机构 01 中央国债登记结算有限责任公司/ 02 上海清算所 / 03 中国证券登记结算有限责任公司 / 04 中国证券投资基金业协会 /99 其他
      */
     public void setRegistOrg1(String registOrg1) {
@@ -3048,15 +3029,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 基金管理机构名称
-     * @return MNG_ORG_NAME 基金管理机构名称
+     * 取得 基金管理机构名称
+     * @return 基金管理机构名称
      */
     public String getMngOrgName() {
         return mngOrgName;
     }
 
     /**
-     * 基金管理机构名称
+     * 设置 基金管理机构名称
      * @param mngOrgName 基金管理机构名称
      */
     public void setMngOrgName(String mngOrgName) {
@@ -3064,15 +3045,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 基金托管机构名称
-     * @return TRU_ORG_NAME 基金托管机构名称
+     * 取得 基金托管机构名称
+     * @return 基金托管机构名称
      */
     public String getTruOrgName() {
         return truOrgName;
     }
 
     /**
-     * 基金托管机构名称
+     * 设置 基金托管机构名称
      * @param truOrgName 基金托管机构名称
      */
     public void setTruOrgName(String truOrgName) {
@@ -3080,15 +3061,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 基金投资资产
-     * @return FUND_INVEST_ASSET 基金投资资产
+     * 取得 基金投资资产
+     * @return 基金投资资产
      */
     public String getFundInvestAsset() {
         return fundInvestAsset;
     }
 
     /**
-     * 基金投资资产
+     * 设置 基金投资资产
      * @param fundInvestAsset 基金投资资产
      */
     public void setFundInvestAsset(String fundInvestAsset) {
@@ -3096,15 +3077,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 行内资产类别 01 场内股票质押回购/02 场外股票质押融资/03 融资租赁/99 其他
-     * @return IN_ASSET_TYPE 行内资产类别 01 场内股票质押回购/02 场外股票质押融资/03 融资租赁/99 其他
+     * 取得 行内资产类别 01 场内股票质押回购/02 场外股票质押融资/03 融资租赁/99 其他
+     * @return 行内资产类别 01 场内股票质押回购/02 场外股票质押融资/03 融资租赁/99 其他
      */
     public String getInAssetType() {
         return inAssetType;
     }
 
     /**
-     * 行内资产类别 01 场内股票质押回购/02 场外股票质押融资/03 融资租赁/99 其他
+     * 设置 行内资产类别 01 场内股票质押回购/02 场外股票质押融资/03 融资租赁/99 其他
      * @param inAssetType 行内资产类别 01 场内股票质押回购/02 场外股票质押融资/03 融资租赁/99 其他
      */
     public void setInAssetType(String inAssetType) {
@@ -3112,15 +3093,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 行内资产类别说明
-     * @return IN_ASSET_TYPE_CMM 行内资产类别说明
+     * 取得 行内资产类别说明
+     * @return 行内资产类别说明
      */
     public String getInAssetTypeCmm() {
         return inAssetTypeCmm;
     }
 
     /**
-     * 行内资产类别说明
+     * 设置 行内资产类别说明
      * @param inAssetTypeCmm 行内资产类别说明
      */
     public void setInAssetTypeCmm(String inAssetTypeCmm) {
@@ -3128,15 +3109,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 备注
-     * @return REMARK 备注
+     * 取得 备注
+     * @return 备注
      */
     public String getRemark() {
         return remark;
     }
 
     /**
-     * 备注
+     * 设置 备注
      * @param remark 备注
      */
     public void setRemark(String remark) {
@@ -3144,15 +3125,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 是否底层资产 01 是/ 02 否
-     * @return IS_UNDER_ASSET 是否底层资产 01 是/ 02 否
+     * 取得 是否底层资产 01 是/ 02 否
+     * @return 是否底层资产 01 是/ 02 否
      */
     public String getIsUnderAsset() {
         return isUnderAsset;
     }
 
     /**
-     * 是否底层资产 01 是/ 02 否
+     * 设置 是否底层资产 01 是/ 02 否
      * @param isUnderAsset 是否底层资产 01 是/ 02 否
      */
     public void setIsUnderAsset(String isUnderAsset) {
@@ -3160,15 +3141,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 是否属于政府投资基金 01 是/ 02 否
-     * @return IS_GOVERN_FUND 是否属于政府投资基金 01 是/ 02 否
+     * 取得 是否属于政府投资基金 01 是/ 02 否
+     * @return 是否属于政府投资基金 01 是/ 02 否
      */
     public String getIsGovernFund() {
         return isGovernFund;
     }
 
     /**
-     * 是否属于政府投资基金 01 是/ 02 否
+     * 设置 是否属于政府投资基金 01 是/ 02 否
      * @param isGovernFund 是否属于政府投资基金 01 是/ 02 否
      */
     public void setIsGovernFund(String isGovernFund) {
@@ -3176,15 +3157,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 政府投资基金投向 01 投向创业早期企业/ 02 投向中小微企业/ 03 投向产业转型升级和发展/ 04 投向基础设施和公共服务领域/99 其他
-     * @return GOVERN_INVEST_FUND 政府投资基金投向 01 投向创业早期企业/ 02 投向中小微企业/ 03 投向产业转型升级和发展/ 04 投向基础设施和公共服务领域/99 其他
+     * 取得 政府投资基金投向 01 投向创业早期企业/ 02 投向中小微企业/ 03 投向产业转型升级和发展/ 04 投向基础设施和公共服务领域/99 其他
+     * @return 政府投资基金投向 01 投向创业早期企业/ 02 投向中小微企业/ 03 投向产业转型升级和发展/ 04 投向基础设施和公共服务领域/99 其他
      */
     public String getGovernInvestFund() {
         return governInvestFund;
     }
 
     /**
-     * 政府投资基金投向 01 投向创业早期企业/ 02 投向中小微企业/ 03 投向产业转型升级和发展/ 04 投向基础设施和公共服务领域/99 其他
+     * 设置 政府投资基金投向 01 投向创业早期企业/ 02 投向中小微企业/ 03 投向产业转型升级和发展/ 04 投向基础设施和公共服务领域/99 其他
      * @param governInvestFund 政府投资基金投向 01 投向创业早期企业/ 02 投向中小微企业/ 03 投向产业转型升级和发展/ 04 投向基础设施和公共服务领域/99 其他
      */
     public void setGovernInvestFund(String governInvestFund) {
@@ -3192,15 +3173,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 基金公司名称
-     * @return FUND_ENPE_NAME 基金公司名称
+     * 取得 基金公司名称
+     * @return 基金公司名称
      */
     public String getFundEnpeName() {
         return fundEnpeName;
     }
 
     /**
-     * 基金公司名称
+     * 设置 基金公司名称
      * @param fundEnpeName 基金公司名称
      */
     public void setFundEnpeName(String fundEnpeName) {
@@ -3208,15 +3189,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 受托人
-     * @return TRUSTEE 受托人
+     * 取得 受托人
+     * @return 受托人
      */
     public String getTrustee() {
         return trustee;
     }
 
     /**
-     * 受托人
+     * 设置 受托人
      * @param trustee 受托人
      */
     public void setTrustee(String trustee) {
@@ -3224,95 +3205,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 数据状态  D	删除 A	待处理 E	有效
-     * @return STATUS 数据状态  D	删除 A	待处理 E	有效
-     */
-    public String getStatus() {
-        return status;
-    }
-
-    /**
-     * 数据状态  D	删除 A	待处理 E	有效
-     * @param status 数据状态  D	删除 A	待处理 E	有效
-     */
-    public void setStatus(String status) {
-        this.status = status == null ? null : status.trim();
-    }
-
-    /**
-     * 创建人
-     * @return CREATE_USER 创建人
-     */
-    public String getCreateUser() {
-        return createUser;
-    }
-
-    /**
-     * 创建人
-     * @param createUser 创建人
-     */
-    public void setCreateUser(String createUser) {
-        this.createUser = createUser == null ? null : createUser.trim();
-    }
-
-    /**
-     * 创建人
-     * @return CREATE_TIME 创建人
-     */
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    /**
-     * 创建人
-     * @param createTime 创建人
-     */
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    /**
-     * 更新人
-     * @return UPDATE_USER 更新人
-     */
-    public String getUpdateUser() {
-        return updateUser;
-    }
-
-    /**
-     * 更新人
-     * @param updateUser 更新人
-     */
-    public void setUpdateUser(String updateUser) {
-        this.updateUser = updateUser == null ? null : updateUser.trim();
-    }
-
-    /**
-     * 更新时间
-     * @return UPDATE_TIME 更新时间
-     */
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    /**
-     * 更新时间
-     * @param updateTime 更新时间
-     */
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    /**
-     * 部门代码
-     * @return DEPT_CODE 部门代码
+     * 取得 部门代码
+     * @return 部门代码
      */
     public String getDeptCode() {
         return deptCode;
     }
 
     /**
-     * 部门代码
+     * 设置 部门代码
      * @param deptCode 部门代码
      */
     public void setDeptCode(String deptCode) {
@@ -3320,15 +3221,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 机构代码
-     * @return ORG_CODE 机构代码
+     * 取得 机构代码
+     * @return 机构代码
      */
     public String getOrgCode() {
         return orgCode;
     }
 
     /**
-     * 机构代码
+     * 设置 机构代码
      * @param orgCode 机构代码
      */
     public void setOrgCode(String orgCode) {
@@ -3336,15 +3237,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 数据来源
-     * @return DATA_SOURCE 数据来源
+     * 取得 数据来源
+     * @return 数据来源
      */
     public String getDataSource() {
         return dataSource;
     }
 
     /**
-     * 数据来源
+     * 设置 数据来源
      * @param dataSource 数据来源
      */
     public void setDataSource(String dataSource) {
@@ -3352,15 +3253,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 是否投向投向“金融资产投资公司或其附属机构发行的私募股权投资基金
-     * @return PRIVATEFUND_FLAG 是否投向投向“金融资产投资公司或其附属机构发行的私募股权投资基金
+     * 取得 是否投向投向“金融资产投资公司或其附属机构发行的私募股权投资基金
+     * @return 是否投向投向“金融资产投资公司或其附属机构发行的私募股权投资基金
      */
     public String getPrivatefundFlag() {
         return privatefundFlag;
     }
 
     /**
-     * 是否投向投向“金融资产投资公司或其附属机构发行的私募股权投资基金
+     * 设置 是否投向投向“金融资产投资公司或其附属机构发行的私募股权投资基金
      * @param privatefundFlag 是否投向投向“金融资产投资公司或其附属机构发行的私募股权投资基金
      */
     public void setPrivatefundFlag(String privatefundFlag) {
@@ -3368,45 +3269,31 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 是否投向金融资产投资公司发行的私募资产管理产品
-     * @return PRIVATEPRD_FLAG 是否投向金融资产投资公司发行的私募资产管理产品
+     * 取得 是否投向金融资产投资公司发行的私募资产管理产品
+     * @return 是否投向金融资产投资公司发行的私募资产管理产品
      */
     public String getPrivateprdFlag() {
         return privateprdFlag;
     }
 
     /**
-     * 是否投向金融资产投资公司发行的私募资产管理产品
+     * 设置 是否投向金融资产投资公司发行的私募资产管理产品
      * @param privateprdFlag 是否投向金融资产投资公司发行的私募资产管理产品
      */
     public void setPrivateprdFlag(String privateprdFlag) {
         this.privateprdFlag = privateprdFlag == null ? null : privateprdFlag.trim();
     }
-    /**
-     * 是否投向地方政府融资平台
-     * @return PRIVATE_FLAG 是否投向地方政府融资平台
-     */
-    public String getPrivateFlag() {
-		return privateFlag;
-	}
-    /**
-     * 是否投向地方政府融资平台
-     * @param privateFlag 是否投向地方政府融资平台
-     */
-	public void setPrivateFlag(String privateFlag) {
-		this.privateFlag = privateFlag;
-	}
 
-	/**
-     * 是否投向“市场化债转股相关产品的部分”
-     * @return BONDTOSTOCK_FLAG 是否投向“市场化债转股相关产品的部分”
+    /**
+     * 取得 是否投向“市场化债转股相关产品的部分”
+     * @return 是否投向“市场化债转股相关产品的部分”
      */
     public String getBondtostockFlag() {
         return bondtostockFlag;
     }
 
     /**
-     * 是否投向“市场化债转股相关产品的部分”
+     * 设置 是否投向“市场化债转股相关产品的部分”
      * @param bondtostockFlag 是否投向“市场化债转股相关产品的部分”
      */
     public void setBondtostockFlag(String bondtostockFlag) {
@@ -3414,15 +3301,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 公共PPP
-     * @return PPPFLAG 公共PPP
+     * 取得 公共PPP
+     * @return 公共PPP
      */
     public String getPppflag() {
         return pppflag;
     }
 
     /**
-     * 公共PPP
+     * 设置 公共PPP
      * @param pppflag 公共PPP
      */
     public void setPppflag(String pppflag) {
@@ -3430,31 +3317,32 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 数据日期
-     * @return STATUS_DATE 数据日期
+     * 取得 数据日期
+     * @return 数据日期
      */
     public Date getStatusDate() {
         return statusDate;
     }
 
     /**
-     * 数据日期
+     * 设置 数据日期
      * @param statusDate 数据日期
      */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
     public void setStatusDate(Date statusDate) {
         this.statusDate = statusDate;
     }
 
     /**
-     * 资金运用行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
-     * @return CAP_USE_INDU_LEVEL2 资金运用行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
+     * 取得 资金运用行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
+     * @return 资金运用行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
      */
     public String getCapUseInduLevel2() {
         return capUseInduLevel2;
     }
 
     /**
-     * 资金运用行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
+     * 设置 资金运用行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
      * @param capUseInduLevel2 资金运用行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL
      */
     public void setCapUseInduLevel2(String capUseInduLevel2) {
@@ -3462,15 +3350,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 发行机构
-     * @return ISSUE_PARTY_NAME 发行机构
+     * 取得 发行机构
+     * @return 发行机构
      */
     public String getIssuePartyName() {
         return issuePartyName;
     }
 
     /**
-     * 发行机构
+     * 设置 发行机构
      * @param issuePartyName 发行机构
      */
     public void setIssuePartyName(String issuePartyName) {
@@ -3478,15 +3366,15 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 债券信用评级
-     * @return SEC_CREDIT_GRADE_TYPE 债券信用评级
+     * 取得 债券信用评级
+     * @return 债券信用评级
      */
     public String getSecCreditGradeType() {
         return secCreditGradeType;
     }
 
     /**
-     * 债券信用评级
+     * 设置 债券信用评级
      * @param secCreditGradeType 债券信用评级
      */
     public void setSecCreditGradeType(String secCreditGradeType) {
@@ -3494,501 +3382,1147 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * null
-     * @return SEC_MAIN_GRADE null
+     * 取得 债券主体评级
+     * @return 债券主体评级
      */
     public String getSecMainGrade() {
         return secMainGrade;
     }
 
     /**
-     * null
-     * @param secMainGrade null
+     * 设置 债券主体评级
+     * @param secMainGrade 债券主体评级
      */
     public void setSecMainGrade(String secMainGrade) {
         this.secMainGrade = secMainGrade == null ? null : secMainGrade.trim();
     }
 
-	public String getBlnArea() {
-		return blnArea;
-	}
+    /**
+     * 取得 境内外
+     * @return 境内外
+     */
+    public String getBlnArea() {
+        return blnArea;
+    }
 
-	public void setBlnArea(String blnArea) {
-		this.blnArea = blnArea;
-	}
+    /**
+     * 设置 境内外
+     * @param blnArea 境内外
+     */
+    public void setBlnArea(String blnArea) {
+        this.blnArea = blnArea == null ? null : blnArea.trim();
+    }
 
-	public String getIndustryPbc() {
-		return industryPbc;
-	}
+    /**
+     * 取得 融资人所属行业一级分类
+     * @return 融资人所属行业一级分类
+     */
+    public String getIndustryPbc() {
+        return industryPbc;
+    }
 
-	public void setIndustryPbc(String industryPbc) {
-		this.industryPbc = industryPbc;
-	}
+    /**
+     * 设置 融资人所属行业一级分类
+     * @param industryPbc 融资人所属行业一级分类
+     */
+    public void setIndustryPbc(String industryPbc) {
+        this.industryPbc = industryPbc == null ? null : industryPbc.trim();
+    }
 
-	public String getCustomerObjType() {
-		return customerObjType;
-	}
+    /**
+     * 取得 客户主体类型,数据字典:SVR_CUSTOMER_PRIN_TYPE
+     * @return 客户主体类型,数据字典:SVR_CUSTOMER_PRIN_TYPE
+     */
+    public String getCustomerObjType() {
+        return customerObjType;
+    }
 
-	public void setCustomerObjType(String customerObjType) {
-		this.customerObjType = customerObjType;
-	}
+    /**
+     * 设置 客户主体类型,数据字典:SVR_CUSTOMER_PRIN_TYPE
+     * @param customerObjType 客户主体类型,数据字典:SVR_CUSTOMER_PRIN_TYPE
+     */
+    public void setCustomerObjType(String customerObjType) {
+        this.customerObjType = customerObjType == null ? null : customerObjType.trim();
+    }
 
+    /**
+     * 取得 上游资产一级分类
+     * @return 上游资产一级分类
+     */
     public String getOrgAssetType1() {
         return orgAssetType1;
     }
 
+    /**
+     * 设置 上游资产一级分类
+     * @param orgAssetType1 上游资产一级分类
+     */
     public void setOrgAssetType1(String orgAssetType1) {
-        this.orgAssetType1 = orgAssetType1;
+        this.orgAssetType1 = orgAssetType1 == null ? null : orgAssetType1.trim();
     }
 
+    /**
+     * 取得 上游资产二级分类
+     * @return 上游资产二级分类
+     */
     public String getOrgAssetType2() {
         return orgAssetType2;
     }
 
+    /**
+     * 设置 上游资产二级分类
+     * @param orgAssetType2 上游资产二级分类
+     */
     public void setOrgAssetType2(String orgAssetType2) {
-        this.orgAssetType2 = orgAssetType2;
+        this.orgAssetType2 = orgAssetType2 == null ? null : orgAssetType2.trim();
     }
 
+    /**
+     * 取得 上游资产三级分类
+     * @return 上游资产三级分类
+     */
     public String getOrgAssetType3() {
         return orgAssetType3;
     }
 
+    /**
+     * 设置 上游资产三级分类
+     * @param orgAssetType3 上游资产三级分类
+     */
     public void setOrgAssetType3(String orgAssetType3) {
-        this.orgAssetType3 = orgAssetType3;
+        this.orgAssetType3 = orgAssetType3 == null ? null : orgAssetType3.trim();
     }
- 
+
+    /**
+     * 取得 发行人/融资人所属地区
+     * @return 发行人/融资人所属地区
+     */
     public String getBuyPlace() {
         return buyPlace;
     }
 
+    /**
+     * 设置 发行人/融资人所属地区
+     * @param buyPlace 发行人/融资人所属地区
+     */
     public void setBuyPlace(String buyPlace) {
-        this.buyPlace = buyPlace;
+        this.buyPlace = buyPlace == null ? null : buyPlace.trim();
     }
 
+    /**
+     * 取得 历史资产代码，数据移植时刷入
+     * @return 历史资产代码，数据移植时刷入
+     */
+    public String getAssetCodeOld() {
+        return assetCodeOld;
+    }
+
+    /**
+     * 设置 历史资产代码，数据移植时刷入
+     * @param assetCodeOld 历史资产代码，数据移植时刷入
+     */
+    public void setAssetCodeOld(String assetCodeOld) {
+        this.assetCodeOld = assetCodeOld == null ? null : assetCodeOld.trim();
+    }
+
+    /**
+     * 取得 二级资产细分类:资产/负债二级类别=2201 信贷资产流转项目时必填，枚举值：01 小微企业信贷资产流转和收益权转让/02 信贷资产收益权转让
+     * @return 二级资产细分类:资产/负债二级类别=2201 信贷资产流转项目时必填，枚举值：01 小微企业信贷资产流转和收益权转让/02 信贷资产收益权转让
+     */
     public String getAssetType3() {
         return assetType3;
     }
 
+    /**
+     * 设置 二级资产细分类:资产/负债二级类别=2201 信贷资产流转项目时必填，枚举值：01 小微企业信贷资产流转和收益权转让/02 信贷资产收益权转让
+     * @param assetType3 二级资产细分类:资产/负债二级类别=2201 信贷资产流转项目时必填，枚举值：01 小微企业信贷资产流转和收益权转让/02 信贷资产收益权转让
+     */
     public void setAssetType3(String assetType3) {
-        this.assetType3 = assetType3;
+        this.assetType3 = assetType3 == null ? null : assetType3.trim();
     }
 
+    /**
+     * 取得 人行资产一级分类
+     * @return 人行资产一级分类
+     */
     public String getPbcAssetType1() {
         return pbcAssetType1;
     }
 
+    /**
+     * 设置 人行资产一级分类
+     * @param pbcAssetType1 人行资产一级分类
+     */
     public void setPbcAssetType1(String pbcAssetType1) {
-        this.pbcAssetType1 = pbcAssetType1;
+        this.pbcAssetType1 = pbcAssetType1 == null ? null : pbcAssetType1.trim();
     }
 
+    /**
+     * 取得 人行资产二级分类
+     * @return 人行资产二级分类
+     */
     public String getPbcAssetType2() {
         return pbcAssetType2;
     }
 
+    /**
+     * 设置 人行资产二级分类
+     * @param pbcAssetType2 人行资产二级分类
+     */
     public void setPbcAssetType2(String pbcAssetType2) {
-        this.pbcAssetType2 = pbcAssetType2;
+        this.pbcAssetType2 = pbcAssetType2 == null ? null : pbcAssetType2.trim();
     }
 
+    /**
+     * 取得 人行资产三级分类
+     * @return 人行资产三级分类
+     */
     public String getPbcAssetType3() {
         return pbcAssetType3;
     }
 
+    /**
+     * 设置 人行资产三级分类
+     * @param pbcAssetType3 人行资产三级分类
+     */
     public void setPbcAssetType3(String pbcAssetType3) {
-        this.pbcAssetType3 = pbcAssetType3;
+        this.pbcAssetType3 = pbcAssetType3 == null ? null : pbcAssetType3.trim();
     }
 
-	/**  
-	 * @Description TODO  
-	 * @Author      高健  
-	 * @Date        2019年9月2日 上午10:26:49  
-	 * @return orgAssetType4  
-	 */
-	
-	public String getOrgAssetType4() {
-		return orgAssetType4;
-	}
-
-	/**  
-	 * @Description TODO  
-	 * @Author      高健  
-	 * @Date        2019年9月2日 上午10:26:49  
-	 * @param orgAssetType4 orgAssetType4  
-	 */
-	
-	public void setOrgAssetType4(String orgAssetType4) {
-		this.orgAssetType4 = orgAssetType4;
-	}
-
-	/**  
-	 * @Description TODO  
-	 * @Author      高健  
-	 * @Date        2019年9月2日 上午10:26:49  
-	 * @return orgAssetType5  
-	 */
-	
-	public String getOrgAssetType5() {
-		return orgAssetType5;
-	}
-
-	/**  
-	 * @Description TODO  
-	 * @Author      高健  
-	 * @Date        2019年9月2日 上午10:26:49  
-	 * @param orgAssetType5 orgAssetType5  
-	 */
-	
-	public void setOrgAssetType5(String orgAssetType5) {
-		this.orgAssetType5 = orgAssetType5;
-	}
-
-	/**  
-	 * @Description TODO  
-	 * @Author      高健  
-	 * @Date        2019年9月2日 上午11:13:19  
-	 * @return orgAssetTypeEx  
-	 */
-	
-	public String getOrgAssetTypeEx() {
-		return orgAssetTypeEx;
-	}
-
-	/**  
-	 * @Description TODO  
-	 * @Author      高健  
-	 * @Date        2019年9月2日 上午11:13:19  
-	 * @param orgAssetTypeEx orgAssetTypeEx  
-	 */
-	
-	public void setOrgAssetTypeEx(String orgAssetTypeEx) {
-		this.orgAssetTypeEx = orgAssetTypeEx;
-	}
-
-	public String getInstitSize() {
-		return institSize;
-	}
-
-	public void setInstitSize(String institSize) {
-		this.institSize = institSize;
-	}
-	public String getDepoType() {
-		return depoType;
-	}
-
-	public void setDepoType(String depoType) {
-		this.depoType = depoType;
-	}
-
-	public String getRivalPartyType() {
-		return rivalPartyType;
-	}
-
-	public void setRivalPartyType(String rivalPartyType) {
-		this.rivalPartyType = rivalPartyType;
-	}
-
-	public BigDecimal getPrinBaseamt() {
-		return prinBaseamt;
-	}
-
-	public void setPrinBaseamt(BigDecimal prinBaseamt) {
-		this.prinBaseamt = prinBaseamt;
-	}
-
-
-	public Date getFmdate() {
-		return fmdate;
-	}
-
-	public void setFmdate(Date fmdate) {
-		this.fmdate = fmdate;
-	}
-
-	public String getCouponSpecies() {
-		return couponSpecies;
-	}
-
-	public void setCouponSpecies(String couponSpecies) {
-		this.couponSpecies = couponSpecies;
-	}
-
-	public String getInterestRuleFlag() {
-		return interestRuleFlag;
-	}
-
-	public void setInterestRuleFlag(String interestRuleFlag) {
-		this.interestRuleFlag = interestRuleFlag;
-	}
-
-	public String getIntpayRule() {
-		return intpayRule;
-	}
-
-	public void setIntpayRule(String intpayRule) {
-		this.intpayRule = intpayRule;
-	}
-
-	public String getFloatFactorFlag() {
-		return floatFactorFlag;
-	}
-
-	public void setFloatFactorFlag(String floatFactorFlag) {
-		this.floatFactorFlag = floatFactorFlag;
-	}
-
-	public String getStructGrade() {
-		return structGrade;
-	}
-
-	public void setStructGrade(String structGrade) {
-		this.structGrade = structGrade;
-	}
-
-	public String getRepaymentType() {
-		return repaymentType;
-	}
-
-	public void setRepaymentType(String repaymentType) {
-		this.repaymentType = repaymentType;
-	}
-
-	public String getPeriodRepaymentFlag() {
-		return periodRepaymentFlag;
-	}
-
-	public void setPeriodRepaymentFlag(String periodRepaymentFlag) {
-		this.periodRepaymentFlag = periodRepaymentFlag;
-	}
-
-	public String getBasicAssetType() {
-		return basicAssetType;
-	}
-
-	public void setBasicAssetType(String basicAssetType) {
-		this.basicAssetType = basicAssetType;
-	}
-
-	public BigDecimal getExcessProfitRate() {
-		return excessProfitRate;
-	}
-
-	public void setExcessProfitRate(BigDecimal excessProfitRate) {
-		this.excessProfitRate = excessProfitRate;
-	}
-
-	public String getPledgeType() {
-		return pledgeType;
-	}
-
-	public void setPledgeType(String pledgeType) {
-		this.pledgeType = pledgeType;
-	}
-
-	public BigDecimal getPledgeValue() {
-		return pledgeValue;
-	}
-
-	public void setPledgeValue(BigDecimal pledgeValue) {
-		this.pledgeValue = pledgeValue;
-	}
-
-	public String getNatureGuarantee() {
-		return natureGuarantee;
-	}
-
-	public void setNatureGuarantee(String natureGuarantee) {
-		this.natureGuarantee = natureGuarantee;
-	}
-
-	public String getRelationFinan() {
-		return relationFinan;
-	}
-
-	public void setRelationFinan(String relationFinan) {
-		this.relationFinan = relationFinan;
-	}
-
-	public String getContainType() {
-		return containType;
-	}
-
-	public void setContainType(String containType) {
-		this.containType = containType;
-	}
-
-	public String getExerciseType() {
-		return exerciseType;
-	}
-
-	public void setExerciseType(String exerciseType) {
-		this.exerciseType = exerciseType;
-	}
-
-	public Date getExerciseDate() {
-		return exerciseDate;
-	}
-
-	public void setExerciseDate(Date exerciseDate) {
-		this.exerciseDate = exerciseDate;
-	}
-
-	public Date getFirstExerciseDate() {
-		return firstExerciseDate;
-	}
-
-	public void setFirstExerciseDate(Date firstExerciseDate) {
-		this.firstExerciseDate = firstExerciseDate;
-	}
-
-	public Integer getExercisePeriod() {
-		return exercisePeriod;
-	}
-
-	public void setExercisePeriod(Integer exercisePeriod) {
-		this.exercisePeriod = exercisePeriod;
-	}
-
-	public BigDecimal getExercisePrice() {
-		return exercisePrice;
-	}
-
-	public void setExercisePrice(BigDecimal exercisePrice) {
-		this.exercisePrice = exercisePrice;
-	}
-
-	public String getPerpetualClauseType() {
-		return perpetualClauseType;
-	}
-
-	public void setPerpetualClauseType(String perpetualClauseType) {
-		this.perpetualClauseType = perpetualClauseType;
-	}
-
-	public String getDeferredInterestType() {
-		return deferredInterestType;
-	}
-
-	public void setDeferredInterestType(String deferredInterestType) {
-		this.deferredInterestType = deferredInterestType;
-	}
-
-	public String getDeferredInterestInt() {
-		return deferredInterestInt;
-	}
-
-	public void setDeferredInterestInt(String deferredInterestInt) {
-		this.deferredInterestInt = deferredInterestInt;
-	}
-
-	public Date getFirstReprceDate() {
-		return firstReprceDate;
-	}
-
-	public void setFirstReprceDate(Date firstReprceDate) {
-		this.firstReprceDate = firstReprceDate;
-	}
-
-	public Integer getReprceCycle() {
-		return reprceCycle;
-	}
-
-	public void setReprceCycle(Integer reprceCycle) {
-		this.reprceCycle = reprceCycle;
-	}
-
-	public String getPartRedemFlag() {
-		return partRedemFlag;
-	}
-
-	public void setPartRedemFlag(String partRedemFlag) {
-		this.partRedemFlag = partRedemFlag;
-	}
-
-	public BigDecimal getPartRedemRate() {
-		return partRedemRate;
-	}
-
-	public void setPartRedemRate(BigDecimal partRedemRate) {
-		this.partRedemRate = partRedemRate;
-	}
-
-	public String getCreditOrgCode() {
-		return creditOrgCode;
-	}
-
-	public void setCreditOrgCode(String creditOrgCode) {
-		this.creditOrgCode = creditOrgCode;
-	}
-
-	public String getCreditOrgName() {
-		return creditOrgName;
-	}
-
-	public void setCreditOrgName(String creditOrgName) {
-		this.creditOrgName = creditOrgName;
-	}
-
-	public Date getEquityQuit() {
-		return equityQuit;
-	}
-
-	public void setEquityQuit(Date equityQuit) {
-		this.equityQuit = equityQuit;
-	}
-
-	public String getDeptEquity() {
-		return deptEquity;
-	}
-
-	public void setDeptEquity(String deptEquity) {
-		this.deptEquity = deptEquity;
-	}
-
-	public String getHoldPurpose() {
-		return holdPurpose;
-	}
-
-	public void setHoldPurpose(String holdPurpose) {
-		this.holdPurpose = holdPurpose;
-	}
-
-	public String getFinancialComissue() {
-		return financialComissue;
-	}
-
-	public void setFinancialComissue(String financialComissue) {
-		this.financialComissue = financialComissue;
-	}
-
-	public String getAssetCodeOld() {
-		return assetCodeOld;
-	}
-
-	public void setAssetCodeOld(String assetCodeOld) {
-		this.assetCodeOld = assetCodeOld;
-	}
-	public String getBankSecCapital() {
-		return bankSecCapital;
-	}
-
-	public void setBankSecCapital(String bankSecCapital) {
-		this.bankSecCapital = bankSecCapital;
-	}
-
-	public String getBankSecPerpetual() {
-		return bankSecPerpetual;
-	}
-
-	public void setBankSecPerpetual(String bankSecPerpetual) {
-		this.bankSecPerpetual = bankSecPerpetual;
-	}
-
-	public String getBankSecPrefer() {
-		return bankSecPrefer;
-	}
-
-	public void setBankSecPrefer(String bankSecPrefer) {
-		this.bankSecPrefer = bankSecPrefer;
-	}
-	
-	
+    /**
+     * 取得 上游资产四级分类
+     * @return 上游资产四级分类
+     */
+    public String getOrgAssetType4() {
+        return orgAssetType4;
+    }
+
+    /**
+     * 设置 上游资产四级分类
+     * @param orgAssetType4 上游资产四级分类
+     */
+    public void setOrgAssetType4(String orgAssetType4) {
+        this.orgAssetType4 = orgAssetType4 == null ? null : orgAssetType4.trim();
+    }
+
+    /**
+     * 取得 上游资产五级分类
+     * @return 上游资产五级分类
+     */
+    public String getOrgAssetType5() {
+        return orgAssetType5;
+    }
+
+    /**
+     * 设置 上游资产五级分类
+     * @param orgAssetType5 上游资产五级分类
+     */
+    public void setOrgAssetType5(String orgAssetType5) {
+        this.orgAssetType5 = orgAssetType5 == null ? null : orgAssetType5.trim();
+    }
+
+    /**
+     * 取得 是否投向地方政府融资平台
+     * @return 是否投向地方政府融资平台
+     */
+    public String getPrivateFlag() {
+        return privateFlag;
+    }
+
+    /**
+     * 设置 是否投向地方政府融资平台
+     * @param privateFlag 是否投向地方政府融资平台
+     */
+    public void setPrivateFlag(String privateFlag) {
+        this.privateFlag = privateFlag == null ? null : privateFlag.trim();
+    }
+
+    /**
+     * 取得 人行机构规模
+     * @return 人行机构规模
+     */
+    public String getInstitSize() {
+        return institSize;
+    }
+
+    /**
+     * 设置 人行机构规模
+     * @param institSize 人行机构规模
+     */
+    public void setInstitSize(String institSize) {
+        this.institSize = institSize == null ? null : institSize.trim();
+    }
+
+    /**
+     * 取得 交易所基金类型
+     * @return 交易所基金类型
+     */
+    public String getTrmFundType() {
+        return trmFundType;
+    }
+
+    /**
+     * 设置 交易所基金类型
+     * @param trmFundType 交易所基金类型
+     */
+    public void setTrmFundType(String trmFundType) {
+        this.trmFundType = trmFundType == null ? null : trmFundType.trim();
+    }
+
+    /**
+     * 取得 商业银行二级资本债
+     * @return 商业银行二级资本债
+     */
+    public String getBankSecCapital() {
+        return bankSecCapital;
+    }
+
+    /**
+     * 设置 商业银行二级资本债
+     * @param bankSecCapital 商业银行二级资本债
+     */
+    public void setBankSecCapital(String bankSecCapital) {
+        this.bankSecCapital = bankSecCapital == null ? null : bankSecCapital.trim();
+    }
+
+    /**
+     * 取得 商业银行优先股
+     * @return 商业银行优先股
+     */
+    public String getBankSecPrefer() {
+        return bankSecPrefer;
+    }
+
+    /**
+     * 设置 商业银行优先股
+     * @param bankSecPrefer 商业银行优先股
+     */
+    public void setBankSecPrefer(String bankSecPrefer) {
+        this.bankSecPrefer = bankSecPrefer == null ? null : bankSecPrefer.trim();
+    }
+
+    /**
+     * 取得 商业银行永续债
+     * @return 商业银行永续债
+     */
+    public String getBankSecPerpetual() {
+        return bankSecPerpetual;
+    }
+
+    /**
+     * 设置 商业银行永续债
+     * @param bankSecPerpetual 商业银行永续债
+     */
+    public void setBankSecPerpetual(String bankSecPerpetual) {
+        this.bankSecPerpetual = bankSecPerpetual == null ? null : bankSecPerpetual.trim();
+    }
+
+    /**
+     * 取得 存款类型
+     * @return 存款类型
+     */
+    public String getDepoType() {
+        return depoType;
+    }
+
+    /**
+     * 设置 存款类型
+     * @param depoType 存款类型
+     */
+    public void setDepoType(String depoType) {
+        this.depoType = depoType == null ? null : depoType.trim();
+    }
+
+    /**
+     * 取得 对手方类型
+     * @return 对手方类型
+     */
+    public String getRivalPartyType() {
+        return rivalPartyType;
+    }
+
+    /**
+     * 设置 对手方类型
+     * @param rivalPartyType 对手方类型
+     */
+    public void setRivalPartyType(String rivalPartyType) {
+        this.rivalPartyType = rivalPartyType == null ? null : rivalPartyType.trim();
+    }
+
+    /**
+     * 取得 份额面值
+     * @return 份额面值
+     */
+    public BigDecimal getPrinBaseamt() {
+        return prinBaseamt;
+    }
+
+    /**
+     * 设置 份额面值
+     * @param prinBaseamt 份额面值
+     */
+    public void setPrinBaseamt(BigDecimal prinBaseamt) {
+        this.prinBaseamt = prinBaseamt;
+    }
+
+    /**
+     * 取得 法定到期日
+     * @return 法定到期日
+     */
+    public Date getFmdate() {
+        return fmdate;
+    }
+
+    /**
+     * 设置 法定到期日
+     * @param fmdate 法定到期日
+     */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setFmdate(Date fmdate) {
+        this.fmdate = fmdate;
+    }
+
+    /**
+     * 取得 计息类型
+     * @return 计息类型
+     */
+    public String getCouponSpecies() {
+        return couponSpecies;
+    }
+
+    /**
+     * 设置 计息类型
+     * @param couponSpecies 计息类型
+     */
+    public void setCouponSpecies(String couponSpecies) {
+        this.couponSpecies = couponSpecies == null ? null : couponSpecies.trim();
+    }
+
+    /**
+     * 取得 规则付息标识
+     * @return 规则付息标识
+     */
+    public String getInterestRuleFlag() {
+        return interestRuleFlag;
+    }
+
+    /**
+     * 设置 规则付息标识
+     * @param interestRuleFlag 规则付息标识
+     */
+    public void setInterestRuleFlag(String interestRuleFlag) {
+        this.interestRuleFlag = interestRuleFlag == null ? null : interestRuleFlag.trim();
+    }
+
+    /**
+     * 取得 利息分布方式
+     * @return 利息分布方式
+     */
+    public String getIntpayRule() {
+        return intpayRule;
+    }
+
+    /**
+     * 设置 利息分布方式
+     * @param intpayRule 利息分布方式
+     */
+    public void setIntpayRule(String intpayRule) {
+        this.intpayRule = intpayRule == null ? null : intpayRule.trim();
+    }
+
+    /**
+     * 取得 是否有浮动因子
+     * @return 是否有浮动因子
+     */
+    public String getFloatFactorFlag() {
+        return floatFactorFlag;
+    }
+
+    /**
+     * 设置 是否有浮动因子
+     * @param floatFactorFlag 是否有浮动因子
+     */
+    public void setFloatFactorFlag(String floatFactorFlag) {
+        this.floatFactorFlag = floatFactorFlag == null ? null : floatFactorFlag.trim();
+    }
+
+    /**
+     * 取得 结构档次
+     * @return 结构档次
+     */
+    public String getStructGrade() {
+        return structGrade;
+    }
+
+    /**
+     * 设置 结构档次
+     * @param structGrade 结构档次
+     */
+    public void setStructGrade(String structGrade) {
+        this.structGrade = structGrade == null ? null : structGrade.trim();
+    }
+
+    /**
+     * 取得 还本方式
+     * @return 还本方式
+     */
+    public String getRepaymentType() {
+        return repaymentType;
+    }
+
+    /**
+     * 设置 还本方式
+     * @param repaymentType 还本方式
+     */
+    public void setRepaymentType(String repaymentType) {
+        this.repaymentType = repaymentType == null ? null : repaymentType.trim();
+    }
+
+    /**
+     * 取得 分期还本条款标识
+     * @return 分期还本条款标识
+     */
+    public String getPeriodRepaymentFlag() {
+        return periodRepaymentFlag;
+    }
+
+    /**
+     * 设置 分期还本条款标识
+     * @param periodRepaymentFlag 分期还本条款标识
+     */
+    public void setPeriodRepaymentFlag(String periodRepaymentFlag) {
+        this.periodRepaymentFlag = periodRepaymentFlag == null ? null : periodRepaymentFlag.trim();
+    }
+
+    /**
+     * 取得 基础资产类型
+     * @return 基础资产类型
+     */
+    public String getBasicAssetType() {
+        return basicAssetType;
+    }
+
+    /**
+     * 设置 基础资产类型
+     * @param basicAssetType 基础资产类型
+     */
+    public void setBasicAssetType(String basicAssetType) {
+        this.basicAssetType = basicAssetType == null ? null : basicAssetType.trim();
+    }
+
+    /**
+     * 取得 超额收益分配比例%
+     * @return 超额收益分配比例%
+     */
+    public BigDecimal getExcessProfitRate() {
+        return excessProfitRate;
+    }
+
+    /**
+     * 设置 超额收益分配比例%
+     * @param excessProfitRate 超额收益分配比例%
+     */
+    public void setExcessProfitRate(BigDecimal excessProfitRate) {
+        this.excessProfitRate = excessProfitRate;
+    }
+
+    /**
+     * 取得 抵质押物类型
+     * @return 抵质押物类型
+     */
+    public String getPledgeType() {
+        return pledgeType;
+    }
+
+    /**
+     * 设置 抵质押物类型
+     * @param pledgeType 抵质押物类型
+     */
+    public void setPledgeType(String pledgeType) {
+        this.pledgeType = pledgeType == null ? null : pledgeType.trim();
+    }
+
+    /**
+     * 取得 抵质押物价值（元）
+     * @return 抵质押物价值（元）
+     */
+    public BigDecimal getPledgeValue() {
+        return pledgeValue;
+    }
+
+    /**
+     * 设置 抵质押物价值（元）
+     * @param pledgeValue 抵质押物价值（元）
+     */
+    public void setPledgeValue(BigDecimal pledgeValue) {
+        this.pledgeValue = pledgeValue;
+    }
+
+    /**
+     * 取得 担保性质
+     * @return 担保性质
+     */
+    public String getNatureGuarantee() {
+        return natureGuarantee;
+    }
+
+    /**
+     * 设置 担保性质
+     * @param natureGuarantee 担保性质
+     */
+    public void setNatureGuarantee(String natureGuarantee) {
+        this.natureGuarantee = natureGuarantee == null ? null : natureGuarantee.trim();
+    }
+
+    /**
+     * 取得 担保人与融资人关系
+     * @return 担保人与融资人关系
+     */
+    public String getRelationFinan() {
+        return relationFinan;
+    }
+
+    /**
+     * 设置 担保人与融资人关系
+     * @param relationFinan 担保人与融资人关系
+     */
+    public void setRelationFinan(String relationFinan) {
+        this.relationFinan = relationFinan == null ? null : relationFinan.trim();
+    }
+
+    /**
+     * 取得 含权类型
+     * @return 含权类型
+     */
+    public String getContainType() {
+        return containType;
+    }
+
+    /**
+     * 设置 含权类型
+     * @param containType 含权类型
+     */
+    public void setContainType(String containType) {
+        this.containType = containType == null ? null : containType.trim();
+    }
+
+    /**
+     * 取得 行权方式
+     * @return 行权方式
+     */
+    public String getExerciseType() {
+        return exerciseType;
+    }
+
+    /**
+     * 设置 行权方式
+     * @param exerciseType 行权方式
+     */
+    public void setExerciseType(String exerciseType) {
+        this.exerciseType = exerciseType == null ? null : exerciseType.trim();
+    }
+
+    /**
+     * 取得 固定行权日
+     * @return 固定行权日
+     */
+    public Date getExerciseDate() {
+        return exerciseDate;
+    }
+
+    /**
+     * 设置 固定行权日
+     * @param exerciseDate 固定行权日
+     */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setExerciseDate(Date exerciseDate) {
+        this.exerciseDate = exerciseDate;
+    }
+
+    /**
+     * 取得 首次行权日期
+     * @return 首次行权日期
+     */
+    public Date getFirstExerciseDate() {
+        return firstExerciseDate;
+    }
+
+    /**
+     * 设置 首次行权日期
+     * @param firstExerciseDate 首次行权日期
+     */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setFirstExerciseDate(Date firstExerciseDate) {
+        this.firstExerciseDate = firstExerciseDate;
+    }
+
+    /**
+     * 取得 行权周期
+     * @return 行权周期
+     */
+    public Integer getExercisePeriod() {
+        return exercisePeriod;
+    }
+
+    /**
+     * 设置 行权周期
+     * @param exercisePeriod 行权周期
+     */
+    public void setExercisePeriod(Integer exercisePeriod) {
+        this.exercisePeriod = exercisePeriod;
+    }
+
+    /**
+     * 取得 行权价格
+     * @return 行权价格
+     */
+    public BigDecimal getExercisePrice() {
+        return exercisePrice;
+    }
+
+    /**
+     * 设置 行权价格
+     * @param exercisePrice 行权价格
+     */
+    public void setExercisePrice(BigDecimal exercisePrice) {
+        this.exercisePrice = exercisePrice;
+    }
+
+    /**
+     * 取得 永续条款类型
+     * @return 永续条款类型
+     */
+    public String getPerpetualClauseType() {
+        return perpetualClauseType;
+    }
+
+    /**
+     * 设置 永续条款类型
+     * @param perpetualClauseType 永续条款类型
+     */
+    public void setPerpetualClauseType(String perpetualClauseType) {
+        this.perpetualClauseType = perpetualClauseType == null ? null : perpetualClauseType.trim();
+    }
+
+    /**
+     * 取得 利息递延条款类型
+     * @return 利息递延条款类型
+     */
+    public String getDeferredInterestType() {
+        return deferredInterestType;
+    }
+
+    /**
+     * 设置 利息递延条款类型
+     * @param deferredInterestType 利息递延条款类型
+     */
+    public void setDeferredInterestType(String deferredInterestType) {
+        this.deferredInterestType = deferredInterestType == null ? null : deferredInterestType.trim();
+    }
+
+    /**
+     * 取得 递延利息是否计息
+     * @return 递延利息是否计息
+     */
+    public String getDeferredInterestInt() {
+        return deferredInterestInt;
+    }
+
+    /**
+     * 设置 递延利息是否计息
+     * @param deferredInterestInt 递延利息是否计息
+     */
+    public void setDeferredInterestInt(String deferredInterestInt) {
+        this.deferredInterestInt = deferredInterestInt == null ? null : deferredInterestInt.trim();
+    }
+
+    /**
+     * 取得 首次重定价日期
+     * @return 首次重定价日期
+     */
+    public Date getFirstReprceDate() {
+        return firstReprceDate;
+    }
+
+    /**
+     * 设置 首次重定价日期
+     * @param firstReprceDate 首次重定价日期
+     */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setFirstReprceDate(Date firstReprceDate) {
+        this.firstReprceDate = firstReprceDate;
+    }
+
+    /**
+     * 取得 重定价周期
+     * @return 重定价周期
+     */
+    public Integer getReprceCycle() {
+        return reprceCycle;
+    }
+
+    /**
+     * 设置 重定价周期
+     * @param reprceCycle 重定价周期
+     */
+    public void setReprceCycle(Integer reprceCycle) {
+        this.reprceCycle = reprceCycle;
+    }
+
+    /**
+     * 取得 部分赎回标识
+     * @return 部分赎回标识
+     */
+    public String getPartRedemFlag() {
+        return partRedemFlag;
+    }
+
+    /**
+     * 设置 部分赎回标识
+     * @param partRedemFlag 部分赎回标识
+     */
+    public void setPartRedemFlag(String partRedemFlag) {
+        this.partRedemFlag = partRedemFlag == null ? null : partRedemFlag.trim();
+    }
+
+    /**
+     * 取得 部分赎回比例%
+     * @return 部分赎回比例%
+     */
+    public BigDecimal getPartRedemRate() {
+        return partRedemRate;
+    }
+
+    /**
+     * 设置 部分赎回比例%
+     * @param partRedemRate 部分赎回比例%
+     */
+    public void setPartRedemRate(BigDecimal partRedemRate) {
+        this.partRedemRate = partRedemRate;
+    }
+
+    /**
+     * 取得 增信机构代码
+     * @return 增信机构代码
+     */
+    public String getCreditOrgCode() {
+        return creditOrgCode;
+    }
+
+    /**
+     * 设置 增信机构代码
+     * @param creditOrgCode 增信机构代码
+     */
+    public void setCreditOrgCode(String creditOrgCode) {
+        this.creditOrgCode = creditOrgCode == null ? null : creditOrgCode.trim();
+    }
+
+    /**
+     * 取得 增信机构名称
+     * @return 增信机构名称
+     */
+    public String getCreditOrgName() {
+        return creditOrgName;
+    }
+
+    /**
+     * 设置 增信机构名称
+     * @param creditOrgName 增信机构名称
+     */
+    public void setCreditOrgName(String creditOrgName) {
+        this.creditOrgName = creditOrgName == null ? null : creditOrgName.trim();
+    }
+
+    /**
+     * 取得 股权退出安排
+     * @return 股权退出安排
+     */
+    public Date getEquityQuit() {
+        return equityQuit;
+    }
+
+    /**
+     * 设置 股权退出安排
+     * @param equityQuit 股权退出安排
+     */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setEquityQuit(Date equityQuit) {
+        this.equityQuit = equityQuit;
+    }
+
+    /**
+     * 取得 是否为债转股
+     * @return 是否为债转股
+     */
+    public String getDeptEquity() {
+        return deptEquity;
+    }
+
+    /**
+     * 设置 是否为债转股
+     * @param deptEquity 是否为债转股
+     */
+    public void setDeptEquity(String deptEquity) {
+        this.deptEquity = deptEquity == null ? null : deptEquity.trim();
+    }
+
+    /**
+     * 取得 持有目的
+     * @return 持有目的
+     */
+    public String getHoldPurpose() {
+        return holdPurpose;
+    }
+
+    /**
+     * 设置 持有目的
+     * @param holdPurpose 持有目的
+     */
+    public void setHoldPurpose(String holdPurpose) {
+        this.holdPurpose = holdPurpose == null ? null : holdPurpose.trim();
+    }
+
+    /**
+     * 取得 是否由金融资产投资公司发行
+     * @return 是否由金融资产投资公司发行
+     */
+    public String getFinancialComissue() {
+        return financialComissue;
+    }
+
+    /**
+     * 设置 是否由金融资产投资公司发行
+     * @param financialComissue 是否由金融资产投资公司发行
+     */
+    public void setFinancialComissue(String financialComissue) {
+        this.financialComissue = financialComissue == null ? null : financialComissue.trim();
+    }
+
+    /**
+     * 取得 null
+     * @return null
+     */
+    public String getIsChl() {
+        return isChl;
+    }
+
+    /**
+     * 设置 null
+     * @param isChl null
+     */
+    public void setIsChl(String isChl) {
+        this.isChl = isChl == null ? null : isChl.trim();
+    }
+
+    /**
+     * 取得 是否商业银行可转债
+     * @return 是否商业银行可转债
+     */
+    public String getBankSecKzzq() {
+        return bankSecKzzq;
+    }
+
+    /**
+     * 设置 是否商业银行可转债
+     * @param bankSecKzzq 是否商业银行可转债
+     */
+    public void setBankSecKzzq(String bankSecKzzq) {
+        this.bankSecKzzq = bankSecKzzq == null ? null : bankSecKzzq.trim();
+    }
+
+    /**
+     * 取得 是否专项债券
+     * @return 是否专项债券
+     */
+    public String getBankSecZxzq() {
+        return bankSecZxzq;
+    }
+
+    /**
+     * 设置 是否专项债券
+     * @param bankSecZxzq 是否专项债券
+     */
+    public void setBankSecZxzq(String bankSecZxzq) {
+        this.bankSecZxzq = bankSecZxzq == null ? null : bankSecZxzq.trim();
+    }
+
+    /**
+     * 取得 是否政府出资产业投资基金
+     * @return 是否政府出资产业投资基金
+     */
+    public String getIsunlisted() {
+        return isunlisted;
+    }
+
+    /**
+     * 设置 是否政府出资产业投资基金
+     * @param isunlisted 是否政府出资产业投资基金
+     */
+    public void setIsunlisted(String isunlisted) {
+        this.isunlisted = isunlisted == null ? null : isunlisted.trim();
+    }
+
+    /**
+     * 取得 是否标准化票据
+     * @return 是否标准化票据
+     */
+    public String getIsBzhpj() {
+        return isBzhpj;
+    }
+
+    /**
+     * 设置 是否标准化票据
+     * @param isBzhpj 是否标准化票据
+     */
+    public void setIsBzhpj(String isBzhpj) {
+        this.isBzhpj = isBzhpj == null ? null : isBzhpj.trim();
+    }
+
+    /**
+     * 取得 发行人代码
+     * @return 发行人代码
+     */
+    public String getChbIssuerId() {
+        return chbIssuerId;
+    }
+
+    /**
+     * 设置 发行人代码
+     * @param chbIssuerId 发行人代码
+     */
+    public void setChbIssuerId(String chbIssuerId) {
+        this.chbIssuerId = chbIssuerId == null ? null : chbIssuerId.trim();
+    }
+
+    /**
+     * 取得 管理人代码
+     * @return 管理人代码
+     */
+    public String getChbManagerId() {
+        return chbManagerId;
+    }
+
+    /**
+     * 设置 管理人代码
+     * @param chbManagerId 管理人代码
+     */
+    public void setChbManagerId(String chbManagerId) {
+        this.chbManagerId = chbManagerId == null ? null : chbManagerId.trim();
+    }
+
+    /**
+     * 取得 融资人代码
+     * @return 融资人代码
+     */
+    public String getChbFinancierId() {
+        return chbFinancierId;
+    }
+
+    /**
+     * 设置 融资人代码
+     * @param chbFinancierId 融资人代码
+     */
+    public void setChbFinancierId(String chbFinancierId) {
+        this.chbFinancierId = chbFinancierId == null ? null : chbFinancierId.trim();
+    }
+
+    /**
+     * 取得 是否永续债
+     * @return 是否永续债
+     */
+    public String getPerpetualFlag() {
+        return perpetualFlag;
+    }
+
+    /**
+     * 设置 是否永续债
+     * @param perpetualFlag 是否永续债
+     */
+    public void setPerpetualFlag(String perpetualFlag) {
+        this.perpetualFlag = perpetualFlag == null ? null : perpetualFlag.trim();
+    }
+
+    /**
+     * 取得 是否含权债
+     * @return 是否含权债
+     */
+    public String getOptionFlag() {
+        return optionFlag;
+    }
+
+    /**
+     * 设置 是否含权债
+     * @param optionFlag 是否含权债
+     */
+    public void setOptionFlag(String optionFlag) {
+        this.optionFlag = optionFlag == null ? null : optionFlag.trim();
+    }
+
+    /**
+     * 取得 是否资产四级分类为“北金所债权”
+     * @return 是否资产四级分类为“北金所债权”
+     */
+    public String getIsBjszq() {
+        return isBjszq;
+    }
+
+    /**
+     * 设置 是否资产四级分类为“北金所债权”
+     * @param isBjszq 是否资产四级分类为“北金所债权”
+     */
+    public void setIsBjszq(String isBjszq) {
+        this.isBjszq = isBjszq == null ? null : isBjszq.trim();
+    }
+
+    /**
+     * 取得 永续债属性（债性/股性）
+     * @return 永续债属性（债性/股性）
+     */
+    public String getIsPerpetual() {
+        return isPerpetual;
+    }
+
+    /**
+     * 设置 永续债属性（债性/股性）
+     * @param isPerpetual 永续债属性（债性/股性）
+     */
+    public void setIsPerpetual(String isPerpetual) {
+        this.isPerpetual = isPerpetual == null ? null : isPerpetual.trim();
+    }
+
+    /**
+     * 取得 是否非标转标资产
+     * @return 是否非标转标资产
+     */
+    public String getIsFbzb() {
+        return isFbzb;
+    }
+
+    /**
+     * 设置 是否非标转标资产
+     * @param isFbzb 是否非标转标资产
+     */
+    public void setIsFbzb(String isFbzb) {
+        this.isFbzb = isFbzb == null ? null : isFbzb.trim();
+    }
+
+    private String orgAssetTypeEx;
+
+    private String isFinLicence;
+
+    public String getOrgAssetTypeEx() {
+        return orgAssetTypeEx;
+    }
+
+    public void setOrgAssetTypeEx(String orgAssetTypeEx) {
+        this.orgAssetTypeEx = orgAssetTypeEx;
+    }
+
+    public String getIsFinLicence() {
+        return isFinLicence;
+    }
+
+    public void setIsFinLicence(String isFinLicence) {
+        this.isFinLicence = isFinLicence;
+    }
 }
