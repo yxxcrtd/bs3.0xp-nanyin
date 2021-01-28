@@ -145,6 +145,16 @@ public class PaActiveRemind001Dto extends RskSupervisionRiskAnalyzeDto  {
      */
     private Date dDate;
 
+    private String oneAttr;
+
+    public String getOneAttr() {
+        return oneAttr;
+    }
+
+    public void setOneAttr(String oneAttr) {
+        this.oneAttr = oneAttr;
+    }
+
     /**
      * 计息截止日
      * @return 计息截止日

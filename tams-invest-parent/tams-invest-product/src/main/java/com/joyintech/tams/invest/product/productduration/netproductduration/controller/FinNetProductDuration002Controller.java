@@ -126,6 +126,15 @@ public class FinNetProductDuration002Controller extends BaseController{
         	//净值型周期型新增	期次管理方式	系统参数	20190923
         	finNetProductDurationDto.setManeWay(
         			finNetProductDurationService.getSysParameter(DictCodeListExt1.子系统代码_投管.getValue(), BussinessConstant.PERIODIC_MANAGE_INFORMATION));		//debug
+
+            if(StringUtil.isNotEmpty(getParam("remType"))) {
+                finNetProductDurationDto.setFinprodMarketId(getParam("finprodId"));
+
+                model.addAttribute("remType", getParam("remType"));
+
+            }
+
+
             model.addAttribute("entity", finNetProductDurationDto);
         }else if(StringUtil.isNotEmpty(tradeId) && (!StringUtil.isNotEmpty(workflowId) || WorkFlowUtil.isNotFromToDoList())){
             //查看 或修改初始化

@@ -136,7 +136,8 @@
 		REMINDER_SET.LABLE as lable,
 		REMINDER_SET.DEALF as dealF,
 		REMINDER_SET.CLOSF as closF,
-		REMINDER_SET.DAYS as days
+		REMINDER_SET.DAYS as days,
+		FIN_PRODUCT.PROFIT_TYPE as oneAttr
 		FROM
 		FIN_CASH_PLAN
 		LEFT JOIN
@@ -292,6 +293,7 @@
 		FIN_PRODUCT.FINPROD_ID as prodId,
 		FIN_PRODUCT.FINPROD_NAME as finprodName,
 		'产品到期' as reminder,
+		FIN_PRODUCT.PROFIT_TYPE as oneAttr,
 		REMINDER_SET.MENU_ID as menuId,
 		REMINDER_SET.URL as url,
 		REMINDER_SET.LABLE as lable,
