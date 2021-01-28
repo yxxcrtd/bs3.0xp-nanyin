@@ -1525,6 +1525,7 @@ var TrdCommandReceive001 = function () {
 
                     var param = {
                         entrustId: tableData[0].entrustId,
+                        proavailablecash: tableData[0].proAvailableCash,
                         pageModel: PAGE_MODEL_NEW,
                         entrustId: tableData[0].entrustId,
                         portfolioId: tableData[0].portfolioId,
