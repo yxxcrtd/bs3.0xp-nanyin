@@ -21,6 +21,9 @@
             <if test="FINPROD_TYPE != null and FINPROD_TYPE != ''">
                 AND FINPROD_TYPE2 = #{FINPROD_TYPE}
             </if>
+            <if test="initValue != null and initValue != ''">
+                and FIN_PRODUCT.FINPROD_MARKET_ID = #{initValue}
+            </if>
         </where>
         order by FINPROD_MARKET_ID
     </select>
