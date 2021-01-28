@@ -6,6 +6,7 @@ import java.util.Map;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.service.risk.creditmanagement.ceorg.service.CeOrg002Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,9 @@ public class CeAssetGroup002Service extends BaseService<CreditMstInfoDto> {
 	
 	@Autowired
 	private CreditLinesMapper creditLinesMapper;
+
+	@Autowired
+	private CeOrg002Service ceOrg002Service;
 	
     /**
      * 查询额度信息
@@ -61,7 +65,8 @@ public class CeAssetGroup002Service extends BaseService<CreditMstInfoDto> {
 		String createInst =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
 		entity.setInstitutionCode(createInst);
 		//多级法人改造 add by jingqiongqiong 20200616
-    	creditLinesMapper.insert(entity);
+		entity.setHapCreditAmt(ceOrg002Service.extendCreditLinesDeal(entity.getSeqno(), entity.getVdate(), entity.getCreditMstId(),entity.getCustomerId()));
+		creditLinesMapper.insert(entity);
     }
     
    

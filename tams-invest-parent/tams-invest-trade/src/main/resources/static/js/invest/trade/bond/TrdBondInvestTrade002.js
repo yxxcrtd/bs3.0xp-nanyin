@@ -1,3 +1,4 @@
+//@ sourceURL=TrdBondInvestTrade002.js
 var table;
 (function () {
     var entrustNum; // 委托时的券面总额
@@ -382,7 +383,7 @@ var table;
             	    $("#exchangeAmt").val('').trigger("change");
             	    $("#commissionAmt").val('').trigger("change");
             	    $("#tradeAmtAndFee").val('').trigger("change");
-            	    $("#fpriceAmt").val('').trigger("change");
+            	    // $("#fpriceAmt").val('').trigger("change");
 
                     //$("#exchangeFeesAmtDiv").hide();
                     $tradePlat.updateChosenArr({

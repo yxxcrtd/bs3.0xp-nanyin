@@ -12,9 +12,13 @@ package com.joyintech.tams.invest.trade.trddepositinvesttrade.validate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -160,6 +164,12 @@ public class TrdDepositInvestTrade001Validator implements TradeCommonValidator{
                  } 
                }
             //add by yujiaping 2020-12-8 BS-1598 '活期存放'交易方向选择'卖出'时，将'应计利息总额'去掉必填并隐藏end
+            if (StringUtil.isNotEmpty(dto.getBussTrdTransfenpeiDto())){
+                Map<String, List<BussTrdTransfenpeiDto>> map = dto.getBussTrdTransfenpeiDto().stream().collect(JoyinCollectors.groupingBy(item->item.getPortfolioId()));
+                if (map.keySet().size()<dto.getBussTrdTransfenpeiDto().size()){
+                    errorList.add(new ValidMessage("组合分配不能重复分配给同一组合。"));
+                }
+            }
         }
       return errorList;
     }

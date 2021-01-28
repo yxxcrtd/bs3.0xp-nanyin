@@ -1,6 +1,7 @@
 package com.joyintech.service.risk.creditmanagement.ceorg.service;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,8 @@ import java.util.Map;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.common.base.dao.CreditLinesDealMapper;
+import com.joyintech.tams.common.base.entity.CreditLinesDeal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,9 +51,13 @@ public class CeOrg002Service extends BaseService<CreditMstInfoDto> {
 	
 	@Autowired
 	private CreditLinesMapper creditLinesMapper;
-	
+
 	@Autowired(required = false)
 	private BaseGetBussinessId baseGetBussinessId;
+	
+	@Autowired
+	private CreditLinesDealMapper creditLinesDealMapper;
+
     /**
      * 客户代码联想文本框service层实现
       *
@@ -144,12 +151,15 @@ public class CeOrg002Service extends BaseService<CreditMstInfoDto> {
 				//多级法人改造 add by jingqiongqiong 20200616
 				dto.setInstitutionCode(createInst);
 				//多级法人改造 add by jingqiongqiong 20200616
+				dto.setHapCreditAmt(extendCreditLinesDeal(dto.getSeqno(), dto.getVdate(), dto.getCreditMstId(),dto.getCustomerId()));
     			creditLinesMapper.insert(dto);
     		}
     		
     	}
+		entity.setHapCreditAmt(extendCreditLinesDeal(entity.getSeqno(), entity.getVdate(), entity.getCreditMstId(),entity.getCustomerId()));
     	creditLinesMapper.insert(entity);
-    }
+
+	}
     
    
     /**
@@ -196,6 +206,7 @@ public class CeOrg002Service extends BaseService<CreditMstInfoDto> {
         				dto.setSeqno(getQuotePrimaryKey());
         				dto.setHapCreditAmt(new BigDecimal(0));
         				dto.setCreditFlag(DictCodeList.是否_是.getValue());
+						dto.setHapCreditAmt(extendCreditLinesDeal(dto.getSeqno(), dto.getVdate(), dto.getCreditMstId(),dto.getCustomerId()));
             			creditLinesMapper.insert(dto);
         			}
         		}
@@ -236,4 +247,26 @@ public class CeOrg002Service extends BaseService<CreditMstInfoDto> {
 		}
 		return  false;
 	}
+
+	/**
+	 * 授信继承
+	 * @param name
+	 */
+	public BigDecimal extendCreditLinesDeal(String seqno, Date vdate, String creditMstId, String customerId) {
+		if(CacheUtil.getSysParam("IS_EXTEND_CREDIT").equals("true")){
+			Map<String, Object> param=new HashMap<String, Object>();
+			param.put("creditMstId", creditMstId);
+			param.put("customerId", customerId);
+			param.put("vdate", vdate);
+			List<CreditLinesDeal> creditLinesDealList = ceOrgMapper.selectCreditLinesDeal(param);
+			for(CreditLinesDeal creditLinesDeal : creditLinesDealList){
+				creditLinesDeal.setSeqno(seqno);
+				creditLinesDealMapper.insert(creditLinesDeal);
+			}
+			return ceOrgMapper.selectCreditLinesHap(param);
+		}else{
+			return new BigDecimal("0");
+		}
+	}
+
 }
