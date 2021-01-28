@@ -267,6 +267,7 @@
 		null workflowId,
 	</if>
 	WFLDEAL.ENTRUST_ID entrustId,
+	fp1.FINPROD_NAME chlFinprodId,
 	PP.PORTFOLIO_ID portfolioId,
 	PP.PORTFOLIO_NAME portfolioName,
 	totalDeal.FINPROD_TYPE2 finprodType,
@@ -296,6 +297,7 @@
 		LEFT JOIN PTL_PORTFOLIO PP ON totalDeal.PORTFOLIO_ID = PP.PORTFOLIO_ID
 	</if>
 	LEFT JOIN FIN_PRODUCT FIN ON totalDeal.FINPROD_ID = FIN.FINPROD_ID
+	LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = totalDeal.CHL_ID
 	LEFT JOIN FIN_PRODUCT_TYPE FINTYPE ON FIN.FINPROD_ID = FINTYPE.FINPROD_ID
 	<where>
 		PP.INVEST_YESORNO = 'Y'
@@ -310,6 +312,9 @@
 		</if>
 		<if test="finprodType2 != null and finprodType2 != ''">
 			AND totalDeal.FINPROD_TYPE2 = #{finprodType2}
+		</if>
+		<if test="chlFinprodId != null and chlFinprodId != ''">
+			AND totalDeal.CHL_ID = #{chlFinprodId}
 		</if>
 		<if test="pingTypeBuy != null and pingTypeBuy != ''">
 			AND (WFLPA.PA_BUSS_TYPE = #{pingTypePurchase} OR WFLPA.PA_BUSS_TYPE = #{pingTypeRedemption})
@@ -372,6 +377,7 @@
 	totalDeal.WORKFLOW_STATUS  tradeStatus,
 	totalDeal.WORKFLOW_ID workflowId,
 	WFLDEAL.ENTRUST_ID entrustId,
+	fp1.FINPROD_NAME chlFinprodId,
 	WFLDEAL.PORTFOLIO_ID portfolioId,
 	PTL.PORTFOLIO_NAME portfolioName,
 	totalDeal.FINPROD_TYPE2 finprodType,
@@ -393,6 +399,7 @@
 	LEFT JOIN WFL_PA_TRD_PRODUCT_DEAL WFLPA ON deal.TRADE_ID = WFLPA.TRADE_ID
 	LEFT JOIN PTL_PORTFOLIO PTL ON totalDeal.PORTFOLIO_ID = PTL.PORTFOLIO_ID
 	LEFT JOIN FIN_PRODUCT FIN ON totalDeal.FINPROD_ID = FIN.FINPROD_ID
+	LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = totalDeal.CHL_ID
 	LEFT JOIN FIN_PRODUCT_TYPE FINTYPE ON FIN.FINPROD_ID = FINTYPE.FINPROD_ID
 	<where>
 	totalDeal.PS in (#{ps_shengou},#{ps_shuhui})
@@ -421,6 +428,9 @@
 	</if>
 	<if test="entrustId != null and entrustId !='' ">
 		AND WFLDEAL.ENTRUST_ID  = #{entrustId}
+	</if>
+	<if test="chlFinprodId != null and chlFinprodId != ''">
+		AND totalDeal.CHL_ID = #{chlFinprodId}
 	</if>
 	<if test="finprodId != null and finprodId !='' ">
 		AND FIN.FINPROD_MARKET_ID LIKE concat(concat('%',#{finprodId}),'%')

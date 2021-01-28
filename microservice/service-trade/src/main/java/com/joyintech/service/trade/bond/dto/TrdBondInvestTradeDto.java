@@ -349,6 +349,19 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal {
     }
 
     /**
+     * 合作资产
+     */
+    private String chlFinprodId;
+
+    public String getChlFinprodId() {
+        return chlFinprodId;
+    }
+
+    public void setChlFinprodId(String chlFinprodId) {
+        this.chlFinprodId = chlFinprodId;
+    }
+
+    /**
      * 设置 isExercise
      *
      * @param isExercise isExercise

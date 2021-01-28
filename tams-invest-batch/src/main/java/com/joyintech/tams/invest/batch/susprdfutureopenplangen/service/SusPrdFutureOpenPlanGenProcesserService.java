@@ -33,7 +33,6 @@ import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.PrdOpenPlanUpdateDt
 import com.joyintech.tams.invest.batch.prdopenplanupdate.relyingonresources.dto.BussFinProductPayPlanDto;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dao.SusPrdFutureOpenPlanGenMapper;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto;
-import com.joyintech.tams.invest.batch.susprdfutureopenplangen.relyingonresources.dto.BussFinProductAnapleroticPlanDto;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.relyingonresources.dto.BussFinProductOpenPlanDto;
 import com.joyintech.tams.invest.common.CommonUtil;
 
@@ -132,11 +131,11 @@ public class SusPrdFutureOpenPlanGenProcesserService extends BaseService {
 	 * @param popuDto
 	 * @return
 	 */
-	public BussFinProductAnapleroticPlanDto executeAnapleroticDto(SusPrdFutureOpenPlanGenDto popuDto){
+/*	public BussFinProductAnapleroticPlanDto executeAnapleroticDto(SusPrdFutureOpenPlanGenDto popuDto){
 		BussFinProductAnapleroticPlanDto bussFinProductAnapleroticPlanDto = new BussFinProductAnapleroticPlanDto();
 		BeanUtil.copyPropertiesIgnoreNull(bussFinProductAnapleroticPlanDto, popuDto);
 		return bussFinProductAnapleroticPlanDto;
-	}
+	}*/
 	
 	/**
 	 * 生成付息计划规则

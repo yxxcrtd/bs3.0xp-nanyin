@@ -49,6 +49,20 @@ public class TrdPlanRateInvestTradeDto extends WflTrdProductDeal{
      * 金融产品类型
      */
     private String type1;
+
+    /**
+     * 合作资产
+     */
+    private String chlFinprodId;
+
+    public String getChlFinprodId() {
+        return chlFinprodId;
+    }
+
+    public void setChlFinprodId(String chlFinprodId) {
+        this.chlFinprodId = chlFinprodId;
+    }
+
    /* 原因、zhuyongkang 2019/7/30  start */
     /**
      * 资产二级类型

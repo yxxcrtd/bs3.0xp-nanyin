@@ -275,6 +275,19 @@ public class TrdRepoTradeReferenceDto extends TrdProductDeal {
     private String calendarId;
 
     /**
+     * 合作资产
+     */
+    private String chlFinprodId;
+
+    public String getChlFinprodId() {
+        return chlFinprodId;
+    }
+
+    public void setChlFinprodId(String chlFinprodId) {
+        this.chlFinprodId = chlFinprodId;
+    }
+
+    /**
      * 期限品种
      */
     private String termTypeReback;

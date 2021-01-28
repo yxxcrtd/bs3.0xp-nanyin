@@ -26,6 +26,7 @@
 	<sql id="queryEffective">
 		select  TRD_PRODUCT_DEAL.TRADE_ID tradeId,
 				'${effective}' effectStatus,
+				fp1.FINPROD_NAME chlFinprodId,
 				TRD_PRODUCT_DEAL_ADD.ENTRUST_ID entrustId,
 				PTL_PORTFOLIO.PORTFOLIO_ID portfolioId,
 				PTL_PORTFOLIO.PORTFOLIO_NAME portfolioName,
@@ -59,6 +60,8 @@
 		left join FIN_TRADE_PRODUCT on TRD_PRODUCT_DEAL.TRADE_ID = FIN_TRADE_PRODUCT.FINPROD_ID
 		left join FIN_DEAL_PLEDGE on TRD_PRODUCT_DEAL.TRADE_ID = FIN_DEAL_PLEDGE.FINPROD_ID
 		left join FIN_PRODUCT on FIN_DEAL_PLEDGE.PLEDGE_FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+		LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = TRD_PRODUCT_DEAL.CHL_ID
+		LEFT JOIN FIN_DEAL_PLEDGE ON TRD_PRODUCT_DEAL.TRADE_ID = FIN_DEAL_PLEDGE.finprod_id
 		where PTL_PORTFOLIO.INVEST_YESORNO='Y'
 		and TRD_PRODUCT_DEAL.FINPROD_TYPE2 IN (#{bugOutTypeForword}, #{bugOutTypeNegative})
 		and TRD_PRODUCT_DEAL.PS = #{psPay}
@@ -73,6 +76,28 @@
 			<foreach collection="portfolioId" item="item" open="(" close=")" separator=",">
 				#{item}
 			</foreach>)
+		</if>
+		<if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+			AND (TRD_PRODUCT_DEAL.CHL_ID IN
+			<foreach collection="chlFinprodIdList" item="item" index="index" open="("
+					 close=")" separator=",">
+				<if test="(index % 998) == 0">
+					null) OR TRD_PRODUCT_DEAL.CHL_ID in (
+				</if>
+				#{item}
+			</foreach>
+			)
+		</if>
+		<if test="finprodIdList != null and finprodIdList.size() > 0">
+			AND (FIN_DEAL_PLEDGE.PLEDGE_FINPROD_ID IN
+			<foreach collection="finprodIdList" item="item" index="index" open="("
+					 close=")" separator=",">
+				<if test="(index % 998) == 0">
+					null) OR FIN_DEAL_PLEDGE.PLEDGE_FINPROD_ID in (
+				</if>
+				#{item}
+			</foreach>
+			)
 		</if>
 		<if test="userId != null and userId != ''">
 			and (PTL_PORTFOLIO.PORTFOLIO_ID IN (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
@@ -113,6 +138,7 @@
 				FIN_DEAL_PLEDGE.PLEDGE_FINPROD_ID ,
 				FIN_PRODUCT.FINPROD_NAME ,
 		        FIN_PRODUCT.FINPROD_ABBR,
+				fp1.FINPROD_NAME,
        			FIN_PRODUCT.FINPROD_MARKET_ID 
 		
 	</sql>
@@ -120,6 +146,7 @@
 	<sql id="queryRevoke">
 		select  TRD_PRODUCT_DEAL.P_TRADE_ID tradeId,
 				'${revoke}' effectStatus,
+				fp1.FINPROD_NAME chlFinprodId,
 				TRD_PRODUCT_DEAL_ADD.ENTRUST_ID entrustId,
 				PTL_PORTFOLIO.PORTFOLIO_ID portfolioId,
 				PTL_PORTFOLIO.PORTFOLIO_NAME portfolioName,
@@ -152,7 +179,9 @@
 		left join FIN_PRODUCT_TYPE on TRD_PRODUCT_DEAL.FINPROD_ID = FIN_PRODUCT_TYPE.FINPROD_ID
 		left join FIN_TRADE_PRODUCT on TRD_PRODUCT_DEAL.TRADE_ID = FIN_TRADE_PRODUCT.FINPROD_ID
 		left join FIN_DEAL_PLEDGE on TRD_PRODUCT_DEAL.P_TRADE_ID = FIN_DEAL_PLEDGE.FINPROD_ID
-		left join FIN_PRODUCT on FIN_DEAL_PLEDGE.PLEDGE_FINPROD_ID = FIN_PRODUCT.FINPROD_ID 
+		left join FIN_PRODUCT on FIN_DEAL_PLEDGE.PLEDGE_FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+		LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = TRD_PRODUCT_DEAL.CHL_ID
+		LEFT JOIN FIN_DEAL_PLEDGE ON TRD_PRODUCT_DEAL.TRADE_ID = FIN_DEAL_PLEDGE.finprod_id
 		where PTL_PORTFOLIO.INVEST_YESORNO='Y'
 		and TRD_PRODUCT_DEAL.FINPROD_TYPE2 IN (#{bugOutTypeForword}, #{bugOutTypeNegative})
 		and TRD_PRODUCT_DEAL.PS = #{psPay}
@@ -171,6 +200,28 @@
 				#{item}
 			</foreach>)
 		</if>
+		<if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+			AND (TRD_PRODUCT_DEAL.CHL_ID IN
+			<foreach collection="chlFinprodIdList" item="item" index="index" open="("
+					 close=")" separator=",">
+				<if test="(index % 998) == 0">
+					null) OR TRD_PRODUCT_DEAL.CHL_ID in (
+				</if>
+				#{item}
+			</foreach>
+			)
+		</if>
+		<if test="finprodIdList != null and finprodIdList.size() > 0">
+			AND (FIN_DEAL_PLEDGE.PLEDGE_FINPROD_ID IN
+			<foreach collection="finprodIdList" item="item" index="index" open="("
+					 close=")" separator=",">
+				<if test="(index % 998) == 0">
+					null) OR FIN_DEAL_PLEDGE.PLEDGE_FINPROD_ID in (
+				</if>
+				#{item}
+			</foreach>
+			)
+		</if>
 		<if test="entrustId != null and entrustId != ''">
 			and TRD_PRODUCT_DEAL_ADD.ENTRUST_ID = #{entrustId}
 		</if>
@@ -188,6 +239,7 @@
 	<sql id="queryInFlow">
 		select  WFL_TRD_PRODUCT_DEAL.TRADE_ID tradeId,
 				'${inflow}' effectStatus,
+				fp1.FINPROD_NAME chlFinprodId,
 				WFL_TRD_PRODUCT_DEAL_ADD.ENTRUST_ID entrustId,
 				PTL_PORTFOLIO.PORTFOLIO_ID portfolioId,
 				PTL_PORTFOLIO.PORTFOLIO_NAME portfolioName,
@@ -220,7 +272,9 @@
 		left join FIN_TRADE_PRODUCT on WFL_TRD_PRODUCT_DEAL.TRADE_ID = FIN_TRADE_PRODUCT.FINPROD_ID
 		left join TRD_PRODUCT_DEAL on WFL_TRD_PRODUCT_DEAL.TRADE_ID = TRD_PRODUCT_DEAL.TRADE_ID
 		left join FIN_DEAL_PLEDGE on WFL_TRD_PRODUCT_DEAL.TRADE_ID = FIN_DEAL_PLEDGE.FINPROD_ID
-		left join FIN_PRODUCT on FIN_DEAL_PLEDGE.PLEDGE_FINPROD_ID = FIN_PRODUCT.FINPROD_ID 
+		left join FIN_PRODUCT on FIN_DEAL_PLEDGE.PLEDGE_FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+		LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = WFL_TRD_PRODUCT_DEAL.CHL_ID
+		LEFT JOIN FIN_DEAL_PLEDGE ON WFL_TRD_PRODUCT_DEAL.TRADE_ID = FIN_DEAL_PLEDGE.finprod_id
 		where PTL_PORTFOLIO.INVEST_YESORNO='Y'
 		and WFL_TRD_PRODUCT_DEAL.FINPROD_TYPE2 IN (#{bugOutTypeForword}, #{bugOutTypeNegative})
 		and WFL_TRD_PRODUCT_DEAL.PS = #{psPay}
@@ -235,6 +289,28 @@
 			<foreach collection="portfolioId" item="item" open="(" close=")" separator=",">
 				#{item}
 			</foreach>)
+		</if>
+		<if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+			AND (WFL_TRD_PRODUCT_DEAL.CHL_ID IN
+			<foreach collection="chlFinprodIdList" item="item" index="index" open="("
+					 close=")" separator=",">
+				<if test="(index % 998) == 0">
+					null) OR WFL_TRD_PRODUCT_DEAL.CHL_ID in (
+				</if>
+				#{item}
+			</foreach>
+			)
+		</if>
+		<if test="finprodIdList != null and finprodIdList.size() > 0">
+			AND (FIN_DEAL_PLEDGE.PLEDGE_FINPROD_ID IN
+			<foreach collection="finprodIdList" item="item" index="index" open="("
+					 close=")" separator=",">
+				<if test="(index % 998) == 0">
+					null) OR FIN_DEAL_PLEDGE.PLEDGE_FINPROD_ID in (
+				</if>
+				#{item}
+			</foreach>
+			)
 		</if>
 		<if test="userId != null and userId != ''">
 			and (PTL_PORTFOLIO.PORTFOLIO_ID IN (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})

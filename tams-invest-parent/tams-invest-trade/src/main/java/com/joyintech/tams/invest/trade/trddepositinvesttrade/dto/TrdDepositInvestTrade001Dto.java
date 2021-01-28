@@ -127,6 +127,20 @@ public class TrdDepositInvestTrade001Dto extends WflTrdProductDeal implements Pr
      * elementId
      */
     private String elementId;
+
+    /**
+     * 合作资产
+     */
+    private String chlFinprodId;
+
+    public String getChlFinprodId() {
+        return chlFinprodId;
+    }
+
+    public void setChlFinprodId(String chlFinprodId) {
+        this.chlFinprodId = chlFinprodId;
+    }
+
     /**
      * 划款指令表
      */

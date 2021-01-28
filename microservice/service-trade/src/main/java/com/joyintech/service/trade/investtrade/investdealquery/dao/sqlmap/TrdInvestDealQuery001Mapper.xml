@@ -16,6 +16,7 @@
 	<sql id="BASE_COLUMNS">
 		SELECT	
 		WFL_TRD_PRODUCT_DEAL.TRADE_ID tradeId,
+		fp1.FINPROD_NAME chlFinprodId,
 		#{tradeStatus01} AS validStatus, 
 		WFL_TRD_PRODUCT_DEAL_ADD.ENTRUST_ID entrustId,
 		WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID portfolioId,
@@ -61,6 +62,7 @@
 			FIN_PRODUCT
 		ON					
 			FIN_PRODUCT.FINPROD_ID = WFL_TRD_PRODUCT_DEAL.FINPROD_ID
+		LEFT JOIN FIN_PRODUCT fp1 ON fp1.FINPROD_ID = WFL_TRD_PRODUCT_DEAL.CHL_ID
 		LEFT JOIN
 			WFL_PA_TRD_PRODUCT_DEAL
 		ON	WFL_TRD_PRODUCT_DEAL.TRADE_ID = WFL_PA_TRD_PRODUCT_DEAL.TRADE_ID
@@ -70,6 +72,7 @@
 	<sql id="BASE_COLUMNS_TOTLE">
 	    SELECT 
    		WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID tradeId,
+		fp1.FINPROD_NAME chlFinprodId,
 		#{tradeStatus01} AS validStatus, 
 		WFL_TRD_DEAL_TOTAL_ADD.ENTRUST_ID entrustId,
 		WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.PORTFOLIO_ID portfolioId,
@@ -99,6 +102,7 @@
 		  LEFT JOIN     WFL_TRD_DEAL_TOTAL_ADD 	ON	 	WFL_TRD_DEAL_TOTAL_ADD.TOTLE_TRADE_ID = WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID
 		  LEFT JOIN 	PTL_PORTFOLIO			ON		PTL_PORTFOLIO.PORTFOLIO_ID = WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.PORTFOLIO_ID	
 	  	  LEFT JOIN		FIN_PRODUCT				ON		FIN_PRODUCT.FINPROD_ID = WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_ID
+		  LEFT JOIN     FIN_PRODUCT fp1         ON      fp1.FINPROD_ID = WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID
 		  LEFT JOIN 	MST_COUNTER_PARTY 		ON 		MST_COUNTER_PARTY.COUNTER_ID = WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.COUNTER_ID
 	</sql>
 	
@@ -106,6 +110,7 @@
 	<sql id="VALID_COLUMNS">
 		SELECT distinct
 		TRD_PRODUCT_DEAL.TRADE_ID	tradeId,
+		fp1.FINPROD_NAME chlFinprodId,
 		#{tradeStatus02} AS	validStatus,
 		TRD_PRODUCT_DEAL_ADD.ENTRUST_ID		entrustId,
 		PTL_PORTFOLIO.PORTFOLIO_ID 	portfolioId,
@@ -151,6 +156,7 @@
 			ON	PTL_PORTFOLIO.PORTFOLIO_ID = PTL_TRADE.PORTFOLIO_ID
 		LEFT JOIN	FIN_PRODUCT
 			ON	FIN_PRODUCT.FINPROD_ID = TRD_PRODUCT_DEAL.FINPROD_ID
+		LEFT JOIN     FIN_PRODUCT fp1         ON      fp1.FINPROD_ID = TRD_PRODUCT_DEAL.CHL_ID
 		INNER JOIN	PA_TRD_PRODUCT_DEAL
 			ON 	TRD_PRODUCT_DEAL.TRADE_ID = PA_TRD_PRODUCT_DEAL.TRADE_ID
 		LEFT JOIN MST_COUNTER_PARTY ON MST_COUNTER_PARTY.COUNTER_ID = TRD_PRODUCT_DEAL.COUNTER_ID
@@ -164,6 +170,7 @@
 	<sql id="VALID_COLUMNS_TOTLE">
 	    SELECT 
    		TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID	tradeId,
+		fp1.FINPROD_NAME chlFinprodId,
 		#{tradeStatus02} AS	validStatus,
 		TRD_DEAL_TOTAL_ADD.ENTRUST_ID		entrustId,
 		PTL_PORTFOLIO.PORTFOLIO_ID 	portfolioId,
@@ -194,12 +201,14 @@
 		LEFT JOIN	TRD_DEAL_TOTAL_ADD	ON	TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID = TRD_DEAL_TOTAL_ADD.TOTLE_TRADE_ID
 		LEFT JOIN	PTL_PORTFOLIO		ON	PTL_PORTFOLIO.PORTFOLIO_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.PORTFOLIO_ID
 		LEFT JOIN	FIN_PRODUCT			ON	FIN_PRODUCT.FINPROD_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_ID
+		LEFT JOIN   FIN_PRODUCT fp1     ON  fp1.FINPROD_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID
 		LEFT JOIN 	MST_COUNTER_PARTY 	ON 	MST_COUNTER_PARTY.COUNTER_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.COUNTER_ID
 	</sql>
 	
 	<sql id="CANCEL_COLUMNS">
 		SELECT  distinct
 		TRD_PRODUCT_DEAL.TRADE_ID	tradeId,
+		fp1.FINPROD_NAME chlFinprodId,
 		#{tradeStatus03} AS	validStatus,
 		TRD_PRODUCT_DEAL_ADD.ENTRUST_ID		entrustId,
 		PTL_PORTFOLIO.PORTFOLIO_ID 	portfolioId,
@@ -245,6 +254,7 @@
 			ON	PTL_PORTFOLIO.PORTFOLIO_ID = PTL_TRADE.PORTFOLIO_ID
 		LEFT JOIN	FIN_PRODUCT
 			ON	FIN_PRODUCT.FINPROD_ID = TRD_PRODUCT_DEAL.FINPROD_ID
+		LEFT JOIN   FIN_PRODUCT fp1     ON  fp1.FINPROD_ID = TRD_PRODUCT_DEAL.CHL_ID
 		INNER JOIN	PA_TRD_PRODUCT_DEAL
 			ON 	TRD_PRODUCT_DEAL.TRADE_ID = PA_TRD_PRODUCT_DEAL.TRADE_ID
 		LEFT JOIN MST_COUNTER_PARTY ON MST_COUNTER_PARTY.COUNTER_ID = TRD_PRODUCT_DEAL.COUNTER_ID
@@ -257,6 +267,7 @@
 	<sql id="CANCEL_COLUMNS_TOTLE">
       SELECT 
 		TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID	tradeId,
+		fp1.FINPROD_NAME chlFinprodId,
 		#{tradeStatus03} AS	validStatus,
 		TRD_DEAL_TOTAL_ADD.ENTRUST_ID		entrustId,
 		PTL_PORTFOLIO.PORTFOLIO_ID 	portfolioId,
@@ -286,7 +297,8 @@
 			TRD_FIN_PRODUCT_DEAL_TOTAL
 		LEFT JOIN		TRD_DEAL_TOTAL_ADD		ON	TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID = TRD_DEAL_TOTAL_ADD.TOTLE_TRADE_ID
 		LEFT JOIN	PTL_PORTFOLIO			ON	PTL_PORTFOLIO.PORTFOLIO_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.PORTFOLIO_ID
-		LEFT JOIN	FIN_PRODUCT			ON	FIN_PRODUCT.FINPROD_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_ID		
+		LEFT JOIN	FIN_PRODUCT			ON	FIN_PRODUCT.FINPROD_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_ID
+		LEFT JOIN   FIN_PRODUCT fp1     ON  fp1.FINPROD_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID
 		LEFT JOIN MST_COUNTER_PARTY ON MST_COUNTER_PARTY.COUNTER_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.COUNTER_ID
 	</sql>
 	
@@ -405,6 +417,9 @@
 			</if>
 			<if test="tradeMarketMode != null and tradeMarketMode !='' ">
 				AND WFL_TRD_PRODUCT_DEAL.TRADE_MARKET_MODE = #{tradeMarketMode}
+			</if>
+			<if test="chlFinprodId != null and chlFinprodId !='' ">
+				AND WFL_TRD_PRODUCT_DEAL.CHL_ID = #{chlFinprodId}
 			</if>
 			<if test="ps != null and ps !='' ">
 				<!-- AND WFL_TRD_PRODUCT_DEAL.PS = #{ps} -->
@@ -537,6 +552,9 @@
 			<if test="tradeMarketMode != null and tradeMarketMode !='' ">
 				AND WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_MARKET_MODE = #{tradeMarketMode}
 			</if>
+			<if test="chlFinprodId != null and chlFinprodId !='' ">
+				AND WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID = #{chlFinprodId}
+			</if>
 			<if test="ps != null and ps !='' ">
 				AND WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.PS=#{ps}
 			</if>
@@ -668,6 +686,9 @@
 			</if> -->
 			<if test="tradeMarket != null and tradeMarket !='' ">
 				AND TRD_PRODUCT_DEAL.TRADE_MARKET = #{tradeMarket}
+			</if>
+			<if test="chlFinprodId != null and chlFinprodId !='' ">
+				AND TRD_PRODUCT_DEAL.CHL_ID = #{chlFinprodId}
 			</if>
 			<if test="tradeMarketMode != null and tradeMarketMode !='' ">
 				AND TRD_PRODUCT_DEAL.TRADE_MARKET_MODE = #{tradeMarketMode}
@@ -804,6 +825,9 @@
 			<if test="tradeMarketMode != null and tradeMarketMode !='' ">
 				AND TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_MARKET_MODE = #{tradeMarketMode}
 			</if>
+			<if test="chlFinprodId != null and chlFinprodId !='' ">
+				AND TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID = #{chlFinprodId}
+			</if>
 			<if test="ps != null and ps !='' ">
 				AND TRD_FIN_PRODUCT_DEAL_TOTAL.PS = #{ps}
 			</if>
@@ -938,6 +962,9 @@
 			<if test="tradeMarketMode != null and tradeMarketMode !='' ">
 				AND TRD_PRODUCT_DEAL.TRADE_MARKET_MODE = #{tradeMarketMode}
 			</if>
+			<if test="chlFinprodId != null and chlFinprodId !='' ">
+				AND TRD_PRODUCT_DEAL.CHL_ID = #{chlFinprodId}
+			</if>
 			<if test="ps != null and ps !='' ">
 				<!-- AND TRD_PRODUCT_DEAL.PS = #{ps} -->
 				<!-- AND (TRD_PRODUCT_DEAL.PS = #{ps}
@@ -1067,6 +1094,9 @@
 			</if>
 			<if test="tradeMarketMode != null and tradeMarketMode !='' ">
 				AND TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_MARKET_MODE = #{tradeMarketMode}
+			</if>
+			<if test="chlFinprodId != null and chlFinprodId !='' ">
+				AND TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID = #{chlFinprodId}
 			</if>
 			<if test="ps != null and ps !='' ">
 				AND TRD_FIN_PRODUCT_DEAL_TOTAL.PS = #{ps}
@@ -1201,6 +1231,9 @@
 			</if>
 			<if test="tradeMarketMode != null and tradeMarketMode !='' ">
 				AND WFL_TRD_PRODUCT_DEAL.TRADE_MARKET_MODE = #{tradeMarketMode}
+			</if>
+			<if test="chlFinprodId != null and chlFinprodId !='' ">
+				AND WFL_TRD_PRODUCT_DEAL.CHL_ID = #{chlFinprodId}
 			</if>
 			<if test="ps != null and ps !='' ">
 				<!-- AND WFL_TRD_PRODUCT_DEAL.PS = #{ps} -->
@@ -1357,6 +1390,9 @@
 			</if>
 			<if test="tradeMarketMode != null and tradeMarketMode !='' ">
 				AND TRD_PRODUCT_DEAL.TRADE_MARKET_MODE = #{tradeMarketMode}
+			</if>
+			<if test="chlFinprodId != null and chlFinprodId !='' ">
+				AND TRD_PRODUCT_DEAL.CHL_ID = #{chlFinprodId}
 			</if>
 			<if test="ps != null and ps !='' ">
 				<!-- AND TRD_PRODUCT_DEAL.PS = #{ps} -->
@@ -1529,6 +1565,9 @@
 			<if test="tradeMarketMode != null and tradeMarketMode !='' ">
 				AND TRD_PRODUCT_DEAL.TRADE_MARKET_MODE = #{tradeMarketMode}
 			</if>
+			<if test="chlFinprodId != null and chlFinprodId !='' ">
+				AND TRD_PRODUCT_DEAL.CHL_ID = #{chlFinprodId}
+			</if>
 			<if test="ps != null and ps !='' ">
 				<!-- AND TRD_PRODUCT_DEAL.PS = #{ps} -->
 				<!-- AND (TRD_PRODUCT_DEAL.PS = #{ps}
@@ -1665,6 +1704,9 @@
 			<if test="tradeMarketMode != null and tradeMarketMode !='' ">
 				AND WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_MARKET_MODE = #{tradeMarketMode}
 			</if>
+			<if test="chlFinprodId != null and chlFinprodId !='' ">
+				AND WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID = #{chlFinprodId}
+			</if>
 			<if test="ps != null and ps !='' ">
 				AND WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.PS=#{ps}
 			</if>
@@ -1762,6 +1804,9 @@
 			</if>
 			<if test="tradeMarketMode != null and tradeMarketMode !='' ">
 				AND TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_MARKET_MODE = #{tradeMarketMode}
+			</if>
+			<if test="chlFinprodId != null and chlFinprodId !='' ">
+				AND TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID = #{chlFinprodId}
 			</if>
 			<if test="ps != null and ps !='' ">
 				AND TRD_FIN_PRODUCT_DEAL_TOTAL.PS = #{ps}
@@ -1877,6 +1922,9 @@
 			</if>
 			<if test="tradeMarketMode != null and tradeMarketMode !='' ">
 				AND TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_MARKET_MODE = #{tradeMarketMode}
+			</if>
+			<if test="chlFinprodId != null and chlFinprodId !='' ">
+				AND TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID = #{chlFinprodId}
 			</if>
 			<if test="ps != null and ps !='' ">
 				AND TRD_FIN_PRODUCT_DEAL_TOTAL.PS = #{ps}

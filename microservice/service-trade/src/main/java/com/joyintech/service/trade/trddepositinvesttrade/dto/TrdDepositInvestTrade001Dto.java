@@ -93,6 +93,19 @@ public class TrdDepositInvestTrade001Dto extends WflTrdProductDeal{
          * 金融产品交易实体类
          */
         private BaseTradeProductDealDto baseTradeProductDealDto;
+
+        /**
+         * 合作资产
+         */
+        private String chlFinprodId;
+
+        public String getChlFinprodId() {
+                return chlFinprodId;
+        }
+
+        public void setChlFinprodId(String chlFinprodId) {
+                this.chlFinprodId = chlFinprodId;
+        }
         
         /**新增资产二、三、四级分类	王贵奇	2019/7/30 开始*/   
         

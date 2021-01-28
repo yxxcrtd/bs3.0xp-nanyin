@@ -120,6 +120,7 @@ $(function(){
     	var obj=$.serializeToObject('#TrdInvestDealQuery001_searchForm');
     	obj.beginDate=$('#TrdInvestDealQuery001_settleDate').startDate();
     	obj.endDate=$('#TrdInvestDealQuery001_settleDate').endDate();
+    	obj.chlFinprodId=$('#chlFinprodId').val();
     	if(!$("#TrdInvestDealQuery001_finprodType2").val() == ''){
     		obj.finprodType2=$("#TrdInvestDealQuery001_finprodType2").val().join(",");
     	}
@@ -416,6 +417,7 @@ $(function(){
         	,width:180
         	}
         	,{field:'finprodAbbr',title: 'TrdInvestDealQuery001.finprodAbbr',width:160}
+        	,{field:'chlFinprodId',title: 'TrdInvestDealQuery001.chlFinprodId',width:160}
         	,{field:'psVal', title: 'TrdInvestDealQuery001.ps',width:100,sortField:'ps'}
         	,{field:'tradeMarketVal', title: 'TrdInvestDealQuery001.tradeMarket',width:130,sortField:'tradeMarket'}
         	,{field:'tradeMarketModeVal',  title: 'TrdInvestDealQuery001.tradeMarketMode',width:100,sortField:'tradeMarketMode'}

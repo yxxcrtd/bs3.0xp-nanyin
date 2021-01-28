@@ -297,6 +297,9 @@
         <if test="entrustId != null and entrustId != ''">
             and TPDA.ENTRUST_ID = #{entrustId}
         </if>
+        <if test="chlFinprodId != null and chlFinprodId != ''">
+            and deal.CHL_ID = #{chlFinprodId}
+        </if>
         <if test="finprodMarketId != null and finprodMarketId != ''">
             and FP.FINPROD_MARKET_ID = #{finprodMarketId}
         </if>
@@ -531,6 +534,7 @@
             select TPD.TRADE_ID bizCode, /*金融产品交易汇总业务流程.交易编号*/
             '01' statusValid,/*“流程中” as 有效状态*/
             TPDA.ENTRUST_ID,/*金融产品交易附属业务流程.委托代码*/
+            fp1.FINPROD_NAME chlFinprodId,
             PP.PORTFOLIO_ID,/*金融产品交易附属业务流程.投资组合代码*/
             PP.PORTFOLIO_NAME,/*组合.组合名称*/
             TPD.FINPROD_TYPE2,/*金融产品交易业务流程.金融产品类型*/
@@ -569,6 +573,7 @@
             on PP.PORTFOLIO_ID = TPDA.PORTFOLIO_ID
             left join FIN_PRODUCT FP
             on FP.FINPROD_ID = TPD.FINPROD_ID
+            LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = TPD.CHL_ID
             left join FIN_PRODUCT_TYPE FPT
             on FP.FINPROD_ID=FPT.FINPROD_ID
             where TPD.IS_CANCEL != #{YES} and TPD.TRADE_STATUS = #{TRADE_STATUS01}
@@ -582,6 +587,7 @@
             select deal.TOTLE_TRADE_ID bizCode, /*金融产品交易业务流程.交易编号*/
             '02' statusValid,
             TPDA.ENTRUST_ID,/*金融产品交易附属业务流程.委托代码*/
+            fp1.FINPROD_NAME chlFinprodId,
             PP.PORTFOLIO_ID,/*金融产品交易附属业务流程.投资组合代码*/
             PP.PORTFOLIO_NAME,/*组合.组合名称*/
             TPD.FINPROD_TYPE2,/*金融产品交易业务流程.金融产品类型*/
@@ -607,6 +613,7 @@
             left join TRD_PRODUCT_DEAL TPD on deal.TOTLE_TRADE_ID = TPD.TOTLE_TRADE_ID and deal.PS=TPD.PS
             left join TRD_PRODUCT_DEAL_ADD TPDA on TPD.TRADE_ID=TPDA.TRADE_ID
             left join FIN_PRODUCT FP on FP.FINPROD_ID = TPD.FINPROD_ID
+            LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = deal.CHL_ID
             left join FIN_PRODUCT_TYPE FPT on FP.FINPROD_ID=FPT.FINPROD_ID
             LEFT JOIN PTL_TRADE PT ON TPD.TRADE_ID = PT.BUSI_NO
             LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
@@ -621,6 +628,7 @@
             select deal.P_TOTLE_TRADE_ID bizCode, /*金融产品交易业务流程.交易编号*/
             '03' statusValid,
             TPDA.ENTRUST_ID,/*金融产品交易附属业务流程.委托代码*/
+            fp1.FINPROD_NAME chlFinprodId,
             PP.PORTFOLIO_ID,/*金融产品交易附属业务流程.投资组合代码*/
             PP.PORTFOLIO_NAME,/*组合.组合名称*/
             TPD.FINPROD_TYPE2,/*金融产品交易业务流程.金融产品类型*/
@@ -646,6 +654,7 @@
             left join TRD_PRODUCT_DEAL TPD on deal.TOTLE_TRADE_ID = TPD.TOTLE_TRADE_ID and deal.PS=TPD.PS
             left join TRD_PRODUCT_DEAL_ADD TPDA on TPD.TRADE_ID=TPDA.TRADE_ID
             left join FIN_PRODUCT FP on FP.FINPROD_ID = TPD.FINPROD_ID
+            LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = deal.CHL_ID
             left join FIN_PRODUCT_TYPE FPT on FP.FINPROD_ID=FPT.FINPROD_ID
             LEFT JOIN PTL_TRADE PT ON TPD.P_TRADE_ID = PT.BUSI_NO
             LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
@@ -665,6 +674,7 @@
             </if>
             '${statusValid}' statusValid,/*“流程中” as 有效状态*/
             TPDA.ENTRUST_ID,/*金融产品交易附属业务流程.委托代码*/
+            fp1.FINPROD_NAME chlFinprodId,
             PP.PORTFOLIO_ID,/*金融产品交易附属业务流程.投资组合代码*/
             PP.PORTFOLIO_NAME,/*组合.组合名称*/
             TPD.FINPROD_TYPE2,/*金融产品交易业务流程.金融产品类型*/
@@ -698,6 +708,7 @@
                 left join WFL_TRD_FIN_PRODUCT_DEAL_TOTAL deal on  deal.TOTLE_TRADE_ID = TPD.TOTLE_TRADE_ID and deal.PS=TPD.PS
                 left join WFL_TRD_PRODUCT_DEAL_ADD TPDA on TPD.TRADE_ID=TPDA.TRADE_ID
                 left join PTL_PORTFOLIO PP on PP.PORTFOLIO_ID = TPDA.PORTFOLIO_ID
+                LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = TPD.CHL_ID
             </if>
             <if test="statusValid == TRADE_FLOW_STATUS02 or statusValid == TRADE_FLOW_STATUS03">
                 TRD_FIN_PRODUCT_DEAL_TOTAL deal
@@ -705,6 +716,7 @@
                 left join TRD_PRODUCT_DEAL_ADD TPDA on TPD.TRADE_ID=TPDA.TRADE_ID
                 LEFT JOIN PTL_TRADE PT ON TPD.TRADE_ID = PT.BUSI_NO
                 LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
+                LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = deal.CHL_ID
             </if>
             left join FIN_PRODUCT FP on FP.FINPROD_ID = TPD.FINPROD_ID
             left join FIN_PRODUCT_TYPE FPT on FP.FINPROD_ID=FPT.FINPROD_ID

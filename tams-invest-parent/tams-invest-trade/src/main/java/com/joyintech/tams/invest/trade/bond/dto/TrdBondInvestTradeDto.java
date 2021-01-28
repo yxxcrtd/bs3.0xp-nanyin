@@ -120,6 +120,19 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
     private String finprodName;
 
     /**
+     * 合作资产
+     */
+    private String chlFinprodId;
+
+    public String getChlFinprodId() {
+        return chlFinprodId;
+    }
+
+    public void setChlFinprodId(String chlFinprodId) {
+        this.chlFinprodId = chlFinprodId;
+    }
+
+    /**
      * 清算速度
      */
     @NotEmpty(fieldName = "TrdBondInvestTrade002.settleSpreed")

@@ -265,10 +265,10 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 		if (returnList != null && returnList.getRoot() !=null 
 				&& returnList.getRoot().size() > 0) {
 			for (TrdInvestDealQuery001Dto dto : returnList.getRoot()) {
-				if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_特拆拆入.getValue())) {
+				if (StringUtil.isNotEmpty(dto.getFinprodType2()) && dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_特拆拆入.getValue())) {
 					dto.setFinprodType2(DictCodeList.平安资产类型_拆借.getValue());
 				}
-				if (dto.getFinprodType2().equals(DictCodeListExt3.金融产品类型_投管用_期权.getValue())) {
+				if (StringUtil.isNotEmpty(dto.getFinprodType2()) && dto.getFinprodType2().equals(DictCodeListExt3.金融产品类型_投管用_期权.getValue())) {
 					dto.setFinprodType2(DictCodeListExt3.平安资产类型_期权.getValue());
 				}
 			}

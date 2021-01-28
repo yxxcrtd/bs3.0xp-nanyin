@@ -37,6 +37,7 @@ import com.joyintech.tams.common.base.entity.FinOpenPlan;
 import com.joyintech.tams.common.base.entity.FinOpenPlanKey;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.AccrDateNeedOtherDto;
+import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.AccrDateOtherDto;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dao.SusPrdFutureOpenPlanGenMapper;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.FinOpenPlanDto;
 
@@ -105,10 +106,12 @@ public class SusPrdFutureOpenPlanGenWriter extends BaseWriter<NeedToWriteEntity>
 					
 					//生成最新的浮动管理费计提计划 
 					createFinFloatAccrualSche(prodidList);
+					//生成最新的回补计划 
+					createFinAnapleroticAccrualSche(prodidList);
 					
 				}
 				//更新业绩回补计划
-				if (!StringUtil.isEmptyList(finOpenPlanDto.getFinAnapleroticPlanList())) {
+				/*if (!StringUtil.isEmptyList(finOpenPlanDto.getFinAnapleroticPlanList())) {
 					for (FinFloatAccrualSche finFloatAccrualSche : finOpenPlanDto.getFinAnapleroticPlanList()) {
 						// 查询无重复
 						FinFloatAccrualScheKey key = new FinFloatAccrualScheKey();
@@ -120,7 +123,7 @@ public class SusPrdFutureOpenPlanGenWriter extends BaseWriter<NeedToWriteEntity>
 						   finFloatAccrualScheMapper.insert(finFloatAccrualSche); // 如果为空再插入操作
 					   }
 					}
-			}
+			}*/
 				//更新付息计划	
 				if (!StringUtil.isEmptyList(finOpenPlanDto.getFinCashPlanList())) {
 					for (FinCashPlan finCashPlan : finOpenPlanDto.getFinCashPlanList()) {
@@ -211,6 +214,93 @@ public class SusPrdFutureOpenPlanGenWriter extends BaseWriter<NeedToWriteEntity>
 		}
 	}
 	
+	/**
+	 * 根据开放计划生成回补计划 
+	 */
+	public void createFinAnapleroticAccrualSche(List<String> finprodidList){
+		
+		if (!StringUtil.isEmptyList(finprodidList)) {
+			for (String finprodId : finprodidList) {
+				// 1.根据产品代码  查询到相应的开放计划净值日
+				List<Date> dateOpenPlanList = susPrdFutureOpenPlanGenMapper.findNdateOrEndDateByProdid(finprodId);
+				if(StringUtil.isEmptyList(dateOpenPlanList)){//过滤收益型产品
+					continue;
+				}
+				// 1.2 当净值型产品没有回补时，无需更新回补计划
+				Map<String,Object> map = new HashMap<String,Object>();
+		        map.put("FINPROD_ID", finprodId);
+		        //查询回补的现金流代码
+		        String cashId = susPrdFutureOpenPlanGenMapper.selectfinAnapleroticInfo(map);
+		        if(StringUtil.isEmpty(cashId)){
+		        	continue;
+		        }
+				// 2.将其他时间点也塞进dateOpenPlanList内
+		        AccrDateOtherDto accrDateOtherDto = susPrdFutureOpenPlanGenMapper
+						.findOtherNeedDate(finprodId);
+				//3.根据回补的cashid删除产品原计提计划
+				FinFloatAccrualScheKey finFloatAccrualScheKey=new FinFloatAccrualScheKey();
+				finFloatAccrualScheKey.setCashId(accrDateOtherDto.getCashId());
+				susPrdFutureOpenPlanGenMapper.deleteFloatAccrualScheByPrimaryKey(finFloatAccrualScheKey);
+				
+				if (StringUtil.isNotEmpty(accrDateOtherDto)) {
+					addDateToList(dateOpenPlanList, accrDateOtherDto.getVdate());
+					addDateToList(dateOpenPlanList, accrDateOtherDto.getMdate());
+					addDateToList(dateOpenPlanList, accrDateOtherDto.getFirstAnapleroticDate());
+					addDateToList(dateOpenPlanList, accrDateOtherDto.getAnapleroticEndDate());
+					addDateToList(dateOpenPlanList, accrDateOtherDto.getFirstAnapleroticCycleBegDate());
+				}
+				
+				if(accrDateOtherDto.getFirstAnapleroticCycleBegDate().compareTo(accrDateOtherDto.getFirstAnapleroticDate())<0) {
+					FinFloatAccrualSche finFloatAccrualScheFirst = new FinFloatAccrualSche();
+					finFloatAccrualScheFirst.setCashId(accrDateOtherDto.getCashId());
+					finFloatAccrualScheFirst.setAccrDate(accrDateOtherDto.getFirstAnapleroticDate());
+					finFloatAccrualScheFirst.setAccrStrDate(accrDateOtherDto.getFirstAnapleroticCycleBegDate());
+					finFloatAccrualScheFirst.setAccrEndDate(accrDateOtherDto.getFirstAnapleroticDate());
+					finFloatAccrualScheFirst.setValDate(accrDateOtherDto.getFirstAnapleroticDate());
+					finFloatAccrualScheFirst.setUpdateTime(new Date());
+					finFloatAccrualScheMapper.insert(finFloatAccrualScheFirst);
+				}
+				// 对dateOpenPlanList进行处理
+				Date startDate = dateOpenPlanList.get(0);
+				boolean flag = true;
+				for (Date endDate : dateOpenPlanList) {
+					if (startDate.compareTo(endDate) == 0) {
+						startDate = endDate;
+						continue;
+					}
+					if (endDate.compareTo(accrDateOtherDto.getFirstAnapleroticCycleBegDate()) < 0) {
+						startDate = endDate;
+						continue;
+					}
+					if (endDate.compareTo(accrDateOtherDto.getFirstAnapleroticDate()) < 0) {
+						startDate = endDate;
+						continue;
+					}
+					if (endDate.compareTo(accrDateOtherDto.getAnapleroticEndDate()) > 0) {
+						startDate = endDate;
+						continue;
+					}
+					FinFloatAccrualSche finFloatAccrualScheFirst = new FinFloatAccrualSche();
+					finFloatAccrualScheFirst.setCashId(accrDateOtherDto.getCashId());
+					finFloatAccrualScheFirst.setAccrDate(endDate);
+					finFloatAccrualScheFirst.setAccrStrDate(startDate);
+					if (flag) {
+						finFloatAccrualScheFirst.setAccrStrDate(DateUtil.addDay(startDate, -1));
+						flag = false;
+					}
+
+					finFloatAccrualScheFirst.setAccrEndDate(endDate);
+					finFloatAccrualScheFirst.setValDate(endDate);
+					finFloatAccrualScheFirst.setUpdateTime(new Date());
+					//插入更新的回补计提计划
+					if(finFloatAccrualScheFirst.getAccrStrDate().compareTo(accrDateOtherDto.getFirstAnapleroticCycleBegDate()) >= 0) {						
+						finFloatAccrualScheMapper.insert(finFloatAccrualScheFirst);
+					}
+					startDate = endDate;
+				}
+			}
+		}
+	}
 	/**
 	 * 按降序向列表添加日期
 	 * @param list

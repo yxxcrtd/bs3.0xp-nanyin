@@ -2502,7 +2502,11 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 AccurIntCalOutParameter accurIntCalOutParameter = calc.calculate(accurIntCalInParameter);
                 accurInt = ArithmeticUtil.round(accurIntCalOutParameter.getInterest(), SCALE, RoundingMode.HALF_UP);
             }
-
+            if (isJiaoYiSuo) {
+                if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue())){
+                    accurInt = BigDecimal.ZERO;
+                }
+            }
             // 单位应计利息
             if (dto.getUnitInt() == null) {
                 if (isJiaoYiSuo) {
@@ -2580,7 +2584,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                     yieldPriceInParameter.setFullPrice(dto.getUnitFprice()/* dto.getFpriceAmt() */);
                     yieldPriceOutParameter = yieldByPriceCalculator.calculate(yieldPriceInParameter);
                     dto.setYield(yieldPriceOutParameter.getMatYield());
-                    if (secInfoModelDto.getNextExeDate() != null) {
+                    if (secInfoModelDto.getNextExeDate() != null&&priceYieldInParameter.getCalDate().compareTo(BasicUtil.dateToLocal(secInfoModelDto.getNextExeDate()))>0) {
                         // 全价总额==>行权收益率
                         yieldPriceInParameter.setNextExeDate(toLocalDate(secInfoModelDto.getNextExeDate()));
                         yieldPriceInParameter.setNextExePrice(secInfoModelDto.getNextExercisePrice());
@@ -2601,7 +2605,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                     // dto.setFpriceAmt(priceYieldOutParameter.getFullPrice());
                     dto.setUnitFprice(priceYieldOutParameter.getFullPrice());
                     // 全价总额==>行权收益率
-                    if (secInfoModelDto.getNextExeDate() != null) {
+                    if (secInfoModelDto.getNextExeDate() != null&&priceYieldInParameter.getCalDate().compareTo(BasicUtil.dateToLocal(secInfoModelDto.getNextExeDate()))>0) {
                         yieldPriceInParameter.setFullPrice(dto.getUnitFprice()/* dto.getFpriceAmt() */);
                         yieldPriceInParameter.setNextExeDate(toLocalDate(secInfoModelDto.getNextExeDate()));
                         yieldPriceInParameter.setNextExePrice(secInfoModelDto.getNextExercisePrice());
@@ -2617,7 +2621,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 // 行权收益率
                 case "exerYield":
                     // 行权收益率==>全价总额
-                    if (secInfoModelDto.getNextExeDate() != null) {
+                    if (secInfoModelDto.getNextExeDate() != null&&priceYieldInParameter.getCalDate().compareTo(BasicUtil.dateToLocal(secInfoModelDto.getNextExeDate()))>0) {
                         priceYieldInParameter.setMatYield(dto.getExerYield());
                         yieldPriceInParameter.setNextExeDate(toLocalDate(secInfoModelDto.getNextExeDate()));
                         yieldPriceInParameter.setNextExePrice(secInfoModelDto.getNextExercisePrice());

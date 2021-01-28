@@ -42,6 +42,19 @@ public class TrdOutRightRepoTradeDto extends TrdProductDeal {
 	 * 组合名称
 	 */
 	private String portfolioName;
+
+	/**
+	 * 合作资产
+	 */
+	private String chlFinprodId;
+
+	public String getChlFinprodId() {
+		return chlFinprodId;
+	}
+
+	public void setChlFinprodId(String chlFinprodId) {
+		this.chlFinprodId = chlFinprodId;
+	}
 	
 	/**
 	 * 资产一级分类

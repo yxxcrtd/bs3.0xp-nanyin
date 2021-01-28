@@ -28,7 +28,6 @@ import com.joyintech.tams.invest.batch.prdopenplanupdate.relyingonresources.serv
 import com.joyintech.tams.invest.batch.prdopenplanupdate.service.PrdOpenPlanUpdateProcessorService;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.FinOpenPlanDto;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto;
-import com.joyintech.tams.invest.batch.susprdfutureopenplangen.relyingonresources.service.BussFinProductAnapleroticPlanService;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.relyingonresources.service.BussFinProductOpenPlanService;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.service.SusPrdFutureOpenPlanGenProcesserService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
@@ -53,8 +52,7 @@ public class SusPrdFutureOpenPlanGenProcessor extends BaseProcessor<NeedOperateE
 	@Autowired
 	private SusPrdFutureOpenPlanGenProcesserService susPrdFutureOpenPlanGenProcesserService;
 	
-	@Autowired
-	private BussFinProductAnapleroticPlanService bussFinProductAnapleroticPlanService;
+
 
 	
 	@Override
@@ -76,12 +74,12 @@ public class SusPrdFutureOpenPlanGenProcessor extends BaseProcessor<NeedOperateE
 				susprdfutureopenplangendto);
 		finOpenPlanDto.setFinOpenPlanList(newFinOpenPlanList);
 		}
-		else if(StringUtil.equals("业绩回补计划", susprdfutureopenplangendto.getPlanType())) {
+		/*else if(StringUtil.equals("业绩回补计划", susprdfutureopenplangendto.getPlanType())) {
 			// 公共方法生成的List<业绩回补计划>
 			List<FinFloatAccrualSche> finAnapleroticPlanList = bussFinProductAnapleroticPlanService
 					.genAnapleroticPlanList(susPrdFutureOpenPlanGenProcesserService.executeAnapleroticDto(susprdfutureopenplangendto));
 		finOpenPlanDto.setFinAnapleroticPlanList(finAnapleroticPlanList);
-		}
+		}*/
 		else if(StringUtil.equals("付息计划", susprdfutureopenplangendto.getPlanType())){
 			// 公共方法生成的List<付息计划>
 			List<FinCashPlan> finCashPlanList = bussFinProductPayPlanService.getProductInterestPlanData(

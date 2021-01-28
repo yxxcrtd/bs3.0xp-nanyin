@@ -79,6 +79,19 @@ public class TrdProjectInvestTradeDto extends BaseEntity {
     private String finprodMarketId;
 
     /**
+     * 合作资产
+     */
+    private String chlFinprodId;
+
+    public String getChlFinprodId() {
+        return chlFinprodId;
+    }
+
+    public void setChlFinprodId(String chlFinprodId) {
+        this.chlFinprodId = chlFinprodId;
+    }
+
+    /**
      * 资产名称
      */
     private String finprodName;

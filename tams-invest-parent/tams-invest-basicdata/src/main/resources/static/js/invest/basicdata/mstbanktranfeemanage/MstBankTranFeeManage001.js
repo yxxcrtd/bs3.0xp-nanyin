@@ -33,6 +33,7 @@ $(function() {
 
         cols:[
              {field:'batchSeq',visible: false}
+            ,{field:'validStatusVal',title:'MstBankTranFeeManage001.validStatus',width:100,sortField:'validStatus'}
             ,{field:'feeTypeStr',width:'20%',sortField:'feeType',title: 'MstBankTranFeeManage001.feeType'}//费用类型
             ,{field:'registOrgStr',width:'20%',sortField:'registOrg', title: 'MstBankTranFeeManage001.registOrg'}//登记托管机构
             ,{field:'tradeTypeStr',width:'20%',sortField:'tradeType', title: 'MstBankTranFeeManage001.tradeType'}//交易品种

@@ -18,6 +18,8 @@
             // 有效状态
             , validStatus: $('#validStatus').val()
             ,fTradeId:fTradeId?fTradeId:''
+            ,chlFinprodId: $('#chlFinprodId').val()
+            ,finprodId: $('#finprodId').val()
         };
 
         if ($("#portfolioId").val()) {
@@ -25,6 +27,18 @@
         } else {
             pageParam.portfolioId = null;
         }
+
+        if ($("#chlFinprodId").val()) {
+            pageParam.chlFinprodId = $("#chlFinprodId").val().join(",");
+        } else {
+            pageParam.chlFinprodId = null;
+        }
+        if ($("#finprodId").val()) {
+            pageParam.finprodId = $("#finprodId").val().join(",");
+        } else {
+            pageParam.finprodId = null;
+        }
+
         return pageParam;
     };
     /**
@@ -66,6 +80,7 @@
                 }
             }
             , {field: 'portfolioName', width:180, sortField:'portfolioName', title: 'TrdRepoTrade001.colModel.portfolioName'}
+            , {field: 'chlFinprodId', width:180, sortField:'chlFinprodId', title: 'TrdRepoTrade001.colModel.chlFinprodId'}
             , {field: 'tradeMarket', width:180, sortField:'tradeMarket', title: 'TrdRepoTrade001.colModel.tradeMarket'}
             , {field: 'bondName', width:180, sortable:false, title: 'TrdRepoTrade001.colModel.bondName'}
             , {field: 'repoTypeText', width:120, sortField:'repoType', title: 'TrdRepoTrade001.colModel.repoType'}

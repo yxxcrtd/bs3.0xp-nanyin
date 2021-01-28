@@ -7,6 +7,7 @@
 		resultType="com.joyintech.service.trade.trddepositinvesttrade.dto.TrdDepositInvestTrade001Dto">
 		SELECT 
 		    WFL.TRADE_ID tradeId,
+			fp1.FINPROD_NAME chlFinprodId,
 		<if test="status != null and status.equals(validStatus_01)">
 		    WFL.WORKFLOW_STATUS  tradeStatus,
 		</if>
@@ -73,6 +74,7 @@
 			    FIN_PRODUCT FIN
 			ON
 			    WFL.FINPROD_ID = FIN.FINPROD_ID
+			LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = WFL.CHL_ID
 			LEFT JOIN 
 			    FIN_PRODUCT_TYPE FINTYPE
 			ON
@@ -103,6 +105,9 @@
 			</if>
 			<if test="entrustId != null and entrustId !='' ">
 				AND WFLDEAL.ENTRUST_ID  = #{entrustId}
+			</if>
+			<if test="chlFinprodId != null and chlFinprodId !='' ">
+				AND WFL.CHL_ID  = #{chlFinprodId}
 			</if>
 			<if test="finprodId != null and finprodId !='' ">
 				AND (FIN.FINPROD_MARKET_ID
@@ -168,6 +173,7 @@
 			UNION ALL 
 				SELECT 
 			    WFL.TRADE_ID tradeId,
+				fp1.FINPROD_NAME chlFinprodId,
 			    WFL.WORKFLOW_STATUS  tradeStatus,
 			    WFLDEAL.ENTRUST_ID entrustId,
 				pp.PORTFOLIO_ID portfolioId,
@@ -201,6 +207,7 @@
 			    FIN_PRODUCT FIN
 			ON
 			    WFL.FINPROD_ID = FIN.FINPROD_ID
+			LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = WFL.CHL_ID
 			LEFT JOIN 
 			    FIN_PRODUCT_TYPE FINTYPE
 			ON
@@ -232,6 +239,9 @@
 			</if>
 			<if test="entrustId != null and entrustId !='' ">
 				AND WFLDEAL.ENTRUST_ID  = #{entrustId}
+			</if>
+			<if test="chlFinprodId != null and chlFinprodId !='' ">
+				AND WFL.CHL_ID  = #{chlFinprodId}
 			</if>
 			<if test="finprodId != null and finprodId !='' ">
 				AND (FIN.FINPROD_MARKET_ID
