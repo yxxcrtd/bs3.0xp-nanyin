@@ -6,7 +6,7 @@ declare
 	(
 	 	select CASE WHEN nvl(sum(B1.LAST_PERIOD),0)=0 THEN (((A1.mdate)-(date''${valDate}''))) ELSE (nvl(sum(B1.LAST_PERIOD),0))*365 END LAST_PERIOD from  MST_BOND_VALUATION_INFO B1
 	    inner join
-	    (select to_char(max(VALUE_DATE),''yyyy-MM-dd'') as VALUE_DATE,SEC_ID from MST_BOND_VALUATION_INFO where VALUE_DATE<=date''${valDate}'' group by sec_id) B2
+	    (select max(VALUE_DATE) as VALUE_DATE,SEC_ID from MST_BOND_VALUATION_INFO where VALUE_DATE<=date''${valDate}'' group by sec_id) B2
 	    on B1.SEC_ID=B2.SEC_ID and B1.VALUE_DATE=B2.VALUE_DATE WHERE B1.SEC_ID=A1.FINPROD_ID
 	)
 	WHEN (A1.FINPROD_TYPE =''F06'' OR A1.FINPROD_TYPE =''XJ'') THEN (0)
@@ -150,7 +150,7 @@ declare
 	(
 	 	select CASE WHEN nvl(sum(B1.LAST_PERIOD),0)=0 THEN (((A1.mdate)-(date''${valDate}''))) ELSE (nvl(sum(B1.LAST_PERIOD),0))*365 END LAST_PERIOD from  MST_BOND_VALUATION_INFO B1
 	    inner join
-	    (select to_char(max(VALUE_DATE),''yyyy-MM-dd'') as VALUE_DATE,SEC_ID from MST_BOND_VALUATION_INFO where VALUE_DATE<=date''${valDate}'' group by sec_id) B2
+	    (select max(VALUE_DATE) as VALUE_DATE,SEC_ID from MST_BOND_VALUATION_INFO where VALUE_DATE<=date''${valDate}'' group by sec_id) B2
 	    on B1.SEC_ID=B2.SEC_ID and to_char(B1.VALUE_DATE,''yyyy-MM-dd'')=B2.VALUE_DATE WHERE B1.SEC_ID=A1.FINPROD_ID
 	)
 	WHEN (A1.FINPROD_TYPE =''F06'' OR A1.FINPROD_TYPE =''XJ'') THEN (0)
