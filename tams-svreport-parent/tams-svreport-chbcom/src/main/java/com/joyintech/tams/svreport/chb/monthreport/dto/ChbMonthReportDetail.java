@@ -85,6 +85,62 @@ public class ChbMonthReportDetail {
     private Set<String> prodSet;
     
     private Set<String> durationProdSet;
+
+    private Set<String> xgdurationprodcountsSet;
+
+    /**
+     * 本期兑付金额
+     */
+    private BigDecimal prodpayamount;
+
+
+    /**
+     * 合规新产品期末存续只数
+     */
+    private  Integer    xgdurationprodcounts;
+
+    /**
+     * 合规新产品期末余额
+     */
+    private   BigDecimal   xgbalance;
+
+    /**
+     * 合规新产品期末余额（穿透后）
+     */
+    private  BigDecimal     xgbottombalance;
+
+
+    public BigDecimal getProdpayamount() {
+        return prodpayamount;
+    }
+
+    public void setProdpayamount(BigDecimal prodpayamount) {
+        this.prodpayamount = prodpayamount;
+    }
+
+    public Integer getXgdurationprodcounts() {
+        return xgdurationprodcounts;
+    }
+
+    public void setXgdurationprodcounts(Integer xgdurationprodcounts) {
+        this.xgdurationprodcounts = xgdurationprodcounts;
+    }
+
+    public BigDecimal getXgbalance() {
+        return xgbalance;
+    }
+
+    public void setXgbalance(BigDecimal xgbalance) {
+        this.xgbalance = xgbalance;
+    }
+
+    public BigDecimal getXgbottombalance() {
+        return xgbottombalance;
+    }
+
+    public void setXgbottombalance(BigDecimal xgbottombalance) {
+        this.xgbottombalance = xgbottombalance;
+    }
     
     /**
      * null
@@ -310,10 +366,17 @@ public class ChbMonthReportDetail {
     
     public int calcDurationprodcounts(String prodid) {
         durationProdSet.add(prodid);
-        durationprodcounts = durationProdSet.size();
+        xgdurationprodcounts = durationProdSet.size();
+        return xgdurationprodcounts.intValue();
+    }
+
+
+    public int calcxgdurationprodcounts(String prodid) {
+        xgdurationprodcountsSet.add(prodid);
+        durationprodcounts = xgdurationprodcountsSet.size();
         return durationprodcounts.intValue();
     }
-    
+
     public Set<String> getProdSet() {
         return prodSet;
     }

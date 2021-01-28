@@ -10,7 +10,7 @@
     <result column="CCY" property="ccy" jdbcType="VARCHAR" />
     <result column="RAISEMODE" property="raisemode" jdbcType="VARCHAR" />
     <result column="IVSTORIENTATION" property="ivstorientation" jdbcType="VARCHAR" />
-    <result column="bal" property="bal" jdbcType="VARCHAR" />
+    <result column="TERMTYPE" property="termtype" jdbcType="VARCHAR" />
     <result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
     <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
     <result column="SALE_TARGET" property="saleTarget" jdbcType="VARCHAR" />
@@ -30,16 +30,21 @@
     <result column="OPENDURATION" property="openduration" jdbcType="VARCHAR" />
     <result column="CASH_MANA_CATE" property="cashmanacate" jdbcType="VARCHAR" />
     <result column="INSTITUTION_CODE" property="institutionCode" jdbcType="VARCHAR" />
+    <result column="PAYAMTSUM" property="payamtsum" jdbcType="DECIMAL" />
+    <result column="CLOSETERMDAY" property="closetermday" jdbcType="DECIMAL" />
+    <result column="IS_TRANSFER" property="isTransfer" jdbcType="VARCHAR" />
+    <result column="IS_FHXGCP" property="isFhxgcp" jdbcType="VARCHAR" />
+    <result column="IS_YLLCCP" property="isYllccp" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    POSUUID, PRODID, STARTDATE, ENDDATE, BOOKDATE, CCY, RAISEMODE, IVSTORIENTATION, bal, 
+    POSUUID, PRODID, STARTDATE, ENDDATE, BOOKDATE, CCY, RAISEMODE, IVSTORIENTATION, TERMTYPE,
     OPERATE_MODE, PROFIT_TYPE, SALE_TARGET, CON_PRD_TRAGET, ORD_IDENTIFIED, DIRTYAMTSUM, 
     CLEANAMTSUM, REDEEMAMT, TERMINATIONAMT, ENDAMTSUM_OTH, CUSTOMERAMT, REDEEMINTAMT, 
     TERMINATIONINTAMT, CASHAMT, DURATIONFLAG, VDATE,OPENDURATION,CASH_MANA_CATE
   </sql>
   
   <sql id="Base_Column_List_inst" >
-    POSUUID, PRODID, STARTDATE, ENDDATE, BOOKDATE, CCY, RAISEMODE, IVSTORIENTATION, bal, 
+    POSUUID, PRODID, STARTDATE, ENDDATE, BOOKDATE, CCY, RAISEMODE, IVSTORIENTATION, TERMTYPE,
     OPERATE_MODE, PROFIT_TYPE, SALE_TARGET, CON_PRD_TRAGET, ORD_IDENTIFIED, DIRTYAMTSUM, 
     CLEANAMTSUM, REDEEMAMT, TERMINATIONAMT, ENDAMTSUM_OTH, CUSTOMERAMT, REDEEMINTAMT, 
     TERMINATIONINTAMT, CASHAMT, DURATIONFLAG, VDATE,OPENDURATION,CASH_MANA_CATE, INSTITUTION_CODE
@@ -66,7 +71,7 @@
   <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition" >
     insert into CHB_MONTH_PRD_POSITION (POSUUID, PRODID, STARTDATE, 
       ENDDATE, BOOKDATE, CCY, 
-      RAISEMODE, IVSTORIENTATION, bal, 
+      RAISEMODE, IVSTORIENTATION, TERMTYPE,
       OPERATE_MODE, PROFIT_TYPE, SALE_TARGET, 
       CON_PRD_TRAGET, ORD_IDENTIFIED, DIRTYAMTSUM, 
       CLEANAMTSUM, REDEEMAMT, TERMINATIONAMT, 
@@ -75,7 +80,7 @@
       VDATE)
     values (#{posuuid,jdbcType=CHAR}, #{prodid,jdbcType=VARCHAR}, #{startdate,jdbcType=TIMESTAMP}, 
       #{enddate,jdbcType=TIMESTAMP}, #{bookdate,jdbcType=TIMESTAMP}, #{ccy,jdbcType=VARCHAR}, 
-      #{raisemode,jdbcType=VARCHAR}, #{ivstorientation,jdbcType=VARCHAR}, #{bal,jdbcType=VARCHAR}, 
+      #{raisemode,jdbcType=VARCHAR}, #{ivstorientation,jdbcType=VARCHAR}, #{termtype,jdbcType=VARCHAR},
       #{operateMode,jdbcType=VARCHAR}, #{profitType,jdbcType=VARCHAR}, #{saleTarget,jdbcType=VARCHAR}, 
       #{conPrdTraget,jdbcType=VARCHAR}, #{ordIdentified,jdbcType=VARCHAR}, #{dirtyamtsum,jdbcType=DECIMAL}, 
       #{cleanamtsum,jdbcType=DECIMAL}, #{redeemamt,jdbcType=DECIMAL}, #{terminationamt,jdbcType=DECIMAL}, 
@@ -110,8 +115,8 @@
       <if test="ivstorientation != null" >
         IVSTORIENTATION,
       </if>
-      <if test="bal != null" >
-        bal,
+      <if test="termtype != null" >
+          TERMTYPE,
       </if>
       <if test="operateMode != null" >
         OPERATE_MODE,
@@ -187,8 +192,8 @@
       <if test="ivstorientation != null" >
         #{ivstorientation,jdbcType=VARCHAR},
       </if>
-      <if test="bal != null" >
-        #{bal,jdbcType=VARCHAR},
+      <if test="termtype != null" >
+        #{termtype,jdbcType=VARCHAR},
       </if>
       <if test="operateMode != null" >
         #{operateMode,jdbcType=VARCHAR},
@@ -264,8 +269,8 @@
       <if test="ivstorientation != null" >
         IVSTORIENTATION = #{ivstorientation,jdbcType=VARCHAR},
       </if>
-      <if test="bal != null" >
-        bal = #{bal,jdbcType=VARCHAR},
+      <if test="termtype != null" >
+          TERMTYPE = #{termtype,jdbcType=VARCHAR},
       </if>
       <if test="operateMode != null" >
         OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
@@ -327,7 +332,7 @@
       CCY = #{ccy,jdbcType=VARCHAR},
       RAISEMODE = #{raisemode,jdbcType=VARCHAR},
       IVSTORIENTATION = #{ivstorientation,jdbcType=VARCHAR},
-      bal = #{bal,jdbcType=VARCHAR},
+      TERMTYPE = #{termtype,jdbcType=VARCHAR},
       OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
       PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
       SALE_TARGET = #{saleTarget,jdbcType=VARCHAR},
@@ -348,13 +353,18 @@
   </update>
   
   <select id="select" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition" >
-    select 
-        <include refid="Base_Column_List_inst" />
-    from CHB_MONTH_PRD_POSITION
-     	left join (      select f.finprod_market_id,di.institution_code 
+select
+    pos.POSUUID, pos.PRODID, pos.STARTDATE, pos.ENDDATE, pos.BOOKDATE, pos.CCY, pos.RAISEMODE, pos.IVSTORIENTATION,
+    pos.OPERATE_MODE, pos.PROFIT_TYPE, pos.SALE_TARGET, pos.CON_PRD_TRAGET, pos.ORD_IDENTIFIED, pos.DIRTYAMTSUM,
+    pos.CLEANAMTSUM, pos.REDEEMAMT, pos.TERMINATIONAMT, pos.ENDAMTSUM_OTH, pos.CUSTOMERAMT, pos.REDEEMINTAMT,
+    pos.TERMINATIONINTAMT, pos.CASHAMT, pos.DURATIONFLAG, pos.VDATE,pos.OPENDURATION,pos.CASH_MANA_CATE, di.INSTITUTION_CODE,
+    pos.PAYAMTSUM,pos.CLOSETERMDAY,info.IS_TRANSFER,info.IS_FHXGCP,info.IS_YLLCCP
+    from CHB_MONTH_PRD_POSITION  pos
+     	left join (      select f.finprod_market_id,di.institution_code
       from fin_product f
       left join DATA_AUTH_NOTIFY_INST di on f.finprod_id=di.business_id and di.model_type = '02' AND DI.DATA_TYPE= 'FINPROD04'
-      WHERE f.p_finprod_id is null) di on di.finprod_market_id = CHB_MONTH_PRD_POSITION.PRODID
+      WHERE f.p_finprod_id is null) di on di.finprod_market_id = pos.PRODID
+      left join  chb_prd_baseinfo  info on  info.prod_id=pos.PRODID
     where startdate = #{startdate,jdbcType=DATE}
     and enddate = #{enddate,jdbcType=DATE}
   </select>
@@ -369,7 +379,7 @@
 	    ,CCY
 	    ,RAISEMODE
 	    ,IVSTORIENTATION
-	    ,bal
+	    ,TERMTYPE
 	    ,OPERATE_MODE
 	    ,PROFIT_TYPE
 	    ,SALE_TARGET
@@ -383,6 +393,8 @@
 	    ,CLEANAMTSUM
 	    ,ENDAMTSUM_OTH
 	    ,CUSTOMERAMT
+	    ,PAYAMTSUM  /**本期兑付金额*/
+	    ,CLOSETERMDAY  /**封闭式产品期限*/
 	)
 	with 
 	/*产品存续状态*/
@@ -406,12 +418,12 @@
 	    select nvl (info.fprod_id,info.prod_id) prodid
 	    ,info.RAISE_TYPE
 	    ,info.Ivstorientation
-	    ,info.bal
+	    ,info.TERMTYPE
 	    ,info.OPERATE_MODE
 	    ,info.OPENTYPEP
         ,info.CASH_MANA_CATE
         /***封闭期在半年以上的定期开放式产品：改成按照期限品种统计； leipeng 20201226***/
-      ,          case when info.operate_mode in ('03') and info.bal in ('06','08','09')
+      ,          case when info.operate_mode in ('03') and info.termtype in ('06','08','09')
                       then '02' else
                       (case when info.SHORT_TERM is null
                           then null
@@ -425,6 +437,9 @@
 	    ,info.CON_PRD_TRAGET
 	    ,pd.DURATIONFLAG
 	    ,info.vdate
+	    ,case when info.operate_mode in ('01','02')
+	    then info.mdate-info.vdate else null
+	    end  closetermday  /**新加字段封闭式产品期限*/
 	    ,nvl(val.prod_value,1) prod_value
       	,nvl(val.CCY,'CNY') prod_value_ccy
 	    from chb_prd_baseinfo info
@@ -439,6 +454,7 @@
 	    on nvl (info.fprod_id,info.prod_id)=val.prod_id
 	     left join pd on info.prod_id=pd.prod_id
 	    where info.FPROD_ID is null
+	    and  info.status in  ('E','M') and  info.ISSUING_STATUS in  ('01','02','03')
 	)
   	 ,rate as(
 	     SELECT
@@ -521,6 +537,11 @@
       when dd.TRADE_TYPE in('03','16','15','17') then 0-amount
       else 0
 	    end ) cleansum /*净募集金额*/
+	  ,sum(
+	  case when  dd.TRADE_TYPE in('03','04','05','15','16')
+	  then  amount else 0
+	  end
+      )  payamtsum   /**本期兑付金额*/
 	from dd
 	where 1=1
 	group by dd.prodid,dd.ccy,dd.ord_identified,prodtype
@@ -680,7 +701,7 @@
 	    ,deal.ccy
 	    ,DECODE(prod.RAISE_TYPE, '01', '01', '02', '02', null)
 	    ,prod.IVSTORIENTATION
-	    ,prod.bal
+	    ,prod.TERMTYPE
 	    ,prod.OPERATE_MODE
 	    ,prod.PROFIT_TYPE    
 	    ,prod.SALETARGET
@@ -723,8 +744,13 @@
         <if test="intamttype !=null and intamttype=='02' ">
 	    ,di.intamt customeramt /*客户收益*/
         </if>
-	from dm deal
-    left join pi prod on deal.prodid=prod.prodid
+        /*add  新加2个字段   by  dongxiangyang  start*/
+        ,deal.payamtsum   /**本期兑付金额*/
+        ,prod.closetermday  /*封闭式产品期限*/
+         /*add  新加2个字段   by  dongxiangyang  end*/
+
+    from  pi prod
+    left join dm deal  on deal.prodid=prod.prodid
     left join pm on deal.prodid=pm.prodid and deal.ccy=pm.ccy 
     and  (deal.ord_identified=pm.ord_identified 
     or (deal.ord_identified is null and pm.ord_identified is null)
@@ -764,7 +790,7 @@
             end )) ccy,
             DECODE(prod.raise_type, '01', '01', '02', '02', null),
             prod.ivstorientation,
-            prod.bal,
+            prod.termtype,
             prod.operate_mode,
             prod.profit_type,
             decode(prod.EXC_FIN_SECTOR,'01','04',prod.SALETARGET) saletarget,
@@ -781,6 +807,8 @@
             else pm.endamtsum 
             end ENDAMTSUM_OTH /*期末余额*/,
             0 customeramt /*客户收益*/
+           ,0  payamtsum   /**本期兑付金额*/
+           ,0  closetermday  /*封闭式产品期限*/
         FROM
            /* chb_prd_baseinfo prod */
            /* left join CHB_MONTH_PRD_POSITION pos1*/

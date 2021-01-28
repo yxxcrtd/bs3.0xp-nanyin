@@ -51,13 +51,31 @@ public class ChbMonthReportPrdConstants {
     public final static String FJRJG="FJRJG";  //    其中：5.2.1 非金融机构
     public final static String YHLJRJG="YHLJRJG";  //          5.2.2 银行类金融机构
     public final static String QTJRJG="QTJRJG";  //          5.2.3 其他金融机构
+    public final static String BXJRJG="BXJRJG";  //          5.2.3 保险业金融机构
+    public final static String XTGS="XTGS";  //          5.2.4 信托公司
+    public final static String ZQGS="ZQGS";  //          5.2.5 证券公司
+    public final static String JJGS="JJGS";  //          5.2.6 基金公司
+    public final static String JRJGZCGLCP="JRJGZCGLCP";  //          5.2.8 金融机构资产管理产品
+
+
+
     public final static String RMB="RMB";  //    6.1 人民币
     public final static String MY="MY";  //    6.2 美元
     public final static String OY="OY";  //    6.3 欧元
     public final static String QTBZ="QTBZ";  //    6.4 其他币种
     public final static String BBLCCP="BBLCCP";  //    7.1 保本理财产品（不含结构性存款）
+    public final static String CMHHZCP="CMHHZCP";  //    7.1 从母行划转的产品
     public final static String JRTYZSLCCP="JRTYZSLCCP";  //    7.2 金融同业专属理财产品
-    
+    public final static String TYZS_YHLJRJG="TYZS_YHLJRJG";  //    7.2.1 银行类金融机构
+    public final static String TYZS_BXJRJG="TYZS_BXJRJG";  //    7.2.2  保险业金融机构
+    public final static String TYZS_XTGS="TYZS_XTGS";  //    7.2.3 信托公司
+    public final static String TYZS_ZQGS="TYZS_ZQGS";  //    7.2.4 证券公司
+    public final static String TYZS_JJGS="TYZS_JJGS";  //    7.2.5 基金公司
+    public final static String TYZS_QTJRJG="TYZS_QTJRJG";  //    7.2.6 其他金融机构
+    public final static String TYZS_JRJGZCGLCP="TYZS_JRJGZCGLCP";  //    7.2.7 金融机构资产管理产品
+    public final static String YLLCCP="YLLCCP";  //    7.3 养老理财产品
+
+
     public final static String SUM_MJFS="SUM_MJFS";      //合计:1.按募集方式划分
     public final static String SUM_TZXZ="SUM_TZXZ";      //合计:2.按投资性质划分
     public final static String SUM_YZMS="SUM_YZMS";      //合计:3.按产品运作模式划分

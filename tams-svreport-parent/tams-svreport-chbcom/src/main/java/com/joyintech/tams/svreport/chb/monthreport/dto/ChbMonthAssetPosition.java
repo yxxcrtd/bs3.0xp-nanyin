@@ -197,6 +197,22 @@ public class ChbMonthAssetPosition extends CommonProductRatingDto implements Clo
      * 商业银行优先股
      */
     private  String  bankSecPrefer;
+
+    /**
+     * 是否合规新产品
+     * @return
+     */
+    private   String   isFhxgcp;
+
+
+    public String getIsFhxgcp() {
+        return isFhxgcp;
+    }
+
+    public void setIsFhxgcp(String isFhxgcp) {
+        this.isFhxgcp = isFhxgcp;
+    }
+
     public String getOldAssetCode() {
 		return oldAssetCode;
 	}
