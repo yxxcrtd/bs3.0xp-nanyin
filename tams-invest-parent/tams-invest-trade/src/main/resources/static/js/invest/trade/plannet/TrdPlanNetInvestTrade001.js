@@ -199,7 +199,9 @@
 //                    Joyin.ajaxJson(basePath + 'invest/trade/plannet/TrdPlanNetInvestTrade001/check', object, function(result1) {
                         Joyin.prompt(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.revoke")),0 ,function(result2){
                             object.cancelRemark = result2;
-                            WorkFlow.doRevokeList(basePath + 'invest/trade/plannet/TrdPlanNetInvestTrade001/revoke', object, "TrdPlanNetInvestTrade001_btn_revoke", "TrdPlanNetInvestTrade003");
+                            WorkFlow.doRevokeList(basePath + 'invest/trade/plannet/TrdPlanNetInvestTrade001/revoke', object, "TrdPlanNetInvestTrade001_btn_revoke", "TrdPlanNetInvestTrade003",function(){
+                                table.reload();//回调事件请求及回调函数
+                            });
                         });
 //                    });
                 });

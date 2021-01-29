@@ -140,7 +140,9 @@
                         result = '无';
                     }
                     object.revokeReason = result;
-                    WorkFlow.doRevoke(basePath + 'invest/period/trdbuyoutduration/TrdRepoBuyoutDuration001/revoke', object, "TrdRepoBuyoutDuration001_btn_revoke", "TrdRepoBuyoutDuration002");
+                    WorkFlow.doRevoke(basePath + 'invest/period/trdbuyoutduration/TrdRepoBuyoutDuration001/revoke', object, "TrdRepoBuyoutDuration001_btn_revoke", "TrdRepoBuyoutDuration002",function(){
+                        table.reload();//回调事件请求及回调函数
+                    });
                 });
             });
         })

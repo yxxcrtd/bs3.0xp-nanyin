@@ -101,7 +101,9 @@
             Joyin.ajaxJson(basePath + 'invest/portfolio/ptlfundallocation/PtlFundAllocation001/check', object, function(result) {//数据验证
                 Joyin.confirm(JoyinUtil.getMessage('COMMON_C_0001',JoyinUtil.getMessage(JoyinUtil.getLabel("SysCommon.revoke"))), function(){
 //                    WorkFlow.doRevokeList(basePath + 'invest/portfolio/ptlfundallocation/PtlFundAllocation001/revoke', object, "PtlFundAllocation001_btn_revoke", "PtlFundAllocation002");//删除
-                	WorkFlow.doDeleteList(basePath + 'invest/portfolio/ptlfundallocation/PtlFundAllocation001/revoke', object, "PtlFundAllocation001_btn_revoke", "PtlFundAllocation002");//删除
+                	WorkFlow.doDeleteList(basePath + 'invest/portfolio/ptlfundallocation/PtlFundAllocation001/revoke', object, "PtlFundAllocation001_btn_revoke", "PtlFundAllocation002",function(){
+                        table.reload();//回调事件请求及回调函数
+                    });
                 });
             });
         })
