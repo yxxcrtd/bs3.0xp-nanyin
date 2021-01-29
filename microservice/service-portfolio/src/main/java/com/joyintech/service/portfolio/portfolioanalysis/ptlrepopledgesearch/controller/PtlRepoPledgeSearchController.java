@@ -2,8 +2,10 @@ package com.joyintech.service.portfolio.portfolioanalysis.ptlrepopledgesearch.co
 
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.service.portfolio.portfolioanalysis.ptlrepopledgesearch.dto.PtlPldgeSummaryDto;
 import com.joyintech.service.portfolio.portfolioanalysis.ptlrepopledgesearch.dto.PtlRepoPledgeSearchDto;
 import com.joyintech.service.portfolio.portfolioanalysis.ptlrepopledgesearch.dto.PtlSubstitutionRepoPledgeDto;
+import com.joyintech.service.portfolio.portfolioanalysis.ptlrepopledgesearch.service.PtlPldgeSummarySerchService;
 import com.joyintech.service.portfolio.portfolioanalysis.ptlrepopledgesearch.service.PtlRepoPledgeDetailService;
 import com.joyintech.service.portfolio.portfolioanalysis.ptlrepopledgesearch.service.PtlRepoPledgeSearchService;
 import com.joyintech.service.portfolio.portfolioanalysis.ptlrepopledgesearch.service.PtlSubstitutionRepoPledgeService;
@@ -37,6 +39,11 @@ public class PtlRepoPledgeSearchController {
     //质押券置换明细查询service
     @Autowired
     private PtlRepoPledgeDetailService ptlRepoPledgeDetailService;
+
+    //质押券汇总查询service
+    @Autowired
+    private PtlPldgeSummarySerchService ptlPldgeSummarySerchService;
+    
     /**
      * 组合代码的联想下拉框事件
      *
@@ -110,5 +117,20 @@ public class PtlRepoPledgeSearchController {
         return ptlRepoPledgeDetailService.getPledgeDetail(page, length, param);
     }
 
+    /**
+     * 债券质押汇总查询画面查询方法
+     *
+     * @param param 画面参数
+     * @param page 页码数
+     * @param length 页面长度
+     * @return 查询结果集
+     * @throws Exception 异常
+     */
+    @PostMapping("ptlPledgeSummaryFindPage/{page}/{length}")
+    public Page<PtlPldgeSummaryDto> ptlPledgeSummaryFindPage(@RequestBody Map<String, Object> param,
+                                                             @PathVariable("page") int page, @PathVariable("length") int length)
+            throws Exception {
+        return ptlPldgeSummarySerchService.pledgeSummaryFindPage(page, length, param);
+    }
 
 }

@@ -42,6 +42,21 @@ $(function() {
             substitutionEndDate : substitutionEndDate
         }
     };
+
+    /**
+     * 获取查询参数
+     */
+    var getPledgeSummarySearchParams = function() {
+        var object = $.serializeToObject('#pledgeSummarySearchForm');
+        if(object.pledgeSummaryPortfolioId){
+            object.portfolioId=object.pledgeSummaryPortfolioId.join(",");
+        }
+        return {
+            portfolioId:object.portfolioId,
+            searchDate:$('#pledgeSummaryTradeDate').val()
+        }
+    };
+    
     /**
      * 定义债券质押数据表格
      */
@@ -69,12 +84,6 @@ $(function() {
             ,{field:'mdate',width:150,title: 'PtlRepoPledgeSearch001.mdate',type:'date'}
             ,{field:'pledgeRatio',width:150,type:'number',title: 'PtlRepoPledgeSearch001.pledgeRatio'}
             ,{field:'pledgeFaceValue',width:150,type:'money',title: 'PtlRepoPledgeSearch001.pledgeFaceValue'}
-            
-            ,{field:'prinAmt',width:150,type:'money',title: 'PtlRepoPledgeSearch001.prinAmt'}
-            ,{field:'canpledgeAmt',width:150,type:'money',title: 'PtlRepoPledgeSearch001.canpledgeAmt'}
-            ,{field:'usedPledgeAmt',width:150,type:'money',title: 'PtlRepoPledgeSearch001.usedPledgeAmt'}
-            ,{field:'remainAmt',width:150,type:'money',title: 'PtlRepoPledgeSearch001.remainAmt'}
-            
             ,{field:'gradeResult',width:150,title: 'PtlRepoPledgeSearch001.gradeResult',sortField:'GRADE_RESULT'}
             ,{field:'registOrgAbbr',width:150,title: 'PtlRepoPledgeSearch001.registOrg',sortField:'REGIST_ORG'}
         ]
@@ -126,6 +135,33 @@ $(function() {
             ,{field:'remark',width:150,title: 'PledgeSubstitution001.remark',sort:false}
         ]
     });
+
+    /**
+     * 定义债券质押汇总查询数据表格
+     */
+    var pledgeSummaryDataTable=$("#pledgeSummaryDataTable").joyintable({
+        ajax: {
+            url: basePath + 'invest/portfolio/portfolioanalysis/ptlrepopledgesearch/PtlRepoPledgeSearch004/pledgeSummaryFindPage',
+            type: 'POST',
+            data: function() {
+                return getPledgeSummarySearchParams();
+            }
+        },
+        cols:[
+            {field:'portfolioId',width:150,title: '组合代码',sort:false}
+            ,{field:'portfolioName',width:220,title: '组合名称',sort:false}
+            ,{field:'secid',width:150,title: '债券代码',sort:false}
+            ,{field:'secName',width:150,title: '债券名称',sort:false}
+            ,{field:'prinAmt',width:150,type:'money',title: '持仓券面',sort:false}
+            ,{field:'canpledgeAmt',width:150,type:'money',title: '可质押券面',sort:false}
+            ,{field:'pledgeAmt',width:150,type:'money',title: '已质押券面',sort:false}
+            ,{field:'remainAmt',width:150,type:'money',title: '剩余券面',sort:false}
+            ,{field:'gradeTypeNamezt',width:110,title: '主体评级',sort:false}
+            ,{field:'gradeTypeNamezx',width:110,title: '债项评级',sort:false}
+            ,{field:'registOrgName',width:280,title: '登记托管机构',sort:false}
+        ]
+    });
+    
     /**
      * 绑定导出事件
      */
@@ -209,6 +245,27 @@ $(function() {
             }
         });
     };
+
+    /**
+     * 绑定导出事件->质押券汇总查询导出
+     */
+    var exportPledgeSummaryExcel = function() {
+        if ($('#pledgeSummaryPortfolioId').val() == null || $('#pledgeSummaryPortfolioId').val() == ''){
+            Joyin.error('请选择组合代码!');
+            return;
+        }
+        if ($('#pledgeSummaryTradeDate').val() == null || $('#pledgeSummaryTradeDate').val() == ''){
+            Joyin.error('请选择交易日期!');
+            return;
+        }
+        var paramObj = getPledgeSummarySearchParams();
+        Joyin.ajaxJson(basePath + 'invest/portfolio/portfolioanalysis/ptlrepopledgesearch/PtlRepoPledgeSearch004/exportCheck', paramObj, function(result) {
+            if (result && result.statuCode == '200') {
+                Joyin.exportExcel(basePath + 'invest/portfolio/portfolioanalysis/ptlrepopledgesearch/PtlRepoPledgeSearch004/export', paramObj);
+            }
+        });
+    };
+    
     /**
      * 画面加载完成
      */
@@ -225,9 +282,25 @@ $(function() {
         $('.condition-area-substitution #PtlRepoPledgeSearch001_btn_search').click(function() {
             substitutionDataTable.load();
         });
+        
+        $('.condition-area-substitution #PtlRepoPledgeSearch001_btn_search').click(function() {
+            if ($('#pledgeSummaryPortfolioId').val() == null || $('#pledgeSummaryPortfolioId').val() == ''){
+                Joyin.error('请选择组合代码!');
+                return;
+            }
+            if ($('#pledgeSummaryTradeDate').val() == null || $('#pledgeSummaryTradeDate').val() == ''){
+                Joyin.error('请选择交易日期!');
+                return;
+            }
+            pledgeSummaryDataTable.load();
+        });
         // 绑定按钮事件
         $('.substitutionSearchDiv #PtlRepoPledgeSearch001_btn_export').click(function() {
             exportSubstitutionExcel();
+        });
+
+        $('.pledgeSummarySearchDiv #PtlRepoPledgeSearch001_btn_export').click(function() {
+            exportPledgeSummaryExcel();
         });
 
     });

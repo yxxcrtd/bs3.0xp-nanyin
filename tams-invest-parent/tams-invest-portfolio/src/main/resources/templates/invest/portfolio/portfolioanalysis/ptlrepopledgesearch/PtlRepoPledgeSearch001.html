@@ -9,15 +9,16 @@
 	<div layout:fragment="content">
 		<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
 			<ul class="layui-tab-title">
-				<li class="layui-this">债券质押查询</li>
-				<li>质押券置换查询</li>x
+				<li class="layui-this">债券质押明细查询</li>
+				<li>质押券置换查询</li>
+				<li>债券质押汇总查询</li>
 			</ul>
 			<div class="layui-tab-content" >
 				<div class="layui-tab-item layui-show">
-	    	    <div class='layui-fluid'>
-			<div class="layui-col-md12 form-button-area"></div>
-			<div class='joyin-form-wrap joyin-filter-form condition-area'>
-				<form class="layui-form" id="searchForm"> 
+					<div class='layui-fluid'>
+						<div class="layui-col-md12 form-button-area"></div>
+						<div class='joyin-form-wrap joyin-filter-form condition-area'>
+							<form class="layui-form" id="searchForm"> 
 					<div class="layui-form-item">
 						<div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
 							<label class="layui-form-label form-lable"
@@ -81,11 +82,11 @@
                         <!--  add by wangyang1 【吉林银行】 增加 产品经理 end -->
 					</div>
 				</form>
-			</div>
-			<div>
-				<table class="layui-table" id="dataTable"></table>
-			</div>
-		</div>
+						</div>
+						<div>
+							<table class="layui-table" id="dataTable"></table>
+						</div>
+					</div>
 				</div>
 				<div class="layui-tab-item">
 					<div class='layui-fluid'>
@@ -155,6 +156,42 @@
 						</div>
 						<div>
 							<table class="layui-table" id="substitutionDataTable"></table>
+						</div>
+					</div>
+				</div>
+				<div class="layui-tab-item">
+					<div class='layui-fluid'>
+						<div class="layui-col-md12 form-button-area pledgeSummarySearchDiv">
+						</div>
+
+						<div class='joyin-form-wrap joyin-filter-form condition-area condition-area-substitution'>
+							<form class="layui-form" id="pledgeSummarySearchForm">
+								<div class="layui-form-item">
+									<div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
+										<label class="layui-form-label form-lable"
+											   data-th-text="#{PledgeSubstitution001.substitutionPortfolioId}">组合代码</label>
+										<div class="layui-input-inline input-inline">
+											<select type="text" id="pledgeSummaryPortfolioId" name="pledgeSummaryPortfolioId" placeholder="请输入内容"
+													data-th-placeholder="#{SysCommon.placeholder}" class="layui-input form-input input-select"
+													data-th-data-url="@{/invest/portfolio/portfolioanalysis/ptlrepopledgesearch/PtlRepoPledgeSearch001/getCounterId}"
+													allowClear="true" multiple="true" formatoption="true" required>
+											</select>
+										</div>
+									</div>
+									<div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
+										<label class="layui-form-label form-lable"
+											   data-th-text="#{PledgeSubstitution001.substitutionTradeDate}">交易日期</label>
+										<div class="layui-input-inline input-inline">
+											<input id="pledgeSummaryTradeDate" name='pledgeSummaryTradeDate'
+												   type="text" class="layui-input form-input input-dateSelect"
+												   data-th-value="${sysDate}" placeholder="请选择日期" required/>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div>
+							<table class="layui-table" id="pledgeSummaryDataTable"></table>
 						</div>
 					</div>
 				</div>

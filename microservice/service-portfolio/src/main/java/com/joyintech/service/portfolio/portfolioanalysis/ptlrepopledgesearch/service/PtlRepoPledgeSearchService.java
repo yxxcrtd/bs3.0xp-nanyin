@@ -6,8 +6,8 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.portfolio.portfolioanalysis.ptlrepopledgesearch.dao.PtlRepoPledgeSearchMapper;
+import com.joyintech.service.portfolio.portfolioanalysis.ptlrepopledgesearch.dto.PtlPldgeSummaryDto;
 import com.joyintech.service.portfolio.portfolioanalysis.ptlrepopledgesearch.dto.PtlRepoPledgeSearchDto;
-import com.joyintech.service.portfolio.portfolioanalysis.ptlrepopledgesearch.dto.PtlSubstitutionRepoPledgeDto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 
@@ -85,6 +85,4 @@ public class PtlRepoPledgeSearchService extends BaseService<PtlRepoPledgeSearchD
         /**add by 张年 20190902  去掉买断式正逆回购 end*/
         return super.queryForPage(page, length, () -> ptlRepoPledgeSearchMapper.select(pageParam));
     }
-
-
 }
