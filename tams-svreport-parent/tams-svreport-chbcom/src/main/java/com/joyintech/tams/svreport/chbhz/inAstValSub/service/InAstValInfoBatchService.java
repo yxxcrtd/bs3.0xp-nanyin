@@ -115,7 +115,7 @@ public class InAstValInfoBatchService extends FileImpService {
         // add by dubaojun 2020-10-12 修复文件名为null异常的问题 end
 
         // add by dubaojun 2020-10-12 配置无法实现，代码实现的check start
-        commonCodeCheckBatchService.codeCheckCommon(listMap, ChbCheckTableInfo.资产估值信息登记表, BUSSINESSKEY);
+        commonCodeCheckBatchService.codeCheckCommon(listMap, ChbCheckTableInfo.资产估值信息登记表SUB, BUSSINESSKEY);
         // add by dubaojun 2020-10-12 配置无法实现，代码实现的check end
         
         //3、正确数据处理

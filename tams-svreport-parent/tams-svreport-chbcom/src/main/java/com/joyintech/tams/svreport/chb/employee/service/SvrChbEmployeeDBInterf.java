@@ -67,7 +67,7 @@ public class SvrChbEmployeeDBInterf extends BaseService{
 
 		// 调用check逻辑
 		logger.debug("从业人员信息登记数据检查开始------检查前数据个数：" + list.size());
-		list = chbCommonCheckService.checkData(list, ChbCheckTableInfo.从业人员登记表);
+		list = chbCommonCheckService.checkData(list, ChbCheckTableInfo.从业人员登记表SUB);
 		logger.debug("从业人员信息登记数据检查结束------检查后数据个数：" + list.size());
 		
 		if(StringUtil.isEmptyList(list)){

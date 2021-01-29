@@ -226,7 +226,7 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 			
 		}
         // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
-		insertdtolist = chbCommonCheckService.checkData(insertdtolist, ChbCheckTableInfo.募集总量登记);
+		insertdtolist = chbCommonCheckService.checkData(insertdtolist, ChbCheckTableInfo.募集总量登记SUB);
         // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
 		if("001".equals(isPsbc)){
 			/**邮储个性化修改 开始**/

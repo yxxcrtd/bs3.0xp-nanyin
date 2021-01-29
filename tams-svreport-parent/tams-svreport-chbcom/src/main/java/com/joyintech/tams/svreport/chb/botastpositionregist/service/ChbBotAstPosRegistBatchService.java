@@ -92,7 +92,7 @@ public class ChbBotAstPosRegistBatchService  extends SvrCBBaseService{
 			chbBotAstPosCBMapper.delete(para);
 			List<ChbBotAstPositionSub> updateOrDelList = chbBotAstPosCBMapper.queryUpdateOrDelList(DateUtil.format(posDate), isChbBtm);
             // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
-            updateOrDelList = chbCommonCheckService.checkData(updateOrDelList, ChbCheckTableInfo.底层资产持仓信息登记表);
+            updateOrDelList = chbCommonCheckService.checkData(updateOrDelList, ChbCheckTableInfo.底层资产持仓信息登记表SUB);
             // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
 			for (ChbBotAstPositionSub sub : updateOrDelList) {
 				sub.setRegistSeqno(IDGenerator.generate(36));
@@ -113,7 +113,7 @@ public class ChbBotAstPosRegistBatchService  extends SvrCBBaseService{
             // modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
             List<ChbBotAstPositionSub> insertDataList = chbBotAstPosCBMapper.queryInsertGenerateList(DateUtil.format(posDate), isChbBtm, ToolsUtil.getCurrentTime(batchTime),
                     chbSubmitDeadline, submitDeadline);
-            insertDataList = chbCommonCheckService.checkData(insertDataList, ChbCheckTableInfo.底层资产持仓信息登记表);
+            insertDataList = chbCommonCheckService.checkData(insertDataList, ChbCheckTableInfo.底层资产持仓信息登记表SUB);
 //            chbBotAstPosCBMapper.queryGenerateListAndInsert(DateUtil.format(posDate), isChbBtm, ToolsUtil.getCurrentTime(batchTime),
 //                    chbSubmitDeadline, submitDeadline);
             for(ChbBotAstPositionSub sub : insertDataList) {

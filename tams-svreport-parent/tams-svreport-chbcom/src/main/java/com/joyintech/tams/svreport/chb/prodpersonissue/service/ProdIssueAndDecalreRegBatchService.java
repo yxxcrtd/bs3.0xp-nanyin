@@ -211,7 +211,7 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
         
         // 删除、插入发行登记
         // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
-        issueInsertDataList = chbCommonCheckService.checkData(issueInsertDataList, ChbCheckTableInfo.个人发行登记表);
+        issueInsertDataList = chbCommonCheckService.checkData(issueInsertDataList, ChbCheckTableInfo.个人发行登记表SUB);
         // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
         dealResultIssueCommitSingle(issueDeleteDataList,issueInsertDataList);
     }
@@ -361,7 +361,7 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
            }
    		}
 		// add by dubaojun 2020-10-14 入库前需要进行数据检验，检验错误的数据不入库 start
-       subInsertDataList = chbCommonCheckService.checkData(subInsertDataList, ChbCheckTableInfo.个人产品申报登记);
+       subInsertDataList = chbCommonCheckService.checkData(subInsertDataList, ChbCheckTableInfo.个人产品申报登记SUB);
        // add by dubaojun 2020-10-14 入库前需要进行数据检验，检验错误的数据不入库 end
        // 删除、插入发行登记
        dealResultSubCommitSingle(subDeleteDataList,subInsertDataList);

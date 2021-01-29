@@ -103,7 +103,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	           }
 	   		}
 			// add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
-    	    dataList = chbCommonCheckService.checkData(dataList, ChbCheckTableInfo.产品存续登记表);
+    	    dataList = chbCommonCheckService.checkData(dataList, ChbCheckTableInfo.产品存续登记表SUB);
             // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
     		
 			insertBatch(dataList);

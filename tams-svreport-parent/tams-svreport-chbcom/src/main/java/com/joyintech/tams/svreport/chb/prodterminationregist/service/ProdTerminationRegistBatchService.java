@@ -237,7 +237,7 @@ public class ProdTerminationRegistBatchService extends SvrDataStatusUtil {
 	   		}
         
         // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
-        insertlist = chbCommonCheckService.checkData(insertlist, ChbCheckTableInfo.终止登记);
+        insertlist = chbCommonCheckService.checkData(insertlist, ChbCheckTableInfo.终止登记SUB);
         // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
         logger.debug("终止登记数据处理--------结束---------");
         int singalCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));

@@ -108,7 +108,7 @@ public class ChbAstValRegistBatchService extends SvrCBBaseService {
 			 List<ChbAstValueSub> updateOrDelList =
 			 chbAstValCBMapper.queryUpdateOrDelList(DateUtil.format(posDate));
 			 // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
-			 updateOrDelList = chbCommonCheckService.checkData(updateOrDelList, ChbCheckTableInfo.资产估值信息登记表);
+			 updateOrDelList = chbCommonCheckService.checkData(updateOrDelList, ChbCheckTableInfo.资产估值信息登记表SUB);
 	         // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
 			 for(ChbAstValueSub sub:updateOrDelList){
 				 sub.setRegistSeqno(IDGenerator.generate(36));
@@ -130,7 +130,7 @@ public class ChbAstValRegistBatchService extends SvrCBBaseService {
 	        // modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
 			List<ChbAstValueSub> insertDataList = chbAstValCBMapper.queryInsertGenerateList(DateUtil.format(posDate), batchTime, chbSubmitDeadline,
                     submitDeadline);
-	        insertDataList = chbCommonCheckService.checkData(insertDataList, ChbCheckTableInfo.资产估值信息登记表);
+	        insertDataList = chbCommonCheckService.checkData(insertDataList, ChbCheckTableInfo.资产估值信息登记表SUB);
 //			chbAstValCBMapper.queryGenerateListAndInsert(DateUtil.format(posDate), batchTime, chbSubmitDeadline,
 //					submitDeadline);
             for(ChbAstValueSub sub : insertDataList) {
