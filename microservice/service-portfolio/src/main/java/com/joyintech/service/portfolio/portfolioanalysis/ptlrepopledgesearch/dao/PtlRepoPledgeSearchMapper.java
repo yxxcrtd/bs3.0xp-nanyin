@@ -1,6 +1,7 @@
 package com.joyintech.service.portfolio.portfolioanalysis.ptlrepopledgesearch.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.service.portfolio.portfolioanalysis.ptlrepopledgesearch.dto.PtlPldgeSummaryDto;
 import com.joyintech.service.portfolio.portfolioanalysis.ptlrepopledgesearch.dto.PtlRepoPledgeSearchDto;
 import com.joyintech.service.portfolio.portfolioanalysis.ptlrepopledgesearch.dto.PtlSubstitutionRepoPledgeDto;
 import com.joyintech.tams.common.base.entity.FinPledgeDisplaceDetail;
@@ -68,5 +69,13 @@ public interface PtlRepoPledgeSearchMapper {
      */
     List<FinPledgeDisplaceDetail>  getPledgeDetail(Map<String, Object> param);
 
-
+    /**
+     * 质押券汇总查询
+     *
+     * @param pageParam 页面参数
+     * @return 结果
+     * @see
+     * @since 1.0
+     */
+    List<PtlPldgeSummaryDto> pledgeSummaryFindPage(Map<String, Object> pageParam);
 }
