@@ -1446,17 +1446,20 @@ public class MonthReportProdService {
 		}
 		/**add  新增列  by  dongxiangyang  start*/
 
-		if(StringUtil.equals(DictCodeList.是否_中债_是.getValue(),pos.getIsFhxgcp())){
-			//合规新产品期末存续只数//（只）
-			result.get(code).calcxgdurationprodcounts(pos.getProdid());
 
+		//合规新产品期末存续只数//（只）
+		if(StringUtil.equals(DictCodeList.是否_中债_是.getValue(),pos.getIsFhxgcp())){
+			result.get(code).calcxgdurationprodcounts(pos.getProdid());
+		}
+		if(StringUtil.equals(DictCodeList.是否_中债_是.getValue(),pos.getIsFhxgcp())){
 			//合规新产品期末余额
 			result.get(code).setXgbalance(result.get(code).getXgbalance().add(pos.getEndamtsumOth()));
 		}
+
          //本期兑付金额
 		result.get(code).setProdpayamount(result.get(code).getProdpayamount().add(pos.getPayamtsum()));
 
-		/**add  新增列  by  dongxiangyang  start*/
+		/**add  新增列  by  dongxiangyang  end*/
 
 	}
 	
