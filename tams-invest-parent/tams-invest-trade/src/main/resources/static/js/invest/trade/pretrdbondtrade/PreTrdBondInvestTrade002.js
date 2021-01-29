@@ -372,7 +372,8 @@
              $("#type9").val(data.type9).trigger('change');
             $("#vdate").val(data.vdate).trigger('change');
             $("#mdate").val(data.mdate).trigger('change');
-            showOrhide();
+            //ZGBSS-146  债券交易预录入新建界面（由指令接收进入），显示字段与需求不符
+            // showOrhide();
 
 
             if (data.tradeMarket) {
