@@ -400,7 +400,7 @@ var table;
                     $("#exchangeAmt").val('').trigger("change");
                     $("#commissionAmt").val('').trigger("change");
                     $("#tradeAmtAndFee").val('').trigger("change");
-                    $("#fpriceAmt").val('').trigger("change");
+                    // $("#fpriceAmt").val('').trigger("change");
                     //$("#exchangeFeesAmtDiv").hide();
                     $tradePlat.updateChosenArr({
                         item: [SHARES_TRADE_PLATFORM_01],
@@ -416,7 +416,7 @@ var table;
                     $("#exchangeAmt").val('').trigger("change");
                     $("#commissionAmt").val('').trigger("change");
                     $("#tradeAmtAndFee").val('').trigger("change");
-                    $("#fpriceAmt").val('').trigger("change");
+                    // $("#fpriceAmt").val('').trigger("change");
                     //$("#exchangeFeesAmtDiv").hide();
                     $tradePlat.updateChosenArr({
                         disabled: true
@@ -431,7 +431,7 @@ var table;
                     $("#exchangeAmt").val('').trigger("change");
                     $("#commissionAmt").val('').trigger("change");
                     $("#tradeAmtAndFee").val('').trigger("change");
-                    $("#fpriceAmt").val('').trigger("change");
+                    // $("#fpriceAmt").val('').trigger("change");
                     //$("#exchangeFeesAmtDiv").show();
                     $tradePlat.updateChosenArr({
                         item: ['02','03','04'],
@@ -447,7 +447,7 @@ var table;
                     $("#exchangeAmt").val('').trigger("change");
                     $("#commissionAmt").val('').trigger("change");
                     $("#tradeAmtAndFee").val('').trigger("change");
-                    $("#fpriceAmt").val('').trigger("change");
+                    // $("#fpriceAmt").val('').trigger("change");
                     //$("#exchangeFeesAmtDiv").hide();
                     $tradePlat.updateChosenArr({
                         disabled: true
@@ -461,7 +461,7 @@ var table;
                     $("#exchangeAmt").val('').trigger("change");
                     $("#commissionAmt").val('').trigger("change");
                     $("#tradeAmtAndFee").val('').trigger("change");
-                    $("#fpriceAmt").val('').trigger("change");
+                    // $("#fpriceAmt").val('').trigger("change");
                     //$("#exchangeFeesAmtDiv").show();
                     $tradePlat.updateChosenArr({
                         item: ['02','05'],
@@ -476,7 +476,7 @@ var table;
                     $("#exchangeAmt").val('').trigger("change");
                     $("#commissionAmt").val('').trigger("change");
                     $("#tradeAmtAndFee").val('').trigger("change");
-                    $("#fpriceAmt").val('').trigger("change");
+                    // $("#fpriceAmt").val('').trigger("change");
                     //$("#exchangeFeesAmtDiv").hide();
                     if (isInit || pageModel == PAGE_MODEL_REFERENCE || pageModel ==PAGE_MODEL_EDIT) {
                         break;
