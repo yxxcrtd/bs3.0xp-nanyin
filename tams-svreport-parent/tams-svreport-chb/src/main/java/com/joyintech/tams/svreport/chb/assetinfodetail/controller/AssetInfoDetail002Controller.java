@@ -135,6 +135,8 @@ public class AssetInfoDetail002Controller extends BaseController {
                 params.put("orgAssetType3", null);
             }else if (StringUtil.isEmpty((String) params.get("orgAssetType4")) || "null".equals(params.get("orgAssetType4"))) {
                 params.put("orgAssetType4", null);
+            }else if (StringUtil.isEmpty((String) params.get("orgAssetType5")) || "null".equals(params.get("orgAssetType5"))) {
+                params.put("orgAssetType5", null);
             }
             list = assetInfoDetailMService.getAssetTye2(params);
         }

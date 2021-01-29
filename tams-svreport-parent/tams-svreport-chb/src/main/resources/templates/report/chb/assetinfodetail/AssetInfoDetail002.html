@@ -75,8 +75,8 @@
 								<div class="layui-input-inline input-inline">
 									<select  id="orgAssetType1" name="orgAssetType1"
 											 data-th-initValue="${entity?.orgAssetType1}"
-											 class="layui-input form-input input-select"
-												 data-th-data-result="${SVR_ORG_ASSET_TYPE1}" required
+											 class="layui-input form-input input-select" childrenIds="orgAssetType2"
+											 data-th-data-result="${SVR_ORG_ASSET_TYPE1}" required
 									></select>
 								</div>
 							</div>
@@ -85,8 +85,9 @@
 								<div class="layui-input-inline input-inline">
 									<select  id="orgAssetType2" name="orgAssetType2"
 											 data-th-initValue="${entity?.orgAssetType2}"
+											 childrenIds="orgAssetType3" parentIds="orgAssetType1"
 											 class="layui-input form-input input-select"
-												 data-th-data-result="${SVR_ORG_ASSET_TYPE2}"
+											 data-th-data-result="${SVR_ORG_ASSET_TYPE2}"
 									></select>
 								</div>
 							</div>
@@ -96,6 +97,7 @@
 								<label class="layui-form-label form-label-wrap">资产三级分类</label>
 								<div class="layui-input-inline input-inline">
 									<select  id="orgAssetType3" name="orgAssetType3"
+											 childrenIds="orgAssetType4" parentIds="orgAssetType2"
 											 data-th-initValue="${entity?.orgAssetType3}"
 											 class="layui-input form-input input-select"
 											 data-th-data-result="${SVR_ORG_ASSET_TYPE3}"
@@ -106,6 +108,8 @@
 								<label class="layui-form-label form-label-wrap">资产四级分类</label>
 								<div class="layui-input-inline input-inline">
 									<select  id="orgAssetType4" name="orgAssetType4"
+											 childrenIds="orgAssetType5"
+											 parentIds="orgAssetType3"
 											 data-th-initValue="${entity?.orgAssetType4}"
 											 class="layui-input form-input input-select"
 											 data-th-data-result="${SVR_ORG_ASSET_TYPE4}"
@@ -115,11 +119,13 @@
 							<div class="form-inline-wrap" >
 								<label class="layui-form-label form-label-wrap">资产五级分类</label>
 								<div class="layui-input-inline input-inline">
-									<select  id="orgAssetType5" name="orgAssetType5"
-											 data-th-initValue="${entity?.orgAssetType5}"
-											 class="layui-input form-input input-select"
-											 data-th-data-result="${SVR_ORG_ASSET_TYPE5}"
-									></select>
+									<div class="layui-input-inline input-inline">
+										<select  id="orgAssetType5" name="orgAssetType5"
+												 parentIds="orgAssetType4"
+												 data-th-initValue="${entity?.orgAssetType5}"
+												 class="layui-input form-input input-select"
+												 data-th-data-result="${SVR_ORG_ASSET_TYPE5}"
+										></select>
 								</div>
 							</div>
 						</div>
@@ -171,12 +177,17 @@
 							<div class="form-inline-wrap" >
 								<label class="layui-form-label form-label-wrap">资产负债二级类别</label>
 								<div class="layui-input-inline input-inline">
-									<select  id="assetType2" name="assetType2"
-											 data-th-initValue="${entity?.assetType2}"
-											 class="layui-input form-input input-select"
-											 data-th-data-result="${SVR_ASSET_TYPE_SECOND_LEVEL}" required
-											 childrenIds="repSectype,SvrBussRepAssetAstBillInfoDto_notstandSecType"
-									></select>
+
+									<select required class="layui-input form-input input-select" placeholder="请输入内容"
+											id="assetType2" name="assetType2"
+											data-th-placeholder="#{SysCommon.placeholder}"
+											parentIds="orgAssetType1,orgAssetType2,orgAssetType3,orgAssetType4,orgAssetType5"
+											data-th-data-url="|@{/chb/assetinfodetail/AssetInfoDetail002/getAssetType2}"
+											data-th-data-effectivefieldsalias='|{"orgAssetType1":"#{orgAssetType1}","orgAssetType2":"#{orgAssetType2}"
+											,"orgAssetType3":"#{orgAssetType3}","orgAssetType4":"#{orgAssetType4}","orgAssetType5":"#{orgAssetType5}"}|'
+											th:initValue='${entity?.assetType2}'
+											childrenIds="repSectype,SvrBussRepAssetAstBillInfoDto_notstandSecType">
+									</select>
 								</div>
 							</div>
 						</div>
