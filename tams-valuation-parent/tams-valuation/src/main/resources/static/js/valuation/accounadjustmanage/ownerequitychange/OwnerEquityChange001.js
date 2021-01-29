@@ -209,6 +209,8 @@ $(function () {
             var booksetGroupArray = $("#booksetGroup").val();
             if(booksetGroupArray){            	
             	var booksetGroup = booksetGroupArray.toString();
+            }else{
+            	var booksetGroup = $("#booksetGroup").val();
             }
             var reportTermType = $("#reportTermType").val();
             if(reportTermType != '' && (booksetId != '' || booksetGroup != '')){

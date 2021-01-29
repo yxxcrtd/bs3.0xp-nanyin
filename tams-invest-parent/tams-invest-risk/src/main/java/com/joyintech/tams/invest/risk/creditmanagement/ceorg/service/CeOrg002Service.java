@@ -170,4 +170,14 @@ public class CeOrg002Service extends CommonExportService<CreditLinesOrgDto>
 				ServiceApplication.RISK_SERVICE_NAME + "/CeOrg002/searchIsUse",map,
 				Boolean.class);
 	}
+
+	public List<CreditLines> selectCreditLines(String creditMstId, String customerId, Date vdate) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("customerId", customerId);
+		map.put("creditMstId", creditMstId);
+		map.put("vdate", DateUtil.format(vdate));
+		return restTemplate.postForList(
+				ServiceApplication.RISK_SERVICE_NAME + "/CeOrg002/selectCreditLines",map,
+				CreditLines.class);
+	}
 }

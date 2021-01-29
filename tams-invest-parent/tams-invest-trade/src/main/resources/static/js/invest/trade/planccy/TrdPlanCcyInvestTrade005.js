@@ -384,6 +384,22 @@ $(function() {
          */
         $('#feeAmtPay').change(function(){
         	var ps = $('#ps').val();
+
+        	if(ps == ps_T05 || ps == ps_T19){
+        	    var feeAmtPay = $('#feeAmtPay').val();
+                var tradeAmt = $('#tradeAmtHid').val();
+                if(Number(feeAmtPay)>= Number(tradeAmt)){
+                    if(ps == ps_T05){
+                        Joyin.error("申购费不能大于交易金额");
+                    }else{
+                        Joyin.error("赎回费不能大于交易金额");
+                    }
+                    $('#feeAmtPay').val('').trigger('change');
+                    return;
+                }
+
+        	}
+
         	if(ps == ps_T05){
 	            var feeAmtPay = $('#feeAmtPay').val();
 	            var tradeAmt = $('#tradeAmtHid').val();

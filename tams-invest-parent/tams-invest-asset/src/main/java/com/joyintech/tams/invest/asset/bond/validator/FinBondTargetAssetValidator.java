@@ -112,7 +112,7 @@ public class FinBondTargetAssetValidator implements BeanValidator{
                 if(finBondTargetAssetService.selectCountByfinprodId(DictCodeList.平安资产类型_债券.getValue() +
                         "_" + dto.getFinprodMarketId())>0){
                     resultList.add(new ValidMessage("finprodMarketId",
-                            getMessage("BUSS_COM_E_0006", getMessage("FinBondTargetAsset002.finprodId"))));
+                            getMessage("BUSS_COM_E_0006", getMessage("FinBondTargetAsset002.finprodId"),"")));
                 }
             }
         }

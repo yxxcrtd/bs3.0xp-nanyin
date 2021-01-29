@@ -148,7 +148,23 @@ public class PreTrdRepoTrade001Service extends CommonExportService<PreTrdRepoTra
         pageList.setRoot(resultList);
         pageList.setRecords(resultList.size());
         return pageList;*/
-    	return selectForPage(selectParam);
+    	//return selectForPage(selectParam);
     	//modify by yujiaping 2020-12-10 BS-1409【 质押式回购交易预录入】未选择点击导出应导出全部，选中点击导出，只导出选中数据end
+
+        Page<PreTrdRepoTrade002Dto> pageList = new Page<>();
+        Page<PreTrdRepoTrade002Dto> resultpage = selectForPage(selectParam);
+
+        List<PreTrdRepoTrade002Dto> resultList = new ArrayList<>();
+        List<PreTrdRepoTrade002Dto> list = resultpage.getRoot();
+        list.forEach(item ->{
+            String parentId = item.getChildId();
+            selectParam.put("parentId",parentId);
+            Page<PreTrdRepoTrade002Dto> pages = this.selectForPage(selectParam);
+            resultList.add(item);
+            resultList.addAll(pages.getRoot());
+        });
+        pageList.setRoot(resultList);
+        pageList.setRecords(resultList.size());
+        return pageList;
     }
 }

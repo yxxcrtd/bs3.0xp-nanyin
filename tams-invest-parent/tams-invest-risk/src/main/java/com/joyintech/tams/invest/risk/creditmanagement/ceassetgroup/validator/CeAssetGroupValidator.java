@@ -5,6 +5,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.entity.CreditLines;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.invest.risk.creditmanagement.ceassetgroup.dto.CreditLinesAstGrpDto;
@@ -47,6 +48,13 @@ public class CeAssetGroupValidator implements BeanValidator{
                         getMessage("BUSS_COM_E_0003", getMessage("CeAssetGroup002.vdate"),getMessage("CeAssetGroup002.mdate"))));
                 }
             }
+
+			if(StringUtil.isNotEmpty(dto.getVdate())){
+				List<CreditLines> list = ceOrg002Service.selectCreditLines(dto.getCreditMstId(),dto.getCustomerId(),dto.getVdate());
+				if(list != null && list.size()>0){
+					resultList.add(new ValidMessage("vdate", "该资产系列在当前确认日已存在授信！"));
+				}
+			}
 //        	if(StringUtil.isNotEmpty(dto.getCustomerId())&&StringUtil.isNotEmpty(dto.getVdate())&&StringUtil.isNotEmpty(dto.getMdate())){
 //	            int vcount= ceOrg002Service.searchRepeatByVmDate(dto.getSeqno(),dto.getCustomerId(), dto.getVdate());
 //	            if(vcount>0){

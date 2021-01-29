@@ -293,7 +293,14 @@ public class PrdOpenPlanUpdateWriter extends BaseWriter<NeedToWriteEntity>{
 					finFloatAccrualScheFirst.setUpdateTime(new Date());
 					//插入更新的回补计提计划
 					if(finFloatAccrualScheFirst.getAccrStrDate().compareTo(accrDateOtherDto.getFirstAnapleroticCycleBegDate()) >= 0) {	
-						finFloatAccrualScheMapper.insert(finFloatAccrualScheFirst);						
+						// 查询无重复
+						FinFloatAccrualScheKey key = new FinFloatAccrualScheKey();
+						key.setCashId(accrDateOtherDto.getCashId());
+						key.setAccrDate(finFloatAccrualScheFirst.getAccrDate());
+						FinFloatAccrualSche fcp = finFloatAccrualScheMapper.selectByPrimaryKey(key);						
+						if(!StringUtil.isNotEmpty(fcp)) {
+							finFloatAccrualScheMapper.insert(finFloatAccrualScheFirst); // 如果为空再插入操作
+						}					
 					}
 					startDate = endDate;
 				}

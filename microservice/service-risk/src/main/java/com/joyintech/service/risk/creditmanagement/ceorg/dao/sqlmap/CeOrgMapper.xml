@@ -262,4 +262,18 @@
 		</if>
 	</select>
 
+    <select id="selectCreditLines" parameterType="Map"	resultType="com.joyintech.tams.common.base.entity.CreditLines" >
+        select * from CREDIT_LINES CL1
+        WHERE 1=1
+        <if test="creditMstId !=null and creditMstId !=''">
+            and CL1.CREDIT_MST_ID = #{creditMstId,jdbcType=VARCHAR}
+        </if>
+        <if test="customerId !=null and customerId !=''">
+            AND CL1.CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+        </if>
+		<if test="vdate !=null and vdate !=''">
+			AND to_char(CL1.VDATE,'yyyy-MM-dd')  = #{vdate, jdbcType=VARCHAR}
+        </if>
+    </select>
+
 </mapper>

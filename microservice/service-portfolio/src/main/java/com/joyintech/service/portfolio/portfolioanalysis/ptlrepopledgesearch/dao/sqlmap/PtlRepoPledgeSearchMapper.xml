@@ -84,8 +84,17 @@ FROM
 	AND J.BACK_LEND_DIRECTION=#{BACK_LEND_DIRECTION_03}
 
 	<if test="sysDate != null and sysDate != ''">
-		AND (H.VDATE &lt;= TO_DATE(#{sysDate},'YYYY-MM-DD') AND TO_DATE(#{sysDate},'YYYY-MM-DD') &lt; H.MDATE)
+		AND (H.VDATE &lt;= TO_DATE(#{sysDate},'YYYY-MM-DD') AND TO_DATE(#{sysDate},'YYYY-MM-DD') &lt;= H.MDATE)
 	</if>
+	AND not exists(
+	select TT.FINPROD_ID from
+	TRD_FIN_PRODUCT_DEAL_TOTAL TT where
+	TT.PS = 'T07'
+	AND TT.FINPROD_ID = H.FINPROD_ID
+	AND TT.TRADE_STATUS = '01'
+	AND TT.IS_CANCEL = 'N'
+	AND TT.TRADE_DATE &lt;= TO_DATE(#{sysDate},'YYYY-MM-DD')
+	)
 	<if test="counterIdList != null and counterIdList.size()>0">
 		<foreach collection="counterIdList" index="index" open="AND (G.PORTFOLIO_ID IN (" item="counterId" separator="," close=")">
 			<if test="(index % 998) == 0">
@@ -172,8 +181,17 @@ FROM
 	AND B.TRADE_STATUS='01'AND B.IS_CANCEL='N' and F.IS_SEC_BOND = 'Y' AND J.BACK_LEND_DIRECTION=#{BACK_LEND_DIRECTION_03}
 
 	<if test="sysDate != null and sysDate != ''">
-		AND (H.VDATE &lt;= TO_DATE(#{sysDate},'YYYY-MM-DD') AND TO_DATE(#{sysDate},'YYYY-MM-DD') &lt; H.MDATE)
+		AND (H.VDATE &lt;= TO_DATE(#{sysDate},'YYYY-MM-DD') AND TO_DATE(#{sysDate},'YYYY-MM-DD') &lt;= H.MDATE)
 	</if>
+	AND not exists(
+		select TT.FINPROD_ID from
+		TRD_FIN_PRODUCT_DEAL_TOTAL TT where
+		TT.PS = 'T07'
+		AND TT.FINPROD_ID = H.FINPROD_ID
+		AND TT.TRADE_STATUS = '01'
+		AND TT.IS_CANCEL = 'N'
+		AND TT.TRADE_DATE &lt;= TO_DATE(#{sysDate},'YYYY-MM-DD')
+	)
 	<if test="counterIdList != null and counterIdList.size()>0">
 		<foreach collection="counterIdList" index="index" open="AND (G.PORTFOLIO_ID IN (" item="counterId" separator="," close=")">
 			<if test="(index % 998) == 0">
@@ -257,8 +275,17 @@ FROM
 	AND B.TRADE_STATUS='01'AND B.IS_CANCEL='N' AND J.BACK_LEND_DIRECTION in (#{BACK_LEND_DIRECTION_05},#{BACK_LEND_DIRECTION_06})
 
 	<if test="sysDate != null and sysDate != ''">
-		AND (H.VDATE &lt;= TO_DATE(#{sysDate},'YYYY-MM-DD') AND TO_DATE(#{sysDate},'YYYY-MM-DD') &lt; H.MDATE)
+		AND (H.VDATE &lt;= TO_DATE(#{sysDate},'YYYY-MM-DD') AND TO_DATE(#{sysDate},'YYYY-MM-DD') &lt;= H.MDATE)
 	</if>
+	AND not exists(
+		select TT.FINPROD_ID from
+		TRD_FIN_PRODUCT_DEAL_TOTAL TT where
+		TT.PS = 'T07'
+		AND TT.FINPROD_ID = H.FINPROD_ID
+		AND TT.TRADE_STATUS = '01'
+		AND TT.IS_CANCEL = 'N'
+		AND TT.TRADE_DATE &lt;= TO_DATE(#{sysDate},'YYYY-MM-DD')
+	)
 	<if test="counterIdList != null and counterIdList.size()>0">
 		<foreach collection="counterIdList" open="AND G.PORTFOLIO_ID IN (" item="counterId" separator="," close=")">
 			#{counterId,jdbcType=VARCHAR}
