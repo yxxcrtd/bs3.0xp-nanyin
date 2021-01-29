@@ -243,7 +243,7 @@ $(function() {
             if (result && result.statuCode == '200') {
                 Joyin.exportExcel(basePath + 'invest/portfolio/portfolioanalysis/ptlrepopledgesearch/PtlRepoPledgeSearch002/export', paramObj);
             }
-        });
+        }); 
     };
 
     /**
