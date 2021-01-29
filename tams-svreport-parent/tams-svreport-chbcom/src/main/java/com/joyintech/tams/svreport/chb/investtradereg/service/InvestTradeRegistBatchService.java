@@ -449,7 +449,7 @@ public class InvestTradeRegistBatchService extends SvrDataStatusUtil {
 		}
 	       
 		// add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
-        insertDataList = chbCommonCheckService.checkData(insertDataList, ChbCheckTableInfo.投资交易表登记);
+        insertDataList = chbCommonCheckService.checkData(insertDataList, ChbCheckTableInfo.投资交易表登记SUB);
         // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
 		insertDB(deleteDataList,insertDataList);
 		// 记录日志批处理结束

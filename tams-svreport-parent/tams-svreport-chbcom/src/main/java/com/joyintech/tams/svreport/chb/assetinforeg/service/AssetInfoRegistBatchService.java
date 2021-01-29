@@ -258,7 +258,7 @@ public class AssetInfoRegistBatchService extends SvrCBBaseService {
 			}
 		}
 		// add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
-		insertDataList = chbCommonCheckService.checkData(insertDataList, ChbCheckTableInfo.资产要素登记表);
+		insertDataList = chbCommonCheckService.checkData(insertDataList, ChbCheckTableInfo.资产要素登记表SUB);
 		// add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
 		// 数据入库
 		insertDB(deleteDataList,insertDataList);
