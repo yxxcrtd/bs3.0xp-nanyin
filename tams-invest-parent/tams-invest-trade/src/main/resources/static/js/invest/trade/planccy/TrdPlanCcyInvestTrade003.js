@@ -183,8 +183,10 @@ $(function() {
             var ps = $('#ps').val();
             var shareAmt = $('#shareAmt').val();
             if(ps == ps_T05){
-                if(unitCprice != null && unitCprice != '' && unitCprice != 0){
-                    $('#shareAmt').val(tradeAmt/unitCprice).trigger('blur');
+                if (pageModel != PAGE_MODEL_REFERENCE) {
+                    if(unitCprice != null && unitCprice != '' && unitCprice != 0){
+                        $('#shareAmt').val(tradeAmt/unitCprice).trigger('blur');
+                    }
                 }
             }else if((ps == ps_T19)){
                 if(unitCprice != null && unitCprice != '' && shareAmt){
@@ -226,7 +228,7 @@ $(function() {
                         $('#shareAmt').val((tradeAmt - feeAmtPay) / unitCprice).trigger('blur');
                         $('#tradeAmtHid2').val(tradeAmt - feeAmtPay);
                     }else {
-                        $('#shareAmt').val(tradeAmt / unitCprice).trigger('blur');
+                        //$('#shareAmt').val(tradeAmt / unitCprice).trigger('blur');
                         $('#tradeAmtHid2').val(tradeAmt);
                     }
                 }else if(!feeAmtPay){
