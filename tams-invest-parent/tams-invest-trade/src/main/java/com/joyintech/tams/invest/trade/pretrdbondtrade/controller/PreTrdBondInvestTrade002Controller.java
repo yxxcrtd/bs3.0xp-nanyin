@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.base.dao.FinProductTypeMapper;
+import com.joyintech.tams.common.base.entity.FinProductType;
+import com.joyintech.tams.common.base.entity.FinProductTypeKey;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.apache.commons.lang.StringUtils;
@@ -90,6 +93,8 @@ public class PreTrdBondInvestTrade002Controller extends BaseController {
     @Autowired(required = false)
     private BaseGetBusinessId baseGetBusinessId;
 
+    @Autowired(required = false)
+    private FinProductTypeMapper  finProductTypeMapper;
 
     @Override
     public String init(Model model) {
@@ -445,6 +450,13 @@ public class PreTrdBondInvestTrade002Controller extends BaseController {
     @RequestMapping("calculateData")
     @ResponseBody
     public AjaxResult calculateData(@RequestBody TrdBondInvestTradeDto inputDto) {
+        FinProductTypeKey key = new FinProductTypeKey();
+        key.setFinprodId(inputDto.getFinprodId());
+        key.setBranch(StringUtil.isNotEmpty(inputDto.getBranch())?inputDto.getBranch():0);
+        FinProductType finProductType = finProductTypeMapper.selectByPrimaryKey(key);
+        inputDto.setType9(finProductType.getType9());
+        inputDto.setType10(finProductType.getType10());
+        inputDto.setType11(finProductType.getType11());
         return trdBondInvestTrade002Service.calculateData(inputDto);
     }
 
