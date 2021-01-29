@@ -561,4 +561,12 @@
            and FIN_OPEN_PLAN.OPEN_DATE_STR = TO_DATE(#{dateStr,jdbcType=VARCHAR},'YYYY-MM-DD')-1 
     </select>
     <!-- ZGBSS-42 非首次新建浮动管理费报价时 生效日选择开放计划开放开始日+1天作为生效日 add by yujiaping 20210118 end -->
+    
+    <select id="getopenMode" resultType="java.lang.String" >                
+           select foru.OPEN_MODE
+          from FIN_CASH_INFO fci 
+          left join FIN_OPEN_RULE foru on foru.CASH_ID = fci.CASH_ID
+          where fci.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and fci.CASH_TYPE_1 = '01' and fci.CASH_TYPE_2 = 'C01'
+    </select>
 </mapper>
