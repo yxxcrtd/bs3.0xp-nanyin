@@ -130,6 +130,16 @@ specialsyspara:
 specialsyspage:
   pagekey: SysInstitution001||SysDepartment001||SysUser001||SysActorRole001||SysActorAssign001||SysBatchProcess001||SysBatchStart001||ValBatchStart001||SystemBatchQuartzConfig001||Workflow001||SysDate001||SysDataDict001||SysParaSet001
 application:
+  chb:
+    #由于一二期直连调用组件包，组件包不能访问缓存，故在此配置同三期一致的路径
+    filepath: /home/tams/svr_nb_prod/sharedata/chb/send/CB/
+    #由于一二期直连调用组件包，组件包不能访问缓存，故在此配置同三期一致的路径
+    download-file-path: /home/tams/svr_nb_prod/sharedata/chb/recive/CB/
+    maxSqlNum: 2000
+    msg-start-time: 0600
+    msg-end-time: 2200
+    reportCbFeedBackHandleCountOneTime: 10000
+    isExceptionWhenSendTimeout: 01
   cache:
     file: classpath:ehcache_app.xml
   remindPage: invest/remindMain  
