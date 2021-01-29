@@ -325,9 +325,39 @@ public class FinProductBuild002Controller extends BaseController {
                                 this.getMessage("BussRepFinProductInfo.isFreeRedem"))));
                     }
                 }
+            }
 
+            if(StringUtil.isNotEmpty(dto.getProfitType()) && StringUtil.isNotEmpty(dto.getOperationType()) && StringUtil.isNotEmpty(repFinProductInfoDto.getRepOperateMode())){
+                if (StringUtil.equals(dto.getOperationType(), DictCodeList.开放类型_开放式.getValue())){
+                    if (StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_收益型.getValue())){
+                        if (!StringUtil.equals(repFinProductInfoDto.getRepOperateMode(), DictCodeListExt2.产品运作模式_开放式非净值型.getValue())){
+                            errorList.add(new ValidMessage("bussRepFinProductInfoDto.operationType",this.getMessage("FIN_PROD_E_0301")));
+                        }
+                    }
+//                    if (StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_净值型.getValue()) ||
+//                            StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_货币型.getValue())){
+//                        if (!StringUtil.equals(repFinProductInfoDto.getRepOperateMode(), DictCodeListExt2.产品运作模式_开放式净值型.getValue())){
+//                            errorList.add(new ValidMessage("bussRepFinProductInfoDto.operationType",this.getMessage("FIN_PROD_E_0301")));
+//                        }
+//                    }
+                }
+                if (StringUtil.equals(dto.getOperationType(), DictCodeList.开放类型_封闭式.getValue())){
+                    if (StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_收益型.getValue())){
+                        if (!StringUtil.equals(repFinProductInfoDto.getRepOperateMode(), DictCodeListExt2.产品运作模式_封闭式非净值型.getValue())){
+                            errorList.add(new ValidMessage("bussRepFinProductInfoDto.operationType",this.getMessage("FIN_PROD_E_0301")));
+                        }
+                    }
+//                    if (StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_净值型.getValue()) ||
+//                            StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_货币型.getValue())){
+//                        if (!StringUtil.equals(repFinProductInfoDto.getRepOperateMode(), DictCodeListExt2.产品运作模式_封闭式净值型.getValue())){
+//                            errorList.add(new ValidMessage("bussRepFinProductInfoDto.operationType",this.getMessage("FIN_PROD_E_0301")));
+//                        }
+//                    }
+                }
             }
         }
+        
+        
         ar.setErrorList(errorList);
         //开放式 的产品 是否设置最短持有期限 和 最短持有期限（天） 必输 yjm start 20190807
         StringBuffer sb = new StringBuffer();

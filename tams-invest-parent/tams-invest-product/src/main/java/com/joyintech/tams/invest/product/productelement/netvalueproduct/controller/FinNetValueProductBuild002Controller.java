@@ -328,6 +328,35 @@ public class FinNetValueProductBuild002Controller extends BaseController {
                 }
 
             }
+
+            if(StringUtil.isNotEmpty(dto.getProfitType()) && StringUtil.isNotEmpty(dto.getOperationType()) && StringUtil.isNotEmpty(repFinProductInfoDto.getRepOperateMode())){
+                if (StringUtil.equals(dto.getOperationType(), DictCodeList.开放类型_开放式.getValue())){
+//                    if (StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_收益型.getValue())){
+//                        if (!StringUtil.equals(repFinProductInfoDto.getRepOperateMode(), DictCodeListExt2.产品运作模式_开放式非净值型.getValue())){
+//                            errorList.add(new ValidMessage("bussRepFinProductInfoDto.operationType",this.getMessage("FIN_PROD_E_0301")));
+//                        }
+//                    }
+                    if (StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_净值型.getValue()) ||
+                            StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_货币型.getValue())){
+                        if (!StringUtil.equals(repFinProductInfoDto.getRepOperateMode(), DictCodeListExt2.产品运作模式_开放式净值型.getValue())){
+                            errorList.add(new ValidMessage("bussRepFinProductInfoDto.operationType",this.getMessage("FIN_PROD_E_0301")));
+                        }
+                    }
+                }
+                if (StringUtil.equals(dto.getOperationType(), DictCodeList.开放类型_封闭式.getValue())){
+//                    if (StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_收益型.getValue())){
+//                        if (!StringUtil.equals(repFinProductInfoDto.getRepOperateMode(), DictCodeListExt2.产品运作模式_封闭式非净值型.getValue())){
+//                            errorList.add(new ValidMessage("bussRepFinProductInfoDto.operationType",this.getMessage("FIN_PROD_E_0301")));
+//                        }
+//                    }
+                    if (StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_净值型.getValue()) ||
+                            StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_货币型.getValue())){
+                        if (!StringUtil.equals(repFinProductInfoDto.getRepOperateMode(), DictCodeListExt2.产品运作模式_封闭式净值型.getValue())){
+                            errorList.add(new ValidMessage("bussRepFinProductInfoDto.operationType",this.getMessage("FIN_PROD_E_0301")));
+                        }
+                    }
+                }
+            }
         }
         
         // add by zhangJin 20191022 start 校验：封闭式产品 浮动管理费 首次计提日 只能 产品到期日 或 产品到期日-1
