@@ -17,8 +17,8 @@
 	union all select '11' reportcode,'CHB_ASSET_INFO' htmlindex from dual
 	union all select '12' reportcode,'CHB_INVEST_TRADE' htmlindex from dual
 	union all select '13' reportcode,'CHB_BOT_AST_POS' htmlindex from dual
-	union all select '14' reportcode,'CHB_ASSETS_BASIS_DATA' htmlindex from dual
-	union all select '15' reportcode,'BOK_BALANCE' htmlindex from dual
+	union all select '14' reportcode,'CHB_ASSET_INDEX' htmlindex from dual
+	union all select '15' reportcode,'CHB_SUBJECT_BALANCE' htmlindex from dual
 	union all select '16' reportcode,'MST_BOND_CREDIT_RATING' htmlindex from dual
 	union all select '17' reportcode,'MST_CUSTOMER_INFO' htmlindex from dual
 	union all select '18' reportcode,'CHB_CPROD_BALANCE' htmlindex from dual

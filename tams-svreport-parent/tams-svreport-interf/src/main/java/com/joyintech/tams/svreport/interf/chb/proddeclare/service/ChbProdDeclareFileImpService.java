@@ -105,7 +105,7 @@ public class ChbProdDeclareFileImpService extends FileImpService{
 				insertDataMerge(list);
 			} else {
 				
-				createDataFile(tmpPath + "/CHB_PRD_DECLARE_INFO/CHB_PRD_DECLARE_INFO", list, table.getColumns());
+				createDataFile(tmpPath + "/CHB_PRD_DECLARE/CHB_PRD_DECLARE", list, table.getColumns());
 			}
 		}
 		return CollectionUtils.isNotEmpty(list);
@@ -279,9 +279,9 @@ public class ChbProdDeclareFileImpService extends FileImpService{
 		// 解析成功，对数据list进行处理
 		if (!CollectionUtils.isEmpty(dataList)) {
 //			List<Map<String, String>>  listA =
-			checkDataCodeCheck(dataList, file.getFilename(), ChbCheckTableInfo.个人产品申报登记INFO);
-//			checkData(dataList, file.getFilename(), InterfDefine.产品申报信息接口数据.getCode(),
-//							InterfDefine.产品申报信息接口数据.getCode(),null, DUPLICATIED_LIST);
+//			checkDataCodeCheck(dataList, file.getFilename(), ChbCheckTableInfo.个人产品申报登记INFO);
+			checkData(dataList, file.getFilename(), InterfDefine.产品申报信息接口数据.getCode(),
+							InterfDefine.产品申报信息接口数据.getCode(),null, DUPLICATIED_LIST);
 //			dataList.addAll(listA);
 			if(CollectionUtils.isEmpty(dataList)){
 				return rs;

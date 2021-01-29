@@ -74,46 +74,46 @@ public class CommonCodeCheckBatchService {
         for (int i = list.size() - 1; i >= 0; i--){
             Map<String, String> map=list.get(i);
             switch (tableInfo) {
-                case 从业人员登记表:
+                case 从业人员登记表SUB:
                     checkEmployeeSubInfo(map);
                     break;
-                case 资产要素登记表:
+                case 资产要素登记表SUB:
                 case 资产要素登记表INFO:
                 case 资产要素登记TMP:
                     checkAssetSubInfo(map);
                     break;
-                case 个人发行登记表:
+                case 个人发行登记表SUB:
                 case 个人发行登记表INFO:
                 case 个人发行登记TMP:
                     checkPrdoIssue(map, prodRegistCodeList);
                     break;
-                case 募集总量登记:
+                case 募集总量登记SUB:
                 case 募集总量登记TMP:
                     checkProdRaisetot(map, prodRegistCodeList);
                     break;
-                case 底层资产持仓信息登记表:
+                case 底层资产持仓信息登记表SUB:
                 case 底层资产持仓信息登记INFO:
                 case 底层资产持仓信息登记TMP:
                     checkBotAstPos(map, newDataList);
                     break;
-                case 投资交易表登记:
+                case 投资交易表登记SUB:
                 case 投资交易表登记TMP:
                     checkInvestTradeInfo(map, prodRegistCodeMap);
                     break;
-                case 资产估值信息登记表:
+                case 资产估值信息登记表SUB:
                 case 资产估值信息登记TMP:
                     checkAstValInfo(map, list);
                     break;
-                case 产品存续登记表:
+                case 产品存续登记表SUB:
                 case 产品存续登记TMP:
                     checkProdDeal(map, list);
                     break;
-                case 个人产品申报登记:
+                case 个人产品申报登记SUB:
                 case 个人产品申报登记INFO:
                 case 个人产品申报登记TMP:
                     checkPrdoDeclare(map,list);
                     break;
-                case 终止登记:
+                case 终止登记SUB:
                 case 终止登记TMP:
                     checkProdEndSubTmp(map,prodRegistCodeList);
                     break;

@@ -12,16 +12,16 @@ import com.joyintech.framework.util.StringUtil;
  * @since 2020-10-13
  */
 public enum ChbCheckTableInfo {
-	从业人员登记表("CHB_EMPLOYEE_INFO_SUB", true, "", new String[] {"EMPLOYEE_TYPE","IDENTIFY_NUMBER"}),
-    个人发行登记表("CHB_PRD_ISSUE_SUB", true, "PROD_ID", new String[] {"PROD_ID"}),
-    募集总量登记("CHB_PRD_RAISETOT_SUB", true, "PROD_ID", new String[] {"PROD_ID"}),
-    投资交易表登记("CHB_INVEST_TRADE_SUB", true, null, new String[] {"PROD_ID", "TRADE_CODE", "ASSET_CODE", "CUR_ASSET_TYPE"}),
-    资产要素登记表("CHB_ASSET_INFO_SUB", true, "ASSET_CODE", new String[] {"ASSET_CODE"}),
-    资产估值信息登记表("CHB_AST_VAL_SUB", true, null, new String[] {"ASSET_CODE", "VAL_DATE"}),
-    个人产品申报登记("CHB_PRD_DECLARE_SUB", true, "PROD_INS_ID", new String[] {"PROD_INS_ID"}),
-    产品存续登记表("CHB_PRD_DEAL_SUB", true, null, new String[] {"PROD_ID", "MDATE"}),
-    底层资产持仓信息登记表("CHB_BOT_AST_POS_SUB", true, null, new String[] {"POS_DATE", "ASSET_CODE", "PLAN_ASSET_ID"}),
-    终止登记("CHB_PRD_END_SUB", true, "PROD_ID", new String[] {"PROD_ID"}),
+	从业人员登记表SUB("CHB_EMPLOYEE_INFO_SUB", true, "", new String[] {"EMPLOYEE_TYPE","IDENTIFY_NUMBER"}),
+    个人发行登记表SUB("CHB_PRD_ISSUE_SUB", true, "PROD_ID", new String[] {"PROD_ID"}),
+    募集总量登记SUB("CHB_PRD_RAISETOT_SUB", true, "PROD_ID", new String[] {"PROD_ID"}),
+    投资交易表登记SUB("CHB_INVEST_TRADE_SUB", true, null, new String[] {"PROD_ID", "TRADE_CODE", "ASSET_CODE", "CUR_ASSET_TYPE"}),
+    资产要素登记表SUB("CHB_ASSET_INFO_SUB", true, "ASSET_CODE", new String[] {"ASSET_CODE"}),
+    资产估值信息登记表SUB("CHB_AST_VAL_SUB", true, null, new String[] {"ASSET_CODE", "VAL_DATE"}),
+    个人产品申报登记SUB("CHB_PRD_DECLARE_SUB", true, "PROD_INS_ID", new String[] {"PROD_INS_ID"}),
+    产品存续登记表SUB("CHB_PRD_DEAL_SUB", true, null, new String[] {"PROD_ID", "MDATE"}),
+    底层资产持仓信息登记表SUB("CHB_BOT_AST_POS_SUB", true, null, new String[] {"POS_DATE", "ASSET_CODE", "PLAN_ASSET_ID"}),
+    终止登记SUB("CHB_PRD_END_SUB", true, "PROD_ID", new String[] {"PROD_ID"}),
 
     /*文件接入*/
     资产要素登记表INFO("CHB_ASSET_INFO", true, "ASSET_CODE", new String[] {"ASSET_CODE"}),
