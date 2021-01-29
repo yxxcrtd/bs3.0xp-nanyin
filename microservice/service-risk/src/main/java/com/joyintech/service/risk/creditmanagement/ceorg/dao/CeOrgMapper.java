@@ -65,4 +65,6 @@ public interface CeOrgMapper {
     List<CreditLinesDeal> selectCreditLinesDeal(Map<String, Object> param);
 
     BigDecimal selectCreditLinesHap(Map<String, Object> param);
+
+    List<CreditLines> selectCreditLines(Map<String, Object> param);
 }

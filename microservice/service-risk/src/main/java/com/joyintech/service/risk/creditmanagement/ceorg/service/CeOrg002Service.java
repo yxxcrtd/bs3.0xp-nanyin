@@ -269,4 +269,8 @@ public class CeOrg002Service extends BaseService<CreditMstInfoDto> {
 		}
 	}
 
+	public List<CreditLines> selectCreditLines(Map<String, Object> param){
+		return ceOrgMapper.selectCreditLines(param);
+	}
+
 }

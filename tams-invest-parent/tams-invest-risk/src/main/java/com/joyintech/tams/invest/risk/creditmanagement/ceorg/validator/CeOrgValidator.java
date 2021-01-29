@@ -54,6 +54,13 @@ public class CeOrgValidator implements BeanValidator{
                         getMessage("BUSS_COM_E_0003", getMessage("CeOrg002.vdate"),getMessage("CeOrg002.mdate"))));
                 }
             }
+
+			if(StringUtil.isNotEmpty(dto.getVdate())){
+				List<CreditLines> list = ceOrg002Service.selectCreditLines(dto.getCreditMstId(),dto.getCustomerId(),dto.getVdate());
+				if(list != null && list.size()>0){
+					resultList.add(new ValidMessage("vdate", "该机构在当前确认日已存在授信！"));
+				}
+			}
         	if(StringUtil.isNotEmpty(dto.getCustomerId())&&StringUtil.isNotEmpty(dto.getVdate())&&StringUtil.isNotEmpty(dto.getMdate())){
 	           /* int vcount= ceOrg002Service.searchRepeatByVmDate(dto.getSeqno(),dto.getCustomerId(), dto.getVdate());
 	            if(vcount>0){

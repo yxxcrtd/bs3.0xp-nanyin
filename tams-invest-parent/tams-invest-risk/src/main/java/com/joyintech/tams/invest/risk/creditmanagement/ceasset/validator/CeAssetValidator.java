@@ -6,6 +6,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.entity.CreditLines;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
@@ -50,6 +51,13 @@ public class CeAssetValidator implements BeanValidator{
                              getMessage("BUSS_COM_E_0038", getMessage("CeAsset002.assetName"))));
         		}
         	}
+
+			if(StringUtil.isNotEmpty(dto.getVdate())){
+				List<CreditLines> list = ceOrg002Service.selectCreditLines(dto.getCreditMstId(),dto.getCustomerId(),dto.getVdate());
+				if(list != null && list.size()>0){
+					resultList.add(new ValidMessage("vdate", "该资产在当前确认日已存在授信！"));
+				}
+			}
         	/*else{
         		if(!StringUtil.isNotEmpty(dto.getPflshName())){
        			 resultList.add(new ValidMessage("pflshName",

@@ -13,6 +13,7 @@ package com.joyintech.service.risk.creditmanagement.ceorg.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.CreditLines;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -167,6 +168,11 @@ public class CeOrg002Controller {
 	@PostMapping("/searchIsUse")
 	public Boolean searchIsUse(@RequestBody Map<String, Object> param) {
 		return ceOrg002Service.searchIsUse(param);
+	}
+
+	@PostMapping("/selectCreditLines")
+	public List<CreditLines> selectCreditLines(@RequestBody Map<String, Object> param){
+		return ceOrg002Service.selectCreditLines(param);
 	}
 
 }
