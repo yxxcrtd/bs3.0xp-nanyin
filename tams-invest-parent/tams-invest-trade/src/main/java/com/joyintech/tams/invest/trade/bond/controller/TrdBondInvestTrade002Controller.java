@@ -731,48 +731,7 @@ public class TrdBondInvestTrade002Controller extends BaseController {
     		trdBondInvestTrade002Service.fastSave(dto);
     		return new AjaxResult("成功");
     	}
-    	List<TrdBondInvestTradeDto> dtoList = new ArrayList<>();
-    	List<BussTrdTransfenpeiDto> fenpeiList = dto.getBussTrdTransfenpeiDto();
-    	List<BussTrdTransferOrderDto> orderList = dto.getBussTrdTransferOrder();
-    	for(BussTrdTransferOrderDto bussTrdTransferOrder : orderList) {
-    		
-    		TrdBondInvestTradeDto tempDto = new TrdBondInvestTradeDto();
-    		BeanUtil.copyProperties(tempDto, dto);
-    		List<BussTrdTransferOrderDto> tmpOrderList = new ArrayList<BussTrdTransferOrderDto>();
-    		if(fenpeiList != null && fenpeiList.size()>0){
-    			for(BussTrdTransfenpeiDto fenpei : fenpeiList) {
-    				if (StringUtils.equals(bussTrdTransferOrder.getPortfolioId(), fenpei.getPortfolioId())
-    						&& bussTrdTransferOrder.getSettleAmt().equals(fenpei.getFpriceAmt())) {
-    					tmpOrderList.add(bussTrdTransferOrder);
-    					
-    					tempDto.setPortfolioId(fenpei.getPortfolioId());
-    					tempDto.setTradeAmt(fenpei.getTradeAmt());
-    					tempDto.setCpriceAmt(fenpei.getCpriceAmt());
-    					tempDto.setFpriceAmt(fenpei.getFpriceAmt());
-    					tempDto.setBussTrdTransferOrder(tmpOrderList);
-
-    					if (baseGetBusinessId != null) {
-                            BussinessCodeParameter codeParameter = getBussinessCodeParameter(tempDto.getPs());
-                            tempDto.setTotleTradeId(baseGetBusinessId.buildBussinessCode(codeParameter));
-    					}
-    					else {
-    						tempDto.setTotleTradeId(IDGenerator.generate());
-    					}
-    					dtoList.add(tempDto);
-    				}
-        		}
-    		}else{
-    			if (baseGetBusinessId != null) {
-                    BussinessCodeParameter codeParameter = getBussinessCodeParameter(tempDto.getPs());
-                    tempDto.setTotleTradeId(baseGetBusinessId.buildBussinessCode(codeParameter));
-				}
-				else {
-					tempDto.setTotleTradeId(IDGenerator.generate());
-				}
-    			dtoList.add(tempDto);
-    		}
-    		
-    	}
+    	List<TrdBondInvestTradeDto> dtoList = trdBondInvestTrade002Service.getDtoList(dto);
         //----------add by jjpei 20200114 核风险版本 start----------
         if(dto.getOperateType().equals(BussinessConstant.SUBMIT)&&CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)){
             for (TrdBondInvestTradeDto bondDto : dtoList) {
