@@ -176,7 +176,9 @@ $(function() {
 		    
             var booksetId = $("#booksetId").val();
             var booksetGroupArray = $("#booksetGroup").val();
-            var booksetGroup = booksetGroupArray.toString();
+            if(booksetGroupArray){            	
+            	var booksetGroup = booksetGroupArray.toString();
+            }
             var reportTermType = $("#reportTermType").val();
             if(reportTermType != '' && (booksetId != '' || booksetGroup != '')){
                 Joyin.ajax(

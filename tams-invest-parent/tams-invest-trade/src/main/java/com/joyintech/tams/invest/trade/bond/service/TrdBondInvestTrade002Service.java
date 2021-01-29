@@ -42,6 +42,7 @@ import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
 import com.joyintech.tams.component.business.trade.BussTrdAvailableCashQueryService;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
+import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
 import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -79,12 +80,16 @@ import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeDto;
 import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.entity.FlowEntity;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -111,6 +116,7 @@ import static com.joyintech.tams.invest.common.trade.AllTradeCommonUtil.copyFile
 @Service
 public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTradeDto> implements BaseProcessService<TrdBondInvestTradeDto> {
 
+	private Logger logger = LoggerFactory.getLogger(getClass());
     /**
      * BussTrdTransferOrderService
      */
@@ -1176,8 +1182,46 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
         if (!StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
             // 先删除流程中数据
             this.deleteBussFlowData(entity.getWorkflowId());
-
-            this.setEntity(Arrays.asList(entity));
+            //流程中修改保存不会进入controller的save方法，会导致丢失数据
+        	if(StringUtil.isEmpty(entity.getTotleTradeId())) {
+        		try {
+					List<TrdBondInvestTradeDto> dtoList = getDtoList(entity);
+					setEntity(dtoList);
+					if(dtoList.size()>0) {
+						BeanUtil.copyPropertiesIgnoreNull(entity, dtoList.remove(0));
+					}
+					//存在多条，需要新建工作流
+					if(dtoList.size()>0) {
+				        ProcessParameter<TrdBondInvestTradeDto> processParameter = new ProcessParameter<>();
+				        WorkFlowParameter<TrdBondInvestTradeDto> workFlowParameter = new WorkFlowParameter<>();
+				        processParameter.setWorkFlowParameter(workFlowParameter);
+				        processParameter.setPageId("TrdBondInvestTrade002");
+				        if (StringUtil.equals(entity.getPageModel(), com.joyintech.tams.valuation.common.constants.GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
+				            processParameter.setOperationType(OperationType.NEW);
+				        }
+				        else {
+				            processParameter.setOperationType(OperationType.MODIFY);
+				        }
+				        workFlowParameter.setPageId("TrdBondInvestTrade002");
+				        //只考虑save 正常情形下submit不会到这里
+				        workFlowParameter.setElementId("TrdBondInvestTrade002_btn_save");
+				        workFlowParameter.setBusinessCode((dto) -> dto.getTotleTradeId());
+				        workFlowParameter.setBusinessType(DictCodeList.共通业务类型_债券类资产交易.getValue());
+				        workFlowParameter.setComment((dto) -> WorkFlowUtil.concatComment(
+				            getMessage("TrdBondInvestTrade002.tradeId") + com.joyintech.tams.valuation.common.constants.GlobalConstant.COLON + dto.getTotleTradeId(),
+				            getMessage("TrdBondInvestTrade002.finprodName") + com.joyintech.tams.valuation.common.constants.GlobalConstant.COLON + dto.getFinprodName(),
+				            getMessage("TrdBondInvestTrade002.tradeDate") + com.joyintech.tams.valuation.common.constants.GlobalConstant.COLON + DateUtil.format(dto.getTradeDate())));
+				        this.start(processParameter, dtoList.toArray(new TrdBondInvestTradeDto[]{}));
+					}
+					
+				} catch (Exception e) {
+					logger.error("解析dto出错："+e);
+					e.printStackTrace();
+				}
+        	}
+        	else {
+        		this.setEntity(Arrays.asList(entity));
+        	}
 
             setWorkflowId(entity);
 
@@ -1200,6 +1244,52 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 e.printStackTrace();
             }
         }
+    }
+
+    public List<TrdBondInvestTradeDto> getDtoList(TrdBondInvestTradeDto dto) throws Exception{
+    	List<TrdBondInvestTradeDto> dtoList = new ArrayList<>();
+    	List<BussTrdTransfenpeiDto> fenpeiList = dto.getBussTrdTransfenpeiDto();
+    	List<BussTrdTransferOrderDto> orderList = dto.getBussTrdTransferOrder();
+    	for(BussTrdTransferOrderDto bussTrdTransferOrder : orderList) {
+    		
+    		TrdBondInvestTradeDto tempDto = new TrdBondInvestTradeDto();
+    		BeanUtil.copyProperties(tempDto, dto);
+    		List<BussTrdTransferOrderDto> tmpOrderList = new ArrayList<BussTrdTransferOrderDto>();
+    		if(fenpeiList != null && fenpeiList.size()>0){
+    			for(BussTrdTransfenpeiDto fenpei : fenpeiList) {
+    				if (StringUtils.equals(bussTrdTransferOrder.getPortfolioId(), fenpei.getPortfolioId())
+    						&& bussTrdTransferOrder.getSettleAmt().equals(fenpei.getFpriceAmt())) {
+    					tmpOrderList.add(bussTrdTransferOrder);
+    					
+    					tempDto.setPortfolioId(fenpei.getPortfolioId());
+    					tempDto.setTradeAmt(fenpei.getTradeAmt());
+    					tempDto.setCpriceAmt(fenpei.getCpriceAmt());
+    					tempDto.setFpriceAmt(fenpei.getFpriceAmt());
+    					tempDto.setBussTrdTransferOrder(tmpOrderList);
+
+    					if (baseGetBusinessId != null) {
+                            BussinessCodeParameter codeParameter = getBussinessCodeParameter(tempDto.getPs());
+                            tempDto.setTotleTradeId(baseGetBusinessId.buildBussinessCode(codeParameter));
+    					}
+    					else {
+    						tempDto.setTotleTradeId(IDGenerator.generate());
+    					}
+    					dtoList.add(tempDto);
+    				}
+        		}
+    		}else{
+    			if (baseGetBusinessId != null) {
+                    BussinessCodeParameter codeParameter = getBussinessCodeParameter(tempDto.getPs());
+                    tempDto.setTotleTradeId(baseGetBusinessId.buildBussinessCode(codeParameter));
+				}
+				else {
+					tempDto.setTotleTradeId(IDGenerator.generate());
+				}
+    			dtoList.add(tempDto);
+    		}
+    		
+    	}
+    	return dtoList;
     }
 
     /**
