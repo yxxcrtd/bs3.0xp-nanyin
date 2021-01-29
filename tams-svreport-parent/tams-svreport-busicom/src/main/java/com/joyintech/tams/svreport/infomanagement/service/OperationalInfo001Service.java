@@ -2195,7 +2195,10 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
                 DataCheckService.checkDataList(dataMapList,listRules, false);
 
                 // add by zhangliang 20210127 添加代码校验 start
-				commonCodeCheckBatchService.codeCheckCommonOnly(dataMapList, ChbCheckTableInfo.genChbCheckTableInfo(tableId));
+				ChbCheckTableInfo chbCheckTableInfo = ChbCheckTableInfo.genChbCheckTableInfo(tableId);
+				if (chbCheckTableInfo != null){
+					commonCodeCheckBatchService.codeCheckCommonOnly(dataMapList, chbCheckTableInfo);
+				}
 				// add by zhangliang 20210127 添加代码校验 end
 //                listError.forEach(errorMap -> {
 //                	errorLists.add(errorMap.get("ERRMSG"));
