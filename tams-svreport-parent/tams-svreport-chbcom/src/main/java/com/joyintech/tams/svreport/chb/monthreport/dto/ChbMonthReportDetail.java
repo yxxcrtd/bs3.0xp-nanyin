@@ -366,15 +366,15 @@ public class ChbMonthReportDetail {
     
     public int calcDurationprodcounts(String prodid) {
         durationProdSet.add(prodid);
-        xgdurationprodcounts = durationProdSet.size();
-        return xgdurationprodcounts.intValue();
+        durationprodcounts = durationProdSet.size();
+        return durationprodcounts.intValue();
     }
 
 
     public int calcxgdurationprodcounts(String prodid) {
         xgdurationprodcountsSet.add(prodid);
-        durationprodcounts = xgdurationprodcountsSet.size();
-        return durationprodcounts.intValue();
+        xgdurationprodcounts  = xgdurationprodcountsSet.size();
+        return xgdurationprodcounts.intValue();
     }
 
     public Set<String> getProdSet() {
