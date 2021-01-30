@@ -73,13 +73,16 @@
 	and
 	info.P_FINPROD_ID IS NULL
 	and nvl(val.UPDATE_TIME,val.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP} -->
-	<!-- 净值型产品单位净值取估值核算系统 -->
-	select DECODE(info.P_FINPROD_ID,NULL,NULL,info.FINPROD_MARKET_ID) AS FPROD_ID,
-	DECODE(info.P_FINPROD_ID,NULL,info.FINPROD_MARKET_ID,info.FINPROD_ID) AS PROD_ID,
-	val.VAL_DATE as CHANGE_DATE,NET_UNIT_VALUE as PROD_VALUE,'01' as CHANG_TYPE,val.TOTAL_NET_VALUE as unitValueTotal,
-	nvl(val.UPDATE_TIME,val.CREATE_TIME) updatetime
-	from bok_valbal_table_status val
-	LEFT JOIN FIN_PRODUCT info
+	  <!-- 净值型产品单位净值取估值核算系统 -->
+	  select DECODE(info.P_FINPROD_ID,NULL,NULL,info.FINPROD_MARKET_ID) AS FPROD_ID,
+	  DECODE(info.P_FINPROD_ID,NULL,info.FINPROD_MARKET_ID,info.FINPROD_ID) AS PROD_ID,
+	  val.VAL_DATE as CHANGE_DATE,
+	  nvl(ad.net_unit_value,val.NET_UNIT_VALUE) as PROD_VALUE,'01' as CHANG_TYPE,
+	  nvl(ad.net_unit_value,val.TOTAL_NET_VALUE) as unitValueTotal,
+	  nvl(val.UPDATE_TIME,val.CREATE_TIME) updatetime
+	  from bok_valbal_table_status val
+	  LEFT JOIN BOK_VALBAL_TABLE_STATUS_ADD ad ON VAL.FINPROD_ID = ad.FINPROD_ID and val.VAL_DATE = ad.VAL_DATE
+	  LEFT JOIN FIN_PRODUCT info
 	on info.FINPROD_ID = val.FINPROD_ID
 	where info.FINPROD_TYPE2 = 'F16'
 	AND info.PROFIT_TYPE = '01'
@@ -100,7 +103,7 @@
 		and (val.NOTICE_STATUS is null or   val.NOTICE_STATUS != '1') 
         and (val.CONFIRM_STATUS is null or   val.CONFIRM_STATUS != '1')  
 	</if>
-	and nvl(val.UPDATE_TIME,val.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
+	  and nvl(ad.UPDATE_TIME,val.UPDATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
 	) a
 	where 1=1
 	<if test="prodidList!=null and prodidList.size>0">

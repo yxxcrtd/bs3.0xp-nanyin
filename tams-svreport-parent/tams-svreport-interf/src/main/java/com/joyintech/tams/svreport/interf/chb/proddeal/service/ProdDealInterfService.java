@@ -702,27 +702,16 @@ public class ProdDealInterfService extends BaseService{
 				if(TRADE_TYPE_SHLXQR.equals(dl.getTradeType())
 					|| TRADE_TYPE_DQFH.equals(dl.getTradeType())
 					|| TRADE_TYPE_FX.equals(dl.getTradeType())){
-					
-					tmp.setIntAmt((null == tmp.getIntAmt() ? BigDecimal.ZERO : tmp.getIntAmt())
-									.add(null == dl.getIntAmt()?BigDecimal.ZERO:dl.getIntAmt()));
 
-//					if(!"R".equals(dl.getBusiType())){
-						tmp.setTradePrince((null == tmp.getTradePrince() ? BigDecimal.ZERO : tmp.getTradePrince())
-										.add(null == dl.getIntAmt()?BigDecimal.ZERO:dl.getIntAmt()));
-//					}
-					
 				}else{
-//					if(!"R".equals(dl.getBusiType())){
-						tmp.setTradePrince((null == tmp.getIntAmt() ? BigDecimal.ZERO : tmp.getIntAmt())
-										.add(null == dl.getTradePrince()?BigDecimal.ZERO:dl.getTradePrince()));
-//					}else{
-//						tmp.setTradePrince(null == dl.getTradePrince()?BigDecimal.ZERO:dl.getTradePrince());
-//					}
 					tmp.setTradeType(dl.getTradeType());
-					// 修复产品交易接入到期交易时上游俩笔数据合并成一笔数据，利息数据先接入结果不对 的bug add by weiyuqiang 2019-04-25 start
-	                tmp.setTradeQty(dl.getTradeQty());
-                    // 修复产品交易接入到期交易时上游俩笔数据合并成一笔数据，利息数据先接入结果不对 的bug add by weiyuqiang 2019-04-25 end
 				}
+				tmp.setIntAmt((null == tmp.getIntAmt() ? BigDecimal.ZERO : tmp.getIntAmt())
+						.add(null == dl.getIntAmt()?BigDecimal.ZERO:dl.getIntAmt()));
+				tmp.setTradePrince((null == tmp.getTradePrince() ? BigDecimal.ZERO : tmp.getTradePrince())
+						.add(null == dl.getTradePrince()?BigDecimal.ZERO:dl.getTradePrince()));
+
+
 				map.put(key, tmp);
 			}else{
 				map.put(key,dl);

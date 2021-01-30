@@ -27,7 +27,7 @@ $(function() {
 	
 	var SvrOperationalInfo004_table002 = $('#dataResult').joyintable({
         ajax: {
-            url: basePath + "common/infomanagement/SvrOperationalInfo002/queryDataResultPage",
+            url: basePath + "common/infomanagement/SvrOperationalInfo002/queryDataResultList",
             type: 'POST',
             async: false,
             data: {
@@ -37,6 +37,8 @@ $(function() {
         checkbox: false,
         addbtn: true,
         searchOnInit: true,
+		loadonce:true,
+		page: false, // 不分页
         cols: [
             { title: "查询结果列主键", field:'resultId', visible: false},
             { title: "字段名", field:'columnId', edit:true, editOption: {type:'input'}, sortable:false},

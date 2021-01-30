@@ -475,9 +475,9 @@
 		// 导入按钮点击事件
 		$('#OperationalLoanInfo001_btn_import').click(function() {
 			Joyin.confirm(JoyinUtil.getMessage('CHB_ISIMPORT'), function() {
-				Joyin.uploadFile(/*{	
+				Joyin.uploadFile({
 					hideTpl : true
-			       },*/ function(fileName) {
+			       }, function(fileName) {
 					Joyin.ajax(basePath + 'common/loaninfomanagement/OperationalLoanInfo001/checkConfirmMsgForImportData', {fileName : fileName}, function(result) {
 						if (result.length == 0) {
 							Joyin.ajax(basePath + 'common/loaninfomanagement/OperationalLoanInfo001/importFile', {fileName : fileName}, function(result){

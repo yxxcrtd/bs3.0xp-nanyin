@@ -42,7 +42,8 @@ public class OperationalLoanInfo002Controller extends BaseController{
         this.setSelectOptionToModel(model, DictCode.客户一级类型,DictCode.贷款种类,DictCode.区域划分_省,
         		DictCode.区域划分_市,DictCode.区域划分_县,DictCode.借款人类型,DictCode.行业门内编码,DictCode.所属国家或地区,
         		DictCode.经济成分一级,DictCode.经济成分二级,DictCode.经济成分三级,DictCode.企业规模,DictCode.贷款产品类别,
-        		DictCode.行业大类编码,DictCode.利率是否固定,DictCode.贷款担保方式,DictCode.贷款质量,DictCode.贷款状态,DictCode.币种_中债,DictCode.人行资产三级分类,DictCode.人行资产一级分类);
+        		DictCode.行业大类编码,DictCode.利率是否固定,DictCode.贷款担保方式,DictCode.贷款质量,DictCode.贷款状态,DictCode.币种_中债,DictCode.人行资产三级分类,DictCode.人行资产一级分类,
+                DictCode.中债贷款分类);
         model.addAttribute("assetUuid", this.getParam("ASSET_UUID"));
         
         model.addAttribute("SVR_LOAN_TYPE_1", DictCodeListExt3.贷款种类_发放贷款.getValue());

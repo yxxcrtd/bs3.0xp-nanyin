@@ -946,7 +946,8 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     中债_上游资产三级分类_保证金(DictCode.中债_上游资产三级分类,"NB_WINDTYPETWO","保证金"),
 
 
-
+    中债_中债贷款分类_收益权(DictCode.中债贷款分类,"01","收益权"),
+    中债_中债贷款分类_贷款(DictCode.中债贷款分类,"02","贷款"),
     中债_处理状态_待处理(DictCode.中债_处理状态,"01","待处理"),
     中债_处理状态_已处理(DictCode.中债_处理状态,"02","已处理"),
     ;

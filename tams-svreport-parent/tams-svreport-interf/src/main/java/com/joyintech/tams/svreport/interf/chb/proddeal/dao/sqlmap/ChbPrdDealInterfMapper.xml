@@ -27,7 +27,7 @@
 		DL.SETTLE_DATE AS payDate,
 		DL.SETTLE_DATE AS interestDate,
 		DL.INT_AMT AS intAmt,
-		DL.TRADE_AMT AS
+		nvl(DL.TRADE_AMT,dl.INT_AMT) AS
 		tradePrince,
 		DL.UNIT_INT AS unitBonusAmount,
 		DL.SHARE_AMT AS tradeQty,
