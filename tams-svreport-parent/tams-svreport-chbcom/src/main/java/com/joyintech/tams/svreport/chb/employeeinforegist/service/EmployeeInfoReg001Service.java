@@ -486,7 +486,7 @@ public class EmployeeInfoReg001Service extends SvrCommonExportService<EmployeeIn
      * @since 1.0
      */
     public Map<String,Object> checkData(Map<String, Object> param){
-    	param.put("sendStatus", DictCodeListExt2.报送状态_未报送.getValue());
+    	// param.put("sendStatus", DictCodeListExt2.报送状态_未报送.getValue());
     	dealSearchParam(param);
         List<String> keyList = new ArrayList<String>();
     	if(param.get("checkKeys")!=null){
