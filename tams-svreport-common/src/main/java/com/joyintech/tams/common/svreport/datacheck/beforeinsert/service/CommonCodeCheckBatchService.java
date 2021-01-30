@@ -1429,8 +1429,8 @@ public class CommonCodeCheckBatchService {
         List<ChbPrdIssueSub>  listChbPrdIssueSub=comminCodeCheckMapper.getChbPrdIssueSubByProdId(prodId);
         if(!StringUtil.isEmptyList(listChbPrdIssueSub)){
             //产品起始日期
-            Date raiseVdate=listChbPrdIssueSub.get(0).getRaiseVdate();
-            if(raiseVdate.compareTo(DateUtil.parse(mDate))>=0){
+            Date prdVdate=listChbPrdIssueSub.get(0).getPrdVdate();
+            if(prdVdate.compareTo(DateUtil.parse(mDate))>=0){
                 errMsg +="理财产品实际终止日期应大于发行登记中的“产品起始日期”[MDATE="+mDate+"];";
             }
         }

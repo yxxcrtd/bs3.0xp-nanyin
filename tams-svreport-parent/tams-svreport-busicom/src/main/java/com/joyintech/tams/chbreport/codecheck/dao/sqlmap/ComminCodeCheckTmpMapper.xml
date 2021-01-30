@@ -174,10 +174,11 @@ and stp.SEND_STATUS  in ('02','03')
     </select>
    	<!-- add by dubaojun 2020-10-12 配置无法实现，代码实现的check end -->
    	
-   		   	<select id="getChbPrdIssueSubByProdId"  resultType="com.joyintech.tams.common.base.entity.ChbPrdIssueSub">
-   	select
-   	RAISE_VDATE  raiseVdate
-   	from  CHB_PRD_ISSUE_SUB
-   	where  PROD_ID = #{prodId,jdbcType=VARCHAR}
+    <select id="getChbPrdIssueSubByProdId"  resultType="com.joyintech.tams.common.base.entity.ChbPrdIssueSub">
+        select
+        RAISE_VDATE  raiseVdate,
+        PRD_VDATE prdVdate
+        from  CHB_PRD_ISSUE_SUB
+        where  PROD_ID = #{prodId,jdbcType=VARCHAR}
    	</select>
 </mapper>
