@@ -574,7 +574,7 @@ public class TrdBondInvestTradeService extends BaseService {
             trdTradeFeeTotal = trdTradeFeeTotalMapper.selectByPrimaryKey(trdTradeFeeTotalKey);
             if (trdTradeFeeTotal != null){
                 resultDto.setSettleAmt(trdTradeFeeTotal.getFeeAmt());
-                resultDto.setIsPayWithTrade(trdTradeFeeTotal.getIsPayWithTrade());
+                resultDto.setSettleIsPayWithTrade(trdTradeFeeTotal.getIsPayWithTrade());
             }
 
             //经手费
@@ -582,7 +582,7 @@ public class TrdBondInvestTradeService extends BaseService {
             trdTradeFeeTotal = trdTradeFeeTotalMapper.selectByPrimaryKey(trdTradeFeeTotalKey);
             if (trdTradeFeeTotal != null){
                 resultDto.setExchangeAmt(trdTradeFeeTotal.getFeeAmt());
-                resultDto.setIsPayWithTrade(trdTradeFeeTotal.getIsPayWithTrade());
+                resultDto.setExchangeIsPayWithTrade(trdTradeFeeTotal.getIsPayWithTrade());
             }
 
          // 印花税
