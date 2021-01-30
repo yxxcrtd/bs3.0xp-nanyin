@@ -2730,7 +2730,7 @@
         BANK_SEC_PREFER,
         BANK_SEC_PERPETUAL)
         values(
-        TEMP.ASSET_UUID,
+        SYS_GUID(),
         TEMP.ASSET_CODE,
         TEMP.ASSET_TYPE,
         TEMP.ASSET_TYPE2,
