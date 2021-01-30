@@ -549,7 +549,7 @@ public class ProdDurationReg001Service extends SvrCommonExportService<ProdDurati
 						checkResult.add(exc);
 					} else {
 						ExcelValidDto exc=new ExcelValidDto();
-						exc.setValidKey("产品代码:"+repmap.get(key).getProdId() + (StringUtil.isNotEmpty(repmap.get(key).getVdate()) ? ";业务开始日:"+repmap.get(key).getVdate() : ""));
+						exc.setValidKey("产品代码:"+repmap.get(key).getProdId() + (StringUtil.isNotEmpty(repmap.get(key).getMdate()) ? ";业务结束日:"+repmap.get(key).getMdate() : ""));
 						exc.setCheckResult("01");
 						checkResult.add(exc);
 					}
