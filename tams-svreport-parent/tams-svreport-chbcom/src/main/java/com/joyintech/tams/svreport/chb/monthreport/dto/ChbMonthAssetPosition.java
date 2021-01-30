@@ -204,6 +204,58 @@ public class ChbMonthAssetPosition extends CommonProductRatingDto implements Clo
      */
     private   String   isFhxgcp;
 
+    /**
+     * 是否商业银行可转债
+     */
+    private String bankSecKzzq;
+
+    /**
+     * 是否专项债券
+     */
+    private String bankSecZxzq;
+
+    /**
+     * 是否未上市企业-政府出资产业投资基金
+     */
+    private String isunlisted;
+
+    /**
+     * 是否标准化票据
+     */
+    private String isBzhpj;
+
+
+    public String getBankSecKzzq() {
+        return bankSecKzzq;
+    }
+
+    public void setBankSecKzzq(String bankSecKzzq) {
+        this.bankSecKzzq = bankSecKzzq;
+    }
+
+    public String getBankSecZxzq() {
+        return bankSecZxzq;
+    }
+
+    public void setBankSecZxzq(String bankSecZxzq) {
+        this.bankSecZxzq = bankSecZxzq;
+    }
+
+    public String getIsunlisted() {
+        return isunlisted;
+    }
+
+    public void setIsunlisted(String isunlisted) {
+        this.isunlisted = isunlisted;
+    }
+
+    public String getIsBzhpj() {
+        return isBzhpj;
+    }
+
+    public void setIsBzhpj(String isBzhpj) {
+        this.isBzhpj = isBzhpj;
+    }
 
     public String getIsFhxgcp() {
         return isFhxgcp;
