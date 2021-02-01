@@ -201,7 +201,8 @@
    	 	select 
 	        DETAILUUID, TERMID, REPORTTYPE, PROPERTYCODE, PRODCOUNTS, PRODAMOUNT, PRODNETAMOUNT, 
    			 DURATIONPRODCOUNTS, BALANCE, BOTTOMBALANCE, CUSTOMERPROFIT, BANKPROFIT, PRODYIELD,
-   			 ''  as createUser,'' as createDept
+   			 ''  as createUser,'' as createDept,
+             PRODPAYAMOUNT,XGDURATIONPRODCOUNTS,XGBALANCE,XGBOTTOMBALANCE
 	    from CHB_MONTH_REPORT_DETAIL
    		<where>
 			<if test="termid != null and termid != ''">
