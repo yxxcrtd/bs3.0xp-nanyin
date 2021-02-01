@@ -18,6 +18,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.common.base.entity.FinFloatAccrualScheKey;
+import com.joyintech.tams.common.base.entity.FinOpenPlan;
 import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.AccrDateNeedOtherDto;
 import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.AccrDateOtherDto;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto;
@@ -58,6 +59,10 @@ public interface SusPrdFutureOpenPlanGenMapper {
 	 * 根据产品代码查询其他计算浮动管理费计提计划的必须字段(业绩报酬计提规则表)
 	 */
 	AccrDateNeedOtherDto findOtherNeedDateByProdid(String finprodId);
+	/**
+	 * 根据产品代码  查询到相应的申购开放计划
+	 */
+	List<FinOpenPlan> findOpenPlanListByProdid(String finprodId);
 	/**
 	 * 根据产品代码查询其他计算回补计划的必须字段(业绩报酬计提规则表)
 	 */

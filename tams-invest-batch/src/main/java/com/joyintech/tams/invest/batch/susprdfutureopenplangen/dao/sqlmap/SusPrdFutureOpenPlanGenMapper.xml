@@ -36,7 +36,8 @@
 			F.CREATE_TIME AS CREATE_TIME,
 			F.UPDATE_USER AS UPDATE_USER,
 			F.UPDATE_TIME AS UPDATE_TIME,
-			G.Pur_Speed AS purConfDays																							
+			G.Pur_Speed AS purConfDays,
+			fcpr.PAY_CYCLE payCycleV																							
 		FROM																									
 			FIN_PRODUCT A																								
 			INNER JOIN																								
@@ -81,7 +82,9 @@
 				ON E.CASH_ID = F.CASH_ID																							
 				AND E.OPEN_TYPE = F.OPEN_TYPE
 			INNER JOIN FIN_PRODUCT_ADD 	G
-			ON A.FINPROD_ID = G.FINPROD_ID																						
+			ON A.FINPROD_ID = G.FINPROD_ID	
+			LEFT JOIN FIN_CASH_INFO fci on fci.FINPROD_ID = E.FINPROD_ID and fci.CASH_TYPE_1 = '02'	
+			LEFT JOIN FIN_CASH_PAY_RULE fcpr on fcpr.CASH_ID = fci.CASH_ID																	
 		WHERE 																									
 			A.FINPROD_TYPE2 = #{finprodType}																
 			AND A.P_FINPROD_ID IS NULL
@@ -275,6 +278,18 @@
 			    and finprod_id = #{finprodId}
 		) t
 		where t.ro = 1
+	</select>
+	
+	<select id="findOpenPlanListByProdid" parameterType="string" resultType="com.joyintech.tams.common.base.entity.FinOpenPlan">
+		select A.VDATE AS openVdateUn,/*产品起息日*/
+                 B.OPEN_DATE_STR AS openDateStr,
+                 B.OPEN_DATE_END AS openDateEnd,
+                 C.CASH_ID AS cashId,
+                 B.OPEN_VDATE AS openVdate
+                 from FIN_PRODUCT A 
+                 INNER JOIN FIN_OPEN_PLAN B ON B.FINPROD_ID = A.FINPROD_ID AND B.OPEN_TYPE != '02'
+                 LEFT JOIN FIN_CASH_PLAN C ON C.FINPROD_ID = A.FINPROD_ID AND C.CASH_TYPE = '01'
+                 WHERE A.FINPROD_ID = #{finprodId}
 	</select>
 
 </mapper>
