@@ -607,7 +607,9 @@
                     $("#fpriceAmt").val(JoyinMath.doAdd($("#intAmt").val(), $("#cpriceAmt").val(), 2)).trigger("blur").trigger('change');
                 }
             } else {
-                table.renderRow(i, {"fpriceAmt": 0});
+                for (var i = 0; i < table.getAllRows().length; i++) {
+                    table.renderRow(i, {"fpriceAmt": 0});
+                }
             }
     }
 
