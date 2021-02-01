@@ -152,10 +152,10 @@ $(function() {
             ,{field:'portfolioName',width:220,title: '组合名称',sort:false}
             ,{field:'secid',width:150,title: '债券代码',sort:false}
             ,{field:'secName',width:150,title: '债券名称',sort:false}
-            ,{field:'prinAmt',width:150,type:'money',title: '持仓券面',sort:false}
-            ,{field:'canpledgeAmt',width:150,type:'money',title: '可质押券面',sort:false}
+            ,{field:'canpledgeAmt',width:150,type:'money',title: '持仓券面',sort:false}
+            ,{field:'remainAmt',width:150,type:'money',title: '可质押券面',sort:false}
+            // ,{field:'canpledgeAmt',width:150,type:'money',title: '可质押券面',sort:false}
             ,{field:'pledgeAmt',width:150,type:'money',title: '已质押券面',sort:false}
-            ,{field:'remainAmt',width:150,type:'money',title: '剩余券面',sort:false}
             ,{field:'gradeTypeNamezt',width:110,title: '主体评级',sort:false}
             ,{field:'gradeTypeNamezx',width:110,title: '债项评级',sort:false}
             ,{field:'registOrgName',width:280,title: '登记托管机构',sort:false}
