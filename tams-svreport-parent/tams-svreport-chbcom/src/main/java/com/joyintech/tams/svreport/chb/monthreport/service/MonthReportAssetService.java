@@ -498,7 +498,7 @@ public class MonthReportAssetService {
 //        // 获取前月的第一天
         // 查询月度日期之间的资产头寸
         logger.info("查询本月月报资产头寸开始：");
-        List<ChbMonthAssetPosition> assetMonthPositionList = chbMonthAssetPositionMapper.selectByMonthDate(DateUtil.
+			List<ChbMonthAssetPosition> assetMonthPositionList = chbMonthAssetPositionMapper.selectByMonthDate(DateUtil.
         		format(firstday),DateUtil.format(lastday));
         logger.info("查询本月月报资产头寸结束：");
         // 用于统计穿透前期末余额 穿透后期末余额,key=propertyCode
@@ -615,13 +615,13 @@ public class MonthReportAssetService {
     					//汇总表记录总数
     					if (!assetMonthReportDetailMap.containsKey(singleRule.getPropertyCode()+"合计")){
         					assetMonthReportDetailMap.put(singleRule.getPropertyCode()+"合计", 
-        							buildDetail(reportStartDate, singleRule.getPropertyCode(), BigDecimal.ZERO, BigDecimal.ZERO));
+        							buildDetail(reportStartDate, singleRule.getPropertyCode(), BigDecimal.ZERO, BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO));
         				}
     					//保存分支的合计数据
     					if(null!=deptMap.get(position.getOrgId())){
     						//拷贝一份相同数据并传入当前机构分支数据中
     						deptMap.get(position.getOrgId()).put(singleRule.getPropertyCode()+"合计", 
-    								buildDetail(reportStartDate, singleRule.getPropertyCode(), BigDecimal.ZERO, BigDecimal.ZERO));
+    								buildDetail(reportStartDate, singleRule.getPropertyCode(), BigDecimal.ZERO, BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO));
 
     					}
     				}
@@ -733,6 +733,20 @@ public class MonthReportAssetService {
     	    					detail.setBalance(detail.getBalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
     	    					// 穿透后科目余额 = 穿透后科目余额 + 新增值
     	    					detail.setBottombalance(detail.getBottombalance().add(position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB()));
+                                /**G06资产端改造  add by  dongxiangyang  start*/
+
+                                //合规穿透前科目余额 = 合规穿透前科目余额 + （【是否合规产品】 = 是 【新增穿透前值】 else 【0】）
+								if(StringUtil.equals(DictCodeList.是否_中债_是.getValue(),position.getIsFhxgcp())){
+									detail.setXgbalance(detail.getXgbalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
+									detail.setXgbottombalance(detail.getXgbottombalance().add(position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB()));
+								}else{
+									//合规穿透后科目余额 = 合规穿透后科目余额 + 【是否合规产品】 = 是 【新增穿透后值】 else 【0】
+
+									detail.setXgbalance(detail.getXgbalance().add(BigDecimal.ZERO));
+									detail.setXgbottombalance(detail.getXgbottombalance().add(BigDecimal.ZERO));
+								}
+								/**G06资产端改造  add by  dongxiangyang  end*/
+
     	    					// 场外(内)股票质押融资（穿透后）计行内一级分类IN_ASSET_TYPE1=01场内股票质押回购的资产价值ASSETVALUE_B+ASSETVALUE_A（除一级分类=资管，委外，私募）
 //    	    					if (singleRule.equals(ChbMonthAssetRule.场内股票质押回购)
 //    	    							|| singleRule.equals(ChbMonthAssetRule.场外股票质押融资)){
@@ -751,6 +765,18 @@ public class MonthReportAssetService {
     	    					detail.setBalance(detail.getBalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
     	    					// 穿透后科目余额 = 穿透后科目余额 + 新增值
     	    					detail.setBottombalance(detail.getBottombalance().add(position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB()));
+								/**G06资产端改造  add by  dongxiangyang  start*/
+
+								//合规穿透前科目余额 = 合规穿透前科目余额 + （【是否合规产品】 = 是 【新增穿透前值】 else 【0】）
+								if(StringUtil.equals(DictCodeList.是否_中债_是.getValue(),position.getIsFhxgcp())){
+									detail.setXgbalance(detail.getXgbalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
+									detail.setXgbottombalance(detail.getXgbottombalance().add(position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB()));
+								}else{
+									//合规穿透后科目余额 = 合规穿透后科目余额 + 【是否合规产品】 = 是 【新增穿透后值】 else 【0】
+									detail.setXgbalance(detail.getXgbalance().add(BigDecimal.ZERO));
+									detail.setXgbottombalance(detail.getXgbottombalance().add(BigDecimal.ZERO));
+								}
+								/**G06资产端改造  add by  dongxiangyang  end*/
                 			}
     					}
     				} else {
@@ -758,6 +784,10 @@ public class MonthReportAssetService {
     					BigDecimal balance = BigDecimal.ZERO;
     					
     					BigDecimal bottombalance = BigDecimal.ZERO;
+
+						BigDecimal xgbalance = BigDecimal.ZERO;
+
+						BigDecimal xgbottombalance = BigDecimal.ZERO;
 
 //    					ChbMonthReportDetail detail = new ChbMonthReportDetail();
 //    					// uuid
@@ -773,7 +803,13 @@ public class MonthReportAssetService {
             				balance = position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA();
             				
             				bottombalance = position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB();
-	    					// 期末余额穿透前 = 新增值
+
+							if(StringUtil.equals(DictCodeList.是否_中债_是.getValue(),position.getIsFhxgcp())){
+								xgbalance=position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA();
+
+								xgbottombalance = position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB();
+							}
+            				// 期末余额穿透前 = 新增值
 //	    					detail.setBalance(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA());
 //	    					// 期末余额穿透后 = 新增值
 //	    					detail.setBottombalance(position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB());
@@ -791,7 +827,7 @@ public class MonthReportAssetService {
             			//如果汇总项无此合计项则填入
             			assetMonthReportDetailMap.put(singleRule.getPropertyCode(), 
 								buildDetail(reportStartDate, singleRule.getPropertyCode(), balance
-										, bottombalance));
+										, bottombalance,xgbalance,xgbottombalance));
             			
             			
 //    					assetMonthReportDetailMap.put(singleRule.getPropertyCode(), detail);
@@ -812,7 +848,19 @@ public class MonthReportAssetService {
 	    	    					detail.setBalance(detail.getBalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
 	    	    					// 穿透后科目余额 = 穿透后科目余额 + 新增值
 	    	    					detail.setBottombalance(detail.getBottombalance().add(position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB()));
-	
+
+									/**G06资产端改造  add by  dongxiangyang  start*/
+
+									//合规穿透前科目余额 = 合规穿透前科目余额 + （【是否合规产品】 = 是 【新增穿透前值】 else 【0】）
+									if(StringUtil.equals(DictCodeList.是否_中债_是.getValue(),position.getIsFhxgcp())){
+										detail.setXgbalance(detail.getXgbalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
+										detail.setXgbottombalance(detail.getXgbottombalance().add(position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB()));
+									}else{
+										//合规穿透后科目余额 = 合规穿透后科目余额 + 【是否合规产品】 = 是 【新增穿透后值】 else 【0】
+										detail.setXgbalance(detail.getXgbalance().add(BigDecimal.ZERO));
+										detail.setXgbottombalance(detail.getXgbottombalance().add(BigDecimal.ZERO));
+									}
+									/**G06资产端改造  add by  dongxiangyang  end*/
 	                			}
 	    					} else if (deptMap.get(position.getOrgId()).containsKey(singleRule.getPropertyCode() + "合计")){
 	        					ChbMonthReportDetail detail = deptMap.get(position.getOrgId()).get(singleRule.getPropertyCode()+"合计");
@@ -822,6 +870,19 @@ public class MonthReportAssetService {
 	    	    					detail.setBalance(detail.getBalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
 	    	    					// 穿透后科目余额 = 穿透后科目余额 + 新增值
 	    	    					detail.setBottombalance(detail.getBottombalance().add(position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB()));
+
+									/**G06资产端改造  add by  dongxiangyang  start*/
+
+									//合规穿透前科目余额 = 合规穿透前科目余额 + （【是否合规产品】 = 是 【新增穿透前值】 else 【0】）
+									if(StringUtil.equals(DictCodeList.是否_中债_是.getValue(),position.getIsFhxgcp())){
+										detail.setXgbalance(detail.getXgbalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
+										detail.setXgbottombalance(detail.getXgbottombalance().add(position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB()));
+									}else{
+										//合规穿透后科目余额 = 合规穿透后科目余额 + 【是否合规产品】 = 是 【新增穿透后值】 else 【0】
+										detail.setXgbalance(detail.getXgbalance().add(BigDecimal.ZERO));
+										detail.setXgbottombalance(detail.getXgbottombalance().add(BigDecimal.ZERO));
+									}
+									/**G06资产端改造  add by  dongxiangyang  end*/
 	                			}
 	    					}
 	    				} else {
@@ -829,6 +890,10 @@ public class MonthReportAssetService {
 	    					BigDecimal balance = BigDecimal.ZERO;
 	    					
 	    					BigDecimal bottombalance = BigDecimal.ZERO;
+
+							BigDecimal xgbalance = BigDecimal.ZERO;
+
+							BigDecimal xgbottombalance = BigDecimal.ZERO;
 	
 	    					// 计入本次头寸值
 	            			if (isPattern){
@@ -837,11 +902,17 @@ public class MonthReportAssetService {
 	            				
 	            				
 	            				bottombalance = position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB();
-	
+
+								if(StringUtil.equals(DictCodeList.是否_中债_是.getValue(),position.getIsFhxgcp())){
+									xgbalance=position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA();
+
+									xgbottombalance = position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB();
+								}
+
 	            			}
 	            			deptMap.get(position.getOrgId()).put(singleRule.getPropertyCode(), 
 									buildDetail(reportStartDate, singleRule.getPropertyCode(), balance
-											, bottombalance));
+											, bottombalance,xgbalance,xgbottombalance));
 	    				}
     				}
     				
@@ -922,9 +993,9 @@ public class MonthReportAssetService {
         			// 计算其他合计累计值
         			balanceA = balanceA.add(balance);
         			// 去除隐藏列的b列值
-        			if (!detail.getKey().startsWith("AMT1_14_9")
-        					&& !detail.getKey().startsWith("AMT1_15_7")
-        					&& !detail.getKey().startsWith("AMT1_16_8")){
+        			if (!detail.getKey().startsWith("AMT1_12_9")
+        					&& !detail.getKey().startsWith("AMT1_13_7")
+        					&& !detail.getKey().startsWith("AMT1_14_8")){
             			balanceB = balanceB.add(bottombalance);
         				
         			}
@@ -934,7 +1005,7 @@ public class MonthReportAssetService {
         	}
         }
         // 计算合计值ATM1_17
-        ChbMonthReportDetail atm117 = assetMonthReportDetailMap.get("AMT1_17合计");
+        ChbMonthReportDetail atm117 = assetMonthReportDetailMap.get("AMT1_15合计");
         atm117.setBalance(balanceA);
         atm117.setBottombalance(balanceB);
     }
@@ -984,7 +1055,8 @@ public class MonthReportAssetService {
     }
     
     
-    public ChbMonthReportDetail buildDetail(Date reportStartDate,String properCode,BigDecimal balance,BigDecimal bottombalance){
+    public ChbMonthReportDetail buildDetail(Date reportStartDate,String properCode,BigDecimal balance,BigDecimal bottombalance,
+	     BigDecimal xgbalance,BigDecimal xgbottombalance){
     	ChbMonthReportDetail detail = new ChbMonthReportDetail();
 		// uuid
 		detail.setDetailuuid(IDGenerator.generate(36));
@@ -998,7 +1070,13 @@ public class MonthReportAssetService {
 		detail.setBalance(balance);
 		// 期末余额穿透后 = 新增值
 		detail.setBottombalance(bottombalance);
-		
+		/**新增合规穿透代码字段 start  by dongxiangyang */
+        //dto.合规穿透前金额 = 入参.合规穿透前金额
+        detail.setXgbalance(xgbalance);
+        //dto.合规穿透后金额 = 入参.合规穿透后金额
+		detail.setXgbottombalance(xgbottombalance);
+		/**新增合规穿透代码字段 start  by dongxiangyang */
+
 		return detail;
     }
     
