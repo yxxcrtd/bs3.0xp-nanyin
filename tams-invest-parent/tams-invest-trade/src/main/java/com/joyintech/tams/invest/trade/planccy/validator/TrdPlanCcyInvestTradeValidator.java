@@ -252,7 +252,7 @@ public class TrdPlanCcyInvestTradeValidator implements TradeCommonValidator {
                     if ((StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())|| StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue()))&& tradeAmt != null && tradeAmt.compareTo(entrustAmt) == 1) {
                         errorList.add(new ValidMessage("tradeAmt", this.getMessage("TRD_X_0004") + entrustAmt));
                     }else if((StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())|| StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue()))&&shareAmt != null && shareAmt.compareTo(entrustAmt) == 1){
-                        errorList.add(new ValidMessage("shareAmt", this.getMessage("TRD_X_0009") + shareAmt));
+                        errorList.add(new ValidMessage("shareAmt", this.getMessage("TRD_X_0009") + entrustAmt));
                     }
                 }
             }
