@@ -390,9 +390,9 @@ $(function() {
                 var tradeAmt = $('#tradeAmtHid').val();
                 if(Number(feeAmtPay)>= Number(tradeAmt)){
                     if(ps == ps_T05){
-                        Joyin.error("申购费不能大于交易金额");
+                        Joyin.error("申购费不能大于等于交易金额");
                     }else{
-                        Joyin.error("赎回费不能大于交易金额");
+                        Joyin.error("赎回费不能大于等于交易金额");
                     }
                     $('#feeAmtPay').val('').trigger('change');
                     return;

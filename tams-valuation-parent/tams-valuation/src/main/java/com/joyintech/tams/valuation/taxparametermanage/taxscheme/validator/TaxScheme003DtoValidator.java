@@ -79,6 +79,24 @@ public class TaxScheme003DtoValidator implements BeanValidator {
                 return errorList;
             }
 
+            // 修改逻辑：如：选择资产类型：A01，生效日：2021-1-29 ，提交后，再进入新建中资产类型：A01，生效日：2021-1-29，
+            // 点提交，判断资产类型和生效日，限制提交给出提醒“1.该资产类型同一生效日存在流程中的数据！”
+            if (StringUtil.isNotEmpty(dto.getAssetClassify()) && StringUtil.isNotEmpty(dto.getEffDate())){
+                if (!StringUtils.startsWith(dto.getOperateType(), "delete")) { // 非删除时
+                    WflValidInputParameter validParamTime = new WflValidInputParameter();
+                    ProcessMark processMarkTime = WorkflowContext.getProcessMarkService().getParameterByAnnotation(dto);
+                    validParamTime.setWorkflowId(dto.getWorkflowId());
+                    validParamTime.setPageId(processMarkTime.getPageId());
+                    validParamTime.setBusinessDataPk3(dto.getAssetClassify());
+                    validParamTime.setBusinessDataPk6(dto.getEffDate());
+                    if (mstWorkflowCommonService.isInWflProcess(validParamTime)) {
+                        // 流程存在情况
+                        errorList.add(new ValidMessage("该资产类型同一生效日存在流程中的数据!"));
+                        return errorList;
+                    }
+                }
+            }
+
             //当四个必填项都填写完毕后才从工作流中查询，否则直接返回
             if (StringUtil.isNotEmpty(dto.getAssetClassify()) && StringUtil.isNotEmpty(dto.getIncomeType())
             && StringUtil.isNotEmpty(dto.getTaxableSign()) && StringUtil.isNotEmpty(dto.getEffDate())){

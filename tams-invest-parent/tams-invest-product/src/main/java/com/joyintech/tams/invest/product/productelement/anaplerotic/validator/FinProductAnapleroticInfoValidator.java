@@ -104,12 +104,15 @@ public class FinProductAnapleroticInfoValidator implements BeanValidator {
                 validList.add(new ValidMessage("anapleroticEndDate", this.getMessage("BUSS_COM_E_0038",
                         this.getMessage("FinProductAnapleroticInfo.anapleroticEndDate"))));
             }
-            //首次回补日必须大于等于平台日
-            if(dto.getFirstAnapleroticDate() != null &&DateUtil.compareTo(dto.getFirstAnapleroticDate(),dto.getEffDate())<0){
-                validList.add(new ValidMessage("firstAnapleroticDate", this.getMessage("BUSS_COM_E_0004",
-                        this.getMessage("FinProductAnapleroticInfo.firstAnapleroticDate"),
-                        this.getMessage("FinProductAnapleroticInfo.effDate"))));
-            }
+
+            //modify by 马数凯 20210201 回补信息调整去除首次回补日不能小于生效日校验 start
+//            //首次回补日必须大于等于平台日
+//            if(dto.getFirstAnapleroticDate() != null &&DateUtil.compareTo(dto.getFirstAnapleroticDate(),dto.getEffDate())<0){
+//                validList.add(new ValidMessage("firstAnapleroticDate", this.getMessage("BUSS_COM_E_0004",
+//                        this.getMessage("FinProductAnapleroticInfo.firstAnapleroticDate"),
+//                        this.getMessage("FinProductAnapleroticInfo.effDate"))));
+//            }
+            //modify by 马数凯 20210201 回补信息调整去除首次回补日不能小于生效日校验 end
             //回补结束日必须大于等于平台日
             if(dto.getAnapleroticEndDate() != null &&DateUtil.compareTo(dto.getAnapleroticEndDate(),dto.getEffDate())<0){
                 validList.add(new ValidMessage("anapleroticEndDate", this.getMessage("BUSS_COM_E_0004",

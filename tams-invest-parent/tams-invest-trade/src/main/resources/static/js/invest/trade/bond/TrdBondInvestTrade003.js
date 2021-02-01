@@ -3334,9 +3334,9 @@ var table;
 			               ,{field:'fpriceAmt',width:100, title: 'TrdInvestFenPeiInfo.fpriceAmt',sortable:false,type:'number', digit:2}
                            ,{field:'procedureAmt',width:100, title: 'TrdInvestFenPeiInfo.procedureAmt',sortable:false,type:'number', edit:true,digit:2}
                            ,{field:'settleServiceAmt',width:100, title: 'TrdInvestFenPeiInfo.settleServiceAmt',sortable:false,type:'number', edit:true,digit:2}
+                           ,{field:'commissionAmt',width:100, title: 'TrdInvestFenPeiInfo.commissionAmt',sortable:false,type:'number',edit:true, digit:2}
                            ,{field:'settleAmt',width:100, title: 'TrdInvestFenPeiInfo.settleAmt',sortable:false,type:'number', edit:true,digit:2}
                            ,{field:'exchangeAmt',width:100, title: 'TrdInvestFenPeiInfo.exchangeAmt',sortable:false,type:'number', edit:true,digit:2}
-                           ,{field:'commissionAmt',width:100, title: 'TrdInvestFenPeiInfo.commissionAmt',sortable:false,type:'number',edit:true, digit:2}
                           ,{field:'stampDutyAmt',width:100, title: 'TrdInvestFenPeiInfo.stampDutyAmt',sortable:false,type:'number', edit:true,digit:2}
                            ,{field:'channelFee',width:100, title: function(){return JoyinUtil.getLabel("invest.channelId")+JoyinUtil.getLabel("TrdInvestFenPeiInfo.channelFee");}(),sortable:false,type:'number', digit:2, visible:false} //通道费
                            ,{field:'tradeAmtAndFee',width:100, title: 'TrdInvestFenPeiInfo.tradeAmtAndFee',sortable:false,type:'number', digit:2}
