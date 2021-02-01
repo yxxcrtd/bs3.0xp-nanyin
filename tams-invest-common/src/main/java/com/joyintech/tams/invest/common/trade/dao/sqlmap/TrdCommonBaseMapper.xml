@@ -551,5 +551,14 @@
             and (tpd.R_TRADE_ID = #{tradeId, jdbcType=VARCHAR} or tpd2.TOTLE_TRADE_ID = #{tradeId, jdbcType=VARCHAR})
 	</select>
     <!-- 根据交易编号查询另一笔未撤销的转仓交易信息 add by hpp 2020-09-17 end -->
-
+    <select id="selectRevokedDataCount" resultType="int">
+        select count(1) from TRD_PRODUCT_DEAL
+        where
+            (TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+            or P_TRADE_ID = #{tradeId,jdbcType=VARCHAR})
+            and
+            (IS_CANCEL = #{YES_NO_YES,jdbcType=VARCHAR}
+            or TRADE_STATUS = #{TRADE_STATUS_03,jdbcType=VARCHAR}
+            )
+    </select>
 </mapper>

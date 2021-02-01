@@ -177,4 +177,15 @@ public interface TrdCommonBaseMapper {
      * @return
      */
     TrdProductDeal selectZCDeal(@Param("tradeId") String tradeId);
+
+    /**
+     * 根据交易编号查询已撤销数据条数
+     *
+     * @param paramMap 参数
+     * @return 已撤销数据条数
+     * @see
+     * @since 1.0
+     */
+    int selectRevokedDataCount(Map<String, Object> paramMap);
+
 }
