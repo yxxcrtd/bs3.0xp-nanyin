@@ -164,14 +164,15 @@
       ASSETVALUE_B, INDUSTRY1, IN_ASSET_TYPE, 
       PPPFLAG, MONIT_TYPE, MANAGE_TYPE, 
       IS_GOVERN_FUND1, PRIVATEFUND_FLAG, PRIVATEPRD_FLAG, 
-      BONDTOSTOCK_FLAG, RATING,ASSETTYPE2,OLD_ASSET_CODE)
+      BONDTOSTOCK_FLAG, RATING,ASSETTYPE2,OLD_ASSET_CODE,IS_FHXGCP)
     values (#{posuuid,jdbcType=CHAR}, #{bookdate,jdbcType=TIMESTAMP}, #{startdate,jdbcType=TIMESTAMP}, 
       #{enddate,jdbcType=TIMESTAMP}, #{investVariety,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR}, 
       #{assettype,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{assetvalueA,jdbcType=DECIMAL}, 
       #{assetvalueB,jdbcType=DECIMAL}, #{industry1,jdbcType=VARCHAR}, #{inAssetType,jdbcType=VARCHAR}, 
       #{pppflag,jdbcType=VARCHAR}, #{monitType,jdbcType=VARCHAR}, #{manageType,jdbcType=VARCHAR}, 
       #{isGovernFund1,jdbcType=VARCHAR}, #{privatefundFlag,jdbcType=VARCHAR}, #{privateprdFlag,jdbcType=VARCHAR}, 
-      #{bondtostockFlag,jdbcType=VARCHAR}, #{rating,jdbcType=VARCHAR},#{assettype2,jdbcType=VARCHAR},#{oldAssetCode,jdbcType=VARCHAR})
+      #{bondtostockFlag,jdbcType=VARCHAR}, #{rating,jdbcType=VARCHAR},#{assettype2,jdbcType=VARCHAR},#{oldAssetCode,jdbcType=VARCHAR}
+      ,#{isFhxgcp,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition" >
     insert into CHB_MONTH_ASSET_POSITION
@@ -625,7 +626,8 @@
     ASSETINFO.IS_BZHPJ,
     ASSETINFO.ISUNLISTED,
     ASSETINFO.IS_FBZB,
-    ASSETINFO.BANK_SEC_KZZQ
+    ASSETINFO.BANK_SEC_KZZQ,
+    POSITION.IS_FHXGCP
     /*G06改造新加字段*/
     from CHB_MONTH_ASSET_POSITION POSITION
     LEFT JOIN CHB_ASSET_INFO ASSETINFO
@@ -658,6 +660,7 @@
     ,ASSETINFO.INDUSTRY_PBC
     ,ASSETINFO.INDUSTRY
     ,POSITION.ASSETTYPE2
+    ,POSITION.IS_FHXGCP
   </select>
   <delete id="deleteByDate" parameterType="date" >
     delete from CHB_MONTH_ASSET_POSITION

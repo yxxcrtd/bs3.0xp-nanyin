@@ -35,12 +35,16 @@
       PROPERTYCODE, PRODCOUNTS, PRODAMOUNT, 
       PRODNETAMOUNT, DURATIONPRODCOUNTS, BALANCE, 
       BOTTOMBALANCE, CUSTOMERPROFIT, BANKPROFIT, 
-      PRODYIELD,REPORTUUID)
+      PRODYIELD,REPORTUUID,PRODPAYAMOUNT,XGDURATIONPRODCOUNTS,XGBALANCE,XGBOTTOMBALANCE)
     values (#{detailuuid,jdbcType=CHAR}, #{termid,jdbcType=VARCHAR}, #{reporttype,jdbcType=VARCHAR}, 
       #{propertycode,jdbcType=VARCHAR}, #{prodcounts,jdbcType=DECIMAL}, #{prodamount,jdbcType=DECIMAL}, 
       #{prodnetamount,jdbcType=DECIMAL}, #{durationprodcounts,jdbcType=DECIMAL}, #{balance,jdbcType=DECIMAL}, 
       #{bottombalance,jdbcType=DECIMAL}, #{customerprofit,jdbcType=DECIMAL}, #{bankprofit,jdbcType=DECIMAL}, 
-      #{prodyield,jdbcType=DECIMAL},#{reportuuid,jdbcType=CHAR})
+      #{prodyield,jdbcType=DECIMAL},#{reportuuid,jdbcType=CHAR},
+      #{prodpayamount,jdbcType=DECIMAL},
+        #{xgdurationprodcounts,jdbcType=DECIMAL},
+        #{xgbalance,jdbcType=DECIMAL},
+        #{xgbottombalance,jdbcType=DECIMAL})
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportDetail" >
     insert into CHB_MONTH_REPORT_DETAIL
@@ -216,7 +220,7 @@
       PROPERTYCODE, PRODCOUNTS, PRODAMOUNT, 
       PRODNETAMOUNT, DURATIONPRODCOUNTS, BALANCE, 
       BOTTOMBALANCE, CUSTOMERPROFIT, BANKPROFIT, 
-      PRODYIELD,REPORTUUID)
+      PRODYIELD,REPORTUUID,PRODPAYAMOUNT,XGDURATIONPRODCOUNTS,XGBALANCE,XGBOTTOMBALANCE)
     <foreach collection="insertList" item="item" index="index" separator="union all">
     	select 
     	#{item.detailuuid,jdbcType=CHAR}, 
@@ -232,7 +236,11 @@
 		#{item.customerprofit,jdbcType=DECIMAL}, 
 		#{item.bankprofit,jdbcType=DECIMAL}, 
 		#{item.prodyield,jdbcType=DECIMAL},
-		#{item.reportuuid,jdbcType=CHAR}
+		#{item.reportuuid,jdbcType=CHAR},
+        #{item.prodpayamount,jdbcType=DECIMAL},
+        #{item.xgdurationprodcounts,jdbcType=DECIMAL},
+        #{item.xgbalance,jdbcType=DECIMAL},
+        #{item.xgbottombalance,jdbcType=DECIMAL}
 		from dual
     </foreach>
   </insert>
