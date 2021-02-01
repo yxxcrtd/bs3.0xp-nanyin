@@ -397,7 +397,7 @@
              exerYieldDivContrl();
         } else {
             // 资产名称文本框根据资产代码选择自动显示对应名称;
-        	showOrhide();
+        	// showOrhide();
             $("#finprodName").val("").trigger('change');
             // 同时带出资产相关信息，包括起息日，到期日，发行日，交易场所，币种，交易日历，计息基础等;
             $("#vdate").val("").trigger('change');
@@ -1115,7 +1115,7 @@
     //画面初始化
     var init = function() {
         initPayType();
-        showOrhide();
+        // showOrhide();
         psAndspeed();
         getEntrustByEntrustId();
         
