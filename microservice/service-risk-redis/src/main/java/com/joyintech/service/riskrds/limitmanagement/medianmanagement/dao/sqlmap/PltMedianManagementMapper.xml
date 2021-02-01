@@ -228,7 +228,7 @@
 		<where>
 			<if test='blank != null and blank != ""'>
 			  <!-- (T1.CHANGE_VALUE != 0 OR T3.EVENT_ID IS NULL) -->
-			  (T1.CHANGE_VALUE != 0 OR T3.EVENT_ID ='前一日余额')
+			  (T1.CHANGE_VALUE != 0 OR T1.TRADE_ID ='前一日余额')
 			</if>
 			<if test='tradeId != null and tradeId != ""'>
 			  AND	T1.TRADE_ID LIKE CONCAT(CONCAT('%',#{tradeId}),'%')
