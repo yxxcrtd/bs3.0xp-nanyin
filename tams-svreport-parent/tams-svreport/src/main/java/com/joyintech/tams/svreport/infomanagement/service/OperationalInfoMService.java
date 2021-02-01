@@ -67,6 +67,9 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 	@Autowired
 	private OperationalInfo001Service operationalInfo001Service;
 
+	@Autowired
+	private OperationalInfo004Service operationalInfo004Service;
+
 	// 资产要素表中文名
 //	private static final String CHB_ASSET_INFO_CN = "资产基本信息";
 	/**
@@ -548,6 +551,18 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 	public Page<ChbInfoMgrResultConfig> queryDataResultPage(Map<String, Object> selectParam) {
 		return restTemplate.postForPage(SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/queryDataResultPage",
 				selectParam, ChbInfoMgrResultConfig.class);
+	}
+
+	/**
+	 * @Title: queryDataResultPage
+	 * @Description: 根据表名查询已配置查询结果列表
+	 * @param @param selectParam
+	 * @param @return    参数
+	 * @return Page<ChbInfoMgrResultConfig>    查询结果列表
+	 * @throws
+	 */
+	public List<ChbInfoMgrResultConfig> queryDataResultList(Map<String, Object> selectParam) {
+		return operationalInfo004Service.queryDataResultList(selectParam);
 	}
 	
 	/**

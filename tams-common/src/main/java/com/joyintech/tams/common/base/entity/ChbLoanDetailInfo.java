@@ -77,12 +77,12 @@ public class ChbLoanDetailInfo extends BaseEntity {
     private String borrowerProvince;
 
     /**
-     * 借款人地区(市)
+     * null
      */
     private String borrowerCity;
 
     /**
-     * 借款人地区(县)
+     * null
      */
     private String borrowerCounty;
 
@@ -222,6 +222,11 @@ public class ChbLoanDetailInfo extends BaseEntity {
      * 金融产品代码
      */
     private String finprodId;
+
+    /**
+     * 贷款分类 - 01收益权,02贷款
+     */
+    private String assetType;
 
     /**
      * 取得 主键
@@ -432,32 +437,32 @@ public class ChbLoanDetailInfo extends BaseEntity {
     }
 
     /**
-     * 取得 借款人地区(市)
-     * @return 借款人地区(市)
+     * 取得 null
+     * @return null
      */
     public String getBorrowerCity() {
         return borrowerCity;
     }
 
     /**
-     * 设置 借款人地区(市)
-     * @param borrowerCity 借款人地区(市)
+     * 设置 null
+     * @param borrowerCity null
      */
     public void setBorrowerCity(String borrowerCity) {
         this.borrowerCity = borrowerCity == null ? null : borrowerCity.trim();
     }
 
     /**
-     * 取得 借款人地区(县)
-     * @return 借款人地区(县)
+     * 取得 null
+     * @return null
      */
     public String getBorrowerCounty() {
         return borrowerCounty;
     }
 
     /**
-     * 设置 借款人地区(县)
-     * @param borrowerCounty 借款人地区(县)
+     * 设置 null
+     * @param borrowerCounty null
      */
     public void setBorrowerCounty(String borrowerCounty) {
         this.borrowerCounty = borrowerCounty == null ? null : borrowerCounty.trim();
@@ -882,11 +887,35 @@ public class ChbLoanDetailInfo extends BaseEntity {
         this.dataSource = dataSource == null ? null : dataSource.trim();
     }
 
+    /**
+     * 取得 金融产品代码
+     * @return 金融产品代码
+     */
     public String getFinprodId() {
         return finprodId;
     }
 
+    /**
+     * 设置 金融产品代码
+     * @param finprodId 金融产品代码
+     */
     public void setFinprodId(String finprodId) {
-        this.finprodId = finprodId;
+        this.finprodId = finprodId == null ? null : finprodId.trim();
+    }
+
+    /**
+     * 取得 贷款分类 - 01收益权,02贷款
+     * @return 贷款分类 - 01收益权,02贷款
+     */
+    public String getAssetType() {
+        return assetType;
+    }
+
+    /**
+     * 设置 贷款分类 - 01收益权,02贷款
+     * @param assetType 贷款分类 - 01收益权,02贷款
+     */
+    public void setAssetType(String assetType) {
+        this.assetType = assetType == null ? null : assetType.trim();
     }
 }

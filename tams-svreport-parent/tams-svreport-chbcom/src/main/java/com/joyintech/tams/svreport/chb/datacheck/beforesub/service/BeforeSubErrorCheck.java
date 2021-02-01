@@ -12,6 +12,7 @@ package com.joyintech.tams.svreport.chb.datacheck.beforesub.service;
 
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ChbPrdDeclareSub;
@@ -107,7 +108,7 @@ public class BeforeSubErrorCheck {
             chbReportCheck.setRefseqno(m.get("REGIST_SEQNO"));
             chbReportCheck.setRepCode(DictCodeListExt2.报表名称_产品存续期登记.getValue());
             chbReportCheck.setRepName(DictCodeListExt2.报表名称_产品存续期登记.getCodeName());
-            chbReportCheck.setValidKey("产品代码:"+m.get("PROD_ID"));
+            chbReportCheck.setValidKey("产品代码:"+m.get("PROD_ID")+ (StringUtil.isNotEmpty(m.get("MDATE")) ? ";业务结束日:"+ DateUtil.format(DateUtil.parse(m.get("MDATE"))): ""));
             chbReportCheck.setCheckResult(SysDataUtil.getCodeFromDataDictByName(
                 DictCode.检查结果, DictCodeListExt2.检查结果_检查不通过.getCodeName()));
             chbReportCheck.setDataTime(checkdate);

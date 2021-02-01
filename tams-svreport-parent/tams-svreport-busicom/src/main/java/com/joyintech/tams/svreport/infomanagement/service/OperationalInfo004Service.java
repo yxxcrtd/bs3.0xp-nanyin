@@ -97,6 +97,20 @@ public class OperationalInfo004Service extends CommonExportService<ChbInfoMgrRes
 	            		pagenum,legth,()->chbInfoMgrResultConfigMapper.queryAllchbMgrTableInfo(selectParam));
 		return page;
 	}
+
+
+	/**
+	 * @Title: queryDataResultPage
+	 * @Description: 根据表名查询已配置查询结果列表
+	 * @param @param selectParam
+	 * @param @return    参数
+	 * @return Page<ChbInfoMgrResultConfig>    查询结果列表
+	 * @throws
+	 */
+	public List<ChbInfoMgrResultConfig> queryDataResultList(Map<String, Object> selectParam) {
+		selectParam.put("flag", false);
+		return chbInfoMgrResultConfigMapper.queryAllchbMgrTableInfo(selectParam);
+	}
 	
 	/**
 	* @Title: check

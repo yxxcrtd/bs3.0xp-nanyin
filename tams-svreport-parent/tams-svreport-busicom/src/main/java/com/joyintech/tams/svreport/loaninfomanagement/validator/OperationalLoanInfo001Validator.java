@@ -1,11 +1,5 @@
 package com.joyintech.tams.svreport.loaninfomanagement.validator;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -14,6 +8,12 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.svreport.loaninfomanagement.dao.OperationalLoanInfo001Mapper;
 import com.joyintech.tams.svreport.loaninfomanagement.dto.OperationalLoanInfo001Dto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class OperationalLoanInfo001Validator implements BeanValidator{
@@ -41,7 +41,7 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 			}
 
 			//当资产为资产收益权时，必填校验
-			if(StringUtil.equals(dto.getAssetType(), DictCodeListExt3.人行资产一级分类_资产收益权.getValue())){
+			if(StringUtil.equals(dto.getAssetType(), DictCodeListExt3.中债_中债贷款分类_收益权.getValue())){
 				//基础资产投向分类/各比例 必填
 				if(StringUtil.isEmpty(dto.getAssetsInvest())){
 					errorList.add(new ValidMessage("assetsInvest", getMessage("REPORT_COMMON_E_0001",
@@ -51,7 +51,7 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 					errorList.add(new ValidMessage("eachProportion", getMessage("REPORT_COMMON_E_0001",
 							"各比例")));
 				}
-			}else if(StringUtil.equals(dto.getAssetType(), DictCodeListExt3.人行资产二级分类_除回购或拆借外贷款.getValue())){//当资产为资产收益权时
+			}else if(StringUtil.equals(dto.getAssetType(), DictCodeListExt3.中债_中债贷款分类_贷款.getValue())){//当资产为资产收益权时
 				//必填验证
 				dataCheck(dto,errorList);
 
@@ -90,6 +90,39 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 						errorList.add(new ValidMessage("loanTransferorRate", getMessage("BUSS_COM_E_0038",
 								"贷款转让折扣率(%)")));
 					}
+
+					/*校验修复 zc add by start*/
+					if(StringUtil.isNotEmpty(dto.getLoanTransferorId()) && dto.getLoanTransferorId().length() > 6){
+						errorList.add(new ValidMessage("loanTransferorId", getMessage("贷款转让方机构代码最大长度为6位!")));
+					}
+					if(StringUtil.isNotEmpty(dto.getLoanTransferorName()) && dto.getLoanTransferorName().length() > 300){
+						errorList.add(new ValidMessage("loanTransferorName", getMessage("贷款转让方机构名称最多只能输入300个汉字!")));
+					}
+					if(StringUtil.isNotEmpty(dto.getLoanContractOrgId()) &&  dto.getLoanContractOrgId().length() > 6){
+						errorList.add(new ValidMessage("loanContractOrgId", getMessage("贷款合同原始发放机构代码最大长度为6位!")));
+					}
+					if(StringUtil.isNotEmpty(dto.getLoanContractOrgName()) &&  dto.getLoanContractOrgName().length() > 300){
+						errorList.add(new ValidMessage("loanContractOrgName", getMessage("贷款合同原始发放机构名称最多只能输入300个汉字!")));
+					}
+					if(StringUtil.isNotEmpty(dto.getBorrowerId()) &&  dto.getBorrowerId().length() > 30){
+						errorList.add(new ValidMessage("borrowerId", getMessage("借款人代码最大长度为30位!")));
+					}
+					if(StringUtil.isNotEmpty(dto.getLoanBasisId()) &&  dto.getLoanBasisId().length() > 35){
+						errorList.add(new ValidMessage("loanBasisId", getMessage("贷款借据编码最大长度为35位!")));
+					}
+					if(StringUtil.isNotEmpty(dto.getRateLevel()) && isNumber(dto.getRateLevel().toString(),17,2) ){
+						errorList.add(new ValidMessage("rateLevel", getMessage("利率水平（%）格式需要为n(17,2)!")));
+					}
+					if(StringUtil.isNotEmpty(dto.getLoanTransferorRate()) &&  isNumber(dto.getLoanTransferorRate().toString(),17,2)){
+						errorList.add(new ValidMessage("loanTransferorRate", getMessage("贷款转让折扣率（%）格式需要为n(17,2)!")));
+					}
+					if(StringUtil.isNotEmpty(dto.getOrigContractAmount()) &&  isNumber(dto.getOrigContractAmount().toString(),17,2)){
+						errorList.add(new ValidMessage("origContractAmount", getMessage("原始合同金额格式需要为n(17,2)!")));
+					}
+					if(StringUtil.isNotEmpty(dto.getOrigContractAmountCny()) &&  isNumber(dto.getOrigContractAmountCny().toString(),17,2)){
+						errorList.add(new ValidMessage("origContractAmountCny", getMessage("原始合同金额折人民币格式需要为n(17,2)!")));
+					}
+					/*校验修复 zc add by end*/
 				}
 
 				//当贷款种类为“其他债权”时,贷款借据编码、贷款产品类别、贷款质量、贷款状态   置灰不可填，否则必填
@@ -180,7 +213,7 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 					if (StringUtil.isNotEmpty(dto.getLoanExtensionDueDate()) && StringUtil.isNotEmpty(dto.getLoanMdate())) {
 						if (DateUtil.compareDate(dto.getLoanExtensionDueDate(), dto.getLoanMdate()) <= 0) {
 							errorList.add(new ValidMessage("loanExtensionDueDate",
-									getMessage("REPORT_COMMON_E_0059", getMessage("OperationalLoanInfo002.loanExtensionDueDate"),
+									getMessage("REPORT_COMMON_E_0059", getMessage("贷款展期到期日期"),
 											"贷款到期日期")));
 						}
 					}
@@ -232,7 +265,7 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 		if (StringUtil.isNotEmpty(dto.getLoanVdate()) && StringUtil.isNotEmpty(dto.getLoanMdate())) {
 			if (DateUtil.compareDate(dto.getLoanVdate(), dto.getLoanMdate()) > 0) {
 				errorList.add(new ValidMessage("loanMdate",
-						getMessage("REPORT_COMMON_E_0106", getMessage("OperationalLoanInfo002.loanVdate"),
+						getMessage("REPORT_COMMON_E_0106", getMessage("贷款发放日期"),
 								"贷款到期日期")));
 			}
 		}
@@ -241,7 +274,7 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 					"利率是否固定")));
 		}
 		if(!StringUtil.isNotEmpty(dto.getRateLevel())){
-			errorList.add(new ValidMessage("assetCode", getMessage("REPORT_COMMON_E_0001",
+			errorList.add(new ValidMessage("rateLevel", getMessage("REPORT_COMMON_E_0001",
 					"利率水平(%)")));
 		}
 		if(StringUtil.isEmpty(dto.getLoanGuaranteeMode())){
@@ -257,10 +290,29 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 			errorList.add(new ValidMessage("origContractAmount", getMessage("REPORT_COMMON_E_0001",
 					"原始合同金额")));
 		}
-		if(!StringUtil.isNotEmpty(dto.getOrigContractAmountCny())){
-			errorList.add(new ValidMessage("origContractAmountCny", getMessage("REPORT_COMMON_E_0001",
-					"原始合同金额折人民币")));
+		if(!StringUtil.isEmpty(dto.getOrigCcy()) &&  "CNY".equals(dto.getOrigCcy())){
+			if(StringUtil.isNotEmpty(dto.getOrigContractAmount()) && StringUtil.isNotEmpty(dto.getOrigContractAmountCny())){
+				if(dto.getOrigContractAmount().compareTo(dto.getOrigContractAmountCny()) != 0){
+					errorList.add(new ValidMessage("origContractAmountCny", getMessage("原始合同币种代码人民币时,原始合同金额折人民币必须与原始合同金额相等")));
+				}
+			}
+		}else {
+			if(!StringUtil.isNotEmpty(dto.getOrigContractAmountCny())){
+				errorList.add(new ValidMessage("origContractAmountCny", getMessage("REPORT_COMMON_E_0001",
+						"原始合同金额折人民币")));
+			}
 		}
+	}
+
+	public boolean isNumber(String srcValue,int allbit,int decbit){
+		String format = "";
+		if ( decbit>0){
+			format = "^([-+]?[0-9]{1,"+(allbit-decbit)+"})?[.][0-9]{"+decbit+"}$";
+		}else{
+			format = "^([-+]?[0-9]{1,"+(allbit-decbit)+"})?[.]?[0-9]{"+decbit+"}$";
+		}
+
+		return srcValue.matches(format);
 	}
 
 }

@@ -125,5 +125,20 @@ public class OperationalInfo002Controller extends BaseController {
 	public Page<ChbInfoMgrResultConfig> queryDataResultPage() {
 		return operationalInfoMService.queryDataResultPage(RequestUtil.getPageParam());
 	}
+
+
+	/**
+	 * @Title: queryDataResultPage
+	 * @Description: 根据表名查询已配置查询结果列表
+	 * @param @return    参数
+	 * @return Page<ChbInfoMgrResultConfig> 查询结果列表
+	 * @throws
+	 */
+
+	@ResponseBody
+	@PostMapping("queryDataResultList")
+	public List<ChbInfoMgrResultConfig> queryDataResultList() {
+		return operationalInfoMService.queryDataResultList(RequestUtil.getPageParam());
+	}
 	
 }
