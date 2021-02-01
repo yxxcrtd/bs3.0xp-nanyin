@@ -59,7 +59,8 @@
             #{item.orgCode ,jdbcType=VARCHAR } ORG_CODE,
             #{item.deptCode ,jdbcType=VARCHAR } DEPT_CODE,
             #{item.status ,jdbcType=VARCHAR } STATUS,
-            #{item.dataSource ,jdbcType=VARCHAR } DATA_SOURCE
+            #{item.dataSource ,jdbcType=VARCHAR } DATA_SOURCE,
+            #{item.assetType ,jdbcType=VARCHAR } ASSET_TYPE
             from dual
         </foreach>
         ) TEMP
@@ -112,7 +113,8 @@
         L.ORG_CODE = TEMP.ORG_CODE,
         L.DEPT_CODE = TEMP.DEPT_CODE,
         L.STATUS = TEMP.STATUS,
-        L.DATA_SOURCE = TEMP.DATA_SOURCE
+        L.DATA_SOURCE = TEMP.DATA_SOURCE,
+        L.ASSET_TYPE = TEMP.ASSET_TYPE
         WHEN NOT MATCHED THEN
         INSERT (
         ASSET_UUID,
@@ -161,7 +163,9 @@
         ORG_CODE,
         DEPT_CODE,
         STATUS,
-        DATA_SOURCE)
+        DATA_SOURCE,
+        ASSET_TYPE
+        )
         VALUES(
         TEMP.ASSET_UUID,
         TEMP.ASSET_CODE,
@@ -209,7 +213,8 @@
         TEMP.ORG_CODE,
         TEMP.DEPT_CODE,
         TEMP.STATUS,
-        TEMP.DATA_SOURCE
+        TEMP.DATA_SOURCE,
+        TEMP.ASSET_TYPE
         )
     </insert>
     <select id="selectPbcAssetType" parameterType="java.lang.String" resultMap="pbcAssetTypeMap">
