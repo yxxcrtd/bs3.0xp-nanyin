@@ -224,6 +224,16 @@ public class ChbMonthAssetPosition extends CommonProductRatingDto implements Clo
      */
     private String isBzhpj;
 
+    private  String  isFbzb;
+
+
+    public String getIsFbzb() {
+        return isFbzb;
+    }
+
+    public void setIsFbzb(String isFbzb) {
+        this.isFbzb = isFbzb;
+    }
 
     public String getBankSecKzzq() {
         return bankSecKzzq;

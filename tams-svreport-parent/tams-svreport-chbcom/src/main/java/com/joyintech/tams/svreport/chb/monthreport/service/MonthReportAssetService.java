@@ -946,7 +946,11 @@ public class MonthReportAssetService {
     	//总合计1.17单独计算
         BigDecimal balanceA=BigDecimal.ZERO;
         BigDecimal balanceB=BigDecimal.ZERO;
-        // 处理合计值
+		BigDecimal balanceC=BigDecimal.ZERO;
+		BigDecimal balanceD=BigDecimal.ZERO;
+
+
+		// 处理合计值
         for (Entry<String,ChbMonthReportDetail> detail : assetMonthReportDetailMap.entrySet()){
         	if (detail.getKey().contains("合计")){
         		
@@ -956,16 +960,26 @@ public class MonthReportAssetService {
         		BigDecimal balance = BigDecimal.ZERO;
         		// 期末余额穿透后
         		BigDecimal bottombalance = BigDecimal.ZERO;
-        		// AMT2_3特殊处理，此处不会计算AMT2_1_3故另外计算
+
+				BigDecimal xgbalance = BigDecimal.ZERO;
+
+				BigDecimal xgbottombalance = BigDecimal.ZERO;
+
+				// AMT2_3特殊处理，此处不会计算AMT2_1_3故另外计算
         		if (detail.getKey().startsWith("AMT2_3")){
         			if (assetMonthReportDetailMap.containsKey("AMT2_1_3合计")){
         				ChbMonthReportDetail detailAmt213= assetMonthReportDetailMap.get("AMT2_1_3合计");
         				balance = balance.add(detailAmt213.getBalance());
         				bottombalance = bottombalance.add(detailAmt213.getBottombalance());
-        			} else if (assetMonthReportDetailMap.containsKey("AMT2_1_3")){
+						xgbalance=xgbalance.add(detailAmt213.getXgbalance());
+						xgbottombalance = xgbottombalance.add(detailAmt213.getXgbottombalance());
+
+					} else if (assetMonthReportDetailMap.containsKey("AMT2_1_3")){
         				ChbMonthReportDetail detailAmt213= assetMonthReportDetailMap.get("AMT2_1_3");
         				balance = balance.add(detailAmt213.getBalance());
         				bottombalance = bottombalance.add(detailAmt213.getBottombalance());
+						xgbalance=xgbalance.add(detailAmt213.getXgbalance());
+						xgbottombalance = xgbottombalance.add(detailAmt213.getXgbottombalance());
         			}
         		}
         		for (Entry<String,ChbMonthReportDetail> detail2 : assetMonthReportDetailMap.entrySet()){
@@ -981,24 +995,32 @@ public class MonthReportAssetService {
         					&& !detail2.getKey().endsWith("_c")
         					&& !detail2.getKey().equals(detail.getKey())){
         				balance = balance.add(detail2.getValue().getBalance());
-        				bottombalance = bottombalance.add(detail2.getValue().getBottombalance());
+        				bottombalance = bottombalance.add(detail2.getValue().getXgbottombalance());
+						xgbalance = xgbalance.add(detail2.getValue().getBalance());
+						xgbottombalance = xgbottombalance.add(detail2.getValue().getXgbottombalance());
         			}
         		}
         		ChbMonthReportDetail chbSumDetail = detail.getValue();
         		chbSumDetail.setBalance(balance);
         		chbSumDetail.setBottombalance(bottombalance);
-        		if (detail.getKey().startsWith("AMT1_")){
+				chbSumDetail.setXgbalance(xgbalance);
+				chbSumDetail.setXgbottombalance(xgbottombalance);
+
+				if (detail.getKey().startsWith("AMT1_")){
         			
         			
         			// 计算其他合计累计值
         			balanceA = balanceA.add(balance);
-        			// 去除隐藏列的b列值
+					balanceC = balanceC.add(xgbalance);
+
+					// 去除隐藏列的b列值
         			if (!detail.getKey().startsWith("AMT1_12_9")
         					&& !detail.getKey().startsWith("AMT1_13_7")
         					&& !detail.getKey().startsWith("AMT1_14_8")){
             			balanceB = balanceB.add(bottombalance);
-        				
-        			}
+						balanceD= balanceD.add(xgbottombalance);
+
+					}
         		} 
         		
         		detail.setValue(chbSumDetail);
@@ -1008,7 +1030,10 @@ public class MonthReportAssetService {
         ChbMonthReportDetail atm117 = assetMonthReportDetailMap.get("AMT1_15合计");
         atm117.setBalance(balanceA);
         atm117.setBottombalance(balanceB);
-    }
+		atm117.setXgbalance(balanceC);
+		atm117.setXgbottombalance(balanceD);
+
+	}
     
     
     
