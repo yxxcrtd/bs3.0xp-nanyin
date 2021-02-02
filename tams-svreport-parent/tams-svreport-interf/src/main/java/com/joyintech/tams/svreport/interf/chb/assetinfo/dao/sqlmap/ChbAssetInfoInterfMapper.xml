@@ -11912,7 +11912,17 @@
                 #{item.bankSecKzzq,jdbcType=VARCHAR} BANK_SEC_KZZQ,
                 #{item.bankSecZxzq,jdbcType=VARCHAR} BANK_SEC_ZXZQ,
                 #{item.isunlisted,jdbcType=VARCHAR} ISUNLISTED,
-                #{item.isBzhpj,jdbcType=VARCHAR} IS_BZHPJ
+                #{item.isBzhpj,jdbcType=VARCHAR} IS_BZHPJ,
+                <!-- add by zhangliang G06升级字段新增  start -->
+                #{item.chbIssuerId,jdbcType=VARCHAR} CHB_ISSUER_ID,
+                #{item.chbManagerId,jdbcType=VARCHAR} CHB_MANAGER_ID,
+                #{item.chbFinancierId,jdbcType=VARCHAR} CHB_FINANCIER_ID,
+                #{item.perpetualFlag,jdbcType=VARCHAR} PERPETUAL_FLAG,
+                #{item.optionFlag,jdbcType=VARCHAR} OPTION_FLAG,
+                #{item.isBjszq,jdbcType=VARCHAR} IS_BJSZQ,
+                #{item.isPerpetual,jdbcType=VARCHAR} IS_PERPETUAL,
+                #{item.isFbzb,jdbcType=VARCHAR} IS_FBZB
+                <!-- add by zhangliang G06升级字段新增  end -->
                 from dual
             </foreach>
         ) TEMP
@@ -12125,7 +12135,17 @@
             CII.BANK_SEC_KZZQ=TEMP.BANK_SEC_KZZQ,
             CII.BANK_SEC_ZXZQ=TEMP.BANK_SEC_ZXZQ,
             CII.ISUNLISTED=TEMP.ISUNLISTED,
-            CII.IS_BZHPJ=TEMP.IS_BZHPJ
+            CII.IS_BZHPJ=TEMP.IS_BZHPJ,
+            <!-- add by zhangliang G06升级字段新增  start -->
+            CII.CHB_ISSUER_ID	=	TEMP.CHB_ISSUER_ID,
+            CII.CHB_MANAGER_ID	=	TEMP.CHB_MANAGER_ID,
+            CII.CHB_FINANCIER_ID	=	TEMP.CHB_FINANCIER_ID,
+            CII.PERPETUAL_FLAG	=	TEMP.PERPETUAL_FLAG,
+            CII.OPTION_FLAG	=	TEMP.OPTION_FLAG,
+            CII.IS_BJSZQ	=	TEMP.IS_BJSZQ,
+            CII.IS_PERPETUAL	=	TEMP.IS_PERPETUAL,
+            CII.IS_FBZB	=	TEMP.IS_FBZB
+            <!-- add by zhangliang G06升级字段新增  end -->
         <!-- 未匹配到这插入 -->
         WHEN NOT MATCHED THEN 
         INSERT (ASSET_UUID, ASSET_CODE, ASSET_TYPE,
@@ -12222,7 +12242,17 @@
         BANK_SEC_KZZQ,
         BANK_SEC_ZXZQ,
         ISUNLISTED,
-        IS_BZHPJ
+        IS_BZHPJ,
+        <!-- add by zhangliang G06升级字段新增  start -->
+        CHB_ISSUER_ID,
+        CHB_MANAGER_ID,
+        CHB_FINANCIER_ID,
+        PERPETUAL_FLAG,
+        OPTION_FLAG,
+        IS_BJSZQ,
+        IS_PERPETUAL,
+        IS_FBZB
+        <!-- add by zhangliang G06升级字段新增  end -->
         )
         values(
             TEMP.ASSET_UUID,
@@ -12429,7 +12459,17 @@
             TEMP.BANK_SEC_KZZQ,
             TEMP.BANK_SEC_ZXZQ,
             TEMP.ISUNLISTED,
-            TEMP.IS_BZHPJ
+            TEMP.IS_BZHPJ,
+            <!-- add by zhangliang G06升级字段新增  start -->
+            TEMP.CHB_ISSUER_ID,
+            TEMP.CHB_MANAGER_ID,
+            TEMP.CHB_FINANCIER_ID,
+            TEMP.PERPETUAL_FLAG,
+            TEMP.OPTION_FLAG,
+            TEMP.IS_BJSZQ,
+            TEMP.IS_PERPETUAL,
+            TEMP.IS_FBZB
+            <!-- add by zhangliang G06升级字段新增  end -->
         )
     </insert>
     
