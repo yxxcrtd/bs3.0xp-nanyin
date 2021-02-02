@@ -1,4 +1,4 @@
-package com.joyintech.common.base.dao;
+package com.joyintech.tams.common.base.dao;
 
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import org.springframework.stereotype.Repository;
