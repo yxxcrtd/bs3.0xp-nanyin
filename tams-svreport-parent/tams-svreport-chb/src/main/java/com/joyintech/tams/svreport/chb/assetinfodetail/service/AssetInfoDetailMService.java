@@ -9,6 +9,7 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.system.base.entity.SysDatadictListLink;
@@ -131,8 +132,10 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		//赋值相关数据
 		dto.setCreateUser(LoginUserUtil.getUserName());
 		dto.setUpdateUser(LoginUserUtil.getUserName());
-		dto.setStatus(DictCodeList.数据状态_修改.getValue());
 		dto.setIssuePartyId(CommonUtil.selectBankCode());
+		if(StringUtil.isEmpty(dto.getAssetUuid())){
+			dto.setAssetUuid(IDGenerator.generate(36));
+		}
 		restTemplate.postForObject(
 				SvrServiceApplication.CHB_SERVICE_NAME + "/AssetInfoDetail/doSave", dto, Integer.class);
 

@@ -2356,7 +2356,7 @@
             #{item.governInvestFund,jdbcType=VARCHAR} GOVERN_INVEST_FUND,
             #{item.fundEnpeName,jdbcType=VARCHAR} FUND_ENPE_NAME,
             #{item.trustee,jdbcType=VARCHAR} TRUSTEE,
-            #{item.status,jdbcType=VARCHAR} STATUS,
+			#{item.status,jdbcType=VARCHAR} STATUS,
             #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
             sysdate CREATE_TIME,
             #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
@@ -2566,7 +2566,7 @@
         CII.GOVERN_INVEST_FUND = TEMP.GOVERN_INVEST_FUND,
         CII.FUND_ENPE_NAME = TEMP.FUND_ENPE_NAME,
         CII.TRUSTEE = TEMP.TRUSTEE,
-        CII.STATUS = TEMP.STATUS,
+        CII.STATUS = 'M',
         CII.CREATE_USER = TEMP.CREATE_USER,
         /*CII.CREATE_TIME = TEMP.CREATE_TIME,*/
         CII.UPDATE_USER = TEMP.UPDATE_USER,
@@ -2730,7 +2730,7 @@
         BANK_SEC_PREFER,
         BANK_SEC_PERPETUAL)
         values(
-        SYS_GUID(),
+        TEMP.ASSET_UUID,
         TEMP.ASSET_CODE,
         TEMP.ASSET_TYPE,
         TEMP.ASSET_TYPE2,
@@ -2862,7 +2862,7 @@
         TEMP.GOVERN_INVEST_FUND,
         TEMP.FUND_ENPE_NAME,
         TEMP.TRUSTEE,
-        TEMP.STATUS,
+        'E',
         TEMP.CREATE_USER,
         TEMP.CREATE_TIME,
         TEMP.UPDATE_USER,
@@ -2959,6 +2959,10 @@
             </if>
             <if test="orgAssetType4 != null and orgAssetType4!=''">
                 AND M.ASSET_BUSI_TYPE =#{orgAssetType4}
+            </if>
+            <if test="search != null and search!=''">
+                AND (E.CHB_ASSET_TYPE2 like '%'|| #{search} ||'%'
+                        or l.ITEM_VALUE like '%'|| #{search} ||'%')
             </if>
     </select>
 

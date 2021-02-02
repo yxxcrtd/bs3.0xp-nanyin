@@ -50,14 +50,49 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 				if(StringUtil.isEmpty(dto.getEachProportion())){
 					errorList.add(new ValidMessage("eachProportion", getMessage("REPORT_COMMON_E_0001",
 							"各比例")));
+				}else{
+					try {
+						int each = 0;
+						for(String code : dto.getEachProportion().split(":")){
+							each = each + Integer.parseInt(code);
+						}
+						if(each!=100){
+							errorList.add(new ValidMessage("eachProportion", "各比例分割后合计必须等于100",
+									"各比例"));
+						}
+					}catch(Exception e){
+						errorList.add(new ValidMessage("eachProportion", "各比例分割后合计必须等于100",
+								"各比例"));
+					}
+
 				}
-			}else if(StringUtil.equals(dto.getAssetType(), DictCodeListExt3.中债_中债贷款分类_贷款.getValue())){//当资产为资产收益权时
+			}else if(StringUtil.equals(dto.getAssetType(), DictCodeListExt3.中债_中债贷款分类_贷款.getValue())){
 				//必填验证
 				dataCheck(dto,errorList);
 
 				//当“贷款种类”选择“转让贷款”时,贷款转让方信息、贷款转让折扣率（%）   必填
 				if (StringUtil.isNotEmpty(dto.getLoansType()) &&
 						StringUtil.equals(dto.getLoansType(), DictCodeListExt3.贷款种类_转让贷款.getValue())) {
+
+
+					/***转让**/
+					if(StringUtil.isNotEmpty(dto.getLoanTransferorRate()) &&  !isNumber(dto.getLoanTransferorRate().toString(),17,2)){
+						errorList.add(new ValidMessage("loanTransferorRate", getMessage("贷款转让折扣率（%）格式需要为n(17,2)!")));
+					}
+
+					if(StringUtil.isNotEmpty(dto.getLoanTransferorId()) && dto.getLoanTransferorId().length() > 6){
+						errorList.add(new ValidMessage("loanTransferorId", getMessage("贷款转让方机构代码最大长度为6位!")));
+					}
+					if(StringUtil.isNotEmpty(dto.getLoanTransferorName()) && dto.getLoanTransferorName().length() > 300){
+						errorList.add(new ValidMessage("loanTransferorName", getMessage("贷款转让方机构名称最多只能输入300个汉字!")));
+					}
+					if(StringUtil.isNotEmpty(dto.getLoanContractOrgId()) &&  dto.getLoanContractOrgId().length() > 6){
+						errorList.add(new ValidMessage("loanContractOrgId", getMessage("贷款合同原始发放机构代码最大长度为6位!")));
+					}
+					if(StringUtil.isNotEmpty(dto.getLoanContractOrgName()) &&  dto.getLoanContractOrgName().length() > 300){
+						errorList.add(new ValidMessage("loanContractOrgName", getMessage("贷款合同原始发放机构名称最多只能输入300个汉字!")));
+					}
+
 					if(!StringUtil.isNotEmpty(dto.getLoanTransferorId())){
 						errorList.add(new ValidMessage("loanTransferorId", getMessage("BUSS_COM_E_0038",
 								"贷款转让方机构代码")));
@@ -90,39 +125,6 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 						errorList.add(new ValidMessage("loanTransferorRate", getMessage("BUSS_COM_E_0038",
 								"贷款转让折扣率(%)")));
 					}
-
-					/*校验修复 zc add by start*/
-					if(StringUtil.isNotEmpty(dto.getLoanTransferorId()) && dto.getLoanTransferorId().length() > 6){
-						errorList.add(new ValidMessage("loanTransferorId", getMessage("贷款转让方机构代码最大长度为6位!")));
-					}
-					if(StringUtil.isNotEmpty(dto.getLoanTransferorName()) && dto.getLoanTransferorName().length() > 300){
-						errorList.add(new ValidMessage("loanTransferorName", getMessage("贷款转让方机构名称最多只能输入300个汉字!")));
-					}
-					if(StringUtil.isNotEmpty(dto.getLoanContractOrgId()) &&  dto.getLoanContractOrgId().length() > 6){
-						errorList.add(new ValidMessage("loanContractOrgId", getMessage("贷款合同原始发放机构代码最大长度为6位!")));
-					}
-					if(StringUtil.isNotEmpty(dto.getLoanContractOrgName()) &&  dto.getLoanContractOrgName().length() > 300){
-						errorList.add(new ValidMessage("loanContractOrgName", getMessage("贷款合同原始发放机构名称最多只能输入300个汉字!")));
-					}
-					if(StringUtil.isNotEmpty(dto.getBorrowerId()) &&  dto.getBorrowerId().length() > 30){
-						errorList.add(new ValidMessage("borrowerId", getMessage("借款人代码最大长度为30位!")));
-					}
-					if(StringUtil.isNotEmpty(dto.getLoanBasisId()) &&  dto.getLoanBasisId().length() > 35){
-						errorList.add(new ValidMessage("loanBasisId", getMessage("贷款借据编码最大长度为35位!")));
-					}
-					if(StringUtil.isNotEmpty(dto.getRateLevel()) && isNumber(dto.getRateLevel().toString(),17,2) ){
-						errorList.add(new ValidMessage("rateLevel", getMessage("利率水平（%）格式需要为n(17,2)!")));
-					}
-					if(StringUtil.isNotEmpty(dto.getLoanTransferorRate()) &&  isNumber(dto.getLoanTransferorRate().toString(),17,2)){
-						errorList.add(new ValidMessage("loanTransferorRate", getMessage("贷款转让折扣率（%）格式需要为n(17,2)!")));
-					}
-					if(StringUtil.isNotEmpty(dto.getOrigContractAmount()) &&  isNumber(dto.getOrigContractAmount().toString(),17,2)){
-						errorList.add(new ValidMessage("origContractAmount", getMessage("原始合同金额格式需要为n(17,2)!")));
-					}
-					if(StringUtil.isNotEmpty(dto.getOrigContractAmountCny()) &&  isNumber(dto.getOrigContractAmountCny().toString(),17,2)){
-						errorList.add(new ValidMessage("origContractAmountCny", getMessage("原始合同金额折人民币格式需要为n(17,2)!")));
-					}
-					/*校验修复 zc add by end*/
 				}
 
 				//当贷款种类为“其他债权”时,贷款借据编码、贷款产品类别、贷款质量、贷款状态   置灰不可填，否则必填
@@ -131,6 +133,10 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 					if(!StringUtil.isNotEmpty(dto.getLoanBasisId())){
 						errorList.add(new ValidMessage("loanBasisId", getMessage("BUSS_COM_E_0038",
 								"贷款借据编码")));
+					}
+					/**发放,转让**/
+					if(StringUtil.isNotEmpty(dto.getLoanBasisId()) &&  dto.getLoanBasisId().length() > 35){
+						errorList.add(new ValidMessage("loanBasisId", getMessage("贷款借据编码最大长度为35位!")));
 					}
 					if(StringUtil.isNotEmpty(dto.getLoanPrdType())
 							&& StringUtil.equals(dto.getLoanPrdType(), DictCodeListExt3.贷款产品类别_其他贷款.getValue())){
@@ -302,6 +308,25 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 						"原始合同金额折人民币")));
 			}
 		}
+		/*校验修复 zc add by start*/
+
+		if(StringUtil.isNotEmpty(dto.getBorrowerId()) &&  dto.getBorrowerId().length() > 30){
+			errorList.add(new ValidMessage("borrowerId", getMessage("借款人代码最大长度为30位!")));
+		}
+
+
+
+		if(StringUtil.isNotEmpty(dto.getRateLevel()) && !isNumber(dto.getRateLevel().toString(),15,2) ){
+			errorList.add(new ValidMessage("rateLevel", getMessage("利率水平（%）格式需要为n(17,2)!")));
+		}
+
+		if(StringUtil.isNotEmpty(dto.getOrigContractAmount()) &&  !isNumber(dto.getOrigContractAmount().toString(),15,2)){
+			errorList.add(new ValidMessage("origContractAmount", getMessage("原始合同金额格式需要为n(17,2)!")));
+		}
+		if(StringUtil.isNotEmpty(dto.getOrigContractAmountCny()) &&  !isNumber(dto.getOrigContractAmountCny().toString(),15,2)){
+			errorList.add(new ValidMessage("origContractAmountCny", getMessage("原始合同金额折人民币格式需要为n(17,2)!")));
+		}
+		/*校验修复 zc add by end*/
 	}
 
 	public boolean isNumber(String srcValue,int allbit,int decbit){
