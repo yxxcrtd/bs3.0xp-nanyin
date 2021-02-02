@@ -255,6 +255,7 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
         // 1 获取需要生成预提交易类标的的配置信息
         List<TrdAccountmfConfigDto> taclists = investFeePayMapper.selectTACInfoByDate(DateUtil.format(batchDate, "yyyy-MM-dd"));
         for(TrdAccountmfConfigDto dto : taclists) {
+            String org = dto.getRegistOrg();
         	String secAcctIdStr = (String)param.get("secAcctId");
         	if(StringUtil.isEmpty(secAcctIdStr) || (StringUtil.isNotEmpty(secAcctIdStr) && StringUtil.equals(dto.getSecAcctId(),secAcctIdStr)) ){
         		// 2 获取费用上次支付的计提结束日
@@ -298,7 +299,7 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
                 			continue;
                 		}
                 		
-                        BigDecimal balance =  this.getSubjectBalance(detail.getBooksetId(),detail.getBokDetailId(),detail.getMdate(),detail.getMdate());
+                        BigDecimal balance =  this.getSubjectBalance(detail.getBooksetId(),detail.getBokDetailId(),detail.getMdate(),detail.getMdate(),org);
                     	InvestFeePayDto feePayDto = new InvestFeePayDto();
                         feePayDto.setSecAcctId(dto.getSecAcctId()); //证券账户
                         feePayDto.setFeeType1(DictCodeList.费用品种类型_账户维护费.getValue());
@@ -402,10 +403,15 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
      * @param bookDate
      * @return
      */
-    private BigDecimal getSubjectBalance(String booksetId,String bokDetailId, Date happenDate, Date bookDate ){
+    private BigDecimal getSubjectBalance(String booksetId,String bokDetailId, Date happenDate, Date bookDate ,String org){
         // 塞入要查询的基础科目性质
-        List<String> baseSubjectNatureList = new ArrayList<>();;
-        baseSubjectNatureList.add(DictCodeBaseSubjectNatrue.预提费用.getValue());
+        List<String> baseSubjectNatureList = new ArrayList<>();
+        if("01".equals(org)){
+            baseSubjectNatureList.add("ZZYTFY");
+        }else if("02".equals(org)){
+            baseSubjectNatureList.add("SQYTFY");
+        }
+//        baseSubjectNatureList.add(DictCodeBaseSubjectNatrue.预提费用.getValue());
 
         //设值科目余额查询参数Dto
         SubjectBalanceSearchDto searchDto = new SubjectBalanceSearchDto();
@@ -714,13 +720,17 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
         map.put("secAcctId", secAcctId);
         map.put("feeType", feeType);
         map.put("cdate", cdate);
-        map.put("org", regTrustOrg);
         if (feeType != null && feeType.equals(DictCodeList.费用品种类型_结算服务费.getValue())) {
+            map.put("org", regTrustOrg);
             map.put("feeType1", DictCodeListExt1.一次性费用类型_结算手续费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_交易手续费.getValue())) {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_交易手续费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_佣金.getValue())) {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_佣金.getValue());
+        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_经手费.getValue())){
+            map.put("feeType1", DictCodeListExt1.一次性费用类型_经手费.getValue());
+        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_结算费.getValue())){
+            map.put("feeType1", DictCodeListExt1.一次性费用类型_结算费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_账户维护费.getValue())) {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_账户维护费.getValue());
         }
@@ -730,16 +740,20 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
     public BigDecimal queryPayTradeAmt(String secAcctId, String org, String cdate, String startDate,String feeType,String confirmFlag) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("secAcctId", secAcctId);
-        map.put("org", org);
         map.put("cdate", cdate);
         map.put("feeType", feeType);
         map.put("noFlag", DictCodeList.是否_否.getValue());
         if (feeType != null && feeType.equals(DictCodeList.费用品种类型_结算服务费.getValue())) {
+            map.put("org", org);
             map.put("feeType1", DictCodeListExt1.一次性费用类型_结算手续费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_交易手续费.getValue())) {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_交易手续费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_佣金.getValue())) {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_佣金.getValue());
+        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_经手费.getValue())){
+            map.put("feeType1", DictCodeListExt1.一次性费用类型_经手费.getValue());
+        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_结算费.getValue())){
+            map.put("feeType1", DictCodeListExt1.一次性费用类型_结算费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_账户维护费.getValue())) {
             BigDecimal balance = BigDecimal.ZERO;
             if(StringUtil.isNotEmpty(secAcctId) && StringUtil.isNotEmpty(startDate) && StringUtil.isNotEmpty(cdate)) {
@@ -749,7 +763,7 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
                 }
                 List<BokDetailId> bokDetailIds = investFeePayMapper.selectFinDetail(map);
                 for (BokDetailId detail : bokDetailIds) {
-                    BigDecimal tmpBalance = this.getSubjectBalance(detail.getBooksetId(), detail.getBokDetailId(), DateUtil.parse(cdate), DateUtil.parse(cdate));
+                    BigDecimal tmpBalance = this.getSubjectBalance(detail.getBooksetId(), detail.getBokDetailId(), DateUtil.parse(cdate), DateUtil.parse(cdate),org);
                     balance = ArithmeticUtil.doAdd(balance, tmpBalance);
                 }
             }
@@ -839,15 +853,19 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
     public List<InvestFeePayPositionDetailDto> queryPayFeeInfoList(String secAcctId, String org, String cdate,String startDate, String feeType,String confirmFlag) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("secAcctId", secAcctId);
-        map.put("org", org);
         map.put("cdate", cdate);
         map.put("feeType", feeType);
         if (feeType != null && feeType.equals(DictCodeList.费用品种类型_结算服务费.getValue())) {
+            map.put("org", org);
             map.put("feeType1", DictCodeListExt1.一次性费用类型_结算手续费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_交易手续费.getValue())) {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_交易手续费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_佣金.getValue())) {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_佣金.getValue());
+        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_经手费.getValue())){
+            map.put("feeType1", DictCodeListExt1.一次性费用类型_经手费.getValue());
+        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_结算费.getValue())){
+            map.put("feeType1", DictCodeListExt1.一次性费用类型_结算费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_账户维护费.getValue())) {
             Map<String, Object> map2 = new HashMap<String, Object>();
             map2.put("feeType",DictCodeListExt1.一次性费用类型_账户维护费.getValue());
@@ -866,7 +884,7 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
                 feePay.setPtlId(entry.getKey());
                 List<BokDetailId> list = entry.getValue();
                 for(BokDetailId detail : list){
-                    BigDecimal tmpBalance =  this.getSubjectBalance(detail.getBooksetId(),detail.getBokDetailId(),DateUtil.parse(cdate),DateUtil.parse(cdate));
+                    BigDecimal tmpBalance =  this.getSubjectBalance(detail.getBooksetId(),detail.getBokDetailId(),DateUtil.parse(cdate),DateUtil.parse(cdate),org);
                     balance = ArithmeticUtil.doAdd(balance, tmpBalance);
                     feePay.setPortFolioName(detail.getBusiDetailType());
                 }
@@ -904,7 +922,7 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
      * @return 费用明细
      */
     public List<InvestFeePayPositionDetailDto> queryFeePositionDetail(String feeType, String startDate, String enddate, 
-                                                                      String secAcctId, String ptlId,String confirmFlag,String tradeId) {
+                                                                      String secAcctId, String ptlId,String confirmFlag,String tradeId,String org) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("feeType", feeType);
         map.put("startDate", startDate);
@@ -920,7 +938,11 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_交易手续费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_佣金.getValue())) {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_佣金.getValue());
-        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_账户维护费.getValue())) {
+        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_经手费.getValue())){
+            map.put("feeType1", DictCodeListExt1.一次性费用类型_经手费.getValue());
+        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_结算费.getValue())){
+            map.put("feeType1", DictCodeListExt1.一次性费用类型_结算费.getValue());
+        }else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_账户维护费.getValue())) {
             Map<String, Object> map2 = new HashMap<String, Object>();
             map2.put("feeType",DictCodeListExt1.一次性费用类型_账户维护费.getValue());
             map2.put("secAcctId",secAcctId);
@@ -939,7 +961,7 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
             List<BokDetailId> bokDetailIds= investFeePayMapper.selectFinDetail(map2);
             List<InvestFeePayPositionDetailDto> feeList = new ArrayList<>();
             for(BokDetailId detail : bokDetailIds){
-                BigDecimal tmpBalance =  this.getSubjectBalance(detail.getBooksetId(),detail.getBokDetailId(),DateUtil.parse(enddate),DateUtil.parse(enddate));
+                BigDecimal tmpBalance =  this.getSubjectBalance(detail.getBooksetId(),detail.getBokDetailId(),DateUtil.parse(enddate),DateUtil.parse(enddate),org);
                 InvestFeePayPositionDetailDto feePay = new InvestFeePayPositionDetailDto();
                 feePay.setPtlId(ptlId);
                 feePay.setPortFolioName(detail.getBusiDetailType());
@@ -1073,6 +1095,10 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_交易手续费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_佣金.getValue())) {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_佣金.getValue());
+        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_经手费.getValue())){
+            map.put("feeType1", DictCodeListExt1.一次性费用类型_经手费.getValue());
+        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_结算费.getValue())){
+            map.put("feeType1", DictCodeListExt1.一次性费用类型_结算费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_账户维护费.getValue())) {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_账户维护费.getValue());
         }
@@ -1524,5 +1550,9 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
      */
     public String inputDataType(String tradeId) {
         return investFeePayMapper.inputDataType(tradeId);
+    }
+
+    public List<SelectOptionDto> getPortFolioName(Map<String, Object> map) {
+        return investFeePayMapper.getPortFolioName(map);
     }
 }

@@ -396,4 +396,5 @@ public interface InvestFeePayMapper {
      */
     String inputWflDataType(String tradeId);
 
+    List<SelectOptionDto> getPortFolioName(Map<String, Object> map);
 }

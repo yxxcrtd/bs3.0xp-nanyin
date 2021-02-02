@@ -342,7 +342,10 @@
 			LEFT JOIN PTL_SEC_ACCT PSA 
 			ON PSA.PORTFOLIO_ID = PTL_FEE_POSITION.PORTFOLIO_ID
 			INNER JOIN STL_SEC_ACCT_INFO SSAI 
-      		ON SSAI.SEC_ACCT_ID = PSA.ACCT_NO AND SSAI.REGIST_ORG = PTL_FEE_POSITION.PTL_FEE_PLACE
+      		ON SSAI.SEC_ACCT_ID = PSA.ACCT_NO
+			<if test="org != null and org != '' and org != 'null'">
+				AND SSAI.REGIST_ORG = PTL_FEE_POSITION.PTL_FEE_PLACE
+			</if>
 		</if>
    		WHERE PTL_FEE_POSITION.PTL_FEE_TYPE = #{feeType1}
 			AND PTL_FEE_POSITION.CDATE = to_date(#{cdate}, 'yyyy-MM-dd')-1
@@ -413,7 +416,10 @@
 		LEFT JOIN PTL_SEC_ACCT PSA 
 			ON PSA.PORTFOLIO_ID = PTL_FEE_POSITION.PORTFOLIO_ID
 		INNER JOIN STL_SEC_ACCT_INFO SSAI 
-			ON SSAI.SEC_ACCT_ID = PSA.ACCT_NO AND SSAI.REGIST_ORG = PTL_FEE_POSITION.PTL_FEE_PLACE
+			ON SSAI.SEC_ACCT_ID = PSA.ACCT_NO
+			<if test="org != null and org != ''">
+				AND SSAI.REGIST_ORG = PTL_FEE_POSITION.PTL_FEE_PLACE
+			</if>
 		</if>
    		WHERE PTL_FEE_POSITION.PTL_FEE_TYPE = #{feeType1}
 			AND PTL_FEE_POSITION.CDATE = to_date(#{cdate}, 'yyyy-MM-dd')-1
@@ -1281,4 +1287,15 @@ AND NOT EXISTS (
 		and tpd.totle_trade_id = #{tradeId}
 	</select>
 
+	<select id="getPortFolioName" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select pp.PORTFOLIO_ID id,pp.PORTFOLIO_NAME text from PTL_PORTFOLIO pp
+		inner JOIN PTL_SEC_ACCT psa
+		ON psa.PORTFOLIO_ID = pp.PORTFOLIO_ID
+		where psa.ACCT_NO = #{secAcctId}
+		and pp.MDATE <![CDATA[>=]]> to_date(#{payDate},'yyyy-mm-dd')
+		and to_date(#{payDate},'yyyy-mm-dd') <![CDATA[>=]]> pp.VDATE
+		<if test="initValue != null and initValue != ''">
+			AND pp.PORTFOLIO_ID = #{initValue}
+		</if>
+	</select>
 </mapper>

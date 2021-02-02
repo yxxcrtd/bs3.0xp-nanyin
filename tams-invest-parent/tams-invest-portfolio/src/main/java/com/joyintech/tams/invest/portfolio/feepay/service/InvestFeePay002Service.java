@@ -996,13 +996,13 @@ public class InvestFeePay002Service extends BaseService<InvestFeePay002Dto> impl
      * @since 1.0
      */
     public List<InvestFeePay003Dto> queryFeePositionDetail(String secAcctId, String ptlId, String calcStartDate, String calcEndDate,
-                                                               String feeType,String confirmFlag,String tradeId) {
+                                                               String feeType,String confirmFlag,String tradeId,String org) {
         // 根据费用品种对应到交易费用明细表的费用类型
         List<InvestFeePay003Dto> positionDetailList = restTemplate.getForList(
             ServiceApplication.PORTFOLIO_SERVICE_NAME + "/InvestFeePay/queryFeePositionDetail?feeType=" + feeType
                                                                              + "&startDate=" + calcStartDate + "&enddate="
                                                                              + calcEndDate + "&secAcctId=" + secAcctId
-                                                                             + "&ptlId=" + ptlId+ "&confirmFlag=" + confirmFlag + "&tradeId=" + tradeId,
+                                                                             + "&ptlId=" + ptlId+ "&confirmFlag=" + confirmFlag + "&tradeId=" + tradeId + "&org=" + org,
                                                                              InvestFeePay003Dto.class);
 
         if (StringUtil.isNotEmpty(positionDetailList)) {
@@ -1232,6 +1232,12 @@ public class InvestFeePay002Service extends BaseService<InvestFeePay002Dto> impl
         else if (StringUtil.equals(feeType, DictCodeList.费用品种类型_佣金.getValue())) {
             return DictCodeListExt1.一次性费用类型_佣金.getValue();
         }
+        else if (StringUtil.equals(feeType, DictCodeList.费用品种类型_经手费.getValue())) {
+            return DictCodeListExt1.一次性费用类型_经手费.getValue();
+        }
+        else if (StringUtil.equals(feeType, DictCodeList.费用品种类型_结算费.getValue())) {
+            return DictCodeListExt1.一次性费用类型_结算费.getValue();
+        }
         /**add by chendijun 2019-10-15 投资顾问费转换 **/
         else if (StringUtil.equals(feeType, DictCodeListExt2.费用品种类型_投资顾问费.getValue())) {
             return DictCodeListExt2.现金流二级类型_投资顾问费.getValue();
@@ -1378,6 +1384,11 @@ public class InvestFeePay002Service extends BaseService<InvestFeePay002Dto> impl
     public List<BussTrdTransferOrderDto> selectPayOrders(String bizCode) {
         return restTemplate.postForList(ServiceApplication.SETTLE_SERVICE_NAME + "/BussSettleOrderComm/selectOrdersByBizCode",
             bizCode, BussTrdTransferOrderDto.class);
+    }
+
+    public List<SelectOptionDto> getPortFolioName(Map<String, Object> pageParam) {
+        return restTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/InvestFeePay/getPortFolioName",
+                pageParam, SelectOptionDto.class);
     }
 
 }
