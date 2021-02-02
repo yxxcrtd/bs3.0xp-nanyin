@@ -85,6 +85,7 @@ public class PrdOpenPlanUpdateDto extends NeedOperateEntity{
      * 首次计费结束日
      */
     private Date firstCalEndDate;
+    private Date eAccrDate;//计提结束日
 	/*******************付费计划字段 end*********************/
     
     /*******************业绩回补计划字段 start*********************/
@@ -100,7 +101,7 @@ public class PrdOpenPlanUpdateDto extends NeedOperateEntity{
     private Date  firstAnapleroticCycleBegDate;//首次回补周期结束日
     private Date  firstAnapleroticCycleEndDate;//首次回补周期结束日
     private BigDecimal  anapleroticRatio; // 回补比例
-    private Date  eAccrDate;//回补计提结束日
+    //private Date  eAccrDate;//回补计提结束日
     
     
     /*******************业绩回补计划字段 end*********************/
@@ -440,6 +441,12 @@ public class PrdOpenPlanUpdateDto extends NeedOperateEntity{
 	}
 	public void setAnapleroticRatio(BigDecimal anapleroticRatio) {
 		this.anapleroticRatio = anapleroticRatio;
+	}
+	public Date geteAccrDate() {
+		return eAccrDate;
+	}
+	public void seteAccrDate(Date eAccrDate) {
+		this.eAccrDate = eAccrDate;
 	}
     
 }

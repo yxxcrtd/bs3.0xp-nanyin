@@ -75,7 +75,10 @@ public class PrdOpenPlanUpdateProcessor extends BaseProcessor<NeedOperateEntity,
 			// 公共方法生成的List<付费计划>
 			List<FinCashPlan> finFeePlanList = bussFinProductFeePlanService.getProductFeePlanData(
 					prdOpenPlanUpdateProcessorService.executeFeeDto(prdOpenPlanUpdateDto));
-			finOpenPlanDto.setFinFeePlanList(finFeePlanList);
+			// 更新后的付费计划
+						List<FinCashPlan> newFinFeePlanList = prdOpenPlanUpdateProcessorService.executeFeeList(finFeePlanList,
+								prdOpenPlanUpdateDto);						
+			finOpenPlanDto.setFinFeePlanList(newFinFeePlanList);
 		}
 		
 		finOpenPlanDto.setPrdOpenPlanUpdateDto(prdOpenPlanUpdateDto);
