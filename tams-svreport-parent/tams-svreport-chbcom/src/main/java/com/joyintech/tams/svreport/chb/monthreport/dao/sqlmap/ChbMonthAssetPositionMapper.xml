@@ -916,7 +916,7 @@
         decode(info.PPPFLAG,'01','01',null), decode(info.IS_GOVERN_FUND,'01','01',null),
         decode(info.PRIVATEFUND_FLAG,'01','01',null), decode(info.PRIVATEPRD_FLAG,'01','01',null),
         decode(info.BONDTOSTOCK_FLAG,'01','01',null),
-        info.MANAGE_TYPE,,prd.IS_FHXGCP
+        info.MANAGE_TYPE,prd.IS_FHXGCP
     </select>
     <select id="selectPlanInfoByCommon" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
             flushCache="true" useCache="false">
