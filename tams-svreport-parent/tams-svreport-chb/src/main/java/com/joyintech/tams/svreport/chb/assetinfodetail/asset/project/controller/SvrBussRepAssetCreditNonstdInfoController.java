@@ -45,7 +45,7 @@ public class SvrBussRepAssetCreditNonstdInfoController extends BaseController{
 
         //1.赋值界面数据字典
         setSelectOptionToModel(model,   new DictCode[] {DictCode.基准利率,DictCode.是否_中债,DictCode.资产_负债二级类别,DictCode.交易流通场所,DictCode.收受益权类型,
-                DictCode.重点监控行业和领域类别,DictCode.担保方式,DictCode.资产评级,
+                DictCode.重点监控行业和领域类别,DictCode.担保方式,DictCode.资产评级,DictCode.计息基础_中债,
                 DictCode.发行机构类型_按技术领域划分,DictCode.发行机构类型_按规模划分,DictCode.发行机构类型_按经济类型划分
                 ,DictCode.机构所属行业一级分类,DictCode.机构所属行业二级分类,DictCode.行政区划_市,DictCode.资产评级,DictCode.人行机构规模,DictCode.受让形式}
          );
