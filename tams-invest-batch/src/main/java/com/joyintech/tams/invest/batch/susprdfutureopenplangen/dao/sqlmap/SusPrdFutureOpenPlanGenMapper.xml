@@ -2,9 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.invest.batch.susprdfutureopenplangen.dao.SusPrdFutureOpenPlanGenMapper">
 
-	<select id="findSusPrdFutureOpenPlanGenList" parameterType="Map" resultType="com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto">
-		select * from
-		(SELECT	
+	<select id="findSusPrdFutureOpenPlanGenList" parameterType="Map" resultType="com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto">		
+		SELECT	
 		    '开放计划' planType,																								
 			A.FINPROD_ID AS FINPROD_ID,																								
 			A.VDATE AS VDATE,	
@@ -90,17 +89,7 @@
 			A.FINPROD_TYPE2 = #{finprodType}																
 			AND A.P_FINPROD_ID IS NULL
 			<!-- AND A.IS_SUS = #{isSus} -->
-			AND A.OPERATION_TYPE = #{operationType}	
-			)b
-			 LEFT JOIN (select f.FINPROD_ID,F.CREATE_DEPT from fin_product f) f 
-			ON f.FINPROD_ID = b.FINPROD_ID
-			left join SYS_DEPARTMENT sd on f.CREATE_DEPT =  sd.DEPT_CODE
-			 where sd.institution_code in
-			(select si.INSTITUTION_CODE
-		from sys_user su
-		inner join SYS_DEPARTMENT sd on su.DEPT_CODE = sd.DEPT_CODE
-		inner join SYS_INSTITUTION si on si.INSTITUTION_CODE = sd.INSTITUTION_CODE
-		where su.USER_Name = #{userId,jdbcType=VARCHAR})																								
+			AND A.OPERATION_TYPE = #{operationType}																											
 	</select>
 	
 <!-- 	<select id="findProductAnapleroticPlanList" parameterType="Map" resultType="com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto">
@@ -163,8 +152,7 @@
 		    A.FINPROD_TYPE = 'F16'																								
 	</select> -->
 	
-	<select id="findProductPayPlanList" parameterType="Map" resultType="com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto">
-		select * from(
+	<select id="findProductPayPlanList" parameterType="Map" resultType="com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto">		
 		SELECT	
 		'付息计划' planType,/*计划类型*/
 		fp.FINPROD_ID AS finprodId,/*金融产品代码*/
@@ -219,17 +207,7 @@
 				where
 				fp.FINPROD_TYPE2 = 'F16'
 		        AND fp.PROFIT_TYPE in ('02','03')
-		        AND fp.P_FINPROD_ID IS NULL		
-		        )b		
-		        LEFT JOIN (select f.FINPROD_ID,F.CREATE_DEPT from fin_product f) f 
-			ON f.FINPROD_ID = b.finprodId
-			left join SYS_DEPARTMENT sd on f.CREATE_DEPT =  sd.DEPT_CODE
-			 where sd.institution_code in
-			(select si.INSTITUTION_CODE
-		from sys_user su
-		inner join SYS_DEPARTMENT sd on su.DEPT_CODE = sd.DEPT_CODE
-		inner join SYS_INSTITUTION si on si.INSTITUTION_CODE = sd.INSTITUTION_CODE
-		where su.USER_Name = #{userId,jdbcType=VARCHAR})																			
+		        AND fp.P_FINPROD_ID IS NULL				       																		
 	</select>
 	
 	<select id="findNdateOrEndDateByProdid" parameterType="string" resultType="java.util.Date">
