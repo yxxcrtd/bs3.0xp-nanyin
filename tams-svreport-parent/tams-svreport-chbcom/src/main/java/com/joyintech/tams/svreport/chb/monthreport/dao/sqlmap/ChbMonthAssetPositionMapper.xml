@@ -35,6 +35,7 @@
       <result column="BANK_SEC_ZXZQ" property="bankSecZxzq" jdbcType="VARCHAR" />
       <result column="ISUNLISTED" property="isunlisted" jdbcType="VARCHAR" />
       <result column="IS_BZHPJ" property="isBzhpj" jdbcType="VARCHAR" />
+      <result column="IS_FBZB" property="isFbzb" jdbcType="VARCHAR" />
 
   </resultMap>
   
