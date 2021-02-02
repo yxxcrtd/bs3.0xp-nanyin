@@ -640,7 +640,18 @@ public class ChbMonthReport001Service extends SvrCommonExportService<ChbMonthRep
 			detail.setProdamount(detail.getProdamount().divide(tenthousand, 9, BigDecimal.ROUND_HALF_UP));
 		if(detail.getProdnetamount()!=null)//本期总募集金额
 			detail.setProdnetamount(detail.getProdnetamount().divide(tenthousand, 9, BigDecimal.ROUND_HALF_UP));
+		/**add by  新增字段     dongxiangyang  start*/
+		if(detail.getProdpayamount()!=null){
+			detail.setProdpayamount(detail.getProdpayamount().divide(tenthousand, 9, BigDecimal.ROUND_HALF_UP));
+		}if(detail.getXgbalance()!=null){
+			detail.setXgbalance(detail.getXgbalance().divide(tenthousand, 9, BigDecimal.ROUND_HALF_UP));
+		}if(detail.getXgbottombalance()!=null){
+			detail.setXgbottombalance(detail.getXgbottombalance().divide(tenthousand, 9, BigDecimal.ROUND_HALF_UP));
+		}
+		/**add by  新增字段     dongxiangyang  end*/
+
 		return detail;
+
 	}
 	
 	public List<ExcelValidDto> checkData(List<String> checkKeys){
@@ -742,6 +753,19 @@ public class ChbMonthReport001Service extends SvrCommonExportService<ChbMonthRep
 			if(detail.getDurationprodcounts()==null){
 				detail.setDurationprodcounts(0);
 			}
+			/**add by  dongxiangyang  新加字段  start*/
+			if(detail.getXgdurationprodcounts()==null){
+				detail.setXgdurationprodcounts(0);
+			}if(detail.getXgbalance()==null){
+				detail.setXgbalance(BigDecimal.ZERO);
+			}if(detail.getXgbottombalance()==null){
+				detail.setXgbottombalance(BigDecimal.ZERO);
+			}
+			if(detail.getProdnetamount()==null){
+				detail.setProdnetamount(BigDecimal.ZERO);
+			}
+			/**add by  dongxiangyang  新加字段  end*/
+
 		} else if("02".equals(isShowZero)){
 			
 			if(detail.getBalance()!=null&&(BigDecimal.ZERO).compareTo(detail.getBalance())==0){
@@ -771,6 +795,21 @@ public class ChbMonthReport001Service extends SvrCommonExportService<ChbMonthRep
 			if(detail.getDurationprodcounts()!=null&&detail.getDurationprodcounts()==0){
 				detail.setDurationprodcounts(null);
 			}
+			/**add by  dongxiangyang  新加字段  start*/
+            if(detail.getXgdurationprodcounts()!=null&&detail.getXgdurationprodcounts()==0){
+				detail.setXgdurationprodcounts(null);
+			}
+            if(detail.getXgbalance()!=null&&(BigDecimal.ZERO).compareTo(detail.getXgbalance())==0){
+				detail.setXgbalance(null);
+			}
+            if(detail.getXgbottombalance()!=null&&(BigDecimal.ZERO).compareTo(detail.getXgbottombalance())==0){
+				detail.setXgbottombalance(null);
+			}
+			if(detail.getProdnetamount()!=null&&(BigDecimal.ZERO).compareTo(detail.getProdnetamount())==0){
+				detail.setProdnetamount(null);
+			}
+			/**add by  dongxiangyang  新加字段  end*/
+
 		}
 	}
  	
