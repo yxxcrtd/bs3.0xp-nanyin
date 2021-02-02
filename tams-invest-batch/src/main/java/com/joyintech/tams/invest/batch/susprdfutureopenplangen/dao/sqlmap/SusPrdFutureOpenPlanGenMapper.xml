@@ -92,13 +92,15 @@
 			<!-- AND A.IS_SUS = #{isSus} -->
 			AND A.OPERATION_TYPE = #{operationType}	
 			)b
-			LEFT JOIN (select f.FINPROD_ID,di.institution_code from fin_product f left join DATA_AUTH_NOTIFY_INST di on f.finprod_id=di.business_id and di.model_type = '02' and DI.DATA_TYPE='FINPROD04') di 
-			on di.FINPROD_ID = b.FINPROD_ID where di.institution_code in
+			 LEFT JOIN (select f.FINPROD_ID,F.CREATE_DEPT from fin_product f) f 
+			ON f.FINPROD_ID = b.FINPROD_ID
+			left join SYS_DEPARTMENT sd on f.CREATE_DEPT =  sd.DEPT_CODE
+			 where sd.institution_code in
 			(select si.INSTITUTION_CODE
 		from sys_user su
 		inner join SYS_DEPARTMENT sd on su.DEPT_CODE = sd.DEPT_CODE
 		inner join SYS_INSTITUTION si on si.INSTITUTION_CODE = sd.INSTITUTION_CODE
-		where su.USER_Name = #{userId,jdbcType=VARCHAR})																							
+		where su.USER_Name = #{userId,jdbcType=VARCHAR})																								
 	</select>
 	
 <!-- 	<select id="findProductAnapleroticPlanList" parameterType="Map" resultType="com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto">
@@ -219,8 +221,10 @@
 		        AND fp.PROFIT_TYPE in ('02','03')
 		        AND fp.P_FINPROD_ID IS NULL		
 		        )b		
-		        LEFT JOIN (select f.FINPROD_ID,di.institution_code from fin_product f left join DATA_AUTH_NOTIFY_INST di on f.finprod_id=di.business_id and di.model_type = '02' and DI.DATA_TYPE='FINPROD04') di 
-			on di.FINPROD_ID = b.finprodId where di.institution_code in
+		        LEFT JOIN (select f.FINPROD_ID,F.CREATE_DEPT from fin_product f) f 
+			ON f.FINPROD_ID = b.finprodId
+			left join SYS_DEPARTMENT sd on f.CREATE_DEPT =  sd.DEPT_CODE
+			 where sd.institution_code in
 			(select si.INSTITUTION_CODE
 		from sys_user su
 		inner join SYS_DEPARTMENT sd on su.DEPT_CODE = sd.DEPT_CODE
