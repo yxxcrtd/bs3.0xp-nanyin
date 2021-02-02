@@ -86,27 +86,32 @@ $(function() {
                                             + "&orgId=" + orgId + "&orgName=" + orgName;
                 }
 
-                var urls = "/invest";
-                if (remType == 'R1S3') {
-                    if(oneAttr == '02'){
-                        urls += url+urlPara;
-                    }else if(oneAttr == '03'){
-                        urls += '/product/productduration/netproductDuration/FinNetProductDuration/init'+urlPara;
-                        lable = 'FinNetProductDuration';
-                    }
-                }else if(remType == 'R1S5'){
-                    if(oneAttr == '02'){
-                        urls += url+urlPara;
-                    }else{
-                        // 净值型 或 收益型
-                        urls += '/product/productduration/netproductDuration/FinNetProductDuration/init'+urlPara;
-                        lable = 'FinNetProductDuration';
-                    }
-                }else{
-
-                        urls += url+urlPara;
+                if(oneAttr == '01' || oneAttr == '03'){
+                    url = '/product/productduration/netproductDuration/FinNetProductDuration/init';
+                    lable = 'FinNetProductDuration';
                 }
 
+                var urls = "/invest";
+//                if (remType == 'R1S3') {
+//                    if(oneAttr == '02'){
+//                        urls += url+urlPara;
+//                    }else if(oneAttr == '03'){
+//                        urls += '/product/productduration/netproductDuration/FinNetProductDuration/init'+urlPara;
+//                        lable = 'FinNetProductDuration';
+//                    }
+//                }else if(remType == 'R1S5'){
+//                    if(oneAttr == '02'){
+//                        urls += url+urlPara;
+//                    }else{
+//                        // 净值型 或 收益型
+//                        urls += '/product/productduration/netproductDuration/FinNetProductDuration/init'+urlPara;
+//                        lable = 'FinNetProductDuration';
+//                    }
+//                }else{
+//
+//                        urls += url+urlPara;
+//                }
+                urls += url+urlPara;
 
                 // 新窗口打开
                 var newTab = {
