@@ -194,13 +194,18 @@ FROM
 	<!--资金账户已经有通道挂的话，不允许再挂 yjm start 20191031-->
 	<select id="isReBusiAcctNo" parameterType="java.util.Map" resultType="Integer">
 		SELECT count(s.acct_no)
-  FROM FIN_PRODUCT T, STL_FIN_PRODUCT_ACCT S
- WHERE T.FINPROD_ID = S.FINPROD_ID
-   AND T.FINPROD_TYPE2 = #{F28,jdbcType=VARCHAR}
-	<if test="pageMode =='1'.toString() and finprodMarketId !=null and finprodMarketId !=''">
-		AND T.FINPROD_MARKET_ID != #{finprodMarketId,jdbcType=VARCHAR}
-	</if>      
-   AND S.ACCT_NO = #{busiAcctNo,jdbcType=VARCHAR}
+	  	FROM FIN_PRODUCT T, STL_FIN_PRODUCT_ACCT S
+	 	WHERE T.FINPROD_ID = S.FINPROD_ID
+	 		<if test="F16 != null and F16 != ''">
+				AND (T.FINPROD_TYPE2 = #{F28,jdbcType=VARCHAR} OR T.FINPROD_TYPE2 = #{F16,jdbcType=VARCHAR})
+			</if>
+			<if test="F16 == null or F16 == ''">
+				AND T.FINPROD_TYPE2 = #{F28,jdbcType=VARCHAR}
+			</if>
+			<if test="pageMode =='1'.toString() and finprodMarketId !=null and finprodMarketId !=''">
+				AND T.FINPROD_MARKET_ID != #{finprodMarketId,jdbcType=VARCHAR}
+			</if>      
+			AND S.ACCT_NO = #{busiAcctNo,jdbcType=VARCHAR}
 	</select>
-	<!--资金账户已经有通道挂的话，不允许再挂 yjm end 20191031-->
+		<!--资金账户已经有通道挂的话，不允许再挂 yjm end 20191031-->
 </mapper>

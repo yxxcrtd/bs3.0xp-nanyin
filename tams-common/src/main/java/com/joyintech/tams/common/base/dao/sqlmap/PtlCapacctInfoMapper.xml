@@ -145,4 +145,14 @@
           and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
           and CCY = #{ccy,jdbcType=VARCHAR}
     </update>
+
+    <select id="getReAcct" parameterType="java.util.Map" resultType="Integer">
+        SELECT count(s.acct_no)
+        FROM FIN_PRODUCT T, STL_FIN_PRODUCT_ACCT S
+        WHERE T.FINPROD_ID = S.FINPROD_ID
+        AND T.FINPROD_TYPE2 = #{F28,jdbcType=VARCHAR}
+        <foreach collection="busiAcctNoList" index="index" open="and S.ACCT_NO in (" separator="," close=")" item="item">
+            #{item}
+        </foreach>
+    </select>
 </mapper>
