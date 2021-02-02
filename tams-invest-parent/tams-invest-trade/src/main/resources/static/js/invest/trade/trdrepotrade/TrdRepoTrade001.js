@@ -263,4 +263,18 @@
         });
 
     });
+
+    //回购类型在切换后事件
+    $("#repoType").on("change", function () {
+        if($("#repoType").val() == 'H02'){
+            $("#chlFinprodId").val('').trigger("change");
+            $("#finprodId").val('').trigger("change");
+            $("#chlFinprodId").prop("disabled", true).trigger("change");
+            $("#finprodId").prop("disabled", true).trigger("change");
+        }else{
+            $("#chlFinprodId").prop("disabled", false).trigger("change");
+            $("#finprodId").prop("disabled", false).trigger("change");
+        }
+    });
+
 }());
