@@ -208,6 +208,9 @@
       --LACKS  ,  --<!--  信息缺失项 无缺失、缺失中债申报、缺失中债发行   -->
       D.REP_FINPROD_INS_ID PROD_INS_ID  ,  --<!--  行内标识码   -->
       TA.PROFIT_FLAG PROFIT_TYPE  ,  --<!--  产品收益类型  01 保证收益/02 保本浮动收益/03 非保本浮动收益     -->
+      '02' IS_TRANSFER  ,   --<!-- 是否母行划转产品  01 是/02 否 -->
+      TA.IS_FHXGCP IS_FHXGCP    ,   --<!-- 是否合规新产品 01 是/02 否 -->
+      TA.IS_YLLCCP IS_YLLCCP    ,   --<!-- 是否养老理财产品  01 是/02 否 -->
       D.REP_INVESTOR_TYPE INVESTOR_TYPE  ,  --<!--  投资者类型   -->
       --IS_INTACT  ,  --<!--  发行要素维护完整   -->
       'E' STATUS  ,  --<!--  数据状态  A 新建/ E 有效/D删除   -->
