@@ -14,7 +14,7 @@
     // 新建
     function showDialog() {
         Joyin.dialog(JoyinUtil.getLabel('MstCommissionSet002'), basePath
-                + 'invest/basicdata/mstcommissionset/MstCommissionSet002/init', '90%', '80%', {
+                + 'invest/basicdata/mstcommissionset/MstCommissionSet002/init', '98%', '98%', {
             pageModel : PAGE_MODEL_NEW
         }, function() {
             table.reload();
