@@ -188,4 +188,6 @@ public interface TrdCommonBaseMapper {
      */
     int selectRevokedDataCount(Map<String, Object> paramMap);
 
+
+    List<BigDecimal> selectProAvailableCash(Map<String, Object> paramMap);
 }
