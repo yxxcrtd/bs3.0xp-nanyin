@@ -861,6 +861,7 @@
         ,decode(info.PRIVATEPRD_FLAG,'01','01',null) PRIVATEPRD_FLAG
         ,decode(info.BONDTOSTOCK_FLAG,'01','01',null) BONDTOSTOCK_FLAG
         ,info.MANAGE_TYPE MANAGE_TYPE /*管理方式*/
+        ,prd.IS_FHXGCP    /**是否合新规*/
         from CHB_ASSET_POSITION pos
         left join CHB_ASSET_INFO info
         on pos.ASSET_CODE=info.ASSET_CODE
@@ -915,7 +916,7 @@
         decode(info.PPPFLAG,'01','01',null), decode(info.IS_GOVERN_FUND,'01','01',null),
         decode(info.PRIVATEFUND_FLAG,'01','01',null), decode(info.PRIVATEPRD_FLAG,'01','01',null),
         decode(info.BONDTOSTOCK_FLAG,'01','01',null),
-        info.MANAGE_TYPE
+        info.MANAGE_TYPE,,prd.IS_FHXGCP
     </select>
     <select id="selectPlanInfoByCommon" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
             flushCache="true" useCache="false">
