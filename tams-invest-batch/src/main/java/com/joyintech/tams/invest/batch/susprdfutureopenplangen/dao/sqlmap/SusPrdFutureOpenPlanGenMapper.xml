@@ -3,7 +3,8 @@
 <mapper namespace="com.joyintech.tams.invest.batch.susprdfutureopenplangen.dao.SusPrdFutureOpenPlanGenMapper">
 
 	<select id="findSusPrdFutureOpenPlanGenList" parameterType="Map" resultType="com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto">
-		SELECT	
+		select * from
+		(SELECT	
 		    '开放计划' planType,																								
 			A.FINPROD_ID AS FINPROD_ID,																								
 			A.VDATE AS VDATE,	
@@ -89,7 +90,15 @@
 			A.FINPROD_TYPE2 = #{finprodType}																
 			AND A.P_FINPROD_ID IS NULL
 			<!-- AND A.IS_SUS = #{isSus} -->
-			AND A.OPERATION_TYPE = #{operationType}																								
+			AND A.OPERATION_TYPE = #{operationType}	
+			)b
+			LEFT JOIN (select f.FINPROD_ID,di.institution_code from fin_product f left join DATA_AUTH_NOTIFY_INST di on f.finprod_id=di.business_id and di.model_type = '02' and DI.DATA_TYPE='FINPROD04') di 
+			on di.FINPROD_ID = b.FINPROD_ID where di.institution_code in
+			(select si.INSTITUTION_CODE
+		from sys_user su
+		inner join SYS_DEPARTMENT sd on su.DEPT_CODE = sd.DEPT_CODE
+		inner join SYS_INSTITUTION si on si.INSTITUTION_CODE = sd.INSTITUTION_CODE
+		where su.USER_Name = #{userId,jdbcType=VARCHAR})																							
 	</select>
 	
 <!-- 	<select id="findProductAnapleroticPlanList" parameterType="Map" resultType="com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto">
@@ -153,6 +162,7 @@
 	</select> -->
 	
 	<select id="findProductPayPlanList" parameterType="Map" resultType="com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto">
+		select * from(
 		SELECT	
 		'付息计划' planType,/*计划类型*/
 		fp.FINPROD_ID AS finprodId,/*金融产品代码*/
@@ -207,7 +217,15 @@
 				where
 				fp.FINPROD_TYPE2 = 'F16'
 		        AND fp.PROFIT_TYPE in ('02','03')
-		        AND fp.P_FINPROD_ID IS NULL																						
+		        AND fp.P_FINPROD_ID IS NULL		
+		        )b		
+		        LEFT JOIN (select f.FINPROD_ID,di.institution_code from fin_product f left join DATA_AUTH_NOTIFY_INST di on f.finprod_id=di.business_id and di.model_type = '02' and DI.DATA_TYPE='FINPROD04') di 
+			on di.FINPROD_ID = b.finprodId where di.institution_code in
+			(select si.INSTITUTION_CODE
+		from sys_user su
+		inner join SYS_DEPARTMENT sd on su.DEPT_CODE = sd.DEPT_CODE
+		inner join SYS_INSTITUTION si on si.INSTITUTION_CODE = sd.INSTITUTION_CODE
+		where su.USER_Name = #{userId,jdbcType=VARCHAR})																			
 	</select>
 	
 	<select id="findNdateOrEndDateByProdid" parameterType="string" resultType="java.util.Date">
