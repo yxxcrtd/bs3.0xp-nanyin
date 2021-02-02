@@ -3098,7 +3098,7 @@ $(function() {
         	alert(6);
         	addReduceCycleDataInit();
         });*/
-         if( remType =='R1S3' || remType =='R1S5' ){
+         if( remType =='R1S3' || remType =='R1S5' || remType == 'R1S2' ||remType=='R1S4'){
                 finprodMarketIdChange();
          };
         //20191205 bug修复，红利再投撤销审批页面多撤销按钮

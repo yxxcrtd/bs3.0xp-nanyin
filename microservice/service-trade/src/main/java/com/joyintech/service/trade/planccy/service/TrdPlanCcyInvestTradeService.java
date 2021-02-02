@@ -960,6 +960,11 @@ public class TrdPlanCcyInvestTradeService extends BaseService<TrdPlanCcyInvestTr
 
                 resultDto.getEtrEntrust().setEntrustAmt(
                         ArithmeticUtil.subtract(resultDto.getEtrEntrust().getEntrustAmt(), 已完成额度));
+                if(StringUtil.isNotEmpty(resultDto.getEtrEntrust().getPs()) && 
+                        StringUtil.equals(resultDto.getEtrEntrust().getPs(),DictCodeList.交易方向_赎回.getValue())){
+                    resultDto.getEtrEntrust().setEntrustNum(
+                            ArithmeticUtil.subtract(resultDto.getEtrEntrust().getEntrustNum(), 已完成额度));    
+                }
             }
         }
         return resultDto;

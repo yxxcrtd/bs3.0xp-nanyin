@@ -4,6 +4,8 @@ import com.joyintech.tams.common.base.entity.PtlCapacctInfo;
 import com.joyintech.tams.common.base.entity.PtlCapacctInfoKey;
 import org.springframework.stereotype.Repository;
 
+import java.util.Map;
+
 @Repository
 public interface PtlCapacctInfoMapper {
     int deleteByPrimaryKey(PtlCapacctInfoKey key);
@@ -19,4 +21,6 @@ public interface PtlCapacctInfoMapper {
     int updateByPrimaryKeySelective(PtlCapacctInfo record);
 
     int updateByPrimaryKey(PtlCapacctInfo record);
+
+    int getReAcct(Map<String, Object> map);
 }

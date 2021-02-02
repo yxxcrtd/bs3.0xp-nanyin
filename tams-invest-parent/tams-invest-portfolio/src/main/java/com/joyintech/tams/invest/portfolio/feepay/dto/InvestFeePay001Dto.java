@@ -300,7 +300,7 @@ public class InvestFeePay001Dto extends BaseEntity implements ProcessEntity {
      * 获取 feeType
      * @return feeType.
      */
-    @NotEmpty(fieldName = "FinProductFeePay002.feeType")
+//    @NotEmpty(fieldName = "FinProductFeePay002.feeType")
     @PrimaryKey(Field.PK_1)
     public String getFeeType() {
         return feeType;

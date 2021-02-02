@@ -512,4 +512,22 @@
 	                     and D.trade_date = A.accr_date)
 	    order by ACCR_STR_DATE
 	</select>
+
+	<select id="getOpenMode" resultType="java.lang.String"
+			parameterType="java.lang.String">
+		select 
+		  t.Open_Mode 
+		  from  
+		  (
+			select 
+			t1.Open_Mode,
+			t1.OPEN_TYPE,
+			rownum rn 
+			from fin_open_rule t1 
+			left join fin_cash_info t2 on t1.cash_id = t2.cash_id
+			where t2.finprod_id = #{finprodId,jdbcType=VARCHAR}
+			order by t1.OPEN_TYPE desc
+		  )t
+		  where t.rn = 1
+	</select>
 </mapper>

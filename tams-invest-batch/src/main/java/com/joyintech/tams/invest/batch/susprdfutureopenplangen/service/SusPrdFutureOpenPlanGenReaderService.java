@@ -59,6 +59,7 @@ public class SusPrdFutureOpenPlanGenReaderService extends BaseService {
 		paramMap.put("cashFinprodType", DictCodeListExt1.现金流业务类型_金融产品.getValue());
 		paramMap.put("cashType1", DictCodeListExt1.现金流二级类型_本金.getValue());
 		paramMap.put("sysDate", DateUtil.format(batchExecuteInfo.getExecuteDate()));
+		paramMap.put("userId", batchExecuteInfo.getCreateUser());
 		paramMap.put("issueStatus", DictCodeListExt1.发行状态_发行成功.getValue());
 		paramMap.put("finprodType", DictCodeListExt1.金融产品类型_理财产品.getValue());
 		//paramMap.put("isSus", DictCodeList.是否_是.getValue());
@@ -81,6 +82,7 @@ public class SusPrdFutureOpenPlanGenReaderService extends BaseService {
 		//查询需要更新的付息计划
 		Map<String, Object> paramMapPayPlan = new HashMap<String, Object>();
 		paramMapPayPlan.put("cashType1", DictCodeListExt1.现金流一级类型_利息.getValue());
+		paramMapPayPlan.put("userId", batchExecuteInfo.getCreateUser());
 		paramMapPayPlan.put("sysDate", DateUtil.format(batchExecuteInfo.getExecuteDate()));
 		List<SusPrdFutureOpenPlanGenDto> finProductPayPlanList = susprdfutureopenplangenMapper
 						.findProductPayPlanList(paramMapPayPlan);

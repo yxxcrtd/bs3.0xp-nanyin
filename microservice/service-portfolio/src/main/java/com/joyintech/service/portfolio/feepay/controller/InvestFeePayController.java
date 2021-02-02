@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.dto.common.TrdCommonParam;
 import com.joyintech.tams.invest.common.dto.common.TrdCommonWflParam;
@@ -195,8 +196,8 @@ public class InvestFeePayController {
      */
     @GetMapping("queryFeePositionDetail")
     public List<InvestFeePayPositionDetailDto> queryFeePositionDetail(String feeType, String startDate, String enddate, 
-                                                                      String secAcctId, String ptlId,String confirmFlag,String tradeId) {
-        return investFeePayService.queryFeePositionDetail(feeType, startDate, enddate, secAcctId, ptlId, confirmFlag,tradeId);
+                                                                      String secAcctId, String ptlId,String confirmFlag,String tradeId,String org) {
+        return investFeePayService.queryFeePositionDetail(feeType, startDate, enddate, secAcctId, ptlId, confirmFlag,tradeId,org);
     }
 
     /** 根据交易编号查询费用明细信息
@@ -474,4 +475,14 @@ public class InvestFeePayController {
         return investFeePayService.inputDataType(tradeId);
     }
 
+    /**
+     * 获取组合名称
+     * @see
+     * @since 1.0
+     * @return 账套实体类
+     */
+    @PostMapping("/getPortFolioName")
+    public List<SelectOptionDto> getPortFolioName(@RequestBody Map<String,Object> map) {
+        return investFeePayService.getPortFolioName(map);
+    }
 }

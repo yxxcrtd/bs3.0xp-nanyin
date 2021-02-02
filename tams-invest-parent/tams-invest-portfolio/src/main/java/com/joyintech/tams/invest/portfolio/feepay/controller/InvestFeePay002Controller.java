@@ -350,6 +350,7 @@ public class InvestFeePay002Controller extends BaseController {
         else if (StringUtil.isNotEmpty(this.getParam("tradeId"))) {
             return investFeePay002Service.queryFeeDetailByTradeId(this.getParam("tradeId"), this.getParam("payDate"));
         }
+        if(StringUtil.isEmpty(this.getParam("feeType")))return new ArrayList<>();
         // 新建或者待确认
         return investFeePay002Service.queryPayFeeInfoList(RequestUtil.getPageParam());
     }
@@ -469,5 +470,15 @@ public class InvestFeePay002Controller extends BaseController {
         // 返回工作流错误信息
         return new AjaxResult(msg);
     }
-    
+    /**
+     * 获取组合名称
+     * @return 下拉框集合
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("getPortFolioName")
+    public List<SelectOptionDto> getPortFolioName() {
+        return investFeePay002Service.getPortFolioName(RequestUtil.getPageParam());
+    }
 }

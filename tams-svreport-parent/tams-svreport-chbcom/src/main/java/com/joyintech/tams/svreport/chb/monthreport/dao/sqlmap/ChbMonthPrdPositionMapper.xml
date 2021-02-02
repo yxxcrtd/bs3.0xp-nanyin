@@ -506,16 +506,16 @@
 	,dm as (
 	select dd.prodid,dd.ccy,dd.ord_identified,prodtype
 	,sum(
-	    case when dd.TRADE_TYPE in('01','02','05') then amount 
+	    case when dd.TRADE_TYPE in('01','02','05','14') then amount
 	    else 0 
 	    end ) dirtysum /*募集金额*/
 	,sum(
-	    case when dd.TRADE_TYPE in('01','02','05') then tradeQty 
+	    case when dd.TRADE_TYPE in('01','02','05','14') then tradeQty
 	    else 0 
 	    end ) dirtysumqty /*募集金额-份额*/
 	,sum(
-	    case when dd.TRADE_TYPE in('01','02','05') then amount 
-	    when dd.TRADE_TYPE in('03','16','17') then 0-amount 
+          case when dd.TRADE_TYPE in('01','02','05','14') then amount
+          when dd.TRADE_TYPE in('03','16','15','17') then 0-amount
 	    else 0 
 	    end ) cleansum /*净募集金额*/
 	from dd
@@ -656,7 +656,7 @@
 	    	dd.prodid prodid,
 	    	dd.ccy ccy,
 	    	dd.ord_identified ord_identified,
-			sum(case when dd.TRADE_TYPE in('03','16','17') then amount 
+            sum(case when dd.TRADE_TYPE in('03','15','16','17') then amount
 	    	else 0 
 	    	end ) amt,
 			sum(case when dd.TRADE_TYPE in('03','16','17') then tradeQty 

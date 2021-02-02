@@ -566,7 +566,7 @@ public class FinProductAnapleroticInfo002Service extends BaseService<FinProductA
     //判断是否高频开放
     public String getOpenMode(String finprodId) {
         return  restTemplate.getForObject(ServiceApplication.PRODUCT_SERVICE_NAME
-                        + "/FinProductBuild/getOpenMode?finprodId="
+                        + "/FinProductAnaplerotic/getOpenMode?finprodId="
                         + finprodId,
                 String.class);
     }

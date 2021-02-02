@@ -142,12 +142,14 @@ public class AccountMaintFeeBookProcessorService {
                     || dealInfoForTarget.getMdate().before(acctEntity.getHappenDate())) {
                 continue;
             }
-
+            String jichukemuxingzhi = "";
+            if("01".equals(dealInfoForTarget.getRegistOrg()))jichukemuxingzhi="ZZYTFY";
+            if("02".equals(dealInfoForTarget.getRegistOrg()))jichukemuxingzhi="SQYTFY";
             //2.2 变量.预提费用余额
             //调用共通设计->【详细设计-账务类共通方法设计.xlsx】->科目余额查询-期待方向SHEET
             SubjectBalance subjectBalance = this.getSubjectBalance(booksetIdNow,
                     acctEntity.getBokDetailId(), happenDateNow, bookDateNow,
-                    DictCodeList.余额方向_贷方.getValue(), DictCodeBaseSubjectNatrue.预提费用.getValue(), null, dto.getTaskPri());
+                    DictCodeList.余额方向_贷方.getValue(),jichukemuxingzhi, null, dto.getTaskPri());
             //定义 变量.预提费用本币余额 = 预提费用DTO.本币余额
             BigDecimal ytfyBalance_BCcy = StringUtil.isNotEmpty(subjectBalance.getbAmt()) ? subjectBalance.getbAmt() : BigDecimal.ZERO;
             //定义 变量.预提费用余额 = 预提费用DTO.科目余额
