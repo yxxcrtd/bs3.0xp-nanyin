@@ -76,7 +76,11 @@ FROM
 		FROM FIN_PRODUCT
 		<where>
 			<if test="search != null and search != ''">
-				and FINPROD_MARKET_ID like concat(concat('%',#{search}),'%')
+				and (
+				FINPROD_MARKET_ID like concat(concat('%',#{search}),'%')
+				or
+				FINPROD_NAME like concat(concat('%',#{search}),'%')
+				)
 			</if>
 			<if test="finprodType2 != null and finprodType2 != ''">
 			AND FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
