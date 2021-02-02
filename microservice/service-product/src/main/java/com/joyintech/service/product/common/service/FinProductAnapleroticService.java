@@ -768,4 +768,8 @@ public class FinProductAnapleroticService extends BaseService<FinProductAnaplero
     public List<FinProductAnapleroticPlanDto> selectAnapleroticPlanByFinprodId(String finprodId){
         return finProductAnapleroticMapper.selectAnapleroticPlanByFinprodId(finprodId);
     }
+
+    public String getOpenMode(String finprodId) {
+        return finProductAnapleroticMapper.getOpenMode(finprodId);
+    }
 }

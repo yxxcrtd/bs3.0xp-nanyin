@@ -91,4 +91,9 @@ public class FinProductAnapleroticController {
     public List<FinProductAnapleroticPlanDto> selectAnapleroticPlanByFinprodId(String finprodId){
         return finProductAnapleroticService.selectAnapleroticPlanByFinprodId(finprodId);
     }
+
+    @GetMapping("getOpenMode")
+    public String getOpenMode(String finprodId) {
+        return finProductAnapleroticService.getOpenMode(finprodId);
+    }
 }
