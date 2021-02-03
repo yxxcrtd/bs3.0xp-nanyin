@@ -94,6 +94,7 @@ public class TrdCommandsCollection002Service extends CommonExportService<TrdComm
         param.put("counterId", dto.getCounterId());
         param.put("purchModle", dto.getPurchModle());
         param.put("purchType", dto.getPurchType());
+        param.put("calendarId", dto.getCalendarId());
         if(StringUtil.equals(assetType, DictCodeList.平安资产类型_质押式回购.getValue()))
             param.put("repoType", dto.getType6());
         if(StringUtil.equals(assetType, DictCodeList.平安资产类型_拆借.getValue()))

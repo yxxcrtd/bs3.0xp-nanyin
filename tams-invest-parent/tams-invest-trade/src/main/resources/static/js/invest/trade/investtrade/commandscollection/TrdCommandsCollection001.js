@@ -942,6 +942,7 @@ $(function() {
                     height:150,
                     cols:[
                         {field:'lendTypeStr', width:'15%', title: 'EtrLendSpecInfo001.type6',sortField:"type6"}
+                        ,{field:'calendarId', title: 'TrdLendInvestTrade002.calendarId', visible : false,sortable : false }
                         ,{field:'psStr',  width:'15%', title: 'TrdFundInvestTrade001.ps',sortField:"ps"}
                         ,{field:'termDays', width:'15%', title: 'TrdCommandsCollection002.repoTerm', sortField:"termDays"}
                         ,{field:'entrustAmt', width: 200, title: 'TrdCommandsCollection002.entrustAmtF07', type: 'number', sortField:"entrustAmt"}

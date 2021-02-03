@@ -801,6 +801,12 @@
             <if test="ps != null and ps !='' and assetType != PINAN_ASSET_TYPE_F08">
                 AND T1.PS = #{ps}
             </if>
+            <if test="assetType == PINAN_ASSET_TYPE_F08 and calendarId != null and calendarId != ''">
+                AND T1.CALENDAR_ID = #{calendarId,jdbcType=VARCHAR}
+            </if>
+            <if test="assetType == PINAN_ASSET_TYPE_F08 and calendarId == null or calendarId == ''">
+                AND T1.CALENDAR_ID IS NULL
+            </if>
             <if test="ps != null and ps !='' and assetType == PINAN_ASSET_TYPE_F08">
                 AND T2.BUSI_PS = #{ps}
             </if>
