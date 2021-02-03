@@ -363,6 +363,11 @@ public class SVReportGlobalConstant {
      */
     public static final String SVR_IS_SUB_SYSTEM = "SVR_IS_SUB_SYSTEM";
     /**
+     * 系统参数:是否子公司
+     */
+    public static final String SVR_IS_SUBSIDIARY = "SVR_IS_SUBSIDIARY";
+
+    /**
      * 系统参数:是否生成修改\删除未报送（Y:生成，N:不生成）
      */
     public static final String SVR_SUBMIT_ONCHANGE = "SVR_SUBMIT_ONCHANGE";
