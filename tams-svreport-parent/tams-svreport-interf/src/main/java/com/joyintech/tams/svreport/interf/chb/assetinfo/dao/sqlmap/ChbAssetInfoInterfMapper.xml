@@ -13511,7 +13511,21 @@
 				#{item.financialComissue,jdbcType=VARCHAR} FINANCIAL_COMISSUE,
 				#{item.bankSecCapital,jdbcType=VARCHAR} BANK_SEC_CAPITAL,
 				#{item.bankSecPerpetual,jdbcType=VARCHAR} BANK_SEC_PERPETUAL,
-				#{item.bankSecPrefer,jdbcType=VARCHAR} BANK_SEC_PREFER
+				#{item.bankSecPrefer,jdbcType=VARCHAR} BANK_SEC_PREFER,
+            <!-- G06升级 add by qufangxu at 2021-02-03 -->
+				#{item.bankSecKzzq,jdbcType=VARCHAR} BANK_SEC_KZZQ,
+				#{item.bankSecZxzq,jdbcType=VARCHAR} BANK_SEC_ZXZQ,
+				#{item.isunlisted,jdbcType=VARCHAR} ISUNLISTED,
+				#{item.isBzhpj,jdbcType=VARCHAR} IS_BZHPJ,
+				#{item.chbIssuerId,jdbcType=VARCHAR} chb_ISSUER_ID,
+				#{item.chbManagerId,jdbcType=VARCHAR} chb_MANAGER_ID,
+				#{item.chbFinancierId,jdbcType=VARCHAR} chb_FINANCIER_ID,
+				#{item.perpetualFlag,jdbcType=VARCHAR} PERPETUAL_FLAG,
+				#{item.optionFlag,jdbcType=VARCHAR} OPTION_FLAG,
+				#{item.isBjszq,jdbcType=VARCHAR} IS_BJSZQ,
+				#{item.isPerpetual,jdbcType=VARCHAR} IS_PERPETUAL,
+				#{item.isFbzb,jdbcType=VARCHAR} IS_FBZB
+            <!-- G06升级 add by qufangxu at 2021-02-03 -->
             
             from dual
         </foreach>
@@ -13721,8 +13735,22 @@
             CII.FINANCIAL_COMISSUE=TEMP.FINANCIAL_COMISSUE,
             CII.BANK_SEC_CAPITAL=TEMP.BANK_SEC_CAPITAL,
             CII.BANK_SEC_PREFER=TEMP.BANK_SEC_PREFER,
-            CII.BANK_SEC_PERPETUAL=TEMP.BANK_SEC_PERPETUAL
-            
+            CII.BANK_SEC_PERPETUAL=TEMP.BANK_SEC_PERPETUAL,
+        <!-- G06升级 add by qufangxu at 2021-02-03 -->
+            CII.BANK_SEC_KZZQ=TEMP.BANK_SEC_KZZQ,
+            CII.BANK_SEC_ZXZQ=TEMP.BANK_SEC_ZXZQ,
+            CII.ISUNLISTED=TEMP.ISUNLISTED,
+            CII.IS_BZHPJ=TEMP.IS_BZHPJ,
+            CII.CHB_ISSUER_ID=TEMP.CHB_ISSUER_ID,
+            CII.CHB_MANAGER_ID=TEMP.CHB_MANAGER_ID,
+            CII.CHB_FINANCIER_ID=TEMP.CHB_FINANCIER_ID,
+            CII.PERPETUAL_FLAG=TEMP.PERPETUAL_FLAG,
+            CII.OPTION_FLAG=TEMP.OPTION_FLAG,
+            CII.IS_BJSZQ=TEMP.IS_BJSZQ,
+            CII.IS_PERPETUAL=TEMP.IS_PERPETUAL,
+            CII.IS_FBZB=TEMP.IS_FBZB
+        <!-- G06升级 add by qufangxu at 2021-02-03 -->
+
         <!-- 未匹配到这插入 -->
         WHEN NOT MATCHED THEN
         INSERT (ASSET_UUID, ASSET_CODE, ASSET_TYPE,
@@ -13815,7 +13843,22 @@
         FINANCIAL_COMISSUE,
         BANK_SEC_CAPITAL,
         BANK_SEC_PREFER,
-        BANK_SEC_PERPETUAL)
+        BANK_SEC_PERPETUAL,
+        <!-- G06升级 add by qufangxu at 2021-02-03 -->
+        BANK_SEC_KZZQ,
+        BANK_SEC_ZXZQ,
+        ISUNLISTED,
+        IS_BZHPJ,
+        CHB_ISSUER_ID,
+        CHB_MANAGER_ID,
+        CHB_FINANCIER_ID,
+        PERPETUAL_FLAG,
+        OPTION_FLAG,
+        IS_BJSZQ,
+        IS_PERPETUAL,
+        IS_FBZB
+        <!-- G06升级 add by qufangxu at 2021-02-03 -->
+        )
         values(
         TEMP.ASSET_UUID,
         TEMP.ASSET_CODE,
@@ -14018,7 +14061,21 @@
             TEMP.FINANCIAL_COMISSUE,
             TEMP.BANK_SEC_CAPITAL,
             TEMP.BANK_SEC_PREFER,
-            TEMP.BANK_SEC_PERPETUAL
+            TEMP.BANK_SEC_PERPETUAL,
+        <!-- G06升级 add by qufangxu at 2021-02-03 -->
+            TEMP.BANK_SEC_KZZQ,
+            TEMP.BANK_SEC_ZXZQ,
+            TEMP.ISUNLISTED,
+            TEMP.IS_BZHPJ,
+            TEMP.CHB_ISSUER_ID,
+            TEMP.CHB_MANAGER_ID,
+            TEMP.CHB_FINANCIER_ID,
+            TEMP.PERPETUAL_FLAG,
+            TEMP.OPTION_FLAG,
+            TEMP.IS_BJSZQ,
+            TEMP.IS_PERPETUAL,
+            TEMP.IS_FBZB
+        <!-- G06升级 add by qufangxu at 2021-02-03 -->
         )
     </insert>
 
