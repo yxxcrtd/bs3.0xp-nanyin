@@ -1043,6 +1043,14 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         repairSet(infRiskRdsDto, dataMap);
         // BUG BSTOT-2281 by zhangrui1 end
         
+        infRiskRdsDto.setTradeAmtReal(infRiskRdsDto.getAmount());
+        //存款，债券，质押式回购取tradeAmt
+        if(CommonUtil.isType(infRiskRdsDto.getAssetType(), DictCodeList.平安资产类型_债券)|| 
+        	CommonUtil.isType(infRiskRdsDto.getAssetType(), DictCodeList.平安资产类型_存款)||
+            CommonUtil.isType(infRiskRdsDto.getAssetType(), DictCodeList.平安资产类型_质押式回购)){
+        	infRiskRdsDto.setTradeAmtReal(finDto.getTradeAmt());
+        }
+        
         //ZGBSS-451 计划利率资产、项目类资产、买断式回购存续期交易金额取理论值start
         if(CommonUtil.isType(infRiskRdsDto.getAssetType(), DictCodeList.平安资产类型_买断式回购)
         	||CommonUtil.isType(infRiskRdsDto.getAssetType(), DictCodeList.平安资产类型_计划类资产_利率型)
@@ -1057,14 +1065,6 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             }
         }
         //ZGBSS-451 计划利率资产、项目类资产、买断式回购存续期交易金额取理论值end
-        
-        infRiskRdsDto.setTradeAmtReal(infRiskRdsDto.getAmount());
-        //存款，债券，质押式回购取tradeAmt
-        if(CommonUtil.isType(infRiskRdsDto.getAssetType(), DictCodeList.平安资产类型_债券)|| 
-        	CommonUtil.isType(infRiskRdsDto.getAssetType(), DictCodeList.平安资产类型_存款)||
-            CommonUtil.isType(infRiskRdsDto.getAssetType(), DictCodeList.平安资产类型_质押式回购)){
-        	infRiskRdsDto.setTradeAmtReal(finDto.getTradeAmt());
-        }
         return infRiskRdsDto;
     }
 
