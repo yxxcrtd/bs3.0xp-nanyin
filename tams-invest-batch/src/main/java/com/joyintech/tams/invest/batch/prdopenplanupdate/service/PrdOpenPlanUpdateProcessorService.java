@@ -197,7 +197,7 @@ public class PrdOpenPlanUpdateProcessorService extends BaseService{
 	 * @return
 	 * @throws Exception
 	 */
-	public List<FinCashPlan> executeFeeList(List<FinCashPlan> finFeePlanList, PrdOpenPlanUpdateDto popuDto) throws Exception {
+	/*public List<FinCashPlan> executeFeeList(List<FinCashPlan> finFeePlanList, PrdOpenPlanUpdateDto popuDto) throws Exception {
 		// 经过处理的List<付费计划>
 		List<FinCashPlan> newFinFeePlanList = new ArrayList<FinCashPlan>();
 		for (int i = 0; i < finFeePlanList.size(); i++ ) {
@@ -218,7 +218,7 @@ public class PrdOpenPlanUpdateProcessorService extends BaseService{
                 newFinFeePlanList.add(finCashPlan);
 			}
 		return newFinFeePlanList;
-	}
+	}*/
 	
 	
 }

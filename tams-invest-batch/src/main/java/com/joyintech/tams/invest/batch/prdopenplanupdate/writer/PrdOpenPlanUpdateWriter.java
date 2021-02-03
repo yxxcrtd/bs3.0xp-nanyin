@@ -135,12 +135,11 @@ public class PrdOpenPlanUpdateWriter extends BaseWriter<NeedToWriteEntity>{
 						finCashPlanMapper.insert(finCashPlan); // 如果为空再插入操作
 					}
 				}
-			}
-			
-			//更新系统参数-市场日历更新联动更新的开发计划日期（年）
-			String platYear = DateUtil.format(platformDateService.getSysDate()).substring(0, 4);
-			prdOpenPlanUpdateMapper.updateSysParam(platYear);
+			}			
 		}
+		//更新系统参数-市场日历更新联动更新的开发计划日期（年）
+		String platYear = DateUtil.format(platformDateService.getSysDate()).substring(0, 4);
+		prdOpenPlanUpdateMapper.updateSysParam(platYear);
 	}
 
 	/**

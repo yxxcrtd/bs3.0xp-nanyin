@@ -128,6 +128,11 @@ public class BussFinProductFeePlanImplService extends BaseService<BussFinProduct
             
             resultDto.setPayDate(adjustPayDate);
             resultDto.setPayDateUnadjust(adjustPayDate);
+            resultDto.setCashId(finProductFeePlanDto.getCashId());
+            resultDto.setFinprodId(finProductFeePlanDto.getFinprodId());
+            resultDto.setFinprodType("F16");
+            resultDto.setFinprodType2("F16");
+            resultDto.setBranch(0L);
             resultList.add(resultDto);
             
             finProductFeePlanDto.setVdate(finProductFeePlanDto.getFirstCalEndDate());
@@ -198,6 +203,11 @@ public class BussFinProductFeePlanImplService extends BaseService<BussFinProduct
             resultDto.setVdateUnadjust(startDate);
             resultDto.setMdateUnadjust(endDate);
             resultDto.setPayDateUnadjust(tradePaymentDay);
+            resultDto.setCashId(finProductFeePlanDto.getCashId());
+            resultDto.setFinprodId(finProductFeePlanDto.getFinprodId());
+            resultDto.setFinprodType("F16");
+            resultDto.setFinprodType2("F16");
+            resultDto.setBranch(0L);
             resultList.add(resultDto);
         }
 
