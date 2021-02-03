@@ -8,6 +8,8 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.svreport.loaninfomanagement.dao.OperationalLoanInfo001Mapper;
 import com.joyintech.tams.svreport.loaninfomanagement.dto.OperationalLoanInfo001Dto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +21,11 @@ import java.util.List;
 public class OperationalLoanInfo001Validator implements BeanValidator{
 	@Autowired
 	private OperationalLoanInfo001Mapper operationalLoanInfo001Mapper;
+
+	/**
+	 * 日志管理
+	 */
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Override
 	public List<ValidMessage> valid(Object value) {
@@ -61,6 +68,7 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 									"各比例"));
 						}
 					}catch(Exception e){
+						logger.error("数据转换错误:",e);
 						errorList.add(new ValidMessage("eachProportion", "各比例分割后合计必须等于100",
 								"各比例"));
 					}
@@ -134,10 +142,17 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 						errorList.add(new ValidMessage("loanBasisId", getMessage("BUSS_COM_E_0038",
 								"贷款借据编码")));
 					}
-					/**发放,转让**/
-					if(StringUtil.isNotEmpty(dto.getLoanBasisId()) &&  dto.getLoanBasisId().length() > 35){
-						errorList.add(new ValidMessage("loanBasisId", getMessage("贷款借据编码最大长度为35位!")));
+					try {
+						/**发放,转让**/
+						if(StringUtil.isNotEmpty(dto.getLoanBasisId()) &&  dto.getLoanBasisId().getBytes("GBK").length > 35){
+							errorList.add(new ValidMessage("loanBasisId", getMessage("贷款借据编码不得大于17位!")));
+						}
+
+					}catch(Exception e){
+						logger.error("数据转换错误:",e);
+						errorList.add(new ValidMessage("loanBasisId", getMessage("贷款借据编码不得大于17位!")));
 					}
+
 					if(StringUtil.isNotEmpty(dto.getLoanPrdType())
 							&& StringUtil.equals(dto.getLoanPrdType(), DictCodeListExt3.贷款产品类别_其他贷款.getValue())){
 						errorList.add(new ValidMessage("loanPrdType", "只有贷款种类为其他债权时才能选择“F99-其他贷款”"));
@@ -309,21 +324,24 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 			}
 		}
 		/*校验修复 zc add by start*/
+		try {
+			if (StringUtil.isNotEmpty(dto.getBorrowerId()) && dto.getBorrowerId().getBytes("GBK").length > 30) {
+				errorList.add(new ValidMessage("borrowerId", getMessage("借款人代码最大长度为30位!")));
+			}
 
-		if(StringUtil.isNotEmpty(dto.getBorrowerId()) &&  dto.getBorrowerId().length() > 30){
+		}catch(Exception e){
+			logger.error("数据转换错误:",e);
 			errorList.add(new ValidMessage("borrowerId", getMessage("借款人代码最大长度为30位!")));
 		}
 
-
-
-		if(StringUtil.isNotEmpty(dto.getRateLevel()) && !isNumber(dto.getRateLevel().toString(),15,2) ){
+		if(StringUtil.isNotEmpty(dto.getRateLevel()) && !isNumber(dto.getRateLevel().toString(),17,2) ){
 			errorList.add(new ValidMessage("rateLevel", getMessage("利率水平（%）格式需要为n(17,2)!")));
 		}
 
-		if(StringUtil.isNotEmpty(dto.getOrigContractAmount()) &&  !isNumber(dto.getOrigContractAmount().toString(),15,2)){
+		if(StringUtil.isNotEmpty(dto.getOrigContractAmount()) &&  !isNumber(dto.getOrigContractAmount().toString(),17,2)){
 			errorList.add(new ValidMessage("origContractAmount", getMessage("原始合同金额格式需要为n(17,2)!")));
 		}
-		if(StringUtil.isNotEmpty(dto.getOrigContractAmountCny()) &&  !isNumber(dto.getOrigContractAmountCny().toString(),15,2)){
+		if(StringUtil.isNotEmpty(dto.getOrigContractAmountCny()) &&  !isNumber(dto.getOrigContractAmountCny().toString(),17,2)){
 			errorList.add(new ValidMessage("origContractAmountCny", getMessage("原始合同金额折人民币格式需要为n(17,2)!")));
 		}
 		/*校验修复 zc add by end*/
