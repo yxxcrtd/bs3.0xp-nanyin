@@ -19,6 +19,9 @@ var TrdBondDuration001;
         if ($("#finprodMarketId").val() &&  $('#finprodMarketId').select2('data')[0] && $('#finprodMarketId').select2('data')[0].object) {
             result.finprodId = $('#finprodMarketId').select2('data')[0].object;
         }
+        if ($("#chlId").val()) {
+        	result.chlId = $("#chlId").val().join(",");
+        }
         if ($("#mDate").val()) {
             result.mdateStart = $("#mDate").startDate();
             result.mdateEnd = $("#mDate").endDate();

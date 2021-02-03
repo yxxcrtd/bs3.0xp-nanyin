@@ -142,8 +142,16 @@
                     <if test="registOrg != null and registOrg != ''">
                         AND fp.REGIST_ORG = #{registOrg}
                     </if>
-                    <if test="chlFinprodId != null and chlFinprodId != ''">
-                        AND wtpd.CHL_ID = #{chlFinprodId}
+                    <if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+                        AND (wtpd.CHL_ID IN
+                        <foreach collection="chlFinprodIdList" item="item" index="index" open="("
+                                 close=")" separator=",">
+                            <if test="(index % 998) == 0">
+                                null) OR wtpd.CHL_ID in (
+                            </if>
+                            #{item}
+                        </foreach>
+                        )
                     </if>
                     <if test="endDays1Start != null and endDays1Start != ''">
                         AND mbvi.LAST_PERIOD >= #{endDays1Start}
@@ -271,8 +279,16 @@
                     <if test="registOrg != null and registOrg != ''">
                         AND fp.REGIST_ORG = #{registOrg}
                     </if>
-                    <if test="chlFinprodId != null and chlFinprodId != ''">
-                        AND wtpd.CHL_ID = #{chlFinprodId}
+                    <if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+                        AND (wtpd.CHL_ID IN
+                        <foreach collection="chlFinprodIdList" item="item" index="index" open="("
+                                 close=")" separator=",">
+                            <if test="(index % 998) == 0">
+                                null) OR wtpd.CHL_ID in (
+                            </if>
+                            #{item}
+                        </foreach>
+                        )
                     </if>
                     <if test="endDays1Start != null and endDays1Start != ''">
                         AND mbvi.LAST_PERIOD >= #{endDays1Start}
@@ -399,8 +415,16 @@
                     <if test="registOrg != null and registOrg != ''">
                         AND fp.REGIST_ORG = #{registOrg}
                     </if>
-                    <if test="chlFinprodId != null and chlFinprodId != ''">
-                        AND wtpd.CHL_ID = #{chlFinprodId}
+                    <if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+                        AND (wtpd.CHL_ID IN
+                        <foreach collection="chlFinprodIdList" item="item" index="index" open="("
+                                 close=")" separator=",">
+                            <if test="(index % 998) == 0">
+                                null) OR wtpd.CHL_ID in (
+                            </if>
+                            #{item}
+                        </foreach>
+                        )
                     </if>
                     <if test="endDays1Start != null and endDays1Start != ''">
                         AND mbvi.LAST_PERIOD >= #{endDays1Start}

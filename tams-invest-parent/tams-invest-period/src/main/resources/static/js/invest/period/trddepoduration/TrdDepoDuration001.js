@@ -25,6 +25,9 @@ $(function() {
         }else{
             object.statusValid = null;
         }
+        if ($("#chlId").val()) {
+        	object.chlId = $("#chlId").val().join(",");
+        }
         object.mdateProdStart = $('#mdateProd').startDate();
         object.mdateProdEnd = $('#mdateProd').endDate();
         //add by yejiejie 2019-3-9 start

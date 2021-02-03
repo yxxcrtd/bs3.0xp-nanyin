@@ -61,8 +61,16 @@
             AND T1.TRADE_DATE &lt;= to_date(#{tradeDateEnd}, 'yyyy-MM-dd')
         </if>
         <!-- 2019年9月4日14:50:08 魏鹏：需求添加通道筛选条件 -->
-        <if test="chlId != null and !chlId.isEmpty()">
-            AND T1.CHL_ID = #{chlId}
+        <if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+            AND (T1.CHL_ID IN
+            <foreach collection="chlFinprodIdList" item="item" index="index" open="("
+                     close=")" separator=",">
+                <if test="(index % 998) == 0">
+                    null) OR T1.CHL_ID in (
+                </if>
+                #{item}
+            </foreach>
+            )
         </if>
         <!-- 批处理用，只查非通道的 add by renping 20200110 start -->
         <if test="notChannelFlag != null and !notChannelFlag.isEmpty()">
@@ -87,6 +95,7 @@
            SELECT * FROM (
             SELECT
               '${PAGE_DATE_STATUS03}' statusValid,
+              fp1.FINPROD_NAME chlFinprodId,
               T1.TOTLE_TRADE_ID busiCode,
               T1.CCY,
               T4.BASIS,
@@ -122,6 +131,7 @@
                 T1.PS/*交易方向*/
                 ,T1.workflow_id
             FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL T1
+            LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = T1.CHL_ID
             LEFT JOIN WFL_PA_TRD_FIN_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
             LEFT JOIN PTL_PORTFOLIO T2 ON T2.PORTFOLIO_ID = T1.PORTFOLIO_ID
             LEFT JOIN FIN_TRADE_PRODUCT T4 ON T1.FINPROD_ID = T4.FINPROD_ID
@@ -154,6 +164,7 @@
             SELECT * FROM (
             SELECT
                 '${PAGE_DATE_STATUS01}' statusValid,
+                fp1.FINPROD_NAME chlFinprodId,
                 null busiCode,
                 T1.CCY,
                 T4.BASIS,
@@ -186,6 +197,7 @@
                 ,T1.PS/*交易方向*/
                 ,null workflow_id
             FROM TRD_PRODUCT_DEAL T1
+            LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = T1.CHL_ID
             <!--  一体化对应etliu start -->
             LEFT JOIN PTL_TRADE T3 ON T1.TRADE_ID = T3.BUSI_NO <!-- AND T1.BUSI_TYPE = T3.BUSI_TYPE -->
             <!--  一体化对应etliu end -->
@@ -270,6 +282,7 @@
             SELECT * FROM (
                 SELECT
                   '${PAGE_DATE_STATUS05}' statusValid,
+                    fp1.FINPROD_NAME chlFinprodId,
                   T1.TOTLE_TRADE_ID busiCode,
                   T1.CCY,
                   T4.BASIS,
@@ -304,6 +317,7 @@
                     T1.PS/*交易方向*/
                 ,null workflow_id
                 FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
+            LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = T1.CHL_ID
                 LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
                 LEFT JOIN FIN_TRADE_PRODUCT T4 ON T1.FINPROD_ID = T4.FINPROD_ID
                 LEFT JOIN FIN_PRODUCT_TYPE T5 ON T4.FINPROD_ID = T5.FINPROD_ID
@@ -339,6 +353,7 @@
             SELECT * FROM (
             SELECT
               '${PAGE_DATE_STATUS06}' statusValid,
+              fp1.FINPROD_NAME chlFinprodId,
               T1.P_TRADE_ID busiCode,
               T1.CCY,
               T4.BASIS,
@@ -373,6 +388,7 @@
               T1.PS/*交易方向*/
             ,null workflow_id
             FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
+            LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = T1.CHL_ID
             LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
             LEFT JOIN FIN_TRADE_PRODUCT T4 ON T1.FINPROD_ID = T4.FINPROD_ID
             LEFT JOIN FIN_PRODUCT_TYPE T5 ON T4.FINPROD_ID = T5.FINPROD_ID

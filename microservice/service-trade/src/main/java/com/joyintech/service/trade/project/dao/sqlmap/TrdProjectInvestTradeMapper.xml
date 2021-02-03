@@ -297,8 +297,16 @@
         <if test="entrustId != null and entrustId != ''">
             and TPDA.ENTRUST_ID = #{entrustId}
         </if>
-        <if test="chlFinprodId != null and chlFinprodId != ''">
-            and deal.CHL_ID = #{chlFinprodId}
+        <if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+            AND (deal.CHL_ID IN
+            <foreach collection="chlFinprodIdList" item="item" index="index" open="("
+                     close=")" separator=",">
+                <if test="(index % 998) == 0">
+                    null) OR deal.CHL_ID in (
+                </if>
+                #{item}
+            </foreach>
+            )
         </if>
         <if test="finprodMarketId != null and finprodMarketId != ''">
             and FP.FINPROD_MARKET_ID = #{finprodMarketId}

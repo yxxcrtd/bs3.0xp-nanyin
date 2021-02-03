@@ -418,8 +418,16 @@
 			<if test="tradeMarketMode != null and tradeMarketMode !='' ">
 				AND WFL_TRD_PRODUCT_DEAL.TRADE_MARKET_MODE = #{tradeMarketMode}
 			</if>
-			<if test="chlFinprodId != null and chlFinprodId !='' ">
-				AND WFL_TRD_PRODUCT_DEAL.CHL_ID = #{chlFinprodId}
+			<if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+				AND (WFL_TRD_PRODUCT_DEAL.CHL_ID IN
+				<foreach collection="chlFinprodIdList" item="item" index="index" open="("
+						 close=")" separator=",">
+					<if test="(index % 998) == 0">
+						null) OR WFL_TRD_PRODUCT_DEAL.CHL_ID in (
+					</if>
+					#{item}
+				</foreach>
+				)
 			</if>
 			<if test="ps != null and ps !='' ">
 				<!-- AND WFL_TRD_PRODUCT_DEAL.PS = #{ps} -->
@@ -552,8 +560,16 @@
 			<if test="tradeMarketMode != null and tradeMarketMode !='' ">
 				AND WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_MARKET_MODE = #{tradeMarketMode}
 			</if>
-			<if test="chlFinprodId != null and chlFinprodId !='' ">
-				AND WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID = #{chlFinprodId}
+			<if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+				AND (WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID IN
+				<foreach collection="chlFinprodIdList" item="item" index="index" open="("
+						 close=")" separator=",">
+					<if test="(index % 998) == 0">
+						null) OR WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID in (
+					</if>
+					#{item}
+				</foreach>
+				)
 			</if>
 			<if test="ps != null and ps !='' ">
 				AND WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.PS=#{ps}
@@ -687,8 +703,16 @@
 			<if test="tradeMarket != null and tradeMarket !='' ">
 				AND TRD_PRODUCT_DEAL.TRADE_MARKET = #{tradeMarket}
 			</if>
-			<if test="chlFinprodId != null and chlFinprodId !='' ">
-				AND TRD_PRODUCT_DEAL.CHL_ID = #{chlFinprodId}
+			<if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+				AND (TRD_PRODUCT_DEAL.CHL_ID IN
+				<foreach collection="chlFinprodIdList" item="item" index="index" open="("
+						 close=")" separator=",">
+					<if test="(index % 998) == 0">
+						null) OR TRD_PRODUCT_DEAL.CHL_ID in (
+					</if>
+					#{item}
+				</foreach>
+				)
 			</if>
 			<if test="tradeMarketMode != null and tradeMarketMode !='' ">
 				AND TRD_PRODUCT_DEAL.TRADE_MARKET_MODE = #{tradeMarketMode}
@@ -825,8 +849,16 @@
 			<if test="tradeMarketMode != null and tradeMarketMode !='' ">
 				AND TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_MARKET_MODE = #{tradeMarketMode}
 			</if>
-			<if test="chlFinprodId != null and chlFinprodId !='' ">
-				AND TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID = #{chlFinprodId}
+			<if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+				AND (TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID IN
+				<foreach collection="chlFinprodIdList" item="item" index="index" open="("
+						 close=")" separator=",">
+					<if test="(index % 998) == 0">
+						null) OR TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID in (
+					</if>
+					#{item}
+				</foreach>
+				)
 			</if>
 			<if test="ps != null and ps !='' ">
 				AND TRD_FIN_PRODUCT_DEAL_TOTAL.PS = #{ps}
@@ -962,8 +994,16 @@
 			<if test="tradeMarketMode != null and tradeMarketMode !='' ">
 				AND TRD_PRODUCT_DEAL.TRADE_MARKET_MODE = #{tradeMarketMode}
 			</if>
-			<if test="chlFinprodId != null and chlFinprodId !='' ">
-				AND TRD_PRODUCT_DEAL.CHL_ID = #{chlFinprodId}
+			<if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+				AND (TRD_PRODUCT_DEAL.CHL_ID IN
+				<foreach collection="chlFinprodIdList" item="item" index="index" open="("
+						 close=")" separator=",">
+					<if test="(index % 998) == 0">
+						null) OR TRD_PRODUCT_DEAL.CHL_ID in (
+					</if>
+					#{item}
+				</foreach>
+				)
 			</if>
 			<if test="ps != null and ps !='' ">
 				<!-- AND TRD_PRODUCT_DEAL.PS = #{ps} -->
@@ -1095,8 +1135,16 @@
 			<if test="tradeMarketMode != null and tradeMarketMode !='' ">
 				AND TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_MARKET_MODE = #{tradeMarketMode}
 			</if>
-			<if test="chlFinprodId != null and chlFinprodId !='' ">
-				AND TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID = #{chlFinprodId}
+			<if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+				AND (TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID IN
+				<foreach collection="chlFinprodIdList" item="item" index="index" open="("
+						 close=")" separator=",">
+					<if test="(index % 998) == 0">
+						null) OR TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID in (
+					</if>
+					#{item}
+				</foreach>
+				)
 			</if>
 			<if test="ps != null and ps !='' ">
 				AND TRD_FIN_PRODUCT_DEAL_TOTAL.PS = #{ps}
@@ -1232,8 +1280,16 @@
 			<if test="tradeMarketMode != null and tradeMarketMode !='' ">
 				AND WFL_TRD_PRODUCT_DEAL.TRADE_MARKET_MODE = #{tradeMarketMode}
 			</if>
-			<if test="chlFinprodId != null and chlFinprodId !='' ">
-				AND WFL_TRD_PRODUCT_DEAL.CHL_ID = #{chlFinprodId}
+			<if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+				AND (WFL_TRD_PRODUCT_DEAL.CHL_ID IN
+				<foreach collection="chlFinprodIdList" item="item" index="index" open="("
+						 close=")" separator=",">
+					<if test="(index % 998) == 0">
+						null) OR WFL_TRD_PRODUCT_DEAL.CHL_ID in (
+					</if>
+					#{item}
+				</foreach>
+				)
 			</if>
 			<if test="ps != null and ps !='' ">
 				<!-- AND WFL_TRD_PRODUCT_DEAL.PS = #{ps} -->
@@ -1391,8 +1447,16 @@
 			<if test="tradeMarketMode != null and tradeMarketMode !='' ">
 				AND TRD_PRODUCT_DEAL.TRADE_MARKET_MODE = #{tradeMarketMode}
 			</if>
-			<if test="chlFinprodId != null and chlFinprodId !='' ">
-				AND TRD_PRODUCT_DEAL.CHL_ID = #{chlFinprodId}
+			<if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+				AND (TRD_PRODUCT_DEAL.CHL_ID IN
+				<foreach collection="chlFinprodIdList" item="item" index="index" open="("
+						 close=")" separator=",">
+					<if test="(index % 998) == 0">
+						null) OR TRD_PRODUCT_DEAL.CHL_ID in (
+					</if>
+					#{item}
+				</foreach>
+				)
 			</if>
 			<if test="ps != null and ps !='' ">
 				<!-- AND TRD_PRODUCT_DEAL.PS = #{ps} -->
@@ -1565,8 +1629,16 @@
 			<if test="tradeMarketMode != null and tradeMarketMode !='' ">
 				AND TRD_PRODUCT_DEAL.TRADE_MARKET_MODE = #{tradeMarketMode}
 			</if>
-			<if test="chlFinprodId != null and chlFinprodId !='' ">
-				AND TRD_PRODUCT_DEAL.CHL_ID = #{chlFinprodId}
+			<if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+				AND (TRD_PRODUCT_DEAL.CHL_ID IN
+				<foreach collection="chlFinprodIdList" item="item" index="index" open="("
+						 close=")" separator=",">
+					<if test="(index % 998) == 0">
+						null) OR TRD_PRODUCT_DEAL.CHL_ID in (
+					</if>
+					#{item}
+				</foreach>
+				)
 			</if>
 			<if test="ps != null and ps !='' ">
 				<!-- AND TRD_PRODUCT_DEAL.PS = #{ps} -->
@@ -1704,8 +1776,16 @@
 			<if test="tradeMarketMode != null and tradeMarketMode !='' ">
 				AND WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_MARKET_MODE = #{tradeMarketMode}
 			</if>
-			<if test="chlFinprodId != null and chlFinprodId !='' ">
-				AND WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID = #{chlFinprodId}
+			<if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+				AND (WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID IN
+				<foreach collection="chlFinprodIdList" item="item" index="index" open="("
+						 close=")" separator=",">
+					<if test="(index % 998) == 0">
+						null) OR WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID in (
+					</if>
+					#{item}
+				</foreach>
+				)
 			</if>
 			<if test="ps != null and ps !='' ">
 				AND WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.PS=#{ps}
@@ -1805,8 +1885,16 @@
 			<if test="tradeMarketMode != null and tradeMarketMode !='' ">
 				AND TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_MARKET_MODE = #{tradeMarketMode}
 			</if>
-			<if test="chlFinprodId != null and chlFinprodId !='' ">
-				AND TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID = #{chlFinprodId}
+			<if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+				AND (TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID IN
+				<foreach collection="chlFinprodIdList" item="item" index="index" open="("
+						 close=")" separator=",">
+					<if test="(index % 998) == 0">
+						null) OR TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID in (
+					</if>
+					#{item}
+				</foreach>
+				)
 			</if>
 			<if test="ps != null and ps !='' ">
 				AND TRD_FIN_PRODUCT_DEAL_TOTAL.PS = #{ps}
@@ -1923,8 +2011,16 @@
 			<if test="tradeMarketMode != null and tradeMarketMode !='' ">
 				AND TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_MARKET_MODE = #{tradeMarketMode}
 			</if>
-			<if test="chlFinprodId != null and chlFinprodId !='' ">
-				AND TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID = #{chlFinprodId}
+			<if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+				AND (TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID IN
+				<foreach collection="chlFinprodIdList" item="item" index="index" open="("
+						 close=")" separator=",">
+					<if test="(index % 998) == 0">
+						null) OR TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID in (
+					</if>
+					#{item}
+				</foreach>
+				)
 			</if>
 			<if test="ps != null and ps !='' ">
 				AND TRD_FIN_PRODUCT_DEAL_TOTAL.PS = #{ps}

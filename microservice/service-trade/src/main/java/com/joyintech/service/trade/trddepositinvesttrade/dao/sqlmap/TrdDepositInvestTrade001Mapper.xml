@@ -106,8 +106,16 @@
 			<if test="entrustId != null and entrustId !='' ">
 				AND WFLDEAL.ENTRUST_ID  = #{entrustId}
 			</if>
-			<if test="chlFinprodId != null and chlFinprodId !='' ">
-				AND WFL.CHL_ID  = #{chlFinprodId}
+			<if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+				AND (WFL.CHL_ID IN
+				<foreach collection="chlFinprodIdList" item="item" index="index" open="("
+						 close=")" separator=",">
+					<if test="(index % 998) == 0">
+						null) OR WFL.CHL_ID in (
+					</if>
+					#{item}
+				</foreach>
+				)
 			</if>
 			<if test="finprodId != null and finprodId !='' ">
 				AND (FIN.FINPROD_MARKET_ID
@@ -240,8 +248,16 @@
 			<if test="entrustId != null and entrustId !='' ">
 				AND WFLDEAL.ENTRUST_ID  = #{entrustId}
 			</if>
-			<if test="chlFinprodId != null and chlFinprodId !='' ">
-				AND WFL.CHL_ID  = #{chlFinprodId}
+			<if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+				AND (WFL.CHL_ID IN
+				<foreach collection="chlFinprodIdList" item="item" index="index" open="("
+						 close=")" separator=",">
+					<if test="(index % 998) == 0">
+						null) OR WFL.CHL_ID in (
+					</if>
+					#{item}
+				</foreach>
+				)
 			</if>
 			<if test="finprodId != null and finprodId !='' ">
 				AND (FIN.FINPROD_MARKET_ID

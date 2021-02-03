@@ -5,8 +5,12 @@ $(function(){
     var getPageParams = function() {
         var portfolioIdTemp = $('#portfolioId').val();
         var portfolioId = null;
+        var chlFinprodId = null;
         if(portfolioIdTemp != null)
             portfolioId = portfolioIdTemp.join(",");
+        if ($("#chlFinprodId").val()) {
+        	chlFinprodId = $("#chlFinprodId").val().join(",");
+        }
         return {
             entrustId:$('#entrustId').val(),
             portfolioId:portfolioId,
@@ -21,7 +25,7 @@ $(function(){
             status:$('#status').val(),
             tradeDateBegin:$('#tradeDate').startDate(),
             tradeDateEnd:$('#tradeDate').endDate(),
-            chlFinprodId:$('#chlFinprodId').val()
+            chlFinprodId:chlFinprodId
         };
     };
     

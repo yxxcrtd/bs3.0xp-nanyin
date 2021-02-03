@@ -130,8 +130,16 @@
             <if test="busiCode != null and !busiCode.isEmpty()">
                 AND T1.TOTLE_TRADE_ID = #{busiCode}
             </if>
-            <if test="chlId != null and !chlId.isEmpty()">
-                AND FP.FINPROD_ID = #{chlId}
+            <if test="chlIdList != null and chlIdList.size() > 0">
+                AND (FP.FINPROD_ID IN
+                <foreach collection="chlIdList" item="item" index="index" open="("
+                         close=")" separator=",">
+                    <if test="(index % 998) == 0">
+                        null) OR FP.FINPROD_ID in (
+                    </if>
+                    #{item}
+                </foreach>
+                )
             </if>
             <include refid="where_sql" />
             AND (EXISTS(
@@ -272,8 +280,16 @@
                             )
                             and T2.PAY_DATE >= #{PLATEFORM_DATE}
                             <!--小于计息截止日的最大持仓 丁志鹏 2019/08/28 end-->
-                            <if test="chlId != null and !chlId.isEmpty()">
-                                AND T1.SEC_ACCT_ID = #{chlId}
+                            <if test="chlIdList != null and chlIdList.size() > 0">
+                                AND (T1.SEC_ACCT_ID IN
+                                <foreach collection="chlIdList" item="item" index="index" open="("
+                                         close=")" separator=",">
+                                    <if test="(index % 998) == 0">
+                                        null) OR T1.SEC_ACCT_ID in (
+                                    </if>
+                                    #{item}
+                                </foreach>
+                                )
                             </if>
                             and T1.PORTFOLIO_ID <include refid="portfolioAth"/>
                             <if test="portfolioId != null and !portfolioId.isEmpty()">
@@ -406,8 +422,16 @@
             <if test="busiCode != null and !busiCode.isEmpty()">
                 AND T1.TOTLE_TRADE_ID = #{busiCode}
             </if>
-            <if test="chlId != null and !chlId.isEmpty()">
-                AND FP.FINPROD_ID = #{chlId}
+            <if test="chlIdList != null and chlIdList.size() > 0">
+                AND (FP.FINPROD_ID IN
+                <foreach collection="chlIdList" item="item" index="index" open="("
+                         close=")" separator=",">
+                    <if test="(index % 998) == 0">
+                        null) OR FP.FINPROD_ID in (
+                    </if>
+                    #{item}
+                </foreach>
+                )
             </if>
             AND T1.P_TOTLE_TRADE_ID IS NULL <!-- 只展示汇总的汇总交易 -->
             <include refid="where_sql" />
@@ -475,8 +499,16 @@
             <if test="busiCode != null and !busiCode.isEmpty()">
                 AND T1.P_TRADE_ID = #{busiCode}
             </if>
-            <if test="chlId != null and !chlId.isEmpty()">
-                AND FP.FINPROD_ID = #{chlId}
+            <if test="chlIdList != null and chlIdList.size() > 0">
+                AND (FP.FINPROD_ID IN
+                <foreach collection="chlIdList" item="item" index="index" open="("
+                         close=")" separator=",">
+                    <if test="(index % 998) == 0">
+                        null) OR FP.FINPROD_ID in (
+                    </if>
+                    #{item}
+                </foreach>
+                )
             </if>
             AND T1.P_TOTLE_TRADE_ID IS NULL <!-- 只展示汇总的汇总交易 -->
                 <include refid="where_sql" />

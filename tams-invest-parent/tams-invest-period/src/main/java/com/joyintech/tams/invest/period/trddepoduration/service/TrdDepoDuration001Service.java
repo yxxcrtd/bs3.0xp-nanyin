@@ -34,6 +34,7 @@ import com.joyintech.tams.invest.common.dto.period.common.BaseTotalTradeInfoDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.period.common.service.PeriodCommonService;
 import com.joyintech.tams.invest.period.trddepoduration.dto.TrdDepoDuration001Dto;
+import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -199,6 +200,14 @@ implements BaseProcessService<TrdDepoDuration001Dto>{
         }
         else {
             params.put("statusValid", new ArrayList<>());
+        }
+        //多选下拉框处理（合作资产）
+        Object chlFinprodIdObj = params.get("chlId");
+        if (chlFinprodIdObj != null){
+            params.put("chlIdList",
+                    StringUtil.splitToList(GlobalConstant.COMMA,(String) chlFinprodIdObj));
+        }else {
+            params.put("chlIdList",new ArrayList<>());
         }
         params.put("userName", LoginUserUtil.getUserName());
         String cashType = (String)params.get("cashType");

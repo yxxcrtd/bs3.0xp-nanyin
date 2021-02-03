@@ -10,6 +10,9 @@
         } else {
             result.projectType = null;
         }
+        if ($("#chlFinprodId").val()) {
+        	result.chlFinprodId = $("#chlFinprodId").val().join(",");
+        }
         // 项目类资产五级分类改造 add by renping 2019-08-01 start
         if ($("#type9").val()) {
         	result.type9 = $("#type9").val().join(",");

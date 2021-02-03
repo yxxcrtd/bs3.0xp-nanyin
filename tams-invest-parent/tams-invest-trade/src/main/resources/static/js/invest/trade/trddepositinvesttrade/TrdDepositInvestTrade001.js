@@ -22,6 +22,9 @@ $(function(){
         if(param.type11){
             param.type11 = param.type11.join(",");
         }
+        if ($("#chlFinprodId").val()) {
+        	param.chlFinprodId = $("#chlFinprodId").val().join(",");
+        }
         //	查询条件换成资产二级分类多选项 -wangguiqi on 2019/8/6 -end
         return {
         	/* type9~11 added by wangguiqi on 2019/8/1 -start */
@@ -33,7 +36,7 @@ $(function(){
             portfolioId:portfolioId,
             finprodType:$('#finprodType').val(),
             finprodId:$('#finprodId').val(),
-            chlFinprodId:$('#chlFinprodId').val(),
+            chlFinprodId:param.chlFinprodId,
             ps:ps,
             status:$('#status').val(),
             tradeDateBegin:$('#tradeDate').startDate(),

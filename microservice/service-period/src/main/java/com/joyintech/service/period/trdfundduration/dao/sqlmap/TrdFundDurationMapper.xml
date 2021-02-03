@@ -288,8 +288,16 @@
         </if>
         <!-- 通道新增 renping 2020/01/21 start -->
         <!-- 通道代码 -->
-        <if test="chlId != null and !chlId.equals('')">
-            and tpd.CHL_ID = #{chlId}
+        <if test="chlIdList != null and chlIdList.size() > 0">
+            AND (tpd.CHL_ID IN
+            <foreach collection="chlIdList" item="item" index="index" open="("
+                     close=")" separator=",">
+                <if test="(index % 998) == 0">
+                    null) OR tpd.CHL_ID in (
+                </if>
+                #{item}
+            </foreach>
+            )
         </if>
         <!-- 通道新增 renping 2020/01/21 start -->
     </sql>

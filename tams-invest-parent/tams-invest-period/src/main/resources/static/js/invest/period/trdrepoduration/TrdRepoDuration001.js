@@ -20,6 +20,9 @@
         } else {
             result.ps = null;
         }
+        if ($("#chlFinprodId").val()) {
+        	result.chlFinprodId = $("#chlFinprodId").val().join(",");
+        }
         if ($("#psType").val()) {
             result.psType = $("#psType").val().join(",");
         } else {
@@ -87,7 +90,7 @@
                 //         "href='javascript:openOperateWindow(\"" + row.finprodId + "\")'>" + data||'' + "</a>";
                 // }
             }
-            , {field: 'chlId', width: 200, title: function(){return JoyinUtil.getLabel("invest.channelId")+JoyinUtil.getLabel("ChannelAsset002.finprodIdBak");}()}
+            , {field: 'chlFinprodId', width: 200, title: '合作资产'}
             , {field: 'statusValid', visible: false}
             , {field: 'type6', visible: false}
             , {field: 'workflowId', visible: false}

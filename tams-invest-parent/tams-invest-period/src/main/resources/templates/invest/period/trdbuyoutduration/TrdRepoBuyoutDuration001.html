@@ -81,6 +81,19 @@
                     </div>
                 </div>
             </div>
+            <div class="layui-form-item">
+                <div class="form-inline-wrap">
+                    <label class="layui-form-label form-label-wrap"
+                           data-th-text="#{TrdBondDuration001.chlFinprodId}">合作资产</label>
+                    <div class="layui-input-inline input-inline">
+                        <select type="text" id="chlFinprodId" name="chlFinprodId"
+                                class="layui-input form-input input-select" placeholder="请输入内容"
+                                data-th-placeholder="#{SysCommon.placeholder}"  data-th-data-url="@{/invest/asset/channel/ChannelAsset001/getSecAcctId}"
+                                allowClear="true"
+                                multiple="true"></select>
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
     <div>

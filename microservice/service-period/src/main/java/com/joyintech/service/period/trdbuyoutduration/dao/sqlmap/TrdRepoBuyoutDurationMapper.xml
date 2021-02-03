@@ -53,6 +53,7 @@
             SELECT * FROM (
             SELECT
               '${PAGE_DATE_STATUS03}' statusValid,
+              fp1.FINPROD_NAME chlFinprodId,
               T1.TOTLE_TRADE_ID busiCode,
               T1.CCY,
               T4.BASIS,
@@ -80,6 +81,7 @@
               T1.FPRICE_AMT TRADE_AMT/*实收本息总额*/
               <!-- 存续期增加通道费 modify by renping 20191025 end -->
             FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL T1
+            LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = T1.CHL_ID
             LEFT JOIN WFL_PA_TRD_FIN_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
             LEFT JOIN PTL_PORTFOLIO T2 ON T2.PORTFOLIO_ID = T1.PORTFOLIO_ID
             LEFT JOIN FIN_TRADE_PRODUCT T4 ON T1.FINPROD_ID = T4.FINPROD_ID
@@ -96,6 +98,17 @@
                 T2.PARENT_PORTFOLIO_ID IN (<foreach collection="portfolioId" item="item" separator=",">#{item}</foreach> )
                 )
             </if>
+            <if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+                AND (T1.CHL_ID IN
+                <foreach collection="chlFinprodIdList" item="item" index="index" open="("
+                         close=")" separator=",">
+                    <if test="(index % 998) == 0">
+                        null) OR T1.CHL_ID in (
+                    </if>
+                    #{item}
+                </foreach>
+                )
+            </if>
             <!-- 子组合交易时，选择母组合代码，查询不到流程中数据 modify by renping 20191028 end -->
             <include refid="where_sql" />
             ORDER BY T1.TRADE_DATE DESC
@@ -108,6 +121,7 @@
             SELECT * FROM (
             SELECT
                 '${PAGE_DATE_STATUS01}' statusValid,
+                fp1.FINPROD_NAME chlFinprodId,
                 null busiCode,
                 T1.CCY,
                 T4.BASIS,
@@ -133,6 +147,7 @@
                 T1.PRIN_AMT + T4.M_INT_AMT THEORY_AMT/*理论本息总额 T1.PRIN_AMT + NVL(PSV.TDY_INTINCEXP, FCP.INT_AMT)*/,
                 null TRADE_AMT
             FROM TRD_PRODUCT_DEAL T1
+            LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = T1.CHL_ID
             LEFT JOIN PTL_TRADE T3 ON T1.TRADE_ID = T3.BUSI_NO
             LEFT JOIN PTL_PORTFOLIO T2 ON T2.PORTFOLIO_ID = T3.PORTFOLIO_ID
             LEFT JOIN PTL_TRADE T31 ON T1.TRADE_ID = T31.BUSI_NO
@@ -166,6 +181,17 @@
                 AND (T2.PORTFOLIO_ID IN (<foreach collection="portfolioId" item="item" separator=",">#{item}</foreach> )
                 or SUBT2.PORTFOLIO_ID IN (<foreach collection="portfolioId" item="item" separator=",">#{item}</foreach> ))
             </if>
+            <if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+                AND (T1.CHL_ID IN
+                <foreach collection="chlFinprodIdList" item="item" index="index" open="("
+                         close=")" separator=",">
+                    <if test="(index % 998) == 0">
+                        null) OR T1.CHL_ID in (
+                    </if>
+                    #{item}
+                </foreach>
+                )
+            </if>
             <include refid="where_sql" />
             ORDER BY T1.TRADE_DATE DESC
             )
@@ -180,6 +206,7 @@
             SELECT * FROM (
                 SELECT
                   '${PAGE_DATE_STATUS05}' statusValid,
+                  fp1.FINPROD_NAME chlFinprodId,
                   T1.TOTLE_TRADE_ID busiCode,
                   T1.CCY,
                   T4.BASIS,
@@ -207,6 +234,7 @@
                   T1.FPRICE_AMT TRADE_AMT/*实收本息总额*/
                   <!-- 存续期增加通道费 modify by renping 20191025 end -->
                 FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
+                LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = T1.CHL_ID
                 LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
                 LEFT JOIN FIN_TRADE_PRODUCT T4 ON T1.FINPROD_ID = T4.FINPROD_ID
                 LEFT JOIN FIN_PRODUCT_TYPE T5 ON T4.FINPROD_ID = T5.FINPROD_ID
@@ -224,6 +252,17 @@
                     PP.PARENT_PORTFOLIO_ID IN (<foreach collection="portfolioId" item="item" separator=",">#{item}</foreach> )
                 )
             </if>
+            <if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+                AND (T1.CHL_ID IN
+                <foreach collection="chlFinprodIdList" item="item" index="index" open="("
+                         close=")" separator=",">
+                    <if test="(index % 998) == 0">
+                        null) OR T1.CHL_ID in (
+                    </if>
+                    #{item}
+                </foreach>
+                )
+            </if>
                 <include refid="where_sql" />
                 ORDER BY T1.TRADE_DATE DESC
             )
@@ -238,6 +277,7 @@
             SELECT * FROM (
             SELECT
               '${PAGE_DATE_STATUS06}' statusValid,
+            fp1.FINPROD_NAME chlFinprodId,
               T1.P_TRADE_ID busiCode,
               T1.CCY,
               T4.BASIS,
@@ -265,6 +305,7 @@
               T1.FPRICE_AMT TRADE_AMT/*实收本息总额*/
               <!-- 存续期增加通道费 modify by renping 20191025 end -->
             FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
+            LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = T1.CHL_ID
             LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
             LEFT JOIN FIN_TRADE_PRODUCT T4 ON T1.FINPROD_ID = T4.FINPROD_ID
             LEFT JOIN FIN_PRODUCT_TYPE T5 ON T4.FINPROD_ID = T5.FINPROD_ID
@@ -278,6 +319,17 @@
                 AND (PP.PORTFOLIO_ID IN (<foreach collection="portfolioId" item="item" separator=",">#{item}</foreach> )
                 or
                 PP.PARENT_PORTFOLIO_ID IN (<foreach collection="portfolioId" item="item" separator=",">#{item}</foreach> )
+                )
+            </if>
+            <if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+                AND (T1.CHL_ID IN
+                <foreach collection="chlFinprodIdList" item="item" index="index" open="("
+                         close=")" separator=",">
+                    <if test="(index % 998) == 0">
+                        null) OR T1.CHL_ID in (
+                    </if>
+                    #{item}
+                </foreach>
                 )
             </if>
             <include refid="where_sql" />
