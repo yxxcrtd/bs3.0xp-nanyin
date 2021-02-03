@@ -27,7 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.constant.DictCodeList;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -369,13 +371,27 @@ public class ChbMonthReport001Service extends SvrCommonExportService<ChbMonthRep
         Map<String,Object> data = restTemplate.postForObject(
     	                SvrServiceApplication.CHB_SERVICE_NAME + "/ChbMonthReport/createData",selectParam,
     	                Map.class);
-    	String termname = data.get("termname").toString();
-    	String exceltemplate = "Monthreport";
+		// 获取是否子公司(01：是 02：否)
+		String isSubSystem = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SUBSIDIARY);
+		String exceltemplate = "Monthreport";
+		if(isSubSystem != null) {
+			if (StringUtils.equalsIgnoreCase(isSubSystem, DictCodeList.是否_中债_是.getValue())) {
+				exceltemplate="ZMonthreport";
+			}
+		}
+		String termname = data.get("termname").toString();
 	    String fileName = "银行月度报表"+"_"+termname+".xls";
 
 		try {
 			if("G06".equals(selectParam.get("G06"))){
-				 return exportG06MonthReportExcel(data,termname);
+				exceltemplate = "G06Monthreport";
+				if(isSubSystem != null) {
+					if (StringUtils.equalsIgnoreCase(isSubSystem, DictCodeList.是否_中债_是.getValue())) {
+						exceltemplate="ZG06Monthreport";
+					}
+				}
+//				 return exportG06MonthReportExcel(data,termname);
+				fileName="G06银行月度报表"+"_"+termname+".xls";
 			}
             return exportMonthReportExcel(data,exceltemplate,fileName);
         } catch (IOException e) {   
@@ -470,9 +486,21 @@ public class ChbMonthReport001Service extends SvrCommonExportService<ChbMonthRep
 
 	}
 	public String priview(String pageid,Map<String, Object> selectParam) {
+		// 获取是否子公司(01：是 02：否)
+		String isSubSystem = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SUBSIDIARY);
 		String exceltemplate =  "Monthreport";
+		if(isSubSystem != null) {
+			if (StringUtils.equalsIgnoreCase(isSubSystem, DictCodeList.是否_中债_是.getValue())) {
+				exceltemplate="ZMonthreport";
+			}
+		}
 		if("G06".equals(selectParam.get("G06"))){
 			exceltemplate = "G06Monthreport";
+			if(isSubSystem != null) {
+				if (StringUtils.equalsIgnoreCase(isSubSystem, DictCodeList.是否_中债_是.getValue())) {
+					exceltemplate="ZG06Monthreport";
+				}
+			}
 		}
 		@SuppressWarnings("unchecked")
         Map<String,Object> data = restTemplate.postForObject(
