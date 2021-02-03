@@ -455,7 +455,7 @@
 	    on nvl (info.fprod_id,info.prod_id)=val.prod_id
 	     left join pd on info.prod_id=pd.prod_id
 	    where info.FPROD_ID is null
-	    and  info.vdate <![CDATA[<]]>  #{startdate,jdbcType=DATE}
+	    and  info.vdate <![CDATA[<=]]>  #{enddate,jdbcType=DATE}
        /**历史到期产品不统计*/
       AND NOT EXISTS (
       SELECT
@@ -734,10 +734,7 @@
 	    ,nvl(pm.cleanamtsum,0) CLEANSUM /*净募集金额*/
 	    </if>
         <if test="monthReport=='01' and cleanamttype=='02'">
-        ,case when deal.prodtype in('N')
-        	then deal.dirtysum-pm2.amt 
-        	else deal.dirtysum-pm2.qty 
-        	end CLEANSUM /*净募集金额*/
+        ,deal.dirtysum-pm2.amt  CLEANSUM /*净募集金额*/
         </if>
         <if test="monthReport=='02'">
         ,deal.dirtysumqty-pm2.qty CLEANSUM
