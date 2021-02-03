@@ -492,21 +492,8 @@ SELECT fpd.TRADE_ID businessCode,
 	</select>
 
 	<select id="pledgeSummaryFindPage" resultType="com.joyintech.service.portfolio.portfolioanalysis.ptlrepopledgesearch.dto.PtlPldgeSummaryDto">
-		with bondvredit as (
-		SELECT * FROM (
 		select
-		T1.O_CODE,
-		T1.O_TYPE,
-		T1.GRADE_RESULT,
-		row_number() over(partition by T1.O_CODE,T1.O_TYPE order by GRADE_RESULT desc) mm
-		from MST_BOND_CREDIT_RATING T1
-		where T1.GRADE_DATE &lt;= to_date(#{searchDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
-		) WHERE mm =1
-		)
-		select
-		T3.*,
-		T1.GRADE_RESULT gradeTypezt,
-		T2.GRADE_RESULT gradeTypezx
+		T3.*
 		from (
 		select
 		INFO.PORTFOLIO_ID portfolioId,
@@ -907,11 +894,7 @@ SELECT fpd.TRADE_ID businessCode,
 		INFO.FINPROD_NAME,
 		INFO.REGIST_ORG
 		)T3
-		left join bondvredit T1 ON T1.O_CODE = T3.secid AND T1.O_TYPE = '01'
-		left join bondvredit T2 ON T2.O_CODE = T3.secid AND T2.O_TYPE = '02'
-		where prinAmt <![CDATA[<>]]> 0
-		or canpledgeAmt <![CDATA[<>]]> 0
-		or pledgeAmt <![CDATA[<>]]> 0
-		or remainAmt <![CDATA[<>]]> 0
+		where
+		pledgeAmt <![CDATA[<>]]> 0
 	</select>
 </mapper>
