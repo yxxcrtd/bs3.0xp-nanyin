@@ -238,6 +238,14 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 											"贷款到期日期")));
 						}
 					}
+				}else if(StringUtil.isNotEmpty(dto.getLoanState()) &&
+						StringUtil.equals(dto.getLoanState(), DictCodeListExt3.贷款状态_逾期.getValue())){
+					if(StringUtil.isNotEmpty(dto.getLoanExtensionDueDate()) && StringUtil.isNotEmpty(dto.getLoanMdate())
+							&&DateUtil.compareDate(dto.getLoanExtensionDueDate(), dto.getLoanMdate()) <= 0){
+						errorList.add(new ValidMessage("loanExtensionDueDate",
+								getMessage("REPORT_COMMON_E_0059", getMessage("贷款展期到期日期"),
+										"贷款到期日期")));
+					}
 				}
 			}
 

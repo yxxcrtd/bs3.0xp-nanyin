@@ -105,7 +105,10 @@
         left join CHB_TYPE_MAPPING_EX typex on typex.OBJFIELD1 =  info.ORG_ASSET_TYPE1 
                                       	   and ((typex.OBJFIELD2 =  info.ORG_ASSET_TYPE2) or typex.OBJFIELD2 is null)
                                       	   and ((typex.OBJFIELD3 =  info.TRM_FUND_TYPE) or typex.OBJFIELD3 is null)
-                                    	   and typex.MAPPINGCODE='ASSETBASISTYPE'
+                                      	   /***对于债券类资产，需要根据其登记托管机构配置哪些生成估值信息登记 add by leipeng 20210129***/
+											and ((typex.OBJFIELD4 =  info.REGIST_ORG) or typex.OBJFIELD4 is null)
+											/***对于债券类资产，需要根据其登记托管机构配置哪些生成估值信息登记 add by leipeng 20210129***/
+											and typex.MAPPINGCODE='ASSETBASISTYPE'
 				where 1=1 
 				  and (assetbasis.posAmt &lt;&gt; 0 or assetbasis.valueDate=assetbasis.mdate)
 				  and  assetbasis.assetCode is not null
