@@ -158,7 +158,7 @@ $(function() {
             ,{field:'pledgeAmt',width:150,type:'money',title: '已质押券面(元)',sort:false}
             // ,{field:'gradeTypeNamezt',width:110,title: '主体评级',sort:false}
             // ,{field:'gradeTypeNamezx',width:110,title: '债项评级',sort:false}
-            ,{field:'registOrgName',width:280,title: '登记托管机构',sort:false}
+            // ,{field:'registOrgName',width:280,title: '机构名称',sort:false}
         ]
     });
     
