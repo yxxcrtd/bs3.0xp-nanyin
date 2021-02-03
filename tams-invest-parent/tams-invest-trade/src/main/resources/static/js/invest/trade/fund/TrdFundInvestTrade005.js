@@ -224,10 +224,13 @@ $(function () {
             } else {
                 object.fileArray = FileCommon.getUploadFileInfo();
             }
-            if (object.fileArray && _.isArray(object.fileArray)) {
+            if (object.fileArray && _.isArray(object.fileArray) && object.fileArray.length > 0) {
                 $.each(object.fileArray, function (index, obj) {
                     obj.seqNo = obj.fileNo;
                 });
+            }else {
+                Joyin.error('请上传确认单！');
+                return;
             }
         }
 
