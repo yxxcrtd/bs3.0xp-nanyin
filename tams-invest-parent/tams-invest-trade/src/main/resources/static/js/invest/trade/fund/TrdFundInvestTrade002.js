@@ -1229,6 +1229,7 @@ $(function () {
                 $("#trdInvestPersonInfo_counterId").on("change", counterIdOnChange);
                 pageItemDisplay();
                 initFlag = false;
+                selectManeger();
             }
         }
 
