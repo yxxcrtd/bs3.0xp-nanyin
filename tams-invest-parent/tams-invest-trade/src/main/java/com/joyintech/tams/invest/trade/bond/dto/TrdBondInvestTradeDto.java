@@ -10,21 +10,10 @@
 
 package com.joyintech.tams.invest.trade.bond.dto;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
-import javax.validation.Valid;
-
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.joyintech.framework.json.BigDecimalSerializer;
-import com.joyintech.tams.common.base.entity.PaTrdProductDeal;
-import com.joyintech.tams.common.base.entity.PtlTrade;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
-import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
@@ -41,6 +30,11 @@ import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.trade.bond.validator.TrdBondInvestTradeDtoValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+
+import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 债券交易Dto
@@ -2076,4 +2070,75 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
     public void setCreditSource(String creditSource) {
         this.creditSource = creditSource;
     }
+    // 合并 by 华兴 start
+    /**
+     * 金融产品交易附属
+     */
+    private TrdProductDealAdd trdProductDealAdd;
+    /**
+     * 金融产品交易业务流程表
+     */
+    private WflTrdProductDealAdd wflTrdProductDealAdd;
+
+    /**
+     * 金融产品交易扩展
+     */
+    private PaTrdProductDeal paTrdProductDeal;
+    /**
+     * 待转让本金
+     */
+    private BigDecimal assignPrinamt;
+    /**
+     * 待转让利息
+     */
+    private BigDecimal assignIntamt;
+
+    public TrdProductDealAdd getTrdProductDealAdd() {
+        return trdProductDealAdd;
+    }
+
+    public void setTrdProductDealAdd(TrdProductDealAdd trdProductDealAdd) {
+        this.trdProductDealAdd = trdProductDealAdd;
+    }
+
+    public WflTrdProductDealAdd getWflTrdProductDealAdd() {
+        return wflTrdProductDealAdd;
+    }
+
+    public void setWflTrdProductDealAdd(WflTrdProductDealAdd wflTrdProductDealAdd) {
+        this.wflTrdProductDealAdd = wflTrdProductDealAdd;
+    }
+
+    public PaTrdProductDeal getPaTrdProductDeal() {
+        return paTrdProductDeal;
+    }
+
+    public void setPaTrdProductDeal(PaTrdProductDeal paTrdProductDeal) {
+        this.paTrdProductDeal = paTrdProductDeal;
+    }
+
+    public BigDecimal getSettleAmtRate() {
+        return settleAmtRate;
+    }
+
+    public void setSettleAmtRate(BigDecimal settleAmtRate) {
+        this.settleAmtRate = settleAmtRate;
+    }
+
+    public BigDecimal getAssignPrinamt() {
+        return assignPrinamt;
+    }
+
+    public void setAssignPrinamt(BigDecimal assignPrinamt) {
+        this.assignPrinamt = assignPrinamt;
+    }
+
+    public BigDecimal getAssignIntamt() {
+        return assignIntamt;
+    }
+
+    public void setAssignIntamt(BigDecimal assignIntamt) {
+        this.assignIntamt = assignIntamt;
+    }
+    // 合并 by 华兴 end
 }
