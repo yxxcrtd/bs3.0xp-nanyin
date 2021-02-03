@@ -5,8 +5,12 @@ $(function(){
     var getPageParams = function() {
         var portfolioIdTemp = $('#portfolioId').val();
         var portfolioId = null;
+        var chlFinprodId = null;
         if(portfolioIdTemp != null)
             portfolioId = portfolioIdTemp.join(",");
+        if ($("#chlFinprodId").val()) {
+        	chlFinprodId = $("#chlFinprodId").val().join(",");
+        }
         return {
             entrustId:$('#entrustId').val(),
             portfolioId:portfolioId,
@@ -21,7 +25,7 @@ $(function(){
             status:$('#status').val(),
             tradeDateBegin:$('#tradeDate').startDate(),
             tradeDateEnd:$('#tradeDate').endDate(),
-            chlFinprodId:$('#chlFinprodId').val()
+            chlFinprodId:chlFinprodId
         };
     };
     
@@ -137,7 +141,9 @@ $(function(){
                     for(var select in object.selectedItem){
                         object.selectedItem[select].cancelRemark = result;
                     }
-                    WorkFlow.doRevokeList(basePath + 'invest/trade/trdplanrateinvesttrade/TrdPlanRateInvestTrade001/delete', object, "TrdPlanRateInvestTrade001_btn_delete", "TrdPlanRateInvestTrade002");//删除
+                    WorkFlow.doRevokeList(basePath + 'invest/trade/trdplanrateinvesttrade/TrdPlanRateInvestTrade001/delete', object, "TrdPlanRateInvestTrade001_btn_delete", "TrdPlanRateInvestTrade002",function(){
+                        table.reload();//回调事件请求及回调函数
+                    });
 //                    WorkFlow.doDeleteList(basePath + 'invest/trade/trdplanrateinvesttrade/TrdPlanRateInvestTrade001/delete', object, "TrdPlanRateInvestTrade001_btn_delete", "TrdPlanRateInvestTrade002");//删除
                     });
                 });

@@ -35,11 +35,13 @@ import com.joyintech.tams.common.base.entity.FinFloatAccrualSche;
 import com.joyintech.tams.common.base.entity.FinFloatAccrualScheKey;
 import com.joyintech.tams.common.base.entity.FinOpenPlan;
 import com.joyintech.tams.common.base.entity.FinOpenPlanKey;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.AccrDateNeedOtherDto;
 import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.AccrDateOtherDto;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dao.SusPrdFutureOpenPlanGenMapper;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.FinOpenPlanDto;
+import com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto;
 
 /**
  * 对应 写入处理
@@ -108,6 +110,18 @@ public class SusPrdFutureOpenPlanGenWriter extends BaseWriter<NeedToWriteEntity>
 					createFinFloatAccrualSche(prodidList);
 					//生成最新的回补计划 
 					createFinAnapleroticAccrualSche(prodidList);
+					//若分红与申购同频时，当新的开放计划生成时生成新的分红计划
+					if(!StringUtil.equals(finOpenPlanDto.getSusPrdFutureOpenPlanGenDto().getOpenType(), "02" )
+					&&StringUtil.equals(finOpenPlanDto.getSusPrdFutureOpenPlanGenDto().getPayCycleV(), "08")
+					&&StringUtil.equals(finOpenPlanDto.getSusPrdFutureOpenPlanGenDto().getProfitType(), "03")) {
+						createFinCashPlan(prodidList);
+					}
+					//若付息与申购同频时，当新的付息计划生成时生成新的付息计划
+					if(!StringUtil.equals(finOpenPlanDto.getSusPrdFutureOpenPlanGenDto().getOpenType(), "02" )
+					&&StringUtil.equals(finOpenPlanDto.getSusPrdFutureOpenPlanGenDto().getPayCycleV(), "03")
+					&&StringUtil.equals(finOpenPlanDto.getSusPrdFutureOpenPlanGenDto().getProfitType(), "02")) {
+						createFinCashPlan1(prodidList);
+					}
 					
 				}
 				//更新业绩回补计划
@@ -293,14 +307,138 @@ public class SusPrdFutureOpenPlanGenWriter extends BaseWriter<NeedToWriteEntity>
 					finFloatAccrualScheFirst.setValDate(endDate);
 					finFloatAccrualScheFirst.setUpdateTime(new Date());
 					//插入更新的回补计提计划
-					if(finFloatAccrualScheFirst.getAccrStrDate().compareTo(accrDateOtherDto.getFirstAnapleroticCycleBegDate()) >= 0) {						
-						finFloatAccrualScheMapper.insert(finFloatAccrualScheFirst);
+					if(finFloatAccrualScheFirst.getAccrStrDate().compareTo(accrDateOtherDto.getFirstAnapleroticCycleBegDate()) >= 0) {
+						// 查询无重复
+						FinFloatAccrualScheKey key = new FinFloatAccrualScheKey();
+						key.setCashId(accrDateOtherDto.getCashId());
+						key.setAccrDate(finFloatAccrualScheFirst.getAccrDate());
+						FinFloatAccrualSche fcp = finFloatAccrualScheMapper.selectByPrimaryKey(key);						
+						if(!StringUtil.isNotEmpty(fcp)) {
+							finFloatAccrualScheMapper.insert(finFloatAccrualScheFirst); // 如果为空再插入操作
+						}
 					}
 					startDate = endDate;
 				}
 			}
 		}
 	}
+	
+	/**
+	 * 若分红计划与申购同频时，当新的开放计划生成时生成新的分红计划 
+	 */
+	public void createFinCashPlan(List<String> finprodidList){
+		
+		if (!StringUtil.isEmptyList(finprodidList)) {
+			for (String finprodId : finprodidList) {
+				// 根据产品代码  查询到相应的申购开放计划
+				List<FinOpenPlan> openPlanList = susPrdFutureOpenPlanGenMapper.findOpenPlanListByProdid(finprodId);
+				if(!StringUtil.isEmptyList(openPlanList)){
+					  for(int i = 0; i < openPlanList.size();i++){
+	                    	FinCashPlan finCashPlan = new FinCashPlan();
+	                    	FinOpenPlan finOpenPlan = openPlanList.get(i);
+	                    	if(0 == i){
+	                    		finCashPlan.setCashId(finOpenPlan.getCashId());
+	                    		finCashPlan.setCashNum(1L);
+	                            finCashPlan.setCashType(DictCodeList.现金流类型_中间收息.getValue());
+	                            finCashPlan.setVdateUnadjust(finOpenPlan.getOpenVdateUn());
+	                            finCashPlan.setMdateUnadjust(finOpenPlan.getOpenDateEnd());
+	                            finCashPlan.setPayDateUnadjust(finOpenPlan.getOpenVdate());
+	                            finCashPlan.setVdate(finOpenPlan.getOpenVdateUn());
+	                            finCashPlan.setMdate(finOpenPlan.getOpenDateEnd());
+	                            finCashPlan.setPayDate(finOpenPlan.getOpenVdate());
+	                            finCashPlan.setFinprodId(finprodId);
+	                            finCashPlan.setFinprodType("F16");
+	                            finCashPlan.setFinprodType2("F16");
+	                            finCashPlan.setBranch(0L);
+	                    	}else{
+	                    		finCashPlan.setCashId(finOpenPlan.getCashId());
+	                    		finCashPlan.setCashNum(new Long(i+1));
+	                            finCashPlan.setCashType(DictCodeList.现金流类型_中间收息.getValue());
+	                            finCashPlan.setVdateUnadjust(openPlanList.get(i - 1).getOpenDateEnd());
+	                            finCashPlan.setMdateUnadjust(finOpenPlan.getOpenDateEnd());
+	                            finCashPlan.setPayDateUnadjust(finOpenPlan.getOpenVdate());
+	                            finCashPlan.setVdate(openPlanList.get(i - 1).getOpenDateEnd());
+	                            finCashPlan.setMdate(finOpenPlan.getOpenDateEnd());
+	                            finCashPlan.setPayDate(finOpenPlan.getOpenVdate());
+	                            finCashPlan.setFinprodId(finprodId);
+	                            finCashPlan.setFinprodType("F16");
+	                            finCashPlan.setFinprodType2("F16");
+	                            finCashPlan.setBranch(0L);
+	                    	}
+	                    	// 查询无重复
+							FinCashPlanKey key = new FinCashPlanKey();
+							key.setCashId(finCashPlan.getCashId());
+							key.setMdate(finCashPlan.getMdate());
+							FinCashPlan fcp = finCashPlanMapper.selectByPrimaryKey(key);
+							
+							if(!StringUtil.isNotEmpty(fcp)) {
+								finCashPlanMapper.insert(finCashPlan); // 如果为空再插入操作
+	                    }
+				}
+				}
+			}
+		}							
+			
+	}
+	
+	/**
+	 * 若付息计划与申购同频时，当新的开放计划生成时生成新的付息计划 
+	 */
+	public void createFinCashPlan1(List<String> finprodidList){
+		
+		if (!StringUtil.isEmptyList(finprodidList)) {
+			for (String finprodId : finprodidList) {
+				// 根据产品代码  查询到相应的申购开放计划
+				List<FinOpenPlan> openPlanList = susPrdFutureOpenPlanGenMapper.findOpenPlanListByProdid(finprodId);
+				if(!StringUtil.isEmptyList(openPlanList)){
+					  for(int i = 0; i < openPlanList.size();i++){
+	                    	FinCashPlan finCashPlan = new FinCashPlan();
+	                    	FinOpenPlan finOpenPlan = openPlanList.get(i);
+	                    	if(0 == i){
+	                    		finCashPlan.setCashId(finOpenPlan.getCashId());
+	                    		finCashPlan.setCashNum(1L);
+	                            finCashPlan.setCashType(DictCodeList.现金流类型_中间收息.getValue());
+	                            finCashPlan.setVdateUnadjust(finOpenPlan.getOpenVdateUn());
+	                            finCashPlan.setMdateUnadjust(finOpenPlan.getOpenVdate());
+	                            finCashPlan.setPayDateUnadjust(finOpenPlan.getOpenVdate());
+	                            finCashPlan.setVdate(finOpenPlan.getOpenVdateUn());
+	                            finCashPlan.setMdate(finOpenPlan.getOpenVdate());
+	                            finCashPlan.setPayDate(finOpenPlan.getOpenVdate());
+	                            finCashPlan.setFinprodId(finprodId);
+	                            finCashPlan.setFinprodType("F16");
+	                            finCashPlan.setFinprodType2("F16");
+	                            finCashPlan.setBranch(0L);
+	                    	}else{
+	                    		finCashPlan.setCashId(finOpenPlan.getCashId());
+	                    		finCashPlan.setCashNum(new Long(i+1));
+	                            finCashPlan.setCashType(DictCodeList.现金流类型_中间收息.getValue());
+	                            finCashPlan.setVdateUnadjust(openPlanList.get(i - 1).getOpenVdate());
+	                            finCashPlan.setMdateUnadjust(finOpenPlan.getOpenVdate());
+	                            finCashPlan.setPayDateUnadjust(finOpenPlan.getOpenVdate());
+	                            finCashPlan.setVdate(openPlanList.get(i - 1).getOpenVdate());
+	                            finCashPlan.setMdate(finOpenPlan.getOpenVdate());
+	                            finCashPlan.setPayDate(finOpenPlan.getOpenVdate());
+	                            finCashPlan.setFinprodId(finprodId);
+	                            finCashPlan.setFinprodType("F16");
+	                            finCashPlan.setFinprodType2("F16");
+	                            finCashPlan.setBranch(0L);
+	                    	}
+	                    	// 查询无重复
+							FinCashPlanKey key = new FinCashPlanKey();
+							key.setCashId(finCashPlan.getCashId());
+							key.setMdate(finCashPlan.getMdate());
+							FinCashPlan fcp = finCashPlanMapper.selectByPrimaryKey(key);
+							
+							if(!StringUtil.isNotEmpty(fcp)) {
+								finCashPlanMapper.insert(finCashPlan); // 如果为空再插入操作
+	                    }
+				}
+				}
+			}
+		}							
+			
+	}
+	
 	/**
 	 * 按降序向列表添加日期
 	 * @param list

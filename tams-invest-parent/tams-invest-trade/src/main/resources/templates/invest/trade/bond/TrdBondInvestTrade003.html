@@ -450,14 +450,23 @@
                                             th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.settleServiceAmt}" />
                                 </div>
                             </div>
+                            <div class="form-inline-wrap" id="commissionAmtDiv" style="display: none">
+                                <label class="layui-form-label form-label-wrap"
+                                       th:text="#{TrdBondInvestTrade002.commissionAmt}">佣金</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input  type="text" id="commissionAmt" name="commissionAmt"
+                                            class="layui-input form-input text-number" placeholder="请输入内容"
+                                            th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.commissionAmt}" />
+                                </div>
+                            </div>
                             <!--增加结算费经手费-->
                             <div class="form-inline-wrap" id="settleAmtDiv" style="display: none">
                                 <label class="layui-form-label form-label-wrap"
                                        th:text="#{TrdBondInvestTrade002.settleAmt}">结算费</label>
                                 <div class="layui-input-inline input-inline">
                                     <input  type="text" id="settleAmt" name="settleAmt"
-                                           class="layui-input form-input text-number" placeholder="请输入内容"
-                                           th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.settleAmt}" />
+                                            class="layui-input form-input text-number" placeholder="请输入内容"
+                                            th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.settleAmt}" />
                                 </div>
                             </div>
                             <div class="form-inline-wrap" id="exchangeAmtDiv">
@@ -467,15 +476,6 @@
                                     <input  type="text" id="exchangeAmt" name="exchangeAmt"
                                             class="layui-input form-input text-number" placeholder="请输入内容"
                                             th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.exchangeAmt}" />
-                                </div>
-                            </div>
-                            <div class="form-inline-wrap" id="commissionAmtDiv" style="display: none">
-                                <label class="layui-form-label form-label-wrap"
-                                       th:text="#{TrdBondInvestTrade002.commissionAmt}">佣金</label>
-                                <div class="layui-input-inline input-inline">
-                                    <input  type="text" id="commissionAmt" name="commissionAmt"
-                                            class="layui-input form-input text-number" placeholder="请输入内容"
-                                            th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.commissionAmt}" />
                                 </div>
                             </div>
                         </div>

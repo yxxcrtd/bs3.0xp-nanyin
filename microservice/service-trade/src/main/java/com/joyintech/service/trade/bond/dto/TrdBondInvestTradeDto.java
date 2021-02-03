@@ -278,7 +278,27 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal {
      */
     private String isPayWithTrade;
     // add by wangguoxian 费用设置 20180808 end
-    
+
+    private String settleIsPayWithTrade;
+
+    private String exchangeIsPayWithTrade;
+
+    public String getSettleIsPayWithTrade() {
+        return settleIsPayWithTrade;
+    }
+
+    public void setSettleIsPayWithTrade(String settleIsPayWithTrade) {
+        this.settleIsPayWithTrade = settleIsPayWithTrade;
+    }
+
+    public String getExchangeIsPayWithTrade() {
+        return exchangeIsPayWithTrade;
+    }
+
+    public void setExchangeIsPayWithTrade(String exchangeIsPayWithTrade) {
+        this.exchangeIsPayWithTrade = exchangeIsPayWithTrade;
+    }
+
     // 增加偏离度by赵东东 2019.9.23 start
     /**
      * 偏离度

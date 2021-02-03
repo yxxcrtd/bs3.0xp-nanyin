@@ -27,11 +27,13 @@ import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.component.business.settle.BussSettleOrderCommService;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
+import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
+import com.joyintech.tams.invest.common.trade.dao.TrdCommonBaseMapper;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.trade.plannet.dto.TrdPlanNetInvestTradeConfirmDto;
 import com.joyintech.tams.invest.trade.plannet.dto.TrdPlanNetInvestTradeDto;
@@ -95,6 +97,9 @@ public class TrdPlanNetInvestTrade001Controller extends BaseController {
      */
     @Autowired
     private TrdCommonBaseService trdCommonBaseService;
+
+    @Autowired
+    private TrdCommonBaseMapper trdCommonBaseMapper;
 
     /**
      * {@inheritDoc}
@@ -187,15 +192,46 @@ public class TrdPlanNetInvestTrade001Controller extends BaseController {
             }
             // 确认提醒 TISHKBS-1113【组合资金账户头寸查询】内转交易撤销提醒 add by hpp 2020-09-17 end
         }else if (StringUtil.equals(dto.getOperateType(), "confirm") && result.getErrorCount() == 0) {// 确认时校验 add by yangwenjun 20201124
-            WflValidInputParameter parameter = new WflValidInputParameter();
-            parameter.setPageId("TrdPlanNetInvestTrade003");
-            parameter.setBusinessDataPk3(dto.getTradeId());
-            if (mstWorkflowCommonService.isInWflProcess(parameter)) {
-                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
-                errorList.add(new ValidMessage(this.getMessage("BUSS_COM_E_0041")));
+
+            if(StringUtil.isEmpty(dto.getTotleTradeId())) {
+                // 单组合 仅校验自己
+                WflValidInputParameter parameter = new WflValidInputParameter();
+                parameter.setPageId("TrdPlanNetInvestTrade003");
+                parameter.setBusinessDataPk3(dto.getTradeId());
+                if (mstWorkflowCommonService.isInWflProcess(parameter)) {
+                    ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+                    errorList.add(new ValidMessage(this.getMessage("BUSS_COM_E_0041")));
+                    AjaxResult ar = new AjaxResult();
+                    ar.setErrorList(errorList);
+                    return ar;
+                }
+            }else{
+                // 多组合 需要校验 多条。。
+                Map<String, Object> param = new HashMap<>();
+                param.put("totleTradeId",dto.getTotleTradeId());
+//                // 随便传的值 仅为获取tradeId 不影响 防止报错
+//                param.put("unitCprice","1");
+//                param.put("ps",dto.getPs());
+
+                List<TrdProductDeal> trdList = trdCommonBaseMapper.findDealByTotalId(param);
                 AjaxResult ar = new AjaxResult();
-                ar.setErrorList(errorList);
-                return ar;
+                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+
+                for (TrdProductDeal trd :trdList) {
+                    if(StringUtil.isNotEmpty(trd.getTradeId()) && !StringUtil.equals(trd.getIsCancel(),DictCodeList.是否_是.getValue())) {
+                        WflValidInputParameter parameter = new WflValidInputParameter();
+                        parameter.setPageId("TrdPlanNetInvestTrade003");
+                        parameter.setBusinessDataPk3(trd.getTradeId());
+                        if (mstWorkflowCommonService.isInWflProcess(parameter)) {
+                            errorList.add(new ValidMessage(this.getMessage("BUSS_COM_E_0041")+trd.getTradeId()));
+                        }
+                    }
+                }
+                if(!StringUtil.isEmptyList(errorList)) {
+                    ar.setErrorList(errorList);
+                    return ar;
+                }
+
             }
         }
         

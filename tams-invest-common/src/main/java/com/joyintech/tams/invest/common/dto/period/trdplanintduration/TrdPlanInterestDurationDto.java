@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
@@ -79,6 +80,29 @@ public class TrdPlanInterestDurationDto extends BaseEntity {
      * 利息调整
      */
     private BigDecimal intAdjustment;
+
+    private String chlName;
+
+    public String getChlName() {
+        return chlName;
+    }
+
+    public void setChlName(String chlName) {
+        this.chlName = chlName;
+    }
+
+    /**
+     * 合作资产
+     */
+    private String chlFinprodId;
+
+    public String getChlFinprodId() {
+        return StringUtil.isEmpty(chlName) ? chlFinprodId : chlName;
+    }
+
+    public void setChlFinprodId(String chlFinprodId) {
+        this.chlFinprodId = chlFinprodId;
+    }
 
     /**
      * 还本金额

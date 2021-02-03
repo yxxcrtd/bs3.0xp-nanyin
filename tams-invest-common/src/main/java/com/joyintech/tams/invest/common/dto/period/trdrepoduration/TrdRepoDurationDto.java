@@ -96,6 +96,19 @@ public class TrdRepoDurationDto extends BaseEntity {
     private String trader;
 
     /**
+     * 合作资产
+     */
+    private String chlFinprodId;
+
+    public String getChlFinprodId() {
+        return chlFinprodId;
+    }
+
+    public void setChlFinprodId(String chlFinprodId) {
+        this.chlFinprodId = chlFinprodId;
+    }
+
+    /**
      * 产品代码
      */
     private String finprodId;

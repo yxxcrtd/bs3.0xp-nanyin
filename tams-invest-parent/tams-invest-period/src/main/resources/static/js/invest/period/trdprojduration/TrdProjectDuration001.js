@@ -22,6 +22,10 @@
         if ($("#finprodMarketId").val()) {
             result.finprodId = $('#finprodMarketId').select2('data')[0].object
         }
+
+        if ($("#chlFinprodId").val()) {
+        	result.chlFinprodId = $("#chlFinprodId").val().join(",");
+        }
         return result;
     };
 
@@ -59,6 +63,7 @@
                 }
             }
             , {field: 'finprodMarketName', width: 160, title: '资产名称', sortField:"finprodMarketName"}
+            , {field: 'chlFinprodId', width: 160, title: '合作资产', sortField:"chlName"}
             , {field: 'qty', width: 160, title: '剩余本金', type: 'number', sortField:"qty"}
             , {field: 'returnAmount', width: 160, title: '还本金额', type: 'number', sortField:"returnAmount"}
             , {field: 'yield', width: 120, title: '计提利率（%）', type: 'number', sortField:"yield"}//update by yejiejie 2019-2-28
@@ -133,7 +138,9 @@
                         result = '无';
                     }
                     object.revokeReason = result;
-                    WorkFlow.doRevoke(basePath + 'invest/period/trdprojduration/TrdProjectDuration001/revoke', object, "TrdProjectDuration001_btn_revoke", "TrdProjectDuration002");
+                    WorkFlow.doRevoke(basePath + 'invest/period/trdprojduration/TrdProjectDuration001/revoke', object, "TrdProjectDuration001_btn_revoke", "TrdProjectDuration002",function(){
+                        table.reload();//回调事件请求及回调函数
+                    });
                 });
             });
         })

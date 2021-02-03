@@ -99,11 +99,11 @@
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-lable" data-th-text="#{invest.channelId}">通道</label>
                     <div class="layui-input-inline input-inline">
-                        <select type="text" id="chlId" name="chlId"
+                        <select type="text" id="chlFinprodId" name="chlFinprodId"
                                 class="layui-input form-input input-select" allowClear="true"
                                 data-th-placeholder="#{SysCommon.placeholder}" formatoption="true"
                                 data-th-data-url="@{/component/trade/BussChannelCommon/getChannelId}"
-                                data-th-initvalue="${entity?.chlId}">
+                                multiple="true">
                         </select>
                     </div>
                 </div>

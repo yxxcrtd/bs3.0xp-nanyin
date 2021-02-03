@@ -10,6 +10,10 @@
     	var type9;
     	var type10;
     	var type11;
+    	var chlFinprodId;
+    	if ($("#chlFinprodId").val()) {
+        	chlFinprodId = $("#chlFinprodId").val().join(",");
+        }
     	if($("#type9").val() == null || $("#type9").val() == ''){
     		type9 = $("#type9").val();
     	}
@@ -51,6 +55,7 @@
             ,tradeDateBegin: $('#tradeDate').startDate()
             ,tradeDateEnd: $('#tradeDate').endDate()
             ,secondType:$('#secondType').val()
+            ,chlFinprodId:chlFinprodId
         }
     };
 
@@ -93,6 +98,7 @@
                 return "<a  class='pro-link portfolioIdLink' style='cursor: pointer;'>"+row.portfolioId+"</ a>";
             },sortField:"orderPortfolioId"}
             ,{field:'portfolioName', width:'12%', title: 'TrdFundInvestTrade001.portfolioName',sortField:"PORTFOLIO_NAME"}
+            ,{field:'chlFinprodId', width:'12%', title: 'TrdFundInvestTrade001.chlFinprodId',sortField:"chlFinprodId"}
             ,{field:'finprodMarketId', width:'12%', title: 'TrdFundInvestTrade001.finprodId',
                 render : function(data, type, row, meta) {
                     return "<a  class='pro-link finprodIdLink' style='cursor: pointer;'>"+data+"</ a>";
@@ -223,7 +229,9 @@
                     Joyin.ajaxJson(basePath + 'invest/trade/fund/TrdFundInvestTrade001/check', object, function(result1) {
                         Joyin.prompt(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.revoke")),0 ,function(result2){
                             object.cancelRemark = result2;
-                            WorkFlow.doRevokeList(basePath + 'invest/trade/fund/TrdFundInvestTrade001/revoke', object, "TrdFundInvestTrade001_btn_revoke", "TrdFundInvestTrade003");
+                            WorkFlow.doRevokeList(basePath + 'invest/trade/fund/TrdFundInvestTrade001/revoke', object, "TrdFundInvestTrade001_btn_revoke", "TrdFundInvestTrade003",function(){
+                                table.reload();//回调事件请求及回调函数
+                            });
                         });
                     });
                 });
@@ -233,7 +241,9 @@
                     Joyin.prompt(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.revoke")),0 ,function(result2){
                         Joyin.confirm(resdata, function() {
                         object.cancelRemark = result2;
-                        WorkFlow.doRevokeList(basePath + 'invest/trade/fund/TrdFundInvestTrade001/revoke', object, "TrdFundInvestTrade001_btn_revoke", "TrdFundInvestTrade002");
+                        WorkFlow.doRevokeList(basePath + 'invest/trade/fund/TrdFundInvestTrade001/revoke', object, "TrdFundInvestTrade001_btn_revoke", "TrdFundInvestTrade002",function(){
+                            table.reload();//回调事件请求及回调函数
+                        });
                         });
                     });
                 });

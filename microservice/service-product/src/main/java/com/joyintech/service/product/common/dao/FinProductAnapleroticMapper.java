@@ -138,5 +138,6 @@ public interface FinProductAnapleroticMapper {
 	int insertFinFloatAccrualSche(FinFloatAccrualSche finFloatAccrualSche);
 	
 	List<FinProductAnapleroticPlanDto> selectAnapleroticPlanByFinprodId(@Param("finprodId") String finprodId);
-	
+
+    String getOpenMode(@Param("finprodId") String finprodId);
 }

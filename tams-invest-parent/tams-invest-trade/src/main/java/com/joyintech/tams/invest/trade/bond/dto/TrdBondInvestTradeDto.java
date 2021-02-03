@@ -362,6 +362,27 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
      */
     private String stampDutyIsPayWithTrade;
     // add by wangpeng 费用设置 20180818 end
+
+    private String settleIsPayWithTrade;
+
+    private String exchangeIsPayWithTrade;
+
+    public String getSettleIsPayWithTrade() {
+        return settleIsPayWithTrade;
+    }
+
+    public void setSettleIsPayWithTrade(String settleIsPayWithTrade) {
+        this.settleIsPayWithTrade = settleIsPayWithTrade;
+    }
+
+    public String getExchangeIsPayWithTrade() {
+        return exchangeIsPayWithTrade;
+    }
+
+    public void setExchangeIsPayWithTrade(String exchangeIsPayWithTrade) {
+        this.exchangeIsPayWithTrade = exchangeIsPayWithTrade;
+    }
+
     /**
      * 过户手续费
      */

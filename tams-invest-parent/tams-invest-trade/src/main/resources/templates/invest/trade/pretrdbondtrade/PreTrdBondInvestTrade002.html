@@ -308,7 +308,7 @@
                             <div class="form-inline-wrap">
                                  <label class="layui-form-label form-label-wrap">
                                        <!--th:text="#{PreTrdBondInvestTrade001.tradeAmt}"-->
-                                券面总额(元)</label>
+                                券面总额</label>
                                 <div class="layui-input-inline input-inline">
                                     <input required type="text" id="tradeAmt" name="tradeAmt"
                                            class="layui-input form-input text-number" placeholder="请输入内容"
@@ -405,10 +405,10 @@
                             </div>
                             <div class="form-inline-wrap" id="exerYieldDiv">
                                 <label class="layui-form-label form-label-wrap">
-                                    <input type="radio" id="calculateField_exerYield" name="calculateField" value="exerYield" th:title="#{TrdBondInvestTrade002.exerYield}" />
+                                    <input type="radio" id="calculateField_exerYield" name="calculateField" value="exerYield" th:text="#{TrdBondInvestTrade002.exerYield}" />
                                 </label>
                                 <div class="layui-input-inline input-inline">
-                                    <input required type="text" id="exerYield" name="exerYield"
+                                    <input type="text" id="exerYield" name="exerYield"
                                            class="layui-input form-input text-number" placeholder="请输入内容"
                                            data-fixtype="2" data-textrange="4"
                                            th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.exerYield}" />

@@ -664,4 +664,9 @@ public class PtlManagementInfo001Service extends CommonExportService<PtlManageme
         }
     }
     // add by xingxiaokang 2020-03-09 end
+
+    public int getReAcct(Map<String, Object> param) {
+        return restTemplate.postForObject(
+                ServiceApplication.ASSET_SERVICE_NAME + "/ptlmanagementinfo/getReAcct", param,Integer.class);    
+    }
 }

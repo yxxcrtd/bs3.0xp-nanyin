@@ -84,19 +84,19 @@ public class MstBankTranFeeManageValidator implements BeanValidator {
             // 当计费类型是固定金额时，费用值必填
             if (StringUtil.equals(dto.getChargeType(), BussinessDictCodeList.计费类型_固定金额.getValue())
                     && dto.getChargeValue() == null) {
-                resultList.add(new ValidMessage(this.getMessage("FW_E_0006",
+                resultList.add(new ValidMessage("chargeValue",this.getMessage("FW_E_0006",
                         getMessage("MstBankTranFeeManage002.chargeValue"))));
             }
             // 当计费类型是固定费率时，费率值必填
             if (StringUtil.equals(dto.getChargeType(), BussinessDictCodeList.计费类型_固定费率.getValue())
                     && dto.getChargeRate() == null) {
-                resultList.add(new ValidMessage(this.getMessage("FW_E_0006",
+                resultList.add(new ValidMessage("chargeRate",this.getMessage("FW_E_0006",
                         getMessage("MstBankTranFeeManage002.chargeRate"))));
             }
             // 当计费类型是固定费率时，计费基数必填
             if (StringUtil.equals(dto.getChargeType(), BussinessDictCodeList.计费类型_固定费率.getValue())
                     && StringUtil.isBlank(dto.getChargeBasis())) {
-                resultList.add(new ValidMessage(this.getMessage("FW_E_0006",
+                resultList.add(new ValidMessage("chargeBasis",this.getMessage("FW_E_0006",
                         getMessage("MstBankTranFeeManage002.chargeBasis"))));
             }
             // 最大金额不允许小于最小金额

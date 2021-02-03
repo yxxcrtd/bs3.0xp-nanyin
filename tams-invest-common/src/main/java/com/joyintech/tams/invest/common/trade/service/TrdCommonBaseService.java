@@ -37,6 +37,8 @@ import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -965,5 +967,22 @@ public class TrdCommonBaseService extends BaseService {
      */
     public TrdProductDeal selectZCDeal(String tradeId){
         return trdCommonBaseMapper.selectZCDeal(tradeId);
+    }
+
+    /**
+     * 根据交易编号查询该交易是否已被撤销
+     *
+     * @param tradeId 交易编号
+     * @return 该交易是否已被撤销
+     * @see
+     * @since 1.0
+     */
+    public Boolean isAlreadyRevoked(String tradeId) {
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("tradeId", tradeId);
+        paramMap.put("YES_NO_YES", DictCodeList.是否_是.getValue());
+        paramMap.put("TRADE_STATUS_03", DictCodeListExt1.交易流程状态_撤销.getValue());
+        return trdCommonBaseMapper.selectRevokedDataCount(paramMap) > 0;
+
     }
 }

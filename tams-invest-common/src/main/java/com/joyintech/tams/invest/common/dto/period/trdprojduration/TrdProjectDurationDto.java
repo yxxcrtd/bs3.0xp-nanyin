@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.invest.common.dto.common.FinAssetInfo;
@@ -74,6 +75,19 @@ public class TrdProjectDurationDto extends BaseEntity {
      * 资产名称
      */
     private String finprodMarketName;
+
+    /**
+     * 合作资产
+     */
+    private String chlFinprodId;
+
+    public String getChlFinprodId() {
+        return StringUtil.isEmpty(chlName) ? chlFinprodId : chlName;
+    }
+
+    public void setChlFinprodId(String chlFinprodId) {
+        this.chlFinprodId = chlFinprodId;
+    }
 
     /**
      * 交易备注

@@ -190,4 +190,10 @@ public class TradeCommonService extends BaseService {
         }
         return null;
     }
+
+    public List<BigDecimal> selectProAvailableCash(String entrustId){
+        Map<String,Object> map = new HashMap<>();
+        map.put("entrustId",entrustId);
+        return trdCommonBaseMapper.selectProAvailableCash(map);
+    }
 }

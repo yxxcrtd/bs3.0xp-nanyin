@@ -18,9 +18,11 @@ var table;
     // add by wangguoxian 费用设置 20190807 end
     // add by wangpeng 费用设置 20190817 start
     var stampDutyIsPayWithTrade = $("#stampDutyIsPayWithTrade").val()?$("#stampDutyIsPayWithTrade").val():YES_OR_NO_Y;//印花是否随交易支付，默认为是
-    var settleIsPayWithTrade = YES_OR_NO_Y;//结算费是否随交易支付，默认为是
-    var exchangeIsPayWithTrade = YES_OR_NO_Y;//经手费是否随交易支付，默认为是
+    var settleIsPayWithTrade = $("#settleIsPayWithTrade").val()?$("#settleIsPayWithTrade").val():YES_OR_NO_Y;//结算费是否随交易支付，默认为是
+    var exchangeIsPayWithTrade = $("#exchangeIsPayWithTrade").val()?$("#exchangeIsPayWithTrade").val():YES_OR_NO_Y;//经手费是否随交易支付，默认为是
     $("#stampDutyIsPayWithTrade").val(stampDutyIsPayWithTrade);
+    $("#settleIsPayWithTrade").val(settleIsPayWithTrade);
+    $("#exchangeIsPayWithTrade").val(exchangeIsPayWithTrade);
     // add by wangpeng 费用设置 20190817 end
     var getriskdata = function () {
         var obj = {timePoint:MY_SUP_TIME_TYPE_02,valDate:$('#settleDate').val(),portfolioCode:$('#portfolioId').val(),tradeAmount:$('#fpriceAmt').val(),assetType:FINPROD_TYPE_F01,isEnabled:'01',assetCode:$('#finprodId').val(),tradeDirection:$('#ps').val()}
@@ -400,7 +402,7 @@ var table;
                     $("#exchangeAmt").val('').trigger("change");
                     $("#commissionAmt").val('').trigger("change");
                     $("#tradeAmtAndFee").val('').trigger("change");
-                    $("#fpriceAmt").val('').trigger("change");
+                    // $("#fpriceAmt").val('').trigger("change");
                     //$("#exchangeFeesAmtDiv").hide();
                     $tradePlat.updateChosenArr({
                         item: [SHARES_TRADE_PLATFORM_01],
@@ -416,7 +418,7 @@ var table;
                     $("#exchangeAmt").val('').trigger("change");
                     $("#commissionAmt").val('').trigger("change");
                     $("#tradeAmtAndFee").val('').trigger("change");
-                    $("#fpriceAmt").val('').trigger("change");
+                    // $("#fpriceAmt").val('').trigger("change");
                     //$("#exchangeFeesAmtDiv").hide();
                     $tradePlat.updateChosenArr({
                         disabled: true
@@ -431,7 +433,7 @@ var table;
                     $("#exchangeAmt").val('').trigger("change");
                     $("#commissionAmt").val('').trigger("change");
                     $("#tradeAmtAndFee").val('').trigger("change");
-                    $("#fpriceAmt").val('').trigger("change");
+                    // $("#fpriceAmt").val('').trigger("change");
                     //$("#exchangeFeesAmtDiv").show();
                     $tradePlat.updateChosenArr({
                         item: ['02','03','04'],
@@ -447,7 +449,7 @@ var table;
                     $("#exchangeAmt").val('').trigger("change");
                     $("#commissionAmt").val('').trigger("change");
                     $("#tradeAmtAndFee").val('').trigger("change");
-                    $("#fpriceAmt").val('').trigger("change");
+                    // $("#fpriceAmt").val('').trigger("change");
                     //$("#exchangeFeesAmtDiv").hide();
                     $tradePlat.updateChosenArr({
                         disabled: true
@@ -461,7 +463,7 @@ var table;
                     $("#exchangeAmt").val('').trigger("change");
                     $("#commissionAmt").val('').trigger("change");
                     $("#tradeAmtAndFee").val('').trigger("change");
-                    $("#fpriceAmt").val('').trigger("change");
+                    // $("#fpriceAmt").val('').trigger("change");
                     //$("#exchangeFeesAmtDiv").show();
                     $tradePlat.updateChosenArr({
                         item: ['02','05'],
@@ -476,7 +478,7 @@ var table;
                     $("#exchangeAmt").val('').trigger("change");
                     $("#commissionAmt").val('').trigger("change");
                     $("#tradeAmtAndFee").val('').trigger("change");
-                    $("#fpriceAmt").val('').trigger("change");
+                    // $("#fpriceAmt").val('').trigger("change");
                     //$("#exchangeFeesAmtDiv").hide();
                     if (isInit || pageModel == PAGE_MODEL_REFERENCE || pageModel ==PAGE_MODEL_EDIT) {
                         break;
@@ -1108,10 +1110,14 @@ var table;
             // $("#tradeAmtAndFee").val(JoyinMath.doMinus($("#fpriceAmt").val(), $("#channelFee").val(), 2)).trigger('blur');
             if (isPayWithTrade == YES_OR_NO_Y) {
                 $("#tradeAmtAndFee").val(JoyinMath.doMinus($("#tradeAmtAndFee").val(), $("#commissionAmt").val(), 2)).trigger('blur');
+            }
+            if(settleIsPayWithTrade == YES_OR_NO_Y){
                 //若结算费不为空
                 if($("#settleAmt").val()){
                     $("#tradeAmtAndFee").val(JoyinMath.doMinus($("#tradeAmtAndFee").val(), $("#settleAmt").val(), 2)).trigger('blur');
                 }
+            }
+            if(exchangeIsPayWithTrade == YES_OR_NO_Y) {
                 //若经手费不为空
                 if($("#exchangeAmt").val()){
                     $("#tradeAmtAndFee").val(JoyinMath.doMinus($("#tradeAmtAndFee").val(), $("#exchangeAmt").val(), 2)).trigger('blur');
@@ -1534,11 +1540,13 @@ var table;
                         if(v.feeType==FEE_TYPE_07&&v.feeAmt){
                             cntS++;
                             settleIsPayWithTrade = v.isPayWithTrade;
+                            $("#settleIsPayWithTrade").val(settleIsPayWithTrade);
                             $("#settleAmt").val(v.feeAmt).trigger("blur");
                         }
                         if(v.feeType==FEE_TYPE_01&&v.feeAmt){
                             cntM++;
                             exchangeIsPayWithTrade = v.isPayWithTrade;
+                            $("#exchangeIsPayWithTrade").val(exchangeIsPayWithTrade);
                             $("#exchangeAmt").val(v.feeAmt).trigger("blur");
                         }
 

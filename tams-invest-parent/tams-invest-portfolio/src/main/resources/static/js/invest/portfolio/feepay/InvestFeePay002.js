@@ -7,17 +7,23 @@ function showFeeDetail(secAcctId, ptlId, calcStartDate, calcEndDate, feeType, co
 	}
 	Joyin.dialog(JoyinUtil.getLabel("InvestFeePay003"), JoyinUtil.getRealPath('invest/portfolio/feepay/InvestFeePay003/init'),
 		"60%", "70%", {pageModel:PAGE_MODEL_REFERENCE, secAcctId : secAcctId, ptlId : ptlId, 
-					   calcStartDate : calcStartDate, calcEndDate : calcEndDate, feeType: feeType, confirmFlag: confirmFlag, tradeId :$('#InvestFeePay002_hidden_tradeId').val()})
+					   calcStartDate : calcStartDate, calcEndDate : calcEndDate, feeType: feeType, confirmFlag: confirmFlag, tradeId :$('#InvestFeePay002_hidden_tradeId').val(),org:$('#InvestFeePay002_regTrustOrg').val()})
 }
 // 定义函数作用域(立即执行),防止全局变量污染
 $(function() {
-	
+	var isNew = false;//是否是新建（没有预提规则的账户维护费），默认为不是
 	var calcConditionObjBackUp;
-	var cols1 = [{field : 'portFolioName',width:120,title : 'InvestFeePay002.feeTable.portFolioName'
-		}, {field : 'payAmt',width:100,title : 'InvestFeePay002.feeTable.payAmt',type : 'number',textrange : '2'
-		}, {field : 'actPayAmt',width:100,title : 'InvestFeePay002.feeTable.actPayAmt',type : 'number',textrange : '2',edit:true
-		}, {field : 'adjustAmt',width:100,title : 'InvestFeePay002.feeTable.adjustAmt',type : 'number',textrange : '2'
-		}, {field : 'status',width:100,title : 'InvestFeePay002.feeTable.showDetail',sort : false,
+	var cols1 = [{field : 'portFolioName',width:230,title : 'InvestFeePay002.feeTable.portFolioName'
+		}, {field: 'ptlId',width:230, title : 'InvestFeePay002.feeTable.portFolioName',visible: false,edit:true,sortable:false,editOption:{type:'select',id:'booksetId',showField:'text',formatoption:true,
+			url: JoyinUtil.getRealPath('/invest/portfolio/feepay/InvestFeePay002/getPortFolioName'),postData: function(){
+				return {
+					payDate: $("#InvestFeePay002_payDate").val(),
+					secAcctId: $("#InvestFeePay002_secAcctId").val()
+				}}}
+		}, {field : 'payAmt',width:120,title : 'InvestFeePay002.feeTable.payAmt',type : 'number',textrange : '2',sortable:false
+		}, {field : 'actPayAmt',width:120,title : 'InvestFeePay002.feeTable.actPayAmt',type : 'number',textrange : '2',edit:true,sortable:false
+		}, {field : 'adjustAmt',width:120,title : 'InvestFeePay002.feeTable.adjustAmt',type : 'number',textrange : '2',sortable:false
+		}, {field : 'status',width:100,title : 'InvestFeePay002.feeTable.showDetail',sortable:false,
 			render : function(data, type, row, meta) {
 					var secAcctId = row.secAcctId;
 					if (!secAcctId || secAcctId == 'undefined') {
@@ -26,8 +32,9 @@ $(function() {
 					return "<a onclick=\"showFeeDetail('" + secAcctId +"','"+ row.ptlId +"','" + $('#InvestFeePay002_positionStartDate').val() +"','" + $('#InvestFeePay002_positionEndDate').val() +"','" + $('#InvestFeePay002_feeType').val()+"','" + $('#InvestFeePay002_hidden_operateType').val()+"')\" + style='cursor: pointer;'>"+JoyinUtil.getLabel("InvestFeePay002.feeTable.showDetail")+"</a>";
 				}
 		}, {field : 'secAcctId',visible : false
-		}, {field : 'ptlId',visible : false}];
-	
+		}, {field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['delt'], visible: false
+	}];
+
 	/**
 	 * 付费明细
 	 */
@@ -53,12 +60,46 @@ $(function() {
 			}
 		},
 		loadonce : true,
-		searchOnInit: !($('#InvestFeePay002_hidden_feeType').val() === ''),
+		// searchOnInit: !($('#InvestFeePay002_hidden_feeType').val() === ''),
+		searchOnInit: true,
+		addbtn: true,
         height: 300,
         page: false,
         checkbox: false,
         rowno: true,
 		cols : cols1,
+		addclick: function(row) {
+			if(isNew && $("#InvestFeePay002_feeType").val() == '08'){
+				$('#InvestFeePay002_div_positionStartDate').hide();
+				$('#InvestFeePay002_div_positionEndDate').hide();
+				$('#InvestFeePay002_div_payAmt').hide();
+				$('#InvestFeePay002_div_adjustAmt').hide();
+				$('#InvestFeePay002_div_calculate').hide();
+				feeInfoTable.showColumns([{field:'operation', visible:true}],true);
+				feeInfoTable.showColumns([{field:'ptlId', visible:true}],true);
+				feeInfoTable.showColumns([{field:'portFolioName', visible:false}],true);
+				feeInfoTable.showColumns([{field:'payAmt', visible:false}],true);
+				feeInfoTable.showColumns([{field:'adjustAmt', visible:false}],true);
+				feeInfoTable.showColumns([{field:'status', visible:false}],true) ;
+			}else{
+				$('#InvestFeePay002_div_positionStartDate').show();
+				$('#InvestFeePay002_div_positionEndDate').show();
+				$('#InvestFeePay002_div_payAmt').show();
+				$('#InvestFeePay002_div_adjustAmt').show();
+				$('#InvestFeePay002_div_calculate').show();
+				feeInfoTable.showColumns([{field:'operation', visible:false}],true);
+				feeInfoTable.showColumns([{field:'ptlId', visible:false}],true);
+				feeInfoTable.showColumns([{field:'portFolioName', visible:true}],true);
+				feeInfoTable.showColumns([{field:'payAmt', visible:true}],true);
+				feeInfoTable.showColumns([{field:'adjustAmt', visible:true}],true);
+				feeInfoTable.showColumns([{field:'status', visible:true}],true);
+				if($("#InvestFeePay002_feeType").val() == '08'){
+					feeInfoTable.showColumns([{field:'status', visible:false}],true);
+				}else{
+					feeInfoTable.showColumns([{field:'status', visible:true}],true);
+				}
+			}
+		},
         editCell : function(value, data, field, cell, column){
         	if (field === "actPayAmt"){
         		if (typeof value == "undefined" || value == null || value == "") {
@@ -80,7 +121,19 @@ $(function() {
             	$('#InvestFeePay002_actPayAmt').val(totalAmt).trigger('change');
         	}
         },
+		beforeEditCell : function(preVal, field, rowData) {
+			if(field == 'portFolioName'){
+				if(!isNew || $("#InvestFeePay002_feeType").val() != '08')return false;
+			}
+			return true;
+		},
         done : function(allData, table){
+			if(isNew && $("#InvestFeePay002_feeType").val() == '08')return;
+			if($("#InvestFeePay002_feeType").val() == '08'){
+				feeInfoTable.showColumns([{field:'status', visible:false}],true);
+			}else{
+				feeInfoTable.showColumns([{field:'status', visible:true}],true);
+			}
         	var totalAmt = '0';
         	var actPayAmtCurSum = '0';
         	if (allData && allData.length > 0 && !isTodoList && $('#InvestFeePay002_hidden_operateType').val() === 'new'){
@@ -108,51 +161,76 @@ $(function() {
         	$('#InvestFeePay002_hidden_tradeAmt').val(totalAmt);
         }
 	});
-	
+
+	feeInfoTable.bind("click",".delt",function (data,index){
+		feeInfoTable.removeRow(data);
+		var totalAmt = '0';
+		var allData = feeInfoTable.getAllRows();
+		if (allData && allData.length > 0){
+			$.each(allData, function(id, value){
+				totalAmt = JoyinMath.doAdd(totalAmt, value.actPayAmt, 2, JoyinMath.ROUND_HALF_UP);
+			});
+		}
+		$('#InvestFeePay002_hidden_tradeAmt').val(totalAmt);
+		$('#InvestFeePay002_actPayAmt').val(totalAmt).trigger('change');
+		if(isNew && $("#InvestFeePay002_feeType").val() == '08'){
+			$('#InvestFeePay002_div_positionStartDate').hide();
+			$('#InvestFeePay002_div_positionEndDate').hide();
+			$('#InvestFeePay002_div_payAmt').hide();
+			$('#InvestFeePay002_div_adjustAmt').hide();
+			$('#InvestFeePay002_div_calculate').hide();
+			feeInfoTable.showColumns([{field:'operation', visible:true}],true);
+			feeInfoTable.showColumns([{field:'ptlId', visible:true}],true);
+			feeInfoTable.showColumns([{field:'portFolioName', visible:false}],true);
+			feeInfoTable.showColumns([{field:'payAmt', visible:false}],true);
+			feeInfoTable.showColumns([{field:'adjustAmt', visible:false}],true);
+			feeInfoTable.showColumns([{field:'status', visible:false}],true) ;
+		}else{
+			$('#InvestFeePay002_div_positionStartDate').show();
+			$('#InvestFeePay002_div_positionEndDate').show();
+			$('#InvestFeePay002_div_payAmt').show();
+			$('#InvestFeePay002_div_adjustAmt').show();
+			$('#InvestFeePay002_div_calculate').show();
+			feeInfoTable.showColumns([{field:'operation', visible:false}],true);
+			feeInfoTable.showColumns([{field:'ptlId', visible:false}],true);
+			feeInfoTable.showColumns([{field:'portFolioName', visible:true}],true);
+			feeInfoTable.showColumns([{field:'payAmt', visible:true}],true);
+			feeInfoTable.showColumns([{field:'adjustAmt', visible:true}],true);
+			feeInfoTable.showColumns([{field:'status', visible:true}],true);
+			if($("#InvestFeePay002_feeType").val() == '08'){
+				feeInfoTable.showColumns([{field:'status', visible:false}],true);
+			}else{
+				feeInfoTable.showColumns([{field:'status', visible:true}],true);
+			}
+		}
+	})
+
 	function feeTypeChangeAction(){
 		var feeType = $('#InvestFeePay002_feeType').val();
 		var feeName = $('#InvestFeePay002_feeType option:selected').text();
 		if (feeType){
 			$('#InvestFeePay002_hidden_feeType').val(feeType);
 			$('#InvestFeePay002_hidden_feeName').val(feeName);
-			if (feeType == '06'){
-				// 当费用类型选择交易手续费时，证券账户和登记托管机构置灰，不可选，直接带出每个组合的费用
-				$('#InvestFeePay002_secAcctId').val('').trigger('change');
+			//费用类型联动登记托管机构
+			if (feeType == '06'||feeType == '07'||feeType == '08'){
 				$('#InvestFeePay002_regTrustOrg').val('').trigger('change');
-				$("#InvestFeePay002_secAcctId").prop("disabled", true);
-				$("#InvestFeePay002_regTrustOrg").prop("disabled", true);
-//				reloadTable();
-				// 查询上一次计提开始日
-				if ($('#InvestFeePay002_hidden_operateType').val() === 'new'){
-					secAcctIdFeeTypeChangeAction();
-				}
-				$("#InvestFeePay002_positionStartDate").prop("disabled", true);
-			} else {
-				// 当费用类型选择结算费或佣金时，证券账户必填，此时以证券账户为维度计算费用
-				$('#InvestFeePay002_regTrustOrg').val('').trigger('change');
-				$("#InvestFeePay002_secAcctId").prop("disabled", false);
 				$("#InvestFeePay002_regTrustOrg").prop("disabled", false);
-				if (feeType == '14') {
-					// 费用类型选佣金时，默认为中国证券登记结算有限责任公司，不可修改
-//					$("#InvestFeePay002_regTrustOrg").val('03').trigger('change');
-//					$("#InvestFeePay002_regTrustOrg").prop("disabled", true);
-
-                    //费用类型选佣金时 默认为空且置灰 TISHKBS-894
-                     // 【晋商五期】【组合管理-投资费用支付】佣金的理论费用金额、实付费用金额未带出，无法提交
-					$("#InvestFeePay002_regTrustOrg").val('').trigger('change');
-                    $("#InvestFeePay002_regTrustOrg").prop("disabled", true);
-
-				}
-				
-//				reloadTable();
-				// 查询上一次计提开始日
-				if ($('#InvestFeePay002_hidden_operateType').val() === 'new'){
-					if(feeType == '07' || feeType == '14' || feeType == '08'){
-						secAcctIdFeeTypeChangeAction();
-					}
-				}
+			}else{
+				$('#InvestFeePay002_regTrustOrg').val('03').trigger('change');
+				$("#InvestFeePay002_regTrustOrg").prop("disabled", true);
 			}
-			payTradeAmtChangeAction();
+			//费用类型联动证券账户
+			if(feeType == '06'){
+				$('#InvestFeePay002_secAcctId').val('').trigger('change');
+				$("#InvestFeePay002_secAcctId").prop("disabled", true);
+			}else{
+				$('#InvestFeePay002_secAcctId').val('').trigger('change');
+				$("#InvestFeePay002_secAcctId").prop("disabled", false);
+			}
+			//计算计费开始日
+			if ($('#InvestFeePay002_hidden_operateType').val() === 'new'){
+				secAcctIdFeeTypeChangeAction();
+			}
 		}else{
 			$('#InvestFeePay002_hidden_feeType').val('');
 		}
@@ -179,14 +257,14 @@ $(function() {
 		}
 	}
 	/**
-	 * 证券账户和费用代码下拉框联动处理
+	 * 证券账户和费用类型下拉框联动处理
 	 */
 	function secAcctIdFeeTypeChangeAction(){
 		var feeType = $('#InvestFeePay002_feeType').val();
 		var secAcctId = $('#InvestFeePay002_secAcctId').val();
 		if (feeType){
 			if(feeType != '08'){
-				// 查询上一次计提开始日
+				// 查询费用上次计提结束日
 				Joyin.ajax(JoyinUtil.getRealPath('/invest/portfolio/feepay/InvestFeePay002/queryLastPayDate'),
 					{secAcctId : secAcctId, feeType : feeType, operateType:$('#InvestFeePay002_hidden_operateType').val()}, function(result){
 						$('#InvestFeePay002_positionStartDate').val(result).trigger('change');
@@ -199,13 +277,20 @@ $(function() {
 			} else {
 				// 账户维护费 获取计提开始日
 				if (secAcctId) {
-					Joyin.ajax(JoyinUtil.getRealPath('/invest/portfolio/feepay/InvestFeePay002/queryStartDate'),
+					Joyin.ajaxSync(JoyinUtil.getRealPath('/invest/portfolio/feepay/InvestFeePay002/queryStartDate'),
 						{secAcctId: secAcctId}, function (result) {
+							if (!result || result == 'undefined') {
+								isNew = true;
+							}else{
+								isNew = false;
+							}
 							$('#InvestFeePay002_positionStartDate').val(result).trigger('change');
 							var endDate = $('#InvestFeePay002_positionEndDateHide').val();
 							$('#InvestFeePay002_positionEndDate').val(endDate).trigger('change');
 							$('#InvestFeePay002_positionStartDate').prop("disabled", true);
 						});
+				}else{
+					isNew = false;
 				}
 			}
 			// 当费用类型为佣金或结算服务费时，自动带出登记托管机构
@@ -225,6 +310,38 @@ $(function() {
 			}
 		} else {
 			$('#InvestFeePay002_positionStartDate').val('').trigger('change');
+		}
+		if(isNew && feeType == '08'){
+			$('#InvestFeePay002_div_positionStartDate').hide();
+			$('#InvestFeePay002_div_positionEndDate').hide();
+			$('#InvestFeePay002_div_payAmt').hide();
+			$('#InvestFeePay002_div_adjustAmt').hide();
+			$('#InvestFeePay002_div_calculate').hide();
+			feeInfoTable.clear();
+			feeInfoTable.showColumns([{field:'operation', visible:true}],true);
+			feeInfoTable.showColumns([{field:'ptlId', visible:true}],true);
+			feeInfoTable.showColumns([{field:'portFolioName', visible:false}],true);
+			feeInfoTable.showColumns([{field:'payAmt', visible:false}],true);
+			feeInfoTable.showColumns([{field:'adjustAmt', visible:false}],true);
+			feeInfoTable.showColumns([{field:'status', visible:false}],true) ;
+		}else{
+			$('#InvestFeePay002_div_positionStartDate').show();
+			$('#InvestFeePay002_div_positionEndDate').show();
+			$('#InvestFeePay002_div_payAmt').show();
+			$('#InvestFeePay002_div_adjustAmt').show();
+			$('#InvestFeePay002_div_calculate').show();
+			feeInfoTable.clear();
+			feeInfoTable.showColumns([{field:'operation', visible:false}],true);
+			feeInfoTable.showColumns([{field:'ptlId', visible:false}],true);
+			feeInfoTable.showColumns([{field:'portFolioName', visible:true}],true);
+			feeInfoTable.showColumns([{field:'payAmt', visible:true}],true);
+			feeInfoTable.showColumns([{field:'adjustAmt', visible:true}],true);
+			feeInfoTable.showColumns([{field:'status', visible:true}],true);
+			if(feeType == '08'){
+				feeInfoTable.showColumns([{field:'status', visible:false}],true);
+			}else{
+				feeInfoTable.showColumns([{field:'status', visible:true}],true);
+			}
 		}
 	}
 	
@@ -528,6 +645,17 @@ $(function() {
 	};
 	
 	function saveOrSubmitAction(operateType){
+		if(!isNew && $("#InvestFeePay002_feeType").val() == '08'){
+			var feeInfoTableList=feeInfoTable.getAllRows();
+			var sum=0;
+			for(var i=0;i<feeInfoTableList.length;i++){
+				sum=sum+feeInfoTableList[i].actPayAmt;
+			}
+			if(sum != 4500){
+				Joyin.error("汇总金额不等于4500，请修改！");
+				return false;
+			}
+		}
 		// 检查生成划款指令参数是否发生变化
         if (isCalcConditionChanged()) {
             return;

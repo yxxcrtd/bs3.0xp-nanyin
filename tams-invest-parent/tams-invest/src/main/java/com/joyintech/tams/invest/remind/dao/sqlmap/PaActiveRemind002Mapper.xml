@@ -80,6 +80,7 @@
 		REMINDER_SET.DEALF as dealF,
 		REMINDER_SET.CLOSF as closF,
 		REMINDER_SET.DAYS as days
+		,FIN_PRODUCT.PROFIT_TYPE as oneAttr
 		FROM
 		FIN_PRODUCT
 		INNER JOIN FIN_PRODUCT_ADD
@@ -218,6 +219,7 @@
 		        REMINDER_SET.DEALF as dealF,
 		        REMINDER_SET.CLOSF as closF,
 		        REMINDER_SET.DAYS as days
+				,fp2.PROFIT_TYPE as oneAttr
 		    FROM TRD_PRODUCT_DEAL TPRD
 		    LEFT JOIN FIN_PRODUCT fp1 ON TPRD.FINPROD_ID = fp1.FINPROD_ID
 		    LEFT JOIN fin_product fp2 ON fp1.P_FINPROD_ID = fp2.finprod_id
@@ -257,6 +259,7 @@
 		    GROUP BY fp2.FINPROD_MARKET_ID,
 		        fp2.FINPROD_ID ,
 		        fp2.FINPROD_NAME ,
+				fp2.PROFIT_TYPE,
 		        TPRD.MDATE,
 		        TPRD.BRANCH,
 		        REMINDER_SET.MENU_ID,

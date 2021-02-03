@@ -1323,5 +1323,8 @@ public class PtlManagementInfo001Service extends BaseService<PtlManagementInfoDt
     	ptlCapacctInfoMapper.insertSelective(entity);
         return DictCodeList.是否_是.getValue();
     }
-    
+
+    public int getReAcct(Map<String, Object> map) {
+        return ptlCapacctInfoMapper.getReAcct(map);
+    }
 }

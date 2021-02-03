@@ -118,7 +118,9 @@ $(function() {
             Joyin.ajaxJson(basePath + 'invest/portfolio/ptlactivityperiod/PtlActivityPeriod001/check', object, function(result) {//数据验证
 //                Joyin.prompt(JoyinUtil.getLabel('PtlActivityPeriod001.cancelText'), 0, function (result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("PtlActivityPeriod001.cancel")), function() {
-                    WorkFlow.doRevokeList(basePath + 'invest/portfolio/ptlactivityperiod/PtlActivityPeriod001/delete', object, "PtlActivityPeriod001_btn_delete", "PtlActivityPeriod002");//删除
+                    WorkFlow.doRevokeList(basePath + 'invest/portfolio/ptlactivityperiod/PtlActivityPeriod001/delete', object, "PtlActivityPeriod001_btn_delete", "PtlActivityPeriod002",function(){
+                        table.reload();//回调事件请求及回调函数
+                    });
                 });
             });
         });

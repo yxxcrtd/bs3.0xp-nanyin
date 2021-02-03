@@ -83,6 +83,9 @@ public class ChannelAssetValidator implements BeanValidator{
                 map.put("busiAcctNo", dto.getBusiAcctNo());
                 map.put("finprodMarketId", dto.getFinprodMarketId());
                 map.put("F28", DictCodeListExt1.金融产品类型_投管用_通道.getValue());
+                //add by 马数凯 ZGBSS-428 20210202 资金账户已经有产品挂了的话，不允许通道再挂 start 
+                map.put("F16", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
+                //add by 马数凯 ZGBSS-428 20210202 资金账户已经有产品挂了的话，不允许通道再挂 end 
                 map.put("pageMode", GlobalConstant.DETAIL_PAGE_MODEL_NEW);
                 if(channelAssetService.isReBusiAcctNo(map)>0){
                 	//update by yantianyuan 20200721 格式化字符串缺少参数 start
@@ -117,6 +120,9 @@ public class ChannelAssetValidator implements BeanValidator{
                 map.put("busiAcctNo", dto.getBusiAcctNo());
                 map.put("finprodMarketId", dto.getFinprodMarketId());
                 map.put("F28", DictCodeListExt1.金融产品类型_投管用_通道.getValue());
+                //add by 马数凯 ZGBSS-428 20210202 资金账户已经有产品挂了的话，不允许通道再挂 start 
+                map.put("F16", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
+                //add by 马数凯 ZGBSS-428 20210202 资金账户已经有产品挂了的话，不允许通道再挂 end 
                 map.put("pageMode", GlobalConstant.DETAIL_PAGE_MODEL_EDIT);
                 if(channelAssetService.isReBusiAcctNo(map)>0){
                     resultList.add(new ValidMessage("busiAcctNo",

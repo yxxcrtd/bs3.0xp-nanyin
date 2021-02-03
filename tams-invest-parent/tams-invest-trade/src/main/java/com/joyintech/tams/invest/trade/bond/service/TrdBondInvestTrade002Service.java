@@ -2674,16 +2674,21 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                     yieldPriceInParameter.setFullPrice(dto.getUnitFprice()/* dto.getFpriceAmt() */);
                     yieldPriceOutParameter = yieldByPriceCalculator.calculate(yieldPriceInParameter);
                     dto.setYield(yieldPriceOutParameter.getMatYield());
-                    if (secInfoModelDto.getNextExeDate() != null&&priceYieldInParameter.getCalDate().compareTo(BasicUtil.dateToLocal(secInfoModelDto.getNextExeDate()))>0) {
-                        // 全价总额==>行权收益率
-                        yieldPriceInParameter.setNextExeDate(toLocalDate(secInfoModelDto.getNextExeDate()));
-                        yieldPriceInParameter.setNextExePrice(secInfoModelDto.getNextExercisePrice());
-                        if (yieldPriceInParameter.getNextExePrice() != null) {
-                            yieldPriceOutParameter = yieldByPriceCalculator.calculate(yieldPriceInParameter);
-                            dto.setExerYield(yieldPriceOutParameter.getExeYield());
-                        }
+                    if (secInfoModelDto.getNextExeDate() != null) {
+                    	if(priceYieldInParameter.getCalDate().compareTo(BasicUtil.dateToLocal(secInfoModelDto.getNextExeDate()))<0) {
+                    		// 全价总额==>行权收益率
+                    		yieldPriceInParameter.setNextExeDate(toLocalDate(secInfoModelDto.getNextExeDate()));
+                    		yieldPriceInParameter.setNextExePrice(secInfoModelDto.getNextExercisePrice());
+                    		if (yieldPriceInParameter.getNextExePrice() != null) {
+                    			yieldPriceOutParameter = yieldByPriceCalculator.calculate(yieldPriceInParameter);
+                    			dto.setExerYield(yieldPriceOutParameter.getExeYield());
+                    		}
+                    		else {
+                    			dto.setExerYield(null);
+                    		}
+                    	}
                         else {
-                            dto.setExerYield(null);
+                        	dto.setExerYield(BigDecimal.ZERO);
                         }
                     }
                     break;
@@ -2695,35 +2700,45 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                     // dto.setFpriceAmt(priceYieldOutParameter.getFullPrice());
                     dto.setUnitFprice(priceYieldOutParameter.getFullPrice());
                     // 全价总额==>行权收益率
-                    if (secInfoModelDto.getNextExeDate() != null&&priceYieldInParameter.getCalDate().compareTo(BasicUtil.dateToLocal(secInfoModelDto.getNextExeDate()))>0) {
-                        yieldPriceInParameter.setFullPrice(dto.getUnitFprice()/* dto.getFpriceAmt() */);
-                        yieldPriceInParameter.setNextExeDate(toLocalDate(secInfoModelDto.getNextExeDate()));
-                        yieldPriceInParameter.setNextExePrice(secInfoModelDto.getNextExercisePrice());
-                        if (yieldPriceInParameter.getNextExePrice() != null) {
-                            yieldPriceOutParameter = yieldByPriceCalculator.calculate(yieldPriceInParameter);
-                            dto.setExerYield(yieldPriceOutParameter.getMatYield());
-                        }
-                        else {
-                            dto.setExerYield(null);
-                        }
+                    if (secInfoModelDto.getNextExeDate() != null) {
+                    	if(priceYieldInParameter.getCalDate().compareTo(BasicUtil.dateToLocal(secInfoModelDto.getNextExeDate()))<0) {
+                            yieldPriceInParameter.setFullPrice(dto.getUnitFprice()/* dto.getFpriceAmt() */);
+                            yieldPriceInParameter.setNextExeDate(toLocalDate(secInfoModelDto.getNextExeDate()));
+                            yieldPriceInParameter.setNextExePrice(secInfoModelDto.getNextExercisePrice());
+                            if (yieldPriceInParameter.getNextExePrice() != null) {
+                                yieldPriceOutParameter = yieldByPriceCalculator.calculate(yieldPriceInParameter);
+                                dto.setExerYield(yieldPriceOutParameter.getMatYield());
+                            }
+                            else {
+                                dto.setExerYield(null);
+                            }
+                    	}
+                    	else {
+                    		dto.setExerYield(BigDecimal.ZERO);
+                    	}
                     }
                     break;
                 // 行权收益率
                 case "exerYield":
                     // 行权收益率==>全价总额
-                    if (secInfoModelDto.getNextExeDate() != null&&priceYieldInParameter.getCalDate().compareTo(BasicUtil.dateToLocal(secInfoModelDto.getNextExeDate()))>0) {
-                        priceYieldInParameter.setMatYield(dto.getExerYield());
-                        yieldPriceInParameter.setNextExeDate(toLocalDate(secInfoModelDto.getNextExeDate()));
-                        yieldPriceInParameter.setNextExePrice(secInfoModelDto.getNextExercisePrice());
-                        priceYieldOutParameter = priceByYieldCalculator.calculate(priceYieldInParameter);
-                        dto.setFpriceAmt(priceYieldOutParameter.getFullPrice());
-                        if (计算融入券) {
-                            dto.setIntegrateFpriceAmt(priceYieldOutParameter.getFullPrice());
+                    if (secInfoModelDto.getNextExeDate() != null) {
+                    	if(priceYieldInParameter.getCalDate().compareTo(BasicUtil.dateToLocal(secInfoModelDto.getNextExeDate()))<0) {
+                            priceYieldInParameter.setMatYield(dto.getExerYield());
+                            yieldPriceInParameter.setNextExeDate(toLocalDate(secInfoModelDto.getNextExeDate()));
+                            yieldPriceInParameter.setNextExePrice(secInfoModelDto.getNextExercisePrice());
+                            priceYieldOutParameter = priceByYieldCalculator.calculate(priceYieldInParameter);
+                            dto.setFpriceAmt(priceYieldOutParameter.getFullPrice());
+                            if (计算融入券) {
+                                dto.setIntegrateFpriceAmt(priceYieldOutParameter.getFullPrice());
+                            }
+                            // 全价总额==>到期收益率
+                            yieldPriceInParameter.setFullPrice(dto.getFpriceAmt());
+                            yieldPriceOutParameter = yieldByPriceCalculator.calculate(yieldPriceInParameter);
+                            dto.setYield(yieldPriceOutParameter.getMatYield());	
+                    	}
+                        else {
+                        	dto.setYield(BigDecimal.ZERO);
                         }
-                        // 全价总额==>到期收益率
-                        yieldPriceInParameter.setFullPrice(dto.getFpriceAmt());
-                        yieldPriceOutParameter = yieldByPriceCalculator.calculate(yieldPriceInParameter);
-                        dto.setYield(yieldPriceOutParameter.getMatYield());
                     }
                     break;
                 default:

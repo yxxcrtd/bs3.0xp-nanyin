@@ -124,7 +124,9 @@
                         result = '无';
                     }
             	data.revokeReason = result;
-                WorkFlow.doRevokeList(basePath + 'invest/product/resultscovering/FinResultsCovering001/doRevoke', data, "FinResultsCovering001_btn_revoke", "FinResultsCovering002");
+                WorkFlow.doRevokeList(basePath + 'invest/product/resultscovering/FinResultsCovering001/doRevoke', data, "FinResultsCovering001_btn_revoke", "FinResultsCovering002",function(){
+                    table.reload();//回调事件请求及回调函数
+                });
             });
         });
     });

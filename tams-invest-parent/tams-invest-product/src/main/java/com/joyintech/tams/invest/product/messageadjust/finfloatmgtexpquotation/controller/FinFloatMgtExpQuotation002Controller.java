@@ -419,4 +419,17 @@ public class FinFloatMgtExpQuotation002Controller extends BaseController {
         return flag;
     }
     //ZGBSS-42 非首次新建浮动管理费报价时 生效日选择开放计划开放开始日+1天作为生效日 add by yujiaping 20210118 end
+    
+    /**
+     * 获取开放模式
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("getopenMode")
+    public String getopenMode(){
+        return finFloatMgtExpQuotation001Service.getopenMode(this.getParam("finprodId"));
+    }
 }

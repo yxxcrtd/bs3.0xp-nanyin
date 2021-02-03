@@ -49,6 +49,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -327,6 +328,14 @@ implements BaseProcessService<TrdFundDuration001Dto>{
      */
     public Page<TrdFundDuration001Dto> findPage(Map<String, Object> pageParam) {
         pageParam.put("userName", LoginUserUtil.getUserName());
+        //多选下拉框处理（合作资产）
+        Object chlFinprodIdObj = pageParam.get("chlId");
+        if (chlFinprodIdObj != null){
+            pageParam.put("chlIdList",
+                    StringUtil.splitToList(GlobalConstant.COMMA,(String) chlFinprodIdObj));
+        }else {
+            pageParam.put("chlIdList",new ArrayList<>());
+        }
         return restTemplate.postForPage(
             ServiceApplication.PERIOD_SERVICE_NAME + "/TrdFundDuration/findPage", pageParam,
             TrdFundDuration001Dto.class);

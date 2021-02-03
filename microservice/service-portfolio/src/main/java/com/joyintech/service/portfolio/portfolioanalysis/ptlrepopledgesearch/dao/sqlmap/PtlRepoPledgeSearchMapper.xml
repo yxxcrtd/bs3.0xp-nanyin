@@ -84,8 +84,17 @@ FROM
 	AND J.BACK_LEND_DIRECTION=#{BACK_LEND_DIRECTION_03}
 
 	<if test="sysDate != null and sysDate != ''">
-		AND (H.VDATE &lt;= TO_DATE(#{sysDate},'YYYY-MM-DD') AND TO_DATE(#{sysDate},'YYYY-MM-DD') &lt; H.MDATE)
+		AND (H.VDATE &lt;= TO_DATE(#{sysDate},'YYYY-MM-DD') AND TO_DATE(#{sysDate},'YYYY-MM-DD') &lt;= H.MDATE)
 	</if>
+	AND not exists(
+	select TT.FINPROD_ID from
+	TRD_FIN_PRODUCT_DEAL_TOTAL TT where
+	TT.PS = 'T07'
+	AND TT.FINPROD_ID = H.FINPROD_ID
+	AND TT.TRADE_STATUS = '01'
+	AND TT.IS_CANCEL = 'N'
+	AND TT.TRADE_DATE &lt;= TO_DATE(#{sysDate},'YYYY-MM-DD')
+	)
 	<if test="counterIdList != null and counterIdList.size()>0">
 		<foreach collection="counterIdList" index="index" open="AND (G.PORTFOLIO_ID IN (" item="counterId" separator="," close=")">
 			<if test="(index % 998) == 0">
@@ -172,8 +181,17 @@ FROM
 	AND B.TRADE_STATUS='01'AND B.IS_CANCEL='N' and F.IS_SEC_BOND = 'Y' AND J.BACK_LEND_DIRECTION=#{BACK_LEND_DIRECTION_03}
 
 	<if test="sysDate != null and sysDate != ''">
-		AND (H.VDATE &lt;= TO_DATE(#{sysDate},'YYYY-MM-DD') AND TO_DATE(#{sysDate},'YYYY-MM-DD') &lt; H.MDATE)
+		AND (H.VDATE &lt;= TO_DATE(#{sysDate},'YYYY-MM-DD') AND TO_DATE(#{sysDate},'YYYY-MM-DD') &lt;= H.MDATE)
 	</if>
+	AND not exists(
+		select TT.FINPROD_ID from
+		TRD_FIN_PRODUCT_DEAL_TOTAL TT where
+		TT.PS = 'T07'
+		AND TT.FINPROD_ID = H.FINPROD_ID
+		AND TT.TRADE_STATUS = '01'
+		AND TT.IS_CANCEL = 'N'
+		AND TT.TRADE_DATE &lt;= TO_DATE(#{sysDate},'YYYY-MM-DD')
+	)
 	<if test="counterIdList != null and counterIdList.size()>0">
 		<foreach collection="counterIdList" index="index" open="AND (G.PORTFOLIO_ID IN (" item="counterId" separator="," close=")">
 			<if test="(index % 998) == 0">
@@ -257,8 +275,17 @@ FROM
 	AND B.TRADE_STATUS='01'AND B.IS_CANCEL='N' AND J.BACK_LEND_DIRECTION in (#{BACK_LEND_DIRECTION_05},#{BACK_LEND_DIRECTION_06})
 
 	<if test="sysDate != null and sysDate != ''">
-		AND (H.VDATE &lt;= TO_DATE(#{sysDate},'YYYY-MM-DD') AND TO_DATE(#{sysDate},'YYYY-MM-DD') &lt; H.MDATE)
+		AND (H.VDATE &lt;= TO_DATE(#{sysDate},'YYYY-MM-DD') AND TO_DATE(#{sysDate},'YYYY-MM-DD') &lt;= H.MDATE)
 	</if>
+	AND not exists(
+		select TT.FINPROD_ID from
+		TRD_FIN_PRODUCT_DEAL_TOTAL TT where
+		TT.PS = 'T07'
+		AND TT.FINPROD_ID = H.FINPROD_ID
+		AND TT.TRADE_STATUS = '01'
+		AND TT.IS_CANCEL = 'N'
+		AND TT.TRADE_DATE &lt;= TO_DATE(#{sysDate},'YYYY-MM-DD')
+	)
 	<if test="counterIdList != null and counterIdList.size()>0">
 		<foreach collection="counterIdList" open="AND G.PORTFOLIO_ID IN (" item="counterId" separator="," close=")">
 			#{counterId,jdbcType=VARCHAR}
@@ -465,21 +492,8 @@ SELECT fpd.TRADE_ID businessCode,
 	</select>
 
 	<select id="pledgeSummaryFindPage" resultType="com.joyintech.service.portfolio.portfolioanalysis.ptlrepopledgesearch.dto.PtlPldgeSummaryDto">
-		with bondvredit as (
-		SELECT * FROM (
 		select
-		T1.O_CODE,
-		T1.O_TYPE,
-		T1.GRADE_RESULT,
-		row_number() over(partition by T1.O_CODE,T1.O_TYPE order by GRADE_RESULT desc) mm
-		from MST_BOND_CREDIT_RATING T1
-		where T1.GRADE_DATE &lt;= to_date(#{searchDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
-		) WHERE mm =1
-		)
-		select
-		T3.*,
-		T1.GRADE_RESULT gradeTypezt,
-		T2.GRADE_RESULT gradeTypezx
+		T3.*
 		from (
 		select
 		INFO.PORTFOLIO_ID portfolioId,
@@ -577,8 +591,8 @@ SELECT fpd.TRADE_ID businessCode,
 		FIN_PRODUCT.FINPROD_ABBR AS FINPROD_NAME,
 		FIN_PRODUCT.REGIST_ORG,
 		0 prinAmt, /*持仓券面*/
-		decode(TRD_PRODUCT_DEAL.FINPROD_TYPE2, 'F05', FIN_DEAL_PLEDGE.PLEDGE_NUMBER * 100, 0) canpledgeAmt, /*可质押券面*/
-		decode(TRD_PRODUCT_DEAL.FINPROD_TYPE2, 'F04', FIN_DEAL_PLEDGE.PLEDGE_NUMBER * 100, 'F02', FIN_DEAL_PLEDGE.PLEDGE_NUMBER * 100, 0) pledgeAmt /*已质押券面*/
+		decode(TRD_PRODUCT_DEAL.FINPROD_TYPE2, 'F05', FIN_DEAL_PLEDGE.PLEDGE_NUMBER * 100,'F04', -FIN_DEAL_PLEDGE.PLEDGE_NUMBER * 100, 0) canpledgeAmt, /*可质押券面*/
+		decode(TRD_PRODUCT_DEAL.FINPROD_TYPE2, 'F02', FIN_DEAL_PLEDGE.PLEDGE_NUMBER * 100, 0) pledgeAmt /*已质押券面*/
 		FROM TRD_PRODUCT_DEAL
 		LEFT JOIN TRD_PRODUCT_DEAL_ADD ON TRD_PRODUCT_DEAL.TRADE_ID = TRD_PRODUCT_DEAL_ADD.TRADE_ID
 		LEFT JOIN PA_TRD_PRODUCT_DEAL ON TRD_PRODUCT_DEAL.TRADE_ID = PA_TRD_PRODUCT_DEAL.TRADE_ID
@@ -607,8 +621,8 @@ SELECT fpd.TRADE_ID businessCode,
 		T6.FINPROD_ABBR AS FINPROD_NAME,
 		T6.REGIST_ORG,
 		0 prinAmt, /*持仓券面*/
-		decode(T1.FINPROD_TYPE2,'F05', -1 *T5.PLEDGE_NUMBER * 100, 0) canpledgeAmt, /*可质押券面*/
-		decode(T1.FINPROD_TYPE2, 'F04', -1 *T5.PLEDGE_NUMBER * 100, 'F02', -1 *T5.PLEDGE_NUMBER * 100, 0) pledgeAmt /*已质押券面*/
+		decode(T1.FINPROD_TYPE2, 'F05', -1 *T5.PLEDGE_NUMBER * 100, 'F04', T5.PLEDGE_NUMBER * 100, 0) canpledgeAmt, /*可质押券面*/
+		decode(T1.FINPROD_TYPE2, 'F02', -1 *T5.PLEDGE_NUMBER * 100, 0) pledgeAmt /*已质押券面*/
 		FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
 		inner JOIN PTL_PORTFOLIO T2 ON T2.PORTFOLIO_ID = T1.PORTFOLIO_ID
 		LEFT JOIN FIN_TRADE_PRODUCT T4  ON T1.FINPROD_ID = T4.FINPROD_ID
@@ -880,11 +894,7 @@ SELECT fpd.TRADE_ID businessCode,
 		INFO.FINPROD_NAME,
 		INFO.REGIST_ORG
 		)T3
-		left join bondvredit T1 ON T1.O_CODE = T3.secid AND T1.O_TYPE = '01'
-		left join bondvredit T2 ON T2.O_CODE = T3.secid AND T2.O_TYPE = '02'
-		where prinAmt <![CDATA[<>]]> 0
-		or canpledgeAmt <![CDATA[<>]]> 0
-		or pledgeAmt <![CDATA[<>]]> 0
-		or remainAmt <![CDATA[<>]]> 0
+		where
+		pledgeAmt <![CDATA[<>]]> 0
 	</select>
 </mapper>

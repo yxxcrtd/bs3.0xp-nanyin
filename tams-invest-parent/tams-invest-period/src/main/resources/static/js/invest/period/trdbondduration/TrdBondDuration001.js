@@ -19,6 +19,9 @@ var TrdBondDuration001;
         if ($("#finprodMarketId").val() &&  $('#finprodMarketId').select2('data')[0] && $('#finprodMarketId').select2('data')[0].object) {
             result.finprodId = $('#finprodMarketId').select2('data')[0].object;
         }
+        if ($("#chlId").val()) {
+        	result.chlId = $("#chlId").val().join(",");
+        }
         if ($("#mDate").val()) {
             result.mdateStart = $("#mDate").startDate();
             result.mdateEnd = $("#mDate").endDate();
@@ -154,7 +157,9 @@ var TrdBondDuration001;
                         result = '无';
                     }
                     object.revokeReason = result;
-                    WorkFlow.doRevoke(basePath + 'invest/period/trdbondduration/TrdBondDuration001/revoke', object, "TrdBondDuration001_btn_revoke", pageId);
+                    WorkFlow.doRevoke(basePath + 'invest/period/trdbondduration/TrdBondDuration001/revoke', object, "TrdBondDuration001_btn_revoke", pageId,function(){
+                        table.reload();//回调事件请求及回调函数
+                    });
                 });
             });
         })

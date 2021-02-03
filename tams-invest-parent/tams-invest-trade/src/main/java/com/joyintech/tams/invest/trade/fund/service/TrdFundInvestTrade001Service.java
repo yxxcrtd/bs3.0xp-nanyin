@@ -41,6 +41,7 @@ import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
 import com.joyintech.tams.invest.trade.fund.dto.TrdFundInvestTradeDto;
+import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -130,7 +131,14 @@ public class TrdFundInvestTrade001Service extends CommonExportService<TrdFundInv
         if (StringUtil.isNotEmpty(pageParam.get("portfolioId"))) {
             pageParam.put("portfolioId", StringUtil.splitToList(null, pageParam.get("portfolioId").toString()));
         }
-
+        //多选下拉框处理（合作资产）
+        Object chlFinprodIdObj = pageParam.get("chlFinprodId");
+        if (chlFinprodIdObj != null){
+            pageParam.put("chlFinprodIdList",
+                    StringUtil.splitToList(GlobalConstant.COMMA,(String) chlFinprodIdObj));
+        }else {
+            pageParam.put("chlFinprodIdList",new ArrayList<>());
+        }
         // 新增资产二、三、四级分类	王贵奇	2019/7/30 -结束
         Page<TrdFundInvestTradeDto> res =  restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME + "/TrdFundInvestTrade/findPage",
             pageParam,TrdFundInvestTradeDto.class);

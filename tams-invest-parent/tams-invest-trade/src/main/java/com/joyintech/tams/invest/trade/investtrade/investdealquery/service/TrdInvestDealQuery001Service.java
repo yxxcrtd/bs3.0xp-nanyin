@@ -104,6 +104,15 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 			}
 		}
 
+		//多选下拉框处理（合作资产）
+		Object chlFinprodIdObj = pageParam.get("chlFinprodId");
+		if (chlFinprodIdObj != null){
+			pageParam.put("chlFinprodIdList",
+					StringUtil.splitToList(GlobalConstant.COMMA,(String) chlFinprodIdObj));
+		}else {
+			pageParam.put("chlFinprodIdList",new ArrayList<>());
+		}
+
 		//平安数据字典转为投管用字典
 		String finprodType2Old = (String)pageParam.get("finprodType2");
         if (StringUtil.isNotEmpty(finprodType2Old) || StringUtil.isNotEmpty(pageParam.get("ps"))) {

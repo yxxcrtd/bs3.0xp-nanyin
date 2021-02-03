@@ -49,6 +49,17 @@
             <if test="finprodMarketId != null and !finprodMarketId.isEmpty()">
                 AND T3.FINPROD_MARKET_ID = #{finprodMarketId}
             </if>
+            <if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+                AND (t1.CHL_ID IN
+                <foreach collection="chlFinprodIdList" item="item" index="index" open="("
+                         close=")" separator=",">
+                    <if test="(index % 998) == 0">
+                        null) OR t1.CHL_ID in (
+                    </if>
+                    #{item}
+                </foreach>
+                )
+            </if>
             <if test="paBizType != null and !paBizType.isEmpty()">
                 AND T2.PA_BUSS_TYPE = #{paBizType}
             </if>
@@ -273,6 +284,17 @@
             <if test="finprodMarketId != null and !finprodMarketId.isEmpty()">
                 AND t10.FINPROD_MARKET_ID = #{finprodMarketId}
             </if>
+            <if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+                AND (t8.SEC_ACCT_ID IN
+                <foreach collection="chlFinprodIdList" item="item" index="index" open="("
+                         close=")" separator=",">
+                    <if test="(index % 998) == 0">
+                        null) OR t8.SEC_ACCT_ID in (
+                    </if>
+                    #{item}
+                </foreach>
+                )
+            </if>
             <if test="projectType != null and !projectType.isEmpty()">
                 AND T4.TYPE_6 = #{projectType}
             </if>
@@ -333,6 +355,17 @@
             </if>
             <if test="finprodMarketId != null and !finprodMarketId.isEmpty()">
                 AND T3.FINPROD_MARKET_ID = #{finprodMarketId}
+            </if>
+            <if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+                AND (t1.CHL_ID IN
+                <foreach collection="chlFinprodIdList" item="item" index="index" open="("
+                         close=")" separator=",">
+                    <if test="(index % 998) == 0">
+                        null) OR t1.CHL_ID in (
+                    </if>
+                    #{item}
+                </foreach>
+                )
             </if>
             <if test="paBizType != null and !paBizType.isEmpty()">
                 AND T2.PA_BUSS_TYPE = #{paBizType}
@@ -401,6 +434,17 @@
             </if>
             <if test="finprodMarketId != null and !finprodMarketId.isEmpty()">
                 AND T3.FINPROD_MARKET_ID = #{finprodMarketId}
+            </if>
+            <if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+                AND (t1.CHL_ID IN
+                <foreach collection="chlFinprodIdList" item="item" index="index" open="("
+                         close=")" separator=",">
+                    <if test="(index % 998) == 0">
+                        null) OR t1.CHL_ID in (
+                    </if>
+                    #{item}
+                </foreach>
+                )
             </if>
             <if test="paBizType != null and !paBizType.isEmpty()">
                 AND T2.PA_BUSS_TYPE = #{paBizType}

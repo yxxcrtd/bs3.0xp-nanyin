@@ -15,8 +15,10 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.period.trdbuyoutduration.dto.TrdRepoBuyoutDuration001Dto;
 
+import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -51,6 +53,15 @@ public class TrdRepoBuyoutDuration001Service extends CommonExportService<TrdRepo
                     StringUtil.splitToList(",", (String) params.get("statusValid")));
         } else {
             params.put("statusValid", null);
+        }
+
+        //多选下拉框处理（合作资产）
+        Object chlFinprodIdObj = params.get("chlFinprodId");
+        if (chlFinprodIdObj != null){
+            params.put("chlFinprodIdList",
+                    StringUtil.splitToList(GlobalConstant.COMMA,(String) chlFinprodIdObj));
+        }else {
+            params.put("chlFinprodIdList",new ArrayList<>());
         }
 
         if (params.get("portfolioId") != null) {

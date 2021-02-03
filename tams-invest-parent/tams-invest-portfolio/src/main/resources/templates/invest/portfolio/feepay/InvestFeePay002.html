@@ -31,16 +31,16 @@
 		                       					data-th-data-url="@{/invest/portfolio/feepay/InvestFeePay001/getSecAcctId}" 
 		                      					data-idfield="code" data-keyfield="name" data-th-data-effectivefieldsalias='|{"code":"#{InvestFeePay002.secAcctCode}","shortName":"#{InvestFeePay002.secAcctName}"}|'> -->
 		                      					
-		                      					<select type="text" id="InvestFeePay002_secAcctId" name="secAcctId" formatoption="true"
+		                      				<!--	<select type="text" id="InvestFeePay002_secAcctId" name="secAcctId" formatoption="true"
 													class="tabJump layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
 													data-th-data-url="@{/invest/portfolio/feeprovisionsetting/FeeProvisionSetting001/getSecAcctId}"
 													data-th-initValue="${entity?.secAcctId}">
-												</select>
-		                      					<!--<select type="text" id="InvestFeePay002_secAcctId" name="secAcctId"
-						                               class="layui-input form-input input-select" placeholder="请输入内容" 
-						                              data-th-data-url="@{/invest/portfolio/feepay/InvestFeePay001/getSecAcctIdS}" 
+												</select>-->
+		                      					<select type="text" id="InvestFeePay002_secAcctId" name="secAcctId"
+						                               class="layui-input form-input input-select" placeholder="请输入内容"
+						                              data-th-data-url="@{/invest/portfolio/feepay/InvestFeePay001/getSecAcctIdS}"
 						                                data-th-initValue="${entity?.secAcctId}">
-						                          </select>-->
+						                          </select>
 										</div>
 									</div>
 									<div class="form-inline-wrap">
@@ -51,7 +51,7 @@
                                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                                 th:placeholder="#{SysCommon.placeholder}" 
                                                 data-th-data-result="${INVEST_FEE_TYPE}"
-                                                formatoption="true"  type="text"
+                                                formatoption="true"  type="text" childrenIds="InvestFeePay002_regTrustOrg"
                                                 th:initValue="${entity?.feeType}"></select>
 										</div>
 									</div>
@@ -59,7 +59,7 @@
 										<label class="layui-form-label form-label-wrap" data-th-text="#{InvestFeePay002.regTrustOrg}">登记托管机构</label>
 										<div class="layui-input-inline input-inline">
 											<select id="InvestFeePay002_regTrustOrg" name="regTrustOrg"
-												class="layui-input form-input input-select"
+												class="layui-input form-input input-select" parentIds="InvestFeePay002_feeType"
 												data-th-placeholder="#{SysCommon.placeholder}"
 												data-th-initValue='${entity?.regTrustOrg}'
 												data-th-data-result="${REGIST_ORG}">
@@ -91,30 +91,30 @@
 												data-th-value='${entity?.endDate eq null ? platDate : #dates.format(entity?.endDate,"yyyy-MM-dd")}'>
 										</div>
 									</div>
-									<div class="form-inline-wrap">
-										<label class="layui-form-label form-label-wrap" data-th-text="#{InvestFeePay002.payDate}">支付日</label>
-										<div class="layui-input-inline input-inline">
-											<input type="text" name="payDate" id="InvestFeePay002_payDate"
-												class="layui-input form-input input-dateSelect" required
-												data-th-value='${entity?.payDate eq null ? platDate : #dates.format(entity?.payDate,"yyyy-MM-dd")}'>
-										</div>
-									</div>
-								</div>
-								<div class="layui-form-item">
 									<div class="form-inline-wrap" id='InvestFeePay002_div_payAmt'>
 										<label class="layui-form-label form-label-wrap" data-th-text="#{InvestFeePay002.payAmt}">理论费用金额</label>
 										<div class="layui-input-inline input-inline">
 											<input type="text" name="payAmt" id="InvestFeePay002_payAmt"
-												class="layui-input form-input text-number" required disabled
-												data-th-placeholder="#{SysCommon.placeholder}"
-												data-th-value='${entity?.payAmt}' >
+												   class="layui-input form-input text-number" required disabled
+												   data-th-placeholder="#{SysCommon.placeholder}"
+												   data-th-value='${entity?.payAmt}' >
+										</div>
+									</div>
+								</div>
+								<div class="layui-form-item">
+									<div class="form-inline-wrap">
+										<label class="layui-form-label form-label-wrap" data-th-text="#{InvestFeePay002.payDate}">支付日</label>
+										<div class="layui-input-inline input-inline">
+											<input type="text" name="payDate" id="InvestFeePay002_payDate"
+												   class="layui-input form-input input-dateSelect" required
+												   data-th-value='${entity?.payDate eq null ? platDate : #dates.format(entity?.payDate,"yyyy-MM-dd")}'>
 										</div>
 									</div>
 									<div class="form-inline-wrap" id='InvestFeePay002_div_actPayAmt'>
 										<label class="layui-form-label form-label-wrap" data-th-text="#{InvestFeePay002.actPayAmt}">实付费用金额</label>
 										<div class="layui-input-inline input-inline">
 											<input type="text" name="actPayAmt" id="InvestFeePay002_actPayAmt"
-												class="layui-input form-input text-number" required
+												class="layui-input form-input text-number" required disabled
 												data-th-placeholder="#{SysCommon.placeholder}"
 												data-th-value='${entity?.actPayAmt}'>
 										</div>

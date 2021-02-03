@@ -551,4 +551,14 @@ public class PtlManagementInfo001Controller extends BaseService<PtlManagementInf
     public String insertPtlCapacctInfo(@RequestBody PtlCapacctInfo entity) {
         return ptlManagementInfo001Service.insertPtlCapacctInfo(entity);
     }
+
+    /**
+     * 资金账户已经有通道挂的话，不允许再挂
+     * @param map
+     * @return
+     */
+    @PostMapping("/getReAcct")
+    public int getReAcct(@RequestBody Map<String, Object> map){
+        return ptlManagementInfo001Service.getReAcct(map);
+    }
 }

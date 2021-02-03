@@ -22,6 +22,9 @@ $(function(){
         if(param.type11){
             param.type11 = param.type11.join(",");
         }
+        if ($("#chlFinprodId").val()) {
+        	param.chlFinprodId = $("#chlFinprodId").val().join(",");
+        }
         //	查询条件换成资产二级分类多选项 -wangguiqi on 2019/8/6 -end
         return {
         	/* type9~11 added by wangguiqi on 2019/8/1 -start */
@@ -33,7 +36,7 @@ $(function(){
             portfolioId:portfolioId,
             finprodType:$('#finprodType').val(),
             finprodId:$('#finprodId').val(),
-            chlFinprodId:$('#chlFinprodId').val(),
+            chlFinprodId:param.chlFinprodId,
             ps:ps,
             status:$('#status').val(),
             tradeDateBegin:$('#tradeDate').startDate(),
@@ -151,7 +154,9 @@ $(function(){
                     for(var select in object.selectedItem){
                         object.selectedItem[select].cancelRemark = result;
                     }
-                    WorkFlow.doRevokeList(basePath + 'invest/trade/trddepositinvesttrade/TrdDepositInvestTrade001/delete', object, "TrdDepositInvestTrade001_btn_delete", "TrdDepositInvestTrade002");//删除
+                    WorkFlow.doRevokeList(basePath + 'invest/trade/trddepositinvesttrade/TrdDepositInvestTrade001/delete', object, "TrdDepositInvestTrade001_btn_delete", "TrdDepositInvestTrade002",function(){
+                        table.reload();//回调事件请求及回调函数
+                    });
 //                    WorkFlow.doDeleteList(basePath + 'invest/trade/trddepositinvesttrade/TrdDepositInvestTrade001/delete', object, "TrdDepositInvestTrade001_btn_revoke", "TrdDepositInvestTrade002");//删除
                     });
                 });

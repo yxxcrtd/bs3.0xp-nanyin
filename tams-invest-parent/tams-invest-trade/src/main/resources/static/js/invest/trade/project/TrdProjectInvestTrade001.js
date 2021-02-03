@@ -10,6 +10,9 @@
         } else {
             result.projectType = null;
         }
+        if ($("#chlFinprodId").val()) {
+        	result.chlFinprodId = $("#chlFinprodId").val().join(",");
+        }
         // 项目类资产五级分类改造 add by renping 2019-08-01 start
         if ($("#type9").val()) {
         	result.type9 = $("#type9").val().join(",");
@@ -153,7 +156,9 @@
                         result = '无';
                     }
                     object.revokeReason = result;
-                    WorkFlow.doRevoke(basePath + 'invest/trade/project/TrdProjectInvestTrade001/revoke', object, "TrdProjectInvestTrade001_btn_revoke", "TrdProjectInvestTrade002");
+                    WorkFlow.doRevoke(basePath + 'invest/trade/project/TrdProjectInvestTrade001/revoke', object, "TrdProjectInvestTrade001_btn_revoke", "TrdProjectInvestTrade002",function(){
+                        table.reload();//回调事件请求及回调函数
+                    });
                     });
                 });
             });

@@ -1,10 +1,10 @@
---2021.1.25
+--2021.02.02
 
 ----增加COMMON_BUSINESS_TYPE字典
 DELETE Sys_Datadict_List WHERE dict_code = 'COMMON_BUSINESS_TYPE'
 AND ITEM_CODE ='S10';
 insert into Sys_Datadict_List (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('COMMON_BUSINESS_TYPE', 'S10', '流程配置', 10, '0', 'system', null, sysdate, 'system', sysdate, null);
+values ('COMMON_BUSINESS_TYPE', 'S10', '工作流管理', 10, '0', 'system', null, sysdate, 'system', sysdate, null);
 
 
 
@@ -12,17 +12,17 @@ values ('COMMON_BUSINESS_TYPE', 'S10', '流程配置', 10, '0', 'system', null, 
 DELETE sys_page WHERE PAGE_ID in ( 'SysWflBusinessModule001','SysWflBusinessModule002');
 
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SysWflBusinessModule001', 'SYS', '/system/wflmoduleset/SysWflBusinessModule001', 'system/wflmoduleset/SysWflBusinessModule001', 'SYSTEM_001_006_010', null, null, '01', '02', '流程配置', 'system', null, sysdate, 'system', sysdate);
+values ('SysWflBusinessModule001', 'SYS', '/system/wflmoduleset/SysWflBusinessModule001', 'system/wflmoduleset/SysWflBusinessModule001', 'SYSTEM_001_006_010', null, null, '01', '02', '工作流管理', 'system', null, sysdate, 'system', sysdate);
 
 
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SysWflBusinessModule002', 'SYS', '/system/wflmoduleset/SysWflBusinessModule002', 'system/wflmoduleset/SysWflBusinessModule002', null, null, null, '01', '01', '流程配置', 'system', null, sysdate, 'system', sysdate);
+values ('SysWflBusinessModule002', 'SYS', '/system/wflmoduleset/SysWflBusinessModule002', 'system/wflmoduleset/SysWflBusinessModule002', null, null, null, '01', '01', '工作流管理', 'system', null, sysdate, 'system', sysdate);
 
 --- 增加菜单
 DELETE sys_menu WHERE MENU_ID in ( 'SYSTEM_001_006_010');
 
 insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SYSTEM_001_006_010', 'SYS', null, 'SYSTEM_001_006', 'SysWflBusinessModule001', 11, '02', '流程配置', 'system', null, sysdate, 'system', sysdate);
+values ('SYSTEM_001_006_010', 'SYS', null, 'SYSTEM_001_006', 'SysWflBusinessModule001', 11, '02', '工作流管理', 'system', null, sysdate, 'system', sysdate);
 
 ---增加菜单按钮
 DELETE sys_page_element WHERE page_id = 'SysWflBusinessModule001' and ELEMENT_ID = 'SysWflBusinessModule001_btn_search';

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.invest.batch.susprdfutureopenplangen.dao.SusPrdFutureOpenPlanGenMapper">
 
-	<select id="findSusPrdFutureOpenPlanGenList" parameterType="Map" resultType="com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto">
+	<select id="findSusPrdFutureOpenPlanGenList" parameterType="Map" resultType="com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto">		
 		SELECT	
 		    '开放计划' planType,																								
 			A.FINPROD_ID AS FINPROD_ID,																								
@@ -11,8 +11,8 @@
 			A.PROFIT_TYPE AS PROFIT_TYPE,																								
 			E.OPEN_MDATE AS OPEN_MDATE,																								
 			E.CASH_ID AS CASH_ID,																								
-			E.OPEN_TYPE AS OPEN_TYPE,																						
-			E.OPEN_VDATE AS OPEN_VDATE,																								
+			E.OPEN_TYPE AS OPEN_TYPE,	
+			decode(F.Calc_Rule,'01',E.OPEN_CDATE,'02',E.OPEN_VDATE,'03',E.OPEN_MDATE) AS OPEN_VDATE,																																												
 			A.CALENDAR_ID AS CALENDAR_ID,																								
 			D.PUR_SPEED AS PUR_SPEED,																							
 			D.IS_CYCLE AS IS_CYCLE, 																								
@@ -36,7 +36,8 @@
 			F.CREATE_TIME AS CREATE_TIME,
 			F.UPDATE_USER AS UPDATE_USER,
 			F.UPDATE_TIME AS UPDATE_TIME,
-			G.Pur_Speed AS purConfDays																							
+			G.Pur_Speed AS purConfDays,
+			fcpr.PAY_CYCLE payCycleV																							
 		FROM																									
 			FIN_PRODUCT A																								
 			INNER JOIN																								
@@ -44,6 +45,7 @@
 					T.CASH_ID,
 					T.OPEN_TYPE,
 					T.OPEN_DATE_END,
+					T.OPEN_CDATE,
 					T.OPEN_VDATE,
 					T.OPEN_MDATE,
 					T.FINPROD_ID,
@@ -52,7 +54,8 @@
 					(SELECT  																						
 						B.CASH_ID AS CASH_ID, 																					
 						C.OPEN_TYPE AS OPEN_TYPE,																				
-						C.OPEN_DATE_END AS OPEN_DATE_END, 																					
+						C.OPEN_DATE_END AS OPEN_DATE_END, 	
+						C.Open_Vdate AS OPEN_CDATE,																				
 						C.open_date_str AS OPEN_VDATE,
 						C.open_date_end AS OPEN_MDATE,	
 						C.FINPROD_ID AS FINPROD_ID,																				
@@ -79,12 +82,14 @@
 				ON E.CASH_ID = F.CASH_ID																							
 				AND E.OPEN_TYPE = F.OPEN_TYPE
 			INNER JOIN FIN_PRODUCT_ADD 	G
-			ON A.FINPROD_ID = G.FINPROD_ID																						
+			ON A.FINPROD_ID = G.FINPROD_ID	
+			LEFT JOIN FIN_CASH_INFO fci on fci.FINPROD_ID = E.FINPROD_ID and fci.CASH_TYPE_1 = '02'	
+			LEFT JOIN FIN_CASH_PAY_RULE fcpr on fcpr.CASH_ID = fci.CASH_ID																	
 		WHERE 																									
 			A.FINPROD_TYPE2 = #{finprodType}																
 			AND A.P_FINPROD_ID IS NULL
 			<!-- AND A.IS_SUS = #{isSus} -->
-			AND A.OPERATION_TYPE = #{operationType}																								
+			AND A.OPERATION_TYPE = #{operationType}																											
 	</select>
 	
 <!-- 	<select id="findProductAnapleroticPlanList" parameterType="Map" resultType="com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto">
@@ -147,7 +152,7 @@
 		    A.FINPROD_TYPE = 'F16'																								
 	</select> -->
 	
-	<select id="findProductPayPlanList" parameterType="Map" resultType="com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto">
+	<select id="findProductPayPlanList" parameterType="Map" resultType="com.joyintech.tams.invest.batch.susprdfutureopenplangen.dto.SusPrdFutureOpenPlanGenDto">		
 		SELECT	
 		'付息计划' planType,/*计划类型*/
 		fp.FINPROD_ID AS finprodId,/*金融产品代码*/
@@ -202,7 +207,7 @@
 				where
 				fp.FINPROD_TYPE2 = 'F16'
 		        AND fp.PROFIT_TYPE in ('02','03')
-		        AND fp.P_FINPROD_ID IS NULL																						
+		        AND fp.P_FINPROD_ID IS NULL				       																		
 	</select>
 	
 	<select id="findNdateOrEndDateByProdid" parameterType="string" resultType="java.util.Date">
@@ -273,6 +278,18 @@
 			    and finprod_id = #{finprodId}
 		) t
 		where t.ro = 1
+	</select>
+	
+	<select id="findOpenPlanListByProdid" parameterType="string" resultType="com.joyintech.tams.common.base.entity.FinOpenPlan">
+		select A.VDATE AS openVdateUn,/*产品起息日*/
+                 B.OPEN_DATE_STR AS openDateStr,
+                 B.OPEN_DATE_END AS openDateEnd,
+                 C.CASH_ID AS cashId,
+                 B.OPEN_VDATE AS openVdate
+                 from FIN_PRODUCT A 
+                 INNER JOIN FIN_OPEN_PLAN B ON B.FINPROD_ID = A.FINPROD_ID AND B.OPEN_TYPE != '02'
+                 LEFT JOIN FIN_CASH_PLAN C ON C.FINPROD_ID = A.FINPROD_ID AND C.CASH_TYPE = '01'
+                 WHERE A.FINPROD_ID = #{finprodId}
 	</select>
 
 </mapper>

@@ -25,6 +25,9 @@ $(function() {
         }else{
             object.statusValid = null;
         }
+        if ($("#chlId").val()) {
+        	object.chlId = $("#chlId").val().join(",");
+        }
         object.mdateProdStart = $('#mdateProd').startDate();
         object.mdateProdEnd = $('#mdateProd').endDate();
         //add by yejiejie 2019-3-9 start
@@ -183,7 +186,9 @@ $(function() {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.revoke")), function(){
                     Joyin.prompt(JoyinUtil.getLabel("TrdDepoDuration001.revokeReason"),2,function(res){
                         object.cancelRemark = res;
-                        WorkFlow.doRevokeList(basePath + 'invest/period/trddepoduration/TrdDepoDuration001/revoke', object, "TrdDepoDuration001_btn_revoke", "TrdDepoDuration002");
+                        WorkFlow.doRevokeList(basePath + 'invest/period/trddepoduration/TrdDepoDuration001/revoke', object, "TrdDepoDuration001_btn_revoke", "TrdDepoDuration002",function(){
+                            table.reload();//回调事件请求及回调函数
+                        });
                     },null,200);
                 });
             });

@@ -5,6 +5,7 @@
 
 package com.joyintech.tams.invest.trade.fund.validator;
 
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.ArithmeticUtil;
@@ -645,7 +646,18 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
 
         if (!StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
             if (StringUtil.isNotEmpty(dto.getTradeAmt())) {
-                errorList.add(new ValidMessage("tradeAmt", getMessage("交易金额不能小于0")));
+//                errorList.add(new ValidMessage("tradeAmt", getMessage("交易金额不能小于0")));
+            }
+        }
+
+        if (DictCodeList.交易方向_赎回.getValue().equals(dto.getPs())) {
+            List<BigDecimal> ssList= tradeCommonService.selectProAvailableCash(dto.getEntrustId());
+            if (!StringUtil.isEmptyList(ssList) &&
+                    ssList.get(0).compareTo(BigDecimal.ZERO) != 0) {
+                if (dto.getShareAmt().compareTo(ssList.get(0)) == 1) {
+                    ValidMessage validMessage = new ValidMessage("基金赎回份额不能大于基金可交易额度份额！");
+                    errorList.add(validMessage);
+                }
             }
         }
         //add by msk TISHKBS-1038 新增一次性划款通道交易前是否划款判断 end

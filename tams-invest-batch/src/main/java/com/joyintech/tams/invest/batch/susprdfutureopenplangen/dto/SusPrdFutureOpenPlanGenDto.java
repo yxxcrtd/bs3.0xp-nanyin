@@ -42,6 +42,7 @@ public class SusPrdFutureOpenPlanGenDto extends NeedOperateEntity {
 	private Date createTime; // 创建时间
 	private String updateUser; // 更新人
 	private Date updateTime; // 更新时间
+	private String payCycleV; // 支付频率
 	/**
      * 申购确认天数
      */
@@ -421,6 +422,12 @@ public class SusPrdFutureOpenPlanGenDto extends NeedOperateEntity {
 	}
 	public void setMdate(Date mdate) {
 		this.mdate = mdate;
+	}
+	public String getPayCycleV() {
+		return payCycleV;
+	}
+	public void setPayCycleV(String payCycleV) {
+		this.payCycleV = payCycleV;
 	}
 	
 }

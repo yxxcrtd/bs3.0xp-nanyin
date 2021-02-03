@@ -12,7 +12,7 @@
             url: JoyinUtil.getRealPath('/invest/portfolio/feepay/InvestFeePay003/queryFeePositionDetail'),
             type: 'POST',
             data: function() {
-                return {secAcctId : secAcctId, ptlId : ptlId, calcStartDate : calcStartDate, calcEndDate : calcEndDate, feeType: feeType, confirmFlag: confirmFlag, tradeId: tradeId};
+                return {secAcctId : secAcctId, ptlId : ptlId, calcStartDate : calcStartDate, calcEndDate : calcEndDate, feeType: feeType, confirmFlag: confirmFlag, tradeId: tradeId,org:org};
             }
         },
         searchOnInit: true,

@@ -709,4 +709,19 @@ public class FinFloatMgtExpQuotation001Service extends CommonExportService<FinFl
                 boolean.class);
     }
     //ZGBSS-42 非首次新建浮动管理费报价时 生效日选择开放计划开放开始日+1天作为生效日 add by yujiaping 20210118 end
+    
+    /**
+     * 获取开放模式 <功能详细描述>
+     *
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public String getopenMode(String finprodId) {
+    	Map<String,Object> param=new HashMap<String,Object>();
+    	param.put("finprodId", finprodId);
+    	return restTemplate.postForObject(
+                ServiceApplication.PRODUCT_SERVICE_NAME + "/FinFloatMgtExpQuotation/getopenMode", param,
+                String.class);
+    }
 }

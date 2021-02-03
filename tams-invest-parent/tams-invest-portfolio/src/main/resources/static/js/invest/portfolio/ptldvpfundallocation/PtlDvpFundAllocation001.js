@@ -108,7 +108,9 @@
                         result = '无';
                     }
                         checkObj.revokeReason = result;
-                        WorkFlow.doRevokeList(basePath + 'invest/portfolio/ptldvpfundallocation/PtlDvpFundAllocation001/revoke', checkObj, "PtlDvpFundAllocation001_btn_revoke", "PtlDvpFundAllocation002");//删除
+                        WorkFlow.doRevokeList(basePath + 'invest/portfolio/ptldvpfundallocation/PtlDvpFundAllocation001/revoke', checkObj, "PtlDvpFundAllocation001_btn_revoke", "PtlDvpFundAllocation002",function(){
+                            table.reload();//回调事件请求及回调函数
+                        });
                     });
                 });
             });

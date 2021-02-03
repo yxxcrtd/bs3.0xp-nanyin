@@ -9,11 +9,7 @@
  */
 
 package com.joyintech.tams.invest.portfolio.ptlmanagementinfo.validate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
@@ -196,6 +192,24 @@ public class PtlManagementInfo001Validator implements BeanValidator{
                 errorList.add(new ValidMessage(getMessage("PtlManagementInfo001.selectAcct")));
             }
         }
+        
+        //add by 马数凯 20210202 新增校验，组合新建页面资金账户不能是通道所使过的资金账户 start
+        Map<String, Object> param = new HashMap<String, Object>();
+        List<String> acctList = new ArrayList<String>();
+        //资金账户账号
+        for(FundAccountInfoDto fundDto : dto.getFundAccountInfoDto()){
+            acctList.add(fundDto.getAcctNo());
+        }
+        //证券账户账号
+        for(SecuritiesAccountInfoDto secDto : dto.getSecuritiesAccountInfoDto()){
+            acctList.add(secDto.getTrdAcctId());
+        }
+        param.put("busiAcctNoList", acctList);
+        param.put("F28", DictCodeListExt1.金融产品类型_投管用_通道.getValue());
+        if(ptlManagementInfo001Service.getReAcct(param) > 0){
+            errorList.add(new ValidMessage("资金账户已被合作资产使用,请重新选择资金账户"));
+        }
+        //add by 马数凯 20210202 新增校验，组合新建页面资金账户不能是通道所使过的资金账户 end
     }
 
     public void secDtoValid(PtlManagementInfoDto dto,ArrayList<ValidMessage> errorList){

@@ -1050,6 +1050,21 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             CommonUtil.isType(infRiskRdsDto.getAssetType(), DictCodeList.平安资产类型_质押式回购)){
         	infRiskRdsDto.setTradeAmtReal(finDto.getTradeAmt());
         }
+        
+        //ZGBSS-451 计划利率资产、项目类资产、买断式回购存续期交易金额取理论值start
+        if(CommonUtil.isType(infRiskRdsDto.getAssetType(), DictCodeList.平安资产类型_买断式回购)
+        	||CommonUtil.isType(infRiskRdsDto.getAssetType(), DictCodeList.平安资产类型_计划类资产_利率型)
+            || CommonUtil.isType(infRiskRdsDto.getAssetType(), DictCodeList.平安资产类型_项目类资产)) {
+        	String key = "theoryAmt";
+        	if(CommonUtil.isType(infRiskRdsDto.getAssetType(), DictCodeList.平安资产类型_买断式回购)) {
+        		key = "fpriceAmt";
+        	}
+            Object obj = dataMap.get(key);
+            if (StringUtil.isNotEmpty(obj)) {
+            	infRiskRdsDto.setAmount(new BigDecimal(obj.toString()));
+            }
+        }
+        //ZGBSS-451 计划利率资产、项目类资产、买断式回购存续期交易金额取理论值end
         return infRiskRdsDto;
     }
 
@@ -1065,9 +1080,10 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
     private void repairSet(InterfRiskRdsDto dto, Map<String, Object> dataMap) {
         // 债券中间付息、还本、到期和相应的撤销，应该用实收本息总额
         if (( CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_债券)
-                || CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_存款)||
-                CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_计划类资产_利率型)
-                || CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_项目类资产))
+                || CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_存款)
+//                || CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_计划类资产_利率型)
+//                || CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_项目类资产)
+                )
                 && (CommonUtil.isType(dto.getPs(), DictCodeList.交易方向_还本)
                         || CommonUtil.isType(dto.getPs(), DictCodeList.交易方向_到期)
                         || CommonUtil.isType(dto.getPs(), DictCodeList.交易方向_收息))) {

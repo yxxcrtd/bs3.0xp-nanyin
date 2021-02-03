@@ -107,6 +107,19 @@ public class TrdFundInvestTradeDto extends TrdProductDeal implements ProcessEnti
     private Date redCfmDate;
 
     /**
+     * 合作资产
+     */
+    private String chlFinprodId;
+
+    public String getChlFinprodId() {
+        return chlFinprodId;
+    }
+
+    public void setChlFinprodId(String chlFinprodId) {
+        this.chlFinprodId = chlFinprodId;
+    }
+
+    /**
      * 市场代码
      */
     private String finprodMarketId;

@@ -35,6 +35,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 质押式回购交易预录入新建画面：PreTrdRepoTrade002DtoValidator
@@ -143,8 +144,15 @@ public class PreTrdRepoTrade002DtoValidator implements TradeCommonValidator {
                 }
             }
         }
-
-
+        if (StringUtil.isNotEmpty(pledgeBondList)&&StringUtil.isNotEmpty(pledgeBondListDetailed)){
+           List<String> portfolioIdList =  pledgeBondList.stream().map(item->item.getPortfolioId()).collect(Collectors.toList());
+           List<String> portfolioIdOneDetailedList =  pledgeBondListDetailed.stream().map(item->item.getPortfolioId()).collect(Collectors.toList());
+           for (String portfolioId : portfolioIdList){
+              if (!portfolioIdOneDetailedList.contains(portfolioId)){
+                  errorList.add(new ValidMessage("组合分配列表与质押券列表中组合不一致"));
+              }
+           }
+        }
 
         return errorList;
     }

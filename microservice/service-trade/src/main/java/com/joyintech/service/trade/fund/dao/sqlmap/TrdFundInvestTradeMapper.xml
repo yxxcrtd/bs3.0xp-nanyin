@@ -14,6 +14,7 @@
       <result column="ASSET_RECOMMAND_ORG"       property="assetRecommandOrg"       jdbcType="VARCHAR" />
       <!-- 推荐方 新增 zhuyongkang 20191023 start -->
       <result column="TOTLE_TRADE_ID"       property="totleTradeId"       jdbcType="VARCHAR" />
+      <result column="chlFinprodId"       property="chlFinprodId"       jdbcType="VARCHAR" />
     </resultMap>
 
     <resultMap id="trdFundInvestTradeFullResultMap" type="com.joyintech.service.trade.fund.dto.TrdFundInvestTradeDto"
@@ -71,6 +72,7 @@
                 <if test="validStatus == null or validStatus == '' or validStatus == VALID_STATUS_01">
                     SELECT
                         T1.TRADE_ID, #{VALID_STATUS_01} VALID_STATUS, T1.FINPROD_TYPE2, T1.FINPROD_ID,
+                        fp1.FINPROD_NAME chlFinprodId,T1.CHL_ID,
                         T1.PS, T1.TRADE_MARKET, T1.TRADE_PLAT, T1.TRADE_MARKET_MODE,T1.TRADE_AMT, T1.PRIN_AMT,T1.SHARE_AMT, T1.CCY, T1.TRADE_DATE, T1.SETTLE_DATE,
                         T1.REMARK,T1.WORKFLOW_ID, null WORKFLOW_STATUS,T1.B_TRADE_ID,T2.ENTRUST_ID,T2.PORTFOLIO_ID,pp.PARENT_PORTFOLIO_ID,pp.PORTFOLIO_NAME
                     <!-- 推荐方 新增 zhuyongkang 20191023 start -->
@@ -82,6 +84,7 @@
                          MINUS
                          SELECT W1.* FROM WFL_TRD_PRODUCT_DEAL W1 INNER JOIN WFL_TRD_PRODUCT_DEAL W2 ON W1.B_TRADE_ID = W2.TRADE_ID WHERE W1.PS = #{PS24}) T1
                    left join TRD_PRODUCT_DEAL_ADD tpda on T1.TRADE_ID =tpda.TRADE_ID
+                    LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = T1.CHL_ID
                     LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD T2 ON T1.TRADE_ID = T2.TRADE_ID
                     LEFT JOIN PTL_PORTFOLIO pp ON pp.PORTFOLIO_ID = T2.PORTFOLIO_ID
                     <where>
@@ -94,11 +97,13 @@
 
                     SELECT
                     T1.TOTLE_TRADE_ID TRADE_ID, #{VALID_STATUS_01} VALID_STATUS, T1.FINPROD_TYPE2, T1.FINPROD_ID,
+                    fp1.FINPROD_NAME chlFinprodId,T1.CHL_ID,
                     T1.PS, T1.TRADE_MARKET, T1.TRADE_PLAT, T1.TRADE_MARKET_MODE,T1.TRADE_AMT, T1.PRIN_AMT,T1.SHARE_AMT, T1.CCY, T1.TRADE_DATE, T1.SETTLE_DATE,
                     T1.REMARK, null WORKFLOW_ID, null WORKFLOW_STATUS,T1.B_TRADE_ID,T2.ENTRUST_ID,pp.PORTFOLIO_ID,pp.PARENT_PORTFOLIO_ID,pp.PORTFOLIO_NAME
                     ,T2.ASSET_RECOMMAND_ORG
                     ,T1.TOTLE_TRADE_ID
                     FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL T1
+                    LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = T1.CHL_ID
                     LEFT JOIN WFL_TRD_DEAL_TOTAL_ADD T2 on T1.TOTLE_TRADE_ID = T2.TOTLE_TRADE_ID
                     LEFT JOIN PTL_PORTFOLIO PP ON T1.PORTFOLIO_ID = PP.PORTFOLIO_ID
                     <where>
@@ -111,6 +116,7 @@
                     UNION ALL
                     SELECT
                         T1.TRADE_ID, #{VALID_STATUS_02} VALID_STATUS, T1.FINPROD_TYPE2, T1.FINPROD_ID,
+                        fp1.FINPROD_NAME chlFinprodId,T1.CHL_ID,
                         T1.PS, T1.TRADE_MARKET, T1.TRADE_PLAT, T1.TRADE_MARKET_MODE,T1.TRADE_AMT, T1.PRIN_AMT,T1.SHARE_AMT, T1.CCY, T1.TRADE_DATE, T1.SETTLE_DATE,
                         T1.REMARK, null WORKFLOW_ID, null WORKFLOW_STATUS,T1.B_TRADE_ID,T2.ENTRUST_ID,pp.PORTFOLIO_ID,pp.PARENT_PORTFOLIO_ID,pp.PORTFOLIO_NAME
                     <!-- 推荐方 新增 zhuyongkang 20191023 start -->
@@ -120,6 +126,7 @@
                     FROM
                         TRD_PRODUCT_DEAL T1
                     left join TRD_PRODUCT_DEAL_ADD tpda on T1.TRADE_ID=tpda.TRADE_ID
+                    LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = T1.CHL_ID
                     LEFT JOIN
                         TRD_PRODUCT_DEAL_ADD T2 ON T1.TRADE_ID = T2.TRADE_ID
                     LEFT JOIN PTL_TRADE PT ON T1.TRADE_ID = PT.BUSI_NO
@@ -136,11 +143,13 @@
 
                     SELECT
                     T1.TOTLE_TRADE_ID TRADE_ID, #{VALID_STATUS_02} VALID_STATUS, T1.FINPROD_TYPE2, T1.FINPROD_ID,
+                    fp1.FINPROD_NAME chlFinprodId,T1.CHL_ID,
                     T1.PS, T1.TRADE_MARKET, T1.TRADE_PLAT, T1.TRADE_MARKET_MODE,T1.TRADE_AMT, T1.PRIN_AMT,T1.SHARE_AMT, T1.CCY, T1.TRADE_DATE, T1.SETTLE_DATE,
                     T1.REMARK, null WORKFLOW_ID, null WORKFLOW_STATUS,T1.B_TRADE_ID,T2.ENTRUST_ID,pp.PORTFOLIO_ID,pp.PARENT_PORTFOLIO_ID,pp.PORTFOLIO_NAME
                     ,T2.ASSET_RECOMMAND_ORG
                     ,T1.TOTLE_TRADE_ID
                     FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
+                    LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = T1.CHL_ID
                     LEFT JOIN TRD_DEAL_TOTAL_ADD T2 on T1.TOTLE_TRADE_ID = T2.TOTLE_TRADE_ID
                     LEFT JOIN PTL_PORTFOLIO PP ON T1.PORTFOLIO_ID = PP.PORTFOLIO_ID
                     <where>
@@ -153,6 +162,7 @@
                     UNION ALL
                     SELECT
                         T1.TRADE_ID, #{VALID_STATUS_03} VALID_STATUS, T1.FINPROD_TYPE2, T1.FINPROD_ID,
+                        fp1.FINPROD_NAME chlFinprodId,T1.CHL_ID,
                         T1.PS, T1.TRADE_MARKET, T1.TRADE_PLAT, T1.TRADE_MARKET_MODE,T1.TRADE_AMT, T1.PRIN_AMT,T1.SHARE_AMT, T1.CCY, T1.TRADE_DATE, T1.SETTLE_DATE,
                         T1.REMARK, null WORKFLOW_ID, null WORKFLOW_STATUS,T1.B_TRADE_ID,T2.ENTRUST_ID,PP.PORTFOLIO_ID,pp.PARENT_PORTFOLIO_ID,pp.PORTFOLIO_NAME
                     <!-- 推荐方 新增 zhuyongkang 20191023 start -->
@@ -162,6 +172,7 @@
                     FROM
                         TRD_PRODUCT_DEAL T1
                     left join TRD_PRODUCT_DEAL_ADD tpda on T1.TRADE_ID=tpda.TRADE_ID
+                    LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = T1.CHL_ID
                     LEFT JOIN
                         TRD_PRODUCT_DEAL_ADD T2 ON T1.TRADE_ID = T2.TRADE_ID
                     LEFT JOIN PTL_TRADE PT ON T1.TRADE_ID = PT.BUSI_NO
@@ -176,11 +187,13 @@
 
                     SELECT
                     T1.TOTLE_TRADE_ID TRADE_ID, #{VALID_STATUS_03} VALID_STATUS, T1.FINPROD_TYPE2, T1.FINPROD_ID,
+                    fp1.FINPROD_NAME chlFinprodId,T1.CHL_ID,
                     T1.PS, T1.TRADE_MARKET, T1.TRADE_PLAT, T1.TRADE_MARKET_MODE,T1.TRADE_AMT, T1.PRIN_AMT,T1.SHARE_AMT, T1.CCY, T1.TRADE_DATE, T1.SETTLE_DATE,
                     T1.REMARK, null WORKFLOW_ID, null WORKFLOW_STATUS,T1.B_TRADE_ID,T2.ENTRUST_ID,pp.PORTFOLIO_ID,pp.PARENT_PORTFOLIO_ID,pp.PORTFOLIO_NAME
                     ,T2.ASSET_RECOMMAND_ORG
                     ,T1.TOTLE_TRADE_ID
                     FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
+                    LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = T1.CHL_ID
                     LEFT JOIN TRD_DEAL_TOTAL_ADD T2 on T1.TOTLE_TRADE_ID = T2.TOTLE_TRADE_ID
                     LEFT JOIN PTL_PORTFOLIO PP ON T1.PORTFOLIO_ID = PP.PORTFOLIO_ID
                     <where>
@@ -221,6 +234,17 @@
             </if>
             <if test="type6 != null and type6 !=''">
                 AND fpt.TYPE_6 = #{type6}
+            </if>
+            <if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+                AND (tpd.CHL_ID IN
+                <foreach collection="chlFinprodIdList" item="item" index="index" open="("
+                         close=")" separator=",">
+                    <if test="(index % 998) == 0">
+                        null) OR tpd.CHL_ID in (
+                    </if>
+                    #{item}
+                </foreach>
+                )
             </if>
             <!-- 新增资产二、三、四级分类 王贵奇 2019/7/30开始 -->            
             <if test="type9 != null and type9.size()>0">

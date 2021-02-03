@@ -143,7 +143,9 @@ $(function() {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.revoke")), function(){
                 	Joyin.prompt(JoyinUtil.getLabel("TrdLendDuration001.revokeReason"),2,function(res){
                 		object.cancelRemark = res;
-                		WorkFlow.doRevokeList(basePath + 'invest/period/trdlendduration/TrdLendDuration001/revoke', object, "TrdLendDuration001_btn_revoke", "TrdLendDuration002");
+                		WorkFlow.doRevokeList(basePath + 'invest/period/trdlendduration/TrdLendDuration001/revoke', object, "TrdLendDuration001_btn_revoke", "TrdLendDuration002",function(){
+                            table.reload();//回调事件请求及回调函数
+                        });
                 	},null,200);
                 });
             });

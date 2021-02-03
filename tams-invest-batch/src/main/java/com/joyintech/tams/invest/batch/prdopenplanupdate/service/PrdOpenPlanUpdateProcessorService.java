@@ -190,4 +190,35 @@ public class PrdOpenPlanUpdateProcessorService extends BaseService{
 		return bussFinProductFeePlanDto;
 	}
 	
+	/**
+	 * 处理更新后的付费计划
+	 * @param finOpenPlanList
+	 * @param popuDto
+	 * @return
+	 * @throws Exception
+	 */
+	public List<FinCashPlan> executeFeeList(List<FinCashPlan> finFeePlanList, PrdOpenPlanUpdateDto popuDto) throws Exception {
+		// 经过处理的List<付费计划>
+		List<FinCashPlan> newFinFeePlanList = new ArrayList<FinCashPlan>();
+		for (int i = 0; i < finFeePlanList.size(); i++ ) {
+			FinCashPlan finCashPlan = finFeePlanList.get(i);			
+                finCashPlan.setCashId(popuDto.getCashId());
+                finCashPlan.setCashNum(new Long(popuDto.getCashNum() + i));
+                finCashPlan.setCashType(DictCodeListExt1.现金流一级类型_费用.getValue());
+                finCashPlan.setVdateUnadjust(finCashPlan.getVdate());
+                finCashPlan.setMdateUnadjust(finCashPlan.getMdate());
+                finCashPlan.setPayDateUnadjust(finCashPlan.getPayDate());
+                finCashPlan.setVdate(finCashPlan.getVdate());
+                finCashPlan.setMdate(finCashPlan.getMdate());
+                finCashPlan.setPayDate(finCashPlan.getPayDate());
+                finCashPlan.setFinprodId(popuDto.getFinprodId());
+                finCashPlan.setFinprodType("F16");
+                finCashPlan.setFinprodType2("F16");
+                finCashPlan.setBranch(0L);
+                newFinFeePlanList.add(finCashPlan);
+			}
+		return newFinFeePlanList;
+	}
+	
+	
 }
