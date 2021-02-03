@@ -1,0 +1,306 @@
+package com.joyintech.tams.invest.trade.transfer.netplantransfer.controller;
+
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.trade.transfer.netplantransfer.dto.NetPlanTransfer001Dto;
+import com.joyintech.tams.invest.trade.transfer.netplantransfer.dto.NetPlanTransfer002Dto;
+import com.joyintech.tams.invest.trade.transfer.netplantransfer.service.NetPlanTransfer001Service;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 净值型计划资产转仓
+ *
+ * @author liuwei
+ * @version 1.0 2019年12月23日
+ * @see NetPlanTransfer001Controller
+ * @since 1.0
+ */
+@Controller
+@PageId("NetPlanTransfer001")
+@RequestMapping("/hxbank/transfer/netplantransfer/NetPlanTransfer001")
+public class NetPlanTransfer001Controller extends BaseController {
+    /**
+     * NetPlanTransfer001Service
+     */
+    @Autowired
+    private NetPlanTransfer001Service netPlanTransfer001Service;
+    /**
+     * 注入业务主键生产类
+     */
+    @Autowired(required=false)
+    private BaseGetBusinessId baseGetBusinessId;
+
+    /**
+     * 重写init方法，加载页面
+     * {@inheritDoc}
+     */
+    @Override
+    public String init(Model model) {
+        this.setSelectOptionToModel(model, DictCode.币种);
+        NetPlanTransfer001Dto entity = new NetPlanTransfer001Dto();
+        Map<String,Object> paraMap = RequestUtil.getPageParam();
+        String workflowId = getParam(com.joyintech.framework.constant.GlobalConstant.WORKFLOW_ID);
+        //来自代办
+        if(!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)){
+            // 根据工作流与留痕处理提供的共通方法获取业务实体
+            entity = netPlanTransfer001Service.getBussinessEntityByWorkflowId(workflowId);
+            // 设置到model中
+            model.addAttribute(com.joyintech.framework.constant.GlobalConstant.WORKFLOW_ID,workflowId);
+            model.addAttribute("entityData", JsonUtils.object2Json(entity.getNetPlanTransfer002DtoList()));
+            model.addAttribute("entity", entity);
+            model.addAttribute("formTodoList", true);
+        }
+        //初始化界面
+        else {
+            entity.setTradeDate(DateUtil.platDateFromCache());
+            entity.setFinprodMarketId(paraMap.get("finprodMarketId")==null?null : (String) paraMap.get("finprodMarketId"));
+            entity.setFinprodAbbr(paraMap.get("finprodAbbr")==null?null : (String) paraMap.get("finprodAbbr"));
+            entity.setCcy(paraMap.get("ccy")==null?null : (String) paraMap.get("ccy"));
+            entity.setChlName(paraMap.get("chlName")==null?null : (String) paraMap.get("chlName"));
+            entity.setChlId(paraMap.get("chlId")==null?null : (String) paraMap.get("chlId"));
+            entity.setPosAmt(paraMap.get("posAmt")==null?null : new BigDecimal((String)paraMap.get("posAmt")));
+            entity.setUndistributedAmount(paraMap.get("undistributedAmount")==null?null : new BigDecimal((String) paraMap.get("undistributedAmount")));
+            paraMap.put("tradeDate",DateUtil.format(DateUtil.platDateFromCache()));
+            entity.setUnitValue(netPlanTransfer001Service.getUnitValue(paraMap));
+            entity.setPortfolioIdOut(paraMap.get("portfolioId")==null?null : (String) paraMap.get("portfolioId"));
+            entity.setSecAcctId(paraMap.get("secAcctId")==null?null : (String) paraMap.get("secAcctId"));
+            entity.setCalendarId(paraMap.get("calendarId")==null?null : (String) paraMap.get("calendarId"));
+            entity.setFinprodId(paraMap.get("finprodId")==null?null : (String) paraMap.get("finprodId"));
+            entity.setType7(netPlanTransfer001Service.selectType7(entity.getFinprodId()));
+            model.addAttribute("entity", entity);
+        }
+        model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_交易监控.getValue());
+        model.addAttribute("FINPROD_TYPE_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
+        model.addAttribute("PS_T01", DictCodeList.交易方向_买入.getValue());
+        return super.init(model);
+    }
+
+    /**
+     * 获取转仓信息—组合代码
+     * @return 联想下拉框实体类集合
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("getPortfolioId")
+    public List<SelectOptionDto> getPortfolioId(){
+        Map<String,Object> map = RequestUtil.getPageParam();
+        return netPlanTransfer001Service.getPortfolioId(map);
+    }
+
+    /**
+     * 添加按钮按下前check
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("addCheck")
+    public AjaxResult addCheck(@RequestBody NetPlanTransfer001Dto dto, BindingResult br) {
+        Map<String, Object> map = RequestUtil.getPageParam();
+        AjaxResult ar = new AjaxResult();
+        List<ValidMessage> errorList = new ArrayList<>();
+        boolean flag = false;
+        String message = "";
+        if (StringUtil.isNotEmpty(dto)) {
+            if (!StringUtil.isNotEmpty(dto.getPortfolioId())) {
+                errorList.add(new ValidMessage("portfolioId", "请输入组合代码！"));
+            }
+            //产品组合在列表信息已存在
+            else if(!StringUtil.isEmptyList(dto.getNetPlanTransfer002DtoList())){
+                for(NetPlanTransfer002Dto entity : dto.getNetPlanTransfer002DtoList()){
+                    if(StringUtil.equals(entity.getPortfolioId(),dto.getPortfolioId())){
+                        errorList.add(new ValidMessage("产品组合:" + dto.getPortfolioId()+"在转仓列表已存在！"));
+                        break;
+                    }
+                }
+            }
+            //交易份额验证
+            if(!StringUtil.isNotEmpty(dto.getTradeAmt())){
+                errorList.add(new ValidMessage("tradeAmt","请输入交易份额！"));
+            }
+            else if(dto.getTradeAmt().compareTo(new BigDecimal(0)) <= 0){
+                errorList.add(new ValidMessage("tradeAmt","交易份额必须大于0！"));
+            }
+            //单位净值验证
+            if(!StringUtil.isNotEmpty(dto.getUnitValue())){
+                errorList.add(new ValidMessage("unitValue","请输入单位净值！"));
+            }
+            else if(dto.getUnitValue().compareTo(new BigDecimal(0)) <= 0){
+                errorList.add(new ValidMessage("unitValue","单位净值必须大于0！"));
+            }
+            //输入的交易份额 > 剩余待转仓份额
+            if(StringUtil.isNotEmpty(dto.getTradeAmt()) && StringUtil.isNotEmpty(dto.getUndistributedAmount()) &&
+                    dto.getTradeAmt().compareTo(dto.getUndistributedAmount()) > 0){
+                errorList.add(new ValidMessage("tradeAmt","输入的交易份额不能大于" + dto.getUndistributedAmount().toString()+"!"));
+            }
+            if(!StringUtil.isNotEmpty(dto.getChlId()) && dto.getAvalibleCash() != null && StringUtil.isNotEmpty(dto.getTradeMoney()) &&
+                    dto.getTradeMoney().compareTo(dto.getAvalibleCash()) > 0){
+                flag = true;
+                message = getMessage("组合剩余现金不足，请确认是否继续添加？");
+//                errorList.add(new ValidMessage("tradeMoney","组合剩余现金不足！"));
+            }
+        }
+        if (StringUtil.isEmptyList(errorList)) {
+            if(flag) {
+                return new AjaxResult(message,MessageType.确认消息);
+            }
+            else {
+                ar.setStatuCode(HttpStatus.OK.value());
+            }
+        } else {
+            ar.setErrorList(errorList);
+            ar.setStatuCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        }
+        return ar;
+    }
+
+    /**
+     * 保存按钮点击时的check
+     *
+     * @param dto dto
+     * @param result BindingResult
+     * @return check结果
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("check")
+    public AjaxResult check(@RequestBody NetPlanTransfer001Dto dto, BindingResult result) {
+        AjaxResult ar = new AjaxResult();
+        String btnName = "";
+        if (StringUtil.equalsIgnoreCase(OPERATE_TYPE_SAVE, dto.getOperateType())) {
+            btnName = "SysCommon.save";
+        }
+        else if (StringUtil.equalsIgnoreCase(OPERATE_TYPE_SUBMIT, dto.getOperateType())) {
+            btnName = "SysCommon.submit";
+        }
+        if (!result.hasErrors()) {
+            if (StringUtil.isEmptyList(dto.getNetPlanTransfer002DtoList())) {
+                return new AjaxResult("转仓列表不能为空！",MessageType.错误消息);
+            }
+            else {
+                Map<String,BigDecimal> map = new HashMap<>();
+                List<String> list = new ArrayList<>();
+                Map<String,Object> paramMap = new HashMap<>();
+                paramMap.put("finprodId",dto.getFinprodId());
+                paramMap.put("tradeDate",DateUtil.format(dto.getTradeDate()));
+                Boolean flag = false;
+                for(NetPlanTransfer002Dto entity : dto.getNetPlanTransfer002DtoList()){
+                    if(!StringUtil.isNotEmpty(map.get("unitValue"))){
+                        map.put("unitValue",entity.getUnitValue());
+                    }
+                    else if(map.get("unitValue").compareTo(entity.getUnitValue()) != 0){
+                        flag = true;
+                        break;
+                    }
+                    if(StringUtil.isNotEmpty(map.get("unitValue"))){
+                        paramMap.put("portfolioId",entity.getPortfolioId());
+                        List<BigDecimal> unitValueList = netPlanTransfer001Service.getUnitValueList(paramMap);
+                        if(unitValueList.size() > 0 && !unitValueList.contains(entity.getUnitValue())){
+                            flag = true;
+                            break;
+                        }
+                    }
+                }
+                if(flag){
+                    ar.setData(this.getMessage("多笔转仓交易中单位净值不一致，是否确认提交？"));
+//                    return new AjaxResult("多笔转仓交易中单位净值不一致，是否确认提交？",MessageType.确认消息);
+                }
+                else {
+                    ar.setData(this.getMessage("COMMON_C_0001", this.getMessage(btnName)));
+                }
+            }
+        }
+        return ar;
+    }
+
+    /**
+     * 保存操作
+     *
+     * @param dto dto
+     * @param br BindingResult
+     * @return 结果
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("save")
+    public AjaxResult save(@RequestBody NetPlanTransfer001Dto dto, BindingResult br)
+            throws Exception {
+        if (br.hasErrors()) {
+            return new AjaxResult(br);
+        }
+        ProcessParameter<NetPlanTransfer001Dto> processParameter = new ProcessParameter<>();
+        WorkFlowParameter<NetPlanTransfer001Dto> params = new WorkFlowParameter<>();
+        params.setPageId(this.getPageId());
+        params.setElementId(dto.getElementId());
+        params.setBusinessCode(dto.getFinprodId());
+        params.setBusinessType(DictCodeList.共通业务类型_计划类资产_净值型_交易.getValue());
+        // 设置流程业务说明, entity即传入的dto
+        params.setComment(entity -> "资产代码："+dto.getFinprodId()+";资产名称："+
+                dto.getFinprodAbbr()+";交易日："+ DateUtil.format(dto.getTradeDate()));
+        processParameter.setWorkFlowParameter(params);
+        //转仓列表
+        if (BussinessConstant.SUBMIT.equals(dto.getOperateType()) &&
+                !StringUtil.isEmptyList(dto.getNetPlanTransfer002DtoList())) {
+            dto.getNetPlanTransfer002DtoList().forEach(netPlanTransfer002Dto -> {
+                netPlanTransfer001Service.genFinProductDto(netPlanTransfer002Dto,dto);
+            });
+        }
+        String msg = netPlanTransfer001Service.start(processParameter, dto);
+        return new AjaxResult(msg);
+    }
+
+    @ResponseBody
+    @RequestMapping("/selectIndex")
+    public String selectIndex() {
+        BussinessCodeParameter codeParameter = new BussinessCodeParameter();
+        codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_计划类资产_净值型_交易);
+        String index=baseGetBusinessId.buildBussinessCode(codeParameter);
+        return index;
+    }
+
+    @ResponseBody
+    @RequestMapping("/getUnitValue")
+    public AjaxResult getUnitValue() {
+        AjaxResult result = new AjaxResult();
+        Map<String,Object> paraMap = RequestUtil.getPageParam();
+        BigDecimal unitValue = netPlanTransfer001Service.getUnitValue(paraMap);
+        if(StringUtil.isNotEmpty(unitValue)){
+            result.setData(unitValue);
+        }
+        return result;
+    }
+}
