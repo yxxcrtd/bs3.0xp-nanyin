@@ -12196,6 +12196,7 @@
                 #{item.isPerpetual,jdbcType=VARCHAR} IS_PERPETUAL,
                 #{item.isFbzb,jdbcType=VARCHAR} IS_FBZB
                 <!-- add by zhangliang G06升级字段新增  end -->
+                ,#{item.privateFlag,jdbcType=VARCHAR} PRIVATE_FLAG
                 from dual
             </foreach>
         ) TEMP
@@ -12419,6 +12420,7 @@
             CII.IS_PERPETUAL	=	TEMP.IS_PERPETUAL,
             CII.IS_FBZB	=	TEMP.IS_FBZB
             <!-- add by zhangliang G06升级字段新增  end -->
+            ,CII.PRIVATE_FLAG	=	TEMP.PRIVATE_FLAG
         <!-- 未匹配到这插入 -->
         WHEN NOT MATCHED THEN 
         INSERT (ASSET_UUID, ASSET_CODE, ASSET_TYPE,
@@ -12526,6 +12528,7 @@
         IS_PERPETUAL,
         IS_FBZB
         <!-- add by zhangliang G06升级字段新增  end -->
+        ,PRIVATE_FLAG
         )
         values(
             TEMP.ASSET_UUID,
@@ -12743,6 +12746,7 @@
             TEMP.IS_PERPETUAL,
             TEMP.IS_FBZB
             <!-- add by zhangliang G06升级字段新增  end -->
+            ,TEMP.PRIVATE_FLAG
         )
     </insert>
     
