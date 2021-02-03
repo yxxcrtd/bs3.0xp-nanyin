@@ -1191,7 +1191,11 @@ public class TrdPlanNetInvestTradeService extends BaseService<TrdPlanNetInvestTr
 			if(StringUtil.equals(ps, DictCodeList.交易方向_申购确认.getValue())){
 				dto.setShareAmt(ArithmeticUtil.divide(dto.getTradeAmt(), unitCprice, 2));
 			}else if(StringUtil.equals(ps, DictCodeList.交易方向_赎回确认.getValue())){
-				dto.setTradeAmt(ArithmeticUtil.multiply(dto.getShareAmt(), unitCprice));
+			    if(dto.getShareAmt()==null) {
+                    dto.setShareAmt(ArithmeticUtil.divide(dto.getTradeAmt(), unitCprice,2));
+                }else{
+                    dto.setTradeAmt(ArithmeticUtil.multiply(dto.getShareAmt(), unitCprice));
+                }
 			}
 			resultMap = trdAvailableCashQueryService.getAvailableCash(param);
 			dto.setBussTrdAvailableCashQueryavalibleCash(resultMap.get("T_0"));
@@ -1203,7 +1207,7 @@ public class TrdPlanNetInvestTradeService extends BaseService<TrdPlanNetInvestTr
 
 	/**
 	 * 根据资产代码查询持有金额
-	 * @param param
+	 * @param finprodId
 	 * @return
 	 */
 	public BigDecimal queryHoldAmt(String finprodId) {
@@ -1214,7 +1218,7 @@ public class TrdPlanNetInvestTradeService extends BaseService<TrdPlanNetInvestTr
 	
 	/**
 	 * 根据资产代码查询发行金额
-	 * @param param
+	 * @param finprodId
 	 * @return
 	 */
 	public BigDecimal queryIssueAmt(String finprodId) {

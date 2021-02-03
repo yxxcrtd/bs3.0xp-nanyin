@@ -53,8 +53,12 @@ $(function() {
         		tradeAmt = JoyinMath.doAdd(tradeAmt, table.getAllRows()[i].tradeAmt, 2);
         		shareAmt = JoyinMath.doAdd(shareAmt, table.getAllRows()[i].shareAmt, 2);
         	}
-        	$('#tradeAmt').val(tradeAmt).trigger('blur').change();
-        	$('#shareAmt').val(shareAmt).trigger('blur').change();
+        	$('#tradeAmt').val(tradeAmt).trigger('change');
+        	$('#shareAmt').val(shareAmt).trigger('change');
+        	var ps = $('#ps').val();
+        	if(ps==ps_T19 || ps==ps_T05){
+        	    $('#tradeAmtHid').val(tradeAmt).trigger('change');
+        	}
         }
 		});
     
@@ -98,7 +102,7 @@ $(function() {
     
     function feeAmtRedemDistribution(){
     	var feeAmtPay = 0;
-    	var feeAmtPayAll = $("#feeAmtPay").val() || 0; 
+    	var feeAmtPayAll = $("#feeAmtRedem").val() || 0;
 		 var shareAmtAll = $("#shareAmt").val();
 		 if(shareAmtAll){
 			 var rownum = 0;
@@ -156,6 +160,43 @@ $(function() {
 			}
 		}
     }
+
+    function shareAmtFenpei(){
+        //单位净价
+        var tradeAmt = $('#tradeAmt').val();
+        var shareAmt = $('#shareAmt').val();
+        var ps = $('#ps').val();
+        if(shareAmt && (ps == ps_T05 || ps == ps_T19) ){
+            for (var i = 0; i < table.getAllRows().length; i++) {
+                    //交易金额
+                    var tradeAmtTmp = JoyinMath.doAdd(table.getAllRows()[i].tradeAmt, 0, 2);
+                    //申购确认，
+                    var shareAmtTmp = JoyinMath.doMul(JoyinMath.doDiv(tradeAmtTmp, tradeAmt, 2),shareAmt,2);
+                    table.renderRow(i, {'shareAmt' : shareAmtTmp});
+
+            }
+        }
+     }
+
+
+     function tradeAmtFenpei(){
+             //单位净价
+             var tradeAmt = $('#tradeAmt').val();
+             var shareAmt = $('#shareAmt').val();
+             var ps = $('#ps').val();
+             if(tradeAmt && ps == ps_T19){
+                 for (var i = 0; i < table.getAllRows().length; i++) {
+
+                         //交易 份额
+                         var shareAmtTmp = JoyinMath.doAdd(table.getAllRows()[i].shareAmt, 0, 2);
+
+                         //赎回确认，交易金额= 份额/总份额*总金额
+                         var tradeAmtTmp = JoyinMath.doMul(JoyinMath.doDiv(shareAmtTmp, shareAmt, 2),tradeAmt,2);
+                         table.renderRow(i, {'tradeAmt' : tradeAmtTmp});
+
+                 }
+             }
+          }
 	
     function saveOrSubmit(operateType) {
     	// 划款指令隐藏时，自动生成划款指令信息
@@ -304,19 +345,33 @@ $(function() {
             if(ps == ps_T05){
                 var tradeAmtHid = $('#tradeAmtHid').val();
                 // 申购确认，调整交易份额  交易份额不应显示反算理论值 yjm 20190726
-                if(!shareAmt && unitCprice != null && unitCprice != '' && unitCprice != 0){
-                    $('#shareAmt').val(tradeAmtHid/unitCprice).trigger('blur');
+                if( unitCprice != null && unitCprice != '' && unitCprice != 0){
+                    $('#shareAmt').val(tradeAmtHid/unitCprice).trigger('change');
                 }
             }else if((ps == ps_T19 || ps == ps_T24)){
+                var isDisabled = $("#tradeAmt").prop("disabled");
                 var tradeAmt = $('#tradeAmt').val();
-                if(unitCprice != null && unitCprice != '' && shareAmt){
-                    $('#tradeAmt').val(shareAmt*unitCprice).trigger('blur');
-                    $('#tradeAmtHid').val(shareAmt*unitCprice).trigger('blur');
-                    $('#feeAmtRedem').change();
-                }else if(unitCprice != null && unitCprice != '' && unitCprice != 0 && tradeAmt){
-
-                    $('#shareAmt').val(tradeAmt/unitCprice).trigger('blur');
+                var redFee = $('#feeAmtRedem').val();
+                if(isDisabled){
+                    if(unitCprice != null && unitCprice != '' && unitCprice != 0 && tradeAmt){
+                        $('#shareAmt').val( JoyinMath.doDiv(JoyinMath.doMinus(tradeAmt,redFee,2) ,unitCprice,2)  ).trigger('change');
+                    }
+                }else{
+                    if(unitCprice != null && unitCprice != '' && shareAmt){
+                        $('#tradeAmt').val(shareAmt*unitCprice).trigger('blur');
+                        $('#tradeAmtHid').val(shareAmt*unitCprice).trigger('blur');
+                        $('#feeAmtRedem').change();
+                    }
                 }
+//                var tradeAmt = $('#tradeAmt').val();
+//                if(unitCprice != null && unitCprice != '' && shareAmt){
+//                    $('#tradeAmt').val(shareAmt*unitCprice).trigger('blur');
+//                    $('#tradeAmtHid').val(shareAmt*unitCprice).trigger('blur');
+//                    $('#feeAmtRedem').change();
+//                }else if(unitCprice != null && unitCprice != '' && unitCprice != 0 && tradeAmt){
+//
+//                    $('#shareAmt').val(tradeAmt/unitCprice).trigger('blur');
+//                }
             }
         });
         /**
@@ -348,6 +403,7 @@ $(function() {
         $('#feeAmtRedem').change(function(){
             var feeAmtRedem = $('#feeAmtRedem').val();
             var tradeAmt = $('#tradeAmtHid').val();
+            var unitCprice = $('#unitCprice').val();
             //var channelFee = $('#channelFee').val();
             if(!feeAmtRedem){
                 feeAmtRedem = 0;
@@ -355,17 +411,26 @@ $(function() {
             /*if(!channelFee){
                 channelFee=0
             }*/
-            if(tradeAmt){
-                $('#tradeAmt').val(Number(tradeAmt)-Number(feeAmtRedem)).trigger('blur');
+
+            var isDisabled = $("#tradeAmt").prop("disabled");
+
+            if(isDisabled){
+                // 如果金额不允许编辑 则影响的是份额
+                $('#shareAmt').val(JoyinMath.doDiv(JoyinMath.doMinus(tradeAmt,feeAmtRedem,2) ,unitCprice,2)  ).trigger('change');
                 feeAmtRedemDistribution();
-                tradeAmtDistribution();
+
+            }else{
+                    $('#tradeAmt').val(Number(tradeAmt)-Number(feeAmtRedem)).trigger('blur');
+                    feeAmtRedemDistribution();
+                    tradeAmtDistribution();
             }
+
         });
         
         /**
          * 交易金额
          */
-        $('#tradeAmt').change(function(){
+        $('#tradeAmt').on('blur',function(){
             var feeAmtPay = $('#feeAmtPay').val();
             var tradeAmt = $('#tradeAmt').val();
             var unitCprice = $('#unitCprice').val();
@@ -373,6 +438,13 @@ $(function() {
             if(unitCprice && $('#tradeAmt').val() && ps != ps_T19 && ps != ps_T24){
                 $('#shareAmt').val($('#tradeAmt').val()/unitCprice).trigger('blur');
             }
+
+            // 如果是赎回确认 并且是输入金额
+            if(ps == ps_T19){
+                // 输入份额 多组合列表中重新计算
+                tradeAmtFenpei();
+            }
+
         });
         //需求提出不要反算金额 yjm start 20191029
         /*$('#shareAmt').change(function(){
@@ -385,7 +457,13 @@ $(function() {
         	}
         });*/
         //需求提出不要反算金额 yjm end 20191029
-        
+
+        $('#shareAmt').change(function(){
+            if($('#ps').val() == ps_T05 || $('#ps').val() == ps_T19){
+                // 输入份额 多组合列表中重新计算
+                shareAmtFenpei();
+            }
+        });
         
         $('#expectedArrivalDate').change(function(){
             var expectedArrivalDate = $('#expectedArrivalDate').val();
