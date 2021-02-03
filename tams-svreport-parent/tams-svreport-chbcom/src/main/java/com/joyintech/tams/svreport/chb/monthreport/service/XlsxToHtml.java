@@ -93,7 +93,7 @@ public class XlsxToHtml {
      public static String getExcelInfo(Workbook wb,boolean isWithStyle){
          
          StringBuffer sb = new StringBuffer();
-         for(int i=0;i<3;i++){
+         for(int i=0;i<2;i++){
         	 Sheet sheet = wb.getSheetAt(i);//获取第一个Sheet的内容
              int lastRowNum = sheet.getLastRowNum();
              Map<String, String> map[] = getRowSpanColSpanMap(sheet);
