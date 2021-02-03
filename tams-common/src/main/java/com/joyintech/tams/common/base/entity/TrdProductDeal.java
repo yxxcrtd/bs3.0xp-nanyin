@@ -1344,4 +1344,80 @@ public class TrdProductDeal extends BaseEntity {
     public void setMaxTradeamt(BigDecimal maxTradeamt) {
         this.maxTradeamt = maxTradeamt;
     }
+    // 合并by华兴 start
+    /**
+     * 拆分前交易编号
+     */
+    private String splitTradeId;
+
+    /**
+     * 是否转仓交易
+     */
+    private String isSwapTransaction;
+    //update by xy for huaxin 20200311 start
+    /**
+     * 是否需要生成转让交易
+     */
+    private String isNeedAssign;
+    /**
+     * 待转让本金
+     */
+    private BigDecimal assignPrinamt;
+    /**
+     * 待转让利息
+     */
+    private BigDecimal assignIntamt;
+    /**
+     * 利息分支序号
+     */
+    private Long liBranch;
+
+    public String getSplitTradeId() {
+        return splitTradeId;
+    }
+
+    public void setSplitTradeId(String splitTradeId) {
+        this.splitTradeId = splitTradeId;
+    }
+
+    public String getIsSwapTransaction() {
+        return isSwapTransaction;
+    }
+
+    public void setIsSwapTransaction(String isSwapTransaction) {
+        this.isSwapTransaction = isSwapTransaction;
+    }
+
+    public String getIsNeedAssign() {
+        return isNeedAssign;
+    }
+
+    public void setIsNeedAssign(String isNeedAssign) {
+        this.isNeedAssign = isNeedAssign;
+    }
+
+    public BigDecimal getAssignPrinamt() {
+        return assignPrinamt;
+    }
+
+    public void setAssignPrinamt(BigDecimal assignPrinamt) {
+        this.assignPrinamt = assignPrinamt;
+    }
+
+    public BigDecimal getAssignIntamt() {
+        return assignIntamt;
+    }
+
+    public void setAssignIntamt(BigDecimal assignIntamt) {
+        this.assignIntamt = assignIntamt;
+    }
+
+    public Long getLiBranch() {
+        return liBranch;
+    }
+
+    public void setLiBranch(Long liBranch) {
+        this.liBranch = liBranch;
+    }
+    // 合并by华兴 end
 }

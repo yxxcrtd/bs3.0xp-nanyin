@@ -1242,4 +1242,79 @@ public class WflTrdProductDeal extends WflTrdProductDealKey {
     public void setTgBusiType(String tgBusiType) {
         this.tgBusiType = tgBusiType;
     }
+
+    // 合并by华兴 start
+    /**
+     * 待转让本金
+     */
+    private BigDecimal assignPrinamt;
+    /**
+     * 待转让利息
+     */
+    private BigDecimal assignIntamt;
+    /**
+     * 付息分支序号
+     */
+    private Long liBranch;
+    /**
+     * 是否需要生成转让交易
+     */
+    private String isNeedAssign;
+
+    /**
+     * 拆分前交易编号
+     */
+    private String splitTradeId;
+
+    /**zhangnn for huaxing 2020/05/07**/
+    private String outOfAccount;
+
+    public BigDecimal getAssignPrinamt() {
+        return assignPrinamt;
+    }
+
+    public void setAssignPrinamt(BigDecimal assignPrinamt) {
+        this.assignPrinamt = assignPrinamt;
+    }
+
+    public BigDecimal getAssignIntamt() {
+        return assignIntamt;
+    }
+
+    public void setAssignIntamt(BigDecimal assignIntamt) {
+        this.assignIntamt = assignIntamt;
+    }
+
+    public Long getLiBranch() {
+        return liBranch;
+    }
+
+    public void setLiBranch(Long liBranch) {
+        this.liBranch = liBranch;
+    }
+
+    public String getIsNeedAssign() {
+        return isNeedAssign;
+    }
+
+    public void setIsNeedAssign(String isNeedAssign) {
+        this.isNeedAssign = isNeedAssign;
+    }
+
+    public String getSplitTradeId() {
+        return splitTradeId;
+    }
+
+    public void setSplitTradeId(String splitTradeId) {
+        this.splitTradeId = splitTradeId;
+    }
+
+    public String getOutOfAccount() {
+        return outOfAccount;
+    }
+
+    public void setOutOfAccount(String outOfAccount) {
+        this.outOfAccount = outOfAccount;
+    }
+    // 合并by华兴 end
 }
