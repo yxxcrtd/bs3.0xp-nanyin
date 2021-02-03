@@ -789,8 +789,8 @@ public class ChbMonthReport001Service extends SvrCommonExportService<ChbMonthRep
 			}if(detail.getXgbottombalance()==null){
 				detail.setXgbottombalance(BigDecimal.ZERO);
 			}
-			if(detail.getProdnetamount()==null){
-				detail.setProdnetamount(BigDecimal.ZERO);
+			if(detail.getProdpayamount()==null){
+				detail.setProdpayamount(BigDecimal.ZERO);
 			}
 			/**add by  dongxiangyang  新加字段  end*/
 
@@ -833,8 +833,8 @@ public class ChbMonthReport001Service extends SvrCommonExportService<ChbMonthRep
             if(detail.getXgbottombalance()!=null&&(BigDecimal.ZERO).compareTo(detail.getXgbottombalance())==0){
 				detail.setXgbottombalance(null);
 			}
-			if(detail.getProdnetamount()!=null&&(BigDecimal.ZERO).compareTo(detail.getProdnetamount())==0){
-				detail.setProdnetamount(null);
+			if(detail.getProdpayamount()!=null&&(BigDecimal.ZERO).compareTo(detail.getProdnetamount())==0){
+				detail.setProdpayamount(null);
 			}
 			/**add by  dongxiangyang  新加字段  end*/
 

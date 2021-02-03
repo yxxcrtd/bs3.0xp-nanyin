@@ -277,36 +277,36 @@ spring:
 #    redissonEnabled: false
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.76:1521/orcl
-    username: zgtams1225yh
-    password: zgtams1225yh
+    username: zgtams1225yh_bak
+    password: zgtams1225yh_bak
     reportSqlldrDatabaseName: 192.168.90.76:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.90.76:1521/orcl
-  sqldiruserName: zgtams1225yh
-  sqldirpassword: zgtams1225yh
+  sqldiruserName: zgtams1225yh_bak
+  sqldirpassword: zgtams1225yh_bak
 shiro:
   ssoEnable: true
   allowUrl: /service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
 base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.76:1521/orcl
-    username: zgtams1225yh
-    password: zgtams1225yh
+    username: zgtams1225yh_bak
+    password: zgtams1225yh_bak
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.76:1521/orcl
-    username: zgtams1225yh
-    password: zgtams1225yh
+    username: zgtams1225yh_bak
+    password: zgtams1225yh_bak
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.76:1521/orcl
-    username: zgtams1225yh
-    password: zgtams1225yh
+    username: zgtams1225yh_bak
+    password: zgtams1225yh_bak
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.76:1521/orcl
-    username: zgtams1225yh
-    password: zgtams1225yh
+    username: zgtams1225yh_bak
+    password: zgtams1225yh_bak
 log:
   path: /home/tams/logs/tams
   level: info
