@@ -263,17 +263,17 @@
     <result column="BANK_SEC_PERPETUAL" property="bankSecPerpetual" jdbcType="VARCHAR" />
     <result column="BANK_SEC_PREFER" property="bankSecPrefer" jdbcType="VARCHAR" />
     <result column="BANK_SEC_KZZQ" property="bankSecKzzq" jdbcType="VARCHAR" />
-        <result column="BANK_SEC_ZXZQ" property="bankSecZxzq" jdbcType="VARCHAR" />
-        <result column="ISUNLISTED" property="isunlisted" jdbcType="VARCHAR" />
-        <result column="IS_BZHPJ" property="isBzhpj" jdbcType="VARCHAR" />
-        <result column="CHB_ISSUER_ID" property="chbIssuerId" jdbcType="VARCHAR" />
-        <result column="CHB_MANAGER_ID" property="chbManagerId" jdbcType="VARCHAR" />
-        <result column="CHB_FINANCIER_ID" property="chbFinancierId" jdbcType="VARCHAR" />
-        <result column="PERPETUAL_FLAG" property="perpetualFlag" jdbcType="VARCHAR" />
-        <result column="OPTION_FLAG" property="optionFlag" jdbcType="VARCHAR" />
-        <result column="IS_BJSZQ" property="isBjszq" jdbcType="VARCHAR" />
-        <result column="IS_PERPETUAL" property="isPerpetual" jdbcType="VARCHAR" />
-        <result column="IS_FBZB" property="isFbzb" jdbcType="VARCHAR" />
+    <result column="BANK_SEC_ZXZQ" property="bankSecZxzq" jdbcType="VARCHAR" />
+    <result column="ISUNLISTED" property="isunlisted" jdbcType="VARCHAR" />
+    <result column="IS_BZHPJ" property="isBzhpj" jdbcType="VARCHAR" />
+    <result column="CHB_ISSUER_ID" property="chbIssuerId" jdbcType="VARCHAR" />
+    <result column="CHB_MANAGER_ID" property="chbManagerId" jdbcType="VARCHAR" />
+    <result column="CHB_FINANCIER_ID" property="chbFinancierId" jdbcType="VARCHAR" />
+    <result column="PERPETUAL_FLAG" property="perpetualFlag" jdbcType="VARCHAR" />
+    <result column="OPTION_FLAG" property="optionFlag" jdbcType="VARCHAR" />
+    <result column="IS_BJSZQ" property="isBjszq" jdbcType="VARCHAR" />
+    <result column="IS_PERPETUAL" property="isPerpetual" jdbcType="VARCHAR" />
+    <result column="IS_FBZB" property="isFbzb" jdbcType="VARCHAR" />
 
     </resultMap>
     <resultMap id="PsbcBaseResultMap"
