@@ -419,7 +419,7 @@ public class SVReportGlobalConstant {
     /**
      * 系统类别：01中债一二期,02人行,03中债三期，04信批（可以填多个以，隔开）
      */
-//    public static final String SVR_SYSTEM_TYPE="SVR_SYSTEM_TYPE";
+    public static final String SVR_SYSTEM_TYPE="SVR_SYSTEM_TYPE";
 
     /**
      * 产品登记编码取值主表：01-CHB_PRDRESIST_CODE,02-CHB_PRD_DECLARE_INFO

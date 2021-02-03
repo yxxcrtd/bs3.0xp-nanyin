@@ -23,6 +23,7 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.ExportUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.FilterInformationDetailMapper;
 import com.joyintech.tams.common.base.dao.FilterInformationMapper;
 import com.joyintech.tams.common.base.entity.*;
@@ -133,6 +134,9 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 	private static final String[] INTERF_DATASOURCE = new String[] {"CHB_ASSET_INFO","CHB_BOT_AST_POS"};
 	//投资者交易
 	private static final String CHB_PRD_DEAL = "CHB_PRD_DEAL";
+
+	//贷款明细维护
+	private static final String CHB_LOAN_DETAIL_INFO = "CHB_LOAN_DETAIL_INFO";
 	// 资产要素表表头合并单元格数据key(起始下标-结束下标) value(存值)
 	private static final Map<String, String> headerMap = new HashMap<String, String>();
 
@@ -2056,7 +2060,22 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             		}else if(CHB_ASSET_INFO_LIST.contains(tableName)&&"1".equals(headerNum)){
             			//单表头的资产基本信息
             			assetType=nameMap.get(sheetName);
-            		}
+            		}else if (StringUtil.equals(CHB_LOAN_DETAIL_INFO, tableName)){
+						try {
+							int each = 0;
+							String eachProportion = strList.get(4) ;
+							for(String code : eachProportion.split(":")){
+								each = each + Integer.parseInt(code);
+							}
+							if(each!=100){
+								checkResult.add(new ExcelValidDto(columnList.get(4), String.valueOf(j + 1), "各比例分割后合计必须等于100",
+										"各比例"));
+							}
+						}catch(Exception e){
+							checkResult.add(new ExcelValidDto(columnList.get(4), String.valueOf(j + 1),"各比例分割后合计必须等于100",
+									"各比例"));
+						}
+					}
             		List<Integer> indexList = new ArrayList<Integer>();
             		if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
             			for (int i = 1; i < 7; i ++) {
