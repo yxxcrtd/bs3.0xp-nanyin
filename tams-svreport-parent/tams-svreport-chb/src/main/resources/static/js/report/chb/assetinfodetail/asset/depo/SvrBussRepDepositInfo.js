@@ -85,8 +85,8 @@
         initRepDeposit();
 
         //存款类型联动
-        $("#SvrBussRepDepositInfoDto_repDepoType").change(function(){
-         var  depoType=$("#SvrBussRepDepositInfoDto_repDepoType").val();
+        $("#svrBussRepDepositInfoDto_repDepoType").change(function(){
+         var  depoType=$("#svrBussRepDepositInfoDto_repDepoType").val();
          if(depoType!='06'){
              //结构性存款挂钩标的类别/结构性存款挂钩标。该字段清空，且置灰不可修改
              $("#svrBussRepDepositInfoDto_repTargetType").val('').attr("disabled",true);

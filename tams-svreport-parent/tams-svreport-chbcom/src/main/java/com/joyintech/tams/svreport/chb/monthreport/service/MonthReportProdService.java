@@ -1448,10 +1448,12 @@ public class MonthReportProdService {
 
 
 		//合规新产品期末存续只数//（只）
-		if(StringUtil.equals(DictCodeList.是否_中债_是.getValue(),pos.getIsFhxgcp())){
+		if(StringUtil.equals(DictCodeList.是否_中债_是.getValue(),pos.getIsFhxgcp())&&
+				(null==flag.get(calcDurationprodcounts)||flag.get(calcDurationprodcounts))){
 			result.get(code).calcxgdurationprodcounts(pos.getProdid());
 		}
-		if(StringUtil.equals(DictCodeList.是否_中债_是.getValue(),pos.getIsFhxgcp())){
+		if(StringUtil.equals(DictCodeList.是否_中债_是.getValue(),pos.getIsFhxgcp())&&(
+				null==flag.get(Balance)||flag.get(Balance))){
 			//合规新产品期末余额
 			result.get(code).setXgbalance(result.get(code).getXgbalance().add(pos.getEndamtsumOth()));
 		}
