@@ -1,0 +1,1 @@
+delete  from rsk_event_item_rule where event_code in ( 'EVENT_ID_JGZQGZHJ_05','EVENT_ID_JGZQGZHJ_06');
