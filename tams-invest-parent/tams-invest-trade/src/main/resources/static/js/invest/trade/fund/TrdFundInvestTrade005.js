@@ -693,6 +693,19 @@ $(function () {
          */
         $('#feeAmtPay,#commissionFee,#feeAmtPayPurchase').change(function () {
             var ps = $('#ps').val();
+
+            if(Number(getPayWithTradeFee())>= Number($('#tradeAmt').val())){
+                if(ps == ps_T05){
+                    $('#feeAmtPay').val('').trigger('change');
+                    Joyin.error("申购确认：各项费用和不能大于等于交易金额");
+                    return;
+                }else if(ps == ps_T19){
+                    $(this).val('').trigger('change');
+                    Joyin.error("赎回确认：各项费用和不能大于等于交易金额");
+                    return;
+                }
+            }
+
              if (ps == ps_T05 || ps == ps_T18) {
                 var tradeAmtHid2 = $('#tradeAmtHid2').val();
                 if (tradeAmtHid2) {

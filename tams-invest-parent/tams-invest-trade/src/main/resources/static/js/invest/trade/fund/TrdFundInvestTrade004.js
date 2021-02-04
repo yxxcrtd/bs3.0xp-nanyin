@@ -1,4 +1,4 @@
-//@ sourceURL=TrdFundInvestTrade002.js
+//@ sourceURL=TrdFundInvestTrade004.js
 /**
  * 基金投资交易新建
  */
