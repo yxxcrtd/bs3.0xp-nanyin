@@ -610,7 +610,7 @@ $(function () {
                 && $("#tradeMarket").val() != TRADE_PLACE_04) {
                 $('#trdInvestPersonInfo_counterId').val('').trigger('change');
                 $("#trdInvestPersonInfo_counterId").prop('disabled', false);
-            } else if ((ps != ps_mr && ps != ps_mc) && !$("#chlId").val()) {
+            } else if ((ps != ps_mr && ps != ps_mc) ) {
                 Joyin.ajaxJson(basePath + 'invest/trade/fund/TrdFundInvestTrade002/selectManeger', {issuer: data.issuer},
                     function (result) {
                         $("#trdInvestPersonInfo_counterId").textSelect('setValue', result.id);
