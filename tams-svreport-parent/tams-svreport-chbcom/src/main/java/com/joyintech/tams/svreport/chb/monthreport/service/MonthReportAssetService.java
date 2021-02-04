@@ -995,8 +995,8 @@ public class MonthReportAssetService {
         					&& !detail2.getKey().endsWith("_c")
         					&& !detail2.getKey().equals(detail.getKey())){
         				balance = balance.add(detail2.getValue().getBalance());
-        				bottombalance = bottombalance.add(detail2.getValue().getXgbottombalance());
-						xgbalance = xgbalance.add(detail2.getValue().getBalance());
+        				bottombalance = bottombalance.add(detail2.getValue().getBottombalance());
+						xgbalance = xgbalance.add(detail2.getValue().getXgbalance());
 						xgbottombalance = xgbottombalance.add(detail2.getValue().getXgbottombalance());
         			}
         		}

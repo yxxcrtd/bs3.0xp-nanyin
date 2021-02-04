@@ -10,6 +10,10 @@
  
 package com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.framework.json.CustomDateDeserialize;
 import com.joyintech.framework.validation.annotation.Amount;
 import com.joyintech.framework.validation.annotation.Length;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -17,6 +21,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.RepAssetAstBill;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 非标资产(票据或信用)报送信息
@@ -27,6 +32,185 @@ import java.math.BigDecimal;
  * @since 1.0
  */
 public class SvrBussRepAssetAstBillInfoDto extends RepAssetAstBill{
+
+    /**
+     * 金融产品代码
+     */
+    private String repFinprodId;
+
+
+
+    /**
+     * 类型
+     */
+    private String repAstBillType;
+
+    /**
+     * 数量
+     */
+    private Integer repNum;
+
+    /**
+     * 合计金额
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal repAmtSum;
+
+
+
+
+    /**
+     * 行业
+     */
+    private String repIndustry;
+
+    /**
+     * 行业二级分类
+     */
+    private String repIndustryLevel2;
+
+    /**
+     * 贴现利率
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal repDiscRate;
+
+    /**
+     * 备注
+     */
+    private String repRemark;
+
+    /**
+     * 取得 金融产品代码
+     * @return 金融产品代码
+     */
+    public String getRepFinprodId() {
+        return repFinprodId;
+    }
+
+    /**
+     * 设置 金融产品代码
+     * @param repFinprodId 金融产品代码
+     */
+    public void setRepFinprodId(String repFinprodId) {
+        this.repFinprodId = repFinprodId == null ? null : repFinprodId.trim();
+    }
+
+
+
+    /**
+     * 取得 类型
+     * @return 类型
+     */
+    public String getRepAstBillType() {
+        return repAstBillType;
+    }
+
+    /**
+     * 设置 类型
+     * @param repAstBillType 类型
+     */
+    public void setRepAstBillType(String repAstBillType) {
+        this.repAstBillType = repAstBillType == null ? null : repAstBillType.trim();
+    }
+
+    /**
+     * 取得 数量
+     * @return 数量
+     */
+    public Integer getRepNum() {
+        return repNum;
+    }
+
+    /**
+     * 设置 数量
+     * @param repNum 数量
+     */
+    public void setRepNum(Integer repNum) {
+        this.repNum = repNum;
+    }
+
+    /**
+     * 取得 合计金额
+     * @return 合计金额
+     */
+    public BigDecimal getRepAmtSum() {
+        return repAmtSum;
+    }
+
+    /**
+     * 设置 合计金额
+     * @param repAmtSum 合计金额
+     */
+    public void setRepAmtSum(BigDecimal repAmtSum) {
+        this.repAmtSum = repAmtSum;
+    }
+
+
+    /**
+     * 取得 行业
+     * @return 行业
+     */
+    public String getRepIndustry() {
+        return repIndustry;
+    }
+
+    /**
+     * 设置 行业
+     * @param repIndustry 行业
+     */
+    public void setRepIndustry(String repIndustry) {
+        this.repIndustry = repIndustry == null ? null : repIndustry.trim();
+    }
+
+    /**
+     * 取得 行业二级分类
+     * @return 行业二级分类
+     */
+    public String getRepIndustryLevel2() {
+        return repIndustryLevel2;
+    }
+
+    /**
+     * 设置 行业二级分类
+     * @param repIndustryLevel2 行业二级分类
+     */
+    public void setRepIndustryLevel2(String repIndustryLevel2) {
+        this.repIndustryLevel2 = repIndustryLevel2 == null ? null : repIndustryLevel2.trim();
+    }
+
+    /**
+     * 取得 贴现利率
+     * @return 贴现利率
+     */
+    public BigDecimal getRepDiscRate() {
+        return repDiscRate;
+    }
+
+    /**
+     * 设置 贴现利率
+     * @param repDiscRate 贴现利率
+     */
+    public void setRepDiscRate(BigDecimal repDiscRate) {
+        this.repDiscRate = repDiscRate;
+    }
+
+    /**
+     * 取得 备注
+     * @return 备注
+     */
+    public String getRepRemark() {
+        return repRemark;
+    }
+
+    /**
+     * 设置 备注
+     * @param repRemark 备注
+     */
+    public void setRepRemark(String repRemark) {
+        this.repRemark = repRemark == null ? null : repRemark.trim();
+    }
+
 
     /**
      * <意义，目的和功能，以及可能被用到的地方>
