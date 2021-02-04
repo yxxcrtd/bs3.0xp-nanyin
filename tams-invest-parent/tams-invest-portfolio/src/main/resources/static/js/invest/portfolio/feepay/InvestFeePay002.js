@@ -271,8 +271,8 @@ $(function() {
 						if (!result || result == 'undefined') {
 							$('#InvestFeePay002_positionStartDate').prop("disabled", false);
 						}
-						var endDate = $('#InvestFeePay002_positionEndDateHide').val();
-						$('#InvestFeePay002_positionEndDate').val(endDate).trigger('change');
+						//var endDate = $('#InvestFeePay002_positionEndDateHide').val();
+						//$('#InvestFeePay002_positionEndDate').val(endDate).trigger('change');
 					});
 			} else {
 				// 账户维护费 获取计提开始日
@@ -285,8 +285,8 @@ $(function() {
 								isNew = false;
 							}
 							$('#InvestFeePay002_positionStartDate').val(result).trigger('change');
-							var endDate = $('#InvestFeePay002_positionEndDateHide').val();
-							$('#InvestFeePay002_positionEndDate').val(endDate).trigger('change');
+							//var endDate = $('#InvestFeePay002_positionEndDateHide').val();
+							//$('#InvestFeePay002_positionEndDate').val(endDate).trigger('change');
 							$('#InvestFeePay002_positionStartDate').prop("disabled", true);
 						});
 				}else{
