@@ -197,10 +197,10 @@
         SELECT
             T1.CCY ccy,
             T1.CHL_ID chlId,
-        <if test="assetType == PINAN_ASSET_TYPE_F01 ">
-            T2.ASSET_TYPE,
             T3.FINPROD_ID finprodId,
             T3.FINPROD_MARKET_ID finprodMarketId,
+        <if test="assetType == PINAN_ASSET_TYPE_F01 ">
+            T2.ASSET_TYPE,
             T3.FINPROD_ABBR finprodName,
             T1.TRADE_MARKET tradeMarket,
             DECODE(T2.ASSET_TYPE, #{PINAN_ASSET_TYPE_F01}, SUM(NVL(T1.ENTRUST_NUM * 100, 0) - NVL(T4.FINISHED_AMT * 100, 0)),
@@ -213,8 +213,6 @@
             NVL2(T2.SETTLE_SPREED, CONCAT('0',T2.SETTLE_SPREED+1), NULL) settleSpeed
         </if>
         <if test="assetType == PINAN_ASSET_TYPE_F06">
-            T3.FINPROD_ID finprodId,
-            T3.FINPROD_MARKET_ID finprodMarketId,
             T3.FINPROD_ABBR finprodName,
             SUM(NVL(T1.ENTRUST_AMT, 0)) entrustAmt,
             DECODE(T2.ASSET_TYPE, #{PINAN_ASSET_TYPE_F01}, SUM(NVL(T1.ENTRUST_NUM * 100, 0) - NVL(T4.FINISHED_AMT * 100, 0)),
