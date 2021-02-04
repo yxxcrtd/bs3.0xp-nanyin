@@ -25,9 +25,9 @@
       temp_data as (
       select t.*,
       --/*case when ligValSceBre >=0 then null else ligValFlowMonBrePre end*/ ligValFlowMonBrePre as ligValFlowMonBre,
-             case when ligValSceBre >=0 then '-' else to_char(ligValFlowMonBrePre) end as ligValFlowMonBre,
+             case when ligValSceBre >=0 then '-' else to_char(ligValFlowMonBrePre) end as ligValFlowMonBre, 
       --/*case when medValSceBre >=0 then null else medValFlowMonBrePre end*/ medValFlowMonBrePre as medValFlowMonBre,
-             case when medValSceBre >=0 then '-' else to_char(medValFlowMonBrePre) end as medValFlowMonBre,
+             case when medValSceBre >=0 then '-' else to_char(medValFlowMonBrePre) end as medValFlowMonBre, 
       --/*case when heaValSceBre >=0 then null else heaValFlowMonBrePre end*/ heaValFlowMonBrePre as heaValFlowMonBre
              case when heaValSceBre >=0 then '-' else to_char(heaValFlowMonBrePre) end as heaValFlowMonBre
       from(select
@@ -83,6 +83,11 @@
       so.object_name,
       t.object_id,
       so.object_name))t)
+      select temp.*, 
+      decode(substr(ligValFlowMonBreTemp,1,1),'.','0'||ligValFlowMonBreTemp,ligValFlowMonBreTemp) ligValFlowMonBre,
+      decode(substr(medValFlowMonBreTemp,1,1),'.','0'||medValFlowMonBreTemp,medValFlowMonBreTemp) medValFlowMonBre,
+      decode(substr(heaValFlowMonBreTemp,1,1),'.','0'||heaValFlowMonBreTemp,heaValFlowMonBreTemp) heaValFlowMonBre
+      from (
       select  baseDate,
     testStartDate,
     testEndDate,
@@ -106,21 +111,21 @@
     sum(ligValRiskSlowBre) ligValRiskSlowBre,
     --case when round(sum(ligValFlowMonBre),2)>=0 then '-' else to_char(round(abs(sum(ligValFlowMonBre)),4)) end as ligValFlowMonBre,
       --case when round(sum(decode(ligValFlowMonBre,'-',0,ligValFlowMonBre)),2)>=0 then '-' else
-      to_char(round(abs(sum(decode(ligValFlowMonBre,'-',0,ligValFlowMonBre))),4)) as ligValFlowMonBre,
+      to_char(round(abs(sum(decode(ligValFlowMonBre,'-',0,ligValFlowMonBre))),4)) as ligValFlowMonBreTemp,
     sum(ligValLeverRate) ligValLeverRate,
     sum(medValSceBre) medValSceBre,
     sum(medValRiskSlowBreOne) medValRiskSlowBreOne,
     sum(medValRiskSlowBre) medValRiskSlowBre,
     --case when round(sum(medValFlowMonBre),2)>=0 then '-' else to_char(round(abs(sum(medValFlowMonBre)),4)) end as medValFlowMonBre,
       --
-      to_char(round(abs(sum(decode(medValFlowMonBre,'-',0,medValFlowMonBre))),4)) as medValFlowMonBre,
+      to_char(round(abs(sum(decode(medValFlowMonBre,'-',0,medValFlowMonBre))),4)) as medValFlowMonBreTemp,
     sum(medValLeverRate) medValLeverRate,
     sum(heaValSceBre) heaValSceBre,
     sum(heaValRiskSlowBreOne) heaValRiskSlowBreOne,
     sum(heaValRiskSlowBre) heaValRiskSlowBre,
     --case when round(sum(heaValFlowMonBre),2)>=0 then '-' else to_char(round(abs(sum(heaValFlowMonBre)),4)) end as heaValFlowMonBre,
       --
-      to_char(round(abs(sum(decode(heaValFlowMonBre,'-',0,heaValFlowMonBre))),4)) as heaValFlowMonBre,
+      to_char(round(abs(sum(decode(heaValFlowMonBre,'-',0,heaValFlowMonBre))),4)) as heaValFlowMonBreTemp,
     sum(heaValLeverRate) heaValLeverRate
     from temp_data t group by grouping sets(flowTestId,(baseDate,
     testStartDate,
@@ -132,7 +137,8 @@
     portfolioName,
     finprodId,
     finprodName)) 
-    order by portfolioId desc 
+    order by portfolioId desc
+    )temp
 	</select>
 	<!-- 根据测试代码得到测试明细信息 --> 
 	<select id="queryDetByTestId" resultType="com.joyintech.service.risk.stresstestmanage.flowrisksstresstestview.dto.FlowRiskStressTestView002Dto" parameterType="Map">
