@@ -1114,10 +1114,8 @@ public class MonthReportProdService {
 				buildAmt(pos, flag, result, ChbMonthReportPrdConstants.TYZS_JRJGZCGLCP);
 				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.TYZS_JRJGZCGLCP);
 			}
-
 			// 7.3  养老理财产品
 			if (ProdConstants.IS_YLLCCP.equals(pos.getIsYllccp())) { // 金融机构资产管理产品
-
 				buildAmt(pos, flag, result, ChbMonthReportPrdConstants.YLLCCP);
 				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.YLLCCP);
 			}
@@ -1216,6 +1214,15 @@ public class MonthReportProdService {
 
 					deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.HHL).
 							setBankprofit(deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.HHL).getBankprofit().add(pos.getBankamt()));
+					}
+					// 7.3  养老理财产品
+				}
+
+				if (ProdConstants.IS_YLLCCP.equals(pos.getIsYllccp())) { // 金融机构资产管理产品
+					result.get(ChbMonthReportPrdConstants.YLLCCP).setBankprofit(result.get(ChbMonthReportPrdConstants.YLLCCP).getBankprofit().add(pos.getBankamt()));
+					if(null!=deptMap&&null!=deptMap.get(pos.getInstitutionCode())){
+						deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.YLLCCP).
+								setBankprofit(deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.YLLCCP).getBankprofit().add(pos.getBankamt()));
 					}
 				}
 			}
