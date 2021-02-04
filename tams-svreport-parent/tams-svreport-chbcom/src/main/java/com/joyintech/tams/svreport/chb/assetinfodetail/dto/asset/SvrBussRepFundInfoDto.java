@@ -36,7 +36,7 @@ public class SvrBussRepFundInfoDto extends RepFund {
     /**
      * 资产代码
      */
-    private String assetId;
+    private String assetCode;
 
     /**
      * 资产名称
@@ -122,12 +122,12 @@ public class SvrBussRepFundInfoDto extends RepFund {
         return serialVersionUID;
     }
 
-    public String getAssetId() {
-        return assetId;
+    public String getAssetCode() {
+        return assetCode;
     }
 
-    public void setAssetId(String assetId) {
-        this.assetId = assetId;
+    public void setAssetCode(String assetCode) {
+        this.assetCode = assetCode;
     }
 
     public String getAssetName() {

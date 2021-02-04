@@ -91,15 +91,21 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 					if(StringUtil.isNotEmpty(dto.getLoanTransferorId()) && dto.getLoanTransferorId().length() > 6){
 						errorList.add(new ValidMessage("loanTransferorId", getMessage("贷款转让方机构代码最大长度为6位!")));
 					}
-					if(StringUtil.isNotEmpty(dto.getLoanTransferorName()) && dto.getLoanTransferorName().length() > 300){
-						errorList.add(new ValidMessage("loanTransferorName", getMessage("贷款转让方机构名称最多只能输入300个汉字!")));
+
+					try{
+						if(StringUtil.isNotEmpty(dto.getLoanTransferorName()) && dto.getLoanTransferorName().getBytes("GBK").length > 500){
+							errorList.add(new ValidMessage("loanTransferorName", getMessage("贷款转让方机构名称最多只能输入500个字节!")));
+						}
+						if(StringUtil.isNotEmpty(dto.getLoanContractOrgId()) &&  dto.getLoanContractOrgId().length() > 6){
+							errorList.add(new ValidMessage("loanContractOrgId", getMessage("贷款合同原始发放机构代码最大长度为6位!")));
+						}
+						if(StringUtil.isNotEmpty(dto.getLoanContractOrgName()) &&  dto.getLoanContractOrgName().getBytes("GBK").length > 500){
+							errorList.add(new ValidMessage("loanContractOrgName", getMessage("贷款合同原始发放机构名称最多只能输入500个字节!")));
+						}
+					}catch(Exception e){
+						errorList.add(new ValidMessage("loanTransferorName", getMessage("数据转换异常")));
 					}
-					if(StringUtil.isNotEmpty(dto.getLoanContractOrgId()) &&  dto.getLoanContractOrgId().length() > 6){
-						errorList.add(new ValidMessage("loanContractOrgId", getMessage("贷款合同原始发放机构代码最大长度为6位!")));
-					}
-					if(StringUtil.isNotEmpty(dto.getLoanContractOrgName()) &&  dto.getLoanContractOrgName().length() > 300){
-						errorList.add(new ValidMessage("loanContractOrgName", getMessage("贷款合同原始发放机构名称最多只能输入300个汉字!")));
-					}
+
 
 					if(!StringUtil.isNotEmpty(dto.getLoanTransferorId())){
 						errorList.add(new ValidMessage("loanTransferorId", getMessage("BUSS_COM_E_0038",

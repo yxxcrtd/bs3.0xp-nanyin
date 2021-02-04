@@ -10,6 +10,7 @@ import com.joyintech.tams.common.base.dao.BaseMapper;
 import com.joyintech.tams.common.base.entity.ChbLoanDetailInfo;
 import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
 import com.joyintech.tams.svreport.interf.chb.loandetailinfo.dao.ChbLoanDetailInfoInterfMapper;
@@ -150,6 +151,14 @@ public class SvrLoanDetailInfoFileImpService extends FileImpService {
                         loanInfo.put("PBC_ASSET_TYPE2",typeMap.get("pbcAssetType2"));
                     }
                 }
+                /****单体数据判断**/
+                if(StringUtil.equals(loanInfo.get("ASSET_TYPE"), DictCodeListExt3.中债_中债贷款分类_收益权.getValue())) {
+                    int each = 0;
+                    for (String code : loanInfo.get("EACH_PROPORTION").split(":")) {
+                        each = each + Integer.parseInt(code);
+                    }
+                    loanInfo.put("EACH_PROPORTION_SUM",each+"");
+                }
 
             }
         } finally {
@@ -158,6 +167,11 @@ public class SvrLoanDetailInfoFileImpService extends FileImpService {
         // add by zhangmingming 从CHB_ASSET_INFO中读入人行资产一级分类和人行资产二级分类，用于数据校验 20191224 end
         checkData(loanDetailInfoList, interfFile.getFilename(),
                 InterfDefine.贷款明细信息接口数据.getCode(), InterfDefine.贷款明细信息接口数据.getCode(),BUSSINESSKEY,DUPLICATIED_LIST);
+
+
+
+
+
         //待入库为空则直接返回
         if (CollectionUtils.isEmpty(loanDetailInfoList)){
             return "success";

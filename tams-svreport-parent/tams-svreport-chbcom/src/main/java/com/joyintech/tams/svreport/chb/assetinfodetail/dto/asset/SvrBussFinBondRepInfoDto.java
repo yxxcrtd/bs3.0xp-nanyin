@@ -104,10 +104,6 @@ public class SvrBussFinBondRepInfoDto extends RepAssetBond{
      */
     private String tradeMarket;
 
-    /**
-     * 发行方式 01 公开发行/02 非公开发行
-     */
-    private String issueMode;
 
     /**
      * 债卷评级
@@ -143,13 +139,6 @@ public class SvrBussFinBondRepInfoDto extends RepAssetBond{
         this.isPerpetual = isPerpetual;
     }
 
-    public String getIssueMode() {
-        return issueMode;
-    }
-
-    public void setIssueMode(String issueMode) {
-        this.issueMode = issueMode;
-    }
 
     public String getSecMainGrade() {
         return secMainGrade;
