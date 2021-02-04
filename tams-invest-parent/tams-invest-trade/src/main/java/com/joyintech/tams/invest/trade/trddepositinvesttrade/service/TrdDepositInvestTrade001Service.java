@@ -23,6 +23,7 @@ import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.trade.trddepositinvesttrade.dto.TrdDepositInvestTrade001Dto;
+import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.poi.ss.usermodel.Cell;
@@ -30,10 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 存款类投资交易service
@@ -76,6 +74,14 @@ public class TrdDepositInvestTrade001Service extends CommonExportService<TrdDepo
              map.replace("ps", Arrays.asList(ps));
          }else{
              map.replace("ps", ps);
+         }
+         //多选下拉框处理（合作资产）
+         Object chlFinprodIdObj = map.get("chlFinprodId");
+         if (chlFinprodIdObj != null){
+             map.put("chlFinprodIdList",
+                     StringUtil.splitToList(GlobalConstant.COMMA,(String) chlFinprodIdObj));
+         }else {
+             map.put("chlFinprodIdList",new ArrayList<>());
          }
          String[] portfolioId = null;
          if(map.get("portfolioId") != null && !(map.get("portfolioId").toString().isEmpty())){

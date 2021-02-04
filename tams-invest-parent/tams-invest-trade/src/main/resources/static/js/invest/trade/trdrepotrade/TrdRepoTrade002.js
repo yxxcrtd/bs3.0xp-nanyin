@@ -1952,9 +1952,11 @@
         
         $('#secAcctId').on("change", function () {
                 var repoType = $("#repoType").val();
+                var tradeMarket = $('#tradeMarket').val();
                 if ($("#secAcctId").val()) {
                     $("#chlId").val('').prop("disabled", true);
-                } else if ((!etrEntrust || !etrEntrust.chlId) && repoType == TARGET_BACK_TYPE_H01) {
+                } else if ((!etrEntrust || !etrEntrust.chlId) 
+                		&& (repoType == TARGET_BACK_TYPE_H01 || (tradeMarket ==TRADE_PLACE_01 && repoType == TARGET_BACK_TYPE_H04))) {
                     $("#chlId").prop("disabled", false);
                 }
                 if ($('#secAcctId').val()) {

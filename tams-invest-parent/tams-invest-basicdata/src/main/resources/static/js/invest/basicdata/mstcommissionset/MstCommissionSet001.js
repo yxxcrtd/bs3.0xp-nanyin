@@ -170,8 +170,8 @@
         Joyin.ajaxJson(basePath + 'invest/basicdata/mstcommissionset/MstCommissionSet002/check',
                 data, function(result) {
                     Joyin.dialog(JoyinUtil.getLabel("MstCommissionSet002.edit"), basePath
-                            + "invest/basicdata/mstcommissionset/MstCommissionSet002/init", "90%",
-                            "80%", data, function() {
+                            + "invest/basicdata/mstcommissionset/MstCommissionSet002/init", "98%",
+                            "98%", data, function() {
                                 table.reload();
                             });
                 });

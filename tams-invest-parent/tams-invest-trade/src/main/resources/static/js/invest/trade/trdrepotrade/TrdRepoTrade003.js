@@ -423,7 +423,7 @@
             if (window && window.BussRepoSecPtl && window.BussRepoSecPtl["bussRepoSecPtl"]) {
                 // 质押券信息恢复显示
                 if($("#ps").val()=='04'){
-                    $("#Ps04Repo").show();
+                    $("#Ps04Repo").hide();
                 }
                 
                 window.BussRepoSecPtl["bussRepoSecPtl"].showRepo();
@@ -2000,7 +2000,7 @@
             
             if($('#ps').val()=="04"){
                 if($('#repoType').val()!="H02"){
-                    $('#Ps04Repo').show();
+                    $('#Ps04Repo').hide();
                 }
 
                 if( ($('#tradeMarket').val() == "01" && $('#repoType').val()=="H04")

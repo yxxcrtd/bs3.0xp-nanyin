@@ -492,21 +492,8 @@ SELECT fpd.TRADE_ID businessCode,
 	</select>
 
 	<select id="pledgeSummaryFindPage" resultType="com.joyintech.service.portfolio.portfolioanalysis.ptlrepopledgesearch.dto.PtlPldgeSummaryDto">
-		with bondvredit as (
-		SELECT * FROM (
 		select
-		T1.O_CODE,
-		T1.O_TYPE,
-		T1.GRADE_RESULT,
-		row_number() over(partition by T1.O_CODE,T1.O_TYPE order by GRADE_RESULT desc) mm
-		from MST_BOND_CREDIT_RATING T1
-		where T1.GRADE_DATE &lt;= to_date(#{searchDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
-		) WHERE mm =1
-		)
-		select
-		T3.*,
-		T1.GRADE_RESULT gradeTypezt,
-		T2.GRADE_RESULT gradeTypezx
+		T3.*
 		from (
 		select
 		INFO.PORTFOLIO_ID portfolioId,
@@ -594,6 +581,45 @@ SELECT fpd.TRADE_ID businessCode,
 		fp.FINPROD_MARKET_ID,
 		fp.FINPROD_ABBR,
 		fp.REGIST_ORG
+		
+		union all
+		
+		/*债券中间还本*/
+		SELECT
+		/*汇总交易.组合代码 组合*/
+		TOTAL.PORTFOLIO_ID,
+		pp.PORTFOLIO_NAME,
+		fp.FINPROD_MARKET_ID,
+		fp.FINPROD_ABBR AS FINPROD_NAME,
+		fp.REGIST_ORG,
+		-1 * sum(nvl(ROUND(TOTAL.PRIN_AMT,2), 0)) prinAmt, /*持仓券面*/
+		-1 * sum(nvl(ROUND(TOTAL.PRIN_AMT,2), 0)) canpledgeAmt, /*可质押券面*/
+		0 pledgeAmt/*已质押券面*/
+		FROM TRD_FIN_PRODUCT_DEAL_TOTAL TOTAL
+		LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL PA_TOTAL ON TOTAL.TOTLE_TRADE_ID = PA_TOTAL.TOTLE_TRADE_ID
+		inner JOIN PTL_PORTFOLIO pp ON pp.PORTFOLIO_ID = TOTAL.PORTFOLIO_ID
+		LEFT JOIN FIN_PRODUCT fp ON fp.FINPROD_ID = TOTAL.FINPROD_ID
+		/*检索条件*/
+		WHERE
+		1 = 1
+		and PA_TOTAL.PA_BUSS_TYPE = '36'
+		AND (TOTAL.IS_CANCEL  IS NULL OR TOTAL.IS_CANCEL = 'N')
+		AND TOTAL.TRADE_STATUS = '01'
+		and total.PORTFOLIO_ID is not null
+		/*组合代码*/
+		<if test="groupcode != null and groupcode.size() > 0">
+			and total.PORTFOLIO_ID in
+			<foreach collection="groupcode" item="item" index="index" open="(" close=")" separator=",">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		/*查询日期*/
+		and TOTAL.SETTLE_DATE &lt;= date'2020-01-09'
+		group by TOTAL.PORTFOLIO_ID,
+		pp.PORTFOLIO_NAME,
+		fp.FINPROD_MARKET_ID,
+		fp.FINPROD_ABBR,
+		fp.REGIST_ORG
 
 		union all
 		/*回购交易：正回购、逆回购*/
@@ -604,8 +630,8 @@ SELECT fpd.TRADE_ID businessCode,
 		FIN_PRODUCT.FINPROD_ABBR AS FINPROD_NAME,
 		FIN_PRODUCT.REGIST_ORG,
 		0 prinAmt, /*持仓券面*/
-		decode(TRD_PRODUCT_DEAL.FINPROD_TYPE2, 'F05', FIN_DEAL_PLEDGE.PLEDGE_NUMBER * 100, 0) canpledgeAmt, /*可质押券面*/
-		decode(TRD_PRODUCT_DEAL.FINPROD_TYPE2, 'F04', FIN_DEAL_PLEDGE.PLEDGE_NUMBER * 100, 'F02', FIN_DEAL_PLEDGE.PLEDGE_NUMBER * 100, 0) pledgeAmt /*已质押券面*/
+		decode(TRD_PRODUCT_DEAL.FINPROD_TYPE2, 'F05', FIN_DEAL_PLEDGE.PLEDGE_NUMBER * 100,'F04', -FIN_DEAL_PLEDGE.PLEDGE_NUMBER * 100, 0) canpledgeAmt, /*可质押券面*/
+		decode(TRD_PRODUCT_DEAL.FINPROD_TYPE2, 'F02', FIN_DEAL_PLEDGE.PLEDGE_NUMBER * 100, 0) pledgeAmt /*已质押券面*/
 		FROM TRD_PRODUCT_DEAL
 		LEFT JOIN TRD_PRODUCT_DEAL_ADD ON TRD_PRODUCT_DEAL.TRADE_ID = TRD_PRODUCT_DEAL_ADD.TRADE_ID
 		LEFT JOIN PA_TRD_PRODUCT_DEAL ON TRD_PRODUCT_DEAL.TRADE_ID = PA_TRD_PRODUCT_DEAL.TRADE_ID
@@ -634,8 +660,8 @@ SELECT fpd.TRADE_ID businessCode,
 		T6.FINPROD_ABBR AS FINPROD_NAME,
 		T6.REGIST_ORG,
 		0 prinAmt, /*持仓券面*/
-		decode(T1.FINPROD_TYPE2,'F05', -1 *T5.PLEDGE_NUMBER * 100, 0) canpledgeAmt, /*可质押券面*/
-		decode(T1.FINPROD_TYPE2, 'F04', -1 *T5.PLEDGE_NUMBER * 100, 'F02', -1 *T5.PLEDGE_NUMBER * 100, 0) pledgeAmt /*已质押券面*/
+		decode(T1.FINPROD_TYPE2, 'F05', -1 *T5.PLEDGE_NUMBER * 100, 'F04', T5.PLEDGE_NUMBER * 100, 0) canpledgeAmt, /*可质押券面*/
+		decode(T1.FINPROD_TYPE2, 'F02', -1 *T5.PLEDGE_NUMBER * 100, 0) pledgeAmt /*已质押券面*/
 		FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
 		inner JOIN PTL_PORTFOLIO T2 ON T2.PORTFOLIO_ID = T1.PORTFOLIO_ID
 		LEFT JOIN FIN_TRADE_PRODUCT T4  ON T1.FINPROD_ID = T4.FINPROD_ID
@@ -897,6 +923,41 @@ SELECT fpd.TRADE_ID businessCode,
 		fp.FINPROD_MARKET_ID,
 		fp.FINPROD_ABBR,
 		fp.REGIST_ORG
+
+		union all
+
+		/*标准券入库-出库*/
+		SELECT
+		TSF.PORTFOLIO_ID,
+		PP.PORTFOLIO_NAME,
+		fp.FINPROD_MARKET_ID,
+		fp.FINPROD_ABBR AS FINPROD_NAME,
+		fp.REGIST_ORG,
+		0 AS prinAmt ,
+		0 AS canpledgeAmt, /*持仓券面*/
+		sum(NVL(decode(TSF.PS, '01',TSFD.AMT,'02',-TSFD.AMT,0), 0) * 100) pledgeAmt/*已质押券面*/
+		FROM TRD_STASEC_FLOW TSF
+		LEFT JOIN TRD_STASEC_FLOW_DETAIL TSFD ON TSF.SEQNO = TSFD.SEQNO
+		inner JOIN PTL_PORTFOLIO PP
+		ON PP.PORTFOLIO_ID = TSF.PORTFOLIO_ID
+		LEFT JOIN FIN_PRODUCT fp
+		ON fp.FINPROD_ID         = TSFD.FINPROD_ID
+		<where>
+			/*组合代码*/
+			<if test="groupcode != null and groupcode.size() > 0">
+				TSF.PORTFOLIO_ID in
+				<foreach collection="groupcode" item="item" index="index" open="(" close=")" separator=",">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			/*查询日期*/
+			and TSF.CDATE &lt;= to_date(#{searchDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
+		</where>
+		group by TSF.PORTFOLIO_ID,
+		pp.PORTFOLIO_NAME,
+		fp.FINPROD_MARKET_ID,
+		fp.FINPROD_ABBR,
+		fp.REGIST_ORG
 		) INFO
 		LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID=info.PORTFOLIO_ID
 		LEFT JOIN PA_FIN_PRODUCT PFP ON PFP.FINPROD_ID=FP.FINPROD_ID
@@ -907,11 +968,7 @@ SELECT fpd.TRADE_ID businessCode,
 		INFO.FINPROD_NAME,
 		INFO.REGIST_ORG
 		)T3
-		left join bondvredit T1 ON T1.O_CODE = T3.secid AND T1.O_TYPE = '01'
-		left join bondvredit T2 ON T2.O_CODE = T3.secid AND T2.O_TYPE = '02'
-		where prinAmt <![CDATA[<>]]> 0
-		or canpledgeAmt <![CDATA[<>]]> 0
-		or pledgeAmt <![CDATA[<>]]> 0
-		or remainAmt <![CDATA[<>]]> 0
+		where
+		pledgeAmt <![CDATA[<>]]> 0
 	</select>
 </mapper>

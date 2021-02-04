@@ -118,12 +118,16 @@
                         			}
                             	 });
                             	}else{
-                            		if(operateType === 'save') {
+                            		Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/check', object, function(result) {
+                                        Joyin.confirm(result.data, function() {
+                    				if(operateType === 'save') {
                                         WorkFlow.doSaveList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_save");
                                     }
                                     else {
                                         WorkFlow.doSubmitList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_submit");
                                     }
+                                   });                                          
+                    			 });
                             	}
                             	return;
                             });
@@ -176,12 +180,16 @@
                                 			}
                                 		});
                                 	}else{
-                                		if(operateType === 'save') {
+                                		Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/check', object, function(result) {
+                                            Joyin.confirm(result.data, function() {
+                        				if(operateType === 'save') {
                                             WorkFlow.doSaveList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_save");
                                         }
                                         else {
                                             WorkFlow.doSubmitList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_submit");
                                         }
+                                       });                                          
+                        			 });
                                 	}
                                 });
                                     /*if(operateType === 'save') {
@@ -232,12 +240,16 @@
                 		}
                 		});
                 	}else{
-                		if(operateType === 'save') {
+                		Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/check', object, function(result) {
+                            Joyin.confirm(result.data, function() {
+        				if(operateType === 'save') {
                             WorkFlow.doSaveList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_save");
                         }
                         else {
                             WorkFlow.doSubmitList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_submit");
                         }
+                       });                                          
+        			 });
                 	}
                 });
                     /*if(operateType === 'save') {

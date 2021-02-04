@@ -120,10 +120,12 @@ $(function(){
     	var obj=$.serializeToObject('#TrdInvestDealQuery001_searchForm');
     	obj.beginDate=$('#TrdInvestDealQuery001_settleDate').startDate();
     	obj.endDate=$('#TrdInvestDealQuery001_settleDate').endDate();
-    	obj.chlFinprodId=$('#chlFinprodId').val();
     	if(!$("#TrdInvestDealQuery001_finprodType2").val() == ''){
     		obj.finprodType2=$("#TrdInvestDealQuery001_finprodType2").val().join(",");
     	}
+    	if ($("#chlFinprodId").val()) {
+        	obj.chlFinprodId = $("#chlFinprodId").val().join(",");
+        }
 		obj.portfolioId=$("#portfolioId").val();
 		if(obj.portfolioId){
 			obj.portfolioId=obj.portfolioId.join(",");

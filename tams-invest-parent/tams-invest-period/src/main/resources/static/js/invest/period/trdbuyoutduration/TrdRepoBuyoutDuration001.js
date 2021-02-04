@@ -20,6 +20,9 @@
         } else {
             result.ps = null;
         }
+        if ($("#chlFinprodId").val()) {
+        	result.chlFinprodId = $("#chlFinprodId").val().join(",");
+        }
 
         if($("#tradeDate").val()) {
             result.tradeDateStart = $("#tradeDate").startDate();
@@ -69,6 +72,7 @@
                 }
             }
             , {field: 'portfolioName', sortField:"PORTFOLIO_ID",width: 200, title: '组合名称'}
+            , {field: 'chlFinprodId', sortField:"chlFinprodId",width: 200, title: '合作资产'}
             //yujiaping 2020-11-14 ZGBUGTWO-215 买断式回购存续期查询结果去掉回购类型start
            /* , {field: 'type6String', sortField:"TYPE_6", width: 200, title: '回购类型'}*/
             //yujiaping 2020-11-24 ZGBUGTWO-215 买断式回购存续期查询结果去掉回购类型end

@@ -9,11 +9,13 @@
  */
  
 package com.joyintech.tams.invest.trade.trdplanrateinvesttrade.service;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,6 +50,14 @@ public class TrdPlanRateInvestTrade001Service extends CommonExportService<TrdPla
             map.replace("portfolioId", Arrays.asList(portfolioId));
         }else{
             map.replace("portfolioId", portfolioId);
+        }
+        //多选下拉框处理（合作资产）
+        Object chlFinprodIdObj = map.get("chlFinprodId");
+        if (chlFinprodIdObj != null){
+            map.put("chlFinprodIdList",
+                    StringUtil.splitToList(GlobalConstant.COMMA,(String) chlFinprodIdObj));
+        }else {
+            map.put("chlFinprodIdList",new ArrayList<>());
         }
         return restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME
             + "/TrdPlanRateInvestTrade/findPage",map,TrdPlanRateInvestTradeDto.class);

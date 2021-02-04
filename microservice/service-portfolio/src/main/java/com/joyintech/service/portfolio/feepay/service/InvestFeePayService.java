@@ -727,9 +727,9 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_交易手续费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_佣金.getValue())) {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_佣金.getValue());
-        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_经手费.getValue())){
+        } else if (feeType != null && feeType.equals(DictCodeListExt1.费用品种类型_经手费.getValue())){
             map.put("feeType1", DictCodeListExt1.一次性费用类型_经手费.getValue());
-        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_结算费.getValue())){
+        } else if (feeType != null && feeType.equals(DictCodeListExt1.费用品种类型_结算费.getValue())){
             map.put("feeType1", DictCodeListExt1.一次性费用类型_结算费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_账户维护费.getValue())) {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_账户维护费.getValue());
@@ -750,9 +750,9 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_交易手续费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_佣金.getValue())) {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_佣金.getValue());
-        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_经手费.getValue())){
+        } else if (feeType != null && feeType.equals(DictCodeListExt1.费用品种类型_经手费.getValue())){
             map.put("feeType1", DictCodeListExt1.一次性费用类型_经手费.getValue());
-        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_结算费.getValue())){
+        } else if (feeType != null && feeType.equals(DictCodeListExt1.费用品种类型_结算费.getValue())){
             map.put("feeType1", DictCodeListExt1.一次性费用类型_结算费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_账户维护费.getValue())) {
             BigDecimal balance = BigDecimal.ZERO;
@@ -862,9 +862,9 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_交易手续费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_佣金.getValue())) {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_佣金.getValue());
-        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_经手费.getValue())){
+        } else if (feeType != null && feeType.equals(DictCodeListExt1.费用品种类型_经手费.getValue())){
             map.put("feeType1", DictCodeListExt1.一次性费用类型_经手费.getValue());
-        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_结算费.getValue())){
+        } else if (feeType != null && feeType.equals(DictCodeListExt1.费用品种类型_结算费.getValue())){
             map.put("feeType1", DictCodeListExt1.一次性费用类型_结算费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_账户维护费.getValue())) {
             Map<String, Object> map2 = new HashMap<String, Object>();
@@ -938,9 +938,9 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_交易手续费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_佣金.getValue())) {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_佣金.getValue());
-        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_经手费.getValue())){
+        } else if (feeType != null && feeType.equals(DictCodeListExt1.费用品种类型_经手费.getValue())){
             map.put("feeType1", DictCodeListExt1.一次性费用类型_经手费.getValue());
-        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_结算费.getValue())){
+        } else if (feeType != null && feeType.equals(DictCodeListExt1.费用品种类型_结算费.getValue())){
             map.put("feeType1", DictCodeListExt1.一次性费用类型_结算费.getValue());
         }else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_账户维护费.getValue())) {
             Map<String, Object> map2 = new HashMap<String, Object>();
@@ -1095,9 +1095,9 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_交易手续费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_佣金.getValue())) {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_佣金.getValue());
-        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_经手费.getValue())){
+        } else if (feeType != null && feeType.equals(DictCodeListExt1.费用品种类型_经手费.getValue())){
             map.put("feeType1", DictCodeListExt1.一次性费用类型_经手费.getValue());
-        } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_结算费.getValue())){
+        } else if (feeType != null && feeType.equals(DictCodeListExt1.费用品种类型_结算费.getValue())){
             map.put("feeType1", DictCodeListExt1.一次性费用类型_结算费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_账户维护费.getValue())) {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_账户维护费.getValue());

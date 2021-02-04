@@ -1,39 +1,32 @@
 package com.joyintech.service.risk.creditmanagement.ceorg.service;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.tams.common.base.dao.CreditLinesDealMapper;
-import com.joyintech.tams.common.base.entity.CreditLinesDeal;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.joyintech.tams.common.base.dao.CreditLinesMapper;
-import com.joyintech.tams.common.base.entity.CreditLines;
-import com.alibaba.fastjson.serializer.BigDecimalCodec;
-import com.joyintech.framework.base.BaseService;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.TreeNode;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.risk.creditmanagement.ceorg.dao.CeOrgMapper;
 import com.joyintech.service.risk.creditmanagement.ceorg.dto.CreditLinesOrgDto;
 import com.joyintech.service.risk.creditmanagement.ceorg.dto.CreditMstInfoDto;
-import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
+import com.joyintech.tams.common.base.dao.CreditLinesDealMapper;
+import com.joyintech.tams.common.base.dao.CreditLinesMapper;
+import com.joyintech.tams.common.base.entity.CreditLines;
+import com.joyintech.tams.common.base.entity.CreditLinesDeal;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -263,7 +256,8 @@ public class CeOrg002Service extends BaseService<CreditMstInfoDto> {
 				creditLinesDeal.setSeqno(seqno);
 				creditLinesDealMapper.insert(creditLinesDeal);
 			}
-			return ceOrgMapper.selectCreditLinesHap(param);
+			BigDecimal res = ceOrgMapper.selectCreditLinesHap(param);
+			return res == null? new BigDecimal("0") : res;
 		}else{
 			return new BigDecimal("0");
 		}

@@ -18,6 +18,9 @@
             result.arrivalDateStart = $("#arrivalDate").startDate();
             result.arrivalDateEnd = $("#arrivalDate").endDate();
         }
+        if ($("#chlFinprodId").val()) {
+        	result.chlFinprodId = $("#chlFinprodId").val().join(",");
+        }
         return result;
     };
 
@@ -52,6 +55,7 @@
                     }
                 }}
             , {field: 'finprodMarketName', width: 200, title: '资产名称', sortField: 'finprodMarketName'}
+            , {field: 'chlFinprodId', width: 200, title: '合作资产', sortField: 'chlName'}
             , {field: 'qty', width: 200, title: '剩余本金', type: 'number', sortField: 'qty'}
             , {field: 'returnAmount', width: 200, title: '还本金额', type: 'number', sortField: 'returnAmount'}
             , {field: 'yield', width: 200, title: '预期收益率%', type: 'number', sortField: 'yield'}

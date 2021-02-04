@@ -1053,7 +1053,27 @@ public class VatDrawProcessorBService {
                     // 获取 增值税账务明细余额
                     TaxBokBalance taxBalanceDto = taxBokBalanceMap.get(keyDto);
                     if (taxBalanceDto == null) {
-                        continue;
+                        //针对交易所债券买入后第二天全部卖出，taxBalanceDto为null，预估冲不完特殊处理
+                        if(StringUtil.isNotEmpty(cfConfigs.get("EXCHANGE_ALLSELL_DEAL")) &&
+                                StringUtil.equals("01",cfConfigs.get("EXCHANGE_ALLSELL_DEAL"))){
+                            if(StringUtil.isNotEmpty(infoDto.getBusiId()) &&
+                                    (infoDto.getBusiId().contains("SH") ||infoDto.getBusiId().contains("SZ")) &&
+                                    (infoDto.getTableId().contains("1316") ||infoDto.getTableId().contains("1325") ||infoDto.getTableId().contains("1308")) &&
+                                    StringUtil.equals(keyDto.getTaxPType(),DictCodeList.增值税_确认类型_预估计税.getValue())){
+                                taxBalanceDto =new TaxBokBalance();
+                                BeanUtil.copyProperties(taxBalanceDto, acctEntity);
+                                BeanUtil.copyProperties(taxBalanceDto, infoDto);
+                                taxBalanceDto.setSeqNo(dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型));
+                                taxBalanceDto.setVatType(configDto.getVatType());
+                                taxBalanceDto.setTaxPType(DictCodeList.增值税_确认类型_预估计税.getValue());
+                                taxBalanceDto.setCalcType(configDto.getCalcType());
+                                taxBalanceDto.setIncomeSource(configDto.getCalcBase());
+                                taxBalanceDto.setBookOrder(maxBookOrderDto.getMaxTdyBookOrder());
+                                taxBalanceDto.setIncomeAmtAll(BigDecimal.ZERO);
+                            }else{continue;}
+                        }else{
+                            continue;
+                        }
                     }
                     // 定义 发生含税销售额
                     BigDecimal happenAmtTmp = BigDecimal.ZERO;

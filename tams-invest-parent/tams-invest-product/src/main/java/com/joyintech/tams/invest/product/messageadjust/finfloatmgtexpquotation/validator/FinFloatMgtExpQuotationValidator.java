@@ -408,7 +408,7 @@ public class FinFloatMgtExpQuotationValidator implements BeanValidator{
                 //当生效日后发生了浮动管理费计提、支付交易，不予保存
                 int count=finFloatMgtExpQuotation001Service.getFloatFeeCount(finprodId, effDateStr);
                 if(count > 0){
-                    errorList.add(new ValidMessage("", getMessage("FIN_PROD_W_0014")));
+                    errorList.add(new ValidMessage("", getMessage("报价生效日后有浮动管理费报价，不予保存。")));
                 }
                 //校验是否存在业绩基准代码
 //                if(StringUtil.isNotEmpty(finprodId) && StringUtil.isNotEmpty(effDate)){
@@ -498,7 +498,8 @@ public class FinFloatMgtExpQuotationValidator implements BeanValidator{
                             getMessage("FinFloatMgtExpQuotation002.firstPayDate")+DateUtil.format(firstPayDate),
                             getMessage("FinFloatMgtExpQuotation001.mdate")+DateUtil.format(temp.getMdate()))));
                     }
-                    //首次付费日不能小于生效日
+                    //首次付费日不能小于生效日                  
+                    if(StringUtil.isEmpty(finFloatMgtExpQuotation001Dto.getCashId())){ //非首次报价，去掉生效日和首次付费日的判断
                     if(finFloatMgtExpQuotation001Dto.getEffDate()!=null&&
                     		DateUtil.compareDate(firstPayDate,finFloatMgtExpQuotation001Dto.getEffDate()) < 0){
                         errorList.add(new ValidMessage("",getMessage("FIN_PROD_E_0127",
@@ -506,6 +507,7 @@ public class FinFloatMgtExpQuotationValidator implements BeanValidator{
                         		getMessage("FinFloatMgtExpQuotation002.effDate")+DateUtil.format(finFloatMgtExpQuotation001Dto.getEffDate())
                             )));
                     }
+                }
                 }
             }
             

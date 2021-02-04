@@ -337,6 +337,8 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 	估值日期_行情日加1(DictCode.估值日期,"03","行情日+1"),
 	交易场所类别_场内(DictCode.交易场所类别,"01","场内"),
 	交易场所类别_场外(DictCode.交易场所类别,"02","场外"),
+	费用品种类型_经手费(DictCode.费用品种类型,"16","经手费"),
+	费用品种类型_结算费(DictCode.费用品种类型,"17","结算费"),
 	一次性费用类型_经手费(DictCode.一次性费用类型,"B01","经手费"),
 	一次性费用类型_印花税(DictCode.一次性费用类型,"B02","印花税"),
 	一次性费用类型_证管费(DictCode.一次性费用类型,"B03","证管费"),

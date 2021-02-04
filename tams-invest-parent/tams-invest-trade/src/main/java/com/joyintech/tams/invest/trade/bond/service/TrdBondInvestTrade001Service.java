@@ -50,6 +50,15 @@ public class TrdBondInvestTrade001Service extends CommonExportService<TrdBondInv
             pageParam.put("portfolioIdList", new ArrayList<>());
         }
 
+        //多选下拉框处理（合作资产）
+        Object chlFinprodIdObj = pageParam.get("chlFinprodId");
+        if (chlFinprodIdObj != null){
+            pageParam.put("chlFinprodIdList",
+                    StringUtil.splitToList(GlobalConstant.COMMA,(String) chlFinprodIdObj));
+        }else {
+            pageParam.put("chlFinprodIdList",new ArrayList<>());
+        }
+
         pageParam.put("loginUserName", LoginUserUtil.getUserName());
 
         return restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/findPage",

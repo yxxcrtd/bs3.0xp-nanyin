@@ -228,40 +228,35 @@
         }
         return mstDto;
     }
+
     var feeTypeChange = function () {
-        if($("#feeType").val() == FEE_TYPE_B01||$("#feeType").val() == FEE_TYPE_B07){
+        var feeType = $("#feeType").val();
+        if(feeType == FEE_TYPE_B01 || feeType == FEE_TYPE_B07 || feeType == FEE_TYPE_B02){
             $("#secAcctId").val('').prop('disabled',true).prop("required",false).trigger('change');
+        }else{
+            $("#secAcctId").prop('disabled',false).prop("required",true).trigger('change');
+        }
+        if(feeType == FEE_TYPE_B01||feeType == FEE_TYPE_B07){
             $("#chargeType").prop('disabled',false).trigger('change');
-            $("#tradeType").prop('disabled',false).trigger('change');
-            $("#termType").prop('disabled',false).trigger('change');
-        }else if($("#feeType").val() == FEE_TYPE_B02){
-            $("#secAcctId").val('').prop('disabled',true).prop("required",false).trigger('change');
-            $("#tradeType").val(PINAN_ASSET_TYPE_F11).prop('disabled',true).trigger('change');
+        }else if(feeType == FEE_TYPE_B02){
             $("#chargeType").val(CHARGE_KIND_1).prop('disabled',true).trigger('change');
             $("#chargeBasis").val(CHARGE_BASIS_02).prop("required",true).trigger('change');
-            $('#isPayWithTrade').prop("checked",false).prop("disabled", true).trigger('change');
-            $('#isPayWithTrade').next().find("em").text('是');
-            $('#isPayWithTrade').next().addClass("layui-form-onswitch");
-            $('#isPayWithTrade').next().removeClass('layui-disabled');
-            displayStar();
-        }else if($("#feeType").val() == FEE_TYPE_B05){
-            $("#secAcctId").prop('disabled',false).prop("required",true).trigger('change');
+        }else if(feeType == FEE_TYPE_B05){
             $("#chargeType").prop('disabled',false).trigger('change');
-            $("#tradeType").prop('disabled',false).trigger('change');
-            // 是否随交易支付可选
-            $('#isPayWithTrade').next().removeClass('layui-disabled');
-            $('#isPayWithTrade').prop("disabled", false);
-            $('#isPayWithTrade').trigger('change');
-            displayStar();
-        }else {
-            // 是否随交易支付默认为是
-            $('#isPayWithTrade').prop("checked",true);
-            $('#isPayWithTrade').next().find("em").text('是');
-            $('#isPayWithTrade').next().removeClass('layui-disabled');
-            $('#isPayWithTrade').prop("disabled", false);
-            $('#isPayWithTrade').trigger('change');
         }
+        if(feeType == FEE_TYPE_B01||feeType == FEE_TYPE_B07){
+            $("#tradeType").val('F01').prop('disabled',true).trigger('change');
+            $('#tradeMarketMode').val('02').prop('disabled',true).trigger('change');
+        }else if(feeType == FEE_TYPE_B02){
+            $('#tradeMarketMode').val('').prop('disabled',false).trigger('change');
+            $("#tradeType").val('F11').prop('disabled',true).trigger('change');
+        }else{
+            $('#tradeMarketMode').val('').prop('disabled',false).trigger('change');
+            $("#tradeType").prop('disabled',false).trigger('change');
+        }
+        displayStar();
     }
+
     var init = function(){
         var chargeType = $('#chargeType').val();
         if(pageModel==PAGE_MODEL_EDIT){
@@ -358,14 +353,12 @@
         $("#tradeType").change(function(){
             if($(this).val() == PINAN_ASSET_TYPE_F01 || $(this).val() == PINAN_ASSET_TYPE_F11 || $(this).val() == PINAN_ASSET_TYPE_F02){
                 $("#termType").val('').prop('disabled',true).prop("required",false).trigger('change');
-            }
-            else{
+            }else{
                 $("#termType").prop('disabled',false).prop("required",true).trigger('change');
             }
             if($(this).val() == PINAN_ASSET_TYPE_F11){
                 $("#chargeBasis").val(CHARGE_BASIS_02).trigger('change');
             }
-            displayStar();
             if($(this).val() == PINAN_ASSET_TYPE_F01){
                 $("#tradeMarketMode_div").show().trigger('change');
                 $("#windtypeone").prop('disabled',false).trigger('change');
@@ -376,6 +369,14 @@
                 $("#windtypeone").val('').prop('disabled',true).trigger('change');
                 $("#windtypetwo").val('').prop('disabled',true).trigger('change');
             }
+            if($(this).val() == PINAN_ASSET_TYPE_F11 && $('#feeType').val() == FEE_TYPE_B05 || $('#feeType').val() == FEE_TYPE_B02){
+                $('#isPayWithTrade').prop("disabled", true).trigger('change');
+                $('#isGrade').val('N').prop('disabled',true).trigger('change');
+            }else{
+                $('#isPayWithTrade').prop('disabled',false).trigger('change');
+                $('#isGrade').prop('disabled',false).trigger('change');
+            }
+            displayStar();
         });
         // modified by wangguoxian 20190717 end
         // add by wangguoxian 20190717 start
@@ -392,14 +393,12 @@
                 $('#feeMaxi').val('').trigger('change');
                 $('#feeMini').val('').trigger('change');
             }else{
+                table.clear();
                 $('#grade_div2').hide().trigger('change');
                 $('#grade_div1').show().trigger('change');
             }
         });
-        $("#tradeType").trigger("change");
         $("#isGrade").trigger('change');
-        feeTypeChange();
-//        $("#chargeType").trigger('change');
         if(($("#workflowId").val()!=null&&$("#workflowId").val()!='')||pageModel!=PAGE_MODEL_NEW){
             $("#windtypetwo").val(windtypetwo).trigger("change");
             $("#chargeBasis").val(chargeBasis).trigger("change");

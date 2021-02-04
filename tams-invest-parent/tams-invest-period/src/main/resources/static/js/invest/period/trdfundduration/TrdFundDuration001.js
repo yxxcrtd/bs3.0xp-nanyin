@@ -10,6 +10,9 @@ $(function () {
         obj.registDateStart = $('#registDate').startDate();
         obj.registDateEnd = $('#registDate').endDate();
         obj.statusValid = statusValid?statusValid.join(','):'';
+        if ($("#chlId").val()) {
+        	obj.chlId = $("#chlId").val().join(",");
+        }
         return obj;
     };
     var getSearchParamsTwo = function() {
@@ -20,6 +23,9 @@ $(function () {
         obj.conversionTimeStart = $('#conversionTime').startDate();
         obj.conversionTimeEnd = $('#conversionTime').endDate();
         obj.statusValid = statusValid?statusValid.join(','):'';
+        if ($("#chlId").val()) {
+            obj.chlId = $("#chlId").val().join(",");
+        }
         return obj;
     };
     /**

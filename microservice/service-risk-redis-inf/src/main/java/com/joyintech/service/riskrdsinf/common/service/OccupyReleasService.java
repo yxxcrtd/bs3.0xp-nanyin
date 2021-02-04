@@ -60,11 +60,24 @@ public abstract class OccupyReleasService<V> extends EventBaseService<V> {
         // 取得报文体
         mapData.putAll(request.getBody());
         // 从报文体取得预占/实占编号
-        String occupyCode = /*getSysCode() + GlobalConstant.COLON
+        String occupyCodeTemp = /*getSysCode() + GlobalConstant.COLON
                             +*/ (String)request.getBodyField(EVENT_ID);
-        mapData.put(EVENT_ID, occupyCode);
+        mapData.put(EVENT_ID, occupyCodeTemp);
         // 从Redis取得预占/实占信息
-        IOccupyRelParam ocpRelParam = getOccupyRelParam(occupyCode, getOccupyType());
+        IOccupyRelParam ocpRelParamTemp = getOccupyRelParam(occupyCodeTemp, getOccupyType());
+        
+        if(ocpRelParamTemp==null) {
+        	String[] codes =  occupyCodeTemp.split(":");
+        	if(codes[0].endsWith("R")) {
+        		codes[0] = codes[0].substring(0,codes[0].length()-1);
+        		occupyCodeTemp = String.join(":", codes);
+        		ocpRelParamTemp = getOccupyRelParam(occupyCodeTemp, getOccupyType());
+        	}
+        }
+        
+        String occupyCode = occupyCodeTemp;
+        IOccupyRelParam ocpRelParam = ocpRelParamTemp; 
+        
         // 若预占/实占信息不存在
         if (ocpRelParam == null /*|| CollectionUtils.isEmpty(ocpRelParam.getItems())*/) {
             //---update by zxjjpei 20200318--不予提示 start----------
@@ -134,7 +147,7 @@ public abstract class OccupyReleasService<V> extends EventBaseService<V> {
         // 更新DB
         saveData(mapData, false, getInfId());
         // 参数计算明细
-        saveDetails(details, mapData, occupyCode);
+        saveDetails(details, mapData,  mapData.get(EVENT_ID).toString());
         return null;
     }
 

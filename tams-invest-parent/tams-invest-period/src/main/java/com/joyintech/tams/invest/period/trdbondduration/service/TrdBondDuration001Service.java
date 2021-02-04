@@ -9,6 +9,7 @@ import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
@@ -64,6 +65,14 @@ public class TrdBondDuration001Service extends CommonExportService<TrdBondDurati
         }
         else {
             params.put("portfolioId", new ArrayList<>());
+        }
+        //多选下拉框处理（合作资产）
+        Object chlIdObj = params.get("chlId");
+        if (chlIdObj != null){
+            params.put("chlIdList",
+                    StringUtil.splitToList(GlobalConstant.COMMA,(String) chlIdObj));
+        }else {
+            params.put("chlIdList",new ArrayList<>());
         }
         params.put("userName", LoginUserUtil.getUserName());
         return restTemplate.postForPage(

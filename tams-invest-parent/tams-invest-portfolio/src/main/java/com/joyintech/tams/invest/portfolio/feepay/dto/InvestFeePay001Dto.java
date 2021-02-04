@@ -35,7 +35,7 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
  * @see InvestFeePay001Dto
  * @since 1.0
  */
-@PageId(value = "InvestFeePay002")
+
 @ValidLogic(targetClass = InvestFeePay001Validator.class)
 public class InvestFeePay001Dto extends BaseEntity implements ProcessEntity {
 

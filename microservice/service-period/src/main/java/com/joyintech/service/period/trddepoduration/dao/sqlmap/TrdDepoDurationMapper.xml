@@ -158,8 +158,16 @@
             AND T1.MDATE &lt;= to_date(#{mdateProdEnd}, 'yyyy-MM-dd')
         </if>
         <!-- 2019年9月4日14:50:08 魏鹏：需求添加通道筛选条件 -->
-        <if test="chlId != null and !chlId.isEmpty()">
-            AND T1.CHL_ID = #{chlId}
+        <if test="chlIdList != null and chlIdList.size() > 0">
+            AND (T1.CHL_ID IN
+            <foreach collection="chlIdList" item="item" index="index" open="("
+                     close=")" separator=",">
+                <if test="(index % 998) == 0">
+                    null) OR T1.CHL_ID in (
+                </if>
+                #{item}
+            </foreach>
+            )
         </if>
         <if test="tradeDateStart != null and !tradeDateStart.isEmpty()">
             AND T1.TRADE_DATE >= to_date(#{tradeDateStart}, 'yyyy-MM-dd')
@@ -365,8 +373,16 @@
                     AND t8.MDATE &lt;= to_date(#{mdateProdEnd}, 'yyyy-MM-dd')
                 </if>
                 <!-- 2019年9月4日14:50:08 魏鹏：需求添加通道筛选条件 -->
-                <if test="chlId != null and !chlId.isEmpty()">
-                    AND t8.SEC_ACCT_ID = #{chlId}
+                <if test="chlIdList != null and chlIdList.size() > 0">
+                    AND (t8.SEC_ACCT_ID IN
+                    <foreach collection="chlIdList" item="item" index="index" open="("
+                             close=")" separator=",">
+                        <if test="(index % 998) == 0">
+                            null) OR t8.SEC_ACCT_ID in (
+                        </if>
+                        #{item}
+                    </foreach>
+                    )
                 </if>
             </where>
             GROUP BY

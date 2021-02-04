@@ -27,6 +27,7 @@ var table;
     var zcdm,jyfx,jycs,jypt,tdao;
     var isChange = false;
     var isOpen = false;
+    var isautobond = false;
     // add by wangguoxian 费用设置 20190807 start
     var isPayWithTrade = $("#isPayWithTrade").val()?$("#isPayWithTrade").val():YES_OR_NO_Y;//佣金是否随交易支付，默认为是
     $("#isPayWithTrade").val(isPayWithTrade);
@@ -300,16 +301,29 @@ var table;
 		object.maxTradeamt = maxTradeamt;
 		Joyin.ajaxJson(basePath + 'invest/trade/bond/TrdBondInvestTrade003/check', object, function(result) {
 			Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/check', object, function(result1) {
-		          Joyin.confirm(result.data, function() {
-		              if(operateType === 'save') {
-		                  WorkFlow.doSaveList(basePath + 'invest/trade/bond/TrdBondInvestTrade003/save', object, "TrdBondInvestTrade002_btn_save");
-		              }
-		              else {
-		                  WorkFlow.doSubmitList(basePath + 'invest/trade/bond/TrdBondInvestTrade003/save', object, "TrdBondInvestTrade002_btn_submit",pageId,null,function(result){
-								window.BaseRiskMathComm.reloadRiskTable(result);
-							});
-		              }
-		          });
+                if(isautobond == true) {
+                    Joyin.alert("资产第一次接入系统，请确认并完善【债券标的】页面资产要素完整！", 1, function () {
+                        Joyin.confirm(result.data, function () {
+                            if (operateType === 'save') {
+                                WorkFlow.doSaveList(basePath + 'invest/trade/bond/TrdBondInvestTrade003/save', object, "TrdBondInvestTrade002_btn_save");
+                            } else {
+                                WorkFlow.doSubmitList(basePath + 'invest/trade/bond/TrdBondInvestTrade003/save', object, "TrdBondInvestTrade002_btn_submit", pageId, null, function (result) {
+                                    window.BaseRiskMathComm.reloadRiskTable(result);
+                                });
+                            }
+                        });
+                    });
+                }else{
+                    Joyin.confirm(result.data, function () {
+                        if (operateType === 'save') {
+                            WorkFlow.doSaveList(basePath + 'invest/trade/bond/TrdBondInvestTrade003/save', object, "TrdBondInvestTrade002_btn_save");
+                        } else {
+                            WorkFlow.doSubmitList(basePath + 'invest/trade/bond/TrdBondInvestTrade003/save', object, "TrdBondInvestTrade002_btn_submit", pageId, null, function (result) {
+                                window.BaseRiskMathComm.reloadRiskTable(result);
+                            });
+                        }
+                    });
+                }
 		      },false);
 		});
 		      //update by lwj 20200325 券面总额大于资产可用持仓提示 end
@@ -683,6 +697,7 @@ var table;
             } else {
 	        	//自动加券 yjm
 	        	var autoCoupon = AutoCoupon.autoBondTradeCoupon($('#finprodId').val());
+                isautobond = true;
 	            // 资产名称文本框根据资产代码选择自动显示对应名称;
 	            $("#finprodName").val(autoCoupon.finprodAbbr).trigger('change');
 	            // 同时带出资产相关信息，包括起息日，到期日，发行日，交易场所，币种，交易日历，计息基础等;

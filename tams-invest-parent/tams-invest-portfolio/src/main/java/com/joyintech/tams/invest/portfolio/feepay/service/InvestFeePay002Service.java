@@ -1232,10 +1232,10 @@ public class InvestFeePay002Service extends BaseService<InvestFeePay002Dto> impl
         else if (StringUtil.equals(feeType, DictCodeList.费用品种类型_佣金.getValue())) {
             return DictCodeListExt1.一次性费用类型_佣金.getValue();
         }
-        else if (StringUtil.equals(feeType, DictCodeList.费用品种类型_经手费.getValue())) {
+        else if (StringUtil.equals(feeType, DictCodeListExt1.费用品种类型_经手费.getValue())) {
             return DictCodeListExt1.一次性费用类型_经手费.getValue();
         }
-        else if (StringUtil.equals(feeType, DictCodeList.费用品种类型_结算费.getValue())) {
+        else if (StringUtil.equals(feeType, DictCodeListExt1.费用品种类型_结算费.getValue())) {
             return DictCodeListExt1.一次性费用类型_结算费.getValue();
         }
         /**add by chendijun 2019-10-15 投资顾问费转换 **/

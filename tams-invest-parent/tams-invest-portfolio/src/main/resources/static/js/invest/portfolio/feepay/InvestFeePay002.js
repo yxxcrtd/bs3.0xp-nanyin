@@ -93,6 +93,11 @@ $(function() {
 				feeInfoTable.showColumns([{field:'payAmt', visible:true}],true);
 				feeInfoTable.showColumns([{field:'adjustAmt', visible:true}],true);
 				feeInfoTable.showColumns([{field:'status', visible:true}],true);
+				if($("#InvestFeePay002_feeType").val() == '08'){
+					feeInfoTable.showColumns([{field:'status', visible:false}],true);
+				}else{
+					feeInfoTable.showColumns([{field:'status', visible:true}],true);
+				}
 			}
 		},
         editCell : function(value, data, field, cell, column){
@@ -124,6 +129,11 @@ $(function() {
 		},
         done : function(allData, table){
 			if(isNew && $("#InvestFeePay002_feeType").val() == '08')return;
+			if($("#InvestFeePay002_feeType").val() == '08'){
+				feeInfoTable.showColumns([{field:'status', visible:false}],true);
+			}else{
+				feeInfoTable.showColumns([{field:'status', visible:true}],true);
+			}
         	var totalAmt = '0';
         	var actPayAmtCurSum = '0';
         	if (allData && allData.length > 0 && !isTodoList && $('#InvestFeePay002_hidden_operateType').val() === 'new'){
@@ -187,6 +197,11 @@ $(function() {
 			feeInfoTable.showColumns([{field:'payAmt', visible:true}],true);
 			feeInfoTable.showColumns([{field:'adjustAmt', visible:true}],true);
 			feeInfoTable.showColumns([{field:'status', visible:true}],true);
+			if($("#InvestFeePay002_feeType").val() == '08'){
+				feeInfoTable.showColumns([{field:'status', visible:false}],true);
+			}else{
+				feeInfoTable.showColumns([{field:'status', visible:true}],true);
+			}
 		}
 	})
 
@@ -256,8 +271,8 @@ $(function() {
 						if (!result || result == 'undefined') {
 							$('#InvestFeePay002_positionStartDate').prop("disabled", false);
 						}
-						var endDate = $('#InvestFeePay002_positionEndDateHide').val();
-						$('#InvestFeePay002_positionEndDate').val(endDate).trigger('change');
+						//var endDate = $('#InvestFeePay002_positionEndDateHide').val();
+						//$('#InvestFeePay002_positionEndDate').val(endDate).trigger('change');
 					});
 			} else {
 				// 账户维护费 获取计提开始日
@@ -270,8 +285,8 @@ $(function() {
 								isNew = false;
 							}
 							$('#InvestFeePay002_positionStartDate').val(result).trigger('change');
-							var endDate = $('#InvestFeePay002_positionEndDateHide').val();
-							$('#InvestFeePay002_positionEndDate').val(endDate).trigger('change');
+							//var endDate = $('#InvestFeePay002_positionEndDateHide').val();
+							//$('#InvestFeePay002_positionEndDate').val(endDate).trigger('change');
 							$('#InvestFeePay002_positionStartDate').prop("disabled", true);
 						});
 				}else{
@@ -322,6 +337,11 @@ $(function() {
 			feeInfoTable.showColumns([{field:'payAmt', visible:true}],true);
 			feeInfoTable.showColumns([{field:'adjustAmt', visible:true}],true);
 			feeInfoTable.showColumns([{field:'status', visible:true}],true);
+			if(feeType == '08'){
+				feeInfoTable.showColumns([{field:'status', visible:false}],true);
+			}else{
+				feeInfoTable.showColumns([{field:'status', visible:true}],true);
+			}
 		}
 	}
 	
@@ -625,6 +645,17 @@ $(function() {
 	};
 	
 	function saveOrSubmitAction(operateType){
+		if(!isNew && $("#InvestFeePay002_feeType").val() == '08'){
+			var feeInfoTableList=feeInfoTable.getAllRows();
+			var sum=0;
+			for(var i=0;i<feeInfoTableList.length;i++){
+				sum=sum+feeInfoTableList[i].actPayAmt;
+			}
+			if(sum != 4500){
+				Joyin.error("汇总金额不等于4500，请修改！");
+				return false;
+			}
+		}
 		// 检查生成划款指令参数是否发生变化
         if (isCalcConditionChanged()) {
             return;
