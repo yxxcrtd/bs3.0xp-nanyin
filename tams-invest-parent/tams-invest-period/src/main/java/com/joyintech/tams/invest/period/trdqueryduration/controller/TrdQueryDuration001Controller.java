@@ -17,6 +17,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -85,6 +86,7 @@ public class TrdQueryDuration001Controller extends BaseController{
 		model.addAttribute("PINAN_ASSET_TYPE_F18", DictCodeListExt3.平安资产类型_期权.getValue());
 		List<SelectOptionDto> psList = makeAllFloatRate();
         model.addAttribute("psList", JsonUtils.objectArray2Json(psList.toArray()));
+        model.addAttribute("platDate", DateUtil.format(DateUtil.platDateFromCache())+" - "+DateUtil.format(DateUtil.platDateFromCache()));
         return super.init(model);
 	}
 
@@ -184,7 +186,7 @@ public class TrdQueryDuration001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Valid TrdQueryDurationDto dto, BindingResult result) {
-        return commonCheck(result, "");
+        return commonCheck(result, dto.getOperateType());
     }
 
 
