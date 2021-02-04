@@ -51,6 +51,7 @@ public class SvrBussRepQDIIStructureInfoController extends BaseController {
             //调用service
             bussAssetInfoService.setModle(uuid, dataStatus, model);
         }
+        model.addAttribute("entityName",this.getParam("entityName"));
 
         //3、返回 子组件对应的页面
         return "report/chb/assetinfodetail/asset/qdiiStructure/SvrBussRepQDIIStructureInfo";

@@ -473,6 +473,7 @@ public class InvestTradeRegistBatchService extends SvrDataStatusUtil {
 		param.put("registDate", interfDate);
 		param.put("tradenoList", tradenoList);
 		param.put("prodList", prodList);
+		param.put("feeOrg",SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_FEE_ORG));
 		template.select("com.joyintech.tams.svreport.chb.investtradereg.dao.InvestTradeRegist001Mapper.selectInvestTradeForRegist",
 				param,new ResultHandler() {
 			@Override

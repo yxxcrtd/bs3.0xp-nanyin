@@ -1048,8 +1048,14 @@
         <!-- 托管费改造 2020.11.16 shengqiqiang end -->
 	left join CHB_PRDRESIST_CODE code
 		on code.prodid =  prdfeedeal.PROD_ID
-		where 1 =1 
-		and prdfeedeal.FEE_TYPE = '02'/*他行费用*/
+		where 1 =1
+		/***本机构的费用也需要统计  add by leipeng 20210129**/
+      <if test="feeOrg != null and  feeOrg=='01'.toString()">
+        and prdfeedeal.FEE_TYPE in ('02','01')/*他行费用加本行费用*/
+      </if>
+      <if test="feeOrg != null and  feeOrg=='02'.toString()">
+        and prdfeedeal.FEE_TYPE in ('02')/*他行费用*/
+      </if>
 		<!-- and prdfeedeal.FEE_SECTYPE in ('05','06','07','09') -->
         <!-- 不过滤状态 -->
 		<!-- and prdfeedeal.status = 'E' -->/*有效状态*/

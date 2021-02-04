@@ -833,7 +833,7 @@ public class ChbMonthReport001Service extends SvrCommonExportService<ChbMonthRep
             if(detail.getXgbottombalance()!=null&&(BigDecimal.ZERO).compareTo(detail.getXgbottombalance())==0){
 				detail.setXgbottombalance(null);
 			}
-			if(detail.getProdpayamount()!=null&&(BigDecimal.ZERO).compareTo(detail.getProdnetamount())==0){
+			if(detail.getProdpayamount()!=null&&(BigDecimal.ZERO).compareTo(detail.getProdpayamount())==0){
 				detail.setProdpayamount(null);
 			}
 			/**add by  dongxiangyang  新加字段  end*/

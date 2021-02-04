@@ -145,12 +145,12 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 					try {
 						/**发放,转让**/
 						if(StringUtil.isNotEmpty(dto.getLoanBasisId()) &&  dto.getLoanBasisId().getBytes("GBK").length > 35){
-							errorList.add(new ValidMessage("loanBasisId", getMessage("贷款借据编码不得大于17位!")));
+							errorList.add(new ValidMessage("loanBasisId", getMessage("贷款借据编码不得大于35位字符!")));
 						}
 
 					}catch(Exception e){
 						logger.error("数据转换错误:",e);
-						errorList.add(new ValidMessage("loanBasisId", getMessage("贷款借据编码不得大于17位!")));
+						errorList.add(new ValidMessage("loanBasisId", getMessage("贷款借据编码不得大于35位字符!")));
 					}
 
 					if(StringUtil.isNotEmpty(dto.getLoanPrdType())

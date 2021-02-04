@@ -2061,19 +2061,22 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             			//单表头的资产基本信息
             			assetType=nameMap.get(sheetName);
             		}else if (StringUtil.equals(CHB_LOAN_DETAIL_INFO, tableName)){
-						try {
-							int each = 0;
-							String eachProportion = strList.get(4) ;
-							for(String code : eachProportion.split(":")){
-								each = each + Integer.parseInt(code);
-							}
-							if(each!=100){
-								checkResult.add(new ExcelValidDto(columnList.get(4), String.valueOf(j + 1), "各比例分割后合计必须等于100",
+						String loantype = strList.get(2) ;
+						if("01".equals(loantype)){
+							try {
+								int each = 0;
+								String eachProportion = strList.get(4) ;
+								for(String code : eachProportion.split(":")){
+									each = each + Integer.parseInt(code);
+								}
+								if(each!=100){
+									checkResult.add(new ExcelValidDto(strList.get(1), String.valueOf(j + 1), "各比例分割后合计必须等于100",
+											"各比例"));
+								}
+							}catch(Exception e){
+								checkResult.add(new ExcelValidDto(strList.get(1), String.valueOf(j + 1),"各比例分割后合计必须等于100",
 										"各比例"));
 							}
-						}catch(Exception e){
-							checkResult.add(new ExcelValidDto(columnList.get(4), String.valueOf(j + 1),"各比例分割后合计必须等于100",
-									"各比例"));
 						}
 					}
             		List<Integer> indexList = new ArrayList<Integer>();
