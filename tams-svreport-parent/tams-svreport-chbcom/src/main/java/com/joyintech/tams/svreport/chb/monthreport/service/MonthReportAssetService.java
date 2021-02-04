@@ -463,7 +463,7 @@ public class MonthReportAssetService {
         //查询底层持仓
         List<ChbBotAstPosition> listUnderDeal = chbMonthAssetPositionMapper.selectPlanDeal(pos);
         for ( ChbBotAstPosition p11:listUnderDeal ) {
-            if ( "02".equals(p11.getIsfinaplan()) ) { //不是资管计划
+            if (p11.getIsfinaplan()==null|| "02".equals(p11.getIsfinaplan()) ) { //不是资管计划
               //计算穿透资产价值
               	if("01".equals(pos.getMonthReport())){
             		p11.setAccuamt( p11.getAccuamt().divide(p11.getTotalNum(),18,RoundingMode.HALF_UP).multiply(p11.getPosAmt()) );
