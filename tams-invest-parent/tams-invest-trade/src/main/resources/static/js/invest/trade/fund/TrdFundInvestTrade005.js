@@ -1,4 +1,4 @@
-//@ sourceURL=TrdFundInvestTrade003.js
+//@ sourceURL=TrdFundInvestTrade005.js
 /**
  * 基金投资交易确认
  */
@@ -851,6 +851,12 @@ $(function () {
 //                        });
 //                    }
 //                }
+
+                var ps = $('#ps').val();
+                if(ps==ps_T05 || ps==ps_T19){
+                    $("#trdInvestPersonInfo_counterId").prop('disabled', true).trigger('change');
+                }
+
             }
         }
 
