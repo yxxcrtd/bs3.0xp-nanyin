@@ -467,7 +467,7 @@
       AND nvl(d.fprod_id, d.prod_id) = info.prod_id
       AND D.SETTDATE_DATE <![CDATA[<=]]> #{enddate,jdbcType=DATE}
       )
-      and  info.status in  ('E','M') and  info.ISSUING_STATUS in  ('01','02','03')
+      and  info.status in  ('E','M') and  info.ISSUING_STATUS in  ('01')
 	)
   	 ,rate as(
 	     SELECT
