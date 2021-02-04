@@ -16,7 +16,7 @@ public enum ServerMenu{
      资产基本信息_贵金属商品类信息("svrBussRepNobleMetalInfoDto", DictCodeListExt2.资产_负债类别_商品类资产.getValue(), null),
      资产基本信息_另类资产类信息("svrBussRepOthKindInfoDto", DictCodeListExt2.资产_负债类别_另类资产.getValue(), null),
      资产基本信息_其它资产类信息("svrBussRepOtherInfoDto", DictCodeListExt2.资产_负债类别_其他_负债_类资产.getValue(), null),
-    
+
      资产基本信息_非标准化债权类资产新增信息("svrBussRepAssetCreditNonstdInfoDto", DictCodeListExt2.资产_负债类别_非标准化债权类资产_信贷资产流转项目.getValue(), "rep"),
      资产基本信息_票据类信证类资产信息("svrBussRepAssetAstBillInfoDto", DictCodeListExt2.资产_负债类别_票据类资产_信用证类资产.getValue(), null),
      资产基本信息_权益类信息("svrBussRepEquityInfoDto", DictCodeListExt2.资产_负债类别_权益类资产.getValue(), null),
