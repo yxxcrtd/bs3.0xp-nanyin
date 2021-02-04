@@ -319,7 +319,7 @@ public class TrdFundInvestTrade002Service extends BaseService<TrdFundInvestTrade
             // 实时申赎货币基金申购申请生效后，自动生成一笔申购确认交易，确认份额为申购金额*100，单位净值为0.01；
             // 实时申赎货币基金赎回申请生效后，自动生成赎回确认和赎回到账交易，金额为份额*0.01，单位净值0.01；
              // 单组合申请交易，流程结束才生成确认流程
-            if (StringUtil.isEmpty(entity.getTotleTradeId())) {
+            //if (StringUtil.isEmpty(entity.getTotleTradeId())) {
 				if ((StringUtil.equals(entity.getPs(), DictCodeList.交易方向_申购.getValue())
                  || StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回.getValue()))
                 && StringUtil.equals(DictCodeListExt2.交易所基金类型_实时申赎货币基金.getValue(), entity.getTrmFundType())) {
@@ -355,7 +355,7 @@ public class TrdFundInvestTrade002Service extends BaseService<TrdFundInvestTrade
 						e.printStackTrace();
 					}
 				}
-			}
+			//}
             // 场内基金改造 modify by renping 20191117 end
 
             jasperExecute(entity);
