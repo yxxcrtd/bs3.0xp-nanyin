@@ -405,17 +405,10 @@ public class RepoNBookDetailProcessDealService {
                             accountAmountMap.put(BookConstant.COST, glb_subjectAmt);//回购本金 <-  变量.成本科目余额
                             accountAmountMap.put(BookConstant.DEALAMT, dealDto.getTradeAmt());//到期/转出金额<-交易明细.交易金额
                             //accountAmountMap.put(BookConstant.INTAMT, dealDto.getIntAmt());//应计利息<- 交易明细.利息总额   
-                        	//变量.应计利息 = 金额元素.到期/转出金额 - 金额元素.回购本金 
+                            //变量.应计利息 = 金额元素.到期/转出金额 - 金额元素.回购本金
+                            intAmt = glb_subjectProfit;
                             if(dealDto.getFinprodType().equals(DictCodeListExt1.金融产品类型_债券质押式逆回购.getValue())){
-//                            	intAmt = dealDto.getTradeAmt().subtract(glb_subjectAmt)
-//                                    	.subtract(accountAmountMap.get(BookConstant.STAMPTAX)).add(accountAmountMap.get(BookConstant.STAMPTAX_OUT))// - 金额元素.印花税  + 金额元素.印花税支出                     
-//                                        .subtract(accountAmountMap.get(BookConstant.HANDFEE)).add(accountAmountMap.get(BookConstant.HANDFEE_OUT))// - 金额元素.经手费  + 金额元素.经手费支出
-//                                        .subtract(accountAmountMap.get(BookConstant.CERTIFEE)).add(accountAmountMap.get(BookConstant.CERTIFEE_OUT))// - 金额元素.证管费 + 金额元素.证管费 支出   
-//                                        .subtract(accountAmountMap.get(BookConstant.SETTLEFEE)).add(accountAmountMap.get(BookConstant.SETTLEFEE_OUT))// - 金额元素.结算费 + 金额元素.结算费支出   
-//                                        .subtract(accountAmountMap.get(BookConstant.COMMISSION)).add(accountAmountMap.get(BookConstant.COMMISSION_OUT))// - 金额元素.佣金 + 金额元素.佣金支出    
-//                                        .subtract(accountAmountMap.get(BookConstant.TRADEFEE)).add(accountAmountMap.get(BookConstant.TRADEFEE_OUT))// - 金额元素.交易手续费 + 金额元素.交易手续费 支出   
-//                                        .subtract(accountAmountMap.get(BookConstant.SETTLEMENTFEE)).add(accountAmountMap.get(BookConstant.SETTLEMENTFEE_OUT));// - 金额元素.结算手续费 + 金额元素.结算手续费支出  
-                                intAmt = ArithmeticUtil.doSub(dealDto.getTradeAmt(), glb_subjectAmt);
+//                                intAmt = ArithmeticUtil.doSub(dealDto.getTradeAmt(), glb_subjectAmt);
                                 intAmt = ArithmeticUtil.doSub(intAmt,
                                     accountAmountMap.get(BookConstant.STAMPTAX),
                                     accountAmountMap.get(BookConstant.HANDFEE),
@@ -433,15 +426,7 @@ public class RepoNBookDetailProcessDealService {
                                     accountAmountMap.get(BookConstant.TRADEFEE_OUT),
                                     accountAmountMap.get(BookConstant.SETTLEMENTFEE_OUT));
                             }else {
-//                            	intAmt = dealDto.getTradeAmt().subtract(glb_subjectAmt)
-//                                        .add(accountAmountMap.get(BookConstant.STAMPTAX)).subtract(accountAmountMap.get(BookConstant.STAMPTAX_OUT))// + 金额元素.印花税 - 金额元素.印花税支出                   
-//                                        .add(accountAmountMap.get(BookConstant.HANDFEE)).subtract(accountAmountMap.get(BookConstant.HANDFEE_OUT))// + 金额元素.经手费 - 金额元素.经手费支出  
-//                                        .add(accountAmountMap.get(BookConstant.CERTIFEE)).subtract(accountAmountMap.get(BookConstant.CERTIFEE_OUT))// + 金额元素.证管费 - 金额元素.证管费支出 
-//                                        .add(accountAmountMap.get(BookConstant.SETTLEFEE)).subtract(accountAmountMap.get(BookConstant.SETTLEFEE_OUT))// + 金额元素.结算费 - 金额元素.结算费支出    
-//                                        .add(accountAmountMap.get(BookConstant.COMMISSION)).subtract(accountAmountMap.get(BookConstant.COMMISSION_OUT))// + 金额元素.佣金 - 金额元素.佣金支出 
-//                                        .add(accountAmountMap.get(BookConstant.TRADEFEE)).subtract(accountAmountMap.get(BookConstant.TRADEFEE_OUT))// + 金额元素.交易手续费 - 金额元素.交易手续费支出 
-//                                        .add(accountAmountMap.get(BookConstant.SETTLEMENTFEE)).subtract(accountAmountMap.get(BookConstant.SETTLEMENTFEE_OUT));// + 金额元素.结算手续费 - 金额元素.结算手续费支出
-                                intAmt = ArithmeticUtil.doSub(dealDto.getTradeAmt(), glb_subjectAmt);
+//                                intAmt = ArithmeticUtil.doSub(dealDto.getTradeAmt(), glb_subjectAmt);
                                 intAmt = ArithmeticUtil.doAdd(intAmt,
                                     accountAmountMap.get(BookConstant.STAMPTAX),
                                     accountAmountMap.get(BookConstant.HANDFEE),
@@ -459,6 +444,7 @@ public class RepoNBookDetailProcessDealService {
                                     accountAmountMap.get(BookConstant.TRADEFEE_OUT),
                                     accountAmountMap.get(BookConstant.SETTLEMENTFEE_OUT));
                             }
+                            adjustAmt = ArithmeticUtil.doSub(dealDto.getTradeAmt(), glb_subjectAmt, intAmt);
 
                         }else {
                             accountAmountMap.put(BookConstant.DEALAMT, dealDto.getTradeAmt());//交易明细.交易金额
@@ -614,26 +600,25 @@ public class RepoNBookDetailProcessDealService {
                             adjustAmt = ArithmeticUtil.subtract(dealDto.getIntAmt(), intAmt);
                         }
 
-                        if(adjustAmt.compareTo(BigDecimal.ZERO)>=0){//调整金额_贷 <-     变量.调整金额
-
-                            if(dealDto.getFinprodType().equals(DictCodeListExt1.金融产品类型_债券质押式逆回购.getValue())){
-                                accountAmountMap.put(BookConstant.INCOMEAMT_C, adjustAmt);
-                            }else{
-                                accountAmountMap.put(BookConstant.INCOMEAMT_D, adjustAmt);
-                            }
-
-                        }else{//调整金额_借  <-  变量.调整金额 * -1
-                            if(dealDto.getFinprodType().equals(DictCodeListExt1.金融产品类型_债券质押式逆回购.getValue())){
-                                accountAmountMap.put(BookConstant.INCOMEAMT_D, adjustAmt.multiply(new BigDecimal(-1)));
-                            }else{
-                                accountAmountMap.put(BookConstant.INCOMEAMT_C, adjustAmt.multiply(new BigDecimal(-1)));
-                            }
-                        }             
-                    	
                     	glb_subjectAmt = ArithmeticUtil.subtract(glb_subjectAmt, dealDto.getPrinAmt());// 变量.成本科目余额 - 交易明细.交易本金
                         glb_subjectNum = ArithmeticUtil.subtract(glb_subjectNum, dealDto.getShareAmt());//变量.成本科目数量 - 交易明细.交易份额
                         glb_subjectProfit = ArithmeticUtil.subtract(glb_subjectProfit, dealDto.getIntAmt());// 变量.应计利息科目余额 - 交易明细.利息总额
 	                 }
+                    if(adjustAmt.compareTo(BigDecimal.ZERO)>=0){//调整金额_贷 <-     变量.调整金额
+
+                        if(dealDto.getFinprodType().equals(DictCodeListExt1.金融产品类型_债券质押式逆回购.getValue())){
+                            accountAmountMap.put(BookConstant.INCOMEAMT_C, adjustAmt);
+                        }else{
+                            accountAmountMap.put(BookConstant.INCOMEAMT_D, adjustAmt);
+                        }
+
+                    }else{//调整金额_借  <-  变量.调整金额 * -1
+                        if(dealDto.getFinprodType().equals(DictCodeListExt1.金融产品类型_债券质押式逆回购.getValue())){
+                            accountAmountMap.put(BookConstant.INCOMEAMT_D, adjustAmt.multiply(new BigDecimal(-1)));
+                        }else{
+                            accountAmountMap.put(BookConstant.INCOMEAMT_C, adjustAmt.multiply(new BigDecimal(-1)));
+                        }
+                    }
                 }
 
 
