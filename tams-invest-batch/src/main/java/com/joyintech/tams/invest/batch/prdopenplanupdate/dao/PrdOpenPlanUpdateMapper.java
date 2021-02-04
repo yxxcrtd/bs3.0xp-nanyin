@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.common.base.entity.FinCashPlanKey;
 import com.joyintech.tams.common.base.entity.FinFloatAccrualScheKey;
+import com.joyintech.tams.common.base.entity.FinOpenPlan;
 import com.joyintech.tams.common.base.entity.FinOpenPlanKey;
 import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.AccrDateNeedOtherDto;
 import com.joyintech.tams.invest.batch.prdopenplanupdate.dto.AccrDateOtherDto;
@@ -80,6 +81,10 @@ public interface PrdOpenPlanUpdateMapper {
 	 * @return
 	 */
 	String selectfinAnapleroticInfo(Map<String,Object> map);
+	/**
+	 * 根据产品代码  查询到相应的申购开放计划
+	 */
+	List<FinOpenPlan> findOpenPlanListByProdid(String finprodId);
 	
 	//****************更新产品开放计划相关方法 end**********************/
 	
@@ -96,6 +101,9 @@ public interface PrdOpenPlanUpdateMapper {
 	 * @return
 	 */
 	int deleteOldPayPlans(FinCashPlanKey key);
+	
+	int deleteOldPayPlan(FinCashPlanKey key);
+	
 	
 	Date queryMaxDealMdate(@Param("finprodId") String finprodId);
 	//****************更新产品付息/分红计划相关方法 end**********************/

@@ -336,6 +336,7 @@ public class SusPrdFutureOpenPlanGenWriter extends BaseWriter<NeedToWriteEntity>
 					  for(int i = 0; i < openPlanList.size();i++){
 	                    	FinCashPlan finCashPlan = new FinCashPlan();
 	                    	FinOpenPlan finOpenPlan = openPlanList.get(i);
+	                    	if(finOpenPlan.getCashId() != null) {
 	                    	if(0 == i){
 	                    		finCashPlan.setCashId(finOpenPlan.getCashId());
 	                    		finCashPlan.setCashNum(1L);
@@ -375,6 +376,7 @@ public class SusPrdFutureOpenPlanGenWriter extends BaseWriter<NeedToWriteEntity>
 								finCashPlanMapper.insert(finCashPlan); // 如果为空再插入操作
 	                    }
 				}
+		  }
 				}
 			}
 		}							
@@ -394,6 +396,7 @@ public class SusPrdFutureOpenPlanGenWriter extends BaseWriter<NeedToWriteEntity>
 					  for(int i = 0; i < openPlanList.size();i++){
 	                    	FinCashPlan finCashPlan = new FinCashPlan();
 	                    	FinOpenPlan finOpenPlan = openPlanList.get(i);
+	                    	if(finOpenPlan.getCashId() != null) {
 	                    	if(0 == i){
 	                    		finCashPlan.setCashId(finOpenPlan.getCashId());
 	                    		finCashPlan.setCashNum(1L);
@@ -435,7 +438,8 @@ public class SusPrdFutureOpenPlanGenWriter extends BaseWriter<NeedToWriteEntity>
 				}
 				}
 			}
-		}							
+		}	
+		}
 			
 	}
 	

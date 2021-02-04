@@ -88,7 +88,8 @@
 		    fpa.IS_CYCLE AS isCycle, /*是否周期型*/
 		    fpa.CLOSE_DAYS AS closeDays, /*封闭期限*/
 		    fpa.PUR_SPEED AS purSpeed, /*申购确认速度*/
-		    fpa.PUR_SPEED AS purConfDays
+		    fpa.PUR_SPEED AS purConfDays,
+		    fcpr.PAY_CYCLE payCycleV
 		FROM FIN_PRODUCT fp
 		inner join qjMdate on fp.FINPROD_ID = qjMdate.FINPROD_ID
         left join qjVdate on qjVdate.CASH_ID = qjMdate.CASH_ID and qjVdate.OPEN_TYPE = qjMdate.OPEN_TYPE
@@ -96,6 +97,8 @@
 		left join qjMdate on qjVdate.CASH_ID = qjMdate.CASH_ID and qjVdate.OPEN_TYPE = qjMdate.OPEN_TYPE -->
 		INNER JOIN FIN_PRODUCT_ADD fpa ON fp.FINPROD_ID = fpa.FINPROD_ID AND fpa.ISSUE_STATUS in ('01','03')
 		INNER JOIN FIN_OPEN_RULE forule ON qjMdate.CASH_ID = forule.CASH_ID AND qjMdate.OPEN_TYPE = forule.OPEN_TYPE
+		LEFT JOIN FIN_CASH_INFO fci on fci.FINPROD_ID = fp.FINPROD_ID and fci.CASH_TYPE_1 = '02'	
+		LEFT JOIN FIN_CASH_PAY_RULE fcpr on fcpr.CASH_ID = fci.CASH_ID
 		WHERE fp.FINPROD_TYPE2 in ('F16','F24')
 		--    AND fp.P_FINPROD_ID IS NULL
 		    AND fp.OPERATION_TYPE = '02'
@@ -269,6 +272,11 @@
           and MDATE >= #{mdate,jdbcType=DATE}
 	</delete>
 	
+	<delete id="deleteOldPayPlan" parameterType="com.joyintech.tams.common.base.entity.FinCashPlanKey" >
+		delete from FIN_CASH_PLAN
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}        
+	</delete>
+	
 	<select id="queryMaxDealMdate" parameterType="string" resultType="java.util.Date">
 		select t.mdate from (
 			SELECT
@@ -377,6 +385,18 @@
 		and fp.vdate &lt;= to_date(#{sysDate},'yyyy-MM-dd')/*平台日-跑批日*/
 		and fp.mdate > TO_DATE(#{sysDate},'yyyy-MM-dd')/*平台日-跑批日*/
     </select>
+    
+    <select id="findOpenPlanListByProdid" parameterType="string" resultType="com.joyintech.tams.common.base.entity.FinOpenPlan">
+		select A.VDATE AS openVdateUn,/*产品起息日*/
+                 B.OPEN_DATE_STR AS openDateStr,
+                 B.OPEN_DATE_END AS openDateEnd,
+                 C.CASH_ID AS cashId,
+                 B.OPEN_VDATE AS openVdate
+                 from FIN_PRODUCT A 
+                 INNER JOIN FIN_OPEN_PLAN B ON B.FINPROD_ID = A.FINPROD_ID AND B.OPEN_TYPE != '02'
+                 LEFT JOIN FIN_CASH_PLAN C ON C.FINPROD_ID = A.FINPROD_ID AND C.CASH_TYPE = '01'
+                 WHERE A.FINPROD_ID = #{finprodId}
+	</select>
     
     <!-- 查询回补计划回补周期开始日 大于平台日的需要更新的计划 -->
      <!--<select id="queryOldAnapleroticPlanList" resultType="com.joyintech.tams.invest.batch.prdopenplanupdate.dto.PrdOpenPlanUpdateDto">
