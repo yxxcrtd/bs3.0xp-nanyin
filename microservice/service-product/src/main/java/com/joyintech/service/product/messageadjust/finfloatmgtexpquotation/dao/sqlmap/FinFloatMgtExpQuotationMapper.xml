@@ -230,13 +230,13 @@
 			AND FIN_CASH_PAY_RULE.EFF_DATE = FIN_FLOAT_COUNTING_RULE.EFF_DATE
 			AND FIN_FLOAT_CALC_RULE.EFF_DATE = FIN_FLOAT_COUNTING_RULE.EFF_DATE
 			and FIN_FLOAT_CALC_RULE.Eff_Date =
-		   <!--新建时取该代码生效日最新的数据-->
-			(SELECT MAX(FIN_FLOAT_CALC_RULE.EFF_DATE)
+		   <!--新建时取首次浮动管理费报价信息，即该代码生效日最小的数据-->
+			(SELECT MIN(FIN_FLOAT_CALC_RULE.EFF_DATE)
 			FROM FIN_FLOAT_CALC_RULE,FIN_CASH_INFO,FIN_PRODUCT WHERE
 			FIN_PRODUCT.FINPROD_ID =#{finprodId}
 			AND FIN_PRODUCT.FINPROD_ID = FIN_CASH_INFO.FINPROD_ID
 			AND FIN_CASH_INFO.CASH_ID = FIN_FLOAT_CALC_RULE.CASH_ID
-			AND FIN_FLOAT_CALC_RULE.EFF_DATE  <![CDATA[<=]]> to_date(#{iplatformDate},'yyyy-MM-dd')
+			<!-- AND FIN_FLOAT_CALC_RULE.EFF_DATE  <![CDATA[<=]]> to_date(#{iplatformDate},'yyyy-MM-dd') -->
 			)
 			AND FIN_CASH_INFO.FEE_ID =  MST_FEEINFO.FEE_ID
 		</where>	
@@ -276,12 +276,12 @@
 			AND FIN_FLOAT_CALC_RULE_DETAIL.LEV = #{lev}
 			</if>
 			<!-- add by dingjunfeng start -->
-			<if test="effDate != null and effDate != ''">
+			<!-- <if test="effDate != null and effDate != ''">
 			AND  to_char(FIN_FLOAT_CALC_RULE_DETAIL.EFF_DATE,'yyyy-MM-dd') = #{effDate}
-			</if>
+			</if> -->
 			<!-- add by dingjunfeng end -->
 			<if test="pageModel=='0'.toString()">
-				<![CDATA[ AND FIN_FLOAT_CALC_RULE_DETAIL.EFF_DATE  = (select max(eff_date) from FIN_FLOAT_CALC_RULE_DETAIL where to_char(EFF_DATE,'yyyy-MM-dd')<=#{SESSION_SYS_DATE} and cash_id=#{cashId}) ]]>
+				<![CDATA[ AND FIN_FLOAT_CALC_RULE_DETAIL.EFF_DATE  = (select min(eff_date) from FIN_FLOAT_CALC_RULE_DETAIL where cash_id=#{cashId}) ]]>
 			</if>
 			<if test="pageModel=='1'.toString()">
 				<![CDATA[ AND to_char(FIN_FLOAT_CALC_RULE_DETAIL.EFF_DATE,'yyyy-MM-dd') = #{effDate} ]]>
@@ -487,19 +487,19 @@
 		FROM
     		FIN_BASE_RULE_INFO
     	where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
-    	<if test="effDate!=null and effDate!=''">
+    	<!-- <if test="effDate!=null and effDate!=''">
     		and EFF_DATE = to_date(#{effDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-		</if>
-		<!-- 新建时，选择产品代码联动出已有的业绩基准信息（离平台日最近的） -->
-		<if test="effDate==null or effDate==''">
+		</if> -->
+		<!-- 新建时，选择产品代码联动出已有的业绩基准信息（首次） -->
+		<!-- <if test="effDate==null or effDate==''"> -->
 			and EFF_DATE =
-			(SELECT  max(EFF_DATE) FROM
+			(SELECT  min(EFF_DATE) FROM
 			FIN_BASE_RULE_INFO
 			where FINPROD_ID =#{finprodId,jdbcType=VARCHAR}
 			and BASE_RULE_TYPE =#{baseRuleType02,jdbcType=VARCHAR}
-			and EFF_DATE  <![CDATA[<=]]>to_date(#{sysFloatDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+			<!-- and EFF_DATE  <![CDATA[<=]]>to_date(#{sysFloatDate,jdbcType=VARCHAR},'yyyy-MM-dd') -->
 			and BRANCH = 0)
-		</if>
+		<!-- </if> -->
     		and BASE_RULE_TYPE = #{baseRuleType02,jdbcType=VARCHAR}
     		<!-- 浮动管理费查看只查询branch为0的数据，即不查询期次层的业绩基准 -->
     		and BRANCH = 0
