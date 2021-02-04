@@ -41,7 +41,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 /**
- * @package com.joyintech.tams.hxbank.resolute.planratetransfer.controller
+ * @package com.joyintech.tams.trade.resolute.planratetransfer.controller
  * @author: Xu Zhihao
  * @date: 2019/12/17 16:04
  * @version: V1.0
@@ -49,7 +49,7 @@ import java.util.*;
  */
 @Controller
 @PageId("TrdPlanRateInvestTradeTransfer001")
-@RequestMapping("/hxbank/resolute/planratetransfer/TrdPlanRateInvestTradeTransfer001")
+@RequestMapping("/invest/trade/resolute/planratetransfer/TrdPlanRateInvestTradeTransfer001")
 public class TrdPlanRateInvestTradeTransfer001Controller extends BaseController {
 
     @Autowired

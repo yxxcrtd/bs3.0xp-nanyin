@@ -170,7 +170,7 @@ public class BuyOutRepoTransfer001Service extends CommonExportService<BuyOutRepo
      * @since 1.0
      */
     public BuyOutRepoTransfer001Dto getTradeInfo(String tradeId){
-        return simpleRestTemplate.getForObject(ServiceApplication.REPORT_SERVICE_NAME + "/BuyOutRepoTransfer/getTradeInfo?tradeId="+tradeId,
+        return simpleRestTemplate.getForObject(ServiceApplication.TRADE_SERVICE_NAME + "/BuyOutRepoTransfer/getTradeInfo?tradeId="+tradeId,
                 BuyOutRepoTransfer001Dto.class);
     }
 
@@ -181,7 +181,7 @@ public class BuyOutRepoTransfer001Service extends CommonExportService<BuyOutRepo
      * @since 1.0
      */
     public List<SelectOptionDto> getPortfolioId(Map<String, Object> map){
-        return simpleRestTemplate.postForList(ServiceApplication.REPORT_SERVICE_NAME + "/BuyOutRepoTransfer/getPortfolioId",
+        return simpleRestTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME + "/BuyOutRepoTransfer/getPortfolioId",
                 map, SelectOptionDto.class);
     }
 
@@ -202,7 +202,7 @@ public class BuyOutRepoTransfer001Service extends CommonExportService<BuyOutRepo
         map.put("HODING_TYPE_05", DictCodeList.持仓类型_融入.getValue());
         map.put("HODING_TYPE_06", DictCodeList.持仓类型_融出.getValue());
         map.put("HODING_TYPE_04", DictCodeList.持仓类型_质押.getValue());
-        return simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/BuyOutRepoTransfer/selectPosition",
+        return simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/BuyOutRepoTransfer/selectPosition",
                 map, BigDecimal.class);
     }
 
@@ -520,7 +520,7 @@ public class BuyOutRepoTransfer001Service extends CommonExportService<BuyOutRepo
      * @since 1.0
      */
     public BigDecimal getBondAmount(Map<String,Object> map){
-        return simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/BuyOutRepoTransfer/getBondAmount",
+        return simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/BuyOutRepoTransfer/getBondAmount",
                 map, BigDecimal.class);
     }
 
@@ -532,7 +532,7 @@ public class BuyOutRepoTransfer001Service extends CommonExportService<BuyOutRepo
      * @since 1.0
      */
     public BigDecimal getTradeAmount(Map<String,Object> map){
-        return simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/BuyOutRepoTransfer/getTradeAmount",
+        return simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/BuyOutRepoTransfer/getTradeAmount",
                 map, BigDecimal.class);
     }
 
@@ -733,7 +733,7 @@ public class BuyOutRepoTransfer001Service extends CommonExportService<BuyOutRepo
             PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();
             ptlPositionHoldDto.setPtlSecPositionFlows(lstPtlSecPositionFlowDto);
             return simpleRestTemplate.postForObject(
-                    ServiceApplication.REPORT_SERVICE_NAME + "/BuyoutRepoResolute/insertPosition", ptlPositionHoldDto,
+                    ServiceApplication.TRADE_SERVICE_NAME + "/BuyoutRepoResolute/insertPosition", ptlPositionHoldDto,
                     Boolean.class);
         }
     }
@@ -755,13 +755,13 @@ public class BuyOutRepoTransfer001Service extends CommonExportService<BuyOutRepo
         param.put("chlId", entity.getChlId());
         param.put("secAcctId", entity.getSecManageAcctId());
         return simpleRestTemplate.postForList(
-                ServiceApplication.REPORT_SERVICE_NAME + "/BuyoutRepoResolute/selectAvaPledgeBondDetailList", param,
+                ServiceApplication.TRADE_SERVICE_NAME + "/BuyoutRepoResolute/selectAvaPledgeBondDetailList", param,
                 PledgeBondInfoDto.class);
     }
 
     private void ptlSecPositionFlowLogicDelete(String tradeId) {
         simpleRestTemplate.getForObject(
-                ServiceApplication.REPORT_SERVICE_NAME + "/BuyoutRepoResolute/deletePtlSecPositionFlow?tradeId=" + tradeId,
+                ServiceApplication.TRADE_SERVICE_NAME + "/BuyoutRepoResolute/deletePtlSecPositionFlow?tradeId=" + tradeId,
                 Long.class);
     }
 
@@ -923,7 +923,7 @@ public class BuyOutRepoTransfer001Service extends CommonExportService<BuyOutRepo
      */
     public void deleteFinDealPledgeByTradeId(String tradeId){
         simpleRestTemplate.getForObject(
-                ServiceApplication.REPORT_SERVICE_NAME + "/BuyoutRepoResolute/deleteFinDealPledgeByTradeId?tradeId=" + tradeId,
+                ServiceApplication.TRADE_SERVICE_NAME + "/BuyoutRepoResolute/deleteFinDealPledgeByTradeId?tradeId=" + tradeId,
                 Integer.class);
     }
 
@@ -935,7 +935,7 @@ public class BuyOutRepoTransfer001Service extends CommonExportService<BuyOutRepo
      */
     private void deleteFinTradeProductByTradeId(String tradeId) {
         simpleRestTemplate.getForObject(
-                ServiceApplication.REPORT_SERVICE_NAME + "/BuyoutRepoResolute/deleteFinTradeProductByTradeId?tradeId=" + tradeId,
+                ServiceApplication.TRADE_SERVICE_NAME + "/BuyoutRepoResolute/deleteFinTradeProductByTradeId?tradeId=" + tradeId,
                 Integer.class);
     }
 
@@ -947,7 +947,7 @@ public class BuyOutRepoTransfer001Service extends CommonExportService<BuyOutRepo
      */
     private void deleteFinProductTypeByTradeId(String tradeId) {
         simpleRestTemplate.getForObject(
-                ServiceApplication.REPORT_SERVICE_NAME + "/BuyOutRepoTransfer/deleteFinProductTypeByTradeId?tradeId=" + tradeId,
+                ServiceApplication.TRADE_SERVICE_NAME + "/BuyOutRepoTransfer/deleteFinProductTypeByTradeId?tradeId=" + tradeId,
                 Integer.class);
     }
 
@@ -998,7 +998,7 @@ public class BuyOutRepoTransfer001Service extends CommonExportService<BuyOutRepo
     public void doDelete(String workflowId) {
         // 根据工作流代码查询交易编号、组合代码
         List<WflTrdProductDeal> wflTrdProductDealList = simpleRestTemplate.getForList(
-                ServiceApplication.REPORT_SERVICE_NAME + "/BuyoutRepoResolute/selectWflTrdProductDeal?workflowId=" + workflowId,
+                ServiceApplication.TRADE_SERVICE_NAME + "/BuyoutRepoResolute/selectWflTrdProductDeal?workflowId=" + workflowId,
                 WflTrdProductDeal.class);
 
         if (!StringUtil.isEmptyList(wflTrdProductDealList)) {
@@ -1193,7 +1193,7 @@ public class BuyOutRepoTransfer001Service extends CommonExportService<BuyOutRepo
                                 repTrade.setRepRemark("买断式回购交易转仓");
 
                                 // 调用基础组件.【交易报送组件】将交易报送信息Entity插入交易报送信息表
-                                simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/BuyoutRepoResolute/insertRepTrade",
+                                simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/BuyoutRepoResolute/insertRepTrade",
                                         Arrays.asList(rtEntity), Boolean.class);
                             }
 
@@ -1205,7 +1205,7 @@ public class BuyOutRepoTransfer001Service extends CommonExportService<BuyOutRepo
                                 repAssetDept.setFinprodMarketId(tpdEntity.getTradeId());
 
                                 // 调用资产负债信息报送组件
-                                simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/BuyoutRepoResolute/insertRepAssetDebt",
+                                simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/BuyoutRepoResolute/insertRepAssetDebt",
                                         Arrays.asList(repAssetDept), Boolean.class);
                             }
 
@@ -1220,7 +1220,7 @@ public class BuyOutRepoTransfer001Service extends CommonExportService<BuyOutRepo
                                     repLiabilities.setRepBuyBackMoney(tpdEntity.getPrinAmt());
 
                                     // 调用负债(同业拆入卖出回购)报送信息组件
-                                    simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/BuyoutRepoResolute/insertRepLiabilities",
+                                    simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/BuyoutRepoResolute/insertRepLiabilities",
                                             Arrays.asList(repLiabilities), Boolean.class);
                                 }
                             }
@@ -1234,7 +1234,7 @@ public class BuyOutRepoTransfer001Service extends CommonExportService<BuyOutRepo
                                     repAssetInterLend.setRepTargetAmt(tpdEntity.getPrinAmt());
 
                                     // 调用负债(同业拆入卖出回购)报送信息组件
-                                    simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/BuyoutRepoResolute/insertRepDlRepoInfo",
+                                    simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/BuyoutRepoResolute/insertRepDlRepoInfo",
                                             Arrays.asList(repAssetInterLend), Boolean.class);
                                 }
                             }
@@ -1325,7 +1325,7 @@ public class BuyOutRepoTransfer001Service extends CommonExportService<BuyOutRepo
     public boolean multiApproveTradeCheck(String tradeId) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("tradeId", tradeId);
-        int count = simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/DepositResolute001/getWorkflowTradeId",
+        int count = simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/DepositResolute001/getWorkflowTradeId",
                 map, Integer.class);
         if (count > 0) {
             return true;

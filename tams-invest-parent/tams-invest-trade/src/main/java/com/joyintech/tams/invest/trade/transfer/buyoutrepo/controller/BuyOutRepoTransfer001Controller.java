@@ -44,7 +44,7 @@ import java.util.Map;
  */
 @Controller
 @PageId("BuyOutRepoTransfer001")
-@RequestMapping("/hxbank/transfer/buyoutrepo/BuyOutRepoTransfer001")
+@RequestMapping("/invest/trade/transfer/buyoutrepo/BuyOutRepoTransfer001")
 public class BuyOutRepoTransfer001Controller extends BaseController {
 
     /**

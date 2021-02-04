@@ -530,7 +530,7 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
     @SuppressWarnings("unchecked")
     public List<SelectOptionDto> selectPortfolioId(Map<String, Object> param) {
         return simpleRestTemplate.postForObject(                
-                ServiceApplication.REPORT_SERVICE_NAME+ "/hxbank/transfer/trdassetsproject/TrdAssetsProject/selectPortfolioId",
+                ServiceApplication.TRADE_SERVICE_NAME+ "/trade/transfer/trdassetsproject/TrdAssetsProject/selectPortfolioId",
                 param, List.class);
     }
     public static BussinessCodeParameter genBizCode(TrdAssetsProject001Dto dto) {
@@ -875,7 +875,7 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
     public void doBack(TrdAssetsProject001Dto entity) {
         List<WflTrdProductDeal> trdProductDealList = null;
         if (StringUtil.isNotEmpty(entity.getWorkflowId())) {
-            trdProductDealList = simpleRestTemplate.postForList(ServiceApplication.REPORT_SERVICE_NAME+ "/hxbank/transfer/common/TransferCommon/selectDealByworkflowId",
+            trdProductDealList = simpleRestTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME+ "/trade/transfer/common/TransferCommon/selectDealByworkflowId",
                     entity.getWorkflowId(), WflTrdProductDeal.class);
         }
         if (!StringUtil.isEmptyList(trdProductDealList)) {

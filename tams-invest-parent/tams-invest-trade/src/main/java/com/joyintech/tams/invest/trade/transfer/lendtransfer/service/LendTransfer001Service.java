@@ -137,7 +137,7 @@ public class LendTransfer001Service extends CommonExportService<LendTransfer001D
      * @since 1.0
      */
     public List<SelectOptionDto> getPortfolioId(Map<String,Object> map){
-        return simpleRestTemplate.postForList(ServiceApplication.REPORT_SERVICE_NAME + "/LendTransfer/getPortfolioId",
+        return simpleRestTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME + "/LendTransfer/getPortfolioId",
                 map, SelectOptionDto.class);
     }
 
@@ -148,7 +148,7 @@ public class LendTransfer001Service extends CommonExportService<LendTransfer001D
      * @since 1.0
      */
     public LendTransfer001Dto getTradeInfo(String tradeId){
-        return simpleRestTemplate.getForObject(ServiceApplication.REPORT_SERVICE_NAME + "/LendTransfer/getTradeInfo?tradeId="+tradeId,
+        return simpleRestTemplate.getForObject(ServiceApplication.TRADE_SERVICE_NAME + "/LendTransfer/getTradeInfo?tradeId="+tradeId,
                 LendTransfer001Dto.class);
     }
 
@@ -1140,7 +1140,7 @@ public class LendTransfer001Service extends CommonExportService<LendTransfer001D
     public boolean multiApproveTradeCheck(String tradeId) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("tradeId", tradeId);
-        int count = simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/DepositResolute001/getWorkflowTradeId",
+        int count = simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/DepositResolute001/getWorkflowTradeId",
                 map, Integer.class);
         if (count > 0) {
             return true;

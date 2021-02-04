@@ -144,7 +144,7 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
                 map.put("product", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
                 map.put("portfolioId", input.getPortfolioId());
                 // 插入交易报送表
-                String prodCode = simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/hxbank/transfer/fund/FundAssetTransfer/selProdCode", map, String.class);
+                String prodCode = simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/trade/transfer/fund/FundAssetTransfer/selProdCode", map, String.class);
                 if (StringUtil.isNotEmpty(prodCode)) {
                     RepTrade repentity = new RepTrade();
                     repentity.setRepFinprodRegId(prodCode);
@@ -159,7 +159,7 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
                         map.put("ccy", input.getCcy());
                         map.put("cny", DictCodeList.币种_人民币_CNY.getValue());
                         map.put("tradDate", input.getTradeDate());
-                        BigDecimal num = simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/hxbank/transfer/fund/FundAssetTransfer/selCloPrice", map, BigDecimal.class);
+                        BigDecimal num = simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/trade/transfer/fund/FundAssetTransfer/selCloPrice", map, BigDecimal.class);
                         if (num != null) {
                             cloPrice = num;
                         }
@@ -180,7 +180,7 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
                 }
                 map.put("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
                 map.put("finprodId", input.getFinprodId());
-                simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/hxbank/transfer/fund/FundAssetTransfer/updateRep", map, Integer.class);
+                simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/trade/transfer/fund/FundAssetTransfer/updateRep", map, Integer.class);
 
                 // 一体化对应etliu start
                 // 所有交易生效后调用的共通方法
@@ -258,7 +258,7 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
                 map1.put("product", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
                 map1.put("portfolioId", output.getPortfolioId());
                 // 插入交易报送表
-                String prodCode1 = simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/hxbank/transfer/fund/FundAssetTransfer/selProdCode", map1, String.class);
+                String prodCode1 = simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/trade/transfer/fund/FundAssetTransfer/selProdCode", map1, String.class);
                 if (StringUtil.isNotEmpty(prodCode1)) {
                     RepTrade repentity = new RepTrade();
                     repentity.setRepFinprodRegId(prodCode);
@@ -273,7 +273,7 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
                         map1.put("ccy", output.getCcy());
                         map1.put("cny", DictCodeList.币种_人民币_CNY.getValue());
                         map1.put("tradDate", output.getTradeDate());
-                        BigDecimal num = simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/hxbank/transfer/fund/FundAssetTransfer/selCloPrice", map, BigDecimal.class);
+                        BigDecimal num = simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/trade/transfer/fund/FundAssetTransfer/selCloPrice", map, BigDecimal.class);
                         if (num != null) {
                             cloPrice = num;
                         }
@@ -294,7 +294,7 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
                 }
                 map1.put("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
                 map1.put("finprodId", output.getFinprodId());
-                simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/hxbank/transfer/fund/FundAssetTransfer/updateRep", map1, Integer.class);
+                simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/trade/transfer/fund/FundAssetTransfer/updateRep", map1, Integer.class);
 
 
                 // 一体化对应etliu start
@@ -396,7 +396,7 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
      * * @return list
      */
     public List<SelectOptionDto> selectPortfolioId(Map<String, Object> param) {
-        return simpleRestTemplate.postForList(ServiceApplication.REPORT_SERVICE_NAME + "/hxbank/transfer/fund/FundAssetTransfer/selectPortfolioId",
+        return simpleRestTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME + "/trade/transfer/fund/FundAssetTransfer/selectPortfolioId",
                 param, SelectOptionDto.class);
     }
 
@@ -407,7 +407,7 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
      * @return 非货币基金单位净值初始化值
      */
     public BigDecimal findInitCarryOverQty(Map<String, Object> param) {
-        return simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/hxbank/transfer/fund/FundAssetTransfer/findInitCarryOverQty",
+        return simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/trade/transfer/fund/FundAssetTransfer/findInitCarryOverQty",
                 param, BigDecimal.class);
     }
 
@@ -464,7 +464,7 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
         param.put("tardeStatus01", DictCodeListExt1.交易状态_初始.getValue());
         param.put("yesorno_no", DictCodeListExt1.是否_否.getValue());
         param.put("tradeDate", DateUtil.format(dto.getTradeDate()));
-        List<FundAssetTransfer001Dto> list = simpleRestTemplate.postForList(ServiceApplication.REPORT_SERVICE_NAME + "/hxbank/transfer/fund/FundAssetTransfer/findUnitCprice", param, FundAssetTransfer001Dto.class);
+        List<FundAssetTransfer001Dto> list = simpleRestTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME + "/trade/transfer/fund/FundAssetTransfer/findUnitCprice", param, FundAssetTransfer001Dto.class);
         for (FundAssetTransfer001Dto fundDto : list) {
             if (!StringUtil.isNotEmpty(unitCpriceMap.get(fundDto.getPortfolioId()))) {
                 unitCpriceMap.put(fundDto.getPortfolioId(), fundDto.getUnitCprice());
@@ -1066,7 +1066,7 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
     public void doBack(FundAssetTransfer001Dto entity) {
         List<WflTrdProductDeal> trdProductDealList = null;
         if (StringUtil.isNotEmpty(entity.getWorkflowId())) {
-            trdProductDealList = simpleRestTemplate.postForList(ServiceApplication.REPORT_SERVICE_NAME+ "/hxbank/transfer/common/TransferCommon/selectDealByworkflowId",
+            trdProductDealList = simpleRestTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME+ "/trade/transfer/common/TransferCommon/selectDealByworkflowId",
                     entity.getWorkflowId(), WflTrdProductDeal.class);
         }
         if (!StringUtil.isEmptyList(trdProductDealList)) {

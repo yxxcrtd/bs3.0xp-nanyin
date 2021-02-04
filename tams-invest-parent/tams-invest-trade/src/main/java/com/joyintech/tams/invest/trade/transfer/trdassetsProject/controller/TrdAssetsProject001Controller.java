@@ -51,7 +51,7 @@ import com.joyintech.tams.invest.period.trdprojduration.service.TrdProjectDurati
 /**
  * 项目类资产转仓
  */
-@RequestMapping("/hxbank/transfer/trdassetsProject/TrdAssetsProject001")
+@RequestMapping("/invest/trade/transfer/trdassetsProject/TrdAssetsProject001")
 @PageId("TrdAssetsProject001")
 @Controller
 public class TrdAssetsProject001Controller extends BaseController {
@@ -159,7 +159,7 @@ public class TrdAssetsProject001Controller extends BaseController {
         setSelectOptionToModel(model, DictCode.指标类型, DictCode.监督状态, DictCode.单位,
                 DictCode.监督类型, DictCode.监督频率, DictCode.金融产品类型_投管用, DictCode.WIND一级分类_含债券一级分类等,
                 DictCode.基金类资产二级类型, DictCode.资产评级, DictCode.申万行业一级类型, DictCode.指标类型映射编码);
-        return "/hxbank/resolute/common/RiskMathComm";
+        return "/trade/resolute/common/RiskMathComm";
     }
 
     /**

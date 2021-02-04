@@ -187,7 +187,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
      * @since 1.0
      */
     public List<SelectOptionDto> getFinprodMarketId(Map<String, Object> map) {
-        return simpleRestTemplate.postForList(ServiceApplication.REPORT_SERVICE_NAME + "/SecResolute/getFinprodMarketId",
+        return simpleRestTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME + "/SecResolute/getFinprodMarketId",
                 map, SelectOptionDto.class);
     }
 
@@ -200,7 +200,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
      */
     public SecTransfer001Dto selectTradeInfo(Map<String,Object> map){
         return simpleRestTemplate.postForObject(
-                ServiceApplication.REPORT_SERVICE_NAME + "/SecTransfer/selectTradeInfo",map,
+                ServiceApplication.TRADE_SERVICE_NAME + "/SecTransfer/selectTradeInfo",map,
                 SecTransfer001Dto.class);
     }
 
@@ -211,7 +211,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
      * @since 1.0
      */
     public List<SelectOptionDto> getPortfolioId(Map<String, Object> map){
-        return simpleRestTemplate.postForList(ServiceApplication.REPORT_SERVICE_NAME + "/SecTransfer/getPortfolioId",
+        return simpleRestTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME + "/SecTransfer/getPortfolioId",
                 map, SelectOptionDto.class);
     }
     
@@ -223,7 +223,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
      * @since 1.0
      */
     public String getAccountInfo(Map<String,Object> map){
-        return simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/SecResolute/getAccountInfo",map,
+        return simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/SecResolute/getAccountInfo",map,
                 String.class);
     }
 
@@ -235,7 +235,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
      * @since 1.0
      */
     public String getCounterAcctInfo(Map<String,Object> map){
-        return simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/SecTransfer/getCounterAcctInfo",map,
+        return simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/SecTransfer/getCounterAcctInfo",map,
                 String.class);
     }
 
@@ -2045,7 +2045,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
      */
     //add by xuzhihao start
     public BigDecimal findUnitCprice(Map<String, Object> pageParam) {
-        return simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/SecTransfer/findUnitCprice",pageParam,
+        return simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/SecTransfer/findUnitCprice",pageParam,
                 BigDecimal.class);
     }
     //add by xuzhihao end

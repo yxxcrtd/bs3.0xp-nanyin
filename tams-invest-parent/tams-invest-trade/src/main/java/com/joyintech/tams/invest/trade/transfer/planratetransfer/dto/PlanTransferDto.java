@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @package com.joyintech.tams.hxbank.resolute.planratetransfer.dto
+ * @package com.joyintech.tams.trade.resolute.planratetransfer.dto
  * @author: Xu Zhihao
  * @date: 2019/12/17 16:08
  * @version: V1.0

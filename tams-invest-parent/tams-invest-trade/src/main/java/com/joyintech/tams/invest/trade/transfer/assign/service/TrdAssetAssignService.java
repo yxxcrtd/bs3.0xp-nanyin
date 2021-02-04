@@ -68,7 +68,7 @@ public class TrdAssetAssignService {
 	public TrdAssetAssignDto calcAssignAmt(Map<String, String> params) {
 
 		TrdAssetAssignDto result = new TrdAssetAssignDto();
-		String isAutoAssign = tamsBaseMapper.selectSysParamValue("HXBANK", "IS_AUTO_ASSIGN");
+		String isAutoAssign = tamsBaseMapper.selectSysParamValue("sys", "IS_AUTO_ASSIGN");
 		if (!DictCodeList.是否_是.getValue().equals(isAutoAssign)) {
 			return result;
 		}

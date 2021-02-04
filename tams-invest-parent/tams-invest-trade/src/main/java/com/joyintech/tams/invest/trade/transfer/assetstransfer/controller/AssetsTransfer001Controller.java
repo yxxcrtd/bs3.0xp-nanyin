@@ -39,7 +39,7 @@ import java.util.*;
  */
 @Controller
 @PageId("AssetsTransfer001")
-@RequestMapping("/hxbank/transfer/assetstransfer/AssetsTransfer001")
+@RequestMapping("/invest/trade/transfer/assetstransfer/AssetsTransfer001")
 public class AssetsTransfer001Controller extends BaseController {
 
     /**

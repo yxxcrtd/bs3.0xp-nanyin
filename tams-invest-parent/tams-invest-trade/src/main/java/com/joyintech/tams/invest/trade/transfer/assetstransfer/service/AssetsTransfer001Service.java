@@ -35,7 +35,7 @@ public class AssetsTransfer001Service extends BaseService<AssetsTransfer001Dto> 
      */
     public List<SelectOptionDto> getPortfolioId(Map<String,Object> paramMap){
         return simpleRestTemplate.postForList(
-                ServiceApplication.REPORT_SERVICE_NAME + "/AssetsTransfer/getPortfolioId" ,paramMap,
+                ServiceApplication.TRADE_SERVICE_NAME + "/AssetsTransfer/getPortfolioId" ,paramMap,
                 SelectOptionDto.class);
     }
 
@@ -53,7 +53,7 @@ public class AssetsTransfer001Service extends BaseService<AssetsTransfer001Dto> 
         paramMap.put("portfolioId",portfolioId);
         paramMap.put("mdate", DateUtil.format(mdate));
         treeProList = simpleRestTemplate.postForList(
-                ServiceApplication.REPORT_SERVICE_NAME + "/AssetsTransfer/getPortfolioIdTree" ,paramMap,
+                ServiceApplication.TRADE_SERVICE_NAME + "/AssetsTransfer/getPortfolioIdTree" ,paramMap,
                 TreeNode.class);
         List<DataDictItem> profitList = (List<DataDictItem>) SysDataUtil.getDataDictItem(DictCode.收益类型.getValue());
         if (profitList.size() > 0) {
@@ -79,7 +79,7 @@ public class AssetsTransfer001Service extends BaseService<AssetsTransfer001Dto> 
      */
     public Page<AssetsTransfer001Dto> findUnTransPage(Map<String,Object> paramMap){
         return simpleRestTemplate.postForPage(
-                ServiceApplication.REPORT_SERVICE_NAME + "/AssetsTransfer/findUnTransPage" ,paramMap,
+                ServiceApplication.TRADE_SERVICE_NAME + "/AssetsTransfer/findUnTransPage" ,paramMap,
                 AssetsTransfer001Dto.class);
     }
 
@@ -92,7 +92,7 @@ public class AssetsTransfer001Service extends BaseService<AssetsTransfer001Dto> 
      */
     public Page<AssetsTransfer001Dto> findTransPage(Map<String,Object> paramMap){
         return simpleRestTemplate.postForPage(
-                ServiceApplication.REPORT_SERVICE_NAME + "/AssetsTransfer/findTransPage" ,paramMap,
+                ServiceApplication.TRADE_SERVICE_NAME + "/AssetsTransfer/findTransPage" ,paramMap,
                 AssetsTransfer001Dto.class);
     }
 
@@ -104,7 +104,7 @@ public class AssetsTransfer001Service extends BaseService<AssetsTransfer001Dto> 
      */
     public List<SelectOptionDto> getFinprodId(Map<String,Object> paramMap){
         return simpleRestTemplate.postForList(
-                ServiceApplication.REPORT_SERVICE_NAME + "/AssetsTransfer/getFinprodId" ,paramMap,
+                ServiceApplication.TRADE_SERVICE_NAME + "/AssetsTransfer/getFinprodId" ,paramMap,
                 SelectOptionDto.class);
     }
 }

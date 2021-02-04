@@ -27,7 +27,7 @@ public class TransferCommon001Service extends BaseService {
      * @return list
      */
     public List<TransferCommon001Dto> findAvaPortfolioInfo(Map<String, Object> pageParam) {
-        List<TransferCommon001Dto> resultList =  simpleRestTemplate.postForList(ServiceApplication.REPORT_SERVICE_NAME+"/hxbank/transfer/common/TransferCommon/findAvaPortfolioInfo",pageParam,TransferCommon001Dto.class);
+        List<TransferCommon001Dto> resultList =  simpleRestTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME+"/trade/transfer/common/TransferCommon/findAvaPortfolioInfo",pageParam,TransferCommon001Dto.class);
         //画面已转仓列表
         List<TransferInfoDto> listInfoList = new ArrayList<>();
         try {

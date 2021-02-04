@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @PageId("TransferCommon001")
-@RequestMapping("/hxbank/transfer/common/TransferCommon001")
+@RequestMapping("/invest/trade/transfer/common/TransferCommon001")
 public class TransferCommon001Controller extends BaseController {
     /**
      * transferCommon001Service
@@ -27,6 +27,6 @@ public class TransferCommon001Controller extends BaseController {
     @Override
     public String init(Model model){
         model.addAttribute("entityList",transferCommon001Service.findAvaPortfolioInfo(RequestUtil.getPageParam()));
-        return "/hxbank/transfer/common/TransferCommon001";
+        return "/invest/trade/ransfer/common/TransferCommon001";
     }
 }

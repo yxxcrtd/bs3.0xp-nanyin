@@ -46,7 +46,7 @@ import java.util.Map;
 /**
  * 质押式回购交易拆分
  */
-@RequestMapping("/hxbank/transfer/trdrolloverpledgedrepo/TrdRolloverPledgedRepo001")
+@RequestMapping("/invest/trade/transfer/trdrolloverpledgedrepo/TrdRolloverPledgedRepo001")
 @PageId("TrdRolloverPledgedRepo001")
 @Controller
 public class TrdRolloverPledgedRepo001Controller extends BaseController {
@@ -217,7 +217,7 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
         setSelectOptionToModel(model, DictCode.指标类型, DictCode.监督状态, DictCode.单位,
                 DictCode.监督类型, DictCode.监督频率, DictCode.金融产品类型_投管用, DictCode.WIND一级分类_含债券一级分类等,
                 DictCode.基金类资产二级类型, DictCode.资产评级, DictCode.申万行业一级类型, DictCode.指标类型映射编码);
-        return "/hxbank/resolute/common/RiskMathComm";
+        return "/invest/trade/resolute/common/RiskMathComm";
     }
     /**
      * 查询质押券信息
@@ -243,7 +243,7 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
             pledgedRepoRolloverList = JSONArray.parseArray((String)param.get("pledgedRepoRolloverList"),FinDealPledgeDto.class);
         }
         model.addAttribute("finDealPledgeList",pledgedRepoRolloverList);
-        return "/hxbank/resolute/trdsplitpledgedrepo/PledgedSecInfo";
+        return "/invest/trade/resolute/trdsplitpledgedrepo/PledgedSecInfo";
     }
     /**
      * 保存时校验

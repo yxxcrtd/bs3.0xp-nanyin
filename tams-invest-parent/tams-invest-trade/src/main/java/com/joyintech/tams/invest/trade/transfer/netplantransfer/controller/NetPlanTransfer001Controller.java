@@ -47,7 +47,7 @@ import java.util.Map;
  */
 @Controller
 @PageId("NetPlanTransfer001")
-@RequestMapping("/hxbank/transfer/netplantransfer/NetPlanTransfer001")
+@RequestMapping("/invest/trade/transfer/netplantransfer/NetPlanTransfer001")
 public class NetPlanTransfer001Controller extends BaseController {
     /**
      * NetPlanTransfer001Service

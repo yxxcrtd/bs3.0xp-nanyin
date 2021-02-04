@@ -49,7 +49,7 @@ import java.util.*;
  */
 @Controller
 @PageId("SecTransfer001")
-@RequestMapping("/hxbank/transfer/sectransfer/SecTransfer001")
+@RequestMapping("/invest/trade/transfer/sectransfer/SecTransfer001")
 public class SecTransfer001Controller extends BaseController {
 
     /**

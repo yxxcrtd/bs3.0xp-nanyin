@@ -39,7 +39,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 /**
- * @package com.joyintech.tams.hxbank.resolute.planratetransfer.service
+ * @package com.joyintech.tams.trade.resolute.planratetransfer.service
  * @author: Xu Zhihao
  * @date: 2019/12/17 16:50
  * @version: V1.0
@@ -98,7 +98,7 @@ public class TrdPlanRateInvestTradeTransfer001Service extends CommonExportServic
 	 * @return
 	 */
 	public List<SelectOptionDto> selectPortoId(Map<String, Object> pageParam) {
-		return simpleRestTemplate.postForList(ServiceApplication.REPORT_SERVICE_NAME + "/TrdPlanRateInvestTradeTransfer/queryProdIdInfo", pageParam, SelectOptionDto.class);
+		return simpleRestTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanRateInvestTradeTransfer/queryProdIdInfo", pageParam, SelectOptionDto.class);
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class TrdPlanRateInvestTradeTransfer001Service extends CommonExportServic
 	 */
 	//@SuppressWarnings("unchecked")
 	public PlanTransferDto queryAssetInt(Map<String, Object> param) {
-		return simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/TrdPlanRateInvestTradeTransfer/queryAssetInt", param, PlanTransferDto.class);
+		return simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanRateInvestTradeTransfer/queryAssetInt", param, PlanTransferDto.class);
 	}
 
 	/**
@@ -270,7 +270,7 @@ public class TrdPlanRateInvestTradeTransfer001Service extends CommonExportServic
 				});
 				baseTradeProductDealCommService.execute(finProductTradeDto);
 				entity.setOperateType(type.toString());
-				simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/TrdPlanRateInvestTradeTransfer/doComplete", planTransferDtos, String.class);
+				simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanRateInvestTradeTransfer/doComplete", planTransferDtos, String.class);
 				entity.setTradeAmt(planTransferDtos.getTransferTradeAmt());
 				// 所有交易生效后调用的共通方法
 				if (!StringUtil.isEmptyList(finProductTradeDto.getBaseTradeProductDealDtos())) {
@@ -791,7 +791,7 @@ public class TrdPlanRateInvestTradeTransfer001Service extends CommonExportServic
 		if (prodRegistCode != null && !prodRegistCode.isEmpty()) {
 			RepTrade repTrade = this.setRepTrade(trdProductDeal, this.getProdRegistCode(trdProductDealAdd.getPortfolioId()));
 			// 调用基础组件.【交易报送组件】将交易报送信息Entity插入交易报送信息表
-			simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/TrdPlanRateInvestTradeTransfer/insertRepTrade", Arrays.asList(repTrade), Boolean.class);
+			simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanRateInvestTradeTransfer/insertRepTrade", Arrays.asList(repTrade), Boolean.class);
 		}
 		RepAssetDept repAssetDept = new RepAssetDept();
 		repAssetDept.setRepFinprodId(trdProductDeal.getFinprodId());
@@ -812,7 +812,7 @@ public class TrdPlanRateInvestTradeTransfer001Service extends CommonExportServic
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("portfolioId", portfolioId);
 		map.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
-		return simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/TrdPlanRateInvestTradeTransfer/getProdRegistCode", map, String.class);
+		return simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanRateInvestTradeTransfer/getProdRegistCode", map, String.class);
 	}
 
 	/**

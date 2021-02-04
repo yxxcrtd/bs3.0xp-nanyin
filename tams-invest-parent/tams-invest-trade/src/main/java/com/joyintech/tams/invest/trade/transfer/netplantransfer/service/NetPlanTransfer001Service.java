@@ -139,7 +139,7 @@ public class NetPlanTransfer001Service extends CommonExportService<NetPlanTransf
      * @since 1.0
      */
     public BigDecimal getUnitValue(Map<String,Object> paraMap){
-        return simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/NetPlanTransfer001/getUnitValue",
+        return simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/NetPlanTransfer001/getUnitValue",
                 paraMap, BigDecimal.class);
     }
 
@@ -150,7 +150,7 @@ public class NetPlanTransfer001Service extends CommonExportService<NetPlanTransf
      * @since 1.0
      */
     public List<SelectOptionDto> getPortfolioId(Map<String,Object> map){
-        return simpleRestTemplate.postForList(ServiceApplication.REPORT_SERVICE_NAME + "/NetPlanTransfer001/getPortfolioId",
+        return simpleRestTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME + "/NetPlanTransfer001/getPortfolioId",
                 map, SelectOptionDto.class);
     }
 
@@ -161,7 +161,7 @@ public class NetPlanTransfer001Service extends CommonExportService<NetPlanTransf
      * @since 1.0
      */
     public String selectType7(String finprodId){
-        return simpleRestTemplate.getForObject(ServiceApplication.REPORT_SERVICE_NAME + "/NetPlanTransfer001/selectType7?finprodId="+finprodId, String.class);
+        return simpleRestTemplate.getForObject(ServiceApplication.TRADE_SERVICE_NAME + "/NetPlanTransfer001/selectType7?finprodId="+finprodId, String.class);
     }
 
     /**
@@ -171,7 +171,7 @@ public class NetPlanTransfer001Service extends CommonExportService<NetPlanTransf
      * @since 1.0
      */
     public List<BigDecimal> getUnitValueList(Map<String,Object> map){
-        return simpleRestTemplate.postForList(ServiceApplication.REPORT_SERVICE_NAME + "/NetPlanTransfer001/getUnitValueList",map, BigDecimal.class);
+        return simpleRestTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME + "/NetPlanTransfer001/getUnitValueList",map, BigDecimal.class);
     }
 
     /**
@@ -664,7 +664,7 @@ public class NetPlanTransfer001Service extends CommonExportService<NetPlanTransf
                             map.put("portfolioId", trdProductDealAdd.getPortfolioId());
                             if (StringUtil.equals(trdProductDeal.getPs(), DictCodeList.交易方向_买入.getValue())
                                     || StringUtil.equals(trdProductDeal.getPs(), DictCodeList.交易方向_卖出.getValue())) {
-                                String prodCode = simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/NetPlanTransfer001/selProdCode",
+                                String prodCode = simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/NetPlanTransfer001/selProdCode",
                                         map, String.class);
                                 if (StringUtil.isNotEmpty(prodCode)) {
                                     RepTrade repentity = new RepTrade();
@@ -681,7 +681,7 @@ public class NetPlanTransfer001Service extends CommonExportService<NetPlanTransf
                                         map.put("ccy", entity.getCcy());
                                         map.put("cny", DictCodeList.币种_人民币_CNY.getValue());
                                         map.put("tradDate", trdProductDeal.getTradeDate());
-                                        BigDecimal num = simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/NetPlanTransfer001/selCloPrice",
+                                        BigDecimal num = simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/NetPlanTransfer001/selCloPrice",
                                                 map, BigDecimal.class);
                                         if(num != null){
                                             cloPrice = num;
@@ -703,7 +703,7 @@ public class NetPlanTransfer001Service extends CommonExportService<NetPlanTransf
                                     repTradeMapper.insert(repentity);
                                     map.put("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
                                     map.put("finprodId", trdProductDeal.getFinprodId());
-                                    simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/NetPlanTransfer001/updateRep",
+                                    simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/NetPlanTransfer001/updateRep",
                                             map, Integer.class);
                                 }
                             }
@@ -773,7 +773,7 @@ public class NetPlanTransfer001Service extends CommonExportService<NetPlanTransf
     public boolean multiApproveTradeCheck(String tradeId) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("tradeId", tradeId);
-        int count = simpleRestTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/DepositResolute001/getWorkflowTradeId",
+        int count = simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/DepositResolute001/getWorkflowTradeId",
                 map, Integer.class);
         if (count > 0) {
             return true;

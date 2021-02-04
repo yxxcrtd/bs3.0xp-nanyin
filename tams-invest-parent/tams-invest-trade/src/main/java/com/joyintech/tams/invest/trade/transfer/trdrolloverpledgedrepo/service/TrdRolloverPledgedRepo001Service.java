@@ -118,7 +118,7 @@ public class TrdRolloverPledgedRepo001Service extends BaseService<TrdRolloverPle
      */
     public List<SelectOptionDto> selectPortfolioId(Map<String, Object> param) {
         return simpleRestTemplate.postForList(
-                ServiceApplication.REPORT_SERVICE_NAME + "/hxbank/transfer/trdrolloverpledgedrepo/TrdRolloverPledgedRepo/selectPortfolioId",
+                ServiceApplication.TRADE_SERVICE_NAME + "/trade/transfer/trdrolloverpledgedrepo/TrdRolloverPledgedRepo/selectPortfolioId",
                 param, SelectOptionDto.class);
     }
 
@@ -129,7 +129,7 @@ public class TrdRolloverPledgedRepo001Service extends BaseService<TrdRolloverPle
      */
     public List<FinDealPledgeDto> selectPledgedRepoRolloverList(Map<String, Object> param) {
         return simpleRestTemplate.postForList(
-                ServiceApplication.REPORT_SERVICE_NAME + "/hxbank/transfer/trdrolloverpledgedrepo/TrdRolloverPledgedRepo/selectPledgedRepoRolloverList",
+                ServiceApplication.TRADE_SERVICE_NAME + "/trade/transfer/trdrolloverpledgedrepo/TrdRolloverPledgedRepo/selectPledgedRepoRolloverList",
                 param, FinDealPledgeDto.class);
     }
 
@@ -1306,7 +1306,7 @@ public class TrdRolloverPledgedRepo001Service extends BaseService<TrdRolloverPle
     }
 
     private void deleteFinProductInfo(String workflowId) {
-        List<WflTrdProductDeal> dealList = simpleRestTemplate.postForList(ServiceApplication.REPORT_SERVICE_NAME+ "/hxbank/transfer/common/TransferCommon/selectDealByworkflowId",
+        List<WflTrdProductDeal> dealList = simpleRestTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME+ "/trade/transfer/common/TransferCommon/selectDealByworkflowId",
                 workflowId, WflTrdProductDeal.class);
         if(!StringUtil.isEmptyList(dealList)){
             for (WflTrdProductDeal deal:dealList) {
@@ -1908,7 +1908,7 @@ public class TrdRolloverPledgedRepo001Service extends BaseService<TrdRolloverPle
 
     @Override
     public void doBack(TrdRolloverPledgedRepo001Dto entity) {
-        List<WflTrdProductDeal> trdProductDealList = simpleRestTemplate.postForList(ServiceApplication.REPORT_SERVICE_NAME+ "/hxbank/transfer/common/TransferCommon/selectDealByworkflowId",
+        List<WflTrdProductDeal> trdProductDealList = simpleRestTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME+ "/trade/transfer/common/TransferCommon/selectDealByworkflowId",
                 entity.getWorkflowId(), WflTrdProductDeal.class);
         if(!StringUtil.isEmptyList(trdProductDealList)){
             for (WflTrdProductDeal deal: trdProductDealList) {
