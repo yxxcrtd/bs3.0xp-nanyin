@@ -5,6 +5,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 
 public enum ServerMenu{
 
+
     资产基本信息_债券信息("svrBussFinBondRepInfoDto", DictCodeListExt2.资产_负债类别_债券类资产_理财直接融资工具_同业存单.getValue(), "rep"),
     资产基本信息_存款类信息("svrBussRepDepositInfoDto", DictCodeListExt2.资产_负债类别_本行_他行存款_大额存单.getValue(), "rep"),
 //    存款类资产中债报送("svrBussRepDlRepoInfoDto", DictCodeListExt2.资产_负债类别_本行_他行存款_大额存单.getValue(), "rep")
@@ -15,6 +16,16 @@ public enum ServerMenu{
      资产基本信息_贵金属商品类信息("svrBussRepNobleMetalInfoDto", DictCodeListExt2.资产_负债类别_商品类资产.getValue(), null),
      资产基本信息_另类资产类信息("svrBussRepOthKindInfoDto", DictCodeListExt2.资产_负债类别_另类资产.getValue(), null),
      资产基本信息_其它资产类信息("svrBussRepOtherInfoDto", DictCodeListExt2.资产_负债类别_其他_负债_类资产.getValue(), null),
+
+     资产基本信息_非标准化债权类资产新增信息("svrBussRepAssetCreditNonstdInfoDto", DictCodeListExt2.资产_负债类别_非标准化债权类资产_信贷资产流转项目.getValue(), "rep"),
+     资产基本信息_票据类信证类资产信息("svrBussRepAssetAstBillInfoDto", DictCodeListExt2.资产_负债类别_票据类资产_信用证类资产.getValue(), null),
+     资产基本信息_权益类信息("svrBussRepEquityInfoDto", DictCodeListExt2.资产_负债类别_权益类资产.getValue(), null),
+     资产基本信息_QDII债券信息("svrBussRepQDIIBondInfoDto", DictCodeListExt2.资产_负债类别_QDII债券资产.getValue(), null),
+     资产基本信息_QDII股票基金类信息("svrBussQDIISharesInfoDto", DictCodeListExt2.资产_负债类别_QDII股票_基金类资产.getValue(), null),
+     资产基本信息_资产管理产品信息("svrBussRepAssetMngProdInfoDto", DictCodeListExt2.资产_负债类别_资产管理产品.getValue(), null),
+     资产基本信息_其他非标准化债券权益境外理财投资信息("svrBussRepOtherInvestTargetInfoDto", DictCodeListExt2.资产_负债类别_各类资产的其他项.getValue(), null),
+     资产基本信息_公募私募基金信息("svrBussRepFundInfoDto", DictCodeListExt2.资产_负债类别_私募基金.getValue(), null),
+     资产基本信息_委外投资信息("svrBussRepOutInvestAgrInfoDto", DictCodeListExt2.资产_负债类别_委外投资_协议方式.getValue(), null),
 
     ;
 

@@ -143,7 +143,17 @@ public class AssetInfoDetail002Controller extends BaseController {
         if(StringUtil.isEmptyList(list)){
             SelectDto selectDto1 = this.getSelectDataFromDataDic(DictCode.资产_负债二级类别, null);
             for (SelectOptionDto dto : selectDto1.getOptions()) {
-                list.add(dto);
+                // add by zhangliang 20210204 增加前台输入过滤 start
+                if (StringUtil.isNotEmpty(params.get("search"))){
+                    if (StringUtil.indexOf(dto.getId(), params.get("search").toString()) > -1
+                        || StringUtil.indexOf(dto.getText(), params.get("search").toString()) > -1){
+                        list.add(dto);
+                    }
+                }else{
+                    list.add(dto);
+                }
+//                list.add(dto);
+                // add by zhangliang 20210204 增加前台输入过滤 end
             }
         }
         return list;

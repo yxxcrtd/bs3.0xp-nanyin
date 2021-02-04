@@ -247,6 +247,13 @@ public class SVReportGlobalConstant {
      */
     public static final String SVR_IS_CHL_BTM = "SVR_IS_CHL_BTM";
 
+
+
+    /**
+     * 中债投资接入费用交易是否包含本行  01 包含 02 不含
+     */
+    public static final String SVR_FEE_ORG = "SVR_FEE_ORG";
+
     /**
      * 余额计算时单位净值是否要保留5位小数），01：是，02：否
      */

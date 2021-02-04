@@ -467,7 +467,7 @@
       AND nvl(d.fprod_id, d.prod_id) = info.prod_id
       AND D.SETTDATE_DATE <![CDATA[<=]]> #{enddate,jdbcType=DATE}
       )
-      and  info.status in  ('E','M') and  info.ISSUING_STATUS in  ('01','02','03')
+      and  info.status in  ('E','M') and  info.ISSUING_STATUS in  ('01')
 	)
   	 ,rate as(
 	     SELECT
@@ -741,7 +741,7 @@
         </if>
         <if test="monthReport!=null and monthReport=='01'">
         ,case when deal.prodtype in('N') 
-            then pm.endamtsum*prod.prod_value*nvl(rate.yeid,1)
+            then round(pm.endamtsum*prod.prod_value,2)*nvl(rate.yeid,1)
             else pm.endamtsum 
         end ENDAMTSUM_OTH /*期末余额*/
         </if>
