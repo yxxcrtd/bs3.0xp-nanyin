@@ -231,25 +231,9 @@
 
     var feeTypeChange = function () {
         var feeType = $("#feeType").val();
-        if(feeType == FEE_TYPE_B05){
-            $('#isPayWithTrade').next().removeClass("layui-form-onswitch");
-            $('#isPayWithTrade').next().find("em").text('否');
-            $('#isPayWithTrade').prop("checked",false).prop("disabled", false).trigger('change');
-        }else{
-            $('#isPayWithTrade').next().addClass("layui-form-onswitch");
-            $('#isPayWithTrade').next().find("em").text('是');
-            $('#isPayWithTrade').prop("checked",true).trigger('change');
-            if(feeType == FEE_TYPE_B02){
-                $('#isPayWithTrade').prop("disabled",true).trigger('change');
-            }else{
-                $('#isPayWithTrade').prop("disabled",false).trigger('change');
-            }
-        }
-        if(feeType == FEE_TYPE_B02){
-            $('#isGrade').val('N').prop('disabled',true).trigger('change');
-        }else{
-            $('#isGrade').prop('disabled',false).trigger('change');
-        }
+        $('#isPayWithTrade').next().addClass("layui-form-onswitch");
+        $('#isPayWithTrade').next().find("em").text('是');
+        $('#isPayWithTrade').prop("checked",true).prop("disabled", false).trigger('change');
         if(feeType == FEE_TYPE_B01 || feeType == FEE_TYPE_B07 || feeType == FEE_TYPE_B02){
             $("#secAcctId").val('').prop('disabled',true).prop("required",false).trigger('change');
         }else{
@@ -266,9 +250,12 @@
         if(feeType == FEE_TYPE_B01||feeType == FEE_TYPE_B07){
             $("#tradeType").val('F01').prop('disabled',true).trigger('change');
             $('#tradeMarketMode').val('02').prop('disabled',true).trigger('change');
+        }else if(feeType == FEE_TYPE_B02){
+            $('#tradeMarketMode').val('').prop('disabled',false).trigger('change');
+            $("#tradeType").val('F11').prop('disabled',true).trigger('change');
         }else{
             $('#tradeMarketMode').val('').prop('disabled',false).trigger('change');
-            $("#tradeType").val('').prop('disabled',false).trigger('change');
+            $("#tradeType").prop('disabled',false).trigger('change');
         }
         displayStar();
     }
@@ -385,7 +372,7 @@
                 $("#windtypeone").val('').prop('disabled',true).trigger('change');
                 $("#windtypetwo").val('').prop('disabled',true).trigger('change');
             }
-            if($(this).val() == PINAN_ASSET_TYPE_F11 && $('#feeType').val() == FEE_TYPE_B05){
+            if($(this).val() == PINAN_ASSET_TYPE_F11 && $('#feeType').val() == FEE_TYPE_B05 || $('#feeType').val() == FEE_TYPE_B02){
                 $('#isPayWithTrade').prop("disabled", true).trigger('change');
                 $('#isGrade').val('N').prop('disabled',true).trigger('change');
             }else{
@@ -413,16 +400,6 @@
                 $('#grade_div1').show().trigger('change');
             }
         });
-        $("#tradeType").trigger("change");
-        $("#isGrade").trigger('change');
-        feeTypeChange();
-//        $("#chargeType").trigger('change');
-        if(($("#workflowId").val()!=null&&$("#workflowId").val()!='')||pageModel!=PAGE_MODEL_NEW){
-            $("#windtypetwo").val(windtypetwo).trigger("change");
-            $("#chargeBasis").val(chargeBasis).trigger("change");
-            $("#feeMaxi").val(feeMaxi).trigger("change");
-            $("#feeMini").val(feeMini).trigger("change");
-        }
     });
 }());
 
