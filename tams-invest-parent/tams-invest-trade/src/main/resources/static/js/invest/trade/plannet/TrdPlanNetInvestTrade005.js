@@ -49,8 +49,16 @@ $(function() {
         done:function(){
         	var tradeAmt = 0;
         	var shareAmt = 0;
+        	var unitCprice = $('#unitCprice').val();
+        	var ps = $("#ps").val();
+        	var isDisabled = $("#tradeAmt").prop("disabled")
         	for(var i = 0; i < table.getAllRows().length; i++){
         		tradeAmt = JoyinMath.doAdd(tradeAmt, table.getAllRows()[i].tradeAmt, 2);
+
+        		if( unitCprice && unitCprice!= 1 && ps == ps_T19 && isDisabled){
+                    table.renderRow(i,  {"shareAmt": JoyinMath.doDiv(table.getAllRows()[i].tradeAmt,unitCprice,2)});
+        		}
+
         		shareAmt = JoyinMath.doAdd(shareAmt, table.getAllRows()[i].shareAmt, 2);
         	}
         	$('#tradeAmt').val(tradeAmt).trigger('change');
@@ -135,6 +143,43 @@ $(function() {
 			 }
 		 }	
     }
+
+    function feeAmtRedemByTradeAmt(){
+
+        var feeAmtPay = 0;
+        var feeAmtPayAll = $("#feeAmtRedem").val() || 0;
+         var tradeAmtAll = $("#tradeAmt").val();
+         if(tradeAmtAll){
+             var rownum = 0;
+             var sumAmt = 0;
+             //寻求表格数据本金金额非零最后索引值
+             for(var i=0;i<table.getAllRows().length;i++){
+                 var a = table.getAllRows()[i].tradeAmt;
+                 if(a && Number(a) != Number(0)){
+                     rownum = i;
+                 }
+             }
+             for(var i=0;i<table.getAllRows().length;i++){
+                 var aa = table.getAllRows()[i].tradeAmt;
+                 if(i== rownum&& Number(aa) != Number(0)){//最后一个组合采用倒减法
+                     if(aa ){
+                         feeAmtPay = JoyinMath.doMinus(feeAmtPayAll,sumAmt,2);
+                     }else{
+                         feeAmtPay = JoyinMath.doAdd(0,0,2);
+                     }
+                 }else{
+                     if(aa && Number(aa) != Number(0)){
+                         var scale = JoyinMath.doMul(feeAmtPayAll,aa,6);
+                         feeAmtPay = JoyinMath.doDiv(scale, tradeAmtAll, 2);
+                     }else{
+                         feeAmtPay = JoyinMath.doAdd(0,0,2);
+                     }
+                     sumAmt = JoyinMath.doAdd(sumAmt, feeAmtPay, 2);
+                 }
+                 table.renderRow(i,  {"feeAmtPay": feeAmtPay});
+             }
+         }
+    }
     
     function tradeAmtDistribution(){
     	//单位净价
@@ -171,8 +216,9 @@ $(function() {
                     //交易金额
                     var tradeAmtTmp = JoyinMath.doAdd(table.getAllRows()[i].tradeAmt, 0, 2);
                     //申购确认，
-                    var shareAmtTmp = JoyinMath.doMul(JoyinMath.doDiv(tradeAmtTmp, tradeAmt, 2),shareAmt,2);
+                    var shareAmtTmp = JoyinMath.doDiv(JoyinMath.doMul(tradeAmtTmp, shareAmt),tradeAmt,2);
                     table.renderRow(i, {'shareAmt' : shareAmtTmp});
+
 
             }
         }
@@ -340,13 +386,18 @@ $(function() {
          */
         $('#unitCprice').change(function(){
             var unitCprice = $('#unitCprice').val();
+//            if(unitCprice){
+//                table.table? table.reload() : table.load();
+//            }
+
             var ps = $('#ps').val();
             var shareAmt = $('#shareAmt').val();
             if(ps == ps_T05){
                 var tradeAmtHid = $('#tradeAmtHid').val();
+                var feeAmtPay = $('#feeAmtPay').val();
                 // 申购确认，调整交易份额  交易份额不应显示反算理论值 yjm 20190726
                 if( unitCprice != null && unitCprice != '' && unitCprice != 0){
-                    $('#shareAmt').val(tradeAmtHid/unitCprice).trigger('change');
+                    $('#shareAmt').val(JoyinMath.doDiv(JoyinMath.doMinus(tradeAmtHid,feeAmtPay,2),unitCprice,2)).trigger('blur');
                 }
             }else if((ps == ps_T19 || ps == ps_T24)){
                 var isDisabled = $("#tradeAmt").prop("disabled");
@@ -417,7 +468,7 @@ $(function() {
             if(isDisabled){
                 // 如果金额不允许编辑 则影响的是份额
                 $('#shareAmt').val(JoyinMath.doDiv(JoyinMath.doMinus(tradeAmt,feeAmtRedem,2) ,unitCprice,2)  ).trigger('change');
-                feeAmtRedemDistribution();
+                feeAmtRedemByTradeAmt();
 
             }else{
                     $('#tradeAmt').val(Number(tradeAmt)-Number(feeAmtRedem)).trigger('blur');
@@ -458,7 +509,7 @@ $(function() {
         });*/
         //需求提出不要反算金额 yjm end 20191029
 
-        $('#shareAmt').change(function(){
+        $('#shareAmt').on('blur',function(){
             if($('#ps').val() == ps_T05 || $('#ps').val() == ps_T19){
                 // 输入份额 多组合列表中重新计算
                 shareAmtFenpei();
