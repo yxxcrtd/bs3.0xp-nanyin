@@ -98,4 +98,77 @@
             and BRANCH = #{branch, jdbcType=DECIMAL}
         </if>
     </sql>
+    <!-- 华兴银行：组合持仓融入融出明细共通 added by liuwei 2020/1/9 S -->
+    <!-- 查询组合持仓融入融出明细值 -->
+    <select id="selectSecPositionDetail" resultType="java.math.BigDecimal" >
+        select
+        SUM(AMOUNT)
+        from PTL_SEC_POSITION_DETAIL
+        where CDATE = #{cdate,jdbcType=DATE}
+        <if test="pFinprodId != null and pFinprodId != ''">
+            AND TRADE_ID = #{pFinprodId}
+        </if>
+        <if test="acctType != null and !acctType.isEmpty() and needAcctType">
+            and SEC_ACCT_ID in (
+            SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID = #{portfolioId}
+            <foreach collection="acctType" open=" and ACCT_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
+            )
+        </if>
+    </select>
+    <!-- 查询融入融出明细最大持仓日 -->
+    <sql id="whereSqlDetail">
+        <if test="portfolioId != null and portfolioId != ''">
+            and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+        </if>
+        <if test="hodingType != null and hodingType != ''">
+            and HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+        </if>
+        <if test="channel != null and channel">
+            and SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
+        </if>
+        <if test="!channel and secAcctId != null and secAcctId != ''">
+            and SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
+        </if>
+        <if test="!channel and (secAcctId == null or secAcctId == '') and (entrust == null || !entrust)">
+            and SEC_ACCT_ID = '999999'
+        </if>
+        <if test="tradeId != null and tradeId != ''">
+            AND TRADE_ID = #{tradeId}
+        </if>
+        <if test="finprodId != null and finprodId != ''">
+            and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        </if>
+        <if test="branch != null">
+            and BRANCH = #{branch, jdbcType=DECIMAL}
+        </if>
+    </sql>
+    <select id="selectSecPositionDetailMaxCdate" resultType="java.util.Date" >
+        select
+        max(CDATE)
+        from PTL_SEC_POSITION_DETAIL
+        where CDATE &lt;= #{cdate,jdbcType=DATE}
+        <include refid="whereSqlDetail"/>
+        <if test="acctType != null and !acctType.isEmpty() and needAcctType">
+            and SEC_ACCT_ID in (
+            SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID = #{portfolioId}
+            <foreach collection="acctType" open=" and ACCT_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
+            )
+        </if>
+    </select>
+    <!-- 检索组合持仓融入融出明细的最大日期 -->
+    <select id="selectMaxCdateDetail" resultType="string" >
+        select
+        to_char(MAX(CDATE), 'yyyy-MM-dd')
+        from PTL_SEC_POSITION_DETAIL
+        <where>
+            <include refid="whereSqlDetail"/>
+        </where>
+    </select>
+    <!-- 更新交易日之后的持仓数据 -->
+    <update id="updatePositionDetail" parameterType="map">
+        UPDATE PTL_SEC_POSITION_DETAIL SET AMOUNT = AMOUNT + #{amount}
+        where CDATE between TO_DATE(#{minDate}, 'yyyy-MM-dd') AND TO_DATE(#{maxDate}, 'yyyy-MM-dd')
+        <include refid="whereSqlDetail"/>
+    </update>
+    <!-- 华兴银行：组合持仓融入融出明细共通 added by liuwei 2020/1/9 E -->
 </mapper>

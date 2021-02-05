@@ -10,6 +10,55 @@
             )
         </if>
     </delete>
+    <!--add for 华兴 by liupengfei S-->
+    <delete id="deleteTodaySecPosDetailData">
+        delete from PTL_SEC_POSITION_DETAIL where CDATE = #{batchDate,jdbcType=DATE}
+        <if test="productIdList != null and !productIdList.isEmpty()">
+            and (
+            <include refid="com.joyintech.tams.invest.batch.autogeneration.cashpos.dao.CashPosAutoGenerationMapper.portfolio_id_in_sql" />
+            )
+        </if>
+    </delete>
+    <insert id="insertTodaySecPosDetailData">
+        insert into PTL_SEC_POSITION_DETAIL (PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID,
+        BRANCH, TRADE_ID, HODING_TYPE, CDATE,
+        AMOUNT, CCY, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        SELECT
+        targetTable.PORTFOLIO_ID, targetTable.SEC_ACCT_ID, targetTable.FINPROD_ID,
+        targetTable.BRANCH, targetTable.TRADE_ID,targetTable.HODING_TYPE, #{batchDate,jdbcType=DATE},
+        SUM(targetTable.AMOUNT), targetTable.CCY,'system', null, sysdate, 'system', sysdate
+        FROM
+        (
+        SELECT
+        PORTFOLIO_ID, NVL(SEC_ACCT_ID, '999999') as SEC_ACCT_ID, FINPROD_ID, BRANCH, TRADE_ID, HODING_TYPE, CCY ,AMOUNT
+        FROM
+        PTL_SEC_POSITION_DETAIL
+        WHERE
+        HODING_TYPE IN (#{POSITION_TYPE_05,jdbcType=VARCHAR},#{POSITION_TYPE_06,jdbcType=VARCHAR})
+        and CDATE = #{lastDate,jdbcType=DATE}
+        <if test="productIdList != null and !productIdList.isEmpty()">
+            and (
+            <include refid="com.joyintech.tams.invest.batch.autogeneration.cashpos.dao.CashPosAutoGenerationMapper.portfolio_id_in_sql" />
+            )
+        </if>
+        union all
+        SELECT
+        PORTFOLIO_ID, NVL(SEC_ACCT_ID, '999999') as SEC_ACCT_ID, FINPROD_ID, BRANCH, P_FINPROD_ID as TRADE_ID, HODING_TYPE, CCY, AMOUNT
+        FROM
+        PTL_SEC_POSITION_FLOW
+        WHERE
+        HODING_TYPE IN (#{POSITION_TYPE_05,jdbcType=VARCHAR},#{POSITION_TYPE_06,jdbcType=VARCHAR})
+        and CDATE = #{batchDate,jdbcType=DATE}
+        <if test="productIdList != null and !productIdList.isEmpty()">
+            and (
+            <include refid="com.joyintech.tams.invest.batch.autogeneration.cashpos.dao.CashPosAutoGenerationMapper.portfolio_id_in_sql" />
+            )
+        </if>
+        ) targetTable
+        GROUP BY targetTable.PORTFOLIO_ID, targetTable.SEC_ACCT_ID, targetTable.FINPROD_ID, targetTable.BRANCH, targetTable.TRADE_ID,  targetTable.HODING_TYPE, targetTable.CCY
+    </insert>
+    <!--add for 华兴 by liupengfei E-->
     <delete id="deleteReportTodaySecPosData">
         delete from ASSET_TARGET_DB where CDATE =#{batchDate,jdbcType=DATE}
     </delete>

@@ -10,13 +10,16 @@
 
 package com.joyintech.tams.invest.batch.autogeneration.secpos.dao;
 
-import java.util.List;
-import java.util.Map;
-
 import com.joyintech.tams.busicommon.productRating.dto.CommonProductRatingDto;
-import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.base.entity.AssetTargetDb;
+import com.joyintech.tams.common.base.entity.FinCashCalcRule;
+import com.joyintech.tams.common.base.entity.FinExercisePlan;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.invest.batch.autogeneration.secpos.dto.AssetTargetDbDto;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 组合持仓自动生成批处理Mapper
@@ -128,4 +131,25 @@ public interface SecPosAutoGenerationMapper {
      * @since 1.0
      */
     List<String> getAssetRiskTypeList(Map<String, Object> paramMap);
+
+    //add for 华兴 by liupengfei S
+    /**
+     * 删除当日组合持仓融入融出明细数据
+     *
+     * @param paramMap 参数
+     * @return 执行结果
+     * @see
+     * @since 1.0
+     */
+    int deleteTodaySecPosDetailData(Map<String, Object> paramMap);
+    /**
+     * 通过汇总昨日持仓数据和当日融入融出明细数据，生成当日持仓数据
+     *
+     * @param paramMap 参数
+     * @return 执行结果
+     * @see
+     * @since 1.0
+     */
+    int insertTodaySecPosDetailData(Map<String, Object> paramMap);
+    //add for 华兴 by liupengfei E
 }
