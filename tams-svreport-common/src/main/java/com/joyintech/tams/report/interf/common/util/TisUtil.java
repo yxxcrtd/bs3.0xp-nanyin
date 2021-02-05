@@ -569,7 +569,7 @@ public class TisUtil {
 									HSSFCell baseCell = (HSSFCell) row.getCell(index);
 									HSSFCell newcell = (HSSFCell) row.createCell(index);
 									copyCell((HSSFWorkbook) wb, baseCell, newcell, true);
-                                  if(exceltemplate.contains("G06")){
+                                  if(exceltemplate.contains("Monthreport")){
 									  try {
 										  newcell.setCellValue(Double.parseDouble(value));
 									  }catch(Exception e){
