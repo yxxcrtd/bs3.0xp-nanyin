@@ -135,6 +135,19 @@ public class InvestFeePay002Dto extends BaseEntity implements ProcessEntity {
     private String finprodId;
 
     /**
+     * 存json串
+     */
+    private String allData;
+
+    public String getAllData() {
+        return allData;
+    }
+
+    public void setAllData(String allData) {
+        this.allData = allData;
+    }
+
+    /**
      * 市场代码
      */
     private String finprodMarketId;

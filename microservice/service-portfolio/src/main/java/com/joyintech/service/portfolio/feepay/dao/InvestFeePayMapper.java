@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.base.core.dto.WflValidInputParameter;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.SubjectBalance;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.SubjectBalanceSearchDto;
 import org.apache.ibatis.annotations.Param;
@@ -397,4 +398,6 @@ public interface InvestFeePayMapper {
     String inputWflDataType(String tradeId);
 
     List<SelectOptionDto> getPortFolioName(Map<String, Object> map);
+
+    List<InvestFeePayDto> getBusinessData(WflValidInputParameter parameter);
 }

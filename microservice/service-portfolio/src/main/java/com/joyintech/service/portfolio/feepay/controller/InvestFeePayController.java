@@ -8,6 +8,7 @@ import java.util.Map;
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.base.core.dto.WflValidInputParameter;
 import com.joyintech.tams.invest.common.dto.common.TrdCommonParam;
 import com.joyintech.tams.invest.common.dto.common.TrdCommonWflParam;
 import com.joyintech.tams.invest.common.product.dto.FinProductExpireBaseTrdDto;
@@ -54,6 +55,20 @@ public class InvestFeePayController {
     public Page<InvestFeePayDto> selectForPage(@RequestBody Map<String, Object> param,
                                                    @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
         return investFeePayService.selectForPage(page, length, param);
+    }
+
+    /**
+     * 根据pageId查询所有存在于工作流当中的数据
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @param parameter
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("/getBusinessData")
+    public List<InvestFeePayDto> getBusinessData(@RequestBody WflValidInputParameter parameter){
+        return investFeePayService.getBusinessData(parameter);
     }
     
     /**
