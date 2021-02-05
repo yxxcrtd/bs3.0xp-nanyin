@@ -255,6 +255,7 @@ var QueryFunc=function(){
 
         }else if(obj["05"].indexOf(repAssetType)>=0){
             //票据类资产/信用证类资产
+            $("#svrBussRepAssetAstBillInfoDto_privateFlag").val('02').trigger("change");
             if(repAssetType=='1210'){
                 //类型默认05置灰不可修改
                 $("#svrBussRepAssetAstBillInfoDto_notstandSecType").val('05').attr('disabled', true).trigger('change');
