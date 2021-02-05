@@ -123,7 +123,7 @@ public class FinFloatMgtExpQuotationValidator implements BeanValidator{
                 }
             }
             else{
-                errorList.add(new ValidMessage("", "业绩基准不能为空！"));
+                errorList.add(new ValidMessage("", "超额业绩报酬不能为空！"));
             }
             String finprodId=finFloatMgtExpQuotation001Dto.getFinprodId();
             Date effDate=finFloatMgtExpQuotation001Dto.getEffDate();
