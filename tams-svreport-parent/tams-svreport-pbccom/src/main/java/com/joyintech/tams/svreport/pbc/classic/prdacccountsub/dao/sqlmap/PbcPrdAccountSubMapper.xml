@@ -272,7 +272,7 @@
 		else PROD_NAME
 		end ACCOUNT_NAME,
 		VDATE,
-		PROD_ID ACCOUNT_ID,
+        INFO.PROD_ID ACCOUNT_ID,
 		sysdate STATUS_DATE,
 		info.STATUS,
 		info.CREATE_USER,
@@ -280,10 +280,25 @@
 		info.ORG_CODE,
 		info.DEPT_CODE CREATE_DEPT
 		from chb_prd_baseinfo info
-		where 
-			to_char(greatest(nvl(NVL(info.UPDATE_TIME,info.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),nvl(info.VDATE,to_date('1900-01-01','yyyy-MM-dd')))
-			,'yyyy-MM-dd') = to_char(#{statusDate,jdbcType=DATE},'yyyy-MM-dd')
-			and info.PROFIT_TYPE='03'
+
+		/****add by leipeng 人行产品基本信息，人行产品代码一旦生成，修改基本信息数据在重新跑批也不会改变了  start**/
+        LEFT JOIN (
+        select nvl(DEAL.FPROD_ID,DEAL.PROD_ID) PROD_ID, max(UPDATE_TIME) UPDATE_TIME,max(CREATE_TIME) CREATE_TIME
+         from
+            CHB_PRD_DEAL deal
+        where  trade_type = '01' and status IN ('E','M')
+        group by DEAL.FPROD_ID,DEAL.PROD_ID
+
+      ) DEAL ON INFO.PROD_ID = deal.PROD_ID
+      where to_char(greatest(nvl(NVL(info.UPDATE_TIME, info.CREATE_TIME),
+                      to_date('1900-01-01', 'yyyy-MM-dd')),
+                      nvl(info.VDATE, to_date('1900-01-01', 'yyyy-MM-dd')),
+                      nvl(NVL(DEAL.UPDATE_TIME, DEAL.CREATE_TIME),
+                      to_date('1900-01-01', 'yyyy-MM-dd'))),'yyyy-MM-dd') = to_char(#{statusDate,jdbcType=DATE},'yyyy-MM-dd')
+            and deal.PROD_ID is not null
+      /****add by leipeng 人行产品基本信息，人行产品代码一旦生成，修改基本信息数据在重新跑批也不会改变了   end**/
+
+      and info.PROFIT_TYPE='03'
 			and info.fprod_id is null
 			and info.ISSUING_STATUS='01'
 		<if test="prodList !=null  and prodList.size()!=0">
