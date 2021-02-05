@@ -289,9 +289,9 @@ $(function(){
         },
         cols:[
              {field:'statusValidString',title:'TrdQueryDuration001.statusValid',width:100,sortField:'validStatus'}
-            ,{field:'busiCode', title: 'TrdQueryDuration001.tradeId',width:170}
-            ,{field:'finprodType2String', title:'TrdQueryDuration001.finprodType2',width:170}
-            ,{field:'paBussTypeString', title: 'TrdQueryDuration001.paBussTypeString',width:170}
+            ,{field:'busiCode', title: 'TrdQueryDuration001.tradeId',width:170, sortField:"busiCode"}
+            ,{field:'finprodType2String', title:'TrdQueryDuration001.finprodType2',width:170, sortField:"finprodType2"}
+            ,{field:'paBussTypeString', title: 'TrdQueryDuration001.paBussTypeString',width:170, sortField:"paBussType"}
         	,{field:'portfolioId', title: 'TrdQueryDuration001.portfolioId',
                 render : function(data, type, row, meta) {
                     if(row.portfolioId !=undefined) {
@@ -299,9 +299,9 @@ $(function(){
                             + '\')" class="pro-link"  style="cursor: pointer;">' + row.portfolioId + '</a>';
                     }
                 }
-                ,width:130
+                ,width:130, sortField:"portfolioId"
             }
-        	,{field:'portfolioName',title: 'TrdQueryDuration001.portfolioName',width:140}
+        	,{field:'portfolioName',title: 'TrdQueryDuration001.portfolioName',width:140, sortField:"portfolioName"}
             ,{field:'secAcctName', width:130, title: function(){return JoyinUtil.getLabel("TrdQueryDuration001.secAcctId")+'/'+JoyinUtil.getLabel("TrdQueryDuration001.channelId");}(), sortField:'secAcctName'}
         	,{field:'finprodMarketId', title: 'TrdQueryDuration001.finprodMarketId',
                 render : function(data, type, row, meta) {
@@ -311,14 +311,14 @@ $(function(){
                 }
                 ,width:180
             }
-        	,{field:'finprodAbbr',title: 'TrdQueryDuration001.finprodAbbr',width:160}
+        	,{field:'finprodAbbr',title: 'TrdQueryDuration001.finprodAbbr',width:160, sortField:"finprodAbbr"}
             ,{field:'vDate', width:120, title: 'TrdQueryDuration001.vDate',sortField:'vDate'}
             ,{field:'mDate', width:120, title: 'TrdQueryDuration001.mDate',sortField:'mDate'}
-        	,{field:'tradeAmt2String', title: 'TrdQueryDuration001.amt',width:150,type:'number'}
-            ,{field:'shareAmt', title: 'TrdQueryDuration001.shareAmt',width:150,type:'number'}
-        	,{field:'ccyVal', title: 'TrdQueryDuration001.ccy',width:120,sortField:'ccy'}
+        	,{field:'tradeAmt2String', title: 'TrdQueryDuration001.amt',width:150,type:'number', sortField:"tradeAmt",sort: false}
+            ,{field:'shareAmt', title: 'TrdQueryDuration001.shareAmt',width:150,type:'number',sortField:"shareAmt"}
+        	,{field:'ccyVal', title: 'TrdQueryDuration001.ccy',width:120,sortField:'ccy',sortField:"ccy"}
         	,{field:'tradeDate', title: 'TrdQueryDuration001.tradeDate',width:100,sortField:'tradeDate'}
-        	,{field:'remark', title: 'TrdQueryDuration001.remark',width:100}
+        	,{field:'remark', title: 'TrdQueryDuration001.remark',width:100,sortField:"remark"}
             ,{field:'ps', visible:false}
             ,{field:'paBussType', visible:false}
             ,{field:'totleTradeId', visible:false}
