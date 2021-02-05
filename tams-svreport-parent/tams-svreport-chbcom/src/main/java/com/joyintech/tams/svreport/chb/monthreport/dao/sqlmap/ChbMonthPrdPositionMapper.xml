@@ -458,14 +458,14 @@
 	    and  info.vdate <![CDATA[<=]]>  #{enddate,jdbcType=DATE}
        /**历史到期产品不统计*/
       AND NOT EXISTS (
-      SELECT
-      1
-      FROM
-      chb_prd_deal d
-      WHERE
-      d.trade_type = '16'
-      AND nvl(d.fprod_id, d.prod_id) = info.prod_id
-      AND D.SETTDATE_DATE <![CDATA[<=]]> #{enddate,jdbcType=DATE}
+          SELECT
+          1
+          FROM
+          chb_prd_deal d
+          WHERE
+          d.trade_type = '16'
+          AND nvl(d.fprod_id, d.prod_id) = info.prod_id
+          AND D.SETTDATE_DATE <![CDATA[<]]> #{startdate,jdbcType=DATE}
       )
       and  info.status in  ('E','M') and  info.ISSUING_STATUS in  ('01')
 	)
