@@ -288,7 +288,7 @@ $(function(){
             }
         },
         cols:[
-             {field:'statusValidString',title:'TrdQueryDuration001.statusValid',width:100,sortField:'validStatus'}
+             {field:'statusValidString',title:'TrdQueryDuration001.statusValid',width:100,sortField:'statusValid'}
             ,{field:'busiCode', title: 'TrdQueryDuration001.tradeId',width:170, sortField:"busiCode"}
             ,{field:'finprodType2String', title:'TrdQueryDuration001.finprodType2',width:170, sortField:"finprodType2"}
             ,{field:'paBussTypeString', title: 'TrdQueryDuration001.paBussTypeString',width:170, sortField:"paBussType"}
