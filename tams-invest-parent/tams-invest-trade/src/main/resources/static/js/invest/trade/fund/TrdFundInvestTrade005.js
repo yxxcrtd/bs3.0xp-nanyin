@@ -777,6 +777,16 @@ $(function () {
                 }
             }
         });
+
+        $('#shareAmt').on('blur',function(){
+            var ps = $('#ps').val();
+            if (ps == ps_T05) {
+
+               shareAmtBlur_DZH();
+
+            }
+
+        })
         /**
          * 预计到账日
          */
@@ -1443,6 +1453,30 @@ $(function () {
     //         tradeAmtDistribution();
     //     }
     // }
+
+     function shareAmtBlur_DZH() {
+
+         var ps = $('#ps').val();
+         //var unitCprice = $('#unitCprice').val();
+         var shareAmtAll = $('#shareAmt').val();
+         var tradeAmtAll = $('#tradeAmt').val();
+
+         if (ps == ps_T05) {
+              for (var i = 0; i < table.getAllRows().length; i++) {
+                  var tradeAmt = table.getAllRows()[i].tradeAmt;
+                  if(shareAmtAll) {
+                      if (tradeAmt&& tradeAmtAll ) {
+                          // $('#tradeAmt').val(unitCprice * shareAmt + parseFloat(carryAmt) - getPayWithTradeFee()).trigger('blur');
+                          // 金额/总金额*总份额
+                          table.renderRow(i, {'shareAmt': JoyinMath.doDiv( JoyinMath.doMul(tradeAmt,shareAmtAll) ,tradeAmtAll,2) });
+                      }
+                  }else{
+                      table.renderRow(i, {'shareAmt': Number(0)});
+                  }
+              }
+         }
+     }
+
     /**
      * 画面加载完成
      */
