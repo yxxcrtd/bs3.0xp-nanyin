@@ -573,6 +573,9 @@ $(function () {
 //                     getPtlCashPositionInfo();
 //                 }
             }
+            //赎回确认是交易金额不置灰
+            $('#tradeAmt').attr('disabled',ps != ps_T19);
+            
         });
         //modify by gaopeng 20191018 页面优化 end
         /**
