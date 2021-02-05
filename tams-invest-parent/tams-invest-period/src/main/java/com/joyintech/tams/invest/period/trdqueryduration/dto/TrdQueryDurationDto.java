@@ -11,10 +11,13 @@
 package com.joyintech.tams.invest.period.trdqueryduration.dto;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.validation.annotation.ValidLogic;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTotalTradeInfoDto;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondDurDbInertDto;
+import com.joyintech.tams.invest.period.trdqueryduration.validator.TrdQueryDurationValidator;
 
 import java.math.BigDecimal;
 import java.util.List;

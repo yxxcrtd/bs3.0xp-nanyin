@@ -42,8 +42,8 @@ public class TrdQueryDurationValidator implements BeanValidator {
     @SuppressWarnings("unchecked")
     @Override
     public List<ValidMessage> valid(Object value) {
-        TrdQueryDurationDto entity = (TrdQueryDurationDto)value;
-        List<ValidMessage> validList = new ArrayList<ValidMessage>();
-        return validList; 
+        ArrayList<ValidMessage> errorList = new ArrayList<>();
+        errorList.add(new ValidMessage(getMessage("资金到账日不允许为空！")));
+        return errorList;
     }
 }
