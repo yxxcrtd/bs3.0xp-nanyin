@@ -56,7 +56,7 @@ public class TrdBondDuration003DtoValidator implements PeriodCommonValidator {
                 Map<String,Object> map = new HashMap<>();
                 map.put("finprodMarketId",dto.getFinprodMarketId());
                 map.put("chlId",dto.getChlId());
-                map.put("tradeDate",DateUtil.format(dto.getSettleDate(),DateUtil.DEFAULT_DATE_FORMAT_EN));
+//                map.put("tradeDate",DateUtil.format(dto.getSettleDate(),DateUtil.DEFAULT_DATE_FORMAT_EN));
                List<String> dtos = trdBondDuration003Service.findProcessDtos(map);
                if (dtos.size() > 0){
                    errorList.add(
