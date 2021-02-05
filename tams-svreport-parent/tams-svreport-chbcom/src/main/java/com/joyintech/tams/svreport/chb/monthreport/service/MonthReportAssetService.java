@@ -284,6 +284,8 @@ public class MonthReportAssetService {
                         m.setStartdate(firstday);
 //                        chbMonthAssetPositionMapper.insert(m);
                         m.setOldAssetCode(p1.getAssetCode());
+                        //新加字段
+						m.setIsFhxgcp(p1.getIsFhxgcp());
                         positionList.add(m);
                     }
                 }
