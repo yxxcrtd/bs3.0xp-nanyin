@@ -154,7 +154,7 @@ public class CommonCodeCheckBatchService {
                 list.remove(i);
             }
 
-            if (StringUtil.equals(tableInfo.getTableName(), ChbCheckTableInfo.资产要素登记表INFO.getTableName())){
+            if (StringUtil.equals(CacheUtil.getSysParam("INSERT_ERRDATA_MODE"), "02") && StringUtil.equals(tableInfo.getTableName(), ChbCheckTableInfo.资产要素登记表INFO.getTableName())){
                 // 记录资产要素错误信息表
                 ChbAssetInfoErrodataWithBLOBs chbAssetInfoErrodata = createChbAssetInfoInterfErrdata(map);
                 if(chbAssetInfoErrodata != null) {
@@ -164,13 +164,16 @@ public class CommonCodeCheckBatchService {
         }
 
 		//错误信息入库
-		if(!erroList.isEmpty() && StringUtil.equals(CacheUtil.getSysParam("INSERT_ERRDATA_MODE"), "01")){
-			insertErroData(erroList);
-		}
-		// 资产要素错误信息入库
-        if(!chbAssetInfoErrorList.isEmpty() && StringUtil.equals(CacheUtil.getSysParam("INSERT_ERRDATA_MODE"), "02")){
-            deleteAssetInfoErrorDataByAssetCode(chbAssetInfoErrorList);
-            insertChbAssetInfoErroData(chbAssetInfoErrorList);
+        if (StringUtil.isEmptyList(chbAssetInfoErrorList)){
+            if(!erroList.isEmpty()){
+                insertErroData(erroList);
+            }
+        }else{
+            // 资产要素错误信息入库
+            if(!chbAssetInfoErrorList.isEmpty()){
+                deleteAssetInfoErrorDataByAssetCode(chbAssetInfoErrorList);
+                insertChbAssetInfoErroData(chbAssetInfoErrorList);
+            }
         }
 	}
 

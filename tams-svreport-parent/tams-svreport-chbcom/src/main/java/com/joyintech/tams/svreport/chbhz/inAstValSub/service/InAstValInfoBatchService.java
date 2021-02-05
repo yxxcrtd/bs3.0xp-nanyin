@@ -1,17 +1,26 @@
 package com.joyintech.tams.svreport.chbhz.inAstValSub.service;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.alibaba.fastjson.JSON;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.chbreport.codecheck.service.CommonCodeCheckTmpBatchService;
+import com.joyintech.tams.common.FileImpService;
+import com.joyintech.tams.common.InterfFile;
+import com.joyintech.tams.common.base.dao.BaseMapper;
+import com.joyintech.tams.common.base.dao.ChbAstValueSubMapper;
+import com.joyintech.tams.common.base.entity.ChbAstValSubTmp;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
-import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.util.SvrMaptoEntityUtil;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
+import com.joyintech.tams.svreport.chb.astvalueregist.dao.ChbAstValueRegist001Mapper;
+import com.joyintech.tams.svreport.chb.astvalueregist.dto.ChbAstValueRegist001Dto;
+import com.joyintech.tams.svreport.chbhz.inAstValSub.dao.InAstValInfoSvrMapper;
+import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -23,24 +32,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSON;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.FileImpService;
-import com.joyintech.tams.common.InterfFile;
-import com.joyintech.tams.common.base.dao.BaseMapper;
-import com.joyintech.tams.common.base.dao.ChbAstValueSubMapper;
-import com.joyintech.tams.common.base.entity.ChbAstValSubTmp;
-import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
-import com.joyintech.tams.svreport.chb.astvalueregist.dao.ChbAstValueRegist001Mapper;
-import com.joyintech.tams.svreport.chb.astvalueregist.dto.ChbAstValueRegist001Dto;
-import com.joyintech.tams.svreport.chbhz.inAstValSub.dao.InAstValInfoSvrMapper;
-import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
-import com.joyintech.tams.systemtools.util.CommonUtil;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 /**
  * 功能:资产估值信息登记生成批处理主service
  * @since 1.0.0
@@ -91,7 +86,7 @@ public class InAstValInfoBatchService extends FileImpService {
 
     // add by dubaojun 2020-10-12 配置无法实现，代码实现的check start
     @Autowired
-    private CommonCodeCheckBatchService commonCodeCheckBatchService;
+    private CommonCodeCheckTmpBatchService commonCodeCheckTmpBatchService;
     // add by dubaojun 2020-10-12 配置无法实现，代码实现的check end
     /**
      * @param  
@@ -115,7 +110,7 @@ public class InAstValInfoBatchService extends FileImpService {
         // add by dubaojun 2020-10-12 修复文件名为null异常的问题 end
 
         // add by dubaojun 2020-10-12 配置无法实现，代码实现的check start
-        commonCodeCheckBatchService.codeCheckCommon(listMap, ChbCheckTableInfo.资产估值信息登记表SUB, BUSSINESSKEY);
+		commonCodeCheckTmpBatchService.codeCheckTmpCommon(listMap, astValInfoTableName, BUSSINESSKEY);
         // add by dubaojun 2020-10-12 配置无法实现，代码实现的check end
         
         //3、正确数据处理
