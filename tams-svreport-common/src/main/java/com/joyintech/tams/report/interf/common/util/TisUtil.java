@@ -569,8 +569,15 @@ public class TisUtil {
 									HSSFCell baseCell = (HSSFCell) row.getCell(index);
 									HSSFCell newcell = (HSSFCell) row.createCell(index);
 									copyCell((HSSFWorkbook) wb, baseCell, newcell, true);
-									newcell.setCellValue(value);
-
+                                  if(exceltemplate.contains("G06")){
+									  try {
+										  newcell.setCellValue(Double.parseDouble(value));
+									  }catch(Exception e){
+										  newcell.setCellValue(value);
+									  }
+								  }else{
+									  newcell.setCellValue(value);
+								  }
 								}else if(paraMap.get(key)==null){
 									insertRow(row, 1);
 									Map<String, Object> value2=new HashMap<String, Object>();
