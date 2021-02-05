@@ -589,4 +589,14 @@ public class TrdBondDurationService extends BaseService {
     public List<SecPositionExerciseInfoDto> findSecPosition(Map<String, Object> param) {
         return trdBondDurationMapper.findSecPosition(param);
     }
+
+    public List<String> findProcessDtos(Map<String, Object> param) {
+        param.put("TRADE_STATUS01", DictCodeListExt1.交易状态_初始.getValue());
+        param.put("YESNO_N", DictCodeList.是否_否.getValue());
+        param.put("FINPROD_TYPE_TGF01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        param.put("STATUS_N", DictCodeList.数据状态_新建.getValue());
+        return trdBondDurationMapper.findProcessDtos(param);
+    }
+
+
 }

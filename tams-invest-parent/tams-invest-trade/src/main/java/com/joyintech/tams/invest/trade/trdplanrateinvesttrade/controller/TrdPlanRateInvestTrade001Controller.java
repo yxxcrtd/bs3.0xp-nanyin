@@ -18,6 +18,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
@@ -51,6 +52,7 @@ import com.joyintech.tams.invest.trade.trdplanrateinvesttrade.service.TrdPlanRat
 import com.joyintech.tams.invest.trade.trdplanrateinvesttrade.service.TrdPlanRateInvestTrade002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 /**
  * 计划类资产投资交易查询
@@ -167,6 +169,17 @@ public class TrdPlanRateInvestTrade001Controller extends BaseController{
             }
         }
         // 确认提醒 TISHKBS-1113【组合资金账户头寸查询】内转交易撤销提醒 add by hpp 2020-09-17 end
+        if (StringUtil.equals(dto.getOperateType(), "revoke")) {
+            if (trdCommonBaseService.isAlreadyRevoked(dto.getSelectedItem().get(0).getTradeId())) {
+                ValidMessage validMessage = new ValidMessage(getMessage("TRD_W_0001",
+                        getMessage("pingan.common.revoke"), getMessage("pingan.common.revoke")));
+                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+                errorList.add(validMessage);
+                AjaxResult ar = new AjaxResult();
+                ar.setErrorList(errorList);
+                return ar;
+            }
+        }
         return commonCheck(result, dto.getOperateType());
     }
     /**
@@ -226,13 +239,22 @@ public class TrdPlanRateInvestTrade001Controller extends BaseController{
         params.setBusinessCode(item -> item.getTotleTradeId());
         params.setBusinessType(DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue());
         // 业务说明：“交易编号：” + 上述取得的交易编号+“资产名称：”+画面.资产名称+“交易日：”+画面.交易日 
-        params.setComment(
-            entity -> this.getMessage("TrdPlanRateInvestTrade001.tradeId") + "("
-                      + entity.getTotleTradeId() + ")" + "-"
-                      + this.getMessage("TrdPlanRateInvestTrade001.finprodName") + "("
-                      + entity.getFinprodName() + ")" 
-                      + this.getMessage("TrdPlanRateInvestTrade001.tradeDate") + "("
-                          + DateUtil.format(entity.getTradeDate()) + ")" );
+//        params.setComment(
+//            entity -> this.getMessage("TrdPlanRateInvestTrade001.tradeId") + "("
+//                      + entity.getTotleTradeId() + ")" + "-"
+//                      + this.getMessage("TrdPlanRateInvestTrade001.finprodName") + "("
+//                      + entity.getFinprodName() + ")" 
+//                      + this.getMessage("TrdPlanRateInvestTrade001.tradeDate") + "("
+//                          + DateUtil.format(entity.getTradeDate()) + ")" );
+        
+        params.setComment((entity) -> WorkFlowUtil.concatComment(
+                getMessage("TrdPlanRateInvestTrade001.tradeId"),
+                entity.getTotleTradeId(),
+                getMessage("TrdPlanRateInvestTrade001.finprodName"), 
+                entity.getFinprodName(),
+                getMessage("TrdPlanRateInvestTrade001.tradeDate"),
+                DateUtil.format(entity.getTradeDate())
+                ));
         processParameter.setWorkFlowParameter(params);
         String msg = trdPlanRateInvestTrade002Service.start(processParameter, dto);
         return new AjaxResult(msg);

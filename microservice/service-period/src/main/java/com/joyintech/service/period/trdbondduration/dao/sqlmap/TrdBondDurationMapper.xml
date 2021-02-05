@@ -1193,4 +1193,28 @@
 		and PS = 'T23'
 		and TRADE_STATUS = '01'
 	</select>
+
+    <select id="findProcessDtos" resultType="java.lang.String">
+        SELECT
+           T1.TOTLE_TRADE_ID busiCode
+        FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
+        LEFT JOIN TRD_DEAL_TOTAL_ADD wtdta on t1.totle_trade_ID = WTDTA.TOTLE_TRADE_ID
+        LEFT JOIN FIN_PRODUCT T4 ON T1.FINPROD_ID = T4.FINPROD_ID
+        LEFT JOIN FIN_PRODUCT FP ON T1.CHL_ID = FP.FINPROD_ID
+        WHERE T1.TRADE_STATUS = #{TRADE_STATUS01}
+        AND nvl(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
+        AND wtdta.MP_FINPROD_ID IS NULL
+        AND T1.IS_CANCEL = #{YESNO_N}
+        AND T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF01}
+        AND T1.PS='T39'
+        <if test="finprodMarketId != null and !finprodMarketId.isEmpty()">
+            AND  T4.FINPROD_MARKET_ID = #{finprodMarketId}
+        </if>
+        <if test="chlId != null and !chlId.isEmpty()">
+            AND  T1.CHL_ID = #{chlId}
+        </if>
+        <if test="tradeDate != null and !tradeDate.isEmpty()">
+            AND T1.SETTLE_DATE = to_date(#{tradeDate}, 'yyyy-MM-dd')
+        </if>
+    </select>
 </mapper>

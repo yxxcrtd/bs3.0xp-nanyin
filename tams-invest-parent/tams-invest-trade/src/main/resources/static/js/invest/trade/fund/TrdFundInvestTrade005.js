@@ -573,6 +573,10 @@ $(function () {
 //                     getPtlCashPositionInfo();
 //                 }
             }
+            //赎回确认是交易金额不置灰
+            $('#tradeAmt').attr('disabled',ps != ps_T19);
+            $('#expectedArrivalDate').attr('disabled',ps != ps_T19);
+            
         });
         //modify by gaopeng 20191018 页面优化 end
         /**
@@ -693,6 +697,19 @@ $(function () {
          */
         $('#feeAmtPay,#commissionFee,#feeAmtPayPurchase').change(function () {
             var ps = $('#ps').val();
+
+            if(Number(getPayWithTradeFee())>= Number($('#tradeAmt').val())){
+                if(ps == ps_T05){
+                    $('#feeAmtPay').val('').trigger('change');
+                    Joyin.error("申购确认：各项费用和不能大于等于交易金额");
+                    return;
+                }else if(ps == ps_T19){
+                    $(this).val('').trigger('change');
+                    Joyin.error("赎回确认：各项费用和不能大于等于交易金额");
+                    return;
+                }
+            }
+
              if (ps == ps_T05 || ps == ps_T18) {
                 var tradeAmtHid2 = $('#tradeAmtHid2').val();
                 if (tradeAmtHid2) {
@@ -760,6 +777,16 @@ $(function () {
                 }
             }
         });
+
+        $('#shareAmt').on('blur',function(){
+            var ps = $('#ps').val();
+            if (ps == ps_T05) {
+
+               shareAmtBlur_DZH();
+
+            }
+
+        })
         /**
          * 预计到账日
          */
@@ -805,6 +832,7 @@ $(function () {
                 }
             }
         });
+        
 
         window.componentLoadCallback = function (isDone, pagePath, params) {
             if (isDone) {
@@ -1425,6 +1453,30 @@ $(function () {
     //         tradeAmtDistribution();
     //     }
     // }
+
+     function shareAmtBlur_DZH() {
+
+         var ps = $('#ps').val();
+         //var unitCprice = $('#unitCprice').val();
+         var shareAmtAll = $('#shareAmt').val();
+         var tradeAmtAll = $('#tradeAmt').val();
+
+         if (ps == ps_T05) {
+              for (var i = 0; i < table.getAllRows().length; i++) {
+                  var tradeAmt = table.getAllRows()[i].tradeAmt;
+                  if(shareAmtAll) {
+                      if (tradeAmt&& tradeAmtAll ) {
+                          // $('#tradeAmt').val(unitCprice * shareAmt + parseFloat(carryAmt) - getPayWithTradeFee()).trigger('blur');
+                          // 金额/总金额*总份额
+                          table.renderRow(i, {'shareAmt': JoyinMath.doDiv( JoyinMath.doMul(tradeAmt,shareAmtAll) ,tradeAmtAll,2) });
+                      }
+                  }else{
+                      table.renderRow(i, {'shareAmt': Number(0)});
+                  }
+              }
+         }
+     }
+
     /**
      * 画面加载完成
      */

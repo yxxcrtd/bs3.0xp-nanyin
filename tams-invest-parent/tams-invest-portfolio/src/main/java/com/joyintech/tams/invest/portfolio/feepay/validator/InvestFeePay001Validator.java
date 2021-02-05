@@ -74,7 +74,7 @@ public class InvestFeePay001Validator implements BeanValidator {
             // 数据状态必须为有效
             if (!StringUtil.equals(finProductFeePay001Dto.getEffectStatusStr(),
                 DictCodeListExt1.有效状态_有效.getCodeName())) {
-                validList.add(new ValidMessage(this.getMessage("FIN_PROD_E_0032",
+                validList.add(new ValidMessage(this.getMessage("FIN_PROD_E_0137",
                     DictCodeListExt1.有效状态_有效.getCodeName())));
             }
 

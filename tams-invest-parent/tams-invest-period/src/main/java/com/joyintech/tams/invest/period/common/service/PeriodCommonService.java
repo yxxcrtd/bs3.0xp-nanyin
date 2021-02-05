@@ -31,6 +31,7 @@ import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTotalTradeInfoDto;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTradeInfoDto;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
+import com.joyintech.tams.invest.common.trade.dao.PreTrdCommonMapper;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import org.apache.commons.collections.CollectionUtils;
@@ -62,6 +63,9 @@ public class PeriodCommonService extends BaseService {
     private TrdProductDealAddMapper trdProductDealAddMapper;
     @Autowired
     private PaTrdProductDealMapper paTrdProductDealMapper;
+
+    @Autowired
+    private PreTrdCommonMapper preTrdCommonMapper;
 
     @Autowired
     private PtlTradeMapper ptlTradeMapper;
@@ -729,5 +733,22 @@ public class PeriodCommonService extends BaseService {
         flowDto.setFinprodId(findprodId);
         flowDto.setBranch(branch);
         return basePtlRecePositionService.getPayDate(flowDto);//该资产还本计划的支付日
+    }
+
+    /**
+     * 根据交易编号查询该交易是否已被撤销
+     *
+     * @param tradeId 交易编号
+     * @return 该交易是否已被撤销
+     * @see
+     * @since 1.0
+     */
+    public Boolean isAlreadyRevoked(String totleTradeId) {
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("totleTradeId", totleTradeId);
+        paramMap.put("YES_NO_YES", DictCodeList.是否_是.getValue());
+        paramMap.put("TRADE_STATUS_03", DictCodeListExt1.交易流程状态_撤销.getValue());
+        return preTrdCommonMapper.selectRevokedDataCount(paramMap) > 0;
+
     }
 }

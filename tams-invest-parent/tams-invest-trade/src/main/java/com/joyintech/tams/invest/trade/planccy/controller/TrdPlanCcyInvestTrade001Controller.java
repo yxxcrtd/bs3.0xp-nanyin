@@ -153,6 +153,17 @@ public class TrdPlanCcyInvestTrade001Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
         ValidateGroupDelete.class}) TrdPlanCcyInvestTradeDto dto, BindingResult result) {
+        if (StringUtil.equals(dto.getOperateType(), "revoke")) {
+            if (trdCommonBaseService.isAlreadyRevoked(dto.getSelectedItem().get(0).getTradeId())) {
+                ValidMessage validMessage = new ValidMessage(getMessage("TRD_W_0001",
+                        getMessage("pingan.common.revoke"), getMessage("pingan.common.revoke")));
+                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+                errorList.add(validMessage);
+                AjaxResult ar = new AjaxResult();
+                ar.setErrorList(errorList);
+                return ar;
+            }
+        }
         //撤销时校验
         if (StringUtil.equals(dto.getOperateType(), "revoke")){
             //校验是否存在待确认的流程 yjm start 20190906
@@ -211,6 +222,7 @@ public class TrdPlanCcyInvestTrade001Controller extends BaseController {
                 }
             }
         }
+
         return commonCheck(result, dto.getOperateType());
     }
     /**
@@ -226,6 +238,17 @@ public class TrdPlanCcyInvestTrade001Controller extends BaseController {
     @RequestMapping("check2")
     public AjaxResult check2(@RequestBody @Validated({
         ValidateGroupDelete.class}) TrdPlanCcyInvestTradeConfirmDto dto, BindingResult result) {
+        if (StringUtil.equals(dto.getOperateType(), "revoke")) {
+            if (trdCommonBaseService.isAlreadyRevoked(dto.getSelectedItem().get(0).getTradeId())) {
+                ValidMessage validMessage = new ValidMessage(getMessage("TRD_W_0001",
+                        getMessage("pingan.common.revoke"), getMessage("pingan.common.revoke")));
+                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+                errorList.add(validMessage);
+                AjaxResult ar = new AjaxResult();
+                ar.setErrorList(errorList);
+                return ar;
+            }
+        }
         return commonCheck(result, dto.getOperateType());
     }
     /**

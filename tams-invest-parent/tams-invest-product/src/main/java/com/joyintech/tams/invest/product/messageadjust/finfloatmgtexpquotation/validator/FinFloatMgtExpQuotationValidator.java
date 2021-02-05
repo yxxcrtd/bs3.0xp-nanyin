@@ -123,7 +123,7 @@ public class FinFloatMgtExpQuotationValidator implements BeanValidator{
                 }
             }
             else{
-                errorList.add(new ValidMessage("", "业绩基准不能为空！"));
+                errorList.add(new ValidMessage("", "超额业绩报酬不能为空！"));
             }
             String finprodId=finFloatMgtExpQuotation001Dto.getFinprodId();
             Date effDate=finFloatMgtExpQuotation001Dto.getEffDate();
@@ -380,7 +380,7 @@ public class FinFloatMgtExpQuotationValidator implements BeanValidator{
                 }*/
             }
             else{
-                errorList.add(new ValidMessage("", "业绩基准不能为空！"));
+                errorList.add(new ValidMessage("", "超额业绩报酬不能为空！"));
             }
             String finprodId=finFloatMgtExpQuotation001Dto.getFinprodId();
             Date effDate=finFloatMgtExpQuotation001Dto.getEffDate();
@@ -408,7 +408,7 @@ public class FinFloatMgtExpQuotationValidator implements BeanValidator{
                 //当生效日后发生了浮动管理费计提、支付交易，不予保存
                 int count=finFloatMgtExpQuotation001Service.getFloatFeeCount(finprodId, effDateStr);
                 if(count > 0){
-                    errorList.add(new ValidMessage("", getMessage("报价生效日后有浮动管理费报价，不予保存。")));
+                    errorList.add(new ValidMessage("", getMessage("报价生效日后有浮动管理费报价。")));
                 }
                 //校验是否存在业绩基准代码
 //                if(StringUtil.isNotEmpty(finprodId) && StringUtil.isNotEmpty(effDate)){

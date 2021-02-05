@@ -11,8 +11,14 @@
 package com.joyintech.tams.invest.portfolio.feepay.validator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.invest.portfolio.feepay.service.InvestFeePay002Service;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -44,6 +50,9 @@ public class InvestFeePay002Validator implements BeanValidator {
      */
     @Autowired(required = false)
     private BussTrdTransferOrderService bussTrdTransferOrderService;
+
+    @Autowired(required = false)
+    private InvestFeePay002Service investFeePay002Service;
     
     
     @Autowired
@@ -56,6 +65,33 @@ public class InvestFeePay002Validator implements BeanValidator {
     public List<ValidMessage> valid(Object value) {
         InvestFeePay002Dto investFeePay002Dto = (InvestFeePay002Dto)value;
         List<ValidMessage> validList = new ArrayList<ValidMessage>();
+
+        WflValidInputParameter parameter = new WflValidInputParameter();
+        parameter.setPageId("InvestFeePay002");
+        List<InvestFeePay002Dto> businessData = investFeePay002Service.getBusinessData(parameter);
+        if (businessData != null && businessData.size() > 0 && investFeePay002Dto != null){
+            for (InvestFeePay002Dto businessDatum : businessData) {
+                if (businessDatum.getAllData() != null
+                        && StringUtil.isNotEmpty(businessDatum.getAllData())
+                        && !StringUtil.equals(businessDatum.getAllData(), "")){
+                    try {
+                        Map<String, Object> dtos = JsonUtils.stringToMap(businessDatum.getAllData());
+                        if (null != dtos && !dtos.isEmpty()){
+                            //当登记托管机构，费用类型，支付日，证券账户都与流程中数据一致时，返回提示信息
+                            if (StringUtil.equals(dtos.get("feeType"),investFeePay002Dto.getFeeType())
+                            && StringUtil.equals(dtos.get("regTrustOrg"),investFeePay002Dto.getRegTrustOrg())
+                            && StringUtil.equals(String.valueOf(dtos.get("payDate")),String.valueOf(investFeePay002Dto.getPayDate().getTime()))
+                            && StringUtil.equals(dtos.get("secAcctId"),investFeePay002Dto.getSecAcctId())){
+                                validList.add(new ValidMessage(getMessage("FinProductFeePay002.workflowMsg")));
+                                return validList;
+                            }
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
         // 划款指令check
         if (bussTrdTransferOrderService != null) {
             List<ValidMessage> list = bussTrdTransferOrderService.check(
@@ -74,6 +110,8 @@ public class InvestFeePay002Validator implements BeanValidator {
                 }
             }
         }
+
+
         
         if(StringUtil.equals(investFeePay002Dto.getChargeType(),
                 DictCodeList.收费类型_不规则费用.getValue())) {

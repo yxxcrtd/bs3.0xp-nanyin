@@ -1009,6 +1009,13 @@ AND NOT EXISTS (
 			<if test="org != null and org != ''">
 				AND PTL_FEE_POSITION.PTL_FEE_PLACE = #{org}
 			</if>
+			<if test="authorityType == '02' and userId != ''">
+				AND PORTFOLIO_ID IN
+				(select BUSINESS_ID from data_auth_notify_inst where INSTITUTION_CODE =
+				(select sd.INSTITUTION_CODE from SYS_USER su
+				left join SYS_DEPARTMENT sd on su.DEPT_CODE = sd.DEPT_CODE
+				where su.USER_ID= #{userId}))
+			</if>
   	</select>
   	
   	<!-- 根据交易编号查询流程中数据条数 -->
@@ -1297,5 +1304,82 @@ AND NOT EXISTS (
 		<if test="initValue != null and initValue != ''">
 			AND pp.PORTFOLIO_ID = #{initValue}
 		</if>
+	</select>
+
+
+	<sql id="getMaxHisNo">
+		select
+		max(HIS_NO)	       HIS_NO,
+		WORKFLOW_ID
+		from SYS_DATA_PROCESS_MARK
+		<where>
+			<if test="pageId != null and pageId !=''">
+				PAGE_ID = #{pageId}
+			</if>
+			<if test="pageIdList != null and pageIdList.size() > 0">
+				PAGE_ID in
+				<foreach collection="pageIdList" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+		group by  WORKFLOW_ID
+	</sql>
+
+	<select id="getBusinessData" resultType="com.joyintech.service.portfolio.feepay.dto.InvestFeePayDto">
+		select pm.STATUS status,
+		pm.BUSINESS_DATA allData,
+		pm.WORKFLOW_ID workflowId
+		from SYS_DATA_PROCESS_MARK pm
+		inner join (<include refid="getMaxHisNo"/>) tempHis on  pm.HIS_NO = tempHis.HIS_NO and pm.WORKFLOW_ID = tempHis.WORKFLOW_ID
+		<where>
+			<if test="seachMode != null and seachMode !='' and seachMode == '01'.toString()">
+				pm.status in ('A','U','P')
+			</if>
+			<if test="pageId != null and pageId !=''">
+				and pm.PAGE_ID = #{pageId}
+			</if>
+			<if test="pageIdList != null and pageIdList.size() > 0">
+				and pm.PAGE_ID in
+				<foreach collection="pageIdList" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
+			<if test="businessDataPk1 != null">
+				and pm.BUSINESS_DATA_PK1 = #{businessDataPk1}
+			</if>
+			<if test="businessDataPk2 != null">
+				and pm.BUSINESS_DATA_PK2 = #{businessDataPk2}
+			</if>
+			<if test="businessDataPk3 != null">
+				and pm.BUSINESS_DATA_PK3 = #{businessDataPk3}
+			</if>
+			<if test="businessDataPk4 != null">
+				and pm.BUSINESS_DATA_PK4 = #{businessDataPk4}
+			</if>
+			<if test="businessDataPk5 != null">
+				and pm.BUSINESS_DATA_PK5 = #{businessDataPk5}
+			</if>
+			<if test="businessDataPk6 != null">
+				and pm.BUSINESS_DATA_PK6 = #{businessDataPk6}
+			</if>
+			<if test="businessDataPk7 != null">
+				and pm.BUSINESS_DATA_PK7 = #{businessDataPk7}
+			</if>
+			<if test="businessDataPk8 != null">
+				and pm.BUSINESS_DATA_PK8 = #{businessDataPk8}
+			</if>
+			<if test="businessDataPk9 != null">
+				and pm.BUSINESS_DATA_PK9 = #{businessDataPk9}
+			</if>
+			<if test="businessDataPk10 != null">
+				and pm.BUSINESS_DATA_PK10 = #{businessDataPk10}
+			</if>
+			<if test="workflowId != null and workflowId !=''">
+				and pm.WORKFLOW_ID != #{workflowId}
+			</if>
+		</where>
+		<!-- 根据创建时间排序 （降序） -->
+		order by pm.create_time desc
 	</select>
 </mapper>

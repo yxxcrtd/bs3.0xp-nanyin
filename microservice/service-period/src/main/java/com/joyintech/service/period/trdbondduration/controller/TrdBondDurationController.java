@@ -201,4 +201,9 @@ public class TrdBondDurationController {
     public List<String> getFlowDeal(@RequestBody Map<String, Object> map) {
         return trdBondDurationService.getFlowDeal(map);
     }
+
+    @PostMapping("findProcessDtos")
+    public List<String> findProcessDtos(@RequestBody Map<String, Object> params) {
+        return trdBondDurationService.findProcessDtos(params);
+    }
 }

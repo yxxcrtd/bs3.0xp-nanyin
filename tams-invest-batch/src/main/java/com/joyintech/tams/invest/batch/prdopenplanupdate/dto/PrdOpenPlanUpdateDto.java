@@ -52,6 +52,7 @@ public class PrdOpenPlanUpdateDto extends NeedOperateEntity{
 	private String openDays; // 开放天数
 	private String cpriceRule; // 净值日取值规则
 	private String tradedayRule; // 营业日准则
+	private String payCycleV; // 支付频率
 	
 	private String hdayOpenFlag; // 节假日是否开放
 	
@@ -447,6 +448,12 @@ public class PrdOpenPlanUpdateDto extends NeedOperateEntity{
 	}
 	public void seteAccrDate(Date eAccrDate) {
 		this.eAccrDate = eAccrDate;
+	}
+	public String getPayCycleV() {
+		return payCycleV;
+	}
+	public void setPayCycleV(String payCycleV) {
+		this.payCycleV = payCycleV;
 	}
     
 }

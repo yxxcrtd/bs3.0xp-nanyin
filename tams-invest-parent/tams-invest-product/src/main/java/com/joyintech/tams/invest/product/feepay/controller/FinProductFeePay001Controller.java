@@ -19,6 +19,7 @@ import javax.validation.Valid;
 
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.product.messageadjust.finfloatmgtexpquotation.dto.FinFloatMgtExpQuotation001Dto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -103,6 +104,13 @@ public class FinProductFeePay001Controller extends BaseController {
     private TrdFinProductDealTotalMapper trdFinProductDealTotalMapper;
     @Autowired
     private MstFeeinfoMapper mstFeeinfoMapper;
+
+    /**
+     * 交易基础组件调用Service
+     */
+    @Autowired
+    private TrdCommonBaseService trdCommonBaseService;
+
     /**
      * {@inheritDoc}
      */
@@ -225,6 +233,17 @@ public class FinProductFeePay001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("check")
     public AjaxResult check(@Valid @RequestBody FinProductFeePay001Dto finProductFeePay001Dto, BindingResult br) {
+        if (StringUtil.equals(finProductFeePay001Dto.getOperateType(), "revoke")) {
+            if (trdCommonBaseService.isAlreadyRevoked(finProductFeePay001Dto.getTradeId())) {
+                ValidMessage validMessage = new ValidMessage(getMessage("TRD_W_0001",
+                        getMessage("pingan.common.revoke"), getMessage("pingan.common.revoke")));
+                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+                errorList.add(validMessage);
+                AjaxResult ar = new AjaxResult();
+                ar.setErrorList(errorList);
+                return ar;
+            }
+        }
         if (br != null && br.hasErrors()) {
             return new AjaxResult(br);
         }

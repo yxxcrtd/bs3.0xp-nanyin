@@ -10,6 +10,7 @@ import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -184,6 +186,17 @@ public class TrdRepoBuyoutDuration001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("revokeCheck")
     public AjaxResult revokeCheck(@Valid TrdRepoBuyoutDuration002Dto dto, BindingResult result) {
+        if (StringUtil.equals(dto.getOperateType(), "revoke")) {
+            if (periodCommonService.isAlreadyRevoked(dto.getBusiCode())) {
+                ValidMessage validMessage = new ValidMessage(getMessage("TRD_W_0001",
+                        getMessage("pingan.common.revoke"), getMessage("pingan.common.revoke")));
+                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+                errorList.add(validMessage);
+                AjaxResult ar = new AjaxResult();
+                ar.setErrorList(errorList);
+                return ar;
+            }
+        }
         return commonCheck(result, "revoke");
     }
 

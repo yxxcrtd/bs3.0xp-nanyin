@@ -581,6 +581,45 @@ SELECT fpd.TRADE_ID businessCode,
 		fp.FINPROD_MARKET_ID,
 		fp.FINPROD_ABBR,
 		fp.REGIST_ORG
+		
+		union all
+		
+		/*债券中间还本*/
+		SELECT
+		/*汇总交易.组合代码 组合*/
+		TOTAL.PORTFOLIO_ID,
+		pp.PORTFOLIO_NAME,
+		fp.FINPROD_MARKET_ID,
+		fp.FINPROD_ABBR AS FINPROD_NAME,
+		fp.REGIST_ORG,
+		-1 * sum(nvl(ROUND(TOTAL.PRIN_AMT,2), 0)) prinAmt, /*持仓券面*/
+		-1 * sum(nvl(ROUND(TOTAL.PRIN_AMT,2), 0)) canpledgeAmt, /*可质押券面*/
+		0 pledgeAmt/*已质押券面*/
+		FROM TRD_FIN_PRODUCT_DEAL_TOTAL TOTAL
+		LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL PA_TOTAL ON TOTAL.TOTLE_TRADE_ID = PA_TOTAL.TOTLE_TRADE_ID
+		inner JOIN PTL_PORTFOLIO pp ON pp.PORTFOLIO_ID = TOTAL.PORTFOLIO_ID
+		LEFT JOIN FIN_PRODUCT fp ON fp.FINPROD_ID = TOTAL.FINPROD_ID
+		/*检索条件*/
+		WHERE
+		1 = 1
+		and PA_TOTAL.PA_BUSS_TYPE = '36'
+		AND (TOTAL.IS_CANCEL  IS NULL OR TOTAL.IS_CANCEL = 'N')
+		AND TOTAL.TRADE_STATUS = '01'
+		and total.PORTFOLIO_ID is not null
+		/*组合代码*/
+		<if test="groupcode != null and groupcode.size() > 0">
+			and total.PORTFOLIO_ID in
+			<foreach collection="groupcode" item="item" index="index" open="(" close=")" separator=",">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		/*查询日期*/
+		and TOTAL.SETTLE_DATE &lt;= date'2020-01-09'
+		group by TOTAL.PORTFOLIO_ID,
+		pp.PORTFOLIO_NAME,
+		fp.FINPROD_MARKET_ID,
+		fp.FINPROD_ABBR,
+		fp.REGIST_ORG
 
 		union all
 		/*回购交易：正回购、逆回购*/

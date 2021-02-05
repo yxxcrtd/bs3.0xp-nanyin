@@ -194,6 +194,17 @@ public class TrdRepoDuration001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("revokeCheck")
     public AjaxResult revokeCheck(@Valid TrdRepoDuration001Dto dto, BindingResult result) {
+        if (StringUtil.equals(dto.getOperateType(), "revoke")) {
+            if (periodCommonService.isAlreadyRevoked(dto.getBusiCode())) {
+                ValidMessage validMessage = new ValidMessage(getMessage("TRD_W_0001",
+                        getMessage("pingan.common.revoke"), getMessage("pingan.common.revoke")));
+                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+                errorList.add(validMessage);
+                AjaxResult ar = new AjaxResult();
+                ar.setErrorList(errorList);
+                return ar;
+            }
+        }
         return commonCheck(result, "revoke");
     }
 

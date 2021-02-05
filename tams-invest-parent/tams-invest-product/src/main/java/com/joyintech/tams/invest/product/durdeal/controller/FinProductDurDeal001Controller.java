@@ -20,14 +20,18 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.product.durdeal.dto.FinProductDurDeal001Dto;
 import com.joyintech.tams.invest.product.durdeal.service.FinProductDurDeal001Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -54,6 +58,12 @@ public class FinProductDurDeal001Controller extends BaseController {
      */
     @Autowired
     private FinProductDurDeal001Service finProductDurDeal001Service;
+
+    /**
+     * 交易基础组件调用Service
+     */
+    @Autowired
+    private TrdCommonBaseService trdCommonBaseService;
 
     /**
      * {@inheritDoc}
@@ -146,4 +156,26 @@ public class FinProductDurDeal001Controller extends BaseController {
     public Page<FinProductDurDeal001Dto> findDetailPage() throws Exception {
     	return finProductDurDeal001Service.findDetailPage(RequestUtil.getPageParam());
     }
+
+    /**
+     * 删除按钮点击时的check
+     * @param dto 验证的实体类
+     * @param result 验证的结果
+     * @return 错误信息
+     */
+    @ResponseBody
+    @RequestMapping("check")
+    public AjaxResult check(@RequestBody FinProductDurDeal001Dto dto, BindingResult result) {
+        AjaxResult ar = new AjaxResult();
+        if (trdCommonBaseService.isAlreadyRevoked(dto.getTradeId())) {
+            ValidMessage validMessage = new ValidMessage(getMessage("TRD_W_0001",
+                    getMessage("pingan.common.revoke"), getMessage("pingan.common.revoke")));
+            ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+            errorList.add(validMessage);
+            ar.setErrorList(errorList);
+            return ar;
+        }
+        return ar;
+    }
+
 }

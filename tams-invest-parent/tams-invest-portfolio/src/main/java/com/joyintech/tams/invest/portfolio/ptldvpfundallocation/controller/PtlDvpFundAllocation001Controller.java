@@ -13,6 +13,8 @@ package com.joyintech.tams.invest.portfolio.ptldvpfundallocation.controller;
 import javax.validation.Valid;
 
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -35,6 +37,8 @@ import com.joyintech.tams.invest.portfolio.ptldvpfundallocation.service.PtlDvpFu
 import com.joyintech.tams.invest.portfolio.ptldvpfundallocation.service.PtlDvpFundAllocation002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+
+import java.util.ArrayList;
 
 /**
  * DVP资金调拨管理Controller
@@ -61,6 +65,8 @@ public class PtlDvpFundAllocation001Controller extends BaseController {
     @Autowired
     private PtlDvpFundAllocation002Service ptlDvpFundAllocation002Service;
 
+    @Autowired
+    private TrdCommonBaseService trdCommonBaseService;
     /**
      * 重写init方法
      * @param model 模型
@@ -121,7 +127,17 @@ public class PtlDvpFundAllocation001Controller extends BaseController {
                 return wr;
             }
         }
-
+        if (StringUtil.equals(dto.getOperateType(), "revoke")) {
+            if (trdCommonBaseService.isAlreadyRevoked(dto.getTradeId())) {
+                ValidMessage validMessage = new ValidMessage(getMessage("TRD_W_0001",
+                        getMessage("pingan.common.revoke"), getMessage("pingan.common.revoke")));
+                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+                errorList.add(validMessage);
+                AjaxResult ar = new AjaxResult();
+                ar.setErrorList(errorList);
+                return ar;
+            }
+        }
         return commonCheck(result, dto.getOperateType());
     }
     

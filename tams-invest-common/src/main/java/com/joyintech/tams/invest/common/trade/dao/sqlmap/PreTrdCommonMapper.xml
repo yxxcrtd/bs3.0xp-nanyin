@@ -390,4 +390,16 @@
         WHERE T1.ORDER_ID = T2.TRADE_ID
         AND T2.WORKFLOW_ID = #{workflowId, jdbcType = VARCHAR})
     </delete>
+
+    <!-- 根据交易编号查询另一笔未撤销的转仓交易信息 add by hpp 2020-09-17 end -->
+    <select id="selectRevokedDataCount" resultType="int">
+        select count(1) from TRD_FIN_PRODUCT_DEAL_TOTAL
+        where
+            (TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+            or P_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR})
+            and
+            (IS_CANCEL = #{YES_NO_YES,jdbcType=VARCHAR}
+            or TRADE_STATUS = #{TRADE_STATUS_03,jdbcType=VARCHAR}
+            )
+    </select>
 </mapper>

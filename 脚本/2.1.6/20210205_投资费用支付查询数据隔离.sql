@@ -1,0 +1,3 @@
+delete from DATA_AUTH_MAPPER_CONFIG where SQL_ID = 'com.joyintech.service.portfolio.feepay.dao.InvestFeePayMapper.selectTACInfoByDate';
+
+INSERT INTO "DATA_AUTH_MAPPER_CONFIG"("SQL_ID", "FILTER_TYPE", "IS_NEST", "JOIN_COLUMN_NAME", "FILTER_SQL", "SYSTEM_CODE", "PAGE_ID", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME", "ADD_COLUMN", "ADD_COLUMN_NAME", "DATA_TYPE") VALUES ('com.joyintech.service.portfolio.feepay.dao.InvestFeePayMapper.selectTACInfoByDate', '2', '02', 'secAcctId', NULL, 'STL', 'InvestFeePay001', 'admin', NULL, TO_TIMESTAMP('2020-07-13 05:04:55.000000', 'SYYYY-MM-DD HH24:MI:SS:FF6'), 'admin', TO_TIMESTAMP('2020-07-13 05:04:55.000000', 'SYYYY-MM-DD HH24:MI:SS:FF6'), NULL, NULL, 'MST10');

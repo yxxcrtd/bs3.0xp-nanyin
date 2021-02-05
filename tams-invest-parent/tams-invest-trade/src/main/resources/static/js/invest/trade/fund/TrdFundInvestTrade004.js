@@ -1,4 +1,4 @@
-//@ sourceURL=TrdFundInvestTrade002.js
+//@ sourceURL=TrdFundInvestTrade004.js
 /**
  * 基金投资交易新建
  */
@@ -100,13 +100,17 @@ $(function () {
             table.showColumns([{field:'bussTrdAvailableCashQueryavalibleCash',visible: true}]);
             table.showColumns([{field:'bussTrdAvailableCashQueryavalibleCash1',visible: true}]);
 
-            if ($("#secManageAcctId").val() && ($("#tradeMarket").val() == TRADE_PLACE_03 || $("#tradeMarket").val() == TRADE_PLACE_04)) {
-                // $('#tradeMarketAccAvailableCash_div').show();
-                table.showColumns([{field:'tradeMarketAccAvailableCash',visible: true}]);
-            } else {
-                // $('#tradeMarketAccAvailableCash_div').hide();
-                table.showColumns([{field:'tradeMarketAccAvailableCash',visible: false}]);
-            }
+            
+            //交易方向为买入，且交易场所为深交所和上交所时才显示该列
+            table.showColumns([{field:'tradeMarketAccAvailableCash',visible: false}]);
+//            if ($("#secManageAcctId").val() && ($("#tradeMarket").val() == TRADE_PLACE_03 || $("#tradeMarket").val() == TRADE_PLACE_04)) {
+//                // $('#tradeMarketAccAvailableCash_div').show();
+//                table.showColumns([{field:'tradeMarketAccAvailableCash',visible: true}]);
+//            } else {
+//                // $('#tradeMarketAccAvailableCash_div').hide();
+//                table.showColumns([{field:'tradeMarketAccAvailableCash',visible: false}]);
+//            }
+            
             $('#tradePrice_label').hide();//交易价格
             $('.commissionFee_class').hide();//佣金
             table.showColumns([{field:'commissionAmt',visible: false}]);
@@ -1558,6 +1562,11 @@ $(function () {
                 $("#changeToFinprodName").val("")
             }
         })
+        
+        //确认日期联动预计到账日
+        $("#purCfmDate").change(function(){
+        	$("#expectedArrivalDate").val($("#purCfmDate").val());
+        });
 
         // zhangnian add 20190917 交易日期+清算速度 联动计算确认日期 start
         var calcCfmDate = function () {

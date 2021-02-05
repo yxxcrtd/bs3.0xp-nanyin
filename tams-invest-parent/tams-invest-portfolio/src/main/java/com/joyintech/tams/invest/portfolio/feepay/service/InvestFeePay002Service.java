@@ -19,6 +19,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.constant.DictCode;
@@ -224,6 +225,23 @@ public class InvestFeePay002Service extends BaseService<InvestFeePay002Dto> impl
         restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/InvestFeePay/insertBussFlowData",
             trdCommonWflParam, String.class);
     }
+
+    /**
+     * 根据pageId查询所有流程中的数据逐条进行对比
+     * <功能详细描述>
+     * @param parameter parameter
+     * @return MstBankTranFeeManageDto
+     * @see
+     * @since 1.0
+     */
+    public List<InvestFeePay002Dto> getBusinessData(WflValidInputParameter parameter) {
+        return restTemplate.postForList(
+                ServiceApplication.PORTFOLIO_SERVICE_NAME +
+                        "/InvestFeePay/getBusinessData",parameter,
+                InvestFeePay002Dto.class);
+    }
+
+
 
     /**
      * {@inheritDoc}

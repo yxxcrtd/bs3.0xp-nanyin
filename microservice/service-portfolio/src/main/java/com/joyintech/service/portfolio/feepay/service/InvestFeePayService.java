@@ -15,6 +15,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.jdbc.datasource.DataSource;
+import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.component.base.core.dto.WflValidInputParameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,6 +67,8 @@ import com.joyintech.tams.valuation.common.batch.finproduct.entity.SubjectBalanc
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.SubjectBalanceSearchDto;
 import com.joyintech.tams.valuation.common.constants.BookConstant;
 import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author malinlin
@@ -743,6 +750,8 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
         map.put("cdate", cdate);
         map.put("feeType", feeType);
         map.put("noFlag", DictCodeList.是否_否.getValue());
+        map.put("userId",SecurityUtil.getLoginUser().getUid());
+        map.put("authorityType", CacheUtil.getSysParam("AUTHORITY_TYPE"));
         if (feeType != null && feeType.equals(DictCodeList.费用品种类型_结算服务费.getValue())) {
             map.put("org", org);
             map.put("feeType1", DictCodeListExt1.一次性费用类型_结算手续费.getValue());
@@ -1554,5 +1563,13 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
 
     public List<SelectOptionDto> getPortFolioName(Map<String, Object> map) {
         return investFeePayMapper.getPortFolioName(map);
+    }
+
+    @DataSource(DataSourceType.OTHER)
+    @Transactional(propagation= Propagation.REQUIRES_NEW)
+    public List<InvestFeePayDto> getBusinessData(WflValidInputParameter parameter) {
+        parameter.setSeachMode("01");
+        List<InvestFeePayDto> list = investFeePayMapper.getBusinessData(parameter);
+        return list;
     }
 }

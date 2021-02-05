@@ -39,4 +39,14 @@ public interface PreTrdCommonMapper {
     void deleteEtrSecPositionFlow(Map<String, Object> params);
 
     void deleteEtrCashPositionFlow(Map<String, Object> params);
+
+    /**
+     * 根据交易编号查询已撤销数据条数
+     *
+     * @param paramMap 参数
+     * @return 已撤销数据条数
+     * @see
+     * @since 1.0
+     */
+    int selectRevokedDataCount(Map<String, Object> paramMap);
 }
