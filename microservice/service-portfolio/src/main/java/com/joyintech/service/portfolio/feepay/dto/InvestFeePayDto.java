@@ -54,7 +54,17 @@ public class InvestFeePayDto extends BaseEntity {
      * 销售部门
      */
     private String saleDepartment;
-    
+
+    private String allData;
+
+    public String getAllData() {
+        return allData;
+    }
+
+    public void setAllData(String allData) {
+        this.allData = allData;
+    }
+
     /**
      * 费用代码
      */

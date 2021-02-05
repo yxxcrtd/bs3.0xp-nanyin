@@ -423,6 +423,7 @@
         // 当交易场所是银行间时
         if (tradeMarket == TRADE_PLACE_01) {
             // 2) 清算速度默认为T+0，资金可用日隐藏；
+        	$("#chlId").prop("disabled", false);
             $("#actCapDays").prop("disabled", true);
             if (pageModel!= PAGE_MODEL_REFERENCE) {
                 $("#settleSpeedStr").val(ACCOUNT_SPEED_01).trigger("change").prop("disabled", false);

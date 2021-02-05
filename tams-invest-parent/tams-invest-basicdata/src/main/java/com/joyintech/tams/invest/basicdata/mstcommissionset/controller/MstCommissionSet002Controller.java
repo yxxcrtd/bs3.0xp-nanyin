@@ -218,10 +218,11 @@ public class MstCommissionSet002Controller extends BaseController {
 
     @ResponseBody
     @RequestMapping("findTable")
-        public Page<TrdFeeConfigDetail> findTable() throws Exception {
+    public Page<TrdFeeConfigDetail> findTable() throws Exception {
         List<TrdFeeConfigDetail> list=new ArrayList<>();
 //        Page<TrdFeeConfigDetail> page = mstCommissionSetService.findTable(RequestUtil.getParameters(getRequest()));
         Map<String,Object> map=RequestUtil.getParameters(getRequest());
+
         String workflowId=(String)map.get("workflowId");
         if(workflowId!=null && workflowId!=""){
             MstCommissionSetDto dto = mstCommissionSetService.getBussinessEntityByWorkflowId(workflowId);
@@ -229,7 +230,7 @@ public class MstCommissionSet002Controller extends BaseController {
         }else if(map.get("batchSeq")!=null && map.get("batchSeq")!=""){
             list = mstCommissionSetService.findTable(map);
         }
-
+        if("N".equals(map.get("isGrade"))) list = new ArrayList<>();
         Page<TrdFeeConfigDetail> page = new Page<>();
         page.setRoot(list);
         return page;

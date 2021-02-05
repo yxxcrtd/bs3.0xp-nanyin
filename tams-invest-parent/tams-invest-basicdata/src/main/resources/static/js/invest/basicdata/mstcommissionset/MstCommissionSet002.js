@@ -37,6 +37,7 @@
     }
     var getparam = function () {
         var data = $.serializeToObject('#informationForm');
+        data.isGrade = $('#isGrade').val();
         data.batchSeq = $("#batchSeq").val();
         data.workflowId = $("#workflowId").val();
         return data;
@@ -393,7 +394,7 @@
                 $('#feeMaxi').val('').trigger('change');
                 $('#feeMini').val('').trigger('change');
             }else{
-                table.clear();
+                table.reload({data:[],url:null});
                 $('#grade_div2').hide().trigger('change');
                 $('#grade_div1').show().trigger('change');
             }

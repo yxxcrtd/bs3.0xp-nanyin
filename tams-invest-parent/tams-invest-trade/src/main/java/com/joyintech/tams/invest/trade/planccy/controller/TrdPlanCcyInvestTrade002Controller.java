@@ -392,10 +392,14 @@ public class TrdPlanCcyInvestTrade002Controller extends BaseController {
         workFlowParameter.setBusinessCode((entity) -> entity.getTradeId());
         workFlowParameter.setBusinessType(DictCodeList.共通业务类型_计划类资产_货币型_交易.getValue());
         workFlowParameter.setComment((entity) -> WorkFlowUtil.concatComment(
-            getMessage("TrdFundInvestTrade002.tradeId"), entity.getTradeId(),
-            getMessage("TrdFundInvestTrade002.finprodName"), GlobalConstant.SPLIT,
-            entity.getFinprodName(), getMessage("TrdFundInvestTrade002.tradeDate"),
-            DateUtil.format(entity.getTradeDate())));
+            getMessage("TrdFundInvestTrade002.tradeId"),
+            entity.getTradeId(),
+            getMessage("TrdFundInvestTrade002.finprodName"), 
+//            GlobalConstant.SPLIT,
+            entity.getFinprodName(),
+            getMessage("TrdFundInvestTrade002.tradeDate"),
+            DateUtil.format(entity.getTradeDate())
+            ));
         prepareEntity(dto);
 
         String msg = trdPlanCcyInvestTrade002Service.start(processParameter, dto);
