@@ -60,4 +60,7 @@ public interface TrdBondDurationMapper {
      *findFinprodIdByBusiCode
      */
     List<String> findCeTradeIdByTotleTradeId(String totleTradeId);
+
+    List<String> findProcessDtos(Map<String, Object> param);
+
 }

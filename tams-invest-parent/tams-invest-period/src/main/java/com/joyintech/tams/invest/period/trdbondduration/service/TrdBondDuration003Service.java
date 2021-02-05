@@ -6,8 +6,10 @@ import java.util.stream.Collectors;
 
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.listener.FileAttachmentProcess;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
 import com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondPtlSecExerciseInfo;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import org.apache.commons.collections.CollectionUtils;
@@ -636,5 +638,14 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
             entity = JsonUtils.json2Object(temp.getBusinessData(), TrdBondDuration003ProcessDto.class);
         }
         return entity;
+    }
+
+    public List<String> findProcessDtos(Map<String, Object> param) {
+        param.put("userName", LoginUserUtil.getUserName());
+        param.put("ps", "T39");
+        List<String> dtos = restTemplate.postForObject(
+                ServiceApplication.PERIOD_SERVICE_NAME + "/TrdBondDuration/findProcessDtos", param,
+                ArrayList.class);
+        return dtos;
     }
 }
