@@ -253,6 +253,17 @@ public class TrdFundInvestTrade001Controller extends BaseController {
     @RequestMapping("check2")
     public AjaxResult check2(@RequestBody @Validated({
         ValidateGroupDelete.class}) TrdFundInvestTradeConfirmDto dto, BindingResult result) {
+        if (StringUtil.equals(dto.getOperateType(), "revoke")) {
+            if (trdCommonBaseService.isAlreadyRevoked(dto.getSelectedItem().get(0).getTradeId())) {
+                ValidMessage validMessage = new ValidMessage(getMessage("TRD_W_0001",
+                        getMessage("pingan.common.revoke"), getMessage("pingan.common.revoke")));
+                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+                errorList.add(validMessage);
+                AjaxResult ar = new AjaxResult();
+                ar.setErrorList(errorList);
+                return ar;
+            }
+        }
         return commonCheck(result, dto.getOperateType());
     }
 
