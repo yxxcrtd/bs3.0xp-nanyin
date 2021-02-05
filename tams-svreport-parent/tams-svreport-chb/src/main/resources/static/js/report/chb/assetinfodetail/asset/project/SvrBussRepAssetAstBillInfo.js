@@ -33,6 +33,7 @@
             });
         }
         var  initBussRepAssetAstBill= function(){
+            $("#svrBussRepAssetAstBillInfoDto_privateFlag").val('02').trigger("change");
             var assetTvalueBill=$('#assetType2').val();
             if(assetTvalueBill=='1210'){
                 //类型默认05置灰不可修改
