@@ -154,8 +154,13 @@ public class SvrLoanDetailInfoFileImpService extends FileImpService {
                 /****单体数据判断**/
                 if(StringUtil.equals(loanInfo.get("ASSET_TYPE"), DictCodeListExt3.中债_中债贷款分类_收益权.getValue())) {
                     int each = 0;
-                    for (String code : loanInfo.get("EACH_PROPORTION").split(":")) {
-                        each = each + Integer.parseInt(code);
+                    try{
+                        for (String code : loanInfo.get("EACH_PROPORTION").split(":")) {
+                            each = each + Integer.parseInt(code);
+                        }
+                    }catch(Exception e){
+                        logger.error("数据转换错误:",e);
+                        each = 0;
                     }
                     loanInfo.put("EACH_PROPORTION_SUM",each+"");
                 }
