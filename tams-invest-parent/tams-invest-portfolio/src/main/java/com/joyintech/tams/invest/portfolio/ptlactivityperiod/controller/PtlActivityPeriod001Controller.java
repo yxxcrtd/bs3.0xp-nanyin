@@ -10,9 +10,12 @@
  
 package com.joyintech.tams.invest.portfolio.ptlactivityperiod.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.invest.common.trade.service.PreTrdCommonBaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -63,6 +66,9 @@ public class PtlActivityPeriod001Controller extends BaseController{
      */
     @Autowired
     public PtlActivityPeriod002Service ptlActivityPeriod002Service;
+
+    @Autowired
+    public PreTrdCommonBaseService preTrdCommonBaseService;
     /**
      * 界面初始化
      * {@inheritDoc}
@@ -153,6 +159,17 @@ public class PtlActivityPeriod001Controller extends BaseController{
   @RequestMapping("check")
   public AjaxResult check(@RequestBody @Validated({
       ValidateGroupDelete.class}) PtlActivityPeriod001Dto dto, BindingResult result) {
+      if (StringUtil.equals(dto.getOperateType(), "delete")) {
+          if (preTrdCommonBaseService.isAlreadyRevoked(dto.getBusiNo())) {
+              ValidMessage validMessage = new ValidMessage(getMessage("TRD_W_0001",
+                      getMessage("pingan.common.revoke"), getMessage("pingan.common.revoke")));
+              ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+              errorList.add(validMessage);
+              AjaxResult ar = new AjaxResult();
+              ar.setErrorList(errorList);
+              return ar;
+          }
+      }
       return commonCheck(result, dto.getOperateType());
   }
   /**

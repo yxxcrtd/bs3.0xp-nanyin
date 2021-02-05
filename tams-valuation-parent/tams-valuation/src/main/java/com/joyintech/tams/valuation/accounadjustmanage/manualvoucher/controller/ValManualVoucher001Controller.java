@@ -13,12 +13,16 @@ package com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.controller
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.dao.TrdVouchDealMapper;
+import com.joyintech.tams.common.base.entity.TrdVouchDeal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -73,7 +77,9 @@ public class ValManualVoucher001Controller extends BaseController {
      */
     @Autowired
     private ValManualVoucher001Service valManualVoucher001Service;
-    
+
+    @Autowired
+    private TrdVouchDealMapper trdVouchDealMapper;
 //    /**
 //     * ValManualVoucher003Service
 //     */
@@ -320,6 +326,16 @@ public class ValManualVoucher001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("check")
    public AjaxResult check(@RequestBody @Valid ValManualVoucher001Dto dto, BindingResult result, String operateType) {
+//        if (StringUtil.equals(dto.ge, "revoke")) {
+            if (!StringUtil.isNotEmpty(trdVouchDealMapper.selectByPrimaryKey(dto.getBookId()))) {
+                ValidMessage validMessage = new ValidMessage("该条数据已删除");
+                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+                errorList.add(validMessage);
+                AjaxResult ar = new AjaxResult();
+                ar.setErrorList(errorList);
+                return ar;
+            }
+//        }
         return commonCheck(result, operateType);
     }
     

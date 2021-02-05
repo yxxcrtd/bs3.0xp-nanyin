@@ -256,8 +256,17 @@ public class TrdDepositInvestTrade001Controller extends BaseController{
                     return ajaxResult;
                 }
             }
-            // 确认提醒 TISHKBS-1113【组合资金账户头寸查询】内转交易撤销提醒 add by hpp 2020-09-17 end
-
+            if (StringUtil.equals(dto.getOperateType(), "revoke")) {
+                if (trdCommonBaseService.isAlreadyRevoked(dto.getSelectedItem().get(0).getTradeId())) {
+                    ValidMessage validMessage = new ValidMessage(getMessage("TRD_W_0001",
+                            getMessage("pingan.common.revoke"), getMessage("pingan.common.revoke")));
+                    ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+                    errorList.add(validMessage);
+                    AjaxResult ar = new AjaxResult();
+                    ar.setErrorList(errorList);
+                    return ar;
+                }
+            }
             return commonCheck(result, dto.getOperateType());
         }
         /**

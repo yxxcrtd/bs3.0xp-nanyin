@@ -262,65 +262,81 @@
         var isCycle = data.isCycle;
         var profitType = data.profitType;
         var dealType = data.dealType;
-        if(profitType=='01' || profitType=='03'){
-        	if(profitType=='01'){
-        		if(dealType=='C8'){
-            		//净值型分红方案确认撤销
-            		Joyin.dialog(JoyinUtil.getLabel("FinNetProductBonusScheme003.revoke"), 
-                            JoyinUtil.getRealPath("invest/product/productduration/netproductbonusscheme/FinNetProductBonusScheme003/init"), 
-                            "98%", "95%", data,function(){detailDataTable.reload();});
-            	}else if(dealType=='C9'){
-            		//净值型红利下发撤销
-            		Joyin.dialog(JoyinUtil.getLabel("FinNetProductBonusScheme004.revoke"), 
-                            JoyinUtil.getRealPath("invest/product/productduration/netproductbonusscheme/FinNetProductBonusScheme004/init"), 
-                            "98%", "95%", data,function(){detailDataTable.reload();});
-            	}else if(dealType=='C10'){
-            		//净值型红利再投撤销
-            		Joyin.dialog(JoyinUtil.getLabel("FinNetProductBonusScheme005.revoke"), 
-                            JoyinUtil.getRealPath("invest/product/productduration/netproductbonusscheme/FinNetProductBonusScheme005/init"), 
-                            "98%", "95%", data,function(){detailDataTable.reload();});
-            	}else{
-            		Joyin.dialog(JoyinUtil.getLabel("FinNetProductDuration.revokepage"),
+        Joyin.ajaxJson(basePath + 'invest/product/durdeal/FinProductDurDeal001/check', data, function(result) {
+            if (profitType == '01' || profitType == '03') {
+                if (profitType == '01') {
+                    if (dealType == 'C8') {
+                        //净值型分红方案确认撤销
+                        Joyin.dialog(JoyinUtil.getLabel("FinNetProductBonusScheme003.revoke"),
+                            JoyinUtil.getRealPath("invest/product/productduration/netproductbonusscheme/FinNetProductBonusScheme003/init"),
+                            "98%", "95%", data, function () {
+                                detailDataTable.reload();
+                            });
+                    } else if (dealType == 'C9') {
+                        //净值型红利下发撤销
+                        Joyin.dialog(JoyinUtil.getLabel("FinNetProductBonusScheme004.revoke"),
+                            JoyinUtil.getRealPath("invest/product/productduration/netproductbonusscheme/FinNetProductBonusScheme004/init"),
+                            "98%", "95%", data, function () {
+                                detailDataTable.reload();
+                            });
+                    } else if (dealType == 'C10') {
+                        //净值型红利再投撤销
+                        Joyin.dialog(JoyinUtil.getLabel("FinNetProductBonusScheme005.revoke"),
+                            JoyinUtil.getRealPath("invest/product/productduration/netproductbonusscheme/FinNetProductBonusScheme005/init"),
+                            "98%", "95%", data, function () {
+                                detailDataTable.reload();
+                            });
+                    } else {
+                        Joyin.dialog(JoyinUtil.getLabel("FinNetProductDuration.revokepage"),
                             JoyinUtil.getRealPath("invest/product/productduration/netproductDuration/FinNetProductDuration/init"),
-                            "98%", "95%",data,function(){detailDataTable.reload();}
-                    );
-            	}
-        	}else{
-        		Joyin.dialog(JoyinUtil.getLabel("FinNetProductDuration.revokepage"),
+                            "98%", "95%", data, function () {
+                                detailDataTable.reload();
+                            }
+                        );
+                    }
+                } else {
+                    Joyin.dialog(JoyinUtil.getLabel("FinNetProductDuration.revokepage"),
                         JoyinUtil.getRealPath("invest/product/productduration/netproductDuration/FinNetProductDuration/init"),
-                        "98%", "95%",data,function(){detailDataTable.reload();}
-                );
-        	}
-        	
-        	
-        }else if(profitType=='02'){
-        	if(dealType=='C1'||dealType=='C2'){//收益型产品认购申购撤销
-                Joyin.dialog(JoyinUtil.getLabel("FinProductEstablish002.revoke"),
-                    JoyinUtil.getRealPath("/invest/product/productduration/establish/FinProductEstablish002/init"),
-                    "98%", "95%",data,function(){detailDataTable.reload();}
-                );
-                //alert("请到预期收益产品相关模块操作，暂时未集成");
+                        "98%", "95%", data, function () {
+                            detailDataTable.reload();
+                        }
+                    );
+                }
+
+
+            } else if (profitType == '02') {
+                if (dealType == 'C1' || dealType == 'C2') {//收益型产品认购申购撤销
+                    Joyin.dialog(JoyinUtil.getLabel("FinProductEstablish002.revoke"),
+                        JoyinUtil.getRealPath("/invest/product/productduration/establish/FinProductEstablish002/init"),
+                        "98%", "95%", data, function () {
+                            detailDataTable.reload();
+                        }
+                    );
+                    //alert("请到预期收益产品相关模块操作，暂时未集成");
+                } else if (dealType == 'C17' || dealType == 'C18') {//收益型产品提前赎回撤销
+                    Joyin.dialog(JoyinUtil.getLabel("FinProductAddReduce002.revoke"),
+                        JoyinUtil.getRealPath("/invest/product/productduration/addreduce/FinProductAddReduce002/init"),
+                        "98%", "95%", data, function () {
+                            detailDataTable.reload();
+                        }
+                    );
+                } else if (dealType == 'C7') {//收益型产品中间付息撤销
+                    Joyin.dialog(JoyinUtil.getLabel("FinProductPayInt003.revoke"),
+                        JoyinUtil.getRealPath("/invest/product/payint/FinProductPayInt003/init"),
+                        "98%", "95%", data, function () {
+                            detailDataTable.reload();
+                        }
+                    );
+                } else if (dealType == 'C4' || dealType == 'C5' || dealType == 'C20') {//收益型产品赎回到期撤销,增加提前终止
+                    Joyin.dialog(JoyinUtil.getLabel("FinProductExpire002.revoke"),
+                        JoyinUtil.getRealPath("/invest/product/productduration/expire/FinProductExpire002/init"),
+                        "98%", "95%", data, function () {
+                            detailDataTable.reload();
+                        }
+                    );
+                }
             }
-            else if(dealType=='C17'||dealType=='C18'){//收益型产品提前赎回撤销
-                Joyin.dialog(JoyinUtil.getLabel("FinProductAddReduce002.revoke"),
-                    JoyinUtil.getRealPath("/invest/product/productduration/addreduce/FinProductAddReduce002/init"),
-                    "98%", "95%",data,function(){detailDataTable.reload();}
-                );
-            }
-            else if(dealType=='C7'){//收益型产品中间付息撤销
-                Joyin.dialog(JoyinUtil.getLabel("FinProductPayInt003.revoke"),
-                    JoyinUtil.getRealPath("/invest/product/payint/FinProductPayInt003/init"),
-                    "98%", "95%",data,function(){detailDataTable.reload();}
-                );
-            }
-            else if(dealType=='C4'||dealType=='C5'||dealType=='C20'){//收益型产品赎回到期撤销,增加提前终止
-                Joyin.dialog(JoyinUtil.getLabel("FinProductExpire002.revoke"),
-                    JoyinUtil.getRealPath("/invest/product/productduration/expire/FinProductExpire002/init"),
-                    "98%", "95%",data,function(){detailDataTable.reload();}
-                );
-            }
-        }
-        
+        });
     });
 
     /**

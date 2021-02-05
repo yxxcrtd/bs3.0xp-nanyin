@@ -9,11 +9,13 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.trade.service.PreTrdCommonBaseService;
 import com.joyintech.tams.invest.product.resultscovering.dto.FinResultsCovering001Dto;
 import com.joyintech.tams.invest.product.resultscovering.dto.FinResultsCovering002Dto;
 import com.joyintech.tams.invest.product.resultscovering.service.FinResultsCovering001Service;
@@ -36,6 +38,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +54,8 @@ public class FinResultsCovering001Controller extends BaseController {
 	@Autowired
 	private FinResultsCovering002Service finResultsCovering002Service;
 
+	@Autowired
+	private  PreTrdCommonBaseService preTrdCommonBaseService;
 	@Override
 	public String init(Model model) {
 		this.setSelectOptionToModel(model, DictCode.回补方式, DictCode.回补规则,DictCode.有效状态);
@@ -146,6 +151,18 @@ public class FinResultsCovering001Controller extends BaseController {
 					}
 				}
 
+			}
+		}
+
+		if (StringUtil.equals(dto.getOperateType(), "revoke")) {
+			if (preTrdCommonBaseService.isAlreadyRevoked(dto.getTradeId())) {
+				ValidMessage validMessage = new ValidMessage(getMessage("TRD_W_0001",
+						getMessage("pingan.common.revoke"), getMessage("pingan.common.revoke")));
+				ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+				errorList.add(validMessage);
+				AjaxResult ar = new AjaxResult();
+				ar.setErrorList(errorList);
+				return ar;
 			}
 		}
 		return commonCheck(result, dto.getOperateType());

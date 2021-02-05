@@ -3,6 +3,7 @@ package com.joyintech.tams.invest.period.trdprojduration.controller;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
@@ -40,6 +41,7 @@ import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -149,6 +151,17 @@ public class TrdProjectDuration001Controller extends BaseController {
     @RequestMapping("revokeCheck")
     public AjaxResult revokeCheck(@Validated({ValidateGroupDelete.class}) TrdProjectDurationProcessDto dto,
                                   BindingResult result) {
+        if (StringUtil.equals(dto.getOperateType(), "revoke")) {
+            if (periodCommonService.isAlreadyRevoked(dto.getBusiCode())) {
+                ValidMessage validMessage = new ValidMessage(getMessage("TRD_W_0001",
+                        getMessage("pingan.common.revoke"), getMessage("pingan.common.revoke")));
+                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+                errorList.add(validMessage);
+                AjaxResult ar = new AjaxResult();
+                ar.setErrorList(errorList);
+                return ar;
+            }
+        }
         return commonCheck(result, dto.getOperateType());
     }
 

@@ -335,4 +335,21 @@ public class PreTrdCommonBaseService extends BaseService {
         preTrdCommonMapper.deleteEtrSecPositionFlow(params);
         preTrdCommonMapper.deleteEtrCashPositionFlow(params);
     }
+
+    /**
+     * 根据交易编号查询该交易是否已被撤销
+     *
+     * @param tradeId 交易编号
+     * @return 该交易是否已被撤销
+     * @see
+     * @since 1.0
+     */
+    public Boolean isAlreadyRevoked(String totleTradeId) {
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("totleTradeId", totleTradeId);
+        paramMap.put("YES_NO_YES", DictCodeList.是否_是.getValue());
+        paramMap.put("TRADE_STATUS_03", DictCodeListExt1.交易流程状态_撤销.getValue());
+        return preTrdCommonMapper.selectRevokedDataCount(paramMap) > 0;
+
+    }
 }

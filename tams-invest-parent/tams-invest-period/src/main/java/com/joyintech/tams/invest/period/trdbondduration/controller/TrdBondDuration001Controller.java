@@ -1,6 +1,7 @@
 package com.joyintech.tams.invest.period.trdbondduration.controller;
 
 import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.period.trdbondduration.dto.TrdBondDuration003ProcessDto;
@@ -29,6 +30,7 @@ import com.joyintech.tams.invest.period.trdbondduration.service.TrdBondDuration0
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 
@@ -211,6 +213,17 @@ public class TrdBondDuration001Controller extends BaseController {
     @RequestMapping("revokeCheck")
     public AjaxResult revokeCheck(@Validated({ValidateGroupDelete.class}) TrdBondDuration002ProcessDto dto,
                                   BindingResult result) {
+        if (StringUtil.equals(dto.getOperateType(), "revoke")) {
+            if (periodCommonService.isAlreadyRevoked(dto.getBusiCode())) {
+                ValidMessage validMessage = new ValidMessage(getMessage("TRD_W_0001",
+                        getMessage("pingan.common.revoke"), getMessage("pingan.common.revoke")));
+                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+                errorList.add(validMessage);
+                AjaxResult ar = new AjaxResult();
+                ar.setErrorList(errorList);
+                return ar;
+            }
+        }
         return commonCheck(result, dto.getOperateType());
     }
 }
