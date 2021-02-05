@@ -42,6 +42,7 @@ var QueryFunc=function(){
         var repAssetType = $('#assetType2').val();
         //隐藏所有中债报送信息
         $(".businessDeptClass").hide();
+        $(".businessDeptClass").attr('disabled',true);
         var obj = JSON.parse(AssetTypeListLink) ;
         if(obj["01"].indexOf(repAssetType)>=0){
             //本行/他行存款||大额存单
@@ -388,6 +389,18 @@ var QueryFunc=function(){
     var init = function(){
         showReportInfo();
     }
+
+
+    var assetVal = function(){
+        $("#svrBussRepEquityInfoDto_assetCode").val($('#assetCode').val());
+        $("#svrBussRepOutInvestAgrInfo_assetCode").val($('#assetCode').val());
+        $("#svrBussRepFundInfo_assetCode").val($('#assetCode').val());
+
+
+        $("#svrBussRepEquityInfoDto_assetName").val($('#assetName').val());
+        $("#svrBussRepOutInvestAgrInfo_assetName").val($('#assetName').val());
+        $("#svrBussRepFundInfo_assetName").val($('#assetName').val());
+    }
     /**
      * 画面加载完成
      *
@@ -408,12 +421,22 @@ var QueryFunc=function(){
             saveOrSubmit('submit');
         });
 
+
         $('#assetType2').change(function(){
             showReportInfo();
             //assetType2联动子页面的内容
             changeReport();
-
         });
+
+        $('#assetCode').change(function(){
+            assetVal();
+        });
+
+        $('#assetName').change(function(){
+            assetVal();
+        });
+
+
     });
 }());
 

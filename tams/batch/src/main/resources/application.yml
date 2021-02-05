@@ -234,10 +234,10 @@ interf:
     password: zgtams1225yh_bak
 #日志路径配置
 log:
-  path: /home/tams/logs/batch
+  path: /home/tams/logs/batch_cp
   level: DEBUG
 logging:
-  path: /home/tams/logs/batch
+  path: /home/tams/logs/batch_cp
 #注册中心配置
 eureka:
   client:

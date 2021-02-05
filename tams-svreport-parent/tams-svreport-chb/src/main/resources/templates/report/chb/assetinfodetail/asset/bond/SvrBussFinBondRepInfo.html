@@ -35,10 +35,10 @@
                 </div>
             </div>
             <div class="form-inline-wrap">
-                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussFinBondRepInfo.issueMode}">发行方式</label>
+                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussFinBondRepInfo.repIssueMode}">发行方式</label>
                 <div class="layui-input-inline input-inline">
-                    <select th:id="|${entityName}_issueMode|" th:name="|${entityName}.issueMode|"
-                            th:initValue="${entity?.issueMode}"
+                    <select th:id="|${entityName}_repIssueMode|" th:name="|${entityName}.repIssueMode|"
+                            th:initValue="${entity?.repIssueMode}"
                             class="layui-input form-input input-select" placeholder="请输入内容"
                             data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${SVR_ISSUE_MODE_FUND}"
                             required>
