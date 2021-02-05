@@ -100,13 +100,17 @@ $(function () {
             table.showColumns([{field:'bussTrdAvailableCashQueryavalibleCash',visible: true}]);
             table.showColumns([{field:'bussTrdAvailableCashQueryavalibleCash1',visible: true}]);
 
-            if ($("#secManageAcctId").val() && ($("#tradeMarket").val() == TRADE_PLACE_03 || $("#tradeMarket").val() == TRADE_PLACE_04)) {
-                // $('#tradeMarketAccAvailableCash_div').show();
-                table.showColumns([{field:'tradeMarketAccAvailableCash',visible: true}]);
-            } else {
-                // $('#tradeMarketAccAvailableCash_div').hide();
-                table.showColumns([{field:'tradeMarketAccAvailableCash',visible: false}]);
-            }
+            
+            //交易方向为买入，且交易场所为深交所和上交所时才显示该列
+            table.showColumns([{field:'tradeMarketAccAvailableCash',visible: false}]);
+//            if ($("#secManageAcctId").val() && ($("#tradeMarket").val() == TRADE_PLACE_03 || $("#tradeMarket").val() == TRADE_PLACE_04)) {
+//                // $('#tradeMarketAccAvailableCash_div').show();
+//                table.showColumns([{field:'tradeMarketAccAvailableCash',visible: true}]);
+//            } else {
+//                // $('#tradeMarketAccAvailableCash_div').hide();
+//                table.showColumns([{field:'tradeMarketAccAvailableCash',visible: false}]);
+//            }
+            
             $('#tradePrice_label').hide();//交易价格
             $('.commissionFee_class').hide();//佣金
             table.showColumns([{field:'commissionAmt',visible: false}]);
