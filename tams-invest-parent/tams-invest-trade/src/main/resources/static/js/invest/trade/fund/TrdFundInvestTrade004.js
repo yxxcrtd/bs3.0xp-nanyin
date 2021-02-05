@@ -1558,6 +1558,11 @@ $(function () {
                 $("#changeToFinprodName").val("")
             }
         })
+        
+        //确认日期联动预计到账日
+        $("#purCfmDate").change(function(){
+        	$("#expectedArrivalDate").val($("#purCfmDate").val());
+        });
 
         // zhangnian add 20190917 交易日期+清算速度 联动计算确认日期 start
         var calcCfmDate = function () {
