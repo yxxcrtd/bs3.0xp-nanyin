@@ -236,15 +236,13 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
     public List<ExcelValidDto> importData(List<List<String>> dataList,List<List<String>> tempList,String bankCode,String orgCode,String deptCode) {
         if (!StringUtil.isEmptyList(dataList)) {
             List<String> headList = new ArrayList<String>();
-            headList.add("发行机构名称");
+
+            headList.add("产品代码*");
             headList.add("产品名称");
-            headList.add("产品登记编码");
-            headList.add("行内标识码");
-            headList.add("理财产品代码");
+            headList.add("产品登记编码*");
+            headList.add("起息日");
+            headList.add("到期日");
             headList.add("产品运作模式");
-            headList.add("目标客户类型");
-            headList.add("产品状态");
-            headList.add("产品登记编码生成日");
             List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
             if (!StringUtil.isEmptyList(tempCheckResult)) {
                 return tempCheckResult;
@@ -310,9 +308,9 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
         List<ExcelValidDto> checkResult = new ArrayList<>();
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list = dataList.get(i);
-            if (null == list || list.size() != 9) {
+            if (null == list || list.size() != 6) {
                 checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i),
-                    this.getMessage("REPORT_COMMON_FILE_E_0001", "文件内容")));
+                        this.getMessage("REPORT_COMMON_FILE_E_0001", "文件内容")));
                 continue;
             }
             ChbPrdresistCode entity = new ChbPrdresistCode();
@@ -321,13 +319,13 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
             //系统中所有产品代码对应产品登记编码信息
             Map<String,String> prodIdToRegCodeMap = proRegistCodeManage001Mapper.selectProdInfo().stream().collect(JoyinCollectors.toMap(x->x.get("PRODID"),x->x.get("REGCODE")));
             //产品代码            	//update by leipeng 产品登记编码导入完成后，导入模板理财产品代码为cp002 但是导入库是行内标识码
-            String error0 =checkCode2(list.get(4), "产品代码", 30, true);
+            String error0 =checkCode2(list.get(0), "产品代码", 30, true);
             if (StringUtil.isNotEmpty(error0)) {
                 message.add(error0);
             }
             else {
-            	//update by leipeng 产品登记编码导入完成后，导入模板理财产品代码为cp002 但是导入库是行内标识码
-            	entity.setProdid(list.get(4));
+                //update by leipeng 产品登记编码导入完成后，导入模板理财产品代码为cp002 但是导入库是行内标识码
+                entity.setProdid(list.get(0));
                 Map<String , Object> map =new HashMap<>();
                 map.put("prodid",entity.getProdid());
                 map.put("orgCode", orgCode);
@@ -335,7 +333,7 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
 //                    message.add("同一机构中已存在此产品代码");
 //                }
 //                else{
-                
+
 //                }
             }
             //产品名称
@@ -369,12 +367,12 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
             else{
                 entity.setRegCode(list.get(2));
                 if(prodIdToRegCodeMap.values().contains(list.get(2))){
-                    if(!StringUtil.equals(this.getMapKeyByValue(prodIdToRegCodeMap,list.get(2)),list.get(3))){
+                    if(!StringUtil.equals(this.getMapKeyByValue(prodIdToRegCodeMap,list.get(2)),list.get(0))){
                         message.add("不同的产品代码不能对应同一产品登记编码");
                     }
                 }
                 else if(box.values().contains(list.get(2))){
-                    if(!StringUtil.equals(this.getMapKeyByValue(box,list.get(2)),list.get(3))){
+                    if(!StringUtil.equals(this.getMapKeyByValue(box,list.get(2)),list.get(0))){
                         message.add("不同的产品代码不能对应同一产品登记编码");
                     }
                 }
@@ -387,52 +385,52 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
 //                    message.add(this.getMessage("REPORT_COMMON_E_0028", "产品登记编码"));
 //                }
             }
-//            String vdate=list.get(3);
-//            String mdate=list.get(4);
-//            //起息日
-//            if(StringUtil.isNotEmpty(vdate)){
-//                if(!DateUtil.isDateStr(vdate, DateUtil.DEFAULT_OTHER_FORMAT,
-//                    DateUtil.DEFAULT_ANOTHER_FORMAT,DateUtil.DEFAULT_DATE_FORMAT_EN)){
-//                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "起息日"));
-//                }
-//                else {
-//                    entity.setVdate(DateUtil.parse(vdate));
-//                }
-//            }
-//            //到期日
-//            if(StringUtil.isNotEmpty(mdate)){
-//                if(!DateUtil.isDateStr(mdate, DateUtil.DEFAULT_OTHER_FORMAT,
-//                    DateUtil.DEFAULT_ANOTHER_FORMAT,DateUtil.DEFAULT_DATE_FORMAT_EN)){
-//                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "到期日"));
-//                }
-//                else {
-//                    entity.setMdate(DateUtil.parse(mdate));
-//                }
-//            }
-//            if(entity.getVdate()!=null&&entity.getMdate()!=null){
-//                if(DateUtil.compareDate(entity.getVdate(), entity.getMdate())>0){
-//                    message.add("起息日不能大于到期日！");
-//                }
-//            }
-            List<ProRegistCodeManage001Dto> list1 = proRegistCodeManage001Mapper.queryProdid(list.get(3));
+            String vdate=list.get(3);
+            String mdate=list.get(4);
+            //起息日
+            if(StringUtil.isNotEmpty(vdate)){
+                if(!DateUtil.isDateStr(vdate, DateUtil.DEFAULT_OTHER_FORMAT,
+                        DateUtil.DEFAULT_ANOTHER_FORMAT,DateUtil.DEFAULT_DATE_FORMAT_EN)){
+                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "起息日"));
+                }
+                else {
+                    entity.setVdate(DateUtil.parse(vdate));
+                }
+            }
+            //到期日
+            if(StringUtil.isNotEmpty(mdate)){
+                if(!DateUtil.isDateStr(mdate, DateUtil.DEFAULT_OTHER_FORMAT,
+                        DateUtil.DEFAULT_ANOTHER_FORMAT,DateUtil.DEFAULT_DATE_FORMAT_EN)){
+                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "到期日"));
+                }
+                else {
+                    entity.setMdate(DateUtil.parse(mdate));
+                }
+            }
+            if(entity.getVdate()!=null&&entity.getMdate()!=null){
+                if(DateUtil.compareDate(entity.getVdate(), entity.getMdate())>0){
+                    message.add("起息日不能大于到期日！");
+                }
+            }
+            List<ProRegistCodeManage001Dto> list1 = proRegistCodeManage001Mapper.queryProdid(list.get(0));
             if (list1.size() != 0 && StringUtil.isEmpty(list.get(2))){
 //                message.add(this.getMessage("系统中存在对应数据，更新数据请输入产品登记编码！"));
                 message.add("系统中存在对应数据，更新数据请输入产品登记编码！");
             }
-//            String error3 =checkCode2(list.get(5), "产品运作模式", 50, false);
-//            if (StringUtil.isNotEmpty(error3)) {
-//                message.add(error3);
-//            }
-//            else {
-//                //产品运作模式
-//            	if(StringUtil.isNotEmpty(list.get(5))){
-//	                String operateMode=list.get(5).substring(0,2);
-//	                entity.setOperateMode(operateMode);
-//            	}
-//            }
+            String error3 =checkCode2(list.get(5), "产品运作模式", 50, false);
+            if (StringUtil.isNotEmpty(error3)) {
+                message.add(error3);
+            }
+            else {
+                //产品运作模式
+                if(StringUtil.isNotEmpty(list.get(5))){
+                    String operateMode=list.get(5).substring(0,2);
+                    entity.setOperateMode(operateMode);
+                }
+            }
             if (CollectionUtils.isNotEmpty(message)) {
                 checkResult.add(new ExcelValidDto(entity.getProdid(), String.valueOf(i+1),
-                    StringUtil.joinString(message, GlobalConstant.COMMA)));
+                        StringUtil.joinString(message, GlobalConstant.COMMA)));
             }
             else {
                 entities.add(entity);
