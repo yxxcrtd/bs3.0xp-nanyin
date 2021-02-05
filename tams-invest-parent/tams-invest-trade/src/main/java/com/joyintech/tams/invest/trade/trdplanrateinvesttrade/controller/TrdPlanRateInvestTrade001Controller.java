@@ -51,6 +51,7 @@ import com.joyintech.tams.invest.trade.trdplanrateinvesttrade.service.TrdPlanRat
 import com.joyintech.tams.invest.trade.trdplanrateinvesttrade.service.TrdPlanRateInvestTrade002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 /**
  * 计划类资产投资交易查询
@@ -226,13 +227,22 @@ public class TrdPlanRateInvestTrade001Controller extends BaseController{
         params.setBusinessCode(item -> item.getTotleTradeId());
         params.setBusinessType(DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue());
         // 业务说明：“交易编号：” + 上述取得的交易编号+“资产名称：”+画面.资产名称+“交易日：”+画面.交易日 
-        params.setComment(
-            entity -> this.getMessage("TrdPlanRateInvestTrade001.tradeId") + "("
-                      + entity.getTotleTradeId() + ")" + "-"
-                      + this.getMessage("TrdPlanRateInvestTrade001.finprodName") + "("
-                      + entity.getFinprodName() + ")" 
-                      + this.getMessage("TrdPlanRateInvestTrade001.tradeDate") + "("
-                          + DateUtil.format(entity.getTradeDate()) + ")" );
+//        params.setComment(
+//            entity -> this.getMessage("TrdPlanRateInvestTrade001.tradeId") + "("
+//                      + entity.getTotleTradeId() + ")" + "-"
+//                      + this.getMessage("TrdPlanRateInvestTrade001.finprodName") + "("
+//                      + entity.getFinprodName() + ")" 
+//                      + this.getMessage("TrdPlanRateInvestTrade001.tradeDate") + "("
+//                          + DateUtil.format(entity.getTradeDate()) + ")" );
+        
+        params.setComment((entity) -> WorkFlowUtil.concatComment(
+                getMessage("TrdPlanRateInvestTrade001.tradeId"),
+                entity.getTotleTradeId(),
+                getMessage("TrdPlanRateInvestTrade001.finprodName"), 
+                entity.getFinprodName(),
+                getMessage("TrdPlanRateInvestTrade001.tradeDate"),
+                DateUtil.format(entity.getTradeDate())
+                ));
         processParameter.setWorkFlowParameter(params);
         String msg = trdPlanRateInvestTrade002Service.start(processParameter, dto);
         return new AjaxResult(msg);

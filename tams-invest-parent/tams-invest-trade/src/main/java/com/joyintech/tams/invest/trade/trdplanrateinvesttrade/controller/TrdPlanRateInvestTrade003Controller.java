@@ -589,13 +589,21 @@ public class TrdPlanRateInvestTrade003Controller extends BaseController{
         params.setBusinessCode(item -> item.getTotleTradeId());
         params.setBusinessType(DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue());
         // 业务说明：“交易编号：” + 上述取得的交易编号+“资产名称：”+画面.资产名称+“交易日：”+画面.交易日
-        params.setComment(
-                entity -> this.getMessage("TrdPlanRateInvestTrade001.tradeId") + "("
-                        + entity.getTradeId() + ")" + "-"
-                        + this.getMessage("TrdPlanRateInvestTrade001.finprodName") + "("
-                        + entity.getFinprodName() + ")"
-                        + this.getMessage("TrdPlanRateInvestTrade001.tradeDate") + "("
-                        + DateUtil.format(entity.getTradeDate()) + ")" );
+//        params.setComment(
+//                entity -> this.getMessage("TrdPlanRateInvestTrade001.tradeId") + "("
+//                        + entity.getTradeId() + ")" + "-"
+//                        + this.getMessage("TrdPlanRateInvestTrade001.finprodName") + "("
+//                        + entity.getFinprodName() + ")"
+//                        + this.getMessage("TrdPlanRateInvestTrade001.tradeDate") + "("
+//                        + DateUtil.format(entity.getTradeDate()) + ")" );
+        params.setComment((entity) -> WorkFlowUtil.concatComment(
+                getMessage("TrdPlanRateInvestTrade001.tradeId"),
+                entity.getTotleTradeId(),
+                getMessage("TrdPlanRateInvestTrade001.finprodName"), 
+                entity.getFinprodName(),
+                getMessage("TrdPlanRateInvestTrade001.tradeDate"),
+                DateUtil.format(entity.getTradeDate())
+                ));  
         processParameter.setWorkFlowParameter(params);
         String msg = trdPlanRateInvestTrade002Service.start(processParameter, dtoList.toArray(new TrdPlanRateInvestTradeDto[]{}));
         return new AjaxResult(msg);
