@@ -308,8 +308,8 @@ wind:
     username: zgtams1225yh_bak
     password: zgtams1225yh_bak
 log:
-  path: /home/tams/logs/tams
-  level: info
+  path: /home/tams/logs/tams_cp
+  level: debug
 eureka:
   client:
     enabled: false
