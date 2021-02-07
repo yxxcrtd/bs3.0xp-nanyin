@@ -59,7 +59,7 @@ public class TrdCommandsCollection001Controller extends BaseController{
         setSelectOptionToModel(model,DictCode.WIND一级分类_含债券一级分类等,DictCode.WIND二级分类_含债券二级分类等,DictCode.基金类资产二级类型,
                 DictCode.估值交易市场,DictCode.外汇交易模式,DictCode.上市板,DictCode.申购方式,DictCode.申购类型,DictCode.交易平台,
                 DictCode.回购类型,DictCode.交易方向,DictCode.回购拆借方向,DictCode.质押标的,DictCode.拆借类型,DictCode.计划类资产一级分类,
-                DictCode.存款类资产类型,DictCode.项目类一级分类);
+                DictCode.存款类资产类型,DictCode.项目类一级分类,DictCode.交易场所);
         model.addAttribute("ENTRUST_STATUS_03", DictCodeList.委托状态_已接收.getValue());
         model.addAttribute("PINAN_ASSET_TYPE_F01", DictCodeList.平安资产类型_债券.getValue());
         model.addAttribute("PINAN_ASSET_TYPE_F02", DictCodeList.平安资产类型_基金.getValue());
