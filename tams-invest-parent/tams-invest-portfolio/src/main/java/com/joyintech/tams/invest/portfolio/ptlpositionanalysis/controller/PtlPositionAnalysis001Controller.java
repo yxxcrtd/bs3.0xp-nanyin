@@ -188,7 +188,7 @@ public class PtlPositionAnalysis001Controller extends BaseController {
 //                                 + SystemGlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
 //            outFile, true);
         return ptlPositionAnalysis001Service.export(this.getPageId(),
-            RequestUtil.getParameters(getRequest()));
+            RequestUtil.getParameters(getRequest()),"searchDate");
     }
     /**
      * 资产代码的下拉框事件
