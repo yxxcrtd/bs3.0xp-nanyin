@@ -48,6 +48,9 @@
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="HS_TYPE" property="hsType" jdbcType="VARCHAR" />
         <result column="IS_FIN_LICENCE" property="isFinLicence" jdbcType="VARCHAR" />
+        <result column="INDUSTRY3" property="industry3" jdbcType="VARCHAR" />
+        <result column="INDUSTRY4" property="industry4" jdbcType="VARCHAR" />
+
     </resultMap>
     <resultMap id="ResultMapWithBLOBs" type="com.joyintech.tams.common.base.entity.MstCustomerInfoAddWithBLOBs" extends="BaseResultMap" >
         <result column="BUSI_SCOPE" property="busiScope" jdbcType="CLOB" />
@@ -66,7 +69,7 @@
         PROPERTY PROPERTY, COMPANY_NATURE COMPANY_NATURE, LINK_ID1 LINK_ID1, LINK_ID2 LINK_ID2, 
         LINK_ID3 LINK_ID3, REMARK REMARK, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
         CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, HS_TYPE HS_TYPE, 
-        IS_FIN_LICENCE IS_FIN_LICENCE
+        IS_FIN_LICENCE IS_FIN_LICENCE, INDUSTRY3 INDUSTRY3, INDUSTRY4 INDUSTRY4
     </sql>
     <sql id="Blob_Column_List" >
         BUSI_SCOPE, MAIN_BUSI
@@ -113,7 +116,7 @@
             LINK_ID2, LINK_ID3, REMARK, 
             CREATE_USER, CREATE_DEPT, CREATE_TIME, 
             UPDATE_USER, UPDATE_TIME, HS_TYPE, 
-            IS_FIN_LICENCE, BUSI_SCOPE, MAIN_BUSI
+            IS_FIN_LICENCE, BUSI_SCOPE, MAIN_BUSI,INDUSTRY3,INDUSTRY4
             )
         values (#{customerId,jdbcType=VARCHAR}, #{partyType3,jdbcType=VARCHAR}, #{partyType2,jdbcType=VARCHAR}, 
             #{partyType1,jdbcType=VARCHAR}, #{industry,jdbcType=VARCHAR}, #{industry2,jdbcType=VARCHAR}, 
@@ -130,7 +133,8 @@
             #{linkId2,jdbcType=VARCHAR}, #{linkId3,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
             #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
             #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{hsType,jdbcType=VARCHAR}, 
-            #{isFinLicence,jdbcType=VARCHAR}, #{busiScope,jdbcType=CLOB}, #{mainBusi,jdbcType=CLOB}
+            #{isFinLicence,jdbcType=VARCHAR}, #{busiScope,jdbcType=CLOB}, #{mainBusi,jdbcType=CLOB},
+            #{industry3,jdbcType=VARCHAR}, #{industry4,jdbcType=VARCHAR}
             )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfoAddWithBLOBs" >
@@ -280,6 +284,12 @@
             <if test="mainBusi != null" >
                 MAIN_BUSI,
             </if>
+            <if test="industry3 != null" >
+                INDUSTRY3,
+            </if>
+            <if test="industry4 != null" >
+                INDUSTRY4,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="customerId != null" >
@@ -426,6 +436,12 @@
             <if test="mainBusi != null" >
                 #{mainBusi,jdbcType=CLOB},
             </if>
+            <if test="industry3 != null" >
+                #{industry3,jdbcType=VARCHAR},
+            </if>
+            <if test="industry4 != null" >
+                #{industry4,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfoAddWithBLOBs" >
@@ -436,7 +452,7 @@
         IS_CREDIT_RELATED_TRD, STRUCT_ADJUST_TYPE, INDUS_UPGRATE_TYPE, SEX, PERSON_ID, M_PHONE, 
         PHONE, POSITION, COMPANY_NAME, ADDRESS, MAIL, PROPERTY, COMPANY_NATURE, LINK_ID1, 
         LINK_ID2, LINK_ID3, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
-        HS_TYPE, IS_FIN_LICENCE, BUSI_SCOPE, MAIN_BUSI)
+        HS_TYPE, IS_FIN_LICENCE, BUSI_SCOPE, MAIN_BUSI, INDUSTRY3, INDUSTRY4)
         select CUSTOMER_ID, PARTY_TYPE3, PARTY_TYPE2, PARTY_TYPE1, 
             INDUSTRY, INDUSTRY2, INSITITUTE_CODE, IS_GOV, MAIN_CAPITAL, REGISTER_CAPITAL, PROVINCE, 
             CITY, COUNTY, HOLDING_TYPE, CUSTOMER_OBJ_TYPE, IS_LISTED_COMPANY, IS_GROUP_CUSTOMER, 
@@ -444,7 +460,7 @@
             IS_CREDIT_RELATED_TRD, STRUCT_ADJUST_TYPE, INDUS_UPGRATE_TYPE, SEX, PERSON_ID, M_PHONE, 
             PHONE, POSITION, COMPANY_NAME, ADDRESS, MAIL, PROPERTY, COMPANY_NATURE, LINK_ID1, 
             LINK_ID2, LINK_ID3, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
-            HS_TYPE, IS_FIN_LICENCE, BUSI_SCOPE, MAIN_BUSI
+            HS_TYPE, IS_FIN_LICENCE, BUSI_SCOPE, MAIN_BUSI, INDUSTRY3, INDUSTRY4
              from MST_CUSTOMER_INFO_ADD
              where 1 = 1 and CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
     </insert>
@@ -583,6 +599,12 @@
             <if test="mainBusi != null" >
                 MAIN_BUSI = #{mainBusi,jdbcType=CLOB},
             </if>
+            <if test="industry3 != null" >
+                INDUSTRY3 = #{industry3,jdbcType=VARCHAR},
+            </if>
+            <if test="industry4 != null" >
+                INDUSTRY4 = #{industry4,jdbcType=VARCHAR},
+            </if>
         </set>
         where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
     </update>
@@ -631,7 +653,10 @@
             HS_TYPE = #{hsType,jdbcType=VARCHAR},
             IS_FIN_LICENCE = #{isFinLicence,jdbcType=VARCHAR},
             BUSI_SCOPE = #{busiScope,jdbcType=CLOB},
-            MAIN_BUSI = #{mainBusi,jdbcType=CLOB}
+            MAIN_BUSI = #{mainBusi,jdbcType=CLOB},
+            INDUSTRY3 = #{industry3,jdbcType=VARCHAR},
+            INDUSTRY4 = #{industry4,jdbcType=VARCHAR}
+
         where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfoAdd" >
@@ -677,7 +702,10 @@
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             HS_TYPE = #{hsType,jdbcType=VARCHAR},
-            IS_FIN_LICENCE = #{isFinLicence,jdbcType=VARCHAR}
+            IS_FIN_LICENCE = #{isFinLicence,jdbcType=VARCHAR},
+            INDUSTRY3 = #{industry3,jdbcType=VARCHAR},
+            INDUSTRY4 = #{industry4,jdbcType=VARCHAR}
+
         where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
     </update>
 </mapper>

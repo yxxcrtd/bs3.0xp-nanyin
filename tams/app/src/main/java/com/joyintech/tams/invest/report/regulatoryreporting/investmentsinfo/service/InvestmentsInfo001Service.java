@@ -15,24 +15,32 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.*;
+import com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessCounterDetailsDto;
+import com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto;
+import com.joyintech.tams.report.common.constant.SvrServiceApplication;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.report.regulatoryreporting.palopenmarketdealersmonthly.dto.ChbBankMonthReportModelDto;
@@ -64,7 +72,7 @@ public class InvestmentsInfo001Service extends CommonExportService<ChbBankMonthR
      */
     private static final String TMP_DIR = "/tpl/";
 	
-	/**  
+	/**
 	 * @Description 导出EXCEL文件  
 	 * @Author      高健  
 	 * @Date        2019年8月3日 下午3:13:04  
@@ -81,13 +89,87 @@ public class InvestmentsInfo001Service extends CommonExportService<ChbBankMonthR
 		String exportYear = (String) pageParam.get("exportYear");
 		// 导出季度
 		String exportQuarter = (String) pageParam.get("exportQuarter");
-		String exceltemplate = "InvestmentsInfo001";
-		  String fileName = "表内外投资业务情况统计表（共6张）大型银行报表(" + exportYear+"年" +exportQuarter+ "月" + ").xls";
+
+		//String exceltemplate = "InvestmentsInfo001";
+		  //String fileName = "表内外投资业务情况统计表（共6张）大型银行报表(" + exportYear+"年" +exportQuarter+ "月" + ").xls";
 		// File depositfile = createFile(data,exceltemplate);
-		 File depositfile = TisUtil.createFile(data, exceltemplate, fileName);
-		 return ExportUtil.export(fileName, depositfile, true);
+		// File depositfile = TisUtil.createFile(data, exceltemplate, fileName);
+
+        //表7-2
+        List<InvestmentBusinessCounterDetailsDto> listCounter=restTemplate.postForList(ServiceApplication.REPORT_SERVICE_NAME + "/InvestmentsInfo/createTable3AddData",
+                pageParam, InvestmentBusinessCounterDetailsDto.class);
+        data.put("listCounter",listCounter);
+
+        //表3附表
+		pageParam.put("rule","local");
+		List<InvestmentBusinessDetailsDto> listLocal=restTemplate.postForList(ServiceApplication.REPORT_SERVICE_NAME + "/InvestmentsInfo/createTable3AddData",
+		pageParam, InvestmentBusinessDetailsDto.class);
+		pageParam.put("rule","otherPlace");
+		List<InvestmentBusinessDetailsDto> listOtherPlace=restTemplate.postForList(ServiceApplication.REPORT_SERVICE_NAME + "/InvestmentsInfo/createTable3AddData",
+		pageParam, InvestmentBusinessDetailsDto.class);
+		data.put("listLocal",listLocal);
+		data.put("listOtherPlace",listOtherPlace);
+
+
+        List<File> sourceFiles = new ArrayList<File>();
+		//表内外投资业务情况统计表
+		data.put("fileName", "表内外投资业务情况统计表（共6张）大型银行报表(" + exportYear+"年" +exportQuarter+ "月" + ").xls");
+		File assetsFile = TisUtil.createFile(data, "InvestmentsInfo001",  "表内外投资业务情况统计表（共6张）大型银行报表(" + exportYear+"年" +exportQuarter+ "月" + ").xls");
+
+		sourceFiles.add(assetsFile);
+		//表3附表
+		data.put("fileName", "表3附表(" + exportYear+"年" +exportQuarter+ "月" + ").xls");
+		File table3AddFile = TisUtil.createFile(data, "InvestmentsInfot3Add", "表3附表(" + exportYear+"年" +exportQuarter+ "月" + ").xls");
+
+
+		//表３附表单元格合并
+		InputStream inputStream = new FileInputStream(table3AddFile);
+		POIFSFileSystem fs = new POIFSFileSystem(inputStream);
+		Workbook wb = new HSSFWorkbook(fs);
+			Sheet sheet = wb.getSheetAt(0);
+			int index1 = 3;
+			int index2 = index1+listLocal.size()-1;
+			int index3=index2+1;
+			int index4=index3+listOtherPlace.size()-1;
+			if(index1!=index2){
+				sheet.addMergedRegion(new CellRangeAddress(index1, index2, 0, 0));
+			}
+			if(index3!=index4){
+				sheet.addMergedRegion(new CellRangeAddress(index3, index4, 0, 0));
+			}
+		wb.write(new FileOutputStream(table3AddFile));
+
+		sourceFiles.add(table3AddFile);
+
+		// 如果生成excel文件个数大于1，生成压缩文件
+		File outFile = null;
+		String exportFilePath = SvrDataUtil.getSysParam(com.joyintech.framework.constant.GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+
+		String zipFileName = "表内外投资业务情况统计表"+"_"+exportYear+"年" +exportQuarter+ "月"+".zip";
+		outFile = new File(exportFilePath + File.separator + zipFileName);
+		// 导出路径不存在则重新生成
+		if (!outFile.getParentFile().exists()) {
+			outFile.getParentFile().mkdirs();
+		}
+		try {
+			ZipFileUtil.compressZip(outFile, true, sourceFiles.toArray(new File[] {}));
+		}
+		catch (Exception e) {
+			// 压缩文件失败后，删除所有临时文件
+			for (File file : sourceFiles) {
+				if (file.exists()) {
+					file.delete();
+				}
+			}
+			logger.error(e.getMessage(),e);
+		}
+		//删掉xls文件
+		for(File single : sourceFiles){
+			single.delete();
+		}
+		return ExportUtil.export(zipFileName, outFile, true);
+
 	}
-	
 	/**  
 	 * @Description 生产EXCEL文件  
 	 * @Author      高健  

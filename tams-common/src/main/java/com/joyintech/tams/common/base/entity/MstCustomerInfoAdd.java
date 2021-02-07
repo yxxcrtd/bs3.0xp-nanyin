@@ -35,7 +35,14 @@ public class MstCustomerInfoAdd extends BaseEntity {
      * 国标二级分类
      */
     private String industry2;
-
+    /**
+     * 行业三级类别
+     */
+    private String industry3;
+    /**
+     * 行业四级类别
+     */
+    private String industry4;
     /**
      * 组织机构代码/统一社会信用代码
      */
@@ -867,5 +874,21 @@ public class MstCustomerInfoAdd extends BaseEntity {
      */
     public void setIsFinLicence(String isFinLicence) {
         this.isFinLicence = isFinLicence == null ? null : isFinLicence.trim();
+    }
+
+    public String getIndustry3() {
+        return industry3;
+    }
+
+    public void setIndustry3(String industry3) {
+        this.industry3 = industry3;
+    }
+
+    public String getIndustry4() {
+        return industry4;
+    }
+
+    public void setIndustry4(String industry4) {
+        this.industry4 = industry4;
     }
 }

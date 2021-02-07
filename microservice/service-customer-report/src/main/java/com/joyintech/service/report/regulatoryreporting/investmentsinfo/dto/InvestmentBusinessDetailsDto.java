@@ -58,7 +58,15 @@ public class InvestmentBusinessDetailsDto {
 	//资产类型  表二算底层用 
 	private String assettype;
 	private String assettype2;
-	
+	private String remark;
+	//表三附表
+	//总计，本季末数额
+	private BigDecimal totleBalance;
+	//总计，上季末数额
+	private BigDecimal lasttotleBalance;
+    //表7中行业类别
+	private String industryType;
+
 	/**  
 	 * @Description   
 	 * @Author      高健  
@@ -321,6 +329,37 @@ public class InvestmentBusinessDetailsDto {
 	public void setAssettype2(String assettype2) {
 		this.assettype2 = assettype2;
 	}
-	
-	
+
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public BigDecimal getTotleBalance() {
+		return totleBalance;
+	}
+
+	public void setTotleBalance(BigDecimal totleBalance) {
+		this.totleBalance = totleBalance;
+	}
+
+	public BigDecimal getLasttotleBalance() {
+		return lasttotleBalance;
+	}
+
+	public void setLasttotleBalance(BigDecimal lasttotleBalance) {
+		this.lasttotleBalance = lasttotleBalance;
+	}
+
+	public String getIndustryType() {
+		return industryType;
+	}
+
+	public void setIndustryType(String industryType) {
+		this.industryType = industryType;
+	}
 }
