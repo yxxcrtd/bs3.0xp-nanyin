@@ -63,7 +63,10 @@ public class EtrRepo001Controller extends BaseController {
         setSelectOptionToModel(model, DictCode.委托状态);
         setSelectOptionToModel(model, DictCode.回购期限品种);
         setSelectOptionToModel(model, DictCode.价格模式);
-        model.addAttribute("repoType", DictCodeList.回购类型_质押式协议回购.getValue());
+//      modify by 马数凯 29210207 ZGBSS-68 去除查询页回购类型初始化值 start
+//        model.addAttribute("repoType", DictCodeList.回购类型_质押式协议回购.getValue());
+//      modify by 马数凯 29210207 ZGBSS-68 去除查询页回购类型初始化值 end
+
         return super.init(model);
     }
     
