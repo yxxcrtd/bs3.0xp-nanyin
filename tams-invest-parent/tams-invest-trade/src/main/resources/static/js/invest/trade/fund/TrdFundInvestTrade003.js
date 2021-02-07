@@ -578,7 +578,7 @@ $(function () {
                     $('#shareAmt').val((Number(tradeAmt) - getPayWithTradeFee()) / unitCprice).trigger('blur');
                 }
             } else if ((ps == ps_T19)) {
-                if (unitCprice != null && unitCprice != '' && shareAmt) {
+                if (unitCprice != null && unitCprice != '' && shareAmt && pageModel != PAGE_MODEL_REFERENCE && !isTodoList) {
                     // var tradeAmtHid = shareAmt * unitCprice;
                     // $('#tradeAmt').val(tradeAmtHid).trigger('blur');
                     // $('#tradeAmtHid').val(tradeAmtHid).trigger('blur');
