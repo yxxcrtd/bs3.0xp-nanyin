@@ -463,8 +463,51 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
            List<RskValtblAssetSubDto> handval_List = handValList(valList, vtaccountMap);
            //底层---一级汇总
            valHand_oneList = sum_handValList(handval_List, vtaccountMap,rskValtblSubjectList);
+           
+           //多条科目需汇总（不同投资目的可生成多条信息）
+           Map<String,Integer> indexMap = new HashMap<>();
+           int i=0;
+           while(i<valHand_oneList.size()) {
+        	   RskValtblAssetSubDto processDto = valHand_oneList.get(i);
+        	   if(indexMap.containsKey(processDto.getSubCode())) {
+        		   RskValtblAssetSubDto sumDto = valHand_oneList.get(indexMap.get(processDto.getSubCode()));
+        		   //1.汇总计算
+        		   summary(sumDto,processDto);
+        		   //2.移除
+        		   valHand_oneList.remove(i);
+        	   }
+        	   else {
+        		   indexMap.put(processDto.getSubCode(), i++);
+        	   }
+           }
        }
        return valHand_oneList;
+   }
+   
+   private void summary(RskValtblAssetSubDto sumDto,RskValtblAssetSubDto processDto) {
+	   //证券数量 securityQuantity 
+	   sumDto.setSecurityQuantity(processAdd(sumDto.getSecurityQuantity(),processDto.getSecurityQuantity()));
+	   //单位成本 unitCost 汇总处理待确认
+	   //证券成本 securityCost
+	   sumDto.setSecurityCost(processAdd(sumDto.getSecurityCost(),processDto.getSecurityCost()));
+	   //成本占净值比 ctnwr
+	   sumDto.setCtnwr(processAdd(sumDto.getCtnwr(),processDto.getCtnwr()));
+	   //行情收市价 mcp 汇总处理待确认
+	   //证券市值  smv
+	   sumDto.setSmv(processAdd(sumDto.getSmv(),processDto.getSmv()));
+	   //市值占净值比 mcr
+	   sumDto.setMcr(processAdd(sumDto.getMcr(),processDto.getMcr()));
+	   //估值增值 valueAdded
+	   sumDto.setValueAdded(processAdd(sumDto.getValueAdded(),processDto.getValueAdded()));
+	   //停牌信息 equityInfo
+	   //权益信息 valType
+   }
+   
+   private BigDecimal processAdd(BigDecimal num1,BigDecimal num2) {
+	   if(num1==null&&num2==null) {
+		   return null;
+	   }
+	   return ArithmeticUtil.doAdd(num1,num2);
    }
    
    /**

@@ -10,18 +10,6 @@
 
 package com.joyintech.tams.invest.batch.autogeneration.secpos.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -38,6 +26,12 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.batch.autogeneration.secpos.dao.SecPosAutoGenerationMapper;
 import com.joyintech.tams.invest.batch.autogeneration.secpos.dto.AssetTargetDbDto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 组合持仓自动生成批处理Service
@@ -81,12 +75,22 @@ public class SecPosAutoGenerationService {
             paramMap.put("productIdList", null);
         }
         secPosAutoGenerationMapper.deleteTodaySecPosData(paramMap);
+        //add for 华兴 by liupengfei S
+        //删除当日组合持仓融入融出明细数据
+        secPosAutoGenerationMapper.deleteTodaySecPosDetailData(paramMap);
+        //add for 华兴 by liupengfei E
 
         // 生成当日持仓数据
         paramMap.put("POSITION_TYPE_03", DictCodeList.持仓类型_实际.getValue());
         paramMap.put("POSITION_TYPE_01", DictCodeList.持仓类型_可用.getValue());
         paramMap.put("lastDate", DateUtil.addDay(batchDate, -1));
         secPosAutoGenerationMapper.insertTodaySecPosData(paramMap);
+        //add for 华兴 by liupengfei S
+        //通过汇总昨日持仓数据和当日融入融出明细数据，生成当日持仓数据
+        paramMap.put("POSITION_TYPE_05", DictCodeList.持仓类型_融入.getValue());
+        paramMap.put("POSITION_TYPE_06", DictCodeList.持仓类型_融出.getValue());
+        secPosAutoGenerationMapper.insertTodaySecPosDetailData(paramMap);
+        //add for 华兴 by liupengfei E
     }
 
 

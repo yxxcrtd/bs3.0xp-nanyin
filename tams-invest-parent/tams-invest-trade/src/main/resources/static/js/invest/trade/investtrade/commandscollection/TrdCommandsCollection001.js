@@ -339,7 +339,7 @@ $(function() {
                         {field:'entrustId', width:'13%', title: 'TrdBondInvestTrade001.entrustId',sortable:false}
                         ,{field:'vdate', visible:false}
                         ,{field:'mdateStr', width:'10%', title: 'TrdCommandReceive001.mdate', type: 'date', sortable:false}
-                        ,{field:'settleSpeedStr', width:'10%', title: 'TrdRepoTrade002.settleSpeed', sortable:false}
+                        // ,{field:'settleSpeedStr', width:'10%', title: 'TrdRepoTrade002.settleSpeed', sortable:false}
                         ,{field:'entrustAmt', width: 200, title: 'TrdCommandsCollection002.entrustAmtF02', type: 'number', sortable:false}
                         ,{field:'finishedAmt', width: 200, title: 'TrdCommandsCollection002.finishedAmtF02', type: 'number', sortable:false}
                         ,{field:'unfinishedAmt', width: 200, title: 'TrdCommandsCollection002.unfinishedAmtF02', type: 'number', sortable:false}
