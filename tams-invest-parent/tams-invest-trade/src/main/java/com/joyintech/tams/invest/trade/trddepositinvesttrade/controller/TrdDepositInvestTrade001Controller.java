@@ -202,7 +202,17 @@ public class TrdDepositInvestTrade001Controller extends BaseController{
         @RequestMapping("check")
         public AjaxResult check(@RequestBody @Validated({
             ValidateGroupDelete.class}) TrdDepositInvestTrade001Dto dto, BindingResult result) {
-
+            if (StringUtil.equals(dto.getOperateType(), "delete")) {
+                if (trdCommonBaseService.isAlreadyRevoked(dto.getSelectedItem().get(0).getTradeId())) {
+                    ValidMessage validMessage = new ValidMessage(getMessage("TRD_W_0001",
+                            getMessage("pingan.common.revoke"), getMessage("pingan.common.revoke")));
+                    ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+                    errorList.add(validMessage);
+                    AjaxResult ar = new AjaxResult();
+                    ar.setErrorList(errorList);
+                    return ar;
+                }
+            }
            //已撤销的交易不允许撤销
             WflValidInputParameter parameter = new WflValidInputParameter();
             parameter.setPageId("TrdDepositInvestTrade002");
@@ -254,17 +264,6 @@ public class TrdDepositInvestTrade001Controller extends BaseController{
                 }
                 if (ajaxResult != null) {
                     return ajaxResult;
-                }
-            }
-            if (StringUtil.equals(dto.getOperateType(), "revoke")) {
-                if (trdCommonBaseService.isAlreadyRevoked(dto.getSelectedItem().get(0).getTradeId())) {
-                    ValidMessage validMessage = new ValidMessage(getMessage("TRD_W_0001",
-                            getMessage("pingan.common.revoke"), getMessage("pingan.common.revoke")));
-                    ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
-                    errorList.add(validMessage);
-                    AjaxResult ar = new AjaxResult();
-                    ar.setErrorList(errorList);
-                    return ar;
                 }
             }
             return commonCheck(result, dto.getOperateType());
