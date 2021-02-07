@@ -327,14 +327,14 @@ public class ValManualVoucher001Controller extends BaseController {
     @RequestMapping("check")
    public AjaxResult check(@RequestBody @Valid ValManualVoucher001Dto dto, BindingResult result, String operateType) {
 //        if (StringUtil.equals(dto.ge, "revoke")) {
-            if (!StringUtil.isNotEmpty(trdVouchDealMapper.selectByPrimaryKey(dto.getBookId()))) {
-                ValidMessage validMessage = new ValidMessage("该条数据已删除");
-                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
-                errorList.add(validMessage);
-                AjaxResult ar = new AjaxResult();
-                ar.setErrorList(errorList);
-                return ar;
-            }
+//            if (!StringUtil.isNotEmpty(trdVouchDealMapper.selectByPrimaryKey(dto.getBookId()))) {
+//                ValidMessage validMessage = new ValidMessage("该条数据已删除");
+//                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+//                errorList.add(validMessage);
+//                AjaxResult ar = new AjaxResult();
+//                ar.setErrorList(errorList);
+//                return ar;
+//            }
 //        }
         return commonCheck(result, operateType);
     }
