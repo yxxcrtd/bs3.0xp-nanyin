@@ -156,6 +156,17 @@ public class TrdPlanNetInvestTrade001Controller extends BaseController {
         ValidateGroupDelete.class}) TrdPlanNetInvestTradeDto dto, BindingResult result) {
         //撤销时校验
         if (StringUtil.equals(dto.getOperateType(), "revoke")){
+            if (trdCommonBaseService.isAlreadyRevoked(dto.getSelectedItem().get(0).getTradeId())) {
+                ValidMessage validMessage = new ValidMessage(getMessage("TRD_W_0001",
+                        getMessage("pingan.common.revoke"), getMessage("pingan.common.revoke")));
+                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+                errorList.add(validMessage);
+                AjaxResult ar = new AjaxResult();
+                ar.setErrorList(errorList);
+                return ar;
+            }
+        }
+        if (StringUtil.equals(dto.getOperateType(), "revoke")){
             //校验是否存在待确认的流程 yjm start 20190904
             WflValidInputParameter parameter = new WflValidInputParameter();
             parameter.setPageId("TrdPlanNetInvestTrade003");      
@@ -234,17 +245,7 @@ public class TrdPlanNetInvestTrade001Controller extends BaseController {
 
             }
         }
-        if (StringUtil.equals(dto.getOperateType(), "revoke")){
-            if (trdCommonBaseService.isAlreadyRevoked(dto.getSelectedItem().get(0).getTradeId())) {
-                ValidMessage validMessage = new ValidMessage(getMessage("TRD_W_0001",
-                        getMessage("pingan.common.revoke"), getMessage("pingan.common.revoke")));
-                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
-                errorList.add(validMessage);
-                AjaxResult ar = new AjaxResult();
-                ar.setErrorList(errorList);
-                return ar;
-            }
-        }
+
         return commonCheck(result, dto.getOperateType());
     }
     /**

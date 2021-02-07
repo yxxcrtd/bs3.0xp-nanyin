@@ -190,6 +190,17 @@ public class TrdProjectInvestTrade001Controller extends BaseController {
     public AjaxResult revokeCheck(@Validated({ValidateGroupDelete.class}) TrdProjectInvestTrade001Dto dto,
                                   BindingResult result) {
         // TISHKBS-1349 债券 进行买入交易后 隔天做卖出交易 卖出交易完成后对买入交易进行撤销,此时不提示存在后续交易 增加提示 add by caojin 20201001 start
+        if (StringUtil.equals(dto.getOperateType(), "revoke")) {
+            if (trdCommonBaseService.isAlreadyRevoked(dto.getBizCode())) {
+                ValidMessage validMessage = new ValidMessage(getMessage("TRD_W_0001",
+                        getMessage("pingan.common.revoke"), getMessage("pingan.common.revoke")));
+                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+                errorList.add(validMessage);
+                AjaxResult ar = new AjaxResult();
+                ar.setErrorList(errorList);
+                return ar;
+            }
+        }
         int T02sum = trdBondInvestTrade002Service.selectTradeT02(dto.getBizCode());
         if(T02sum > 0){
             ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
@@ -222,17 +233,7 @@ public class TrdProjectInvestTrade001Controller extends BaseController {
             }
         }
         // 确认提醒 TISHKBS-1113【组合资金账户头寸查询】内转交易撤销提醒 add by hpp 2020-09-17 end
-        if (StringUtil.equals(dto.getOperateType(), "revoke")) {
-            if (trdCommonBaseService.isAlreadyRevoked(dto.getBizCode())) {
-                ValidMessage validMessage = new ValidMessage(getMessage("TRD_W_0001",
-                        getMessage("pingan.common.revoke"), getMessage("pingan.common.revoke")));
-                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
-                errorList.add(validMessage);
-                AjaxResult ar = new AjaxResult();
-                ar.setErrorList(errorList);
-                return ar;
-            }
-        }
+
         return commonCheck(result, dto.getOperateType());
     }
 
