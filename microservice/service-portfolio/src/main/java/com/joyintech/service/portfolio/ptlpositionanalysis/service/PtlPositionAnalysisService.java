@@ -75,7 +75,8 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
         if (StringUtil.isNotEmpty(pageParam.get("prodManager"))) {
             pageParam.put("prodManager", StringUtil.splitToList(null, pageParam.get("prodManager").toString()));
         } else {
-            pageParam.put("prodManager", null);
+        	//获取设置的产品经理全集，未设置时返回null，兼容之前的设置
+            pageParam.put("prodManager", pageParam.get("prodManagers"));
         }
         // add by wangyang1 【吉林银行】 增加 产品经理  end 
         pageParam.put("cash", "现金");
@@ -173,7 +174,7 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
         if (StringUtil.isNotEmpty(pageParam.get("prodManager"))) {
             pageParam.put("prodManager", StringUtil.splitToList(null, pageParam.get("prodManager").toString()));
         } else {
-            pageParam.put("prodManager", null);
+            pageParam.put("prodManager", pageParam.get("prodManagers"));
         }
         // add by wangyang1 【吉林银行】 增加 产品经理  end
         // 多级法人改造 add by jingqiongqiong 20200615
@@ -248,7 +249,7 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
         if (StringUtil.isNotEmpty(pageParam.get("prodManager"))) {
             pageParam.put("prodManager", StringUtil.splitToList(null, pageParam.get("prodManager").toString()));
         } else {
-            pageParam.put("prodManager", null);
+            pageParam.put("prodManager",  pageParam.get("prodManagers"));
         }
         // add by wangyang1 【吉林银行】 增加 产品经理  end
         pageParam.put("cash", "现金");
@@ -296,7 +297,7 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
         if (StringUtil.isNotEmpty(pageParam.get("prodManager"))) {
             pageParam.put("prodManager", StringUtil.splitToList(null, pageParam.get("prodManager").toString()));
         } else {
-            pageParam.put("prodManager", null);
+            pageParam.put("prodManager", pageParam.get("prodManagers"));
         }
         // add by wangyang1 【吉林银行】 增加 产品经理  end
         List<PtlPositionAnalysis001Dto> resultList = new ArrayList<>();

@@ -10,6 +10,8 @@
  
 package com.joyintech.tams.invest.portfolio.ptlpositionanalysis.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +23,7 @@ import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis001Dto;
 import com.joyintech.tams.invest.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis002Dto;
@@ -43,6 +46,14 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
      * @since 1.0
      */
     public Page<PtlPositionAnalysis001Dto> selectForPage(Map<String, Object> map){
+    	if(!StringUtil.isNotEmpty(map.get("prodManager"))) {
+    		List<String> prodManagers = new ArrayList<>();
+    		//产品经理不存在时获取所有符合的产品经理
+    		Page<SelectOptionDto> users = restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductCommon/getUserName", new HashMap<String,Object>(),
+            		SelectOptionDto.class);
+    		users.getRoot().stream().forEach(user->prodManagers.add(user.getId()));
+    		map.put("prodManagers",prodManagers);
+    	}
         return restTemplate.postForPage(
                 ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlPositionAnalysis/findPage",
                 map, PtlPositionAnalysis001Dto.class);
@@ -57,6 +68,14 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
      * @since 1.0
      */
     public List<PtlPositionAnalysis001Dto> selectAllList(Map<String, Object> map){
+    	if(!StringUtil.isNotEmpty(map.get("prodManager"))) {
+    		List<String> prodManagers = new ArrayList<>();
+    		//产品经理不存在时获取所有符合的产品经理
+    		Page<SelectOptionDto> users = restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductCommon/getUserName", new HashMap<String,Object>(),
+            		SelectOptionDto.class);
+    		users.getRoot().stream().forEach(user->prodManagers.add(user.getId()));
+    		map.put("prodManagers",prodManagers);
+    	}
         List<PtlPositionAnalysis001Dto> list=restTemplate.postForList(
             ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlPositionAnalysis/findList",
             map, PtlPositionAnalysis001Dto.class);
@@ -85,6 +104,14 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
      * @since 1.0
      */
     public List<PtlPositionAnalysis002Dto> selectAllAssetList(Map<String, Object> map){
+    	if(!StringUtil.isNotEmpty(map.get("prodManager"))) {
+    		List<String> prodManagers = new ArrayList<>();
+    		//产品经理不存在时获取所有符合的产品经理
+    		Page<SelectOptionDto> users = restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductCommon/getUserName", new HashMap<String,Object>(),
+            		SelectOptionDto.class);
+    		users.getRoot().stream().forEach(user->prodManagers.add(user.getId()));
+    		map.put("prodManagers",prodManagers);
+    	}
         List<PtlPositionAnalysis002Dto> list = restTemplate.postForList(
                 ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlPositionAnalysis/findListForAsset",
                 map, PtlPositionAnalysis002Dto.class);
@@ -124,6 +151,14 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
      * @since 1.0
      */
     public Page<PtlPositionAnalysis001Dto> selectForExport(Map<String, Object> map){
+    	if(!StringUtil.isNotEmpty(map.get("prodManager"))) {
+    		List<String> prodManagers = new ArrayList<>();
+    		//产品经理不存在时获取所有符合的产品经理
+    		Page<SelectOptionDto> users = restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductCommon/getUserName", new HashMap<String,Object>(),
+            		SelectOptionDto.class);
+    		users.getRoot().stream().forEach(user->prodManagers.add(user.getId()));
+    		map.put("prodManagers",prodManagers);
+    	}
         Page<PtlPositionAnalysis001Dto> page = restTemplate.postForPage(
                 ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlPositionAnalysis/findPageForExport",
                 map, PtlPositionAnalysis001Dto.class);
