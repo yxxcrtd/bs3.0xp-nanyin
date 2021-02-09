@@ -450,6 +450,7 @@
 	        select rank() over(partition by prod_id order by change_date desc) 
 	        my_rank,prod_id,ccy,prod_value from CHB_PRD_PERIODYIELD
 	        where CHANGE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE} and CHANG_TYPE='01'
+	        AND STATUS IN ('E','M')
 	        ) where my_rank=1
 	    )val
 	    on nvl (info.fprod_id,info.prod_id)=val.prod_id
@@ -465,6 +466,7 @@
           WHERE
           d.trade_type = '16'
           AND nvl(d.fprod_id, d.prod_id) = info.prod_id
+          and D.status in ('E','M')
           AND D.SETTDATE_DATE <![CDATA[<]]> #{startdate,jdbcType=DATE}
       )
       and  info.status in  ('E','M') and  info.ISSUING_STATUS in  ('01')
@@ -775,7 +777,9 @@
     or (deal.ord_identified is null and di.ord_identified is null)
     )
     where 1=1
-    <if test="prodid!=null">
+        and (prod.vdate >= #{enddate,jdbcType=DATE} or deal.prodid is not null)
+
+      <if test="prodid!=null">
     	and deal.prodid=#{prodid,jdbcType=VARCHAR} 
     </if>
     <if test="prodids !=null">
@@ -813,12 +817,14 @@
             0 dirtysum /*募集总额*/,
             0 cleansum /*净募集金额*/,
            case when prod.prodtype in ('N')
-            then pm.endamtsum*pi.prod_value*nvl(rate.yeid,1)
+            then round(pm.endamtsum*pi.prod_value,2)*nvl(rate.yeid,1)
             else pm.endamtsum 
             end ENDAMTSUM_OTH /*期末余额*/,
             0 customeramt /*客户收益*/
            ,0  payamtsum   /**本期兑付金额*/
-           ,0  closetermday  /*封闭式产品期限*/
+           ,case when prod.operate_mode in ('01','02')
+              then prod.mdate-prod.vdate else null
+              end  closetermday  /**新加字段封闭式产品期限*/
         FROM
            /* chb_prd_baseinfo prod */
            /* left join CHB_MONTH_PRD_POSITION pos1*/
@@ -843,7 +849,7 @@
             where SETTDATE_DATE between #{startdate,jdbcType=DATE} and #{enddate,jdbcType=DATE}
             and nvl(m.objfield1,'0')=nvl(pos1.ord_identified,'0')
             and nvl(prod.fprod_id,prod.prod_id)=nvl(deal.fprod_id,deal.prod_id) 
-            ---加上有效交易条件
+            /***加上有效交易条件**/
             and deal.status !='D' )    
 		    <if test="prodid!=null">
 		    	and nvl(prod.fprod_id,prod_id)=#{prodid,jdbcType=VARCHAR} 

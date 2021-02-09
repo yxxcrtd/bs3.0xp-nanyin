@@ -391,7 +391,7 @@ public class ChbMonthReport001Service extends SvrCommonExportService<ChbMonthRep
 					}
 				}
 //				 return exportG06MonthReportExcel(data,termname);
-				fileName="G06银行月度报表"+"_"+termname+".xls";
+				fileName="G06月度报表"+"_"+termname+".xls";
 			}
             return exportMonthReportExcel(data,exceltemplate,fileName);
         } catch (IOException e) {   

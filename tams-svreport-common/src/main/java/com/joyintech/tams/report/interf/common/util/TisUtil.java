@@ -31,11 +31,7 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.RichTextString;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -572,6 +568,8 @@ public class TisUtil {
                                   if(exceltemplate.contains("Monthreport")){
 									  try {
 										  newcell.setCellValue(Double.parseDouble(value));
+										  newcell.setCellType(baseCell.getCellType());
+
 									  }catch(Exception e){
 										  newcell.setCellValue(value);
 									  }
