@@ -777,7 +777,7 @@
     or (deal.ord_identified is null and di.ord_identified is null)
     )
     where 1=1
-        and (prod.vdate >= #{enddate,jdbcType=DATE} or deal.prodid is not null)
+        and (prod.vdate >= #{startdate,jdbcType=DATE} or deal.prodid is not null)
 
       <if test="prodid!=null">
     	and deal.prodid=#{prodid,jdbcType=VARCHAR} 
