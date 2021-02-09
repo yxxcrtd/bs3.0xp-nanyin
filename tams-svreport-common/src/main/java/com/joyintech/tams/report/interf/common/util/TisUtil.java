@@ -568,8 +568,9 @@ public class TisUtil {
                                   if(exceltemplate.contains("Monthreport")){
 									  try {
 										  newcell.setCellValue(Double.parseDouble(value));
-										  newcell.setCellType(baseCell.getCellType());
-
+										  if(!exceltemplate.contains("G06")){
+											  newcell.setCellType(baseCell.getCellType());
+										  }
 									  }catch(Exception e){
 										  newcell.setCellValue(value);
 									  }
