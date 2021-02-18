@@ -25,7 +25,7 @@ spring:
     validationQuery: SELECT 1 FROM DUAL
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
     username: zgtams0810
-    password: zgtams0810
+    password: zgtams0810_123
     maxTotal: 10
     maxIdle: 10
     minIdle: 5
@@ -280,12 +280,12 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
     username: zgtams0810
-    password: zgtams0810
+    password: zgtams0810_123
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
   sqldiruserName: zgtams0810
-  sqldirpassword: zgtams0810
+  sqldirpassword: zgtams0810_123
 shiro:
   ssoEnable: true
   allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
@@ -299,22 +299,22 @@ base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
     username: zgtams0810
-    password: zgtams0810
+    password: zgtams0810_123
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
     username: zgtams0810
-    password: zgtams0810
+    password: zgtams0810_123
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
     username: zgtams0810
-    password: zgtams0810
+    password: zgtams0810_123
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
     username: zgtams0810
-    password: zgtams0810
+    password: zgtams0810_123
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -343,33 +343,33 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
     username: zgtams0810
-    password: zgtams0810
+    password: zgtams0810_123
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
 application:
   url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
   username: zgtams0810
-  password: zgtams0810
+  password: zgtams0810_123
 base:
   datasource:
     driverClassName: oracle.jdbc.driver.OracleDriver
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
     username: zgtams0810
-    password: zgtams0810
+    password: zgtams0810_123
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
     username: zgtams0810
-    password: zgtams0810
+    password: zgtams0810_123
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
     username: zgtams0810
-    password: zgtams0810
+    password: zgtams0810_123
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
     username: zgtams0810
-    password: zgtams0810
+    password: zgtams0810_123
 log:
   path: ${user.home}/tams/logs/tams
   level: DEBUG
