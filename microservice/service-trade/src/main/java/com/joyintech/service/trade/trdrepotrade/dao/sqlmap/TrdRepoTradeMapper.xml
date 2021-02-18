@@ -675,6 +675,9 @@
         from FIN_PRODUCT
         where
         FINPROD_MARKET_ID =  #{FINPROD_MARKET_ID}
+        <if test="FINPROD_TYPE2!=null">
+           AND FINPROD_TYPE2 = #{FINPROD_TYPE2}
+        </if>
     </select>
     <select id="getTrdProductDealByFTradeId" resultMap="com.joyintech.tams.common.base.dao.TrdProductDealMapper.BaseResultMap">
         select

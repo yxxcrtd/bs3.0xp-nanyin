@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -251,6 +252,7 @@ public class TrdRepoTrade003DtoValidator implements TradeCommonValidator {
                 	// Add 20200407 fix TISHKBS-86 start
                 	Map<String, Object> paramSec = new HashMap<>();
                 	paramSec.put("FINPROD_MARKET_ID", pbi.getBondCode());
+                    paramSec.put("FINPROD_TYPE2", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
                 	FinProduct finProduct = trdRepoTrade002Service.querySecinfo(paramSec);
                 	if (finProduct != null) {
                 		pbi.setMdate(finProduct.getMdate());

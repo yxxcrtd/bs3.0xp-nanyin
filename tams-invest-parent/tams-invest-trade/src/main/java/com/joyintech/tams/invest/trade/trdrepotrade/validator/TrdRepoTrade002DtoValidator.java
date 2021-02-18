@@ -250,6 +250,7 @@ public class TrdRepoTrade002DtoValidator implements TradeCommonValidator {
                 for (PledgeBondInfoDto pbi : inputDto.getBussRepoSec().getPledgeBondList()) {
                 	Map<String, Object> paramSec = new HashMap<>();
                 	paramSec.put("FINPROD_MARKET_ID", pbi.getBondCode());
+                    paramSec.put("FINPROD_TYPE2", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
                 	FinProduct finProduct = trdRepoTrade002Service.querySecinfo(paramSec);
                 	if (finProduct != null) {
                 		pbi.setMdate(finProduct.getMdate());
