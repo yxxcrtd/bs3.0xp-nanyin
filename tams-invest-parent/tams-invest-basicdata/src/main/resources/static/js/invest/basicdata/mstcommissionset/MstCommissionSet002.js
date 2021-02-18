@@ -319,7 +319,6 @@
             $('#feeRateDiv').hide();
             //费用值显示
             $('#feeValueDiv').show();
-
         }
     };
     $(function() {
@@ -400,6 +399,7 @@
             }
         });
         $("#isGrade").trigger('change');
+        $("#tradeType").trigger('change');
         if(($("#workflowId").val()!=null&&$("#workflowId").val()!='')||pageModel!=PAGE_MODEL_NEW){
             $("#windtypetwo").val(windtypetwo).trigger("change");
             $("#chargeBasis").val(chargeBasis).trigger("change");
