@@ -1,6 +1,9 @@
 package com.joyintech.tams.svreport.chb.perprodeclarereg.service;
 
 
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.ZipUtil;
+import com.joyintech.component.svrreport.chb.contant.ChbConstant;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.dto.UploadFile;
@@ -8,10 +11,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.system.common.listener.UploadListener;
 import com.joyintech.tams.common.base.dao.BaseMapper;
 import com.joyintech.tams.common.svreport.chb.constant.CheckConfConstants;
@@ -36,6 +36,7 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
+import org.aspectj.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +79,8 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 	 */
 	@Autowired
 	private BaseMapper baseMapper;
-	 private Logger logger = LoggerFactory.getLogger(getClass());
+
+ 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
 	 *
@@ -855,5 +857,336 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 	 */
 	public List<SelectOptionDto> queryProdInsIdList(Map<String,Object> map){
 		return perProDeclareReg001Mapper.queryProdInsIdList(map);
+	}
+
+	/**
+	 * 九大附件批量上传校验
+	 * @param map  入参
+	 * @return 处理结果
+	 * @throws IOException 异常信息
+	 */
+	public AjaxResult nineFileUploadCheck(Map<String, Object> map) throws IOException {
+		String fileNo=(String) map.get("param[0][fileNo]");
+		String targetFileSTR=(String) map.get("param[0][targetFile]");
+		File file=new File(targetFileSTR);
+		// 记录错误信息
+		StringBuffer fileCheckMsg = new StringBuffer();
+		// 记录文件信息
+		Map<String, Map<String, List<String>>> prodFileExistsMap = new HashMap<>();
+		// 获取上传的压缩文件
+		ZipFile zipFile=new ZipFile(new File(targetFileSTR),Charset.forName("GBK"));
+		// 记录共同文件
+		Map<String, List<String>> commonFileMap = new HashMap();
+
+		// 遍历压缩包里面所有文件
+		for (Enumeration<? extends ZipEntry> e = zipFile.entries(); e.hasMoreElements();) {
+			ZipEntry entry = e.nextElement();
+			if (entry.getName().indexOf("/") > -1) {
+				fileCheckMsg.append("包含不必要的文件或文件夹" + entry.getName() + "！");
+				fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
+				continue;
+			}
+			if (entry.getName().indexOf("_") < 0) {
+				fileCheckMsg.append("包含不必要的文件" + entry.getName() + "！");
+				fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
+				continue;
+			}
+
+			String prodId = "";
+			String folderName = "";
+			// 03_产品审批文件
+			// 05_理财产品托管协议总行设定
+			// ZK201016_02_可行性评估报告
+			// ZK201016_07_产品说明书
+			int start = entry.getName().indexOf("_");
+			int end = entry.getName().lastIndexOf("_");
+			if (start == end) {
+				start = 0;
+				folderName = entry.getName().substring(start, end);
+			}else{
+				prodId = entry.getName().substring(0, start);
+				// 文件名:01、02....
+				folderName = entry.getName().substring(start + 1, end);
+			}
+
+			ChbPrdDeclareRegFileCode chbPrdDeclareRegFileCode = ChbPrdDeclareRegFileCode.genInfoByFolderNo(folderName);
+			if (chbPrdDeclareRegFileCode != null && entry.getSize() > chbPrdDeclareRegFileCode.getFileSize() * 1024 * 1024) {
+				fileCheckMsg.append("文件大小超过" + chbPrdDeclareRegFileCode.getFileSize() + "M（" + entry.getName() + "）。");
+				fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
+			}
+			String fileType = entry.getName().substring(entry.getName().lastIndexOf(".") + 1, entry.getName().length());
+			if (chbPrdDeclareRegFileCode != null && chbPrdDeclareRegFileCode.getFileType().indexOf(fileType) < 0) {
+				fileCheckMsg.append(entry.getName() + "文件的扩展名不对。必须为以下的一种：" + chbPrdDeclareRegFileCode.getFileType() + "。");
+				fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
+			}
+
+			String fileName = entry.getName();
+			// 带产品代码前缀的文件，放到指定产品代码下
+			if (StringUtil.isNotEmpty(prodId)){
+				if (prodFileExistsMap.containsKey(prodId)){
+					if (prodFileExistsMap.get(prodId).containsKey(folderName)){
+						List<String> folderNameList = new ArrayList<>(prodFileExistsMap.get(prodId).get(folderName));
+						folderNameList.add(fileName);
+						prodFileExistsMap.get(prodId).put(folderName, folderNameList);
+					}
+					else{
+						prodFileExistsMap.get(prodId).put(folderName, Arrays.asList(fileName));
+					}
+				}else{
+					Map<String, List<String>> prodExistsMap = new HashMap<>();
+					prodExistsMap.put(folderName, Arrays.asList(fileName));
+					prodFileExistsMap.put(prodId, prodExistsMap);
+				}
+			}
+			// 公共文件，需要放到每个产品代码下
+			else{
+				if (commonFileMap.containsKey(folderName)){
+					List<String> folderNameList = new ArrayList<>(commonFileMap.get(folderName));
+					folderNameList.add(fileName);
+					commonFileMap.put(folderName, folderNameList);
+				}
+				else{
+					commonFileMap.put(folderName, Arrays.asList(fileName));
+				}
+			}
+		}
+
+		// 公共文件，需要放到每个产品代码下
+		for (String commonFolder : commonFileMap.keySet()){
+			for(String prodId : prodFileExistsMap.keySet()){
+				if (prodFileExistsMap.get(prodId).containsKey(commonFolder)){
+					List<String> folderNameList = new ArrayList<>(prodFileExistsMap.get(prodId).get(commonFolder));
+					folderNameList.addAll(commonFileMap.get(commonFolder));
+					prodFileExistsMap.get(prodId).put(commonFolder, folderNameList);
+				}
+				else{
+					prodFileExistsMap.get(prodId).put(commonFolder, commonFileMap.get(commonFolder));
+				}
+			}
+		}
+
+		// 判断是否缺少必须文件
+		List<String> folderNoList = ChbPrdDeclareRegFileCode.genFolderNoList();
+		for(String prodId : prodFileExistsMap.keySet()){
+			Map<String, List<String>> foldNameMap = prodFileExistsMap.get(prodId);
+			for (String folderNo : folderNoList){
+				if (!foldNameMap.containsKey(folderNo) || StringUtil.isEmptyList(foldNameMap.get(folderNo))){
+					ChbPrdDeclareRegFileCode chbPrdDeclareRegFileCode = ChbPrdDeclareRegFileCode.genInfoByFolderNo(folderNo);
+					if (chbPrdDeclareRegFileCode.isNend()){
+						fileCheckMsg.append("产品代码(" + prodId + ")" + folderNo + "(" + chbPrdDeclareRegFileCode.getFolderName() + ")不可为空。");
+						fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
+					}
+				}
+			}
+		}
+
+		// 检查数据是否已存在
+		Map<String, Object> pageParam = new HashMap<>();
+		pageParam.put("prodIdList", prodFileExistsMap.keySet());
+		pageParam.put("sendStatusList", Arrays.asList(DictCodeListExt2.报送状态_未报送.getValue()));
+		List<PerProDeclareRegDto> subList = perProDeclareReg001Mapper.selectAllData(pageParam);
+
+		for (PerProDeclareRegDto subDto : subList){
+			if (StringUtil.isNotEmpty(subDto.getFileNo())){
+				fileCheckMsg.append("产品代码(" + subDto.getProdId() + ")已存在附件。");
+				fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
+			}
+		}
+
+		// 返回错误信息，删除上传附件及上传记录，处理结束
+		if (fileCheckMsg.length() > 0){
+			if(file.exists()){
+				file.delete();
+			}
+			uploadListener.remove(fileNo);
+
+			fileCheckMsg.append("上传失败！");
+			return new AjaxResult(fileCheckMsg.toString(), MessageType.错误消息);
+		}
+
+		return new AjaxResult("上传中...");
+	}
+
+	/**
+	 * 九大附件批量上传
+	 * @param map  入参
+	 * @return 处理结果
+	 * @throws IOException 异常信息
+	 */
+	public AjaxResult nineFileUpload(Map<String, Object> map) throws IOException {
+		String targetFileSTR=(String) map.get("param[0][targetFile]");
+		// 记录文件信息
+		Map<String, Map<String, List<String>>> prodFileExistsMap = new HashMap<>();
+		// 获取上传的压缩文件
+		ZipFile zipFile=new ZipFile(new File(targetFileSTR),Charset.forName("GBK"));
+		// 记录共同文件
+		Map<String, List<String>> commonFileMap = new HashMap();
+
+		// 遍历压缩包里面所有文件
+		for (Enumeration<? extends ZipEntry> e = zipFile.entries(); e.hasMoreElements();) {
+			ZipEntry entry = e.nextElement();
+
+			String prodId = "";
+			String folderName = "";
+			// 03_产品审批文件
+			// 05_理财产品托管协议总行设定
+			// ZK201016_02_可行性评估报告
+			// ZK201016_07_产品说明书
+			int start = entry.getName().indexOf("_");
+			int end = entry.getName().lastIndexOf("_");
+			if (start == end) {
+				start = 0;
+				folderName = entry.getName().substring(start, end);
+			}else{
+				prodId = entry.getName().substring(0, start);
+				// 文件名:01、02....
+				folderName = entry.getName().substring(start + 1, end);
+			}
+
+			// String fileName = entry.getName().substring(folderName.length() + 1);
+			String fileName = entry.getName();
+			// 带产品代码前缀的文件，放到指定产品代码下
+			if (StringUtil.isNotEmpty(prodId)){
+				if (prodFileExistsMap.containsKey(prodId)){
+					if (prodFileExistsMap.get(prodId).containsKey(folderName)){
+						List<String> folderNameList = new ArrayList<>(prodFileExistsMap.get(prodId).get(folderName));
+						folderNameList.add(fileName);
+						prodFileExistsMap.get(prodId).put(folderName, folderNameList);
+					}
+					else{
+						prodFileExistsMap.get(prodId).put(folderName, Arrays.asList(fileName));
+					}
+				}else{
+					Map<String, List<String>> prodExistsMap = new HashMap<>();
+					prodExistsMap.put(folderName, Arrays.asList(fileName));
+					prodFileExistsMap.put(prodId, prodExistsMap);
+				}
+			}
+			// 公共文件，需要放到每个产品代码下
+			else{
+				if (commonFileMap.containsKey(folderName)){
+					List<String> folderNameList = new ArrayList<>(commonFileMap.get(folderName));
+					folderNameList.add(fileName);
+					commonFileMap.put(folderName, folderNameList);
+				}
+				else{
+					commonFileMap.put(folderName, Arrays.asList(fileName));
+				}
+			}
+		}
+
+		// 公共文件，需要放到每个产品代码下
+		for (String commonFolder : commonFileMap.keySet()){
+			for(String prodId : prodFileExistsMap.keySet()){
+				if (prodFileExistsMap.get(prodId).containsKey(commonFolder)){
+					List<String> folderNameList = new ArrayList<>(prodFileExistsMap.get(prodId).get(commonFolder));
+					folderNameList.addAll(commonFileMap.get(commonFolder));
+					prodFileExistsMap.get(prodId).put(commonFolder, folderNameList);
+				}
+				else{
+					prodFileExistsMap.get(prodId).put(commonFolder, commonFileMap.get(commonFolder));
+				}
+			}
+		}
+
+		// 本地路径
+		String localPath = CacheUtil.getSysParam("upload_file_path") + File.separator;
+		// 第一步：解压上传的压缩包
+		ZipUtil.unzip(zipFile, new File(localPath + "nineAttachFile"));
+
+		// 第二步：循环产品代码生成需要的文件及文件夹
+		for (String prodId : prodFileExistsMap.keySet()){
+			Map<String, List<String>> foldNameMap = prodFileExistsMap.get(prodId);
+			List<File> zipFiles = new ArrayList<>();
+			for (String folderName : foldNameMap.keySet()){
+				File folder = new File(localPath + "nineAttachFile" + File.separator + folderName);
+				//  生成文件夹
+				if (!folder.exists()){
+					folder.mkdir();
+				}
+				else{
+					// 删除文件夹下所有文件
+					this.deleteFile(folder, false);
+				}
+				// 解压的文件复制到各文件夹下
+				for (String sonFile : foldNameMap.get(folderName)){
+					FileUtil.copyFile(new File(localPath + "nineAttachFile" + File.separator + sonFile), folder);
+				}
+				zipFiles.add(folder);
+			}
+			// 第三步：根据产品代码生成压缩包
+			File [] zipFilesArr = zipFiles.toArray(new File[zipFiles.size()]);
+			ZipUtil.zip(new File(localPath + prodId  + ChbConstant.FILE_ZIP), CharsetUtil.defaultCharset(), true, null, zipFilesArr);
+		}
+
+		// 第四步：刪除第一步和第二步生成的文件
+		this.deleteFile(new File(localPath + "nineAttachFile" + File.separator), true);
+
+		// 第五步：记录文件路径
+		for (String prodId : prodFileExistsMap.keySet()){
+			// 拼接中债直连报文所需要的文件信息
+			StringBuffer fileSb = new StringBuffer();
+			BigDecimal fileNum = BigDecimal.ZERO;
+			for (String foldName : prodFileExistsMap.get(prodId).keySet()){
+				fileSb.append(foldName);
+				fileSb.append(GlobalConstant.COMMA);
+				List<String> fileInfoList = prodFileExistsMap.get(prodId).get(foldName);
+				for (String fileInfo : fileInfoList){
+					fileSb.append(fileInfo);
+					fileSb.append(GlobalConstant.COMMA);
+				}
+				fileSb = new StringBuffer(fileSb.substring(0, fileSb.length() - GlobalConstant.COMMA.length()));
+				fileSb.append(GlobalConstant.SEMICOLON);
+
+				fileNum = fileNum.add(BigDecimal.ONE);
+			}
+			fileSb = new StringBuffer(fileSb.substring(0, fileSb.length() - GlobalConstant.SEMICOLON.length()));
+
+			// 定义文件代码
+			String sonFileNo = IDGenerator.generate(32);
+			// 记录文件信息
+			PerProDeclareRegDto  perProDeclareRegDto=new PerProDeclareRegDto();
+			perProDeclareRegDto.setProdId(prodId);
+			perProDeclareRegDto.setFileNo(sonFileNo);
+			perProDeclareRegDto.setFileNum(fileNum);
+			perProDeclareRegDto.setNineFile(fileSb.toString());
+			perProDeclareReg001Mapper.updateFileNo(perProDeclareRegDto);
+			// 记录文件关联表
+			UploadFile fileInfo = new UploadFile();
+			fileInfo.setTargetFile(new File(localPath + prodId  + ChbConstant.FILE_ZIP));
+			fileInfo.setFileNo(sonFileNo);
+			uploadListener.upload(fileInfo);
+		}
+
+		return new AjaxResult("附件上传成功！");
+	}
+
+	/**
+	 * 指定文件夹删除下面所有内容
+	 * @param file 文件
+	 * @param flag 是否删除根目录
+	 */
+	public static void deleteFile(File file, boolean flag){
+		//判断文件不为null或文件目录存在
+		if (file == null || !file.exists()){
+			return;
+		}
+		//取得这个目录下的所有子文件对象
+		File[] files = file.listFiles();
+		//遍历该目录下的文件对象
+		for (File f: files){
+			//打印文件名
+			String name = file.getName();
+			//判断子目录是否存在子目录,如果是文件则删除
+			if (f.isDirectory()){
+				deleteFile(f, true);
+			}else {
+				f.delete();
+			}
+		}
+		// 是否删除根目录
+		if (flag){
+			file.delete();
+		}
 	}
 }
