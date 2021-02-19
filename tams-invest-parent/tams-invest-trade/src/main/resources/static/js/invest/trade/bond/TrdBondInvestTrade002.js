@@ -1814,7 +1814,9 @@ var table;
                     $("#commissionAmtDiv").hide();
                     $("#settleAmtDiv").hide();
                     $("#exchangeAmtDiv").hide();
-                    ClearNum();
+                    if(!isTodoList&&pageModel!=PAGE_MODEL_REFERENCE){
+                        ClearNum();
+                    }
                 }
 
                 if($("#tradeMarket").val()!="01"){
