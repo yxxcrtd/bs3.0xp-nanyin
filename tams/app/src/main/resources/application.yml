@@ -330,7 +330,7 @@ xinping:
     urlPort: 9191
 tx-lcn:
   client:
-    managerAddress: 192.168.90.219:8070
+    managerAddress: 192.168.90.197:8070
 ---
 spring:
   profiles: dtx
