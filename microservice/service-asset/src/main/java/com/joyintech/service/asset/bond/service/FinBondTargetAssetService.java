@@ -339,6 +339,15 @@ public class FinBondTargetAssetService extends BaseService<FinBondTargetAssetDto
                     List<RepAssetEquity> list = entity.getBaseRepAssetEquityInfoDto().getRepAssetEquityList();
                     entity.getBaseRepAssetEquityInfoDto().setRepAssetEquityList(list);
                     baseRepAssetEquityInfoService.update(entity.getBaseRepAssetEquityInfoDto());
+                    //修改债券资产二级分类，比如从债券修改为权益类，REP_ASSET_BOND表数据删除不掉bug修改
+                    BaseRepBondAssetInfoDto baseRepBondAssetInfoDto =new BaseRepBondAssetInfoDto();
+                    List<String> repFinprodIdList = new ArrayList<String>();
+                    repFinprodIdList.add(list.get(0).getRepFinprodId());
+                    baseRepBondAssetInfoDto.setRepFinprodIdList(repFinprodIdList);
+                    List<RepAssetBond> repAssetBondTemp = baseRepBondAssetInfoService.select(baseRepBondAssetInfoDto);
+                    if(!StringUtil.isEmptyList(repAssetBondTemp)){
+                        baseRepBondAssetInfoService.delete(baseRepBondAssetInfoDto);
+                    }
                 }
             }
             //资产负债
