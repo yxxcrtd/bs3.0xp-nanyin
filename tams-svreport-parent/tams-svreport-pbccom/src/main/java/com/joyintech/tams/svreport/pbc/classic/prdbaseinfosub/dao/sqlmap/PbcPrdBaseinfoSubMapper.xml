@@ -896,7 +896,10 @@
 			t1.OUT_DEP_NAME outDepName,
 			t1.VDATE vdate,
 			t1.MDATE mdate,
-			t1.ACCOUNT_ID accountId,
+		    <!-- modify by zhangliang 20210220 工单号:YHZGCPB20210129004 start -->
+		    <!-- t1.ACCOUNT_ID accountId, -->
+		    NVL(t3.PBC_CODE, t1.ACCOUNT_ID) accountId,
+		    <!-- modify by zhangliang 20210220 工单号:YHZGCPB20210129004 end -->
 			t1.IS_CONSTRACTE isConstracte,
 			t1.TRANSFER_TYPE transferType,
 			t1.IDENTI_FLAG identiFlag,
@@ -927,6 +930,18 @@
 	            status='E'
 	            AND code_type='01'
 	    )t2 ON t2.inside_prod_id=t1.PROD_ID
+	  <!-- add by zhangliang 20210220 工单号:YHZGCPB20210129004 start -->
+	  LEFT JOIN(
+		  SELECT
+				  inside_prod_id,
+				  pbc_code
+		  FROM
+				pbc_prod_assetpool_code
+		  WHERE
+				status='E'
+		  AND code_type='02'
+	  )t3 ON t3.inside_prod_id=t1.PROD_ID
+	  <!-- add by zhangliang 20210220 工单号:YHZGCPB20210129004 end -->
 	    LEFT JOIN CHB_ORG_REGIST_BANK_CODE CORBC
 	    ON CORBC.REGIST_BANK_CODE = t1.ISSUE_PARTY_ID
 	    LEFT JOIN SYS_INSTITUTION SI
