@@ -740,6 +740,67 @@
                     </if>
                     )
                 </if>
+                <if test="finprodType == 'F01'">
+                    AND EXISTS ( SELECT 1 FROM (
+                    SELECT
+                    T1.PORTFOLIO_ID,
+                    T1.SEC_ACCT_ID,
+                    T1.FINPROD_ID,
+                    T1.CDATE,
+                    DECODE(T1.HODING_TYPE, '06', T1.AMOUNT*-1, '04', T1.AMOUNT*-1, T1.AMOUNT) AMOUNT
+                    FROM PTL_SEC_POSITION T1
+                    INNER JOIN FIN_EXERCISE_PLAN E1 ON E1.FINPROD_ID = T1.FINPROD_ID AND E1.EXERCISE_TYPE = '01' and E1.EXERCISE_DATE IS NOT NULL
+                    AND E1.EXERCISE_DATE &lt;= to_date(#{sysDate}, 'yyyy-MM-dd')
+                    AND NOT EXISTS (
+                        SELECT 1 FROM FIN_EXERCISE_PLAN TT1
+                        WHERE TT1.FINPROD_ID = E1.FINPROD_ID
+                        AND E1.EXERCISE_DATE &lt;= to_date(#{sysDate}, 'yyyy-MM-dd')
+                        AND TT1.EXERCISE_TYPE = '01'
+                        AND TT1.EXERCISE_DATE > E1.EXERCISE_DATE
+                    )
+                    <where>
+                          T1.HODING_TYPE IN ('03', '04', '06', '08')
+                        <if test="chlId != null and !chlId.isEmpty()">
+                            and T1.SEC_ACCT_ID = #{chlId}
+                        </if>
+                        <if test="chlId == null or chlId.isEmpty()">
+                            AND NOT EXISTS (SELECT 1 FROM FIN_PRODUCT FP WHERE FP.FINPROD_ID = T1.SEC_ACCT_ID)
+                        </if>
+                        AND T1.PORTFOLIO_ID IN (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName})
+                        AND NOT EXISTS (SELECT 1 FROM PTL_SEC_POSITION TT1 WHERE
+                        T1.PORTFOLIO_ID =  TT1.PORTFOLIO_ID
+                        AND T1.SEC_ACCT_ID =  TT1.SEC_ACCT_ID
+                        AND T1.FINPROD_ID =  TT1.FINPROD_ID
+                        AND T1.BRANCH =  TT1.BRANCH
+                        AND T1.INV_AIM =  TT1.INV_AIM
+                        AND T1.HODING_TYPE =  TT1.HODING_TYPE
+                        AND T1.CDATE &lt; TT1.CDATE
+                        and tt1.cdate &lt;= E1.EXERCISE_DATE )
+                    </where>
+                    UNION ALL
+                    SELECT
+                    T1.PORTFOLIO_ID,
+                    T1.SEC_ACCT_ID,
+                    T1.FINPROD_ID,
+                    T1.CDATE,
+                    T1.AMOUNT
+                    FROM PTL_SEC_POSITION_FLOW T1
+                    <where>
+                        AND T1.HODING_TYPE IN ('01')
+                        <if test="chlId != null and !chlId.isEmpty()">
+                            and T1.SEC_ACCT_ID = #{chlId}
+                        </if>
+                        <if test="chlId == null or chlId.isEmpty()">
+                            AND NOT EXISTS (SELECT 1 FROM FIN_PRODUCT FP WHERE FP.FINPROD_ID = T1.SEC_ACCT_ID)
+                        </if>
+                        AND T1.PORTFOLIO_ID IN (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName})
+                    </where>
+                    ) PSP
+                    INNER JOIN PTL_PORTFOLIO PP ON PSP.PORTFOLIO_ID = PP.PORTFOLIO_ID AND PP.INVEST_YESORNO = 'Y'
+                    WHERE PSP.FINPROD_ID = A.FINPROD_ID AND T1.EXERCISE_DATE >= PSP.CDATE
+                    GROUP BY PSP.PORTFOLIO_ID, PSP.SEC_ACCT_ID, PSP.FINPROD_ID
+                    HAVING SUM(PSP.AMOUNT) > 0)
+                </if>
             </if>
         </if>
         <where>

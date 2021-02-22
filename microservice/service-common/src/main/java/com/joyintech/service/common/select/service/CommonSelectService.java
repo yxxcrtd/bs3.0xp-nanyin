@@ -11,6 +11,7 @@ package com.joyintech.service.common.select.service;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.StringUtil;
@@ -188,6 +189,7 @@ public class CommonSelectService extends BaseService {
     }
 
     public Page<SelectOptionDto> selectFinprodMarketId(int page,int length, Map<String, Object> param) {
+        param.put("loginUserName", SecurityUtil.getLoginUser().getUserName());
         return queryForPageForSelectReturn(page, length, () -> commonSelectMapper.selectFinprodMarketId(param));
 
     }
