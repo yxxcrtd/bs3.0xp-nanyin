@@ -80,6 +80,9 @@
         , {field: 'minAmt', title: 'EtrRepo003.minAmt', type: 'number', width: 150, sortable: false}
         , {field: 'tradeMarketName', title: 'EtrRepo003.tradeMarket', width: 150, sortable: false}
         , {field: 'repoTerm', title: 'EtrRepo003.repoTerm', type: 'number', width: 150, sortable: false}
+        //add by yujiaping 20210222 TISHKBS-1817 导入模板中增加“期限品种”字段 start
+        , {field: 'termType', title: 'EtrRepo003.termType', width: 150, sortable: false}
+        //add by yujiaping 20210222 TISHKBS-1817 导入模板中增加“期限品种”字段 end
         , {field: 'calendarIdName', title: 'EtrRepo003.calendarId', width: 150, sortable: false}
         , {field: 'securitiesCustName', title: 'EtrRepo003.securitiesCust', width: 150, sortable: false}
         , {field: 'chlIdName', title: 'invest.channelId', width: 150, sortable: false}

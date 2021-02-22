@@ -386,10 +386,14 @@ public class EtrRepo002Service extends BaseService<EtrRepoDto> implements BasePr
                 etrRepoDto.setTradeMarket(rowData.get(12).toString().split(":")[0]);
                 // 期限
                 etrRepoDto.setRepoTerm(new BigDecimal(rowData.get(13).toString()));
+                //add by yujiaping 20210222 TISHKBS-1817 导入模板中增加“期限品种”字段 start
+                //期限品种
+                etrRepoDto.setTermType(rowData.get(14).toString());
+                //add by yujiaping 20210222 TISHKBS-1817 导入模板中增加“期限品种”字段 end
                 // 交易日历
-                etrRepoDto.setCalendarId(rowData.get(14).toString());
+                etrRepoDto.setCalendarId(rowData.get(15).toString());
                 Map<String, Object> param = new HashMap<>();
-                param.put("initValue", rowData.get(14).toString());
+                param.put("initValue", rowData.get(15).toString());
                 param.put("page", 1);
                 param.put("length", 20);
                 Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
@@ -399,10 +403,10 @@ public class EtrRepo002Service extends BaseService<EtrRepoDto> implements BasePr
                     etrRepoDto.setCalendarIdName(selectOptionDtoPage.getRoot().get(0).getText());
                 }
                 // 证券账户
-                if (StringUtil.isNotBlank(rowData.get(15).toString())) {
-                    etrRepoDto.setSecuritiesCust(rowData.get(15).toString());
+                if (StringUtil.isNotBlank(rowData.get(16).toString())) {
+                    etrRepoDto.setSecuritiesCust(rowData.get(16).toString());
                     param = new HashMap<>();
-                    param.put("initValue", rowData.get(15).toString());
+                    param.put("initValue", rowData.get(16).toString());
                     param.put("portfolioId", rowData.get(3).toString());
                     param.put("tradeMarket", rowData.get(12).toString().split(":")[0]);
                     param.put("page", 1);
@@ -413,10 +417,10 @@ public class EtrRepo002Service extends BaseService<EtrRepoDto> implements BasePr
                     }
                 }
                 // 通道
-                if (StringUtil.isNotBlank(rowData.get(16).toString())) {
-                    etrRepoDto.setChlId(rowData.get(16).toString());
+                if (StringUtil.isNotBlank(rowData.get(17).toString())) {
+                    etrRepoDto.setChlId(rowData.get(17).toString());
                     param = new HashMap<>();
-                    param.put("initValue", rowData.get(16).toString());
+                    param.put("initValue", rowData.get(17).toString());
                     param.put("page", 1);
                     param.put("length", 20);
                     selectOptionDtoPage = restTemplate.postForPage(
@@ -427,7 +431,7 @@ public class EtrRepo002Service extends BaseService<EtrRepoDto> implements BasePr
                     }
                 }
                 // 备注
-                etrRepoDto.setRemark(rowData.get(17).toString());
+                etrRepoDto.setRemark(rowData.get(18).toString());
                 param = new HashMap<>();
                 param.put("portfolioId", etrRepoDto.getPortfolioId());
                 param.put("ccy", etrRepoDto.getCcy());
@@ -455,7 +459,7 @@ public class EtrRepo002Service extends BaseService<EtrRepoDto> implements BasePr
             // 质押券信息
             PledgeBondInfoDto pledgeBondInfoDto = new PledgeBondInfoDto();
             // 债券代码
-            pledgeBondInfoDto.setBondCode(rowData.get(18).toString());
+            pledgeBondInfoDto.setBondCode(rowData.get(19).toString());
             EtrRepoDto etrRepoDto = etrRepoDtoList.get(etrRepoDtoList.size() - 1);
             List<PledgeBondInfoDto> list = selectAvaPledgeBondDetailList(
                 pledgeBondInfoDto.getBondCode(), etrRepoDto);
@@ -468,11 +472,11 @@ public class EtrRepo002Service extends BaseService<EtrRepoDto> implements BasePr
                 BeanUtil.copyPropertiesIgnoreNull(pledgeBondInfoDto, list.get(0));
             }
             // 债券代码
-            pledgeBondInfoDto.setBondCode(rowData.get(18).toString());
+            pledgeBondInfoDto.setBondCode(rowData.get(19).toString());
             // 质押券面总额
-            pledgeBondInfoDto.setPledgePrin(new BigDecimal(rowData.get(19).toString()));
+            pledgeBondInfoDto.setPledgePrin(new BigDecimal(rowData.get(20).toString()));
             // 折算比例%
-            pledgeBondInfoDto.setPledgeRatio(new BigDecimal(rowData.get(20).toString()));
+            pledgeBondInfoDto.setPledgeRatio(new BigDecimal(rowData.get(21).toString()));
             pledgeBondList.add(pledgeBondInfoDto);
             etrRepoDto.getBussRepoSec().setTotalPrinAmt(
                 ArithmeticUtil.doAdd(etrRepoDto.getBussRepoSec().getTotalPrinAmt(),
@@ -670,37 +674,45 @@ public class EtrRepo002Service extends BaseService<EtrRepoDto> implements BasePr
                 // 期限是大于0
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsGtZero(repoTerm, "EtrRepo003.repoTerm", lineNo));
+             // 期限品种非空(交易所时)
+                if ((rowData.get(12).toString().contains(DictCodeListExt1.交易场所_上海证券交易所.getValue())
+                     || rowData.get(12).toString().contains(
+                         DictCodeListExt1.交易场所_深圳证券交易所.getValue()))
+                    && StringUtil.isBlank(rowData.get(14).toString())) {
+                    confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                        getMessage("ETR_E_0033", lineNo));
+                }
                 // 交易日历非空
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsBlank(rowData.get(14).toString(),
+                    etrCommonService.checkIsBlank(rowData.get(15).toString(),
                         "EtrRepo003.calendarId", lineNo));
                 // 交易日历check
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkCalendarIdExist(rowData.get(14).toString(),
+                    etrCommonService.checkCalendarIdExist(rowData.get(15).toString(),
                         "EtrRepo003.calendarId", lineNo));
                 // 证券账户
                 // 通道
-                if ((StringUtil.isBlank(rowData.get(15).toString())
-                     && StringUtil.isBlank(rowData.get(16).toString()))
-                    || (StringUtil.isNotBlank(rowData.get(15).toString())
-                        && StringUtil.isNotBlank(rowData.get(16).toString()))) {
+                if ((StringUtil.isBlank(rowData.get(16).toString())
+                     && StringUtil.isBlank(rowData.get(17).toString()))
+                    || (StringUtil.isNotBlank(rowData.get(16).toString())
+                        && StringUtil.isNotBlank(rowData.get(17).toString()))) {
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                         getMessage("ETR_E_0020", getMessage("EtrRepo003.securitiesCust"),
                             getMessage("invest.channelId"), lineNo));
                 }
                 // 只有银行间时才能选择通道
                 if (!rowData.get(12).toString().contains(DictCodeListExt1.交易场所_银行间.getValue())
-                    && StringUtil.isNotBlank(rowData.get(16).toString())) {
+                    && StringUtil.isNotBlank(rowData.get(17).toString())) {
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                         getMessage("ETR_E_0028", getMessage("EtrRepo003.tradeMarket"),
                             getMessage("invest.channelId"), lineNo));
                 }
                 // 证券账户存在
-                if (StringUtil.isNotBlank(rowData.get(15).toString())
+                if (StringUtil.isNotBlank(rowData.get(16).toString())
                     && StringUtil.isNotBlank(rowData.get(3).toString())
                     && StringUtil.isNotBlank(rowData.get(12).toString())) {
                     Map<String, Object> param = new HashMap<>();
-                    param.put("initValue", rowData.get(15).toString());
+                    param.put("initValue", rowData.get(16).toString());
                     param.put("portfolioId", rowData.get(3).toString());
                     param.put("tradeMarket", rowData.get(12).toString().split(":")[0]);
                     param.put("page", 1);
@@ -712,9 +724,9 @@ public class EtrRepo002Service extends BaseService<EtrRepoDto> implements BasePr
                     }
                 }
                 // 通道存在
-                if (StringUtil.isNotBlank(rowData.get(16).toString())) {
+                if (StringUtil.isNotBlank(rowData.get(17).toString())) {
                     Map<String, Object> param = new HashMap<>();
-                    param.put("initValue", rowData.get(16).toString());
+                    param.put("initValue", rowData.get(17).toString());
                     param.put("page", 1);
                     param.put("length", 20);
                     Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
@@ -735,12 +747,12 @@ public class EtrRepo002Service extends BaseService<EtrRepoDto> implements BasePr
                     etrRepoDto.setPs(rowData.get(4).toString().split(":")[0]);
                 }
                 // 证券账户
-                etrRepoDto.setSecuritiesCust(rowData.get(15).toString());
+                etrRepoDto.setSecuritiesCust(rowData.get(16).toString());
                 // 通道
-                etrRepoDto.setChlId(rowData.get(16).toString());
+                etrRepoDto.setChlId(rowData.get(17).toString());
             }
             // check18~20
-            String bondCode = rowData.get(18).toString();
+            String bondCode = rowData.get(19).toString();
             // 债券代码非空
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                 etrCommonService.checkIsBlank(bondCode, "EtrRepo003.bondCode", lineNo));
@@ -753,7 +765,7 @@ public class EtrRepo002Service extends BaseService<EtrRepoDto> implements BasePr
                         getMessage("ETR_E_0018", getMessage("EtrRepo003.bondCode"), lineNo));
                 }
             }
-            String pledgePrin = rowData.get(19).toString();
+            String pledgePrin = rowData.get(20).toString();
             // 质押券面总额(元)非空
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                 etrCommonService.checkIsBlank(pledgePrin, "EtrRepo003.pledgePrin", lineNo));
@@ -763,7 +775,7 @@ public class EtrRepo002Service extends BaseService<EtrRepoDto> implements BasePr
             // 质押券面总额(元)是大于0
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                 etrCommonService.checkIsGtZero(pledgePrin, "EtrRepo003.pledgePrin", lineNo));
-            String pledgeRatio = rowData.get(20).toString();
+            String pledgeRatio = rowData.get(21).toString();
             // 折算比例非空
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                 etrCommonService.checkIsBlank(pledgeRatio, "EtrRepo003.pledgeRatio", lineNo));
