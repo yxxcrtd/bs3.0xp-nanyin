@@ -494,7 +494,7 @@ public class PrdBaseinfoEndSubService001 extends CommonExportService<PbcPrdBasei
 		File outFile = makeFile2(
 				"/com/joyintech/tams/svreport/pbc/classic/prdinfoendsub/conf/export_conf2.xml", list1,exportFileName,"xls",true);
 		return ExportUtil.export(
-            						 exportFileName 
+            						 exportFileName
                                      + "." + "xls",
                 outFile, true);
     }
