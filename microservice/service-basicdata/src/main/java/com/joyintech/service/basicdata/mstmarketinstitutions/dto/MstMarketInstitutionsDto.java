@@ -298,6 +298,22 @@ public class MstMarketInstitutionsDto extends MstCustomerInfoAddWithBLOBs implem
     public String getIndustry2() {
         return super.getIndustry2();
     }
+
+    /**
+     * 取得 行业三级分类
+     * @return 国标三级分类
+     */
+    public String getIndustry3() {
+        return super.getIndustry3();
+    }
+
+    /**
+     * 取得 行业四级分类
+     * @return 国标四级分类
+     */
+    public String getIndustry4() {
+        return super.getIndustry4();
+    }
     
     /**
      * 取得 国标一级分类

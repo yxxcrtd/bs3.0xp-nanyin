@@ -96,7 +96,10 @@ public class MstMarketInstitutions002Controller extends BaseController{
         model.addAttribute("REPORT_YEAR", JsonUtils.objectArray2Json(listYear.toArray()));
         this.setSelectOptionToModel(model,DictCode.机构所属行业一级分类 );
         this.setSelectOptionToModel(model,DictCode.机构所属行业二级分类 );
-        
+        this.setSelectOptionToModel(model,DictCode.机构所属行业三级分类 );
+        this.setSelectOptionToModel(model,DictCode.机构所属行业四级分类 );
+
+
         //公司性质
         this.setSelectOptionToModel(model,DictCode.企业性质);
         //是否

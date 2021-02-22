@@ -10,8 +10,11 @@
     
 package com.joyintech.service.report.regulatoryreporting.investmentsinfo.controller;
 
+import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessCounterDetailsDto;
+import com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,6 +40,14 @@ public class InvestmentsInfoController {
 	@PostMapping("createData")
 	public Map<String, Object> createData(@RequestBody Map<String, Object> pageParam) {
 		return investmentsInfoService.createData(pageParam);
+	}
+	@PostMapping("createTable3AddData")
+	public List<InvestmentBusinessDetailsDto> createTable3AddData(@RequestBody Map<String, Object> pageParam) {
+		return investmentsInfoService.createTable3AddData(pageParam);
+	}
+	@PostMapping("createTable7OtherInfo")
+	public List<InvestmentBusinessCounterDetailsDto> createTable7OtherInfo(@RequestBody Map<String, Object> pageParam) {
+		return investmentsInfoService.createTable7OtherInfo(pageParam);
 	}
 	
 }

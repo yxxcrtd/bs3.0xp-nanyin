@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.investmentsinfo.dao.ChbProdInfoRateInterfMapper" >
+	<resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.interf.chb.investmentsinfo.dto.ChbProdInfoRate">
+		<id column="SEQNO" property="seqno" jdbcType="CHAR"/>
+		<result column="PROD_ID" property="prodId" jdbcType="VARCHAR"/>
+		<result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP"/>
+		<result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR"/>
+		<result column="CHANGE_TYPE" property="changType" jdbcType="VARCHAR"/>
+		<result column="PROD_YIELD" property="prodYield" jdbcType="DECIMAL"/>
+		<result column="PROD_BENCHMARK_RATE" property="prodBenchmarkRate" jdbcType="DECIMAL"/>
+		<result column="UNIT_VALUE_TOTAL" property="unitValueTotal" jdbcType="DECIMAL"/>
+		<result column="UNIT_VALUE" property="unitValue" jdbcType="DECIMAL"/>
+		<result column="SEVEN_DAY_RATE" property="sevenDayRate" jdbcType="DECIMAL"/>
+		<result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR"/>
+		<result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR"/>
+		<result column="STATUS" property="status" jdbcType="VARCHAR"/>
+		<result column="REV_DATE" property="revDate" jdbcType="TIMESTAMP"/>
+		<result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR"/>
+		<result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR"/>
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
+		<result column="CREATE_USER" property="createUser" jdbcType="VARCHAR"/>
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+		<result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+		<result column="CCY" property="ccy" jdbcType="VARCHAR"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		SEQNO, PROD_ID, CHANGE_DATE, PROFIT_TYPE, CHANGE_TYPE,PROD_YIELD,PROD_BENCHMARK_RATE,
+		UNIT_VALUE_TOTAL,UNIT_VALUE,SEVEN_DAY_RATE,ORG_CODE, DEPT_CODE,
+		STATUS, REV_DATE, DATA_SOURCE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME,
+		REMARK,CCY
+	</sql>
+  
+  <select id="selectProdInfoRateData"
+    resultSetType="FORWARD_ONLY" fetchSize="1000"
+	resultType="com.joyintech.tams.svreport.interf.chb.investmentsinfo.dto.ChbProdInfoRate" parameterType="java.util.Map">
+	  select * from(
+	  <!-- 预期收益型产品预期收益率 -->
+	  SELECT info.FINPROD_MARKET_ID AS prodId,
+	  rul.EFF_DATE AS changeDate,
+	  info.PROFIT_TYPE as profitType,
+	  '01' changType,
+	  rul.YIELD AS prodYield,
+	  null as prodBenchmarkRate,
+	  null as unitValueTotal,
+	  null as unitValue,
+	  null as sevenDayRate,
+	  nvl(rul.UPDATE_TIME,rul.CREATE_TIME) updatetime
+	  FROM FIN_CASH_CALC_RULE rul
+	  left JOIN FIN_PRODUCT info
+	  on info.FINPROD_ID=rul.FINPROD_ID
+	  LEFT JOIN FIN_CASH_INFO B
+	  ON rul.CASH_ID = B.CASH_ID
+	  WHERE 1=1
+	  <if test="finprodType2List!=null and finprodType2List.size>0">
+		  and info.FINPROD_TYPE2 in
+		  <foreach collection="finprodType2List" item="finprodType2" open="("
+				   separator="," close=")">
+			  #{finprodType2,jdbcType=VARCHAR}
+		  </foreach>
+	  </if>
+	  AND info.PROFIT_TYPE = '02'
+	  and B.CASH_TYPE_1 = '02'
+	  AND rul.BRANCH=0
+	  and b.branch = 0 ---取母产品报价
+	  and nvl(rul.UPDATE_TIME,rul.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
+	  union all
+
+	  <!-- 净值型产品单位净值取估值核算系统 -->
+	  select info.FINPROD_MARKET_ID AS PROD_ID,
+	  val.VAL_DATE as changeDate,
+	  info.PROFIT_TYPE as profitType,
+	  '02' changType,
+	  null AS prodYield,
+	  null as prodBenchmarkRate,
+	  val.TOTAL_NET_VALUE as unitValueTotal,
+	  val.NET_UNIT_VALUE as unitValue,
+	  val.SEVEN_DAY_RATE as sevenDayRate,
+	  nvl(val.UPDATE_TIME,val.CREATE_TIME) updatetime
+	  from bok_valbal_table_status val
+	  LEFT JOIN FIN_PRODUCT info
+	  on info.FINPROD_ID = val.FINPROD_ID
+	  where info.FINPROD_TYPE2 = 'F16'
+	  AND info.PROFIT_TYPE in ('01','03')
+
+	  <if test="valStatusFlag != null and valStatusFlag == '01'.toString()">
+		  and val.NOTICE_STATUS = '1'
+	  </if>
+	  <if test="valStatusFlag != null and valStatusFlag == '02'.toString()">
+		  and val.CONFIRM_STATUS = '1'
+	  </if>
+	  <if test="valStatusFlag != null and valStatusFlag == '03'.toString()">
+		  and (val.NOTICE_STATUS is null or   val.NOTICE_STATUS != '1')
+		  and (val.CONFIRM_STATUS is null or   val.CONFIRM_STATUS != '1')
+	  </if>
+	  and nvl(val.UPDATE_TIME,val.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
+
+	  union all
+	  <!--净值型、货币型产品最新的业绩基准（用于计算浮动管理费）-->
+	  SELECT info.FINPROD_MARKET_ID AS prodId,
+	  rul.EFF_DATE AS changeDate,
+	  info.PROFIT_TYPE as profitType,
+	  '03' changType,
+	  null AS prodYield,
+	  rul.rate as prodBenchmarkRate,
+	  null as unitValueTotal,
+	  null as unitValue,
+	  null as sevenDayRate,
+	  nvl(rul.UPDATE_TIME,rul.CREATE_TIME) updatetime
+	  FROM FIN_BASE_RULE_INFO rul
+	  left JOIN FIN_PRODUCT info
+	  on info.FINPROD_ID=rul.FINPROD_ID
+
+	  WHERE 1=1
+	  <if test="finprodType2List!=null and finprodType2List.size>0">
+		  and info.FINPROD_TYPE2 in
+		  <foreach collection="finprodType2List" item="finprodType2" open="("
+				   separator="," close=")">
+			  #{finprodType2,jdbcType=VARCHAR}
+		  </foreach>
+	  </if>
+	  AND info.PROFIT_TYPE in ('01','03')
+	  AND rul.BRANCH=0
+	  and rul.base_rule_type='02'
+	  and nvl(rul.UPDATE_TIME,rul.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
+
+	  ) a
+	  where 1=1
+	  <if test="prodidList!=null and prodidList.size>0">
+		  and a.prodId in
+		  <foreach collection="prodidList" item="prodid" open="("
+				   separator="," close=")">
+			  #{prodid,jdbcType=VARCHAR}
+		  </foreach>
+	  </if>
+</select>
+  
+  <insert id="insertBatchList"
+	parameterType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield">
+	insert into CHB_PRD_PERIODYIELD (SEQNO, PROD_ID,
+	CHANGE_DATE, PROFIT_TYPE,CHANGE_TYPE, PROD_YIELD,PROD_BENCHMARK_RATE,UNIT_VALUE_TOTAL,
+	  UNIT_VALUE,SEVEN_DAY_RATE,
+	ORG_CODE, DEPT_CODE, STATUS,
+	REV_DATE, DATA_SOURCE, UPDATE_USER,
+	UPDATE_TIME, CREATE_USER, CREATE_TIME,
+	REMARK,CCY)
+	<foreach collection="list" item="dto" separator="union all">
+		select #{dto.seqno,jdbcType=CHAR},
+		#{dto.prodId,jdbcType=VARCHAR},
+		#{dto.changeDate,jdbcType=TIMESTAMP}, #{dto.profitType,jdbcType=VARCHAR},#{dto.changType,jdbcType=VARCHAR},
+		#{dto.prodYield,jdbcType=DECIMAL},#{dto.prodBenchmarkRate,jdbcType=DECIMAL},#{dto.unitValueTotal,jdbcType=DECIMAL},
+		#{dto.unitValue,jdbcType=DECIMAL},#{dto.sevenDayRate,jdbcType=DECIMAL},
+		#{dto.orgCode,jdbcType=VARCHAR}, #{dto.deptCode,jdbcType=VARCHAR},
+		#{dto.status,jdbcType=VARCHAR},
+		#{dto.revDate,jdbcType=TIMESTAMP}, #{dto.dataSource,jdbcType=VARCHAR},
+		#{dto.updateUser,jdbcType=VARCHAR},
+		sysdate, #{dto.createUser,jdbcType=VARCHAR}, sysdate,
+		#{dto.remark,jdbcType=VARCHAR},
+		#{dto.ccy,jdbcType=VARCHAR} from dual
+	</foreach>
+</insert>
+
+ <insert id="insert"
+	parameterType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield">
+	insert into CHB_PRD_PERIODYIELD (SEQNO, FPROD_ID, PROD_ID,
+	CHANGE_DATE, CHANGE_TYPE, PROD_VALUE,
+	ORG_CODE, DEPT_CODE, STATUS,
+	REV_DATE, DATA_SOURCE, UPDATE_USER,
+	UPDATE_TIME, CREATE_USER, CREATE_TIME,
+	REMARK,UNIT_VALUE_TOTAL,CCY)
+	values(
+		#{seqno,jdbcType=CHAR}, #{fprodId,jdbcType=VARCHAR},
+		#{prodId,jdbcType=VARCHAR},
+		#{changeDate,jdbcType=TIMESTAMP}, #{changType,jdbcType=VARCHAR}, #{prodValue,jdbcType=DECIMAL},
+		#{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR},
+		#{revDate,jdbcType=TIMESTAMP}, #{dataSource,jdbcType=VARCHAR},
+		#{updateUser,jdbcType=VARCHAR},
+		sysdate, #{createUser,jdbcType=VARCHAR}, sysdate,
+		#{remark,jdbcType=VARCHAR},#{unitValueTotal,jdbcType=DECIMAL}
+		,#{ccy,jdbcType=VARCHAR}
+		)
+  </insert>
+  
+  <delete id="deleteBatchList"
+	parameterType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield">
+	delete from CHB_PRD_PERIODYIELD
+	where PROD_ID=#{prodid,jdbcType=VARCHAR}
+	and to_char(CHANGE_DATE,'yyyy-mm-dd')=#{changedate,jdbcType=VARCHAR}
+</delete>
+  
+  <delete id="deleteBatch"
+	parameterType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield">
+	begin
+	<foreach collection="list" item="dto" separator=";">
+		delete from
+		CHB_PRD_PERIODYIELD
+		where
+		PROD_ID=#{dto.prodId,jdbcType=VARCHAR}
+		and
+		CHANGE_DATE=#{dto.changeDate,jdbcType=TIMESTAMP}
+		<if test="dto.fprodId != null">
+			and FPROD_ID=#{dto.fprodId,jdbcType=VARCHAR}
+		</if>
+	</foreach>
+	;end;
+</delete>
+<delete id="deleteBatch2"
+	parameterType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield">
+	delete from CHB_PRD_PERIODYIELD
+	<where>
+		<foreach collection="list" item="dto" separator="union all"
+			open="(PROD_ID,CHANGE_DATE) in ("
+			close=")">
+			select #{dto.prodId,jdbcType=VARCHAR},
+			#{dto.changeDate,jdbcType=TIMESTAMP}
+			from dual
+		</foreach>
+	</where>
+</delete>
+
+<insert id="mergeChbPodInfoRatedData"
+	parameterType="com.joyintech.tams.svreport.interf.chb.investmentsinfo.dto.ChbProdInfoRate">
+	MERGE INTO CHB_PRD_RATE CII
+	USING (
+	<foreach collection="list" item="item" open="select * from("
+		close=")" separator="union all">
+		SELECT
+		#{item.seqno,jdbcType=CHAR} SEQNO,
+		#{item.prodId,jdbcType=VARCHAR} PROD_ID,
+		#{item.changeDate,jdbcType=TIMESTAMP} CHANGE_DATE,
+		#{item.profitType,jdbcType=VARCHAR} PROFIT_TYPE,
+		#{item.changType,jdbcType=VARCHAR} CHANGE_TYPE,
+		#{item.prodYield,jdbcType=DECIMAL} PROD_YIELD,
+		#{item.prodBenchmarkRate,jdbcType=DECIMAL} PROD_BENCHMARK_RATE,
+		#{item.unitValueTotal,jdbcType=DECIMAL} UNIT_VALUE_TOTAL,
+		#{item.unitValue,jdbcType=DECIMAL} UNIT_VALUE,
+		#{item.sevenDayRate,jdbcType=DECIMAL} SEVEN_DAY_RATE,
+		#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+		#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+		#{item.status,jdbcType=VARCHAR} STATUS,
+		#{item.revDate,jdbcType=TIMESTAMP} REV_DATE,
+		#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+		#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+		sysdate UPDATE_TIME, 
+		#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+		sysdate CREATE_TIME,
+		#{item.remark,jdbcType=VARCHAR} REMARK,
+		#{item.ccy,jdbcType=VARCHAR} ccy
+		FROM
+		DUAL
+	</foreach>
+	) TEMP
+	<!-- 业务主键匹配 -->
+	ON(CII.PROD_ID = TEMP.PROD_ID
+	AND to_char(CII.CHANGE_DATE,'yyyy-mm-dd') = to_char(TEMP.CHANGE_DATE,'yyyy-mm-dd')
+	AND CII.PROFIT_TYPE = TEMP.PROFIT_TYPE
+	AND CII.CHANGE_TYPE = TEMP.CHANGE_TYPE
+	)
+	<!-- 匹配到则更新 -->
+	WHEN MATCHED THEN UPDATE SET
+	CII.PROD_YIELD = TEMP.PROD_YIELD,
+	CII.PROD_BENCHMARK_RATE = TEMP.PROD_BENCHMARK_RATE,
+	CII.UNIT_VALUE_TOTAL = TEMP.UNIT_VALUE_TOTAL,
+	CII.UNIT_VALUE = TEMP.UNIT_VALUE,
+	CII.SEVEN_DAY_RATE = TEMP.SEVEN_DAY_RATE,
+	CII.ORG_CODE = TEMP.ORG_CODE,
+	CII.DEPT_CODE = TEMP.DEPT_CODE,
+	CII.REV_DATE = TEMP.REV_DATE,
+	CII.STATUS = TEMP.STATUS,
+	CII.REMARK = TEMP.REMARK,
+	CII.UPDATE_USER = TEMP.UPDATE_USER,
+	CII.UPDATE_TIME = TEMP.UPDATE_TIME,
+	CII.CCY = TEMP.CCY
+	<!-- 未匹配到这插入 -->
+	WHEN NOT MATCHED THEN INSERT (SEQNO, PROD_ID,
+	CHANGE_DATE, PROFIT_TYPE,CHANGE_TYPE, PROD_YIELD,PROD_BENCHMARK_RATE,UNIT_VALUE_TOTAL,
+	UNIT_VALUE,SEVEN_DAY_RATE,
+	ORG_CODE, DEPT_CODE, STATUS,
+	REV_DATE, DATA_SOURCE, UPDATE_USER,
+	UPDATE_TIME, CREATE_USER, CREATE_TIME,
+	REMARK,CCY)
+	VALUES(TEMP.SEQNO, TEMP.PROD_ID,
+	TEMP.CHANGE_DATE, TEMP.PROFIT_TYPE,TEMP.CHANGE_TYPE,
+	TEMP.PROD_YIELD,TEMP.PROD_BENCHMARK_RATE,TEMP.UNIT_VALUE_TOTAL,TEMP.UNIT_VALUE,TEMP.SEVEN_DAY_RATE,
+	TEMP.ORG_CODE, TEMP.DEPT_CODE, TEMP.STATUS,
+	TEMP.REV_DATE, TEMP.DATA_SOURCE, TEMP.UPDATE_USER,
+	TEMP.UPDATE_TIME, TEMP.CREATE_USER,
+	TEMP.CREATE_TIME,
+	TEMP.REMARK,TEMP.CCY)
+</insert>
+
+<delete id="deleteTodayData">
+  delete from CHB_PRD_PERIODYIELD where to_char(nvl(UPDATE_TIME,CREATE_TIME),'yyyymmdd')=to_char(sysdate,'yyyymmdd')
+  </delete>
+</mapper>

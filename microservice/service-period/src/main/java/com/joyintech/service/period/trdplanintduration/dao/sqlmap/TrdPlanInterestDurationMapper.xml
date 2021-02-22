@@ -140,31 +140,62 @@
                                 /*理论利息*/
                                 t6.PAY_DATE
                        from
-                            (select * from (
-                                SELECT
-                                    T1.FINPROD_ID,
-                                    T1.AMOUNT,
-                                    T1.SEC_ACCT_ID,
-                                    T1.PORTFOLIO_ID,
-                                    t2.vdate,
-                                    t2.mdate,
-                                    t2.cash_amt,
-                                    t2.prin_amt,
-            case when t2.cash_type IN ('01', '04') then NVL(PSV.TDY_INTINCEXP, (nvl(T2.INT_AMT,0)-nvl(T2.REPAY_WITHOUT_INT,0))*t1.AMOUNT/T2.CASH_BASEAMT)
-            WHEN T2.CASH_TYPE IN ('02', '03') AND nvl(T2.INT_AMT,0)-nvl(T2.REPAY_WITHOUT_INT,0) != 0 AND PSV.SHARE_AMT is not null
-            THEN ROUND(T2.PRIN_AMT * T1.AMOUNT/T2.CASH_BASEAMT * PSV.TDY_INTINCEXP/PSV.SHARE_AMT, 2)
-            else (nvl(T2.INT_AMT,0)-nvl(T2.REPAY_WITHOUT_INT,0)) * t1.AMOUNT/t2.CASH_BASEAMT end int_amt,
-                                    t2.cash_id,
-                                    t2.cash_type,
-                                    t2.pay_date,
-                                    t2.INT_PRIN_AMT,
-                                    t2.CASH_BASEAMT,
-                                    rank() over(partition BY t1.finprod_id ORDER BY t2.mdate) rank
+                            ( select
+                                    T61.FINPROD_ID,
+                                    T61.AMOUNT,
+                                    T61.SEC_ACCT_ID,
+                                    T61.PORTFOLIO_ID,
+                                    T61.vdate,
+                                    T61.mdate,
+                                    T61.cash_amt,
+                                    T61.prin_amt,
+                                    T61.cash_id,
+                                    T61.cash_type,
+                                    T61.pay_date,
+                                    T61.INT_PRIN_AMT,
+                                    case
+                                    when T61.cash_type IN
+                                    ('01', '04') then
+                                    NVL(PSV.TDY_INTINCEXP,
+                                    (nvl(T61.INT_AMT, 0) -
+                                    nvl(T61.REPAY_WITHOUT_INT, 0)) *
+                                    T61.AMOUNT / T61.CASH_BASEAMT)
+                                    WHEN T61.CASH_TYPE IN
+                                    ('02', '03') AND
+                                    nvl(T61.INT_AMT, 0) -
+                                    nvl(T61.REPAY_WITHOUT_INT, 0) != 0 AND
+                                    PSV.SHARE_AMT is not null THEN
+                                    ROUND(T61.PRIN_AMT * T61.AMOUNT /
+                                    T61.CASH_BASEAMT *
+                                    PSV.TDY_INTINCEXP /
+                                    PSV.SHARE_AMT,
+                                    2)
+                                    else
+                                    (nvl(T61.INT_AMT, 0) -
+                                    nvl(T61.REPAY_WITHOUT_INT, 0)) *
+                                    t61.AMOUNT / t61.CASH_BASEAMT
+                                    end int_amt,
+                                    T61.CASH_BASEAMT
+                                from (SELECT
+                                        T1.FINPROD_ID,
+                                        T1.AMOUNT,
+                                        T1.SEC_ACCT_ID,
+                                        T1.PORTFOLIO_ID,
+                                        t2.vdate,
+                                        t2.mdate,
+                                        t2.cash_amt,
+                                        t2.prin_amt,
+                                        t2.cash_id,
+                                        t2.cash_type,
+                                        t2.pay_date,
+                                        t2.INT_PRIN_AMT,
+                                        t2.CASH_BASEAMT,
+                                        T2.INT_AMT,
+                                        T2.REPAY_WITHOUT_INT
+                                    <!--,rank() over(partition BY t1.finprod_id ORDER BY t2.mdate) rank-->
                                 FROM PTL_SEC_POSITION T1 INNER JOIN FIN_CASH_PLAN T2 ON T1.FINPROD_ID = T2.FINPROD_ID
-                                inner join PTL_PORTFOLIO pp on T1.PORTFOLIO_ID = pp.PORTFOLIO_ID
                                 AND T2.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF17} AND t1.CDATE &lt; t2.MDATE
-            LEFT JOIN PTL_SEC_VALUTION PSV ON t2.MDATE = PSV.CDATE + 1 AND T1.PORTFOLIO_ID = PSV.PORTFOLIO_ID
-            AND T1.FINPROD_ID = PSV.FINPROD_ID AND PSV.INV_AIM = '999999'
+                                inner join PTL_PORTFOLIO pp on T1.PORTFOLIO_ID = pp.PORTFOLIO_ID
                                     <where>
                                     T1.AMOUNT > 0 AND T1.HODING_TYPE = #{POSITION_TYPE03}
                                     <if test="cashTypeSb != null and !cashTypeSb.isEmpty() and !cashTypeSb.contains(CASH_CLASS_TYPE03)">
@@ -177,7 +208,10 @@
                                         and T2.CASH_TYPE IN (#{CASH_CLASS_TYPE01},#{CASH_CLASS_TYPE02},#{CASH_CLASS_TYPE03},#{CASH_CLASS_TYPE04})
                                     </if>
                                     and (t2.INT_AMT > 0 or t2.PRIN_AMT > 0)
-                                    <!-- and t2.MDATE &lt;=#{PLATEFORM_DATE} -->
+                                    and t2.mdate =(select min(tt.mdate) from FIN_CASH_PLAN tt where tt.finprod_id =t1.finprod_id
+                                        AND tt.MDATE > t1.CDATE
+                                        AND Tt.PAY_DATE >= to_date(#{PLATEFORM_DATE},'yyyy-MM-dd'))
+                                        <!-- and t2.MDATE &lt;=#{PLATEFORM_DATE} -->
                                     /*不存在生效的交易*/
                                     and NOT EXISTS (SELECT 1 FROM TRD_FIN_PRODUCT_DEAL_TOTAL TPDA where TPDA.TRADE_STATUS = #{TRADE_STATUS01}
                                     AND TPDA.IS_CANCEL = #{YESNO_N} and T2.MDATE = TPDA.MDATE
@@ -212,7 +246,13 @@
                                     <if test="portfolioId != null and !portfolioId.isEmpty()">
                                         <foreach collection="portfolioId" open=" AND T1.PORTFOLIO_ID IN (" item="item" close=")" separator=",">#{item}</foreach>
                                     </if>
-                                </where>) where rank = 1) T6
+                                </where>)T61
+                                LEFT JOIN PTL_SEC_VALUTION PSV
+                                ON t61.MDATE = PSV.CDATE + 1
+                                AND T61.PORTFOLIO_ID =
+                                PSV.PORTFOLIO_ID
+                                AND T61.FINPROD_ID = PSV.FINPROD_ID
+                                AND PSV.INV_AIM = '999999') T6
                             GROUP BY
                             T6.FINPROD_ID,
                             T6.SEC_ACCT_ID,

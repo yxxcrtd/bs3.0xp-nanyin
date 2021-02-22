@@ -63,4 +63,83 @@ public interface OverallInfoMapper {
 	 * @throws  
 	 */  
 	List<OverallInfoDto> queryNotBankDebentureInfoList(@Param("startDate")Date startDate, @Param("lastStartDate")Date lastStartDate);
+	/**
+	 * @Description 根据季末时间查询表内外投资业务总体情况基础数据,穿透后期末余额
+	 * @Author      高健
+	 * @Date        2019年8月7日 下午3:32:38
+	 * @param @param map
+	 * @param @return 参数
+	 * @return List<OverallInfoDto> 返回类型
+	 * @throws
+	 */
+	List<OverallInfoDto> queryBottomOverallInfoList(Map<String,Object> map);
+	/**
+	 * @Description 查询商业性金融债券及发行人所属行业为金融业的信用债信息
+	 * @Author      高健
+	 * @Date        2019年8月8日 上午11:08:50
+	 * @param @param map
+	 * @param @return 参数
+	 * @return OverallInfoDto 返回类型
+	 * @throws
+	 */
+	OverallInfoDto queryBottomOverallInfoByRating(Map<String,Object> map);
+	/**
+	 * @Description 查询商业性金融债券及发行人所属行业为金融业的信用债信息
+	 * @Author      高健
+	 * @Date        2019年8月8日 上午11:08:50
+	 * @param @param map
+	 * @param @return 参数
+	 * @return OverallInfoDto 返回类型
+	 * @throws
+	 */
+	OverallInfoDto queryBottomOverallInfoYx(Map<String,Object> map);
+
+	/**
+	 * 根据‘其他’项的信息，查询出备注（穿透后余额前三或大于10亿）
+	 * @param map
+	 * @return
+	 */
+	OverallInfoDto queryBottomRemarkInfoByInfo(Map<String,Object> map);
+
+	/**
+	 * @Description 查询债券评级，穿透前余额
+	 * @Author      高健
+	 * @Date        2019年8月8日 上午11:08:50
+	 * @param @param map
+	 * @param @return 参数
+	 * @return OverallInfoDto 返回类型
+	 * @throws
+	 */
+	OverallInfoDto queryOverallInfoByRating(Map<String,Object> map);
+	/**
+	 * 根据‘其他’项的信息，查询出备注（穿透前余额前三或大于10亿）
+	 * @param map
+	 * @return
+	 */
+	OverallInfoDto queryRemarkInfoByInfo(Map<String,Object> map);
+	/**
+	 * @Description 根据时间查询非金融债券信息
+	 * @param @param startDate
+	 * @param @param lastStartDate
+	 * @param @return 参数
+	 * @return List<OverallInfoDto> 返回类型
+	 * @throws
+	 */
+	List<OverallInfoDto> queryBottomIndustryOverallInfoList(@Param("startDate")Date startDate, @Param("lastStartDate")Date lastStartDate);
+
+	/**
+	 * @Description 根据时间查询非金融债券信息
+	 * @param @param startDate
+	 * @param @param lastStartDate
+	 * @param @return 参数
+	 * @return List<OverallInfoDto> 返回类型
+	 * @throws
+	 */
+	List<OverallInfoDto> queryBottomTable3AddInfoList(Map<String,Object> map);
+	/**
+	 * 表3备注
+	 */
+	List<OverallInfoDto> queryBottomRemarkInfoByIndustry(@Param("startDate")Date startDate, @Param("endDate")Date endDate);
+
+
 }

@@ -2,6 +2,7 @@ package com.joyintech.service.report.regulatoryreporting.investmentsinfo.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -62,4 +63,28 @@ public interface InvestmentBusinessDetailsMapper {
 	 * @throws  
 	 */  
 	InvestmentBusinessDetailsDto queryDiffAsset(@Param("startDate")Date startDate, @Param("lastStartDate")Date lastStartDate);
+	/**
+	 * @Description 统计难以实时统计基础资产的产品信息(穿透后)
+	 * @Author      高健
+	 * @Date        2019年8月10日 下午3:51:20
+	 * @param @param startDate
+	 * @param @param lastStartDate
+	 * @param @return 参数
+	 * @return InvestmentBusinessDetailsDto 返回类型
+	 * @throws
+	 */
+	InvestmentBusinessDetailsDto queryBottomDiffAsset(@Param("startDate")Date startDate, @Param("lastStartDate")Date lastStartDate, @Param("endDate")Date endDate);
+
+	/**
+	 * 重点关注领域
+	 * @param startDate
+	 * @param lastStartDate
+	 * @return
+	 */
+	InvestmentBusinessDetailsDto queryBottomInfoAmountByModeType(Map<String,Object> map);
+	InvestmentBusinessDetailsDto queryBottomTable3AddXj(Map<String,Object> map);
+	InvestmentBusinessDetailsDto queryBottomTable3AddSum(Map<String,Object> map);
+
+
+
 }

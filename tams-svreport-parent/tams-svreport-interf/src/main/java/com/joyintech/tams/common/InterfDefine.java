@@ -64,7 +64,11 @@ public enum InterfDefine {
     贷款明细信息接口数据("CHB_LOAN_DETAIL_INFO","贷款明细信息接口数据"),
     贷款明细原始合同信息接口("CHB_LOAN_DETAIL_CONTRACT","贷款明细原始合同信息接口"),
     产品费用头寸接口("CHB_PRDFEE_BASIS_DATA","产品费用头寸接口"),
-    产品分红交易接口数据("CHB_PRD_BONUS_DEAL","产品分红交易接口数据")
+    产品分红交易接口数据("CHB_PRD_BONUS_DEAL","产品分红交易接口数据"),
+    产品利率基本信息接口数据("CHB_PRD_RATE","产品利率基本信息接口数据"),
+    资产利率基本信息接口数据("CHB_ASSET_RATE","资产利率基本信息接口数据"),
+
+
     ;
     
     /*两个属性*/

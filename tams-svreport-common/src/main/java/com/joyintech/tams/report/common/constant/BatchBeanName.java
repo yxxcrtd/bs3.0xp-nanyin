@@ -96,8 +96,11 @@ public enum BatchBeanName {
 	投资者明细信息登记导出("3075","equityBusiInfoExportService","equityBusiInfoExportMainService","投资者明细信息登记导出"),
 	产品运作模式更新("3074","svrUpdateOperateModeTaskService","UpdateOperateModeMainService","产品运作模式更新"),
 	产品费用交易头寸接口数据接入("3076","svrChbPrdFeeBasisInfoTaskService","chbPrdFeeBasisImpMainService","产品费用交易头寸接口数据接入"),
-	产品分红交易接口数据接入("3077","svrProdDiviendBasisInfoTaskService","chbPrdDividendBasisImpMainService","产品分红交易接口数据接入")
-	;
+	产品分红交易接口数据接入("3077","svrProdDiviendBasisInfoTaskService","chbPrdDividendBasisImpMainService","产品分红交易接口数据接入"),
+    产品利率基本信息接口数据接入("4100","svrProdRateInfoInterfTaskService","SvrProdRateInfoImpMainService","产品利率基本信息接口数据接入"),
+    资产利率基本信息接口数据接入("4101","svrAssetRateInfoInterfTaskService","SvrAssetRateInfoImpMainService","资产利率基本信息接口数据接入"),
+
+            ;
 	/**
      * taskId
      */

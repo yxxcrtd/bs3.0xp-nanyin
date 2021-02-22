@@ -51,7 +51,10 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
-    </resultMap>
+		<result column="INDUSTRY3" property="industry3" jdbcType="VARCHAR" />
+		<result column="INDUSTRY4" property="industry4" jdbcType="VARCHAR" />
+
+	</resultMap>
     <sql id="Base_Column_List" >
         CUSTOMER_ID, CUSTOMER_NAME, PARTY_TYPE3, PARTY_TYPE2, PARTY_TYPE1, 
         INDUSTRY, INDUSTRY2, INSITITUTE_CODE, IS_GOV, 
@@ -66,8 +69,9 @@
         LINK_ID3, REMARK, CREATE_USER, CREATE_DEPT, 
         CREATE_TIME, UPDATE_USER, UPDATE_TIME
 		<!--添加'是否持有金融牌照' add by lishuping 20190823 start-->
-        , IS_FIN_LICENCE
+        ,IS_FIN_LICENCE
 		<!--添加'是否持有金融牌照' add by lishuping 20190823 end-->
+		,INDUSTRY3,INDUSTRY4
     </sql>
    	<!--  模糊查询 -->
 	<select id="select" parameterType="Map" resultMap="BaseResultMap">
@@ -86,7 +90,7 @@
 	        T2.LINK_ID3, T2.REMARK, T2.CREATE_USER, T2.CREATE_DEPT, 
 	        T2.CREATE_TIME, T2.UPDATE_USER, T2.UPDATE_TIME
 			<!--添加'是否持有金融牌照' add by lishuping 20190823 start-->
-	        ,T2.IS_FIN_LICENCE
+	        ,T2.IS_FIN_LICENCE, T2.INDUSTRY3, T2.INDUSTRY4
 			<!--添加'是否持有金融牌照' add by lishuping 20190823 end-->
         from MST_CUSTOMER_INFO T1 full outer join MST_CUSTOMER_INFO_ADD T2 
         on T1.CUSTOMER_ID = T2.CUSTOMER_ID
@@ -160,6 +164,9 @@
 			<!--添加'是否持有金融牌照' add by lishuping 20190823 start-->
 			,T2.IS_FIN_LICENCE
 			<!--添加'是否持有金融牌照' add by lishuping 20190823 end-->
+		    ,T2.INDUSTRY3
+		    ,T2.INDUSTRY4
+
         from MST_CUSTOMER_INFO T1 inner join MST_CUSTOMER_INFO_ADD T2 
         	 on T1.CUSTOMER_ID = T2.CUSTOMER_ID
         	 where T1.CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
