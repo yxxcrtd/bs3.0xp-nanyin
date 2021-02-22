@@ -835,6 +835,7 @@
 	        WHERE
 	            d.trade_type = '16'
 	            AND nvl(d.fprod_id, d.prod_id) = info.prod_id
+	            and status in ('E','M')
 	            AND D.SETTDATE_DATE <![CDATA[<]]> #{reportStartDate,jdbcType=DATE}
 	    )
 	)

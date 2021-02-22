@@ -1115,7 +1115,7 @@ public class MonthReportProdService {
 				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.TYZS_JRJGZCGLCP);
 			}
 
-			flagType(4, flag, pos);
+			flagType(2, flag, pos);
 			// 7.3  养老理财产品
 			if (ProdConstants.IS_YLLCCP.equals(pos.getIsYllccp())) { // 金融机构资产管理产品
 				buildAmt(pos, flag, result, ChbMonthReportPrdConstants.YLLCCP);
@@ -1524,7 +1524,6 @@ public class MonthReportProdService {
 			flag.put(calcDurationprodcounts, false);
 			flag.put(Customerprofit, false);
 			break;
-
 		default:
 			break;
 		}
