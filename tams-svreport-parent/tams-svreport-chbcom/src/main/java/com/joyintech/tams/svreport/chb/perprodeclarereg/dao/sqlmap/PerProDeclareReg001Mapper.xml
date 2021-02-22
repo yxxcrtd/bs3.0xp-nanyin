@@ -355,7 +355,14 @@
 	    set FILE_NO=#{fileNo},
 	    FILE_NUM=#{fileNum},
 	    NINE_FILE = #{nineFile}
-	    where REGIST_SEQNO=#{registSeqno}
+	    <where>
+			<if test="registSeqno != null and registSeqno != ''">
+				REGIST_SEQNO=#{registSeqno}
+			</if>
+			<if test="prodId != null and prodId != ''">
+				PROD_ID = #{prodId}
+			</if>
+		</where>
 	</update>
 
 	

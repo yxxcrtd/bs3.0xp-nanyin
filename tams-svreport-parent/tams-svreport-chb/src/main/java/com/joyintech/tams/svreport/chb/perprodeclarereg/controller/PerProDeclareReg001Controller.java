@@ -296,4 +296,43 @@ public class PerProDeclareReg001Controller extends BaseController{
 	public List<SelectOptionDto> queryProdInsIdList(){
 		return perProDeclareRegMService.queryProdInsIdList(RequestUtil.getPageParam());
 	}
+
+	/**
+	 * 九大附件批量上传
+	 * @param map  入参
+	 * @return 处理结果
+	 * @throws IOException 异常信息
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/nineFileUploadCheck", method = RequestMethod.POST)
+	public AjaxResult nineFileUploadCheck(@RequestParam Map<String, Object> map) throws IOException {
+		AjaxResult res=new AjaxResult();
+		try {
+			res =perProDeclareReg001Service.nineFileUploadCheck(map);
+		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
+			throw e;
+		}
+		return res;
+	}
+
+	/**
+	 * 九大附件批量上传
+	 * @param map  入参
+	 * @return 处理结果
+	 * @throws IOException 异常信息
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/nineFileUpload", method = RequestMethod.POST)
+	public AjaxResult nineFileUpload(@RequestParam Map<String, Object> map) throws IOException {
+		AjaxResult res=new AjaxResult();
+		try {
+			res =perProDeclareReg001Service.nineFileUpload(map);
+		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
+			throw e;
+		}
+		return res;
+	}
+
 }

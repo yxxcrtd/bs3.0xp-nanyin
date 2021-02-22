@@ -896,10 +896,38 @@ $(function() {
 	;
 	init();
 
+	/**
+	 * 九大附件批量上传
+	 */
+	var nineFileUpload = function(){
+		Joyin.uploadFile(
+			{
+				exts : 'zip',
+				hideTpl : true
+			} ,
+			function(fileName,param) {
+				// 上传校验
+				Joyin.ajax('nineFileUploadCheck', {fileName : fileName, param : param}, function(result){
+					// 调用上传方法
+					Joyin.ajax('nineFileUpload', {fileName : fileName, param : param}, function() {
+						table.reload();
+					})
+				});
+			}
+		);
+	}
+
 	$(function() {
 		// 绑定按钮事件
 		$('#SvrPerProDeclareReg001_btn_search').click(function() {
 			table.load();
+		});
+
+		/**
+		 * 九大附件批量上传
+		 */
+		$('#SvrPerProDeclareReg001_btn_fileUpload').click(function() {
+			nineFileUpload();
 		});
 	});
 
