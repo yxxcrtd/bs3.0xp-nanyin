@@ -201,7 +201,7 @@ public class TrdDepoDuration001Validator implements BeanValidator{
                 messageList.add(new ValidMessage(this.getMessage("COMMON_E_0012", dto.getBusiCodeTemp())));
                 return messageList;
             }
-            if(DateUtil.compareDate(dto.getMdateProd(),allData.get(0).getMdateProd())!=0) {
+            if(!StringUtil.isEmptyList(allData) && DateUtil.compareDate(dto.getMdateProd(),allData.get(0).getMdateProd())!=0) {
                 messageList.add(new ValidMessage(getMessage("FIN_ASSET_E_0021")));
             }
             //存放同业到期，无法进行撤销操作
