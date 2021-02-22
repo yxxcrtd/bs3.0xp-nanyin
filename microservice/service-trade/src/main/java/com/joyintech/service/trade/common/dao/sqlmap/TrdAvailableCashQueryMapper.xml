@@ -25,4 +25,19 @@
          WHERE FP.FINPROD_ID = #{finprodId}           
         GROUP BY T.FINPROD_ID, FP.ISSUE_AMT
     </select>
+
+    <select id="getSecPosition" resultType="java.math.BigDecimal">
+        SELECT SUM(nvl(T.AMOUNT,0)) POSITION
+        FROM FIN_PRODUCT FP
+        LEFT JOIN PTL_SEC_POSITION T
+        ON FP.FINPROD_ID = T.FINPROD_ID
+        AND T.CDATE = to_date(#{tradeDate}, 'yyyy-mm-dd')
+        AND T.HODING_TYPE = #{hodingType03}
+        and T.portfolio_id = #{portfolioId}
+        <if test="invAim != null and invAim != ''">
+            and T.INV_AIM = #{invAim}
+        </if>
+        WHERE FP.FINPROD_ID = #{finprodId}
+        GROUP BY T.FINPROD_ID, FP.ISSUE_AMT
+    </select>
 </mapper>

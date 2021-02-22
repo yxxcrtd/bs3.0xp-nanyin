@@ -266,6 +266,22 @@ public class RiskTrialRetDto extends BaseEntity{
 	 */
 	private String forbiddenLn;
 
+	/*
+	 *资产代码
+	 */
+	private String assetCode;
+
+	/*
+	 * 资产名称
+	 */
+	private String assetName;
+
+	/*
+	 * 指标计算表达式
+	 */
+	private String kriExpr;
+
+
 	public String getPortfolioCode() {
 		return portfolioCode;
 	}
@@ -372,5 +388,49 @@ public class RiskTrialRetDto extends BaseEntity{
 
 	public void setKriCode(String kriCode) {
 		this.kriCode = kriCode;
+	}
+
+
+    /**
+     * 获取 assetCode
+     * @return assetCode.
+     */
+    public String getAssetCode() {
+        return assetCode;
+    }
+
+
+    /**
+     * 设置 assetCode
+     * @param assetCode assetCode
+     */
+    public void setAssetCode(String assetCode) {
+        this.assetCode = assetCode;
+    }
+
+
+    /**
+     * 获取 assetName
+     * @return assetName.
+     */
+    public String getAssetName() {
+        return assetName;
+    }
+
+
+    /**
+     * 设置 assetName
+     * @param assetName assetName
+     */
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
+    }
+
+	public String getKriExpr() {
+		return kriExpr;
+	}
+
+	public void setKriExpr(String kriExpr) {
+		this.kriExpr = kriExpr;
 	}
 }

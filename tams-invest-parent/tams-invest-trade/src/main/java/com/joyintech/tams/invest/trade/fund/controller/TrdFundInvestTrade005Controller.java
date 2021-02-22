@@ -134,6 +134,7 @@ public class TrdFundInvestTrade005Controller extends BaseController {
         model.addAttribute("PROFITTYPE_VALUE_01", DictCodeListExt2.收益类型_净值.getValue());
         model.addAttribute("PROFITTYPE_VALUE_03", DictCodeListExt2.收益类型_货币.getValue());
 
+        model.addAttribute("ps_T01", DictCodeList.交易方向_买入.getValue());
         model.addAttribute("ps_T05", DictCodeList.交易方向_申购确认.getValue());
         model.addAttribute("ps_T19", DictCodeList.交易方向_赎回确认.getValue());
         model.addAttribute("ps_T24", DictCodeList.交易方向_赎回到账.getValue());

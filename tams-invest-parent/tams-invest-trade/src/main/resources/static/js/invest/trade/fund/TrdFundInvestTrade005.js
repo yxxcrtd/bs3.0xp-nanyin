@@ -176,7 +176,6 @@ $(function () {
         object.fpriceAmt = object.prinAmt + Number(intAmt);
 
         //组合中金额赋值
-        debugger;
         for(var i in object.bussTrdTransfenpeiDto){
             if (object.ps == ps_T05 && object.bussTrdTransfenpeiDto[i].tradeAmt) {
                 var obj = {row:i,
@@ -502,13 +501,9 @@ $(function () {
                 $('#purchase').hide();
                 $('#redemp').show();
                 if ($("#tradeMarket").val() == TRADE_PLACE_03 || $("#tradeMarket").val() == TRADE_PLACE_04) {
-                    $('#tradeMarketAccAvailableCash_div').show();
-                    table.showColumns([{field:'tradeMarketAccAvailableCash',visible: true}]);
                     $('.commissionFee_class').show();
                     table.showColumns([{field:'commissionAmt',visible: true}]);
                 } else {
-                    $('#tradeMarketAccAvailableCash_div').hide();
-                    table.showColumns([{field:'tradeMarketAccAvailableCash',visible: false}]);
                     $('.commissionFee_class').hide();
                     table.showColumns([{field:'commissionAmt',visible: false}]);
                 }
@@ -559,13 +554,6 @@ $(function () {
                     $('#purchase').hide();
                     $('#subscribe').show();
                 }
-                if ($("#tradeMarket").val() == TRADE_PLACE_03 || $("#tradeMarket").val() == TRADE_PLACE_04) {
-                    $('#tradeMarketAccAvailableCash_div').show();
-                    table.showColumns([{field:'tradeMarketAccAvailableCash',visible: true}]);
-                } else {
-                    $('#tradeMarketAccAvailableCash_div').hide();
-                    table.showColumns([{field:'tradeMarketAccAvailableCash',visible: false}]);
-                }
                 $('#redemp').hide();
 //                $('#tradeAmt').attr('disabled',false);
 //                $('#shareAmt').attr('disabled',true);
@@ -607,7 +595,6 @@ $(function () {
          * 净值日期
          */
         $('#netDate').change(function (e, isInit) {
-            debugger;
             var netDate = $('#netDate').val();
             var finprodId = $('#finprodId').select2('data')[0].object.finprodId;
             var tradeAmt = $('#tradeAmt').val();
@@ -634,7 +621,6 @@ $(function () {
          * 组合分配：单位净值  净值日期发生改变引起组合分配中单位净值发生改变
          */
         var unitCpriceChange_DZH = function (unitCprice) {
-            debugger;
             for(var i=0;i<table.getAllRows().length;i++){
                 var obj = {row:i,
                     tradeAmt:table.getAllRows()[i].tradeAmt,
@@ -759,12 +745,43 @@ $(function () {
             var tradeAmt = $('#tradeAmt').val();
             var ps = $('#ps').val();
             var unitCprice = $('#unitCprice').val();
-            if (unitCprice && tradeAmt) {
+            if (unitCprice && tradeAmt&&ps!=ps_T19) {
                 $('#shareAmt').val((Number(tradeAmt) - getPayWithTradeFee()) / unitCprice).trigger('blur');
                 // tradeAmtChange_DZH();
             }
+            //联动table中交易金额列做对应更新
+       	 	countTable("tradeAmt",tradeAmt);
         });
+        
+        var countTable = function(field,nowNum){
+       	 	//1. 获取table中原始的值
+       	 	var beforeNum = 0;
+       	 	var rows = table.getAllRows();
+       	 	for(var i = 0; i < rows.length; i++){
+       	 		beforeNum = JoyinMath.doAdd(beforeNum, rows[i][field], 2);
+       	 	}
+       	 	//2. 等比例更新table中各行的field
+       	    var paramMap = {};
+       	 	for(var i = 0; i < rows.length; i++){
+       	 		paramMap[field] = JoyinMath.doMul(rows[i][field], JoyinMath.doDiv(nowNum,beforeNum,4),4);
+       	 		table.renderRow(i,paramMap);
+       	 	}
+       	 	
+        }
 
+        /**
+         * 交易场所
+         */
+        $('#tradeMarket,#ps').change(function(){
+            if (($("#tradeMarket").val() == TRADE_PLACE_03 || $("#tradeMarket").val() == TRADE_PLACE_04)&&$("#ps").val() == ps_T01) {
+                $('#tradeMarketAccAvailableCash_div').show();
+                table.showColumns([{field:'tradeMarketAccAvailableCash',visible: true}]);
+            } else {
+                $('#tradeMarketAccAvailableCash_div').hide();
+                table.showColumns([{field:'tradeMarketAccAvailableCash',visible: false}]);
+            }
+        });
+        
         $('#shareAmt').change(function () {
             var ps = $('#ps').val();
             if (ps == ps_T19) {
@@ -781,11 +798,12 @@ $(function () {
         $('#shareAmt').on('blur',function(){
             var ps = $('#ps').val();
             if (ps == ps_T05) {
-
                shareAmtBlur_DZH();
-
             }
-
+            //添加与多组合分配table中的联动 start
+            var shareAmt = $('#shareAmt').val();
+            countTable("shareAmt",shareAmt);
+            //添加与多组合分配table中的联动 end
         })
         /**
          * 预计到账日
@@ -1226,7 +1244,6 @@ $(function () {
 
     //carryAmt待结转金额   按shareAmt占比
     function carryAmtDistribution(){
-        debugger;
         var shareAmt = 0;
         for(var i = 0; i < table.getAllRows().length; i++){
             shareAmt = JoyinMath.doAdd(shareAmt, table.getAllRows()[i].shareAmt, 2);
@@ -1295,7 +1312,6 @@ $(function () {
     // }
 
     function tradeAmtDistribution() {
-        debugger;
         var allRows = table.getAllRows();
         //先按照本金金额排序
         function sortValue(a,b){

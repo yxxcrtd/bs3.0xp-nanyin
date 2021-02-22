@@ -468,7 +468,18 @@ public enum BussinessDictCodeListRds implements BaseDictCodeList {
      * 类名
      */
     指标参数实现类型_类名(BussinessDictCodeRds.指标参数实现类型, "PLUGIN", "类名"),
-
+    /**
+     * REDIS
+     */
+    指标参数计算方式_REDIS(BussinessDictCodeRds.指标参数计算方式, "REDIS", "REDIS"),
+    /**
+     * DATABASE
+     */
+    指标参数计算方式_DB(BussinessDictCodeRds.指标参数计算方式, "DATABASE", "数据库"),
+    /**
+     * 插件模板
+     */
+    指标参数计算方式_PLUGIN(BussinessDictCodeRds.指标参数计算方式, "PLUGIN", "插件模板"),
     /**
      * 券商资产管理计划
      */

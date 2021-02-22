@@ -221,4 +221,14 @@ public class TrdAvailableCashQueryService {
         map.put("hodingType03", DictCodeList.持仓类型_实际.getValue());
         return trdAvailableCashQueryMapper.getFinAvaPosition(map);
     }
+
+    /**
+     * 获得资产维度的持仓
+     * @param map 资产代码，日期
+     * @return 持仓
+     */
+    public BigDecimal getSecPosition(Map<String, Object> map) {
+        map.put("hodingType03", DictCodeList.持仓类型_实际.getValue());
+        return trdAvailableCashQueryMapper.getSecPosition(map);
+    }
 }

@@ -162,6 +162,7 @@
             }
         }
         var object = $.serializeToObject('#submitForm', true);
+        object.distribution = object.bussTransfenpei.distribution;
         object.pageModel = pageModel;
         object.operateType = operateType;
         object.fpriceAmt = $('#fpriceAmt').val();

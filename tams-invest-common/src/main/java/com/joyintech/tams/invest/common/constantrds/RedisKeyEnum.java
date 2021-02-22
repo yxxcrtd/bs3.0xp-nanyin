@@ -92,6 +92,12 @@ public enum RedisKeyEnum {
         "RSK{INFO}ASSETAMOUNT"
     ),
     /**
+     * 资产久期附属信息-Redis主键
+     */
+    资产久期附属信息(
+            "RSK{INFO}ASSETDURATION"
+    ),
+    /**
      * 资产基本信息-Redis主键
      */
     资产基本信息(

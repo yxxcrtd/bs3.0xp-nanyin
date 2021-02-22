@@ -38,4 +38,11 @@ public interface BussTrdAvailableCashQueryService {
      * @return 持仓，融资金额
      */
     Map<String, Object>  getFinAvaPosition(Map<String, Object> map);
+
+    /**
+     * 根据组合id，资产id，日期查询可用持仓
+     * @param map
+     * @return
+     */
+    BigDecimal getSecPosition(Map<String, Object> map);
 }

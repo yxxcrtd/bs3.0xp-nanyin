@@ -1205,4 +1205,12 @@ public class CommonBusinessService extends BaseService {
         return restTemplate.getForObject(ServiceApplication.COMMON_SERVICE_NAME + "/core/isBondExerciseAsset?finprodId=" + finprodId,
                 Integer.class);
     }
+
+	/*组合模拟试算功能合并 panbin 2020-8-18 start*/
+    public String findInvAim(Map<String, Object> pageParam) {
+        return restTemplate.getForObject(ServiceApplication.ENTRUST_SERVICE_NAME
+                        + "/common/entrustcommonbase/findInvAim/" + pageParam.get("portfolioId") + "/" + pageParam.get("finprodId"),
+                String.class);
+    }
+    /*组合模拟试算功能合并 panbin 2020-8-18 end*/
 }

@@ -62,6 +62,11 @@ public class PtlPortfolio extends BaseEntity {
     private String riskEnabled;
 
     /**
+     * 币种
+     */
+    private String ccy;
+
+    /**
      * 取得 组合代码
      * @return 组合代码
      */
@@ -237,5 +242,13 @@ public class PtlPortfolio extends BaseEntity {
      */
     public void setRiskEnabled(String riskEnabled) {
         this.riskEnabled = riskEnabled == null ? null : riskEnabled.trim();
+    }
+
+    public String getCcy() {
+        return ccy;
+    }
+
+    public void setCcy(String ccy) {
+        this.ccy = ccy;
     }
 }

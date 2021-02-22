@@ -41,6 +41,10 @@ public class ImplParam  extends RskIsupIndicatorParaDtl implements IParam{
 
     private String[] fieldArrayRedis;
 
+    private String paramMathType;
+
+    private String paramValueNone;
+
     @Override
     public boolean isFreshCanTrd() {
         return this.isFreshCanTrdRedis;
@@ -155,6 +159,24 @@ public class ImplParam  extends RskIsupIndicatorParaDtl implements IParam{
     public void setInstitutionCode(String institutionCode) {
         this.institutionCode = institutionCode;
     }
-    
-    
+
+
+    @Override
+    public String getParamMathType() {
+        return paramMathType;
+    }
+
+    public void setParamMathType(String paramMathType) {
+        this.paramMathType = paramMathType;
+    }
+
+    @Override
+    public String getParamValueNone() {
+        return paramValueNone;
+    }
+
+    public void setParamValueNone(String paramValueNone) {
+        this.paramValueNone = paramValueNone;
+    }
+
 }

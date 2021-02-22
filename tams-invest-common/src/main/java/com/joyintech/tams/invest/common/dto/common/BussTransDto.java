@@ -20,7 +20,19 @@ public class BussTransDto extends BaseEntity{
      * 组合信息列表
      */
     private List<TrdTransfenpeiDto> trdTransfenpeiDtoList;
-    
+
+	/**
+	 * 分配方式
+	 */
+	private String distribution;
+
+	public String getDistribution() {
+		return distribution;
+	}
+
+	public void setDistribution(String distribution) {
+		this.distribution = distribution;
+	}
 
 	public List<TrdTransfenpeiDto> getTrdTransfenpeiDtoList() {
 		return trdTransfenpeiDtoList;

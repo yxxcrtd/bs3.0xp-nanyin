@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.common.trade.service;
 
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.jdbc.datasource.DynamicDataSourceHolder;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.util.DateUtil;
@@ -26,6 +27,8 @@ import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.TrdStaSecInfoDto;
 import com.joyintech.tams.invest.common.dto.common.TrdCommonParam;
 import com.joyintech.tams.invest.common.dto.common.TrdCommonWflParam;
+import com.joyintech.tams.invest.common.dto.mock.trade.MockTradeInfoDto;
+import com.joyintech.tams.invest.common.dto.mock.trade.MockTrdProductDealDto;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTotalTradeInfoDto;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTrade;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTradeInfoDto;
@@ -984,5 +987,119 @@ public class TrdCommonBaseService extends BaseService {
         paramMap.put("TRADE_STATUS_03", DictCodeListExt1.交易流程状态_撤销.getValue());
         return trdCommonBaseMapper.selectRevokedDataCount(paramMap) > 0;
 
+    }
+	
+	public List<WflTrdProductDeal> findDealByBtradeId(String tradeId) {
+        return trdCommonBaseMapper.findDealByBtradeId(tradeId);
+    }
+
+    /**
+     * 撤销交易时，判断清算的状态是否是清算撤销，是才能撤，对于多组合交易，查询每个单组合交易的清算状态
+     * @param tradeId
+     * @return
+     */
+    public boolean isCanRevoke(String tradeId){
+        Map<String, Object> map = new HashMap<>();
+        map.put("JYZT_CS", DictCodeListExt1.交易状态_初始.getValue());
+        map.put("SF_S", DictCodeListExt1.是否_是.getValue());
+        map.put("tradeIdL",tradeId);
+        return trdCommonBaseMapper.isCanRevoke(map) > 0;
+    }
+
+    /**
+     * 模拟试算
+     * 金融产品交易主方法查询
+     */
+    public MockTradeInfoDto selectTradeinfodeal(Map<String, Object> map) throws Exception {
+    	MockTradeInfoDto allList = new MockTradeInfoDto();
+    	//资产端交易列表
+    	List<MockTrdProductDealDto> listz = selectTradedealz(map);
+    	//负债端交易列表
+    	List<MockTrdProductDealDto> listf = selectTradedealf(map);
+    	//资产端T+N交易列表
+    	List<MockTrdProductDealDto> listztn = selectTradedealztn(map);
+    	//负债端T+N交易列表
+    	List<MockTrdProductDealDto> listftn = selectTradedealftn(map);
+    	List<MockTrdProductDealDto> listfy = selectFyTradedeal(map);
+    	allList.setAssetTradeList(listz);
+    	allList.setLiabilitiesTradeList(listf);
+    	allList.setAssetTdayPlusNdayTradeList(listztn);
+    	allList.setLiabilitiesTdayPlusNdayTradeList(listftn);
+    	//费用交易列表
+    	allList.setFeeTradeList(listfy);
+        return allList;
+    }
+
+    /**
+     * 模拟试算
+     * 金融产品交易查询
+     */
+    public List<MockTrdProductDealDto> selectTradedealz(Map<String, Object> map) throws Exception {
+    	map.put("psList", "T01,T02,T03,T04,T05,T06,T07,T08,T09,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21,T22,T23,T24,T25,T26,T27,T28,T29,T30,T31,T32,T33,T34,T35,T36,T37,T38,T39,T40,T41,T42,T43,T44,T45,T46,T47,T48,T49,T50,T51,T52,T53,T54,T55,T56,T58,T59,T60,T61,T62,T63,T64,T65,T66,T98,T99");
+    	map.put("psList", StringUtil.splitToList(GlobalConstant.COMMA,(String)map.get("psList")));
+    	map.put("isyesorno", "N");
+    	return trdCommonBaseMapper.selectTradedeal(map);
+    }
+
+    /**
+     * 模拟试算
+     * 金融产品交易查询
+     */
+    public List<MockTrdProductDealDto> selectTradedealf(Map<String, Object> map) throws Exception {
+    	map.put("psList", "C1,C10,C14,C15,C16,C17,C18,C2,C20,C3,C4,C5,C6,C7,C8,C9");
+    	map.put("psList", StringUtil.splitToList(GlobalConstant.COMMA,(String)map.get("psList")));
+    	map.put("isyesorno", "N");
+        return trdCommonBaseMapper.selectTradedeal(map);
+    }
+
+    /**
+     * 模拟试算
+     * 金融产品交易查询
+     */
+    public List<MockTrdProductDealDto> selectTradedealztn(Map<String, Object> map) throws Exception {
+    	map.put("psList", "T01,T02,T03,T04,T05,T06,T07,T08,T09,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21,T22,T23,T24,T25,T26,T27,T28,T29,T30,T31,T32,T33,T34,T35,T36,T37,T38,T39,T40,T41,T42,T43,T44,T45,T46,T47,T48,T49,T50,T51,T52,T53,T54,T55,T56,T58,T59,T60,T61,T62,T63,T64,T65,T66,T98,T99");
+    	map.put("psList", StringUtil.splitToList(GlobalConstant.COMMA,(String)map.get("psList")));
+    	map.put("isyesorno", "Y");
+        return trdCommonBaseMapper.selectTradedeal(map);
+    }
+
+    /**
+     * 模拟试算
+     * 金融产品交易查询
+     */
+    public List<MockTrdProductDealDto> selectTradedealftn(Map<String, Object> map) throws Exception {
+    	map.put("psList", "C1,C10,C14,C15,C16,C17,C18,C2,C20,C3,C4,C5,C6,C7,C8,C9");
+    	map.put("psList", StringUtil.splitToList(GlobalConstant.COMMA,(String)map.get("psList")));
+    	map.put("isyesorno", "Y");
+        return trdCommonBaseMapper.selectTradedeal(map);
+    }
+
+    /**
+     * 模拟试算
+     * 费用交易列表查询
+     */
+    public List<MockTrdProductDealDto> selectFyTradedeal(Map<String, Object> map) throws Exception {
+        return trdCommonBaseMapper.selectFyTradedeal(map);
+    }
+
+    public boolean checkRevokeRTrade(String tradeIdL) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("JYZT_CS", DictCodeListExt1.交易状态_初始.getValue());
+        map.put("SF_S", DictCodeListExt1.是否_是.getValue());
+        map.put("tradeIdL",tradeIdL);
+        return trdCommonBaseMapper.checkRevokeRTrade(map)>0;
+    }
+
+    /**
+     * check预录入交易是否存在有效的真实交易
+     * @param tradeId
+     * @return
+     */
+    public boolean checkRevokeBTrade(String tradeId) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("JYZT_CS", DictCodeListExt1.交易状态_初始.getValue());
+        map.put("SF_S", DictCodeListExt1.是否_是.getValue());
+        map.put("tradeIdL",tradeId);
+        return trdCommonBaseMapper.checkRevokeBTrade(map)>0;
     }
 }

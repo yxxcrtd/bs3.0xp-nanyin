@@ -469,5 +469,24 @@
         </if>
         group by portfolio_id,finprod_id
     </select>
-    
+
+    <!--合并模拟测算代码 panbin 2020-8-11 start-->
+    <select id="selectRedisParamConfig" parameterType="Map" resultType="com.joyintech.tams.common.base.entity.RskBusinessRedisConfig">
+        select
+        COMMON_BUSINESS_TYPE commonBusinessType,
+        PARA_CODE paraCode,
+        REDIS_MODEL redisModel
+        from RSK_BUSINESS_REDIS_CONFIG
+        <where>
+            <if test="commonBusinessType != null and commonBusinessType != '' ">
+                and COMMON_BUSINESS_TYPE in ${commonBusinessType}
+            </if>
+            <if test="paraCode != null and paraCode != '' ">
+                and PARA_CODE = #{paraCode}
+            </if>
+            <if test="redisModel != null and redisModel != '' ">
+                and REDIS_MODEL = #{paraCode}
+            </if>
+        </where>
+    </select>
 </mapper>

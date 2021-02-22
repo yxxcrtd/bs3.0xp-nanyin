@@ -628,4 +628,367 @@
             </if>
         </where>
     </select>
+
+    <select id="findDealByBtradeId" resultType="com.joyintech.tams.common.base.entity.WflTrdProductDeal">
+        <include refid="com.joyintech.tams.common.base.dao.WflTrdProductDealMapper.Sql_All_Data" />
+        WHERE B_TRADE_ID = #{tradeId}
+    </select>
+
+    <select id="isCanRevoke" resultType="java.lang.Integer">
+        SELECT count(1) FROM INF_TRD_SETTLE_STATUS WHERE TRADE_ID in (
+        SELECT
+        TRADE_ID
+        FROM
+        TRD_PRODUCT_DEAL tpd
+        left join TRD_FIN_PRODUCT_DEAL_TOTAL tfpdt on tfpdt.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
+        where
+        (instr(#{tradeIdL},tfpdt.OUT_TOTAL_TRADE_ID)>0
+             or instr(#{tradeIdL},tpd.OUT_TOTAL_TRADE_ID)>0
+             or instr(#{tradeIdL},tpd.TRADE_ID)>0
+             or instr(#{tradeIdL},tfpdt.TOTLE_TRADE_ID)>0
+             or instr(#{tradeIdL},tfpdt.P_TOTLE_TRADE_ID)>0)
+        and tpd.TRADE_STATUS = #{JYZT_CS}
+        and nvl(tpd.IS_CANCEL,'N') != #{SF_S}
+        ) AND SETTLE_RET_STATUS IN ('D','N')
+    </select>
+
+    <select id="checkRevokeRTrade" resultType="java.lang.Integer">
+        SELECT count(1) FROM TRD_PRODUCT_DEAL WHERE TRADE_ID in (
+        SELECT
+        tpd.R_TRADE_ID
+        FROM
+        TRD_PRODUCT_DEAL tpd
+        where
+        (instr(#{tradeIdL},tpd.OUT_TOTAL_TRADE_ID)>0 or instr(#{tradeIdL},tpd.TRADE_ID)>0 or instr(#{tradeIdL},tpd.TOTLE_TRADE_ID)>0)
+        and tpd.TRADE_STATUS = #{JYZT_CS}
+        and tpd.IS_CANCEL != #{SF_S}
+        )
+        and TRADE_STATUS = #{JYZT_CS}
+        and IS_CANCEL != #{SF_S}
+    </select>
+    <select id="selectTradedeal" resultType="com.joyintech.tams.invest.common.dto.mock.trade.MockTrdProductDealDto">
+        select 	TRD_PRODUCT_DEAL.TRADE_ID	as tradeId,
+        TRD_PRODUCT_DEAL.FINPROD_ID	as finprodId,
+        TRD_PRODUCT_DEAL.FINPROD_TYPE	as finprodType,
+        TRD_PRODUCT_DEAL.BRANCH	as branch,
+        TRD_PRODUCT_DEAL.UNIT_CPRICE	as unitCprice,
+        TRD_PRODUCT_DEAL.PRIN_AMT	as prinAmt,
+        TRD_PRODUCT_DEAL.SHARE_AMT	as shareAmt,
+        TRD_PRODUCT_DEAL.INT_AMT	as intAmt,
+        TRD_PRODUCT_DEAL.INV_AIM	as invAim,
+        TRD_PRODUCT_DEAL.CREATE_USER	as createUser,
+        TRD_PRODUCT_DEAL.CREATE_DEPT	as createDept,
+        TRD_PRODUCT_DEAL.CREATE_TIME	as createTime,
+        TRD_PRODUCT_DEAL.UPDATE_USER	as updateUser,
+        TRD_PRODUCT_DEAL.UPDATE_TIME	as updateTime,
+        TRD_PRODUCT_DEAL.BUSI_TYPE	as busiType,
+        TRD_PRODUCT_DEAL.FINPROD_TYPE2	as finprodType2,
+        TRD_PRODUCT_DEAL.TRADE_DATE	as tradeDate,
+        TRD_PRODUCT_DEAL.VDATE	as vdate,
+        TRD_PRODUCT_DEAL.MDATE	as mdate,
+        TRD_PRODUCT_DEAL.SETTLE_DATE	as settleDate,
+        TRD_PRODUCT_DEAL.SETTLE_SPEED	as settleSpeed,
+        TRD_PRODUCT_DEAL.CCY	as ccy,
+        TRD_PRODUCT_DEAL.CPRICE_DATE	as cpriceDate,
+        TRD_PRODUCT_DEAL.UNIT_INT	as unitInt,
+        TRD_PRODUCT_DEAL.UNIT_FPRICE	as unitFprice,
+        TRD_PRODUCT_DEAL.PAR_VALUE	as parValue,
+        TRD_PRODUCT_DEAL.CPRICE_AMT	as cpriceAmt,
+        TRD_PRODUCT_DEAL.FPRICE_AMT	as fpriceAmt,
+        TRD_PRODUCT_DEAL.FEE_AMT_PAY	as feeAmtPay,
+        NVL(TRD_PRODUCT_DEAL.TRADE_AMT,0)	as tradeAmt,
+        TRD_PRODUCT_DEAL.FEE_AMT_UNPAY	as feeAmtUnpay,
+        /**TRD_PRODUCT_DEAL.FEE_AMT	as feeAmt,
+        modify 部分资产在交易表中并没有存交易费用字段**/
+        FEE_DETAIL.FEE_AMT	as feeAmt,
+        TRD_PRODUCT_DEAL.PS	as ps,
+        TRD_PRODUCT_DEAL.YIELD	as yield,
+        TRD_PRODUCT_DEAL.EXER_YIELD	as exerYield,
+        TRD_PRODUCT_DEAL.TRADE_STATUS	as tradeStatus,
+        TRD_PRODUCT_DEAL.IS_CANCEL	as isCancel,
+        TRD_PRODUCT_DEAL.P_TRADE_ID	as pTradeId,
+        TRD_PRODUCT_DEAL.IS_CLEAN	as isClean,
+        TRD_PRODUCT_DEAL.TOTLE_TRADE_ID	as totleTradeId,
+        TRD_PRODUCT_DEAL.R_TRADE_ID	 as rTradeId,
+        TRD_PRODUCT_DEAL.B_TRADE_ID	as bTradeId,
+        TRD_PRODUCT_DEAL.CHL_ID	as chlId,
+        TRD_PRODUCT_DEAL.COUNTER_ID	as counterId,
+        TRD_PRODUCT_DEAL.IS_OUT_TRADE	as isOutTrade,
+        TRD_PRODUCT_DEAL.TRADE_MARKET	as tradeMarket,
+        TRD_PRODUCT_DEAL.TRADE_PLAT	as tradePlat,
+        TRD_PRODUCT_DEAL.TRADE_MARKET_MODE	as tradeMarketMode,
+        TRD_PRODUCT_DEAL.TRADER	as trader,
+        TRD_PRODUCT_DEAL.COUNTER_TRADER	as counterTrader,
+        TRD_PRODUCT_DEAL.COUNTER_CONTACT	as counterContact,
+        TRD_PRODUCT_DEAL.SEC_MANAGE_ACCT_ID	as secManageAcctId,
+        TRD_PRODUCT_DEAL.F_TRADE_ID	as fTradeId,
+        TRD_PRODUCT_DEAL.CASH_ID	as cashId,
+        TRD_PRODUCT_DEAL.REGIST_ORG	as registOrg,
+        TRD_PRODUCT_DEAL.REMARK	as remark,
+        TRD_PRODUCT_DEAL.CANCEL_REMARK	as cancelRemark,
+        TRD_PRODUCT_DEAL.DELIVERY_TYPE	as deliveryType,
+        TRD_PRODUCT_DEAL.PAY_DATE	as payDate,
+        TRD_PRODUCT_DEAL.SALE_CODE	as saleCode,
+        TRD_PRODUCT_DEAL.ACCR_NUM	as accrNum,
+        TRD_PRODUCT_DEAL.TG_BUSI_TYPE	as tgBusiType,
+        TRD_PRODUCT_DEAL.PS_PAYMENT	as psPayment,
+        /*TRD_PRODUCT_DEAL.R_INV_AIM	as rInvAim,*/
+        'Y'							as cashProcessedOrNot
+        from	TRD_PRODUCT_DEAL_ADD
+        inner join	TRD_PRODUCT_DEAL
+        on	TRD_PRODUCT_DEAL_ADD.TRADE_ID = TRD_PRODUCT_DEAL.TRADE_ID
+        left join (
+        select trade_id,sum(fee_amt) fee_amt from trd_trade_fee_detail group by trade_id) fee_detail
+        on fee_detail.trade_id = TRD_PRODUCT_DEAL.TRADE_ID
+        where 1=1
+        <if test="portfolioId != null and portfolioId != ''">
+            and TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID  = #{portfolioId}
+        </if>
+        <if test="psList != null">
+            and TRD_PRODUCT_DEAL.PS in
+            <foreach collection="psList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <!-- 入参.是否查询T+N交易 -->
+        <if test='isyesorno == "Y" and tradeDate != null and tradeDate != ""'>
+            and TRD_PRODUCT_DEAL.TRADE_DATE &lt; to_date(#{tradeDate},'yyyy-mm-dd')
+            and TRD_PRODUCT_DEAL.SETTLE_DATE >=  to_date(#{tradeDate},'yyyy-mm-dd')
+        </if>
+        <if test='isyesorno != "Y" and tradeDate != null and tradeDate != ""'>
+            and TRD_PRODUCT_DEAL.TRADE_DATE >= to_date(#{tradeDate},'yyyy-mm-dd')
+        </if>
+        and	(TRD_PRODUCT_DEAL.IS_CANCEL = 'N' or TRD_PRODUCT_DEAL.IS_CANCEL is null)
+        and	TRD_PRODUCT_DEAL.TRADE_STATUS = '01'
+        union all
+        select 	TRD_FIN_PRODUCT_BARTER.TRADE_ID		as tradeId,
+        TRD_FIN_PRODUCT_BARTER.FINPROD_ID	as finprodId,
+        TRD_FIN_PRODUCT_BARTER.FINPROD_TYPE	as finprodType,
+        TRD_FIN_PRODUCT_BARTER.BRANCH		as branch,
+        TRD_FIN_PRODUCT_BARTER.UNIT_CPRICE	as unitCprice,
+        TRD_FIN_PRODUCT_BARTER.PRIN_AMT		as prinAmt,
+        TRD_FIN_PRODUCT_BARTER.SHARE_AMT	as shareAmt,
+        TRD_FIN_PRODUCT_BARTER.INT_AMT		as intAmt,
+        TRD_FIN_PRODUCT_BARTER.INV_AIM		as invAim,
+        TRD_FIN_PRODUCT_BARTER.CREATE_USER	as createUser,
+        TRD_FIN_PRODUCT_BARTER.CREATE_DEPT	as createDept,
+        TRD_FIN_PRODUCT_BARTER.CREATE_TIME	as createTime,
+        TRD_FIN_PRODUCT_BARTER.UPDATE_USER	as updateUser,
+        TRD_FIN_PRODUCT_BARTER.UPDATE_TIME	as updateTime,
+        TRD_PRODUCT_DEAL.BUSI_TYPE	as busiType,
+        TRD_PRODUCT_DEAL.FINPROD_TYPE2	as finprodType2,
+        TRD_PRODUCT_DEAL.TRADE_DATE	as tradeDate,
+        TRD_PRODUCT_DEAL.VDATE	as vdate,
+        TRD_PRODUCT_DEAL.MDATE	as mdate,
+        TRD_PRODUCT_DEAL.SETTLE_DATE	as settleDate,
+        TRD_PRODUCT_DEAL.SETTLE_SPEED	as settleSpeed,
+        TRD_PRODUCT_DEAL.CCY	as ccy,
+        TRD_PRODUCT_DEAL.CPRICE_DATE	as cpriceDate,
+        TRD_PRODUCT_DEAL.UNIT_INT	as unitInt,
+        TRD_PRODUCT_DEAL.UNIT_FPRICE	as unitFprice,
+        TRD_PRODUCT_DEAL.PAR_VALUE	as parValue,
+        TRD_PRODUCT_DEAL.CPRICE_AMT	as cpriceAmt,
+        TRD_PRODUCT_DEAL.FPRICE_AMT	as fpriceAmt,
+        TRD_PRODUCT_DEAL.FEE_AMT_PAY	as feeAmtPay,
+        NVL(TRD_PRODUCT_DEAL.TRADE_AMT,0)	as tradeAmt,
+        TRD_PRODUCT_DEAL.FEE_AMT_UNPAY	as feeAmtUnpay,
+        /**TRD_PRODUCT_DEAL.FEE_AMT	as feeAmt,
+        modify 部分资产在交易表中并没有存交易费用字段**/
+        FEE_DETAIL.FEE_AMT	as feeAmt,
+        TRD_PRODUCT_DEAL.PS	as ps,
+        TRD_PRODUCT_DEAL.YIELD	as yield,
+        TRD_PRODUCT_DEAL.EXER_YIELD	as exerYield,
+        TRD_PRODUCT_DEAL.TRADE_STATUS	as tradeStatus,
+        TRD_PRODUCT_DEAL.IS_CANCEL	as isCancel,
+        TRD_PRODUCT_DEAL.P_TRADE_ID	as pTradeId,
+        TRD_PRODUCT_DEAL.IS_CLEAN	as isClean,
+        TRD_PRODUCT_DEAL.TOTLE_TRADE_ID	as totleTradeId,
+        TRD_PRODUCT_DEAL.R_TRADE_ID	 as rTradeId,
+        TRD_PRODUCT_DEAL.B_TRADE_ID	as bTradeId,
+        TRD_PRODUCT_DEAL.CHL_ID	as chlId,
+        TRD_PRODUCT_DEAL.COUNTER_ID	as counterId,
+        TRD_PRODUCT_DEAL.IS_OUT_TRADE	as isOutTrade,
+        TRD_PRODUCT_DEAL.TRADE_MARKET	as tradeMarket,
+        TRD_PRODUCT_DEAL.TRADE_PLAT	as tradePlat,
+        TRD_PRODUCT_DEAL.TRADE_MARKET_MODE	as tradeMarketMode,
+        TRD_PRODUCT_DEAL.TRADER	as trader,
+        TRD_PRODUCT_DEAL.COUNTER_TRADER	as counterTrader,
+        TRD_PRODUCT_DEAL.COUNTER_CONTACT	as counterContact,
+        TRD_PRODUCT_DEAL.SEC_MANAGE_ACCT_ID	as secManageAcctId,
+        TRD_PRODUCT_DEAL.F_TRADE_ID	as fTradeId,
+        TRD_PRODUCT_DEAL.CASH_ID	as cashId,
+        TRD_PRODUCT_DEAL.REGIST_ORG	as registOrg,
+        TRD_PRODUCT_DEAL.REMARK	as remark,
+        TRD_PRODUCT_DEAL.CANCEL_REMARK	as cancelRemark,
+        TRD_PRODUCT_DEAL.DELIVERY_TYPE	as deliveryType,
+        TRD_PRODUCT_DEAL.PAY_DATE	as payDate,
+        TRD_PRODUCT_DEAL.SALE_CODE	as saleCode,
+        TRD_PRODUCT_DEAL.ACCR_NUM	as accrNum,
+        TRD_PRODUCT_DEAL.TG_BUSI_TYPE	as tgBusiType,
+        TRD_PRODUCT_DEAL.PS_PAYMENT	as psPayment,
+        /*TRD_PRODUCT_DEAL.R_INV_AIM	as rInvAim,*/
+        'Y'							as cashProcessedOrNot
+        from TRD_PRODUCT_DEAL_ADD
+        inner join TRD_PRODUCT_DEAL
+        on	TRD_PRODUCT_DEAL.TRADE_ID =TRD_PRODUCT_DEAL_ADD.TRADE_ID
+        inner join TRD_FIN_PRODUCT_BARTER
+        on	TRD_PRODUCT_DEAL.TRADE_ID = TRD_FIN_PRODUCT_BARTER.TRADE_ID
+        left join (
+        select trade_id,sum(fee_amt) fee_amt from trd_trade_fee_detail group by trade_id) fee_detail
+        on fee_detail.trade_id = TRD_PRODUCT_DEAL.TRADE_ID
+        where 1=1
+        <if test="portfolioId != null and portfolioId != ''">
+            and TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID  = #{portfolioId}
+        </if>
+        <if test="psList != null">
+            and TRD_PRODUCT_DEAL.PS in
+            <foreach collection="psList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <!-- 入参.是否查询T+N交易 -->
+        <if test='isyesorno == "Y" and tradeDate != null and tradeDate != ""'>
+            and TRD_PRODUCT_DEAL.TRADE_DATE &lt; to_date(#{tradeDate},'yyyy-mm-dd')
+            and TRD_PRODUCT_DEAL.SETTLE_DATE >=  to_date(#{tradeDate},'yyyy-mm-dd')
+        </if>
+        <if test='isyesorno != "Y" and tradeDate != null and tradeDate != ""'>
+            and TRD_PRODUCT_DEAL.TRADE_DATE >= to_date(#{tradeDate},'yyyy-mm-dd')
+        </if>
+        and	(TRD_PRODUCT_DEAL.IS_CANCEL = 'N' or TRD_PRODUCT_DEAL.IS_CANCEL is null)
+        and	TRD_PRODUCT_DEAL.TRADE_STATUS = '01'
+    </select>
+    <select id="selectFyTradedeal" resultType="com.joyintech.tams.invest.common.dto.mock.trade.MockTrdProductDealDto">
+        select 		TRD_TRADE_FEE_DETAIL.FEE_TYPE							as finprodId,
+        nvl(TRD_TRADE_FEE_DETAIL.ccy,TRD_PRODUCT_DEAL.ccy) 		as ccy,
+        sum(TRD_TRADE_FEE_DETAIL.FEE_AMT)						as tradeAmt,
+        TRD_PRODUCT_DEAL.trade_date								as tradeDate,
+        TRD_PRODUCT_DEAL.trade_date								as settleDate,
+        TRD_PRODUCT_DEAL.ps										as ps,
+        'Y'														as cashProcessedOrNot
+        from		TRD_PRODUCT_DEAL_ADD
+        inner join	TRD_PRODUCT_DEAL
+        on		TRD_PRODUCT_DEAL_ADD.TRADE_ID = TRD_PRODUCT_DEAL.TRADE_ID
+        inner join	TRD_TRADE_FEE_DETAIL
+        on		TRD_TRADE_FEE_DETAIL.TRADE_ID = TRD_PRODUCT_DEAL.TRADE_ID
+        where 1=1
+        <if test="portfolioId != null and portfolioId != ''">
+            and TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID  = #{portfolioId}
+        </if>
+        <if test="tradeDate != null and tradeDate != ''">
+            and TRD_PRODUCT_DEAL.trade_date  = to_date(#{tradeDate},'yyyy-mm-dd')
+        </if>
+        and		TRD_PRODUCT_DEAL.ps in ('C11','C12','C13','T10','C16')
+        and		(TRD_PRODUCT_DEAL.IS_CANCEL = 'N' or TRD_PRODUCT_DEAL.IS_CANCEL is null)
+        and		TRD_PRODUCT_DEAL.TRADE_STATUS = '01'
+        and		TRD_TRADE_FEE_DETAIL.IS_PAY_WITH_TRADE = 'Y'
+        group by TRD_TRADE_FEE_DETAIL.FEE_TYPE,TRD_PRODUCT_DEAL.ccy,TRD_PRODUCT_DEAL.ps,TRD_TRADE_FEE_DETAIL.ccy,TRD_PRODUCT_DEAL.trade_date
+        union all
+        select 			TRD_TRADE_FEE_DETAIL.FEE_TYPE					   as finprodId,
+        nvl(TRD_TRADE_FEE_DETAIL.ccy,TRD_PRODUCT_DEAL.ccy) as ccy,
+        sum(TRD_TRADE_FEE_DETAIL.FEE_AMT)					   as  tradeAmt,
+        TRD_PRODUCT_DEAL.trade_date							   as tradeDate,
+        TRD_PRODUCT_DEAL.trade_date							   as settleDate,
+        'T57'												   as ps,
+        'Y'													   as cashProcessedOrNot
+        from		TRD_PRODUCT_DEAL_ADD
+        inner join				TRD_PRODUCT_DEAL
+        on			TRD_PRODUCT_DEAL_ADD.TRADE_ID = TRD_PRODUCT_DEAL.TRADE_ID
+        inner join				TRD_TRADE_FEE_DETAIL
+        on			TRD_TRADE_FEE_DETAIL.TRADE_ID = TRD_PRODUCT_DEAL.TRADE_ID
+        where 1=1
+        <if test="portfolioId != null and portfolioId != ''">
+            and TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID  = #{portfolioId}
+        </if>
+        <if test="tradeDate != null and tradeDate != ''">
+            and TRD_PRODUCT_DEAL.trade_date  = to_date(#{tradeDate},'yyyy-mm-dd')
+        </if>
+        /**and		TRD_PRODUCT_DEAL.ps in ('T57')**/
+        and		(TRD_PRODUCT_DEAL.IS_CANCEL = 'N' or TRD_PRODUCT_DEAL.IS_CANCEL is null)
+        and		TRD_PRODUCT_DEAL.TRADE_STATUS = '01'
+        and		TRD_TRADE_FEE_DETAIL.FEE_TYPE != 'B09'
+        and		TRD_TRADE_FEE_DETAIL.IS_PAY_WITH_TRADE = 'N'
+        group by TRD_TRADE_FEE_DETAIL.FEE_TYPE,TRD_PRODUCT_DEAL.ccy,TRD_PRODUCT_DEAL.ps,TRD_TRADE_FEE_DETAIL.ccy,TRD_PRODUCT_DEAL.trade_date
+        union all
+        select 			TRD_TRADE_FEE_DETAIL.FEE_TYPE									as finprodId,
+        nvl(TRD_TRADE_FEE_DETAIL.ccy,TRD_PRODUCT_DEAL.ccy) 			as ccy,
+        sum(TRD_TRADE_FEE_DETAIL.FEE_AMT)							as  tradeAmt,
+        TRD_PRODUCT_DEAL.trade_date										as tradeDate,
+        TRD_PRODUCT_DEAL.trade_date										as settleDate,
+        'T10'													as ps,
+        'Y'														as cashProcessedOrNot
+        from		TRD_PRODUCT_DEAL_ADD
+        inner join		TRD_PRODUCT_DEAL
+        on			TRD_PRODUCT_DEAL_ADD.TRADE_ID = TRD_PRODUCT_DEAL.TRADE_ID
+        inner join		TRD_TRADE_FEE_DETAIL
+        on			TRD_TRADE_FEE_DETAIL.TRADE_ID = TRD_PRODUCT_DEAL.TRADE_ID
+        where 1=1
+        <if test="portfolioId != null and portfolioId != ''">
+            and TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID  = #{portfolioId}
+        </if>
+        <if test="tradeDate != null and tradeDate != ''">
+            and TRD_PRODUCT_DEAL.trade_date  = to_date(#{tradeDate},'yyyy-mm-dd')
+        </if>
+        and		(TRD_PRODUCT_DEAL.ps = 'T01' or TRD_PRODUCT_DEAL.IS_OUT_TRADE='N')
+        and		(TRD_PRODUCT_DEAL.IS_CANCEL = 'N' or TRD_PRODUCT_DEAL.IS_CANCEL is null)
+        and		TRD_PRODUCT_DEAL.TRADE_STATUS = '01'
+        and		TRD_TRADE_FEE_DETAIL.FEE_TYPE = 'B09'
+        and		TRD_TRADE_FEE_DETAIL.IS_PAY_WITH_TRADE = 'Y'
+        group by TRD_TRADE_FEE_DETAIL.FEE_TYPE,TRD_PRODUCT_DEAL.ccy,TRD_PRODUCT_DEAL.ps,TRD_TRADE_FEE_DETAIL.ccy,TRD_PRODUCT_DEAL.trade_date
+        union all
+        select 		TRD_TRADE_FEE_DETAIL.FEE_TYPE								as finprodId,
+        nvl(TRD_TRADE_FEE_DETAIL.ccy,TRD_PRODUCT_DEAL.ccy) 		as ccy,
+        sum(TRD_TRADE_FEE_DETAIL.FEE_AMT)							as tradeAmt	,
+        TRD_PRODUCT_DEAL.trade_date									as tradeDate,
+        TRD_PRODUCT_DEAL.trade_date									as settleDate,
+        'T57'														as ps,
+        'Y'															as cashProcessedOrNot
+        from		TRD_PRODUCT_DEAL_ADD
+        inner join	TRD_PRODUCT_DEAL
+        on		TRD_PRODUCT_DEAL_ADD.TRADE_ID = TRD_PRODUCT_DEAL.TRADE_ID
+        inner join	TRD_TRADE_FEE_DETAIL
+        on		TRD_TRADE_FEE_DETAIL.TRADE_ID = TRD_PRODUCT_DEAL.TRADE_ID
+        where 1=1
+        <if test="portfolioId != null and portfolioId != ''">
+            and TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID  = #{portfolioId}
+        </if>
+        <if test="tradeDate != null and tradeDate != ''">
+            and TRD_PRODUCT_DEAL.trade_date  = to_date(#{tradeDate},'yyyy-mm-dd')
+        </if>
+        and		(TRD_PRODUCT_DEAL.ps = 'T02' or TRD_PRODUCT_DEAL.IS_OUT_TRADE='N')
+        and		(TRD_PRODUCT_DEAL.IS_CANCEL = 'N' or TRD_PRODUCT_DEAL.IS_CANCEL is null)
+        and		TRD_PRODUCT_DEAL.TRADE_STATUS = '01'
+        and		TRD_TRADE_FEE_DETAIL.FEE_TYPE = 'B09'
+        and		TRD_TRADE_FEE_DETAIL.IS_PAY_WITH_TRADE = 'Y'
+        group by TRD_TRADE_FEE_DETAIL.FEE_TYPE,TRD_PRODUCT_DEAL.ccy,TRD_PRODUCT_DEAL.ps,TRD_TRADE_FEE_DETAIL.ccy,TRD_PRODUCT_DEAL.trade_date
+    </select>
+
+    <select id="checkRevokeBTrade" resultType="int">
+        SELECT COUNT(1) FROM TRD_OUT_PRODUCT_DEAL_TOTAL
+        WHERE B_TRADE_ID = #{tradeIdL} and TRADE_STATUS = #{JYZT_CS} and IS_CANCEL != #{SF_S}
+    </select>
+    <select id="queryRTradeId" resultType="java.lang.String">
+        SELECT NVL(TOTLE_TRADE_ID, R_TRADE_ID) FROM TRD_PRODUCT_DEAL
+        WHERE (R_TRADE_ID IS NOT NULL AND TRADE_ID = #{tradeId})
+        OR (TRADE_ID IN (
+            SELECT RTRIM(R_TRADE_ID, 'R') FROM TRD_PRODUCT_DEAL WHERE TOTLE_TRADE_ID = #{tradeId} AND R_TRADE_ID IS NOT NULL
+        ))
+    </select>
+
+    <select id="getFundLatestValuation" resultType="java.math.BigDecimal">
+        select
+        fpv.VALUATION
+        from
+        FIN_PRODUCT_VALUATION fpv, FIN_PRODUCT B
+        where
+        B.FINPROD_ID = #{finprodId} AND B.FINPROD_MARKET_ID = fpv.FINPROD_ID AND B.FINPROD_TYPE2 = fpv.FINPROD_TYPE2
+        and fpv.VAL_DATE &lt;= #{valDate}
+        and  NOT EXISTS (
+        select 1 from FIN_PRODUCT_VALUATION fpvt
+        where
+        fpvt.FINPROD_ID = fpv.FINPROD_ID
+        and fpvt.VAL_DATE > fpv.VAL_DATE
+         and fpvt.VAL_DATE &lt;= #{valDate}
+        )
+    </select>
+
 </mapper>

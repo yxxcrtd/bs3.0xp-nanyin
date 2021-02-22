@@ -564,6 +564,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
 
 
 
+    业务类型_债券交易(DictCode.业务类型, "02", "债券交易"),
     //add by tanxuan on 20200101
 	业务类型_场外期权(DictCode.业务类型,"38","场外期权"),
 	金融产品类型_投管用_期权(DictCode.金融产品类型_投管用,"F35","期权"),
@@ -795,6 +796,14 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
             DictCode.报表生成配置表,"REP_PROD_MESSAGE","理财产品信息表"
     ),
    投资端费用品种类型_账户维护费(DictCode.投资端费用品种类型, "08", "账户维护费"),
+	/*合并模拟测算代码 panbin 2020-8-11 start*/
+    共通业务类型_债券每日行情(DictCode.共通业务类型,"BONDMARKET","债券每日行情"),
+
+    组合类型_虚拟组合(DictCode.组合类型,"04","虚拟组合"),
+    组合开放类型_封闭式(DictCode.组合开放类型,"01","封闭式"),
+    组合开放类型_定期开放(DictCode.组合开放类型,"02","定期开放"),
+    组合开放类型_高频开放(DictCode.组合开放类型,"03","高频开放"),
+    /*合并模拟测算代码 panbin 2020-8-11 end*/
     ;
 
     /**

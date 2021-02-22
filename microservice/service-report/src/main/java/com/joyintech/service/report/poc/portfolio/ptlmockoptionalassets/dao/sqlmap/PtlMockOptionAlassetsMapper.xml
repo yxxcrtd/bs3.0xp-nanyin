@@ -23,10 +23,10 @@
 				BB.yield * 100 as yield,
 				BB.exerYield * 100 as exerYield
 	from	
-		(select 
+		(  select * from (select 
 				PTL_SEC_POSITION.PORTFOLIO_ID portfolioId,
 				PTL_SEC_POSITION.FINPROD_ID finprodId,
-				PTL_SEC_POSITION.INV_AIM invAim,
+				 decode(PTL_SEC_POSITION.INV_AIM,'999999','',PTL_SEC_POSITION.INV_AIM) invAim,
 				sum(PTL_SEC_POSITION.AMOUNT) amount
 			from
 				PTL_SEC_POSITION
@@ -51,7 +51,8 @@
 						#{item}
 					</foreach>
 				</if>
-			group by PTL_SEC_POSITION.PORTFOLIO_ID,PTL_SEC_POSITION.FINPROD_ID,PTL_SEC_POSITION.INV_AIM
+			group by PTL_SEC_POSITION.PORTFOLIO_ID,PTL_SEC_POSITION.FINPROD_ID,PTL_SEC_POSITION.INV_AIM)pp
+			where pp.amount > 0
 		) AA
 		inner join PTL_PORTFOLIO
 			on AA.portfolioId = PTL_PORTFOLIO.PORTFOLIO_ID
@@ -59,7 +60,7 @@
 			on AA.finprodId = fin_product.FINPROD_ID
 		inner join fin_product_type				
 			on fin_product.FINPROD_ID = fin_product_type.FINPROD_ID
-		left join
+		inner join
 			(select
 					PTL_SEC_VALUTION.PORTFOLIO_ID portfolioId,
 					PTL_SEC_VALUTION.FINPROD_ID finprodId,
@@ -77,6 +78,7 @@
 												where T.PORTFOLIO_ID = PTL_SEC_VALUTION.PORTFOLIO_ID
 														 and T.CDATE &lt; to_date(#{cdate},'yyyy-MM-dd')
 												)
+					and ptl_sec_valution.share_amt > 0
 					<if test='portfolioId != null and portfolioId != ""'>
 						and PTL_SEC_VALUTION.PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
 					</if>
@@ -85,7 +87,7 @@
 					</if>
 				group by PTL_SEC_VALUTION.PORTFOLIO_ID,PTL_SEC_VALUTION.FINPROD_ID,PTL_SEC_VALUTION.INV_AIM
 			) BB
-			on AA.portfolioId = BB.portfolioId
+			on AA.portfolioId = BB.portfolioId and AA.finprodid = BB.finprodid
 		left join
 			(select
 					MOCK_PRODUCT_DEAL.FINPROD_ID finprodId,

@@ -69,6 +69,21 @@ public class IndicatorParamValService {
     }
 
     /**
+     * 删除 删除指标参数值
+     *
+     * @param paraValMap 指标参数值列表
+     * @see
+     * @since 1.0
+     */
+    public void delParamVal(Map<String, Map<String, IValue<Object>>> paraValMap) {
+        if (CollectionUtils.isEmpty(paraValMap)) {
+            return;
+        }
+        // 删除Redis参数值
+        valWriteSrv.deleteList(changeKey(paraValMap, true));
+    }
+
+    /**
      * 更新 所有指标参数值
      * 
      * @param paraValMap 指标参数值列表

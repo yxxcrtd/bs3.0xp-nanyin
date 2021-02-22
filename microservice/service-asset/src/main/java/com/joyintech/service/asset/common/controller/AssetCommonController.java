@@ -15,11 +15,18 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.asset.common.service.AssetCommonService;
+import com.joyintech.tams.common.base.entity.FinCashCalcRule;
+import com.joyintech.tams.common.base.entity.FinCashPayRule;
+import com.joyintech.tams.common.base.entity.FinExercisePlan;
+import com.joyintech.tams.common.base.entity.FinOpenPlan;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.FinProductSppiInfo;
 import com.joyintech.tams.common.base.entity.FinProductTypeConfig;
 import com.joyintech.tams.common.base.entity.MstCustomerInfoAdd;
 import com.joyintech.tams.invest.common.asset.dto.AssetCommonInfoDto;
+import com.joyintech.tams.invest.common.asset.service.BaseCommonAssetCommonService;
+import com.joyintech.tams.invest.common.dto.mock.asset.MockAssetInfoDto;
+import com.joyintech.tams.invest.common.dto.mock.asset.MockFinCashPlanDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +50,9 @@ public class AssetCommonController {
 
     @Autowired
     private AssetCommonService assetCommonService;
+
+    @Autowired
+    private BaseCommonAssetCommonService baseCommonAssetCommonService;
     
     @GetMapping("getAssetId")
     public List<SuggestDto> getAssetId(String search,String finprodType2,String profitType, String child) {
@@ -232,12 +242,112 @@ public class AssetCommonController {
     	
     }
 
-
     @RequestMapping("getSysDictCode/{page}/{length}")
     public Page<SelectOptionDto> getSysDictCode(@RequestBody Map<String, Object> param,
-                                              @PathVariable("page") int page,
-                                              @PathVariable("length") int length) {
+                                                @PathVariable("page") int page,
+                                                @PathVariable("length") int length) {
         CommonUtil.setInstitutionMapByType_ms(param);
         return assetCommonService.getSysDictCode(page, length, param);
+    }
+
+    /**
+     * 模拟试算
+     * 金融产品基本信息查询
+     * 参数：金融产品代码列表（finprodIdList: List<String>）
+     * 参数：日期(paramDate: String(yyyy/MM/dd))
+     * @author wl
+     * 2020-04-14
+     */
+    @PostMapping("selectAsset")
+    public List<MockAssetInfoDto> selectAsset(@RequestBody Map<String, Object> param) throws Exception {
+        return baseCommonAssetCommonService.selectAsset(param);
+    }
+
+    /**
+     * 模拟试算
+     * 基本信息批量查询
+     * 参数：金融产品代码列表（finprodIdList: List<String>）
+     * @author wl
+     * 2020-04-14
+     */
+    @PostMapping("selectAssetjb")
+    public List<MockAssetInfoDto> selectAssetjb(@RequestBody Map<String, Object> param) throws Exception {
+        return baseCommonAssetCommonService.selectAssetjb(param);
+    }
+
+    /**
+     * 模拟试算
+     * 现金流计算规则批量查询
+     * 参数：金融产品代码列表（finprodIdList: List<String>）
+     * 参数：日期(paramDate: String(yyyy/MM/dd))
+     * @author wl
+     * 2020-04-14
+     */
+    @PostMapping("selectAssetxjl")
+    public List<FinCashCalcRule> selectAssetxjl(@RequestBody Map<String, Object> param) throws Exception {
+        return baseCommonAssetCommonService.selectAssetxjl(param);
+    }
+
+    /**
+     * 模拟试算
+     * 现金流计划批量查询
+     * 参数：金融产品代码列表（finprodIdList: List<String>）
+     * @author wl
+     * 2020-04-14
+     */
+    @PostMapping("selectAssetjh")
+    public List<MockFinCashPlanDto> selectAssetjh(@RequestBody Map<String, Object> param) throws Exception {
+        return baseCommonAssetCommonService.selectAssetjh(param);
+    }
+
+    /**
+     * 模拟试算
+     * 行权计划批量查询
+     * 参数：金融产品代码列表（finprodIdList: List<String>）
+     * 参数：日期(paramDate: String(yyyy/MM/dd))
+     * @author wl
+     * 2020-04-14
+     */
+    @PostMapping("selectAssetxq")
+    public List<FinExercisePlan> selectAssetxq(@RequestBody Map<String, Object> param) throws Exception {
+        return baseCommonAssetCommonService.selectAssetxq(param);
+    }
+
+    /**
+     * 模拟试算
+     * 回售权下一行权计划列表
+     * 参数：金融产品代码列表（finprodIdList: List<String>）
+     * 参数：日期(paramDate: String(yyyy/MM/dd))
+     * @author wl
+     * 2020-04-18
+     */
+    @PostMapping("selectAssetxqhs")
+    public List<FinExercisePlan> selectAssetxqhs(@RequestBody Map<String, Object> param) throws Exception {
+        return baseCommonAssetCommonService.selectAssetxqhs(param);
+    }
+
+    /**
+     * 模拟试算
+     * 现金流支付规则批量查询
+     * 参数：金融产品代码列表（finprodIdList: List<String>）
+     * @author wl
+     * 2020-04-17
+     */
+    @PostMapping("selectxjlZf")
+    public List<FinCashPayRule> selectxjlZf(@RequestBody Map<String, Object> param) throws Exception {
+        return baseCommonAssetCommonService.selectxjlZf(param);
+    }
+
+    /**
+     * 模拟试算
+     * 基金开放计划批量查询
+     * 参数：金融产品代码列表（finprodIdList: List<String>）
+     * 参数：日期(paramDate: String(yyyy/MM/dd))
+     * @author wl
+     * 2020-04-21
+     */
+    @PostMapping("selectFundOpenjh")
+    public List<FinOpenPlan> selectFundOpenjh(@RequestBody Map<String, Object> param) throws Exception {
+        return baseCommonAssetCommonService.selectFundOpenjh(param);
     }
 }
