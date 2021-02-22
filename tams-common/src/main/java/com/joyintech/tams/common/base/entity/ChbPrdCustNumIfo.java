@@ -37,5 +37,51 @@ public class ChbPrdCustNumIfo {
      */
     private BigDecimal ThrCustNum;
 
+    public String getPrdCode() {
+        return prdCode;
+    }
 
+    public void setPrdCode(String prdCode) {
+        this.prdCode = prdCode;
+    }
+
+    public String getInspectionResults() {
+        return InspectionResults;
+    }
+
+    public void setInspectionResults(String inspectionResults) {
+        InspectionResults = inspectionResults;
+    }
+
+    public String getWarningInformation() {
+        return WarningInformation;
+    }
+
+    public void setWarningInformation(String warningInformation) {
+        WarningInformation = warningInformation;
+    }
+
+    public Date getDataOfDate() {
+        return DataOfDate;
+    }
+
+    public void setDataOfDate(Date dataOfDate) {
+        DataOfDate = dataOfDate;
+    }
+
+    public BigDecimal getCustHeldNum() {
+        return CustHeldNum;
+    }
+
+    public void setCustHeldNum(BigDecimal custHeldNum) {
+        CustHeldNum = custHeldNum;
+    }
+
+    public BigDecimal getThrCustNum() {
+        return ThrCustNum;
+    }
+
+    public void setThrCustNum(BigDecimal thrCustNum) {
+        ThrCustNum = thrCustNum;
+    }
 }
