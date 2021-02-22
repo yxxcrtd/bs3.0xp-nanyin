@@ -431,8 +431,10 @@ public class PbcPrdCashRaiseSubService001 extends CommonExportService<PbcProdRai
 		deaSearchParam(selectParam);
     	// 导出文件 	
         List<File> sourceFiles = new ArrayList<>();
-        
-    	@SuppressWarnings("unchecked")
+
+		List<File> sourceFiles0 = new ArrayList<>();
+
+		@SuppressWarnings("unchecked")
         //List<PbcPrdBaseinfoSub> dataList =  (List<PbcPrdBaseinfoSub>) selectParam.get("reportList");
     	List<PbcProdRaiseSub> dataList=new ArrayList<PbcProdRaiseSub>();
     	if (datas != null){
@@ -599,15 +601,19 @@ public class PbcPrdCashRaiseSubService001 extends CommonExportService<PbcProdRai
 	    	} else {
 	    		nameMap.put(name, 1);
 	    	}
-	    	String fileName = "PCD_"+name+".xls";
-	    	File depositfile = TisUtil.createFile(data, "pbc/"+template, fileName);
-	    	sourceFiles.add(depositfile);
-	    	count++;
+			String fileName = "资金募集数据-"+name+"-"+DateUtil.format(new Date(), "yyyyMMdd")+".xls";
+			String fileName1 = name+"-"+DateUtil.format(new Date(), "yyyyMMdd")+".xls";
+
+			File depositfile = TisUtil.createFile(data, "pbc/"+template, fileName);
+			File depositfile1 = TisUtil.createFile(data, "pbc/"+template, fileName1);
+			sourceFiles0.add(depositfile);
+			sourceFiles.add(depositfile1);
+			count++;
 		}
 		
 		if (sourceFiles.isEmpty()){
 			//String fileName = "PCD_"+DateUtil.format(new Date(), "yyyyMMdd")+"-"+f2.format(count)+".xls";
-			String fileName = "资金募集信息"+DateUtil.format(new Date(), "yyyy-MM-dd")+".xls";
+			String fileName = "资金募集数据-"+DateUtil.format(new Date(), "yyyy-MM-dd")+".xls";
     		Map<String,Object> data  = new HashMap<String,Object>();
 			File depositfile = TisUtil.createFile(data, "pbc/PbcReport_PbcRaisProd_CNY", fileName);
 			sourceFiles.add(depositfile);
@@ -618,8 +624,9 @@ public class PbcPrdCashRaiseSubService001 extends CommonExportService<PbcProdRai
             String exportFilePath = SvrDataUtil.getSysParam(
                 GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 //            String zipFileName = FileNameUtil.createFileName("zip");
-            String zipFileName = "PbocPrdRaise("+DateUtil.format(new Date(), "yyyy-MM-dd")+").zip";
-            outFile = new File(exportFilePath + File.separator + zipFileName);
+//            String zipFileName = "PbocPrdRaise("+DateUtil.format(new Date(), "yyyy-MM-dd")+").zip";
+			String zipFileName = "资金募集数据"+".zip";
+			outFile = new File(exportFilePath + File.separator + zipFileName);
             // 导出路径不存在则重新生成
             if (!outFile.getParentFile().exists()) {
                 outFile.getParentFile().mkdirs();
@@ -637,7 +644,7 @@ public class PbcPrdCashRaiseSubService001 extends CommonExportService<PbcProdRai
                 logger.error(e.getMessage(),e);
             }
         } else {//单个文件
-            outFile = sourceFiles.get(0);
+			outFile = sourceFiles0.get(0);
         }
 		return ExportUtil.export(outFile.getName(), outFile, true);
     }
