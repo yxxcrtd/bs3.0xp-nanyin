@@ -19,7 +19,8 @@
                                 class="layui-input form-input input-select"
                                 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                 allowClear="true" formatoption="true"
-                                data-th-data-result='${DISTRIBUTION}'>
+                                data-th-data-result='${DISTRIBUTION}'
+                                th:initValue="${entity?.distribution}">
                         </select>
                      </div>
                 </div>

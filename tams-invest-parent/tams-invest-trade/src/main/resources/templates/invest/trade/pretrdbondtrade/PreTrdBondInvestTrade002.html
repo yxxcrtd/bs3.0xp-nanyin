@@ -421,7 +421,7 @@
 
             <!-- 组合分配 -->
             <div id="bussRepoSecPtl_pledgeBondTotalTblDetailed" class="page-component" th:data-path="@{/component/trade/Transfenpei/init}"
-                     th:data-params="|{entityName: 'bussTransfenpei', pageFrom: 'PreTrdBondInvestTrade002', entity:'${entity_bussTransfenpeiDto}',portfolioId:'${entity?.portfolioId==null?'':entity?.portfolioId}', ps:'${entity?.ps==null?'':entity?.ps}', bizCode:'${tradeId==null?'':tradeId}', entrustId:'${entity?.entrustId==null?'':entity?.entrustId}',securitiesCust:'01'}|"></div>
+                     th:data-params="|{entityName: 'bussTransfenpei', pageFrom: 'PreTrdBondInvestTrade002', entity:'${entity_bussTransfenpeiDto}',portfolioId:'${entity?.portfolioId==null?'':entity?.portfolioId}', ps:'${entity?.ps==null?'':entity?.ps}', bizCode:'${tradeId==null?'':tradeId}',distribution:'${entity?.distribution==null?'':entity?.distribution}', entrustId:'${entity?.entrustId==null?'':entity?.entrustId}',securitiesCust:'01'}|"></div>
             <!-- 人员信息 -->
                 <div class="page-component" th:data-path="@{/component/trade/PreTrdBondTrdInvestPersonInfo/init}"
                      th:data-params="|{entityName: 'trdInvestPersonInfo', pageFrom: 'submitForm', entity:'${entity_trdInvestPersonInfo}'}|"></div>
