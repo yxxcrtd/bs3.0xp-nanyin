@@ -19,9 +19,11 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.autoperiod.basePtlRecePosition.BasePtlRecePositionService;
 import com.joyintech.tams.invest.common.autoperiod.planinterest.AutoPeriodPlanInterestCommonService;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
+import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
 import com.joyintech.tams.invest.common.dto.common.InvestInterfCommDto;
@@ -65,6 +67,9 @@ public class TrdPlanInterestDuration002Service extends BaseService<TrdPlanIntere
 
     @Autowired
     private InvestInterfCommService investInterfCommService;
+    
+    @Autowired
+    private BasePtlSecPositionInfoService basePtlSecPositionInfoService;
 
     /**
      * AutoPeriodPlanInterestCommonService
@@ -375,6 +380,17 @@ public class TrdPlanInterestDuration002Service extends BaseService<TrdPlanIntere
 
     @Override
     public void doUpdate(TrdPlanInterestDurationProcessDto entity) {
+        //删除持仓流水 start
+        if(entity.getBaseTotalTradeInfoDto()!=null&&entity.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList()!=null) {
+        	PtlSecPositionFlowDto pFlowDto = new PtlSecPositionFlowDto();
+        	for(BaseTradeInfoDto baseTradeInfoDto:entity.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList()) {
+        		if(baseTradeInfoDto.getTrdProductDeal()!=null) {
+        			pFlowDto.setTradeId(baseTradeInfoDto.getTrdProductDeal().getTradeId());
+                	basePtlSecPositionInfoService.deleteSecPosition(pFlowDto);
+        		}
+        	}
+        }
+        //删除持仓流水 end
         entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
         ProcessMark newEntity = null;
         try {

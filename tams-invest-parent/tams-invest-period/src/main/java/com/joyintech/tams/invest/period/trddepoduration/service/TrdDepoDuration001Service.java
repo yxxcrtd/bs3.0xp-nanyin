@@ -27,10 +27,13 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.autoperiod.depo.AutoPeriodDepoCommonService;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTotalTradeInfoDto;
+import com.joyintech.tams.invest.common.dto.period.common.BaseTradeInfoDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.period.common.service.PeriodCommonService;
 import com.joyintech.tams.invest.period.trddepoduration.dto.TrdDepoDuration001Dto;
@@ -77,6 +80,9 @@ implements BaseProcessService<TrdDepoDuration001Dto>{
      */
     @Autowired
     private PeriodCommonService periodCommonService;
+    
+    @Autowired
+    private BasePtlSecPositionInfoService basePtlSecPositionInfoService;
     /**
      * 划款指令
      */
@@ -97,6 +103,19 @@ implements BaseProcessService<TrdDepoDuration001Dto>{
 //        baseTradeProductDealCommServiceImpl.delete(entity.getWorkflowId());
 //        防止生成错误的ps
         entity.setPs("");
+        
+        //删除持仓流水 start
+        if(entity.getBaseTotalTradeInfoDto()!=null&&entity.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList()!=null) {
+        	PtlSecPositionFlowDto pFlowDto = new PtlSecPositionFlowDto();
+        	for(BaseTradeInfoDto baseTradeInfoDto:entity.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList()) {
+        		if(baseTradeInfoDto.getTrdProductDeal()!=null) {
+        			pFlowDto.setTradeId(baseTradeInfoDto.getTrdProductDeal().getTradeId());
+                	basePtlSecPositionInfoService.deleteSecPosition(pFlowDto);
+        		}
+        	}
+        }
+        //删除持仓流水 end
+        
         entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
         ProcessMark newEntity = null;
         try {

@@ -31,9 +31,11 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.autoperiod.common.AutoPeriodCommonService;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
+import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
@@ -121,6 +123,9 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
     
     @Autowired
     private StlPayOrdersMapper stlPayOrdersMapper;
+    
+    @Autowired
+    private BasePtlSecPositionInfoService basePtlSecPositionInfoService;
 
     @Override
     public void doComplete(TrdBondDuration003ProcessDto entity, OperationType type) {
@@ -453,6 +458,17 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
         List<PaTrdProductDeal> paTrdProductDeals = new ArrayList<>();
         List<PtlTrade> ptlTrades = new ArrayList<>();
         List<TrdTradeFeeDetail> trdTradeFeeDetails = new ArrayList<>();
+        
+        //update中删除之前的流水数据 start
+        if(entity.getTrdProductDeals()!=null) {
+        	PtlSecPositionFlowDto pFlowDto = new PtlSecPositionFlowDto();
+        	for(TrdProductDeal oldDeal:entity.getTrdProductDeals()) {
+        		pFlowDto.setTradeId(oldDeal.getTradeId());
+        		basePtlSecPositionInfoService.deleteSecPosition(pFlowDto);
+        	}
+        }
+        //update中删除之前的流水数据 end
+        
         entity.setTrdProductDeals(trdProductDeals);
         entity.setTrdProductDealAdds(trdProductDealAdds);
         entity.setPaTrdProductDeals(paTrdProductDeals);

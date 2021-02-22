@@ -39,9 +39,11 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.autoperiod.basePtlRecePosition.BasePtlRecePositionService;
 import com.joyintech.tams.invest.common.autoperiod.project.AutoPeriodProjectCommonService;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
+import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
@@ -81,6 +83,10 @@ public class TrdProjectDuration002Service extends BaseService<TrdProjectDuration
     private BaseGetBusinessId baseGetBusinessIdImpl;
     @Autowired
     private BasePtlRecePositionService basePtlRecePositionService;
+    
+    @Autowired
+    private BasePtlSecPositionInfoService basePtlSecPositionInfoService;
+
 
     /**
      * AutoPeriodProjectCommonService
@@ -483,6 +489,17 @@ public class TrdProjectDuration002Service extends BaseService<TrdProjectDuration
 
     @Override
     public void doUpdate(TrdProjectDurationProcessDto entity) {
+        //删除持仓流水 start
+        if(entity.getBaseTotalTradeInfoDto()!=null&&entity.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList()!=null) {
+        	PtlSecPositionFlowDto pFlowDto = new PtlSecPositionFlowDto();
+        	for(BaseTradeInfoDto baseTradeInfoDto:entity.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList()) {
+        		if(baseTradeInfoDto.getTrdProductDeal()!=null) {
+        			pFlowDto.setTradeId(baseTradeInfoDto.getTrdProductDeal().getTradeId());
+                	basePtlSecPositionInfoService.deleteSecPosition(pFlowDto);
+        		}
+        	}
+        }
+        //删除持仓流水 end
 //        baseTradeProductDealCommServiceImpl.delete(entity.getWorkflowId());
         entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
         // 留痕表登录会丢主键，导致撤销报错 delete by renping 20191130 start
