@@ -262,7 +262,6 @@ $(function () {
     //画面初始化
     var init = function () {
 
-
         if($('#ps').val()!= ps_T24){//T24
             $("#expectedArrivalDate_label").text('预计到账日');
         }else{
@@ -286,7 +285,9 @@ $(function () {
                   }
     		  }
     		  else{
-    			  $("#channelAmt_div").show();  
+                  if($("#chlId").val()) {
+                      $("#channelAmt_div").show();
+                  }
     		  }
           }else {
               $("#channelAmt_div").hide();
