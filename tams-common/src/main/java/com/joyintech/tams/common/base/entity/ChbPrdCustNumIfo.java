@@ -1,6 +1,8 @@
 package com.joyintech.tams.common.base.entity;
 
 
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  *
@@ -25,15 +27,15 @@ public class ChbPrdCustNumIfo {
     /**
      * 数据日期
      */
-    private String DataOfDate;
+    private Date DataOfDate;
     /**
      * 持有客户数
      */
-    private String CustHeldNum;
+    private BigDecimal CustHeldNum;
     /**
      * 三期客户数
      */
-    private  String ThrCustNum;
+    private BigDecimal ThrCustNum;
 
 
 }
