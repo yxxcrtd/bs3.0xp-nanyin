@@ -161,4 +161,16 @@
 			</if>
 		</where>
 	</select>
+
+	<select id="findInvAimByPortIdAndFinType" resultType="string">
+		SELECT a.INV_AIM FROM INV_PTL_VAL_SCHEME_DETAIL a
+		    inner join FIN_PRODUCT_TYPE b on a.TYPE_9 = b.TYPE_9 and (a.TYPE_10 is null or a.TYPE_10 = b.TYPE_10)
+			and (A.TYPE_11 IS NULL OR A.TYPE_11 = B.TYPE_11) AND (A.TYPE_12 IS NULL OR A.TYPE_12 = B.TYPE_12)
+		    inner join FIN_PRODUCT fp on b.FINPROD_ID = fp.FINPROD_ID AND (A.ISSUE_TYPE IS NULL or a.ISSUE_TYPE = fp.ISSUE_TYPE)
+		WHERE b.FINPROD_ID = #{finprodId} and a.PORTFOLIO_ID = #{portfolioId}
+	</select>
+
+	<select id="findInvAimByPortIdAndFinId" resultType="string">
+		SELECT INV_AIM FROM INV_BOK_VAL_SCHEME_SPECIAL WHERE PORTFOLIO_ID = #{portfolioId} and FINPROD_ID = #{finprodId}
+	</select>
 </mapper>

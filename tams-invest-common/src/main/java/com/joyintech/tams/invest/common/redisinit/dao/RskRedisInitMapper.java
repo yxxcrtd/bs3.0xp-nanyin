@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.common.redisinit.dao;
 
+import com.joyintech.tams.common.base.entity.RskBusinessRedisConfig;
 import com.joyintech.tams.common.base.entity.RskIndividAssetDel;
 import com.joyintech.tams.common.base.entity.RskIndividSpecialStage;
 import com.joyintech.tams.common.base.entity.RskIndividUnite;
@@ -177,4 +178,12 @@ public interface RskRedisInitMapper {
      */
     List<ImplProdAssetAmount> selectProdAssetAmount(Map<String, Object> map);
     // add by zhangrui1 end
+
+    /**
+     * 查询 功能参数影响redis参数
+     *
+     * @param map 查询条件
+     * @return 参数值的变化值
+     */
+    List<RskBusinessRedisConfig> selectRedisParamConfig(Map<String, Object> map);
 }

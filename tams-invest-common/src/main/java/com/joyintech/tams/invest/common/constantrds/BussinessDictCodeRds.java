@@ -62,6 +62,10 @@ public enum BussinessDictCodeRds implements com.joyintech.framework.base.BaseDic
      * 指标参数实现类型
      */
     指标参数实现类型("PARA_DISPLAY_TYPE"),
+    /**
+     * 指标参数计算方式
+     */
+    指标参数计算方式("PARAM_MATH_TYPE"),
 
     /**
      * 本金收益特征

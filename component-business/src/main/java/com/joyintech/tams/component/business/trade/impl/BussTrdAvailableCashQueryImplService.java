@@ -47,4 +47,9 @@ public class BussTrdAvailableCashQueryImplService implements BussTrdAvailableCas
         return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdAvailableCashQuery/getFinAvaPosition",
                 map, Map.class);
     }
+    @Override
+    public BigDecimal getSecPosition(Map<String, Object> map) {
+        return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdAvailableCashQuery/getSecPosition",
+                map, BigDecimal.class);
+    }
 }

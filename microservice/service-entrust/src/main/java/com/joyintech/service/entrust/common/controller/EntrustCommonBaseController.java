@@ -15,6 +15,8 @@ import java.util.List;
 import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -76,5 +78,15 @@ public class EntrustCommonBaseController {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 根据组合代码和金融产品代码，查询债券的投资目的
+     *
+     * @return 查询结果集
+     */
+    @GetMapping("findInvAim/{portfolioId}/{finprodId:.+}")
+    public String findInvAim(@PathVariable("portfolioId") String portfolioId, @PathVariable("finprodId") String finprodId) {
+        return baseEtrInvestInfoServiceImpl.findInvAim(portfolioId, finprodId);
     }
 }

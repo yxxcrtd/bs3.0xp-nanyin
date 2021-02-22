@@ -111,6 +111,9 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
     @Autowired
     private BidCloseStatusMapper bidCloseStatusMapper;
 
+    @Autowired
+    private BaseEtrInvestInfoMapper baseEtrInvestInfoMapper;
+
     /**
      * 委托操作相关校验 <一句话功能简述> <功能详细描述>
      *
@@ -842,5 +845,14 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
     @Override
     public BaseEtrFinishAmtDto selectEtrFinishAmtDtoByPrimaryKey(String entrustId) {
         return etrInvestInfoMapper.selectEtrFinishAmtDtoByPrimaryKey(entrustId);
+    }
+	
+	@Override
+    public String findInvAim(String portfolioId, String finprodId) {
+        String invAim = baseEtrInvestInfoMapper.findInvAimByPortIdAndFinId(portfolioId, finprodId);
+        if (StringUtil.isEmpty(invAim)) {
+            invAim = baseEtrInvestInfoMapper.findInvAimByPortIdAndFinType(portfolioId, finprodId);
+        }
+        return invAim;
     }
 }

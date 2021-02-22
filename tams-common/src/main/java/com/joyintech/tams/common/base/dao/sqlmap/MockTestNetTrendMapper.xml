@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.MockTestNetTrend002Mapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MockTestNetTrend" >
+        <id column="MOCK_ID" property="mockId" jdbcType="VARCHAR" />
+        <id column="CPRICE_DATE" property="cpriceDate" jdbcType="DATE" />
+        <result column="NET_UNIT_VALUE" property="netUnitValue" jdbcType="DECIMAL" />
+        <result column="VAL_CHG" property="valChg" jdbcType="DECIMAL" />
+        <result column="BASE_RULE_CHG" property="baseRuleChg" jdbcType="DECIMAL" />
+        <result column="SEVEN_DAY_RATE" property="sevenDayRate" jdbcType="DECIMAL" />
+        <result column="BASE_RULE" property="baseRule" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        MOCK_ID MOCK_ID, CPRICE_DATE CPRICE_DATE, NET_UNIT_VALUE NET_UNIT_VALUE, VAL_CHG VAL_CHG, 
+        BASE_RULE_CHG BASE_RULE_CHG, SEVEN_DAY_RATE SEVEN_DAY_RATE, BASE_RULE BASE_RULE, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MockTestNetTrend002Mapper.Base_Column_List" />
+        from MOCK_TEST_NET_TREND
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MockTestNetTrend002Mapper.Base_Column_List" />
+        from MOCK_TEST_NET_TREND
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.MockTestNetTrendKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MockTestNetTrend002Mapper.Base_Column_List" />
+        from MOCK_TEST_NET_TREND
+        where MOCK_ID = #{mockId,jdbcType=VARCHAR}
+          and CPRICE_DATE = #{cpriceDate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MockTestNetTrendKey" >
+        delete from MOCK_TEST_NET_TREND
+        where MOCK_ID = #{mockId,jdbcType=VARCHAR}
+          and CPRICE_DATE = #{cpriceDate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.MockTestNetTrend" >
+        insert into MOCK_TEST_NET_TREND (MOCK_ID, CPRICE_DATE, NET_UNIT_VALUE, 
+            VAL_CHG, BASE_RULE_CHG, SEVEN_DAY_RATE, 
+            BASE_RULE, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{mockId,jdbcType=VARCHAR}, #{cpriceDate,jdbcType=DATE}, #{netUnitValue,jdbcType=DECIMAL}, 
+            #{valChg,jdbcType=DECIMAL}, #{baseRuleChg,jdbcType=DECIMAL}, #{sevenDayRate,jdbcType=DECIMAL}, 
+            #{baseRule,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MockTestNetTrend" >
+        insert into MOCK_TEST_NET_TREND
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="mockId != null" >
+                MOCK_ID,
+            </if>
+            <if test="cpriceDate != null" >
+                CPRICE_DATE,
+            </if>
+            <if test="netUnitValue != null" >
+                NET_UNIT_VALUE,
+            </if>
+            <if test="valChg != null" >
+                VAL_CHG,
+            </if>
+            <if test="baseRuleChg != null" >
+                BASE_RULE_CHG,
+            </if>
+            <if test="sevenDayRate != null" >
+                SEVEN_DAY_RATE,
+            </if>
+            <if test="baseRule != null" >
+                BASE_RULE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="mockId != null" >
+                #{mockId,jdbcType=VARCHAR},
+            </if>
+            <if test="cpriceDate != null" >
+                #{cpriceDate,jdbcType=DATE},
+            </if>
+            <if test="netUnitValue != null" >
+                #{netUnitValue,jdbcType=DECIMAL},
+            </if>
+            <if test="valChg != null" >
+                #{valChg,jdbcType=DECIMAL},
+            </if>
+            <if test="baseRuleChg != null" >
+                #{baseRuleChg,jdbcType=DECIMAL},
+            </if>
+            <if test="sevenDayRate != null" >
+                #{sevenDayRate,jdbcType=DECIMAL},
+            </if>
+            <if test="baseRule != null" >
+                #{baseRule,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.MockTestNetTrend" >
+        insert into MOCK_TEST_NET_TREND(MOCK_ID, CPRICE_DATE, NET_UNIT_VALUE, VAL_CHG, BASE_RULE_CHG, 
+        SEVEN_DAY_RATE, BASE_RULE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        select MOCK_ID, CPRICE_DATE, NET_UNIT_VALUE, VAL_CHG, BASE_RULE_CHG, 
+            SEVEN_DAY_RATE, BASE_RULE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            
+             from MOCK_TEST_NET_TREND
+             where 1 = 1 and MOCK_ID = #{mockId,jdbcType=VARCHAR} and CPRICE_DATE = #{cpriceDate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.MockTestNetTrend" >
+        update MOCK_TEST_NET_TREND
+        <set >
+            <if test="netUnitValue != null" >
+                NET_UNIT_VALUE = #{netUnitValue,jdbcType=DECIMAL},
+            </if>
+            <if test="valChg != null" >
+                VAL_CHG = #{valChg,jdbcType=DECIMAL},
+            </if>
+            <if test="baseRuleChg != null" >
+                BASE_RULE_CHG = #{baseRuleChg,jdbcType=DECIMAL},
+            </if>
+            <if test="sevenDayRate != null" >
+                SEVEN_DAY_RATE = #{sevenDayRate,jdbcType=DECIMAL},
+            </if>
+            <if test="baseRule != null" >
+                BASE_RULE = #{baseRule,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where MOCK_ID = #{mockId,jdbcType=VARCHAR}
+          and CPRICE_DATE = #{cpriceDate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MockTestNetTrend" >
+        update MOCK_TEST_NET_TREND
+        set NET_UNIT_VALUE = #{netUnitValue,jdbcType=DECIMAL},
+            VAL_CHG = #{valChg,jdbcType=DECIMAL},
+            BASE_RULE_CHG = #{baseRuleChg,jdbcType=DECIMAL},
+            SEVEN_DAY_RATE = #{sevenDayRate,jdbcType=DECIMAL},
+            BASE_RULE = #{baseRule,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where MOCK_ID = #{mockId,jdbcType=VARCHAR}
+          and CPRICE_DATE = #{cpriceDate,jdbcType=DATE}
+    </update>
+</mapper>

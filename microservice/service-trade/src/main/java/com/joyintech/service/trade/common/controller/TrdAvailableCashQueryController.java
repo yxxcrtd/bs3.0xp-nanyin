@@ -50,4 +50,9 @@ public class TrdAvailableCashQueryController {
 	public Map<String, Object> getFinAvaPosition(@RequestBody Map<String, Object> map) {
 		return trdAvailableCashQueryService.getFinAvaPosition(map);
 	}
+
+	@RequestMapping("/getSecPosition")
+	public BigDecimal getSecPosition(@RequestBody Map<String, Object> param) {
+		return trdAvailableCashQueryService.getSecPosition(param);
+	}
 }

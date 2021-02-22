@@ -13,6 +13,8 @@ import java.util.Map;
 
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.invest.common.autoperiod.common.service.InvestPeriodCommonService;
+import com.joyintech.tams.invest.common.dto.mock.trade.MockTradeInfoDto;
+import com.joyintech.tams.invest.common.dto.mock.trade.MockTrdProductDealDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -601,5 +603,71 @@ public class TrdCommonBaseController {
         List<String> list = new ArrayList<String>();
         list.add(tradeId);
         return baseTradeProductDealServiceImpl.selectTotalDeal(list);
+    }
+
+    /**
+     * 模拟试算
+     * 金融产品交易主方法查询
+     * @author wl
+     * 2020-04-14
+     */
+    @PostMapping("selectTradeinfodeal")
+    public MockTradeInfoDto selectTradeinfodeal(@RequestBody Map<String, Object> param) throws Exception {
+        return trdCommonBaseService.selectTradeinfodeal(param);
+    }
+
+    /**
+     * 模拟试算
+     * 资产端交易列表
+     * @author wl
+     * 2020-04-14
+     */
+    @PostMapping("selectTradedealz")
+    public List<MockTrdProductDealDto> selectTradedealz(@RequestBody Map<String, Object> param) throws Exception {
+        return trdCommonBaseService.selectTradedealz(param);
+    }
+
+    /**
+     * 模拟试算
+     * 负债端交易列表
+     * @author wl
+     * 2020-04-14
+     */
+    @PostMapping("selectTradedealf")
+    public List<MockTrdProductDealDto> selectTradedealf(@RequestBody Map<String, Object> param) throws Exception {
+        return trdCommonBaseService.selectTradedealf(param);
+    }
+
+    /**
+     * 模拟试算
+     * 资产端T+N交易列表
+     * @author wl
+     * 2020-04-14
+     */
+    @PostMapping("selectTradedealztn")
+    public List<MockTrdProductDealDto> selectTradedealztn(@RequestBody Map<String, Object> param) throws Exception {
+        return trdCommonBaseService.selectTradedealztn(param);
+    }
+
+    /**
+     * 模拟试算
+     * 负债端T+N交易列表
+     * @author wl
+     * 2020-04-14
+     */
+    @PostMapping("selectTradedealftn")
+    public List<MockTrdProductDealDto> selectTradedealftn(@RequestBody Map<String, Object> param) throws Exception {
+        return trdCommonBaseService.selectTradedealftn(param);
+    }
+
+    /**
+     * 模拟试算
+     * 费用交易列表查询
+     * @author wl
+     * 2020-04-14
+     */
+    @PostMapping("selectFyTradedeal")
+    public List<MockTrdProductDealDto> selectFyTradedeal(@RequestBody Map<String, Object> param) throws Exception {
+        return trdCommonBaseService.selectFyTradedeal(param);
     }
 }

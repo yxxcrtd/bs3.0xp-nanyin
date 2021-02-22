@@ -315,6 +315,24 @@ public class FinProductAdd extends BaseEntity {
     private String calRateType;
 
     /**
+     * 是否非标
+     */
+    private String isNonStandard;
+
+    /**
+     * 无固定期限
+     */
+    private String noFixedTerm;
+
+    public String getIsNonStandard() {
+        return isNonStandard;
+    }
+
+    public void setIsNonStandard(String isNonStandard) {
+        this.isNonStandard = isNonStandard;
+    }
+
+    /**
      * 取得 金融产品代码
      * @return 金融产品代码
      */
@@ -1261,7 +1279,6 @@ public class FinProductAdd extends BaseEntity {
         this.valOrg = valOrg == null ? null : valOrg.trim();
     }
 
-
     /**
      * 计息利率方式
      */
@@ -1286,6 +1303,22 @@ public class FinProductAdd extends BaseEntity {
 
     public void setRepFinprodInsId(String repFinprodInsId) {
         this.repFinprodInsId = repFinprodInsId;
+    }
+	
+	/**
+     * 取得 无固定期限
+     * @return 无固定期限
+     */
+    public String getNoFixedTerm() {
+        return noFixedTerm;
+    }
+
+    /**
+     * 设置 无固定期限
+     * @param noFixedTerm 无固定期限
+     */
+    public void setNoFixedTerm(String noFixedTerm) {
+        this.noFixedTerm = noFixedTerm == null ? null : noFixedTerm.trim();
     }
 
 }

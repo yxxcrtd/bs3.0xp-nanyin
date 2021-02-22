@@ -405,4 +405,120 @@ public interface PtlManagementInfo001Mapper {
      * @since 1.0
      */
     List<NodeDto> getUserList(Map<String, Object> param);
+
+    /**
+     * 模拟试算
+     * 查询业绩基准
+     * @param map 参数map
+     * @return 实体类
+     * @see
+     * @since 1.0
+     */
+    FinBaseRuleInfo selectBenchmark(Map<String,Object> map);
+
+    /**
+     * 模拟试算
+     * 查询基准来源为利率时业绩基准
+     * @param map 参数map
+     * @return 实体类
+     * @see
+     * @since 1.0
+     */
+    MstIntRateInfo selectlv(Map<String,Object> map);
+
+    /**
+     * 模拟试算
+     * 查询基准来源为指数时业绩基准
+     * @param map 参数map
+     * @return 实体类
+     * @see
+     * @since 1.0
+     */
+    MstExponentQuotation selectSpj(Map<String,Object> map);
+
+    /**
+     * 模拟试算
+     * 查询基准来源为复合时业绩基准
+     * @param map 参数map
+     * @return 实体类
+     * @see
+     * @since 1.0
+     */
+    List<MstIndexComponent> selectJzcf(Map<String,Object> map);
+
+    /**
+     * 模拟试算
+     * 查询管理费率
+     * @param map 参数map
+     * @return 实体类
+     * @see
+     * @since 1.0
+     */
+    FinCashCalcRule selectYield(Map<String,Object> map);
+
+    /**
+     * 模拟试算
+     * 查询分红规则
+     * @param map 参数map
+     * @return 实体类
+     * @see
+     * @since 1.0
+     */
+    FinCashPayRule selectFhgz(Map<String,Object> map);
+
+    /**
+     * 模拟试算
+     * 查询计息基础
+     * @param map 参数map
+     * @return 实体类
+     * @see
+     * @since 1.0
+     */
+    FinRateInfo selectBasis(Map<String,Object> map);
+
+    /**
+     * 模拟试算
+     * 查询开放计划
+     * @param map 参数map
+     * @return 实体类
+     * @see
+     * @since 1.0
+     */
+    List<FinOpenPlan> selectOpenjh(Map<String,Object> map);
+
+    /**
+     *
+     * @param key 资金账户信息查询
+     * @return
+     */
+    Map<String, Object> selectByBusiAcctNo(Map<String, Object> key);
+
+    List<PtlManagementInfoDto> selectPortfolioByIds(Map<String, Object> param);
+
+    void deleteInvPtlValByPortfolio(String portfolioId);
+
+    Map<String, Object>  selectStlSecAcctInfoKey(String seqNo);
+
+	void updateStlSecAcctInfoKeySelective(StlSecAcctInfo stlSecAcctInfo);
+
+    /**
+     * 模拟试算
+     * 查询所有业绩基准
+     * @param map 参数map
+     * @return 实体类
+     * @see
+     * @since 1.0
+     */
+    List<FinBaseRuleInfo> selectAllBaseRule(Map<String,Object> map);
+
+    /**
+     * 模拟试算
+     * 查询基准来源为利率时所有的业绩基准
+     * @param map 参数map
+     * @return 实体类
+     * @see
+     * @since 1.0
+     */
+    List<MstIntRateInfo> selectAlllv(Map<String,Object> map);
+
 }

@@ -25,7 +25,12 @@ import java.util.stream.Collectors;
 
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.invest.common.asset.service.BaseCommonAssetCommonService;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.common.dto.mock.asset.MockAssetInfoDto;
+import com.joyintech.tams.invest.common.dto.mock.basicdata.MockQuotationInfoDto;
+import com.joyintech.tams.invest.common.redisinit.dto.ImplAssetDuration;
+import com.joyintech.tams.invest.common.riskinfrds.info.service.ProdAssetDurationService;
 import com.joyintech.tams.invest.common.risktrialrds.dao.RiskTrialCommMapper;
 import com.joyintech.tams.invest.common.risktrialrds.dto.RiskIndividConditionDto;
 import org.slf4j.Logger;
@@ -157,8 +162,14 @@ public class RiskRedisInitServiceImpl extends BaseService implements RiskRedisIn
     private ProdAssetAmountService prodAssetAmtSrc;
     // add by zhangrui1 end
 
+    @Autowired
+    private ProdAssetDurationService prodAssetDurationSrc;
+
     @Autowired(required = false)
     private RiskTrialCommMapper riskTrialCommMapper;
+
+    @Autowired
+    private BaseCommonAssetCommonService baseCommonAssetCommonService;
 
     private Map<String,Object> batchSucMap=new HashMap<>();
     /**
@@ -970,4 +981,138 @@ public class RiskRedisInitServiceImpl extends BaseService implements RiskRedisIn
         }
     }
     // add by zhangrui1 end
+
+
+    /**
+     * 处理 资产现金流相关信息为久期指标用
+     *
+     * @param cond 资产现金流相关信息为久期指标用
+     */
+    public void dealAstCashDurationInfo(ICond cond) {
+        Map<String, Object> mapPass = new HashMap<>();
+        mapPass.put("finprodIdList", cond.getAssetIdArray());
+        mapPass.put("paramDate", DateUtil.format(cond.getPlateDate()));
+        try {
+            List<MockAssetInfoDto> 资产基本信息列表=baseCommonAssetCommonService.selectAsset(mapPass);
+            if (!StringUtil.isEmptyList(资产基本信息列表)) {
+                List<ImplAssetDuration> implAssetDurationList=资产基本信息列表.stream().map(item->{
+                    ImplAssetDuration implAssetDuration=new ImplAssetDuration();
+                    implAssetDuration.setAssetCode(item.getFinprodId());
+                    implAssetDuration.setMockAssetInfoDto(item);
+                    return implAssetDuration;
+                }).collect(Collectors.toList());
+                ImplAssetDuration[] implAssetDurations=implAssetDurationList.toArray(new ImplAssetDuration[implAssetDurationList.size()]);
+                clearRedisDurationProperty(implAssetDurations);
+                prodAssetDurationSrc.saveToRedis(implAssetDurations);
+            }
+        } catch (Exception e) {
+            logger.error("资产久期信息装载出错"+e.getMessage(),e);
+        }
+
+    }
+
+    /**
+     * 清除实体字段,提高接口那边的速度
+     *
+     * @param tList
+     * @param <T>
+     */
+    @SuppressWarnings("unchecked")
+    private <T extends ImplAssetDuration> void clearRedisDurationProperty(T... tList) {
+        for (T t : tList) {
+            //主实体
+            clearRedisProperty(t);
+            if(StringUtil.isNotEmpty(t.getMockAssetInfoDto())) {
+                //主实体
+                clearRedisProperty(t.getMockAssetInfoDto());
+                //金融产品主表
+                FinProduct newFinProduct = new FinProduct();
+                FinProduct finProduct = t.getMockAssetInfoDto().getFinProduct();
+                newFinProduct.setFinprodId(finProduct.getFinprodId());
+                newFinProduct.setFinprodAbbr(finProduct.getFinprodAbbr());
+                newFinProduct.setMdate(finProduct.getMdate());
+                newFinProduct.setIsSus(finProduct.getIsSus());
+                newFinProduct.setCouponSpecies(finProduct.getCouponSpecies());
+                newFinProduct.setIsRight(finProduct.getIsRight());
+                clearRedisProperty(newFinProduct);
+                t.getMockAssetInfoDto().setFinProduct(newFinProduct);
+                //金融产品附属表
+                FinProductAdd newFinProductAdd = new FinProductAdd();
+                FinProductAdd finProductAdd = t.getMockAssetInfoDto().getFinProductAdd();
+                newFinProductAdd.setNoFixedTerm(finProductAdd.getNoFixedTerm());
+                clearRedisProperty(newFinProductAdd);
+                t.getMockAssetInfoDto().setFinProductAdd(newFinProductAdd);
+                //金融产品分类
+                FinProductType newFinProductType = new FinProductType();
+                FinProductType finProductType = t.getMockAssetInfoDto().getFinProductType();
+                newFinProductType.setType6(finProductType.getType6());
+                newFinProductType.setType7(finProductType.getType7());
+                newFinProductType.setType8(finProductType.getType8());
+                clearRedisProperty(newFinProductType);
+                t.getMockAssetInfoDto().setFinProductType(newFinProductType);
+                //交易类金融产品
+                FinTradeProduct newFinTradeProduct = new FinTradeProduct();
+                FinTradeProduct finTradeProduct = t.getMockAssetInfoDto().getFinTradeProduct();
+                newFinTradeProduct.setMdate(finTradeProduct.getMdate());
+                clearRedisProperty(newFinTradeProduct);
+                t.getMockAssetInfoDto().setFinTradeProduct(newFinTradeProduct);
+                //交易类产品附属
+                t.getMockAssetInfoDto().setFinTradeProductAdd(null);
+                //现金流计算规则表Entity列表
+                List<FinCashCalcRule> finCashCalcRuleList = t.getMockAssetInfoDto().getFinCashCalcRuleList();
+                for (FinCashCalcRule finCashCalcRule : finCashCalcRuleList) {
+                    finCashCalcRule.setBranch(null);
+                    finCashCalcRule.setBasis(null);
+                    finCashCalcRule.setFinprodId(null);
+                    finCashCalcRule.setBaseDateType(null);
+                    finCashCalcRule.setBaseType(null);
+                    finCashCalcRule.setFinprodType(null);
+                    finCashCalcRule.setIsInitial(null);
+                    finCashCalcRule.setFinprodType2(null);
+                    finCashCalcRule.setRemark(null);
+                    finCashCalcRule.setCashId(null);
+                    clearRedisProperty(finCashCalcRule);
+                }
+                //现金流支付规则批量查询
+                List<FinCashPayRule> finCashPayRuleList = t.getMockAssetInfoDto().getFinCashPayRuleList();
+                List<FinCashPayRule> newFinCashPayRuleList = new ArrayList<>();
+                for (FinCashPayRule finCashPayRule : finCashPayRuleList) {
+                    FinCashPayRule newFinCashPayRule = new FinCashPayRule();
+                    newFinCashPayRule.setPayCycle(finCashPayRule.getPayCycle());
+                    newFinCashPayRule.setPayCycleVal(finCashPayRule.getPayCycleVal());
+                    clearRedisProperty(newFinCashPayRule);
+                    newFinCashPayRuleList.add(newFinCashPayRule);
+                }
+                t.getMockAssetInfoDto().setFinCashPayRuleList(newFinCashPayRuleList);
+                //现金流计划表扩展列表
+                t.getMockAssetInfoDto().setMockFinCashPlanDtoList(null);
+                //行情DTO列表
+                List<MockQuotationInfoDto> mockQuotationInfoDtoList = t.getMockAssetInfoDto().getMockQuotationInfoDtoList();
+                List<MockQuotationInfoDto> newMockQuotationInfoDtoList = new ArrayList<>();
+                if (!StringUtil.isEmptyList(mockQuotationInfoDtoList)) {
+                    clearRedisProperty(mockQuotationInfoDtoList.get(0));
+                    newMockQuotationInfoDtoList.add(mockQuotationInfoDtoList.get(0));
+                    t.getMockAssetInfoDto().setMockQuotationInfoDtoList(newMockQuotationInfoDtoList);
+                }
+                //行情DTO列表 (公允价值使用  原因：债券计算公允价值的行情的取值逻辑与久期行情逻辑不同)
+                t.getMockAssetInfoDto().setMockQuotationInfoDtoListForGYJZ(null);
+                //行权计划表Entity
+                t.getMockAssetInfoDto().setFinExercisePlanList(null);
+                //回售权下一行权计划列表
+                List<FinExercisePlan> finExercisePlanList = t.getMockAssetInfoDto().getResaleFinExercisePlanList();
+                List<FinExercisePlan> newFinExercisePlanList = new ArrayList<>();
+                if (!StringUtil.isEmptyList(finExercisePlanList)) {
+                    clearRedisProperty(finExercisePlanList.get(0));
+                    newFinExercisePlanList.add(finExercisePlanList.get(0));
+                    t.getMockAssetInfoDto().setResaleFinExercisePlanList(newFinExercisePlanList);
+                }
+                //基金开放计划
+                List<FinOpenPlan> fundOpenPlanList = t.getMockAssetInfoDto().getFundOpenPlanList();
+                for (FinOpenPlan finCashPayRule : fundOpenPlanList) {
+                    clearRedisProperty(finCashPayRule);
+                }
+            }
+        }
+    }
+
 }

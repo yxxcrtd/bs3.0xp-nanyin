@@ -49,6 +49,10 @@ public class RiskUtil {
     public static final String APPROVE_LINE_ONE="APPROVE_LINE_ONE";
     public static final String APPROVE_LINE_TWO="APPROVE_LINE_TWO";
     public static final String APPROVE_LINE_THR="APPROVE_LINE_THR";
+
+    /*合并模拟测算代码 panbin 2020-8-11 start*/
+	public static final String PAGE_REDIS_FLAG="pageRedisFlag";
+	/*合并模拟测算代码 panbin 2020-8-11 end*/
 	/**
 	 * @param str
 	 * @return

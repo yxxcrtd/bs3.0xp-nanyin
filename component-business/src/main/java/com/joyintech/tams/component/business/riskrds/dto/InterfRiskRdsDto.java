@@ -239,6 +239,69 @@ public class InterfRiskRdsDto implements IRiskRds {
      */
     private Date mdate;
 
+    /**
+     * 产品总资产(虚拟组合所用)
+     */
+    private BigDecimal tdyAssetValue;
+
+    /**
+     * 产品净资产(虚拟组合所用)
+     */
+    private BigDecimal tdyAssetNetValue;
+
+    /**
+     * 资产名称(虚拟组合所用)
+     */
+    private String assetName;
+
+    /**
+     * 产品到期日(虚拟组合所用)
+     */
+    private String prdMdate;
+
+    /**
+     * 投资性质(虚拟组合所用)
+     */
+    private String investNature;
+
+    /**
+     * 是否非标(虚拟组合所用)
+     */
+    private String isStandard;
+
+    /**
+     * 发行规模(虚拟组合所用)
+     */
+    private String publicAmount;
+
+    /**
+     * 分组代码(多对多指令，为了区分是哪一笔计算的指标，格式[类型_委托/交易_序号])
+     */
+    private String groupCode;
+
+    /**
+     * 是否虚拟资产(是/否)
+     */
+    private String isVirtual;
+
+    /**
+     * 投资目的
+     */
+    private String invAim;
+
+    /**
+     * 是否非标（项目类理财直熔工具根据该字段判断是否非标资产）
+     */
+    private String isNonstandard;
+
+    public String getIsNonstandard() {
+        return isNonstandard;
+    }
+
+    public void setIsNonstandard(String isNonstandard) {
+        this.isNonstandard = isNonstandard;
+    }
+
 
     /**
      * 机构代码
@@ -842,4 +905,84 @@ public class InterfRiskRdsDto implements IRiskRds {
 	private BigDecimal tradeAmtReal;
 	
 	private Boolean notCalcAmount;
+
+	public BigDecimal getTdyAssetValue() {
+        return tdyAssetValue;
+    }
+
+    public void setTdyAssetValue(BigDecimal tdyAssetValue) {
+        this.tdyAssetValue = tdyAssetValue;
+    }
+
+    public BigDecimal getTdyAssetNetValue() {
+        return tdyAssetNetValue;
+    }
+
+    public void setTdyAssetNetValue(BigDecimal tdyAssetNetValue) {
+        this.tdyAssetNetValue = tdyAssetNetValue;
+    }
+
+    public String getAssetName() {
+        return assetName;
+    }
+
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
+    }
+
+    public String getPrdMdate() {
+        return prdMdate;
+    }
+
+    public void setPrdMdate(String prdMdate) {
+        this.prdMdate = prdMdate;
+    }
+
+    public String getInvestNature() {
+        return investNature;
+    }
+
+    public void setInvestNature(String investNature) {
+        this.investNature = investNature;
+    }
+
+    public String getIsStandard() {
+        return isStandard;
+    }
+
+    public void setIsStandard(String isStandard) {
+        this.isStandard = isStandard;
+    }
+
+    public String getPublicAmount() {
+        return publicAmount;
+    }
+
+    public void setPublicAmount(String publicAmount) {
+        this.publicAmount = publicAmount;
+    }
+
+    public String getGroupCode() {
+        return groupCode;
+    }
+
+    public void setGroupCode(String groupCode) {
+        this.groupCode = groupCode;
+    }
+
+    public String getIsVirtual() {
+        return isVirtual;
+    }
+
+    public void setIsVirtual(String isVirtual) {
+        this.isVirtual = isVirtual;
+    }
+
+    public String getInvAim() {
+        return invAim;
+    }
+
+    public void setInvAim(String invAim) {
+        this.invAim = invAim;
+    }
 }

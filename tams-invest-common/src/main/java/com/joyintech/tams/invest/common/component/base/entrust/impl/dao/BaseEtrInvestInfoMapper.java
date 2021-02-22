@@ -125,4 +125,8 @@ public interface BaseEtrInvestInfoMapper {
     int deleteBidPrice(String entrustId);
 
     List<EtrEntrust> selectByPrimaryKeyPtl(Map<String, Object> pageParam);
+
+    String findInvAimByPortIdAndFinId(@Param("portfolioId") String portfolioId, @Param("finprodId") String finprodId);
+
+    String findInvAimByPortIdAndFinType(@Param("portfolioId") String portfolioId, @Param("finprodId") String finprodId);
 }

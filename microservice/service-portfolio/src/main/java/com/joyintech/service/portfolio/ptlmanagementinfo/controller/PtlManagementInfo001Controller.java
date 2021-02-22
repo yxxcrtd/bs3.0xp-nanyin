@@ -21,6 +21,7 @@ import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.base.core.MstUserAndRoleService;
 import com.joyintech.tams.component.base.core.dto.MstUserAndRoleOutputParameter;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.dto.mock.portfolio.MockPtlPortfolioDto;
 import com.joyintech.tams.valuation.common.interf.common.ResultCode;
 import com.joyintech.tams.valuation.common.interf.common.ResultObject;
 
@@ -560,5 +561,46 @@ public class PtlManagementInfo001Controller extends BaseService<PtlManagementInf
     @PostMapping("/getReAcct")
     public int getReAcct(@RequestBody Map<String, Object> map){
         return ptlManagementInfo001Service.getReAcct(map);
+    }
+	
+	/**
+     *
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("selectAllBaseRule")
+    public List<FinBaseRuleInfo> selectAllBaseRule(@RequestBody Map<String, Object> param)
+            throws Exception {
+        return ptlManagementInfo001Service.selectAllBaseRule(param);
+    }
+
+    /**
+     * 模拟试算 组合信息基本服务
+     * 参数：portfolioId： 组合代码（String）
+     * 参数：paramDate： 计算日期（String yyyy-MM-dd）
+     *
+     * @param param 参数
+     * @return 查询结果集
+     * @throws Exception 异常
+     */
+    @PostMapping("selectPortfolioDetailInfo")
+    public MockPtlPortfolioDto selectPortfolioDetailInfo(@RequestBody Map<String, Object> param)
+            throws Exception {
+        return ptlManagementInfo001Service.selectPortfolioDetailInfo(param);
+    }
+
+    /**
+     * 模拟试算
+     * 查询基准来源为利率时所有的业绩基准
+     * @param map 参数map
+     * @return 实体类
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("selectAlllv")
+    public List<MstIntRateInfo> selectAlllv(@RequestBody Map<String, Object> param)
+            throws Exception {
+        return ptlManagementInfo001Service.selectAlllv(param);
     }
 }

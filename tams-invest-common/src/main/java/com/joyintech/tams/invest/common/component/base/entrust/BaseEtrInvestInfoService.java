@@ -189,4 +189,6 @@ public interface BaseEtrInvestInfoService {
     boolean updateBackReason(String entrustId,String reason);
 
     BaseEtrFinishAmtDto  selectEtrFinishAmtDtoByPrimaryKey(String entrustId);
+	
+	String findInvAim(String portfolioId, String finprodId);
 }

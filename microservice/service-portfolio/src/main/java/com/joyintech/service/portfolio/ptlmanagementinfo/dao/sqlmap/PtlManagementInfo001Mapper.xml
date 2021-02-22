@@ -898,4 +898,338 @@
 		</where>
 		<!-- 多级法人改造 add by jingqiongqiong 20200618 -->
 	</select>
+
+	<select id="selectBenchmark" resultType="com.joyintech.tams.common.base.entity.FinBaseRuleInfo">
+		select
+		T1.BASE_RULE_ID	baseRuleId,
+		T1.EFF_DATE	effDate,
+		T1.RATE_TYPE rateType,
+		T1.RATE	rate,
+		T1.INDEX_ID	indexId,
+		T1.INDEX_SOURCE	indexSource,
+		T1.COEFFICIENT	coefficient,
+		T1.SPREAD_RATE	spreadRate,
+		T1.RESET_TYPE	resetType,
+		T1.FINPROD_ID	finprodId,
+		T1.BRANCH	branch,
+		T1.REMARK	remark,
+		T1.CREATE_USER	createUser,
+		T1.CREATE_DEPT	createDept,
+		T1.CREATE_TIME	createTime,
+		T1.UPDATE_USER	updateUser,
+		T1.UPDATE_TIME	updateTime,
+		T1.BASE_RULE_TYPE baseRuleType,
+		T1.PUBLISH_TYPE	publishType,
+		T1.RATE_LOWER	rateLower,
+		T1.RATE_LIMIT	rateLimit
+		from
+		FIN_BASE_RULE_INFO T1
+		where
+		T1.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+		and T1.BASE_RULE_TYPE = '01'
+		and EFF_DATE = (select max(T2.EFF_DATE)
+		from FIN_BASE_RULE_INFO T2
+		where T2.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+		and T2.BASE_RULE_TYPE = '01'
+		<if test="paramDate != null">
+			and T2.EFF_DATE &lt;= #{paramDate,jdbcType=DATE}
+		</if>)
+	</select>
+	<select id="selectlv" resultType="com.joyintech.tams.common.base.entity.MstIntRateInfo">
+		select
+		MST_INT_RATE_INFO.INT_RATE intRate
+		from
+		MST_INT_RATE_INFO
+		where 1=1 and MST_INT_RATE_INFO.INT_RATE_ID = #{indexId,jdbcType=VARCHAR}
+		and MST_INT_RATE_INFO.EFF_DATE = (select
+		max(T.EFF_DATE)
+		from
+		MST_INT_RATE_INFO T
+		where
+		T.INT_RATE_ID = MST_INT_RATE_INFO.INT_RATE_ID
+		<if test="paramDate != null">
+			and T.EFF_DATE &lt;= #{paramDate,jdbcType=DATE}
+		</if>)
+	</select>
+	<select id="selectSpj" resultType="com.joyintech.tams.common.base.entity.MstExponentQuotation">
+		select
+		MST_EXPONENT_QUOTATION.CLOSE_PRICE	closePrice
+		from
+		MST_EXPONENT_QUOTATION
+		where	1=1  and MST_EXPONENT_QUOTATION.MARKET_ID = #{indexId,jdbcType=VARCHAR}
+		and MST_EXPONENT_QUOTATION.MARKET_DATE = (select
+		max(T.MARKET_DATE)
+		from
+		MST_EXPONENT_QUOTATION T
+		where
+		T.MARKET_ID = MST_EXPONENT_QUOTATION.MARKET_ID
+		<if test="paramDate != null">
+			and T.MARKET_DATE &lt;= #{paramDate,jdbcType=DATE}
+		</if>)
+	</select>
+	<select id="selectJzcf" resultType="com.joyintech.tams.common.base.entity.MstIndexComponent">
+			select
+					MST_INDEX_COMPONENT.COMPONENT_ID componentId,
+					MST_INDEX_COMPONENT.COMPONENT_TYPE componentType,
+					MST_INDEX_COMPONENT.WEIGHT	weight
+			from
+					MST_INDEX_COMPONENT
+			where
+					MST_INDEX_COMPONENT.INDEX_ID = #{indexId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectYield" resultType="com.joyintech.tams.common.base.entity.FinCashCalcRule">
+		select
+		sum(FIN_CASH_CALC_RULE.YIELD) yield
+		from
+		FIN_CASH_INFO
+		inner join FIN_CASH_CALC_RULE
+		on FIN_CASH_INFO.CASH_ID = FIN_CASH_CALC_RULE.CASH_ID
+		and FIN_CASH_CALC_RULE.EFF_DATE = (select max(T.EFF_DATE)
+		from FIN_CASH_CALC_RULE T
+		where
+		T.CASH_ID = FIN_CASH_CALC_RULE.CASH_ID
+		<if test="paramDate != null">
+			and T.EFF_DATE &lt;= #{paramDate,jdbcType=DATE}
+		</if>)
+		where
+		FIN_CASH_INFO.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+		and FIN_CASH_INFO.BRANCH = 0
+		and FIN_CASH_INFO.CASH_TYPE_1 = '03'
+		and FIN_CASH_INFO.CASH_TYPE_2 != 'C04'
+	</select>
+	<select id="selectFhgz" resultType="com.joyintech.tams.common.base.entity.FinCashPayRule">
+		select
+		max(FIN_CASH_PAY_RULE.PAY_CYCLE) payCycle
+		from
+		FIN_CASH_INFO
+		inner join FIN_CASH_PAY_RULE
+		on FIN_CASH_INFO.CASH_ID = FIN_CASH_PAY_RULE.CASH_ID
+		and FIN_CASH_PAY_RULE.EFF_DATE = (select max(T.EFF_DATE)
+		from FIN_CASH_PAY_RULE T
+		where
+		T.CASH_ID = FIN_CASH_PAY_RULE.CASH_ID
+		<if test="paramDate != null">
+			and T.EFF_DATE &lt;= #{paramDate,jdbcType=DATE}
+		</if>)
+		where
+		FIN_CASH_INFO.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+		and FIN_CASH_INFO.BRANCH = 0
+		and FIN_CASH_INFO.CASH_TYPE_1 = '02'
+		and FIN_CASH_INFO.CASH_TYPE_2 = 'C02'
+		and FIN_CASH_INFO.FINPROD_TYPE = '01'
+	</select>
+	<select id="selectBasis" resultType="com.joyintech.tams.common.base.entity.FinRateInfo">
+		select
+		max(FIN_RATE_INFO.BASIS) basis
+		from
+		FIN_CASH_INFO
+		inner join FIN_RATE_INFO
+		on FIN_CASH_INFO.CASH_ID = FIN_RATE_INFO.CASH_ID
+		and FIN_RATE_INFO.EFF_DATE = (select max(T.EFF_DATE)
+		from FIN_RATE_INFO T
+		where
+		T.CASH_ID = FIN_RATE_INFO.CASH_ID
+		<if test="paramDate != null">
+			and T.EFF_DATE &lt;= #{paramDate,jdbcType=DATE}
+		</if>)
+		where
+		FIN_CASH_INFO.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+		and FIN_CASH_INFO.BRANCH = 0
+		and FIN_CASH_INFO.CASH_TYPE_1 = '02'
+		and FIN_CASH_INFO.CASH_TYPE_2 = 'C02'
+		and FIN_CASH_INFO.FINPROD_TYPE = '01'
+	</select>
+	<select id="selectOpenjh" resultType="com.joyintech.tams.common.base.entity.FinOpenPlan">
+		select
+		FIN_OPEN_PLAN.OPEN_VDATE openVdate,
+		FIN_OPEN_PLAN.OPEN_MDATE openMdate
+		from
+		FIN_OPEN_PLAN
+		where
+		FIN_OPEN_PLAN.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+		and FIN_OPEN_PLAN.OPEN_MDATE = (select max(T.OPEN_MDATE)
+		from FIN_OPEN_PLAN T
+		where T.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+		<if test="paramDate != null">
+			and T.OPEN_MDATE &lt;= #{paramDate,jdbcType=DATE}
+		</if>)
+		union all
+		select
+		FIN_OPEN_PLAN.OPEN_VDATE openVdate,
+		FIN_OPEN_PLAN.OPEN_MDATE openMdate
+		from
+		FIN_OPEN_PLAN
+		where
+		FIN_OPEN_PLAN.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+		and FIN_OPEN_PLAN.OPEN_MDATE = (select min(T.OPEN_MDATE)
+		from FIN_OPEN_PLAN T
+		where T.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+		<if test="paramDate != null">
+			and T.OPEN_MDATE > #{paramDate,jdbcType=DATE}
+		</if>)
+	</select>
+	<select id="selectByBusiAcctNo" resultType="java.util.HashMap">
+		select
+			ACCT_NO ACCT_NO,
+			CCY CCY
+		from STL_CAPACCT_INFO
+		where BUSI_ACCT_NO = #{busiAcctNo,jdbcType=VARCHAR}
+		and CCY = #{ccy,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectPortfolioByIds" resultType="com.joyintech.service.portfolio.ptlmanagementinfo.dto.PtlManagementInfoDto">
+		SELECT PORTFOLIO_ID, PORTFOLIO_NAME, PORTFOLIO_TYPE FROM PTL_PORTFOLIO t1
+		where PORTFOLIO_TYPE != '02'
+		<if test="portfolioIdList != null and portfolioIdList.size() >0">
+			and (
+			(
+			T1.PORTFOLIO_ID in
+			<foreach collection="portfolioIdList" index="index" item="prot" open="(" separator="," close=")" >
+				<if test="(index % 998) == 0">
+					null) OR T1.PORTFOLIO_ID IN (
+				</if>
+				#{prot,jdbcType=VARCHAR}
+			</foreach>
+			OR T1.PORTFOLIO_NAME in
+			<foreach collection="portfolioIdList" index="index" item="prot" open="(" separator="," close=")" >
+				<if test="(index % 998) == 0">
+					null) OR T1.PORTFOLIO_NAME in (
+				</if>
+				#{prot,jdbcType=VARCHAR}
+			</foreach>
+			OR T1.PARENT_PORTFOLIO_ID in
+			<foreach collection="portfolioIdList" index="index" item="prot" open="(" close=")" separator=",">
+				<if test="(index % 998) == 0">
+					null) OR T1.PARENT_PORTFOLIO_ID IN (
+				</if>
+				#{prot}
+			</foreach>
+			)
+			)
+		</if>
+	</select>
+
+	<delete id="deleteInvPtlValByPortfolio">
+		DELETE FROM INV_PTL_VAL_SCHEME_DETAIL WHERE PORTFOLIO_ID = #{portfolioId}
+	</delete>
+
+	<select id="selectStlSecAcctInfoKey" resultType="java.util.HashMap" parameterType="java.lang.String" >
+        select
+        SEC_ACCT_ID SEC_ACCT_ID,
+        SEC_ACCT_NAME SEC_ACCT_NAME,
+        SEC_ACCT_SOURCE SEC_ACCT_SOURCE,
+        REGIST_ORG REGIST_ORG,
+        TRD_ACCT_ID TRD_ACCT_ID,
+        TRD_ACCT_CCY TRD_ACCT_CCY,
+        REC_ACCT_ID REC_ACCT_ID,
+        REC_ACCT_CCY REC_ACCT_CCY,
+        REMARK REMARK,
+        CREATE_USER CREATE_USER,
+        CREATE_DEPT CREATE_DEPT,
+        CREATE_TIME CREATE_TIME,
+        UPDATE_USER UPDATE_USER,
+        UPDATE_TIME UPDATE_TIME,
+        TRADE_PLACE TRADE_PLACE,
+        SEC_ACCT_TYPE SEC_ACCT_TYPE,
+        MANAGER MANAGER,
+        BOND_ID BOND_ID,
+        SEQ_NO SEQ_NO
+        from STL_SEC_ACCT_INFO
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </select>
+
+	<update id="updateStlSecAcctInfoKeySelective" parameterType="com.joyintech.tams.common.base.entity.StlSecAcctInfo" >
+		update STL_SEC_ACCT_INFO
+		<set >
+			<if test="secAcctName != null" >
+				SEC_ACCT_NAME = #{secAcctName,jdbcType=VARCHAR},
+			</if>
+			<if test="secAcctSource != null" >
+				SEC_ACCT_SOURCE = #{secAcctSource,jdbcType=VARCHAR},
+			</if>
+			<if test="registOrg != null" >
+				REGIST_ORG = #{registOrg,jdbcType=VARCHAR},
+			</if>
+			<if test="trdAcctId != null" >
+				TRD_ACCT_ID = #{trdAcctId,jdbcType=VARCHAR},
+			</if>
+			<if test="trdAcctCcy != null" >
+				TRD_ACCT_CCY = #{trdAcctCcy,jdbcType=VARCHAR},
+			</if>
+			<if test="recAcctId != null" >
+				REC_ACCT_ID = #{recAcctId,jdbcType=VARCHAR},
+			</if>
+			<if test="recAcctCcy != null" >
+				REC_ACCT_CCY = #{recAcctCcy,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null" >
+				REMARK = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="updateUser != null" >
+				UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null" >
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tradePlace != null" >
+				TRADE_PLACE = #{tradePlace,jdbcType=VARCHAR},
+			</if>
+			<if test="secAcctType != null" >
+				SEC_ACCT_TYPE = #{secAcctType,jdbcType=VARCHAR},
+			</if>
+			<if test="manager != null" >
+				MANAGER = #{manager,jdbcType=VARCHAR},
+			</if>
+			<if test="bondId != null" >
+				BOND_ID = #{bondId,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+	</update>
+
+
+	<select id="selectAllBaseRule" resultType="com.joyintech.tams.common.base.entity.FinBaseRuleInfo">
+		select
+		T1.BASE_RULE_ID	baseRuleId,
+		T1.EFF_DATE	effDate,
+		T1.RATE_TYPE rateType,
+		T1.RATE	rate,
+		T1.INDEX_ID	indexId,
+		T1.INDEX_SOURCE	indexSource,
+		T1.COEFFICIENT	coefficient,
+		T1.SPREAD_RATE	spreadRate,
+		T1.RESET_TYPE	resetType,
+		T1.FINPROD_ID	finprodId,
+		T1.BRANCH	branch,
+		T1.REMARK	remark,
+		T1.CREATE_USER	createUser,
+		T1.CREATE_DEPT	createDept,
+		T1.CREATE_TIME	createTime,
+		T1.UPDATE_USER	updateUser,
+		T1.UPDATE_TIME	updateTime,
+		T1.BASE_RULE_TYPE baseRuleType,
+		T1.PUBLISH_TYPE	publishType,
+		T1.RATE_LOWER	rateLower,
+		T1.RATE_LIMIT	rateLimit
+		from
+		FIN_BASE_RULE_INFO T1
+		where
+		T1.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+		and T1.BASE_RULE_TYPE = '01'
+	</select>
+
+
+	<select id="selectAlllv" resultType="com.joyintech.tams.common.base.entity.MstIntRateInfo">
+		select
+		MST_INT_RATE_INFO.int_rate_id intRateId,
+		MST_INT_RATE_INFO.eff_date effDate,
+		MST_INT_RATE_INFO.INT_RATE intRate
+		from
+		MST_INT_RATE_INFO
+		where 1=1 and MST_INT_RATE_INFO.INT_RATE_ID in (
+		select index_id from FIN_BASE_RULE_INFO where base_rule_type='01'
+		and rate_type= '02' and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+		)
+	</select>
+
 </mapper>

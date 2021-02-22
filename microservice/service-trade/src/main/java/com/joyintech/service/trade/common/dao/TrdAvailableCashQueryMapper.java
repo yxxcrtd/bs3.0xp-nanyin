@@ -25,4 +25,6 @@ public interface TrdAvailableCashQueryMapper {
      * @return 持仓
      */
     Map<String, Object> getFinAvaPosition(Map<String, Object> map);
+
+    BigDecimal getSecPosition(Map<String, Object> map);
 }

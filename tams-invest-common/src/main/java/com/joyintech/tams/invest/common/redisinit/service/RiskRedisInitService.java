@@ -121,4 +121,11 @@ public interface RiskRedisInitService<T extends ICond> {
      */
     void dealProdAssetAmount(T var);
     // add by zhangrui1 end
+
+    /**
+     * 处理 资产久期相关信息
+     *
+     * @param var 资产久期相关信息
+     */
+    void dealAstCashDurationInfo(T var);
 }

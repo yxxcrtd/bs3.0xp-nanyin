@@ -12,6 +12,8 @@ package com.joyintech.tams.invest.common.trade.dao;
 
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.dto.TrdStaSecInfoDto;
+import com.joyintech.tams.invest.common.dto.mock.trade.MockTradeInfoDto;
+import com.joyintech.tams.invest.common.dto.mock.trade.MockTrdProductDealDto;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -190,4 +192,76 @@ public interface TrdCommonBaseMapper {
 
 
     List<BigDecimal> selectProAvailableCash(Map<String, Object> paramMap);
+
+	List<WflTrdProductDeal> findDealByBtradeId(String tradeId);
+
+    /**
+     * 多组合交易是否可以撤销
+     * @param map
+     * @return
+     */
+    int isCanRevoke(Map<String,Object> map);
+
+    /**
+	 *
+	 * 模拟试算
+    * 金融产品交易主方法查询
+	 * <功能详细描述>
+	 * @param param
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	List<MockTradeInfoDto> selectTradeinfodeal(Map<String, Object> param);
+
+    /**
+	 *
+	 * 模拟试算
+     * 金融产品交易查询
+	 * <功能详细描述>
+	 * @param param
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	List<MockTrdProductDealDto> selectTradedeal(Map<String, Object> param);
+
+	/**
+	 *
+	 * 模拟试算
+     * 费用交易列表查询
+	 * <功能详细描述>
+	 * @param param
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	List<MockTrdProductDealDto> selectFyTradedeal(Map<String, Object> param);
+
+    /**
+     * 是否是内转交易
+     * @param map 交易参数
+     * @return 统计条数
+     */
+    int checkRevokeRTrade(Map<String, Object> map);
+
+    int checkRevokeBTrade(Map<String, Object> map);
+
+    // add by zhangrui1 20200619 取得反向交易编号 start
+    /**
+     * 取得反向交易编号
+     *
+     * @param tradeId 交易编号/汇总交易编号
+     * @return 反向交易编号
+     */
+     String queryRTradeId(String tradeId);
+
+    /**
+     * 查询基金最新净值
+     * @param map 参数
+     * @return 查询结果集
+     * @throws Exception 异常
+     */
+    BigDecimal getFundLatestValuation(Map<String, Object> map);
+    // add by zhangrui1 20200619 取得反向交易编号 end
 }

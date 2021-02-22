@@ -20,6 +20,14 @@ import java.util.stream.Collectors;
 
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.tams.common.base.entity.FinBaseRuleInfo;
+import com.joyintech.tams.common.base.entity.FinCashCalcRule;
+import com.joyintech.tams.common.base.entity.FinCashPayRule;
+import com.joyintech.tams.common.base.entity.FinOpenPlan;
+import com.joyintech.tams.common.base.entity.FinRateInfo;
+import com.joyintech.tams.common.base.entity.MstIntRateInfo;
+import com.joyintech.tams.invest.common.dto.mock.portfolio.MockPtlPortfolioDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -1326,5 +1334,170 @@ public class PtlManagementInfo001Service extends BaseService<PtlManagementInfoDt
 
     public int getReAcct(Map<String, Object> map) {
         return ptlCapacctInfoMapper.getReAcct(map);
+    }
+    
+    /**
+     * 模拟试算 组合信息服务
+     *
+     * @param map 参数
+     * @throws Exception 异常
+     * @return 组合基本信息
+     * @see
+     * @since 1.0
+     */
+    public MockPtlPortfolioDto selectPortfolioDetailInfo(Map<String, Object> map)
+            throws Exception {
+        String portfolioId = (String)map.get("portfolioId");
+        String paramDate = (String)map.get("paramDate");
+        if (StringUtil.isNotBlank(paramDate)) {
+            map.remove("paramDate");
+            map.put("paramDate", DateUtil.parse(paramDate));
+        }
+
+        // 根据组合代码查询组合信息表数据
+        PtlPortfolio ptlPortfolio = ptlPortfolioMapper.selectByPrimaryKey(portfolioId);
+        MockPtlPortfolioDto d = new MockPtlPortfolioDto();
+        BeanUtil.copyPropertiesIgnoreNull(d, ptlPortfolio);
+
+        // 根据组合代码查询组合对应产品的产品金融产品代码
+        String finprodId = valuationInterfService.selectFinprodIdByPortfolioId(portfolioId);
+        if (StringUtil.isBlank(finprodId)) {
+            finprodId = portfolioId;
+        }
+        map.put("finprodId", finprodId);
+
+        // 查询业绩基准
+        BigDecimal jizhun = findBenchmark(map);
+        d.setFinBaseRuleYield(jizhun);
+
+        // 管理费率
+        FinCashCalcRule yield = ptlManagementInfo001Mapper.selectYield(map);
+        if (StringUtil.isNotEmpty(yield)) {
+            d.setManageFeeRate(yield.getYield());
+        }
+
+        // 查询分红规则
+        FinCashPayRule paycycle = ptlManagementInfo001Mapper.selectFhgz(map);
+        if (StringUtil.isNotEmpty(paycycle)) {
+            d.setBonusPayCycle(paycycle.getPayCycle());
+        }
+
+        // 查询计息基础
+        FinRateInfo basis = ptlManagementInfo001Mapper.selectBasis(map);
+        if (StringUtil.isNotEmpty(basis)) {
+            d.setBasis(basis.getBasis());
+        }
+
+        // 查询开放计划
+        List<FinOpenPlan> openjh = ptlManagementInfo001Mapper.selectOpenjh(map);
+        if (StringUtil.isNotEmpty(openjh)) {
+            d.setFinOpenPlanList(openjh);
+        }
+
+        // 查询组合扩展表数据
+        PaPtlPortfolio kz = paPtlPortfolioMapper.selectByPrimaryKey(portfolioId);
+        d.setPaPtlPortfolio(kz);
+        return d;
+    }
+
+    /**
+     *
+     * @param map
+     * @return
+     */
+    public List<FinBaseRuleInfo> selectAllBaseRule(Map<String,Object> map){
+        return ptlManagementInfo001Mapper.selectAllBaseRule(map);
+    }
+
+    /**
+     * 模拟试算 业绩基准
+     *
+     * @param map 参数
+     * @return 业绩基准
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    private BigDecimal findBenchmark(Map<String, Object> map)
+            throws Exception {
+        // 查询业绩基准
+        FinBaseRuleInfo dto = ptlManagementInfo001Mapper.selectBenchmark(map);
+        BigDecimal a = null;
+        if (StringUtil.isNotEmpty(dto)) {
+            map.put("indexId", dto.getIndexId());
+            if (StringUtil.equals(DictCodeList.利率类型_固定利率.getValue(), dto.getRateType())) {
+                // 固定利率
+                a = dto.getRate();
+            }
+            else if (StringUtil.equals(DictCodeList.利率类型_浮动利率.getValue(), dto.getRateType())) {
+                // 基准来源利率
+//                map.put("indexId", dto.getBaseRuleId());
+                MstIntRateInfo dto1 = ptlManagementInfo001Mapper.selectlv(map);
+                if (StringUtil.isNotEmpty(dto1)) {
+                    a = ArithmeticUtil.doAdd(
+                            ArithmeticUtil.multiply(dto1.getIntRate(),dto.getCoefficient()==null?BigDecimal.ONE:dto.getCoefficient()),dto.getSpreadRate());
+//                    a = dto1.getIntRate();
+                }
+//                // 浮动利率
+//                if (StringUtil.equals(DictCodeListExt1.基准类型_2_利率.getValue(),
+//                    dto.getIndexSource())) {
+//                    // 基准来源利率
+//                    map.put("indexId", dto.getBaseRuleId());
+//                    MstIntRateInfo dto1 = ptlManagementInfo001Mapper.selectlv(map);
+//                    if (StringUtil.isNotEmpty(dto1)) {
+//                        a = dto1.getIntRate();
+//                    }
+//                }
+//                else if (StringUtil.equals(DictCodeListExt1.基准类型_2_指数.getValue(),
+//                    dto.getIndexSource())) {
+//                    // 基准来源指数
+//                    MstExponentQuotation dto2 = ptlManagementInfo001Mapper.selectSpj(map);
+//                    if (StringUtil.isNotEmpty(dto2)) {
+//                        a = dto2.getClosePrice();
+//                    }
+//                }
+//                else if (StringUtil.equals(DictCodeListExt1.基准类型_2_复合.getValue(),
+//                    dto.getIndexSource())) {
+//                    // 基准来源复合
+//                    List<MstIndexComponent> dto3 = ptlManagementInfo001Mapper.selectJzcf(map);
+//                    if (!StringUtil.isEmptyList(dto3)) {
+//                        BigDecimal jz = new BigDecimal(0);
+//                        for (MstIndexComponent dto4 : dto3) {
+//                            if (StringUtil.equals(DictCodeList.行情类型_利率.getValue(),
+//                                dto4.getComponentType())) {
+//                                map.put("indexId", dto4.getComponentId());
+//                                MstIntRateInfo dto5 = ptlManagementInfo001Mapper.selectlv(map);
+//                                if (StringUtil.isNotEmpty(dto5)) {
+//                                    jz = ArithmeticUtil.doAdd(
+//                                        dto4.getWeight().multiply(dto5.getIntRate()), jz);
+//                                }
+//                            }
+//                            else if (StringUtil.equals(DictCodeList.行情类型_指数.getValue(),
+//                                dto4.getComponentType())) {
+//                                map.put("indexId", dto4.getComponentId());
+//                                MstExponentQuotation dto6 = ptlManagementInfo001Mapper.selectSpj(
+//                                    map);
+//                                if (StringUtil.isNotEmpty(dto6)) {
+//                                    jz = ArithmeticUtil.doAdd(
+//                                        dto4.getWeight().multiply(dto6.getClosePrice()), jz);
+//                                }
+//                            }
+//                        }
+//                        a = jz;
+//                    }
+//                }
+            }
+        }
+        return a;
+    }
+
+    /**
+     *
+     * 查询基准来源为利率时所有的业绩基准
+     * @param map
+     * @return
+     */
+    public List<MstIntRateInfo> selectAlllv(Map<String,Object> map){
+        return ptlManagementInfo001Mapper.selectAlllv(map);
     }
 }
