@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.investmentsinfo.dao.ChbAssetInfoRateInterfMapper" >
+  <select id="selectAssetInfoRateData"
+    resultSetType="FORWARD_ONLY" fetchSize="1000"
+	resultType="com.joyintech.tams.svreport.interf.chb.investmentsinfo.dto.ChbAssetInfoRate" parameterType="java.util.Map">
+	  select * from(
+	  <!-- 债券，项目，存款，计划利率的收益率 -->
+	  select fp.finprod_market_id as assetId ,fp.finprod_type2 as finprodType2,
+	  fp.profit_type as profitType,
+	  f.eff_date as changeDate,
+	  f.rate as assetRate,null as assetBonusReinvestRate,null as closePriceFull,null as costAmt,
+	  nvl(f.UPDATE_TIME,f.CREATE_TIME) updatetime,
+	  null tradeId,
+	  null as status
+	  from fin_rate_info f
+	  left join fin_product fp
+	  on f.finprod_id=fp.finprod_id
+	  left join fin_cash_info cash
+	  on f.finprod_id=cash.finprod_id
+	  and f.cash_id=cash.cash_id
+	  where (fp.finprod_type2 in ('F01','F18','F07') or (fp.finprod_type2='F17' and fp.profit_type='02'))
+	  and cash.cash_type_1='02'
+	  and nvl(f.UPDATE_TIME,f.CREATE_TIME)  > #{updatetime,jdbcType=TIMESTAMP}
+
+	  union all
+
+	  <!-- 计划类净值型，非货币基金  + 计划货币，货币基金 -->
+	  select fp.finprod_market_id as assetId ,fp.finprod_type2 as finprodType2,
+	  fp.profit_type as profitType,
+	  f.val_date as changeDate,
+	  f.valuation as assetRate,null as assetBonusReinvestRate,null as closePriceFull,null as costAmt,
+	  nvl(f.UPDATE_TIME,f.CREATE_TIME) updatetime,
+	  null tradeId,
+	  null as status
+	  from fin_product_valuation f
+	  left join fin_product fp
+	  on f.finprod_id=fp.finprod_market_id
+	  and f.finprod_type2=fp.finprod_type2
+	  where fp.finprod_type2 in ('F17','F06') and  fp.profit_type in ('01','03')
+	  and nvl(f.UPDATE_TIME,f.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
+
+	  union all
+	  <!--计划类净值型，非货币基金分红 -->
+	  select  fp.finprod_market_id as assetId ,fp.finprod_type2 as finprodType2,
+	  fp.profit_type as profitType,
+	  f.trade_date as changeDate,
+	  null as assetRate,f.unit_cprice as assetBonusReinvestRate,null as closePriceFull,null as costAmt,
+	  nvl(f.UPDATE_TIME,f.CREATE_TIME) updatetime,
+	  f.trade_id tradeId,
+	  decode(f.is_cancel,'N','E','Y','D') as status
+	  from trd_product_deal f
+	  left join fin_product fp
+	  on f.finprod_id=fp.finprod_id
+	  where fp.finprod_type2 in ('F17','F06') and  fp.profit_type in ('01') and f.ps in ('T11','T13')
+	  and f.trade_status='01'
+	  and nvl(f.UPDATE_TIME,f.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
+
+	  union all
+	  <!--回购，债券借贷-->
+
+	  select ftp.finprod_id as assetId ,ftp.finprod_type2 as finprodType2,
+	  null as profitType,
+	  ftp.vdate as changeDate,
+	  ftp.int_rate as assetRate,null as assetBonusReinvestRate,null as closePriceFull,null as costAmt,
+	  nvl(ftp.UPDATE_TIME,ftp.CREATE_TIME) updatetime,
+	  null tradeId,
+	  null as status
+	  from fin_trade_product ftp
+	  where ftp.finprod_type2 in ('F02','F03','F04','F05','F15')
+	  and nvl(ftp.UPDATE_TIME,ftp.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
+
+	  union all
+	  <!--现金 -->
+	  select fi.finprod_id as assetId ,'XJ' as finprodType2,
+	  null as profitType,
+	  fi.eff_date as changeDate,
+	  fi.rate as assetRate,null as assetBonusReinvestRate,null as closePriceFull,null as costAmt,
+	  nvl(fi.UPDATE_TIME,fi.CREATE_TIME) updatetime,
+	  null tradeId,
+	  null as status
+	  from FIN_RATE_INFO fi
+	  left join fin_cash_info cash
+	  on fi.cash_id=cash.cash_id
+	  where cash.cash_type_1='02' and cash.finprod_type='02'
+	  and nvl(fi.UPDATE_TIME,fi.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
+
+	  union all
+	  <!--现金余额-->
+	  select tt.* from (select fi.acct_id as assetId ,'XJ' as finprodType2,
+	  null as profitType,
+	  fi.cdate as changeDate,
+	  null as assetRate,null as assetBonusReinvestRate,null as closePriceFull,
+	  sum(nvl(fi.amount,0)) as costAmt,
+	  max(nvl(fi.UPDATE_TIME,fi.CREATE_TIME)) updatetime,
+	  null tradeId,
+	  null as status
+	  from ptl_cash_position fi
+	  group by  fi.acct_id,fi.cdate)tt
+	  where  tt.updatetime  > #{updatetime,jdbcType=TIMESTAMP} and tt.costAmt!=0
+
+	  union all
+	  <!--可转债 -->
+
+	  select fi.sec_id as assetId ,fp.finprod_type2 as finprodType2,
+	  fpt.type_11 as profitType,
+	  fi.value_date as changeDate,
+	  null as assetRate,null as assetBonusReinvestRate,fi.close_price_full as closePriceFull,null as costAmt,
+	  nvl(fi.UPDATE_TIME,fi.CREATE_TIME) updatetime,
+	  null tradeId,
+	  null as status
+	  from mst_bond_market_info fi
+	  left join fin_product fp
+	  on fi.sec_id=fp.finprod_market_id
+	  left join fin_product_type fpt
+	  on fp.finprod_id=fpt.finprod_id
+	  where fpt.type_11='013'
+	  and nvl(fi.UPDATE_TIME,fi.CREATE_TIME)  > #{updatetime,jdbcType=TIMESTAMP}
+	  union all
+	  <!--可转债成本 -->
+	  select tt.* from (select fp.finprod_market_id as assetId ,fp.finprod_type2 as finprodType2,
+	  fpt.type_11 as profitType,
+	  fi.cdate as changeDate,
+	  null as assetRate,null as assetBonusReinvestRate,null as closePriceFull,
+	  sum(nvl(fi.dsc_cost_amt,0)) as costAmt,
+	  max(nvl(fi.UPDATE_TIME,fi.CREATE_TIME)) updatetime,
+	  null tradeId,
+	  null as status
+	  from ptl_sec_valution fi
+	  left join fin_product fp
+	  on fi.finprod_id=fp.finprod_id
+	  left join fin_product_type fpt
+	  on fp.finprod_id=fpt.finprod_id
+	  where fpt.type_11='013'
+	  group by  fp.finprod_market_id ,fp.finprod_type2,fpt.type_11,fi.cdate)tt
+	  where  tt.updatetime  > #{updatetime,jdbcType=TIMESTAMP}
+
+
+	  union all
+	  <!--股票 -->
+	  select fi.shares_id as assetId ,fp.finprod_type2 as finprodType2,
+	  null as profitType,
+	  fi.deal_date as changeDate,
+	  null as assetRate,null as assetBonusReinvestRate,fi.close_price as closePriceFull,null as costAmt,
+	  nvl(fi.UPDATE_TIME,fi.CREATE_TIME) updatetime,
+	  null tradeId,
+	  null as status
+	  from mst_share_price fi
+	  left join fin_product fp
+	  on fi.shares_id=fp.finprod_market_id
+	  where    nvl(fi.UPDATE_TIME,fi.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
+
+	  union all
+	  <!--股票持仓成本 -->
+	  select tt.* from(select fp.finprod_market_id as assetId ,fp.finprod_type2 as finprodType2,
+	  null as profitType,
+	  fi.happen_date as changeDate,
+	  null as assetRate,null as assetBonusReinvestRate,null as closePriceFull,
+	  sum(nvl(fi.pos_amt,0)) as costAmt,
+	  max(nvl(fi.UPDATE_TIME,fi.CREATE_TIME)) updatetime,
+	  null tradeId,
+	  null as status
+	  from bok_stat_det_posiiton fi
+	  left join fin_product fp
+	  on fi.busi_id=fp.finprod_id
+	  where fp.finprod_type2='F10'
+	  group by  fp.finprod_market_id ,fp.finprod_type2,fi.happen_date)tt
+	  where  tt.updatetime  > #{updatetime,jdbcType=TIMESTAMP}
+	  ) a
+	  where 1=1
+</select>
+
+
+<insert id="mergeChbAssetInfoRatedData"
+	parameterType="com.joyintech.tams.svreport.interf.chb.investmentsinfo.dto.ChbAssetInfoRate">
+	MERGE INTO CHB_ASSET_RATE CII
+	USING (
+	<foreach collection="list" item="item" open="select * from("
+		close=")" separator="union all">
+		SELECT
+		#{item.seqno,jdbcType=CHAR} SEQNO,
+		#{item.assetId,jdbcType=VARCHAR} ASSET_ID,
+		#{item.finprodType2,jdbcType=VARCHAR} FINPROD_TYPE2,
+		#{item.changeDate,jdbcType=TIMESTAMP} CHANGE_DATE,
+		#{item.assetRate,jdbcType=DECIMAL} ASSET_RATE,
+		#{item.assetBonusReinvestRate,jdbcType=DECIMAL} ASSET_BONUSREINVEST_RATE,
+		#{item.closePriceFull,jdbcType=DECIMAL} CLOSE_PRICE_FULL,
+		#{item.costAmt,jdbcType=DECIMAL} COST_AMT,
+		#{item.tradeId,jdbcType=VARCHAR} TRADE_ID,
+		#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+		#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+		#{item.status,jdbcType=VARCHAR} STATUS,
+		#{item.revDate,jdbcType=TIMESTAMP} REV_DATE,
+		#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+		#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+		sysdate UPDATE_TIME, 
+		#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+		sysdate CREATE_TIME,
+		#{item.remark,jdbcType=VARCHAR} REMARK,
+		#{item.ccy,jdbcType=VARCHAR} ccy
+		FROM
+		DUAL
+	</foreach>
+	) TEMP
+	<!-- 业务主键匹配 -->
+	ON(CII.ASSET_ID = TEMP.ASSET_ID
+	AND to_char(CII.CHANGE_DATE,'yyyy-mm-dd') = to_char(TEMP.CHANGE_DATE,'yyyy-mm-dd')
+	and ((CII.TRADE_ID is not null and TEMP.TRADE_ID is not null and CII.TRADE_ID = TEMP.TRADE_ID)
+	    or (CII.TRADE_ID  is null and TEMP.TRADE_ID is null))
+	)
+	<!-- 匹配到则更新 -->
+	WHEN MATCHED THEN UPDATE SET
+	CII.ASSET_RATE = TEMP.ASSET_RATE,
+	CII.ASSET_BONUSREINVEST_RATE = TEMP.ASSET_BONUSREINVEST_RATE,
+	CII.CLOSE_PRICE_FULL = TEMP.CLOSE_PRICE_FULL,
+	CII.COST_AMT = TEMP.COST_AMT,
+	CII.TRADE_ID = TEMP.TRADE_ID,
+	CII.ORG_CODE = TEMP.ORG_CODE,
+	CII.DEPT_CODE = TEMP.DEPT_CODE,
+	CII.REV_DATE = TEMP.REV_DATE,
+	CII.STATUS = TEMP.STATUS,
+	CII.REMARK = TEMP.REMARK,
+	CII.UPDATE_USER = TEMP.UPDATE_USER,
+	CII.UPDATE_TIME = TEMP.UPDATE_TIME,
+	CII.CCY = TEMP.CCY
+	<!-- 未匹配到这插入 -->
+	WHEN NOT MATCHED THEN INSERT (SEQNO, ASSET_ID,FINPROD_TYPE2,
+	CHANGE_DATE, ASSET_RATE,ASSET_BONUSREINVEST_RATE,CLOSE_PRICE_FULL,
+	COST_AMT,TRADE_ID,
+	ORG_CODE, DEPT_CODE, STATUS,
+	REV_DATE, DATA_SOURCE, UPDATE_USER,
+	UPDATE_TIME, CREATE_USER, CREATE_TIME,
+	REMARK,CCY)
+	VALUES(TEMP.SEQNO, TEMP.ASSET_ID,TEMP.FINPROD_TYPE2,
+	TEMP.CHANGE_DATE,
+	TEMP.ASSET_RATE,TEMP.ASSET_BONUSREINVEST_RATE,TEMP.CLOSE_PRICE_FULL,TEMP.COST_AMT,TEMP.TRADE_ID,
+	TEMP.ORG_CODE, TEMP.DEPT_CODE, TEMP.STATUS,
+	TEMP.REV_DATE, TEMP.DATA_SOURCE, TEMP.UPDATE_USER,
+	TEMP.UPDATE_TIME, TEMP.CREATE_USER,
+	TEMP.CREATE_TIME,
+	TEMP.REMARK,TEMP.CCY)
+</insert>
+</mapper>

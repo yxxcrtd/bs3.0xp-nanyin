@@ -47,7 +47,10 @@ public class OverallInfoDto {
 	 * @Fields balance   
 	 */  
 	private BigDecimal balance;
-
+	/**
+	 * 备注
+	 */
+    private String remark;
 	/**  
 	 * @Description   
 	 * @Author      高健  
@@ -113,5 +116,12 @@ public class OverallInfoDto {
 	public void setBalance(BigDecimal balance) {
 		this.balance = balance;
 	}
-	
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
 }
