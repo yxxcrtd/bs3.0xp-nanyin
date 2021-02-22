@@ -502,13 +502,13 @@ $(function () {
                 $('#purchase').hide();
                 $('#redemp').show();
                 if ($("#tradeMarket").val() == TRADE_PLACE_03 || $("#tradeMarket").val() == TRADE_PLACE_04) {
-                    $('#tradeMarketAccAvailableCash_div').show();
-                    table.showColumns([{field:'tradeMarketAccAvailableCash',visible: true}]);
+//                    $('#tradeMarketAccAvailableCash_div').show();
+//                    table.showColumns([{field:'tradeMarketAccAvailableCash',visible: true}]);
                     $('.commissionFee_class').show();
                     table.showColumns([{field:'commissionAmt',visible: true}]);
                 } else {
-                    $('#tradeMarketAccAvailableCash_div').hide();
-                    table.showColumns([{field:'tradeMarketAccAvailableCash',visible: false}]);
+//                    $('#tradeMarketAccAvailableCash_div').hide();
+//                    table.showColumns([{field:'tradeMarketAccAvailableCash',visible: false}]);
                     $('.commissionFee_class').hide();
                     table.showColumns([{field:'commissionAmt',visible: false}]);
                 }
@@ -559,13 +559,13 @@ $(function () {
                     $('#purchase').hide();
                     $('#subscribe').show();
                 }
-                if ($("#tradeMarket").val() == TRADE_PLACE_03 || $("#tradeMarket").val() == TRADE_PLACE_04) {
-                    $('#tradeMarketAccAvailableCash_div').show();
-                    table.showColumns([{field:'tradeMarketAccAvailableCash',visible: true}]);
-                } else {
-                    $('#tradeMarketAccAvailableCash_div').hide();
-                    table.showColumns([{field:'tradeMarketAccAvailableCash',visible: false}]);
-                }
+//                if ($("#tradeMarket").val() == TRADE_PLACE_03 || $("#tradeMarket").val() == TRADE_PLACE_04) {
+//                    $('#tradeMarketAccAvailableCash_div').show();
+//                    table.showColumns([{field:'tradeMarketAccAvailableCash',visible: true}]);
+//                } else {
+//                    $('#tradeMarketAccAvailableCash_div').hide();
+//                    table.showColumns([{field:'tradeMarketAccAvailableCash',visible: false}]);
+//                }
                 $('#redemp').hide();
 //                $('#tradeAmt').attr('disabled',false);
 //                $('#shareAmt').attr('disabled',true);
@@ -756,6 +756,7 @@ $(function () {
          * 交易金额
          */
         $('#tradeAmt').change(function () {
+        	debugger;
             var tradeAmt = $('#tradeAmt').val();
             var ps = $('#ps').val();
             var unitCprice = $('#unitCprice').val();
@@ -765,6 +766,20 @@ $(function () {
             }
         });
 
+        /**
+         * 交易场所
+         */
+        $('#tradeMarket,#ps').change(function(){
+        	debugger;
+            if (($("#tradeMarket").val() == TRADE_PLACE_03 || $("#tradeMarket").val() == TRADE_PLACE_04)&&$("#ps").val() == ps_T01) {
+                $('#tradeMarketAccAvailableCash_div').show();
+                table.showColumns([{field:'tradeMarketAccAvailableCash',visible: true}]);
+            } else {
+                $('#tradeMarketAccAvailableCash_div').hide();
+                table.showColumns([{field:'tradeMarketAccAvailableCash',visible: false}]);
+            }
+        });
+        
         $('#shareAmt').change(function () {
             var ps = $('#ps').val();
             if (ps == ps_T19) {
