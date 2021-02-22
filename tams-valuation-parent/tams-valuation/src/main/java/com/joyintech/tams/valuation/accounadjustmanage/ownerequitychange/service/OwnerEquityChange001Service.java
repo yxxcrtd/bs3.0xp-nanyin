@@ -340,7 +340,7 @@ public class OwnerEquityChange001Service extends CommonExportService<OwnerEquity
         	// 全账套
         	prefix = "账套组";
         }
-        String fileName = prefix+ "_" + reportDate + "_所有者权益变动表" + ".xls";
+        String fileName = prefix+ "_" + reportDate + "_净值变动表" + ".xls";
 
         
         
