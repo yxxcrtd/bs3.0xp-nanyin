@@ -174,16 +174,29 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
         BigDecimal zero = new BigDecimal(0);
         // 获取委托的份额,基金的赎回委托属于限量委托 yjm start 20191121
         if (StringUtil.equals(dto.getOperateType(), "save") || StringUtil.equals(dto.getOperateType(), "submit")) {
-            if (StringUtil.isNotEmpty(entrustId) && StringUtil.isNotEmpty(shareAmt)
-                && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
-                Map<String, Object> resultMap = trdFundInvestTrade002Service.selectEntrustAmt(param);
-                BigDecimal entrustNum = new BigDecimal((String)resultMap.get("ENTRUST_NUM"));
-                if (StringUtil.isNotEmpty(entrustNum) && shareAmt.compareTo(entrustNum) > 0) {
-                    errorList.add(new ValidMessage("shareAmt", this.getMessage("BUSS_COM_E_0003",
-                        this.getMessage("TrdFundInvestTrade002.tradeSha"), "委托份额:" + entrustNum)));
-                }
-            }
+             if (StringUtil.isNotEmpty(entrustId) && StringUtil.isNotEmpty(shareAmt)
+                        && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
+                    Map<String, Object> resultMap = trdFundInvestTrade002Service.selectEntrustAmt(param);
+                    BigDecimal entrustNum = new BigDecimal((String) resultMap.get("ENTRUST_NUM"));
+                    if (StringUtil.isNotEmpty(entrustNum) && shareAmt.compareTo(entrustNum) > 0) {
+//                        errorList.add(new ValidMessage("shareAmt", this.getMessage("BUSS_COM_E_0003",
+//                                this.getMessage("TrdFundInvestTrade002.tradeSha"), "委托份额:" + entrustNum)));
+                        errorList.add(new ValidMessage("shareAmt", "基金赎回份额不能大于基金可交易额度份额，可交易额度份额:" + entrustNum));
 
+                    }
+             } else {
+                 if (DictCodeList.交易方向_赎回.getValue().equals(dto.getPs())) {
+                     List<BigDecimal> ssList= tradeCommonService.selectProAvailableCash(dto.getEntrustId());
+                     if (!StringUtil.isEmptyList(ssList) &&
+                             ssList.get(0).compareTo(BigDecimal.ZERO) != 0) {
+                         if (dto.getShareAmt().compareTo(ssList.get(0)) == 1) {
+//                             errorList.add(new ValidMessage("shareAmt", this.getMessage("BUSS_COM_E_0003",
+//                                     this.getMessage("TrdFundInvestTrade002.tradeSha"), "委托份额:" + ssList.get(0))));
+                             errorList.add(new ValidMessage("shareAmt", "基金赎回份额不能大于基金可交易额度份额，可交易额度份额:" + ssList.get(0)));
+                         }
+                     }
+                 }
+             }
             // OPEX-878 公募基金分红后赎回交易问题 如果存在存续期流程中红利再投数据，禁止赎回操作。 qcx 20200305
             if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
                 List<String> 流程中 = tradeCommonService.checkWflData(dto.getFinprodId(), 金融产品代码, true);
@@ -191,7 +204,14 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
                     errorList.add(new ValidMessage("finprodId", "该资产存在流程中的存续期数据数据，交易编号：" + 流程中));
                 }
             }
-
+            if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
+                if (StringUtil.isNotEmpty(shareAmt) && StringUtil.isNotEmpty(dto.getAssetAvailablePosition())
+                        && shareAmt.compareTo(dto.getAssetAvailablePosition()) == 1) {
+                    errorList.add(new ValidMessage("shareAmt",
+                            this.getMessage("BUSS_COM_E_0003", this.getMessage("TrdFundInvestTrade002.tradeSha"),
+                                    this.getMessage("TrdBondInvestTrade002.avaliblePosition"))));
+                }
+            }
         }
         // 获取委托的份额,基金的赎回委托属于限量委托 yjm end 20191121
 
@@ -257,6 +277,12 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
                     if (shareAmt == null) {
                         errorList.add(new ValidMessage("shareAmt",
                             this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdFundInvestTrade002.tradeSha"))));
+                    }
+                    if (StringUtil.isNotEmpty(shareAmt) && StringUtil.isNotEmpty(dto.getAssetAvailablePosition())
+                        && shareAmt.compareTo(dto.getAssetAvailablePosition()) == 1) {
+                        errorList.add(new ValidMessage("shareAmt",
+                                this.getMessage("BUSS_COM_E_0003", this.getMessage("TrdFundInvestTrade002.tradeSha"),
+                                this.getMessage("TrdBondInvestTrade002.avaliblePosition"))));
                     }
                 }
                 if (tradeAmt != null && tradeAmt.compareTo(zero) == -1) {
@@ -650,16 +676,6 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
             }
         }
 
-        if (DictCodeList.交易方向_赎回.getValue().equals(dto.getPs())) {
-            List<BigDecimal> ssList= tradeCommonService.selectProAvailableCash(dto.getEntrustId());
-            if (!StringUtil.isEmptyList(ssList) &&
-                    ssList.get(0).compareTo(BigDecimal.ZERO) != 0) {
-                if (dto.getShareAmt().compareTo(ssList.get(0)) == 1) {
-                    ValidMessage validMessage = new ValidMessage("基金赎回份额不能大于基金可交易额度份额！");
-                    errorList.add(validMessage);
-                }
-            }
-        }
         //add by msk TISHKBS-1038 新增一次性划款通道交易前是否划款判断 end
         return errorList;
     }
