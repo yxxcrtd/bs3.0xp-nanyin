@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.ChbPrdCustNumIfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -56,5 +57,12 @@ public interface ChbPrdDealInterfMapper {
     void insertChbPrdFeeDealData(@Param("newDataList")List<ChbPrdFeeDeal> newDataList);
     
     int insertDataMerge(@Param("newDataList")List<ChbPrdDeal> insertList);
+
+	/**
+	 * 查询三期的产品代码和客户数
+	 * @return
+	 */
+	List<ChbPrdCustNumIfo>   getraiseCustNumThree(@Param("prodIdList")List<String> prodIdList, @Param("checkDate")Date checkDate);
+
 
 }
