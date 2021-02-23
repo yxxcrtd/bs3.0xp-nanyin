@@ -95,6 +95,9 @@ public class SvrCustomerNumCheckService {
                     dto.setCheckSeqno(IDGenerator.generate(32));
                     //报表ID=DictCodeListExt2.报表名称_募集总量登记.getValue()
                     dto.setRepCode(DictCodeListExt2.报表名称_募集总量登记.getValue());
+                    //报表名称
+                    dto.setRepName(DictCodeListExt2.报表名称_募集总量登记.getCodeName());
+
                     //唯一标识="产品代码:" + 此条记录的.产品代码
                     dto.setValidKey("产品代码" + cinfo.getPrdCode());
                     //检查结果
@@ -117,6 +120,9 @@ public class SvrCustomerNumCheckService {
                         dto.setCheckSeqno(IDGenerator.generate(32));
                         //报表ID=DictCodeListExt2.报表名称_募集总量登记.getValue()
                         dto.setRepCode(DictCodeListExt2.报表名称_募集总量登记.getValue());
+                        //报表名称
+                        dto.setRepName(DictCodeListExt2.报表名称_募集总量登记.getCodeName());
+
                         //唯一标识="产品代码:" + 此条记录的.产品代码
                         dto.setValidKey("产品代码" + cinfo.getPrdCode());
                         //检查结果
