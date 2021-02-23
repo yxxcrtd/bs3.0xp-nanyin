@@ -523,7 +523,7 @@ public class TrdCommandsCollection001Dto extends EtrEntrust{
      * @return tradeMarketStr 
      */
     public String getTradeMarketStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.估值交易市场, super.getTradeMarket());
+        return SysDataUtil.getNameFromDataDict(DictCode.交易场所, super.getTradeMarket());
     }
 
     /**

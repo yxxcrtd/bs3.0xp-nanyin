@@ -1601,7 +1601,7 @@ $(function() {
     var init = function(){
         $('#TrdCommandsCollection001_btn_reset').hide();
         var PS_SELECTIONS = JSON.parse(PS);
-        var TRADE_PLACE_SELECTIONS = JSON.parse(VALUATION_TRADE_MARKET);
+        var TRADE_PLACE_SELECTIONS = JSON.parse(TRADE_PLACE);
         var DEAL_MODE_SELECTIONS = JSON.parse(DEAL_MODE);
         var BACK_LEND_SELECTIONS = JSON.parse(BACK_LEND_DIRECTION);
         var ps01Selections = [];
@@ -1612,6 +1612,7 @@ $(function() {
         var psF10Selections = [];
         var psF11Selections = [];
         var tradeMarket12Selections = [];
+        var tradeMarket124Selections = [];
         var tradeMarket012Selections = [];
         var tradeMarket02345Selections = [];
         var dealMode0123Selections = [];
@@ -1638,14 +1639,17 @@ $(function() {
         psF11Selections.push(PS_SELECTIONS[95].id);
         psF11Selections.push(PS_SELECTIONS[97].id);
         tradeMarket12Selections.push(TRADE_PLACE_SELECTIONS[2].id);
-        tradeMarket12Selections.push(TRADE_PLACE_SELECTIONS[3].id);
+        tradeMarket12Selections.push(TRADE_PLACE_SELECTIONS[1].id);
+        tradeMarket124Selections.push(TRADE_PLACE_SELECTIONS[1].id);
+        tradeMarket124Selections.push(TRADE_PLACE_SELECTIONS[2].id);
+        tradeMarket124Selections.push(TRADE_PLACE_SELECTIONS[4].id);
         tradeMarket012Selections.push(TRADE_PLACE_SELECTIONS[0].id);
         tradeMarket012Selections.push(TRADE_PLACE_SELECTIONS[2].id);
-        tradeMarket012Selections.push(TRADE_PLACE_SELECTIONS[3].id);
+        tradeMarket012Selections.push(TRADE_PLACE_SELECTIONS[1].id);
         tradeMarket02345Selections.push(TRADE_PLACE_SELECTIONS[0].id);
         tradeMarket02345Selections.push(TRADE_PLACE_SELECTIONS[2].id);
         tradeMarket02345Selections.push(TRADE_PLACE_SELECTIONS[3].id);
-        tradeMarket02345Selections.push(TRADE_PLACE_SELECTIONS[4].id);
+        tradeMarket02345Selections.push(TRADE_PLACE_SELECTIONS[1].id);
         tradeMarket02345Selections.push(TRADE_PLACE_SELECTIONS[5].id);
         dealMode0123Selections.push(DEAL_MODE_SELECTIONS[0].id);
         dealMode0123Selections.push(DEAL_MODE_SELECTIONS[1].id);
@@ -1688,7 +1692,7 @@ $(function() {
             item: tradeMarket02345Selections
         });
         $('#tradeMarketF02').updateChosenArr({
-            item: tradeMarket12Selections
+            item: tradeMarket124Selections
         });
         $('#tradeMarketF07').updateChosenArr({
             item: tradeMarket012Selections
