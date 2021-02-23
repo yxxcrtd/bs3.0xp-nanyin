@@ -16,6 +16,7 @@ import com.joyintech.system.base.entity.SysDatadictListLink;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.errormessage.dto.ErrorMessage001;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.DtoChangeUtil;
@@ -136,6 +137,15 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		if(StringUtil.isEmpty(dto.getAssetUuid())){
 			dto.setAssetUuid(IDGenerator.generate(36));
 		}
+
+
+		/***当资产为资管计划或者委外时,需要保存资管计划开始结束日**/
+		if(DictCodeListExt2.资产_负债类别_资产管理产品.getValue().equals(dto.getAssetType())
+		||DictCodeListExt2.资产_负债类别_委外投资_协议方式.getValue().equals(dto.getAssetType())){
+			dto.setPlanSdate(dto.getVdate());
+			dto.setPlanEdate(dto.getMdate());
+		}
+
 		restTemplate.postForObject(
 				SvrServiceApplication.CHB_SERVICE_NAME + "/AssetInfoDetail/doSave", dto, Integer.class);
 
