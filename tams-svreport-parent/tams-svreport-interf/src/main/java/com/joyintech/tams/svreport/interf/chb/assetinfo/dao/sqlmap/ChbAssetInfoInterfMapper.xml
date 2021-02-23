@@ -7042,7 +7042,7 @@
         INFO.FINANCIER CHB_FINANCIER_ID,
         decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
         decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
-        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
+        CASE WHEN FPTYPE.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
 
