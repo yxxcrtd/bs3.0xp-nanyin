@@ -19,8 +19,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001Mapper;
-import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
+import com.joyintech.tams.svreport.interf.chb.proddeal.dto.CheckReport001Dto;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
@@ -125,8 +124,6 @@ public class SvrProdDealFileImpService extends FileImpService {
 	@Autowired
 	private ChbTypeMappingMapper chbTypeMappingMapper;
 
-	@Autowired
-	private CheckReport001Mapper checkReport001Mapper;
 	 /**
      * mybatis的sqlsession管理核心
      */
@@ -1009,10 +1006,10 @@ public class SvrProdDealFileImpService extends FileImpService {
 			for (int index = 0; index < resultList.size();) {
 				if (batchLastIndex > resultList.size() - 1) {
 					batchLastIndex = resultList.size();
-					checkReport001Mapper.batchInsert(resultList.subList(index, batchLastIndex));
+					chbPrdDealInterfMapper.batchInsert(resultList.subList(index, batchLastIndex));
 					break;// 数据删除完毕,退出循环
 				} else {
-					checkReport001Mapper.batchInsert(resultList.subList(index, batchLastIndex));
+					chbPrdDealInterfMapper.batchInsert(resultList.subList(index, batchLastIndex));
 					index = batchLastIndex;// 设置下一批下标
 					batchLastIndex = index + batchCount;
 				}

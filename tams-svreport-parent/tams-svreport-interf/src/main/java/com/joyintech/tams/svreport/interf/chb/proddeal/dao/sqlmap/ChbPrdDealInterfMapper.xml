@@ -676,4 +676,44 @@
 		AND STATUS !='D'
 		) a   group by a.ACCOUNT
 	</select>
+
+	<!-- 批量插入 -->
+	<insert id="batchInsert"
+			parameterType="com.joyintech.tams.svreport.interf.chb.proddeal.dto.CheckReport001Dto">
+		insert into CHB_REPORT_CHECK(CHECK_SEQNO,
+		REP_CODE,
+		REP_NAME,
+		VALID_KEY,
+		CHECK_RESULT,
+		ORG_CODE,
+		DATA_TIME,
+		CREATE_DEPT,
+		UPDATE_USER,
+		UPDATE_TIME,
+		CREATE_USER,
+		CREATE_TIME,
+		ERROR_INFO,
+		WARN_INFO,
+		IS_LOGIC_CHECK,
+		REF_SEQNO)
+		<foreach collection="list" item="dto" open=" select * from (select "
+				 close="from dual)" separator="from dual union all select ">
+			#{dto.checkSeqno,jdbcType=VARCHAR},
+			#{dto.repCode,jdbcType=VARCHAR},
+			#{dto.repName,jdbcType=VARCHAR},
+			#{dto.validKey,jdbcType=VARCHAR},
+			#{dto.checkResult,jdbcType=VARCHAR},
+			#{dto.orgCode,jdbcType=VARCHAR},
+			#{dto.dataTime,jdbcType=TIMESTAMP},
+			#{dto.createDept,jdbcType=VARCHAR},
+			#{dto.updateUser,jdbcType=VARCHAR},
+			#{dto.updateTime,jdbcType=TIMESTAMP},
+			#{dto.createUser,jdbcType=VARCHAR},
+			#{dto.createTime,jdbcType=TIMESTAMP},
+			#{dto.errorInfo,jdbcType=VARCHAR},
+			#{dto.warnInfo,jdbcType=VARCHAR},
+			#{dto.isLogicCheck,jdbcType=VARCHAR},
+			#{dto.refseqno,jdbcType=VARCHAR}
+		</foreach>
+	</insert>
 </mapper>

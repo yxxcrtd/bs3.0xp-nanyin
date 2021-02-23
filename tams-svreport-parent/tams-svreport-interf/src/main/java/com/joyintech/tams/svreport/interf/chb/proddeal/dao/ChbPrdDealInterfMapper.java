@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.common.base.entity.ChbPrdCustNumIfo;
+import com.joyintech.tams.svreport.interf.chb.proddeal.dto.CheckReport001Dto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -64,5 +65,12 @@ public interface ChbPrdDealInterfMapper {
 	 */
 	List<ChbPrdCustNumIfo>   getraiseCustNumThree(@Param("prodIdList")List<String> prodIdList, @Param("checkDate")Date checkDate);
 
-
+	/**
+	 * 批量插入报送前检查结果
+	 *
+	 * @param resultList 数据集
+	 * @see
+	 * @since 1.0
+	 */
+	void batchInsert(List<CheckReport001Dto> resultList);
 }
