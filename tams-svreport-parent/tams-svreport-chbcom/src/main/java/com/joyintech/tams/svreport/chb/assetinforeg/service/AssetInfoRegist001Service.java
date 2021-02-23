@@ -806,7 +806,8 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
         if (StringUtil.equals(exportMethodFlg, "export")) {
             // 设置参数
         	dealSearchParam(pageParam);
-            exportParam.config("/com/joyintech/tams/svreport/chb/assetinforeg/conf/export_conf.xml").select(() -> assetInfoRegist001Mapper.selectAssetInfoByPage(pageParam));
+            exportParam.config("/com/joyintech/tams/svreport/chb/assetinforeg/conf/export_conf.xml").select(() ->
+					dealDataList(assetInfoRegist001Mapper.selectAssetInfoByPage(pageParam), false));
         }
         // 将选择的数据导出成excel
         else if (StringUtil.equals(exportMethodFlg, "exportSelect")) {
@@ -827,8 +828,8 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 				pageParam.put("assetTypeList", assetTypeList);
 			}
 			// add by zhangliang 20201109 公募和私募基金特殊处理 end
-
-            exportParam.config("/com/joyintech/tams/svreport/chb/assetinforeg/conf/export_conf.xml").select(() -> assetInfoRegist001Mapper.selectExportSelectListSeq(pageParam));
+            exportParam.config("/com/joyintech/tams/svreport/chb/assetinforeg/conf/export_conf.xml").select(() ->
+					dealDataList(assetInfoRegist001Mapper.selectExportSelectListSeq(pageParam), false));
         }
 
      }
