@@ -138,9 +138,10 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-utext="#{SvrBussRepAssetMngProdInfo.capUseIndu}">资金运作一级行业</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_capUseIndu|" th:name="|${entityName}.capUseIndu|"
+                        <select id="svrBussRepAssetMngProdInfoDto_capUseIndu" th:name="|${entityName}.capUseIndu|"
                                 data-th-data-result="${INSTITUTION_INDUSTRY_FIRST_LEVEL}"
                                 th:initValue="${entity?.capUseIndu}"
+                                childrenIds="svrBussRepAssetMngProdInfoDto_capUseInduLevel2"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" required>
                         </select>
@@ -151,9 +152,10 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-utext="#{SvrBussRepAssetMngProdInfo.capUseInduLevel2}">资金运作二级行业</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_capUseInduLevel2|" th:name="|${entityName}.capUseInduLevel2|"
+                        <select id="svrBussRepAssetMngProdInfoDto_capUseInduLevel2" th:name="|${entityName}.capUseInduLevel2|"
                                 data-th-data-result="${INSTITUTION_INDUSTRY_SECOND_LEVEL}"
                                 th:initValue="${entity?.capUseInduLevel2}"
+                                parentIds="svrBussRepAssetMngProdInfoDto_capUseIndu"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" required>
                         </select>
