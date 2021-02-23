@@ -223,6 +223,8 @@ public class ChannelAssetService extends BaseService<ChannelAssetDto> {
         finprodIdList.add(entity.getFinprodId());
         //标的金融产品信息
         baseFinProductBaseInfoService.delete(finprodIdList);
+        //标的类金融产品扩展表
+        paFinProductMapper.deleteByPrimaryKey(entity.getFinprodId());
 //        StlFinProductAcctKey key = new StlFinProductAcctKey();
 //        key.setFinprodId(entity.getFinprodId());
 //        key.setAcctNo(entity.getOldBusiAcctNo());
