@@ -66,7 +66,9 @@ public class PreTrdBondBussTransfenpeiController extends BaseController {
             String entrustId = this.getParam("entrustId");
             String distribution = this.getParam("distribution");
             BussTransDto entity = StringUtil.isNotEmpty(entityStr) ? JsonUtils.json2Object(entityStr, BussTransDto.class) : null;
-            entity.setDistribution(distribution);
+            if(StringUtil.isNotEmpty(entity) && StringUtil.isNotEmpty(distribution)){
+                entity.setDistribution(distribution);
+            }
             if (entity != null) {
                 // 已质押券信息一览
                 model.addAttribute("entity", entity);
