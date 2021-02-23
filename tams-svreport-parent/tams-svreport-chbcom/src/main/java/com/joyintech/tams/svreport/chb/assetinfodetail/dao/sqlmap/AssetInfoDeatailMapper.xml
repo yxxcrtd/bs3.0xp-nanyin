@@ -2201,6 +2201,13 @@
           where ASSET_UUID = #{Assetuuid,jdbcType=VARCHAR}
     </select>
 
+
+    <select id="queryAssetInfo"  parameterType="java.lang.String" resultMap="BaseResultMap">
+          SELECT *
+          FROM CHB_ASSET_INFO a
+          where ASSET_CODE = #{assetCode,jdbcType=VARCHAR}
+    </select>
+
     <select id="getDataListLinkData"  resultType="com.joyintech.system.base.entity.SysDatadictListLink">
           SELECT * FROM SYS_DATADICT_LIST_LINK
           WHERE 1=1
@@ -3019,7 +3026,10 @@
             set status = 'D'
             WHERE ASSET_UUID = #{assetUUid}
     </update>
-
+    <delete id="deleteErrorMsg" parameterType="java.lang.String" >
+        delete from CHB_ASSET_INFO_ERRODATA
+        where trim(ASSET_CODE) = #{assetCode,jdbcType=CHAR}
+    </delete>
 
 
 

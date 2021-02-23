@@ -37,6 +37,10 @@ public interface AssetInfoDetailMapper {
 	List<AssetInfoDetailDto> selectChbInfoByParam (Map<String,Object> params);
 
 	AssetInfoDetailDto getAssetInfoDetail (@Param("Assetuuid") String Assetuuid);
+	AssetInfoDetailDto queryAssetInfo (@Param("assetCode") String assetCode);
+
+
+
 	ChbAssetInfo getChbAssetInfoByUUid (@Param("Assetuuid") String Assetuuid);
 
 	int mergeInfoListEx(@Param("newDataList")List<ChbAssetInfo> insertList);
@@ -59,6 +63,9 @@ public interface AssetInfoDetailMapper {
 	int deleteError(String assetUUid);
 
 	int updateChbAssetType(String assetUUid);
+
+
+	int deleteErrorMsg(String assetCode);
 
 
 }

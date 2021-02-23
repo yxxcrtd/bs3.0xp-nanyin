@@ -14,6 +14,8 @@ import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUt
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.svreport.chb.assetinfodetail.dao.AssetInfoDetailMapper;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,6 +37,9 @@ public class AssetInfoDetailValidator implements BeanValidator{
 
     @Autowired
     private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+
+    @Autowired
+    private AssetInfoDetailMapper assetInfoDetailMapper;
 
     /**
      * {@inheritDoc}
@@ -78,7 +83,13 @@ public class AssetInfoDetailValidator implements BeanValidator{
 //            resultList.add(new ValidMessage("",
 //                    getMessage("COMMON_E_0057", getMessage("市场机构代码"))));
 //        }
-
+        //如果资产没有资产编号.默认为新增.检查是否存在对应资产
+        if(StringUtil.isEmpty(dto.getAssetUuid())){
+            AssetInfoDetailDto resultDto = assetInfoDetailMapper.queryAssetInfo(dto.getAssetCode());
+            if(null!=resultDto){
+                resultList.add(new ValidMessage("assetCode","资产编码已存在"));
+            }
+        }
         // add by zhangliang 20210126 中债check调用 start
         resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getAssetType2(), ValidMessage.class);
         // add by zhangliang 20210126 中债check调用 end

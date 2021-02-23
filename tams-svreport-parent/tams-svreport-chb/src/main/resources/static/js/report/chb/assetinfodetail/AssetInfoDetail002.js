@@ -391,16 +391,12 @@ var QueryFunc=function(){
         showReportInfo();
     }
 
-
+    /**
+     * 将当前子页面的数据赋值
+     */
     var assetVal = function(){
-        $("#svrBussRepEquityInfoDto_assetCode").val($('#assetCode').val());
-        $("#svrBussRepOutInvestAgrInfo_assetCode").val($('#assetCode').val());
-        $("#svrBussRepFundInfo_assetCode").val($('#assetCode').val());
-
-
-        $("#svrBussRepEquityInfoDto_assetName").val($('#assetName').val());
-        $("#svrBussRepOutInvestAgrInfo_assetName").val($('#assetName').val());
-        $("#svrBussRepFundInfo_assetName").val($('#assetName').val());
+        $("input[id$='_assetCode']").val($('#assetCode').val());
+        $("input[id$='_assetName']").val($('#assetName').val());
     }
     /**
      * 画面加载完成
@@ -422,11 +418,11 @@ var QueryFunc=function(){
             saveOrSubmit('submit');
         });
 
-
         $('#assetType2').change(function(){
             showReportInfo();
             //assetType2联动子页面的内容
             changeReport();
+            assetVal();
         });
 
         $('#assetCode').change(function(){
