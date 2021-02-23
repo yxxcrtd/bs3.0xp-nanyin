@@ -40,6 +40,9 @@
         if(single == "1"){
             $(name).attr('required',true);
         }
+        if (pageId == 'EtrConBond002'){
+            $('#etrInvestPersonInfo_trader').removeAttr('multiple'); 
+        }
         star();
         $(name).change(function () {// 内部交易对手时，只能选择卖出
             if ($(name).select2('data') && $(name).select2('data')[0]) {

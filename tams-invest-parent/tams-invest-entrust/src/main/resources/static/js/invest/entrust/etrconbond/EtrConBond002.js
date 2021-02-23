@@ -180,7 +180,7 @@
                 }
             }
         }
-    	$('#etrInvestPersonInfo_trader').attr('multiple',false);
+    	// $('#etrInvestPersonInfo_trader').attr('multiple',false);
     }
 
     /**
