@@ -2162,6 +2162,8 @@
         ASSET_CODE,ASSET_NAME
         FROM CHB_ASSET_INFO ASSETINFO
         <where>
+            1=1
+            and ASSETINFO.STATUS IN ('E','M')
             <if test="search != null and search != ''">
                 and ASSETINFO.ASSET_CODE like concat(concat('%', #{search}),'%') or ASSETINFO.ASSET_NAME like concat(concat('%', #{search}),'%')
             </if>
@@ -2199,6 +2201,7 @@
           SELECT '02' dataStatus,a.*
           FROM CHB_ASSET_INFO a
           where ASSET_UUID = #{Assetuuid,jdbcType=VARCHAR}
+          AND A.STATUS IN ('E','M')
     </select>
 
 
@@ -2206,6 +2209,7 @@
           SELECT *
           FROM CHB_ASSET_INFO a
           where ASSET_CODE = #{assetCode,jdbcType=VARCHAR}
+          AND A.STATUS IN ('E','M')
     </select>
 
     <select id="getDataListLinkData"  resultType="com.joyintech.system.base.entity.SysDatadictListLink">
@@ -2223,6 +2227,7 @@
     <select id="getChbAssetInfoByUUid"  resultMap="ChbBaseResultMap">
           SELECT * FROM CHB_ASSET_INFO
           where ASSET_UUID = #{Assetuuid}
+          and STATUS IN ('E','M')
     </select>
 
     <insert id="mergeInfoListEx"  parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
@@ -2452,7 +2457,8 @@
         </foreach>
         ) TEMP
         <!-- 业务主键匹配 -->
-        ON (CII.ASSET_CODE = TEMP.ASSET_CODE)
+        ON (CII.ASSET_CODE = TEMP.ASSET_CODE
+        and CII.status IN ('E','M'))
         <!-- 匹配到则更新 -->
         WHEN MATCHED THEN
         UPDATE
@@ -2768,10 +2774,6 @@
         IS_BZHPJ,CHB_ISSUER_ID,CHB_MANAGER_ID,
         CHB_FINANCIER_ID,PERPETUAL_FLAG,OPTION_FLAG,
         IS_BJSZQ,IS_PERPETUAL,IS_FBZB
-
-
-
-
         )
         values(
         TEMP.ASSET_UUID,
@@ -3023,7 +3025,8 @@
 
     <update id="updateChbAssetType">
             update CHB_ASSET_INFO
-            set status = 'D'
+            set status = 'D',
+            update_time = sysdate
             WHERE ASSET_UUID = #{assetUUid}
     </update>
     <delete id="deleteErrorMsg" parameterType="java.lang.String" >
