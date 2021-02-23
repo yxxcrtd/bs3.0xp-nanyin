@@ -402,6 +402,18 @@
                     </div>
                 </div>
 
+                <div class="form-inline-wrap">
+                    <label class="layui-form-label form-label-wrap"
+                           data-th-text="#{SvrBussRepOtherInvestTargetInfo.deptEquity}">是否为债转股</label>
+                    <div class="layui-input-inline input-inline">
+                        <select th:id="|${entityName}_deptEquity|" th:name="|${entityName}.deptEquity|"
+                                th:initValue="${entity?.deptEquity}" class="layui-input form-input input-select"
+                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                data-th-data-result="${SVR_YES_OR_NO}">
+                        </select>
+                    </div>
+                </div>
+
             </div>
 
 
