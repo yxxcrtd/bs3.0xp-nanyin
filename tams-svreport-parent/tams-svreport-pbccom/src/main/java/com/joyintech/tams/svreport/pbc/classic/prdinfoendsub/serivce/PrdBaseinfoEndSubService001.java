@@ -68,7 +68,7 @@ public class PrdBaseinfoEndSubService001 extends CommonExportService<PbcPrdBasei
 	 */
 	@Autowired
 	private PbcPrdBaseinfoEndSubMapper pbcPrdBaseinfoEndSubMapper;
-	export2
+
 	/**
 	 * 资产池基本信息service
 	 */
