@@ -5,12 +5,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.Format;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
@@ -489,7 +484,7 @@ public class PbcPrdCashRaiseSubService001 extends CommonExportService<PbcProdRai
 	    	//模板名
 	    	String name=dto.getValue().getPbcCode();
 	    	if(StringUtils.isEmpty(name)){
-	    		name = pbcProdId+"("+DateUtil.format(dto.getValue().getRaisingDate(),"yyyyMMdd")+")";
+				name = pbcProdId;
 	    	}
 	    	String operateMode = "";
 	    	List<String> operateModeList = pbcProdRaiseSubMapper.selectOperateMode(pbcProdIdShow);
@@ -601,8 +596,12 @@ public class PbcPrdCashRaiseSubService001 extends CommonExportService<PbcProdRai
 	    	} else {
 	    		nameMap.put(name, 1);
 	    	}
-			String fileName = "资金募集数据-"+name+"-"+DateUtil.format(new Date(), "yyyyMMdd")+".xls";
-			String fileName1 = name+"-"+DateUtil.format(new Date(), "yyyyMMdd")+".xls";
+			Calendar cale = Calendar.getInstance();
+			cale.add(Calendar.MONTH, 1);
+			cale.set(Calendar.DAY_OF_MONTH, 0);
+			String  lastday = DateUtil.format(cale.getTime(),"yyyyMMdd");
+			String fileName = "资金募集数据-"+name+"-"+lastday+".xls";
+			String fileName1 = name+"-"+lastday+".xls";
 
 			File depositfile = TisUtil.createFile(data, "pbc/"+template, fileName);
 			File depositfile1 = TisUtil.createFile(data, "pbc/"+template, fileName1);
