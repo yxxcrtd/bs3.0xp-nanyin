@@ -171,6 +171,19 @@ public class SvrBussRepOtherInvestTargetInfoDto extends RepOtherInvestTarget{
     /**
      * 担保人与融资人关系
      */
+    /**
+     * 是否为债转股
+     */
+    private String deptEquity;
+
+    public String getDeptEquity() {
+        return deptEquity;
+    }
+
+    public void setDeptEquity(String deptEquity) {
+        this.deptEquity = deptEquity;
+    }
+
     private String relationFinan;
 
     public static long getSerialVersionUID() {

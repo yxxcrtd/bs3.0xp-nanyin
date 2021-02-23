@@ -5,12 +5,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -438,13 +433,17 @@ public class SvrProdDealFileImpService extends FileImpService {
 		if("02".equals(inoraboard)) {//境外时，客户一级类型为C06，客户一级类型为C0600
 //			c1 = "C06";
 //			c2 = "C0600";
-			c2 = customerMapJW.get(map.get("cusCode")).getObjdatatypeid();
+
+				c2 = customerMapJW.get(map.get("cusCode")).getObjdatatypeid();
+
 			c1 = null;
 			if (c2 != null && c2.length() > 3) {
 				c1 = c2.substring(0, 3);
 			}
 		}else {//境内时，从映射表取值客户一级类型，客户一级类型
-			c2 = customerMap.get(map.get("cusCode")).getObjdatatypeid();
+
+			  c2 = customerMap.get(map.get("cusCode")).getObjdatatypeid();
+
 			c1 = null;
 			if (c2 != null && c2.length() > 3) {
 				c1 = c2.substring(0, 3);
@@ -853,11 +852,6 @@ public class SvrProdDealFileImpService extends FileImpService {
         if(!listData.isEmpty()){
 			//1、复制入库处理用的listData（List<map>，用作客户数检查数据。
 			List<Map<String, String>> listdataCheck=listData;
-        	//设置系统参数
-			String svrCusNumCheck = SvrDataUtil.getSysParam("SAVE_CUS_NUM_CHECK_01");
-
-        	result=saveData(listData, saveFlag, interfFile.getDataSource());
-			//1、当系统参数设置为【是否做客户数检查 = 01：是】的时候，进行以下处理：
 			String checkDate="";
 
 			for(Map<String, String> map1:listdataCheck){
@@ -865,6 +859,16 @@ public class SvrProdDealFileImpService extends FileImpService {
 					checkDate=map1.get("checkDate");
 				}
 			}
+        	//设置系统参数
+			String svrCusNumCheck = SvrDataUtil.getSysParam("SAVE_CUS_NUM_CHECK_01");
+            for(int i=0;i<listData.size();i++){
+             if(listData.get(i).containsKey("checkDate")){
+				 listData.remove(i);
+			 }
+			}
+        	result=saveData(listData, saveFlag, interfFile.getDataSource());
+			//1、当系统参数设置为【是否做客户数检查 = 01：是】的时候，进行以下处理：
+
 			if(StringUtil.equals("01",svrCusNumCheck)){
 				cusNumChkInterf(listdataCheck,checkDate);
 			}
@@ -954,13 +958,13 @@ public class SvrProdDealFileImpService extends FileImpService {
 		HashMap<String, ChbPrdCustNumIfo> prdMap = new HashMap<>();
 
 		//新建对象： 产品列表list<Stirng>  对象产品list
-		List<String> prdList = new ArrayList<>();
+		Set<String> prdList = new HashSet<>();
 
 		//以输入参数.ListData为基础、进行循环处理，生成产品维度的客户数数据
 		for (Map<String, String> map : listData) {
 			//以此条数据的产品代码为Key,进行是否认购数据判断，当此条数据为认购数据的情况下，进行以下处理：
 			if (!StringUtil.isEmpty(map.get("prinamt")) && new BigDecimal(map.get("prinamt")).compareTo(BigDecimal.ZERO) != 0) {
-				BigDecimal cust_counts = new BigDecimal(map.get("CUST_COUNTS"));
+				BigDecimal cust_counts = new BigDecimal(map.get("saveCusNum"));
 
 				//在【产品信息map】中存在prodDealInterfService
 				if (prdMap.containsKey(map.get("PROD_ID"))) {
@@ -972,7 +976,7 @@ public class SvrProdDealFileImpService extends FileImpService {
 					//在【产品信息map】中不存在
 					//以此条记录的信息，对【产品客户信息DTO】进行设值
 					ChbPrdCustNumIfo custNumIfo = new ChbPrdCustNumIfo();
-					custNumIfo.setPrdCode(map.get("PROD_ID"));
+					custNumIfo.setPrdCode(map.get("finprodId"));
 					custNumIfo.setInspectionResults(null);
 					custNumIfo.setWarningInformation(null);
 					//custNumIfo.setDataOfDate(map.get());
@@ -980,17 +984,21 @@ public class SvrProdDealFileImpService extends FileImpService {
 					custNumIfo.setCustHeldNum(counts);
 					custNumIfo.setThrCustNum(new BigDecimal("0"));
 					//往产品信息Map中，设值<此条记录的.产品代码，循环中新建的.产品客户信息DTO>
-					prdMap.put(map.get("PROD_ID"), custNumIfo);
+					prdMap.put(map.get("finprodId"), custNumIfo);
 					//对象产品list.add(此条数据的产品ID）
-					prdList.add(map.get("PROD_ID"));
+					prdList.add(map.get("finprodId"));
 				}
 			}
-
+		}
+		List<String>  prList=new ArrayList<>();
+        for(String se:prdList){
+			prList.add(se);
+		}
 			//组装一二期客户数信息
 			List<ChbPrdCustNumIfo> lsitOtbch =new ArrayList<ChbPrdCustNumIfo>(prdMap.values());
 
 			// 2、以1中处理【对象产品List】为查询条件，查询三期数据、并进行比较处理
-			List<ChbPrdCustNumIfo> lsitOtbchThree = chbPrdDealInterfMapper.getraiseCustNumThree(prdList, com.joyintech.framework.util.DateUtil.parse(checkDate));
+			List<ChbPrdCustNumIfo> lsitOtbchThree = chbPrdDealInterfMapper.getraiseCustNumThree(prList, com.joyintech.framework.util.DateUtil.parse(checkDate));
 
 			//2.2 、比较一二期 与 三期的客户数
 
@@ -1014,7 +1022,6 @@ public class SvrProdDealFileImpService extends FileImpService {
 					batchLastIndex = index + batchCount;
 				}
 			}
-		}
 
 	}
 	/**
@@ -1040,6 +1047,8 @@ public class SvrProdDealFileImpService extends FileImpService {
 					dto.setCheckSeqno(IDGenerator.generate(32));
 					//报表ID=DictCodeListExt2.报表名称_募集总量登记.getValue()
 					dto.setRepCode(DictCodeListExt2.报表名称_募集总量登记.getValue());
+					//报表名称
+					dto.setRepName(DictCodeListExt2.报表名称_募集总量登记.getCodeName());
 					//唯一标识="产品代码:" + 此条记录的.产品代码
 					dto.setValidKey("产品代码" + cinfo.getPrdCode());
 					//检查结果
