@@ -413,13 +413,27 @@ public class FinFloatMgtExpQuotationService extends BaseService<FinFloatMgtExpQu
             if(cashExist&&!StringUtil.isEmptyList(finFloatAccrualScheNew)){
             	finFloatMgtExpQuotationMapper.deleteFloatScheByCashId(entity.getCashId());
             	for (FinFloatAccrualSche finFloatAccrualSche : finFloatAccrualScheNew) {
+            		// 查询无重复
+            		FinFloatAccrualScheKey key = new FinFloatAccrualScheKey();
+					key.setCashId(finFloatAccrualSche.getCashId());
+					key.setAccrDate(finFloatAccrualSche.getAccrDate());
+					FinFloatAccrualSche fas = finFloatAccrualScheMapper.selectByPrimaryKey(key);
+					if(!StringUtil.isNotEmpty(fas)) {
             		finFloatAccrualScheMapper.insert(finFloatAccrualSche);
+					}
 				}
             }
             //当现金流计提计划没有，并且新的列表有值
             else if(!StringUtil.isEmptyList(finFloatAccrualScheNew)){
             	for (FinFloatAccrualSche finFloatAccrualSche : finFloatAccrualScheNew) {
+            		// 查询无重复
+            		FinFloatAccrualScheKey key = new FinFloatAccrualScheKey();
+					key.setCashId(finFloatAccrualSche.getCashId());
+					key.setAccrDate(finFloatAccrualSche.getAccrDate());
+					FinFloatAccrualSche fas = finFloatAccrualScheMapper.selectByPrimaryKey(key);
+					if(!StringUtil.isNotEmpty(fas)) {
             		finFloatAccrualScheMapper.insert(finFloatAccrualSche);
+					}
 				}
             }
         }
@@ -430,7 +444,14 @@ public class FinFloatMgtExpQuotationService extends BaseService<FinFloatMgtExpQu
         		finFloatMgtExpQuotationMapper.deleteCashPlanByCashId(entity.getCashId());
         	}
         	for (FinCashPlan finCashPlan : planList) {
+        		// 查询无重复
+				FinCashPlanKey key = new FinCashPlanKey();
+				key.setCashId(finCashPlan.getCashId());
+				key.setMdate(finCashPlan.getMdate());
+				FinCashPlan fcp = finCashPlanMapper.selectByPrimaryKey(key);
+				if(!StringUtil.isNotEmpty(fcp)) {
         		finCashPlanMapper.insert(finCashPlan);
+				}
 			}
         }
     }
