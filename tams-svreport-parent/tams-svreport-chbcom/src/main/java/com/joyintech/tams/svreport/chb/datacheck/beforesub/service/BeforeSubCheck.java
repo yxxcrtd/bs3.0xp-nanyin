@@ -298,10 +298,14 @@ public class BeforeSubCheck extends SvrCBBaseService{
         //设置系统参数
         String svrCusNumCheck = SvrDataUtil.getSysParam("SAVE_CUS_NUM_CHECK_01");
         //当系统参数设置为【是否做客户数检查 = 01：是】的时候，进行以下处理：
+        List<CheckReport001Dto> listcheck=new ArrayList<>();
         if(StringUtil.equals("01",svrCusNumCheck)){
-            List<CheckReport001Dto> listcheck=svrCustomerNumCheckService.checkProdRaiseTotalRegCusNum(checkdate);
+             listcheck=svrCustomerNumCheckService.checkProdRaiseTotalRegCusNum(checkdate);
         }
         logger.info("募集总量登记检查结束");
+        if(listcheck!=null){
+            resultList.addAll(listcheck);
+        }
         return resultList;
         
     }

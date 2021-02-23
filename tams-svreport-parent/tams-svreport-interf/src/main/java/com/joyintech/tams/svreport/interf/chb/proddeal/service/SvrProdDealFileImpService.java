@@ -949,6 +949,11 @@ public class SvrProdDealFileImpService extends FileImpService {
         logger.debug("产品交易插入结束--------------" + new Date());
     }
 
+	/**
+	 * 检查客户数方法
+	 * @param listData
+	 * @param checkDate
+	 */
 	public void cusNumChkInterf(List<Map<String, String>> listData,String   checkDate) {
 		//定义返回对象
 		List<CheckReport001Dto> resultList = new ArrayList<>();
@@ -1071,6 +1076,8 @@ public class SvrProdDealFileImpService extends FileImpService {
 						dto.setCheckSeqno(IDGenerator.generate(32));
 						//报表ID=DictCodeListExt2.报表名称_募集总量登记.getValue()
 						dto.setRepCode(DictCodeListExt2.报表名称_募集总量登记.getValue());
+						//报表名称
+						dto.setRepName(DictCodeListExt2.报表名称_募集总量登记.getCodeName());
 						//唯一标识="产品代码:" + 此条记录的.产品代码
 						dto.setValidKey("产品代码" + cinfo.getPrdCode());
 						//检查结果
