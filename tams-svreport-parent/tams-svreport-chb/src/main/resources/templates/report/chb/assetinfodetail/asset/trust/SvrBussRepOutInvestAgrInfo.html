@@ -25,7 +25,7 @@
                            data-th-utext="#{SvrBussRepOutInvestAgrInfo.assetName}">委外投资协议名称</label>
                     <div class="layui-input-inline input-inline">
                         <input type="text" th:id="|${entityName}_assetName|"
-                               th:value="${entity?.assetName}" disabled="disabled"
+                               th:value="${entity?.assetName}"
                                data-fixtype="2" class="layui-input form-input" required/>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                            data-th-text="#{SvrBussRepOutInvestAgrInfo.assetId}">委外投资协议编号</label>
                     <div class="layui-input-inline input-inline">
                         <input type="text" th:id="|${entityName}_assetCode|"
-							   data-th-value="${entity?.assetCode}"  disabled="disabled"
+							   data-th-value="${entity?.assetCode}"  
                                class="layui-input form-input" placeholder="请输入内容"
                                data-th-placeholder="#{SysCommon.placeholder}" required>
                     </div>
