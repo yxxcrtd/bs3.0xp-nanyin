@@ -137,7 +137,8 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
 		 * 如果是待处理数据,则将错误信息表里面的数据删除
 		 */
 		if(DictCodeListExt3.中债_处理状态_待处理.getValue().equals(dto.getDataStatus())){
-			chbAssetInfoErrodataMapper.deleteByPrimaryKey(dto.getAssetId());
+			assetInfoDetailMapper.deleteErrorMsg(dto.getAssetCode());
+
 		}
 
 		return flag;
