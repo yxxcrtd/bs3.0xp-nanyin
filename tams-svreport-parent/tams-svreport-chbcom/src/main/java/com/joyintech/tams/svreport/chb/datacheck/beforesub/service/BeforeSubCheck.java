@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.svreport.chb.common.SvrCustomerNumCheckService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,9 @@ public class BeforeSubCheck extends SvrCBBaseService{
     
     @Autowired
     private BeforeSubErrorCheck beforeSubErrorCheck;
+
+    @Autowired
+    private SvrCustomerNumCheckService svrCustomerNumCheckService;
     /**
      * 
      * 检查总表
@@ -291,6 +295,12 @@ public class BeforeSubCheck extends SvrCBBaseService{
                 chbReportCheck.setWarnInfo("产品的发行登记未报送!");
                 resultList.add(chbReportCheck);
             }            
+        }
+        //设置系统参数
+        String svrCusNumCheck = SvrDataUtil.getSysParam("SAVE_CUS_NUM_CHECK_01");
+        //当系统参数设置为【是否做客户数检查 = 01：是】的时候，进行以下处理：
+        if(StringUtil.equals("01",svrCusNumCheck)){
+            List<CheckReport001Dto> listcheck=svrCustomerNumCheckService.checkProdRaiseTotalRegCusNum(checkdate);
         }
         logger.info("募集总量登记检查结束");
         return resultList;

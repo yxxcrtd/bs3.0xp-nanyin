@@ -16,6 +16,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+import com.joyintech.tams.svreport.chb.common.SvrCustomerNumCheckService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
@@ -120,7 +121,10 @@ public class SvrProdDealFileImpService extends FileImpService {
 	private ChbPrdDealInterfMapper chbPrdDealInterfMapper;
 	@Autowired
 	private ProdDealInterfService prodDealInterfService;
-	
+
+	@Autowired
+	private SvrCustomerNumCheckService svrCustomerNumCheckService;
+
 	@Autowired
 	private ChbTypeMappingMapper chbTypeMappingMapper;
 	 /**
@@ -850,7 +854,23 @@ public class SvrProdDealFileImpService extends FileImpService {
         }
         String saveFlag = interfConfig.getContentType();
         if(!listData.isEmpty()){
+			//1、复制入库处理用的listData（List<map>，用作客户数检查数据。
+			List<Map<String, String>> listdataCheck=listData;
+        	//设置系统参数
+			String svrCusNumCheck = SvrDataUtil.getSysParam("SAVE_CUS_NUM_CHECK_01");
+
         	result=saveData(listData, saveFlag, interfFile.getDataSource());
+			//1、当系统参数设置为【是否做客户数检查 = 01：是】的时候，进行以下处理：
+			String checkDate="";
+
+			for(Map<String, String> map1:listdataCheck){
+				if(map1.get("checkDate")!=null){
+					checkDate=map1.get("checkDate");
+				}
+			}
+			if(StringUtil.equals("01",svrCusNumCheck)){
+				svrCustomerNumCheckService.cusNumChkInterf(listdataCheck,checkDate);
+			}
         }
         // 更新系统配置时间
         ChbInterfUtil.updateInterfTimeBySysdate( InterfDefine.投资者交易信息接口数据.getCode());
@@ -927,4 +947,8 @@ public class SvrProdDealFileImpService extends FileImpService {
         }
         logger.debug("产品交易插入结束--------------" + new Date());
     }
+
+
+
+
 }

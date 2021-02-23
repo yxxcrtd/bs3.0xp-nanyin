@@ -5,7 +5,10 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ChbPrdCustNumIfo;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001Mapper;
 import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
 import com.joyintech.tams.svreport.chb.common.dao.ChbCustomerNumCheckMapper;
 import com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto;
@@ -31,18 +34,18 @@ public class SvrCustomerNumCheckService {
     @Autowired
     private ChbCustomerNumCheckMapper chbCustomerNumCheckMapper;
 
+    @Autowired
+    private CheckReport001Mapper checkReport001Mapper;
     /**
      * 客户数检查-数据接入用方法
      *
      * @param listData
-     * @param paraMap
+     * @param
      */
-    private void cusNumChkInterf(List<Map<String, String>> listData, Map<String, String> paraMap) {
+    public void cusNumChkInterf(List<Map<String, String>> listData,String   checkDate) {
         //定义返回对象
-        List<CheckReport001Dto> returList = new ArrayList<>();
+        List<CheckReport001Dto> resultList = new ArrayList<>();
 
-        //取得数据检查业务日期
-        String checkDate = paraMap.get("CHECK_DATA");
 
         //新建对象： map<string 产品ID，产品客户数信息DTO>
         HashMap<String, ChbPrdCustNumIfo> prdMap = new HashMap<>();
@@ -81,7 +84,7 @@ public class SvrCustomerNumCheckService {
             }
 
             //组装一二期客户数信息
-            List<ChbPrdCustNumIfo> lsitOtbch =new ArrayList<>(prdMap.values());
+            List<ChbPrdCustNumIfo> lsitOtbch =new ArrayList<ChbPrdCustNumIfo>(prdMap.values());
 
             // 2、以1中处理【对象产品List】为查询条件，查询三期数据、并进行比较处理
             List<ChbPrdCustNumIfo> lsitOtbchThree = chbCustomerNumCheckMapper.getraiseCustNumThree(prdList, DateUtil.parse(checkDate));
@@ -89,10 +92,25 @@ public class SvrCustomerNumCheckService {
             //2.2 、比较一二期 与 三期的客户数
 
             //a、三期不存在、一二期存在  &&  c、三期存在、一二期存在，但是客户数不一致
-            complareList2(lsitOtbchThree, lsitOtbch, DateUtil.parse(checkDate), returList, false);
+            complareList(lsitOtbchThree, lsitOtbch, DateUtil.parse(checkDate), resultList, false);
             //b、三期存在，一二期不存在
-            complareList2(lsitOtbch, lsitOtbchThree, DateUtil.parse(checkDate), returList, true);
+            complareList(lsitOtbch, lsitOtbchThree, DateUtil.parse(checkDate), resultList, true);
 
+            //3、检查结果数据、批量入库
+
+            int batchCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));// 每批commit的个数
+            int batchLastIndex = batchCount;// 每批最后一个的下标
+            for (int index = 0; index < resultList.size();) {
+                if (batchLastIndex > resultList.size() - 1) {
+                    batchLastIndex = resultList.size();
+                    checkReport001Mapper.batchInsert(resultList.subList(index, batchLastIndex));
+                    break;// 数据删除完毕,退出循环
+                } else {
+                    checkReport001Mapper.batchInsert(resultList.subList(index, batchLastIndex));
+                    index = batchLastIndex;// 设置下一批下标
+                    batchLastIndex = index + batchCount;
+                }
+            }
         }
 
     }
@@ -200,102 +218,6 @@ public class SvrCustomerNumCheckService {
 
 
 
-    public void complareList2(List<ChbPrdCustNumIfo> otList, List<ChbPrdCustNumIfo> thList, Date checkdate,
-                              List<CheckReport001Dto> returList, boolean flag) {
-        Map<String, ChbPrdCustNumIfo> map = new HashMap<>();
-        //otList 转为map
-        if (otList != null) {
-            map = otList.stream().collect(Collectors.toMap(ChbPrdCustNumIfo::getPrdCode, Function.identity(), (key1, key2) -> key2));
-        }
-        if (thList != null && thList.size() > 0) {
-            for (ChbPrdCustNumIfo cinfo : thList) {
-//                if(!map.containsKey(cinfo.getPrdCode())){
-//                    CheckReport001Dto  dto=new  CheckReport001Dto();
-//                    //检查序列号  自动生成
-//                    dto.setCheckSeqno(IDGenerator.generate(32));
-//                    //报表ID=DictCodeListExt2.报表名称_募集总量登记.getValue()
-//                    dto.setRepCode(DictCodeListExt2.报表名称_募集总量登记.getValue());
-//                    //唯一标识="产品代码:" + 此条记录的.产品代码
-//                    dto.setValidKey("产品代码"+cinfo.getPrdCode());
-//                    //检查结果
-//                    dto.setCheckResult("03");
-//                    //错误信息项
-//                    dto.setErrorInfo(null);
-//                    //警告信息
-//                    if(flag) {
-//                        dto.setWarnInfo("客户数不一致（交易入库检查），三期客户数：{" + cinfo.getCustHeldNum() + "}、一二期客户数：{" + 0 + "}；");
-//                    }else{
-//                        dto.setWarnInfo("客户数不一致（交易入库检查），三期客户数：{" + 0 + "}、一二期客户数：{" + cinfo.getCustHeldNum() + "}；");
-//                    }
-//                    //机构代码
-//                    dto.set
-//                    //数据日期
-//                    dto.setDataTime(checkdate);
-//                    //创建部门
-//
-//                    //更新人
-//
-//                    //更新时间
-//
-//                    //创建人
-//
-//                    //创建时间
-//
-//                    //是否逻辑校验
-//
-//                    //关联序列号
-//
-//                    returList.add(dto);
-//                }else{
-//                    //c、三期存在、一二期存在，但是客户数不一致
-//                    if(cinfo.getCustHeldNum().compareTo(map.get(cinfo.getPrdCode()).getCustHeldNum())!=0&&
-//                            !flag){
-
-
-                //三期存在、一二期存在，但是客户数不一致
-                if (cinfo.getCustHeldNum().compareTo(map.get(cinfo.getPrdCode()).getCustHeldNum()) != 0 &&
-                        !flag) {
-                    CheckReport001Dto dto = new CheckReport001Dto();
-                    // 检查序列号  自动生成
-                    dto.setCheckSeqno(IDGenerator.generate(32));
-                    //报表ID=DictCodeListExt2.报表名称_募集总量登记.getValue()
-                    dto.setRepCode(DictCodeListExt2.报表名称_募集总量登记.getValue());
-                    //唯一标识="产品代码:" + 此条记录的.产品代码
-                    dto.setValidKey("产品代码" + cinfo.getPrdCode());
-                    //检查结果
-                    dto.setCheckResult("03");
-                    //错误信息项
-                    dto.setErrorInfo(null);
-                    //警告信息
-                    if (flag) {
-                        dto.setWarnInfo("客户数不一致（交易入库检查），三期客户数：{" + cinfo.getCustHeldNum() + "}、一二期客户数：{" + 0 + "}；");
-                    } else {
-                        dto.setWarnInfo("客户数不一致（交易入库检查），三期客户数：{" + 0 + "}、一二期客户数：{" + cinfo.getCustHeldNum() + "}；");
-                    }
-                    //机构代码
-//                    dto.setOrgCode();
-                    //数据日期
-                    dto.setDataTime(checkdate);
-                    //创建部门
-//                    dto.setCreateDept();
-                    //更新人
-//                    dto.setUpdateUser();
-                    //更新时间
-//                    dto.setUpdateTime();
-                    //创建人
-//                    dto.setCreateUser();
-                    //创建时间
-//                    dto.setCreateTime();
-                    //是否逻辑校验
-                    dto.setIsLogicCheck(null);
-                    //关联序列号
-//                    dto.set
-                    returList.add(dto);
-                }
-            }
-        }
-
-    }
 
 }
 

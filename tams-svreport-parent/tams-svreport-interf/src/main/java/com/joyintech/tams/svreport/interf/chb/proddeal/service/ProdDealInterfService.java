@@ -203,6 +203,9 @@ public class ProdDealInterfService extends BaseService{
 		InterfFile interfile = new InterfFile();
 		interfile.setDataSource("16");
 		interfile.setFilename("CHB_PRD_DEAL_阜新文件接入" + df.format(batchTime));
+		Map<String,String> mapdate=new HashMap<>();
+		mapdate.put("checkDate",DateUtil.format(batchTime));
+		listData.add(mapdate);
 		if(!listData.isEmpty()){
         	result = svrProdDealFileImpService.importDB(listData, interfile);
         }
