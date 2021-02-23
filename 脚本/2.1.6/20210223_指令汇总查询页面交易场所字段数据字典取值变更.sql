@@ -1,0 +1,1 @@
+delete from SYS_PAGE_DICTLIST where page_id = 'TrdCommandsCollection001' and dict_id = 'TRADE_PLACE';
