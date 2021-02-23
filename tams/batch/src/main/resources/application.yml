@@ -235,7 +235,7 @@ interf:
 #日志路径配置
 log:
   path: /home/tams/logs/batch_cp
-  level: DEBUG
+  level: info
 logging:
   path: /home/tams/logs/batch_cp
 #注册中心配置

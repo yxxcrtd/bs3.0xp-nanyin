@@ -379,9 +379,9 @@ public class PbcPrdAccountSubService001 extends CommonExportService<PbcPrdAccoun
             	List<PbcPrdAccountSub> pbcPrdAccountSubList = new ArrayList<PbcPrdAccountSub>();
             	if(StringUtils.isNotBlank(pbcPrdAccountSub.getPbcAccountId())) {
             		if(StringUtils.isNotEmpty(pbcPrdAccountSub.getPbcCode())) {
-						exportFileName = "PPB_"+pbcPrdAccountSub.getPbcCode();
+						exportFileName = "PPI-"+pbcPrdAccountSub.getPbcCode();
 					} else {
-						exportFileName = "PPB_"+pbcPrdAccountSub.getPbcAccountId();
+						exportFileName = "PPI-"+pbcPrdAccountSub.getPbcAccountId();
 					}
 
             	}
@@ -418,9 +418,9 @@ public class PbcPrdAccountSubService001 extends CommonExportService<PbcPrdAccoun
         for(PbcPrdAccountSub pbcPrdAccountSub : list1) {
         	if(StringUtils.isNotBlank(pbcPrdAccountSub.getPbcAccountId())) {
 				if(StringUtils.isNotEmpty(pbcPrdAccountSub.getPbcCode())) {
-					exportFileName = "PPB_"+pbcPrdAccountSub.getPbcCode();
+					exportFileName = "PPI-"+pbcPrdAccountSub.getPbcCode();
 				} else {
-					exportFileName = "PPB_"+pbcPrdAccountSub.getPbcAccountId();
+					exportFileName = "PPI-"+pbcPrdAccountSub.getPbcAccountId();
 				}
         	}
           }

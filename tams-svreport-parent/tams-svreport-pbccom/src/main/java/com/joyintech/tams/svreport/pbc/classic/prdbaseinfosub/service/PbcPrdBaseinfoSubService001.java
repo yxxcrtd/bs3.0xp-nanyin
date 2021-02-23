@@ -748,7 +748,7 @@ public class PbcPrdBaseinfoSubService001 extends CommonExportService<PbcPrdBasei
 	    	} else {
 	    		nameMap.put(name, 1);
 	    	}
-	    	String fileName = "PIB_"+name+".xls";
+	    	String fileName = "PBI-"+name+".xls";
 	    	File depositfile = TisUtil.createFile(data, "pbc/" + template, fileName);
 	    	sourceFiles.add(depositfile);
 	    	count++;
