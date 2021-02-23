@@ -122,6 +122,8 @@ public class InvestmentsInfoService {
 		tablePorpertyMap_1.put("t6_last28_amt", "ASSETAMT1_15_6");
 		tablePorpertyMap_1.put("t2_cur83_amt", "PRODSUM_MJFS");
 		tablePorpertyMap_1.put("t2_last83_amt", "PRODSUM_MJFS");
+        tablePorpertyMap_1.put("t2_cur85_amt", "PRODSUM_MJFS");
+        tablePorpertyMap_1.put("t2_last85_amt", "PRODSUM_MJFS");
 
 		tablePorpertyMap_2.put("t2_cur6_amt", "ASSETAMT1_1_6");
 		tablePorpertyMap_2.put("t2_last6_amt", "ASSETAMT1_1_6");
@@ -239,6 +241,10 @@ public class InvestmentsInfoService {
 		tablePorpertyMap_2.put("t2_last81_amt", "ASSETAMT2_1_1");
 		tablePorpertyMap_2.put("t2_cur82_amt", "ASSETAMT2_1_2");
 		tablePorpertyMap_2.put("t2_last82_amt", "ASSETAMT2_1_2");
+
+        tablePorpertyMap_2.put("t2_cur85_amt", "ASSETAMT2_1_1+ASSETAMT2_1_2");
+        tablePorpertyMap_2.put("t2_last85_amt", "ASSETAMT2_1_1+ASSETAMT2_1_2");
+
 		tablePorpertyMap_2.put("t3_zq7_amt", "ASSETAMT1_4_1");
 		tablePorpertyMap_2.put("t3_lzq7_amt", "ASSETAMT1_4_1");
 		tablePorpertyMap_2.put("t3_zq8_amt", "ASSETAMT1_4_2+ASSETAMT1_4_4");
@@ -765,6 +771,14 @@ public class InvestmentsInfoService {
 			}
 			resultMap.put(key, money);
 		}
+        //表一E17合计赋值
+        resultMap.put("t1_cur17_amt", resultMap.get("t1_cur12_amt")
+                .add(resultMap.get("t1_cur13_amt"))
+                .add(resultMap.get("t1_cur14_amt")));
+		//表一F17合计赋值
+        resultMap.put("t1_last17_amt", resultMap.get("t1_last12_amt")
+                .add(resultMap.get("t1_last13_amt"))
+                .add(resultMap.get("t1_last14_amt")));
 		// 表六C29 赋值
 		resultMap.put("t6_cur29_amt", queryMoney(currMap, "ASSETAMT1_7_12")
 				.add(queryMoney(currMap,"ASSETAMT1_6_4"))
@@ -2302,34 +2316,34 @@ public class InvestmentsInfoService {
 
 		}
 		for(InvestmentBusinessDetailsDto single:financeAssetBalanceList){
-			assetMap.put(single.getTermType(), single);
+			assetMap.put(single.getIndustryType(), single);
 		}
 		for(InvestmentBusinessDetailsDto single:lastFinanceAssetBalanceList){
-			if(assetMap.containsKey(single.getTermType())){
-				InvestmentBusinessDetailsDto dto=assetMap.get(single.getTermType());
+			if(assetMap.containsKey(single.getIndustryType())){
+				InvestmentBusinessDetailsDto dto=assetMap.get(single.getIndustryType());
 				dto.setLastSessionendBalance(single.getSessionendBalance());
 			}else{
 				single.setLastSessionendBalance(single.getSessionendBalance());
 				single.setSessionendBalance(BigDecimal.ZERO);
-				assetMap.put(single.getTermType(), single);
+				assetMap.put(single.getIndustryType(), single);
 			}
 		}
 		for(InvestmentBusinessDetailsDto single:financeAssetRateList){
-			if(assetMap.containsKey(single.getTermType())){
-				InvestmentBusinessDetailsDto dto=assetMap.get(single.getTermType());
+			if(assetMap.containsKey(single.getIndustryType())){
+				InvestmentBusinessDetailsDto dto=assetMap.get(single.getIndustryType());
 				dto.setSessionendYield(single.getSessionendYield());
 			}else{
-				assetMap.put(single.getTermType(), single);
+				assetMap.put(single.getIndustryType(), single);
 			}
 		}
 		for(InvestmentBusinessDetailsDto single:lastFinanceAssetRateList){
-			if(assetMap.containsKey(single.getTermType())){
-				InvestmentBusinessDetailsDto dto=assetMap.get(single.getTermType());
+			if(assetMap.containsKey(single.getIndustryType())){
+				InvestmentBusinessDetailsDto dto=assetMap.get(single.getIndustryType());
 				dto.setLastSessionendYield(single.getSessionendYield());
 			}else{
 				single.setLastSessionendYield(single.getSessionendYield());
 				single.setSessionendYield(BigDecimal.ZERO);
-				assetMap.put(single.getTermType(), single);
+				assetMap.put(single.getIndustryType(), single);
 			}
 		}
 

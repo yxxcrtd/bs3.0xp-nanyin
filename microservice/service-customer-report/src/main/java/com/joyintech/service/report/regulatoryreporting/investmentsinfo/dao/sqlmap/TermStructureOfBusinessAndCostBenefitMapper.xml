@@ -827,12 +827,12 @@ with cj as(
 		    when info.mdate-#{endDate,jdbcType=DATE} >366 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
 		    when info.mdate-#{endDate,jdbcType=DATE} >1096 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
 		    when info.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
-		    when info.perpetual_flag ='Y' then '08'
+		    when info.perpetual_flag ='01' then '08'
 		    when info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>0 then '09'
 		    end days
 	     </if>
 	     <if test="execonfig != null  and execonfig.equals('02')">
-			case when info.option_flag='Y' then
+			case when info.option_flag='01' then
 			(case
 		    when exeplan.mdate is null
 		    then '01'
@@ -844,7 +844,7 @@ with cj as(
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >366 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >1096 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
-		    when info.perpetual_flag ='Y' then '08'
+		    when info.perpetual_flag ='01' then '08'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} 	<![CDATA[<=]]>0 then '09'
 		    end )
 		    else (case
@@ -858,7 +858,7 @@ with cj as(
 		    when info.mdate-#{endDate,jdbcType=DATE} >366 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
 		    when info.mdate-#{endDate,jdbcType=DATE} >1096 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
 		    when info.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
-		    when info.perpetual_flag ='Y' then '08'
+		    when info.perpetual_flag ='01' then '08'
 		    when info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>0 then '09'
 		     end ) end  days
 
@@ -988,12 +988,12 @@ with cj as(
 		    when info.mdate-#{endDate,jdbcType=DATE} >366 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
 		    when info.mdate-#{endDate,jdbcType=DATE} >1096 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
 		    when info.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
-		    when info.perpetual_flag ='Y' then '08'
+		    when info.perpetual_flag ='01' then '08'
 		    when info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>0 then '09'
 		    end days
 	     </if>
 	     <if test="execonfig != null  and execonfig.equals('02')">
-			case when info.option_flag='Y' then
+			case when info.option_flag='01' then
 			(case
 		    when exeplan.mdate is null
 		    then '01'
@@ -1005,7 +1005,7 @@ with cj as(
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >366 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >1096 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
-		     when info.perpetual_flag ='Y' then '08'
+		     when info.perpetual_flag ='01' then '08'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>0 then '09'
 		    end )
 		    else (case
@@ -1019,7 +1019,7 @@ with cj as(
 		    when info.mdate-#{endDate,jdbcType=DATE} >366 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
 		    when info.mdate-#{endDate,jdbcType=DATE} >1096 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
 		    when info.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
-		    when info.perpetual_flag ='Y' then '08'
+		    when info.perpetual_flag ='01' then '08'
 		    when info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>0 then '09'
 		    end ) end  days
 
@@ -1175,12 +1175,12 @@ with cj as(
 		    when info.mdate-#{endDate,jdbcType=DATE} >366 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
 		    when info.mdate-#{endDate,jdbcType=DATE} >1096 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
 		    when info.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
-		      when info.perpetual_flag ='Y' then '08'
+		      when info.perpetual_flag ='01' then '08'
 		    when info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>0 then '09'
 		    end days
 	     </if>
 	     <if test="execonfig != null  and execonfig.equals('02')">
-			case when info.option_flag='Y' then
+			case when info.option_flag='01' then
 			(case
 		    when exeplan.mdate is null
 		    then '01'
@@ -1192,7 +1192,7 @@ with cj as(
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >366 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >1096 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
-		     when info.perpetual_flag ='Y' then '08'
+		     when info.perpetual_flag ='01' then '08'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>0 then '09'
 		    end )
 		    else (case
@@ -1206,7 +1206,7 @@ with cj as(
 		    when info.mdate-#{endDate,jdbcType=DATE} >366 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
 		    when info.mdate-#{endDate,jdbcType=DATE} >1096 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
 		    when info.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
-		    when info.perpetual_flag ='Y' then '08'
+		    when info.perpetual_flag ='01' then '08'
 		    when info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>0 then '09'
 		    end ) end  days
 
@@ -1281,12 +1281,12 @@ with cj as(
 		    when info.mdate-#{endDate,jdbcType=DATE} >366 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
 		    when info.mdate-#{endDate,jdbcType=DATE} >1096 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
 		    when info.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
-		      when info.perpetual_flag ='Y' then '08'
+		      when info.perpetual_flag ='01' then '08'
 		    when info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>0 then '09'
 		    end days
 	     </if>
 	     <if test="execonfig != null  and execonfig.equals('02')">
-			case when info.option_flag='Y' then
+			case when info.option_flag='01' then
 			(case
 		    when exeplan.mdate is null
 		    then '01'
@@ -1298,7 +1298,7 @@ with cj as(
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >366 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >1096 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
-		     when info.perpetual_flag ='Y' then '08'
+		     when info.perpetual_flag ='01' then '08'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>0 then '09'
 		    end )
 		    else (case
@@ -1312,7 +1312,7 @@ with cj as(
 		    when info.mdate-#{endDate,jdbcType=DATE} >366 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
 		    when info.mdate-#{endDate,jdbcType=DATE} >1096 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
 		    when info.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
-		      when info.perpetual_flag ='Y' then '08'
+		      when info.perpetual_flag ='01' then '08'
 		    when info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>0 then '09'
 		    end ) end  days
 
@@ -1443,12 +1443,12 @@ with cj as(
 		    when info.mdate-#{endDate,jdbcType=DATE} >366 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
 		    when info.mdate-#{endDate,jdbcType=DATE} >1096 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
 		    when info.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
-		      when info.perpetual_flag ='Y' then '08'
+		      when info.perpetual_flag ='01' then '08'
 		    when info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>0 then '09'
 		    end days
 	     </if>
 	     <if test="execonfig != null  and execonfig.equals('02')">
-			case when info.option_flag='Y' then
+			case when info.option_flag='01' then
 			(case
 		    when exeplan.mdate is null
 		    then '01'
@@ -1460,7 +1460,7 @@ with cj as(
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >366 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >1096 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
-		    when info.perpetual_flag ='Y' then '08'
+		    when info.perpetual_flag ='01' then '08'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>0 then '09'
 		    end )
 		    else (case
@@ -1474,7 +1474,7 @@ with cj as(
 		    when info.mdate-#{endDate,jdbcType=DATE} >366 and info.mdate-#{endDate,jdbcType=DATE}<![CDATA[<=]]>1096 then '05'
 		    when info.mdate-#{endDate,jdbcType=DATE} >1096 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
 		    when info.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
-		       when info.perpetual_flag ='Y' then '08'
+		       when info.perpetual_flag ='01' then '08'
 		    when info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>0 then '09'
 		    end ) end  days
 
@@ -1624,12 +1624,12 @@ with cj as(
 		    when info.mdate-#{endDate,jdbcType=DATE} >366 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
 		    when info.mdate-#{endDate,jdbcType=DATE} >1096 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
 		    when info.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
-		      when info.perpetual_flag ='Y' then '08'
+		      when info.perpetual_flag ='01' then '08'
 		    when info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>0 then '09'
 		    end days
 	     </if>
 	     <if test="execonfig != null  and execonfig.equals('02')">
-			case when info.option_flag='Y' then
+			case when info.option_flag='01' then
 			(case
 		    when exeplan.mdate is null
 		    then '01'
@@ -1641,7 +1641,7 @@ with cj as(
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >366 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >1096 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
-		    when info.perpetual_flag ='Y' then '08'
+		    when info.perpetual_flag ='01' then '08'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>0 then '09'
 		    end )
 		    else (case
@@ -1655,7 +1655,7 @@ with cj as(
 		    when info.mdate-#{endDate,jdbcType=DATE} >366 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
 		    when info.mdate-#{endDate,jdbcType=DATE} >1096 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
 		    when info.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
-		       when info.perpetual_flag ='Y' then '08'
+		       when info.perpetual_flag ='01' then '08'
 		    when info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>0 then '09'
 		     end ) end  days
 
@@ -2059,7 +2059,7 @@ with cj as(
 	where possum.sumamt !=0
 
 	union all
-	select psisum.industryType termType,0 sessionendYield
+	select psisum.industryType industryType,0 sessionendYield
 	from psisum
 	left join possum on psisum.industryType=possum.industryType
 	where possum.sumamt =0
@@ -2094,7 +2094,7 @@ with cj as(
 
 		select
 		mst.customer_id as　counterId,
-		case when info.is_bjszq='Y' then '北京金融资产交易所'
+		case when info.is_bjszq='01' then '北京金融资产交易所'
 		else mstinfo.customer_name end as counterName,
 		nvl(cmap.ASSETVALUE_A,0) as sessionendNum,
 		0 as lastSessionendNum,
@@ -2133,7 +2133,7 @@ with cj as(
 
 		select
 		mst.customer_id as　counterId,
-		case when info.is_bjszq='Y' then '北京金融资产交易所'
+		case when info.is_bjszq='01' then '北京金融资产交易所'
 		else mstinfo.customer_name end as counterName,
 
 		0 as sessionendNum,
@@ -2174,7 +2174,7 @@ with cj as(
 
 		select
 		mst.customer_id as　counterId,
-		case when info.is_bjszq='Y' then '北京金融资产交易所'
+		case when info.is_bjszq='01' then '北京金融资产交易所'
 		else mstinfo.customer_name end as counterName,
 		0 as sessionendNum,
 		0 as lastSessionendNum,
