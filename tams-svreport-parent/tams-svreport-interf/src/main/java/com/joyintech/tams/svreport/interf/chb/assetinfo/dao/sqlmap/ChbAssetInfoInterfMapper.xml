@@ -2260,9 +2260,9 @@
         info.ISSUER CHB_ISSUER_ID,
         info.MANAGER CHB_MANAGER_ID,
         info.FINANCIER CHB_FINANCIER_ID,
-        info.IS_SUS PERPETUAL_FLAG,
-        info.IS_RIGHT OPTION_FLAG,
-        CASE WHEN infotp.TYPE_11 = '130' THEN 'Y' ELSE 'N' END IS_BJSZQ,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
 
@@ -2509,9 +2509,9 @@
         info.ISSUER CHB_ISSUER_ID,
         info.MANAGER CHB_MANAGER_ID,
         info.FINANCIER CHB_FINANCIER_ID,
-        info.IS_SUS PERPETUAL_FLAG,
-        info.IS_RIGHT OPTION_FLAG,
-        CASE WHEN infotp.TYPE_11 = '130' THEN 'Y' ELSE 'N' END IS_BJSZQ,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
 
@@ -2774,9 +2774,9 @@
         info.ISSUER CHB_ISSUER_ID,
         NVL(DECODE(mcp.COUNTER_TYPE,'02',mcp.MANAGER_ID,tradeproduct.COUNTER_ID),info.MANAGER) CHB_MANAGER_ID,
         info.FINANCIER CHB_FINANCIER_ID,
-        info.IS_SUS PERPETUAL_FLAG,
-        info.IS_RIGHT OPTION_FLAG,
-        CASE WHEN infotp.TYPE_11 = '130' THEN 'Y' ELSE 'N' END IS_BJSZQ,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
 
@@ -3034,9 +3034,9 @@
         info.ISSUER CHB_ISSUER_ID,
         NVL(DECODE(mcp.COUNTER_TYPE,'02',mcp.MANAGER_ID,tradeproduct.COUNTER_ID),info.MANAGER) CHB_MANAGER_ID,
         info.FINANCIER CHB_FINANCIER_ID,
-        info.IS_SUS PERPETUAL_FLAG,
-        info.IS_RIGHT OPTION_FLAG,
-        CASE WHEN infotp.TYPE_11 = '130' THEN 'Y' ELSE 'N' END IS_BJSZQ,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
 		
@@ -3350,9 +3350,9 @@
         info.ISSUER CHB_ISSUER_ID,
         info.MANAGER CHB_MANAGER_ID,
         info.FINANCIER CHB_FINANCIER_ID,
-        info.IS_SUS PERPETUAL_FLAG,
-        info.IS_RIGHT OPTION_FLAG,
-        CASE WHEN infotp.TYPE_11 = '130' THEN 'Y' ELSE 'N' END IS_BJSZQ,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
 
@@ -3623,9 +3623,9 @@
         info.ISSUER CHB_ISSUER_ID,
         info.MANAGER CHB_MANAGER_ID,
         info.FINANCIER CHB_FINANCIER_ID,
-        info.IS_SUS PERPETUAL_FLAG,
-        info.IS_RIGHT OPTION_FLAG,
-        CASE WHEN infotp.TYPE_11 = '130' THEN 'Y' ELSE 'N' END IS_BJSZQ,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
 
@@ -3869,9 +3869,9 @@
         info.ISSUER CHB_ISSUER_ID,
         info.MANAGER CHB_MANAGER_ID,
         info.FINANCIER CHB_FINANCIER_ID,
-        info.IS_SUS PERPETUAL_FLAG,
-        info.IS_RIGHT OPTION_FLAG,
-        CASE WHEN infotp.TYPE_11 = '130' THEN 'Y' ELSE 'N' END IS_BJSZQ,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
 
@@ -4113,9 +4113,9 @@
         info.ISSUER CHB_ISSUER_ID,
         info.MANAGER CHB_MANAGER_ID,
         info.FINANCIER CHB_FINANCIER_ID,
-        info.IS_SUS PERPETUAL_FLAG,
-        info.IS_RIGHT OPTION_FLAG,
-        CASE WHEN infotp.TYPE_11 = '130' THEN 'Y' ELSE 'N' END IS_BJSZQ,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
 
@@ -4355,9 +4355,9 @@
         info.ISSUER CHB_ISSUER_ID,
         info.MANAGER CHB_MANAGER_ID,
         info.FINANCIER CHB_FINANCIER_ID,
-        info.IS_SUS PERPETUAL_FLAG,
-        info.IS_RIGHT OPTION_FLAG,
-        CASE WHEN infotp.TYPE_11 = '130' THEN 'Y' ELSE 'N' END IS_BJSZQ,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
 		
@@ -4597,9 +4597,9 @@
         info.ISSUER CHB_ISSUER_ID,
         info.MANAGER CHB_MANAGER_ID,
         info.FINANCIER CHB_FINANCIER_ID,
-        info.IS_SUS PERPETUAL_FLAG,
-        info.IS_RIGHT OPTION_FLAG,
-        CASE WHEN infotp.TYPE_11 = '130' THEN 'Y' ELSE 'N' END IS_BJSZQ,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
 		
@@ -4839,9 +4839,9 @@
         info.ISSUER CHB_ISSUER_ID,
         info.MANAGER CHB_MANAGER_ID,
         info.FINANCIER CHB_FINANCIER_ID,
-        info.IS_SUS PERPETUAL_FLAG,
-        info.IS_RIGHT OPTION_FLAG,
-        CASE WHEN infotp.TYPE_11 = '130' THEN 'Y' ELSE 'N' END IS_BJSZQ,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
 		
@@ -5081,9 +5081,9 @@
         info.ISSUER CHB_ISSUER_ID,
         info.MANAGER CHB_MANAGER_ID,
         info.FINANCIER CHB_FINANCIER_ID,
-        info.IS_SUS PERPETUAL_FLAG,
-        info.IS_RIGHT OPTION_FLAG,
-        CASE WHEN infotp.TYPE_11 = '130' THEN 'Y' ELSE 'N' END IS_BJSZQ,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
 		
@@ -5323,9 +5323,9 @@
         info.ISSUER CHB_ISSUER_ID,
         info.MANAGER CHB_MANAGER_ID,
         info.FINANCIER CHB_FINANCIER_ID,
-        info.IS_SUS PERPETUAL_FLAG,
-        info.IS_RIGHT OPTION_FLAG,
-        CASE WHEN infotp.TYPE_11 = '130' THEN 'Y' ELSE 'N' END IS_BJSZQ,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
 
@@ -5571,9 +5571,9 @@
         info.ISSUER CHB_ISSUER_ID,
         info.MANAGER CHB_MANAGER_ID,
         info.FINANCIER CHB_FINANCIER_ID,
-        info.IS_SUS PERPETUAL_FLAG,
-        info.IS_RIGHT OPTION_FLAG,
-        CASE WHEN infotp.TYPE_11 = '130' THEN 'Y' ELSE 'N' END IS_BJSZQ,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
 
@@ -5814,9 +5814,9 @@
         info.ISSUER CHB_ISSUER_ID,
         info.MANAGER CHB_MANAGER_ID,
         info.FINANCIER CHB_FINANCIER_ID,
-        info.IS_SUS PERPETUAL_FLAG,
-        info.IS_RIGHT OPTION_FLAG,
-        CASE WHEN infotp.TYPE_11 = '130' THEN 'Y' ELSE 'N' END IS_BJSZQ,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
 
@@ -6059,9 +6059,9 @@
         info.ISSUER CHB_ISSUER_ID,
         info.MANAGER CHB_MANAGER_ID,
         info.FINANCIER CHB_FINANCIER_ID,
-        info.IS_SUS PERPETUAL_FLAG,
-        info.IS_RIGHT OPTION_FLAG,
-        CASE WHEN infotp.TYPE_11 = '130' THEN 'Y' ELSE 'N' END IS_BJSZQ,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
 
@@ -6302,9 +6302,9 @@
         info.ISSUER CHB_ISSUER_ID,
         info.MANAGER CHB_MANAGER_ID,
         info.FINANCIER CHB_FINANCIER_ID,
-        info.IS_SUS PERPETUAL_FLAG,
-        info.IS_RIGHT OPTION_FLAG,
-        CASE WHEN infotp.TYPE_11 = '130' THEN 'Y' ELSE 'N' END IS_BJSZQ,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
 
@@ -6550,9 +6550,9 @@
         info.ISSUER CHB_ISSUER_ID,
         info.MANAGER CHB_MANAGER_ID,
         info.FINANCIER CHB_FINANCIER_ID,
-        info.IS_SUS PERPETUAL_FLAG,
-        info.IS_RIGHT OPTION_FLAG,
-        CASE WHEN infotp.TYPE_11 = '130' THEN 'Y' ELSE 'N' END IS_BJSZQ,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
 
@@ -6794,9 +6794,9 @@
         info.ISSUER CHB_ISSUER_ID,
         info.MANAGER CHB_MANAGER_ID,
         info.FINANCIER CHB_FINANCIER_ID,
-        info.IS_SUS PERPETUAL_FLAG,
-        info.IS_RIGHT OPTION_FLAG,
-        CASE WHEN infotp.TYPE_11 = '130' THEN 'Y' ELSE 'N' END IS_BJSZQ,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
 		
@@ -7040,9 +7040,9 @@
         INFO.ISSUER CHB_ISSUER_ID,
         NVL(DECODE(MSP.COUNTER_TYPE,'02',MSP.MANAGER_ID,FTP.COUNTER_ID),INFO.MANAGER) CHB_MANAGER_ID,
         INFO.FINANCIER CHB_FINANCIER_ID,
-        INFO.IS_SUS PERPETUAL_FLAG,
-        INFO.IS_RIGHT OPTION_FLAG,
-        CASE WHEN FPTYPE.TYPE_11 = '130' THEN 'Y' ELSE 'N' END IS_BJSZQ,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
 
@@ -7318,9 +7318,9 @@
         info.ISSUER CHB_ISSUER_ID,
         NVL(DECODE(mcp.COUNTER_TYPE,'02',mcp.MANAGER_ID,fp.COUNTER_ID),info.MANAGER) CHB_MANAGER_ID,
         info.FINANCIER CHB_FINANCIER_ID,
-        info.IS_SUS PERPETUAL_FLAG,
-        info.IS_RIGHT OPTION_FLAG,
-        CASE WHEN infotp.TYPE_11 = '130' THEN 'Y' ELSE 'N' END IS_BJSZQ,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
 
