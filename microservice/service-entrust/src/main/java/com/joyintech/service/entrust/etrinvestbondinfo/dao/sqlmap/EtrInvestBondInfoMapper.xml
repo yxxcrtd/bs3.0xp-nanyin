@@ -282,7 +282,8 @@
 SELECT interf.SECID id,
        interf.SECFULLNAME text,
        interf.SECFULLNAME,
-       fin.finprod_id,
+       <!-- fin.finprod_id, -->
+       concat(#{assestType},concat('_',interf.SECID)) finprod_id,
        null,
        interf.MARKET,
        null,
@@ -293,10 +294,18 @@ SELECT interf.SECID id,
        null,
        null
   FROM INTERF_PAYHSRCSECINFO interf
-  left join fin_product fin
-    on fin.finprod_market_id = interf.SECID
+  <!-- left join fin_product fin on fin.finprod_market_id = interf.SECID  -->
     where interf.SECID not in
-    (select FINPROD_MARKET_ID from FIN_PRODUCT T1   <include refid="getfinprodIdForAddWhere"></include>)
+    (select FINPROD_MARKET_ID from FIN_PRODUCT T1  
+    	where T1.FINPROD_TYPE2 = #{assestType}
+    	<!-- <include refid="getfinprodIdForAddWhere"></include> -->
+    )
+    <if test="initValue != null and !initValue.equals('')">
+		and interf.SECID = #{initValue}
+	</if>
+	<if test="tradeMarket != null and !tradeMarket.equals('')">
+		and interf.MARKET = #{tradeMarket}
+	</if>
     <if test="search != null and search!='' ">
 		  and 
 	     ( (interf.SECCODE) LIKE CONCAT('%', CONCAT(#{search}, '%'))
