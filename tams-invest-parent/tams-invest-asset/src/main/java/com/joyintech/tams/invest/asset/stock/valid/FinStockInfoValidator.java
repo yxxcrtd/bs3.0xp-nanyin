@@ -200,7 +200,7 @@ public class FinStockInfoValidator implements BeanValidator {
 
                    //总股本大于等于流通股本check
                }
-               errorList = chbDataCheckCommonUtil.chbCheckCommon(errorList, value, null, null, ValidMessage.class);
+               errorList = chbDataCheckCommonUtil.chbCheckCommon(errorList, value, null, "1302", ValidMessage.class);
             }
 
         return errorList;
