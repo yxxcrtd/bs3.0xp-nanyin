@@ -383,6 +383,7 @@
 		SELECT
 			VDATE vdate,
 			MDATE mdate,
+			OPERATION_TYPE operationType，
 			CALENDAR_ID calendarId
 		FROM
 			FIN_PRODUCT

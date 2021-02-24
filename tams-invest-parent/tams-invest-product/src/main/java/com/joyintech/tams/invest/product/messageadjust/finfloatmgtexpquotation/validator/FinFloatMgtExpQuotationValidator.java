@@ -169,6 +169,13 @@ public class FinFloatMgtExpQuotationValidator implements BeanValidator{
                                 getMessage("FinFloatMgtExpQuotation002.fAccrDate")+DateUtil.format(fAccrDate),
                                 getMessage("FinFloatMgtExpQuotation001.mdate")+DateUtil.format(temp.getMdate()))));
                         }
+                        //add by yujiaping 20210224 ZGBSS-617 封闭式净值产品设置浮动管理费，提示首次计提日必须为到期日或者到期日-1 start
+                        if(StringUtil.equals(temp.getOperationType(), "01")){                        	
+                        	if(DateUtil.compareDate(fAccrDate,temp.getMdate()) != 0 && DateUtil.compareDate(fAccrDate,DateUtil.addDay(temp.getMdate(),-1)) != 0){
+                        	errorList.add(new ValidMessage("",getMessage("封闭式产品 浮动管理费  首次计提日 只能是产品到期日 或 产品到期日-1")));
+                        }
+                        }
+                        //add by yujiaping 20210224 ZGBSS-617 封闭式净值产品设置浮动管理费，提示首次计提日必须为到期日或者到期日-1 end                        
                       //新建不联动首次计提日大于等于平台日
 //                      if(StringUtil.isEmpty(finFloatMgtExpQuotation001Dto.getCashId())){
                       if(DateUtil.compareDate(fAccrDate,DateUtil.platDateFromCache()) < 0){
@@ -435,6 +442,13 @@ public class FinFloatMgtExpQuotationValidator implements BeanValidator{
                                 getMessage("FinFloatMgtExpQuotation002.fAccrDate")+DateUtil.format(fAccrDate),
                                 getMessage("FinFloatMgtExpQuotation001.mdate")+DateUtil.format(temp.getMdate()))));
                         }
+                        //add by yujiaping 20210224 ZGBSS-617 封闭式净值产品设置浮动管理费，提示首次计提日必须为到期日或者到期日-1 start
+                        if(StringUtil.equals(temp.getOperationType(), "01")){                        	
+                        	if(DateUtil.compareDate(fAccrDate,temp.getMdate()) != 0 && DateUtil.compareDate(fAccrDate,DateUtil.addDay(temp.getMdate(),-1)) != 0){
+                        	errorList.add(new ValidMessage("",getMessage("封闭式产品 浮动管理费  首次计提日 只能是产品到期日 或 产品到期日-1")));
+                        }
+                        }
+                        //add by yujiaping 20210224 ZGBSS-617 封闭式净值产品设置浮动管理费，提示首次计提日必须为到期日或者到期日-1 end                        
                         //新建不联动首次计提日大于等于平台日
 //                        if(StringUtil.isEmpty(finFloatMgtExpQuotation001Dto.getCashId())){
                         if(DateUtil.compareDate(fAccrDate,DateUtil.platDateFromCache()) < 0){
