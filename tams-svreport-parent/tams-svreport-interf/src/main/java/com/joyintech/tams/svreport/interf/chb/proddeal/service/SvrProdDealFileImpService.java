@@ -972,10 +972,10 @@ public class SvrProdDealFileImpService extends FileImpService {
 				BigDecimal cust_counts = new BigDecimal(map.get("saveCusNum"));
 
 				//在【产品信息map】中存在prodDealInterfService
-				if (prdMap.containsKey(map.get("PROD_ID"))) {
+				if (prdMap.containsKey(map.get("finprodId"))) {
 
 					// 产品信息map.产品客户数信息DTO.持有客户数  + 此条信息的.保有量客户数
-					prdMap.get(map.get("PROD_ID")).getCustHeldNum().add(cust_counts);
+					prdMap.get(map.get("finprodId")).getCustHeldNum().add(cust_counts);
 
 				} else {
 					//在【产品信息map】中不存在
@@ -1013,20 +1013,22 @@ public class SvrProdDealFileImpService extends FileImpService {
 			complareList(lsitOtbch, lsitOtbchThree, com.joyintech.framework.util.DateUtil.parse(checkDate), resultList, true);
 
 			//3、检查结果数据、批量入库
-
-			int batchCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));// 每批commit的个数
-			int batchLastIndex = batchCount;// 每批最后一个的下标
-			for (int index = 0; index < resultList.size();) {
-				if (batchLastIndex > resultList.size() - 1) {
-					batchLastIndex = resultList.size();
-					chbPrdDealInterfMapper.batchInsert(resultList.subList(index, batchLastIndex));
-					break;// 数据删除完毕,退出循环
-				} else {
-					chbPrdDealInterfMapper.batchInsert(resultList.subList(index, batchLastIndex));
-					index = batchLastIndex;// 设置下一批下标
-					batchLastIndex = index + batchCount;
+            if(resultList!=null&&resultList.size()>0){
+				int batchCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));// 每批commit的个数
+				int batchLastIndex = batchCount;// 每批最后一个的下标
+				for (int index = 0; index < resultList.size();) {
+					if (batchLastIndex > resultList.size() - 1) {
+						batchLastIndex = resultList.size();
+						chbPrdDealInterfMapper.batchInsert(resultList.subList(index, batchLastIndex));
+						break;// 数据删除完毕,退出循环
+					} else {
+						chbPrdDealInterfMapper.batchInsert(resultList.subList(index, batchLastIndex));
+						index = batchLastIndex;// 设置下一批下标
+						batchLastIndex = index + batchCount;
+					}
 				}
 			}
+
 
 	}
 	/**
