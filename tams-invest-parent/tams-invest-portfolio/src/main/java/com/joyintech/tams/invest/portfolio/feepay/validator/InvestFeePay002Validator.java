@@ -57,7 +57,6 @@ public class InvestFeePay002Validator implements BeanValidator {
     
     @Autowired
     private IPlatformDate iPlatformDate;
-     
     /**
      * {@inheritDoc}
      */
@@ -80,8 +79,9 @@ public class InvestFeePay002Validator implements BeanValidator {
                             //当登记托管机构，费用类型，支付日，证券账户都与流程中数据一致时，返回提示信息
                             if (StringUtil.equals(dtos.get("feeType"),investFeePay002Dto.getFeeType())
                             && StringUtil.equals(dtos.get("regTrustOrg"),investFeePay002Dto.getRegTrustOrg())
-                            && StringUtil.equals(String.valueOf(dtos.get("payDate")),String.valueOf(investFeePay002Dto.getPayDate().getTime()))
-                            && StringUtil.equals(dtos.get("secAcctId"),investFeePay002Dto.getSecAcctId())){
+                           // && StringUtil.equals(String.valueOf(dtos.get("payDate")),String.valueOf(investFeePay002Dto.getPayDate().getTime()))
+                            && StringUtil.equals(String.valueOf(dtos.get("startDate")),String.valueOf(investFeePay002Dto.getStartDate().getTime()))
+                                    && StringUtil.equals(dtos.get("secAcctId"),investFeePay002Dto.getSecAcctId())){
                                 validList.add(new ValidMessage(getMessage("FinProductFeePay002.workflowMsg")));
                                 return validList;
                             }
