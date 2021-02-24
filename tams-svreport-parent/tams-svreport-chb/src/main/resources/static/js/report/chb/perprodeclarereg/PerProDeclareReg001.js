@@ -106,6 +106,12 @@ $(function() {
 									visible : false
 								},
 								{
+									title : '产品登记编码',
+									field : 'regCode',
+									width : 200,
+									sortField:'regCode'
+								},
+								{
 									title : '产品代码',
 									field : 'prodId',
 									width : 200, 
