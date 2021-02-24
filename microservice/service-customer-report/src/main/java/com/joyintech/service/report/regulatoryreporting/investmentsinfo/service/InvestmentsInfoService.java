@@ -930,7 +930,16 @@ public class InvestmentsInfoService {
 				for (int i = 0; i < length; i ++) {
 					money = money.add(queryMoney(lastMap, valueList[i]));
 				}
-			}
+			} else if (key.contains("_zq")) {
+				for (int i = 0; i < length; i ++) {
+					money = money.add(queryMoney(currMap, valueList[i]));
+				}
+			}else if (key.contains("_lzq")) {
+				for (int i = 0; i < length; i ++) {
+					money = money.add(queryMoney(lastMap, valueList[i]));
+				}
+		    }
+
 			resultMap.put(key, money);
 		}
 
