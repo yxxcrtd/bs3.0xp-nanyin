@@ -126,8 +126,9 @@ public class ChannelAssetValidator implements BeanValidator{
                 //add by 马数凯 ZGBSS-428 20210202 资金账户已经有产品挂了的话，不允许通道再挂 end 
                 map.put("pageMode", GlobalConstant.DETAIL_PAGE_MODEL_EDIT);
                 if(channelAssetService.isReBusiAcctNo(map)>0){
-                    resultList.add(new ValidMessage("busiAcctNo",
-                            getMessage("BUSS_COM_E_0006", getMessage("ChannelAsset002.busiAcctNo"))));
+                	 //update by yujiaping 20200223 ZGBSS-634 合作资产维护界面，选择已被使用的资金账户,提示改为“资金账户不能重复”
+               	 resultList.add(new ValidMessage("busiAcctNo",
+                            getMessage("资金账户不能重复。")));
                 }
             }
         }
