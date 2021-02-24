@@ -223,6 +223,7 @@
             T10.FINPROD_ABBR chlName
         </if>
         <if test="assetType == PINAN_ASSET_TYPE_F10 ">
+            T1.TRADE_MARKET tradeMarket,
             T1.PS ps,
             T2.TERM_DAYS termDays,
             NVL2(T2.SETTLE_SPREED, CONCAT('0',T2.SETTLE_SPREED+1), NULL) settleSpeed
