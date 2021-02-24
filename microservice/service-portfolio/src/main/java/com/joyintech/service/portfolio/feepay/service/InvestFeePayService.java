@@ -305,8 +305,14 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
                 		if(count > 0) {
                 			continue;
                 		}
-                		
-                        BigDecimal balance =  this.getSubjectBalance(detail.getBooksetId(),detail.getBokDetailId(),detail.getMdate(),detail.getMdate(),org);
+                        BigDecimal balance = BigDecimal.ZERO;
+                        map.put("feeType",DictCodeListExt1.一次性费用类型_账户维护费.getValue());
+                        List<BokDetailId> bokDetailIdss = investFeePayMapper.selectFinDetail(map);
+                        for(BokDetailId d:bokDetailIdss){
+                            BigDecimal tmpBalance =  this.getSubjectBalance(d.getBooksetId(),d.getBokDetailId(),d.getMdate(),d.getMdate(),org);
+                            balance = ArithmeticUtil.doAdd(balance, tmpBalance);
+                        }
+                        //BigDecimal balance =  this.getSubjectBalance(detail.getBooksetId(),detail.getBokDetailId(),detail.getMdate(),detail.getMdate(),org);
                     	InvestFeePayDto feePayDto = new InvestFeePayDto();
                         feePayDto.setSecAcctId(dto.getSecAcctId()); //证券账户
                         feePayDto.setFeeType1(DictCodeList.费用品种类型_账户维护费.getValue());
