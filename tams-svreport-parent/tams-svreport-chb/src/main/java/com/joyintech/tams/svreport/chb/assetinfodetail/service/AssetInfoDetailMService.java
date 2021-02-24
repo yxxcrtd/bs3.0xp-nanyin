@@ -145,6 +145,10 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 			dto.setPlanSdate(dto.getVdate());
 			dto.setPlanEdate(dto.getMdate());
 		}
+		/***【资产基本信息维护】-新建或修改页面（债券类资产），“具体类别”字段未保存至CHB_ASSET_INFO表**/
+		if(DictCodeListExt2.资产_负债类别_债券类资产_理财直接融资工具_同业存单.getValue().equals(dto.getAssetType())){
+			dto.setChbSectype(dto.getSvrBussFinBondRepInfoDto().getRepSectype());
+		}
 
 		restTemplate.postForObject(
 				SvrServiceApplication.CHB_SERVICE_NAME + "/AssetInfoDetail/doSave", dto, Integer.class);

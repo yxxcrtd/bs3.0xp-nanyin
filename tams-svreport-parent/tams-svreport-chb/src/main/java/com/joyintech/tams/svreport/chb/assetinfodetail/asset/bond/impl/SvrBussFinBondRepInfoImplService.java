@@ -63,6 +63,7 @@ public class SvrBussFinBondRepInfoImplService extends BaseService<SvrBussFinBond
             //实体类转换方法
             DtoChangeUtil.SetChbToRep(chbAssetInfo,dto,DtoChangeUtil.target,false);
         }
+        dto.setRepSectype(chbAssetInfo.getChbSectype());
        //4、model.addAttribute(GlobalConstant.ENTITY, 子组件DTO（债券类资产/理财直接融资工具/同业存单）);
         model.addAttribute(GlobalConstant.ENTITY, dto);
 
