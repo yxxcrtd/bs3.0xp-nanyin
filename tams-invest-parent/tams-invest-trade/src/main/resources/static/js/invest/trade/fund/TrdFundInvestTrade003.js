@@ -3,6 +3,7 @@
  * 基金投资交易确认
  */
 $(function () {
+	var initFlag = false;
 	let changeType = null;
     var getriskdata = function () {
         var data = $('#finprodId').select2('data')[0].object;
@@ -590,7 +591,16 @@ $(function () {
             else if (ps == ps_T05 || ps == ps_T18) {
                 var tradeAmtHid = $('#tradeAmtHid').val();
                 if (unitCprice != null && unitCprice != '' && unitCprice != 0) {
-                    $('#shareAmt').val((Number(tradeAmt) - getPayWithTradeFee()) / unitCprice).trigger('blur');
+                	var countFlag = true;
+                	if(ps==ps_T05&&(isInit||initFlag)){
+                		var temp = $('#shareAmt').val();
+                		if(temp!==null||temp!==undefined||temp!=""){
+                			countFlag = false;
+                		}
+                	}
+                	if(countFlag){
+                		$('#shareAmt').val((Number(tradeAmt) - getPayWithTradeFee()) / unitCprice).trigger('blur');	
+                	}
                 }
             } else if ((ps == ps_T19)) {
                 if (unitCprice != null && unitCprice != '' && shareAmt && pageModel != PAGE_MODEL_REFERENCE && !isTodoList) {
@@ -633,7 +643,11 @@ $(function () {
                 var tradeAmtHid2 = $('#tradeAmtHid2').val();
                 if (tradeAmtHid2) {
                     $('#tradeAmtHid').val(Number(tradeAmtHid2) - getPayWithTradeFee()).change().trigger('blur');
-                    $('#tradeAmt').val($('#tradeAmtHid2').val());
+                    //ZGBSS-377 申购确认时不修改交易金额 start
+                    if(ps!=ps_T05){
+                    	$('#tradeAmt').val($('#tradeAmtHid2').val());
+                    }
+                    //ZGBSS-377 申购确认时不修改交易金额 end
                 } else {
                     $('#tradeAmtHid').val(tradeAmtHid2).trigger('blur');
                 }
@@ -653,12 +667,20 @@ $(function () {
         $('#tradeAmtHid').change(function () {
             var tradeAmtHid = $('#tradeAmtHid').val();
             var ps = $('#ps').val();
-            var unitCprice = $('#unitCprice').val();
-            if (ps == ps_T05 || ps == ps_T18) {
+            var unitCprice = $('#unitCprice').val(); 
+            if (ps == ps_T18) {
                 if (unitCprice && tradeAmtHid) {
                     $('#shareAmt').val(tradeAmtHid / unitCprice).trigger('blur');
                 }
             }
+            if(ps == ps_T05){
+            	var tradeAmt = $('#tradeAmt').val();
+                if (unitCprice && tradeAmt) {
+                    $('#shareAmt').val((tradeAmt-getPayWithTradeFee())/ unitCprice).trigger('blur');
+                }
+                debugger;
+            }
+            
         });
         /**
          * 交易金额
@@ -798,6 +820,7 @@ $(function () {
      * 画面加载完成
      */
     $(function () {
+    	initFlag = true;
         //初始化画面
         init();
         // 绑定按钮事件
@@ -840,5 +863,6 @@ $(function () {
          } else {
              $('#type11Div').hide();
          }
+        initFlag = false;
      });
  });
