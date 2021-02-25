@@ -273,7 +273,7 @@
                          style="width: 30%!important;display: inline-block;">
                         <input th:id="|${entityName}_repIndustry1|"
                                th:name="|${entityName}.repIndustry1|"
-                               th:childrenIds="|${entityName}_repIndustryLevel2|"
+                               th:childrenIds="|${entityName}_industryLevel2Type|"
                                th:initValue="${entity?.repIndustry1}"
                                data-th-data-result="${INSTITUTION_INDUSTRY_FIRST_LEVEL}"
                                class="layui-input form-input input-select" placeholder="请输入内容"
@@ -281,9 +281,9 @@
                     </div>
                     <div class="layui-input-inline input-inline buss-inline-wrap"
                          style="width: 30%!important;display: inline-block;">
-                        <input th:id="|${entityName}_repIndustryLevel2|"
-                               th:name="|${entityName}.repIndustryLevel2|"
-                               th:initValue="${entity?.repIndustryLevel2}"
+                        <input th:id="|${entityName}_industryLevel2Type|"
+                               th:name="|${entityName}.industryLevel2Type|"
+                               th:initValue="${entity?.industryLevel2Type}"
                                data-th-data-result="${INSTITUTION_INDUSTRY_SECOND_LEVEL}"
                                class="layui-input form-input input-select" placeholder="请输入内容"
                                data-th-placeholder="#{SysCommon.placeholder}" >

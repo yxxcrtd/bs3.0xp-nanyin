@@ -264,6 +264,17 @@ public class SvrBussRepAssetCreditNonstdInfoDto extends RepAssetCreditNonstd{
      */
     private BigDecimal  totalFeeRate;
 
+
+    private String  industryLevel2Type;
+
+    public String getIndustryLevel2Type() {
+        return industryLevel2Type;
+    }
+
+    public void setIndustryLevel2Type(String industryLevel2Type) {
+        this.industryLevel2Type = industryLevel2Type;
+    }
+
     public String getCreditOrgCode() {
         return creditOrgCode;
     }
