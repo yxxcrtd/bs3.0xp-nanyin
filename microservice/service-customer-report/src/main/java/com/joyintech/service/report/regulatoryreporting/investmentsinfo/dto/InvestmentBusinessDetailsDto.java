@@ -66,6 +66,10 @@ public class InvestmentBusinessDetailsDto {
 	private BigDecimal lasttotleBalance;
     //表7中行业类别
 	private String industryType;
+	//机构名称
+	private String orgName;
+	//数据时点
+	private String reportDate;
 
 	/**  
 	 * @Description   
@@ -361,5 +365,22 @@ public class InvestmentBusinessDetailsDto {
 
 	public void setIndustryType(String industryType) {
 		this.industryType = industryType;
+	}
+
+	public String getOrgName() {
+		return orgName;
+	}
+
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+
+
+	public String getReportDate() {
+		return reportDate;
+	}
+
+	public void setReportDate(String reportDate) {
+		this.reportDate = reportDate;
 	}
 }

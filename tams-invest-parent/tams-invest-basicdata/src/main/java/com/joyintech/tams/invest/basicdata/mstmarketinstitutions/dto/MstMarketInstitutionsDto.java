@@ -189,7 +189,7 @@ public class MstMarketInstitutionsDto extends MstCustomerInfoAddWithBLOBs implem
      * @return String
      * 所属省
      */
-    //@NotEmpty(fieldName = "MstMarketInstitutions002.province", groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "MstMarketInstitutions002.province", groups = {ValidateGroupEdit.class})
     public String getProvince(){
         return super.getProvince();
     }

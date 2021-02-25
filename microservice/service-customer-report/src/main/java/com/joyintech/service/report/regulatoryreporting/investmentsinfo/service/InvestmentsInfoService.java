@@ -554,16 +554,17 @@ public class InvestmentsInfoService {
 			data.put(detail.getPropertycode(), divideBillion(detail));
 		}
 		//登录机构
+		InvestmentBusinessDetailsDto reportDto=new InvestmentBusinessDetailsDto();
+		reportDto.setPropertycode("report");
 		if(MultilevelDataAuthorityUtil.isEnabled()) {
 			//联社模式,查询登录人的机构
         	String org =   MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
             String orgName=CacheUtil.getAppCacheInstitutionCodeName(org).toString();
-			data.put("org", orgName);
+			reportDto.setOrgName(orgName);
 		}else{
 			//银行模式
 			String orgName=overallInfoMapper.selectBankModeOrgName();
-			data.put("org", orgName);
-
+			reportDto.setOrgName(orgName);
 		}
 		//数据时点
 		// 导出年份
@@ -584,8 +585,9 @@ public class InvestmentsInfoService {
 		calendar.add(Calendar.MONTH, 1);
 		calendar.set(Calendar.DAY_OF_MONTH, 0);
 		//取到本季末
-		Date endDate=calendar.getTime();
-
+		String reportDate = DateUtil.format(calendar.getTime(), "yyyy-MM-dd");
+		reportDto.setReportDate(reportDate);
+		data.put("report",reportDto);
 		return data;
 	}
 	public List<InvestmentBusinessCounterDetailsDto>  createTable7OtherInfo(Map<String, Object> pageParam) {
@@ -2850,6 +2852,19 @@ public class InvestmentsInfoService {
 			investmentBusinessDetailsDto.setRemark(resultRemarkMap.get(flag + "OTHERREMARK") == null ?"": resultRemarkMap.get(flag + "OTHERREMARK"));
 			investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto);
 		}
+		//计算合计值
+		/*InvestmentBusinessDetailsDto investmentBusinessDetailsDto33=new InvestmentBusinessDetailsDto();
+		for(InvestmentBusinessDetailsDto item:investmentBusinessDetailsDtoList){
+			investmentBusinessDetailsDto33.setSessionendNum(investmentBusinessDetailsDto33.getSessionendNum().add()item);
+			investmentBusinessDetailsDto33.setLastSessionendNum();
+			investmentBusinessDetailsDto33.setNonsStandardAmount();
+			investmentBusinessDetailsDto33.setLastNonsStandardAmount();
+			investmentBusinessDetailsDto33.setIndInvestmentAmount();
+			investmentBusinessDetailsDto33.setLastIndInvestmentAmount();
+			investmentBusinessDetailsDto33.setOtherAmount();
+			investmentBusinessDetailsDto33.setLastOtherAmount();
+
+		}*/
 		InvestmentBusinessDetailsDto investmentBusinessDetailsDto36= investmentBusinessDetailsMapper.queryBottomDiffAsset(startDate, lastDate,endDate);
 		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto36);
 		Map<String, Object> paraMap = new HashMap<String, Object>();
