@@ -910,14 +910,21 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 			}
 
 			ChbPrdDeclareRegFileCode chbPrdDeclareRegFileCode = ChbPrdDeclareRegFileCode.genInfoByFolderNo(folderName);
+			if (chbPrdDeclareRegFileCode == null){
+				fileCheckMsg.append("文件名称（" + entry.getName() + "）不符合规范。");
+				fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
+				continue;
+			}
 			if (chbPrdDeclareRegFileCode != null && entry.getSize() > chbPrdDeclareRegFileCode.getFileSize() * 1024 * 1024) {
 				fileCheckMsg.append("文件大小超过" + chbPrdDeclareRegFileCode.getFileSize() + "M（" + entry.getName() + "）。");
 				fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
+				continue;
 			}
 			String fileType = entry.getName().substring(entry.getName().lastIndexOf(".") + 1, entry.getName().length());
 			if (chbPrdDeclareRegFileCode != null && chbPrdDeclareRegFileCode.getFileType().indexOf(fileType) < 0) {
 				fileCheckMsg.append(entry.getName() + "文件的扩展名不对。必须为以下的一种：" + chbPrdDeclareRegFileCode.getFileType() + "。");
 				fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
+				continue;
 			}
 
 			String fileName = entry.getName();
@@ -965,31 +972,41 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 			}
 		}
 
-		// 判断是否缺少必须文件
-		List<String> folderNoList = ChbPrdDeclareRegFileCode.genFolderNoList();
-		for(String prodId : prodFileExistsMap.keySet()){
-			Map<String, List<String>> foldNameMap = prodFileExistsMap.get(prodId);
-			for (String folderNo : folderNoList){
-				if (!foldNameMap.containsKey(folderNo) || StringUtil.isEmptyList(foldNameMap.get(folderNo))){
-					ChbPrdDeclareRegFileCode chbPrdDeclareRegFileCode = ChbPrdDeclareRegFileCode.genInfoByFolderNo(folderNo);
-					if (chbPrdDeclareRegFileCode.isNend()){
-						fileCheckMsg.append("产品代码(" + prodId + ")" + folderNo + "(" + chbPrdDeclareRegFileCode.getFolderName() + ")不可为空。");
-						fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
-					}
-				}
-			}
-		}
-
 		// 检查数据是否已存在
 		Map<String, Object> pageParam = new HashMap<>();
 		pageParam.put("prodIdList", prodFileExistsMap.keySet());
 		pageParam.put("sendStatusList", Arrays.asList(DictCodeListExt2.报送状态_未报送.getValue()));
+		pageParam.put("statusList", Arrays.asList(DictCodeListExt2.报送数据状态_修改.getValue(), DictCodeListExt2.报送数据状态_新建.getValue()));
 		List<PerProDeclareRegDto> subList = perProDeclareReg001Mapper.selectAllData(pageParam);
 
-		for (PerProDeclareRegDto subDto : subList){
-			if (StringUtil.isNotEmpty(subDto.getFileNo())){
-				fileCheckMsg.append("产品代码(" + subDto.getProdId() + ")已存在附件。");
-				fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
+		// 产品是否不存在或状态是删除
+		if (!StringUtil.isEmptyList(subList)){
+			List<String> folderNoList = ChbPrdDeclareRegFileCode.genFolderNoList();
+			Map<String, List<PerProDeclareRegDto>> subMap = subList.stream().collect(Collectors.groupingBy(PerProDeclareRegDto::getProdId));
+			for(String prodId : prodFileExistsMap.keySet()){
+				if (!subMap.containsKey(prodId)){
+					fileCheckMsg.append("产品代码(" + prodId + ")必须满足发送状态为未报送且数据状态为新建或修改的记录。");
+					fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
+					continue;
+				}
+				// 已存在附件
+				if (StringUtil.isNotEmpty(subMap.get(prodId).get(0).getFileNo())){
+					fileCheckMsg.append("产品代码(" + subMap.get(prodId).get(0).getProdId() + ")已存在附件。");
+					fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
+					continue;
+				}
+
+				// 判断是否缺少必须文件
+				Map<String, List<String>> foldNameMap = prodFileExistsMap.get(prodId);
+				for (String folderNo : folderNoList){
+					if (!foldNameMap.containsKey(folderNo) || StringUtil.isEmptyList(foldNameMap.get(folderNo))){
+						ChbPrdDeclareRegFileCode chbPrdDeclareRegFileCode = ChbPrdDeclareRegFileCode.genInfoByFolderNo(folderNo);
+						if (chbPrdDeclareRegFileCode.isNend()){
+							fileCheckMsg.append("产品代码(" + prodId + ")" + folderNo + "(" + chbPrdDeclareRegFileCode.getFolderName() + ")不可为空。");
+							fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
+						}
+					}
+				}
 			}
 		}
 
