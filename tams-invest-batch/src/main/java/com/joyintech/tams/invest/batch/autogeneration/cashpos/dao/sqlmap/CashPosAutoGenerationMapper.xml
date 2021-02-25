@@ -76,7 +76,7 @@
             SELECT
               PORTFOLIO_ID, ACCT_ID, CCY, SUM(AMOUNT) as AMOUNT, CHL_FINPROD_ID
             FROM
-              PTL_CASH_POSITION_FLOW
+                  PTL_CASH_POSITION_FLOW
             WHERE
               HODING_TYPE = #{POSITION_TYPE_03,jdbcType=VARCHAR}
               and CDATE = #{batchDate,jdbcType=DATE}
