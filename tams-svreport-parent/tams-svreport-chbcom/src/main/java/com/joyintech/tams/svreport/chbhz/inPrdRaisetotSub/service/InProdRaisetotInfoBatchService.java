@@ -1,15 +1,25 @@
 package com.joyintech.tams.svreport.chbhz.inPrdRaisetotSub.service;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.alibaba.fastjson.JSON;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.FileImpService;
+import com.joyintech.tams.common.InterfFile;
+import com.joyintech.tams.common.base.dao.BaseMapper;
+import com.joyintech.tams.common.base.entity.ChbPrdRaisetotSubTmp;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.util.SvrMaptoEntityUtil;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
+import com.joyintech.tams.report.interf.common.constant.DateUtil;
+import com.joyintech.tams.svreport.chb.prodraisetotalregist.dao.RaiseTotalRegist001Mapper;
+import com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto;
+import com.joyintech.tams.svreport.chbhz.inPrdRaisetotSub.dao.InprodRaisetotInfoSvrMapper;
+import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -21,24 +31,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSON;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.chbreport.codecheck.service.CommonCodeCheckTmpBatchService;
-import com.joyintech.tams.common.FileImpService;
-import com.joyintech.tams.common.InterfFile;
-import com.joyintech.tams.common.base.dao.BaseMapper;
-import com.joyintech.tams.common.base.entity.ChbPrdRaisetotSubTmp;
-import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
-import com.joyintech.tams.report.interf.common.constant.DateUtil;
-import com.joyintech.tams.svreport.chb.prodraisetotalregist.dao.RaiseTotalRegist001Mapper;
-import com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto;
-import com.joyintech.tams.svreport.chbhz.inPrdRaisetotSub.dao.InprodRaisetotInfoSvrMapper;
-import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
-import com.joyintech.tams.systemtools.util.CommonUtil;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 功能:产品募集总量登记生成批处理主service
@@ -86,7 +82,7 @@ public class InProdRaisetotInfoBatchService extends FileImpService {
 	private BaseMapper baseMapper;
 
 	@Autowired
-	private CommonCodeCheckTmpBatchService commonCodeCheckTmpBatchService;
+	private CommonCodeCheckBatchService commonCodeCheckBatchService;
 
 	/**
 	 * @param
@@ -111,7 +107,8 @@ public class InProdRaisetotInfoBatchService extends FileImpService {
 				DUPLICATIED_LIST);
 
 		/** start 配置无法实现，代码实现的check add by zhangliang 20201010 */
-		commonCodeCheckTmpBatchService.codeCheckTmpCommon(listMap, raisetotTableName, BUSSINESSKEY);
+		// commonCodeCheckTmpBatchService.codeCheckTmpCommon(listMap, raisetotTableName, BUSSINESSKEY);
+		commonCodeCheckBatchService.codeCheckCommon(listMap, ChbCheckTableInfo.genChbCheckTableInfo(raisetotTableName), null);
 		/** end 配置无法实现，代码实现的check add by zhangliang 20201010 */
 
 		// 3、正确数据处理

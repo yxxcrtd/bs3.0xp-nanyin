@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.util.SvrMaptoEntityUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -89,9 +91,9 @@ public class InInvestTradeInfoBatchService extends FileImpService {
 
 	// add by dubaojun 2020-10-12 配置无法实现，代码实现的check start
 	@Autowired
-	private CommonCodeCheckTmpBatchService commonCodeCheckTmpBatchService;
-
+	private CommonCodeCheckBatchService commonCodeCheckBatchService;
 	// add by dubaojun 2020-10-12 配置无法实现，代码实现的check end
+
 	/**
 	 * @param
 	 * @see
@@ -115,7 +117,8 @@ public class InInvestTradeInfoBatchService extends FileImpService {
 		// add by dubaojun 2020-10-12 修复文件名为null异常的问题 end
 
 		// add by dubaojun 2020-10-12 配置无法实现，代码实现的check start
-		commonCodeCheckTmpBatchService.codeCheckTmpCommon(listMap, investTradeTableName, BUSSINESSKEY);
+		// commonCodeCheckTmpBatchService.codeCheckTmpCommon(listMap, investTradeTableName, BUSSINESSKEY);
+		commonCodeCheckBatchService.codeCheckCommon(listMap, ChbCheckTableInfo.genChbCheckTableInfo(investTradeTableName), null);
 		// add by dubaojun 2020-10-12 配置无法实现，代码实现的check end
 
 		// 3、正确数据处理
