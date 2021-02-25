@@ -13,7 +13,6 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset;
 import com.joyintech.framework.validation.annotation.Amount;
 import com.joyintech.framework.validation.annotation.Length;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.common.base.entity.RepAssetCreditNonstd;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -26,7 +25,7 @@ import java.util.Date;
  * @see SvrBussRepAssetCreditNonstdInfoDto
  * @since 1.0
  */
-public class SvrBussRepAssetCreditNonstdInfoDto extends RepAssetCreditNonstd{
+public class SvrBussRepAssetCreditNonstdInfoDto extends RepAssetCreditNonstdDto {
     
     /**
      * <意义，目的和功能，以及可能被用到的地方>
