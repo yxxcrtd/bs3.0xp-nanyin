@@ -245,5 +245,9 @@ public class FinFloatMgtExpQuotationController {
     public String getopenMode(@RequestBody Map<String,Object> param){
         return finFloatMgtExpQuotationService.getopenMode(param);
     }
+    @PostMapping("getopenType")
+    public String getopenType(@RequestBody Map<String,Object> param){
+        return finFloatMgtExpQuotationService.getopenType(param);
+    }
     
 }

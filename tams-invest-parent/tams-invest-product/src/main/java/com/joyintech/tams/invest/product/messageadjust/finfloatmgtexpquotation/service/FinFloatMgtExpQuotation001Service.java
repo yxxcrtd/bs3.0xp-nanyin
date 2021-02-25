@@ -724,4 +724,19 @@ public class FinFloatMgtExpQuotation001Service extends CommonExportService<FinFl
                 ServiceApplication.PRODUCT_SERVICE_NAME + "/FinFloatMgtExpQuotation/getopenMode", param,
                 String.class);
     }
+    
+    /**
+     * 获取发行方式 <功能详细描述>
+     *
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public String getopenType(String finprodId) {
+    	Map<String,Object> param=new HashMap<String,Object>();
+    	param.put("finprodId", finprodId);
+    	return restTemplate.postForObject(
+                ServiceApplication.PRODUCT_SERVICE_NAME + "/FinFloatMgtExpQuotation/getopenType", param,
+                String.class);
+    }
 }
