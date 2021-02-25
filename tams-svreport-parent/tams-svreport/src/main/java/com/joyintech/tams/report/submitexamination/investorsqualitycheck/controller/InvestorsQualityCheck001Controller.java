@@ -23,8 +23,8 @@ import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service
  *
  */
 @Controller
-@PageId("SvrInvestorsQualityCheck001")
-@RequestMapping("/svreport/submitexamination/investorsqualitycheck/SvrInvestorsQualityCheck001")
+@PageId("InvestorsQualityCheck001")
+@RequestMapping("/svreport/submitexamination/investorsqualitycheck/InvestorsQualityCheck001")
 public class InvestorsQualityCheck001Controller extends BaseController{
 
     

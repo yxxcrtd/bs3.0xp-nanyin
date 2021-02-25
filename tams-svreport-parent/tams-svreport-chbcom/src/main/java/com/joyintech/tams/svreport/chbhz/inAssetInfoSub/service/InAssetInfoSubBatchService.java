@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.util.SvrMaptoEntityUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -94,7 +96,7 @@ public class InAssetInfoSubBatchService extends FileImpService {
 	private BaseMapper baseMapper;
 
 	@Autowired
-	private CommonCodeCheckTmpBatchService commonCodeCheckTmpBatchService;
+	private CommonCodeCheckBatchService commonCodeCheckBatchService;
 
 	/**
 	 * 数据批量一次查询或者删除条数
@@ -121,7 +123,8 @@ public class InAssetInfoSubBatchService extends FileImpService {
 		checkData(true, listMap, tableName, tableName, tableName, BUSSINESSKEY, DUPLICATIED_LIST);
 
 		/** start 配置无法实现，代码实现的check add by zhangliang 20201020 */
-		commonCodeCheckTmpBatchService.codeCheckTmpCommon(listMap, chbAsseTableName, BUSSINESSKEY);
+		// commonCodeCheckTmpBatchService.codeCheckTmpCommon(listMap, chbAsseTableName, BUSSINESSKEY);
+		commonCodeCheckBatchService.codeCheckCommon(listMap, ChbCheckTableInfo.genChbCheckTableInfo(tableName), null);
 		/** end 配置无法实现，代码实现的check add by zhangliang 20201020 */
 
 		// 3、正确数据处理

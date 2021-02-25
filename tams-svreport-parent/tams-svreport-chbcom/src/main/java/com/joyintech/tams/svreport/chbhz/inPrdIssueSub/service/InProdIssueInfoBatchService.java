@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.util.SvrMaptoEntityUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -86,7 +88,7 @@ public class InProdIssueInfoBatchService extends FileImpService {
 	private BaseMapper baseMapper;
 
 	@Autowired
-	private CommonCodeCheckTmpBatchService commonCodeCheckTmpBatchService;
+	private CommonCodeCheckBatchService commonCodeCheckBatchService;
 
 	/**
 	 * @param
@@ -108,7 +110,8 @@ public class InProdIssueInfoBatchService extends FileImpService {
 		checkData(true, listMap, issueTableName, issueTableName, issueTableName, BUSSINESSKEY, DUPLICATIED_LIST);
 
 		/** start 配置无法实现，代码实现的check add by zhangliang 20201010 */
-		commonCodeCheckTmpBatchService.codeCheckTmpCommon(listMap, issueTableName, BUSSINESSKEY);
+		// commonCodeCheckTmpBatchService.codeCheckTmpCommon(listMap, issueTableName, BUSSINESSKEY);
+		commonCodeCheckBatchService.codeCheckCommon(listMap, ChbCheckTableInfo.genChbCheckTableInfo(issueTableName), null);
 		/** end 配置无法实现，代码实现的check add by zhangliang 20201010 */
 
 		// 3、正确数据处理

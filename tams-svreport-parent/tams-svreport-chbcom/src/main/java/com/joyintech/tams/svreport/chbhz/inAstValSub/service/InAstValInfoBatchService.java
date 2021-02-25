@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.chbreport.codecheck.service.CommonCodeCheckTmpBatchService;
 import com.joyintech.tams.common.FileImpService;
 import com.joyintech.tams.common.InterfFile;
 import com.joyintech.tams.common.base.dao.BaseMapper;
@@ -13,6 +12,7 @@ import com.joyintech.tams.common.base.entity.ChbAstValSubTmp;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.util.SvrMaptoEntityUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
@@ -85,8 +85,8 @@ public class InAstValInfoBatchService extends FileImpService {
     private BaseMapper baseMapper;
 
     // add by dubaojun 2020-10-12 配置无法实现，代码实现的check start
-    @Autowired
-    private CommonCodeCheckTmpBatchService commonCodeCheckTmpBatchService;
+	@Autowired
+	private CommonCodeCheckBatchService commonCodeCheckBatchService;
     // add by dubaojun 2020-10-12 配置无法实现，代码实现的check end
     /**
      * @param  
@@ -110,7 +110,8 @@ public class InAstValInfoBatchService extends FileImpService {
         // add by dubaojun 2020-10-12 修复文件名为null异常的问题 end
 
         // add by dubaojun 2020-10-12 配置无法实现，代码实现的check start
-		commonCodeCheckTmpBatchService.codeCheckTmpCommon(listMap, astValInfoTableName, BUSSINESSKEY);
+		// commonCodeCheckTmpBatchService.codeCheckTmpCommon(listMap, astValInfoTableName, BUSSINESSKEY);
+		commonCodeCheckBatchService.codeCheckCommon(listMap, ChbCheckTableInfo.genChbCheckTableInfo(astValInfoTableName), null);
         // add by dubaojun 2020-10-12 配置无法实现，代码实现的check end
         
         //3、正确数据处理

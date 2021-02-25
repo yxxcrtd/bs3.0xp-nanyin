@@ -39,7 +39,6 @@ import com.joyintech.tams.report.common.dao.ChbBaseCommonMapper;
  * @see ChbBaseCommonService
  * @since 1.0
  */
-@Primary
 @Service
 public class ChbBaseCommonService extends BaseService<Product> implements ProductService {
 

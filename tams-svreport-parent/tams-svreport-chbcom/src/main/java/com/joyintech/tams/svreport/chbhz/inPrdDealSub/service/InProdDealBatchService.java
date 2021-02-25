@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.util.SvrMaptoEntityUtil;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -83,7 +85,7 @@ public class InProdDealBatchService extends FileImpService {
 	private InprodDealSvrMapper inprodDealSvrMapper;
 
 	@Autowired
-	private CommonCodeCheckTmpBatchService commonCodeCheckTmpBatchService;
+	private CommonCodeCheckBatchService commonCodeCheckBatchService;
 
 	@Autowired
 	private SqlSessionTemplate template;
@@ -112,7 +114,8 @@ public class InProdDealBatchService extends FileImpService {
 		// 2.2调用FileImpService.checkData方法
 		checkData(true, listMap, tableName, tableName, tableName, BUSSINESSKEY, DUPLICATIED_LIST);
 		/** start 配置无法实现，代码实现的check add by dongxiangyang 20201009 */
-		commonCodeCheckTmpBatchService.codeCheckTmpCommon(listMap, tableName, BUSSINESSKEY);
+		// commonCodeCheckTmpBatchService.codeCheckTmpCommon(listMap, tableName, BUSSINESSKEY);
+		commonCodeCheckBatchService.codeCheckCommon(listMap, ChbCheckTableInfo.genChbCheckTableInfo(tableName), null);
 		/** end 配置无法实现，代码实现的check add by dongxiangyang 20201009 */
 		// 3、正确数据处理
 		// 3.1 对[2]清理掉错误数据的List，调用以下共通，进行数据类型转化处理。将检查后的listMap 转为List<业务表登记表Dto>
