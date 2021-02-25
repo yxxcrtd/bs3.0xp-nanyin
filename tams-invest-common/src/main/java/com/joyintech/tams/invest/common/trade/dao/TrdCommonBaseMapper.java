@@ -264,4 +264,9 @@ public interface TrdCommonBaseMapper {
      */
     BigDecimal getFundLatestValuation(Map<String, Object> map);
     // add by zhangrui1 20200619 取得反向交易编号 end
+
+    //查询转仓前一天的(其他应收款-利息)的科目余额
+    Map<String, Object> getYSKLXBalance(Map<String, Object> map);
+
+    int selectTrdOnPayDate(Map<String, Object> params);
 }
