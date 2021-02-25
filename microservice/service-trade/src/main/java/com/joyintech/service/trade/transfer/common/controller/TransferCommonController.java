@@ -18,7 +18,7 @@ import java.util.Map;
  * @version 2019/12/23
  */
 @RestController("backTransferCommonController_dtx")
-@RequestMapping("/service/trade/transfer/common/TransferCommon")
+@RequestMapping("/trade/transfer/common/TransferCommon")
 public class TransferCommonController extends BaseController {
     @Autowired
     private TransferCommonService transferCommonService;

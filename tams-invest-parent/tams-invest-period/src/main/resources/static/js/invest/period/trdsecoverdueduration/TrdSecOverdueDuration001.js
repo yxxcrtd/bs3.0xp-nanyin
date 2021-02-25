@@ -191,7 +191,7 @@ $(function () {
         	}
         }
         param.payType='no';
-        Joyin.dialog('收息明细信息', JoyinUtil.getRealPath('invest/period/trdsecoverdueduration/TrdSecOverdueDuration001/initIntertstDetail'), '80%', '80%',param);
+        Joyin.dialog('收息明细信息', JoyinUtil.getRealPath('invest/period/trdsecoverdueduration/TrdSecOverdueDuration001/initIntertstDetail'), '98%', '95%',param);
     })
     /**
      * 定义多次未结清的数据表格

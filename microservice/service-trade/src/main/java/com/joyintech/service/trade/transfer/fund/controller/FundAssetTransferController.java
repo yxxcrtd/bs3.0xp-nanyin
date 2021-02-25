@@ -20,7 +20,7 @@ import java.util.Map;
  * @since 1.0
  */
 @RestController("FundAssetTransfer_dtx")
-@RequestMapping("/service/trade/transfer/fund/FundAssetTransfer")
+@RequestMapping("/trade/transfer/fund/FundAssetTransfer")
 public class FundAssetTransferController {
     /**
      * FundAssetTransferService

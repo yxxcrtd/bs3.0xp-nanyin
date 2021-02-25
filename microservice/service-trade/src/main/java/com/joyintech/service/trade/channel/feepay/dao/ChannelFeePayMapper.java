@@ -56,4 +56,12 @@ public interface ChannelFeePayMapper {
     List<PtlTrade> findPtlTrades(String tradeId);
     
     String getCollectType(Map<String, Object> map);
+
+    List<WflTrdProductDeal> selectWflTrdProductDeal(WflTrdProductDeal wflTrdProductDeal);
+
+    List<TrdProductDeal> selectTrdProductDeal(String tradeId);
+
+    String getTradeId(Map<String, Object> map);
+
+    String findPortfolioName(String portfolioId);
 }

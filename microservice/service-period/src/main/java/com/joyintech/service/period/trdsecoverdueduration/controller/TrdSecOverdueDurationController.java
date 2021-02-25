@@ -224,4 +224,14 @@ public class TrdSecOverdueDurationController {
     public int checkCounterFlowDeal(@RequestBody Map<String, Object> param) {
         return trdSecOverdueDurationService.checkCounterFlowDeal(param);
     }
+
+    /**
+     * 根据汇总的汇总交易编号查询有效的数据
+     * @param busiCode
+     * @return
+     */
+    @RequestMapping("findEffectiveData")
+    public TrdSecOverdueDurationDto findEffectiveData(@RequestBody String busiCode) {
+        return trdSecOverdueDurationService.findEffectiveData(busiCode);
+    }
 }

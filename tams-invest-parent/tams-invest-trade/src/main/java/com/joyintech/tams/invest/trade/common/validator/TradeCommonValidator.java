@@ -39,6 +39,7 @@ import com.joyintech.tams.invest.trade.bondtostock.service.TrdBondToStock002Serv
 import com.joyintech.tams.invest.trade.buyoutrepo.dto.TrdOutRightRepoTrade002Dto;
 import com.joyintech.tams.invest.trade.buyoutrepo.dto.TrdOutRightRepoTradePtl;
 import com.joyintech.tams.invest.trade.buyoutrepo.service.TrdOutRightRepoTrade002Service;
+import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
 import com.joyintech.tams.invest.trade.conbond.dto.TrdConBondDto;
 import com.joyintech.tams.invest.trade.conbond.service.TrdConBond002Service;
 import com.joyintech.tams.invest.trade.forwex.dto.TrdForwexInvestTradeDto;
@@ -105,6 +106,63 @@ public interface TradeCommonValidator extends BeanValidator {
     default List<ValidMessage> valid(Object value) {
         // 先执行各个画面的业务check
         List<ValidMessage> validMessageList = this.bussValid(value);
+        //收息,还本,到期日当天禁止转仓 S
+        Map<String, Object> map = new HashMap<String, Object>();
+        int count =0;
+        TradeCommonService tradeCommonService = SpringContextUtil.getBean(TradeCommonService.class);
+        boolean isCreditSync = false;
+        String isOutTrade = "";
+        // 债券投资交易
+        if (value instanceof TrdBondInvestTradeDto) {
+            TrdBondInvestTradeDto inputDto = (TrdBondInvestTradeDto)value;
+            if(DictCodeList.交易方向_卖出.getValue().equals(inputDto.getPs())) {
+                map.put("payDate", inputDto.getSettleDate());
+                map.put("finprodId", inputDto.getFinprodId());
+                count = tradeCommonService.getPayTrad(map);
+            } else if (DictCodeList.交易方向_买入.getValue().equals(inputDto.getPs())) {
+                isCreditSync = true;
+                isOutTrade = inputDto.getTrdInvestPersonInfo().getIsOutTrade();
+            }
+        }// 存款类资产投资交易
+        else if (value instanceof TrdDepositInvestTrade001Dto) {
+            TrdDepositInvestTrade001Dto inputDto = (TrdDepositInvestTrade001Dto)value;
+            if(DictCodeList.交易方向_卖出.getValue().equals(inputDto.getPs())) {
+                map.put("payDate", inputDto.getSettleDate());
+                map.put("finprodId", inputDto.getFinprodId());
+                count = tradeCommonService.getPayTrad(map);
+            }
+        }// 计划类资产（利率型）交易
+        else if (value instanceof TrdPlanRateInvestTradeDto) {
+            TrdPlanRateInvestTradeDto inputDto = (TrdPlanRateInvestTradeDto)value;
+            if(DictCodeList.交易方向_卖出.getValue().equals(inputDto.getPs())) {
+                map.put("payDate", inputDto.getSettleDate());
+                map.put("finprodId", inputDto.getFinprodId());
+                count = tradeCommonService.getPayTrad(map);
+            } else if (DictCodeList.交易方向_买入.getValue().equals(inputDto.getPs())) {
+                isCreditSync = true;
+                isOutTrade = inputDto.getTrdInvestPersonInfo002Dto().getIsOutTrade();
+            }
+
+        }/// 项目类资产交易
+        else if (value instanceof TrdProjectInvestTrade002Dto) {
+            TrdProjectInvestTrade002Dto inputDto = (TrdProjectInvestTrade002Dto)value;
+            if(DictCodeList.交易方向_卖出.getValue().equals(inputDto.getPs())) {
+                map.put("payDate", DateUtil.parse(inputDto.getSettleDate()));
+                map.put("finprodId", inputDto.getFinprodId());
+                count = tradeCommonService.getPayTrad(map);
+            } else if (DictCodeList.交易方向_买入.getValue().equals(inputDto.getPs())) {
+                isCreditSync = true;
+                isOutTrade = inputDto.getTrdInvestPersonInfo().getIsOutTrade();
+            }
+        }
+        if(count > 0) {
+            ValidMessage validMessage = new ValidMessage("收息,还本,到期日当天禁止卖出!");
+            validMessageList.add(validMessage);
+            return validMessageList;
+        }
+
+        //收息,还本,到期日当天禁止转仓 E
+
         //名单管理  isNameSoftControl true:软控  false:硬控
         boolean isNameSoftControl = Boolean.parseBoolean(CacheUtil.getSysParam("IS_NAME_SOFTCONTROL"));
         boolean isAuthorizationSoftcontrol = Boolean.parseBoolean(CacheUtil.getSysParam("IS_AUTHORIZATION_SOFTCONTROL"));

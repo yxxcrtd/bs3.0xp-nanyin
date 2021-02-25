@@ -991,4 +991,41 @@
         )
     </select>
 
+    <select id="getYSKLXBalance" resultType="java.util.Map" parameterType="java.util.Map">
+		select
+        	SUM(B_AMT) bAmt
+        from BOK_BALANCE
+        where REPLACE(BOOKSET_ID, 'F16_') = #{booksetId,jdbcType=VARCHAR}
+          and BALANCE_DATE = #{balanceDate,jdbcType=DATE}
+          and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
+	</select>
+
+    <select id="selectTrdOnPayDate" parameterType="map" resultType="_int">
+		SELECT COUNT(1)
+		  FROM (SELECT T.FINPROD_ID
+		          FROM FIN_CASH_PLAN T
+		         WHERE NOT EXISTS (SELECT 1
+		                  FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL W
+		                 WHERE W.FINPROD_ID = #{finprodId, jdbcType=VARCHAR}
+		                   AND W.TRADE_DATE = #{payDate, jdbcType=DATE}
+		                   AND W.PS IN ('T07', 'T08', 'T09')
+		                   AND W.WORKFLOW_STATUS = 'A'
+		                UNION ALL
+		                SELECT 1
+		                  FROM TRD_FIN_PRODUCT_DEAL_TOTAL TF
+		                 WHERE TF.FINPROD_ID = #{finprodId, jdbcType=VARCHAR}
+		                   AND TF.TRADE_DATE = #{payDate, jdbcType=DATE}
+		                   AND TF.PS IN ('T07', 'T08', 'T09')
+		                   AND TF.TRADE_STATUS = '01'
+		                   AND TF.IS_CANCEL = 'N')
+		           AND T.FINPROD_ID = #{finprodId, jdbcType=VARCHAR}
+		           AND T.PAY_DATE = #{payDate, jdbcType=DATE}
+		        UNION ALL
+		        SELECT T.FINPROD_ID
+		          FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL T
+		         WHERE T.PS IN ('T07', 'T08', 'T09')
+		           AND T.WORKFLOW_STATUS = 'A'
+		           AND T.FINPROD_ID = #{finprodId, jdbcType=VARCHAR}
+		           AND T.TRADE_DATE = #{payDate, jdbcType=DATE})
+	</select>
 </mapper>

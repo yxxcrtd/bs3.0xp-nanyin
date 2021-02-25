@@ -4,15 +4,17 @@
  */
 package com.joyintech.service.trade.channel.feepay.service;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
 
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
+import com.joyintech.tams.invest.common.dto.channel.ChannelFeeInfoDto;
+import org.apache.commons.collections.list.TransformedList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -96,44 +98,82 @@ public class ChannelFeePayService extends BaseService<ChannelFeePayDto> {
 
     public ProductTradeInfoDto findAllTrade(String tradeId) {
         ProductTradeInfoDto baseDto = new ProductTradeInfoDto();
+        baseDto.setTrdProductDeals(new ArrayList<TrdProductDeal>());
+        baseDto.setStlPayOrders(new ArrayList<StlPayOrdersDto>());
         WflTrdProductDeal wflTrdProductDeal = new WflTrdProductDeal();
         wflTrdProductDeal.setTradeId(tradeId);
         wflTrdProductDeal.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
-        wflTrdProductDeal = wflTrdProductDealMapper.selectByPrimaryKey(wflTrdProductDeal);
-        if (wflTrdProductDeal != null) {
-            TrdProductDeal deal = new TrdProductDeal();
-            BeanUtil.copyPropertiesIgnoreNull(deal, wflTrdProductDeal);
-            baseDto.setTrdProductDeals(Arrays.asList(deal));
+        List<WflTrdProductDeal> wflTrdProductDealList = new ArrayList<>();
+        wflTrdProductDealList = channelFeePayMapper.selectWflTrdProductDeal(wflTrdProductDeal);
+        if(wflTrdProductDealList!=null && wflTrdProductDealList.size()>0) {
+            for (int i = 0; i < wflTrdProductDealList.size(); i++) {
+                WflTrdProductDeal wflTrdProductDealDto = new WflTrdProductDeal();
+                wflTrdProductDealDto = wflTrdProductDealList.get(i);
+                if (wflTrdProductDealDto != null) {
+                    TrdProductDeal deal = new TrdProductDeal();
+                    BeanUtil.copyPropertiesIgnoreNull(deal, wflTrdProductDealDto);
+                    baseDto.getTrdProductDeals().add(deal);
+                    baseDto.getStlPayOrders().add(channelFeePayMapper.selectAllOrders(deal.getTradeId()).get(0));
+                }
+            }
         }
-
         baseDto.setTrdProductDealAdds(channelFeePayMapper.selectAllDealAdds(baseDto.getTrdProductDeals()));
         baseDto.setPaTrdProductDeals(channelFeePayMapper.selectAllPaDeals(baseDto.getTrdProductDeals()));
-        baseDto.setStlPayOrders(channelFeePayMapper.selectAllOrders(tradeId));
-        baseDto.setPtlTrades(channelFeePayMapper.findPtlTrades(tradeId));
+//        baseDto.setStlPayOrders(channelFeePayMapper.selectAllOrders(tradeId));
+//        baseDto.setPtlTrades(channelFeePayMapper.findPtlTrades(tradeId));
         return baseDto;
     }
 
     public ChannelFeePayDto getEffectiveData(String tradeId) {
         ChannelFeePayDto result = new ChannelFeePayDto();
-        TrdProductDeal trdProductDeal = trdProductDealMapper.selectByPrimaryKey(tradeId);
-        if (trdProductDeal != null) {
-            BeanUtil.copyPropertiesIgnoreNull(result, trdProductDeal);
-            List<TrdProductDealAdd> adds = channelFeePayMapper.selectAllEfDealAdds(Arrays.asList(new TrdProductDeal[]{trdProductDeal}));
-            List<PaTrdProductDeal> paDeals = channelFeePayMapper.selectAllEfPaDeals(Arrays.asList(new TrdProductDeal[]{trdProductDeal}));
-            List<StlPayOrders> orders = channelFeePayMapper.selectAllEfOrders(tradeId);
+        result.setFeeInfoList(new ArrayList<ChannelFeeInfoDto>());
+        List<TrdProductDeal> trdProductDealList = channelFeePayMapper.selectTrdProductDeal(tradeId);
+//        TrdProductDeal trdProductDeal = trdProductDealMapper.selectByPrimaryKey(tradeId);
+        if (trdProductDealList != null && trdProductDealList.size()>0) {
+            BeanUtil.copyPropertiesIgnoreNull(result, trdProductDealList.get(0));
+            List<TrdProductDealAdd> adds = channelFeePayMapper.selectAllEfDealAdds(trdProductDealList);
+            List<PaTrdProductDeal> paDeals = channelFeePayMapper.selectAllEfPaDeals(trdProductDealList);
+            List<StlPayOrders> orders = new ArrayList<>();
             FinProduct product = finProductMapper.selectByPrimaryKey(result.getFinprodId());
             if (product != null) {
                 result.setFinprodMarketId(product.getFinprodMarketId());
                 result.setChannelName(product.getFinprodName());
             }
-            if (adds != null && !adds.isEmpty()) {
-                result.setPortfolioId(adds.get(0).getPortfolioId());
+//            if (adds != null && !adds.isEmpty()) {
+//                result.setPortfolioId(adds.get(0).getPortfolioId());
+//            }
+            BigDecimal tradeAmt = new BigDecimal(0);
+            for (TrdProductDeal dto : trdProductDealList) {
+                if(dto.getTradeAmt()!=null) {
+                    tradeAmt = dto.getTradeAmt().add(tradeAmt);
+                }
+                orders.add(channelFeePayMapper.selectAllEfOrders(dto.getTradeId()).get(0));
             }
+            BigDecimal theoryInt = new BigDecimal(0);
             if (paDeals != null && !paDeals.isEmpty()) {
-                result.setTheoryInt(paDeals.get(0).getTheoryInt());
+                for(PaTrdProductDeal dto:paDeals){
+                    if(dto.getTheoryInt()!=null) {
+                        theoryInt = dto.getTheoryInt().add(theoryInt);
+                    }
+                }
             }
+            result.setTheoryInt(theoryInt);
+            result.setTradeAmt(tradeAmt);
             result.setOrders(orders);
+
+            Map<String, Object> param = new HashMap<>();
+            List<SelectOptionDto> list = restTemplate.postForList(
+                    ServiceApplication.COMMON_SERVICE_NAME + "/CommonSelect/selectPortfolioId",param, SelectOptionDto.class);
+            for(int i=0;i<trdProductDealList.size();i++){
+                ChannelFeeInfoDto channelFeeInfoDto = new ChannelFeeInfoDto();
+                channelFeeInfoDto.setPortfolioId(adds.get(i).getPortfolioId());
+                channelFeeInfoDto.setPortFolioName(channelFeePayMapper.findPortfolioName(channelFeeInfoDto.getPortfolioId()));
+                channelFeeInfoDto.setPayAmt(paDeals.get(i).getTheoryAmt());
+                channelFeeInfoDto.setActPayAmt(trdProductDealList.get(i).getTradeAmt());
+                result.getFeeInfoList().add(channelFeeInfoDto);
+            }
         }
+        result.setTradeId(trdProductDealList.get(0).getTotleTradeId());
         return result;
     }
 
@@ -147,5 +187,16 @@ public class ChannelFeePayService extends BaseService<ChannelFeePayDto> {
     }
     public String getCollectType(Map<String, Object> map) {
         return channelFeePayMapper.getCollectType(map);
+    }
+
+    public String getTradeId(String totleTradeId,String portfolioId) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("totleTradeId",totleTradeId);
+        map.put("portfolioId",portfolioId);
+        return channelFeePayMapper.getTradeId(map);
+    }
+
+    public String findPortfolioName(String portfolioId) {
+       return channelFeePayMapper.findPortfolioName(portfolioId);
     }
 }

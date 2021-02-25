@@ -134,9 +134,23 @@ $(function(){
         });
         //撤销操作
         $('#PreTrdRepoTrade001_btn_revoke').click(function(){
+            var selArr1 = new Array();
             if(table!=null && table!=''){
                 var selArr = table.getAllCheckedRows();//判断表格不为空，然后获取选择的数据
+                if (selArr.length > 1){
+                    //撤销时只选取具有有效状态的数据
+                    for(var i = 0;i < selArr.length; i++){
+                        if (selArr[i].validStatusText != null){
+                            var j = selArr1.length;
+                            if (j>0){
+                                j = j - 1;
+                            }
+                            selArr1[j] = selArr[i]    
+                        }        
+                    }            
+                }
             }
+            selArr = selArr1;
             if (!selArr || selArr.length == 0) {//判断是否选择，如果没有则报错COMMON_E_0026
                 Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0026"));
                 return;

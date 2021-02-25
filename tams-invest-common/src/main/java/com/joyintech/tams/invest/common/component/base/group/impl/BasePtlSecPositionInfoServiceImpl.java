@@ -5,13 +5,12 @@
 
 package com.joyintech.tams.invest.common.component.base.group.impl;
 
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.dao.PtlSecPositionDetailMapper;
 import com.joyintech.tams.common.base.dao.PtlSecPositionFlowMapper;
 import com.joyintech.tams.common.base.dao.PtlSecPositionMapper;
 import com.joyintech.tams.common.base.entity.PtlSecPosition;
+import com.joyintech.tams.common.base.entity.PtlSecPositionDetail;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
@@ -62,6 +61,12 @@ public class BasePtlSecPositionInfoServiceImpl implements BasePtlSecPositionInfo
      */
     @Autowired
     private BaseGetBussinessId baseGetBussinessIdimpl;
+
+    /**
+     * 组合持仓融入融出明细系统生成Mapper
+     */
+    @Autowired
+    private PtlSecPositionDetailMapper ptlSecPositionDetailMapper;
 
     /**
      * {@inheritDoc}
@@ -225,6 +230,45 @@ public class BasePtlSecPositionInfoServiceImpl implements BasePtlSecPositionInfo
                 deleteSecPosition(positionFlowDto);
             }
         }
+        //华兴银行：组合持仓融入融出明细共通 added by liuwei 2020/1/9 S
+        if (CacheUtil.getSysParam("IS_GHB_SPECIAL").equals("01") && DictCodeList.持仓类型_融入.getValue().equals(positionFlowDto.getHodingType())
+                || DictCodeList.持仓类型_融出.getValue().equals(positionFlowDto.getHodingType())) {
+            PtlSecPositionDetail position = getPtlSecPositionDetail(positionFlowDto);
+            BigDecimal amount = basePtlSecPositionInfoMapper.selectSecPositionDetail(positionFlowDto);
+            if (amount == null) {
+                // 如果当天的持仓数据没有，取当天之前最近一天的数据
+                // 查询最近的那一天
+                Date maxCdate = basePtlSecPositionInfoMapper.selectSecPositionDetailMaxCdate(positionFlowDto);
+                if (maxCdate == null) {
+                    ptlSecPositionDetailMapper.insertSelective(position);
+                }
+                else {
+                    PtlSecPositionFlowDto tempPositionFlowDto = new PtlSecPositionFlowDto();
+                    BeanUtils.copyProperties(positionFlowDto, tempPositionFlowDto);
+                    tempPositionFlowDto.setCdate(maxCdate);
+                    BigDecimal tempAmount = basePtlSecPositionInfoMapper.selectSecPositionDetail(tempPositionFlowDto);
+                    position.setAmount(ArithmeticUtil.doAdd(position.getAmount(), tempAmount));
+                    ptlSecPositionDetailMapper.insertSelective(position);
+                }
+            } else {
+                position.setAmount(ArithmeticUtil.doAdd(position.getAmount(), amount));
+                ptlSecPositionDetailMapper.updateByPrimaryKeySelective(position);
+            }
+            // 2.2.2 检索组合持仓的最大日期
+            String maxCdate = basePtlSecPositionInfoMapper.selectMaxCdateDetail(positionFlowDto);
+            String cDate = DateUtil.format(positionFlowDto.getCdate());
+            // 2.2.3 上面检索出的最大日期 <> 输入参数.日期，将输入参数.日期到2.2.2检索出来的最大日期的数据全部更新
+            if (maxCdate != null && !maxCdate.equals(cDate)) {
+                String minDate = maxCdate.compareTo(cDate) > 0 ? DateUtil.addDay(cDate, 1) : maxCdate;
+                String maxDate = maxCdate.compareTo(cDate) < 0 ? DateUtil.addDay(cDate, -1) : maxCdate;
+                Map<String, Object> params = BeanUtil.object2Map(positionFlowDto);
+                params.put("minDate", minDate);
+                params.put("maxDate", maxDate);
+                basePtlSecPositionInfoMapper.updatePositionDetail(params);
+            }
+//            }
+        }
+        //华兴银行：组合持仓融入融出明细共通 added by liuwei 2020/1/9 E
         return true;
     }
 
@@ -257,4 +301,27 @@ public class BasePtlSecPositionInfoServiceImpl implements BasePtlSecPositionInfo
     public int deleteSecPosition(PtlSecPositionFlowDto positionQueryDto) {
         return basePtlSecPositionInfoMapper.deletePtlSecPositionFlow(positionQueryDto);
     }
+
+    //华兴银行：组合持仓融入融出明细共通 added by liuwei 2020/1/9 S
+    private PtlSecPositionDetail getPtlSecPositionDetail(PtlSecPositionFlowDto positionFlowDto) {
+        PtlSecPositionDetail position = new PtlSecPositionDetail();
+        position.setAmount(positionFlowDto.getAmount());
+        position.setCcy(positionFlowDto.getCcy());
+        position.setPortfolioId(positionFlowDto.getPortfolioId());
+        position.setSecAcctId(positionFlowDto.getSecAcctId());
+        position.setFinprodId(positionFlowDto.getFinprodId());
+        position.setBranch(positionFlowDto.getBranch());
+        position.setHodingType(positionFlowDto.getHodingType());
+        position.setCdate(positionFlowDto.getCdate());
+        position.setStatus(positionFlowDto.getStatus());
+        position.setTradeId(positionFlowDto.getpFinprodId());
+        position.setCreateTime(positionFlowDto.getCreateTime());
+        position.setUpdateUser(positionFlowDto.getUpdateUser());
+        position.setUpdateTime(positionFlowDto.getUpdateTime());
+        position.setWorkflowId(positionFlowDto.getWorkflowId());
+        position.setCreateUser(positionFlowDto.getCreateUser());
+        position.setCreateDept(positionFlowDto.getCreateDept());
+        return position;
+    }
+    //华兴银行：组合持仓融入融出明细共通 added by liuwei 2020/1/9 E
 }

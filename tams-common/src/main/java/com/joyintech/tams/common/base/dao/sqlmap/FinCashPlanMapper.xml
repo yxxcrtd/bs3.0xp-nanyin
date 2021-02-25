@@ -476,4 +476,16 @@
         where CASH_ID = #{cashId,jdbcType=VARCHAR}
           and MDATE = #{mdate,jdbcType=DATE}
     </update>
+
+    <select id="getPayTrad" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        COUNT(1)
+        FROM
+        FIN_CASH_PLAN
+        WHERE
+        FINPROD_ID=#{finprodId}
+        <if test="payDate != null" >
+            AND PAY_DATE=#{payDate}
+        </if>
+    </select>
 </mapper>

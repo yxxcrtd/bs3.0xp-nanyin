@@ -28,7 +28,11 @@ $(function () {
             }//ajax请求数据
         },
         cols: [
-            {field:'totleTradeId',sortField:'totleTradeId', width:200,title: '业务编号'}//组合代码
+            {field:'totleTradeId',sortField:'totleTradeId', width:200,title: '业务编号',//组合代码
+               render : function(data, type, row, meta) {
+                    if (row.tradeStatus == '有效')
+                        return "<a class='totleTradeId-link' style='cursor: pointer;'>" + row.totleTradeId + "</a>";
+               }}//业务编号
             ,{field:'tradeStatus',sortField:'tradeStatus', width:150,title: '有效状态'}//组合代码
             ,{field:'settleDate',sortField:'settleDate',width:150,title:'资金到账日',type:'date', digit:2}//除权日
             ,{field:'accountingAmt',sortField:'accountingAmt',width:170,title:'实收本息总额',type:'number', digit:2}//到账日
@@ -107,6 +111,11 @@ $(function () {
         }
         }
     )
+
+    table.bind('click','.totleTradeId-link', function(row) {
+        Joyin.dialog("还本收息查看", basePath + "invest/period/trdsecoverdueduration/TrdSecOverdueDuration002/init", "98%", "95%",
+        {pageModel: PAGE_MODEL_REFERENCE, busiCode: row.totleTradeId, statusValid: '05'});
+    });
 
     /**
      * 导出选中的表格数据

@@ -20,7 +20,7 @@ import java.util.Map;
  * @since 1.0
  */
 @RestController("BuyOutRepoTransferCtr_dtx")
-@RequestMapping("/service/BuyOutRepoTransfer")
+@RequestMapping("/BuyOutRepoTransfer")
 public class BuyOutRepoTransferController {
 
     /**

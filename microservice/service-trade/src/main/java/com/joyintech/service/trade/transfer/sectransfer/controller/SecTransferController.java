@@ -22,7 +22,7 @@ import java.util.Map;
 * @since 1.0
 */
 @RestController("backSecTransferController_dtx")
-@RequestMapping("/service/SecTransfer")
+@RequestMapping("/SecTransfer")
 public class SecTransferController {
 
     /**
