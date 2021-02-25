@@ -587,7 +587,10 @@ SELECT
     SUM(tradeqty)tradeqty,
     remark,
     settdatedate,
-    isagency
+    isagency,
+    /****当系统参数SVR_PRD_DEAL_DIMENSION=02时，三个客户数字段改成从Chb_Prd_Deal表取认购交易的保有客户数字段 leipeng 20210224***/
+    sum(cust_counts) cust_counts,
+    customer_type2
 FROM(
 	select deal.fprod_id fprodid,
 <!-- 	deal.prod_id prodid, -->
@@ -596,7 +599,9 @@ FROM(
 	buyplace,deal.trade_type tradetype,deal.ccy ccy,deal.trade_prince
 	tradeprince,deal.trade_qty tradeqty,info.ISAGENCY remark,deal.SETTDATE_DATE settdateDate,
 	deal.ISAGENCY isagency
-	from chb_prd_deal deal
+        /****当系统参数SVR_PRD_DEAL_DIMENSION=02时，三个客户数字段改成从Chb_Prd_Deal表取认购交易的保有客户数字段 leipeng 20210224***/
+        ,deal.customer_type2,deal.cust_counts
+        from chb_prd_deal deal
 	left join chb_prd_baseinfo info
 	on info.prod_id = deal.prod_id
 	and info.status in ('E','M')
@@ -615,6 +620,8 @@ FROM(
     remark,
     settdatedate,
     isagency
+    /****当系统参数SVR_PRD_DEAL_DIMENSION=02时，三个客户数字段改成从Chb_Prd_Deal表取认购交易的保有客户数字段 leipeng 20210224***/
+    ,customer_type2
 </select>
   
    <select id="selectPositionData" resultType="com.joyintech.tams.svreport.position.dto.ChbPrdPosition">

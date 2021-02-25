@@ -112,7 +112,8 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
         List<ChbPrdPosition> positionlist = new ArrayList<ChbPrdPosition>();
         List<ChbPrdDeal> deallist = new ArrayList<ChbPrdDeal>();
         logger.debug("查询头寸信息开始---------------"+new Date());
-        positionlist=raiseTotalRegist001Mapper.selectPositionData(prodlistsum);
+
+//        positionlist=raiseTotalRegist001Mapper.selectPositionData(prodlistsum);
         deallist=raiseTotalRegist001Mapper.selectDealData(prodlistsum);
         logger.debug("查询头寸信息结束---------------"+new Date());
 		List<RaiseTotalRegist001Dto> prodtotallist = new ArrayList<RaiseTotalRegist001Dto>();
@@ -397,6 +398,26 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 					isagencyAmt = isagencyAmt.add(amt);
 				}
 				/**是否代销和代销金额字段取值改从交易里面取值  start  add by  dongxiangyang 20201224 **/
+
+				/****当系统参数SVR_PRD_DEAL_DIMENSION=02时，三个客户数字段改成从Chb_Prd_Deal表取认购交易的保有客户数字段 leipeng 20210224***/
+				String customerType = chbTypeMappingService.getMappingValue("PRD_RAISETOT_INVESTOR_TYPE", deal.getCustomerType2());
+				if(SINGLE_PERSON.equals(customerType)){
+					//个人
+					singleTotal+=deal.getCustCounts().intValue();
+				}else if(LEGAL_PERSON.equals(customerType)){
+					//法人
+					legalTotal+=deal.getCustCounts().intValue();
+				}else if(UNLEGAL_PERSON.equals(customerType)){
+					//非法人
+					unlegalTotal+=deal.getCustCounts().intValue();
+				}
+				/****当系统参数SVR_PRD_DEAL_DIMENSION=02时，三个客户数字段改成从Chb_Prd_Deal表取认购交易的保有客户数字段 leipeng 20210224***/
+
+//				singleTotal=singleTotal+(posmodel.getSingletotal()==null?BigDecimal.ZERO:posmodel.getSingletotal()).intValue();
+//				legalTotal=legalTotal+(posmodel.getLegaltotal()==null?BigDecimal.ZERO:posmodel.getLegaltotal()).intValue();
+//				unlegalTotal=unlegalTotal+(posmodel.getUnlegaltotal()==null?BigDecimal.ZERO:posmodel.getUnlegaltotal()).intValue();
+
+
 			}
 		}
 		/**青岛银行关于客户数的调整   add by  dongxiangyang  20201112 start*/
@@ -435,20 +456,20 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 //					isagencyAmt = isagencyAmt.add(amt);
 //				}
 				
-				String customerType = chbTypeMappingService.getMappingValue("PRD_RAISETOT_INVESTOR_TYPE", posmodel.getCustomerType2());
-				if(SINGLE_PERSON.equals(customerType)){
-					//个人
-					singleTotal+=posmodel.getCustCounts().intValue();
-				}else if(LEGAL_PERSON.equals(customerType)){
-					//法人
-					legalTotal+=posmodel.getCustCounts().intValue();
-				}else if(UNLEGAL_PERSON.equals(customerType)){
-					//非法人
-					unlegalTotal+=posmodel.getCustCounts().intValue();
-				}
-				singleTotal=singleTotal+(posmodel.getSingletotal()==null?BigDecimal.ZERO:posmodel.getSingletotal()).intValue();
-				legalTotal=legalTotal+(posmodel.getLegaltotal()==null?BigDecimal.ZERO:posmodel.getLegaltotal()).intValue();
-				unlegalTotal=unlegalTotal+(posmodel.getUnlegaltotal()==null?BigDecimal.ZERO:posmodel.getUnlegaltotal()).intValue();
+//				String customerType = chbTypeMappingService.getMappingValue("PRD_RAISETOT_INVESTOR_TYPE", posmodel.getCustomerType2());
+//				if(SINGLE_PERSON.equals(customerType)){
+//					//个人
+//					singleTotal+=posmodel.getCustCounts().intValue();
+//				}else if(LEGAL_PERSON.equals(customerType)){
+//					//法人
+//					legalTotal+=posmodel.getCustCounts().intValue();
+//				}else if(UNLEGAL_PERSON.equals(customerType)){
+//					//非法人
+//					unlegalTotal+=posmodel.getCustCounts().intValue();
+//				}
+//				singleTotal=singleTotal+(posmodel.getSingletotal()==null?BigDecimal.ZERO:posmodel.getSingletotal()).intValue();
+//				legalTotal=legalTotal+(posmodel.getLegaltotal()==null?BigDecimal.ZERO:posmodel.getLegaltotal()).intValue();
+//				unlegalTotal=unlegalTotal+(posmodel.getUnlegaltotal()==null?BigDecimal.ZERO:posmodel.getUnlegaltotal()).intValue();
 			}
 		}
 		dto.setSingleTotal(singleTotal==0?0:singleTotal);//个人
