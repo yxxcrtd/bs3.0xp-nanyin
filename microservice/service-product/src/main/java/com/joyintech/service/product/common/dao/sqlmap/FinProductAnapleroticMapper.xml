@@ -242,7 +242,7 @@
 	      and FIN_PRODUCT.PROFIT_TYPE != #{notProfitType}
 		  and FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
 		  and FIN_PRODUCT_ADD.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID	
-		  and FIN_PRODUCT.mdate > #{currentDate, jdbcType = DATE}
+		  <!-- and FIN_PRODUCT.mdate > #{currentDate, jdbcType = DATE} -->
 		  and not exists (
 		        select 1 from fin_product_add fpa where fin_product.FINPROD_ID =fpa.FINPROD_ID
 		        and fin_product.profit_type = '01' and fpa.DEAL_MODE = '10'
@@ -259,7 +259,8 @@
          </choose>
        
     <if test="search != null and search != ''">
-      and (FIN_PRODUCT.FINPROD_MARKET_ID like concat(concat('%',#{search}),'%')
+      and (FIN_PRODUCT.FINPROD_ID like concat(concat('%',#{search}),'%')
+          or FIN_PRODUCT.FINPROD_MARKET_ID like concat(concat('%',#{search}),'%')
           or FIN_PRODUCT.FINPROD_ABBR like concat(concat('%',#{search}),'%'))
     </if>
     </select>
