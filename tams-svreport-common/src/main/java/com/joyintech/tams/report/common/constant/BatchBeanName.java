@@ -85,6 +85,9 @@ public enum BatchBeanName {
 	资产基础指标不穿透数据接入("3082","svrAssetIndexNoBtmInterfTaskService","assetIndexNoBtmImpMainService","资产基础指标不穿透数据接入"),
     投资者明细信息登记手工处理("3067", "equityBusiInfoRegistAutoManualCBService", "equityBusiInfoRegistAutoManualCBMainService","投资者明细信息登记手工处理"),
 	投资者明细信息数据检查批处理("3068", "eqityBusiInfoRegistManualCheckService","equityBusiInfoRegistManualCheckMainService", "投资者明细信息数据检查批处理"),
+
+    // 监管客户组别区域报送数据接入 add by qufangxu at 2021-02-24
+    监管客户组别区域报送数据接入("3003","SvrSaleCustSvrreportInterfTastService","SaleCustSvrrepportImpMainService","监管客户组别区域报送接入"),
 	/**
      * 业务明细数据自动检查报送
      */
