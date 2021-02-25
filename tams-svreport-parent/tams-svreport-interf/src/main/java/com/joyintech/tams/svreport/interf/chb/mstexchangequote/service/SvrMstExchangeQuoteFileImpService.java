@@ -6,10 +6,12 @@ import com.joyintech.tams.common.InterfDefine;
 import com.joyintech.tams.common.InterfFile;
 import com.joyintech.tams.common.base.dao.BaseMapper;
 import com.joyintech.tams.common.base.entity.MstExchargeQuote;
+import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
 import com.joyintech.tams.svreport.interf.chb.mstexchangequote.dao.ChbMstExchangeQuoteMapper;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -242,7 +244,18 @@ public class SvrMstExchangeQuoteFileImpService extends FileImpService {
     }
 
     @Override
-    public String importDB(List<Map<String, String>> listData, InterfFile interfFile) {
-        return null;
+    public String importDB(List<Map<String, String>> mstExchargeQuoteList, InterfFile interfFile) {
+
+        //待入库为空则直接返回
+        if (CollectionUtils.isEmpty(mstExchargeQuoteList)){
+            return "success";
+        }
+
+        String saveResult = saveData(mstExchargeQuoteList, null , interfFile.getDataSource());
+
+        // 更新系统配置时间
+        ChbInterfUtil.updateInterfTimeBySysdate(InterfDefine.汇率信息数据.getCode());
+
+        return saveResult;
     }
 }
