@@ -432,4 +432,17 @@ public class FinFloatMgtExpQuotation002Controller extends BaseController {
     public String getopenMode(){
         return finFloatMgtExpQuotation001Service.getopenMode(this.getParam("finprodId"));
     }
+    
+    /**
+     * 获取发行方式
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("getopenType")
+    public String getopenType(){
+        return finFloatMgtExpQuotation001Service.getopenType(this.getParam("finprodId"));
+    }
 }

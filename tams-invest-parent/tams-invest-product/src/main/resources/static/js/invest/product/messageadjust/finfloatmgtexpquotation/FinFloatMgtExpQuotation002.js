@@ -89,8 +89,23 @@
                             			if(result != '02'){
                             		Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/checkeffDate', object, function(result) {
                             			if(result == false){
-                            				Joyin.error(JoyinUtil.getMessage("浮动管理费计提为算尾不算头，请选择开放计划开放开始日+1天作为生效日！"));
-                            	            return;
+                            				Joyin.ajax(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/getopenType', object, function(result) {
+                                    			if(result == '02'){
+                            				       Joyin.error(JoyinUtil.getMessage("浮动管理费计提为算尾不算头，请选择开放计划开放开始日+1天作为生效日！"));
+                            	                    return;
+                                    			}else{
+                                    				Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/check', object, function(result) {
+                                                        Joyin.confirm(result.data, function() {
+                                    				if(operateType === 'save') {
+                                                        WorkFlow.doSaveList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_save");
+                                                    }
+                                                    else {
+                                                        WorkFlow.doSubmitList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_submit");
+                                                    }
+                                                   });                                          
+                                    			 });
+                                    		 }
+                            				 });
                             			}else{
                             				Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/check', object, function(result) {
                                                 Joyin.confirm(result.data, function() {
@@ -151,8 +166,23 @@
                                 			if(result != '02'){
                                 		Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/checkeffDate', object, function(result) {
                                 			if(result == false){
-                                				Joyin.error(JoyinUtil.getMessage("浮动管理费计提为算尾不算头，请选择开放计划开放开始日+1天作为生效日！"));
-                                	            return;
+                                				Joyin.ajax(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/getopenType', object, function(result) {
+                                        			if(result == '02'){
+                                				       Joyin.error(JoyinUtil.getMessage("浮动管理费计提为算尾不算头，请选择开放计划开放开始日+1天作为生效日！"));
+                                	                    return;
+                                        			}else{
+                                        				Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/check', object, function(result) {
+                                                            Joyin.confirm(result.data, function() {
+                                        				if(operateType === 'save') {
+                                                            WorkFlow.doSaveList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_save");
+                                                        }
+                                                        else {
+                                                            WorkFlow.doSubmitList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_submit");
+                                                        }
+                                                       });                                          
+                                        			 });
+                                        		 }
+                                				 });
                                 			}else{
                                 				Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/check', object, function(result) {
                                                     Joyin.confirm(result.data, function() {
@@ -211,8 +241,23 @@
                 			if(result != '02'){
                 		Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/checkeffDate', object, function(result) {
                 			if(result == false){
-                				Joyin.error(JoyinUtil.getMessage("浮动管理费计提为算尾不算头，请选择开放计划开放开始日+1天作为生效日！"));
-                	            return;
+                				Joyin.ajax(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/getopenType', object, function(result) {
+                        			if(result == '02'){
+                				       Joyin.error(JoyinUtil.getMessage("浮动管理费计提为算尾不算头，请选择开放计划开放开始日+1天作为生效日！"));
+                	                    return;
+                        			}else{
+                        				Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/check', object, function(result) {
+                                            Joyin.confirm(result.data, function() {
+                        				if(operateType === 'save') {
+                                            WorkFlow.doSaveList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_save");
+                                        }
+                                        else {
+                                            WorkFlow.doSubmitList(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/save', object, "FinFloatMgtExpQuotation002_btn_submit");
+                                        }
+                                       });                                          
+                        			 });
+                        		 }
+                				 });
                 			}else{
                 				Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/check', object, function(result) {
                                     Joyin.confirm(result.data, function() {

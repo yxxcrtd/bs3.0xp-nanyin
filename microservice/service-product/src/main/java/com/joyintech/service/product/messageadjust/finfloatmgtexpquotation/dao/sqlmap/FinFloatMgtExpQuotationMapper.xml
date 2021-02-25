@@ -570,4 +570,10 @@
           where fci.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
           and fci.CASH_TYPE_1 = '01' and fci.CASH_TYPE_2 = 'C01'
     </select>
+    
+    <select id="getopenType" resultType="java.lang.String" >                
+          select fp.OPERATION_TYPE
+          from FIN_PRODUCT fp         
+          where fp.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}        
+    </select>
 </mapper>
