@@ -352,96 +352,111 @@
 		/*债券本季末数额*/
 		SELECT
 		'BONDCUR' AS reportType,
-		INFO.INDUSTRY AS propertyCode,
+		mst.INDUSTRY AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) = mst.customer_id
+
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
-		AND INFO.INDUSTRY IS NOT NULL
-		AND INFO.ASSET_TYPE2 IN ('1113', '1114', '1115', '1116')
-		GROUP BY INFO.INDUSTRY
+		AND INFO.ASSET_TYPE2 IN ('1113', '1114', '1115')
+		AND mst.INDUSTRY IS NOT NULL
+		GROUP BY mst.INDUSTRY
+
 		/*债券上季末数额*/
 		UNION ALL
 		SELECT
 		'BONDLAST' AS reportType,
-		INFO.INDUSTRY AS propertyCode,
+		mst.INDUSTRY AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) = mst.customer_id
+
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
-		AND INFO.INDUSTRY IS NOT NULL
-		AND INFO.ASSET_TYPE2 IN ('1113', '1114', '1115', '1116')
-		GROUP BY INFO.INDUSTRY
+		AND mst.INDUSTRY is NOT NULL
+		AND INFO.ASSET_TYPE2 IN ('1113', '1114', '1115')
+		GROUP BY mst.INDUSTRY
 
 		/*非标准化债权类投资本季末数额*/
 		UNION ALL
 		SELECT
 		'NOSTABONDCUR' AS reportType,
-		NVL(INFO.INDUSTRY1, INFO.INDUSTRY_SHARES) AS propertyCode,
+		mst.INDUSTRY AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) = mst.customer_id
 
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 
 		AND (INFO.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209')
 		OR (INFO.ASSET_TYPE2 ='1299' and INFO.IN_ASSET_TYPE is not null AND INFO.IN_ASSET_TYPE NOT IN ('01','02'))
 		OR (INFO.ASSET_TYPE2 ='1299' AND INFO.IN_ASSET_TYPE is null))
-
-		AND (INFO.INDUSTRY1 IS NOT NULL OR INFO.INDUSTRY_SHARES IS NOT NULL)
-		GROUP BY NVL(INFO.INDUSTRY1, INFO.INDUSTRY_SHARES)
+		AND mst.INDUSTRY　is not null
+		GROUP BY mst.INDUSTRY
 
 		/*非标准化债权类投资上季末数额*/
 		UNION ALL
 		SELECT
 		'NOSTABONDLAST' AS reportType,
-		NVL(INFO.INDUSTRY1, INFO.INDUSTRY_SHARES) AS propertyCode,
+		mst.INDUSTRY AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) = mst.customer_id
+
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
 
 		AND (INFO.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209')
 		OR (INFO.ASSET_TYPE2 ='1299' and INFO.IN_ASSET_TYPE is not null AND INFO.IN_ASSET_TYPE NOT IN ('01','02'))
 		OR (INFO.ASSET_TYPE2 ='1299' AND INFO.IN_ASSET_TYPE is null))
-		AND (INFO.INDUSTRY1 IS NOT NULL OR INFO.INDUSTRY_SHARES IS NOT NULL)
-		GROUP BY NVL(INFO.INDUSTRY1, INFO.INDUSTRY_SHARES)
+		AND mst.INDUSTRY IS NOT NULL
+		GROUP BY mst.INDUSTRY
 
 		/*产业投资基金本季末余额*/
 		UNION ALL
 		SELECT
 		'INDINCUR' AS reportType,
-		INFO.INDUSTRY_SHARES AS propertyCode,
+		mst.INDUSTRY AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) = mst.customer_id
 
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
-		AND INFO.INDUSTRY_SHARES IS NOT NULL
+		AND mst.INDUSTRY IS NOT NULL
 		AND INFO.ASSET_TYPE2 IN ('1106', '2401', '1303', '2403','2402','2499')
 		AND ((INFO.IS_GOVERN_FUND is not null and INFO.IS_GOVERN_FUND='01') or INFO.IS_GOVERN_FUND is null)
-		GROUP BY INFO.INDUSTRY_SHARES
+		GROUP BY mst.INDUSTRY
 
 		/*产业投资基金上季末余额*/
 		UNION ALL
 		SELECT
 		'INDINLAST' AS reportType,
-		INFO.INDUSTRY_SHARES AS propertyCode,
+		mst.INDUSTRY AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) = mst.customer_id
 
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
-		AND INFO.INDUSTRY_SHARES IS NOT NULL
+		AND mst.INDUSTRY IS NOT NULL
 		AND INFO.ASSET_TYPE2 IN ('1106', '2401', '1303', '2403','2402','2499')
 		AND ((INFO.IS_GOVERN_FUND is not null and INFO.IS_GOVERN_FUND='01') or INFO.IS_GOVERN_FUND is null)
-		GROUP BY INFO.INDUSTRY_SHARES
+		GROUP BY mst.INDUSTRY
 
 		/* 其他本季末数额 */
 		UNION ALL
@@ -510,14 +525,16 @@
 		/*债券本季末数额*/
 		SELECT
 		'BONDCUR' AS reportType,
-		mst.province AS propertyCode,
+		d1.item_value AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
 		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
-
+　　　　　left join sys_datadict_list d1
+		on mst.province=d1.item_code
+		and d1.dict_code ='ADMINISTRATIVE_TYPE1'
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
 		AND mst.province IS NOT NULL
@@ -541,18 +558,21 @@
 			</if>
 		</if>
 
-		GROUP BY mst.province
+		GROUP BY d1.item_value
 		/*债券上季末数额*/
 		UNION ALL
 		SELECT
 		'BONDLAST' AS reportType,
-		mst.province AS propertyCode,
+		d1.item_value AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
 		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		left join sys_datadict_list d1
+		on mst.province=d1.item_code
+		and d1.dict_code ='ADMINISTRATIVE_TYPE1'
 
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
 		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
@@ -577,20 +597,23 @@
 			</if>
 		</if>
 
-		GROUP BY mst.province
+		GROUP BY d1.item_value
 
 
 		/*非标准化债权类投资本季末数额*/
 		UNION ALL
 		SELECT
 		'NOSTABONDCUR' AS reportType,
-		mst.province AS propertyCode,
+		d1.item_value AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
 		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		left join sys_datadict_list d1
+		on mst.province=d1.item_code
+		and d1.dict_code ='ADMINISTRATIVE_TYPE1'
 
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
@@ -615,19 +638,22 @@
 			</if>
 		</if>
 
-		GROUP BY mst.province
+		GROUP BY d1.item_value
 
 		/*非标准化债权类投资上季末数额*/
 		UNION ALL
 		SELECT
 		'NOSTABONDLAST' AS reportType,
-		mst.province AS propertyCode,
+		d1.item_value AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
 		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		left join sys_datadict_list d1
+		on mst.province=d1.item_code
+		and d1.dict_code ='ADMINISTRATIVE_TYPE1'
 
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
 		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
@@ -652,19 +678,22 @@
 			</if>
 		</if>
 
-		GROUP BY mst.province
+		GROUP BY d1.item_value
 
 		/*产业投资基金本季末余额*/
 		UNION ALL
 		SELECT
 		'INDINCUR' AS reportType,
-		mst.province AS propertyCode,
+		d1.item_value AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
 		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		left join sys_datadict_list d1
+		on mst.province=d1.item_code
+		and d1.dict_code ='ADMINISTRATIVE_TYPE1'
 
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
@@ -691,19 +720,23 @@
 			</if>
 		</if>
 
-		GROUP BY mst.province
+		GROUP BY d1.item_value
 
 		/*产业投资基金上季末余额*/
 		UNION ALL
 		SELECT
 		'INDINLAST' AS reportType,
-		mst.province AS propertyCode,
+		d1.item_value AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
 		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		left join sys_datadict_list d1
+		on mst.province=d1.item_code
+		and d1.dict_code ='ADMINISTRATIVE_TYPE1'
+
 
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
 		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
@@ -730,19 +763,22 @@
 			</if>
 		</if>
 
-		GROUP BY mst.province
+		GROUP BY d1.item_value
 
 		/* 其他本季末数额 */
 		UNION ALL
 		SELECT
 		'OTHERCUR' AS reportType,
-		mst.province AS propertyCode,
+		d1.item_value AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
 		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		left join sys_datadict_list d1
+		on mst.province=d1.item_code
+		and d1.dict_code ='ADMINISTRATIVE_TYPE1'
 
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
@@ -766,19 +802,22 @@
 			</if>
 		</if>
 
-		GROUP BY mst.province
+		GROUP BY d1.item_value
 
 		/* 其他上季末数额 */
 		UNION ALL
 		SELECT
 		'OTHERCUR' AS reportType,
-		mst.province AS propertyCode,
+		d1.item_value AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
 		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		left join sys_datadict_list d1
+		on mst.province=d1.item_code
+		and d1.dict_code ='ADMINISTRATIVE_TYPE1'
 
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
 		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
@@ -802,8 +841,16 @@
 			</if>
 		</if>
 
-		GROUP BY mst.province
+		GROUP BY d1.item_value
 
+	</select>
+	<select id="selectBankModeOrgName" resultType="java.lang.String">
+		select sysi.institution_name
+		from  chb_org_regist_bank_code corbc
+		inner join sys_institution sysi
+		on corbc.org_code=sysi.institution_code
+		and corbc.status='E'
+		where   rownum=1
 	</select>
 
 </mapper>

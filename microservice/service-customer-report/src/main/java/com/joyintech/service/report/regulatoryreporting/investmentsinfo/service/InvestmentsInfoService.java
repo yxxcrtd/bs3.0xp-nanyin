@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessCounterDetailsDto;
 import org.apache.commons.lang.time.DateUtils;
@@ -551,10 +553,43 @@ public class InvestmentsInfoService {
 			}
 			data.put(detail.getPropertycode(), divideBillion(detail));
 		}
+		//登录机构
+		if(MultilevelDataAuthorityUtil.isEnabled()) {
+			//联社模式,查询登录人的机构
+        	String org =   MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
+            String orgName=CacheUtil.getAppCacheInstitutionCodeName(org).toString();
+			data.put("org", orgName);
+		}else{
+			//银行模式
+			String orgName=overallInfoMapper.selectBankModeOrgName();
+			data.put("org", orgName);
+
+		}
+		//数据时点
+		// 导出年份
+		String exportYear = (String) pageParam.get("exportYear");
+		// 导出季度
+		String exportQuarter = (String) pageParam.get("exportQuarter");
+		// 本季末期数
+		String termId = exportYear + exportQuarter;
+		String cdateStr = exportYear + exportQuarter+"01";
+		Date cdate=new Date();
+		try {
+			cdate = DateUtil.parseDate(cdateStr,"yyyyMMdd");
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(cdate);
+		calendar.add(Calendar.MONTH, 1);
+		calendar.set(Calendar.DAY_OF_MONTH, 0);
+		//取到本季末
+		Date endDate=calendar.getTime();
+
 		return data;
 	}
 	public List<InvestmentBusinessCounterDetailsDto>  createTable7OtherInfo(Map<String, Object> pageParam) {
-		//针对表3附表
+		//针对表７-2
 		List<InvestmentBusinessCounterDetailsDto> list=queryTable7OtherInfo(pageParam);
 		return list;
 	}

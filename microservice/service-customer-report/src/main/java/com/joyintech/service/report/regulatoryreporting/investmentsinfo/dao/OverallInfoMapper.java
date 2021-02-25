@@ -141,5 +141,9 @@ public interface OverallInfoMapper {
 	 */
 	List<OverallInfoDto> queryBottomRemarkInfoByIndustry(@Param("startDate")Date startDate, @Param("endDate")Date endDate);
 
-
+	/**
+	 * 银行模式时，返回机构
+	 * @return
+	 */
+	public String selectBankModeOrgName();
 }
