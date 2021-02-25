@@ -33,7 +33,7 @@ public class SvrBussRepEquityInfoDto extends RepAssetEquity{
     /**
      * 资产代码
      */
-    private String assetCode;
+    private String assetId;
 
     /**
      * 资产名称
@@ -104,12 +104,12 @@ public class SvrBussRepEquityInfoDto extends RepAssetEquity{
         return serialVersionUID;
     }
 
-    public String getAssetCode() {
-        return assetCode;
+    public String getAssetId() {
+        return assetId;
     }
 
-    public void setAssetCode(String assetCode) {
-        this.assetCode = assetCode;
+    public void setAssetId(String assetId) {
+        this.assetId = assetId;
     }
 
     public String getAssetName() {

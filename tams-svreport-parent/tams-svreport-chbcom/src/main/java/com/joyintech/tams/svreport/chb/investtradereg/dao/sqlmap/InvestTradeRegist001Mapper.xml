@@ -1294,14 +1294,14 @@
           trade.TRADE_CODE text
          FROM (
 	         select DISTINCT trade_code
-	         from CHB_INVEST_TRADE
-<!-- 	         where status = 'E' -->
-	         union all 
-	         select DISTINCT trade_id trade_code
-	         from chb_prd_fee_deal
-	         where 1=1
-<!-- 	         status = 'E' -->
-             and FEE_TYPE = '02'/*他行费用*/
+	         from CHB_INVEST_TRADE_sub
+      <!-- 	         where status = 'E'
+                   union all
+                   select DISTINCT trade_id trade_code
+                   from chb_prd_fee_deal
+                   where 1=1
+                    status = 'E'
+             and FEE_TYPE = '02' /*他行费用*/-->
          ) trade
          <where>
             <if test="search != null and search != ''">

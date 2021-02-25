@@ -24,8 +24,10 @@ public enum ServerMenu{
      资产基本信息_QDII股票基金类信息("svrBussQDIISharesInfoDto", DictCodeListExt2.资产_负债类别_QDII股票_基金类资产.getValue(), null),
      资产基本信息_资产管理产品信息("svrBussRepAssetMngProdInfoDto", DictCodeListExt2.资产_负债类别_资产管理产品.getValue(), null),
      资产基本信息_其他非标准化债券权益境外理财投资信息("svrBussRepOtherInvestTargetInfoDto", DictCodeListExt2.资产_负债类别_各类资产的其他项.getValue(), null),
-     资产基本信息_公募私募基金信息("svrBussRepFundInfoDto", DictCodeListExt2.资产_负债类别_私募基金.getValue(), null),
-     资产基本信息_委外投资信息("svrBussRepOutInvestAgrInfoDto", DictCodeListExt2.资产_负债类别_委外投资_协议方式.getValue(), null),
+     资产基本信息_私募基金信息("svrBussRepFundInfoDto", DictCodeListExt2.资产_负债类别_私募基金.getValue(), null),
+    资产基本信息_公募基金信息("svrBussRepFundInfoDto", DictCodeListExt2.资产_负债类别_公募基金.getValue(), null),
+
+    资产基本信息_委外投资信息("svrBussRepOutInvestAgrInfoDto", DictCodeListExt2.资产_负债类别_委外投资_协议方式.getValue(), null),
 
     ;
 

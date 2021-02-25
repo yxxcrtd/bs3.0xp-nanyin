@@ -45,7 +45,9 @@ public class RechbAassetInfoUtilService {
             //调用共通方法，获取资产要素
             if(listChbAssetInfoErrordata!=null&&listChbAssetInfoErrordata.size()>0){
                 ErrdataConvertUtil.errdataAssetInfoConvert(infoDto,listChbAssetInfoErrordata.get(0));
+                infoDto.setAssetUuid(assetUUid);
             }
+
         }
         //当 入参【模式】为02的况下
         else if(StringUtil.equals(DictCodeListExt3.中债_处理状态_已处理.getValue(),flag)){
