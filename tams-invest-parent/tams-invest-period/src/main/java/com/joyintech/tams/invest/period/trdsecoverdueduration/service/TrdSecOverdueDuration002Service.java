@@ -420,4 +420,13 @@ public class TrdSecOverdueDuration002Service extends BaseService<TrdSecOverdueDu
                 ServiceApplication.PERIOD_SERVICE_NAME + "/TrdSecOverdueDuration/findSecOverdueData", params,
                 TrdSecOverdueDuration002Dto.class);
 	}
+
+    /**
+     * 根据汇总的汇总交易编号查询有效的数据
+     * @param busiCode
+     * @return
+     */
+    public TrdSecOverdueDuration002Dto findEffectiveData(String busiCode) {
+        return simpleRestTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdSecOverdueDuration/findEffectiveData", busiCode, TrdSecOverdueDuration002Dto.class);
+    }
 }

@@ -1060,6 +1060,7 @@ with rece_all as(
                         and tfpdt.TRADE_STATUS ='01'
                         and tdta.MP_FINPROD_ID is null
                         and tfpdt.P_TOTLE_TRADE_ID is null
+                        and tfpdt.is_overdue_deal = 'Y'
                         <!-- 多级法人改造 add by caiqun 20200615 -->
                         <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
                             AND tfpdt.INSTITUTION_CODE IN
@@ -1094,6 +1095,7 @@ with rece_all as(
                         and tfpdt.TRADE_STATUS ='01'
                         and tdta.MP_FINPROD_ID is null
                         and tfpdt.P_TOTLE_TRADE_ID is null
+                        and tfpdt.is_overdue_deal = 'Y'
                         <!-- 多级法人改造 add by caiqun 20200615 -->
                         <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
                             AND tfpdt.INSTITUTION_CODE IN
@@ -1645,5 +1647,103 @@ with rece_all as(
                 and total.ps = #{PS_MC}
             )
 
+    </select>
+    <resultMap id="effectiveDataResultMap" type="com.joyintech.tams.invest.common.dto.period.trdsecoverdueduration.TrdSecOverdueDurationDto">
+        <id column="TOTLE_TRADE_ID" property="busiCode" jdbcType="VARCHAR"/>
+        <result column="ITEM_VALUE" property="finprodTypeName" jdbcType="VARCHAR"/>
+        <result column="TYPE_8" property="finprodType2" jdbcType="VARCHAR"/>
+        <result column="SECACCT_ID" property="secAcctId" jdbcType="VARCHAR"/>
+        <result column="CHL_NAME" property="chIldName" jdbcType="VARCHAR"/>
+        <result column="FINPROD_MARKET_ID" property="finprodMarketId" jdbcType="VARCHAR"/>
+        <result column="FINPROD_NAME" property="finprodName" jdbcType="VARCHAR"/>
+        <result column="VDATE" property="vdate" jdbcType="DATE"/>
+        <result column="MDATE" property="mdate" jdbcType="DATE"/>
+        <result column="THEORY_PRIN" property="theoryPrin" jdbcType="DECIMAL"/>
+        <result column="THEORY_INT" property="theoryInt" jdbcType="DECIMAL"/>
+        <result column="THEORY_PENALTY_INT" property="theoryPenaltyInt" jdbcType="DECIMAL"/>
+        <result column="PRIN_AMT" property="prinAmt" jdbcType="DECIMAL"/>
+        <result column="INT_AMT" property="intAmt" jdbcType="DECIMAL"/>
+        <result column="PENALTY_INTAMT" property="penaltyIntamt" jdbcType="DECIMAL"/>
+        <result column="TRADE_AMT" property="tradeAmt" jdbcType="DECIMAL"/>
+        <result column="TRADE_DATE" property="tradeDate" jdbcType="DATE"/>
+        <result column="IS_CLEAN" property="isClean" jdbcType="VARCHAR"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+        <collection property="finAssetIntInfoList" ofType="com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo">
+            <id column="SUB_TOTLE_TRADE_ID" property="tradeId"/>
+            <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR"/>
+            <result column="PORTFOLIO_NAME" property="portfolioName" jdbcType="VARCHAR"/>
+            <result column="INV_AIM" property="invAim" jdbcType="VARCHAR"/>
+            <result column="SUB_THEORY_PRIN" property="prinAmtTheory" jdbcType="DECIMAL"/>
+            <result column="SUB_THEORY_INT" property="theoryInt" jdbcType="DECIMAL"/>
+            <result column="SUB_THEORY_PENALTY_INT" property="theoryPenalty" jdbcType="DECIMAL"/>
+            <result column="SUB_PRIN_AMT" property="prinAmt" jdbcType="DECIMAL"/>
+            <result column="SUB_INT_AMT" property="intAmt" jdbcType="DECIMAL"/>
+            <result column="SUB_PENALTY_INTAMT" property="penaltyIntamt" jdbcType="DECIMAL"/>
+            <result column="SUB_TRADE_AMT" property="tradeAmt" jdbcType="DECIMAL"/>
+            <result column="INVEST_YESORNO" property="investYesorno" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+    <select id="findEffectiveData" resultMap="effectiveDataResultMap">
+        select t.totle_trade_id,
+        type3.type_8,
+        dict.item_value,
+        nvl(t.sec_manage_acct_id, t.chl_id) secacct_id,
+        nvl(chl.finprod_name,stl.sec_acct_name) chl_name,
+        f.finprod_market_id,
+        nvl(f.finprod_abbr, f.finprod_name) finprod_name,
+        t.vdate,
+        t.mdate,
+        pt.theory_prin,
+        pt.theory_int,
+        pt.theory_penalty_int,
+        t.prin_amt,
+        t.int_amt,
+        td.penalty_intamt,
+        t.trade_amt,
+        t.trade_date,
+        t.is_clean,
+        t.remark,
+        sub.totle_trade_id sub_totle_trade_id,
+        sub.portfolio_id,
+        ptl.portfolio_name,
+        sub.inv_aim,
+        subpt.theory_prin sub_theory_prin,
+        subpt.theory_int sub_theory_int,
+        subpt.theory_penalty_int sub_theory_penalty_int,
+        sub.prin_amt sub_prin_amt,
+        sub.int_amt sub_int_amt,
+        subtd.penalty_intamt sub_penalty_intamt,
+        sub.trade_amt sub_trade_amt,
+        ptl.invest_yesorno
+        from trd_fin_product_deal_total t
+        left join trd_deal_total_add td
+        on td.totle_trade_id = t.totle_trade_id
+        left join pa_trd_fin_product_deal_total pt
+        on pt.totle_trade_id = t.totle_trade_id
+        left join fin_product f
+        on f.finprod_id = t.finprod_id
+        left join fin_product_type type3
+        on type3.finprod_id = f.finprod_id
+        and type3.branch = 0
+        left join sys_datadict_list dict
+        on dict.item_code = type3.type_8
+        and dict.dict_code = 'PINAN_ASSET_TYPE'
+        left join fin_product chl
+        on chl.finprod_id = t.chl_id
+        left join stl_sec_acct_info stl
+        on stl.sec_acct_id = t.sec_manage_acct_id
+        left join trd_fin_product_deal_total sub
+        on sub.p_totle_trade_id = t.totle_trade_id
+        left join trd_deal_total_add subtd
+        on subtd.totle_trade_id = sub.totle_trade_id
+        left join pa_trd_fin_product_deal_total subpt
+        on subpt.totle_trade_id = sub.totle_trade_id
+        left join ptl_portfolio ptl
+        on ptl.portfolio_id = sub.portfolio_id
+        where t.is_cancel = 'N'
+        and t.trade_status = '01'
+        and t.is_overdue_deal = 'Y'
+        and t.totle_trade_id = #{busiCode, jdbcType=VARCHAR}
     </select>
 </mapper>

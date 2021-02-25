@@ -616,7 +616,7 @@ public class TrdSecOverdueDurationService extends BaseService<TrdSecOverdueDurat
         Date updateTime = new Date();
         if (BussinessConstant.REVOKE.equals(durationDto.getOperateType())) {
             investPeriodCommonService.deleteByWorkflowId(durationDto.getWorkflowId());
-            TrdFinProductDealTotal trdFinProductDealTotal = investPeriodCommonService.revoke汇总和交易相关表(durationDto.getBusiCode(),
+            investPeriodCommonService.revoke汇总和交易相关表(durationDto.getBusiCode(),
                 updateUser, durationDto.getRevokeReason(), null, null);
             // 删除其他表
             return Boolean.TRUE.toString();
@@ -765,5 +765,14 @@ public class TrdSecOverdueDurationService extends BaseService<TrdSecOverdueDurat
         param.put("transferDate",DateUtil.parse((String)param.get("transferDate")));
         param.put("PS_MC", DictCodeList.交易方向_卖出.getValue());
 	     return trdSecOverdueDurationMapper.checkCounterFlowDeal(param);
+    }
+
+    /**
+     * 根据汇总的汇总交易编号查询有效的数据
+     * @param busiCode
+     * @return
+     */
+    public TrdSecOverdueDurationDto findEffectiveData(String busiCode) {
+        return trdSecOverdueDurationMapper.findEffectiveData(busiCode);
     }
 }

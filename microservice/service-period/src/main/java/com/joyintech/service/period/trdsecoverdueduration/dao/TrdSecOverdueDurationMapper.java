@@ -12,6 +12,7 @@ package com.joyintech.service.period.trdsecoverdueduration.dao;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
 import com.joyintech.tams.invest.common.dto.period.trdsecoverdueduration.TrdSecOverdueDurationDto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -62,4 +63,6 @@ public interface TrdSecOverdueDurationMapper {
 
 
     int checkCounterFlowDeal(Map<String, Object> param);
+
+    TrdSecOverdueDurationDto findEffectiveData(@Param("busiCode") String busiCode);
 }

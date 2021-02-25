@@ -85,6 +85,7 @@ public class TrdSecOverdueDuration002Controller  extends BaseController {
          Map<String, Object> params = RequestUtil.getPageParam();
          String statusValid = (String) params.get("statusValid");
          params.put("statusValid", statusValid);
+         String busiCode = this.getParam("busiCode");
          Map<String, Object> map  = new HashMap<>();
          if (RequestUtil.getParam("isFromCheck") != null && Boolean.valueOf(RequestUtil.getParam("isFromCheck"))
             && StringUtil.isNotEmpty(params.get("bizCode"))) {
@@ -92,7 +93,10 @@ public class TrdSecOverdueDuration002Controller  extends BaseController {
             params.put("workflowId", workflowId);
             params.put("statusValid", DictCodeListExt1.画面数据状态_流程中.getValue());
          }
-         if ((!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(params.get("workflowId")))
+         if (StringUtil.isNotEmpty(busiCode) && WorkFlowUtil.isNotFromToDoList() && DictCodeListExt1.画面数据状态_有效.getValue().equals(statusValid)) {
+            entity = trdSecOverdueDuration002Service.findEffectiveData(busiCode);
+            entity.setBussTrdTransferOrder(periodCommonService.selectPayOrders(busiCode));
+         }else if ((!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(params.get("workflowId")))
                  || DictCodeListExt1.画面数据状态_流程中.getValue().equals(params.get("statusValid"))) {
              String workflowId = (String) params.get("workflowId");
              if (StringUtil.isNotEmpty(workflowId)) {
