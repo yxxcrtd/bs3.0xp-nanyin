@@ -13,7 +13,6 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset;
 import com.joyintech.framework.validation.annotation.Amount;
 import com.joyintech.framework.validation.annotation.Length;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.common.base.entity.RepAssetCreditNonstd;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -26,7 +25,7 @@ import java.util.Date;
  * @see SvrBussRepAssetCreditNonstdInfoDto
  * @since 1.0
  */
-public class SvrBussRepAssetCreditNonstdInfoDto extends RepAssetCreditNonstd{
+public class SvrBussRepAssetCreditNonstdInfoDto extends RepAssetCreditNonstdDto {
     
     /**
      * <意义，目的和功能，以及可能被用到的地方>
@@ -264,6 +263,17 @@ public class SvrBussRepAssetCreditNonstdInfoDto extends RepAssetCreditNonstd{
      */
     private BigDecimal  totalFeeRate;
 
+
+    private String  industryLevel2Type;
+
+    public String getIndustryLevel2Type() {
+        return industryLevel2Type;
+    }
+
+    public void setIndustryLevel2Type(String industryLevel2Type) {
+        this.industryLevel2Type = industryLevel2Type;
+    }
+
     public String getCreditOrgCode() {
         return creditOrgCode;
     }
@@ -483,10 +493,6 @@ public class SvrBussRepAssetCreditNonstdInfoDto extends RepAssetCreditNonstd{
         return super.getRepConditionCmm();
     }
     
-    @Amount(fieldName = "BussRepAssetCreditNonstdInfo.repTotalFeeRate", maxIntBit = 3,maxDecBit = 5, groups = {ValidateGroupEdit.class})
-    public BigDecimal getRepTotalFeeRate(){
-        return super.getRepTotalFeeRate();
-    }
 
     public String getRepPrivatefundFlag() {
         return repPrivatefundFlag;

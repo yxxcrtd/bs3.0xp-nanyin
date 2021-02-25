@@ -238,6 +238,9 @@ public class PbcPrdAccountSub extends BaseEntity{
     public String getVdate02() {
         return DateUtil.format(vdate,"yyyy-MM-dd");
     }
+    public String getVdate03() {
+        return DateUtil.format(vdate,DateUtil.DEFAULT_ANOTHER_FORMAT);
+    }
     /**
      * 资产池起始日期
      * @param vdate 资产池起始日期

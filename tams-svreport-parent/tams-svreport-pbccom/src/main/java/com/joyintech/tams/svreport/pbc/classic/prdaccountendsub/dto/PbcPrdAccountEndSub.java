@@ -496,4 +496,8 @@ public class PbcPrdAccountEndSub extends BaseEntity {
 	public String getMdateStr(){
 		return DateUtil.format(getMdate());
 	}
+
+    public String getMdateStr2(){
+        return DateUtil.format(getMdate(), DateUtil.DEFAULT_ANOTHER_FORMAT);
+    }
 }

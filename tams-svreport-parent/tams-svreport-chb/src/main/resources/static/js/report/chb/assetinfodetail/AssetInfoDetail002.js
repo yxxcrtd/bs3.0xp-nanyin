@@ -309,8 +309,8 @@ var QueryFunc=function(){
         }else if(obj["L01"].indexOf(repAssetType)>=0){
             //公募基金/私募基金
             if(repAssetType=='2607'||repAssetType=='2610'||repAssetType=='2613'||
-                repAssetType=='2611'||repAssetType=='2612'||repAssetType=='1617'){
-                $("#svrBussRepFundInfoDto_isGovernFund").val('02').trigger("change");
+                repAssetType=='2611'||repAssetType=='2612'||repAssetType=='2617'){
+                $("#svrBussRepFundInfoDto_isGovernFund").val('').trigger("change");
                 $("#svrBussRepFundInfoDto_isGovernFund").attr("disabled",false);
             }else{
                 $("#svrBussRepFundInfoDto_isGovernFund").val('').trigger("change");
