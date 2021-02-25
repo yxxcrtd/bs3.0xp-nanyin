@@ -52,8 +52,8 @@
 		var assetTvalueFund=$('#assetType2').val();
 		//公募基金/私募基金
 		if(assetTvalueFund=='2607'||assetTvalueFund=='2610'||assetTvalueFund=='2613'||
-			assetTvalueFund=='2611'||assetTvalueFund=='2612'||assetTvalueFund=='1617'){
-			$("#SvrBussRepFundInfoDto_isGovernFund").val('02').trigger("change");
+			assetTvalueFund=='2611'||assetTvalueFund=='2612'||assetTvalueFund=='2617'){
+			$("#SvrBussRepFundInfoDto_isGovernFund").val('').trigger("change");
 			$("#SvrBussRepFundInfoDto_isGovernFund").attr("disabled",false);
 		}else{
 			$("#SvrBussRepFundInfoDto_isGovernFund").val('').trigger("change");
