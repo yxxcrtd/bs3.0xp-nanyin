@@ -16,7 +16,7 @@ import java.util.Map;
  * 质押式回购拆分
  */
 @RestController("backTrdRolloverPledgedRepoController_dtx")
-@RequestMapping("/service/trade/transfer/trdrolloverpledgedrepo/TrdRolloverPledgedRepo")
+@RequestMapping("/trade/transfer/trdrolloverpledgedrepo/TrdRolloverPledgedRepo")
 public class TrdRolloverPledgedRepoController {
     /**
      * trdRolloverPledgedRepoService

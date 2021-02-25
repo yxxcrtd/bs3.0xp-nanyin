@@ -17,7 +17,7 @@ import java.util.Map;
  * @since 1.0
  */
 @RestController("LendTransferControllerCtr_dtx")
-@RequestMapping("/service/LendTransfer")
+@RequestMapping("/LendTransfer")
 public class LendTransferController {
 
     /**

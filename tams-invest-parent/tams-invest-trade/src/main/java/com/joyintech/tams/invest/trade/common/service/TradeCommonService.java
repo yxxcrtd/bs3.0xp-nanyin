@@ -4,6 +4,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.FinCashPlanMapper;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
@@ -54,6 +55,9 @@ public class TradeCommonService extends BaseService {
      */
     @Autowired(required = false)
     private DateCalService dateCalService;
+
+    @Autowired
+    private FinCashPlanMapper finCashPlanMapper;
     
     /**
      * 查询生效的委托
@@ -195,5 +199,31 @@ public class TradeCommonService extends BaseService {
         Map<String,Object> map = new HashMap<>();
         map.put("entrustId",entrustId);
         return trdCommonBaseMapper.selectProAvailableCash(map);
+    }
+
+    /**
+     * 查询当天是否为资产收息日或到期日
+     * @param trdProductDeal
+     * @return
+     */
+    public int getPayTrad(Map<String, Object> map) {
+        return finCashPlanMapper.getPayTrad(map);
+    }
+    /**
+     * 查询转仓日前一天(其他应收款-利息)科目余额是否为0
+     * @param trdProductDeal
+     * @return
+     */
+    public Map<String, Object> getYSKLXBalance(Map<String, Object> map) {
+        return trdCommonBaseMapper.getYSKLXBalance(map);
+    }
+
+    /**
+     * 查询理论结息日有没有待处理和流程中的资产存续交易
+     * @param params
+     * @return
+     */
+    public int selectTrdOnPayDate(Map<String, Object> params) {
+        return trdCommonBaseMapper.selectTrdOnPayDate(params);
     }
 }

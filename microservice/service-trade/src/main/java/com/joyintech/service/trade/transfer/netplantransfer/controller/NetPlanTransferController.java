@@ -17,7 +17,7 @@ import java.util.Map;
  * @since 1.0
  */
 @RestController("NetPlanTransfer001Ctr_dtx")
-@RequestMapping("/service/NetPlanTransfer001")
+@RequestMapping("/NetPlanTransfer001")
 public class NetPlanTransferController {
 
     /**

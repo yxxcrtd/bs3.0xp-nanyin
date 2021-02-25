@@ -19,7 +19,7 @@ import java.util.Map;
  * @since 1.0
  */
 @RestController("AssetsTransferCtr_dtx")
-@RequestMapping("/service/AssetsTransfer")
+@RequestMapping("/AssetsTransfer")
 public class AssetsTransferController {
 
     /**

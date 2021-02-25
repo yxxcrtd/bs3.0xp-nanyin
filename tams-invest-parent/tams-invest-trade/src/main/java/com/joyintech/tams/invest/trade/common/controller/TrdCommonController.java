@@ -1,25 +1,15 @@
 package com.joyintech.tams.invest.trade.common.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.risk.dto.RiskCreditListCommonDto;
@@ -30,6 +20,19 @@ import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.CreditLinesDealCommon;
 import com.joyintech.tams.invest.trade.common.service.RiskAuthorizeListCommonValidatorService;
 import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author : 强成西
@@ -189,4 +192,44 @@ public class TrdCommonController extends BaseController {
 //        }
 //        return riskCreditListCommonValidatorService.delLinesDeal(riskCreditListCommonDto,tradeId);
 //    }
+@RequestMapping("checkTrd")
+@ResponseBody
+public AjaxResult checkTrd(@RequestBody TrdProductDeal trdProductDeal) {
+    AjaxResult wr = new AjaxResult();
+
+
+    Map<String, Object> map = new HashMap<String, Object>();
+    List<JoyinMessage> joyinMessagesEx = new ArrayList<>();
+    map.put("payDate", DateUtil.parse(DateUtil.getSysDate()));
+    map.put("finprodId", trdProductDeal.getFinprodId());
+		/*List<ValidMessage> joyinMessages = new ArrayList<>();
+		int count=tradeCommonService.getPayTrad(map);
+		if(count > 0) {
+			ValidMessage ms = new ValidMessage("收息,还本,到期日当天禁止转仓!");
+		    joyinMessages.add(ms);
+		    wr.setErrorList(joyinMessages);
+		}*/
+    if (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(trdProductDeal.getFinprodType2())
+            || DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(trdProductDeal.getFinprodType2())
+            || DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue().equals(trdProductDeal.getFinprodType2())) {
+
+        int counts = tradeCommonService.selectTrdOnPayDate(map);
+        if (counts > 0) {
+            wr.setStatuCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            wr.setMessage("该资产当天存在存续期待处理或流程中交易，请先处理！", MessageType.错误消息);
+            return wr;
+        }
+
+        map.put("balanceDate", DateUtil.addDay(DateUtil.parse(DateUtil.getSysDate()), -1));
+        map.put("booksetId", trdProductDeal.getPortfolioId());
+        map.put("subjectNo", "12219903" + trdProductDeal.getFinprodId());
+        Map<String, Object> balanceAmt = tradeCommonService.getYSKLXBalance(map);
+        if (StringUtil.isNotEmpty(balanceAmt) && (((BigDecimal) balanceAmt.get("BAMT")).compareTo(BigDecimal.ZERO) > 0)) {
+            JoyinMessage ms = new JoyinMessage("其他应收款-利息科目余额大于0，是否确认提交?", MessageType.确认消息);
+            joyinMessagesEx.add(ms);
+            wr.setJoyinMessages(joyinMessagesEx);
+        }
+    }
+    return wr;
+}
 }

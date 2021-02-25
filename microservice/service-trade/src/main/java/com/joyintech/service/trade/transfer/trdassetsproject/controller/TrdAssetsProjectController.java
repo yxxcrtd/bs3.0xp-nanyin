@@ -15,7 +15,7 @@ import java.util.Map;
  * 项目类资产转仓
  */
 @RestController("backTrdAssetsProjectController_dtx")
-@RequestMapping("/service/trade/transfer/trdassetsproject/TrdAssetsProject")
+@RequestMapping("/trade/transfer/trdassetsproject/TrdAssetsProject")
 public class TrdAssetsProjectController {
     /**
      * trdassetsProjectService
