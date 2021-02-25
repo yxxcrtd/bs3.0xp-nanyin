@@ -493,10 +493,6 @@ public class SvrBussRepAssetCreditNonstdInfoDto extends RepAssetCreditNonstdDto 
         return super.getRepConditionCmm();
     }
     
-    @Amount(fieldName = "BussRepAssetCreditNonstdInfo.repTotalFeeRate", maxIntBit = 3,maxDecBit = 5, groups = {ValidateGroupEdit.class})
-    public BigDecimal getRepTotalFeeRate(){
-        return super.getRepTotalFeeRate();
-    }
 
     public String getRepPrivatefundFlag() {
         return repPrivatefundFlag;
