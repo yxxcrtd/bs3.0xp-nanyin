@@ -101,8 +101,8 @@ public class InvestFeePay001Controller extends BaseController {
         /*费用类型 guyunfei 20190923 start*/
         setSelectOptionToModel(model, DictCode.投资端费用品种类型);
         /*费用类型 guyunfei 20190923 end*/
-        model.addAttribute("statusUndo", DictCodeListExt1.有效状态_流程中.getValue());
-        
+//        model.addAttribute("statusUndo", DictCodeListExt1.有效状态_流程中.getValue());
+
         setSelectOptionToModel(model, DictCode.有效状态);
 //        SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.有效状态, null);
 //        List<SelectOptionDto> options = selectDto.getOptions();
