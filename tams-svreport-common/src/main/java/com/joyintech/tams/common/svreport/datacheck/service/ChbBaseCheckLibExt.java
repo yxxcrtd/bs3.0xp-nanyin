@@ -28,7 +28,7 @@ import java.util.Map;
  * @see BaseCheckLibExt
  * @since 1.0
  */
-public class BaseCheckLibExt {
+public class ChbBaseCheckLibExt {
 
     /**
      * 判断指定的字符串是否是数字

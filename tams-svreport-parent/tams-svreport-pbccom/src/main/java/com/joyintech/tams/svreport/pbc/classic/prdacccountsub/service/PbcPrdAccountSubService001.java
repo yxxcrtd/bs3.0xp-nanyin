@@ -534,7 +534,7 @@ public class PbcPrdAccountSubService001 extends CommonExportService<PbcPrdAccoun
             int index = sheetCfg.getRowStart();
 			
             //TISHKBS-976 产品终止信息，资产池基本信息，资产池终止信息导出人行excel,导出内容标题栏与数据栏中间多了一行空白 modify by lizhi 20200825 start
-//			index ++;
+			index ++;
             //TISHKBS-976 产品终止信息，资产池基本信息，资产池终止信息导出人行excel,导出内容标题栏与数据栏中间多了一行空白 modify by lizhi 20200825 end
 			
             // // 模板文件当前sheet中的最大行

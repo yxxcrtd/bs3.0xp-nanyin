@@ -8,7 +8,7 @@
  * 系统名称：理财资管管理系统V2.0
  */
 
-package com.joyintech.tams.invest.common;
+package com.joyintech.tams.common.svreport.datacheck.service;
 
 import com.joyintech.component.svrreport.chb.chbcommoncheck.dto.CheckElement;
 import com.joyintech.framework.base.intf.DataDict;
@@ -17,6 +17,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -367,6 +368,67 @@ public class ChbBaseCheckLib {
                         return true;
                 }
             }
+            return false;
+        }
+
+    }
+
+    /**
+     * 根据指定的规则，判断指定的值是否在数据字典枚举类型范围内
+     * @param data 被检查的数据
+     * @param rule 检查规则实体
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public static boolean inDatadictMulti(Map<String, String> data, CheckElement rule) {
+        String srcValue = data.get(rule.getSrcproperty());
+        if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
+            return true;
+        if ( StringUtils.isEmpty(srcValue) )
+            return false;
+        if(StringUtils.equals(rule.getCompareto(),"<")){
+            List<String> srcValueList = Arrays.asList(srcValue.split(","));
+            // 可以多选 但是不能重复
+            if(srcValueList.size() != new HashSet<String>(srcValueList).size()){
+                return false;
+            }
+
+            int flag = 0;
+            Set<String> objValueSet = new HashSet<>(Arrays.asList(rule.getObjvalue().split(",")));
+            for (String objValue : objValueSet){
+                DataDict dto = CacheUtil.getDictCode(objValue);
+                if (null != dto) {
+                    List<? extends DataDictItem> items = dto.getItems();
+                    for (DataDictItem item : items) {
+                        for (String value : srcValueList) {
+                            if (value.equals(item.getItemCode()))  flag++;
+                        }
+
+                        if(flag == srcValueList.size())  return true;
+                    }
+
+                    if(flag == srcValueList.size())  return true;
+                }
+            }
+
+            if(flag == srcValueList.size())  return true;
+
+            return false;
+        }else {
+            List<String> objValueList = Arrays.asList(rule.getObjvalue().split(","));
+
+            for (String objValue : objValueList){
+                DataDict dto = CacheUtil.getDictCode(objValue);
+                if (null != dto) {
+                    List<? extends DataDictItem> items = dto.getItems();
+                    for (DataDictItem item : items) {
+                        if (srcValue.equals(item.getItemCode()))
+                            return true;
+                    }
+                }
+            }
+
             return false;
         }
 
