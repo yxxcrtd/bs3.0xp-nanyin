@@ -333,6 +333,11 @@ var QueryFunc=function(){
 
         var object = $.serializeToObject('#submitForm', true);
         object.operateType = operateType;
+
+        /**【资产基本信息维护】-新建页面（1401、1402、1403、1404、1405、1406、1499），提交报错**/
+        object.svrBussRepFinanciallInfoDto.targetType3 = object.svrBussRepFinanciallInfoDto.targetType3?object.svrBussRepFinanciallInfoDto.targetType3.join(","):'';
+        object.svrBussRepDepositInfoDto.repTargetType = object.svrBussRepDepositInfoDto.repTargetType?object.svrBussRepDepositInfoDto.repTargetType.join(","):'';
+
         object.pageModel = pageModel;
 
         Joyin.ajaxJson(basePath + 'chb/assetinfodetail/AssetInfoDetail002/check',object,function(result){
@@ -395,7 +400,7 @@ var QueryFunc=function(){
      * 将当前子页面的数据赋值
      */
     var assetVal = function(){
-        $("input[id$='_assetCode']").val($('#assetCode').val());
+        // $("input[id$='_assetId']").val($('#assetCode').val());
         $("input[id$='_assetName']").val($('#assetName').val());
     }
     /**
