@@ -747,12 +747,12 @@ public class TrdRepoTrade003Controller extends BaseController {
 
             List<PledgeBondInfoDto>  dto1 = new ArrayList<>();
             List<PledgeBondInfoDto>  dto2 = new ArrayList<>();
-            List<BussTrdTransferOrderDto>  dto3 = new ArrayList<>();
+//            List<BussTrdTransferOrderDto>  dto3 = new ArrayList<>();
             List<RiskTrialRetDto> risk= new ArrayList<>();
             
             dto1.addAll(dto.getPledgeBondList());
             dto2.addAll(dto.getPledgeBondListDetailed());
-            dto3.addAll(dto.getBussTrdTransferOrder());
+//            dto3.addAll(dto.getBussTrdTransferOrder());
             risk.addAll(dto.getRiskTrialRetDto());
             
             dto.setPortfolioId(dto.getPledgeBondList().get(i).getPortfolioId());
@@ -796,12 +796,12 @@ public class TrdRepoTrade003Controller extends BaseController {
                 }
             }
             
-            for(int j=0;j<dto3.size();j++){
-                if(dto.getPledgeBondList().get(i).getPortfolioId().equals(dto3.get(j).getPortfolioId())){
-                    dto3.remove(j);
-                    j--;
-                }
-            }
+//            for(int j=0;j<dto3.size();j++){
+//                if(dto.getPledgeBondList().get(i).getPortfolioId().equals(dto3.get(j).getPortfolioId())){
+//                    dto3.remove(j);
+//                    j--;
+//                }
+//            }
             
             for(int j=0;j<dto.getBussTrdTransferOrder().size();j++){
                 if(!dto.getPledgeBondList().get(i).getPortfolioId().equals(dto.getBussTrdTransferOrder().get(j).getPortfolioId())){
@@ -830,10 +830,13 @@ public class TrdRepoTrade003Controller extends BaseController {
             BeanUtil.copyPropertiesIgnoreNull(dtonew, dto);
             dtonew.setPledgeBondList(dto.getPledgeBondListDetailed());
             dtonew.setEntrustId(entrustId);
+            List<BussTrdTransferOrderDto> orderDto = new ArrayList<>();
+            orderDto.add(dto.getBussTrdTransferOrder().get(i));
+            dtonew.setBussTrdTransferOrder(orderDto);
             trd003.add(dtonew);
             dto.setEntrustId(entrustId);
             dto.setPledgeBondListDetailed(dto2);
-            dto.setBussTrdTransferOrder(dto3);
+//            dto.setBussTrdTransferOrder(dto3);
             dto.setPledgeBondList(dto1);
             dto.setRiskTrialRetDto(risk);
         }
