@@ -8,6 +8,7 @@ package com.joyintech.tams.invest.trade.channel.feepay.validate;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.validator.CommonValidator;
+import com.joyintech.tams.invest.common.dto.channel.ChannelFeeInfoDto;
 import com.joyintech.tams.invest.trade.channel.feepay.dto.ChannelFeePay002Dto;
 import com.joyintech.tams.invest.trade.channel.feepay.service.ChannelFeePay002Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +40,16 @@ public class ChannelFeePay002Validator implements CommonValidator {
         List<ValidMessage> resultList = new ArrayList<>();
         // 该通道在这个计提结束日的费用是否已支付
         //判断时增加组合条件
-        String tradeId = channelFeePay002Service.findChannelFeePaied(dto.getFinprodId(), dto.getMdate(), dto.getPortfolioId());
-        if (StringUtil.isNotEmpty(tradeId)) {
-            resultList.add(new ValidMessage("该通道在这个计提结束日的费用已支付，交易编号：" + tradeId));
+        for(ChannelFeeInfoDto ChannelFeeInfo:dto.getFeeInfoList()){
+            String tradeId = channelFeePay002Service.findChannelFeePaied(dto.getFinprodId(), dto.getMdate(), ChannelFeeInfo.getPortfolioId());
+            if (StringUtil.isNotEmpty(tradeId)) {
+                resultList.add(new ValidMessage("该通道在这个计提结束日的费用已支付，交易编号：" + tradeId));
+            }
         }
+//        String tradeId = channelFeePay002Service.findChannelFeePaied(dto.getFinprodId(), dto.getMdate(), dto.getPortfolioId());
+//        if (StringUtil.isNotEmpty(tradeId)) {
+//            resultList.add(new ValidMessage("该通道在这个计提结束日的费用已支付，交易编号：" + tradeId));
+//        }
         if (dto.getBussTrdTransferOrder() == null || dto.getBussTrdTransferOrder().isEmpty()) {
             resultList.add(new ValidMessage("请生成划款指令。"));
         }

@@ -66,7 +66,6 @@ public class ChannelFeePay002Dto extends ChannelFeePayDto implements ProcessEnti
     }
 
     @Override
-    @NotEmpty(fieldName = "组合代码")
     @PrimaryKey(PrimaryKey.Field.PK_3)
     public String getPortfolioId() {
         return super.getPortfolioId();

@@ -54,6 +54,16 @@ public class ChannelFeePayDto extends TrdProductDeal {
      * 有效状态
      */
     private String effectStatus;
+
+    private List<ChannelFeeInfoDto> feeInfoList;
+
+    public List<ChannelFeeInfoDto> getFeeInfoList() {
+        return feeInfoList;
+    }
+
+    public void setFeeInfoList(List<ChannelFeeInfoDto> feeInfoList) {
+        this.feeInfoList = feeInfoList;
+    }
     /**
      * 获取 orders
      *

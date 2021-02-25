@@ -6,20 +6,17 @@
 package com.joyintech.tams.invest.trade.channel.feepay.controller;
 
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.intf.IDictCode;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeDto;
+import com.joyintech.tams.invest.common.dto.channel.ChannelFeeInfoDto;
+import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.trade.channel.feepay.dto.ChannelFeePay002Dto;
 import com.joyintech.tams.invest.trade.channel.feepay.service.ChannelFeePay002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -29,16 +26,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.util.RequestUtil;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 通道费用支付新建
@@ -80,9 +77,11 @@ public class ChannelFeePay002Controller extends BaseController {
         model.addAttribute("T10", DictCodeList.交易方向_付费.getValue());
         model.addAttribute("formTodoList", !WorkFlowUtil.isNotFromToDoList());
         ChannelFeePay002Dto dto = new ChannelFeePay002Dto();
+        dto.setBussTrdTransferOrder(new ArrayList<BussTrdTransferOrderDto>());
         String tradeId = this.getParam("tradeId");
         String workflowStatus = this.getParam("workflowStatus");
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
+        model.addAttribute("workflowId",workflowId);
 
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(workflowId)) {
             dto = channelFeePay002Service.getBussinessEntityByWorkflowId(workflowId);
@@ -90,11 +89,11 @@ public class ChannelFeePay002Controller extends BaseController {
         else if (StringUtil.isNotEmpty(tradeId)) {
             dto = channelFeePay002Service.getEffectiveData(tradeId);
             if (dto.getBussTrdTransferOrder() != null && !dto.getBussTrdTransferOrder().isEmpty()) {
-                model.addAttribute("entity_bussTrdTransferOrderDto", JsonUtils.object2Json(dto.getOrders().get(0)));
+                model.addAttribute("entity_bussTrdTransferOrderDto", JsonUtils.object2Json(dto.getOrders()));
             }
         }
         if (dto.getBussTrdTransferOrder() != null && !dto.getBussTrdTransferOrder().isEmpty()) {
-            model.addAttribute("entity_bussTrdTransferOrderDto", JsonUtils.object2Json(dto.getBussTrdTransferOrder().get(0)));
+            model.addAttribute("entity_bussTrdTransferOrderDto", JsonUtils.object2Json(dto.getBussTrdTransferOrder()));
         }
         //给币种赋个默认值CNY by zhaodongdong 20191210 start
         dto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
@@ -171,5 +170,37 @@ public class ChannelFeePay002Controller extends BaseController {
         processParameter.setWorkFlowParameter(params);
         String msg = channelFeePay002Service.start(processParameter, dto);
         return new AjaxResult(msg);
+    }
+
+    /**
+     * 查询费用明细列表
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("queryPayFeeInfoList")
+    public Page<ChannelFeeInfoDto> queryPayFeeInfoList() {
+        Page<ChannelFeeInfoDto> page = new Page<>();
+        List<ChannelFeeInfoDto> list = new ArrayList<>();
+        String workflowId = this.getParam("workflowId");
+        String tradeId = this.getParam("tradeId");
+        if(StringUtil.isNotEmpty(workflowId)){
+            list = channelFeePay002Service.getBussinessEntityByWorkflowId(workflowId).getFeeInfoList();
+        }else if (StringUtil.isNotEmpty(tradeId)) {
+            ChannelFeePay002Dto dto = channelFeePay002Service.getEffectiveData(tradeId);
+            list = dto.getFeeInfoList();
+        }
+        page.setRoot(list);
+        return page;
+    }
+
+    /**
+     * 通过组合id找组合名称
+     * @param portfolioId 组合id
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("findPortfolioName")
+    public String findPortfolioName(String portfolioId) {
+        return channelFeePay002Service.findPortfolioName(portfolioId);
     }
 }

@@ -40,7 +40,6 @@ $(function() {
             {field:'effectStatusStr', sortField:'effectStatus',width:120, title: '有效状态'}
             ,{field:'effectStatus', width:120, title: '有效状态Code', visible : false}
             ,{field:'tradeId',width:200,title: '业务编号'}
-            ,{field:'portfolioId',width:150,title: '组合代码'}
             ,{field:'channelName',width:150,title: function(){return JoyinUtil.getLabel("invest.channelId")+JoyinUtil.getLabel("ChannelAsset002.finprodNameBak");}()}
             ,{field:'feeNameString',width:150,title: '费用名称', sortField: 'feeName'}
             ,{field:'mdate',width:150,title: '计提结束日', type: 'date'}
@@ -105,7 +104,7 @@ $(function() {
             checkObj.tradeAmt = selArr[0].tradeAmt;
             checkObj.operateType = "revoke";
             checkObj.effectStatus = selArr[0].effectStatus;
-            checkObj.portfolioId = selArr[0].portfolioId;
+            // checkObj.portfolioId = selArr[0].portfolioId;
             checkObj.mdate = selArr[0].mdate;
             checkObj.chlId = selArr[0].finprodId;
             Joyin.ajaxJson(basePath + 'invest/trade/channel/feepay/ChannelFeePay001/checkRevoke', checkObj, function(result) {

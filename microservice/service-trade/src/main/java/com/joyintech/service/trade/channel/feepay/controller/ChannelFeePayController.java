@@ -11,11 +11,7 @@ import com.joyintech.tams.invest.common.dto.channel.ChannelFeePayDto;
 import com.joyintech.tams.invest.common.dto.product.addreduce.ProductTradeInfoDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -82,5 +78,12 @@ public class ChannelFeePayController {
     public String getCollectType(@RequestBody Map<String, Object> map) {
         return channelFeePayService.getCollectType(map);
     }
-
+    @GetMapping("getTradeId")
+    public String getTradeId(String totleTradeId,String portfolioId) {
+        return channelFeePayService.getTradeId(totleTradeId,portfolioId);
+    }
+    @GetMapping("findPortfolioName")
+    public String findPortfolioName(String portfolioId) {
+        return channelFeePayService.findPortfolioName(portfolioId);
+    }
 }
