@@ -498,6 +498,6 @@ public class PbcPrdAccountEndSub extends BaseEntity {
 	}
 
     public String getMdateStr2(){
-        return DateUtil.format(getMdate(), "yyyy-M-d");
+        return DateUtil.format(getMdate(), "yyyy/M/d");
     }
 }
