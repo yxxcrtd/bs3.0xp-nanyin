@@ -87,7 +87,7 @@ public enum BatchBeanName {
 	投资者明细信息数据检查批处理("3068", "eqityBusiInfoRegistManualCheckService","equityBusiInfoRegistManualCheckMainService", "投资者明细信息数据检查批处理"),
 
     // 监管客户组别区域报送数据接入 add by qufangxu at 2021-02-24
-    监管客户组别区域报送数据接入("3003","SvrSaleCustSvrreportInterfTastService","SaleCustSvrrepportImpMainService","监管客户组别区域报送接入"),
+    监管客户组别区域报送数据接入("3003","svrSaleCustSvrreportInterfTastService","saleCustSvrrepportImpMainService","监管客户组别区域报送数据接入"),
 	/**
      * 业务明细数据自动检查报送
      */
