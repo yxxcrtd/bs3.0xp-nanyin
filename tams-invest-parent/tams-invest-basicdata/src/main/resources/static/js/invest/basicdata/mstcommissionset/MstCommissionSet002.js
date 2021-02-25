@@ -405,6 +405,10 @@
             $("#chargeBasis").val(chargeBasis).trigger("change");
             $("#feeMaxi").val(feeMaxi).trigger("change");
             $("#feeMini").val(feeMini).trigger("change");
+            $("#tradeMarketMode").val(tradeMarketMode).trigger("change");
+        }
+        if($('#chargeType').val() == "02"){
+            $('#chargeBasis').val('').prop("disabled",true).trigger('change');
         }
     });
 }());
