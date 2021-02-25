@@ -422,7 +422,7 @@
                 // 保存生成指令参数
                 calcConditionObjBackUp = data;
 
-                if (data) {
+                if (data && data.skipPrivate!=true) {
                     Joyin.ajaxJson(JoyinUtil.getRealPath('/component/trade/BussTrdTransferOrder/check'), data, function () {
                         Joyin.ajaxJson(JoyinUtil.getRealPath('/component/trade/BussTrdTransferOrder/generateOrder'), data, function (ret) {
                             var order = ret.data;

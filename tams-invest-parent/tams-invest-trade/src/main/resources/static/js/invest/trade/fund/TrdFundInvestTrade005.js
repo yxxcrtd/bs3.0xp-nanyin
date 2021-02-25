@@ -888,6 +888,7 @@ $(function () {
                         ,'portfolioId':'dzh'
                         ,'jiaoyiType':'dzh'
                         ,'deal':list
+                        ,'skipPrivate':true
                     };
                 });
 //                if(entrustId != ''){
