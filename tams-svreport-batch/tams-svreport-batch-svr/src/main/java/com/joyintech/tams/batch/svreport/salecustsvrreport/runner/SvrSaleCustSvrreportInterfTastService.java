@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +18,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Service(value = "SvrSaleCustSvrreportInterfTastService")
+@Service(value = "svrSaleCustSvrreportInterfTastService")
 @Scope("prototype")
 public class SvrSaleCustSvrreportInterfTastService extends BatchBaseService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
+    @Autowired
     private SaleCustSvrrepportImpMainService mainService;
 
     @Override
