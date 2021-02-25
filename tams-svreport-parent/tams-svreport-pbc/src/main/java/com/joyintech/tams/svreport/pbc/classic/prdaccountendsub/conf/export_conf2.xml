@@ -3,7 +3,7 @@
 	<Worksheet javaBean="com.joyintech.tams.svreport.pbc.classic.prdaccountendsub.dto.PbcPrdAccountEndSub">
 		<Row>
 			<Cell order="1" name="资产池代码">pbcAccountId</Cell>
-			<Cell order="2" name="资产池终止日期">mdateStr</Cell>
+			<Cell order="2" name="资产池终止日期">mdateStr2</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>
