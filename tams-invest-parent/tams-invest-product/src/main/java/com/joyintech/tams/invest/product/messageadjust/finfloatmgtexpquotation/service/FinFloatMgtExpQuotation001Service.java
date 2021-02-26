@@ -739,4 +739,20 @@ public class FinFloatMgtExpQuotation001Service extends CommonExportService<FinFl
                 ServiceApplication.PRODUCT_SERVICE_NAME + "/FinFloatMgtExpQuotation/getopenType", param,
                 String.class);
     }
+    
+    /**
+     * 获取是否是初始化生成的产品浮动管理费 <功能详细描述>
+     *
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public String getisInitial(String finprodId,String effDate) {
+    	Map<String,Object> param=new HashMap<String,Object>();
+    	param.put("finprodId", finprodId);
+    	param.put("effDate", effDate);
+    	return restTemplate.postForObject(
+                ServiceApplication.PRODUCT_SERVICE_NAME + "/FinFloatMgtExpQuotation/getisInitial", param,
+                String.class);
+    }
 }

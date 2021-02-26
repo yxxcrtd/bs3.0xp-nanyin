@@ -80,6 +80,13 @@ public class FinFloatMgtExpQuotationValidator implements BeanValidator{
             if(!StringUtil.isNotEmpty(dto)){
             	errorList.add(new ValidMessage("","只能对存续未到期的净值型/货币型产品进行修改"));
             }
+            //add by yujiaping 20210226 ZGBSS-643 浮动管理费调整报价初始化记录加限制不允许修改 start
+            String isInitial = finFloatMgtExpQuotation001Service.getisInitial(finFloatMgtExpQuotation001Dto.getFinprodId(),DateUtil.format(finFloatMgtExpQuotation001Dto.getEffDate()));
+            if(isInitial != null && StringUtil.equals(isInitial,DictCodeList.是否_是.getValue())) {
+            	errorList.add(new ValidMessage("","初始化生成的产品浮动管理费信息不允许操作。"+
+            			"产品代码："+finFloatMgtExpQuotation001Dto.getFinprodMarketId()));
+            }
+            //add by yujiaping 20210226 ZGBSS-643 浮动管理费调整报价初始化记录加限制不允许修改 end
         }
         //修改校验（保存）
         if(StringUtil.equals(finFloatMgtExpQuotation001Dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)

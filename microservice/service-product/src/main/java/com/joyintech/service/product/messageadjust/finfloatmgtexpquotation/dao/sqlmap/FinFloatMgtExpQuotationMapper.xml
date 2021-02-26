@@ -576,4 +576,12 @@
           from FIN_PRODUCT fp         
           where fp.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}        
     </select>
+    
+    <select id="getisInitial" resultType="java.lang.String" >                
+         select IS_INITIAL 
+         from FIN_CASH_INFO fci 
+         left join FIN_CASH_CALC_RULE fcr on fcr.CASH_ID = fci.CASH_ID and fcr.EFF_DATE = TO_DATE(#{effDate,jdbcType=VARCHAR},'YYYY-MM-DD')
+         where fci.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}  
+         and fci.CASH_TYPE_1 = '03' and fci.CASH_TYPE_2 = 'C04'       
+    </select>
 </mapper>

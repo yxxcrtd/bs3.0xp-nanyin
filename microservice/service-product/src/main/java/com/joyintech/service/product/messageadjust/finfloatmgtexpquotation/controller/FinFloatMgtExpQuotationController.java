@@ -249,5 +249,8 @@ public class FinFloatMgtExpQuotationController {
     public String getopenType(@RequestBody Map<String,Object> param){
         return finFloatMgtExpQuotationService.getopenType(param);
     }
-    
+    @PostMapping("getisInitial")
+    public String getisInitial(@RequestBody Map<String,Object> param){
+        return finFloatMgtExpQuotationService.getisInitial(param);
+    }
 }

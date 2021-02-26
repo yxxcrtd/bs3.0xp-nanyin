@@ -219,4 +219,5 @@ public interface FinFloatMgtExpQuotationMapper {
    
    String getopenMode(Map<String,Object> param);
    String getopenType(Map<String,Object> param);
+   String getisInitial(Map<String,Object> param);
 }

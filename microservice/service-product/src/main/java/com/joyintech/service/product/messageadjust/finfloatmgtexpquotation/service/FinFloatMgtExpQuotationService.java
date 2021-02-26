@@ -1264,4 +1264,7 @@ public class FinFloatMgtExpQuotationService extends BaseService<FinFloatMgtExpQu
     public String getopenType(Map<String,Object> param) {       
         return finFloatMgtExpQuotationMapper.getopenType(param);
     }
+    public String getisInitial(Map<String,Object> param) {       
+        return finFloatMgtExpQuotationMapper.getisInitial(param);
+    }
 }
