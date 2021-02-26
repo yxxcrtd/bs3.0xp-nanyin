@@ -597,6 +597,7 @@ public class PbcPrdCashRaiseSubService001 extends CommonExportService<PbcProdRai
 	    		nameMap.put(name, 1);
 	    	}
 			Calendar cale = Calendar.getInstance();
+	    	cale.setTime(dto.getValue().getRaisingDate());
 			cale.add(Calendar.MONTH, 1);
 			cale.set(Calendar.DAY_OF_MONTH, 0);
 			String  lastday = DateUtil.format(cale.getTime(),"yyyyMMdd");
