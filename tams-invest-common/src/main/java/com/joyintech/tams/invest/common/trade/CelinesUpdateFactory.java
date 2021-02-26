@@ -519,7 +519,12 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
             if(ArithmeticUtil.doAdd(hapCreditAmt,pierceAmt).compareTo(creditLines.getCreditAmt())>0 && flagps1 && !isSave){
                 //提示 授信额度不够,并且直接返回提示语，不再进行下次循环
                 isEnoughCreditflag=false;
-                common.setErrMessage(getMessage("BUSS_COM_CRE_002"));
+                if(Boolean.parseBoolean(CacheUtil.getSysParam("IS_CREDIT_SOFTCONTROL"))) {
+                	common.setErrMessage(getMessage("BUSS_COM_CRE_005"));
+                }
+                else {
+                	common.setErrMessage(getMessage("BUSS_COM_CRE_002"));
+                }
                 list.add(common);
                 return list;
             }
@@ -538,7 +543,12 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
             if (StringUtil.equals(detail.getCheckresult(), "nopass")) {
                 common.setCreditresult("nopass");
                 isEnoughCreditflag = false;
-                common.setErrMessage(getMessage("BUSS_COM_CRE_002"));
+                if(Boolean.parseBoolean(CacheUtil.getSysParam("IS_CREDIT_SOFTCONTROL"))) {
+                	common.setErrMessage(getMessage("BUSS_COM_CRE_005"));
+                }
+                else {
+                	common.setErrMessage(getMessage("BUSS_COM_CRE_002"));
+                }
                 break;
             } else {
                 isEnoughCreditflag = true;
