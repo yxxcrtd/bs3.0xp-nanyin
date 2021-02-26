@@ -273,6 +273,7 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
         		mapPay.put("payCycle", DictCodeList.频率_不规则.getValue());
         		mapPay.put("flag", DictCodeList.是否_否.getValue());
         		mapPay.put("feeType1", DictCodeListExt1.一次性费用类型_账户维护费.getValue());
+                mapPay.put("TG_BUSI_TYPE", "142");
                 String lastPayDateStr = investFeePayMapper.queryLastPayDate(mapPay);
         		// 2.1 如果未支付则为计提开始日
         		Date lastPayDate = null;
