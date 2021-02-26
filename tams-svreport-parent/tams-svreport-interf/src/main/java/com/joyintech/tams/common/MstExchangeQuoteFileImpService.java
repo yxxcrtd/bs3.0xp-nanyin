@@ -5,6 +5,7 @@ import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.framework.thread.JoyinThreadPoolExecutor;
 import com.joyintech.tams.svreport.interf.chb.mstexchangequote.service.SvrMstExchangeQuoteFileImpService;
+import com.joyintech.tams.svreport.interf.dis.mstexchangequote.service.DisRepMstExchangeQuoteService;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,9 @@ public class MstExchangeQuoteFileImpService  extends AbstractFileImpService{
     @Autowired
     private SvrMstExchangeQuoteFileImpService svrMstExchangeQuoteFileImpService;
 
+    @Autowired
+    private DisRepMstExchangeQuoteService disRepMstExchangeQuoteService;
+
 
     @Override
     public String getInfoByInterf(String currentDate) {
@@ -49,7 +53,8 @@ public class MstExchangeQuoteFileImpService  extends AbstractFileImpService{
         }
 
         if(interfConfig.getSysScope() != null && interfConfig.getSysScope().length()==3 && "1".equals(interfConfig.getSysScope().substring(2))){
-
+            // unused
+            serviceList.add(disRepMstExchangeQuoteService);
         }
         String result = "success";
         for(InterfFile interfFile: fileLists){
