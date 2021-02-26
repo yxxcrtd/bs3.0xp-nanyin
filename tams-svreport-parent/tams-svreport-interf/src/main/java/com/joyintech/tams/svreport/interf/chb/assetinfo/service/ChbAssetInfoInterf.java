@@ -199,6 +199,11 @@ public class ChbAssetInfoInterf  extends BaseService{
     		if("2201".equals(assetInfo.getAssetType2())) {
     			assetInfo.setAssetType3("02");
     		}
+
+            //modify by zhangliang 20201212 当是否有预期收益率为否时不取
+    		if (StringUtil.equals(assetInfo.getRateFlag(), "02")){
+                assetInfo.setAssetYield(null);
+            }
             // 是否字段
             // 是否为结构性存款
 //          assetInfo.setIsStruct(SysDataUtil.getNameFromDataDict(DictCode.是否_中债字段映射,assetInfo.getIsStruct()));
