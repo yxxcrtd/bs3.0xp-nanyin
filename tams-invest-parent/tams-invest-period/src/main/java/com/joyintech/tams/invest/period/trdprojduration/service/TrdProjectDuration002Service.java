@@ -492,6 +492,7 @@ public class TrdProjectDuration002Service extends BaseService<TrdProjectDuration
         //删除持仓流水 start
         if(entity.getBaseTotalTradeInfoDto()!=null&&entity.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList()!=null) {
         	PtlSecPositionFlowDto pFlowDto = new PtlSecPositionFlowDto();
+        	pFlowDto.setEntrust(true);
         	for(BaseTradeInfoDto baseTradeInfoDto:entity.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList()) {
         		if(baseTradeInfoDto.getTrdProductDeal()!=null) {
         			pFlowDto.setTradeId(baseTradeInfoDto.getTrdProductDeal().getTradeId());

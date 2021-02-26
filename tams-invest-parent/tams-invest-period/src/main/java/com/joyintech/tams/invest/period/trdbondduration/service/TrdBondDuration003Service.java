@@ -462,6 +462,7 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
         //update中删除之前的流水数据 start
         if(entity.getTrdProductDeals()!=null) {
         	PtlSecPositionFlowDto pFlowDto = new PtlSecPositionFlowDto();
+        	pFlowDto.setEntrust(true);
         	for(TrdProductDeal oldDeal:entity.getTrdProductDeals()) {
         		pFlowDto.setTradeId(oldDeal.getTradeId());
         		basePtlSecPositionInfoService.deleteSecPosition(pFlowDto);
