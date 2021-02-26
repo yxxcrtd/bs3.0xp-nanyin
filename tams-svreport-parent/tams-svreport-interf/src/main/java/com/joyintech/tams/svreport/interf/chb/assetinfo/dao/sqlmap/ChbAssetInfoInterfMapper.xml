@@ -14868,12 +14868,31 @@
         'F09' ORG_ASSET_TYPE1,/*原资产一级分类*/
         decode(asset.REP_ASSET_TYPE,'1703','N01','1701','N02','1704','N03','1702','N04','1706','N05','1705','N06') ORG_ASSET_TYPE2,/*原资产二级分类*/
         null ORG_ASSET_TYPE3,/*原资产三级分类*/
-        addq.city buy_place/*发行人/融资人所属地区*/
+        addq.city buy_place,/*发行人/融资人所属地区*/
+
+        NULL  BANK_SEC_CAPITAL,
+        NULL BANK_SEC_PERPETUAL,
+        NULL BANK_SEC_PREFER,
+        NULL BANK_SEC_KZZQ,
+        NULL BANK_SEC_ZXZQ,
+        NULL ISUNLISTED,
+        NULL IS_BZHPJ,
+        info.ISSUER CHB_ISSUER_ID,
+        info.MANAGER CHB_MANAGER_ID,
+        info.FINANCIER CHB_FINANCIER_ID,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
+        NULL IS_PERPETUAL,
+        NULL IS_FBZB
+
         FROM REP_ASSET_MNG_PLAN DETAIL
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
         left join fin_product info
         on info.FINPROD_ID=detail.REP_FINPROD_ID
+        left join FIN_PRODUCT_TYPE infotp
+        on info.FINPROD_ID = infotp.FINPROD_ID
         left join MST_CUSTOMER_INFO_ADD addq
         on info.FINANCIER=addq.CUSTOMER_ID
         left join mst_customer_info customerinfo
@@ -14887,6 +14906,7 @@
         /*根据创建时间、更新时间和接口接入时间接入数据*/
         <![CDATA[AND( NVL(asset.UPDATE_TIME,asset.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
         <![CDATA[or NVL(info.UPDATE_TIME,info.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+        <![CDATA[or NVL(infotp.UPDATE_TIME,infotp.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
         <![CDATA[OR NVL(CUSTOMERINFO.UPDATE_TIME,CUSTOMERINFO.CREATE_TIME) > #{INTERFDATE,jdbcType=TIMESTAMP}]]>
         <![CDATA[or NVL(addq.UPDATE_TIME,addq.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
     </select>
