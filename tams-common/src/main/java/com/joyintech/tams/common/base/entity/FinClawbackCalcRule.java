@@ -20,6 +20,10 @@ public class FinClawbackCalcRule extends FinClawbackCalcRuleKey {
      * 生效规则
      */
     private String actRule;
+    /**
+     * 是否初始记录
+     */
+    private String isInitial;
 
     /**
      * 取得 回补规则
@@ -84,4 +88,12 @@ public class FinClawbackCalcRule extends FinClawbackCalcRuleKey {
     public void setActRule(String actRule) {
         this.actRule = actRule == null ? null : actRule.trim();
     }
+
+	public String getIsInitial() {
+		return isInitial;
+	}
+
+	public void setIsInitial(String isInitial) {
+		this.isInitial = isInitial;
+	}
 }

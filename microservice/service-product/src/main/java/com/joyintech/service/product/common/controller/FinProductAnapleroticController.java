@@ -96,4 +96,9 @@ public class FinProductAnapleroticController {
     public String getOpenMode(String finprodId) {
         return finProductAnapleroticService.getOpenMode(finprodId);
     }
+    
+    @PostMapping("getisInitial")
+    public String getisInitial(@RequestBody Map<String,Object> param){
+        return finProductAnapleroticService.getisInitial(param);
+    }
 }

@@ -140,4 +140,5 @@ public interface FinProductAnapleroticMapper {
 	List<FinProductAnapleroticPlanDto> selectAnapleroticPlanByFinprodId(@Param("finprodId") String finprodId);
 
     String getOpenMode(@Param("finprodId") String finprodId);
+    String getisInitial(Map<String,Object> param);
 }

@@ -28,6 +28,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.product.productelement.anaplerotic.dto.FinProductAnapleroticInfoDto;
+import com.joyintech.tams.invest.product.productelement.anaplerotic.service.FinProductAnapleroticInfo002Service;
 import com.joyintech.tams.invest.product.productelement.netvalueproduct.dto.FinNetValueProductBuild002Dto;
 import com.joyintech.tams.invest.product.productelement.netvalueproduct.service.FinNetValueProductBuild002Service;
 /**
@@ -52,6 +53,8 @@ public class FinProductAnapleroticInfoValidator implements BeanValidator {
     @Autowired
     private BussFinProductFeeInfoService bussFinProductFeeInfoService;
 
+    @Autowired
+    private FinProductAnapleroticInfo002Service finProductAnapleroticInfo002Service;
     /**
      * {@linkplain}
      */
@@ -280,6 +283,13 @@ public class FinProductAnapleroticInfoValidator implements BeanValidator {
                     if(DateUtil.compareTo(finDto.getMdate(),iPlatformDate.getSysDate())<0){
                         validList.add(new ValidMessage("产品已到期不允许修改"));
                     }
+                    //add by yujiaping 20210226 ZGBSS-642 产品回补信息初始化记录加限制不允许修改 start
+                    String isInitial = finProductAnapleroticInfo002Service.getisInitial(dto.getFinprodId(),DateUtil.format(dto.getEffDate()));
+                    if(isInitial != null && StringUtil.equals(isInitial,DictCodeList.是否_是.getValue())) {
+                    	validList.add(new ValidMessage("","初始化生成的产品回补信息不允许操作。"+
+                    			"产品代码："+dto.getFinprodId()));
+                    }
+                    //add by yujiaping 20210226 ZGBSS-642 产品回补信息初始化记录加限制不允许修改 end
                 }else{
                     if(DateUtil.compareTo(finDto.getMdate(),iPlatformDate.getSysDate())<0){
                         validList.add(new ValidMessage("产品已到期不允许删除"));

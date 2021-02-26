@@ -592,6 +592,11 @@ public class FinProductAnapleroticService extends BaseService<FinProductAnaplero
         finclawbackcalcrule.setBasis(anapleroticDto.getAnapleroticBasic());
         //业绩回补计算规则Entity.生效规则 = 数据字典.生效规则.期初
         finclawbackcalcrule.setActRule(DictCodeList.生效规则_期初.getValue());
+        if(finProductCommonInfoDto == null) {       	
+        	finclawbackcalcrule.setIsInitial(DictCodeList.是否_否.getValue());
+        }else {
+        	finclawbackcalcrule.setIsInitial(DictCodeList.是否_是.getValue());
+        }
         //插入业绩回补计算规则
         baseFinAnapleroticCalcRuleService.insert(finclawbackcalcrule);
         
@@ -771,5 +776,9 @@ public class FinProductAnapleroticService extends BaseService<FinProductAnaplero
 
     public String getOpenMode(String finprodId) {
         return finProductAnapleroticMapper.getOpenMode(finprodId);
+    }
+    
+    public String getisInitial(Map<String,Object> param) {       
+        return finProductAnapleroticMapper.getisInitial(param);
     }
 }

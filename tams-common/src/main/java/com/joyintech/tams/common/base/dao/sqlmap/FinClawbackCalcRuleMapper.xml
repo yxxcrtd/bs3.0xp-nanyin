@@ -54,11 +54,11 @@
         insert into FIN_CLAWBACK_CALC_RULE (CASH_ID, EFF_DATE, CAWLBACK_RULE, 
             CAWLBACK_TYPE, BASIS, ACT_RULE, 
             CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-            UPDATE_USER, UPDATE_TIME)
+            UPDATE_USER, UPDATE_TIME,IS_INITIAL)
         values (#{cashId,jdbcType=VARCHAR}, #{effDate,jdbcType=DATE}, #{cawlbackRule,jdbcType=VARCHAR}, 
             #{cawlbackType,jdbcType=VARCHAR}, #{basis,jdbcType=VARCHAR}, #{actRule,jdbcType=VARCHAR}, 
             #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},#{isInitial,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinClawbackCalcRule" >
         insert into FIN_CLAWBACK_CALC_RULE

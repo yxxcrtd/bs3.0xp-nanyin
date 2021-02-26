@@ -598,4 +598,20 @@ public class FinProductAnapleroticInfo002Service extends BaseService<FinProductA
         return restTemplate.getForList(
             ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductAnaplerotic/selectAnapleroticPlanByFinprodId?finprodId=" + finprodId, FinProductAnapleroticPlanDto.class);
     }
+    
+    /**
+     * 获取是否是初始化生成的产品回补信息 <功能详细描述>
+     *
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public String getisInitial(String finprodId,String effDate) {
+    	Map<String,Object> param=new HashMap<String,Object>();
+    	param.put("finprodId", finprodId);
+    	param.put("effDate", effDate);
+    	return restTemplate.postForObject(
+                ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductAnaplerotic/getisInitial", param,
+                String.class);
+    }
 }

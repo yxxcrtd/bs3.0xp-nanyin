@@ -531,4 +531,12 @@
 		  )t
 		  where t.rn = 1
 	</select>
+	
+	 <select id="getisInitial" resultType="java.lang.String" >                
+         select fcr.IS_INITIAL 
+         from FIN_CASH_INFO fci 
+         left join FIN_CLAWBACK_CALC_RULE fcr on fcr.CASH_ID = fci.CASH_ID and fcr.EFF_DATE = TO_DATE(#{effDate,jdbcType=VARCHAR},'YYYY-MM-DD')
+         where fci.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}  
+         and fci.CASH_TYPE_1 = '06' and fci.CASH_TYPE_2 = 'C11'       
+    </select>
 </mapper>

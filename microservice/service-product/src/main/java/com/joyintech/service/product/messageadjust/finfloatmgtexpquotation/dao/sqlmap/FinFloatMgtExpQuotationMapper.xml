@@ -578,7 +578,7 @@
     </select>
     
     <select id="getisInitial" resultType="java.lang.String" >                
-         select IS_INITIAL 
+         select fcr.IS_INITIAL 
          from FIN_CASH_INFO fci 
          left join FIN_CASH_CALC_RULE fcr on fcr.CASH_ID = fci.CASH_ID and fcr.EFF_DATE = TO_DATE(#{effDate,jdbcType=VARCHAR},'YYYY-MM-DD')
          where fci.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}  
