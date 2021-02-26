@@ -161,7 +161,7 @@ public class SvrSaleCustSvrreportFileImpService extends FileImpService {
                     session.clearCache();
                 }
             }
-            logger.debug("贷款明细信息插入结束--------------" + new Date());
+            logger.debug("监管客户组别区域报送数据插入结束--------------" + new Date());
             session.commit();
             session.clearCache();
         }finally {

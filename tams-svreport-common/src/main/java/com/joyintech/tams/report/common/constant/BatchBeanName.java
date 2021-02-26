@@ -36,7 +36,7 @@ public enum BatchBeanName {
     投资者报送数据归档("3005","reportDataBackupService","ReportDataBackupMainService","投资者报送数据归档"),
     债券评级数据接入("3006","svrSecRatingInterfTaskService","SecRatingImpMainService","债券评级数据接入"),
     节假日数据接入("3007","svrHolidayInterfTaskService","HolidayImpMainService","节假日数据接入"),
-    汇率信息数据接入("3008","svrExchangeInterfTaskService","ExchangeImpMainService","汇率信息数据接入"),
+    汇率信息数据接入("3008","svrMstExchangeQuoteInterfTaskService","MstExchangeQuoteImpMainService","汇率信息数据接入"),
     市场机构数据接入("3009","svrMarketOrgInterTaskService","MarketOrgInterImpMainService","市场机构数据接入"),
     交易对手接口数据接入("3010","svrThirdPartyInterfTaskService","ThirdPartyInterfMainService","交易对手接口数据接入"),
     产品基本信息接口数据接入("3011","svrProdInfoInterfTaskService","SvrProdInfoInterfMainService","产品基本信息接口数据接入"),
