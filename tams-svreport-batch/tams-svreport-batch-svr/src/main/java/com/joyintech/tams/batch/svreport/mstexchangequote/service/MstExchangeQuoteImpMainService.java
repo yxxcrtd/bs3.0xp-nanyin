@@ -38,9 +38,9 @@ public class MstExchangeQuoteImpMainService extends AutoSendCBBaseService {
         }
         String contentSrc = interfConfig.getContentSrc();
 
-        logger.debug("监管客户区域组别数据接入批处理开始");
+        logger.debug("汇率信息数据接入批处理开始");
         if (InterfConstants.CONTENTSRC_DB.equals(contentSrc)) {
-            //无一体化抽数
+            logger.debug("汇率信息数据接入不支持DB入库 ！");
         } else if (InterfConstants.CONTENTSRC_FILE_XML.equals(contentSrc)
                 || InterfConstants.CONTENTSRC_FILE_TXT.equals(contentSrc)) {
             String result = mstExchangeQuoteFileImpService.execute(batchDate, InterfDefine.汇率信息数据.getCode());
@@ -50,7 +50,7 @@ public class MstExchangeQuoteImpMainService extends AutoSendCBBaseService {
         } else {
             logger.error("CHB_INTERF_CONFIG表中内容来源配置无效!");
         }
-        logger.debug("监管客户区域组别数据接入批处理结束");
+        logger.debug("汇率信息数据接入批处理结束");
         logInfoBatchEnd();
     }
 }

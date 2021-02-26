@@ -35,7 +35,7 @@ public class SvrMstExchangeQuoteFileImpService extends FileImpService {
     /**
      * 接口文件名称类型
      */
-    private static final String[] FILENAME_LIST = {InterfDefine.监管区域客户组别接口数据.getCode()};
+    private static final String[] FILENAME_LIST = {InterfDefine.汇率信息数据.getCode()};
 
     /**
      * 日志
