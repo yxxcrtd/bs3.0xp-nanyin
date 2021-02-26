@@ -219,11 +219,13 @@ $(function() {
 				$('#InvestFeePay002_regTrustOrg').val('03').trigger('change');
 				$("#InvestFeePay002_regTrustOrg").prop("disabled", true);
 			}
-			//费用类型联动证券账户
-			if(feeType == '06'){
+			//费用类型联动证券账户   update by zoujiamin  2021/02/26  ZGBSS-639/ZGBSS-636
+			if(feeType == '06'||feeType == '16'||feeType == '17'){
 				$('#InvestFeePay002_secAcctId').val('').trigger('change');
 				$("#InvestFeePay002_secAcctId").prop("disabled", true);
-			}else{
+			}else if(feeType == '08') {
+			    $("#InvestFeePay002_secAcctId").prop("disabled", false);
+			} else{
 				$('#InvestFeePay002_secAcctId').val('').trigger('change');
 				$("#InvestFeePay002_secAcctId").prop("disabled", false);
 			}
