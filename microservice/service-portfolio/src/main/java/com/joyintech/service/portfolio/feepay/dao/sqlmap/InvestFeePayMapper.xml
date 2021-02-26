@@ -317,6 +317,7 @@
     	and TRD_FIN_PRODUCT_DEAL_TOTAL.IS_CANCEL = #{isCancel}
 		and TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_STATUS = #{tradeStatus}
     	and TRD_TRADE_FEE_DETAIL.FEE_TYPE = #{feeType1}
+		AND TRD_FIN_PRODUCT_DEAL_TOTAL.TG_BUSI_TYPE=#{TG_BUSI_TYPE}
     	<if test="cdate != null and cdate != ''">
     		and #{cdate} >= to_char(TRD_PRODUCT_DEAL.MDATE, 'yyyy-MM-dd') 
     	</if>

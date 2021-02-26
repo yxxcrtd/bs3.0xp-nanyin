@@ -1104,6 +1104,7 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
         map.put("payCycle", DictCodeList.频率_不规则.getValue());
         map.put("flag", DictCodeList.是否_否.getValue());
         map.put("cdate", DateUtil.getSysDate());
+        map.put("TG_BUSI_TYPE", "142");
         if (feeType != null && feeType.equals(DictCodeList.费用品种类型_结算服务费.getValue())) {
             map.put("feeType1", DictCodeListExt1.一次性费用类型_结算手续费.getValue());
         } else if (feeType != null && feeType.equals(DictCodeList.费用品种类型_交易手续费.getValue())) {
