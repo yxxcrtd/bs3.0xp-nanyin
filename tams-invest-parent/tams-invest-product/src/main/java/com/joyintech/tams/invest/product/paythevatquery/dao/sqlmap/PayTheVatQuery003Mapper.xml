@@ -7,9 +7,9 @@
 	<select id="findFinproduct" resultType="com.joyintech.tams.invest.product.paythevatquery.dto.PayTheVatQuery001Dto">
     SELECT 
      BB.BOOKSET_ID
-     FROM BOK_BOOKSET BB
+     FROM BOK_BOOKSET_DATE BB
      WHERE  BB.BOOKSET_ID = #{booksetId}
-     AND BB.START_DATE &gt;= to_date(#{seitleDate}, 'yyyy-MM-dd')
+     AND BB.Bookset_Date > to_date(#{seitleDate}, 'yyyy-MM-dd')
 	</select>
 	
 	<!-- 纳税增值税查询 -->
