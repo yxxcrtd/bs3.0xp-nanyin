@@ -18,8 +18,8 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-text="#{SvrBussRepEquityInfo.assetId}">股票代码</label>
                     <div class="layui-input-inline input-inline">
-                        <input type="text" th:id="|${entityName}_assetCode|"
-                               data-th-value="${entity?.assetCode}" disabled="disabled"
+                        <input type="text" th:id="|${entityName}_assetId|" th:name="|${entityName}.assetId|"
+                               data-th-value="${entity?.assetId}"
                                class="layui-input form-input" placeholder="请输入内容"
                                data-th-placeholder="#{SysCommon.placeholder}" >
                     </div>

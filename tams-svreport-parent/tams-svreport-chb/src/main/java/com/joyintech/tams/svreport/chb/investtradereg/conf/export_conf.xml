@@ -21,7 +21,7 @@
 			<Cell order="15" name="交易对手方">tradeCounter</Cell><!-- 交易对手方 -->
 			<Cell order="16" name="交易对手方类型">rivalPartyType</Cell><!-- 交易对手方类型 -->
 			<Cell order="17" name="成交编号/合同号">contractCode</Cell><!-- 成交编号/合同号 -->
-			<Cell order="18" name="交易日">dealdateString</Cell><!-- 交易日 -->
+			<Cell order="18" name="交易日">dealdateStr</Cell><!-- 交易日 -->
 			<Cell order="19" name="备注">remark</Cell><!-- 备注 -->
 		</Row>
 	</Worksheet>
