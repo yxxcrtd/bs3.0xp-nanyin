@@ -215,7 +215,7 @@ public class ChbInvestTradeInterf  extends BaseService{
     		}
     		// 到期收益率保留5位有效数字，对应数据库7位数字
     		if (investDeal.getEndRate() != null){
-    			investDeal.setEndRate(investDeal.getEndRate().setScale(7,BigDecimal.ROUND_HALF_EVEN));
+    			investDeal.setEndRate(ArithmeticUtil.multiply(investDeal.getEndRate(), BigDecimal.valueOf(100)).setScale(5,BigDecimal.ROUND_HALF_EVEN));
     		}
 			logger.debug("上游投资交易数据处理测试:003---" +  df1.format(new Date()));
     		// 类型说明为“无”
@@ -633,11 +633,19 @@ public class ChbInvestTradeInterf  extends BaseService{
     	StringBuilder sb = new StringBuilder(tradeCode);
     	// 原交易编号+01分红+02
     	assetDeal.setTradeCode(sb.append("01").toString());
+    	// 存款类资产流动类型01更改为03
+    	if(DictCodeListExt2.投资品种_存款类资产.getValue().equals(assetDeal.getInvestVariety())){
+    		assetDeal.setCurAssetType(DictCodeListExt2.资金流动类型_存入银行存款.getValue());
+    	}
     	// 合同编号=交易编号
-    	assetDeal.setContractCode(assetDeal.getTradeCode());
+		if(!StringUtil.isNotEmpty(assetDeal.getContractCode())){
+			assetDeal.setContractCode(assetDeal.getTradeCode());
+		}
     	StringBuilder sbNew = new StringBuilder(tradeCode);
 		assetIntDeal.setTradeCode(sbNew.append("02").toString());
-		assetIntDeal.setContractCode(assetIntDeal.getTradeCode());
+		if(!StringUtil.isNotEmpty(assetDeal.getContractCode())){
+			assetIntDeal.setContractCode(assetIntDeal.getTradeCode());
+		}
     	// 根据资产交易资产流动类型区分资产流动类型:投资资产所得收益
     	assetIntDeal.setCurAssetType(DictCodeListExt2.资金流动类型_投资资产所得收益.getValue());
     	// 单位成交价格(净价)
@@ -654,6 +662,8 @@ public class ChbInvestTradeInterf  extends BaseService{
     	assetIntDeal.setUpdateUser(CommonUtil.getUserName());
         // 数据来源
     	assetIntDeal.setDataSource("DB");
+    	// 资产计量方式
+    	assetIntDeal.setAssetMethod(null);
     	return assetIntDeal;
     }
 
