@@ -231,7 +231,7 @@ public class BasePtlSecPositionInfoServiceImpl implements BasePtlSecPositionInfo
             }
         }
         //华兴银行：组合持仓融入融出明细共通 added by liuwei 2020/1/9 S
-        if (CacheUtil.getSysParam("IS_GHB_SPECIAL").equals("01") && DictCodeList.持仓类型_融入.getValue().equals(positionFlowDto.getHodingType())
+        if (DictCodeList.持仓类型_融入.getValue().equals(positionFlowDto.getHodingType())
                 || DictCodeList.持仓类型_融出.getValue().equals(positionFlowDto.getHodingType())) {
             PtlSecPositionDetail position = getPtlSecPositionDetail(positionFlowDto);
             BigDecimal amount = basePtlSecPositionInfoMapper.selectSecPositionDetail(positionFlowDto);
