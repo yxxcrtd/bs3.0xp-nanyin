@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Workbook filePath="PbcPrdBaseinfoEndSub002.xls" name="产品终止信息">
+<Workbook filePath="PbcPrdBaseinfoEndSub002.xlsx" name="产品终止信息">
 	<Worksheet javaBean="com.joyintech.tams.svreport.pbc.classic.prdinfoendsub.dto.PbcPrdBaseinfoEndSub">
 		<Row>
 			<Cell order="1" name="产品代码">pbcProdId</Cell>
