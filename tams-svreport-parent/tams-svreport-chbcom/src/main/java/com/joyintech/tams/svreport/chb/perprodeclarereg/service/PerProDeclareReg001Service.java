@@ -915,14 +915,20 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 				fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
 				continue;
 			}
-			if (chbPrdDeclareRegFileCode != null && entry.getSize() > chbPrdDeclareRegFileCode.getFileSize() * 1024 * 1024) {
-				fileCheckMsg.append("文件大小超过" + chbPrdDeclareRegFileCode.getFileSize() + "M（" + entry.getName() + "）。");
+			if (chbPrdDeclareRegFileCode != null && ((chbPrdDeclareRegFileCode.isComm() && StringUtil.isNotEmpty(prodId))
+						|| (!chbPrdDeclareRegFileCode.isComm() && StringUtil.isEmpty(prodId)))) {
+				fileCheckMsg.append("文件名称（" + entry.getName() + "）不属于公共文件，命令不符合规范。");
 				fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
 				continue;
 			}
 			String fileType = entry.getName().substring(entry.getName().lastIndexOf(".") + 1, entry.getName().length());
 			if (chbPrdDeclareRegFileCode != null && chbPrdDeclareRegFileCode.getFileType().indexOf(fileType) < 0) {
-				fileCheckMsg.append(entry.getName() + "文件的扩展名不对。必须为以下的一种：" + chbPrdDeclareRegFileCode.getFileType() + "。");
+				fileCheckMsg.append("文件名称（" + entry.getName() + "）扩展名不对。必须为以下的一种：" + chbPrdDeclareRegFileCode.getFileType() + "。");
+				fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
+				continue;
+			}
+			if (chbPrdDeclareRegFileCode != null && entry.getSize() > chbPrdDeclareRegFileCode.getFileSize() * 1024 * 1024) {
+				fileCheckMsg.append("文件名称（" + entry.getName() + "）大小不能超过" + chbPrdDeclareRegFileCode.getFileSize() + "M。");
 				fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
 				continue;
 			}
