@@ -3,7 +3,7 @@
 <mapper namespace="com.joyintech.tams.svreport.interf.chb.salecustsvrreport.dao.ChbSaleCustSvrreportMpper">
 <!--入库 -->
     <insert id="mergeInfoList" parameterType="com.joyintech.tams.common.base.entity.SaleCustSvrreport">
-    MERGE INTO CHB_LOAN_DETAIL_INFO L
+    MERGE INTO SALE_CUST_SVRREPORT L
         USING (
         <foreach collection="newDataList" item="item" open="select * from("
                  close=")" separator="union all">
@@ -47,8 +47,7 @@
             #{item.saveAmtRmb ,jdbcType=DECIMAL } SAVE_AMT_RMB,
             #{item.saveQty ,jdbcType=DECIMAL } SAVE_QTY,
             #{item.exchangeRate ,jdbcType=DECIMAL } EXCHANGE_RATE,
-            #{item.cusType ,jdbcType=VARCHAR } CUS_TYPE,
-            #{item.updatetime ,jdbcType=TIMESTAMP } UPDATETIME
+            #{item.cusType ,jdbcType=VARCHAR } CUS_TYPE
             from dual
         </foreach>
         ) TEMP
@@ -57,7 +56,7 @@
         UPDATE
         SET
         L.SENDDATE = TEMP.SENDDATE,
-        L.FINPROD_ID = TEMP.FINPROD_ID,
+--         L.FINPROD_ID = TEMP.FINPROD_ID,
         L.ISSUEMEMBER = TEMP.ISSUEMEMBER,
         L.INORABOARD = TEMP.INORABOARD,
         L.CUS_CODE = TEMP.CUS_CODE,
@@ -95,8 +94,7 @@
         L.SAVE_AMT_RMB = TEMP.SAVE_AMT_RMB,
         L.SAVE_QTY = TEMP.SAVE_QTY,
         L.EXCHANGE_RATE = TEMP.EXCHANGE_RATE,
-        L.CUS_TYPE = TEMP.CUS_TYPE,
-        L.UPDATETIME = TEMP.UPDATETIME
+        L.CUS_TYPE = TEMP.CUS_TYPE
         WHEN NOT MATCHED THEN
         INSERT (
         SENDDATE,
@@ -123,7 +121,7 @@
         EXPIRE_AMT_PRINCIPAL_RMB,
         EXPIRE_AMT_QTY,
         REBONUS_AMT,
-        REBONUS_AMT,
+        REBONUS_AMT_RMB,
         REBONUS_AMT_QTY,
         BONUS_AMT,
         BONUS_AMT_RMB,
@@ -138,8 +136,7 @@
         SAVE_AMT_RMB,
         SAVE_QTY,
         EXCHANGE_RATE,
-        CUS_TYPE,
-        UPDATETIME
+        CUS_TYPE
         )
         VALUES(
         TEMP.SENDDATE,
@@ -162,7 +159,7 @@
         TEMP.SH_QTY,
         TEMP.EXPIRE_AMT,
         TEMP.EXPIRE_AMT_RMB,
-        TEMP.EXPIRE_AMT_PRINCIPAL
+        TEMP.EXPIRE_AMT_PRINCIPAL,
         TEMP.EXPIRE_AMT_PRINCIPAL_RMB,
         TEMP.EXPIRE_AMT_QTY,
         TEMP.REBONUS_AMT,
@@ -181,8 +178,7 @@
         TEMP.SAVE_AMT_RMB,
         TEMP.SAVE_QTY,
         TEMP.EXCHANGE_RATE,
-        TEMP.CUS_TYPE,
-        TEMP.UPDATETIME
+        TEMP.CUS_TYPE
         )
     </insert>
 

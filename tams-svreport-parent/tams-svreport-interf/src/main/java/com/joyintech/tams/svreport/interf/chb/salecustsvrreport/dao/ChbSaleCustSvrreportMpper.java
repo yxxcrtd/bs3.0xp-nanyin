@@ -1,20 +1,20 @@
 package com.joyintech.tams.svreport.interf.chb.salecustsvrreport.dao;
 
 import com.joyintech.tams.common.base.entity.SaleCustSvrreport;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public interface ChbSaleCustSvrreportMpper {
 
     /**
      * 合并数据（入库）
-     * @param subList
+     * @param insertList
      * @return
      */
-    int mergeInfoList(List<SaleCustSvrreport> subList);
+    int mergeInfoList(@Param("newDataList") List<SaleCustSvrreport> insertList);
 
 //    /**
 //     * 根据行内资产负债编码 查询 人行分类
