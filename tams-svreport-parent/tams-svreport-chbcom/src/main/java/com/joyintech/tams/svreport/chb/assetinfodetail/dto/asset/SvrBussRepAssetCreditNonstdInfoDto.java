@@ -171,10 +171,7 @@ public class SvrBussRepAssetCreditNonstdInfoDto extends RepAssetCreditNonstdDto 
     */
     private Date repFirstReprceDate;
 
-    /**
-    * 重定价周期
-    */
-    private BigDecimal repReprceCycle;
+
 
     /**
     * 部分赎回标识
@@ -445,9 +442,9 @@ public class SvrBussRepAssetCreditNonstdInfoDto extends RepAssetCreditNonstdDto 
     }
     
     //融资人
-    @Length(fieldName = "BussRepAssetCreditNonstdInfo.repFinancier", max = 200, groups = {ValidateGroupEdit.class})
-    public String getRepFinancier(){
-        return super.getRepFinancier();
+    @Length(fieldName = "BussRepAssetCreditNonstdInfo.repFinancie", max = 200, groups = {ValidateGroupEdit.class})
+    public String getRepFinancie(){
+        return super.getRepFinancie();
     }
     
     //融资人内部信用评级
@@ -839,20 +836,6 @@ public class SvrBussRepAssetCreditNonstdInfoDto extends RepAssetCreditNonstdDto 
 	}
 
 
-	/**
-	 * @return the repReprceCycle
-	 */
-	public BigDecimal getRepReprceCycle() {
-		return repReprceCycle;
-	}
-
-
-	/**
-	 * @param repReprceCycle the repReprceCycle to set
-	 */
-	public void setRepReprceCycle(BigDecimal repReprceCycle) {
-		this.repReprceCycle = repReprceCycle;
-	}
 
 
 	/**
