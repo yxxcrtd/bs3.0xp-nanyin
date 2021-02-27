@@ -54,9 +54,9 @@
         ||getElementById('repContainType').val()=='05'||getElementById('repContainType').val()=='06'||
             getElementById('repContainType').val()=='07'){
         //行权价格
-            getElementById('_repExercisePrice').val('').attr('disabled', true).trigger('change');
+            getElementById('repExercisePrice').val('').attr('disabled', true).trigger('change');
         }else{
-            getElementById('_repExercisePrice').attr('disabled', false).trigger('change');
+            getElementById('repExercisePrice').attr('disabled', false).trigger('change');
         }
         // if(getElementById('repContainType').val()==''){
         //     //行权方式

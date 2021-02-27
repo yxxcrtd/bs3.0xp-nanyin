@@ -538,6 +538,7 @@
                         <select th:id="|${entityName}_repPrivateprdFlag|" th:name="|${entityName}.repPrivateprdFlag|"
                                 th:initValue="${entity?.repPrivateprdFlag}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
+                                required="required"
                                 data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${SVR_YES_OR_NO}">
                         </select>
                     </div>
