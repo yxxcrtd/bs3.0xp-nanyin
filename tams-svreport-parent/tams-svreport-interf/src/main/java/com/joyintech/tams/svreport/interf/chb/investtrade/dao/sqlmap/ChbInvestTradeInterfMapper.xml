@@ -545,7 +545,7 @@
 	left join MST_COUNTER_PARTY party2 on party2.LINK_ID=DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',NVL(DEAL.COUNTER_ID,secASSET.Issuer),'T22',customer.customer_id,'T23',customer.customer_id)
     left join MST_COUNTER_PARTY party3 on party3.MANAGER_ID=DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',customer.customer_id,'T23',customer.customer_id)
     WHERE 1=1
-    AND DEAL.BUSI_TYPE IN( '02','29')/*wuhaiyan*/
+    AND DEAL.BUSI_TYPE IN( '02','29','14')/*wuhaiyan*/
     and (ABS(nvl(deal.share_amt,0)) + ABS(nvl(deal.trade_amt,0)) != 0)/* 去除面额和金额同时为空的情况 */
     /*只接入原始交易数据*/
     /*AND DEAL.TRADE_STATUS = '01'*/
@@ -661,7 +661,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
      SELECT 1 FROM TRD_PRODUCT_DEAL A
       LEFT JOIN TRD_PRODUCT_DEAL_ADD AD ON A.TRADE_ID = AD.TRADE_ID
       WHERE A.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
-    AND DEAL.BUSI_TYPE IN( '02','29')/*wuhaiyan*/
+    AND DEAL.BUSI_TYPE IN( '02','29','14')/*wuhaiyan*/
     and (ABS(nvl(deal.share_amt,0)) + ABS(nvl(deal.trade_amt,0)) != 0)/* 去除面额和金额同时为空的情况 */
     /*只接入原始交易数据*/
     /*AND DEAL.TRADE_STATUS = '01'*/
@@ -1878,7 +1878,9 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
   DEAL.CCY CCY, /*币种*/
   DECODE(DEAL.PS, 'T01', 0, NVL(DEAL.TRADE_AMT, 0)) AMT, /*发生金额*/
   NULL CNY_AMT, /*折算人民币金额*/
-  NVL(DEAL.SHARE_AMT, 0) NUM, /*数量*/
+    /***TOS-253 【交易信息登记-集成测试】：利率互换交易信息登记相关问题，详见附件 leipeng 20210225****/
+    /*NVL(DEAL.SHARE_AMT, 0) NUM, 数量*/
+    NVL(TOTAL.REMAIN_PRIN, 0) NUM,
   DECODE (DEAL.PS, 'T01', '01', 'T07', '02', 'T98', '09', 'T99', '10') CUR_ASSET_TYPE, /*资金流动类型*/
   CASE
     WHEN DEAL.PS = 'T98' THEN '利率互换利息收入'
@@ -1895,8 +1897,12 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     WHEN DEAL.PS IN ('T01', 'T02') THEN 0
     ELSE NULL
   END AS UNIT_PRICE_NET, /*单位成交价格（净价）*/
-  DEAL.YIELD END_RATE, /*到期收益率*/
-  DEAL.TRADE_ID CONTRACT_CODE, /*成交编号/合同号*/
+    /***TOS-253 【交易信息登记-集成测试】：利率互换交易信息登记相关问题，详见附件 leipeng 20210225****/
+    /*DEAL.YIELD END_RATE, 到期收益率*/
+    NULL END_RATE,
+    /***TOS-253 【交易信息登记-集成测试】：利率互换交易信息登记相关问题，详见附件 leipeng 20210225****/
+
+        DEAL.TRADE_ID CONTRACT_CODE, /*成交编号/合同号*/
   NULL REMARK, /*备注*/
   NULL CHL_CPCT_ID, /*通道代码*/
   '01' TRADE_TYPE, /*交易类型*/
@@ -1928,6 +1934,9 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
   FROM TRD_PRODUCT_DEAL DEAL
   LEFT JOIN TRD_PRODUCT_DEAL REVDL
     ON deal.TRADE_ID = REVDL.P_TRADE_ID
+    /***TOS-253 【交易信息登记-集成测试】：利率互换交易信息登记相关问题，详见附件 leipeng 20210225****/
+    LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TOTAL ON DEAL.TOTLE_TRADE_ID=TOTAL.TOTLE_TRADE_ID
+	/***TOS-253 【交易信息登记-集成测试】：利率互换交易信息登记相关问题，详见附件 leipeng 20210225****/
   LEFT JOIN TRD_PRODUCT_DEAL_ADD DEALADD
     ON DEALADD.TRADE_ID = DEAL.TRADE_ID
   LEFT JOIN FIN_PRODUCT PROJECTASSET
@@ -1943,6 +1952,9 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     <![CDATA[AND (NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
       <![CDATA[or NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
     and nvL(deal.p_trade_id,'NOREV') = 'NOREV'
+    /***TOS-253 【交易信息登记-集成测试】：利率互换交易信息登记相关问题，详见附件 leipeng 20210225****/
+    and deal.ps not in ('T01','T07')
+    /***TOS-253 【交易信息登记-集成测试】：利率互换交易信息登记相关问题，详见附件 leipeng 20210225****/
   /*债券借贷交易*/
   UNION ALL
   SELECT 
@@ -4415,7 +4427,9 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
   DEAL.CCY CCY, /*币种*/
   DECODE(DEAL.PS, 'T01', 0, NVL(DEAL.TRADE_AMT, 0)) AMT, /*发生金额*/
   NULL CNY_AMT, /*折算人民币金额*/
-  NVL(DEAL.SHARE_AMT, 0) NUM, /*数量*/
+  /***利率互换存续期交易，数量字段取值不正确，改成取汇总交易表的REMAIN_PRIN字段**/
+      /*NVL(DEAL.SHARE_AMT, 0) NUM, 数量*/
+   NVL(TOTAL.REMAIN_PRIN, 0) NUM,
   DECODE (DEAL.PS, 'T01', '01', 'T07', '02', 'T98', '09', 'T99', '10') CUR_ASSET_TYPE, /*资金流动类型*/
   CASE
     WHEN DEAL.PS = 'T98' THEN '利率互换利息收入'
@@ -4432,8 +4446,11 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     WHEN DEAL.PS IN ('T01', 'T02') THEN 0
     ELSE NULL
   END AS UNIT_PRICE_NET, /*单位成交价格（净价）*/
-  DEAL.YIELD END_RATE, /*到期收益率*/
-  DEAL.TRADE_ID CONTRACT_CODE, /*成交编号/合同号*/
+  /***利率互换交易的到期收益率改成空，现在是取的trd_product_deal.YIELD(利率互换交易投管该字段存了0，不是空，导致交易信息登记该字段值为0)； leipeng 20210225****/
+  /*DEAL.YIELD END_RATE, 到期收益率*/
+   NULL END_RATE,
+    /***利率互换交易的到期收益率改成空，现在是取的trd_product_deal.YIELD(利率互换交易投管该字段存了0，不是空，导致交易信息登记该字段值为0)； leipeng 20210225****/
+      DEAL.TRADE_ID CONTRACT_CODE, /*成交编号/合同号*/
   NULL REMARK, /*备注*/
   NULL CHL_CPCT_ID, /*通道代码*/
   '01' TRADE_TYPE, /*交易类型*/
@@ -4465,6 +4482,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
   FROM TRD_PRODUCT_DEAL DEAL
   LEFT JOIN TRD_PRODUCT_DEAL REVDL
     ON deal.TRADE_ID = REVDL.P_TRADE_ID
+    LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TOTAL ON DEAL.TOTLE_TRADE_ID=TOTAL.TOTLE_TRADE_ID
   LEFT JOIN TRD_PRODUCT_DEAL_ADD DEALADD
     ON DEALADD.TRADE_ID = DEAL.TRADE_ID
   LEFT JOIN FIN_PRODUCT PROJECTASSET
