@@ -6,13 +6,7 @@ package com.joyintech.service.portfolio.feepay.service;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.jdbc.datasource.DataSource;
@@ -427,6 +421,18 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
         }
 //        baseSubjectNatureList.add(DictCodeBaseSubjectNatrue.预提费用.getValue());
 
+
+        Calendar calendar = new GregorianCalendar();
+        if(StringUtil.isNotEmpty(happenDate)){
+            calendar.setTime(happenDate);
+            calendar.add(calendar.DATE,-1);
+            happenDate = calendar.getTime();
+        }
+        if(StringUtil.isNotEmpty(bookDate)) {
+            calendar.setTime(bookDate);
+            calendar.add(calendar.DATE, -1);
+            bookDate = calendar.getTime();
+        }
         //设值科目余额查询参数Dto
         SubjectBalanceSearchDto searchDto = new SubjectBalanceSearchDto();
         searchDto.setBooksetId(booksetId);
@@ -437,7 +443,6 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
         // 调用公用方法：【科目余额查询-期待方向 】,获取科目余额信息
         List<SubjectBalance> balanceList = this.getSubjectBalanceExpectDirection(
                 searchDto, DictCodeList.余额方向_贷方.getValue());
-
         BigDecimal balance = BigDecimal.ZERO;
         if(balanceList != null && !balanceList.isEmpty()){
             balance = balanceList.get(0).getBalance();
