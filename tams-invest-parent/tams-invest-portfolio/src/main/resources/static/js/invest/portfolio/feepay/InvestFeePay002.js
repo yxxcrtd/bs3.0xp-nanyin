@@ -608,12 +608,12 @@ $(function() {
 
     $("#bussTrdTransferOrder_btn_generate").on("click", function () {
         if(stlCommandInput != null) {
-            var index = layer.open({
-                type: 1,
-                icon : 16,
-                area: ['200px', '100px'],
-                content: '数据加载中',closeBtn: 0
-            });
+            // var index = layer.open({
+            //     type: 1,
+            //     icon : 16,
+            //     area: ['200px', '100px'],
+            //     content: '数据加载中',closeBtn: 0
+            // });
             var data = stlCommandInput();
             // 保存生成指令参数
             calcConditionObjBackUp = data;
@@ -630,7 +630,7 @@ $(function() {
                         }
                         table.clear(function () {
                             table.addRow(ret.data)
-                            layui.layer.close(index);
+                            // layui.layer.close(index);
                         })
                     }
                 });
