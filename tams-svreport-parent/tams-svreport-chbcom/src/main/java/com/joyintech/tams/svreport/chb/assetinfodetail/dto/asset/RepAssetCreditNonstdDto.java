@@ -55,20 +55,16 @@ public class RepAssetCreditNonstdDto extends BaseEntity {
     /**
      * 付息频率(个月/次)
      */
-    private Short repIntpayCycle;
+    private Long repIntpayCycle;
 
     /**
      * 还本付息情况说明
      */
     private String repRepayCmt;
-
-
-
-
     /**
      * 融资人
      */
-    private String repFinancier;
+    private String repFinancie;
 
     /**
      * 融资人内部信用评级
@@ -279,7 +275,7 @@ public class RepAssetCreditNonstdDto extends BaseEntity {
      /**
      * 重定价周期
      */
-     private BigDecimal repReprceCycle;
+     private Integer repReprceCycle;
 
      /**
      * 部分赎回标识
@@ -451,7 +447,7 @@ public class RepAssetCreditNonstdDto extends BaseEntity {
      * 取得 付息频率(个月/次)
      * @return 付息频率(个月/次)
      */
-    public Short getRepIntpayCycle() {
+    public Long getRepIntpayCycle() {
         return repIntpayCycle;
     }
 
@@ -459,7 +455,7 @@ public class RepAssetCreditNonstdDto extends BaseEntity {
      * 设置 付息频率(个月/次)
      * @param repIntpayCycle 付息频率(个月/次)
      */
-    public void setRepIntpayCycle(Short repIntpayCycle) {
+    public void setRepIntpayCycle(Long repIntpayCycle) {
         this.repIntpayCycle = repIntpayCycle;
     }
 
@@ -479,24 +475,12 @@ public class RepAssetCreditNonstdDto extends BaseEntity {
         this.repRepayCmt = repRepayCmt == null ? null : repRepayCmt.trim();
     }
 
-
-
-
-
-    /**
-     * 取得 融资人
-     * @return 融资人
-     */
-    public String getRepFinancier() {
-        return repFinancier;
+    public String getRepFinancie() {
+        return repFinancie;
     }
 
-    /**
-     * 设置 融资人
-     * @param repFinancier 融资人
-     */
-    public void setRepFinancier(String repFinancier) {
-        this.repFinancier = repFinancier == null ? null : repFinancier.trim();
+    public void setRepFinancie(String repFinancie) {
+        this.repFinancie = repFinancie;
     }
 
     /**
@@ -1123,14 +1107,14 @@ public class RepAssetCreditNonstdDto extends BaseEntity {
 	/**
 	 * @return the repReprceCycle
 	 */
-	public BigDecimal getRepReprceCycle() {
+	public Integer getRepReprceCycle() {
 		return repReprceCycle;
 	}
 
 	/**
 	 * @param repReprceCycle the repReprceCycle to set
 	 */
-	public void setRepReprceCycle(BigDecimal repReprceCycle) {
+	public void setRepReprceCycle(Integer repReprceCycle) {
 		this.repReprceCycle = repReprceCycle;
 	}
 

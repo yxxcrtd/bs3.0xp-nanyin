@@ -420,10 +420,23 @@
 		,NVL(DEAL.TRADE_AMT,0) AMT /*发生金额*/ 
 		,NULL CNY_AMT/*折算人民币金额*/
 		,DEAL.SHARE_AMT NUM/*数量*/
-		,DECODE(DEAL.PS,'T01','01','T59','02','T60','02','T61','02')  CUR_ASSET_TYPE/*资金流动类型*/
-		,'无' CUR_ASSETDET_TYPE   /*资金流动类型说明*/
+        /****TOS-269 【交易信息登记-集成测试】：场外期权交易，交易信息登记不正确，详见描述 leipeng 20210227***/
+        ,CASE WHEN DEAL.TG_BUSI_TYPE = '145' THEN '10'
+        WHEN DEAL.TG_BUSI_TYPE = '146' THEN '09'
+        WHEN DEAL.TG_BUSI_TYPE IN ('148','149') AND DEAL.PS_PAYMENT = '01' THEN '09'
+        WHEN DEAL.TG_BUSI_TYPE IN ('148','149') AND DEAL.PS_PAYMENT = '02' THEN '10'
+        END  CUR_ASSET_TYPE/*资金流动类型*/
+        ,CASE WHEN DEAL.TG_BUSI_TYPE = '145' THEN '支付期权费用'
+        WHEN DEAL.TG_BUSI_TYPE = '146' THEN '卖方收取期权费用'
+        WHEN DEAL.TG_BUSI_TYPE IN ('148','149') AND DEAL.PS_PAYMENT = '01' THEN '场外期权收入'
+        WHEN DEAL.TG_BUSI_TYPE IN ('148','149') AND DEAL.PS_PAYMENT = '02' THEN '场外期权支出' end CUR_ASSETDET_TYPE   /*资金流动类型说明*/
+        /*,DECODE(DEAL.PS,'T01','01','T59','02','T60','02','T61','02')  CUR_ASSET_TYPE资金流动类型
+        ,'无' CUR_ASSETDET_TYPE   资金流动类型说明*/
+        /****TOS-269 【交易信息登记-集成测试】：场外期权交易，交易信息登记不正确，详见描述 leipeng 20210227***/
 		,DEAL.SETTLE_DATE DEALDATE /*交易日*/
-		,DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG) TRADE_COUNTER/*交易对手*/
+		,DECODE(DEAL.PS,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG,TOTALDEAL.COUNTER_ID) TRADE_COUNTER/*交易对手*/
+		/**		,DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG) TRADE_COUNTER/*交易对手*/***/		
+		/****TOS-269 【交易信息登记-集成测试】：场外期权交易，交易信息登记不正确，详见描述 leipeng 20210227***/		
 		,NULL UNIT_PRICE_FULL  /*单位成交价格（全价）*/
 		,NULL UNIT_PRICE_NET  /*单位成交价格（净价）*/
 		,DEAL.YIELD END_RATE   /*到期收益率*/
@@ -463,9 +476,11 @@
 		    on deal.TOTLE_TRADE_ID = TOTALDEAL.TOTLE_TRADE_ID
 		    LEFT JOIN TRD_PRODUCT_DEAL_ADD DEALADD
 		    ON DEALADD.TRADE_ID = DEAL.TRADE_ID
-			left join MST_COUNTER_PARTY party on DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG) = party.COUNTER_ID
-		    left join MST_COUNTER_PARTY party2 on DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG) = party2.LINK_ID
-		    left join MST_COUNTER_PARTY party3 on DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG) = party3.MANAGER_ID
+        /****TOS-269 【交易信息登记-集成测试】：场外期权交易，交易信息登记不正确，详见描述 leipeng 20210227***/
+			left join MST_COUNTER_PARTY party on DECODE(DEAL.PS,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG,TOTALDEAL.COUNTER_ID) = party.COUNTER_ID
+		    left join MST_COUNTER_PARTY party2 on DECODE(DEAL.PS,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG,TOTALDEAL.COUNTER_ID) = party2.LINK_ID
+		    left join MST_COUNTER_PARTY party3 on DECODE(DEAL.PS,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG,TOTALDEAL.COUNTER_ID) = party3.MANAGER_ID
+        /****TOS-269 【交易信息登记-集成测试】：场外期权交易，交易信息登记不正确，详见描述 leipeng 20210227***/		
 		where 1=1 
 		      and DEAL.FINPROD_TYPE2='F35'
 		      AND nvl(deal.p_trade_id,'NOREV')='NOREV'/*不取撤销交易*/
@@ -473,7 +488,11 @@
 		    <![CDATA[or NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
 		    <![CDATA[or NVL(secASSET.UPDATE_TIME,secASSET.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
 		    <![CDATA[or NVL(TOTALDEAL.UPDATE_TIME,TOTALDEAL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
-		/*增加期权 add by zhengxiaolian 2020-01-15 end*/
+        /****TOS-269 【交易信息登记-集成测试】：场外期权交易，交易信息登记不正确，详见描述 leipeng 20210227***/
+        and NVL(DEAL.TRADE_AMT,0) > 0
+        /****TOS-269 【交易信息登记-集成测试】：场外期权交易，交易信息登记不正确，详见描述 leipeng 20210227***/
+
+        /*增加期权 add by zhengxiaolian 2020-01-15 end*/
 	union all
     
    /*债券+abs+行权 - 非还本不带息*/
@@ -491,8 +510,7 @@
     DECODE(DEAL.PS,'T01','01','T02','02','T03','02','T39','02','T22',DECODE(TOTALDEAL.PS,'T08','11','T09','09','T07','09'),'T23',DECODE(TOTALDEAL.PS,'T08','11','T07','02')) CUR_ASSET_TYPE,/*中间还本的利息需统计成11其他收入*/
     DECODE(DEAL.PS,'T22',decode(TOTALDEAL.ps,'T08','部分到期-收息','T09','收息','T07','收息'),'T23',decode(TOTALDEAL.ps,'T08','部分到期','T07','到期')) CUR_ASSETDET_TYPE,/*针对不同的收息：中间收息：债券收息交易，部分还本收息：债券中间还本交易，到期收息：债券到期利息收入*/
     DEAL.SETTLE_DATE DEALDATE,
-<!--     DECODE(DEAL.PS,'T01',NVL(DEAL.COUNTER_ID,PRODUCTASSET.COUNTER_ID),'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG,'T29',PRODUCTASSET1.COUNTER_ID,'T32',PRODUCTASSET1.COUNTER_ID) TRADE_COUNTER, -->
-    DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',NVL(DEAL.COUNTER_ID,secASSET.Issuer),'T22',customer.CUSTOMER_NAME,'T23',customer.CUSTOMER_NAME) TRADE_COUNTER,
+    DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T29',DEAL.COUNTER_ID,'T39',nvl(party2.COUNTER_ID,party3.COUNTER_ID),'T22',nvl(party2.COUNTER_ID,party3.COUNTER_ID),'T23',nvl(party2.COUNTER_ID,party3.COUNTER_ID)) TRADE_COUNTER,
     ROUND(DECODE(DEAL.PS,'T01',DEAL.UNIT_FPRICE,'T02',DEAL.UNIT_FPRICE,'T03',DEAL.UNIT_FPRICE,'T39',NVL(DEAL.UNIT_FPRICE, DECODE(DEAL.SHARE_AMT, 0, 0, DEAL.TRADE_AMT/DEAL.SHARE_AMT)),'T23',DECODE(TOTALDEAL.PS,'T08',DECODE(DEAL.TG_BUSI_TYPE,'144',NVL(PRODUCTASSET.M_PRIN_AMT,0) * -1,DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/DEAL.SHARE_AMT*-1)),'T07',DECODE(DEAL.TG_BUSI_TYPE,'144',NVL(PRODUCTASSET.M_PRIN_AMT,0),DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/DEAL.SHARE_AMT)))),4) UNIT_PRICE_FULL,
     ROUND(DECODE(DEAL.PS,'T01',DEAL.UNIT_CPRICE,'T02',DEAL.UNIT_CPRICE,'T03',DEAL.UNIT_CPRICE,'T39',NVL(DEAL.UNIT_CPRICE, DECODE(DEAL.SHARE_AMT, 0, 0, DEAL.CPRICE_AMT/DEAL.SHARE_AMT)),'T23',DECODE(TOTALDEAL.PS,'T08',DECODE(DEAL.TG_BUSI_TYPE,'144',NVL(PRODUCTASSET.M_PRIN_AMT,0) * -1,DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/DEAL.SHARE_AMT*-1)),'T07',DECODE(DEAL.TG_BUSI_TYPE,'144',NVL(PRODUCTASSET.M_PRIN_AMT,0),DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/DEAL.SHARE_AMT)))),4) UNIT_PRICE_NET,
     DECODE(DEAL.PS,'T01',DEAL.YIELD,'T02',DEAL.YIELD,'T03',DEAL.YIELD,'T39',DEAL.YIELD,'T23',decode(TOTALDEAL.ps,'T07',DEAL.YIELD)) END_RATE,
@@ -980,7 +998,14 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T01','03','T02','04','T12','03','T22','09','T23',DECODE(TOTALDEAL.PS,'T08','04','T07','04'),'T38','04'),'01',DECODE(DEAL.FINPROD_TYPE2,'F08',DECODE(DEAL.PS,'T01','06','T02','08','T22','10','T23','08'),DECODE(DEAL.PS,'T01','05','T02','07','T22','09','T23','07'))) CUR_ASSET_TYPE,
     DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',DECODE(TOTALDEAL.PS,'T08','收息','T09','收息','T07','收息'),'T23',DECODE(TOTALDEAL.PS,'T08','部分到期','T07','到期')),'01',DECODE(DEAL.PS,'T22',DECODE(DEAL.FINPROD_TYPE2,'F08','付息','收息'),'T23','到期')) CUR_ASSETDET_TYPE,
     DEAL.SETTLE_DATE DEALDATE,
-  	DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',mst.customer_name,'T23',mst.customer_name,'T38',mst.customer_name,'T12',mst.customer_name,DECODE(TOTALDEAL.PS,'T09',mst.customer_name,deal.counter_id)),'01',NVL(deal.counter_id,assetcounter.countername)) TRADE_COUNTER,
+
+    <!-- modify by zhangliang 20201215 修改存款类资产同业借款取值逻辑 DEAL.BUSI_TYPE = '01' and DEAL.FINPROD_TYPE2 = 'F07'-->
+    case when DEAL.BUSI_TYPE = '03' then DECODE(DEAL.PS,'T22',mst.customer_name,'T23',mst.customer_name,'T38',mst.customer_name,'T12',mst.customer_name,DECODE(TOTALDEAL.PS,'T09',mst.customer_name,deal.counter_id))
+         when DEAL.BUSI_TYPE = '01' and DEAL.FINPROD_TYPE2 = 'F07' then NVL(deal.counter_id,party2.COUNTER_ID)
+         when DEAL.BUSI_TYPE = '01' and DEAL.FINPROD_TYPE2 != 'F07' then NVL(deal.counter_id,assetcounter.COUNTER_ID)
+         else null end as TRADE_COUNTER,
+
+      <!--DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',mst.customer_name,'T23',mst.customer_name,'T38',mst.customer_name,'T12',mst.customer_name,DECODE(TOTALDEAL.PS,'T09',mst.customer_name,deal.counter_id)),'01',NVL(deal.counter_id,assetcounter.COUNTER_ID)) TRADE_COUNTER,-->
     <!--DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',mst.customer_name,'T23',mst.customer_name,'T38',mst.customer_name,decode(TOTALDEAL.PS,'T09',mst.customer_name,deal.counter_id)),'01',NVL(deal.counter_id,assetcounter.COUNTER_ID)) TRADE_COUNTER,-->
     /*  DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',assetcounter.COUNTER_ID,'T23',assetcounter.COUNTER_ID,'T38',assetcounter.COUNTER_ID,decode(TOTALDEAL.PS,'T09',assetcounter.COUNTER_ID,deal.counter_id)),'01',decode(deal.finprod_id,'F07',DECODE(DEAL.PS,'T22',assetcounter.COUNTER_ID,'T23',assetcounter.COUNTER_ID,'T38',assetcounter.COUNTER_ID,decode(TOTALDEAL.PS,'T09',assetcounter.COUNTER_ID,deal.counter_id),DECODE(DEAL.PS,'T22',assetcounter.COUNTER_ID,'T23',assetcounter.COUNTER_ID,deal.counter_id)))) TRADE_COUNTER, */
     /*到期收息的对手方要为空*/
@@ -1074,7 +1099,7 @@ SELECT NULL TRADE_SEQNO,
     DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T01','03','T02','04','T12','01','T22','09','T23',DECODE(TOTALDEAL.PS,'T08','04','T07','04'),'T38','04'),'01',DECODE(DEAL.FINPROD_TYPE2,'F08',DECODE(DEAL.PS,'T01','06','T02','08','T22','10','T23','08'),DECODE(DEAL.PS,'T01','05','T02','07','T22','09','T23','07'))) CUR_ASSET_TYPE,
     DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',DECODE(TOTALDEAL.PS,'T08','收息','T09','收息','T07','收息'),'T23',DECODE(TOTALDEAL.PS,'T08','部分到期','T07','到期')),'01',DECODE(DEAL.PS,'T22',DECODE(DEAL.FINPROD_TYPE2,'F08','付息','收息'),'T23','到期')) CUR_ASSETDET_TYPE,
     DEAL.SETTLE_DATE DEALDATE,
-  	DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',mst.customer_name,'T23',mst.customer_name,'T38',mst.customer_name,'T12',mst.customer_name,DECODE(TOTALDEAL.PS,'T09',mst.customer_name,deal.counter_id)),'01',NVL(deal.counter_id,assetcounter.countername)) TRADE_COUNTER,
+  	DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',mst.customer_name,'T23',mst.customer_name,'T38',mst.customer_name,'T12',mst.customer_name,DECODE(TOTALDEAL.PS,'T09',mst.customer_name,deal.counter_id)),'01',NVL(deal.counter_id,assetcounter.COUNTER_ID)) TRADE_COUNTER,
     
     /*到期收息的对手方要为空*/
     NULL UNIT_PRICE_FULL,
@@ -2138,14 +2163,18 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     DEALADD.PORTFOLIO_ID   PROD_ID ,         /* 产品代码 */
     deal.regist_org REGIST_BANK_CODE,/*发行机构代码/*登记银行编码*/
     DEAL.FINPROD_ID ASSET_CODE ,  /*行内资产/负债编码 */   
-    DEAL.CCY CCY ,/*币种 */ 
-    DEAL.SHARE_AMT*100-DEAL.TRADE_AMT AMT ,/*发生金额*/                                                                              
+    DEAL.CCY CCY ,/*币种 */
+    /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
+    BARTER.PRIN_AMT AMT ,/*发生金额  */
+    /* DEAL.SHARE_AMT*100-DEAL.TRADE_AMT AMT,发生金额  */
     NULL CNY_AMT,/*折算后人民币在街口中单独处理*/                                                                            
     DEAL.SHARE_AMT*100 NUM ,/*数量     */                                                                            
     '02' CUR_ASSET_TYPE，/*资金流动类型 */                                                                                
-    '无' CUR_ASSETDET_TYPE，/*资金流动类型说明*/                                                                             
-    DEAL.SETTLE_DATE DEALDATE,   /*交易日  */
-    DEAL.COUNTER_ID TRADE_COUNTER, /*交易对手 */
+    '无' CUR_ASSETDET_TYPE，/*资金流动类型说明*/
+    DEAL.TRADE_DATE DEALDATE,   /*交易日  */
+    /*DEAL.SETTLE_DATE DEALDATE,   交易日  */
+    /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
+        DEAL.COUNTER_ID TRADE_COUNTER, /*交易对手 */
     (DEAL.SHARE_AMT*100-DEAL.TRADE_AMT)/DEAL.SHARE_AMT UNIT_PRICE_FULL  ,/*单位成交价格（全价）*/                                                                          
     (DEAL.SHARE_AMT*100-DEAL.TRADE_AMT)/DEAL.SHARE_AMT UNIT_PRICE_NET ,/*单位成交价格（净价） */                                                                         
     NULL END_RATE  ,/*到期收益率 */                                                                           
@@ -2177,6 +2206,10 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     null F_TRADE_ID
     ,nvl(party.P_TYPE_TWO,nvl(party2.P_TYPE_TWO,party3.P_TYPE_TWO)) P_TYPE_TWO/*人行二级分类*/                                                                           
     FROM TRD_PRODUCT_DEAL DEAL
+    /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
+    left join TRD_FIN_PRODUCT_BARTER BARTER
+    on deal.TRADE_ID=BARTER.TRADE_ID
+    /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
     LEFT JOIN TRD_PRODUCT_DEAL REVDL
     ON deal.TRADE_ID = REVDL.P_TRADE_ID
     LEFT JOIN FIN_PRODUCT secASSET
@@ -2189,6 +2222,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
 	left join MST_COUNTER_PARTY party2 on party2.LINK_ID=DEAL.COUNTER_ID
 		left join MST_COUNTER_PARTY party3 on party3.MANAGER_ID=DEAL.COUNTER_ID
     where 1=1
+    and BARTER.TRADE_ID is not null /*存了一条股票的记录*/
     and deal.PS='T49'
     and deal.finprod_type2='F01'
     and (ABS(nvl(deal.share_amt,0)) + ABS(nvl(deal.trade_amt,0)) != 0)/* 去除面额和金额同时为空的情况 */
@@ -2202,19 +2236,27 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     '25' INVEST_VARIETY ,/*投资品种 */                                                                             
     NULL INVEST_TYPE,/*投资类型/*投资目的 枚举值对应待处理TODO*/                                                                                                                                                                      
     DEALADD.PORTFOLIO_ID   PROD_ID ,         /* 产品代码 */                                                                                
-    deal.regist_org REGIST_BANK_CODE,/*发行机构代码/*登记银行编码*/                                                                               
-    DEAL.FINPROD_ID ASSET_CODE ,  /*行内资产/负债编码 */   
-    secASSET.CCY CCY ,/*币种 */ 
-    DEAL.SHARE_AMT*100-DEAL.TRADE_AMT AMT ,/*发生金额*/                                                                              
+    deal.regist_org REGIST_BANK_CODE,/*发行机构代码/*登记银行编码*/
+    /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
+    secASSET.Finprod_Id ASSET_CODE ,  /*行内资产/负债编码 */
+    /*DEAL.FINPROD_ID ASSET_CODE ,  行内资产/负债编码 */
+    secASSET.CCY CCY ,/*币种 */
+    BARTER.PRIN_AMT AMT ,/*发生金额  */
+    /* DEAL.SHARE_AMT*100-DEAL.TRADE_AMT AMT,发生金额  */
     NULL CNY_AMT,/*折算后人民币在街口中单独处理*/                                                                            
     BARTER.SHARE_AMT NUM ,/*数量*/                                                                                 
     '01' CUR_ASSET_TYPE，/*资金流动类型 */                                                                                
-    '无' CUR_ASSETDET_TYPE，/*资金流动类型说明 */                                                                            
-    DEAL.SETTLE_DATE DEALDATE,   /*交易日 */
+    '无' CUR_ASSETDET_TYPE，/*资金流动类型说明 */
+    DEAL.TRADE_DATE DEALDATE,   /*交易日  */
+    /*DEAL.SETTLE_DATE DEALDATE,   交易日  */
     DEAL.COUNTER_ID TRADE_COUNTER, /*交易对手 */
-    (DEAL.SHARE_AMT*100-DEAL.TRADE_AMT)/DEAL.SHARE_AMT UNIT_PRICE_FULL  ,/*单位成交价格（全价）*/                                                                          
-    (DEAL.SHARE_AMT*100-DEAL.TRADE_AMT)/DEAL.SHARE_AMT UNIT_PRICE_NET ,/*单位成交价格（净价） */                                                                         
-    NULL END_RATE  ,/*到期收益率  */                                                                          
+
+    BARTER.UNIT_CPRICE    UNIT_PRICE_FULL  ,/*单位成交价格（全价）*/
+    BARTER.UNIT_CPRICE    UNIT_PRICE_NET ,/*单位成交价格（净价） */
+        /*(DEAL.SHARE_AMT*100-DEAL.TRADE_AMT)/DEAL.SHARE_AMT UNIT_PRICE_FULL  ,单位成交价格（全价）*/
+        /*(DEAL.SHARE_AMT*100-DEAL.TRADE_AMT)/DEAL.SHARE_AMT UNIT_PRICE_NET ,单位成交价格（净价） */
+    /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
+        NULL END_RATE  ,/*到期收益率  */
     DEAL.TRADE_ID||'02' CONTRACT_CODE  ,/*成交编号/合同号  */                                                                         
     NULL REMARK  ,/*备注   */                                                                         
     NULL CHL_CPCT_ID ,/* 通道代码  */                                                                            
@@ -2261,6 +2303,8 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     and deal.PS='T49'
     and deal.finprod_type2='F01'
     and (ABS(nvl(deal.share_amt,0)) + ABS(nvl(deal.trade_amt,0)) != 0)/* 去除面额和金额同时为空的情况 */
+    <![CDATA[AND (NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    <![CDATA[or NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
     UNION ALL 
     /*债转股(投资收益)*/ 
     select 
@@ -2269,11 +2313,11 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     '01' INVEST_VARIETY ,/*投资品种*/                                                                              
     null INVEST_TYPE,/*投资类型  */                                                                                                                                                                  
     DEALADD.PORTFOLIO_ID   PROD_ID ,         /* 产品代码*/                                                                                 
-    deal.regist_org REGIST_BANK_CODE,/*发行机构代码/*登记银行编码*/                                                                               
-    DEAL.FINPROD_ID ASSET_CODE ,  /*行内资产/负债编码 */   
-    DEAL.CCY CCY ,/*币种 */ 
-    DEAL.TRADE_AMT AMT ,/*发生金额  */                                                                            
-    NULL CNY_AMT,/*折算后人民币在街口中单独处理*/                                                                            
+    deal.regist_org REGIST_BANK_CODE,/*发行机构代码/*登记银行编码*/
+    DEAL.FINPROD_ID ASSET_CODE ,  /*行内资产/负债编码 */
+    DEAL.CCY CCY ,/*币种 */
+    DEAL.TRADE_AMT AMT ,/*发生金额  */
+    NULL CNY_AMT,/*折算后人民币在街口中单独处理*/
     DEALADD.SPO_SHARE_NUM NUM ,/*数量 */                                                                                
     '09' CUR_ASSET_TYPE，/*资金流动类型*/                                                                                 
     '零股折算现金' CUR_ASSETDET_TYPE，/*资金流动类型说明 */                                                                            
@@ -2917,10 +2961,23 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
 		,NVL(DEAL.TRADE_AMT,0) AMT /*发生金额*/ 
 		,NULL CNY_AMT/*折算人民币金额*/
 		,DEAL.SHARE_AMT NUM/*数量*/
-		,DECODE(DEAL.PS,'T01','01','T59','02','T60','02','T61','02')  CUR_ASSET_TYPE/*资金流动类型*/
-		,'无' CUR_ASSETDET_TYPE   /*资金流动类型说明*/
+		/****TOS-269 【交易信息登记-集成测试】：场外期权交易，交易信息登记不正确，详见描述 leipeng 20210227***/
+        ,CASE WHEN DEAL.TG_BUSI_TYPE = '145' THEN '10'
+        WHEN DEAL.TG_BUSI_TYPE = '146' THEN '09'
+        WHEN DEAL.TG_BUSI_TYPE IN ('148','149') AND DEAL.PS_PAYMENT = '01' THEN '09'
+        WHEN DEAL.TG_BUSI_TYPE IN ('148','149') AND DEAL.PS_PAYMENT = '02' THEN '10'
+        END  CUR_ASSET_TYPE/*资金流动类型*/
+        ,CASE WHEN DEAL.TG_BUSI_TYPE = '145' THEN '支付期权费用'
+        WHEN DEAL.TG_BUSI_TYPE = '146' THEN '卖方收取期权费用'
+        WHEN DEAL.TG_BUSI_TYPE IN ('148','149') AND DEAL.PS_PAYMENT = '01' THEN '场外期权收入'
+        WHEN DEAL.TG_BUSI_TYPE IN ('148','149') AND DEAL.PS_PAYMENT = '02' THEN '场外期权支出' end CUR_ASSETDET_TYPE   /*资金流动类型说明*/
+        /*,DECODE(DEAL.PS,'T01','01','T59','02','T60','02','T61','02')  CUR_ASSET_TYPE资金流动类型
+        ,'无' CUR_ASSETDET_TYPE   资金流动类型说明*/
+        /****TOS-269 【交易信息登记-集成测试】：场外期权交易，交易信息登记不正确，详见描述 leipeng 20210227***/
 		,DEAL.SETTLE_DATE DEALDATE /*交易日*/
-		,DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG) TRADE_COUNTER/*交易对手*/
+		,DECODE(DEAL.PS,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG,TOTALDEAL.COUNTER_ID) TRADE_COUNTER/*交易对手*/
+		/**		,DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG) TRADE_COUNTER/*交易对手*/***/		
+		/****TOS-269 【交易信息登记-集成测试】：场外期权交易，交易信息登记不正确，详见描述 leipeng 20210227***/		
 		,NULL UNIT_PRICE_FULL  /*单位成交价格（全价）*/
 		,NULL UNIT_PRICE_NET  /*单位成交价格（净价）*/
 		,DEAL.YIELD END_RATE   /*到期收益率*/
@@ -2960,16 +3017,22 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
 		    on deal.TOTLE_TRADE_ID = TOTALDEAL.TOTLE_TRADE_ID
 		    LEFT JOIN TRD_PRODUCT_DEAL_ADD DEALADD
 		    ON DEALADD.TRADE_ID = DEAL.TRADE_ID
-			left join MST_COUNTER_PARTY party on DECODE(DEAL.PS,'T01',NVL(DEAL.COUNTER_ID,TOTALDEAL.COUNTER_ID),'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG,NVL(SECASSET.REGIST_ORG,TOTALDEAL.COUNTER_ID)) = party.COUNTER_ID
-		    left join MST_COUNTER_PARTY party2 on DECODE(DEAL.PS,'T01',NVL(DEAL.COUNTER_ID,TOTALDEAL.COUNTER_ID),'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG,NVL(SECASSET.REGIST_ORG,TOTALDEAL.COUNTER_ID)) = party2.LINK_ID
-		    left join MST_COUNTER_PARTY party3 on DECODE(DEAL.PS,'T01',NVL(DEAL.COUNTER_ID,TOTALDEAL.COUNTER_ID),'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG,NVL(SECASSET.REGIST_ORG,TOTALDEAL.COUNTER_ID)) = party3.MANAGER_ID
-		 	LEFT JOIN DATA_AUTH_NOTIFY_INST T22 ON DEALADD.PORTFOLIO_ID = T22.BUSINESS_ID AND T22.DATA_TYPE = 'PTL01' AND T22.MODEL_TYPE='02'
+			/****TOS-269 【交易信息登记-集成测试】：场外期权交易，交易信息登记不正确，详见描述 leipeng 20210227***/
+			left join MST_COUNTER_PARTY party on DECODE(DEAL.PS,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG,TOTALDEAL.COUNTER_ID) = party.COUNTER_ID
+		    left join MST_COUNTER_PARTY party2 on DECODE(DEAL.PS,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG,TOTALDEAL.COUNTER_ID) = party2.LINK_ID
+		    left join MST_COUNTER_PARTY party3 on DECODE(DEAL.PS,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG,TOTALDEAL.COUNTER_ID) = party3.MANAGER_ID
+       		 /****TOS-269 【交易信息登记-集成测试】：场外期权交易，交易信息登记不正确，详见描述 leipeng 20210227***/		
+			LEFT JOIN DATA_AUTH_NOTIFY_INST T22 ON DEALADD.PORTFOLIO_ID = T22.BUSINESS_ID AND T22.DATA_TYPE = 'PTL01' AND T22.MODEL_TYPE='02'
 		    LEFT JOIN DATA_AUTH_NOTIFY_INST T23 ON nvl(party.counter_id,party2.counter_id) = T23.BUSINESS_ID AND T23.DATA_TYPE = 'MST15'
 		    AND T23.MODEL_TYPE='02' AND T22.INSTITUTION_CODE=T23.INSTITUTION_CODE
 		        WHERE 1=1
 		   and T23.INSTITUTION_CODE IS NOT NULL
 		      and DEAL.FINPROD_TYPE2='F35'
 		      AND nvl(deal.p_trade_id,'NOREV')='NOREV'/*不取撤销交易*/
+	        /****TOS-269 【交易信息登记-集成测试】：场外期权交易，交易信息登记不正确，详见描述 leipeng 20210227***/
+	        and NVL(DEAL.TRADE_AMT,0) > 0
+	        /****TOS-269 【交易信息登记-集成测试】：场外期权交易，交易信息登记不正确，详见描述 leipeng 20210227***/
+
 		    <![CDATA[AND( NVL(deal.UPDATE_TIME,deal.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
 		    <![CDATA[or NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
 		    <![CDATA[or NVL(secASSET.UPDATE_TIME,secASSET.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
@@ -4427,9 +4490,9 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
   DEAL.CCY CCY, /*币种*/
   DECODE(DEAL.PS, 'T01', 0, NVL(DEAL.TRADE_AMT, 0)) AMT, /*发生金额*/
   NULL CNY_AMT, /*折算人民币金额*/
-  /***利率互换存续期交易，数量字段取值不正确，改成取汇总交易表的REMAIN_PRIN字段**/
+      /***TOS-253 【交易信息登记-集成测试】：利率互换交易信息登记相关问题，详见附件 leipeng 20210225****/
       /*NVL(DEAL.SHARE_AMT, 0) NUM, 数量*/
-   NVL(TOTAL.REMAIN_PRIN, 0) NUM,
+      NVL(TOTAL.REMAIN_PRIN, 0) NUM,
   DECODE (DEAL.PS, 'T01', '01', 'T07', '02', 'T98', '09', 'T99', '10') CUR_ASSET_TYPE, /*资金流动类型*/
   CASE
     WHEN DEAL.PS = 'T98' THEN '利率互换利息收入'
@@ -4482,7 +4545,9 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
   FROM TRD_PRODUCT_DEAL DEAL
   LEFT JOIN TRD_PRODUCT_DEAL REVDL
     ON deal.TRADE_ID = REVDL.P_TRADE_ID
-    LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TOTAL ON DEAL.TOTLE_TRADE_ID=TOTAL.TOTLE_TRADE_ID
+      /***TOS-253 【交易信息登记-集成测试】：利率互换交易信息登记相关问题，详见附件 leipeng 20210225****/
+      LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TOTAL ON DEAL.TOTLE_TRADE_ID=TOTAL.TOTLE_TRADE_ID
+      /***TOS-253 【交易信息登记-集成测试】：利率互换交易信息登记相关问题，详见附件 leipeng 20210225****/
   LEFT JOIN TRD_PRODUCT_DEAL_ADD DEALADD
     ON DEALADD.TRADE_ID = DEAL.TRADE_ID
   LEFT JOIN FIN_PRODUCT PROJECTASSET
@@ -4498,6 +4563,9 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     <![CDATA[AND (NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
       <![CDATA[or NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
     and nvL(deal.p_trade_id,'NOREV') = 'NOREV'
+      /***TOS-253 【交易信息登记-集成测试】：利率互换交易信息登记相关问题，详见附件 leipeng 20210225****/
+      and deal.ps not in ('T01','T07')
+      /***TOS-253 【交易信息登记-集成测试】：利率互换交易信息登记相关问题，详见附件 leipeng 20210225****/
   /*债券借贷交易*/
   UNION ALL
   SELECT 
@@ -4672,138 +4740,167 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     <![CDATA[or NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
     AND nvl(deal.p_trade_id,'NOREV')='NOREV'/*不取撤销交易*/
     UNION ALL
-    /*债转股(债券卖出)*/ 
-    select 
-    NULL TRADE_SEQNO ,/*交易UUID*/                                                                                 
-    DEAL.TRADE_ID||'01'  TRADE_CODE,/*行内交易编码 */ 
-    '01' INVEST_VARIETY ,/*投资品种*/                                                                              
-    decode(DEAL.INV_AIM,'FVTPL','TRA','AC','HTM','FVOCI','AFS') INVEST_TYPE,/*投资类型/*投资目的 枚举值对应待处理TODO*/
-    DEALADD.PORTFOLIO_ID   PROD_ID ,         /* 产品代码 */
-    deal.regist_org REGIST_BANK_CODE,/*发行机构代码/*登记银行编码*/
-    DEAL.FINPROD_ID ASSET_CODE ,  /*行内资产/负债编码 */   
-    DEAL.CCY CCY ,/*币种 */ 
-    DEAL.SHARE_AMT*100-DEAL.TRADE_AMT AMT ,/*发生金额*/                                                                              
-    NULL CNY_AMT,/*折算后人民币在街口中单独处理*/                                                                            
-    DEAL.SHARE_AMT*100 NUM ,/*数量     */                                                                            
-    '02' CUR_ASSET_TYPE，/*资金流动类型 */                                                                                
-    '无' CUR_ASSETDET_TYPE，/*资金流动类型说明*/                                                                             
-    DEAL.SETTLE_DATE DEALDATE,   /*交易日  */
-    DEAL.COUNTER_ID TRADE_COUNTER, /*交易对手 */
-    (DEAL.SHARE_AMT*100-DEAL.TRADE_AMT)/DEAL.SHARE_AMT UNIT_PRICE_FULL  ,/*单位成交价格（全价）*/                                                                          
-    (DEAL.SHARE_AMT*100-DEAL.TRADE_AMT)/DEAL.SHARE_AMT UNIT_PRICE_NET ,/*单位成交价格（净价） */                                                                         
-    NULL END_RATE  ,/*到期收益率 */                                                                           
-    DEAL.TRADE_ID||'01' CONTRACT_CODE  ,/*成交编号/合同号 */                                                                          
-    NULL REMARK  ,/*备注   */                                                                         
-    NULL CHL_CPCT_ID ,/* 通道代码 */                                                                             
-    '01' TRADE_TYPE ,/*  交易类型   */                                                                      
-    NULL CHL_AGRT_NAME,/* 通道名称  */                                                                        
-    '02' IS_UNDER_TRADE ,/*是否底层交易流水 01 是/ 02 否 */                                                                          
-    DECODE(NVL(REVDL.TRADE_ID,'NCANCEL'),'NCANCEL','E','D') STATUS,/*数据状态 D 删除 A  待处理 E 有效 */                                                             
-    NULL ORG_CODE, /*机构代码  */                                                                     
-    NULL DEPT_CODE, /*部门代码 */                                                                  
-    deal.CREATE_USER CREATE_USER,   /*创建人 */                                                              
-    deal.CREATE_TIME CREATE_TIME,  /* 创建时间  */                                                                 
-    deal.UPDATE_USER UPDATE_USER,  /* 更新人  */                                                              
-    greatest(nvl(NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
-           nvl(NVL(secASSET.UPDATE_TIME,secASSET.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
-           nvl(NVL(TOTALDEAL.UPDATE_TIME,TOTALDEAL.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd'))
-           )  UPDATE_TIME,/*更新时间*/ 
-    NULL STATUS_DATE,/*数据日期*/ 
-    REVDL.create_time REV_DATE,/*撤销日*/                                                                
-    NULL DATA_SOURCE,                                                                            
-    NULL RATE,/*利率  */                                                                              
-    NULL BASIS ,  /*计息基础   */                                                                         
-    DEAL.PAR_VALUE FACEVALUE,/*面值  */   
-    '09' DEALTYPE ,/*交易类型 */     
-    deal.TOTLE_TRADE_ID TOTLE_TRADE_ID,
-    null INTPAYAMT,
-    null F_TRADE_ID
-    ,nvl(party.P_TYPE_TWO,nvl(party2.P_TYPE_TWO,party3.P_TYPE_TWO)) P_TYPE_TWO/*人行二级分类*/                                                                           
-    FROM TRD_PRODUCT_DEAL DEAL
-    LEFT JOIN TRD_PRODUCT_DEAL REVDL
-    ON deal.TRADE_ID = REVDL.P_TRADE_ID
-    LEFT JOIN FIN_PRODUCT secASSET
-    on deal.FINPROD_ID = secASSET.FINPROD_ID
-    LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TOTALDEAL
-    on deal.TOTLE_TRADE_ID = TOTALDEAL.TOTLE_TRADE_ID
-    LEFT JOIN TRD_PRODUCT_DEAL_ADD DEALADD
-    ON DEALADD.TRADE_ID = DEAL.TRADE_ID
-        left join MST_COUNTER_PARTY party on party.COUNTER_ID=DEAL.COUNTER_ID
-	left join MST_COUNTER_PARTY party2 on party2.LINK_ID=DEAL.COUNTER_ID
-		left join MST_COUNTER_PARTY party3 on party3.MANAGER_ID=DEAL.COUNTER_ID
-    where 1=1
-    and deal.PS='T49'
-    and deal.finprod_type2='F01'
-    and (ABS(nvl(deal.share_amt,0)) + ABS(nvl(deal.trade_amt,0)) != 0)/* 去除面额和金额同时为空的情况 */
-    <![CDATA[AND (NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
-    <![CDATA[or NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
-    UNION ALL                                                                           
-    /*-债转股(股票买入)*/                                                                                                                 
-    select 
-    NULL TRADE_SEQNO ,/*交易UUID */                                                                                
-    DEAL.TRADE_ID||'02'  TRADE_CODE,/*行内交易编码 */ 
-    '25' INVEST_VARIETY ,/*投资品种 */                                                                             
-    NULL INVEST_TYPE,/*投资类型/*投资目的 枚举值对应待处理TODO*/                                                                                                                                                                      
-    DEALADD.PORTFOLIO_ID   PROD_ID ,         /* 产品代码 */                                                                                
-    deal.regist_org REGIST_BANK_CODE,/*发行机构代码/*登记银行编码*/                                                                               
-    DEAL.FINPROD_ID ASSET_CODE ,  /*行内资产/负债编码 */   
-    secASSET.CCY CCY ,/*币种 */ 
-    DEAL.SHARE_AMT*100-DEAL.TRADE_AMT AMT ,/*发生金额*/                                                                              
-    NULL CNY_AMT,/*折算后人民币在街口中单独处理*/                                                                            
-    BARTER.SHARE_AMT NUM ,/*数量*/                                                                                 
-    '01' CUR_ASSET_TYPE，/*资金流动类型 */                                                                                
-    '无' CUR_ASSETDET_TYPE，/*资金流动类型说明 */                                                                            
-    DEAL.SETTLE_DATE DEALDATE,   /*交易日 */
-    DEAL.COUNTER_ID TRADE_COUNTER, /*交易对手 */
-    (DEAL.SHARE_AMT*100-DEAL.TRADE_AMT)/DEAL.SHARE_AMT UNIT_PRICE_FULL  ,/*单位成交价格（全价）*/                                                                          
-    (DEAL.SHARE_AMT*100-DEAL.TRADE_AMT)/DEAL.SHARE_AMT UNIT_PRICE_NET ,/*单位成交价格（净价） */                                                                         
-    NULL END_RATE  ,/*到期收益率  */                                                                          
-    DEAL.TRADE_ID||'02' CONTRACT_CODE  ,/*成交编号/合同号  */                                                                         
-    NULL REMARK  ,/*备注   */                                                                         
-    NULL CHL_CPCT_ID ,/* 通道代码  */                                                                            
-    '01' TRADE_TYPE ,/*  交易类型  */                                                                       
-    NULL CHL_AGRT_NAME,/* 通道名称 */                                                                         
-    '02' IS_UNDER_TRADE ,/*是否底层交易流水 01 是/ 02 否 */                                                                          
-    DECODE(NVL(REVDL.TRADE_ID,'NCANCEL'),'NCANCEL','E','D') STATUS,/*数据状态 D 删除 A  待处理 E 有效   */                                                           
-    NULL ORG_CODE, /*机构代码 */                                                                      
-    NULL DEPT_CODE, /*部门代码  */                                                                 
-    deal.CREATE_USER CREATE_USER,   /*创建人 */                                                              
-    deal.CREATE_TIME CREATE_TIME,  /* 创建时间 */                                                                  
-    deal.UPDATE_USER UPDATE_USER,  /* 更新人  */                                                              
-    greatest(nvl(NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
-           nvl(NVL(secASSET.UPDATE_TIME,secASSET.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
-           nvl(NVL(TOTALDEAL.UPDATE_TIME,TOTALDEAL.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd'))
-           )  UPDATE_TIME,/*更新时间*/ 
-    NULL STATUS_DATE,/*数据日期*/ 
-    REVDL.create_time REV_DATE,/*撤销日*/                                                                
-    NULL DATA_SOURCE,                                                                            
-    NULL RATE,/*利率  */                                                                              
-    NULL BASIS ,  /*计息基础  */                                                                          
-    NULL FACEVALUE,/*面值   */  
-    '08' DEALTYPE ,/*交易类型 */     
-    deal.TOTLE_TRADE_ID TOTLE_TRADE_ID,
-    null INTPAYAMT,
-    null F_TRADE_ID   
-    ,nvl(party.P_TYPE_TWO,nvl(party2.P_TYPE_TWO,party3.P_TYPE_TWO)) P_TYPE_TWO/*人行二级分类*/                                                                       
-    FROM TRD_PRODUCT_DEAL DEAL
-    left join TRD_FIN_PRODUCT_BARTER BARTER
-    on deal.TRADE_ID=BARTER.TRADE_ID
-    LEFT JOIN TRD_PRODUCT_DEAL REVDL
-    ON deal.TRADE_ID = REVDL.P_TRADE_ID
-    LEFT JOIN FIN_PRODUCT secASSET
-    on BARTER.FINPROD_ID = secASSET.FINPROD_ID
-    LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TOTALDEAL
-    on deal.TOTLE_TRADE_ID = TOTALDEAL.TOTLE_TRADE_ID
-    LEFT JOIN TRD_PRODUCT_DEAL_ADD DEALADD
-    ON DEALADD.TRADE_ID = DEAL.TRADE_ID
-        left join MST_COUNTER_PARTY party on party.COUNTER_ID=DEAL.COUNTER_ID
-	left join MST_COUNTER_PARTY party2 on party2.LINK_ID=DEAL.COUNTER_ID
-		left join MST_COUNTER_PARTY party3 on party3.MANAGER_ID=DEAL.COUNTER_ID
-    where 1=1
-    and BARTER.TRADE_ID is not null /*存了一条股票的记录*/ 
-    and deal.PS='T49'
-    and deal.finprod_type2='F01'
-    and (ABS(nvl(deal.share_amt,0)) + ABS(nvl(deal.trade_amt,0)) != 0)/* 去除面额和金额同时为空的情况 */
+      /*债转股(债券卖出)*/
+      select
+      NULL TRADE_SEQNO ,/*交易UUID*/
+      DEAL.TRADE_ID||'01'  TRADE_CODE,/*行内交易编码 */
+      '01' INVEST_VARIETY ,/*投资品种*/
+      decode(DEAL.INV_AIM,'FVTPL','TRA','AC','HTM','FVOCI','AFS') INVEST_TYPE,/*投资类型/*投资目的 枚举值对应待处理TODO*/
+      DEALADD.PORTFOLIO_ID   PROD_ID ,         /* 产品代码 */
+      deal.regist_org REGIST_BANK_CODE,/*发行机构代码/*登记银行编码*/
+      DEAL.FINPROD_ID ASSET_CODE ,  /*行内资产/负债编码 */
+      DEAL.CCY CCY ,/*币种 */
+      /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
+      BARTER.PRIN_AMT AMT ,/*发生金额  */
+      /* DEAL.SHARE_AMT*100-DEAL.TRADE_AMT AMT,发生金额  */
+      /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
+      NULL CNY_AMT,/*折算后人民币在街口中单独处理*/
+      DEAL.SHARE_AMT*100 NUM ,/*数量     */
+      '02' CUR_ASSET_TYPE，/*资金流动类型 */
+      '无' CUR_ASSETDET_TYPE，/*资金流动类型说明*/
+
+      /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
+      DEAL.TRADE_DATE DEALDATE,   /*交易日  */
+      /*DEAL.SETTLE_DATE DEALDATE,   交易日  */
+      /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
+      DEAL.COUNTER_ID TRADE_COUNTER, /*交易对手 */
+      (DEAL.SHARE_AMT*100-DEAL.TRADE_AMT)/DEAL.SHARE_AMT UNIT_PRICE_FULL  ,/*单位成交价格（全价）*/
+      (DEAL.SHARE_AMT*100-DEAL.TRADE_AMT)/DEAL.SHARE_AMT UNIT_PRICE_NET ,/*单位成交价格（净价） */
+      NULL END_RATE  ,/*到期收益率 */
+      DEAL.TRADE_ID||'01' CONTRACT_CODE  ,/*成交编号/合同号 */
+      NULL REMARK  ,/*备注   */
+      NULL CHL_CPCT_ID ,/* 通道代码 */
+      '01' TRADE_TYPE ,/*  交易类型   */
+      NULL CHL_AGRT_NAME,/* 通道名称  */
+      '02' IS_UNDER_TRADE ,/*是否底层交易流水 01 是/ 02 否 */
+      DECODE(NVL(REVDL.TRADE_ID,'NCANCEL'),'NCANCEL','E','D') STATUS,/*数据状态 D 删除 A  待处理 E 有效 */
+      NULL ORG_CODE, /*机构代码  */
+      NULL DEPT_CODE, /*部门代码 */
+      deal.CREATE_USER CREATE_USER,   /*创建人 */
+      deal.CREATE_TIME CREATE_TIME,  /* 创建时间  */
+      deal.UPDATE_USER UPDATE_USER,  /* 更新人  */
+      greatest(nvl(NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+      nvl(NVL(secASSET.UPDATE_TIME,secASSET.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+      nvl(NVL(TOTALDEAL.UPDATE_TIME,TOTALDEAL.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd'))
+      )  UPDATE_TIME,/*更新时间*/
+      NULL STATUS_DATE,/*数据日期*/
+      REVDL.create_time REV_DATE,/*撤销日*/
+      NULL DATA_SOURCE,
+      NULL RATE,/*利率  */
+      NULL BASIS ,  /*计息基础   */
+      DEAL.PAR_VALUE FACEVALUE,/*面值  */
+      '09' DEALTYPE ,/*交易类型 */
+      deal.TOTLE_TRADE_ID TOTLE_TRADE_ID,
+      null INTPAYAMT,
+      null F_TRADE_ID
+      ,nvl(party.P_TYPE_TWO,nvl(party2.P_TYPE_TWO,party3.P_TYPE_TWO)) P_TYPE_TWO/*人行二级分类*/
+      FROM TRD_PRODUCT_DEAL DEAL
+      /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
+      left join TRD_FIN_PRODUCT_BARTER BARTER
+      on deal.TRADE_ID=BARTER.TRADE_ID
+      /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
+      LEFT JOIN TRD_PRODUCT_DEAL REVDL
+      ON deal.TRADE_ID = REVDL.P_TRADE_ID
+      LEFT JOIN FIN_PRODUCT secASSET
+      on deal.FINPROD_ID = secASSET.FINPROD_ID
+      LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TOTALDEAL
+      on deal.TOTLE_TRADE_ID = TOTALDEAL.TOTLE_TRADE_ID
+      LEFT JOIN TRD_PRODUCT_DEAL_ADD DEALADD
+      ON DEALADD.TRADE_ID = DEAL.TRADE_ID
+      left join MST_COUNTER_PARTY party on party.COUNTER_ID=DEAL.COUNTER_ID
+      left join MST_COUNTER_PARTY party2 on party2.LINK_ID=DEAL.COUNTER_ID
+      left join MST_COUNTER_PARTY party3 on party3.MANAGER_ID=DEAL.COUNTER_ID
+      where 1=1
+      and BARTER.TRADE_ID is not null /*存了一条股票的记录*/
+      and deal.PS='T49'
+      and deal.finprod_type2='F01'
+      and (ABS(nvl(deal.share_amt,0)) + ABS(nvl(deal.trade_amt,0)) != 0)/* 去除面额和金额同时为空的情况 */
+      <![CDATA[AND (NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+      <![CDATA[or NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
+      UNION ALL
+      /*-债转股(股票买入)*/
+      select
+      NULL TRADE_SEQNO ,/*交易UUID */
+      DEAL.TRADE_ID||'02'  TRADE_CODE,/*行内交易编码 */
+      '25' INVEST_VARIETY ,/*投资品种 */
+      NULL INVEST_TYPE,/*投资类型/*投资目的 枚举值对应待处理TODO*/
+      DEALADD.PORTFOLIO_ID   PROD_ID ,         /* 产品代码 */
+      deal.regist_org REGIST_BANK_CODE,/*发行机构代码/*登记银行编码*/
+      /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
+      secASSET.Finprod_Id ASSET_CODE ,  /*行内资产/负债编码 */
+      /*DEAL.FINPROD_ID ASSET_CODE ,  行内资产/负债编码 */
+      /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
+      secASSET.CCY CCY ,/*币种 */
+
+      /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
+      BARTER.PRIN_AMT AMT ,/*发生金额  */
+      /* DEAL.SHARE_AMT*100-DEAL.TRADE_AMT AMT,发生金额  */
+      /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
+      NULL CNY_AMT,/*折算后人民币在街口中单独处理*/
+      BARTER.SHARE_AMT NUM ,/*数量*/
+      '01' CUR_ASSET_TYPE，/*资金流动类型 */
+      '无' CUR_ASSETDET_TYPE，/*资金流动类型说明 */
+      /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
+      DEAL.TRADE_DATE DEALDATE,   /*交易日  */
+      /*DEAL.SETTLE_DATE DEALDATE,   交易日  */
+      /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
+      DEAL.COUNTER_ID TRADE_COUNTER, /*交易对手 */
+
+      /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
+      BARTER.UNIT_CPRICE    UNIT_PRICE_FULL  ,/*单位成交价格（全价）*/
+      BARTER.UNIT_CPRICE    UNIT_PRICE_NET ,/*单位成交价格（净价） */
+      /*(DEAL.SHARE_AMT*100-DEAL.TRADE_AMT)/DEAL.SHARE_AMT UNIT_PRICE_FULL  ,单位成交价格（全价）*/
+      /*(DEAL.SHARE_AMT*100-DEAL.TRADE_AMT)/DEAL.SHARE_AMT UNIT_PRICE_NET ,单位成交价格（净价） */
+      /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
+      NULL END_RATE  ,/*到期收益率  */
+      DEAL.TRADE_ID||'02' CONTRACT_CODE  ,/*成交编号/合同号  */
+      NULL REMARK  ,/*备注   */
+      NULL CHL_CPCT_ID ,/* 通道代码  */
+      '01' TRADE_TYPE ,/*  交易类型  */
+      NULL CHL_AGRT_NAME,/* 通道名称 */
+      '02' IS_UNDER_TRADE ,/*是否底层交易流水 01 是/ 02 否 */
+      DECODE(NVL(REVDL.TRADE_ID,'NCANCEL'),'NCANCEL','E','D') STATUS,/*数据状态 D 删除 A  待处理 E 有效   */
+      NULL ORG_CODE, /*机构代码 */
+      NULL DEPT_CODE, /*部门代码  */
+      deal.CREATE_USER CREATE_USER,   /*创建人 */
+      deal.CREATE_TIME CREATE_TIME,  /* 创建时间 */
+      deal.UPDATE_USER UPDATE_USER,  /* 更新人  */
+      greatest(nvl(NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+      nvl(NVL(secASSET.UPDATE_TIME,secASSET.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),
+      nvl(NVL(TOTALDEAL.UPDATE_TIME,TOTALDEAL.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd'))
+      )  UPDATE_TIME,/*更新时间*/
+      NULL STATUS_DATE,/*数据日期*/
+      REVDL.create_time REV_DATE,/*撤销日*/
+      NULL DATA_SOURCE,
+      NULL RATE,/*利率  */
+      NULL BASIS ,  /*计息基础  */
+      NULL FACEVALUE,/*面值   */
+      '08' DEALTYPE ,/*交易类型 */
+      deal.TOTLE_TRADE_ID TOTLE_TRADE_ID,
+      null INTPAYAMT,
+      null F_TRADE_ID
+      ,nvl(party.P_TYPE_TWO,nvl(party2.P_TYPE_TWO,party3.P_TYPE_TWO)) P_TYPE_TWO/*人行二级分类*/
+      FROM TRD_PRODUCT_DEAL DEAL
+      left join TRD_FIN_PRODUCT_BARTER BARTER
+      on deal.TRADE_ID=BARTER.TRADE_ID
+      LEFT JOIN TRD_PRODUCT_DEAL REVDL
+      ON deal.TRADE_ID = REVDL.P_TRADE_ID
+      LEFT JOIN FIN_PRODUCT secASSET
+      on BARTER.FINPROD_ID = secASSET.FINPROD_ID
+      LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TOTALDEAL
+      on deal.TOTLE_TRADE_ID = TOTALDEAL.TOTLE_TRADE_ID
+      LEFT JOIN TRD_PRODUCT_DEAL_ADD DEALADD
+      ON DEALADD.TRADE_ID = DEAL.TRADE_ID
+      left join MST_COUNTER_PARTY party on party.COUNTER_ID=DEAL.COUNTER_ID
+      left join MST_COUNTER_PARTY party2 on party2.LINK_ID=DEAL.COUNTER_ID
+      left join MST_COUNTER_PARTY party3 on party3.MANAGER_ID=DEAL.COUNTER_ID
+      where 1=1
+      and BARTER.TRADE_ID is not null /*存了一条股票的记录*/
+      and deal.PS='T49'
+      and deal.finprod_type2='F01'
+      and (ABS(nvl(deal.share_amt,0)) + ABS(nvl(deal.trade_amt,0)) != 0)/* 去除面额和金额同时为空的情况 */
+      <![CDATA[AND (NVL(DEAL.UPDATE_TIME,DEAL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+      <![CDATA[or NVL(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
     UNION ALL 
     /*债转股(投资收益)*/ 
     select 
