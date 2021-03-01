@@ -2707,7 +2707,8 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                             yieldPriceInParameter.setNextExePrice(secInfoModelDto.getNextExercisePrice());
                             if (yieldPriceInParameter.getNextExePrice() != null) {
                                 yieldPriceOutParameter = yieldByPriceCalculator.calculate(yieldPriceInParameter);
-                                dto.setExerYield(yieldPriceOutParameter.getMatYield());
+//                                dto.setExerYield(yieldPriceOutParameter.getMatYield());
+                                dto.setExerYield(yieldPriceOutParameter.getExeYield());
                             }
                             else {
                                 dto.setExerYield(null);
