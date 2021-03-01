@@ -23,6 +23,8 @@ public class InvestmentBusinessCounterDetailsDto {
 	private BigDecimal sessionendNum;
 	// 表七上季末数额
 	private BigDecimal lastSessionendNum;
+	//表七城商行主动管理类业务余额
+	private BigDecimal zdSessionendNum;
 	//表七穿透后非标债权资产余额
 	private BigDecimal fbSessionendNum;
 
@@ -33,6 +35,8 @@ public class InvestmentBusinessCounterDetailsDto {
 	private BigDecimal xtSessionendNum;
 	// 表七上季末数额-信托公司
 	private BigDecimal xtLastSessionendNum;
+	//表7城商行主动管理类业务余额
+	private BigDecimal xtZdSessionendNum;
 	//表七穿透后非标债权资产余额-信托公司
 	private BigDecimal xtFbSessionendNum;
 
@@ -42,6 +46,8 @@ public class InvestmentBusinessCounterDetailsDto {
 	private BigDecimal zqqhSessionendNum;
 	// 表七上季末数额-证券期货公司及其子公司
 	private BigDecimal zqqhLastSessionendNum;
+	//表7城商行主动管理类业务余额
+	private BigDecimal zqqhZdSessionendNum;
 	//表七穿透后非标债权资产余额-证券期货公司及其子公司
 	private BigDecimal zqqhFbSessionendNum;
 
@@ -51,6 +57,8 @@ public class InvestmentBusinessCounterDetailsDto {
 	private BigDecimal zqjjSessionendNum;
 	// 表七上季末数额-证券投资基金（公募基金）及其子公司（含公募基金专户）
 	private BigDecimal zqjjLastSessionendNum;
+	//表7城商行主动管理类业务余额
+	private BigDecimal zqjjZdSessionendNum;
 	//表七穿透后非标债权资产余额-证券投资基金（公募基金）及其子公司（含公募基金专户）
 	private BigDecimal zqjjFbSessionendNum;
 
@@ -60,6 +68,8 @@ public class InvestmentBusinessCounterDetailsDto {
 	private BigDecimal yhSessionendNum;
 	// 表七上季末数额-政策性银行、商业银行（含农商行、农信社、村镇银行|农村合作银行）及其理财子公司
 	private BigDecimal yhLastSessionendNum;
+	//表7城商行主动管理类业务余额
+	private BigDecimal yhZdSessionendNum;
 	//表七穿透后非标债权资产余额-政策性银行、商业银行（含农商行、农信社、村镇银行|农村合作银行）及其理财子公司
 	private BigDecimal yhFbSessionendNum;
 
@@ -69,6 +79,8 @@ public class InvestmentBusinessCounterDetailsDto {
 	private BigDecimal bxSessionendNum;
 	// 表七上季末数额-保险及其资管公司、私募基金、地方金融资产交易所等其他金融机构
 	private BigDecimal bxLastSessionendNum;
+	//表7城商行主动管理类业务余额
+	private BigDecimal bxZdSessionendNum;
 	//表七穿透后非标债权资产余额-保险及其资管公司、私募基金、地方金融资产交易所等其他金融机构
 	private BigDecimal bxFbSessionendNum;
 
@@ -304,5 +316,53 @@ public class InvestmentBusinessCounterDetailsDto {
 
 	public void setBxFbSessionendNum(BigDecimal bxFbSessionendNum) {
 		this.bxFbSessionendNum = bxFbSessionendNum;
+	}
+
+	public BigDecimal getXtZdSessionendNum() {
+		return xtZdSessionendNum;
+	}
+
+	public void setXtZdSessionendNum(BigDecimal xtZdSessionendNum) {
+		this.xtZdSessionendNum = xtZdSessionendNum;
+	}
+
+	public BigDecimal getZqqhZdSessionendNum() {
+		return zqqhZdSessionendNum;
+	}
+
+	public void setZqqhZdSessionendNum(BigDecimal zqqhZdSessionendNum) {
+		this.zqqhZdSessionendNum = zqqhZdSessionendNum;
+	}
+
+	public BigDecimal getZqjjZdSessionendNum() {
+		return zqjjZdSessionendNum;
+	}
+
+	public void setZqjjZdSessionendNum(BigDecimal zqjjZdSessionendNum) {
+		this.zqjjZdSessionendNum = zqjjZdSessionendNum;
+	}
+
+	public BigDecimal getYhZdSessionendNum() {
+		return yhZdSessionendNum;
+	}
+
+	public void setYhZdSessionendNum(BigDecimal yhZdSessionendNum) {
+		this.yhZdSessionendNum = yhZdSessionendNum;
+	}
+
+	public BigDecimal getBxZdSessionendNum() {
+		return bxZdSessionendNum;
+	}
+
+	public void setBxZdSessionendNum(BigDecimal bxZdSessionendNum) {
+		this.bxZdSessionendNum = bxZdSessionendNum;
+	}
+
+	public BigDecimal getZdSessionendNum() {
+		return zdSessionendNum;
+	}
+
+	public void setZdSessionendNum(BigDecimal zdSessionendNum) {
+		this.zdSessionendNum = zdSessionendNum;
 	}
 }

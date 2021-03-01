@@ -85,6 +85,13 @@ public interface InvestmentBusinessDetailsMapper {
 	InvestmentBusinessDetailsDto queryBottomTable3AddXj(Map<String,Object> map);
 	InvestmentBusinessDetailsDto queryBottomTable3AddSum(Map<String,Object> map);
 
+	/**
+	 * 表3中非金融企业债券
+	 * @param map
+	 * @return
+	 */
+	InvestmentBusinessDetailsDto queryBottomInfoAmountFjr(Map<String,Object> map);
+
 
 
 }

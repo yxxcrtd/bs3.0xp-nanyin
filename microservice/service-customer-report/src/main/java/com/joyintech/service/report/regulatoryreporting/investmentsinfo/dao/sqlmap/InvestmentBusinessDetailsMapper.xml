@@ -335,7 +335,6 @@
 
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 		AND INFO.ASSET_TYPE2 IN ('1106', '2401', '1303', '2403','2402','2499')
-		AND ((INFO.IS_GOVERN_FUND is not null and INFO.IS_GOVERN_FUND!='01' ) or INFO.IS_GOVERN_FUND is  null)
 		) AS indInvestmentAmount,
 		(
 		SELECT
@@ -346,7 +345,6 @@
 
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
 		AND INFO.ASSET_TYPE2 IN ('1106', '2401', '1303', '2403','2402','2499')
-		AND ((INFO.IS_GOVERN_FUND is not null and INFO.IS_GOVERN_FUND!='01' ) or INFO.IS_GOVERN_FUND is  null)
 		) AS lastIndInvestmentAmount,
 		(
 		SELECT
@@ -553,80 +551,6 @@
 		(
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
-		FROM CHB_MONTH_ASSET_POSITION CMAP
-		LEFT JOIN CHB_ASSET_INFO INFO
-		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
-		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
-
-		WHERE 1=1
-		<if test="startDate != null  ">
-			and CMAP.STARTDATE = #{startDate, jdbcType = DATE}
-		</if>
-		AND INFO.ASSET_TYPE2 IN ('1106', '2401', '1303', '2403','2402','2499')
-		<if test="modetype != null  and modetype.equals('40')">
-			and INFO.IS_GOVERN_FUND='01'
-			and mst.IS_GOV='Y'
-		</if>
-		<if test="modetype != null  and modetype.equals('41')">
-			and INFO.IS_GOVERN_FUND='01'
-			and mst.PARTY_TYPE2='01'
-		</if>
-		<if test="modetype != null  and modetype.equals('43')">
-			and mst.INDUSTRY in ('04','07','14')
-		</if>
-		<if test="modetype != null  and modetype.equals('44')">
-			and mst.IS_FIN_LICENCE='N'
-			<if test="provinces!=null and provinces.size>0">
-				and  mst.PROVINCE not in
-				<foreach collection="provinces" item="province" open="("
-						 separator="," close=")">
-					#{province,jdbcType=VARCHAR}
-				</foreach>
-			</if>
-		</if>
-
-		) AS indInvestmentAmount,
-		(
-		SELECT
-		NVL(SUM(CMAP.ASSETVALUE_B), 0)
-		FROM CHB_MONTH_ASSET_POSITION CMAP
-		LEFT JOIN CHB_ASSET_INFO INFO
-		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
-		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
-
-		WHERE 1=1
-		<if test="lastStartDate != null">
-			and CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
-		</if>
-		AND INFO.ASSET_TYPE2 IN ('1106', '2401', '1303', '2403','2402','2499')
-		<if test="modetype != null  and modetype.equals('40')">
-			and INFO.IS_GOVERN_FUND='01'
-			and mst.IS_GOV='Y'
-		</if>
-		<if test="modetype != null  and modetype.equals('41')">
-			and INFO.IS_GOVERN_FUND='01'
-			and mst.PARTY_TYPE2='01'
-		</if>
-		<if test="modetype != null  and modetype.equals('43')">
-			and mst.INDUSTRY in ('04','07','14')
-		</if>
-		<if test="modetype != null  and modetype.equals('44')">
-			and mst.IS_FIN_LICENCE='N'
-			<if test="provinces!=null and provinces.size>0">
-				and  mst.PROVINCE not in
-				<foreach collection="provinces" item="province" open="("
-						 separator="," close=")">
-					#{province,jdbcType=VARCHAR}
-				</foreach>
-			</if>
-		</if>
-
-		) AS lastIndInvestmentAmount,
-		(
-		SELECT
-		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM  CHB_MONTH_ASSET_POSITION CMAP
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
@@ -637,8 +561,7 @@
 		<if test="startDate != null  ">
 			and CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 		</if>
-		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305')
-
+		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305','1106', '2401', '1303', '2403','2402','2499')
 		<if test="modetype != null  and modetype.equals('40')">
 			and mst.IS_GOV='Y'
 		</if>
@@ -673,7 +596,7 @@
 		 <if test="lastStartDate != null">
 		and CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
 	    </if>
-		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305')
+		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305','1106', '2401', '1303', '2403','2402','2499')
 		<if test="modetype != null  and modetype.equals('40')">
 			and mst.IS_GOV='Y'
 		</if>
@@ -715,7 +638,7 @@
 		<if test="startDate != null">
 			and CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 		</if>
-		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305')
+		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305','1106', '2401', '1303', '2403','2402','2499')
 		<if test="modetype != null  and modetype.equals('40')">
 			and mst.IS_GOV='Y'
 		</if>
@@ -1140,6 +1063,36 @@
 		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305')
 
 		) AS lastOtherAmount
+		FROM DUAL
+	</select>
+	<select id="queryBottomInfoAmountFjr" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
+			parameterType="map">
+		SELECT
+		't3_15_amt' propertycode,
+		(
+		SELECT
+		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
+		AND mst.INDUSTRY IS NOT NULL　and  mst.INDUSTRY !='10'
+		and info.asset_type2 in  ('1113', '1114', '1115')
+		) AS sessionendNum,
+		(
+		SELECT
+		NVL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
+		AND mst.INDUSTRY IS NOT NULL　and  mst.INDUSTRY !='10'
+		and info.asset_type2 in  ('1113', '1114', '1115')
+		) AS lastSessionendNum
 		FROM DUAL
 	</select>
 

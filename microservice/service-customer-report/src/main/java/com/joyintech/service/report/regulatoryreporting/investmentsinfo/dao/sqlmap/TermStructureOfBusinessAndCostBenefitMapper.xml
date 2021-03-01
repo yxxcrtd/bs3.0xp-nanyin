@@ -572,6 +572,30 @@ with cj as(
 	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
 	and base.operate_mode in ('03','04')
  	and base.opendayp>1096
+
+	union all
+	select '10' days, cp.ENDAMTSUM_OTH
+	from CHB_MONTH_PRD_POSITION cp
+	where cp.ENDDATE=#{endDate,jdbcType=DATE}
+	and cp.termtype in ('01','02','03','04','05','06','07')
+
+	union all
+	select  '10' days, cp.ENDAMTSUM_OTH
+	from chb_month_prd_position cp
+	left join chb_prd_baseinfo base
+	on cp.prodid=base.prod_id
+	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
+	and  base.operate_mode in ('01','02')
+	and base.mdate-base.vdate>1096
+
+	union all
+	select  '10' days, cp.ENDAMTSUM_OTH
+	from chb_month_prd_position cp
+	left join chb_prd_baseinfo base
+	on cp.prodid=base.prod_id
+	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
+	and base.operate_mode in ('03','04')
+	and base.opendayp>1096
 	)
 	group by days
 	)a
@@ -593,15 +617,20 @@ with cj as(
 	<if test="valconfig != null  and valconfig.equals('02')">
 	select distinct cr.prod_id as prodid,
     decode (cr.profit_type,'02',cr.prod_yield,'03',cr.seven_day_rate,'01',
-   case when base.mdate-base.vdate<![CDATA[<=]]>365 and crmin.unit_value is not null and crmin.unit_value !=0 then
+   case when 　base.vdate　<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}　
+		and crmin.unit_value is not null and crmin.unit_value !=0 then
       (crmax.unit_value-crmin.unit_value)/crmin.unit_value/(#{endDate,jdbcType=DATE}-crmin.change_date+1)*365
-    when base.mdate-base.vdate<![CDATA[<=]]>365 and crmin.unit_value is  null  then 0
-    when base.mdate-base.vdate>365 and crlastmax.unit_value_total!=null  and crmin.unit_value_total !=0  then
-     (crmax.unit_value_total-crlastmax.unit_value_total)/crlastmax.unit_value_total
-    when base.mdate-base.vdate>365 and crlastmax.unit_value_total is null
+    when base.vdate　<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}　 and crmin.unit_value is  null  then 0
+
+		when base.vdate　<![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and crlastmax.unit_value_total!=null  and crmin.unit_value_total !=0
+		then (crmax.unit_value_total-crlastmax.unit_value_total)/crlastmax.unit_value_total/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)*365
+
+
+		when base.vdate　<![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and crlastmax.unit_value_total is null
       and   crmin.unit_value is not null  and crmin.unit_value !=0 then
       (crmax.unit_value-crmin.unit_value)/crmin.unit_value/(#{endDate,jdbcType=DATE}-crmin.change_date+1)*365
-     when base.mdate-base.vdate>365 and crlastmax.unit_value_total is null  and   crmin.unit_value is  null then 0
+
+		when base.vdate　<![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and crlastmax.unit_value_total is null  and   crmin.unit_value is  null then 0
     end ) as prodRate
    from chb_prd_rate cr
 	left join chb_prd_baseinfo base
@@ -619,7 +648,7 @@ with cj as(
 
     left join (select cr1.prod_id,cr1.unit_value,cr1.unit_value_total,cr1.change_date from chb_prd_rate cr1
    where cr1.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr1.prod_id
-	and fc1.change_date<![CDATA[<]]>#{lastYearDate,jdbcType=DATE}))crlastmax
+	and fc1.change_date<![CDATA[<]]>#{yearStartDate,jdbcType=DATE}))crlastmax
 	on cr.prod_id=crlastmax.prod_id
 
 	where 1=1 and cr.change_type in ('01','02')
@@ -636,16 +665,22 @@ with cj as(
   	  when cp.termtype ='05' then '03'
       when cp.termtype ='06' then '04'
       when cp.termtype ='07' then '05'
-	end days, cp.ENDAMTSUM_OTH as amt,cp.prodid
+	end days, nvl(cp.ENDAMTSUM_OTH,0)-nvl(scp.ENDAMTSUM_OTH,0) as amt,cp.prodid
 	from CHB_MONTH_PRD_POSITION cp
+		left join CHB_MONTH_PRD_POSITION scp
+		on cp.prodid=scp.prodid
+		and scp.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
 	where cp.ENDDATE=#{endDate,jdbcType=DATE}
 	and cp.termtype in ('01','02','03','04','05','06','07')
 
     union all
     select case
 	when base.mdate-base.vdate>1096 and base.mdate-base.vdate<![CDATA[<=]]>1827 then '06'
-	when base.mdate-base.vdate>1827 then '07' end days, cp.ENDAMTSUM_OTH as amt,cp.prodid
+	when base.mdate-base.vdate>1827 then '07' end days, nvl(cp.ENDAMTSUM_OTH,0)-nvl(scp.ENDAMTSUM_OTH,0) as amt,cp.prodid
   	from chb_month_prd_position cp
+		left join CHB_MONTH_PRD_POSITION scp
+		on cp.prodid=scp.prodid
+		and scp.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
 	left join chb_prd_baseinfo base
 	on cp.prodid=base.prod_id
 	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
@@ -655,14 +690,49 @@ with cj as(
 	union all
 	select case
 		when base.opendayp>1096 and base.opendayp<![CDATA[<=]]>1827 then '06'
-		when base.opendayp>1827 then '07' end days, cp.ENDAMTSUM_OTH as amt,cp.prodid
+		when base.opendayp>1827 then '07' end days, nvl(cp.ENDAMTSUM_OTH,0)-nvl(scp.ENDAMTSUM_OTH,0) as amt,cp.prodid
 	from chb_month_prd_position cp
+		left join CHB_MONTH_PRD_POSITION scp
+		on cp.prodid=scp.prodid
+		and scp.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
 	left join chb_prd_baseinfo base
 	on cp.prodid=base.prod_id
 	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
 	and base.operate_mode in ('03','04')
  	and base.opendayp>1096
+　　　
+		union all
+		select '10' days, nvl(cp.ENDAMTSUM_OTH,0)-nvl(scp.ENDAMTSUM_OTH,0) as amt,cp.prodid
+		from CHB_MONTH_PRD_POSITION cp
+		left join CHB_MONTH_PRD_POSITION scp
+		on cp.prodid=scp.prodid
+		and scp.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
+		where cp.ENDDATE=#{endDate,jdbcType=DATE}
+		and cp.termtype in ('01','02','03','04','05','06','07')
 
+		union all
+		select '10'  days, nvl(cp.ENDAMTSUM_OTH,0)-nvl(scp.ENDAMTSUM_OTH,0) as amt,cp.prodid
+		from chb_month_prd_position cp
+		left join CHB_MONTH_PRD_POSITION scp
+		on cp.prodid=scp.prodid
+		and scp.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
+		left join chb_prd_baseinfo base
+		on cp.prodid=base.prod_id
+		where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
+		and  base.operate_mode in ('01','02')
+		and base.mdate-base.vdate>1096
+
+		union all
+		select '10'  days, nvl(cp.ENDAMTSUM_OTH,0)-nvl(scp.ENDAMTSUM_OTH,0) as amt,cp.prodid
+		from chb_month_prd_position cp
+		left join CHB_MONTH_PRD_POSITION scp
+		on cp.prodid=scp.prodid
+		and scp.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
+		left join chb_prd_baseinfo base
+		on cp.prodid=base.prod_id
+		where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
+		and base.operate_mode in ('03','04')
+		and base.opendayp>1096
 	)
 	,possum as(
 	select end.days as days,sum(nvl(end.amt,0)) as sumamt
@@ -705,15 +775,20 @@ with cj as(
 	<if test="valconfig != null  and valconfig.equals('02')">
 	select distinct cr.prod_id as prodid,
     decode (cr.profit_type,'02',cr.prod_yield,'03',cr.seven_day_rate,'01',
-   case when base.mdate-base.vdate<![CDATA[<=]]>365 and crmin.unit_value is not null and crmin.unit_value !=0 then
+
+   case when base.vdate　<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}　 and crmin.unit_value is not null and crmin.unit_value !=0 then
       (crmax.unit_value-crmin.unit_value)/crmin.unit_value/(#{endDate,jdbcType=DATE}-crmin.change_date+1)*365
-    when base.mdate-base.vdate<![CDATA[<=]]>365 and crmin.unit_value is  null  then 0
-    when base.mdate-base.vdate>365 and crlastmax.unit_value_total!=null  and crmin.unit_value_total !=0  then
-     (crmax.unit_value_total-crlastmax.unit_value_total)/crlastmax.unit_value_total
-    when base.mdate-base.vdate>365 and crlastmax.unit_value_total is null
+
+    when base.vdate　<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}　 and crmin.unit_value is  null  then 0
+
+    when base.vdate　<![CDATA[>]]>#{yearStartDate,jdbcType=DATE}　 and crlastmax.unit_value_total!=null  and crmin.unit_value_total !=0  then
+     (crmax.unit_value_total-crlastmax.unit_value_total)/crlastmax.unit_value_total/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)*365
+
+    when <![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and crlastmax.unit_value_total is null
       and   crmin.unit_value is not null  and crmin.unit_value !=0 then
       (crmax.unit_value-crmin.unit_value)/crmin.unit_value/(#{endDate,jdbcType=DATE}-crmin.change_date+1)*365
-     when base.mdate-base.vdate>365 and crlastmax.unit_value_total is null  and   crmin.unit_value is  null then 0
+
+     when <![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and crlastmax.unit_value_total is null  and   crmin.unit_value is  null then 0
     end ) as prodRate
    from chb_prd_rate cr
 	left join chb_prd_baseinfo base
@@ -731,7 +806,7 @@ with cj as(
 
     left join (select cr1.prod_id,cr1.unit_value,cr1.unit_value_total,cr1.change_date from chb_prd_rate cr1
    where cr1.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr1.prod_id
-	and fc1.change_date<![CDATA[<]]>#{lastYearDate,jdbcType=DATE}))crlastmax
+	and fc1.change_date<![CDATA[<]]>#{yearStartDate,jdbcType=DATE}))crlastmax
 	on cr.prod_id=crlastmax.prod_id
 
 	where 1=1 and cr.change_type in ('01','02')
@@ -782,7 +857,38 @@ with cj as(
 	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
 	and base.operate_mode in ('03','04')
  	and base.opendayp>1096
+     union all
+		select '10'  days, cp.ENDAMTSUM_OTH as amt,cp.prodid,lastcp.ENDAMTSUM_OTH as lastamt
+		from CHB_MONTH_PRD_POSITION cp
+		left join CHB_MONTH_PRD_POSITION lastcp
+		on cp.prodid=lastcp.prodid
+		and lastcp.ENDDATE=#{lastEndDate,jdbcType=DATE}
+		where cp.ENDDATE=#{endDate,jdbcType=DATE}
+		and cp.termtype in ('01','02','03','04','05','06','07')
 
+		union all
+		select  '10' days, cp.ENDAMTSUM_OTH as amt,cp.prodid,lastcp.ENDAMTSUM_OTH as lastamt
+		from chb_month_prd_position cp
+		left join chb_prd_baseinfo base
+		on cp.prodid=base.prod_id
+		left join CHB_MONTH_PRD_POSITION lastcp
+		on cp.prodid=lastcp.prodid
+		and lastcp.ENDDATE=#{lastEndDate,jdbcType=DATE}
+		where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
+		and  base.operate_mode in ('01','02')
+		and base.mdate-base.vdate>1096
+
+		union all
+		select  '10'  days, cp.ENDAMTSUM_OTH as amt,cp.prodid,lastcp.ENDAMTSUM_OTH as lastamt
+		from chb_month_prd_position cp
+		left join chb_prd_baseinfo base
+		on cp.prodid=base.prod_id
+		left join CHB_MONTH_PRD_POSITION lastcp
+		on cp.prodid=lastcp.prodid
+		and lastcp.ENDDATE=#{lastEndDate,jdbcType=DATE}
+		where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
+		and base.operate_mode in ('03','04')
+		and base.opendayp>1096
 	)
 	,possum as(
 	select end.days as days,(sum(nvl(end.amt,0))+sum(nvl(end.lastamt,0)))/2 as sumamt
@@ -874,6 +980,21 @@ with cj as(
   			left join chb_asset_info info
   　　　　　　on cmap.asset_code=info.asset_code
   　　　　　　where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
+
+		　　　union all
+
+		select nvl(cmap.ASSETVALUE_A,0) amt,'10' days
+		from
+		CHB_MONTH_ASSET_POSITION cmap
+		left join(select cabd.mdate as mdate,cabd.asset_id
+		　　　　from CHB_ASSETS_BASIS_DATA_NOBTM cabd
+		WHERE 1=1 and cabd.value_date=#{endDate,jdbcType=DATE}
+
+		)exeplan
+		on cmap.asset_code=exeplan.asset_id
+		left join chb_asset_info info
+		　　　　　　on cmap.asset_code=info.asset_code
+		　　　　　　where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
             )t
 			GROUP by t.DAYS
 		) A
@@ -897,17 +1018,17 @@ with cj as(
 
  <!-- 计划类净值型，非货币基金 -->
    select distinct cr.asset_id as assetId,
-   case when fjycr.change_date<![CDATA[<=]]>#{lastEndDate,jdbcType=DATE}+1 then
-           (cr.asset_rate-fcr.asset_rate+bonus.rateSum)/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{lastEndDate,jdbcType=DATE}+1) *365
-        when fjycr.change_date>#{lastEndDate,jdbcType=DATE}+1 then
-           (cr.asset_rate-fjycr.asset_rate+bonus.rateSum)/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date) *365
+   case when fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} then
+           (cr.asset_rate-fcr.asset_rate+bonus.rateSum)/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1) *365
+        when fjycr.change_date>#{yearStartDate,jdbcType=DATE} then
+           (cr.asset_rate-fjycr.asset_rate+jybonus.rateSum)/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date+1) *365
 
    end as assetRate
 	from chb_asset_rate cr
 	left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
 	         where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('01')
 	        	and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-	                and fc1.change_date<![CDATA[<=]]>#{lastEndDate,jdbcType=DATE})
+	                and fc1.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1)
 	 )fcr
 	 on cr.asset_id=fcr.asset_id
 	 left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
@@ -920,10 +1041,19 @@ with cj as(
             select cr1.asset_id,sum(nvl(cr1.ASSET_BONUSREINVEST_RATE,0)) as rateSum
             from chb_asset_rate cr1
             where 1=1 and cr1.trade_id is not null and cr1.status='E'
-            and cr1.change_date between #{lastEndDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+            and cr1.change_date between #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
 		    group by cr1.asset_id
      )bonus
      on cr.asset_id =bonus.asset_id
+		left join (
+		select cr1.asset_id,sum(nvl(cr1.ASSET_BONUSREINVEST_RATE,0)) as rateSum
+		from chb_asset_rate cr1
+		where 1=1 and cr1.trade_id is not null and cr1.status='E'
+		and cr1.change_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+		and cr1.change_date<![CDATA[>=]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= cr1.asset_id)
+		group by cr1.asset_id
+		)jybonus
+		on cr.asset_id =jybonus.asset_id
 	where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01')
 	and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
 	and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE})
@@ -935,10 +1065,17 @@ with cj as(
        t.asset_id  as assetId,sum(nvl(t.asset_rate,0))/10000*(max(t.change_date)-min(t.change_date)+1)*365 as assetRate
     from(select cr.asset_id,cr.asset_rate,cr.change_date
     from  chb_asset_rate cr
+		left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
+		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('03')
+		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
+		and fc1.change_date<![CDATA[<]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= fc1.asset_id))
+		)fjycr
+		on cr.asset_id=fjycr.asset_id
 	where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('03')
     and cr.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
-    and cr.change_date>=(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= cr.asset_id)
-    and cr.change_date>=#{lastEndDate,jdbcType=DATE})t
+   and ((fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and cr.change_date>=#{yearStartDate,jdbcType=DATE} )
+	or (fjycr.change_date<![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and cr.change_date>=fjycr.change_date))
+		)t
     group by t.asset_id
 
    union all
@@ -975,7 +1112,7 @@ with cj as(
 	and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
 	),
 	enddays as(
-	    select nvl(cmap.ASSETVALUE_A,0) amt,cmap.asset_code as assetId,
+	    select nvl(cmap.ASSETVALUE_A,0)-nvl(scmap.ASSETVALUE_A,0) amt,cmap.asset_code as assetId,
 	     <if test="execonfig != null  and execonfig.equals('01')">
 			case
 		    when info.mdate is null
@@ -1026,7 +1163,10 @@ with cj as(
 	     </if>
 		    from
 		    CHB_MONTH_ASSET_POSITION cmap
-		    left join(select cabd.mdate as mdate,cabd.asset_id
+		    left join CHB_MONTH_ASSET_POSITION scmap
+		     on cmap.asset_code=scmap.asset_code
+		      and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
+		left join(select cabd.mdate as mdate,cabd.asset_id
   			　　　　from CHB_ASSETS_BASIS_DATA_NOBTM cabd
   				WHERE 1=1 and cabd.value_date=#{endDate,jdbcType=DATE}
 
@@ -1037,12 +1177,51 @@ with cj as(
   　　　　　　where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}　and cmap.asset_code!='REMAININGCASH'
 
 		union all
-		select sum(nvl(cmapr.COST_AMT,0)) amt,cmapr.ASSET_ID as assetId,
+		select sum(nvl(cmapr.COST_AMT,0)-nvl(scmapr.COST_AMT,0)) amt,cmapr.ASSET_ID as assetId,
 		'01'  days
 		from
 		chb_asset_rate cmapr
+		left join (select * from chb_asset_rate scmapr
+         where scmapr.CHANGE_DATE=(select max(scmapr1.change_date) from chb_asset_rate scmapr1
+		where   scmapr.ASSET_ID= scmapr1.ASSET_ID and scmapr1.finprod_type2='XJ'  and scmapr1.COST_AMT!=0 and scmapr1.CHANGE_DATE<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1)
+		) scmapr
+		on cmapr.ASSET_ID=scmapr.ASSET_ID
+
+
         where 1=1 and cmapr.CHANGE_DATE=#{endDate,jdbcType=DATE}　and cmapr.finprod_type2='XJ' and cmapr.COST_AMT!=0
         group by cmapr.ASSET_ID
+
+		union all
+		select nvl(cmap.ASSETVALUE_A,0)-nvl(scmap.ASSETVALUE_A,0) amt,cmap.asset_code as assetId,'10' days
+		from
+		CHB_MONTH_ASSET_POSITION cmap
+		left join CHB_MONTH_ASSET_POSITION scmap
+		on cmap.asset_code=scmap.asset_code
+		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
+
+		left join(select cabd.mdate as mdate,cabd.asset_id
+		　　　　from CHB_ASSETS_BASIS_DATA_NOBTM cabd
+		WHERE 1=1 and cabd.value_date=#{endDate,jdbcType=DATE}
+
+		)exeplan
+		on cmap.asset_code=exeplan.asset_id
+		left join chb_asset_info info
+		　　　　　　on cmap.asset_code=info.asset_code
+		　　　　　　where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}　and cmap.asset_code!='REMAININGCASH'
+
+		union all
+		select sum(nvl(cmapr.COST_AMT,0)-nvl(scmapr.COST_AMT,0)) amt,cmapr.ASSET_ID as assetId,
+		'10'  days
+		from
+		chb_asset_rate cmapr
+		left join (select * from chb_asset_rate scmapr
+		where scmapr.CHANGE_DATE=(select max(scmapr1.change_date) from chb_asset_rate scmapr1
+		where   scmapr.ASSET_ID= scmapr1.ASSET_ID and scmapr1.finprod_type2='XJ'  and scmapr1.COST_AMT!=0 and scmapr1.CHANGE_DATE<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1)
+		) scmapr
+		on cmapr.ASSET_ID=scmapr.ASSET_ID
+
+		where 1=1 and cmapr.CHANGE_DATE=#{endDate,jdbcType=DATE}　and cmapr.finprod_type2='XJ' and cmapr.COST_AMT!=0
+		group by cmapr.ASSET_ID
 	)
 	,possum as(
 	select end.days as days,sum(nvl(end.amt,0)) as sumamt
@@ -1084,17 +1263,16 @@ with cj as(
 
  <!-- 计划类净值型，非货币基金 -->
    select distinct cr.asset_id as assetId,
-   case when fjycr.change_date<![CDATA[<=]]>#{lastEndDate,jdbcType=DATE}+1 then
-           (cr.asset_rate-fcr.asset_rate+bonus.rateSum)/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{lastEndDate,jdbcType=DATE}+1) *365
-        when fjycr.change_date>#{lastEndDate,jdbcType=DATE}+1 then
-           (cr.asset_rate-fjycr.asset_rate+bonus.rateSum)/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date) *365
-
+		case when fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} then
+		(cr.asset_rate-fcr.asset_rate+bonus.rateSum)/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1) *365
+		when fjycr.change_date>#{yearStartDate,jdbcType=DATE} then
+		(cr.asset_rate-fjycr.asset_rate+jybonus.rateSum)/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date+1) *365
    end as assetRate
 	from chb_asset_rate cr
 	left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
 	         where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('01')
 	        	and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-	                and fc1.change_date<![CDATA[<=]]>#{lastEndDate,jdbcType=DATE})
+	                and fc1.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE})
 	 )fcr
 	 on cr.asset_id=fcr.asset_id
 	 left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
@@ -1107,10 +1285,19 @@ with cj as(
             select cr1.asset_id,sum(nvl(cr1.ASSET_BONUSREINVEST_RATE,0)) as rateSum
             from chb_asset_rate cr1
             where 1=1 and cr1.trade_id is not null and cr1.status='E'
-            and cr1.change_date between #{lastEndDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+            and cr1.change_date between #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
 		group by cr1.asset_id
      )bonus
      on cr.asset_id =bonus.asset_id
+		left join (
+		select cr1.asset_id,sum(nvl(cr1.ASSET_BONUSREINVEST_RATE,0)) as rateSum
+		from chb_asset_rate cr1
+		where 1=1 and cr1.trade_id is not null and cr1.status='E'
+		and cr1.change_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+		and cr1.change_date<![CDATA[>=]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= cr1.asset_id)
+		group by cr1.asset_id
+		)jybonus
+		on cr.asset_id =jybonus.asset_id
 	where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01')
 	and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
 	and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE})
@@ -1122,10 +1309,17 @@ with cj as(
        t.asset_id  as assetId,sum(nvl(t.asset_rate,0))/10000*(max(t.change_date)-min(t.change_date)+1)*365 as assetRate
     from(select cr.asset_id,cr.asset_rate,cr.change_date
     from  chb_asset_rate cr
+		left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
+		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('03')
+		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
+		and fc1.change_date<![CDATA[<]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= fc1.asset_id))
+		)fjycr
+		on cr.asset_id=fjycr.asset_id
 	where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('03')
     and cr.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
-    and cr.change_date>=(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= cr.asset_id)
-    and cr.change_date>=#{lastEndDate,jdbcType=DATE})t
+		and ((fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and cr.change_date>=#{yearStartDate,jdbcType=DATE} )
+		or (fjycr.change_date<![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and cr.change_date>=fjycr.change_date))
+		)t
     group by t.asset_id
 
    union all
@@ -1237,6 +1431,34 @@ with cj as(
 		where 1=1 and cmapr.CHANGE_DATE=#{endDate,jdbcType=DATE}　and cmapr.finprod_type2='XJ' and cmapr.COST_AMT!=0
 		group by cmapr.ASSET_ID
 
+		union all
+		select nvl(cmap.ASSETVALUE_A,0) amt,cmap.asset_code as assetId,nvl(lastcmap.ASSETVALUE_A,0) lastamt,'10' days
+		from
+		CHB_MONTH_ASSET_POSITION cmap
+		left join CHB_MONTH_ASSET_POSITION lastcmap
+		on cmap.asset_code=lastcmap.asset_code
+		and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
+		left join(select cabd.mdate as mdate,cabd.asset_id
+		　　　　from CHB_ASSETS_BASIS_DATA_NOBTM cabd
+		WHERE 1=1 and cabd.value_date=#{endDate,jdbcType=DATE}
+		)exeplan
+		on cmap.asset_code=exeplan.asset_id
+		left join chb_asset_info info
+		　　　　　　on cmap.asset_code=info.asset_code
+		　　　　　　where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE} and cmap.asset_code!='REMAININGCASH'
+
+		union all
+		select sum(nvl(cmapr.COST_AMT,0)) amt,cmapr.ASSET_ID as assetId,sum(nvl(lastcmapr.COST_AMT,0)) lastamt,
+		'10' days
+		from
+		chb_asset_rate cmapr
+		left join chb_asset_rate lastcmapr
+		on cmapr.ASSET_ID=lastcmapr.ASSET_ID
+		and  lastcmapr.CHANGE_DATE=#{lastEndDate,jdbcType=DATE}
+		and lastcmapr.finprod_type2='XJ' and lastcmapr.COST_AMT!=0
+		where 1=1 and cmapr.CHANGE_DATE=#{endDate,jdbcType=DATE}　and cmapr.finprod_type2='XJ' and cmapr.COST_AMT!=0
+		group by cmapr.ASSET_ID
+
 	)
 	,possum as(
 	select end.days as days,sum((nvl(end.amt,0)+nvl(end.lastamt,0))/2) as sumamt
@@ -1329,6 +1551,20 @@ with cj as(
   　　　　　　where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
  		    and  INFO.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 
+		     union all
+		select nvl(cmap.ASSETVALUE_A,0) amt,'10' days
+		from
+		CHB_MONTH_ASSET_POSITION cmap
+		left join(select cabd.mdate as mdate,cabd.asset_id
+		　　　　from CHB_ASSETS_BASIS_DATA_NOBTM cabd
+		WHERE 1=1 and cabd.value_date=#{endDate,jdbcType=DATE}
+		)exeplan
+		on cmap.asset_code=exeplan.asset_id
+		left join chb_asset_info info
+		　　　　　　on cmap.asset_code=info.asset_code
+		　　　　　　where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
+		and  INFO.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+
             )t
 			GROUP by t.DAYS
 		) A
@@ -1352,17 +1588,17 @@ with cj as(
 
  <!-- 计划类净值型，非货币基金 -->
    select distinct cr.asset_id as assetId,
-   case when fjycr.change_date<![CDATA[<=]]>#{lastEndDate,jdbcType=DATE}+1 then
-           (cr.asset_rate-fcr.asset_rate+bonus.rateSum)/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{lastEndDate,jdbcType=DATE}+1) *365
-        when fjycr.change_date>#{lastEndDate,jdbcType=DATE}+1 then
-           (cr.asset_rate-fjycr.asset_rate+bonus.rateSum)/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date) *365
+		case when fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} then
+		(cr.asset_rate-fcr.asset_rate+bonus.rateSum)/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1) *365
+		when fjycr.change_date>#{yearStartDate,jdbcType=DATE} then
+		(cr.asset_rate-fjycr.asset_rate+jybonus.rateSum)/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date+1) *365
 
    end as assetRate
 	from chb_asset_rate cr
 	left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
 	         where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('01')
 	        	and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-	                and fc1.change_date<![CDATA[<=]]>#{lastEndDate,jdbcType=DATE})
+	                and fc1.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE})
 	 )fcr
 	 on cr.asset_id=fcr.asset_id
 	 left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
@@ -1375,10 +1611,19 @@ with cj as(
             select cr1.asset_id,sum(nvl(cr1.ASSET_BONUSREINVEST_RATE,0)) as rateSum
             from chb_asset_rate cr1
             where 1=1 and cr1.trade_id is not null and cr1.status='E'
-            and cr1.change_date between #{lastEndDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+            and cr1.change_date between #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
 		group by cr1.asset_id
      )bonus
      on cr.asset_id =bonus.asset_id
+		left join (
+		select cr1.asset_id,sum(nvl(cr1.ASSET_BONUSREINVEST_RATE,0)) as rateSum
+		from chb_asset_rate cr1
+		where 1=1 and cr1.trade_id is not null and cr1.status='E'
+		and cr1.change_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+		and cr1.change_date<![CDATA[>=]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= cr1.asset_id)
+		group by cr1.asset_id
+		)jybonus
+		on cr.asset_id =jybonus.asset_id
 	where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01')
 	and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
 	and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE})
@@ -1390,10 +1635,17 @@ with cj as(
        t.asset_id  as assetId,sum(nvl(t.asset_rate,0))/10000*(max(t.change_date)-min(t.change_date)+1)*365 as assetRate
     from(select cr.asset_id,cr.asset_rate,cr.change_date
     from  chb_asset_rate cr
+		left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
+		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('03')
+		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
+		and fc1.change_date<![CDATA[<]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= fc1.asset_id))
+		)fjycr
+		on cr.asset_id=fjycr.asset_id
 	where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('03')
     and cr.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
-    and cr.change_date>=(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= cr.asset_id)
-    and cr.change_date>=#{lastEndDate,jdbcType=DATE})t
+		and ((fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and cr.change_date>=#{yearStartDate,jdbcType=DATE} )
+		or (fjycr.change_date<![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and cr.change_date>=fjycr.change_date))
+		)t
     group by t.asset_id
 
    union all
@@ -1430,7 +1682,7 @@ with cj as(
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and  fc1.cost_amt!=0)
 	),
 	enddays as(
-	    select nvl(cmap.ASSETVALUE_A,0) amt,cmap.asset_code as assetId,
+	    select nvl(cmap.ASSETVALUE_A,0)-nvl(scmap.ASSETVALUE_A,0) amt,cmap.asset_code as assetId,
 	     <if test="execonfig != null  and execonfig.equals('01')">
 			case
 		    when info.mdate is null
@@ -1481,6 +1733,10 @@ with cj as(
 	     </if>
 		    from
 		    CHB_MONTH_ASSET_POSITION cmap
+		left join CHB_MONTH_ASSET_POSITION scmap
+		on cmap.asset_code=scmap.asset_code
+		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
+
 		    left join(select cabd.mdate as mdate,cabd.asset_id
   			　　　　from CHB_ASSETS_BASIS_DATA_NOBTM cabd
   				WHERE 1=1 and cabd.value_date=#{endDate,jdbcType=DATE}
@@ -1491,6 +1747,25 @@ with cj as(
   　　　　　　on cmap.asset_code=info.asset_code
   　　　　　　where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
  		    and  info.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+
+		　　　union all
+		select nvl(cmap.ASSETVALUE_A,0)-nvl(scmap.ASSETVALUE_A,0)  amt,cmap.asset_code as assetId,'10' days
+		from
+		CHB_MONTH_ASSET_POSITION cmap
+		left join CHB_MONTH_ASSET_POSITION scmap
+		on cmap.asset_code=scmap.asset_code
+		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
+		left join(select cabd.mdate as mdate,cabd.asset_id
+		　　　　from CHB_ASSETS_BASIS_DATA_NOBTM cabd
+		WHERE 1=1 and cabd.value_date=#{endDate,jdbcType=DATE}
+
+		)exeplan
+		on cmap.asset_code=exeplan.asset_id
+		left join chb_asset_info info
+		　　　　　　on cmap.asset_code=info.asset_code
+		　　　　　　where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
+		and  info.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+
 
 	)
 	,possum as(
@@ -1533,17 +1808,16 @@ with cj as(
 
  <!-- 计划类净值型，非货币基金 -->
    select distinct cr.asset_id as assetId,
-   case when fjycr.change_date<![CDATA[<=]]>#{lastEndDate,jdbcType=DATE}+1 then
-           (cr.asset_rate-fcr.asset_rate+bonus.rateSum)/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{lastEndDate,jdbcType=DATE}+1) *365
-        when fjycr.change_date>#{lastEndDate,jdbcType=DATE}+1 then
-           (cr.asset_rate-fjycr.asset_rate+bonus.rateSum)/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date) *365
-
+	case when fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} then
+		(cr.asset_rate-fcr.asset_rate+bonus.rateSum)/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1) *365
+		when fjycr.change_date>#{yearStartDate,jdbcType=DATE} then
+		(cr.asset_rate-fjycr.asset_rate+jybonus.rateSum)/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date+1) *365
    end as assetRate
 	from chb_asset_rate cr
 	left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
 	         where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('01')
 	        	and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-	                and fc1.change_date<![CDATA[<=]]>#{lastEndDate,jdbcType=DATE})
+	                and fc1.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE})
 	 )fcr
 	 on cr.asset_id=fcr.asset_id
 	 left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
@@ -1556,10 +1830,19 @@ with cj as(
             select cr1.asset_id,sum(nvl(cr1.ASSET_BONUSREINVEST_RATE,0)) as rateSum
             from chb_asset_rate cr1
             where 1=1 and cr1.trade_id is not null and cr1.status='E'
-            and cr1.change_date between #{lastEndDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+            and cr1.change_date between #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
 		group by cr1.asset_id
      )bonus
      on cr.asset_id =bonus.asset_id
+		left join (
+		select cr1.asset_id,sum(nvl(cr1.ASSET_BONUSREINVEST_RATE,0)) as rateSum
+		from chb_asset_rate cr1
+		where 1=1 and cr1.trade_id is not null and cr1.status='E'
+		and cr1.change_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+		and cr1.change_date<![CDATA[>=]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= cr1.asset_id)
+		group by cr1.asset_id
+		)jybonus
+		on cr.asset_id =jybonus.asset_id
 	where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01')
 	and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
 	and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE})
@@ -1571,10 +1854,17 @@ with cj as(
        t.asset_id  as assetId,sum(nvl(t.asset_rate,0))/10000*(max(t.change_date)-min(t.change_date)+1)*365 as assetRate
     from(select cr.asset_id,cr.asset_rate,cr.change_date
     from  chb_asset_rate cr
+		left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
+		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('03')
+		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
+		and fc1.change_date<![CDATA[<]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= fc1.asset_id))
+		)fjycr
+		on cr.asset_id=fjycr.asset_id
 	where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('03')
     and cr.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
-    and cr.change_date>=(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= cr.asset_id)
-    and cr.change_date>=#{lastEndDate,jdbcType=DATE})t
+		and ((fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and cr.change_date>=#{yearStartDate,jdbcType=DATE} )
+		or (fjycr.change_date<![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and cr.change_date>=fjycr.change_date))
+		)t
     group by t.asset_id
 
    union all
@@ -1674,6 +1964,23 @@ with cj as(
   　　　　　　on cmap.asset_code=info.asset_code
   　　　　　　where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
  		    and  info.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+　　　　　　union all
+		select nvl(cmap.ASSETVALUE_A,0) amt,cmap.asset_code as assetId,nvl(lastcmap.ASSETVALUE_A,0) lastamt,
+		'10' days
+		from
+		CHB_MONTH_ASSET_POSITION cmap
+		left join CHB_MONTH_ASSET_POSITION lastcmap
+		on cmap.asset_code=lastcmap.asset_code
+		and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
+		left join(select cabd.mdate as mdate,cabd.asset_id
+		　　　　from CHB_ASSETS_BASIS_DATA_NOBTM cabd
+		WHERE 1=1 and cabd.value_date=#{endDate,jdbcType=DATE}
+		)exeplan
+		on cmap.asset_code=exeplan.asset_id
+		left join chb_asset_info info
+		　　　　　　on cmap.asset_code=info.asset_code
+		　　　　　　where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
+		and  info.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 
 	)
 	,possum as(
@@ -1738,16 +2045,18 @@ with cj as(
 				when mst.industry4 ='02' then '03'
 				when mst.industry4 ='03' then '04'
 				when mst.industry4 ='04' then '05'
-				when mst.industry3 ='01' then '06'
-				when mst.industry4 ='07' then '07'
-				when mst.industry4 ='08' then '08'
-				when mst.industry3 ='13' then '09'
-				when mst.industry3 ='14' then '10'
-				when mst.industry3 ='16' then '11'
-				when mst.industry2 ='J68' then '12'
-				when mst.industry3 ='15' then '13'
-				when mst.industry3 in('21','22') then '14'
-				else  '15' end as industryType
+				when mst.industry4 ='07' then '06'
+
+				when　cmap.ASSETTYPE2='1701' then '07'
+				when cmap.ASSETTYPE2='1703' then '08'
+				when cmap.ASSETTYPE2 in ('1704','1106','2401','1303','2403','2402','2499')  then '09'
+				when cmap.ASSETTYPE2='1706' then '10'
+				when cmap.ASSETTYPE2='1702'  then '11'
+
+				when cmap.ASSETTYPE2 in ('2601','2602','2604',
+		        '2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620')  then '12'
+				when cmap.ASSETTYPE2='1209' <!--and info.ISFBZB!=01--> then '13'
+		        else  '14' end as industryType
 		from
 		    CHB_MONTH_ASSET_POSITION cmap
   			left join chb_asset_info info
@@ -1756,10 +2065,24 @@ with cj as(
 		    on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
 		　　 where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
 		    and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
-		    and mst.industry='10'
-		    and  cmap.ASSETTYPE2 in ('1102','1112','1209','1106','2401','1303','2403','2402','2499','2601','2602','2604',
-		     '2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2618','2619','2620','1701','1703',
-		     '1704','1706','1702','1705')
+		    and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
+		     '2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
+		     '1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
+		union all
+		select nvl(cmap.ASSETVALUE_A,0) amt,
+		　　　　'15'  as industryType
+		from
+		CHB_MONTH_ASSET_POSITION cmap
+		left join chb_asset_info info
+		　　　　　　on cmap.asset_code=info.asset_code
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
+		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
+		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
+		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
+
 		)t
 			GROUP by t.industryType
 		) A
@@ -1783,17 +2106,16 @@ with cj as(
 
  <!-- 计划类净值型，非货币基金 -->
    select distinct cr.asset_id as assetId,
-   case when fjycr.change_date<![CDATA[<=]]>#{lastEndDate,jdbcType=DATE}+1 then
-           (cr.asset_rate-fcr.asset_rate+bonus.rateSum)/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{lastEndDate,jdbcType=DATE}+1) *365
-        when fjycr.change_date>#{lastEndDate,jdbcType=DATE}+1 then
-           (cr.asset_rate-fjycr.asset_rate+bonus.rateSum)/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date) *365
-
-   end as assetRate
+		case when fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} then
+		(cr.asset_rate-fcr.asset_rate+bonus.rateSum)/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1) *365
+		when fjycr.change_date>#{yearStartDate,jdbcType=DATE} then
+		(cr.asset_rate-fjycr.asset_rate+jybonus.rateSum)/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date+1) *365
+		end as assetRate
 	from chb_asset_rate cr
 	left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
 	         where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('01')
 	        	and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-	                and fc1.change_date<![CDATA[<=]]>#{lastEndDate,jdbcType=DATE})
+	                and fc1.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE})
 	 )fcr
 	 on cr.asset_id=fcr.asset_id
 	 left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
@@ -1806,10 +2128,19 @@ with cj as(
             select cr1.asset_id,sum(nvl(cr1.ASSET_BONUSREINVEST_RATE,0)) as rateSum
             from chb_asset_rate cr1
             where 1=1 and cr1.trade_id is not null and cr1.status='E'
-            and cr1.change_date between #{lastEndDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+            and cr1.change_date between #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
 		group by cr1.asset_id
      )bonus
      on cr.asset_id =bonus.asset_id
+		left join (
+		select cr1.asset_id,sum(nvl(cr1.ASSET_BONUSREINVEST_RATE,0)) as rateSum
+		from chb_asset_rate cr1
+		where 1=1 and cr1.trade_id is not null and cr1.status='E'
+		and cr1.change_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+		and cr1.change_date<![CDATA[>=]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= cr1.asset_id)
+		group by cr1.asset_id
+		)jybonus
+		on cr.asset_id =jybonus.asset_id
 	where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01')
 	and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
 	and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE})
@@ -1821,10 +2152,17 @@ with cj as(
        t.asset_id  as assetId,sum(nvl(t.asset_rate,0))/10000*(max(t.change_date)-min(t.change_date)+1)*365 as assetRate
     from(select cr.asset_id,cr.asset_rate,cr.change_date
     from  chb_asset_rate cr
+		left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
+		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('03')
+		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
+		and fc1.change_date<![CDATA[<]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= fc1.asset_id))
+		)fjycr
+		on cr.asset_id=fjycr.asset_id
 	where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('03')
     and cr.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
-    and cr.change_date>=(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= cr.asset_id)
-    and cr.change_date>=#{lastEndDate,jdbcType=DATE})t
+		and ((fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and cr.change_date>=#{yearStartDate,jdbcType=DATE} )
+		or (fjycr.change_date<![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and cr.change_date>=fjycr.change_date))
+		)t
     group by t.asset_id
 
    union all
@@ -1861,34 +2199,56 @@ with cj as(
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt!=0)
 	),
 	industryTypes as(
-		    select nvl(cmap.ASSETVALUE_A,0) amt,cmap.asset_code　as assetId,
+		    select nvl(cmap.ASSETVALUE_A,0)-nvl(scmap.ASSETVALUE_A,0) amt,cmap.asset_code　as assetId,
 　　　　　　　case when mst.industry3 ='03' then '01'
 				when mst.industry4 ='01' then '02'
 				when mst.industry4 ='02' then '03'
 				when mst.industry4 ='03' then '04'
 				when mst.industry4 ='04' then '05'
-				when mst.industry3 ='01' then '06'
-				when mst.industry4 ='07' then '07'
-				when mst.industry4 ='08' then '08'
-				when mst.industry3 ='13' then '09'
-				when mst.industry3 ='14' then '10'
-				when mst.industry3 ='16' then '11'
-				when mst.industry2 ='J68' then '12'
-				when mst.industry3 ='15' then '13'
-				when mst.industry3 in('21','22') then '14'
-				else  '15' end as industryType
+				when mst.industry4 ='07' then '06'
+				when　cmap.ASSETTYPE2='1701' then '07'
+				when cmap.ASSETTYPE2='1703' then '08'
+				when cmap.ASSETTYPE2 in ('1704','1106','2401','1303','2403','2402','2499')  then '09'
+				when cmap.ASSETTYPE2='1706' then '10'
+				when cmap.ASSETTYPE2='1702'  then '11'
+				when cmap.ASSETTYPE2 in ('2601','2602','2604',
+				'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620')  then '12'
+				when cmap.ASSETTYPE2='1209' <!--and info.ISFBZB!=01--> then '13'
+				else  '14' end as industryType
 		from
 		    CHB_MONTH_ASSET_POSITION cmap
+		left join CHB_MONTH_ASSET_POSITION scmap
+		on cmap.asset_code=scmap.asset_code
+		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
   			left join chb_asset_info info
   　　　　　　on cmap.asset_code=info.asset_code
 		    left join mst_customer_info_add mst
 		    on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
 		　　 where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
 		    and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
-		and  cmap.ASSETTYPE2 in ('1102','1112','1209','1106','2401','1303','2403','2402','2499','2601','2602','2604',
-		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2618','2619','2620','1701','1703',
-		'1704','1706','1702','1705')
-		    and mst.industry='10'
+		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
+		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
+		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
+
+
+		union all
+		select nvl(cmap.ASSETVALUE_A,0)-nvl(scmap.ASSETVALUE_A,0) amt,cmap.asset_code　as assetId,
+		　　　  '15'  as industryType
+		from
+		CHB_MONTH_ASSET_POSITION cmap
+		left join CHB_MONTH_ASSET_POSITION scmap
+		on cmap.asset_code=scmap.asset_code
+		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
+		left join chb_asset_info info
+		on cmap.asset_code=info.asset_code
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
+		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
+		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
+		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
+
 	)
 	,possum as(
 	select end.industryType as industryType,sum(nvl(end.amt,0)) as sumamt
@@ -1930,17 +2290,17 @@ with cj as(
 
  <!-- 计划类净值型，非货币基金 -->
    select distinct cr.asset_id as assetId,
-   case when fjycr.change_date<![CDATA[<=]]>#{lastEndDate,jdbcType=DATE}+1 then
-           (cr.asset_rate-fcr.asset_rate+bonus.rateSum)/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{lastEndDate,jdbcType=DATE}+1) *365
-        when fjycr.change_date>#{lastEndDate,jdbcType=DATE}+1 then
-           (cr.asset_rate-fjycr.asset_rate+bonus.rateSum)/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date) *365
+		case when fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} then
+		(cr.asset_rate-fcr.asset_rate+bonus.rateSum)/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1) *365
+		when fjycr.change_date>#{yearStartDate,jdbcType=DATE} then
+		(cr.asset_rate-fjycr.asset_rate+jybonus.rateSum)/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date+1) *365
 
    end as assetRate
 	from chb_asset_rate cr
 	left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
 	         where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('01')
 	        	and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-	                and fc1.change_date<![CDATA[<=]]>#{lastEndDate,jdbcType=DATE})
+	                and fc1.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE})
 	 )fcr
 	 on cr.asset_id=fcr.asset_id
 	 left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
@@ -1953,10 +2313,19 @@ with cj as(
             select cr1.asset_id,sum(nvl(cr1.ASSET_BONUSREINVEST_RATE,0)) as rateSum
             from chb_asset_rate cr1
             where 1=1 and cr1.trade_id is not null and cr1.status='E'
-            and cr1.change_date between #{lastEndDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+            and cr1.change_date between #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
 		group by cr1.asset_id
      )bonus
      on cr.asset_id =bonus.asset_id
+		left join (
+		select cr1.asset_id,sum(nvl(cr1.ASSET_BONUSREINVEST_RATE,0)) as rateSum
+		from chb_asset_rate cr1
+		where 1=1 and cr1.trade_id is not null and cr1.status='E'
+		and cr1.change_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+		and cr1.change_date<![CDATA[>=]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= cr1.asset_id)
+		group by cr1.asset_id
+		)jybonus
+		on cr.asset_id =jybonus.asset_id
 	where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01')
 	and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
 	and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE})
@@ -1968,10 +2337,17 @@ with cj as(
        t.asset_id  as assetId,sum(nvl(t.asset_rate,0))/10000*(max(t.change_date)-min(t.change_date)+1)*365 as assetRate
     from(select cr.asset_id,cr.asset_rate,cr.change_date
     from  chb_asset_rate cr
+		left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
+		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('03')
+		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
+		and fc1.change_date<![CDATA[<]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= fc1.asset_id))
+		)fjycr
+		on cr.asset_id=fjycr.asset_id
 	where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('03')
     and cr.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
-    and cr.change_date>=(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= cr.asset_id)
-    and cr.change_date>=#{lastEndDate,jdbcType=DATE})t
+		and ((fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and cr.change_date>=#{yearStartDate,jdbcType=DATE} )
+		or (fjycr.change_date<![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and cr.change_date>=fjycr.change_date))
+		)t
     group by t.asset_id
 
    union all
@@ -2014,16 +2390,16 @@ with cj as(
 				when mst.industry4 ='02' then '03'
 				when mst.industry4 ='03' then '04'
 				when mst.industry4 ='04' then '05'
-				when mst.industry3 ='01' then '06'
-				when mst.industry4 ='07' then '07'
-				when mst.industry4 ='08' then '08'
-				when mst.industry3 ='13' then '09'
-				when mst.industry3 ='14' then '10'
-				when mst.industry3 ='16' then '11'
-				when mst.industry2 ='J68' then '12'
-				when mst.industry3 ='15' then '13'
-				when mst.industry3 in('21','22') then '14'
-				else  '15' end as industryType
+				when mst.industry4 ='07' then '06'
+				when　cmap.ASSETTYPE2='1701' then '07'
+				when cmap.ASSETTYPE2='1703' then '08'
+				when cmap.ASSETTYPE2 in ('1704','1106','2401','1303','2403','2402','2499')  then '09'
+				when cmap.ASSETTYPE2='1706' then '10'
+				when cmap.ASSETTYPE2='1702'  then '11'
+				when cmap.ASSETTYPE2 in ('2601','2602','2604',
+				'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620')  then '12'
+				when cmap.ASSETTYPE2='1209' <!--and info.ISFBZB!=01--> then '13'
+				else  '14' end as industryType
 		from
 		    CHB_MONTH_ASSET_POSITION cmap
   			left join chb_asset_info info
@@ -2035,11 +2411,27 @@ with cj as(
 		    on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
 		　　 where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
 		    and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
-		    and mst.industry='10'
-		and  cmap.ASSETTYPE2 in ('1102','1112','1209','1106','2401','1303','2403','2402','2499','2601','2602','2604',
-		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2618','2619','2620','1701','1703',
-		'1704','1706','1702','1705')
+		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
+		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
+		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
 
+        union all
+		select nvl(cmap.ASSETVALUE_A,0) amt,cmap.asset_code　as assetId,nvl(lastcmap.ASSETVALUE_A,0) lastamt,
+		　　　 '15'  as industryType
+		from
+		CHB_MONTH_ASSET_POSITION cmap
+		left join chb_asset_info info
+		　　　　　　on cmap.asset_code=info.asset_code
+		left join CHB_MONTH_ASSET_POSITION lastcmap
+		on cmap.asset_code=lastcmap.asset_code
+		and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		　　 where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
+		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
+		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
+		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
 	)
 	,possum as(
 	select end.industryType as industryType,sum((nvl(end.amt,0)+nvl(end.lastamt,0))/2) as sumamt
@@ -2089,8 +2481,9 @@ with cj as(
 		</if>
 		sum(t.sessionendNum) as sessionendNum,
 		sum(t.lastSessionendNum) as lastSessionendNum,
+		sum(t.zdSessionendNum) as zdSessionendNum,
 		sum(t.fbSessionendNum) as fbSessionendNum
-		(
+		from(
 
 		select
 		mst.customer_id as　counterId,
@@ -2098,6 +2491,7 @@ with cj as(
 		else mstinfo.customer_name end as counterName,
 		nvl(cmap.ASSETVALUE_A,0) as sessionendNum,
 		0 as lastSessionendNum,
+		0 as zdSessionendNum,
 		0 as fbSessionendNum
 		from
 		CHB_MONTH_ASSET_POSITION cmap
@@ -2109,25 +2503,25 @@ with cj as(
 		on mst.customer_id=mstinfo.customer_id
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
 		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
-		and mst.industry='10'
-		and  cmap.ASSETTYPE2 in ('1102','1112','1209','1106','2401','1303','2403','2402','2499','2601','2602','2604',
-		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2618','2619','2620','1701','1703',
-		'1704','1706','1702','1705')
+		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
+		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
+		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
 		<if test="industryType != null  and industryType.equals('XT')">
-			and mst.industry4 ='08'
+			and cmap.ASSETTYPE2='1701'
 		</if>
 		<if test="industryType != null  and industryType.equals('ZQQT')">
-			and mst.industry3 in ('13','16')
+			and cmap.ASSETTYPE2 in ('1703','1706')
 		</if>
 		<if test="industryType != null  and industryType.equals('ZQJJ')">
-			and mst.industry3 = '14'
+			and cmap.ASSETTYPE2 in ('1704','1106','2401','1303','2403','2402','2499')
 		</if>
 		<if test="industryType != null  and industryType.equals('YH')">
 			and (mst.industry3 = '03' or  mst.industry4 in ('01','02','03','04'))
 		</if>
 		<if test="industryType != null  and industryType.equals('BX')">
-            and mst.industry3 not in ('13','16','14','03','01')
-			and mst.industry4 not in ('08','01','02','03','04','07')
+            and (mst.industry3 not in ('03')　or mst.industry3 is null)
+			and (mst.industry4 not in ('01','02','03','04','07') or mst.industry4 is null)
+			and cmap.ASSETTYPE2 not in ('1701','1703','1704','1106','2401','1303','2403','2402','2499',1706)
 		</if>
 		union all
 
@@ -2138,6 +2532,7 @@ with cj as(
 
 		0 as sessionendNum,
 		nvl(cmap.ASSETVALUE_A,0) as lastSessionendNum,
+		0 as zdSessionendNum,
 		0 as fbSessionendNum
 		from
 		CHB_MONTH_ASSET_POSITION cmap
@@ -2149,25 +2544,70 @@ with cj as(
 		on mst.customer_id=mstinfo.customer_id
 		where 1=1 and cmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
 		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
-		and mst.industry='10'
-		and  cmap.ASSETTYPE2 in ('1102','1112','1209','1106','2401','1303','2403','2402','2499','2601','2602','2604',
-		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2618','2619','2620','1701','1703',
-		'1704','1706','1702','1705')
+		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
+		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
+		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
 		<if test="industryType != null  and industryType.equals('XT')">
-			and mst.industry4 ='08'
+			and cmap.ASSETTYPE2='1701'
 		</if>
 		<if test="industryType != null  and industryType.equals('ZQQT')">
-			and mst.industry3 in ('13','16')
+			and cmap.ASSETTYPE2 in ('1703','1706')
 		</if>
 		<if test="industryType != null  and industryType.equals('ZQJJ')">
-			and mst.industry3 = '14'
+			and cmap.ASSETTYPE2 in ('1704','1106','2401','1303','2403','2402','2499')
 		</if>
 		<if test="industryType != null  and industryType.equals('YH')">
 			and (mst.industry3 = '03' or  mst.industry4 in ('01','02','03','04'))
 		</if>
 		<if test="industryType != null  and industryType.equals('BX')">
-			and mst.industry3 not in ('13','16','14','03','01')
-			and mst.industry4 not in ('08','01','02','03','04','07')
+			and (mst.industry3 not in ('03')　or mst.industry3 is null)
+			and (mst.industry4 not in ('01','02','03','04','07') or mst.industry4 is null)
+			and cmap.ASSETTYPE2 not in ('1701','1703','1704','1106','2401','1303','2403','2402','2499',1706)
+		</if>
+		union all
+
+		select
+		mst.customer_id as　counterId,
+		case when info.is_bjszq='01' then '北京金融资产交易所'
+		else mstinfo.customer_name end as counterName,
+		0 as sessionendNum,
+		0 as lastSessionendNum,
+		nvl(cmap.ASSETVALUE_A,0) as zdSessionendNum,
+		0 as fbSessionendNum　　　　
+		from
+		CHB_MONTH_ASSET_POSITION cmap
+		left join chb_asset_info info
+		on cmap.asset_code=info.asset_code
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		left join mst_customer_info mstinfo
+		on mst.customer_id=mstinfo.customer_id
+		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
+		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
+		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
+		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
+		<if test="industryType != null  and industryType.equals('XT')">
+			and cmap.ASSETTYPE2='1701'
+			and  info.manage_type='01'
+		</if>
+		<if test="industryType != null  and industryType.equals('ZQQT')">
+			and cmap.ASSETTYPE2 in ('1703','1706')
+			and  info.manage_type='01'
+		</if>
+		<if test="industryType != null  and industryType.equals('ZQJJ')">
+			and cmap.ASSETTYPE2 in ('1704','1106','2401','1303','2403','2402','2499')
+			and info.PRO_PROPERTY in ('02','03','04','05')
+		</if>
+		<if test="industryType != null  and industryType.equals('YH')">
+			and (mst.industry3 = '03' or  mst.industry4 in ('01','02','03','04'))
+			and  info.manage_type='01'
+		</if>
+		<if test="industryType != null  and industryType.equals('BX')">
+			and (mst.industry3 not in ('03')　or mst.industry3 is null)
+			and (mst.industry4 not in ('01','02','03','04','07') or mst.industry4 is null)
+			and cmap.ASSETTYPE2 not in ('1701','1703','1704','1106','2401','1303','2403','2402','2499',1706)
+			and  info.manage_type='01'
 		</if>
 
 		union all
@@ -2178,6 +2618,7 @@ with cj as(
 		else mstinfo.customer_name end as counterName,
 		0 as sessionendNum,
 		0 as lastSessionendNum,
+		0 as zdSessionendNum,
 		nvl(cmap.ASSETVALUE_B,0) as fbSessionendNum　　　　
 		from
 		CHB_MONTH_ASSET_POSITION cmap
@@ -2189,35 +2630,30 @@ with cj as(
 		on mst.customer_id=mstinfo.customer_id
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
 		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
-		and mst.industry='10'
-		and  cmap.ASSETTYPE2 in ('1102','1112','1209','1106','2401','1303','2403','2402','2499','2601','2602','2604',
-		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2618','2619','2620','1701','1703',
-		'1704','1706','1702','1705')
-		AND cmap.ASSETTYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
+		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
+		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
 		<if test="industryType != null  and industryType.equals('XT')">
-			and mst.industry4 ='08'
+			and cmap.ASSETTYPE2='1701'
 		</if>
 		<if test="industryType != null  and industryType.equals('ZQQT')">
-			and mst.industry3 in ('13','16')
+			and cmap.ASSETTYPE2 in ('1703','1706')
 		</if>
 		<if test="industryType != null  and industryType.equals('ZQJJ')">
-			and mst.industry3 = '14'
+			and cmap.ASSETTYPE2 in ('1704','1106','2401','1303','2403','2402','2499')
 		</if>
 		<if test="industryType != null  and industryType.equals('YH')">
 			and (mst.industry3 = '03' or  mst.industry4 in ('01','02','03','04'))
 		</if>
 		<if test="industryType != null  and industryType.equals('BX')">
-			and mst.industry3 not in ('13','16','14','03','01')
-			and mst.industry4 not in ('08','01','02','03','04','07')
+			and (mst.industry3 not in ('03')　or mst.industry3 is null)
+			and (mst.industry4 not in ('01','02','03','04','07') or mst.industry4 is null)
+			and cmap.ASSETTYPE2 not in ('1701','1703','1704','1106','2401','1303','2403','2402','2499',1706)
 		</if>
 
 		)t
         group by t.counterName
         )tt
-
-
-
-
 	</select>
 
 

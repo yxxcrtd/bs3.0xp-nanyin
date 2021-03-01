@@ -96,7 +96,7 @@ public class InvestmentsInfo001Service extends CommonExportService<ChbBankMonthR
 		// File depositfile = TisUtil.createFile(data, exceltemplate, fileName);
 
         //表7-2
-        List<InvestmentBusinessCounterDetailsDto> listCounter=restTemplate.postForList(ServiceApplication.REPORT_SERVICE_NAME + "/InvestmentsInfo/createTable3AddData",
+        List<InvestmentBusinessCounterDetailsDto> listCounter=restTemplate.postForList(ServiceApplication.REPORT_SERVICE_NAME + "/InvestmentsInfo/createTable7OtherInfo",
                 pageParam, InvestmentBusinessCounterDetailsDto.class);
         data.put("listCounter",listCounter);
 

@@ -88,14 +88,31 @@ public class InvestmentsInfoService {
 	// 存储值相同的单元格对应情况
 	private static Map<String, String> sameValueMap = new HashMap<String, String>();
 	static {
-		tablePorpertyMap_1.put("t1_cur13_amt", "ASSETAMT1_15_1_1+ASSETAMT1_15_2_1+ASSETAMT1_15_3_1+ASSETAMT1_15_4_1+ASSETAMT1_15_5_1+ASSETAMT1_15_6_1");
-		tablePorpertyMap_1.put("t1_last13_amt", "ASSETAMT1_15_1_1+ASSETAMT1_15_2_1+ASSETAMT1_15_3_1+ASSETAMT1_15_4_1+ASSETAMT1_15_5_1+ASSETAMT1_15_6_1");
-		tablePorpertyMap_1.put("t1_cur14_amt", "ASSETAMT1_15_1_2+ASSETAMT1_15_2_2+ASSETAMT1_15_3_2+ASSETAMT1_15_4_2+ASSETAMT1_15_5_2+ASSETAMT1_15_6_2");
-		tablePorpertyMap_1.put("t1_last14_amt", "ASSETAMT1_15_1_2+ASSETAMT1_15_2_2+ASSETAMT1_15_3_2+ASSETAMT1_15_4_2+ASSETAMT1_15_5_2+ASSETAMT1_15_6_2");
+		tablePorpertyMap_1.put("t1_cur12_amt", "ASSETAMT1_1_6+ASSETAMT1_2_3+ASSETAMT1_3_3+ASSETAMT1_4_14+ASSETAMT1_5_17+ASSETAMT1_6_5+ASSETAMT1_7_8+ASSETAMT1_8_11+ASSETAMT1_9_4+ASSETAMT1_10_7+ASSETAMT1_11_7+ASSETAMT1_12_9+ASSETAMT1_14_8");
+		tablePorpertyMap_1.put("t1_last12_amt",  "ASSETAMT1_1_6+ASSETAMT1_2_3+ASSETAMT1_3_3+ASSETAMT1_4_14+ASSETAMT1_5_17+ASSETAMT1_6_5+ASSETAMT1_7_8+ASSETAMT1_8_11+ASSETAMT1_9_4+ASSETAMT1_10_7+ASSETAMT1_11_7+ASSETAMT1_12_9+ASSETAMT1_14_8");
+		tablePorpertyMap_1.put("t1_cur13_amt", "ASSETAMT1_13_1_1+ASSETAMT1_13_2_1+ASSETAMT1_13_3_1+ASSETAMT1_13_4_1+ASSETAMT1_13_5_1+ASSETAMT1_13_6_1");
+		tablePorpertyMap_1.put("t1_last13_amt", "ASSETAMT1_13_1_1+ASSETAMT1_13_2_1+ASSETAMT1_13_3_1+ASSETAMT1_13_4_1+ASSETAMT1_13_5_1+ASSETAMT1_13_6_1");
+		tablePorpertyMap_1.put("t1_cur14_amt", "ASSETAMT1_13_1_2+ASSETAMT1_13_2_2+ASSETAMT1_13_3_2+ASSETAMT1_13_4_2+ASSETAMT1_13_5_2+ASSETAMT1_13_6_2");
+		tablePorpertyMap_1.put("t1_last14_amt", "ASSETAMT1_13_1_2+ASSETAMT1_13_2_2+ASSETAMT1_13_3_2+ASSETAMT1_13_4_2+ASSETAMT1_13_5_2+ASSETAMT1_13_6_2");
+		tablePorpertyMap_1.put("t1_cur26_amt", "ASSETAMT1_13_1_1");
+		tablePorpertyMap_1.put("t1_last26_amt",  "ASSETAMT1_13_1_1");
+		tablePorpertyMap_1.put("t1_cur27_amt", "ASSETAMT1_13_2_1");
+		tablePorpertyMap_1.put("t1_last27_amt",  "ASSETAMT1_13_2_1");
+		tablePorpertyMap_1.put("t1_cur28_amt", "ASSETAMT1_13_3_1");
+		tablePorpertyMap_1.put("t1_last28_amt",  "ASSETAMT1_13_3_1");
+		tablePorpertyMap_1.put("t1_cur29_amt", "ASSETAMT1_13_4_1+ASSETAMT1_13_5_1+ASSETAMT1_13_6_1");
+		tablePorpertyMap_1.put("t1_last29_amt", "ASSETAMT1_13_4_1+ASSETAMT1_13_5_1+ASSETAMT1_13_6_1");
+		tablePorpertyMap_1.put("t1_cur31_amt", "ASSETAMT1_13_1_2");
+		tablePorpertyMap_1.put("t1_last31_amt",  "ASSETAMT1_13_1_2");
+		tablePorpertyMap_1.put("t1_cur32_amt", "ASSETAMT1_13_2_2");
+		tablePorpertyMap_1.put("t1_last32_amt",  "ASSETAMT1_13_2_2");
+		tablePorpertyMap_1.put("t1_cur33_amt", "ASSETAMT1_13_3_2");
+		tablePorpertyMap_1.put("t1_last33_amt",  "ASSETAMT1_13_3_2");
+		tablePorpertyMap_1.put("t1_cur34_amt", "ASSETAMT1_13_4_2+ASSETAMT1_13_5_2+ASSETAMT1_13_6_2");
+		tablePorpertyMap_1.put("t1_last34_amt", "ASSETAMT1_13_4_2+ASSETAMT1_13_5_2+ASSETAMT1_13_6_2");
+
 		tablePorpertyMap_1.put("t6_cur6_amt", "ASSETAMT1_4_13");
 		tablePorpertyMap_1.put("t6_last6_amt", "ASSETAMT1_4_13");
-		tablePorpertyMap_1.put("t6_cur7_amt", "ASSETAMT1_4_a");
-		tablePorpertyMap_1.put("t6_last7_amt", "ASSETAMT1_4_a");
 		tablePorpertyMap_1.put("t6_cur13_amt", "ASSETAMT1_3_1+ASSETAMT1_3_2+ASSETAMT1_2_1+ASSETAMT1_2_2");
 		tablePorpertyMap_1.put("t6_last13_amt", "ASSETAMT1_3_1+ASSETAMT1_3_2+ASSETAMT1_2_1+ASSETAMT1_2_2");
 		tablePorpertyMap_1.put("t6_cur14_amt", "ASSETAMT1_3_1");
@@ -104,28 +121,36 @@ public class InvestmentsInfoService {
 		tablePorpertyMap_1.put("t6_last15_amt", "ASSETAMT1_3_2");
 		tablePorpertyMap_1.put("t6_cur16_amt", "ASSETAMT1_2_1+ASSETAMT1_2_2");
 		tablePorpertyMap_1.put("t6_last16_amt", "ASSETAMT1_2_1+ASSETAMT1_2_2");
-		tablePorpertyMap_1.put("t6_cur17_amt", "ASSETAMT1_5_3");
-		tablePorpertyMap_1.put("t6_last17_amt", "ASSETAMT1_5_3");
-		tablePorpertyMap_1.put("t6_cur18_amt", "ASSETAMT1_7_11_a");
-		tablePorpertyMap_1.put("t6_last18_amt", "ASSETAMT1_7_11_a");
-		tablePorpertyMap_1.put("t6_cur20_amt", "ASSETAMT1_8_5");
-		tablePorpertyMap_1.put("t6_last20_amt", "ASSETAMT1_8_5");
-		tablePorpertyMap_1.put("t6_cur22_amt", "ASSETAMT1_13_7");
-		tablePorpertyMap_1.put("t6_last22_amt", "ASSETAMT1_13_7");
-		tablePorpertyMap_1.put("t6_cur23_amt", "ASSETAMT1_14_9");
-		tablePorpertyMap_1.put("t6_last23_amt", "ASSETAMT1_14_9");
-		tablePorpertyMap_1.put("t6_cur25_amt", "ASSETAMT1_15_1");
-		tablePorpertyMap_1.put("t6_last25_amt", "ASSETAMT1_15_1");
-		tablePorpertyMap_1.put("t6_cur26_amt", "ASSETAMT1_15_2+ASSETAMT1_15_3+ASSETAMT1_15_4");
-		tablePorpertyMap_1.put("t6_last26_amt","ASSETAMT1_15_2+ASSETAMT1_15_3+ASSETAMT1_15_4");
-		tablePorpertyMap_1.put("t6_cur27_amt", "ASSETAMT1_15_5");
-		tablePorpertyMap_1.put("t6_last27_amt", "ASSETAMT1_15_5");
-		tablePorpertyMap_1.put("t6_cur28_amt", "ASSETAMT1_15_6");
-		tablePorpertyMap_1.put("t6_last28_amt", "ASSETAMT1_15_6");
-		tablePorpertyMap_1.put("t2_cur83_amt", "PRODSUM_MJFS");
-		tablePorpertyMap_1.put("t2_last83_amt", "PRODSUM_MJFS");
-        tablePorpertyMap_1.put("t2_cur85_amt", "PRODSUM_MJFS");
-        tablePorpertyMap_1.put("t2_last85_amt", "PRODSUM_MJFS");
+		tablePorpertyMap_1.put("t6_cur17_amt", "ASSETAMT1_5_17");
+		tablePorpertyMap_1.put("t6_last17_amt", "ASSETAMT1_5_17");
+		tablePorpertyMap_1.put("t6_cur18_amt", "ASSETAMT1_6_5");
+		tablePorpertyMap_1.put("t6_last18_amt", "ASSETAMT1_6_5");
+
+		tablePorpertyMap_1.put("t6_cur20_amt", "ASSETAMT1_11_7");
+		tablePorpertyMap_1.put("t6_last20_amt", "ASSETAMT1_11_7");
+		tablePorpertyMap_1.put("t6_cur21_amt", "ASSETAMT1_12_9");
+		tablePorpertyMap_1.put("t6_last21_amt", "ASSETAMT1_12_9");
+
+		tablePorpertyMap_1.put("t6_cur23_amt", "ASSETAMT1_13_1");
+		tablePorpertyMap_1.put("t6_last23_amt", "ASSETAMT1_13_1");
+
+		tablePorpertyMap_1.put("t6_cur24_amt", "ASSETAMT1_13_2+ASSETAMT1_13_3+ASSETAMT1_13_4");
+		tablePorpertyMap_1.put("t6_last24_amt", "ASSETAMT1_13_2+ASSETAMT1_13_3+ASSETAMT1_13_4");
+		tablePorpertyMap_1.put("t6_cur25_amt", "ASSETAMT1_13_5");
+		tablePorpertyMap_1.put("t6_last25_amt", "ASSETAMT1_13_5");
+
+		tablePorpertyMap_1.put("t6_cur26_amt", "ASSETAMT1_13_6");
+		tablePorpertyMap_1.put("t6_last26_amt","ASSETAMT1_13_6");
+
+		tablePorpertyMap_1.put("t6_cur27_amt", "ASSETAMT1_7_8");
+		tablePorpertyMap_1.put("t6_last27_amt", "ASSETAMT1_7_8");
+		tablePorpertyMap_1.put("t6_cur28_amt", "ASSETAMT1_4_13+ASSETAMT1_3_1+ASSETAMT1_3_2+ASSETAMT1_2_1+ASSETAMT1_2_2+ASSETAMT1_5_17+ASSETAMT1_6_5+ASSETAMT1_11_7+ASSETAMT1_12_9+ASSETAMT1_13_1+ASSETAMT1_13_2+ASSETAMT1_13_3+ASSETAMT1_13_4+ASSETAMT1_13_5+ASSETAMT1_13_6+ASSETAMT1_7_8");
+		tablePorpertyMap_1.put("t6_last28_amt", "ASSETAMT1_4_13+ASSETAMT1_3_1+ASSETAMT1_3_2+ASSETAMT1_2_1+ASSETAMT1_2_2+ASSETAMT1_5_17+ASSETAMT1_6_5+ASSETAMT1_11_7+ASSETAMT1_12_9+ASSETAMT1_13_1+ASSETAMT1_13_2+ASSETAMT1_13_3+ASSETAMT1_13_4+ASSETAMT1_13_5+ASSETAMT1_13_6+ASSETAMT1_7_8");
+
+		tablePorpertyMap_1.put("t2_cur84_amt", "PRODSUM_MJFS");
+		tablePorpertyMap_1.put("t2_last84_amt", "PRODSUM_MJFS");
+        tablePorpertyMap_1.put("t2_cur86_amt", "PRODSUM_MJFS");
+        tablePorpertyMap_1.put("t2_last86_amt", "PRODSUM_MJFS");
 
 		tablePorpertyMap_2.put("t2_cur6_amt", "ASSETAMT1_1_6");
 		tablePorpertyMap_2.put("t2_last6_amt", "ASSETAMT1_1_6");
@@ -149,8 +174,8 @@ public class InvestmentsInfoService {
 		tablePorpertyMap_2.put("t2_last17_amt", "ASSETAMT1_2_1");
 		tablePorpertyMap_2.put("t2_cur18_amt", "ASSETAMT1_2_2");
 		tablePorpertyMap_2.put("t2_last18_amt", "ASSETAMT1_2_2");
-		tablePorpertyMap_2.put("t2_cur21_amt", "ASSETAMT1_4_13");
-		tablePorpertyMap_2.put("t2_last21_amt", "ASSETAMT1_4_13");
+		tablePorpertyMap_2.put("t2_cur21_amt", "ASSETAMT1_4_14");
+		tablePorpertyMap_2.put("t2_last21_amt", "ASSETAMT1_4_14");
 		tablePorpertyMap_2.put("t2_cur22_amt", "ASSETAMT1_4_1");
 		tablePorpertyMap_2.put("t2_last22_amt", "ASSETAMT1_4_1");
 		tablePorpertyMap_2.put("t2_cur23_amt", "ASSETAMT1_4_2");
@@ -173,92 +198,101 @@ public class InvestmentsInfoService {
 		tablePorpertyMap_2.put("t2_last31_amt", "ASSETAMT1_4_10");
 		tablePorpertyMap_2.put("t2_cur32_amt", "ASSETAMT1_4_11");
 		tablePorpertyMap_2.put("t2_last32_amt", "ASSETAMT1_4_11");
-    	tablePorpertyMap_2.put("t2_cur39_amt", "ASSETAMT1_7_12+ASSETAMT1_5_1+ASSETAMT1_6_4");
-		tablePorpertyMap_2.put("t2_last39_amt", "ASSETAMT1_7_12+ASSETAMT1_5_1+ASSETAMT1_6_4");
-		tablePorpertyMap_2.put("t2_cur40_amt", "ASSETAMT1_7_1");
-		tablePorpertyMap_2.put("t2_last40_amt", "ASSETAMT1_7_1");
-		tablePorpertyMap_2.put("t2_cur41_amt", "ASSETAMT1_7_2");
-		tablePorpertyMap_2.put("t2_last41_amt", "ASSETAMT1_7_2");
-		tablePorpertyMap_2.put("t2_cur42_amt", "ASSETAMT1_7_3");
-		tablePorpertyMap_2.put("t2_last42_amt", "ASSETAMT1_7_3");
-		tablePorpertyMap_2.put("t2_cur43_amt", "ASSETAMT1_7_4");
-		tablePorpertyMap_2.put("t2_last43_amt", "ASSETAMT1_7_4");
-		tablePorpertyMap_2.put("t2_cur44_amt", "ASSETAMT1_7_5");
-		tablePorpertyMap_2.put("t2_last44_amt", "ASSETAMT1_7_5");
-		tablePorpertyMap_2.put("t2_cur45_amt", "ASSETAMT1_7_6");
-		tablePorpertyMap_2.put("t2_last45_amt", "ASSETAMT1_7_6");
-		tablePorpertyMap_2.put("t2_cur46_amt", "ASSETAMT1_7_7");
-		tablePorpertyMap_2.put("t2_last46_amt", "ASSETAMT1_7_7");
-		tablePorpertyMap_2.put("t2_cur47_amt", "ASSETAMT1_7_8");
-		tablePorpertyMap_2.put("t2_last47_amt", "ASSETAMT1_7_8");
-		tablePorpertyMap_2.put("t2_cur48_amt", "ASSETAMT1_7_9");
-		tablePorpertyMap_2.put("t2_last48_amt", "ASSETAMT1_7_9");
-		tablePorpertyMap_2.put("t2_cur49_amt", "ASSETAMT1_7_10");
-		tablePorpertyMap_2.put("t2_last49_amt", "ASSETAMT1_7_10");
-		tablePorpertyMap_2.put("t2_cur51_amt", "ASSETAMT1_5_1");
-		tablePorpertyMap_2.put("t2_last51_amt", "ASSETAMT1_5_1");
-		tablePorpertyMap_2.put("t2_cur52_amt", "ASSETAMT1_6_4");
-		tablePorpertyMap_2.put("t2_last52_amt", "ASSETAMT1_6_4");
-		tablePorpertyMap_2.put("t2_cur53_amt", "ASSETAMT1_6_1");
-		tablePorpertyMap_2.put("t2_last53_amt", "ASSETAMT1_6_1");
-		tablePorpertyMap_2.put("t2_cur54_amt", "ASSETAMT1_7_11");
-		tablePorpertyMap_2.put("t2_last54_amt", "ASSETAMT1_7_11");
-		tablePorpertyMap_2.put("t2_cur55_amt", "ASSETAMT1_8_5");
-		tablePorpertyMap_2.put("t2_last55_amt", "ASSETAMT1_8_5");
-		tablePorpertyMap_2.put("t2_cur56_amt", "ASSETAMT1_8_1");
-		tablePorpertyMap_2.put("t2_last56_amt", "ASSETAMT1_8_1");
-		tablePorpertyMap_2.put("t2_cur57_amt", "ASSETAMT1_8_2");
-		tablePorpertyMap_2.put("t2_last57_amt", "ASSETAMT1_8_2");
-		tablePorpertyMap_2.put("t2_cur60_amt", "ASSETAMT1_8_3");
-		tablePorpertyMap_2.put("t2_last60_amt", "ASSETAMT1_8_3");
-		tablePorpertyMap_2.put("t2_cur63_amt", "ASSETAMT1_8_4");
-		tablePorpertyMap_2.put("t2_last63_amt", "ASSETAMT1_8_4");
-		tablePorpertyMap_2.put("t2_cur64_amt", "ASSETAMT1_13_7");
-		tablePorpertyMap_2.put("t2_last64_amt", "ASSETAMT1_13_7");
-		tablePorpertyMap_2.put("t2_cur65_amt", "ASSETAMT1_13_1");
-		tablePorpertyMap_2.put("t2_last65_amt", "ASSETAMT1_13_1");
-		tablePorpertyMap_2.put("t2_cur66_amt", "ASSETAMT1_13_2");
-		tablePorpertyMap_2.put("t2_last66_amt", "ASSETAMT1_13_2");
-		tablePorpertyMap_2.put("t2_cur67_amt", "ASSETAMT1_13_3");
-		tablePorpertyMap_2.put("t2_last67_amt", "ASSETAMT1_13_3");
-		tablePorpertyMap_2.put("t2_cur68_amt", "ASSETAMT1_13_4");
-		tablePorpertyMap_2.put("t2_last68_amt", "ASSETAMT1_13_4");
-		tablePorpertyMap_2.put("t2_cur69_amt", "ASSETAMT1_13_5");
-		tablePorpertyMap_2.put("t2_last69_amt", "ASSETAMT1_13_5");
-		tablePorpertyMap_2.put("t2_cur70_amt", "ASSETAMT1_13_6");
-		tablePorpertyMap_2.put("t2_last70_amt", "ASSETAMT1_13_6");
-		tablePorpertyMap_2.put("t2_cur71_amt", "ASSETAMT1_9_8");
-		tablePorpertyMap_2.put("t2_last71_amt", "ASSETAMT1_9_8");
-		tablePorpertyMap_2.put("t2_cur72_amt", "ASSETAMT1_10_11");
-		tablePorpertyMap_2.put("t2_last72_amt", "ASSETAMT1_10_11");
-		tablePorpertyMap_2.put("t2_cur73_amt", "ASSETAMT1_11_4");
-		tablePorpertyMap_2.put("t2_last73_amt", "ASSETAMT1_11_4");
-		tablePorpertyMap_2.put("t2_cur74_amt", "ASSETAMT1_12_7");
-		tablePorpertyMap_2.put("t2_last74_amt", "ASSETAMT1_12_7");
-		tablePorpertyMap_2.put("t2_cur76_amt", "ASSETAMT1_17");
-		tablePorpertyMap_2.put("t2_last76_amt", "ASSETAMT1_17");
-		tablePorpertyMap_2.put("t2_cur77_amt", "ASSETAMT3_1");
-		tablePorpertyMap_2.put("t2_last77_amt", "ASSETAMT3_1");
-		tablePorpertyMap_2.put("t2_cur81_amt", "ASSETAMT2_1_1");
-		tablePorpertyMap_2.put("t2_last81_amt", "ASSETAMT2_1_1");
-		tablePorpertyMap_2.put("t2_cur82_amt", "ASSETAMT2_1_2");
-		tablePorpertyMap_2.put("t2_last82_amt", "ASSETAMT2_1_2");
-
-        tablePorpertyMap_2.put("t2_cur85_amt", "ASSETAMT2_1_1+ASSETAMT2_1_2");
-        tablePorpertyMap_2.put("t2_last85_amt", "ASSETAMT2_1_1+ASSETAMT2_1_2");
+		tablePorpertyMap_2.put("t2_cur40_amt", "ASSETAMT1_5_17");
+		tablePorpertyMap_2.put("t2_last40_amt", "ASSETAMT1_5_17");
+		tablePorpertyMap_2.put("t2_cur41_amt", "ASSETAMT1_5_1");
+		tablePorpertyMap_2.put("t2_last41_amt", "ASSETAMT1_5_1");
+		tablePorpertyMap_2.put("t2_cur42_amt", "ASSETAMT1_5_2");
+		tablePorpertyMap_2.put("t2_last42_amt", "ASSETAMT1_5_2");
+		tablePorpertyMap_2.put("t2_cur43_amt", "ASSETAMT1_5_3");
+		tablePorpertyMap_2.put("t2_last43_amt", "ASSETAMT1_5_3");
+		tablePorpertyMap_2.put("t2_cur44_amt", "ASSETAMT1_5_4");
+		tablePorpertyMap_2.put("t2_last44_amt", "ASSETAMT1_5_4");
+		tablePorpertyMap_2.put("t2_cur45_amt", "ASSETAMT1_5_5");
+		tablePorpertyMap_2.put("t2_last45_amt", "ASSETAMT1_5_5");
+		tablePorpertyMap_2.put("t2_cur46_amt", "ASSETAMT1_5_6");
+		tablePorpertyMap_2.put("t2_last46_amt", "ASSETAMT1_5_6");
+		tablePorpertyMap_2.put("t2_cur47_amt", "ASSETAMT1_5_7");
+		tablePorpertyMap_2.put("t2_last47_amt", "ASSETAMT1_5_7");
+		tablePorpertyMap_2.put("t2_cur48_amt", "ASSETAMT1_5_8");
+		tablePorpertyMap_2.put("t2_last48_amt", "ASSETAMT1_5_8");
+		tablePorpertyMap_2.put("t2_cur49_amt", "ASSETAMT1_5_9");
+		tablePorpertyMap_2.put("t2_last49_amt", "ASSETAMT1_5_9");
+		tablePorpertyMap_2.put("t2_cur50_amt", "ASSETAMT1_5_14");
+		tablePorpertyMap_2.put("t2_last50_amt", "ASSETAMT1_5_14");
+		tablePorpertyMap_2.put("t2_cur51_amt", "ASSETAMT1_5_15");
+		tablePorpertyMap_2.put("t2_last51_amt", "ASSETAMT1_5_15");
+		tablePorpertyMap_2.put("t2_cur52_amt", "ASSETAMT1_5_12");
+		tablePorpertyMap_2.put("t2_last52_amt", "ASSETAMT1_5_12");
+		tablePorpertyMap_2.put("t2_cur53_amt", "ASSETAMT1_5_13");
+		tablePorpertyMap_2.put("t2_last53_amt", "ASSETAMT1_5_13");
+		tablePorpertyMap_2.put("t2_cur54_amt", "ASSETAMT1_5_10");
+		tablePorpertyMap_2.put("t2_last54_amt", "ASSETAMT1_5_10");
+		tablePorpertyMap_2.put("t2_cur55_amt", "ASSETAMT1_5_16_a");
+		tablePorpertyMap_2.put("t2_last55_amt", "ASSETAMT1_5_16_a");
+		tablePorpertyMap_2.put("t2_cur57_amt", "ASSETAMT1_5_16");
+		tablePorpertyMap_2.put("t2_last57_amt", "ASSETAMT1_5_16");
+		tablePorpertyMap_2.put("t2_cur58_amt", "ASSETAMT1_6_5");
+		tablePorpertyMap_2.put("t2_last58_amt", "ASSETAMT1_6_5");
+		tablePorpertyMap_2.put("t2_cur59_amt", "ASSETAMT1_6_1");
+		tablePorpertyMap_2.put("t2_last59_amt", "ASSETAMT1_6_1");
+		tablePorpertyMap_2.put("t2_cur60_amt", "ASSETAMT1_6_2");
+		tablePorpertyMap_2.put("t2_last60_amt", "ASSETAMT1_6_2");
+		tablePorpertyMap_2.put("t2_cur63_amt", "ASSETAMT1_6_3");
+		tablePorpertyMap_2.put("t2_last63_amt", "ASSETAMT1_6_3");
+		tablePorpertyMap_2.put("t2_cur65_amt", "ASSETAMT1_6_4");
+		tablePorpertyMap_2.put("t2_last65_amt", "ASSETAMT1_6_4");
+		tablePorpertyMap_2.put("t2_cur66_amt", "ASSETAMT1_11_7");
+		tablePorpertyMap_2.put("t2_last66_amt", "ASSETAMT1_11_7");
+		tablePorpertyMap_2.put("t2_cur67_amt", "ASSETAMT1_11_1");
+		tablePorpertyMap_2.put("t2_last67_amt", "ASSETAMT1_11_1");
+		tablePorpertyMap_2.put("t2_cur68_amt", "ASSETAMT1_11_2");
+		tablePorpertyMap_2.put("t2_last68_amt", "ASSETAMT1_11_2");
+		tablePorpertyMap_2.put("t2_cur69_amt", "ASSETAMT1_11_3");
+		tablePorpertyMap_2.put("t2_last69_amt", "ASSETAMT1_11_3");
+		tablePorpertyMap_2.put("t2_cur70_amt", "ASSETAMT1_11_4");
+		tablePorpertyMap_2.put("t2_last70_amt", "ASSETAMT1_11_4");
+		tablePorpertyMap_2.put("t2_cur71_amt", "ASSETAMT1_11_5");
+		tablePorpertyMap_2.put("t2_last71_amt", "ASSETAMT1_11_5");
+		tablePorpertyMap_2.put("t2_cur72_amt", "ASSETAMT1_11_6");
+		tablePorpertyMap_2.put("t2_last72_amt", "ASSETAMT1_11_6");
+		tablePorpertyMap_2.put("t2_cur73_amt", "ASSETAMT1_7_8");
+		tablePorpertyMap_2.put("t2_last73_amt", "ASSETAMT1_7_8");
+		tablePorpertyMap_2.put("t2_cur74_amt", "ASSETAMT1_8_11");
+		tablePorpertyMap_2.put("t2_last74_amt", "ASSETAMT1_8_11");
+		tablePorpertyMap_2.put("t2_cur75_amt", "ASSETAMT1_9_4");
+		tablePorpertyMap_2.put("t2_last75_amt", "ASSETAMT1_9_4");
+		tablePorpertyMap_2.put("t2_cur76_amt", "ASSETAMT1_10_7");
+		tablePorpertyMap_2.put("t2_last76_amt", "ASSETAMT1_10_7");
+		tablePorpertyMap_2.put("t2_cur77_amt", "ASSETAMT1_15");
+		tablePorpertyMap_2.put("t2_last77_amt", "ASSETAMT1_15");
+		tablePorpertyMap_2.put("t2_cur78_amt", "ASSETAMT3_1_2");
+		tablePorpertyMap_2.put("t2_last78_amt", "ASSETAMT3_1_2");
+		tablePorpertyMap_2.put("t2_cur79_amt", "ASSETAMT3_1_1");
+		tablePorpertyMap_2.put("t2_last79_amt", "ASSETAMT3_1_1");
+		tablePorpertyMap_2.put("t2_cur82_amt", "ASSETAMT2_1_1");
+		tablePorpertyMap_2.put("t2_last82_amt", "ASSETAMT2_1_1");
+		tablePorpertyMap_2.put("t2_cur83_amt", "ASSETAMT2_1_2");
+		tablePorpertyMap_2.put("t2_last83_amt", "ASSETAMT2_1_2");
+		tablePorpertyMap_2.put("t2_cur86_amt", "ASSETAMT2_1_1+ASSETAMT2_1_2");
+		tablePorpertyMap_2.put("t2_last86_amt", "ASSETAMT2_1_1+ASSETAMT2_1_2");
 
 		tablePorpertyMap_2.put("t3_zq7_amt", "ASSETAMT1_4_1");
 		tablePorpertyMap_2.put("t3_lzq7_amt", "ASSETAMT1_4_1");
-		tablePorpertyMap_2.put("t3_zq8_amt", "ASSETAMT1_4_2+ASSETAMT1_4_4");
-		tablePorpertyMap_2.put("t3_lzq8_amt", "ASSETAMT1_4_2+ASSETAMT1_4_4");
+		tablePorpertyMap_2.put("t3_zq8_amt", "ASSETAMT1_4_2");
+		tablePorpertyMap_2.put("t3_lzq8_amt", "ASSETAMT1_4_2");
 		tablePorpertyMap_2.put("t3_zq9_amt", "ASSETAMT1_4_3");
 		tablePorpertyMap_2.put("t3_lzq9_amt", "ASSETAMT1_4_3");
-		tablePorpertyMap_2.put("t3_zq10_amt", "ASSETAMT1_4_5+ASSETAMT1_4_6");
-		tablePorpertyMap_2.put("t3_lzq10_amt", "ASSETAMT1_4_5+ASSETAMT1_4_6");
-		tablePorpertyMap_2.put("t3_zq11_amt", "ASSETAMT1_4_11");
-		tablePorpertyMap_2.put("t3_lzq11_amt", "ASSETAMT1_4_11");
-		tablePorpertyMap_2.put("t3_zq12_amt", "ASSETAMT1_4_7+ASSETAMT1_4_8+ASSETAMT1_4_9+ASSETAMT1_4_10");
-		tablePorpertyMap_2.put("t3_lzq12_amt", "ASSETAMT1_4_7+ASSETAMT1_4_8+ASSETAMT1_4_9+ASSETAMT1_4_10");
+		tablePorpertyMap_2.put("t3_zq10_amt", "ASSETAMT1_4_5");
+		tablePorpertyMap_2.put("t3_lzq10_amt","ASSETAMT1_4_5");
+		tablePorpertyMap_2.put("t3_zq11_amt", "ASSETAMT1_4_6");
+		tablePorpertyMap_2.put("t3_lzq11_amt", "ASSETAMT1_4_6");
+		tablePorpertyMap_2.put("t3_zq12_amt", "ASSETAMT1_4_4");
+		tablePorpertyMap_2.put("t3_lzq12_amt","ASSETAMT1_4_4");
+		tablePorpertyMap_2.put("t3_zq13_amt", "ASSETAMT1_4_10");
+		tablePorpertyMap_2.put("t3_lzq13_amt", "ASSETAMT1_4_10");
+		tablePorpertyMap_2.put("t3_zq14_amt", "ASSETAMT1_4_11");
+		tablePorpertyMap_2.put("t3_lzq14_amt", "ASSETAMT1_4_11");
 
 
 		tablePorpertyMap_4_1.put("01", "t4_amt1_1");
@@ -268,6 +302,7 @@ public class InvestmentsInfoService {
 		tablePorpertyMap_4_1.put("05", "t4_amt1_5");
 		tablePorpertyMap_4_1.put("06", "t4_amt1_6");
 		tablePorpertyMap_4_1.put("07", "t4_amt1_7");
+		tablePorpertyMap_4_1.put("10", "t4_amt1_10");
 
 		tablePorpertyMap_4_2.put("01", "t4_amt2_1");
 		tablePorpertyMap_4_2.put("02", "t4_amt2_2");
@@ -278,6 +313,8 @@ public class InvestmentsInfoService {
 		tablePorpertyMap_4_2.put("07", "t4_amt2_7");
 		tablePorpertyMap_4_2.put("08", "t4_amt2_8");
 		tablePorpertyMap_4_2.put("09", "t4_amt2_9");
+		tablePorpertyMap_4_2.put("10", "t4_amt2_10");
+
 
 
 		tablePorpertyMap_4_3.put("01", "t4_amt3_1");
@@ -289,6 +326,7 @@ public class InvestmentsInfoService {
 		tablePorpertyMap_4_3.put("07", "t4_amt3_7");
 		tablePorpertyMap_4_3.put("08", "t4_amt3_8");
 		tablePorpertyMap_4_3.put("09", "t4_amt3_9");
+		tablePorpertyMap_4_3.put("10", "t4_amt3_10");
 
 		tablePorpertyMap_4_4.put("1901", "t4_amt4_1");
 		tablePorpertyMap_4_4.put("1902", "t4_amt4_2");
@@ -513,17 +551,17 @@ public class InvestmentsInfoService {
 		porpertyMap_4_4.put("1902", "t4_amt4_2");
 		
 		// 表六C32 = 表一E12
-		sameValueMap.put("t6_cur32_amt", "t1_cur12_amt");
+		sameValueMap.put("t6_cur29_amt", "t1_cur12_amt");
 		// 表六D32 = 表一F12
-		sameValueMap.put("t6_last32_amt", "t1_last12_amt");
+		sameValueMap.put("t6_last29_amt", "t1_last12_amt");
 		// 表六C33 = 表一E13
-		sameValueMap.put("t6_cur33_amt", "t1_cur13_amt");
+		sameValueMap.put("t6_cur30_amt", "t1_cur13_amt");
 		// 表六D33 = 表一F13
-		sameValueMap.put("t6_last33_amt", "t1_last13_amt");
+		sameValueMap.put("t6_last30_amt", "t1_last13_amt");
 		// 表六C34 = 表一E14
-		sameValueMap.put("t6_cur34_amt", "t1_cur14_amt");
+		sameValueMap.put("t6_cur31_amt", "t1_cur14_amt");
 		// 表六D34 = 表一F14
-		sameValueMap.put("t6_last34_amt", "t1_last14_amt");
+		sameValueMap.put("t6_last31_amt", "t1_last14_amt");
 	}
 
 	/**  
@@ -737,13 +775,16 @@ public class InvestmentsInfoService {
 		// 本季末参数
 		paraMap.put("termId", termId);
 		List<OverallInfoDto> overallInfoList = overallInfoMapper.queryOverallInfoList(paraMap);
-		//其它Ａ级
+		//表6中AA+(含以上)
+		paraMap.put("rating", "1");
+		OverallInfoDto overallInfoDto1 = overallInfoMapper.queryOverallInfoByRating(paraMap);
+		//表6中其它Ａ级
 		paraMap.put("rating", "2");
 		OverallInfoDto overallInfoDto2 = overallInfoMapper.queryOverallInfoByRating(paraMap);
-		//B级及以下
+		//表6中B级及以下
 		paraMap.put("rating", "3");
 		OverallInfoDto overallInfoDto3 = overallInfoMapper.queryOverallInfoByRating(paraMap);
-		//无评级
+		//表6中无评级
 		paraMap.put("rating", "4");
 		OverallInfoDto overallInfoDto4 = overallInfoMapper.queryOverallInfoByRating(paraMap);
 
@@ -751,7 +792,9 @@ public class InvestmentsInfoService {
 		String lastTermId = getLastQuarter(termId);
 		paraMap.put("termId", lastTermId);
 		List<OverallInfoDto> lastOverallInfoList = overallInfoMapper.queryOverallInfoList(paraMap);
-
+		//AA+(含以上)
+		paraMap.put("rating", "1");
+		OverallInfoDto lastOverallInfoDto1 = overallInfoMapper.queryOverallInfoByRating(paraMap);
 		//其它Ａ级
 		paraMap.put("rating", "2");
 		OverallInfoDto lastOverallInfoDto2 = overallInfoMapper.queryOverallInfoByRating(paraMap);
@@ -769,14 +812,17 @@ public class InvestmentsInfoService {
 		// 上季末已组装数据
 		Map<String, BigDecimal> lastMap = assembleMap(lastOverallInfoList);
 		// 表一E12单元格直接投资为减法运算，单独提取出来
-		resultMap.put("t1_cur12_amt", queryMoney(currMap, "ASSETAMT1_17")
+		/*resultMap.put("t1_cur12_amt", queryMoney(currMap, "ASSETAMT1_17")
 				.subtract(queryMoney(currMap, "ASSETAMT1_16_8"))
-				.subtract(queryMoney(currMap, "ASSETAMT1_15_7")));
+				.subtract(queryMoney(currMap, "ASSETAMT1_15_7")));*/
 		// 表一F12单元格直接投资为减法运算，单独提取出来
-		resultMap.put("t1_last12_amt", queryMoney(lastMap, "ASSETAMT1_17")
+		/*resultMap.put("t1_last12_amt", queryMoney(lastMap, "ASSETAMT1_17")
 				.subtract(queryMoney(lastMap, "ASSETAMT1_16_8"))
-				.subtract(queryMoney(lastMap, "ASSETAMT1_15_7")));
-
+				.subtract(queryMoney(lastMap, "ASSETAMT1_15_7")));*/
+		// 表六C7数据
+		resultMap.put("t6_cur7_amt", overallInfoDto2==null?BigDecimal.ZERO:overallInfoDto1.getBalance());
+		// 表六D7数据
+		resultMap.put("t6_last7_amt", lastOverallInfoDto2==null?BigDecimal.ZERO:lastOverallInfoDto1.getBalance());
 		// 表六C8数据
 		resultMap.put("t6_cur8_amt", overallInfoDto2==null?BigDecimal.ZERO:overallInfoDto2.getBalance());
 		// 表六D8数据
@@ -816,42 +862,6 @@ public class InvestmentsInfoService {
         resultMap.put("t1_last17_amt", resultMap.get("t1_last12_amt")
                 .add(resultMap.get("t1_last13_amt"))
                 .add(resultMap.get("t1_last14_amt")));
-		// 表六C29 赋值
-		resultMap.put("t6_cur29_amt", queryMoney(currMap, "ASSETAMT1_7_12")
-				.add(queryMoney(currMap,"ASSETAMT1_6_4"))
-				.subtract(queryMoney(currMap, "ASSETAMT1_7_11_a"))
-				.subtract(queryMoney(currMap, "ASSETAMT1_7_11_b")));
-		// 表六D29重新赋值
-		resultMap.put("t6_last29_amt", queryMoney(lastMap, "ASSETAMT1_7_12")
-				.add(queryMoney(lastMap,"ASSETAMT1_6_4"))
-				.subtract(queryMoney(lastMap, "ASSETAMT1_7_11_a"))
-				.subtract(queryMoney(lastMap, "ASSETAMT1_7_11_b")));
-		// 表六C31 赋值
-		resultMap.put("t6_cur31_amt", resultMap.get("t6_cur6_amt")
-				.add(resultMap.get("t6_cur13_amt"))
-				.add(resultMap.get("t6_cur17_amt"))
-				.add(resultMap.get("t6_cur18_amt"))
-				.add(resultMap.get("t6_cur20_amt"))
-				.add(resultMap.get("t6_cur22_amt"))
-				.add(resultMap.get("t6_cur23_amt"))
-				.add(resultMap.get("t6_cur25_amt"))
-				.add(resultMap.get("t6_cur26_amt"))
-				.add(resultMap.get("t6_cur27_amt"))
-				.add(resultMap.get("t6_cur28_amt"))
-				.add(resultMap.get("t6_cur29_amt")));
-		// 表六D31赋值
-		resultMap.put("t6_last31_amt", resultMap.get("t6_last6_amt")
-				.add(resultMap.get("t6_last13_amt"))
-				.add(resultMap.get("t6_last17_amt"))
-				.add(resultMap.get("t6_last18_amt"))
-				.add(resultMap.get("t6_last20_amt"))
-				.add(resultMap.get("t6_last22_amt"))
-				.add(resultMap.get("t6_last23_amt"))
-				.add(resultMap.get("t6_last25_amt"))
-				.add(resultMap.get("t6_last26_amt"))
-				.add(resultMap.get("t6_last27_amt"))
-				.add(resultMap.get("t6_last28_amt"))
-				.add(resultMap.get("t6_last29_amt")));
 		// 值相同单元格赋值
 		for (String key : sameValueMap.keySet()) {
 			resultMap.put(key, resultMap.get(sameValueMap.get(key)));
@@ -925,31 +935,28 @@ public class InvestmentsInfoService {
 		Map<String, BigDecimal> currMap = assembleMap(overallInfoList);
 		// 上季末已组装数据
 		Map<String, BigDecimal> lastMap = assembleMap(lastOverallInfoList);
-		// 表二B35
-		/*resultMap.put("t2_cur35_amt", queryMoney(currMap, "ASSETAMT1_4_a")
-				.subtract(overallInfoDto1==null?BigDecimal.ZERO:overallInfoDto1.getBalance()));*/
-		resultMap.put("t2_cur35_amt", overallInfoDto1==null?BigDecimal.ZERO:overallInfoDto1.getBalance());
-		// 表二C35
-		resultMap.put("t2_last35_amt", lastOverallInfoDto1==null?BigDecimal.ZERO:lastOverallInfoDto1.getBalance());
-		// 表二B36数据
-		resultMap.put("t2_cur36_amt", overallInfoDto2==null?BigDecimal.ZERO:overallInfoDto2.getBalance());
-		// 表二C36数据
-		resultMap.put("t2_last36_amt", lastOverallInfoDto2==null?BigDecimal.ZERO:lastOverallInfoDto2.getBalance());
-		//  表二B37数据
-		resultMap.put("t2_cur37_amt", overallInfoDto3==null?BigDecimal.ZERO:overallInfoDto3.getBalance());
-		//  表二C37数据
-		resultMap.put("t2_last37_amt", lastOverallInfoDto3==null?BigDecimal.ZERO:lastOverallInfoDto3.getBalance());
-		// 表二B38
-		resultMap.put("t2_cur38_amt",overallInfoDto4==null?BigDecimal.ZERO:overallInfoDto4.getBalance());
-		// 表二C38
-		resultMap.put("t2_last38_amt", lastOverallInfoDto4==null?BigDecimal.ZERO:lastOverallInfoDto4.getBalance());
-
-
+		// 表二B36
+		resultMap.put("t2_cur36_amt", overallInfoDto1==null?BigDecimal.ZERO:overallInfoDto1.getBalance());
+		// 表二C36
+		resultMap.put("t2_last36_amt", lastOverallInfoDto1==null?BigDecimal.ZERO:lastOverallInfoDto1.getBalance());
+		// 表二B37数据
+		resultMap.put("t2_cur37_amt", overallInfoDto2==null?BigDecimal.ZERO:overallInfoDto2.getBalance());
+		// 表二C37数据
+		resultMap.put("t2_last37_amt", lastOverallInfoDto2==null?BigDecimal.ZERO:lastOverallInfoDto2.getBalance());
+		//  表二B38数据
+		resultMap.put("t2_cur38_amt", overallInfoDto3==null?BigDecimal.ZERO:overallInfoDto3.getBalance());
+		//  表二C38数据
+		resultMap.put("t2_last38_amt", lastOverallInfoDto3==null?BigDecimal.ZERO:lastOverallInfoDto3.getBalance());
+		// 表二B39
+		resultMap.put("t2_cur39_amt",overallInfoDto4==null?BigDecimal.ZERO:overallInfoDto4.getBalance());
+		// 表二C39
+		resultMap.put("t2_last39_amt", lastOverallInfoDto4==null?BigDecimal.ZERO:lastOverallInfoDto4.getBalance());
 
 		//  表二B59数据
-		resultMap.put("t2_cur59_amt", overallInfoDtoYx==null?BigDecimal.ZERO:overallInfoDtoYx.getBalance());
+		resultMap.put("t2_cur62_amt", overallInfoDtoYx==null?BigDecimal.ZERO:overallInfoDtoYx.getBalance());
 		//  表二C59数据
-		resultMap.put("t2_last59_amt", lastOverallInfoDtoYx==null?BigDecimal.ZERO:lastOverallInfoDtoYx.getBalance());
+		resultMap.put("t2_last62_amt", lastOverallInfoDtoYx==null?BigDecimal.ZERO:lastOverallInfoDtoYx.getBalance());
+
 
 
 		// 表二其余单元格赋值
@@ -1022,20 +1029,26 @@ public class InvestmentsInfoService {
 		paraMap.put("assettype2", "1299");
 		paraMap.put("endDate",endDate);
 
-		OverallInfoDto reamrk54 = overallInfoMapper.queryBottomRemarkInfoByInfo(paraMap);
+		OverallInfoDto reamrk57 = overallInfoMapper.queryBottomRemarkInfoByInfo(paraMap);
 		paraMap.put("assettype2", "1399");
-		OverallInfoDto reamrk63 = overallInfoMapper.queryBottomRemarkInfoByInfo(paraMap);
+		OverallInfoDto reamrk65 = overallInfoMapper.queryBottomRemarkInfoByInfo(paraMap);
 		paraMap.put("assettype2", "2499");
-		OverallInfoDto reamrk70 = overallInfoMapper.queryBottomRemarkInfoByInfo(paraMap);
+		OverallInfoDto reamrk72 = overallInfoMapper.queryBottomRemarkInfoByInfo(paraMap);
 		//备注
-		if(null!=reamrk54 && StringUtil.isNotEmpty(reamrk54)){
-			resultRemarkMap.put("t2_54_remark", reamrk54.getRemark());
+		if(null!=reamrk57 && StringUtil.isNotEmpty(reamrk57)){
+			resultRemarkMap.put("t2_57_remark", reamrk57.getRemark());
+		}else{
+			resultRemarkMap.put("t2_57_remark", null);
 		}
-		if(null!=reamrk63 && StringUtil.isNotEmpty(reamrk63)){
-			resultRemarkMap.put("t2_63_remark", reamrk63.getRemark());
+		if(null!=reamrk65 && StringUtil.isNotEmpty(reamrk65)){
+			resultRemarkMap.put("t2_65_remark", reamrk65.getRemark());
+		}else{
+			resultRemarkMap.put("t2_65_remark", null);
 		}
-		if(null!=reamrk70 && StringUtil.isNotEmpty(reamrk70)){
-			resultRemarkMap.put("t2_70_remark", reamrk70.getRemark());
+		if(null!=reamrk72 && StringUtil.isNotEmpty(reamrk72)){
+			resultRemarkMap.put("t2_72_remark", reamrk72.getRemark());
+		}else{
+			resultRemarkMap.put("t2_72_remark", null);
 		}
 		return resultRemarkMap;
 	}
@@ -1085,6 +1098,8 @@ public class InvestmentsInfoService {
 		//备注
 		if(null!=reamrk16 && StringUtil.isNotEmpty(reamrk16)){
 			resultRemarkMap.put("t6_16_remark", reamrk16.getRemark());
+		}else{
+			resultRemarkMap.put("t6_16_remark", null);
 		}
 
 		return resultRemarkMap;
@@ -1886,6 +1901,11 @@ public class InvestmentsInfoService {
 		//取到上季末
 		Date lastEndDate=calendar.getTime();
 
+		//今年年初
+		calendar.set(Calendar.MONTH, 0);
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		Date yearStartDate=calendar.getTime();
+
 		List<InvestmentBusinessDetailsDto> allList=new ArrayList<InvestmentBusinessDetailsDto>();
 		List<InvestmentBusinessDetailsDto> prodList =termStructureOfBusinessAndCostBenefitMapper.selectProductBalanceByInfo(endDate);
 		List<InvestmentBusinessDetailsDto> lastprodList =termStructureOfBusinessAndCostBenefitMapper.selectProductBalanceByInfo(lastEndDate);
@@ -1910,7 +1930,10 @@ public class InvestmentsInfoService {
 			Date lastYearDate=calendarlast.getTime();
 
 			paraMap.put("endDate", endDate);
-			paraMap.put("lastYearDate", lastYearDate);
+			//paraMap.put("lastYearDate", lastYearDate);
+			//今年年初
+			paraMap.put("yearStartDate", yearStartDate);
+
 			prodRateList =termStructureOfBusinessAndCostBenefitMapper.selectProductAvgRateInfo1(paraMap);
 
 			//上季度末
@@ -1941,7 +1964,8 @@ public class InvestmentsInfoService {
 
 			paraMap.put("endDate", endDate);
 			paraMap.put("lastendDate", lastEndDate);
-			paraMap.put("lastYearDate", lastYearDate);
+			//paraMap.put("lastYearDate", lastYearDate);
+			paraMap.put("yearStartDate", yearStartDate);
             prodRateList =termStructureOfBusinessAndCostBenefitMapper.selectProductAvgRateInfo2(paraMap);
 			//上季度末
 			Calendar calendarlastlast = Calendar.getInstance();
@@ -1961,7 +1985,9 @@ public class InvestmentsInfoService {
 
 			paraMap.put("endDate", lastEndDate);
 			paraMap.put("lastendDate", lastlastEndDate);
-			paraMap.put("lastYearDate", lastlastYearDate);
+			//paraMap.put("lastYearDate", lastlastYearDate);
+			paraMap.put("yearStartDate", yearStartDate);
+
 			lastprodRateList =termStructureOfBusinessAndCostBenefitMapper.selectProductAvgRateInfo2(paraMap);
 
 		}
@@ -2018,6 +2044,7 @@ public class InvestmentsInfoService {
 
 			paraMap.put("endDate", endDate);
 			paraMap.put("lastEndDate", lastEndDate);
+			paraMap.put("yearStartDate", yearStartDate);
 			assetRateList =termStructureOfBusinessAndCostBenefitMapper.selectAssetRateByInfo1(paraMap);
 			//上季度末
 
@@ -2027,13 +2054,15 @@ public class InvestmentsInfoService {
 			//取到上季末
 			Date lastlastEndDate=calendar.getTime();
 			paraMap.put("endDate", lastEndDate);
-			paraMap.put("lastendDate", lastlastEndDate);
+			paraMap.put("lastEndDate", lastlastEndDate);
+			paraMap.put("yearStartDate", yearStartDate);
 			lastassetRateList =termStructureOfBusinessAndCostBenefitMapper.selectAssetRateByInfo1(paraMap);
 		}else{
 			//本季度末
 
 			paraMap.put("endDate", endDate);
 			paraMap.put("lastEndDate", lastEndDate);
+			paraMap.put("yearStartDate", yearStartDate);
 			assetRateList =termStructureOfBusinessAndCostBenefitMapper.selectAssetRateByInfo2(paraMap);
 			//上季度末
 			Calendar calendarlastEndDate= Calendar.getInstance();
@@ -2045,6 +2074,7 @@ public class InvestmentsInfoService {
 
 			paraMap.put("endDate", lastEndDate);
 			paraMap.put("lastendDate", lastlastEndDate);
+			paraMap.put("yearStartDate", yearStartDate);
 			lastassetRateList =termStructureOfBusinessAndCostBenefitMapper.selectAssetRateByInfo2(paraMap);
 
 		}
@@ -2094,6 +2124,8 @@ public class InvestmentsInfoService {
 
 			paraMap.put("endDate", endDate);
 			paraMap.put("lastEndDate", lastEndDate);
+			paraMap.put("yearStartDate", yearStartDate);
+
 			assetNSRateList =termStructureOfBusinessAndCostBenefitMapper.selectNSAssetRateByInfo1(paraMap);
 			//上季度末
 
@@ -2104,12 +2136,16 @@ public class InvestmentsInfoService {
 			Date lastlastEndDate=calendar.getTime();
 			paraMap.put("endDate", lastEndDate);
 			paraMap.put("lastendDate", lastlastEndDate);
+			paraMap.put("yearStartDate", yearStartDate);
+
 			lastassetNSRateList =termStructureOfBusinessAndCostBenefitMapper.selectNSAssetRateByInfo1(paraMap);
 		}else{
 			//本季度末
 
 			paraMap.put("endDate", endDate);
 			paraMap.put("lastEndDate", lastEndDate);
+			paraMap.put("yearStartDate", yearStartDate);
+
 			assetNSRateList =termStructureOfBusinessAndCostBenefitMapper.selectNSAssetRateByInfo2(paraMap);
 			//上季度末
 
@@ -2122,7 +2158,9 @@ public class InvestmentsInfoService {
 			Date lastlastEndDate=calendarlastEndDate.getTime();
 
 			paraMap.put("endDate", lastEndDate);
-			paraMap.put("lastendDate", lastlastEndDate);
+			paraMap.put("lastEndDate", lastlastEndDate);
+			paraMap.put("yearStartDate", yearStartDate);
+
 			lastassetNSRateList =termStructureOfBusinessAndCostBenefitMapper.selectNSAssetRateByInfo2(paraMap);
 
 		}
@@ -2310,6 +2348,10 @@ public class InvestmentsInfoService {
 		calendar.set(Calendar.DAY_OF_MONTH, 0);
 		//取到上季末
 		Date lastEndDate=calendar.getTime();
+		//今年年初
+		calendar.set(Calendar.MONTH, 0);
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		Date yearStartDate=calendar.getTime();
 
 		List<InvestmentBusinessDetailsDto> allList=new ArrayList<InvestmentBusinessDetailsDto>();
 
@@ -2329,6 +2371,8 @@ public class InvestmentsInfoService {
 
 			paraMap.put("endDate", endDate);
 			paraMap.put("lastEndDate", lastEndDate);
+			paraMap.put("yearStartDate", yearStartDate);
+
 			financeAssetRateList =termStructureOfBusinessAndCostBenefitMapper.selectFinanceAssetRateByInfo1(paraMap);
 			//上季度末
 
@@ -2339,6 +2383,8 @@ public class InvestmentsInfoService {
 			Date lastlastEndDate=calendar.getTime();
 			paraMap.put("endDate", lastEndDate);
 			paraMap.put("lastendDate", lastlastEndDate);
+			paraMap.put("yearStartDate", yearStartDate);
+
 			lastFinanceAssetRateList =termStructureOfBusinessAndCostBenefitMapper.selectFinanceAssetRateByInfo1(paraMap);
 		}else{
 			//公式二
@@ -2347,6 +2393,8 @@ public class InvestmentsInfoService {
 
 			paraMap.put("endDate", endDate);
 			paraMap.put("lastEndDate", lastEndDate);
+			paraMap.put("yearStartDate", yearStartDate);
+
 			financeAssetRateList =termStructureOfBusinessAndCostBenefitMapper.selectFinanceAssetRateByInfo2(paraMap);
 			//上季度末
 			Calendar calendarlastEndDate= Calendar.getInstance();
@@ -2358,6 +2406,8 @@ public class InvestmentsInfoService {
 
 			paraMap.put("endDate", lastEndDate);
 			paraMap.put("lastendDate", lastlastEndDate);
+			paraMap.put("yearStartDate", yearStartDate);
+
 			lastFinanceAssetRateList =termStructureOfBusinessAndCostBenefitMapper.selectFinanceAssetRateByInfo2(paraMap);
 
 		}
@@ -2484,27 +2534,32 @@ public class InvestmentsInfoService {
 					existDto.setXtCounterName(dto.getCounterName());
 					existDto.setXtSessionendNum(dto.getSessionendNum());
 					existDto.setXtLastSessionendNum(dto.getLastSessionendNum());
+					existDto.setXtZdSessionendNum(dto.getZdSessionendNum());
 					existDto.setXtFbSessionendNum(dto.getFbSessionendNum());
 
 				}else if(dto.getPropertytype().equals("ZQQT")){
 					existDto.setZqqhCounterName(dto.getCounterName());
 					existDto.setZqqhSessionendNum(dto.getSessionendNum());
 					existDto.setZqqhLastSessionendNum(dto.getLastSessionendNum());
+					existDto.setZqqhZdSessionendNum(dto.getZdSessionendNum());
 					existDto.setZqqhFbSessionendNum(dto.getFbSessionendNum());
 				}else if(dto.getPropertytype().equals("ZQJJ")){
 					existDto.setZqjjCounterName(dto.getCounterName());
 					existDto.setZqjjSessionendNum(dto.getSessionendNum());
 					existDto.setZqjjLastSessionendNum(dto.getLastSessionendNum());
+					existDto.setZqjjZdSessionendNum(dto.getZdSessionendNum());
 					existDto.setZqjjFbSessionendNum(dto.getFbSessionendNum());
 				}else if(dto.getPropertytype().equals("YH")){
 					existDto.setYhCounterName(dto.getCounterName());
 					existDto.setYhSessionendNum(dto.getSessionendNum());
 					existDto.setYhLastSessionendNum(dto.getLastSessionendNum());
+					existDto.setYhZdSessionendNum(dto.getZdSessionendNum());
 					existDto.setYhFbSessionendNum(dto.getFbSessionendNum());
 				}else if(dto.getPropertytype().equals("BX")){
 					existDto.setBxCounterName(dto.getCounterName());
 					existDto.setBxSessionendNum(dto.getSessionendNum());
 					existDto.setBxLastSessionendNum(dto.getLastSessionendNum());
+					existDto.setBxZdSessionendNum(dto.getZdSessionendNum());
 					existDto.setBxFbSessionendNum(dto.getFbSessionendNum());
 				}
 			}else{
@@ -2516,27 +2571,32 @@ public class InvestmentsInfoService {
 					newDto.setXtCounterName(dto.getCounterName());
 					newDto.setXtSessionendNum(dto.getSessionendNum());
 					newDto.setXtLastSessionendNum(dto.getLastSessionendNum());
+					newDto.setXtZdSessionendNum(dto.getZdSessionendNum());
 					newDto.setXtFbSessionendNum(dto.getFbSessionendNum());
 
 				}else if(dto.getPropertytype().equals("ZQQT")){
 					newDto.setZqqhCounterName(dto.getCounterName());
 					newDto.setZqqhSessionendNum(dto.getSessionendNum());
 					newDto.setZqqhLastSessionendNum(dto.getLastSessionendNum());
+					newDto.setZqqhZdSessionendNum(dto.getZdSessionendNum());
 					newDto.setZqqhFbSessionendNum(dto.getFbSessionendNum());
 				}else if(dto.getPropertytype().equals("ZQJJ")){
 					newDto.setZqjjCounterName(dto.getCounterName());
 					newDto.setZqjjSessionendNum(dto.getSessionendNum());
 					newDto.setZqjjLastSessionendNum(dto.getLastSessionendNum());
+					newDto.setZqjjZdSessionendNum(dto.getZdSessionendNum());
 					newDto.setZqjjFbSessionendNum(dto.getFbSessionendNum());
 				}else if(dto.getPropertytype().equals("YH")){
 					newDto.setYhCounterName(dto.getCounterName());
 					newDto.setYhSessionendNum(dto.getSessionendNum());
 					newDto.setYhLastSessionendNum(dto.getLastSessionendNum());
+					newDto.setYhZdSessionendNum(dto.getZdSessionendNum());
 					newDto.setYhFbSessionendNum(dto.getFbSessionendNum());
 				}else if(dto.getPropertytype().equals("BX")){
 					newDto.setBxCounterName(dto.getCounterName());
 					newDto.setBxSessionendNum(dto.getSessionendNum());
 					newDto.setBxLastSessionendNum(dto.getLastSessionendNum());
+					newDto.setBxZdSessionendNum(dto.getZdSessionendNum());
 					newDto.setBxFbSessionendNum(dto.getFbSessionendNum());
 				}
 				porpertyDtoMap.put(returnIndex,newDto);
@@ -2845,26 +2905,23 @@ public class InvestmentsInfoService {
 			investmentBusinessDetailsDto.setLastSessionendNum(porpertyAmoutMap.get(flag + "BONDLAST") == null ? BigDecimal.ZERO : porpertyAmoutMap.get(flag + "BONDLAST"));
 			investmentBusinessDetailsDto.setNonsStandardAmount(porpertyAmoutMap.get(flag + "NOSTABONDCUR") == null ? BigDecimal.ZERO : porpertyAmoutMap.get(flag + "NOSTABONDCUR"));
 			investmentBusinessDetailsDto.setLastNonsStandardAmount(porpertyAmoutMap.get(flag + "NOSTABONDLAST") == null ? BigDecimal.ZERO : porpertyAmoutMap.get(flag + "NOSTABONDLAST"));
-			investmentBusinessDetailsDto.setIndInvestmentAmount(porpertyAmoutMap.get(flag + "INDINCUR") == null ? BigDecimal.ZERO : porpertyAmoutMap.get(flag + "INDINCUR"));
-			investmentBusinessDetailsDto.setLastIndInvestmentAmount(porpertyAmoutMap.get(flag + "INDINLAST") == null ? BigDecimal.ZERO : porpertyAmoutMap.get(flag + "INDINLAST"));
 			investmentBusinessDetailsDto.setOtherAmount(porpertyAmoutMap.get(flag + "OTHERCUR") == null ? BigDecimal.ZERO : porpertyAmoutMap.get(flag + "OTHERCUR"));
 			investmentBusinessDetailsDto.setLastOtherAmount(porpertyAmoutMap.get(flag + "OTHERLAST") == null ? BigDecimal.ZERO : porpertyAmoutMap.get(flag + "OTHERLAST"));
 			investmentBusinessDetailsDto.setRemark(resultRemarkMap.get(flag + "OTHERREMARK") == null ?"": resultRemarkMap.get(flag + "OTHERREMARK"));
 			investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto);
 		}
 		//计算合计值
-		/*InvestmentBusinessDetailsDto investmentBusinessDetailsDto33=new InvestmentBusinessDetailsDto();
+		InvestmentBusinessDetailsDto investmentBusinessDetailsDto33=new InvestmentBusinessDetailsDto();
+		investmentBusinessDetailsDto33.setPropertycode("t3_33_amt");
 		for(InvestmentBusinessDetailsDto item:investmentBusinessDetailsDtoList){
-			investmentBusinessDetailsDto33.setSessionendNum(investmentBusinessDetailsDto33.getSessionendNum().add()item);
-			investmentBusinessDetailsDto33.setLastSessionendNum();
-			investmentBusinessDetailsDto33.setNonsStandardAmount();
-			investmentBusinessDetailsDto33.setLastNonsStandardAmount();
-			investmentBusinessDetailsDto33.setIndInvestmentAmount();
-			investmentBusinessDetailsDto33.setLastIndInvestmentAmount();
-			investmentBusinessDetailsDto33.setOtherAmount();
-			investmentBusinessDetailsDto33.setLastOtherAmount();
-
-		}*/
+			investmentBusinessDetailsDto33.setSessionendNum(addMoney(investmentBusinessDetailsDto33.getSessionendNum(),item.getSessionendNum()));
+			investmentBusinessDetailsDto33.setLastSessionendNum(addMoney(investmentBusinessDetailsDto33.getLastSessionendNum(),item.getLastSessionendNum()));
+			investmentBusinessDetailsDto33.setNonsStandardAmount(addMoney(investmentBusinessDetailsDto33.getNonsStandardAmount(),item.getNonsStandardAmount()));
+			investmentBusinessDetailsDto33.setLastNonsStandardAmount(addMoney(investmentBusinessDetailsDto33.getLastNonsStandardAmount(),item.getLastNonsStandardAmount()));
+			investmentBusinessDetailsDto33.setOtherAmount(addMoney(investmentBusinessDetailsDto33.getOtherAmount(),item.getOtherAmount()));
+			investmentBusinessDetailsDto33.setLastOtherAmount(addMoney(investmentBusinessDetailsDto33.getLastOtherAmount(),item.getLastOtherAmount()));
+		}
+		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto33);
 		InvestmentBusinessDetailsDto investmentBusinessDetailsDto36= investmentBusinessDetailsMapper.queryBottomDiffAsset(startDate, lastDate,endDate);
 		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto36);
 		Map<String, Object> paraMap = new HashMap<String, Object>();
@@ -2885,6 +2942,13 @@ public class InvestmentsInfoService {
 		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto41);
 		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto43);
 		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto44);
+		for(InvestmentBusinessDetailsDto it:investmentBusinessDetailsDtoList){
+			it.setTotleBalance(addAllMoney(it.getSessionendNum(),it.getNonsStandardAmount(),null,it.getOtherAmount()));
+			it.setLasttotleBalance(addAllMoney(it.getLastSessionendNum(),it.getLastNonsStandardAmount(),null,it.getLastOtherAmount()));
+		}
+		//表三C15和E15的数据
+		InvestmentBusinessDetailsDto investmentBusinessDetailsDto15=investmentBusinessDetailsMapper.queryBottomInfoAmountFjr(paraMap);
+		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto15);
 		//表３附表合计
 		InvestmentBusinessDetailsDto investmentBusinessDetailsDtot3AddSum= investmentBusinessDetailsMapper.queryBottomTable3AddSum(paraMap);
 		investmentBusinessDetailsDtot3AddSum.setTotleBalance(investmentBusinessDetailsDtot3AddSum.getSessionendNum()
@@ -3022,14 +3086,30 @@ public class InvestmentsInfoService {
 	 * @throws  
 	 */  
 	private BigDecimal addMoney(BigDecimal num1, BigDecimal num2) {
-		BigDecimal billion = new BigDecimal(100000000);
+		//BigDecimal billion = new BigDecimal(100000000);
 		if (null == num1) {
 			num1 = BigDecimal.ZERO;
 		}
 		if (null == num2) {
 			num2 = BigDecimal.ZERO;
 		}
-		return num1.multiply(billion).add(num2);
+		//return num1.multiply(billion).add(num2);
+		return num1.add(num2);
+	}
+	private BigDecimal addAllMoney(BigDecimal num1, BigDecimal num2, BigDecimal num3, BigDecimal num4) {
+		if (null == num1) {
+			num1 = BigDecimal.ZERO;
+		}
+		if (null == num2) {
+			num2 = BigDecimal.ZERO;
+		}
+		if (null == num3) {
+			num3 = BigDecimal.ZERO;
+		}
+		if (null == num4) {
+			num4 = BigDecimal.ZERO;
+		}
+		return num1.add(num2).add(num3).add(num4);
 	}
 	
  }
