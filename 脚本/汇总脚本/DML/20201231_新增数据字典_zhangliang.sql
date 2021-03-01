@@ -1,0 +1,23 @@
+delete from SYS_DATADICT where DICT_CODE IN ('SVR_CUSTOMER_TYPE','SVR_ISSUING_STATUS','SVR_PROD_BASIS','SVR_XS_CCY');
+insert into SYS_DATADICT values ('SVR_CUSTOMER_TYPE','SVR','人行客户类型','','02','system','',to_date('2020/11/18', 'yyyy/mm/dd'), 'system',to_date('2020/11/18', 'yyyy/mm/dd'));
+insert into SYS_DATADICT values ('SVR_ISSUING_STATUS','SVR','报送产品发行状态','','02','system','',to_date('2020/11/18', 'yyyy/mm/dd'), 'system',to_date('2020/11/18', 'yyyy/mm/dd'));
+insert into SYS_DATADICT values ('SVR_PROD_BASIS','SVR','报送产品计息基础','','02','system','',to_date('2020/11/18', 'yyyy/mm/dd'), 'system',to_date('2020/11/18', 'yyyy/mm/dd'));
+insert into SYS_DATADICT values ('SVR_XS_CCY','SVR','TA币种','','02','system','',to_date('2020/11/18', 'yyyy/mm/dd'), 'system',to_date('2020/11/18', 'yyyy/mm/dd'));
+
+delete from SYS_DATADICT_LIST where DICT_CODE IN ('SVR_CUSTOMER_TYPE','SVR_ISSUING_STATUS','SVR_PROD_BASIS','SVR_XS_CCY');
+insert into SYS_DATADICT_LIST values ('SVR_CUSTOMER_TYPE','1','单位','1','0','system','',to_date('2019/2/27', 'yyyy/mm/dd'), 'system',to_date('2019/2/27', 'yyyy/mm/dd'), '');
+insert into SYS_DATADICT_LIST values ('SVR_CUSTOMER_TYPE','2','个人','2','0','system','',to_date('2019/2/27', 'yyyy/mm/dd'), 'system',to_date('2019/2/27', 'yyyy/mm/dd'), '');
+insert into SYS_DATADICT_LIST values ('SVR_CUSTOMER_TYPE','3','单位及个人','3','0','system','',to_date('2019/2/27', 'yyyy/mm/dd'), 'system',to_date('2019/2/27', 'yyyy/mm/dd'), '');
+insert into SYS_DATADICT_LIST values ('SVR_ISSUING_STATUS','01','发行成功','1','0','system','',to_date('2019/2/27', 'yyyy/mm/dd'), 'system',to_date('2019/2/27', 'yyyy/mm/dd'), '');
+insert into SYS_DATADICT_LIST values ('SVR_ISSUING_STATUS','02','发行失败','2','0','system','',to_date('2019/2/27', 'yyyy/mm/dd'), 'system',to_date('2019/2/27', 'yyyy/mm/dd'), '');
+insert into SYS_DATADICT_LIST values ('SVR_ISSUING_STATUS','03','确认发行','3','0','system','',to_date('2019/2/27', 'yyyy/mm/dd'), 'system',to_date('2019/2/27', 'yyyy/mm/dd'), '');
+insert into SYS_DATADICT_LIST values ('SVR_PROD_BASIS','A/360','A/360','1','0','system','',to_date('2019/2/27', 'yyyy/mm/dd'), 'system',to_date('2019/2/27', 'yyyy/mm/dd'), '');
+insert into SYS_DATADICT_LIST values ('SVR_PROD_BASIS','A/365','A/365','2','0','system','',to_date('2019/2/27', 'yyyy/mm/dd'), 'system',to_date('2019/2/27', 'yyyy/mm/dd'), '');
+insert into SYS_DATADICT_LIST values ('SVR_XS_CCY','036','AUD','1','0','system','',to_date('2019/2/27', 'yyyy/mm/dd'), 'system',to_date('2019/2/27', 'yyyy/mm/dd'), '');
+insert into SYS_DATADICT_LIST values ('SVR_XS_CCY','124','CAD','2','0','system','',to_date('2019/2/27', 'yyyy/mm/dd'), 'system',to_date('2019/2/27', 'yyyy/mm/dd'), '');
+insert into SYS_DATADICT_LIST values ('SVR_XS_CCY','156','CNY','3','0','system','',to_date('2019/2/27', 'yyyy/mm/dd'), 'system',to_date('2019/2/27', 'yyyy/mm/dd'), '');
+insert into SYS_DATADICT_LIST values ('SVR_XS_CCY','344','HKD','4','0','system','',to_date('2019/2/27', 'yyyy/mm/dd'), 'system',to_date('2019/2/27', 'yyyy/mm/dd'), '');
+insert into SYS_DATADICT_LIST values ('SVR_XS_CCY','392','JPY','5','0','system','',to_date('2019/2/27', 'yyyy/mm/dd'), 'system',to_date('2019/2/27', 'yyyy/mm/dd'), '');
+insert into SYS_DATADICT_LIST values ('SVR_XS_CCY','826','GBP','6','0','system','',to_date('2019/2/27', 'yyyy/mm/dd'), 'system',to_date('2019/2/27', 'yyyy/mm/dd'), '');
+insert into SYS_DATADICT_LIST values ('SVR_XS_CCY','840','USD','7','0','system','',to_date('2019/2/27', 'yyyy/mm/dd'), 'system',to_date('2019/2/27', 'yyyy/mm/dd'), '');
+insert into SYS_DATADICT_LIST values ('SVR_XS_CCY','978','EUR','8','0','system','',to_date('2019/2/27', 'yyyy/mm/dd'), 'system',to_date('2019/2/27', 'yyyy/mm/dd'), '');
