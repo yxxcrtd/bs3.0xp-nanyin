@@ -427,8 +427,11 @@
 			<if test="secAcctId != null and secAcctId != ''">
 				AND PSA.ACCT_NO = #{secAcctId}
 			</if>
-			<if test="secAcctId == null or secAcctId == ''">
-				AND PTL_FEE_POSITION.PTL_FEE_PLACE = '999999'
+			<if test="org != null and org != ''">
+				<!-- AND PTL_FEE_POSITION.PTL_FEE_PLACE = '999999' -->
+				<if test="feeType1 != null and feeType1 == 'B08'">
+				AND PTL_FEE_POSITION.PTL_FEE_PLACE = #{org}
+			    </if>
 			</if>
 		group by PTL_FEE_POSITION.PORTFOLIO_ID, ptl.PORTFOLIO_NAME
 		<if test="secAcctId != null and secAcctId != ''">
