@@ -915,8 +915,12 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 				fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
 				continue;
 			}
-			if (chbPrdDeclareRegFileCode != null && ((chbPrdDeclareRegFileCode.isComm() && StringUtil.isNotEmpty(prodId))
-						|| (!chbPrdDeclareRegFileCode.isComm() && StringUtil.isEmpty(prodId)))) {
+			if (chbPrdDeclareRegFileCode != null && chbPrdDeclareRegFileCode.isComm() && StringUtil.isNotEmpty(prodId)) {
+				fileCheckMsg.append("文件名称（" + entry.getName() + "）属于公共文件，命令不符合规范。");
+				fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
+				continue;
+			}
+			if (chbPrdDeclareRegFileCode != null && !chbPrdDeclareRegFileCode.isComm() && StringUtil.isEmpty(prodId)) {
 				fileCheckMsg.append("文件名称（" + entry.getName() + "）不属于公共文件，命令不符合规范。");
 				fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
 				continue;
