@@ -435,7 +435,7 @@
         /****TOS-269 【交易信息登记-集成测试】：场外期权交易，交易信息登记不正确，详见描述 leipeng 20210227***/
 		,DEAL.SETTLE_DATE DEALDATE /*交易日*/
 		,DECODE(DEAL.PS,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG,TOTALDEAL.COUNTER_ID) TRADE_COUNTER/*交易对手*/
-		/**		,DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG) TRADE_COUNTER/*交易对手*/***/		
+		/**		,DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG) TRADE_COUNTER/*交易对手*/
 		/****TOS-269 【交易信息登记-集成测试】：场外期权交易，交易信息登记不正确，详见描述 leipeng 20210227***/		
 		,NULL UNIT_PRICE_FULL  /*单位成交价格（全价）*/
 		,NULL UNIT_PRICE_NET  /*单位成交价格（净价）*/
@@ -563,7 +563,8 @@
 	left join MST_COUNTER_PARTY party2 on party2.LINK_ID=DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',NVL(DEAL.COUNTER_ID,secASSET.Issuer),'T22',customer.customer_id,'T23',customer.customer_id)
     left join MST_COUNTER_PARTY party3 on party3.MANAGER_ID=DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',customer.customer_id,'T23',customer.customer_id)
     WHERE 1=1
-    AND DEAL.BUSI_TYPE IN( '02','29','14')/*wuhaiyan*/
+    /*债券借贷现金交易融出券生成的交易暂时先放这里统计*/
+    AND (DEAL.BUSI_TYPE IN ( '02', '29') or (DEAL.BUSI_TYPE = '14' and DEAL.PS = 'T02'))
     and (ABS(nvl(deal.share_amt,0)) + ABS(nvl(deal.trade_amt,0)) != 0)/* 去除面额和金额同时为空的情况 */
     /*只接入原始交易数据*/
     /*AND DEAL.TRADE_STATUS = '01'*/
@@ -679,7 +680,8 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
      SELECT 1 FROM TRD_PRODUCT_DEAL A
       LEFT JOIN TRD_PRODUCT_DEAL_ADD AD ON A.TRADE_ID = AD.TRADE_ID
       WHERE A.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
-    AND DEAL.BUSI_TYPE IN( '02','29','14')/*wuhaiyan*/
+    /*债券借贷现金交易融出券生成的交易暂时先放这里统计*/
+    AND (DEAL.BUSI_TYPE IN ( '02', '29') or (DEAL.BUSI_TYPE = '14' and DEAL.PS = 'T02'))
     and (ABS(nvl(deal.share_amt,0)) + ABS(nvl(deal.trade_amt,0)) != 0)/* 去除面额和金额同时为空的情况 */
     /*只接入原始交易数据*/
     /*AND DEAL.TRADE_STATUS = '01'*/
@@ -2976,7 +2978,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
         /****TOS-269 【交易信息登记-集成测试】：场外期权交易，交易信息登记不正确，详见描述 leipeng 20210227***/
 		,DEAL.SETTLE_DATE DEALDATE /*交易日*/
 		,DECODE(DEAL.PS,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG,TOTALDEAL.COUNTER_ID) TRADE_COUNTER/*交易对手*/
-		/**		,DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG) TRADE_COUNTER/*交易对手*/***/		
+		/**		,DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG) TRADE_COUNTER/*交易对手*/
 		/****TOS-269 【交易信息登记-集成测试】：场外期权交易，交易信息登记不正确，详见描述 leipeng 20210227***/		
 		,NULL UNIT_PRICE_FULL  /*单位成交价格（全价）*/
 		,NULL UNIT_PRICE_NET  /*单位成交价格（净价）*/
