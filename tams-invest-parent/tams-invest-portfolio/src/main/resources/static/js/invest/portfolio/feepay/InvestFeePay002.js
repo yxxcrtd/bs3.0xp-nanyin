@@ -212,10 +212,16 @@ $(function() {
 			$('#InvestFeePay002_hidden_feeType').val(feeType);
 			$('#InvestFeePay002_hidden_feeName').val(feeName);
 			//费用类型联动登记托管机构
-			if (feeType == '06'||feeType == '07'||feeType == '08'){
+			//modify by yujiaping 20210301 ZGBSS-585 当选择交易手续费时，登记托管机构置灰 start
+			if (feeType == '06'){
+				$('#InvestFeePay002_regTrustOrg').val('').trigger('change');
+				$("#InvestFeePay002_regTrustOrg").prop("disabled", true);
+			}else if (feeType == '07'||feeType == '08'){
 				$('#InvestFeePay002_regTrustOrg').val('').trigger('change');
 				$("#InvestFeePay002_regTrustOrg").prop("disabled", false);
-			}else{
+			}
+			//modify by yujiaping 20210301 ZGBSS-585 当选择交易手续费时，登记托管机构置灰 end
+			else{
 				$('#InvestFeePay002_regTrustOrg').val('03').trigger('change');
 				$("#InvestFeePay002_regTrustOrg").prop("disabled", true);
 			}
