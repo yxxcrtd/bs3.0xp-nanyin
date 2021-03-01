@@ -220,7 +220,7 @@ $(function() {
 				$("#InvestFeePay002_regTrustOrg").prop("disabled", true);
 			}
 			//费用类型联动证券账户   update by zoujiamin  2021/02/26  ZGBSS-639/ZGBSS-636
-			if(feeType == '06'||feeType == '16'||feeType == '17'){
+			if(feeType == '06'||feeType == '16'||feeType == '17' ||feeType == '07'){
 				$('#InvestFeePay002_secAcctId').val('').trigger('change');
 				$("#InvestFeePay002_secAcctId").prop("disabled", true);
 			}else if(feeType == '08') {
@@ -412,7 +412,7 @@ $(function() {
     $('#InvestFeePay002_btn_calculate').click(function() {
     	var feeType = $('#InvestFeePay002_feeType').val();
 		var secAcctId = $('#InvestFeePay002_secAcctId').val();
-    	if (feeType == '07' || feeType == '14' || feeType == '08') {
+    	if (feeType == '14' || feeType == '08') {
     		if (!secAcctId) {
     			Joyin.error("当前费用类型下，证券账户必选！")
                 return;
