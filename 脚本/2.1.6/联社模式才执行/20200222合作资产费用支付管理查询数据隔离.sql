@@ -1,0 +1,2 @@
+delete from DATA_AUTH_MAPPER_CONFIG where SQL_ID='com.joyintech.service.trade.channel.feepay.dao.ChannelFeePayMapper.findPage';
+INSERT INTO DATA_AUTH_MAPPER_CONFIG (SQL_ID, FILTER_TYPE, IS_NEST, JOIN_COLUMN_NAME, FILTER_SQL, SYSTEM_CODE, PAGE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADD_COLUMN, ADD_COLUMN_NAME, DATA_TYPE) VALUES ('com.joyintech.service.trade.channel.feepay.dao.ChannelFeePayMapper.findPage', '2', '02', 'finprodId', null, 'FIN', 'ChannelFeePay001', 'admin', null,sysdate, 'admin',sysdate, null, null, 'FINASSET12');
