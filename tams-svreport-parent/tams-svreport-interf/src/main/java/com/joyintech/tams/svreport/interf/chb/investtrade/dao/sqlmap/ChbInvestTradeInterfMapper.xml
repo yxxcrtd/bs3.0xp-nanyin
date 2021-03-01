@@ -435,7 +435,7 @@
         /****TOS-269 【交易信息登记-集成测试】：场外期权交易，交易信息登记不正确，详见描述 leipeng 20210227***/
 		,DEAL.SETTLE_DATE DEALDATE /*交易日*/
 		,DECODE(DEAL.PS,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG,TOTALDEAL.COUNTER_ID) TRADE_COUNTER/*交易对手*/
-		/**		,DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG) TRADE_COUNTER/*交易对手*/
+		<!--,DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG) TRADE_COUNTER/*交易对手*/-->
 		/****TOS-269 【交易信息登记-集成测试】：场外期权交易，交易信息登记不正确，详见描述 leipeng 20210227***/		
 		,NULL UNIT_PRICE_FULL  /*单位成交价格（全价）*/
 		,NULL UNIT_PRICE_NET  /*单位成交价格（净价）*/
@@ -507,10 +507,10 @@
     deal.trade_amt AMT,
     NULL CNY_AMT,/*折算后人民币在街口中单独处理*/
     DEAL.SHARE_AMT*100 NUM,
-    DECODE(DEAL.PS,'T01','01','T02','02','T03','02','T39','02','T22',DECODE(TOTALDEAL.PS,'T08','11','T09','09','T07','09'),'T23',DECODE(TOTALDEAL.PS,'T08','11','T07','02')) CUR_ASSET_TYPE,/*中间还本的利息需统计成11其他收入*/
-    DECODE(DEAL.PS,'T22',decode(TOTALDEAL.ps,'T08','部分到期-收息','T09','收息','T07','收息'),'T23',decode(TOTALDEAL.ps,'T08','部分到期','T07','到期')) CUR_ASSETDET_TYPE,/*针对不同的收息：中间收息：债券收息交易，部分还本收息：债券中间还本交易，到期收息：债券到期利息收入*/
+    DECODE(DEAL.PS,'T01','01','T02','02','T03','02','T39','02','T22',DECODE(TOTALDEAL.PS,'T08','11','T09','09','T07','09'),'T23',DECODE(TOTALDEAL.PS,'T08','11','T07','02'), 'T29', '12', 'T32', '12') CUR_ASSET_TYPE,/*中间还本的利息需统计成11其他收入*/
+    DECODE(DEAL.PS,'T22',decode(TOTALDEAL.ps,'T08','部分到期-收息','T09','收息','T07','收息'),'T23',decode(TOTALDEAL.ps,'T08','部分到期','T07','到期'), 'T29', '融入债券付息还本', 'T32', '融入债券付息还本') CUR_ASSETDET_TYPE,/*针对不同的收息：中间收息：债券收息交易，部分还本收息：债券中间还本交易，到期收息：债券到期利息收入*/
     DEAL.SETTLE_DATE DEALDATE,
-    DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T29',DEAL.COUNTER_ID,'T39',nvl(party2.COUNTER_ID,party3.COUNTER_ID),'T22',nvl(party2.COUNTER_ID,party3.COUNTER_ID),'T23',nvl(party2.COUNTER_ID,party3.COUNTER_ID)) TRADE_COUNTER,
+    DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T29',DEAL.COUNTER_ID,'T39',nvl(party2.COUNTER_ID,party3.COUNTER_ID),'T22',nvl(party2.COUNTER_ID,party3.COUNTER_ID),'T23',nvl(party2.COUNTER_ID,party3.COUNTER_ID), 'T29', party2.COUNTER_ID, 'T32', party2.COUNTER_ID) TRADE_COUNTER,
     ROUND(DECODE(DEAL.PS,'T01',DEAL.UNIT_FPRICE,'T02',DEAL.UNIT_FPRICE,'T03',DEAL.UNIT_FPRICE,'T39',NVL(DEAL.UNIT_FPRICE, DECODE(DEAL.SHARE_AMT, 0, 0, DEAL.TRADE_AMT/DEAL.SHARE_AMT)),'T23',DECODE(TOTALDEAL.PS,'T08',DECODE(DEAL.TG_BUSI_TYPE,'144',NVL(PRODUCTASSET.M_PRIN_AMT,0) * -1,DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/DEAL.SHARE_AMT*-1)),'T07',DECODE(DEAL.TG_BUSI_TYPE,'144',NVL(PRODUCTASSET.M_PRIN_AMT,0),DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/DEAL.SHARE_AMT)))),4) UNIT_PRICE_FULL,
     ROUND(DECODE(DEAL.PS,'T01',DEAL.UNIT_CPRICE,'T02',DEAL.UNIT_CPRICE,'T03',DEAL.UNIT_CPRICE,'T39',NVL(DEAL.UNIT_CPRICE, DECODE(DEAL.SHARE_AMT, 0, 0, DEAL.CPRICE_AMT/DEAL.SHARE_AMT)),'T23',DECODE(TOTALDEAL.PS,'T08',DECODE(DEAL.TG_BUSI_TYPE,'144',NVL(PRODUCTASSET.M_PRIN_AMT,0) * -1,DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/DEAL.SHARE_AMT*-1)),'T07',DECODE(DEAL.TG_BUSI_TYPE,'144',NVL(PRODUCTASSET.M_PRIN_AMT,0),DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/DEAL.SHARE_AMT)))),4) UNIT_PRICE_NET,
     DECODE(DEAL.PS,'T01',DEAL.YIELD,'T02',DEAL.YIELD,'T03',DEAL.YIELD,'T39',DEAL.YIELD,'T23',decode(TOTALDEAL.ps,'T07',DEAL.YIELD)) END_RATE,
@@ -560,7 +560,7 @@
     LEFT JOIN TRD_PRODUCT_DEAL_ADD DEALADD
     ON DEALADD.TRADE_ID = DEAL.TRADE_ID
     left join MST_COUNTER_PARTY party on party.COUNTER_ID= DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',customer.customer_id,'T23',customer.customer_id)
-	left join MST_COUNTER_PARTY party2 on party2.LINK_ID=DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',NVL(DEAL.COUNTER_ID,secASSET.Issuer),'T22',customer.customer_id,'T23',customer.customer_id)
+	left join MST_COUNTER_PARTY party2 on party2.LINK_ID=DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',NVL(DEAL.COUNTER_ID,secASSET.Issuer),'T22',customer.customer_id,'T23',customer.customer_id, 'T29', secASSET.Issuer, 'T32', secASSET.Issuer)
     left join MST_COUNTER_PARTY party3 on party3.MANAGER_ID=DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',customer.customer_id,'T23',customer.customer_id)
     WHERE 1=1
     /*债券借贷现金交易融出券生成的交易暂时先放这里统计*/
@@ -2161,9 +2161,9 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     NULL TRADE_SEQNO ,/*交易UUID*/                                                                                 
     DEAL.TRADE_ID||'01'  TRADE_CODE,/*行内交易编码 */ 
     '01' INVEST_VARIETY ,/*投资品种*/                                                                              
-    decode(DEAL.INV_AIM,'FVTPL','TRA','AC','HTM','FVOCI','AFS') INVEST_TYPE,/*投资类型/*投资目的 枚举值对应待处理TODO*/
+    decode(DEAL.INV_AIM,'FVTPL','TRA','AC','HTM','FVOCI','AFS') INVEST_TYPE,<!--/*投资类型/*投资目的 枚举值对应待处理TODO*/-->
     DEALADD.PORTFOLIO_ID   PROD_ID ,         /* 产品代码 */
-    deal.regist_org REGIST_BANK_CODE,/*发行机构代码/*登记银行编码*/
+    deal.regist_org REGIST_BANK_CODE,<!--/*发行机构代码/*登记银行编码*/-->
     DEAL.FINPROD_ID ASSET_CODE ,  /*行内资产/负债编码 */   
     DEAL.CCY CCY ,/*币种 */
     /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
@@ -2171,8 +2171,8 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     /* DEAL.SHARE_AMT*100-DEAL.TRADE_AMT AMT,发生金额  */
     NULL CNY_AMT,/*折算后人民币在街口中单独处理*/                                                                            
     DEAL.SHARE_AMT*100 NUM ,/*数量     */                                                                            
-    '02' CUR_ASSET_TYPE，/*资金流动类型 */                                                                                
-    '无' CUR_ASSETDET_TYPE，/*资金流动类型说明*/
+    '02' CUR_ASSET_TYPE,/*资金流动类型 */
+    '无' CUR_ASSETDET_TYPE,/*资金流动类型说明*/
     DEAL.TRADE_DATE DEALDATE,   /*交易日  */
     /*DEAL.SETTLE_DATE DEALDATE,   交易日  */
     /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
@@ -2236,9 +2236,9 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     NULL TRADE_SEQNO ,/*交易UUID */                                                                                
     DEAL.TRADE_ID||'02'  TRADE_CODE,/*行内交易编码 */ 
     '25' INVEST_VARIETY ,/*投资品种 */                                                                             
-    NULL INVEST_TYPE,/*投资类型/*投资目的 枚举值对应待处理TODO*/                                                                                                                                                                      
+    NULL INVEST_TYPE,<!--/*投资类型/*投资目的 枚举值对应待处理TODO*/-->
     DEALADD.PORTFOLIO_ID   PROD_ID ,         /* 产品代码 */                                                                                
-    deal.regist_org REGIST_BANK_CODE,/*发行机构代码/*登记银行编码*/
+    deal.regist_org REGIST_BANK_CODE,<!--/*发行机构代码/*登记银行编码*/-->
     /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
     secASSET.Finprod_Id ASSET_CODE ,  /*行内资产/负债编码 */
     /*DEAL.FINPROD_ID ASSET_CODE ,  行内资产/负债编码 */
@@ -2247,8 +2247,8 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     /* DEAL.SHARE_AMT*100-DEAL.TRADE_AMT AMT,发生金额  */
     NULL CNY_AMT,/*折算后人民币在街口中单独处理*/                                                                            
     BARTER.SHARE_AMT NUM ,/*数量*/                                                                                 
-    '01' CUR_ASSET_TYPE，/*资金流动类型 */                                                                                
-    '无' CUR_ASSETDET_TYPE，/*资金流动类型说明 */
+    '01' CUR_ASSET_TYPE,/*资金流动类型 */
+    '无' CUR_ASSETDET_TYPE,/*资金流动类型说明 */
     DEAL.TRADE_DATE DEALDATE,   /*交易日  */
     /*DEAL.SETTLE_DATE DEALDATE,   交易日  */
     DEAL.COUNTER_ID TRADE_COUNTER, /*交易对手 */
@@ -2315,14 +2315,14 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     '01' INVEST_VARIETY ,/*投资品种*/                                                                              
     null INVEST_TYPE,/*投资类型  */                                                                                                                                                                  
     DEALADD.PORTFOLIO_ID   PROD_ID ,         /* 产品代码*/                                                                                 
-    deal.regist_org REGIST_BANK_CODE,/*发行机构代码/*登记银行编码*/
+    deal.regist_org REGIST_BANK_CODE,<!--/*发行机构代码/*登记银行编码*/-->
     DEAL.FINPROD_ID ASSET_CODE ,  /*行内资产/负债编码 */
     DEAL.CCY CCY ,/*币种 */
     DEAL.TRADE_AMT AMT ,/*发生金额  */
     NULL CNY_AMT,/*折算后人民币在街口中单独处理*/
     DEALADD.SPO_SHARE_NUM NUM ,/*数量 */                                                                                
-    '09' CUR_ASSET_TYPE，/*资金流动类型*/                                                                                 
-    '零股折算现金' CUR_ASSETDET_TYPE，/*资金流动类型说明 */                                                                            
+    '09' CUR_ASSET_TYPE,/*资金流动类型*/
+    '零股折算现金' CUR_ASSETDET_TYPE,/*资金流动类型说明 */
     DEAL.SETTLE_DATE DEALDATE,   /*交易日  */
     DEAL.COUNTER_ID TRADE_COUNTER, /*交易对手  */
     NULL UNIT_PRICE_FULL  ,/*单位成交价格（全价）*/                                                                          
@@ -2978,7 +2978,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
         /****TOS-269 【交易信息登记-集成测试】：场外期权交易，交易信息登记不正确，详见描述 leipeng 20210227***/
 		,DEAL.SETTLE_DATE DEALDATE /*交易日*/
 		,DECODE(DEAL.PS,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG,TOTALDEAL.COUNTER_ID) TRADE_COUNTER/*交易对手*/
-		/**		,DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG) TRADE_COUNTER/*交易对手*/
+		<!--,DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',SECASSET.REGIST_ORG,'T23',SECASSET.REGIST_ORG) TRADE_COUNTER/*交易对手*/-->
 		/****TOS-269 【交易信息登记-集成测试】：场外期权交易，交易信息登记不正确，详见描述 leipeng 20210227***/		
 		,NULL UNIT_PRICE_FULL  /*单位成交价格（全价）*/
 		,NULL UNIT_PRICE_NET  /*单位成交价格（净价）*/
@@ -4747,10 +4747,10 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
       NULL TRADE_SEQNO ,/*交易UUID*/
       DEAL.TRADE_ID||'01'  TRADE_CODE,/*行内交易编码 */
       '01' INVEST_VARIETY ,/*投资品种*/
-      decode(DEAL.INV_AIM,'FVTPL','TRA','AC','HTM','FVOCI','AFS') INVEST_TYPE,/*投资类型/*投资目的 枚举值对应待处理TODO*/
+      decode(DEAL.INV_AIM,'FVTPL','TRA','AC','HTM','FVOCI','AFS') INVEST_TYPE,<!--/*投资类型/*投资目的 枚举值对应待处理TODO*/-->
       DEALADD.PORTFOLIO_ID   PROD_ID ,         /* 产品代码 */
-      deal.regist_org REGIST_BANK_CODE,/*发行机构代码/*登记银行编码*/
-      DEAL.FINPROD_ID ASSET_CODE ,  /*行内资产/负债编码 */
+      deal.regist_org REGIST_BANK_CODE,<!--/*发行机构代码/*登记银行编码*/-->
+      DEAL.FINPROD_ID ASSET_CODE ,  <!--/*行内资产/负债编码 */-->
       DEAL.CCY CCY ,/*币种 */
       /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
       BARTER.PRIN_AMT AMT ,/*发生金额  */
@@ -4825,9 +4825,9 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
       NULL TRADE_SEQNO ,/*交易UUID */
       DEAL.TRADE_ID||'02'  TRADE_CODE,/*行内交易编码 */
       '25' INVEST_VARIETY ,/*投资品种 */
-      NULL INVEST_TYPE,/*投资类型/*投资目的 枚举值对应待处理TODO*/
+      NULL INVEST_TYPE,<!--/*投资类型/*投资目的 枚举值对应待处理TODO*/-->
       DEALADD.PORTFOLIO_ID   PROD_ID ,         /* 产品代码 */
-      deal.regist_org REGIST_BANK_CODE,/*发行机构代码/*登记银行编码*/
+      deal.regist_org REGIST_BANK_CODE,<!--/*发行机构代码/*登记银行编码*/-->
       /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
       secASSET.Finprod_Id ASSET_CODE ,  /*行内资产/负债编码 */
       /*DEAL.FINPROD_ID ASSET_CODE ,  行内资产/负债编码 */
@@ -4911,7 +4911,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     '01' INVEST_VARIETY ,/*投资品种*/                                                                              
     null INVEST_TYPE,/*投资类型  */                                                                                                                                                                  
     DEALADD.PORTFOLIO_ID   PROD_ID ,         /* 产品代码*/                                                                                 
-    deal.regist_org REGIST_BANK_CODE,/*发行机构代码/*登记银行编码*/                                                                               
+    deal.regist_org REGIST_BANK_CODE,<!--/*发行机构代码/*登记银行编码*/  -->
     DEAL.FINPROD_ID ASSET_CODE ,  /*行内资产/负债编码 */   
     DEAL.CCY CCY ,/*币种 */ 
     DEAL.TRADE_AMT AMT ,/*发生金额  */                                                                            
