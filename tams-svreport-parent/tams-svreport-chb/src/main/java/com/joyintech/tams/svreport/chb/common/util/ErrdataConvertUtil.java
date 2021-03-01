@@ -59,6 +59,9 @@ public class ErrdataConvertUtil {
                     if (!StringUtil.isNotEmpty(value)) {
                         continue;
                     }
+                    if (StringUtil.equals(column, "CREATE_TIME") || StringUtil.equals(column, "UPDATE_TIME")){
+                        continue;
+                    }
                     //根据数据库字段获取类的属性字段
                     Field field = ReflectionUtils.findField(chbAssetInfo.getClass(), subBlank(StringUtil.lowerCase(column)));
                     //如果字段没有则跳过。
