@@ -548,54 +548,102 @@ with cj as(
       when cp.termtype ='07' then '05'
 	end days, cp.ENDAMTSUM_OTH
 	from CHB_MONTH_PRD_POSITION cp
+	<if test="org != null  and org!=''">
+		left join DATA_AUTH_NOTIFY_INST di
+		on cp.prodid=di.business_id
+		and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+	</if>
 	where cp.ENDDATE=#{endDate,jdbcType=DATE}
 	and cp.termtype in ('01','02','03','04','05','06','07')
+	<if test="org != null  and org!=''">
+		and di.institution_code=#{org, jdbcType=VARCHAR}
+	</if>
 
     union all
     select case
 	when base.mdate-base.vdate>1096 and base.mdate-base.vdate<![CDATA[<=]]>1827 then '06'
 	when base.mdate-base.vdate>1827 then '07' end days, cp.ENDAMTSUM_OTH
   	from chb_month_prd_position cp
+	<if test="org != null  and org!=''">
+		left join DATA_AUTH_NOTIFY_INST di
+		on cp.prodid=di.business_id
+		and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+	</if>
 	left join chb_prd_baseinfo base
 	on cp.prodid=base.prod_id
 	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
 	and  base.operate_mode in ('01','02')
 	and base.mdate-base.vdate>1096
+	<if test="org != null  and org!=''">
+		and di.institution_code=#{org, jdbcType=VARCHAR}
+	</if>
 
 	union all
 	select case
 		when base.opendayp>1096 and base.opendayp<![CDATA[<=]]>1827 then '06'
 		when base.opendayp>1827 then '07' end days, cp.ENDAMTSUM_OTH
 	from chb_month_prd_position cp
+	<if test="org != null  and org!=''">
+		left join DATA_AUTH_NOTIFY_INST di
+		on cp.prodid=di.business_id
+		and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+	</if>
 	left join chb_prd_baseinfo base
 	on cp.prodid=base.prod_id
 	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
 	and base.operate_mode in ('03','04')
  	and base.opendayp>1096
+	<if test="org != null  and org!=''">
+		and di.institution_code=#{org, jdbcType=VARCHAR}
+	</if>
 
 	union all
 	select '10' days, cp.ENDAMTSUM_OTH
 	from CHB_MONTH_PRD_POSITION cp
+	<if test="org != null  and org!=''">
+		left join DATA_AUTH_NOTIFY_INST di
+		on cp.prodid=di.business_id
+		and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+	</if>
 	where cp.ENDDATE=#{endDate,jdbcType=DATE}
 	and cp.termtype in ('01','02','03','04','05','06','07')
+	<if test="org != null  and org!=''">
+		and di.institution_code=#{org, jdbcType=VARCHAR}
+	</if>
 
 	union all
 	select  '10' days, cp.ENDAMTSUM_OTH
 	from chb_month_prd_position cp
+	<if test="org != null  and org!=''">
+		left join DATA_AUTH_NOTIFY_INST di
+		on cp.prodid=di.business_id
+		and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+	</if>
 	left join chb_prd_baseinfo base
 	on cp.prodid=base.prod_id
 	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
 	and  base.operate_mode in ('01','02')
 	and base.mdate-base.vdate>1096
+	<if test="org != null  and org!=''">
+		and di.institution_code=#{org, jdbcType=VARCHAR}
+	</if>
 
 	union all
 	select  '10' days, cp.ENDAMTSUM_OTH
 	from chb_month_prd_position cp
+	<if test="org != null  and org!=''">
+		left join DATA_AUTH_NOTIFY_INST di
+		on cp.prodid=di.business_id
+		and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+	</if>
 	left join chb_prd_baseinfo base
 	on cp.prodid=base.prod_id
 	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
 	and base.operate_mode in ('03','04')
 	and base.opendayp>1096
+	<if test="org != null  and org!=''">
+		and di.institution_code=#{org, jdbcType=VARCHAR}
+	</if>
 	)
 	group by days
 	)a
@@ -667,17 +715,31 @@ with cj as(
       when cp.termtype ='07' then '05'
 	end days, nvl(cp.ENDAMTSUM_OTH,0)-nvl(scp.ENDAMTSUM_OTH,0) as amt,cp.prodid
 	from CHB_MONTH_PRD_POSITION cp
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cp.prodid=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+
 		left join CHB_MONTH_PRD_POSITION scp
 		on cp.prodid=scp.prodid
 		and scp.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
 	where cp.ENDDATE=#{endDate,jdbcType=DATE}
 	and cp.termtype in ('01','02','03','04','05','06','07')
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 
     union all
     select case
 	when base.mdate-base.vdate>1096 and base.mdate-base.vdate<![CDATA[<=]]>1827 then '06'
 	when base.mdate-base.vdate>1827 then '07' end days, nvl(cp.ENDAMTSUM_OTH,0)-nvl(scp.ENDAMTSUM_OTH,0) as amt,cp.prodid
   	from chb_month_prd_position cp
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cp.prodid=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join CHB_MONTH_PRD_POSITION scp
 		on cp.prodid=scp.prodid
 		and scp.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
@@ -686,12 +748,20 @@ with cj as(
 	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
 	and  base.operate_mode in ('01','02')
 	and base.mdate-base.vdate>1096
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 
 	union all
 	select case
 		when base.opendayp>1096 and base.opendayp<![CDATA[<=]]>1827 then '06'
 		when base.opendayp>1827 then '07' end days, nvl(cp.ENDAMTSUM_OTH,0)-nvl(scp.ENDAMTSUM_OTH,0) as amt,cp.prodid
 	from chb_month_prd_position cp
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cp.prodid=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join CHB_MONTH_PRD_POSITION scp
 		on cp.prodid=scp.prodid
 		and scp.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
@@ -700,19 +770,35 @@ with cj as(
 	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
 	and base.operate_mode in ('03','04')
  	and base.opendayp>1096
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 　　　
 		union all
 		select '10' days, nvl(cp.ENDAMTSUM_OTH,0)-nvl(scp.ENDAMTSUM_OTH,0) as amt,cp.prodid
 		from CHB_MONTH_PRD_POSITION cp
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cp.prodid=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join CHB_MONTH_PRD_POSITION scp
 		on cp.prodid=scp.prodid
 		and scp.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
 		where cp.ENDDATE=#{endDate,jdbcType=DATE}
 		and cp.termtype in ('01','02','03','04','05','06','07')
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 
 		union all
 		select '10'  days, nvl(cp.ENDAMTSUM_OTH,0)-nvl(scp.ENDAMTSUM_OTH,0) as amt,cp.prodid
 		from chb_month_prd_position cp
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cp.prodid=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join CHB_MONTH_PRD_POSITION scp
 		on cp.prodid=scp.prodid
 		and scp.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
@@ -721,10 +807,18 @@ with cj as(
 		where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
 		and  base.operate_mode in ('01','02')
 		and base.mdate-base.vdate>1096
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 
 		union all
 		select '10'  days, nvl(cp.ENDAMTSUM_OTH,0)-nvl(scp.ENDAMTSUM_OTH,0) as amt,cp.prodid
 		from chb_month_prd_position cp
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cp.prodid=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join CHB_MONTH_PRD_POSITION scp
 		on cp.prodid=scp.prodid
 		and scp.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
@@ -733,6 +827,9 @@ with cj as(
 		where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
 		and base.operate_mode in ('03','04')
 		and base.opendayp>1096
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 	)
 	,possum as(
 	select end.days as days,sum(nvl(end.amt,0)) as sumamt
@@ -824,17 +921,29 @@ with cj as(
       when cp.termtype ='07' then '05'
 	end days, cp.ENDAMTSUM_OTH as amt,cp.prodid,lastcp.ENDAMTSUM_OTH as lastamt
 	from CHB_MONTH_PRD_POSITION cp
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cp.prodid=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 	left join CHB_MONTH_PRD_POSITION lastcp
 	on cp.prodid=lastcp.prodid
 	and lastcp.ENDDATE=#{lastEndDate,jdbcType=DATE}
 	where cp.ENDDATE=#{endDate,jdbcType=DATE}
 	and cp.termtype in ('01','02','03','04','05','06','07')
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
     union all
     select case
 	when base.mdate-base.vdate>1096 and base.mdate-base.vdate<![CDATA[<=]]>1827 then '06'
 	when base.mdate-base.vdate>1827 then '07' end days, cp.ENDAMTSUM_OTH as amt,cp.prodid,lastcp.ENDAMTSUM_OTH as lastamt
   	from chb_month_prd_position cp
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cp.prodid=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 	left join chb_prd_baseinfo base
 	on cp.prodid=base.prod_id
 	left join CHB_MONTH_PRD_POSITION lastcp
@@ -843,12 +952,19 @@ with cj as(
 	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
 	and  base.operate_mode in ('01','02')
 	and base.mdate-base.vdate>1096
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 	union all
 	select case
 		when base.opendayp>1096 and base.opendayp<![CDATA[<=]]>1827 then '06'
 		when base.opendayp>1827 then '07' end days, cp.ENDAMTSUM_OTH as amt,cp.prodid,lastcp.ENDAMTSUM_OTH as lastamt
 	from chb_month_prd_position cp
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cp.prodid=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 	left join chb_prd_baseinfo base
 	on cp.prodid=base.prod_id
 	left join CHB_MONTH_PRD_POSITION lastcp
@@ -857,18 +973,34 @@ with cj as(
 	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
 	and base.operate_mode in ('03','04')
  	and base.opendayp>1096
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
      union all
 		select '10'  days, cp.ENDAMTSUM_OTH as amt,cp.prodid,lastcp.ENDAMTSUM_OTH as lastamt
 		from CHB_MONTH_PRD_POSITION cp
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cp.prodid=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join CHB_MONTH_PRD_POSITION lastcp
 		on cp.prodid=lastcp.prodid
 		and lastcp.ENDDATE=#{lastEndDate,jdbcType=DATE}
 		where cp.ENDDATE=#{endDate,jdbcType=DATE}
 		and cp.termtype in ('01','02','03','04','05','06','07')
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 
 		union all
 		select  '10' days, cp.ENDAMTSUM_OTH as amt,cp.prodid,lastcp.ENDAMTSUM_OTH as lastamt
 		from chb_month_prd_position cp
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cp.prodid=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join chb_prd_baseinfo base
 		on cp.prodid=base.prod_id
 		left join CHB_MONTH_PRD_POSITION lastcp
@@ -877,10 +1009,18 @@ with cj as(
 		where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
 		and  base.operate_mode in ('01','02')
 		and base.mdate-base.vdate>1096
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 
 		union all
 		select  '10'  days, cp.ENDAMTSUM_OTH as amt,cp.prodid,lastcp.ENDAMTSUM_OTH as lastamt
 		from chb_month_prd_position cp
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cp.prodid=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join chb_prd_baseinfo base
 		on cp.prodid=base.prod_id
 		left join CHB_MONTH_PRD_POSITION lastcp
@@ -889,6 +1029,9 @@ with cj as(
 		where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
 		and base.operate_mode in ('03','04')
 		and base.opendayp>1096
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 	)
 	,possum as(
 	select end.days as days,(sum(nvl(end.amt,0))+sum(nvl(end.lastamt,0)))/2 as sumamt
@@ -971,6 +1114,11 @@ with cj as(
 	     </if>
 		    from
 		    CHB_MONTH_ASSET_POSITION cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		    left join(select cabd.mdate as mdate,cabd.asset_id
   			　　　　from CHB_ASSETS_BASIS_DATA_NOBTM cabd
   				WHERE 1=1 and cabd.value_date=#{endDate,jdbcType=DATE}
@@ -980,12 +1128,20 @@ with cj as(
   			left join chb_asset_info info
   　　　　　　on cmap.asset_code=info.asset_code
   　　　　　　where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 
 		　　　union all
 
 		select nvl(cmap.ASSETVALUE_A,0) amt,'10' days
 		from
 		CHB_MONTH_ASSET_POSITION cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join(select cabd.mdate as mdate,cabd.asset_id
 		　　　　from CHB_ASSETS_BASIS_DATA_NOBTM cabd
 		WHERE 1=1 and cabd.value_date=#{endDate,jdbcType=DATE}
@@ -993,8 +1149,11 @@ with cj as(
 		)exeplan
 		on cmap.asset_code=exeplan.asset_id
 		left join chb_asset_info info
-		　　　　　　on cmap.asset_code=info.asset_code
-		　　　　　　where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
+		on cmap.asset_code=info.asset_code
+		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
             )t
 			GROUP by t.DAYS
 		) A
@@ -1163,6 +1322,11 @@ with cj as(
 	     </if>
 		    from
 		    CHB_MONTH_ASSET_POSITION cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		    left join CHB_MONTH_ASSET_POSITION scmap
 		     on cmap.asset_code=scmap.asset_code
 		      and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
@@ -1175,26 +1339,40 @@ with cj as(
   			left join chb_asset_info info
   　　　　　　on cmap.asset_code=info.asset_code
   　　　　　　where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}　and cmap.asset_code!='REMAININGCASH'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 
 		union all
 		select sum(nvl(cmapr.COST_AMT,0)-nvl(scmapr.COST_AMT,0)) amt,cmapr.ASSET_ID as assetId,
 		'01'  days
 		from
 		chb_asset_rate cmapr
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmapr.scino=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'MST09'
+		</if>
 		left join (select * from chb_asset_rate scmapr
          where scmapr.CHANGE_DATE=(select max(scmapr1.change_date) from chb_asset_rate scmapr1
 		where   scmapr.ASSET_ID= scmapr1.ASSET_ID and scmapr1.finprod_type2='XJ'  and scmapr1.COST_AMT!=0 and scmapr1.CHANGE_DATE<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1)
 		) scmapr
 		on cmapr.ASSET_ID=scmapr.ASSET_ID
-
-
         where 1=1 and cmapr.CHANGE_DATE=#{endDate,jdbcType=DATE}　and cmapr.finprod_type2='XJ' and cmapr.COST_AMT!=0
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
         group by cmapr.ASSET_ID
 
 		union all
 		select nvl(cmap.ASSETVALUE_A,0)-nvl(scmap.ASSETVALUE_A,0) amt,cmap.asset_code as assetId,'10' days
 		from
 		CHB_MONTH_ASSET_POSITION cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join CHB_MONTH_ASSET_POSITION scmap
 		on cmap.asset_code=scmap.asset_code
 		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
@@ -1202,18 +1380,24 @@ with cj as(
 		left join(select cabd.mdate as mdate,cabd.asset_id
 		　　　　from CHB_ASSETS_BASIS_DATA_NOBTM cabd
 		WHERE 1=1 and cabd.value_date=#{endDate,jdbcType=DATE}
-
 		)exeplan
 		on cmap.asset_code=exeplan.asset_id
 		left join chb_asset_info info
 		　　　　　　on cmap.asset_code=info.asset_code
 		　　　　　　where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}　and cmap.asset_code!='REMAININGCASH'
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		union all
 		select sum(nvl(cmapr.COST_AMT,0)-nvl(scmapr.COST_AMT,0)) amt,cmapr.ASSET_ID as assetId,
 		'10'  days
 		from
 		chb_asset_rate cmapr
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmapr.scino=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'MST09'
+		</if>
 		left join (select * from chb_asset_rate scmapr
 		where scmapr.CHANGE_DATE=(select max(scmapr1.change_date) from chb_asset_rate scmapr1
 		where   scmapr.ASSET_ID= scmapr1.ASSET_ID and scmapr1.finprod_type2='XJ'  and scmapr1.COST_AMT!=0 and scmapr1.CHANGE_DATE<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1)
@@ -1221,6 +1405,9 @@ with cj as(
 		on cmapr.ASSET_ID=scmapr.ASSET_ID
 
 		where 1=1 and cmapr.CHANGE_DATE=#{endDate,jdbcType=DATE}　and cmapr.finprod_type2='XJ' and cmapr.COST_AMT!=0
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		group by cmapr.ASSET_ID
 	)
 	,possum as(
@@ -1407,6 +1594,11 @@ with cj as(
 	     </if>
 		    from
 		    CHB_MONTH_ASSET_POSITION cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		    left join CHB_MONTH_ASSET_POSITION lastcmap
 			on cmap.asset_code=lastcmap.asset_code
 			and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
@@ -1418,23 +1610,38 @@ with cj as(
   			left join chb_asset_info info
   　　　　　　on cmap.asset_code=info.asset_code
   　　　　　　where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE} and cmap.asset_code!='REMAININGCASH'
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		union all
 		select sum(nvl(cmapr.COST_AMT,0)) amt,cmapr.ASSET_ID as assetId,sum(nvl(lastcmapr.COST_AMT,0)) lastamt,
 		'01'  days
 		from
 		chb_asset_rate cmapr
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmapr.scino=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'MST09'
+		</if>
 		left join chb_asset_rate lastcmapr
 		on cmapr.ASSET_ID=lastcmapr.ASSET_ID
 		and  lastcmapr.CHANGE_DATE=#{lastEndDate,jdbcType=DATE}
 		and lastcmapr.finprod_type2='XJ' and lastcmapr.COST_AMT!=0
 		where 1=1 and cmapr.CHANGE_DATE=#{endDate,jdbcType=DATE}　and cmapr.finprod_type2='XJ' and cmapr.COST_AMT!=0
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		group by cmapr.ASSET_ID
 
 		union all
 		select nvl(cmap.ASSETVALUE_A,0) amt,cmap.asset_code as assetId,nvl(lastcmap.ASSETVALUE_A,0) lastamt,'10' days
 		from
 		CHB_MONTH_ASSET_POSITION cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join CHB_MONTH_ASSET_POSITION lastcmap
 		on cmap.asset_code=lastcmap.asset_code
 		and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
@@ -1446,17 +1653,27 @@ with cj as(
 		left join chb_asset_info info
 		　　　　　　on cmap.asset_code=info.asset_code
 		　　　　　　where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE} and cmap.asset_code!='REMAININGCASH'
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		union all
 		select sum(nvl(cmapr.COST_AMT,0)) amt,cmapr.ASSET_ID as assetId,sum(nvl(lastcmapr.COST_AMT,0)) lastamt,
 		'10' days
 		from
 		chb_asset_rate cmapr
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmapr.scino=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'MST09'
+		</if>
 		left join chb_asset_rate lastcmapr
 		on cmapr.ASSET_ID=lastcmapr.ASSET_ID
 		and  lastcmapr.CHANGE_DATE=#{lastEndDate,jdbcType=DATE}
 		and lastcmapr.finprod_type2='XJ' and lastcmapr.COST_AMT!=0
 		where 1=1 and cmapr.CHANGE_DATE=#{endDate,jdbcType=DATE}　and cmapr.finprod_type2='XJ' and cmapr.COST_AMT!=0
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		group by cmapr.ASSET_ID
 
 	)
@@ -1541,6 +1758,11 @@ with cj as(
 	     </if>
 		    from
 		    CHB_MONTH_ASSET_POSITION cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		    left join(select cabd.mdate as mdate,cabd.asset_id
   			　　　　from CHB_ASSETS_BASIS_DATA_NOBTM cabd
   				WHERE 1=1 and cabd.value_date=#{endDate,jdbcType=DATE}
@@ -1550,11 +1772,18 @@ with cj as(
   　　　　　　on cmap.asset_code=info.asset_code
   　　　　　　where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
  		    and  INFO.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		     union all
 		select nvl(cmap.ASSETVALUE_A,0) amt,'10' days
 		from
 		CHB_MONTH_ASSET_POSITION cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join(select cabd.mdate as mdate,cabd.asset_id
 		　　　　from CHB_ASSETS_BASIS_DATA_NOBTM cabd
 		WHERE 1=1 and cabd.value_date=#{endDate,jdbcType=DATE}
@@ -1564,7 +1793,9 @@ with cj as(
 		　　　　　　on cmap.asset_code=info.asset_code
 		　　　　　　where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
 		and  INFO.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
             )t
 			GROUP by t.DAYS
 		) A
@@ -1733,6 +1964,11 @@ with cj as(
 	     </if>
 		    from
 		    CHB_MONTH_ASSET_POSITION cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join CHB_MONTH_ASSET_POSITION scmap
 		on cmap.asset_code=scmap.asset_code
 		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
@@ -1747,11 +1983,18 @@ with cj as(
   　　　　　　on cmap.asset_code=info.asset_code
   　　　　　　where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
  		    and  info.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		　　　union all
 		select nvl(cmap.ASSETVALUE_A,0)-nvl(scmap.ASSETVALUE_A,0)  amt,cmap.asset_code as assetId,'10' days
 		from
 		CHB_MONTH_ASSET_POSITION cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join CHB_MONTH_ASSET_POSITION scmap
 		on cmap.asset_code=scmap.asset_code
 		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
@@ -1765,7 +2008,9 @@ with cj as(
 		　　　　　　on cmap.asset_code=info.asset_code
 		　　　　　　where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
 		and  info.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 
 	)
 	,possum as(
@@ -1952,6 +2197,11 @@ with cj as(
 	     </if>
 		    from
 		    CHB_MONTH_ASSET_POSITION cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		    left join CHB_MONTH_ASSET_POSITION lastcmap
 			on cmap.asset_code=lastcmap.asset_code
 			and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
@@ -1964,11 +2214,19 @@ with cj as(
   　　　　　　on cmap.asset_code=info.asset_code
   　　　　　　where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
  		    and  info.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
-　　　　　　union all
+　　　　　<if test="org != null  and org!=''">
+		and di.institution_code=#{org, jdbcType=VARCHAR}
+	</if>
+		　union all
 		select nvl(cmap.ASSETVALUE_A,0) amt,cmap.asset_code as assetId,nvl(lastcmap.ASSETVALUE_A,0) lastamt,
 		'10' days
 		from
 		CHB_MONTH_ASSET_POSITION cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join CHB_MONTH_ASSET_POSITION lastcmap
 		on cmap.asset_code=lastcmap.asset_code
 		and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
@@ -1981,7 +2239,9 @@ with cj as(
 		　　　　　　on cmap.asset_code=info.asset_code
 		　　　　　　where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
 		and  info.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
-
+		　<if test="org != null  and org!=''">
+		　and di.institution_code=#{org, jdbcType=VARCHAR}
+	　　　</if>
 	)
 	,possum as(
 	select end.days as days,sum((nvl(end.amt,0)+nvl(end.lastamt,0))/2) as sumamt
@@ -2012,8 +2272,16 @@ with cj as(
 		SELECT CAP.ASSETTYPE2 termType,
 		SUM(cap.ASSETVALUE_A) sessionendBalance
 		FROM CHB_MONTH_ASSET_POSITION cap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		WHERE CAP.ENDDATE  =#{endDate,jdbcType=DATE}
 		AND CAP.ASSETTYPE2 in ('1901','1902')
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		group by CAP.ASSETTYPE2
 	</select>
 	<select id="selectIncurDebtsRateByInfo" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
@@ -2022,6 +2290,11 @@ with cj as(
 		case when sum(nvl(cmap.assetvalue_a,0)) =0 then 0
 		else sum(nvl(rate.asset_rate*cmap.assetvalue_a,0))/sum(nvl(cmap.assetvalue_a,0)) end as sessionendYield
 		from CHB_MONTH_ASSET_POSITION cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join chb_asset_rate rate
 		on cmap.asset_code=rate.asset_id
 		where rate.change_date=(
@@ -2029,6 +2302,9 @@ with cj as(
 		where rate1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and rate.asset_id=rate1.asset_id
 		)
 		and cmap.ASSETTYPE2 in ('1901','1902')
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		and cmap.ENDDATE  =#{endDate,jdbcType=DATE}
 		group by cmap.ASSETTYPE2
 
@@ -2059,6 +2335,11 @@ with cj as(
 		        else  '14' end as industryType
 		from
 		    CHB_MONTH_ASSET_POSITION cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
   			left join chb_asset_info info
   　　　　　　on cmap.asset_code=info.asset_code
 		    left join mst_customer_info_add mst
@@ -2068,11 +2349,19 @@ with cj as(
 		    and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
 		     '2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
 		     '1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		union all
 		select nvl(cmap.ASSETVALUE_A,0) amt,
 		　　　　'15'  as industryType
 		from
 		CHB_MONTH_ASSET_POSITION cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join chb_asset_info info
 		　　　　　　on cmap.asset_code=info.asset_code
 		left join mst_customer_info_add mst
@@ -2082,7 +2371,9 @@ with cj as(
 		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
 		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
 		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		)t
 			GROUP by t.industryType
 		) A
@@ -2217,6 +2508,11 @@ with cj as(
 				else  '14' end as industryType
 		from
 		    CHB_MONTH_ASSET_POSITION cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join CHB_MONTH_ASSET_POSITION scmap
 		on cmap.asset_code=scmap.asset_code
 		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
@@ -2229,13 +2525,20 @@ with cj as(
 		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
 		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
 		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 
 		union all
 		select nvl(cmap.ASSETVALUE_A,0)-nvl(scmap.ASSETVALUE_A,0) amt,cmap.asset_code　as assetId,
 		　　　  '15'  as industryType
 		from
 		CHB_MONTH_ASSET_POSITION cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join CHB_MONTH_ASSET_POSITION scmap
 		on cmap.asset_code=scmap.asset_code
 		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
@@ -2248,6 +2551,9 @@ with cj as(
 		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
 		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
 		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 
 	)
 	,possum as(
@@ -2402,6 +2708,11 @@ with cj as(
 				else  '14' end as industryType
 		from
 		    CHB_MONTH_ASSET_POSITION cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
   			left join chb_asset_info info
   　　　　　　on cmap.asset_code=info.asset_code
 		left join CHB_MONTH_ASSET_POSITION lastcmap
@@ -2414,12 +2725,19 @@ with cj as(
 		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
 		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
 		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
         union all
 		select nvl(cmap.ASSETVALUE_A,0) amt,cmap.asset_code　as assetId,nvl(lastcmap.ASSETVALUE_A,0) lastamt,
 		　　　 '15'  as industryType
 		from
 		CHB_MONTH_ASSET_POSITION cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join chb_asset_info info
 		　　　　　　on cmap.asset_code=info.asset_code
 		left join CHB_MONTH_ASSET_POSITION lastcmap
@@ -2432,6 +2750,9 @@ with cj as(
 		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
 		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
 		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 	)
 	,possum as(
 	select end.industryType as industryType,sum((nvl(end.amt,0)+nvl(end.lastamt,0))/2) as sumamt
@@ -2495,6 +2816,11 @@ with cj as(
 		0 as fbSessionendNum
 		from
 		CHB_MONTH_ASSET_POSITION cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join chb_asset_info info
 		on cmap.asset_code=info.asset_code
 		left join mst_customer_info_add mst
@@ -2523,6 +2849,9 @@ with cj as(
 			and (mst.industry4 not in ('01','02','03','04','07') or mst.industry4 is null)
 			and cmap.ASSETTYPE2 not in ('1701','1703','1704','1106','2401','1303','2403','2402','2499',1706)
 		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		union all
 
 		select
@@ -2536,6 +2865,11 @@ with cj as(
 		0 as fbSessionendNum
 		from
 		CHB_MONTH_ASSET_POSITION cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join chb_asset_info info
 		on cmap.asset_code=info.asset_code
 		left join mst_customer_info_add mst
@@ -2564,6 +2898,9 @@ with cj as(
 			and (mst.industry4 not in ('01','02','03','04','07') or mst.industry4 is null)
 			and cmap.ASSETTYPE2 not in ('1701','1703','1704','1106','2401','1303','2403','2402','2499',1706)
 		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		union all
 
 		select
@@ -2576,6 +2913,11 @@ with cj as(
 		0 as fbSessionendNum　　　　
 		from
 		CHB_MONTH_ASSET_POSITION cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join chb_asset_info info
 		on cmap.asset_code=info.asset_code
 		left join mst_customer_info_add mst
@@ -2609,6 +2951,9 @@ with cj as(
 			and cmap.ASSETTYPE2 not in ('1701','1703','1704','1106','2401','1303','2403','2402','2499',1706)
 			and  info.manage_type='01'
 		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 
 		union all
 
@@ -2622,6 +2967,11 @@ with cj as(
 		nvl(cmap.ASSETVALUE_B,0) as fbSessionendNum　　　　
 		from
 		CHB_MONTH_ASSET_POSITION cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join chb_asset_info info
 		on cmap.asset_code=info.asset_code
 		left join mst_customer_info_add mst
@@ -2650,7 +3000,9 @@ with cj as(
 			and (mst.industry4 not in ('01','02','03','04','07') or mst.industry4 is null)
 			and cmap.ASSETTYPE2 not in ('1701','1703','1704','1106','2401','1303','2403','2402','2499',1706)
 		</if>
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		)t
         group by t.counterName
         )tt

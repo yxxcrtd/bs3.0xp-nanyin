@@ -642,122 +642,10 @@ public class InvestmentsInfoService {
 
 
 
-	/**  
-	 * @Description 查询表一数据并组装为Map  
-	 * @Author      高健  
-	 * @Date        2019年8月7日 下午3:41:08  
-	 * @param @param pageParam
-	 * @param @return 参数  
-	 * @return Map<Object,Object> 返回类型   
-	 * @throws  
-	 */  
-/*	private Map<String, BigDecimal> createTable1Data(Map<String, Object> pageParam) {
-		Map<String, BigDecimal> resultMap = new HashMap<String, BigDecimal>(1 << 4);
-		// 导出年份
-		String exportYear = (String) pageParam.get("exportYear");
-		// 导出季度
-		String exportQuarter = (String) pageParam.get("exportQuarter");
-		// 本季末期数
-		String termId = exportYear + exportQuarter;
-		Map<String, Object> paraMap = new HashMap<String, Object>();
-		// 本季末参数
-		paraMap.put("termId", termId);
-		List<OverallInfoDto> overallInfoList = overallInfoMapper.queryOverallInfoList(paraMap);
-		OverallInfoDto overallInfoDto = overallInfoMapper.queryMarginTrading(paraMap);
-		// 上季末参数
-		String lastTermId = getLastQuarter(termId);
-		paraMap.put("termId", lastTermId);
-		List<OverallInfoDto> lastOverallInfoList = overallInfoMapper.queryOverallInfoList(paraMap);
-		OverallInfoDto lastOverallInfoDto = overallInfoMapper.queryMarginTrading(paraMap);
-		// 本季末已组装数据
-		Map<String, BigDecimal> currMap = assembleMap(overallInfoList);
-		// 上季末已组装数据
-		Map<String, BigDecimal> lastMap = assembleMap(lastOverallInfoList);
-		// 表一E12单元格直接投资为减法运算，单独提取出来
-		resultMap.put("t1_cur12_amt", queryMoney(currMap, "ASSETAMT1_17")  
-				.subtract(queryMoney(currMap, "ASSETAMT1_16_8"))
-				.subtract(queryMoney(currMap, "ASSETAMT1_15_7")));
-		// 表一F12单元格直接投资为减法运算，单独提取出来
-		resultMap.put("t1_last12_amt", queryMoney(lastMap, "ASSETAMT1_17")  
-				.subtract(queryMoney(lastMap, "ASSETAMT1_16_8"))
-				.subtract(queryMoney(lastMap, "ASSETAMT1_15_7")));
-		// 表六C47数据
-		resultMap.put("t6_cur47_amt", overallInfoDto.getBalance());
-		// 表六D47数据
-		resultMap.put("t6_last47_amt", lastOverallInfoDto.getBalance());
-		
-		// 表一、表六其余单元格赋值
-		for (String key : porpertyMap_1.keySet()) {
-			String[] valueList = porpertyMap_1.get(key).split("-");
-			int length = valueList.length;
-			BigDecimal money = BigDecimal.ZERO;
-			// 本季末数额
-			if (key.contains("cur")) {
-				for (int i = 0; i < length; i ++) {
-					money = money.add(queryMoney(currMap, valueList[i]));
-				}
-				// 上季末数额
-			} else if (key.contains("last")) {
-				for (int i = 0; i < length; i ++) {
-					money = money.add(queryMoney(lastMap, valueList[i]));
-				}
-			}
-			resultMap.put(key, money);
-		}
-		// 表六C41数据
-		resultMap.put("t6_cur41_amt", resultMap.get("t6_cur42_amt")
-				.add(resultMap.get("t6_cur43_amt"))
-				.add(resultMap.get("t6_cur44_amt")));
-		// 表D41数据
-		resultMap.put("t6_last41_amt", resultMap.get("t6_last42_amt")
-				.add(resultMap.get("t6_last43_amt"))
-				.add(resultMap.get("t6_last44_amt")));
-		// 表六C58重新赋值
-		resultMap.put("t6_cur58_amt", resultMap.get("t6_cur58_amt")
-				.subtract(resultMap.get("t6_cur46_amt"))
-				.subtract(resultMap.get("t6_cur47_amt")));
-		// 表六D58重新赋值
-		resultMap.put("t6_last58_amt", resultMap.get("t6_last58_amt")
-				.subtract(resultMap.get("t6_last46_amt"))
-				.subtract(resultMap.get("t6_last47_amt")));
-		// 表六C59赋值
-		resultMap.put("t6_cur59_amt", resultMap.get("t6_cur35_amt")
-				.add(resultMap.get("t6_cur41_amt"))
-				.add(resultMap.get("t6_cur45_amt"))
-				.add(resultMap.get("t6_cur46_amt"))
-				.add(resultMap.get("t6_cur47_amt"))
-				.add(resultMap.get("t6_cur48_amt"))
-				.add(resultMap.get("t6_cur50_amt"))
-				.add(resultMap.get("t6_cur51_amt"))
-				.add(resultMap.get("t6_cur54_amt"))
-				.add(resultMap.get("t6_cur55_amt"))
-				.add(resultMap.get("t6_cur56_amt"))
-				.add(resultMap.get("t6_cur57_amt"))
-				.add(resultMap.get("t6_cur58_amt")));
-		// 表六D59赋值
-		resultMap.put("t6_last59_amt", resultMap.get("t6_last35_amt")
-				.add(resultMap.get("t6_last41_amt"))
-				.add(resultMap.get("t6_last45_amt"))
-				.add(resultMap.get("t6_last46_amt"))
-				.add(resultMap.get("t6_last47_amt"))
-				.add(resultMap.get("t6_last48_amt"))
-				.add(resultMap.get("t6_last50_amt"))
-				.add(resultMap.get("t6_last51_amt"))
-				.add(resultMap.get("t6_last54_amt"))
-				.add(resultMap.get("t6_last55_amt"))
-				.add(resultMap.get("t6_last56_amt"))
-				.add(resultMap.get("t6_last57_amt"))
-				.add(resultMap.get("t6_last58_amt")));
-		// 值相同单元格赋值
-		for (String key : sameValueMap.keySet()) {
-			resultMap.put(key, resultMap.get(sameValueMap.get(key)));
-		}
-		return resultMap;
-	}*/
 	/**
 	 * @Description 查询表一数据并组装为Map
-	 * @Author      高健
-	 * @Date        2019年8月7日 下午3:41:08
+	 * @Author
+	 * @Date      2021-01-01
 	 * @param @param pageParam
 	 * @param @return 参数
 	 * @return Map<Object,Object> 返回类型
@@ -772,6 +660,11 @@ public class InvestmentsInfoService {
 		// 本季末期数
 		String termId = exportYear + exportQuarter;
 		Map<String, Object> paraMap = new HashMap<String, Object>();
+		if(MultilevelDataAuthorityUtil.isEnabled()) {
+			//联社模式,查询登录人的机构
+			String org =   MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
+			paraMap.put("org",org);
+		}
 		// 本季末参数
 		paraMap.put("termId", termId);
 		List<OverallInfoDto> overallInfoList = overallInfoMapper.queryOverallInfoList(paraMap);
@@ -887,6 +780,11 @@ public class InvestmentsInfoService {
 		// 本季末期数
 		String termId = exportYear + exportQuarter;
 		Map<String, Object> paraMap = new HashMap<String, Object>();
+		if(MultilevelDataAuthorityUtil.isEnabled()) {
+			//联社模式,查询登录人的机构
+			String org =   MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
+			paraMap.put("org",org);
+		}
 		// 本季末参数
 		paraMap.put("termId", termId);
 		List<OverallInfoDto> overallInfoList = overallInfoMapper.queryBottomOverallInfoList(paraMap);
@@ -1025,6 +923,11 @@ public class InvestmentsInfoService {
 		Map<String, Object> paraMap = new HashMap<String, Object>();
 		// 本季末参数
 		paraMap.put("termId", termId);
+		if(MultilevelDataAuthorityUtil.isEnabled()) {
+			//联社模式,查询登录人的机构
+			String org =   MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
+			paraMap.put("org",org);
+		}
 		//备注
 		paraMap.put("assettype2", "1299");
 		paraMap.put("endDate",endDate);
@@ -1093,7 +996,11 @@ public class InvestmentsInfoService {
 		//备注
 		paraMap.put("assetType2List", assetType2List);
 		paraMap.put("endDate",endDate);
-
+		if(MultilevelDataAuthorityUtil.isEnabled()) {
+			//联社模式,查询登录人的机构
+			String org =   MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
+			paraMap.put("org",org);
+		}
 		OverallInfoDto reamrk16 = overallInfoMapper.queryRemarkInfoByInfo(paraMap);
 		//备注
 		if(null!=reamrk16 && StringUtil.isNotEmpty(reamrk16)){
@@ -1595,280 +1502,6 @@ public class InvestmentsInfoService {
 		resultList.add(investmentBusinessDetailsDto1);
 		return resultList;
 	}
-	/**
-	 * 查询表四数据
-	 * @param pageParam
-	 * @return
-	 */
-/*
-	private List<InvestmentBusinessDetailsDto> queryTable4Info(Map<String, Object> pageParam) {
-		// 导出年份
-		String exportYear = (String) pageParam.get("exportYear");
-		// 导出季度
-		String exportQuarter = (String) pageParam.get("exportQuarter");
-		String cdateStr = exportYear + exportQuarter+"01";
-		Date cdate=new Date();
-		try {
-			cdate = DateUtil.parseDate(cdateStr,"yyyyMMdd");
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		Calendar calendar = Calendar.getInstance();
-	    calendar.setTime(cdate);
-	    calendar.add(Calendar.MONTH, 1);
-	    calendar.set(Calendar.DAY_OF_MONTH, 0);
-	    //取到本季末
-	    Date endDate=calendar.getTime();
-		calendar.add(Calendar.MONTH, -3);
-		calendar.add(Calendar.MONTH, 1);
-	    calendar.set(Calendar.DAY_OF_MONTH, 0);
-		 //取到上季末
-		Date lastEndDate=calendar.getTime();
-		List<InvestmentBusinessDetailsDto> allList=new ArrayList<InvestmentBusinessDetailsDto>();
-		List<InvestmentBusinessDetailsDto> closedprodList =termStructureOfBusinessAndCostBenefitMapper.selectClosedProductBalance(endDate);
-		List<InvestmentBusinessDetailsDto> lastclosedprodList =termStructureOfBusinessAndCostBenefitMapper.selectClosedProductBalance(lastEndDate);
-		List<InvestmentBusinessDetailsDto> openprodList =termStructureOfBusinessAndCostBenefitMapper.selectOpenProductBalance(endDate);
-		List<InvestmentBusinessDetailsDto> lastopenprodList =termStructureOfBusinessAndCostBenefitMapper.selectOpenProductBalance(lastEndDate);
-		List<InvestmentBusinessDetailsDto> rprodRateList =termStructureOfBusinessAndCostBenefitMapper.selectRProductAvgRate(endDate);
-		List<InvestmentBusinessDetailsDto> lastrprodRateList =termStructureOfBusinessAndCostBenefitMapper.selectRProductAvgRate(lastEndDate);
-		List<InvestmentBusinessDetailsDto> nprodRateList =termStructureOfBusinessAndCostBenefitMapper.selectNProductAvgRate(endDate);
-		List<InvestmentBusinessDetailsDto> lastnprodRateList =termStructureOfBusinessAndCostBenefitMapper.selectNProductAvgRate(lastEndDate);
-		Map<String,InvestmentBusinessDetailsDto> prodMap=new HashMap<String,InvestmentBusinessDetailsDto>();
-		for(InvestmentBusinessDetailsDto single:closedprodList){
-			prodMap.put(single.getTermType(), single);
-		}
-		for(InvestmentBusinessDetailsDto single:lastclosedprodList){
-			if(prodMap.containsKey(single.getTermType())){
-				InvestmentBusinessDetailsDto dto=prodMap.get(single.getTermType());
-				dto.setLastSessionendBalance(single.getSessionendBalance());
-			}else{
-				single.setLastSessionendBalance(single.getSessionendBalance());
-				single.setSessionendBalance(BigDecimal.ZERO);
-				prodMap.put(single.getTermType(), single);
-			}
-		}
-		for(InvestmentBusinessDetailsDto single:openprodList){
-			if(prodMap.containsKey(single.getTermType())){
-				InvestmentBusinessDetailsDto dto=prodMap.get(single.getTermType());
-				dto.setSessionendBalance(dto.getSessionendBalance().add(single.getSessionendBalance()));
-			}else{
-				prodMap.put(single.getTermType(), single);
-			}
-		}
-		for(InvestmentBusinessDetailsDto single:lastopenprodList){
-			if(prodMap.containsKey(single.getTermType())){
-				InvestmentBusinessDetailsDto dto=prodMap.get(single.getTermType());
-				dto.setLastSessionendBalance((dto.getLastSessionendBalance()==null?BigDecimal.ZERO:dto.getLastSessionendBalance()).add(single.getSessionendBalance()));
-			}else{
-				single.setLastSessionendBalance(single.getSessionendBalance());
-				single.setSessionendBalance(BigDecimal.ZERO);
-				prodMap.put(single.getTermType(), single);
-			}
-		}
-		for(InvestmentBusinessDetailsDto single:rprodRateList){
-			if(prodMap.containsKey(single.getTermType())){
-				InvestmentBusinessDetailsDto dto=prodMap.get(single.getTermType());
-				dto.setShareamt(single.getShareamt());
-				dto.setSyamt(single.getSyamt());
-				dto.setSessionendYield(single.getSessionendYield());
-			}else{
-				prodMap.put(single.getTermType(), single);
-			}
-		}
-		for(InvestmentBusinessDetailsDto single:lastrprodRateList){
-			if(prodMap.containsKey(single.getTermType())){
-				InvestmentBusinessDetailsDto dto=prodMap.get(single.getTermType());
-				dto.setLastshareamt(single.getShareamt());
-				dto.setLastsyamt(single.getSyamt());
-				dto.setLastSessionendYield(single.getSessionendYield());
-			}else{
-				single.setLastSessionendYield(single.getSessionendYield());
-				single.setSessionendYield(BigDecimal.ZERO);
-				single.setLastsyamt(single.getSyamt());
-				single.setLastSessionendYield(single.getSessionendYield());
-				prodMap.put(single.getTermType(), single);
-			}
-		}
-		for(InvestmentBusinessDetailsDto single:nprodRateList){
-			if(prodMap.containsKey(single.getTermType())){
-				InvestmentBusinessDetailsDto dto=prodMap.get(single.getTermType());
-				if(dto.getSessionendYield()!=null){
-					BigDecimal yield=BigDecimal.ZERO;
-					BigDecimal shartamt=dto.getShareamt().add(single.getShareamt());
-					BigDecimal syamt=dto.getSyamt().add(single.getSyamt());
-					yield=syamt.divide(shartamt,15,RoundingMode.HALF_UP);
-					dto.setSessionendYield(yield);
-				}else{
-					dto.setSessionendYield(single.getSessionendYield());
-				}
-			}else{
-				prodMap.put(single.getTermType(), single);
-			}
-		}
-		for(InvestmentBusinessDetailsDto single:lastnprodRateList){
-			if(prodMap.containsKey(single.getTermType())){
-				InvestmentBusinessDetailsDto dto=prodMap.get(single.getTermType());
-				if(dto.getLastSessionendYield()!=null){
-					BigDecimal yield=BigDecimal.ZERO;
-					BigDecimal shartamt=dto.getLastshareamt().add(single.getShareamt());
-					BigDecimal syamt=dto.getLastsyamt().add(single.getSyamt());
-					yield=syamt.divide(shartamt,15,RoundingMode.HALF_UP);
-					dto.setLastSessionendYield(yield);
-				}else{
-					dto.setLastSessionendYield(single.getSessionendYield());
-				}
-			}else{
-				single.setLastSessionendYield(single.getSessionendYield());
-				single.setSessionendYield(BigDecimal.ZERO);
-				prodMap.put(single.getTermType(), single);
-			}
-		}
-		Map<String,InvestmentBusinessDetailsDto> assetMap=new HashMap<String,InvestmentBusinessDetailsDto>();
-		List<InvestmentBusinessDetailsDto> assetBalanceList =termStructureOfBusinessAndCostBenefitMapper.selectAssetBalance(endDate);
-		List<InvestmentBusinessDetailsDto> lastassetBalanceList =termStructureOfBusinessAndCostBenefitMapper.selectAssetBalance(lastEndDate);
-		List<InvestmentBusinessDetailsDto> assetRateList =termStructureOfBusinessAndCostBenefitMapper.selectAssetRate(endDate);
-		List<InvestmentBusinessDetailsDto> lastassetRateList =termStructureOfBusinessAndCostBenefitMapper.selectAssetRate(lastEndDate);
-		for(InvestmentBusinessDetailsDto single:assetBalanceList){
-			assetMap.put(single.getTermType(), single);
-		}
-		for(InvestmentBusinessDetailsDto single:lastassetBalanceList){
-			if(assetMap.containsKey(single.getTermType())){
-				InvestmentBusinessDetailsDto dto=assetMap.get(single.getTermType());
-				dto.setLastSessionendBalance(single.getSessionendBalance());
-			}else{
-				single.setLastSessionendBalance(single.getSessionendBalance());
-				single.setSessionendBalance(BigDecimal.ZERO);
-				assetMap.put(single.getTermType(), single);
-			}
-		}
-		for(InvestmentBusinessDetailsDto single:assetRateList){
-			if(assetMap.containsKey(single.getTermType())){
-				InvestmentBusinessDetailsDto dto=assetMap.get(single.getTermType());
-				dto.setSessionendYield(single.getSessionendYield());
-			}else{
-				assetMap.put(single.getTermType(), single);
-			}
-		}
-		for(InvestmentBusinessDetailsDto single:lastassetRateList){
-			if(assetMap.containsKey(single.getTermType())){
-				InvestmentBusinessDetailsDto dto=assetMap.get(single.getTermType());
-				dto.setLastSessionendYield(single.getSessionendYield());
-			}else{
-				single.setLastSessionendYield(single.getSessionendYield());
-				single.setSessionendYield(BigDecimal.ZERO);
-				assetMap.put(single.getTermType(), single);
-			}
-		}
-		Map<String,InvestmentBusinessDetailsDto> assetNSMap=new HashMap<String,InvestmentBusinessDetailsDto>();
-		List<InvestmentBusinessDetailsDto> assetNSBalanceList =termStructureOfBusinessAndCostBenefitMapper.selectNSAssetBalance(endDate);
-		List<InvestmentBusinessDetailsDto> lastassetNSBalanceList =termStructureOfBusinessAndCostBenefitMapper.selectNSAssetBalance(lastEndDate);
-		List<InvestmentBusinessDetailsDto> assetNSRateList =termStructureOfBusinessAndCostBenefitMapper.selectNSAssetRate(endDate);
-		List<InvestmentBusinessDetailsDto> lastassetNSRateList =termStructureOfBusinessAndCostBenefitMapper.selectNSAssetRate(lastEndDate);
-		for(InvestmentBusinessDetailsDto single:assetNSBalanceList){
-			assetNSMap.put(single.getTermType(), single);
-		}
-		for(InvestmentBusinessDetailsDto single:lastassetNSBalanceList){
-			if(assetNSMap.containsKey(single.getTermType())){
-				InvestmentBusinessDetailsDto dto=assetNSMap.get(single.getTermType());
-				dto.setLastSessionendBalance(single.getSessionendBalance());
-			}else{
-				single.setLastSessionendBalance(single.getSessionendBalance());
-				single.setSessionendBalance(BigDecimal.ZERO);
-				assetNSMap.put(single.getTermType(), single);
-			}
-		}
-		
-		for(InvestmentBusinessDetailsDto single:assetNSRateList){
-			if(assetNSMap.containsKey(single.getTermType())){
-				InvestmentBusinessDetailsDto dto=assetNSMap.get(single.getTermType());
-				dto.setSessionendYield(single.getSessionendYield());
-				dto.setLastSessionendYield(single.getLastSessionendYield());
-			}else{
-				assetNSMap.put(single.getTermType(), single);
-			}
-		}
-		for(InvestmentBusinessDetailsDto single:lastassetNSRateList){
-			if(assetNSMap.containsKey(single.getTermType())){
-				InvestmentBusinessDetailsDto dto=assetNSMap.get(single.getTermType());
-				dto.setLastSessionendYield(single.getSessionendYield());
-			}else{
-				single.setLastSessionendYield(single.getSessionendYield());
-				single.setSessionendYield(BigDecimal.ZERO);
-				assetNSMap.put(single.getTermType(), single);
-			}
-		}
-		for(String key:prodMap.keySet()){
-			String propertycode=porpertyMap_4_1.get(key);
-			InvestmentBusinessDetailsDto dto=prodMap.get(key);
-			if(dto!=null){
-				dto.setPropertycode(propertycode);
-				allList.add(dto);
-			}
-		}
-		for(String key:assetMap.keySet()){
-			String propertycode=porpertyMap_4_2.get(key);
-			InvestmentBusinessDetailsDto dto=assetMap.get(key);
-			if(dto!=null){
-				dto.setPropertycode(propertycode);
-				allList.add(dto);
-			}
-		}
-		for(String key:assetNSMap.keySet()){
-			String propertycode=porpertyMap_4_3.get(key);
-			InvestmentBusinessDetailsDto dto=assetNSMap.get(key);
-			if(dto!=null){
-				dto.setPropertycode(propertycode);
-				allList.add(dto);
-			}
-		}
-		Map<String,InvestmentBusinessDetailsDto> incurDebtsMap=new HashMap<String,InvestmentBusinessDetailsDto>();
-		List<InvestmentBusinessDetailsDto> incurDebtsBalanceList =termStructureOfBusinessAndCostBenefitMapper.selectIncurDebtsBalance(endDate);
-		List<InvestmentBusinessDetailsDto> lastincurDebtsBalanceList =termStructureOfBusinessAndCostBenefitMapper.selectIncurDebtsBalance(lastEndDate);
-		List<InvestmentBusinessDetailsDto> incurDebtsRateList =termStructureOfBusinessAndCostBenefitMapper.selectIncurDebtsRate(endDate);
-		List<InvestmentBusinessDetailsDto> lastincurDebtsRateList =termStructureOfBusinessAndCostBenefitMapper.selectIncurDebtsRate(lastEndDate);
-		
-		for(InvestmentBusinessDetailsDto single:incurDebtsBalanceList){
-			incurDebtsMap.put(single.getTermType(), single);
-		}
-		for(InvestmentBusinessDetailsDto single:lastincurDebtsBalanceList){
-			if(incurDebtsMap.containsKey(single.getTermType())){
-				single.setLastSessionendBalance(single.getSessionendBalance());
-			}else{
-				single.setLastSessionendBalance(single.getSessionendBalance());
-				single.setSessionendBalance(BigDecimal.ZERO);
-				incurDebtsMap.put(single.getTermType(), single);
-			}
-		}
-		for(InvestmentBusinessDetailsDto single:incurDebtsRateList){
-			if(incurDebtsMap.containsKey(single.getTermType())){
-				InvestmentBusinessDetailsDto dto=incurDebtsMap.get(single.getTermType());
-				dto.setSessionendYield(single.getSessionendYield());
-			}else{
-				incurDebtsMap.put(single.getTermType(), single);
-			}
-		}
-		for(InvestmentBusinessDetailsDto single:lastincurDebtsRateList){
-			if(incurDebtsMap.containsKey(single.getTermType())){
-				InvestmentBusinessDetailsDto dto=incurDebtsMap.get(single.getTermType());
-				dto.setLastSessionendYield(single.getSessionendYield());
-			}else{
-				single.setLastSessionendYield(single.getSessionendYield());
-				single.setSessionendYield(BigDecimal.ZERO);
-				incurDebtsMap.put(single.getTermType(), single);
-			}
-		}
-		for(String key:incurDebtsMap.keySet()){
-			String propertycode=porpertyMap_4_4.get(key);
-			InvestmentBusinessDetailsDto dto=incurDebtsMap.get(key);
-			if(dto!=null){
-				dto.setPropertycode(propertycode);
-				allList.add(dto);
-			}
-		}
-		return allList;
-		
-	}
-*/
 
 	/**
 	 * 组装表四数据到实体类
@@ -1905,10 +1538,17 @@ public class InvestmentsInfoService {
 		calendar.set(Calendar.MONTH, 0);
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
 		Date yearStartDate=calendar.getTime();
-
+		Map<String, Object> paraMap = new HashMap<String, Object>();
+		if(MultilevelDataAuthorityUtil.isEnabled()) {
+			//联社模式,查询登录人的机构
+			String org =   MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
+			paraMap.put("org",org);
+		}
+		paraMap.put("endDate",endDate);
 		List<InvestmentBusinessDetailsDto> allList=new ArrayList<InvestmentBusinessDetailsDto>();
-		List<InvestmentBusinessDetailsDto> prodList =termStructureOfBusinessAndCostBenefitMapper.selectProductBalanceByInfo(endDate);
-		List<InvestmentBusinessDetailsDto> lastprodList =termStructureOfBusinessAndCostBenefitMapper.selectProductBalanceByInfo(lastEndDate);
+		List<InvestmentBusinessDetailsDto> prodList =termStructureOfBusinessAndCostBenefitMapper.selectProductBalanceByInfo(paraMap);
+		paraMap.put("endDate",lastEndDate);
+		List<InvestmentBusinessDetailsDto> lastprodList =termStructureOfBusinessAndCostBenefitMapper.selectProductBalanceByInfo(paraMap);
 
 		//资金来源的平均年化资金成本
 		List<InvestmentBusinessDetailsDto> prodRateList=null;
@@ -1918,7 +1558,7 @@ public class InvestmentsInfoService {
 		if(StringUtil.isNotEmpty(valcalc) && valcalc.equals("01")){
 			//公式一
 			//本季度末
-			Map<String, Object> paraMap = new HashMap<String, Object>();
+
 			paraMap.put("valconfig", CacheUtil.getSysParam("SVR_VALCONFIG_FLAG").toString());
 
 			Calendar calendarlast = Calendar.getInstance();
@@ -1945,13 +1585,12 @@ public class InvestmentsInfoService {
 			//上年今日
 			Date lastlastYearDate=calendarlastlast.getTime();
 			paraMap.put("endDate", lastEndDate);
-			paraMap.put("lastYearDate", lastlastYearDate);
+			paraMap.put("yearStartDate", yearStartDate);
 			lastprodRateList =termStructureOfBusinessAndCostBenefitMapper.selectProductAvgRateInfo1(paraMap);
 
 		}else{
 			//公式二
 			//本季度末
-			Map<String, Object> paraMap = new HashMap<String, Object>();
 			paraMap.put("valconfig", CacheUtil.getSysParam("SVR_VALCONFIG_FLAG").toString());
 
 			Calendar calendarlast = Calendar.getInstance();
@@ -2028,7 +1667,6 @@ public class InvestmentsInfoService {
 		//资金运用
 		Map<String,InvestmentBusinessDetailsDto> assetMap=new HashMap<String,InvestmentBusinessDetailsDto>();
 
-		Map<String, Object> paraMap = new HashMap<String, Object>();
 		paraMap.put("execonfig", CacheUtil.getSysParam("SEC_ASSETS_MDATE_CONF").toString());
 		paraMap.put("endDate",endDate);
 		List<InvestmentBusinessDetailsDto> assetBalanceList =termStructureOfBusinessAndCostBenefitMapper.selectAssetBalanceByInfo(paraMap);
@@ -2260,10 +1898,14 @@ public class InvestmentsInfoService {
 		}
 
 		Map<String,InvestmentBusinessDetailsDto> incurDebtsMap=new HashMap<String,InvestmentBusinessDetailsDto>();
-		List<InvestmentBusinessDetailsDto> incurDebtsBalanceList =termStructureOfBusinessAndCostBenefitMapper.selectIncurDebtsBalanceByInfo(endDate);
-		List<InvestmentBusinessDetailsDto> lastincurDebtsBalanceList =termStructureOfBusinessAndCostBenefitMapper.selectIncurDebtsBalanceByInfo(lastEndDate);
-		List<InvestmentBusinessDetailsDto> incurDebtsRateList =termStructureOfBusinessAndCostBenefitMapper.selectIncurDebtsRateByInfo(endDate);
-		List<InvestmentBusinessDetailsDto> lastincurDebtsRateList =termStructureOfBusinessAndCostBenefitMapper.selectIncurDebtsRateByInfo(lastEndDate);
+		paraMap.put("endDate", endDate);
+		List<InvestmentBusinessDetailsDto> incurDebtsBalanceList =termStructureOfBusinessAndCostBenefitMapper.selectIncurDebtsBalanceByInfo(paraMap);
+		paraMap.put("endDate", lastEndDate);
+		List<InvestmentBusinessDetailsDto> lastincurDebtsBalanceList =termStructureOfBusinessAndCostBenefitMapper.selectIncurDebtsBalanceByInfo(paraMap);
+		paraMap.put("endDate", endDate);
+		List<InvestmentBusinessDetailsDto> incurDebtsRateList =termStructureOfBusinessAndCostBenefitMapper.selectIncurDebtsRateByInfo(paraMap);
+		paraMap.put("endDate", lastEndDate);
+		List<InvestmentBusinessDetailsDto> lastincurDebtsRateList =termStructureOfBusinessAndCostBenefitMapper.selectIncurDebtsRateByInfo(paraMap);
 
 		for(InvestmentBusinessDetailsDto single:incurDebtsBalanceList){
 			incurDebtsMap.put(single.getTermType(), single);
@@ -2352,14 +1994,21 @@ public class InvestmentsInfoService {
 		calendar.set(Calendar.MONTH, 0);
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
 		Date yearStartDate=calendar.getTime();
-
+		Map<String, Object> paraMap = new HashMap<String, Object>();
+		if(MultilevelDataAuthorityUtil.isEnabled()) {
+			//联社模式,查询登录人的机构
+			String org =   MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
+			paraMap.put("org",org);
+		}
 		List<InvestmentBusinessDetailsDto> allList=new ArrayList<InvestmentBusinessDetailsDto>();
 
 		String valcalc=CacheUtil.getSysParam("SVR_VALCALC_FLAG").toString();
 		//资金运用
 		Map<String,InvestmentBusinessDetailsDto> assetMap=new HashMap<String,InvestmentBusinessDetailsDto>();
-		List<InvestmentBusinessDetailsDto> financeAssetBalanceList =termStructureOfBusinessAndCostBenefitMapper.selectFinanceAssetBalanceByInfo(endDate);
-		List<InvestmentBusinessDetailsDto> lastFinanceAssetBalanceList =termStructureOfBusinessAndCostBenefitMapper.selectFinanceAssetBalanceByInfo(lastEndDate);
+		paraMap.put("endDate",endDate);
+		List<InvestmentBusinessDetailsDto> financeAssetBalanceList =termStructureOfBusinessAndCostBenefitMapper.selectFinanceAssetBalanceByInfo(paraMap);
+		paraMap.put("endDate",lastEndDate);
+		List<InvestmentBusinessDetailsDto> lastFinanceAssetBalanceList =termStructureOfBusinessAndCostBenefitMapper.selectFinanceAssetBalanceByInfo(paraMap);
 		//资金运用的“'平均年化收益水平”
 		List<InvestmentBusinessDetailsDto> financeAssetRateList=null;
 		List<InvestmentBusinessDetailsDto> lastFinanceAssetRateList=null;
@@ -2367,7 +2016,7 @@ public class InvestmentsInfoService {
 		if(StringUtil.isNotEmpty(valcalc) && valcalc.equals("01")) {
 			//公式一
 			//本季度末
-			Map<String, Object> paraMap = new HashMap<String, Object>();
+
 
 			paraMap.put("endDate", endDate);
 			paraMap.put("lastEndDate", lastEndDate);
@@ -2389,7 +2038,7 @@ public class InvestmentsInfoService {
 		}else{
 			//公式二
 			//本季度末
-			Map<String, Object> paraMap = new HashMap<String, Object>();
+
 
 			paraMap.put("endDate", endDate);
 			paraMap.put("lastEndDate", lastEndDate);
@@ -2503,6 +2152,11 @@ public class InvestmentsInfoService {
 
 
 		Map<String, Object> paraMap = new HashMap<String, Object>();
+		if(MultilevelDataAuthorityUtil.isEnabled()) {
+			//联社模式,查询登录人的机构
+			String org =   MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
+			paraMap.put("org",org);
+		}
 		paraMap.put("endDate", endDate);
 		paraMap.put("lastEndDate", lastEndDate);
 		List<InvestmentBusinessCounterDetailsDto> selectCounterBalanceList =new ArrayList<InvestmentBusinessCounterDetailsDto>();
@@ -2779,65 +2433,7 @@ public class InvestmentsInfoService {
 		}
 		return detail;
 	}
-	
-	/**  
-	 * @Description 查询表三剩余数据  
-	 * @Author      高健  
-	 * @Date        2019年8月9日 上午11:17:18  
-	 * @param @param pageParam
-	 * @param @return 参数  
-	 * @return List<InvestmentBusinessDetailsDto> 返回类型   
-	 * @throws  
-	 */  
-	/*private List<InvestmentBusinessDetailsDto> queryTable3OtherInfo(Map<String, Object> pageParam) {
-		List<InvestmentBusinessDetailsDto> investmentBusinessDetailsDtoList = new ArrayList<InvestmentBusinessDetailsDto>();
-		// 导出年份
-		String exportYear = (String) pageParam.get("exportYear");
-		// 导出季度
-		String exportQuarter = (String) pageParam.get("exportQuarter");
-		String startDateStr = exportYear + "-" + exportQuarter + "-01";
-		Date startDate=new Date();
-		try {
-			startDate = DateUtil.parseDate(startDateStr,"yyyy-MM-dd");
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		Calendar calendar = Calendar.getInstance();
-	    calendar.setTime(startDate);
-		calendar.add(Calendar.MONTH, -3);
-		Date lastDate=calendar.getTime();
-		// 金融债券相关信息
-		List<InvestmentBusinessDetailsDto> InvestmentBusinessDetails = investmentBusinessDetailsMapper.queryBankDebentureAmount(startDate, lastDate);
-		investmentBusinessDetailsDtoList.addAll(InvestmentBusinessDetails);
-		List<OverallInfoDto> overallInfoDtoList = overallInfoMapper.queryNotBankDebentureInfoList(startDate, lastDate);
-		// Map<行业分类:产品形式, 余额>
-		Map<String, BigDecimal> porpertyAmoutMap = new HashMap<String, BigDecimal>(1 << 8);
-		for (OverallInfoDto overallInfoDto : overallInfoDtoList) {
-			porpertyAmoutMap.put(overallInfoDto.getPropertyCode() + overallInfoDto.getReportType(), overallInfoDto.getBalance());
-		}
-		for (int i = 1; i < 21; i ++) {
-			String porperty = "thamt1_1_";
-			String flag = "";
-			if (i < 10) {
-				flag = "0" + i;
-			} else {
-				flag =  i + "";
-			}
-			porperty += flag;
-			InvestmentBusinessDetailsDto investmentBusinessDetailsDto = new InvestmentBusinessDetailsDto();
-			investmentBusinessDetailsDto.setPropertycode(porperty);
-			investmentBusinessDetailsDto.setSessionendNum(porpertyAmoutMap.get(flag + "BONDCUR") == null ? BigDecimal.ZERO : porpertyAmoutMap.get(flag + "BONDCUR"));
-			investmentBusinessDetailsDto.setLastSessionendNum(porpertyAmoutMap.get(flag + "BONDLAST") == null ? BigDecimal.ZERO : porpertyAmoutMap.get(flag + "BONDLAST"));
-			investmentBusinessDetailsDto.setNonsStandardAmount(porpertyAmoutMap.get(flag + "NOSTABONDCUR") == null ? BigDecimal.ZERO : porpertyAmoutMap.get(flag + "NOSTABONDCUR"));
-			investmentBusinessDetailsDto.setLastNonsStandardAmount(porpertyAmoutMap.get(flag + "NOSTABONDLAST") == null ? BigDecimal.ZERO : porpertyAmoutMap.get(flag + "NOSTABONDLAST"));
-			investmentBusinessDetailsDto.setIndInvestmentAmount(porpertyAmoutMap.get(flag + "INDINCUR") == null ? BigDecimal.ZERO : porpertyAmoutMap.get(flag + "INDINCUR"));
-			investmentBusinessDetailsDto.setLastIndInvestmentAmount(porpertyAmoutMap.get(flag + "INDINLAST") == null ? BigDecimal.ZERO : porpertyAmoutMap.get(flag + "INDINLAST"));
-			investmentBusinessDetailsDto.setOtherAmount(porpertyAmoutMap.get(flag + "OTHERCUR") == null ? BigDecimal.ZERO : porpertyAmoutMap.get(flag + "OTHERCUR"));
-			investmentBusinessDetailsDto.setLastOtherAmount(porpertyAmoutMap.get(flag + "OTHERLAST") == null ? BigDecimal.ZERO : porpertyAmoutMap.get(flag + "OTHERLAST"));
-			investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto);
-		}
-		return investmentBusinessDetailsDtoList;
-	}*/
+
 	/**
 	 * @Description 查询表三剩余数据
 	 * @param @param pageParam
@@ -2862,7 +2458,15 @@ public class InvestmentsInfoService {
 		calendar.setTime(startDate);
 		calendar.add(Calendar.MONTH, -3);
 		Date lastDate=calendar.getTime();
-		List<OverallInfoDto> overallInfoDtoList = overallInfoMapper.queryBottomIndustryOverallInfoList(startDate, lastDate);
+		Map<String, Object> paraMap = new HashMap<String, Object>();
+		if(MultilevelDataAuthorityUtil.isEnabled()) {
+			//联社模式,查询登录人的机构
+			String org =   MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
+			paraMap.put("org",org);
+		}
+		paraMap.put("startDate",startDate);
+		paraMap.put("lastStartDate",lastDate);
+		List<OverallInfoDto> overallInfoDtoList = overallInfoMapper.queryBottomIndustryOverallInfoList(paraMap);
 		//表3备注
 		String cdateStr = exportYear + exportQuarter+"01";
 		Date cdate=new Date();
@@ -2877,8 +2481,9 @@ public class InvestmentsInfoService {
 		calendar1.set(Calendar.DAY_OF_MONTH, 0);
 		//取到本季末
 		Date endDate=calendar1.getTime();
-
-		List<OverallInfoDto> overallInfoDtoRemarkList = overallInfoMapper.queryBottomRemarkInfoByIndustry(startDate, endDate);
+		paraMap.put("startDate",startDate);
+		paraMap.put("endDate",endDate);
+		List<OverallInfoDto> overallInfoDtoRemarkList = overallInfoMapper.queryBottomRemarkInfoByIndustry(paraMap);
 
 		// Map<行业分类:产品形式, 余额>
 		Map<String, BigDecimal> porpertyAmoutMap = new HashMap<String, BigDecimal>(1 << 8);
@@ -2922,9 +2527,11 @@ public class InvestmentsInfoService {
 			investmentBusinessDetailsDto33.setLastOtherAmount(addMoney(investmentBusinessDetailsDto33.getLastOtherAmount(),item.getLastOtherAmount()));
 		}
 		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto33);
-		InvestmentBusinessDetailsDto investmentBusinessDetailsDto36= investmentBusinessDetailsMapper.queryBottomDiffAsset(startDate, lastDate,endDate);
+		paraMap.put("startDate", startDate);
+		paraMap.put("lastStartDate", lastDate);
+		paraMap.put("endDate",endDate);
+		InvestmentBusinessDetailsDto investmentBusinessDetailsDto36= investmentBusinessDetailsMapper.queryBottomDiffAsset(paraMap);
 		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto36);
-		Map<String, Object> paraMap = new HashMap<String, Object>();
 		// 本季末参数
 		paraMap.put("startDate", startDate);
 		paraMap.put("lastStartDate", lastDate);
@@ -2984,6 +2591,11 @@ public class InvestmentsInfoService {
 		calendar.add(Calendar.MONTH, -3);
 		Date lastDate=calendar.getTime();
 		Map<String, Object> paraMap = new HashMap<String, Object>();
+		if(MultilevelDataAuthorityUtil.isEnabled()) {
+			//联社模式,查询登录人的机构
+			String org =   MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
+			paraMap.put("org",org);
+		}
 		// 本季末参数
 		paraMap.put("startDate", startDate);
 		paraMap.put("lastStartDate", lastDate);

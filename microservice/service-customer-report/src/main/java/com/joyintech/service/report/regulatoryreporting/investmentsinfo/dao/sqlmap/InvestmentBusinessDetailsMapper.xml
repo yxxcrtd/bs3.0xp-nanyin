@@ -330,61 +330,109 @@
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 		AND INFO.ASSET_TYPE2 IN ('1106', '2401', '1303', '2403','2402','2499')
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		) AS indInvestmentAmount,
 		(
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
 		AND INFO.ASSET_TYPE2 IN ('1106', '2401', '1303', '2403','2402','2499')
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		) AS lastIndInvestmentAmount,
 		(
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM  CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 		AND (INFO.ASSET_TYPE2 IN ('1301', '1305', '1302', '1399') or (INFO.ASSET_TYPE2 ='1299' and INFO.IN_ASSET_TYPE  IN ('01','02')))
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		) AS otherAmount,
 		(
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
 		AND (INFO.ASSET_TYPE2 IN ('1301', '1305', '1302', '1399') or (INFO.ASSET_TYPE2 ='1299' and INFO.IN_ASSET_TYPE  IN ('01','02')))
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		) AS lastOtherAmount,
 		(
-		select REPLACE(to_char(wm_concat(t.remark)),',','、') reamrk from
+		select REPLACE(to_char(wm_concat(t.remark)),',','、') remark from
 		(
 		select
-		nvl(info.asset_name,info.asset_code)||'+'||to_char(nvl(CMAP.ASSETVALUE_B,0)) AS remark
-		,nvl(CMAP.ASSETVALUE_B,0) as balance,data.pos_amt as posAmt,row_number() over(order by CMAP.ASSETVALUE_B desc) as idx
+		t1.asset_name||'+'||to_char(t1.balance) AS remark
+		,t1.balance as balance,t1.posAmt as posAmt,row_number() over(order by t1.balance desc) as idx
+
+		from(
+		select nvl(info.asset_name,info.asset_code) as asset_name,
+		sum(nvl(CMAP.ASSETVALUE_B,0)) as balance,
+		sum(nvl(data.pos_amt,0)) as posAmt
 		from chb_month_asset_position  cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+
 		left join chb_asset_info info
 		ON cmap.asset_code=info.asset_code
 		left join chb_assets_basis_data data
 		on cmap.asset_code=data.asset_id
 		and data.value_date=#{endDate, jdbcType = DATE}
-
+		and cmap.prod_id =data.prod_id
 
 		where  CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 		and cmap.ASSETVALUE_B is not null
 		AND (INFO.ASSET_TYPE2 IN ('1301', '1305', '1302', '1399') or (INFO.ASSET_TYPE2 ='1299' and INFO.IN_ASSET_TYPE  IN ('01','02')))
-		order by CMAP.ASSETVALUE_B desc
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		group by nvl(info.asset_name,info.asset_code)
+		)t1
+		order by  t1.balance desc
 		) t where  t.idx<![CDATA[<=]]> 3 or t.posAmt>=1000000000
 		) as remark
 
@@ -409,6 +457,12 @@
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -438,11 +492,20 @@
 				</foreach>
 			</if>
 		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		) AS sessionendNum,
 		(
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -473,12 +536,19 @@
 				</foreach>
 			</if>
 		</if>
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		) AS lastSessionendNum,
 		(
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -510,11 +580,19 @@
 				</foreach>
 			</if>
 		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		) AS nonsStandardAmount,
 		(
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -545,13 +623,20 @@
 				</foreach>
 			</if>
 		</if>
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		) AS lastNonsStandardAmount,
 
 		(
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM  CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -581,12 +666,20 @@
 				</foreach>
 			</if>
 		</if>
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		) AS otherAmount,
 		(
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -616,15 +709,28 @@
 				</foreach>
 			</if>
 		</if>
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		) AS lastOtherAmount,
 		(
-		select REPLACE(to_char(wm_concat(t.remark)),',','、') reamrk from
+		select REPLACE(to_char(wm_concat(t.remark)),',','、') remark from
 		(
 		select
-		nvl(info.asset_name,info.asset_code)||'+'||to_char(nvl(CMAP.ASSETVALUE_B,0)) AS remark
-		,nvl(CMAP.ASSETVALUE_B,0) as balance,data.pos_amt as posAmt,row_number() over(order by CMAP.ASSETVALUE_B desc) as idx
+		t1.asset_name||'+'||to_char(t1.balance) AS remark,
+		t1.balance as balance,
+		t1.posAmt as posAmt,row_number() over(order by t1.balance  desc) as idx
+		from
+		(select
+		nvl(info.asset_name,info.asset_code) as asset_name,
+		sum(nvl(CMAP.ASSETVALUE_B,0)) as balance,
+		sum(nvl(data.pos_amt,0)) as posAmt
 		from chb_month_asset_position  cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join chb_asset_info info
 		ON cmap.asset_code=info.asset_code
 		left join mst_customer_info_add mst
@@ -632,7 +738,7 @@
 		left join chb_assets_basis_data data
 		on cmap.asset_code=data.asset_id
 		and data.value_date=#{endDate, jdbcType = DATE}
-
+		and cmap.prod_id =data.prod_id
 		where 1=1
 		and cmap.ASSETVALUE_B is not null
 		<if test="startDate != null">
@@ -658,7 +764,12 @@
 				</foreach>
 			</if>
 		</if>
-		order by CMAP.ASSETVALUE_B desc
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		group by nvl(info.asset_name,info.asset_code)
+		)t1
+		order by t1.balance desc
 		) t where  t.idx<![CDATA[<=]]> 3 or t.posAmt>=1000000000
 		) as remark
 		FROM DUAL
@@ -671,6 +782,11 @@
 		SELECT
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -697,12 +813,20 @@
 					#{province,jdbcType=VARCHAR}
 				</foreach>
 			</if>
+		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
 		) AS sessionendNum,
 		(
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -730,12 +854,19 @@
 				</foreach>
 			</if>
 		</if>
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		) AS lastSessionendNum,
 		(
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -762,12 +893,20 @@
 					#{province,jdbcType=VARCHAR}
 				</foreach>
 			</if>
+		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
 		) AS nonsStandardAmount,
 		(
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -795,13 +934,20 @@
 				</foreach>
 			</if>
 		</if>
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		) AS lastNonsStandardAmount,
 
 		(
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -831,12 +977,19 @@
 				</foreach>
 			</if>
 		</if>
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		) AS indInvestmentAmount,
 		(
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -866,12 +1019,19 @@
 				</foreach>
 			</if>
 		</if>
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		) AS lastIndInvestmentAmount,
 		(
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -898,12 +1058,19 @@
 				</foreach>
 			</if>
 		</if>
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		) AS otherAmount,
 		(
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -929,6 +1096,9 @@
 					#{province,jdbcType=VARCHAR}
 				</foreach>
 			</if>
+		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
 		) AS lastOtherAmount
 		FROM DUAL
@@ -941,6 +1111,11 @@
 		SELECT
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -950,11 +1125,19 @@
 		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
 		AND mst.province IS NOT NULL
 		and info.asset_type2 in  ('1101','1110','1109','1111','1102','1112','1113','1114','1115','1116','1117')
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		) AS sessionendNum,
 		(
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -965,11 +1148,19 @@
 		AND mst.province IS NOT NULL
 		and info.asset_type2 in  ('1101','1110','1109','1111','1102','1112','1113','1114','1115','1116','1117')
 
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		) AS lastSessionendNum,
 		(
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -980,11 +1171,19 @@
 		AND mst.province IS NOT NULL
 		AND INFO.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		) AS nonsStandardAmount,
 		(
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -994,7 +1193,9 @@
 		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
 		AND mst.province IS NOT NULL
 		AND INFO.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 
 		) AS lastNonsStandardAmount,
 
@@ -1002,6 +1203,11 @@
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -1013,13 +1219,20 @@
 		AND INFO.ASSET_TYPE2 IN ('1106', '2401', '1303', '2403','2402','2499')
 		and INFO.IS_GOVERN_FUND='01'
 		and mst.IS_GOV='Y'
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 
 		) AS indInvestmentAmount,
 		(
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -1031,13 +1244,20 @@
 		AND INFO.ASSET_TYPE2 IN ('1106', '2401', '1303', '2403','2402','2499')
 		and INFO.IS_GOVERN_FUND='01'
 		and mst.IS_GOV='Y'
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 
 		) AS lastIndInvestmentAmount,
 		(
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -1046,13 +1266,20 @@
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
 		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305')
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 
 		) AS otherAmount,
 		(
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -1061,6 +1288,9 @@
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
 		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
 		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305')
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 
 		) AS lastOtherAmount
 		FROM DUAL
@@ -1073,6 +1303,11 @@
 		SELECT
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -1080,11 +1315,19 @@
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 		AND mst.INDUSTRY IS NOT NULL　and  mst.INDUSTRY !='10'
 		and info.asset_type2 in  ('1113', '1114', '1115')
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		) AS sessionendNum,
 		(
 		SELECT
 		NVL(SUM(CMAP.ASSETVALUE_B), 0)
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -1092,6 +1335,9 @@
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
 		AND mst.INDUSTRY IS NOT NULL　and  mst.INDUSTRY !='10'
 		and info.asset_type2 in  ('1113', '1114', '1115')
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		) AS lastSessionendNum
 		FROM DUAL
 	</select>

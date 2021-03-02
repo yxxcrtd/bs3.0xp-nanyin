@@ -122,7 +122,8 @@ alter table CHB_PRD_RATE
     create_user         VARCHAR2(20),
     create_time         TIMESTAMP(6),
     remark              VARCHAR2(1000),
-    ccy                 VARCHAR2(50) default 'CNY' not null
+    ccy                 VARCHAR2(50) default 'CNY' not null,
+    scino　　　　　　　　　VARCHAR2(32)
   );
 
   -- Add comments to the table
@@ -171,6 +172,8 @@ alter table CHB_PRD_RATE
     is '备注';
   comment on column CHB_ASSET_RATE.ccy
     is '币种';
+  comment on column CHB_ASSET_RATE.scino
+    is '资金账户流水号';
   -- Create/Recreate primary, unique and foreign key constraints
   alter table CHB_ASSET_RATE
     add constraint CHB_ASSET_RATE_PK primary key (SEQNO);

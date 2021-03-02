@@ -12,6 +12,9 @@
         	T.REPORTUUID,
         	T.TERMID
         	FROM CHB_MONTH_REPORT T
+		<if test="org != null  and org!=''">
+			where  T.org_code=#{org, jdbcType=VARCHAR}
+		</if>
 		) WHERE RN = 1 AND TERMID = #{termId, jdbcType=VARCHAR}	
   	)
 	</select>	
@@ -224,12 +227,20 @@
 		T.REPORTUUID,
 		T.TERMID
 		FROM CHB_MONTH_REPORT T
+		<if test="org != null  and org!=''">
+			where  T.org_code=#{org, jdbcType=VARCHAR}
+		</if>
 		) WHERE RN = 1 AND TERMID = #{termId, jdbcType=VARCHAR}
 		)
 	</select>
 	<select id="queryBottomOverallInfoByRating" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.OverallInfoDto" parameterType="java.util.Map">
 		select NVL(SUM(CMAP.ASSETVALUE_B), 0) AS balance
 		from CHB_MONTH_ASSET_POSITION cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN chb_asset_info info
 		ON cmap.asset_code=info.asset_code
 		WHERE  TO_CHAR(CMAP.ENDDATE, 'yyyyMM') = #{termId, jdbcType=VARCHAR}
@@ -260,33 +271,54 @@
 			and ((info.industry　is not null and info.industry!='10') or info.industry is null)
 			and cmap.rating is null
 		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 	</select>
 	<select id="queryBottomOverallInfoYx" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.OverallInfoDto" parameterType="java.util.Map">
 		SELECT NVL(SUM(CMAP.ASSETVALUE_B), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN chb_asset_info info
 		ON cmap.asset_code=info.asset_code
 		WHERE TO_CHAR(CMAP.ENDDATE, 'yyyyMM') = #{termId, jdbcType=VARCHAR}
 		and info.SHARES_TYPE='02'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 	</select>
 	<select id="queryBottomRemarkInfoByInfo" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.OverallInfoDto" parameterType="java.util.Map">
-		select REPLACE(to_char(wm_concat(t.remark)),',','、') reamrk from
+		select REPLACE(to_char(wm_concat(t.remark)),',','、') remark from
 		(
 		select
-		nvl(info.asset_name,info.asset_code)||'+'||to_char(nvl(CMAP.ASSETVALUE_B,0)) AS remark
-		,nvl(CMAP.ASSETVALUE_B,0) as balance,data.pos_amt as posAmt,row_number() over(order by CMAP.ASSETVALUE_B desc) as idx
+		t1.asset_name||'+'||to_char(t1.balance) AS remark
+		,t1.balance as balance,t1.posAmt as posAmt,row_number() over(order by t1.balance desc) as idx
+		from(
+		select
+		nvl(info.asset_name,info.asset_code) as asset_name,
+		sum(nvl(CMAP.ASSETVALUE_B,0)) as balance,
+		sum(nvl(data.pos_amt,0)) as posAmt
 		from chb_month_asset_position  cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join chb_asset_info info
 		ON cmap.asset_code=info.asset_code
 		left join chb_assets_basis_data data
 		on cmap.asset_code=data.asset_id
 		and data.value_date=#{endDate, jdbcType = DATE}
-
+		and cmap.prod_id =data.prod_id
 		where  TO_CHAR(cmap.ENDDATE, 'yyyyMM') = #{termId, jdbcType=VARCHAR}
 		and cmap.ASSETVALUE_B is not null
 		<if test="assettype2 != null  and assettype2.equals('1299')">
 			and  cmap.assettype2='1299'
-		<!--	and info.ISFBZB!=01-->
+			<!--	and info.ISFBZB!=01-->
 
 		</if>
 		<if test="assettype2 != null  and assettype2.equals('1399')">
@@ -296,13 +328,23 @@
 		<if test="assettype2 != null  and assettype2.equals('2499')">
 			and  cmap.assettype2='2499'
 		</if>
-		order by CMAP.ASSETVALUE_B desc
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		group by nvl(info.asset_name,info.asset_code)
+		)t1
+		order by t1.balance desc
 		) t where  t.idx<![CDATA[<=]]> 3 or t.posAmt>=1000000000
 	</select>
 	<select id="queryOverallInfoByRating" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.OverallInfoDto"
 			parameterType="java.util.Map">
 		select NVL(SUM(CMAP.ASSETVALUE_A), 0) AS balance
 		from CHB_MONTH_ASSET_POSITION cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN chb_asset_info info
 		ON cmap.asset_code=info.asset_code
 		WHERE  TO_CHAR(CMAP.ENDDATE, 'yyyyMM') = #{termId, jdbcType=VARCHAR}
@@ -333,20 +375,34 @@
 			and ((info.industry　is not null and info.industry!='10') or info.industry is null)
 			and cmap.rating is null
 		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 	</select>
 	<select id="queryRemarkInfoByInfo" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.OverallInfoDto" parameterType="java.util.Map">
-		select REPLACE(to_char(wm_concat(t.remark)),',','、') reamrk from
+		select REPLACE(to_char(wm_concat(t.remark)),',','、') remark from
 		(
 		select
-		nvl(info.asset_name,info.asset_code)||'+'||to_char(nvl(CMAP.ASSETVALUE_A,0)) AS remark
-		,nvl(CMAP.ASSETVALUE_A,0) as balance, data.pos_amt as posAmt,row_number() over(order by CMAP.ASSETVALUE_A desc) as idx
+		t1.asset_name||'+'||to_char(t1.balance) AS remark,
+		t1.balance as balance,t1.posAmt as posAmt,row_number() over(order by t1.balance desc) as idx
+		from(
+		select
+		nvl(info.asset_name,info.asset_code) as  asset_name,
+		sum(nvl(CMAP.ASSETVALUE_A,0)) as balance,
+		sum(nvl(data.pos_amt,0)) as posAmt
 		from chb_month_asset_position  cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+
 		left join chb_asset_info info
 		ON cmap.asset_code=info.asset_code
 		left join chb_assets_basis_data_nobtm data
 		on cmap.asset_code=data.asset_id
 		and data.value_date=#{endDate, jdbcType = DATE}
-
+		and cmap.prod_id =data.prod_id
 		where  TO_CHAR(cmap.ENDDATE, 'yyyyMM') = #{termId, jdbcType=VARCHAR}
 		and cmap.ASSETVALUE_A is not null
 		<if test="assetType2List!=null and assetType2List.size>0">
@@ -356,7 +412,12 @@
 				#{assetType2,jdbcType=VARCHAR}
 			</foreach>
 		</if>
-		order by CMAP.ASSETVALUE_A desc
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		group by nvl(info.asset_name,info.asset_code)
+		)t1
+		order by  t1.balance desc
 		) t where  t.idx<![CDATA[<=]]> 3 or t.posAmt>=1000000000
 	</select>
 	<select id="queryBottomIndustryOverallInfoList" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.OverallInfoDto" parameterType="java.util.Map">
@@ -366,6 +427,11 @@
 		mst.INDUSTRY AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -374,6 +440,9 @@
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 		AND INFO.ASSET_TYPE2 IN ('1113', '1114', '1115')
 		AND mst.INDUSTRY IS NOT NULL
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		GROUP BY mst.INDUSTRY
 
 		/*债券上季末数额*/
@@ -383,6 +452,11 @@
 		mst.INDUSTRY AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -391,6 +465,9 @@
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
 		AND mst.INDUSTRY is NOT NULL
 		AND INFO.ASSET_TYPE2 IN ('1113', '1114', '1115')
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		GROUP BY mst.INDUSTRY
 
 		/*非标准化债权类投资本季末数额*/
@@ -400,6 +477,11 @@
 		mst.INDUSTRY AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -411,6 +493,9 @@
 		OR (INFO.ASSET_TYPE2 ='1299' and INFO.IN_ASSET_TYPE is not null AND INFO.IN_ASSET_TYPE NOT IN ('01','02'))
 		OR (INFO.ASSET_TYPE2 ='1299' AND INFO.IN_ASSET_TYPE is null))
 		AND mst.INDUSTRY　is not null
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		GROUP BY mst.INDUSTRY
 
 		/*非标准化债权类投资上季末数额*/
@@ -420,6 +505,11 @@
 		mst.INDUSTRY AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -431,6 +521,9 @@
 		OR (INFO.ASSET_TYPE2 ='1299' and INFO.IN_ASSET_TYPE is not null AND INFO.IN_ASSET_TYPE NOT IN ('01','02'))
 		OR (INFO.ASSET_TYPE2 ='1299' AND INFO.IN_ASSET_TYPE is null))
 		AND mst.INDUSTRY IS NOT NULL
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		GROUP BY mst.INDUSTRY
 
 
@@ -441,6 +534,11 @@
 		'10' AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -449,6 +547,9 @@
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 		AND (INFO.ASSET_TYPE2 IN ('1001', '1002', '1003', '1004','1005','2501','2502','1107','1108')
 		 or (mst.INDUSTRY ='10' AND INFO.ASSET_TYPE2 IN ('1113', '1114', '1115') ))
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 
 
 		/* 其他上季末数额 */
@@ -458,6 +559,11 @@
 		'10' AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -466,18 +572,30 @@
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
 		AND (INFO.ASSET_TYPE2 IN ('1001', '1002', '1003', '1004','1005','2501','2502','1107','1108')
 		or (mst.INDUSTRY ='10' AND INFO.ASSET_TYPE2 IN ('1113', '1114', '1115') ))
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 
 	</select>
 	<select id="queryBottomRemarkInfoByIndustry" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.OverallInfoDto" parameterType="java.util.Map">
 		select 'OTHERREMARK' AS reportType,
 		t.INDUSTRY AS propertyCode,
-		REPLACE(to_char(wm_concat(t.remark)),',','、') reamrk
+		REPLACE(to_char(wm_concat(t.remark)),',','、') remark
 		from(
-		select '10' INDUSTRY,
-		nvl(info.asset_name,info.asset_code)||'+'||to_char(nvl(CMAP.ASSETVALUE_B,0)) AS remark
-		,nvl(CMAP.ASSETVALUE_B,0) as balance,data.pos_amt as posAmt,row_number() over(order by CMAP.ASSETVALUE_B desc) as idx
+		select
+		'10' INDUSTRY,
+		t1.asset_name||'+'||to_char(t1.balance) AS remark
+		,t1.balance as balance,t1.posAmt as posAmt,row_number() over(order by t1.balance desc) as idx
+		from(select
+		nvl(info.asset_name,info.asset_code) as asset_name,
+		sum(nvl(CMAP.ASSETVALUE_B,0)) as balance,
+		sum(nvl(data.pos_amt,0)) as posAmt
 		from chb_month_asset_position  cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -485,13 +603,17 @@
 		left join chb_assets_basis_data data
 		on cmap.asset_code=data.asset_id
 		and data.value_date=#{endDate, jdbcType = DATE}
-
-
+		and cmap.prod_id =data.prod_id
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		and cmap.ASSETVALUE_B is not null
 		AND (INFO.ASSET_TYPE2 IN ('1001', '1002', '1003', '1004','1005','2501','2502','1107','1108')
 		or (mst.INDUSTRY ='10' AND INFO.ASSET_TYPE2 IN ('1113', '1114', '1115') ))
-		order by CMAP.ASSETVALUE_B desc
+		group by nvl(info.asset_name,info.asset_code)
+		)t1
+		order by t1.balance desc
 		) t where  t.idx<![CDATA[<=]]> 3 or t.posAmt>=1000000000
 		group by t.INDUSTRY
 
@@ -504,6 +626,11 @@
 		d1.item_value AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -533,6 +660,9 @@
 				</foreach>
 			</if>
 		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 
 		GROUP BY d1.item_value
 		/*债券上季末数额*/
@@ -542,6 +672,11 @@
 		d1.item_value AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -572,7 +707,9 @@
 				</foreach>
 			</if>
 		</if>
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		GROUP BY d1.item_value
 
 
@@ -583,6 +720,11 @@
 		d1.item_value AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -612,6 +754,9 @@
 					#{province,jdbcType=VARCHAR}
 				</foreach>
 			</if>
+		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
 
 		GROUP BY d1.item_value
@@ -623,6 +768,11 @@
 		d1.item_value AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -653,7 +803,9 @@
 				</foreach>
 			</if>
 		</if>
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		GROUP BY d1.item_value
 
 		/*产业投资基金本季末余额*/
@@ -663,6 +815,11 @@
 		d1.item_value AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -694,6 +851,9 @@
 					#{province,jdbcType=VARCHAR}
 				</foreach>
 			</if>
+		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
 
 		GROUP BY d1.item_value
@@ -705,6 +865,11 @@
 		d1.item_value AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -738,7 +903,9 @@
 				</foreach>
 			</if>
 		</if>
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		GROUP BY d1.item_value
 
 		/* 其他本季末数额 */
@@ -748,6 +915,11 @@
 		d1.item_value AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -777,7 +949,9 @@
 				</foreach>
 			</if>
 		</if>
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		GROUP BY d1.item_value
 
 		/* 其他上季末数额 */
@@ -787,6 +961,11 @@
 		d1.item_value AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
@@ -816,7 +995,9 @@
 				</foreach>
 			</if>
 		</if>
-
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		GROUP BY d1.item_value
 
 	</select>

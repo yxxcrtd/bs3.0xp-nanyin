@@ -106,7 +106,10 @@ public class ChbAssetInfoRate extends BaseEntity{
      * @return
      */
     private  String tradeId;
-
+    /**
+     * 资金账户
+     */
+    private  String scino;
 
     public String getSeqno() {
         return seqno;
@@ -276,5 +279,13 @@ public class ChbAssetInfoRate extends BaseEntity{
 
     public void setTradeId(String tradeId) {
         this.tradeId = tradeId;
+    }
+
+    public String getScino() {
+        return scino;
+    }
+
+    public void setScino(String scino) {
+        this.scino = scino;
     }
 }

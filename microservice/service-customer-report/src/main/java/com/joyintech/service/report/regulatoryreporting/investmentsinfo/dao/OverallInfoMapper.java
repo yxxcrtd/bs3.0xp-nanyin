@@ -31,8 +31,8 @@ public interface OverallInfoMapper {
 
 	/**  
 	 * @Description 根据季末时间查询表内外投资业务总体情况基础数据
-	 * @Author      高健  
-	 * @Date        2019年8月7日 下午3:32:38  
+	 * @Author
+	 * @Date        2021-01-01
 	 * @param @param map
 	 * @param @return 参数  
 	 * @return List<OverallInfoDto> 返回类型   
@@ -125,7 +125,7 @@ public interface OverallInfoMapper {
 	 * @return List<OverallInfoDto> 返回类型
 	 * @throws
 	 */
-	List<OverallInfoDto> queryBottomIndustryOverallInfoList(@Param("startDate")Date startDate, @Param("lastStartDate")Date lastStartDate);
+	List<OverallInfoDto> queryBottomIndustryOverallInfoList(Map<String,Object> map);
 
 	/**
 	 * @Description 根据时间查询非金融债券信息
@@ -139,7 +139,7 @@ public interface OverallInfoMapper {
 	/**
 	 * 表3备注
 	 */
-	List<OverallInfoDto> queryBottomRemarkInfoByIndustry(@Param("startDate")Date startDate, @Param("endDate")Date endDate);
+	List<OverallInfoDto> queryBottomRemarkInfoByIndustry(Map<String,Object> map);
 
 	/**
 	 * 银行模式时，返回机构

@@ -73,7 +73,7 @@ public interface InvestmentBusinessDetailsMapper {
 	 * @return InvestmentBusinessDetailsDto 返回类型
 	 * @throws
 	 */
-	InvestmentBusinessDetailsDto queryBottomDiffAsset(@Param("startDate")Date startDate, @Param("lastStartDate")Date lastStartDate, @Param("endDate")Date endDate);
+	InvestmentBusinessDetailsDto queryBottomDiffAsset(Map<String,Object> map);
 
 	/**
 	 * 重点关注领域

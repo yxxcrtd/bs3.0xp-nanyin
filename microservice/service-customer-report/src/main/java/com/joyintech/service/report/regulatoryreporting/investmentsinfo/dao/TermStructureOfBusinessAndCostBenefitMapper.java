@@ -36,7 +36,7 @@ public interface TermStructureOfBusinessAndCostBenefitMapper {
 	 * @param endDate
 	 * @return
 	 */
-	List<InvestmentBusinessDetailsDto> selectProductBalanceByInfo(@Param("endDate")Date endDate);
+	List<InvestmentBusinessDetailsDto> selectProductBalanceByInfo(Map<String,Object> map);
 
 	/**
 	 * 平均年化资金成本,公式一
@@ -93,8 +93,8 @@ public interface TermStructureOfBusinessAndCostBenefitMapper {
 	 */
 	List<InvestmentBusinessDetailsDto> selectNSAssetRateByInfo2(Map<String,Object> map);
 
-	List<InvestmentBusinessDetailsDto> selectIncurDebtsBalanceByInfo(@Param("endDate")Date endDate);
-	List<InvestmentBusinessDetailsDto> selectIncurDebtsRateByInfo(@Param("endDate")Date endDate);
+	List<InvestmentBusinessDetailsDto> selectIncurDebtsBalanceByInfo(Map<String,Object> map);
+	List<InvestmentBusinessDetailsDto> selectIncurDebtsRateByInfo(Map<String,Object> map);
 
 	/**
 	 *表7中金融业按照所属三级行业类别进行分类
@@ -102,7 +102,7 @@ public interface TermStructureOfBusinessAndCostBenefitMapper {
 	 * @return
 	 */
 
-	List<InvestmentBusinessDetailsDto> selectFinanceAssetBalanceByInfo(@Param("endDate")Date endDate);
+	List<InvestmentBusinessDetailsDto> selectFinanceAssetBalanceByInfo(Map<String,Object> map);
 	/**
 	 * 表7中资金运用的“'平均年化收益水平”公式一
 	 * @param endDate
