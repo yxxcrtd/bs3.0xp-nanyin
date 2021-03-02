@@ -133,7 +133,9 @@
                                     formatoption=true data-th-initValue="${entity?.registOrg}"></select>
                         </div>
                     </div>
-                    <div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
+                    <!--隐藏剩余期限查询条件 update by zoujiamin 20210302 start-->
+                    <div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4" style="display: none;">
+                        <!--隐藏剩余期限查询条件 update by zoujiamin 20210302 end-->
                         <label class="layui-form-label form-lable" data-th-text="#{TrdBondInvestTrade001.endDays1}">剩余期限</label>
                         <div class="layui-input-inline input-inline">
                             <nobr>

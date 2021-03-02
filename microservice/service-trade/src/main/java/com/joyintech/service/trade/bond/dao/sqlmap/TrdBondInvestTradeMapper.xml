@@ -153,12 +153,14 @@
                         </foreach>
                         )
                     </if>
-                    <if test="endDays1Start != null and endDays1Start != ''">
-                        AND mbvi.LAST_PERIOD >= #{endDays1Start}
-                    </if>
-                    <if test="endDays1End != null and endDays1End != ''">
-                        AND mbvi.LAST_PERIOD &lt;= #{endDays1End}
-                    </if>
+                    <!--删除剩余期限查询条件 update by zoujiamin 20210302 start-->
+<!--                    <if test="endDays1Start != null and endDays1Start != ''">-->
+<!--                        AND mbvi.LAST_PERIOD >= #{endDays1Start}-->
+<!--                    </if>-->
+<!--                    <if test="endDays1End != null and endDays1End != ''">-->
+<!--                        AND mbvi.LAST_PERIOD &lt;= #{endDays1End}-->
+<!--                    </if>-->
+                    <!--删除剩余期限查询条件 update by zoujiamin 20210302 end-->
                     <!--添加查询条件登记托管机构 add by lishuping 20191010 end-->
                     and wtpd.TRADE_STATUS = #{TRADE_STATUS_01}
                     <if test="fTradeId!=null and fTradeId!='' ">
@@ -290,12 +292,14 @@
                         </foreach>
                         )
                     </if>
-                    <if test="endDays1Start != null and endDays1Start != ''">
-                        AND mbvi.LAST_PERIOD >= #{endDays1Start}
-                    </if>
-                    <if test="endDays1End != null and endDays1End != ''">
-                        AND mbvi.LAST_PERIOD &lt;= #{endDays1End}
-                    </if>
+                <!--删除剩余期限查询条件 update by zoujiamin 20210302 start-->
+<!--                    <if test="endDays1Start != null and endDays1Start != ''">-->
+<!--                        AND mbvi.LAST_PERIOD >= #{endDays1Start}-->
+<!--                    </if>-->
+<!--                    <if test="endDays1End != null and endDays1End != ''">-->
+<!--                        AND mbvi.LAST_PERIOD &lt;= #{endDays1End}-->
+<!--                    </if>-->
+                <!--删除剩余期限查询条件 update by zoujiamin 20210302 end-->
                     <!--添加查询条件登记托管机构 add by lishuping 20191010 end-->
                     and (wtpd.IS_CANCEL is null or wtpd.IS_CANCEL = #{YES_NO_NO})
                     and wtpd.TRADE_STATUS = #{TRADE_STATUS_01}
@@ -426,12 +430,14 @@
                         </foreach>
                         )
                     </if>
-                    <if test="endDays1Start != null and endDays1Start != ''">
-                        AND mbvi.LAST_PERIOD >= #{endDays1Start}
-                    </if>
-                    <if test="endDays1End != null and endDays1End != ''">
-                        AND mbvi.LAST_PERIOD &lt;= #{endDays1End}
-                    </if>
+                <!--删除剩余期限查询条件 update by zoujiamin 20210302 start-->
+<!--                    <if test="endDays1Start != null and endDays1Start != ''">-->
+<!--                        AND mbvi.LAST_PERIOD >= #{endDays1Start}-->
+<!--                    </if>-->
+<!--                    <if test="endDays1End != null and endDays1End != ''">-->
+<!--                        AND mbvi.LAST_PERIOD &lt;= #{endDays1End}-->
+<!--                    </if>-->
+                    <!--删除剩余期限查询条件 update by zoujiamin 20210302 end-->
                     <!--添加查询条件登记托管机构 add by lishuping 20191010 end-->
                     and wtpd.IS_CANCEL = #{YES_NO_YES}
                     and wtpd.TRADE_STATUS = #{TRADE_STATUS_01}
