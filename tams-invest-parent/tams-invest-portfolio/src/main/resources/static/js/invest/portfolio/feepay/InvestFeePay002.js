@@ -313,6 +313,7 @@ $(function() {
                 if(feeType == '07' || feeType == '08'){
 					Joyin.ajax(JoyinUtil.getRealPath('/invest/portfolio/feepay/InvestFeePay002/querySecAcctOrg'), {secAcctId : secAcctId}, function(result){
 						$('#InvestFeePay002_regTrustOrg').val(result).trigger('change');
+						$('#InvestFeePay002_regTrustOrg').prop("disabled", true);
 					});
 				}
 			}
