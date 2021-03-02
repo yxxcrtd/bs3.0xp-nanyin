@@ -839,4 +839,21 @@
 			AND CL1.CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
 		</if>
 	</select>
+
+	<select id="isKDQ" resultType="java.lang.Integer">
+		select count(1) from CREDIT_LINES
+		where 1=1
+		<if test="creditmstid !=null and creditmstid !=''">
+			and CREDIT_MST_ID = #{creditmstid,jdbcType=VARCHAR}
+		</if>
+		<if test="customerid !=null and customerid !=''">
+			and CUSTOMER_ID = #{customerid,jdbcType=VARCHAR}
+		</if>
+		<if test="dealdate !=null">
+			and vdate &lt;= #{dealdate, jdbcType=DATE}
+		</if>
+		<if test="dealdate !=null">
+			and mdate &gt;= #{dealdate, jdbcType=DATE}
+		</if>
+	</select>
 </mapper>

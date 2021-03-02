@@ -10,29 +10,31 @@
 
 package com.joyintech.tams.batch.creditPierce.service;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.joyintech.calculation.util.ArithmeticUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.batch.creditPierce.dao.CreditPierceMapper;
 import com.joyintech.tams.batch.creditPierce.dto.PtlSecPierceValDto;
+import com.joyintech.tams.common.base.dao.CreditLinesMapper;
 import com.joyintech.tams.common.base.dao.CreditLinesPierceMapper;
+import com.joyintech.tams.common.base.entity.CreditLines;
 import com.joyintech.tams.common.base.entity.CreditLinesPierce;
 import com.joyintech.tams.common.base.entity.CreditMstInfo;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.trade.CelinesUpdateFactory;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.joyintech.calculation.util.ArithmeticUtil;
-import com.joyintech.framework.util.StringUtil;
+
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -52,6 +54,14 @@ public class CreditPierceService {
     @Autowired
     private CreditLinesPierceMapper creditLinesPierceMapper;
 
+    @Autowired(required = false)
+    private BaseGetBussinessId baseGetBusinessId;
+
+    @Autowired
+    private CreditLinesMapper creditMapper;
+
+    @Autowired
+    private CelinesUpdateFactory celinesUpdateFactory;
 
     /**
      * 授信估值穿透数据接入处理
@@ -124,6 +134,55 @@ public class CreditPierceService {
                     dto.setCustomerId(organId);
                     dto.setCdate(currentDate);
                     dto.setCreditMstId("0001");
+                    if(celinesUpdateFactory.isKDQ(dto.getCreditMstId(), dto.getCustomerId(), dto.getCdate())<=0){
+                        CreditLines creditLines = new CreditLines();
+                        String customerId = dto.getCustomerId();
+                        String seqNo = "";
+                        if (baseGetBusinessId != null) {
+                            BussinessCodeParameter codeParameter = new BussinessCodeParameter();
+//                    if(StringUtil.equals(model.getInputValue1(), DictCodeList.平安资产类型_拆借.getValue())
+//                            ||StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())
+//                            ||StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue())) {
+//                        codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_机构授信);
+//                    }else {
+//                        codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_资产授信);
+//                    }
+                            codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_机构授信);
+                            seqNo = baseGetBusinessId.buildBussinessCode(codeParameter);
+                        }
+                        else {
+                            seqNo= IDGenerator.generate();
+                        }
+                        creditLines.setSeqno(seqNo);
+                        creditLines.setCreditAmt(BigDecimal.ZERO);
+//                if(StringUtil.equals(model.getInputValue1(), DictCodeList.平安资产类型_拆借.getValue())
+//                        ||StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())
+//                        ||StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue())) {
+//                    creditLines.setCreditMstId("0001");
+//                    customerId = model.getCounterId();
+//                    creditLines.setCustomerId(customerId);
+//                    creditLines.setCreditFlag("Y");
+//                }else {
+//                    creditLines.setCreditMstId("0002");
+//                    creditLines.setCustomerId(customerId);
+//                    creditLines.setParentCustomerId(creditLines.getCustomerId());
+//                    creditLines.setCreditFlag("N");
+//                }
+                        creditLines.setCreditMstId("0001");
+                        customerId = dto.getCustomerId();
+                        creditLines.setCustomerId(customerId);
+                        creditLines.setCreditFlag("Y");
+                        creditLines.setVdate(dto.getCdate());
+                        creditLines.setMdate(DateUtil.parse("2099-12-31"));
+                        creditLines.setPflsh("空档期授信");
+                        creditLines.setCreateDept(dto.getCreateDept());
+                        creditLines.setCreateTime(dto.getCreateTime());
+                        creditLines.setCreateUser(dto.getCreateUser());
+                        creditLines.setUpdateTime(dto.getUpdateTime());
+                        creditLines.setUpdateUser(dto.getUpdateUser());
+                        creditLines.setHapCreditAmt(celinesUpdateFactory.extendCreditLinesDeal(creditLines.getSeqno(), creditLines.getVdate(), creditLines.getCreditMstId(),creditLines.getCustomerId()));
+                        creditMapper.insert(creditLines);
+                    }
 //                    dto.setPlanAssetId(ptlSecPierceValutioListMap.get(finprodId).get(0).get);
                     dto.setCcy(ptlSecPierceValutioOrgListMap.get(organId).get(0).getCcy());
                     BigDecimal creditAmt = BigDecimal.ZERO;

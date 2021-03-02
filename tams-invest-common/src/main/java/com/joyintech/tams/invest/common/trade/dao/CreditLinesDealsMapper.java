@@ -98,4 +98,12 @@ public interface CreditLinesDealsMapper {
 	List<CreditLinesDeal> selectCreditLinesDeal(Map<String, Object> param);
 
 	BigDecimal selectCreditLinesHap(Map<String, Object> param);
+
+	/**
+	 * 判断是否是空档期
+	 * @param seqno
+	 * @param tradeId
+	 * @return
+	 */
+	int isKDQ(@Param("creditmstid") String creditmstid, @Param("customerid") String customerid, @Param("dealdate") Date dealdate);
 }

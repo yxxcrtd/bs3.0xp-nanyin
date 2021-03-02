@@ -941,4 +941,14 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
             return new BigDecimal("0");
         }
     }
+
+    /**
+     * 判断是否是空档期
+     * @param seqno
+     * @param tradeId
+     * @return
+     */
+    public int isKDQ(String creditmstid, String customerid, Date dealdate) {
+        return creditLinesMapper.isKDQ(creditmstid, customerid, dealdate);
+    }
 }
