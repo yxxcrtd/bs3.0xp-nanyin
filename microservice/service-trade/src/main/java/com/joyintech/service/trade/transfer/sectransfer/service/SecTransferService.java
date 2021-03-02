@@ -182,11 +182,11 @@ public class SecTransferService extends BaseService<SecTransfer001Dto> {
      * @see
      * @since 1.0
      */
-//    public List<SelectOptionDto> getPortfolioId(Map<String,Object> map){
-//    	map.put("portfolioType", DictCodeList.组合类型_投资过渡组合.getValue());
-//    	map.put("Y", DictCodeListExt1.是否_是.getValue());
-//        return secTransferMapper.getPortfolioId(map);
-//    }
+    public List<SelectOptionDto> getPortfolioId(Map<String,Object> map){
+    	map.put("portfolioType", DictCodeListExt1.组合类型_投资过渡组合.getValue());
+    	map.put("Y", DictCodeListExt1.是否_是.getValue());
+        return secTransferMapper.getPortfolioId(map);
+    }
 
     // add by xuzhihao start
     public BigDecimal findUnitCprice(Map<String, Object> param) {

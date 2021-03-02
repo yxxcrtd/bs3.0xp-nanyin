@@ -10,15 +10,14 @@
  
 package com.joyintech.tams.invest.batch.creditmanager.service;
 
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.CreditLinesDealMapper;
 import com.joyintech.tams.common.base.entity.CreditLines;
 import com.joyintech.tams.common.base.entity.CreditLinesDeal;
-import com.joyintech.tams.common.base.entity.CreditLinesDealKey;
 import com.joyintech.tams.invest.batch.creditmanager.dao.CreditExtendsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +42,7 @@ public class CreditExtendsService {
     private CreditLinesDealMapper creditLinesDealMapper;
 
 
+
     /**
      * 继承处理
      * <功能详细描述>
@@ -53,31 +53,47 @@ public class CreditExtendsService {
     public void run(Date currentDate){
         Map<String,Object> paramMap = new HashMap<String,Object>();
         paramMap.put("pdate", currentDate);
-        //获取新建的授信
+        //获取需要继承的授信，及跑批当日生效占用额度为0的授信
         List<CreditLines> ptlList = creditExtendsMapper.selectCreditIdForTask(paramMap);
         for(CreditLines ptl : ptlList){
-            paramMap.put("creditMstId", ptl.getCreditMstId());//授信配置编号
-            paramMap.put("customerId", ptl.getCustomerId());//授信客户编号
-            List<CreditLines> ptlPreList = creditExtendsMapper.selectPreCreditIdForTask(paramMap);
-            if(StringUtil.isEmptyList(ptlPreList)){
-                continue;
+            Map<String, Object> param=new HashMap<String, Object>();
+            param.put("creditMstId", ptl.getCreditMstId());
+            param.put("customerId", ptl.getCustomerId());
+            param.put("vdate", ptl.getVdate());
+            List<CreditLinesDeal> creditLinesDealList = creditExtendsMapper.selectCreditLinesDeal(param);
+            for(CreditLinesDeal creditLinesDeal : creditLinesDealList){
+                creditLinesDeal.setSeqno(ptl.getSeqno());
+                creditLinesDealMapper.insert(creditLinesDeal);
             }
-            ptl.setHapCreditAmt(ptlPreList.get(0).getHapCreditAmt());//取最近的一次授信额度
+            BigDecimal res = creditExtendsMapper.selectCreditLinesHap(param);
+            res = res == null? new BigDecimal("0") : res;
+            ptl.setHapCreditAmt(res);
             ptl.setUpdateTime(new Date());
             creditExtendsMapper.updateLinesByPrimaryKeySelective(ptl);
 
-            //查找原交易关联明细信息
-            List<CreditLinesDeal> creLineDeal=creditExtendsMapper.selectDealByPrimaryKey(ptlPreList.get(0).getSeqno());
-            for(CreditLinesDeal entry:creLineDeal){
-                entry.setSeqno(ptl.getSeqno());
-                CreditLinesDealKey creKey=new CreditLinesDealKey();
-                creKey.setSeqno(ptl.getSeqno());
-                creKey.setTradeId(entry.getTradeId());
-                creditLinesDealMapper.deleteByPrimaryKey(creKey);
-                creditLinesDealMapper.insertSelective(entry);
-            }
+//            paramMap.put("creditMstId", ptl.getCreditMstId());//授信配置编号
+//            paramMap.put("customerId", ptl.getCustomerId());//授信客户编号
+//            List<CreditLines> ptlPreList = creditExtendsMapper.selectPreCreditIdForTask(paramMap);
+//            if(StringUtil.isEmptyList(ptlPreList)){
+//                continue;
+//            }
+//            ptl.setHapCreditAmt(ptlPreList.get(0).getHapCreditAmt());//取最近的一次授信额度
+//            ptl.setUpdateTime(new Date());
+//            creditExtendsMapper.updateLinesByPrimaryKeySelective(ptl);
+
+//            //查找原交易关联明细信息
+//            List<CreditLinesDeal> creLineDeal=creditExtendsMapper.selectDealByPrimaryKey(ptlPreList.get(0).getSeqno());
+//            for(CreditLinesDeal entry:creLineDeal){
+//                entry.setSeqno(ptl.getSeqno());
+//                CreditLinesDealKey creKey=new CreditLinesDealKey();
+//                creKey.setSeqno(ptl.getSeqno());
+//                creKey.setTradeId(entry.getTradeId());
+//                creditLinesDealMapper.deleteByPrimaryKey(creKey);
+//                creditLinesDealMapper.insertSelective(entry);
+//            }
 
         }
     }
+
 
 }

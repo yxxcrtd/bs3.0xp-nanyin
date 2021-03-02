@@ -7,6 +7,7 @@ import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.TreeNode;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.risk.creditmanagement.ceorg.dao.CeOrgMapper;
@@ -246,7 +247,7 @@ public class CeOrg002Service extends BaseService<CreditMstInfoDto> {
 	 * @param name
 	 */
 	public BigDecimal extendCreditLinesDeal(String seqno, Date vdate, String creditMstId, String customerId) {
-		if(CacheUtil.getSysParam("IS_EXTEND_CREDIT").equals("true")){
+		if(CacheUtil.getSysParam("IS_EXTEND_CREDIT").equals("true") && vdate.compareTo(DateUtil.platDateFromCache())<=0){
 			Map<String, Object> param=new HashMap<String, Object>();
 			param.put("creditMstId", creditMstId);
 			param.put("customerId", customerId);
