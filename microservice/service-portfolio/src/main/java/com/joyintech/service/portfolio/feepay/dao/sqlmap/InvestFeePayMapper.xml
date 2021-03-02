@@ -406,9 +406,9 @@
 			<if test="secAcctId != null and secAcctId != ''">
 			PSA.ACCT_NO secAcctId, 
 			</if>
-			<if test="secAcctId == null or secAcctId == ''">
+			<!-- <if test="secAcctId == null or secAcctId == ''">
 			PTL_FEE_POSITION.PTL_FEE_PLACE,
-			</if>
+			</if> -->
 			sum(NVL(PTL_FEE_POSITION.TDY_ACCUMUL_PAY_FEE,0)) payAmt, sum(NVL(PTL_FEE_POSITION.TDY_ACCUMUL_PAY_FEE,0)) actPayAmt
    		FROM PTL_FEE_POSITION
    		LEFT JOIN PTL_PORTFOLIO ptl
@@ -437,9 +437,9 @@
 		<if test="secAcctId != null and secAcctId != ''">
 		,PSA.ACCT_NO 
 		</if>
-		<if test="secAcctId == null or secAcctId == ''">
+		<!-- <if test="secAcctId == null or secAcctId == ''">
 		,PTL_FEE_POSITION.PTL_FEE_PLACE
-		</if>
+		</if> -->
 		having sum(NVL(PTL_FEE_POSITION.TDY_ACCUMUL_PAY_FEE,0)) > 0
 	</select>
 	
