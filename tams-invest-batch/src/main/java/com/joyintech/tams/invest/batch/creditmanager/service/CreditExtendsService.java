@@ -63,6 +63,8 @@ public class CreditExtendsService {
             List<CreditLinesDeal> creditLinesDealList = creditExtendsMapper.selectCreditLinesDeal(param);
             for(CreditLinesDeal creditLinesDeal : creditLinesDealList){
                 creditLinesDeal.setSeqno(ptl.getSeqno());
+                creditLinesDeal.setCreateTime(new Date());
+                creditLinesDeal.setUpdateTime(new Date());
                 creditLinesDealMapper.insert(creditLinesDeal);
             }
             BigDecimal res = creditExtendsMapper.selectCreditLinesHap(param);

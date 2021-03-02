@@ -58,12 +58,12 @@
 		WHERE SEQNO = #{seqno,jdbcType=VARCHAR}
 	</update>
 
-	<select id="selectCreditLinesDeal" parameterType="Map"	resultType="cselectCreditIdForTaskom.joyintech.tams.common.base.entity.CreditLinesDeal" >
+	<select id="selectCreditLinesDeal" parameterType="Map"	resultType="com.joyintech.tams.common.base.entity.CreditLinesDeal" >
 		select CLD1.* from CREDIT_LINES_DEAL CLD1
 		left join CREDIT_LINES CL1 on CL1.SEQNO = CLD1.SEQNO
 		WHERE CL1.VDATE = (select max(VDATE) from CREDIT_LINES CL2 WHERE CL1.CREDIT_MST_ID = CL2.CREDIT_MST_ID AND CL1.CUSTOMER_ID = CL2.CUSTOMER_ID
 		<if test="vdate !=null">
-			and CL2.vdate &lt;= #{vdate, jdbcType=DATE}
+			and CL2.vdate &lt; #{vdate, jdbcType=DATE}
 		</if>
 		)
 		<if test="creditMstId !=null and creditMstId !=''">
@@ -78,7 +78,7 @@
 		select nvl(CL1.HAP_CREDIT_AMT,0) from CREDIT_LINES CL1
 		WHERE CL1.VDATE = (select max(VDATE) from CREDIT_LINES CL2 WHERE CL1.CREDIT_MST_ID = CL2.CREDIT_MST_ID AND CL1.CUSTOMER_ID = CL2.CUSTOMER_ID
 		<if test="vdate !=null">
-			and CL2.vdate &lt;= #{vdate, jdbcType=DATE}
+			and CL2.vdate &lt; #{vdate, jdbcType=DATE}
 		</if>
 		)
 		<if test="creditMstId !=null and creditMstId !=''">

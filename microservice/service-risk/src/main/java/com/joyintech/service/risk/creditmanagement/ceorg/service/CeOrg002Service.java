@@ -255,6 +255,8 @@ public class CeOrg002Service extends BaseService<CreditMstInfoDto> {
 			List<CreditLinesDeal> creditLinesDealList = ceOrgMapper.selectCreditLinesDeal(param);
 			for(CreditLinesDeal creditLinesDeal : creditLinesDealList){
 				creditLinesDeal.setSeqno(seqno);
+                creditLinesDeal.setCreateTime(new Date());
+                creditLinesDeal.setUpdateTime(new Date());
 				creditLinesDealMapper.insert(creditLinesDeal);
 			}
 			BigDecimal res = ceOrgMapper.selectCreditLinesHap(param);
