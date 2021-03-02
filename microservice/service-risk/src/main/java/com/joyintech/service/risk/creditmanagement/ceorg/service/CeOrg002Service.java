@@ -6,7 +6,6 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.TreeNode;
-import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
@@ -16,15 +15,14 @@ import com.joyintech.service.risk.creditmanagement.ceorg.dto.CreditMstInfoDto;
 import com.joyintech.tams.common.base.dao.CreditLinesDealMapper;
 import com.joyintech.tams.common.base.dao.CreditLinesMapper;
 import com.joyintech.tams.common.base.entity.CreditLines;
-import com.joyintech.tams.common.base.entity.CreditLinesDeal;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.trade.CelinesUpdateFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +49,9 @@ public class CeOrg002Service extends BaseService<CreditMstInfoDto> {
 	
 	@Autowired
 	private CreditLinesDealMapper creditLinesDealMapper;
+
+	@Autowired
+	private CelinesUpdateFactory celinesUpdateFactory;
 
     /**
      * 客户代码联想文本框service层实现
@@ -122,7 +123,6 @@ public class CeOrg002Service extends BaseService<CreditMstInfoDto> {
     	if(StringUtil.isNotEmpty(entity.getCreditAmt())){
     		entity.setCreditAmt(entity.getCreditAmt().multiply(new BigDecimal(100000000)));
     	}
-    	entity.setHapCreditAmt(new BigDecimal(0));
     	entity.setCreditFlag(DictCodeList.是否_是.getValue());
 		//多级法人改造 add by jingqiongqiong 20200616
 		//当前用户所属机构代码
@@ -138,19 +138,27 @@ public class CeOrg002Service extends BaseService<CreditMstInfoDto> {
     			dto.setMdate(entity.getMdate());
     			dto.setRemark(entity.getRemark());
     			dto.setPflsh(entity.getPflsh());
-    			dto.setHapCreditAmt(new BigDecimal(0));
     			dto.setCustomerId(entity.getCustomerId());
     			dto.setCreditFlag(DictCodeList.是否_是.getValue());
     			dto.setParentCustomerId(entity.getCustomerId());
 				//多级法人改造 add by jingqiongqiong 20200616
 				dto.setInstitutionCode(createInst);
 				//多级法人改造 add by jingqiongqiong 20200616
-				dto.setHapCreditAmt(extendCreditLinesDeal(dto.getSeqno(), dto.getVdate(), dto.getCreditMstId(),dto.getCustomerId()));
+
+				if(entity.getVdate().compareTo(DateUtil.platDateFromCache())<=0){
+					dto.setHapCreditAmt(celinesUpdateFactory.extendCreditLinesDeal(dto.getSeqno(), dto.getVdate(), dto.getCreditMstId(),dto.getCustomerId()));
+				}else{
+					dto.setHapCreditAmt(new BigDecimal(0));
+				}
     			creditLinesMapper.insert(dto);
     		}
     		
     	}
-		entity.setHapCreditAmt(extendCreditLinesDeal(entity.getSeqno(), entity.getVdate(), entity.getCreditMstId(),entity.getCustomerId()));
+		if(entity.getVdate().compareTo(DateUtil.platDateFromCache())<=0){
+			entity.setHapCreditAmt(celinesUpdateFactory.extendCreditLinesDeal(entity.getSeqno(), entity.getVdate(), entity.getCreditMstId(),entity.getCustomerId()));
+		}else{
+			entity.setHapCreditAmt(new BigDecimal(0));
+		}
     	creditLinesMapper.insert(entity);
 
 	}
@@ -198,9 +206,12 @@ public class CeOrg002Service extends BaseService<CreditMstInfoDto> {
         			}
         			else{
         				dto.setSeqno(getQuotePrimaryKey());
-        				dto.setHapCreditAmt(new BigDecimal(0));
         				dto.setCreditFlag(DictCodeList.是否_是.getValue());
-						dto.setHapCreditAmt(extendCreditLinesDeal(dto.getSeqno(), dto.getVdate(), dto.getCreditMstId(),dto.getCustomerId()));
+						if(entity.getVdate().compareTo(DateUtil.platDateFromCache())<=0){
+							dto.setHapCreditAmt(celinesUpdateFactory.extendCreditLinesDeal(dto.getSeqno(), dto.getVdate(), dto.getCreditMstId(),dto.getCustomerId()));
+						}else{
+							dto.setHapCreditAmt(new BigDecimal(0));
+						}
             			creditLinesMapper.insert(dto);
         			}
         		}
@@ -242,29 +253,29 @@ public class CeOrg002Service extends BaseService<CreditMstInfoDto> {
 		return  false;
 	}
 
-	/**
-	 * 授信继承
-	 * @param name
-	 */
-	public BigDecimal extendCreditLinesDeal(String seqno, Date vdate, String creditMstId, String customerId) {
-		if(CacheUtil.getSysParam("IS_EXTEND_CREDIT").equals("true") && vdate.compareTo(DateUtil.platDateFromCache())<=0){
-			Map<String, Object> param=new HashMap<String, Object>();
-			param.put("creditMstId", creditMstId);
-			param.put("customerId", customerId);
-			param.put("vdate", vdate);
-			List<CreditLinesDeal> creditLinesDealList = ceOrgMapper.selectCreditLinesDeal(param);
-			for(CreditLinesDeal creditLinesDeal : creditLinesDealList){
-				creditLinesDeal.setSeqno(seqno);
-                creditLinesDeal.setCreateTime(new Date());
-                creditLinesDeal.setUpdateTime(new Date());
-				creditLinesDealMapper.insert(creditLinesDeal);
-			}
-			BigDecimal res = ceOrgMapper.selectCreditLinesHap(param);
-			return res == null? new BigDecimal("0") : res;
-		}else{
-			return new BigDecimal("0");
-		}
-	}
+//	/**
+//	 * 授信继承
+//	 * @param name
+//	 */
+//	public BigDecimal extendCreditLinesDeal(String seqno, Date vdate, String creditMstId, String customerId) {
+//		if(CacheUtil.getSysParam("IS_EXTEND_CREDIT").equals("true") && vdate.compareTo(DateUtil.platDateFromCache())<=0){
+//			Map<String, Object> param=new HashMap<String, Object>();
+//			param.put("creditMstId", creditMstId);
+//			param.put("customerId", customerId);
+//			param.put("vdate", vdate);
+//			List<CreditLinesDeal> creditLinesDealList = ceOrgMapper.selectCreditLinesDeal(param);
+//			for(CreditLinesDeal creditLinesDeal : creditLinesDealList){
+//				creditLinesDeal.setSeqno(seqno);
+//                creditLinesDeal.setCreateTime(new Date());
+//                creditLinesDeal.setUpdateTime(new Date());
+//				creditLinesDealMapper.insert(creditLinesDeal);
+//			}
+//			BigDecimal res = ceOrgMapper.selectCreditLinesHap(param);
+//			return res == null? new BigDecimal("0") : res;
+//		}else{
+//			return new BigDecimal("0");
+//		}
+//	}
 
 	public List<CreditLines> selectCreditLines(Map<String, Object> param){
 		return ceOrgMapper.selectCreditLines(param);

@@ -5,15 +5,15 @@
 
 package com.joyintech.tams.invest.common.trade.dao;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.trade.dto.FinProductCredit;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 业务共通组件.交易占用/释放授信共通组件的Mapper
@@ -94,4 +94,8 @@ public interface CreditLinesDealsMapper {
 	int deleteLinesSecPositionBySeqno(@Param("seqno")String seqno);
 
 	int insertLinesSecPosition(CreditLinesSecPosition creditLinesSecPosition);
+
+	List<CreditLinesDeal> selectCreditLinesDeal(Map<String, Object> param);
+
+	BigDecimal selectCreditLinesHap(Map<String, Object> param);
 }
