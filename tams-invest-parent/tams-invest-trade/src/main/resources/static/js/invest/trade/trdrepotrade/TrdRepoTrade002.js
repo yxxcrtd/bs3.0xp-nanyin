@@ -21,6 +21,7 @@
      * 获取期限品种  date(yyyy-MM-dd),repoterm
      */
     function getTermType(date,repoterm) {
+    debugger
     	if(repoterm&&repoterm<=21){
     		//期限品种小于21天
     		if(repoterm==1){
@@ -1314,6 +1315,7 @@
 	 * 期限品种联动期限
 	 */
 	var termTypeChangeAction = function(){
+	debugger
 		var termType = $('#termTypeReback').val();
 //		if($("#repoType").val()&&$("#repoType").val()==TARGET_BACK_TYPE_H02){
 			if ($('#termTypeReback').val()){
@@ -1356,11 +1358,11 @@
 				}
 				/*$('#TrdOutRightRepoTrade002_mdate').attr('disabled',true);*/
 				//YHZGCPB20200617004   银行间质押式正回购交易选择期限品种R007,修改回购期限为2天，点击保存按钮，在待办中双击查看此数据，回购期限变成了7天，导致到期结算金额错误 leipeng 20200619
-				if(!$('#workflowId').val()){
+                //if(!$('#workflowId').val()){}
+                //ZGBSS-711     新建的质押式回购交易在复核岗被退回，修改期限品种时,到期日,首期交收日和到期交收日没有联动变化  wangyaning  20210302
 				    if($('#term').val()!=repoterm){
 				    $('#term').val(repoterm).trigger('change');
 				    }
-        		}
 			}
 //		}
 		
@@ -2011,6 +2013,7 @@
         });
         // 期限品种改变时
         $("#termTypeReback").on("keyup blur",function(){
+        debugger;
                 calFee();
                 changeTradeAmtAndFee();
                 termTypeChangeAction();
