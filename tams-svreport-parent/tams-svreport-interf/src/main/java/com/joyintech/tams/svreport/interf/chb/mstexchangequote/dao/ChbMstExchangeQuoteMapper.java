@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.interf.chb.mstexchangequote.dao;
 
 import com.joyintech.tams.common.base.entity.MstExchargeQuote;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,5 +14,5 @@ public interface ChbMstExchangeQuoteMapper {
      * @param subList
      * @return
      */
-    int mergeInfoList(List<MstExchargeQuote> subList);
+    int mergeInfoList(@Param("newDataList") List<MstExchargeQuote> subList);
 }

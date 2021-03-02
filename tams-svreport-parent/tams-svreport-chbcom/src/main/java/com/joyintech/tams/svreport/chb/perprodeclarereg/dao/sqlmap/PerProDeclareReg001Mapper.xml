@@ -184,7 +184,7 @@
 	    cds.ORG_CODE orgCode,
 	    cds.FILE_NUM fileNum,
 	    cds.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
-	    cds.REG_CODE regCode,
+	    NVL(cpc.REG_CODE, cds.REG_CODE) regCode,
 		cds.RAISE_TYPE raiseType,
 		cds.IVSTORIENTATION ivstorientation,
 		cds.EXC_FIN_SECTOR excFinSector,
@@ -195,7 +195,8 @@
 		cds.YIELD yield,
 		cds.INVEST_FEE_RATE investFeeRate,
 		cds.SUMIT_SEQ sumitSeq
-     from CHB_PRD_DECLARE_SUB cds 
+     from CHB_PRD_DECLARE_SUB cds
+     left join CHB_PRDRESIST_CODE cpc on cpc.PRODID = cds.PROD_ID
      <if test="model_type != null">
 		left join CHB_PRD_BASEINFO info on info.PROD_ID=cds.prod_id
 	 </if>

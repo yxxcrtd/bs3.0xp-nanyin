@@ -75,6 +75,7 @@ public class MstExchangeQuoteFileImpService  extends AbstractFileImpService{
                 result = "fail";
                 continue;
             }
+            //获取文件内容
             List<Map<String, String>> dataList = (List<Map<String,String>>) parseResult.get("dataList");
 
             //创建线程池

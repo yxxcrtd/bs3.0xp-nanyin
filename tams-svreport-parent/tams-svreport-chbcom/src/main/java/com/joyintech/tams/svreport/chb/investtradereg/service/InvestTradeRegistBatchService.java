@@ -377,7 +377,7 @@ public class InvestTradeRegistBatchService extends SvrDataStatusUtil {
 									}
 								}
 								String counterRegName = StringUtil.joinString(counterRegNameList, GlobalConstant.COMMA);
-								if (counterRegName != null && !counterRegName.equals("null")) {
+								if (StringUtil.isNotEmpty(counterRegName)) {
 									dto.setTradeCounter(counterRegName);
 								} else {
 									dto.setTradeCounter(dto.getTradeCounter());

@@ -28,11 +28,10 @@
             from dual
         </foreach>
         ) TEMP
-        ON (L.TRADE_DATE = TEMP.TRADE_DATE)
+        ON (L.EXCHARGE_CODE = TEMP.EXCHARGE_CODE)
         WHEN MATCHED THEN
         UPDATE
         SET
-        L.EXCHARGE_CODE = TEMP.EXCHARGE_CODE,
         L.TRADE_DATE = TEMP.TRADE_DATE,
         L.DATASOURCE_TYPE = TEMP.DATASOURCE_TYPE,
         L.OPEN_PRICE = TEMP.OPEN_PRICE,
