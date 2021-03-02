@@ -657,7 +657,7 @@ $(function() {
 			var feeInfoTableList=feeInfoTable.getAllRows();
 			var sum=0;
 			for(var i=0;i<feeInfoTableList.length;i++){
-				sum=sum+feeInfoTableList[i].actPayAmt;
+				sum=sum+Number(feeInfoTableList[i].actPayAmt);
 			}
 			if(sum != 4500){
 				Joyin.error("汇总金额不等于4500，请修改！");
