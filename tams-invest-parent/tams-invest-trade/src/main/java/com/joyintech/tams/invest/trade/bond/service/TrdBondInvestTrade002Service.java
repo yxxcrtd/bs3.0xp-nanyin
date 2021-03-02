@@ -2776,6 +2776,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
         // --------add by 裴家俊 2019/03/28 费用查询----start---
         try {
             BasicTradeFeeInputDto inputDto = new BasicTradeFeeInputDto();
+            inputDto.setTradeAmt(dto.getTradeAmt());
             inputDto.setTradeDate(dto.getTradeDate());
             inputDto.setTradeMarket(dto.getTradeMarket());
             inputDto.setFinprodType2(BussinessDictCodeList.平安资产类型_债券.getValue());

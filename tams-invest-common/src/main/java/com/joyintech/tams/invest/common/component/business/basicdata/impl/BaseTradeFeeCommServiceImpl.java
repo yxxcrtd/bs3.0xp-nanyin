@@ -113,6 +113,8 @@ public class BaseTradeFeeCommServiceImpl implements BaseTradeFeeCommService {
 				MstCommissionSetDto retFeeDetailDto=new MstCommissionSetDto();
 				//当前交易的全价总额
 				BigDecimal fpriceAmt=inputDto.getFpriceAmt();
+				//当前交易的券面总额
+				BigDecimal tradeAmt = inputDto.getTradeAmt();
 				//遍历所有查询出的费用规则，找到最合适的一个费用规则
 				for(MstCommissionSetDto dto:feeDetailList){
 					/**判断是否能找到一个种类（若不分档，该种类只有一条费用规则，若分档，该种类有大于1条费用规则）的符合要求的费用规则
@@ -137,9 +139,16 @@ public class BaseTradeFeeCommServiceImpl implements BaseTradeFeeCommService {
 							break;
 						//判断该种类下的该费用规则是否分档
 						if("Y".equals(dto.getIsGrade())){
+							//获取分档时比较对象金额
+							BigDecimal obj = new BigDecimal(0);
+							if("01".equals(dto.getChargeType()) && "01".equals(dto.getChargeBasis())){
+								obj = tradeAmt;
+							}else{
+								obj = fpriceAmt;
+							}
 							//若分档，判断该债券交易的（全价总额是否大于分档金额）或者（全价总额是否等于分档金额并且是否包含分档金额是否为“是”），若满足，暂时赋值该规则
-							if(fpriceAmt.compareTo(new BigDecimal(dto.getGradeAmount()))>0
-									||fpriceAmt.compareTo(new BigDecimal(dto.getGradeAmount()))==0&&"Y".equals(dto.getIsCludeStartamt()))
+							if(obj.compareTo(new BigDecimal(dto.getGradeAmount()))>0
+									||obj.compareTo(new BigDecimal(dto.getGradeAmount()))==0&&"Y".equals(dto.getIsCludeStartamt()))
 								retFeeDetailDto=dto;
 						}else{
 							//若不分档，赋值取到符合要求的费用规则，跳出循环
