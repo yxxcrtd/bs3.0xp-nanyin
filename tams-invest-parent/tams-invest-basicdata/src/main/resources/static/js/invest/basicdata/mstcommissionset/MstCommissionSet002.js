@@ -370,6 +370,10 @@
                 $("#windtypetwo").val('').prop('disabled',true).trigger('change');
             }
             if($(this).val() == PINAN_ASSET_TYPE_F11 && $('#feeType').val() == FEE_TYPE_B05 || $('#feeType').val() == FEE_TYPE_B02){
+                $('#isPayWithTrade').prop("checked",true);
+                $('#isPayWithTrade').next().find("em").text('是');
+                $('#isPayWithTrade').next().removeClass('layui-disabled');
+                $('#isPayWithTrade').next().addClass("layui-form-onswitch");
                 $('#isPayWithTrade').prop("disabled", true).trigger('change');
                 $('#isGrade').val('N').prop('disabled',true).trigger('change');
             }else{
