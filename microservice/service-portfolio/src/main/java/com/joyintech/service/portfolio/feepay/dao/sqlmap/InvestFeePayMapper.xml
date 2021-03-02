@@ -471,6 +471,11 @@
 		<if test="secAcctId != null and secAcctId != ''">
 			AND tpd.SEC_MANAGE_ACCT_ID = #{secAcctId}
 		</if>
+		<if test="org != null and org != ''">				
+				<if test="feeType1 != null and feeType1 == 'B08'">
+				AND  asset.REGIST_ORG = #{org}
+			    </if>
+		</if>
 		AND tdf.fee_type           = #{feeType1}
 		AND tpd.TRADE_DATE >= to_date(#{startDate}, 'yyyy-MM-dd') 
 		AND to_date(#{enddate}, 'yyyy-MM-dd') > tpd.TRADE_DATE

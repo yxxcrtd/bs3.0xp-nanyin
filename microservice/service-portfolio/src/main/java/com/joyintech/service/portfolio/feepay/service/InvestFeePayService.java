@@ -275,7 +275,7 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
         			lastPayDate = dto.getPositionStartDate();
         		}else {
         			lastPayDate = DateUtil.parse(lastPayDateStr);
-        		}
+        		}        	
                 // 3 查询账务明细(大于上次支付日小于等于平台日)
         		Map<String, Object> mapBok = new HashMap<>();
         		mapBok.put("secAcctId",dto.getSecAcctId());
@@ -950,6 +950,7 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
         map.put("enddate", enddate);
         map.put("secAcctId", secAcctId);
         map.put("ptlId", ptlId);
+        map.put("org", org);
         map.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
         map.put("IS_CANCEL_N", DictCodeListExt1.是否_否.getValue());
         map.put("FINPROD_TYPE2_C11", DictCodeListExt1.金融产品类型_交易费用.getValue());
