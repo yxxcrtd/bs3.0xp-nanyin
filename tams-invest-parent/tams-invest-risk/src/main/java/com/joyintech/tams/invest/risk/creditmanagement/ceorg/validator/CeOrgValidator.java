@@ -1,32 +1,29 @@
 package com.joyintech.tams.invest.risk.creditmanagement.ceorg.validator;
 
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.BeanValidator;
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.entity.CreditLines;
+import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
+import com.joyintech.tams.invest.risk.creditmanagement.ceorg.dto.CreditLinesOrgDto;
+import com.joyintech.tams.invest.risk.creditmanagement.ceorg.dto.CreditMstInfoDto;
+import com.joyintech.tams.invest.risk.creditmanagement.ceorg.service.CeOrg002Service;
+import com.joyintech.tools.collectors.JoyinCollectors;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.tams.common.base.dao.CreditMstInfoMapper;
-import com.joyintech.tams.common.base.entity.CreditLines;
-import com.joyintech.tams.common.base.entity.CreditMstInfo;
-import com.joyintech.tams.invest.risk.creditmanagement.ceorg.dto.CreditMstInfoDto;
-import com.joyintech.tools.collectors.JoyinCollectors;
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.BeanValidator;
-import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
-import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
-import com.joyintech.tams.invest.risk.creditmanagement.ceorg.dto.CreditLinesOrgDto;
-import com.joyintech.tams.invest.risk.creditmanagement.ceorg.service.CeOrg002Service;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 /**
  * 机构授信验证
@@ -55,10 +52,16 @@ public class CeOrgValidator implements BeanValidator{
                 }
             }
 
-			if(StringUtil.isNotEmpty(dto.getVdate())){
+			if(dto.getOperateType().equals("submit") && StringUtil.isNotEmpty(dto.getVdate())){
 				List<CreditLines> list = ceOrg002Service.selectCreditLines(dto.getCreditMstId(),dto.getCustomerId(),dto.getVdate());
 				if(list != null && list.size()>0){
-					resultList.add(new ValidMessage("vdate", "该机构在当前确认日已存在授信！"));
+					resultList.add(new ValidMessage("vdate", "该机构在当前生效日已存在授信！"));
+				}
+			}
+
+			if(dto.getOperateType().equals("submit") && StringUtil.isNotEmpty(dto.getMdate())){
+				if (dto.getMdate().compareTo(DateUtil.platDateFromCache()) < 0){
+					resultList.add(new ValidMessage("mdate", "到期日必须大于等于平台日"));
 				}
 			}
         	if(StringUtil.isNotEmpty(dto.getCustomerId())&&StringUtil.isNotEmpty(dto.getVdate())&&StringUtil.isNotEmpty(dto.getMdate())){

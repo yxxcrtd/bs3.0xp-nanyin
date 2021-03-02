@@ -14,6 +14,7 @@ import com.joyintech.tams.common.base.entity.CreditLines;
 import com.joyintech.tams.common.base.entity.CreditLinesDeal;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -35,5 +36,9 @@ public interface CreditExtendsMapper {
     List<CreditLinesDeal>  selectDealByPrimaryKey(String seqno);
 
     int updateLinesByPrimaryKeySelective(CreditLines creditLines);
+
+    List<CreditLinesDeal> selectCreditLinesDeal(Map<String, Object> param);
+
+    BigDecimal selectCreditLinesHap(Map<String, Object> param);
     
 }

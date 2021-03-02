@@ -276,9 +276,11 @@
 			AND FIN_FLOAT_CALC_RULE_DETAIL.LEV = #{lev}
 			</if>
 			<!-- add by dingjunfeng start -->
-			<!-- <if test="effDate != null and effDate != ''">
-			AND  to_char(FIN_FLOAT_CALC_RULE_DETAIL.EFF_DATE,'yyyy-MM-dd') = #{effDate}
-			</if> -->
+		    <if test="effDate != null and effDate != ''">
+		       <if test="pageModel !='0'.toString()">
+			  AND  to_char(FIN_FLOAT_CALC_RULE_DETAIL.EFF_DATE,'yyyy-MM-dd') = #{effDate}
+			   </if>
+			</if>
 			<!-- add by dingjunfeng end -->
 			<if test="pageModel=='0'.toString()">
 				<![CDATA[ AND FIN_FLOAT_CALC_RULE_DETAIL.EFF_DATE  = (select min(eff_date) from FIN_FLOAT_CALC_RULE_DETAIL where cash_id=#{cashId}) ]]>
@@ -488,11 +490,16 @@
 		FROM
     		FIN_BASE_RULE_INFO
     	where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
-    	<!-- <if test="effDate!=null and effDate!=''">
-    		and EFF_DATE = to_date(#{effDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+    	<!--  <if test="effDate!=null and effDate!=''">
+    	  and EFF_DATE = to_date(#{effDate,jdbcType=VARCHAR},'yyyy-MM-dd')
 		</if> -->
+		 <if test="effDate != null and effDate != ''">
+		       <if test="pageModel !='0'.toString()">
+			 and EFF_DATE = to_date(#{effDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+			   </if>
+			</if>
 		<!-- 新建时，选择产品代码联动出已有的业绩基准信息（首次） -->
-		<!-- <if test="effDate==null or effDate==''"> -->
+		 <if test="pageModel=='0'.toString()">
 			and EFF_DATE =
 			(SELECT  min(EFF_DATE) FROM
 			FIN_BASE_RULE_INFO
@@ -500,7 +507,7 @@
 			and BASE_RULE_TYPE =#{baseRuleType02,jdbcType=VARCHAR}
 			<!-- and EFF_DATE  <![CDATA[<=]]>to_date(#{sysFloatDate,jdbcType=VARCHAR},'yyyy-MM-dd') -->
 			and BRANCH = 0)
-		<!-- </if> -->
+		</if>
     		and BASE_RULE_TYPE = #{baseRuleType02,jdbcType=VARCHAR}
     		<!-- 浮动管理费查看只查询branch为0的数据，即不查询期次层的业绩基准 -->
     		and BRANCH = 0

@@ -187,7 +187,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
      * @since 1.0
      */
     public List<SelectOptionDto> getFinprodMarketId(Map<String, Object> map) {
-        return simpleRestTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME + "/SecResolute/getFinprodMarketId",
+        return simpleRestTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME + "/SecTransfer/getFinprodMarketId",
                 map, SelectOptionDto.class);
     }
 
@@ -223,7 +223,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
      * @since 1.0
      */
     public String getAccountInfo(Map<String,Object> map){
-        return simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/SecResolute/getAccountInfo",map,
+        return simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/SecTransfer/getAccountInfo",map,
                 String.class);
     }
 
@@ -463,7 +463,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
                         + entity.getBussTrdTransferOrder().get(0).getOrderId() + ")");
         processParameter.setWorkFlowParameter(params);
         try {
-            ptlFundAllocation002Service.start(processParameter, dto);
+//            ptlFundAllocation002Service.start(processParameter, dto);
         }catch (Exception e) {
             e.printStackTrace();// SpringContextUtil.getTextValue("COMMON_I_0005")
         }
@@ -761,6 +761,9 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
     	        BaseTradeProductDealDto baseTradeProductDealDto = new BaseTradeProductDealDto();
     	        baseTradeProductDealDto.setTrdFinProductDealTotal(secResoluteDto);
     	        baseTradeProductDealDto.setTrdProductDealAdd(secResoluteDto.getTrdProductDealAdd());
+                TrdProductDeal trdProductDeal = new TrdProductDeal();
+    	        BeanUtil.copyPropertiesIgnoreNull(trdProductDeal, secResoluteDto);
+                baseTradeProductDealDto.setTrdProductDeal(trdProductDeal);
     	        if (!StringUtil.isEmptyList(secResoluteDto.getStlPayOrdersList())) {
     	            baseTradeProductDealDto.setStlPayOrdersList(
     	                    Arrays.asList(secResoluteDto.getStlPayOrdersList().get(0)));

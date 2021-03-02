@@ -10,8 +10,12 @@
  
 package com.joyintech.tams.invest.batch.creditmanager.runner;
 
-import java.util.Date;
-
+import com.joyintech.batch.batchbase.baseclass.BatchBaseService;
+import com.joyintech.batch.batchbase.exception.BatchException;
+import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.web.PlatformDate;
+import com.joyintech.tams.invest.batch.creditmanager.service.CreditExtendsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.BatchStatus;
@@ -20,11 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.batch.batchbase.baseclass.BatchBaseService;
-import com.joyintech.batch.batchbase.exception.BatchException;
-import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.framework.web.PlatformDate;
-import com.joyintech.tams.invest.batch.creditmanager.service.CreditExtendsService;
+import java.util.Date;
 
 /**
  *  授信继承任务
@@ -86,7 +86,9 @@ public class CreditExtendsTask extends BatchBaseService{
         	else{
         		supDate = platformDateService.getSysDate();
         	}
-            creditExtendsService.run(supDate);
+            if(CacheUtil.getSysParam("IS_EXTEND_CREDIT").equals("true")) {
+                creditExtendsService.run(supDate);
+            }
             result.setStatus(BatchStatus.COMPLETED);
         }
         catch (Exception e) {

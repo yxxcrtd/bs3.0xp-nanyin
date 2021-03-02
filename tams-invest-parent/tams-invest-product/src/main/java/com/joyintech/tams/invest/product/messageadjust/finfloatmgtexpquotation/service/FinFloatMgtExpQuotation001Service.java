@@ -687,10 +687,11 @@ public class FinFloatMgtExpQuotation001Service extends CommonExportService<FinFl
      * @see
      * @since 1.0
      */
-    public BussBenchMarkInfoDto selectBussBenchMarkInfo(String finprodId, String effDate){
+    public BussBenchMarkInfoDto selectBussBenchMarkInfo(String finprodId, String effDate,String pageModel){
         Map<String,Object> param=new HashMap<String,Object>();
         param.put("finprodId", finprodId);
         param.put("effDate", effDate);
+        param.put("pageModel",pageModel);
         param.put("baseRuleType02", DictCodeListExt1.业绩基准类型_浮动管理费.getValue());
         param.put("sysFloatDate", DateUtil.getSysDate());
         return restTemplate.postForObject(

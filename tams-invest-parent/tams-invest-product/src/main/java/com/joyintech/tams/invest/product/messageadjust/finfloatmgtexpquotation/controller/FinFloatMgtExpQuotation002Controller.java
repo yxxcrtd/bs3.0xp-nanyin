@@ -87,6 +87,7 @@ public class FinFloatMgtExpQuotation002Controller extends BaseController {
         String cashId=getParam("cashId");
         String finprodId=getParam("finprodId");
         String effDate=getParam("effDateStr");
+        String pageModel = getParam("pageModel");
         String lev=getParam("lev");
         //工作流代码
         String workflowId = getParam("workflowId");
@@ -118,7 +119,7 @@ public class FinFloatMgtExpQuotation002Controller extends BaseController {
         	FinFloatMgtExpQuotation001Dto dto = finFloatMgtExpQuotation001Service.selectDetail(finprodId, effDate,cashId);
         	if(StringUtil.isNotEmpty(dto)){
         		//添加业绩基准信息
-        		BussBenchMarkInfoDto bussBenchMarkInfoDto = finFloatMgtExpQuotation001Service.selectBussBenchMarkInfo(finprodId, effDate);
+        		BussBenchMarkInfoDto bussBenchMarkInfoDto = finFloatMgtExpQuotation001Service.selectBussBenchMarkInfo(finprodId, effDate,pageModel);
                 model.addAttribute("entity_benchMark", bussBenchMarkInfoDto);
         		if(StringUtil.isNotEmpty(lev)){
         			dto.setLev(Long.parseLong(lev));
@@ -406,8 +407,9 @@ public class FinFloatMgtExpQuotation002Controller extends BaseController {
     public BussBenchMarkInfoDto getMarkInfo(){
         String finprodId=RequestUtil.getParam("finprodId");
         String effDate=RequestUtil.getParam("effDate");
+        String pageModel = RequestUtil.getParam("pageModel");
         //添加业绩基准信息
-        BussBenchMarkInfoDto bussBenchMarkInfoDto = finFloatMgtExpQuotation001Service.selectBussBenchMarkInfo(finprodId, effDate);
+        BussBenchMarkInfoDto bussBenchMarkInfoDto = finFloatMgtExpQuotation001Service.selectBussBenchMarkInfo(finprodId, effDate,pageModel);
         return bussBenchMarkInfoDto;
     }
     //ZGBSS-42 非首次新建浮动管理费报价时 生效日选择开放计划开放开始日+1天作为生效日 add by yujiaping 20210118 start

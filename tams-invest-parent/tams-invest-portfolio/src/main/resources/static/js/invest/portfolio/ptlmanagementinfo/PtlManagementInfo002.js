@@ -69,7 +69,7 @@
             $('#tree').reloadTree({portfolioId:$('#portfolioId').val()});
         }
         if(pageModel==PAGE_MODEL_NEW || pageModel==PAGE_MODEL_EDIT){
-            $("#portfolioType").val('01').attr("disabled",true).change();
+            $("#portfolioType").val('01').change();
         }
     }
     function saveOrSubmit(operateType) {

@@ -805,7 +805,7 @@
 		if($('#wfl_operType').val()){
 			return;
 		}
-        Joyin.ajax('/invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/getMarkInfo', {finprodId:finprodId,effDate:$('#effDate').val()}, function(result) {
+        Joyin.ajax('/invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/getMarkInfo', {finprodId:finprodId,effDate:$('#effDate').val(),pageModel:pageModel}, function(result) {
         	if (result!=null && result!=''){
 			$('#rateType').textSelect('setValue',result.rateType);
 			$('#rate').val(result.rate);
