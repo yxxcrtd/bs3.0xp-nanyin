@@ -1123,7 +1123,7 @@ AND NOT EXISTS (
 		from FIN_TRADE_PRODUCT t1,BOK_DETAIL_ID t3,FIN_PRODUCT t2
 		where t1.finprod_id = t3.busi_id and (t3.bookset_id = t2.finprod_id or t3.bookset_id = t2.finprod_market_id)
 		and t3.BUSI_DETAIL_TYPE = 'C20'
-		and t1.finprod_id like concat(#{secAcctId}, '%')
+		and t1.finprod_id like concat(#{secAcctId}, 'F%')
 		<if test="startDate !=null">
 			and t1.vdate >= #{startDate}
 		</if>
@@ -1141,7 +1141,7 @@ AND NOT EXISTS (
 		from FIN_TRADE_PRODUCT t1,BOK_DETAIL_ID t3,FIN_PRODUCT t2
 		where t1.finprod_id = t3.busi_id and (t3.bookset_id = t2.finprod_id or t3.bookset_id = t2.finprod_market_id)
 		and t3.BUSI_DETAIL_TYPE = 'C20'
-		and t1.finprod_id like concat(#{secAcctId}, '%')
+		and t1.finprod_id like concat(#{secAcctId}, 'F%')
 		<if test="startDate !=null">
 			and t1.mdate > #{startDate}
 		</if>

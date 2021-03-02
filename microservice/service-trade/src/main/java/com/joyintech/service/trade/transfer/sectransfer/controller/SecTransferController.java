@@ -67,16 +67,16 @@ public class SecTransferController {
         return secResoluteService.getDistAmt(tradeId);
     }
 
-//    /**
-//     * 获取拆分信息—组合代码
-//     * @return 联想文本框实体类集合
-//     * @see
-//     * @since 1.0
-//     */
-//    @PostMapping("getPortfolioId")
-//    public List<SelectOptionDto> getPortfolioId(@RequestBody Map<String,Object> map){
-//        return secResoluteService.getPortfolioId(map);
-//    }
+    /**
+     * 获取拆分信息—组合代码
+     * @return 联想文本框实体类集合
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("getPortfolioId")
+    public List<SelectOptionDto> getPortfolioId(@RequestBody Map<String,Object> map){
+        return secResoluteService.getPortfolioId(map);
+    }
 
     /**
      * 插入数据，并删除流程表数据

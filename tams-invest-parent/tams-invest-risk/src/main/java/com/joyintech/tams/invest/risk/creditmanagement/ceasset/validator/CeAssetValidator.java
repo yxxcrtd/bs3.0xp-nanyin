@@ -52,10 +52,16 @@ public class CeAssetValidator implements BeanValidator{
         		}
         	}
 
-			if(StringUtil.isNotEmpty(dto.getVdate())){
+			if(dto.getOperateType().equals("submit") && StringUtil.isNotEmpty(dto.getVdate())){
 				List<CreditLines> list = ceOrg002Service.selectCreditLines(dto.getCreditMstId(),dto.getCustomerId(),dto.getVdate());
 				if(list != null && list.size()>0){
-					resultList.add(new ValidMessage("vdate", "该资产在当前确认日已存在授信！"));
+					resultList.add(new ValidMessage("vdate", "该资产在当前生效日已存在授信！"));
+				}
+			}
+
+			if(dto.getOperateType().equals("submit") && StringUtil.isNotEmpty(dto.getMdate())){
+				if (dto.getMdate().compareTo(DateUtil.platDateFromCache()) < 0){
+					resultList.add(new ValidMessage("mdate", "到期日必须大于等于平台日"));
 				}
 			}
         	/*else{

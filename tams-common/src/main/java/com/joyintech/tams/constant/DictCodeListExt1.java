@@ -798,6 +798,7 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 	组合类型_投资类组合(DictCode.组合类型,"01","产品组合"),
 	组合类型_委外组合(DictCode.组合类型,"02","委外组合"),
 	组合类型_子组合(DictCode.组合类型,"03","子组合"),
+	组合类型_投资过渡组合(DictCode.组合类型,"04","投资过渡组合"),
 	交易对手类型_市场机构(DictCode.交易对手类型 ,"01","市场机构"),
 	交易对手类型_资管产品(DictCode.交易对手类型 ,"02","资管产品"),
 	交易对手类型_通道计划(DictCode.交易对手类型 ,"03","通道计划"),
