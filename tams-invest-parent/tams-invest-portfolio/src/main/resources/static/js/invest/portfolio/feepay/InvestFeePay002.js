@@ -745,6 +745,8 @@ $(function() {
 		$('#InvestFeePay002_secAcctId').change(secAcctIdFeeTypeChangeAction);
 		//登记托管机构
 		$('#InvestFeePay002_regTrustOrg').change(payTradeAmtChangeAction);
+		//证券账户联动
+		$('#InvestFeePay002_secAcctId').change(payTradeAmtChangeAction);
 		// 计提结束日
 		$('#InvestFeePay002_positionEndDate').change(endDateChangeAction);
 		// 支付日
