@@ -398,6 +398,38 @@ $(function() {
 		payTradeAmtChangeAction();
 	}
 	
+	//add by yujiaping 20210303 ZGBSS-654 费用类型选择【账户维护费】在没有待支付的数据时修改支付日清空组合信息 start	
+	function feeInfoListAction(){
+		var feeType = $('#InvestFeePay002_feeType').val();
+		var secAcctId = $('#InvestFeePay002_secAcctId').val();
+		if (secAcctId) {
+			Joyin.ajaxSync(JoyinUtil.getRealPath('/invest/portfolio/feepay/InvestFeePay002/queryStartDate'),
+				{secAcctId: secAcctId}, function (result) {
+					if (!result || result == 'undefined') {
+						isNew = true;
+					}else{
+						isNew = false;
+					}
+				});
+		}else{
+			isNew = false;
+		}
+		if(isNew && feeType == '08'){
+			$('#InvestFeePay002_div_positionStartDate').hide();
+			$('#InvestFeePay002_div_positionEndDate').hide();
+			$('#InvestFeePay002_div_payAmt').hide();
+			$('#InvestFeePay002_div_adjustAmt').hide();
+			$('#InvestFeePay002_div_calculate').hide();
+			feeInfoTable.clear();
+			feeInfoTable.showColumns([{field:'operation', visible:true}],true);
+			feeInfoTable.showColumns([{field:'ptlId', visible:true}],true);
+			feeInfoTable.showColumns([{field:'portFolioName', visible:false}],true);
+			feeInfoTable.showColumns([{field:'payAmt', visible:false}],true);
+			feeInfoTable.showColumns([{field:'adjustAmt', visible:false}],true);
+			feeInfoTable.showColumns([{field:'status', visible:false}],true) ;			
+		}		
+	}
+	//add by yujiaping 20210303 ZGBSS-654 费用类型选择【账户维护费】在没有待支付的数据时修改支付日清空组合信息 end
 	/**
 	 * 实付金额联动处理
 	 */
@@ -751,6 +783,7 @@ $(function() {
 		$('#InvestFeePay002_positionEndDate').change(endDateChangeAction);
 		// 支付日
 		$('#InvestFeePay002_payDate').change(payDateChangeAction);
+		$('#InvestFeePay002_payDate').change(feeInfoListAction);
 		// 实付金额
 		$('#InvestFeePay002_actPayAmt').change(actPayAmtChangeAction);
 		// 保存按钮
