@@ -174,23 +174,25 @@ public class VatDealProcessorService {
                     //调用共通设计->【详细设计-账务类共通方法设计.xlsx】->科目余额查询-期待方向SHEET
                     SubjectBalance subjectBalance = this.getSubjectBalance(acctEntity.getBooksetId(), acctEntity.getBokDetailId(), acctEntity.getBookDate(), 
                     		dealNow.getMdate(), DictCodeList.余额方向_贷方.getValue(), baseSubjectNature);
+                    //定义 变量.应交利息收入税 = 返回值.科目余额.本币余额
+                    BigDecimal lxIncomeFee = BigDecimal.ZERO;
                     if(subjectBalance != null) {
                     	//定义 变量.应交利息收入税 = 返回值.科目余额.本币余额															
-                        BigDecimal lxIncomeFee = subjectBalance.getbAmt();
+                        lxIncomeFee = subjectBalance.getbAmt();
                         /**add by taoran 20200120 start**/
                         // 金额元素.利息收入税额 = 变量.应交利息收入税
                         accountAmountMap.put(BookConstant.VAT_INT, lxIncomeFee);
                         /**add by taoran 20200120 end**/
-                        //(变量.应交利息收入税 > 费用金额)
-                        if(lxIncomeFee.compareTo(feeDetail.getFeeAmt()) > 0) {
-                        	//变量.缴税差额-负 += （变量.应交利息收入税 - 费用金额）
-                        	feeAmt_f = ArithmeticUtil.doAdd(feeAmt_f, ArithmeticUtil.doSub(lxIncomeFee, feeDetail.getFeeAmt())); 
-                        }
-                        else if(lxIncomeFee.compareTo(feeDetail.getFeeAmt()) < 0){
-                        	//金额元素.利息收入税差额 = 费用金额 - 变量.应交利息收入税 
-                        	accountAmountMap.put(BookConstant.NETAMT_D_60119901, ArithmeticUtil.round(ArithmeticUtil.doSub(
-                        			feeDetail.getFeeAmt(), lxIncomeFee), NumberEnum.MONEY.getCode(), null));
-                        }
+                    }
+                    //(变量.应交利息收入税 > 费用金额)
+                    if(lxIncomeFee.compareTo(feeDetail.getFeeAmt()) > 0) {
+                        //变量.缴税差额-负 += （变量.应交利息收入税 - 费用金额）
+                        feeAmt_f = ArithmeticUtil.doAdd(feeAmt_f, ArithmeticUtil.doSub(lxIncomeFee, feeDetail.getFeeAmt()));
+                    }
+                    else if(lxIncomeFee.compareTo(feeDetail.getFeeAmt()) < 0){
+                        //金额元素.利息收入税差额 = 费用金额 - 变量.应交利息收入税
+                        accountAmountMap.put(BookConstant.NETAMT_D_60119901, ArithmeticUtil.round(ArithmeticUtil.doSub(
+                                feeDetail.getFeeAmt(), lxIncomeFee), NumberEnum.MONEY.getCode(), null));
                     }
                     /**add by taoran 20200107 end**/
                 }
@@ -206,23 +208,25 @@ public class VatDealProcessorService {
                     //调用共通设计->【详细设计-账务类共通方法设计.xlsx】->科目余额查询-期待方向SHEET
                     SubjectBalance subjectBalance = this.getSubjectBalance(acctEntity.getBooksetId(), acctEntity.getBokDetailId(), acctEntity.getBookDate(), 
                     		dealNow.getMdate(), DictCodeList.余额方向_贷方.getValue(), baseSubjectNature);
+                    //定义 变量.应交红利收入税 = 返回值.科目余额.本币余额
+                    BigDecimal hlIncomeFee =BigDecimal.ZERO;
                     if(subjectBalance != null) {
                     	//定义 变量.应交红利收入税 = 返回值.科目余额.本币余额
-                        BigDecimal hlIncomeFee = subjectBalance.getbAmt();
+                        hlIncomeFee = subjectBalance.getbAmt();
                         /**add by taoran 20200120 start**/
                         // 金额元素.红利收入税额 =  变量.应交红利收入税 
                         accountAmountMap.put(BookConstant.VAT_BONUS, hlIncomeFee);
                         /**add by taoran 20200120 end**/
-                        //(变量.应交红利收入税 > 费用金额)
-                        if(hlIncomeFee.compareTo(feeDetail.getFeeAmt()) > 0) {
-                        	//变量.缴税差额-负 += （变量.应交红利收入税- 费用金额）
-                        	feeAmt_f = ArithmeticUtil.doAdd(feeAmt_f, ArithmeticUtil.doSub(hlIncomeFee, feeDetail.getFeeAmt())); 
-                        }
-                        else if(hlIncomeFee.compareTo(feeDetail.getFeeAmt()) < 0){
-                        	//金额元素.红利收入税差额 = 费用金额 - 变量.应交红利收入税
-                        	accountAmountMap.put(BookConstant.NETAMT_D_61119601, ArithmeticUtil.round(ArithmeticUtil.doSub(
-                        			feeDetail.getFeeAmt(), hlIncomeFee), NumberEnum.MONEY.getCode(), null));
-                        }
+                    }
+                    //(变量.应交红利收入税 > 费用金额)
+                    if(hlIncomeFee.compareTo(feeDetail.getFeeAmt()) > 0) {
+                        //变量.缴税差额-负 += （变量.应交红利收入税- 费用金额）
+                        feeAmt_f = ArithmeticUtil.doAdd(feeAmt_f, ArithmeticUtil.doSub(hlIncomeFee, feeDetail.getFeeAmt()));
+                    }
+                    else if(hlIncomeFee.compareTo(feeDetail.getFeeAmt()) < 0){
+                        //金额元素.红利收入税差额 = 费用金额 - 变量.应交红利收入税
+                        accountAmountMap.put(BookConstant.NETAMT_D_61119601, ArithmeticUtil.round(ArithmeticUtil.doSub(
+                                feeDetail.getFeeAmt(), hlIncomeFee), NumberEnum.MONEY.getCode(), null));
                     }
                     /**add by taoran 20200107 end**/
                 }
@@ -239,23 +243,25 @@ public class VatDealProcessorService {
                     //调用共通设计->【详细设计-账务类共通方法设计.xlsx】->科目余额查询-期待方向SHEET
                     SubjectBalance subjectBalance = this.getSubjectBalance(acctEntity.getBooksetId(), acctEntity.getBokDetailId(), acctEntity.getBookDate(), 
                     		dealNow.getMdate(), DictCodeList.余额方向_贷方.getValue(), baseSubjectNature);
+                    //定义 变量.应交投资收益税 = 返回值.科目余额.本币余额
+                    BigDecimal tzIncomeFee =BigDecimal.ZERO;
                     if(subjectBalance != null) {
                     	//定义 变量.应交投资收益税 = 返回值.科目余额.本币余额
-                        BigDecimal tzIncomeFee = subjectBalance.getbAmt();
+                        tzIncomeFee = subjectBalance.getbAmt();
                         /**add by taoran 20200120 start**/
                         // 金额元素.价差收入税额 = 应交投资收益税
                         accountAmountMap.put(BookConstant.VAT_INV, tzIncomeFee);
                         /**add by taoran 20200120 end**/
-                        //(变量.应交投资收益税 > 费用金额)
-                        if(tzIncomeFee.compareTo(feeDetail.getFeeAmt()) > 0) {
-                        	//变量.缴税差额-负 += （变量.应交投资收益税- 费用金额）
-                        	feeAmt_f = ArithmeticUtil.doAdd(feeAmt_f, ArithmeticUtil.doSub(tzIncomeFee, feeDetail.getFeeAmt())); 
-                        }
-                        else if(tzIncomeFee.compareTo(feeDetail.getFeeAmt()) < 0){
-                        	//金额元素.投资收益税差额 = 费用金额 - 变量.应交投资收益税
-                        	accountAmountMap.put(BookConstant.NETAMT_D_61119901, ArithmeticUtil.round(ArithmeticUtil.doSub(
-                        			feeDetail.getFeeAmt(), tzIncomeFee), NumberEnum.MONEY.getCode(), null));
-                        }
+                    }
+                    //(变量.应交投资收益税 > 费用金额)
+                    if(tzIncomeFee.compareTo(feeDetail.getFeeAmt()) > 0) {
+                        //变量.缴税差额-负 += （变量.应交投资收益税- 费用金额）
+                        feeAmt_f = ArithmeticUtil.doAdd(feeAmt_f, ArithmeticUtil.doSub(tzIncomeFee, feeDetail.getFeeAmt()));
+                    }
+                    else if(tzIncomeFee.compareTo(feeDetail.getFeeAmt()) < 0){
+                        //金额元素.投资收益税差额 = 费用金额 - 变量.应交投资收益税
+                        accountAmountMap.put(BookConstant.NETAMT_D_61119901, ArithmeticUtil.round(ArithmeticUtil.doSub(
+                                feeDetail.getFeeAmt(), tzIncomeFee), NumberEnum.MONEY.getCode(), null));
                     }
                     /**add by taoran 20200107 end**/
                 }
@@ -271,32 +277,34 @@ public class VatDealProcessorService {
                     //调用共通设计->【详细设计-账务类共通方法设计.xlsx】->科目余额查询-期待方向SHEET
                     SubjectBalance subjectBalance = this.getSubjectBalance(acctEntity.getBooksetId(), acctEntity.getBokDetailId(), acctEntity.getBookDate(), 
                     		dealNow.getMdate(), DictCodeList.余额方向_贷方.getValue(), baseSubjectNature);
+                    //定义 变量.应交城建附加税 = 返回值.科目余额.本币余额
+                    BigDecimal cjIncomeFee = BigDecimal.ZERO;
                     if(subjectBalance != null) {
                     	//定义 变量.应交城建附加税 = 返回值.科目余额.本币余额
-                        BigDecimal cjIncomeFee = subjectBalance.getbAmt();
+                        cjIncomeFee = subjectBalance.getbAmt();
                         /**add by taoran 20200120 start**/
                         // 金额元素.城建税税额 = 费用金额
                         accountAmountMap.put(BookConstant.VAT_URBAN, cjIncomeFee);
                         /**add by taoran 20200120 end**/
-                        //(变量.应交城建附加税 > 费用金额)
-                        if(cjIncomeFee.compareTo(feeDetail.getFeeAmt()) > 0) {
-                        	//变量.缴税差额-负 += （变量.应交城建附加税- 费用金额）
-                        	feeAmt_f = ArithmeticUtil.doAdd(feeAmt_f, ArithmeticUtil.doSub(cjIncomeFee, feeDetail.getFeeAmt())); 
-                        }
-                        else if(cjIncomeFee.compareTo(feeDetail.getFeeAmt()) < 0){
-                        	//金额元素.城建附加税差额 = 费用金额 - 变量.应交城建附加税
+                    }
+                    //(变量.应交城建附加税 > 费用金额)
+                    if(cjIncomeFee.compareTo(feeDetail.getFeeAmt()) > 0) {
+                        //变量.缴税差额-负 += （变量.应交城建附加税- 费用金额）
+                        feeAmt_f = ArithmeticUtil.doAdd(feeAmt_f, ArithmeticUtil.doSub(cjIncomeFee, feeDetail.getFeeAmt()));
+                    }
+                    else if(cjIncomeFee.compareTo(feeDetail.getFeeAmt()) < 0){
+                        //金额元素.城建附加税差额 = 费用金额 - 变量.应交城建附加税
                         	/*   accountAmountMap.put(BookConstant.NETAMT_D_64140101, ArithmeticUtil.round(ArithmeticUtil.doSub(
                         	              feeDetail.getFeeAmt(), cjIncomeFee), NumberEnum.MONEY.getCode(), null));*/
-                        	 /*modify by hxy 20200324 start 通道和直投增值税的科目不一致*/
-                        	 if (DictCodeListExt1.金融产品类型_通道.getValue().equals(dealNow.getFinprodType())) {
-                        	           accountAmountMap.put(BookConstant.NETAMT_D_64140101, ArithmeticUtil.round(ArithmeticUtil.doSub(
-                        	                             			feeDetail.getFeeAmt(), cjIncomeFee), NumberEnum.MONEY.getCode(), null));
-                        	} else {
-                        	            accountAmountMap.put(BookConstant.NETAMT_D_64080101, ArithmeticUtil.round(ArithmeticUtil.doSub(
-                        	                   feeDetail.getFeeAmt(), cjIncomeFee), NumberEnum.MONEY.getCode(), null));
-                        	}
-                        	/*modify by hxy 20200324 end 通道和直投增值税的科目不一致*/
-                       }
+                        /*modify by hxy 20200324 start 通道和直投增值税的科目不一致*/
+                        if (DictCodeListExt1.金融产品类型_通道.getValue().equals(dealNow.getFinprodType())) {
+                            accountAmountMap.put(BookConstant.NETAMT_D_64140101, ArithmeticUtil.round(ArithmeticUtil.doSub(
+                                    feeDetail.getFeeAmt(), cjIncomeFee), NumberEnum.MONEY.getCode(), null));
+                        } else {
+                            accountAmountMap.put(BookConstant.NETAMT_D_64080101, ArithmeticUtil.round(ArithmeticUtil.doSub(
+                                    feeDetail.getFeeAmt(), cjIncomeFee), NumberEnum.MONEY.getCode(), null));
+                        }
+                        /*modify by hxy 20200324 end 通道和直投增值税的科目不一致*/
                     }
                     /**add by taoran 20200107 end**/
                 }
@@ -312,32 +320,34 @@ public class VatDealProcessorService {
                     //调用共通设计->【详细设计-账务类共通方法设计.xlsx】->科目余额查询-期待方向SHEET
                     SubjectBalance subjectBalance = this.getSubjectBalance(acctEntity.getBooksetId(), acctEntity.getBokDetailId(), acctEntity.getBookDate(), 
                     		dealNow.getMdate(), DictCodeList.余额方向_贷方.getValue(), baseSubjectNature);
+                    //定义 变量.应交教育附加税 = 返回值.科目余额.本币余额
+                    BigDecimal jyIncomeFee =BigDecimal.ZERO;
                     if(subjectBalance != null) {
                     	//定义 变量.应交教育附加税 = 返回值.科目余额.本币余额
-                        BigDecimal jyIncomeFee = subjectBalance.getbAmt();
+                        jyIncomeFee = subjectBalance.getbAmt();
                         /**add by taoran 20200120 start**/
                         // 金额元素.教育税税额 =  变量.应交教育附加税
                         accountAmountMap.put(BookConstant.VAT_EDU, jyIncomeFee);
                         /**add by taoran 20200120 end**/
-                        //(变量.应交教育附加税 > 费用金额)
-                        if(jyIncomeFee.compareTo(feeDetail.getFeeAmt()) > 0) {
-                        	//变量.缴税差额-负 += （变量.应交教育附加税- 费用金额）
-                        	feeAmt_f = ArithmeticUtil.doAdd(feeAmt_f, ArithmeticUtil.doSub(jyIncomeFee, feeDetail.getFeeAmt())); 
-                        }
-                        else if(jyIncomeFee.compareTo(feeDetail.getFeeAmt()) < 0){
-                        	//金额元素.教育附加税差额 = 费用金额 - 变量.应交教育附加税
+                    }
+                    //(变量.应交教育附加税 > 费用金额)
+                    if(jyIncomeFee.compareTo(feeDetail.getFeeAmt()) > 0) {
+                        //变量.缴税差额-负 += （变量.应交教育附加税- 费用金额）
+                        feeAmt_f = ArithmeticUtil.doAdd(feeAmt_f, ArithmeticUtil.doSub(jyIncomeFee, feeDetail.getFeeAmt()));
+                    }
+                    else if(jyIncomeFee.compareTo(feeDetail.getFeeAmt()) < 0){
+                        //金额元素.教育附加税差额 = 费用金额 - 变量.应交教育附加税
                         	/*accountAmountMap.put(BookConstant.NETAMT_D_64140102, ArithmeticUtil.round(ArithmeticUtil.doSub(
                         			feeDetail.getFeeAmt(), jyIncomeFee), NumberEnum.MONEY.getCode(), null));*/
-                            /*modify by hxy 20200324 start 通道和直投增值税的科目不一致*/
-                       	 if (DictCodeListExt1.金融产品类型_通道.getValue().equals(dealNow.getFinprodType())) {
-                       		accountAmountMap.put(BookConstant.NETAMT_D_64140102, ArithmeticUtil.round(ArithmeticUtil.doSub(
-                        			feeDetail.getFeeAmt(), jyIncomeFee), NumberEnum.MONEY.getCode(), null));
-                            } else {
-                            	accountAmountMap.put(BookConstant.NETAMT_D_64080102, ArithmeticUtil.round(ArithmeticUtil.doSub(
-                            			feeDetail.getFeeAmt(), jyIncomeFee), NumberEnum.MONEY.getCode(), null));
-                            }
-                       /*modify by hxy 20200324 end 通道和直投增值税的科目不一致*/
+                        /*modify by hxy 20200324 start 通道和直投增值税的科目不一致*/
+                        if (DictCodeListExt1.金融产品类型_通道.getValue().equals(dealNow.getFinprodType())) {
+                            accountAmountMap.put(BookConstant.NETAMT_D_64140102, ArithmeticUtil.round(ArithmeticUtil.doSub(
+                                    feeDetail.getFeeAmt(), jyIncomeFee), NumberEnum.MONEY.getCode(), null));
+                        } else {
+                            accountAmountMap.put(BookConstant.NETAMT_D_64080102, ArithmeticUtil.round(ArithmeticUtil.doSub(
+                                    feeDetail.getFeeAmt(), jyIncomeFee), NumberEnum.MONEY.getCode(), null));
                         }
+                        /*modify by hxy 20200324 end 通道和直投增值税的科目不一致*/
                     }
                     /**add by taoran 20200107 end**/
                 }
@@ -353,32 +363,34 @@ public class VatDealProcessorService {
                     //调用共通设计->【详细设计-账务类共通方法设计.xlsx】->科目余额查询-期待方向SHEET
                     SubjectBalance subjectBalance = this.getSubjectBalance(acctEntity.getBooksetId(), acctEntity.getBokDetailId(), acctEntity.getBookDate(), 
                     		dealNow.getMdate(), DictCodeList.余额方向_贷方.getValue(), baseSubjectNature);
+                    //定义 变量.应交地方教育附加税 = 返回值.科目余额.本币余额
+                    BigDecimal dfIncomeFee = BigDecimal.ZERO;
                     if(subjectBalance != null) {
                     	//定义 变量.应交地方教育附加税 = 返回值.科目余额.本币余额
-                        BigDecimal dfIncomeFee = subjectBalance.getbAmt();
+                        dfIncomeFee = subjectBalance.getbAmt();
                         /**add by taoran 20200120 start**/
                         // 金额元素.地方教育税税额 = 变量.应交地方教育附加税
                         accountAmountMap.put(BookConstant.VAT_LEDU, dfIncomeFee);
                         /**add by taoran 20200120 end**/
-                        //(变量.应交地方教育附加税 > 费用金额)
-                        if(dfIncomeFee.compareTo(feeDetail.getFeeAmt()) > 0) {
-                        	//变量.缴税差额-负 += （变量.应交地方教育附加税- 费用金额）
-                        	feeAmt_f = ArithmeticUtil.doAdd(feeAmt_f, ArithmeticUtil.doSub(dfIncomeFee, feeDetail.getFeeAmt())); 
-                        }
-                        else if(dfIncomeFee.compareTo(feeDetail.getFeeAmt()) < 0){
-                        	//金额元素.地方教育附加税差额 = 费用金额 - 变量.应交地方教育附加税
+                    }
+                    //(变量.应交地方教育附加税 > 费用金额)
+                    if(dfIncomeFee.compareTo(feeDetail.getFeeAmt()) > 0) {
+                        //变量.缴税差额-负 += （变量.应交地方教育附加税- 费用金额）
+                        feeAmt_f = ArithmeticUtil.doAdd(feeAmt_f, ArithmeticUtil.doSub(dfIncomeFee, feeDetail.getFeeAmt()));
+                    }
+                    else if(dfIncomeFee.compareTo(feeDetail.getFeeAmt()) < 0){
+                        //金额元素.地方教育附加税差额 = 费用金额 - 变量.应交地方教育附加税
                         	/*accountAmountMap.put(BookConstant.NETAMT_D_64140103, ArithmeticUtil.round(ArithmeticUtil.doSub(
                         			feeDetail.getFeeAmt(), dfIncomeFee), NumberEnum.MONEY.getCode(), null));*/
-                            /*modify by hxy 20200324 start 通道和直投增值税的科目不一致*/
-                          	 if (DictCodeListExt1.金融产品类型_通道.getValue().equals(dealNow.getFinprodType())) {
-                             	accountAmountMap.put(BookConstant.NETAMT_D_64140103, ArithmeticUtil.round(ArithmeticUtil.doSub(
-                            			feeDetail.getFeeAmt(), dfIncomeFee), NumberEnum.MONEY.getCode(), null));
-                               } else {
-                               	accountAmountMap.put(BookConstant.NETAMT_D_64080103, ArithmeticUtil.round(ArithmeticUtil.doSub(
-                            			feeDetail.getFeeAmt(), dfIncomeFee), NumberEnum.MONEY.getCode(), null));
-                               }
-                          /*modify by hxy 20200324 end 通道和直投增值税的科目不一致*/
+                        /*modify by hxy 20200324 start 通道和直投增值税的科目不一致*/
+                        if (DictCodeListExt1.金融产品类型_通道.getValue().equals(dealNow.getFinprodType())) {
+                            accountAmountMap.put(BookConstant.NETAMT_D_64140103, ArithmeticUtil.round(ArithmeticUtil.doSub(
+                                    feeDetail.getFeeAmt(), dfIncomeFee), NumberEnum.MONEY.getCode(), null));
+                        } else {
+                            accountAmountMap.put(BookConstant.NETAMT_D_64080103, ArithmeticUtil.round(ArithmeticUtil.doSub(
+                                    feeDetail.getFeeAmt(), dfIncomeFee), NumberEnum.MONEY.getCode(), null));
                         }
+                        /*modify by hxy 20200324 end 通道和直投增值税的科目不一致*/
                     }
                     /**add by taoran 20200107 end**/
                 }
@@ -394,32 +406,34 @@ public class VatDealProcessorService {
                     //调用共通设计->【详细设计-账务类共通方法设计.xlsx】->科目余额查询-期待方向SHEET
                     SubjectBalance subjectBalance = this.getSubjectBalance(acctEntity.getBooksetId(), acctEntity.getBokDetailId(), acctEntity.getBookDate(), 
                     		dealNow.getMdate(), DictCodeList.余额方向_贷方.getValue(), baseSubjectNature);
+                    //定义 变量.应交水利基金税 = 返回值.科目余额.本币余额
+                    BigDecimal slIncomeFee = BigDecimal.ZERO;
                     if(subjectBalance != null) {
                     	//定义 变量.应交水利基金税 = 返回值.科目余额.本币余额
-                        BigDecimal slIncomeFee = subjectBalance.getbAmt();
+                        slIncomeFee = subjectBalance.getbAmt();
                         /**add by taoran 20200120 start**/
                         // 金额元素.水利基金税税额 = 变量.应交水利基金税
                         accountAmountMap.put(BookConstant.VAT_WATER, slIncomeFee);
                         /**add by taoran 20200120 end**/
-                        //(变量.应交水利基金税 > 费用金额)
-                        if(slIncomeFee.compareTo(feeDetail.getFeeAmt()) > 0) {
-                        	//变量.缴税差额-负 += （变量.应交水利基金税- 费用金额）
-                        	feeAmt_f = ArithmeticUtil.doAdd(feeAmt_f, ArithmeticUtil.doSub(slIncomeFee, feeDetail.getFeeAmt())); 
-                        }
-                        else if(slIncomeFee.compareTo(feeDetail.getFeeAmt()) < 0){
-                        	//金额元素.水利基金税差额 = 费用金额 - 变量.应交水利基金税
+                    }
+                    //(变量.应交水利基金税 > 费用金额)
+                    if(slIncomeFee.compareTo(feeDetail.getFeeAmt()) > 0) {
+                        //变量.缴税差额-负 += （变量.应交水利基金税- 费用金额）
+                        feeAmt_f = ArithmeticUtil.doAdd(feeAmt_f, ArithmeticUtil.doSub(slIncomeFee, feeDetail.getFeeAmt()));
+                    }
+                    else if(slIncomeFee.compareTo(feeDetail.getFeeAmt()) < 0){
+                        //金额元素.水利基金税差额 = 费用金额 - 变量.应交水利基金税
                         /*	accountAmountMap.put(BookConstant.NETAMT_D_64140104, ArithmeticUtil.round(ArithmeticUtil.doSub(
                         			feeDetail.getFeeAmt(), slIncomeFee), NumberEnum.MONEY.getCode(), null));*/
-                            /*modify by hxy 20200324 start 通道和直投增值税的科目不一致*/
-                        	if (DictCodeListExt1.金融产品类型_通道.getValue().equals(dealNow.getFinprodType())) {
-                        			accountAmountMap.put(BookConstant.NETAMT_D_64140104, ArithmeticUtil.round(ArithmeticUtil.doSub(
-                                			feeDetail.getFeeAmt(), slIncomeFee), NumberEnum.MONEY.getCode(), null));
-                                } else {
-                                	accountAmountMap.put(BookConstant.NETAMT_D_64080104, ArithmeticUtil.round(ArithmeticUtil.doSub(
-                                			feeDetail.getFeeAmt(), slIncomeFee), NumberEnum.MONEY.getCode(), null));
-                                }
-                        	 /*modify by hxy 20200324 end 通道和直投增值税的科目不一致*/
+                        /*modify by hxy 20200324 start 通道和直投增值税的科目不一致*/
+                        if (DictCodeListExt1.金融产品类型_通道.getValue().equals(dealNow.getFinprodType())) {
+                            accountAmountMap.put(BookConstant.NETAMT_D_64140104, ArithmeticUtil.round(ArithmeticUtil.doSub(
+                                    feeDetail.getFeeAmt(), slIncomeFee), NumberEnum.MONEY.getCode(), null));
+                        } else {
+                            accountAmountMap.put(BookConstant.NETAMT_D_64080104, ArithmeticUtil.round(ArithmeticUtil.doSub(
+                                    feeDetail.getFeeAmt(), slIncomeFee), NumberEnum.MONEY.getCode(), null));
                         }
+                        /*modify by hxy 20200324 end 通道和直投增值税的科目不一致*/
                     }
                     /**add by taoran 20200107 end**/
                 }
