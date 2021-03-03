@@ -19,7 +19,7 @@
 	when fp.MDATE-CP.ENDDATE>1826 then '07'
 	end days, cp.ENDAMTSUM_OTH from CHB_MONTH_PRD_POSITION cp
 	left join FIN_PRODUCT fp on fp.FINPROD_MARKET_ID=CP.PRODID
-	where  fp.OPERATION_TYPE='01'
+	where  fp.OPERATION_TYPE='01' 	and cp.PROFIT_TYPE='03'
 	and CP.ENDDATE=#{endDate,jdbcType=DATE} and fp.MDATE-CP.ENDDATE>0)
 	group by days)a
 	
@@ -61,7 +61,8 @@
 		end days, cp.ENDAMTSUM_OTH from CHB_MONTH_PRD_POSITION cp
 		inner join enddays  on enddays.FINPROD_MARKET_ID=CP.PRODID
 		where  
-		 CP.ENDDATE=#{endDate,jdbcType=DATE})
+		 CP.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
+		 )
 		group by days)a
 		order by a.days
 ]]>
@@ -554,6 +555,7 @@ with cj as(
 		and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
 	</if>
 	where cp.ENDDATE=#{endDate,jdbcType=DATE}
+	and cp.PROFIT_TYPE='03'
 	and cp.termtype in ('01','02','03','04','05','06','07')
 	<if test="org != null  and org!=''">
 		and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -571,7 +573,7 @@ with cj as(
 	</if>
 	left join chb_prd_baseinfo base
 	on cp.prodid=base.prod_id
-	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
+	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 	and  base.operate_mode in ('01','02')
 	and base.mdate-base.vdate>1096
 	<if test="org != null  and org!=''">
@@ -590,7 +592,7 @@ with cj as(
 	</if>
 	left join chb_prd_baseinfo base
 	on cp.prodid=base.prod_id
-	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
+	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 	and base.operate_mode in ('03','04')
  	and base.opendayp>1096
 	<if test="org != null  and org!=''">
@@ -605,7 +607,7 @@ with cj as(
 		on cp.prodid=di.business_id
 		and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
 	</if>
-	where cp.ENDDATE=#{endDate,jdbcType=DATE}
+	where cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 	and cp.termtype in ('01','02','03','04','05','06','07')
 	<if test="org != null  and org!=''">
 		and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -621,7 +623,7 @@ with cj as(
 	</if>
 	left join chb_prd_baseinfo base
 	on cp.prodid=base.prod_id
-	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
+	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 	and  base.operate_mode in ('01','02')
 	and base.mdate-base.vdate>1096
 	<if test="org != null  and org!=''">
@@ -638,7 +640,7 @@ with cj as(
 	</if>
 	left join chb_prd_baseinfo base
 	on cp.prodid=base.prod_id
-	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
+	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 	and base.operate_mode in ('03','04')
 	and base.opendayp>1096
 	<if test="org != null  and org!=''">
@@ -724,7 +726,7 @@ with cj as(
 		left join CHB_MONTH_PRD_POSITION scp
 		on cp.prodid=scp.prodid
 		and scp.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
-	where cp.ENDDATE=#{endDate,jdbcType=DATE}
+	where cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 	and cp.termtype in ('01','02','03','04','05','06','07')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -745,7 +747,7 @@ with cj as(
 		and scp.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
 	left join chb_prd_baseinfo base
 	on cp.prodid=base.prod_id
-	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
+	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 	and  base.operate_mode in ('01','02')
 	and base.mdate-base.vdate>1096
 		<if test="org != null  and org!=''">
@@ -767,7 +769,7 @@ with cj as(
 		and scp.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
 	left join chb_prd_baseinfo base
 	on cp.prodid=base.prod_id
-	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
+	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 	and base.operate_mode in ('03','04')
  	and base.opendayp>1096
 		<if test="org != null  and org!=''">
@@ -785,7 +787,7 @@ with cj as(
 		left join CHB_MONTH_PRD_POSITION scp
 		on cp.prodid=scp.prodid
 		and scp.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
-		where cp.ENDDATE=#{endDate,jdbcType=DATE}
+		where cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 		and cp.termtype in ('01','02','03','04','05','06','07')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -804,7 +806,7 @@ with cj as(
 		and scp.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
 		left join chb_prd_baseinfo base
 		on cp.prodid=base.prod_id
-		where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
+		where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 		and  base.operate_mode in ('01','02')
 		and base.mdate-base.vdate>1096
 		<if test="org != null  and org!=''">
@@ -824,7 +826,7 @@ with cj as(
 		and scp.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
 		left join chb_prd_baseinfo base
 		on cp.prodid=base.prod_id
-		where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
+		where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 		and base.operate_mode in ('03','04')
 		and base.opendayp>1096
 		<if test="org != null  and org!=''">
@@ -929,7 +931,7 @@ with cj as(
 	left join CHB_MONTH_PRD_POSITION lastcp
 	on cp.prodid=lastcp.prodid
 	and lastcp.ENDDATE=#{lastEndDate,jdbcType=DATE}
-	where cp.ENDDATE=#{endDate,jdbcType=DATE}
+	where cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 	and cp.termtype in ('01','02','03','04','05','06','07')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -949,7 +951,7 @@ with cj as(
 	left join CHB_MONTH_PRD_POSITION lastcp
 	on cp.prodid=lastcp.prodid
 	and lastcp.ENDDATE=#{lastEndDate,jdbcType=DATE}
-	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
+	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 	and  base.operate_mode in ('01','02')
 	and base.mdate-base.vdate>1096
 		<if test="org != null  and org!=''">
@@ -970,7 +972,7 @@ with cj as(
 	left join CHB_MONTH_PRD_POSITION lastcp
 	on cp.prodid=lastcp.prodid
 	and lastcp.ENDDATE=#{lastEndDate,jdbcType=DATE}
-	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
+	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 	and base.operate_mode in ('03','04')
  	and base.opendayp>1096
 		<if test="org != null  and org!=''">
@@ -987,7 +989,7 @@ with cj as(
 		left join CHB_MONTH_PRD_POSITION lastcp
 		on cp.prodid=lastcp.prodid
 		and lastcp.ENDDATE=#{lastEndDate,jdbcType=DATE}
-		where cp.ENDDATE=#{endDate,jdbcType=DATE}
+		where cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 		and cp.termtype in ('01','02','03','04','05','06','07')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -1006,7 +1008,7 @@ with cj as(
 		left join CHB_MONTH_PRD_POSITION lastcp
 		on cp.prodid=lastcp.prodid
 		and lastcp.ENDDATE=#{lastEndDate,jdbcType=DATE}
-		where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
+		where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 		and  base.operate_mode in ('01','02')
 		and base.mdate-base.vdate>1096
 		<if test="org != null  and org!=''">
@@ -1026,7 +1028,7 @@ with cj as(
 		left join CHB_MONTH_PRD_POSITION lastcp
 		on cp.prodid=lastcp.prodid
 		and lastcp.ENDDATE=#{lastEndDate,jdbcType=DATE}
-		where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE}
+		where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 		and base.operate_mode in ('03','04')
 		and base.opendayp>1096
 		<if test="org != null  and org!=''">
@@ -1067,10 +1069,8 @@ with cj as(
 	     <if test="execonfig != null  and execonfig.equals('01')">
 			case
 		    when info.mdate is null
-		    then '01'
-		    when info.mdate-#{endDate,jdbcType=DATE} >0 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1
-		    then '01'
-		    when info.mdate-#{endDate,jdbcType=DATE} >1 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
+		    then '02'
+		    when info.mdate-#{endDate,jdbcType=DATE} >=1 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
 		    when info.mdate-#{endDate,jdbcType=DATE} >92 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>184 then '03'
 		    when info.mdate-#{endDate,jdbcType=DATE} >184 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>366 then '04'
 		    when info.mdate-#{endDate,jdbcType=DATE} >366 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
@@ -1084,10 +1084,8 @@ with cj as(
 			case when info.option_flag='01' then
 			(case
 		    when exeplan.mdate is null
-		    then '01'
-		    when exeplan.mdate-#{endDate,jdbcType=DATE} >0 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1
-		    then '01'
-		    when exeplan.mdate-#{endDate,jdbcType=DATE} >1 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
+		    then '02'
+		    when exeplan.mdate-#{endDate,jdbcType=DATE} >=1 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >92 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>184 then '03'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >184 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>366 then '04'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >366 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
@@ -1098,10 +1096,8 @@ with cj as(
 		    end )
 		    else (case
 		    when info.mdate is null
-		    then '01'
-		    when info.mdate-#{endDate,jdbcType=DATE} >0 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1
-		    then '01'
-		    when info.mdate-#{endDate,jdbcType=DATE} >1 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
+		    then '02'
+		    when info.mdate-#{endDate,jdbcType=DATE} >=1 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
 		    when info.mdate-#{endDate,jdbcType=DATE} >92 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>184 then '03'
 		    when info.mdate-#{endDate,jdbcType=DATE} >184 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>366 then '04'
 		    when info.mdate-#{endDate,jdbcType=DATE} >366 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
@@ -1275,10 +1271,8 @@ with cj as(
 	     <if test="execonfig != null  and execonfig.equals('01')">
 			case
 		    when info.mdate is null
-		    then '01'
-		    when info.mdate-#{endDate,jdbcType=DATE} >0 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1
-		    then '01'
-		    when info.mdate-#{endDate,jdbcType=DATE} >1 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
+		    then '02'
+		    when info.mdate-#{endDate,jdbcType=DATE} >=1 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
 		    when info.mdate-#{endDate,jdbcType=DATE} >92 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>184 then '03'
 		    when info.mdate-#{endDate,jdbcType=DATE} >184 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>366 then '04'
 		    when info.mdate-#{endDate,jdbcType=DATE} >366 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
@@ -1292,10 +1286,8 @@ with cj as(
 			case when info.option_flag='01' then
 			(case
 		    when exeplan.mdate is null
-		    then '01'
-		     when exeplan.mdate-#{endDate,jdbcType=DATE} >0 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1
-		    then '01'
-		    when exeplan.mdate-#{endDate,jdbcType=DATE} >1 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
+		    then '02'
+		    when exeplan.mdate-#{endDate,jdbcType=DATE} >=1 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >92 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>184 then '03'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >184 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>366 then '04'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >366 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
@@ -1547,10 +1539,8 @@ with cj as(
 	     <if test="execonfig != null  and execonfig.equals('01')">
 			case
 		    when info.mdate is null
-		    then '01'
-		    when info.mdate-#{endDate,jdbcType=DATE} >0 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1
-		    then '01'
-		    when info.mdate-#{endDate,jdbcType=DATE} >1 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
+		    then '02'
+		    when info.mdate-#{endDate,jdbcType=DATE} >=1 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
 		    when info.mdate-#{endDate,jdbcType=DATE} >92 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>184 then '03'
 		    when info.mdate-#{endDate,jdbcType=DATE} >184 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>366 then '04'
 		    when info.mdate-#{endDate,jdbcType=DATE} >366 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
@@ -1564,10 +1554,8 @@ with cj as(
 			case when info.option_flag='01' then
 			(case
 		    when exeplan.mdate is null
-		    then '01'
-		    when exeplan.mdate-#{endDate,jdbcType=DATE} >0 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1
-		    then '01'
-		    when exeplan.mdate-#{endDate,jdbcType=DATE} >1 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
+		    then '02'
+		    when exeplan.mdate-#{endDate,jdbcType=DATE} >=1 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >92 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>184 then '03'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >184 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>366 then '04'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >366 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
@@ -1711,10 +1699,8 @@ with cj as(
 	     <if test="execonfig != null  and execonfig.equals('01')">
 			case
 		    when info.mdate is null
-		    then '01'
-		    when info.mdate-#{endDate,jdbcType=DATE} >0 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1
-		    then '01'
-		    when info.mdate-#{endDate,jdbcType=DATE} >1 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
+		    then '02'
+		    when info.mdate-#{endDate,jdbcType=DATE} >=1 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
 		    when info.mdate-#{endDate,jdbcType=DATE} >92 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>184 then '03'
 		    when info.mdate-#{endDate,jdbcType=DATE} >184 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>366 then '04'
 		    when info.mdate-#{endDate,jdbcType=DATE} >366 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
@@ -1728,10 +1714,8 @@ with cj as(
 			case when info.option_flag='01' then
 			(case
 		    when exeplan.mdate is null
-		    then '01'
-		    when exeplan.mdate-#{endDate,jdbcType=DATE} >0 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1
-		    then '01'
-		    when exeplan.mdate-#{endDate,jdbcType=DATE} >1 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
+		    then '02'
+		    when exeplan.mdate-#{endDate,jdbcType=DATE} >=1 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >92 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>184 then '03'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >184 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>366 then '04'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >366 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
@@ -1917,10 +1901,8 @@ with cj as(
 	     <if test="execonfig != null  and execonfig.equals('01')">
 			case
 		    when info.mdate is null
-		    then '01'
-		    when info.mdate-#{endDate,jdbcType=DATE} >0 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1
-		    then '01'
-		    when info.mdate-#{endDate,jdbcType=DATE} >1 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
+		    then '02'
+		    when info.mdate-#{endDate,jdbcType=DATE} >=1 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
 		    when info.mdate-#{endDate,jdbcType=DATE} >92 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>184 then '03'
 		    when info.mdate-#{endDate,jdbcType=DATE} >184 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>366 then '04'
 		    when info.mdate-#{endDate,jdbcType=DATE} >366 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
@@ -1934,10 +1916,8 @@ with cj as(
 			case when info.option_flag='01' then
 			(case
 		    when exeplan.mdate is null
-		    then '01'
-		    when exeplan.mdate-#{endDate,jdbcType=DATE} >0 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1
-		    then '01'
-		    when exeplan.mdate-#{endDate,jdbcType=DATE} >1 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
+		    then '02'
+		    when exeplan.mdate-#{endDate,jdbcType=DATE} >=1 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >92 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>184 then '03'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >184 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>366 then '04'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >366 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
@@ -2150,10 +2130,8 @@ with cj as(
 	     <if test="execonfig != null  and execonfig.equals('01')">
 			case
 		    when info.mdate is null
-		    then '01'
-		    when info.mdate-#{endDate,jdbcType=DATE} >0 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1
-		    then '01'
-		    when info.mdate-#{endDate,jdbcType=DATE} >1 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
+		    then '02'
+		    when info.mdate-#{endDate,jdbcType=DATE} >=1 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
 		    when info.mdate-#{endDate,jdbcType=DATE} >92 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>184 then '03'
 		    when info.mdate-#{endDate,jdbcType=DATE} >184 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>366 then '04'
 		    when info.mdate-#{endDate,jdbcType=DATE} >366 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
@@ -2167,10 +2145,8 @@ with cj as(
 			case when info.option_flag='01' then
 			(case
 		    when exeplan.mdate is null
-		    then '01'
-		    when exeplan.mdate-#{endDate,jdbcType=DATE} >0 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1
-		    then '01'
-		    when exeplan.mdate-#{endDate,jdbcType=DATE} >1 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
+		    then '02'
+		    when exeplan.mdate-#{endDate,jdbcType=DATE} >=1 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >92 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>184 then '03'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >184 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>366 then '04'
 		    when exeplan.mdate-#{endDate,jdbcType=DATE} >366 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
