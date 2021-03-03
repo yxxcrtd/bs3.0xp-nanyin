@@ -55,7 +55,7 @@
 	  from trd_product_deal f
 	  left join fin_product fp
 	  on f.finprod_id=fp.finprod_id
-	  where fp.finprod_type2 in ('F17','F06') and  fp.profit_type in ('01') and f.ps in ('T11','T12')
+	  where fp.finprod_type2 in ('F17','F06') and  fp.profit_type in ('01') and f.ps in ('T13')
 	  and f.trade_status='01'
 	  and nvl(f.UPDATE_TIME,f.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
 
