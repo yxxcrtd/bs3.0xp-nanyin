@@ -1,6 +1,6 @@
 DELETE FROM SYS_MENU WHERE PAGE_ID IN ('AssetInfoDetail001','AssetInfoDetail002');
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('REPORT_001_003_008', 'REP', null, 'REPORT_001_003', 'AssetInfoDetail001', 8, null, '资产基本信息维护', 'system', null, SysDate, 'system', SysDate);
+values ('REPORT_001_003_012', 'REP', null, 'REPORT_001_003', 'AssetInfoDetail001', 12, null, '资产基本信息维护', 'system', null, SysDate, 'system', SysDate);
 
 
 DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('AssetInfoDetail001','AssetInfoDetail002');
