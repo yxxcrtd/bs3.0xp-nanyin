@@ -50,7 +50,7 @@ public class CeAssetGroupValidator implements BeanValidator{
             }
 
 			if(dto.getOperateType().equals("submit") && StringUtil.isNotEmpty(dto.getVdate())){
-				List<CreditLines> list = ceOrg002Service.selectCreditLines(dto.getCreditMstId(),dto.getCustomerId(),dto.getVdate());
+				List<CreditLines> list = ceOrg002Service.selectCreditLines(dto.getCreditMstId(),dto.getCustomerId(),dto.getVdate(),dto.getSeqno());
 				if(list != null && list.size()>0){
 					resultList.add(new ValidMessage("vdate", "该资产系列在当前生效日已存在授信！"));
 				}

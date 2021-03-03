@@ -823,6 +823,9 @@
 		<if test="customerId !=null and customerId !=''">
 			AND CL1.CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
 		</if>
+        <if test="orgno !=null and orgno !=''">
+            AND CL1.INSTITUTION_CODE = #{orgno,jdbcType=VARCHAR}
+        </if>
 	</select>
 
 	<select id="selectCreditLinesHap" parameterType="Map"	resultType="java.math.BigDecimal" >
@@ -838,6 +841,9 @@
 		<if test="customerId !=null and customerId !=''">
 			AND CL1.CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
 		</if>
+        <if test="orgno !=null and orgno !=''">
+            AND CL1.INSTITUTION_CODE = #{orgno,jdbcType=VARCHAR}
+        </if>
 	</select>
 
 	<select id="isKDQ" resultType="java.lang.Integer">
@@ -855,5 +861,8 @@
 		<if test="dealdate !=null">
 			and mdate &gt;= #{dealdate, jdbcType=DATE}
 		</if>
+        <if test="orgno !=null and orgno !=''">
+            AND INSTITUTION_CODE = #{orgno,jdbcType=VARCHAR}
+        </if>
 	</select>
 </mapper>

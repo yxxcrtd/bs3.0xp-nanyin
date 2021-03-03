@@ -105,5 +105,5 @@ public interface CreditLinesDealsMapper {
 	 * @param tradeId
 	 * @return
 	 */
-	int isKDQ(@Param("creditmstid") String creditmstid, @Param("customerid") String customerid, @Param("dealdate") Date dealdate);
+	int isKDQ(@Param("creditmstid") String creditmstid, @Param("customerid") String customerid, @Param("dealdate") Date dealdate, @Param("orgno") String orgno);
 }

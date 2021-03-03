@@ -58,7 +58,7 @@ public class CreditExtendsService {
         //获取需要继承的授信，及跑批当日生效占用额度为0的授信
         List<CreditLines> ptlList = creditExtendsMapper.selectCreditIdForTask(paramMap);
         for(CreditLines ptl : ptlList){
-            ptl.setHapCreditAmt(celinesUpdateFactory.extendCreditLinesDeal(ptl.getSeqno(), ptl.getVdate(), ptl.getCreditMstId(),ptl.getCustomerId()));
+            ptl.setHapCreditAmt(celinesUpdateFactory.extendCreditLinesDeal(ptl.getSeqno(), ptl.getVdate(), ptl.getCreditMstId(),ptl.getCustomerId(),ptl.getInstitutionCode()));
             ptl.setUpdateTime(new Date());
             creditExtendsMapper.updateLinesByPrimaryKeySelective(ptl);
 

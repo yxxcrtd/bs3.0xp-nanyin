@@ -134,7 +134,7 @@ public class CreditPierceService {
                     dto.setCustomerId(organId);
                     dto.setCdate(currentDate);
                     dto.setCreditMstId("0001");
-                    if(celinesUpdateFactory.isKDQ(dto.getCreditMstId(), dto.getCustomerId(), dto.getCdate())<=0){
+                    if(celinesUpdateFactory.isKDQ(dto.getCreditMstId(), dto.getCustomerId(), dto.getCdate(),dto.getInstitutionCode())<=0){
                         CreditLines creditLines = new CreditLines();
                         String customerId = dto.getCustomerId();
                         String seqNo = "";
@@ -180,7 +180,8 @@ public class CreditPierceService {
                         creditLines.setCreateUser(dto.getCreateUser());
                         creditLines.setUpdateTime(dto.getUpdateTime());
                         creditLines.setUpdateUser(dto.getUpdateUser());
-                        creditLines.setHapCreditAmt(celinesUpdateFactory.extendCreditLinesDeal(creditLines.getSeqno(), creditLines.getVdate(), creditLines.getCreditMstId(),creditLines.getCustomerId()));
+                        creditLines.setInstitutionCode(dto.getInstitutionCode());
+                        creditLines.setHapCreditAmt(celinesUpdateFactory.extendCreditLinesDeal(creditLines.getSeqno(), creditLines.getVdate(), creditLines.getCreditMstId(),creditLines.getCustomerId(),dto.getInstitutionCode()));
                         creditMapper.insert(creditLines);
                     }
 //                    dto.setPlanAssetId(ptlSecPierceValutioListMap.get(finprodId).get(0).get);

@@ -1,5 +1,7 @@
 package com.joyintech.tams.invest.common.trade;
 
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
@@ -689,7 +691,12 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                 creditLines.setCreateUser(model.getCreateUser());
                 creditLines.setUpdateTime(model.getUpdateTime());
                 creditLines.setUpdateUser(model.getUpdateUser());
-                creditLines.setHapCreditAmt(todocredit_amt.add(extendCreditLinesDeal(creditLines.getSeqno(), creditLines.getVdate(), creditLines.getCreditMstId(),creditLines.getCustomerId())));
+                String institutionCode = "";
+                if(MultilevelDataAuthorityUtil.isEnabled()){
+                    institutionCode =  MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
+                }
+                creditLines.setInstitutionCode(institutionCode);
+                creditLines.setHapCreditAmt(todocredit_amt.add(extendCreditLinesDeal(creditLines.getSeqno(), creditLines.getVdate(), creditLines.getCreditMstId(),creditLines.getCustomerId(), institutionCode)));
                 creditMapper.insert(creditLines);
                 if(isNotBottomflag){
                     //2.0 存额度占用明细表
@@ -924,12 +931,13 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
      * 授信继承
      * @param name
      */
-    public BigDecimal extendCreditLinesDeal(String seqno, Date vdate, String creditMstId, String customerId) {
+    public BigDecimal extendCreditLinesDeal(String seqno, Date vdate, String creditMstId, String customerId, String orgno) {
         if(CacheUtil.getSysParam("IS_EXTEND_CREDIT").equals("true")){
             Map<String, Object> param=new HashMap<String, Object>();
             param.put("creditMstId", creditMstId);
             param.put("customerId", customerId);
             param.put("vdate", vdate);
+            param.put("orgno", orgno);
             List<CreditLinesDeal> creditLinesDealList = creditLinesMapper.selectCreditLinesDeal(param);
             for(CreditLinesDeal creditLinesDeal : creditLinesDealList){
                 creditLinesDeal.setSeqno(seqno);
@@ -950,7 +958,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
      * @param tradeId
      * @return
      */
-    public int isKDQ(String creditmstid, String customerid, Date dealdate) {
-        return creditLinesMapper.isKDQ(creditmstid, customerid, dealdate);
+    public int isKDQ(String creditmstid, String customerid, Date dealdate, String orgno) {
+        return creditLinesMapper.isKDQ(creditmstid, customerid, dealdate, orgno);
     }
 }
