@@ -106,6 +106,13 @@
 	  from ptl_cash_position fi
 	  left join STL_CAPACCT_INFO sci
 	  on sci.acct_no=fi.acct_id
+	  left join fin_product fp
+	  on fi.portfolio_id=fp.finprod_market_id
+	  and fp.p_finprod_id is null
+	  and fp.finprod_type='F16'
+	  left join fin_product_add fpa
+	  on fp.finprod_id=fpa.finprod_id
+	  where fpa.profit_flag='03'
 	  group by  fi.acct_id,fi.cdate,sci.seq_no)tt
 	  where  tt.updatetime  > #{updatetime,jdbcType=TIMESTAMP} and tt.costAmt!=0
 
