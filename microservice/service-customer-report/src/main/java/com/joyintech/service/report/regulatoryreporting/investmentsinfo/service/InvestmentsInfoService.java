@@ -2550,8 +2550,8 @@ public class InvestmentsInfoService {
 		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto43);
 		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto44);
 		for(InvestmentBusinessDetailsDto it:investmentBusinessDetailsDtoList){
-			it.setTotleBalance(addAllMoney(it.getSessionendNum(),it.getNonsStandardAmount(),null,it.getOtherAmount()));
-			it.setLasttotleBalance(addAllMoney(it.getLastSessionendNum(),it.getLastNonsStandardAmount(),null,it.getLastOtherAmount()));
+			it.setTotleBalance(addAllMoney(it.getSessionendNum(),it.getNonsStandardAmount(),it.getIndInvestmentAmount(),it.getOtherAmount()));
+			it.setLasttotleBalance(addAllMoney(it.getLastSessionendNum(),it.getLastNonsStandardAmount(),it.getLastIndInvestmentAmount(),it.getLastOtherAmount()));
 		}
 		//表三C15和E15的数据
 		InvestmentBusinessDetailsDto investmentBusinessDetailsDto15=investmentBusinessDetailsMapper.queryBottomInfoAmountFjr(paraMap);
