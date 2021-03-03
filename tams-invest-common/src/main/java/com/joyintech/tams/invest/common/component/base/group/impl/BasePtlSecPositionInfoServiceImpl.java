@@ -314,7 +314,7 @@ public class BasePtlSecPositionInfoServiceImpl implements BasePtlSecPositionInfo
         position.setHodingType(positionFlowDto.getHodingType());
         position.setCdate(positionFlowDto.getCdate());
         position.setStatus(positionFlowDto.getStatus());
-        position.setTradeId(positionFlowDto.getpFinprodId());
+        position.setTradeId(positionFlowDto.getTradeId());
         position.setCreateTime(positionFlowDto.getCreateTime());
         position.setUpdateUser(positionFlowDto.getUpdateUser());
         position.setUpdateTime(positionFlowDto.getUpdateTime());
