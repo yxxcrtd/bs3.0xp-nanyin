@@ -1,31 +1,24 @@
 package com.joyintech.tams.invest.risk.creditmanagement.ceorg.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.joyintech.tams.common.base.entity.CreditLines;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.TreeNode;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.CreditLines;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.risk.creditmanagement.ceorg.dto.CreditLinesOrgDto;
 import com.joyintech.tams.invest.risk.creditmanagement.ceorg.dto.CreditMstInfoDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 /**
  * 机构授信
@@ -171,10 +164,11 @@ public class CeOrg002Service extends CommonExportService<CreditLinesOrgDto>
 				Boolean.class);
 	}
 
-	public List<CreditLines> selectCreditLines(String creditMstId, String customerId, Date vdate) {
+	public List<CreditLines> selectCreditLines(String creditMstId, String customerId, Date vdate, String seqno) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("customerId", customerId);
 		map.put("creditMstId", creditMstId);
+		map.put("seqno", seqno);
 		map.put("vdate", DateUtil.format(vdate));
 		return restTemplate.postForList(
 				ServiceApplication.RISK_SERVICE_NAME + "/CeOrg002/selectCreditLines",map,

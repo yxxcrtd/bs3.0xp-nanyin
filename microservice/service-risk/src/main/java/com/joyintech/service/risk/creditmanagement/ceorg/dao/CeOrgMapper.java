@@ -10,19 +10,16 @@
  
 package com.joyintech.service.risk.creditmanagement.ceorg.dao;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.tams.common.base.entity.CreditLinesDeal;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
-
-import com.joyintech.tams.common.base.entity.CreditLines;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.TreeNode;
 import com.joyintech.service.risk.creditmanagement.ceorg.dto.CreditLinesOrgDto;
 import com.joyintech.service.risk.creditmanagement.ceorg.dto.CreditMstInfoDto;
+import com.joyintech.tams.common.base.entity.CreditLines;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -62,9 +59,9 @@ public interface CeOrgMapper {
      */
     int searchIsUse(Map<String, Object> param);
 
-    List<CreditLinesDeal> selectCreditLinesDeal(Map<String, Object> param);
-
-    BigDecimal selectCreditLinesHap(Map<String, Object> param);
+//    List<CreditLinesDeal> selectCreditLinesDeal(Map<String, Object> param);
+//
+//    BigDecimal selectCreditLinesHap(Map<String, Object> param);
 
     List<CreditLines> selectCreditLines(Map<String, Object> param);
 }

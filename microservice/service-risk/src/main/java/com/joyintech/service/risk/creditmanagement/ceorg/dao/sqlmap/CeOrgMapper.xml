@@ -274,6 +274,9 @@
 		<if test="vdate !=null and vdate !=''">
 			AND to_char(CL1.VDATE,'yyyy-MM-dd')  = #{vdate, jdbcType=VARCHAR}
         </if>
+		<if test="seqno !=null and seqno !=''">
+			AND CL1.seqno != #{seqno,jdbcType=VARCHAR}
+		</if>
     </select>
 
 </mapper>

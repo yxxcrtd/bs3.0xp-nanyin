@@ -146,7 +146,7 @@ public class CeOrg002Service extends BaseService<CreditMstInfoDto> {
 				//多级法人改造 add by jingqiongqiong 20200616
 
 				if(entity.getVdate().compareTo(DateUtil.platDateFromCache())<=0){
-					dto.setHapCreditAmt(celinesUpdateFactory.extendCreditLinesDeal(dto.getSeqno(), dto.getVdate(), dto.getCreditMstId(),dto.getCustomerId()));
+					dto.setHapCreditAmt(celinesUpdateFactory.extendCreditLinesDeal(dto.getSeqno(), dto.getVdate(), dto.getCreditMstId(),dto.getCustomerId(), createInst));
 				}else{
 					dto.setHapCreditAmt(new BigDecimal(0));
 				}
@@ -155,7 +155,7 @@ public class CeOrg002Service extends BaseService<CreditMstInfoDto> {
     		
     	}
 		if(entity.getVdate().compareTo(DateUtil.platDateFromCache())<=0){
-			entity.setHapCreditAmt(celinesUpdateFactory.extendCreditLinesDeal(entity.getSeqno(), entity.getVdate(), entity.getCreditMstId(),entity.getCustomerId()));
+			entity.setHapCreditAmt(celinesUpdateFactory.extendCreditLinesDeal(entity.getSeqno(), entity.getVdate(), entity.getCreditMstId(),entity.getCustomerId(), createInst));
 		}else{
 			entity.setHapCreditAmt(new BigDecimal(0));
 		}
@@ -208,7 +208,7 @@ public class CeOrg002Service extends BaseService<CreditMstInfoDto> {
         				dto.setSeqno(getQuotePrimaryKey());
         				dto.setCreditFlag(DictCodeList.是否_是.getValue());
 						if(entity.getVdate().compareTo(DateUtil.platDateFromCache())<=0){
-							dto.setHapCreditAmt(celinesUpdateFactory.extendCreditLinesDeal(dto.getSeqno(), dto.getVdate(), dto.getCreditMstId(),dto.getCustomerId()));
+							dto.setHapCreditAmt(celinesUpdateFactory.extendCreditLinesDeal(dto.getSeqno(), dto.getVdate(), dto.getCreditMstId(),dto.getCustomerId(), createInst));
 						}else{
 							dto.setHapCreditAmt(new BigDecimal(0));
 						}

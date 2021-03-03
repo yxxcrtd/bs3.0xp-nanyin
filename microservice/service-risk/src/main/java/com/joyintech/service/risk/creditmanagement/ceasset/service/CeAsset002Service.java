@@ -70,7 +70,7 @@ public class CeAsset002Service extends BaseService<CreditMstInfoDto> {
 		entity.setInstitutionCode(createInst);
 		//多级法人改造 add by jingqiongqiong 20200622
 		if(entity.getVdate().compareTo(DateUtil.platDateFromCache())<=0){
-			entity.setHapCreditAmt(celinesUpdateFactory.extendCreditLinesDeal(entity.getSeqno(), entity.getVdate(), entity.getCreditMstId(),entity.getCustomerId()));
+			entity.setHapCreditAmt(celinesUpdateFactory.extendCreditLinesDeal(entity.getSeqno(), entity.getVdate(), entity.getCreditMstId(),entity.getCustomerId(), createInst));
 		}else{
 			entity.setHapCreditAmt(new BigDecimal(0));
 		}
