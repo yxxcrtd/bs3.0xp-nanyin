@@ -669,16 +669,16 @@ public class InvestmentsInfoService {
 		paraMap.put("termId", termId);
 		List<OverallInfoDto> overallInfoList = overallInfoMapper.queryOverallInfoList(paraMap);
 		//表6中AA+(含以上)
-		paraMap.put("rating", "1");
+		paraMap.put("rating", '1');
 		OverallInfoDto overallInfoDto1 = overallInfoMapper.queryOverallInfoByRating(paraMap);
 		//表6中其它Ａ级
-		paraMap.put("rating", "2");
+		paraMap.put("rating", '2');
 		OverallInfoDto overallInfoDto2 = overallInfoMapper.queryOverallInfoByRating(paraMap);
 		//表6中B级及以下
-		paraMap.put("rating", "3");
+		paraMap.put("rating", '3');
 		OverallInfoDto overallInfoDto3 = overallInfoMapper.queryOverallInfoByRating(paraMap);
 		//表6中无评级
-		paraMap.put("rating", "4");
+		paraMap.put("rating", '4');
 		OverallInfoDto overallInfoDto4 = overallInfoMapper.queryOverallInfoByRating(paraMap);
 
 		// 上季末参数
@@ -686,16 +686,16 @@ public class InvestmentsInfoService {
 		paraMap.put("termId", lastTermId);
 		List<OverallInfoDto> lastOverallInfoList = overallInfoMapper.queryOverallInfoList(paraMap);
 		//AA+(含以上)
-		paraMap.put("rating", "1");
+		paraMap.put("rating", '1');
 		OverallInfoDto lastOverallInfoDto1 = overallInfoMapper.queryOverallInfoByRating(paraMap);
 		//其它Ａ级
-		paraMap.put("rating", "2");
+		paraMap.put("rating", '2');
 		OverallInfoDto lastOverallInfoDto2 = overallInfoMapper.queryOverallInfoByRating(paraMap);
 		//B级及以下
-		paraMap.put("rating", "3");
+		paraMap.put("rating", '3');
 		OverallInfoDto lastOverallInfoDto3 = overallInfoMapper.queryOverallInfoByRating(paraMap);
 		//无评级
-		paraMap.put("rating", "4");
+		paraMap.put("rating", '4');
 		OverallInfoDto lastOverallInfoDto4 = overallInfoMapper.queryOverallInfoByRating(paraMap);
 
 
@@ -789,16 +789,16 @@ public class InvestmentsInfoService {
 		paraMap.put("termId", termId);
 		List<OverallInfoDto> overallInfoList = overallInfoMapper.queryBottomOverallInfoList(paraMap);
         //AA+(含以上)
-		paraMap.put("rating", "1");
+		paraMap.put("rating", '1');
 		OverallInfoDto overallInfoDto1 = overallInfoMapper.queryBottomOverallInfoByRating(paraMap);
 		//其它Ａ级
-		paraMap.put("rating", "2");
+		paraMap.put("rating", '2');
 		OverallInfoDto overallInfoDto2 = overallInfoMapper.queryBottomOverallInfoByRating(paraMap);
 		//B级及以下
-		paraMap.put("rating", "3");
+		paraMap.put("rating", '3');
 		OverallInfoDto overallInfoDto3 = overallInfoMapper.queryBottomOverallInfoByRating(paraMap);
 		//无评级
-		paraMap.put("rating", "4");
+		paraMap.put("rating", '4');
 		OverallInfoDto overallInfoDto4 = overallInfoMapper.queryBottomOverallInfoByRating(paraMap);
 
 		//定向增发
@@ -811,16 +811,16 @@ public class InvestmentsInfoService {
 		paraMap.put("termId", lastTermId);
 		List<OverallInfoDto> lastOverallInfoList = overallInfoMapper.queryBottomOverallInfoList(paraMap);
 		//AA+(含以上)
-		paraMap.put("rating", "1");
+		paraMap.put("rating", '1');
 		OverallInfoDto lastOverallInfoDto1 = overallInfoMapper.queryBottomOverallInfoByRating(paraMap);
 		//其它Ａ级
-		paraMap.put("rating", "2");
+		paraMap.put("rating", '2');
 		OverallInfoDto lastOverallInfoDto2 = overallInfoMapper.queryBottomOverallInfoByRating(paraMap);
 		//B级及以下
-		paraMap.put("rating", "3");
+		paraMap.put("rating", '3');
 		OverallInfoDto lastOverallInfoDto3 = overallInfoMapper.queryBottomOverallInfoByRating(paraMap);
 		//无评级
-		paraMap.put("rating", "4");
+		paraMap.put("rating", '4');
 		OverallInfoDto lastOverallInfoDto4 = overallInfoMapper.queryBottomOverallInfoByRating(paraMap);
 		//定向增发
 
@@ -2672,18 +2672,18 @@ public class InvestmentsInfoService {
 	private InvestmentBusinessDetailsDto mergeSameDto(InvestmentBusinessDetailsDto dto1, InvestmentBusinessDetailsDto dto2) {
 		InvestmentBusinessDetailsDto investmentBusinessDetailsDto = new InvestmentBusinessDetailsDto();
 		investmentBusinessDetailsDto.setPropertycode(dto1.getPropertycode());
-		investmentBusinessDetailsDto.setTqeAmount(addMoney(dto1.getTqeAmount(), dto2.getTqeAmount()));
-		investmentBusinessDetailsDto.setTlqeAmount(addMoney(dto1.getTlqeAmount(), dto2.getTlqeAmount()));
-		investmentBusinessDetailsDto.setSessionendNum(addMoney(dto1.getSessionendNum(), dto2.getSessionendNum()));
-		investmentBusinessDetailsDto.setNonperformingAssetNum(addMoney(dto1.getNonperformingAssetNum(), dto2.getNonperformingAssetNum()));
-		investmentBusinessDetailsDto.setLastSessionendNum(addMoney(dto1.getLastSessionendNum(), dto2.getLastSessionendNum()));
-		investmentBusinessDetailsDto.setLastNonperformingAssetNum(addMoney(dto1.getLastNonperformingAssetNum(), dto2.getLastNonperformingAssetNum()));
-		investmentBusinessDetailsDto.setNonsStandardAmount(addMoney(dto1.getNonsStandardAmount(), dto2.getNonsStandardAmount()));
-		investmentBusinessDetailsDto.setLastNonsStandardAmount(addMoney(dto1.getLastNonsStandardAmount(), dto2.getLastNonsStandardAmount()));
-		investmentBusinessDetailsDto.setIndInvestmentAmount(addMoney(dto1.getIndInvestmentAmount(), dto2.getIndInvestmentAmount()));
-		investmentBusinessDetailsDto.setLastIndInvestmentAmount(addMoney(dto1.getLastIndInvestmentAmount(), dto2.getLastIndInvestmentAmount()));
-		investmentBusinessDetailsDto.setOtherAmount(addMoney(dto1.getOtherAmount(), dto2.getOtherAmount()));
-		investmentBusinessDetailsDto.setLastOtherAmount(addMoney(dto1.getLastOtherAmount(), dto2.getLastOtherAmount()));
+		investmentBusinessDetailsDto.setTqeAmount(addMoneySum(dto1.getTqeAmount(), dto2.getTqeAmount()));
+		investmentBusinessDetailsDto.setTlqeAmount(addMoneySum(dto1.getTlqeAmount(), dto2.getTlqeAmount()));
+		investmentBusinessDetailsDto.setSessionendNum(addMoneySum(dto1.getSessionendNum(), dto2.getSessionendNum()));
+		investmentBusinessDetailsDto.setNonperformingAssetNum(addMoneySum(dto1.getNonperformingAssetNum(), dto2.getNonperformingAssetNum()));
+		investmentBusinessDetailsDto.setLastSessionendNum(addMoneySum(dto1.getLastSessionendNum(), dto2.getLastSessionendNum()));
+		investmentBusinessDetailsDto.setLastNonperformingAssetNum(addMoneySum(dto1.getLastNonperformingAssetNum(), dto2.getLastNonperformingAssetNum()));
+		investmentBusinessDetailsDto.setNonsStandardAmount(addMoneySum(dto1.getNonsStandardAmount(), dto2.getNonsStandardAmount()));
+		investmentBusinessDetailsDto.setLastNonsStandardAmount(addMoneySum(dto1.getLastNonsStandardAmount(), dto2.getLastNonsStandardAmount()));
+		investmentBusinessDetailsDto.setIndInvestmentAmount(addMoneySum(dto1.getIndInvestmentAmount(), dto2.getIndInvestmentAmount()));
+		investmentBusinessDetailsDto.setLastIndInvestmentAmount(addMoneySum(dto1.getLastIndInvestmentAmount(), dto2.getLastIndInvestmentAmount()));
+		investmentBusinessDetailsDto.setOtherAmount(addMoneySum(dto1.getOtherAmount(), dto2.getOtherAmount()));
+		investmentBusinessDetailsDto.setLastOtherAmount(addMoneySum(dto1.getLastOtherAmount(), dto2.getLastOtherAmount()));
 		return investmentBusinessDetailsDto;
 	}
 	
@@ -2707,6 +2707,16 @@ public class InvestmentsInfoService {
 		}
 		//return num1.multiply(billion).add(num2);
 		return num1.add(num2);
+	}
+	private BigDecimal addMoneySum(BigDecimal num1, BigDecimal num2) {
+		BigDecimal billion = new BigDecimal(10000);
+		if (null == num1) {
+			num1 = BigDecimal.ZERO;
+		}
+		if (null == num2) {
+			num2 = BigDecimal.ZERO;
+		}
+		return num1.multiply(billion).add(num2);
 	}
 	private BigDecimal addAllMoney(BigDecimal num1, BigDecimal num2, BigDecimal num3, BigDecimal num4) {
 		if (null == num1) {
