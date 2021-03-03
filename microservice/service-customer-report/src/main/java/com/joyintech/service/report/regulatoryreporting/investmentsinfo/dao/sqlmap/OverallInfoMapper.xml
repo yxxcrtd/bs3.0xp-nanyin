@@ -545,7 +545,7 @@
 		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
 
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
-		AND (INFO.ASSET_TYPE2 IN ('1001', '1002', '1003', '1004','1005','2501','2502','1107','1108')
+		AND (CMAP.assettype2 IN ('1001', '1002', '1003', '1004','1005','2501','2502','1107','1108')
 		 or (mst.INDUSTRY ='10' AND INFO.ASSET_TYPE2 IN ('1113', '1114', '1115') ))
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -570,7 +570,7 @@
 		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
 
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
-		AND (INFO.ASSET_TYPE2 IN ('1001', '1002', '1003', '1004','1005','2501','2502','1107','1108')
+		AND (CMAP.assettype2 IN ('1001', '1002', '1003', '1004','1005','2501','2502','1107','1108')
 		or (mst.INDUSTRY ='10' AND INFO.ASSET_TYPE2 IN ('1113', '1114', '1115') ))
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -609,7 +609,7 @@
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
 		and cmap.ASSETVALUE_B is not null
-		AND (INFO.ASSET_TYPE2 IN ('1001', '1002', '1003', '1004','1005','2501','2502','1107','1108')
+		AND (CMAP.assettype2 IN ('1001', '1002', '1003', '1004','1005','2501','2502','1107','1108')
 		or (mst.INDUSTRY ='10' AND INFO.ASSET_TYPE2 IN ('1113', '1114', '1115') ))
 		group by nvl(info.asset_name,info.asset_code)
 		)t1
