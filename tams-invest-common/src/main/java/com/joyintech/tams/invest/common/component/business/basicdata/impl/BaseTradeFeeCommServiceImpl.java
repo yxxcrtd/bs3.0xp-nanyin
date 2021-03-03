@@ -132,10 +132,12 @@ public class BaseTradeFeeCommServiceImpl implements BaseTradeFeeCommService {
 						 * 实现条件：费用规则的费用规则中是否分档为“否”并且暂存的规则是否分档为“是”
 						 * 			或者费用规则的资产分类二为空并且暂存的规则资产分类二不为空
 						 * 			或者费用规则的资产分类一为空并且暂存的规则资产分类一不为空
+						 * 		或者暂存的规则不为空并且暂存的规则生效日不等于循环中的规则生效日
 						 */
-						if(("Y".equals(retFeeDetailDto.getIsGrade())&&"N".equals(dto.getIsGrade()))
+ 						if(("Y".equals(retFeeDetailDto.getIsGrade())&&"N".equals(dto.getIsGrade()))
 								||(StringUtil.isNotEmpty(retFeeDetailDto.getWindtypetwo())&&StringUtil.isEmpty(dto.getWindtypetwo()))
-								||(StringUtil.isNotEmpty(retFeeDetailDto.getWindtypeone())&&StringUtil.isEmpty(dto.getWindtypeone())))
+								||(StringUtil.isNotEmpty(retFeeDetailDto.getWindtypeone())&&StringUtil.isEmpty(dto.getWindtypeone()))
+								||(StringUtil.isNotEmpty(retFeeDetailDto.getBatchSeq())&&!retFeeDetailDto.getEffDate().equals(dto.getEffDate())))
 							break;
 						//判断该种类下的该费用规则是否分档
 						if("Y".equals(dto.getIsGrade())){
