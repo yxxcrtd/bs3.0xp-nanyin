@@ -275,7 +275,25 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
         			lastPayDate = dto.getPositionStartDate();
         		}else {
         			lastPayDate = DateUtil.parse(lastPayDateStr);
-        		}        	
+        		}  
+        		//20210303 ZGBSS-647 根据账户维护费预提设置的支付信息获得支付日 start
+        		int cycle = 3;
+        		Date date1 = dto.getPositionStartDate();
+        		Date date2 = dto.getPositionEndDate();   
+        		int paycount = 1;
+        		Date date1Temp = date1;
+        	    List<Date> paylist = new ArrayList<Date>();			
+        			while(DateUtil.compareDate(date1Temp, date2) < 0) {
+        				Date calcDate = DateUtil.addMonthDate(date1, cycle*paycount);
+        				if(DateUtil.compareDate(calcDate, date2) <= 0) {        					                     
+        	                 paylist.add(calcDate);
+        	                 date1Temp=calcDate;
+        				     paycount++;			     
+        				}else {
+        					break;
+        				}
+        			}
+        		//20210303 ZGBSS-647 根据账户维护费预提设置的支付信息获得支付日 end
                 // 3 查询账务明细(大于上次支付日小于等于平台日)
         		Map<String, Object> mapBok = new HashMap<>();
         		mapBok.put("secAcctId",dto.getSecAcctId());
@@ -289,8 +307,10 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
                 		Date payDate = DateUtil.setDays(detail.getMdate(), Integer.parseInt(dto.getPayDate()));
                 		if(payDate.compareTo(batchDate) > 0) {
                 			continue;
+                		}     
+                		if(!paylist.contains(payDate) || payDate.compareTo(batchDate) != 0) {
+                			continue;
                 		}
-                		
                 		// 5 判断待处理是否已在流程中
                 		Map<String, Object> map = new HashMap<>();
                 		map.put("secAcctId",dto.getSecAcctId());
@@ -1586,4 +1606,5 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
         List<InvestFeePayDto> list = investFeePayMapper.getBusinessData(parameter);
         return list;
     }
+    
 }
