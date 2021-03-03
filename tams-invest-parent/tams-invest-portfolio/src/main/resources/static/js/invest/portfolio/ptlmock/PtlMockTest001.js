@@ -105,6 +105,9 @@ $(function() {
      * 画面加载完成
      */
     $(function() {
+        //隐藏框架中的重置按钮，防止查询栏查询条件超过两行时出现重置按钮
+        $('#PtlMockTest001_btn_reset').hide();
+        
         // 绑定删除按钮
         $('#PtlMockTest001_btn_delete').click(
             function(data) {
@@ -146,5 +149,13 @@ $(function() {
                     table.reload();
                 });
             });
+    });
+
+    /**
+     * 新增重置按钮的重置事件
+     */
+    $('#PtlMockTest001_btn_clickReset').click(function () {
+        //重新加载当前页面
+        location.reload();
     });
 }());
